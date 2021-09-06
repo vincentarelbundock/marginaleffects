@@ -97,3 +97,18 @@ test_that("polr", {
     expect_error(mfx(mod, variance = NULL), regexp = "must specify")
     expect_error(mfx(mod, group_names = "1"), regexp = "not supported")
 })
+
+test_that("merMod", {
+    skip_if_not_installed("lme4")
+    N <- 1000
+    tmp <- data.frame(x1 = rnorm(N),
+                      x2 = rnorm(N),
+                      y = sample(0:1, N, replace = TRUE),
+                      group = sample(letters[1:10], N, replace = TRUE))
+    mod <- lme4::glmer(y ~ x1 + x2 + (1 | group), data = tmp, family = binomial)
+    res <- mfx(mod, variance = NULL)
+    mar <- data.frame(margins(mod))
+    expect_true(cor(mar$dydx_x1, res$dydx_x1) > .999)
+    expect_true(cor(mar$dydx_x2, res$dydx_x2) > .999)
+    expect_error(mfx(mod), regexp = "variance.*not supported")
+})
