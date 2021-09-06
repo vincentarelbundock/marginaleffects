@@ -1,4 +1,3 @@
-
 fastmargins: Fast Marginal Effects
 ================
 
@@ -13,11 +12,13 @@ applications.
 
 You can install the released version of fastmargins from Github:
 
-```r
+``` r
 remotes::install_github("vincentarelbundock/fastmargins")
 ```
 
-# Example
+# Examples
+
+## Logit regression with a multiplicative interaction term
 
 Load the library, simulate data, and estimate a logistic regression
 model with interaction terms:
@@ -43,20 +44,20 @@ Compute unit-level marginal effects and variances:
 ``` r
 res <- mfx(mod)
 head(res)
-#>   y          x1          x2         x3         x4    dydx_x1    dydx_x2
-#> 1 1 -0.05710882 -0.03955901  0.2663629  1.5528969 0.02359321 0.02242696
-#> 2 0 -1.46101992  0.12057078  1.9413666 -0.3170301 0.41221357 0.39183515
-#> 3 0  0.19504407 -1.02289844  0.2686651 -1.4423351 0.02303646 0.02189755
-#> 4 1  0.86767939  0.33877950  0.2565602  0.4375469 0.03988153 0.03791012
-#> 5 1  0.74975103  1.57639836 -0.7730068  1.1803665 0.06016017 0.05718634
-#> 6 0 -1.14716821  2.44451162 -1.4694027  0.7195470 0.34018131 0.32336359
-#>       dydx_x3     dydx_x4  se_dydx_x1  se_dydx_x2  se_dydx_x3  se_dydx_x4
-#> 1  0.06329837  0.03349969 0.007089214 0.006812727 0.017527645 0.008852562
-#> 2  0.29151516  1.31503165 0.034288840 0.039609213 0.044316662 0.121388801
-#> 3 -0.01110204  0.03276754 0.006706809 0.005831630 0.003346525 0.008520467
-#> 4  0.06000385  0.05621422 0.008058450 0.008359958 0.012702297 0.011908868
-#> 5  0.13772884  0.01934612 0.015613571 0.013926261 0.040199329 0.004757735
-#> 6  0.61323923 -0.14095393 0.053558741 0.067749012 0.088165390 0.032926728
+#>   y         x1         x2          x3         x4    dydx_x1    dydx_x2
+#> 1 0 -0.4314039  0.7843935 -0.46414782 -0.3344323 0.39577379 0.35078843
+#> 2 1 -0.4727572 -0.1597447 -0.47979869  1.2051817 0.37059818 0.32847403
+#> 3 1  0.8935453 -1.3832461  0.51524443  1.4268085 0.04016064 0.03559619
+#> 4 1 -0.9882923  0.1713650  0.14651325  2.0666091 0.10482873 0.09291437
+#> 5 0  1.0550042 -1.6421494  0.79159637 -0.5750850 0.31141112 0.27601403
+#> 6 0 -1.4645218  0.1530650  0.01203903  0.5836429 0.29817746 0.26428451
+#>      dydx_x3    dydx_x4 se_dydx_x1 se_dydx_x2 se_dydx_x3 se_dydx_x4
+#> 1 0.20951826 0.19436352 0.03081659 0.03492218 0.02873504 0.02740292
+#> 2 0.75213335 0.17634776 0.03130465 0.03120440 0.06137066 0.03388806
+#> 3 0.09016752 0.05804355 0.01186115 0.01199401 0.02537074 0.01571310
+#> 4 0.30068804 0.11385126 0.02949572 0.02395656 0.07153288 0.02334606
+#> 5 0.09183942 0.53395731 0.05017214 0.02776799 0.03165472 0.06328442
+#> 6 0.42457807 0.28477564 0.02075781 0.03373799 0.05354220 0.04059182
 ```
 
 The results are obtained using a slightly different numerical
@@ -79,12 +80,36 @@ cor(mar$SE_dydx_x3, res$se_dydx_x3)
 #> [1] 1
 ```
 
+## Conditional marginal effects with `ggplot2`
+
+``` r
+library(tidyverse)
+
+lm(mpg ~ hp * wt, data = mtcars) |>
+    mfx() |> 
+    mutate(conf.low = dydx_hp - se_dydx_hp * 1.96,
+           conf.high = dydx_hp + se_dydx_hp * 1.96) |>
+    ggplot(aes(x = wt, 
+               y = dydx_hp, 
+               ymin = conf.low, 
+               ymax = conf.high)) +
+    geom_ribbon(alpha = .1) +
+    geom_line()
+```
+
+<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
+
 # Benchmarks
 
-Unit-level standard errors can be expensive to compute, so we run the
-benchmarks with and without standard errors.
+Here are a couple naive benchmarks to compare the speed of computation
+with the `fastmargins` and `margins` packages. Since unit-level standard
+errors can be expensive to compute, we run the benchmarks with and
+without standard errors.
 
-# Benchmarks: Marginal effects + Variances
+## Marginal effects and standard errors (unit-level)
+
+In this naive benchmark, computing marginal effects with their
+unit-level standard errors is over 300x faster.
 
 ``` r
 b1 = bench::mark(
@@ -97,11 +122,14 @@ b1
 #> # A tibble: 2 × 6
 #>   expression                          min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                     <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 margins(mod, unit_ses = TRUE)     49.5s    49.5s    0.0202     947MB     2.18
-#> 2 mfx(mod, variance = vcov(mod))  107.2ms  110.2ms    8.47      11.4MB     0
+#> 1 margins(mod, unit_ses = TRUE)     50.3s    50.3s    0.0199     947MB     1.29
+#> 2 mfx(mod, variance = vcov(mod))  118.4ms  119.5ms    8.20      12.6MB     0
 ```
 
-# Benchmarks: Marginal effects only
+## Marginal effects only
+
+In this naive benchmark, computing marginal effects *without* their
+unit-level standard errors is over 40% faster.
 
 ``` r
 b2 = bench::mark(
@@ -113,6 +141,6 @@ b2
 #> # A tibble: 2 × 6
 #>   expression                          min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                     <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 margins(mod, unit_ses = FALSE)   95.2ms  104.7ms      9.55   22.96MB     4.78
-#> 2 mfx(mod, variance = NULL)        56.2ms   58.1ms     17.1     1.52MB     0
+#> 1 margins(mod, unit_ses = FALSE)  101.3ms  101.5ms      9.33   22.96MB        0
+#> 2 mfx(mod, variance = NULL)        65.2ms   67.7ms     14.7     1.74MB        0
 ```

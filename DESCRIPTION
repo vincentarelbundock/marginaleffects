@@ -24,13 +24,15 @@ Suggests:
     ggeffects
 Config/testthat/edition: 3
 Collate: 
-    'get_dydx_glm.R'
+    'get_dydx_stats.R'
+    'get_dydx_nnet.R'
+    'get_dydx_MASS.R'
     'get_dydx_betareg.R'
     'get_dydx_fixest.R'
-    'get_dydx_lm.R'
-    'get_dydx_loess.R'
-    'get_dydx_multinom.R'
-    'get_dydx_polr.R'
+    'get_dydx_ivreg.R'
+    'get_dydx_lme4.R'
+    'get_dydx_ordinal.R'
+    'get_dydx_survey.R'
     'mfx.R'
     'reset_coefs.R'
     'se_from_J_V.R'
