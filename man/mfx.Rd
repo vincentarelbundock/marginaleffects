@@ -4,7 +4,13 @@
 \alias{mfx}
 \title{compute marginal effects estimates using numerical derivatives}
 \usage{
-mfx(model, variables = NULL, fitfram = NULL, variance = vcov(model))
+mfx(
+  model,
+  variables = NULL,
+  fitfram = NULL,
+  group_names = NULL,
+  variance = vcov(model)
+)
 }
 \description{
 compute marginal effects estimates using numerical derivatives

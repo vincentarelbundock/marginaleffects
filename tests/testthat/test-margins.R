@@ -68,3 +68,16 @@ test_that("betareg", {
     expect_true(cor(as.numeric(mar$temp), res$temp, use = "complete.obs") > .99999)
     # TODO: variance does not work for betareg objects
 })
+
+test_that("multinom", {
+    tmp <- mtcars
+    tmp$cyl <- as.factor(tmp$cyl)
+    void <- capture.output( mod <- 
+        nnet::multinom(cyl ~ hp + am + mpg, data = tmp, quiet = true))
+    res <- mfx(mod, group_names = c("4", "6"), variance = NULL)
+    expect_s3_class(res, "data.frame")
+
+    # TODO: `margins` appears to break with numeric regressors but not factors
+    # here it's the opposite: we don't support factors.
+    expect_error(margins(mod))
+})

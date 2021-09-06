@@ -29,6 +29,7 @@ Collate:
     'get_dydx_fixest.R'
     'get_dydx_lm.R'
     'get_dydx_loess.R'
+    'get_dydx_multinom.R'
     'mfx.R'
     'reset_coefs.R'
     'se_from_J_V.R'
