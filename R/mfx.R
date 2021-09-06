@@ -22,27 +22,31 @@ mfx <- function(model,
         variables <- insight::find_variables(mod)$conditional
     }
 
-    if (is.null(group_names)) group_names <- c(NULL)
+    if (is.null(group_names)) {
+        counter <- 1
+    } else {
+        counter <- length(group_names)
+    }
 
-    for (gn in group_names) {
+    for (i in seq(counter)) {
         for (v in variables) {
-            label <- ifelse(is.null(gn), sprintf("dydx_%s", v), sprintf("dydx_%s_%s", v, gn))
+            label <- ifelse(is.null(group_names), sprintf("dydx_%s", v), sprintf("dydx_%s_%s", v, gn))
             tmp <- get_dydx(model = model, 
                             fitfram = fitfram,
                             variable = v,
-                            group_name = gn)
+                            group_name = group_names[i])
             # strip attributes (multinom looks like a mess otherwise)
             tmp <- as.numeric(tmp)
             fitfram[[label]] <- tmp
         }
         if (!is.null(variance)) {
             for (v in variables) {
-                label <- ifelse(is.null(gn), sprintf("se_dydx_%s", v), sprintf("dydx_%s_%s", v, gn))
+                label <- ifelse(is.null(group_names), sprintf("se_dydx_%s", v), sprintf("dydx_%s_%s", v, gn))
                 tmp <- get_dydx_se(model = model, 
                                    fitfram = fitfram,
                                    variable = v,
                                    variance = variance,
-                                   group_name = gn)
+                                   group_name = group_names[i])
                 # strip attributes (multinom looks like a mess otherwise)
                 fitfram[[label]] <- tmp
             }
