@@ -47,3 +47,11 @@ test_that("fixest", {
     res = mfx(mod, fitfram = counterfactuals)
     expect_s3_class(res, "data.frame")
 })
+
+test_that("loess", {
+    mod <- loess(mpg ~ wt, data = mtcars)
+    expect_error(mfx(mod), regexp = "not supported")
+    res <- mfx(mod, variance = NULL)
+    mar <- data.frame(margins(mod))
+    expect_true(cor(as.numeric(mar$dydx_wt), res$dydx_wt, use = "complete.obs") > .99999)
+})

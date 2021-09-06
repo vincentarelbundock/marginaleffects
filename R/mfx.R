@@ -32,5 +32,3 @@ mfx <- function(model, variables = NULL, fitfram = NULL, variance = vcov(model))
     }
     return(fitfram)
 }
-
-
