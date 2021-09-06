@@ -22,7 +22,7 @@ This is just a proof of concept. Please do not use in serious applications.
 
 You can install the released version of fastmargins from Github:
 
-```{r. eval=FALSE}
+```{r, eval=FALSE}
 remotes::install_github("vincentarelbundock/fastmargins")
 ```
 
