@@ -26,17 +26,45 @@ model with interaction terms:
 ``` r
 library(fastmargins)
 
-N <- 1e3
+N <- 1000
 dat <- data.frame(
     x2 = rnorm(N),
     x1 = rnorm(N),
     x3 = rnorm(N),
     x4 = rnorm(N),
     e = rnorm(N))
-dat$y <- as.numeric(plogis(
-    dat$x1 + dat$x2 + dat$x3 + dat$x4 + dat$x3 * dat$x4 + dat$e) > 0.5)
+dat$y <- rbinom(N, 1, plogis(
+    dat$x1 + dat$x2 + dat$x3 + dat$x4 + dat$x3 * dat$x4))
 
 mod <- glm(y ~ x1 + x2 + x3 * x4, data = dat, family = binomial)
+
+summary(mod)
+#> 
+#> Call:
+#> glm(formula = y ~ x1 + x2 + x3 * x4, family = binomial, data = dat)
+#> 
+#> Deviance Residuals: 
+#>     Min       1Q   Median       3Q      Max  
+#> -2.7271  -0.7051  -0.1885   0.7260   2.5893  
+#> 
+#> Coefficients:
+#>             Estimate Std. Error z value Pr(>|z|)    
+#> (Intercept)  0.02079    0.08480   0.245    0.806    
+#> x1           0.97229    0.09385  10.361  < 2e-16 ***
+#> x2           1.04582    0.09808  10.663  < 2e-16 ***
+#> x3           0.96172    0.10191   9.437  < 2e-16 ***
+#> x4           1.10058    0.10271  10.715  < 2e-16 ***
+#> x3:x4        0.93853    0.11970   7.841 4.49e-15 ***
+#> ---
+#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> 
+#> (Dispersion parameter for binomial family taken to be 1)
+#> 
+#>     Null deviance: 1382.93  on 999  degrees of freedom
+#> Residual deviance:  885.63  on 994  degrees of freedom
+#> AIC: 897.63
+#> 
+#> Number of Fisher Scoring iterations: 5
 ```
 
 Compute unit-level marginal effects and variances:
@@ -44,20 +72,20 @@ Compute unit-level marginal effects and variances:
 ``` r
 res <- mfx(mod)
 head(res)
-#>   y         x1         x2          x3         x4    dydx_x1    dydx_x2
-#> 1 0 -0.4314039  0.7843935 -0.46414782 -0.3344323 0.39577379 0.35078843
-#> 2 1 -0.4727572 -0.1597447 -0.47979869  1.2051817 0.37059818 0.32847403
-#> 3 1  0.8935453 -1.3832461  0.51524443  1.4268085 0.04016064 0.03559619
-#> 4 1 -0.9882923  0.1713650  0.14651325  2.0666091 0.10482873 0.09291437
-#> 5 0  1.0550042 -1.6421494  0.79159637 -0.5750850 0.31141112 0.27601403
-#> 6 0 -1.4645218  0.1530650  0.01203903  0.5836429 0.29817746 0.26428451
-#>      dydx_x3    dydx_x4 se_dydx_x1 se_dydx_x2 se_dydx_x3 se_dydx_x4
-#> 1 0.20951826 0.19436352 0.03081659 0.03492218 0.02873504 0.02740292
-#> 2 0.75213335 0.17634776 0.03130465 0.03120440 0.06137066 0.03388806
-#> 3 0.09016752 0.05804355 0.01186115 0.01199401 0.02537074 0.01571310
-#> 4 0.30068804 0.11385126 0.02949572 0.02395656 0.07153288 0.02334606
-#> 5 0.09183942 0.53395731 0.05017214 0.02776799 0.03165472 0.06328442
-#> 6 0.42457807 0.28477564 0.02075781 0.03373799 0.05354220 0.04059182
+#>   y         x1         x2          x3         x4     dydx_x1     dydx_x2
+#> 1 1  0.1776867 -0.1935552  2.28200192  1.3943948 0.001185699 0.001275361
+#> 2 1  1.1069474 -0.1839420  0.79333923  0.4618769 0.067015804 0.072083551
+#> 3 0 -0.4001303 -0.2084529  0.14129243 -1.3696638 0.091622980 0.098552121
+#> 4 1 -1.1236975  2.3575163  0.05344117 -0.1445274 0.165608911 0.178132475
+#> 5 1 -0.3704111 -0.5638635 -1.44639133 -0.1851436 0.082353079 0.088581176
+#> 6 1  1.4520958  0.4076593 -0.78185882 -1.7198915 0.229793254 0.247170823
+#>        dydx_x3      dydx_x4   se_dydx_x1  se_dydx_x2  se_dydx_x3  se_dydx_x4
+#> 1  0.002768543  0.003953501 0.0006849124 0.000746884 0.001405126 0.002024267
+#> 2  0.096163398  0.127173302 0.0091808339 0.013343543 0.012567699 0.017452972
+#> 3 -0.030506801  0.116209174 0.0117693410 0.013236280 0.014358391 0.009561125
+#> 4  0.140704484  0.196001678 0.0292979360 0.013428674 0.022946135 0.029632146
+#> 5  0.066739234 -0.021758446 0.0119928247 0.011765892 0.006236587 0.014677421
+#> 6 -0.154204058  0.086686371 0.0196640647 0.025003754 0.041195442 0.030343455
 ```
 
 The results are obtained using a slightly different numerical
@@ -84,6 +112,16 @@ cor(mar$SE_dydx_x3, res$se_dydx_x3)
 
 ``` r
 library(tidyverse)
+#> Warning in system("timedatectl", intern = TRUE): running command 'timedatectl'
+#> had status 1
+#> ── Attaching packages ─────────────────────────────────────────────────────────────────────────────── tidyverse 1.3.1 ──
+#> ✔ tibble  3.1.3     ✔ dplyr   1.0.7
+#> ✔ tidyr   1.1.3     ✔ stringr 1.4.0
+#> ✔ readr   2.0.0     ✔ forcats 0.5.1
+#> ✔ purrr   0.3.4
+#> ── Conflicts ────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+#> ✖ dplyr::filter() masks stats::filter()
+#> ✖ dplyr::lag()    masks stats::lag()
 
 lm(mpg ~ hp * wt, data = mtcars) |>
     mfx() |> 
@@ -122,8 +160,8 @@ b1
 #> # A tibble: 2 × 6
 #>   expression                          min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                     <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 margins(mod, unit_ses = TRUE)     50.3s    50.3s    0.0199     947MB     1.29
-#> 2 mfx(mod, variance = vcov(mod))  118.4ms  119.5ms    8.20      12.6MB     0
+#> 1 margins(mod, unit_ses = TRUE)     50.8s    50.8s    0.0197   946.5MB     1.79
+#> 2 mfx(mod, variance = vcov(mod))  118.3ms    119ms    8.40      12.6MB     0
 ```
 
 ## Marginal effects only
@@ -141,6 +179,6 @@ b2
 #> # A tibble: 2 × 6
 #>   expression                          min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                     <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 margins(mod, unit_ses = FALSE)  101.3ms  101.5ms      9.33   22.96MB        0
-#> 2 mfx(mod, variance = NULL)        65.2ms   67.7ms     14.7     1.74MB        0
+#> 1 margins(mod, unit_ses = FALSE)  123.1ms    141ms      7.09   22.51MB     3.55
+#> 2 mfx(mod, variance = NULL)        62.9ms   63.6ms     15.5     1.67MB     0
 ```

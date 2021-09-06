@@ -35,17 +35,19 @@ Load the library, simulate data, and estimate a logistic regression model with i
 ```{r}
 library(fastmargins)
 
-N <- 1e3
+N <- 1000
 dat <- data.frame(
     x2 = rnorm(N),
     x1 = rnorm(N),
     x3 = rnorm(N),
     x4 = rnorm(N),
     e = rnorm(N))
-dat$y <- as.numeric(plogis(
-    dat$x1 + dat$x2 + dat$x3 + dat$x4 + dat$x3 * dat$x4 + dat$e) > 0.5)
+dat$y <- rbinom(N, 1, plogis(
+    dat$x1 + dat$x2 + dat$x3 + dat$x4 + dat$x3 * dat$x4))
 
 mod <- glm(y ~ x1 + x2 + x3 * x4, data = dat, family = binomial)
+
+summary(mod)
 ```
 
 Compute unit-level marginal effects and variances:
@@ -72,6 +74,7 @@ cor(mar$SE_dydx_x3, res$se_dydx_x3)
 ## Conditional marginal effects with `ggplot2`
 
 ```{r, echo = FALSE}
+library(ggplot2)
 theme_set(theme_minimal())
 ```
 
