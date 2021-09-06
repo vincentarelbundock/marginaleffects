@@ -14,17 +14,81 @@ knitr::opts_chunk$set(
 )
 ```
 
-# fastmfx
+# Proof of concept
 
-<!-- badges: start -->
-<!-- badges: end -->
+This is just a proof of concept. Please do not use in serious applications.
 
-The goal of fastmfx is to ...
-
-## Installation
+# Installation
 
 You can install the released version of fastmfx from Github:
 
-``` r
+```{r. eval=FALSE}
 remotes::install_github("vincentarelbundock/fastmfx")
+```
+
+# Example
+
+Load the library, simulate data, and estimate a logistic regression model with interaction terms:
+
+```{r}
+library(fastmfx)
+
+N <- 1e3
+dat <- data.frame(
+    x2 = rnorm(N),
+    x1 = rnorm(N),
+    x3 = rnorm(N),
+    x4 = rnorm(N),
+    e = rnorm(N))
+dat$y <- as.numeric(plogis(
+    dat$x1 + dat$x2 + dat$x3 + dat$x4 + dat$x3 * dat$x4 + dat$e) > 0.5)
+
+mod <- glm(y ~ x1 + x2 + x3 * x4, data = dat, family = binomial)
+```
+
+Compute unit-level marginal effects and variances:
+
+```{r}
+res <- mfx(mod)
+head(res)
+```
+
+The results are obtained using a slightly different numerical approximation strategy than the one used in `margins`, so they will differ a bit. However, they are essentially indistinguishable:
+
+```{r}
+library(margins)
+
+mar <- margins(mod, unit_ses = TRUE) |> data.frame()
+
+cor(mar$dydx_x1, res$dydx_x1)
+cor(mar$SE_dydx_x1, res$se_dydx_x1)
+
+cor(mar$dydx_x3, res$dydx_x3)
+cor(mar$SE_dydx_x3, res$se_dydx_x3)
+```
+
+# Benchmarks
+
+Unit-level standard errors can be expensive to compute, so we run the benchmarks with and without standard errors.
+
+# Benchmarks: Marginal effects + Variances
+
+```{r}
+b1 = bench::mark(
+    margins(mod, unit_ses = TRUE),
+    mfx(mod, variance = vcov(mod)),
+    check = FALSE,
+    max_iterations = 3)
+b1
+```
+
+# Benchmarks: Marginal effects only
+
+```{r}
+b2 = bench::mark(
+    margins(mod, unit_ses = FALSE),
+    mfx(mod, variance = NULL),
+    check = FALSE,
+    max_iterations = 3)
+b2
 ```
