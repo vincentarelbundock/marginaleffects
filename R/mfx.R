@@ -14,6 +14,7 @@ mfx <- function(model,
                 group_names = NULL,
                 variance = vcov(model)) {
 
+    # sanity checks and preparation
     if (is.null(fitfram)) {
         fitfram <- insight::get_data(model)
     }
@@ -22,6 +23,14 @@ mfx <- function(model,
         variables <- insight::find_variables(mod)$conditional
     }
 
+    checkmate::assert_data_frame(fitfram)
+    checkmate::assert_true(all(variables %in% colnames(fitfram)))
+
+    if (!all(sapply(fitfram[, variables, drop = FALSE], is.numeric))) {
+        stop("All the variables listed in the `variables` argument must be numeric.")
+    }
+
+    # computation
     if (is.null(group_names)) {
         counter <- 1
     } else {
