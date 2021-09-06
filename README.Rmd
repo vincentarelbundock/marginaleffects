@@ -26,7 +26,9 @@ You can install the released version of fastmargins from Github:
 remotes::install_github("vincentarelbundock/fastmargins")
 ```
 
-# Example
+# Examples
+
+## Logit regression with a multiplicative interaction term
 
 Load the library, simulate data, and estimate a logistic regression model with interaction terms:
 
@@ -67,11 +69,34 @@ cor(mar$dydx_x3, res$dydx_x3)
 cor(mar$SE_dydx_x3, res$se_dydx_x3)
 ```
 
+## Conditional marginal effects with `ggplot2`
+
+```{r, echo = FALSE}
+theme_set(theme_minimal())
+```
+
+```{r}
+library(tidyverse)
+
+lm(mpg ~ hp * wt, data = mtcars) |>
+    mfx() |> 
+    mutate(conf.low = dydx_hp - se_dydx_hp * 1.96,
+           conf.high = dydx_hp + se_dydx_hp * 1.96) |>
+    ggplot(aes(x = wt, 
+               y = dydx_hp, 
+               ymin = conf.low, 
+               ymax = conf.high)) +
+    geom_ribbon(alpha = .1) +
+    geom_line()
+```
+
 # Benchmarks
 
-Unit-level standard errors can be expensive to compute, so we run the benchmarks with and without standard errors.
+Here are a couple naive benchmarks to compare the speed of computation with the `fastmargins` and `margins` packages. Since unit-level standard errors can be expensive to compute, we run the benchmarks with and without standard errors.
 
-# Benchmarks: Marginal effects + Variances
+## Marginal effects and standard errors (unit-level)
+
+In this naive benchmark, computing marginal effects with their unit-level standard errors is over 300x faster.
 
 ```{r}
 b1 = bench::mark(
@@ -82,7 +107,9 @@ b1 = bench::mark(
 b1
 ```
 
-# Benchmarks: Marginal effects only
+## Marginal effects only
+
+In this naive benchmark, computing marginal effects *without* their unit-level standard errors is over 40% faster.
 
 ```{r}
 b2 = bench::mark(
