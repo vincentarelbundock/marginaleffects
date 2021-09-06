@@ -30,7 +30,9 @@ mfx <- function(model,
 
     for (i in seq(counter)) {
         for (v in variables) {
-            label <- ifelse(is.null(group_names), sprintf("dydx_%s", v), sprintf("dydx_%s_%s", v, gn))
+            label <- ifelse(is.null(group_names), 
+                            sprintf("dydx_%s", v), 
+                            sprintf("dydx_%s_%s", v, group_names[i]))
             tmp <- get_dydx(model = model, 
                             fitfram = fitfram,
                             variable = v,
@@ -41,7 +43,9 @@ mfx <- function(model,
         }
         if (!is.null(variance)) {
             for (v in variables) {
-                label <- ifelse(is.null(group_names), sprintf("se_dydx_%s", v), sprintf("dydx_%s_%s", v, gn))
+                label <- ifelse(is.null(group_names), 
+                                sprintf("se_dydx_%s", v), 
+                                sprintf("dydx_%s_%s", v, group_names[i]))
                 tmp <- get_dydx_se(model = model, 
                                    fitfram = fitfram,
                                    variable = v,

@@ -70,6 +70,8 @@ test_that("betareg", {
 })
 
 test_that("multinom", {
+    skip_if_not_installed("nnet")
+    library(nnet)
     tmp <- mtcars
     tmp$cyl <- as.factor(tmp$cyl)
     void <- capture.output( mod <- 
@@ -80,4 +82,18 @@ test_that("multinom", {
     # TODO: `margins` appears to break with numeric regressors but not factors
     # here it's the opposite: we don't support factors.
     expect_error(margins(mod))
+})
+
+test_that("polr", {
+    skip_if_not_installed("MASS")
+    library(MASS)
+    tmp <- mtcars
+    tmp$carb <- as.factor(tmp$carb)
+    mod <- polr(carb ~ hp + am + mpg, data = tmp) 
+    res <- mfx(mod, group_names = c("1", "2", "3", "4", "6"), variance = NULL)
+    expect_s3_class(res, "data.frame")
+    expect_equal(dim(res), c(32, 19))
+    # TODO: not supported yet
+    expect_error(mfx(mod, variance = NULL), regexp = "must specify")
+    expect_error(mfx(mod, group_names = "1"), regexp = "not supported")
 })
