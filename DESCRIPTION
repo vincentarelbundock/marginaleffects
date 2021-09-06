@@ -2,11 +2,11 @@ Package: fastmfx
 Title: What the Package Does (One Line, Title Case)
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Vincent",
+           family = "Arel-Bundock",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+           email = "vincent.arel-bundock@umontreal.ca",
+           comment = c(ORCID = "0000-0003-2042-7063"))
 Description: What the package does (one paragraph).
 License: GPL (>= 3)
 Encoding: UTF-8
@@ -17,5 +17,7 @@ Imports:
     insight,
     numDeriv
 Suggests: 
-    testthat,
+    testthat (>= 3.0.0),
+    bench,
     margins
+Config/testthat/edition: 3
