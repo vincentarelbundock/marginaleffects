@@ -1,15 +1,16 @@
 library(margins)
+library(fastmargins)
 library(ggeffects)
 
-test_that("logit model gives same results in `fastmfx` and `margins`", {
+test_that("logit model gives same results in `fastmargins` and `margins`", {
     N <- 1e2
     dat <- data.frame(x1 = rnorm(N),
                       x2 = rnorm(N),
                       x3 = rnorm(N),
                       x4 = rnorm(N),
                       e = rnorm(N))
-    dat$y <- as.numeric(plogis(dat$x1 + dat$x2 + dat$x3 + dat$x4 + 
-                              dat$x3 * dat$x4 + dat$e) > 0.5)
+    dat$y <- as.numeric(plogis(
+        dat$x1 + dat$x2 + dat$x3 + dat$x4 + dat$x3 * dat$x4 + dat$e) > 0.5)
     mod <- glm(y ~ x1 + x2 + x3 * x4, data = dat, family = binomial)
     unknown <- mfx(mod, variance = vcov(mod))
     known <- data.frame(margins(mod, unit_ses = TRUE))
@@ -22,9 +23,27 @@ test_that("logit model gives same results in `fastmfx` and `margins`", {
 test_that("linear regression with interactions", {
     counterfactuals <- expand.grid(hp = 100, am = 0:1)
     mod <- lm(mpg ~ hp * am, data = mtcars)
-    res <- mfx(mod, variable = "hp", fitfram = dat)
+    res <- mfx(mod, variable = "hp", fitfram = counterfactuals)
     mar <- margins(mod, variable = "hp", data = counterfactuals, unit_ses = TRUE)
     mar <- data.frame(mar)
     expect_equal(res$dydx_hp, as.numeric(mar$dydx_hp))
     expect_equal(res$se_dydx_hp, as.numeric(mar$SE_dydx_hp), tolerance = 1e-4)
+})
+
+test_that("fixest", {
+    skip_if_not_installed("fixest")
+    library("fixest")
+
+    # logit is identical
+    counterfactuals <- data.frame(hp = 110, wt = c(min(mtcars$wt), max(mtcars$wt)), cyl = 4)
+    mod1 = feglm(am ~ hp * wt, data = mtcars, family = "binomial")
+    mod2 = glm(am ~ hp * wt, data = mtcars, family = "binomial")
+    expect_equal(mfx(mod1, fitfram = counterfactuals),
+                 mfx(mod2, fitfram = counterfactuals),
+                 tolerance = 1e-3)
+
+    # TODO: this only checks if it outputs a data.frame, not if the results are correct
+    mod = feglm(am ~ hp * wt | cyl, data = mtcars, family = "binomial")
+    res = mfx(mod, fitfram = counterfactuals)
+    expect_s3_class(res, "data.frame")
 })
