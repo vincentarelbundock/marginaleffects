@@ -26,7 +26,7 @@ get_dydx_se.glm <- function(model,
                             ...) {
     model_tmp <- model
     inner <- function(x) {
-        model_tmp$coefficients <- x
+        model_tmp <- reset_coefs(model_tmp, x)
         marginalfx <- get_dydx(model_tmp, 
                                fitfram = fitfram, 
                                variable = variable)
@@ -38,5 +38,3 @@ get_dydx_se.glm <- function(model,
     out <- se_from_J_V(J, variance)
     return(out)
 }
-
-

@@ -8,7 +8,7 @@ get_dydx_se.loess <- function(model,
                               numDeriv_method = "simple", 
                               ...) {
     if (!is.null(variance)) {
-        stop("The `variance` argument is not supported for models of type `loess`. It must be `NULL`.")
+        stop("The `variance` argument is not supported for models of class `loess`. The `variance` argument must be `NULL`.")
     }
     get_dydx.glm(model = model,
                  fitfram = fitfram,
