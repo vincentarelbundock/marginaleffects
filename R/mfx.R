@@ -20,7 +20,7 @@ mfx <- function(model,
     }
 
     if (is.null(variables)) {
-        variables <- insight::find_variables(mod)$conditional
+        variables <- insight::find_variables(model)$conditional
     }
 
     checkmate::assert_data_frame(fitfram)
