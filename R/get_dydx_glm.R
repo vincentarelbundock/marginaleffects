@@ -10,6 +10,8 @@ get_dydx.glm <- function(model,
         pred <- predict(model, 
                         newdata = fitfram_tmp, 
                         type = prediction_type)
+        # predict(survey::svyglm) produces a vector with weird attributes
+        pred <- as.numeric(pred)
         return(pred)
     }
     out <- numDeriv::grad(func = inner, 
