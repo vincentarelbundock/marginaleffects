@@ -2,10 +2,14 @@ get_dydx.multinom <- function(
     model, 
     fitfram, 
     variable, 
-    group_name,
+    group_name = NULL,
     prediction_type = "probs",
     numDeriv_method = "simple",
     ...) {
+
+    if (is.null(group_name)) {
+        stop('You must specify the `group_names` for which to calculate marginal effects. These names are typically the factor levels of the response variable.')
+    }
 
     if (prediction_type != "probs") {
         stop('The only `prediction_type` supported for models of class `multinom` is `"probs"`.')
@@ -35,7 +39,9 @@ get_dydx_se.multinom <- function(model,
                                  variance, 
                                  numDeriv_method = "simple", 
                                  ...) {
+
     stop("Variance estimates for models of class `multinom` are not supported yet. Please set `variance=NULL`")
+
     model_tmp <- model
     inner <- function(x) {
         model_tmp <- reset_coefs(model_tmp, x)
