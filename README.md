@@ -1,25 +1,14 @@
----
-output: github_document
-title: "fastmfx: Fast Marginal Effects"
----
+fastmfx: Fast Marginal Effects
+================
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.path = "man/figures/README-",
-  out.width = "100%"
-)
-```
 
 # fastmfx
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of fastmfx is to ...
+The goal of fastmfx is to …
 
 ## Installation
 
