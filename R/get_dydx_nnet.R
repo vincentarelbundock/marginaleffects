@@ -1,3 +1,5 @@
+#' @include get_dydx_stats.R
+
 get_dydx.multinom <- function(
     model, 
     fitfram, 
