@@ -1,19 +1,29 @@
-get_dydx.glm <- function(model, fitfram, variable, ...) {
+get_dydx.glm <- function(model, 
+                         fitfram, 
+                         variable, 
+                         prediction_type = "response",
+                         numDeriv_method = "simple",
+                         ...) {
     fitfram_tmp <- fitfram
     inner <- function(x) {
         fitfram_tmp[[variable]] <- x
         pred <- predict(model, 
                         newdata = fitfram_tmp, 
-                        type = "response")
+                        type = prediction_type)
         return(pred)
     }
     out <- numDeriv::grad(func = inner, 
                           x = fitfram[[variable]], 
-                          method = "simple")
+                          method = numDeriv_method)
     return(out)
 }
 
-get_dydx_se.glm <- function(model, fitfram, variable, variance, ...) {
+get_dydx_se.glm <- function(model, 
+                            fitfram, 
+                            variable, 
+                            variance, 
+                            numDeriv_method = "simple", 
+                            ...) {
     model_tmp <- model
     inner <- function(x) {
         model_tmp$coefficients <- x
@@ -24,12 +34,9 @@ get_dydx_se.glm <- function(model, fitfram, variable, variance, ...) {
     }
     J <- numDeriv::jacobian(func = inner, 
                             x = coef(model), 
-                            method = "simple")
-    # Var(dydx) = J Var(beta) J'
-    # reaches memory limit, so we only get the diagonal
-    # computation trick: https://stackoverflow.com/a/42569902/342331
-    A <- J %*% variance
-    V <- colSums(t(A) * t(J))
-    out <- sqrt(V)
+                            method = numDeriv_method)
+    out <- se_from_J_V(J, variance)
     return(out)
 }
+
+

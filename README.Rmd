@@ -1,6 +1,6 @@
 ---
 output: github_document
-title: "fastmfx: Fast Marginal Effects"
+title: "fastmargins: Fast Marginal Effects"
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -20,10 +20,10 @@ This is just a proof of concept. Please do not use in serious applications.
 
 # Installation
 
-You can install the released version of fastmfx from Github:
+You can install the released version of fastmargins from Github:
 
 ```{r. eval=FALSE}
-remotes::install_github("vincentarelbundock/fastmfx")
+remotes::install_github("vincentarelbundock/fastmargins")
 ```
 
 # Example
@@ -31,7 +31,7 @@ remotes::install_github("vincentarelbundock/fastmfx")
 Load the library, simulate data, and estimate a logistic regression model with interaction terms:
 
 ```{r}
-library(fastmfx)
+library(fastmargins)
 
 N <- 1e3
 dat <- data.frame(

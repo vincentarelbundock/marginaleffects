@@ -1,4 +1,4 @@
-Package: fastmfx
+Package: fastmargins
 Title: What the Package Does (One Line, Title Case)
 Version: 0.0.0.9000
 Authors@R: 
@@ -17,7 +17,9 @@ Imports:
     insight,
     numDeriv
 Suggests: 
+    margins,
     testthat (>= 3.0.0),
     bench,
-    margins
+    fixest,
+    ggeffects
 Config/testthat/edition: 3

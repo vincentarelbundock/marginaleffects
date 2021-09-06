@@ -1,4 +1,4 @@
 library(testthat)
-library(fastmfx)
+library(fastmargins)
 
-test_check("fastmfx")
+test_check("fastmargins")
