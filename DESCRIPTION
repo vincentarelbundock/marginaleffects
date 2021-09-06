@@ -25,8 +25,10 @@ Suggests:
 Config/testthat/edition: 3
 Collate: 
     'get_dydx_glm.R'
+    'get_dydx_betareg.R'
     'get_dydx_fixest.R'
     'get_dydx_lm.R'
     'get_dydx_loess.R'
     'mfx.R'
+    'reset_coefs.R'
     'se_from_J_V.R'

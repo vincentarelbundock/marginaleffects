@@ -2,7 +2,7 @@ library(margins)
 library(fastmargins)
 library(ggeffects)
 
-test_that("logit model gives same results in `fastmargins` and `margins`", {
+test_that("glm", {
     N <- 1e2
     dat <- data.frame(x1 = rnorm(N),
                       x2 = rnorm(N),
@@ -20,7 +20,7 @@ test_that("logit model gives same results in `fastmargins` and `margins`", {
     expect_true(cor(unknown$se_dydx_x4, known$SE_dydx_x4) > 0.999)
 })
 
-test_that("linear regression with interactions", {
+test_that("lm with interactions", {
     counterfactuals <- expand.grid(hp = 100, am = 0:1)
     mod <- lm(mpg ~ hp * am, data = mtcars)
     res <- mfx(mod, variable = "hp", fitfram = counterfactuals)
@@ -54,4 +54,17 @@ test_that("loess", {
     res <- mfx(mod, variance = NULL)
     mar <- data.frame(margins(mod))
     expect_true(cor(as.numeric(mar$dydx_wt), res$dydx_wt, use = "complete.obs") > .99999)
+})
+
+test_that("betareg", {
+    skip_if_not_installed("betareg")
+    library(betareg)
+    data("GasolineYield", package = "betareg")
+    mod <- betareg::betareg(yield ~ batch + temp, data = GasolineYield)
+    suppressWarnings({
+        res <- mfx(mod, variables = "temp", variance = NULL)
+        mar <- data.frame(margins(mod, unit_ses = FALSE))
+    })
+    expect_true(cor(as.numeric(mar$temp), res$temp, use = "complete.obs") > .99999)
+    # TODO: variance does not work for betareg objects
 })
