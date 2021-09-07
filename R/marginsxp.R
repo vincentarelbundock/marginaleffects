@@ -1,6 +1,6 @@
 #' compute marginal effects estimates using numerical derivatives
 #' @export
-mfx <- function(model, 
+marginsxp <- function(model, 
                 newdata = NULL, 
                 variables = NULL, 
                 variance = try(stats::vcov(model), silent = TRUE),

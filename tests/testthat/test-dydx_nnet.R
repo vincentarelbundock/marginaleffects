@@ -8,7 +8,7 @@ test_that("multinom", {
     void <- capture.output( mod <- 
         nnet::multinom(cyl ~ hp + am + mpg, data = tmp, quiet = true))
 
-    res <- mfx(mod, 
+    res <- marginsxp(mod, 
                variance = NULL,
                prediction_type = "probs")
     expect_s3_class(res, "data.frame")

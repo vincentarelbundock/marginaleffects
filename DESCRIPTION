@@ -1,4 +1,4 @@
-Package: fastmargins
+Package: marginsxp
 Title: What the Package Does (One Line, Title Case)
 Version: 0.0.0.9000
 Authors@R: 
@@ -33,6 +33,7 @@ Suggests:
     survey
 Config/testthat/edition: 3
 Collate: 
+    'counterfactual.R'
     'get_dydx.R'
     'get_dydx_stats.R'
     'get_dydx_nnet.R'
@@ -43,7 +44,7 @@ Collate:
     'get_dydx_lme4.R'
     'get_dydx_ordinal.R'
     'get_dydx_survey.R'
-    'mfx.R'
+    'marginsxp.R'
     'reset_coefs.R'
     'sanity.R'
     'se_from_J_V.R'
