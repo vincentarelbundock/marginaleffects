@@ -33,6 +33,7 @@ Suggests:
     survey
 Config/testthat/edition: 3
 Collate: 
+    'aaa_median_or_mode.R'
     'counterfactual.R'
     'get_dydx.R'
     'get_dydx_stats.R'

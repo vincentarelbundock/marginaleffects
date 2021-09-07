@@ -7,6 +7,7 @@
 marginsxp(
   model,
   newdata = NULL,
+  at = NULL,
   variables = NULL,
   variance = try(stats::vcov(model), silent = TRUE),
   prediction_type = "response",
