@@ -37,7 +37,7 @@ get_jacobian_multinom <- function(model,
 
     model_tmp <- model
     inner <- function(x) {
-        model_tmp <- reset_coefs_multinom(model_tmp, x)
+        model_tmp <- reset_coefs(model_tmp, x)
         g <- get_gradient_multinom(model = model_tmp, 
                                    fitfram = fitfram, 
                                    variable = variable, 
