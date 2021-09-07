@@ -1,17 +1,5 @@
-get_gradient <- function (model, 
-                          fitfram, 
-                          variable, 
-                          prediction_type = "response",
-                          numDeriv_method = "simple") {
-    UseMethod("get_gradient", model)
-}
-
 get_dydx <- function (model, ...) {
     UseMethod("get_dydx", model)
-}
-
-get_dydx_se <- function (model, ...) {
-    UseMethod("get_dydx_se", model)
 }
 
 #' compute marginal effects estimates using numerical derivatives
