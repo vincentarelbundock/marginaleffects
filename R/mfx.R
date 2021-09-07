@@ -1,3 +1,11 @@
+get_gradient <- function (model, 
+                          fitfram, 
+                          variable, 
+                          prediction_type = "response",
+                          numDeriv_method = "simple") {
+    UseMethod("get_gradient", model)
+}
+
 get_dydx <- function (model, ...) {
     UseMethod("get_dydx", model)
 }
@@ -10,60 +18,64 @@ get_dydx_se <- function (model, ...) {
 #' @export
 mfx <- function(model, 
                 variables = NULL, 
-                fitfram = NULL, 
+                newdata = NULL, 
                 group_names = NULL,
-                variance = vcov(model)) {
+                variance = try(stats::vcov(model), silent = TRUE),
+                orientation = "long") {
 
     # sanity checks and preparation
-    if (is.null(fitfram)) {
-        fitfram <- insight::get_data(model)
+    checkmate::assert_choice(orientation, choices = c("long", "wide"))
+    checkmate::assert_character(group_names, null.ok = TRUE)
+
+    if (is.null(newdata)) {
+        newdata <- insight::get_data(model)
     }
 
     if (is.null(variables)) {
         variables <- insight::find_variables(model)$conditional
     }
 
-    checkmate::assert_data_frame(fitfram)
-    checkmate::assert_true(all(variables %in% colnames(fitfram)))
+    checkmate::assert_data_frame(newdata, any.missing = FALSE)
+    checkmate::assert_true(all(variables %in% colnames(newdata)))
 
-    if (!all(sapply(fitfram[, variables, drop = FALSE], is.numeric))) {
+    if (!all(sapply(newdata[, variables, drop = FALSE], is.numeric))) {
         stop("All the variables listed in the `variables` argument must be numeric.")
     }
 
-    # computation
-    if (is.null(group_names)) {
-        counter <- 1
-    } else {
-        counter <- length(group_names)
+    if (!is.null(variance)) {
+        unsupported <- c("lmerMod", "glmerMod", "multinom", "betareg", "polr", "loess")
+        if (any(unsupported %in% class(model))) {
+            stop(sprintf("Variance estimates are not yet supported for objects of class %s. Please set `variance=NULL` to continue.", class(model))[1])
+        }
     }
 
-    for (i in seq(counter)) {
+    # compute and save results in a nested list
+    if (is.null(group_names)) {
+        group_names <- "main"
+    }
+
+    out <- list()
+    for (gn in group_names) {
         for (v in variables) {
-            label <- ifelse(is.null(group_names), 
-                            sprintf("dydx_%s", v), 
-                            sprintf("dydx_%s_%s", v, group_names[i]))
             tmp <- get_dydx(model = model, 
-                            fitfram = fitfram,
+                            fitfram = newdata,
                             variable = v,
-                            group_name = group_names[i])
-            # strip attributes (multinom looks like a mess otherwise)
-            tmp <- as.numeric(tmp)
-            fitfram[[label]] <- tmp
-        }
-        if (!is.null(variance)) {
-            for (v in variables) {
-                label <- ifelse(is.null(group_names), 
-                                sprintf("se_dydx_%s", v), 
-                                sprintf("dydx_%s_%s", v, group_names[i]))
-                tmp <- get_dydx_se(model = model, 
-                                   fitfram = fitfram,
-                                   variable = v,
-                                   variance = variance,
-                                   group_name = group_names[i])
-                # strip attributes (multinom looks like a mess otherwise)
-                fitfram[[label]] <- tmp
+                            variance = variance,
+                            group_name = gn)
+            if (length(group_names) > 1) {
+                tmp$group <- gn
             }
+            tmp$term <- v
+            out <- c(out, list(tmp))
         }
     }
-    return(fitfram)
+
+    # clean output
+    out <- do.call("rbind", out)
+    newdata$rowid <- 1:nrow(newdata)
+    out <- merge(out, newdata, by = "rowid")
+    cols <- intersect(c("rowid", "group", "term", "dydx", "std.error"), colnames(out))
+    cols <- unique(c(cols, colnames(out)))
+    out <- out[, cols]
+    return(out)
 }

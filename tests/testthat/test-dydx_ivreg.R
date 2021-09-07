@@ -1,11 +1,11 @@
+skip_if_not_installed("ivreg")
+
+library("margins")
+
 test_that("ivreg: vs. margins", {
-    skip_if_not_installed("ivreg")
     data(Kmenta, package = "ivreg")
     mod <- ivreg::ivreg(Q ~ P * D | D + F + A, data = Kmenta)
     res <- mfx(mod)
     mar <- data.frame(margins(mod, unit_ses = TRUE))
-    expect_true(cor(res$dydx_P, mar$dydx_P) > 0.999)
-    expect_true(cor(res$dydx_D, mar$dydx_D) > 0.999)
-    expect_true(cor(res$se_dydx_P, mar$SE_dydx_P) > 0.999)
-    expect_true(cor(res$se_dydx_D, mar$SE_dydx_D) > 0.999)
+    fastmargins:::test_against_margins(res, mar, tolerance = .01)
 })    
