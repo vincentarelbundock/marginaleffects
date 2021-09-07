@@ -45,7 +45,7 @@ sanity_dydx_variables <- function(model, newdata, variables) {
     variables_numeric <- variables[idx]
     variables_notnumeric <- variables[!idx]
     if (length(variables_notnumeric) > 0) {
-        msg <- "These variables were ignored because they are not numeric: %s. Specify the `variables` argument manually to silence this warning."
+        msg <- "No marginal effect was computed for these variables because they are not numeric: %s. Specify the `variables` argument manually to silence this warning."
         warning(sprintf(msg, paste(variables_notnumeric, collapse = ", ")))
     }
     variables <- variables_numeric
