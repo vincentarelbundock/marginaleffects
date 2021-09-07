@@ -21,6 +21,21 @@ sanity_dydx_group_names <- function (model) {
 }
 
     
+sanity_dydx_at <- function(model, newdata, at) {
+    if (!is.null(at) && !is.null(newdata)) {
+        stop("The `at` and `newdata` parameters cannot be used simultaneously.")
+    }
+    if (!is.null(at)) {
+        # sanity checks on `at` are conducted in the `counterfactual` function.
+        # This reduces code duplication because that function is useful elsewhere.
+        newdata <- counterfactual(model, at = at)
+        return(newdata)
+    } else {
+        return(newdata)
+    }
+}
+
+
 sanity_dydx_newdata <- function(model, newdata) {
     checkmate::check_data_frame(newdata, 
                                 null.ok = TRUE, 

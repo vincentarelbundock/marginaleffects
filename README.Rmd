@@ -82,26 +82,19 @@ library(ggplot2)
 theme_set(theme_minimal())
 ```
 
-We can use the `newdata` argument to do a "counterfactual" analysis:
+We can use the `newdata` argument to do a "counterfactual" analysis. Here, we create a new dataset with some factor and logical variables. Then, we use the `at` argument to specify counterfactual values that we want to inspect. When a variable is not specified in `at`, its median or mode is automatically selected:
 
 ```{r}
-
-source("R/counterfactual.R")
 tmp <- mtcars
-tmp$gear <- as.factor(tmp$gear)
 tmp$am <- as.logical(tmp$am)
-mod <- lm(mpg ~ hp + drat + gear + am, tmp)
+tmp$gear <- as.factor(tmp$gear)
+mod <- lm(mpg ~ hp * wt + am + gear, data = tmp)
 
-# error
-nd <- counterfactual(mod, 
-                     at = list(gear = "6", am = c(TRUE, FALSE)))
-                    
-# correct
-nd <- counterfactual(mod, 
-                     at = list(gear = 5, am = c(TRUE, FALSE)))
-
-
-marginsxp(mod, newdata = nd) |> head()
+marginsxp(mod, 
+          variables = "hp",
+          at = list(hp = c(100, 110),
+                    gear = c(3, 4),
+                    am = TRUE))
 ```
 
 The nice thing about the `tidy` output format is that we can pipe the output of the `marginsxp` function directly to `ggplot2`:
@@ -109,7 +102,13 @@ The nice thing about the `tidy` output format is that we can pipe the output of 
 ```{r}
 library(tidyverse)
 
-marginsxp(mod, newdata = counterfactuals) |>
+marginsxp(mod, 
+          variables = "hp",
+          at = list(hp = c(100, 110),
+                    gear = c(3, 4),
+                    am = TRUE))
+
+
     mutate(conf.low = dydx - 1.96 * std.error,
            conf.high = dydx + 1.96 * std.error) |>
     ggplot(aes(x = x4, 

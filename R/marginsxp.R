@@ -2,6 +2,7 @@
 #' @export
 marginsxp <- function(model, 
                 newdata = NULL, 
+                at = NULL,
                 variables = NULL, 
                 variance = try(stats::vcov(model), silent = TRUE),
                 prediction_type = "response",
@@ -9,12 +10,14 @@ marginsxp <- function(model,
 
     # sanity checks and preparation
     model <- sanity_dydx_model(model)
+    newdata <- sanity_dydx_at(model, newdata, at)
     newdata <- sanity_dydx_newdata(model, newdata)
     variables <- sanity_dydx_variables(model, newdata, variables)
     variance <- sanity_dydx_variance(model, variance)
     group_names <- sanity_dydx_group_names(model)
     prediction_type <- sanity_dydx_prediction_type(model, prediction_type)
 
+    # computation
     out <- list()
     for (gn in group_names) {
         for (v in variables) {
