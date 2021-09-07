@@ -5,42 +5,17 @@ get_dydx <- function (model, ...) {
 #' compute marginal effects estimates using numerical derivatives
 #' @export
 mfx <- function(model, 
-                variables = NULL, 
                 newdata = NULL, 
-                group_names = NULL,
-                variance = try(stats::vcov(model), silent = TRUE),
-                orientation = "long") {
+                variables = NULL, 
+                variance = try(stats::vcov(model), silent = TRUE)) {
 
     # sanity checks and preparation
-    checkmate::assert_choice(orientation, choices = c("long", "wide"))
-    checkmate::assert_character(group_names, null.ok = TRUE)
-
-    if (is.null(newdata)) {
-        newdata <- insight::get_data(model)
-    }
-
-    if (is.null(variables)) {
-        variables <- insight::find_variables(model)$conditional
-    }
-
-    checkmate::assert_data_frame(newdata, any.missing = FALSE)
+    model <- sanity_dydx_model(model)
+    newdata <- sanity_dydx_newdata(model, newdata)
+    variables <- sanity_dydx_variables(model, variables)
+    variance <- sanity_dydx_variance(model, variance)
+    group_names <- sanity_dydx_group_names(model)
     checkmate::assert_true(all(variables %in% colnames(newdata)))
-
-    if (!all(sapply(newdata[, variables, drop = FALSE], is.numeric))) {
-        stop("All the variables listed in the `variables` argument must be numeric.")
-    }
-
-    if (!is.null(variance)) {
-        unsupported <- c("lmerMod", "glmerMod", "multinom", "betareg", "polr", "loess")
-        if (any(unsupported %in% class(model))) {
-            stop(sprintf("Variance estimates are not yet supported for objects of class %s. Please set `variance=NULL` to continue.", class(model))[1])
-        }
-    }
-
-    # compute and save results in a nested list
-    if (is.null(group_names)) {
-        group_names <- "main"
-    }
 
     out <- list()
     for (gn in group_names) {

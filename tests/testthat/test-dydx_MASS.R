@@ -7,9 +7,9 @@ test_that("polr: test against margins", {
     tmp <- data.frame(mtcars)
     tmp$carb <- as.factor(tmp$carb)
     mod <- MASS::polr(carb ~ hp + am + mpg, data = tmp) 
-
-    res <- mfx(mod, group_names = c("1", "2", "3", "4", "6"), variance = NULL)
+    res <- mfx(mod, variance = NULL)
     mar <- margins(mod)
+
     expect_s3_class(res, "data.frame")
     expect_equal(dim(res), c(480, 8))
 
