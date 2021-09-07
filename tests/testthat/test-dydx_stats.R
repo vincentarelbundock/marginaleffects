@@ -1,4 +1,6 @@
 library("margins")
+library("haven")
+library("data.table")
 
 test_that("glm", {
     set.seed(1024)
@@ -17,6 +19,28 @@ test_that("glm", {
 })
 
 
+test_that("glm vs. Stata", {
+    stata <- readRDS(test_path("stata/stata.rds"))[["stats_glm_01"]]
+    dat <- read_dta(test_path("stata/data/stats_glm_01.dta"))
+    mod <- glm(y ~ x1 * x2, family = binomial, data = dat)
+    mfx <- data.table(marginsxp(mod))
+    ame <- mfx[, list(dydx = mean(dydx), std.error = mean(std.error)), by = "term"]
+    ame <- merge(ame, stata)
+    expect_equal(ame$dydx, ame$dydxstata, tolerance = 0.00001)
+})
+
+
+test_that("lm vs. Stata", {
+    stata <- readRDS(test_path("stata/stata.rds"))[["stats_lm_01"]]
+    dat <- read_dta(test_path("stata/data/stats_lm_01.dta"))
+    mod <- lm(y ~ x1 * x2, data = dat)
+    mfx <- data.table(marginsxp(mod))
+    ame <- mfx[, list(dydx = mean(dydx), std.error = mean(std.error)), by = "term"]
+    ame <- merge(ame, stata)
+    expect_equal(ame$dydx, ame$dydxstata, tolerance = 0.00001)
+})
+
+
 test_that("lm with interactions", {
     counterfactuals <- expand.grid(hp = 100, am = 0:1)
     mod <- lm(mpg ~ hp * am, data = mtcars)
@@ -27,14 +51,14 @@ test_that("lm with interactions", {
 })
 
 
-test_that("TODO: loess vcov error is raised too early to catch", {
+test_that("vcov(loess) does not exist", {
     mod <- loess(mpg ~ wt, data = mtcars)
     expect_error(marginsxp(mod), regexp = "not yet supported")
 })
 
 
 test_that("loess error", {
-    skip("not sure why I get different results for loess")
+    skip("loess produces different results under margins and marginsxp")
     mod <- loess(mpg ~ wt, data = mtcars)
     res <- marginsxp(mod, variance = NULL)
     mar <- data.frame(margins(mod))
