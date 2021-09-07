@@ -2,3 +2,4 @@
 ^README\.Rmd$
 ^README\.html$
 ^\.github$
+^\.here$
