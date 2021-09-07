@@ -1,6 +1,6 @@
 ---
 output: github_document
-title: "marginsxp: Fast Marginal Effects"
+title: "meffects: Fast Marginal Effects"
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -20,10 +20,10 @@ This is just a proof of concept. Please do not use in serious applications.
 
 # Installation
 
-You can install the released version of marginsxp from Github:
+You can install the released version of meffects from Github:
 
 ```{r, eval=FALSE}
-remotes::install_github("vincentarelbundock/marginsxp")
+remotes::install_github("vincentarelbundock/meffects")
 ```
 
 # Examples
@@ -33,7 +33,7 @@ remotes::install_github("vincentarelbundock/marginsxp")
 Load the library, simulate data, and estimate a logistic regression model with interaction terms:
 
 ```{r}
-library(marginsxp)
+library(meffects)
 
 N <- 1000
 dat <- data.frame(
@@ -53,7 +53,7 @@ coef(mod)
 Compute unit-level marginal effects and variances:
 
 ```{r}
-res <- marginsxp(mod)
+res <- meffects(mod)
 head(res)
 ```
 
@@ -90,19 +90,19 @@ tmp$am <- as.logical(tmp$am)
 tmp$gear <- as.factor(tmp$gear)
 mod <- lm(mpg ~ hp * wt + am + gear, data = tmp)
 
-marginsxp(mod, 
+meffects(mod, 
           variables = "hp",
           at = list(hp = c(100, 110),
                     gear = c(3, 4),
                     am = TRUE))
 ```
 
-The nice thing about the `tidy` output format is that we can pipe the output of the `marginsxp` function directly to `ggplot2`:
+The nice thing about the `tidy` output format is that we can pipe the output of the `meffects` function directly to `ggplot2`:
 
 ```{r}
 library(tidyverse)
 
-marginsxp(mod, 
+meffects(mod, 
           variables = "hp",
           at = list(hp = c(100, 110),
                     gear = c(3, 4),
@@ -122,7 +122,7 @@ marginsxp(mod,
 
 # Benchmarks
 
-Here are a couple naive benchmarks to compare the speed of computation with the `marginsxp` and `margins` packages. Since unit-level standard errors can be expensive to compute, we run the benchmarks with and without standard errors.
+Here are a couple naive benchmarks to compare the speed of computation with the `meffects` and `margins` packages. Since unit-level standard errors can be expensive to compute, we run the benchmarks with and without standard errors.
 
 ## Marginal effects and standard errors (unit-level)
 
@@ -131,7 +131,7 @@ In this naive benchmark, computing marginal effects with their unit-level standa
 ```{r}
 b1 = bench::mark(
     margins(mod, unit_ses = TRUE),
-    marginsxp(mod, variance = vcov(mod)),
+    meffects(mod, variance = vcov(mod)),
     check = FALSE,
     max_iterations = 3)
 b1
@@ -144,7 +144,7 @@ In this naive benchmark, computing marginal effects *without* their unit-level s
 ```{r}
 b2 = bench::mark(
     margins(mod, unit_ses = FALSE),
-    marginsxp(mod, variance = NULL),
+    meffects(mod, variance = NULL),
     check = FALSE,
     max_iterations = 3)
 b2

@@ -3,12 +3,12 @@ test_that("`at` with factors and logical", {
     tmp$am <- as.logical(tmp$am)
     tmp$gear <- as.factor(tmp$gear)
     mod <- lm(mpg ~ hp + am + gear, data = tmp)
-    res1 <- marginsxp(mod, 
+    res1 <- meffects(mod, 
                       variables = "hp",
                       at = list(hp = c(100, 110),
                                 gear = c("3", "4"),
                                 am = TRUE))
-    res2 <- marginsxp(mod, 
+    res2 <- meffects(mod, 
                       variables = "hp",
                       at = list(hp = c(100, 110),
                                 gear = c(3, 4),

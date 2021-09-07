@@ -1,6 +1,6 @@
 #' compute marginal effects estimates using numerical derivatives
 #' @export
-marginsxp <- function(model, 
+meffects <- function(model, 
                 newdata = NULL, 
                 at = NULL,
                 variables = NULL, 
