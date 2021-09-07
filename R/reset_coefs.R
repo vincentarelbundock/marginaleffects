@@ -1,3 +1,9 @@
+# To compute the variance of marginal effects we need to take the Jacobian with
+# respect to the model coefficients. These functions manipulate model objects
+# to change the coefficients stored internally, which changes the output of the
+# `predict()` function.
+
+
 ##############################################
 #  copied from `margins` under MIT license  ##
 #  copyright: Thomas J. Leeper 2016-2018    ##
@@ -49,3 +55,21 @@ reset_coefs.merMod <- function(model, coefs) {
 }
 
 reset_coefs.lmerMod <- reset_coefs.merMod
+
+
+###########################################
+#  Below written by Vincent Arel-Bundock  #
+###########################################
+
+#' @export
+reset_coefs.multinom <- function(model, coefs) {
+    # internally, coefficients are held in the `wts` vector, with 0s
+    # interspersed. When transforming that vector to a matrix, we see that the
+    # first row and first column are all zeros. 
+    # NOTE: must use `newdata` in predict otherwise returns stored object.
+    coefs <- matrix(coefs, nrow = model$n[3L] - 1)
+    coefs <- rbind(rep(0, ncol(coefs)), coefs)
+    coefs <- cbind(rep(0, nrow(coefs)), coefs)
+    model$wts <- as.vector(t(coefs))
+    return(model)
+}
