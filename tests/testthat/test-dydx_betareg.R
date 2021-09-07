@@ -6,7 +6,7 @@ test_that("betareg", {
     data("GasolineYield", package = "betareg")
     mod <- betareg::betareg(yield ~ batch + temp, data = GasolineYield)
     suppressWarnings({
-        res <- mfx(mod, variables = "temp", variance = NULL)
+        res <- marginsxp(mod, variables = "temp", variance = NULL)
         mar <- data.frame(margins(mod, unit_ses = FALSE))
     })
     expect_true(cor(as.numeric(mar$temp), res$temp, use = "complete.obs") > .99999)

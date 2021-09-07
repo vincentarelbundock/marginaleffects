@@ -2,7 +2,7 @@ skip_if_not_installed("survey")
 
 library("margins")
 
-test_that("survey: fastmargins vs. margins", {
+test_that("survey: marginsxp vs. margins", {
     data("fpc", package = "survey")
     svyd <- survey::svydesign(weights=~weight, 
                               ids=~psuid, 
@@ -12,7 +12,7 @@ test_that("survey: fastmargins vs. margins", {
                               data=fpc, 
                               nest=TRUE)
     mod <- survey::svyglm(x ~ nh, design = svyd)
-    res <- mfx(mod)
+    res <- marginsxp(mod)
     mar <- data.frame(margins(mod, unit_ses = TRUE))
     # TODO: what explains this mismatch?
     expect_equal(res$dydx, as.numeric(mar$dydx_nh))

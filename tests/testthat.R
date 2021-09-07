@@ -1,5 +1,5 @@
 library(testthat)
-library(fastmargins)
+library(marginsxp)
 library(margins)
 
-test_check("fastmargins")
+test_check("marginsxp")
