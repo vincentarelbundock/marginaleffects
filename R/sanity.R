@@ -1,6 +1,6 @@
 sanity_dydx_model <- function(model) {
-    supported <- c("lm", "glm", "clm", "lmerMod", "glmerMod", "fixest", "polr",
-                   "ivreg", "multinom")
+    supported <- c("lm", "glm", "betareg", "clm", "lmerMod", "loess",
+                   "glmerMod", "fixest", "polr", "ivreg", "multinom")
     if (!any(supported %in% class(model))) {
         msg <- "Models of class %s are not supported. Supported model classes include: %s."
         msg <- sprintf(msg, class(model)[1], paste(supported, paste = ", "))
@@ -11,7 +11,7 @@ sanity_dydx_model <- function(model) {
 
 
 sanity_dydx_group_names <- function (model) {
-    grouped_models <- c("multinom", "polr")
+    group_models <- c("multinom", "polr")
     if (any(group_models %in% class(model))) {
         group_names <- levels(insight::get_response(model))
     } else {
@@ -32,8 +32,7 @@ sanity_dydx_newdata <- function(model, newdata) {
 }
 
 
-sanity_dydx_variables <- function(model, variables) {
-    checkmate::assert_atomic_vector(variables, null.ok = TRUE)
+sanity_dydx_variables <- function(model, newdata, variables) {
     checkmate::assert_character(variables, null.ok = TRUE)
 
     # guess variables
@@ -42,7 +41,7 @@ sanity_dydx_variables <- function(model, variables) {
     }
 
     # subset of numeric variables
-    idx <- sapply(newdata[, variables], is.numeric)
+    idx <- sapply(newdata[, variables, drop = FALSE], is.numeric)
     variables_numeric <- variables[idx]
     variables_notnumeric <- variables[!idx]
     if (length(variables_notnumeric) > 0) {
@@ -57,12 +56,37 @@ sanity_dydx_variables <- function(model, variables) {
 
 sanity_dydx_variance <- function(model, variance) {
     if (!is.null(variance)) {
-        unsupported <- c("lmerMod", "glmerMod", "multinom", "betareg", "polr",
-                         "loess")
+        unsupported <- c("clm", "lmerMod", "glmerMod", "multinom", "betareg",
+                         "polr", "loess")
         msg <- "Variance estimates are not yet supported for objects of class %s. Please set `variance=NULL` to continue."
         if (any(unsupported %in% class(model))) {
             stop(sprintf(msg, class(model))[1])
         }
     }
     return(variance)
+}
+
+
+sanity_dydx_prediction_type <- function(model, prediction_type) {
+    checkmate::assert_character(prediction_type, len = 1, null.ok = FALSE)
+
+    if ("clm" %in% class(model)) {
+        if (prediction_type %in% c("prob", "probs")) {
+            prediction_type <- "prob"
+        } else {
+            warning(sprintf('The only `prediction_type` supported for models of class `%s` is `"probs"`. The value of the argument was adjusted automatically. Modify the argument manually to silence this warning.', class(model)[1]))
+            prediction_type <- "prob"
+        }
+    }
+
+    if (any(c("multinom", "nnet") %in% class(model))) {
+        if(prediction_type %in% c("prob", "probs")) {
+            prediction_type <- "probs"
+        } else {
+            stop(sprintf('The only `prediction_type` supported for models of class `%s` is `"probs"`. The value of the argument was adjusted automatically. Modify the argument manually to silence this warning.', class(model)[1]))
+            prediction_type <- "probs"
+        }
+    }
+
+    return(prediction_type)
 }

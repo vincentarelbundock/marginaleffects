@@ -7,9 +7,20 @@ test_that("ordinal: vs `margins`", {
     tmp <- wine
     tmp$warm <- as.numeric(tmp$temp == "warm")
     mod <- ordinal::clm(rating ~ warm * contact, data = tmp)
-    res <- mfx(mod, variables = "warm", variance = NULL)
+    res <- mfx(mod, 
+               variables = "warm", 
+               variance = NULL,
+               prediction_type = "prob")
     mar <- suppressWarnings(data.frame(margins(mod)))
     expect_true(cor(res$dydx, mar$dydx_warm) > 0.999)
-    expect_error(mfx(mod, variables = "warm"), regexp = "variance")
-    expect_error(mfx(mod, variance = NULL), regexp = "numeric")
+    expect_error(mfx(mod, 
+                     variables = "warm",
+                     prediction_type = "prob"), regexp = "variance")
+    expect_warning(mfx(mod, 
+                     variance = NULL,
+                     variables = "warm"),
+                 regexp = "prediction")
+    expect_warning(mfx(mod, 
+                       variance = NULL,
+                       prediction_type = "probs"), regexp = "numeric")
 })

@@ -8,10 +8,6 @@ get_dydx.clm <- function(model,
                          numDeriv_method = "simple",
                          ...) {
 
-    if (prediction_type != "prob") {
-        stop('The only `prediction_type` supported for models of class `clm` is `"prob"`.')
-    }
-    
     fitfram_tmp <- fitfram
     inner <- function(x) {
         fitfram_tmp[[variable]] <- x
@@ -25,9 +21,6 @@ get_dydx.clm <- function(model,
                         method = numDeriv_method)
     out <- data.frame(rowid = 1:nrow(fitfram), term = variable, dydx = g)
 
-    if (!is.null(variance)) {
-        stop('The `variance` argument is not yet supported for models of class `clm`.')
-    }
 
     # output
     return(out)
