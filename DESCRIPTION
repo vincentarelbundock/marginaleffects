@@ -23,7 +23,7 @@ Suggests:
     testthat (>= 3.0.0),
     bench,
     betareg,
-    data.table,
+    dplyr,
     fixest,
     ggeffects,
     haven,

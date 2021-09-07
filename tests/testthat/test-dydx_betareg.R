@@ -3,7 +3,7 @@ skip_if_not_installed("betareg")
 library("margins")
 library("haven")
 library("betareg")
-library("data.table")
+library("dplyr")
 
 test_that("betareg", {
     data("GasolineYield", package = "betareg")
@@ -20,8 +20,9 @@ test_that("betareg vs. Stata", {
     stata <- readRDS(test_path("stata/stata.rds"))[["betareg_betareg_01"]]
     dat <- read_dta(test_path("stata/data/betareg_betareg_01.dta"))
     mod <- betareg::betareg(yield ~ factor(batch) + temp, data = dat)
-    mfx <- suppressWarnings(data.table(meffects(mod, variance = NULL)))
-    ame <- mfx[, list(dydx = mean(dydx)), by = "term"]
-    ame <- merge(ame, stata)
+    mfx <- suppressWarnings(meffects(mod, variance = NULL)) %>%
+           group_by(term) %>%
+           summarize(dydx = mean(dydx)) %>%
+           inner_join(stata)
     expect_equal(ame$dydx, ame$dydxstata, tolerance = 0.00001)
 })

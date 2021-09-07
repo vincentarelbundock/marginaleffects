@@ -2,7 +2,7 @@ skip_if_not_installed("MASS")
 
 library("margins")
 library("haven")
-library("data.table")
+library("dplyr")
 
 test_that("polr vs. margins", {
     skip("no idea why this fails")
@@ -22,12 +22,12 @@ test_that("polr vs. Stata", {
     stata <- readRDS(test_path("stata/stata.rds"))[["MASS_polr_01"]]
     dat <- read_dta(test_path("stata/data/MASS_polr_01.dta"))
     mod <- MASS::polr(factor(y) ~ x1 + x2, data = dat)
-    mfx <- meffects(mod, 
-                     variance = NULL, 
-                     prediction_type = "probs")
-    mfx <- data.table(mfx)
-    ame <- mfx[, list(dydx = mean(dydx)), by = c("group", "term")][
-               , group := as.numeric(group)]
-    ame <- merge(ame, stata, by = c("group", "term"))
+    ame <- meffects(mod, 
+                    variance = NULL, 
+                    prediction_type = "probs") %>%
+           group_by(group, term) %>%
+           summarize(dydx = mean(dydx)) %>%
+           mutate(group = as.numeric(group)) %>%
+           inner_join(stata, by = c("group", "term"))
     expect_equal(ame$dydx, ame$dydxstata, tolerance = 0.001)
 })
