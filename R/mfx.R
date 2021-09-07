@@ -1,7 +1,3 @@
-get_dydx <- function (model, ...) {
-    UseMethod("get_dydx", model)
-}
-
 #' compute marginal effects estimates using numerical derivatives
 #' @export
 mfx <- function(model, 
