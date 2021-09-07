@@ -1,0 +1,68 @@
+sanity_dydx_model <- function(model) {
+    supported <- c("lm", "glm", "clm", "lmerMod", "glmerMod", "fixest", "polr",
+                   "ivreg", "multinom")
+    if (!any(supported %in% class(model))) {
+        msg <- "Models of class %s are not supported. Supported model classes include: %s."
+        msg <- sprintf(msg, class(model)[1], paste(supported, paste = ", "))
+        stop(msg)
+    }
+    return(model)
+}
+
+
+sanity_dydx_group_names <- function (model) {
+    grouped_models <- c("multinom", "polr")
+    if (any(group_models %in% class(model))) {
+        group_names <- levels(insight::get_response(model))
+    } else {
+        group_names <- "main"
+    }
+    return(group_names)
+}
+
+    
+sanity_dydx_newdata <- function(model, newdata) {
+    checkmate::check_data_frame(newdata, 
+                                null.ok = TRUE, 
+                                any.missing = FALSE)
+    if (is.null(newdata)) {
+        newdata <- insight::get_data(model)
+    }
+    return(newdata)
+}
+
+
+sanity_dydx_variables <- function(model, variables) {
+    checkmate::assert_atomic_vector(variables, null.ok = TRUE)
+    checkmate::assert_character(variables, null.ok = TRUE)
+
+    # guess variables
+    if (is.null(variables)) {
+        variables <- insight::find_variables(model)$conditional
+    }
+
+    # subset of numeric variables
+    idx <- sapply(newdata[, variables], is.numeric)
+    variables_numeric <- variables[idx]
+    variables_notnumeric <- variables[!idx]
+    if (length(variables_notnumeric) > 0) {
+        msg <- "These variables were ignored because they are not numeric: %s. Specify the `variables` argument manually to silence this warning."
+        warning(sprintf(msg, paste(variables_notnumeric, collapse = ", ")))
+    }
+    variables <- variables_numeric
+
+    return(variables)
+}
+
+
+sanity_dydx_variance <- function(model, variance) {
+    if (!is.null(variance)) {
+        unsupported <- c("lmerMod", "glmerMod", "multinom", "betareg", "polr",
+                         "loess")
+        msg <- "Variance estimates are not yet supported for objects of class %s. Please set `variance=NULL` to continue."
+        if (any(unsupported %in% class(model))) {
+            stop(sprintf(msg, class(model))[1])
+        }
+    }
+    return(variance)
+}
