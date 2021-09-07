@@ -3,15 +3,17 @@
 mfx <- function(model, 
                 newdata = NULL, 
                 variables = NULL, 
-                variance = try(stats::vcov(model), silent = TRUE)) {
+                variance = try(stats::vcov(model), silent = TRUE),
+                prediction_type = "response",
+                numDeriv_method = "simple") {
 
     # sanity checks and preparation
     model <- sanity_dydx_model(model)
     newdata <- sanity_dydx_newdata(model, newdata)
-    variables <- sanity_dydx_variables(model, variables)
+    variables <- sanity_dydx_variables(model, newdata, variables)
     variance <- sanity_dydx_variance(model, variance)
     group_names <- sanity_dydx_group_names(model)
-    checkmate::assert_true(all(variables %in% colnames(newdata)))
+    prediction_type <- sanity_dydx_prediction_type(model, prediction_type)
 
     out <- list()
     for (gn in group_names) {
@@ -20,7 +22,9 @@ mfx <- function(model,
                             fitfram = newdata,
                             variable = v,
                             variance = variance,
-                            group_name = gn)
+                            group_name = gn,
+                            prediction_type = prediction_type,
+                            numDeriv_method = numDeriv_method)
             if (length(group_names) > 1) {
                 tmp$group <- gn
             }

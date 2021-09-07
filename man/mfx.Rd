@@ -6,10 +6,11 @@
 \usage{
 mfx(
   model,
+  newdata = NULL,
   variables = NULL,
-  fitfram = NULL,
-  group_names = NULL,
-  variance = vcov(model)
+  variance = try(stats::vcov(model), silent = TRUE),
+  prediction_type = "response",
+  numDeriv_method = "simple"
 )
 }
 \description{

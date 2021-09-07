@@ -32,6 +32,7 @@ Suggests:
     survey
 Config/testthat/edition: 3
 Collate: 
+    'get_dydx.R'
     'get_dydx_stats.R'
     'get_dydx_nnet.R'
     'get_dydx_MASS.R'
@@ -43,5 +44,6 @@ Collate:
     'get_dydx_survey.R'
     'mfx.R'
     'reset_coefs.R'
+    'sanity.R'
     'se_from_J_V.R'
     'test_against_margins.R'

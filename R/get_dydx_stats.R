@@ -13,10 +13,10 @@ get_gradient_glm <- function(model,
         pred <- as.numeric(pred)
         return(pred)
     }
-    out <- numDeriv::grad(func = inner, 
-                          x = fitfram[[variable]], 
-                          method = numDeriv_method)
-    return(out)
+    g <- numDeriv::grad(func = inner, 
+                        x = fitfram[[variable]], 
+                        method = numDeriv_method)
+    return(g)
 }
 
 
