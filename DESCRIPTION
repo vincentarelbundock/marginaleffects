@@ -14,14 +14,22 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Imports: 
+    checkmate,
     insight,
     numDeriv
 Suggests: 
     margins,
     testthat (>= 3.0.0),
     bench,
+    betareg,
     fixest,
-    ggeffects
+    ggeffects,
+    ivreg,
+    lme4,
+    MASS,
+    nnet,
+    ordinal,
+    survey
 Config/testthat/edition: 3
 Collate: 
     'get_dydx_stats.R'
@@ -36,3 +44,4 @@ Collate:
     'mfx.R'
     'reset_coefs.R'
     'se_from_J_V.R'
+    'test_against_margins.R'

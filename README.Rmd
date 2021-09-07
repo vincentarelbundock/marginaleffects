@@ -47,7 +47,7 @@ dat$y <- rbinom(N, 1, plogis(
 
 mod <- glm(y ~ x1 + x2 + x3 * x4, data = dat, family = binomial)
 
-summary(mod)
+coef(mod)
 ```
 
 Compute unit-level marginal effects and variances:
@@ -57,18 +57,22 @@ res <- mfx(mod)
 head(res)
 ```
 
-The results are obtained using a slightly different numerical approximation strategy than the one used in `margins`, so they will differ a bit. However, they are essentially indistinguishable:
+Notice that the results are presented in `tidy` format: each row of the original dataset gets a unique `rowid` value, each unit-level marginal effect appears on a distinct row, and metadata appears neatly in separate columns. This makes it easy to operate on the results programmatically.
+
+We can obtain similar results with the `margins` package, but the two packages use slightly different numerical approximation strategies, so the results will differ very slightly:
 
 ```{r}
 library(margins)
 
-mar <- margins(mod, unit_ses = TRUE) |> data.frame()
+mar <- margins(mod, unit_ses = TRUE)
 
-cor(mar$dydx_x1, res$dydx_x1)
-cor(mar$SE_dydx_x1, res$se_dydx_x1)
+head(data.frame(mar), 2)
 
-cor(mar$dydx_x3, res$dydx_x3)
-cor(mar$SE_dydx_x3, res$se_dydx_x3)
+cor(mar$dydx_x1, res[res$term == "x1", "dydx"])
+cor(mar$SE_dydx_x1, res[res$term == "x1", "std.error"])
+
+cor(mar$dydx_x3, res[res$term == "x3", "dydx"])
+cor(mar$SE_dydx_x3, res[res$term == "x3", "std.error"])
 ```
 
 ## Conditional marginal effects with `ggplot2`
@@ -78,19 +82,34 @@ library(ggplot2)
 theme_set(theme_minimal())
 ```
 
+We can use the `newdata` argument to do a "counterfactual" analysis:o
+
+```{r}
+counterfactuals <- data.frame(
+    x1 = 0,
+    x2 = 0,
+    x3 = 1,
+    x4 = seq(min(dat$x4), max(dat$x4), length.out = 100))
+
+mfx(mod, newdata = counterfactuals) |> head()
+```
+ 
+
+The nice thing about the `tidy` output format is that we can pipe the output of the `mfx` function directly to `ggplot2`:
+
 ```{r}
 library(tidyverse)
 
-lm(mpg ~ hp * wt, data = mtcars) |>
-    mfx() |> 
-    mutate(conf.low = dydx_hp - se_dydx_hp * 1.96,
-           conf.high = dydx_hp + se_dydx_hp * 1.96) |>
-    ggplot(aes(x = wt, 
-               y = dydx_hp, 
+mfx(mod, newdata = counterfactuals) |>
+    mutate(conf.low = dydx - 1.96 * std.error,
+           conf.high = dydx + 1.96 * std.error) |>
+    ggplot(aes(x = x4, 
+               y = dydx, 
                ymin = conf.low, 
                ymax = conf.high)) +
     geom_ribbon(alpha = .1) +
-    geom_line()
+    geom_line() + 
+    facet_wrap(~term)
 ```
 
 # Benchmarks
