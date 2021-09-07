@@ -1,5 +1,5 @@
 library(testthat)
-library(marginsxp)
+library(meffects)
 library(margins)
 
-test_check("marginsxp")
+test_check("meffects")

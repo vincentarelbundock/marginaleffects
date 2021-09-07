@@ -9,20 +9,20 @@ test_that("polr vs. margins", {
     tmp <- data.frame(mtcars)
     tmp$carb <- as.factor(tmp$carb)
     mod <- MASS::polr(carb ~ hp + am + mpg, data = tmp) 
-    res <- marginsxp(mod, variance = NULL)
+    res <- meffects(mod, variance = NULL)
     mar <- margins(mod)
     expect_s3_class(res, "data.frame")
     expect_equal(dim(res), c(480, 8))
     # TODO: not supported yet
-    expect_error(marginsxp(mod, variance = NULL), regexp = "group_name")
-    expect_error(marginsxp(mod, group_names = "1"), regexp = "not yet supported")
+    expect_error(meffects(mod, variance = NULL), regexp = "group_name")
+    expect_error(meffects(mod, group_names = "1"), regexp = "not yet supported")
 })
 
 test_that("polr vs. Stata", {
     stata <- readRDS(test_path("stata/stata.rds"))[["MASS_polr_01"]]
     dat <- read_dta(test_path("stata/data/MASS_polr_01.dta"))
     mod <- MASS::polr(factor(y) ~ x1 + x2, data = dat)
-    mfx <- marginsxp(mod, 
+    mfx <- meffects(mod, 
                      variance = NULL, 
                      prediction_type = "probs")
     mfx <- data.table(mfx)

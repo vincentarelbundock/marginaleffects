@@ -1,6 +1,3 @@
-cd ~/Dropbox/marginsxp_crosscheck
-
-
 * stats::glm
 clear
 use data/stats_glm_01.dta
