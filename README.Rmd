@@ -26,6 +26,33 @@ You can install the released version of meffects from Github:
 remotes::install_github("vincentarelbundock/meffects")
 ```
 
+# Supported models
+
+```{r, echo=FALSE}
+library(tibble)
+library(kableExtra)
+
+tab <- 
+'"Model",           "Effect", "Variance", "Stata comp.", "margins comp.", "Status"
+"stats::lm",        "✓"      , "✓"        , "✓"           , "✓"             ,
+"stats::glm",       "✓"      , "✓"        , "✓"           , "✓"             ,
+"stats::loess",     "✓"      ,          ,             , "✓"             , "Unstable"
+"AER::ivreg",       "✓"      , "✓"        , "✓"           , "✓"             ,
+"betareg::betareg", "✓"      , "✓"        , "✓"           ,               ,
+"fixest::feols",    "✓"      , "✓"        ,             ,               , "Unstable"
+"fixest::feglm",    "✓"      , "✓"        ,             ,               , "Unstable"
+"ivreg::ivreg",     "✓"      , "✓"        , "✓"           , "✓"             , 
+"lme4::lmer",       "✓"      ,          ,             , "✓"             , "Unstable"
+"lme4::glmer",      "✓"      ,          ,             , "✓"             , "Unstable"
+"MASS::polr",       "✓"      ,          , "✓"           ,               , "Unstable"
+"ordinal::clm",     "✓"      , "✓"        ,             , "✓"             , "Unstable"
+"survey::svyglm",   "✓"      , "✓"        ,             , "✓"             , "Unstable"
+"survey::svyglm",   "✓"      , "✓"        ,             , "✓"             , "Unstable"'
+tab <- data.frame(data.table::fread(text = tab))
+kbl(tab) %>% kable_styling()
+```
+
+
 # Examples
 
 ## Logit regression with a multiplicative interaction term
