@@ -82,18 +82,27 @@ library(ggplot2)
 theme_set(theme_minimal())
 ```
 
-We can use the `newdata` argument to do a "counterfactual" analysis:o
+We can use the `newdata` argument to do a "counterfactual" analysis:
 
 ```{r}
-counterfactuals <- data.frame(
-    x1 = 0,
-    x2 = 0,
-    x3 = 1,
-    x4 = seq(min(dat$x4), max(dat$x4), length.out = 100))
 
-mfx(mod, newdata = counterfactuals) |> head()
+source("R/counterfactual.R")
+tmp <- mtcars
+tmp$gear <- as.factor(tmp$gear)
+tmp$am <- as.logical(tmp$am)
+mod <- lm(mpg ~ hp + drat + gear + am, tmp)
+
+# error
+nd <- counterfactual(mod, 
+                     at = list(gear = "6", am = c(TRUE, FALSE)))
+                    
+# correct
+nd <- counterfactual(mod, 
+                     at = list(gear = 5, am = c(TRUE, FALSE)))
+
+
+mfx(mod, newdata = nd) |> head()
 ```
- 
 
 The nice thing about the `tidy` output format is that we can pipe the output of the `mfx` function directly to `ggplot2`:
 
