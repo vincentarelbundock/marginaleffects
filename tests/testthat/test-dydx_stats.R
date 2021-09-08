@@ -55,7 +55,7 @@ test_that("lm with interactions", {
 
 test_that("vcov(loess) does not exist", {
     mod <- loess(mpg ~ wt, data = mtcars)
-    expect_error(meffects(mod), regexp = "not yet supported")
+    expect_warning(meffects(mod), regexp = "not yet supported")
 })
 
 

@@ -13,14 +13,14 @@ test_that("ordinal: vs `margins`", {
                prediction_type = "prob")
     mar <- suppressWarnings(data.frame(margins(mod)))
     expect_true(cor(res$dydx, mar$dydx_warm) > 0.999)
-    expect_error(meffects(mod, 
-                     variables = "warm",
-                     prediction_type = "prob"), regexp = "variance")
     expect_warning(meffects(mod, 
-                     variance = NULL,
-                     variables = "warm"),
-                 regexp = "prediction")
+                            variables = "warm",
+                            prediction_type = "prob"), regexp = "variance")
     expect_warning(meffects(mod, 
-                       variance = NULL,
-                       prediction_type = "probs"), regexp = "numeric")
+                            variance = NULL,
+                            variables = "warm"),
+                   regexp = "prediction")
+    expect_warning(meffects(mod, 
+                            variance = NULL,
+                            prediction_type = "probs"), regexp = "numeric")
 })

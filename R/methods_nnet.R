@@ -1,29 +1,4 @@
-#' @rdname get_mfx
-#' @export
-get_mfx.multinom <- function(model, 
-                             fitfram, 
-                             variable, 
-                             group_name = NULL,
-                             prediction_type = "probs",
-                             numDeriv_method = "simple") {
-
-    fitfram_tmp <- fitfram
-    inner <- function(x) {
-        fitfram_tmp[[variable]] <- x
-        pred <- stats::predict(model, 
-                               newdata = fitfram_tmp, 
-                               type = prediction_type)
-        # grad() expects a vector output
-        pred <- pred[, group_name, drop = TRUE]
-        return(pred)
-    }
-    out <- numDeriv::grad(func = inner, 
-                          x = fitfram[[variable]], 
-                          method = numDeriv_method)
-    # sometimes weird attributes must be stripped
-    out <- as.numeric(out)
-    return(out)
-}
+# TODO: I'm sure this can be simplifed using targeted methods
 
 
 #' @include reset_coefs.R
@@ -67,45 +42,12 @@ get_se_delta.multinom <- function(model,
     J <- numDeriv::jacobian(func = inner, 
                             x = as.vector(t(stats::coef(model))),
                             method = numDeriv_method)
-    J
-}
 
-#' @rdname get_mfx_and_se
-#' @export
-get_mfx_and_se.multinom <- function(model, 
-                                    fitfram, 
-                                    variable, 
-                                    group_name,
-                                    variance, 
-                                    prediction_type = "probs",
-                                    numDeriv_method = "simple", 
-                                    ...) {
+    # Var(dydx) = J Var(beta) J'
+    # computing the full matrix is memory-expensive, and we only need the diagonal
+    # algebra trick: https://stackoverflow.com/a/42569902/342331
+    V <- colSums(t(J %*% variance) * t(J))
+    se <- sqrt(V)
 
-    # marginal effects
-    g <- get_mfx(model = model,
-                 fitfram = fitfram,
-                 variable = variable,
-                 group_name = group_name,
-                 prediction_type = prediction_type,
-                 numDeriv_method = numDeriv_method)
-
-    out <- data.frame(rowid = 1:nrow(fitfram),
-                      group = group_name, 
-                      term = variable, 
-                      dydx = g)
-
-    # standard errors
-    if (!is.null(variance)) {
-        se <- get_se_delta(model = model,
-                           fitfram = fitfram,
-                           variable = variable,
-                           variance = variance,
-                           group_name = group_name,
-                           prediction_type = prediction_type,
-                           numDeriv_method = numDeriv_method)
-        out$std.error <- se
-    }
-
-    # output
-    return(out)
+    return(se)
 }

@@ -72,9 +72,10 @@ sanity_dydx_variables <- function(model, newdata, variables) {
 sanity_dydx_variance <- function(model, variance) {
     if (!is.null(variance)) {
         unsupported <- c("clm", "lmerMod", "glmerMod", "loess", "polr")
-        msg <- "Variance estimates are not yet supported for objects of class %s. Please set `variance=NULL` to continue."
+        msg <- "Variance estimates are not yet supported for objects of class %s. Set `variance=NULL` to silence this warning."
         if (any(unsupported %in% class(model))) {
-            stop(sprintf(msg, class(model))[1])
+            warning(sprintf(msg, class(model))[1])
+            variance <- NULL
         }
     }
     return(variance)

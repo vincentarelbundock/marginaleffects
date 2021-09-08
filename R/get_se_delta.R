@@ -12,18 +12,21 @@ get_se_delta.default <- function(model,
                                  fitfram, 
                                  variable, 
                                  variance,
+                                 group_name,
                                  prediction_type = "response",
                                  numDeriv_method = "simple", 
                                  ...) {
     model_tmp <- model
     coefs <- get_coef(model)
+    variance <- variance[names(coefs), names(coefs)]
     inner <- function(x) {
         model_tmp <- reset_coefs(model_tmp, stats::setNames(x, names(coefs)))
         g <- get_mfx(model = model_tmp,
-                          fitfram = fitfram,
-                          variable = variable,
-                          prediction_type = prediction_type,
-                          numDeriv_method = numDeriv_method)
+                     fitfram = fitfram,
+                     variable = variable,
+                     group_name = group_name,
+                     prediction_type = prediction_type,
+                     numDeriv_method = numDeriv_method)
         return(g)
     }
     J <- numDeriv::jacobian(func = inner, 

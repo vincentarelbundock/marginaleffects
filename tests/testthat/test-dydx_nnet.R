@@ -9,8 +9,8 @@ test_that("multinom: mfx", {
         nnet::multinom(cyl ~ hp + am + mpg, data = tmp, quiet = true))
 
     res <- meffects(mod, 
-                     variance = NULL,
-                     prediction_type = "probs")
+                    variance = NULL,
+                    prediction_type = "probs")
     expect_s3_class(res, "data.frame")
 
     # TODO: `margins` appears to break with numeric regressors but not factors

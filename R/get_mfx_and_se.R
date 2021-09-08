@@ -33,7 +33,7 @@ get_mfx_and_se.default <- function(model,
     if (!is.null(variance)) {
 
         # special case: polr (TODO: generalize using a get_vcov.polr() method)
-        if (inherits(model, "polr") && !is.null(group_name)) {
+        if (any(c("polr", "betareg") %in% class(model)) && !is.null(group_name)) {
             variance <- variance[names(stats::coef(model)), names(stats::coef(model))]
         }
 
