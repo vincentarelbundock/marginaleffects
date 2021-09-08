@@ -58,7 +58,9 @@ You can install the released version of meffects from Github:
 remotes::install_github("vincentarelbundock/meffects")
 ```
 
-# Getting started
+# Examples
+
+## Getting started
 
 First, we load the library, download data from the [`Rdatasets`
 archive](https://vincentarelbundock.github.io/Rdatasets/articles/data.html),
@@ -119,11 +121,14 @@ head(mar, 2)
 #> 2   0.04476005        0.1314996        NA           1
 ```
 
+# Average Marginal Effects
+
 A dataset with one marginal effect estimate per unit of observation is a
 bit unwieldy and difficult to interpret. Many analysts like to report
 the “Average Marginal Effect”, that is, the average of all the
-unit-specific marginal effects. These are easy to compute based on the
-full `data.frame` shown above, but the `summary` function is convenient:
+observation-specific marginal effects. These are easy to compute based
+on the full `data.frame` shown above, but the `summary` function is
+convenient:
 
 ``` r
 summary(mfx)
@@ -140,7 +145,7 @@ You can also calculate the “Median Marginal Effect” (or any other
 aggregation function) by changing one argument:
 
 ``` r
-summary(mfx, aggregation_function = median)
+summary(mfx, agg_fun = median)
 #> Median marginal effects 
 #>            Marg. Effect Std. Error z value Pr(>|z|)   2.5 %  97.5 %
 #> 1     kids      0.93273    0.15933 5.85401        0 0.62044 1.24501
@@ -163,6 +168,83 @@ tidy(mfx)
 glance(mfx)
 #>   null.deviance df.null    logLik      AIC      BIC deviance df.residual nobs
 #> 1      2925.455     600 -1662.128 3330.257 3343.453 2830.267         598  601
+```
+
+# Typical Marginal Effects
+
+Sometimes, we are not interested in *all* the unit-specific marginal
+effects, but would rather look at the estimated marginal effects for
+certain “typical” individuals. The `typical` function helps us build
+datasets full of “typical” rows. For example, to generate very unhappy
+individuals with or without kids:
+
+``` r
+typical(mod, at = list("vryunhap" = 1, "kids" = 0:1))
+#>   vryunhap kids
+#> 1        1    0
+#> 2        1    1
+```
+
+This dataset can then be used in `meffects` to compute marginal effects
+for those (fictional) individuals:
+
+``` r
+nd <- typical(mod, at = list("vryunhap" = 1, "kids" = 0:1))
+meffects(mod, newdata = nd)
+#>   rowid     term     dydx std.error vryunhap kids
+#> 1     1     kids 1.378088 0.2016120        1    0
+#> 2     1 vryunhap 2.296569 0.6271726        1    0
+#> 3     2     kids 2.475374 0.5077121        1    1
+#> 4     2 vryunhap 4.125186 1.0711911        1    1
+```
+
+When a variable is omitted from the `at` list, `typical` will
+automatically select the median (or mode) of the missing variable.
+
+# Counterfactual Marginal Effects
+
+The `typical` function allowed us look at completely fictional
+individual. The `counterfactual` lets us compute the marginal effects
+for the actual observations in our dataset, but with a few manipulated
+values. For example, this code will create a `data.frame` twice as long
+as the original `dat`, where each observation is repeated with different
+values of the `kids` variable:
+
+``` r
+nd <- counterfactual(mod, at = list("kids" = 0:1))
+```
+
+We see that the rows 1, 2, and 3 of the original dataset have been
+replicated twice, with different values of the `kids` variable:
+
+``` r
+nd[nd$rowid %in% 1:3,]
+#>     rowid vryunhap kids
+#> 1       1        0    0
+#> 2       2        0    0
+#> 3       3        0    0
+#> 602     1        0    1
+#> 603     2        0    1
+#> 604     3        0    1
+```
+
+Again, we can use this to compute average marginal effects over the
+counterfactual individuals:
+
+``` r
+library(dplyr)
+
+meffects(mod, newdata = nd) |> 
+    group_by(kids, term) %>%
+    summarize(across(dydx:std.error, median))
+#> # A tibble: 4 x 4
+#> # Groups:   kids [2]
+#>    kids term      dydx std.error
+#>   <int> <chr>    <dbl>     <dbl>
+#> 1     0 kids     0.519    0.0448
+#> 2     0 vryunhap 0.865    0.132 
+#> 3     1 kids     0.933    0.159 
+#> 4     1 vryunhap 1.55     0.203
 ```
 
 # Regression tables
@@ -196,7 +278,7 @@ modelsummary(mfx, output = "markdown")
 | BIC      |    729.8     |      3343.5       |
 | Log.Lik. |   -358.491   |     -1662.128     |
 
-# Plots
+# Plots with `ggplot2`
 
 We can use the `newdata` argument to do a “counterfactual” analysis.
 Here, we create a new dataset with some factor and logical variables.

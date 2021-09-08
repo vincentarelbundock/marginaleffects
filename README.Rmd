@@ -159,7 +159,7 @@ meffects(mod, newdata = nd) |>
     summarize(across(dydx:std.error, median))
 ```
 
-## Regression tables
+# Regression tables
 
 Average marginal effects are easy to display in a regression table using packages like `modelsummary`:
 
@@ -178,7 +178,7 @@ mfx <- lapply(mod, meffects)
 modelsummary(mfx, output = "markdown")
 ```
 
-## Conditional marginal effects with `ggplot2`
+# Plots with `ggplot2`
 
 ```{r, echo=FALSE}
 library(ggplot2)
