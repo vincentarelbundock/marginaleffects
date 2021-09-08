@@ -9,8 +9,8 @@ get_dydx(model, ...)
 
 \method{get_dydx}{default}(
   model,
-  fitfram,
   variable,
+  fitfram = insight::find_data(model),
   group_name = NULL,
   prediction_type = "response",
   numDeriv_method = "simple",

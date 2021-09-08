@@ -15,6 +15,7 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Imports: 
     checkmate,
+    generics,
     insight,
     numDeriv
 Suggests: 
@@ -51,3 +52,4 @@ Collate:
     'methods_stats.R'
     'sanity.R'
     'test_against_margins.R'
+    'tidy.R'

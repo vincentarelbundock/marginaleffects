@@ -3,12 +3,12 @@
 \name{get_coef}
 \alias{get_coef}
 \alias{get_coef.betareg}
-\title{Get a named vector of coefficients}
+\title{Takes a model object and returns a named \emph{vector} of coefficients}
 \usage{
 get_coef(model, ...)
 
 \method{get_coef}{betareg}(model)
 }
 \description{
-Get a named vector of coefficients
+Takes a model object and returns a named \emph{vector} of coefficients
 }
