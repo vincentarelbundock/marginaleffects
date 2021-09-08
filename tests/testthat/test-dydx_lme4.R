@@ -15,7 +15,7 @@ test_that("lme4: meffects vs. margins", {
     mar <- margins(mod)
     meffects:::test_against_margins(res, mar)
 
-    expect_error(meffects(mod), regexp = "Variance.*not yet supported")
+    expect_warning(meffects(mod), regexp = "Variance.*not yet supported")
 
     # TODO: not sure why I get different results
     N <- 1000
@@ -29,5 +29,5 @@ test_that("lme4: meffects vs. margins", {
     meffects:::test_against_margins(res, mar)
 
     # Unsupported arguments
-    expect_error(meffects(mod), regexp = "Variance.*not yet supported")
+    expect_warning(meffects(mod), regexp = "Variance.*not yet supported")
 })

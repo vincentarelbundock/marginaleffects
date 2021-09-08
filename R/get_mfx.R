@@ -8,12 +8,12 @@ get_mfx <- function (model, ...) {
 #' @rdname get_mfx
 #' @export
 get_mfx.default <- function(model, 
-                                 fitfram, 
-                                 variable, 
-                                 group_name = NULL,
-                                 prediction_type = "response",
-                                 numDeriv_method = "simple",
-                                 ...) {
+                            fitfram, 
+                            variable, 
+                            group_name = NULL,
+                            prediction_type = "response",
+                            numDeriv_method = "simple",
+                            ...) {
     fitfram_tmp <- fitfram
     inner <- function(x) {
         fitfram_tmp[[variable]] <- x
