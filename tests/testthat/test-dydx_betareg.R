@@ -9,7 +9,7 @@ test_that("betareg vs. margins", {
     data("GasolineYield", package = "betareg")
     mod <- betareg::betareg(yield ~ batch + temp, data = GasolineYield)
     suppressWarnings({
-        res <- meffects(mod, variables = "temp")
+        res <- marginaleffects(mod, variables = "temp")
         mar <- data.frame(margins(mod, unit_ses = TRUE))
     })
     expect_true(test_against_margins(res, mar, tolerance = 0.1))
@@ -21,7 +21,7 @@ test_that("betareg vs. Stata", {
     stata <- readRDS(test_path("stata/stata.rds"))[["betareg_betareg_01"]]
     dat <- read_dta(test_path("stata/data/betareg_betareg_01.dta"))
     mod <- betareg::betareg(yield ~ factor(batch) + temp, data = dat)
-    ame <- suppressWarnings(meffects(mod)) %>%
+    ame <- suppressWarnings(marginaleffects(mod)) %>%
            group_by(term) %>%
            summarize(dydx = mean(dydx), std.error = mean(std.error)) %>%
            inner_join(stata, by = "term")

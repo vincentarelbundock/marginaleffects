@@ -1,5 +1,5 @@
 library(testthat)
-library(meffects)
+library(marginaleffects)
 library(margins)
 
-test_check("meffects")
+test_check("marginaleffects")
