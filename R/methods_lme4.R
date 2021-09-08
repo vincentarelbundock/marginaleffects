@@ -9,3 +9,10 @@ reset_coefs.merMod <- function(model, coefs) {
     methods::slot(model, "beta") <- beta
     model
 }
+
+#' @include get_coef.R
+#' @rdname @get_coef
+#' @export
+get_coef.merMod <- function(model) {
+    lme4::fixef(model)
+}

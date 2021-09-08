@@ -5,16 +5,15 @@ library("haven")
 library("betareg")
 library("dplyr", warn.conflicts = FALSE)
 
-test_that("betareg", {
+test_that("betareg vs. margins", {
     data("GasolineYield", package = "betareg")
     mod <- betareg::betareg(yield ~ batch + temp, data = GasolineYield)
     suppressWarnings({
         res <- meffects(mod, variables = "temp")
         mar <- data.frame(margins(mod, unit_ses = TRUE))
     })
-    expect_true(cor(mar$dydx_temp, res$dydx) > .99999)
-    expect_true(cor(mar$SE_dydx_temp, res$std.error) > .999)
-    test_against_margins(res, mar)
+    expect_true(test_against_margins(res, mar, tolerance = 0.1))
+    warning("low tolerance")
 })
 
 test_that("betareg vs. Stata", {

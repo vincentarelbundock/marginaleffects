@@ -4,8 +4,8 @@ library("margins")
 library("haven")
 library("dplyr", warn.conflicts = FALSE)
 
-test_that("polr vs. margins", {
-    skip("`margins` failure prevents MASS::polr reference check.")
+test_that("polr vs. margins (dydx only)", {
+    skip("`margins` produces weird results with MASS::polr")
     tmp <- data.frame(mtcars)
     tmp$carb <- as.factor(tmp$carb)
     mod <- MASS::polr(carb ~ hp + am + mpg, data = tmp) 

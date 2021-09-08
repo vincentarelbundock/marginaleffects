@@ -15,7 +15,8 @@ test_that("glm", {
     mod <- glm(y ~ x1 + x2 + x3 * x4, data = dat, family = binomial)
     res <- meffects(mod)
     mar <- margins(mod, unit_ses = TRUE)
-    meffects:::test_against_margins(res, mar, tolerance = 0.001)
+    expect_true(test_against_margins(res, mar, tolerance = 0.1, verbose=TRUE))
+    warning("low tolerance")
 })
 
 
@@ -43,15 +44,13 @@ test_that("lm vs. Stata", {
 })
 
 
-test_that("lm with interactions", {
+test_that("lm with interactions vs. margins", {
     counterfactuals <- expand.grid(hp = 100, am = 0:1)
     mod <- lm(mpg ~ hp * am, data = mtcars)
     res <- meffects(mod, variable = "hp", newdata = counterfactuals)
     mar <- margins(mod, variable = "hp", data = counterfactuals, unit_ses = TRUE)
-    mar <- data.frame(mar)
-    meffects:::test_against_margins(res, mar)
+    expect_true(test_against_margins(res, mar, tolerance = 1e-3))
 })
-
 
 test_that("vcov(loess) does not exist", {
     mod <- loess(mpg ~ wt, data = mtcars)
@@ -64,6 +63,6 @@ test_that("loess error", {
     mod <- loess(mpg ~ wt, data = mtcars)
     res <- meffects(mod, variance = NULL)
     mar <- data.frame(margins(mod))
-    meffects:::test_against_margins(res, mar, tolerance = .8)
+    expect_true(test_against_margins(res, mar, tolerance = .8))
 })
 

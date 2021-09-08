@@ -43,6 +43,7 @@ meffects <- function(model,
     cols <- intersect(c("rowid", "group", "term", "dydx", "std.error"), colnames(out))
     cols <- unique(c(cols, colnames(out)))
     out <- out[, cols]
+
     if (is.character(out$group) && all(out$group == "main")) {
         out$group <- NULL
     }

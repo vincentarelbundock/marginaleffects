@@ -3,6 +3,7 @@ skip_if_not_installed("nnet")
 library("margins")
 
 test_that("multinom: mfx", {
+    skip("nnet::multinom is in progress")
     tmp <- mtcars
     tmp$cyl <- as.factor(tmp$cyl)
     void <- capture.output( mod <- 
@@ -35,7 +36,7 @@ test_that("reset_coefs", {
 
 
 test_that("multinom: variance", {
-    skip("nnet::multinom is probably failing.")
+    skip("nnet::multinom is in progress")
     N <- 100
     tmp <- data.frame(x1 = rnorm(N), x2 = rnorm(N))
     tmp$y <- tmp$x1 + tmp$x2 + rnorm(N)
