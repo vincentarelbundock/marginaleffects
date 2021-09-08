@@ -1,4 +1,4 @@
-#' @title Get a named vector of coefficients
+#' @title Takes a model object and returns a named *vector* of coefficients
 #' @rdname get_coef
 #' @export
 get_coef <- function (model, ...) {

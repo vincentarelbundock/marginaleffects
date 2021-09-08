@@ -8,12 +8,12 @@ get_dydx <- function (model, ...) {
 #' @rdname get_dydx
 #' @export
 get_dydx.default <- function(model, 
-                            fitfram, 
-                            variable, 
-                            group_name = NULL,
-                            prediction_type = "response",
-                            numDeriv_method = "simple",
-                            ...) {
+                             variable,
+                             fitfram = insight::find_data(model), 
+                             group_name = NULL,
+                             prediction_type = "response",
+                             numDeriv_method = "simple",
+                             ...) {
     fitfram_tmp <- fitfram
     inner <- function(x) {
         fitfram_tmp[[variable]] <- x
