@@ -21,13 +21,13 @@ meffects <- function(model,
     out <- list()
     for (gn in group_names) {
         for (v in variables) {
-            tmp <- get_dydx(model = model, 
-                            fitfram = newdata,
-                            variable = v,
-                            variance = variance,
-                            group_name = gn,
-                            prediction_type = prediction_type,
-                            numDeriv_method = numDeriv_method)
+            tmp <- get_mfx_and_se(model = model, 
+                                  fitfram = newdata,
+                                  variable = v,
+                                  variance = variance,
+                                  group_name = gn,
+                                  prediction_type = prediction_type,
+                                  numDeriv_method = numDeriv_method)
             if (length(group_names) > 1) {
                 tmp$group <- gn
             }

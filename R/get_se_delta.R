@@ -1,14 +1,14 @@
 #' @title Get Jacobian
-#' @rdname get_jacobian
+#' @rdname get_se_delta
 #' @export
-get_jacobian <- function (model, ...) {
-    UseMethod("get_jacobian", model)
+get_se_delta <- function (model, ...) {
+    UseMethod("get_se_delta", model)
 }
 
 
-#' @rdname get_jacobian
+#' @rdname get_se_delta
 #' @export
-get_jacobian.default <- function(model, 
+get_se_delta.default <- function(model, 
                                  fitfram, 
                                  variable, 
                                  variance,
@@ -19,7 +19,7 @@ get_jacobian.default <- function(model,
     coefs <- get_coef(model)
     inner <- function(x) {
         model_tmp <- reset_coefs(model_tmp, stats::setNames(x, names(coefs)))
-        g <- get_gradient(model = model_tmp,
+        g <- get_mfx(model = model_tmp,
                           fitfram = fitfram,
                           variable = variable,
                           prediction_type = prediction_type,

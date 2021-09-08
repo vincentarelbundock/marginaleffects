@@ -1,13 +1,13 @@
 #' @title Get Gradient
-#' @rdname get_gradient
+#' @rdname get_mfx
 #' @export
-get_gradient <- function (model, ...) {
-    UseMethod("get_gradient", model)
+get_mfx <- function (model, ...) {
+    UseMethod("get_mfx", model)
 }
 
-#' @rdname get_gradient
+#' @rdname get_mfx
 #' @export
-get_gradient.default <- function(model, 
+get_mfx.default <- function(model, 
                                  fitfram, 
                                  variable, 
                                  group_name = NULL,
