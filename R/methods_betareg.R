@@ -8,9 +8,9 @@ reset_coefs.betareg <- function(model, coefs) {
     model
 }
 
-#' @rdname get_jacobian
+#' @rdname get_se_delta
 #' @export
-get_jacobian.betareg <- function(model, 
+get_se_delta.betareg <- function(model, 
                                  fitfram, 
                                  variable, 
                                  variance,
@@ -19,10 +19,10 @@ get_jacobian.betareg <- function(model,
                                  ...) {
     model_tmp <- model
     inner <- function(x) {
-        # labelling is the only difference w.r.t. get_jacobian.glm
+        # labelling is the only difference w.r.t. get_se_delta.glm
         x <- stats::setNames(x, names(model_tmp[["coefficients"]][["mean"]]))
         model_tmp <- reset_coefs(model_tmp, x)
-        g <- get_gradient(model = model_tmp,
+        g <- get_mfx(model = model_tmp,
                           fitfram = fitfram,
                           variable = variable,
                           prediction_type = prediction_type,
@@ -35,9 +35,9 @@ get_jacobian.betareg <- function(model,
     return(J)
 }
 
-#' @rdname get_dydx
+#' @rdname get_mfx_and_se
 #' @export
-get_dydx.betareg <- function(model, 
+get_mfx_and_se.betareg <- function(model, 
                              fitfram, 
                              variable, 
                              variance, 
@@ -45,7 +45,7 @@ get_dydx.betareg <- function(model,
                              numDeriv_method = "simple", 
                              ...) {
     # marginal effects
-    g <- get_gradient(model = model,
+    g <- get_mfx(model = model,
                       fitfram = fitfram,
                       variable = variable,
                       prediction_type = prediction_type,
@@ -54,7 +54,7 @@ get_dydx.betareg <- function(model,
 
     # standard errors
     if (!is.null(variance)) {
-        J <- get_jacobian(model = model,
+        J <- get_se_delta(model = model,
                           fitfram = fitfram,
                           variable = variable,
                           prediction_type = prediction_type,

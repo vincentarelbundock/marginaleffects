@@ -1,8 +1,8 @@
 test_against_margins <- function(results, 
-                               margins_object, 
-                               se = TRUE, 
-                               tolerance = 0.0001,
-                               verbose = FALSE) {
+                                 margins_object, 
+                                 se = TRUE, 
+                                 tolerance = 0.0001,
+                                 verbose = FALSE) {
 
     margins_object <- data.frame(margins_object)
     term_names <- unique(results$term)

@@ -1,28 +1,28 @@
 #' @title Get dY/dX
-#' @rdname get_dydx
+#' @rdname get_mfx_and_se
 #' @export
-get_dydx <- function (model, ...) {
-    UseMethod("get_dydx", model)
+get_mfx_and_se <- function (model, ...) {
+    UseMethod("get_mfx_and_se", model)
 }
 
-#' @rdname get_dydx
+#' @rdname get_mfx_and_se
 #' @export
-get_dydx.default <- function(model, 
-                             fitfram, 
-                             variable, 
-                             variance, 
-                             group_name = NULL,
-                             prediction_type = "response",
-                             numDeriv_method = "simple", 
-                             ...) {
+get_mfx_and_se.default <- function(model, 
+                                   fitfram, 
+                                   variable, 
+                                   variance, 
+                                   group_name = NULL,
+                                   prediction_type = "response",
+                                   numDeriv_method = "simple", 
+                                   ...) {
 
     # marginal effects
-    g <- get_gradient(model = model,
-                      fitfram = fitfram,
-                      variable = variable,
-                      group_name = group_name,
-                      prediction_type = prediction_type,
-                      numDeriv_method = numDeriv_method)
+    g <- get_mfx(model = model,
+                 fitfram = fitfram,
+                 variable = variable,
+                 group_name = group_name,
+                 prediction_type = prediction_type,
+                 numDeriv_method = numDeriv_method)
 
     out <- data.frame(rowid = 1:nrow(fitfram), 
                       term = variable,
@@ -37,7 +37,7 @@ get_dydx.default <- function(model,
             variance <- variance[names(stats::coef(model)), names(stats::coef(model))]
         }
 
-        se <- get_jacobian(model = model,
+        se <- get_se_delta(model = model,
                            fitfram = fitfram,
                            variable = variable,
                            variance = variance,

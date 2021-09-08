@@ -1,11 +1,12 @@
-#' @rdname get_gradient
+#' @rdname get_mfx
 #' @export
-get_gradient.multinom <- function(model, 
-                                  fitfram, 
-                                  variable, 
-                                  group_name = NULL,
-                                  prediction_type = "probs",
-                                  numDeriv_method = "simple") {
+get_mfx.multinom <- function(model, 
+                             fitfram, 
+                             variable, 
+                             group_name = NULL,
+                             prediction_type = "probs",
+                             numDeriv_method = "simple") {
+
     fitfram_tmp <- fitfram
     inner <- function(x) {
         fitfram_tmp[[variable]] <- x
@@ -41,9 +42,9 @@ reset_coefs.multinom <- function(model, coefs) {
 }
 
 
-#' @rdname get_jacobian
+#' @rdname get_se_delta
 #' @export
-get_jacobian.multinom <- function(model, 
+get_se_delta.multinom <- function(model, 
                                   fitfram, 
                                   variable, 
                                   variance = NULL, 
@@ -55,7 +56,7 @@ get_jacobian.multinom <- function(model,
     model_tmp <- model
     inner <- function(x) {
         model_tmp <- reset_coefs(model_tmp, x)
-        g <- get_gradient(model = model_tmp, 
+        g <- get_mfx(model = model_tmp, 
                           fitfram = fitfram, 
                           variable = variable, 
                           group_name = group_name,
@@ -69,40 +70,40 @@ get_jacobian.multinom <- function(model,
     J
 }
 
-#' @rdname get_dydx
+#' @rdname get_mfx_and_se
 #' @export
-get_dydx.multinom <- function(model, 
-                              fitfram, 
-                              variable, 
-                              group_name,
-                              variance, 
-                              prediction_type = "probs",
-                              numDeriv_method = "simple", 
-                              ...) {
+get_mfx_and_se.multinom <- function(model, 
+                                    fitfram, 
+                                    variable, 
+                                    group_name,
+                                    variance, 
+                                    prediction_type = "probs",
+                                    numDeriv_method = "simple", 
+                                    ...) {
 
     # marginal effects
-    g <- get_gradient(model = model,
-                      fitfram = fitfram,
-                      variable = variable,
-                      group_name = group_name,
-                      prediction_type = prediction_type,
-                      numDeriv_method = numDeriv_method)
+    g <- get_mfx(model = model,
+                 fitfram = fitfram,
+                 variable = variable,
+                 group_name = group_name,
+                 prediction_type = prediction_type,
+                 numDeriv_method = numDeriv_method)
+
     out <- data.frame(rowid = 1:nrow(fitfram),
                       group = group_name, 
                       term = variable, 
                       dydx = g)
 
-
     # standard errors
     if (!is.null(variance)) {
-        J <- get_jacobian(model = model,
-                          fitfram = fitfram,
-                          variable = variable,
-                          group_name = group_name,
-                          prediction_type = prediction_type,
-                          numDeriv_method = numDeriv_method)
-        idx <- grepl(paste0("^", group_name, ":"), colnames(variance))
-        out$std.error <- se_from_J_V(J, variance)
+        se <- get_se_delta(model = model,
+                           fitfram = fitfram,
+                           variable = variable,
+                           variance = variance,
+                           group_name = group_name,
+                           prediction_type = prediction_type,
+                           numDeriv_method = numDeriv_method)
+        out$std.error <- se
     }
 
     # output
