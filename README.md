@@ -134,8 +134,8 @@ summary(mfx)
 #> 1     kids      0.85274    0.13505 6.31418        0 0.58804 1.11744
 #> 2 vryunhap      1.42109    0.20381 6.97252        0 1.02162 1.82055
 #> 
-#> Prediction type:  
-#> numDeriv method:
+#> Model type:  glm 
+#> Prediction type:  response
 ```
 
 You can also calculate the “Median Marginal Effect” (or any other
@@ -143,13 +143,13 @@ aggregation function) by changing one argument:
 
 ``` r
 summary(mfx, aggregation_function = median)
-#> Marginal effects 
+#> Median marginal effects 
 #>            Marg. Effect Std. Error z value Pr(>|z|)   2.5 %  97.5 %
 #> 1     kids      0.93273    0.15933 5.85401        0 0.62044 1.24501
 #> 2 vryunhap      1.55438    0.20285 7.66255        0 1.15679 1.95197
 #> 
-#> Prediction type:  
-#> numDeriv method:
+#> Model type:  glm 
+#> Prediction type:  response
 ```
 
 You can also extract average marginal effects using `tidy` and `glance`
@@ -173,9 +173,32 @@ Average marginal effects are easy to display in a regression table using
 packages like `modelsummary`:
 
 ``` r
+library(modelsummary)
+
+# fit models and store them in a named list
+mod <- list(
+    "Kids (Logit)" = glm(kids ~ vryunhap, data = dat, family = binomial),
+    "Affairs (Poisson)" = glm(naffairs ~ kids + vryunhap, data = dat, family = poisson))
+
+# apply the `meffects` function to all the models using `lapply`
+mfx <- lapply(mod, meffects)
+
+# build a table
+modelsummary(mfx, output = "markdown")
+```
+
+|          | Kids (Logit) | Affairs (Poisson) |
+|:---------|:------------:|:-----------------:|
+| vryunhap |    0.113     |       1.421       |
+|          |   (0.131)    |      (0.204)      |
+| kids     |              |       0.853       |
+|          |              |      (0.135)      |
+| Num.Obs. |     601      |        601        |
+| AIC      |    721.0     |      3330.3       |
+| BIC      |    729.8     |      3343.5       |
+| Log.Lik. |   -358.491   |     -1662.128     |
 
 ## Conditional marginal effects with `ggplot2`
-```
 
 We can use the `newdata` argument to do a “counterfactual” analysis.
 Here, we create a new dataset with some factor and logical variables.

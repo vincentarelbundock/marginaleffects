@@ -121,7 +121,19 @@ glance(mfx)
 Average marginal effects are easy to display in a regression table using packages like `modelsummary`:
 
 ```{r}
+library(modelsummary)
 
+# fit models and store them in a named list
+mod <- list(
+    "Kids (Logit)" = glm(kids ~ vryunhap, data = dat, family = binomial),
+    "Affairs (Poisson)" = glm(naffairs ~ kids + vryunhap, data = dat, family = poisson))
+
+# apply the `meffects` function to all the models using `lapply`
+mfx <- lapply(mod, meffects)
+
+# build a table
+modelsummary(mfx, output = "markdown")
+```
 
 ## Conditional marginal effects with `ggplot2`
 
