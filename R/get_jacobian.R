@@ -11,6 +11,7 @@ get_jacobian <- function (model, ...) {
 get_jacobian.default <- function(model, 
                                  fitfram, 
                                  variable, 
+                                 variance,
                                  prediction_type = "response",
                                  numDeriv_method = "simple", 
                                  ...) {
@@ -28,5 +29,12 @@ get_jacobian.default <- function(model,
     J <- numDeriv::jacobian(func = inner, 
                             x = coefs,
                             method = numDeriv_method)
-    return(J)
+
+    # Var(dydx) = J Var(beta) J'
+    # computing the full matrix is memory-expensive, and we only need the diagonal
+    # algebra trick: https://stackoverflow.com/a/42569902/342331
+    V <- colSums(t(J %*% variance) * t(J))
+    se <- sqrt(V)
+
+    return(se)
 }
