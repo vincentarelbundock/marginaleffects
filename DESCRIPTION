@@ -1,4 +1,4 @@
-Package: meffects
+Package: marginaleffects
 Title: What the Package Does (One Line, Title Case)
 Version: 0.0.0.9000
 Authors@R: 
@@ -22,6 +22,7 @@ Suggests:
     margins,
     testthat (>= 3.0.0),
     modelsummary,
+    ggplot2,
     bench,
     betareg,
     dplyr,
@@ -44,13 +45,15 @@ Collate:
     'get_dydx_and_se.R'
     'get_predict.R'
     'get_se_delta.R'
-    'meffects.R'
+    'marginaleffects.R'
     'reset_coefs.R'
     'methods_betareg.R'
     'methods_lme4.R'
     'methods_nnet.R'
     'methods_ordinal.R'
     'methods_stats.R'
+    'plot.R'
+    'plot_cme.R'
     'sanity.R'
     'summary.R'
     'test_against_margins.R'

@@ -9,7 +9,7 @@ test_that("multinom: mfx", {
     void <- capture.output( mod <- 
         nnet::multinom(cyl ~ hp + am + mpg, data = tmp, quiet = true))
 
-    res <- meffects(mod, 
+    res <- marginaleffects(mod, 
                     variance = NULL,
                     prediction_type = "probs")
     expect_s3_class(res, "data.frame")
@@ -43,7 +43,7 @@ test_that("multinom: variance", {
     tmp$y <- cut(tmp$y, breaks = 4)
     tmp$y <- factor(as.numeric(tmp$y))
     void <- capture.output( mod <- nnet::multinom(y ~ x1 + x2, data = tmp, quiet = true))
-    res <- meffects(mod, prediction_type = "probs")
+    res <- marginaleffects(mod, prediction_type = "probs")
     expect_s3_class(res, "data.frame")
     expect_equal(dim(res), c(800, 8))
 })

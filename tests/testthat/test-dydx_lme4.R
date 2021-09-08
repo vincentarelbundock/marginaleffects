@@ -22,20 +22,20 @@ mod_lm <- lme4::lmer(y ~ x1 + x2 + (1 | clus), data = dat_lm)
 
 
 test_that("lme4: no errors generated (no validity check)", {
-    res <- meffects(mod_glm)
+    res <- marginaleffects(mod_glm)
     expect_s3_class(res, "data.frame")
     expect_equal(dim(res), c(2000, 8))
-    res <- meffects(mod_lm)
+    res <- marginaleffects(mod_lm)
     expect_s3_class(res, "data.frame")
     expect_equal(dim(res), c(2000, 8))
 })
 
 
 test_that("vs. margins (dydx only)", {
-    res <- meffects(mod_glm, variance = NULL)
+    res <- marginaleffects(mod_glm, variance = NULL)
     mar <- margins(mod_glm)
     expect_true(test_against_margins(res, mar, tolerance = 1e-4))
-    res <- meffects(mod_lm, variance = NULL)
+    res <- marginaleffects(mod_lm, variance = NULL)
     mar <- margins(mod_lm)
     expect_true(test_against_margins(res, mar))
 })
@@ -46,17 +46,17 @@ test_that("vs. margins (dydx and se)", {
 
     set.seed(1024)
     mod <- lme4::glmer(y ~ x1 + x2 + (1 | clus), data = dat_glm, family = binomial)
-    res <- meffects(mod)
+    res <- marginaleffects(mod)
     mar <- margins(mod)
     expect_true(test_against_margins(res, mar))
 
     mod <- lme4::lmer(y ~ x1 + x2 + (1 | clus), data = dat_lm)
-    res <- meffects(mod)
+    res <- marginaleffects(mod)
     mar <- margins(mod)
     expect_true(test_against_margins(res, mar))
 
     # Unsupported arguments
-    expect_warning(meffects(mod), regexp = "Variance.*not yet supported")
+    expect_warning(marginaleffects(mod), regexp = "Variance.*not yet supported")
 })
 
 
@@ -68,5 +68,5 @@ test_that("'group' cannot be a column name because of conflict with tidy output"
                       y = sample(0:1, N, replace = TRUE),
                       group = sample(letters[1:10], N, replace = TRUE))
     mod <- lme4::glmer(y ~ x1 + x2 + (1 | group), data = tmp, family = binomial)
-    expect_error(meffects(mod), regexp = "more descriptive")
+    expect_error(marginaleffects(mod), regexp = "more descriptive")
 })

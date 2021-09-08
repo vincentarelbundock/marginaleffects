@@ -1,5 +1,5 @@
 mod <- glm(vs ~ hp * mpg, data = mtcars, family = binomial)
-mfx <- meffects(mod) 
+mfx <- marginaleffects(mod) 
 
 test_that("tidy: minimal", {
     ti <- tidy(mfx)
