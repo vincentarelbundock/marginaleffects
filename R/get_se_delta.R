@@ -21,7 +21,7 @@ get_se_delta.default <- function(model,
     variance <- variance[names(coefs), names(coefs)]
     inner <- function(x) {
         model_tmp <- reset_coefs(model_tmp, stats::setNames(x, names(coefs)))
-        g <- get_mfx(model = model_tmp,
+        g <- get_dydx(model = model_tmp,
                      fitfram = fitfram,
                      variable = variable,
                      group_name = group_name,

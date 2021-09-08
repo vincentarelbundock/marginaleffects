@@ -1,13 +1,13 @@
 #' @title Get dY/dX
-#' @rdname get_mfx_and_se
+#' @rdname get_dydx_and_se
 #' @export
-get_mfx_and_se <- function (model, ...) {
-    UseMethod("get_mfx_and_se", model)
+get_dydx_and_se <- function (model, ...) {
+    UseMethod("get_dydx_and_se", model)
 }
 
-#' @rdname get_mfx_and_se
+#' @rdname get_dydx_and_se
 #' @export
-get_mfx_and_se.default <- function(model, 
+get_dydx_and_se.default <- function(model, 
                                    fitfram, 
                                    variable, 
                                    variance, 
@@ -17,7 +17,7 @@ get_mfx_and_se.default <- function(model,
                                    ...) {
 
     # marginal effects
-    g <- get_mfx(model = model,
+    g <- get_dydx(model = model,
                  fitfram = fitfram,
                  variable = variable,
                  group_name = group_name,
