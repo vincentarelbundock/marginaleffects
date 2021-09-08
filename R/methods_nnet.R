@@ -1,4 +1,3 @@
-#' @include get_dydx_stats.R
 #' @rdname get_gradient
 #' @export
 get_gradient.multinom <- function(model, 
@@ -26,6 +25,7 @@ get_gradient.multinom <- function(model,
 }
 
 
+#' @include reset_coefs.R
 #' @rdname reset_coefs
 #' @export
 reset_coefs.multinom <- function(model, coefs) {

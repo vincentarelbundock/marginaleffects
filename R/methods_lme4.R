@@ -1,7 +1,4 @@
-##############
-#  glmerMod  #
-##############
-
+#' @include reset_coefs.R
 #' @rdname @reset_coefs
 #' @export
 reset_coefs.merMod <- function(model, coefs) {
@@ -12,8 +9,3 @@ reset_coefs.merMod <- function(model, coefs) {
     methods::slot(model, "beta") <- beta
     model
 }
-
-
-#############
-#  lmerMod  #
-#############

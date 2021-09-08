@@ -17,9 +17,9 @@ get_gradient.default <- function(model,
     fitfram_tmp <- fitfram
     inner <- function(x) {
         fitfram_tmp[[variable]] <- x
-        pred <- stats::predict(model, 
-                               newdata = fitfram_tmp, 
-                               type = prediction_type)
+        pred <- get_predict(model = model,
+                            newdata = fitfram_tmp,
+                            prediction_type = prediction_type)
         # numDeriv expects a vector
         if (is.matrix(pred) && !is.null(group_name)) {
             pred <- pred[, group_name, drop = TRUE]

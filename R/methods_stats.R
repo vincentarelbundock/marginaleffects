@@ -1,7 +1,3 @@
-################
-#  stats::glm  #
-################
-
 #' @include reset_coefs.R
 #' @rdname reset_coefs
 #' @export
@@ -15,11 +11,6 @@ reset_coefs.glm <- function(model, coefs) {
     model
 }
 
-
-###############
-#  stats::lm  #
-###############
-
 #' @rdname reset_coefs
 #' @export
 reset_coefs.lm <- function(model, coefs) {
@@ -27,8 +18,3 @@ reset_coefs.lm <- function(model, coefs) {
     model[["coefficients"]][names(coefs)] <- coefs
     model
 }
-
-
-##################
-#  stats::loess  #
-##################

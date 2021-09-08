@@ -1,3 +1,4 @@
+#' @include reset_coefs.R
 #' @rdname reset_coefs
 #' @export
 reset_coefs.betareg <- function(model, coefs) {
