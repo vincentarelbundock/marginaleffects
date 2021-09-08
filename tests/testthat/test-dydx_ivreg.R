@@ -17,7 +17,7 @@ test_that("ivreg: vs. Stata", {
     dat <- read_dta(test_path("stata/data/ivreg_ivreg_01.dta"))
     stata <- readRDS(test_path("stata/stata.rds"))[["ivreg_ivreg_01"]]
     mod <- ivreg::ivreg(Q ~ P + D | D + F + A, data = dat)
-    mfx <- meffects(mod) %>%
+    ame <- meffects(mod) %>%
            group_by(term) %>%
            summarize(dydx = mean(dydx),
                      std.error = mean(std.error)) %>%

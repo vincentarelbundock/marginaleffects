@@ -5,17 +5,12 @@ library("haven")
 library("dplyr")
 
 test_that("polr vs. margins", {
-    skip("no idea why this fails")
+    skip("`margins` failure prevents MASS::polr reference check.")
     tmp <- data.frame(mtcars)
     tmp$carb <- as.factor(tmp$carb)
     mod <- MASS::polr(carb ~ hp + am + mpg, data = tmp) 
-    res <- meffects(mod, variance = NULL)
+    res <- meffects(mod, variance = NULL, prediction_type = "probs")
     mar <- margins(mod)
-    expect_s3_class(res, "data.frame")
-    expect_equal(dim(res), c(480, 8))
-    # TODO: not supported yet
-    expect_error(meffects(mod, variance = NULL), regexp = "group_name")
-    expect_error(meffects(mod, group_names = "1"), regexp = "not yet supported")
 })
 
 test_that("polr vs. Stata", {

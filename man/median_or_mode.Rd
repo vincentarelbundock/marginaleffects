@@ -18,6 +18,9 @@ median_or_mode(x)
 
 \method{median_or_mode}{data.frame}(x)
 }
+\arguments{
+\item{x}{extract the median or the mode of vector or data.frame x depending on its type}
+}
 \description{
 Get typical values from data.frames or vectors
 }

@@ -1,7 +1,7 @@
 ---
 output: github_document
-title: "meffects: Fast Marginal Effects"
 ---
+title: "meffects: Fast Marginal Effects"
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
@@ -33,25 +33,25 @@ library(tibble)
 library(kableExtra)
 
 tab <- 
-'"Model",           "Effect", "Variance", "Stata comp.", "margins comp.", "Status"
-"stats::lm",        "✓"      , "✓"        , "✓"           , "✓"             ,
-"stats::glm",       "✓"      , "✓"        , "✓"           , "✓"             ,
-"stats::loess",     "✓"      ,          ,             , "✓"             , "Unstable"
-"AER::ivreg",       "✓"      , "✓"        , "✓"           , "✓"             ,
-"betareg::betareg", "✓"      , "✓"        , "✓"           ,               ,
-"fixest::feols",    "✓"      , "✓"        ,             ,               , "Unstable"
-"fixest::feglm",    "✓"      , "✓"        ,             ,               , "Unstable"
-"ivreg::ivreg",     "✓"      , "✓"        , "✓"           , "✓"             , 
-"lme4::lmer",       "✓"      ,          ,             , "✓"             , "Unstable"
-"lme4::glmer",      "✓"      ,          ,             , "✓"             , "Unstable"
-"MASS::polr",       "✓"      ,          , "✓"           ,               , "Unstable"
-"ordinal::clm",     "✓"      , "✓"        ,             , "✓"             , "Unstable"
-"survey::svyglm",   "✓"      , "✓"        ,             , "✓"             , "Unstable"
-"survey::svyglm",   "✓"      , "✓"        ,             , "✓"             , "Unstable"'
+'"Model",           "Effect", "Variance", "Stata",         "margins"
+"stats::lm",        "✓"      , "✓"        , "2/2"         , "2/2"
+"stats::glm",       "✓"      , "✓"        , "2/2"         , "2/2"
+"stats::loess",     "✓"      ,            ,               , 
+"AER::ivreg",       "✓"      , "✓"        , "2/2"         , "2/2"
+"betareg::betareg", "✓"      , "✓"        , "1/2"         , "2/2"
+"fixest::feols",    "✓"      , "✓"        ,               ,
+"fixest::feglm",    "✓"      , "✓"        ,               ,
+"ivreg::ivreg",     "✓"      , "✓"        , "2/2"         , "2/2"
+"lme4::lmer",       "✓"      ,            ,               , "1/1"
+"lme4::glmer",      "✓"      ,            ,               , "1/1"
+"MASS::polr",       "✓"      ,            , "✓"           ,
+"ordinal::clm",     "✓"      ,            ,               , "✓"
+"survey::svyglm",   "✓"      , "✓"        ,               , "✓"
+"survey::svyglm",   "✓"      , "✓"        ,               , "✓"
 tab <- data.frame(data.table::fread(text = tab))
+colnames(tab) <- c("Model", "Variance", "Stata match", "margins match")
 kbl(tab) %>% kable_styling()
 ```
-
 
 # Examples
 

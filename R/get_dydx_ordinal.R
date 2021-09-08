@@ -1,5 +1,22 @@
-# only difference with `get_dydx.glm` is predict()$fit
+#' @include get_dydx_stats.R
+#' @rdname get_gradient
+#' @export
+get_gradient.clm <- get_gradient.glm
 
+
+#' @rdname reset_coefs
+#' @export
+reset_coefs.clm <- reset_coefs.default
+
+
+#' @rdname get_jacobian
+#' @export
+get_jacobian.clm <- get_jacobian.glm
+
+
+#' @rdname get_dydx
+#' @export
+# The only difference with `get_dydx.glm` is predict()$fit
 get_dydx.clm <- function(model, 
                          fitfram, 
                          variable, 
