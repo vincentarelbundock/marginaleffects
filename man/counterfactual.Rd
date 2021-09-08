@@ -4,7 +4,7 @@
 \alias{counterfactual}
 \title{Generate "counterfactual" datasets based on a model}
 \usage{
-counterfactual(model, at = NULL)
+counterfactual(model = NULL, data = NULL, at = NULL)
 }
 \description{
 Generate "counterfactual" datasets based on a model

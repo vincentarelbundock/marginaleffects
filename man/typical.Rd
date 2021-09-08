@@ -4,7 +4,7 @@
 \alias{typical}
 \title{Generate "typical" datasets based on a model}
 \usage{
-typical(model, at = NULL)
+typical(model = NULL, data = NULL, at = NULL)
 }
 \description{
 Generate "typical" datasets based on a model
