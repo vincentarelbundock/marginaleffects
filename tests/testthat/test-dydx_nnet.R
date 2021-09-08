@@ -35,7 +35,7 @@ test_that("reset_coefs", {
 
 
 test_that("multinom: variance", {
-    skip("Looks good but not sure this is correct.")
+    skip("nnet::multinom is probably failing.")
     N <- 100
     tmp <- data.frame(x1 = rnorm(N), x2 = rnorm(N))
     tmp$y <- tmp$x1 + tmp$x2 + rnorm(N)

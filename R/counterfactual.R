@@ -27,7 +27,7 @@ counterfactual <- function(model, at = NULL) {
 
     if (length(v_automatic) > 0) {
         dat_automatic <- dat[, v_automatic, drop = FALSE]
-        dat_automatic <- na.omit(dat_automatic)
+        dat_automatic <- stats::na.omit(dat_automatic)
         out <- median_or_mode(dat_automatic)
     } else {
         out <- list()

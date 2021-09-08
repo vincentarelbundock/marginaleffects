@@ -16,7 +16,6 @@ RoxygenNote: 7.1.1
 Imports: 
     checkmate,
     insight,
-    prediction,
     numDeriv
 Suggests: 
     margins,
@@ -38,7 +37,6 @@ Config/testthat/edition: 3
 Collate: 
     'aaa_median_or_mode.R'
     'counterfactual.R'
-    'get_dydx.R'
     'get_dydx_stats.R'
     'get_dydx_nnet.R'
     'get_dydx_MASS.R'
