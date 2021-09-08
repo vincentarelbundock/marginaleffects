@@ -20,8 +20,8 @@ reset_coefs.multinom <- function(model, coefs) {
 #' @rdname get_se_delta
 #' @export
 get_se_delta.multinom <- function(model, 
-                                  fitfram, 
                                   variable, 
+                                  fitfram = insight::find_data(model), 
                                   variance = NULL, 
                                   group_name = NULL,
                                   prediction_type = "probs",

@@ -2,7 +2,6 @@
 #' @export
 meffects <- function(model, 
                      newdata = NULL, 
-                     at = NULL,
                      variables = NULL, 
                      variance = try(stats::vcov(model), silent = TRUE),
                      prediction_type = "response",
@@ -10,7 +9,6 @@ meffects <- function(model,
 
     # sanity checks and preparation
     model <- sanity_dydx_model(model)
-    newdata <- sanity_dydx_at(model, newdata, at)
     newdata <- sanity_dydx_newdata(model, newdata)
     variables <- sanity_dydx_variables(model, newdata, variables)
     variance <- sanity_dydx_variance(model, variance)

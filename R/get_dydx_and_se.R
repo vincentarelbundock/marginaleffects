@@ -8,13 +8,13 @@ get_dydx_and_se <- function (model, ...) {
 #' @rdname get_dydx_and_se
 #' @export
 get_dydx_and_se.default <- function(model, 
-                                   fitfram, 
-                                   variable, 
-                                   variance, 
-                                   group_name = NULL,
-                                   prediction_type = "response",
-                                   numDeriv_method = "simple", 
-                                   ...) {
+                                    variable, 
+                                    fitfram = insight::find_data(model), 
+                                    variance = stats::vcov(model), 
+                                    group_name = NULL,
+                                    prediction_type = "response",
+                                    numDeriv_method = "simple", 
+                                    ...) {
 
     # marginal effects
     g <- get_dydx(model = model,

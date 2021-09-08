@@ -1,4 +1,4 @@
-#' @title Get Jacobian
+#' @title Compute a vector of standard errors
 #' @rdname get_se_delta
 #' @export
 get_se_delta <- function (model, ...) {
@@ -9,10 +9,10 @@ get_se_delta <- function (model, ...) {
 #' @rdname get_se_delta
 #' @export
 get_se_delta.default <- function(model, 
-                                 fitfram, 
-                                 variable, 
-                                 variance,
-                                 group_name,
+                                 variable,
+                                 fitfram = insight::find_data(model), 
+                                 variance = vcov(model),
+                                 group_name = NULL,
                                  prediction_type = "response",
                                  numDeriv_method = "simple", 
                                  ...) {
