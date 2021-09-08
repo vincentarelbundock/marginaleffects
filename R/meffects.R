@@ -21,7 +21,7 @@ meffects <- function(model,
     out <- list()
     for (gn in group_names) {
         for (v in variables) {
-            tmp <- get_mfx_and_se(model = model, 
+            tmp <- get_dydx_and_se(model = model, 
                                   fitfram = newdata,
                                   variable = v,
                                   variance = variance,

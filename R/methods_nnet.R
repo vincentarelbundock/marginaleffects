@@ -31,7 +31,7 @@ get_se_delta.multinom <- function(model,
     model_tmp <- model
     inner <- function(x) {
         model_tmp <- reset_coefs(model_tmp, x)
-        g <- get_mfx(model = model_tmp, 
+        g <- get_dydx(model = model_tmp, 
                           fitfram = fitfram, 
                           variable = variable, 
                           group_name = group_name,

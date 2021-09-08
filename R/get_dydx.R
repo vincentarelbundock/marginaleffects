@@ -1,13 +1,13 @@
 #' @title Get Gradient
-#' @rdname get_mfx
+#' @rdname get_dydx
 #' @export
-get_mfx <- function (model, ...) {
-    UseMethod("get_mfx", model)
+get_dydx <- function (model, ...) {
+    UseMethod("get_dydx", model)
 }
 
-#' @rdname get_mfx
+#' @rdname get_dydx
 #' @export
-get_mfx.default <- function(model, 
+get_dydx.default <- function(model, 
                             fitfram, 
                             variable, 
                             group_name = NULL,
