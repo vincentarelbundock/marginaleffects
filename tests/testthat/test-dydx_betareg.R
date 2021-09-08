@@ -3,7 +3,7 @@ skip_if_not_installed("betareg")
 library("margins")
 library("haven")
 library("betareg")
-library("dplyr")
+library("dplyr", warn.conflicts = FALSE)
 
 test_that("betareg", {
     data("GasolineYield", package = "betareg")

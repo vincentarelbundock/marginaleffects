@@ -1,12 +1,3 @@
-#' @include get_dydx_stats.R
-#' @rdname get_dydx
-#' @export
-get_dydx.betareg <- get_dydx.glm
-
-#' @rdname get_gradient
-#' @export
-get_gradient.betareg <- get_gradient.glm
-
 #' @rdname reset_coefs
 #' @export
 reset_coefs.betareg <- function(model, coefs) {

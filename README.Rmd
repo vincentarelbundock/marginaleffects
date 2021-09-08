@@ -44,7 +44,8 @@ tab <-
 "ivreg::ivreg",     "✓"      , "✓"        , "2/2"         , "2/2"
 "lme4::lmer",       "✓"      ,            ,               , "1/1"
 "lme4::glmer",      "✓"      ,            ,               , "1/1"
-"MASS::polr",       "✓"      ,            , "✓"           ,
+"MASS::polr",       "✓"      , "bad"      , "1/2"         ,
+"nnet::multinom",   "bad",   . "bad",     ,               ,
 "ordinal::clm",     "✓"      ,            ,               , "✓"
 "survey::svyglm",   "✓"      , "✓"        ,               , "✓"
 "survey::svyglm",   "✓"      , "✓"        ,               , "✓"
