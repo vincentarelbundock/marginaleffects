@@ -51,7 +51,6 @@ Collate:
     'get_dydx_survey.R'
     'get_gradient.R'
     'get_jacobian.R'
-    'marginsxp.R'
+    'meffects.R'
     'sanity.R'
-    'se_from_J_V.R'
     'test_against_margins.R'

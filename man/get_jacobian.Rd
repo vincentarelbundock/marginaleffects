@@ -35,6 +35,7 @@ get_jacobian(model, ...)
   model,
   fitfram,
   variable,
+  variance,
   prediction_type = "response",
   numDeriv_method = "simple",
   ...
