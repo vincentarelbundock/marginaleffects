@@ -64,32 +64,22 @@ remotes::install_github("vincentarelbundock/meffects")
 
 # Examples
 
-## Logit regression with a multiplicative interaction term
+## Getting started
 
-Load the library, simulate data, and estimate a logistic regression model with interaction terms:
+First, we load the library, download data from the [`Rdatasets` archive](https://vincentarelbundock.github.io/Rdatasets/articles/data.html), and estimate a Poisson GLM model:
 
 ```{r}
 library(meffects)
 
-N <- 1000
-dat <- data.frame(
-    x2 = rnorm(N),
-    x1 = rnorm(N),
-    x3 = rnorm(N),
-    x4 = rnorm(N),
-    e = rnorm(N))
-dat$y <- rbinom(N, 1, plogis(
-    dat$x1 + dat$x2 + dat$x3 + dat$x4 + dat$x3 * dat$x4))
-
-mod <- glm(y ~ x1 + x2 + x3 * x4, data = dat, family = binomial)
-
-coef(mod)
+dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/COUNT/affairs.csv")
+mod <- glm(naffairs ~ kids + vryunhap, data = dat, family = poisson)
 ```
 
-Compute unit-level marginal effects and standard errors:
+The `meffects` function computes a distinct estimate of the marginal effect and of the standard error for each regressor ("term"), for each unit of observation ("rowid"). You can browse view and manipulate the full results with functions like `head`, as you would any `data.frame`:
 
 ```{r}
 mfx <- meffects(mod)
+
 head(mfx)
 ```
 
@@ -97,13 +87,41 @@ Notice that the results are presented in "tidy" format: each row of the original
 
 We can obtain similar (but arguably messier) results with the `margins` package:
 
-```{r, eval=FALSE}
+```{r}
 library(margins)
 
 mar <- margins(mod, unit_ses = TRUE)
+mar <- data.frame(mar)
 
-head(data.frame(mar), 2)
+head(mar, 2)
 ```
+
+A dataset with one marginal effect estimate per unit of observation is a bit unwieldy and difficult to interpret. Many analysts like to report the "Average Marginal Effect", that is, the average of all the unit-specific marginal effects. These are easy to compute based on the full `data.frame` shown above, but the `summary` function is convenient:
+
+```{r}
+summary(mfx)
+```
+
+You can also calculate the "Median Marginal Effect" (or any other aggregation function) by changing one argument:
+
+```{r}
+summary(mfx, aggregation_function = median)
+```
+
+You can also extract average marginal effects using `tidy` and `glance` methods which conform to the [`broom` package specification](https://broom.tidymodels.org/):
+
+```{r}
+tidy(mfx)
+
+glance(mfx)
+```
+
+## Regression tables
+
+Average marginal effects are easy to display in a regression table using packages like `modelsummary`:
+
+```{r}
+
 
 ## Conditional marginal effects with `ggplot2`
 
@@ -157,6 +175,20 @@ Here are a couple naive benchmarks to compare the speed of computation with the 
 ## Marginal effects and standard errors (unit-level)
 
 In this naive benchmark, computing marginal effects with their unit-level standard errors is over 300x faster.
+
+```{r}
+N <- 1000
+dat <- data.frame(
+    x2 = rnorm(N),
+    x1 = rnorm(N),
+    x3 = rnorm(N),
+    x4 = rnorm(N),
+    e = rnorm(N))
+dat$y <- rbinom(N, 1, plogis(
+    dat$x1 + dat$x2 + dat$x3 + dat$x4 + dat$x3 * dat$x4))
+
+mod <- glm(y ~ x1 + x2 + x3 * x4, data = dat, family = binomial)
+```
 
 ```{r, eval=FALSE}
 b1 = bench::mark(

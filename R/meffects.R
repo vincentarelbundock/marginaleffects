@@ -34,7 +34,7 @@ meffects <- function(model,
         }
     }
 
-    # clean output
+    # combine groups and terms
     out <- do.call("rbind", out)
     newdata$rowid <- 1:nrow(newdata)
     out <- merge(out, newdata, by = "rowid")
@@ -46,7 +46,22 @@ meffects <- function(model,
         out$group <- NULL
     }
 
+    # attach model info if the `modelsummary` package is installed
+    if (check_dependency("modelsummary")) {
+        gl <- try(modelsummary::get_gof(model), silent = TRUE)
+        if (inherits(gl, "data.frame")) {
+            attr(out, "glance") <- data.frame(gl)
+        } else {
+            attr(out, "glance") <- NULL
+        }
+    } else {
+        attr(out, "glance") <- NULL
+    }
+
     # output
     class(out) <- c("marginaleffects", class(out))
+    attr(out, "prediction_type") <- prediction_type
+    attr(out, "numDeriv_method") <- numDeriv_method
+    attr(out, "model_type") <- class(model)[1]
     return(out)
 }

@@ -1,0 +1,59 @@
+#' @export
+summary.marginaleffects <- function(x, 
+                                    aggregation_function = mean,
+                                    ...) {
+    out <- tidy(x, aggregation_function = aggregation_function)
+    class(out) <- c("marginaleffects.summary", class(out))
+    attr(out, "aggregation_function") <- aggregation_function
+    attr(out, "numDeriv_method") <- attr(x, "numDeriv_method")
+    attr(out, "prediction_type") <- attr(x, "prediction_type")
+    attr(out, "model_type") <- attr(x, "model_type")
+    return(out)
+}
+
+
+#' @export
+print.marginaleffects.summary <- function(x, 
+                                          digits = max(3L, getOption("digits") - 2L),
+                                          ...) {
+
+  out <- x
+
+  # title
+  if (identical(mean, attr(out, "aggregation_function"))) {
+    tit <- "Average marginal effects"
+  } else if (identical(median, attr(out, "aggregation_function"))) {
+    tit <- "Median marginal effects"
+  } else {
+    tit <- "Marginal effects"
+  }
+
+  # round
+  for (col in c("estimate", "std.error", "statistic", "p.value", "conf.low", "conf.high")) {
+    if (col %in% colnames(out)) {
+      out[[col]] <- format(round(out[[col]], digits = digits))
+    }
+  }
+
+  # rename
+  dict <- c("term" = " ",
+            "estimate" = "Marg. Effect",
+            "std.error" = "Std. Error",
+            "statistic" = "z value",
+            "p.value" = "Pr(>|z|)",
+            "conf.low" = "2.5 %",
+            "conf.high" = "97.5 %")
+
+  for (i in seq_along(dict)) {
+    colnames(out)[colnames(out) == names(dict)[i]] <- dict[i]
+  }
+
+  cat(tit, "\n")
+  # avoid infinite recursion
+  print(as.data.frame(out))
+  cat("\n")
+  cat("Model type: ", attr(x, "model_type"), "\n")
+  cat("Prediction type: ", attr(x, "prediction_type"), "\n")
+
+  return(invisible(x))
+}

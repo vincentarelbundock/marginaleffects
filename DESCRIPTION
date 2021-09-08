@@ -21,6 +21,7 @@ Imports:
 Suggests: 
     margins,
     testthat (>= 3.0.0),
+    modelsummary,
     bench,
     betareg,
     dplyr,
@@ -51,5 +52,6 @@ Collate:
     'methods_ordinal.R'
     'methods_stats.R'
     'sanity.R'
+    'summary.R'
     'test_against_margins.R'
     'tidy.R'
