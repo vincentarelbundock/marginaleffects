@@ -2,6 +2,12 @@
 #' @export
 generics::tidy
 
+
+#' @importFrom generics glance
+#' @export
+generics::glance
+
+
 #' @export
 tidy.marginaleffects <- function(mfx,
                                  conf.int = TRUE,
@@ -36,5 +42,12 @@ tidy.marginaleffects <- function(mfx,
         }
     }
 
+    return(out)
+}
+
+
+#' @export
+glance.marginaleffects <- function(mfx, ...) {
+    out <- attr(mfx, "glance")
     return(out)
 }

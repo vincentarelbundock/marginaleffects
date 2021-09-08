@@ -1,3 +1,27 @@
+#' check if dependency is installed
+#'
+#' @noRd
+check_dependency <- function(library_name) {
+  flag <- requireNamespace(library_name, quietly = TRUE)
+  if (isFALSE(flag)) {
+      msg <- sprintf("Please install the `%s` package.", library_name)
+      return(msg)
+  } else {
+      return(TRUE)
+  }
+}
+assert_dependency <- checkmate::makeAssertionFunction(check_dependency)
+
+
+#' sanity check
+#'
+#' @noRd
+sanitize_escape <- function(escape) {
+  checkmate::assert_flag(escape, null.ok = FALSE)
+  settings_set("escape", escape)
+}
+
+
 sanity_dydx_model <- function(model) {
     supported <- c("betareg",
                    "clm",

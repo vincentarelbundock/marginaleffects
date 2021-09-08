@@ -60,50 +60,35 @@ remotes::install_github("vincentarelbundock/meffects")
 
 # Examples
 
-## Logit regression with a multiplicative interaction term
+## Getting started
 
-Load the library, simulate data, and estimate a logistic regression
-model with interaction terms:
+First, we load the library, download data from the [`Rdatasets`
+archive](https://vincentarelbundock.github.io/Rdatasets/articles/data.html),
+and estimate a Poisson GLM model:
 
 ``` r
 library(meffects)
 
-N <- 1000
-dat <- data.frame(
-    x2 = rnorm(N),
-    x1 = rnorm(N),
-    x3 = rnorm(N),
-    x4 = rnorm(N),
-    e = rnorm(N))
-dat$y <- rbinom(N, 1, plogis(
-    dat$x1 + dat$x2 + dat$x3 + dat$x4 + dat$x3 * dat$x4))
-
-mod <- glm(y ~ x1 + x2 + x3 * x4, data = dat, family = binomial)
-
-coef(mod)
-#> (Intercept)          x1          x2          x3          x4       x3:x4 
-#>  -0.1349112   1.1047398   1.1225511   1.0550986   1.0239286   1.1726812
+dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/COUNT/affairs.csv")
+mod <- glm(naffairs ~ kids + vryunhap, data = dat, family = poisson)
 ```
 
-Compute unit-level marginal effects and standard errors:
+The `meffects` function computes a distinct estimate of the marginal
+effect and of the standard error for each regressor (“term”), for each
+unit of observation (“rowid”). You can browse view and manipulate the
+full results with functions like `head`, as you would any `data.frame`:
 
 ``` r
 mfx <- meffects(mod)
+
 head(mfx)
-#>   rowid term        dydx   std.error y         x1        x2         x3
-#> 1     1   x1 0.132137375 0.008806117 0 -1.1452110 0.1008357 -0.4426676
-#> 2     1   x3 0.106598407 0.013500656 0 -1.1452110 0.1008357 -0.4426676
-#> 3     1   x4 0.060380032 0.013165695 0 -1.1452110 0.1008357 -0.4426676
-#> 4     1   x2 0.134267859 0.016853016 0 -1.1452110 0.1008357 -0.4426676
-#> 5     2   x4 0.004480184 0.028322125 1 -0.6416573 1.9640871 -0.8569794
-#> 6     2   x1 0.260973948 0.030577292 1 -0.6416573 1.9640871 -0.8569794
-#>           x4
-#> 1 -0.1397409
-#> 2 -0.1397409
-#> 3 -0.1397409
-#> 4 -0.1397409
-#> 5  1.1287299
-#> 6  1.1287299
+#>   rowid     term      dydx  std.error naffairs kids vryunhap
+#> 1     1     kids 0.5192665 0.04476208        0    0        0
+#> 2     1 vryunhap 0.8653523 0.13151255        0    0        0
+#> 3     2     kids 0.5192665 0.04476208        0    0        0
+#> 4     2 vryunhap 0.8653523 0.13151255        0    0        0
+#> 5     3 vryunhap 0.8653523 0.13151255        3    0        0
+#> 6     3     kids 0.5192665 0.04476208        3    0        0
 ```
 
 Notice that the results are presented in “tidy” format: each row of the
@@ -119,11 +104,78 @@ package:
 library(margins)
 
 mar <- margins(mod, unit_ses = TRUE)
+mar <- data.frame(mar)
 
-head(data.frame(mar), 2)
+head(mar, 2)
+#>   X naffairs kids vryunhap unhap avgmarr hapavg vryhap antirel notrel slghtrel
+#> 1 1        0    0        0     0       0      1      0       0      0        1
+#> 2 2        0    0        0     0       0      1      0       0      0        0
+#>   smerel vryrel yrsmarr1 yrsmarr2 yrsmarr3 yrsmarr4 yrsmarr5 yrsmarr6    fitted
+#> 1      0      0        0        0        0        0        1        0 0.8865564
+#> 2      1      0        0        0        1        0        0        0 0.8865564
+#>    se.fitted dydx_kids dydx_vryunhap Var_dydx_kids Var_dydx_vryunhap
+#> 1 0.07117823 0.5192513     0.8653101    0.01740253        0.03918275
+#> 2 0.07117823 0.5192513     0.8653101    0.01740253        0.03918275
+#>   SE_dydx_kids SE_dydx_vryunhap X_weights X_at_number
+#> 1   0.04476005        0.1314996        NA           1
+#> 2   0.04476005        0.1314996        NA           1
 ```
 
+A dataset with one marginal effect estimate per unit of observation is a
+bit unwieldy and difficult to interpret. Many analysts like to report
+the “Average Marginal Effect”, that is, the average of all the
+unit-specific marginal effects. These are easy to compute based on the
+full `data.frame` shown above, but the `summary` function is convenient:
+
+``` r
+summary(mfx)
+#> Average marginal effects 
+#>            Marg. Effect Std. Error z value Pr(>|z|)   2.5 %  97.5 %
+#> 1     kids      0.85274    0.13505 6.31418        0 0.58804 1.11744
+#> 2 vryunhap      1.42109    0.20381 6.97252        0 1.02162 1.82055
+#> 
+#> Prediction type:  
+#> numDeriv method:
+```
+
+You can also calculate the “Median Marginal Effect” (or any other
+aggregation function) by changing one argument:
+
+``` r
+summary(mfx, aggregation_function = median)
+#> Marginal effects 
+#>            Marg. Effect Std. Error z value Pr(>|z|)   2.5 %  97.5 %
+#> 1     kids      0.93273    0.15933 5.85401        0 0.62044 1.24501
+#> 2 vryunhap      1.55438    0.20285 7.66255        0 1.15679 1.95197
+#> 
+#> Prediction type:  
+#> numDeriv method:
+```
+
+You can also extract average marginal effects using `tidy` and `glance`
+methods which conform to the [`broom` package
+specification](https://broom.tidymodels.org/):
+
+``` r
+tidy(mfx)
+#>       term  estimate std.error statistic      p.value  conf.low conf.high
+#> 1     kids 0.8527418 0.1350519  6.314178 2.716005e-10 0.5880449  1.117439
+#> 2 vryunhap 1.4210854 0.2038124  6.972517 3.113287e-12 1.0216204  1.820550
+
+glance(mfx)
+#>   null.deviance df.null    logLik      AIC      BIC deviance df.residual nobs
+#> 1      2925.455     600 -1662.128 3330.257 3343.453 2830.267         598  601
+```
+
+## Regression tables
+
+Average marginal effects are easy to display in a regression table using
+packages like `modelsummary`:
+
+``` r
+
 ## Conditional marginal effects with `ggplot2`
+```
 
 We can use the `newdata` argument to do a “counterfactual” analysis.
 Here, we create a new dataset with some factor and logical variables.
@@ -178,6 +230,20 @@ without standard errors.
 
 In this naive benchmark, computing marginal effects with their
 unit-level standard errors is over 300x faster.
+
+``` r
+N <- 1000
+dat <- data.frame(
+    x2 = rnorm(N),
+    x1 = rnorm(N),
+    x3 = rnorm(N),
+    x4 = rnorm(N),
+    e = rnorm(N))
+dat$y <- rbinom(N, 1, plogis(
+    dat$x1 + dat$x2 + dat$x3 + dat$x4 + dat$x3 * dat$x4))
+
+mod <- glm(y ~ x1 + x2 + x3 * x4, data = dat, family = binomial)
+```
 
 ``` r
 b1 = bench::mark(
