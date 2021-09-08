@@ -1,10 +1,10 @@
 #' @export
 summary.marginaleffects <- function(x, 
-                                    aggregation_function = mean,
+                                    agg_fun = mean,
                                     ...) {
-    out <- tidy(x, aggregation_function = aggregation_function)
+    out <- tidy(x, agg_fun = agg_fun)
     class(out) <- c("marginaleffects.summary", class(out))
-    attr(out, "aggregation_function") <- aggregation_function
+    attr(out, "agg_fun") <- agg_fun
     attr(out, "numDeriv_method") <- attr(x, "numDeriv_method")
     attr(out, "prediction_type") <- attr(x, "prediction_type")
     attr(out, "model_type") <- attr(x, "model_type")
@@ -20,9 +20,9 @@ print.marginaleffects.summary <- function(x,
   out <- x
 
   # title
-  if (identical(mean, attr(out, "aggregation_function"))) {
+  if (identical(mean, attr(out, "agg_fun"))) {
     tit <- "Average marginal effects"
-  } else if (identical(median, attr(out, "aggregation_function"))) {
+  } else if (identical(median, attr(out, "agg_fun"))) {
     tit <- "Median marginal effects"
   } else {
     tit <- "Marginal effects"

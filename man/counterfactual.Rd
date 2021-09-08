@@ -2,10 +2,10 @@
 % Please edit documentation in R/counterfactual.R
 \name{counterfactual}
 \alias{counterfactual}
-\title{Generate counterfactual datasets based on a model}
+\title{Generate "counterfactual" datasets based on a model}
 \usage{
 counterfactual(model, at = NULL)
 }
 \description{
-Generate counterfactual datasets based on a model
+Generate "counterfactual" datasets based on a model
 }

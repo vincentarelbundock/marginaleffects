@@ -1,6 +1,6 @@
-#' @title Generate "counterfactual" datasets based on a model
+#' @title Generate "typical" datasets based on a model
 #' @export
-counterfactual <- function(model = NULL, data = NULL, at = NULL) {
+typical <- function(model = NULL, data = NULL, at = NULL) {
     checkmate::assert_list(at, 
                            null.ok = TRUE, 
                            min.len = 1,
@@ -31,16 +31,20 @@ counterfactual <- function(model = NULL, data = NULL, at = NULL) {
         }
     }
 
-    # `at` -> `data.frame`
-    at <- expand.grid(at)
-
     if (length(v_automatic) > 0) {
         dat_automatic <- dat[, v_automatic, drop = FALSE]
-        dat_automatic <- cbind(data.frame(rowid = 1:nrow(dat_automatic)), dat_automatic)
-        out <- merge(dat_automatic, at, all = TRUE)
-    }  else {
-        out <- at
+        dat_automatic <- stats::na.omit(dat_automatic)
+        out <- median_or_mode(dat_automatic)
+    } else {
+        out <- list()
     }
 
+    if (!is.null(at)) {
+        for (n in names(at)) {
+            out[n] <- at[n]
+        }
+    }
+
+    out <- expand.grid(out)
     return(out)
 }
