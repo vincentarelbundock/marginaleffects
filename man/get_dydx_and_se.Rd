@@ -9,9 +9,9 @@ get_dydx_and_se(model, ...)
 
 \method{get_dydx_and_se}{default}(
   model,
-  fitfram,
   variable,
-  variance,
+  fitfram = insight::find_data(model),
+  variance = stats::vcov(model),
   group_name = NULL,
   prediction_type = "response",
   numDeriv_method = "simple",

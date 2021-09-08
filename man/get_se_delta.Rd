@@ -4,16 +4,16 @@
 \alias{get_se_delta}
 \alias{get_se_delta.default}
 \alias{get_se_delta.multinom}
-\title{Get Jacobian}
+\title{Compute a vector of standard errors}
 \usage{
 get_se_delta(model, ...)
 
 \method{get_se_delta}{default}(
   model,
-  fitfram,
   variable,
-  variance,
-  group_name,
+  fitfram = insight::find_data(model),
+  variance = vcov(model),
+  group_name = NULL,
   prediction_type = "response",
   numDeriv_method = "simple",
   ...
@@ -21,8 +21,8 @@ get_se_delta(model, ...)
 
 \method{get_se_delta}{multinom}(
   model,
-  fitfram,
   variable,
+  fitfram = insight::find_data(model),
   variance = NULL,
   group_name = NULL,
   prediction_type = "probs",
@@ -31,5 +31,5 @@ get_se_delta(model, ...)
 )
 }
 \description{
-Get Jacobian
+Compute a vector of standard errors
 }

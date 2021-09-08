@@ -7,7 +7,12 @@
 \usage{
 get_predict(model, newdata, prediction_type, ...)
 
-\method{get_predict}{clm}(model, newdata, prediction_type, ...)
+\method{get_predict}{clm}(
+  model,
+  newdata = insight::find_data(model),
+  prediction_type = "probs",
+  ...
+)
 }
 \description{
 Get a named vector of predictficients from a model object

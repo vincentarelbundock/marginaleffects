@@ -45,5 +45,8 @@ meffects <- function(model,
     if (is.character(out$group) && all(out$group == "main")) {
         out$group <- NULL
     }
+
+    # output
+    class(out) <- c("marginaleffects", class(out))
     return(out)
 }
