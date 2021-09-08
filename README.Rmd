@@ -96,7 +96,9 @@ mar <- data.frame(mar)
 head(mar, 2)
 ```
 
-A dataset with one marginal effect estimate per unit of observation is a bit unwieldy and difficult to interpret. Many analysts like to report the "Average Marginal Effect", that is, the average of all the unit-specific marginal effects. These are easy to compute based on the full `data.frame` shown above, but the `summary` function is convenient:
+# Average Marginal Effects
+
+A dataset with one marginal effect estimate per unit of observation is a bit unwieldy and difficult to interpret. Many analysts like to report the "Average Marginal Effect", that is, the average of all the observation-specific marginal effects. These are easy to compute based on the full `data.frame` shown above, but the `summary` function is convenient:
 
 ```{r}
 summary(mfx)
@@ -105,7 +107,7 @@ summary(mfx)
 You can also calculate the "Median Marginal Effect" (or any other aggregation function) by changing one argument:
 
 ```{r}
-summary(mfx, aggregation_function = median)
+summary(mfx, agg_fun = median)
 ```
 
 You can also extract average marginal effects using `tidy` and `glance` methods which conform to the [`broom` package specification](https://broom.tidymodels.org/):
@@ -114,6 +116,47 @@ You can also extract average marginal effects using `tidy` and `glance` methods 
 tidy(mfx)
 
 glance(mfx)
+```
+
+# Typical Marginal Effects
+
+Sometimes, we are not interested in *all* the unit-specific marginal effects, but would rather look at the estimated marginal effects for certain "typical" individuals. The `typical` function helps us build datasets full of "typical" rows. For example, to generate very unhappy individuals with or without kids: 
+
+```{r}
+typical(mod, at = list("vryunhap" = 1, "kids" = 0:1))
+```
+
+This dataset can then be used in `meffects` to compute marginal effects for those (fictional) individuals:
+
+```{r}
+nd <- typical(mod, at = list("vryunhap" = 1, "kids" = 0:1))
+meffects(mod, newdata = nd)
+```
+
+When a variable is omitted from the `at` list, `typical` will automatically select the median (or mode) of the missing variable.
+
+# Counterfactual Marginal Effects
+
+The `typical` function allowed us look at completely fictional individual. The `counterfactual` lets us compute the marginal effects for the actual observations in our dataset, but with a few manipulated values. For example, this code will create a `data.frame` twice as long as the original `dat`, where each observation is repeated with different values of the `kids` variable:
+
+```{r}
+nd <- counterfactual(mod, at = list("kids" = 0:1))
+```
+
+We see that the rows 1, 2, and 3 of the original dataset have been replicated twice, with different values of the `kids` variable:
+
+```{r}
+nd[nd$rowid %in% 1:3,]
+```
+
+Again, we can use this to compute average marginal effects over the counterfactual individuals:
+
+```{r, message=FALSE, warning=FALSE}
+library(dplyr)
+
+meffects(mod, newdata = nd) |> 
+    group_by(kids, term) %>%
+    summarize(across(dydx:std.error, median))
 ```
 
 ## Regression tables

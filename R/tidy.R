@@ -12,7 +12,7 @@ generics::glance
 tidy.marginaleffects <- function(mfx,
                                  conf.int = TRUE,
                                  conf.level = 0.95,
-                                 aggregation_function = mean) {
+                                 agg_fun = mean) {
 
     mfx <- mfx[, colnames(mfx) %in% c("group", "term", "dydx", "std.error")]
     colnames(mfx)[match("dydx", colnames(mfx))] <- "estimate"
@@ -30,7 +30,7 @@ tidy.marginaleffects <- function(mfx,
             f <- estimate ~ term
         }
     }
-    out <- aggregate(f, data = mfx, FUN = aggregation_function)
+    out <- aggregate(f, data = mfx, FUN = agg_fun)
 
     if ("std.error" %in% colnames(out)) {
         out$statistic <- out$estimate / out$std.error

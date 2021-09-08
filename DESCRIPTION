@@ -55,3 +55,4 @@ Collate:
     'summary.R'
     'test_against_margins.R'
     'tidy.R'
+    'typical.R'

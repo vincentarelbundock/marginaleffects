@@ -58,9 +58,7 @@ You can install the released version of meffects from Github:
 remotes::install_github("vincentarelbundock/meffects")
 ```
 
-# Examples
-
-## Getting started
+# Getting started
 
 First, we load the library, download data from the [`Rdatasets`
 archive](https://vincentarelbundock.github.io/Rdatasets/articles/data.html),
@@ -167,7 +165,7 @@ glance(mfx)
 #> 1      2925.455     600 -1662.128 3330.257 3343.453 2830.267         598  601
 ```
 
-## Regression tables
+# Regression tables
 
 Average marginal effects are easy to display in a regression table using
 packages like `modelsummary`:
@@ -198,7 +196,7 @@ modelsummary(mfx, output = "markdown")
 | BIC      |    729.8     |      3343.5       |
 | Log.Lik. |   -358.491   |     -1662.128     |
 
-## Conditional marginal effects with `ggplot2`
+# Plots
 
 We can use the `newdata` argument to do a “counterfactual” analysis.
 Here, we create a new dataset with some factor and logical variables.
