@@ -5,15 +5,15 @@ library("haven")
 library("dplyr", warn.conflicts = FALSE)
 library("ivreg")
 
-test_that("ivreg: vs. margins", {
+test_that("ivreg vs. margins", {
     data(Kmenta, package = "ivreg")
     mod <- ivreg::ivreg(Q ~ P * D | D + F + A, data = Kmenta)
     res <- meffects(mod)
     mar <- data.frame(margins(mod, unit_ses = TRUE))
-    meffects:::test_against_margins(res, mar, tolerance = .01)
+    expect_true(test_against_margins(res, mar, tolerance = .01))
 })    
 
-test_that("ivreg: vs. Stata", {
+test_that("ivreg vs. Stata", {
     dat <- read_dta(test_path("stata/data/ivreg_ivreg_01.dta"))
     stata <- readRDS(test_path("stata/stata.rds"))[["ivreg_ivreg_01"]]
     mod <- ivreg::ivreg(Q ~ P + D | D + F + A, data = dat)

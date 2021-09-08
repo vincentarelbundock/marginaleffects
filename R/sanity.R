@@ -1,6 +1,15 @@
 sanity_dydx_model <- function(model) {
-    supported <- c("lm", "glm", "betareg", "clm", "multinom", "lmerMod",
-                   "loess", "glmerMod", "fixest", "polr", "ivreg")
+    supported <- c("betareg",
+                   "clm",
+                   "fixest",
+                   "glm",
+                   "glmerMod",
+                   "ivreg",
+                   "lm",
+                   "lmerMod",
+                   "loess",
+                   # "multinom",
+                   "polr")
     if (!any(supported %in% class(model))) {
         msg <- "Models of class %s are not supported. Supported model classes include: %s."
         msg <- sprintf(msg, class(model)[1], paste(supported, paste = ", "))
@@ -43,6 +52,9 @@ sanity_dydx_newdata <- function(model, newdata) {
     if (is.null(newdata)) {
         newdata <- insight::get_data(model)
     }
+    if ("group" %in% colnames(newdata)) {
+        stop('The string "group" cannot be a column name in `newdata`. It is used in the generic, standardized, and tidy output of the `meffects` function. Sharing a column name could cause confusion. Please use a more descriptive variable name in your dataset.')
+    }
     return(newdata)
 }
 
@@ -71,12 +83,20 @@ sanity_dydx_variables <- function(model, newdata, variables) {
 
 sanity_dydx_variance <- function(model, variance) {
     if (!is.null(variance)) {
-        unsupported <- c("clm", "lmerMod", "glmerMod", "loess", "polr")
+        unsupported <- c("clm", 
+                         "loess", 
+                         "polr")
         msg <- "Variance estimates are not yet supported for objects of class %s. Set `variance=NULL` to silence this warning."
         if (any(unsupported %in% class(model))) {
             warning(sprintf(msg, class(model))[1])
             variance <- NULL
         }
+
+        if (inherits(variance, "dpoMatrix")) {
+            variance <- as.matrix(variance)
+        }
+
+        checkmate::assert_matrix(variance, col.names = "unique", row.names = "unique", null.ok = TRUE)
     }
     return(variance)
 }

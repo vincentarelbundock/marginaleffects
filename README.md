@@ -1,12 +1,54 @@
-meffects: Fast Marginal Effects
+`meffects`: Marginal effects using `R`, automatic differentiation, and
+the delta method
 ================
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# Proof of concept
+`meffects` stands for “Marginal Effects.”
 
-This is just a proof of concept. Please do not use in serious
-applications.
+`meffects` also stands for “Model Effects.”
+
+This package is still experimental. *Use with caution!*
+
+# What is this?
+
+This package is (essentially) a clone of the `margins` package. It
+allows users to easily and quickly compute “marginal effects” for a wide
+variety of models. A “marginal effect” is a measure of the association
+between a change in the regressors and a change in the response
+variable. More formally, [the `margins`
+vignette](https://cran.r-project.org/web/packages/margins/index.html)
+defines “marginal effects” as follows:
+
+> “Marginal effects are partial derivatives of the regression equation
+> with respect to each variable in the model for each unit in the data;
+> average marginal effects are simply the mean of these unit-specific
+> partial derivatives over some sample. In ordinary least squares
+> regression with no interactions or higher-order term, the estimated
+> slope coefficients are marginal effects. In other cases and for
+> generalized linear models, the coefficients are not marginal effects
+> at least not on the scale of the response variable. margins therefore
+> provides ways of calculating the marginal effects of variables to make
+> these models more interpretable.”
+
+# Supported models
+
+| Model            | Support: Effect | Support: Std.Errors | Validity: Stata | Validity: margins |
+|:-----------------|:----------------|:--------------------|:----------------|:------------------|
+| stats::lm        | ✓               | ✓                   | ✓               | ✓                 |
+| stats::glm       | ✓               | ✓                   | ✓               | ✓                 |
+| stats::loess     | ✓               |                     |                 | ✓                 |
+| AER::ivreg       | ✓               | ✓                   | ✓               | ✓                 |
+| betareg::betareg | ✓               | ✓                   | ✓               | ✓                 |
+| fixest::feols    | ✓               | ✓                   |                 |                   |
+| fixest::feglm    | ✓               | ✓                   |                 |                   |
+| ivreg::ivreg     | ✓               | ✓                   | ✓               | ✓                 |
+| lme4::lmer       | ✓               | ✓                   |                 | dydx only         |
+| lme4::glmer      | ✓               | ✓                   |                 | dydx only         |
+| MASS::polr       | ✓               |                     | ✓               |                   |
+| ordinal::clm     | ✓               |                     |                 | ✓                 |
+| survey::svyglm   | ✓               | ✓                   |                 | ✓                 |
+| survey::svyglm   | ✓               | ✓                   |                 | ✓                 |
 
 # Installation
 
@@ -40,39 +82,38 @@ mod <- glm(y ~ x1 + x2 + x3 * x4, data = dat, family = binomial)
 
 coef(mod)
 #> (Intercept)          x1          x2          x3          x4       x3:x4 
-#>  -0.1128156   1.0141016   1.1067059   0.8045853   1.0235580   0.8679344
+#>  -0.1349112   1.1047398   1.1225511   1.0550986   1.0239286   1.1726812
 ```
 
-Compute unit-level marginal effects and variances:
+Compute unit-level marginal effects and standard errors:
 
 ``` r
-res <- meffects(mod)
-head(res)
-#>   rowid term        dydx  std.error y        x1         x2         x3
-#> 1     1   x1  0.23813205 0.01968382 1 0.9172122  0.6030016 -1.2651308
-#> 2     1   x3  0.08948162 0.02441014 1 0.9172122  0.6030016 -1.2651308
-#> 3     1   x4 -0.01749262 0.03448268 1 0.9172122  0.6030016 -1.2651308
-#> 4     1   x2  0.25987715 0.02221290 1 0.9172122  0.6030016 -1.2651308
-#> 5     2   x4  0.11631003 0.01195424 1 0.9032544 -0.2952875  0.3317008
-#> 6     2   x1  0.08993967 0.01180490 1 0.9032544 -0.2952875  0.3317008
+mfx <- meffects(mod)
+head(mfx)
+#>   rowid term        dydx   std.error y         x1        x2         x3
+#> 1     1   x1 0.132137375 0.008806117 0 -1.1452110 0.1008357 -0.4426676
+#> 2     1   x3 0.106598407 0.013500656 0 -1.1452110 0.1008357 -0.4426676
+#> 3     1   x4 0.060380032 0.013165695 0 -1.1452110 0.1008357 -0.4426676
+#> 4     1   x2 0.134267859 0.016853016 0 -1.1452110 0.1008357 -0.4426676
+#> 5     2   x4 0.004480184 0.028322125 1 -0.6416573 1.9640871 -0.8569794
+#> 6     2   x1 0.260973948 0.030577292 1 -0.6416573 1.9640871 -0.8569794
 #>           x4
-#> 1 -0.4879685
-#> 2 -0.4879685
-#> 3 -0.4879685
-#> 4 -0.4879685
-#> 5  1.1225853
-#> 6  1.1225853
+#> 1 -0.1397409
+#> 2 -0.1397409
+#> 3 -0.1397409
+#> 4 -0.1397409
+#> 5  1.1287299
+#> 6  1.1287299
 ```
 
-Notice that the results are presented in `tidy` format: each row of the
+Notice that the results are presented in “tidy” format: each row of the
 original dataset gets a unique `rowid` value, each unit-level marginal
 effect appears on a distinct row, and metadata appears neatly in
 separate columns. This makes it easy to operate on the results
 programmatically.
 
-We can obtain similar results with the `margins` package, but the two
-packages use slightly different numerical approximation strategies, so
-the results will differ very slightly:
+We can obtain similar (but arguably messier) results with the `margins`
+package:
 
 ``` r
 library(margins)
@@ -80,49 +121,27 @@ library(margins)
 mar <- margins(mod, unit_ses = TRUE)
 
 head(data.frame(mar), 2)
-#>           x2        x1         x3         x4          e y    fitted  se.fitted
-#> 1  0.6030016 0.9172122 -1.2651308 -0.4879685 -1.6085638 1 0.6231924 0.03974125
-#> 2 -0.2952875 0.9032544  0.3317008  1.1225853  0.8638109 1 0.9016309 0.01762985
-#>      dydx_x1    dydx_x2    dydx_x3    dydx_x4 Var_dydx_x1  Var_dydx_x2
-#> 1 0.23813500 0.25988067 0.08948204 -0.0174926 0.000114257 0.0001251213
-#> 2 0.08994334 0.09815666 0.15777673  0.1163162 0.000114257 0.0001251213
-#>    Var_dydx_x3 Var_dydx_x4 SE_dydx_x1 SE_dydx_x2 SE_dydx_x3 SE_dydx_x4
-#> 1 0.0001266054 0.000124684 0.01968513 0.02221435 0.02440984 0.03448305
-#> 2 0.0001266054 0.000124684 0.01180561 0.01599235 0.02059237 0.01195434
-#>   X_weights X_at_number
-#> 1        NA           1
-#> 2        NA           1
-
-cor(mar$dydx_x1, res[res$term == "x1", "dydx"])
-#> [1] 1
-cor(mar$SE_dydx_x1, res[res$term == "x1", "std.error"])
-#> [1] 1
-
-cor(mar$dydx_x3, res[res$term == "x3", "dydx"])
-#> [1] 1
-cor(mar$SE_dydx_x3, res[res$term == "x3", "std.error"])
-#> [1] 1
 ```
 
 ## Conditional marginal effects with `ggplot2`
 
-We can use the `newdata` argument to do a “counterfactual” analysis:o
+We can use the `newdata` argument to do a “counterfactual” analysis.
+Here, we create a new dataset with some factor and logical variables.
+Then, we use the `at` argument to specify counterfactual values that we
+want to inspect. When a variable is not specified in `at`, its median or
+mode is automatically selected:
 
 ``` r
-counterfactuals <- data.frame(
-    x1 = 0,
-    x2 = 0,
-    x3 = 1,
-    x4 = seq(min(dat$x4), max(dat$x4), length.out = 100))
+tmp <- mtcars
+tmp$am <- as.logical(tmp$am)
+tmp$gear <- as.factor(tmp$gear)
+mod <- lm(mpg ~ hp * wt + am + gear, data = tmp)
 
-meffects(mod, newdata = counterfactuals) |> head()
-#>   rowid term         dydx   std.error x1 x2 x3        x4
-#> 1     1   x1  0.001965177 0.001137908  0  0  1 -3.665946
-#> 2     1   x4  0.003665589 0.001867172  0  0  1 -3.665946
-#> 3     1   x2  0.002144640 0.001230894  0  0  1 -3.665946
-#> 4     1   x3 -0.004605909 0.002205534  0  0  1 -3.665946
-#> 5     2   x4  0.004132264 0.002060534  0  0  1 -3.602328
-#> 6     2   x2  0.002417680 0.001361827  0  0  1 -3.602328
+meffects(mod, 
+          variables = "hp",
+          at = list(hp = c(100, 110),
+                    gear = c(3, 4),
+                    am = TRUE))
 ```
 
 The nice thing about the `tidy` output format is that we can pipe the
@@ -131,7 +150,12 @@ output of the `meffects` function directly to `ggplot2`:
 ``` r
 library(tidyverse)
 
-meffects(mod, newdata = counterfactuals) |>
+meffects(mod, 
+          variables = "hp",
+          at = list(hp = c(100, 110),
+                    gear = c(3, 4),
+                    am = TRUE))
+
     mutate(conf.low = dydx - 1.96 * std.error,
            conf.high = dydx + 1.96 * std.error) |>
     ggplot(aes(x = x4, 
@@ -142,8 +166,6 @@ meffects(mod, newdata = counterfactuals) |>
     geom_line() + 
     facet_wrap(~term)
 ```
-
-<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
 
 # Benchmarks
 
@@ -163,13 +185,7 @@ b1 = bench::mark(
     meffects(mod, variance = vcov(mod)),
     check = FALSE,
     max_iterations = 3)
-#> Warning: Some expressions had a GC in every iteration; so filtering is disabled.
 b1
-#> # A tibble: 2 × 6
-#>   expression                          min   median `itr/sec` mem_alloc `gc/sec`
-#>   <bch:expr>                     <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 margins(mod, unit_ses = TRUE)     52.5s    52.5s    0.0191   946.6MB     1.20
-#> 2 meffects(mod, variance = vcov(mod))  133.8ms  144.1ms    6.61      14.2MB     2.20
 ```
 
 ## Marginal effects only
@@ -184,9 +200,4 @@ b2 = bench::mark(
     check = FALSE,
     max_iterations = 3)
 b2
-#> # A tibble: 2 × 6
-#>   expression                          min   median `itr/sec` mem_alloc `gc/sec`
-#>   <bch:expr>                     <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 margins(mod, unit_ses = FALSE)  112.6ms  117.1ms      8.54   22.46MB     4.27
-#> 2 meffects(mod, variance = NULL)        69.9ms   73.5ms     13.8     3.14MB     0
 ```
