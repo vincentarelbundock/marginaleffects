@@ -1,24 +1,3 @@
-#' @title Get Gradient
-#' @rdname get_gradient
-#' @export
-get_gradient <- function (model, ...) {
-    UseMethod("get_gradient", model)
-}
-
-#' @title Get Jacobian
-#' @rdname get_jacobian
-#' @export
-get_jacobian <- function (model, ...) {
-    UseMethod("get_jacobian", model)
-}
-
-#' @title Get dY/dX
-#' @rdname get_dydx
-#' @export
-get_dydx <- function (model, ...) {
-    UseMethod("get_dydx", model)
-}
-
 #' @title Utility function to reset the coefficients in a model object
 #' @rdname reset_coefs
 #' @param model object to modify

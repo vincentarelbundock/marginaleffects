@@ -1,6 +1,6 @@
 library("margins")
 library("haven")
-library("dplyr")
+library("dplyr", warn.conflicts = FALSE)
 
 test_that("glm", {
     set.seed(1024)
@@ -38,7 +38,7 @@ test_that("lm vs. Stata", {
     ame <- meffects(mod) %>%
            group_by(term) %>%
            summarize(dydx = mean(dydx), std.error = mean(std.error)) %>%
-           inner_join(stata)
+           inner_join(stata, by = "term")
     expect_equal(ame$dydx, ame$dydxstata, tolerance = 0.00001)
 })
 

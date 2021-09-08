@@ -1,12 +1,12 @@
 #' compute marginal effects estimates using numerical derivatives
 #' @export
 meffects <- function(model, 
-                newdata = NULL, 
-                at = NULL,
-                variables = NULL, 
-                variance = try(stats::vcov(model), silent = TRUE),
-                prediction_type = "response",
-                numDeriv_method = "simple") {
+                     newdata = NULL, 
+                     at = NULL,
+                     variables = NULL, 
+                     variance = try(stats::vcov(model), silent = TRUE),
+                     prediction_type = "response",
+                     numDeriv_method = "simple") {
 
     # sanity checks and preparation
     model <- sanity_dydx_model(model)
@@ -43,5 +43,8 @@ meffects <- function(model,
     cols <- intersect(c("rowid", "group", "term", "dydx", "std.error"), colnames(out))
     cols <- unique(c(cols, colnames(out)))
     out <- out[, cols]
+    if (is.character(out$group) && all(out$group == "main")) {
+        out$group <- NULL
+    }
     return(out)
 }

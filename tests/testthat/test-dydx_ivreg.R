@@ -2,7 +2,7 @@ skip_if_not_installed("ivreg")
 
 library("margins")
 library("haven")
-library("dplyr")
+library("dplyr", warn.conflicts = FALSE)
 library("ivreg")
 
 test_that("ivreg: vs. margins", {
