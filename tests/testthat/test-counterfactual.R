@@ -10,3 +10,15 @@ test_that("counterfactual(): factor, logical, automatic variable", {
     expect_s3_class(res, "data.frame")
     expect_equal(dim(res), c(128, 5))
 })
+
+test_that("typical(): factor, logical, numeric", {
+    tmp <- mtcars
+    tmp$am <- as.logical(tmp$am)
+    tmp$gear <- as.factor(tmp$gear)
+    res <- typical(data = tmp)
+    expect_s3_class(res, "data.frame")
+    expect_equal(dim(res), c(1, 11))
+    expect_equal(sum(sapply(res, is.logical)), 1)
+    expect_equal(sum(sapply(res, is.factor)), 1)
+    expect_equal(sum(sapply(res, is.numeric)), 9)
+})

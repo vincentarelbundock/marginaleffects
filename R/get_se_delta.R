@@ -10,23 +10,25 @@ get_se_delta <- function (model, ...) {
 #' @export
 get_se_delta.default <- function(model, 
                                  variable,
-                                 fitfram = insight::find_data(model), 
-                                 variance = vcov(model),
+                                 fitfram = insight::get_data(model), 
+                                 variance = stats::vcov(model),
                                  group_name = NULL,
                                  prediction_type = "response",
                                  numDeriv_method = "simple", 
                                  ...) {
+
     model_tmp <- model
     coefs <- get_coef(model)
     variance <- variance[names(coefs), names(coefs)]
+
     inner <- function(x) {
         model_tmp <- reset_coefs(model_tmp, stats::setNames(x, names(coefs)))
         g <- get_dydx(model = model_tmp,
-                     fitfram = fitfram,
-                     variable = variable,
-                     group_name = group_name,
-                     prediction_type = prediction_type,
-                     numDeriv_method = numDeriv_method)
+                      fitfram = fitfram,
+                      variable = variable,
+                      group_name = group_name,
+                      prediction_type = prediction_type,
+                      numDeriv_method = numDeriv_method)
         return(g)
     }
     J <- numDeriv::jacobian(func = inner, 
