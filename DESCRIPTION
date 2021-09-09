@@ -63,4 +63,3 @@ Collate:
     'test_against_margins.R'
     'tidy.R'
     'typical.R'
-    'utils-pipe.R'
