@@ -202,7 +202,7 @@ marginaleffects(mod, newdata = nd) %>%
 Average marginal effects are easy to display in a regression table using packages like `modelsummary`:
 
 ```{r, echo = FALSE}
-options(modelsummary_default = "markdown")
+options(modelsummary_factory_default = "markdown")
 ```
 
 ```{r}
@@ -251,6 +251,38 @@ The second is a `plot_cme` function to draw "Conditional Marginal Effects." This
 mod <- lm(mpg ~ hp * wt + drat, data = mtcars)
 
 plot_cme(mod, effect = "hp", condition = "wt")
+```
+
+## Simple analytic example: Quadratic term
+
+Say you estimate a linear regression model with a quadratic term:
+
+$$Y = \beta_0 + \beta_1 X + \varepsilon$$,
+
+and obtain the following estimates: $\beta_1=1; \beta_2=2$. By taking the partial derivative with respect to $X$ we obtain the marginal effect of $X$ on $Y$ variable:
+
+$$\partial Y / \partial X = \beta_1 + 2 \cdot \beta_2 X$$
+
+Plugging in our estimates leads us to conclude that the effect of $X$ on $Y$ increases as $X$ itself increases. An increase in $X$ is associated with $1 + 4X$. When $X$ is large, an increase in $X$ has a large effect on $Y$. When $X$ is small, an increase in $X$ has a small effect on $Y$.
+
+`marginaleffects` arrives at the same conclusion in simultated data:
+
+```{r}
+N <- 1e5
+dat <- data.frame(x = rnorm(N))
+dat$y <- 1 + 1 * dat$x + 2 * dat$x^2 + rnorm(N)
+mod <- lm(y ~ x + I(x^2), dat)
+
+marginaleffects(mod, 
+                newdata = typical(data = dat, at = list(x = -2:2))) %>%
+    mutate(truth = 1 + 4 * x) %>%
+    select(dydx, truth)
+```
+
+We can also plot the result easily with the `plot_cme` function:
+
+```{r, out.width = "60%"}
+plot_cme(mod, effect = "x", condition = "x")
 ```
 
 ## Benchmarks
