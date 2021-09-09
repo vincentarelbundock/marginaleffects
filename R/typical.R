@@ -6,17 +6,23 @@ typical <- function(model = NULL, data = NULL, at = NULL) {
                            min.len = 1,
                            names = "unique")
 
-    v_all <- insight::find_variables(model)$conditional
+    if (!is.null(model) & !is.null(data)) {
+        stop("One of the `model` or `data` arguments must be `NULL`.")
+    }
+    if (is.null(model) & is.null(data)) {
+        stop("One of the `model` or `data` arguments must not be `NULL`.")
+    }
+
+    if (!is.null(model)) {
+        dat <- insight::get_data(model)
+        v_all <- insight::find_variables(model)$conditional
+    } else {
+        dat <- data
+        v_all <- colnames(dat)
+    }
+
     v_manual <- names(at)
     v_automatic <- setdiff(v_all, v_manual)
-
-    if (!is.null(model) && is.null(data)) {
-        dat <- insight::get_data(model)
-    } else if (is.null(model) && !is.null(data)) {
-        dat <- data
-    } else {
-        stop("One (and only one) of the `model` and `data` arguments can be `NULL`.")
-    }
 
     # check `at` elements and convert them to factor as needed
     for (n in names(at)) {

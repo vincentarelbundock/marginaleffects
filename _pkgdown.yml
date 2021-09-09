@@ -1,3 +1,5 @@
 template:
   params:
     bootswatch: readable
+toc:
+  depth: 2

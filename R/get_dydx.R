@@ -9,7 +9,7 @@ get_dydx <- function (model, ...) {
 #' @export
 get_dydx.default <- function(model, 
                              variable,
-                             fitfram = insight::find_data(model), 
+                             fitfram = insight::get_data(model), 
                              group_name = NULL,
                              prediction_type = "response",
                              numDeriv_method = "simple",

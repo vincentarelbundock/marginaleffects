@@ -1,7 +1,10 @@
 ---
 output: github_document
-title: "`marginaleffects`: Marginal effects using `R`, automatic differentiation, and the delta method"
 ---
+
+# `marginaleffects`
+
+### Marginal effects using `R`, automatic differentiation, and the delta method
 
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
@@ -19,7 +22,7 @@ knitr::opts_chunk$set(
 
 This package is still experimental. *Use with caution!*
 
-# What?
+## What?
 
 The `marginaleffects` package allows `R` users to compute and plot "marginal effects" for a *wide* variety of models. 
 
@@ -31,7 +34,7 @@ Marginal effects are extremely useful, because they are intuitive and easy to in
 
 > In ordinary least squares regression with no interactions or higher-order term, the estimated slope coefficients are marginal effects. In other cases and for generalized linear models, the coefficients are not marginal effects at least not on the scale of the response variable.
 
-To calculate marginal effects, we take the derivative of the regression equation. This can be challenging, especially when our models are non-linear, or when regressors are transformed or interacted. Computing the variance is even more difficult. The `marginaleffects` package hopes to do most of this hard work for you.
+To calculate marginal effects, we take derivatives of the regression equation. This can be challenging, especially when our models are non-linear, or when regressors are transformed or interacted. Computing the variance is even more difficult. The `marginaleffects` package hopes to do most of this hard work for you.
 
 # Why?
 
@@ -46,12 +49,20 @@ So why did I write a new package?
 * _Extensibility:_ Adding support for new models often requires less than 10 lines of new code.
 * `ggplot2` support: Plot your (conditional) marginal effects using `ggplot2`.
 * _Tidy:_ The results produced by `marginaleffects` follow "tidy" principles. They are easy to process and program with. 
+* _Active development_.
 
-# How?
+Downsides of `marginaleffects` include:
+
+* No support for weights or simultation-based inference.
+* Possibly fragile handling of transformations in model formulas (not sure).
+* More dependencies.
+* Newer package with a much smaller (i.e., non-existent) user base.
+
+## How?
 
 By using [the `numDeriv` package](https://cran.r-project.org/web/packages/numDeriv/index.html) to compute gradients and jacobians. That's it. That's the secret sauce.
 
-# Supported models
+## Supported models
 
 This table shows the list of models supported by `marginaleffect`, and shows which numerical results have been checked against alternative software packages: Stata's `margins` command and R's `margins` package. 
 
@@ -81,7 +92,7 @@ kbl(tab, format = "pipe") %>% kable_styling()
 #%>% add_header_above(c(" " = 1, "Support" = 2, "Validity" = 2))
 ```
 
-# Installation
+## Installation
 
 You can install the latest version of `marginaleffects` from Github:
 
@@ -89,7 +100,7 @@ You can install the latest version of `marginaleffects` from Github:
 remotes::install_github("vincentarelbundock/marginaleffects")
 ```
 
-# Getting started
+## Getting started
 
 First, we load the library, download the [Palmer Penguins](https://allisonhorst.github.io/palmerpenguins/) data from the [`Rdatasets` archive](https://vincentarelbundock.github.io/Rdatasets/articles/data.html), and estimate a GLM model:
 
@@ -124,7 +135,7 @@ mar <- data.frame(mar)
 head(mar, 2)
 ```
 
-# Average Marginal Effects
+## Average Marginal Effects
 
 A dataset with one marginal effect estimate per unit of observation is a bit unwieldy and difficult to interpret. Many analysts like to report the "Average Marginal Effect", that is, the average of all the observation-specific marginal effects. These are easy to compute based on the full `data.frame` shown above, but the `summary` function is convenient:
 
@@ -142,7 +153,7 @@ tidy(mfx)
 glance(mfx)
 ```
 
-# Typical Marginal Effects
+## Typical Marginal Effects
 
 Sometimes, we are not interested in *all* the unit-specific marginal effects, but would rather look at the estimated marginal effects for certain "typical" individuals. The `typical` function helps us build datasets full of "typical" rows. For example, to generate very unhappy individuals with or without kids: 
 
@@ -163,7 +174,7 @@ marginaleffects(mod, newdata = nd)
 
 When a variable is omitted from the `at` list, `typical` will automatically select the median (or mode) of the missing variable.
 
-# Counterfactual Marginal Effects
+## Counterfactual Marginal Effects
 
 The `typical` function allowed us look at completely fictional individual. The `counterfactual` lets us compute the marginal effects for the actual observations in our dataset, but with a few manipulated values. For example, this code will create a `data.frame` twice as long as the original `dat`, where each observation is repeated with different values of the `kids` variable:
 
@@ -187,9 +198,13 @@ marginaleffects(mod, newdata = nd) %>%
     summarize(across(dydx:std.error, median))
 ```
 
-# Tables
+## Tables
 
 Average marginal effects are easy to display in a regression table using packages like `modelsummary`:
+
+```{r, echo = FALSE}
+options(modelsummary_default = "markdown")
+```
 
 ```{r}
 library(modelsummary)
@@ -203,7 +218,7 @@ mod <- list(
 mfx <- lapply(mod, marginaleffects)
 
 # build a table
-modelsummary(mfx, output = "markdown")
+modelsummary(mfx)
 ```
 
 You can also display models with contrasts using `modelsummary`'s `group` argument:
@@ -215,18 +230,16 @@ mod <- list(
 
 mfx <- lapply(mod, marginaleffects)
 
-modelsummary(mfx, 
-             group = term + contrast ~ model, 
-             output = "markdown")
+modelsummary(mfx, group = term + contrast ~ model)
 ```
 
-# Plots (`ggplot2`)
+## Plots (`ggplot2`)
 
 Since the output of the `marginaleffects` function is "tidy", it is very easy to use the `data.frame` that this function produces directly to draw plots with any drawing package you like. In addition, the `marginaleffects` package also offers functions to draw frequently used plots with `ggplot2`.
 
 The first is a simple `plot` command to draw the average marginal effects:
 
-```{r}
+```{r, out.width = "60%"}
 mod <- lm(mpg ~ hp + wt + drat, data = mtcars)
 mfx <- marginaleffects(mod)
 
@@ -235,13 +248,13 @@ plot(mfx)
 
 The second is a `plot_cme` function to draw "Conditional Marginal Effects." This is useful when a model includes interaction terms and we want to plot how the marginal effect of a variable changes as the value of a "condition" (or "moderator") variable changes:
 
-```{r}
+```{r, out.width = "60%"}
 mod <- lm(mpg ~ hp * wt + drat, data = mtcars)
 
 plot_cme(mod, effect = "hp", condition = "wt")
 ```
 
-# Benchmarks
+## Benchmarks
 
 Here are two *very* naive benchmarks to compare the speed of `marginaleffects` and `margins`. Computing the unit-level marginal effects and standard errors in a logistic regression model with 1500 observations is over 400 times faster with `marginaleffects`. Calculating only the marginal effects is about 50% faster. 
 
@@ -297,7 +310,7 @@ b2
 #> # … with 1 more variable: gc/sec <dbl>
 ```
 
-# Extending `marginaleffects` to support new models
+## Extending `marginaleffects` to support new models
 
 In most cases, extending `marginaleffects` to support new models is easy. Imagine you want to add support for an object called "`model`" of class "`Example`" with N observations. 
 

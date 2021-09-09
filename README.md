@@ -1,6 +1,7 @@
-`marginaleffects`: Marginal effects using `R`, automatic
-differentiation, and the delta method
-================
+
+# `marginaleffects`
+
+### Marginal effects using `R`, automatic differentiation, and the delta method
 
 <!-- badges: start -->
 
@@ -11,7 +12,7 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 
 This package is still experimental. *Use with caution\!*
 
-# What?
+## What?
 
 The `marginaleffects` package allows `R` users to compute and plot
 “marginal effects” for a *wide* variety of models.
@@ -36,7 +37,7 @@ to compute:
 > coefficients are not marginal effects at least not on the scale of the
 > response variable.
 
-To calculate marginal effects, we take the derivative of the regression
+To calculate marginal effects, we take derivatives of the regression
 equation. This can be challenging, especially when our models are
 non-linear, or when regressors are transformed or interacted. Computing
 the variance is even more difficult. The `marginaleffects` package hopes
@@ -72,13 +73,13 @@ So why did I write a new package?
   - *Tidy:* The results produced by `marginaleffects` follow “tidy”
     principles. They are easy to process and program with.
 
-# How?
+## How?
 
 By using [the `numDeriv`
 package](https://cran.r-project.org/web/packages/numDeriv/index.html) to
 compute gradients and jacobians. That’s it. That’s the secret sauce.
 
-# Supported models
+## Supported models
 
 This table shows the list of models supported by `marginaleffect`, and
 shows which numerical results have been checked against alternative
@@ -101,7 +102,7 @@ software packages: Stata’s `margins` command and R’s `margins` package.
 | survey::svyglm   | ✓               | ✓                   |                 | ✓                 |
 | survey::svyglm   | ✓               | ✓                   |                 | ✓                 |
 
-# Installation
+## Installation
 
 You can install the latest version of `marginaleffects` from Github:
 
@@ -109,7 +110,7 @@ You can install the latest version of `marginaleffects` from Github:
 remotes::install_github("vincentarelbundock/marginaleffects")
 ```
 
-# Getting started
+## Getting started
 
 First, we load the library, download the [Palmer
 Penguins](https://allisonhorst.github.io/palmerpenguins/) data from the
@@ -119,14 +120,6 @@ and estimate a GLM model:
 
 ``` r
 library(marginaleffects)
-#> 
-#> Attaching package: 'marginaleffects'
-#> The following object is masked from 'package:kableExtra':
-#> 
-#>     %>%
-#> The following object is masked from 'package:tibble':
-#> 
-#>     %>%
 
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv")
 dat$large_penguin <- ifelse(dat$body_mass_g > median(dat$body_mass_g, na.rm = TRUE), 1, 0)
@@ -194,7 +187,7 @@ head(mar, 2)
 #> 2                0.00319684             0.01142364        NA           1
 ```
 
-# Average Marginal Effects
+## Average Marginal Effects
 
 A dataset with one marginal effect estimate per unit of observation is a
 bit unwieldy and difficult to interpret. Many analysts like to report
@@ -247,7 +240,7 @@ glance(mfx)
 #> 1      473.8202     341 -84.92257 179.8451 199.0192 169.8451         337  342
 ```
 
-# Typical Marginal Effects
+## Typical Marginal Effects
 
 Sometimes, we are not interested in *all* the unit-specific marginal
 effects, but would rather look at the estimated marginal effects for
@@ -287,7 +280,7 @@ marginaleffects(mod, newdata = nd)
 When a variable is omitted from the `at` list, `typical` will
 automatically select the median (or mode) of the missing variable.
 
-# Counterfactual Marginal Effects
+## Counterfactual Marginal Effects
 
 The `typical` function allowed us look at completely fictional
 individual. The `counterfactual` lets us compute the marginal effects
@@ -330,7 +323,7 @@ marginaleffects(mod, newdata = nd) %>%
 #> 2 flipper_length_mm 0.00378   0.00144
 ```
 
-# Tables
+## Tables
 
 Average marginal effects are easy to display in a regression table using
 packages like `modelsummary`:
@@ -347,7 +340,7 @@ mod <- list(
 mfx <- lapply(mod, marginaleffects)
 
 # build a table
-modelsummary(mfx, output = "markdown")
+modelsummary(mfx)
 ```
 
 |                     |   Logit   |    OLS     |
@@ -374,9 +367,7 @@ mod <- list(
 
 mfx <- lapply(mod, marginaleffects)
 
-modelsummary(mfx, 
-             group = term + contrast ~ model, 
-             output = "markdown")
+modelsummary(mfx, group = term + contrast ~ model)
 ```
 
 |                     |                    |   Logit   |    OLS     |
@@ -397,7 +388,7 @@ modelsummary(mfx,
 | Log.Lik.            |                    | \-115.188 | \-2510.762 |
 | F                   |                    |           |  405.693   |
 
-# Plots (`ggplot2`)
+## Plots (`ggplot2`)
 
 Since the output of the `marginaleffects` function is “tidy”, it is very
 easy to use the `data.frame` that this function produces directly to
@@ -415,7 +406,7 @@ mfx <- marginaleffects(mod)
 plot(mfx)
 ```
 
-<img src="man/figures/README-unnamed-chunk-16-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-17-1.png" width="60%" />
 
 The second is a `plot_cme` function to draw “Conditional Marginal
 Effects.” This is useful when a model includes interaction terms and we
@@ -428,9 +419,9 @@ mod <- lm(mpg ~ hp * wt + drat, data = mtcars)
 plot_cme(mod, effect = "hp", condition = "wt")
 ```
 
-<img src="man/figures/README-unnamed-chunk-17-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-18-1.png" width="60%" />
 
-# Benchmarks
+## Benchmarks
 
 Here are two *very* naive benchmarks to compare the speed of
 `marginaleffects` and `margins`. Computing the unit-level marginal
@@ -490,7 +481,7 @@ b2
 #> # … with 1 more variable: gc/sec <dbl>
 ```
 
-# Extending to support new models
+## Extending `marginaleffects` to support new models
 
 In most cases, extending `marginaleffects` to support new models is
 easy. Imagine you want to add support for an object called “`model`” of
