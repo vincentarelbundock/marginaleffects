@@ -3,3 +3,6 @@
 ^README\.html$
 ^\.github$
 ^\.here$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
