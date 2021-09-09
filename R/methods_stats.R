@@ -1,7 +1,7 @@
-#' @include reset_coefs.R
-#' @rdname reset_coefs
+#' @include set_coef.R
+#' @rdname set_coef
 #' @export
-reset_coefs.glm <- function(model, coefs) {
+set_coef.glm <- function(model, coefs) {
     # in glm coefficients are named vector
     model[["coefficients"]][names(coefs)] <- coefs
     ## But, there's an edge case!! When `predict(model, se.fit = TRUE)` is called without `newdata`, `predict.lm()` isn't called.
@@ -11,9 +11,9 @@ reset_coefs.glm <- function(model, coefs) {
     model
 }
 
-#' @rdname reset_coefs
+#' @rdname set_coef
 #' @export
-reset_coefs.lm <- function(model, coefs) {
+set_coef.lm <- function(model, coefs) {
     # in lm coefficients are named vector
     model[["coefficients"]][names(coefs)] <- coefs
     model

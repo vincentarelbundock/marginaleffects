@@ -21,16 +21,16 @@ test_that("multinom: mfx", {
 })
 
 
-test_that("reset_coefs", {
+test_that("set_coef", {
     tmp <- mtcars
     tmp$cyl <- as.factor(tmp$cyl)
     void <- capture.output( old <- 
         nnet::multinom(cyl ~ hp + am + mpg, data = tmp, quiet = true))
     b <- rep(0, length(coef(old)))
-    new <- reset_coefs(old, b)
+    new <- set_coef(old, b)
     expect_true(all(coef(new) == 0))
     b <- rep(1, length(coef(new)))
-    new <- reset_coefs(old, b)
+    new <- set_coef(old, b)
     expect_true(all(coef(new) == 1))
 })
 

@@ -1,5 +1,17 @@
-#' @title Generate "typical" datasets based on a model
+#' Generate "typical" datasets for use in `marginaleffects`'s `newdata` argument
+#' 
+#' @param model Model object
+#' @param data data.frame (one and only one of the `model` and `data` arguments
+#' must be true).
+#' @param at Named list of typical values to consider.
+#' @return A `data.frame` with the values specified in the `at` list, and where each of the other variables is set at its median or mode.
 #' @export
+#' @examples
+#' # Notice that the dataset now only has 2 rows, and that all variables except
+#' # `hp` are at their median or mode.
+#' td <- typical(data = mtcars, at = list("hp" = c(100, 110)))
+#' td
+#'
 typical <- function(model = NULL, data = NULL, at = NULL) {
     checkmate::assert_list(at, 
                            null.ok = TRUE, 

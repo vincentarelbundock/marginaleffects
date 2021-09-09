@@ -1,5 +1,23 @@
-#' @title Conditional marginal effects plot
+#' Conditional marginal effects plot
+#' 
+#' In models where two continous variables are interacted, the marginal effect
+#' of one variable is conditional on the value of the other variable. This
+#' function draws a plot of the marginal effect of the `effect` variable for
+#' different values of the `condition` variable.
+#' 
+#' @param effect Name of the variable whose marginal effect we want to plot on the y-axis
+#' @param condition Name of the variable to plot on the x-axis
+#' @param draw `TRUE` returns a `ggplot2` plot. `FALSE` returns a `data.frame` of the underlying data.
+#' @inheritParams plot.marginaleffects
+#' @inheritParams marginaleffects
+#' @return A `ggplot2` object
 #' @export
+#' @examples
+#' mod <- lm(mpg ~ hp * wt, data = mtcars)
+#' plot_cme(mod, 
+#'          effect = "hp",
+#'          condition = "wt")
+#'
 plot_cme <- function(model, 
                      effect,
                      condition,
@@ -34,12 +52,12 @@ plot_cme <- function(model,
     # ggplot2
     if ("std.error" %in% colnames(datplot) && isTRUE(conf.int)) {
         alpha <- 1 - conf.level
-        datplot$conf.low <- datplot$dydx + qnorm(alpha / 2) * datplot$std.error
-        datplot$conf.high <- datplot$dydx - qnorm(alpha / 2) * datplot$std.error
+        datplot$conf.low <- datplot$dydx + stats::qnorm(alpha / 2) * datplot$std.error
+        datplot$conf.high <- datplot$dydx - stats::qnorm(alpha / 2) * datplot$std.error
         p <- ggplot2::ggplot(datplot, ggplot2::aes(x = condition1, y = dydx, ymin = conf.low, ymax = conf.high)) +
              ggplot2::geom_ribbon(alpha = .1) +
              ggplot2::geom_line() + 
-             ggplot2::labs(x = condition1, y = "Average marginal effects")
+             ggplot2::labs(x = condition1, y = "Average marginal effect")
     } else {
         if ("group" %in% colnames(datplot)) {
             p <- ggplot2::ggplot(datplot, ggplot2::aes(y = term, x = estimate, color = group))
@@ -48,7 +66,7 @@ plot_cme <- function(model,
         }
         p <- p +
              ggplot2::geom_point() +
-             ggplot2::labs(x = m, y = "Average marginal effects")
+             ggplot2::labs(x = condition1, y = "Average marginal effect")
     }
 
     if ("group" %in% colnames(datplot)) {

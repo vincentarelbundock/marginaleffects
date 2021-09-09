@@ -1,12 +1,25 @@
-#' @title Plot average marginal effects
+#' Point-range plot of average marginal effects
+#' 
+#' Uses the `ggplot2` package to draw a point-range plot of the average marginal effects computed by `tidy`.
+#' @inheritParams marginaleffects
+#' @inheritParams tidy.marginaleffects
+#' @inherit tidy.marginaleffects details
+#' @return A `ggplot2` object
 #' @export
-plot.marginaleffects <- function(mfx, 
+#'
+#' @examples
+#' mod <- glm(am ~ hp + wt, data = mtcars)
+#' mfx <- marginaleffects(mod)
+#' plot(mfx)
+#'
+plot.marginaleffects <- function(x, 
                                  conf.int = TRUE,
-                                 conf.level = 0.95) {
+                                 conf.level = 0.95,
+                                 ...) {
 
     assert_dependency("ggplot2")
 
-    dat <- tidy(mfx, conf.int = conf.int, conf.level = conf.level)
+    dat <- tidy(x, conf.int = conf.int, conf.level = conf.level)
 
     if ("conf.low" %in% colnames(dat)) {
         if ("group" %in% colnames(dat)) {

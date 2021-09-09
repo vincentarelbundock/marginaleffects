@@ -1,12 +1,75 @@
-#' compute marginal effects estimates using numerical derivatives
+#' Marginal effects using numerical derivatives
+#' 
+#' Warning: This package is experimental.
+#' 
+#' A "marginal effect" is the partial derivative of the regression equation
+#' with respect to a variable in the model. This package uses automatic
+#' differentiation tu compute marginal effects for a vast array of models,
+#' including non-linear models with transformations (e.g., polynomials).
+#' 
+#' @param model Model object
+#' @param variables Variables to consider (character vector). `NULL`
+#'   calculates marginal effects for all terms in the model object.
+#' @param variance Matrix or boolean
+#'   + FALSE: does not compute unit-level standard errors.
+#'   + TRUE: computes unit-level standard errors using the default `vcov(model)` variance matrix.
+#'   + Named square matrix: computes standard errors with a user-supplied variance matrix. This matrix must be square and have dimensions equal to the number of coefficients in `get_coef(model)`.
+#' @param newdata A dataset over which to compute marginal effects. `NULL` uses
+#'   the original data used to fit the model.
+#' @param prediction_type Type of prediction as character. This can differ
+#'   based on the model type, but will typically be a string such as: "response",
+#'   "link", or "probs".
+#' @param numDeriv_method One of "simple", "Richardson", or "complex",
+#'   indicating the method to use for the approximation. See
+#'   [numDeriv::grad()] for details.
+#' @param return_data boolean If `TRUE`, the original data used to fit the
+#'   model is attached to the output. `FALSE` will objects which take up less
+#'   space in memory.
+#' @param ... Additional arguments are ignored.
 #' @export
+#' @details
+#' Most -- but not all -- of the models below have been checked against
+#' alternative software packages to validate results. Visit the
+#' `marginaleffects` website to learn more about the testing procedure and
+#' coverage.
+#'
+#' Supported models:
+#' 
+#' + stats::lm
+#' + stats::glm
+#' + stats::loess (no variance)
+#' + AER::ivreg
+#' + betareg::betareg
+#' + fixest::feols
+#' + fixest::feglm
+#' + lme4::lmer
+#' + lme4::glmer
+#' + MASS::polr (no variance)
+#' + ordinal::clm (no variance)
+#' + survey::svyglm
+#'
+#' @examples
+#' 
+#' mod <- glm(am ~ hp * wt, data = mtcars, family = binomial)
+#' mfx <- marginaleffects(mod)
+#' summary(mfx)
+#' tidy(mfx)
+#' head(mfx)
+#' \dontrun{
+#' plot(mfx)
+#' }
+#'
+#' nd <- typical(mod, at = list(hp = c(100, 110)))
+#' marginaleffects(mod, newdata = nd)
+#'
 marginaleffects <- function(model, 
                             newdata = NULL, 
                             variables = NULL, 
                             variance = TRUE,
                             numDeriv_method = "simple",
                             prediction_type = "response",
-                            return_data = TRUE) {
+                            return_data = TRUE,
+                            ...) {
 
     # sanity checks and pre-processing
     model <- sanity_dydx_model(model)

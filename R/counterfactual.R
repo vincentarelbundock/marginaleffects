@@ -1,5 +1,22 @@
-#' @title Generate "counterfactual" datasets based on a model
+#' Generate "counterfactual" datasets for use in `marginaleffects`'s `newdata` argument
+#' 
+#' @param model Model object
+#' @param data data.frame (one and only one of the `model` and `data` arguments
+#' must be true).
+#' @param at Named list of counterfactual values to consider.
+#' @return A `data.frame` where each row of the original data is repeated
+#' multiple times for each of the values of the variables in the `at` list. See
+#' example below.
+#'
+#' If users supply a model, the data used to fit that model is retrieved using
+#' the `insight::get_data` function, and then replicated with different values
+#' of the variables in the `at` list.
 #' @export
+#' @examples
+#' # Notice that rows 1 through 3 are now repeated twice, with different values of `hp`
+#' cd <- counterfactual(data = mtcars, at = list("hp" = c(100, 110)))
+#' cd[cd$rowid %in% 1:3,]
+#'
 counterfactual <- function(model = NULL, data = NULL, at = NULL) {
     checkmate::assert_list(at, 
                            null.ok = TRUE, 

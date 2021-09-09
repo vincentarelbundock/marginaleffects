@@ -2,13 +2,25 @@
 % Please edit documentation in R/get_coef.R, R/methods_betareg.R
 \name{get_coef}
 \alias{get_coef}
+\alias{get_coef.default}
 \alias{get_coef.betareg}
-\title{Takes a model object and returns a named \emph{vector} of coefficients}
+\title{Get a named vector of coefficients from a model object (internal function)}
 \usage{
 get_coef(model, ...)
 
-\method{get_coef}{betareg}(model)
+\method{get_coef}{default}(model, ...)
+
+\method{get_coef}{betareg}(model, ...)
+}
+\arguments{
+\item{model}{Model object}
+
+\item{...}{Additional arguments are ignored.}
+}
+\value{
+A named vector of coefficients. The names must match those of the variance matrix.
 }
 \description{
-Takes a model object and returns a named \emph{vector} of coefficients
+Get a named vector of coefficients from a model object (internal function)
 }
+\keyword{internal}

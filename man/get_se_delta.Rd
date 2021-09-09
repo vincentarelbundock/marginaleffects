@@ -4,15 +4,15 @@
 \alias{get_se_delta}
 \alias{get_se_delta.default}
 \alias{get_se_delta.multinom}
-\title{Compute a vector of standard errors}
+\title{Compute a vector of standard errors using the delta method (internal function)}
 \usage{
 get_se_delta(model, ...)
 
 \method{get_se_delta}{default}(
   model,
   variable,
-  fitfram = insight::find_data(model),
-  variance = vcov(model),
+  fitfram = insight::get_data(model),
+  variance = stats::vcov(model),
   group_name = NULL,
   prediction_type = "response",
   numDeriv_method = "simple",
@@ -30,6 +30,38 @@ get_se_delta(model, ...)
   ...
 )
 }
-\description{
-Compute a vector of standard errors
+\arguments{
+\item{model}{Model object}
+
+\item{...}{Additional arguments are ignored.}
+
+\item{variable}{A string to identify the variable whose marginal effect to compute.}
+
+\item{fitfram}{A data.frame over which to compute marginal effects.}
+
+\item{variance}{Matrix or boolean
+\itemize{
+\item FALSE: does not compute unit-level standard errors.
+\item TRUE: computes unit-level standard errors using the default \code{vcov(model)} variance matrix.
+\item Named square matrix: computes standard errors with a user-supplied variance matrix. This matrix must be square and have dimensions equal to the number of coefficients in \code{get_coef(model)}.
+}}
+
+\item{group_name}{String to identify the "group" or "level" of the terms to
+estimate. Groups are often used in models like multinomial logit where each
+level of the response variable is associated to its own set of coefficients.}
+
+\item{prediction_type}{Type of prediction as character. This can differ
+based on the model type, but will typically be a string such as: "response",
+"link", or "probs".}
+
+\item{numDeriv_method}{One of "simple", "Richardson", or "complex",
+indicating the method to use for the approximation. See
+\code{\link[numDeriv:grad]{numDeriv::grad()}} for details.}
 }
+\value{
+A vector of standard errors of the same lenght as the coefficient
+}
+\description{
+Compute a vector of standard errors using the delta method (internal function)
+}
+\keyword{internal}

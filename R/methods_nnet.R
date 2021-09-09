@@ -1,10 +1,9 @@
 # TODO: I'm sure this can be simplifed using targeted methods
 
-
-#' @include reset_coefs.R
-#' @rdname reset_coefs
+#' @include set_coef.R
+#' @rdname set_coef
 #' @export
-reset_coefs.multinom <- function(model, coefs) {
+set_coef.multinom <- function(model, coefs) {
     # internally, coefficients are held in the `wts` vector, with 0s
     # interspersed. When transforming that vector to a matrix, we see that the
     # first row and first column are all zeros. 
@@ -30,7 +29,7 @@ get_se_delta.multinom <- function(model,
 
     model_tmp <- model
     inner <- function(x) {
-        model_tmp <- reset_coefs(model_tmp, x)
+        model_tmp <- set_coef(model_tmp, x)
         g <- get_dydx(model = model_tmp, 
                           fitfram = fitfram, 
                           variable = variable, 

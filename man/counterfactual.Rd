@@ -2,10 +2,33 @@
 % Please edit documentation in R/counterfactual.R
 \name{counterfactual}
 \alias{counterfactual}
-\title{Generate "counterfactual" datasets based on a model}
+\title{Generate "counterfactual" datasets for use in \code{marginaleffects}'s \code{newdata} argument}
 \usage{
 counterfactual(model = NULL, data = NULL, at = NULL)
 }
+\arguments{
+\item{model}{Model object}
+
+\item{data}{data.frame (one and only one of the \code{model} and \code{data} arguments
+must be true).}
+
+\item{at}{Named list of counterfactual values to consider.}
+}
+\value{
+A \code{data.frame} where each row of the original data is repeated
+multiple times for each of the values of the variables in the \code{at} list. See
+example below.
+
+If users supply a model, the data used to fit that model is retrieved using
+the \code{insight::get_data} function, and then replicated with different values
+of the variables in the \code{at} list.
+}
 \description{
-Generate "counterfactual" datasets based on a model
+Generate "counterfactual" datasets for use in \code{marginaleffects}'s \code{newdata} argument
+}
+\examples{
+# Notice that rows 1 through 3 are now repeated twice, with different values of `hp`
+cd <- counterfactual(data = mtcars, at = list("hp" = c(100, 110)))
+cd[cd$rowid \%in\% 1:3,]
+
 }

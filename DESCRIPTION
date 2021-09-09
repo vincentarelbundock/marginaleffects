@@ -10,7 +10,6 @@ Authors@R:
 Description: What the package does (one paragraph).
 License: GPL (>= 3)
 Encoding: UTF-8
-LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Depends:
@@ -19,6 +18,7 @@ Imports:
     checkmate,
     generics,
     insight,
+    methods,
     numDeriv,
     poorman
 Suggests: 
@@ -50,12 +50,13 @@ Collate:
     'get_predict.R'
     'get_se_delta.R'
     'marginaleffects.R'
-    'reset_coefs.R'
+    'set_coef.R'
     'methods_betareg.R'
     'methods_lme4.R'
     'methods_nnet.R'
     'methods_ordinal.R'
     'methods_stats.R'
+    'package.R'
     'plot.R'
     'plot_cme.R'
     'sanity.R'

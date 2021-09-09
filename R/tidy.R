@@ -8,12 +8,29 @@ generics::tidy
 generics::glance
 
 
+#' Tidy a `marginaleffects` object
+#'
+#' @param x An object produced by the `marginaleffects` function.
+#' @param conf.int Logical indicating whether or not to include a confidence interval.
+#' @param conf.level The confidence level to use for the confidence interval if
+#'   `conf.int=TRUE`. Must be strictly greater than 0 and less than 1. Defaults
+#'   to 0.95, which corresponds to a 95 percent confidence interval.
+#' @inheritParams marginaleffects
+#' @details
+#' The `tidy` function calculates average marginal effects by taking the mean
+#' of all the unit-level marginal effects computed by the `marginaleffects`
+#' function.
 #' @export
-tidy.marginaleffects <- function(mfx,
+#' @examples
+#' mod <- lm(mpg ~ hp * wt + factor(gear), data = mtcars)
+#' mfx <- marginaleffects(mod)
+#' tidy(mfx)
+tidy.marginaleffects <- function(x,
                                  conf.int = TRUE,
-                                 conf.level = 0.95) {
+                                 conf.level = 0.95,
+                                 ...) {
 
-    if (length(attr(mfx, "contrasts")) > 1) {
+    if (length(attr(x, "contrasts")) > 1) {
         if (isFALSE(check_dependency("emmeans"))) {
             warning("The model includes logical and/or factor variables. You can install the `emmeans` package to compute contrasts.")
         }
@@ -21,14 +38,14 @@ tidy.marginaleffects <- function(mfx,
 
     # dydx averages
     # empty initial mfx data.frame means there were no numeric variables in the model
-    if ("term" %in% colnames(mfx)) {
-        dydx <- mfx[, colnames(mfx) %in% c("group", "term", "dydx", "std.error")]
+    if ("term" %in% colnames(x)) {
+        dydx <- x[, colnames(x) %in% c("group", "term", "dydx", "std.error")]
         colnames(dydx)[match("dydx", colnames(dydx))] <- "estimate"
 
         if ("group" %in% colnames(dydx)) { 
             if ("std.error" %in% colnames(dydx)) {
                 dydx <- poorman::group_by(dydx, group, term) 
-                dydx <- poorman::summarize(dydx, across(c("estimate", "std.error"), mean, na.rm = TRUE))
+                dydx <- poorman::summarize(dydx, poorman::across(c("estimate", "std.error"), mean, na.rm = TRUE))
             } else {
                 dydx <- poorman::group_by(dydx, group, term)
                 dydx <- poorman::summarize(dydx, estimate = mean, na.rm = TRUE)
@@ -36,7 +53,7 @@ tidy.marginaleffects <- function(mfx,
         } else {
             if ("std.error" %in% colnames(dydx)) {
                 dydx <- poorman::group_by(dydx, term)
-                dydx <- poorman::summarize(dydx, across(c("estimate", "std.error"), mean, na.rm = TRUE))
+                dydx <- poorman::summarize(dydx, poorman::across(c("estimate", "std.error"), mean, na.rm = TRUE))
             } else {
                 dydx <- poorman::group_by(dydx, term)
                 dydx <- poorman::summarize(dydx, estimate = mean(estimate, na.rm = TRUE))
@@ -50,13 +67,13 @@ tidy.marginaleffects <- function(mfx,
     # dydx statistics (emmeans calculates those for us)
     if ("term" %in% colnames(dydx)) {
         if (!"statistic" %in% colnames(dydx)) dydx$statistic <- dydx$estimate / dydx$std.error
-        if (!"p.value" %in% colnames(dydx)) dydx$p.value <- 2 * (1 - pnorm(abs(dydx$statistic)))
+        if (!"p.value" %in% colnames(dydx)) dydx$p.value <- 2 * (1 - stats::pnorm(abs(dydx$statistic)))
     }
 
     # contrasts
-    cont <- attr(mfx, "contrasts")
+    cont <- attr(x, "contrasts")
     if (nrow(dydx) > 0 && !is.null(cont)) {
-        out <- poorman::bind_rows(dydx, attr(mfx, "contrasts"))
+        out <- poorman::bind_rows(dydx, attr(x, "contrasts"))
     } else if (nrow(dydx) > 0) {
         out <- dydx
     } else if (!is.null(cont)) {
@@ -69,8 +86,8 @@ tidy.marginaleffects <- function(mfx,
     if ("std.error" %in% colnames(out)) {
         if (isTRUE(conf.int) && !"conf.low" %in% colnames(out)) {
             alpha <- 1 - conf.level
-            out$conf.low <- out$estimate + qnorm(alpha / 2) * out$std.error
-            out$conf.high <- out$estimate - qnorm(alpha / 2) * out$std.error
+            out$conf.low <- out$estimate + stats::qnorm(alpha / 2) * out$std.error
+            out$conf.high <- out$estimate - stats::qnorm(alpha / 2) * out$std.error
         }
     }
 
@@ -83,7 +100,7 @@ tidy.marginaleffects <- function(mfx,
 
 
 #' @export
-glance.marginaleffects <- function(mfx, ...) {
-    out <- attr(mfx, "glance")
+glance.marginaleffects <- function(x, ...) {
+    out <- attr(x, "glance")
     return(out)
 }

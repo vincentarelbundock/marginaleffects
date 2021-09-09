@@ -2,10 +2,18 @@
 % Please edit documentation in R/get_predict.R, R/methods_ordinal.R
 \name{get_predict}
 \alias{get_predict}
+\alias{get_predict.default}
 \alias{get_predict.clm}
-\title{Get a named vector of predictficients from a model object}
+\title{Get predicted values from a model object (internal function)}
 \usage{
 get_predict(model, newdata, prediction_type, ...)
+
+\method{get_predict}{default}(
+  model,
+  newdata = insight::find_data(model),
+  prediction_type = "response",
+  ...
+)
 
 \method{get_predict}{clm}(
   model,
@@ -14,6 +22,25 @@ get_predict(model, newdata, prediction_type, ...)
   ...
 )
 }
-\description{
-Get a named vector of predictficients from a model object
+\arguments{
+\item{model}{Model object}
+
+\item{newdata}{A dataset over which to compute marginal effects. \code{NULL} uses
+the original data used to fit the model.}
+
+\item{prediction_type}{Type of prediction as character. This can differ
+based on the model type, but will typically be a string such as: "response",
+"link", or "probs".}
+
+\item{...}{Additional arguments are ignored.}
 }
+\value{
+A vector of predicted values of length equal to the number of rows
+in \code{newdata}. For models with multi-level outcomes (e.g., multinomial
+logit), this function returns a matrix of predicted values with column names
+equal to each of the levels/groups.
+}
+\description{
+Get predicted values from a model object (internal function)
+}
+\keyword{internal}
