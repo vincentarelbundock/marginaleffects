@@ -10,7 +10,7 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 [![R-CMD-check](https://github.com/vincentarelbundock/fastmargins/workflows/R-CMD-check/badge.svg)](https://github.com/vincentarelbundock/fastmargins/actions)
 <!-- badges: end -->
 
-This package is still experimental. *Use with caution\!*
+This package is still experimental. *Use with caution!*
 
 ## What?
 
@@ -63,15 +63,25 @@ package is (essentially) a clone of `margins`.
 
 So why did I write a new package?
 
-  - *Speed:* In a typical case shown below, `marginaleffects` is over
+-   *Speed:* In a typical case shown below, `marginaleffects` is over
     400x faster (55 seconds vs. 130 *milli*seconds).
-  - *Efficiency:* Between 5 and 60x smaller memory footprint.
-  - *Extensibility:* Adding support for new models often requires less
-    than 10 lines of new code.
-  - `ggplot2` support: Plot your (conditional) marginal effects using
+-   *Efficiency:* Between 5 and 60x smaller memory footprint.
+-   *Extensibility:* Adding support for new models often requires less
+    than 10 lines of new code. In the medium run, my goal is to add
+    support for *several* more model types.
+-   `ggplot2` support: Plot your (conditional) marginal effects using
     `ggplot2`.
-  - *Tidy:* The results produced by `marginaleffects` follow “tidy”
+-   *Tidy:* The results produced by `marginaleffects` follow “tidy”
     principles. They are easy to process and program with.
+-   *Active development*.
+
+Downsides of `marginaleffects` include:
+
+-   No support for weights or simultation-based inference.
+-   Possibly fragile handling of transformations in model formulas (not
+    sure).
+-   More dependencies.
+-   Newer package with a much smaller (i.e., non-existent) user base.
 
 ## How?
 
@@ -86,7 +96,7 @@ shows which numerical results have been checked against alternative
 software packages: Stata’s `margins` command and R’s `margins` package.
 
 | Model            | Support: Effect | Support: Std.Errors | Validity: Stata | Validity: margins |
-| :--------------- | :-------------- | :------------------ | :-------------- | :---------------- |
+|:-----------------|:----------------|:--------------------|:----------------|:------------------|
 | stats::lm        | ✓               | ✓                   | ✓               | ✓                 |
 | stats::glm       | ✓               | ✓                   | ✓               | ✓                 |
 | stats::loess     | ✓               |                     |                 | ✓                 |
@@ -99,7 +109,6 @@ software packages: Stata’s `margins` command and R’s `margins` package.
 | lme4::glmer      | ✓               | ✓                   |                 | dydx only         |
 | MASS::polr       | ✓               |                     | ✓               |                   |
 | ordinal::clm     | ✓               |                     |                 | ✓                 |
-| survey::svyglm   | ✓               | ✓                   |                 | ✓                 |
 | survey::svyglm   | ✓               | ✓                   |                 | ✓                 |
 
 ## Installation
@@ -140,11 +149,11 @@ mfx <- marginaleffects(mod)
 head(mfx)
 #>   rowid              term        dydx   std.error large_penguin bill_length_mm
 #> 1     1    bill_length_mm 0.017622745 0.007837288             0           39.1
-#> 2     1 flipper_length_mm 0.006763748 0.001561740             0           39.1
+#> 2     1 flipper_length_mm 0.006763748 0.001561738             0           39.1
 #> 3     2    bill_length_mm 0.035846649 0.011917159             0           39.5
-#> 4     2 flipper_length_mm 0.013758244 0.002880123             0           39.5
-#> 5     3    bill_length_mm 0.084433436 0.021119186             0           40.3
-#> 6     3 flipper_length_mm 0.032406447 0.008159318             0           40.3
+#> 4     2 flipper_length_mm 0.013758244 0.002880122             0           39.5
+#> 5     3    bill_length_mm 0.084433436 0.021119181             0           40.3
+#> 6     3 flipper_length_mm 0.032406447 0.008159349             0           40.3
 #>   flipper_length_mm species
 #> 1               181  Adelie
 #> 2               181  Adelie
@@ -180,8 +189,8 @@ head(mar, 2)
 #> 1          0.01762256            0.006763789           -0.05093734
 #> 2          0.03584626            0.013758266           -0.11056655
 #>   dydx_speciesGentoo Var_dydx_bill_length_mm Var_dydx_flipper_length_mm
-#> 1         0.05458668            3.335633e-05               5.498657e-06
-#> 2         0.10402440            3.335633e-05               5.498657e-06
+#> 1         0.05458668            3.335632e-05               5.498655e-06
+#> 2         0.10402440            3.335632e-05               5.498655e-06
 #>   Var_dydx_speciesChinstrap Var_dydx_speciesGentoo X_weights X_at_number
 #> 1                0.00319684             0.01142364        NA           1
 #> 2                0.00319684             0.01142364        NA           1
@@ -266,10 +275,10 @@ nd <- typical(mod,
                         species = c("Adelie", "Gentoo")))
 marginaleffects(mod, newdata = nd)
 #>   rowid              term       dydx   std.error bill_length_mm
-#> 1     1    bill_length_mm 0.06730577 0.035695241          44.45
-#> 2     1 flipper_length_mm 0.02583260 0.005812078          44.45
-#> 3     2    bill_length_mm 0.08815874 0.032833955          44.45
-#> 4     2 flipper_length_mm 0.03383629 0.005861870          44.45
+#> 1     1    bill_length_mm 0.06730577 0.035695232          44.45
+#> 2     1 flipper_length_mm 0.02583260 0.005812085          44.45
+#> 3     2    bill_length_mm 0.08815874 0.032833988          44.45
+#> 4     2 flipper_length_mm 0.03383629 0.005861848          44.45
 #>   flipper_length_mm species
 #> 1               180  Adelie
 #> 2               180  Adelie
@@ -343,19 +352,19 @@ mfx <- lapply(mod, marginaleffects)
 modelsummary(mfx)
 ```
 
-|                     |   Logit   |    OLS     |
-| :------------------ | :-------: | :--------: |
-| flipper\_length\_mm |   0.020   |   48.145   |
-|                     |  (0.003)  |  (2.011)   |
-| bill\_length\_mm    |           |   6.047    |
-|                     |           |  (5.180)   |
-| Num.Obs.            |    342    |    342     |
-| R2                  |           |   0.760    |
-| R2 Adj.             |           |   0.759    |
-| AIC                 |   222.2   |   5063.5   |
-| BIC                 |   229.9   |   5078.8   |
-| Log.Lik.            | \-109.111 | \-2527.741 |
-| F                   |           |  536.626   |
+|                     |  Logit   |    OLS    |
+|:--------------------|:--------:|:---------:|
+| flipper\_length\_mm |  0.020   |  48.145   |
+|                     | (0.003)  |  (2.011)  |
+| bill\_length\_mm    |          |   6.047   |
+|                     |          |  (5.180)  |
+| Num.Obs.            |   342    |    342    |
+| R2                  |          |   0.760   |
+| R2 Adj.             |          |   0.759   |
+| AIC                 |  222.2   |  5063.5   |
+| BIC                 |  229.9   |  5078.8   |
+| Log.Lik.            | -109.111 | -2527.741 |
+| F                   |          |  536.626  |
 
 You can also display models with contrasts using `modelsummary`’s
 `group` argument:
@@ -370,23 +379,23 @@ mfx <- lapply(mod, marginaleffects)
 modelsummary(mfx, group = term + contrast ~ model)
 ```
 
-|                     |                    |   Logit   |    OLS     |
-| :------------------ | :----------------- | :-------: | :--------: |
-| species             | Chinstrap - Adelie |  \-0.371  | \-206.510  |
-|                     |                    |  (0.384)  |  (57.731)  |
-|                     | Gentoo - Adelie    |   6.078   |  266.810   |
-|                     |                    |  (1.023)  |  (95.264)  |
-|                     | Gentoo - Chinstrap |   6.449   |  473.320   |
-|                     |                    |  (1.057)  |  (86.746)  |
-| flipper\_length\_mm |                    |           |   40.705   |
-|                     |                    |           |  (3.068)   |
-| Num.Obs.            |                    |    342    |    342     |
-| R2                  |                    |           |   0.783    |
-| R2 Adj.             |                    |           |   0.781    |
-| AIC                 |                    |   236.4   |   5031.5   |
-| BIC                 |                    |   247.9   |   5050.7   |
-| Log.Lik.            |                    | \-115.188 | \-2510.762 |
-| F                   |                    |           |  405.693   |
+|                     |                    |  Logit   |    OLS    |
+|:--------------------|:-------------------|:--------:|:---------:|
+| species             | Chinstrap - Adelie |  -0.371  | -206.510  |
+|                     |                    | (0.384)  | (57.731)  |
+|                     | Gentoo - Adelie    |  6.078   |  266.810  |
+|                     |                    | (1.023)  | (95.264)  |
+|                     | Gentoo - Chinstrap |  6.449   |  473.320  |
+|                     |                    | (1.057)  | (86.746)  |
+| flipper\_length\_mm |                    |          |  40.705   |
+|                     |                    |          |  (3.068)  |
+| Num.Obs.            |                    |   342    |    342    |
+| R2                  |                    |          |   0.783   |
+| R2 Adj.             |                    |          |   0.781   |
+| AIC                 |                    |  236.4   |  5031.5   |
+| BIC                 |                    |  247.9   |  5050.7   |
+| Log.Lik.            |                    | -115.188 | -2510.762 |
+| F                   |                    |          |  405.693  |
 
 ## Plots (`ggplot2`)
 
@@ -420,6 +429,53 @@ plot_cme(mod, effect = "hp", condition = "wt")
 ```
 
 <img src="man/figures/README-unnamed-chunk-18-1.png" width="60%" />
+
+## Simple analytic example: Quadratic term
+
+Say you estimate a linear regression model with a quadratic term:
+
+*Y* = *β*<sub>0</sub> + *β*<sub>1</sub>*X* + *ε*
+,
+
+and obtain the following estimates:
+*β*<sub>1</sub> = 1; *β*<sub>2</sub> = 2. By taking the partial
+derivative with respect to *X* we obtain the marginal effect of *X* on
+*Y* variable:
+
+∂*Y*/∂*X* = *β*<sub>1</sub> + 2 ⋅ *β*<sub>2</sub>*X*
+
+Plugging in our estimates leads us to conclude that the effect of *X* on
+*Y* increases as *X* itself increases. An increase in *X* is associated
+with 1 + 4*X*. When *X* is large, an increase in *X* has a large effect
+on *Y*. When *X* is small, an increase in *X* has a small effect on *Y*.
+
+`marginaleffects` arrives at the same conclusion in simultated data:
+
+``` r
+N <- 1e5
+dat <- data.frame(x = rnorm(N))
+dat$y <- 1 + 1 * dat$x + 2 * dat$x^2 + rnorm(N)
+mod <- lm(y ~ x + I(x^2), dat)
+
+marginaleffects(mod, 
+                newdata = typical(data = dat, at = list(x = -2:2))) %>%
+    mutate(truth = 1 + 4 * x) %>%
+    select(dydx, truth)
+#>        dydx truth
+#> 1 -6.999457    -7
+#> 2 -2.998704    -3
+#> 3  1.002049     1
+#> 4  5.002801     5
+#> 5  9.003554     9
+```
+
+We can also plot the result easily with the `plot_cme` function:
+
+``` r
+plot_cme(mod, effect = "x", condition = "x")
+```
+
+<img src="man/figures/README-unnamed-chunk-20-1.png" width="60%" />
 
 ## Benchmarks
 
@@ -502,7 +558,7 @@ stats::vcov(model)
 
 # returns a new model object with different stored coefficients 
 # calling predict(model) and predict(model_new) should produce different results
-model_new <- reset_coefs(model, rep(0, length(get_coef(model))))
+model_new <- set_coef(model, rep(0, length(get_coef(model))))
 ```
 
 If all of these functions work out-of-the-box, there’s a good chance
@@ -518,8 +574,8 @@ class(model)
 ```
 
 Then, create functions (methods) called `get_coef.EXAMPLE`,
-`get_predict.EXAMPLE`, `vcov.EXAMPLE`, and `reset_coefs.EXAMPLE`, with
-the “EXAMPLE” replace by the name your model class.
+`get_predict.EXAMPLE`, `vcov.EXAMPLE`, and `set_coef.EXAMPLE`, with the
+“EXAMPLE” replace by the name your model class.
 
 #### *Step 3:* Add tests
 
@@ -532,5 +588,6 @@ tests. Ideally, we would like to compare the results obtained by
 
 Add your new model class to the lists of supported models:
 
-  - In the `sanity_dydx_model` function of the `R/sanity.R` file.
-  - In the supported models table of the `README.Rmd` file.
+-   In the `sanity_dydx_model` function of the `R/sanity.R` file.
+-   In the supported models table of the `README.Rmd` file.
+-   In the “Details” section of the `R/marginaleffects.R` documentation
