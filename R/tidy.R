@@ -28,18 +28,18 @@ tidy.marginaleffects <- function(mfx,
         if ("group" %in% colnames(dydx)) { 
             if ("std.error" %in% colnames(dydx)) {
                 dydx <- poorman::group_by(dydx, group, term) 
-                dydx <- poorman::summarize(dydx, across(c("estimate", "std.error"), mean))
+                dydx <- poorman::summarize(dydx, across(c("estimate", "std.error"), mean, na.rm = TRUE))
             } else {
                 dydx <- poorman::group_by(dydx, group, term)
-                dydx <- poorman::summarize(dydx, estimate = mean)
+                dydx <- poorman::summarize(dydx, estimate = mean, na.rm = TRUE)
             }
         } else {
             if ("std.error" %in% colnames(dydx)) {
                 dydx <- poorman::group_by(dydx, term)
-                dydx <- poorman::summarize(dydx, across(c("estimate", "std.error"), mean))
+                dydx <- poorman::summarize(dydx, across(c("estimate", "std.error"), mean, na.rm = TRUE))
             } else {
                 dydx <- poorman::group_by(dydx, term)
-                dydx <- poorman::summarize(dydx, estimate = mean(estimate))
+                dydx <- poorman::summarize(dydx, estimate = mean(estimate, na.rm = TRUE))
             }
         }
     } else {
