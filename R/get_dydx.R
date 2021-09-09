@@ -21,7 +21,7 @@ get_dydx.default <- function(model,
                             newdata = fitfram_tmp,
                             prediction_type = prediction_type)
         # numDeriv expects a vector
-        if (is.matrix(pred) && !is.null(group_name)) {
+        if (is.matrix(pred) && (!is.null(group_name) && group_name != "main")) {
             pred <- pred[, group_name, drop = TRUE]
         }
         # strip weird attributes added by some methods (e.g., predict.svyglm)

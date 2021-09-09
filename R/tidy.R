@@ -19,18 +19,25 @@ tidy.marginaleffects <- function(mfx,
 
     if ("group" %in% colnames(mfx)) { 
         if ("std.error" %in% colnames(mfx)) {
-            f <- cbind(estimate, std.error) ~ group + term
+            out <- mfx %>%
+                poorman::group_by(group, term) %>%
+                poorman::summarize(across(c("estimate", "std.error"), mean))
         } else {
-            f <- estimate ~ group + term
+            out <- mfx %>%
+                poorman::group_by(group, term) %>%
+                poorman::summarize(estimate = mean(estimate))
         }
     } else {
         if ("std.error" %in% colnames(mfx)) {
-            f <- cbind(estimate, std.error) ~ term
+            out <- mfx %>%
+                poorman::group_by(term) %>%
+                poorman::summarize(across(c("estimate", "std.error"), mean))
         } else {
-            f <- estimate ~ term
+            out <- mfx %>%
+                poorman::group_by(term) %>%
+                poorman::summarize(estimate = mean(estimate))
         }
     }
-    out <- aggregate(f, data = mfx, FUN = agg_fun)
 
     if ("std.error" %in% colnames(out)) {
         out$statistic <- out$estimate / out$std.error

@@ -31,7 +31,9 @@ print.marginaleffects.summary <- function(x,
   # round
   for (col in c("estimate", "std.error", "statistic", "p.value", "conf.low", "conf.high")) {
     if (col %in% colnames(out)) {
-      out[[col]] <- format(round(out[[col]], digits = digits))
+      out[[col]] <- ifelse(is.na(out[[col]]), 
+                           "",
+                           format(round(out[[col]], digits = digits)))
     }
   }
 
@@ -48,9 +50,11 @@ print.marginaleffects.summary <- function(x,
     colnames(out)[colnames(out) == names(dict)[i]] <- dict[i]
   }
 
+  # avoid infinite recursion by stripping marginaleffect.summary class
+  out <- as.data.frame(out)
+
   cat(tit, "\n")
-  # avoid infinite recursion
-  print(as.data.frame(out))
+  print(out)
   cat("\n")
   cat("Model type: ", attr(x, "model_type"), "\n")
   cat("Prediction type: ", attr(x, "prediction_type"), "\n")

@@ -6,17 +6,18 @@ counterfactual <- function(model = NULL, data = NULL, at = NULL) {
                            min.len = 1,
                            names = "unique")
 
-    v_all <- insight::find_variables(model)$conditional
-    v_manual <- names(at)
-    v_automatic <- setdiff(v_all, v_manual)
-
     if (!is.null(model) && is.null(data)) {
         dat <- insight::get_data(model)
+        v_all <- insight::find_variables(model)$conditional
     } else if (is.null(model) && !is.null(data)) {
         dat <- data
+        v_all <- colnames(dat)
     } else {
         stop("One (and only one) of the `model` and `data` arguments can be `NULL`.")
     }
+
+    v_manual <- names(at)
+    v_automatic <- setdiff(v_all, v_manual)
 
     # check `at` elements and convert them to factor as needed
     for (n in names(at)) {
