@@ -1,3 +1,4 @@
+
 mod <- glm(vs ~ hp * mpg, data = mtcars, family = binomial)
 mfx <- marginaleffects(mod) 
 
@@ -15,4 +16,34 @@ test_that("tidy: minimal", {
 test_that("glance: with modelsummary", {
     gl <- glance(mfx)
     expect_equal(dim(glance(mfx)), c(1, 8))
+})
+
+test_that("tidy: with and without contrasts", {
+    tmp <- mtcars
+    tmp$am <- as.logical(tmp$am)
+
+    # numeric only
+    x <- tidy(marginaleffects(lm(mpg ~ hp, tmp)))
+    expect_equal(dim(x), c(1, 7))
+
+    # logical only
+    x <- tidy(marginaleffects(lm(mpg ~ am, tmp)))
+    expect_equal(dim(x), c(1, 8))
+
+    # factor only
+    x <- tidy(marginaleffects(lm(mpg ~ factor(gear), tmp)))
+    expect_equal(dim(x), c(3, 8))
+
+    # combinations
+    x <- tidy(marginaleffects(lm(mpg ~ hp + am, tmp)))
+    expect_equal(dim(x), c(2, 8))
+
+    x <- tidy(marginaleffects(lm(mpg ~ hp + factor(gear), tmp)))
+    expect_equal(dim(x), c(4, 8))
+
+    x <- tidy(marginaleffects(lm(mpg ~ am + factor(gear), tmp)))
+    expect_equal(dim(x), c(4, 8))
+
+    x <- tidy(marginaleffects(lm(mpg ~ hp + am + factor(gear), tmp)))
+    expect_equal(dim(x), c(5, 8))
 })

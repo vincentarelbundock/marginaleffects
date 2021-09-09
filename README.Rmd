@@ -297,7 +297,7 @@ b2
 #> # … with 1 more variable: gc/sec <dbl>
 ```
 
-# Extending to support new models
+# Extending `marginaleffects` to support new models
 
 In most cases, extending `marginaleffects` to support new models is easy. Imagine you want to add support for an object called "`model`" of class "`Example`" with N observations. 
 
