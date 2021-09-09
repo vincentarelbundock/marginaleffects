@@ -17,7 +17,9 @@ Imports:
     checkmate,
     generics,
     insight,
-    numDeriv
+    magrittr,
+    numDeriv,
+    poorman
 Suggests: 
     margins,
     testthat (>= 3.0.0),
@@ -43,6 +45,7 @@ Collate:
     'get_coef.R'
     'get_dydx.R'
     'get_dydx_and_se.R'
+    'get_pred_diff_logical.R'
     'get_predict.R'
     'get_se_delta.R'
     'marginaleffects.R'

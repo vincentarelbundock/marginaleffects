@@ -84,24 +84,34 @@ sanity_dydx_newdata <- function(model, newdata) {
 
 
 sanity_dydx_variables <- function(model, newdata, variables) {
-    checkmate::assert_character(variables, null.ok = TRUE)
+    checkmate::assert_character(variables, min.len = 1, null.ok = TRUE)
 
     # guess variables
     if (is.null(variables)) {
         variables <- insight::find_variables(model)$conditional
     }
 
-    # subset of numeric variables
+    # numeric
     idx <- sapply(newdata[, variables, drop = FALSE], is.numeric)
     variables_numeric <- variables[idx]
-    variables_notnumeric <- variables[!idx]
-    if (length(variables_notnumeric) > 0) {
-        msg <- "No marginal effect was computed for these variables because they are not numeric: %s. Specify the `variables` argument manually to silence this warning."
-        warning(sprintf(msg, paste(variables_notnumeric, collapse = ", ")))
-    }
-    variables <- variables_numeric
 
-    return(variables)
+    # logical
+    idx <- sapply(newdata[, variables, drop = FALSE], is.logical)
+    variables_logical <- variables[idx]
+
+    # others
+    variables_others <- setdiff(variables, 
+                                c(variables_numeric, variables_logical))
+    if (length(variables_others) > 0) {
+        variables_others <- paste(variables_others, collapse = ", ")
+        msg <- sprintf("No marginal effect was computed for these variables because they are not numeric or logical: %s. Specify the `variables` argument manually to silence this warning.", variables_others)
+        warning(msg)
+    }
+
+    out <- list("numeric" = variables_numeric, 
+                "logical" = variables_logical)
+
+    return(out)
 }
 
 
