@@ -45,7 +45,6 @@ Collate:
     'counterfactual.R'
     'get_coef.R'
     'get_contrast.R'
-    'get_contrast_logical.R'
     'get_dydx.R'
     'get_dydx_and_se.R'
     'get_predict.R'

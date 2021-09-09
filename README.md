@@ -37,10 +37,10 @@ to compute:
 > response variable.
 
 To calculate marginal effects, we take the derivative of the regression
-equation. This can be annoying, especially when our models are
+equation. This can be challenging, especially when our models are
 non-linear, or when regressors are transformed or interacted. Computing
-the variance is even worse. The `marginaleffects` package hopes to do
-most of this hard work for you.
+the variance is even more difficult. The `marginaleffects` package hopes
+to do most of this hard work for you.
 
 # Why?
 
@@ -70,7 +70,7 @@ So why did I write a new package?
   - `ggplot2` support: Plot your (conditional) marginal effects using
     `ggplot2`.
   - *Tidy:* The results produced by `marginaleffects` follow “tidy”
-    principles and are easy to process and program with.
+    principles. They are easy to process and program with.
 
 # How?
 
@@ -83,17 +83,6 @@ compute gradients and jacobians. That’s it. That’s the secret sauce.
 This table shows the list of models supported by `marginaleffect`, and
 shows which numerical results have been checked against alternative
 software packages: Stata’s `margins` command and R’s `margins` package.
-
-    #> 
-    #> Attaching package: 'tibble'
-    #> The following object is masked from 'package:marginaleffects':
-    #> 
-    #>     %>%
-    #> 
-    #> Attaching package: 'kableExtra'
-    #> The following object is masked from 'package:marginaleffects':
-    #> 
-    #>     %>%
 
 | Model            | Support: Effect | Support: Std.Errors | Validity: Stata | Validity: margins |
 | :--------------- | :-------------- | :------------------ | :-------------- | :---------------- |
@@ -114,7 +103,7 @@ software packages: Stata’s `margins` command and R’s `margins` package.
 
 # Installation
 
-You can install the released version of marginaleffects from Github:
+You can install the latest version of `marginaleffects` from Github:
 
 ``` r
 remotes::install_github("vincentarelbundock/marginaleffects")
@@ -130,6 +119,14 @@ and estimate a GLM model:
 
 ``` r
 library(marginaleffects)
+#> 
+#> Attaching package: 'marginaleffects'
+#> The following object is masked from 'package:kableExtra':
+#> 
+#>     %>%
+#> The following object is masked from 'package:tibble':
+#> 
+#>     %>%
 
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv")
 dat$large_penguin <- ifelse(dat$body_mass_g > median(dat$body_mass_g, na.rm = TRUE), 1, 0)
@@ -404,9 +401,9 @@ modelsummary(mfx,
 
 Since the output of the `marginaleffects` function is “tidy”, it is very
 easy to use the `data.frame` that this function produces directly to
-draw plots with Base `R` functions, `lattice`, or `ggplot2`. In
-addition, the `marginaleffects` package also offers two functions to
-draw frequently used plots.
+draw plots with any drawing package you like. In addition, the
+`marginaleffects` package also offers functions to draw frequently used
+plots with `ggplot2`.
 
 The first is a simple `plot` command to draw the average marginal
 effects:
@@ -438,9 +435,8 @@ plot_cme(mod, effect = "hp", condition = "wt")
 Here are two *very* naive benchmarks to compare the speed of
 `marginaleffects` and `margins`. Computing the unit-level marginal
 effects and standard errors in a logistic regression model with 1500
-observations is over 300 times faster with `marginaleffects`.
-Calculating only the marginal effects is about twice as fast with
-`marginaleffects`.
+observations is over 400 times faster with `marginaleffects`.
+Calculating only the marginal effects is about 50% faster.
 
 Simulate data and fit model:
 
@@ -493,3 +489,57 @@ b2
 #> 2 marginaleffects(mod, variance = NULL)            66.1ms   67.7ms     14.3     5.22MB
 #> # … with 1 more variable: gc/sec <dbl>
 ```
+
+# Extending to support new models
+
+In most cases, extending `marginaleffects` to support new models is
+easy. Imagine you want to add support for an object called “`model`” of
+class “`Example`” with N observations.
+
+#### *Step 1:* Check if `marginaleffects` default functions work:
+
+``` r
+# returns a named vector of coefficients
+get_coef(model)
+
+# returns a named vector of predictions 
+# returns a named matrix of size NxK for models with K levels (e.g., multinomial logit)
+get_predict(model)
+
+# returns a named square matrix of size equal to the number of coefficients
+stats::vcov(model)
+
+# returns a new model object with different stored coefficients 
+# calling predict(model) and predict(model_new) should produce different results
+model_new <- reset_coefs(model, rep(0, length(get_coef(model))))
+```
+
+If all of these functions work out-of-the-box, there’s a good chance
+your model will be supported automatically. If they do *not* work, move
+to…
+
+#### *Step 2:* Define the missing methods.
+
+Find the class name of your model by calling:
+
+``` r
+class(model)
+```
+
+Then, create functions (methods) called `get_coef.EXAMPLE`,
+`get_predict.EXAMPLE`, `vcov.EXAMPLE`, and `reset_coefs.EXAMPLE`, with
+the “EXAMPLE” replace by the name your model class.
+
+#### *Step 3:* Add tests
+
+Create a file called `tests/testthat/test-PKGNAME.R` and write a few
+tests. Ideally, we would like to compare the results obtained by
+`marginaleffect` to an external source, like the `margins` package or
+`Stata`.
+
+#### *Step 4:* Finalize
+
+Add your new model class to the lists of supported models:
+
+  - In the `sanity_dydx_model` function of the `R/sanity.R` file.
+  - In the supported models table of the `README.Rmd` file.
