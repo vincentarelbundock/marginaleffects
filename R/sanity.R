@@ -33,7 +33,7 @@ sanity_dydx_model <- function(model) {
                    "polr")
     if (!any(supported %in% class(model))) {
         msg <- "Models of class %s are not supported. Supported model classes include: %s."
-        msg <- sprintf(msg, class(model)[1], paste(supported, paste = ", "))
+        msg <- sprintf(msg, class(model)[1], paste(supported, collapse = ", "))
         stop(msg)
     }
     return(model)
@@ -93,7 +93,8 @@ sanity_dydx_variables <- function(model, newdata, variables) {
     variables_dydx <- variables[idx]
 
     # contrast
-    idx <- sapply(newdata[, variables, drop = FALSE], function(x) is.logical(x) || is.factor(x))
+    idx <- sapply(newdata[, variables, drop = FALSE], 
+                  function(x) is.logical(x) | is.factor(x) | is.character(x))
     variables_contrast <- variables[idx]
 
     # others
@@ -137,12 +138,14 @@ sanity_dydx_variance <- function(model, variance) {
         if (inherits(variance, "try-error")) {
             variance <- NULL
             warning(sprintf('Unable to extract a variance-covariance matrix from model of class "%s" using the `stats::vcov` function. The `variance` argument was switched to `FALSE`. Please supply a named matrix to produce uncertainty estimates.', class(model)[1]))
+            # dpoMatrix conversion
         }
+        variance <- as.matrix(variance)
     } 
+
 
     # TODO: Test if the names of the matrix match the names of the coefficients.
     # This could be dangerous, so leaving as a Github issue until I have time for serious work.
-
     if (isFALSE(variance)) {
         variance <- NULL
     }

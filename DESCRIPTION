@@ -17,7 +17,6 @@ Depends:
     R (>= 3.5.0)
 Imports: 
     checkmate,
-    emmeans,
     generics,
     insight,
     numDeriv,
@@ -26,6 +25,7 @@ Suggests:
     margins,
     testthat (>= 3.0.0),
     modelsummary,
+    emmeans,
     ggplot2,
     bench,
     betareg,

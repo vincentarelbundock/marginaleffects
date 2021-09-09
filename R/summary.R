@@ -1,10 +1,8 @@
 #' @export
 summary.marginaleffects <- function(x, 
-                                    agg_fun = mean,
                                     ...) {
-    out <- tidy(x, agg_fun = agg_fun)
+    out <- tidy(x)
     class(out) <- c("marginaleffects.summary", class(out))
-    attr(out, "agg_fun") <- agg_fun
     attr(out, "numDeriv_method") <- attr(x, "numDeriv_method")
     attr(out, "prediction_type") <- attr(x, "prediction_type")
     attr(out, "model_type") <- attr(x, "model_type")
@@ -20,21 +18,18 @@ print.marginaleffects.summary <- function(x,
   out <- x
 
   # title
-  if (identical(mean, attr(out, "agg_fun"))) {
-    tit <- "Average marginal effects"
-  } else if (identical(median, attr(out, "agg_fun"))) {
-    tit <- "Median marginal effects"
-  } else {
-    tit <- "Marginal effects"
-  }
+  tit <- "Average marginal effects"
 
   # round and replace NAs
-  for (col in c("estimate", "std.error", "statistic", "p.value", "conf.low", "conf.high")) {
+  for (col in c("estimate", "std.error", "statistic", "conf.low", "conf.high")) {
     if (col %in% colnames(out)) {
       out[[col]] <- ifelse(is.na(out[[col]]), 
                            "",
                            format(round(out[[col]], digits = digits)))
     }
+  }
+  if ("p.value" %in% colnames(out)) {
+      out$p.value <- format.pval(out$p.value)
   }
   if ("contrast" %in% colnames(out)) {
       out$contrast[is.na(out$contrast)] <- ""

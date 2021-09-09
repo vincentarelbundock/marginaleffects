@@ -37,6 +37,11 @@ marginaleffects <- function(model,
     }
     dydx <- poorman::bind_rows(dydx)
 
+    # an empty dydx data.frame may still be useful to display contrasts
+    if (is.null(dydx)) {
+        dydx <- data.frame()
+    }
+
     # contrasts: logical and factor variables w/ emmeans
     cont <- list()
     for (v in variables$cont) {
@@ -45,22 +50,24 @@ marginaleffects <- function(model,
     }
     cont <- poorman::bind_rows(cont)
 
-    # clean output and merge original data
+    # output: return data only if there are numeric variables
     out <- dydx
-    newdata$rowid <- 1:nrow(newdata)
-    if (isTRUE(return_data)) {
-        dydx <- merge(dydx, newdata, by = "rowid")
-    }
-    cols <- intersect(c("rowid", "group", "term", "dydx", "std.error"), colnames(out))
-    cols <- unique(c(cols, colnames(out)))
-    out <- out[, cols]
-    if (all(out$group == "main")) {
-        out$group <- NULL
+    if (nrow(out) > 0) {  # no numeric variables
+        if (isTRUE(return_data) && nrow(out) > 0) {
+            newdata$rowid <- 1:nrow(newdata)
+            out <- merge(out, newdata, by = "rowid")
+        }
+        cols <- intersect(c("rowid", "group", "term", "dydx", "std.error"), colnames(out))
+        cols <- unique(c(cols, colnames(out)))
+        out <- out[, cols]
+        if (all(out$group == "main")) {
+            out$group <- NULL
+        }
     }
 
     # attach model info
     if (check_dependency("modelsummary")) {
-        gl <- try(modelsummary::get_gof(model), silent = TRUE)
+        gl <- suppressWarnings(try(modelsummary::get_gof(model), silent = TRUE))
         if (inherits(gl, "data.frame")) {
             attr(out, "glance") <- data.frame(gl)
         } else {

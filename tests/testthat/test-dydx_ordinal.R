@@ -15,15 +15,11 @@ test_that("ordinal: vs `margins`", {
     expect_true(test_against_margins(res, mar, tol = .01))
     warning("low tolerance")
     expect_warning(marginaleffects(mod, 
-                            variables = "warm",
-                            prediction_type = "prob"), 
+                                   variables = "warm",
+                                   prediction_type = "prob"), 
                    regexp = "variance")
     expect_warning(marginaleffects(mod, 
-                            variance = FALSE,
-                            variables = "warm"),
+                                   variance = FALSE,
+                                   variables = "warm"),
                    regexp = "prediction")
-    expect_warning(marginaleffects(mod, 
-                            variance = FALSE,
-                            prediction_type = "probs"), 
-                   regexp = "numeric")
 })

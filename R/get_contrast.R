@@ -1,5 +1,6 @@
 #' @export
 get_contrast <- function(model, variable, ...) {
+    assert_dependency("emmeans")
     emm <- emmeans::emmeans(model, specs = variable)
     con <- emmeans::contrast(emm, method = "revpairwise")
     out <- data.frame(summary(con))
