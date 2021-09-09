@@ -28,7 +28,7 @@ print.marginaleffects.summary <- function(x,
     tit <- "Marginal effects"
   }
 
-  # round
+  # round and replace NAs
   for (col in c("estimate", "std.error", "statistic", "p.value", "conf.low", "conf.high")) {
     if (col %in% colnames(out)) {
       out[[col]] <- ifelse(is.na(out[[col]]), 
@@ -36,10 +36,15 @@ print.marginaleffects.summary <- function(x,
                            format(round(out[[col]], digits = digits)))
     }
   }
+  if ("contrast" %in% colnames(out)) {
+      out$contrast[is.na(out$contrast)] <- ""
+  }
 
   # rename
-  dict <- c("term" = " ",
-            "estimate" = "Marg. Effect",
+  dict <- c("Group" = "group",
+            "Term" = "term",
+            "Contrast" = "Contrast",
+            "estimate" = "Effect",
             "std.error" = "Std. Error",
             "statistic" = "z value",
             "p.value" = "Pr(>|z|)",
