@@ -2,10 +2,28 @@
 % Please edit documentation in R/typical.R
 \name{typical}
 \alias{typical}
-\title{Generate "typical" datasets based on a model}
+\title{Generate "typical" datasets for use in \code{marginaleffects}'s \code{newdata} argument}
 \usage{
 typical(model = NULL, data = NULL, at = NULL)
 }
+\arguments{
+\item{model}{Model object}
+
+\item{data}{data.frame (one and only one of the \code{model} and \code{data} arguments
+must be true).}
+
+\item{at}{Named list of typical values to consider.}
+}
+\value{
+A \code{data.frame} with the values specified in the \code{at} list, and where each of the other variables is set at its median or mode.
+}
 \description{
-Generate "typical" datasets based on a model
+Generate "typical" datasets for use in \code{marginaleffects}'s \code{newdata} argument
+}
+\examples{
+# Notice that the dataset now only has 2 rows, and that all variables except
+# `hp` are at their median or mode.
+td <- typical(data = mtcars, at = list("hp" = c(100, 110)))
+td
+
 }

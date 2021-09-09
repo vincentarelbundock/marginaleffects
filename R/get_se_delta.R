@@ -1,5 +1,10 @@
-#' @title Compute a vector of standard errors
+#' Compute a vector of standard errors using the delta method (internal function)
+#'
 #' @rdname get_se_delta
+#' @return A vector of standard errors of the same lenght as the coefficient
+#' @inheritParams marginaleffects
+#' @inheritParams get_dydx_and_se
+#' @keywords internal
 #' @export
 get_se_delta <- function (model, ...) {
     UseMethod("get_se_delta", model)
@@ -22,7 +27,7 @@ get_se_delta.default <- function(model,
     variance <- variance[names(coefs), names(coefs)]
 
     inner <- function(x) {
-        model_tmp <- reset_coefs(model_tmp, stats::setNames(x, names(coefs)))
+        model_tmp <- set_coef(model_tmp, stats::setNames(x, names(coefs)))
         g <- get_dydx(model = model_tmp,
                       fitfram = fitfram,
                       variable = variable,

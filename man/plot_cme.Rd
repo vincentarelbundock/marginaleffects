@@ -13,6 +13,34 @@ plot_cme(
   draw = TRUE
 )
 }
+\arguments{
+\item{model}{Model object}
+
+\item{effect}{Name of the variable whose marginal effect we want to plot on the y-axis}
+
+\item{condition}{Name of the variable to plot on the x-axis}
+
+\item{conf.int}{Logical indicating whether or not to include a confidence interval.}
+
+\item{conf.level}{The confidence level to use for the confidence interval if
+\code{conf.int=TRUE}. Must be strictly greater than 0 and less than 1. Defaults
+to 0.95, which corresponds to a 95 percent confidence interval.}
+
+\item{draw}{\code{TRUE} returns a \code{ggplot2} plot. \code{FALSE} returns a \code{data.frame} of the underlying data.}
+}
+\value{
+A \code{ggplot2} object
+}
 \description{
-Conditional marginal effects plot
+In models where two continous variables are interacted, the marginal effect
+of one variable is conditional on the value of the other variable. This
+function draws a plot of the marginal effect of the \code{effect} variable for
+different values of the \code{condition} variable.
+}
+\examples{
+mod <- lm(mpg ~ hp * wt, data = mtcars)
+plot_cme(mod, 
+         effect = "hp",
+         condition = "wt")
+
 }

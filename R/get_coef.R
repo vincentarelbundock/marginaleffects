@@ -1,10 +1,16 @@
-#' @title Takes a model object and returns a named *vector* of coefficients
+#' Get a named vector of coefficients from a model object (internal function)
+#' 
+#' @inheritParams marginaleffects
+#' @return A named vector of coefficients. The names must match those of the variance matrix.
 #' @rdname get_coef
+#' @keywords internal
 #' @export
 get_coef <- function (model, ...) {
     UseMethod("get_coef", model)
 }
 
+#' @rdname get_coef
+#' @export
 get_coef.default <- function(model, ...) {
     stats::coef(model)
 }

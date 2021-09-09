@@ -2,7 +2,7 @@
 % Please edit documentation in R/marginaleffects.R
 \name{marginaleffects}
 \alias{marginaleffects}
-\title{compute marginal effects estimates using numerical derivatives}
+\title{Marginal effects using numerical derivatives}
 \usage{
 marginaleffects(
   model,
@@ -11,9 +11,82 @@ marginaleffects(
   variance = TRUE,
   numDeriv_method = "simple",
   prediction_type = "response",
-  return_data = TRUE
+  return_data = TRUE,
+  ...
 )
 }
+\arguments{
+\item{model}{Model object}
+
+\item{newdata}{A dataset over which to compute marginal effects. \code{NULL} uses
+the original data used to fit the model.}
+
+\item{variables}{Variables to consider (character vector). \code{NULL}
+calculates marginal effects for all terms in the model object.}
+
+\item{variance}{Matrix or boolean
+\itemize{
+\item FALSE: does not compute unit-level standard errors.
+\item TRUE: computes unit-level standard errors using the default \code{vcov(model)} variance matrix.
+\item Named square matrix: computes standard errors with a user-supplied variance matrix. This matrix must be square and have dimensions equal to the number of coefficients in \code{get_coef(model)}.
+}}
+
+\item{numDeriv_method}{One of "simple", "Richardson", or "complex",
+indicating the method to use for the approximation. See
+\code{\link[numDeriv:grad]{numDeriv::grad()}} for details.}
+
+\item{prediction_type}{Type of prediction as character. This can differ
+based on the model type, but will typically be a string such as: "response",
+"link", or "probs".}
+
+\item{return_data}{boolean If \code{TRUE}, the original data used to fit the
+model is attached to the output. \code{FALSE} will objects which take up less
+space in memory.}
+
+\item{...}{Additional arguments are ignored.}
+}
 \description{
-compute marginal effects estimates using numerical derivatives
+Warning: This package is experimental.
+}
+\details{
+A "marginal effect" is the partial derivative of the regression equation
+with respect to a variable in the model. This package uses automatic
+differentiation tu compute marginal effects for a vast array of models,
+including non-linear models with transformations (e.g., polynomials).
+
+Most -- but not all -- of the models below have been checked against
+alternative software packages to validate results. Visit the
+\code{marginaleffects} website to learn more about the testing procedure and
+coverage.
+
+Supported models:
+\itemize{
+\item stats::lm
+\item stats::glm
+\item stats::loess (no variance)
+\item AER::ivreg
+\item betareg::betareg
+\item fixest::feols
+\item fixest::feglm
+\item lme4::lmer
+\item lme4::glmer
+\item MASS::polr (no variance)
+\item ordinal::clm (no variance)
+\item survey::svyglm
+}
+}
+\examples{
+
+mod <- glm(am ~ hp * wt, data = mtcars, family = binomial)
+mfx <- marginaleffects(mod)
+summary(mfx)
+tidy(mfx)
+head(mfx)
+\dontrun{
+plot(mfx)
+}
+
+nd <- typical(mod, at = list(hp = c(100, 110)))
+marginaleffects(mod, newdata = nd)
+
 }

@@ -1,3 +1,10 @@
+#' Get contrasts for factor and logical terms in a model object (internal function)
+#'
+#' @inheritParams marginaleffects
+#' @param variable Name of the variable to contrast (string)
+#' @return A `broom`-style `data.frame` with the results of the
+#' `emmeans::contrast` function.
+#' @keywords internal
 #' @export
 get_contrast <- function(model, variable, ...) {
     assert_dependency("emmeans")

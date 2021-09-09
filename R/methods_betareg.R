@@ -1,7 +1,7 @@
-#' @include reset_coefs.R
-#' @rdname reset_coefs
+#' @include set_coef.R
+#' @rdname set_coef
 #' @export
-reset_coefs.betareg <- function(model, coefs) {
+set_coef.betareg <- function(model, coefs) {
     # in betareg, coefficients are a two-element list. We want to substitute the first element!
     # vab: this must absolutely be a named vector, otherwise the precision gets mixed with coefs
     model[["coefficients"]]$mean[names(coefs)] <- coefs
@@ -12,6 +12,6 @@ reset_coefs.betareg <- function(model, coefs) {
 #' @include get_coef.R
 #' @rdname get_coef
 #' @export
-get_coef.betareg <- function(model) {
+get_coef.betareg <- function(model, ...) {
     model$coefficients$mean
 }

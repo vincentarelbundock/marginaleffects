@@ -1,10 +1,20 @@
-#' @title Get a named vector of predictficients from a model object
+#' Get predicted values from a model object (internal function)
+#' 
+#' @return A vector of predicted values of length equal to the number of rows
+#' in `newdata`. For models with multi-level outcomes (e.g., multinomial
+#' logit), this function returns a matrix of predicted values with column names
+#' equal to each of the levels/groups.
 #' @rdname get_predict
+#' @inheritParams marginaleffects
+#' @keywords internal
 #' @export
 get_predict <- function (model, newdata, prediction_type, ...) {
     UseMethod("get_predict", model)
 }
 
+
+#' @rdname get_predict
+#' @export
 get_predict.default <- function(model, 
                                 newdata = insight::find_data(model), 
                                 prediction_type = "response", 

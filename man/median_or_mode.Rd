@@ -6,7 +6,7 @@
 \alias{median_or_mode.factor}
 \alias{median_or_mode.logical}
 \alias{median_or_mode.data.frame}
-\title{Get typical values from data.frames or vectors}
+\title{Compute the mode or median of \code{x}}
 \usage{
 median_or_mode(x)
 
@@ -22,5 +22,6 @@ median_or_mode(x)
 \item{x}{extract the median or the mode of vector or data.frame x depending on its type}
 }
 \description{
-Get typical values from data.frames or vectors
+Compute the mode or median of \code{x}
 }
+\keyword{internal}

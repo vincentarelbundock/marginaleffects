@@ -1,5 +1,9 @@
-#' @title Get Gradient
+#' Compute marginal effects (internal function)
+#'
 #' @rdname get_dydx
+#' @inheritParams marginaleffects
+#' @inheritParams get_dydx_and_se
+#' @keywords internal
 #' @export
 get_dydx <- function (model, ...) {
     UseMethod("get_dydx", model)

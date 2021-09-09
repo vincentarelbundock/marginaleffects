@@ -46,7 +46,7 @@ So why did I write a new package?
 
 * _Speed:_ In a typical case shown below, `marginaleffects` is over 400x faster (55 seconds vs. 130 *milli*seconds).
 * _Efficiency:_ Between 5 and 60x smaller memory footprint.
-* _Extensibility:_ Adding support for new models often requires less than 10 lines of new code.
+* _Extensibility:_ Adding support for new models often requires less than 10 lines of new code. In the medium run, my goal is to add support for *several* more model types.
 * `ggplot2` support: Plot your (conditional) marginal effects using `ggplot2`.
 * _Tidy:_ The results produced by `marginaleffects` follow "tidy" principles. They are easy to process and program with. 
 * _Active development_.
@@ -84,7 +84,6 @@ tab <-
 "lme4::glmer",      "✓"      , "✓"        ,             , "dydx only"
 "MASS::polr",       "✓"      ,            , "✓"         ,
 "ordinal::clm",     "✓"      ,            ,             , "✓"
-"survey::svyglm",   "✓"      , "✓"        ,             , "✓"
 "survey::svyglm",   "✓"      , "✓"        ,             , "✓"'
 tab <- read.csv(text = tab)
 colnames(tab) <- c("Model", "Support: Effect", "Support: Std.Errors", "Validity: Stata", "Validity: margins")
@@ -329,7 +328,7 @@ stats::vcov(model)
 
 # returns a new model object with different stored coefficients 
 # calling predict(model) and predict(model_new) should produce different results
-model_new <- reset_coefs(model, rep(0, length(get_coef(model))))
+model_new <- set_coef(model, rep(0, length(get_coef(model))))
 ```
 
 If all of these functions work out-of-the-box, there's a good chance your model will be supported automatically. If they do *not* work, move to...
@@ -342,7 +341,7 @@ Find the class name of your model by calling:
 class(model)
 ```
 
-Then, create functions (methods) called `get_coef.EXAMPLE`, `get_predict.EXAMPLE`, `vcov.EXAMPLE`, and `reset_coefs.EXAMPLE`, with the "EXAMPLE" replace by the name your model class.
+Then, create functions (methods) called `get_coef.EXAMPLE`, `get_predict.EXAMPLE`, `vcov.EXAMPLE`, and `set_coef.EXAMPLE`, with the "EXAMPLE" replace by the name your model class.
 
 #### *Step 3:* Add tests
 
@@ -354,3 +353,4 @@ Add your new model class to the lists of supported models:
 
 * In the `sanity_dydx_model` function of the `R/sanity.R` file.
 * In the supported models table of the `README.Rmd` file.
+* In the "Details" section of the `R/marginaleffects.R` documentation

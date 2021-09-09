@@ -1,11 +1,14 @@
+#' Summarize a `marginaleffects` object
+#'
+#' @param object An object produced by the `marginaleffects` function
+#' @inheritParams marginaleffects
 #' @export
-summary.marginaleffects <- function(x, 
-                                    ...) {
-    out <- tidy(x)
+summary.marginaleffects <- function(object, ...) {
+    out <- tidy(object)
     class(out) <- c("marginaleffects.summary", class(out))
-    attr(out, "numDeriv_method") <- attr(x, "numDeriv_method")
-    attr(out, "prediction_type") <- attr(x, "prediction_type")
-    attr(out, "model_type") <- attr(x, "model_type")
+    attr(out, "numDeriv_method") <- attr(object, "numDeriv_method")
+    attr(out, "prediction_type") <- attr(object, "prediction_type")
+    attr(out, "model_type") <- attr(object, "model_type")
     return(out)
 }
 

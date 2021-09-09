@@ -22,3 +22,10 @@ test_that("typical(): factor, logical, numeric", {
     expect_equal(sum(sapply(res, is.factor)), 1)
     expect_equal(sum(sapply(res, is.numeric)), 9)
 })
+
+
+test_that("typical number of rows", {
+    mod <- lm(mpg ~ hp * wt, data = mtcars)
+    nd <- typical(mod, at = list(hp = c(100, 110)))
+    expect_equal(dim(marginaleffects(mod, newdata = nd)), c(4, 6))
+})

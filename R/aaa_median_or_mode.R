@@ -12,9 +12,10 @@ Mode <- function(x) {
 #  MIT License                                                    ##
 ####################################################################
 
-#' @rdname median_or_mode
-#' @title Get typical values from data.frames or vectors
+#' Compute the mode or median of `x`
 #' @param x extract the median or the mode of vector or data.frame x depending on its type
+#' @rdname median_or_mode
+#' @keywords internal
 #' @export
 median_or_mode <- function(x) {
     UseMethod("median_or_mode")

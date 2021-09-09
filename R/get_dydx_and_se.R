@@ -1,5 +1,15 @@
-#' @title Get dY/dX
+#' Get marginal effects and standard errors (internal function)
+#'
+#' @return A data.frame with term names, group names, marginal effects, and
+#' standard errors.
+#' @param variable A string to identify the variable whose marginal effect to compute.
+#' @param fitfram A data.frame over which to compute marginal effects.
+#' @param group_name String to identify the "group" or "level" of the terms to
+#'   estimate. Groups are often used in models like multinomial logit where each
+#'   level of the response variable is associated to its own set of coefficients.
+#' @inheritParams marginaleffects
 #' @rdname get_dydx_and_se
+#' @keywords internal
 #' @export
 get_dydx_and_se <- function (model, ...) {
     UseMethod("get_dydx_and_se", model)

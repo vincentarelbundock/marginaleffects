@@ -3,7 +3,7 @@
 \name{get_dydx}
 \alias{get_dydx}
 \alias{get_dydx.default}
-\title{Get Gradient}
+\title{Compute marginal effects (internal function)}
 \usage{
 get_dydx(model, ...)
 
@@ -17,6 +17,28 @@ get_dydx(model, ...)
   ...
 )
 }
-\description{
-Get Gradient
+\arguments{
+\item{model}{Model object}
+
+\item{...}{Additional arguments are ignored.}
+
+\item{variable}{A string to identify the variable whose marginal effect to compute.}
+
+\item{fitfram}{A data.frame over which to compute marginal effects.}
+
+\item{group_name}{String to identify the "group" or "level" of the terms to
+estimate. Groups are often used in models like multinomial logit where each
+level of the response variable is associated to its own set of coefficients.}
+
+\item{prediction_type}{Type of prediction as character. This can differ
+based on the model type, but will typically be a string such as: "response",
+"link", or "probs".}
+
+\item{numDeriv_method}{One of "simple", "Richardson", or "complex",
+indicating the method to use for the approximation. See
+\code{\link[numDeriv:grad]{numDeriv::grad()}} for details.}
 }
+\description{
+Compute marginal effects (internal function)
+}
+\keyword{internal}
