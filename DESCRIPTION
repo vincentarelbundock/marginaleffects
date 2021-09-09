@@ -13,11 +13,13 @@ Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
+Depends:
+    R (>= 3.5.0)
 Imports: 
     checkmate,
+    emmeans,
     generics,
     insight,
-    magrittr,
     numDeriv,
     poorman
 Suggests: 
@@ -29,7 +31,6 @@ Suggests:
     betareg,
     dplyr,
     fixest,
-    ggeffects,
     haven,
     here,
     ivreg,
@@ -43,9 +44,10 @@ Collate:
     'aaa_median_or_mode.R'
     'counterfactual.R'
     'get_coef.R'
+    'get_contrast.R'
+    'get_contrast_logical.R'
     'get_dydx.R'
     'get_dydx_and_se.R'
-    'get_pred_diff_logical.R'
     'get_predict.R'
     'get_se_delta.R'
     'marginaleffects.R'
@@ -62,3 +64,4 @@ Collate:
     'test_against_margins.R'
     'tidy.R'
     'typical.R'
+    'utils-pipe.R'

@@ -13,12 +13,9 @@ check_dependency <- function(library_name) {
 assert_dependency <- checkmate::makeAssertionFunction(check_dependency)
 
 
-#' sanity check
-#'
-#' @noRd
-sanitize_escape <- function(escape) {
-  checkmate::assert_flag(escape, null.ok = FALSE)
-  settings_set("escape", escape)
+sanity_dydx_return_data <- function(return_data) {
+    checkmate::assert_flag(return_data)
+    return(return_data)
 }
 
 
@@ -91,47 +88,65 @@ sanity_dydx_variables <- function(model, newdata, variables) {
         variables <- insight::find_variables(model)$conditional
     }
 
-    # numeric
+    # dydx variables
     idx <- sapply(newdata[, variables, drop = FALSE], is.numeric)
-    variables_numeric <- variables[idx]
+    variables_dydx <- variables[idx]
 
-    # logical
-    idx <- sapply(newdata[, variables, drop = FALSE], is.logical)
-    variables_logical <- variables[idx]
+    # contrast
+    idx <- sapply(newdata[, variables, drop = FALSE], function(x) is.logical(x) || is.factor(x))
+    variables_contrast <- variables[idx]
 
     # others
-    variables_others <- setdiff(variables, 
-                                c(variables_numeric, variables_logical))
-    if (length(variables_others) > 0) {
-        variables_others <- paste(variables_others, collapse = ", ")
-        msg <- sprintf("No marginal effect was computed for these variables because they are not numeric or logical: %s. Specify the `variables` argument manually to silence this warning.", variables_others)
-        warning(msg)
-    }
+    variables_others <- setdiff(variables, c(variables_dydx, variables_contrast))
 
-    out <- list("numeric" = variables_numeric, 
-                "logical" = variables_logical)
-
+    # output
+    out <- list("dydx" = variables_dydx, 
+                "contrast" = variables_contrast,
+                "others" = variables_others)
     return(out)
 }
 
 
 sanity_dydx_variance <- function(model, variance) {
-    if (!is.null(variance)) {
-        unsupported <- c("clm", 
-                         "loess", 
-                         "polr")
-        msg <- "Variance estimates are not yet supported for objects of class %s. Set `variance=NULL` to silence this warning."
-        if (any(unsupported %in% class(model))) {
-            warning(sprintf(msg, class(model))[1])
-            variance <- NULL
-        }
 
-        if (inherits(variance, "dpoMatrix")) {
+    # lme4 produces a distinct matrix type
+    if (inherits(variance, "dpoMatrix")) {
             variance <- as.matrix(variance)
-        }
-
-        checkmate::assert_matrix(variance, col.names = "unique", row.names = "unique", null.ok = TRUE)
     }
+
+    # assert affer dpoMatrix conversion
+    checkmate::assert(
+        checkmate::check_flag(variance),
+        checkmate::check_matrix(variance, col.names = "unique", row.names = "unique", null.ok = TRUE))
+
+    # skip
+    if (isFALSE(variance)) {
+        variance <- FALSE
+    }
+
+    # unsupported models
+    unsupported <- c("clm", "loess", "polr")
+    if (!isFALSE(variance) && any(unsupported %in% class(model))) {
+        variance <- NULL
+        warning(sprintf("Variance estimates are not yet supported for objects of class %s. Set `variance=NULL` to silence this warning.", class(model))[1])
+    }
+
+    # TRUE: try to extract a vcov (TODO: implement get_vcov)
+    if (isTRUE(variance)) {
+        variance <- try(stats::vcov(model), silent = TRUE)
+        if (inherits(variance, "try-error")) {
+            variance <- NULL
+            warning(sprintf('Unable to extract a variance-covariance matrix from model of class "%s" using the `stats::vcov` function. The `variance` argument was switched to `FALSE`. Please supply a named matrix to produce uncertainty estimates.', class(model)[1]))
+        }
+    } 
+
+    # TODO: Test if the names of the matrix match the names of the coefficients.
+    # This could be dangerous, so leaving as a Github issue until I have time for serious work.
+
+    if (isFALSE(variance)) {
+        variance <- NULL
+    }
+
     return(variance)
 }
 

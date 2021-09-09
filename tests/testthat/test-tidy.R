@@ -14,7 +14,5 @@ test_that("tidy: minimal", {
 
 test_that("glance: with modelsummary", {
     gl <- glance(mfx)
-    expect_equal(dim(mfx), c(1, 8))
+    expect_equal(dim(glance(mfx)), c(1, 8))
 })
-
-

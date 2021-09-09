@@ -9,7 +9,7 @@ test_that("polr vs. margins (dydx only)", {
     tmp <- data.frame(mtcars)
     tmp$carb <- as.factor(tmp$carb)
     mod <- MASS::polr(carb ~ hp + am + mpg, data = tmp) 
-    res <- marginaleffects(mod, variance = NULL, prediction_type = "probs")
+    res <- marginaleffects(mod, variance = FALSE, prediction_type = "probs")
     mar <- margins(mod)
 })
 
@@ -17,7 +17,7 @@ test_that("polr vs. Stata", {
     stata <- readRDS(test_path("stata/stata.rds"))[["MASS_polr_01"]]
     dat <- read_dta(test_path("stata/data/MASS_polr_01.dta"))
     mod <- MASS::polr(factor(y) ~ x1 + x2, data = dat)
-    ame <- marginaleffects(mod, variance = NULL, prediction_type = "probs") %>%
+    ame <- marginaleffects(mod, variance = FALSE, prediction_type = "probs") %>%
            group_by(group, term) %>%
            summarize(dydx = mean(dydx)) %>% #, std.error = mean(std.error)) %>%
            mutate(group = as.numeric(group)) %>%

@@ -8,9 +8,10 @@ marginaleffects(
   model,
   newdata = NULL,
   variables = NULL,
-  variance = try(stats::vcov(model), silent = TRUE),
+  variance = TRUE,
+  numDeriv_method = "simple",
   prediction_type = "response",
-  numDeriv_method = "simple"
+  return_data = TRUE
 )
 }
 \description{

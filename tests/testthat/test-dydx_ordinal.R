@@ -9,7 +9,7 @@ test_that("ordinal: vs `margins`", {
     mod <- ordinal::clm(rating ~ warm * contact, data = tmp)
     res <- marginaleffects(mod, 
                     variables = "warm", 
-                    variance = NULL,
+                    variance = FALSE,
                     prediction_type = "prob")
     mar <- suppressWarnings(margins(mod))
     expect_true(test_against_margins(res, mar, tol = .01))
@@ -19,11 +19,11 @@ test_that("ordinal: vs `margins`", {
                             prediction_type = "prob"), 
                    regexp = "variance")
     expect_warning(marginaleffects(mod, 
-                            variance = NULL,
+                            variance = FALSE,
                             variables = "warm"),
                    regexp = "prediction")
     expect_warning(marginaleffects(mod, 
-                            variance = NULL,
+                            variance = FALSE,
                             prediction_type = "probs"), 
                    regexp = "numeric")
 })
