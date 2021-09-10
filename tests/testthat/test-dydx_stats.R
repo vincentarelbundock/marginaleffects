@@ -52,17 +52,22 @@ test_that("lm with interactions vs. margins", {
     expect_true(test_against_margins(res, mar, tolerance = 1e-3))
 })
 
-test_that("vcov(loess) does not exist", {
-    mod <- loess(mpg ~ wt, data = mtcars)
-    expect_warning(marginaleffects(mod), regexp = "not yet supported")
-})
+
+###################################################
+#  note sure if stats::loess should be supported  #
+###################################################
+
+# test_that("vcov(loess) does not exist", {
+#     mod <- loess(mpg ~ wt, data = mtcars)
+#     expect_warning(marginaleffects(mod), regexp = "not yet supported")
+# })
 
 
-test_that("loess error", {
-    skip("loess produces different results under margins and marginaleffects")
-    mod <- loess(mpg ~ wt, data = mtcars)
-    res <- marginaleffects(mod, vcov = FALSE)
-    mar <- data.frame(margins(mod))
-    expect_true(test_against_margins(res, mar, tolerance = .8))
-})
+# test_that("loess error", {
+#     skip("loess produces different results under margins and marginaleffects")
+#     mod <- loess(mpg ~ wt, data = mtcars)
+#     res <- marginaleffects(mod, vcov = FALSE)
+#     mar <- data.frame(margins(mod))
+#     expect_true(test_against_margins(res, mar, tolerance = .8))
+# })
 

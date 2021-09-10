@@ -74,7 +74,6 @@ tab <-
 '"Model",           "Effect", "Variance", "Stata",      "margins"
 "stats::lm",        "✓"      , "✓"        , "✓"         , "✓"
 "stats::glm",       "✓"      , "✓"        , "✓"         , "✓"
-"stats::loess",     "✓"      ,            ,             , "✓"
 "AER::ivreg",       "✓"      , "✓"        , "✓"         , "✓"
 "betareg::betareg", "✓"      , "✓"        , "✓"         , "✓"
 "fixest::feols",    "✓"      , "✓"        ,             ,
