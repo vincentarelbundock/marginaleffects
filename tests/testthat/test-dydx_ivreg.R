@@ -10,7 +10,7 @@ test_that("ivreg vs. margins", {
     mod <- ivreg::ivreg(Q ~ P * D | D + F + A, data = Kmenta)
     res <- marginaleffects(mod)
     mar <- data.frame(margins(mod, unit_ses = TRUE))
-    expect_true(test_against_margins(res, mar, tolerance = .01))
+    expect_true(test_against_margins(res, mar, tolerance = .1, verbose = TRUE))
 })    
 
 test_that("ivreg vs. Stata", {
