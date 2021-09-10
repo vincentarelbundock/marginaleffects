@@ -32,7 +32,7 @@ Marginal effects are extremely useful, because they are intuitive and easy to in
 
 ## Why?
 
-Unfortunately, to calculate marginal effects we need to take derivatives of the regression equation. This can be challenging to do manually, especially when our models are non-linear, or when regressors are transformed or interacted. Computing the variance of a marginal effect is even more difficult. 
+To calculate marginal effects we need to take derivatives of the regression equation. This can be challenging to do manually, especially when our models are non-linear, or when regressors are transformed or interacted. Computing the variance of a marginal effect is even more difficult. 
 
 The `marginaleffects` package hopes to do most of this hard work for you.
 
