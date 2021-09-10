@@ -7,8 +7,8 @@ for (i in seq_along(tmp)) {
 test_that("original data with NAs do not pose problems in glm and lm.", {
     mod1 <- lm(hp ~ mpg + drat + wt + factor(gear), data = tmp)
     mod2 <- glm(vs ~ mpg + drat + wt + factor(gear), data = tmp, family = binomial)
-    expect_s3_class(tidy(mod1), "data.frame")
-    expect_s3_class(tidy(mod2), "data.frame")
+    expect_s3_class(tidy(marginaleffects(mod1)), "data.frame")
+    expect_s3_class(tidy(marginaleffects(mod2)), "data.frame")
 })
 
 test_that("newdata with NAs do not pose problems in lm.", {
