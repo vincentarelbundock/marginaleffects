@@ -71,7 +71,9 @@ sanity_dydx_variables <- function(model, newdata, variables) {
 
     # guess variables
     if (is.null(variables)) {
-        variables <- insight::find_variables(model)$conditional
+        variables <- insight::find_variables(model)
+        variables$response <- NULL
+        variables <- unlist(variables)
     }
 
     # dydx variables
