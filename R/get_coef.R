@@ -12,5 +12,11 @@ get_coef <- function (model, ...) {
 #' @rdname get_coef
 #' @export
 get_coef.default <- function(model, ...) {
-    stats::coef(model)
+    ## faster
+    # out <-  stats::coef(model)
+
+    # more general
+    out <- insight::get_parameters(model)
+    out <- setNames(out$Estimate, out$Parameter)
+    return(out)
 }
