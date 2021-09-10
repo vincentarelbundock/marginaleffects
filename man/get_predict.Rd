@@ -10,7 +10,7 @@ get_predict(model, newdata, prediction_type, ...)
 
 \method{get_predict}{default}(
   model,
-  newdata = insight::find_data(model),
+  newdata = insight::get_data(model),
   prediction_type = "response",
   ...
 )
