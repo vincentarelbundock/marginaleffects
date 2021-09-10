@@ -41,7 +41,6 @@ Suggests:
     survey
 Config/testthat/edition: 3
 Collate: 
-    'aaa_median_or_mode.R'
     'counterfactual.R'
     'get_coef.R'
     'get_contrast.R'
@@ -50,6 +49,7 @@ Collate:
     'get_predict.R'
     'get_se_delta.R'
     'marginaleffects.R'
+    'median_or_mode.R'
     'set_coef.R'
     'methods_betareg.R'
     'methods_lme4.R'
