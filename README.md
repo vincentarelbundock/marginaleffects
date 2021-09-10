@@ -28,16 +28,16 @@ Marginal effects are extremely useful, because they are intuitive and
 easy to interpret. They are often the main quantity of interest in an
 empirical analysis.
 
-Unfortunately, to calculate marginal effects we need to take derivatives
-of the regression equation. This can be challenging to do manually,
-especially when our models are non-linear, or when regressors are
-transformed or interacted. Computing the variance of a marginal effect
-is even more difficult.
+## Why?
+
+To calculate marginal effects we need to take derivatives of the
+regression equation. This can be challenging to do manually, especially
+when our models are non-linear, or when regressors are transformed or
+interacted. Computing the variance of a marginal effect is even more
+difficult.
 
 The `marginaleffects` package hopes to do most of this hard work for
 you.
-
-## Why?
 
 Many `R` packages advertise their ability to compute “marginal effects.”
 However, most of them do *not* actually compute marginal effects *as
@@ -441,12 +441,12 @@ mod <- lm(y ~ x + I(x^2), dat)
 marginaleffects(mod, newdata = typical(x = -2:2)) %>%
     mutate(truth = 1 + 4 * x) %>%
     select(dydx, truth)
-#>        dydx truth
-#> 1 -6.999047    -7
-#> 2 -2.997719    -3
-#> 3  1.003609     1
-#> 4  5.004937     5
-#> 5  9.006266     9
+#>         dydx truth
+#> 1 -6.9932156    -7
+#> 2 -2.9976342    -3
+#> 3  0.9979472     1
+#> 4  4.9935286     5
+#> 5  8.9891100     9
 ```
 
 We can also plot the result with the `plot_cme` function:
