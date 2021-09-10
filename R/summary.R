@@ -39,9 +39,9 @@ print.marginaleffects.summary <- function(x,
   }
 
   # rename
-  dict <- c("Group" = "group",
-            "Term" = "term",
-            "Contrast" = "Contrast",
+  dict <- c("group" = "Group",
+            "term" = "Term",
+            "contrast" = "Contrast",
             "estimate" = "Effect",
             "std.error" = "Std. Error",
             "statistic" = "z value",
