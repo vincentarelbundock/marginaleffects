@@ -17,7 +17,7 @@ marginal effects for a *wide* variety of models.
 
 A “marginal effect” is a measure of the association between a change in
 a regressor, and a change in the response variable. More formally, [the
-(excellent) `margins`
+excellent `margins`
 vignette](https://cran.r-project.org/web/packages/margins/index.html)
 defines the concept as follows:
 
@@ -441,12 +441,12 @@ mod <- lm(y ~ x + I(x^2), dat)
 marginaleffects(mod, newdata = typical(x = -2:2)) %>%
     mutate(truth = 1 + 4 * x) %>%
     select(dydx, truth)
-#>         dydx truth
-#> 1 -6.9932156    -7
-#> 2 -2.9976342    -3
-#> 3  0.9979472     1
-#> 4  4.9935286     5
-#> 5  8.9891100     9
+#>        dydx truth
+#> 1 -6.999426    -7
+#> 2 -2.997651    -3
+#> 3  1.004124     1
+#> 4  5.005899     5
+#> 5  9.007674     9
 ```
 
 We can also plot the result with the `plot_cme` function:
