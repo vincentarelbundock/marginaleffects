@@ -149,7 +149,7 @@ marginaleffects <- function(model,
     }
 
     # attach model info
-    if (check_dependency("modelsummary")) {
+    if (isTRUE(check_dependency("modelsummary"))) {
         gl <- suppressWarnings(try(modelsummary::get_gof(model), silent = TRUE))
         if (inherits(gl, "data.frame")) {
             attr(out, "glance") <- data.frame(gl)
