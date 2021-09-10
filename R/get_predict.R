@@ -16,7 +16,7 @@ get_predict <- function (model, newdata, prediction_type, ...) {
 #' @rdname get_predict
 #' @export
 get_predict.default <- function(model, 
-                                newdata = insight::find_data(model), 
+                                newdata = insight::get_data(model), 
                                 prediction_type = "response", 
                                 ...) {
     pred <- stats::predict(model, 
