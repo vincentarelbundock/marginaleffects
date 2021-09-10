@@ -66,7 +66,12 @@ print.marginaleffects.summary <- function(x,
 }
 
 
+# BAD IDEA
 # this forces me to do: head(data.frame(mfx))
+# also breaks when I process a marginaleffects data.frame with dplyr, because
+# the output retains the class even when it drops columns, and then tidy
+# breaks.
+
 #print.marginaleffects <- function(
 #    x, digits = max(3L, getOption("digits") - 2L), ...) {
 

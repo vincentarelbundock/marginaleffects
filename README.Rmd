@@ -26,7 +26,7 @@ This package is still experimental. *Use with caution!*
 
 The `marginaleffects` package allows `R` users to compute and plot "marginal effects" for a *wide* variety of models. 
 
-A "marginal effect" is a measure of the association between a change in the regressors, and a change in the response variable. More formally, [the `margins` vignette](https://cran.r-project.org/web/packages/margins/index.html) defines "marginal effects" as follows:
+A "marginal effect" is a measure of the association between a change in the regressors, and a change in the response variable. More formally, [the (excellent) `margins` vignette](https://cran.r-project.org/web/packages/margins/index.html) defines "marginal effects" as follows:
 
 > "Marginal effects are partial derivatives of the regression equation with respect to each variable in the model for each unit in the data."
 
@@ -257,13 +257,13 @@ plot_cme(mod, effect = "hp", condition = "wt")
 
 Say you estimate a linear regression model with a quadratic term:
 
-$$Y = \beta_0 + \beta_1 X + \varepsilon$$,
+$$Y = \beta_0 + \beta_1 X^2 + \varepsilon$$,
 
-and obtain the following estimates: $\beta_1=1; \beta_2=2$. By taking the partial derivative with respect to $X$ we obtain the marginal effect of $X$ on $Y$ variable:
+and obtain the following estimates: $\beta_0=1; \beta_1=2$. By taking the partial derivative with respect to $X$ we obtain the marginal effect of $X$ on $Y$:
 
-$$\partial Y / \partial X = \beta_1 + 2 \cdot \beta_2 X$$
+$$\partial Y / \partial X = \beta_0 + 2 \cdot \beta_1 X = 1 + 4X$$
 
-Plugging in our estimates leads us to conclude that the effect of $X$ on $Y$ increases as $X$ itself increases. An increase in $X$ is associated with $1 + 4X$. When $X$ is large, an increase in $X$ has a large effect on $Y$. When $X$ is small, an increase in $X$ has a small effect on $Y$.
+Plugging in our estimates leads us to conclude that the effect of a *change* in $X$ on $Y$ depends on the *level* of $X$. When $X$ is large, an increase in $X$ is associated to a large change in $Y$. When $X$ is small, an increase in $X$ is associated to a small change in $Y$.
 
 `marginaleffects` arrives at the same conclusion in simultated data:
 

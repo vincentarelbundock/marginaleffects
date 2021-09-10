@@ -19,7 +19,7 @@ The `marginaleffects` package allows `R` users to compute and plot
 
 A “marginal effect” is a measure of the association between a change in
 the regressors, and a change in the response variable. More formally,
-[the `margins`
+[the (excellent) `margins`
 vignette](https://cran.r-project.org/web/packages/margins/index.html)
 defines “marginal effects” as follows:
 
@@ -435,20 +435,20 @@ plot_cme(mod, effect = "hp", condition = "wt")
 
 Say you estimate a linear regression model with a quadratic term:
 
-*Y* = *β*<sub>0</sub> + *β*<sub>1</sub>*X* + *ε*
+*Y* = *β*<sub>0</sub> + *β*<sub>1</sub>*X*<sup>2</sup> + *ε*
 ,
 
 and obtain the following estimates:
-*β*<sub>1</sub> = 1; *β*<sub>2</sub> = 2. By taking the partial
+*β*<sub>0</sub> = 1; *β*<sub>1</sub> = 2. By taking the partial
 derivative with respect to *X* we obtain the marginal effect of *X* on
-*Y* variable:
+*Y*:
 
-∂*Y*/∂*X* = *β*<sub>1</sub> + 2 ⋅ *β*<sub>2</sub>*X*
+∂*Y*/∂*X* = *β*<sub>0</sub> + 2 ⋅ *β*<sub>1</sub>*X* = 1 + 4*X*
 
-Plugging in our estimates leads us to conclude that the effect of *X* on
-*Y* increases as *X* itself increases. An increase in *X* is associated
-with 1 + 4*X*. When *X* is large, an increase in *X* has a large effect
-on *Y*. When *X* is small, an increase in *X* has a small effect on *Y*.
+Plugging in our estimates leads us to conclude that the effect of a
+*change* in *X* on *Y* depends on the *level* of *X*. When *X* is large,
+an increase in *X* is associated to a large change in *Y*. When *X* is
+small, an increase in *X* is associated to a small change in *Y*.
 
 `marginaleffects` arrives at the same conclusion in simultated data:
 
@@ -462,12 +462,12 @@ marginaleffects(mod,
                 newdata = typical(data = dat, at = list(x = -2:2))) %>%
     mutate(truth = 1 + 4 * x) %>%
     select(dydx, truth)
-#>         dydx truth
-#> 1 -6.9938438    -7
-#> 2 -2.9975707    -3
-#> 3  0.9987025     1
-#> 4  4.9949756     5
-#> 5  8.9912488     9
+#>        dydx truth
+#> 1 -6.987805    -7
+#> 2 -2.993776    -3
+#> 3  1.000253     1
+#> 4  4.994282     5
+#> 5  8.988311     9
 ```
 
 We can also plot the result easily with the `plot_cme` function:
