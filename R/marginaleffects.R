@@ -16,9 +16,9 @@
 #'   + Named square matrix: computes standard errors with a user-supplied variance-covariance matrix. This matrix must be square and have dimensions equal to the number of coefficients in `get_coef(model)`.
 #' @param newdata A dataset over which to compute marginal effects. `NULL` uses
 #'   the original data used to fit the model.
-#' @param prediction_type Type of prediction as character. This can differ
-#'   based on the model type, but will typically be a string such as: "response",
-#'   "link", or "probs".
+#' @param prediction_type Type(s) of prediction as string or vector This can
+#' differ based on the model type, but will typically be a string such as:
+#' "response", "link", "probs", or "zero".
 #' @param numDeriv_method One of "simple", "Richardson", or "complex",
 #'   indicating the method to use for the approximation. See
 #'   [numDeriv::grad()] for details.
@@ -46,6 +46,7 @@
 #' + lme4::glmer
 #' + MASS::polr (no variance)
 #' + ordinal::clm (no variance)
+#' + pscl::hurdle
 #' + survey::svyglm
 #'
 #' @examples
@@ -102,23 +103,26 @@ marginaleffects <- function(model,
 
     # dydx: numeric variables w/ autodiff
     dydx <- list()
-    for (gn in group_names) {
-        for (v in variables$dydx) {
-            tmp <- get_dydx_and_se(model = model, 
-                                   fitfram = newdata,
-                                   variable = v,
-                                   vcov = vcov,
-                                   group_name = gn,
-                                   prediction_type = prediction_type,
-                                   numDeriv_method = numDeriv_method)
-            if (length(group_names) > 1) {
-                tmp$group <- gn
+    for (predt in prediction_type) {
+        for (gn in group_names) {
+            for (v in variables$dydx) {
+                tmp <- get_dydx_and_se(model = model, 
+                                       fitfram = newdata,
+                                       variable = v,
+                                       vcov = vcov,
+                                       group_name = gn,
+                                       prediction_type = predt,
+                                       numDeriv_method = numDeriv_method)
+                if (length(group_names) > 1) {
+                    tmp$group <- gn
+                }
+                tmp$term <- v
+                tmp$type <- predt
+                dydx <- c(dydx, list(tmp))
             }
-            tmp$term <- v
-            dydx <- c(dydx, list(tmp))
         }
     }
-    dydx <- poorman::bind_rows(dydx)
+    dydx <- dplyr::bind_rows(dydx)
 
     # an empty dydx data.frame may still be useful to display contrasts
     if (is.null(dydx)) {
@@ -127,11 +131,14 @@ marginaleffects <- function(model,
 
     # contrasts: logical and factor variables w/ emmeans
     cont <- list()
-    for (v in variables$cont) {
-        tmp <- try(get_contrast(model, v), silent = TRUE)
-        cont <- c(cont, list(tmp))
+    for (predt in prediction_type) {
+        for (v in variables$cont) {
+            tmp <- try(get_contrast(model, v, type = predt), silent = TRUE)
+            tmp$type <- predt
+            cont <- c(cont, list(tmp))
+        }
     }
-    cont <- poorman::bind_rows(cont)
+    cont <- dplyr::bind_rows(cont)
 
     # output: return data only if there are numeric variables
     out <- dydx
@@ -140,7 +147,7 @@ marginaleffects <- function(model,
             newdata$rowid <- 1:nrow(newdata)
             out <- merge(out, newdata, by = "rowid")
         }
-        cols <- intersect(c("rowid", "group", "term", "dydx", "std.error"), colnames(out))
+        cols <- intersect(c("rowid", "type", "group", "term", "dydx", "std.error"), colnames(out))
         cols <- unique(c(cols, colnames(out)))
         out <- out[, cols]
         if (all(out$group == "main")) {

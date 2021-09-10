@@ -36,33 +36,19 @@ tidy.marginaleffects <- function(x,
         }
     }
 
+
     # dydx averages
     # empty initial mfx data.frame means there were no numeric variables in the model
     if ("term" %in% colnames(x)) {
-        dydx <- x[, colnames(x) %in% c("group", "term", "dydx", "std.error")]
+        dydx <- x[, colnames(x) %in% c("type", "group", "term", "dydx", "std.error")]
         colnames(dydx)[match("dydx", colnames(dydx))] <- "estimate"
-
-        if ("group" %in% colnames(dydx)) { 
-            if ("std.error" %in% colnames(dydx)) {
-                dydx <- poorman::group_by(dydx, group, term) 
-                dydx <- poorman::summarize(dydx, poorman::across(c("estimate", "std.error"), mean, na.rm = TRUE))
-            } else {
-                dydx <- poorman::group_by(dydx, group, term)
-                dydx <- poorman::summarize(dydx, estimate = mean, na.rm = TRUE)
-            }
-        } else {
-            if ("std.error" %in% colnames(dydx)) {
-                dydx <- poorman::group_by(dydx, term)
-                dydx <- poorman::summarize(dydx, poorman::across(c("estimate", "std.error"), mean, na.rm = TRUE))
-            } else {
-                dydx <- poorman::group_by(dydx, term)
-                dydx <- poorman::summarize(dydx, estimate = mean(estimate, na.rm = TRUE))
-            }
-        }
+        dydx <- dplyr::group_by(dydx, dplyr::across(dplyr::matches("type|group|term")))
+        dydx <- dplyr::summarize(dydx, dplyr::across(dplyr::matches("estimate|std.error"), mean, na.rm = TRUE))
     } else {
         # avoids namespace conflict with `margins`
         dydx <- data.frame()
     }
+
 
     # dydx statistics (emmeans calculates those for us)
     if ("term" %in% colnames(dydx)) {
@@ -73,7 +59,7 @@ tidy.marginaleffects <- function(x,
     # contrasts
     cont <- attr(x, "contrasts")
     if (nrow(dydx) > 0 && !is.null(cont)) {
-        out <- poorman::bind_rows(dydx, attr(x, "contrasts"))
+        out <- dplyr::bind_rows(dydx, attr(x, "contrasts"))
     } else if (nrow(dydx) > 0) {
         out <- dydx
     } else if (!is.null(cont)) {
@@ -92,7 +78,7 @@ tidy.marginaleffects <- function(x,
     }
 
     # sort and subset columns
-    cols <- c("group", "term", "contrast", "estimate", "std.error",
+    cols <- c("type", "group", "term", "contrast", "estimate", "std.error",
               "statistic", "p.value", "conf.low", "conf.high")
     out <- out[, intersect(cols, colnames(out)), drop = FALSE]
     return(out)

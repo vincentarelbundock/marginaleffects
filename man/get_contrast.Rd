@@ -4,12 +4,16 @@
 \alias{get_contrast}
 \title{Get contrasts for factor and logical terms in a model object (internal function)}
 \usage{
-get_contrast(model, variable, ...)
+get_contrast(model, variable, prediction_type = "response", ...)
 }
 \arguments{
 \item{model}{Model object}
 
 \item{variable}{Name of the variable to contrast (string)}
+
+\item{prediction_type}{Type(s) of prediction as string or vector This can
+differ based on the model type, but will typically be a string such as:
+"response", "link", "probs", or "zero".}
 
 \item{...}{Additional arguments are ignored.}
 }

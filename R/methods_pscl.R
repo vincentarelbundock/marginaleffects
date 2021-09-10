@@ -19,11 +19,3 @@ set_coef.hurdle <- function(model, coefs) {
     }
     return(out)
 }
-
-
-#' @include get_coef.R
-#' @rdname get_coef
-#' @export
-get_coef.betareg <- function(model, ...) {
-    model$coefficients$mean
-}
