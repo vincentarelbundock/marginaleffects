@@ -32,10 +32,10 @@ test_that("lme4: no errors generated (no validity check)", {
 
 
 test_that("vs. margins (dydx only)", {
-    res <- marginaleffects(mod_glm, variance = FALSE)
+    res <- marginaleffects(mod_glm, vcov = FALSE)
     mar <- margins(mod_glm)
     expect_true(test_against_margins(res, mar, tolerance = 1e-4))
-    res <- marginaleffects(mod_lm, variance = FALSE)
+    res <- marginaleffects(mod_lm, vcov = FALSE)
     mar <- margins(mod_lm)
     expect_true(test_against_margins(res, mar))
 })

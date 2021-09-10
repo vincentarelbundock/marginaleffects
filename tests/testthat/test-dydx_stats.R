@@ -61,7 +61,7 @@ test_that("vcov(loess) does not exist", {
 test_that("loess error", {
     skip("loess produces different results under margins and marginaleffects")
     mod <- loess(mpg ~ wt, data = mtcars)
-    res <- marginaleffects(mod, variance = FALSE)
+    res <- marginaleffects(mod, vcov = FALSE)
     mar <- data.frame(margins(mod))
     expect_true(test_against_margins(res, mar, tolerance = .8))
 })

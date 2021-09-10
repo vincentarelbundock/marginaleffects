@@ -50,21 +50,6 @@ sanity_dydx_group_names <- function (model) {
     return(group_names)
 }
 
-    
-sanity_dydx_at <- function(model, newdata, at) {
-    if (!is.null(at) && !is.null(newdata)) {
-        stop("The `at` and `newdata` parameters cannot be used simultaneously.")
-    }
-    if (!is.null(at)) {
-        # sanity checks on `at` are conducted in the `counterfactual` function.
-        # This reduces code duplication because that function is useful elsewhere.
-        newdata <- counterfactual(model, at = at)
-        return(newdata)
-    } else {
-        return(newdata)
-    }
-}
-
 
 sanity_dydx_newdata <- function(model, newdata) {
     checkmate::check_data_frame(newdata, 
@@ -108,49 +93,49 @@ sanity_dydx_variables <- function(model, newdata, variables) {
 }
 
 
-sanity_dydx_variance <- function(model, variance) {
+sanity_dydx_vcov <- function(model, vcov) {
 
     # lme4 produces a distinct matrix type
-    if (inherits(variance, "dpoMatrix")) {
-            variance <- as.matrix(variance)
+    if (inherits(vcov, "dpoMatrix")) {
+            vcov <- as.matrix(vcov)
     }
 
     # assert affer dpoMatrix conversion
     checkmate::assert(
-        checkmate::check_flag(variance),
-        checkmate::check_matrix(variance, col.names = "unique", row.names = "unique", null.ok = TRUE))
+        checkmate::check_flag(vcov),
+        checkmate::check_matrix(vcov, col.names = "unique", row.names = "unique", null.ok = TRUE))
 
     # skip
-    if (isFALSE(variance)) {
-        variance <- FALSE
+    if (isFALSE(vcov)) {
+        vcov <- FALSE
     }
 
     # unsupported models
     unsupported <- c("clm", "loess", "polr")
-    if (!isFALSE(variance) && any(unsupported %in% class(model))) {
-        variance <- NULL
-        warning(sprintf("Variance estimates are not yet supported for objects of class %s. Set `variance=NULL` to silence this warning.", class(model))[1])
+    if (!isFALSE(vcov) && any(unsupported %in% class(model))) {
+        vcov <- NULL
+        warning(sprintf("Variance estimates are not yet supported for objects of class %s. Set `vcov=NULL` to silence this warning.", class(model))[1])
     }
 
     # TRUE: try to extract a vcov (TODO: implement get_vcov)
-    if (isTRUE(variance)) {
-        variance <- try(stats::vcov(model), silent = TRUE)
-        if (inherits(variance, "try-error")) {
-            variance <- NULL
-            warning(sprintf('Unable to extract a variance-covariance matrix from model of class "%s" using the `stats::vcov` function. The `variance` argument was switched to `FALSE`. Please supply a named matrix to produce uncertainty estimates.', class(model)[1]))
+    if (isTRUE(vcov)) {
+        vcov <- try(stats::vcov(model), silent = TRUE)
+        if (inherits(vcov, "try-error")) {
+            vcov <- NULL
+            warning(sprintf('Unable to extract a variance-covariance matrix from model of class "%s" using the `stats::vcov` function. The `vcov` argument was switched to `FALSE`. Please supply a named matrix to produce uncertainty estimates.', class(model)[1]))
             # dpoMatrix conversion
         }
-        variance <- as.matrix(variance)
+        vcov <- as.matrix(vcov)
     } 
 
 
     # TODO: Test if the names of the matrix match the names of the coefficients.
     # This could be dangerous, so leaving as a Github issue until I have time for serious work.
-    if (isFALSE(variance)) {
-        variance <- NULL
+    if (isFALSE(vcov)) {
+        vcov <- NULL
     }
 
-    return(variance)
+    return(vcov)
 }
 
 

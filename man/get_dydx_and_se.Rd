@@ -11,7 +11,7 @@ get_dydx_and_se(model, ...)
   model,
   variable,
   fitfram = insight::get_data(model),
-  variance = stats::vcov(model),
+  vcov = stats::vcov(model),
   group_name = NULL,
   prediction_type = "response",
   numDeriv_method = "simple",
@@ -27,11 +27,11 @@ get_dydx_and_se(model, ...)
 
 \item{fitfram}{A data.frame over which to compute marginal effects.}
 
-\item{variance}{Matrix or boolean
+\item{vcov}{Matrix or boolean
 \itemize{
 \item FALSE: does not compute unit-level standard errors.
-\item TRUE: computes unit-level standard errors using the default \code{vcov(model)} variance matrix.
-\item Named square matrix: computes standard errors with a user-supplied variance matrix. This matrix must be square and have dimensions equal to the number of coefficients in \code{get_coef(model)}.
+\item TRUE: computes unit-level standard errors using the default \code{vcov(model)} variance-covariance matrix.
+\item Named square matrix: computes standard errors with a user-supplied variance-covariance matrix. This matrix must be square and have dimensions equal to the number of coefficients in \code{get_coef(model)}.
 }}
 
 \item{group_name}{String to identify the "group" or "level" of the terms to

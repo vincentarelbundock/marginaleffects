@@ -10,10 +10,10 @@
 #' @param model Model object
 #' @param variables Variables to consider (character vector). `NULL`
 #'   calculates marginal effects for all terms in the model object.
-#' @param variance Matrix or boolean
+#' @param vcov Matrix or boolean
 #'   + FALSE: does not compute unit-level standard errors.
-#'   + TRUE: computes unit-level standard errors using the default `vcov(model)` variance matrix.
-#'   + Named square matrix: computes standard errors with a user-supplied variance matrix. This matrix must be square and have dimensions equal to the number of coefficients in `get_coef(model)`.
+#'   + TRUE: computes unit-level standard errors using the default `vcov(model)` variance-covariance matrix.
+#'   + Named square matrix: computes standard errors with a user-supplied variance-covariance matrix. This matrix must be square and have dimensions equal to the number of coefficients in `get_coef(model)`.
 #' @param newdata A dataset over which to compute marginal effects. `NULL` uses
 #'   the original data used to fit the model.
 #' @param prediction_type Type of prediction as character. This can differ
@@ -59,26 +59,46 @@
 #' plot(mfx)
 #' }
 #'
-#' nd <- typical(mod, at = list(hp = c(100, 110)))
-#' marginaleffects(mod, newdata = nd)
+#' # typical marginal effects
+#' marginaleffects(mod, 
+#'                 newdata = typical(hp = c(100, 110)))
+#' 
+#' # counterfactual average marginal effects
+#' marginaleffects(mod, 
+#'                 newdata = counterfactual(hp = c(100, 110)))
 #'
+#' # heteroskedasticity robust standard errors
+#' marginaleffects(mod, vcov = sandwich::vcovHC(mod))
+#'                
 marginaleffects <- function(model, 
                             newdata = NULL, 
                             variables = NULL, 
-                            variance = TRUE,
+                            vcov = TRUE,
                             numDeriv_method = "simple",
                             prediction_type = "response",
                             return_data = TRUE,
                             ...) {
 
+  
+    # if `newdata` is a call to `typical()` or `counterfactual()`, insert `model`
+    scall <- substitute(newdata)
+    if (is.call(scall) && as.character(scall)[1] %in% c("typical", "counterfactual")) {
+        lcall <- as.list(scall)
+        if (!any(c("model", "data") %in% names(lcall))) {
+            lcall <- c(lcall, list("model" = model))
+            newdata <- eval.parent(as.call(lcall))
+        }
+    }
+
     # sanity checks and pre-processing
     model <- sanity_dydx_model(model)
     newdata <- sanity_dydx_newdata(model, newdata)
     variables <- sanity_dydx_variables(model, newdata, variables)
-    variance <- sanity_dydx_variance(model, variance)
+    vcov <- sanity_dydx_vcov(model, vcov)
     group_names <- sanity_dydx_group_names(model)
     prediction_type <- sanity_dydx_prediction_type(model, prediction_type)
     return_data <- sanity_dydx_return_data(return_data)
+
 
     # dydx: numeric variables w/ autodiff
     dydx <- list()
@@ -87,7 +107,7 @@ marginaleffects <- function(model,
             tmp <- get_dydx_and_se(model = model, 
                                    fitfram = newdata,
                                    variable = v,
-                                   variance = variance,
+                                   vcov = vcov,
                                    group_name = gn,
                                    prediction_type = prediction_type,
                                    numDeriv_method = numDeriv_method)

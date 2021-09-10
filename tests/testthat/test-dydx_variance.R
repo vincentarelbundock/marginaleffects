@@ -1,6 +1,6 @@
-test_that("marginal effects at the 'typical()' value when variance=FALSE", {
+test_that("marginal effects at the 'typical()' value when vcov=FALSE", {
     mod <- lm(hp ~ mpg + drat, data = mtcars)
-    res <- tidy(marginaleffects(mod, variance = FALSE))
+    res <- tidy(marginaleffects(mod, vcov = FALSE))
     expect_s3_class(res, "data.frame")
     expect_true(all(res$std.error > 0))
 })

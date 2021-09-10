@@ -24,17 +24,15 @@ This package is still experimental. *Use with caution!*
 
 ## What?
 
-The `marginaleffects` package allows `R` users to compute and plot "marginal effects" for a *wide* variety of models. 
+The `marginaleffects` package allows `R` users to compute and plot marginal effects for a *wide* variety of models. 
 
 A "marginal effect" is a measure of the association between a change in the regressors, and a change in the response variable. More formally, [the (excellent) `margins` vignette](https://cran.r-project.org/web/packages/margins/index.html) defines "marginal effects" as follows:
 
-> "Marginal effects are partial derivatives of the regression equation with respect to each variable in the model for each unit in the data."
+> "*Marginal effects are partial derivatives of the regression equation with respect to each variable in the model for each unit in the data.* In ordinary least squares regression with no interactions or higher-order term, the estimated slope coefficients are marginal effects. In other cases and for generalized linear models, the coefficients are not marginal effects at least not on the scale of the response variable."
 
-Marginal effects are extremely useful, because they are intuitive and easy to interpret. They are often the main quantity of interest in an empirical analysis. Unfortunately, they can be often be quite difficult to compute:
+Marginal effects are extremely useful, because they are intuitive and easy to interpret. They are often the main quantity of interest in an empirical analysis. To calculate marginal effects, we need to take derivatives of the regression equation. This can be challenging, especially when our models are non-linear, or when regressors are transformed or interacted. Computing the variance of a marginal effect manually is even more difficult. 
 
-> In ordinary least squares regression with no interactions or higher-order term, the estimated slope coefficients are marginal effects. In other cases and for generalized linear models, the coefficients are not marginal effects at least not on the scale of the response variable.
-
-To calculate marginal effects, we take derivatives of the regression equation. This can be challenging, especially when our models are non-linear, or when regressors are transformed or interacted. Computing the variance is even more difficult. The `marginaleffects` package hopes to do most of this hard work for you.
+The `marginaleffects` package hopes to do most of this hard work for you.
 
 # Why?
 
@@ -136,7 +134,7 @@ head(mar, 2)
 
 ## Average Marginal Effects
 
-A dataset with one marginal effect estimate per unit of observation is a bit unwieldy and difficult to interpret. Many analysts like to report the "Average Marginal Effect", that is, the average of all the observation-specific marginal effects. These are easy to compute based on the full `data.frame` shown above, but the `summary` function is convenient:
+A dataset with one marginal effect estimate per unit of observation is a bit unwieldy and kifficult to interpret. Many analysts like to report the "Average Marginal Effect", that is, the average of all the observation-specific marginal effects. These are easy to compute based on the full `data.frame` shown above, but the `summary` function is convenient:
 
 ```{r}
 summary(mfx)
@@ -157,28 +155,26 @@ glance(mfx)
 Sometimes, we are not interested in *all* the unit-specific marginal effects, but would rather look at the estimated marginal effects for certain "typical" individuals. The `typical` function helps us build datasets full of "typical" rows. For example, to generate very unhappy individuals with or without kids: 
 
 ```{r}
-typical(mod, 
-        at = list(flipper_length_mm = 180, 
-                  species = c("Adelie", "Gentoo")))
+typical(flipper_length_mm = 180, 
+        species = c("Adelie", "Gentoo"), 
+        model = mod)
 ```
 
-This dataset can then be used in `marginaleffects` to compute marginal effects for those (fictional) individuals:
+The same command can be used (omitting the `model` argument) to `marginaleffects` in order to compute marginal effects for those (fictional) individuals:
 
 ```{r}
-nd <- typical(mod, 
-              at = list(flipper_length_mm = 180, 
-                        species = c("Adelie", "Gentoo")))
-marginaleffects(mod, newdata = nd)
+marginaleffects(mod, newdata = typical(flipper_length_mm = 180, 
+                                       species = c("Adelie", "Gentoo")))
 ```
 
-When a variable is omitted from the `at` list, `typical` will automatically select the median (or mode) of the missing variable.
+When variables are omitted from the `typical` call, they will automatically be set at their median or mode (depending on variable type).
 
 ## Counterfactual Marginal Effects
 
 The `typical` function allowed us look at completely fictional individual. The `counterfactual` lets us compute the marginal effects for the actual observations in our dataset, but with a few manipulated values. For example, this code will create a `data.frame` twice as long as the original `dat`, where each observation is repeated with different values of the `kids` variable:
 
 ```{r}
-nd <- counterfactual(mod, at = list(flipper_length_mm = c(160, 180)))
+nd <- counterfactual(flipper_length_mm = c(160, 180), model = mod)
 ```
 
 We see that the rows 1, 2, and 3 of the original dataset have been replicated twice, with different values of the `kids` variable:
@@ -273,8 +269,7 @@ dat <- data.frame(x = rnorm(N))
 dat$y <- 1 + 1 * dat$x + 2 * dat$x^2 + rnorm(N)
 mod <- lm(y ~ x + I(x^2), dat)
 
-marginaleffects(mod, 
-                newdata = typical(data = dat, at = list(x = -2:2))) %>%
+marginaleffects(mod, newdata = typical(x = -2:2)) %>%
     mutate(truth = 1 + 4 * x) %>%
     select(dydx, truth)
 ```

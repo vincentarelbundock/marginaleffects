@@ -8,7 +8,7 @@ marginaleffects(
   model,
   newdata = NULL,
   variables = NULL,
-  variance = TRUE,
+  vcov = TRUE,
   numDeriv_method = "simple",
   prediction_type = "response",
   return_data = TRUE,
@@ -24,11 +24,11 @@ the original data used to fit the model.}
 \item{variables}{Variables to consider (character vector). \code{NULL}
 calculates marginal effects for all terms in the model object.}
 
-\item{variance}{Matrix or boolean
+\item{vcov}{Matrix or boolean
 \itemize{
 \item FALSE: does not compute unit-level standard errors.
-\item TRUE: computes unit-level standard errors using the default \code{vcov(model)} variance matrix.
-\item Named square matrix: computes standard errors with a user-supplied variance matrix. This matrix must be square and have dimensions equal to the number of coefficients in \code{get_coef(model)}.
+\item TRUE: computes unit-level standard errors using the default \code{vcov(model)} variance-covariance matrix.
+\item Named square matrix: computes standard errors with a user-supplied variance-covariance matrix. This matrix must be square and have dimensions equal to the number of coefficients in \code{get_coef(model)}.
 }}
 
 \item{numDeriv_method}{One of "simple", "Richardson", or "complex",
@@ -86,7 +86,15 @@ head(mfx)
 plot(mfx)
 }
 
-nd <- typical(mod, at = list(hp = c(100, 110)))
-marginaleffects(mod, newdata = nd)
+# typical marginal effects
+marginaleffects(mod, 
+                newdata = typical(hp = c(100, 110)))
 
+# counterfactual average marginal effects
+marginaleffects(mod, 
+                newdata = counterfactual(hp = c(100, 110)))
+
+# heteroskedasticity robust standard errors
+marginaleffects(mod, vcov = sandwich::vcovHC(mod))
+               
 }

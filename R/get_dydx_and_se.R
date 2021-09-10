@@ -20,7 +20,7 @@ get_dydx_and_se <- function (model, ...) {
 get_dydx_and_se.default <- function(model, 
                                     variable, 
                                     fitfram = insight::get_data(model), 
-                                    variance = stats::vcov(model), 
+                                    vcov = stats::vcov(model), 
                                     group_name = NULL,
                                     prediction_type = "response",
                                     numDeriv_method = "simple", 
@@ -39,23 +39,23 @@ get_dydx_and_se.default <- function(model,
                       dydx = g)
     out$group <- group_name # could be NULL
 
-    # unit-level standard errors are slower to compute. When variance=NULL, use a single typical dataset.
-    if (is.null(variance)) {
+    # unit-level standard errors are slower to compute. When vcov=NULL, use a single typical dataset.
+    if (is.null(vcov)) {
         fitfram <- typical(data = fitfram)
-        variance <- try(stats::vcov(model), silent = TRUE)
+        vcov <- try(stats::vcov(model), silent = TRUE)
     }
 
     # special case: polr (TODO: generalize using a get_vcov.polr() method)
-    if (inherits(variance, "matrix") &&
+    if (inherits(vcov, "matrix") &&
         any(c("polr", "betareg") %in% class(model)) && 
         !is.null(group_name)) {
-        variance <- variance[names(stats::coef(model)), names(stats::coef(model))]
+        vcov <- vcov[names(stats::coef(model)), names(stats::coef(model))]
     }
 
     se <- try(get_se_delta(model = model,
                            fitfram = fitfram,
                            variable = variable,
-                           variance = variance,
+                           vcov = vcov,
                            group_name = group_name,
                            prediction_type = prediction_type,
                            numDeriv_method = numDeriv_method),
