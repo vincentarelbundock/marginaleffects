@@ -36,6 +36,12 @@ typical <- function(model = NULL, data = NULL, at = NULL) {
     v_manual <- names(at)
     v_automatic <- setdiff(v_all, v_manual)
 
+    # check `at` names
+    v_bad <- setdiff(names(at), v_all)
+    if (length(v_bad) > 0) {
+        warning(sprintf("Variables in `at` are missing from the model data: %s", paste(v_bad, collapse = ", ")))
+    }
+
     # check `at` elements and convert them to factor as needed
     for (n in names(at)) {
         if (is.factor(dat[[n]])) {
