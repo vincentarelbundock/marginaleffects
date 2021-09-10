@@ -25,6 +25,7 @@ sanity_dydx_model <- function(model) {
                    "fixest",
                    "glm",
                    "glmerMod",
+                   "hurdle",
                    "ivreg",
                    "lm",
                    "lmerMod",
@@ -140,7 +141,7 @@ sanity_dydx_vcov <- function(model, vcov) {
 
 
 sanity_dydx_prediction_type <- function(model, prediction_type) {
-    checkmate::assert_character(prediction_type, len = 1, null.ok = FALSE)
+    checkmate::assert_character(prediction_type, min.len = 1, null.ok = FALSE)
 
     if ("clm" %in% class(model)) {
         if (prediction_type %in% c("prob", "probs")) {

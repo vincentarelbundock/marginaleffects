@@ -83,6 +83,7 @@ tab <-
 "lme4::glmer",      "✓"      , "✓"        ,             , "dydx only"
 "MASS::polr",       "✓"      ,            , "✓"         ,
 "ordinal::clm",     "✓"      ,            ,             , "✓"
+"pscl::hurdle",     "✓"      , "✓"        ,             , 
 "survey::svyglm",   "✓"      , "✓"        ,             , "✓"'
 tab <- read.csv(text = tab)
 colnames(tab) <- c("Model", "Support: Effect", "Support: Std.Errors", "Validity: Stata", "Validity: margins")
@@ -359,8 +360,9 @@ Create a file called `tests/testthat/test-PKGNAME.R` and write a few tests. Idea
 
 #### *Step 4:* Finalize
 
-Add your new model class to the lists of supported models:
+Add your new model class to the lists of supported models in:
 
-* In the `sanity_dydx_model` function of the `R/sanity.R` file.
-* In the supported models table of the `README.Rmd` file.
-* In the "Details" section of the `R/marginaleffects.R` documentation
+* The `sanity_dydx_model` function of the `R/sanity.R` file.
+* The supported models table of the `README.Rmd` file.
+* The "Details" section of the `R/marginaleffects.R` documentation
+* The "Suggests" list in the `DESCRIPTION` file.
