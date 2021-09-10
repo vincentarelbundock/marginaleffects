@@ -1,13 +1,21 @@
 template:
   params:
     bootswatch: readable
-toc:
-  depth: 2
 navbar:
   title: marginaleffects
-  type: default
-  right:
-  - text: Reference
-    href: reference/index.html
-  - text: Changelog
-    href: news/index.html
+  structure:
+    left:
+    - home
+    - reference
+    - news
+    right: github
+  components:
+    home:
+      icon: fas fa-home fa-lg
+      href: index.html
+    reference:
+      text: Functions
+      href: reference/index.html
+    news:
+      text: Changelog
+      href: news/index.html

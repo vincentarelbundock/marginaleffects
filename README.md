@@ -441,12 +441,12 @@ mod <- lm(y ~ x + I(x^2), dat)
 marginaleffects(mod, newdata = typical(x = -2:2)) %>%
     mutate(truth = 1 + 4 * x) %>%
     select(dydx, truth)
-#>         dydx truth
-#> 1 -7.0014512    -7
-#> 2 -3.0013295    -3
-#> 3  0.9987923     1
-#> 4  4.9989141     5
-#> 5  8.9990358     9
+#>        dydx truth
+#> 1 -6.999047    -7
+#> 2 -2.997719    -3
+#> 3  1.003609     1
+#> 4  5.004937     5
+#> 5  9.006266     9
 ```
 
 We can also plot the result with the `plot_cme` function:

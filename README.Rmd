@@ -30,11 +30,11 @@ A "marginal effect" is a measure of the association between a change in a regres
 
 Marginal effects are extremely useful, because they are intuitive and easy to interpret. They are often the main quantity of interest in an empirical analysis. 
 
+## Why?
+
 Unfortunately, to calculate marginal effects we need to take derivatives of the regression equation. This can be challenging to do manually, especially when our models are non-linear, or when regressors are transformed or interacted. Computing the variance of a marginal effect is even more difficult. 
 
 The `marginaleffects` package hopes to do most of this hard work for you.
-
-## Why?
 
 Many `R` packages advertise their ability to compute "marginal effects." However, most of them do *not* actually compute marginal effects *as defined above* (the term is ambiguously defined in the statistical literature and used differently across fields). Instead, they compute related quantities such as "Estimated Marginal Means" or "Differences in Predicted Probabilities." The rare packages that actually compute marginal effects are typically limited in the model types they support, and in the range of transformations they allow (interactions, polynomials, etc.).
 
