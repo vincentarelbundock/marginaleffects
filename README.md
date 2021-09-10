@@ -63,17 +63,18 @@ package is (essentially) a clone of `margins`.
 
 So why did I write a new package?
 
--   *Speed:* In a typical case shown below, `marginaleffects` is over
-    400x faster (55 seconds vs. 130 *milli*seconds).
--   *Efficiency:* Between 5 and 60x smaller memory footprint.
--   *Extensibility:* Adding support for new models often requires less
-    than 10 lines of new code. In the medium run, my goal is to add
-    support for *several* more model types.
+-   *Speed:* In one benchmark (see below), computing unit-level standard
+    errors is over 400x faster with `marginaleffects` (1 minute vs. 130
+    milliseconds).
+-   *Efficiency:* Smaller memory footprint.
+-   *Extensibility:* Adding support for new models is very easy, often
+    requires less than 10 lines of new code. In the medium run, the goal
+    is to add support for *several* more model types.
 -   `ggplot2` support: Plot your (conditional) marginal effects using
     `ggplot2`.
 -   *Tidy:* The results produced by `marginaleffects` follow “tidy”
     principles. They are easy to process and program with.
--   *Active development*.
+-   *Active development*
 
 Downsides of `marginaleffects` include:
 
@@ -461,12 +462,12 @@ marginaleffects(mod,
                 newdata = typical(data = dat, at = list(x = -2:2))) %>%
     mutate(truth = 1 + 4 * x) %>%
     select(dydx, truth)
-#>        dydx truth
-#> 1 -6.999457    -7
-#> 2 -2.998704    -3
-#> 3  1.002049     1
-#> 4  5.002801     5
-#> 5  9.003554     9
+#>         dydx truth
+#> 1 -6.9938438    -7
+#> 2 -2.9975707    -3
+#> 3  0.9987025     1
+#> 4  4.9949756     5
+#> 5  8.9912488     9
 ```
 
 We can also plot the result easily with the `plot_cme` function:
@@ -481,14 +482,14 @@ plot_cme(mod, effect = "x", condition = "x")
 
 Here are two *very* naive benchmarks to compare the speed of
 `marginaleffects` and `margins`. Computing the unit-level marginal
-effects and standard errors in a logistic regression model with 1500
+effects and standard errors in a logistic regression model with 2000
 observations is over 400 times faster with `marginaleffects`.
-Calculating only the marginal effects is about 50% faster.
+Calculating only the marginal effects is about 20% faster.
 
 Simulate data and fit model:
 
 ``` r
-N <- 1500
+N <- 2000
 dat <- data.frame(
     x2 = rnorm(N),
     x1 = rnorm(N),
@@ -504,37 +505,27 @@ mod <- glm(y ~ x1 + x2 + x3 * x4, data = dat, family = binomial)
 Marginal effects and standard errors:
 
 ``` r
-b1 = bench::mark(
+bench::mark(
     margins::margins(mod, unit_ses = TRUE),
     marginaleffects(mod),
-    check = FALSE,
-    max_iterations = 3)
+    check = FALSE)
 
-b1
-#> # A tibble: 2 x 6
-#>   expression                                  min   median `itr/sec` mem_alloc
-#>   <bch:expr>                             <bch:tm> <bch:tm>     <dbl> <bch:byt>
-#> 1 margins::margins(mod, unit_ses = TRUE)    54.6s    54.6s    0.0183    1.39GB
-#> 2 marginaleffects(mod)                           123.4ms  129.5ms    7.60     21.83MB
-#> # … with 1 more variable: gc/sec <dbl>
+> expression                                  min   median `itr/sec` mem_alloc
+> margins::margins(mod, unit_ses = TRUE)    1.08m    1.08m    0.0154    1.85GB
+> marginaleffects(mod)                    124.5ms 154.43ms    5.75     51.63MB
 ```
 
 Marginal effects only:
 
 ``` r
-b2 = bench::mark(
+bench::mark(
     margins::margins(mod, unit_ses = FALSE),
-    marginaleffects(mod, variance = NULL),
-    check = FALSE,
-    max_iterations = 3)
+    marginaleffects(mod, variance = FALSE),
+    check = FALSE)
 
-b2
-#> # A tibble: 2 x 6
-#>   expression                                   min   median `itr/sec` mem_alloc
-#>   <bch:expr>                              <bch:tm> <bch:tm>     <dbl> <bch:byt>
-#> 1 margins::margins(mod, unit_ses = FALSE)   92.7ms  101.3ms      9.74   34.14MB
-#> 2 marginaleffects(mod, variance = NULL)            66.1ms   67.7ms     14.3     5.22MB
-#> # … with 1 more variable: gc/sec <dbl>
+  expression                                   min   median `itr/sec` mem_alloc
+> margins::margins(mod, unit_ses = FALSE)    131ms    146ms      6.97    43.8MB
+> marginaleffects(mod, variance = FALSE)     111ms    121ms      8.32    32.7MB
 ```
 
 ## Extending `marginaleffects` to support new models
