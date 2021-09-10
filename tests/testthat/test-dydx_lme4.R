@@ -24,10 +24,10 @@ mod_lm <- lme4::lmer(y ~ x1 + x2 + (1 | clus), data = dat_lm)
 test_that("lme4: no errors generated (no validity check)", {
     res <- marginaleffects(mod_glm)
     expect_s3_class(res, "data.frame")
-    expect_equal(dim(res), c(2000, 8))
+    expect_equal(dim(res), c(2000, 9))
     res <- marginaleffects(mod_lm)
     expect_s3_class(res, "data.frame")
-    expect_equal(dim(res), c(2000, 8))
+    expect_equal(dim(res), c(2000, 9))
 })
 
 

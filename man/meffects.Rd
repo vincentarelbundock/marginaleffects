@@ -35,9 +35,9 @@ calculates marginal effects for all terms in the model object.}
 indicating the method to use for the approximation. See
 \code{\link[numDeriv:grad]{numDeriv::grad()}} for details.}
 
-\item{prediction_type}{Type of prediction as character. This can differ
-based on the model type, but will typically be a string such as: "response",
-"link", or "probs".}
+\item{prediction_type}{Type(s) of prediction as string or vector This can
+differ based on the model type, but will typically be a string such as:
+"response", "link", "probs", or "zero".}
 
 \item{return_data}{boolean If \code{TRUE}, the original data used to fit the
 model is attached to the output. \code{FALSE} will objects which take up less
@@ -72,6 +72,7 @@ Supported models:
 \item lme4::glmer
 \item MASS::polr (no variance)
 \item ordinal::clm (no variance)
+\item pscl::hurdle
 \item survey::svyglm
 }
 }

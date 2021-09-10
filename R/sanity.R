@@ -144,19 +144,18 @@ sanity_dydx_prediction_type <- function(model, prediction_type) {
     checkmate::assert_character(prediction_type, min.len = 1, null.ok = FALSE)
 
     if ("clm" %in% class(model)) {
-        if (prediction_type %in% c("prob", "probs")) {
-            prediction_type <- "prob"
-        } else {
-            warning(sprintf('The only `prediction_type` supported for models of class `%s` is `"probs"`. The value of the argument was adjusted automatically. Modify the argument manually to silence this warning.', class(model)[1]))
-            prediction_type <- "prob"
+        prediction_type[prediction_type == "probs"] <- "prob"
+        idx <- !prediction_type %in% c("prob", "class", "cum.prob", "linear_predictor")
+        prediction_type[idx] <- "prob"
+        prediction_type <- unique(prediction_type)
+        if (any(idx)) {
+            warning(sprintf('The only `prediction_type` supported for models of class `%s` are "prob", "cum.prob", and "linear.predictor".', class(model)[1]))
         }
     }
 
     if (any(c("multinom", "nnet") %in% class(model))) {
-        if(prediction_type %in% c("prob", "probs")) {
-            prediction_type <- "probs"
-        } else {
-            stop(sprintf('The only `prediction_type` supported for models of class `%s` is `"probs"`. The value of the argument was adjusted automatically. Modify the argument manually to silence this warning.', class(model)[1]))
+        if (any(prediction_type != "probs")) {
+            warning(sprintf('The only `prediction_type` supported for models of class `%s` is `"probs"`. The value of the argument was adjusted automatically. Modify the argument manually to silence this warning.', class(model)[1]))
             prediction_type <- "probs"
         }
     }

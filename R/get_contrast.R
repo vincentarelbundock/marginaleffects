@@ -6,9 +6,9 @@
 #' `emmeans::contrast` function.
 #' @keywords internal
 #' @export
-get_contrast <- function(model, variable, ...) {
+get_contrast <- function(model, variable, prediction_type = "response", ...) {
     assert_dependency("emmeans")
-    emm <- emmeans::emmeans(model, specs = variable)
+    emm <- emmeans::emmeans(model, specs = variable, type = prediction_type)
     con <- emmeans::contrast(emm, method = "revpairwise")
     out <- data.frame(summary(con))
     colnames(out)[colnames(out) == "SE"] <- "std.error"

@@ -28,9 +28,9 @@ get_predict(model, newdata, prediction_type, ...)
 \item{newdata}{A dataset over which to compute marginal effects. \code{NULL} uses
 the original data used to fit the model.}
 
-\item{prediction_type}{Type of prediction as character. This can differ
-based on the model type, but will typically be a string such as: "response",
-"link", or "probs".}
+\item{prediction_type}{Type(s) of prediction as string or vector This can
+differ based on the model type, but will typically be a string such as:
+"response", "link", "probs", or "zero".}
 
 \item{...}{Additional arguments are ignored.}
 }

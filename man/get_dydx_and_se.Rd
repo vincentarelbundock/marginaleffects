@@ -38,9 +38,9 @@ get_dydx_and_se(model, ...)
 estimate. Groups are often used in models like multinomial logit where each
 level of the response variable is associated to its own set of coefficients.}
 
-\item{prediction_type}{Type of prediction as character. This can differ
-based on the model type, but will typically be a string such as: "response",
-"link", or "probs".}
+\item{prediction_type}{Type(s) of prediction as string or vector This can
+differ based on the model type, but will typically be a string such as:
+"response", "link", "probs", or "zero".}
 
 \item{numDeriv_method}{One of "simple", "Richardson", or "complex",
 indicating the method to use for the approximation. See

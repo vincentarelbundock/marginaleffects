@@ -19,11 +19,11 @@ Depends:
     R (>= 3.5.0)
 Imports: 
     checkmate,
+    dplyr,
     generics,
     insight,
     methods,
     numDeriv,
-    poorman
 Suggests: 
     margins,
     testthat (>= 3.0.0),
@@ -32,7 +32,6 @@ Suggests:
     ggplot2,
     bench,
     betareg,
-    dplyr,
     fixest,
     haven,
     here,
@@ -61,6 +60,7 @@ Collate:
     'methods_lme4.R'
     'methods_nnet.R'
     'methods_ordinal.R'
+    'methods_pscl.R'
     'methods_stats.R'
     'package.R'
     'plot.R'
