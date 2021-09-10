@@ -64,3 +64,14 @@ print.marginaleffects.summary <- function(x,
 
   return(invisible(x))
 }
+
+
+# this forces me to do: head(data.frame(mfx))
+#print.marginaleffects <- function(
+#    x, digits = max(3L, getOption("digits") - 2L), ...) {
+
+#    print.marginaleffects.summary(
+#        summary.marginaleffects(x), 
+#        digits = digits, 
+#        ...)
+#}

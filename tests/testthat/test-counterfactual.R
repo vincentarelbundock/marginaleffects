@@ -1,3 +1,11 @@
+test_that("warning on bad `at` entry", {
+    expect_warning(counterfactual(data = mtcars, at = list("blah" = 0:1)))
+})
+
+test_that("warning on bad `at` entry", {
+    expect_warning(typical(data = mtcars, at = list("blah" = 0:1)))
+})
+
 test_that("counterfactual(): factor, logical, automatic variable", {
     tmp <- mtcars
     tmp$am <- as.logical(tmp$am)
