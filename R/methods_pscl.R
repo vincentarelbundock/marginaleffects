@@ -1,0 +1,29 @@
+#' @include set_coef.R
+#' @rdname set_coef
+#' @export
+set_coef.hurdle <- function(model, coefs) {
+    # in pscl::hurdle, coefficients are held in a named list:
+    # model$coefficients. Each element of the list is a vector which
+    # corresponds to one equation (e.g., "zero" or "response"). When calling
+    # "coef(model)", the equation label is prefixed to the term name with an
+    # underscore.
+    out <- model
+    for (lab in names(out$coefficients)) {
+        idx <- paste0(lab, "_", names(out$coefficients[[lab]]))
+        idx <- match(idx, names(coefs))
+        # probably too conservative
+        if (anyNA(idx)) {
+            stop("Mismatched coefficients names. Please check the `marginaleffects::set_coef.hurdle` function.")
+        }
+        out$coefficients[[lab]] <- stats::setNames(coefs[idx], out$coefficients[[lab]])
+    }
+    return(out)
+}
+
+
+#' @include get_coef.R
+#' @rdname get_coef
+#' @export
+get_coef.betareg <- function(model, ...) {
+    model$coefficients$mean
+}
