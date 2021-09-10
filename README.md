@@ -1,7 +1,5 @@
 
-# `marginaleffects`
-
-### Marginal effects using `R`, automatic differentiation, and the delta method
+# The `marginaleffects` package for `R`
 
 <!-- badges: start -->
 
@@ -10,47 +8,43 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 [![R-CMD-check](https://github.com/vincentarelbundock/fastmargins/workflows/R-CMD-check/badge.svg)](https://github.com/vincentarelbundock/fastmargins/actions)
 <!-- badges: end -->
 
-This package is still experimental. *Use with caution!*
+This package is still experimental. *Use with caution\!*
 
 ## What?
 
 The `marginaleffects` package allows `R` users to compute and plot
-“marginal effects” for a *wide* variety of models.
+marginal effects for a *wide* variety of models.
 
 A “marginal effect” is a measure of the association between a change in
-the regressors, and a change in the response variable. More formally,
-[the (excellent) `margins`
+a regressor, and a change in the response variable. More formally, [the
+(excellent) `margins`
 vignette](https://cran.r-project.org/web/packages/margins/index.html)
-defines “marginal effects” as follows:
+defines the concept as follows:
 
-> “Marginal effects are partial derivatives of the regression equation
-> with respect to each variable in the model for each unit in the data.”
+> Marginal effects are partial derivatives of the regression equation
+> with respect to each variable in the model for each unit in the data.
 
 Marginal effects are extremely useful, because they are intuitive and
 easy to interpret. They are often the main quantity of interest in an
-empirical analysis. Unfortunately, they can be often be quite difficult
-to compute:
+empirical analysis.
 
-> In ordinary least squares regression with no interactions or
-> higher-order term, the estimated slope coefficients are marginal
-> effects. In other cases and for generalized linear models, the
-> coefficients are not marginal effects at least not on the scale of the
-> response variable.
+Unfortunately, to calculate marginal effects we need to take derivatives
+of the regression equation. This can be challenging to do manually,
+especially when our models are non-linear, or when regressors are
+transformed or interacted. Computing the variance of a marginal effect
+is even more difficult.
 
-To calculate marginal effects, we take derivatives of the regression
-equation. This can be challenging, especially when our models are
-non-linear, or when regressors are transformed or interacted. Computing
-the variance is even more difficult. The `marginaleffects` package hopes
-to do most of this hard work for you.
+The `marginaleffects` package hopes to do most of this hard work for
+you.
 
-# Why?
+## Why?
 
 Many `R` packages advertise their ability to compute “marginal effects.”
 However, most of them do *not* actually compute marginal effects *as
 defined above* (the term is ambiguously defined in the statistical
 literature and used differently across fields). Instead, they compute
 related quantities such as “Estimated Marginal Means” or “Differences in
-Predicted Probabilities.” The rare packages which actually compute
+Predicted Probabilities.” The rare packages that actually compute
 marginal effects are typically limited in the model types they support,
 and in the range of transformations they allow (interactions,
 polynomials, etc.).
@@ -61,28 +55,28 @@ The main package in the `R` ecosystem to compute marginal effects is
 by [Thomas J. Leeper.](https://thomasleeper.com/) The `marginaleffects`
 package is (essentially) a clone of `margins`.
 
-So why did I write a new package?
+So why did I write a clone?
 
--   *Speed:* In one benchmark (see below), computing unit-level standard
-    errors is over 400x faster with `marginaleffects` (1 minute vs. 130
+  - *Speed:* In one benchmark (see below), computing unit-level standard
+    errors is over 400x faster with `marginaleffects` (1 minute vs. 150
     milliseconds).
--   *Efficiency:* Smaller memory footprint.
--   *Extensibility:* Adding support for new models is very easy, often
-    requires less than 10 lines of new code. In the medium run, the goal
-    is to add support for *several* more model types.
--   `ggplot2` support: Plot your (conditional) marginal effects using
-    `ggplot2`.
--   *Tidy:* The results produced by `marginaleffects` follow “tidy”
+  - *Efficiency:* Smaller memory footprint (1.8GB vs 52MB in the same
+    example).
+  - *Extensibility:* Adding support for new models is very easy, often
+    requiring less than 10 lines of new code. In the medium run, the
+    goal is to add support for *several* more model types.
+  - `ggplot2` support for plotting (conditional) marginal effects.
+  - *Tidy:* The results produced by `marginaleffects` follow “tidy”
     principles. They are easy to process and program with.
--   *Active development*
+  - *User interface:* Slight changes to the user interface are intended
+    to improve the experience.
+  - *Active development*
 
 Downsides of `marginaleffects` include:
 
--   No support for weights or simultation-based inference.
--   Possibly fragile handling of transformations in model formulas (not
-    sure).
--   More dependencies.
--   Newer package with a much smaller (i.e., non-existent) user base.
+  - Weights and simultation-based inference are not (yet) supported.
+  - More dependencies.
+  - Newer package with a smaller (read: nonexistent) user base.
 
 ## How?
 
@@ -96,8 +90,11 @@ This table shows the list of models supported by `marginaleffect`, and
 shows which numerical results have been checked against alternative
 software packages: Stata’s `margins` command and R’s `margins` package.
 
+I am *very* eager to add support for new models. Feel free to file a
+request on Github or – even better – submit some code.
+
 | Model            | Support: Effect | Support: Std.Errors | Validity: Stata | Validity: margins |
-|:-----------------|:----------------|:--------------------|:----------------|:------------------|
+| :--------------- | :-------------- | :------------------ | :-------------- | :---------------- |
 | stats::lm        | ✓               | ✓                   | ✓               | ✓                 |
 | stats::glm       | ✓               | ✓                   | ✓               | ✓                 |
 | stats::loess     | ✓               |                     |                 | ✓                 |
@@ -138,10 +135,15 @@ mod <- glm(large_penguin ~ bill_length_mm + flipper_length_mm + species,
            data = dat, family = binomial)
 ```
 
-The `marginaleffects` function computes a distinct estimate of the
+A “marginal effect” is a unit-specific measure of association between a
+change in a regressor and a change in the regressand. In most cases, its
+value will depend on the values of all the other variables in the model
+for that specific unit.
+
+The `marginaleffects` function thus computes a distinct estimate of the
 marginal effect and of the standard error for each regressor (“term”),
-for each unit of observation (“rowid”). You can browse view and
-manipulate the full results with functions like `head`, as you would any
+for each unit of observation (“rowid”). You can view and manipulate the
+full results with functions like `head`, as you would with any other
 `data.frame`:
 
 ``` r
@@ -150,11 +152,11 @@ mfx <- marginaleffects(mod)
 head(mfx)
 #>   rowid              term        dydx   std.error large_penguin bill_length_mm
 #> 1     1    bill_length_mm 0.017622745 0.007837288             0           39.1
-#> 2     1 flipper_length_mm 0.006763748 0.001561738             0           39.1
+#> 2     1 flipper_length_mm 0.006763748 0.001561740             0           39.1
 #> 3     2    bill_length_mm 0.035846649 0.011917159             0           39.5
-#> 4     2 flipper_length_mm 0.013758244 0.002880122             0           39.5
-#> 5     3    bill_length_mm 0.084433436 0.021119181             0           40.3
-#> 6     3 flipper_length_mm 0.032406447 0.008159349             0           40.3
+#> 4     2 flipper_length_mm 0.013758244 0.002880123             0           39.5
+#> 5     3    bill_length_mm 0.084433436 0.021119186             0           40.3
+#> 6     3 flipper_length_mm 0.032406447 0.008159318             0           40.3
 #>   flipper_length_mm species
 #> 1               181  Adelie
 #> 2               181  Adelie
@@ -164,38 +166,11 @@ head(mfx)
 #> 6               195  Adelie
 ```
 
-Notice that the results are presented in “tidy” format: each row of the
-original dataset gets a unique `rowid` value, each unit-level marginal
-effect appears on a distinct row, and metadata appears neatly in
-separate columns. This makes it easy to operate on the results
+Notice that the results are presented in “tidy” long format: each row of
+the original dataset gets a unique `rowid` value, each unit-level
+marginal effect appears on a distinct row, and metadata appears neatly
+in separate columns. This makes it easy to operate on the results
 programmatically.
-
-We can obtain similar (but arguably messier) results with the `margins`
-package:
-
-``` r
-library(margins)
-
-mar <- margins(mod)
-mar <- data.frame(mar)
-
-head(mar, 2)
-#>   X species    island bill_length_mm bill_depth_mm flipper_length_mm
-#> 1 1  Adelie Torgersen           39.1          18.7               181
-#> 2 2  Adelie Torgersen           39.5          17.4               186
-#>   body_mass_g    sex year large_penguin     fitted  se.fitted
-#> 1        3750   male 2007             0 0.05123266 0.02294299
-#> 2        3800 female 2007             0 0.11125087 0.03296249
-#>   dydx_bill_length_mm dydx_flipper_length_mm dydx_speciesChinstrap
-#> 1          0.01762256            0.006763789           -0.05093734
-#> 2          0.03584626            0.013758266           -0.11056655
-#>   dydx_speciesGentoo Var_dydx_bill_length_mm Var_dydx_flipper_length_mm
-#> 1         0.05458668            3.335632e-05               5.498655e-06
-#> 2         0.10402440            3.335632e-05               5.498655e-06
-#>   Var_dydx_speciesChinstrap Var_dydx_speciesGentoo X_weights X_at_number
-#> 1                0.00319684             0.01142364        NA           1
-#> 2                0.00319684             0.01142364        NA           1
-```
 
 ## Average Marginal Effects
 
@@ -209,7 +184,7 @@ convenient:
 ``` r
 summary(mfx)
 #> Average marginal effects 
-#>                term           contrast   Effect Std. Error z value   Pr(>|z|)
+#>                Term           Contrast   Effect Std. Error z value   Pr(>|z|)
 #> 1    bill_length_mm                     0.02757    0.00849 3.24819  0.0011614
 #> 2 flipper_length_mm                     0.01058    0.00332 3.18766  0.0014343
 #> 3           species Chinstrap - Adelie -5.20837    1.04973         2.0906e-06
@@ -226,8 +201,12 @@ summary(mfx)
 #> Prediction type:  response
 ```
 
-If the `emmeans` package is installed, `summary.marginaleffects` will
-try to display contrasts for logical, factor, and character variables.
+Note that since marginal effects are derivatives, they are only properly
+defined for continuous numeric variables. When the model also includes
+categorical regressors, the `summary` function will try to display
+relevant (regression-adjusted) contrasts between different categories,
+as shown above. This optional feature requires users to install the
+`emmeans` package.
 
 You can also extract average marginal effects using `tidy` and `glance`
 methods which conform to the [`broom` package
@@ -255,31 +234,30 @@ glance(mfx)
 Sometimes, we are not interested in *all* the unit-specific marginal
 effects, but would rather look at the estimated marginal effects for
 certain “typical” individuals. The `typical` function helps us build
-datasets full of “typical” rows. For example, to generate very unhappy
-individuals with or without kids:
+datasets full of “typical” rows. For example, to generate artificial
+Adelies and Gentoos with 180mm flippers:
 
 ``` r
-typical(mod, 
-        at = list(flipper_length_mm = 180, 
-                  species = c("Adelie", "Gentoo")))
+typical(flipper_length_mm = 180, 
+        species = c("Adelie", "Gentoo"), 
+        model = mod)
 #>   bill_length_mm flipper_length_mm species
 #> 1          44.45               180  Adelie
 #> 2          44.45               180  Gentoo
 ```
 
-This dataset can then be used in `marginaleffects` to compute marginal
-effects for those (fictional) individuals:
+The same command can be used (omitting the `model` argument) to
+`marginaleffects`’s `newdata` argument to compute marginal effects for
+those (fictional) individuals:
 
 ``` r
-nd <- typical(mod, 
-              at = list(flipper_length_mm = 180, 
-                        species = c("Adelie", "Gentoo")))
-marginaleffects(mod, newdata = nd)
+marginaleffects(mod, newdata = typical(flipper_length_mm = 180, 
+                                       species = c("Adelie", "Gentoo")))
 #>   rowid              term       dydx   std.error bill_length_mm
-#> 1     1    bill_length_mm 0.06730577 0.035695232          44.45
-#> 2     1 flipper_length_mm 0.02583260 0.005812085          44.45
-#> 3     2    bill_length_mm 0.08815874 0.032833988          44.45
-#> 4     2 flipper_length_mm 0.03383629 0.005861848          44.45
+#> 1     1    bill_length_mm 0.06730577 0.035695241          44.45
+#> 2     1 flipper_length_mm 0.02583260 0.005812078          44.45
+#> 3     2    bill_length_mm 0.08815874 0.032833955          44.45
+#> 4     2 flipper_length_mm 0.03383629 0.005861870          44.45
 #>   flipper_length_mm species
 #> 1               180  Adelie
 #> 2               180  Adelie
@@ -287,24 +265,26 @@ marginaleffects(mod, newdata = nd)
 #> 4               180  Gentoo
 ```
 
-When a variable is omitted from the `at` list, `typical` will
-automatically select the median (or mode) of the missing variable.
+When variables are omitted from the `typical` call, they will
+automatically be set at their median or mode (depending on variable
+type).
 
 ## Counterfactual Marginal Effects
 
 The `typical` function allowed us look at completely fictional
-individual. The `counterfactual` lets us compute the marginal effects
-for the actual observations in our dataset, but with a few manipulated
-values. For example, this code will create a `data.frame` twice as long
-as the original `dat`, where each observation is repeated with different
-values of the `kids` variable:
+individuals. The `counterfactual` function lets us compute the marginal
+effects for the actual observations in our dataset, but with a few
+manipulated values. For example, this code will create a `data.frame`
+twice as long as the original `dat`, where each observation is repeated
+with different values of the `flipper_length_mm` variable:
 
 ``` r
-nd <- counterfactual(mod, at = list(flipper_length_mm = c(160, 180)))
+nd <- counterfactual(flipper_length_mm = c(160, 180), model = mod)
 ```
 
 We see that the rows 1, 2, and 3 of the original dataset have been
-replicated twice, with different values of the `kids` variable:
+replicated twice, with different values of the `flipper_length_mm`
+variable:
 
 ``` r
 nd[nd$rowid %in% 1:3,]
@@ -353,19 +333,19 @@ mfx <- lapply(mod, marginaleffects)
 modelsummary(mfx)
 ```
 
-|                     |  Logit   |    OLS    |
-|:--------------------|:--------:|:---------:|
-| flipper\_length\_mm |  0.020   |  48.145   |
-|                     | (0.003)  |  (2.011)  |
-| bill\_length\_mm    |          |   6.047   |
-|                     |          |  (5.180)  |
-| Num.Obs.            |   342    |    342    |
-| R2                  |          |   0.760   |
-| R2 Adj.             |          |   0.759   |
-| AIC                 |  222.2   |  5063.5   |
-| BIC                 |  229.9   |  5078.8   |
-| Log.Lik.            | -109.111 | -2527.741 |
-| F                   |          |  536.626  |
+|                     |   Logit   |    OLS     |
+| :------------------ | :-------: | :--------: |
+| flipper\_length\_mm |   0.020   |   48.145   |
+|                     |  (0.003)  |  (2.011)   |
+| bill\_length\_mm    |           |   6.047    |
+|                     |           |  (5.180)   |
+| Num.Obs.            |    342    |    342     |
+| R2                  |           |   0.760    |
+| R2 Adj.             |           |   0.759    |
+| AIC                 |   222.2   |   5063.5   |
+| BIC                 |   229.9   |   5078.8   |
+| Log.Lik.            | \-109.111 | \-2527.741 |
+| F                   |           |  536.626   |
 
 You can also display models with contrasts using `modelsummary`’s
 `group` argument:
@@ -380,23 +360,23 @@ mfx <- lapply(mod, marginaleffects)
 modelsummary(mfx, group = term + contrast ~ model)
 ```
 
-|                     |                    |  Logit   |    OLS    |
-|:--------------------|:-------------------|:--------:|:---------:|
-| species             | Chinstrap - Adelie |  -0.371  | -206.510  |
-|                     |                    | (0.384)  | (57.731)  |
-|                     | Gentoo - Adelie    |  6.078   |  266.810  |
-|                     |                    | (1.023)  | (95.264)  |
-|                     | Gentoo - Chinstrap |  6.449   |  473.320  |
-|                     |                    | (1.057)  | (86.746)  |
-| flipper\_length\_mm |                    |          |  40.705   |
-|                     |                    |          |  (3.068)  |
-| Num.Obs.            |                    |   342    |    342    |
-| R2                  |                    |          |   0.783   |
-| R2 Adj.             |                    |          |   0.781   |
-| AIC                 |                    |  236.4   |  5031.5   |
-| BIC                 |                    |  247.9   |  5050.7   |
-| Log.Lik.            |                    | -115.188 | -2510.762 |
-| F                   |                    |          |  405.693  |
+|                     |                    |   Logit   |    OLS     |
+| :------------------ | :----------------- | :-------: | :--------: |
+| species             | Chinstrap - Adelie |  \-0.371  | \-206.510  |
+|                     |                    |  (0.384)  |  (57.731)  |
+|                     | Gentoo - Adelie    |   6.078   |  266.810   |
+|                     |                    |  (1.023)  |  (95.264)  |
+|                     | Gentoo - Chinstrap |   6.449   |  473.320   |
+|                     |                    |  (1.057)  |  (86.746)  |
+| flipper\_length\_mm |                    |           |   40.705   |
+|                     |                    |           |  (3.068)   |
+| Num.Obs.            |                    |    342    |    342     |
+| R2                  |                    |           |   0.783    |
+| R2 Adj.             |                    |           |   0.781    |
+| AIC                 |                    |   236.4   |   5031.5   |
+| BIC                 |                    |   247.9   |   5050.7   |
+| Log.Lik.            |                    | \-115.188 | \-2510.762 |
+| F                   |                    |           |  405.693   |
 
 ## Plots (`ggplot2`)
 
@@ -416,7 +396,7 @@ mfx <- marginaleffects(mod)
 plot(mfx)
 ```
 
-<img src="man/figures/README-unnamed-chunk-17-1.png" width="60%" />
+<img src="man/figures/README-unnamed-chunk-16-1.png" width="60%" />
 
 The second is a `plot_cme` function to draw “Conditional Marginal
 Effects.” This is useful when a model includes interaction terms and we
@@ -429,26 +409,26 @@ mod <- lm(mpg ~ hp * wt + drat, data = mtcars)
 plot_cme(mod, effect = "hp", condition = "wt")
 ```
 
-<img src="man/figures/README-unnamed-chunk-18-1.png" width="60%" />
+<img src="man/figures/README-unnamed-chunk-17-1.png" width="60%" />
 
 ## Simple analytic example: Quadratic term
 
 Say you estimate a linear regression model with a quadratic term:
 
-*Y* = *β*<sub>0</sub> + *β*<sub>1</sub>*X*<sup>2</sup> + *ε*
-,
+\[Y = \beta_0 + \beta_1 X^2 + \varepsilon\]
 
-and obtain the following estimates:
-*β*<sub>0</sub> = 1; *β*<sub>1</sub> = 2. By taking the partial
-derivative with respect to *X* we obtain the marginal effect of *X* on
-*Y*:
+and obtain estimates of \(\beta_0=1\) and \(\beta_1=2\). Taking the
+partial derivative with respect to \(X\) and plugging in our estimates
+gives us the marginal effect of \(X\) on \(Y\):
 
-∂*Y*/∂*X* = *β*<sub>0</sub> + 2 ⋅ *β*<sub>1</sub>*X* = 1 + 4*X*
+\[\partial Y / \partial X = \beta_0 + 2 \cdot \beta_1 X = 1 + 4X\]
 
-Plugging in our estimates leads us to conclude that the effect of a
-*change* in *X* on *Y* depends on the *level* of *X*. When *X* is large,
-an increase in *X* is associated to a large change in *Y*. When *X* is
-small, an increase in *X* is associated to a small change in *Y*.
+This result suggests that the effect of a *change* in \(X\) on \(Y\)
+depends on the *level* of \(X\). When \(X\) is large and positive, an
+increase in \(X\) is associated to a large increase in \(Y\). When \(X\)
+is small and positive, an increase in \(X\) is associated to a small
+increase in \(Y\). When \(X\) is a large negative value, an increase in
+\(X\) is associated with a *decrease* in \(Y\).
 
 `marginaleffects` arrives at the same conclusion in simultated data:
 
@@ -458,25 +438,24 @@ dat <- data.frame(x = rnorm(N))
 dat$y <- 1 + 1 * dat$x + 2 * dat$x^2 + rnorm(N)
 mod <- lm(y ~ x + I(x^2), dat)
 
-marginaleffects(mod, 
-                newdata = typical(data = dat, at = list(x = -2:2))) %>%
+marginaleffects(mod, newdata = typical(x = -2:2)) %>%
     mutate(truth = 1 + 4 * x) %>%
     select(dydx, truth)
-#>        dydx truth
-#> 1 -6.987805    -7
-#> 2 -2.993776    -3
-#> 3  1.000253     1
-#> 4  4.994282     5
-#> 5  8.988311     9
+#>         dydx truth
+#> 1 -7.0014512    -7
+#> 2 -3.0013295    -3
+#> 3  0.9987923     1
+#> 4  4.9989141     5
+#> 5  8.9990358     9
 ```
 
-We can also plot the result easily with the `plot_cme` function:
+We can also plot the result with the `plot_cme` function:
 
 ``` r
 plot_cme(mod, effect = "x", condition = "x")
 ```
 
-<img src="man/figures/README-unnamed-chunk-20-1.png" width="60%" />
+<img src="man/figures/README-unnamed-chunk-19-1.png" width="60%" />
 
 ## Benchmarks
 
@@ -531,8 +510,8 @@ bench::mark(
 ## Extending `marginaleffects` to support new models
 
 In most cases, extending `marginaleffects` to support new models is
-easy. Imagine you want to add support for an object called “`model`” of
-class “`Example`” with N observations.
+easy. Imagine you want to add support for an object called `model` of
+class `EXAMPLE` with N observations.
 
 #### *Step 1:* Check if `marginaleffects` default functions work:
 
@@ -548,8 +527,9 @@ get_predict(model)
 stats::vcov(model)
 
 # returns a new model object with different stored coefficients 
-# calling predict(model) and predict(model_new) should produce different results
+# calling get_predict(model) and get_predict(model_new) should produce different results
 model_new <- set_coef(model, rep(0, length(get_coef(model))))
+predict(model) != predict(model_new)
 ```
 
 If all of these functions work out-of-the-box, there’s a good chance
@@ -566,19 +546,19 @@ class(model)
 
 Then, create functions (methods) called `get_coef.EXAMPLE`,
 `get_predict.EXAMPLE`, `vcov.EXAMPLE`, and `set_coef.EXAMPLE`, with the
-“EXAMPLE” replace by the name your model class.
+“EXAMPLE” replaced by the name your model class.
 
 #### *Step 3:* Add tests
 
 Create a file called `tests/testthat/test-PKGNAME.R` and write a few
 tests. Ideally, we would like to compare the results obtained by
-`marginaleffect` to an external source, like the `margins` package or
-`Stata`.
+`marginaleffects` to an external source, like the `margins` package for
+`R`, or the `margins` command for `Stata`.
 
 #### *Step 4:* Finalize
 
 Add your new model class to the lists of supported models:
 
--   In the `sanity_dydx_model` function of the `R/sanity.R` file.
--   In the supported models table of the `README.Rmd` file.
--   In the “Details” section of the `R/marginaleffects.R` documentation
+  - In the `sanity_dydx_model` function of the `R/sanity.R` file.
+  - In the supported models table of the `README.Rmd` file.
+  - In the “Details” section of the `R/marginaleffects.R` documentation

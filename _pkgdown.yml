@@ -3,3 +3,11 @@ template:
     bootswatch: readable
 toc:
   depth: 2
+navbar:
+  title: marginaleffects
+  type: default
+  right:
+  - text: Reference
+    href: reference/index.html
+  - text: Changelog
+    href: news/index.html

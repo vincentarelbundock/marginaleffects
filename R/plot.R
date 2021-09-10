@@ -34,7 +34,7 @@ plot.marginaleffects <- function(x,
                                                    xmin = conf.low,
                                                    xmax = conf.high))
         }
-        xlab <- sprintf("Estimates with %s confidence intervals", sprintf("%.0f", conf.level * 100))
+        xlab <- sprintf("Estimates with %s%% confidence intervals", sprintf("%.0f", conf.level * 100))
         p <- p + 
              ggplot2::geom_pointrange() + 
              ggplot2::labs(x = xlab, y = "")
@@ -44,7 +44,7 @@ plot.marginaleffects <- function(x,
         } else {
             p <- ggplot2::ggplot(dat, ggplot2::aes(y = term, x = estimate))
         }
-        xlab <- sprintf("Estimates with %s confidence intervals", sprintf("%.0f", conf.level * 100))
+        xlab <- sprintf("Estimates with %s%% confidence intervals", sprintf("%.0f", conf.level * 100))
         p <- p +
              ggplot2::geom_point() +
              ggplot2::labs(x = xlab, y = "")

@@ -168,3 +168,11 @@ marginaleffects <- function(model,
 
     return(out)
 }
+
+
+#' `meffects()` is a shortcut to `marginaleffects()`
+#'
+#' @inherit marginaleffects
+#' @keywords internal
+#' @export
+meffects <- marginaleffects
