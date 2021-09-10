@@ -38,7 +38,8 @@ plot_cme <- function(model,
     at_list[[condition1]] <- seq(min(dat[[condition1]], na.rm = TRUE), 
                                  max(dat[[condition1]], na.rm = TRUE), 
                                  length.out = 25)
-    nd <- typical(model, at = at_list)
+    at_list[["model"]] = model
+    nd <- do.call("typical", at_list)
     datplot <- marginaleffects(model, variables = effect, newdata = nd)
     colnames(datplot)[colnames(datplot) == condition1] <- "condition1"
 
@@ -57,7 +58,7 @@ plot_cme <- function(model,
         p <- ggplot2::ggplot(datplot, ggplot2::aes(x = condition1, y = dydx, ymin = conf.low, ymax = conf.high)) +
              ggplot2::geom_ribbon(alpha = .1) +
              ggplot2::geom_line() + 
-             ggplot2::labs(x = condition1, y = "Average marginal effect")
+             ggplot2::labs(x = condition1, y = sprintf("Marginal effect of %s", condition))
     } else {
         if ("group" %in% colnames(datplot)) {
             p <- ggplot2::ggplot(datplot, ggplot2::aes(y = term, x = estimate, color = group))
@@ -66,7 +67,7 @@ plot_cme <- function(model,
         }
         p <- p +
              ggplot2::geom_point() +
-             ggplot2::labs(x = condition1, y = "Average marginal effect")
+             ggplot2::labs(x = condition1, y = sprintf("Average marginal effect %s", condition))
     }
 
     if ("group" %in% colnames(datplot)) {

@@ -38,10 +38,12 @@ Suggests:
     MASS,
     nnet,
     ordinal,
-    survey
+    sandwich,
+    survey,
+    vdiffr
 Config/testthat/edition: 3
 Collate: 
-    'counterfactual.R'
+    'counterfactual_typical.R'
     'get_coef.R'
     'get_contrast.R'
     'get_dydx.R'
@@ -63,4 +65,3 @@ Collate:
     'summary.R'
     'test_against_margins.R'
     'tidy.R'
-    'typical.R'

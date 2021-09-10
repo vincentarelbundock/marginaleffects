@@ -37,7 +37,7 @@ plot.marginaleffects <- function(x,
         xlab <- sprintf("Estimates with %s confidence intervals", sprintf("%.0f", conf.level * 100))
         p <- p + 
              ggplot2::geom_pointrange() + 
-             ggplot2::labs(x = xlab, y = "Average marginal effects")
+             ggplot2::labs(x = xlab, y = "")
     } else {
         if ("group" %in% colnames(dat)) {
             p <- ggplot2::ggplot(dat, ggplot2::aes(y = term, x = estimate, color = group))
@@ -47,7 +47,7 @@ plot.marginaleffects <- function(x,
         xlab <- sprintf("Estimates with %s confidence intervals", sprintf("%.0f", conf.level * 100))
         p <- p +
              ggplot2::geom_point() +
-             ggplot2::labs(x = xlab, y = "Average marginal effects")
+             ggplot2::labs(x = xlab, y = "")
     }
 
     # theme and return

@@ -13,6 +13,6 @@ test_that("original data with NAs do not pose problems in glm and lm.", {
 
 test_that("newdata with NAs do not pose problems in lm.", {
     mod <- lm(hp ~ mpg + drat + wt + factor(gear), data = tmp)
-    nd <- typical(mod, at = list("drat" = c(NA, 10)))
-    expect_s3_class(tidy(marginaleffects(mod, newdata = nd)), "data.frame")
+    mfx <- marginaleffects(mod, newdata = typical(drat = c(NA, 10)))
+    expect_s3_class(tidy(mfx), "data.frame")
 })

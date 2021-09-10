@@ -16,7 +16,7 @@ get_se_delta <- function (model, ...) {
 get_se_delta.default <- function(model, 
                                  variable,
                                  fitfram = insight::get_data(model), 
-                                 variance = stats::vcov(model),
+                                 vcov = stats::vcov(model),
                                  group_name = NULL,
                                  prediction_type = "response",
                                  numDeriv_method = "simple", 
@@ -24,7 +24,7 @@ get_se_delta.default <- function(model,
 
     model_tmp <- model
     coefs <- get_coef(model)
-    variance <- variance[names(coefs), names(coefs)]
+    vcov <- vcov[names(coefs), names(coefs)]
 
     inner <- function(x) {
         model_tmp <- set_coef(model_tmp, stats::setNames(x, names(coefs)))
@@ -43,7 +43,7 @@ get_se_delta.default <- function(model,
     # Var(dydx) = J Var(beta) J'
     # computing the full matrix is memory-expensive, and we only need the diagonal
     # algebra trick: https://stackoverflow.com/a/42569902/342331
-    V <- colSums(t(J %*% variance) * t(J))
+    V <- colSums(t(J %*% vcov) * t(J))
     se <- sqrt(V)
 
     return(se)

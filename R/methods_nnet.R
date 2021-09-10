@@ -21,7 +21,7 @@ set_coef.multinom <- function(model, coefs) {
 get_se_delta.multinom <- function(model, 
                                   variable, 
                                   fitfram = insight::find_data(model), 
-                                  variance = NULL, 
+                                  vcov = NULL, 
                                   group_name = NULL,
                                   prediction_type = "probs",
                                   numDeriv_method = "simple", 
@@ -45,7 +45,7 @@ get_se_delta.multinom <- function(model,
     # Var(dydx) = J Var(beta) J'
     # computing the full matrix is memory-expensive, and we only need the diagonal
     # algebra trick: https://stackoverflow.com/a/42569902/342331
-    V <- colSums(t(J %*% variance) * t(J))
+    V <- colSums(t(J %*% vcov) * t(J))
     se <- sqrt(V)
 
     return(se)

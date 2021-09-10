@@ -10,7 +10,7 @@ test_that("multinom: mfx", {
         nnet::multinom(cyl ~ hp + am + mpg, data = tmp, quiet = true))
 
     res <- marginaleffects(mod, 
-                    variance = FALSE,
+                    vcov = FALSE,
                     prediction_type = "probs")
     expect_s3_class(res, "data.frame")
 
