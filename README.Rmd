@@ -24,7 +24,7 @@ This package is still experimental. *Use with caution!*
 
 The `marginaleffects` package allows `R` users to compute and plot marginal effects for a *wide* variety of models. 
 
-A "marginal effect" is a measure of the association between a change in a regressor, and a change in the response variable. More formally, [the (excellent) `margins` vignette](https://cran.r-project.org/web/packages/margins/index.html) defines the concept as follows:
+A "marginal effect" is a measure of the association between a change in a regressor, and a change in the response variable. More formally, [the excellent `margins` vignette](https://cran.r-project.org/web/packages/margins/index.html) defines the concept as follows:
 
 > Marginal effects are partial derivatives of the regression equation with respect to each variable in the model for each unit in the data.
 
