@@ -45,6 +45,7 @@
 #' + estimatr::lm_robust
 #' + fixest::feols
 #' + fixest::feglm
+#' + gam::gam
 #' + lme4::lmer
 #' + lme4::glmer
 #' + MASS::polr (no variance)
