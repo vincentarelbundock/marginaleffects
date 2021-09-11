@@ -76,6 +76,8 @@ Supported models:
 \item MASS::polr (no variance)
 \item ordinal::clm (no variance)
 \item pscl::hurdle
+\item speedglm::speedglm
+\item speedglm::speedlm
 \item survey::svyglm
 }
 }

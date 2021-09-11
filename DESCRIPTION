@@ -37,6 +37,7 @@ Suggests:
     AER,
     betareg,
     bife,
+    estimatr,
     fixest,
     ivreg,
     lme4,
@@ -45,6 +46,7 @@ Suggests:
     ordinal,
     pscl,
     sandwich,
+    speedglm,
     survey
 Config/testthat/edition: 3
 Collate: 
