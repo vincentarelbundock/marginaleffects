@@ -100,6 +100,13 @@ marginaleffects <- function(model,
     prediction_type <- sanity_prediction_type(model, prediction_type)
     return_data <- sanity_return_data(return_data)
 
+    # add predictions to newdata
+    for (predt in prediction_type) {
+        lab <- paste0("predicted_", predt)
+        newdata[[lab]] <- get_predict(model = model,
+                                      newdata = newdata,
+                                      prediction_type = predt)
+    }
 
     # dydx: numeric variables w/ autodiff
     dydx <- list()
@@ -147,7 +154,9 @@ marginaleffects <- function(model,
             newdata$rowid <- 1:nrow(newdata)
             out <- merge(out, newdata, by = "rowid")
         }
-        cols <- intersect(c("rowid", "type", "group", "term", "dydx", "std.error"), colnames(out))
+        stubcols <- c("rowid", "type", "group", "term", "dydx", "std.error",
+                      sort(grep("^predicted", colnames(newdata), value = TRUE)))
+        cols <- intersect(stubcols, colnames(out))
         cols <- unique(c(cols, colnames(out)))
         out <- out[, cols]
         if (all(out$group == "main")) {
