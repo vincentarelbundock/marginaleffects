@@ -13,13 +13,13 @@ check_dependency <- function(library_name) {
 assert_dependency <- checkmate::makeAssertionFunction(check_dependency)
 
 
-sanity_dydx_return_data <- function(return_data) {
+sanity_return_data <- function(return_data) {
     checkmate::assert_flag(return_data)
     return(return_data)
 }
 
 
-sanity_dydx_model <- function(model) {
+sanity_model <- function(model) {
     supported <- c("betareg",
                    "clm",
                    "fixest",
@@ -41,7 +41,7 @@ sanity_dydx_model <- function(model) {
 }
 
 
-sanity_dydx_group_names <- function (model) {
+sanity_group_names <- function (model) {
     group_models <- c("multinom", "polr")
     if (any(group_models %in% class(model))) {
         group_names <- levels(insight::get_response(model))
@@ -52,7 +52,7 @@ sanity_dydx_group_names <- function (model) {
 }
 
 
-sanity_dydx_newdata <- function(model, newdata) {
+sanity_newdata <- function(model, newdata) {
     checkmate::check_data_frame(newdata, 
                                 null.ok = TRUE, 
                                 any.missing = FALSE)
@@ -66,7 +66,7 @@ sanity_dydx_newdata <- function(model, newdata) {
 }
 
 
-sanity_dydx_variables <- function(model, newdata, variables) {
+sanity_variables <- function(model, newdata, variables) {
     checkmate::assert_character(variables, min.len = 1, null.ok = TRUE)
 
     # guess variables
@@ -98,7 +98,7 @@ sanity_dydx_variables <- function(model, newdata, variables) {
 }
 
 
-sanity_dydx_vcov <- function(model, vcov) {
+sanity_vcov <- function(model, vcov) {
 
     # lme4 produces a distinct matrix type
     if (inherits(vcov, "dpoMatrix")) {
@@ -144,7 +144,7 @@ sanity_dydx_vcov <- function(model, vcov) {
 }
 
 
-sanity_dydx_prediction_type <- function(model, prediction_type) {
+sanity_prediction_type <- function(model, prediction_type) {
     checkmate::assert_character(prediction_type, min.len = 1, null.ok = FALSE)
 
     if ("clm" %in% class(model)) {

@@ -362,7 +362,7 @@ Create a file called `tests/testthat/test-PKGNAME.R` and write a few tests. Idea
 
 Add your new model class to the lists of supported models in:
 
-* The `sanity_dydx_model` function of the `R/sanity.R` file.
+* The `sanity_model` function of the `R/sanity.R` file.
 * The supported models table of the `README.Rmd` file.
 * The "Details" section of the `R/marginaleffects.R` documentation
 * The "Suggests" list in the `DESCRIPTION` file.

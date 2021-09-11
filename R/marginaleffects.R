@@ -92,13 +92,13 @@ marginaleffects <- function(model,
     }
 
     # sanity checks and pre-processing
-    model <- sanity_dydx_model(model)
-    newdata <- sanity_dydx_newdata(model, newdata)
-    variables <- sanity_dydx_variables(model, newdata, variables)
-    vcov <- sanity_dydx_vcov(model, vcov)
-    group_names <- sanity_dydx_group_names(model)
-    prediction_type <- sanity_dydx_prediction_type(model, prediction_type)
-    return_data <- sanity_dydx_return_data(return_data)
+    model <- sanity_model(model)
+    newdata <- sanity_newdata(model, newdata)
+    variables <- sanity_variables(model, newdata, variables)
+    vcov <- sanity_vcov(model, vcov)
+    group_names <- sanity_group_names(model)
+    prediction_type <- sanity_prediction_type(model, prediction_type)
+    return_data <- sanity_return_data(return_data)
 
 
     # dydx: numeric variables w/ autodiff
