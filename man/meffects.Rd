@@ -67,6 +67,7 @@ Supported models:
 \item AER::ivreg
 \item AER::tobit
 \item betareg::betareg
+\item bife::bife
 \item estimatr::lm_robust
 \item fixest::feols
 \item fixest::feglm

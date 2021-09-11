@@ -2,6 +2,10 @@ library("margins")
 library("haven")
 library("dplyr", warn.conflicts = FALSE)
 
+# pkgload::load_all()
+# mod = lm(hp ~ mpg, mtcars)
+# marginaleffects(mod)
+
 test_that("glm", {
     set.seed(1024)
     N <- 1e2

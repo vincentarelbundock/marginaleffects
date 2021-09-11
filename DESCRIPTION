@@ -36,6 +36,7 @@ Suggests:
     vdiffr,
     AER,
     betareg,
+    bife,
     fixest,
     ivreg,
     lme4,
@@ -54,10 +55,12 @@ Collate:
     'get_dydx_and_se.R'
     'get_predict.R'
     'get_se_delta.R'
+    'get_vcov.R'
     'marginaleffects.R'
     'median_or_mode.R'
     'set_coef.R'
     'methods_betareg.R'
+    'methods_bife.R'
     'methods_lme4.R'
     'methods_nnet.R'
     'methods_ordinal.R'

@@ -20,6 +20,7 @@ sanity_return_data <- function(return_data) {
 
 sanity_model <- function(model) {
     supported <- list("betareg",
+                      "bife",
                       "clm",
                       "fixest",
                       "glm",
@@ -131,7 +132,7 @@ sanity_vcov <- function(model, vcov) {
 
     # TRUE: try to extract a vcov (TODO: implement get_vcov)
     if (isTRUE(vcov)) {
-        vcov <- try(stats::vcov(model), silent = TRUE)
+        vcov <- try(get_vcov(model), silent = TRUE)
         if (inherits(vcov, "try-error")) {
             vcov <- NULL
             warning(sprintf('Unable to extract a variance-covariance matrix from model of class "%s" using the `stats::vcov` function. The `vcov` argument was switched to `FALSE`. Please supply a named matrix to produce uncertainty estimates.', class(model)[1]))
