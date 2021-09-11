@@ -33,7 +33,7 @@ get_se_delta(model, ...)
 \arguments{
 \item{model}{Model object}
 
-\item{...}{Additional arguments are ignored.}
+\item{...}{Additional arguments are pushed forward to \code{predict()}.}
 
 \item{variable}{A string to identify the variable whose marginal effect to compute.}
 

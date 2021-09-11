@@ -25,7 +25,7 @@
 #' @param return_data boolean If `TRUE`, the original data used to fit the
 #'   model is attached to the output. `FALSE` will objects which take up less
 #'   space in memory.
-#' @param ... Additional arguments are ignored.
+#' @param ... Additional arguments are pushed forward to `predict()`.
 #' @export
 #' @details
 #' Most -- but not all -- of the models below have been checked against
@@ -105,7 +105,8 @@ marginaleffects <- function(model,
         lab <- paste0("predicted_", predt)
         newdata[[lab]] <- get_predict(model = model,
                                       newdata = newdata,
-                                      prediction_type = predt)
+                                      prediction_type = predt,
+                                      ...)
     }
 
     # dydx: numeric variables w/ autodiff
@@ -119,7 +120,8 @@ marginaleffects <- function(model,
                                        vcov = vcov,
                                        group_name = gn,
                                        prediction_type = predt,
-                                       numDeriv_method = numDeriv_method)
+                                       numDeriv_method = numDeriv_method,
+                                       ...)
                 if (length(group_names) > 1) {
                     tmp$group <- gn
                 }

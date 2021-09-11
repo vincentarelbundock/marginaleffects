@@ -32,7 +32,7 @@ the original data used to fit the model.}
 differ based on the model type, but will typically be a string such as:
 "response", "link", "probs", or "zero".}
 
-\item{...}{Additional arguments are ignored.}
+\item{...}{Additional arguments are pushed forward to \code{predict()}.}
 }
 \value{
 A vector of predicted values of length equal to the number of rows

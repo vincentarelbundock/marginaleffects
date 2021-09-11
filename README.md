@@ -97,7 +97,6 @@ request on Github or – even better – submit some code.
 | :--------------- | :-------------- | :------------------ | :-------------- | :---------------- |
 | stats::lm        | ✓               | ✓                   | ✓               | ✓                 |
 | stats::glm       | ✓               | ✓                   | ✓               | ✓                 |
-| stats::loess     | ✓               |                     |                 | ✓                 |
 | AER::ivreg       | ✓               | ✓                   | ✓               | ✓                 |
 | betareg::betareg | ✓               | ✓                   | ✓               | ✓                 |
 | fixest::feols    | ✓               | ✓                   |                 |                   |
@@ -107,6 +106,7 @@ request on Github or – even better – submit some code.
 | lme4::glmer      | ✓               | ✓                   |                 | dydx only         |
 | MASS::polr       | ✓               |                     | ✓               |                   |
 | ordinal::clm     | ✓               |                     |                 | ✓                 |
+| pscl::hurdle     | ✓               | ✓                   |                 |                   |
 | survey::svyglm   | ✓               | ✓                   |                 | ✓                 |
 
 ## Installation
@@ -150,20 +150,20 @@ full results with functions like `head`, as you would with any other
 mfx <- marginaleffects(mod)
 
 head(mfx)
-#>   rowid              term        dydx   std.error large_penguin bill_length_mm
-#> 1     1    bill_length_mm 0.017622745 0.007837288             0           39.1
-#> 2     1 flipper_length_mm 0.006763748 0.001561740             0           39.1
-#> 3     2    bill_length_mm 0.035846649 0.011917159             0           39.5
-#> 4     2 flipper_length_mm 0.013758244 0.002880123             0           39.5
-#> 5     3    bill_length_mm 0.084433436 0.021119186             0           40.3
-#> 6     3 flipper_length_mm 0.032406447 0.008159318             0           40.3
-#>   flipper_length_mm species
-#> 1               181  Adelie
-#> 2               181  Adelie
-#> 3               186  Adelie
-#> 4               186  Adelie
-#> 5               195  Adelie
-#> 6               195  Adelie
+#>   rowid     type              term        dydx   std.error predicted_response
+#> 1     1 response    bill_length_mm 0.017622745 0.007837288         0.05123266
+#> 2     1 response flipper_length_mm 0.006763748 0.001561740         0.05123266
+#> 3     2 response    bill_length_mm 0.035846649 0.011917159         0.11125087
+#> 4     2 response flipper_length_mm 0.013758244 0.002880123         0.11125087
+#> 5     3 response    bill_length_mm 0.084433436 0.021119186         0.36919834
+#> 6     3 response flipper_length_mm 0.032406447 0.008159318         0.36919834
+#>   large_penguin bill_length_mm flipper_length_mm species
+#> 1             0           39.1               181  Adelie
+#> 2             0           39.1               181  Adelie
+#> 3             0           39.5               186  Adelie
+#> 4             0           39.5               186  Adelie
+#> 5             0           40.3               195  Adelie
+#> 6             0           40.3               195  Adelie
 ```
 
 Notice that the results are presented in “tidy” long format: each row of
@@ -183,19 +183,21 @@ convenient:
 
 ``` r
 summary(mfx)
+#> Warning in `[<-.factor`(`*tmp*`, is.na(out$contrast), value = structure(c(NA, :
+#> invalid factor level, NA generated
 #> Average marginal effects 
-#>                Term           Contrast   Effect Std. Error z value   Pr(>|z|)
-#> 1    bill_length_mm                     0.02757    0.00849 3.24819  0.0011614
-#> 2 flipper_length_mm                     0.01058    0.00332 3.18766  0.0014343
-#> 3           species Chinstrap - Adelie -5.20837    1.04973         2.0906e-06
-#> 4           species    Gentoo - Adelie  0.78461    1.25627          0.8066373
-#> 5           species Gentoo - Chinstrap  5.99298    1.30388         1.2828e-05
-#>      2.5 %   97.5 %
-#> 1  0.01093  0.04421
-#> 2  0.00408  0.01709
-#> 3 -7.26580 -3.15094
-#> 4 -1.67763  3.24685
-#> 5  3.43743  8.54853
+#>       type              Term           Contrast    Effect Std. Error  z value
+#> 1 response    bill_length_mm               <NA>   0.02757    0.00849  3.24819
+#> 2 response flipper_length_mm               <NA>   0.01058    0.00332  3.18766
+#> 3 response           species Chinstrap / Adelie   0.00547    0.00574 -4.96164
+#> 4 response           species    Gentoo / Adelie   2.19156    2.75319  0.62456
+#> 5 response           species Gentoo / Chinstrap 400.60647  522.34202  4.59627
+#>     Pr(>|z|)      2.5 %     97.5 %
+#> 1  0.0011614    0.01093    0.04421
+#> 2  0.0014343    0.00408    0.01709
+#> 3 2.0906e-06   -0.00578    0.01673
+#> 4  0.8066373   -3.20459    7.58770
+#> 5 1.2828e-05 -623.16509 1424.37802
 #> 
 #> Model type:  glm 
 #> Prediction type:  response
@@ -214,15 +216,15 @@ specification](https://broom.tidymodels.org/):
 
 ``` r
 tidy(mfx)
-#> # A tibble: 5 × 8
-#> # Groups:   term [3]
-#>   term              contrast estimate std.error statistic p.value conf.low conf.high
-#>   <chr>             <chr>       <dbl>     <dbl>     <dbl>   <dbl>    <dbl>     <dbl>
-#> 1 bill_length_mm    <NA>       0.0276   0.00849      3.25 1.16e-3  0.0109     0.0442
-#> 2 flipper_length_mm <NA>       0.0106   0.00332      3.19 1.43e-3  0.00408    0.0171
-#> 3 species           Chinstr…  -5.21     1.05        NA    2.09e-6 -7.27      -3.15  
-#> 4 species           Gentoo …   0.785    1.26        NA    8.07e-1 -1.68       3.25  
-#> 5 species           Gentoo …   5.99     1.30        NA    1.28e-5  3.44       8.55
+#> # A tibble: 5 × 9
+#> # Groups:   type [1]
+#>   type     term  contrast estimate std.error statistic p.value conf.low conf.high
+#>   <chr>    <chr> <fct>       <dbl>     <dbl>     <dbl>   <dbl>    <dbl>     <dbl>
+#> 1 response bill… <NA>      2.76e-2   0.00849     3.25  1.16e-3  1.09e-2    0.0442
+#> 2 response flip… <NA>      1.06e-2   0.00332     3.19  1.43e-3  4.08e-3    0.0171
+#> 3 response spec… Chinstr…  5.47e-3   0.00574    -4.96  2.09e-6 -5.78e-3    0.0167
+#> 4 response spec… Gentoo …  2.19e+0   2.75        0.625 8.07e-1 -3.20e+0    7.59  
+#> 5 response spec… Gentoo …  4.01e+2 522.          4.60  1.28e-5 -6.23e+2 1424.
 
 glance(mfx)
 #>   null.deviance df.null    logLik      AIC      BIC deviance df.residual nobs
@@ -253,16 +255,16 @@ those (fictional) individuals:
 ``` r
 marginaleffects(mod, newdata = typical(flipper_length_mm = 180, 
                                        species = c("Adelie", "Gentoo")))
-#>   rowid              term       dydx   std.error bill_length_mm
-#> 1     1    bill_length_mm 0.06730577 0.035695241          44.45
-#> 2     1 flipper_length_mm 0.02583260 0.005812078          44.45
-#> 3     2    bill_length_mm 0.08815874 0.032833955          44.45
-#> 4     2 flipper_length_mm 0.03383629 0.005861870          44.45
-#>   flipper_length_mm species
-#> 1               180  Adelie
-#> 2               180  Adelie
-#> 3               180  Gentoo
-#> 4               180  Gentoo
+#>   rowid     type              term       dydx   std.error predicted_response
+#> 1     1 response    bill_length_mm 0.06730577 0.035695241          0.2463215
+#> 2     1 response flipper_length_mm 0.02583260 0.005812078          0.2463215
+#> 3     2 response    bill_length_mm 0.08815874 0.032833955          0.4173366
+#> 4     2 response flipper_length_mm 0.03383629 0.005861870          0.4173366
+#>   bill_length_mm flipper_length_mm species
+#> 1          44.45               180  Adelie
+#> 2          44.45               180  Adelie
+#> 3          44.45               180  Gentoo
+#> 4          44.45               180  Gentoo
 ```
 
 When variables are omitted from the `typical` call, they will
@@ -358,16 +360,27 @@ mod <- list(
 mfx <- lapply(mod, marginaleffects)
 
 modelsummary(mfx, group = term + contrast ~ model)
+#> Warning in `[<-.factor`(`*tmp*`, thisvar, value = ""): invalid factor level, NA
+#> generated
+
+#> Warning in `[<-.factor`(`*tmp*`, thisvar, value = ""): invalid factor level, NA
+#> generated
 ```
 
 |                     |                    |   Logit   |    OLS     |
 | :------------------ | :----------------- | :-------: | :--------: |
-| species             | Chinstrap - Adelie |  \-0.371  | \-206.510  |
-|                     |                    |  (0.384)  |  (57.731)  |
-|                     | Gentoo - Adelie    |   6.078   |  266.810   |
-|                     |                    |  (1.023)  |  (95.264)  |
-|                     | Gentoo - Chinstrap |   6.449   |  473.320   |
-|                     |                    |  (1.057)  |  (86.746)  |
+| species             | Chinstrap / Adelie |   0.690   |            |
+|                     |                    |  (0.265)  |            |
+|                     | Gentoo / Adelie    |  436.242  |            |
+|                     |                    | (446.354) |            |
+|                     | Gentoo / Chinstrap |  632.182  |            |
+|                     |                    | (668.012) |            |
+|                     | Chinstrap - Adelie |           | \-206.510  |
+|                     |                    |           |  (57.731)  |
+|                     | Gentoo - Adelie    |           |  266.810   |
+|                     |                    |           |  (95.264)  |
+|                     | Gentoo - Chinstrap |           |  473.320   |
+|                     |                    |           |  (86.746)  |
 | flipper\_length\_mm |                    |           |   40.705   |
 |                     |                    |           |  (3.068)   |
 | Num.Obs.            |                    |    342    |    342     |
@@ -442,11 +455,11 @@ marginaleffects(mod, newdata = typical(x = -2:2)) %>%
     mutate(truth = 1 + 4 * x) %>%
     select(dydx, truth)
 #>        dydx truth
-#> 1 -6.999426    -7
-#> 2 -2.997651    -3
-#> 3  1.004124     1
-#> 4  5.005899     5
-#> 5  9.007674     9
+#> 1 -7.004247    -7
+#> 2 -3.001050    -3
+#> 3  1.002148     1
+#> 4  5.005346     5
+#> 5  9.008544     9
 ```
 
 We can also plot the result with the `plot_cme` function:
@@ -557,8 +570,9 @@ tests. Ideally, we would like to compare the results obtained by
 
 #### *Step 4:* Finalize
 
-Add your new model class to the lists of supported models:
+Add your new model class to the lists of supported models in:
 
-  - In the `sanity_model` function of the `R/sanity.R` file.
-  - In the supported models table of the `README.Rmd` file.
-  - In the “Details” section of the `R/marginaleffects.R` documentation
+  - The `sanity_model` function of the `R/sanity.R` file.
+  - The supported models table of the `README.Rmd` file.
+  - The “Details” section of the `R/marginaleffects.R` documentation
+  - The “Suggests” list in the `DESCRIPTION` file.

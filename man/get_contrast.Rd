@@ -15,7 +15,7 @@ get_contrast(model, variable, prediction_type = "response", ...)
 differ based on the model type, but will typically be a string such as:
 "response", "link", "probs", or "zero".}
 
-\item{...}{Additional arguments are ignored.}
+\item{...}{Additional arguments are pushed forward to \code{predict()}.}
 }
 \value{
 A \code{broom}-style \code{data.frame} with the results of the

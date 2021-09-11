@@ -43,7 +43,7 @@ differ based on the model type, but will typically be a string such as:
 model is attached to the output. \code{FALSE} will objects which take up less
 space in memory.}
 
-\item{...}{Additional arguments are ignored.}
+\item{...}{Additional arguments are pushed forward to \code{predict()}.}
 }
 \description{
 Warning: This package is experimental.
