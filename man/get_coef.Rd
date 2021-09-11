@@ -15,7 +15,7 @@ get_coef(model, ...)
 \arguments{
 \item{model}{Model object}
 
-\item{...}{Additional arguments are ignored.}
+\item{...}{Additional arguments are pushed forward to \code{predict()}.}
 }
 \value{
 A named vector of coefficients. The names must match those of the variance matrix.

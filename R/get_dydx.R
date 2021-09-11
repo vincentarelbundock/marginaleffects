@@ -23,7 +23,8 @@ get_dydx.default <- function(model,
         fitfram_tmp[[variable]] <- x
         pred <- get_predict(model = model,
                             newdata = fitfram_tmp,
-                            prediction_type = prediction_type)
+                            prediction_type = prediction_type,
+                            ...)
         # numDeriv expects a vector
         if (is.matrix(pred) && (!is.null(group_name) && group_name != "main")) {
             pred <- pred[, group_name, drop = TRUE]

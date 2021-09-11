@@ -32,7 +32,8 @@ get_dydx_and_se.default <- function(model,
                   variable = variable,
                   group_name = group_name,
                   prediction_type = prediction_type,
-                  numDeriv_method = numDeriv_method)
+                  numDeriv_method = numDeriv_method,
+                  ...)
 
     out <- data.frame(rowid = 1:nrow(fitfram), 
                       term = variable,
@@ -58,7 +59,8 @@ get_dydx_and_se.default <- function(model,
                            vcov = vcov,
                            group_name = group_name,
                            prediction_type = prediction_type,
-                           numDeriv_method = numDeriv_method),
+                           numDeriv_method = numDeriv_method,
+                           ...),
               silent = TRUE)
     if (!inherits(se, "try-error")) {
         out$std.error <- se

@@ -15,7 +15,7 @@
 \code{conf.int=TRUE}. Must be strictly greater than 0 and less than 1. Defaults
 to 0.95, which corresponds to a 95 percent confidence interval.}
 
-\item{...}{Additional arguments are ignored.}
+\item{...}{Additional arguments are pushed forward to \code{predict()}.}
 }
 \value{
 A \code{ggplot2} object

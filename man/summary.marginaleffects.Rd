@@ -9,7 +9,7 @@
 \arguments{
 \item{object}{An object produced by the \code{marginaleffects} function}
 
-\item{...}{Additional arguments are ignored.}
+\item{...}{Additional arguments are pushed forward to \code{predict()}.}
 }
 \description{
 Summarize a \code{marginaleffects} object
