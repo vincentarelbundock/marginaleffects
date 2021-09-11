@@ -25,16 +25,17 @@ Imports:
     methods,
     numDeriv,
 Suggests: 
-    margins,
+    bench,
     testthat (>= 3.0.0),
-    modelsummary,
     emmeans,
     ggplot2,
-    bench,
+    haven,
+    margins,
+    modelsummary,
+    vdiffr,
+    AER,
     betareg,
     fixest,
-    haven,
-    here,
     ivreg,
     lme4,
     MASS,
@@ -42,8 +43,7 @@ Suggests:
     ordinal,
     pscl,
     sandwich,
-    survey,
-    vdiffr
+    survey
 Config/testthat/edition: 3
 Collate: 
     'counterfactual_typical.R'

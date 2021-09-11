@@ -18,21 +18,27 @@ sanity_return_data <- function(return_data) {
     return(return_data)
 }
 
-
 sanity_model <- function(model) {
-    supported <- c("betareg",
-                   "clm",
-                   "fixest",
-                   "glm",
-                   "glmerMod",
-                   "hurdle",
-                   "ivreg",
-                   "lm",
-                   "lmerMod",
-                   "loess",
-                   # "multinom",
-                   "polr")
-    if (!any(supported %in% class(model))) {
+    supported <- list("betareg",
+                      "clm",
+                      "fixest",
+                      "glm",
+                      "glmerMod",
+                      "hurdle",
+                      "ivreg",
+                      "lm",
+                      "lmerMod",
+                      "loess",
+                      # "multinom",
+                      "polr",
+                      c("tobit", "survreg"))
+    flag <- FALSE
+    for (sup in supported) {
+        if (all(sup %in% class(model))) {
+            flag <- TRUE
+        }
+    }
+    if (isFALSE(flag)) {
         msg <- "Models of class %s are not supported. Supported model classes include: %s."
         msg <- sprintf(msg, class(model)[1], paste(supported, collapse = ", "))
         stop(msg)

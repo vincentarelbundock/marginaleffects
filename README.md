@@ -98,6 +98,7 @@ request on Github or – even better – submit some code.
 | stats::lm        | ✓               | ✓                   | ✓               | ✓                 |
 | stats::glm       | ✓               | ✓                   | ✓               | ✓                 |
 | AER::ivreg       | ✓               | ✓                   | ✓               | ✓                 |
+| AER::tobit       | ✓               | ✓                   |                 |                   |
 | betareg::betareg | ✓               | ✓                   | ✓               | ✓                 |
 | fixest::feols    | ✓               | ✓                   |                 |                   |
 | fixest::feglm    | ✓               | ✓                   |                 |                   |
@@ -455,11 +456,11 @@ marginaleffects(mod, newdata = typical(x = -2:2)) %>%
     mutate(truth = 1 + 4 * x) %>%
     select(dydx, truth)
 #>        dydx truth
-#> 1 -7.004247    -7
-#> 2 -3.001050    -3
-#> 3  1.002148     1
-#> 4  5.005346     5
-#> 5  9.008544     9
+#> 1 -6.984955    -7
+#> 2 -2.990531    -3
+#> 3  1.003893     1
+#> 4  4.998317     5
+#> 5  8.992741     9
 ```
 
 We can also plot the result with the `plot_cme` function:
