@@ -559,6 +559,6 @@ tests. Ideally, we would like to compare the results obtained by
 
 Add your new model class to the lists of supported models:
 
-  - In the `sanity_dydx_model` function of the `R/sanity.R` file.
+  - In the `sanity_model` function of the `R/sanity.R` file.
   - In the supported models table of the `README.Rmd` file.
   - In the “Details” section of the `R/marginaleffects.R` documentation
