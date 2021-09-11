@@ -51,6 +51,7 @@
 #' + MASS::polr (no variance)
 #' + ordinal::clm (no variance)
 #' + pscl::hurdle
+#' + rms:lrm
 #' + speedglm::speedglm
 #' + speedglm::speedlm
 #' + survey::svyglm
