@@ -87,6 +87,8 @@ tab <-
 "MASS::polr",       "✓"      ,            , "✓"         ,
 "ordinal::clm",     "✓"      ,            ,             , "✓"
 "pscl::hurdle",     "✓"      , "✓"        ,             , 
+"speedglm::speedglm",     "✓"      , "✓"        ,             , 
+"speedglm::speedlm",     "✓"      , "✓"        ,             , 
 "survey::svyglm",   "✓"      , "✓"        ,             , "✓"'
 tab <- read.csv(text = tab)
 colnames(tab) <- c("Model", "Support: Effect", "Support: Std.Errors", "Validity: Stata", "Validity: margins")

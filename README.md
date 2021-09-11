@@ -110,6 +110,8 @@ request on Github or – even better – submit some code.
 | MASS::polr           | ✓               |                     | ✓               |                   |
 | ordinal::clm         | ✓               |                     |                 | ✓                 |
 | pscl::hurdle         | ✓               | ✓                   |                 |                   |
+| speedglm::speedglm   | ✓               | ✓                   |                 |                   |
+| speedglm::speedlm    | ✓               | ✓                   |                 |                   |
 | survey::svyglm       | ✓               | ✓                   |                 | ✓                 |
 
 ## Installation
@@ -186,8 +188,8 @@ convenient:
 
 ``` r
 summary(mfx)
-#> Warning in `[<-.factor`(`*tmp*`, is.na(out$contrast), value = structure(c(NA, :
-#> invalid factor level, NA generated
+#> Warning in `[<-.factor`(`*tmp*`, is.na(out$contrast), value = ""): invalid
+#> factor level, NA generated
 #> Average marginal effects 
 #>       type              Term           Contrast    Effect Std. Error  z value
 #> 1 response    bill_length_mm               <NA>   0.02757    0.00849  3.24819
@@ -458,11 +460,11 @@ marginaleffects(mod, newdata = typical(x = -2:2)) %>%
     mutate(truth = 1 + 4 * x) %>%
     select(dydx, truth)
 #>        dydx truth
-#> 1 -7.001423    -7
-#> 2 -2.999851    -3
-#> 3  1.001722     1
-#> 4  5.003295     5
-#> 5  9.004867     9
+#> 1 -6.989555    -7
+#> 2 -2.992098    -3
+#> 3  1.005359     1
+#> 4  5.002816     5
+#> 5  9.000273     9
 ```
 
 We can also plot the result with the `plot_cme` function:

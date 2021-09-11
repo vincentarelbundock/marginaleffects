@@ -33,6 +33,8 @@ sanity_model <- function(model) {
                       "loess",
                       # "multinom",
                       "polr",
+                      "speedglm",
+                      "speedlm",
                       c("tobit", "survreg"))
     flag <- FALSE
     for (sup in supported) {
