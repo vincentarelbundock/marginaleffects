@@ -28,6 +28,7 @@ Suggests:
     bench,
     testthat (>= 3.0.0),
     emmeans,
+    estimatr,
     ggplot2,
     haven,
     margins,
