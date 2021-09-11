@@ -43,7 +43,7 @@ get_dydx_and_se.default <- function(model,
     # unit-level standard errors are slower to compute. When vcov=NULL, use a single typical dataset.
     if (is.null(vcov)) {
         fitfram <- typical(data = fitfram)
-        vcov <- try(stats::vcov(model), silent = TRUE)
+        vcov <- try(get_vcov(model), silent = TRUE)
     }
 
     # special case: polr (TODO: generalize using a get_vcov.polr() method)

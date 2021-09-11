@@ -100,6 +100,7 @@ request on Github or – even better – submit some code.
 | AER::ivreg           | ✓               | ✓                   | ✓               | ✓                 |
 | AER::tobit           | ✓               | ✓                   |                 |                   |
 | betareg::betareg     | ✓               | ✓                   | ✓               | ✓                 |
+| bife::bife           | ✓               | ✓                   |                 |                   |
 | estimatr::lm\_robust | ✓               | ✓                   |                 |                   |
 | fixest::feols        | ✓               | ✓                   |                 |                   |
 | fixest::feglm        | ✓               | ✓                   |                 |                   |
@@ -456,12 +457,12 @@ mod <- lm(y ~ x + I(x^2), dat)
 marginaleffects(mod, newdata = typical(x = -2:2)) %>%
     mutate(truth = 1 + 4 * x) %>%
     select(dydx, truth)
-#>         dydx truth
-#> 1 -7.0193202    -7
-#> 2 -3.0106319    -3
-#> 3  0.9980564     1
-#> 4  5.0067448     5
-#> 5  9.0154331     9
+#>        dydx truth
+#> 1 -7.001423    -7
+#> 2 -2.999851    -3
+#> 3  1.001722     1
+#> 4  5.003295     5
+#> 5  9.004867     9
 ```
 
 We can also plot the result with the `plot_cme` function:
@@ -539,7 +540,7 @@ get_coef(model)
 get_predict(model)
 
 # returns a named square matrix of size equal to the number of coefficients
-stats::vcov(model)
+get_vcov(model)
 
 # returns a new model object with different stored coefficients 
 # calling get_predict(model) and get_predict(model_new) should produce different results

@@ -77,6 +77,7 @@ tab <-
 "AER::ivreg",       "✓"      , "✓"        , "✓"         , "✓"
 "AER::tobit",       "✓"      , "✓"        ,             ,    
 "betareg::betareg", "✓"      , "✓"        , "✓"         , "✓"
+"bife::bife",    "✓"      , "✓"        ,             ,
 "estimatr::lm_robust", "✓"   , "✓"     ,          ,
 "fixest::feols",    "✓"      , "✓"        ,             ,
 "fixest::feglm",    "✓"      , "✓"        ,             ,
@@ -336,7 +337,7 @@ get_coef(model)
 get_predict(model)
 
 # returns a named square matrix of size equal to the number of coefficients
-stats::vcov(model)
+get_vcov(model)
 
 # returns a new model object with different stored coefficients 
 # calling get_predict(model) and get_predict(model_new) should produce different results
