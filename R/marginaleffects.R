@@ -41,6 +41,7 @@
 #' + AER::ivreg
 #' + AER::tobit
 #' + betareg::betareg
+#' + estimatr::lm_robust
 #' + fixest::feols
 #' + fixest::feglm
 #' + lme4::lmer

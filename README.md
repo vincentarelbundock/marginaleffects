@@ -93,22 +93,23 @@ software packages: Stata’s `margins` command and R’s `margins` package.
 I am *very* eager to add support for new models. Feel free to file a
 request on Github or – even better – submit some code.
 
-| Model            | Support: Effect | Support: Std.Errors | Validity: Stata | Validity: margins |
-| :--------------- | :-------------- | :------------------ | :-------------- | :---------------- |
-| stats::lm        | ✓               | ✓                   | ✓               | ✓                 |
-| stats::glm       | ✓               | ✓                   | ✓               | ✓                 |
-| AER::ivreg       | ✓               | ✓                   | ✓               | ✓                 |
-| AER::tobit       | ✓               | ✓                   |                 |                   |
-| betareg::betareg | ✓               | ✓                   | ✓               | ✓                 |
-| fixest::feols    | ✓               | ✓                   |                 |                   |
-| fixest::feglm    | ✓               | ✓                   |                 |                   |
-| ivreg::ivreg     | ✓               | ✓                   | ✓               | ✓                 |
-| lme4::lmer       | ✓               | ✓                   |                 | dydx only         |
-| lme4::glmer      | ✓               | ✓                   |                 | dydx only         |
-| MASS::polr       | ✓               |                     | ✓               |                   |
-| ordinal::clm     | ✓               |                     |                 | ✓                 |
-| pscl::hurdle     | ✓               | ✓                   |                 |                   |
-| survey::svyglm   | ✓               | ✓                   |                 | ✓                 |
+| Model                | Support: Effect | Support: Std.Errors | Validity: Stata | Validity: margins |
+| :------------------- | :-------------- | :------------------ | :-------------- | :---------------- |
+| stats::lm            | ✓               | ✓                   | ✓               | ✓                 |
+| stats::glm           | ✓               | ✓                   | ✓               | ✓                 |
+| AER::ivreg           | ✓               | ✓                   | ✓               | ✓                 |
+| AER::tobit           | ✓               | ✓                   |                 |                   |
+| betareg::betareg     | ✓               | ✓                   | ✓               | ✓                 |
+| estimatr::lm\_robust | ✓               | ✓                   |                 |                   |
+| fixest::feols        | ✓               | ✓                   |                 |                   |
+| fixest::feglm        | ✓               | ✓                   |                 |                   |
+| ivreg::ivreg         | ✓               | ✓                   | ✓               | ✓                 |
+| lme4::lmer           | ✓               | ✓                   |                 | dydx only         |
+| lme4::glmer          | ✓               | ✓                   |                 | dydx only         |
+| MASS::polr           | ✓               |                     | ✓               |                   |
+| ordinal::clm         | ✓               |                     |                 | ✓                 |
+| pscl::hurdle         | ✓               | ✓                   |                 |                   |
+| survey::svyglm       | ✓               | ✓                   |                 | ✓                 |
 
 ## Installation
 
@@ -455,12 +456,12 @@ mod <- lm(y ~ x + I(x^2), dat)
 marginaleffects(mod, newdata = typical(x = -2:2)) %>%
     mutate(truth = 1 + 4 * x) %>%
     select(dydx, truth)
-#>        dydx truth
-#> 1 -6.984955    -7
-#> 2 -2.990531    -3
-#> 3  1.003893     1
-#> 4  4.998317     5
-#> 5  8.992741     9
+#>         dydx truth
+#> 1 -7.0193202    -7
+#> 2 -3.0106319    -3
+#> 3  0.9980564     1
+#> 4  5.0067448     5
+#> 5  9.0154331     9
 ```
 
 We can also plot the result with the `plot_cme` function:

@@ -28,6 +28,7 @@ sanity_model <- function(model) {
                       "ivreg",
                       "lm",
                       "lmerMod",
+                      "lm_robust",
                       "loess",
                       # "multinom",
                       "polr",
