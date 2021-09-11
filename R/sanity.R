@@ -32,6 +32,7 @@ sanity_model <- function(model) {
                       "lmerMod",
                       "lm_robust",
                       "loess",
+                      c("lrm", "rms", "glm"),
                       # "multinom",
                       "polr",
                       "speedglm",

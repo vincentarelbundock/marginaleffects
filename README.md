@@ -93,6 +93,11 @@ software packages: Stata’s `margins` command and R’s `margins` package.
 I am *very* eager to add support for new models. Feel free to file a
 request on Github or – even better – submit some code.
 
+Warning: When using `marginaleffects` with different models, you will
+probably have to adjust the `prediction_type` argument. Refer to the
+documentation of your modeling package to see what `type` argument is
+allowed in the `predict` function.
+
 | Model                | Support: Effect | Support: Std.Errors | Validity: Stata | Validity: margins |
 | :------------------- | :-------------- | :------------------ | :-------------- | :---------------- |
 | stats::lm            | ✓               | ✓                   | ✓               | ✓                 |
@@ -111,6 +116,7 @@ request on Github or – even better – submit some code.
 | MASS::polr           | ✓               |                     | ✓               |                   |
 | ordinal::clm         | ✓               |                     |                 | ✓                 |
 | pscl::hurdle         | ✓               | ✓                   |                 |                   |
+| rms::lrm             | ✓               | ✓                   |                 |                   |
 | speedglm::speedglm   | ✓               | ✓                   |                 |                   |
 | speedglm::speedlm    | ✓               | ✓                   |                 |                   |
 | survey::svyglm       | ✓               | ✓                   |                 | ✓                 |
@@ -461,11 +467,11 @@ marginaleffects(mod, newdata = typical(x = -2:2)) %>%
     mutate(truth = 1 + 4 * x) %>%
     select(dydx, truth)
 #>        dydx truth
-#> 1 -7.006222    -7
-#> 2 -3.003059    -3
-#> 3  1.000104     1
-#> 4  5.003267     5
-#> 5  9.006430     9
+#> 1 -7.006585    -7
+#> 2 -3.002953    -3
+#> 3  1.000680     1
+#> 4  5.004312     5
+#> 5  9.007944     9
 ```
 
 We can also plot the result with the `plot_cme` function:
