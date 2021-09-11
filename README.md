@@ -98,28 +98,29 @@ probably have to adjust the `prediction_type` argument. Refer to the
 documentation of your modeling package to see what `type` argument is
 allowed in the `predict` function.
 
-| Model                | Support: Effect | Support: Std.Errors | Validity: Stata | Validity: margins |
-| :------------------- | :-------------- | :------------------ | :-------------- | :---------------- |
-| stats::lm            | ✓               | ✓                   | ✓               | ✓                 |
-| stats::glm           | ✓               | ✓                   | ✓               | ✓                 |
-| AER::ivreg           | ✓               | ✓                   | ✓               | ✓                 |
-| AER::tobit           | ✓               | ✓                   |                 |                   |
-| betareg::betareg     | ✓               | ✓                   | ✓               | ✓                 |
-| bife::bife           | ✓               | ✓                   |                 |                   |
-| estimatr::lm\_robust | ✓               | ✓                   |                 |                   |
-| fixest::feols        | ✓               | ✓                   |                 |                   |
-| fixest::feglm        | ✓               | ✓                   |                 |                   |
-| gam::gam             | ✓               | ✓                   |                 |                   |
-| ivreg::ivreg         | ✓               | ✓                   | ✓               | ✓                 |
-| lme4::lmer           | ✓               | ✓                   |                 | dydx only         |
-| lme4::glmer          | ✓               | ✓                   |                 | dydx only         |
-| MASS::polr           | ✓               |                     | ✓               |                   |
-| ordinal::clm         | ✓               |                     |                 | ✓                 |
-| pscl::hurdle         | ✓               | ✓                   |                 |                   |
-| rms::lrm             | ✓               | ✓                   |                 |                   |
-| speedglm::speedglm   | ✓               | ✓                   |                 |                   |
-| speedglm::speedlm    | ✓               | ✓                   |                 |                   |
-| survey::svyglm       | ✓               | ✓                   |                 | ✓                 |
+| Model                | Support: Effect | Support: Std. Errors | Validity: Stata | Validity: Margins |
+| :------------------- | :-------------- | :------------------- | :-------------- | :---------------- |
+| stats::lm            | ✓               | ✓                    | ✓               | ✓                 |
+| stats::glm           | ✓               | ✓                    | ✓               | ✓                 |
+| aer::ivreg           | ✓               | ✓                    | ✓               | ✓                 |
+| aer::tobit           | ✓               | ✓                    |                 |                   |
+| betareg::betareg     | ✓               | ✓                    | ✓               | ✓                 |
+| bife::bife           | ✓               | ✓                    |                 |                   |
+| estimatr::lm\_robust | ✓               | ✓                    |                 |                   |
+| fixest::feols        | ✓               | ✓                    |                 |                   |
+| fixest::feglm        | ✓               | ✓                    |                 |                   |
+| gam::gam             | ✓               | ✓                    |                 |                   |
+| ivreg::ivreg         | ✓               | ✓                    | ✓               | ✓                 |
+| lme4::lmer           | ✓               | ✓                    |                 | dydx only         |
+| lme4::glmer          | ✓               | ✓                    |                 | dydx only         |
+| MASS::polr           | ✓               |                      | ✓               |                   |
+| MASS::rlm            | ✓               | ✓                    |                 |                   |
+| ordinal::clm         | ✓               |                      |                 | ✓                 |
+| pscl::hurdle         | ✓               | ✓                    |                 |                   |
+| rms::lrm             | ✓               | ✓                    |                 |                   |
+| speedglm::speedglm   | ✓               | ✓                    |                 |                   |
+| speedglm::speedlm    | ✓               | ✓                    |                 |                   |
+| survey::svyglm       | ✓               | ✓                    |                 | ✓                 |
 
 ## Installation
 
@@ -366,42 +367,31 @@ You can also display models with contrasts using `modelsummary`’s
 
 ``` r
 mod <- list(
-    "Logit" = glm(large_penguin ~ species, data = dat, family = binomial),
-    "OLS" = lm(body_mass_g ~ flipper_length_mm + species, data = dat))
+    lm(body_mass_g ~ flipper_length_mm + species, data = dat),
+    lm(body_mass_g ~ species, data = dat))
 
 mfx <- lapply(mod, marginaleffects)
 
 modelsummary(mfx, group = term + contrast ~ model)
-#> Warning in `[<-.factor`(`*tmp*`, thisvar, value = ""): invalid factor level, NA
-#> generated
-
-#> Warning in `[<-.factor`(`*tmp*`, thisvar, value = ""): invalid factor level, NA
-#> generated
 ```
 
-|                     |                    |   Logit   |    OLS     |
-| :------------------ | :----------------- | :-------: | :--------: |
-| species             | Chinstrap / Adelie |   0.690   |            |
-|                     |                    |  (0.265)  |            |
-|                     | Gentoo / Adelie    |  436.242  |            |
-|                     |                    | (446.354) |            |
-|                     | Gentoo / Chinstrap |  632.182  |            |
-|                     |                    | (668.012) |            |
-|                     | Chinstrap - Adelie |           | \-206.510  |
-|                     |                    |           |  (57.731)  |
-|                     | Gentoo - Adelie    |           |  266.810   |
-|                     |                    |           |  (95.264)  |
-|                     | Gentoo - Chinstrap |           |  473.320   |
-|                     |                    |           |  (86.746)  |
-| flipper\_length\_mm |                    |           |   40.705   |
-|                     |                    |           |  (3.068)   |
-| Num.Obs.            |                    |    342    |    342     |
-| R2                  |                    |           |   0.783    |
-| R2 Adj.             |                    |           |   0.781    |
-| AIC                 |                    |   236.4   |   5031.5   |
-| BIC                 |                    |   247.9   |   5050.7   |
-| Log.Lik.            |                    | \-115.188 | \-2510.762 |
-| F                   |                    |           |  405.693   |
+|                     |                    |  Model 1   |  Model 2   |
+| :------------------ | :----------------- | :--------: | :--------: |
+| flipper\_length\_mm |                    |   40.705   |            |
+|                     |                    |  (3.068)   |            |
+| species             | Chinstrap - Adelie | \-206.510  |   32.426   |
+|                     |                    |  (57.731)  |  (67.512)  |
+|                     | Gentoo - Adelie    |  266.810   |  1375.354  |
+|                     |                    |  (95.264)  |  (56.148)  |
+|                     | Gentoo - Chinstrap |  473.320   |  1342.928  |
+|                     |                    |  (86.746)  |  (69.857)  |
+| Num.Obs.            |                    |    342     |    342     |
+| R2                  |                    |   0.783    |   0.670    |
+| R2 Adj.             |                    |   0.781    |   0.668    |
+| AIC                 |                    |   5031.5   |   5172.7   |
+| BIC                 |                    |   5050.7   |   5188.0   |
+| Log.Lik.            |                    | \-2510.762 | \-2582.337 |
+| F                   |                    |  405.693   |  343.626   |
 
 ## Plots (`ggplot2`)
 
@@ -467,11 +457,11 @@ marginaleffects(mod, newdata = typical(x = -2:2)) %>%
     mutate(truth = 1 + 4 * x) %>%
     select(dydx, truth)
 #>        dydx truth
-#> 1 -7.006585    -7
-#> 2 -3.002953    -3
-#> 3  1.000680     1
-#> 4  5.004312     5
-#> 5  9.007944     9
+#> 1 -7.001929    -7
+#> 2 -3.000685    -3
+#> 3  1.000560     1
+#> 4  5.001805     5
+#> 5  9.003049     9
 ```
 
 We can also plot the result with the `plot_cme` function:
@@ -585,6 +575,7 @@ tests. Ideally, we would like to compare the results obtained by
 Add your new model class to the lists of supported models in:
 
   - The `sanity_model` function of the `R/sanity.R` file.
-  - The supported models table of the `README.Rmd` file.
-  - The “Details” section of the `R/marginaleffects.R` documentation
+  - The supported models CSV table in `data-raw/supported_models.csv`.
+    Then, run the `data-raw/supported_models.R` script to propagate your
+    change throughout the package documentation.
   - The “Suggests” list in the `DESCRIPTION` file.

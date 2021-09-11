@@ -69,35 +69,10 @@ I am *very* eager to add support for new models. Feel free to file a request on 
 Warning: When using `marginaleffects` with different models, you will probably have to adjust the `prediction_type` argument. Refer to the documentation of your modeling package to see what `type` argument is allowed in the `predict` function. 
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
-library(tibble)
+library(marginaleffects)
 library(kableExtra)
-
-tab <- 
-'"Model",           "Effect", "Variance", "Stata",      "margins"
-"stats::lm",        "✓"      , "✓"        , "✓"         , "✓"
-"stats::glm",       "✓"      , "✓"        , "✓"         , "✓"
-"AER::ivreg",       "✓"      , "✓"        , "✓"         , "✓"
-"AER::tobit",       "✓"      , "✓"        ,             ,    
-"betareg::betareg", "✓"      , "✓"        , "✓"         , "✓"
-"bife::bife",    "✓"      , "✓"        ,             ,
-"estimatr::lm_robust", "✓"   , "✓"     ,          ,
-"fixest::feols",    "✓"      , "✓"        ,             ,
-"fixest::feglm",    "✓"      , "✓"        ,             ,
-"gam::gam",    "✓"      , "✓"        ,             ,
-"ivreg::ivreg",     "✓"      , "✓"        , "✓"         , "✓"
-"lme4::lmer",       "✓"      , "✓"        ,             , "dydx only"
-"lme4::glmer",      "✓"      , "✓"        ,             , "dydx only"
-"MASS::polr",       "✓"      ,            , "✓"         ,
-"ordinal::clm",     "✓"      ,            ,             , "✓"
-"pscl::hurdle",     "✓"      , "✓"        ,             , 
-"rms::lrm",         "✓"      , "✓"        ,             , 
-"speedglm::speedglm",     "✓"      , "✓"        ,             , 
-"speedglm::speedlm",     "✓"      , "✓"        ,             , 
-"survey::svyglm",   "✓"      , "✓"        ,             , "✓"'
-tab <- read.csv(text = tab)
-colnames(tab) <- c("Model", "Support: Effect", "Support: Std.Errors", "Validity: Stata", "Validity: margins")
-kbl(tab, format = "pipe") %>% kable_styling() 
-#%>% add_header_above(c(" " = 1, "Support" = 2, "Validity" = 2))
+kbl(supported_models, format = "pipe") %>% 
+    kable_styling() 
 ```
 
 ## Installation
@@ -220,10 +195,10 @@ modelsummary(mfx)
 
 You can also display models with contrasts using `modelsummary`'s `group` argument:
 
-```{r}
+```{r, warning=FALSE}
 mod <- list(
-    "Logit" = glm(large_penguin ~ species, data = dat, family = binomial),
-    "OLS" = lm(body_mass_g ~ flipper_length_mm + species, data = dat))
+    lm(body_mass_g ~ flipper_length_mm + species, data = dat),
+    lm(body_mass_g ~ species, data = dat))
 
 mfx <- lapply(mod, marginaleffects)
 
@@ -372,6 +347,5 @@ Create a file called `tests/testthat/test-PKGNAME.R` and write a few tests. Idea
 Add your new model class to the lists of supported models in:
 
 * The `sanity_model` function of the `R/sanity.R` file.
-* The supported models table of the `README.Rmd` file.
-* The "Details" section of the `R/marginaleffects.R` documentation
+* The supported models CSV table in `data-raw/supported_models.csv`. Then, run the `data-raw/supported_models.R` script to propagate your change throughout the package documentation.
 * The "Suggests" list in the `DESCRIPTION` file.
