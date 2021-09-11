@@ -39,6 +39,7 @@
 #' + stats::glm
 #' + stats::loess (no variance)
 #' + AER::ivreg
+#' + AER::tobit
 #' + betareg::betareg
 #' + fixest::feols
 #' + fixest::feglm

@@ -65,6 +65,7 @@ Supported models:
 \item stats::glm
 \item stats::loess (no variance)
 \item AER::ivreg
+\item AER::tobit
 \item betareg::betareg
 \item fixest::feols
 \item fixest::feglm

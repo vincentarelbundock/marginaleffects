@@ -75,6 +75,7 @@ tab <-
 "stats::lm",        "✓"      , "✓"        , "✓"         , "✓"
 "stats::glm",       "✓"      , "✓"        , "✓"         , "✓"
 "AER::ivreg",       "✓"      , "✓"        , "✓"         , "✓"
+"AER::tobit",       "✓"      , "✓"        ,             ,    
 "betareg::betareg", "✓"      , "✓"        , "✓"         , "✓"
 "fixest::feols",    "✓"      , "✓"        ,             ,
 "fixest::feglm",    "✓"      , "✓"        ,             ,
