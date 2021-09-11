@@ -1,0 +1,171 @@
+---
+title: "Terminology" 
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Definitions: Marginal Effects, Estimated Marginal Means, Conditional Probabilities, and Contrasts}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  fig.width = 6,
+  fig.asp = .4,
+  warning = FALSE,
+  message = FALSE,
+  comment = "#>"
+)
+
+library(marginaleffects)
+library(patchwork)
+library(ggplot2)
+
+theme_set(theme_minimal())
+```
+
+The terminology around marginal effects is very confusing (to me, at least). The term is used inconsistently in the statistical literature and across fields. This vignette defines the terms used for different quantities *in the context of this package* .
+
+TLDR:
+
+* _Marginal effect:_ A partial derivative (slope) of the regression/prediction equation with respect to a regressor of interest.
+* _Estimated Marginal Mean (EMM):_ Reponse predicted by a model for some combination of the regressors' values, typically their means or factor levels. 
+* _Contrast in EMMs_: The difference between two EMMs, calculated for meanginfully different regressor values (e.g., College graduates vs. Others).
+
+In scientific practice, the "Marginal Effect" falls in the same toolbox as the "Contrast in EMMs." Both try to answer a counterfactual question: What would happen to $y$ if $x$ were different? They allow us to model the "effect" of a change/difference in the regressor $x$ on the response $y$.^[The term "effect" is itself very tricky. I actually don't like it much in this context. To be clear, this vignette does *not* use the word "effect" to imply "causality".] 
+
+# Marginal effects
+
+A "marginal effect" is defined as:
+
+> A partial derivative of the regression equation with respect to a regressor of interest.
+
+Put differently, the marginal effect measures the association between a change in a regressor $x$, and a change in the response $y$. Put differently, differently, the marginal effect is the slope of the prediction function, measured at a specific value of the regressor $x$.
+
+Consider this quadratic function:
+
+$$y = -x^2$$
+
+From the definition above, we know that the marginal effect is the partial derivative of $y$ with respect to $x$:
+
+$$\frac{\partial y}{\partial x} = -2x$$
+
+To get intuition about how to interpret this quantity, consider the "true" response of $y$ to $x$. It looks like this:
+
+```{r, echo=FALSE}
+x <- seq(-4, 4, .01)
+y <- -x^2 
+dat <- data.frame(x, y)
+ggplot(dat, aes(x, y)) + 
+    geom_line() +
+    labs(y = "True response") +
+    xlim(c(-4, 4)) +
+    ylim(c(-7, 0.5))
+```
+
+When $x$ increases, $y$ starts to increase. But then, as $x$ increases further, $y$ creeps back down in negative territory.
+
+In practice, $y$ is generated with some error, so we won't know exactly what the response function is, but we can estimate it. For example, here we simulate some data and estimate a linear regression model:
+
+```{r}
+N <- 1e5
+x <- runif(N, -4, 4)
+e <- rnorm(N)
+y <- -x^2 + e
+dat <- data.frame(y, x)
+
+mod <- lm(y ~ x + I(x^2))
+```
+
+We can then use the `predict` function to plot the "estimated mean" or the "predicted" $y$, for different values of $x$:
+
+```{r}
+nd <- data.frame(x = seq(-4, 4, .01))
+nd$predicted_response <- predict(mod, newdata = nd)
+
+ggplot(nd, aes(x, predicted_response)) + 
+      geom_line() + 
+      labs(y = "Predicted response") +
+      xlim(c(-4, 4)) +
+      ylim(c(-7, 0.5))
+```
+
+A marginal effect is the slope of this response function at a certain value of $x$. The next graph adds three tangent lines, highlighting the slopes of the response function for three values of $x$: 
+
+```{r, echo=FALSE}
+p1 <- ggplot(nd, aes(x, predicted_response)) + 
+      xlim(c(-4, 4)) +
+      ylim(c(-7, 0.5)) +
+      labs(y = "Predicted response") +
+      geom_abline(slope = 4, intercept = 4, color = "orange", linetype = "dashed") +
+      geom_abline(slope = 0, intercept = 0, color = "orange", linetype = "dashed") +
+      geom_abline(slope = -4, intercept = 4, color = "orange", linetype = "dashed") +
+      geom_line() +
+      annotate("point", x = -2, y = -4, colour = "orange") +
+      annotate("point", x = 0, y = 0, colour = "orange") +
+      annotate("point", x = 2, y = -4, colour = "orange")
+p1
+```
+
+The slopes of these tangents tell us three things:
+
+1. When $x$ is negative, the slope is positive: an increase in $x$ is associated with an increase in $y$: The marginal effect is positive.
+2. When $x=0$, the slope is null: a (small) change in $x$ is associated with no change in $y$. The marginal effect is null.
+3. When $x>0$, the slope is negative: an increase in $x$ is associated with a decrease in $y$. The marginal effect is negative.
+
+The marginal effect is an interesting quantity, because our scientific questions are often expressed in terms of changes, and not just levels: If $x$ increases, does $y$ increase, stay unchanged, or decrease? The answer to this question is a marginal effect.
+
+Marginal effects have several drawbacks, but I will only mention two. First, since they are derivatives, they are only properly defined for continuous variables. To interpret the effect of categorical variables, we turn to *contrasts* between Estimated Marginal Means (see the next section). 
+
+Second, marginal effects can be quite difficult to compute manually, especially when the regression function is non-linear, or includes transformations like polynomials. Who wants to stop their interactive data analysis to take derivatives by hand?! And how do we compute the standard error of the derivative? `modelsummary` tries to make this process a bit easier by using automatic differentiation to compute marginal effects and standard errors.
+
+For example, to calculate the marginal effect of $x$ on $y$ pour three "typical" values of $x$, we call:
+
+```{r}
+library(marginaleffects)
+
+marginaleffects(mod, newdata = typical(x = c(-2, 0, 2)))
+```
+
+These numerical results are very close to the analytical truth:
+
+\begin{align*}
+\partial y/\partial x = -2x\\
+\partial y/\partial x = 4, && \mbox{for x=-2}\\
+\partial y/\partial x = 0, && \mbox{for x=0}\\
+\partial y/\partial x = -4, && \mbox{for x=2}
+\end{align*}
+
+Instead of looking at the marginal effects for one value of $x$ after the other, we can plot it for a whole range of values of $x$, using the `plot_cme` function:
+
+```{r}
+plot_cme(mod, effect = "x", condition = "x") + xlim(-4, 4)
+```
+
+Again, the conclusion is the same. When $x<0$, an increase in $x$ is associated with an increase in $y$. When $x=0$, the marginal effect is equal to 0. When $x>0$, an increase in $x$ is associated with a decrease in $y$.
+
+# Estimated Marginal Means
+A concept which often gets confused with marginal effects is that of "Estimated Marginal Means."
+
+
+This differs from "Fitted Values" (a.k.a. "Predictions") because the combination of regressor values being consider do not 
+
+
+By default, the `marginaleffects` function returns predicted/estimated responses for each of the observations in the dataset:
+
+```{r}
+mod <- lm(mpg ~ hp + factor(cyl), data = mtcars)
+
+marginaleffects(mod) |> head()
+```
+
+We can also request these responses for specific values of the regressors, using the `typical` function, in the `newdata` argument. By default, `typical` will set any variable which is not explicitly specify to its mean value. For example, 
+
+```{r}
+marginaleffects(mod, newdata = typical(cyl = c(4, 6, 8)))
+```
+
+```{r}
+library(emmeans)
+emmeans(mod, specs = "cyl")
+```
