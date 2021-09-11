@@ -1,14 +1,8 @@
 skip_if_not_installed("MASS")
 
-
-test_that("MASS::rlm no validity check", {
-    model <- MASS::rlm(mpg ~ hp * wt, mtcars)
-    mfx <- marginaleffects(model)
-    expect_s3_class(mfx, "data.frame")
-    expect_false(any(mfx$estimate == 0))
-    expect_false(any(mfx$std.error == 0))
-})
-
+library("margins")
+library("haven")
+library("dplyr", warn.conflicts = FALSE)
 
 test_that("polr vs. margins (dydx only)", {
     skip("`margins` produces weird results with MASS::polr")
@@ -18,7 +12,6 @@ test_that("polr vs. margins (dydx only)", {
     res <- marginaleffects(mod, vcov = FALSE, prediction_type = "probs")
     mar <- margins(mod)
 })
-
 
 test_that("polr vs. Stata", {
     stata <- readRDS(test_path("stata/stata.rds"))[["MASS_polr_01"]]
