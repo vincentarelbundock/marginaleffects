@@ -17,6 +17,16 @@ test_that("glance: with modelsummary", {
     expect_equal(dim(glance(mfx)), c(1, 8))
 })
 
+
+test_that("bug: emmeans contrast rename in binomial", {
+    x <- glm(am ~ mpg + factor(cyl), data = mtcars, family = binomial)
+    x <- marginaleffects(x)
+    x <- tidy(x)
+    expect_s3_class(x, "data.frame") 
+    expect_equal(nrow(x), 4)
+})
+
+
 test_that("tidy: with and without contrasts", {
     tmp <- mtcars
     tmp$am <- as.logical(tmp$am)

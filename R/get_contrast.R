@@ -11,8 +11,27 @@ get_contrast <- function(model, variable, prediction_type = "response", ...) {
     emm <- emmeans::emmeans(model, specs = variable, type = prediction_type)
     con <- emmeans::contrast(emm, method = "revpairwise")
     out <- data.frame(summary(con))
-    colnames(out)[colnames(out) == "SE"] <- "std.error"
-    colnames(out)[colnames(out) == "t.ratio"] <- "statistic"
+    # dict adapted from `broom`
+    dict <- list("lsmean" = "estimate",
+                 "emmean" = "estimate",
+                 "pmmean" = "estimate",
+                 "odds.ratio" = "estimate",
+                 "prediction" = "estimate",
+                 "effect.size" = "estimate",
+                 "SE" = "std.error",
+                 "lower.CL" = "conf.low",
+                 "asymp.LCL" = "conf.low",
+                 "upper.CL" = "conf.high",
+                 "asymp.UCL" = "conf.high",
+                 "z.ratio" = "statistic",
+                 "t.ratio" = "statistic",
+                 "F.ratio" = "statistic",
+                 "df1" = "num.df",
+                 "df2" = "den.df",
+                 "model term" = "term")
+    for (n in names(dict)) {
+        colnames(out)[colnames(out) == n] <- dict[n]
+    }
     out$term <- variable
     out <- out[, colnames(out) %in% c("term", "contrast", "estimate",
                                       "std.error", "statistic", "p.value",
