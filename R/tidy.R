@@ -77,6 +77,10 @@ tidy.marginaleffects <- function(x,
         }
     }
 
+    # remove terms with precise zero estimates. typically the case in
+    # multi-equation models where some terms only affect one response
+    out <- out[out$estimate != 0,]
+
     # sort and subset columns
     cols <- c("type", "group", "term", "contrast", "estimate", "std.error",
               "statistic", "p.value", "conf.low", "conf.high")
