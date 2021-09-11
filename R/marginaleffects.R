@@ -1,11 +1,12 @@
 #' Marginal effects using numerical derivatives
 #' 
-#' Warning: This package is experimental.
-#' 
-#' A "marginal effect" is the partial derivative of the regression equation
-#' with respect to a variable in the model. This package uses automatic
-#' differentiation tu compute marginal effects for a vast array of models,
-#' including non-linear models with transformations (e.g., polynomials).
+#' Warning: This package is experimental.  A "marginal effect" is the partial
+#' derivative of the regression equation with respect to a variable in the
+#' model. This package uses automatic differentiation tu compute marginal
+#' effects for a vast array of models, including non-linear models with
+#' transformations (e.g., polynomials). The list of supported model types is
+#' available in the `supported_models` dataset which accompanies this package:
+#' `marginaleffects::supported_models`
 #' 
 #' @param model Model object
 #' @param variables Variables to consider (character vector). `NULL`
@@ -28,34 +29,6 @@
 #' @param ... Additional arguments are pushed forward to `predict()`.
 #' @export
 #' @details
-#' Most -- but not all -- of the models below have been checked against
-#' alternative software packages to validate results. Visit the
-#' `marginaleffects` website to learn more about the testing procedure and
-#' coverage.
-#'
-#' Supported models:
-#' 
-#' + stats::lm
-#' + stats::glm
-#' + stats::loess (no variance)
-#' + AER::ivreg
-#' + AER::tobit
-#' + betareg::betareg
-#' + bife::bife
-#' + estimatr::lm_robust
-#' + fixest::feols
-#' + fixest::feglm
-#' + gam::gam
-#' + lme4::lmer
-#' + lme4::glmer
-#' + MASS::polr (no variance)
-#' + ordinal::clm (no variance)
-#' + pscl::hurdle
-#' + rms:lrm
-#' + speedglm::speedglm
-#' + speedglm::speedlm
-#' + survey::svyglm
-#'
 #' @examples
 #' 
 #' mod <- glm(am ~ hp * wt, data = mtcars, family = binomial)

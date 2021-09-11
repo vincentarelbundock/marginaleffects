@@ -46,42 +46,13 @@ space in memory.}
 \item{...}{Additional arguments are pushed forward to \code{predict()}.}
 }
 \description{
-Warning: This package is experimental.
-}
-\details{
-A "marginal effect" is the partial derivative of the regression equation
-with respect to a variable in the model. This package uses automatic
-differentiation tu compute marginal effects for a vast array of models,
-including non-linear models with transformations (e.g., polynomials).
-
-Most -- but not all -- of the models below have been checked against
-alternative software packages to validate results. Visit the
-\code{marginaleffects} website to learn more about the testing procedure and
-coverage.
-
-Supported models:
-\itemize{
-\item stats::lm
-\item stats::glm
-\item stats::loess (no variance)
-\item AER::ivreg
-\item AER::tobit
-\item betareg::betareg
-\item bife::bife
-\item estimatr::lm_robust
-\item fixest::feols
-\item fixest::feglm
-\item gam::gam
-\item lme4::lmer
-\item lme4::glmer
-\item MASS::polr (no variance)
-\item ordinal::clm (no variance)
-\item pscl::hurdle
-\item rms:lrm
-\item speedglm::speedglm
-\item speedglm::speedlm
-\item survey::svyglm
-}
+Warning: This package is experimental.  A "marginal effect" is the partial
+derivative of the regression equation with respect to a variable in the
+model. This package uses automatic differentiation tu compute marginal
+effects for a vast array of models, including non-linear models with
+transformations (e.g., polynomials). The list of supported model types is
+available in the \code{supported_models} dataset which accompanies this package:
+\code{marginaleffects::supported_models}
 }
 \examples{
 

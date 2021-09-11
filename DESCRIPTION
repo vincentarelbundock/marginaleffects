@@ -9,6 +9,7 @@ Authors@R:
            comment = c(ORCID = "0000-0003-2042-7063"))
 Description: Compute, summarize, and plot "marginal effects" for a wide variety of models. The package uses automatic differentiation to compute marginal effects for numeric regressors (partial derivatives of the regression equation), and calculates adjusted contrasts for categorical regressors.
 License: GPL (>= 3)
+LazyData: true
 Encoding: UTF-8
 URL: https://vincentarelbundock.github.io/marginaleffects/
     https://github.com/vincentarelbundock/marginaleffects
@@ -74,5 +75,6 @@ Collate:
     'plot_cme.R'
     'sanity.R'
     'summary.R'
+    'supported_models.R'
     'test_against_margins.R'
     'tidy.R'
