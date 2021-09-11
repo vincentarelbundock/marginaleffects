@@ -71,6 +71,7 @@ Supported models:
 \item estimatr::lm_robust
 \item fixest::feols
 \item fixest::feglm
+\item gam::gam
 \item lme4::lmer
 \item lme4::glmer
 \item MASS::polr (no variance)

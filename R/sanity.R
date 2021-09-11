@@ -23,6 +23,7 @@ sanity_model <- function(model) {
                       "bife",
                       "clm",
                       "fixest",
+                      c("Gam", "glm", "lm"),
                       "glm",
                       "glmerMod",
                       "hurdle",

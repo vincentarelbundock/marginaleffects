@@ -81,6 +81,7 @@ tab <-
 "estimatr::lm_robust", "✓"   , "✓"     ,          ,
 "fixest::feols",    "✓"      , "✓"        ,             ,
 "fixest::feglm",    "✓"      , "✓"        ,             ,
+"gam::gam",    "✓"      , "✓"        ,             ,
 "ivreg::ivreg",     "✓"      , "✓"        , "✓"         , "✓"
 "lme4::lmer",       "✓"      , "✓"        ,             , "dydx only"
 "lme4::glmer",      "✓"      , "✓"        ,             , "dydx only"

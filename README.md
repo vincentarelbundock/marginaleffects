@@ -104,6 +104,7 @@ request on Github or – even better – submit some code.
 | estimatr::lm\_robust | ✓               | ✓                   |                 |                   |
 | fixest::feols        | ✓               | ✓                   |                 |                   |
 | fixest::feglm        | ✓               | ✓                   |                 |                   |
+| gam::gam             | ✓               | ✓                   |                 |                   |
 | ivreg::ivreg         | ✓               | ✓                   | ✓               | ✓                 |
 | lme4::lmer           | ✓               | ✓                   |                 | dydx only         |
 | lme4::glmer          | ✓               | ✓                   |                 | dydx only         |
@@ -460,11 +461,11 @@ marginaleffects(mod, newdata = typical(x = -2:2)) %>%
     mutate(truth = 1 + 4 * x) %>%
     select(dydx, truth)
 #>        dydx truth
-#> 1 -6.989555    -7
-#> 2 -2.992098    -3
-#> 3  1.005359     1
-#> 4  5.002816     5
-#> 5  9.000273     9
+#> 1 -7.006222    -7
+#> 2 -3.003059    -3
+#> 3  1.000104     1
+#> 4  5.003267     5
+#> 5  9.006430     9
 ```
 
 We can also plot the result with the `plot_cme` function:
