@@ -1,22 +1,22 @@
 "Model", "Support: Effect", "Support: Std. Errors", "Validity: Stata", "Validity: Margins"
-"stats::lm", "✓" , "✓" , "✓" , "✓"
-"stats::glm", "✓" , "✓" , "✓" , "✓"
-"aer::ivreg", "✓" , "✓" , "✓" , "✓"
-"aer::tobit", "✓" , "✓" , , 
-"betareg::betareg", "✓" , "✓" , "✓" , "✓"
-"bife::bife", "✓" , "✓" , ,
-"estimatr::lm_robust", "✓" , "✓" , ,
-"fixest::feols", "✓" , "✓" , ,
-"fixest::feglm", "✓" , "✓" , ,
-"gam::gam", "✓" , "✓" , ,
-"ivreg::ivreg", "✓" , "✓" , "✓" , "✓"
-"lme4::lmer", "✓" , "✓" , , "dydx only"
-"lme4::glmer", "✓" , "✓" , , "dydx only"
-"MASS::polr", "✓" , , "✓" ,
-"MASS::rlm", "✓" , "✓" , ,
-"ordinal::clm", "✓" , , , "✓"
-"pscl::hurdle", "✓" , "✓" , , 
-"rms::lrm", "✓" , "✓" , , 
-"speedglm::speedglm", "✓" , "✓" , , 
-"speedglm::speedlm", "✓" , "✓" , , 
-"survey::svyglm", "✓" , "✓" , , "✓"
+"stats::lm", "x" , "x" , "x" , "x"
+"stats::glm", "x" , "x" , "x" , "x"
+"aer::ivreg", "x" , "x" , "x" , "x"
+"aer::tobit", "x" , "x" , , 
+"betareg::betareg", "x" , "x" , "x" , "x"
+"bife::bife", "x" , "x" , ,
+"estimatr::lm_robust", "x" , "x" , ,
+"fixest::feols", "x" , "x" , ,
+"fixest::feglm", "x" , "x" , ,
+"gam::gam", "x" , "x" , ,
+"ivreg::ivreg", "x" , "x" , "x" , "x"
+"lme4::lmer", "x" , "x" , , "dydx only"
+"lme4::glmer", "x" , "x" , , "dydx only"
+"MASS::polr", "x" , , "x" ,
+"MASS::rlm", "x" , "x" , ,
+"ordinal::clm", "x" , , , "x"
+"pscl::hurdle", "x" , "x" , , 
+"rms::lrm", "x" , "x" , , 
+"speedglm::speedglm", "x" , "x" , , 
+"speedglm::speedlm", "x" , "x" , , 
+"survey::svyglm", "x" , "x" , , "x"
