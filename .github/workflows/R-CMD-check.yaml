@@ -1,5 +1,9 @@
 # Workflow derived from https://github.com/r-lib/actions/tree/master/examples
 # Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
+#
+# NOTE: This workflow is overkill for most R packages and
+# check-standard.yaml is likely a better choice.
+# usethis::use_github_action("check-standard") will install it.
 on:
   push:
     branches: [main, master]
@@ -10,15 +14,38 @@ name: R-CMD-check
 
 jobs:
   R-CMD-check:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.config.os }}
+
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - {os: macOS-latest,   r: 'release'}
+          - {os: windows-latest, r: 'release'}
+          - {os: windows-latest, r: '3.6'}
+          # Deliberately check on older ubuntu to maximise backward compatibility
+          - {os: ubuntu-18.04,   r: 'devel', http-user-agent: 'release'}
+          - {os: ubuntu-18.04,   r: 'release'}
+          - {os: ubuntu-18.04,   r: 'oldrel/1'}
+          - {os: ubuntu-18.04,   r: 'oldrel/2'}
+          - {os: ubuntu-18.04,   r: 'oldrel/3'}
+          - {os: ubuntu-18.04,   r: 'oldrel/4'}
+
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
+
     steps:
       - uses: actions/checkout@v2
 
+      - uses: r-lib/actions/setup-pandoc@v1
+
       - uses: r-lib/actions/setup-r@v1
         with:
+          r-version: ${{ matrix.config.r }}
+          http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
       - uses: r-lib/actions/setup-r-dependencies@v1
