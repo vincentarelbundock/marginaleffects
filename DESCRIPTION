@@ -49,7 +49,8 @@ Suggests:
     rms,
     sandwich,
     speedglm,
-    survey
+    survey,
+    covr
 Config/testthat/edition: 3
 Collate: 
     'counterfactual_typical.R'
