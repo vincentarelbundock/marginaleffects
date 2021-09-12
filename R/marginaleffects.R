@@ -80,6 +80,17 @@ marginaleffects <- function(model,
     prediction_type <- sanity_prediction_type(model, prediction_type)
     return_data <- sanity_return_data(return_data)
 
+    # contrasts: logical and factor variables w/ emmeans
+    cont <- list()
+    for (predt in prediction_type) {
+        for (v in variables$cont) {
+            tmp <- try(get_contrast(model, v, type = predt), silent = TRUE)
+            tmp$type <- predt
+            cont <- c(cont, list(tmp))
+        }
+    }
+    cont <- dplyr::bind_rows(cont)
+
     # add predictions to newdata
     for (predt in prediction_type) {
         lab <- paste0("predicted_", predt)
@@ -113,37 +124,27 @@ marginaleffects <- function(model,
     }
     dydx <- dplyr::bind_rows(dydx)
 
-    # an empty dydx data.frame may still be useful to display contrasts
-    if (is.null(dydx)) {
-        dydx <- data.frame()
-    }
-
-    # contrasts: logical and factor variables w/ emmeans
-    cont <- list()
-    for (predt in prediction_type) {
-        for (v in variables$cont) {
-            tmp <- try(get_contrast(model, v, type = predt), silent = TRUE)
-            tmp$type <- predt
-            cont <- c(cont, list(tmp))
-        }
-    }
-    cont <- dplyr::bind_rows(cont)
+    # for merging later (do this before assigning to dydx)
+    newdata$rowid <- 1:nrow(newdata)
 
     # output: return data only if there are numeric variables
     out <- dydx
     if (nrow(out) > 0) {  # no numeric variables
         if (isTRUE(return_data) && nrow(out) > 0) {
-            newdata$rowid <- 1:nrow(newdata)
             out <- merge(out, newdata, by = "rowid")
         }
-        stubcols <- c("rowid", "type", "group", "term", "dydx", "std.error",
-                      sort(grep("^predicted", colnames(newdata), value = TRUE)))
-        cols <- intersect(stubcols, colnames(out))
-        cols <- unique(c(cols, colnames(out)))
-        out <- out[, cols]
-        if (all(out$group == "main")) {
-            out$group <- NULL
-        }
+    }  else {
+        out <- newdata
+    }
+
+    # clean columns
+    stubcols <- c("rowid", "type", "group", "term", "dydx", "std.error",
+                  sort(grep("^predicted", colnames(newdata), value = TRUE)))
+    cols <- intersect(stubcols, colnames(out))
+    cols <- unique(c(cols, colnames(out)))
+    out <- out[, cols]
+    if ("group" %in% colnames(out) && all(out$group == "main")) {
+        out$group <- NULL
     }
 
     # attach model info
