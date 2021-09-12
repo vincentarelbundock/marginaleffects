@@ -162,10 +162,42 @@ marginaleffects(mod) |> head()
 We can also request these responses for specific values of the regressors, using the `typical` function, in the `newdata` argument. By default, `typical` will set any variable which is not explicitly specify to its mean value. For example, 
 
 ```{r}
+typical(cyl = c(4, 6, 8), model = mod)
+```
+
+This gives us 3 "typical observations" -- or "margins" -- at which we can do prediction. Using the `marginaleffects` function to extract those predictions gives us:
+
+```{r, echo = FALSE}
+emm <- marginaleffects(mod, newdata = typical(cyl = c(4, 6, 8)))$predicted_response
+emm <- paste(sprintf("%.1f", emm), collapse = ", ")
+```
+
+```{r}
 marginaleffects(mod, newdata = typical(cyl = c(4, 6, 8)))
 ```
+
+The `emmeans` package refers to the set of observations that we just used to compute predicted values as a "reference grid," but the idea is the same. Indeed, our `predicted_response` values (`r emm`) are exactly identical to the EMMs computed by the `emmeans` package:
 
 ```{r}
 library(emmeans)
 emmeans(mod, specs = "cyl")
+```
+
+# Contrasts between EMMs
+
+```{r}
+
+
+mod <- lm(log(conc) ~ source + factor(percent), data = pigs)
+
+mod <- emmeans(pigs.rg, "source")
+
+
+pigs.lm1 <- lm(log(conc) ~ source + factor(percent), data = pigs)
+pigs.rg <- ref_grid(pigs.lm1)
+pigs.emm.s <- emmeans(pigs.rg, "source")
+
+
+marginaleffects(mod, newdata = typical(source = c("fish", "soy", "skim"), model = mod),
+                prediction_type = "response")
 ```
