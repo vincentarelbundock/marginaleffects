@@ -12,35 +12,35 @@ Mode <- function(x) {
 #  MIT License                                                    ##
 ####################################################################
 
-#' Compute the mode or median of `x`
-#' @param x extract the median or the mode of vector or data.frame x depending on its type
-#' @rdname median_or_mode
+#' Compute the mode or mean of `x`
+#' @param x extract the mean or the mode of vector or data.frame x depending on its type
+#' @rdname mean_or_mode
 #' @keywords internal
 #' @export
-median_or_mode <- function(x) {
-    UseMethod("median_or_mode")
+mean_or_mode <- function(x) {
+    UseMethod("mean_or_mode")
 }
 
-#' @rdname median_or_mode
+#' @rdname mean_or_mode
 #' @export
-median_or_mode.default <- function(x) {
-    stats::median(x)
+mean_or_mode.default <- function(x) {
+    mean(x)
 }
 
-#' @rdname median_or_mode
+#' @rdname mean_or_mode
 #' @export
-median_or_mode.factor <- function(x) {
+mean_or_mode.factor <- function(x) {
     Mode(x)
 }
 
-#' @rdname median_or_mode
+#' @rdname mean_or_mode
 #' @export
-median_or_mode.logical <- function(x) {
+mean_or_mode.logical <- function(x) {
     Mode(x)
 }
 
-#' @rdname median_or_mode
+#' @rdname mean_or_mode
 #' @export
-median_or_mode.data.frame <- function(x) {
-    stats::setNames(lapply(x, median_or_mode), names(x))
+mean_or_mode.data.frame <- function(x) {
+    stats::setNames(lapply(x, mean_or_mode), names(x))
 }

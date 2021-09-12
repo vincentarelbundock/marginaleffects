@@ -56,11 +56,11 @@ counterfactual <- function(..., model = NULL, data = NULL) {
 #' @param model Model object
 #' @param data data.frame (one and only one of the `model` and `data` arguments
 #' must be true).
-#' @return A `data.frame` with the values specified in the `at` list, and where each of the other variables is set at its median or mode.
+#' @return A `data.frame` with the values specified in the `at` list, and where each of the other variables is set at its mean or mode.
 #' @export
 #' @examples
 #' # The output only has 2 rows, and all the variables except `hp` are at their
-#' # median or mode.
+#' # mean or mode.
 #' typical(data = mtcars, hp = c(100, 110))
 #' 
 #' # We get the same result by feeding a model instead of a data.frame
@@ -82,7 +82,7 @@ typical <- function(..., model = NULL, data = NULL) {
     if (length(v_automatic) > 0) {
         dat_automatic <- dat[, v_automatic, drop = FALSE]
         dat_automatic <- stats::na.omit(dat_automatic)
-        out <- median_or_mode(dat_automatic)
+        out <- mean_or_mode(dat_automatic)
     } else {
         out <- list()
     }

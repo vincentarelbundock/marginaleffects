@@ -61,7 +61,7 @@ Collate:
     'get_se_delta.R'
     'get_vcov.R'
     'marginaleffects.R'
-    'median_or_mode.R'
+    'mean_or_mode.R'
     'set_coef.R'
     'methods_betareg.R'
     'methods_bife.R'

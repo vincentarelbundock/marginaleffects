@@ -15,14 +15,14 @@ typical(..., model = NULL, data = NULL)
 must be true).}
 }
 \value{
-A \code{data.frame} with the values specified in the \code{at} list, and where each of the other variables is set at its median or mode.
+A \code{data.frame} with the values specified in the \code{at} list, and where each of the other variables is set at its mean or mode.
 }
 \description{
 Generate "typical" datasets for use in \code{marginaleffects}'s \code{newdata} argument
 }
 \examples{
 # The output only has 2 rows, and all the variables except `hp` are at their
-# median or mode.
+# mean or mode.
 typical(data = mtcars, hp = c(100, 110))
 
 # We get the same result by feeding a model instead of a data.frame
