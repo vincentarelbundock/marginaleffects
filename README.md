@@ -203,18 +203,18 @@ convenient:
 ``` r
 summary(mfx)
 #> Average marginal effects 
-#>       type              Term           Contrast    Effect Std. Error  z value
-#> 1 response    bill_length_mm                      0.02757    0.00849  3.24819
-#> 2 response flipper_length_mm                      0.01058    0.00332  3.18766
-#> 3 response           species Chinstrap / Adelie   0.00547    0.00574 -4.96164
-#> 4 response           species    Gentoo / Adelie   2.19156    2.75319  0.62456
-#> 5 response           species Gentoo / Chinstrap 400.60647  522.34202  4.59627
-#>     Pr(>|z|)      2.5 %     97.5 %
-#> 1  0.0011614    0.01093    0.04421
-#> 2  0.0014343    0.00408    0.01709
-#> 3 2.0906e-06   -0.00578    0.01673
-#> 4  0.8066373   -3.20459    7.58770
-#> 5 1.2828e-05 -623.16509 1424.37802
+#>       type              Term           Contrast   Effect Std. Error   z value
+#> 1 response    bill_length_mm                     0.02757    0.00849   3.24819
+#> 2 response flipper_length_mm                     0.01058    0.00332   3.18766
+#> 3 response           species Chinstrap - Adelie -0.80570    0.07713 -10.44590
+#> 4 response           species    Gentoo - Adelie  0.08359    0.11563   0.72294
+#> 5 response           species Gentoo - Chinstrap  0.88929    0.08534  10.42061
+#>     Pr(>|z|)    2.5 %   97.5 %
+#> 1  0.0011614  0.01093  0.04421
+#> 2  0.0014343  0.00408  0.01709
+#> 3 2.9754e-14 -0.95687 -0.65453
+#> 4  0.7498870 -0.14304  0.31023
+#> 5 3.1086e-14  0.72203  1.05656
 #> 
 #> Model type:  glm 
 #> Prediction type:  response
@@ -235,13 +235,13 @@ specification](https://broom.tidymodels.org/):
 tidy(mfx)
 #> # A tibble: 5 × 9
 #> # Groups:   type [1]
-#>   type     term  contrast estimate std.error statistic p.value conf.low conf.high
-#>   <chr>    <chr> <fct>       <dbl>     <dbl>     <dbl>   <dbl>    <dbl>     <dbl>
-#> 1 response bill… <NA>      2.76e-2   0.00849     3.25  1.16e-3  1.09e-2    0.0442
-#> 2 response flip… <NA>      1.06e-2   0.00332     3.19  1.43e-3  4.08e-3    0.0171
-#> 3 response spec… Chinstr…  5.47e-3   0.00574    -4.96  2.09e-6 -5.78e-3    0.0167
-#> 4 response spec… Gentoo …  2.19e+0   2.75        0.625 8.07e-1 -3.20e+0    7.59  
-#> 5 response spec… Gentoo …  4.01e+2 522.          4.60  1.28e-5 -6.23e+2 1424.
+#>   type     term  contrast estimate std.error statistic  p.value conf.low conf.high
+#>   <chr>    <chr> <chr>       <dbl>     <dbl>     <dbl>    <dbl>    <dbl>     <dbl>
+#> 1 response bill… <NA>       0.0276   0.00849     3.25  1.16e- 3  0.0109     0.0442
+#> 2 response flip… <NA>       0.0106   0.00332     3.19  1.43e- 3  0.00408    0.0171
+#> 3 response spec… Chinstr…  -0.806    0.0771    -10.4   2.98e-14 -0.957     -0.655 
+#> 4 response spec… Gentoo …   0.0836   0.116       0.723 7.50e- 1 -0.143      0.310 
+#> 5 response spec… Gentoo …   0.889    0.0853     10.4   3.11e-14  0.722      1.06
 glance(mfx)
 #>   null.deviance df.null    logLik      AIC      BIC deviance df.residual nobs
 #> 1      473.8202     341 -84.92257 179.8451 199.0192 169.8451         337  342
@@ -459,12 +459,12 @@ mod <- lm(y ~ x + I(x^2), dat)
 marginaleffects(mod, newdata = typical(x = -2:2)) %>%
     mutate(truth = 1 + 4 * x) %>%
     select(dydx, truth)
-#>         dydx truth
-#> 1 -7.0057960    -7
-#> 2 -3.0041201    -3
-#> 3  0.9975558     1
-#> 4  4.9992317     5
-#> 5  9.0009076     9
+#>        dydx truth
+#> 1 -6.991206    -7
+#> 2 -2.992002    -3
+#> 3  1.007202     1
+#> 4  5.006407     5
+#> 5  9.005611     9
 ```
 
 We can also plot the result with the `plot_cme` function:

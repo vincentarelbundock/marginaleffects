@@ -9,8 +9,9 @@
 get_contrast <- function(model, variable, prediction_type = "response", ...) {
     assert_dependency("emmeans")
     emm <- emmeans::emmeans(model, specs = variable, type = prediction_type)
-    con <- emmeans::contrast(emm, method = "revpairwise")
-    out <- data.frame(summary(con))
+    emm <- emmeans::regrid(emm)
+    emm <- emmeans::contrast(emm, method = "revpairwise")
+    out <- data.frame(summary(emm))
     # dict adapted from `broom`
     dict <- list("lsmean" = "estimate",
                  "emmean" = "estimate",
