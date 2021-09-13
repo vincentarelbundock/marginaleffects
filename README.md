@@ -128,6 +128,7 @@ allowed in the `predict` function.
 | speedglm::speedglm   | x               | x                    |                 |                   |
 | speedglm::speedlm    | x               | x                    |                 |                   |
 | survey::svyglm       | x               | x                    |                 | x                 |
+| truncreg::truncreg   | x               | x                    |                 |                   |
 
 ## Installation
 
@@ -462,11 +463,11 @@ marginaleffects(mod, newdata = typical(x = -2:2)) %>%
     mutate(truth = 1 + 4 * x) %>%
     select(dydx, truth)
 #>        dydx truth
-#> 1 -6.983477    -7
-#> 2 -2.990947    -3
-#> 3  1.001582     1
-#> 4  4.994111     5
-#> 5  8.986640     9
+#> 1 -7.004200    -7
+#> 2 -3.002039    -3
+#> 3  1.000122     1
+#> 4  5.002284     5
+#> 5  9.004445     9
 ```
 
 We can also plot the result with the `plot_cme` function:
