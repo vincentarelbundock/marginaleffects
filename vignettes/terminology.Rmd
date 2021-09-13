@@ -155,8 +155,8 @@ By default, the `marginaleffects` function returns predicted/estimated responses
 
 ```{r}
 mod <- lm(mpg ~ hp + factor(cyl), data = mtcars)
-
-marginaleffects(mod) |> head()
+mfx <- marginaleffects(mod)
+head(mfx)
 ```
 
 We can also request these responses for specific values of the regressors, using the `typical` function, in the `newdata` argument. By default, `typical` will set any variable which is not explicitly specify to its mean value. For example, 
@@ -185,9 +185,7 @@ emmeans(mod, specs = "cyl")
 
 # Contrasts between EMMs
 
-```{r}
-
-
+```{r, eval = FALSE}
 mod <- lm(log(conc) ~ source + factor(percent), data = pigs)
 
 mod <- emmeans(pigs.rg, "source")

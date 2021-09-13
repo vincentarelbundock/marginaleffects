@@ -21,8 +21,6 @@
 #' @param ... Additional arguments are pushed forward to `predict()`.
 #' @export
 #' @details
-#' @examples
-#' 
 marginalmeans <- function(model, 
                           newdata = NULL, 
                           variables = NULL, 
