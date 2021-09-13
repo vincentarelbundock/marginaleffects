@@ -42,6 +42,3 @@ space in memory.}
 \description{
 Warning: This package is experimental.
 }
-\examples{
-
-}

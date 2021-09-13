@@ -16,6 +16,7 @@ URL: https://vincentarelbundock.github.io/marginaleffects/
 BugReports: https://github.com/vincentarelbundock/marginaleffects/issues
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
+VignetteBuilder: knitr
 Depends:
     R (>= 3.5.0)
 Imports: 
@@ -31,8 +32,10 @@ Suggests:
     testthat (>= 3.0.0),
     ggplot2,
     haven,
+    knitr,
     margins,
     modelsummary,
+    patchwork,
     vdiffr,
     AER,
     betareg,
