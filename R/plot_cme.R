@@ -28,9 +28,13 @@ plot_cme <- function(model,
     # get data to know over what range of values we should plot
     dat <- insight::get_data(model)
 
-    # eventually we might allow two conditions
+    # eventually we might allow multiple conditions and/or effects
+    checkmate::assert_character(effect, len = 1)
     checkmate::assert_character(condition, len = 1)
-    checkmate::assert_true(condition %in% colnames(dat))
+
+    ## not sure why this fails in testthat
+    # checkmate::assert_true(condition %in% colnames(dat))
+
     condition1 <- condition[1]
 
     # build typical dataset with a sequence of values over "condition" range

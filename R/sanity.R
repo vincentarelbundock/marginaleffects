@@ -83,36 +83,62 @@ sanity_newdata <- function(model, newdata) {
 
 sanity_variables <- function(model, newdata, variables) {
     checkmate::assert_character(variables, min.len = 1, null.ok = TRUE)
+    checkmate::assert_data_frame(newdata, min.row = 1, null.ok = TRUE)
 
-    # guess variables
+    # get data
+    if (is.null(newdata)) {
+        newdata <- insight::get_data(model)
+    }
+
+    # get variables
     if (is.null(variables)) {
-        known <- c("dydx", "conditional", "zero_inflated")
-        variables <- insight::find_variables(model)
-        variables <- variables[names(variables) %in% known]
-        variables <- unique(unlist(variables))
+        variables_list <- insight::find_variables(model)
+        variables_list[["response"]] <- NULL
     } else {
-        miss <- setdiff(variables, colnames(newdata))
-        if (length(miss) > 0) {
-            stop(sprintf("Variables missing from `newdata` and/or the data extracted from the model objects: %s", paste(miss, collapse = ", ")))
-        }
+        variables_list <- list("user" = variables)
+    }
+    variables <- unique(unlist(variables_list))
+
+    # check missing variables
+    miss <- setdiff(variables, colnames(newdata))
+    if (length(miss) > 0) {
+        stop(sprintf("Variables missing from `newdata` and/or the data extracted from the model objects: %s", 
+                     paste(miss, collapse = ", ")))
+    }
+
+
+    # clusters (before dydx, in case cluster is numeric)
+    if ("cluster" %in% names(variables_list)) {
+        variables_cluster <- variables_list[["cluster"]]
+        variables <- setdiff(variables, variables_cluster)
+    } else {
+        variables_cluster <- character()
     }
 
     # dydx variables
-    idx <- sapply(newdata[, variables, drop = FALSE], is.numeric)
-    variables_dydx <- variables[idx]
+    if (length(variables) > 0) {
+        idx <- sapply(variables, function(x) is.numeric(newdata[[x]]))
+        variables_dydx <- variables[idx]
+        variables <- setdiff(variables, variables_dydx)
+    } else {
+        variables_dydx <- character()
+    }
 
     # contrast
-    idx <- sapply(newdata[, variables, drop = FALSE], 
-                  function(x) is.logical(x) | is.factor(x) | is.character(x))
-    variables_contrast <- variables[idx]
-
-    # others
-    variables_others <- setdiff(variables, c(variables_dydx, variables_contrast))
+    if (length(variables) > 0) {
+        idx <- sapply(variables, function(x) 
+                      is.logical(newdata[[x]]) | is.factor(newdata[[x]]) | is.character(newdata[[x]]))
+        variables_contrast <- variables[idx]
+        variables <- setdiff(variables, variables_contrast)
+    } else {
+        variables_contrast <- character()
+    }
 
     # output
     out <- list("dydx" = variables_dydx, 
                 "contrast" = variables_contrast,
-                "others" = variables_others)
+                "cluster" = variables_cluster,
+                "other" = variables)
     return(out)
 }
 
@@ -151,7 +177,6 @@ sanity_vcov <- function(model, vcov) {
         }
         vcov <- as.matrix(vcov)
     } 
-
 
     # TODO: Test if the names of the matrix match the names of the coefficients.
     # This could be dangerous, so leaving as a Github issue until I have time for serious work.

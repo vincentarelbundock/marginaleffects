@@ -1,7 +1,11 @@
 skip_if_not_installed("AER")
 
+Sys.setenv(`_R_S3_METHOD_REGISTRATION_NOTE_OVERWRITES_` = "false")
+suppressPackageStartupMessages({
+  library("AER", warn.conflicts = FALSE)
+})
+
 test_that("tobit: no validity check", {
-  library("AER")
   data("Affairs", package = "AER")
   mod <- AER::tobit(affairs ~ age + yearsmarried + religiousness + occupation + rating, data = Affairs)
   mfx <- marginaleffects(mod)
