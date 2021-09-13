@@ -43,6 +43,7 @@ Suggests:
     estimatr,
     fixest,
     gam,
+    geepack,
     ivreg,
     lme4,
     MASS,
