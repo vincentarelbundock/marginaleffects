@@ -14,6 +14,7 @@
 "lme4::glmer", "x" , "x" , , "dydx only"
 "MASS::polr", "x" , , "x" ,
 "MASS::rlm", "x" , "x" , ,
+"nlme::gls", "x", "x", , 
 "ordinal::clm", "x" , , , "x"
 "pscl::hurdle", "x" , "x" , , 
 "rms::lrm", "x" , "x" , , 

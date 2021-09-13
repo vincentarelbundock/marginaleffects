@@ -46,6 +46,7 @@ Suggests:
     ivreg,
     lme4,
     MASS,
+    nlme,
     nnet,
     ordinal,
     pscl,
