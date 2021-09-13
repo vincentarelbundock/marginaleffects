@@ -1,4 +1,5 @@
 skip_if_not_installed("ivreg")
+skip_if_not_installed("haven")
 
 library("margins")
 library("haven")

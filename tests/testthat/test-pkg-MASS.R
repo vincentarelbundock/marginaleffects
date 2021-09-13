@@ -1,4 +1,6 @@
 skip_if_not_installed("MASS")
+skip_if_not_installed("haven")
+skip_if_not_installed("margins")
 
 library("haven")
 library("margins")
