@@ -78,17 +78,20 @@ sanity_newdata <- function(model, newdata) {
     return(newdata)
 }
 
-
 sanity_variables <- function(model, newdata, variables) {
     checkmate::assert_character(variables, min.len = 1, null.ok = TRUE)
 
     # guess variables
     if (is.null(variables)) {
-
         known <- c("dydx", "conditional", "zero_inflated")
         variables <- insight::find_variables(model)
         variables <- variables[names(variables) %in% known]
         variables <- unique(unlist(variables))
+    } else {
+        miss <- setdiff(variables, colnames(newdata))
+        if (length(miss) > 0) {
+            stop(sprintf("Variables missing from `newdata` and/or the data extracted from the model objects: %s", paste(miss, collapse = ", ")))
+        }
     }
 
     # dydx variables
