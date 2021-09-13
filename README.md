@@ -5,12 +5,13 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![R-CMD-check](https://github.com/vincentarelbundock/fastmargins/workflows/R-CMD-check/badge.svg)](https://github.com/vincentarelbundock/fastmargins/actions)
 [![Codecov test
 coverage](https://codecov.io/gh/vincentarelbundock/marginaleffects/branch/main/graph/badge.svg)](https://codecov.io/gh/vincentarelbundock/marginaleffects?branch=main)
 [![R-CMD-check](https://github.com/vincentarelbundock/marginaleffects/workflows/R-CMD-check/badge.svg)](https://github.com/vincentarelbundock/marginaleffects/actions)
 <!-- badges: end -->
 
-This package is still experimental. *Use with caution!*
+This package is still experimental. *Use with caution\!*
 
 ## What?
 
@@ -59,26 +60,26 @@ package is (essentially) a clone of `margins`.
 
 So why did I write a clone?
 
--   *Speed:* In one benchmark (see below), computing unit-level standard
+  - *Speed:* In one benchmark (see below), computing unit-level standard
     errors is over 400x faster with `marginaleffects` (1 minute vs. 150
     milliseconds).
--   *Efficiency:* Smaller memory footprint (1.8GB vs 52MB in the same
+  - *Efficiency:* Smaller memory footprint (1.8GB vs 52MB in the same
     example).
--   *Extensibility:* Adding support for new models is very easy, often
+  - *Extensibility:* Adding support for new models is very easy, often
     requiring less than 10 lines of new code. In the medium run, the
     goal is to add support for *several* more model types.
--   `ggplot2` support for plotting (conditional) marginal effects.
--   *Tidy:* The results produced by `marginaleffects` follow “tidy”
+  - `ggplot2` support for plotting (conditional) marginal effects.
+  - *Tidy:* The results produced by `marginaleffects` follow “tidy”
     principles. They are easy to process and program with.
--   *User interface:* Slight changes to the user interface are intended
+  - *User interface:* Slight changes to the user interface are intended
     to improve the experience.
--   *Active development*
+  - *Active development*
 
 Downsides of `marginaleffects` include:
 
--   Weights and simultation-based inference are not (yet) supported.
--   More dependencies.
--   Newer package with a smaller (read: nonexistent) user base.
+  - Weights and simultation-based inference are not (yet) supported.
+  - More dependencies.
+  - Newer package with a smaller (read: nonexistent) user base.
 
 ## How?
 
@@ -101,7 +102,7 @@ documentation of your modeling package to see what `type` argument is
 allowed in the `predict` function.
 
 | Model                | Support: Effect | Support: Std. Errors | Validity: Stata | Validity: Margins |
-|:---------------------|:----------------|:---------------------|:----------------|:------------------|
+| :------------------- | :-------------- | :------------------- | :-------------- | :---------------- |
 | stats::lm            | x               | x                    | x               | x                 |
 | stats::glm           | x               | x                    | x               | x                 |
 | aer::ivreg           | x               | x                    | x               | x                 |
@@ -121,6 +122,7 @@ allowed in the `predict` function.
 | MASS::rlm            | x               | x                    |                 |                   |
 | nlme::gls            | x               | x                    |                 |                   |
 | ordinal::clm         | x               |                      |                 | x                 |
+| plm::plm             | x               | x                    |                 |                   |
 | pscl::hurdle         | x               | x                    |                 |                   |
 | rms::lrm             | x               | x                    |                 |                   |
 | speedglm::speedglm   | x               | x                    |                 |                   |
@@ -170,11 +172,11 @@ mfx <- marginaleffects(mod)
 head(mfx)
 #>   rowid     type              term        dydx   std.error predicted_response
 #> 1     1 response    bill_length_mm 0.017622745 0.007837288         0.05123266
-#> 2     1 response flipper_length_mm 0.006763748 0.001561738         0.05123266
+#> 2     1 response flipper_length_mm 0.006763748 0.001561740         0.05123266
 #> 3     2 response    bill_length_mm 0.035846649 0.011917159         0.11125087
-#> 4     2 response flipper_length_mm 0.013758244 0.002880122         0.11125087
-#> 5     3 response    bill_length_mm 0.084433436 0.021119181         0.36919834
-#> 6     3 response flipper_length_mm 0.032406447 0.008159349         0.36919834
+#> 4     2 response flipper_length_mm 0.013758244 0.002880123         0.11125087
+#> 5     3 response    bill_length_mm 0.084433436 0.021119186         0.36919834
+#> 6     3 response flipper_length_mm 0.032406447 0.008159318         0.36919834
 #>   large_penguin bill_length_mm flipper_length_mm species
 #> 1             0           39.1               181  Adelie
 #> 2             0           39.1               181  Adelie
@@ -241,6 +243,7 @@ tidy(mfx)
 #> 3 response spec… Chinstr…  -0.806    0.0771    -10.4   2.98e-14 -0.957     -0.655 
 #> 4 response spec… Gentoo …   0.0836   0.116       0.723 7.50e- 1 -0.143      0.310 
 #> 5 response spec… Gentoo …   0.889    0.0853     10.4   3.11e-14  0.722      1.06
+
 glance(mfx)
 #>   null.deviance df.null    logLik      AIC      BIC deviance df.residual nobs
 #> 1      473.8202     341 -84.92257 179.8451 199.0192 169.8451         337  342
@@ -271,10 +274,10 @@ those (fictional) individuals:
 marginaleffects(mod, newdata = typical(flipper_length_mm = 180, 
                                        species = c("Adelie", "Gentoo")))
 #>   rowid     type              term       dydx   std.error predicted_response
-#> 1     1 response    bill_length_mm 0.06067504 0.033257111          0.2125242
-#> 2     1 response flipper_length_mm 0.02328764 0.005498320          0.2125242
-#> 3     2 response    bill_length_mm 0.08466334 0.040417487          0.3716454
-#> 4     2 response flipper_length_mm 0.03249469 0.008616507          0.3716454
+#> 1     1 response    bill_length_mm 0.06067504 0.033257106          0.2125242
+#> 2     1 response flipper_length_mm 0.02328764 0.005498309          0.2125242
+#> 3     2 response    bill_length_mm 0.08466334 0.040417468          0.3716454
+#> 4     2 response flipper_length_mm 0.03249469 0.008616513          0.3716454
 #>   bill_length_mm flipper_length_mm species
 #> 1       43.92193               180  Adelie
 #> 2       43.92193               180  Adelie
@@ -350,19 +353,19 @@ mfx <- lapply(mod, marginaleffects)
 modelsummary(mfx)
 ```
 
-|                     |  Logit   |    OLS    |
-|:--------------------|:--------:|:---------:|
-| flipper\_length\_mm |  0.020   |  48.145   |
-|                     | (0.003)  |  (2.011)  |
-| bill\_length\_mm    |          |   6.047   |
-|                     |          |  (5.180)  |
-| Num.Obs.            |   342    |    342    |
-| R2                  |          |   0.760   |
-| R2 Adj.             |          |   0.759   |
-| AIC                 |  222.2   |  5063.5   |
-| BIC                 |  229.9   |  5078.8   |
-| Log.Lik.            | -109.111 | -2527.741 |
-| F                   |          |  536.626  |
+|                     |   Logit   |    OLS     |
+| :------------------ | :-------: | :--------: |
+| flipper\_length\_mm |   0.020   |   48.145   |
+|                     |  (0.003)  |  (2.011)   |
+| bill\_length\_mm    |           |   6.047    |
+|                     |           |  (5.180)   |
+| Num.Obs.            |    342    |    342     |
+| R2                  |           |   0.760    |
+| R2 Adj.             |           |   0.759    |
+| AIC                 |   222.2   |   5063.5   |
+| BIC                 |   229.9   |   5078.8   |
+| Log.Lik.            | \-109.111 | \-2527.741 |
+| F                   |           |  536.626   |
 
 You can also display models with contrasts using `modelsummary`’s
 `group` argument:
@@ -377,23 +380,23 @@ mfx <- lapply(mod, marginaleffects)
 modelsummary(mfx, group = term + contrast ~ model)
 ```
 
-|                     |                    |  Model 1  |  Model 2  |
-|:--------------------|:-------------------|:---------:|:---------:|
-| flipper\_length\_mm |                    |  40.705   |           |
-|                     |                    |  (3.068)  |           |
-| species             | Chinstrap - Adelie | -206.510  |  32.426   |
-|                     |                    | (57.731)  | (67.512)  |
-|                     | Gentoo - Adelie    |  266.810  | 1375.354  |
-|                     |                    | (95.264)  | (56.148)  |
-|                     | Gentoo - Chinstrap |  473.320  | 1342.928  |
-|                     |                    | (86.746)  | (69.857)  |
-| Num.Obs.            |                    |    342    |    342    |
-| R2                  |                    |   0.783   |   0.670   |
-| R2 Adj.             |                    |   0.781   |   0.668   |
-| AIC                 |                    |  5031.5   |  5172.7   |
-| BIC                 |                    |  5050.7   |  5188.0   |
-| Log.Lik.            |                    | -2510.762 | -2582.337 |
-| F                   |                    |  405.693  |  343.626  |
+|                     |                    |  Model 1   |  Model 2   |
+| :------------------ | :----------------- | :--------: | :--------: |
+| flipper\_length\_mm |                    |   40.705   |            |
+|                     |                    |  (3.068)   |            |
+| species             | Chinstrap - Adelie | \-206.510  |   32.426   |
+|                     |                    |  (57.731)  |  (67.512)  |
+|                     | Gentoo - Adelie    |  266.810   |  1375.354  |
+|                     |                    |  (95.264)  |  (56.148)  |
+|                     | Gentoo - Chinstrap |  473.320   |  1342.928  |
+|                     |                    |  (86.746)  |  (69.857)  |
+| Num.Obs.            |                    |    342     |    342     |
+| R2                  |                    |   0.783    |   0.670    |
+| R2 Adj.             |                    |   0.781    |   0.668    |
+| AIC                 |                    |   5031.5   |   5172.7   |
+| BIC                 |                    |   5050.7   |   5188.0   |
+| Log.Lik.            |                    | \-2510.762 | \-2582.337 |
+| F                   |                    |  405.693   |  343.626   |
 
 ## Plots (`ggplot2`)
 
@@ -432,20 +435,20 @@ plot_cme(mod, effect = "hp", condition = "wt")
 
 Say you estimate a linear regression model with a quadratic term:
 
-*Y* = *β*<sub>0</sub> + *β*<sub>1</sub>*X*<sup>2</sup> + *ε*
+\[Y = \beta_0 + \beta_1 X^2 + \varepsilon\]
 
-and obtain estimates of *β*<sub>0</sub> = 1 and *β*<sub>1</sub> = 2.
-Taking the partial derivative with respect to *X* and plugging in our
-estimates gives us the marginal effect of *X* on *Y*:
+and obtain estimates of \(\beta_0=1\) and \(\beta_1=2\). Taking the
+partial derivative with respect to \(X\) and plugging in our estimates
+gives us the marginal effect of \(X\) on \(Y\):
 
-∂*Y*/∂*X* = *β*<sub>0</sub> + 2 ⋅ *β*<sub>1</sub>*X* = 1 + 4*X*
+\[\partial Y / \partial X = \beta_0 + 2 \cdot \beta_1 X = 1 + 4X\]
 
-This result suggests that the effect of a *change* in *X* on *Y* depends
-on the *level* of *X*. When *X* is large and positive, an increase in
-*X* is associated to a large increase in *Y*. When *X* is small and
-positive, an increase in *X* is associated to a small increase in *Y*.
-When *X* is a large negative value, an increase in *X* is associated
-with a *decrease* in *Y*.
+This result suggests that the effect of a *change* in \(X\) on \(Y\)
+depends on the *level* of \(X\). When \(X\) is large and positive, an
+increase in \(X\) is associated to a large increase in \(Y\). When \(X\)
+is small and positive, an increase in \(X\) is associated to a small
+increase in \(Y\). When \(X\) is a large negative value, an increase in
+\(X\) is associated with a *decrease* in \(Y\).
 
 `marginaleffects` arrives at the same conclusion in simultated data:
 
@@ -459,11 +462,11 @@ marginaleffects(mod, newdata = typical(x = -2:2)) %>%
     mutate(truth = 1 + 4 * x) %>%
     select(dydx, truth)
 #>        dydx truth
-#> 1 -6.991206    -7
-#> 2 -2.992002    -3
-#> 3  1.007202     1
-#> 4  5.006407     5
-#> 5  9.005611     9
+#> 1 -6.983477    -7
+#> 2 -2.990947    -3
+#> 3  1.001582     1
+#> 4  4.994111     5
+#> 5  8.986640     9
 ```
 
 We can also plot the result with the `plot_cme` function:
@@ -576,8 +579,8 @@ tests. Ideally, we would like to compare the results obtained by
 
 Add your new model class to the lists of supported models in:
 
--   The `sanity_model` function of the `R/sanity.R` file.
--   The supported models CSV table in `data-raw/supported_models.csv`.
+  - The `sanity_model` function of the `R/sanity.R` file.
+  - The supported models CSV table in `data-raw/supported_models.csv`.
     Then, run the `data-raw/supported_models.R` script to propagate your
     change throughout the package documentation.
--   The “Suggests” list in the `DESCRIPTION` file.
+  - The “Suggests” list in the `DESCRIPTION` file.

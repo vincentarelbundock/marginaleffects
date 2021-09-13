@@ -18,6 +18,7 @@
 "MASS::rlm", "x" , "x" , ,
 "nlme::gls", "x", "x", , 
 "ordinal::clm", "x" , , , "x"
+"plm::plm", "x" , "x" , ,
 "pscl::hurdle", "x" , "x" , , 
 "rms::lrm", "x" , "x" , , 
 "speedglm::speedglm", "x" , "x" , , 
