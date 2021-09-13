@@ -36,8 +36,8 @@ sanity_model <- function(model) {
                       "loess",
                       c("lrm", "lm"),
                       c("lrm", "rms", "glm"),
-                      # "multinom",
                       c("negbin", "glm", "lm"),
+                      c("plm", "panelmodel"),
                       "polr",
                       "speedglm",
                       "speedlm",
@@ -53,6 +53,14 @@ sanity_model <- function(model) {
         msg <- sprintf(msg, class(model)[1], paste(supported, collapse = ", "))
         stop(msg)
     }
+
+    # model-specific checks
+    if (all(c("plm", "panelmodel") %in% class(model))) {
+        if ("within" %in% model$args$model) {
+            stop('The `plm::predict` function does not appear to support the `newdata` argument when `plm(model="within")`. Therefore, `marginaleffects` cannot support "within" models, even if it supports many other models produced by the `plm` package.')
+        }
+    }
+
     return(model)
 }
 

@@ -50,6 +50,7 @@ Suggests:
     nlme,
     nnet,
     ordinal,
+    plm,
     pscl,
     rms,
     sandwich,
