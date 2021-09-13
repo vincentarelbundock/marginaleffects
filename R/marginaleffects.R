@@ -127,7 +127,9 @@ marginaleffects <- function(model,
     dydx <- dplyr::bind_rows(dydx)
 
     # for merging later (do this before assigning to dydx)
-    newdata$rowid <- 1:nrow(newdata)
+    if (!"rowid" %in% colnames(newdata)) {
+        newdata$rowid <- 1:nrow(newdata)
+    }
 
     # output: return data only if there are numeric variables
     out <- dydx

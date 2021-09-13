@@ -7,6 +7,11 @@ test_that("old bug: counterfactual with a single regressor", {
     expect_equal(nrow(x), 64)
 })
 
+test_that("marginal effects does not overwrite counterfactual rowid", {
+    mod <- glm(am ~ mpg + factor(cyl), data = mtcars, family = binomial)
+    mfx <- marginaleffects(mod, newdata = counterfactual(cyl = c(4, 6, 8)))
+    expect_true(all(mfx$rowid %in% 1:32))
+})
 
 test_that("alternative syntaxes", {
     mod <- lm(mpg ~ hp + drat + wt, mtcars)
