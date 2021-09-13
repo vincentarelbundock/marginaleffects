@@ -117,6 +117,7 @@ allowed in the `predict` function.
 | ivreg::ivreg         | x               | x                    | x               | x                 |
 | lme4::lmer           | x               | x                    |                 | dydx only         |
 | lme4::glmer          | x               | x                    |                 | dydx only         |
+| MASS::glm.nb         | x               | x                    |                 | x                 |
 | MASS::polr           | x               |                      | x               |                   |
 | MASS::rlm            | x               | x                    |                 |                   |
 | nlme::gls            | x               | x                    |                 |                   |
@@ -459,11 +460,11 @@ marginaleffects(mod, newdata = typical(x = -2:2)) %>%
     mutate(truth = 1 + 4 * x) %>%
     select(dydx, truth)
 #>         dydx truth
-#> 1 -7.0202970    -7
-#> 2 -3.0109543    -3
-#> 3  0.9983884     1
-#> 4  5.0077312     5
-#> 5  9.0170739     9
+#> 1 -7.0057960    -7
+#> 2 -3.0041201    -3
+#> 3  0.9975558     1
+#> 4  4.9992317     5
+#> 5  9.0009076     9
 ```
 
 We can also plot the result with the `plot_cme` function:

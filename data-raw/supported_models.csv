@@ -13,6 +13,7 @@
 "ivreg::ivreg", "x" , "x" , "x" , "x"
 "lme4::lmer", "x" , "x" , , "dydx only"
 "lme4::glmer", "x" , "x" , , "dydx only"
+"MASS::glm.nb", "x" , "x", , "x"
 "MASS::polr", "x" , , "x" ,
 "MASS::rlm", "x" , "x" , ,
 "nlme::gls", "x", "x", , 

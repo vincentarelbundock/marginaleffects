@@ -37,6 +37,7 @@ sanity_model <- function(model) {
                       c("lrm", "lm"),
                       c("lrm", "rms", "glm"),
                       # "multinom",
+                      c("negbin", "glm", "lm"),
                       "polr",
                       "speedglm",
                       "speedlm",
