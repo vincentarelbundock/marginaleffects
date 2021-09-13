@@ -97,6 +97,11 @@ marginalmeans <- function(model,
     }
     out <- dplyr::bind_rows(out_list)
 
+    # return data
+    if (isTRUE(return_data)) {
+        out <- merge(out, newdata, by = "rowid")
+    }
+
     # clean columns
     stubcols <- c("rowid", "type", "group", "term", "predicted", "std.error",
                   "conf.low", "conf.high", 
