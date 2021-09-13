@@ -1,3 +1,6 @@
+skip_if_not_installed("margins")
+skip_if_not_installed("haven")
+skip_if_not_installed("dplyr")
 library("margins")
 library("haven")
 library("dplyr", warn.conflicts = FALSE)

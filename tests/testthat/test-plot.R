@@ -1,3 +1,6 @@
+# I think there are different graphics engines. Do this locally.
+skip_on_ci()
+
 test_that("plot_cme(mod, 'hp', 'wt')", {
     mod <- lm(mpg ~ hp * wt, data = mtcars)
     p <- plot_cme(mod, effect = "hp", condition = "wt")
