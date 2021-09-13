@@ -31,7 +31,6 @@ Suggests:
     bench,
     testthat (>= 3.0.0),
     ggplot2,
-    haven,
     knitr,
     margins,
     modelsummary,

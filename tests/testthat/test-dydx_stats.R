@@ -1,8 +1,6 @@
 skip_if_not_installed("margins")
-skip_if_not_installed("haven")
 skip_if_not_installed("dplyr")
 library("margins")
-library("haven")
 library("dplyr", warn.conflicts = FALSE)
 
 # pkgload::load_all()
@@ -29,7 +27,7 @@ test_that("glm", {
 
 test_that("glm vs. Stata", {
     stata <- readRDS(test_path("stata/stata.rds"))[["stats_glm_01"]]
-    dat <- read_dta(test_path("stata/data/stats_glm_01.dta"))
+    dat <- read.csv(test_path("stata/data/stats_glm_01.csv"))
     mod <- glm(y ~ x1 * x2, family = binomial, data = dat)
     ame <- marginaleffects(mod) %>%
            group_by(term) %>%
@@ -41,7 +39,7 @@ test_that("glm vs. Stata", {
 
 test_that("lm vs. Stata", {
     stata <- readRDS(test_path("stata/stata.rds"))[["stats_lm_01"]]
-    dat <- read_dta(test_path("stata/data/stats_lm_01.dta"))
+    dat <- read.csv(test_path("stata/data/stats_lm_01.csv"))
     mod <- lm(y ~ x1 * x2, data = dat)
     ame <- marginaleffects(mod) %>%
            group_by(term) %>%

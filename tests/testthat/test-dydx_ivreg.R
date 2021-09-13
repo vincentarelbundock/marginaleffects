@@ -1,8 +1,6 @@
 skip_if_not_installed("ivreg")
-skip_if_not_installed("haven")
 
 library("margins")
-library("haven")
 library("dplyr", warn.conflicts = FALSE)
 library("ivreg")
 
@@ -15,7 +13,7 @@ test_that("ivreg vs. margins", {
 })    
 
 test_that("ivreg vs. Stata", {
-    dat <- read_dta(test_path("stata/data/ivreg_ivreg_01.dta"))
+    dat <- read.csv(test_path("stata/data/ivreg_ivreg_01.csv"))
     stata <- readRDS(test_path("stata/stata.rds"))[["ivreg_ivreg_01"]]
     mod <- ivreg::ivreg(Q ~ P + D | D + F + A, data = dat)
     ame <- marginaleffects(mod) %>%
