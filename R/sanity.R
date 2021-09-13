@@ -24,6 +24,7 @@ sanity_model <- function(model) {
                       "clm",
                       "fixest",
                       c("Gam", "glm", "lm"),
+                      c("geeglm", "gee", "glm"),
                       "glm",
                       "gls",
                       "glmerMod",
