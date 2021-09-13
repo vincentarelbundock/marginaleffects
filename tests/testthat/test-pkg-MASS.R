@@ -1,8 +1,6 @@
 skip_if_not_installed("MASS")
-skip_if_not_installed("haven")
 skip_if_not_installed("margins")
 
-library("haven")
 library("margins")
 
 test_that("MASS::rlm no validity check", {
@@ -26,7 +24,7 @@ test_that("polr vs. margins (dydx only)", {
 
 test_that("polr vs. Stata", {
     stata <- readRDS(test_path("stata/stata.rds"))[["MASS_polr_01"]]
-    dat <- haven::read_dta(test_path("stata/data/MASS_polr_01.dta"))
+    dat <- read.csv(test_path("stata/data/MASS_polr_01.csv"))
     mod <- MASS::polr(factor(y) ~ x1 + x2, data = dat)
     void <- capture.output(suppressWarnings(suppressMessages(
         ame <- marginaleffects(mod, vcov = FALSE, prediction_type = "probs") %>%
