@@ -29,17 +29,17 @@ counterfactual <- function(..., model = NULL, data = NULL) {
 
     tmp <- prep_counterfactual_typical(..., model = model, data = data)
     at <- tmp$at
-    dat <- tmp$dat
-    v_all <- tmp$all
-    v_manual <- tmp$v_manual
-    v_automatic <- tmp$v_automatic
+    dat <- tmp$data
+    variables_all <- tmp$all
+    variables_manual <- tmp$variables_manual
+    variables_automatic <- tmp$variables_automatic
 
     # `at` -> `data.frame`
     at <- expand.grid(at)
 
     rowid <- data.frame(rowid = 1:nrow(dat))
-    if (length(v_automatic) > 0) {
-        dat_automatic <- dat[, v_automatic, drop = FALSE]
+    if (length(variables_automatic) > 0) {
+        dat_automatic <- dat[, variables_automatic, drop = FALSE]
         dat_automatic <- cbind(rowid, dat_automatic)
         out <- merge(dat_automatic, at, all = TRUE)
     }  else {
@@ -74,13 +74,13 @@ typical <- function(..., model = NULL, data = NULL) {
 
     tmp <- prep_counterfactual_typical(..., model = model, data = data)
     at <- tmp$at
-    dat <- tmp$dat
-    v_all <- tmp$all
-    v_manual <- tmp$v_manual
-    v_automatic <- tmp$v_automatic
-    
-    if (length(v_automatic) > 0) {
-        dat_automatic <- dat[, v_automatic, drop = FALSE]
+    dat <- tmp$data
+    variables_all <- tmp$all
+    variables_manual <- tmp$variables_manual
+    variables_automatic <- tmp$variables_automatic
+
+    if (length(variables_automatic) > 0) {
+        dat_automatic <- dat[, variables_automatic, drop = FALSE]
         dat_automatic <- stats::na.omit(dat_automatic)
         out <- mean_or_mode(dat_automatic)
     } else {
@@ -104,49 +104,69 @@ prep_counterfactual_typical <- function(..., model = NULL, data = NULL) {
     checkmate::assert_data_frame(data, null.ok = TRUE)
 
     at <- list(...)
-    
+
     if (!is.null(model) & !is.null(data)) {
         stop("One of the `model` or `data` arguments must be `NULL`.")
     }
+
     if (is.null(model) & is.null(data)) {
         stop("The `model` or `data` arguments cannot both be `NULL`.")
     }
 
-    if (!is.null(model)) {
-        dat <- insight::get_data(model)
-        v_all <- insight::find_variables(model)$conditional
+    # data: all variables
+    if (!is.null(data)) {
+        variables <- colnames(data)
+    # model: variables=NULL because otherwise `sanity_variables` excludes others
     } else {
-        dat <- data
-        v_all <- colnames(dat)
+        variables <- NULL
     }
 
-    v_manual <- names(at)
-    v_automatic <- setdiff(v_all, v_manual)
+    variables_list <- sanity_variables(model = model, newdata = data, variables = variables)
+    variables_all <- unique(unlist(variables_list))
+    variables_manual <- names(at)
+    variables_automatic <- setdiff(variables_all, variables_manual)
+
+    # fill in missing data after sanity checks
+    if (is.null(data)) {
+        data <- insight::get_data(model)
+    }
 
     # check `at` names
-    v_bad <- setdiff(names(at), v_all)
-    if (length(v_bad) > 0) {
-        warning(sprintf("Variables in `at` are missing from the model data: %s", paste(v_bad, collapse = ", ")))
+    variables_missing <- setdiff(names(at), variables_all)
+    if (length(variables_missing) > 0) {
+        warning(sprintf("Variables in `at` are missing from the model data: %s", 
+                        paste(variables_missing, collapse = ", ")))
     }
 
     # check `at` elements and convert them to factor as needed
     for (n in names(at)) {
-        if (is.factor(dat[[n]])) {
+        if (is.factor(data[[n]])) {
             at[[n]] <- as.character(at[[n]])
-            if (!all(at[[n]] %in% levels(dat[[n]]))) {
-                msg <- sprintf('The "%s" element of the `at` list corresponds to a factor variable. The values entered in the `at` list must be one of the factor levels: "%s".', n, paste(levels(dat[[n]]), collapse = '", "'))
+            if (!all(at[[n]] %in% levels(data[[n]]))) {
+                msg <- sprintf('The "%s" element of the `at` list corresponds to a factor variable. The values entered in the `at` list must be one of the factor levels: "%s".', n, paste(levels(data[[n]]), collapse = '", "'))
                 stop(msg)
             } else {
-                at[[n]] <- factor(at[[n]], levels = levels(dat[[n]]))
+                at[[n]] <- factor(at[[n]], levels = levels(data[[n]]))
             }
         }
     }
 
-    out <- list("dat" = dat, 
+    # warn if cluster variables are numeric. users probably do not want to take
+    # their means, because this makes prediction impossible in many models
+    # (e.g., `fixest::feols(mpg ~ hp | cyl)`)
+    variables_cluster <- intersect(variables_automatic, variables_list$cluster)
+    if (length(variables_cluster) > 0) {
+        idx <- sapply(variables_cluster, function(x) is.numeric(data[[x]]))
+        if (any(idx)) {
+            idx <- paste(sprintf('"%s"', variables_cluster[idx]), collapse = ", ")
+            warning(sprintf("Unless otherwise instructed, this function sets numeric variables to their mean. This is probably inappropriate in the case of cluster variables such as %s. A safer strategy is to convert cluster variables to factors before fitting the model.", idx))
+        }
+    }
+
+    out <- list("data" = data, 
                 "at" = at, 
-                "v_all" = v_all, 
-                "v_manual" = v_manual, 
-                "v_automatic" = v_automatic)
+                "variables_all" = variables_all, 
+                "variables_manual" = variables_manual, 
+                "variables_automatic" = variables_automatic)
     return(out)
 }
-

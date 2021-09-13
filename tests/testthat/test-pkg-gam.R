@@ -1,7 +1,10 @@
 skip_if_not_installed("gam")
 
-test_that("gam: no validity check", {
+suppressPackageStartupMessages(
   library("gam")
+)
+
+test_that("gam: no validity check", {
   data(kyphosis, package = "gam")
   model <- gam::gam(Kyphosis ~ s(Age,4) + Number, family = binomial, data=kyphosis)
   mfx <- marginaleffects(model)

@@ -13,7 +13,7 @@ test_that("survey: marginaleffects vs. margins", {
                               nest=TRUE)
     mod <- survey::svyglm(x ~ nh, design = svyd)
     res <- marginaleffects(mod)
-    mar <- data.frame(margins(mod, unit_ses = TRUE))
+    mar <- suppressMessages(data.frame(margins(mod, unit_ses = TRUE)))
     # TODO: what explains this mismatch?
     expect_equal(res$dydx, as.numeric(mar$dydx_nh))
     expect_equal(res$std.error, as.numeric(mar$SE_dydx_nh), tolerance = 0.0001)

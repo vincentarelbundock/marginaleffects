@@ -85,8 +85,10 @@ marginaleffects <- function(model,
     for (predt in prediction_type) {
         for (v in variables$cont) {
             tmp <- try(get_contrast(model, v, type = predt), silent = TRUE)
-            tmp$type <- predt
-            cont <- c(cont, list(tmp))
+            if (inherits(tmp, "data.frame")) {
+                tmp$type <- predt
+                cont <- c(cont, list(tmp))
+            }
         }
     }
     cont <- dplyr::bind_rows(cont)

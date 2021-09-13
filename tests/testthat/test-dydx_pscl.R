@@ -1,7 +1,9 @@
 skip_if_not_installed("pscl")
+suppressPackageStartupMessages({
+    library("pscl")
+})
 
 test_that("hurdle: set_coef", {
-    library("pscl")
     data("bioChemists", package = "pscl")
     mod1 <- hurdle(art ~ phd + fem | ment, data = bioChemists, dist = "negbin")
     beta <- stats::setNames(rep(0, length(coef(mod1))), names(coef(mod1)))
@@ -11,7 +13,6 @@ test_that("hurdle: set_coef", {
 
 
 test_that("hurdle: no validity check", {
-    library("pscl")
     data("bioChemists", package = "pscl")
     model <- hurdle(art ~ phd + fem | ment, data = bioChemists, dist = "negbin")
     mfx1 <- marginaleffects(model, prediction_type = "response")
