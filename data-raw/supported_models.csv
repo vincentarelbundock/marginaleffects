@@ -24,3 +24,4 @@
 "speedglm::speedglm", "x" , "x" , , 
 "speedglm::speedlm", "x" , "x" , , 
 "survey::svyglm", "x" , "x" , , "x"
+"truncreg::truncreg", "x" , "x" , ,
