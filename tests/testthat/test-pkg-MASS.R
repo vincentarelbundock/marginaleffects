@@ -36,3 +36,12 @@ test_that("polr vs. Stata", {
     expect_equal(ame$dydx, ame$dydxstata, tolerance = 0.001)
     # expect_equal(ame$std.error, ame$std.errorstata, tolerance = 0.001)
 })
+
+
+test_that("glm.nb vs. margins", {
+    # margins does not support unit-level standard errors
+    model <- suppressWarnings(MASS::glm.nb(carb ~ wt + factor(cyl), data = mtcars))
+    mfx <- marginaleffects(model)
+    mar <- margins(model)
+    expect_true(test_against_margins(mfx, mar))
+})
