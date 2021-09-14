@@ -1,3 +1,4 @@
+skip_if_not_installed("truncreg")
 suppressPackageStartupMessages(library(truncreg, warn.conflicts = FALSE))
 
 test_that("truncreg: no validity check", {

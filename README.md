@@ -123,6 +123,7 @@ allowed in the `predict` function.
 | ordinal::clm         | x               |                      |                 | x                 |
 | plm::plm             | x               | x                    |                 |                   |
 | pscl::hurdle         | x               | x                    |                 |                   |
+| pscl::zeroinfl       | x               | x                    |                 |                   |
 | rms::lrm             | x               | x                    |                 |                   |
 | speedglm::speedglm   | x               | x                    |                 |                   |
 | speedglm::speedlm    | x               | x                    |                 |                   |
@@ -326,10 +327,10 @@ marginaleffects(mod, newdata = nd) %>%
     group_by(term) %>%
     summarize(across(dydx:std.error, median))
 #> # A tibble: 2 × 3
-#>   term                 dydx std.error
-#>   <chr>               <dbl>     <dbl>
-#> 1 bill_length_mm    0.00985   0.00628
-#> 2 flipper_length_mm 0.00378   0.00144
+#>   term                  dydx std.error
+#>   <chr>                <dbl>     <dbl>
+#> 1 bill_length_mm    0.00161   0.00198 
+#> 2 flipper_length_mm 0.000619  0.000561
 ```
 
 ## Tables
@@ -460,12 +461,12 @@ mod <- lm(y ~ x + I(x^2), dat)
 marginaleffects(mod, newdata = typical(x = -2:2)) %>%
     mutate(truth = 1 + 4 * x) %>%
     select(dydx, truth)
-#>        dydx truth
-#> 1 -7.020013    -7
-#> 2 -3.010331    -3
-#> 3  0.999352     1
-#> 4  5.009035     5
-#> 5  9.018717     9
+#>         dydx truth
+#> 1 -7.0129306    -7
+#> 2 -3.0093110    -3
+#> 3  0.9943085     1
+#> 4  4.9979281     5
+#> 5  9.0015476     9
 ```
 
 We can also plot the result with the `plot_cme` function:

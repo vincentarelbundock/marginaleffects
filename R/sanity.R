@@ -42,7 +42,8 @@ sanity_model <- function(model) {
                       "speedglm",
                       "speedlm",
                       c("tobit", "survreg"),
-                      "truncreg")
+                      "truncreg",
+                      "zeroinfl")
     flag <- FALSE
     for (sup in supported) {
         if (all(sup %in% class(model))) {

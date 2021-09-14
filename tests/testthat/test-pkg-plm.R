@@ -1,3 +1,4 @@
+skip_if_not_installed("plm")
 suppressPackageStartupMessages(library("plm", warn.conflicts = FALSE))
 
 test_that("Baltagi (2013) replications from the plm doc", {
