@@ -20,6 +20,7 @@
 "ordinal::clm", "x" , , , "x"
 "plm::plm", "x" , "x" , ,
 "pscl::hurdle", "x" , "x" , , 
+"pscl::zeroinfl", "x" , "x" , , 
 "rms::lrm", "x" , "x" , , 
 "speedglm::speedglm", "x" , "x" , , 
 "speedglm::speedlm", "x" , "x" , , 

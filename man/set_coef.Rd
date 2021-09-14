@@ -7,6 +7,7 @@
 \alias{set_coef.betareg}
 \alias{set_coef.multinom}
 \alias{set_coef.hurdle}
+\alias{set_coef.zeroinfl}
 \alias{set_coef.glm}
 \alias{set_coef.lm}
 \title{Internal function to set coefficients
@@ -22,6 +23,8 @@ set_coef(model, coefs)
 \method{set_coef}{multinom}(model, coefs)
 
 \method{set_coef}{hurdle}(model, coefs)
+
+\method{set_coef}{zeroinfl}(model, coefs)
 
 \method{set_coef}{glm}(model, coefs)
 

@@ -26,3 +26,14 @@ test_that("hurdle: no validity check", {
     expect_s3_class(mfx1, "data.frame")
     expect_s3_class(mfx2, "data.frame")
 })
+
+
+test_that("zeroinfl: no validity check", {
+    data("bioChemists", package = "pscl")
+    model <- zeroinfl(art ~ . | 1, data = bioChemists)
+    mfx <- marginaleffects(model)
+    tid <- tidy(mfx)
+    expect_s3_class(tid, "data.frame")
+    expect_false(any(mfx$dydx == 0))
+    expect_false(any(mfx$std.error == 0))
+})
