@@ -5,6 +5,8 @@
 "aer::tobit", "x" , "x" , , 
 "betareg::betareg", "x" , "x" , "x" , "x"
 "bife::bife", "x" , "x" , ,
+"brglm2::brglmFit", "x", "x", , 
+"brglm2::brnb", "x", "x", , 
 "estimatr::lm_robust", "x" , "x" , ,
 "fixest::feols", "x" , "x" , ,
 "fixest::feglm", "x" , "x" , ,
