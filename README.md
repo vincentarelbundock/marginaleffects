@@ -125,6 +125,8 @@ allowed in the `predict` function.
 | pscl::hurdle         | x               | x                    |                 |                   |
 | pscl::zeroinfl       | x               | x                    |                 |                   |
 | rms::lrm             | x               | x                    |                 |                   |
+| robustbase::glmrob   | x               | x                    |                 |                   |
+| robustbase::lmrob    | x               | x                    |                 |                   |
 | speedglm::speedglm   | x               | x                    |                 |                   |
 | speedglm::speedlm    | x               | x                    |                 |                   |
 | survey::svyglm       | x               | x                    |                 | x                 |
@@ -462,11 +464,11 @@ marginaleffects(mod, newdata = typical(x = -2:2)) %>%
     mutate(truth = 1 + 4 * x) %>%
     select(dydx, truth)
 #>         dydx truth
-#> 1 -7.0129306    -7
-#> 2 -3.0093110    -3
-#> 3  0.9943085     1
-#> 4  4.9979281     5
-#> 5  9.0015476     9
+#> 1 -6.9970108    -7
+#> 2 -3.0000175    -3
+#> 3  0.9969759     1
+#> 4  4.9939692     5
+#> 5  8.9909626     9
 ```
 
 We can also plot the result with the `plot_cme` function:
