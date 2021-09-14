@@ -85,6 +85,7 @@ tidy.marginaleffects <- function(x,
     cols <- c("type", "group", "term", "contrast", "estimate", "std.error",
               "statistic", "p.value", "conf.low", "conf.high")
     out <- out[, intersect(cols, colnames(out)), drop = FALSE]
+    out <- as.data.frame(out)
     return(out)
 }
 

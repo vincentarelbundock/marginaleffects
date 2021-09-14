@@ -27,6 +27,7 @@ Imports:
     insight,
     methods,
     numDeriv,
+    rlang
 Suggests: 
     bench,
     testthat (>= 3.0.0),
@@ -87,5 +88,6 @@ Collate:
     'sanity.R'
     'summary.R'
     'supported_models.R'
+    'test-helper.R'
     'test_against_margins.R'
     'tidy.R'
