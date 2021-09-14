@@ -115,6 +115,7 @@ allowed in the `predict` function.
 | fixest::feglm        | x               | x                    |                 |                   |
 | gam::gam             | x               | x                    |                 |                   |
 | geepack::geeglm      | x               | x                    |                 |                   |
+| glmx::glmx           | x               | x                    |                 |                   |
 | ivreg::ivreg         | x               | x                    | x               | x                 |
 | lme4::lmer           | x               | x                    |                 | dydx only         |
 | lme4::glmer          | x               | x                    |                 | dydx only         |
@@ -471,11 +472,11 @@ marginaleffects(mod, newdata = typical(x = -2:2)) %>%
     mutate(truth = 1 + 4 * x) %>%
     select(dydx, truth)
 #>        dydx truth
-#> 1 -7.001682    -7
-#> 2 -2.998943    -3
-#> 3  1.003796     1
-#> 4  5.006535     5
-#> 5  9.009274     9
+#> 1 -7.017656    -7
+#> 2 -3.008645    -3
+#> 3  1.000367     1
+#> 4  5.009378     5
+#> 5  9.018389     9
 ```
 
 We can also plot the result with the `plot_cme` function:
