@@ -15,7 +15,7 @@ get_dydx.default <- function(model,
                              variable,
                              fitfram = insight::get_data(model), 
                              group_name = NULL,
-                             prediction_type = "response",
+                             predict_type = "response",
                              numDeriv_method = "simple",
                              ...) {
     fitfram_tmp <- fitfram
@@ -23,7 +23,7 @@ get_dydx.default <- function(model,
         fitfram_tmp[[variable]] <- x
         pred <- get_predict(model = model,
                             newdata = fitfram_tmp,
-                            prediction_type = prediction_type,
+                            predict_type = predict_type,
                             ...)
         # numDeriv expects a vector
         if (is.matrix(pred) && (!is.null(group_name) && group_name != "main")) {

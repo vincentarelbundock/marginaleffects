@@ -17,7 +17,7 @@ test_that("polr vs. margins (dydx only)", {
     tmp <- data.frame(mtcars)
     tmp$carb <- as.factor(tmp$carb)
     mod <- MASS::polr(carb ~ hp + am + mpg, data = tmp) 
-    res <- marginaleffects(mod, vcov = FALSE, prediction_type = "probs")
+    res <- marginaleffects(mod, vcov = FALSE, predict_type = "probs")
     mar <- margins(mod)
 })
 
@@ -27,11 +27,11 @@ test_that("polr vs. Stata", {
     dat <- read.csv(test_path("stata/data/MASS_polr_01.csv"))
     mod <- MASS::polr(factor(y) ~ x1 + x2, data = dat)
     void <- capture.output(suppressWarnings(suppressMessages(
-        ame <- marginaleffects(mod, vcov = FALSE, prediction_type = "probs") %>%
-               group_by(group, term) %>%
-               summarize(dydx = mean(dydx)) %>% #, std.error = mean(std.error)) %>%
-               mutate(group = as.numeric(group)) %>%
-               inner_join(stata, by = c("group", "term"))
+        ame <- marginaleffects(mod, vcov = FALSE, predict_type = "probs") %>%
+               dplyr::group_by(group, term) %>%
+               dplyr::summarize(dydx = mean(dydx)) %>% #, std.error = mean(std.error)) %>%
+               dplyr::mutate(group = as.numeric(group)) %>%
+               dplyr::inner_join(stata, by = c("group", "term"))
     )))
     expect_equal(ame$dydx, ame$dydxstata, tolerance = 0.001)
     # expect_equal(ame$std.error, ame$std.errorstata, tolerance = 0.001)

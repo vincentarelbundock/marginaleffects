@@ -10,7 +10,7 @@ marginaleffects(
   variables = NULL,
   vcov = TRUE,
   numDeriv_method = "simple",
-  prediction_type = "response",
+  predict_type = "response",
   return_data = TRUE,
   ...
 )
@@ -35,7 +35,7 @@ calculates marginal effects for all terms in the model object.}
 indicating the method to use for the approximation. See
 \code{\link[numDeriv:grad]{numDeriv::grad()}} for details.}
 
-\item{prediction_type}{Type(s) of prediction as string or vector This can
+\item{predict_type}{Type(s) of prediction as string or vector This can
 differ based on the model type, but will typically be a string such as:
 "response", "link", "probs", or "zero".}
 

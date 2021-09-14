@@ -6,19 +6,19 @@
 \alias{get_predict.clm}
 \title{Get predicted values from a model object (internal function)}
 \usage{
-get_predict(model, newdata, prediction_type, ...)
+get_predict(model, newdata, predict_type, ...)
 
 \method{get_predict}{default}(
   model,
   newdata = insight::get_data(model),
-  prediction_type = "response",
+  predict_type = "response",
   ...
 )
 
 \method{get_predict}{clm}(
   model,
   newdata = insight::find_data(model),
-  prediction_type = "probs",
+  predict_type = "probs",
   ...
 )
 }
@@ -28,7 +28,7 @@ get_predict(model, newdata, prediction_type, ...)
 \item{newdata}{A dataset over which to compute marginal effects. \code{NULL} uses
 the original data used to fit the model.}
 
-\item{prediction_type}{Type(s) of prediction as string or vector This can
+\item{predict_type}{Type(s) of prediction as string or vector This can
 differ based on the model type, but will typically be a string such as:
 "response", "link", "probs", or "zero".}
 

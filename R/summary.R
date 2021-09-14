@@ -7,7 +7,7 @@ summary.marginaleffects <- function(object, ...) {
     out <- tidy(object)
     class(out) <- c("marginaleffects.summary", class(out))
     attr(out, "numDeriv_method") <- attr(object, "numDeriv_method")
-    attr(out, "prediction_type") <- attr(object, "prediction_type")
+    attr(out, "predict_type") <- attr(object, "predict_type")
     attr(out, "model_type") <- attr(object, "model_type")
     return(out)
 }
@@ -61,7 +61,7 @@ print.marginaleffects.summary <- function(x,
   print(out)
   cat("\n")
   cat("Model type: ", attr(x, "model_type"), "\n")
-  cat("Prediction type: ", attr(x, "prediction_type"), "\n")
+  cat("Prediction type: ", attr(x, "predict_type"), "\n")
 
   return(invisible(x))
 }

@@ -17,7 +17,7 @@
 #'   + Named square matrix: computes standard errors with a user-supplied variance-covariance matrix. This matrix must be square and have dimensions equal to the number of coefficients in `get_coef(model)`.
 #' @param newdata A dataset over which to compute marginal effects. `NULL` uses
 #'   the original data used to fit the model.
-#' @param prediction_type Type(s) of prediction as string or vector This can
+#' @param predict_type Type(s) of prediction as string or vector This can
 #' differ based on the model type, but will typically be a string such as:
 #' "response", "link", "probs", or "zero".
 #' @param numDeriv_method One of "simple", "Richardson", or "complex",
@@ -56,7 +56,7 @@ marginaleffects <- function(model,
                             variables = NULL, 
                             vcov = TRUE,
                             numDeriv_method = "simple",
-                            prediction_type = "response",
+                            predict_type = "response",
                             return_data = TRUE,
                             ...) {
 
@@ -77,12 +77,12 @@ marginaleffects <- function(model,
     variables <- sanity_variables(model, newdata, variables)
     vcov <- sanity_vcov(model, vcov)
     group_names <- sanity_group_names(model)
-    prediction_type <- sanity_prediction_type(model, prediction_type)
+    predict_type <- sanity_predict_type(model, predict_type)
     return_data <- sanity_return_data(return_data)
 
     # contrasts: logical and factor variables w/ emmeans
     cont <- list()
-    for (predt in prediction_type) {
+    for (predt in predict_type) {
         for (v in variables$cont) {
             tmp <- try(get_contrast(model, v, type = predt), silent = TRUE)
             if (inherits(tmp, "data.frame")) {
@@ -94,17 +94,17 @@ marginaleffects <- function(model,
     cont <- dplyr::bind_rows(cont)
 
     # add predictions to newdata
-    for (predt in prediction_type) {
+    for (predt in predict_type) {
         lab <- paste0("predicted_", predt)
         newdata[[lab]] <- get_predict(model = model,
                                       newdata = newdata,
-                                      prediction_type = predt,
+                                      predict_type = predt,
                                       ...)
     }
 
     # dydx: numeric variables w/ autodiff
     dydx <- list()
-    for (predt in prediction_type) {
+    for (predt in predict_type) {
         for (gn in group_names) {
             for (v in variables$dydx) {
                 tmp <- get_dydx_and_se(model = model, 
@@ -112,7 +112,7 @@ marginaleffects <- function(model,
                                        variable = v,
                                        vcov = vcov,
                                        group_name = gn,
-                                       prediction_type = predt,
+                                       predict_type = predt,
                                        numDeriv_method = numDeriv_method,
                                        ...)
                 if (length(group_names) > 1) {
@@ -164,7 +164,7 @@ marginaleffects <- function(model,
     }
     class(out) <- c("marginaleffects", class(out))
     attr(out, "contrasts") <- cont
-    attr(out, "prediction_type") <- prediction_type
+    attr(out, "predict_type") <- predict_type
     attr(out, "numDeriv_method") <- numDeriv_method
     attr(out, "model_type") <- class(model)[1]
     attr(out, "variables") <- variables

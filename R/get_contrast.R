@@ -6,9 +6,9 @@
 #' `emmeans::contrast` function.
 #' @keywords internal
 #' @export
-get_contrast <- function(model, variable, prediction_type = "response", ...) {
+get_contrast <- function(model, variable, predict_type = "response", ...) {
     assert_dependency("emmeans")
-    emm <- emmeans::emmeans(model, specs = variable, type = prediction_type)
+    emm <- emmeans::emmeans(model, specs = variable, type = predict_type)
     emm <- emmeans::regrid(emm)
     emm <- emmeans::contrast(emm, method = "revpairwise")
     out <- data.frame(summary(emm))

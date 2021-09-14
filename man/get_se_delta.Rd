@@ -14,7 +14,7 @@ get_se_delta(model, ...)
   fitfram = insight::get_data(model),
   vcov = stats::vcov(model),
   group_name = NULL,
-  prediction_type = "response",
+  predict_type = "response",
   numDeriv_method = "simple",
   ...
 )
@@ -25,7 +25,7 @@ get_se_delta(model, ...)
   fitfram = insight::find_data(model),
   vcov = NULL,
   group_name = NULL,
-  prediction_type = "probs",
+  predict_type = "probs",
   numDeriv_method = "simple",
   ...
 )
@@ -50,7 +50,7 @@ get_se_delta(model, ...)
 estimate. Groups are often used in models like multinomial logit where each
 level of the response variable is associated to its own set of coefficients.}
 
-\item{prediction_type}{Type(s) of prediction as string or vector This can
+\item{predict_type}{Type(s) of prediction as string or vector This can
 differ based on the model type, but will typically be a string such as:
 "response", "link", "probs", or "zero".}
 
