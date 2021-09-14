@@ -21,6 +21,8 @@ sanity_return_data <- function(return_data) {
 sanity_model <- function(model) {
     supported <- list("betareg",
                       "bife",
+                      "brglmFit",
+                      c("brnb", "negbin", "glm"),
                       "clm",
                       "coxph",
                       "fixest",
@@ -54,8 +56,14 @@ sanity_model <- function(model) {
         }
     }
     if (isFALSE(flag)) {
-        msg <- "Models of class %s are not supported. Supported model classes include: %s."
-        msg <- sprintf(msg, class(model)[1], paste(supported, collapse = ", "))
+        support <- paste(sort(unique(sapply(supported, function(x) x[1]))), collapse = ", ")
+        msg <- 
+'Models of class "%s" are not supported. 
+
+Supported model classes include: %s. 
+ 
+Please file a feature request on Github: https://github.com/vincentarelbundock/marginaleffects/issues' 
+        msg <- sprintf(msg, class(model)[1], support)
         stop(msg)
     }
 

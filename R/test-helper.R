@@ -38,7 +38,7 @@ expect_mfx <- function(object,
           dydx_na < 5 &&
           std.error_na < 5
   
-  expect(isTRUE(flag), msg)
+  testthat::expect(isTRUE(flag), msg)
 
   invisible(act$val)
 }

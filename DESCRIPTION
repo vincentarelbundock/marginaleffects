@@ -17,6 +17,8 @@ BugReports: https://github.com/vincentarelbundock/marginaleffects/issues
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 VignetteBuilder: knitr
+Config/testthat/edition: 3
+Config/testthat/parallel: true
 Depends:
     R (>= 3.5.0)
 Imports: 
@@ -27,10 +29,10 @@ Imports:
     insight,
     methods,
     numDeriv,
-    rlang
+    rlang,
+    testthat (>= 3.0.0)
 Suggests: 
     bench,
-    testthat (>= 3.0.0),
     ggplot2,
     knitr,
     margins,
@@ -41,6 +43,7 @@ Suggests:
     AER,
     betareg,
     bife,
+    brglm2,
     estimatr,
     fixest,
     gam,
@@ -61,7 +64,6 @@ Suggests:
     survival,
     truncreg,
     covr
-Config/testthat/edition: 3
 Collate: 
     'counterfactual_typical.R'
     'get_coef.R'
