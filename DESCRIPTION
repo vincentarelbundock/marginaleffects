@@ -53,6 +53,7 @@ Suggests:
     plm,
     pscl,
     rms,
+    robustbase,
     sandwich,
     speedglm,
     survey,
