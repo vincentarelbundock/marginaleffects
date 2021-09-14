@@ -8,4 +8,4 @@
 ^pkgdown$
 ^data-raw$
 ^codecov\.yml$
-^wip$
+^sandbox$
