@@ -22,6 +22,7 @@ sanity_model <- function(model) {
     supported <- list("betareg",
                       "bife",
                       "clm",
+                      "coxph",
                       "fixest",
                       c("Gam", "glm", "lm"),
                       c("geeglm", "gee", "glm"),

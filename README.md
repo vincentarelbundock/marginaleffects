@@ -130,6 +130,7 @@ allowed in the `predict` function.
 | speedglm::speedglm   | x               | x                    |                 |                   |
 | speedglm::speedlm    | x               | x                    |                 |                   |
 | survey::svyglm       | x               | x                    |                 | x                 |
+| survival::coxph      | x               | x                    |                 |                   |
 | truncreg::truncreg   | x               | x                    |                 |                   |
 
 ## Installation
@@ -463,12 +464,12 @@ mod <- lm(y ~ x + I(x^2), dat)
 marginaleffects(mod, newdata = typical(x = -2:2)) %>%
     mutate(truth = 1 + 4 * x) %>%
     select(dydx, truth)
-#>         dydx truth
-#> 1 -6.9970108    -7
-#> 2 -3.0000175    -3
-#> 3  0.9969759     1
-#> 4  4.9939692     5
-#> 5  8.9909626     9
+#>        dydx truth
+#> 1 -6.991235    -7
+#> 2 -2.995183    -3
+#> 3  1.000869     1
+#> 4  4.996921     5
+#> 5  8.992973     9
 ```
 
 We can also plot the result with the `plot_cme` function:
