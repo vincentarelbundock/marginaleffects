@@ -9,7 +9,7 @@
 #'   Five-Number Summaries.
 #' @param newdata A dataset over which to compute marginal effects. `NULL` uses
 #'   the original data used to fit the model.
-#' @param prediction_type Type(s) of prediction as string or vector This can
+#' @param predict_type Type(s) of prediction as string or vector This can
 #' differ based on the model type, but will typically be a string such as:
 #' "response", "link", "probs", or "zero".
 #' @param numDeriv_method One of "simple", "Richardson", or "complex",
@@ -25,7 +25,7 @@ marginalmeans <- function(model,
                           newdata = NULL, 
                           variables = NULL, 
                           numDeriv_method = "simple",
-                          prediction_type = "response",
+                          predict_type = "response",
                           return_data = TRUE,
                           ...) {
 
@@ -61,7 +61,7 @@ marginalmeans <- function(model,
 
     # sanity checks and pre-processing
     model <- sanity_model(model)
-    prediction_type <- sanity_prediction_type(model, prediction_type)
+    predict_type <- sanity_predict_type(model, predict_type)
     return_data <- sanity_return_data(return_data)
     
     # variables argument
@@ -84,7 +84,7 @@ marginalmeans <- function(model,
     newdata$rowid <- 1:nrow(newdata)
 
     # predictions
-    for (predt in prediction_type) {
+    for (predt in predict_type) {
         out_list <- list()
         tmp <- insight::get_predicted(model, 
                                       newdata = newdata,
@@ -125,7 +125,7 @@ marginalmeans <- function(model,
         attr(out, "glance") <- NULL
     }
     class(out) <- c("marginalmeans", class(out))
-    attr(out, "prediction_type") <- prediction_type
+    attr(out, "predict_type") <- predict_type
     attr(out, "numDeriv_method") <- numDeriv_method
     attr(out, "model_type") <- class(model)[1]
     attr(out, "variables") <- variables

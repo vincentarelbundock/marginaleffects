@@ -10,16 +10,16 @@ test_that("ordinal: vs `margins`", {
     res <- marginaleffects(mod, 
                            variables = "warm", 
                            vcov = FALSE,
-                           prediction_type = "prob")
+                           predict_type = "prob")
     mar <- suppressWarnings(margins(mod))
     expect_true(test_against_margins(res, mar, tol = .01))
     warning("low tolerance")
     expect_warning(marginaleffects(mod, 
                                    variables = "warm",
-                                   prediction_type = "prob"), 
+                                   predict_type = "prob"), 
                    regexp = "Variance.*supported")
     expect_warning(marginaleffects(mod, 
                                    vcov = FALSE,
                                    variables = "warm"),
-                   regexp = "prediction")
+                   regexp = "predict_type")
 })

@@ -3,14 +3,14 @@
 #' @export
 #' @keywords internal
 expect_mfx <- function(object, 
-                       prediction_type = "response",
+                       predict_type = "response",
                        n_unique = 10) {
 
   # Capture object and label
   act <- testthat::quasi_label(rlang::enquo(object), arg = "object")
 
   # Compute
-  mfx <- marginaleffects(object, prediction_type = prediction_type)
+  mfx <- marginaleffects(object, predict_type = predict_type)
   tid <- tidy(mfx)
 
   # Check

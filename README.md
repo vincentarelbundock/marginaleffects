@@ -96,7 +96,7 @@ I am *very* eager to add support for new models. Feel free to file a
 request on Github or – even better – submit some code.
 
 Warning: When using `marginaleffects` with different models, you will
-probably have to adjust the `prediction_type` argument. Refer to the
+probably have to adjust the `predict_type` argument. Refer to the
 documentation of your modeling package to see what `type` argument is
 allowed in the `predict` function.
 

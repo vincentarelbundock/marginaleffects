@@ -18,7 +18,7 @@ get_se_delta.default <- function(model,
                                  fitfram = insight::get_data(model), 
                                  vcov = stats::vcov(model),
                                  group_name = NULL,
-                                 prediction_type = "response",
+                                 predict_type = "response",
                                  numDeriv_method = "simple", 
                                  ...) {
 
@@ -32,7 +32,7 @@ get_se_delta.default <- function(model,
                       fitfram = fitfram,
                       variable = variable,
                       group_name = group_name,
-                      prediction_type = prediction_type,
+                      predict_type = predict_type,
                       numDeriv_method = numDeriv_method)
         return(g)
     }

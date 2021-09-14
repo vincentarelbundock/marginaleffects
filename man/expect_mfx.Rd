@@ -4,7 +4,7 @@
 \alias{expect_mfx}
 \title{internal testing function (no validity check)}
 \usage{
-expect_mfx(object, prediction_type = "response", n_unique = 10)
+expect_mfx(object, predict_type = "response", n_unique = 10)
 }
 \description{
 internal testing function (no validity check)

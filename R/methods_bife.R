@@ -4,11 +4,11 @@
 #' @export
 get_predict.bife <- function(model, 
                              newdata = insight::get_data(model), 
-                             prediction_type = "response", 
+                             predict_type = "response", 
                              ...) {
     pred <- stats::predict(model, 
                            X_new = newdata, 
-                           type = prediction_type)
+                           type = predict_type)
     return(pred)
 }
 

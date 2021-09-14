@@ -197,5 +197,5 @@ pigs.emm.s <- emmeans(pigs.rg, "source")
 
 
 marginaleffects(mod, newdata = typical(source = c("fish", "soy", "skim"), model = mod),
-                prediction_type = "response")
+                predict_type = "response")
 ```

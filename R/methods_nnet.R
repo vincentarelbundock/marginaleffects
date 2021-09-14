@@ -23,7 +23,7 @@ get_se_delta.multinom <- function(model,
                                   fitfram = insight::find_data(model), 
                                   vcov = NULL, 
                                   group_name = NULL,
-                                  prediction_type = "probs",
+                                  predict_type = "probs",
                                   numDeriv_method = "simple", 
                                   ...) {
 
@@ -34,7 +34,7 @@ get_se_delta.multinom <- function(model,
                           fitfram = fitfram, 
                           variable = variable, 
                           group_name = group_name,
-                          prediction_type = prediction_type,
+                          predict_type = predict_type,
                           numDeriv_method = numDeriv_method)
         return(g)
     }
