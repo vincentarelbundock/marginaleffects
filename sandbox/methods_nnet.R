@@ -31,11 +31,11 @@ get_se_delta.multinom <- function(model,
     inner <- function(x) {
         model_tmp <- set_coef(model_tmp, x)
         g <- get_dydx(model = model_tmp, 
-                          fitfram = fitfram, 
-                          variable = variable, 
-                          group_name = group_name,
-                          predict_type = predict_type,
-                          numDeriv_method = numDeriv_method)
+                      fitfram = fitfram, 
+                      variable = variable, 
+                      group_name = group_name,
+                      predict_type = predict_type,
+                      numDeriv_method = numDeriv_method)
         return(g)
     }
     J <- numDeriv::jacobian(func = inner, 

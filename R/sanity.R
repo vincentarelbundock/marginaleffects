@@ -23,7 +23,7 @@ sanity_model <- function(model) {
                       "bife",
                       "brglmFit",
                       c("brnb", "negbin", "glm"),
-                      "clm",
+                      # "clm",
                       "coxph",
                       "fixest",
                       c("Gam", "glm", "lm"),
@@ -45,7 +45,7 @@ sanity_model <- function(model) {
                       c("lrm", "rms", "glm"),
                       c("negbin", "glm", "lm"),
                       c("plm", "panelmodel"),
-                      "polr",
+                      # "polr",
                       "speedglm",
                       "speedlm",
                       c("tobit", "survreg"),
@@ -118,7 +118,7 @@ sanity_variables <- function(model, newdata, variables) {
         variables_list <- insight::find_variables(model)
         variables_list[["response"]] <- NULL
     } else {
-        variables_list <- list("user" = variables)
+        variables_list <- list("conditional" = variables)
     }
     variables <- unique(unlist(variables_list))
 
@@ -129,40 +129,7 @@ sanity_variables <- function(model, newdata, variables) {
                      paste(miss, collapse = ", ")))
     }
 
-
-    # clusters (before dydx, in case cluster is numeric)
-    if ("cluster" %in% names(variables_list)) {
-        variables_cluster <- variables_list[["cluster"]]
-        variables <- setdiff(variables, variables_cluster)
-    } else {
-        variables_cluster <- character()
-    }
-
-    # dydx variables
-    if (length(variables) > 0) {
-        idx <- sapply(variables, function(x) is.numeric(newdata[[x]]))
-        variables_dydx <- variables[idx]
-        variables <- setdiff(variables, variables_dydx)
-    } else {
-        variables_dydx <- character()
-    }
-
-    # contrast
-    if (length(variables) > 0) {
-        idx <- sapply(variables, function(x) 
-                      is.logical(newdata[[x]]) | is.factor(newdata[[x]]) | is.character(newdata[[x]]))
-        variables_contrast <- variables[idx]
-        variables <- setdiff(variables, variables_contrast)
-    } else {
-        variables_contrast <- character()
-    }
-
-    # output
-    out <- list("dydx" = variables_dydx, 
-                "contrast" = variables_contrast,
-                "cluster" = variables_cluster,
-                "other" = variables)
-    return(out)
+    return(variables_list)
 }
 
 

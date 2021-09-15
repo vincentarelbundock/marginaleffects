@@ -1,7 +1,6 @@
 skip_if_not_installed("betareg")
+skip_if_not_installed("margins")
 
-library("margins")
-library("betareg")
 library("dplyr", warn.conflicts = FALSE)
 
 test_that("betareg vs. margins", {
@@ -9,7 +8,7 @@ test_that("betareg vs. margins", {
     mod <- betareg::betareg(yield ~ batch + temp, data = GasolineYield)
     suppressWarnings({
         res <- marginaleffects(mod, variables = "temp")
-        mar <- data.frame(margins(mod, unit_ses = TRUE))
+        mar <- data.frame(margins::margins(mod, unit_ses = TRUE))
     })
     expect_true(test_against_margins(res, mar, tolerance = 0.1))
     warning("low tolerance")

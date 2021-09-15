@@ -81,7 +81,9 @@ marginalmeans <- function(model,
         newdata <- do.call("typical", args)
     }
 
-    newdata$rowid <- 1:nrow(newdata)
+    if (!"rowid" %in% colnames(newdata)) {
+        newdata$rowid <- 1:nrow(newdata)
+    }
 
     # predictions
     for (predt in predict_type) {
@@ -92,7 +94,6 @@ marginalmeans <- function(model,
         tmp <- as.data.frame(tmp)
         tmp <- insight::standardize_names(tmp, style = "broom")
         tmp$type <- predt
-        tmp$rowid <- 1:nrow(tmp)
         out_list[[predt]] <- tmp
     }
     out <- dplyr::bind_rows(out_list)

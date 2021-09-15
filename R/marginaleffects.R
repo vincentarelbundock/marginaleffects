@@ -80,65 +80,47 @@ marginaleffects <- function(model,
     predict_type <- sanity_predict_type(model, predict_type)
     return_data <- sanity_return_data(return_data)
 
-    # contrasts: logical and factor variables w/ emmeans
-    cont <- list()
-    for (predt in predict_type) {
-        for (v in variables$cont) {
-            tmp <- try(get_contrast(model, v, type = predt), silent = TRUE)
-            if (inherits(tmp, "data.frame")) {
-                tmp$type <- predt
-                cont <- c(cont, list(tmp))
-            }
-        }
-    }
-    cont <- dplyr::bind_rows(cont)
-
-    # add predictions to newdata
-    for (predt in predict_type) {
-        lab <- paste0("predicted_", predt)
-        newdata[[lab]] <- get_predict(model = model,
-                                      newdata = newdata,
-                                      predict_type = predt,
-                                      ...)
-    }
-
-    # dydx: numeric variables w/ autodiff
-    dydx <- list()
-    for (predt in predict_type) {
-        for (gn in group_names) {
-            for (v in variables$dydx) {
-                tmp <- get_dydx_and_se(model = model, 
-                                       fitfram = newdata,
-                                       variable = v,
-                                       vcov = vcov,
-                                       group_name = gn,
-                                       predict_type = predt,
-                                       numDeriv_method = numDeriv_method,
-                                       ...)
-                if (length(group_names) > 1) {
-                    tmp$group <- gn
-                }
-                tmp$term <- v
-                tmp$type <- predt
-                dydx <- c(dydx, list(tmp))
-            }
-        }
-    }
-    dydx <- dplyr::bind_rows(dydx)
-
-    # for merging later (do this before assigning to dydx)
+    # rowid is required for later merge
     if (!"rowid" %in% colnames(newdata)) {
         newdata$rowid <- 1:nrow(newdata)
     }
 
-    # output: return data only if there are numeric variables
-    out <- dydx
-    if (nrow(out) > 0) {  # no numeric variables
-        if (isTRUE(return_data) && nrow(out) > 0) {
-            out <- merge(out, newdata, by = "rowid")
-        }
-    }  else {
-        out <- newdata
+    # variables is a list, get_dydx_and_se() needs a vector
+    variables_vec <- unlist(variables[names(variables) %in% c("conditional")])
+
+    pred_list <- list()
+    # add predictions to newdata
+    for (predt in predict_type) {
+        tmp <- newdata
+        tmp$type <- predt
+        tmp$predicted <- get_predict(model = model,
+                                     newdata = newdata,
+                                     predict_type = predt,
+                                     ...)
+        pred_list[[predt]] <- tmp
+    }
+    pred <- do.call("rbind", pred_list)
+
+    # compute marginal effects and standard errors
+    out_list <- list()
+    for (predt in predict_type) {
+        out_list[[predt]] <- get_dydx_and_se(model = model, 
+                                             fitfram = newdata,
+                                             variables = variables_vec,
+                                             vcov = vcov,
+                                             group_name = gn,
+                                             predict_type = predt,
+                                             numDeriv_method = numDeriv_method,
+                                             ...)
+        out_list[[predt]]$type <- predt
+    }
+    out <- do.call("rbind", out_list)
+    attributes_backup <- attributes(out)
+
+
+    # merge newdata if requested and restore attributes
+    if (return_data) {
+        out <- merge(out, pred, by = c("rowid", "type"))
     }
 
     # clean columns
@@ -149,6 +131,17 @@ marginaleffects <- function(model,
     out <- out[, cols]
     if ("group" %in% colnames(out) && all(out$group == "main")) {
         out$group <- NULL
+    }
+
+    # sort rows
+    out <- out[order(out$type, out$term, out$rowid),]
+    row.names(out) <- NULL
+
+    # restore useful attributes lost in "clean columns" bloc
+    for (n in names(attributes_backup)) {
+        if (!n %in% names(attributes(out))) {
+            attr(out, n) <- attributes_backup[[n]]
+        }
     }
 
     # attach model info
@@ -163,11 +156,11 @@ marginaleffects <- function(model,
         attr(out, "glance") <- NULL
     }
     class(out) <- c("marginaleffects", class(out))
-    attr(out, "contrasts") <- cont
     attr(out, "predict_type") <- predict_type
     attr(out, "numDeriv_method") <- numDeriv_method
     attr(out, "model_type") <- class(model)[1]
     attr(out, "variables") <- variables
+
 
     return(out)
 }

@@ -22,20 +22,20 @@ test_that("polr vs. margins (dydx only)", {
 })
 
 
-test_that("polr vs. Stata", {
-    stata <- readRDS(test_path("stata/stata.rds"))[["MASS_polr_01"]]
-    dat <- read.csv(test_path("stata/data/MASS_polr_01.csv"))
-    mod <- MASS::polr(factor(y) ~ x1 + x2, data = dat)
-    void <- capture.output(suppressWarnings(suppressMessages(
-        ame <- marginaleffects(mod, vcov = FALSE, predict_type = "probs") %>%
-               dplyr::group_by(group, term) %>%
-               dplyr::summarize(dydx = mean(dydx)) %>% #, std.error = mean(std.error)) %>%
-               dplyr::mutate(group = as.numeric(group)) %>%
-               dplyr::inner_join(stata, by = c("group", "term"))
-    )))
-    expect_equal(ame$dydx, ame$dydxstata, tolerance = 0.001)
-    # expect_equal(ame$std.error, ame$std.errorstata, tolerance = 0.001)
-})
+# test_that("polr vs. Stata", {
+#     stata <- readRDS(test_path("stata/stata.rds"))[["MASS_polr_01"]]
+#     dat <- read.csv(test_path("stata/data/MASS_polr_01.csv"))
+#     mod <- MASS::polr(factor(y) ~ x1 + x2, data = dat)
+#     void <- capture.output(suppressWarnings(suppressMessages(
+#         ame <- marginaleffects(mod, vcov = FALSE, predict_type = "probs") %>%
+#                dplyr::group_by(group, term) %>%
+#                dplyr::summarize(dydx = mean(dydx)) %>% #, std.error = mean(std.error)) %>%
+#                dplyr::mutate(group = as.numeric(group)) %>%
+#                dplyr::inner_join(stata, by = c("group", "term"))
+#     )))
+#     expect_equal(ame$dydx, ame$dydxstata, tolerance = 0.001)
+#     # expect_equal(ame$std.error, ame$std.errorstata, tolerance = 0.001)
+# })
 
 
 test_that("glm.nb vs. margins", {

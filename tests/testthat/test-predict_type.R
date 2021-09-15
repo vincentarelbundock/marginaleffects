@@ -11,7 +11,7 @@ test_that("multiple prediction types", {
 test_that("predicted values are added to the data.frame", {
     mod <- glm(am ~ mpg * wt, data = mtcars, family = binomial)
     mfx <- marginaleffects(mod, predict_type = "response")
-    expect_true("predicted_response" %in% colnames(mfx))
+    expect_true("response" %in% mfx$type)
     mfx <- marginaleffects(mod, predict_type = c("response", "link"))
-    expect_true(all(c("predicted_response", "predicted_link") %in% colnames(mfx)))
+    expect_true(all(c("response", "link") %in% mfx$type))
 })

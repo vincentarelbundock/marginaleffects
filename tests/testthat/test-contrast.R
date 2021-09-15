@@ -4,7 +4,7 @@ test_that("simple contrasts: no validity check", {
     mod <- lm(mpg ~ hp + am + factor(cyl), data = dat)
     res <- tidy(marginaleffects(mod))
     expect_s3_class(res, "data.frame")
-    expect_equal(dim(res), c(5, 9))
+    expect_equal(dim(res), c(4, 8))
 })
 
 test_that("contrast as difference and CI make sense", {
@@ -18,5 +18,4 @@ test_that("contrast as difference and CI make sense", {
     reject_ci <- ti$conf.high < 0 | ti$conf.low > 0
     reject_p <- ti$p.value < 0.05
     expect_equal(reject_ci, reject_p)
-    expect_true("Gentoo - Chinstrap" %in% ti$contrast)
 })

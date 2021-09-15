@@ -18,7 +18,7 @@ get_dydx_and_se <- function (model, ...) {
 #' @rdname get_dydx_and_se
 #' @export
 get_dydx_and_se.default <- function(model, 
-                                    variable, 
+                                    variables, 
                                     fitfram = insight::get_data(model), 
                                     vcov = stats::vcov(model), 
                                     group_name = NULL,
@@ -26,44 +26,97 @@ get_dydx_and_se.default <- function(model,
                                     numDeriv_method = "simple", 
                                     ...) {
 
-    # marginal effects
-    g <- get_dydx(model = model,
-                  fitfram = fitfram,
-                  variable = variable,
-                  group_name = group_name,
-                  predict_type = predict_type,
-                  numDeriv_method = numDeriv_method,
-                  ...)
+    coefs <- get_coef(model)
 
-    out <- data.frame(rowid = 1:nrow(fitfram), 
-                      term = variable,
-                      dydx = g)
-    out$group <- group_name # could be NULL
-
-    # unit-level standard errors are slower to compute. When vcov=NULL, use a single typical dataset.
-    if (is.null(vcov)) {
-        fitfram <- typical(data = fitfram)
-        vcov <- try(get_vcov(model), silent = TRUE)
+    if (!is.null(vcov)) {
+        vcov <- vcov[names(coefs), names(coefs)]
     }
 
-    # special case: polr (TODO: generalize using a get_vcov.polr() method)
-    if (inherits(vcov, "matrix") &&
-        any(c("polr", "betareg") %in% class(model)) && 
-        !is.null(group_name)) {
-        vcov <- vcov[names(stats::coef(model)), names(stats::coef(model))]
+    get_one_variable <- function(v) {
+        if (is.factor(fitfram[[v]]) || is.logical(fitfram[[v]]) || is.character(fitfram[[v]])) {
+            dydx_fun <- get_dydx_categorical
+        } else {
+            dydx_fun <- get_dydx_continuous
+        }
+
+        # Marginal effects
+        g <- dydx_fun(model = model,
+                      fitfram = fitfram,
+                      variable = v,
+                      group_name = group_name,
+                      predict_type = predict_type,
+                      numDeriv_method = numDeriv_method,
+                      ...)
+
+        one_variable <- list()
+        one_variable[["g"]] <- g
+
+        # Standard errors
+        if (!is.null(vcov)) {
+            inner <- function(x) {
+                model_tmp <- set_coef(model, stats::setNames(x, names(coefs)))
+                g <- dydx_fun(model = model_tmp,
+                              fitfram = fitfram,
+                              variable = v,
+                              group_name = group_name,
+                              predict_type = predict_type,
+                              numDeriv_method = numDeriv_method)
+                return(g$dydx)
+            }
+            J <- numDeriv::jacobian(func = inner, 
+                                    x = coefs,
+                                    method = numDeriv_method)
+            colnames(J) <- names(get_coef(model))
+            J_mean <- stats::aggregate(J, by = list(g$term), mean)
+            row.names(J_mean) <- J_mean[[1]]
+            J_mean[[1]] <- NULL
+            one_variable[["J_mean"]] <- as.matrix(J_mean)
+            one_variable[["J"]] <- J
+        }
+        return(one_variable)
     }
 
-    se <- try(get_se_delta(model = model,
-                           fitfram = fitfram,
-                           variable = variable,
-                           vcov = vcov,
-                           group_name = group_name,
-                           predict_type = predict_type,
-                           numDeriv_method = numDeriv_method,
-                           ...),
-              silent = TRUE)
-    if (!inherits(se, "try-error")) {
-        out$std.error <- se
+    g_list <- list()
+    J_list <- list()
+    J_mean_list <- list()
+    for (v in variables) {
+        tmp <- try(get_one_variable(v), silent = TRUE)
+        if (!inherits(tmp, "try-error")) {
+            if ("g" %in% names(tmp)) {
+                g_list[[v]] <- tmp$g
+            }
+            if ("J" %in% names(tmp)) {
+                J_list[[v]] <- tmp$J
+                J_mean_list[[v]] <- tmp$J_mean
+            } else {
+                J_list[[v]] <- NULL
+                J_mean_list[[v]] <- NULL
+            }
+        }
+    }
+ 
+    out <- do.call("rbind", g_list)
+    row.names(out) <- NULL
+
+    if (!is.null(vcov)) {
+        # Keep row.names for J and J_mean matrices
+        J <- do.call("rbind", J_list)
+        J_mean <- do.call("rbind", J_mean_list)
+        attr(out, "J") <- J
+        attr(out, "J_mean") <- J_mean
+
+        # Unit-level standard errors are much slower to compute (are they, though?)
+        # Var(dydx) = J Var(beta) J'
+        # computing the full matrix is memory-expensive, and we only need the diagonal
+        # algebra trick: https://stackoverflow.com/a/42569902/342331
+        V <- colSums(t(J %*% vcov) * t(J))
+        out$std.error <- sqrt(V)
+
+        # Standard errors at the mean gradient (this is what `Stata` and `margins` report)
+        V <- colSums(t(J_mean %*% vcov) * t(J_mean))
+        tmp <- data.frame("term" = names(V), "std.error" = sqrt(V))
+        row.names(tmp) <- NULL
+        attr(out, "se_at_mean_gradient") <- tmp
     }
 
     return(out)

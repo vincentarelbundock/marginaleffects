@@ -1,7 +1,6 @@
 library("survival")
 
 test_that("coxph: no validity", {
-
     test1 <- list(time=c(4,3,1,1,2,2,3), 
                   status=c(1,1,1,0,1,1,0), 
                   x=c(0,2,1,1,1,0,0), 
@@ -19,5 +18,4 @@ test_that("coxph: no validity", {
     mod <- coxph(Surv(time, status) ~ ph.ecog + tt(age), data=lung,
                  tt=function(x,t,...) pspline(x + t/365.25))
     expect_mfx(mod, predict_type = "risk")
-
 })
