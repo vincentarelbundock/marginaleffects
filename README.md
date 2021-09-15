@@ -10,7 +10,7 @@ coverage](https://codecov.io/gh/vincentarelbundock/marginaleffects/branch/main/g
 [![R-CMD-check](https://github.com/vincentarelbundock/marginaleffects/workflows/R-CMD-check/badge.svg)](https://github.com/vincentarelbundock/marginaleffects/actions)
 <!-- badges: end -->
 
-This package is still experimental. *Use with caution\!*
+This package is still experimental. *Use with caution!*
 
 ## What?
 
@@ -59,26 +59,26 @@ package is (essentially) a clone of `margins`.
 
 So why did I write a clone?
 
-  - *Speed:* In one benchmark (see below), computing unit-level standard
+-   *Speed:* In one benchmark (see below), computing unit-level standard
     errors is over 400x faster with `marginaleffects` (1 minute vs. 150
     milliseconds).
-  - *Efficiency:* Smaller memory footprint (1.8GB vs 52MB in the same
+-   *Efficiency:* Smaller memory footprint (1.8GB vs 52MB in the same
     example).
-  - *Extensibility:* Adding support for new models is very easy, often
+-   *Extensibility:* Adding support for new models is very easy, often
     requiring less than 10 lines of new code. In the medium run, the
     goal is to add support for *several* more model types.
-  - `ggplot2` support for plotting (conditional) marginal effects.
-  - *Tidy:* The results produced by `marginaleffects` follow “tidy”
+-   `ggplot2` support for plotting (conditional) marginal effects.
+-   *Tidy:* The results produced by `marginaleffects` follow “tidy”
     principles. They are easy to process and program with.
-  - *User interface:* Slight changes to the user interface are intended
+-   *User interface:* Slight changes to the user interface are intended
     to improve the experience.
-  - *Active development*
+-   *Active development*
 
 Downsides of `marginaleffects` include:
 
-  - Weights and simultation-based inference are not (yet) supported.
-  - More dependencies.
-  - Newer package with a smaller (read: nonexistent) user base.
+-   Weights and simultation-based inference are not (yet) supported.
+-   More dependencies.
+-   Newer package with a smaller (read: nonexistent) user base.
 
 ## How?
 
@@ -100,41 +100,41 @@ probably have to adjust the `predict_type` argument. Refer to the
 documentation of your modeling package to see what `type` argument is
 allowed in the `predict` function.
 
-| Model                | Support: Effect | Support: Std. Errors | Validity: Stata | Validity: Margins |
-| :------------------- | :-------------- | :------------------- | :-------------- | :---------------- |
-| stats::lm            | x               | x                    | x               | x                 |
-| stats::glm           | x               | x                    | x               | x                 |
-| aer::ivreg           | x               | x                    | x               | x                 |
-| aer::tobit           | x               | x                    |                 |                   |
-| betareg::betareg     | x               | x                    | x               | x                 |
-| bife::bife           | x               | x                    |                 |                   |
-| brglm2::brglmFit     | x               | x                    |                 |                   |
-| brglm2::brnb         | x               | x                    |                 |                   |
-| estimatr::lm\_robust | x               | x                    |                 |                   |
-| fixest::feols        | x               | x                    |                 |                   |
-| fixest::feglm        | x               | x                    |                 |                   |
-| gam::gam             | x               | x                    |                 |                   |
-| geepack::geeglm      | x               | x                    |                 |                   |
-| glmx::glmx           | x               | x                    |                 |                   |
-| ivreg::ivreg         | x               | x                    | x               | x                 |
-| lme4::lmer           | x               | x                    |                 | dydx only         |
-| lme4::glmer          | x               | x                    |                 | dydx only         |
-| MASS::glm.nb         | x               | x                    |                 | x                 |
-| MASS::polr           | x               |                      | x               |                   |
-| MASS::rlm            | x               | x                    |                 |                   |
-| nlme::gls            | x               | x                    |                 |                   |
-| ordinal::clm         | x               |                      |                 | x                 |
-| plm::plm             | x               | x                    |                 |                   |
-| pscl::hurdle         | x               | x                    |                 |                   |
-| pscl::zeroinfl       | x               | x                    |                 |                   |
-| rms::lrm             | x               | x                    |                 |                   |
-| robustbase::glmrob   | x               | x                    |                 |                   |
-| robustbase::lmrob    | x               | x                    |                 |                   |
-| speedglm::speedglm   | x               | x                    |                 |                   |
-| speedglm::speedlm    | x               | x                    |                 |                   |
-| survey::svyglm       | x               | x                    |                 | x                 |
-| survival::coxph      | x               | x                    |                 |                   |
-| truncreg::truncreg   | x               | x                    |                 |                   |
+| Model               | Support: Effect | Support: Std. Errors | Validity: Stata | Validity: Margins |
+|:--------------------|:----------------|:---------------------|:----------------|:------------------|
+| stats::lm           | x               | x                    | x               | x                 |
+| stats::glm          | x               | x                    | x               | x                 |
+| aer::ivreg          | x               | x                    | x               | x                 |
+| aer::tobit          | x               | x                    |                 |                   |
+| betareg::betareg    | x               | x                    | x               | x                 |
+| bife::bife          | x               | x                    |                 |                   |
+| brglm2::brglmFit    | x               | x                    |                 |                   |
+| brglm2::brnb        | x               | x                    |                 |                   |
+| estimatr::lm_robust | x               | x                    |                 |                   |
+| fixest::feols       | x               | x                    |                 |                   |
+| fixest::feglm       | x               | x                    |                 |                   |
+| gam::gam            | x               | x                    |                 |                   |
+| geepack::geeglm     | x               | x                    |                 |                   |
+| glmx::glmx          | x               | x                    |                 |                   |
+| ivreg::ivreg        | x               | x                    | x               | x                 |
+| lme4::lmer          | x               | x                    |                 | dydx only         |
+| lme4::glmer         | x               | x                    |                 | dydx only         |
+| MASS::glm.nb        | x               | x                    |                 | x                 |
+| MASS::polr          | x               |                      | x               |                   |
+| MASS::rlm           | x               | x                    |                 |                   |
+| nlme::gls           | x               | x                    |                 |                   |
+| ordinal::clm        | x               |                      |                 | x                 |
+| plm::plm            | x               | x                    |                 |                   |
+| pscl::hurdle        | x               | x                    |                 |                   |
+| pscl::zeroinfl      | x               | x                    |                 |                   |
+| rms::lrm            | x               | x                    |                 |                   |
+| robustbase::glmrob  | x               | x                    |                 |                   |
+| robustbase::lmrob   | x               | x                    |                 |                   |
+| speedglm::speedglm  | x               | x                    |                 |                   |
+| speedglm::speedlm   | x               | x                    |                 |                   |
+| survey::svyglm      | x               | x                    |                 | x                 |
+| survival::coxph     | x               | x                    |                 |                   |
+| truncreg::truncreg  | x               | x                    |                 |                   |
 
 ## Installation
 
@@ -177,20 +177,20 @@ full results with functions like `head`, as you would with any other
 mfx <- marginaleffects(mod)
 
 head(mfx)
-#>   rowid     type              term        dydx   std.error predicted_response
-#> 1     1 response    bill_length_mm 0.017622745 0.007837288         0.05123266
-#> 2     1 response flipper_length_mm 0.006763748 0.001561740         0.05123266
-#> 3     2 response    bill_length_mm 0.035846649 0.011917159         0.11125087
-#> 4     2 response flipper_length_mm 0.013758244 0.002880123         0.11125087
-#> 5     3 response    bill_length_mm 0.084433436 0.021119186         0.36919834
-#> 6     3 response flipper_length_mm 0.032406447 0.008159318         0.36919834
-#>   large_penguin bill_length_mm flipper_length_mm species
-#> 1             0           39.1               181  Adelie
-#> 2             0           39.1               181  Adelie
-#> 3             0           39.5               186  Adelie
-#> 4             0           39.5               186  Adelie
-#> 5             0           40.3               195  Adelie
-#> 6             0           40.3               195  Adelie
+#>   rowid     type           term       dydx   std.error large_penguin
+#> 1     1 response bill_length_mm 0.01762275 0.007837288             0
+#> 2     2 response bill_length_mm 0.03584665 0.011917159             0
+#> 3     3 response bill_length_mm 0.08443344 0.021119181             0
+#> 4     4 response bill_length_mm 0.03471401 0.006506804             0
+#> 5     5 response bill_length_mm 0.05087500 0.013407802             0
+#> 6     6 response bill_length_mm 0.01650827 0.007252823             0
+#>   bill_length_mm flipper_length_mm species  predicted
+#> 1           39.1               181  Adelie 0.05123266
+#> 2           39.5               186  Adelie 0.11125087
+#> 3           40.3               195  Adelie 0.36919834
+#> 4           36.7               193  Adelie 0.10725326
+#> 5           39.3               190  Adelie 0.16882994
+#> 6           38.9               181  Adelie 0.04782069
 ```
 
 Notice that the results are presented in “tidy” long format: each row of
@@ -211,18 +211,16 @@ convenient:
 ``` r
 summary(mfx)
 #> Average marginal effects 
-#>       type              Term           Contrast   Effect Std. Error   z value
-#> 1 response    bill_length_mm                     0.02757    0.00849   3.24819
-#> 2 response flipper_length_mm                     0.01058    0.00332   3.18766
-#> 3 response           species Chinstrap - Adelie -0.80570    0.07713 -10.44590
-#> 4 response           species    Gentoo - Adelie  0.08359    0.11563   0.72294
-#> 5 response           species Gentoo - Chinstrap  0.88929    0.08534  10.42061
-#>     Pr(>|z|)    2.5 %   97.5 %
-#> 1  0.0011614  0.01093  0.04421
-#> 2  0.0014343  0.00408  0.01709
-#> 3 2.9754e-14 -0.95687 -0.65453
-#> 4  0.7498870 -0.14304  0.31023
-#> 5 3.1086e-14  0.72203  1.05656
+#>       type              Term   Effect Std. Error  z value   Pr(>|z|)    2.5 %
+#> 1 response    bill_length_mm  0.02757    0.00849  3.24819  0.0011614  0.01093
+#> 2 response flipper_length_mm  0.01058    0.00332  3.18766  0.0014343  0.00408
+#> 3 response  speciesChinstrap -0.41479    0.08196 -5.06070 4.1773e-07 -0.57543
+#> 4 response     speciesGentoo  0.06170    0.10811  0.57069  0.5682116 -0.15020
+#>     97.5 %
+#> 1  0.04421
+#> 2  0.01709
+#> 3 -0.25415
+#> 4  0.27359
 #> 
 #> Model type:  glm 
 #> Prediction type:  response
@@ -232,8 +230,7 @@ Note that since marginal effects are derivatives, they are only properly
 defined for continuous numeric variables. When the model also includes
 categorical regressors, the `summary` function will try to display
 relevant (regression-adjusted) contrasts between different categories,
-as shown above. This optional feature requires users to install the
-`emmeans` package.
+as shown above.
 
 You can also extract average marginal effects using `tidy` and `glance`
 methods which conform to the [`broom` package
@@ -241,18 +238,16 @@ specification](https://broom.tidymodels.org/):
 
 ``` r
 tidy(mfx)
-#>       type              term           contrast    estimate   std.error
-#> 1 response    bill_length_mm               <NA>  0.02756962 0.008487695
-#> 2 response flipper_length_mm               <NA>  0.01058151 0.003319518
-#> 3 response           species Chinstrap - Adelie -0.80569873 0.077130603
-#> 4 response           species    Gentoo - Adelie  0.08359420 0.115630668
-#> 5 response           species Gentoo - Chinstrap  0.88929293 0.085339832
-#>     statistic      p.value     conf.low   conf.high
-#> 1   3.2481872 1.161428e-03  0.010934045  0.04420520
-#> 2   3.1876636 1.434273e-03  0.004075371  0.01708764
-#> 3 -10.4459021 2.975398e-14 -0.956871933 -0.65452552
-#> 4   0.7229414 7.498870e-01 -0.143037746  0.31022614
-#> 5  10.4206079 3.108624e-14  0.722029929  1.05655592
+#>       type              term    estimate   std.error  statistic      p.value
+#> 1 response    bill_length_mm  0.02756962 0.008487695  3.2481871 1.161429e-03
+#> 2 response flipper_length_mm  0.01058151 0.003319517  3.1876645 1.434268e-03
+#> 3 response  speciesChinstrap -0.41479008 0.081963038 -5.0606967 4.177272e-07
+#> 4 response     speciesGentoo  0.06169819 0.108112065  0.5706874 5.682116e-01
+#>       conf.low   conf.high
+#> 1  0.010934044  0.04420520
+#> 2  0.004075373  0.01708764
+#> 3 -0.575434682 -0.25414548
+#> 4 -0.150197563  0.27359394
 
 glance(mfx)
 #>   null.deviance df.null    logLik      AIC      BIC deviance df.residual nobs
@@ -283,16 +278,20 @@ those (fictional) individuals:
 ``` r
 marginaleffects(mod, newdata = typical(flipper_length_mm = 180, 
                                        species = c("Adelie", "Gentoo")))
-#>   rowid     type              term       dydx   std.error predicted_response
-#> 1     1 response    bill_length_mm 0.06067504 0.033257106          0.2125242
-#> 2     1 response flipper_length_mm 0.02328764 0.005498309          0.2125242
-#> 3     2 response    bill_length_mm 0.08466334 0.040417468          0.3716454
-#> 4     2 response flipper_length_mm 0.03249469 0.008616513          0.3716454
-#>   bill_length_mm flipper_length_mm species
-#> 1       43.92193               180  Adelie
-#> 2       43.92193               180  Adelie
-#> 3       43.92193               180  Gentoo
-#> 4       43.92193               180  Gentoo
+#>   rowid     type              term       dydx   std.error bill_length_mm
+#> 1     1 response    bill_length_mm 0.06067504 0.033257111       43.92193
+#> 2     2 response    bill_length_mm 0.08466334 0.040417487       43.92193
+#> 3     1 response flipper_length_mm 0.02328764 0.005498320       43.92193
+#> 4     2 response flipper_length_mm 0.03249469 0.008616507       43.92193
+#> 5     1 response     speciesGentoo 0.15912111 0.303473386       43.92193
+#> 6     2 response     speciesGentoo 0.15912111 0.303473386       43.92193
+#>   flipper_length_mm species predicted
+#> 1               180  Adelie 0.2125242
+#> 2               180  Gentoo 0.3716454
+#> 3               180  Adelie 0.2125242
+#> 4               180  Gentoo 0.3716454
+#> 5               180  Adelie 0.2125242
+#> 6               180  Gentoo 0.3716454
 ```
 
 When variables are omitted from the `typical` call, they will
@@ -336,11 +335,13 @@ library(dplyr)
 marginaleffects(mod, newdata = nd) %>%
     group_by(term) %>%
     summarize(across(dydx:std.error, median))
-#> # A tibble: 2 × 3
-#>   term                  dydx std.error
-#>   <chr>                <dbl>     <dbl>
-#> 1 bill_length_mm    0.00161   0.00198 
-#> 2 flipper_length_mm 0.000619  0.000561
+#> # A tibble: 4 × 3
+#>   term                   dydx std.error
+#>   <chr>                 <dbl>     <dbl>
+#> 1 bill_length_mm     0.00161   0.00198 
+#> 2 flipper_length_mm  0.000619  0.000561
+#> 3 speciesChinstrap  -0.0572    0.0457  
+#> 4 speciesGentoo      0.0570    0.132
 ```
 
 ## Tables
@@ -353,8 +354,8 @@ library(modelsummary)
 
 # fit models and store them in a named list
 mod <- list(
-    "Logit" = glm(large_penguin ~ flipper_length_mm, data = dat, family = binomial),
-    "OLS" = lm(body_mass_g ~ flipper_length_mm + bill_length_mm, data = dat))
+    "Logit" = glm(large_penguin ~ flipper_length_mm + species, data = dat, family = binomial),
+    "OLS" = lm(body_mass_g ~ flipper_length_mm + bill_length_mm + species, data = dat))
 
 # apply the `marginaleffects` function to all the models using `lapply`
 mfx <- lapply(mod, marginaleffects)
@@ -363,50 +364,23 @@ mfx <- lapply(mod, marginaleffects)
 modelsummary(mfx)
 ```
 
-|                     |   Logit   |    OLS     |
-| :------------------ | :-------: | :--------: |
-| flipper\_length\_mm |   0.020   |   48.145   |
-|                     |  (0.003)  |  (2.011)   |
-| bill\_length\_mm    |           |   6.047    |
-|                     |           |  (5.180)   |
-| Num.Obs.            |    342    |    342     |
-| R2                  |           |   0.760    |
-| R2 Adj.             |           |   0.759    |
-| AIC                 |   222.2   |   5063.5   |
-| BIC                 |   229.9   |   5078.8   |
-| Log.Lik.            | \-109.111 | \-2527.741 |
-| F                   |           |  536.626   |
-
-You can also display models with contrasts using `modelsummary`’s
-`group` argument:
-
-``` r
-mod <- list(
-    lm(body_mass_g ~ flipper_length_mm + species, data = dat),
-    lm(body_mass_g ~ species, data = dat))
-
-mfx <- lapply(mod, marginaleffects)
-
-modelsummary(mfx, group = term + contrast ~ model)
-```
-
-|                     |                    |  Model 1   |  Model 2   |
-| :------------------ | :----------------- | :--------: | :--------: |
-| flipper\_length\_mm |                    |   40.705   |            |
-|                     |                    |  (3.068)   |            |
-| species             | Chinstrap - Adelie | \-206.510  |   32.426   |
-|                     |                    |  (57.731)  |  (67.512)  |
-|                     | Gentoo - Adelie    |  266.810   |  1375.354  |
-|                     |                    |  (95.264)  |  (56.148)  |
-|                     | Gentoo - Chinstrap |  473.320   |  1342.928  |
-|                     |                    |  (86.746)  |  (69.857)  |
-| Num.Obs.            |                    |    342     |    342     |
-| R2                  |                    |   0.783    |   0.670    |
-| R2 Adj.             |                    |   0.781    |   0.668    |
-| AIC                 |                    |   5031.5   |   5172.7   |
-| BIC                 |                    |   5050.7   |   5188.0   |
-| Log.Lik.            |                    | \-2510.762 | \-2582.337 |
-| F                   |                    |  405.693   |  343.626   |
+|                   |  Logit  |    OLS    |
+|:------------------|:-------:|:---------:|
+| flipper_length_mm |  0.016  |  27.429   |
+|                   | (0.004) |  (3.174)  |
+| speciesChinstrap  | -0.165  | -748.562  |
+|                   | (0.053) | (81.534)  |
+| speciesGentoo     |  0.244  |  90.435   |
+|                   | (0.161) | (88.647)  |
+| bill_length_mm    |         |  61.736   |
+|                   |         |  (7.126)  |
+| Num.Obs.          |   342   |    342    |
+| R2                |         |   0.822   |
+| R2 Adj.           |         |   0.820   |
+| AIC               |  199.0  |  4964.7   |
+| BIC               |  214.4  |  4987.8   |
+| Log.Lik.          | -95.506 | -2476.373 |
+| F                 |         |  389.713  |
 
 ## Plots (`ggplot2`)
 
@@ -426,7 +400,7 @@ mfx <- marginaleffects(mod)
 plot(mfx)
 ```
 
-<img src="man/figures/README-unnamed-chunk-16-1.png" width="60%" />
+<img src="man/figures/README-unnamed-chunk-15-1.png" width="60%" />
 
 The second is a `plot_cme` function to draw “Conditional Marginal
 Effects.” This is useful when a model includes interaction terms and we
@@ -439,26 +413,26 @@ mod <- lm(mpg ~ hp * wt + drat, data = mtcars)
 plot_cme(mod, effect = "hp", condition = "wt")
 ```
 
-<img src="man/figures/README-unnamed-chunk-17-1.png" width="60%" />
+<img src="man/figures/README-unnamed-chunk-16-1.png" width="60%" />
 
 ## Simple analytic example: Quadratic term
 
 Say you estimate a linear regression model with a quadratic term:
 
-\[Y = \beta_0 + \beta_1 X^2 + \varepsilon\]
+*Y* = *β*<sub>0</sub> + *β*<sub>1</sub>*X*<sup>2</sup> + *ε*
 
-and obtain estimates of \(\beta_0=1\) and \(\beta_1=2\). Taking the
-partial derivative with respect to \(X\) and plugging in our estimates
-gives us the marginal effect of \(X\) on \(Y\):
+and obtain estimates of *β*<sub>0</sub> = 1 and *β*<sub>1</sub> = 2.
+Taking the partial derivative with respect to *X* and plugging in our
+estimates gives us the marginal effect of *X* on *Y*:
 
-\[\partial Y / \partial X = \beta_0 + 2 \cdot \beta_1 X = 1 + 4X\]
+∂*Y*/∂*X* = *β*<sub>0</sub> + 2 ⋅ *β*<sub>1</sub>*X* = 1 + 4*X*
 
-This result suggests that the effect of a *change* in \(X\) on \(Y\)
-depends on the *level* of \(X\). When \(X\) is large and positive, an
-increase in \(X\) is associated to a large increase in \(Y\). When \(X\)
-is small and positive, an increase in \(X\) is associated to a small
-increase in \(Y\). When \(X\) is a large negative value, an increase in
-\(X\) is associated with a *decrease* in \(Y\).
+This result suggests that the effect of a *change* in *X* on *Y* depends
+on the *level* of *X*. When *X* is large and positive, an increase in
+*X* is associated to a large increase in *Y*. When *X* is small and
+positive, an increase in *X* is associated to a small increase in *Y*.
+When *X* is a large negative value, an increase in *X* is associated
+with a *decrease* in *Y*.
 
 `marginaleffects` arrives at the same conclusion in simultated data:
 
@@ -472,11 +446,11 @@ marginaleffects(mod, newdata = typical(x = -2:2)) %>%
     mutate(truth = 1 + 4 * x) %>%
     select(dydx, truth)
 #>        dydx truth
-#> 1 -7.017656    -7
-#> 2 -3.008645    -3
-#> 3  1.000367     1
-#> 4  5.009378     5
-#> 5  9.018389     9
+#> 1 -6.995362    -7
+#> 2 -2.997224    -3
+#> 3  1.000914     1
+#> 4  4.999052     5
+#> 5  8.997190     9
 ```
 
 We can also plot the result with the `plot_cme` function:
@@ -485,7 +459,7 @@ We can also plot the result with the `plot_cme` function:
 plot_cme(mod, effect = "x", condition = "x")
 ```
 
-<img src="man/figures/README-unnamed-chunk-19-1.png" width="60%" />
+<img src="man/figures/README-unnamed-chunk-18-1.png" width="60%" />
 
 ## Benchmarks
 
@@ -589,8 +563,8 @@ tests. Ideally, we would like to compare the results obtained by
 
 Add your new model class to the lists of supported models in:
 
-  - The `sanity_model` function of the `R/sanity.R` file.
-  - The supported models CSV table in `data-raw/supported_models.csv`.
+-   The `sanity_model` function of the `R/sanity.R` file.
+-   The supported models CSV table in `data-raw/supported_models.csv`.
     Then, run the `data-raw/supported_models.R` script to propagate your
     change throughout the package documentation.
-  - The “Suggests” list in the `DESCRIPTION` file.
+-   The “Suggests” list in the `DESCRIPTION` file.
