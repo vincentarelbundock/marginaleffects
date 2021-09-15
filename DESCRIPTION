@@ -68,7 +68,6 @@ Suggests:
 Collate: 
     'counterfactual_typical.R'
     'get_coef.R'
-    'get_contrast.R'
     'get_dydx_and_se.R'
     'get_dydx_categorical.R'
     'get_dydx_continuous.R'
