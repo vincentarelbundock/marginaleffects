@@ -26,20 +26,29 @@ get_se_delta.default <- function(model,
     coefs <- get_coef(model)
     vcov <- vcov[names(coefs), names(coefs)]
 
+    if (is.factor(fitfram[[variable]]) || is.logical(fitfram[[variable]])) {
+        dydx_fun <- get_dydx_categorical
+    } else {
+        print("good")
+        dydx_fun <- get_dydx_continuous
+    }
+
+    # Jacobian
     inner <- function(x) {
         model_tmp <- set_coef(model_tmp, stats::setNames(x, names(coefs)))
-        g <- get_dydx(model = model_tmp,
+        g <- dydx_fun(model = model_tmp,
                       fitfram = fitfram,
                       variable = variable,
                       group_name = group_name,
                       predict_type = predict_type,
                       numDeriv_method = numDeriv_method)
-        return(g)
+        return(g$dydx)
     }
     J <- numDeriv::jacobian(func = inner, 
                             x = coefs,
                             method = numDeriv_method)
 
+    # Standard error
     # Var(dydx) = J Var(beta) J'
     # computing the full matrix is memory-expensive, and we only need the diagonal
     # algebra trick: https://stackoverflow.com/a/42569902/342331

@@ -23,7 +23,7 @@ test_that("bug: emmeans contrast rename in binomial", {
     x <- marginaleffects(x)
     x <- tidy(x)
     expect_s3_class(x, "data.frame") 
-    expect_equal(nrow(x), 4)
+    expect_equal(nrow(x), 3)
 })
 
 
@@ -37,22 +37,22 @@ test_that("tidy: with and without contrasts", {
 
     # logical only
     x <- tidy(marginaleffects(lm(mpg ~ am, tmp)))
-    expect_equal(dim(x), c(1, 9))
+    expect_equal(dim(x), c(1, 8))
 
     # factor only
     x <- tidy(marginaleffects(lm(mpg ~ factor(gear), tmp)))
-    expect_equal(dim(x), c(3, 9))
+    expect_equal(dim(x), c(2, 8))
 
     # combinations
     x <- tidy(marginaleffects(lm(mpg ~ hp + am, tmp)))
-    expect_equal(dim(x), c(2, 9))
+    expect_equal(dim(x), c(2, 8))
 
     x <- tidy(marginaleffects(lm(mpg ~ hp + factor(gear), tmp)))
-    expect_equal(dim(x), c(4, 9))
+    expect_equal(dim(x), c(3, 8))
 
     x <- tidy(marginaleffects(lm(mpg ~ am + factor(gear), tmp)))
-    expect_equal(dim(x), c(4, 9))
+    expect_equal(dim(x), c(3, 8))
 
     x <- tidy(marginaleffects(lm(mpg ~ hp + am + factor(gear), tmp)))
-    expect_equal(dim(x), c(5, 9))
+    expect_equal(dim(x), c(4, 8))
 })

@@ -9,7 +9,7 @@ get_dydx_and_se(model, ...)
 
 \method{get_dydx_and_se}{default}(
   model,
-  variable,
+  variables,
   fitfram = insight::get_data(model),
   vcov = stats::vcov(model),
   group_name = NULL,
@@ -23,7 +23,8 @@ get_dydx_and_se(model, ...)
 
 \item{...}{Additional arguments are pushed forward to \code{predict()}.}
 
-\item{variable}{A string to identify the variable whose marginal effect to compute.}
+\item{variables}{Variables to consider (character vector). \code{NULL}
+calculates marginal effects for all terms in the model object.}
 
 \item{fitfram}{A data.frame over which to compute marginal effects.}
 
@@ -45,6 +46,8 @@ differ based on the model type, but will typically be a string such as:
 \item{numDeriv_method}{One of "simple", "Richardson", or "complex",
 indicating the method to use for the approximation. See
 \code{\link[numDeriv:grad]{numDeriv::grad()}} for details.}
+
+\item{variable}{A string to identify the variable whose marginal effect to compute.}
 }
 \value{
 A data.frame with term names, group names, marginal effects, and
