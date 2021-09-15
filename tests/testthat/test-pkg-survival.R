@@ -6,7 +6,7 @@ test_that("coxph: no validity", {
                   x=c(0,2,1,1,1,0,0), 
                   sex=c(0,0,0,0,1,1,1)) 
     mod <- coxph(Surv(time, status) ~ x + strata(sex), test1) 
-    expect_mfx(mod, predict_type = "risk", n_unique = 5)
+    expect_mfx(mod, predict_type = "risk", n_unique = 4)
 
     test2 <- list(start=c(1,2,5,2,1,7,3,4,8,8), 
                   stop=c(2,3,6,7,8,9,9,9,14,17), 

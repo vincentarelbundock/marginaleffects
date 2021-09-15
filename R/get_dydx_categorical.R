@@ -19,43 +19,64 @@ get_dydx_categorical.default <- function(model,
                                          predict_type = "response",
                                          ...) {
 
-    args <- list(model = model)
-    if (is.factor(fitfram[[variable]])) {
-        args[[variable]] <- levels(fitfram[[variable]])
-    } else if (is.logical(fitfram[[variable]])) {
-        args[[variable]] <- c(FALSE, TRUE)
-    } else if (is.character(fitfram[[variable]])) {
-        args[[variable]] <- unique(fitfram[[variable]])
-    } else {
-        stop(sprintf('"%s" is not a factor, logical, or character.', variable))
+    # Create counterfactual datasets with different factor values and compare the predictions
+    if (!"rowid" %in% colnames(fitfram)) {
+        fitfram$rowid <- 1:nrow(fitfram)
+    }
+    baseline <- fitfram
+
+    if (is.logical(baseline[[variable]])) {
+        baseline[[variable]] <- FALSE
+        baseline_prediction <- get_predict(model, newdatat = baseline, predict_type = predict_type)
+        baseline[[variable]] <- TRUE
+        baseline$predicted <- get_predict(model = model, newdata = baseline, predict_type = predict_type) - baseline_prediction
+        baseline$term <- paste0(variable, baseline[[variable]])
+        pred <- baseline[, c("rowid", "term", "predicted")]
     }
 
-    # TODO: This is certainly inefficient. Just create two near-identical datasets and compare the predictions instead of doing all this sorting.
-    pred <- do.call("counterfactual", args)
-    pred$predicted <- get_predict(model = model, newdata = pred, predict_type = predict_type)
-    colnames(pred)[match(variable, colnames(pred))] <- "variable"
-    pred <- pred[order(pred$rowid, pred$variable), ]
-    pred <- dplyr::group_by(pred, rowid)
-    pred <- dplyr::mutate(pred, dydx = predicted - predicted[1])
-    pred <- dplyr::slice(pred, -1)
-    pred <- dplyr::select(pred, rowid, variable, dydx)
-    pred <- dplyr::ungroup(pred)
-    pred$variable <- as.character(pred$variable)
-    pred <- as.data.frame(pred)
+    if (is.factor(baseline[[variable]])) {
+        pred_list <- list()
+        baseline[[variable]] <- factor(levels(baseline[[variable]])[1], levels = levels(baseline[[variable]]))
+        baseline_prediction <- get_predict(model, newdata = baseline, predict_type = predict_type)
+        for (i in 2:length(levels(baseline[[variable]]))) {
+            baseline[[variable]] <- factor(levels(baseline[[variable]])[i], levels = levels(baseline[[variable]]))
+            baseline$predicted <- get_predict(model = model, newdata = baseline, predict_type = predict_type) - baseline_prediction
+            pred_list[[i]] <- baseline[, c("rowid", variable, "predicted")]
+        }
+        pred <- do.call("rbind", pred_list)
 
-    # two possible label formats for factor level coefficients: factor(cyl)4 vs. cyl4
-    lab_fmt1 <- sprintf("factor(%s)%s", variable, args[[variable]][2:length(args[[variable]])])
-    lab_fmt2 <- sprintf("%s%s", variable, args[[variable]][2:length(args[[variable]])])
-    if (all(lab_fmt1 %in% names(get_coef(model)))) {
-        pred$variable <- sprintf("factor(%s)%s", variable, pred$variable)
-    } else if (all(lab_fmt2 %in% names(get_coef(model)))) {
-        pred$variable <- sprintf("%s%s", variable, pred$variable)
-    } else {
-        return(NULL)
-        # stop(sprintf("Could not identify the coefficients that match the levels of variable %s.", variable)) 
+        # two possible label formats for factor level coefficients: factor(cyl)4 vs. cyl4
+        levs <- levels(fitfram[[variable]])
+        levs <- levs[2:length(levs)]
+        lab_fmt1 <- sprintf("factor(%s)%s", variable, levs)
+        lab_fmt2 <- sprintf("%s%s", variable, levs)
+        if (all(lab_fmt1 %in% names(get_coef(model)))) {
+            pred$term <- sprintf("factor(%s)%s", variable, pred[[variable]])
+        } else if (all(lab_fmt2 %in% names(get_coef(model)))) {
+            pred$term <- sprintf("%s%s", variable, pred[[variable]])
+        } else {
+            pred$term <- pred[[variable]]
+        }
+        pred <- pred[, c("rowid", "term", "predicted")]
     }
 
-    colnames(pred)[match("variable", colnames(pred))] <- "term"
+    if (is.character(baseline[[variable]])) {
+        pred_list <- list()
+        levs <- unique(baseline[[variable]])
+        baseline[[variable]] <- levs[1]
+        baseline_prediction <- get_predict(model, newdata = baseline, predict_type = predict_type)
+        for (i in 2:length(levs)) {
+            baseline[[variable]] <- levs[i]
+            baseline$predicted <- get_predict(model = model, newdata = baseline, predict_type = predict_type) - baseline_prediction
+            baseline$term <- sprintf("%s%s", variable, baseline[[variable]])
+            pred_list[[i]] <- baseline[, c("rowid", "term", "predicted")]
+        }
+        pred <- do.call("rbind", pred_list)
+    }
+
+    # clean
+    colnames(pred) <- c("rowid", "term", "dydx")
+    row.names(pred) <- NULL
 
     return(pred)
 }

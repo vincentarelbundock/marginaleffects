@@ -36,11 +36,13 @@ test_that("tidy: with and without contrasts", {
     expect_equal(dim(x), c(1, 8))
 
     # logical only
-    x <- tidy(marginaleffects(lm(mpg ~ am, tmp)))
+    model <- lm(mpg ~ am, tmp)
+    x <- tidy(marginaleffects(model))
     expect_equal(dim(x), c(1, 8))
 
     # factor only
-    x <- tidy(marginaleffects(lm(mpg ~ factor(gear), tmp)))
+    model <- lm(mpg ~ factor(gear), tmp)
+    x <- tidy(marginaleffects(model))
     expect_equal(dim(x), c(2, 8))
 
     # combinations
