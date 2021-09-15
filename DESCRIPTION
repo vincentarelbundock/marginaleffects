@@ -24,7 +24,6 @@ Depends:
 Imports: 
     checkmate,
     dplyr,
-    emmeans (>= 1.6.3),
     generics,
     insight,
     methods,
@@ -33,6 +32,7 @@ Imports:
     testthat (>= 3.0.0)
 Suggests: 
     bench,
+    emmeans,
     ggplot2,
     knitr,
     margins,
