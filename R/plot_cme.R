@@ -62,7 +62,7 @@ plot_cme <- function(model,
         p <- ggplot2::ggplot(datplot, ggplot2::aes(x = condition1, y = dydx, ymin = conf.low, ymax = conf.high)) +
              ggplot2::geom_ribbon(alpha = .1) +
              ggplot2::geom_line() + 
-             ggplot2::labs(x = condition1, y = sprintf("Marginal effect of %s", condition))
+             ggplot2::labs(x = condition1, y = sprintf("Marginal effect of %s", effect))
     } else {
         if ("group" %in% colnames(datplot)) {
             p <- ggplot2::ggplot(datplot, ggplot2::aes(y = term, x = estimate, color = group))
@@ -71,7 +71,7 @@ plot_cme <- function(model,
         }
         p <- p +
              ggplot2::geom_point() +
-             ggplot2::labs(x = condition1, y = sprintf("Average marginal effect %s", condition))
+             ggplot2::labs(x = condition1, y = sprintf("Average marginal effect of %s", effect))
     }
 
     if ("group" %in% colnames(datplot)) {
