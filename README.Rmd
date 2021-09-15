@@ -184,26 +184,14 @@ library(modelsummary)
 
 # fit models and store them in a named list
 mod <- list(
-    "Logit" = glm(large_penguin ~ flipper_length_mm, data = dat, family = binomial),
-    "OLS" = lm(body_mass_g ~ flipper_length_mm + bill_length_mm, data = dat))
+    "Logit" = glm(large_penguin ~ flipper_length_mm + species, data = dat, family = binomial),
+    "OLS" = lm(body_mass_g ~ flipper_length_mm + bill_length_mm + species, data = dat))
 
 # apply the `marginaleffects` function to all the models using `lapply`
 mfx <- lapply(mod, marginaleffects)
 
 # build a table
 modelsummary(mfx)
-```
-
-You can also display models with contrasts using `modelsummary`'s `group` argument:
-
-```{r, warning=FALSE}
-mod <- list(
-    lm(body_mass_g ~ flipper_length_mm + species, data = dat),
-    lm(body_mass_g ~ species, data = dat))
-
-mfx <- lapply(mod, marginaleffects)
-
-modelsummary(mfx, group = term + contrast ~ model)
 ```
 
 ## Plots (`ggplot2`)
