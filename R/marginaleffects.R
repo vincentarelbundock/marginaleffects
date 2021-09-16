@@ -103,6 +103,7 @@ marginaleffects <- function(model,
 
     # compute marginal effects and standard errors
     out_list <- list()
+    se_list <- list()
     for (predt in predict_type) {
         out_list[[predt]] <- get_dydx_and_se(model = model, 
                                              fitfram = newdata,
@@ -112,11 +113,14 @@ marginaleffects <- function(model,
                                              predict_type = predt,
                                              numDeriv_method = numDeriv_method,
                                              ...)
+        se_list[[predt]] <- attr(out_list[[predt]], "se_at_mean_gradient")
+        se_list[[predt]]$type <- predt
         out_list[[predt]]$type <- predt
     }
     out <- do.call("rbind", out_list)
     attributes_backup <- attributes(out)
-
+    se <- do.call("rbind", se_list)
+    row.names(se) <- NULL
 
     # merge newdata if requested and restore attributes
     if (return_data) {
@@ -160,7 +164,7 @@ marginaleffects <- function(model,
     attr(out, "numDeriv_method") <- numDeriv_method
     attr(out, "model_type") <- class(model)[1]
     attr(out, "variables") <- variables
-
+    attr(out, "se_at_mean_gradient") <- se
 
     return(out)
 }

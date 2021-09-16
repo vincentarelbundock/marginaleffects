@@ -37,37 +37,34 @@ tidy.marginaleffects <- function(x,
     }
 
 
-    # dydx averages
-    # empty initial mfx data.frame means there were no numeric variables in the model
+    # dydx averages 
+    # empty initial mfx data.frame means there were no numeric variables in the
+    # model
     if ("term" %in% colnames(x)) {
-        dydx <- x[, colnames(x) %in% c("type", "group", "term", "dydx", "std.error")]
+        cols <- c("type", "group", "term")
+        cols <- intersect(cols, colnames(x))
+        cols <- paste(cols, collapse = " + ")
+        f <- as.formula(sprintf("dydx ~ %s", cols))
+        dydx <- aggregate(f, data = x, FUN = mean) |> head()
+        dydx <- merge(dydx, attr(x, "se_at_mean_gradient"))
         colnames(dydx)[match("dydx", colnames(dydx))] <- "estimate"
-        dydx <- dplyr::group_by(dydx, dplyr::across(dplyr::matches("type|group|term")))
-        dydx <- dplyr::summarize(dydx, dplyr::across(dplyr::matches("estimate|std.error"), mean, na.rm = TRUE))
     } else {
         # avoids namespace conflict with `margins`
         dydx <- data.frame()
     }
 
-
     # dydx statistics (emmeans calculates those for us)
     if ("term" %in% colnames(dydx)) {
-        if (!"statistic" %in% colnames(dydx)) dydx$statistic <- dydx$estimate / dydx$std.error
-        if (!"p.value" %in% colnames(dydx)) dydx$p.value <- 2 * (1 - stats::pnorm(abs(dydx$statistic)))
+        if (!"statistic" %in% colnames(dydx)) {
+            dydx$statistic <- dydx$estimate / dydx$std.error
+        }
+        if (!"p.value" %in% colnames(dydx)) {
+            dydx$p.value <- 2 * (1 - stats::pnorm(abs(dydx$statistic)))
+        }
     }
 
-    # contrasts
-    cont <- attr(x, "contrasts")
-    if (nrow(dydx) > 0 && !is.null(cont)) {
-        out <- dplyr::bind_rows(dydx, attr(x, "contrasts"))
-    } else if (nrow(dydx) > 0) {
-        out <- dydx
-    } else if (!is.null(cont)) {
-        out <- cont
-    } else {
-        stop("tidy.marginaleffects could not extract marginal effects or contrasts from this object. Please file a bug report with a minimal reproducible example on Github.")
-    }
-        
+    out <- dydx
+
     # confidence intervals
     if ("std.error" %in% colnames(out)) {
         if (isTRUE(conf.int) && !"conf.low" %in% colnames(out)) {
