@@ -96,7 +96,7 @@ marginalmeans <- function(model,
         tmp$type <- predt
         out_list[[predt]] <- tmp
     }
-    out <- dplyr::bind_rows(out_list)
+    out <- do.call("rbind", out_list)
 
     # return data
     if (isTRUE(return_data)) {

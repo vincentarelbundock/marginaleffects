@@ -23,15 +23,13 @@ Depends:
     R (>= 3.5.0)
 Imports: 
     checkmate,
-    dplyr,
     generics,
     insight,
     methods,
-    numDeriv,
-    rlang,
-    testthat (>= 3.0.0)
+    numDeriv
 Suggests: 
     bench,
+    dplyr,
     emmeans,
     ggplot2,
     knitr,
@@ -39,6 +37,7 @@ Suggests:
     modelsummary,
     patchwork,
     rmarkdown,
+    testthat (>= 3.0.0),
     vdiffr,
     AER,
     betareg,
@@ -91,6 +90,4 @@ Collate:
     'sanity.R'
     'summary.R'
     'supported_models.R'
-    'test-helper.R'
-    'test_against_margins.R'
     'tidy.R'
