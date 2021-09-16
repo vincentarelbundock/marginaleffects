@@ -17,23 +17,20 @@ This package is still experimental. *Use with caution\!*
 The `marginaleffects` package allows `R` users to compute and plot three
 principal quantities of interest for a *wide* variety of models:
 
-  - [*Marginal Effect* (Vignette)](articles/mfx.html)
-      - A partial derivative (slope) of the regression/prediction
-        equation with respect to a regressor of interest.
-  - [*Marginal Mean* (Vignette)](articles/marginalmeans.html)
+  - [*Marginal Effect*
+    (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/mfx.html)
+      - A partial derivative (slope) of the regression equation with
+        respect to a regressor of interest.
+  - [*Marginal Mean*
+    (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html)
       - Response predicted by a model for some combination of the
         regressors’ values (a.k.a. “reference grid”), typically their
         means or factor levels.
-  - [*Contrast* (Vignette)](articles/contrasts.html)
+  - [*Contrast*
+    (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)
       - The difference between two Marginal Means, calculated for
         meanginfully different regressor values (e.g., College graduates
         vs. Others).
-
-In scientific practice, the “Marginal Effect” falls in the same toolbox
-as the “Contrast.” Both try to answer a counterfactual question: What
-would happen to \(y\) if \(x\) were different? They allow us to model
-the “effect” of a change/difference in the regressor \(x\) on the
-response \(y\).\[1\]
 
 ## Why?
 
@@ -48,10 +45,9 @@ you.
 
 Many `R` packages advertise their ability to compute “marginal effects.”
 However, most of them do *not* actually compute marginal effects *as
-defined above* (the term is ambiguously defined in the statistical
-literature and used differently across fields). Instead, they compute
-related quantities such as “Estimated Marginal Means” or “Differences in
-Predicted Probabilities.” The rare packages that actually compute
+defined above*. Instead, they compute fitted values for different
+predictor values (i.e., “Marginal Means”), or differences in fitted
+values (i.e., “contrasts”). The rare packages that actually compute
 marginal effects are typically limited in the model types they support,
 and in the range of transformations they allow (interactions,
 polynomials, etc.).
@@ -60,13 +56,15 @@ The main package in the `R` ecosystem to compute marginal effects is
 [the fantastic, trailblazing, and powerful
 `margins`](https://cran.r-project.org/web/packages/margins/index.html)
 by [Thomas J. Leeper.](https://thomasleeper.com/) The `marginaleffects`
-package is (essentially) a clone of `margins`.
+package is (essentially) a clone of Leeper’s `margins` and `prediction`
+packages.
 
 So why did I write a clone?
 
-  - *Speed:* In one benchmark (see below), computing unit-level standard
-    errors is over 400x faster with `marginaleffects` (1 minute vs. 150
-    milliseconds).
+  - *Speed:* [In one
+    benchmark,](https://vincentarelbundock.github.io/marginaleffects/articles/benchmark.html)
+    computing unit-level standard errors is over 400x faster with
+    `marginaleffects` (minutes vs. milliseconds).
   - *Efficiency:* Smaller memory footprint (1.8GB vs 52MB in the same
     example).
   - *Extensibility:* Adding support for new models is very easy, often
@@ -75,8 +73,10 @@ So why did I write a clone?
   - `ggplot2` support for plotting (conditional) marginal effects.
   - *Tidy:* The results produced by `marginaleffects` follow “tidy”
     principles. They are easy to process and program with.
-  - *User interface:* Slight changes to the user interface are intended
-    to improve the experience.
+  - *User interface:* Related functions are incorporated in a simple,
+    unified, and well-documented interface.
+  - *Safe:* User input is checked extensively before computation. When
+    needed, functions fail gracefully with informative error messages.
   - *Active development*
 
 Downsides of `marginaleffects` include:
@@ -205,6 +205,3 @@ the original dataset gets a unique `rowid` value, each unit-level
 marginal effect appears on a distinct row, and metadata appears neatly
 in separate columns. This makes it easy to operate on the results
 programmatically.
-
-1.  The term “effect” is itself tricky. To be clear, this vignette does
-    *not* use the word “effect” to imply “causality”.

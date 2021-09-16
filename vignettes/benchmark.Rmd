@@ -1,4 +1,17 @@
-```{r, warnings = FALSE, eval = TRUE, results = FALSE}
+---
+title: "Benchmarks"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Benchmarks}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+This image was updated on 2021-09-16. "TRUE" means that both functions calculate unit-specific standard errors. Note that the scale in the right panel goes from milliseconds to minutes.
+
+![](https://user-images.githubusercontent.com/987057/133677041-d1e7e4a0-81cb-41a8-9704-5d3fd7e46fa2.png)
+
+```{r, warnings = FALSE, eval = FALSE, results = FALSE}
 library(bench)
 library(ggplot2)
 library(margins)

@@ -94,10 +94,10 @@ plot_cmm <- function(model,
                                                ymin = conf.low, 
                                                ymax = conf.high))
     if (isTRUE(conf.int) && "conf.low" %in% colnames(datplot)) {
-         p <- p + ggplot2::geom_ribbon(aes(fill = condition2), alpha = .1)
+         p <- p + ggplot2::geom_ribbon(ggplot2::aes(fill = condition2), alpha = .1)
     }
 
-    p <- p + ggplot2::geom_line(aes(color = condition2, linetype = condition3)) + 
+    p <- p + ggplot2::geom_line(ggplot2::aes(color = condition2, linetype = condition3)) + 
              ggplot2::labs(x = condition1, 
                            y = sprintf("Marginal mean of %s", resp),
                            color = condition2,
