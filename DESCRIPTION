@@ -36,6 +36,7 @@ Suggests:
     margins,
     modelsummary,
     patchwork,
+    rlang,
     rmarkdown,
     testthat (>= 3.0.0),
     vdiffr,
