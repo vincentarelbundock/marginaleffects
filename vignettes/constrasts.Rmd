@@ -2,7 +2,7 @@
 title: "Contrasts" 
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Definitions: Marginal Effects, Estimated Marginal Means, Conditional Probabilities, and Contrasts}
+  %\VignetteIndexEntry{Contrasts}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
