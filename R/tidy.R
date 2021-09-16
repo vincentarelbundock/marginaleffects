@@ -30,13 +30,6 @@ tidy.marginaleffects <- function(x,
                                  conf.level = 0.95,
                                  ...) {
 
-    if (length(attr(x, "contrasts")) > 1) {
-        if (isFALSE(check_dependency("emmeans"))) {
-            warning("The model includes logical and/or factor variables. You can install the `emmeans` package to compute contrasts.")
-        }
-    }
-
-
     # dydx averages 
     # empty initial mfx data.frame means there were no numeric variables in the
     # model
