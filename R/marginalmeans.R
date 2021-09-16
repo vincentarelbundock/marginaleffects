@@ -12,26 +12,22 @@
 #' @param predict_type Type(s) of prediction as string or vector This can
 #' differ based on the model type, but will typically be a string such as:
 #' "response", "link", "probs", or "zero".
-#' @param numDeriv_method One of "simple", "Richardson", or "complex",
-#'   indicating the method to use for the approximation. See
-#'   [numDeriv::grad()] for details.
-#' @param return_data boolean If `TRUE`, the original data used to fit the
-#'   model is attached to the output. `FALSE` will objects which take up less
-#'   space in memory.
 #' @param ... Additional arguments are pushed forward to `predict()`.
 #' @export
 #' @details
 marginalmeans <- function(model, 
                           newdata = NULL, 
                           variables = NULL, 
-                          numDeriv_method = "simple",
                           predict_type = "response",
-                          return_data = TRUE,
                           ...) {
 
+    # sanity checks and pre-processing
+    predict_type <- sanity_predict_type(model, predict_type)
+    # return_data <- sanity_return_data(return_data)
 
-    
-  
+    ## do not check this because `insight` supports more models than `marginaleffects`
+    # model <- sanity_model(model)
+
     # order of the first few paragraphs is important
     # if `newdata` is a call to `typical()` or `counterfactual()`, insert `model`
     scall <- substitute(newdata)
@@ -43,64 +39,79 @@ marginalmeans <- function(model,
         }
     }
 
-    ########################################
-    #  TODO: Remove this when implemented  #
-    ########################################
-
-    if (!is.null(newdata)) {
-        stop("The `newdata` argument of `marginalmeans` is not yet implemented.")
-    }
-
-    if (is.null(newdata) && is.null(variables)) {
-        stop("Please supply a value for one of the `variables` or `newdata` arguments in the `marginalmeans` function.")
-    }
-
+    # check before inferring `newdata`
     if (!is.null(variables) && !is.null(newdata)) {
         stop("The `variables` and `newdata` arguments cannot be used simultaneously.")
-    }
-
-    # sanity checks and pre-processing
-    model <- sanity_model(model)
-    predict_type <- sanity_predict_type(model, predict_type)
-    return_data <- sanity_return_data(return_data)
-    
-    # variables argument
-    if (!is.null(newdata)) {
+    } else if (is.null(newdata) && is.null(variables)) {
+        newdata <- typical(model = model)
+    } else if (!is.null(variables)) {
+        # get new data if it doesn't exist
         newdata <- sanity_newdata(model, newdata)
         variables <- sanity_variables(model, newdata, variables)
-    } else {
-        newdata <- sanity_newdata(model, newdata)
-        variables <- sanity_variables(model, newdata, variables)
+        variables <- unique(unlist(variables))
         args <- list("model" = model)
-        for (v in variables$contrast) {
-            args[[v]] <- unique(newdata[[v]])
-        }
-        for (v in variables$dydx) {
-            args[[v]] <- stats::fivenum(newdata[[v]])
+        for (v in variables) {
+            if (is.numeric(newdata[[v]])) {
+                args[[v]] <- stats::fivenum(newdata[[v]])
+            } else if (is.factor(newdata[[v]]) || is.character(newdata[[v]]) || is.logical(newdata[[v]])) {
+                args[[v]] <- unique(newdata[[v]])
+            }
         }
         newdata <- do.call("typical", args)
+    } else if (!is.null(newdata)) {
+        newdata <- sanity_newdata(model, newdata)
+        variables <- sanity_variables(model, newdata, variables)
     }
 
+    # TODO: remove this and add version requirement to DESCRIPTION
+    # do not forget 2nd block below
+    # insight::get_predicted breaks when there are missing factor levels in `newdata`.
+    keep_levels <- list()
+    for (v in colnames(newdata)) {
+        if (is.factor(newdata[[v]])) { 
+            plug <- data.frame(unique(factor(levels(newdata[[v]]), levels = levels(newdata[[v]]))))
+            colnames(plug) <- v
+            keep_levels[[v]] <- newdata[[v]]
+            newdata[[v]] <- NULL
+            newdata <- merge(newdata, plug, all = TRUE)
+        } else if (is.logical(newdata[[v]])) {
+            plug <- data.frame(c(FALSE, TRUE))
+            colnames(plug) <- v
+            keep_levels[[v]] <- newdata[[v]]
+            newdata[[v]] <- NULL
+            newdata <- merge(newdata, plug, all = TRUE)
+        } 
+    }
+
+    # for merging later
     if (!"rowid" %in% colnames(newdata)) {
         newdata$rowid <- 1:nrow(newdata)
     }
 
     # predictions
+    out_list <- list()
     for (predt in predict_type) {
-        out_list <- list()
         tmp <- insight::get_predicted(model, 
                                       newdata = newdata,
-                                      predict = predt)
+                                      type = predt)
         tmp <- as.data.frame(tmp)
         tmp <- insight::standardize_names(tmp, style = "broom")
         tmp$type <- predt
+        tmp$rowid <- 1:nrow(tmp)
         out_list[[predt]] <- tmp
     }
     out <- do.call("rbind", out_list)
 
     # return data
-    if (isTRUE(return_data)) {
-        out <- merge(out, newdata, by = "rowid")
+    out <- merge(out, newdata, by = "rowid")
+
+    # rowid does not make sense here because the grid is made up
+    out$rowid <- NULL
+
+    # TODO: remove this and add version requirement to DESCRIPTION
+    for (v in names(keep_levels)) {
+        idx <- out[[v]] %in% as.character(keep_levels[[v]])
+        out <- out[idx, , drop = FALSE]
     }
 
     # clean columns
@@ -113,6 +124,7 @@ marginalmeans <- function(model,
     if ("group" %in% colnames(out) && all(out$group == "main")) {
         out$group <- NULL
     }
+    row.names(out) <- NULL
 
     # attach model info
     if (isTRUE(check_dependency("modelsummary"))) {
@@ -127,7 +139,6 @@ marginalmeans <- function(model,
     }
     class(out) <- c("marginalmeans", class(out))
     attr(out, "predict_type") <- predict_type
-    attr(out, "numDeriv_method") <- numDeriv_method
     attr(out, "model_type") <- class(model)[1]
     attr(out, "variables") <- variables
 

@@ -8,9 +8,7 @@ marginalmeans(
   model,
   newdata = NULL,
   variables = NULL,
-  numDeriv_method = "simple",
   predict_type = "response",
-  return_data = TRUE,
   ...
 )
 }
@@ -25,17 +23,9 @@ combinations of each of these variables. Factor levels are considered at
 each of their levels. Numeric variables variables are considered at Tukey's
 Five-Number Summaries.}
 
-\item{numDeriv_method}{One of "simple", "Richardson", or "complex",
-indicating the method to use for the approximation. See
-\code{\link[numDeriv:grad]{numDeriv::grad()}} for details.}
-
 \item{predict_type}{Type(s) of prediction as string or vector This can
 differ based on the model type, but will typically be a string such as:
 "response", "link", "probs", or "zero".}
-
-\item{return_data}{boolean If \code{TRUE}, the original data used to fit the
-model is attached to the output. \code{FALSE} will objects which take up less
-space in memory.}
 
 \item{...}{Additional arguments are pushed forward to \code{predict()}.}
 }
