@@ -33,6 +33,7 @@ Suggests:
     emmeans,
     ggplot2,
     ggbeeswarm,
+    kableExtra,
     knitr,
     margins,
     modelsummary,
@@ -89,6 +90,7 @@ Collate:
     'package.R'
     'plot.R'
     'plot_cme.R'
+    'plot_cmm.R'
     'sanity.R'
     'summary.R'
     'supported_models.R'
