@@ -41,6 +41,7 @@ Suggests:
     rlang,
     rmarkdown,
     testthat (>= 3.0.0),
+    tidyverse,
     vdiffr,
     AER,
     betareg,
