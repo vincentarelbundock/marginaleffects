@@ -44,8 +44,8 @@ tidy.marginaleffects <- function(x,
         cols <- c("type", "group", "term")
         cols <- intersect(cols, colnames(x))
         cols <- paste(cols, collapse = " + ")
-        f <- as.formula(sprintf("dydx ~ %s", cols))
-        dydx <- aggregate(f, data = x, FUN = mean) |> head()
+        f <- stats::as.formula(sprintf("dydx ~ %s", cols))
+        dydx <- stats::aggregate(f, data = x, FUN = mean)
         dydx <- merge(dydx, attr(x, "se_at_mean_gradient"))
         colnames(dydx)[match("dydx", colnames(dydx))] <- "estimate"
     } else {
