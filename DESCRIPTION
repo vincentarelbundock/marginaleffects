@@ -75,7 +75,6 @@ Collate:
     'get_dydx_categorical.R'
     'get_dydx_continuous.R'
     'get_predict.R'
-    'get_se_delta.R'
     'get_vcov.R'
     'marginaleffects.R'
     'marginalmeans.R'
