@@ -1,0 +1,46 @@
+---
+title: "Contrasts" 
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Definitions: Marginal Effects, Estimated Marginal Means, Conditional Probabilities, and Contrasts}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  fig.width = 6,
+  fig.asp = .4,
+  warning = FALSE,
+  message = FALSE,
+  comment = "#>"
+)
+
+library(marginaleffects)
+library(patchwork)
+library(ggplot2)
+
+theme_set(theme_minimal())
+```
+
+In the context of this package, a "Contrast" is defined as:
+
+> The difference between two EMMs, calculated for meanginfully different regressor values (e.g., College graduates vs. Others).
+
+# Contrasts between EMMs
+
+```{r, eval = FALSE}
+mod <- lm(log(conc) ~ source + factor(percent), data = pigs)
+
+mod <- emmeans(pigs.rg, "source")
+
+
+pigs.lm1 <- lm(log(conc) ~ source + factor(percent), data = pigs)
+pigs.rg <- ref_grid(pigs.lm1)
+pigs.emm.s <- emmeans(pigs.rg, "source")
+
+
+marginaleffects(mod, newdata = typical(source = c("fish", "soy", "skim"), model = mod),
+                predict_type = "response")
+```
