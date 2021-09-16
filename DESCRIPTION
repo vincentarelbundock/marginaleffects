@@ -32,6 +32,7 @@ Suggests:
     dplyr,
     emmeans,
     ggplot2,
+    ggbeeswarm,
     knitr,
     margins,
     modelsummary,

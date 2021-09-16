@@ -1,8 +1,8 @@
 ---
-title: "Terminology" 
+title: "Marginal Effects" 
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Definitions: Marginal Effects, Estimated Marginal Means, Conditional Probabilities, and Contrasts}
+  %\VignetteIndexEntry{Marginal Effects}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -24,23 +24,19 @@ library(ggplot2)
 theme_set(theme_minimal())
 ```
 
-The terminology around marginal effects is very confusing (to me, at least). The term is used inconsistently in the statistical literature and across fields. This vignette defines the terms used for different quantities *in the context of this package* .
+The terminology around marginal effects can be inconsistent across literatures and fields. In the context of this package, the three main quantities of interest are defined as follows:
 
-TLDR:
+A "marginal effect" is a measure of the association between a change in a regressor, and a change in the response variable. More formally, [the excellent `margins` vignette](https://cran.r-project.org/web/packages/margins/index.html) defines the concept as follows:
 
-* _Marginal effect:_ A partial derivative (slope) of the regression/prediction equation with respect to a regressor of interest.
-* _Estimated Marginal Mean (EMM):_ Reponse predicted by a model for some combination of the regressors' values, typically their means or factor levels. 
-* _Contrast in EMMs_: The difference between two EMMs, calculated for meanginfully different regressor values (e.g., College graduates vs. Others).
-
-In scientific practice, the "Marginal Effect" falls in the same toolbox as the "Contrast in EMMs." Both try to answer a counterfactual question: What would happen to $y$ if $x$ were different? They allow us to model the "effect" of a change/difference in the regressor $x$ on the response $y$.^[The term "effect" is itself very tricky. I actually don't like it much in this context. To be clear, this vignette does *not* use the word "effect" to imply "causality".] 
-
-# Marginal effects
-
-A "marginal effect" is defined as:
-
-> A partial derivative of the regression equation with respect to a regressor of interest.
+> Marginal effects are partial derivatives of the regression equation with respect to each variable in the model for each unit in the data.
 
 Put differently, the marginal effect measures the association between a change in a regressor $x$, and a change in the response $y$. Put differently, differently, the marginal effect is the slope of the prediction function, measured at a specific value of the regressor $x$.
+
+Marginal effects are extremely useful, because they are intuitive and easy to interpret. They are often the main quantity of interest in an empirical analysis. 
+
+In scientific practice, the "Marginal Effect" falls in the same toolbox as the ["Contrast."](articles/contrast.html) Both try to answer a counterfactual question: What would happen to $y$ if $x$ were different? They allow us to model the "effect" of a change/difference in the regressor $x$ on the response $y$.^[The term "effect" is itself tricky. To be clear, this vignette does *not* use the word "effect" to imply "causality".] 
+
+## Example
 
 Consider this quadratic function:
 
@@ -90,7 +86,11 @@ ggplot(nd, aes(x, predicted_response)) +
       ylim(c(-7, 0.5))
 ```
 
-A marginal effect is the slope of this response function at a certain value of $x$. The next graph adds three tangent lines, highlighting the slopes of the response function for three values of $x$: 
+A marginal effect is the slope of this response function at a certain value of $x$. The next plot adds three tangent lines, highlighting the slopes of the response function for three values of $x$. The slopes of these tangents tell us three things:
+
+1. When $x<0$, the slope is positive: an increase in $x$ is associated with an increase in $y$: The marginal effect is positive.
+2. When $x=0$, the slope is null: a (small) change in $x$ is associated with no change in $y$. The marginal effect is null.
+3. When $x>0$, the slope is negative: an increase in $x$ is associated with a decrease in $y$. The marginal effect is negative.
 
 ```{r, echo=FALSE}
 p1 <- ggplot(nd, aes(x, predicted_response)) + 
@@ -106,12 +106,6 @@ p1 <- ggplot(nd, aes(x, predicted_response)) +
       annotate("point", x = 2, y = -4, colour = "orange")
 p1
 ```
-
-The slopes of these tangents tell us three things:
-
-1. When $x$ is negative, the slope is positive: an increase in $x$ is associated with an increase in $y$: The marginal effect is positive.
-2. When $x=0$, the slope is null: a (small) change in $x$ is associated with no change in $y$. The marginal effect is null.
-3. When $x>0$, the slope is negative: an increase in $x$ is associated with a decrease in $y$. The marginal effect is negative.
 
 The marginal effect is an interesting quantity, because our scientific questions are often expressed in terms of changes, and not just levels: If $x$ increases, does $y$ increase, stay unchanged, or decrease? The answer to this question is a marginal effect.
 

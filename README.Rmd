@@ -23,13 +23,13 @@ This package is still experimental. *Use with caution!*
 
 ## What?
 
-The `marginaleffects` package allows `R` users to compute and plot marginal effects for a *wide* variety of models. 
+The `marginaleffects` package allows `R` users to compute and plot three principal quantities of interest for a *wide* variety of models. The terminology around these can be inconsistent across literatures and fields. In the context of this package, the three main quantities of interest are defined as follows:
 
-A "marginal effect" is a measure of the association between a change in a regressor, and a change in the response variable. More formally, [the excellent `margins` vignette](https://cran.r-project.org/web/packages/margins/index.html) defines the concept as follows:
+* _Marginal Effect:_ A partial derivative (slope) of the regression/prediction equation with respect to a regressor of interest.
+* _Marginal Mean:_ Response predicted by a model for some combination of the regressors' values, typically their means or factor levels. 
+* _Contrast: The difference between two Marginal Means, calculated for meanginfully different regressor values (e.g., College graduates vs. Others).
 
-> Marginal effects are partial derivatives of the regression equation with respect to each variable in the model for each unit in the data.
-
-Marginal effects are extremely useful, because they are intuitive and easy to interpret. They are often the main quantity of interest in an empirical analysis. 
+In scientific practice, the "Marginal Effect" falls in the same toolbox as the "Contrast." Both try to answer a counterfactual question: What would happen to $y$ if $x$ were different? They allow us to model the "effect" of a change/difference in the regressor $x$ on the response $y$.^[The term "effect" is itself tricky. To be clear, this vignette does *not* use the word "effect" to imply "causality".] 
 
 ## Why?
 
@@ -59,7 +59,7 @@ Downsides of `marginaleffects` include:
 
 ## How?
 
-By using [the `numDeriv` package](https://cran.r-project.org/web/packages/numDeriv/index.html) to compute gradients and jacobians. That's it. That's the secret sauce.
+By using [the `numDeriv` package](https://cran.r-project.org/web/packages/numDeriv/index.html) to compute gradients and jacobians, and [the `insight` package](https://easystats.github.io/insight/) to extract information from model objects. That's it. That's the secret sauce.
 
 ## Supported models
 
