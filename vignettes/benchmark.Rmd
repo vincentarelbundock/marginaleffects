@@ -42,7 +42,7 @@ results <- bench::press(
 )
 ```
 
-```{r}
+```{r, eval = FALSE}
 results$pkg = as.character(results$expression)
 ggplot(results, aes(N, median, linetype = pkg)) +
     geom_line() +

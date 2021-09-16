@@ -24,6 +24,10 @@ library(ggplot2)
 theme_set(theme_minimal())
 ```
 
+The `marginaleffects` package includes limited support to compute contrasts. Users who require more powerful features are encouraged to consider alternative packages such as [emmeans](https://cran.r-project.org/web/packages/emmeans/index.html), [modelbased](https://github.com/easystats/modelbased), or [ggeffects.](https://strengejacke.github.io/ggeffects/index.html)
+
+In the [marginal effects](articles/mfx.html) vignette, we introduced that quantity as a partial derivative. As a result, they are only properly defined for continuous variables. To interpret the effect of categorical variables, we turn to *contrasts* between [Marginal Means.](articles/marginalmeans.html)
+
 In the context of this package, a "Contrast" is defined as:
 
 > The difference between two EMMs, calculated for meanginfully different regressor values (e.g., College graduates vs. Others).

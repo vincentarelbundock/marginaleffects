@@ -24,9 +24,9 @@ library(ggplot2)
 theme_set(theme_minimal())
 ```
 
-The terminology around marginal effects can be inconsistent across literatures and fields. In the context of this package, the three main quantities of interest are defined as follows:
+# Definition
 
-A "marginal effect" is a measure of the association between a change in a regressor, and a change in the response variable. More formally, [the excellent `margins` vignette](https://cran.r-project.org/web/packages/margins/index.html) defines the concept as follows:
+A "marginal effect" (MFX) is a measure of the association between a change in a regressor, and a change in the response variable. More formally, [the excellent `margins` vignette](https://cran.r-project.org/web/packages/margins/index.html) defines the concept as follows:
 
 > Marginal effects are partial derivatives of the regression equation with respect to each variable in the model for each unit in the data.
 
@@ -36,9 +36,7 @@ Marginal effects are extremely useful, because they are intuitive and easy to in
 
 In scientific practice, the "Marginal Effect" falls in the same toolbox as the ["Contrast."](articles/contrast.html) Both try to answer a counterfactual question: What would happen to $y$ if $x$ were different? They allow us to model the "effect" of a change/difference in the regressor $x$ on the response $y$.^[The term "effect" is itself tricky. To be clear, this vignette does *not* use the word "effect" to imply "causality".] 
 
-## Example
-
-Consider this quadratic function:
+To illustrate the concept, consider this quadratic function:
 
 $$y = -x^2$$
 
@@ -46,7 +44,7 @@ From the definition above, we know that the marginal effect is the partial deriv
 
 $$\frac{\partial y}{\partial x} = -2x$$
 
-To get intuition about how to interpret this quantity, consider the "true" response of $y$ to $x$. It looks like this:
+To get intuition about how to interpret this quantity, consider the response of $y$ to $x$. It looks like this:
 
 ```{r, echo=FALSE}
 x <- seq(-4, 4, .01)
@@ -54,37 +52,12 @@ y <- -x^2
 dat <- data.frame(x, y)
 ggplot(dat, aes(x, y)) + 
     geom_line() +
-    labs(y = "True response") +
+    labs(y = "Response") +
     xlim(c(-4, 4)) +
     ylim(c(-7, 0.5))
 ```
 
 When $x$ increases, $y$ starts to increase. But then, as $x$ increases further, $y$ creeps back down in negative territory.
-
-In practice, $y$ is generated with some error, so we won't know exactly what the response function is, but we can estimate it. For example, here we simulate some data and estimate a linear regression model:
-
-```{r}
-N <- 1e5
-x <- runif(N, -4, 4)
-e <- rnorm(N)
-y <- -x^2 + e
-dat <- data.frame(y, x)
-
-mod <- lm(y ~ x + I(x^2))
-```
-
-We can then use the `predict` function to plot the "estimated mean" or the "predicted" $y$, for different values of $x$:
-
-```{r}
-nd <- data.frame(x = seq(-4, 4, .01))
-nd$predicted_response <- predict(mod, newdata = nd)
-
-ggplot(nd, aes(x, predicted_response)) + 
-      geom_line() + 
-      labs(y = "Predicted response") +
-      xlim(c(-4, 4)) +
-      ylim(c(-7, 0.5))
-```
 
 A marginal effect is the slope of this response function at a certain value of $x$. The next plot adds three tangent lines, highlighting the slopes of the response function for three values of $x$. The slopes of these tangents tell us three things:
 
@@ -93,10 +66,10 @@ A marginal effect is the slope of this response function at a certain value of $
 3. When $x>0$, the slope is negative: an increase in $x$ is associated with a decrease in $y$. The marginal effect is negative.
 
 ```{r, echo=FALSE}
-p1 <- ggplot(nd, aes(x, predicted_response)) + 
+p1 <- ggplot(dat, aes(x, y)) + 
       xlim(c(-4, 4)) +
       ylim(c(-7, 0.5)) +
-      labs(y = "Predicted response") +
+      labs(y = "Response") +
       geom_abline(slope = 4, intercept = 4, color = "orange", linetype = "dashed") +
       geom_abline(slope = 0, intercept = 0, color = "orange", linetype = "dashed") +
       geom_abline(slope = -4, intercept = 4, color = "orange", linetype = "dashed") +
@@ -107,89 +80,219 @@ p1 <- ggplot(nd, aes(x, predicted_response)) +
 p1
 ```
 
-The marginal effect is an interesting quantity, because our scientific questions are often expressed in terms of changes, and not just levels: If $x$ increases, does $y$ increase, stay unchanged, or decrease? The answer to this question is a marginal effect.
+Below, we show how to reach the same conclusions in an estimation context, with simulated data and the `marginaleffects` function.
 
-Marginal effects have several drawbacks, but I will only mention two. First, since they are derivatives, they are only properly defined for continuous variables. To interpret the effect of categorical variables, we turn to *contrasts* between Estimated Marginal Means (see the next section). 
+# `marginaleffects` function
 
-Second, marginal effects can be quite difficult to compute manually, especially when the regression function is non-linear, or includes transformations like polynomials. Who wants to stop their interactive data analysis to take derivatives by hand?! And how do we compute the standard error of the derivative? `modelsummary` tries to make this process a bit easier by using automatic differentiation to compute marginal effects and standard errors.
+The marginal effect is a *unit-level* measure of association between changes in a regressor and changes in the response. Except in the simplest linear models, the value of the marginal effect will be different from individual to individual, because it will depend on the values of the other covariates for each individual. 
 
-For example, to calculate the marginal effect of $x$ on $y$ pour three "typical" values of $x$, we call:
+The `marginaleffects` function thus produces distinct estimates of the marginal effect for each row of the data used to fit the model. The output of `marginaleffects` is a simple `data.frame`, which can be inspected with all the usual `R` commands. 
+
+To show this, we load the library, download the [Palmer Penguins](https://allisonhorst.github.io/palmerpenguins/) data from the [`Rdatasets` archive](https://vincentarelbundock.github.io/Rdatasets/articles/data.html), and estimate a GLM model:
 
 ```{r}
 library(marginaleffects)
 
-marginaleffects(mod, newdata = typical(x = c(-2, 0, 2)))
+dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv")
+dat$large_penguin <- ifelse(dat$body_mass_g > median(dat$body_mass_g, na.rm = TRUE), 1, 0)
+
+mod <- glm(large_penguin ~ bill_length_mm + flipper_length_mm, 
+           data = dat, family = binomial)
 ```
 
-These numerical results are very close to the analytical truth:
-
-\begin{align*}
-\partial y/\partial x = -2x\\
-\partial y/\partial x = 4, && \mbox{for x=-2}\\
-\partial y/\partial x = 0, && \mbox{for x=0}\\
-\partial y/\partial x = -4, && \mbox{for x=2}
-\end{align*}
-
-Instead of looking at the marginal effects for one value of $x$ after the other, we can plot it for a whole range of values of $x$, using the `plot_cme` function:
-
 ```{r}
-plot_cme(mod, effect = "x", condition = "x") + xlim(-4, 4)
-```
-
-Again, the conclusion is the same. When $x<0$, an increase in $x$ is associated with an increase in $y$. When $x=0$, the marginal effect is equal to 0. When $x>0$, an increase in $x$ is associated with a decrease in $y$.
-
-# Estimated Marginal Means
-A concept which often gets confused with marginal effects is that of "Estimated Marginal Means."
-
-
-This differs from "Fitted Values" (a.k.a. "Predictions") because the combination of regressor values being consider do not 
-
-
-By default, the `marginaleffects` function returns predicted/estimated responses for each of the observations in the dataset:
-
-```{r}
-mod <- lm(mpg ~ hp + factor(cyl), data = mtcars)
 mfx <- marginaleffects(mod)
 head(mfx)
 ```
 
-We can also request these responses for specific values of the regressors, using the `typical` function, in the `newdata` argument. By default, `typical` will set any variable which is not explicitly specify to its mean value. For example, 
+# Average MFX
+
+A dataset with one marginal effect estimate per unit of observation is a bit unwieldy and difficult to interpret. Many analysts like to report the "Average Marginal Effect", that is, the average of all the observation-specific marginal effects. These are easy to compute based on the full `data.frame` shown above, but the `summary` function is convenient:
 
 ```{r}
-typical(cyl = c(4, 6, 8), model = mod)
+summary(mfx)
 ```
 
-This gives us 3 "typical observations" -- or "margins" -- at which we can do prediction. Using the `marginaleffects` function to extract those predictions gives us:
+Note that since marginal effects are derivatives, they are only properly defined for continuous numeric variables. When the model also includes categorical regressors, the `summary` function will try to display relevant (regression-adjusted) contrasts between different categories, as shown above.
+
+You can also extract average marginal effects using `tidy` and `glance` methods which conform to the [`broom` package specification](https://broom.tidymodels.org/):
+
+```{r}
+tidy(mfx)
+
+glance(mfx)
+```
+
+# Typical MFX
+
+Sometimes, we are not interested in *all* the unit-specific marginal effects, but would rather look at the estimated marginal effects for certain "typical" individuals. The `typical` function helps us build datasets full of "typical" rows. For example, to generate artificial Adelies and Gentoos with 180mm flippers:
+
+```{r}
+typical(flipper_length_mm = 180, 
+        species = c("Adelie", "Gentoo"), 
+        model = mod)
+```
+
+The same command can be used (omitting the `model` argument) to `marginaleffects`'s `newdata` argument to compute marginal effects for those (fictional) individuals:
+
+```{r}
+marginaleffects(mod, newdata = typical(flipper_length_mm = 180, 
+                                       species = c("Adelie", "Gentoo")))
+```
+
+When variables are omitted from the `typical` call, they will automatically be set at their median or mode (depending on variable type).
+
+# Counterfactual MFX
+
+The `typical` function allowed us look at completely fictional individuals. The `counterfactual` function lets us compute the marginal effects for the actual observations in our dataset, but with a few manipulated values. For example, this code will create a `data.frame` twice as long as the original `dat`, where each observation is repeated with different values of the `flipper_length_mm` variable:
+
+```{r}
+nd <- counterfactual(flipper_length_mm = c(160, 180), model = mod)
+```
+
+We see that the rows 1, 2, and 3 of the original dataset have been replicated twice, with different values of the `flipper_length_mm` variable:
+
+```{r}
+nd[nd$rowid %in% 1:3,]
+```
+
+Again, we can use this to compute average (or median, or anything else) marginal effects over the counterfactual individuals:
+
+```{r, message=FALSE, warning=FALSE}
+library(dplyr)
+
+marginaleffects(mod, newdata = nd) %>%
+    group_by(term) %>%
+    summarize(across(dydx:std.error, median))
+```
+
+# Conditional MFX (Plot)
+
+The `plot_cme` function can be used to draw "Conditional Marginal Effects." This is useful when a model includes interaction terms and we want to plot how the marginal effect of a variable changes as the value of a "condition" (or "moderator") variable changes:
+
+```{r, out.width = "60%"}
+mod <- lm(mpg ~ hp * wt + drat, data = mtcars)
+
+plot_cme(mod, effect = "hp", condition = "wt")
+```
+
+The marginal effects in the plot above were computed with values of all regressors -- except the `effect` and the `condition` -- held at their means or modes, depending on variable type.
+
+# Example: Quadratic
+
+In the "Definition" section of this vignette, we considered how marginal effects can be computed analytically in a simple quadratic equation context. We can now use the `marginaleffects` function to replicate our analysis of the quadratic function in a regression application. 
+
+Say you estimate a linear regression model with a quadratic term:
+
+$$Y = \beta_0 + \beta_1 X^2 + \varepsilon$$
+
+and obtain estimates of $\beta_0=1$ and $\beta_1=2$. Taking the partial derivative with respect to $X$ and plugging in our estimates gives us the marginal effect of $X$ on $Y$:
+
+$$\partial Y / \partial X = \beta_0 + 2 \cdot \beta_1 X$$
+$$\partial Y / \partial X = 1 + 4X$$
+
+This result suggests that the effect of a *change* in $X$ on $Y$ depends on the *level* of $X$. When $X$ is large and positive, an increase in $X$ is associated to a large increase in $Y$. When $X$ is small and positive, an increase in $X$ is associated to a small increase in $Y$. When $X$ is a large negative value, an increase in $X$ is associated with a *decrease* in $Y$.
+
+`marginaleffects` arrives at the same conclusion in simultated data:
+
+```{r, message = FALSE}
+library(tidyverse)
+N <- 1e5
+quad <- data.frame(x = rnorm(N))
+quad$y <- 1 + 1 * quad$x + 2 * quad$x^2 + rnorm(N)
+mod <- lm(y ~ x + I(x^2), quad)
+
+marginaleffects(mod, newdata = typical(x = -2:2)) |>
+    mutate(truth = 1 + 4 * x)  |>
+    select(dydx, truth)
+```
+
+We can also plot the result with the `plot_cme` function (see section below):
+
+```{r}
+plot_cme(mod, effect = "x", condition = "x")
+```
+
+Again, the conclusion is the same. When $x<0$, an increase in $x$ is associated with an increase in $y$. When $x=0$, the marginal effect is equal to 0. When $x>0$, an increase in $x$ is associated with a decrease in $y$.
+
+# Prediction types
+
+The `marginaleffect` function takes the derivative of the fitted (or predicted) values of the model, as is typically generated by the `predict(model)` function. By default, `predict` produces predictions on the `"response"` scale, so the marginal effects should be interpreted on that scale. However, users can pass a string or a vector of strings to the `predict_type` argument, and `marginaleffects` will consider different outcomes. 
+
+Typical values include `"reponse"` and `"link"`, but users should refer to the documentaiton of the `predict` of the package they used to fit the model to know what values are allowable. documentation. 
+
+```{r}
+mod <- glm(am ~ mpg, family = binomial, data = mtcars)
+mfx <- marginaleffects(mod, predict_type = c("response", "link"))
+summary(mfx)
+```
+
+# Regression tables
+
+Average marginal effects are easy to display in a regression table using packages like `modelsummary`:
 
 ```{r, echo = FALSE}
-emm <- marginaleffects(mod, newdata = typical(cyl = c(4, 6, 8)))$predicted_response
-emm <- paste(sprintf("%.1f", emm), collapse = ", ")
+options(modelsummary_factory_default = "markdown")
 ```
 
 ```{r}
-marginaleffects(mod, newdata = typical(cyl = c(4, 6, 8)))
+library(modelsummary)
+
+# fit models and store them in a named list
+mod <- list(
+    "Logit" = glm(large_penguin ~ flipper_length_mm + species, data = dat, family = binomial),
+    "OLS" = lm(body_mass_g ~ flipper_length_mm + bill_length_mm + species, data = dat))
+
+# apply the `marginaleffects` function to all the models using `lapply`
+mfx <- lapply(mod, marginaleffects)
+
+# build a table
+modelsummary(mfx)
 ```
 
-The `emmeans` package refers to the set of observations that we just used to compute predicted values as a "reference grid," but the idea is the same. Indeed, our `predicted_response` values (`r emm`) are exactly identical to the EMMs computed by the `emmeans` package:
+# Supporting new models
 
-```{r}
-library(emmeans)
-emmeans(mod, specs = "cyl")
+In most cases, extending `marginaleffects` to support new models is easy. Imagine you want to add support for an object called `model` of class `EXAMPLE` with N observations. 
+
+#### *Step 1:* Check if `marginaleffects` default functions work:
+
+```r
+# returns a named vector of coefficients
+get_coef(model)
+
+# returns a named vector of predictions 
+# returns a named matrix of size NxK for models with K levels (e.g., multinomial logit)
+get_predict(model)
+
+# returns a named square matrix of size equal to the number of coefficients
+get_vcov(model)
+
+# returns a new model object with different stored coefficients 
+# calling get_predict(model) and get_predict(model_new) should produce different results
+model_new <- set_coef(model, rep(0, length(get_coef(model))))
+predict(model) != predict(model_new)
 ```
 
-# Contrasts between EMMs
+If all of these functions work out-of-the-box, there's a good chance your model will be supported automatically. If they do *not* work, move to...
 
-```{r, eval = FALSE}
-mod <- lm(log(conc) ~ source + factor(percent), data = pigs)
+#### *Step 2:* Define the missing methods.
 
-mod <- emmeans(pigs.rg, "source")
+Find the class name of your model by calling:
 
-
-pigs.lm1 <- lm(log(conc) ~ source + factor(percent), data = pigs)
-pigs.rg <- ref_grid(pigs.lm1)
-pigs.emm.s <- emmeans(pigs.rg, "source")
-
-
-marginaleffects(mod, newdata = typical(source = c("fish", "soy", "skim"), model = mod),
-                predict_type = "response")
+```r
+class(model)
 ```
+
+Then, create functions (methods) called `get_coef.EXAMPLE`, `get_predict.EXAMPLE`, `vcov.EXAMPLE`, and `set_coef.EXAMPLE`, with the "EXAMPLE" replaced by the name your model class.
+
+#### *Step 3:* Add tests
+
+Create a file called `tests/testthat/test-PKGNAME.R` and write a few tests. Ideally, we would like to compare the results obtained by `marginaleffects` to an external source, like the `margins` package for `R`, or the `margins` command for `Stata`.
+
+#### *Step 4:* Finalize
+
+Add your new model class to the lists of supported models in:
+
+* The `sanity_model` function of the `R/sanity.R` file.
+* The supported models CSV table in `data-raw/supported_models.csv`. Then, run the `data-raw/supported_models.R` script to propagate your change throughout the package documentation.
+* The "Suggests" list in the `DESCRIPTION` file.
