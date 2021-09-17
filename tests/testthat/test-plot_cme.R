@@ -10,3 +10,10 @@ test_that("character predictors", {
     expect_equal(nrow(p), 25)
     expect_false(anyNA(p$dydx))
 })
+
+
+test_that("two conditions", {
+    mod <- lm(mpg ~ hp * wt * am, data = mtcars)
+    vdiffr::expect_doppelganger("cme plot with 2 conditions",
+                                plot_cme(mod, effect = "hp", condition = c("wt", "am")))
+})
