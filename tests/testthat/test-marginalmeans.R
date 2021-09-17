@@ -17,7 +17,10 @@ test_that("marginalmeans() = predict()", {
 ##############################
 
 test_that("`variables` arg: factor", {
+
+              pkgload::load_all()
     mm <- marginalmeans(mod, variables = "cyl")
+
     expect_equal(nrow(mm), 3)
 })
 

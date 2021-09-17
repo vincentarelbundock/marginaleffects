@@ -21,7 +21,6 @@ Config/testthat/edition: 3
 Config/testthat/parallel: true
 Depends:
     R (>= 3.5.0)
-Remotes: easystats/insight@master
 Imports: 
     checkmate,
     generics,
@@ -88,6 +87,7 @@ Collate:
     'methods_pscl.R'
     'methods_stats.R'
     'package.R'
+    'pad_factors.R'
     'plot.R'
     'plot_cme.R'
     'plot_cmm.R'
