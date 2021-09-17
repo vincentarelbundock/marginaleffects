@@ -122,7 +122,7 @@ The `marginalmeans` function computes model-adjusted means on the scale of the o
 
 Typical values include `"response"` and `"link"`, but users should refer to the documentaiton of the `predict` of the package they used to fit the model to know what values are allowable. documentation. 
 
-```{r, eval = FALSE}
+```{r}
 mod <- glm(am ~ mpg, family = binomial, data = mtcars)
 marginalmeans(mod, type = c("response", "link"))
 ```
