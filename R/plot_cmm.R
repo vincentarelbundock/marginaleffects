@@ -11,6 +11,15 @@
 #' @inheritParams plot_cme
 #' @return A `ggplot2` object
 #' @export
+#' @example
+#' mod <- lm(mpg ~ hp + wt, data = mtcars)
+#' plot_cme(mod, 
+#'          condition = "wt")
+#'
+#' mod <- lm(mpg ~ hp * wt * am, data = mtcars)
+#' plot_cme(mod, 
+#'          condition = c("hp", "wt"))
+#'
 plot_cmm <- function(model, 
                      condition,
                      type = "response",

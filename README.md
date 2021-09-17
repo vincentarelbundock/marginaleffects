@@ -29,7 +29,7 @@ principal quantities of interest for a *wide* variety of models:
   - [*Contrast*
     (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)
       - The difference between two Marginal Means, calculated for
-        meanginfully different regressor values (e.g., College graduates
+        meaningfully different regressor values (e.g., College graduates
         vs. Others).
 
 ## Why?
@@ -103,9 +103,9 @@ I am *very* eager to add support for new models. Feel free to file a
 request on Github or – even better – submit some code.
 
 Warning: When using `marginaleffects` with different models, you will
-probably have to adjust the `predict_type` argument. Refer to the
-documentation of your modeling package to see what `type` argument is
-allowed in the `predict` function.
+probably have to adjust the `type` argument. Refer to the documentation
+of your modeling package to see what `type` argument is allowed in the
+`predict` function.
 
 | Model                | Support: Effect | Support: Std. Errors | Validity: Stata | Validity: Margins |
 | :------------------- | :-------------- | :------------------- | :-------------- | :---------------- |
