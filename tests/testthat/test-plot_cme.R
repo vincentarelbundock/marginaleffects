@@ -1,3 +1,5 @@
+skip_if(getRversion() < 4.0)
+
 test_that("character predictors", {
     dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv")
     dat$large_penguin <- ifelse(dat$body_mass_g > median(dat$body_mass_g, na.rm = TRUE), 1, 0)
