@@ -18,7 +18,7 @@ pad_factors <- function(x) {
     }
     # create padding
     if (length(vault) > 0) {
-        padding <- head(x, 1)
+        padding <- utils::head(x, 1)
         for (v in names(vault)) {
             padding[[v]] <- NULL
         }

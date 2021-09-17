@@ -1,4 +1,4 @@
-skip_if(getRversion() < 4.0)
+skip_if(getRversion() < 4.1)
 
 test_that("plot_cme(mod, 'hp', 'wt')", {
     mod <- lm(mpg ~ hp * wt, data = mtcars)
