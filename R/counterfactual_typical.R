@@ -35,6 +35,7 @@ counterfactual <- function(..., model = NULL, data = NULL) {
     variables_automatic <- tmp$variables_automatic
 
     # `at` -> `data.frame`
+    at <- lapply(at, unique)
     at <- expand.grid(at)
 
     rowid <- data.frame(rowid = 1:nrow(dat))
@@ -52,7 +53,9 @@ counterfactual <- function(..., model = NULL, data = NULL) {
 
 #' Generate "typical" datasets for use in `marginaleffects`'s `newdata` argument
 #' 
-#' @param ... named arguments with vectors of values for the typical variables to construct (see Examples below.)
+#' @param ... named arguments with vectors of values for the typical variables
+#' to construct (see Examples below.) The typical data will include
+#' combinations of unique values from these vectors
 #' @param model Model object
 #' @param data data.frame (one and only one of the `model` and `data` arguments
 #' must be true).
@@ -93,6 +96,7 @@ typical <- function(..., model = NULL, data = NULL) {
         }
     }
 
+    out <- lapply(out, unique)
     out <- expand.grid(out)
     return(out)
 
