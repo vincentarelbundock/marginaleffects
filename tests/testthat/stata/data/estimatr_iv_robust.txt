@@ -1,0 +1,7 @@
+	(1)	(2)
+	y1	
+VARIABLES	coef	se
+		
+PD	0.0014904499	0.0003953759
+		
+Observations	20	
