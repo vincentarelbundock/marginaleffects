@@ -15,7 +15,7 @@ summary.marginaleffects <- function(object, ...) {
 
 #' @export
 print.marginaleffects.summary <- function(x, 
-                                          digits = max(3L, getOption("digits") - 2L),
+                                          digits = max(3L, getOption("digits") - 3L),
                                           ...) {
 
   out <- x
@@ -26,13 +26,11 @@ print.marginaleffects.summary <- function(x,
   # round and replace NAs
   for (col in c("estimate", "std.error", "statistic", "conf.low", "conf.high")) {
     if (col %in% colnames(out)) {
-      out[[col]] <- ifelse(is.na(out[[col]]), 
-                           "",
-                           format(round(out[[col]], digits = digits)))
+      out[[col]] <- format(out[[col]], digits = digits)
     }
   }
   if ("p.value" %in% colnames(out)) {
-      out$p.value <- format.pval(out$p.value)
+      out[["p.value"]] <- format.pval(out[["p.value"]])
   }
 
   # rename
