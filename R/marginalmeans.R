@@ -68,6 +68,10 @@ marginalmeans <- function(model,
         newdata$rowid <- 1:nrow(newdata)
     }
 
+    # pad factors: `get_predicted/model.matrix` break when factor levels are missing
+    padding <- pad_factors(newdata)
+    newdata <- rbind(padding, newdata)
+
     # predictions
     out_list <- list()
     for (predt in predict_type) {
@@ -84,6 +88,12 @@ marginalmeans <- function(model,
 
     # return data
     out <- merge(out, newdata, by = "rowid")
+
+    # unpad factors
+    if (nrow(padding) > 0) {
+        idx <- !(1:nrow(out)) %in% (1:nrow(padding))
+        out <- out[idx,]
+    }
 
     # rowid does not make sense here because the grid is made up
     out$rowid <- NULL

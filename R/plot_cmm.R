@@ -77,6 +77,8 @@ plot_cmm <- function(model,
     colnames(datplot)[colnames(datplot) == condition2] <- "condition2"
     colnames(datplot)[colnames(datplot) == condition3] <- "condition3"
 
+    model.matrix(model, newdata = nd)
+
     # return immediately if the user doesn't want a plot
     if (isFALSE(draw)) {
         return(datplot)

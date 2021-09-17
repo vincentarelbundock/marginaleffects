@@ -95,6 +95,7 @@ dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/ggplot2movie
     filter(length < 240)
 
 mod <- glm(certified_fresh ~ length * style, data = dat, family = binomial)
+mod <- glm(certified_fresh ~ length + style, data = dat, family = binomial)
 ```
 
 We can plot the marginal means of the response, conditional on the `length` variable using the `plot_cmm` function:
