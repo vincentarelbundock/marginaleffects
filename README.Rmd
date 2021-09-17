@@ -30,7 +30,7 @@ The `marginaleffects` package allows `R` users to compute and plot three princip
 * [_Marginal Mean_ (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) 
     - Response predicted by a model for some combination of the regressors' values (a.k.a. "reference grid"), typically their means or factor levels. 
 * [_Contrast_ (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html) 
-    - The difference between two Marginal Means, calculated for meanginfully different regressor values (e.g., College graduates vs. Others).
+    - The difference between two Marginal Means, calculated for meaningfully different regressor values (e.g., College graduates vs. Others).
 
 ## Why?
 
