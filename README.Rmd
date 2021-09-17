@@ -88,7 +88,7 @@ remotes::install_github("vincentarelbundock/marginaleffects")
 
 ## Getting started
 
-First, we load the library, download the [Palmer Penguins](https://allisonhorst.github.io/palmerpenguins/) data from the [`Rdatasets` archive](https://vincentarelbundock.github.io/Rdatasets/articles/data.html), and estimate a GLM model:
+First, we estimate a linear regression model with multiplicative interactions:
 
 ```{r}
 library(marginaleffects)
@@ -101,7 +101,7 @@ A "marginal effect" is a unit-specific measure of association between a change i
 ```{r}
 mfx <- marginaleffects(mod)
 
-head(mfx, 2)
+head(mfx, 4)
 ```
 
 The function `summary` calculates the "Average Marginal Effect," that is, the average of all unit-specific marginal effects:
@@ -115,3 +115,28 @@ The `plot_cme` plots "Conditional Marginal Effects," that is, it plots the value
 ```{r}
 plot_cme(mod, effect = "hp", condition = c("wt", "am"))
 ```
+
+Beyond marginal effects, we can also use the `marginalmeans` function to estimate -- you guessed it -- marginal means. We use the `variables` argument to select the categorical variables that will form the "grid":
+
+```{r}
+marginalmeans(mod, variables = c("am", "wt"))
+```
+
+The [`typical` function gives us an even more powerful way](https://vincentarelbundock.github.io/marginaleffects/reference/typical.html) to customize the grid:
+
+
+```{r}
+marginalmeans(mod, newdata = typical(am = 0, wt = c(2, 4)))
+```
+
+We can plot the estimated means (a.k.a. regression-adjusted predictions) with the `plot_cmm` function:
+
+```{r}
+plot_cmm(mod, condition = c("hp", "wt"))
+```
+
+There is *much* more you can do with `marginaleffects`. Please read the other articles on this website to learn more:
+
+* [_Marginal Effect_ (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/mfx.html) 
+* [_Marginal Mean_ (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) 
+* [_Contrast_ (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html) 

@@ -153,28 +153,18 @@ remotes::install_github("vincentarelbundock/marginaleffects")
 
 ## Getting started
 
-First, we load the library, download the [Palmer
-Penguins](https://allisonhorst.github.io/palmerpenguins/) data from the
-[`Rdatasets`
-archive](https://vincentarelbundock.github.io/Rdatasets/articles/data.html),
-and estimate a GLM model:
+First, we estimate a linear regression model with multiplicative
+interactions:
 
 ``` r
 library(marginaleffects)
 
-dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv")
-dat$large_penguin <- ifelse(dat$body_mass_g > median(dat$body_mass_g, na.rm = TRUE), 1, 0)
-
-mod <- glm(large_penguin ~ bill_length_mm + flipper_length_mm + species, 
-           data = dat, family = binomial)
+mod <- lm(mpg ~ hp * wt * am, data = mtcars)
 ```
 
 A “marginal effect” is a unit-specific measure of association between a
-change in a regressor and a change in the regressand. In most cases, its
-value will depend on the values of all the other variables in the model
-for that specific unit.
-
-The `marginaleffects` function thus computes a distinct estimate of the
+change in a regressor and a change in the regressand. The
+`marginaleffects` function thus computes a distinct estimate of the
 marginal effect and of the standard error for each regressor (“term”),
 for each unit of observation (“rowid”). You can view and manipulate the
 full results with functions like `head`, as you would with any other
@@ -183,25 +173,84 @@ full results with functions like `head`, as you would with any other
 ``` r
 mfx <- marginaleffects(mod)
 
-head(mfx)
-#>   rowid     type           term       dydx   std.error large_penguin
-#> 1     1 response bill_length_mm 0.01762275 0.007837288             0
-#> 2     2 response bill_length_mm 0.03584665 0.011917159             0
-#> 3     3 response bill_length_mm 0.08443344 0.021119186             0
-#> 4     4 response bill_length_mm 0.03471401 0.006506804             0
-#> 5     5 response bill_length_mm 0.05087500 0.013407802             0
-#> 6     6 response bill_length_mm 0.01650827 0.007252823             0
-#>   bill_length_mm flipper_length_mm species  predicted
-#> 1           39.1               181  Adelie 0.05123266
-#> 2           39.5               186  Adelie 0.11125087
-#> 3           40.3               195  Adelie 0.36919834
-#> 4           36.7               193  Adelie 0.10725326
-#> 5           39.3               190  Adelie 0.16882994
-#> 6           38.9               181  Adelie 0.04782069
+head(mfx, 4)
+#>   rowid     type term       dydx std.error  mpg  hp    wt am predicted
+#> 1     1 response   am  0.3251736  1.682202 21.0 110 2.620  1  22.48857
+#> 2     2 response   am -0.5438639  1.568211 21.0 110 2.875  1  20.80186
+#> 3     3 response   am  1.2007132  2.347558 22.8  93 2.320  1  25.26465
+#> 4     4 response   am -1.7025805  1.867130 21.4 110 3.215  0  20.25549
 ```
 
-Notice that the results are presented in “tidy” long format: each row of
-the original dataset gets a unique `rowid` value, each unit-level
-marginal effect appears on a distinct row, and metadata appears neatly
-in separate columns. This makes it easy to operate on the results
-programmatically.
+The function `summary` calculates the “Average Marginal Effect,” that
+is, the average of all unit-specific marginal effects:
+
+``` r
+summary(mfx)
+#> Average marginal effects 
+#>       type Term   Effect Std. Error  z value   Pr(>|z|)    2.5 %   97.5 %
+#> 1 response   am -0.04811    1.85260 -0.02597 0.97928233 -3.67913  3.58291
+#> 2 response   hp -0.03807    0.01279 -2.97717 0.00290923 -0.06314 -0.01301
+#> 3 response   wt -3.93909    1.08596 -3.62728 0.00028642 -6.06754 -1.81065
+#> 
+#> Model type:  lm 
+#> Prediction type:  response
+```
+
+The `plot_cme` plots “Conditional Marginal Effects,” that is, it plots
+the value of a marginal effect for different values of a regressor
+(often an interaction):
+
+``` r
+plot_cme(mod, effect = "hp", condition = c("wt", "am"))
+```
+
+<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
+
+Beyond marginal effects, we can also use the `marginalmeans` function to
+estimate – you guessed it – marginal means. We use the `variables`
+argument to select the categorical variables that will form the “grid”:
+
+``` r
+marginalmeans(mod, variables = c("am", "wt"))
+#>        type predicted std.error  conf.low conf.high       hp am     wt
+#> 1  response 23.259500 2.7059342 17.674726  28.84427 146.6875  0 1.5130
+#> 2  response 27.148334 2.8518051 21.262498  33.03417 146.6875  1 1.5130
+#> 3  response 20.504387 1.3244556 17.770845  23.23793 146.6875  0 2.5425
+#> 4  response 21.555612 1.0723852 19.342318  23.76891 146.6875  1 2.5425
+#> 5  response 18.410286 0.6151016 17.140779  19.67979 146.6875  0 3.3250
+#> 6  response 17.304709 1.5528055 14.099876  20.50954 146.6875  1 3.3250
+#> 7  response 17.540532 0.7293676 16.035192  19.04587 146.6875  0 3.6500
+#> 8  response 15.539158 2.1453449 11.111383  19.96693 146.6875  1 3.6500
+#> 9  response 12.793013 2.9784942  6.645703  18.94032 146.6875  0 5.4240
+#> 10 response  5.901966 5.8149853 -6.099574  17.90351 146.6875  1 5.4240
+```
+
+The [`typical` function gives us an even more powerful
+way](https://vincentarelbundock.github.io/marginaleffects/reference/typical.html)
+to customize the grid:
+
+``` r
+marginalmeans(mod, newdata = typical(am = 0, wt = c(2, 4)))
+#>       type predicted std.error conf.low conf.high       hp am wt
+#> 1 response  21.95621  2.038630 17.74868  26.16373 146.6875  0  2
+#> 2 response  16.60387  1.083201 14.36826  18.83949 146.6875  0  4
+```
+
+We can plot the estimated means (a.k.a. regression-adjusted predictions)
+with the `plot_cmm` function:
+
+``` r
+plot_cmm(mod, condition = c("hp", "wt"))
+```
+
+<img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
+
+There is *much* more you can do with `marginaleffects`. Please read the
+other articles on this website to learn more:
+
+  - [*Marginal Effect*
+    (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/mfx.html)
+  - [*Marginal Mean*
+    (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html)
+  - [*Contrast*
+    (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)
