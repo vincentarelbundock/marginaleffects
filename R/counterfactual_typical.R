@@ -110,7 +110,7 @@ prep_counterfactual_typical <- function(..., model = NULL, data = NULL) {
     }
 
     if (is.null(model) & is.null(data)) {
-        stop("The `model` or `data` arguments cannot both be `NULL`.")
+        stop("The `model` and `data` arguments should not both be `NULL`.")
     }
 
     # data: all variables
