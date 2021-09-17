@@ -24,27 +24,63 @@ library(ggplot2)
 theme_set(theme_minimal())
 ```
 
-The `marginaleffects` package includes limited support to compute contrasts. Users who require more powerful features are encouraged to consider alternative packages such as [emmeans](https://cran.r-project.org/web/packages/emmeans/index.html), [modelbased](https://github.com/easystats/modelbased), or [ggeffects.](https://strengejacke.github.io/ggeffects/index.html)
+In the [marginal effects](articles/mfx.html) vignette, we introduced that quantity as a partial derivative. As a result, they are only properly defined for continuous variables. To interpret the effect of categorical variables, we turn to *contrasts* between [Marginal Means.](articles/marginalmeans.html) In the context of this package, a "Contrast" is defined as:
 
-In the [marginal effects](articles/mfx.html) vignette, we introduced that quantity as a partial derivative. As a result, they are only properly defined for continuous variables. To interpret the effect of categorical variables, we turn to *contrasts* between [Marginal Means.](articles/marginalmeans.html)
+> The difference between two marginal means, calculated for meanginfully different regressor values (e.g., College graduates vs. Others).
 
-In the context of this package, a "Contrast" is defined as:
+# Simple contrasts
 
-> The difference between two EMMs, calculated for meanginfully different regressor values (e.g., College graduates vs. Others).
+Consider a simple model with a logical and a factor variable:
 
-# Contrasts between EMMs
+```{r}
+library(marginaleffects)
 
-```{r, eval = FALSE}
-mod <- lm(log(conc) ~ source + factor(percent), data = pigs)
-
-mod <- emmeans(pigs.rg, "source")
-
-
-pigs.lm1 <- lm(log(conc) ~ source + factor(percent), data = pigs)
-pigs.rg <- ref_grid(pigs.lm1)
-pigs.emm.s <- emmeans(pigs.rg, "source")
-
-
-marginaleffects(mod, newdata = typical(source = c("fish", "soy", "skim"), model = mod),
-                predict_type = "response")
+tmp <- mtcars
+tmp$am <- as.logical(tmp$am)
+mod <- lm(mpg ~ am + factor(cyl), tmp)
 ```
+
+The `marginaleffects` function automatically computes contrasts for each level of the categorical variables, relative to the baseline category (`FALSE` for logicals, and the reference level for factors), while holding all other values at their mode or mean:
+
+```{r}
+mfx <- marginaleffects(mod)
+summary(mfx)
+```
+
+The summary printed above says that moving from the reference category `4` to the level `6` on the `cyl` factor variable is associated with a change of `r sprintf("%.3f", tidy(mfx)$estimate[2])` in the marginal mean. Likewise, the contrast from `FALSE` to `TRUE` on the `am` variable is equal to `r sprintf("%.3f", tidy(mfx)$estimate[2])`.
+
+We can obtain the same results using the `emmeans` package:
+
+```{r}
+library(emmeans)
+emm <- emmeans(mod, specs = "cyl")
+contrast(emm, method = "revpairwise")
+
+emm <- emmeans(mod, specs = "am")
+contrast(emm, method = "revpairwise")
+```
+
+# Contrasts with interactions
+
+In models with multiplicative interactions, the contrasts of a categorical variable will depend on the values of the interacted variable:
+
+```{r}
+mod_int <- lm(mpg ~ am * factor(cyl), tmp)
+```
+
+We can now use the `newdata` argument of the `modelsummary` function to compute contrasts for different values of the other regressors. As in [the marginal effects vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx.html), the `typical` function can be handy:
+
+```{r}
+marginaleffects(mod_int, newdata = typical(cyl = tmp$cyl), variables = "am")
+```
+
+Once again, we obtain the same results with `emmeans`:
+
+```{r}
+emm <- emmeans(mod_int, specs = "am", by = "cyl")
+contrast(emm, method = "revpairwise")
+```
+
+# Complex queries
+
+As described above, the `marginaleffects` package includes limited support to compute contrasts. Users who require more powerful features are encouraged to consider alternative packages such as [emmeans](https://cran.r-project.org/web/packages/emmeans/index.html), [modelbased](https://github.com/easystats/modelbased), or [ggeffects.](https://strengejacke.github.io/ggeffects/index.html) These packages offer useful features such as automatic back-transforms, p value correction for multiple comparisons, and more.

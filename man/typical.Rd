@@ -7,7 +7,9 @@
 typical(..., model = NULL, data = NULL)
 }
 \arguments{
-\item{...}{named arguments with vectors of values for the typical variables to construct (see Examples below.)}
+\item{...}{named arguments with vectors of values for the typical variables
+to construct (see Examples below.) The typical data will include
+combinations of unique values from these vectors}
 
 \item{model}{Model object}
 

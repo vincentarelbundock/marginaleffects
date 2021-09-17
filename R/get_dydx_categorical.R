@@ -27,7 +27,7 @@ get_dydx_categorical.default <- function(model,
 
     if (is.logical(baseline[[variable]])) {
         baseline[[variable]] <- FALSE
-        baseline_prediction <- get_predict(model, newdatat = baseline, predict_type = predict_type)
+        baseline_prediction <- get_predict(model, newdata = baseline, predict_type = predict_type)
         baseline[[variable]] <- TRUE
         baseline$predicted <- get_predict(model = model, newdata = baseline, predict_type = predict_type) - baseline_prediction
         baseline$term <- paste0(variable, baseline[[variable]])
