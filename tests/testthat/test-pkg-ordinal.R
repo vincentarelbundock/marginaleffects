@@ -10,16 +10,16 @@
 #     res <- marginaleffects(mod, 
 #                            variables = "warm", 
 #                            vcov = FALSE,
-#                            predict_type = "prob")
+#                            type = "prob")
 #     mar <- suppressWarnings(margins(mod))
 #     expect_true(test_against_margins(res, mar, tol = .01))
 #     warning("low tolerance")
 #     expect_warning(marginaleffects(mod, 
 #                                    variables = "warm",
-#                                    predict_type = "prob"), 
+#                                    type = "prob"), 
 #                    regexp = "Variance.*supported")
 #     expect_warning(marginaleffects(mod, 
 #                                    vcov = FALSE,
 #                                    variables = "warm"),
-#                    regexp = "predict_type")
+#                    regexp = "type")
 # })

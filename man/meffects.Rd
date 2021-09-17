@@ -9,7 +9,7 @@ meffects(
   newdata = NULL,
   variables = NULL,
   vcov = TRUE,
-  predict_type = "response",
+  type = "response",
   return_data = TRUE,
   ...
 )
@@ -19,7 +19,7 @@ meffects(
   newdata = NULL,
   variables = NULL,
   vcov = TRUE,
-  predict_type = "response",
+  type = "response",
   return_data = TRUE,
   ...
 )
@@ -40,7 +40,7 @@ calculates marginal effects for all terms in the model object.}
 \item Named square matrix: computes standard errors with a user-supplied variance-covariance matrix. This matrix must be square and have dimensions equal to the number of coefficients in \code{get_coef(model)}.
 }}
 
-\item{predict_type}{Type(s) of prediction as string or vector This can
+\item{type}{Type(s) of prediction as string or vector This can
 differ based on the model type, but will typically be a string such as:
 "response", "link", "probs", or "zero".}
 

@@ -178,25 +178,25 @@ sanity_vcov <- function(model, vcov) {
 }
 
 
-sanity_predict_type <- function(model, predict_type) {
-    checkmate::assert_character(predict_type, min.len = 1, null.ok = FALSE)
+sanity_type <- function(model, type) {
+    checkmate::assert_character(type, min.len = 1, null.ok = FALSE)
 
     if ("clm" %in% class(model)) {
-        predict_type[predict_type == "probs"] <- "prob"
-        idx <- !predict_type %in% c("prob", "class", "cum.prob", "linear_predictor")
-        predict_type[idx] <- "prob"
-        predict_type <- unique(predict_type)
+        type[type == "probs"] <- "prob"
+        idx <- !type %in% c("prob", "class", "cum.prob", "linear_predictor")
+        type[idx] <- "prob"
+        type <- unique(type)
         if (any(idx)) {
-            warning(sprintf('The only `predict_type` supported for models of class `%s` are "prob", "cum.prob", and "linear.predictor".', class(model)[1]))
+            warning(sprintf('The only `type` supported for models of class `%s` are "prob", "cum.prob", and "linear.predictor".', class(model)[1]))
         }
     }
 
     if (any(c("multinom", "nnet") %in% class(model))) {
-        if (any(predict_type != "probs")) {
-            warning(sprintf('The only `predict_type` supported for models of class `%s` is `"probs"`. The value of the argument was adjusted automatically. Modify the argument manually to silence this warning.', class(model)[1]))
-            predict_type <- "probs"
+        if (any(type != "probs")) {
+            warning(sprintf('The only `type` supported for models of class `%s` is `"probs"`. The value of the argument was adjusted automatically. Modify the argument manually to silence this warning.', class(model)[1]))
+            type <- "probs"
         }
     }
 
-    return(predict_type)
+    return(type)
 }

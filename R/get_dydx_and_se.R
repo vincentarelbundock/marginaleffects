@@ -22,7 +22,7 @@ get_dydx_and_se.default <- function(model,
                                     fitfram = insight::get_data(model), 
                                     vcov = stats::vcov(model), 
                                     group_name = NULL,
-                                    predict_type = "response",
+                                    type = "response",
                                     numDeriv_method = "simple", 
                                     ...) {
 
@@ -44,7 +44,7 @@ get_dydx_and_se.default <- function(model,
                       fitfram = fitfram,
                       variable = v,
                       group_name = group_name,
-                      predict_type = predict_type,
+                      type = type,
                       numDeriv_method = numDeriv_method,
                       ...)
 
@@ -59,7 +59,7 @@ get_dydx_and_se.default <- function(model,
                               fitfram = fitfram,
                               variable = v,
                               group_name = group_name,
-                              predict_type = predict_type,
+                              type = type,
                               numDeriv_method = numDeriv_method)
                 return(g$dydx)
             }
