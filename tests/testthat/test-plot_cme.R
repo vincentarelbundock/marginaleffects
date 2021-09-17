@@ -1,4 +1,4 @@
-skip_if(getRversion() < 4.1)
+skip_on_ci() # different graphics engine produce different snapshots
 
 test_that("character predictors", {
     dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv")
