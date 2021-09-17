@@ -63,36 +63,41 @@ marginalmeans <- function(model,
         variables <- sanity_variables(model, newdata, variables)
     }
 
-    # TODO: remove this and add version requirement to DESCRIPTION
-    # do not forget 2nd block below
-    # insight::get_predicted breaks when there are missing factor levels in `newdata`.
-    keep_levels <- list()
-    for (v in colnames(newdata)) {
-        if (is.factor(newdata[[v]])) { 
-            plug <- data.frame(unique(factor(levels(newdata[[v]]), levels = levels(newdata[[v]]))))
-            colnames(plug) <- v
-            keep_levels[[v]] <- newdata[[v]]
-            newdata[[v]] <- NULL
-            newdata <- merge(newdata, plug, all = TRUE)
-        } else if (is.logical(newdata[[v]])) {
-            plug <- data.frame(c(FALSE, TRUE))
-            colnames(plug) <- v
-            keep_levels[[v]] <- newdata[[v]]
-            newdata[[v]] <- NULL
-            newdata <- merge(newdata, plug, all = TRUE)
-        } 
-    }
-
     # for merging later
     if (!"rowid" %in% colnames(newdata)) {
         newdata$rowid <- 1:nrow(newdata)
+    }
+
+    # TODO: remove this and add version requirement to DESCRIPTION
+    # do not forget 2nd block below
+    # insight::get_predicted breaks when there are missing factor levels in `newdata`.
+    completedata <- newdata
+    store_rows <- list()
+    for (v in colnames(completedata)) {
+        if (is.factor(completedata[[v]]) || is.logical(completedata[[v]])) {
+            store_rows[[v]] <- completedata[[v]]
+        }
+        if (is.factor(completedata[[v]])) { 
+            levs <- levels(completedata[[v]])
+            completedata[[v]] <- NULL
+            completedata <- unique(completedata)
+            expand_rows <- data.frame(levs)
+            colnames(expand_rows) <- v
+            completedata <- merge(completedata, expand_rows, all = TRUE)
+        } else if (is.logical(completedata[[v]])) {
+            completedata[[v]] <- NULL
+            completedata <- unique(completedata)
+            expand_rows <- data.frame(c(FALSE, TRUE))
+            colnames(expand_rows) <- v
+            completedata <- merge(completedata, expand_rows, all = TRUE)
+        } 
     }
 
     # predictions
     out_list <- list()
     for (predt in predict_type) {
         tmp <- insight::get_predicted(model, 
-                                      newdata = newdata,
+                                      newdata = completedata,
                                       type = predt)
         tmp <- as.data.frame(tmp)
         tmp <- insight::standardize_names(tmp, style = "broom")
@@ -109,10 +114,8 @@ marginalmeans <- function(model,
     out$rowid <- NULL
 
     # TODO: remove this and add version requirement to DESCRIPTION
-    for (v in names(keep_levels)) {
-        idx <- out[[v]] %in% as.character(keep_levels[[v]])
-        out <- out[idx, , drop = FALSE]
-    }
+    # inner merge gets rid of all those duplicate rows
+    out <- merge(out, newdata)
 
     # clean columns
     stubcols <- c("rowid", "type", "group", "term", "predicted", "std.error",
