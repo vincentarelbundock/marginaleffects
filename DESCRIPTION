@@ -21,6 +21,7 @@ Config/testthat/edition: 3
 Config/testthat/parallel: true
 Depends:
     R (>= 3.5.0)
+Remotes: easystats/insight@master
 Imports: 
     checkmate,
     generics,
