@@ -2,13 +2,22 @@ tmp <- mtcars
 tmp$am <- as.logical(tmp$am)
 mod <- lm(mpg ~ hp + wt + factor(cyl) + am, data = tmp)
 
-########################
-#  variables argument  #
-########################
+######################################
+#  values against predict benchmark  #
+######################################
+
+test_that("marginalmeans() = predict()", {
+    nd <- typical(model = mod, cyl = c(4, 6, 8))
+    mm <- marginalmeans(mod, newdata = nd)
+    expect_equal(mm$predicted, unname(predict(mod, newdata = nd)))
+})
+
+##############################
+#  size: variables argument  #
+##############################
 
 test_that("`variables` arg: factor", {
     mm <- marginalmeans(mod, variables = "cyl")
-    # cyl factor 3
     expect_equal(nrow(mm), 3)
 })
 
@@ -42,9 +51,9 @@ test_that("`variables` arg: factor + numeric", {
 })
 
 
-#######################
-#  new data argument  #
-#######################
+#############################
+#  size: new data argument  #
+#############################
 
 test_that("`newdata`: mtcars has 32 rows", {
     mm <- marginalmeans(mod, newdata = tmp)
@@ -69,6 +78,7 @@ test_that("`typical`: one missing factor", {
 test_that("`typical`: all logical", {
     mm <- marginalmeans(mod, newdata = typical(am = c(TRUE, FALSE)))
     expect_equal(nrow(mm), 2)
+    expect_equal(length(unique(mm$predicted)), nrow(mm))
 })
 
 test_that("`typical`: missing logical", {
