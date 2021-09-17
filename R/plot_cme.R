@@ -47,6 +47,7 @@ plot_cme <- function(model,
     datplot <- marginaleffects(model, variables = effect, newdata = nd)
     colnames(datplot)[colnames(datplot) == condition1] <- "condition1"
 
+
     # return immediately if the user doesn't want a plot
     if (isFALSE(draw)) {
         return(datplot)
