@@ -46,5 +46,35 @@ tmp <- read.table("results/betareg_betareg_01.txt", sep = "\t", skip = 4) |>
     head(1)
 results[["betareg_betareg_01"]] <- tmp
 
+#  MASS::glm.nb
+tmp <- read.table("data/MASS_glm_nb.txt", sep = "\t", skip = 4) |>
+    setNames(c("term", "dydxstata", "std.errorstata")) |>
+    head(1)
+results[["mass_glm_nb"]] <- tmp
+
+#  AER::tobit
+tmp <- read.table("data/AER_tobit.txt", sep = "\t", skip = 4) |>
+    setNames(c("term", "dydxstata", "std.errorstata")) |>
+    head(1)
+results[["aer_tobit"]] <- tmp
+
+#  AER::tobit (right-censured)
+tmp <- read.table("data/AER_tobit_right4.txt", sep = "\t", skip = 4) |>
+    setNames(c("term", "dydxstata", "std.errorstata")) |>
+    head(1)
+results[["aer_tobit_right"]] <- tmp
+
+#  estimatr::lm_robust
+tmp <- read.table("data/estimatr_lm_robust.txt", sep = "\t", skip = 4) |>
+    setNames(c("term", "dydxstata", "std.errorstata")) |>
+    head(1)
+results[["estimatr_lm_robust"]] <- tmp
+
+#  estimatr::iv_robust
+tmp <- read.table("data/estimatr_iv_robust.txt", sep = "\t", skip = 4) |>
+    setNames(c("term", "dydxstata", "std.errorstata")) |>
+    head(1)
+results[["estimatr_iv_robust"]] <- tmp
+
 # save
 saveRDS(results, file = "stata.rds")

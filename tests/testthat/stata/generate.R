@@ -52,3 +52,29 @@ haven::write_dta(GasolineYield, path = "data/betareg_betareg_01.dta")
 #  fixest::fixest  #
 ####################
 haven::write_dta(mtcars, path = "data/fixest_fixest_01.dta")
+
+
+##################
+#  MASS::glm.nb  #
+##################
+haven::write_dta(mtcars, path = "data/mtcars.dta")
+
+
+################
+#  AER::tobit  #
+################
+write.table(data(Affairs, package = "AER"))
+haven::write_dta(Affairs, path = "data/affairs.dta")
+
+
+#########################
+#  estimatr::lm_robust  #
+#########################
+haven::write_dta(mtcars, path = "data/mtcars.dta")
+
+
+#########################
+#  estimatr::iv_robust  #
+#########################
+write.table(data(Kmenta, package = "ivreg"))
+haven::write_dta(Kmenta, path = "data/kmenta.dta")
