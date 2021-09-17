@@ -26,9 +26,9 @@ theme_set(theme_minimal())
 
 In the context of this package, a "Marginal Mean" (MM) is defined as:
 
-> The reponse predicted by a model for some combination (a.k.a. "reference grid") of the regressors' values, typically their means or factor levels. 
+> The reponse predicted by a model for some combination of the regressors' values, such as their means or factor levels (a.k.a. "reference grid"). 
 
-A marginal mean is thus a regression-adjusted mean of the response variable, for given values of the predictors. This differs from "Fitted Values" (a.k.a. "Predictions") because the combination of regressor values being consider do not necessarily correspond to the actual values observed in the dataset (although it could).
+A marginal mean is thus a regression-adjusted mean of the response variable, for given values of the predictors. This differs from "Fitted Values" (a.k.a. "Predictions") because the combination of regressor values under consideration does not necessarily correspond to any specific observation in the dataset (although it could).
 
 By default, the `marginalmeans` function returns predicted/estimated responses for each of the observations in the dataset:
 

@@ -13,6 +13,7 @@
 #' @export
 plot_cmm <- function(model, 
                      condition,
+                     predict_type = "response",
                      conf.int = TRUE,
                      conf.level = 0.95,
                      draw = TRUE) {
@@ -74,7 +75,7 @@ plot_cmm <- function(model,
     # create data
     at_list[["model"]] = model
     nd <- do.call("typical", at_list)
-    datplot <- marginalmeans(model, newdata = nd)
+    datplot <- marginalmeans(model, newdata = nd, conf.int = conf.int)
     colnames(datplot)[colnames(datplot) == condition1] <- "condition1"
     colnames(datplot)[colnames(datplot) == condition2] <- "condition2"
     colnames(datplot)[colnames(datplot) == condition3] <- "condition3"

@@ -23,6 +23,7 @@
 plot_cme <- function(model, 
                      effect,
                      condition,
+                     predict_type = "response",
                      conf.int = TRUE,
                      conf.level = 0.95,
                      draw = TRUE) {
