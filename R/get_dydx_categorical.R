@@ -16,7 +16,7 @@ get_dydx_categorical.default <- function(model,
                                          variable,
                                          fitfram = insight::get_data(model),
                                          group_name = NULL,
-                                         predict_type = "response",
+                                         type = "response",
                                          ...) {
 
     # Create counterfactual datasets with different factor values and compare the predictions
@@ -27,9 +27,9 @@ get_dydx_categorical.default <- function(model,
 
     if (is.logical(baseline[[variable]])) {
         baseline[[variable]] <- FALSE
-        baseline_prediction <- get_predict(model, newdata = baseline, predict_type = predict_type)
+        baseline_prediction <- get_predict(model, newdata = baseline, type = type)
         baseline[[variable]] <- TRUE
-        baseline$predicted <- get_predict(model = model, newdata = baseline, predict_type = predict_type) - baseline_prediction
+        baseline$predicted <- get_predict(model = model, newdata = baseline, type = type) - baseline_prediction
         baseline$term <- paste0(variable, baseline[[variable]])
         pred <- baseline[, c("rowid", "term", "predicted")]
     }
@@ -37,10 +37,10 @@ get_dydx_categorical.default <- function(model,
     if (is.factor(baseline[[variable]])) {
         pred_list <- list()
         baseline[[variable]] <- factor(levels(baseline[[variable]])[1], levels = levels(baseline[[variable]]))
-        baseline_prediction <- get_predict(model, newdata = baseline, predict_type = predict_type)
+        baseline_prediction <- get_predict(model, newdata = baseline, type = type)
         for (i in 2:length(levels(baseline[[variable]]))) {
             baseline[[variable]] <- factor(levels(baseline[[variable]])[i], levels = levels(baseline[[variable]]))
-            baseline$predicted <- get_predict(model = model, newdata = baseline, predict_type = predict_type) - baseline_prediction
+            baseline$predicted <- get_predict(model = model, newdata = baseline, type = type) - baseline_prediction
             pred_list[[i]] <- baseline[, c("rowid", variable, "predicted")]
         }
         pred <- do.call("rbind", pred_list)
@@ -64,10 +64,10 @@ get_dydx_categorical.default <- function(model,
         pred_list <- list()
         levs <- unique(baseline[[variable]])
         baseline[[variable]] <- levs[1]
-        baseline_prediction <- get_predict(model, newdata = baseline, predict_type = predict_type)
+        baseline_prediction <- get_predict(model, newdata = baseline, type = type)
         for (i in 2:length(levs)) {
             baseline[[variable]] <- levs[i]
-            baseline$predicted <- get_predict(model = model, newdata = baseline, predict_type = predict_type) - baseline_prediction
+            baseline$predicted <- get_predict(model = model, newdata = baseline, type = type) - baseline_prediction
             baseline$term <- sprintf("%s%s", variable, baseline[[variable]])
             pred_list[[i]] <- baseline[, c("rowid", "term", "predicted")]
         }

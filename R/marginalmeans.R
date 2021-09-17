@@ -13,7 +13,7 @@
 #' No interval is computed if `conf.int=NULL`.  Must be strictly greater than 0
 #' and less than 1. Defaults to 0.95, which corresponds to a 95 percent
 #' confidence interval.
-#' @param predict_type Type(s) of prediction as string or vector This can
+#' @param type Type(s) of prediction as string or vector This can
 #' differ based on the model type, but will typically be a string such as:
 #' "response", "link", "probs", or "zero".
 #' @param ... Additional arguments are pushed forward to `predict()`.
@@ -22,12 +22,12 @@
 marginalmeans <- function(model, 
                           newdata = NULL, 
                           variables = NULL, 
-                          predict_type = "response",
+                          type = "response",
                           conf.level = 0.95,
                           ...) {
 
     # sanity checks and pre-processing
-    predict_type <- sanity_predict_type(model, predict_type)
+    type <- sanity_type(model, type)
     # return_data <- sanity_return_data(return_data)
 
     ## do not check this because `insight` supports more models than `marginaleffects`
@@ -80,7 +80,7 @@ marginalmeans <- function(model,
 
     # predictions
     out_list <- list()
-    for (predt in predict_type) {
+    for (predt in type) {
         tmp <- insight::get_predicted(model, 
                                       data = newdata,
                                       type = predt,
@@ -129,7 +129,7 @@ marginalmeans <- function(model,
         attr(out, "glance") <- NULL
     }
     class(out) <- c("marginalmeans", class(out))
-    attr(out, "predict_type") <- predict_type
+    attr(out, "type") <- type
     attr(out, "model_type") <- class(model)[1]
     attr(out, "variables") <- variables
 

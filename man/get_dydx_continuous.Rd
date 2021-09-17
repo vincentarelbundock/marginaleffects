@@ -12,7 +12,7 @@ get_dydx_continuous(model, ...)
   variable,
   fitfram = insight::get_data(model),
   group_name = NULL,
-  predict_type = "response",
+  type = "response",
   numDeriv_method = "simple",
   ...
 )
@@ -30,7 +30,7 @@ get_dydx_continuous(model, ...)
 estimate. Groups are often used in models like multinomial logit where each
 level of the response variable is associated to its own set of coefficients.}
 
-\item{predict_type}{Type(s) of prediction as string or vector This can
+\item{type}{Type(s) of prediction as string or vector This can
 differ based on the model type, but will typically be a string such as:
 "response", "link", "probs", or "zero".}
 }

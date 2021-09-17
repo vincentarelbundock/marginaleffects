@@ -118,13 +118,13 @@ plot_cmm(mod, condition = c("length", "style"))
 
 # Prediction types
 
-The `marginalmeans` function computes model-adjusted means on the scale of the output of the `predict(model)` function. By default, `predict` produces predictions on the `"response"` scale, so the marginal means should be interpreted on that scale. However, users can pass a string or a vector of strings to the `predict_type` argument, and `marginalmeans` will consider different outcomes. 
+The `marginalmeans` function computes model-adjusted means on the scale of the output of the `predict(model)` function. By default, `predict` produces predictions on the `"response"` scale, so the marginal means should be interpreted on that scale. However, users can pass a string or a vector of strings to the `type` argument, and `marginalmeans` will consider different outcomes. 
 
 Typical values include `"response"` and `"link"`, but users should refer to the documentaiton of the `predict` of the package they used to fit the model to know what values are allowable. documentation. 
 
 ```{r, eval = FALSE}
 mod <- glm(am ~ mpg, family = binomial, data = mtcars)
-marginalmeans(mod, predict_type = c("response", "link"))
+marginalmeans(mod, type = c("response", "link"))
 ```
 
 Users who need more control over the type of marginal means to compute, including a host of options for back-transformation, may want to consider the [`emmeans` package.](https://cran.r-project.org/web/packages/emmeans/index.html)

@@ -8,7 +8,7 @@
 #' @inheritParams marginaleffects
 #' @keywords internal
 #' @export
-get_predict <- function (model, newdata, predict_type, ...) {
+get_predict <- function (model, newdata, type, ...) {
     UseMethod("get_predict", model)
 }
 
@@ -17,10 +17,10 @@ get_predict <- function (model, newdata, predict_type, ...) {
 #' @export
 get_predict.default <- function(model, 
                                 newdata = insight::get_data(model), 
-                                predict_type = "response", 
+                                type = "response", 
                                 ...) {
     pred <- stats::predict(model, 
                            newdata = newdata, 
-                           type = predict_type)
+                           type = type)
     return(pred)
 }

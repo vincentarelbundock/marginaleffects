@@ -69,7 +69,7 @@ This table shows the list of models supported by `marginaleffect`, and shows whi
 
 I am *very* eager to add support for new models. Feel free to file a request on Github or -- even better -- submit some code.
 
-Warning: When using `marginaleffects` with different models, you will probably have to adjust the `predict_type` argument. Refer to the documentation of your modeling package to see what `type` argument is allowed in the `predict` function. 
+Warning: When using `marginaleffects` with different models, you will probably have to adjust the `type` argument. Refer to the documentation of your modeling package to see what `type` argument is allowed in the `predict` function. 
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 library(marginaleffects)

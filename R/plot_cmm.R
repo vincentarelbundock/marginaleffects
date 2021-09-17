@@ -13,7 +13,7 @@
 #' @export
 plot_cmm <- function(model, 
                      condition,
-                     predict_type = "response",
+                     type = "response",
                      conf.int = TRUE,
                      conf.level = 0.95,
                      draw = TRUE) {

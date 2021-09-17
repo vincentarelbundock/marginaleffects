@@ -17,7 +17,7 @@
 #'   + Named square matrix: computes standard errors with a user-supplied variance-covariance matrix. This matrix must be square and have dimensions equal to the number of coefficients in `get_coef(model)`.
 #' @param newdata A dataset over which to compute marginal effects. `NULL` uses
 #'   the original data used to fit the model.
-#' @param predict_type Type(s) of prediction as string or vector This can
+#' @param type Type(s) of prediction as string or vector This can
 #' differ based on the model type, but will typically be a string such as:
 #' "response", "link", "probs", or "zero".
 #' @param return_data boolean If `TRUE`, the original data used to fit the
@@ -52,7 +52,7 @@ marginaleffects <- function(model,
                             newdata = NULL, 
                             variables = NULL, 
                             vcov = TRUE,
-                            predict_type = "response",
+                            type = "response",
                             return_data = TRUE,
                             ...) {
 
@@ -79,7 +79,7 @@ marginaleffects <- function(model,
     variables <- sanity_variables(model, newdata, variables)
     vcov <- sanity_vcov(model, vcov)
     group_names <- sanity_group_names(model)
-    predict_type <- sanity_predict_type(model, predict_type)
+    type <- sanity_type(model, type)
     return_data <- sanity_return_data(return_data)
 
     # rowid is required for later merge
@@ -92,12 +92,12 @@ marginaleffects <- function(model,
 
     pred_list <- list()
     # add predictions to newdata
-    for (predt in predict_type) {
+    for (predt in type) {
         tmp <- newdata
         tmp$type <- predt
         tmp$predicted <- get_predict(model = model,
                                      newdata = newdata,
-                                     predict_type = predt,
+                                     type = predt,
                                      ...)
         pred_list[[predt]] <- tmp
     }
@@ -106,13 +106,13 @@ marginaleffects <- function(model,
     # compute marginal effects and standard errors
     out_list <- list()
     se_list <- list()
-    for (predt in predict_type) {
+    for (predt in type) {
         out_list[[predt]] <- get_dydx_and_se(model = model, 
                                              fitfram = newdata,
                                              variables = variables_vec,
                                              vcov = vcov,
                                              group_name = gn,
-                                             predict_type = predt,
+                                             type = predt,
                                              numDeriv_method = numDeriv_method,
                                              ...)
         se_list[[predt]] <- attr(out_list[[predt]], "se_at_mean_gradient")
@@ -162,7 +162,7 @@ marginaleffects <- function(model,
         attr(out, "glance") <- NULL
     }
     class(out) <- c("marginaleffects", class(out))
-    attr(out, "predict_type") <- predict_type
+    attr(out, "type") <- type
     attr(out, "numDeriv_method") <- numDeriv_method
     attr(out, "model_type") <- class(model)[1]
     attr(out, "variables") <- variables

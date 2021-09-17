@@ -13,8 +13,8 @@ test_that("hurdle: set_coef", {
 test_that("hurdle: no validity check", {
     data("bioChemists", package = "pscl")
     model <- hurdle(art ~ phd + fem | ment, data = bioChemists, dist = "negbin")
-    mfx1 <- marginaleffects(model, predict_type = "response")
-    mfx2 <- marginaleffects(model, predict_type = "zero")
+    mfx1 <- marginaleffects(model, type = "response")
+    mfx2 <- marginaleffects(model, type = "zero")
     mfx1 <- tidy(mfx1)
     mfx2 <- tidy(mfx2)
     expect_false(any(mfx1$estimate == 0))

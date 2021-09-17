@@ -5,14 +5,9 @@
 \alias{get_predict.default}
 \title{Get predicted values from a model object (internal function)}
 \usage{
-get_predict(model, newdata, predict_type, ...)
+get_predict(model, newdata, type, ...)
 
-\method{get_predict}{default}(
-  model,
-  newdata = insight::get_data(model),
-  predict_type = "response",
-  ...
-)
+\method{get_predict}{default}(model, newdata = insight::get_data(model), type = "response", ...)
 }
 \arguments{
 \item{model}{Model object}
@@ -20,7 +15,7 @@ get_predict(model, newdata, predict_type, ...)
 \item{newdata}{A dataset over which to compute marginal effects. \code{NULL} uses
 the original data used to fit the model.}
 
-\item{predict_type}{Type(s) of prediction as string or vector This can
+\item{type}{Type(s) of prediction as string or vector This can
 differ based on the model type, but will typically be a string such as:
 "response", "link", "probs", or "zero".}
 

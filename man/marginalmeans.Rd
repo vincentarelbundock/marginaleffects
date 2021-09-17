@@ -8,7 +8,7 @@ marginalmeans(
   model,
   newdata = NULL,
   variables = NULL,
-  predict_type = "response",
+  type = "response",
   conf.level = 0.95,
   ...
 )
@@ -24,7 +24,7 @@ combinations of each of these variables. Factor levels are considered at
 each of their levels. Numeric variables variables are considered at Tukey's
 Five-Number Summaries.}
 
-\item{predict_type}{Type(s) of prediction as string or vector This can
+\item{type}{Type(s) of prediction as string or vector This can
 differ based on the model type, but will typically be a string such as:
 "response", "link", "probs", or "zero".}
 
