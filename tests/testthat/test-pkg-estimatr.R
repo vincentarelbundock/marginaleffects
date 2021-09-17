@@ -1,6 +1,6 @@
 skip_if_not_installed("estimatr")
 
-library("estimatr")
+requiet("estimatr")
 
 test_that("estimator::iv_robust no validity chec", {
     data(Kmenta, package = "ivreg")

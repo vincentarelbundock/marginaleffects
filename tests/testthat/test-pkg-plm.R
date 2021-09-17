@@ -1,5 +1,5 @@
 skip_if_not_installed("plm")
-suppressPackageStartupMessages(library("plm", warn.conflicts = FALSE))
+requiet("plm")
 
 test_that("Baltagi (2013) replications from the plm doc", {
     # replicates some results from Baltagi (2013), table 3.1

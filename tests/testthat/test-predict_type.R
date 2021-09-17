@@ -1,6 +1,6 @@
 test_that("multiple prediction types", {
     skip_if_not_installed("pscl")
-    library("pscl")
+    requiet("pscl")
     data("bioChemists", package = "pscl")
     model <- hurdle(art ~ phd + fem | ment, data = bioChemists, dist = "negbin")
     mfx <- marginaleffects(model, predict_type = c("response", "zero"))

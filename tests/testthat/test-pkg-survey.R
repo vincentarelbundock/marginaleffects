@@ -1,6 +1,6 @@
 skip_if_not_installed("survey")
 
-library("margins")
+requiet("margins")
 
 test_that("survey: marginaleffects vs. margins", {
     data("fpc", package = "survey")

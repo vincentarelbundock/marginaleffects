@@ -1,5 +1,5 @@
 skip_if_not_installed("brglm2")
-library("brglm2")
+requiet("brglm2")
 
 test_that("brglm2::brglm_fit no validity check", {
     data("endometrial", package = "brglm2")

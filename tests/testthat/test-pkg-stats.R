@@ -1,7 +1,7 @@
 skip_if_not_installed("margins")
 skip_if_not_installed("dplyr")
-library("margins")
-library("dplyr", warn.conflicts = FALSE)
+requiet("margins")
+requiet("dplyr")
 
 test_that("glm", {
     set.seed(1024)

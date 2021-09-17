@@ -1,9 +1,5 @@
 skip_if_not_installed("AER")
-
-Sys.setenv(`_R_S3_METHOD_REGISTRATION_NOTE_OVERWRITES_` = "false")
-suppressPackageStartupMessages({
-  library("AER", warn.conflicts = FALSE)
-})
+requiet("AER")
 
 test_that("tobit: no validity check", {
   data("Affairs", package = "AER")

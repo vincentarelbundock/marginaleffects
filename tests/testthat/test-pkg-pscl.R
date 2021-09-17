@@ -1,7 +1,5 @@
 skip_if_not_installed("pscl")
-suppressPackageStartupMessages({
-    library("pscl")
-})
+requiet("pscl")
 
 test_that("hurdle: set_coef", {
     data("bioChemists", package = "pscl")

@@ -1,6 +1,6 @@
 # skip_if_not_installed("nnet")
 
-# library("margins")
+# requiet("margins")
 
 # test_that("multinom: mfx", {
 #     skip("nnet::multinom is in progress")

@@ -1,5 +1,5 @@
 skip_if_not_installed("truncreg")
-suppressPackageStartupMessages(library(truncreg, warn.conflicts = FALSE))
+requiet("truncreg")
 
 test_that("truncreg: no validity check", {
     data("tobin", package = "survival")
