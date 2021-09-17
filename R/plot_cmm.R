@@ -3,7 +3,9 @@
 #' This function plots the marginal mean of the outcome variable (y-axis)
 #' against values of one or more predictors.
 #' 
-#' @param condition Name of the variable to plot on the x-axis
+#' @param condition String or vector of two strings. The first is a variable
+#' name to be displayed on the x-axis. The second is a variable whose values
+#' will be displayed in different colors.
 #' @param draw `TRUE` returns a `ggplot2` plot. `FALSE` returns a `data.frame` of the underlying data.
 #' @inheritParams plot.marginaleffects
 #' @inheritParams plot_cme
@@ -20,7 +22,7 @@ plot_cmm <- function(model,
     resp <- insight::find_response(model)[1]
 
     # allow multiple conditions and/or effects
-    checkmate::assert_character(condition, min.len = 1, max.len = 3)
+    checkmate::assert_character(condition, min.len = 1, max.len = 2)
 
     ## not sure why this fails in testthat
     # checkmate::assert_true(condition %in% colnames(dat))
@@ -77,16 +79,16 @@ plot_cmm <- function(model,
     colnames(datplot)[colnames(datplot) == condition2] <- "condition2"
     colnames(datplot)[colnames(datplot) == condition3] <- "condition3"
 
+    # colors and linetypes are categorical attributes
+    if ("condition2" %in% colnames(datplot)) datplot$condition2 <- factor(datplot$condition2)
+    if ("condition3" %in% colnames(datplot)) datplot$condition3 <- factor(datplot$condition3)
+
     # return immediately if the user doesn't want a plot
     if (isFALSE(draw)) {
         return(datplot)
     } else {
         assert_dependency("ggplot2")
     }
-
-    # colors and linetypes are categorical attributes
-    if ("condition2" %in% colnames(dat)) dat$condition2 <- factor(dat$condition2)
-    if ("condition3" %in% colnames(dat)) dat$condition3 <- factor(dat$condition3)
 
     # ggplot2
     p <- ggplot2::ggplot(datplot, ggplot2::aes(x = condition1, 

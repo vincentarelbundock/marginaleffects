@@ -9,7 +9,9 @@ plot_cmm(model, condition, conf.int = TRUE, conf.level = 0.95, draw = TRUE)
 \arguments{
 \item{model}{Model object}
 
-\item{condition}{Name of the variable to plot on the x-axis}
+\item{condition}{String or vector of two strings. The first is a variable
+name to be displayed on the x-axis. The second is a variable whose values
+will be displayed in different colors.}
 
 \item{conf.int}{Logical indicating whether or not to include a confidence interval.}
 
