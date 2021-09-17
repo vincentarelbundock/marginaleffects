@@ -1,3 +1,4 @@
+skip_if(getRversion() < 4.0)
 skip_if_not_installed("ivreg")
 requiet("margins")
 requiet("dplyr")
