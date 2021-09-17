@@ -57,11 +57,11 @@ The `data.frame` produced by `marginalmeans` is "tidy", which makes it easy to m
 library(kableExtra)
 library(tidyverse)
 
-marginalmeans(mod, variables = c("cyl", "hp")) |>
-    select(hp, cyl, predicted) |>
-    pivot_wider(values_from = predicted, names_from = cyl) |>
-    kbl(caption = "A table of Estimated Marginal Means") |>
-    kable_styling() |>
+marginalmeans(mod, variables = c("cyl", "hp")) %>%
+    select(hp, cyl, predicted) %>%
+    pivot_wider(values_from = predicted, names_from = cyl) %>%
+    kbl(caption = "A table of Estimated Marginal Means") %>%
+    kable_styling() %>%
     add_header_above(header = c(" " = 1, "cyl" = 3))
 ```
 
@@ -85,13 +85,13 @@ First, we download the `ggplot2movies` dataset from the [RDatasets archive](http
 
 ```{r, message = FALSE}
 library(tidyverse)
-dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/ggplot2movies/movies.csv") |>
+dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/ggplot2movies/movies.csv") %>%
     mutate(style = case_when(Action == 1 ~ "Action",
                              Comedy == 1 ~ "Comedy",
                              Drama == 1 ~ "Drama",
                              TRUE ~ "Other"),
            style = factor(style),
-           certified_fresh = rating >= 8) |>
+           certified_fresh = rating >= 8) %>%
     filter(length < 240)
 
 mod <- glm(certified_fresh ~ length * style, data = dat, family = binomial)
