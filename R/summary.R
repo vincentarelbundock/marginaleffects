@@ -34,10 +34,6 @@ print.marginaleffects.summary <- function(x,
   if ("p.value" %in% colnames(out)) {
       out$p.value <- format.pval(out$p.value)
   }
-  if ("contrast" %in% colnames(out)) {
-      out$contrast <- as.character(out$contrast) # used to be factor
-      out$contrast[is.na(out$contrast)] <- ""
-  }
 
   # rename
   dict <- c("group" = "Group",
