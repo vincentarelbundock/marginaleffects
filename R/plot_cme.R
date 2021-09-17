@@ -20,6 +20,11 @@
 #'          effect = "hp",
 #'          condition = "wt")
 #'
+#' mod <- lm(mpg ~ hp * wt * am, data = mtcars)
+#' plot_cme(mod, 
+#'          effect = "hp", 
+#'          condition = c("wt", "am"))
+#'
 plot_cme <- function(model, 
                      effect,
                      condition,

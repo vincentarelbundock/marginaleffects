@@ -29,7 +29,7 @@ principal quantities of interest for a *wide* variety of models:
   - [*Contrast*
     (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)
       - The difference between two Marginal Means, calculated for
-        meanginfully different regressor values (e.g., College graduates
+        meaningfully different regressor values (e.g., College graduates
         vs. Others).
 
 ## Why?
@@ -103,9 +103,9 @@ I am *very* eager to add support for new models. Feel free to file a
 request on Github or – even better – submit some code.
 
 Warning: When using `marginaleffects` with different models, you will
-probably have to adjust the `predict_type` argument. Refer to the
-documentation of your modeling package to see what `type` argument is
-allowed in the `predict` function.
+probably have to adjust the `type` argument. Refer to the documentation
+of your modeling package to see what `type` argument is allowed in the
+`predict` function.
 
 | Model                | Support: Effect | Support: Std. Errors | Validity: Stata | Validity: Margins |
 | :------------------- | :-------------- | :------------------- | :-------------- | :---------------- |
@@ -244,6 +244,24 @@ plot_cmm(mod, condition = c("hp", "wt"))
 ```
 
 <img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
+
+Or you can work with the output of the `marginalmeans` or
+`marginaleffects` directly to create your own plots. For example:
+
+``` r
+library(ggplot2)
+
+marginalmeans(mod, 
+              newdata = typical(am = 0:1, 
+                                wt = fivenum(mtcars$wt), 
+                                hp = seq(100, 300, 10))) %>%
+    ggplot(aes(x = hp, y = predicted, ymin = conf.low, ymax = conf.high)) +
+    geom_ribbon(aes(fill = factor(wt)), alpha = .2) +
+    geom_line(aes(color = factor(wt))) +
+    facet_wrap(~am)
+```
+
+<img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />
 
 There is *much* more you can do with `marginaleffects`. Please read the
 other articles on this website to learn more:
