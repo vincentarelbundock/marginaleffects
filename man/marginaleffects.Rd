@@ -9,7 +9,6 @@ marginaleffects(
   newdata = NULL,
   variables = NULL,
   vcov = TRUE,
-  numDeriv_method = "simple",
   predict_type = "response",
   return_data = TRUE,
   ...
@@ -30,10 +29,6 @@ calculates marginal effects for all terms in the model object.}
 \item TRUE: computes unit-level standard errors using the default \code{vcov(model)} variance-covariance matrix.
 \item Named square matrix: computes standard errors with a user-supplied variance-covariance matrix. This matrix must be square and have dimensions equal to the number of coefficients in \code{get_coef(model)}.
 }}
-
-\item{numDeriv_method}{One of "simple", "Richardson", or "complex",
-indicating the method to use for the approximation. See
-\code{\link[numDeriv:grad]{numDeriv::grad()}} for details.}
 
 \item{predict_type}{Type(s) of prediction as string or vector This can
 differ based on the model type, but will typically be a string such as:

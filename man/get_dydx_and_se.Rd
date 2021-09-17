@@ -43,10 +43,6 @@ level of the response variable is associated to its own set of coefficients.}
 differ based on the model type, but will typically be a string such as:
 "response", "link", "probs", or "zero".}
 
-\item{numDeriv_method}{One of "simple", "Richardson", or "complex",
-indicating the method to use for the approximation. See
-\code{\link[numDeriv:grad]{numDeriv::grad()}} for details.}
-
 \item{variable}{A string to identify the variable whose marginal effect to compute.}
 }
 \value{

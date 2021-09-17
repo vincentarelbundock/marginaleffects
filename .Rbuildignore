@@ -9,3 +9,4 @@
 ^data-raw$
 ^codecov\.yml$
 ^sandbox$
+^\.covrignore$

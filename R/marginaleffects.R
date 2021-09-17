@@ -20,9 +20,6 @@
 #' @param predict_type Type(s) of prediction as string or vector This can
 #' differ based on the model type, but will typically be a string such as:
 #' "response", "link", "probs", or "zero".
-#' @param numDeriv_method One of "simple", "Richardson", or "complex",
-#'   indicating the method to use for the approximation. See
-#'   [numDeriv::grad()] for details.
 #' @param return_data boolean If `TRUE`, the original data used to fit the
 #'   model is attached to the output. `FALSE` will objects which take up less
 #'   space in memory.
@@ -55,12 +52,17 @@ marginaleffects <- function(model,
                             newdata = NULL, 
                             variables = NULL, 
                             vcov = TRUE,
-                            numDeriv_method = "simple",
                             predict_type = "response",
                             return_data = TRUE,
                             ...) {
 
   
+    # should I expose this to users? For now, keep the UI simple
+    # numDeriv_method One of "simple", "Richardson", or "complex",
+    #   indicating the method to use for the approximation. See
+    #   [numDeriv::grad()] for details.
+    numDeriv_method <- "simple"
+
     # if `newdata` is a call to `typical()` or `counterfactual()`, insert `model`
     scall <- substitute(newdata)
     if (is.call(scall) && as.character(scall)[1] %in% c("typical", "counterfactual")) {

@@ -9,6 +9,7 @@ marginalmeans(
   newdata = NULL,
   variables = NULL,
   predict_type = "response",
+  conf.level = 0.95,
   ...
 )
 }
@@ -26,6 +27,11 @@ Five-Number Summaries.}
 \item{predict_type}{Type(s) of prediction as string or vector This can
 differ based on the model type, but will typically be a string such as:
 "response", "link", "probs", or "zero".}
+
+\item{conf.level}{The confidence level to use for the confidence interval.
+No interval is computed if \code{conf.int=NULL}.  Must be strictly greater than 0
+and less than 1. Defaults to 0.95, which corresponds to a 95 percent
+confidence interval.}
 
 \item{...}{Additional arguments are pushed forward to \code{predict()}.}
 }

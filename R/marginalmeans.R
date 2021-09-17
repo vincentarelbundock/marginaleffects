@@ -9,6 +9,10 @@
 #'   Five-Number Summaries.
 #' @param newdata A dataset over which to compute marginal effects. `NULL` uses
 #'   the original data used to fit the model.
+#' @param conf.level The confidence level to use for the confidence interval.
+#' No interval is computed if `conf.int=NULL`.  Must be strictly greater than 0
+#' and less than 1. Defaults to 0.95, which corresponds to a 95 percent
+#' confidence interval.
 #' @param predict_type Type(s) of prediction as string or vector This can
 #' differ based on the model type, but will typically be a string such as:
 #' "response", "link", "probs", or "zero".
@@ -19,6 +23,7 @@ marginalmeans <- function(model,
                           newdata = NULL, 
                           variables = NULL, 
                           predict_type = "response",
+                          conf.level = 0.95,
                           ...) {
 
     # sanity checks and pre-processing
@@ -71,13 +76,15 @@ marginalmeans <- function(model,
     # pad factors: `get_predicted/model.matrix` break when factor levels are missing
     padding <- pad_factors(newdata)
     newdata <- rbind(padding, newdata)
+    newdata$rowid <- 1:nrow(newdata)
 
     # predictions
     out_list <- list()
     for (predt in predict_type) {
         tmp <- insight::get_predicted(model, 
-                                      newdata = newdata,
-                                      type = predt)
+                                      data = newdata,
+                                      type = predt,
+                                      ci = conf.level)
         tmp <- as.data.frame(tmp)
         tmp <- insight::standardize_names(tmp, style = "broom")
         tmp$type <- predt
@@ -85,15 +92,15 @@ marginalmeans <- function(model,
         out_list[[predt]] <- tmp
     }
     out <- do.call("rbind", out_list)
-
-    # return data
-    out <- merge(out, newdata, by = "rowid")
-
+    
     # unpad factors
-    if (nrow(padding) > 0) {
-        idx <- !(1:nrow(out)) %in% (1:nrow(padding))
-        out <- out[idx,]
-    }
+    out$rowid <- out$rowid - nrow(padding)
+    out <- utils::tail(out, nrow(out) - nrow(padding))
+    newdata$rowid <- newdata$rowid - nrow(padding)
+    newdata <- utils::tail(newdata, nrow(newdata) - nrow(padding))
+
+    # return data 
+    out <- merge(out, newdata, all.x = TRUE, sort = FALSE)
 
     # rowid does not make sense here because the grid is made up
     out$rowid <- NULL

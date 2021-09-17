@@ -2,6 +2,20 @@ tmp <- mtcars
 tmp$am <- as.logical(tmp$am)
 mod <- lm(mpg ~ hp + wt + factor(cyl) + am, data = tmp)
 
+################
+#  conf.level  #
+################
+
+test_that("conf.level argument changes width of interval", {
+    for (L in c(.4, .7, .9, .95, .99, .999)) {
+        nd <- typical(model = mod)
+        unknown <- marginalmeans(mod, newdata = nd, conf.level = L)
+        known <- predict(mod, newdata = nd, se.fit = TRUE, interval = "confidence", level = L)$fit
+        expect_equal(unknown$conf.low, known[, "lwr"])
+        expect_equal(unknown$conf.high, known[, "upr"])
+    }
+})
+
 ######################################
 #  values against predict benchmark  #
 ######################################
