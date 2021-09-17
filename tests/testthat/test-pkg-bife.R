@@ -1,7 +1,7 @@
 skip_if_not_installed("bife")
 
 test_that("bife: no validity check", {
-    library("bife")
+    requiet("bife")
     dataset <- psid
     mod <- bife(LFP ~ AGE + I(INCH / 1000) + KID1 + KID2 + KID3 | ID, data = dataset)
     mfx <- marginaleffects(mod)

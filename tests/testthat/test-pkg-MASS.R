@@ -1,7 +1,8 @@
 skip_if_not_installed("MASS")
 skip_if_not_installed("margins")
 
-library("margins")
+requiet("margins")
+requiet("MASS")
 
 test_that("MASS::rlm no validity check", {
     model <- MASS::rlm(mpg ~ hp * wt, mtcars)

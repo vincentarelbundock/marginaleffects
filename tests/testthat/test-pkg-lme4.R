@@ -1,6 +1,6 @@
 skip_if_not_installed("lme4")
 
-library("margins")
+requiet("margins")
 
 set.seed(1024)
 N <- 1000

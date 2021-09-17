@@ -1,5 +1,5 @@
 skip_if_not_installed("robustbase")
-library("robustbase")
+requiet("robustbase")
 
 
 test_that("lmrob: no validity check", {

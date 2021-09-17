@@ -1,4 +1,4 @@
-library("survival")
+requiet("survival")
 
 test_that("coxph: no validity", {
     test1 <- list(time=c(4,3,1,1,2,2,3), 

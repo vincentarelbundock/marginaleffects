@@ -1,8 +1,6 @@
 skip_if_not_installed("gam")
 
-suppressPackageStartupMessages(
-  library("gam")
-)
+requiet("gam")
 
 test_that("gam: no validity check", {
   data(kyphosis, package = "gam")

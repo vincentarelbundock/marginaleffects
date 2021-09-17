@@ -1,7 +1,5 @@
-suppressPackageStartupMessages({
-    library("glmx")
-    library("MASS")
-})
+requiet("glmx")
+requiet("MASS")
 
 test_that("glmx: no validity check", {
     d <- data.frame(x = runif(200, -1, 1))

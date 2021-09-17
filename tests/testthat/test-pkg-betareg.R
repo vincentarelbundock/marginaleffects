@@ -1,7 +1,6 @@
 skip_if_not_installed("betareg")
 skip_if_not_installed("margins")
-
-library("dplyr", warn.conflicts = FALSE)
+requiet("dplyr")
 
 test_that("betareg vs. margins", {
     data("GasolineYield", package = "betareg")

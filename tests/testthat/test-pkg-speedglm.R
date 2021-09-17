@@ -1,8 +1,5 @@
 skip_if_not_installed("speedglm")
-
-suppressPackageStartupMessages(
-    library(speedglm)
-)
+requiet("speedglm")
 
 test_that("speedglm: no validity check", {
     set.seed(10)

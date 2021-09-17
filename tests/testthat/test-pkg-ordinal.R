@@ -1,6 +1,6 @@
 # skip_if_not_installed("ordinal")
 
-# library("margins")
+# requiet("margins")
 
 # test_that("ordinal: vs `margins`", {
 #     data("wine", package = "ordinal")

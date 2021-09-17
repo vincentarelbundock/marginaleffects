@@ -1,8 +1,7 @@
 skip_if_not_installed("ivreg")
-
-library("margins")
-library("dplyr", warn.conflicts = FALSE)
-library("ivreg")
+requiet("margins")
+requiet("dplyr")
+requiet("ivreg")
 
 test_that("ivreg vs. margins", {
     data(Kmenta, package = "ivreg")

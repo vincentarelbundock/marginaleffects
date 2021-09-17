@@ -1,10 +1,8 @@
-
-
 pkgload::load_all()
 
-library(insight)
+requiet("insight")
+requiet("sampleSelection")
 
-suppressPackageStartupMessages(library(sampleSelection, warn.conflicts = FALSE))
 data(Mroz87, package = "sampleSelection")
 Mroz87$kids  <- (Mroz87$kids5 + Mroz87$kids618 > 0)
 
