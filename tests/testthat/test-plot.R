@@ -1,5 +1,4 @@
-# I think there are different graphics engines. Do this locally.
-skip_on_ci()
+skip_if(getRversion() < 4.0)
 
 test_that("plot_cme(mod, 'hp', 'wt')", {
     mod <- lm(mpg ~ hp * wt, data = mtcars)
@@ -13,4 +12,3 @@ test_that("plot(mfx)", {
     p <- plot(mfx)
     vdiffr::expect_doppelganger("plot basic", p)
 })
-
