@@ -95,18 +95,21 @@ dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/ggplot2movie
     filter(length < 240)
 
 mod <- glm(certified_fresh ~ length * style, data = dat, family = binomial)
-mod <- glm(certified_fresh ~ length + style, data = dat, family = binomial)
 ```
 
 We can plot the marginal means of the response, conditional on the `length` variable using the `plot_cmm` function:
 
 ```{r}
+mod <- glm(certified_fresh ~ length, data = dat, family = binomial)
+
 plot_cmm(mod, condition = "length")
 ```
 
-We can also introduce another condition which will display a categorical variable like `style` in different colors:
+We can also introduce another condition which will display a categorical variable like `style` in different colors. This can be useful in models with interactions:
 
 ```{r}
+mod <- glm(certified_fresh ~ length * style, data = dat, family = binomial)
+
 plot_cmm(mod, condition = c("length", "style"))
 ```
 
