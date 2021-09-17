@@ -70,3 +70,9 @@ test_that("'group' cannot be a column name because of conflict with tidy output"
     mod <- lme4::glmer(y ~ x1 + x2 + (1 | group), data = tmp, family = binomial)
     expect_error(marginaleffects(mod), regexp = "more descriptive")
 })
+
+
+test_that("sanity check on dpoMatrix", {
+    k <- marginaleffects(mod_glm, vcov = stats::vcov(mod_glm))
+    expect_s3_class(k, "data.frame")
+})
