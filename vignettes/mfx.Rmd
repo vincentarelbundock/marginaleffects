@@ -202,8 +202,8 @@ quad <- data.frame(x = rnorm(N))
 quad$y <- 1 + 1 * quad$x + 2 * quad$x^2 + rnorm(N)
 mod <- lm(y ~ x + I(x^2), quad)
 
-marginaleffects(mod, newdata = typical(x = -2:2)) |>
-    mutate(truth = 1 + 4 * x)  |>
+marginaleffects(mod, newdata = typical(x = -2:2))  %>%
+    mutate(truth = 1 + 4 * x) %>%
     select(dydx, truth)
 ```
 
