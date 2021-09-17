@@ -245,6 +245,24 @@ plot_cmm(mod, condition = c("hp", "wt"))
 
 <img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
 
+Or you can work with the output of the `marginalmeans` or
+`marginaleffects` directly to create your own plots. For example:
+
+``` r
+library(ggplot2)
+
+marginalmeans(mod, 
+              newdata = typical(am = 0:1, 
+                                wt = fivenum(mtcars$wt), 
+                                hp = seq(100, 300, 10))) %>%
+    ggplot(aes(x = hp, y = predicted, ymin = conf.low, ymax = conf.high)) +
+    geom_ribbon(aes(fill = factor(wt)), alpha = .2) +
+    geom_line(aes(color = factor(wt))) +
+    facet_wrap(~am)
+```
+
+<img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />
+
 There is *much* more you can do with `marginaleffects`. Please read the
 other articles on this website to learn more:
 
