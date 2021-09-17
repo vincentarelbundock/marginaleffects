@@ -96,13 +96,11 @@ library(marginaleffects)
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv")
 dat$large_penguin <- ifelse(dat$body_mass_g > median(dat$body_mass_g, na.rm = TRUE), 1, 0)
 
-mod <- glm(large_penguin ~ bill_length_mm + flipper_length_mm + species, 
+mod <- glm(large_penguin ~ bill_length_mm * flipper_length_mm + species, 
            data = dat, family = binomial)
 ```
 
-A "marginal effect" is a unit-specific measure of association between a change in a regressor and a change in the regressand. In most cases, its value will depend on the values of all the other variables in the model for that specific unit.
-
-The `marginaleffects` function thus computes a distinct estimate of the marginal effect and of the standard error for each regressor ("term"), for each unit of observation ("rowid"). You can view and manipulate the full results with functions like `head`, as you would with any other `data.frame`:
+A "marginal effect" is a unit-specific measure of association between a change in a regressor and a change in the regressand. The `marginaleffects` function thus computes a distinct estimate of the marginal effect and of the standard error for each regressor ("term"), for each unit of observation ("rowid"). You can view and manipulate the full results with functions like `head`, as you would with any other `data.frame`:
 
 ```{r}
 mfx <- marginaleffects(mod)
@@ -110,4 +108,14 @@ mfx <- marginaleffects(mod)
 head(mfx)
 ```
 
-Notice that the results are presented in "tidy" long format: each row of the original dataset gets a unique `rowid` value, each unit-level marginal effect appears on a distinct row, and metadata appears neatly in separate columns. This makes it easy to operate on the results programmatically.
+The function `summary` calculates the "Average Marginal Effect," that is, the average of all unit-specific marginal effects:
+
+```{r}
+summary(mfx)
+```
+
+The `plot_cme` plots "Conditional Marginal Effects," that is, it plots the value of a marginal effect for different values of a regressor (often an interaction):
+
+```{r}
+plot_cme(mod, effect = "bill_length_mm", condition = "flipper_length_mm", draw = FALSE)
+```

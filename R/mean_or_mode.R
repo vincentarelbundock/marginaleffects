@@ -29,6 +29,12 @@ mean_or_mode.default <- function(x) {
 
 #' @rdname mean_or_mode
 #' @export
+mean_or_mode.character <- function(x) {
+    Mode(x)
+}
+
+#' @rdname mean_or_mode
+#' @export
 mean_or_mode.factor <- function(x) {
     Mode(x)
 }

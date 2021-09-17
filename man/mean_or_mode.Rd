@@ -3,6 +3,7 @@
 \name{mean_or_mode}
 \alias{mean_or_mode}
 \alias{mean_or_mode.default}
+\alias{mean_or_mode.character}
 \alias{mean_or_mode.factor}
 \alias{mean_or_mode.logical}
 \alias{mean_or_mode.data.frame}
@@ -11,6 +12,8 @@
 mean_or_mode(x)
 
 \method{mean_or_mode}{default}(x)
+
+\method{mean_or_mode}{character}(x)
 
 \method{mean_or_mode}{factor}(x)
 
