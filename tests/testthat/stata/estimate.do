@@ -3,7 +3,7 @@ cd ~/repos/marginaleffects/tests/testthat/stata
 
 * stats::glm
 clear
-use data/stats_glm_01.dta
+use databases/stats_glm_01.dta
 quiet logit y c.x1##c.x2
 quiet margins, dydx(x1 x2) post
 outreg2 using "results/stats_glm_01.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
@@ -11,7 +11,7 @@ outreg2 using "results/stats_glm_01.xls", dec(10) excel replace noaster sideway 
 
 * stats::lm
 clear
-use data/stats_lm_01.dta
+use databases/stats_lm_01.dta
 quiet reg y c.x1##c.x2
 quiet margins, dydx(x1 x2) post
 outreg2 using "results/stats_lm_01.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
@@ -19,7 +19,7 @@ outreg2 using "results/stats_lm_01.xls", dec(10) excel replace noaster sideway n
 
 * betareg::betareg
 clear
-use data/betareg_betareg_01.dta
+use databases/betareg_betareg_01.dta
 quiet betareg yield i.batch temp
 quiet margins, dydx(temp) post
 outreg2 using "results/betareg_betareg_01.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
@@ -27,7 +27,7 @@ outreg2 using "results/betareg_betareg_01.xls", dec(10) excel replace noaster si
 
 * MASS::polr
 clear
-use data/MASS_polr_01.dta
+use databases/MASS_polr_01.dta
 quiet ologit y x1 x2
 quiet margins, dydx(x1 x2) post
 outreg2 using "results/MASS_polr_01.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
@@ -35,7 +35,7 @@ outreg2 using "results/MASS_polr_01.xls", dec(10) excel replace noaster sideway 
 
 * fixest::feols
 clear
-use data/plm_emplUK.dta
+use databases/plm_emplUK.dta
 xtset firm year
 quiet xtreg wage c.capital##c.output, fe cluster(firm)
 quiet margins, dydx(*) post
@@ -49,7 +49,7 @@ outreg2 using "results/fixest_fepois_01.xls", dec(10) excel replace noaster side
 
 * ivreg::ivreg
 clear
-use data/ivreg_ivreg_01.dta
+use databases/ivreg_ivreg_01.dta
 quiet ivregress 2sls Q D (P = D F A)
 quiet margins, dydx(P D) post
 outreg2 using "results/ivreg_ivreg_01.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
@@ -57,7 +57,7 @@ outreg2 using "results/ivreg_ivreg_01.xls", dec(10) excel replace noaster sidewa
 
 * MASS::glm.nb
 clear
-use data/mtcars.dta
+use databases/mtcars.dta
 quiet nbreg carb wt i.cyl
 quiet margins, dydx(*) post
 outreg2 using "results/MASS_glm_nb.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
@@ -65,7 +65,7 @@ outreg2 using "results/MASS_glm_nb.xls", dec(10) excel replace noaster sideway n
 
 * AER::tobit
 clear
-use data/affairs.dta
+use databases/affairs.dta
 quiet tobit affairs age yearsmarried religiousness occupation rating, ll(0)
 quiet margins, dydx(*) post
 outreg2 using "results/AER_tobit.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
@@ -73,7 +73,7 @@ outreg2 using "results/AER_tobit.xls", dec(10) excel replace noaster sideway nop
 
 * AER::tobit (right-censured)
 clear
-use data/affairs.dta
+use databases/affairs.dta
 quiet tobit affairs age yearsmarried religiousness occupation rating, ul(4) ll(0)
 quiet margins, dydx(*) post
 outreg2 using "results/AER_tobit_right4.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
@@ -81,7 +81,7 @@ outreg2 using "results/AER_tobit_right4.xls", dec(10) excel replace noaster side
 
 * estimatr::lm_robust
 clear
-use data/mtcars.dta
+use databases/mtcars.dta
 quiet reg carb wt i.cyl, vce(hc2)
 quiet margins, dydx(*) post
 outreg2 using "results/estimatr_lm_robust.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
@@ -89,17 +89,34 @@ outreg2 using "results/estimatr_lm_robust.xls", dec(10) excel replace noaster si
 
 * estimatr::iv_robust
 clear 
-use data/kmenta.dta
+use databases/kmenta.dta
 quiet ivregress 2sls Q D (P = D F A), vce(robust) small
 quiet margins, dydx(*) post
 outreg2 using "results/estimatr_iv_robust.xls", dec(10) excel replace noaster sideway
+
+* lmer4
+clear
+use databases/lme4_01.dta
+xtset clus
+
+quiet xtreg y c.x1##c.x2, re
+quiet margins, dydx(*) post
+outreg2 using "results/lme4_01.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
+
+clear
+use databases/lme4_02.dta
+xtset clus
+
+quiet xtlogit y c.x1##c.x2, re
+quiet margins, dydx(*) post
+outreg2 using "results/lme4_02.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
 
 
 ******************* PANEL
 
 * emplUK
 clear
-use data/plm_emplUK.dta
+use databases/plm_emplUK.dta
 xtset firm year
 gen logwage = log(wage)
 
@@ -115,7 +132,7 @@ outreg2 using "results/fixest_fepois_01.xls", dec(10) excel replace noaster side
 
 * Grunfeld
 clear
-use data/plm_Grunfeld.dta
+use databases/plm_Grunfeld.dta
 xtset firm year
 
 * plm pooling

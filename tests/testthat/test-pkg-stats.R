@@ -23,7 +23,7 @@ test_that("glm", {
 
 test_that("glm vs. Stata", {
     stata <- readRDS(test_path("stata/stata.rds"))[["stats_glm_01"]]
-    dat <- read.csv(test_path("stata/data/stats_glm_01.csv"))
+    dat <- read.csv(test_path("stata/databases/stats_glm_01.csv"))
     mod <- glm(y ~ x1 * x2, family = binomial, data = dat)
     ame <- marginaleffects(mod) %>%
            group_by(term) %>%
@@ -35,7 +35,7 @@ test_that("glm vs. Stata", {
 
 test_that("lm vs. Stata", {
     stata <- readRDS(test_path("stata/stata.rds"))[["stats_lm_01"]]
-    dat <- read.csv(test_path("stata/data/stats_lm_01.csv"))
+    dat <- read.csv(test_path("stata/databases/stats_lm_01.csv"))
     mod <- lm(y ~ x1 * x2, data = dat)
     ame <- marginaleffects(mod) %>%
            group_by(term) %>%

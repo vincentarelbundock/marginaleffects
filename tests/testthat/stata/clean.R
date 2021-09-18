@@ -110,7 +110,19 @@ results[["plm_sa"]] <- tmp
 
 
 
+# lme4:
+tmp <- read.table(test_path("stata/results/lme4_01.txt"), sep = "\t", skip = 4) |>
+    head(2) |>
+    setNames(c("term", "dydxstata", "std.errorstata"))
+tmp$dydxstata <- as.numeric(tmp$dydxstata)
+results[["lme4_lmer"]] <- tmp
 
+# lme4:
+tmp <- read.table(test_path("stata/results/lme4_02.txt"), sep = "\t", skip = 4) |>
+    head(2) |>
+    setNames(c("term", "dydxstata", "std.errorstata"))
+tmp$dydxstata <- as.numeric(tmp$dydxstata)
+results[["lme4_glmer"]] <- tmp
 
 
 # save

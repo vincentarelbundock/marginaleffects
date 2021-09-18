@@ -16,8 +16,8 @@
 "geepack::geeglm", "x" , "x" , ,
 "glmx::glmx", "x" , "x" , ,
 "ivreg::ivreg", "x" , "x" , "x" , "x"
-"lme4::lmer", "x" , "x" , , "dydx only"
-"lme4::glmer", "x" , "x" , , "dydx only"
+"lme4::lmer", "x" , "x" , "x", "x"
+"lme4::glmer", "x" , "x" , "x", "x"
 "MASS::glm.nb", "x" , "x", "x", "x"
 "MASS::rlm", "x" , "x" , ,
 "nlme::gls", "x", "x", , 

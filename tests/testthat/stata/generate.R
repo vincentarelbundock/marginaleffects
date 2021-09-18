@@ -35,6 +35,30 @@ dat$y <- factor(as.numeric(dat$y))
 haven::write_dta(dat, path = "data/MASS_polr_01.dta")
 
 
+##########
+#  lme4  #
+##########
+
+set.seed(1024)
+N <- 1000
+
+dat_glm <- data.frame(x1 = rnorm(N),
+                      x2 = rnorm(N),
+                      clus = sample(letters[1:10], N, replace = TRUE))
+dat_glm$clus <- as.factor(dat_glm$clus)
+dat_glm$y <- dat_glm$x1 + dat_glm$x2 + dat_glm$x1 * dat_glm$x2 + .1 * as.numeric(dat_glm$clus)
+dat_glm$y <- rbinom(N, 1, plogis(dat_glm$y))
+
+dat_lm <- data.frame(x1 = rnorm(N),
+                     x2 = rnorm(N),
+                     clus = sample(letters[1:10], N, replace = TRUE))
+dat_lm$clus <- as.factor(dat_lm$clus)
+dat_lm$y <- dat_lm$x1 + dat_lm$x2 + dat_lm$x1 * dat_lm$x2 + .1 * as.numeric(dat_lm$clus) + rnorm(N)
+
+haven::write_dta(dat_lm, test_path("stata/data/lme4_01.dta"))
+haven::write_dta(dat_glm, test_path("stata/data/lme4_02.dta"))
+
+
 ############
 #  fixest  #
 ############

@@ -33,6 +33,7 @@ Suggests:
     emmeans,
     ggplot2,
     ggbeeswarm,
+    haven,
     kableExtra,
     knitr,
     margins,
