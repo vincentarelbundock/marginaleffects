@@ -114,12 +114,13 @@ of your modeling package to see what `type` argument is allowed in the
 | stats::lm            | x               | x                    | x               | x                 |
 | stats::glm           | x               | x                    | x               | x                 |
 | aer::ivreg           | x               | x                    | x               | x                 |
-| aer::tobit           | x               | x                    |                 |                   |
+| aer::tobit           | x               | x                    | x               |                   |
 | betareg::betareg     | x               | x                    | x               | x                 |
 | bife::bife           | x               | x                    |                 |                   |
 | brglm2::brglmFit     | x               | x                    |                 |                   |
 | brglm2::brnb         | x               | x                    |                 |                   |
-| estimatr::lm\_robust | x               | x                    |                 |                   |
+| estimatr::lm\_robust | x               | x                    | x               |                   |
+| estimatr::iv\_robust | x               | x                    | x               |                   |
 | fixest::feols        | x               | x                    |                 |                   |
 | fixest::feglm        | x               | x                    |                 |                   |
 | gam::gam             | x               | x                    |                 |                   |
@@ -128,8 +129,7 @@ of your modeling package to see what `type` argument is allowed in the
 | ivreg::ivreg         | x               | x                    | x               | x                 |
 | lme4::lmer           | x               | x                    |                 | dydx only         |
 | lme4::glmer          | x               | x                    |                 | dydx only         |
-| MASS::glm.nb         | x               | x                    |                 | x                 |
-| MASS::polr           | x               |                      | x               |                   |
+| MASS::glm.nb         | x               | x                    | x               | x                 |
 | MASS::rlm            | x               | x                    |                 |                   |
 | nlme::gls            | x               | x                    |                 |                   |
 | ordinal::clm         | x               |                      |                 | x                 |

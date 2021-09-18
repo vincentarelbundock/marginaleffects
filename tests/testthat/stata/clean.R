@@ -49,7 +49,9 @@ results[["betareg_betareg_01"]] <- tmp
 #  MASS::glm.nb
 tmp <- read.table(test_path("stata/results/MASS_glm_nb.txt"), sep = "\t", skip = 4) |>
     setNames(c("term", "dydxstata", "std.errorstata")) |>
-    head(1)
+    head(3)
+tmp$term <- gsub("\\.cyl", "", tmp$term)
+tmp$term[2:3] <- paste0("factor(cyl)", tmp$term)[2:3]
 results[["mass_glm_nb"]] <- tmp
 
 #  AER::tobit
