@@ -118,7 +118,7 @@ plot_cme(mod, effect = "hp", condition = c("wt", "am"))
 
 Beyond marginal effects, we can also use the `marginalmeans` function to estimate -- you guessed it -- marginal means. We use the `variables` argument to select the categorical variables that will form the "grid":
 
-```{r}
+```{r, message=FALSE}
 marginalmeans(mod, variables = c("am", "wt"))
 ```
 
