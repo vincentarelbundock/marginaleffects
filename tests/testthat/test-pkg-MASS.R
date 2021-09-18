@@ -5,11 +5,8 @@ requiet("margins")
 requiet("MASS")
 
 test_that("MASS::rlm no validity check", {
-    model <- MASS::rlm(mpg ~ hp * wt, mtcars)
     mfx <- marginaleffects(model)
-    expect_s3_class(mfx, "data.frame")
-    expect_false(any(mfx$estimate == 0))
-    expect_false(any(mfx$std.error == 0))
+    expect_mfx(model)
 })
 
 
@@ -22,6 +19,24 @@ test_that("polr vs. margins (dydx only)", {
     mar <- margins(mod)
 })
 
+
+test_that("glm.nb vs. margins", {
+    # margins does not support unit-level standard errors
+    model <- suppressWarnings(MASS::glm.nb(carb ~ wt + factor(cyl), data = mtcars))
+    mfx <- marginaleffects(model)
+    mar <- margins(model)
+    expect_true(test_against_margins(mfx, mar))
+})
+
+
+test_that("glm.nb vs. Stata", {
+    stata <- readRDS(test_path("stata/stata.rds"))$mass_glm_nb
+    model <- suppressWarnings(
+        MASS::glm.nb(carb ~ wt + factor(cyl), data = mtcars))
+    mfx <- merge(tidy(marginaleffects(model)), stata)
+    expect_equal(mfx$estimate, mfx$dydxstata, tolerance = .0001)
+    expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = .001)
+})
 
 # test_that("polr vs. Stata", {
 #     stata <- readRDS(test_path("stata/stata.rds"))[["MASS_polr_01"]]
@@ -37,12 +52,3 @@ test_that("polr vs. margins (dydx only)", {
 #     expect_equal(ame$dydx, ame$dydxstata, tolerance = 0.001)
 #     # expect_equal(ame$std.error, ame$std.errorstata, tolerance = 0.001)
 # })
-
-
-test_that("glm.nb vs. margins", {
-    # margins does not support unit-level standard errors
-    model <- suppressWarnings(MASS::glm.nb(carb ~ wt + factor(cyl), data = mtcars))
-    mfx <- marginaleffects(model)
-    mar <- margins(model)
-    expect_true(test_against_margins(mfx, mar))
-})
