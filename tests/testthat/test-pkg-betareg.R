@@ -16,7 +16,7 @@ test_that("betareg vs. margins", {
 test_that("betareg vs. Stata", {
     skip("betareg vs. Stata: matching mfx but different std.errors")
     stata <- readRDS(test_path("stata/stata.rds"))[["betareg_betareg_01"]]
-    dat <- read.csv(test_path("stata/data/betareg_betareg_01.csv"))
+    dat <- read.csv(test_path("stata/databases/betareg_betareg_01.csv"))
     mod <- betareg::betareg(yield ~ factor(batch) + temp, data = dat)
     ame <- suppressWarnings(marginaleffects(mod)) %>%
            group_by(term) %>%

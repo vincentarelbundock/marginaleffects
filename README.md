@@ -128,8 +128,8 @@ of your modeling package to see what `type` argument is allowed in the
 | geepack::geeglm      | x               | x                    |                 |                   |
 | glmx::glmx           | x               | x                    |                 |                   |
 | ivreg::ivreg         | x               | x                    | x               | x                 |
-| lme4::lmer           | x               | x                    |                 | dydx only         |
-| lme4::glmer          | x               | x                    |                 | dydx only         |
+| lme4::lmer           | x               | x                    | x               | x                 |
+| lme4::glmer          | x               | x                    | x               | x                 |
 | MASS::glm.nb         | x               | x                    | x               | x                 |
 | MASS::rlm            | x               | x                    |                 |                   |
 | nlme::gls            | x               | x                    |                 |                   |
@@ -253,7 +253,8 @@ Or you can work with the output of the `marginalmeans` or
 
 ``` r
 library(ggplot2)
-
+#> RStudio Community is a great place to get help:
+#> https://community.rstudio.com/c/tidyverse
 marginalmeans(mod, 
               newdata = typical(am = 0:1, 
                                 wt = fivenum(mtcars$wt), 

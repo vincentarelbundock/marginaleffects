@@ -13,7 +13,7 @@ test_that("ivreg vs. margins", {
 })    
 
 test_that("ivreg vs. Stata", {
-    dat <- read.csv(test_path("stata/data/ivreg_ivreg_01.csv"))
+    dat <- read.csv(test_path("stata/databases/ivreg_ivreg_01.csv"))
     stata <- readRDS(test_path("stata/stata.rds"))[["ivreg_ivreg_01"]]
     mod <- ivreg::ivreg(Q ~ P + D | D + F + A, data = dat)
     ame <- marginaleffects(mod) %>%

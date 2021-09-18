@@ -41,7 +41,7 @@ test_that("glm.nb vs. Stata", {
 
 # test_that("polr vs. Stata", {
 #     stata <- readRDS(test_path("stata/stata.rds"))[["MASS_polr_01"]]
-#     dat <- read.csv(test_path("stata/data/MASS_polr_01.csv"))
+#     dat <- read.csv(test_path("stata/databases/MASS_polr_01.csv"))
 #     mod <- MASS::polr(factor(y) ~ x1 + x2, data = dat)
 #     void <- capture.output(suppressWarnings(suppressMessages(
 #         ame <- marginaleffects(mod, vcov = FALSE, type = "probs") %>%

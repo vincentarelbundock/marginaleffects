@@ -98,9 +98,9 @@ sanity_newdata <- function(model, newdata) {
     if (is.null(newdata)) {
         newdata <- insight::get_data(model)
     }
-    if ("group" %in% colnames(newdata)) {
-        stop('The string "group" cannot be a column name in `newdata`. It is used in the generic, standardized, and tidy output of the `marginaleffects` function. Sharing a column name could cause confusion. Please use a more descriptive variable name in your dataset.')
-    }
+    # if ("group" %in% colnames(newdata)) {
+    #     stop('The string "group" cannot be a column name in `newdata`. It is used in the generic, standardized, and tidy output of the `marginaleffects` function. Sharing a column name could cause confusion. Please use a more descriptive variable name in your dataset.')
+    # }
     return(newdata)
 }
 
