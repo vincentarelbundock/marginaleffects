@@ -47,17 +47,17 @@ outreg2 using "results/MASS_glm_nb.xls", dec(10) excel replace noaster sideway n
 
 
 * AER::tobit
-*clear
-*use data/affairs.dta
-*quiet tobit affairs age yearsmarried religiousness occupation rating
-*quiet margins, dydx(*) post
-*outreg2 using "results/AER_tobit.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
+clear
+use data/affairs.dta
+quiet tobit affairs age yearsmarried religiousness occupation rating, ll(0)
+quiet margins, dydx(*) post
+outreg2 using "results/AER_tobit.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
 
 
 * AER::tobit (right-censured)
 clear
 use data/affairs.dta
-quiet tobit affairs age yearsmarried religiousness occupation rating, ul(4)
+quiet tobit affairs age yearsmarried religiousness occupation rating, ul(4) ll(0)
 quiet margins, dydx(*) post
 outreg2 using "results/AER_tobit_right4.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
 
