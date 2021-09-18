@@ -46,14 +46,12 @@ tidy.marginaleffects <- function(x,
         dydx <- data.frame()
     }
 
-    # dydx statistics (emmeans calculates those for us)
-    if ("term" %in% colnames(dydx)) {
-        if (!"statistic" %in% colnames(dydx)) {
-            dydx$statistic <- dydx$estimate / dydx$std.error
-        }
-        if (!"p.value" %in% colnames(dydx)) {
-            dydx$p.value <- 2 * (1 - stats::pnorm(abs(dydx$statistic)))
-        }
+    if (!"statistic" %in% colnames(dydx) && "std.error" %in% colnames(dydx)) {
+        dydx$statistic <- dydx$estimate / dydx$std.error
+    }
+
+    if (!"p.value" %in% colnames(dydx) && "std.error" %in% colnames(dydx)) {
+        dydx$p.value <- 2 * (1 - stats::pnorm(abs(dydx$statistic)))
     }
 
     out <- dydx
