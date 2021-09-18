@@ -1,3 +1,6 @@
+cd ~/repos/marginaleffects/tests/testthat/stata
+
+
 * stats::glm
 clear
 use data/stats_glm_01.dta
@@ -28,6 +31,20 @@ use data/MASS_polr_01.dta
 quiet ologit y x1 x2
 quiet margins, dydx(x1 x2) post
 outreg2 using "results/MASS_polr_01.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
+
+
+* fixest::feols
+clear
+use data/plm_emplUK.dta
+xtset firm year
+quiet xtreg wage c.capital##c.output, fe cluster(firm)
+quiet margins, dydx(*) post
+outreg2 using "results/fixest_feols_01.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
+
+gen logwage = log(wage)
+quiet xtpoisson logwage c.capital##c.output, fe vce(robust)
+quiet margins, dydx(*) post
+outreg2 using "results/fixest_fepois_01.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
 
 
 * ivreg::ivreg
@@ -78,6 +95,35 @@ quiet margins, dydx(*) post
 outreg2 using "results/estimatr_iv_robust.xls", dec(10) excel replace noaster sideway
 
 
+******************* PANEL
 
+* emplUK
+clear
+use data/plm_emplUK.dta
+xtset firm year
+gen logwage = log(wage)
 
-ivregress 2sls Q D (P = D F A), vce(robust) small
+* fixest::feols
+quiet xtreg wage c.capital##c.output, fe cluster(firm)
+quiet margins, dydx(*) post
+outreg2 using "results/fixest_feols_01.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
+
+* fixest::fepois
+quiet xtpoisson logwage c.capital##c.output, fe vce(robust)
+quiet margins, dydx(*) post
+outreg2 using "results/fixest_fepois_01.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
+
+* Grunfeld
+clear
+use data/plm_Grunfeld.dta
+xtset firm year
+
+* plm pooling
+quiet reg inv c.value##c.capital
+quiet margins, dydx(*) post
+outreg2 using "results/plm_pooling_01.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
+
+* plm Swamy-Arora
+quiet xtreg inv c.value##c.capital, sa
+quiet margins, dydx(*) post
+outreg2 using "results/plm_sa_01.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
