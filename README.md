@@ -73,8 +73,11 @@ So why did I write a clone?
   - `ggplot2` support for plotting (conditional) marginal effects.
   - *Tidy:* The results produced by `marginaleffects` follow “tidy”
     principles. They are easy to process and program with.
-  - *User interface:* Related functions are incorporated in a simple,
-    unified, and well-documented interface.
+  - *User interface:* All functions share an extremely simple, unified,
+    and well-documented interface.
+  - *Dependencies*: The package is built on very few dependencies. The
+    only “true” dependencies are `numDeriv` which has been on the CRAN
+    archive since 2006, and `insight` which is itself dependency-free.
   - *Safe:* User input is checked extensively before computation. When
     needed, functions fail gracefully with informative error messages.
   - *Active development*
@@ -82,7 +85,6 @@ So why did I write a clone?
 Downsides of `marginaleffects` include:
 
   - Weights and simultation-based inference are not (yet) supported.
-  - More dependencies.
   - Newer package with a smaller (read: nonexistent) user base.
 
 ## How?
@@ -212,6 +214,19 @@ argument to select the categorical variables that will form the “grid”:
 
 ``` r
 marginalmeans(mod, variables = c("am", "wt"))
+#> Registered S3 methods overwritten by 'parameters':
+#>   method                           from      
+#>   as.double.parameters_kurtosis    datawizard
+#>   as.double.parameters_skewness    datawizard
+#>   as.double.parameters_smoothness  datawizard
+#>   as.numeric.parameters_kurtosis   datawizard
+#>   as.numeric.parameters_skewness   datawizard
+#>   as.numeric.parameters_smoothness datawizard
+#>   print.parameters_distribution    datawizard
+#>   print.parameters_kurtosis        datawizard
+#>   print.parameters_skewness        datawizard
+#>   summary.parameters_kurtosis      datawizard
+#>   summary.parameters_skewness      datawizard
 #>        type predicted std.error  conf.low conf.high       hp am     wt
 #> 1  response 23.259500 2.7059342 17.674726  28.84427 146.6875  0 1.5130
 #> 2  response 27.148334 2.8518051 21.262498  33.03417 146.6875  1 1.5130
