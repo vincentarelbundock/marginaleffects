@@ -49,6 +49,17 @@ test_that("sanity check on dpoMatrix", {
 })
 
 
+test_that("bug stay dead: tidy without std.error", {
+    dat <- haven::read_dta(test_path("stata/databases/lme4_02.dta"))
+    mod <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = dat, family = binomial)
+    res <- marginaleffects(mod, vcov = FALSE)
+    tid <- tidy(res)
+    expect_s3_class(tid, "data.frame")
+    expect_equal(nrow(tid), 2)
+    expect_error(summary(res), NA)
+})
+
+
 # test_that("'group' cannot be a column name because of conflict with tidy output", {
 #     set.seed(1024)
 #     N <- 1000
