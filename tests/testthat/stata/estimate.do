@@ -47,11 +47,11 @@ outreg2 using "results/MASS_glm_nb.xls", dec(10) excel replace noaster sideway n
 
 
 * AER::tobit
-clear
-use data/affairs.dta
-quiet tobit affairs age yearsmarried religiousness occupation rating
-quiet margins, dydx(*) post
-outreg2 using "results/AER_tobit.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
+*clear
+*use data/affairs.dta
+*quiet tobit affairs age yearsmarried religiousness occupation rating
+*quiet margins, dydx(*) post
+*outreg2 using "results/AER_tobit.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
 
 
 * AER::tobit (right-censured)
@@ -73,7 +73,11 @@ outreg2 using "results/estimatr_lm_robust.xls", dec(10) excel replace noaster si
 * estimatr::iv_robust
 clear 
 use data/kmenta.dta
-gen PD = P * D
-quiet ivregress 2sls Q (PD = D F A), vce(robust) small
+quiet ivregress 2sls Q D (P = D F A), vce(robust) small
 quiet margins, dydx(*) post
 outreg2 using "results/estimatr_iv_robust.xls", dec(10) excel replace noaster sideway
+
+
+
+
+ivregress 2sls Q D (P = D F A), vce(robust) small
