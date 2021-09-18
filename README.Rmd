@@ -74,7 +74,13 @@ Warning: When using `marginaleffects` with different models, you will probably h
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 library(marginaleffects)
 library(kableExtra)
-kbl(supported_models, format = "pipe") %>% 
+tmp <- supported_models
+for (i in nrow(tmp):2) {
+    if (tmp$Package[i] == tmp$Package[i-1]) {
+        tmp$Package[i] <- ""
+    }
+}
+kbl(tmp, format = "pipe") %>% 
     kable_styling() 
 ```
 
