@@ -36,3 +36,44 @@ use data/ivreg_ivreg_01.dta
 quiet ivregress 2sls Q D (P = D F A)
 quiet margins, dydx(P D) post
 outreg2 using "results/ivreg_ivreg_01.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
+
+
+* MASS::glm.nb
+clear
+use data/mtcars.dta
+quiet nbreg carb wt i.cyl
+quiet margins, dydx(*) post
+outreg2 using "results/MASS_glm_nb.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
+
+
+* AER::tobit
+clear
+use data/affairs.dta
+quiet tobit affairs age yearsmarried religiousness occupation rating
+quiet margins, dydx(*) post
+outreg2 using "results/AER_tobit.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
+
+
+* AER::tobit (right-censured)
+clear
+use data/affairs.dta
+quiet tobit affairs age yearsmarried religiousness occupation rating, ul(4)
+quiet margins, dydx(*) post
+outreg2 using "results/AER_tobit_right4.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
+
+
+* estimatr::lm_robust
+clear
+use data/mtcars.dta
+quiet reg carb wt i.cyl, vce(hc2)
+quiet margins, dydx(*) post
+outreg2 using "results/estimatr_lm_robust.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
+
+
+* estimatr::iv_robust
+clear 
+use data/kmenta.dta
+gen PD = P * D
+quiet ivregress 2sls Q (PD = D F A), vce(robust) small
+quiet margins, dydx(*) post
+outreg2 using "results/estimatr_iv_robust.xls", dec(10) excel replace noaster sideway
