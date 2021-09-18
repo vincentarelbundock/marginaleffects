@@ -49,14 +49,14 @@ So why did I write a clone?
 * _Extensibility:_ Adding support for new models is very easy, often requiring less than 10 lines of new code. In the medium run, the goal is to add support for *several* more model types.
 * `ggplot2` support for plotting (conditional) marginal effects.
 * _Tidy:_ The results produced by `marginaleffects` follow "tidy" principles. They are easy to process and program with. 
-* _User interface:_ Related functions are incorporated in a simple, unified, and well-documented interface.
+* _User interface:_ All functions share an extremely simple, unified, and well-documented interface.
+* _Dependencies_: The package is built on very few dependencies. The only "true" dependencies are `numDeriv` which has been on the CRAN archive since 2006, and `insight` which is itself dependency-free.
 * _Safe:_  User input is checked extensively before computation. When needed, functions fail gracefully with informative error messages.
 * _Active development_
 
 Downsides of `marginaleffects` include:
 
 * Weights and simultation-based inference are not (yet) supported.
-* More dependencies.
 * Newer package with a smaller (read: nonexistent) user base.
 
 ## How?
