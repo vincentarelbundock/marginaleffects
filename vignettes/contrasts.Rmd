@@ -47,7 +47,7 @@ mfx <- marginaleffects(mod)
 summary(mfx)
 ```
 
-The summary printed above says that moving from the reference category `4` to the level `6` on the `cyl` factor variable is associated with a change of `r sprintf("%.3f", tidy(mfx)$estimate[2])` in the marginal mean. Likewise, the contrast from `FALSE` to `TRUE` on the `am` variable is equal to `r sprintf("%.3f", tidy(mfx)$estimate[2])`.
+The summary printed above says that moving from the reference category `4` to the level `6` on the `cyl` factor variable is associated with a change of `r sprintf("%.3f", tidy(mfx)$estimate[2])` in the marginal mean. Similarly, the contrast from `FALSE` to `TRUE` on the `am` variable is equal to `r sprintf("%.3f", tidy(mfx)$estimate[1])`.
 
 We can obtain the same results using the `emmeans` package:
 
@@ -68,7 +68,7 @@ In models with multiplicative interactions, the contrasts of a categorical varia
 mod_int <- lm(mpg ~ am * factor(cyl), tmp)
 ```
 
-We can now use the `newdata` argument of the `modelsummary` function to compute contrasts for different values of the other regressors. As in [the marginal effects vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx.html), the `typical` function can be handy:
+We can now use the `newdata` argument of the `marginaleffects` function to compute contrasts for different values of the other regressors. As in [the marginal effects vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx.html), the `typical` function can be handy. Since we only care about the logical `am` contrast, we use the `variables` to indicate the subset of results to report:
 
 ```{r}
 marginaleffects(mod_int, newdata = typical(cyl = tmp$cyl), variables = "am")
