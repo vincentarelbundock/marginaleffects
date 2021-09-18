@@ -1,17 +1,25 @@
 skip_if_not_installed("fixest")
 
-test_that("fixest: standard errors don't match", {
-    # logit is identical
-    counterfactuals <- data.frame(hp = 110, wt = c(min(mtcars$wt), max(mtcars$wt)), cyl = 4)
-    mod1 <- fixest::feglm(vs ~ hp * wt, data = mtcars, family = "binomial", se = "standard")
-    mod2 <- glm(vs ~ hp * wt, data = mtcars, family = "binomial")
-    mod1 <- marginaleffects(mod1, newdata = counterfactuals)
-    mod2 <- marginaleffects(mod2, newdata = counterfactuals)
-    expect_equal(mod1$dydx, mod2$dydx)
-    # TODO: this only checks if it outputs a data.frame, not if the results are correct
-    mod = fixest::feglm(am ~ hp * wt | cyl, data = mtcars, family = "binomial")
-    res = marginaleffects(mod, newdata = counterfactuals)
-    expect_s3_class(res, "data.frame")
+
+test_that("fixest::feols vs. Stata", {
+    data(EmplUK, package = "plm")
+    stata <- readRDS(test_path("stata/stata.rds"))$fixest_feols
+    model <- fixest::feols(wage ~ capital * output | firm, EmplUK)
+    mfx <- merge(tidy(marginaleffects(model)), stata)
+    expect_mfx(model)
+    expect_equal(mfx$estimate, mfx$dydx)
+    expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = .00001)
+})
+
+
+test_that("fixest::fepois vs. Stata", {
+    data(EmplUK, package = "plm")
+    stata <- readRDS(test_path("stata/stata.rds"))$fixest_fepois
+    model <- fixest::fepois(log(wage) ~ capital * output | firm, EmplUK)
+    mfx <- merge(tidy(marginaleffects(model, type = "link")), stata)
+    expect_mfx(model)
+    expect_equal(mfx$estimate, mfx$dydx, tolerance = .000001)
+    expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = .001)
 })
 
 

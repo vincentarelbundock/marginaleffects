@@ -79,5 +79,40 @@ tmp <- read.table(test_path("stata/results/estimatr_iv_robust.txt"), sep = "\t",
 tmp$std.errorstata <- as.numeric(gsub("\\(|\\)", "", tmp$std.errorstata))
 results[["estimatr_iv_robust"]] <- tmp
 
+
+# fixest::feols 
+tmp <- read.table(test_path("stata/results/fixest_feols_01.txt"), sep = "\t", skip = 4) |>
+    head(2) |>
+    setNames(c("term", "dydxstata", "std.errorstata"))
+tmp$dydxstata <- as.numeric(tmp$dydxstata)
+results[["fixest_feols"]] <- tmp
+
+
+# fixest::fepois 
+tmp <- read.table(test_path("stata/results/fixest_fepois_01.txt"), sep = "\t", skip = 4) |>
+    head(2) |>
+    setNames(c("term", "dydxstata", "std.errorstata"))
+tmp$dydxstata <- as.numeric(tmp$dydxstata)
+results[["fixest_fepois"]] <- tmp
+
+# plm
+tmp <- read.table(test_path("stata/results/plm_pooling_01.txt"), sep = "\t", skip = 4) |>
+    head(2) |>
+    setNames(c("term", "dydxstata", "std.errorstata"))
+tmp$dydxstata <- as.numeric(tmp$dydxstata)
+results[["plm_pooling"]] <- tmp
+
+tmp <- read.table(test_path("stata/results/plm_sa_01.txt"), sep = "\t", skip = 4) |>
+    head(2) |>
+    setNames(c("term", "dydxstata", "std.errorstata"))
+tmp$dydxstata <- as.numeric(tmp$dydxstata)
+results[["plm_sa"]] <- tmp
+
+
+
+
+
+
 # save
 saveRDS(results, file = test_path("stata/stata.rds"))
+

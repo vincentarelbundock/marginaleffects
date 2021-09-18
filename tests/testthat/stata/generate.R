@@ -35,6 +35,22 @@ dat$y <- factor(as.numeric(dat$y))
 haven::write_dta(dat, path = "data/MASS_polr_01.dta")
 
 
+############
+#  fixest  #
+############
+data(trade, package = "fixest")
+haven::write_dta(trade, path = test_path("stata/data/fixest_trade_01.dta"))
+
+
+#########
+#  plm  #
+#########
+data(EmplUK, package = "plm")
+haven::write_dta(EmplUK, path = test_path("stata/data/plm_emplUK.dta"))
+
+data(Grunfeld, package = "plm")
+haven::write_dta(Grunfeld, path = test_path("stata/data/plm_Grunfeld.dta"))
+
 ##################
 #  ivreg::ivreg  #
 ##################

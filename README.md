@@ -10,25 +10,25 @@ coverage](https://codecov.io/gh/vincentarelbundock/marginaleffects/branch/main/g
 [![R-CMD-check](https://github.com/vincentarelbundock/marginaleffects/workflows/R-CMD-check/badge.svg)](https://github.com/vincentarelbundock/marginaleffects/actions)
 <!-- badges: end -->
 
-This package is still experimental. *Use with caution\!*
+This package is still experimental. *Use with caution!*
 
 ## What?
 
 The `marginaleffects` package allows `R` users to compute and plot three
 principal quantities of interest for a *wide* variety of models:
 
-  - [*Marginal Effect*
+-   [*Marginal Effect*
     (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/mfx.html)
-      - A partial derivative (slope) of the regression equation with
+    -   A partial derivative (slope) of the regression equation with
         respect to a regressor of interest.
-  - [*Marginal Mean*
+-   [*Marginal Mean*
     (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html)
-      - Response predicted by a model for some combination of the
+    -   Response predicted by a model for some combination of the
         regressors’ values (a.k.a. “reference grid”), typically their
         means or factor levels.
-  - [*Contrast*
+-   [*Contrast*
     (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)
-      - The difference between two Marginal Means, calculated for
+    -   The difference between two Marginal Means, calculated for
         meaningfully different regressor values (e.g., College graduates
         vs. Others).
 
@@ -61,31 +61,31 @@ packages.
 
 So why did I write a clone?
 
-  - *Speed:* [In one
+-   *Speed:* [In one
     benchmark,](https://vincentarelbundock.github.io/marginaleffects/articles/benchmark.html)
     computing unit-level standard errors is over 400x faster with
     `marginaleffects` (minutes vs. milliseconds).
-  - *Efficiency:* Smaller memory footprint (1.8GB vs 52MB in the same
+-   *Efficiency:* Smaller memory footprint (1.8GB vs 52MB in the same
     example).
-  - *Extensibility:* Adding support for new models is very easy, often
+-   *Extensibility:* Adding support for new models is very easy, often
     requiring less than 10 lines of new code. In the medium run, the
     goal is to add support for *several* more model types.
-  - `ggplot2` support for plotting (conditional) marginal effects.
-  - *Tidy:* The results produced by `marginaleffects` follow “tidy”
+-   `ggplot2` support for plotting (conditional) marginal effects.
+-   *Tidy:* The results produced by `marginaleffects` follow “tidy”
     principles. They are easy to process and program with.
-  - *User interface:* All functions share an extremely simple, unified,
+-   *User interface:* All functions share an extremely simple, unified,
     and well-documented interface.
-  - *Dependencies*: The package is built on very few dependencies. The
+-   *Dependencies*: The package is built on very few dependencies. The
     only “true” dependencies are `numDeriv` which has been on the CRAN
     archive since 2006, and `insight` which is itself dependency-free.
-  - *Safe:* User input is checked extensively before computation. When
+-   *Safe:* User input is checked extensively before computation. When
     needed, functions fail gracefully with informative error messages.
-  - *Active development*
+-   *Active development*
 
 Downsides of `marginaleffects` include:
 
-  - Weights and simultation-based inference are not (yet) supported.
-  - Newer package with a smaller (read: nonexistent) user base.
+-   Weights and simultation-based inference are not (yet) supported.
+-   Newer package with a smaller (read: nonexistent) user base.
 
 ## How?
 
@@ -110,7 +110,7 @@ of your modeling package to see what `type` argument is allowed in the
 `predict` function.
 
 | Model                | Support: Effect | Support: Std. Errors | Validity: Stata | Validity: Margins |
-| :------------------- | :-------------- | :------------------- | :-------------- | :---------------- |
+|:---------------------|:----------------|:---------------------|:----------------|:------------------|
 | stats::lm            | x               | x                    | x               | x                 |
 | stats::glm           | x               | x                    | x               | x                 |
 | aer::ivreg           | x               | x                    | x               | x                 |
@@ -121,8 +121,9 @@ of your modeling package to see what `type` argument is allowed in the
 | brglm2::brnb         | x               | x                    |                 |                   |
 | estimatr::lm\_robust | x               | x                    | x               |                   |
 | estimatr::iv\_robust | x               | x                    | x               |                   |
-| fixest::feols        | x               | x                    |                 |                   |
+| fixest::feols        | x               | x                    | x               |                   |
 | fixest::feglm        | x               | x                    |                 |                   |
+| fixest::fepois       | x               | x                    | x               |                   |
 | gam::gam             | x               | x                    |                 |                   |
 | geepack::geeglm      | x               | x                    |                 |                   |
 | glmx::glmx           | x               | x                    |                 |                   |
@@ -133,7 +134,7 @@ of your modeling package to see what `type` argument is allowed in the
 | MASS::rlm            | x               | x                    |                 |                   |
 | nlme::gls            | x               | x                    |                 |                   |
 | ordinal::clm         | x               |                      |                 | x                 |
-| plm::plm             | x               | x                    |                 |                   |
+| plm::plm             | x               | x                    | x               |                   |
 | pscl::hurdle         | x               | x                    |                 |                   |
 | pscl::zeroinfl       | x               | x                    |                 |                   |
 | rms::lrm             | x               | x                    |                 |                   |
@@ -268,9 +269,9 @@ marginalmeans(mod,
 There is *much* more you can do with `marginaleffects`. Please read the
 other articles on this website to learn more:
 
-  - [*Marginal Effect*
+-   [*Marginal Effect*
     (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/mfx.html)
-  - [*Marginal Mean*
+-   [*Marginal Mean*
     (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html)
-  - [*Contrast*
+-   [*Contrast*
     (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)

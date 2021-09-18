@@ -5,8 +5,9 @@ requiet("margins")
 requiet("MASS")
 
 test_that("MASS::rlm no validity check", {
+    model <- MASS::rlm(mpg ~ hp + drat, mtcars)
     mfx <- marginaleffects(model)
-    expect_mfx(model)
+    expect_mfx(model, n_unique = 1)
 })
 
 
