@@ -117,7 +117,7 @@ marginalmeans <- function(model,
     cols <- intersect(stubcols, colnames(out))
     cols <- unique(c(cols, colnames(out)))
     out <- out[, cols]
-    if ("group" %in% colnames(out) && all(out$group == "main")) {
+    if ("group" %in% colnames(out) && all(out$group == "main_marginaleffect")) {
         out$group <- NULL
     }
     row.names(out) <- NULL
