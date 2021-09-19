@@ -26,7 +26,7 @@ get_dydx_continuous.default <- function(model,
                             type = type,
                             ...)
         # numDeriv expects a vector
-        if (is.matrix(pred) && (!is.null(group_name) && group_name != "main")) {
+        if (is.matrix(pred) && (!is.null(group_name) && group_name != "main_marginaleffect")) {
             pred <- pred[, group_name, drop = TRUE]
         }
         # strip weird attributes added by some methods (e.g., predict.svyglm)

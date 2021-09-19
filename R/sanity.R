@@ -92,7 +92,7 @@ sanity_group_names <- function (model) {
     if (any(group_models %in% class(model))) {
         group_names <- levels(insight::get_response(model))
     } else {
-        group_names <- "main"
+        group_names <- "main_marginaleffect"
     }
     return(group_names)
 }
