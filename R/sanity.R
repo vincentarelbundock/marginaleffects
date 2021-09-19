@@ -54,7 +54,7 @@ sanity_model <- function(model) {
                       c("lrm", "rms", "glm"),
                       c("negbin", "glm", "lm"),
                       c("plm", "panelmodel"),
-                      # "polr",
+                      "polr",
                       "speedglm",
                       "speedlm",
                       c("tobit", "survreg"),
@@ -167,7 +167,7 @@ sanity_vcov <- function(model, vcov) {
 
     # lme4 produces a distinct matrix type
     if (inherits(vcov, "dpoMatrix")) {
-            vcov <- as.matrix(vcov)
+        vcov <- as.matrix(vcov)
     }
 
     # assert affer dpoMatrix conversion
@@ -181,7 +181,7 @@ sanity_vcov <- function(model, vcov) {
     }
 
     # unsupported models
-    unsupported <- c("clm", "loess", "polr")
+    unsupported <- c("clm", "loess")
     if (!isFALSE(vcov) && any(unsupported %in% class(model))) {
         vcov <- NULL
         warning(sprintf("Variance estimates are not yet supported for objects of class %s. Set `vcov=NULL` to silence this warning.", class(model))[1])

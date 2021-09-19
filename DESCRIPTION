@@ -83,6 +83,7 @@ Collate:
     'marginalmeans.R'
     'mean_or_mode.R'
     'set_coef.R'
+    'methods_MASS.R'
     'methods_betareg.R'
     'methods_bife.R'
     'methods_crch.R'

@@ -92,9 +92,9 @@ get_dydx_and_se.default <- function(model,
                 J_list[[v]] <- NULL
                 J_mean_list[[v]] <- NULL
             }
-        }
+        } 
     }
- 
+
     out <- do.call("rbind", g_list)
     row.names(out) <- NULL
 
@@ -116,6 +116,7 @@ get_dydx_and_se.default <- function(model,
         V <- colSums(t(J_mean %*% vcov) * t(J_mean))
         tmp <- data.frame("term" = names(V), "std.error" = sqrt(V))
         row.names(tmp) <- NULL
+
         attr(out, "se_at_mean_gradient") <- tmp
     }
 

@@ -13,6 +13,7 @@ get_vcov <- function (model, ...) {
 #' @rdname get_vcov
 #' @export
 get_vcov.default <- function(model, ...) {
-    out <- stats::vcov(model)
+    # suppress "Re-fitting to get Hessian"
+    out <- suppressMessages(stats::vcov(model))
     return(out)
 }
