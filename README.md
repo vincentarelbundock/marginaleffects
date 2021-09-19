@@ -135,6 +135,7 @@ of your modeling package to see what `type` argument is allowed in the
 |            | glmer      | x               | x                    | x                 | x               |
 | MASS       | glm.nb     | x               | x                    | x                 | x               |
 |            | rlm        | x               | x                    |                   |                 |
+|            | polr       | x               | x                    |                   | x               |
 | nlme       | gls        | x               | x                    |                   |                 |
 | ordinal    | clm        | x               |                      | x                 |                 |
 | plm        | plm        | x               | x                    |                   | x               |
