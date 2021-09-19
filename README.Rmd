@@ -116,20 +116,19 @@ The function `summary` calculates the "Average Marginal Effect," that is, the av
 summary(mfx)
 ```
 
-The `plot_cme` plots "Conditional Marginal Effects," that is, it plots the value of a marginal effect for different values of a regressor (often an interaction):
+The `plot_cme` plots "Conditional Marginal Effects," that is, the marginal effects estimated at different values of a regressor (often an interaction):
 
 ```{r}
 plot_cme(mod, effect = "hp", condition = c("wt", "am"))
 ```
 
-Beyond marginal effects, we can also use the `marginalmeans` function to estimate -- you guessed it -- marginal means. We use the `variables` argument to select the categorical variables that will form the "grid":
+Beyond marginal effects, we can also use the `marginalmeans` function to estimate -- you guessed it -- marginal means. We use the `variables` argument to select the categorical variables that will form a "grid" of predictor values over which to compute means/predictions:
 
 ```{r, message=FALSE}
 marginalmeans(mod, variables = c("am", "wt"))
 ```
 
 The [`typical` function gives us an even more powerful way](https://vincentarelbundock.github.io/marginaleffects/reference/typical.html) to customize the grid:
-
 
 ```{r}
 marginalmeans(mod, newdata = typical(am = 0, wt = c(2, 4)))

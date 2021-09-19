@@ -17,7 +17,6 @@ test_that("glm", {
     res <- marginaleffects(mod)
     mar <- margins(mod, unit_ses = TRUE)
     expect_true(test_against_margins(res, mar, tolerance = 0.1, verbose=TRUE))
-    warning("low tolerance")
 })
 
 

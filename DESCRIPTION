@@ -48,6 +48,7 @@ Suggests:
     betareg,
     bife,
     brglm2,
+    crch,
     estimatr,
     fixest,
     gam,
@@ -84,6 +85,7 @@ Collate:
     'set_coef.R'
     'methods_betareg.R'
     'methods_bife.R'
+    'methods_crch.R'
     'methods_glmx.R'
     'methods_lme4.R'
     'methods_pscl.R'

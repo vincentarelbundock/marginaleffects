@@ -120,6 +120,8 @@ of your modeling package to see what `type` argument is allowed in the
 | bife       | bife       | x               | x                    |                   |                 |
 | brglm2     | brglmFit   | x               | x                    |                   |                 |
 |            | brnb       | x               | x                    |                   |                 |
+| crch       | crch       | x               | x                    |                   |                 |
+|            | hxlr       | x               | x                    |                   |                 |
 | estimatr   | lm\_robust | x               | x                    |                   | x               |
 |            | iv\_robust | x               | x                    |                   | x               |
 | fixest     | feols      | x               | x                    |                   | x               |
@@ -200,9 +202,9 @@ summary(mfx)
 #> Prediction type:  response
 ```
 
-The `plot_cme` plots “Conditional Marginal Effects,” that is, it plots
-the value of a marginal effect for different values of a regressor
-(often an interaction):
+The `plot_cme` plots “Conditional Marginal Effects,” that is, the
+marginal effects estimated at different values of a regressor (often an
+interaction):
 
 ``` r
 plot_cme(mod, effect = "hp", condition = c("wt", "am"))
@@ -212,7 +214,8 @@ plot_cme(mod, effect = "hp", condition = c("wt", "am"))
 
 Beyond marginal effects, we can also use the `marginalmeans` function to
 estimate – you guessed it – marginal means. We use the `variables`
-argument to select the categorical variables that will form the “grid”:
+argument to select the categorical variables that will form a “grid” of
+predictor values over which to compute means/predictions:
 
 ``` r
 marginalmeans(mod, variables = c("am", "wt"))
