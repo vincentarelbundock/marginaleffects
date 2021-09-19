@@ -12,4 +12,5 @@ test_that("padding with interactions", {
     mod <- glm(certified_fresh ~ length * style, data = dat, family = binomial)
     res <- marginalmeans(mod, type = c("response", "link"))
     expect_false(anyNA(res$style))
+    expect_equal(nrow(res), 2)
 })
