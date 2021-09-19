@@ -50,14 +50,17 @@ space in memory.}
 
 \item{...}{Additional arguments are pushed forward to \code{predict()}.}
 }
+\value{
+A data.frame of marginal effect estimates with one row per observation per marginal effect.
+}
 \description{
-Warning: This package is experimental.  A "marginal effect" is the partial
-derivative of the regression equation with respect to a variable in the
-model. This package uses automatic differentiation tu compute marginal
-effects for a vast array of models, including non-linear models with
-transformations (e.g., polynomials). The list of supported model types is
-available in the \code{supported_models} dataset which accompanies this package:
-\code{marginaleffects::supported_models}
+A "marginal effect" is the partial derivative of the regression equation
+with respect to a variable in the model. This function uses automatic
+differentiation to compute marginal effects for a vast array of models,
+including non-linear models with transformations (e.g., polynomials). The
+list of supported models and of models whose numerical results have been
+validated against external software (\code{Stata} or \code{margins}) is held in the
+\code{supported_models} dataset which accompanies this package.
 }
 \examples{
 

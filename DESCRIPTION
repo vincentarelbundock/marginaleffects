@@ -7,7 +7,7 @@ Authors@R:
            role = c("aut", "cre"),
            email = "vincent.arel-bundock@umontreal.ca",
            comment = c(ORCID = "0000-0003-2042-7063"))
-Description: Compute, summarize, and plot "marginal effects" for a wide variety of models. The package uses automatic differentiation to compute marginal effects for numeric regressors (partial derivatives of the regression equation), and calculates adjusted contrasts for categorical regressors.
+Description: Compute, summarize, and plot marginal effects, marginal means, and contrasts for a wide variety of models.
 License: GPL (>= 3)
 LazyData: true
 Encoding: UTF-8
@@ -70,6 +70,7 @@ Suggests:
     truncreg,
     covr
 Collate: 
+    'complete_levels.R'
     'counterfactual_typical.R'
     'get_coef.R'
     'get_dydx_and_se.R'
@@ -88,7 +89,6 @@ Collate:
     'methods_pscl.R'
     'methods_stats.R'
     'package.R'
-    'pad_factors.R'
     'plot.R'
     'plot_cme.R'
     'plot_cmm.R'

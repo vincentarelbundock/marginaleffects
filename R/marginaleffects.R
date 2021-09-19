@@ -1,12 +1,12 @@
 #' Marginal effects using numerical derivatives
 #' 
-#' Warning: This package is experimental.  A "marginal effect" is the partial
-#' derivative of the regression equation with respect to a variable in the
-#' model. This package uses automatic differentiation tu compute marginal
-#' effects for a vast array of models, including non-linear models with
-#' transformations (e.g., polynomials). The list of supported model types is
-#' available in the `supported_models` dataset which accompanies this package:
-#' `marginaleffects::supported_models`
+#' A "marginal effect" is the partial derivative of the regression equation
+#' with respect to a variable in the model. This function uses automatic
+#' differentiation to compute marginal effects for a vast array of models,
+#' including non-linear models with transformations (e.g., polynomials). The
+#' list of supported models and of models whose numerical results have been
+#' validated against external software (`Stata` or `margins`) is held in the
+#' `supported_models` dataset which accompanies this package.
 #' 
 #' @param model Model object
 #' @param variables Variables to consider (character vector). `NULL`
@@ -24,6 +24,7 @@
 #'   model is attached to the output. `FALSE` will objects which take up less
 #'   space in memory.
 #' @param ... Additional arguments are pushed forward to `predict()`.
+#' @return A data.frame of marginal effect estimates with one row per observation per marginal effect.
 #' @export
 #' @details
 #' @examples
