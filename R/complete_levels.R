@@ -31,5 +31,11 @@ complete_levels <- function(x, levels_character = NULL) {
     } else {
         padding <- data.frame()
     }
+
+    # negative rowid for easy drop
+    if (nrow(padding) > 0) {
+        padding$rowid <- -1 * 1:nrow(padding)
+    }
+    
     return(padding)
 }

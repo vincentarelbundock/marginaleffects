@@ -79,9 +79,9 @@ marginalmeans <- function(model,
     }
 
     # pad factors: `get_predicted/model.matrix` break when factor levels are missing
+    newdata$rowid <- 1:nrow(newdata)
     padding <- complete_levels(newdata, levels_character)
     newdata <- rbind(padding, newdata)
-    newdata$rowid <- 1:nrow(newdata)
 
     # predictions
     out_list <- list()
@@ -93,16 +93,13 @@ marginalmeans <- function(model,
         tmp <- as.data.frame(tmp)
         tmp <- insight::standardize_names(tmp, style = "broom")
         tmp$type <- predt
-        tmp$rowid <- 1:nrow(tmp)
+        tmp$rowid <- newdata$rowid
         out_list[[predt]] <- tmp
     }
     out <- do.call("rbind", out_list)
     
     # unpad factors
-    out$rowid <- out$rowid - nrow(padding)
-    out <- utils::tail(out, nrow(out) - nrow(padding))
-    newdata$rowid <- newdata$rowid - nrow(padding)
-    newdata <- utils::tail(newdata, nrow(newdata) - nrow(padding))
+    out <- out[out$rowid > 0, , drop = FALSE]
 
     # return data 
     out <- merge(out, newdata, all.x = TRUE, sort = FALSE)
