@@ -13,6 +13,13 @@ check_dependency <- function(library_name) {
 assert_dependency <- checkmate::makeAssertionFunction(check_dependency)
 
 
+## unused for now
+# sanity_weights <- function(mfx, weights) {
+#     checkmate::assert_numeric(weights, null.ok = TRUE, len = length(unique(mfx$rowid)))
+#     return(weights)
+# }
+
+
 sanity_return_data <- function(return_data) {
     checkmate::assert_flag(return_data)
     return(return_data)
@@ -108,9 +115,12 @@ sanity_variables <- function(model, newdata, variables) {
     checkmate::assert_character(variables, min.len = 1, null.ok = TRUE)
     checkmate::assert_data_frame(newdata, min.row = 1, null.ok = TRUE)
 
-    origindata <- insight::get_data(model)
+    if (!is.null(model)) {
+        origindata <- insight::get_data(model)
+    } else {
+        origindata <- newdata
+    }
 
-    # get data
     if (is.null(newdata)) {
         newdata <- origindata
     }

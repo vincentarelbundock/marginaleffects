@@ -2,9 +2,10 @@
 #'
 #' @param object An object produced by the `marginaleffects` function
 #' @inheritParams marginaleffects
+#' @inheritParams tidy.marginaleffects
 #' @export
-summary.marginaleffects <- function(object, ...) {
-    out <- tidy(object)
+summary.marginaleffects <- function(object, conf.level = 0.95, ...) {
+    out <- tidy(object, conf.level = conf.level, ...)
     class(out) <- c("marginaleffects.summary", class(out))
     attr(out, "numDeriv_method") <- attr(object, "numDeriv_method")
     attr(out, "type") <- attr(object, "type")
@@ -33,6 +34,13 @@ print.marginaleffects.summary <- function(x,
       out[["p.value"]] <- format.pval(out[["p.value"]])
   }
 
+
+  if (is.null(attr(x, "conf.level"))) {
+      alpha <- NULL
+  } else {
+      alpha <- 100 * (1 - attr(x, "conf.level"))
+  }
+
   # rename
   dict <- c("group" = "Group",
             "term" = "Term",
@@ -41,8 +49,12 @@ print.marginaleffects.summary <- function(x,
             "std.error" = "Std. Error",
             "statistic" = "z value",
             "p.value" = "Pr(>|z|)",
-            "conf.low" = "2.5 %",
-            "conf.high" = "97.5 %")
+            "conf.low" = ifelse(is.null(alpha), 
+                                "CI low", 
+                                sprintf("%.1f %%", alpha / 2)),
+            "conf.high" = ifelse(is.null(alpha), 
+                                "CI low", 
+                                sprintf("%.1f %%", 100 - alpha / 2)))
 
   for (i in seq_along(dict)) {
     colnames(out)[colnames(out) == names(dict)[i]] <- dict[i]
