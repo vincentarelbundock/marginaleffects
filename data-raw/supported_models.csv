@@ -22,6 +22,7 @@ lme4,lmer,x,x,x,x
 lme4,glmer,x,x,x,x
 MASS,glm.nb,x,x,x,x
 MASS,rlm,x,x,,
+MASS,polr,x,x,,x
 nlme,gls,x,x,,
 ordinal,clm,x,,x,
 plm,plm,x,x,,x

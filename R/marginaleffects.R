@@ -107,18 +107,28 @@ marginaleffects <- function(model,
     # compute marginal effects and standard errors
     out_list <- list()
     se_list <- list()
-    for (predt in type) {
-        out_list[[predt]] <- get_dydx_and_se(model = model, 
-                                             fitfram = newdata,
-                                             variables = variables_vec,
-                                             vcov = vcov,
-                                             group_name = gn,
-                                             type = predt,
-                                             numDeriv_method = numDeriv_method,
-                                             ...)
-        se_list[[predt]] <- attr(out_list[[predt]], "se_at_mean_gradient")
-        se_list[[predt]]$type <- predt
-        out_list[[predt]]$type <- predt
+    for (gn in group_names) {
+        out_list[[gn]] <- list()
+        se_list[[gn]] <- list()
+        for (predt in type) {
+            out_list[[gn]][[predt]] <- get_dydx_and_se(
+                model = model, 
+                fitfram = newdata,
+                variables = variables_vec,
+                vcov = vcov,
+                group_name = gn,
+                type = predt,
+                numDeriv_method = numDeriv_method,
+                ...)
+            se_list[[gn]][[predt]] <- attr(out_list[[gn]][[predt]], 
+                                           "se_at_mean_gradient")
+            se_list[[gn]][[predt]]$type <- predt
+            out_list[[gn]][[predt]]$type <- predt
+            se_list[[gn]][[predt]]$group <- gn
+            out_list[[gn]][[predt]]$group <- gn
+        }
+        se_list[[gn]] <- do.call("rbind", se_list[[gn]])
+        out_list[[gn]] <- do.call("rbind", out_list[[gn]])
     }
     out <- do.call("rbind", out_list)
     attributes_backup <- attributes(out)
@@ -167,6 +177,10 @@ marginaleffects <- function(model,
     attr(out, "numDeriv_method") <- numDeriv_method
     attr(out, "model_type") <- class(model)[1]
     attr(out, "variables") <- variables
+
+    if ("group" %in% colnames(se) && all(se$group == "main_marginaleffect")) {
+        se$group <- NULL
+    }
     attr(out, "se_at_mean_gradient") <- se
 
     return(out)
