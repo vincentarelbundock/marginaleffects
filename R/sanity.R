@@ -108,9 +108,11 @@ sanity_variables <- function(model, newdata, variables) {
     checkmate::assert_character(variables, min.len = 1, null.ok = TRUE)
     checkmate::assert_data_frame(newdata, min.row = 1, null.ok = TRUE)
 
+    origindata <- insight::get_data(model)
+
     # get data
     if (is.null(newdata)) {
-        newdata <- insight::get_data(model)
+        newdata <- origindata
     }
 
     # get variables
@@ -121,6 +123,22 @@ sanity_variables <- function(model, newdata, variables) {
         variables_list <- list("conditional" = variables)
     }
     variables <- unique(unlist(variables_list))
+
+    # check missing character levels
+    # Character variables are treated as factors by model-fitting functions,
+    # but unlike factors, they do not not keep a record of all factor levels.
+    # This poses problem when feeding `newdata` to `predict`, which often
+    # breaks (via `model.matrix`) when the data does not include all possible
+    # factor levels.
+    levels_character <- list()
+    for (v in variables) {
+        if (v %in% colnames(origindata)) {
+            if (is.character(origindata[[v]])) {
+                levels_character[[v]] <- unique(origindata[[v]])
+            }
+        }
+    }
+    attr(variables_list, "levels_character") <- levels_character
 
     # check missing variables
     miss <- setdiff(variables, colnames(newdata))

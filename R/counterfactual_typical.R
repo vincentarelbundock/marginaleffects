@@ -36,7 +36,7 @@ counterfactual <- function(..., model = NULL, data = NULL) {
 
     # `at` -> `data.frame`
     at <- lapply(at, unique)
-    at <- expand.grid(at)
+    at <- expand.grid(at, stringsAsFactors = FALSE)
 
     rowid <- data.frame(rowid = 1:nrow(dat))
     if (length(variables_automatic) > 0) {
@@ -97,7 +97,7 @@ typical <- function(..., model = NULL, data = NULL) {
     }
 
     out <- lapply(out, unique)
-    out <- expand.grid(out)
+    out <- expand.grid(out, stringsAsFactors = FALSE)
     return(out)
 
 }

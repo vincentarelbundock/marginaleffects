@@ -44,6 +44,10 @@ marginalmeans <- function(model,
         }
     }
 
+    # save all character levels for padding
+    # later we call call this function again for different purposes
+    levels_character <- attr(sanity_variables(model, newdata, variables), "levels_character")
+
     # check before inferring `newdata`
     if (!is.null(variables) && !is.null(newdata)) {
         stop("The `variables` and `newdata` arguments cannot be used simultaneously.")
@@ -68,13 +72,14 @@ marginalmeans <- function(model,
         variables <- sanity_variables(model, newdata, variables)
     }
 
+
     # for merging later
     if (!"rowid" %in% colnames(newdata)) {
         newdata$rowid <- 1:nrow(newdata)
     }
 
     # pad factors: `get_predicted/model.matrix` break when factor levels are missing
-    padding <- pad_factors(newdata)
+    padding <- complete_levels(newdata, levels_character)
     newdata <- rbind(padding, newdata)
     newdata$rowid <- 1:nrow(newdata)
 
