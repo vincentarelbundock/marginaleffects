@@ -38,7 +38,16 @@ tidy.marginaleffects <- function(x,
         cols <- intersect(cols, colnames(x))
         cols <- paste(cols, collapse = " + ")
         f <- stats::as.formula(sprintf("dydx ~ %s", cols))
+
         dydx <- stats::aggregate(f, data = x, FUN = mean)
+
+        ## This might be a useful implementation of weights
+        # if (is.null(attr(x, "weights"))) {
+        #     dydx <- stats::aggregate(f, data = x, FUN = mean)
+        # } else {
+        #     dydx <- stats::aggregate(f, data = x, FUN = weighted.mean, w = attr(x, "weights"))
+        # }
+
         dydx <- merge(dydx, attr(x, "se_at_mean_gradient"))
         colnames(dydx)[match("dydx", colnames(dydx))] <- "estimate"
     } else {
@@ -74,6 +83,9 @@ tidy.marginaleffects <- function(x,
               "statistic", "p.value", "conf.low", "conf.high")
     out <- out[, intersect(cols, colnames(out)), drop = FALSE]
     out <- as.data.frame(out)
+
+    attr(out, "conf.level") <- conf.level
+
     return(out)
 }
 

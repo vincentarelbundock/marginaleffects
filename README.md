@@ -53,11 +53,12 @@ and in the range of transformations they allow (interactions,
 polynomials, etc.).
 
 The main package in the `R` ecosystem to compute marginal effects is
-[the fantastic, trailblazing, and powerful
-`margins`](https://cran.r-project.org/web/packages/margins/index.html)
-by [Thomas J. Leeper.](https://thomasleeper.com/) The `marginaleffects`
-package is (essentially) a clone of Leeper’s `margins` and `prediction`
-packages.
+trailblazing and powerful [`margins` by Thomas J.
+Leeper](https://cran.r-project.org/web/packages/margins/index.html)(<https://thomasleeper.com/>),
+and [`emmeans` by Russell V. Lenth and
+contributors.](https://cran.r-project.org/web/packages/emmeans/index.html)
+The `marginaleffects` package is (essentially) a clone of Leeper’s
+`margins` and `prediction` packages.
 
 So why did I write a clone?
 
@@ -84,7 +85,7 @@ So why did I write a clone?
 
 Downsides of `marginaleffects` include:
 
-  - Weights and simultation-based inference are not (yet) supported.
+  - Simultation-based inference is not supported.
   - Newer package with a smaller (read: nonexistent) user base.
 
 ## How?
