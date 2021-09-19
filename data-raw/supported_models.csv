@@ -7,6 +7,8 @@ betareg,betareg,x,x,x,x
 bife,bife,x,x,,
 brglm2,brglmFit,x,x,,
 brglm2,brnb,x,x,,
+crch,crch,x,x,,
+crch,hxlr,x,x,,
 estimatr,lm_robust,x,x,,x
 estimatr,iv_robust,x,x,,x
 fixest,feols,x,x,,x
