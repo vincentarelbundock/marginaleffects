@@ -116,6 +116,19 @@ mod <- glm(certified_fresh ~ length * style, data = dat, family = binomial)
 plot_cmm(mod, condition = c("length", "style"))
 ```
 
+Of course, you can also design your own plots or tables by working with the `marginalmeans` output directly:
+
+
+```{r}
+marginalmeans(mod, 
+              type = c("response", "link"),
+              newdata = typical(length = 90:120,
+                                style = c("Action", "Comedy"))) %>%
+    ggplot(aes(length, predicted, color = style))  +
+    geom_line() +
+    facet_wrap(~type, scales = "free_y")
+```
+
 # Prediction types
 
 The `marginalmeans` function computes model-adjusted means on the scale of the output of the `predict(model)` function. By default, `predict` produces predictions on the `"response"` scale, so the marginal means should be interpreted on that scale. However, users can pass a string or a vector of strings to the `type` argument, and `marginalmeans` will consider different outcomes. 
