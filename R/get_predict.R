@@ -22,5 +22,9 @@ get_predict.default <- function(model,
     pred <- stats::predict(model, 
                            newdata = newdata, 
                            type = type)
+
+    sanity_predict_numeric(pred = pred, model = model, newdata = newdata, type = type)
+    sanity_predict_vector(pred = pred, model = model, newdata = newdata, type = type)
+            
     return(pred)
 }

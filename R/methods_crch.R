@@ -28,7 +28,10 @@ get_vcov.crch <- function(model, ...) {
 #' @rdname get_predict
 #' @export
 get_predict.crch <- function(model, newdata = NULL, type = "location", ...) {
-    stats::predict(model, newdata = newdata, type = type)
+    pred <- stats::predict(model, newdata = newdata, type = type)
+    sanity_predict_vector(pred = pred, model = model, newdata = newdata, type = type)
+    sanity_predict_numeric(pred = pred, model = model, newdata = newdata, type = type)
+    return(pred)
 }
 
 
