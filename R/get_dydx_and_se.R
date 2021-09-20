@@ -80,19 +80,17 @@ get_dydx_and_se.default <- function(model,
     J_list <- list()
     J_mean_list <- list()
     for (v in variables) {
-        tmp <- try(get_one_variable(v), silent = TRUE)
-        if (!inherits(tmp, "try-error")) {
-            if ("g" %in% names(tmp)) {
-                g_list[[v]] <- tmp$g
-            }
-            if ("J" %in% names(tmp)) {
-                J_list[[v]] <- tmp$J
-                J_mean_list[[v]] <- tmp$J_mean
-            } else {
-                J_list[[v]] <- NULL
-                J_mean_list[[v]] <- NULL
-            }
-        } 
+        tmp <- get_one_variable(v)
+        if ("g" %in% names(tmp)) {
+            g_list[[v]] <- tmp$g
+        }
+        if ("J" %in% names(tmp)) {
+            J_list[[v]] <- tmp$J
+            J_mean_list[[v]] <- tmp$J_mean
+        } else {
+            J_list[[v]] <- NULL
+            J_mean_list[[v]] <- NULL
+        }
     }
 
     out <- do.call("rbind", g_list)
