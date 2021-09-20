@@ -152,11 +152,11 @@ full results with functions like `head`, as you would with any other
 mfx <- marginaleffects(mod)
 
 head(mfx, 4)
-#>   rowid     type term       dydx std.error  mpg  hp    wt am predicted
-#> 1     1 response   am  0.3251736  1.682202 21.0 110 2.620  1  22.48857
-#> 2     2 response   am -0.5438639  1.568211 21.0 110 2.875  1  20.80186
-#> 3     3 response   am  1.2007132  2.347558 22.8  93 2.320  1  25.26465
-#> 4     4 response   am -1.7025805  1.867130 21.4 110 3.215  0  20.25549
+#>   rowid     type term    dydx std.error  mpg  hp    wt am predicted
+#> 1     1 response   am  0.3252     1.682 21.0 110 2.620  1     22.49
+#> 2     2 response   am -0.5439     1.568 21.0 110 2.875  1     20.80
+#> 3     3 response   am  1.2007     2.348 22.8  93 2.320  1     25.26
+#> 4     4 response   am -1.7026     1.867 21.4 110 3.215  0     20.26
 ```
 
 The function `summary` calculates the “Average Marginal Effect,” that
@@ -165,10 +165,10 @@ is, the average of all unit-specific marginal effects:
 ``` r
 summary(mfx)
 #> Average marginal effects 
-#>       type Term   Effect Std. Error  z value   Pr(>|z|)    2.5 %   97.5 %
-#> 1 response   am -0.04811    1.85260 -0.02597 0.97928233 -3.67913  3.58291
-#> 2 response   hp -0.03807    0.01279 -2.97717 0.00290923 -0.06314 -0.01301
-#> 3 response   wt -3.93909    1.08596 -3.62728 0.00028642 -6.06754 -1.81065
+#>       type Term  Effect Std. Error z value Pr(>|z|)   2.5 % 97.5 %
+#> 1 response   am -0.0481     1.8526  -0.026  0.97928 -3.6791  3.583
+#> 2 response   hp -0.0381     0.0128  -2.977  0.00291 -0.0631 -0.013
+#> 3 response   wt -3.9391     1.0860  -3.627  0.00029 -6.0675 -1.811
 #> 
 #> Model type:  lm 
 #> Prediction type:  response
@@ -191,17 +191,17 @@ predictor values over which to compute means/predictions:
 
 ``` r
 marginalmeans(mod, variables = c("am", "wt"))
-#>        type predicted std.error  conf.low conf.high       hp am     wt
-#> 1  response 23.259500 2.7059342 17.674726  28.84427 146.6875  0 1.5130
-#> 2  response 27.148334 2.8518051 21.262498  33.03417 146.6875  1 1.5130
-#> 3  response 20.504387 1.3244556 17.770845  23.23793 146.6875  0 2.5425
-#> 4  response 21.555612 1.0723852 19.342318  23.76891 146.6875  1 2.5425
-#> 5  response 18.410286 0.6151016 17.140779  19.67979 146.6875  0 3.3250
-#> 6  response 17.304709 1.5528055 14.099876  20.50954 146.6875  1 3.3250
-#> 7  response 17.540532 0.7293676 16.035192  19.04587 146.6875  0 3.6500
-#> 8  response 15.539158 2.1453449 11.111383  19.96693 146.6875  1 3.6500
-#> 9  response 12.793013 2.9784942  6.645703  18.94032 146.6875  0 5.4240
-#> 10 response  5.901966 5.8149853 -6.099574  17.90351 146.6875  1 5.4240
+#>        type predicted std.error conf.low conf.high    hp am    wt
+#> 1  response    23.259    2.7059   17.675     28.84 146.7  0 1.513
+#> 2  response    27.148    2.8518   21.262     33.03 146.7  1 1.513
+#> 3  response    20.504    1.3245   17.771     23.24 146.7  0 2.542
+#> 4  response    21.556    1.0724   19.342     23.77 146.7  1 2.542
+#> 5  response    18.410    0.6151   17.141     19.68 146.7  0 3.325
+#> 6  response    17.305    1.5528   14.100     20.51 146.7  1 3.325
+#> 7  response    17.541    0.7294   16.035     19.05 146.7  0 3.650
+#> 8  response    15.539    2.1453   11.111     19.97 146.7  1 3.650
+#> 9  response    12.793    2.9785    6.646     18.94 146.7  0 5.424
+#> 10 response     5.902    5.8150   -6.100     17.90 146.7  1 5.424
 ```
 
 The [`typical` function gives us an even more powerful
@@ -210,9 +210,9 @@ to customize the grid:
 
 ``` r
 marginalmeans(mod, newdata = typical(am = 0, wt = c(2, 4)))
-#>       type predicted std.error conf.low conf.high       hp am wt
-#> 1 response  21.95621  2.038630 17.74868  26.16373 146.6875  0  2
-#> 2 response  16.60387  1.083201 14.36826  18.83949 146.6875  0  4
+#>       type predicted std.error conf.low conf.high    hp am wt
+#> 1 response     21.96     2.039    17.75     26.16 146.7  0  2
+#> 2 response     16.60     1.083    14.37     18.84 146.7  0  4
 ```
 
 We can plot the estimated means (a.k.a. regression-adjusted predictions)

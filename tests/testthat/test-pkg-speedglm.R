@@ -1,18 +1,23 @@
 skip_if_not_installed("speedglm")
 requiet("speedglm")
 
-test_that("speedglm: no validity check", {
-    set.seed(10)
-    n <- 500
-    k <- 10
-    y <- rgamma(n,1.5,1)
-    x <- round( matrix(rnorm(n*k),n,k),digits=3)
-    colnames(x) <- paste("s",1:k,sep = "")
-    da <- data.frame(y,x)
-    fo <- as.formula(paste("y~",paste(paste("s",1:k,sep=""),collapse="+")))   
-    model <- speedglm(fo,data=da,family=Gamma(log))
-    mfx <- marginaleffects(model)
-    expect_s3_class(mfx, "data.frame")
-    expect_true(!any(mfx$estimate == 0))
-    expect_true(!any(mfx$std.error == 0))
+test_that("glm vs. Stata", {
+    stata <- readRDS(test_path("stata/stata.rds"))[["stats_glm_01"]]
+    dat <- read.csv(test_path("stata/databases/stats_glm_01.csv"))
+    mod <- speedglm(y ~ x1 * x2, family = binomial(), data = dat)
+    mfx <- merge(tidy(marginaleffects(mod)), stata)
+    expect_mfx(mod)
+    expect_equal(mfx$estimate, mfx$dydxstata, tolerance = .00001)
+    expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = .0001)
+})
+
+
+test_that("lm vs. Stata", {
+    stata <- readRDS(test_path("stata/stata.rds"))[["stats_lm_01"]]
+    dat <- read.csv(test_path("stata/databases/stats_lm_01.csv"))
+    mod <- speedlm(y ~ x1 * x2, data = dat)
+    mfx <- merge(tidy(marginaleffects(mod)), stata)
+    expect_mfx(mod)
+    expect_equal(mfx$estimate, mfx$dydxstata, tolerance = .00001)
+    expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = .0001)
 })

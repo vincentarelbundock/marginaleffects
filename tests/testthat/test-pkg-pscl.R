@@ -26,12 +26,15 @@ test_that("hurdle: no validity check", {
 })
 
 
-test_that("zeroinfl: no validity check", {
+test_that("zeroinfl vs. Stata", {
     data("bioChemists", package = "pscl")
-    model <- zeroinfl(art ~ . | 1, data = bioChemists)
+    model <- zeroinfl(art ~ kid5 + phd | ment, 
+                      dist = "negbin",
+                      data = bioChemists)
+    stata <- readRDS(test_path("stata/stata.rds"))$pscl_zeroinfl_01
+    mfx <- merge(tidy(marginaleffects(model)), stata)
+    expect_mfx(model)
+    expect_equal(mfx$estimate, mfx$dydxstata, tolerance = .00001)
+    expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = .001)
     mfx <- marginaleffects(model)
-    tid <- tidy(mfx)
-    expect_s3_class(tid, "data.frame")
-    expect_false(any(mfx$dydx == 0))
-    expect_false(any(mfx$std.error == 0))
 })

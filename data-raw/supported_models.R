@@ -3,7 +3,6 @@ library("gt")
 supported_models <- read.csv("data-raw/supported_models.csv", check.names = FALSE, encoding = "utf8")
 usethis::use_data(supported_models, overwrite = TRUE)
 
-
 # gt table
 tmp <- supported_models
 for (i in nrow(tmp):2) {
@@ -26,8 +25,8 @@ for (i in 3:ncol(tmp)) {
 }
 tab <- gt(tmp) %>%
   tab_spanner(label = "Support", columns = 3:4) %>%
-  tab_spanner(label = "Validity: margins", columns = 5:6) %>%
-  tab_spanner(label = "Validity: Stata", columns = 7:8) %>%
+  tab_spanner(label = "Validity: Stata", columns = 5:6) %>%
+  tab_spanner(label = "Validity: margins", columns = 7:8) %>%
   tab_style(style = list(cell_borders(sides = c("left", "right"), color = "black", weight = px(1))),
             locations = list(cells_body(columns = 3:ncol(tmp)))) %>%
   tab_style(style = list(cell_borders(sides = c("bottom", "top"), color = "black", weight = px(1))),
