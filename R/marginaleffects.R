@@ -79,9 +79,10 @@ marginaleffects <- function(model,
     newdata <- sanity_newdata(model, newdata)
     variables <- sanity_variables(model, newdata, variables)
     vcov <- sanity_vcov(model, vcov)
-    group_names <- sanity_group_names(model)
     type <- sanity_type(model, type)
     return_data <- sanity_return_data(return_data)
+
+    group_names <- get_group_names(model)
 
     # rowid is required for later merge
     if (!"rowid" %in% colnames(newdata)) {

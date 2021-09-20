@@ -22,6 +22,20 @@ set_coef.polr <- function(model, coefs) {
 }
 
 
+#' @include get_group_names.R
+#' @rdname get_group_names
+#' @export
+get_group_names.polr <- function(model, ...) {
+    resp <- insight::get_response(model)
+    if (is.factor(resp)) {
+        out <- levels(resp)
+    } else {
+        out <- unique(resp)
+    }
+    return(out)
+}
+
+
 #' @include get_vcov.R
 #' @rdname get_vcov
 #' @export
