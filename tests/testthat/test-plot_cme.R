@@ -12,6 +12,15 @@ test_that("character predictors", {
 })
 
 
+test_that("continuous vs. categorical x-axis", {
+    mod <- lm(mpg ~ hp * wt * factor(cyl), mtcars)
+    p <- plot_cme(mod, effect = "hp", condition = "cyl")
+    vdiffr::expect_doppelganger("cme categorical x-axis", p)
+    p <- plot_cme(mod, effect = "hp", condition = "wt")
+    vdiffr::expect_doppelganger("cme continuous x-axis", p)
+})
+
+
 test_that("two conditions", {
     mod <- lm(mpg ~ hp * wt * am, data = mtcars)
     vdiffr::expect_doppelganger("cme plot with 2 conditions",

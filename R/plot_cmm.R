@@ -108,18 +108,34 @@ plot_cmm <- function(model,
                                                y = predicted, 
                                                ymin = conf.low, 
                                                ymax = conf.high))
-    if (isTRUE(conf.int) && "conf.low" %in% colnames(datplot)) {
-         p <- p + ggplot2::geom_ribbon(ggplot2::aes(fill = condition2), alpha = .1)
+
+    # continuous x-axis
+    if (is.numeric(datplot$condition1)) {
+        if (isTRUE(conf.int) && "conf.low" %in% colnames(datplot)) {
+             p <- p + ggplot2::geom_ribbon(ggplot2::aes(fill = condition2), alpha = .1)
+        }
+        p <- p + ggplot2::geom_line(ggplot2::aes(color = condition2, linetype = condition3))
+    # categorical x-axis
+    } else {
+        if (isTRUE(conf.int) && "conf.low" %in% colnames(datplot)) {
+             if (is.null(condition2)) {
+                 p <- p + ggplot2::geom_pointrange()
+             } else {
+                 p <- p + ggplot2::geom_pointrange(ggplot2::aes(color = condition2), 
+                                                   position = ggplot2::position_dodge(.15))
+             }
+        } else {
+            p <- p + ggplot2::geom_point(ggplot2::aes(color = condition2))
+        }
     }
 
-    p <- p + ggplot2::geom_line(ggplot2::aes(color = condition2, linetype = condition3)) + 
-             ggplot2::labs(x = condition1, 
+    p <- p + ggplot2::labs(x = condition1, 
                            y = sprintf("Marginal mean of %s", resp),
                            color = condition2,
                            fill = condition2,
                            linetype = condition3)
 
-    # theme and return
+     # theme and return
     p <- p + ggplot2::theme_minimal()
     return(p) 
 }

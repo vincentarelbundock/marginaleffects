@@ -6,6 +6,13 @@ test_that("two conditions", {
     vdiffr::expect_doppelganger("cmm plot with 2 conditions", p)
 })
 
+test_that("continuous vs. categorical x-axis", {
+    mod <- lm(mpg ~ hp * wt * factor(cyl), mtcars)
+    p <- plot_cmm(mod, condition = c("cyl", "wt"))
+    vdiffr::expect_doppelganger("cmm categorical x-axis", p)
+    p <- plot_cmm(mod, condition = c("wt", "cyl"))
+    vdiffr::expect_doppelganger("cmm continuous x-axis", p)
+})
 
 test_that("conf.level in plots", {
     mod <- lm(mpg ~ hp * wt * am, data = mtcars)
