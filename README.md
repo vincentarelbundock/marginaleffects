@@ -271,6 +271,15 @@ marginalmeans(mod,
 
 <img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />
 
+And of course, categorical variables work too:
+
+``` r
+mod <- lm(mpg ~ factor(cyl), data = mtcars)
+plot_cmm(mod, condition = "cyl")
+```
+
+<img src="man/figures/README-unnamed-chunk-12-1.png" width="100%" />
+
 There is *much* more you can do with `marginaleffects`. Please read the
 other articles on this website to learn more:
 
