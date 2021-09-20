@@ -89,17 +89,6 @@ Please file a feature request on Github: https://github.com/vincentarelbundock/m
 }
 
 
-sanity_group_names <- function (model) {
-    group_models <- c("multinom", "polr")
-    if (any(group_models %in% class(model))) {
-        group_names <- levels(insight::get_response(model))
-    } else {
-        group_names <- "main_marginaleffect"
-    }
-    return(group_names)
-}
-
-
 sanity_newdata <- function(model, newdata) {
     checkmate::check_data_frame(newdata, 
                                 null.ok = TRUE, 
