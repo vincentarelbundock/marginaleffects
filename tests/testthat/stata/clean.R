@@ -34,6 +34,20 @@ tmp[, variable := NULL]
 tmp <- dcast(tmp, group + term ~ statistic, value.var = "value")
 results[["MASS_polr_01"]] <- tmp
 
+#  nnet::multinom 
+tmp <- read.table(test_path("stata/results/nnet_multinom_01.txt"), sep = "\t", skip = 4) |>
+    setNames(c("group", "dydxstata_x1", "std.errorstata_x1", "dydxstata_x2", "std.errorstata_x2")) |>
+    head(3) |>
+    transform(group = 2:4) |>
+    data.table()
+cols <- names(tmp)
+tmp[, (cols) := lapply(.SD, as.numeric)]
+tmp <- melt(tmp, id.vars = "group")
+tmp[, c("statistic", "term") := tstrsplit(variable, "_")]
+tmp[, variable := NULL]
+tmp <- dcast(tmp, group + term ~ statistic, value.var = "value")
+results[["nnet_multinom_01"]] <- tmp
+
 #  ivreg::ivreg
 tmp <- read.table(test_path("stata/results/ivreg_ivreg_01.txt"), sep = "\t", skip = 4) |>
     setNames(c("term", "dydxstata", "std.errorstata")) |>

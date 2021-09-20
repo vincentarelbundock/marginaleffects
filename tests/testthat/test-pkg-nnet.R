@@ -1,14 +1,39 @@
 skip_if_not_installed("nnet")
-skip_if_not_installed("margins")
-requiet("margins")
 
 
+test_that("warning: standard error mismatch", {
+    dat <- read.csv(test_path("stata/databases/MASS_polr_01.csv"))
+    void <- capture.output(mod <- 
+        nnet::multinom(factor(y) ~ x1 + x2, data = dat, quiet = true))
+    expect_warning(marginaleffects(mod, type = "probs"), regexp = "do not match")
+})
+
+
+test_that("error: bad type", {
+    dat <- read.csv(test_path("stata/databases/MASS_polr_01.csv"))
+    void <- capture.output(mod <- 
+        nnet::multinom(factor(y) ~ x1 + x2, data = dat, quiet = true))
+    expect_warning(expect_error(marginaleffects(mod), regexp = "type.*supported"))
+})
+
+   
 test_that("multinom basic", {
     dat <- read.csv(test_path("stata/databases/MASS_polr_01.csv"))
     void <- capture.output(mod <- 
         nnet::multinom(factor(y) ~ x1 + x2, data = dat, quiet = true))
-    expect_mfx(mod, type = "probs")
+    expect_warning(expect_mfx(mod, type = "probs"))
 })
+
+
+test_that("multinom vs. Stata", {
+    stata <- readRDS(test_path("stata/stata.rds"))$nnet_multinom_01
+    dat <- read.csv(test_path("stata/databases/MASS_polr_01.csv"))
+    void <- capture.output(mod <- 
+        nnet::multinom(factor(y) ~ x1 + x2, data = dat, quiet = true))
+    mfx <- merge(tidy(expect_warning(marginaleffects(mod, type = "probs"))), stata, all = TRUE)
+
+})
+
 
 test_that("set_coef", {
     tmp <- mtcars
