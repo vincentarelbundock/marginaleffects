@@ -52,6 +52,7 @@ sanity_model <- function(model) {
                       "loess",
                       c("lrm", "lm"),
                       c("lrm", "rms", "glm"),
+                      c("multinom", "nnet"),
                       c("negbin", "glm", "lm"),
                       c("plm", "panelmodel"),
                       "polr",

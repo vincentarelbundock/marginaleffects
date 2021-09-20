@@ -94,14 +94,19 @@ marginaleffects <- function(model,
 
     pred_list <- list()
     # add predictions to newdata
-    for (predt in type) {
-        tmp <- newdata
-        tmp$type <- predt
-        tmp$predicted <- get_predict(model = model,
-                                     newdata = newdata,
-                                     type = predt,
-                                     ...)
-        pred_list[[predt]] <- tmp
+    for (gn in group_names) {
+        lab <- paste0("predicted_", gn)
+        for (predt in type) {
+            tmp <- newdata
+            tmp$type <- predt
+            tmp$predicted <- get_predict(model = model,
+                                         newdata = newdata,
+                                         type = predt,
+                                         group_name = gn,
+                                         ...)
+            colnames(tmp) <- gsub("_main_marginaleffect", "", colnames(tmp))
+            pred_list[[predt]] <- tmp
+        }
     }
     pred <- do.call("rbind", pred_list)
 
