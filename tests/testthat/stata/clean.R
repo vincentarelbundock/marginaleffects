@@ -20,6 +20,12 @@ tmp <- read.table(test_path("stata/results/stats_lm_01.txt"), sep = "\t", skip =
     head(2)
 results[["stats_lm_01"]] <- tmp
 
+#  survival::coxph
+tmp <- read.table(test_path("stata/results/survival_coxph_01.txt"), sep = "\t", skip = 4) |>
+    setNames(c("term", "dydxstata", "std.errorstata")) |>
+    head(1)
+results[["survival_coxph_01"]] <- tmp
+
 #  pscl::zeroinfl
 tmp <- read.table(test_path("stata/results/pscl_zeroinfl_01.txt"), sep = "\t", skip = 4) |>
     setNames(c("term", "dydxstata", "std.errorstata")) |>

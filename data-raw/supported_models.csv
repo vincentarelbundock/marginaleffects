@@ -34,5 +34,5 @@ robustbase,lmrob,TRUE,TRUE,,,,
 speedglm,speedglm,TRUE,TRUE,TRUE,TRUE,,
 speedglm,speedlm,TRUE,TRUE,TRUE,TRUE,,
 survey,svyglm,TRUE,TRUE,,,TRUE,TRUE
-survival,coxph,TRUE,TRUE,,,,
+survival,coxph,TRUE,TRUE,TRUE,TRUE,,
 truncreg,truncreg,TRUE,TRUE,,,,
