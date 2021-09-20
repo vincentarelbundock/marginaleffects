@@ -32,6 +32,12 @@ quiet ologit y x1 x2
 quiet margins, dydx(x1 x2) post
 outreg2 using "results/MASS_polr_01.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
 
+* nnet::multinom
+clear
+use databases/MASS_polr_01.dta
+quiet mlogit y x1 x2, baseoutcome(1)
+quiet margins, dydx(*) post
+outreg2 using "results/nnet_multinom_01.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
 
 * fixest::feols
 clear
