@@ -65,23 +65,14 @@ By using [the `numDeriv` package](https://cran.r-project.org/web/packages/numDer
 
 ## Supported models
 
-This table shows the list of models supported by `marginaleffect`, and shows which numerical results have been checked against alternative software packages: Stata's `margins` command and R's `margins` package. 
+This table shows the list of models supported by `marginaleffects`, and shows which numerical results -- marginal effects (dY/dX) or standard errors (Std. Error) -- have been checked against alternative software packages: Stata's `margins` command and R's `margins` package. Empty cells mean that the results of a model have not yet been validated against external software. Green cells indicate that the results of [at least one model from the test suite](https://github.com/vincentarelbundock/marginaleffects/tree/main/tests/testthat) match to a reasonable tolerance. Red cells mean that `marginaleffects` results do *not* match those produced by alternative software packages. Obviously, caution is especially warranted when working with estimates from red cells.
 
 I am *very* eager to add support for new models. Feel free to file a request on Github or -- even better -- submit some code.
 
 Warning: When using `marginaleffects` with different models, you will probably have to adjust the `type` argument. Refer to the documentation of your modeling package to see what `type` argument is allowed in the `predict` function. 
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
-library(marginaleffects)
-library(kableExtra)
-tmp <- supported_models
-for (i in nrow(tmp):2) {
-    if (tmp$Package[i] == tmp$Package[i-1]) {
-        tmp$Package[i] <- ""
-    }
-}
-kbl(tmp, format = "pipe") %>% 
-    kable_styling() 
+```{r, echo = FALSE, out.width = "60%"}
+knitr::include_graphics("man/figures/README-supported_models.png")
 ```
 
 ## Installation

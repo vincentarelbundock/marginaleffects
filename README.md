@@ -98,9 +98,18 @@ from model objects. That’s it. That’s the secret sauce.
 
 ## Supported models
 
-This table shows the list of models supported by `marginaleffect`, and
-shows which numerical results have been checked against alternative
-software packages: Stata’s `margins` command and R’s `margins` package.
+This table shows the list of models supported by `marginaleffects`, and
+shows which numerical results – marginal effects (dY/dX) or standard
+errors (Std. Error) – have been checked against alternative software
+packages: Stata’s `margins` command and R’s `margins` package. Empty
+cells mean that the results of a model have not yet been validated
+against external software. Green cells indicate that the results of [at
+least one model from the test
+suite](https://github.com/vincentarelbundock/marginaleffects/tree/main/tests/testthat)
+match to a reasonable tolerance. Red cells mean that `marginaleffects`
+results do *not* match those produced by alternative software packages.
+Obviously, caution is especially warranted when working with estimates
+from red cells.
 
 I am *very* eager to add support for new models. Feel free to file a
 request on Github or – even better – submit some code.
@@ -110,45 +119,7 @@ probably have to adjust the `type` argument. Refer to the documentation
 of your modeling package to see what `type` argument is allowed in the
 `predict` function.
 
-| Package    | Function   | Support: Effect | Support: Std. Errors | Validity: Margins | Validity: Stata |
-| :--------- | :--------- | :-------------- | :------------------- | :---------------- | :-------------- |
-| stats      | lm         | x               | x                    | x                 | x               |
-|            | glm        | x               | x                    | x                 | x               |
-| AER        | ivreg      | x               | x                    | x                 | x               |
-|            | tobit      | x               | x                    |                   | x               |
-| betareg    | betareg    | x               | x                    | x                 | x               |
-| bife       | bife       | x               | x                    |                   |                 |
-| brglm2     | brglmFit   | x               | x                    |                   |                 |
-|            | brnb       | x               | x                    |                   |                 |
-| crch       | crch       | x               | x                    |                   |                 |
-|            | hxlr       | x               | x                    |                   |                 |
-| estimatr   | lm\_robust | x               | x                    |                   | x               |
-|            | iv\_robust | x               | x                    |                   | x               |
-| fixest     | feols      | x               | x                    |                   | x               |
-|            | feglm      | x               | x                    |                   |                 |
-|            | fepois     | x               | x                    |                   | x               |
-| gam        | gam        | x               | x                    |                   |                 |
-| geepack    | geeglm     | x               | x                    |                   |                 |
-| glmx       | glmx       | x               | x                    |                   |                 |
-| ivreg      | ivreg      | x               | x                    | x                 | x               |
-| lme4       | lmer       | x               | x                    | x                 | x               |
-|            | glmer      | x               | x                    | x                 | x               |
-| MASS       | glm.nb     | x               | x                    | x                 | x               |
-|            | rlm        | x               | x                    |                   |                 |
-|            | polr       | x               | x                    |                   | x               |
-| nlme       | gls        | x               | x                    |                   |                 |
-| ordinal    | clm        | x               |                      | x                 |                 |
-| plm        | plm        | x               | x                    |                   | x               |
-| pscl       | hurdle     | x               | x                    |                   |                 |
-|            | zeroinfl   | x               | x                    |                   |                 |
-| rms        | lrm        | x               | x                    |                   |                 |
-| robustbase | glmrob     | x               | x                    |                   |                 |
-|            | lmrob      | x               | x                    |                   |                 |
-| speedglm   | speedglm   | x               | x                    |                   |                 |
-|            | speedlm    | x               | x                    |                   |                 |
-| survey     | svyglm     | x               | x                    | x                 |                 |
-| survival   | coxph      | x               | x                    |                   |                 |
-| truncreg   | truncreg   | x               | x                    |                   |                 |
+<img src="man/figures/README-supported_models.png" width="60%" />
 
 ## Installation
 
