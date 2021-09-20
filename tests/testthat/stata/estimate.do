@@ -25,6 +25,13 @@ quiet margins, dydx(temp) post
 outreg2 using "results/betareg_betareg_01.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
 
 
+* pscl::zeroinfl
+clear
+use databases/pscl_bioChemists.dta
+quiet zinb art kid phd, inflate(ment)
+quiet margins, dydx(*) post
+outreg2 using "results/pscl_zeroinfl_01.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
+
 * MASS::polr
 clear
 use databases/MASS_polr_01.dta
