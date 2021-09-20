@@ -52,10 +52,10 @@ marginal effects are typically limited in the model types they support,
 and in the range of transformations they allow (interactions,
 polynomials, etc.).
 
-The main package in the `R` ecosystem to compute marginal effects is
-trailblazing and powerful [`margins` by Thomas J.
-Leeper](https://cran.r-project.org/web/packages/margins/index.html)(<https://thomasleeper.com/>),
-and [`emmeans` by Russell V. Lenth and
+The main package in the `R` ecosystem to compute marginal effects is the
+trailblazing and powerful [`margins` and `prediction` packages by Thomas
+J. Leeper](https://cran.r-project.org/web/packages/margins/index.html),
+and the [`emmeans` package by Russell V. Lenth and
 contributors.](https://cran.r-project.org/web/packages/emmeans/index.html)
 The `marginaleffects` package is (essentially) a clone of Leeper’s
 `margins` and `prediction` packages.
