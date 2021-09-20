@@ -20,6 +20,12 @@ tmp <- read.table(test_path("stata/results/stats_lm_01.txt"), sep = "\t", skip =
     head(2)
 results[["stats_lm_01"]] <- tmp
 
+#  pscl::zeroinfl
+tmp <- read.table(test_path("stata/results/pscl_zeroinfl_01.txt"), sep = "\t", skip = 4) |>
+    setNames(c("term", "dydxstata", "std.errorstata")) |>
+    head(3)
+results[["pscl_zeroinfl_01"]] <- tmp
+
 #  MASS::polr 
 tmp <- read.table(test_path("stata/results/MASS_polr_01.txt"), sep = "\t", skip = 4) |>
     setNames(c("group", "dydxstata_x1", "std.errorstata_x1", "dydxstata_x2", "std.errorstata_x2")) |>
