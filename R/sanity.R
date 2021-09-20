@@ -107,13 +107,6 @@ sanity_vcov <- function(model, vcov) {
         vcov <- FALSE
     }
 
-    # unsupported models
-    unsupported <- c("clm", "loess")
-    if (!isFALSE(vcov) && any(unsupported %in% class(model))) {
-        vcov <- NULL
-        warning(sprintf("Variance estimates are not yet supported for objects of class %s. Set `vcov=NULL` to silence this warning.", class(model))[1])
-    }
-
     # TRUE: try to extract a vcov (TODO: implement get_vcov)
     if (isTRUE(vcov)) {
         vcov <- try(get_vcov(model), silent = TRUE)
