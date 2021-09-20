@@ -1,3 +1,11 @@
+#' @include sanity_model.R
+#' @rdname sanity_model_specific
+#' @export
+sanity_model_specific.multinom <- function(...) {
+    warning("The standard errors estimated by `marginaleffects` do not match those produced by Stata for `nnet::multinom` models. Please be very careful when interpreting the results.")
+}
+
+
 #' @include set_coef.R
 #' @rdname set_coef
 #' @export
@@ -40,7 +48,7 @@ get_group_names.multinom <- function(model, ...) {
     } else {
         out <- unique(resp)
     }
-    return(out)
+    return(out[2:length(out)])
 }
 
 

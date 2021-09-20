@@ -25,69 +25,6 @@ sanity_return_data <- function(return_data) {
     return(return_data)
 }
 
-sanity_model <- function(model) {
-    supported <- list("betareg",
-                      "bife",
-                      "brglmFit",
-                      c("brnb", "negbin", "glm"),
-                      # "clm",
-                      "coxph",
-                      "crch",
-                      "fixest",
-                      c("Gam", "glm", "lm"),
-                      c("geeglm", "gee", "glm"),
-                      "glm",
-                      "gls",
-                      "glmerMod",
-                      "glmrob",
-                      "glmx",
-                      "hurdle",
-                      "hxlr",
-                      "ivreg",
-                      "iv_robust",
-                      "lm",
-                      "lmerMod",
-                      "lmrob",
-                      "lm_robust",
-                      "loess",
-                      c("lrm", "lm"),
-                      c("lrm", "rms", "glm"),
-                      c("multinom", "nnet"),
-                      c("negbin", "glm", "lm"),
-                      c("plm", "panelmodel"),
-                      "polr",
-                      "speedglm",
-                      "speedlm",
-                      c("tobit", "survreg"),
-                      "truncreg",
-                      "zeroinfl")
-    flag <- FALSE
-    for (sup in supported) {
-        if (all(sup %in% class(model))) {
-            flag <- TRUE
-        }
-    }
-    if (isFALSE(flag)) {
-        support <- paste(sort(unique(sapply(supported, function(x) x[1]))), collapse = ", ")
-        msg <- 
-'Models of class "%s" are not supported. 
-
-Supported model classes include: %s. 
- 
-Please file a feature request on Github: https://github.com/vincentarelbundock/marginaleffects/issues' 
-        msg <- sprintf(msg, class(model)[1], support)
-        stop(msg)
-    }
-
-    # model-specific checks
-    if (all(c("plm", "panelmodel") %in% class(model))) {
-        if ("within" %in% model$args$model) {
-            stop('The `plm::predict` function does not appear to support the `newdata` argument when `plm(model="within")`. Therefore, `marginaleffects` cannot support "within" models, even if it supports many other models produced by the `plm` package. You may want to try the `fixest` package instead.')
-        }
-    }
-
-    return(model)
-}
 
 
 sanity_newdata <- function(model, newdata) {
@@ -195,30 +132,6 @@ sanity_vcov <- function(model, vcov) {
     }
 
     return(vcov)
-}
-
-
-sanity_type <- function(model, type) {
-    checkmate::assert_character(type, min.len = 1, null.ok = FALSE)
-
-    if ("clm" %in% class(model)) {
-        type[type == "probs"] <- "prob"
-        idx <- !type %in% c("prob", "class", "cum.prob", "linear_predictor")
-        type[idx] <- "prob"
-        type <- unique(type)
-        if (any(idx)) {
-            warning(sprintf('The only `type` supported for models of class `%s` are "prob", "cum.prob", and "linear.predictor".', class(model)[1]))
-        }
-    }
-
-    if (any(c("multinom", "nnet") %in% class(model))) {
-        if (any(type != "probs")) {
-            warning(sprintf('The only `type` supported for models of class `%s` is `"probs"`. The value of the argument was adjusted automatically. Modify the argument manually to silence this warning.', class(model)[1]))
-            type <- "probs"
-        }
-    }
-
-    return(type)
 }
 
 

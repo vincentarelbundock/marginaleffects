@@ -75,7 +75,13 @@ marginaleffects <- function(model,
     }
 
     # sanity checks and pre-processing
-    model <- sanity_model(model)
+    model <- sanity_model(model = model, 
+                          newdata = newdata,
+                          variables = variables,
+                          vcov = vcov,
+                          type = type,
+                          return_data = return_data,
+                          ...)
     newdata <- sanity_newdata(model, newdata)
     variables <- sanity_variables(model, newdata, variables)
     vcov <- sanity_vcov(model, vcov)
