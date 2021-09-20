@@ -114,7 +114,6 @@ get_dydx_and_se.default <- function(model,
         V <- colSums(t(J_mean %*% vcov) * t(J_mean))
         tmp <- data.frame("term" = names(V), "std.error" = sqrt(V))
         row.names(tmp) <- NULL
-
         attr(out, "se_at_mean_gradient") <- tmp
     }
 
