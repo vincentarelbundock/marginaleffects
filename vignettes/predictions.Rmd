@@ -1,0 +1,143 @@
+---
+title: "Adjusted Predictions" 
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Adjusted Predictions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  fig.width = 6,
+  fig.asp = .4,
+  warning = FALSE,
+  message = FALSE,
+  comment = "#>"
+)
+
+library(marginaleffects)
+library(patchwork)
+library(ggplot2)
+
+theme_set(theme_minimal())
+```
+
+In the context of this package, an "Adjusted Prediction" is defined as:
+
+> The reponse predicted by a model for some combination of the regressors' values, such as their means or factor levels (a.k.a. "reference grid"). 
+
+An adjusted prediction is thus a regression-adjusted mean of the response variable, for given values of the predictors. This differs from "Fitted Values" (a.k.a. "Predictions") because the combination of regressor values under consideration does not necessarily correspond to any specific observation in the dataset (although it could).
+
+By default, the `predictions` function returns predicted/estimated responses for each of the observations in the dataset:
+
+```{r}
+library(marginaleffects)
+
+mod <- lm(mpg ~ hp + factor(cyl), data = mtcars)
+
+predictions(mod)
+```
+
+Unless otherwise instructed, `predictions` calculates regression-adjusted predicted values for a unit with all regressors set at their means or modes. In most cases, this is too limiting, and researchers will want to specify a grid of "typical" values over which to compute adjusted predictions.
+
+# Typical Predictions
+
+There are two main ways to select the reference grid over which we want to compute adjusted predictions. The first is using the `variables` argument. The second is with the `newdata` argument and the [`typical()` function](reference/typical.html) that we already introduced in the [marginal effects vignette.](articles/mfx.html) 
+
+## `variables`: Levels and Tukey's 5 numbers 
+
+The `variables` argument is a handy shortcut to create grids of predictors. Each of the levels of factor/logical/character variables listed in the `variables` argument will be displayed. For numeric variables, `predictions` will compute adjusted predictions at Tukey's 5 summary numbers. All other variables will be set at their means or modes.
+
+```{r}
+predictions(mod, variables = c("cyl", "hp"))
+```
+
+The `data.frame` produced by `predictions` is "tidy", which makes it easy to manipulate with other `R` packages and functions:
+
+```{r, message = FALSE}
+library(kableExtra)
+library(tidyverse)
+
+predictions(mod, variables = c("cyl", "hp")) %>%
+    select(hp, cyl, predicted) %>%
+    pivot_wider(values_from = predicted, names_from = cyl) %>%
+    kbl(caption = "A table of Adjusted Predictions") %>%
+    kable_styling() %>%
+    add_header_above(header = c(" " = 1, "cyl" = 3))
+```
+
+## `newdata` and `typical`
+
+A second strategy to construct grids of predictors for adjusted predictions is to combine the `newdata` argument and the `typical` function. Recall that this function creates a "typical" dataset with all variables at their means or modes, except those we explicitly define:
+
+```{r}
+typical(cyl = c(4, 6, 8), model = mod)
+```
+
+We can also use this `typical` function in a `predictions` call (omitting the `model` argument):
+
+```{r}
+predictions(mod, newdata = typical(cyl = c(4, 6, 8)))
+```
+
+# Plot: Conditional Predictions
+
+First, we download the `ggplot2movies` dataset from the [RDatasets archive](https://vincentarelbundock.github.io/Rdatasets/articles/data.html). Then, we create a variable called `certified_fresh` for movies with a rating of at least 8. Finally, we discard some outliers and fit a logistic regression model: 
+
+```{r, message = FALSE}
+library(tidyverse)
+dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/ggplot2movies/movies.csv") %>%
+    mutate(style = case_when(Action == 1 ~ "Action",
+                             Comedy == 1 ~ "Comedy",
+                             Drama == 1 ~ "Drama",
+                             TRUE ~ "Other"),
+           style = factor(style),
+           certified_fresh = rating >= 8) %>%
+    filter(length < 240)
+
+mod <- glm(certified_fresh ~ length * style, data = dat, family = binomial)
+```
+
+We can plot adjusted predictions, conditional on the `length` variable using the `plot_cmm` function:
+
+```{r}
+mod <- glm(certified_fresh ~ length, data = dat, family = binomial)
+
+plot_cmm(mod, condition = "length")
+```
+
+We can also introduce another condition which will display a categorical variable like `style` in different colors. This can be useful in models with interactions:
+
+```{r}
+mod <- glm(certified_fresh ~ length * style, data = dat, family = binomial)
+
+plot_cmm(mod, condition = c("length", "style"))
+```
+
+Of course, you can also design your own plots or tables by working with the `predictions` output directly:
+
+
+```{r}
+predictions(mod, 
+              type = c("response", "link"),
+              newdata = typical(length = 90:120,
+                                style = c("Action", "Comedy"))) %>%
+    ggplot(aes(length, predicted, color = style))  +
+    geom_line() +
+    facet_wrap(~type, scales = "free_y")
+```
+
+# Prediction types
+
+The `predictions` function computes model-adjusted means on the scale of the output of the `predict(model)` function. By default, `predict` produces predictions on the `"response"` scale, so the adjusted predictions should be interpreted on that scale. However, users can pass a string or a vector of strings to the `type` argument, and `predictions` will consider different outcomes. 
+
+Typical values include `"response"` and `"link"`, but users should refer to the documentaiton of the `predict` of the package they used to fit the model to know what values are allowable. documentation. 
+
+```{r}
+mod <- glm(am ~ mpg, family = binomial, data = mtcars)
+predictions(mod, type = c("response", "link"))
+```
+
+Users who need more control over the type of adjusted predictions to compute, including a host of options for back-transformation, may want to consider the [`emmeans` package.](https://cran.r-project.org/web/packages/emmeans/index.html)

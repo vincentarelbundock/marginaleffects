@@ -10,7 +10,7 @@ test_that("padding with interactions", {
                   certified_fresh = rating >= 8) %>%
            filter(length < 240)
     mod <- glm(certified_fresh ~ length * style, data = dat, family = binomial)
-    res <- marginalmeans(mod, type = c("response", "link"))
+    res <- predictions(mod, type = c("response", "link"))
     expect_false(anyNA(res$style))
     expect_equal(nrow(res), 2)
 })

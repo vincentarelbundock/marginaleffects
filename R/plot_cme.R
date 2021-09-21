@@ -101,7 +101,7 @@ plot_cme <- function(model,
     if ("condition2" %in% colnames(datplot)) datplot$condition2 <- factor(datplot$condition2)
     if ("condition3" %in% colnames(datplot)) datplot$condition3 <- factor(datplot$condition3)
 
-    # CIs are automatically added to marginalmeans but not marginaleffects output
+    # CIs are automatically added to predictions but not marginaleffects output
     if (isTRUE(conf.int) && !"conf.low" %in% colnames(datplot)) {
         alpha <- 1 - conf.level
         datplot$conf.low <- datplot$dydx + stats::qnorm(alpha / 2) * datplot$std.error

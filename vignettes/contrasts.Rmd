@@ -24,9 +24,9 @@ library(ggplot2)
 theme_set(theme_minimal())
 ```
 
-[In a previous vignette](articles/mfx.html), we introduced the "marginal effect" as a partial derivative. Since derivatives are only properly defined for continuous variables, we cannot use them to interpret the effects of changes in categorical variables. For this, we turn to *contrasts* between [Marginal Means.](articles/marginalmeans.html) In the context of this package, a "Contrast" is defined as:
+[In a previous vignette](articles/mfx.html), we introduced the "marginal effect" as a partial derivative. Since derivatives are only properly defined for continuous variables, we cannot use them to interpret the effects of changes in categorical variables. For this, we turn to *contrasts* between [Adjusted predictions.](articles/predictions.html) In the context of this package, a "Contrast" is defined as:
 
-> The difference between two marginal means, calculated for meanginfully different regressor values (e.g., College graduates vs. Others).
+> The difference between two adjusted predictions, calculated for meanginfully different regressor values (e.g., College graduates vs. Others).
 
 # Simple contrasts
 
@@ -47,7 +47,7 @@ mfx <- marginaleffects(mod)
 summary(mfx)
 ```
 
-The summary printed above says that moving from the reference category `4` to the level `6` on the `cyl` factor variable is associated with a change of `r sprintf("%.3f", tidy(mfx)$estimate[2])` in the marginal mean. Similarly, the contrast from `FALSE` to `TRUE` on the `am` variable is equal to `r sprintf("%.3f", tidy(mfx)$estimate[1])`.
+The summary printed above says that moving from the reference category `4` to the level `6` on the `cyl` factor variable is associated with a change of `r sprintf("%.3f", tidy(mfx)$estimate[2])` in the adjusted prediction. Similarly, the contrast from `FALSE` to `TRUE` on the `am` variable is equal to `r sprintf("%.3f", tidy(mfx)$estimate[1])`.
 
 We can obtain the same results using the `emmeans` package:
 

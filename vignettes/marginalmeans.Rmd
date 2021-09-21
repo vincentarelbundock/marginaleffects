@@ -24,120 +24,31 @@ library(ggplot2)
 theme_set(theme_minimal())
 ```
 
-In the context of this package, a "Marginal Mean" (MM) is defined as:
-
-> The reponse predicted by a model for some combination of the regressors' values, such as their means or factor levels (a.k.a. "reference grid"). 
-
-A marginal mean is thus a regression-adjusted mean of the response variable, for given values of the predictors. This differs from "Fitted Values" (a.k.a. "Predictions") because the combination of regressor values under consideration does not necessarily correspond to any specific observation in the dataset (although it could).
-
-By default, the `marginalmeans` function returns predicted/estimated responses for each of the observations in the dataset:
-
-```{r}
-library(marginaleffects)
-
-mod <- lm(mpg ~ hp + factor(cyl), data = mtcars)
-
-marginalmeans(mod)
-```
-
-Unless otherwise instructed, `marginalmeans` calculates regression-adjusted predicted values for a unit with all regressors set at their means or modes. In most cases, this is too limiting, and researchers will want to specify a grid of "typical" values over which to compute marginal means.
-
-# Typical Marginal Means
-
-There are two main ways to select the reference grid over which we want to compute marginal means. The first is using the `variables` argument. The second is with the `newdata` argument and the [`typical()` function](reference/typical.html) that we already introduced in the [marginal effects vignette.](articles/mfx.html) 
-
-## `variables`: Levels and Tukey's 5 numbers 
-
-The `variables` argument is a handy shortcut to create grids of predictors. Each of the levels of factor/logical/character variables listed in the `variables` argument will be displayed. For numeric variables, `marginalmeans` will compute marginal means at Tukey's 5 summary numbers. All other variables will be set at their means or modes.
-
-```{r}
-marginalmeans(mod, variables = c("cyl", "hp"))
-```
-
-The `data.frame` produced by `marginalmeans` is "tidy", which makes it easy to manipulate with other `R` packages and functions:
-
-```{r, message = FALSE}
-library(kableExtra)
-library(tidyverse)
-
-marginalmeans(mod, variables = c("cyl", "hp")) %>%
-    select(hp, cyl, predicted) %>%
-    pivot_wider(values_from = predicted, names_from = cyl) %>%
-    kbl(caption = "A table of Estimated Marginal Means") %>%
-    kable_styling() %>%
-    add_header_above(header = c(" " = 1, "cyl" = 3))
-```
-
-## `newdata` and `typical`
-
-A second strategy to construct grids of predictors for marginal means is to combine the `newdata` argument and the `typical` function. Recall that this function creates a "typical" dataset with all variables at their means or modes, except those we explicitly define:
-
-```{r}
-typical(cyl = c(4, 6, 8), model = mod)
-```
-
-We can also use this `typical` function in a `marginalmeans` call (omitting the `model` argument):
-
-```{r}
-marginalmeans(mod, newdata = typical(cyl = c(4, 6, 8)))
-```
-
-# Plot: Conditional Marginal Means
-
-First, we download the `ggplot2movies` dataset from the [RDatasets archive](https://vincentarelbundock.github.io/Rdatasets/articles/data.html). Then, we create a variable called `certified_fresh` for movies with a rating of at least 8. Finally, we discard some outliers and fit a logistic regression model: 
-
-```{r, message = FALSE}
-library(tidyverse)
-dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/ggplot2movies/movies.csv") %>%
-    mutate(style = case_when(Action == 1 ~ "Action",
-                             Comedy == 1 ~ "Comedy",
-                             Drama == 1 ~ "Drama",
-                             TRUE ~ "Other"),
-           style = factor(style),
-           certified_fresh = rating >= 8) %>%
-    filter(length < 240)
-
-mod <- glm(certified_fresh ~ length * style, data = dat, family = binomial)
-```
-
-We can plot the marginal means of the response, conditional on the `length` variable using the `plot_cmm` function:
-
-```{r}
-mod <- glm(certified_fresh ~ length, data = dat, family = binomial)
-
-plot_cmm(mod, condition = "length")
-```
-
-We can also introduce another condition which will display a categorical variable like `style` in different colors. This can be useful in models with interactions:
-
-```{r}
-mod <- glm(certified_fresh ~ length * style, data = dat, family = binomial)
-
-plot_cmm(mod, condition = c("length", "style"))
-```
-
-Of course, you can also design your own plots or tables by working with the `marginalmeans` output directly:
 
 
 ```{r}
-marginalmeans(mod, 
-              type = c("response", "link"),
-              newdata = typical(length = 90:120,
-                                style = c("Action", "Comedy"))) %>%
-    ggplot(aes(length, predicted, color = style))  +
-    geom_line() +
-    facet_wrap(~type, scales = "free_y")
+mod <- lm(mpg ~ hp + factor(cyl) + factor(am) + factor(gear), mtcars)
+
+pred <- predictions(mod, variables = c("cyl", "am", "gear"))
+pred
 ```
-
-# Prediction types
-
-The `marginalmeans` function computes model-adjusted means on the scale of the output of the `predict(model)` function. By default, `predict` produces predictions on the `"response"` scale, so the marginal means should be interpreted on that scale. However, users can pass a string or a vector of strings to the `type` argument, and `marginalmeans` will consider different outcomes. 
-
-Typical values include `"response"` and `"link"`, but users should refer to the documentaiton of the `predict` of the package they used to fit the model to know what values are allowable. documentation. 
 
 ```{r}
-mod <- glm(am ~ mpg, family = binomial, data = mtcars)
-marginalmeans(mod, type = c("response", "link"))
-```
 
-Users who need more control over the type of marginal means to compute, including a host of options for back-transformation, may want to consider the [`emmeans` package.](https://cran.r-project.org/web/packages/emmeans/index.html)
+variables <- c("cyl", "am", "gear")
+tmp <- pred[, c(variables, c("predicted", "std.error"))]
+
+get_one_variable <- function(v) {
+
+    
+
+aggregate(cbind(predicted, std.error) ~ cyl, data = tmp, FUN = mean)
+
+tmp <- reshape(tmp, 
+               direction = "long", 
+               varying = c("predicted", "std.error"),
+               v.names = "statistic")
+head(tmp)
+
+
+
