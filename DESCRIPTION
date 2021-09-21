@@ -99,6 +99,7 @@ Collate:
     'plot.R'
     'plot_cme.R'
     'plot_cmm.R'
+    'predictions.R'
     'sanity.R'
     'sanity_type.R'
     'summary.R'

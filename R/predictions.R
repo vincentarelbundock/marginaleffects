@@ -20,11 +20,11 @@
 #' @export
 #' @details
 predictions <- function(model, 
-                          newdata = NULL, 
-                          variables = NULL, 
-                          type = "response",
-                          conf.level = 0.95,
-                          ...) {
+                        variables = NULL, 
+                        newdata = NULL, 
+                        type = "response",
+                        conf.level = 0.95,
+                        ...) {
 
     # sanity checks and pre-processing
     type <- sanity_type(model, type)
