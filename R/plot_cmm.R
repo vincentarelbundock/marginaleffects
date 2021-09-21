@@ -84,7 +84,7 @@ plot_cmm <- function(model,
     # create data
     at_list[["model"]] = model
     nd <- do.call("typical", at_list)
-    datplot <- marginalmeans(model, 
+    datplot <- predictions(model, 
                              newdata = nd, 
                              conf.int = conf.int,
                              conf.level = conf.level)

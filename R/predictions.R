@@ -1,13 +1,13 @@
-#' Marginal means
+#' Predictions
 #' 
 #' Warning: This package is experimental.
 #' 
 #' @param model Model object
-#' @param variables Character vector. Compute Estimated Marginal Means for
+#' @param variables Character vector. Compute Adjusted Predictions for
 #'   combinations of each of these variables. Factor levels are considered at
 #'   each of their levels. Numeric variables variables are considered at Tukey's
 #'   Five-Number Summaries.
-#' @param newdata A dataset over which to compute marginal effects. `NULL` uses
+#' @param newdata A dataset over which to compute adjusted predictions. `NULL` uses
 #'   the original data used to fit the model.
 #' @param conf.level The confidence level to use for the confidence interval.
 #' No interval is computed if `conf.int=NULL`.  Must be strictly greater than 0
@@ -19,7 +19,7 @@
 #' @param ... Additional arguments are pushed forward to `predict()`.
 #' @export
 #' @details
-marginalmeans <- function(model, 
+predictions <- function(model, 
                           newdata = NULL, 
                           variables = NULL, 
                           type = "response",
@@ -108,15 +108,11 @@ marginalmeans <- function(model,
     out$rowid <- NULL
 
     # clean columns
-    stubcols <- c("rowid", "type", "group", "term", "predicted", "std.error",
-                  "conf.low", "conf.high", 
+    stubcols <- c("rowid", "type", "term", "predicted", "std.error", "conf.low", "conf.high", 
                   sort(grep("^predicted", colnames(newdata), value = TRUE)))
     cols <- intersect(stubcols, colnames(out))
     cols <- unique(c(cols, colnames(out)))
     out <- out[, cols]
-    if ("group" %in% colnames(out) && all(out$group == "main_marginaleffect")) {
-        out$group <- NULL
-    }
     row.names(out) <- NULL
 
     # attach model info
@@ -130,18 +126,10 @@ marginalmeans <- function(model,
     } else {
         attr(out, "glance") <- NULL
     }
-    class(out) <- c("marginalmeans", class(out))
+    class(out) <- c("predictions", class(out))
     attr(out, "type") <- type
     attr(out, "model_type") <- class(model)[1]
     attr(out, "variables") <- variables
 
     return(out)
 }
-
-
-#' `meffects()` is a shortcut to `marginaleffects()`
-#'
-#' @inherit marginaleffects
-#' @keywords internal
-#' @export
-meffects <- marginaleffects

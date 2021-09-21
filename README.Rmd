@@ -27,10 +27,10 @@ The `marginaleffects` package allows `R` users to compute and plot three princip
 
 * [_Marginal Effect_ (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/mfx.html) 
     - A partial derivative (slope) of the regression equation with respect to a regressor of interest.
-* [_Marginal Mean_ (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) 
+* [_Marginal Mean_ (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html) 
     - Response predicted by a model for some combination of the regressors' values (a.k.a. "reference grid"), typically their means or factor levels. 
 * [_Contrast_ (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html) 
-    - The difference between two Marginal Means, calculated for meaningfully different regressor values (e.g., College graduates vs. Others).
+    - The difference between two adjusted predictions, calculated for meaningfully different regressor values (e.g., College graduates vs. Others).
 
 ## Why?
 
@@ -38,7 +38,7 @@ To calculate marginal effects we need to take derivatives of the regression equa
 
 The `marginaleffects` package hopes to do most of this hard work for you.
 
-Many `R` packages advertise their ability to compute "marginal effects." However, most of them do *not* actually compute marginal effects *as defined above*. Instead, they compute fitted values for different predictor values (i.e., "Marginal Means"), or differences in fitted values (i.e., "contrasts"). The rare packages that actually compute marginal effects are typically limited in the model types they support, and in the range of transformations they allow (interactions, polynomials, etc.).
+Many `R` packages advertise their ability to compute "marginal effects." However, most of them do *not* actually compute marginal effects *as defined above*. Instead, they compute fitted values for different predictor values, or differences in fitted values. The rare packages that actually compute marginal effects are typically limited in the model types they support, and in the range of transformations they allow (interactions, polynomials, etc.).
 
 The main package in the `R` ecosystem to compute marginal effects is the trailblazing and powerful [`margins` and `prediction` packages by Thomas J. Leeper](https://cran.r-project.org/web/packages/margins/index.html), and the [`emmeans` package by Russell V. Lenth and contributors.](https://cran.r-project.org/web/packages/emmeans/index.html) The `marginaleffects` package is (essentially) a clone of Leeper's `margins` and `prediction` packages. 
 
@@ -113,30 +113,30 @@ The `plot_cme` plots "Conditional Marginal Effects," that is, the marginal effec
 plot_cme(mod, effect = "hp", condition = c("wt", "am"))
 ```
 
-Beyond marginal effects, we can also use the `marginalmeans` function to estimate -- you guessed it -- marginal means. We use the `variables` argument to select the categorical variables that will form a "grid" of predictor values over which to compute means/predictions:
+Beyond marginal effects, we can also use the `predictions` function to estimate -- you guessed it -- adjusted predicted values. We use the `variables` argument to select the categorical variables that will form a "grid" of predictor values over which to compute means/predictions:
 
 ```{r, message=FALSE}
-marginalmeans(mod, variables = c("am", "wt"))
+predictions(mod, variables = c("am", "wt"))
 ```
 
 The [`typical` function gives us an even more powerful way](https://vincentarelbundock.github.io/marginaleffects/reference/typical.html) to customize the grid:
 
 ```{r}
-marginalmeans(mod, newdata = typical(am = 0, wt = c(2, 4)))
+predictions(mod, newdata = typical(am = 0, wt = c(2, 4)))
 ```
 
-We can plot the estimated means (a.k.a. regression-adjusted predictions) with the `plot_cmm` function:
+We can plot the adjusted predictions with the `plot_cmm` function:
 
 ```{r}
 plot_cmm(mod, condition = c("hp", "wt"))
 ```
 
-Or you can work with the output of the `marginalmeans` or `marginaleffects` directly to create your own plots. For example:
+Or you can work with the output of the `predictions` or `marginaleffects` directly to create your own plots. For example:
 
 ```{r}
 library(ggplot2)
 
-marginalmeans(mod, 
+predictions(mod, 
               newdata = typical(am = 0:1, 
                                 wt = fivenum(mtcars$wt), 
                                 hp = seq(100, 300, 10))) %>%
@@ -156,5 +156,5 @@ plot_cmm(mod, condition = "cyl")
 There is *much* more you can do with `marginaleffects`. Please read the other articles on this website to learn more:
 
 * [_Marginal Effect_ (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/mfx.html) 
-* [_Marginal Mean_ (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) 
+* [_Adjusted Predictions_ (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html) 
 * [_Contrast_ (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html) 
