@@ -138,7 +138,7 @@ prep_counterfactual_typical <- function(..., model = NULL, data = NULL) {
     # check `at` names
     variables_missing <- setdiff(names(at), variables_all)
     if (length(variables_missing) > 0) {
-        warning(sprintf("Variables in `at` are missing from the model data: %s", 
+        warning(sprintf("Elements of the `variables` argument are missing from the model data: %s", 
                         paste(variables_missing, collapse = ", ")))
     }
 
