@@ -6,8 +6,8 @@
 \usage{
 predictions(
   model,
-  newdata = NULL,
   variables = NULL,
+  newdata = NULL,
   type = "response",
   conf.level = 0.95,
   ...
@@ -16,13 +16,13 @@ predictions(
 \arguments{
 \item{model}{Model object}
 
-\item{newdata}{A dataset over which to compute adjusted predictions. \code{NULL} uses
-the original data used to fit the model.}
-
 \item{variables}{Character vector. Compute Adjusted Predictions for
 combinations of each of these variables. Factor levels are considered at
 each of their levels. Numeric variables variables are considered at Tukey's
 Five-Number Summaries.}
+
+\item{newdata}{A dataset over which to compute adjusted predictions. \code{NULL} uses
+the original data used to fit the model.}
 
 \item{type}{Type(s) of prediction as string or vector This can
 differ based on the model type, but will typically be a string such as:
