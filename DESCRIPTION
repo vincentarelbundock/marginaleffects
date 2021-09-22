@@ -1,5 +1,5 @@
 Package: marginaleffects
-Title: Marginal effects for a wide variety of models
+Title: Marginal effects, adjusted predictions, contrasts, and marginal means for a wide variety of models
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Vincent",

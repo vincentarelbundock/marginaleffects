@@ -22,7 +22,7 @@ marginalmeans <- function(model,
                           vcov = insight::get_varcov(model)) {
 
 
-    checkmate::assert_character(variables, min.len = 1)
+    checkmate::assert_character(variables, min.len = 1, null.ok = TRUE)
 
     # predictions for each cell of all categorical data
     dat <- insight::get_data(model)

@@ -7,10 +7,13 @@ navbar:
   left:
   - text: "Marginal effects"
     href: articles/mfx.html
-  - text: "Marginal means"
-    href: articles/marginalmeans.html
+  - text: "Adjusted predictions"
+    href: articles/predictions.html
   - text: "Contrasts"
     href: articles/contrasts.html
+  - text: "Marginal means"
+    href: articles/marginalmeans.html
+
   right:
   - text: Reference
     href: reference/index.html

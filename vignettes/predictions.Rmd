@@ -28,9 +28,9 @@ In the context of this package, an "Adjusted Prediction" is defined as:
 
 > The reponse predicted by a model for some combination of the regressors' values, such as their means or factor levels (a.k.a. "reference grid"). 
 
-An adjusted prediction is thus a regression-adjusted mean of the response variable, for given values of the predictors. This differs from "Fitted Values" (a.k.a. "Predictions") because the combination of regressor values under consideration does not necessarily correspond to any specific observation in the dataset (although it could).
+An adjusted prediction is thus the regression-adjusted response variable (or link, or other fitted value), for a given combination (or grid) of predictors. This grid may may or may not correspond to the actual observations in a dataset.
 
-By default, the `predictions` function returns predicted/estimated responses for each of the observations in the dataset:
+By default, `predictions` calculates the regression-adjusted predicted values for a single hypothetical unit of observation with all regressors set at their means or modes:
 
 ```{r}
 library(marginaleffects)
@@ -40,7 +40,7 @@ mod <- lm(mpg ~ hp + factor(cyl), data = mtcars)
 predictions(mod)
 ```
 
-Unless otherwise instructed, `predictions` calculates regression-adjusted predicted values for a unit with all regressors set at their means or modes. In most cases, this is too limiting, and researchers will want to specify a grid of "typical" values over which to compute adjusted predictions.
+In many cases, this is too limiting, and researchers will want to specify a grid of "typical" values over which to compute adjusted predictions.
 
 # Typical Predictions
 
