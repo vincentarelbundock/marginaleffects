@@ -23,14 +23,16 @@ This package is still experimental. *Use with caution!*
 
 ## What?
 
-The `marginaleffects` package allows `R` users to compute and plot three principal quantities of interest for a *wide* variety of models:
+The `marginaleffects` package allows `R` users to compute and plot four principal quantities of interest for a *wide* variety of models:
 
 * [_Marginal Effect_ (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/mfx.html) 
     - A partial derivative (slope) of the regression equation with respect to a regressor of interest.
-* [_Marginal Mean_ (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html) 
-    - Response predicted by a model for some combination of the regressors' values (a.k.a. "reference grid"), typically their means or factor levels. 
+* [_Adjusted Prediction_ (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html) 
+    - The outcome predicted by a model for some combination of the regressors' values, such as their means or factor levels (a.k.a. "reference grid"). 
 * [_Contrast_ (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html) 
     - The difference between two adjusted predictions, calculated for meaningfully different regressor values (e.g., College graduates vs. Others).
+* [_Marginal Mean_ (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) 
+    - Adjusted predictions of a model, averaged across a "reference grid" of categorical predictors.
 
 ## Why?
 
@@ -65,7 +67,13 @@ By using [the `numDeriv` package](https://cran.r-project.org/web/packages/numDer
 
 ## Supported models
 
-This table shows the list of models supported by `marginaleffects`, and shows which numerical results -- marginal effects (dY/dX) or standard errors (Std. Error) -- have been checked against alternative software packages: Stata's `margins` command and R's `margins` package. Empty cells mean that the results of a model have not yet been validated against external software. Green cells indicate that the results of [at least one model from the test suite](https://github.com/vincentarelbundock/marginaleffects/tree/main/tests/testthat) match to a reasonable tolerance. Red cells mean that `marginaleffects` results do *not* match those produced by alternative software packages. Obviously, caution is especially warranted when working with estimates from red cells.
+#### Adjusted predictions
+
+Under the hood, `marginaleffects`'s `predictions` function uses the `insight` package to retrieve adjusted predictions from a wide variety of models. Currently, `insight` [supports over 200 types of model objects](https://easystats.github.io/insight/), and most of those should work out-of-the-box with the `predictions` function. If you run into problems, do not hesitate to report them on Github or via email.
+
+#### Marginal effects
+
+This table shows the list of models supported by the `marginaleffects` function, and shows which numerical results -- marginal effects (dY/dX) or standard errors (Std. Error) -- have been checked against alternative software packages: Stata's `margins` command and R's `margins` package. Empty cells mean that the results of a model have not yet been validated against external software. Green cells indicate that the results of [at least one model from the test suite](https://github.com/vincentarelbundock/marginaleffects/tree/main/tests/testthat) match to a reasonable tolerance. Red cells mean that `marginaleffects` results do *not* match those produced by alternative software packages. Obviously, caution is especially warranted when working with estimates from red cells.
 
 I am *very* eager to add support for new models. Feel free to file a request on Github or -- even better -- submit some code.
 
@@ -74,6 +82,10 @@ Warning: When using `marginaleffects` with different models, you will probably h
 ```{r, echo = FALSE, out.width = "60%"}
 knitr::include_graphics("man/figures/README-supported_models.png")
 ```
+
+#### Contrasts and Marginal Means
+
+
 
 ## Installation
 
@@ -133,8 +145,8 @@ plot_cmm(mod, condition = c("hp", "wt"))
 
 Or you can work with the output of the `predictions` or `marginaleffects` directly to create your own plots. For example:
 
-```{r}
-library(ggplot2)
+```{r, message = FALSE}
+library(tidyverse)
 
 predictions(mod, 
               newdata = typical(am = 0:1, 
