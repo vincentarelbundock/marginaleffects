@@ -16,39 +16,18 @@ knitr::opts_chunk$set(
   message = FALSE,
   comment = "#>"
 )
+```
 
+```{r}
 library(marginaleffects)
-library(patchwork)
-library(ggplot2)
+library(emmeans)
 
-theme_set(theme_minimal())
+dat <- mtcars
+dat$cyl <- as.factor(dat$cyl)
+dat$am <- as.logical(dat$am)
+mod <- lm(mpg ~ hp + cyl + am, data = dat )
+
+emmeans(mod, specs = "cyl")
+
+emmeans(mod, specs = "am")
 ```
-
-
-
-```{r}
-mod <- lm(mpg ~ hp + factor(cyl) + factor(am) + factor(gear), mtcars)
-
-pred <- predictions(mod, variables = c("cyl", "am", "gear"))
-pred
-```
-
-```{r}
-
-variables <- c("cyl", "am", "gear")
-tmp <- pred[, c(variables, c("predicted", "std.error"))]
-
-get_one_variable <- function(v) {
-
-    
-
-aggregate(cbind(predicted, std.error) ~ cyl, data = tmp, FUN = mean)
-
-tmp <- reshape(tmp, 
-               direction = "long", 
-               varying = c("predicted", "std.error"),
-               v.names = "statistic")
-head(tmp)
-
-
-

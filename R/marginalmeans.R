@@ -1,41 +1,64 @@
 #' Marginal Means
 #'
+#' Compute estimated marginal means for specified factors.
+#' 
+#' @inheritParams marginaleffects
+#' @param variables predictors over which to compute marginal means (character
+#'   vector). `NULL` calculates marginal means for all logical, character, or
+#'   factor variables in the dataset used to fit `model`.
+#' @details 
+#'   This function begins by calling the `predictions` function to
+#'   obtain a grid of prediction including cells for all combinations of all
+#'   categorical variables used to fit `model`, with numeric variables held at
+#'   their means. Then, it computes marginal means for the variables listed in
+#'   the `variables` argument. 
+#'
+#'   The `marginaleffects` website compares the output of this function to the
+#'   popular `emmeans` package, which provides similar functionality and more
+#'   advanced options: https://vincentarelbundock.github.io/marginaleffects/
 #' @export
 marginalmeans <- function(model, 
-                          variables,
+                          variables = NULL,
                           vcov = insight::get_varcov(model)) {
 
 
     checkmate::assert_character(variables, min.len = 1)
 
-    newdata <- predictions(model = model, variables = variables)
+    # predictions for each cell of all categorical data
+    dat <- insight::get_data(model)
+    variables_categorical <- get_categorical(dat)
+    dat <- predictions(model = model, variables = variables_categorical)
 
     # variable selection
-    column_labels <- colnames(newdata)
+    column_labels <- colnames(dat)
     term_labels <- insight::find_terms(model, flatten = TRUE)
-    variables_valid <- intersect(column_labels, term_labels)
-    idx <- sapply(variables_valid, function(x) 
-        is.factor(newdata[[x]]) || is.logical(newdata[[x]]) || is.character(newdata[[x]]))
-    variables_valid <- variables_valid[idx]
+    variables_valid <- get_categorical(dat)
+    variables_valid <- intersect(variables_valid, term_labels)
     if (is.null(variables)) {
         variables <- variables_valid
     } else {
         variables <- intersect(variables, variables_valid)
     }
     if (length(variables_valid) == 0) {
-        stop("No logical, factor, or character variable appears as a column in `newdata` and as an untransformed term in the model formula. If you are converting variables to `factor` in the formula, you might consider converting them in your dataset before fitting the model.") 
+        stop("No logical, factor, or character variable was found in the dataset used to fit `model`, and as an untransformed term in the model formula. If you are converting variables to `factor` in the formula, you might consider converting them in your dataset before fitting the model.") 
+    }
+
+    # interactions are not supported
+    interactions <- any(grepl(":", attr(stats::terms(model), "term.labels")))
+    if (isTRUE(interactions)) {
+        warning("The `marginalmeans` function does not support models with interactions. The reported standard errors may be misleading.")
     }
 
     # model.matrix requires a dataset with response
-    newdata[[insight::find_response(model)[1]]] <- 0
-    mm <- insight::get_modelmatrix(model, data = newdata)
+    dat[[insight::find_response(model)[1]]] <- 0
+    mm <- insight::get_modelmatrix(model, data = dat)
 
     # marginal means and standard errors for a single variable
     get_mm_se <- function(v) {
         mm_tmp <- mm
 
         # assign columns of the matrix unrelated to v to their mean value
-        idx <- grep(match(v, attr(terms(model), "term.labels")), attr(mm_tmp, "assign"))
+        idx <- grep(match(v, attr(stats::terms(model), "term.labels")), attr(mm_tmp, "assign"))
         idx <- setdiff(1:ncol(mm_tmp), idx)
         for (i in idx) {
             mm_tmp[, i] <- mean(mm_tmp[, i])
@@ -45,15 +68,15 @@ marginalmeans <- function(model,
         mm_tmp<- unique(mm_tmp)
 
         # marginal means
-        f <- as.formula(paste("predicted ~", v))
-        yhat <- stats::aggregate(f, data = newdata, FUN = mean)
+        f <- stats::as.formula(paste("predicted ~", v))
+        yhat <- stats::aggregate(f, data = dat, FUN = mean)
         colnames(yhat) <- c("value", "predicted")
         yhat$term <- v
 
         # variance: M V M'
         se <- data.frame(
             term = v,
-            value = unique(newdata[[v]]),
+            value = unique(dat[[v]]),
             std.error = sqrt(diag(mm_tmp %*% vcov %*% t(mm_tmp))))
 
         # output

@@ -1,101 +1,36 @@
-tmp <- mtcars
-tmp$am <- as.logical(tmp$am)
-mod <- lm(mpg ~ hp + wt + factor(cyl) + am, data = tmp)
+skip_if_not_installed("emmeans")
+skip_if_not_installed("broom")
 
-################
-#  conf.level  #
-################
 
-test_that("conf.level argument changes width of interval", {
-    for (L in c(.4, .7, .9, .95, .99, .999)) {
-        nd <- typical(model = mod)
-        unknown <- predictions(mod, newdata = nd, conf.level = L)
-        known <- predict(mod, newdata = nd, se.fit = TRUE, interval = "confidence", level = L)$fit
-        expect_equal(unknown$conf.low, known[, "lwr"])
-        expect_equal(unknown$conf.high, known[, "upr"])
-    }
-})
+dat <- mtcars
+dat$am <- as.logical(dat$am)
+dat$cyl <- as.factor(dat$cyl)
 
-######################################
-#  values against predict benchmark  #
-######################################
 
-test_that("predictions() = predict()", {
-    nd <- typical(model = mod, cyl = c(4, 6, 8))
-    mm <- predictions(mod, newdata = nd)
-    expect_equal(mm$predicted, unname(predict(mod, newdata = nd)))
-})
+test_that("simple marginal means", {
+    mod <- lm(mpg ~ cyl + am + hp, dat)
 
-##############################
-#  size: variables argument  #
-##############################
+    em <- broom::tidy(emmeans::emmeans(mod, "cyl"))
+    me <- marginalmeans(mod, variables = "cyl")
+    expect_equal(me$predicted, em$estimate)
+    expect_equal(me$std.error, em$std.error)
 
-test_that("`variables` arg: factor", {
-    mm <- predictions(mod, variables = "cyl")
-    expect_equal(nrow(mm), 3)
-})
-
-test_that("`variables` arg: logical", {
-    mm <- predictions(mod, variables = "am")
-    expect_equal(nrow(mm), 2)
-})
-
-test_that("`variables` arg: numeric", {
-    mm <- predictions(mod, variables = "wt")
-    expect_equal(nrow(mm), 5)
-})
-
-test_that("`variables` arg: factor + logical", {
-    mm <- predictions(mod, variables = c("am", "cyl"))
-    # logical 2; cyl factor 3
-    expect_equal(nrow(mm), 2 * 3)
+    em <- broom::tidy(emmeans::emmeans(mod, "am"))
+    me <- marginalmeans(mod, variables = "am")
+    expect_equal(me$predicted, em$estimate)
+    expect_equal(me$std.error, em$std.error)
 })
 
 
-test_that("`variables` arg: logical + numeric", {
-    mm <- predictions(mod, variables = c("am", "wt"))
-    # logical 2; numeric 5 numbers
-    expect_equal(nrow(mm), 2 * 5)
-})
+test_that("interactions", {
+    # standard errors do not match emmeans
+    mod <- lm(mpg ~ cyl * am, dat)
 
-test_that("`variables` arg: factor + numeric", {
-    mm <- predictions(mod, variables = c("cyl", "wt"))
-    # logical 2; numeric 5 numbers
-    expect_equal(nrow(mm), 3 * 5)
-})
+    em <- suppressMessages(broom::tidy(emmeans::emmeans(mod, "cyl")))
+    me <- expect_warning(marginalmeans(mod, variables = "cyl"), regex = "interactions")
+    expect_equal(me$predicted, em$estimate)
 
-
-#############################
-#  size: new data argument  #
-#############################
-
-test_that("`newdata`: mtcars has 32 rows", {
-    mm <- predictions(mod, newdata = tmp)
-    expect_equal(nrow(mm), 32)
-})
- 
-test_that("`typical`: all factors", {
-    mm <- predictions(mod, newdata = typical(cyl = c(4, 6, 8)))
-    expect_equal(nrow(mm), 3)
-})
-
-test_that("`typical`: two missing factors", {
-    mm <- predictions(mod, newdata = typical(cyl = 4))
-    expect_equal(nrow(mm), 1)
-})
-
-test_that("`typical`: one missing factor", {
-    mm <- predictions(mod, newdata = typical(cyl = c(4, 6)))
-    expect_equal(nrow(mm), 2)
-})
-
-test_that("`typical`: all logical", {
-    mm <- predictions(mod, newdata = typical(am = c(TRUE, FALSE)))
-    expect_equal(nrow(mm), 2)
-    expect_equal(length(unique(mm$predicted)), nrow(mm))
-})
-
-test_that("`typical`: missing logical", {
-    mm <- predictions(mod, newdata = typical(am = TRUE))
-    expect_equal(nrow(mm), 1)
+    em <- suppressMessages(broom::tidy(emmeans::emmeans(mod, "am")))
+    me <- expect_warning(marginalmeans(mod, variables = "am"), regex = "interactions")
+    expect_equal(me$predicted, em$estimate)
 })

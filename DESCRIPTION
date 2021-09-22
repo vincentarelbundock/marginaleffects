@@ -29,6 +29,7 @@ Imports:
     numDeriv
 Suggests: 
     bench,
+    broom,
     dplyr,
     emmeans,
     ggplot2,
@@ -105,3 +106,4 @@ Collate:
     'summary.R'
     'supported_models.R'
     'tidy.R'
+    'utils.R'
