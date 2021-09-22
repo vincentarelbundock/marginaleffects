@@ -231,10 +231,10 @@ predictions(mod, newdata = typical(am = 0, wt = c(2, 4)))
 #> 2 response  16.60387  1.083201 14.36826  18.83949 146.6875  0  4
 ```
 
-We can plot the adjusted predictions with the `plot_cmm` function:
+We can plot the adjusted predictions with the `plot_cap` function:
 
 ``` r
-plot_cmm(mod, condition = c("hp", "wt"))
+plot_cap(mod, condition = c("hp", "wt"))
 ```
 
 <img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
@@ -261,7 +261,7 @@ And of course, categorical variables work too:
 
 ``` r
 mod <- lm(mpg ~ factor(cyl), data = mtcars)
-plot_cmm(mod, condition = "cyl")
+plot_cap(mod, condition = "cyl")
 ```
 
 <img src="man/figures/README-unnamed-chunk-12-1.png" width="100%" />

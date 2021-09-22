@@ -1,6 +1,6 @@
-#' Conditional marginal means plot
+#' Conditional adjusted predictions plot
 #' 
-#' This function plots the marginal mean of the outcome variable (y-axis)
+#' This function plots the adjusted predictions of the outcome (y-axis)
 #' against values of one or more predictors.
 #' 
 #' @param condition String or vector of two strings. The first is a variable
@@ -20,7 +20,7 @@
 #' plot_cme(mod, 
 #'          condition = c("hp", "wt"))
 #'
-plot_cmm <- function(model, 
+plot_cap <- function(model, 
                      condition,
                      type = "response",
                      conf.int = TRUE,
@@ -130,7 +130,7 @@ plot_cmm <- function(model,
     }
 
     p <- p + ggplot2::labs(x = condition1, 
-                           y = sprintf("Marginal mean of %s", resp),
+                           y = resp,
                            color = condition2,
                            fill = condition2,
                            linetype = condition3)

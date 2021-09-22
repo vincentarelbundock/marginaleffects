@@ -137,10 +137,10 @@ The [`typical` function gives us an even more powerful way](https://vincentarelb
 predictions(mod, newdata = typical(am = 0, wt = c(2, 4)))
 ```
 
-We can plot the adjusted predictions with the `plot_cmm` function:
+We can plot the adjusted predictions with the `plot_cap` function:
 
 ```{r}
-plot_cmm(mod, condition = c("hp", "wt"))
+plot_cap(mod, condition = c("hp", "wt"))
 ```
 
 Or you can work with the output of the `predictions` or `marginaleffects` directly to create your own plots. For example:
@@ -162,7 +162,7 @@ And of course, categorical variables work too:
 
 ```{r}
 mod <- lm(mpg ~ factor(cyl), data = mtcars)
-plot_cmm(mod, condition = "cyl")
+plot_cap(mod, condition = "cyl")
 ```
 
 There is *much* more you can do with `marginaleffects`. Please read the other articles on this website to learn more:
