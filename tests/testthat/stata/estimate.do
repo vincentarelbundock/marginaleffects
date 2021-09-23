@@ -135,6 +135,22 @@ quiet margins, dydx(*) post
 outreg2 using "results/lme4_02.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
 
 
+* quantreg::rq
+clear
+use databases/mtcars.dta
+quiet qreg mpg c.hp##c.wt i.cyl
+quiet margins, dydx(*) post
+outreg2 using "results/quantreg_rq.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
+
+
+* truncreg::truncreg
+clear
+use databases/tobin.dta
+quiet truncreg durable age quant, ll(0)
+quiet margins, dydx(*) post
+outreg2 using "results/truncreg_truncreg.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
+
+
 ******************* PANEL
 
 * emplUK

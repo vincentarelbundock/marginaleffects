@@ -118,3 +118,16 @@ haven::write_dta(mtcars, path = "data/mtcars.dta")
 #########################
 write.table(data(Kmenta, package = "ivreg"))
 haven::write_dta(Kmenta, path = "data/kmenta.dta")
+
+
+##################
+#  quantreg::rq  #
+##################
+haven::write_dta(mtcars, path = "data/mtcars.dta")
+
+########################
+#  truncreg::truncreg  #
+########################
+write.table(data(tobin, package = "survival"))
+haven::write_dta(tobin, path = "data/tobin.dta")
+
