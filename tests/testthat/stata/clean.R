@@ -26,6 +26,18 @@ tmp <- read.table(test_path("stata/results/survival_coxph_01.txt"), sep = "\t", 
     head(1)
 results[["survival_coxph_01"]] <- tmp
 
+#  truncreg::truncreg
+tmp <- read.table(test_path("stata/results/truncreg_truncreg_01.txt"), sep = "\t", skip = 4) |>
+    setNames(c("term", "dydxstata", "std.errorstata")) |>
+    head(2)
+results[["truncreg_truncreg_01"]] <- tmp
+
+#  quantreg::rq
+tmp <- read.table(test_path("stata/results/quantreg_rq_01.txt"), sep = "\t", skip = 4) |>
+    setNames(c("term", "dydxstata", "std.errorstata")) |>
+    head(4)
+results[["quantreg_rq_01"]] <- tmp
+
 #  pscl::zeroinfl
 tmp <- read.table(test_path("stata/results/pscl_zeroinfl_01.txt"), sep = "\t", skip = 4) |>
     setNames(c("term", "dydxstata", "std.errorstata")) |>

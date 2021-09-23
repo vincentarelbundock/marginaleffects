@@ -16,7 +16,6 @@ quiet reg y c.x1##c.x2
 quiet margins, dydx(x1 x2) post
 outreg2 using "results/stats_lm_01.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
 
-
 * survival::coxph
 clear
 use databases/survival_coxph_01.dta
@@ -24,9 +23,7 @@ stset time status
 quiet stcox x, strata(sex) nohr
 quiet margins, dydx(x) exp(predict(xb)) post
 outreg2 using "results/survival_coxph_01.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
- 
 
-margins, dydx(*) exp(predict(xb))
 * betareg::betareg
 clear
 use databases/betareg_betareg_01.dta
@@ -140,7 +137,7 @@ clear
 use databases/mtcars.dta
 quiet qreg mpg c.hp##c.wt i.cyl
 quiet margins, dydx(*) post
-outreg2 using "results/quantreg_rq.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
+outreg2 using "results/quantreg_rq_01.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
 
 
 * truncreg::truncreg
@@ -148,7 +145,7 @@ clear
 use databases/tobin.dta
 quiet truncreg durable age quant, ll(0)
 quiet margins, dydx(*) post
-outreg2 using "results/truncreg_truncreg.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
+outreg2 using "results/truncreg_truncreg_01.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
 
 
 ******************* PANEL

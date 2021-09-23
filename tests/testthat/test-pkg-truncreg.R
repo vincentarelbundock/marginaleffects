@@ -13,3 +13,14 @@ test_that("truncreg: no validity check", {
     expect_false(any(tid$std.error == 0))
     expect_false(anyNA(tid$std.error))
 })
+
+
+test_that("truncreg vs. Stata", {
+    stata <- readRDS(test_path("stata/stata.rds"))$truncreg_truncreg_01
+    data("tobin", package = "survival")
+    model <- truncreg::truncreg(durable ~ age + quant, 
+                                data = tobin, subset = durable > 0)
+    mfx <- merge(tidy(marginaleffects(model)), stata)
+    expect_equal(mfx$estimate, mfx$dydxstata, tolerance = .0001)
+    expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = .0001)
+})
