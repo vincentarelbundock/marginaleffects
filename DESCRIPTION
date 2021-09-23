@@ -63,6 +63,7 @@ Suggests:
     ordinal,
     plm,
     pscl,
+    quantreg,
     rms,
     robustbase,
     sandwich,
@@ -95,6 +96,7 @@ Collate:
     'methods_nnet.R'
     'methods_plm.R'
     'methods_pscl.R'
+    'methods_quantreg.R'
     'methods_stats.R'
     'package.R'
     'plot.R'
