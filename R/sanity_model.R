@@ -48,6 +48,7 @@ sanity_model_supported_class <- function(model) {
                       c("negbin", "glm", "lm"),
                       c("plm", "panelmodel"),
                       "polr",
+                      "rq",
                       "speedglm",
                       "speedlm",
                       c("tobit", "survreg"),
@@ -74,7 +75,7 @@ New modeling packages can usually be supported by `marginaleffects` if they incl
 
 
 sanity_model <- function(model, ...) {
-    sanity_model_supported_class(model)
     sanity_model_specific(model, ...)
+    sanity_model_supported_class(model)
     return(model)
 }
