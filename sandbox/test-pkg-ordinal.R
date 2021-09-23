@@ -9,8 +9,8 @@ mod <- ordinal::clm(factor(y) ~ x1 + x2, data = dat)
 mod_polr <- MASS::polr(factor(y) ~ x1 + x2, data = dat)
 
 # Problem: all columns include the same predictions. We should have separate ones to make dy/dx for each level. This looks like a bug, so apparently we cannot support this model.
-predict(mod, newdata = insight::get_data(mod), type = "prob")$fit |> head()
-predict(mod, newdata = insight::get_data(mod), type = "cum.prob")[[2]] |> head()
+a <- predict(mod, newdata = insight::get_data(mod), type = "prob")$fit
+b <- predict(mod, newdata = insight::get_data(mod), type = "cum.prob")[[2]]
 
 test_that("ordinal vs. MASS", {
     dat <- read.csv(test_path("stata/databases/MASS_polr_01.csv"))
