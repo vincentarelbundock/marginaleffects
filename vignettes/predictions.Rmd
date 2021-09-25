@@ -118,7 +118,6 @@ plot_cap(mod, condition = c("length", "style"))
 
 Of course, you can also design your own plots or tables by working with the `predictions` output directly:
 
-
 ```{r}
 predictions(mod, 
               type = c("response", "link"),
