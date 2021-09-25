@@ -1,6 +1,15 @@
+skip_if_not_installed("pscl")
+requiet("pscl")
+
 tmp <- mtcars
 tmp$am <- as.logical(tmp$am)
 mod <- lm(mpg ~ hp + wt + factor(cyl) + am, data = tmp)
+
+# TODO: remove this when insight is updated
+test_that("need update to insight", {
+    expect_warning(predictions(mod, type = "response"))
+})
+
 
 ################
 #  conf.level  #
@@ -98,4 +107,16 @@ test_that("`typical`: all logical", {
 test_that("`typical`: missing logical", {
     mm <- predictions(mod, newdata = typical(am = TRUE))
     expect_equal(nrow(mm), 1)
+})
+
+#########################################################################
+#  some models do not return data.frame under `insight::get_predicted`  #
+#########################################################################
+
+test_that("hurdle predictions", {
+    data("bioChemists", package = "pscl")
+    mod <- pscl::hurdle(art ~ phd + fem | ment, data = bioChemists, dist = "negbin")
+    pred <- predictions(mod)
+    expect_s3_class(pred, "data.frame")
+    expect_true("predicted" %in% colnames(pred))
 })

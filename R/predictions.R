@@ -1,7 +1,7 @@
 #' Predictions
-#' 
+#'
 #' Warning: This package is experimental.
-#' 
+#'
 #' @param model Model object
 #' @param variables Character vector. Compute Adjusted Predictions for
 #'   combinations of each of these variables. Factor levels are considered at
@@ -13,21 +13,23 @@
 #' No interval is computed if `conf.int=NULL`.  Must be strictly greater than 0
 #' and less than 1. Defaults to 0.95, which corresponds to a 95 percent
 #' confidence interval.
-#' @param type Type(s) of prediction as string or vector This can
-#' differ based on the model type, but will typically be a string such as:
-#' "response", "link", "probs", or "zero".
 #' @param ... Additional arguments are pushed forward to `predict()`.
 #' @export
 #' @details
-predictions <- function(model, 
-                        variables = NULL, 
-                        newdata = NULL, 
-                        type = "response",
+predictions <- function(model,
+                        variables = NULL,
+                        newdata = NULL,
                         conf.level = 0.95,
                         ...) {
 
+    # TODO uncomment in the loop and remove hardcoded expectation
+    if ("type" %in% names(list(...))) {
+        warning('The "type" argument is not currently supported by the `predictions` function. All predictions will be made on the "response" or "expectation" scale. The code to support various prediction types is already written, but we are waiting for an update to the `insight` package. Support should come very soon.')
+    }
+
+    type = "expectation"
     # sanity checks and pre-processing
-    type <- sanity_type(model, type)
+    # type <- sanity_type(model, type)
     # return_data <- sanity_return_data(return_data)
 
     ## do not check this because `insight` supports more models than `marginaleffects`
@@ -86,29 +88,35 @@ predictions <- function(model,
     # predictions
     out_list <- list()
     for (predt in type) {
-        tmp <- insight::get_predicted(model, 
+        tmp <- insight::get_predicted(model,
                                       data = newdata,
-                                      type = predt,
+                                      predict = "expectation",
+                                      # predict = predt,
                                       ci = conf.level)
-        tmp <- as.data.frame(tmp)
-        tmp <- insight::standardize_names(tmp, style = "broom")
-        tmp$type <- predt
-        tmp$rowid <- newdata$rowid
+        if (inherits(tmp, "get_predicted")) {
+            tmp <- as.data.frame(tmp)
+            tmp <- insight::standardize_names(tmp, style = "broom")
+            tmp$type <- predt
+            tmp$rowid <- newdata$rowid
+        } else {
+            tmp <- data.frame(newdata$rowid, predt, tmp)
+            colnames(tmp) <- c("rowid", "type", "predicted")
+        }
         out_list[[predt]] <- tmp
     }
     out <- do.call("rbind", out_list)
-    
+
     # unpad factors
     out <- out[out$rowid > 0, , drop = FALSE]
 
-    # return data 
+    # return data
     out <- merge(out, newdata, all.x = TRUE, sort = FALSE)
 
     # rowid does not make sense here because the grid is made up
     out$rowid <- NULL
 
     # clean columns
-    stubcols <- c("rowid", "type", "term", "predicted", "std.error", "conf.low", "conf.high", 
+    stubcols <- c("rowid", "type", "term", "predicted", "std.error", "conf.low", "conf.high",
                   sort(grep("^predicted", colnames(newdata), value = TRUE)))
     cols <- intersect(stubcols, colnames(out))
     cols <- unique(c(cols, colnames(out)))

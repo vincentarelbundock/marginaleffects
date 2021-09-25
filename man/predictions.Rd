@@ -4,14 +4,7 @@
 \alias{predictions}
 \title{Predictions}
 \usage{
-predictions(
-  model,
-  variables = NULL,
-  newdata = NULL,
-  type = "response",
-  conf.level = 0.95,
-  ...
-)
+predictions(model, variables = NULL, newdata = NULL, conf.level = 0.95, ...)
 }
 \arguments{
 \item{model}{Model object}
@@ -23,10 +16,6 @@ Five-Number Summaries.}
 
 \item{newdata}{A dataset over which to compute adjusted predictions. \code{NULL} uses
 the original data used to fit the model.}
-
-\item{type}{Type(s) of prediction as string or vector This can
-differ based on the model type, but will typically be a string such as:
-"response", "link", "probs", or "zero".}
 
 \item{conf.level}{The confidence level to use for the confidence interval.
 No interval is computed if \code{conf.int=NULL}.  Must be strictly greater than 0
