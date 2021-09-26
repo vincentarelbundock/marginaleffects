@@ -7,7 +7,6 @@ test_that("rg() no validity check", {
 
 
 test_that("rq vs. Stata", {
-    skip("rq standard errors do not match Stata")
     stata <- readRDS(test_path("stata/stata.rds"))$quantreg_rq_01
     model <- quantreg::rq(mpg ~ hp * wt + factor(cyl), data = mtcars)
     mfx <- merge(tidy(marginaleffects(model)), stata)
