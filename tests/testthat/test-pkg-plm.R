@@ -9,12 +9,13 @@ test_that("pooling vs. Stata", {
     mfx <- merge(tidy(marginaleffects(pool)), stata)
     expect_mfx(pool, n_unique = 1)
     expect_equal(mfx$estimate, mfx$dydxstata)
+    expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = .0001)
 })
 
 
 test_that("Swamy-Arora vs. Stata", {
     stata <- readRDS(test_path("stata/stata.rds"))$plm_sa
-    mod <- plm(inv ~ value * capital, data = Grunfeld, 
+    mod <- plm(inv ~ value * capital, data = Grunfeld,
                model = "random", effect = "individual")
     mfx <- merge(tidy(marginaleffects(mod)), stata)
     expect_mfx(mod)
@@ -28,7 +29,6 @@ test_that("no validity checks", {
                    data = Grunfeld, model = "random", random.method = "amemiya",
                    effect = "twoways")
     expect_mfx(amemiya)
-    
     walhus <- plm(inv ~ value * capital,
                   data = Grunfeld, model = "random", random.method = "walhus",
                   effect = "twoways")
