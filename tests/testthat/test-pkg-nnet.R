@@ -47,3 +47,13 @@ test_that("set_coef", {
     new <- set_coef(old, b)
     expect_true(all(coef(new) == 1))
 })
+
+
+test_that("bugfix: nnet single row predictions", {
+    dat <- read.csv(test_path("stata/databases/MASS_polr_01.csv"))
+    void <- capture.output(mod <- 
+        nnet::multinom(factor(y) ~ x1 + x2, data = dat, quiet = true))
+    mfx <- expect_warning(marginaleffects(mod, newdata = typical(), type = "probs"))
+    expect_s3_class(mfx, "data.frame")
+    expect_equal(nrow(mfx), 6)
+})
