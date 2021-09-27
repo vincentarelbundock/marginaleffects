@@ -25,7 +25,7 @@ Compute estimated marginal means for specified factors.
 }
 \details{
 This function begins by calling the \code{predictions} function to
-obtain a grid of prediction including cells for all combinations of all
+obtain a grid of predictors, including cells for all combinations of all
 categorical variables used to fit \code{model}, with numeric variables held at
 their means. Then, it computes marginal means for the variables listed in
 the \code{variables} argument.
@@ -33,4 +33,17 @@ the \code{variables} argument.
 The \code{marginaleffects} website compares the output of this function to the
 popular \code{emmeans} package, which provides similar functionality and more
 advanced options: https://vincentarelbundock.github.io/marginaleffects/
+}
+\examples{
+library(marginaleffects)
+
+# Convert numeric variables to categorical before fitting the model
+dat <- mtcars
+dat$cyl <- as.factor(dat$cyl)
+dat$am <- as.logical(dat$am)
+mod <- lm(mpg ~ hp + cyl + am, data = dat)
+
+# Compute and summarize marginal means
+mm <- marginalmeans(mod)
+summary(mm)
 }

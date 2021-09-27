@@ -17,10 +17,20 @@ combinations of unique values from these vectors}
 must be true).}
 }
 \value{
-A \code{data.frame} with the values specified in the \code{at} list, and where each of the other variables is set at its mean or mode.
+A \code{data.frame} in which each row corresponds to one combination of the named
+predictors supplied by the user via the \code{...} dots. Variables which are not
+explicitly defined are held at their mean or mode.
 }
 \description{
 Generate "typical" datasets for use in \code{marginaleffects}'s \code{newdata} argument
+}
+\details{
+If \code{typical} is used in a \code{marginaleffects} or \code{predictions} call as the
+\code{newdata} argument, users do not need to specify the \code{model} or \code{data}
+argument. The data is extracted automatically from the model.
+
+If users supply a model, the data used to fit that model is retrieved using
+the \code{insight::get_data} function.
 }
 \examples{
 # The output only has 2 rows, and all the variables except `hp` are at their
@@ -33,5 +43,4 @@ typical(model = mod, hp = c(100, 110))
 
 # Use in `marginaleffects` to compute "Typical Marginal Effects"
 marginaleffects(mod, newdata = typical(hp = c(100, 110)))
-
 }

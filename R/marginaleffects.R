@@ -56,7 +56,7 @@ marginaleffects <- function(model,
 
     # should I expose this to users? For now, keep the UI simple
     # @param numDeriv_method One of "simple", "Richardson", or "complex",
-    #'   indicating the method to use for the approximation. See
+    #   indicating the method to use for the approximation. See
     #   [numDeriv::grad()] for details.
     # @param return_data boolean If `TRUE`, the original data used to fit the
     #   model is attached to the output. `FALSE` will objects which take up less

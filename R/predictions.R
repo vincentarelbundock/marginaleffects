@@ -1,12 +1,11 @@
-#' Predictions
+#' Adjusted Predictions
 #'
-#' Warning: This package is experimental.
-#'
+#' Compute model-adjusted predictions (fitted values) for a "grid" of regressor values.
 #' @param model Model object
 #' @param variables Character vector. Compute Adjusted Predictions for
 #'   combinations of each of these variables. Factor levels are considered at
 #'   each of their levels. Numeric variables variables are considered at Tukey's
-#'   Five-Number Summaries.
+#'   Five-Number Summaries. `NULL` uses the original data used to fit the model.
 #' @param newdata A dataset over which to compute adjusted predictions. `NULL` uses
 #'   the original data used to fit the model.
 #' @param conf.level The confidence level to use for the confidence interval.
@@ -14,6 +13,7 @@
 #' and less than 1. Defaults to 0.95, which corresponds to a 95 percent
 #' confidence interval.
 #' @param ... Additional arguments are pushed forward to `predict()`.
+#' @return A `data.frame` with a `predicted` column with predictions.
 #' @export
 #' @details
 predictions <- function(model,

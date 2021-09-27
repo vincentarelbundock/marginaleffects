@@ -15,16 +15,24 @@ counterfactual(..., model = NULL, data = NULL)
 must be true).}
 }
 \value{
-A \code{data.frame} where each row of the original data is repeated
-multiple times for each of the values of the variables in the \code{at} list. See
-example below.
+A \code{data.frame} where each row of the original data is repeated multiple
+times for each of the values of the variables in the \code{at} list. See example
+below.
+}
+\description{
+Generate "counterfactual" datasets for use in \code{marginaleffects}'s \code{newdata} argument
+}
+\details{
+If \code{counterfactual} is used in a \code{marginaleffects} or \code{predictions} call as
+the \code{newdata} argument, users do not need to specify the \code{model} or \code{data}
+argument. The data is extracted automatically from the model.
+
+If users supply a model, the data used to fit that model is retrieved using
+the \code{insight::get_data} function.
 
 If users supply a model, the data used to fit that model is retrieved using
 the \code{insight::get_data} function, and then replicated with different values
 of the variables in the \code{at} list.
-}
-\description{
-Generate "counterfactual" datasets for use in \code{marginaleffects}'s \code{newdata} argument
 }
 \examples{
 # All rows are repeated twice, with different values of `hp`
@@ -38,5 +46,4 @@ cd[cd$rowid \%in\% 1:3,]
 
 # Use in `marginaleffects` to compute "Counterfactual Average Marginal Effects"
 marginaleffects(mod, newdata = counterfactual(hp = c(100, 110)))
-
 }

@@ -69,6 +69,5 @@ marginaleffects(mod,
 # heteroskedasticity robust standard errors
 marginaleffects(mod, vcov = sandwich::vcovHC(mod))
 
-  indicating the method to use for the approximation. See
 }
 \keyword{internal}

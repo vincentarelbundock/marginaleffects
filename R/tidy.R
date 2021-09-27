@@ -101,9 +101,8 @@ glance.marginaleffects <- function(x, ...) {
 #'
 #' @param x An object produced by the `marginalmeans` function.
 #' @inheritParams tidy.marginaleffects
-#' @details The `tidy` function calculates average marginal effects by taking
-#' the mean of all the unit-level marginal effects computed by the
-#' `marginaleffects` function.
+#' @return A "tidy" `data.frame` which conforms to the `broom`
+#' package specification.
 #' @export
 tidy.marginalmeans <- function(x,
                                  conf.int = TRUE,

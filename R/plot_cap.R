@@ -22,10 +22,12 @@
 #'
 plot_cap <- function(model, 
                      condition,
-                     type = "response",
+                     # type = "response",
                      conf.int = TRUE,
                      conf.level = 0.95,
                      draw = TRUE) {
+
+    # TODO: reinstate the `type` argument when insight supports it
 
     # get data to know over what range of values we should plot
     dat <- insight::get_data(model)

@@ -1,30 +1,37 @@
 #' Generate "counterfactual" datasets for use in `marginaleffects`'s `newdata` argument
-#' 
+#'
 #' @param ... named arguments with vectors of values for the variables to construct (see Examples below.)
 #' @param model Model object
 #' @param data data.frame (one and only one of the `model` and `data` arguments
 #' must be true).
-#' @return A `data.frame` where each row of the original data is repeated
-#' multiple times for each of the values of the variables in the `at` list. See
-#' example below.
+#' @details
+#' If `counterfactual` is used in a `marginaleffects` or `predictions` call as
+#' the `newdata` argument, users do not need to specify the `model` or `data`
+#' argument. The data is extracted automatically from the model.
 #'
+#' If users supply a model, the data used to fit that model is retrieved using
+#' the `insight::get_data` function.
+#' 
 #' If users supply a model, the data used to fit that model is retrieved using
 #' the `insight::get_data` function, and then replicated with different values
 #' of the variables in the `at` list.
+#' @return 
+#' A `data.frame` where each row of the original data is repeated multiple
+#' times for each of the values of the variables in the `at` list. See example
+#' below.
 #' @export
 #' @examples
 #' # All rows are repeated twice, with different values of `hp`
 #' cd <- counterfactual(data = mtcars, hp = c(100, 110))
 #' cd[cd$rowid %in% 1:3,]
-#' 
+#'
 #' # We get the same result by feeding a model instead of a data.frame
 #' mod <- lm(mpg ~ hp + wt, mtcars)
 #' cd <- counterfactual(model = mod, hp = c(100, 110))
 #' cd[cd$rowid %in% 1:3,]
-#' 
+#'
 #' # Use in `marginaleffects` to compute "Counterfactual Average Marginal Effects"
 #' marginaleffects(mod, newdata = counterfactual(hp = c(100, 110)))
-#'
 counterfactual <- function(..., model = NULL, data = NULL) {
 
     tmp <- prep_counterfactual_typical(..., model = model, data = data)
@@ -52,27 +59,36 @@ counterfactual <- function(..., model = NULL, data = NULL) {
 
 
 #' Generate "typical" datasets for use in `marginaleffects`'s `newdata` argument
-#' 
+#'
 #' @param ... named arguments with vectors of values for the typical variables
 #' to construct (see Examples below.) The typical data will include
 #' combinations of unique values from these vectors
 #' @param model Model object
 #' @param data data.frame (one and only one of the `model` and `data` arguments
 #' must be true).
-#' @return A `data.frame` with the values specified in the `at` list, and where each of the other variables is set at its mean or mode.
+#' @details
+#' If `typical` is used in a `marginaleffects` or `predictions` call as the
+#' `newdata` argument, users do not need to specify the `model` or `data`
+#' argument. The data is extracted automatically from the model.
+#'
+#' If users supply a model, the data used to fit that model is retrieved using
+#' the `insight::get_data` function.
+#' @return
+#' A `data.frame` in which each row corresponds to one combination of the named
+#' predictors supplied by the user via the `...` dots. Variables which are not
+#' explicitly defined are held at their mean or mode.
 #' @export
 #' @examples
 #' # The output only has 2 rows, and all the variables except `hp` are at their
 #' # mean or mode.
 #' typical(data = mtcars, hp = c(100, 110))
-#' 
+#'
 #' # We get the same result by feeding a model instead of a data.frame
 #' mod <- lm(mpg ~ hp, mtcars)
 #' typical(model = mod, hp = c(100, 110))
-#' 
+#'
 #' # Use in `marginaleffects` to compute "Typical Marginal Effects"
 #' marginaleffects(mod, newdata = typical(hp = c(100, 110)))
-#'
 typical <- function(..., model = NULL, data = NULL) {
 
     tmp <- prep_counterfactual_typical(..., model = model, data = data)
