@@ -26,10 +26,7 @@ marginalmeans <- function(model,
 
     checkmate::assert_character(variables, min.len = 1, null.ok = TRUE)
 
-    # predictions for each cell of all categorical data
     dat <- insight::get_data(model)
-    variables_categorical <- get_categorical(dat)
-    dat <- predictions(model = model, variables = variables_categorical)
 
     # variable selection
     column_labels <- colnames(dat)
@@ -42,8 +39,12 @@ marginalmeans <- function(model,
         variables <- intersect(variables, variables_valid)
     }
     if (length(variables_valid) == 0) {
-        stop("No logical, factor, or character variable was found in the dataset used to fit `model`, and as an untransformed term in the model formula. If you are converting variables to `factor` in the formula, you might consider converting them in your dataset before fitting the model.") 
+        stop("No logical, factor, or character variable was found in the dataset used to fit the `model` object. This error is often raised when users convert variables to factor in the model formula (e.g., `lm(y ~ factor(x)`). If this is the case, you may consider converting variables in the dataset before fitting the model.")
     }
+
+    # predictions for each cell of all categorical data
+    variables_categorical <- get_categorical(dat)
+    dat <- predictions(model = model, variables = variables_categorical)
 
     # interactions are not supported
     interactions <- any(grepl(":", attr(stats::terms(model), "term.labels")))

@@ -71,7 +71,7 @@ The marginal means of `am` and `cyl` are obtained by taking the mean of the adju
 marginalmeans(mod)
 ```
 
-The same results can be obtained using the [very powerful `emmeans` package](https://cran.r-project.org/web/packages/emmeans/index.html):
+The same results can be obtained using the [very powerful `emmeans` package](https://cran.r-project.org/package=emmeans):
 
 ```{r}
 library(emmeans)
@@ -99,9 +99,9 @@ Thanks to those tidiers, we can also present the results in the style of a regre
 ```{r}
 library("modelsummary")
 
-modelsummary(me, 
-             estimate = "{estimate} ({std.error}){stars}",
+modelsummary(me,
              title = "Estimated Marginal Means",
+             estimate = "{estimate} ({std.error}){stars}",
              statistic = NULL,
              group = term + group ~ model)
 ```

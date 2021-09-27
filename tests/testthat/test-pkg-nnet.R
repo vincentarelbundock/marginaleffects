@@ -30,8 +30,10 @@ test_that("multinom vs. Stata", {
     dat <- read.csv(test_path("stata/databases/MASS_polr_01.csv"))
     void <- capture.output(mod <- 
         nnet::multinom(factor(y) ~ x1 + x2, data = dat, quiet = true))
-    mfx <- merge(tidy(expect_warning(marginaleffects(mod, type = "probs"))), stata, all = TRUE)
-
+    mfx <- suppressWarnings(marginaleffects(mod, type = "probs"))
+    mfx <- merge(tidy(mfx), stata, all = TRUE)
+    # standard errors don't match
+    expect_equal(mfx$estimate, mfx$dydxstata, tolerance = .0001)
 })
 
 
@@ -53,7 +55,8 @@ test_that("bugfix: nnet single row predictions", {
     dat <- read.csv(test_path("stata/databases/MASS_polr_01.csv"))
     void <- capture.output(mod <- 
         nnet::multinom(factor(y) ~ x1 + x2, data = dat, quiet = true))
-    mfx <- expect_warning(marginaleffects(mod, newdata = typical(), type = "probs"))
+    expect_warning(marginaleffects(mod, newdata = typical(), type = "probs"))
+    mfx <- suppressWarnings(marginaleffects(mod, newdata = typical(), type = "probs"))
     expect_s3_class(mfx, "data.frame")
     expect_equal(nrow(mfx), 6)
 })

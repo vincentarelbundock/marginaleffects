@@ -30,7 +30,6 @@ predictions <- function(model,
     type = "expectation"
     # sanity checks and pre-processing
     # type <- sanity_type(model, type)
-    # return_data <- sanity_return_data(return_data)
 
     ## do not check this because `insight` supports more models than `marginaleffects`
     # model <- sanity_model(model)

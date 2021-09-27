@@ -4,13 +4,11 @@
 <!-- badges: start -->
 
 [![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![Codecov test
 coverage](https://codecov.io/gh/vincentarelbundock/marginaleffects/branch/main/graph/badge.svg)](https://codecov.io/gh/vincentarelbundock/marginaleffects?branch=main)
 [![R-CMD-check](https://github.com/vincentarelbundock/marginaleffects/workflows/R-CMD-check/badge.svg)](https://github.com/vincentarelbundock/marginaleffects/actions)
 <!-- badges: end -->
-
-This package is still experimental. *Use with caution\!*
 
 ## What?
 
@@ -49,59 +47,69 @@ you.
 
 Many `R` packages advertise their ability to compute “marginal effects.”
 However, most of them do *not* actually compute marginal effects *as
-defined above*. Instead, they compute fitted values for different
-predictor values, or differences in fitted values. The rare packages
-that actually compute marginal effects are typically limited in the
-model types they support, and in the range of transformations they allow
-(interactions, polynomials, etc.).
+defined above*. Instead, they compute “adjusted predictions” for
+different regressor values, or differences in adjusted predictions
+(i.e., “contrasts”). The rare packages that actually compute marginal
+effects are typically limited in the model types they support, and in
+the range of transformations they allow (interactions, polynomials,
+etc.).
 
-The main package in the `R` ecosystem to compute marginal effects is the
-trailblazing and powerful [`margins` and `prediction` packages by Thomas
-J. Leeper](https://cran.r-project.org/web/packages/margins/index.html),
-and the [`emmeans` package by Russell V. Lenth and
-contributors.](https://cran.r-project.org/web/packages/emmeans/index.html)
-The `marginaleffects` package is (essentially) a clone of Leeper’s
-`margins` and `prediction` packages.
+The main packages in the `R` ecosystem to compute marginal effects are
+the trailblazing and powerful [`margins` by Thomas J.
+Leeper](https://cran.r-project.org/package=margins), and [`emmeans` by
+Russell V. Lenth and
+contributors.](https://cran.r-project.org/package=emmeans) The
+`marginaleffects` package is essentially a clone of `margins`, with some
+additional features from `emmeans`.
 
 So why did I write a clone?
 
-  - *Speed:* [In one
+  - *Powerful:* Marginal effects and contrasts can be computed for about
+    40 different kinds of models. Adjusted predictions and marginal
+    means can be computed for about 100 model types.
+  - *Extensible:* Adding support for new models is very easy, often
+    requiring less than 10 lines of new code. Please submit [feature
+    requests on
+    Github.](https://github.com/vincentarelbundock/marginaleffects/issues)
+  - *Fast:* [In one
     benchmark,](https://vincentarelbundock.github.io/marginaleffects/articles/benchmark.html)
     computing unit-level standard errors is over 400x faster with
     `marginaleffects` (minutes vs. milliseconds).
-  - *Efficiency:* Smaller memory footprint (1.8GB vs 52MB in the same
+  - *Efficient:* Smaller memory footprint (1.8GB vs 52MB in the same
     example).
-  - *Extensibility:* Adding support for new models is very easy, often
-    requiring less than 10 lines of new code. In the medium run, the
-    goal is to add support for *several* more model types.
-  - `ggplot2` support for plotting (conditional) marginal effects.
+  - *Valid:* When possible, numerical results are checked against
+    alternative software like `Stata`, or other `R` packages.
+  - *Beautiful:* `ggplot2` support for plotting (conditional) marginal
+    effects and adjusted predictions.
   - *Tidy:* The results produced by `marginaleffects` follow “tidy”
-    principles. They are easy to process and program with.
-  - *User interface:* All functions share an extremely simple, unified,
-    and well-documented interface.
-  - *Dependencies*: The package is built on very few dependencies. The
-    only “true” dependencies are `numDeriv` which has been on the CRAN
-    archive since 2006, and `insight` which is itself dependency-free.
+    principles. They are easy to program with and feed to [other
+    packages like
+    `modelsummary`.](https://vincentarelbundock.github.io/marginaleffects/)
+  - *Simple:* All functions share a simple, unified, and well-documented
+    interface.
+  - *Thin:* The package requires few dependencies.
   - *Safe:* User input is checked extensively before computation. When
     needed, functions fail gracefully with informative error messages.
   - *Active development*
 
 Downsides of `marginaleffects` include:
 
+  - Functions to estimate contrasts and marginal means are considerably
+    less flexible than `emmeans`.
   - Simultation-based inference is not supported.
   - Newer package with a smaller (read: nonexistent) user base.
 
 ## How?
 
 By using [the `numDeriv`
-package](https://cran.r-project.org/web/packages/numDeriv/index.html) to
-compute gradients and jacobians, and [the `insight`
+package](https://cran.r-project.org/package=numDeriv) to compute
+gradients and jacobians, and [the `insight`
 package](https://easystats.github.io/insight/) to extract information
 from model objects. That’s it. That’s the secret sauce.
 
 ## Supported models
 
-#### Adjusted predictions
+#### Adjusted predictions and marginal means
 
 Under the hood, `marginaleffects`’s `predictions` function uses the
 `insight` package to retrieve adjusted predictions from a wide variety
@@ -110,7 +118,7 @@ objects](https://easystats.github.io/insight/), and most of those should
 work out-of-the-box with the `predictions` function. If you run into
 problems, do not hesitate to report them on Github or via email.
 
-#### Marginal effects
+#### Marginal effects and contrasts
 
 This table shows the list of models supported by the `marginaleffects`
 function, and shows which numerical results – marginal effects (dY/dX)
@@ -135,11 +143,16 @@ of your modeling package to see what `type` argument is allowed in the
 
 <img src="man/figures/README-supported_models.png" width="60%" />
 
-#### Contrasts and Marginal Means
-
 ## Installation
 
-You can install the latest version of `marginaleffects` from Github:
+You can install the released version of `marginaleffects` from CRAN:
+
+``` r
+install.packages("marginaleffects")
+```
+
+You can install the development version of `marginaleffects` from
+Github:
 
 ``` r
 remotes::install_github("vincentarelbundock/marginaleffects")
@@ -155,6 +168,8 @@ library(marginaleffects)
 
 mod <- lm(mpg ~ hp * wt * am, data = mtcars)
 ```
+
+#### Marginal effects
 
 A “marginal effect” is a unit-specific measure of association between a
 change in a regressor and a change in the regressand. The
@@ -198,7 +213,9 @@ interaction):
 plot_cme(mod, effect = "hp", condition = c("wt", "am"))
 ```
 
-<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
+
+#### Adjusted predictions
 
 Beyond marginal effects, we can also use the `predictions` function to
 estimate – you guessed it – adjusted predicted values. We use the
@@ -237,15 +254,14 @@ We can plot the adjusted predictions with the `plot_cap` function:
 plot_cap(mod, condition = c("hp", "wt"))
 ```
 
-<img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />
 
 Or you can work with the output of the `predictions` or
 `marginaleffects` directly to create your own plots. For example:
 
 ``` r
 library(tidyverse)
-#> Warning in system("timedatectl", intern = TRUE): running command 'timedatectl'
-#> had status 1
+
 predictions(mod, 
               newdata = typical(am = 0:1, 
                                 wt = fivenum(mtcars$wt), 
@@ -256,7 +272,7 @@ predictions(mod,
     facet_wrap(~am)
 ```
 
-<img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-12-1.png" width="100%" />
 
 And of course, categorical variables work too:
 
@@ -265,14 +281,50 @@ mod <- lm(mpg ~ factor(cyl), data = mtcars)
 plot_cap(mod, condition = "cyl")
 ```
 
-<img src="man/figures/README-unnamed-chunk-12-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-13-1.png" width="100%" />
+
+#### Marginal means
+
+To compute marginal means, we first need to make sure that the
+categorical variables of our model are coded as such in the dataset:
+
+``` r
+dat <- mtcars
+dat$am <- as.logical(dat$am)
+dat$cyl <- as.factor(dat$cyl)
+```
+
+Then, we estimate the model and call the `marginalmeans` function:
+
+``` r
+mod <- lm(mpg ~ am + cyl + hp, data = dat)
+mm <- marginalmeans(mod)
+summary(mm)
+#> Estimated marginal means 
+#>   Term Group  Mean Std. Error z value   Pr(>|z|) 2.5 % 97.5 %
+#> 1   am FALSE 18.32     0.7854   23.33 < 2.22e-16 16.78  19.86
+#> 2   am  TRUE 22.48     0.8343   26.94 < 2.22e-16 20.84  24.11
+#> 3  cyl     4 22.88     1.3566   16.87 < 2.22e-16 20.23  25.54
+#> 4  cyl     6 18.96     1.0729   17.67 < 2.22e-16 16.86  21.06
+#> 5  cyl     8 19.35     1.3771   14.05 < 2.22e-16 16.65  22.05
+#> 
+#> Model type:  lm 
+#> Prediction type:  expectation
+```
+
+#### More
 
 There is *much* more you can do with `marginaleffects`. Please read the
-other articles on this website to learn more:
+other articles on this website to learn how to report marginal effects
+and means in [nice tables with the `modelsummary`
+package](https://vincentarelbundock.github.io/modelsummary/), how to
+define your own prediction “grid”, and more:
 
   - [*Marginal Effect*
     (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/mfx.html)
-  - [*Adjusted Predictions*
+  - [*Adjusted Prediction*
     (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html)
   - [*Contrast*
     (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)
+  - [*Marginal Mean*
+    (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html)

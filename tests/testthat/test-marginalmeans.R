@@ -19,12 +19,10 @@ test_that("tidy and glance", {
 
 test_that("simple marginal means", {
     mod <- lm(mpg ~ cyl + am + hp, dat)
-
     em <- broom::tidy(emmeans::emmeans(mod, "cyl"))
     me <- marginalmeans(mod, variables = "cyl")
     expect_equal(me$predicted, em$estimate)
     expect_equal(me$std.error, em$std.error)
-
     em <- broom::tidy(emmeans::emmeans(mod, "am"))
     me <- marginalmeans(mod, variables = "am")
     expect_equal(me$predicted, em$estimate)
@@ -35,12 +33,18 @@ test_that("simple marginal means", {
 test_that("interactions", {
     # standard errors do not match emmeans
     mod <- lm(mpg ~ cyl * am, dat)
-
     em <- suppressMessages(broom::tidy(emmeans::emmeans(mod, "cyl")))
-    me <- expect_warning(marginalmeans(mod, variables = "cyl"), regex = "interactions")
+    me <- suppressWarnings(marginalmeans(mod, variables = "cyl"))
+    expect_warning(marginalmeans(mod, variables = "cyl"), regex = "interactions")
     expect_equal(me$predicted, em$estimate)
-
     em <- suppressMessages(broom::tidy(emmeans::emmeans(mod, "am")))
-    me <- expect_warning(marginalmeans(mod, variables = "am"), regex = "interactions")
+    me <- suppressWarnings(marginalmeans(mod, variables = "am"))
+    expect_warning(marginalmeans(mod, variables = "am"), regex = "interactions")
     expect_equal(me$predicted, em$estimate)
+})
+
+
+test_that("error: no factor", {
+    mod <- lm(hp ~ mpg, mtcars)
+    expect_error(marginalmeans(mod), regexp = "was found")
 })

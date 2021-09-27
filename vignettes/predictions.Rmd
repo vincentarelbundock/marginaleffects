@@ -44,7 +44,7 @@ In many cases, this is too limiting, and researchers will want to specify a grid
 
 # Typical Predictions
 
-There are two main ways to select the reference grid over which we want to compute adjusted predictions. The first is using the `variables` argument. The second is with the `newdata` argument and the [`typical()` function](reference/typical.html) that we already introduced in the [marginal effects vignette.](articles/mfx.html) 
+There are two main ways to select the reference grid over which we want to compute adjusted predictions. The first is using the `variables` argument. The second is with the `newdata` argument and the [`typical()` function](https://vincentarelbundock.github.io/marginaleffects/reference/typical.html) that we already introduced in the [marginal effects vignette.](https://vincentarelbundock.github.io/marginaleffects/articles/mfx.html) 
 
 ## `variables`: Levels and Tukey's 5 numbers 
 
@@ -139,4 +139,4 @@ mod <- glm(am ~ mpg, family = binomial, data = mtcars)
 predictions(mod, type = c("response", "link"))
 ```
 
-Users who need more control over the type of adjusted predictions to compute, including a host of options for back-transformation, may want to consider the [`emmeans` package.](https://cran.r-project.org/web/packages/emmeans/index.html)
+Users who need more control over the type of adjusted predictions to compute, including a host of options for back-transformation, may want to consider the [`emmeans` package.](https://cran.r-project.org/package=emmeans)

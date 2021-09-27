@@ -6,14 +6,13 @@ navbar:
   type: default
   left:
   - text: "Marginal effects"
-    href: articles/mfx.html
+    href: https://vincentarelbundock.github.io/marginaleffects/articles/mfx.html
   - text: "Adjusted predictions"
-    href: articles/predictions.html
+    href: https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html
   - text: "Contrasts"
-    href: articles/contrasts.html
+    href: https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html
   - text: "Marginal means"
-    href: articles/marginalmeans.html
-
+    href: https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html
   right:
   - text: Reference
     href: reference/index.html
