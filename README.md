@@ -1,5 +1,5 @@
 
-# The `marginaleffects` package for `R`
+# The `marginaleffects` package for `R` <img src="https://user-images.githubusercontent.com/987057/134899484-e3392510-2e94-4c39-9830-53356fa5feed.png" align="right" alt="" height="139" />
 
 <!-- badges: start -->
 
@@ -10,30 +10,30 @@ coverage](https://codecov.io/gh/vincentarelbundock/marginaleffects/branch/main/g
 [![R-CMD-check](https://github.com/vincentarelbundock/marginaleffects/workflows/R-CMD-check/badge.svg)](https://github.com/vincentarelbundock/marginaleffects/actions)
 <!-- badges: end -->
 
-This package is still experimental. *Use with caution!*
+This package is still experimental. *Use with caution\!*
 
 ## What?
 
 The `marginaleffects` package allows `R` users to compute and plot four
 principal quantities of interest for a *wide* variety of models:
 
--   [*Marginal Effect*
+  - [*Marginal Effect*
     (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/mfx.html)
-    -   A partial derivative (slope) of the regression equation with
+      - A partial derivative (slope) of the regression equation with
         respect to a regressor of interest.
--   [*Adjusted Prediction*
+  - [*Adjusted Prediction*
     (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html)
-    -   The outcome predicted by a model for some combination of the
+      - The outcome predicted by a model for some combination of the
         regressors’ values, such as their means or factor levels (a.k.a.
         “reference grid”).
--   [*Contrast*
+  - [*Contrast*
     (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)
-    -   The difference between two adjusted predictions, calculated for
+      - The difference between two adjusted predictions, calculated for
         meaningfully different regressor values (e.g., College graduates
         vs. Others).
--   [*Marginal Mean*
+  - [*Marginal Mean*
     (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html)
-    -   Adjusted predictions of a model, averaged across a “reference
+      - Adjusted predictions of a model, averaged across a “reference
         grid” of categorical predictors.
 
 ## Why?
@@ -65,31 +65,31 @@ The `marginaleffects` package is (essentially) a clone of Leeper’s
 
 So why did I write a clone?
 
--   *Speed:* [In one
+  - *Speed:* [In one
     benchmark,](https://vincentarelbundock.github.io/marginaleffects/articles/benchmark.html)
     computing unit-level standard errors is over 400x faster with
     `marginaleffects` (minutes vs. milliseconds).
--   *Efficiency:* Smaller memory footprint (1.8GB vs 52MB in the same
+  - *Efficiency:* Smaller memory footprint (1.8GB vs 52MB in the same
     example).
--   *Extensibility:* Adding support for new models is very easy, often
+  - *Extensibility:* Adding support for new models is very easy, often
     requiring less than 10 lines of new code. In the medium run, the
     goal is to add support for *several* more model types.
--   `ggplot2` support for plotting (conditional) marginal effects.
--   *Tidy:* The results produced by `marginaleffects` follow “tidy”
+  - `ggplot2` support for plotting (conditional) marginal effects.
+  - *Tidy:* The results produced by `marginaleffects` follow “tidy”
     principles. They are easy to process and program with.
--   *User interface:* All functions share an extremely simple, unified,
+  - *User interface:* All functions share an extremely simple, unified,
     and well-documented interface.
--   *Dependencies*: The package is built on very few dependencies. The
+  - *Dependencies*: The package is built on very few dependencies. The
     only “true” dependencies are `numDeriv` which has been on the CRAN
     archive since 2006, and `insight` which is itself dependency-free.
--   *Safe:* User input is checked extensively before computation. When
+  - *Safe:* User input is checked extensively before computation. When
     needed, functions fail gracefully with informative error messages.
--   *Active development*
+  - *Active development*
 
 Downsides of `marginaleffects` include:
 
--   Simultation-based inference is not supported.
--   Newer package with a smaller (read: nonexistent) user base.
+  - Simultation-based inference is not supported.
+  - Newer package with a smaller (read: nonexistent) user base.
 
 ## How?
 
@@ -207,17 +207,17 @@ a “grid” of predictor values over which to compute means/predictions:
 
 ``` r
 predictions(mod, variables = c("am", "wt"))
-#>        type predicted std.error  conf.low conf.high       hp am     wt
-#> 1  response 23.259500 2.7059342 17.674726  28.84427 146.6875  0 1.5130
-#> 2  response 27.148334 2.8518051 21.262498  33.03417 146.6875  1 1.5130
-#> 3  response 20.504387 1.3244556 17.770845  23.23793 146.6875  0 2.5425
-#> 4  response 21.555612 1.0723852 19.342318  23.76891 146.6875  1 2.5425
-#> 5  response 18.410286 0.6151016 17.140779  19.67979 146.6875  0 3.3250
-#> 6  response 17.304709 1.5528055 14.099876  20.50954 146.6875  1 3.3250
-#> 7  response 17.540532 0.7293676 16.035192  19.04587 146.6875  0 3.6500
-#> 8  response 15.539158 2.1453449 11.111383  19.96693 146.6875  1 3.6500
-#> 9  response 12.793013 2.9784942  6.645703  18.94032 146.6875  0 5.4240
-#> 10 response  5.901966 5.8149853 -6.099574  17.90351 146.6875  1 5.4240
+#>           type predicted std.error  conf.low conf.high       hp am     wt
+#> 1  expectation 23.259500 2.7059342 17.674726  28.84427 146.6875  0 1.5130
+#> 2  expectation 27.148334 2.8518051 21.262498  33.03417 146.6875  1 1.5130
+#> 3  expectation 20.504387 1.3244556 17.770845  23.23793 146.6875  0 2.5425
+#> 4  expectation 21.555612 1.0723852 19.342318  23.76891 146.6875  1 2.5425
+#> 5  expectation 18.410286 0.6151016 17.140779  19.67979 146.6875  0 3.3250
+#> 6  expectation 17.304709 1.5528055 14.099876  20.50954 146.6875  1 3.3250
+#> 7  expectation 17.540532 0.7293676 16.035192  19.04587 146.6875  0 3.6500
+#> 8  expectation 15.539158 2.1453449 11.111383  19.96693 146.6875  1 3.6500
+#> 9  expectation 12.793013 2.9784942  6.645703  18.94032 146.6875  0 5.4240
+#> 10 expectation  5.901966 5.8149853 -6.099574  17.90351 146.6875  1 5.4240
 ```
 
 The [`typical` function gives us an even more powerful
@@ -226,9 +226,9 @@ to customize the grid:
 
 ``` r
 predictions(mod, newdata = typical(am = 0, wt = c(2, 4)))
-#>       type predicted std.error conf.low conf.high       hp am wt
-#> 1 response  21.95621  2.038630 17.74868  26.16373 146.6875  0  2
-#> 2 response  16.60387  1.083201 14.36826  18.83949 146.6875  0  4
+#>          type predicted std.error conf.low conf.high       hp am wt
+#> 1 expectation  21.95621  2.038630 17.74868  26.16373 146.6875  0  2
+#> 2 expectation  16.60387  1.083201 14.36826  18.83949 146.6875  0  4
 ```
 
 We can plot the adjusted predictions with the `plot_cap` function:
@@ -244,7 +244,8 @@ Or you can work with the output of the `predictions` or
 
 ``` r
 library(tidyverse)
-
+#> Warning in system("timedatectl", intern = TRUE): running command 'timedatectl'
+#> had status 1
 predictions(mod, 
               newdata = typical(am = 0:1, 
                                 wt = fivenum(mtcars$wt), 
@@ -269,9 +270,9 @@ plot_cap(mod, condition = "cyl")
 There is *much* more you can do with `marginaleffects`. Please read the
 other articles on this website to learn more:
 
--   [*Marginal Effect*
+  - [*Marginal Effect*
     (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/mfx.html)
--   [*Adjusted Predictions*
+  - [*Adjusted Predictions*
     (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html)
--   [*Contrast*
+  - [*Contrast*
     (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)
