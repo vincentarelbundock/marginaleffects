@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Marginal Effects, Adjusted Predictions, Contrasts, and Marginal Means for a Wide Variety of Models
-Version: 0.0.1
+Version: 0.1.0
 Authors@R: 
     person(given = "Vincent",
            family = "Arel-Bundock",
