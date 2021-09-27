@@ -2,7 +2,7 @@
 % Please edit documentation in R/predictions.R
 \name{predictions}
 \alias{predictions}
-\title{Predictions}
+\title{Adjusted Predictions}
 \usage{
 predictions(model, variables = NULL, newdata = NULL, conf.level = 0.95, ...)
 }
@@ -12,7 +12,7 @@ predictions(model, variables = NULL, newdata = NULL, conf.level = 0.95, ...)
 \item{variables}{Character vector. Compute Adjusted Predictions for
 combinations of each of these variables. Factor levels are considered at
 each of their levels. Numeric variables variables are considered at Tukey's
-Five-Number Summaries.}
+Five-Number Summaries. \code{NULL} uses the original data used to fit the model.}
 
 \item{newdata}{A dataset over which to compute adjusted predictions. \code{NULL} uses
 the original data used to fit the model.}
@@ -24,6 +24,9 @@ confidence interval.}
 
 \item{...}{Additional arguments are pushed forward to \code{predict()}.}
 }
+\value{
+A \code{data.frame} with a \code{predicted} column with predictions.
+}
 \description{
-Warning: This package is experimental.
+Compute model-adjusted predictions (fitted values) for a "grid" of regressor values.
 }

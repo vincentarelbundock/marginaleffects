@@ -17,11 +17,10 @@ to 0.95, which corresponds to a 95 percent confidence interval.}
 
 \item{...}{Additional arguments are pushed forward to \code{predict()}.}
 }
+\value{
+A "tidy" \code{data.frame} which conforms to the \code{broom}
+package specification.
+}
 \description{
 Tidy a \code{marginalmeans} object
-}
-\details{
-The \code{tidy} function calculates average marginal effects by taking
-the mean of all the unit-level marginal effects computed by the
-\code{marginaleffects} function.
 }

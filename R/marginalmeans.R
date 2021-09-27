@@ -8,7 +8,7 @@
 #'   factor variables in the dataset used to fit `model`.
 #' @details
 #'   This function begins by calling the `predictions` function to
-#'   obtain a grid of prediction including cells for all combinations of all
+#'   obtain a grid of predictors, including cells for all combinations of all
 #'   categorical variables used to fit `model`, with numeric variables held at
 #'   their means. Then, it computes marginal means for the variables listed in
 #'   the `variables` argument.
@@ -17,6 +17,18 @@
 #'   popular `emmeans` package, which provides similar functionality and more
 #'   advanced options: https://vincentarelbundock.github.io/marginaleffects/
 #' @export
+#' @examples
+#' library(marginaleffects)
+#'
+#' # Convert numeric variables to categorical before fitting the model
+#' dat <- mtcars
+#' dat$cyl <- as.factor(dat$cyl)
+#' dat$am <- as.logical(dat$am)
+#' mod <- lm(mpg ~ hp + cyl + am, data = dat)
+#'
+#' # Compute and summarize marginal means
+#' mm <- marginalmeans(mod)
+#' summary(mm)
 marginalmeans <- function(model,
                           variables = NULL,
                           vcov = insight::get_varcov(model)) {

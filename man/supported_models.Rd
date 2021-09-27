@@ -7,11 +7,14 @@
 \format{
 data.frame
 \describe{
-\item{Model}{package::function of the model type}
-\item{Support: Effect}{Can \code{marginaleffects} retrieve marginal effects?}
-\item{Support: Std.Errors}{Can \code{marginaleffects} retrieve standard errors?}
-\item{Validty: Stata}{Has the validity of numerical results been checked against Stata's margins command?}
-\item{Validty: margins}{Has the validity of numerical results been checked against R's margins package?}
+\item{Package}{R package which produces the model object.}
+\item{Function}{R function which produces the model object.}
+\item{dydx}{Can \code{marginaleffects} retrieve marginal effects?}
+\item{se}{Can \code{marginaleffects} retrieve standard errors?}
+\item{stata_dydx}{Has the validity of numerical results for marginal effects been checked against Stata's margins command?}
+\item{stata_se}{Has the validity of numerical results for standard errors been checked against Stata's margins command?}
+\item{stata_dydx}{Has the validity of numerical results for marginal effects been checked against the margins package for R??}
+\item{stata_se}{Has the validity of numerical results for standard errors been checked against the margins package for R??}
 }
 }
 \usage{
