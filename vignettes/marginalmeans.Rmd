@@ -78,3 +78,30 @@ library(emmeans)
 emmeans(mod, specs = "cyl")
 emmeans(mod, specs = "am")
 ```
+
+
+# Tidy summaries
+
+The `summary`, `tidy`, and `glance` functions are also available to summarize and manipulate the results:
+
+```{r}
+me <- marginalmeans(mod)
+
+tidy(me)
+
+glance(me)
+
+summary(me)
+```
+
+Thanks to those tidiers, we can also present the results in the style of a regression table [using the `modelsummary` package:](https://vincentarelbundock.github.io/modelsummary/)
+
+```{r}
+library("modelsummary")
+
+modelsummary(me, 
+             estimate = "{estimate} ({std.error}){stars}",
+             title = "Estimated Marginal Means",
+             statistic = NULL,
+             group = term + group ~ model)
+```
