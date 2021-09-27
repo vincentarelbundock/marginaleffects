@@ -1,26 +1,28 @@
 #' Marginal Means
 #'
 #' Compute estimated marginal means for specified factors.
-#' 
+#'
 #' @inheritParams marginaleffects
 #' @param variables predictors over which to compute marginal means (character
 #'   vector). `NULL` calculates marginal means for all logical, character, or
 #'   factor variables in the dataset used to fit `model`.
-#' @details 
+#' @details
 #'   This function begins by calling the `predictions` function to
 #'   obtain a grid of prediction including cells for all combinations of all
 #'   categorical variables used to fit `model`, with numeric variables held at
 #'   their means. Then, it computes marginal means for the variables listed in
-#'   the `variables` argument. 
+#'   the `variables` argument.
 #'
 #'   The `marginaleffects` website compares the output of this function to the
 #'   popular `emmeans` package, which provides similar functionality and more
 #'   advanced options: https://vincentarelbundock.github.io/marginaleffects/
 #' @export
-marginalmeans <- function(model, 
+marginalmeans <- function(model,
                           variables = NULL,
                           vcov = insight::get_varcov(model)) {
 
+    # TODO: remove this when we allow a predict type again
+    type <- "expectation"
 
     checkmate::assert_character(variables, min.len = 1, null.ok = TRUE)
 
@@ -102,6 +104,23 @@ marginalmeans <- function(model,
     }
     out <- do.call("rbind", out_list)
     row.names(out) <- NULL
+
+    # attributes
+    if (isTRUE(check_dependency("modelsummary"))) {
+        gl <- suppressMessages(suppressWarnings(try(modelsummary::get_gof(model), silent = TRUE)))
+        if (inherits(gl, "data.frame")) {
+            attr(out, "glance") <- data.frame(gl)
+        } else {
+            attr(out, "glance") <- NULL
+        }
+    } else {
+        attr(out, "glance") <- NULL
+    }
+    class(out) <- c("marginalmeans", class(out))
+    attr(out, "type") <- type
+    attr(out, "model_type") <- class(model)[1]
+    attr(out, "variables") <- variables
+
 
     return(out)
 }

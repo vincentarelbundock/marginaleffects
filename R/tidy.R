@@ -30,7 +30,7 @@ tidy.marginaleffects <- function(x,
                                  conf.level = 0.95,
                                  ...) {
 
-    # dydx averages 
+    # dydx averages
     # empty initial mfx data.frame means there were no numeric variables in the
     # model
     if ("term" %in% colnames(x)) {
@@ -92,6 +92,60 @@ tidy.marginaleffects <- function(x,
 
 #' @export
 glance.marginaleffects <- function(x, ...) {
+    out <- attr(x, "glance")
+    return(out)
+}
+
+
+#' Tidy a `marginalmeans` object
+#'
+#' @param x An object produced by the `marginalmeans` function.
+#' @inheritParams tidy.marginaleffects
+#' @details The `tidy` function calculates average marginal effects by taking
+#' the mean of all the unit-level marginal effects computed by the
+#' `marginaleffects` function.
+#' @export
+tidy.marginalmeans <- function(x,
+                                 conf.int = TRUE,
+                                 conf.level = 0.95,
+                                 ...) {
+
+    out <- x
+    colnames(out)[colnames(out) == "value"] <- "group"
+    colnames(out)[colnames(out) == "predicted"] <- "estimate"
+
+    if (!"statistic" %in% colnames(out) && "std.error" %in% colnames(out)) {
+        out$statistic <- out$estimate / out$std.error
+    }
+
+    if (!"p.value" %in% colnames(out) && "std.error" %in% colnames(out)) {
+        out$p.value <- 2 * (1 - stats::pnorm(abs(out$statistic)))
+    }
+
+    out <- out
+
+    # confidence intervals
+    if ("std.error" %in% colnames(out)) {
+        if (isTRUE(conf.int) && !"conf.low" %in% colnames(out)) {
+            alpha <- 1 - conf.level
+            out$conf.low <- out$estimate + stats::qnorm(alpha / 2) * out$std.error
+            out$conf.high <- out$estimate - stats::qnorm(alpha / 2) * out$std.error
+        }
+    }
+
+    # sort and subset columns
+    cols <- c("type", "term", "group", "estimate", "std.error", "statistic", "p.value", "conf.low", "conf.high")
+    out <- out[, intersect(cols, colnames(out)), drop = FALSE]
+    out <- as.data.frame(out)
+
+    attr(out, "conf.level") <- conf.level
+
+    return(out)
+}
+
+
+#' @export
+glance.marginalmeans <- function(x, ...) {
     out <- attr(x, "glance")
     return(out)
 }

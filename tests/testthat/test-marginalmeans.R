@@ -7,6 +7,16 @@ dat$am <- as.logical(dat$am)
 dat$cyl <- as.factor(dat$cyl)
 
 
+test_that("tidy and glance", {
+    mod <- lm(mpg ~ cyl + am + hp, dat)
+    me <- marginalmeans(mod)
+    ti <- tidy(me)
+    gl <- glance(me)
+    expect_equal(nrow(gl), 1)
+    expect_equal(dim(ti), c(5, 8))
+})
+
+
 test_that("simple marginal means", {
     mod <- lm(mpg ~ cyl + am + hp, dat)
 

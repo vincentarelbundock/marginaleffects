@@ -16,3 +16,15 @@ test_that("summary conf.level", {
     expect_snapshot(print(summary(mfx, conf.level = .9)))
     expect_snapshot(print(summary(mfx, conf.level = .2)))
 })
+
+
+test_that("summary: marginal means", {
+    dat <- mtcars
+    dat$am <- as.logical(dat$am)
+    dat$vs <- as.logical(dat$vs)
+    dat$gear <- as.factor(dat$gear)
+    mod <- lm(mpg ~ gear + am + vs, dat)
+    me <- marginalmeans(mod)
+    s <- summary(me)
+    expect_snapshot(print(s))
+})
