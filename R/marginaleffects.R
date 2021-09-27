@@ -20,15 +20,12 @@
 #' @param type Type(s) of prediction as string or vector This can
 #' differ based on the model type, but will typically be a string such as:
 #' "response", "link", "probs", or "zero".
-#' @param return_data boolean If `TRUE`, the original data used to fit the
-#'   model is attached to the output. `FALSE` will objects which take up less
-#'   space in memory.
 #' @param ... Additional arguments are pushed forward to `predict()`.
 #' @return A data.frame of marginal effect estimates with one row per observation per marginal effect.
 #' @export
 #' @details
 #' @examples
-#' 
+#'
 #' mod <- glm(am ~ hp * wt, data = mtcars, family = binomial)
 #' mfx <- marginaleffects(mod)
 #' summary(mfx)
@@ -39,30 +36,33 @@
 #' }
 #'
 #' # typical marginal effects
-#' marginaleffects(mod, 
+#' marginaleffects(mod,
 #'                 newdata = typical(hp = c(100, 110)))
-#' 
+#'
 #' # counterfactual average marginal effects
-#' marginaleffects(mod, 
+#' marginaleffects(mod,
 #'                 newdata = counterfactual(hp = c(100, 110)))
 #'
 #' # heteroskedasticity robust standard errors
 #' marginaleffects(mod, vcov = sandwich::vcovHC(mod))
-#'                
-marginaleffects <- function(model, 
-                            newdata = NULL, 
-                            variables = NULL, 
+#'
+marginaleffects <- function(model,
+                            newdata = NULL,
+                            variables = NULL,
                             vcov = TRUE,
                             type = "response",
-                            return_data = TRUE,
                             ...) {
 
-  
+
     # should I expose this to users? For now, keep the UI simple
-    # numDeriv_method One of "simple", "Richardson", or "complex",
-    #   indicating the method to use for the approximation. See
+    # @param numDeriv_method One of "simple", "Richardson", or "complex",
+    #'   indicating the method to use for the approximation. See
     #   [numDeriv::grad()] for details.
+    # @param return_data boolean If `TRUE`, the original data used to fit the
+    #   model is attached to the output. `FALSE` will objects which take up less
+    #   space in memory.
     numDeriv_method <- "simple"
+    return_data <- TRUE
 
     # if `newdata` is a call to `typical()` or `counterfactual()`, insert `model`
     scall <- substitute(newdata)
@@ -101,7 +101,6 @@ marginaleffects <- function(model,
     pred_list <- list()
     # add predictions to newdata
     for (gn in group_names) {
-        lab <- paste0("predicted_", gn)
         for (predt in type) {
             tmp <- newdata
             tmp$type <- predt
@@ -124,7 +123,7 @@ marginaleffects <- function(model,
         se_list[[gn]] <- list()
         for (predt in type) {
             out_list[[gn]][[predt]] <- get_dydx_and_se(
-                model = model, 
+                model = model,
                 fitfram = newdata,
                 variables = variables_vec,
                 vcov = vcov,
@@ -132,8 +131,7 @@ marginaleffects <- function(model,
                 type = predt,
                 numDeriv_method = numDeriv_method,
                 ...)
-            se_list[[gn]][[predt]] <- attr(out_list[[gn]][[predt]], 
-                                           "se_at_mean_gradient")
+            se_list[[gn]][[predt]] <- attr(out_list[[gn]][[predt]], "se_at_mean_gradient")
             se_list[[gn]][[predt]]$type <- predt
             out_list[[gn]][[predt]]$type <- predt
             se_list[[gn]][[predt]]$group <- gn
@@ -163,7 +161,7 @@ marginaleffects <- function(model,
     }
 
     # sort rows
-    out <- out[order(out$type, out$term, out$rowid),]
+    out <- out[order(out$type, out$term, out$rowid), ]
     row.names(out) <- NULL
 
     # restore useful attributes lost in "clean columns" bloc

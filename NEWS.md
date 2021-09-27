@@ -1,9 +1,6 @@
-# marginaleffects 0.0.0.9000
+# marginaleffects 0.0.1
 
-+ Experimental pre-release
+First release. Yay!
 
-The first release benefited from comments and suggestions on alpha by:
-
-+ @ercbk
-+ @jakeybob
-+ @achimzeileis
+Thanks to Marco Avina Mendoza, Resul Umit, and all those who offered comments
+and suggestions.

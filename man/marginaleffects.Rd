@@ -10,7 +10,6 @@ marginaleffects(
   variables = NULL,
   vcov = TRUE,
   type = "response",
-  return_data = TRUE,
   ...
 )
 }
@@ -33,10 +32,6 @@ calculates marginal effects for all terms in the model object.}
 \item{type}{Type(s) of prediction as string or vector This can
 differ based on the model type, but will typically be a string such as:
 "response", "link", "probs", or "zero".}
-
-\item{return_data}{boolean If \code{TRUE}, the original data used to fit the
-model is attached to the output. \code{FALSE} will objects which take up less
-space in memory.}
 
 \item{...}{Additional arguments are pushed forward to \code{predict()}.}
 }
@@ -64,14 +59,15 @@ plot(mfx)
 }
 
 # typical marginal effects
-marginaleffects(mod, 
+marginaleffects(mod,
                 newdata = typical(hp = c(100, 110)))
 
 # counterfactual average marginal effects
-marginaleffects(mod, 
+marginaleffects(mod,
                 newdata = counterfactual(hp = c(100, 110)))
 
 # heteroskedasticity robust standard errors
 marginaleffects(mod, vcov = sandwich::vcovHC(mod))
-               
+
+  indicating the method to use for the approximation. See
 }
