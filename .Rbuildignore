@@ -11,3 +11,4 @@
 ^sandbox$
 ^logo$
 ^\.covrignore$
+^cran-comments\.md$

@@ -7,8 +7,10 @@
 #' @param coefs vector of coefficients to insert in the model object
 #' @export
 #' @keywords internal
-#' @details
-# To compute the variance of marginal effects we need to take the Jacobian with
+#' @return Model object of the same class as the `model` argument, but with
+#'   different stored coefficients.
+#' @details To compute the variance of marginal effects we need to take the
+#' Jacobian with
 # respect to the model coefficients. These functions manipulate model objects
 # to change the coefficients stored internally, which changes the output of the
 # `predict()` function.

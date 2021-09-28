@@ -11,6 +11,9 @@ get_dydx_categorical(model, ...)
 
 \item{...}{Additional arguments are pushed forward to \code{predict()}.}
 }
+\value{
+Numeric vector of contrasts associated to a categorical regressor
+}
 \description{
 Compute marginal effects using differences in predicted values between categorical variables (internal function)
 }

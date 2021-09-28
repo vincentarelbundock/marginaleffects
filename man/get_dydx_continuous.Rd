@@ -34,6 +34,9 @@ level of the response variable is associated to its own set of coefficients.}
 differ based on the model type, but will typically be a string such as:
 "response", "link", "probs", or "zero".}
 }
+\value{
+Numeric vector of marginal effects associated to a continuous regressor
+}
 \description{
 Compute marginal effects (internal function)
 }

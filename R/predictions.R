@@ -15,7 +15,6 @@
 #' @param ... Additional arguments are pushed forward to `predict()`.
 #' @return A `data.frame` with a `predicted` column with predictions.
 #' @export
-#' @details
 predictions <- function(model,
                         variables = NULL,
                         newdata = NULL,

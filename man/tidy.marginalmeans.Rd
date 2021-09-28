@@ -18,8 +18,8 @@ to 0.95, which corresponds to a 95 percent confidence interval.}
 \item{...}{Additional arguments are pushed forward to \code{predict()}.}
 }
 \value{
-A "tidy" \code{data.frame} which conforms to the \code{broom}
-package specification.
+A "tidy" \code{data.frame} of summary statistics which conforms to the
+\code{broom} package specification.
 }
 \description{
 Tidy a \code{marginalmeans} object

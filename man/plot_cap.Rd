@@ -28,3 +28,11 @@ A \code{ggplot2} object
 This function plots the adjusted predictions of the outcome (y-axis)
 against values of one or more predictors.
 }
+\examples{
+mod <- lm(mpg ~ hp + wt, data = mtcars)
+plot_cap(mod, condition = "wt")
+
+mod <- lm(mpg ~ hp * wt * am, data = mtcars)
+plot_cap(mod, condition = c("hp", "wt"))
+
+}

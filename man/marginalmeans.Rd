@@ -20,6 +20,10 @@ factor variables in the dataset used to fit \code{model}.}
 \item Named square matrix: computes standard errors with a user-supplied variance-covariance matrix. This matrix must be square and have dimensions equal to the number of coefficients in \code{get_coef(model)}.
 }}
 }
+\value{
+Data frame of marginal means with one row per variable-value
+combination.
+}
 \description{
 Compute estimated marginal means for specified factors.
 }

@@ -4,13 +4,12 @@
 #' @inheritParams marginaleffects
 #' @inheritParams get_dydx_and_se
 #' @keywords internal
-#' @export
+#' @return Numeric vector of marginal effects associated to a continuous regressor
 get_dydx_continuous <- function (model, ...) {
     UseMethod("get_dydx_continuous", model)
 }
 
 #' @rdname get_dydx_continuous
-#' @export
 get_dydx_continuous.default <- function(model, 
                                         variable,
                                         fitfram = insight::get_data(model), 

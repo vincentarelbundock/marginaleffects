@@ -26,9 +26,9 @@ theme_set(theme_minimal())
 
 In the context of this package, an "Adjusted Prediction" is defined as:
 
-> The reponse predicted by a model for some combination of the regressors' values, such as their means or factor levels (a.k.a. "reference grid"). 
+> The response predicted by a model for some combination of the regressors' values, such as their means or factor levels (a.k.a. "reference grid"). 
 
-An adjusted prediction is thus the regression-adjusted response variable (or link, or other fitted value), for a given combination (or grid) of predictors. This grid may may or may not correspond to the actual observations in a dataset.
+An adjusted prediction is thus the regression-adjusted response variable (or link, or other fitted value), for a given combination (or grid) of predictors. This grid may or may not correspond to the actual observations in a dataset.
 
 By default, `predictions` calculates the regression-adjusted predicted values for a single hypothetical unit of observation with all regressors set at their means or modes:
 
@@ -132,7 +132,7 @@ predictions(mod,
 
 The `predictions` function computes model-adjusted means on the scale of the output of the `predict(model)` function. By default, `predict` produces predictions on the `"response"` scale, so the adjusted predictions should be interpreted on that scale. However, users can pass a string or a vector of strings to the `type` argument, and `predictions` will consider different outcomes. 
 
-Typical values include `"response"` and `"link"`, but users should refer to the documentaiton of the `predict` of the package they used to fit the model to know what values are allowable. documentation. 
+Typical values include `"response"` and `"link"`, but users should refer to the documentation of the `predict` of the package they used to fit the model to know what values are allowable. documentation. 
 
 ```{r}
 mod <- glm(am ~ mpg, family = binomial, data = mtcars)

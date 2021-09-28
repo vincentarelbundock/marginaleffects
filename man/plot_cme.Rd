@@ -39,20 +39,16 @@ to 0.95, which corresponds to a 95 percent confidence interval.}
 A \code{ggplot2} object
 }
 \description{
-In models where two continous variables are interacted, the marginal effect
+In models where two continuous variables are interacted, the marginal effect
 of one variable is conditional on the value of the other variable. This
 function draws a plot of the marginal effect of the \code{effect} variable for
 different values of the \code{condition} variable.
 }
 \examples{
 mod <- lm(mpg ~ hp * wt, data = mtcars)
-plot_cme(mod, 
-         effect = "hp",
-         condition = "wt")
+plot_cme(mod, effect = "hp", condition = "wt")
 
 mod <- lm(mpg ~ hp * wt * am, data = mtcars)
-plot_cme(mod, 
-         effect = "hp", 
-         condition = c("wt", "am"))
+plot_cme(mod, effect = "hp", condition = c("wt", "am"))
 
 }
