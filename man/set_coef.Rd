@@ -48,9 +48,17 @@ set_coef(model, coefs)
 
 \item{coefs}{vector of coefficients to insert in the model object}
 }
+\value{
+Model object of the same class as the \code{model} argument, but with
+different stored coefficients.
+}
 \description{
 Internal function to set coefficients
 
 Set the coefficients in a model to different values and return the modified object (internal function)
+}
+\details{
+To compute the variance of marginal effects we need to take the
+Jacobian with
 }
 \keyword{internal}

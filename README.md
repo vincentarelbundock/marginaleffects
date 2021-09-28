@@ -1,5 +1,5 @@
 
-# The `marginaleffects` package for `R` <img src="https://user-images.githubusercontent.com/987057/134899484-e3392510-2e94-4c39-9830-53356fa5feed.png" align="right" alt="" height="139" />
+# The `marginaleffects` package for `R` <img src="https://user-images.githubusercontent.com/987057/134899484-e3392510-2e94-4c39-9830-53356fa5feed.png" align="right" alt="" height="150" />
 
 <!-- badges: start -->
 
@@ -96,7 +96,7 @@ Downsides of `marginaleffects` include:
 
   - Functions to estimate contrasts and marginal means are considerably
     less flexible than `emmeans`.
-  - Simultation-based inference is not supported.
+  - Simulation-based inference is not supported.
   - Newer package with a smaller (read: nonexistent) user base.
 
 ## How?

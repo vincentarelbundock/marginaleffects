@@ -1,5 +1,5 @@
 #' Get predicted values from a model object (internal function)
-#' 
+#'
 #' @return A vector of predicted values of length equal to the number of rows
 #' in `newdata`. For models with multi-level outcomes (e.g., multinomial
 #' logit), this function returns a matrix of predicted values with column names

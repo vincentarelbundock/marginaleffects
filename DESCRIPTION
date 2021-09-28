@@ -1,5 +1,5 @@
 Package: marginaleffects
-Title: Marginal Effects, Adjusted Predictions, Contrasts, and Marginal Means for a Wide Variety of Models
+Title: Marginal Effects, Marginal Means, Predictions, and Contrasts
 Version: 0.1.0
 Authors@R: 
     person(given = "Vincent",
@@ -9,6 +9,7 @@ Authors@R:
            comment = c(ORCID = "0000-0003-2042-7063"))
 Description: Compute, summarize, and plot marginal effects, adjusted predictions, contrasts, and marginal means for a wide variety of models.
 License: GPL (>= 3)
+Copyright: inst/COPYRIGHTS
 LazyData: true
 Encoding: UTF-8
 URL: https://vincentarelbundock.github.io/marginaleffects/

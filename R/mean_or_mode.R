@@ -17,6 +17,7 @@ Mode <- function(x) {
 #' @rdname mean_or_mode
 #' @keywords internal
 #' @export
+#' @return numeric vector
 mean_or_mode <- function(x) {
     UseMethod("mean_or_mode")
 }

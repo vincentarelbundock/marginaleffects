@@ -16,6 +16,8 @@ generics::glance
 #'   `conf.int=TRUE`. Must be strictly greater than 0 and less than 1. Defaults
 #'   to 0.95, which corresponds to a 95 percent confidence interval.
 #' @inheritParams marginaleffects
+#' @return A "tidy" `data.frame` of summary statistics which conforms to the
+#' `broom` package specification.
 #' @details
 #' The `tidy` function calculates average marginal effects by taking the mean
 #' of all the unit-level marginal effects computed by the `marginaleffects`
@@ -101,8 +103,8 @@ glance.marginaleffects <- function(x, ...) {
 #'
 #' @param x An object produced by the `marginalmeans` function.
 #' @inheritParams tidy.marginaleffects
-#' @return A "tidy" `data.frame` which conforms to the `broom`
-#' package specification.
+#' @return A "tidy" `data.frame` of summary statistics which conforms to the
+#' `broom` package specification.
 #' @export
 tidy.marginalmeans <- function(x,
                                  conf.int = TRUE,

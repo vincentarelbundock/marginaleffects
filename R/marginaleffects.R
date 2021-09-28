@@ -23,7 +23,6 @@
 #' @param ... Additional arguments are pushed forward to `predict()`.
 #' @return A data.frame of marginal effect estimates with one row per observation per marginal effect.
 #' @export
-#' @details
 #' @examples
 #'
 #' mod <- glm(am ~ hp * wt, data = mtcars, family = binomial)
@@ -31,9 +30,7 @@
 #' summary(mfx)
 #' tidy(mfx)
 #' head(mfx)
-#' \dontrun{
 #' plot(mfx)
-#' }
 #'
 #' # typical marginal effects
 #' marginaleffects(mod,

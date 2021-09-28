@@ -15,6 +15,10 @@ to 0.95, which corresponds to a 95 percent confidence interval.}
 
 \item{...}{Additional arguments are pushed forward to \code{predict()}.}
 }
+\value{
+Data frame of summary statistics for an object produced by the
+\code{marginalmeans} function
+}
 \description{
 Summarize a \code{marginalmeans} object
 }

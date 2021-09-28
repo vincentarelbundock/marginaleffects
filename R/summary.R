@@ -3,6 +3,8 @@
 #' @param object An object produced by the `marginaleffects` function
 #' @inheritParams marginaleffects
 #' @inheritParams tidy.marginaleffects
+#' @return Data frame of summary statistics for an object produced by the
+#' `marginaleffects` function
 #' @export
 summary.marginaleffects <- function(object, conf.level = 0.95, ...) {
     out <- tidy(object, conf.level = conf.level, ...)
@@ -14,8 +16,14 @@ summary.marginaleffects <- function(object, conf.level = 0.95, ...) {
 }
 
 
+#' Print a `marginaleffects` summary
+#'
 #' @export
-print.marginaleffects.summary <- function(x, 
+#' @inheritParams summary.marginaleffects
+#' @param x an object produced by the `marginaleffects` function.
+#' @param digits the number of significant digits to use when printing.
+#' @return Printed summary of a `marginalmeans` object
+print.marginaleffects.summary <- function(x,
                                           digits = max(3L, getOption("digits") - 3L),
                                           ...) {
 
@@ -79,6 +87,8 @@ print.marginaleffects.summary <- function(x,
 #' @param object An object produced by the `marginalmeans` function
 #' @inheritParams marginalmeans
 #' @inheritParams tidy.marginalmeans
+#' @return Data frame of summary statistics for an object produced by the
+#' `marginalmeans` function
 #' @export
 summary.marginalmeans <- function(object, conf.level = 0.95, ...) {
     out <- tidy(object, conf.level = conf.level, ...)
@@ -89,7 +99,13 @@ summary.marginalmeans <- function(object, conf.level = 0.95, ...) {
 }
 
 
+#' Print a `marginalmeans` summary
+#'
 #' @export
+#' @inheritParams summary.marginalmeans
+#' @param x an object produced by the `marginaleffects` function.
+#' @param digits the number of significant digits to use when printing.
+#' @return Printed summary of a `marginalmeans` object
 print.marginalmeans.summary <- function(x,
                                         digits = max(3L, getOption("digits") - 3L),
                                         ...) {

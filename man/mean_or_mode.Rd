@@ -24,6 +24,9 @@ mean_or_mode(x)
 \arguments{
 \item{x}{extract the mean or the mode of vector or data.frame x depending on its type}
 }
+\value{
+numeric vector
+}
 \description{
 Compute the mode or mean of \code{x}
 }

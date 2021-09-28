@@ -54,9 +54,7 @@ mfx <- marginaleffects(mod)
 summary(mfx)
 tidy(mfx)
 head(mfx)
-\dontrun{
 plot(mfx)
-}
 
 # typical marginal effects
 marginaleffects(mod,

@@ -1,8 +1,8 @@
 #' Conditional adjusted predictions plot
-#' 
+#'
 #' This function plots the adjusted predictions of the outcome (y-axis)
 #' against values of one or more predictors.
-#' 
+#'
 #' @param condition String or vector of two strings. The first is a variable
 #' name to be displayed on the x-axis. The second is a variable whose values
 #' will be displayed in different colors.
@@ -11,14 +11,12 @@
 #' @inheritParams plot_cme
 #' @return A `ggplot2` object
 #' @export
-#' @example
+#' @examples
 #' mod <- lm(mpg ~ hp + wt, data = mtcars)
-#' plot_cme(mod, 
-#'          condition = "wt")
+#' plot_cap(mod, condition = "wt")
 #'
 #' mod <- lm(mpg ~ hp * wt * am, data = mtcars)
-#' plot_cme(mod, 
-#'          condition = c("hp", "wt"))
+#' plot_cap(mod, condition = c("hp", "wt"))
 #'
 plot_cap <- function(model, 
                      condition,

@@ -4,13 +4,12 @@
 #' @inheritParams marginaleffects
 #' @inheritParams get_dydx_and_se
 #' @keywords internal
-#' @export
+#' @return Numeric vector of contrasts associated to a categorical regressor
 get_dydx_categorical <- function (model, ...) {
     UseMethod("get_dydx_categorical", model)
 }
 
 
-#' @export
 #' @keywords internal
 get_dydx_categorical.default <- function(model,
                                          variable,

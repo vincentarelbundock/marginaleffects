@@ -16,6 +16,8 @@
 #'   The `marginaleffects` website compares the output of this function to the
 #'   popular `emmeans` package, which provides similar functionality and more
 #'   advanced options: https://vincentarelbundock.github.io/marginaleffects/
+#' @return Data frame of marginal means with one row per variable-value 
+#' combination.
 #' @export
 #' @examples
 #' library(marginaleffects)
