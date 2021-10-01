@@ -1,11 +1,15 @@
 skip_if_not_installed("brglm2")
 requiet("brglm2")
+requiet("margins")
 
-test_that("brglm2::brglm_fit no validity check", {
+test_that("brglm2::brglm_fit vs. margins", {
     data("endometrial", package = "brglm2")
     model <- glm(HG ~ NV + PI + EH, family = binomial("probit"), data = endometrial)
     model <- update(model, method = "brglm_fit")
+    mar <- margins(model)
+    mfx <- marginaleffects(model)
     expect_mfx(model)
+    expect_true(test_against_margins(mar, mfx))
 })
 
 test_that("brglm2::brglm_fit no validity check", {

@@ -2,29 +2,23 @@ skip_if_not_installed("robustbase")
 requiet("robustbase")
 
 
-test_that("lmrob: no validity check", {
+test_that("lmrob vs. margins", {
     data(coleman, package = "robustbase")
     model <- lmrob(Y ~ ., data=coleman, setting = "KS2014")
+    expect_mfx(model, n_unique = 1)
+    mar <- margins(model, unit_ses = TRUE)
     mfx <- marginaleffects(model)
-    tid <- marginaleffects(model)
-    expect_s3_class(tid, "data.frame")
-    expect_false(any(mfx$estimate == 0))
-    expect_false(any(mfx$std.error == 0))
-    expect_false(anyNA(mfx$std.error))
-    expect_false(anyNA(mfx$estimate))
+    expect_true(test_against_margins(mar, mfx))
 })
 
 
-test_that("glmrob: no validity check", {
+test_that("glmrob vs. margins", {
     data(epilepsy, package = "robustbase")
     model <- glmrob(Ysum ~ Age10 + Base4*Trt, family = poisson,
                     data = epilepsy, method= "Mqle",
                     control = glmrobMqle.control(tcc= 1.2))
+    expect_mfx(model)
+    mar <- margins(model, unit_ses = TRUE)
     mfx <- marginaleffects(model)
-    tid <- marginaleffects(model)
-    expect_s3_class(tid, "data.frame")
-    expect_false(any(mfx$estimate == 0))
-    expect_false(any(mfx$std.error == 0))
-    expect_false(anyNA(mfx$std.error))
-    expect_false(anyNA(mfx$estimate))
+    expect_true(test_against_margins(mar, mfx))
 })
