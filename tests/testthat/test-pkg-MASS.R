@@ -4,13 +4,13 @@ skip_if_not_installed("margins")
 requiet("margins")
 requiet("MASS")
 
-test_that("MASS::rlm no validity check", {
+test_that("MASS::rlm vs. `margins`", {
     model <- MASS::rlm(mpg ~ hp + drat, mtcars)
     mfx <- marginaleffects(model)
     expect_mfx(model, n_unique = 1)
+    mar <- margins(model)
+    expect_true(test_against_margins(mfx, mar))
 })
-
-
 
 
 test_that("glm.nb vs. margins", {

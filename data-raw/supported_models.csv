@@ -5,7 +5,7 @@ AER,ivreg,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE
 AER,tobit,TRUE,TRUE,TRUE,TRUE,,
 betareg,betareg,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE
 bife,bife,TRUE,TRUE,,,,
-brglm2,brglmFit,TRUE,TRUE,,,,
+brglm2,brglmFit,TRUE,TRUE,,,TRUE,TRUE
 brglm2,brnb,TRUE,TRUE,,,,
 crch,crch,TRUE,TRUE,,,,
 crch,hxlr,TRUE,TRUE,,,,
@@ -21,7 +21,7 @@ ivreg,ivreg,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE
 lme4,lmer,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE
 lme4,glmer,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE
 MASS,glm.nb,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE
-MASS,rlm,TRUE,TRUE,,,,
+MASS,rlm,TRUE,TRUE,,,TRUE,TRUE
 MASS,polr,TRUE,TRUE,TRUE,TRUE,,
 nlme,gls,TRUE,TRUE,,,,
 nnet,multinom,TRUE,TRUE,TRUE,FALSE,,
@@ -30,8 +30,8 @@ pscl,hurdle,TRUE,TRUE,,,,
 pscl,zeroinfl,TRUE,TRUE,TRUE,TRUE,,
 quantreg,rq,TRUE,TRUE,TRUE,TRUE,,
 rms,lrm,TRUE,TRUE,,,,
-robustbase,glmrob,TRUE,TRUE,,,,
-robustbase,lmrob,TRUE,TRUE,,,,
+robustbase,glmrob,TRUE,TRUE,,,TRUE,TRUE
+robustbase,lmrob,TRUE,TRUE,,,TRUE,TRUE
 speedglm,speedglm,TRUE,TRUE,TRUE,TRUE,,
 speedglm,speedlm,TRUE,TRUE,TRUE,TRUE,,
 survey,svyglm,TRUE,TRUE,,,TRUE,TRUE
