@@ -4,7 +4,12 @@
 \alias{marginalmeans}
 \title{Marginal Means}
 \usage{
-marginalmeans(model, variables = NULL, vcov = insight::get_varcov(model))
+marginalmeans(
+  model,
+  variables = NULL,
+  vcov = insight::get_varcov(model),
+  type = "response"
+)
 }
 \arguments{
 \item{model}{Model object}
@@ -19,6 +24,10 @@ factor variables in the dataset used to fit \code{model}.}
 \item TRUE: computes unit-level standard errors using the default \code{vcov(model)} variance-covariance matrix.
 \item Named square matrix: computes standard errors with a user-supplied variance-covariance matrix. This matrix must be square and have dimensions equal to the number of coefficients in \code{get_coef(model)}.
 }}
+
+\item{type}{Type(s) of prediction as string or vector This can
+differ based on the model type, but will typically be a string such as:
+"response", "link", "probs", or "zero".}
 }
 \value{
 Data frame of marginal means with one row per variable-value

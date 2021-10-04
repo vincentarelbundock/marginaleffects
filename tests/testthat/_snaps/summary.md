@@ -60,5 +60,5 @@
       7   vs  TRUE 24.33      1.194   20.37 < 2.22e-16 21.99  26.67
       
       Model type:  lm 
-      Prediction type:  expectation 
+      Prediction type:  response 
 
