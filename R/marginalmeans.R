@@ -6,7 +6,14 @@
 #' @param variables predictors over which to compute marginal means (character
 #'   vector). `NULL` calculates marginal means for all logical, character, or
 #'   factor variables in the dataset used to fit `model`.
+#' @param type Type(s) of prediction as string or vector This can
+#'   differ based on the model type, but will typically be a string such as:
+#'   "response", "link", "probs", or "zero".
 #' @details
+#'   `marginalmeans` can only compute standard errors for linear models, or for
+#'   predictions on the link scale, that is, with the `type` argument set to
+#'   "link".
+#'
 #'   This function begins by calling the `predictions` function to
 #'   obtain a grid of predictors, including cells for all combinations of all
 #'   categorical variables used to fit `model`, with numeric variables held at
