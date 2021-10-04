@@ -69,22 +69,22 @@ marginalmeans <- function(model,
 
     # model.matrix requires a dataset with response
     dat[[insight::find_response(model)[1]]] <- 0
-    mm <- insight::get_modelmatrix(model, data = dat)
+    modmat <- insight::get_modelmatrix(model, data = dat)
 
     # marginal means and standard errors for a single variable
     get_mm_se <- function(v) {
-        mm_tmp <- mm
+        modmat_tmp <- modmat
 
         # assign columns of the matrix unrelated to v to their mean value
-        idx <- grep(match(v, attr(stats::terms(model), "term.labels")), attr(mm_tmp, "assign"))
-        idx <- setdiff(1:ncol(mm_tmp), idx)
+        idx <- grep(match(v, attr(stats::terms(model), "term.labels")), attr(modmat_tmp, "assign"))
+        idx <- setdiff(1:ncol(modmat_tmp), idx)
         for (i in idx) {
-            mm_tmp[, i] <- mean(mm_tmp[, i])
+            modmat_tmp[, i] <- mean(modmat_tmp[, i])
         }
 
         # one row per combination of the categorical variable
-        idx <- duplicated(mm_tmp)
-        mm_tmp <- mm_tmp[!idx, ]
+        idx <- duplicated(modmat_tmp)
+        modmat_tmp <- modmat_tmp[!idx, ]
 
         # marginal means
         f <- stats::as.formula(paste("predicted ~", v))
@@ -93,16 +93,20 @@ marginalmeans <- function(model,
         yhat$term <- v
 
         # variance: M V M'
-        if (!all(colnames(vcov) %in% colnames(mm_tmp)) || !all(colnames(vcov) %in% colnames(mm_tmp))) {
-            stop("The column names produced by `insight::get_varcov(model)` and `insight::get_modelmatrix(model, data=dat)` do not match. This can sometimes happen when using character variables as a factor when fitting a model. A safer strategy is to convert character variables to factors before fitting the model. This makes it easier for `marginaleffects` to keep track of the reference category.")
+        # only supported on the links scale or for linear models
+        if (type == "link" || isTRUE(insight::model_info(model)$is_linear)) {
+            if (!all(colnames(vcov) %in% colnames(modmat_tmp)) || !all(colnames(vcov) %in% colnames(modmat_tmp))) {
+                stop("The column names produced by `insight::get_varcov(model)` and `insight::get_modelmatrix(model, data=dat)` do not match. This can sometimes happen when using character variables as a factor when fitting a model. A safer strategy is to convert character variables to factors before fitting the model. This makes it easier for `marginaleffects` to keep track of the reference category.")
+            }
+            modmat_tmp <- modmat_tmp[, colnames(vcov)]
+            se <- dat[!idx, v, drop = FALSE]
+            colnames(se)[match(colnames(se), v)] <- "value"
+            se$term <- v
+            se$std.error <- sqrt(colSums(t(modmat_tmp %*% vcov) * t(modmat_tmp)))
+            out <- merge(yhat, se)
+        } else {
+            out <- yhat
         }
-        mm_tmp <- mm_tmp[, colnames(vcov)]
-        se <- dat[!idx, v, drop = FALSE]
-        colnames(se)[match(colnames(se), v)] <- "value"
-        se$term <- v
-        se$std.error <- sqrt(colSums(t(mm_tmp %*% vcov) * t(mm_tmp)))
-
-        out <- merge(yhat, se)
         idx <- intersect(c("term", "value", "predicted", "std.error"), colnames(out))
         out <- out[, idx]
         return(out)
