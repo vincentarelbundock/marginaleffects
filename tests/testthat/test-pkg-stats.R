@@ -76,11 +76,13 @@ test_that("lm vs. emmeans: marginalmeans", {
 
 
 test_that('glm vs. emmeans: marginalmeans(type = "link")', {
+    # factors seem to behave differently in model.matrix
+    skip_if(getRversion() == "3.6.3")
     dat <- guerry
     dat$binary <- dat$Crime_prop > median(dat$Crime_prop)
     # character variables sometimes break the order
     mod <- glm(binary ~ Region + MainCity + Commerce, data = dat, family = "binomial")
-    expect_error(marginalmeans(mod), regexp = "track of the reference category")
+    expect_error(marginalmeans(mod, type = "link"), regexp = "track of the reference category")
     # factor variables are safer
     dat$Region <- as.factor(dat$Region)
     dat$MainCity <- as.factor(dat$MainCity)
