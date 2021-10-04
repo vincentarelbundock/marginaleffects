@@ -17,6 +17,18 @@ test_that("tidy and glance", {
 })
 
 
+test_that("marginalmeans variance: link scale or linear", {
+    dat <- mtcars
+    dat$am <- factor(dat$am)
+    dat$cyl <- factor(dat$cyl)
+    mod <- glm(gear ~ cyl + am, data = dat, family = poisson)
+    tmp <- marginalmeans(mod)
+    expect_false("std.error" %in% colnames(tmp))
+    tmp <- marginalmeans(mod, type = "link")
+    expect_true("std.error" %in% colnames(tmp))
+})
+
+
 test_that("simple marginal means", {
     mod <- lm(mpg ~ cyl + am + hp, dat)
     em <- broom::tidy(emmeans::emmeans(mod, "cyl"))
