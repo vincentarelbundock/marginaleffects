@@ -33,10 +33,8 @@
 #' summary(mm)
 marginalmeans <- function(model,
                           variables = NULL,
-                          vcov = insight::get_varcov(model)) {
-
-    # TODO: remove this when we allow a predict type again
-    type <- "expectation"
+                          vcov = insight::get_varcov(model),
+                          type = "response") {
 
     checkmate::assert_character(variables, min.len = 1, null.ok = TRUE)
 
@@ -46,7 +44,9 @@ marginalmeans <- function(model,
     column_labels <- colnames(dat)
     term_labels <- insight::find_terms(model, flatten = TRUE)
     variables_valid <- get_categorical(dat)
+    variables_valid <- setdiff(variables_valid, insight::find_response(model, flatten = TRUE))
     variables_valid <- intersect(variables_valid, term_labels)
+
     if (is.null(variables)) {
         variables <- variables_valid
     } else {
@@ -56,9 +56,10 @@ marginalmeans <- function(model,
         stop("No logical, factor, or character variable was found in the dataset used to fit the `model` object. This error is often raised when users convert variables to factor in the model formula (e.g., `lm(y ~ factor(x)`). If this is the case, you may consider converting variables in the dataset before fitting the model.")
     }
 
-    # predictions for each cell of all categorical data
+    # predictions for each cell of all categorical data, but not the response
     variables_categorical <- get_categorical(dat)
-    dat <- predictions(model = model, variables = variables_categorical)
+    variables_categorical <- setdiff(variables_categorical, insight::find_response(model, flatten = TRUE))
+    dat <- predictions(model = model, variables = variables_categorical, type = type)
 
     # interactions are not supported
     interactions <- any(grepl(":", attr(stats::terms(model), "term.labels")))
@@ -82,7 +83,8 @@ marginalmeans <- function(model,
         }
 
         # one row per combination of the categorical variable
-        mm_tmp<- unique(mm_tmp)
+        idx <- duplicated(mm_tmp)
+        mm_tmp <- mm_tmp[!idx, ]
 
         # marginal means
         f <- stats::as.formula(paste("predicted ~", v))
@@ -91,14 +93,18 @@ marginalmeans <- function(model,
         yhat$term <- v
 
         # variance: M V M'
-        se <- data.frame(
-            term = v,
-            value = unique(dat[[v]]),
-            std.error = sqrt(diag(mm_tmp %*% vcov %*% t(mm_tmp))))
+        if (!all(colnames(vcov) %in% colnames(mm_tmp)) || !all(colnames(vcov) %in% colnames(mm_tmp))) {
+            stop("The column names produced by `insight::get_varcov(model)` and `insight::get_modelmatrix(model, data=dat)` do not match. This can sometimes happen when using character variables as a factor when fitting a model. A safer strategy is to convert character variables to factors before fitting the model. This makes it easier for `marginaleffects` to keep track of the reference category.")
+        }
+        mm_tmp <- mm_tmp[, colnames(vcov)]
+        se <- dat[!idx, v, drop = FALSE]
+        colnames(se)[match(colnames(se), v)] <- "value"
+        se$term <- v
+        se$std.error <- sqrt(colSums(t(mm_tmp %*% vcov) * t(mm_tmp)))
 
-        # output
         out <- merge(yhat, se)
-        out <- out[, c("term", "value", "predicted", "std.error")]
+        idx <- intersect(c("term", "value", "predicted", "std.error"), colnames(out))
+        out <- out[, idx]
         return(out)
     }
 
@@ -135,7 +141,6 @@ marginalmeans <- function(model,
     attr(out, "type") <- type
     attr(out, "model_type") <- class(model)[1]
     attr(out, "variables") <- variables
-
 
     return(out)
 }

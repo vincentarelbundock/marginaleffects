@@ -20,12 +20,13 @@ RoxygenNote: 7.1.2
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 Config/testthat/parallel: true
+Remotes: easystats/insight
 Depends:
     R (>= 3.5.0)
 Imports: 
     checkmate,
     generics,
-    insight,
+    insight (>= 0.14.4),
     methods,
     numDeriv
 Suggests: 
@@ -38,6 +39,7 @@ Suggests:
     haven,
     kableExtra,
     knitr,
+    magrittr,
     margins,
     modelsummary,
     patchwork,

@@ -1,6 +1,7 @@
 #' Adjusted Predictions
 #'
 #' Compute model-adjusted predictions (fitted values) for a "grid" of regressor values.
+#' @inheritParams marginaleffects
 #' @param model Model object
 #' @param variables Character vector. Compute Adjusted Predictions for
 #'   combinations of each of these variables. Factor levels are considered at
@@ -19,16 +20,11 @@ predictions <- function(model,
                         variables = NULL,
                         newdata = NULL,
                         conf.level = 0.95,
+                        type = "response",
                         ...) {
 
-    # TODO uncomment in the loop and remove hardcoded expectation
-    if ("type" %in% names(list(...))) {
-        warning('The "type" argument is not currently supported by the `predictions` function. All predictions will be made on the "response" or "expectation" scale. The code to support various prediction types is already written, but we are waiting for an update to the `insight` package. Support should come very soon.')
-    }
-
-    type = "expectation"
     # sanity checks and pre-processing
-    # type <- sanity_type(model, type)
+    type <- sanity_type(model, type)
 
     ## do not check this because `insight` supports more models than `marginaleffects`
     # model <- sanity_model(model)
@@ -88,8 +84,8 @@ predictions <- function(model,
     for (predt in type) {
         tmp <- insight::get_predicted(model,
                                       data = newdata,
-                                      predict = "expectation",
-                                      # predict = predt,
+                                      predict = NULL,
+                                      type = predt,
                                       ci = conf.level)
         if (inherits(tmp, "get_predicted")) {
             tmp <- as.data.frame(tmp)
