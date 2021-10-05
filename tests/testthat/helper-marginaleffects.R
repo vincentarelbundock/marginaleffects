@@ -1,10 +1,10 @@
 #' internal testing function (no validity check)
-#' 
+#'
 #' @export
 #' @keywords internal
-expect_mfx <- function(object, 
-                       type = "response",
-                       n_unique = 10) {
+expect_marginaleffects <- function(object,
+                                   type = "response",
+                                   n_unique = 10) {
 
   # Capture object and label
   act <- testthat::quasi_label(rlang::enquo(object), arg = "object")

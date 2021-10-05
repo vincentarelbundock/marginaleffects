@@ -3,7 +3,7 @@
 #' @export
 #' @keywords internal
 expect_marginalmeans <- function(object, 
-                                 se = FALSE,
+                                 se = TRUE,
                                  n_col = NULL,
                                  n_row = NULL) {
 

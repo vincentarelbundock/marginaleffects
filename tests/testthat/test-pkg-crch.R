@@ -12,13 +12,13 @@ dat <- subset(dat, enssd > 0)
 
 test_that("marginalmeans: crch gaussian: no validity", {
     model <- crch(sqrt(rain) ~ sqrtensmean + sqrtenssd, data = dat, dist = "gaussian")
-    expect_mfx(model, n_unique = 1, type = "location")
+    expect_marginaleffects(model, n_unique = 1, type = "location")
 })
 
 
 test_that("logistic: no validity", {
     model <- crch(sqrt(rain) ~ sqrtensmean | sqrtenssd, data = dat, dist = "logistic", left = 0)
-    expect_mfx(model, type = "location", n_unique = 1)
+    expect_marginaleffects(model, type = "location", n_unique = 1)
 
     mfx <- marginaleffects(model, type = "location", variables = "sqrtensmean")
     expect_true(!any(mfx$dydx == 0))
@@ -38,7 +38,7 @@ test_that("hlxr: no validity", {
     skip("works in interactive session")
     q <- unique(quantile(dat$rain, seq(0.1, 0.9, 0.1)))
     mod <- hxlr(sqrt(rain) ~ sqrtensmean, data = dat, thresholds = sqrt(q))
-    expect_mfx(mod, type = "location", n_unique = 1)
+    expect_marginaleffects(mod, type = "location", n_unique = 1)
 })
 
 

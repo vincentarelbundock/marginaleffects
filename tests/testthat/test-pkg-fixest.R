@@ -6,7 +6,7 @@ test_that("fixest::feols vs. Stata", {
     stata <- readRDS(test_path("stata/stata.rds"))$fixest_feols
     model <- fixest::feols(wage ~ capital * output | firm, EmplUK)
     mfx <- merge(tidy(marginaleffects(model)), stata)
-    expect_mfx(model)
+    expect_marginaleffects(model)
     expect_equal(mfx$estimate, mfx$dydx)
     expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = .00001)
 })
@@ -17,7 +17,7 @@ test_that("fixest::fepois vs. Stata", {
     stata <- readRDS(test_path("stata/stata.rds"))$fixest_fepois
     model <- fixest::fepois(log(wage) ~ capital * output | firm, EmplUK)
     mfx <- merge(tidy(marginaleffects(model, type = "link")), stata)
-    expect_mfx(model)
+    expect_marginaleffects(model)
     expect_equal(mfx$estimate, mfx$dydx, tolerance = .000001)
     expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = .001)
 })

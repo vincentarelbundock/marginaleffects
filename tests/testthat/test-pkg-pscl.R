@@ -33,7 +33,7 @@ test_that("zeroinfl vs. Stata", {
                       data = bioChemists)
     stata <- readRDS(test_path("stata/stata.rds"))$pscl_zeroinfl_01
     mfx <- merge(tidy(marginaleffects(model)), stata)
-    expect_mfx(model)
+    expect_marginaleffects(model)
     expect_equal(mfx$estimate, mfx$dydxstata, tolerance = .00001)
     expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = .001)
     mfx <- marginaleffects(model)

@@ -21,7 +21,7 @@ test_that("multinom basic", {
     dat <- read.csv(test_path("stata/databases/MASS_polr_01.csv"))
     void <- capture.output(mod <- 
         nnet::multinom(factor(y) ~ x1 + x2, data = dat, quiet = true))
-    expect_warning(expect_mfx(mod, type = "probs"))
+    expect_warning(expect_marginaleffects(mod, type = "probs"))
 })
 
 

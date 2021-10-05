@@ -2,8 +2,8 @@
 #'
 #' @export
 #' @keywords internal
-expect_predictions <- function(object, 
-                               se = FALSE,
+expect_predictions <- function(object,
+                               se = TRUE,
                                n_col = NULL,
                                n_row = NULL) {
 
