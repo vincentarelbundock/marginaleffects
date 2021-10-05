@@ -1,6 +1,7 @@
 skip_if_not_installed("betareg")
 skip_if_not_installed("margins")
-requiet("dplyr")
+skip_if_not_installed("emmeans")
+skip_if_not_installed("broom")
 
 test_that("marginaleffects: vs. margins", {
     set.seed(1024)
@@ -30,4 +31,15 @@ test_that("predictions: no validity", {
     expect_predictions(pred, n_row = 1, n_col = 4, se = FALSE)
     pred <- predictions(mod, newdata = typical(batch = 1:3, temp = c(300, 350)))
     expect_predictions(pred, n_row = 6, n_col = 4, se = FALSE)
+ })
+
+test_that("marginalmeans: vs. emmeans", {
+    set.seed(1024)
+    data("GasolineYield", package = "betareg")
+    mod <- betareg::betareg(yield ~ batch + temp, data = GasolineYield)
+    mm <- marginalmeans(mod)
+    ti <- tidy(mm)
+    em <- broom::tidy(emmeans::emmeans(mod, "batch"))
+    expect_marginalmeans(mm, n_row = 10, n_col = 3, se = FALSE)
+    expect_equal(ti$estimate, em$estimate)
  })
