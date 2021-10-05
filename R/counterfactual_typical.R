@@ -174,12 +174,13 @@ prep_counterfactual_typical <- function(..., model = NULL, data = NULL) {
     # warn if cluster variables are numeric. users probably do not want to take
     # their means, because this makes prediction impossible in many models
     # (e.g., `fixest::feols(mpg ~ hp | cyl)`)
-    variables_cluster <- intersect(variables_automatic, variables_list$cluster)
+    variables_cluster <- unlist(c(variables_list$cluster, variables_list$random))
+    variables_cluster <- intersect(variables_automatic, variables_cluster)
     if (length(variables_cluster) > 0) {
         idx <- sapply(variables_cluster, function(x) is.numeric(data[[x]]))
         if (any(idx)) {
             idx <- paste(sprintf('"%s"', variables_cluster[idx]), collapse = ", ")
-            warning(sprintf("Unless otherwise instructed, this function sets numeric variables to their mean. This is probably inappropriate in the case of cluster variables such as %s. A safer strategy is to convert cluster variables to factors before fitting the model.", idx))
+            warning(sprintf("Unless otherwise instructed, this function sets numeric variables to their mean. This is probably inappropriate in the case of cluster variables or group identifiers like %s. A safer strategy is to convert cluster variables to factors before fitting the model.", idx))
         }
     }
 

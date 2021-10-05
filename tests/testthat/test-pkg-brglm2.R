@@ -8,7 +8,7 @@ test_that("brglm2::brglm_fit vs. margins", {
     model <- update(model, method = "brglm_fit")
     mar <- margins(model)
     mfx <- marginaleffects(model)
-    expect_mfx(model)
+    expect_marginaleffects(model)
     expect_true(test_against_margins(mar, mfx))
 })
 
@@ -18,7 +18,7 @@ test_that("brglm2::brglm_fit no validity check", {
                              observation = rep(1:3, each = 6))
     salmonella_fm <- freq ~ dose + log(dose + 10)
     model <- brnb(salmonella_fm, data = salmonella, link = "log", transformation = "inverse", type = "ML")
-    suppressWarnings(expect_mfx(model, n_unique = 6))
+    suppressWarnings(expect_marginaleffects(model, n_unique = 6))
 })
 
 test_that("predictions: brglm2::brglm_fit: no validity", {

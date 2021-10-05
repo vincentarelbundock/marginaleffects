@@ -12,7 +12,7 @@ requiet("emmeans")
 test_that("rlm: marginaleffects: vs. margins", {
     model <- MASS::rlm(mpg ~ hp + drat, mtcars)
     mfx <- marginaleffects(model)
-    expect_mfx(model, n_unique = 1)
+    expect_marginaleffects(model, n_unique = 1)
     mar <- margins(model)
     expect_true(test_against_margins(mfx, mar))
 })
@@ -44,7 +44,7 @@ test_that("polr: marginaleffects: vs. Stata", {
     mfx <- merge(mfx, stata)
     expect_equal(mfx$estimate, mfx$dydxstata, tolerance = .001)
     expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = .001)
-    expect_mfx(mod, type = "probs")
+    expect_marginaleffects(mod, type = "probs")
 })
 
 
