@@ -20,3 +20,13 @@ test_that("brglm2::brglm_fit no validity check", {
     model <- brnb(salmonella_fm, data = salmonella, link = "log", transformation = "inverse", type = "ML")
     suppressWarnings(expect_mfx(model, n_unique = 6))
 })
+
+test_that("predictions: brglm2::brglm_fit: no validity", {
+    data("endometrial", package = "brglm2")
+    model <- glm(HG ~ NV + PI + EH, family = binomial("probit"), data = endometrial)
+    model <- update(model, method = "brglm_fit")
+    pred1 <- predictions(model)
+    pred2 <- predictions(model, newdata = head(endometrial))
+    expect_predictions(pred1, n_row = 1, se = TRUE)
+    expect_predictions(pred2, n_row = 6, se = TRUE)
+})

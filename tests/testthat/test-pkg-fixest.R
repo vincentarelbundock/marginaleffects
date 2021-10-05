@@ -1,5 +1,5 @@
 skip_if_not_installed("fixest")
-
+requiet("fixest")
 
 test_that("fixest::feols vs. Stata", {
     data(EmplUK, package = "plm")
@@ -21,6 +21,20 @@ test_that("fixest::fepois vs. Stata", {
     expect_equal(mfx$estimate, mfx$dydx, tolerance = .000001)
     expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = .001)
 })
+
+
+test_that("fixest::feols: predictions", {
+    skip("insight PR should fix warnings this")
+    data(EmplUK, package = "plm")
+    tmp <- EmplUK
+    tmp$firm <- as.factor(tmp$firm)
+    model <- fixest::feols(wage ~ capital * output | firm, tmp)
+    pred1 <- predictions(model)
+    pred2 <- predictions(model, newdata = head(EmplUK))
+    expect_predictions(pred1)
+    expect_predictions(pred2, n_row = 6)
+})
+
 
 
 # No idea why this fails on testthat. It works locally!
