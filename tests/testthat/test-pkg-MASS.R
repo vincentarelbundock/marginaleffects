@@ -1,14 +1,13 @@
 skip_if_not_installed("MASS")
+skip_if_not_installed("emmeans")
 skip_if_not_installed("margins")
 
 requiet("margins")
 requiet("MASS")
+requiet("emmeans")
 
 
-# +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-# |m|a|r|g|i|n|a|l|e|f|f|e|c|t|s|
-# +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
+### marginaleffects
 
 test_that("rlm: marginaleffects: vs. margins", {
     model <- MASS::rlm(mpg ~ hp + drat, mtcars)
@@ -49,14 +48,7 @@ test_that("polr: marginaleffects: vs. Stata", {
 })
 
 
-#                     _ _      _   _                 
-#  _ __  _ __ ___  __| (_) ___| |_(_) ___  _ __  ___ 
-# | '_ \| '__/ _ \/ _` | |/ __| __| |/ _ \| '_ \/ __|
-# | |_) | | |  __/ (_| | | (__| |_| | (_) | | | \__ \
-# | .__/|_|  \___|\__,_|_|\___|\__|_|\___/|_| |_|___/
-# |_|                                                
-
-
+### predictions
 
 test_that("polr: predictions: no validity", {
     skip("polr: predictions doesn't work. Probably needs to be fixed at the `insight` level.")
@@ -71,8 +63,40 @@ test_that("glm.nb: predictions: no validity", {
 })
 
 test_that("rlm: predictions: no validity", {
-    skip("does MASS::rlm work with `get_predicted`?")
+    skip("will work after PR merge into `insight`")
     model <- MASS::rlm(mpg ~ hp + drat, mtcars)
     pred <- predictions(model)
-    expect_predictions(pred, se = TRUE)
+    expect_predictions(pred, se = TRUE, n_row = 1)
+    pred <- predictions(model, newdata = head(mtcars))
+    expect_predictions(pred, se = TRUE, n_row = 6)
+})
+
+
+### marginalmeans
+
+test_that("glm.nb: marginalmeans: vs. emmeans", {
+    dat <- mtcars
+    dat$cyl <- as.factor(dat$cyl)
+    dat$am <- as.logical(dat$am)
+    model <- suppressWarnings(MASS::glm.nb(carb ~ am + cyl, data = dat))
+    mm <- marginalmeans(model, type = "link", variables = "cyl")
+    ti <- tidy(mm)
+    em <- tidy(emmeans::emmeans(model, "cyl"))
+    expect_marginalmeans(mm, se = TRUE)
+    expect_equal(ti$estimate, em$estimate)
+    expect_equal(ti$std.error, em$std.error)
+})
+
+test_that("rlm: marginalmeans: vs. emmeans", {
+    skip("will work after PR merge into `insight`")
+    dat <- mtcars
+    dat$cyl <- as.factor(dat$cyl)
+    dat$am <- as.logical(dat$am)
+    model <- MASS::rlm(mpg ~ cyl + am, dat)
+    mm <- marginalmeans(model)
+    expect_marginalmeans(mm, se = TRUE)
+    ti <- tidy(marginalmeans(model, variables = "cyl"))
+    em <- tidy(emmeans::emmeans(model, "cyl"))
+    expect_equal(ti$estimate, em$estimate)
+    expect_equal(ti$std.error, em$std.error)
 })
