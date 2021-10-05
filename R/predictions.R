@@ -68,14 +68,12 @@ predictions <- function(model,
         variables <- sanity_variables(model, newdata, variables)
     }
 
-
     # for merging later
     if (!"rowid" %in% colnames(newdata)) {
         newdata$rowid <- 1:nrow(newdata)
     }
 
     # pad factors: `get_predicted/model.matrix` break when factor levels are missing
-    newdata$rowid <- 1:nrow(newdata)
     padding <- complete_levels(newdata, levels_character)
     newdata <- rbind(padding, newdata)
 
@@ -99,6 +97,7 @@ predictions <- function(model,
         out_list[[predt]] <- tmp
     }
     out <- do.call("rbind", out_list)
+
 
     # unpad factors
     out <- out[out$rowid > 0, , drop = FALSE]
