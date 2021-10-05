@@ -37,6 +37,10 @@ combination.
 Compute estimated marginal means for specified factors.
 }
 \details{
+\code{marginalmeans} can only compute standard errors for linear models, or for
+predictions on the link scale, that is, with the \code{type} argument set to
+"link".
+
 This function begins by calling the \code{predictions} function to
 obtain a grid of predictors, including cells for all combinations of all
 categorical variables used to fit \code{model}, with numeric variables held at

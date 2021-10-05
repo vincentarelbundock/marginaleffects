@@ -20,6 +20,7 @@ complete_levels <- function(x, levels_character = NULL) {
             }
         }
     }
+
     # create padding
     if (length(vault) > 0) {
         padding <- utils::head(x, 1)
@@ -36,6 +37,6 @@ complete_levels <- function(x, levels_character = NULL) {
     if (nrow(padding) > 0) {
         padding$rowid <- -1 * 1:nrow(padding)
     }
-    
+
     return(padding)
 }
