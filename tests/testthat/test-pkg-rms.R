@@ -1,10 +1,18 @@
 skip_if_not_installed("rms")
 
-test_that("rms: no validity check", {
+test_that("marginaleffects: rms: no validity", {
     model <- rms::lrm(am ~ mpg, mtcars)
-    # the usual prediction types don't work in predict.rlm
-    void <- capture.output(
-        mfx <- marginaleffects(model, type = "lp")
-    )
-    expect_s3_class(mfx, "data.frame")
+    void <- capture.output({
+        expect_marginaleffects(model, type = "lp", n_unique = 1)
+    })
 })
+
+test_that("predictions: rms: no validity", {
+    skip("wait for insight PR merge")
+    model <- rms::lrm(am ~ mpg, mtcars)
+    pred1 <- predictions(model, type = "lp")
+    pred2 <- predictions(model, type = "lp", newdata = head(mtcars))
+    expect_predictions(pred1, n_row = 1, se = FALSE)
+    expect_predictions(pred2, n_row = 6, se = FALSE)
+})
+

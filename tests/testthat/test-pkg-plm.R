@@ -3,6 +3,9 @@ requiet("plm")
 
 data("Grunfeld", package = "plm")
 
+
+### marginaleffects
+
 test_that("pooling vs. Stata", {
     stata <- readRDS(test_path("stata/stata.rds"))$plm_pooling
     pool <- plm(inv ~ value * capital, data = Grunfeld, model = "pooling")
@@ -41,4 +44,15 @@ test_that("within error", {
     stata <- readRDS(test_path("stata/stata.rds"))$plm_within
     mod <- plm(inv ~ value * capital, data = Grunfeld, model = "within", effect = "twoways")
     expect_error(marginaleffects(mod), regexp = "appear.*support")
+})
+
+
+### predictions
+
+test_that("predictions: pooling no validity", {
+    pool <- plm(inv ~ value * capital, data = Grunfeld, model = "pooling")
+    pred1 <- predictions(pool)
+    pred2 <- predictions(pool, newdata = head(Grunfeld))
+    expect_predictions(pred1, n_row = 1, se = FALSE)
+    expect_predictions(pred2, n_row = 6, se = FALSE)
 })
