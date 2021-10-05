@@ -91,7 +91,7 @@ marginalmeans <- function(model,
 
         # one row per combination of the categorical variable
         idx <- duplicated(modmat_tmp)
-        modmat_tmp <- modmat_tmp[!idx, ]
+        modmat_tmp <- modmat_tmp[!idx, , drop = FALSE]
 
         # marginal means
         f <- stats::as.formula(paste("predicted ~", v))
@@ -105,7 +105,7 @@ marginalmeans <- function(model,
             if (!all(colnames(vcov) %in% colnames(modmat_tmp)) || !all(colnames(vcov) %in% colnames(modmat_tmp))) {
                 stop("The column names produced by `insight::get_varcov(model)` and `insight::get_modelmatrix(model, data=dat)` do not match. This can sometimes happen when using character variables as a factor when fitting a model. A safer strategy is to convert character variables to factors before fitting the model. This makes it easier for `marginaleffects` to keep track of the reference category.")
             }
-            modmat_tmp <- modmat_tmp[, colnames(vcov)]
+            modmat_tmp <- modmat_tmp[, colnames(vcov), drop = FALSE]
             se <- dat[!idx, v, drop = FALSE]
             colnames(se)[match(colnames(se), v)] <- "value"
             se$term <- v
