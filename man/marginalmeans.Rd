@@ -7,6 +7,7 @@
 marginalmeans(
   model,
   variables = NULL,
+  variables_grid = NULL,
   vcov = insight::get_varcov(model),
   type = "response"
 )
@@ -14,9 +15,16 @@ marginalmeans(
 \arguments{
 \item{model}{Model object}
 
-\item{variables}{predictors over which to compute marginal means (character
-vector). \code{NULL} calculates marginal means for all logical, character, or
-factor variables in the dataset used to fit \code{model}.}
+\item{variables}{Categorical predictors over which to compute marginal means
+(character vector). \code{NULL} calculates marginal means for all logical,
+character, or factor variables in the dataset used to fit \code{model}.}
+
+\item{variables_grid}{Categorical predictors used to construct the
+prediction grid over which adjusted predictions are averaged (character
+vector). \code{NULL} creates a grid with all combinations of all categorical
+predictors. This grid can be very large when there are many variables and
+many response levels, so it is advisable to select a limited number of
+variables in the \code{variables} and \code{variables_grid} arguments.}
 
 \item{vcov}{Matrix or boolean
 \itemize{
@@ -37,19 +45,24 @@ combination.
 Compute estimated marginal means for specified factors.
 }
 \details{
+This function begins by calling the \code{predictions} function to obtain a
+grid of predictors, and adjusted predictions for each cell. The grid
+includes all combinations of the categorical variables listed in the
+\code{variables} and \code{variables_grid} arguments, or all combinations of the
+categorical variables used to fit the model if \code{variables_grid} is \code{NULL}.
+In the prediction grid, numeric variables are held at their means.
+
+After constructing the grid and filling the grid with adjusted predictions,
+\code{marginalmeans} computes marginal means for the variables listed in the
+\code{variables} argument, by average across all categories in the grid.
+
 \code{marginalmeans} can only compute standard errors for linear models, or for
 predictions on the link scale, that is, with the \code{type} argument set to
 "link".
 
-This function begins by calling the \code{predictions} function to
-obtain a grid of predictors, including cells for all combinations of all
-categorical variables used to fit \code{model}, with numeric variables held at
-their means. Then, it computes marginal means for the variables listed in
-the \code{variables} argument.
-
 The \code{marginaleffects} website compares the output of this function to the
-popular \code{emmeans} package, which provides similar functionality and more
-advanced options: https://vincentarelbundock.github.io/marginaleffects/
+popular \code{emmeans} package, which provides similar but more advanced
+functionality: https://vincentarelbundock.github.io/marginaleffects/
 }
 \examples{
 library(marginaleffects)
