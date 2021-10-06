@@ -3,26 +3,37 @@
 #' Compute estimated marginal means for specified factors.
 #'
 #' @inheritParams marginaleffects
-#' @param variables predictors over which to compute marginal means (character
-#'   vector). `NULL` calculates marginal means for all logical, character, or
-#'   factor variables in the dataset used to fit `model`.
+#' @param variables Categorical predictors over which to compute marginal means
+#'   (character vector). `NULL` calculates marginal means for all logical,
+#'   character, or factor variables in the dataset used to fit `model`.
+#' @param variables_grid Categorical predictors used to construct the
+#'   prediction grid over which adjusted predictions are averaged (character
+#'   vector). `NULL` creates a grid with all combinations of all categorical
+#'   predictors. This grid can be very large when there are many variables and
+#'   many response levels, so it is advisable to select a limited number of
+#'   variables in the `variables` and `variables_grid` arguments.
 #' @param type Type(s) of prediction as string or vector This can
 #'   differ based on the model type, but will typically be a string such as:
 #'   "response", "link", "probs", or "zero".
 #' @details
+#'   This function begins by calling the `predictions` function to obtain a
+#'   grid of predictors, and adjusted predictions for each cell. The grid
+#'   includes all combinations of the categorical variables listed in the
+#'   `variables` and `variables_grid` arguments, or all combinations of the
+#'   categorical variables used to fit the model if `variables_grid` is `NULL`.
+#'   In the prediction grid, numeric variables are held at their means. 
+#'
+#'   After constructing the grid and filling the grid with adjusted predictions,
+#'   `marginalmeans` computes marginal means for the variables listed in the
+#'   `variables` argument, by average across all categories in the grid.
+#'
 #'   `marginalmeans` can only compute standard errors for linear models, or for
 #'   predictions on the link scale, that is, with the `type` argument set to
 #'   "link".
 #'
-#'   This function begins by calling the `predictions` function to
-#'   obtain a grid of predictors, including cells for all combinations of all
-#'   categorical variables used to fit `model`, with numeric variables held at
-#'   their means. Then, it computes marginal means for the variables listed in
-#'   the `variables` argument.
-#'
 #'   The `marginaleffects` website compares the output of this function to the
-#'   popular `emmeans` package, which provides similar functionality and more
-#'   advanced options: https://vincentarelbundock.github.io/marginaleffects/
+#'   popular `emmeans` package, which provides similar but more advanced
+#'   functionality: https://vincentarelbundock.github.io/marginaleffects/
 #' @return Data frame of marginal means with one row per variable-value 
 #' combination.
 #' @export
@@ -40,33 +51,55 @@
 #' summary(mm)
 marginalmeans <- function(model,
                           variables = NULL,
+                          variables_grid = NULL,
                           vcov = insight::get_varcov(model),
                           type = "response") {
 
-    checkmate::assert_character(variables, min.len = 1, null.ok = TRUE)
-
     dat <- insight::get_data(model)
 
-    # variable selection
+    # sanity
+    checkmate::assert_character(variables, min.len = 1, null.ok = TRUE)
+    if (!is.null(variables)) {
+        bad <- setdiff(variables, colnames(dat))
+        if (length(bad) > 0) {
+            stop(sprintf("Elements of the `variables` argument were not found as column names in the data used to fit the model: %s", paste(bad, collapse = ", ")))
+        }
+    }
+
+    checkmate::assert_character(variables_grid, min.len = 1, null.ok = TRUE)
+    if (!is.null(variables_grid)) {
+        bad <- setdiff(variables_grid, colnames(dat))
+        if (length(bad) > 0) {
+            stop(sprintf("Elements of the `variables_grid` argument were not found as column names in the data used to fit the model: %s", paste(bad, collapse = ", ")))
+        }
+    }
+
+    # categorical variables, excluding response
     column_labels <- colnames(dat)
     term_labels <- insight::find_terms(model, flatten = TRUE)
-    variables_valid <- get_categorical(dat)
-    variables_valid <- setdiff(variables_valid, insight::find_response(model, flatten = TRUE))
-    variables_valid <- intersect(variables_valid, term_labels)
-
-    if (is.null(variables)) {
-        variables <- variables_valid
-    } else {
-        variables <- intersect(variables, variables_valid)
-    }
-    if (length(variables_valid) == 0) {
+    variables_categorical <- get_categorical(dat)
+    variables_categorical <- setdiff(variables_categorical, insight::find_response(model, flatten = TRUE))
+    variables_categorical <- intersect(variables_categorical, term_labels)
+    if (length(variables_categorical) == 0) {
         stop("No logical, factor, or character variable was found in the dataset used to fit the `model` object. This error is often raised when users convert variables to factor in the model formula (e.g., `lm(y ~ factor(x)`). If this is the case, you may consider converting variables in the dataset before fitting the model.")
     }
 
+    # subset variables and grid
+    if (is.null(variables)) {
+        variables <- variables_categorical
+    } else {
+        variables <- intersect(variables, variables_categorical)
+    }
+
+    if (is.null(variables_grid)) {
+        variables_grid <- variables_categorical
+    } else {
+        variables_grid <- intersect(variables_grid, variables_categorical)
+    }
+    variables_grid <- unique(c(variables, variables_grid))
+
     # predictions for each cell of all categorical data, but not the response
-    variables_categorical <- get_categorical(dat)
-    variables_categorical <- setdiff(variables_categorical, insight::find_response(model, flatten = TRUE))
-    dat <- predictions(model = model, variables = variables_categorical, type = type)
+    dat <- predictions(model = model, variables = variables_grid, type = type)
 
     # interactions are not supported
     interactions <- any(grepl(":", attr(stats::terms(model), "term.labels")))
