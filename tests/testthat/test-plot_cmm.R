@@ -1,4 +1,4 @@
-skip_on_ci() # different graphics engine produce different snapshots
+skip_if(getRversion() < 4.1)  # different graphics engines
 
 test_that("two conditions", {
     mod <- lm(mpg ~ hp * wt * am, data = mtcars)

@@ -24,7 +24,7 @@ test_that("fixest::fepois vs. Stata", {
 
 
 test_that("fixest::feols: predictions", {
-    skip("insight PR should fix warnings this")
+    skip("insight 0.14.5")
     data(EmplUK, package = "plm")
     tmp <- EmplUK
     tmp$firm <- as.factor(tmp$firm)
