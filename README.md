@@ -116,9 +116,9 @@ from model objects. That’s it. That’s the secret sauce.
 
 Under the hood, `marginaleffects`’s `predictions` function uses the
 `insight` package to retrieve adjusted predictions from a wide variety
-of models. Currently, `insight` [supports over 200 types of model
-objects](https://easystats.github.io/insight/), and most of those should
-work out-of-the-box with the `predictions` function. If you run into
+of models. Currently, `insight` [supports over 100 model
+types](https://easystats.github.io/insight/), and many should work
+out-of-the-box with the `predictions` function. If you run into
 problems, do not hesitate to report them on Github or via email.
 
 #### Marginal effects and contrasts
@@ -227,17 +227,17 @@ a “grid” of predictor values over which to compute means/predictions:
 
 ``` r
 predictions(mod, variables = c("am", "wt"))
-#>           type predicted std.error  conf.low conf.high       hp am     wt
-#> 1  expectation 23.259500 2.7059342 17.674726  28.84427 146.6875  0 1.5130
-#> 2  expectation 27.148334 2.8518051 21.262498  33.03417 146.6875  1 1.5130
-#> 3  expectation 20.504387 1.3244556 17.770845  23.23793 146.6875  0 2.5425
-#> 4  expectation 21.555612 1.0723852 19.342318  23.76891 146.6875  1 2.5425
-#> 5  expectation 18.410286 0.6151016 17.140779  19.67979 146.6875  0 3.3250
-#> 6  expectation 17.304709 1.5528055 14.099876  20.50954 146.6875  1 3.3250
-#> 7  expectation 17.540532 0.7293676 16.035192  19.04587 146.6875  0 3.6500
-#> 8  expectation 15.539158 2.1453449 11.111383  19.96693 146.6875  1 3.6500
-#> 9  expectation 12.793013 2.9784942  6.645703  18.94032 146.6875  0 5.4240
-#> 10 expectation  5.901966 5.8149853 -6.099574  17.90351 146.6875  1 5.4240
+#>        type predicted std.error  conf.low conf.high       hp am     wt
+#> 1  response 23.259500 2.7059342 17.674726  28.84427 146.6875  0 1.5130
+#> 2  response 27.148334 2.8518051 21.262498  33.03417 146.6875  1 1.5130
+#> 3  response 20.504387 1.3244556 17.770845  23.23793 146.6875  0 2.5425
+#> 4  response 21.555612 1.0723852 19.342318  23.76891 146.6875  1 2.5425
+#> 5  response 18.410286 0.6151016 17.140779  19.67979 146.6875  0 3.3250
+#> 6  response 17.304709 1.5528055 14.099876  20.50954 146.6875  1 3.3250
+#> 7  response 17.540532 0.7293676 16.035192  19.04587 146.6875  0 3.6500
+#> 8  response 15.539158 2.1453449 11.111383  19.96693 146.6875  1 3.6500
+#> 9  response 12.793013 2.9784942  6.645703  18.94032 146.6875  0 5.4240
+#> 10 response  5.901966 5.8149853 -6.099574  17.90351 146.6875  1 5.4240
 ```
 
 The [`typical` function gives us an even more powerful
@@ -246,9 +246,9 @@ to customize the grid:
 
 ``` r
 predictions(mod, newdata = typical(am = 0, wt = c(2, 4)))
-#>          type predicted std.error conf.low conf.high       hp am wt
-#> 1 expectation  21.95621  2.038630 17.74868  26.16373 146.6875  0  2
-#> 2 expectation  16.60387  1.083201 14.36826  18.83949 146.6875  0  4
+#>       type predicted std.error conf.low conf.high       hp am wt
+#> 1 response  21.95621  2.038630 17.74868  26.16373 146.6875  0  2
+#> 2 response  16.60387  1.083201 14.36826  18.83949 146.6875  0  4
 ```
 
 We can plot the adjusted predictions with the `plot_cap` function:
@@ -312,7 +312,7 @@ summary(mm)
 #> 5  cyl     8 19.35     1.3771   14.05 < 2.22e-16 16.65  22.05
 #> 
 #> Model type:  lm 
-#> Prediction type:  expectation
+#> Prediction type:  response
 ```
 
 #### More
