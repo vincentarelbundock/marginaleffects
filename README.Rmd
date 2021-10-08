@@ -72,7 +72,7 @@ By using [the `numDeriv` package](https://cran.r-project.org/package=numDeriv) t
 
 #### Adjusted predictions and marginal means
 
-Under the hood, `marginaleffects`'s `predictions` function uses the `insight` package to retrieve adjusted predictions from a wide variety of models. Currently, `insight` [supports over 200 types of model objects](https://easystats.github.io/insight/), and most of those should work out-of-the-box with the `predictions` function. If you run into problems, do not hesitate to report them on Github or via email.
+Under the hood, `marginaleffects`'s `predictions` function uses the `insight` package to retrieve adjusted predictions from a wide variety of models. Currently, `insight` [supports over 100 model types](https://easystats.github.io/insight/), and many should work out-of-the-box with the `predictions` function. If you run into problems, do not hesitate to report them on Github or via email.
 
 #### Marginal effects and contrasts
 
