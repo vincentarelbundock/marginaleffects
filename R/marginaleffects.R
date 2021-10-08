@@ -84,7 +84,6 @@ marginaleffects <- function(model,
     vcov <- sanity_vcov(model, vcov)
     type <- sanity_type(model, type)
     return_data <- sanity_return_data(return_data)
-
     group_names <- get_group_names(model)
 
     # rowid is required for later merge
@@ -113,37 +112,22 @@ marginaleffects <- function(model,
     pred <- do.call("rbind", pred_list)
 
     # compute marginal effects and standard errors
-    out_list <- list()
-    se_list <- list()
-    for (gn in group_names) {
-        out_list[[gn]] <- list()
-        se_list[[gn]] <- list()
-        for (predt in type) {
-            out_list[[gn]][[predt]] <- get_dydx_and_se(
-                model = model,
-                fitfram = newdata,
-                variables = variables_vec,
-                vcov = vcov,
-                group_name = gn,
-                type = predt,
-                numDeriv_method = numDeriv_method,
-                ...)
-            se_list[[gn]][[predt]] <- attr(out_list[[gn]][[predt]], "se_at_mean_gradient")
-            se_list[[gn]][[predt]]$type <- predt
-            out_list[[gn]][[predt]]$type <- predt
-            se_list[[gn]][[predt]]$group <- gn
-            out_list[[gn]][[predt]]$group <- gn
-        }
-        se_list[[gn]] <- do.call("rbind", se_list[[gn]])
-        out_list[[gn]] <- do.call("rbind", out_list[[gn]])
+    out <- get_dydx_and_se(
+        model = model,
+        fitfram = newdata,
+        variables = variables_vec,
+        vcov = vcov,
+        type = type,
+        numDeriv_method = numDeriv_method)
+
+    # backup attributes
+    attributes_backup <- list()
+    for (n in names(attributes(out))) {
+        attributes_backup[[n]] <- attr(out, n)
     }
-    out <- do.call("rbind", out_list)
-    attributes_backup <- attributes(out)
-    se <- do.call("rbind", se_list)
-    row.names(se) <- NULL
 
     # merge newdata if requested and restore attributes
-    if (return_data) {
+    if (isTRUE(return_data)) {
         out <- merge(out, pred, by = c("rowid", "type"))
     }
 
@@ -153,6 +137,7 @@ marginaleffects <- function(model,
     cols <- intersect(stubcols, colnames(out))
     cols <- unique(c(cols, colnames(out)))
     out <- out[, cols]
+
     if ("group" %in% colnames(out) && all(out$group == "main_marginaleffect")) {
         out$group <- NULL
     }
@@ -160,13 +145,6 @@ marginaleffects <- function(model,
     # sort rows
     out <- out[order(out$type, out$term, out$rowid), ]
     row.names(out) <- NULL
-
-    # restore useful attributes lost in "clean columns" bloc
-    for (n in names(attributes_backup)) {
-        if (!n %in% names(attributes(out))) {
-            attr(out, n) <- attributes_backup[[n]]
-        }
-    }
 
     # attributes
     if (isTRUE(check_dependency("modelsummary"))) {
@@ -185,10 +163,11 @@ marginaleffects <- function(model,
     attr(out, "model_type") <- class(model)[1]
     attr(out, "variables") <- variables
 
-    if ("group" %in% colnames(se) && all(se$group == "main_marginaleffect")) {
-        se$group <- NULL
+    for (n in names(attributes_backup)) {
+        if (!n %in% names(attributes(out))) {
+            attr(out, n) <- attributes_backup[[n]]
+        }
     }
-    attr(out, "se_at_mean_gradient") <- se
 
     return(out)
 }

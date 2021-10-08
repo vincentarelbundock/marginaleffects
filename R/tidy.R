@@ -50,7 +50,10 @@ tidy.marginaleffects <- function(x,
         #     dydx <- stats::aggregate(f, data = x, FUN = weighted.mean, w = attr(x, "weights"))
         # }
 
-        dydx <- merge(dydx, attr(x, "se_at_mean_gradient"))
+        se <- attr(x, "se_at_mean_gradient")
+        if (!is.null(se)) {
+            dydx <- merge(dydx, se, all.x = TRUE)
+        }
         colnames(dydx)[match("dydx", colnames(dydx))] <- "estimate"
     } else {
         # avoids namespace conflict with `margins`
