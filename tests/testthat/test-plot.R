@@ -1,5 +1,6 @@
-skip_if(getRversion() < 4.1)
-skip_on_ci() # different graphics engine produce different snapshots
+skip_if(getRversion() < 4.1) # different graphics engines
+skip_on_ci()
+skip_on_cran()
 
 test_that("plot_cme(mod, 'hp', 'wt')", {
     mod <- lm(mpg ~ hp * wt, data = mtcars)

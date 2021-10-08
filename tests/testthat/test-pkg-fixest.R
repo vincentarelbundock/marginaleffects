@@ -1,63 +1,68 @@
 skip_if_not_installed("fixest")
+skip_if_not_installed("plm")
 requiet("fixest")
+
 
 test_that("fixest::feols vs. Stata", {
     data(EmplUK, package = "plm")
     stata <- readRDS(test_path("stata/stata.rds"))$fixest_feols
-    model <- fixest::feols(wage ~ capital * output | firm, EmplUK)
+    model <- feols(wage ~ capital * output | firm, EmplUK)
     mfx <- merge(tidy(marginaleffects(model)), stata)
     expect_marginaleffects(model)
     expect_equal(mfx$estimate, mfx$dydx)
     expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = .00001)
 })
 
-
 test_that("fixest::fepois vs. Stata", {
     data(EmplUK, package = "plm")
     stata <- readRDS(test_path("stata/stata.rds"))$fixest_fepois
-    model <- fixest::fepois(log(wage) ~ capital * output | firm, EmplUK)
+    model <- fepois(log(wage) ~ capital * output | firm, EmplUK)
     mfx <- merge(tidy(marginaleffects(model, type = "link")), stata)
     expect_marginaleffects(model)
     expect_equal(mfx$estimate, mfx$dydx, tolerance = .000001)
     expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = .001)
 })
 
-
 test_that("fixest::feols: predictions", {
-    skip("insight PR should fix warnings this")
-    data(EmplUK, package = "plm")
-    tmp <- EmplUK
-    tmp$firm <- as.factor(tmp$firm)
-    model <- fixest::feols(wage ~ capital * output | firm, tmp)
+    skip_if_not_installed("insight", minimum_version = "0.14.4.1")
+    data(trade, package = "fixest")
+    model <- feols(Euros ~ dist_km | Destination + Origin, data = trade)
     pred1 <- predictions(model)
-    pred2 <- predictions(model, newdata = head(EmplUK))
-    expect_predictions(pred1)
-    expect_predictions(pred2, n_row = 6)
+    pred2 <- predictions(model, newdata = head(trade))
+    expect_predictions(pred1, se = FALSE)
+    expect_predictions(pred2, n_row = 6, se = FALSE)
 })
 
+test_that("numeric cluster variable raises warning", {
+    skip("works interactively")
+    fe <- data.frame(unit = 1:25, fe = rnorm(25))
+    dat <- expand.grid(unit = 1:25, time = 1:50)
+    dat <- merge(dat, fe, by = "unit")
+    dat$x <- rnorm(nrow(dat)) + dat$fe
+    dat$w <- rnorm(nrow(dat))
+    dat$y <- dat$x + dat$w + dat$x * dat$w + dat$fe + rnorm(nrow(dat), sd = 10)
+    mod1 <- feols(y ~ x * w | unit, data = dat)
+    dat2 <- dat
+    dat2$unit <- as.factor(dat2$unit)
+    mod2 <- fixest::feols(y ~ x * w | unit, data = dat2)
+    expect_warning(plot_cme(mod1, effect = "x", condition = "w", draw = FALSE))
+    expect_warning(plot_cme(mod2, effect = "x", condition = "w", draw = FALSE), NA)
+})
 
-
-# No idea why this fails on testthat. It works locally!
-
-# fe <- data.frame(unit = 1:25, fe = rnorm(25))
-# dat <- expand.grid(unit = 1:25, time = 1:50)
-# dat <- merge(dat, fe, by = "unit")
-# dat$x <- rnorm(nrow(dat)) + dat$fe
-# dat$w <- rnorm(nrow(dat))
-# dat$y <- dat$x + dat$w + dat$x * dat$w + dat$fe + rnorm(nrow(dat), sd = 10)
-# mod1 <- fixest::feols(y ~ x * w | unit, data = dat)
-# dat2 <- dat
-# dat2$unit <- as.factor(dat2$unit)
-# mod2 <- fixest::feols(y ~ x * w | unit, data = dat2)
-
-# test_that("numeric cluster variable raises warning", {
-#     expect_warning(plot_cme(mod1, effect = "x", condition = "w", draw = FALSE))
-#     expect_warning(plot_cme(mod2, effect = "x", condition = "w", draw = FALSE), NA)
-# })
-
-# test_that("plot_cme: extracts all required data", {
-#     k <- plot_cme(mod2, effect = "x", condition = "w", draw = FALSE)
-#     expect_s3_class(k, "data.frame")
-#     expect_false(anyNA(k$dydx))
-#     expect_false(any(k$dydx == 0))
-# })
+test_that("plot_cme: extracts all required data", {
+    skip("works interactively")
+    fe <- data.frame(unit = 1:25, fe = rnorm(25))
+    dat <- expand.grid(unit = 1:25, time = 1:50)
+    dat <- merge(dat, fe, by = "unit")
+    dat$x <- rnorm(nrow(dat)) + dat$fe
+    dat$w <- rnorm(nrow(dat))
+    dat$y <- dat$x + dat$w + dat$x * dat$w + dat$fe + rnorm(nrow(dat), sd = 10)
+    mod1 <- fixest::feols(y ~ x * w | unit, data = dat)
+    dat2 <- dat
+    dat2$unit <- as.factor(dat2$unit)
+    mod2 <- fixest::feols(y ~ x * w | unit, data = dat2)
+    k <- plot_cme(mod2, effect = "x", condition = "w", draw = FALSE)
+    expect_s3_class(k, "data.frame")
+    expect_false(anyNA(k$dydx))
+    expect_false(any(k$dydx == 0))
+})

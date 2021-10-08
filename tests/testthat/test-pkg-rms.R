@@ -8,7 +8,7 @@ test_that("marginaleffects: rms: no validity", {
 })
 
 test_that("predictions: rms: no validity", {
-    skip("wait for insight PR merge")
+    skip("unsupported data argument in get_predicted.lrm")
     model <- rms::lrm(am ~ mpg, mtcars)
     pred1 <- predictions(model, type = "lp")
     pred2 <- predictions(model, type = "lp", newdata = head(mtcars))

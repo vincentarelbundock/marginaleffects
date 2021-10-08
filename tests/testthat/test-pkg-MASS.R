@@ -35,7 +35,7 @@ test_that("glm.nb: marginaleffects: vs. Stata", {
 })
 
 test_that("polr: marginaleffects: vs. Stata", {
-    skip("works in interactive session")
+    skip("works interactively")
     stata <- readRDS(test_path("stata/stata.rds"))[["MASS_polr_01"]]
     dat <- read.csv(test_path("stata/databases/MASS_polr_01.csv"))
     mod <- MASS::polr(factor(y) ~ x1 + x2, data = dat)
@@ -51,9 +51,10 @@ test_that("polr: marginaleffects: vs. Stata", {
 ### predictions
 
 test_that("polr: predictions: no validity", {
-    skip("polr: predictions doesn't work. Probably needs to be fixed at the `insight` level.")
+    skip_if_not_installed("insight", minimum_version = "0.14.4.1")
     mod <- MASS::polr(factor(gear) ~ mpg + factor(cyl), data = mtcars)
-    pred <- predictions(mod)
+    pred <- predictions(mod, type = "probs")
+    expect_predictions(pred, se = FALSE)
 })
 
 test_that("glm.nb: predictions: no validity", {
@@ -63,7 +64,7 @@ test_that("glm.nb: predictions: no validity", {
 })
 
 test_that("rlm: predictions: no validity", {
-    skip("will work after PR merge into `insight`")
+    skip_if_not_installed("insight", minimum_version = "0.14.4.1")
     model <- MASS::rlm(mpg ~ hp + drat, mtcars)
     pred <- predictions(model)
     expect_predictions(pred, se = TRUE, n_row = 1)
@@ -87,8 +88,9 @@ test_that("glm.nb: marginalmeans: vs. emmeans", {
     expect_equal(ti$std.error, em$std.error)
 })
 
+library(testthat)
 test_that("rlm: marginalmeans: vs. emmeans", {
-    skip("will work after PR merge into `insight`")
+    skip_if_not_installed("insight", minimum_version = "0.14.4.1")
     dat <- mtcars
     dat$cyl <- as.factor(dat$cyl)
     dat$am <- as.logical(dat$am)

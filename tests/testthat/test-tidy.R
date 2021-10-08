@@ -1,5 +1,5 @@
 mod <- glm(vs ~ hp * mpg, data = mtcars, family = binomial)
-mfx <- marginaleffects(mod) 
+mfx <- marginaleffects(mod)
 
 test_that("tidy: minimal", {
     ti <- tidy(mfx)
@@ -13,10 +13,10 @@ test_that("tidy: minimal", {
 })
 
 test_that("glance: with modelsummary", {
+    skip_if_not_installed("modelsummary", minimum_version = "0.9.2.9000")
     gl <- glance(mfx)
-    expect_equal(dim(glance(mfx)), c(1, 8))
+    expect_equal(dim(glance(mfx)), c(1, 9))
 })
-
 
 test_that("bug: emmeans contrast rename in binomial", {
     x <- glm(am ~ mpg + factor(cyl), data = mtcars, family = binomial)
@@ -25,7 +25,6 @@ test_that("bug: emmeans contrast rename in binomial", {
     expect_s3_class(x, "data.frame") 
     expect_equal(nrow(x), 3)
 })
-
 
 test_that("tidy: with and without contrasts", {
     tmp <- mtcars

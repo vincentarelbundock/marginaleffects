@@ -1,4 +1,5 @@
 skip_on_ci() # different graphics engine produce different snapshots
+skip_on_cran()
 
 test_that("character predictors", {
     dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv")
