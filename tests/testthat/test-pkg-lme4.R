@@ -57,7 +57,7 @@ test_that("bug stay dead: tidy without std.error", {
 })
 
 test_that("predictions: glmer: no validity", {
-    skip("should work after insight PR")
+    skip("https://github.com/easystats/insight/issues/441")
     dat <- haven::read_dta(test_path("stata/databases/lme4_02.dta"))
     dat$clus <- as.factor(dat$clus)
     model <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = dat, family = binomial)

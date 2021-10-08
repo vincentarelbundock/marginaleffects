@@ -1,4 +1,5 @@
 skip_on_ci() # different graphics engine produce different snapshots
+skip_on_cran() # different graphics engine produce different snapshots
 
 test_that("two conditions", {
     mod <- lm(mpg ~ hp * wt * am, data = mtcars)

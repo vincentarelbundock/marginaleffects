@@ -1,17 +1,13 @@
-requiet("dplyr")
-
 test_that("padding with interactions", {
-    skip("reinstate test when type is supported by `predictions`")
-    dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/ggplot2movies/movies.csv") %>%
-           mutate(style = case_when(Action == 1 ~ "Action",
-                                    Comedy == 1 ~ "Comedy",
-                                    Drama == 1 ~ "Drama",
-                                    TRUE ~ "Other"),
-                  style = factor(style),
-                  certified_fresh = rating >= 8) %>%
-           filter(length < 240)
+    skip_if_not_installed("insight", minimum_version = "0.14.4.1")
+    dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/ggplot2movies/movies.csv")
+    dat$style <- ifelse(dat$Action == 1, "Action", "Other")
+    dat$style <- ifelse(dat$Comedy == 1, "Comedy", dat$style)
+    dat$style <- ifelse(dat$Drama == 1, "Drama", dat$style)
+    dat$style <- factor(dat$style)
+    dat$certified_fresh <- dat$rating >= 8
+    dat <- dat[dat$length < 240,]
     mod <- glm(certified_fresh ~ length * style, data = dat, family = binomial)
     res <- predictions(mod, type = c("response", "link"))
-    expect_false(anyNA(res$style))
-    expect_equal(nrow(res), 2)
+    expect_predictions(res, n_row = 2)
 })

@@ -20,7 +20,7 @@ test_that("predictions: nlme::gls: no validity", {
 })
 
 test_that("marginalmeans: nlme::gls: no validity", {
-    skip("works interactively (TODO: check)")
+    skip("works interactively")
     tmp <- nlme::Ovary
     tmp$categ <- factor(sample(letters[1:5], nrow(tmp), replace = TRUE))
     mod <- gls(follicles ~ sin(2*pi*Time) + cos(2*pi*Time) + categ,

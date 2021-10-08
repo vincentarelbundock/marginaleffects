@@ -1,8 +1,8 @@
 skip_if_not_installed("bife")
+requiet("bife")
 
 test_that("marginaleffects: bife: no validity", {
-    requiet("bife")
-    dataset <- psid
+    dataset <- bife::psid
     mod <- bife(LFP ~ AGE + I(INCH / 1000) + KID1 + KID2 + KID3 | ID, data = dataset)
     mfx <- marginaleffects(mod)
     tid <- tidy(mfx)
@@ -13,10 +13,8 @@ test_that("marginaleffects: bife: no validity", {
 })
 
 test_that("predictions: bife: no validity", {
-    skip("predict.bife uses X_new instead of newdata")
-    requiet("bife")
-    dataset <- psid
+    dataset <- bife::psid
     mod <- bife(LFP ~ AGE + I(INCH / 1000) + KID1 + KID2 + KID3 | ID, data = dataset)
     pred <- predictions(mod)
-    expect_predictions(mod)
+    expect_predictions(pred, n_row = 1, se = FALSE)
 })
