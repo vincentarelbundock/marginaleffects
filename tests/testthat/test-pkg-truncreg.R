@@ -22,5 +22,5 @@ test_that("truncreg vs. Stata", {
                                 data = tobin, subset = durable > 0)
     mfx <- merge(tidy(marginaleffects(model)), stata)
     expect_equal(mfx$estimate, mfx$dydxstata, tolerance = .0001)
-    expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = .0001)
+    expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = .001)
 })
