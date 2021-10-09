@@ -24,6 +24,7 @@ lme4,glmer.nb,TRUE,TRUE,,,,
 MASS,glm.nb,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE
 MASS,rlm,TRUE,TRUE,,,TRUE,TRUE
 MASS,polr,TRUE,TRUE,TRUE,TRUE,,
+mgcv,gam,TRUE,TRUE,,,,
 nlme,gls,TRUE,TRUE,,,,
 nnet,multinom,TRUE,TRUE,TRUE,FALSE,,
 plm,plm,TRUE,TRUE,TRUE,TRUE,,

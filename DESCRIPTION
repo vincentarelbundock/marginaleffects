@@ -96,6 +96,7 @@ Collate:
     'methods_crch.R'
     'methods_glmx.R'
     'methods_lme4.R'
+    'methods_mgcv.R'
     'sanity_model.R'
     'methods_nnet.R'
     'methods_plm.R'

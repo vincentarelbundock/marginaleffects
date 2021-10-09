@@ -2,6 +2,7 @@
 
 S3method(get_coef,betareg)
 S3method(get_coef,default)
+S3method(get_coef,gam)
 S3method(get_coef,merMod)
 S3method(get_coef,polr)
 S3method(get_group_names,default)
