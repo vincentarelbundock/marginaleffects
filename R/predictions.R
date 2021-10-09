@@ -34,7 +34,7 @@ predictions <- function(model,
     scall <- substitute(newdata)
     if (is.call(scall) && as.character(scall)[1] %in% c("typical", "counterfactual")) {
         lcall <- as.list(scall)
-        if (!any(c("model", "data") %in% names(lcall))) {
+        if (!any(c("model", "newdata") %in% names(lcall))) {
             lcall <- c(lcall, list("model" = model))
             newdata <- eval.parent(as.call(lcall))
         }

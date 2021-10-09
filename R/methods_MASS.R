@@ -48,14 +48,14 @@ get_vcov.polr <- function(model, ...) {
 #' @include get_predict.R
 #' @rdname get_predict
 #' @export
-get_predict.polr <- function(model, 
-                             newdata = insight::get_data(model), 
-                             type = "response", 
+get_predict.polr <- function(model,
+                             newdata = insight::get_data(model),
+                             type = "response",
                              group_name = "1",
                              ...) {
 
-    pred <- stats::predict(model, 
-                           newdata = newdata, 
+    pred <- stats::predict(model,
+                           newdata = newdata,
                            type = type)
 
     sanity_predict_numeric(pred = pred, model = model, newdata = newdata, type = type)

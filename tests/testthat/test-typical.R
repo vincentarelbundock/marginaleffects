@@ -22,7 +22,7 @@ test_that("all manual", {
 test_that("errors and warnings", {
     mod <- lm(hp ~ mpg, mtcars)
     expect_error(typical(), regexp = "should not both")
-    expect_error(typical(model = mod, data = mtcars), regexp = "must be")
+    expect_error(typical(model = mod, newdata = mtcars), regexp = "must be")
 
     mod <- lm(hp ~ factor(cyl), mtcars)
     expect_error(typical(model = mod, cyl = "4"), NA)

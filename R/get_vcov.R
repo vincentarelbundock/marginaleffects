@@ -1,11 +1,11 @@
 #' Get a named variance-covariance matrix from a model object (internal function)
-#' 
+#'
 #' @inheritParams marginaleffects
 #' @return A named square matrix of variance and covariances. The names must match the coefficient names.
 #' @rdname get_vcov
 #' @keywords internal
 #' @export
-get_vcov <- function (model, ...) {
+get_vcov <- function(model, ...) {
     UseMethod("get_vcov", model)
 }
 
