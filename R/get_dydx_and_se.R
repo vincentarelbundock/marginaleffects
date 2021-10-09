@@ -11,7 +11,7 @@ get_dydx_and_se <- function(model,
     group_names <- get_group_names(model)
 
     if (!is.null(vcov)) {
-        vcov <- vcov[names(coefs), names(coefs)]
+        vcov <- vcov[names(coefs), names(coefs), drop = FALSE]
     }
 
     mfx_list <- list()

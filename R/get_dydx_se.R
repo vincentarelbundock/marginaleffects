@@ -7,13 +7,17 @@ get_dydx_se <- function(model,
                         type,
                         numDeriv_method) {
 
-    if (is.null(vcov)) {
+    coefs <- get_coef(model)
+
+    if (is.null(vcov) ||
+        !all(names(coefs) %in% colnames(vcov)) ||
+        !all(colnames(vcov) %in% names(coefs))) {
         return(mfx)
     }
 
-    out <- mfx
+    vcov <- vcov[names(coefs), names(coefs), drop = FALSE]
 
-    coefs <- get_coef(model)
+    out <- mfx
 
     if (variable %in% get_categorical(fitfram)) {
         dydx_fun <- get_dydx_categorical
