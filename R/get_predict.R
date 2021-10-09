@@ -15,16 +15,15 @@ get_predict <- function (model, newdata, type, ...) {
 
 #' @rdname get_predict
 #' @export
-get_predict.default <- function(model, 
-                                newdata = insight::get_data(model), 
-                                type = "response", 
+get_predict.default <- function(model,
+                                newdata = insight::get_data(model),
+                                type = "response",
                                 ...) {
-    pred <- stats::predict(model, 
-                           newdata = newdata, 
+    pred <- stats::predict(model,
+                           newdata = newdata,
                            type = type)
 
     sanity_predict_numeric(pred = pred, model = model, newdata = newdata, type = type)
     sanity_predict_vector(pred = pred, model = model, newdata = newdata, type = type)
-            
     return(pred)
 }

@@ -85,9 +85,9 @@ plot_cap <- function(model,
     at_list[["model"]] = model
     nd <- do.call("typical", at_list)
     datplot <- predictions(model, 
-                             newdata = nd, 
-                             conf.int = conf.int,
-                             conf.level = conf.level)
+                           newdata = nd,
+                           conf.int = conf.int,
+                           conf.level = conf.level)
     colnames(datplot)[colnames(datplot) == condition1] <- "condition1"
     colnames(datplot)[colnames(datplot) == condition2] <- "condition2"
     colnames(datplot)[colnames(datplot) == condition3] <- "condition3"

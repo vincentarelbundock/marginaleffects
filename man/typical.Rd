@@ -4,7 +4,7 @@
 \alias{typical}
 \title{Generate "typical" datasets for use in \code{marginaleffects}'s \code{newdata} argument}
 \usage{
-typical(..., model = NULL, data = NULL)
+typical(..., model = NULL, newdata = NULL)
 }
 \arguments{
 \item{...}{named arguments with vectors of values for the typical variables
@@ -13,7 +13,7 @@ combinations of unique values from these vectors}
 
 \item{model}{Model object}
 
-\item{data}{data.frame (one and only one of the \code{model} and \code{data} arguments
+\item{newdata}{data.frame (one and only one of the \code{model} and \code{newdata} arguments
 must be true).}
 }
 \value{
@@ -26,7 +26,7 @@ Generate "typical" datasets for use in \code{marginaleffects}'s \code{newdata} a
 }
 \details{
 If \code{typical} is used in a \code{marginaleffects} or \code{predictions} call as the
-\code{newdata} argument, users do not need to specify the \code{model} or \code{data}
+\code{newdata} argument, users do not need to specify the \code{model} or \code{newdata}
 argument. The data is extracted automatically from the model.
 
 If users supply a model, the data used to fit that model is retrieved using
@@ -35,7 +35,7 @@ the \code{insight::get_data} function.
 \examples{
 # The output only has 2 rows, and all the variables except `hp` are at their
 # mean or mode.
-typical(data = mtcars, hp = c(100, 110))
+typical(newdata = mtcars, hp = c(100, 110))
 
 # We get the same result by feeding a model instead of a data.frame
 mod <- lm(mpg ~ hp, mtcars)

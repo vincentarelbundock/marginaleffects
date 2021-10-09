@@ -16,7 +16,7 @@ test_that("marginal effects does not overwrite counterfactual rowid", {
 test_that("alternative syntaxes", {
     mod <- lm(mpg ~ hp + drat + wt, mtcars)
     nd1 <- typical(wt = 3, hp = c(100, 110), model = mod)
-    nd2 <- typical(wt = 3, hp = c(100, 110), data = mtcars)
+    nd2 <- typical(wt = 3, hp = c(100, 110), newdata = mtcars)
     x <- marginaleffects(mod, newdata = typical(wt = 3, hp = c(100, 110)))
     y <- marginaleffects(mod, newdata = nd1)
     z <- marginaleffects(mod, newdata = nd2)
@@ -28,16 +28,16 @@ test_that("alternative syntaxes", {
 
 test_that("size", {
     mod <- lm(mpg ~ hp + drat + wt, mtcars)
-    expect_equal(nrow(counterfactual(wt = 2:3, data = mtcars)), nrow(mtcars) * 2)
-    expect_equal(nrow(typical(wt = 2:3, data = mtcars)), 2)
+    expect_equal(nrow(counterfactual(wt = 2:3, newdata = mtcars)), nrow(mtcars) * 2)
+    expect_equal(nrow(typical(wt = 2:3, newdata = mtcars)), 2)
     expect_equal(nrow(counterfactual(wt = 2:3, model = mod)), nrow(mtcars) * 2)
     expect_equal(nrow(typical(wt = 2:3, model = mod)), 2)
 })
 
 
 test_that("warning on bad `at` entry", {
-    expect_warning(counterfactual(data = mtcars, at = list("blah" = 0:1)))
-    expect_warning(typical(data = mtcars, at = list("blah" = 0:1)))
+    expect_warning(counterfactual(newdata = mtcars, at = list("blah" = 0:1)))
+    expect_warning(typical(newdata = mtcars, at = list("blah" = 0:1)))
 })
 
 
@@ -58,7 +58,7 @@ test_that("typical(): factor, logical, numeric", {
     tmp <- mtcars
     tmp$am <- as.logical(tmp$am)
     tmp$gear <- as.factor(tmp$gear)
-    res <- typical(data = tmp)
+    res <- typical(newdata = tmp)
     expect_s3_class(res, "data.frame")
     expect_equal(dim(res), c(1, 11))
     expect_equal(sum(sapply(res, is.logical)), 1)

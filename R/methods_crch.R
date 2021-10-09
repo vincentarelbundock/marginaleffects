@@ -7,9 +7,9 @@ set_coef.crch <- function(model, coefs) {
     # model$coefficients$scale
     out <- model
     # this is weird, I know
-    out$coefficients["location"]$location <- 
+    out$coefficients["location"]$location <-
         coefs[1:length(out$coefficients["location"]$location)]
-    out$coefficients["scale"]$scale <- 
+    out$coefficients["scale"]$scale <-
         coefs[(length(out$coefficients["location"]$location) + 1):length(coefs)]
     return(out)
 }

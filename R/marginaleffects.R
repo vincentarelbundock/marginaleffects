@@ -1,5 +1,5 @@
 #' Marginal effects using numerical derivatives
-#' 
+#'
 #' A "marginal effect" is the partial derivative of the regression equation
 #' with respect to a variable in the model. This function uses automatic
 #' differentiation to compute marginal effects for a vast array of models,
@@ -7,7 +7,7 @@
 #' list of supported models and of models whose numerical results have been
 #' validated against external software (`Stata` or `margins`) is held in the
 #' `supported_models` dataset which accompanies this package.
-#' 
+#'
 #' @param model Model object
 #' @param variables Variables to consider (character vector). `NULL`
 #'   calculates marginal effects for all terms in the model object.
