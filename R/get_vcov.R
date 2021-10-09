@@ -15,5 +15,9 @@ get_vcov <- function (model, ...) {
 get_vcov.default <- function(model, ...) {
     # suppress "Re-fitting to get Hessian"
     out <- suppressMessages(stats::vcov(model))
+    # survival::coxph with 1 regressor produces a vector
+    if (!isTRUE(checkmate::check_matrix(out))) {
+        out <- insight::get_varcov(model)
+    }
     return(out)
 }

@@ -107,7 +107,7 @@ sanity_vcov <- function(model, vcov) {
         vcov <- FALSE
     }
 
-    # TRUE: try to extract a vcov (TODO: implement get_vcov)
+    # TRUE: try to extract a vcov
     if (isTRUE(vcov)) {
         vcov <- try(get_vcov(model), silent = TRUE)
         if (inherits(vcov, "try-error")) {
@@ -116,7 +116,7 @@ sanity_vcov <- function(model, vcov) {
             # dpoMatrix conversion
         }
         vcov <- as.matrix(vcov)
-    } 
+    }
 
     # TODO: Test if the names of the matrix match the names of the coefficients.
     # This could be dangerous, so leaving as a Github issue until I have time for serious work.
