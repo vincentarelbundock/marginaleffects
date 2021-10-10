@@ -13,6 +13,10 @@ Breaking change:
 
 * New `variables_grid` argument
 
+`plot_cap`
+
+* New `type` argument
+
 Misc:
 
 * New validity checks and tests

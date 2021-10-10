@@ -4,7 +4,14 @@
 \alias{plot_cap}
 \title{Conditional adjusted predictions plot}
 \usage{
-plot_cap(model, condition, conf.int = TRUE, conf.level = 0.95, draw = TRUE)
+plot_cap(
+  model,
+  condition,
+  type = "response",
+  conf.int = TRUE,
+  conf.level = 0.95,
+  draw = TRUE
+)
 }
 \arguments{
 \item{model}{Model object}
@@ -12,6 +19,10 @@ plot_cap(model, condition, conf.int = TRUE, conf.level = 0.95, draw = TRUE)
 \item{condition}{String or vector of two strings. The first is a variable
 name to be displayed on the x-axis. The second is a variable whose values
 will be displayed in different colors.}
+
+\item{type}{Type(s) of prediction as string or vector This can
+differ based on the model type, but will typically be a string such as:
+"response", "link", "probs", or "zero".}
 
 \item{conf.int}{Logical indicating whether or not to include a confidence interval.}
 
