@@ -69,9 +69,7 @@ predictions <- function(model,
     }
 
     # for merging later
-    if (!"rowid" %in% colnames(newdata)) {
-        newdata$rowid <- 1:nrow(newdata)
-    }
+    newdata$rowid_internal <- 1:nrow(newdata)
 
     # pad factors: `get_predicted/model.matrix` break when factor levels are missing
     padding <- complete_levels(newdata, levels_character)
@@ -96,24 +94,25 @@ predictions <- function(model,
             tmp <- as.data.frame(tmp)
             tmp <- insight::standardize_names(tmp, style = "broom")
             tmp$type <- predt
-            tmp$rowid <- newdata$rowid
+            tmp$rowid_internal <- newdata$rowid_internal
         } else {
             tmp <- data.frame(newdata$rowid, predt, tmp)
-            colnames(tmp) <- c("rowid", "type", "predicted")
+            tmp$rowid_internal <- 1:nrow(tmp)
+            colnames(tmp) <- c("rowid", "type", "predicted", "rowid_internal")
         }
         out_list[[predt]] <- tmp
     }
     out <- do.call("rbind", out_list)
 
-
     # unpad factors
-    out <- out[out$rowid > 0, , drop = FALSE]
+    out <- out[out$rowid_internal > 0, , drop = FALSE]
 
     # return data
     out <- merge(out, newdata, all.x = TRUE, sort = FALSE)
 
     # rowid does not make sense here because the grid is made up
-    out$rowid <- NULL
+    # Wrong! rowid does make sense when we use `counterfactual()` in `newdata`
+    out$rowid_internal <- NULL
 
     # clean columns
     stubcols <- c("rowid", "type", "term", "predicted", "std.error", "conf.low", "conf.high",
