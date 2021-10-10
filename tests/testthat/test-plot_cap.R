@@ -22,3 +22,11 @@ test_that("conf.level in plots", {
     vdiffr::expect_doppelganger("plot_cap large ci", p1)
     vdiffr::expect_doppelganger("plot_cap small ci", p2)
 })
+
+test_that("link vs response", {
+    mod <- glm(am ~ hp + wt, data = mtcars, family = binomial)
+    p1 <- plot_cap(mod, condition = "hp", type = "response")
+    p2 <- plot_cap(mod, condition = "hp", type = "link")
+    vdiffr::expect_doppelganger("plot_cap logit response", p1)
+    vdiffr::expect_doppelganger("plot_cap logit link", p2)
+})
