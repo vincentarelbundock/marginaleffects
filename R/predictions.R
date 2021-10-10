@@ -80,11 +80,18 @@ predictions <- function(model,
     # predictions
     out_list <- list()
     for (predt in type) {
-        tmp <- insight::get_predicted(model,
-                                      data = newdata,
-                                      predict = NULL,
-                                      type = predt,
-                                      ci = conf.level)
+        # extract
+        tmp <- try(insight::get_predicted(model,
+                                          data = newdata,
+                                          predict = NULL,
+                                          type = predt,
+                                          ci = conf.level),
+                   silent = TRUE)
+        if (inherits(tmp, "try-error")) {
+            tmp <- get_predict(model, newdata = newdata, type = predt)
+        }
+
+        # process
         if (inherits(tmp, "get_predicted")) {
             tmp <- as.data.frame(tmp)
             tmp <- insight::standardize_names(tmp, style = "broom")
