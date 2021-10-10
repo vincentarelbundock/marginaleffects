@@ -35,7 +35,7 @@ complete_levels <- function(x, levels_character = NULL) {
 
     # negative rowid for easy drop
     if (nrow(padding) > 0) {
-        padding$rowid <- -1 * 1:nrow(padding)
+        padding$rowid_internal <- -1 * 1:nrow(padding)
     }
 
     return(padding)

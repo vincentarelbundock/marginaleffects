@@ -22,7 +22,7 @@ sanity_model_supported_class <- function(model) {
                       "bife",
                       "brglmFit",
                       c("brnb", "negbin", "glm"),
-                      # "clm",
+                      "clm",
                       "coxph",
                       "crch",
                       "fixest",

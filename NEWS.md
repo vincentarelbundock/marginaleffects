@@ -8,6 +8,7 @@ Breaking change:
 
 * Support `lme4:glmer.nb`
 * Support `mgcv::gam`
+* Support `ordinal::clm`
 
 `marginalmeans`:
 
