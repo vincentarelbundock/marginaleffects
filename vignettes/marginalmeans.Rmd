@@ -105,3 +105,51 @@ modelsummary(me,
              statistic = NULL,
              group = term + group ~ model)
 ```
+
+# Case study: Multinomial Logit
+
+This example requires version 0.2.0 of the `marginaleffects` package.
+
+To begin, we generate data and estimate a large model:
+
+```{r}
+library(nnet)
+library(marginaleffects)
+
+set.seed(1839)
+n <- 1200
+x <- factor(sample(letters[1:3], n, TRUE))
+y <- vector(length = n)
+y[x == "a"] <- sample(letters[4:6], sum(x == "a"), TRUE)
+y[x == "b"] <- sample(letters[4:6], sum(x == "b"), TRUE, c(1 / 4, 2 / 4, 1 / 4))
+y[x == "c"] <- sample(letters[4:6], sum(x == "c"), TRUE, c(1 / 5, 3 / 5, 2 / 5))
+
+dat <- data.frame(x = x, y = factor(y))
+tmp <- as.data.frame(replicate(20, factor(sample(letters[7:9], n, TRUE))))
+dat <- cbind(dat, tmp)
+void <- capture.output({
+    mod <- multinom(y ~ ., dat)
+})
+```
+
+Try to compute marginal means, but realize that you are trying to get marginal means for the wrong type of prediction:
+
+
+```{r, eval=FALSE}
+marginalmeans(mod)
+```
+
+Try to compute marginal means, but realize that your grid won’t fit in memory:
+
+```{r, eval=FALSE}
+marginalmeans(mod, type = "probs")
+```
+
+Use the `variables` and `variables_grid` arguments to compute marginal means over a more reasonably sized grid:
+
+```{r, eval=FALSE}
+marginalmeans(mod,
+              type = "probs",
+              variables = c("x", "V1"),
+              variables_grid = paste0("V", 2:5))
+```
