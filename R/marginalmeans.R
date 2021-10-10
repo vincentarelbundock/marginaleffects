@@ -77,7 +77,7 @@ marginalmeans <- function(model,
     # categorical variables, excluding response
     column_labels <- colnames(dat)
     term_labels <- insight::find_terms(model, flatten = TRUE)
-    variables_categorical <- get_categorical(dat)
+    variables_categorical <- find_categorical(dat)
     variables_categorical <- setdiff(variables_categorical, insight::find_response(model, flatten = TRUE))
     variables_categorical <- intersect(variables_categorical, term_labels)
     if (length(variables_categorical) == 0) {

@@ -19,7 +19,7 @@ get_dydx_se <- function(model,
 
     out <- mfx
 
-    if (variable %in% get_categorical(fitfram)) {
+    if (variable %in% find_categorical(fitfram)) {
         dydx_fun <- get_dydx_categorical
     } else {
         dydx_fun <- get_dydx_continuous
