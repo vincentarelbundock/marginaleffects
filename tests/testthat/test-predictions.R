@@ -11,6 +11,14 @@ test_that("insight > 0.14.1 allows us to support `type`", {
 })
 
 
+test_that("bugfix: counterfactual predictions keep rowid", {
+  mod <- lm(mpg ~ hp + am, mtcars)
+  pred <- predictions(mod, newdata = counterfactual(am = 0:1))
+  expect_predictions(pred, n_row = 64)
+  expect_true("rowid" %in% colnames(pred))
+})
+
+
 ################
 #  conf.level  #
 ################
