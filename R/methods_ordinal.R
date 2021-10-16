@@ -22,7 +22,7 @@ get_predict.clm <- function(model,
     # Corner case: The `predict.clm` method does not make predictions when the
     # response was transformed to a factor in the formula AND the response is
     # missing from `newdata`.
-    lhs <- names(attr(terms(model), "dataClasses"))[1]
+    lhs <- names(attr(stats::terms(model), "dataClasses"))[1]
     if (isTRUE(grepl("^factor\\(", lhs))) {
         stop("The response variable should not be transformed to a factor in the formula. Please convert the variable to factor before fitting your model.")
     }
