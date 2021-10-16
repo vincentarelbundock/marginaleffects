@@ -119,10 +119,10 @@ plot_cap(mod, condition = c("length", "style"))
 Of course, you can also design your own plots or tables by working with the `predictions` output directly:
 
 ```{r}
-predictions(mod, 
-              type = c("response", "link"),
-              newdata = typical(length = 90:120,
-                                style = c("Action", "Comedy"))) %>%
+predictions(mod,
+            type = c("response", "link"),
+            newdata = typical(length = 90:120,
+                              style = c("Action", "Comedy"))) %>%
     ggplot(aes(length, predicted, color = style))  +
     geom_line() +
     facet_wrap(~type, scales = "free_y")
@@ -140,3 +140,13 @@ predictions(mod, type = c("response", "link"))
 ```
 
 Users who need more control over the type of adjusted predictions to compute, including a host of options for back-transformation, may want to consider the [`emmeans` package.](https://cran.r-project.org/package=emmeans)
+
+We can also plot predictions on different outcome scales:
+
+```{r}
+plot_cap(mod, condition = "mpg", type = "response")
+```
+
+```{r}
+plot_cap(mod, condition = "mpg", type = "link")
+```
