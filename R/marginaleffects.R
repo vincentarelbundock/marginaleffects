@@ -114,7 +114,7 @@ marginaleffects <- function(model,
     # compute marginal effects and standard errors
     out <- get_dydx_and_se(
         model = model,
-        fitfram = newdata,
+        newdata = newdata,
         variables = variables_vec,
         vcov = vcov,
         type = type,

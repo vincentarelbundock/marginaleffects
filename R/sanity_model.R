@@ -21,6 +21,7 @@ sanity_model_supported_class <- function(model) {
     supported <- list("betareg",
                       "bife",
                       "brglmFit",
+                      "brmsfit",
                       c("brnb", "negbin", "glm"),
                       "clm",
                       "coxph",
