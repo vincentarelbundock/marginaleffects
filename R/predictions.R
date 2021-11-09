@@ -77,6 +77,7 @@ predictions <- function(model,
 
     # predictions
     out_list <- list()
+    posterior_draws <- list()
     for (predt in type) {
         # extract
         tmp <- try(insight::get_predicted(model,
@@ -95,6 +96,12 @@ predictions <- function(model,
             tmp <- insight::standardize_names(tmp, style = "broom")
             tmp$type <- predt
             tmp$rowid_internal <- newdata$rowid_internal
+            # store bayesian results
+            idx <- grepl("^iter\\.\\d", colnames(tmp))
+            if (any(idx)) {
+                posterior_draws[[predt]] <- as.matrix(tmp[, idx, drop = FALSE])
+                tmp <- tmp[, !idx, drop = FALSE]
+            }
         } else {
             tmp <- data.frame(newdata$rowid_internal, predt, tmp)
             colnames(tmp) <- c("rowid_internal", "type", "predicted")
@@ -136,6 +143,11 @@ predictions <- function(model,
     attr(out, "type") <- type
     attr(out, "model_type") <- class(model)[1]
     attr(out, "variables") <- variables
+    if (length(posterior_draws) == 1) {
+        attr(out, "posterior_draws") <- posterior_draws[[1]]
+    } else if (length(posterior_draws) == 2) {
+        attr(out, "posterior_draws") <- posterior_draws
+    }
 
     return(out)
 }
