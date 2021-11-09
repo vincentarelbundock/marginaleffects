@@ -50,8 +50,8 @@ test_that("marginaleffects: zeroinfl: no validity", {
                       data = bioChemists)
     pred1 <- predictions(model)
     pred2 <- predictions(model, newdata = head(bioChemists))
-    expect_predictions(pred1, n_row = 1, se = FALSE)
-    expect_predictions(pred2, n_row = 6, se = FALSE)
+    expect_predictions(pred1, n_row = 1, se = TRUE)
+    expect_predictions(pred2, n_row = 6, se = TRUE)
 })
 
 
