@@ -3,7 +3,7 @@ get_dydx_se <- function(model,
                         vcov,
                         variable,
                         group_name,
-                        fitfram,
+                        newdata,
                         type,
                         numDeriv_method) {
 
@@ -19,8 +19,8 @@ get_dydx_se <- function(model,
 
     out <- mfx
 
-    if (variable %in% find_categorical(fitfram)) {
-        dydx_fun <- get_dydx_categorical
+    if (variable %in% find_categorical(newdata)) {
+        dydx_fun <- get_contrasts
     } else {
         dydx_fun <- get_dydx_continuous
     }
@@ -28,11 +28,12 @@ get_dydx_se <- function(model,
     inner <- function(x) {
         model_tmp <- set_coef(model, stats::setNames(x, names(coefs)))
         g <- dydx_fun(model = model_tmp,
-                      fitfram = fitfram,
+                      newdata = newdata,
                       variable = variable,
                       group_name = group_name,
                       type = type,
                       numDeriv_method = numDeriv_method)
+        colnames(g)[colnames(g) == "contrast"] <- "dydx"
         return(g$dydx)
     }
 

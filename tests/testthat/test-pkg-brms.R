@@ -5,8 +5,6 @@ skip_if_not_installed("cmdstanr")
 skip_if_not_installed("brms")
 skip("brms is not officially supported yet")
 
-# pkgload::load_all()
-
 test_that("predictions: no validity", {
   void <- capture.output(
     mod <- brm(am ~ mpg + hp, data = mtcars, family = bernoulli(),
@@ -26,10 +24,15 @@ test_that("plot_cap: no validity", {
   p <- plot_cap(mod, condition = c("mpg", "vs"))
 })
 
-void <- capture.output(
-  mod <- brm(am ~ mpg + hp, data = mtcars, family = bernoulli(),
-              backend = "cmdstanr", seed = 1024, silent = 2, chains = 4, iter = 1000)
-)
-get_predict(mod)
 
-  predictions(mod, newdata = typical(hp = c(100, 120), mpg = seq(20, 30, by = 5)))
+test_that("contrast: no validity", {
+  skip("TODO: define a test")
+  void <- capture.output(
+      mod <- brm(am ~ mpg * vs, data = mtcars, family = bernoulli(),
+                backend = "cmdstanr", seed = 1024, silent = 2, chains = 4, iter = 1000)
+  )
+
+  k = get_contrasts(model = mod, variable = "mpg", newdata = counterfactual(vs = 0:1))
+  ggplot(attr(k, "contrast_draws"), aes(x = draw, fill = factor(vs), color = factor(vs))) +
+      geom_density(alpha = .4)
+})

@@ -25,7 +25,7 @@ Depends:
 Imports: 
     checkmate,
     generics,
-    insight (>= 0.14.5),
+    insight (> 0.14.5),
     methods,
     numDeriv
 Suggests: 
@@ -80,6 +80,7 @@ Collate:
     'complete_levels.R'
     'counterfactual_typical.R'
     'get_coef.R'
+    'get_contrasts.R'
     'get_dydx.R'
     'get_dydx_and_se.R'
     'get_dydx_se.R'
@@ -93,6 +94,7 @@ Collate:
     'methods_MASS.R'
     'methods_betareg.R'
     'methods_bife.R'
+    'methods_brms.R'
     'methods_crch.R'
     'methods_glmx.R'
     'methods_lme4.R'

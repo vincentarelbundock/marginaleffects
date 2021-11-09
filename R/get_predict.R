@@ -23,14 +23,14 @@ get_predict.default <- function(model,
                            newdata = newdata,
                            type = type)
 
-    if (!isTRUE(checkmate::check_atomic_vector(pred)) || 
-        !isTRUE(checkmate::check_array(pred, d = 1)) ||
-        !isTRUE(checkmate::check_numeric(pred))) {
-        pred <- suppressWarnings(insight::get_predicted(model, predict = NULL, type = type, ...))
-        if (inherits(pred, "get_predicted")) {
-            pred <- as.numeric(pred)
-        }
-    }
+    # if (!isTRUE(checkmate::check_atomic_vector(pred)) || 
+    #     !isTRUE(checkmate::check_array(pred, d = 1)) ||
+    #     !isTRUE(checkmate::check_numeric(pred))) {
+    #     pred <- suppressWarnings(insight::get_predicted(model, predict = NULL, type = type, ...))
+    #     if (inherits(pred, "get_predicted")) {
+    #         pred <- as.numeric(pred)
+    #     }
+    # }
 
     sanity_predict_numeric(pred = pred, model = model, newdata = newdata, type = type)
     sanity_predict_vector(pred = pred, model = model, newdata = newdata, type = type)
