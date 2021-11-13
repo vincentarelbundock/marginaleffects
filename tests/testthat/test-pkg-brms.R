@@ -42,19 +42,18 @@ test_that("contrast: no validity", {
                 backend = "cmdstanr", seed = 1024, silent = 2, chains = 4, iter = 1000)
   )
 
-pkgload::load_all()
-  a = get_contrasts(model = mod, variable = "mpg", newdata = counterfactual(vs = 0:1))
-  b = marginaleffects(model = mod, variable = "mpg")
+  # a = get_contrasts(model = mod, variable = "mpg", newdata = counterfactual(vs = 0:1))
+  # b = marginaleffects(model = mod, variable = "mpg")
 
 })
 
 
-  dat <- mtcars
-  dat$cyl <- as.factor(dat$cyl)
-  void <- capture.output(
-    mod <- brm(am ~ mpg + cyl, data = dat, family = bernoulli(),
-               backend = "cmdstanr", seed = 1024, silent = 2, chains = 4, iter = 1000))
-  marginaleffects(mod) |> summary()
+  # dat <- mtcars
+  # dat$cyl <- as.factor(dat$cyl)
+  # void <- capture.output(
+  #   mod <- brm(am ~ mpg + cyl, data = dat, family = bernoulli(),
+  #              backend = "cmdstanr", seed = 1024, silent = 2, chains = 4, iter = 1000))
+  # marginaleffects(mod) |> summary()
 
 
 test_that("marginaleffects: factors in formula", {

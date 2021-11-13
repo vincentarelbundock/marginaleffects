@@ -34,7 +34,7 @@ test_that("logistic: no validity", {
 
 test_that("hlxr: no validity", {
     skip("works interactively")
-    q <- unique(quantile(dat$rain, seq(0.1, 0.9, 0.1)))
+    q <- unique(stats::quantile(dat$rain, seq(0.1, 0.9, 0.1)))
     dat$rain_sqrt <- sqrt(dat$rain)
     mod <- hxlr(rain_sqrt ~ sqrtensmean, data = dat, thresholds = sqrt(q))
     expect_marginaleffects(mod, type = "location", n_unique = 1)
