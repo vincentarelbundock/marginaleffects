@@ -5,9 +5,10 @@ get_dydx <- function(model,
                      type,
                      numDeriv_method) {
 
-    if (variable %in% find_categorical(newdata) ||
-        "brmsfit" %in% class(model)) {
+    if (variable %in% find_categorical(newdata)) {
         dydx_fun <- get_contrasts
+    } else if ("brmsfit" %in% class(model)) {
+        dydx_fun <- get_dydx_via_contrasts
     } else {
         dydx_fun <- get_dydx_continuous
     }
@@ -53,4 +54,22 @@ get_dydx <- function(model,
                       term = variable,
                       dydx = g)
     return(out)
+}
+
+
+get_dydx_via_contrasts <- function(model,
+                                   newdata,
+                                   variable,
+                                   group_name = NULL,
+                                   type = "response",
+                                   ...) {
+
+    get_contrasts(model = model,
+                  newdata = newdata,
+                  variable = variable,
+                  group_name = NULL,
+                  type = "response",
+                  step_size = 1e-5,
+                  normalize_dydx = TRUE,
+                  ...)
 }

@@ -155,7 +155,13 @@ get_contrasts_numeric <- function(model,
 
     # term reveals the increment size, which is analogous to level for factor/character/logical variables
     if (!"term" %in% colnames(baseline)) {
-        baseline$term <- sprintf("%s + %s", variable, step_size)
+        # slope
+        if (isTRUE(normalize_dydx)) {
+            baseline$term <- variable
+        # pure contrast
+        } else {
+            baseline$term <- sprintf("%s + %s", variable, step_size)
+        }
     }
 
     pred_baseline <- get_predict(model,
@@ -169,12 +175,19 @@ get_contrasts_numeric <- function(model,
                                   type = type,
                                   group_name = group_name)
 
-    baseline[["contrast"]] <- as.vector(pred_increment) - as.vector(pred_baseline)
+    contr <- as.vector(pred_increment) - as.vector(pred_baseline)
+    if (isTRUE(normalize_dydx)) {
+        contr <- contr / step_size
+    }
+    baseline[["contrast"]] <- contr
     out <- baseline
 
     # bayes: posterior draws and credible intervals
     if ("posterior_draws" %in% names(attributes(pred_increment))) {
         draws <- attr(pred_increment, "posterior_draws") - attr(pred_baseline, "posterior_draws")
+        if (isTRUE(normalize_dydx)) {
+            draws <- draws / step_size
+        }
         ci <- apply(draws, 1, quantile, prob = c(.025, .975))
         out[["conf.low"]] <- ci[1, ]
         out[["conf.high"]] <- ci[2, ]

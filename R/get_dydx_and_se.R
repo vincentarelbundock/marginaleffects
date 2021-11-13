@@ -47,12 +47,15 @@ get_dydx_and_se <- function(model,
             if (!is.null(vcov)) {
                 # Standard errors at the mean gradient (this is what `Stata` and `margins` report)
                 J_mean <- do.call("rbind", J_mean_tmp)
-                V <- colSums(t(J_mean %*% vcov) * t(J_mean))
-                tmp <- data.frame("group" = gn, 
-                                  "type" = predt, 
-                                  "term" = names(V), 
-                                  "std.error" = sqrt(V))
-                se_mean_list <- c(se_mean_list, list(tmp))
+                # J_mean will be NULL in bayesian models and where the delta method breaks
+                if (!is.null(J_mean)) {
+                    V <- colSums(t(J_mean %*% vcov) * t(J_mean))
+                    tmp <- data.frame("group" = gn, 
+                                    "type" = predt, 
+                                    "term" = names(V), 
+                                    "std.error" = sqrt(V))
+                    se_mean_list <- c(se_mean_list, list(tmp))
+                }
             }
         }
     }
