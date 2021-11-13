@@ -188,7 +188,7 @@ get_contrasts_numeric <- function(model,
         if (isTRUE(normalize_dydx)) {
             draws <- draws / step_size
         }
-        ci <- apply(draws, 1, quantile, prob = c(.025, .975))
+        ci <- apply(draws, 1, stats::quantile, prob = c(.025, .975))
         out[["conf.low"]] <- ci[1, ]
         out[["conf.high"]] <- ci[2, ]
         attr(out, "contrast_draws") <- draws
