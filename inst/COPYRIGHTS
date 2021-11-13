@@ -1,8 +1,23 @@
-Methods in the `R/mean_or_mode.R` file were adapted from the `prediction` R package, copyright Thomas J. Leeper, shared under the MIT License (copied below).
+Copyright (c) 2021, Vincent Arel-Bundock
+
+########################
+
+Methods in the `R/poorman.R` were extracted from the `poorman` package for `R`.
+Copyright (c) 2021,	Nathan Eastwood
+
+########################
+
+Some of the methods in the `R/mean_or_mode.R` file were adapted from the
+`prediction` R package, copyright Thomas J. Leeper, shared under the MIT License
+(copied below).
 
 Tests in the `tests/testhat/test-analytical.R` were adapted from the `margins` R package, copyright Thomas J. Leeper (2018), shared under the MIT License (copied below).
 
 Copyright (c) 2016-2018, Thomas J. Leeper.
+
+#######################[#132](https://github.com/vincentarelbundock/marginaleffects/issues/132)
+
+MIT License
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

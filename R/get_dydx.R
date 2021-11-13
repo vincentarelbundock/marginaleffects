@@ -63,13 +63,14 @@ get_dydx_via_contrasts <- function(model,
                                    group_name = NULL,
                                    type = "response",
                                    ...) {
-
-    get_contrasts(model = model,
+    out <- get_contrasts(model = model,
                   newdata = newdata,
                   variable = variable,
                   group_name = NULL,
                   type = "response",
                   step_size = 1e-5,
                   normalize_dydx = TRUE,
+                  return_data = FALSE,
                   ...)
+    return(out)
 }

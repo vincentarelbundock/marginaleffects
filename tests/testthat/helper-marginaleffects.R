@@ -4,7 +4,8 @@
 #' @keywords internal
 expect_marginaleffects <- function(object,
                                    type = "response",
-                                   n_unique = 10) {
+                                   n_unique = 10,
+                                   se = TRUE) {
 
   # Capture object and label
   act <- testthat::quasi_label(rlang::enquo(object), arg = "object")
@@ -19,10 +20,14 @@ expect_marginaleffects <- function(object,
   mfx_nrow <- nrow(mfx)
   tid_nrow <- nrow(tid)
   dydx_unique <- length(unique(round(mfx$dydx, 4))) / length(unique(mfx$term))
-  std.error_unique <- length(unique(round(mfx$std.error, 4))) / length(unique(mfx$term))
   dydx_na <- sum(is.na(mfx$dydx)) / nrow(mfx) * 100
-  std.error_na <- sum(is.na(mfx$std.error_na)) / nrow(mfx) * 100
-
+  if (isTRUE(se)) {
+      std.error_unique <- length(unique(round(mfx$std.error, 4))) / length(unique(mfx$term))
+      std.error_na <- sum(is.na(mfx$std.error_na)) / nrow(mfx) * 100
+  } else {
+      std.error_unique <- NULL
+      std.error_na <- NULL
+  }
   msg <- sprintf("Classes: %s, %s. Rows: %s, %s. Unique: %s, %s. NAs: %s, %s.",
                  mfx_class, tid_class,
                  mfx_nrow, tid_nrow,
@@ -34,10 +39,10 @@ expect_marginaleffects <- function(object,
           mfx_nrow > 0 &&
           tid_nrow > 0 &&
           dydx_unique >= n_unique &&
-          std.error_unique >= n_unique &&
           dydx_na < 5 &&
-          std.error_na < 5
-  
+          (is.null(std.error_na) || std.error_unique >= n_unique) &&
+          (is.null(std.error_na) || std.error_na < 5)
+
   testthat::expect(isTRUE(flag), msg)
 
   invisible(act$val)
