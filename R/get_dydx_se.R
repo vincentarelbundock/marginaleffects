@@ -15,6 +15,12 @@ get_dydx_se <- function(model,
         return(mfx)
     }
 
+    # no delta method for bayesian models because we cannot manipulate the
+    # coefficients of the model. use posterior draws instead.
+    if (inherits(model, "brmsfit")) {
+        return(mfx)
+    }
+
     vcov <- vcov[names(coefs), names(coefs), drop = FALSE]
 
     out <- mfx

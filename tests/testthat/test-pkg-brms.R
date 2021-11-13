@@ -5,6 +5,7 @@ skip_if_not_installed("cmdstanr")
 skip_if_not_installed("brms")
 skip("brms is not officially supported yet")
 
+
 test_that("predictions: no validity", {
   void <- capture.output(
     mod <- brm(am ~ mpg + hp, data = mtcars, family = bernoulli(),
@@ -14,6 +15,7 @@ test_that("predictions: no validity", {
   expect_equal(pred$predicted, c(0.0443223519583173, 0.119305664275307))
   expect_equal(dim(attr(pred, "posterior_draws")), c(2, 2000))
 })
+
 
 test_that("plot_cap: no validity", {
   skip("TODO: define a test")
@@ -25,6 +27,14 @@ test_that("plot_cap: no validity", {
 })
 
 
+test_that()
+  skip("TODO: define a test")
+  void <- capture.output(
+      mod <- brm(am ~ mpg * vs, data = mtcars, family = bernoulli(),
+                backend = "cmdstanr", seed = 1024, silent = 2, chains = 4, iter = 1000)
+  )
+
+
 test_that("contrast: no validity", {
   skip("TODO: define a test")
   void <- capture.output(
@@ -32,7 +42,25 @@ test_that("contrast: no validity", {
                 backend = "cmdstanr", seed = 1024, silent = 2, chains = 4, iter = 1000)
   )
 
-  k = get_contrasts(model = mod, variable = "mpg", newdata = counterfactual(vs = 0:1))
-  ggplot(attr(k, "contrast_draws"), aes(x = draw, fill = factor(vs), color = factor(vs))) +
-      geom_density(alpha = .4)
+pkgload::load_all()
+  a = get_contrasts(model = mod, variable = "mpg", newdata = counterfactual(vs = 0:1))
+  b = marginaleffects(model = mod, variable = "mpg")
+
+})
+
+
+  dat <- mtcars
+  dat$cyl <- as.factor(dat$cyl)
+  void <- capture.output(
+    mod <- brm(am ~ mpg + cyl, data = dat, family = bernoulli(),
+               backend = "cmdstanr", seed = 1024, silent = 2, chains = 4, iter = 1000))
+  marginaleffects(mod) |> summary()
+
+
+test_that("marginaleffects: factors in formula", {
+  void <- capture.output(
+    mod <- brm(am ~ mpg + factor(cyl), data = mtcars, family = bernoulli(),
+               backend = "cmdstanr", seed = 1024, silent = 2, chains = 4, iter = 1000)
+  )
+  expect_error(marginaleffects(mod), NA)
 })
