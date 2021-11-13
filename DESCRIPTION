@@ -2,11 +2,15 @@ Package: marginaleffects
 Title: Marginal Effects, Marginal Means, Predictions, and Contrasts
 Version: 0.2.0
 Authors@R: 
-    person(given = "Vincent",
-           family = "Arel-Bundock",
-           role = c("aut", "cre"),
-           email = "vincent.arel-bundock@umontreal.ca",
-           comment = c(ORCID = "0000-0003-2042-7063"))
+    c(person(given = "Vincent",
+             family = "Arel-Bundock",
+             role = c("aut", "cre", "cph"),
+             email = "vincent.arel-bundock@umontreal.ca",
+             comment = c(ORCID = "0000-0003-2042-7063")),
+      person(given = "Nathan", 
+             family = "Eastwood",
+             role = "cph",
+             email = "nathan.eastwood@icloud.com"))
 Description: Compute, summarize, and plot marginal effects, adjusted predictions, contrasts, and marginal means for a wide variety of models.
 License: GPL (>= 3)
 Copyright: inst/COPYRIGHTS
@@ -112,6 +116,7 @@ Collate:
     'plot.R'
     'plot_cap.R'
     'plot_cme.R'
+    'poorman.R'
     'predictions.R'
     'sanity.R'
     'sanity_type.R'

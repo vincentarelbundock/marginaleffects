@@ -138,6 +138,7 @@ get_contrasts_character <- function(model,
         pred_list[[i]] <- baseline[, c("rowid", "term", "predicted")]
     }
     pred <- do.call("rbind", pred_list)
+    pred <- baseline[, c("rowid", "term", "predicted")]
     colnames(pred) <- c("rowid", "term", "contrast")
     row.names(pred) <- NULL
     return(pred)
@@ -151,6 +152,7 @@ get_contrasts_numeric <- function(model,
                                   type = "response",
                                   step_size = 1,
                                   normalize_dydx = FALSE,
+                                  return_data = FALSE,
                                   ...) {
 
     # term reveals the increment size, which is analogous to level for factor/character/logical variables
@@ -178,9 +180,17 @@ get_contrasts_numeric <- function(model,
     contr <- as.vector(pred_increment) - as.vector(pred_baseline)
     if (isTRUE(normalize_dydx)) {
         contr <- contr / step_size
+        baseline[["dydx"]] <- contr
+    } else {
+        baseline[["contrast"]] <- contr
     }
-    baseline[["contrast"]] <- contr
     out <- baseline
+
+    # subset columns before assigning attributes later
+    if (!isTRUE(return_data)) {
+        cols <- intersect(colnames(out), c("rowid", "term", "group", "dydx", "contrast", "conf.low", "conf.high"))
+        out <- out[, cols]
+    }
 
     # bayes: posterior draws and credible intervals
     if ("posterior_draws" %in% names(attributes(pred_increment))) {

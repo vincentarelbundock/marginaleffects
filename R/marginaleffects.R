@@ -109,7 +109,7 @@ marginaleffects <- function(model,
             pred_list[[predt]] <- tmp
         }
     }
-    pred <- do.call("rbind", pred_list)
+    pred <- bind_rows(pred_list)
 
     # compute marginal effects and standard errors
     out <- get_dydx_and_se(

@@ -51,16 +51,17 @@ get_dydx_and_se <- function(model,
                 if (!is.null(J_mean)) {
                     V <- colSums(t(J_mean %*% vcov) * t(J_mean))
                     tmp <- data.frame("group" = gn, 
-                                    "type" = predt, 
-                                    "term" = names(V), 
-                                    "std.error" = sqrt(V))
+                                      "type" = predt, 
+                                      "term" = names(V), 
+                                      "std.error" = sqrt(V))
                     se_mean_list <- c(se_mean_list, list(tmp))
                 }
             }
         }
     }
 
-    out <- do.call("rbind", mfx_list)
+    # could have different columns, so `rbind` won't do
+    out <- bind_rows(mfx_list)
     row.names(out) <- NULL
 
     if (!is.null(vcov)) {
