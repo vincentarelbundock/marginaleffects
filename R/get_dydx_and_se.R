@@ -20,6 +20,7 @@ get_dydx_and_se <- function(model,
     # compute marginal effects and standard errors
     mfx_list <- list()
     se_mean_list <- list()
+    draws_list <- list()
     for (predt in type) {
         for (gn in group_names) {
             J_mean_tmp <- list()
@@ -30,6 +31,7 @@ get_dydx_and_se <- function(model,
                                 newdata = newdata,
                                 type = predt,
                                 numDeriv_method = numDeriv_method)
+                draws_list <- c(draws_list, list(attr(mfx, "posterior_draws")))
                 mfx <- get_dydx_se(model = model,
                                    mfx = mfx,
                                    vcov = vcov,
@@ -70,6 +72,16 @@ get_dydx_and_se <- function(model,
             se$group <- NULL
         }
         attr(out, "se_at_mean_gradient") <- se
+    }
+
+    # bayesian posterior draws
+    draws <- do.call("rbind", draws_list)
+    if (!is.null(draws)) {
+        attr(out, "posterior_draws") <- draws
+        if (!"conf.low" %in% colnames(out)) {
+            out$conf.low <- apply(draws, 1, quantile, prob = .025)
+            out$conf.high <- apply(draws, 1, quantile, prob = .975)
+        }
     }
 
     return(out)

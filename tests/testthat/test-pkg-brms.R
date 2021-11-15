@@ -3,7 +3,6 @@ library(marginaleffects)
 library(insight)
 skip_if_not_installed("cmdstanr")
 skip_if_not_installed("brms")
-skip("brms is not officially supported yet")
 
 
 void <- capture.output({
@@ -21,14 +20,16 @@ void <- capture.output({
 
 
 test_that("marginaleffects: no validity", {
-    skip("does not work")
     expect_marginaleffects(mod_simple, se = FALSE)
     expect_marginaleffects(mod_int, se = FALSE)
-    # confidence intervals don't work for marginaleffects
-    k <- marginaleffects(mod_factor) 
-    k <- marginaleffects(mod_factor) 
     expect_marginaleffects(mod_factor, se = FALSE)
-    expect_marginaleffects(mod_factor_formula, se = FALSE)
+    # credible intervals and posterior draws
+    tmp <- marginaleffects(mod_factor)
+    expect_true("conf.low" %in% colnames(tmp))
+    expect_true(all(tmp$dydx > tmp$conf.low))
+    expect_true(all(tmp$dydx < tmp$conf.high))
+    expect_false(is.null(attr(tmp, "posterior_draws")))
+    expect_equal(nrow(attr(tmp, "posterior_draws")), nrow(tmp))
 })
 
 
@@ -44,9 +45,6 @@ test_that("predictions: no validity", {
     # factor in data frame
     pred <- predictions(mod_factor, newdata = typical())
     expect_predictions(pred)
-    # factor in formula
-    pred <- predictions(mod_factor_formula, newdata = typical())
-    expect_predictions(pred)
 })
 
 
@@ -60,4 +58,14 @@ test_that("contrast: no validity", {
   skip("TODO: define a test")
   # a = get_contrasts(model = mod, variable = "mpg", newdata = counterfactual(vs = 0:1))
   # b = marginaleffects(model = mod, variable = "mpg")
+})
+
+
+test_that("factor in formula", {
+    skip("https://github.com/easystats/insight/issues/469")
+    # marginaleffects
+    expect_marginaleffects(mod_factor_formula, se = FALSE)
+    # predictions
+    pred <- predictions(mod_factor_formula, newdata = typical())
+    expect_predictions(pred)
 })
