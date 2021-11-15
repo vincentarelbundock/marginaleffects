@@ -65,11 +65,20 @@ get_contrasts_logical <- function(model,
                               newdata = baseline,
                               type = type,
                               group_name = group_name)
+
+
     baseline$predicted <- pred_true - pred_false
     baseline$term <- paste0(variable, baseline[[variable]])
     pred <- baseline[, c("rowid", "term", "predicted")]
     colnames(pred) <- c("rowid", "term", "contrast")
     row.names(pred) <- NULL
+
+    # bayes: posterior draws and credible intervals
+    if ("posterior_draws" %in% names(attributes(pred_false))) {
+        attr(pred, "posterior_draws") <- attr(pred_true, "posterior_draws") -
+                                         attr(pred_false, "posterior_draws")
+    }
+
     return(pred)
 }
 
@@ -86,15 +95,27 @@ get_contrasts_factor <- function(model,
                                        newdata = baseline,
                                        type = type,
                                        group_name = group_name)
+
+    draws_list <- list()
+
     for (i in 2:length(levels(baseline[[variable]]))) {
         baseline[[variable]] <- factor(levels(baseline[[variable]])[i], levels = levels(baseline[[variable]]))
-        baseline$predicted <- get_predict(model = model,
-                                          newdata = baseline,
-                                          type = type,
-                                          group_name = group_name) - baseline_prediction
+        incremented_prediction <- get_predict(model = model,
+                                              newdata = baseline,
+                                              type = type,
+                                              group_name = group_name)
+
+        baseline$predicted <- incremented_prediction - baseline_prediction
         pred_list[[i]] <- baseline[, c("rowid", variable, "predicted")]
+
+        # bayes: posterior draws and credible intervals
+        if ("posterior_draws" %in% names(attributes(baseline_prediction))) {
+            draws_list[[i]] <- attr(incremented_prediction, "posterior_draws") -
+                               attr(baseline_prediction, "posterior_draws")
+        }
     }
     pred <- do.call("rbind", pred_list)
+    draws <- do.call("rbind", draws_list)
 
     # two possible label formats for factor level coefficients: factor(cyl)4 vs. cyl4
     levs <- levels(baseline[[variable]])
@@ -111,6 +132,7 @@ get_contrasts_factor <- function(model,
     pred <- pred[, c("rowid", "term", "predicted")]
     colnames(pred) <- c("rowid", "term", "contrast")
     row.names(pred) <- NULL
+    attr(pred, "posterior_draws") <- draws
     return(pred)
 }
 
@@ -128,20 +150,31 @@ get_contrasts_character <- function(model,
                                        newdata = baseline,
                                        type = type,
                                        group_name = group_name)
+    draws_list <- list()
     for (i in 2:length(levs)) {
         pred <- baseline
         pred[[variable]] <- levs[i]
-        pred$predicted <- get_predict(model = model,
-                                      newdata = baseline,
-                                      type = type,
-                                      group_name = group_name) - baseline_prediction
+        tmp <- get_predict(model = model,
+                           newdata = baseline,
+                           type = type,
+                           group_name = group_name) - baseline_prediction
+
+        # bayes: posterior draws and credible intervals
+        if ("posterior_draws" %in% names(attributes(tmp))) {
+            draws_list[[i]] <- attr(tmp, "posterior_draws")
+        }
+
+        pred$predicted <- tmp
         pred$term <- sprintf("%s%s", variable, pred[[variable]])
         pred_list[[i - 1]] <- pred[, c("rowid", "term", "predicted")]
     }
+
     pred <- do.call("rbind", pred_list)
+    draws <- do.call("rbind", draws_list)
     pred <- pred[, c("rowid", "term", "predicted")]
     colnames(pred) <- c("rowid", "term", "contrast")
     row.names(pred) <- NULL
+    attr(pred, "posterior_draws") <- draws
     return(pred)
 }
 
@@ -197,12 +230,10 @@ get_contrasts_numeric <- function(model,
     if ("posterior_draws" %in% names(attributes(pred_increment))) {
         draws <- attr(pred_increment, "posterior_draws") - attr(pred_baseline, "posterior_draws")
         if (isTRUE(normalize_dydx)) {
-            draws <- draws / step_size
+            attr(out, "posterior_draws") <- draws / step_size
+        } else {
+            attr(out, "posterior_draws") <- draws
         }
-        ci <- apply(draws, 1, stats::quantile, prob = c(.025, .975))
-        out[["conf.low"]] <- ci[1, ]
-        out[["conf.high"]] <- ci[2, ]
-        attr(out, "contrast_draws") <- draws
     }
 
     return(out)
