@@ -25,8 +25,8 @@ test_that("marginaleffects: no validity", {
     expect_marginaleffects(mod_simple, se = FALSE)
     expect_marginaleffects(mod_int, se = FALSE)
     # confidence intervals don't work for marginaleffects
-    k <- marginaleffects(mod_factor) |> head()
-    k <- marginaleffects(mod_factor) |> tail()
+    k <- marginaleffects(mod_factor) 
+    k <- marginaleffects(mod_factor) 
     expect_marginaleffects(mod_factor, se = FALSE)
     expect_marginaleffects(mod_factor_formula, se = FALSE)
 })
@@ -39,7 +39,7 @@ test_that("predictions: no validity", {
     expect_equal(pred$predicted, c(0.0443223519583173, 0.119305664275307))
     expect_equal(dim(attr(pred, "posterior_draws")), c(2, 2000))
     # interaction
-    pred <- predictions(mod_int, newdata = typical(hp = c(100, 120)))
+    pred <- predictions(mod_int, newdata = typical(mpg = c(20, 25)))
     expect_predictions(pred)
     # factor in data frame
     pred <- predictions(mod_factor, newdata = typical())
