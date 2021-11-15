@@ -129,16 +129,17 @@ get_contrasts_character <- function(model,
                                        type = type,
                                        group_name = group_name)
     for (i in 2:length(levs)) {
-        baseline[[variable]] <- levs[i]
-        baseline$predicted <- get_predict(model = model,
-                                            newdata = baseline,
-                                            type = type,
-                                            group_name = group_name) - baseline_prediction
-        baseline$term <- sprintf("%s%s", variable, baseline[[variable]])
-        pred_list[[i]] <- baseline[, c("rowid", "term", "predicted")]
+        pred <- baseline
+        pred[[variable]] <- levs[i]
+        pred$predicted <- get_predict(model = model,
+                                      newdata = baseline,
+                                      type = type,
+                                      group_name = group_name) - baseline_prediction
+        pred$term <- sprintf("%s%s", variable, pred[[variable]])
+        pred_list[[i - 1]] <- pred[, c("rowid", "term", "predicted")]
     }
     pred <- do.call("rbind", pred_list)
-    pred <- baseline[, c("rowid", "term", "predicted")]
+    pred <- pred[, c("rowid", "term", "predicted")]
     colnames(pred) <- c("rowid", "term", "contrast")
     row.names(pred) <- NULL
     return(pred)
