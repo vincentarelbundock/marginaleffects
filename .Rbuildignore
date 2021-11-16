@@ -11,4 +11,5 @@
 ^sandbox$
 ^logo$
 ^\.covrignore$
-^cran-comments\.md$
+^cran-comments\.md
+^vignettes/brms.Rmd
