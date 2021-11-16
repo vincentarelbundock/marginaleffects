@@ -57,9 +57,6 @@ jobs:
         with:
           extra-packages: rcmdcheck
 
-      - name: cmdstanr
-        run: Rscript -e "remotes::install_github('stan-dev/cmdstanr'); cmdstanr::install_cmdstan()"
-
       - uses: r-lib/actions/check-r-package@v1
 
       - name: Show testthat output

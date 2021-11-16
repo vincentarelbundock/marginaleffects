@@ -27,13 +27,13 @@ Config/testthat/parallel: true
 Depends:
     R (>= 3.5.0)
 Imports: 
-    bayestestR,
     checkmate,
     generics,
     insight (>= 0.14.5),
     methods,
     numDeriv
 Suggests: 
+    bayestestR,
     bench,
     brms,
     broom,
@@ -73,7 +73,6 @@ Suggests:
     plm,
     pscl,
     quantreg,
-    remotes,
     rms,
     robustbase,
     sandwich,
