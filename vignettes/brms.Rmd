@@ -1,0 +1,104 @@
+---
+title: "Bayesian analysis with `brms` and `marginaleffects`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Marginal Effects}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  fig.width = 6,
+  fig.asp = .4,
+  warning = FALSE,
+  message = FALSE,
+  comment = "#>"
+)
+
+ggplot2::theme_set(ggplot2::theme_minimal())
+```
+
+Support for `brms` is still experimental. Bug reports and feature requests can be submitted here: https://github.com/vincentarelbundock/marginaleffects/issues
+
+I hope to improve performance considerably in the very near future.
+
+Install the development version of the `marginaleffects` package:
+
+```{r, eval = FALSE}
+library(remotes)
+install_github("vincentarelbundock/marginaleffects")
+```
+
+Load libraries:
+
+```{r, message = FALSE}
+library(brms)
+library(marginaleffects)
+library(ggplot2)
+library(ggdist)
+library(cmdstanr)
+```
+
+Fit a logit model with a multiplicative interaction:
+
+```{r, message = FALSE, warning = FALSE, results = "hide"}
+mod <- brm(am ~ mpg * vs + hp,
+           family = bernoulli(link = "logit"), 
+           data = mtcars,
+           backend = "cmdstanr")
+```
+
+Use `marginaleffects()` to compute marginal effects for each row of the dataset, and use `summary()` to compute "Average Marginal Effects": 
+
+```{r}
+mfx <- marginaleffects(mod)
+summary(mfx)
+```
+
+We can compute marginal effects with some regressors fixed at user-specified values, and other regressors held at their means:
+
+```{r}
+marginaleffects(mod, newdata = typical(hp = c(110, 130)))
+```
+
+The `get_posterior_draws` produces a dataset with `drawid` and `draw` columns.
+
+```{r}
+draws <- get_posterior_draws(mfx)
+
+dim(draws)
+
+head(draws)
+```
+
+We can use this dataset to plot our results. For example, to plot the posterior density of the marginal effect when the `vs` variable is equal to 0 or 1:
+
+```{r}
+marginaleffects(mod, variables = "mpg", newdata = typical(vs = 0:1)) |>
+    get_posterior_draws() |>
+    ggplot(aes(x = draw, color = factor(vs), fill = factor(vs))) +
+    geom_density(alpha = .1) +
+    labs(x = "Marginal effect of Miles per Gallon",
+         y = "Posterior density")
+```
+
+
+A similar strategy can be used to compute and display model predictions with the `predictions` function:
+
+```{r, message = FALSE, warning = FALSE, results = "hide"}
+mod <- brm(mpg ~ hp * vs + am,
+           data = mtcars,
+           backend = "cmdstanr")
+```
+
+```{r}
+predictions(mod, newdata = typical(vs = 0:1, hp = c(100, 200))) |>
+    get_posterior_draws() |>
+    ggplot(aes(y = factor(vs), x = draw)) +
+    stat_gradientinterval() +
+    facet_wrap(~ hp) +
+    labs(x = "Predicted Miles per Gallon",
+         y = "Engine shape (vs)")
+```
