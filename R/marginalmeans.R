@@ -58,6 +58,9 @@ marginalmeans <- function(model,
     dat <- insight::get_data(model)
 
     # sanity
+    if (inherits(model, "brmsfit")) {
+        stop("`brmsfit` objects are yet not supported by the `marginalmeans` function. Follow this link to track progress: https://github.com/vincentarelbundock/marginaleffects/issues/137")
+    }
     checkmate::assert_character(variables, min.len = 1, null.ok = TRUE)
     if (!is.null(variables)) {
         bad <- setdiff(variables, colnames(dat))
@@ -102,7 +105,8 @@ marginalmeans <- function(model,
     dat <- predictions(model = model, variables = variables_grid, type = type)
 
     # interactions are not supported
-    interactions <- any(grepl(":", attr(stats::terms(model), "term.labels")))
+    # stats::terms does not work with brmsfit
+    interactions <- try(any(grepl(":", attr(stats::terms(model), "term.labels"))), silent = TRUE)
     if (isTRUE(interactions)) {
         warning("The `marginalmeans` function does not support models with interactions. The reported standard errors may be misleading.")
     }
@@ -116,7 +120,11 @@ marginalmeans <- function(model,
         modmat_tmp <- modmat
 
         # assign columns of the matrix unrelated to v to their mean value
-        idx <- grep(match(v, attr(stats::terms(model), "term.labels")), attr(modmat_tmp, "assign"))
+        # stats::terms doe snot work with brmsfit
+        idx <- try(grep(match(v, attr(stats::terms(model), "term.labels")), attr(modmat_tmp, "assign")), silent = TRUE)
+        if (inherits(idx, "try-error")) {
+            idx <- grep(v, colnames(modmat_tmp))
+        }
         idx <- setdiff(1:ncol(modmat_tmp), idx)
         for (i in idx) {
             modmat_tmp[, i] <- mean(modmat_tmp[, i])
@@ -135,6 +143,12 @@ marginalmeans <- function(model,
         # variance: M V M'
         # only supported on the links scale or for linear models
         if (type == "link" || isTRUE(insight::model_info(model)$is_linear)) {
+
+            # brms: vcov() and model.matrix() call intercept differently
+            if ("(Intercept)" %in% colnames(modmat_tmp) && "Intercept" %in% colnames(vcov)) {
+                colnames(modmat_tmp)[colnames(modmat_tmp) == "(Intercept)"] <- "Intercept"
+            }
+
             if (!all(colnames(vcov) %in% colnames(modmat_tmp)) || !all(colnames(vcov) %in% colnames(modmat_tmp))) {
                 stop("The column names produced by `insight::get_varcov(model)` and `insight::get_modelmatrix(model, data=dat)` do not match. This can sometimes happen when using character variables as a factor when fitting a model. A safer strategy is to convert character variables to factors before fitting the model. This makes it easier for `marginaleffects` to keep track of the reference category.")
             }

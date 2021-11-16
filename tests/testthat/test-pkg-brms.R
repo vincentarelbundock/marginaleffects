@@ -35,6 +35,14 @@ test_that("predictions: no validity", {
 })
 
 
+test_that("marginalmeans vs. emmeans", {
+    skip_if_not_installed("emmeans")
+    skip_if_not_installed("broom")
+    expect_error(marginalmeans(mod_factor, variables = "cyl_fac", type = "link"), regexp = "github.*issues")
+    # emmeans::emmeans(mod_factor, specs = ~cyl_fac)
+})
+
+
 test_that("marginaleffects: no validity", {
     expect_marginaleffects(mod_two, se = FALSE)
     expect_marginaleffects(mod_int, se = FALSE)
