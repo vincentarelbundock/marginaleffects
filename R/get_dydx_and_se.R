@@ -79,8 +79,11 @@ get_dydx_and_se <- function(model,
     if (!is.null(draws)) {
         attr(out, "posterior_draws") <- draws
         if (!"conf.low" %in% colnames(out)) {
-            out$conf.low <- apply(draws, 1, quantile, prob = .025)
-            out$conf.high <- apply(draws, 1, quantile, prob = .975)
+            tmp <- bayestestR::hdi(data.frame(t(draws)))
+            out$conf.low <- tmp$CI_low
+            out$conf.high <- tmp$CI_high
+            # out$conf.low <- apply(draws, 1, quantile, prob = .025)
+            # out$conf.high <- apply(draws, 1, quantile, prob = .975)
         }
     }
 
