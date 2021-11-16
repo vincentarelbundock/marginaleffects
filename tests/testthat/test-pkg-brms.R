@@ -1,6 +1,5 @@
 library(brms)
 library(marginaleffects)
-library(insight)
 skip_if_not_installed("cmdstanr")
 skip_if_not_installed("brms")
 
