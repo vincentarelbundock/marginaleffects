@@ -77,6 +77,7 @@ get_dydx_and_se <- function(model,
     # bayesian posterior draws
     draws <- do.call("rbind", draws_list)
     if (!is.null(draws)) {
+        assert_dependency("bayestestR")
         attr(out, "posterior_draws") <- draws
         if (!"conf.low" %in% colnames(out)) {
             tmp <- bayestestR::hdi(data.frame(t(draws)))
