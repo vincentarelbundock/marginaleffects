@@ -99,8 +99,12 @@ predictions <- function(model,
             # store bayesian results
             idx <- grepl("^iter\\.\\d", colnames(tmp))
             if (any(idx)) {
-                posterior_draws[[predt]] <- as.matrix(tmp[, idx, drop = FALSE])
+                # select draws and unpad factors
+                dr <- as.matrix(tmp[, idx, drop = FALSE])
+                posterior_draws[[predt]] <- dr[tmp$rowid_internal > 0, , drop = FALSE]
+                # non-draws
                 tmp <- tmp[, !idx, drop = FALSE]
+                
             }
         } else {
             tmp <- data.frame(newdata$rowid_internal, predt, tmp)

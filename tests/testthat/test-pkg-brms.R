@@ -18,6 +18,7 @@ void <- capture.output({
     mod_int <- brm(am ~ mpg * vs, data = dat, family = bernoulli(),
                    backend = "cmdstanr", seed = 1024, silent = 2, chains = 4, iter = 1000)
 })
+    
 
 
 test_that("predictions: no validity", {
@@ -123,4 +124,10 @@ test_that("factor in formula", {
     # predictions
     pred <- predictions(mod_factor_formula, newdata = typical())
     expect_predictions(pred)
+})
+
+
+test_that("bugs stay dead: factor indexing for posterior draws", {
+    tmp <- predictions(mod_factor, newdata = typical(cyl_fac = 4, mpg = c(10, 20))) 
+    expect_error(get_posterior_draws(tmp), NA)
 })
