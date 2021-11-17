@@ -77,7 +77,6 @@ predictions <- function(model,
 
     # predictions
     out_list <- list()
-    posterior_draws <- list()
     for (predt in type) {
         # extract
         tmp <- try(insight::get_predicted(model,
@@ -97,24 +96,13 @@ predictions <- function(model,
             tmp <- insight::standardize_names(tmp, style = "broom")
             tmp$type <- predt
             tmp$rowid_internal <- newdata$rowid_internal
-            # store bayesian results
-            idx <- grepl("^iter\\.\\d", colnames(tmp))
-            if (any(idx)) {
-                # select draws and unpad factors
-                dr <- as.matrix(tmp[, idx, drop = FALSE])
-                posterior_draws[[predt]] <- dr[tmp$rowid_internal > 0, , drop = FALSE]
-                # non-draws
-                tmp <- tmp[, !idx, drop = FALSE]
-                
-            }
         } else {
             tmp <- data.frame(newdata$rowid_internal, predt, tmp)
             colnames(tmp) <- c("rowid_internal", "type", "predicted")
         }
         out_list[[predt]] <- tmp
     }
-    out <- do.call("rbind", out_list)
-    posterior_draws <- do.call("rbind", posterior_draws)
+    out <- bind_rows(out_list)
 
     # unpad factors
     out <- out[out$rowid_internal > 0, , drop = FALSE]
@@ -125,6 +113,11 @@ predictions <- function(model,
     # rowid does not make sense here because the grid is made up
     # Wrong! rowid does make sense when we use `counterfactual()` in `newdata`
     out$rowid_internal <- NULL
+
+    # store bayesian results
+    idx <- grepl("^iter\\.\\d+$", colnames(out))
+    posterior_draws <- as.matrix(out[, idx, drop = FALSE])
+    out <- out[, !idx, drop = FALSE]
 
     # clean columns
     stubcols <- c("rowid", "type", "term", "predicted", "std.error", "conf.low", "conf.high",
