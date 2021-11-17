@@ -138,7 +138,7 @@ plot_cme <- function(model,
     }
 
     p <- p + ggplot2::labs(x = condition1, 
-                           y = sprintf("Marginal effect of %s", resp),
+                           y = sprintf("Marginal effect of %s on %s", effect, resp),
                            color = condition2,
                            fill = condition2,
                            linetype = condition3)
