@@ -30,7 +30,8 @@ get_dydx_and_se <- function(model,
                                 group_name = gn,
                                 newdata = newdata,
                                 type = predt,
-                                numDeriv_method = numDeriv_method)
+                                numDeriv_method = numDeriv_method,
+                                ...)
                 draws_list <- c(draws_list, list(attr(mfx, "posterior_draws")))
                 mfx <- get_dydx_se(model = model,
                                    mfx = mfx,
@@ -39,7 +40,8 @@ get_dydx_and_se <- function(model,
                                    group_name = gn,
                                    newdata = newdata,
                                    type = predt,
-                                   numDeriv_method = numDeriv_method)
+                                   numDeriv_method = numDeriv_method,
+                                   ...)
                 mfx$type <- predt
                 mfx$group <- gn
                 mfx_list <- c(mfx_list, list(mfx))

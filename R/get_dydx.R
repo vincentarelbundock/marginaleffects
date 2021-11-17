@@ -3,7 +3,8 @@ get_dydx <- function(model,
                      group_name,
                      newdata,
                      type,
-                     numDeriv_method) {
+                     numDeriv_method,
+                     ...) {
 
     if (variable %in% find_categorical(newdata)) {
         dydx_fun <- get_contrasts
@@ -19,7 +20,8 @@ get_dydx <- function(model,
                     group_name = group_name,
                     type = type,
                     numDeriv_method = numDeriv_method,
-                    contrast_to_dydx = TRUE)
+                    contrast_to_dydx = TRUE,
+                    ...)
 
     # normalize names to merge when requesting dydx
     colnames(out)[colnames(out) == "contrast"] <- "dydx"

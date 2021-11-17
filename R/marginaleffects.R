@@ -118,7 +118,8 @@ marginaleffects <- function(model,
         variables = variables_vec,
         vcov = vcov,
         type = type,
-        numDeriv_method = numDeriv_method)
+        numDeriv_method = numDeriv_method,
+        ...)
 
     # backup attributes
     attributes_backup <- list()

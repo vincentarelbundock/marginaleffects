@@ -60,12 +60,14 @@ get_contrasts_logical <- function(model,
     pred_false <- get_predict(model,
                               newdata = baseline,
                               type = type,
-                              group_name = group_name)
+                              group_name = group_name,
+                              ...)
     baseline[[variable]] <- TRUE
     pred_true <- get_predict(model = model,
                               newdata = baseline,
                               type = type,
-                              group_name = group_name)
+                              group_name = group_name,
+                              ...)
 
 
     baseline$predicted <- pred_true - pred_false
@@ -104,7 +106,8 @@ get_contrasts_factor <- function(model,
         incremented_prediction <- get_predict(model = model,
                                               newdata = baseline,
                                               type = type,
-                                              group_name = group_name)
+                                              group_name = group_name,
+                                              ...)
 
         baseline$predicted <- incremented_prediction - baseline_prediction
         pred_list[[i]] <- baseline[, c("rowid", variable, "predicted")]
@@ -150,7 +153,8 @@ get_contrasts_character <- function(model,
     baseline_prediction <- get_predict(model,
                                        newdata = baseline,
                                        type = type,
-                                       group_name = group_name)
+                                       group_name = group_name,
+                                       ...)
     draws_list <- list()
     for (i in 2:length(levs)) {
         pred <- baseline
@@ -158,7 +162,8 @@ get_contrasts_character <- function(model,
         tmp <- get_predict(model = model,
                            newdata = baseline,
                            type = type,
-                           group_name = group_name) - baseline_prediction
+                           group_name = group_name,
+                           ...) - baseline_prediction
 
         # bayes: posterior draws and credible intervals
         if ("posterior_draws" %in% names(attributes(tmp))) {
@@ -204,13 +209,15 @@ get_contrasts_numeric <- function(model,
     pred_baseline <- get_predict(model,
                                  newdata = baseline,
                                  type = type,
-                                 group_name = group_name)
+                                 group_name = group_name,
+                                 ...)
 
     baseline[[variable]] <- baseline[[variable]] + step_size
     pred_increment <- get_predict(model,
                                   newdata = baseline,
                                   type = type,
-                                  group_name = group_name)
+                                  group_name = group_name,
+                                  ...)
 
     contr <- as.vector(pred_increment) - as.vector(pred_baseline)
     if (isTRUE(normalize_dydx)) {
