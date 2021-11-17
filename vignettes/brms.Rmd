@@ -96,3 +96,191 @@ predictions(mod, newdata = typical(vs = 0:1, hp = c(100, 200))) |>
     labs(x = "Predicted Miles per Gallon",
          y = "Engine shape (vs)")
 ```
+
+# Heiss replication
+
+Andrew Heiss wrote a neat blog post entitled [A guide to correctly calculating posterior predictions and average marginal effects with multilievel Bayesian models.](https://www.andrewheiss.com/blog/2021/11/10/ame-bayes-re-guide) This section replicates some of the analyses in that post, without much explanation, and without Andrew's beautiful visuals.
+
+Load libraries and clean data:
+
+```{r, message = FALSE}
+library(vdemdata)
+library(tidyverse)
+library(marginaleffects)
+library(brms)
+library(ggdist)
+library(patchwork)
+
+
+vdem_2015 <- vdem %>% 
+  select(country_name, country_text_id, year, region = e_regionpol_6C,
+         media_index = v2xme_altinf, party_autonomy_ord = v2psoppaut_ord,
+         polyarchy = v2x_polyarchy, civil_liberties = v2x_civlib) %>% 
+  filter(year == 2015) %>% 
+  mutate(party_autonomy = party_autonomy_ord >= 3,
+         party_autonomy = ifelse(is.na(party_autonomy), FALSE, party_autonomy)) %>% 
+  mutate(region = factor(region, 
+                         labels = c("Eastern Europe and Central Asia",
+                                    "Latin America and the Caribbean",
+                                    "Middle East and North Africa",
+                                    "Sub-Saharan Africa",
+                                    "Western Europe and North America",
+                                    "Asia and Pacific")))
+```
+
+Fit a basic model:
+
+```{r, results = "hide"}
+model_basic <- brm(
+  bf(media_index ~ party_autonomy + civil_liberties + (1 | region),
+     phi ~ (1 | region)),
+  data = vdem_2015,
+  family = Beta(),
+  control = list(adapt_delta = 0.9),
+  chains = 4, iter = 2000, warmup = 1000,
+  cores = 4, seed = 12345,
+  backend = "cmdstanr")
+```
+
+Compute two types of posterior predictions, with or without accounting for residual (observation-level) variance.
+
+```{r}
+pred <- predictions(model_basic, 
+                    type = c("response", "prediction"),
+                    newdata = typical(party_autonomy = c(TRUE, FALSE),
+                                      civil_liberties = .5,
+                                      region = "Middle East and North Africa"))
+pred
+```
+
+```{r}
+pred |>  
+    get_posterior_draws() |>
+    ggplot(aes(x = draw, fill = party_autonomy)) +
+    stat_halfeye(alpha = .5) +
+    facet_wrap(~ type)
+```
+
+### Marginal effects
+
+As noted in the [Marginal Effects vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx.html), there should be one distinct marginal effect for each combination of regressor values. Here, we consider only one combination of regressor values, where `region` is "Middle East and North Africa", and `civil_liberties` is 0.5. Then, we calculate the mean of the posterior distribution of marginal effects:
+
+```{r}
+mfx <- marginaleffects(model_basic,
+                       newdata = typical(civil_liberties = .5,
+                                         region = "Middle East and North Africa"))
+mfx
+```
+
+Use the `get_posterior_draws()` to extract draws from the posterio distribution of marginal effects, and plot them:
+
+```{r}
+mfx |> get_posterior_draws() |>
+       ggplot(aes(x = draw, y = term)) +
+       stat_halfeye()
+```
+
+Plot marginal effects, conditional on a regressor:
+```{r}
+plot_cme(model_basic, 
+         effect = "civil_liberties",
+         condition = "party_autonomy")
+```
+
+### Continuous predictors
+
+```{r}
+pred <- predictions(model_basic,
+                    newdata = typical(party_autonomy = FALSE,
+                                      region = "Middle East and North Africa",
+                                      civil_liberties = seq(0, 1, by = 0.05)))
+
+pred |> get_posterior_draws() |>
+        ggplot(aes(x = civil_liberties, y = draw)) +
+        stat_lineribbon() +
+        scale_fill_brewer(palette = "Reds")
+```
+
+```{r}
+
+```
+
+The slope of this line for different values of civil liberties can be obtained with:
+
+```{r}
+mfx <- marginaleffects(model_basic, 
+                       newdata = typical(civil_liberties = c(.2, .5, .8),
+                                         party_autonomy = FALSE,
+                                         region = "Middle East and North Africa"),
+                       variables = "civil_liberties")
+mfx
+```
+
+```{r}
+mfx |> get_posterior_draws() |>
+       ggplot(aes(x = draw, fill = factor(civil_liberties))) +
+       stat_halfeye(slab_alpha = .5)
+```
+                                 
+In Heiss' blog post, the author uses `emmeans`, which computes predictions based on a "grand mean" which ignores group random effects. Behind the scenes, `marginaleffects` uses the `get_predicted` function from the `insight` package to extract predictions from the `brms` model. This function accepts a `include_random` argument, which we can pass direction to `marginaleffects` (the argument will be pushed forward through the ellipsis `...`):
+
+```{r}
+marginaleffects(model_basic, 
+                newdata = typical(civil_liberties = c(.2, .5, .8),
+                                  party_autonomy = FALSE,
+                                  region = "Middle East and North Africa"),
+                variables = "civil_liberties",
+                include_random = FALSE) |>
+    get_posterior_draws() |>
+    ggplot(aes(x = draw, fill = factor(civil_liberties))) +
+    stat_halfeye(slab_alpha = .5)
+```
+
+```{r, eval = FALSE, include = FALSE}
+library(emmeans)
+emtrends(model_basic,
+         ~ civil_liberties,
+         var = "civil_liberties",
+         at = list(party_autonomy = FALSE,
+                   civil_liberties = c(.2, .5, .8),
+                   region = "Middle East and North Africa"),
+         transform = "response")
+```                                  
+
+### Global grand mean
+
+
+```{r}
+p1 <- predictions(model_basic, 
+                  include_random = FALSE,
+                  newdata = typical(party_autonomy = c(TRUE, FALSE))) |>
+      get_posterior_draws() |>
+      ggplot(aes(x = draw, fill = party_autonomy)) +
+      stat_halfeye(slab_alpha = .5) 
+
+p2 <- marginaleffects(model_basic,
+                      include_random = FALSE,
+                      variables = "party_autonomy") |>
+      get_posterior_draws() |>
+      ggplot(aes(x = draw)) +
+      stat_halfeye(slab_alpha = .5) 
+
+# combine plots using the `patchwork` package
+p1 + p2
+```
+
+### Region specific predictions
+
+Not sure why the plots don't look exactly the same as Heiss'.
+
+```{r}
+predictions(model_basic,
+            newdata = typical(region = unique(vdem_2015$region),
+                              party_autonomy = FALSE, 
+                              civil_liberties = seq(0, 1, length.out = 100))) |> 
+    get_posterior_draws() |>
+    ggplot(aes(x = civil_liberties, y = draw)) +
+    stat_lineribbon() +
+    scale_fill_brewer(palette = "Reds") +
+    facet_wrap(~ region)
+```

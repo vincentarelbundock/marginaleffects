@@ -24,6 +24,7 @@ RoxygenNote: 7.1.2
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 Config/testthat/parallel: true
+Remotes: vdeminstitute/vdemdata
 Depends:
     R (>= 3.5.0)
 Imports: 
@@ -37,6 +38,7 @@ Suggests:
     bench,
     brms,
     broom,
+    data.table,
     dplyr,
     emmeans,
     ggdist,
@@ -54,6 +56,7 @@ Suggests:
     testthat (>= 3.0.0),
     tidyverse,
     vdiffr,
+    vdemdata,
     AER,
     betareg,
     bife,
@@ -71,6 +74,7 @@ Suggests:
     nlme,
     nnet,
     ordinal,
+    patchwork,
     plm,
     pscl,
     quantreg,
