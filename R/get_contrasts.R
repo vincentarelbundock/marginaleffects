@@ -55,13 +55,14 @@ get_contrasts_logical <- function(model,
                                   group_name = NULL,
                                   type = "response",
                                   ...) {
+
     baseline[[variable]] <- FALSE
-    pred_true <- get_predict(model,
-                             newdata = baseline,
-                             type = type,
-                             group_name = group_name)
+    pred_false <- get_predict(model,
+                              newdata = baseline,
+                              type = type,
+                              group_name = group_name)
     baseline[[variable]] <- TRUE
-    pred_false <- get_predict(model = model,
+    pred_true <- get_predict(model = model,
                               newdata = baseline,
                               type = type,
                               group_name = group_name)
