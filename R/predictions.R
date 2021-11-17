@@ -84,7 +84,8 @@ predictions <- function(model,
                                           data = newdata,
                                           predict = NULL,
                                           type = predt,
-                                          ci = conf.level),
+                                          ci = conf.level,
+                                          ...),
                    silent = TRUE)
         if (inherits(tmp, "try-error")) {
             tmp <- get_predict(model, newdata = newdata, type = predt)
