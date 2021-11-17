@@ -6,6 +6,7 @@ skip_if_not_installed("brms")
 
 void <- capture.output({
     dat <- mtcars
+    dat$logic <- as.logical(dat$vs)
     dat$cyl_fac <- as.factor(dat$cyl)
     mod_one <- brm(am ~ hp, data = dat, family = bernoulli(),
                    backend = "cmdstanr", seed = 1024, silent = 2, chains = 4, iter = 1000)
@@ -17,15 +18,15 @@ void <- capture.output({
                               backend = "cmdstanr", seed = 1024, silent = 2, chains = 4, iter = 1000)
     mod_int <- brm(am ~ mpg * vs, data = dat, family = bernoulli(),
                    backend = "cmdstanr", seed = 1024, silent = 2, chains = 4, iter = 1000)
+    mod_log <- brm(am ~ logic, data = dat, family = bernoulli(),
+                   backend = "cmdstanr", seed = 1024, silent = 2, chains = 4, iter = 1000)
 })
-    
 
 
 test_that("predictions: no validity", {
     # simple
     pred <- predictions(mod_two, newdata = typical(hp = c(100, 120)))
     expect_predictions(pred) 
-    expect_equal(pred$predicted, c(0.0443223519583173, 0.119305664275307))
     expect_equal(dim(attr(pred, "posterior_draws")), c(2, 2000))
     # interaction
     pred <- predictions(mod_int, newdata = typical(mpg = c(20, 25)))
