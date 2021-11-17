@@ -114,6 +114,7 @@ predictions <- function(model,
         out_list[[predt]] <- tmp
     }
     out <- do.call("rbind", out_list)
+    posterior_draws <- do.call("rbind", posterior_draws)
 
     # unpad factors
     out <- out[out$rowid_internal > 0, , drop = FALSE]
@@ -148,11 +149,7 @@ predictions <- function(model,
     attr(out, "type") <- type
     attr(out, "model_type") <- class(model)[1]
     attr(out, "variables") <- variables
-    if (length(posterior_draws) == 1) {
-        attr(out, "posterior_draws") <- posterior_draws[[1]]
-    } else if (length(posterior_draws) == 2) {
-        attr(out, "posterior_draws") <- posterior_draws
-    }
+    attr(out, "posterior_draws") <- posterior_draws
 
     return(out)
 }
