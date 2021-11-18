@@ -37,6 +37,50 @@ test_that("predictions: no validity", {
 })
 
 
+# pkgload::load_all()
+
+
+# pd <- get_posterior_draws(mfx)
+
+
+
+# # test_that("marginaleffects vs. emmeans (multiple types)", {
+# library(ggplot2)
+# skip_if_not_installed("ggplot2")
+# pkgload::load_all()
+# mfx <- marginaleffects(mod_int, variables = "mpg", type = c("response", "link"), newdata = typical(vs = 0:1, mpg = 20))
+#     em_r <- emmeans::emtrends(mod_int, ~vs, var = "mpg", at = list(vs = c(0, 1), mpg = 20), epred = TRUE) 
+#     em_l <- emmeans::emtrends(mod_int, ~vs, var = "mpg", at = list(vs = c(0, 1), mpg = 20)) 
+#     em_r <- data.frame(em_r)
+#     em_l <- data.frame(em_l)
+#     expect_equal(mfx[mfx$type == "link", "dydx"], em_l$mpg.trend)
+#     expect_equal(mfx[mfx$type == "link", "conf.low"], em_l$lower.HPD)
+#     expect_equal(mfx[mfx$type == "link", "conf.high"], em_l$upper.HPD)
+#     expect_equal(mfx[mfx$type == "response", "dydx"], em_r$mpg.trend)
+#     expect_equal(mfx[mfx$type == "response", "conf.low"], em_r$lower.HPD)
+
+
+#     expect_equal(mfx[mfx$type == "response", "conf.high"], em_r$upper.HPD)
+
+# mfx <- get_posterior_draws(mfx)
+# ggplot(mfx, aes(x = draw, fill = factor(vs))) +
+#     geom_density(alpha = .4) +
+#         facet_grid(~type, scales = "free")
+
+# # })
+
+
+test_that("predictions vs. emmeans", {
+    skip_if_not_installed("emmeans")
+    em <- emmeans::emmeans(mod_one, ~hp, "hp", at = list(hp = c(100, 120)))
+    em <- data.frame(em)
+    pred <- predictions(mod_one, newdata = typical(hp = c(100, 120)), type = "link")
+    expect_equal(pred$predicted, em$emmean)
+    expect_equal(pred$conf.low, em$lower.HPD)
+    expect_equal(pred$conf.high, em$upper.HPD)
+})
+
+
 test_that("marginalmeans vs. emmeans", {
     skip_if_not_installed("emmeans")
     skip_if_not_installed("broom")

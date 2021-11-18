@@ -114,10 +114,14 @@ predictions <- function(model,
     # Wrong! rowid does make sense when we use `counterfactual()` in `newdata`
     out$rowid_internal <- NULL
 
-    # store bayesian results
+    # bayesian: posterior density draws
     idx <- grepl("^iter\\.\\d+$", colnames(out))
-    posterior_draws <- as.matrix(out[, idx, drop = FALSE])
-    out <- out[, !idx, drop = FALSE]
+    if (any(idx)) {
+        posterior_draws <- as.matrix(out[, idx, drop = FALSE])
+        out <- out[, !idx, drop = FALSE]
+    } else {
+        posterior_draws <- NULL
+    }
 
     # clean columns
     stubcols <- c("rowid", "type", "term", "predicted", "std.error", "conf.low", "conf.high",
@@ -142,7 +146,17 @@ predictions <- function(model,
     attr(out, "type") <- type
     attr(out, "model_type") <- class(model)[1]
     attr(out, "variables") <- variables
-    attr(out, "posterior_draws") <- posterior_draws
+
+    # bayesian: store draws posterior density draws
+    if (!is.null(posterior_draws)) {
+        assert_dependency("bayestestR")
+        hdi <- bayestestR::hdi(data.frame(t(posterior_draws)))
+        out[["predicted"]] <- apply(posterior_draws, 1, stats::median)
+        out[["std.error"]] <- NULL
+        out[["conf.low"]] <- hdi[["CI_low"]]
+        out[["conf.high"]] <- hdi[["CI_high"]]
+        attr(out, "posterior_draws") <- posterior_draws
+    }
 
     return(out)
 }
