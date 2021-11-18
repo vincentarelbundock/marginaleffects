@@ -138,8 +138,7 @@ model_basic <- brm(
   family = Beta(),
   control = list(adapt_delta = 0.9),
   chains = 4, iter = 2000, warmup = 1000,
-  cores = 4, seed = 12345,
-  backend = "cmdstanr")
+  cores = 4, seed = 12345)
 ```
 
 Compute two types of posterior predictions, with or without accounting for residual (observation-level) variance.
