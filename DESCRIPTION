@@ -81,6 +81,7 @@ Suggests:
     quantreg,
     rms,
     robustbase,
+    rstanarm,
     sandwich,
     speedglm,
     survey,
