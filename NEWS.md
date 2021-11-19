@@ -4,6 +4,16 @@ Breaking change:
 
 * `predictions` returns predictions for every observation in the original dataset instead of `newdata=typical()`.
 
+Support for new models and packages:
+
+* `brms`
+* `rstanarm`
+
+Misc:
+
+* New vignette on Bayesian models
+* Bugfix: inverted logical contrasts
+* Bugfix: erroneous label in `plot_cme`
 
 # marginaleffects 0.2.0
 
