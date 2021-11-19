@@ -30,14 +30,15 @@ In the context of this package, an "Adjusted Prediction" is defined as:
 
 An adjusted prediction is thus the regression-adjusted response variable (or link, or other fitted value), for a given combination (or grid) of predictors. This grid may or may not correspond to the actual observations in a dataset.
 
-By default, `predictions` calculates the regression-adjusted predicted values for a single hypothetical unit of observation with all regressors set at their means or modes:
+By default, `predictions` calculates the regression-adjusted predicted values for every observation in the original dataset:
+
 
 ```{r}
 library(marginaleffects)
 
 mod <- lm(mpg ~ hp + factor(cyl), data = mtcars)
 
-predictions(mod)
+predictions(mod) |> head()
 ```
 
 In many cases, this is too limiting, and researchers will want to specify a grid of "typical" values over which to compute adjusted predictions.
@@ -79,6 +80,8 @@ typical(cyl = c(4, 6, 8), model = mod)
 We can also use this `typical` function in a `predictions` call (omitting the `model` argument):
 
 ```{r}
+predictions(mod, newdata = typical())
+
 predictions(mod, newdata = typical(cyl = c(4, 6, 8)))
 ```
 
@@ -136,7 +139,7 @@ Typical values include `"response"` and `"link"`, but users should refer to the 
 
 ```{r}
 mod <- glm(am ~ mpg, family = binomial, data = mtcars)
-predictions(mod, type = c("response", "link"))
+predictions(mod, type = c("response", "link")) |> head()
 ```
 
 Users who need more control over the type of adjusted predictions to compute, including a host of options for back-transformation, may want to consider the [`emmeans` package.](https://cran.r-project.org/package=emmeans)
