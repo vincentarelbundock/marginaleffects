@@ -30,3 +30,8 @@ test_that("link vs response", {
     vdiffr::expect_doppelganger("plot_cap logit response", p1)
     vdiffr::expect_doppelganger("plot_cap logit link", p2)
 })
+
+test_that("bad condition raises error", {
+    mod <- lm(mpg ~ hp * wt * am, data = mtcars)
+    expect_error(plot_cap(mod, condition = c("bad", "wt")))
+})

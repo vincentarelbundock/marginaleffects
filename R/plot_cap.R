@@ -32,8 +32,7 @@ plot_cap <- function(model,
     # allow multiple conditions and/or effects
     checkmate::assert_character(condition, min.len = 1, max.len = 2)
 
-    ## not sure why this fails in testthat
-    # checkmate::assert_true(condition %in% colnames(dat))
+    checkmate::assert_true(all(condition %in% colnames(dat)))
 
     if (length(condition) == 1) {
         condition1 <- condition[1]
