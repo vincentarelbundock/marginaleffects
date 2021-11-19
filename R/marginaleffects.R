@@ -129,7 +129,7 @@ marginaleffects <- function(model,
 
     # merge newdata if requested and restore attributes
     if (isTRUE(return_data)) {
-        out <- merge(out, pred, by = c("rowid", "type"))
+        out <- merge(out, pred, by = c("rowid", "type"), sort = FALSE)
     }
 
     # clean columns
@@ -143,8 +143,7 @@ marginaleffects <- function(model,
         out$group <- NULL
     }
 
-    # sort rows
-    out <- out[order(out$type, out$term, out$rowid), ]
+    # DO NOT sort rows because we want draws to match
     row.names(out) <- NULL
 
     # attributes

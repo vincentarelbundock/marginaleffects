@@ -77,8 +77,7 @@ get_dydx_and_se <- function(model,
     }
 
     # bayesian posterior draws
-    browser()
-    draws <- bind_rows(draws_list)
+    draws <- do.call("rbind", draws_list)
     if (!is.null(draws)) {
         assert_dependency("bayestestR")
         attr(out, "posterior_draws") <- draws
