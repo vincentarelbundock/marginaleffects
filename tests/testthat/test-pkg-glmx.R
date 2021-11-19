@@ -16,6 +16,6 @@ test_that("predictions: glmx: no validity check", {
                   xlink = "log", xstart = 0)
     pred1 <- predictions(model)
     pred2 <- predictions(model, newdata = head(d))
-    expect_predictions(pred1, n_row = 1, se = FALSE)
+    expect_predictions(pred1, n_row = nrow(d), se = FALSE)
     expect_predictions(pred2, n_row = 6, se = FALSE)
 })

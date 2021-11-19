@@ -28,7 +28,7 @@ test_that("predictions: no validity", {
     data("GasolineYield", package = "betareg")
     mod <- betareg::betareg(yield ~ batch + temp, data = GasolineYield)
     pred <- predictions(mod)
-    expect_predictions(pred, n_row = 1, n_col = 4, se = FALSE)
+    expect_predictions(pred, n_row = nrow(GasolineYield), n_col = 5, se = FALSE)
     pred <- predictions(mod, newdata = typical(batch = 1:3, temp = c(300, 350)))
     expect_predictions(pred, n_row = 6, n_col = 4, se = FALSE)
  })

@@ -1,3 +1,10 @@
+# marginaleffects 0.2.0.9000
+
+Breaking change:
+
+* `predictions` returns predictions for every observation in the original dataset instead of `newdata=typical()`.
+
+
 # marginaleffects 0.2.0
 
 Breaking change:

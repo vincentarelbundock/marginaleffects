@@ -26,7 +26,7 @@ expect_predictions <- function(object,
   }
 
   if (is.null(n_row)) {
-      n_row <- co > 0
+      n_row <- ro > 0
   } else {
       n_row <- ro == n_row
   }

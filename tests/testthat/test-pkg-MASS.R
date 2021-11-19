@@ -67,7 +67,7 @@ test_that("rlm: predictions: no validity", {
     skip_if_not_installed("insight", minimum_version = "0.14.4.1")
     model <- MASS::rlm(mpg ~ hp + drat, mtcars)
     pred <- predictions(model)
-    expect_predictions(pred, se = TRUE, n_row = 1)
+    expect_predictions(pred, se = TRUE, n_row = nrow(mtcars))
     pred <- predictions(model, newdata = head(mtcars))
     expect_predictions(pred, se = TRUE, n_row = 6)
 })

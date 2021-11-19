@@ -35,6 +35,6 @@ test_that("predictions: no validity", {
     mod <- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3), data = dat)
     pred1 <- predictions(mod)
     pred2 <- predictions(mod, newdata = head(dat))
-    expect_predictions(pred1, n_row = 1)
+    expect_predictions(pred1, n_row = nrow(dat))
     expect_predictions(pred2, n_row = 6)
 })
