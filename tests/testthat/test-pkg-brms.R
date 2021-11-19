@@ -4,6 +4,19 @@ skip_if_not_installed("cmdstanr")
 skip_if_not_installed("brms")
 
 
+# test_that("brms: cumulative: predictions: include_random no validity", {
+#     dat <- brms::inhaler
+#     void <- capture.output(
+#         mod_ran <- brm(rating ~ treat + period + (1 | subject), family = cumulative(), data = inhaler, 
+#                     silent = 2, backend = "cmdstanr")
+#     )
+#     p1 <- predictions(mod_ran)
+#     p2 <- predictions(mod_ran, include_random = FALSE)
+#     expect_true(p1$conf.low < p2$conf.low)
+#     expect_true(p1$conf.high > p2$conf.high)
+# })
+
+
 void <- capture.output({
     dat <- mtcars
     dat$logic <- as.logical(dat$vs)
@@ -21,6 +34,7 @@ void <- capture.output({
     mod_log <- brm(am ~ logic, data = dat, family = bernoulli(),
                    backend = "cmdstanr", seed = 1024, silent = 2, chains = 4, iter = 1000)
 })
+
 
 
 test_that("predictions: no validity", {
