@@ -47,8 +47,6 @@ predictions <- function(model,
     # check before inferring `newdata`
     if (!is.null(variables) && !is.null(newdata)) {
         stop("The `variables` and `newdata` arguments cannot be used simultaneously.")
-    } else if (is.null(newdata) && is.null(variables)) {
-        newdata <- typical(model = model)
     } else if (!is.null(variables)) {
         # get new data if it doesn't exist
         newdata <- sanity_newdata(model, newdata)
@@ -63,7 +61,7 @@ predictions <- function(model,
             }
         }
         newdata <- do.call("typical", args)
-    } else if (!is.null(newdata)) {
+    } else {
         newdata <- sanity_newdata(model, newdata)
         variables <- sanity_variables(model, newdata, variables)
     }

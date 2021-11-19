@@ -27,6 +27,6 @@ test_that("predictions: brglm2::brglm_fit: no validity", {
     model <- update(model, method = "brglm_fit")
     pred1 <- predictions(model)
     pred2 <- predictions(model, newdata = head(endometrial))
-    expect_predictions(pred1, n_row = 1, se = TRUE)
+    expect_predictions(pred1, n_row = nrow(endometrial), se = TRUE)
     expect_predictions(pred2, n_row = 6, se = TRUE)
 })

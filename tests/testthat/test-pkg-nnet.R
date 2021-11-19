@@ -82,7 +82,7 @@ test_that("predictions with multinomial outcome", {
     # small predictions
     pred1 <- predictions(m1, type = "probs")
     pred2 <- predictions(m1, type = "probs", variables = "x")
-    expect_predictions(pred1, n_row = 3, se = FALSE)
+    expect_predictions(pred1, n_row = nrow(dat) * 3, se = FALSE)
     expect_predictions(pred2, n_row = 9, se = FALSE)
 
     # large predictions

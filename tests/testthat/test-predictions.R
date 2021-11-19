@@ -1,6 +1,7 @@
 skip_if_not_installed("pscl")
 requiet("pscl")
 
+
 tmp <- mtcars
 tmp$am <- as.logical(tmp$am)
 mod <- lm(mpg ~ hp + wt + factor(cyl) + am, data = tmp)
@@ -10,6 +11,14 @@ test_that("insight > 0.14.1 allows us to support `type`", {
     expect_warning(predictions(mod, type = "response"), NA)
 })
 
+
+test_that("default predicts for all observations", {
+    logit <- glm(am ~ hp + wt, data = mtcars, family = binomial)
+    pred <- predictions(logit)
+    expect_equal(nrow(pred), nrow(mtcars))
+    pred <- predictions(logit, type = c("link", "response"))
+    expect_equal(nrow(pred), 2 * nrow(mtcars))
+})
 
 test_that("bugfix: counterfactual predictions keep rowid", {
   mod <- lm(mpg ~ hp + am, mtcars)

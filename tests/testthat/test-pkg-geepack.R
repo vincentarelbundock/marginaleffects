@@ -26,7 +26,7 @@ test_that("predictions: geepack::geeglm: no validity", {
                                      family=poisson("identity"), corstr="ar1"))
     pred1 <- predictions(model)
     pred2 <- predictions(model, newdata = head(dietox))
-    expect_predictions(pred1, n_row = 1)
+    expect_predictions(pred1, n_row = nrow(dietox))
     expect_predictions(pred2, n_row = 6)
 })
 
