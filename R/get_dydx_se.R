@@ -18,7 +18,8 @@ get_dydx_se <- function(model,
 
     # no delta method for bayesian models because we cannot manipulate the
     # coefficients of the model. use posterior draws instead.
-    if (inherits(model, "brmsfit")) {
+    if (inherits(model, "brmsfit") || inherits(model, "stanreg")) {
+
         return(mfx)
     }
 

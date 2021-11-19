@@ -7,6 +7,7 @@ betareg,betareg,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE
 bife,bife,TRUE,TRUE,,,,
 brglm2,brglmFit,TRUE,TRUE,,,TRUE,TRUE
 brglm2,brnb,TRUE,TRUE,,,,
+brms,brm,TRUE,TRUE,,,,
 crch,crch,TRUE,TRUE,,,,
 crch,hxlr,TRUE,TRUE,,,,
 estimatr,lm_robust,TRUE,TRUE,TRUE,TRUE,,
@@ -35,6 +36,7 @@ quantreg,rq,TRUE,TRUE,TRUE,TRUE,,
 rms,lrm,TRUE,TRUE,,,,
 robustbase,glmrob,TRUE,TRUE,,,TRUE,TRUE
 robustbase,lmrob,TRUE,TRUE,,,TRUE,TRUE
+rstanarm,stan_glm,TRUE,TRUE,,,,
 speedglm,speedglm,TRUE,TRUE,TRUE,TRUE,,
 speedglm,speedlm,TRUE,TRUE,TRUE,TRUE,,
 survey,svyglm,TRUE,TRUE,,,TRUE,TRUE
