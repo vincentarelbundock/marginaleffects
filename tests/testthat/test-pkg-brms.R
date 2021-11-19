@@ -26,48 +26,41 @@ void <- capture.output({
 test_that("predictions: no validity", {
     # simple
     pred <- predictions(mod_two, newdata = typical(hp = c(100, 120)))
-    expect_predictions(pred) 
+    expect_predictions(pred, se = FALSE) 
     expect_equal(dim(attr(pred, "posterior_draws")), c(2, 2000))
     # interaction
     pred <- predictions(mod_int, newdata = typical(mpg = c(20, 25)))
-    expect_predictions(pred)
+    expect_predictions(pred, se = FALSE)
     # factor in data frame
     pred <- predictions(mod_factor, newdata = typical())
-    expect_predictions(pred)
+    expect_predictions(pred, se = FALSE)
 })
 
 
-# pkgload::load_all()
+test_that("marginaleffects vs. emmeans: multiple types are correctly aligned", {
+    skip_if_not_installed("ggplot2")
+    skip_if_not_installed("emmeans")
+    library(ggplot2)
+    mfx <- marginaleffects(mod_int, variables = "mpg", type = c("response", "link"),
+                           newdata = typical(vs = 0:1, mpg = 20))
+    em_r <- emmeans::emtrends(mod_int, ~vs, var = "mpg", at = list(vs = c(0, 1), mpg = 20), epred = TRUE)
+    em_l <- emmeans::emtrends(mod_int, ~vs, var = "mpg", at = list(vs = c(0, 1), mpg = 20))
+    em_r <- data.frame(em_r)
+    em_l <- data.frame(em_l)
+    expect_equal(mfx[mfx$type == "link", "dydx"], em_l$mpg.trend)
+    expect_equal(mfx[mfx$type == "link", "conf.low"], em_l$lower.HPD)
+    expect_equal(mfx[mfx$type == "link", "conf.high"], em_l$upper.HPD)
+    expect_equal(mfx[mfx$type == "response", "dydx"], em_r$mpg.trend, tolerance = .01)
+    expect_equal(mfx[mfx$type == "response", "conf.low"], em_r$lower.HPD, tolerance = .01)
+    expect_equal(mfx[mfx$type == "response", "conf.high"], em_r$upper.HPD, tolerance = .01)
 
-
-# pd <- get_posterior_draws(mfx)
-
-
-
-# # test_that("marginaleffects vs. emmeans (multiple types)", {
-# library(ggplot2)
-# skip_if_not_installed("ggplot2")
-# pkgload::load_all()
-# mfx <- marginaleffects(mod_int, variables = "mpg", type = c("response", "link"), newdata = typical(vs = 0:1, mpg = 20))
-#     em_r <- emmeans::emtrends(mod_int, ~vs, var = "mpg", at = list(vs = c(0, 1), mpg = 20), epred = TRUE) 
-#     em_l <- emmeans::emtrends(mod_int, ~vs, var = "mpg", at = list(vs = c(0, 1), mpg = 20)) 
-#     em_r <- data.frame(em_r)
-#     em_l <- data.frame(em_l)
-#     expect_equal(mfx[mfx$type == "link", "dydx"], em_l$mpg.trend)
-#     expect_equal(mfx[mfx$type == "link", "conf.low"], em_l$lower.HPD)
-#     expect_equal(mfx[mfx$type == "link", "conf.high"], em_l$upper.HPD)
-#     expect_equal(mfx[mfx$type == "response", "dydx"], em_r$mpg.trend)
-#     expect_equal(mfx[mfx$type == "response", "conf.low"], em_r$lower.HPD)
-
-
-#     expect_equal(mfx[mfx$type == "response", "conf.high"], em_r$upper.HPD)
-
-# mfx <- get_posterior_draws(mfx)
-# ggplot(mfx, aes(x = draw, fill = factor(vs))) +
-#     geom_density(alpha = .4) +
-#         facet_grid(~type, scales = "free")
-
-# # })
+    # easier to see correct alignment of draws in a density plot
+    tmp <- get_posterior_draws(mfx)
+    p <- ggplot(tmp, aes(x = draw, fill = factor(vs))) +
+         geom_density(alpha = .4) +
+         facet_grid(~type, scales = "free")
+    vdiffr::expect_doppelganger("posterior_draws alignment with multi-type mfx", p)
+})
 
 
 test_that("predictions vs. emmeans", {
@@ -105,7 +98,7 @@ test_that("marginaleffects: no validity", {
 
 test_that("marginaleffects vs. emmeans", {
     skip_if_not_installed("emmeans")
-    # NOTE: `emmeans` reports the median draw for `dydx`. We report the mean.
+    # NOTE: `emmeans` reports the median draw for `dydx`.
 
     ## known frequentist example to compare syntax
     # mod_one_freq <- glm(am ~ hp, data = mtcars, family = binomial)
@@ -115,16 +108,14 @@ test_that("marginaleffects vs. emmeans", {
     # one variable: link scale
     mfx1 <- marginaleffects(mod_one, variables = "hp", newdata = typical(hp = 110), type = "link")
     mfx2 <- as.data.frame(emmeans::emtrends(mod_one, ~hp, var = "hp", at = list(hp = 110)))
-    mfx1_median <- as.vector(apply(attr(mfx1, "posterior_draws"), 1, median))
-    expect_equal(mfx1_median, mfx2$hp.trend)
+    expect_equal(mfx1$dydx, mfx2$hp.trend)
     expect_equal(mfx1$conf.low, mfx2$lower.HPD)
     expect_equal(mfx1$conf.high, mfx2$upper.HPD)
 
     ## one variable: response scale
     mfx1 <- marginaleffects(mod_one, variables = "hp", newdata = typical(hp = 110))
     mfx2 <- as.data.frame(emmeans::emtrends(mod_one, ~hp, var = "hp", at = list(hp = 110), transform = "response"))
-    mfx1_median <- as.vector(apply(attr(mfx1, "posterior_draws"), 1, median))
-    expect_equal(mfx1_median, mfx2$hp.trend, tolerance = .001)
+    expect_equal(mfx1$dydx, mfx2$hp.trend, tolerance = .001)
     expect_equal(mfx1$conf.low, mfx2$lower.HPD, tolerance = .001)
     expect_equal(mfx1$conf.high, mfx2$upper.HPD, tolerance = .001)
 
@@ -132,8 +123,7 @@ test_that("marginaleffects vs. emmeans", {
     dat <- typical(model = mod_factor, mpg = 25, cyl_fac = 4)
     mfx1 <- marginaleffects(mod_factor, variables = "mpg", newdata = dat, type = "link")
     mfx2 <- as.data.frame(emmeans::emtrends(mod_factor, ~mpg, var = "mpg", at = list(mpg = 25, cyl_fac = 4)))
-    mfx1_median <- as.vector(apply(attr(mfx1, "posterior_draws"), 1, median))
-    expect_equal(mfx1_median, mfx2$mpg.trend, tolerance = .001)
+    expect_equal(mfx1$dydx, mfx2$mpg.trend, tolerance = .001)
     expect_equal(mfx1$conf.low, mfx2$lower.HPD, tolerance = .001)
     expect_equal(mfx1$conf.high, mfx2$upper.HPD, tolerance = .001)
 
@@ -143,8 +133,7 @@ test_that("marginaleffects vs. emmeans", {
     mfx2 <- emmeans::emmeans(mod_factor, ~ cyl_fac, var = "cyl_fac", at = list(mpg = 25))
     mfx2 <- emmeans::contrast(mfx2, method = "revpairwise")
     mfx2 <- data.frame(mfx2)[1:2,]
-    mfx1_median <- as.vector(apply(attr(mfx1, "posterior_draws"), 1, median))
-    expect_equal(mfx1_median, mfx2$estimate, tolerance = .001)
+    expect_equal(mfx1$dydx, mfx2$estimate, tolerance = .001)
     expect_equal(mfx1$conf.low, mfx2$lower.HPD, tolerance = .001)
     expect_equal(mfx1$conf.high, mfx2$upper.HPD, tolerance = .001)
 })
@@ -168,7 +157,7 @@ test_that("factor in formula", {
     expect_marginaleffects(mod_factor_formula, se = FALSE)
     # predictions
     pred <- predictions(mod_factor_formula, newdata = typical())
-    expect_predictions(pred)
+    expect_predictions(pred, se = FALSE)
 })
 
 
