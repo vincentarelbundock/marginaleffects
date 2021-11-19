@@ -8,7 +8,7 @@ get_dydx <- function(model,
 
     if (variable %in% find_categorical(newdata)) {
         dydx_fun <- get_contrasts
-    } else if ("brmsfit" %in% class(model)) {
+    } else if (inherits(model, "brmsfit") || inherits(model, "stanreg")) {
         dydx_fun <- get_dydx_via_contrasts
     } else {
         dydx_fun <- get_dydx_continuous

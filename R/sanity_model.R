@@ -53,6 +53,7 @@ sanity_model_supported_class <- function(model) {
                       "rq",
                       "speedglm",
                       "speedlm",
+                      "stanreg",
                       c("tobit", "survreg"),
                       "truncreg",
                       "zeroinfl")
