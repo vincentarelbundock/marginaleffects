@@ -186,11 +186,11 @@ full results with functions like `head`, as you would with any other
 mfx <- marginaleffects(mod)
 
 head(mfx, 4)
-#>   rowid     type term       dydx std.error  mpg  hp    wt am predicted
-#> 1     1 response   am  0.3251736  1.682202 21.0 110 2.620  1  22.48857
-#> 2     2 response   am -0.5438639  1.568211 21.0 110 2.875  1  20.80186
-#> 3     3 response   am  1.2007132  2.347558 22.8  93 2.320  1  25.26465
-#> 4     4 response   am -1.7025805  1.867130 21.4 110 3.215  0  20.25549
+#>   rowid     type term        dydx  std.error mpg  hp    wt am predicted
+#> 1     1 response   hp -0.03690556 0.01850168  21 110 2.620  1  22.48857
+#> 2     1 response   wt -6.61454909 1.86622482  21 110 2.620  1  22.48857
+#> 3     1 response   am  0.32517359 1.68220195  21 110 2.620  1  22.48857
+#> 4     2 response   hp -0.02868936 0.01562768  21 110 2.875  1  20.80186
 ```
 
 The function `summary` calculates the “Average Marginal Effect,” that
