@@ -44,7 +44,6 @@ Suggests:
     ggdist,
     ggplot2,
     ggbeeswarm,
-    ggokabeito,
     haven,
     kableExtra,
     knitr,

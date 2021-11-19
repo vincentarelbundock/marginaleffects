@@ -19,23 +19,19 @@ knitr::opts_chunk$set(
 )
 
 library(ggplot2)
-library(ggokabeito)
 
 theme_clean <- function() {
   theme_minimal() +
     theme(panel.grid.minor = element_blank(),
-          plot.title = element_text(face = "bold"),
-          axis.title = element_text(face = "bold"),
-          strip.text = element_text(face = "bold", size = rel(1), hjust = 0),
+          strip.text = element_text(size = rel(1), hjust = 0),
           strip.background = element_blank(),
-          legend.position = "bottom",
-          legend.title = element_text(face = "bold"))
+          legend.position = "bottom")
 }
 ggplot2::theme_set(theme_clean())
-options(ggplot2.continuous.colour = scale_color_okabe_ito)
-options(ggplot2.continuous.fill = scale_fill_okabe_ito)
-options(ggplot2.discrete.colour = scale_color_okabe_ito)
-options(ggplot2.discrete.fill = scale_fill_okabe_ito)
+# options(ggplot2.continuous.colour = scale_color_okabe_ito)
+# options(ggplot2.continuous.fill = scale_fill_okabe_ito)
+# options(ggplot2.discrete.colour = scale_color_okabe_ito)
+# options(ggplot2.discrete.fill = scale_fill_okabe_ito)
 ```
 
 # Notes and Caveats
