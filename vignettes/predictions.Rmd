@@ -38,7 +38,9 @@ library(marginaleffects)
 
 mod <- lm(mpg ~ hp + factor(cyl), data = mtcars)
 
-predictions(mod) |> head()
+pred <- predictions(mod)
+
+head(pred)
 ```
 
 In many cases, this is too limiting, and researchers will want to specify a grid of "typical" values over which to compute adjusted predictions.
@@ -139,7 +141,8 @@ Typical values include `"response"` and `"link"`, but users should refer to the 
 
 ```{r}
 mod <- glm(am ~ mpg, family = binomial, data = mtcars)
-predictions(mod, type = c("response", "link")) |> head()
+pred <- predictions(mod, type = c("response", "link"))
+head(pred)
 ```
 
 Users who need more control over the type of adjusted predictions to compute, including a host of options for back-transformation, may want to consider the [`emmeans` package.](https://cran.r-project.org/package=emmeans)
