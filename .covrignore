@@ -1,4 +1,2 @@
-R/plot.R
-R/plot_cme.R
-R/plot_cap.R
 R/summary.R
+R/poorman.R
