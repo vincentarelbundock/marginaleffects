@@ -147,12 +147,11 @@ predictions <- function(model,
 
     # bayesian: store draws posterior density draws
     if (!is.null(posterior_draws)) {
-        assert_dependency("bayestestR")
-        hdi <- bayestestR::hdi(data.frame(t(posterior_draws)))
+        tmp <- apply(posterior_draws, 1, get_hdi)
         out[["predicted"]] <- apply(posterior_draws, 1, stats::median)
         out[["std.error"]] <- NULL
-        out[["conf.low"]] <- hdi[["CI_low"]]
-        out[["conf.high"]] <- hdi[["CI_high"]]
+        out[["conf.low"]] <- tmp[1, ]
+        out[["conf.high"]] <- tmp[2, ]
         attr(out, "posterior_draws") <- posterior_draws
     }
 

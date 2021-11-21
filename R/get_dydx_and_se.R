@@ -79,14 +79,13 @@ get_dydx_and_se <- function(model,
     # bayesian posterior draws
     draws <- do.call("rbind", draws_list)
     if (!is.null(draws)) {
-        assert_dependency("bayestestR")
         attr(out, "posterior_draws") <- draws
         if (!"conf.low" %in% colnames(out)) {
-            tmp <- bayestestR::hdi(data.frame(t(draws)))
+            tmp <- apply(draws, 1, get_hdi)
             out[["std.error"]] <- NULL
             out[["dydx"]] <- apply(draws, 1, stats::median)
-            out[["conf.low"]] <- tmp$CI_low
-            out[["conf.high"]] <- tmp$CI_high
+            out[["conf.low"]] <- tmp[1, ]
+            out[["conf.high"]] <- tmp[2, ]
         }
     }
 
