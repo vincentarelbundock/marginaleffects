@@ -36,12 +36,13 @@ tidy.marginaleffects <- function(x,
     # empty initial mfx data.frame means there were no numeric variables in the
     # model
     if ("term" %in% colnames(x)) {
-        cols <- c("type", "group", "term")
-        cols <- intersect(cols, colnames(x))
-        cols <- paste(cols, collapse = " + ")
-        f <- stats::as.formula(sprintf("dydx ~ %s", cols))
-
-        dydx <- stats::aggregate(f, data = x, FUN = mean)
+        lhs <- intersect(c("dydx", "conf.low", "conf.high"), colnames(x))
+        rhs <- intersect(c("type", "group", "term"), colnames(x))
+        lhs <- sprintf("cbind(%s)", paste(lhs, collapse = ", "))
+        rhs <- paste(rhs, collapse = " + ")
+        form <- sprintf("%s ~ %s", lhs, rhs)
+        form <- stats::as.formula(form)
+        dydx <- stats::aggregate(form, data = x, FUN = mean)
 
         ## This might be a useful implementation of weights
         # if (is.null(attr(x, "weights"))) {
