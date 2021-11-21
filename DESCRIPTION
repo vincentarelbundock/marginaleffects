@@ -34,7 +34,6 @@ Imports:
     methods,
     numDeriv
 Suggests: 
-    bayestestR,
     bench,
     brms,
     broom,
@@ -96,6 +95,7 @@ Collate:
     'get_dydx_and_se.R'
     'get_dydx_se.R'
     'get_group_names.R'
+    'get_hdi.R'
     'get_posterior_draws.R'
     'get_predict.R'
     'get_vcov.R'

@@ -2,8 +2,11 @@ Copyright (c) 2021, Vincent Arel-Bundock
 
 ########################
 
-Methods in the `R/poorman.R` were extracted from the `poorman` package for `R`.
-Copyright (c) 2021,	Nathan Eastwood
+Functions in the `R/get_hdi.R` were extracted from the `HDInterval` package for `R`. Copyright (c) 2020, Mike Meredith and John Kruschke, shared under the GPL3 License.
+
+########################
+
+Methods in the `R/poorman.R` were extracted from the `poorman` package for `R`.  Copyright (c) 2021,	Nathan Eastwood, shared under the MIT License (copied below).
 
 ########################
 
@@ -15,7 +18,7 @@ Tests in the `tests/testhat/test-analytical.R` were adapted from the `margins` R
 
 Copyright (c) 2016-2018, Thomas J. Leeper.
 
-#######################[#132](https://github.com/vincentarelbundock/marginaleffects/issues/132)
+#######################
 
 MIT License
 

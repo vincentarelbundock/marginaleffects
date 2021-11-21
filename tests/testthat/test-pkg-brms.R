@@ -59,6 +59,26 @@ test_that("predictions: no validity", {
 })
 
 
+test_that("predictions: prediction vs. expectation vs. include_random", {
+    prior1 <- prior(normal(0,10), class = b) + prior(cauchy(0,2), class = sd)
+    void <- capture.output(
+        fit1 <- brm(count ~ zAge + zBase * Trt + (1|patient),
+                    data = epilepsy, family = poisson(), prior = prior1,
+                    silent = 2, backend = "cmdstanr"))
+    # prediction vs. response
+    p1 <- suppressWarnings(predictions(fit1, type = "prediction"))
+    p2 <- suppressWarnings(predictions(fit1, type = "response"))
+    expect_true(all(p1$conf.low < p2$conf.low))
+    expect_true(all(p1$conf.high > p2$conf.high))
+    # include_random
+    p1 <- predictions(fit1, newdata = typical(patient = 1))
+    p2 <- predictions(fit1, newdata = typical(patient = 1), include_random = FALSE)
+    expect_false(p1$predicted == p2$predicted)
+    expect_false(p1$conf.low == p2$conf.low)
+    expect_false(p1$conf.high == p2$conf.high)
+})
+
+
 test_that("marginaleffects vs. emmeans: multiple types are correctly aligned", {
     skip_if_not_installed("ggplot2")
     skip_if_not_installed("emmeans")
