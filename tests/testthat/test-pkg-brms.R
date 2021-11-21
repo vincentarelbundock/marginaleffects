@@ -33,6 +33,21 @@ void <- capture.output({
                    backend = "cmdstanr", seed = 1024, silent = 2, chains = 4, iter = 1000)
     mod_log <- brm(am ~ logic, data = dat, family = bernoulli(),
                    backend = "cmdstanr", seed = 1024, silent = 2, chains = 4, iter = 1000)
+    prior1 <- prior(normal(0,10), class = b) + prior(cauchy(0,2), class = sd)
+    mod_epi <- brm(count ~ zAge + zBase * Trt + (1|patient),
+                   data = epilepsy, family = poisson(), prior = prior1,
+                   seed = 1024, iter = 1000, silent = 2, backend = "cmdstanr")
+})
+
+
+test_that("predict new unit: no validity", {
+    dat1 <- dat2 <- typical(model = mod_epi)
+    dat2$patient <- NA
+    set.seed(1024)
+    mfx1 <- marginaleffects(mod_epi, newdata = dat1)
+    set.seed(1024)
+    mfx2 <- marginaleffects(mod_epi, newdata = dat2, re_formula = NULL)
+    expect_false(any(mfx1$dydx == mfx2$dydx))
 })
 
 
@@ -60,19 +75,14 @@ test_that("predictions: no validity", {
 
 
 test_that("predictions: prediction vs. expectation vs. include_random", {
-    prior1 <- prior(normal(0,10), class = b) + prior(cauchy(0,2), class = sd)
-    void <- capture.output(
-        fit1 <- brm(count ~ zAge + zBase * Trt + (1|patient),
-                    data = epilepsy, family = poisson(), prior = prior1,
-                    silent = 2, backend = "cmdstanr"))
     # prediction vs. response
-    p1 <- suppressWarnings(predictions(fit1, type = "prediction"))
-    p2 <- suppressWarnings(predictions(fit1, type = "response"))
+    p1 <- suppressWarnings(predictions(mod_epi, type = "prediction"))
+    p2 <- suppressWarnings(predictions(mod_epi, type = "response"))
     expect_true(all(p1$conf.low < p2$conf.low))
     expect_true(all(p1$conf.high > p2$conf.high))
     # include_random
-    p1 <- predictions(fit1, newdata = typical(patient = 1))
-    p2 <- predictions(fit1, newdata = typical(patient = 1), include_random = FALSE)
+    p1 <- predictions(mod_epi, newdata = typical(patient = 1))
+    p2 <- predictions(mod_epi, newdata = typical(patient = 1), include_random = FALSE)
     expect_false(p1$predicted == p2$predicted)
     expect_false(p1$conf.low == p2$conf.low)
     expect_false(p1$conf.high == p2$conf.high)

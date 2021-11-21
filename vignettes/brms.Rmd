@@ -192,7 +192,7 @@ ggplot(pred, aes(x = draw, fill = party_autonomy)) +
          fill = "Party autonomy")
 ```
 
-### Marginal effects
+## Marginal effects
 
 As noted in the [Marginal Effects vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx.html), there should be one distinct marginal effect for each combination of regressor values. Here, we consider only one combination of regressor values, where `region` is "Middle East and North Africa", and `civil_liberties` is 0.5. Then, we calculate the mean of the posterior distribution of marginal effects:
 
@@ -221,7 +221,7 @@ plot_cme(mod,
          condition = "party_autonomy")
 ```
 
-### Continuous predictors
+## Continuous predictors
 
 ```{r, fig.asp = .6}
 pred <- predictions(mod,
@@ -291,8 +291,7 @@ emtrends(mod,
          transform = "response")
 ```                                  
 
-### Global grand mean
-
+## Global grand mean
 
 ```{r, fig.width = 9}
 pred <- predictions(mod, 
@@ -321,7 +320,7 @@ plot2 <- ggplot(mfx, aes(x = draw)) +
 plot1 + plot2
 ```
 
-### Region specific predictions and contrasts
+## Region-specific predictions and contrasts
 
 Predicted media index by region and level of civil liberties:
 
@@ -387,4 +386,24 @@ ggplot(mfx, aes(x = draw, y = region , fill = party_autonomy)) +
     labs(x = "Media index (predicted)",
          y = "",
          fill = "Party autonomy")
+```
+
+## Hypothetical groups
+
+We can also obtain predictions or marginal effects for a hypothetical group instead of one of the observed regions. To achieve this, we create a dataset with `NA` in the `region` column. Then, we call the `marginaleffects` or `predictions` functions with the `re_formula=NULL` argument. This argument is pushed through via the ellipsis (`...`) to the `predict` function of `brms`:
+
+```{r}
+dat <- data.frame(civil_liberties = .5,
+                  party_autonomy = FALSE,
+                  region = "Atlantis")
+
+marginaleffects(mod,
+                variables = "party_autonomy",
+                type = "response",
+                newdata = dat,
+                allow_new_levels = TRUE,
+                re_formula = NULL) |>
+     get_posterior_draws() |>
+     ggplot(aes(x = draw)) +
+     stat_halfeye()
 ```
