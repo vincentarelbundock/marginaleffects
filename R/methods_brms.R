@@ -5,6 +5,7 @@ get_predict.brmsfit <- function(model,
                                 newdata = insight::get_data(model),
                                 type = "response",
                                 ...) {
+
     type <- match.arg(type, choices = c("response", "link", "prediction"))
     type <- ifelse(type == "response", "expectation", type)
     pred <- suppressWarnings(insight::get_predicted(model, data = newdata, predict = type, ...))
