@@ -3,20 +3,6 @@ library(marginaleffects)
 skip_if_not_installed("cmdstanr")
 skip_if_not_installed("brms")
 
-
-# test_that("brms: cumulative: predictions: include_random no validity", {
-#     dat <- brms::inhaler
-#     void <- capture.output(
-#         mod_ran <- brm(rating ~ treat + period + (1 | subject), family = cumulative(), data = inhaler, 
-#                     silent = 2, backend = "cmdstanr")
-#     )
-#     p1 <- predictions(mod_ran)
-#     p2 <- predictions(mod_ran, include_random = FALSE)
-#     expect_true(p1$conf.low < p2$conf.low)
-#     expect_true(p1$conf.high > p2$conf.high)
-# })
-
-
 void <- capture.output({
     dat <- mtcars
     dat$logic <- as.logical(dat$vs)
@@ -33,10 +19,29 @@ void <- capture.output({
                    backend = "cmdstanr", seed = 1024, silent = 2, chains = 4, iter = 1000)
     mod_log <- brm(am ~ logic, data = dat, family = bernoulli(),
                    backend = "cmdstanr", seed = 1024, silent = 2, chains = 4, iter = 1000)
-    prior1 <- prior(normal(0,10), class = b) + prior(cauchy(0,2), class = sd)
-    mod_epi <- brm(count ~ zAge + zBase * Trt + (1|patient),
+    prior1 <- prior(normal(0, 10), class = b) + prior(cauchy(0, 2), class = sd)
+    mod_epi <- brm(count ~ zAge + zBase * Trt + (1 | patient),
                    data = epilepsy, family = poisson(), prior = prior1,
                    seed = 1024, iter = 1000, silent = 2, backend = "cmdstanr")
+    mod_ran <- brm(rating ~ treat + period + (1 | subject), family = cumulative(), data = inhaler,
+                   silent = 2, backend = "cmdstanr")
+})
+
+
+test_that("brms: cumulative: predictions: include_random no validity", {
+    dat <- brms::inhaler
+    void <- capture.output(
+    )
+    p1 <- predictions(mod_ran)
+    p2 <- predictions(mod_ran, include_random = FALSE)
+    expect_true(mean(p1$conf.low < p2$conf.low) > .95) # tolerance
+    expect_true(mean(p1$conf.high > p2$conf.high) > .98) # tolerance
+})
+
+
+test_that("marginaleffects: ordinal no validity", {
+    mod <- insight::download_model("brms_ordinal_1")
+    expect_marginaleffects(mod, se = FALSE)
 })
 
 
