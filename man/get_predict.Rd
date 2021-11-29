@@ -23,7 +23,13 @@ get_predict(model, newdata, type, ...)
   ...
 )
 
-\method{get_predict}{brmsfit}(model, newdata = insight::get_data(model), type = "response", ...)
+\method{get_predict}{brmsfit}(
+  model,
+  newdata = insight::get_data(model),
+  type = "response",
+  group_name = NULL,
+  ...
+)
 
 \method{get_predict}{crch}(model, newdata = NULL, type = "location", ...)
 

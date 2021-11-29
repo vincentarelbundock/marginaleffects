@@ -97,7 +97,8 @@ get_contrasts_factor <- function(model,
     baseline_prediction <- get_predict(model,
                                        newdata = baseline,
                                        type = type,
-                                       group_name = group_name)
+                                       group_name = group_name,
+                                       ...)
 
     draws_list <- list()
 
