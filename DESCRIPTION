@@ -74,6 +74,7 @@ Suggests:
     quantreg,
     rms,
     robustbase,
+    rstantools,
     rstanarm,
     sandwich,
     speedglm,
