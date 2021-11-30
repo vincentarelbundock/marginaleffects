@@ -7,6 +7,8 @@ get_predict.brmsfit <- function(model,
                                 group_name = NULL,
                                 ...) {
 
+    assert_dependency("rstantools")
+
     type <- match.arg(type, choices = c("response", "link", "prediction"))
 
     if (type == "link") {
