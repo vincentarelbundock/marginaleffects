@@ -59,7 +59,7 @@ plot_cme <- function(model,
     at_list <- list()
 
     # condition 1
-    if (is.numeric(dat[[condition1]])) {
+    if (is.numeric(dat[[condition1]]) && !isTRUE(attr(dat[[condition1]], "factor"))) {
         at_list[[condition1]] <- seq(min(dat[[condition1]], na.rm = TRUE), 
                                      max(dat[[condition1]], na.rm = TRUE), 
                                      length.out = 25)

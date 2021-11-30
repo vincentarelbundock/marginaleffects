@@ -101,6 +101,11 @@ typical <- function(..., model = NULL, newdata = NULL) {
     if (length(variables_automatic) > 0) {
         dat_automatic <- dat[, variables_automatic, drop = FALSE]
         dat_automatic <- stats::na.omit(dat_automatic)
+        # na.omit destroys attributes, and we need the "factor" attribute
+        # created by insight::get_data
+        for (n in names(dat_automatic)) {
+            attr(dat_automatic[[n]], "factor") <- attr(dat[[n]], "factor")
+        }
         out <- mean_or_mode(dat_automatic)
     } else {
         out <- list()
@@ -121,8 +126,15 @@ typical <- function(..., model = NULL, newdata = NULL) {
 
     out <- lapply(out, unique)
     out <- expand.grid(out, stringsAsFactors = FALSE)
-    return(out)
 
+    # na.omit destroys attributes, and we need the "factor" attribute
+    # created by insight::get_data
+    for (n in names(out)) {
+        attr(out[[n]], "factor") <- attr(dat[[n]], "factor")
+    }
+
+
+    return(out)
 }
 
 
@@ -167,13 +179,18 @@ prep_counterfactual_typical <- function(..., model = NULL, newdata = NULL) {
 
     # check `at` elements and convert them to factor as needed
     for (n in names(at)) {
-        if (is.factor(newdata[[n]])) {
+        if (is.factor(newdata[[n]]) || isTRUE(attributes(newdata[[n]])$factor)) {
+            if (is.factor(newdata[[n]])) {
+                levs <- levels(newdata[[n]])
+            } else {
+                levs <- as.character(sort(unique(newdata[[n]])))
+            }
             at[[n]] <- as.character(at[[n]])
-            if (!all(at[[n]] %in% levels(newdata[[n]]))) {
+            if (!all(at[[n]] %in% levs)) {
                 msg <- sprintf('The "%s" element of the `at` list corresponds to a factor variable. The values entered in the `at` list must be one of the factor levels: "%s".', n, paste(levels(newdata[[n]]), collapse = '", "'))
                 stop(msg)
             } else {
-                at[[n]] <- factor(at[[n]], levels = levels(newdata[[n]]))
+                at[[n]] <- factor(at[[n]], levels = levs)
             }
         }
     }
