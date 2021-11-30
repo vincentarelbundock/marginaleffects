@@ -26,8 +26,9 @@ test_that("multinom basic", {
 test_that("multinom vs. Stata", {
     stata <- readRDS(test_path("stata/stata.rds"))$nnet_multinom_01
     dat <- read.csv(test_path("stata/databases/MASS_polr_01.csv"))
+    dat$y <- as.factor(dat$y)
     void <- capture.output(mod <- 
-        nnet::multinom(factor(y) ~ x1 + x2, data = dat, quiet = true))
+        nnet::multinom(y ~ x1 + x2, data = dat, quiet = true))
     mfx <- suppressWarnings(marginaleffects(mod, type = "probs"))
     mfx <- merge(tidy(mfx), stata, all = TRUE)
     # standard errors don't match

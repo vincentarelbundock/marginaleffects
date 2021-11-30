@@ -49,5 +49,15 @@ mean_or_mode.logical <- function(x) {
 #' @rdname mean_or_mode
 #' @export
 mean_or_mode.data.frame <- function(x) {
-    stats::setNames(lapply(x, mean_or_mode), names(x))
+    out <- list()
+    for (n in names(x)) {
+        # variables transformed to factor in formula are assigned a "factor"
+        # TRUE attribute by insight::get_data
+        if (isTRUE(attributes(x[[n]])$factor)) {
+            out[[n]] <- mean_or_mode.factor(x[[n]])
+        } else {
+            out[[n]] <- mean_or_mode(x[[n]])
+        }
+    }
+    return(out)
 }

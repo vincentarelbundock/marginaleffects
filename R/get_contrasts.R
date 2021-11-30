@@ -23,7 +23,7 @@ get_contrasts <- function(model,
         newdata$rowid <- 1:nrow(newdata)
     }
 
-    if (is.factor(newdata[[variable]])) {
+    if (is.factor(newdata[[variable]]) || isTRUE(attr(newdata[[variable]], "factor"))) {
         get_contrasts_fun <- get_contrasts_factor
     } else if (is.logical(newdata[[variable]])) {
         get_contrasts_fun <- get_contrasts_logical
@@ -93,7 +93,12 @@ get_contrasts_factor <- function(model,
                                  type = "response",
                                  ...) {
     pred_list <- list()
-    baseline[[variable]] <- factor(levels(baseline[[variable]])[1], levels = levels(baseline[[variable]]))
+    if (is.factor(baseline[[variable]])) {
+        levs <- levels(baseline[[variable]])
+    } else {
+        levs <- sort(unique(baseline[[variable]]))
+    }
+    baseline[[variable]] <- factor(levs[1], levels = levs)
     baseline_prediction <- get_predict(model,
                                        newdata = baseline,
                                        type = type,
@@ -102,8 +107,8 @@ get_contrasts_factor <- function(model,
 
     draws_list <- list()
 
-    for (i in 2:length(levels(baseline[[variable]]))) {
-        baseline[[variable]] <- factor(levels(baseline[[variable]])[i], levels = levels(baseline[[variable]]))
+    for (i in 2:length(levs)) {
+        baseline[[variable]] <- factor(levs[i], levels = levs)
         incremented_prediction <- get_predict(model = model,
                                               newdata = baseline,
                                               type = type,
@@ -123,7 +128,6 @@ get_contrasts_factor <- function(model,
     draws <- do.call("rbind", draws_list)
 
     # two possible label formats for factor level coefficients: factor(cyl)4 vs. cyl4
-    levs <- levels(baseline[[variable]])
     levs <- levs[2:length(levs)]
     lab_fmt1 <- sprintf("factor(%s)%s", variable, levs)
     lab_fmt2 <- sprintf("%s%s", variable, levs)
@@ -149,7 +153,7 @@ get_contrasts_character <- function(model,
                                     type = "response",
                                     ...) {
     pred_list <- list()
-    levs <- unique(baseline[[variable]])
+    levs <- sort(unique(baseline[[variable]]))
     baseline[[variable]] <- levs[1]
     baseline_prediction <- get_predict(model,
                                        newdata = baseline,

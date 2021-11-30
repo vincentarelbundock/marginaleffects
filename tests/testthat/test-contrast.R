@@ -6,7 +6,7 @@ test_that("simple contrasts: no validity check", {
     expect_s3_class(res, "data.frame")
     expect_equal(dim(res), c(4, 8))
 })
-
+ 
 
 test_that("contrast as difference and CI make sense", {
     # problem reported with suggested fix by E.Book in Issue 58

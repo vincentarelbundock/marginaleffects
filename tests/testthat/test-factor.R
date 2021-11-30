@@ -8,3 +8,4 @@ test_that("factor before fitting or in formula is the same", {
     expect_equal(mfx1$estimate, mfx2$estimate)
     expect_equal(mfx1$std.error, mfx2$std.error)
 })
+

@@ -6,7 +6,7 @@ get_dydx <- function(model,
                      numDeriv_method,
                      ...) {
 
-    if (variable %in% find_categorical(newdata)) {
+    if (variable %in% find_categorical(newdata) || isTRUE(attr(newdata[[variable]], "factor"))) {
         dydx_fun <- get_contrasts
     } else if (inherits(model, "brmsfit") || inherits(model, "stanreg")) {
         dydx_fun <- get_dydx_via_contrasts
