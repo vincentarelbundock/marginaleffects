@@ -34,20 +34,16 @@ ggplot2::theme_set(theme_clean())
 # options(ggplot2.discrete.fill = scale_fill_okabe_ito)
 ```
 
-# Notes and Caveats
-
-Support for `brms` is still experimental. Bug reports and feature requests can be submitted here: https://github.com/vincentarelbundock/marginaleffects/issues
-
-I hope to improve performance considerably in the very near future.
-
-Install the development version of the `marginaleffects` package:
+Support for `brms` is only available in the development version of `marginaleffects`:
 
 ```{r, eval = FALSE}
 library(remotes)
 install_github("vincentarelbundock/marginaleffects")
 ```
 
-# A simple logistic regression model
+Bug reports and feature requests can be submitted here: https://github.com/vincentarelbundock/marginaleffects/issues
+
+# Logistic regression
 
 Load libraries:
 
@@ -120,7 +116,7 @@ ggplot(pred, aes(y = factor(vs), x = draw)) +
          y = "Engine shape (vs)")
 ```
 
-# More fun, courtesy to Andrew Heiss
+# More fun
 
 Andrew Heiss publishes a ton of useful resources on statistics in R on his website. Here, I replicate the analysis in his post: ["A guide to correctly calculating posterior predictions and average marginal effects with multilievel Bayesian models."](https://www.andrewheiss.com/blog/2021/11/10/ame-bayes-re-guide) My goal is only to illustrate the use of `marginaleffects`. Please refer to the original post for a detailed discussion of the quantities computed below.
 
@@ -137,7 +133,6 @@ library(marginaleffects)
 library(brms)
 library(ggdist)
 library(patchwork)
-
 
 vdem_2015 <- vdem %>% 
   select(country_name, country_text_id, year, region = e_regionpol_6C,
@@ -216,7 +211,7 @@ ggplot(mfx, aes(x = draw, y = term)) +
 Plot marginal effects, conditional on a regressor:
 
 ```{r, fig.asp = .8}
-plot_cme(mod, 
+plot_cme(mod,
          effect = "civil_liberties",
          condition = "party_autonomy")
 ```
@@ -262,16 +257,16 @@ ggplot(mfx, aes(x = draw, fill = factor(civil_liberties))) +
          fill = "Civil liberties")
 ```
                                  
-In Heiss' blog post, the author uses `emmeans`, which computes predictions based on a "grand mean" which ignores group random effects. Behind the scenes, `marginaleffects` uses the `get_predicted` function from the `insight` package to extract predictions from the `brms` model. This function accepts a `include_random` argument, which we can pass direction to `marginaleffects` (the argument will be pushed forward through the ellipsis `...`):
+The `marginaleffects` function can use the ellipsis (`...`) to push any argument forward to the `posterior_predict` function. This can alter the types of predictions returned. For example, [the `re_formula=NA` argument of the `posterior_predict.brmsfit` method](https://cran.r-project.org/web/packages/brms/brms.pdf) will compute marginaleffects *without* including any group-level effects:
 
 ```{r}
-mfx <- marginaleffects(mod, 
+mfx <- marginaleffects(mod,
                        newdata = typical(civil_liberties = c(.2, .5, .8),
                                          party_autonomy = FALSE,
                                          region = "Middle East and North Africa"),
                        variables = "civil_liberties",
-                       include_random = FALSE) |>
-       get_posterior_draws() 
+                       re_formula = NA) |>
+       get_posterior_draws()
 
 ggplot(mfx, aes(x = draw, fill = factor(civil_liberties))) +
     stat_halfeye(slab_alpha = .5) +
@@ -294,13 +289,13 @@ emtrends(mod,
 ## Global grand mean
 
 ```{r, fig.width = 9}
-pred <- predictions(mod, 
-                    include_random = FALSE,
+pred <- predictions(mod,
+                    re_formula = NA,
                     newdata = typical(party_autonomy = c(TRUE, FALSE))) |>
         get_posterior_draws()
 
 mfx <- marginaleffects(mod,
-                       include_random = FALSE,
+                       re_formula = NA,
                        variables = "party_autonomy") |>
        get_posterior_draws()
 
