@@ -5,6 +5,7 @@
 expect_marginaleffects <- function(object,
                                    type = "response",
                                    n_unique = 10,
+                                   pct_na = 5,
                                    se = TRUE) {
 
   # Capture object and label
@@ -39,9 +40,9 @@ expect_marginaleffects <- function(object,
           mfx_nrow > 0 &&
           tid_nrow > 0 &&
           dydx_unique >= n_unique &&
-          dydx_na < 5 &&
+          dydx_na <= pct_na  &&
           (is.null(std.error_na) || std.error_unique >= n_unique) &&
-          (is.null(std.error_na) || std.error_na < 5)
+          (is.null(std.error_na) || std.error_na <= pct_na)
 
   testthat::expect(isTRUE(flag), msg)
 

@@ -3,6 +3,33 @@ skip_if_not_installed("plm")
 requiet("fixest")
 
 
+test_that("bugs stay dead: logit with transformations", {
+    skip("works interactively.")
+    dat <- mtcars
+    dat$gear <- as.factor(dat$gear)
+    mod1 <- suppressMessages(feglm(am ~ mpg + mpg^2 | gear, family = binomial(link = "logit"), data = dat, warn = FALSE))
+    mod2 <- suppressMessages(feglm(am ~ mpg | gear, family = binomial(link = "logit"), data = dat, warn = FALSE))
+    mod3 <- suppressMessages(feglm(am ~ mpg + mpg^2 | gear, family = binomial(link = "logit"), data = mtcars, warn = FALSE))
+    mod4 <- suppressMessages(feglm(am ~ mpg | gear, family = binomial(link = "logit"), data = mtcars, warn = FALSE))
+
+    skip_if_not_installed("fixest", minimum_version = "0.10.2")
+    expect_s3_class(insight::get_data(mod1), "data.frame")
+    expect_s3_class(insight::get_data(mod2), "data.frame")
+    expect_s3_class(insight::get_data(mod3), "data.frame")
+    expect_s3_class(insight::get_data(mod4), "data.frame")
+
+    expect_marginaleffects(mod1, pct_na = 62.5)
+    expect_marginaleffects(mod2, pct_na = 62.5)
+    expect_marginaleffects(mod3, pct_na = 62.5)
+    expect_marginaleffects(mod4, pct_na = 62.5)
+
+    mfx <- marginaleffects(mod1, variables = "mpg")
+    expect_s3_class(mfx, "marginaleffects")
+    expect_equal(sum(is.na(mfx$dydx)), 20)
+    expect_equal(sum(is.na(mfx$std.error)), 20)
+})
+
+
 test_that("fixest::feols vs. Stata", {
     data(EmplUK, package = "plm")
     stata <- readRDS(test_path("stata/stata.rds"))$fixest_feols

@@ -42,7 +42,7 @@ tidy.marginaleffects <- function(x,
         rhs <- paste(rhs, collapse = " + ")
         form <- sprintf("%s ~ %s", lhs, rhs)
         form <- stats::as.formula(form)
-        dydx <- stats::aggregate(form, data = x, FUN = mean)
+        dydx <- stats::aggregate(form, data = x, FUN = mean, na.rm = TRUE)
 
         ## This might be a useful implementation of weights
         # if (is.null(attr(x, "weights"))) {
