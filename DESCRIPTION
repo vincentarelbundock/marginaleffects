@@ -20,7 +20,7 @@ RoxygenNote: 7.1.2
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 Config/testthat/parallel: true
-Remotes: vdeminstitute/vdemdata, easystats/insight
+Remotes: vdeminstitute/vdemdata, easystats/insight, lrberge/fixest
 Depends:
     R (>= 3.5.0)
 Imports: 
@@ -58,7 +58,7 @@ Suggests:
     brglm2,
     crch,
     estimatr,
-    fixest,
+    fixest (> 0.10.1),
     gam,
     geepack,
     glmx,

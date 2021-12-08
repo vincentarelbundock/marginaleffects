@@ -49,7 +49,7 @@ get_dydx_se <- function(model,
                             x = coefs,
                             method = numDeriv_method)
     colnames(J) <- names(get_coef(model))
-    J_mean <- stats::aggregate(J, by = list(out$term), mean)
+    J_mean <- stats::aggregate(J, by = list(out$term), FUN = mean, na.rm = TRUE)
     row.names(J_mean) <- J_mean[[1]]
     J_mean[[1]] <- NULL
     J_mean <- as.matrix(J_mean)
