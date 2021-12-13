@@ -103,10 +103,15 @@ plot_cap <- function(model,
     }
 
     # ggplot2
-    p <- ggplot2::ggplot(datplot, ggplot2::aes(x = condition1, 
-                                               y = predicted, 
-                                               ymin = conf.low, 
-                                               ymax = conf.high))
+    if ("conf.low" %in% colnames(datplot)) {
+        p <- ggplot2::ggplot(datplot, ggplot2::aes(x = condition1,
+                                                   y = predicted,
+                                                   ymin = conf.low,
+                                                   ymax = conf.high))
+    } else {
+        p <- ggplot2::ggplot(datplot, ggplot2::aes(x = condition1, y = predicted))
+    }
+
 
     # continuous x-axis
     if (is.numeric(datplot$condition1)) {

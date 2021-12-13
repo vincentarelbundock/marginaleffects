@@ -11,6 +11,13 @@ test_that("marginaleffects: vs. margins", {
     expect_true(test_against_margins(res, mar, tolerance = .1, verbose = TRUE))
 })
 
+test_that("plot_cap: bugs stay dead", {
+    # broke when no conf.low available
+    data(Kmenta, package = "ivreg")
+    mod <- ivreg::ivreg(Q ~ P + D + I(D^2) | D + I(D^2) + F + A, data = Kmenta)
+    expect_error(plot_cap(mod, condition = "D"), NA)
+})
+
 test_that("marginaleffects: vs. Stata", {
     dat <- read.csv(test_path("stata/databases/ivreg_ivreg_01.csv"))
     stata <- readRDS(test_path("stata/stata.rds"))[["ivreg_ivreg_01"]]
