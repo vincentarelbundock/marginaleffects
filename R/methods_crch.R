@@ -31,7 +31,10 @@ get_predict.crch <- function(model, newdata = NULL, type = "location", ...) {
     pred <- stats::predict(model, newdata = newdata, type = type)
     sanity_predict_vector(pred = pred, model = model, newdata = newdata, type = type)
     sanity_predict_numeric(pred = pred, model = model, newdata = newdata, type = type)
-    return(pred)
+    out <- data.frame(
+        rowid = 1:nrow(newdata),
+        predicted = pred)
+    return(out)
 }
 
 

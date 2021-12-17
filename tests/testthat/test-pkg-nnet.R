@@ -23,6 +23,16 @@ test_that("multinom basic", {
     expect_warning(expect_marginaleffects(mod, type = "probs"))
 })
 
+test_that("marginaleffects summary", {
+    dat <- read.csv(test_path("stata/databases/MASS_polr_01.csv"))
+    void <- capture.output(mod <- 
+        nnet::multinom(factor(y) ~ x1 + x2, data = dat, quiet = true))
+    mfx <- marginaleffects(mod, type = "probs")
+    s <- tidy(mfx)
+    expect_false(anyNA(s$estimate))
+    expect_false(anyNA(s$std.error))
+})
+
 test_that("multinom vs. Stata", {
     stata <- readRDS(test_path("stata/stata.rds"))$nnet_multinom_01
     dat <- read.csv(test_path("stata/databases/MASS_polr_01.csv"))

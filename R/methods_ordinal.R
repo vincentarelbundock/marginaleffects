@@ -3,7 +3,6 @@
 get_predict.clm <- function(model,
                             newdata = insight::get_data(model),
                             type = "response",
-                            group_name = NULL,
                             ...) {
 
     checkmate::assert_choice(type, choices = c("response", "prob"))

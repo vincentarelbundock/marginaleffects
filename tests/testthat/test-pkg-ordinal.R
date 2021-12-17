@@ -1,6 +1,3 @@
-requiet("ordinal")
-
-
 test_that("marginaleffects: clm: vs. MASS", {
     data(housing, package = "MASS")
     known <- MASS::polr(Sat ~ Infl + Type + Cont, weights = Freq, data = housing)

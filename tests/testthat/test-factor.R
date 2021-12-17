@@ -1,3 +1,4 @@
+
 test_that("factor before fitting or in formula is the same", {
     tmp <- mtcars
     tmp$cyl <- factor(tmp$cyl)
@@ -9,3 +10,6 @@ test_that("factor before fitting or in formula is the same", {
     expect_equal(mfx1$std.error, mfx2$std.error)
 })
 
+test_that("factor on LHS and RHS at the same time.", {
+   expect_error(warning("TODO"))
+})

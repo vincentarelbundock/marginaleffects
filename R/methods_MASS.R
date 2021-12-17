@@ -43,28 +43,3 @@ get_vcov.polr <- function(model, ...) {
     out <- suppressMessages(insight::get_varcov(model))
     return(out)
 }
-
-
-#' @include get_predict.R
-#' @rdname get_predict
-#' @export
-get_predict.polr <- function(model,
-                             newdata = insight::get_data(model),
-                             type = "response",
-                             group_name = "1",
-                             ...) {
-
-    pred <- stats::predict(model,
-                           newdata = newdata,
-                           type = type)
-
-    sanity_predict_numeric(pred = pred, model = model, newdata = newdata, type = type)
-
-    # numDeriv expects a vector
-    if (is.matrix(pred) && (!is.null(group_name) && group_name != "main_marginaleffect")) {
-        pred <- pred[, group_name, drop = TRUE]
-    }
-
-    return(pred)
-}
-
