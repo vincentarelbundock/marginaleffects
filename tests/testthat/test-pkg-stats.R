@@ -1,3 +1,9 @@
+# pkgload::load_all()
+# mod <- glm(am ~ hp + mpg, data = mtcars, family = binomial)
+# marginaleffects(mod) |> tidy()
+
+
+
 skip_if_not_installed("margins")
 skip_if_not_installed("emmeans")
 skip_if_not_installed("dplyr")

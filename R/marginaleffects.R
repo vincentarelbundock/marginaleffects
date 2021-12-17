@@ -84,7 +84,6 @@ marginaleffects <- function(model,
     vcov <- sanity_vcov(model, vcov)
     type <- sanity_type(model, type)
     return_data <- sanity_return_data(return_data)
-    group_names <- get_group_names(model)
 
     # rowid is required for later merge
     if (!"rowid" %in% colnames(newdata)) {
@@ -93,23 +92,6 @@ marginaleffects <- function(model,
 
     # variables is a list, get_dydx_and_se() needs a vector
     variables_vec <- unlist(variables[names(variables) %in% c("conditional")])
-
-    pred_list <- list()
-    # add predictions to newdata
-    for (gn in group_names) {
-        for (predt in type) {
-            tmp <- newdata
-            tmp$type <- predt
-            tmp$predicted <- get_predict(model = model,
-                                         newdata = newdata,
-                                         type = predt,
-                                         group_name = gn,
-                                         ...)
-            colnames(tmp) <- gsub("_main_marginaleffect", "", colnames(tmp))
-            pred_list[[predt]] <- tmp
-        }
-    }
-    pred <- bind_rows(pred_list)
 
     # compute marginal effects and standard errors
     out <- get_dydx_and_se(
@@ -129,7 +111,7 @@ marginaleffects <- function(model,
 
     # merge newdata if requested and restore attributes
     if (isTRUE(return_data)) {
-        out <- merge(out, pred, by = c("rowid", "type"), sort = FALSE)
+        out <- merge(out, newdata, by = "rowid", sort = FALSE)
     }
 
     # clean columns

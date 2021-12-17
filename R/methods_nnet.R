@@ -57,19 +57,33 @@ get_group_names.multinom <- function(model, ...) {
 #' @export
 get_predict.multinom <- function(model,
                                  newdata = insight::get_data(model),
-                                 type = "response",
-                                 group_name = "1",
+                                 type = "probs",
                                  ...) {
+
+    # needed because `predict.multinom` uses `data` rather than `newdata`
     pred <- stats::predict(model,
                            newdata = newdata,
-                           type = type)
-    sanity_predict_numeric(pred = pred, model = model, newdata = newdata, type = type)
-    # numDeriv expects a vector
-    if (is.matrix(pred) && (!is.null(group_name) && group_name != "main_marginaleffect")) {
-        pred <- pred[, group_name, drop = TRUE]
-    # predict() returns a vector if there is just one row in `newdata`
-    } else if (nrow(newdata) == 1) {
-        pred <- pred[group_name]
+                           type = type,
+                           ...)
+
+    # atomic vector
+    if (isTRUE(checkmate::check_atomic_vector(pred))) {
+        out <- data.frame(
+            rowid = 1:nrow(newdata),
+            # strip weird attributes added by some methods (e.g., predict.svyglm)
+            predicted = as.numeric(pred))
+
+    # matrix with outcome levels as columns
+    } else if (is.matrix(pred)) {
+        out <- data.frame(
+            rowid = rep(1:nrow(pred), times = ncol(pred)),
+            group = rep(colnames(pred), each = nrow(pred)),
+            predicted = c(pred))
+
+    } else {
+        stop(sprintf("Unable to extractpreditions of type %s from a model of class %s. Please report this problem, along with reproducible code and data on Github: https://github.com/vincentarelbundock/marginaleffects/issues", type, class(model)[1]))
     }
-    return(pred)
+
+    return(out)
 }
+

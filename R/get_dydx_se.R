@@ -2,7 +2,6 @@ get_dydx_se <- function(model,
                         mfx,
                         vcov,
                         variable,
-                        group_name,
                         newdata,
                         type,
                         numDeriv_method,
@@ -19,7 +18,6 @@ get_dydx_se <- function(model,
     # no delta method for bayesian models because we cannot manipulate the
     # coefficients of the model. use posterior draws instead.
     if (inherits(model, "brmsfit") || inherits(model, "stanreg")) {
-
         return(mfx)
     }
 
@@ -38,7 +36,6 @@ get_dydx_se <- function(model,
         g <- dydx_fun(model = model_tmp,
                       newdata = newdata,
                       variable = variable,
-                      group_name = group_name,
                       type = type,
                       numDeriv_method = numDeriv_method)
         colnames(g)[colnames(g) == "contrast"] <- "dydx"
@@ -49,10 +46,9 @@ get_dydx_se <- function(model,
                             x = coefs,
                             method = numDeriv_method)
     colnames(J) <- names(get_coef(model))
-    J_mean <- stats::aggregate(J, by = list(out$term), FUN = mean, na.rm = TRUE)
-    row.names(J_mean) <- J_mean[[1]]
-    J_mean[[1]] <- NULL
-    J_mean <- as.matrix(J_mean)
+
+    J_mean <- stats::aggregate(J, by = list("term" = out$term, "group" = out$group),
+                               FUN = mean, na.rm = TRUE)
 
     # Unit-level standard errors are much slower to compute (are they, though?)
     # Var(dydx) = J Var(beta) J'

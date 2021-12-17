@@ -69,5 +69,5 @@ test_that("typical(): factor, logical, numeric", {
 test_that("typical number of rows", {
     mod <- lm(mpg ~ hp * wt, data = mtcars)
     nd <- typical(model = mod, hp = c(100, 110))
-    expect_equal(dim(marginaleffects(mod, newdata = nd)), c(4, 8))
+    expect_equal(dim(marginaleffects(mod, newdata = nd)), c(4, 7))
 })

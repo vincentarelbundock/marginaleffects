@@ -8,7 +8,7 @@
 #' @inheritParams marginaleffects
 #' @keywords internal
 #' @export
-get_predict <- function (model, newdata, type, ...) {
+get_predict <- function(model, newdata, type, ...) {
     UseMethod("get_predict", model)
 }
 
@@ -19,20 +19,29 @@ get_predict.default <- function(model,
                                 newdata = insight::get_data(model),
                                 type = "response",
                                 ...) {
+
+
     pred <- stats::predict(model,
                            newdata = newdata,
                            type = type)
 
-    # if (!isTRUE(checkmate::check_atomic_vector(pred)) || 
-    #     !isTRUE(checkmate::check_array(pred, d = 1)) ||
-    #     !isTRUE(checkmate::check_numeric(pred))) {
-    #     pred <- suppressWarnings(insight::get_predicted(model, predict = NULL, type = type, ...))
-    #     if (inherits(pred, "get_predicted")) {
-    #         pred <- as.numeric(pred)
-    #     }
-    # }
+    # atomic vector
+    if (isTRUE(checkmate::check_atomic_vector(pred))) {
+        out <- data.frame(
+            rowid = 1:nrow(newdata),
+            # strip weird attributes added by some methods (e.g., predict.svyglm)
+            predicted = as.numeric(pred))
 
-    sanity_predict_numeric(pred = pred, model = model, newdata = newdata, type = type)
-    sanity_predict_vector(pred = pred, model = model, newdata = newdata, type = type)
-    return(pred)
+    # matrix with outcome levels as columns
+    } else if (is.matrix(pred)) {
+        out <- data.frame(
+            rowid = rep(1:nrow(pred), times = ncol(pred)),
+            group = rep(colnames(pred), each = nrow(pred)),
+            predicted = c(pred))
+
+    } else {
+        stop(sprintf("Unable to extractpreditions of type %s from a model of class %s. Please report this problem, along with reproducible code and data on Github: https://github.com/vincentarelbundock/marginaleffects/issues", type, class(model)[1]))
+    }
+
+    return(out)
 }
