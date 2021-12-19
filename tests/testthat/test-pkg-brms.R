@@ -1,7 +1,7 @@
 skip_if_not_installed("cmdstanr")
 skip_if_not_installed("brms")
-library(brms)
-library(marginaleffects)
+requiet("brms")
+requiet("cmdstanr")
 
 void <- capture.output({
     dat <- mtcars

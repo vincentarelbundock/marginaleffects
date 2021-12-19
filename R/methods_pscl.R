@@ -30,7 +30,7 @@ set_coef.zeroinfl <- set_coef.hurdle
 #' @export
 get_group_names.hurdle <- function(model, type = "count", ...) {
     if (type == "prob") {
-        out <- colnames(predict(model, type = "prob"))
+        out <- colnames(stats::predict(model, type = "prob"))
     } else {
         out <- "main_marginaleffect"
     } 

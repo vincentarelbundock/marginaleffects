@@ -2,7 +2,7 @@
 #' @export
 get_coef.brmsfit <- function(model, ...) {
     out <- insight::get_parameters(model)
-    out <- apply(out, 2, median)
+    out <- apply(out, 2, stats::median)
     return(out)
 }
 
@@ -56,9 +56,8 @@ get_predict.brmsfit <- function(model,
         stop("marginaleffects cannot extract posterior draws from this model. Please report this problem to the Bug tracker with a reporducible example: https://github.com/vincentarelbundock/marginaleffects/issues")
     }
 
-    if (length(dim(draws)) == 2) {
-        draws <- t(draws)
-    } else if (length(dim(draws)) == 3) {
+    # group for multi-valued outcome
+    if (length(dim(draws)) == 3) {
         draws <- lapply(1:dim(draws)[3], function(i) draws[, , i])
         draws <- do.call("cbind", draws)
     }
