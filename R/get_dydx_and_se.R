@@ -26,16 +26,20 @@ get_dydx_and_se <- function(model,
                             type = predt,
                             numDeriv_method = numDeriv_method,
                             ...)
-            draws_list <- c(draws_list, list(attr(mfx, "posterior_draws")))
 
-            mfx <- get_dydx_se(model = model,
-                               mfx = mfx,
-                               vcov = vcov,
-                               variable = variable,
-                               newdata = newdata,
-                               type = predt,
-                               numDeriv_method = numDeriv_method,
-                               ...)
+            if (!is.null(attr(mfx, "posterior_draws"))) {
+                draws_list <- c(draws_list, list(attr(mfx, "posterior_draws")))
+            } else {
+                mfx <- get_dydx_se(model = model,
+                                   mfx = mfx,
+                                   vcov = vcov,
+                                   variable = variable,
+                                   newdata = newdata,
+                                   type = predt,
+                                   numDeriv_method = numDeriv_method,
+                                   ...)
+            }
+
             mfx$type <- predt
             mfx_list <- c(mfx_list, list(mfx))
 
@@ -58,16 +62,6 @@ get_dydx_and_se <- function(model,
     out <- bind_rows(mfx_list)
     row.names(out) <- NULL
 
-    if (!is.null(vcov)) {
-        # group: outcome level
-        # term: variable
-        se <- do.call("rbind", se_mean_list)
-        if ("group" %in% colnames(se) && all(se$group == "main_marginaleffect")) {
-            se$group <- NULL
-        }
-        attr(out, "se_at_mean_gradient") <- se
-    }
-
     # bayesian posterior draws
     draws <- do.call("rbind", draws_list)
     if (!is.null(draws)) {
@@ -79,6 +73,17 @@ get_dydx_and_se <- function(model,
             out[["conf.low"]] <- tmp[1, ]
             out[["conf.high"]] <- tmp[2, ]
         }
+    }
+
+    # standard errors
+    if (!is.null(vcov)) {
+        # group: outcome level
+        # term: variable
+        se <- do.call("rbind", se_mean_list)
+        if ("group" %in% colnames(se) && all(se$group == "main_marginaleffect")) {
+            se$group <- NULL
+        }
+        attr(out, "se_at_mean_gradient") <- se
     }
 
     return(out)

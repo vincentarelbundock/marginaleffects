@@ -11,5 +11,9 @@ test_that("factor before fitting or in formula is the same", {
 })
 
 test_that("factor on LHS and RHS at the same time.", {
-   expect_error(warning("TODO"))
+    data(housing, package = "MASS")
+    mod <- MASS::polr(Infl ~ Sat + Freq, data = housing)
+    mfx <- marginaleffects(mod, type = "probs")
+    expect_s3_class(mfx, "marginaleffects")
+    expect_true(all(c("Low", "Medium", "High") %in% mfx$group))
 })
