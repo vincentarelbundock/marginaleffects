@@ -1,3 +1,8 @@
+skip_if_not_installed("ordinal")
+skip_if_not_installed("MASS")
+requiet("MASS")
+requiet("ordinal")
+
 test_that("marginaleffects: clm: vs. MASS", {
     data(housing, package = "MASS")
     known <- MASS::polr(Sat ~ Infl + Type + Cont, weights = Freq, data = housing)
