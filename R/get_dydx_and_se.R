@@ -27,6 +27,8 @@ get_dydx_and_se <- function(model,
                             numDeriv_method = numDeriv_method,
                             ...)
             draws_list <- c(draws_list, list(attr(mfx, "posterior_draws")))
+
+            if (!"term" %in% colnames(mfx)) browser()
             mfx <- get_dydx_se(model = model,
                                mfx = mfx,
                                vcov = vcov,

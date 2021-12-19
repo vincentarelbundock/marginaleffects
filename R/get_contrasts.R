@@ -139,12 +139,18 @@ get_contrasts_factor <- function(model,
     levs <- levs[2:length(levs)]
     lab_fmt1 <- sprintf("factor(%s)%s", variable, levs)
     lab_fmt2 <- sprintf("%s%s", variable, levs)
-    if (all(lab_fmt1 %in% names(get_coef(model)))) {
+
+    coef_names <- names(get_coef(model))
+
+    # clean for hurdle models from package `pscl`
+    coef_names <- gsub("count_|zero_", "", coef_names)
+
+    if (all(lab_fmt1 %in% coef_names)) {
         pred$term <- sprintf("factor(%s)%s", variable, pred$term)
-    } else if (all(lab_fmt2 %in% names(get_coef(model)))) {
+    } else if (all(lab_fmt2 %in% coef_names)) {
         pred$term <- sprintf("%s%s", variable, pred$term)
     } else {
-        pred$term <- pred[[variable]]
+        pred$term <- variable
     }
 
     # output
