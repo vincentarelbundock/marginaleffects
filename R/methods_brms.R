@@ -1,3 +1,12 @@
+#' @rdname get_coef
+#' @export
+get_coef.brmsfit <- function(model, ...) {
+    out <- insight::get_parameters(model)
+    out <- apply(out, 2, median)
+    return(out)
+}
+
+
 #' @include get_predict.R
 #' @rdname get_predict
 #' @export
@@ -30,7 +39,11 @@ get_predict.brmsfit <- function(model,
 
     # 1d outcome
     if (length(dim(draws)) == 2) {
-        out <- apply(draws, 2, stats::median)
+        out <- data.frame(
+            rowid = 1:nrow(newdata),
+            group = "main_marginaleffect",
+            predicted = apply(draws, 2, stats::median))
+
     # multi-dimensional outcome
     } else if (length(dim(draws)) == 3) {
         out <- apply(draws, c(2, 3), stats::median)

@@ -24,3 +24,16 @@ set_coef.hurdle <- function(model, coefs) {
 #' @rdname set_coef
 #' @export
 set_coef.zeroinfl <- set_coef.hurdle
+
+
+#' @rdname get_group_names
+#' @export
+get_group_names.hurdle <- function(model, type = "count", ...) {
+    if (type == "prob") {
+        out <- colnames(predict(model, type = "prob"))
+    } else {
+        out <- "main_marginaleffect"
+    } 
+    return(out)
+}
+
