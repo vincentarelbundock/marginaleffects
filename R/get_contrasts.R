@@ -60,7 +60,6 @@ get_contrasts_logical <- function(model,
                                   type = "response",
                                   ...) {
 
-
     baseline <- newdata
     baseline[[variable]] <- FALSE
     pred_false <- get_predict(model,
@@ -219,16 +218,7 @@ get_contrasts_numeric <- function(model,
                                   ...) {
 
     baseline <- newdata
-    # term reveals the increment size, which is analogous to level for factor/character/logical variables
-    if (!"term" %in% colnames(baseline)) {
-        # slope
-        if (isTRUE(normalize_dydx)) {
-            baseline$term <- variable
-        # pure contrast
-        } else {
-            baseline$term <- sprintf("%s + %s", variable, step_size)
-        }
-    }
+
 
     pred_baseline <- get_predict(model,
                                  newdata = baseline,
@@ -242,18 +232,34 @@ get_contrasts_numeric <- function(model,
                                   ...)
 
     contr <- as.vector(pred_increment$predicted) - as.vector(pred_baseline$predicted)
+
     if (isTRUE(normalize_dydx)) {
         contr <- contr / step_size
-        baseline[["dydx"]] <- contr
+        pred_increment[["dydx"]] <- contr
     } else {
-        baseline[["contrast"]] <- contr
+        pred_increment[["contrast"]] <- contr
     }
-    out <- baseline
+    pred_increment$predicted <- NULL
+
+    out <- pred_increment
+
+    # term reveals the increment size, which is analogous to level for factor/character/logical variables
+    if (!"term" %in% colnames(out)) {
+        # slope
+        if (isTRUE(normalize_dydx)) {
+            out$term <- variable
+        # pure contrast
+        } else {
+            out$term <- sprintf("%s + %s", variable, step_size)
+        }
+    }
 
     # subset columns before assigning attributes later
     if (!isTRUE(return_data)) {
         cols <- intersect(colnames(out), c("rowid", "term", "group", "dydx", "contrast", "conf.low", "conf.high"))
         out <- out[, cols]
+    } else {
+        out <- merge(out, newdata, all.x = TRUE)
     }
 
     # bayes: posterior draws and credible intervals

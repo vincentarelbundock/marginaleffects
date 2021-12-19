@@ -28,10 +28,12 @@ void <- capture.output({
 })
 
 
+test_that("brms: cumulative: marginaleffects: include_random no validity", {
+    expect_marginaleffects(mod_ran, se = FALSE)
+})
+
+
 test_that("brms: cumulative: predictions: include_random no validity", {
-    dat <- brms::inhaler
-    void <- capture.output(
-    )
     p1 <- predictions(mod_ran)
     p2 <- predictions(mod_ran, include_random = FALSE)
     expect_true(mean(p1$conf.low < p2$conf.low) > .95) # tolerance

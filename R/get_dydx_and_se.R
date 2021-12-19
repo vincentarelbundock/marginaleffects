@@ -28,7 +28,6 @@ get_dydx_and_se <- function(model,
                             ...)
             draws_list <- c(draws_list, list(attr(mfx, "posterior_draws")))
 
-            if (!"term" %in% colnames(mfx)) browser()
             mfx <- get_dydx_se(model = model,
                                mfx = mfx,
                                vcov = vcov,
