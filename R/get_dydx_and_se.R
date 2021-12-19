@@ -8,7 +8,7 @@ get_dydx_and_se <- function(model,
 
     coefs <- get_coef(model)
 
-    if (!is.null(vcov)) {
+    if (!is.null(vcov) && all(names(coefs) %in% colnames(vcov))) {
         vcov <- vcov[names(coefs), names(coefs), drop = FALSE]
     }
 

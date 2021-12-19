@@ -38,7 +38,7 @@ get_dydx_continuous <- function(model,
     # must be of the same dimensions. This is inefficient with
     # grouped/categorical outcomes, but VAB cannot currently think of a good
     # way to avoid this.
-    group_names <- get_group_names(model)
+    group_names <- get_group_names(model, type = type)
 
     out_list <- list()
     for (gn in group_names) {

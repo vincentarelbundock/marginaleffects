@@ -139,16 +139,22 @@ get_contrasts_factor <- function(model,
     levs <- levs[2:length(levs)]
     lab_fmt1 <- sprintf("factor(%s)%s", variable, levs)
     lab_fmt2 <- sprintf("%s%s", variable, levs)
+    lab_fmt3 <- sprintf("b_%s%s", variable, levs) # brms
 
     coef_names <- names(get_coef(model))
 
     # clean for hurdle models from package `pscl`
     coef_names <- gsub("count_|zero_", "", coef_names)
 
+    # factor in formula
     if (all(lab_fmt1 %in% coef_names)) {
         pred$term <- sprintf("factor(%s)%s", variable, pred$term)
+    # factor in original data
     } else if (all(lab_fmt2 %in% coef_names)) {
         pred$term <- sprintf("%s%s", variable, pred$term)
+    # brmsfit
+    } else if (all(lab_fmt3 %in% coef_names)) {
+        pred$term <- sprintf("b_%s%s", variable, pred$term)
     } else {
         pred$term <- variable
     }
@@ -235,7 +241,7 @@ get_contrasts_numeric <- function(model,
                                   type = type,
                                   ...)
 
-    contr <- as.vector(pred_increment) - as.vector(pred_baseline)
+    contr <- as.vector(pred_increment$predicted) - as.vector(pred_baseline$predicted)
     if (isTRUE(normalize_dydx)) {
         contr <- contr / step_size
         baseline[["dydx"]] <- contr

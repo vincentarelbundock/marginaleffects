@@ -32,13 +32,6 @@ test_that("error: multivariate", {
     requiet("pscl")
     data("bioChemists", package = "pscl")
     model <- hurdle(art ~ phd + fem | ment, data = bioChemists, dist = "negbin")
-    expect_error(mfx <- marginaleffects(model, type = "prob"), regexp = "feature request")
-})
-
-
-test_that("error: character", {
-    skip_if_not_installed("MASS")
-    dat <- read.csv(test_path("stata/databases/MASS_polr_01.csv"))
-    mod <- MASS::polr(factor(y) ~ x1 + x2, data = dat)
-    expect_error(get_predict(mod, type = "class"), regexp = "differentiated")
+    mfx <- marginaleffects(model, type = "prob")
+    expect_true(all(as.character(0:19) %in% mfx$group))
 })
