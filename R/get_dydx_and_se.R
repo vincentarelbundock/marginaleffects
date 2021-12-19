@@ -79,7 +79,7 @@ get_dydx_and_se <- function(model,
     if (!is.null(vcov)) {
         # group: outcome level
         # term: variable
-        se <- do.call("rbind", se_mean_list)
+        se <- bind_rows(se_mean_list)
         if ("group" %in% colnames(se) && all(se$group == "main_marginaleffect")) {
             se$group <- NULL
         }
