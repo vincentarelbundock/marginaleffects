@@ -66,23 +66,16 @@ get_predict.multinom <- function(model,
                            type = type,
                            ...)
 
-    # atomic vector
+    # atomic vector means there is only one row in `newdata`
     if (isTRUE(checkmate::check_atomic_vector(pred))) {
-        out <- data.frame(
-            rowid = 1:nrow(newdata),
-            # strip weird attributes added by some methods (e.g., predict.svyglm)
-            predicted = as.numeric(pred))
+        pred <- matrix(pred, nrow = 1, dimnames = list(NULL, names(pred)))
+    }
 
     # matrix with outcome levels as columns
-    } else if (is.matrix(pred)) {
-        out <- data.frame(
-            rowid = rep(1:nrow(pred), times = ncol(pred)),
-            group = rep(colnames(pred), each = nrow(pred)),
-            predicted = c(pred))
-
-    } else {
-        stop(sprintf("Unable to extractpreditions of type %s from a model of class %s. Please report this problem, along with reproducible code and data on Github: https://github.com/vincentarelbundock/marginaleffects/issues", type, class(model)[1]))
-    }
+    out <- data.frame(
+        rowid = rep(1:nrow(pred), times = ncol(pred)),
+        group = rep(colnames(pred), each = nrow(pred)),
+        predicted = c(pred))
 
     return(out)
 }

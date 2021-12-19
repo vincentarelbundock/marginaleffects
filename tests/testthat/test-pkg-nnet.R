@@ -27,7 +27,7 @@ test_that("marginaleffects summary", {
     dat <- read.csv(test_path("stata/databases/MASS_polr_01.csv"))
     void <- capture.output(mod <- 
         nnet::multinom(factor(y) ~ x1 + x2, data = dat, quiet = true))
-    mfx <- marginaleffects(mod, type = "probs")
+    mfx <- suppressWarnings(marginaleffects(mod, type = "probs"))
     s <- tidy(mfx)
     expect_false(anyNA(s$estimate))
     expect_false(anyNA(s$std.error))
@@ -60,7 +60,7 @@ test_that("set_coef", {
 
 test_that("bugfix: nnet single row predictions", {
     dat <- read.csv(test_path("stata/databases/MASS_polr_01.csv"))
-    void <- capture.output(mod <- 
+    void <- capture.output(mod <-
         nnet::multinom(factor(y) ~ x1 + x2, data = dat, quiet = true))
     expect_warning(marginaleffects(mod, newdata = typical(), type = "probs"))
     mfx <- suppressWarnings(marginaleffects(mod, newdata = typical(), type = "probs"))
