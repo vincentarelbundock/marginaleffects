@@ -20,10 +20,14 @@ get_predict.default <- function(model,
                                 type = "response",
                                 ...) {
 
-
     pred <- stats::predict(model,
                            newdata = newdata,
                            type = type)
+
+    # 1-d array to vector (e.g., mgcv)
+    if (is.array(pred) && length(dim(pred)) == 1) {
+        pred <- as.vector(pred)
+    }
 
     # atomic vector
     if (isTRUE(checkmate::check_atomic_vector(pred))) {
