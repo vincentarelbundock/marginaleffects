@@ -27,6 +27,18 @@ test_that("marginaleffects: hurdle: no validity check", {
     expect_s3_class(mfx2, "data.frame")
 })
 
+
+test_that("bugs stay dead: hurdle with multi-level regressor", {
+    data("bioChemists", package = "pscl")
+    tmp <- bioChemists
+    tmp$fem <- as.character(tmp$fem)
+    tmp$fem[sample(1:nrow(tmp), 300)] <- "Other"
+    tmp$fem <- as.factor(tmp$fem)
+    model <- hurdle(art ~ phd + fem | ment, data = tmp, dist = "negbin")
+    expect_marginaleffects(model)
+})
+
+
 test_that("marginaleffects: zeroinfl vs. Stata", {
     data("bioChemists", package = "pscl")
     model <- zeroinfl(art ~ kid5 + phd | ment,

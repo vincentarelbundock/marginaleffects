@@ -47,7 +47,7 @@ get_dydx_se <- function(model,
                             method = numDeriv_method)
     colnames(J) <- names(get_coef(model))
 
-    J_mean <- stats::aggregate(J, by = list("term" = out$term, "group" = out$group),
+    J_mean <- stats::aggregate(J, by = out[, c("term", "group")],
                                FUN = mean, na.rm = TRUE)
 
     # Unit-level standard errors are much slower to compute (are they, though?)
