@@ -65,22 +65,21 @@ get_contrasts_logical <- function(model,
     pred_false <- get_predict(model,
                               newdata = baseline,
                               type = type,
-                              ...)$predicted
+                              ...)
     baseline[[variable]] <- TRUE
     pred_true <- get_predict(model = model,
                              newdata = baseline,
                              type = type,
-                             ...)$predicted
+                             ...)
 
-    baseline$contrast <- pred_true - pred_false
+    baseline$contrast <- pred_true$predicted - pred_false$predicted
     baseline$term <- sprintf("%sTRUE", variable)
     pred <- baseline[, c("rowid", "term", "contrast")]
     row.names(pred) <- NULL
 
     # bayes: posterior draws and credible intervals
     if ("posterior_draws" %in% names(attributes(pred_false))) {
-        attr(pred, "posterior_draws") <- attr(pred_true, "posterior_draws") -
-                                         attr(pred_false, "posterior_draws")
+        attr(pred, "posterior_draws") <- attr(pred_true, "posterior_draws") - attr(pred_false, "posterior_draws")
     }
 
     return(pred)

@@ -32,6 +32,11 @@ test_that("brms: cumulative: marginaleffects: include_random no validity", {
     expect_marginaleffects(mod_ran, se = FALSE)
 })
 
+test_that("brms: logical regressor", {
+    mfx <- marginaleffects(mod_log)
+    expect_s3_class(mfx, "marginaleffects")
+    expect_equal(nrow(mfx), nrow(attr(mfx, "posterior_draws")))
+})
 
 test_that("brms: cumulative: predictions: include_random no validity", {
     p1 <- predictions(mod_ran)
