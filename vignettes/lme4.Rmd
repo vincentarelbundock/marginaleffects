@@ -19,7 +19,6 @@ knitr::opts_chunk$set(
 )
 
 library(ggplot2)
-library(ggokabeito)
 
 theme_clean <- function() {
   theme_minimal() +
@@ -29,10 +28,6 @@ theme_clean <- function() {
           legend.position = "bottom")
 }
 ggplot2::theme_set(theme_clean())
-options(ggplot2.continuous.colour = scale_color_okabe_ito)
-options(ggplot2.continuous.fill = scale_fill_okabe_ito)
-options(ggplot2.discrete.colour = scale_color_okabe_ito)
-options(ggplot2.discrete.fill = scale_fill_okabe_ito)
 ```
 
 This vignette replicates some of the analyses in this excellent blog post by Solomon Kurz: [Use `emmeans()` to include 95% CIs around your `lme4`-based fitted lines](https://solomonkurz.netlify.app/post/2021-12-16-use-emmeans-to-include-95-cis-around-your-lme4-based-fitted-lines/)
