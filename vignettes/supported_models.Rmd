@@ -1,0 +1,69 @@
+---
+title: "Supported Models"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Supported Models}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Adjusted predictions and marginal means
+
+Under the hood, `marginaleffects`'s `predictions` function uses the `insight` package to retrieve adjusted predictions from a wide variety of models. Currently, `insight` [supports over many model types](https://easystats.github.io/insight/), and most should work out-of-the-box with the `predictions` function. If you run into problems, do not hesitate to report them on Github or via email.
+
+# Marginal effects and contrasts
+
+This table shows the list of models supported by the `marginaleffects` function, and shows which numerical results -- marginal effects (dY/dX) or standard errors (Std. Error) -- have been checked against alternative software packages: Stata's `margins` command and R's `margins` package. Empty cells mean that the results of a model have not yet been validated against external software. Green cells indicate that the results of [at least one model from the test suite](https://github.com/vincentarelbundock/marginaleffects/tree/main/tests/testthat) match to a reasonable tolerance. Red cells mean that `marginaleffects` results do *not* match those produced by alternative software packages. Obviously, caution is especially warranted when working with estimates from red cells.
+
+I am *very* eager to add support for new models. Feel free to file a request on Github or -- even better -- submit some code.
+
+Warning: When using `marginaleffects` with different models, you will probably have to adjust the `type` argument. Refer to the documentation of your modeling package to see what `type` argument is allowed in the `predict` function. 
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+library("gt")
+
+supported_models <- read.csv("https://raw.githubusercontent.com/vincentarelbundock/marginaleffects/main/data-raw/supported_models.csv", check.names = FALSE, encoding = "utf8")
+
+tmp <- supported_models
+for (i in nrow(tmp):2) {
+    if (tmp$Package[i] == tmp$Package[i-1]) {
+        tmp$Package[i] <- ""
+    }
+}
+
+colnames(tmp) <- c("Package", 
+                   "Function", 
+                   "dY/dX", 
+                   "Std. Error", 
+                   "dY/dX ", 
+                   "Std. Error ",
+                   "dY/dX  ",
+                   "Std. Error  ")
+
+idx_green <- lapply(tmp, function(x) x == TRUE)
+idx_red <- lapply(tmp, function(x) x == FALSE)
+
+for (i in 3:ncol(tmp)) {
+    tmp[[i]] <- ""
+}
+
+tab <- gt(tmp) %>%
+  tab_spanner(label = "Support", columns = 3:4) %>%
+  tab_spanner(label = "Validity: Stata", columns = 5:6) %>%
+  tab_spanner(label = "Validity: margins", columns = 7:8) %>%
+  tab_style(style = list(cell_borders(sides = c("left", "right"), color = "black", weight = px(1))),
+            locations = list(cells_body(columns = 3:ncol(tmp)))) %>%
+  tab_style(style = list(cell_borders(sides = c("bottom", "top"), color = "black", weight = px(1))),
+            locations = cells_body())
+
+for (i in 3:ncol(tmp)) {
+    tab <- tab %>%
+    tab_style(style = cell_fill(color = "#c1e1c1"), 
+              locations = cells_body(columns = i, rows = (idx_green[[i]] == TRUE))) %>%
+    tab_style(style = cell_fill(color = "#ff6961"), 
+              locations = cells_body(columns = i, rows = (idx_red[[i]] == TRUE)))
+}
+
+tab
+# gt::gtsave(tab, "man/figures/README-supported_models.png")
+```

@@ -1,0 +1,101 @@
+---
+title: "Mixed models with `lme4` and `marginaleffects`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Mixed models}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  fig.width = 6,
+  fig.asp = .4,
+  out.width = "100%",
+  warning = FALSE,
+  message = FALSE,
+  comment = "#>"
+)
+
+library(ggplot2)
+library(ggokabeito)
+
+theme_clean <- function() {
+  theme_minimal() +
+    theme(panel.grid.minor = element_blank(),
+          strip.text = element_text(size = rel(1), hjust = 0),
+          strip.background = element_blank(),
+          legend.position = "bottom")
+}
+ggplot2::theme_set(theme_clean())
+options(ggplot2.continuous.colour = scale_color_okabe_ito)
+options(ggplot2.continuous.fill = scale_fill_okabe_ito)
+options(ggplot2.discrete.colour = scale_color_okabe_ito)
+options(ggplot2.discrete.fill = scale_fill_okabe_ito)
+```
+
+This vignette replicates some of the analyses in this excellent blog post by Solomon Kurz: [Use `emmeans()` to include 95% CIs around your `lme4`-based fitted lines](https://solomonkurz.netlify.app/post/2021-12-16-use-emmeans-to-include-95-cis-around-your-lme4-based-fitted-lines/)
+
+
+Load librairies and fit two models of chick weights:
+
+```{r, message = FALSE, warning = FALSE}
+library(lme4)
+library(tidyverse)
+library(patchwork)
+library(marginaleffects)
+
+# unconditional linear growth model
+fit1 <- lmer(
+  weight ~ 1 + Time + (1 + Time | Chick),
+  data = ChickWeight)
+
+# conditional quadratic growth model
+fit2 <- lmer(
+  weight ~ 1 + Time + I(Time^2) + Diet + Time:Diet + I(Time^2):Diet + (1 + Time + I(Time^2) | Chick),
+  data = ChickWeight)
+```
+
+## Unit-level predictions
+
+Predict weight of each chick over time:
+
+```{r}
+pred1 <- predictions(fit1,
+                     newdata = typical(Chick = ChickWeight$Chick,
+                                       Time = 0:21))
+
+p1 <- ggplot(pred1, aes(Time, predicted, level = Chick)) +
+      geom_line() +
+      labs(y = "Predicted weight", x = "Time", title = "Linear growth model")
+
+pred2 <- predictions(fit2,
+                     newdata = typical(Chick = ChickWeight$Chick,
+                                       Time = 0:21))
+
+p2 <- ggplot(pred2, aes(Time, predicted, level = Chick)) +
+      geom_line() +
+      labs(y = "Predicted weight", x = "Time", title = "Quadratic growth model")
+
+p1 + p2
+```
+
+## Conditional / Counterfactual predictions
+
+Predictions for each chick, in the 4 counterfactual worlds with different values for the `Diet` variable:
+
+```{r}
+pred <- predictions(fit2,
+                    newdata = typical(Chick = ChickWeight$Chick,
+                                      Diet = 1:4,
+                                      Time = 0:21))
+
+ggplot(pred, aes(Time, predicted, level = Chick)) +
+    geom_line() +
+    facet_wrap(~ Diet, labeller = label_both) +
+    labs(y = "Predicted weight", x = "Time", title = "Quadratic growth model")
+```
+
+## Population-level predictions
+
