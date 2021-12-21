@@ -37,6 +37,18 @@ principal quantities of interest for a *wide* variety of models:
       - Adjusted predictions of a model, averaged across a “reference
         grid” of categorical predictors.
 
+The rest of this page includes a “Getting Started” tutorial with simple
+examples. To go beyond these simple examples, please read the vignettes
+linked above, for each of the four quantities. In addition, you can
+consult these pages:
+
+  - [List of supported
+    models](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
+  - [Case study: `brms` for Bayesian
+    analysis](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)
+  - [Case study: `lme4` for Multi-level
+    modeling](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)
+
 ## Why?
 
 To calculate marginal effects we need to take derivatives of the
@@ -110,42 +122,6 @@ gradients and jacobians, and [the `insight`
 package](https://easystats.github.io/insight/) to extract information
 from model objects. That’s it. That’s the secret sauce.
 
-## Supported models
-
-#### Adjusted predictions and marginal means
-
-Under the hood, `marginaleffects`’s `predictions` function uses the
-`insight` package to retrieve adjusted predictions from a wide variety
-of models. Currently, `insight` [supports over 100 model
-types](https://easystats.github.io/insight/), and many should work
-out-of-the-box with the `predictions` function. If you run into
-problems, do not hesitate to report them on Github or via email.
-
-#### Marginal effects and contrasts
-
-This table shows the list of models supported by the `marginaleffects`
-function, and shows which numerical results – marginal effects (dY/dX)
-or standard errors (Std. Error) – have been checked against alternative
-software packages: Stata’s `margins` command and R’s `margins` package.
-Empty cells mean that the results of a model have not yet been validated
-against external software. Green cells indicate that the results of [at
-least one model from the test
-suite](https://github.com/vincentarelbundock/marginaleffects/tree/main/tests/testthat)
-match to a reasonable tolerance. Red cells mean that `marginaleffects`
-results do *not* match those produced by alternative software packages.
-Obviously, caution is especially warranted when working with estimates
-from red cells.
-
-I am *very* eager to add support for new models. Feel free to file a
-request on Github or – even better – submit some code.
-
-Warning: When using `marginaleffects` with different models, you will
-probably have to adjust the `type` argument. Refer to the documentation
-of your modeling package to see what `type` argument is allowed in the
-`predict` function.
-
-<img src="man/figures/README-supported_models.png" width="60%" />
-
 ## Installation
 
 You can install the released version of `marginaleffects` from CRAN:
@@ -186,11 +162,11 @@ full results with functions like `head`, as you would with any other
 mfx <- marginaleffects(mod)
 
 head(mfx, 4)
-#>   rowid     type term        dydx  std.error mpg  hp    wt am predicted
-#> 1     1 response   hp -0.03690556 0.01850168  21 110 2.620  1  22.48857
-#> 2     1 response   wt -6.61454909 1.86622482  21 110 2.620  1  22.48857
-#> 3     1 response   am  0.32517359 1.68220195  21 110 2.620  1  22.48857
-#> 4     2 response   hp -0.02868936 0.01562768  21 110 2.875  1  20.80186
+#>   rowid     type term        dydx  std.error mpg  hp    wt am
+#> 1     1 response   hp -0.03690556 0.01850168  21 110 2.620  1
+#> 2     1 response   wt -6.61454909 1.86622482  21 110 2.620  1
+#> 3     1 response   am  0.32517359 1.68220195  21 110 2.620  1
+#> 4     2 response   hp -0.02868936 0.01562768  21 110 2.875  1
 ```
 
 The function `summary` calculates the “Average Marginal Effect,” that
@@ -216,7 +192,7 @@ interaction):
 plot_cme(mod, effect = "hp", condition = c("wt", "am"))
 ```
 
-<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
 
 #### Adjusted predictions
 
@@ -257,7 +233,7 @@ We can plot the adjusted predictions with the `plot_cap` function:
 plot_cap(mod, condition = c("hp", "wt"))
 ```
 
-<img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
 
 Or you can work with the output of the `predictions` or
 `marginaleffects` directly to create your own plots. For example:
@@ -275,7 +251,7 @@ predictions(mod,
     facet_wrap(~am)
 ```
 
-<img src="man/figures/README-unnamed-chunk-12-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />
 
 And of course, categorical variables work too:
 
@@ -284,7 +260,7 @@ mod <- lm(mpg ~ factor(cyl), data = mtcars)
 plot_cap(mod, condition = "cyl")
 ```
 
-<img src="man/figures/README-unnamed-chunk-13-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-12-1.png" width="100%" />
 
 #### Marginal means
 

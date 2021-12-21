@@ -34,6 +34,13 @@ The `marginaleffects` package allows `R` users to compute and plot four principa
 * [_Marginal Mean_ (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) 
     - Adjusted predictions of a model, averaged across a "reference grid" of categorical predictors.
 
+The rest of this page includes a "Getting Started" tutorial with simple examples. To go beyond these simple examples, please read the vignettes linked above, for each of the four quantities. In addition, you can consult these pages:
+
+* [List of supported models](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
+* [Case study: `brms` for Bayesian analysis](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)
+* [Case study: `lme4` for Multi-level modeling](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)
+
+
 ## Why?
 
 To calculate marginal effects we need to take derivatives of the regression equation. This can be challenging to do manually, especially when our models are non-linear, or when regressors are transformed or interacted. Computing the variance of a marginal effect is even more difficult. 
@@ -68,23 +75,6 @@ Downsides of `marginaleffects` include:
 
 By using [the `numDeriv` package](https://cran.r-project.org/package=numDeriv) to compute gradients and jacobians, and [the `insight` package](https://easystats.github.io/insight/) to extract information from model objects. That's it. That's the secret sauce.
 
-## Supported models
-
-#### Adjusted predictions and marginal means
-
-Under the hood, `marginaleffects`'s `predictions` function uses the `insight` package to retrieve adjusted predictions from a wide variety of models. Currently, `insight` [supports over 100 model types](https://easystats.github.io/insight/), and many should work out-of-the-box with the `predictions` function. If you run into problems, do not hesitate to report them on Github or via email.
-
-#### Marginal effects and contrasts
-
-This table shows the list of models supported by the `marginaleffects` function, and shows which numerical results -- marginal effects (dY/dX) or standard errors (Std. Error) -- have been checked against alternative software packages: Stata's `margins` command and R's `margins` package. Empty cells mean that the results of a model have not yet been validated against external software. Green cells indicate that the results of [at least one model from the test suite](https://github.com/vincentarelbundock/marginaleffects/tree/main/tests/testthat) match to a reasonable tolerance. Red cells mean that `marginaleffects` results do *not* match those produced by alternative software packages. Obviously, caution is especially warranted when working with estimates from red cells.
-
-I am *very* eager to add support for new models. Feel free to file a request on Github or -- even better -- submit some code.
-
-Warning: When using `marginaleffects` with different models, you will probably have to adjust the `type` argument. Refer to the documentation of your modeling package to see what `type` argument is allowed in the `predict` function. 
-
-```{r, echo = FALSE, out.width = "60%"}
-knitr::include_graphics("man/figures/README-supported_models.png")
-```
 
 ## Installation
 
