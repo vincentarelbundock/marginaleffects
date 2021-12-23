@@ -12,7 +12,13 @@
 \usage{
 get_predict(model, newdata, type, ...)
 
-\method{get_predict}{default}(model, newdata = insight::get_data(model), type = "response", ...)
+\method{get_predict}{default}(
+  model,
+  newdata = insight::get_data(model),
+  type = "response",
+  conf.level = NULL,
+  ...
+)
 
 \method{get_predict}{brmsfit}(
   model,

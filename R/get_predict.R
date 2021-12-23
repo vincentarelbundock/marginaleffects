@@ -21,11 +21,16 @@ get_predict.default <- function(model,
                                 conf.level = NULL,
                                 ...) {
 
-    # fast prediction for numeric differentiation
-    if (is.null(conf.level)) {
-        pred <- stats::predict(model,
-                               newdata = newdata,
-                               type = type)
+    dots <- list(...)
+
+    # `stats::predict` is faster than `insight::get_predicted`
+    if (is.null(conf.level) && !"include_random" %in% names(dots)) {
+
+        pred <- stats::predict(
+            model,
+            newdata = newdata,
+            type = type,
+            ...)
 
         # 1-d array to vector (e.g., mgcv)
         if (is.array(pred) && length(dim(pred)) == 1) {
@@ -50,28 +55,44 @@ get_predict.default <- function(model,
             stop(sprintf("Unable to extractpreditions of type %s from a model of class %s. Please report this problem, along with reproducible code and data on Github: https://github.com/vincentarelbundock/marginaleffects/issues", type, class(model)[1]))
         }
 
-    # slow prediction with `insight::get_predicted` for `predictions`.
-    # this gives us nice back-transformed confidence intervals for many models.
+    # `insight::get_predicted` yields back-transformed confidence intervals
     } else {
-        dots <- list(...)
-        if ("re.form" %in% names(dots)) {
-            if (is.formula(re.form)) {
-                include_random = re.form
-            } else if (is.na(re.form)) {
-                include_random = FALSE
-            } else {
-                include_random = TRUE
-            }
+
+        # insight uses its own type names 
+        if (type %in% c("response", "expectation", "prob", "probs")) {
+            type_insight <- "expectation"
+        } else {
+            type_insight <- type
         }
-        pred <- insight::get_predicted(x,
-                                       data = newdata,
-                                       predict = type,
-                                       ci = conf.level,
-                                       include_random = include_random)
 
+        if (all(c("include_random", "re.form") %in% names(dots))) {
+            stop("The `include_random` and `re.form` arguments cannot be used together.")
+        }
 
+        if ("re.form" %in% names(dots)) {
+            if (isTRUE(checkmate::check_formula(dots[["re.form"]]))) {
+                dots[["include_random"]] <- dots[["re.form"]]
+            } else if (is.na(dots[["re.form"]])) {
+                dots[["include_random"]] <- FALSE
+            } else {
+                dots[["include_random"]] <- TRUE
+            }
+            dots[["re.form"]] <- NULL
+        }
 
+        args <- list(
+            x = model,
+            data = newdata,
+            predict = type_insight,
+            ci = conf.level)
 
+        args <- c(args, dots)
+
+        f <- insight::get_predicted
+        pred <- do.call("f", args)
+
+        out <- data.frame(pred)
+    }
 
     return(out)
 }
