@@ -5,6 +5,50 @@ requiet("margins")
 requiet("haven")
 requiet("lme4")
 
+
+test_that("get_predict: low-level tests", {
+
+    dat <- haven::read_dta(test_path("stata/databases/lme4_02.dta"))
+    mod <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = dat, family = binomial)
+
+    # incompatible arguments
+    expect_error(get_predict(mod, re.form = ~0, include_random = TRUE), regexp = "together")
+
+    # type = "link"
+    w <- predict(mod, type = "link")
+    x <- get_predict(mod, type = "link")
+    y <- get_predict(mod, type = "link", conf.level = .9)
+    z <- get_predicted(mod, predict = "link")
+    expect_equal(w, x$predicted, ignore_attr = TRUE)
+    expect_equal(w, y$Predicted, ignore_attr = TRUE)
+    expect_equal(w, z, ignore_attr = TRUE)
+
+    # type = "response"
+    w <- predict(mod, type = "response")
+    x <- get_predict(mod, type = "response")
+    y <- get_predict(mod, type = "response", conf.level = .9)
+    z <- get_predicted(mod, predict = "expectation")
+    expect_equal(w, x$predicted, ignore_attr = TRUE)
+    expect_equal(w, y$Predicted, ignore_attr = TRUE)
+    expect_equal(w, z, ignore_attr = TRUE)
+
+    # confidence intervals (weak test)
+    w <- get_predict(mod, conf.level = .95)
+    x <- get_predict(mod, conf.level = .90)
+    expect_true(all(w$conf.low < x$conf.low))
+    expect_true(all(w$conf.high > x$conf.high))
+
+    # no random effects: grand mean
+    w <- predict(mod, re.form = NA, type = "response")
+    x <- get_predict(mod, re.form = NA, type = "response")
+    y <- get_predict(mod, include_random = FALSE, type = "response")
+    expect_equal(w, x$predicted, ignore_attr = TRUE)
+    expect_equal(w, y$Predicted, ignore_attr = TRUE)
+
+})
+
+
+
 test_that("glmer vs. stata", {
     dat <- haven::read_dta(test_path("stata/databases/lme4_02.dta"))
     mod <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = dat, family = binomial)
