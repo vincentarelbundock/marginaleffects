@@ -1,6 +1,21 @@
 skip_if_not_installed("fixest")
 
 
+test_that("typical(x = NA)", {
+    # numeric
+    nd <- typical(newdata = mtcars, mpg = NA, hp = 1:4)
+    expect_equal(nrow(nd), 4)
+    expect_true(all(is.na(nd$mpg)))
+
+    # factor
+    tmp <- mtcars
+    tmp$gear <- factor(tmp$gear)
+    nd <- typical(newdata = tmp, gear = NA, hp = 1:4)
+    expect_equal(nrow(nd), 4)
+    expect_true(all(is.na(nd$gear)))
+})
+
+
 test_that("unique values", {
     tmp <- mtcars
     tmp$am <- as.logical(tmp$am)

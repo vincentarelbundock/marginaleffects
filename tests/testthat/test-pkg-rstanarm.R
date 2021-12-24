@@ -1,5 +1,5 @@
 skip_if_not_installed("rstanarm")
-library(rstanarm)
+requiet("rstanarm")
 
 test_that("stan_glm: no validity", {
     void <- capture.output(
