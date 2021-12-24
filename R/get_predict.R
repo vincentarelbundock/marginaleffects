@@ -30,12 +30,13 @@ get_predict.default <- function(model,
     # `stats::predict` is faster than `insight::get_predicted`
     if (is.null(conf.level) && !"include_random" %in% names(dots)) {
 
+        # first argument in the predict methods is not always named "x" or "model"
         dots[["newdata"]] <- newdata
         dots[["type"]] <- type
+        args <- c(list(model), dots)
 
-        # first argument in the predict methods is not always named "x" or "model"
-        fun <- function(x, ...) stats::predict(model, ...)
-        pred <- do.call("fun", dots)
+        fun <- stats::predict
+        pred <- do.call("fun", args)
 
         # 1-d array to vector (e.g., mgcv)
         if (is.array(pred) && length(dim(pred)) == 1) {

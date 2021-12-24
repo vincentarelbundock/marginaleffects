@@ -4,7 +4,7 @@ requiet("fixest")
 
 
 test_that("bugs stay dead: logit with transformations", {
-    skip("works interactively.")
+    skip("works interactively")
     dat <- mtcars
     dat$gear <- as.factor(dat$gear)
     mod1 <- suppressMessages(feglm(am ~ mpg + mpg^2 | gear, family = binomial(link = "logit"), data = dat, warn = FALSE))
