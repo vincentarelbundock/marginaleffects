@@ -23,14 +23,19 @@ get_predict.default <- function(model,
 
     dots <- list(...)
 
+    # some predict methods raise warnings on unused arguments 
+    unused <- c("contrast_to_dydx", "step_size", "numDeriv_method")
+    dots <- dots[setdiff(names(dots), unused)]
+
     # `stats::predict` is faster than `insight::get_predicted`
     if (is.null(conf.level) && !"include_random" %in% names(dots)) {
 
-        pred <- stats::predict(
-            model,
-            newdata = newdata,
-            type = type,
-            ...)
+        dots[["newdata"]] <- newdata
+        dots[["type"]] <- type
+
+        # first argument in the predict methods is not always named "x" or "model"
+        fun <- function(x, ...) stats::predict(model, ...)
+        pred <- do.call("fun", dots)
 
         # 1-d array to vector (e.g., mgcv)
         if (is.array(pred) && length(dim(pred)) == 1) {
