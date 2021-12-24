@@ -75,11 +75,12 @@ predictions <- function(model,
 
     # predictions
     out_list <- list()
+    draws_list <- list()
     for (predt in type) {
         # extract
         tmp <- get_predict(model,
                            newdata = newdata,
-                           type = type,
+                           type = predt,
                            conf.level = conf.level,
                            ...)
 
@@ -95,11 +96,16 @@ predictions <- function(model,
             colnames(tmp) <- c("rowid_internal", "type", "predicted")
         }
         out_list[[predt]] <- tmp
+        draws_list[[predt]] <- attr(tmp, "posterior_draws")
     }
+
     out <- bind_rows(out_list)
+    draws <- do.call("rbind", draws_list) # poorman::bind_rows does not work on matrices
 
     # unpad factors
-    out <- out[out$rowid_internal > 0, , drop = FALSE]
+    idx <- out$rowid_internal > 0
+    out <- out[idx, , drop = FALSE]
+    draws <- draws[idx, , drop = FALSE]
 
     # return data
     out <- merge(out, newdata, all.x = TRUE, sort = FALSE)
@@ -107,15 +113,6 @@ predictions <- function(model,
     # rowid does not make sense here because the grid is made up
     # Wrong! rowid does make sense when we use `counterfactual()` in `newdata`
     out$rowid_internal <- NULL
-
-    # bayesian: posterior density draws
-    idx <- grepl("^iter\\.\\d+$", colnames(out))
-    if (any(idx)) {
-        posterior_draws <- as.matrix(out[, idx, drop = FALSE])
-        out <- out[, !idx, drop = FALSE]
-    } else {
-        posterior_draws <- NULL
-    }
 
     # clean columns
     stubcols <- c("rowid", "type", "term", "predicted", "std.error", "conf.low", "conf.high",
@@ -142,13 +139,14 @@ predictions <- function(model,
     attr(out, "variables") <- variables
 
     # bayesian: store draws posterior density draws
-    if (!is.null(posterior_draws)) {
-        tmp <- apply(posterior_draws, 1, get_hdi)
-        out[["predicted"]] <- apply(posterior_draws, 1, stats::median)
+    attr(out, "posterior_draws") <- draws
+    if (!is.null(draws)) {
+        tmp <- apply(draws, 1, get_hdi)
+        out[["predicted"]] <- apply(draws, 1, stats::median)
         out[["std.error"]] <- NULL
         out[["conf.low"]] <- tmp[1, ]
         out[["conf.high"]] <- tmp[2, ]
-        attr(out, "posterior_draws") <- posterior_draws
+        attr(out, "posterior_draws") <- draws
     }
 
     return(out)
