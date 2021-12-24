@@ -39,6 +39,21 @@ test_that("brms: logical regressor", {
 })
 
 
+test_that("predictions: hypothetical group", {
+    mod <- insight::download_model("brms_mixed_3")
+    nd <- typical(model = mod, grp = 4, subgrp = 12)
+    nd$Subject <- 1000
+    set.seed(1024)
+    p1 <- predictions(mod, newdata = nd, allow_new_levels = TRUE)
+    set.seed(1024)
+    p2 <- predictions(mod, newdata = nd, allow_new_levels = TRUE, sample_new_levels = "gaussian")
+    set.seed(1024)
+    p3 <- predictions(mod, newdata = nd, allow_new_levels = TRUE, sample_new_levels = "uncertainty")
+    expect_false(any(p1$predicted == p2$predicted))
+    expect_equal(p1, p3)
+})
+
+
 test_that("predictions w/ random effects", {
     mod <- insight::download_model("brms_mixed_3")
 
