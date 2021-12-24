@@ -186,7 +186,7 @@ prep_counterfactual_typical <- function(..., model = NULL, newdata = NULL) {
                 levs <- as.character(sort(unique(newdata[[n]])))
             }
             at[[n]] <- as.character(at[[n]])
-            if (!all(at[[n]] %in% levs)) {
+            if (!all(at[[n]] %in% c(levs, NA))) {
                 msg <- sprintf('The "%s" element of the `at` list corresponds to a factor variable. The values entered in the `at` list must be one of the factor levels: "%s".', n, paste(levels(newdata[[n]]), collapse = '", "'))
                 stop(msg)
             } else {
