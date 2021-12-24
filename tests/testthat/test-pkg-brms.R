@@ -28,7 +28,7 @@ void <- capture.output({
 })
 
 
-test_that("brms: cumulative: marginaleffects: include_random no validity", {
+test_that("brms: cumulative: marginaleffects: no validity", {
     expect_marginaleffects(mod_ran, se = FALSE)
 })
 
@@ -38,13 +38,42 @@ test_that("brms: logical regressor", {
     expect_equal(nrow(mfx), nrow(attr(mfx, "posterior_draws")))
 })
 
-test_that("brms: cumulative: predictions: include_random no validity", {
-    p1 <- predictions(mod_ran)
-    p2 <- predictions(mod_ran, include_random = FALSE)
-    expect_true(mean(p1$conf.low < p2$conf.low) > .95) # tolerance
-    expect_true(mean(p1$conf.high > p2$conf.high) > .98) # tolerance
+
+test_that("predictions w/ random effects", {
+    mod <- insight::download_model("brms_mixed_3")
+
+    # link
+    w <- apply(posterior_linpred(mod), 2, stats::median)
+    x <- get_predict(mod, type = "link")
+    y <- predictions(mod, type = "link")
+    expect_equal(w, x$predicted, ignore_attr = TRUE)
+    expect_equal(w, y$predicted, ignore_attr = TRUE)
+
+    # response
+    w <- apply(posterior_epred(mod), 2, stats::median)
+    x <- get_predict(mod, type = "response")
+    y <- predictions(mod, type = "response")
+    expect_equal(w, x$predicted, ignore_attr = TRUE)
+    expect_equal(w, y$predicted, ignore_attr = TRUE)
+
+    # no random effects
+    w1 <- apply(posterior_epred(mod), 2, stats::median)
+    w2 <- apply(posterior_epred(mod, re.form = NA), 2, stats::median)
+    x <- get_predict(mod, re.form = NA, type = "response")
+    y <- predictions(mod, re.form = NA, type = "response")
+    expect_true(all(w1 != w2))
+    expect_equal(w2, x$predicted, ignore_attr = TRUE)
+    expect_equal(w2, y$predicted, ignore_attr = TRUE)
 })
 
+test_that("brms: cumulative: predictions: no validity", {
+    set.seed(1024)
+    p1 <- predictions(mod_ran)
+    p2 <- predictions(mod_ran, re.form = NA)
+    expect_true(mean(p1$conf.low < p2$conf.low) > .99) # tolerance
+    expect_true(mean(p1$conf.high > p2$conf.high) > .99) # tolerance
+    expect_error(predictions(mod_ran, include_random = FALSE)) # only for lme4
+})
 
 test_that("marginaleffects: ordinal no validity", {
     mod <- insight::download_model("brms_ordinal_1")
@@ -92,9 +121,9 @@ test_that("predictions: prediction vs. expectation vs. include_random", {
     p2 <- suppressWarnings(predictions(mod_epi, type = "response"))
     expect_true(all(p1$conf.low < p2$conf.low))
     expect_true(all(p1$conf.high > p2$conf.high))
-    # include_random
+    # re.form
     p1 <- predictions(mod_epi, newdata = typical(patient = 1))
-    p2 <- predictions(mod_epi, newdata = typical(patient = 1), include_random = FALSE)
+    p2 <- predictions(mod_epi, newdata = typical(patient = 1), re.form = NA)
     expect_false(p1$predicted == p2$predicted)
     expect_false(p1$conf.low == p2$conf.low)
     expect_false(p1$conf.high == p2$conf.high)
