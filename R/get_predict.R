@@ -18,33 +18,86 @@ get_predict <- function(model, newdata, type, ...) {
 get_predict.default <- function(model,
                                 newdata = insight::get_data(model),
                                 type = "response",
+                                conf.level = NULL,
                                 ...) {
 
-    pred <- stats::predict(model,
-                           newdata = newdata,
-                           type = type)
+    dots <- list(...)
 
-    # 1-d array to vector (e.g., mgcv)
-    if (is.array(pred) && length(dim(pred)) == 1) {
-        pred <- as.vector(pred)
-    }
+    # some predict methods raise warnings on unused arguments 
+    unused <- c("contrast_to_dydx", "step_size", "numDeriv_method")
+    dots <- dots[setdiff(names(dots), unused)]
 
-    # atomic vector
-    if (isTRUE(checkmate::check_atomic_vector(pred))) {
-        out <- data.frame(
-            rowid = 1:nrow(newdata),
-            # strip weird attributes added by some methods (e.g., predict.svyglm)
-            predicted = as.numeric(pred))
+    # `stats::predict` is faster than `insight::get_predicted`
+    if (is.null(conf.level) && !"include_random" %in% names(dots)) {
 
-    # matrix with outcome levels as columns
-    } else if (is.matrix(pred)) {
-        out <- data.frame(
-            rowid = rep(1:nrow(pred), times = ncol(pred)),
-            group = rep(colnames(pred), each = nrow(pred)),
-            predicted = c(pred))
+        # first argument in the predict methods is not always named "x" or "model"
+        dots[["newdata"]] <- newdata
+        dots[["type"]] <- type
+        args <- c(list(model), dots)
 
+        fun <- stats::predict
+        pred <- do.call("fun", args)
+
+        # 1-d array to vector (e.g., mgcv)
+        if (is.array(pred) && length(dim(pred)) == 1) {
+            pred <- as.vector(pred)
+        }
+
+        # atomic vector
+        if (isTRUE(checkmate::check_atomic_vector(pred))) {
+            out <- data.frame(
+                rowid = 1:nrow(newdata),
+                # strip weird attributes added by some methods (e.g., predict.svyglm)
+                predicted = as.numeric(pred))
+
+        # matrix with outcome levels as columns
+        } else if (is.matrix(pred)) {
+            out <- data.frame(
+                rowid = rep(1:nrow(pred), times = ncol(pred)),
+                group = rep(colnames(pred), each = nrow(pred)),
+                predicted = c(pred))
+
+        } else {
+            stop(sprintf("Unable to extractpreditions of type %s from a model of class %s. Please report this problem, along with reproducible code and data on Github: https://github.com/vincentarelbundock/marginaleffects/issues", type, class(model)[1]))
+        }
+
+    # `insight::get_predicted` yields back-transformed confidence intervals
     } else {
-        stop(sprintf("Unable to extractpreditions of type %s from a model of class %s. Please report this problem, along with reproducible code and data on Github: https://github.com/vincentarelbundock/marginaleffects/issues", type, class(model)[1]))
+
+        # insight uses its own type names 
+        if (type %in% c("response", "expectation", "prob", "probs")) {
+            type_insight <- "expectation"
+        } else {
+            type_insight <- type
+        }
+
+        if (all(c("include_random", "re.form") %in% names(dots))) {
+            stop("The `include_random` and `re.form` arguments cannot be used together.")
+        }
+
+        if ("re.form" %in% names(dots)) {
+            if (isTRUE(checkmate::check_formula(dots[["re.form"]]))) {
+                dots[["include_random"]] <- dots[["re.form"]]
+            } else if (is.na(dots[["re.form"]])) {
+                dots[["include_random"]] <- FALSE
+            } else {
+                dots[["include_random"]] <- TRUE
+            }
+            dots[["re.form"]] <- NULL
+        }
+
+        args <- list(
+            x = model,
+            data = newdata,
+            predict = type_insight,
+            ci = conf.level)
+
+        args <- c(args, dots)
+
+        f <- insight::get_predicted
+        pred <- do.call("f", args)
+
+        out <- data.frame(pred)
     }
 
     return(out)
