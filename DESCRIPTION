@@ -115,6 +115,7 @@ Collate:
     'methods_plm.R'
     'methods_pscl.R'
     'methods_quantreg.R'
+    'methods_rstanarm.R'
     'methods_stats.R'
     'package.R'
     'plot.R'
