@@ -18,7 +18,7 @@ get_predict.brmsfit <- function(model,
 
     assert_dependency("rstantools")
 
-    type <- match.arg(type, choices = c("response", "link", "prediction"))
+    checkmate::assert_choice(type, choices = c("response", "link", "prediction"))
 
     if (type == "link") {
         draws <- rstantools::posterior_linpred(
