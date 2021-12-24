@@ -46,9 +46,15 @@ test_that("get_predict: low-level tests", {
     expect_equal(w, x$predicted, ignore_attr = TRUE)
     expect_equal(w, y$Predicted, ignore_attr = TRUE)
 
+    # grand mean with new data
+    nd <- typical(model = mod, clus = NA, x1 = -1:1)
+    w <- predict(mod, newdata = nd, re.form = NA, type = "response")
+    x <- get_predict(mod, newdata = nd, re.form = NA)
+    y <- predictions(mod, newdata = nd, re.form = NA, type = "response")
+    expect_equal(w, x$predicted, ignore_attr = TRUE)
+    expect_equal(w, y$predicted, ignore_attr = TRUE)
+
 })
-
-
 
 test_that("glmer vs. stata", {
     dat <- haven::read_dta(test_path("stata/databases/lme4_02.dta"))
