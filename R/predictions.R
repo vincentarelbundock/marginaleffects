@@ -96,7 +96,8 @@ predictions <- function(model,
             colnames(tmp) <- c("rowid_internal", "type", "predicted")
         }
         out_list[[predt]] <- tmp
-        draws_list[[predt]] <- attr(tmp, "posterior_draws")
+        draws <- attr(tmp, "posterior_draws")
+        draws_list[[predt]] <- draws
     }
 
     out <- bind_rows(out_list)
@@ -108,7 +109,8 @@ predictions <- function(model,
     draws <- draws[idx, , drop = FALSE]
 
     # return data
-    out <- merge(out, newdata, all.x = TRUE, sort = FALSE)
+    # base::merge() mixes row order
+    out <- left_join(out, newdata, by = "rowid_internal")
 
     # rowid does not make sense here because the grid is made up
     # Wrong! rowid does make sense when we use `counterfactual()` in `newdata`
