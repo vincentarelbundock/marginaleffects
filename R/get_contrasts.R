@@ -178,22 +178,26 @@ get_contrasts_character <- function(model,
     baseline_prediction <- get_predict(model,
                                        newdata = baseline,
                                        type = type,
-                                       ...)$predicted
+                                       ...)
     draws_list <- list()
     for (i in 2:length(levs)) {
         pred <- baseline
         pred[[variable]] <- levs[i]
-        tmp <- get_predict(model = model,
-                           newdata = baseline,
-                           type = type,
-                           ...)$predicted - baseline_prediction
+        incremented_prediction <- get_predict(model = model,
+                                              newdata = pred,
+                                              type = type,
+                                              ...)
+
+        contr <- as.vector(incremented_prediction$predicted) -
+                 as.vector(baseline_prediction$predicted)
 
         # bayes: posterior draws and credible intervals
-        if ("posterior_draws" %in% names(attributes(tmp))) {
-            draws_list[[i]] <- attr(tmp, "posterior_draws")
+        if ("posterior_draws" %in% names(attributes(baseline_prediction))) {
+            draws_list[[i]] <- attr(incremented_prediction, "posterior_draws") -
+                               attr(baseline_prediction, "posterior_draws")
         }
 
-        pred$contrast <- tmp
+        pred$contrast <- contr
         pred$term <- sprintf("%s%s", variable, pred[[variable]])
         pred_list[[i - 1]] <- pred[, c("rowid", "term", "contrast")]
     }
