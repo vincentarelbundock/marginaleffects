@@ -1,8 +1,8 @@
 ---
-title: "Mixed models with `lme4` and `marginaleffects`"
+title: "Mixed effects models with `lme4` and `marginaleffects`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Mixed models}
+  %\VignetteIndexEntry{Mixed effects models with lme4}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
