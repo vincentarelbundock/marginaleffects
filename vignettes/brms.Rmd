@@ -28,10 +28,6 @@ theme_clean <- function() {
           legend.position = "bottom")
 }
 ggplot2::theme_set(theme_clean())
-# options(ggplot2.continuous.colour = scale_color_okabe_ito)
-# options(ggplot2.continuous.fill = scale_fill_okabe_ito)
-# options(ggplot2.discrete.colour = scale_color_okabe_ito)
-# options(ggplot2.discrete.fill = scale_fill_okabe_ito)
 ```
 
 Support for `brms` is only available in the development version of `marginaleffects`:
@@ -45,24 +41,68 @@ Bug reports and feature requests can be submitted here: https://github.com/vince
 
 # Logistic regression with multiplicative interactions
 
-Load libraries:
+Load libraries and download data on passengers of the Titanic from [the Rdatasets archive:](https://vincentarelbundock.github.io/Rdatasets/)
 
 ```{r, message = FALSE}
 library(brms)
 library(marginaleffects)
 library(ggplot2)
 library(ggdist)
+
+dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/carData/TitanicSurvival.csv")
+dat$survived <- ifelse(dat$survived == "yes", 1, 0)
+dat$woman <- ifelse(dat$sex == "female", 1, 0)
 ```
 
 Fit a logit model with a multiplicative interaction:
 
 ```{r, message = FALSE, warning = FALSE, results = "hide"}
-mod <- brm(am ~ mpg * vs + hp, family = bernoulli(link = "logit"), data = mtcars)
+mod <- brm(survived ~ woman * age + passengerClass,
+           family = bernoulli(link = "logit"),
+           data = dat)
+```
+
+## Adjusted predictions
+
+We can compute [adjusted predicted values](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html) of the outcome variable (i.e., probability of survival aboard the Titanic) using the `predictions` function. By default, this function calculates predictions for each row of the dataset:
+
+```{r}
+pred <- predictions(mod)
+head(pred)
+```
+
+To visualize the relationship between the outcome and one of the regressors, we can plot conditional adjusted predictions with the `plot_cap` function:
+
+```{r}
+plot_cap(mod, condition = "age")
+```
+
+Compute adjusted predictions for some user-specified values of the regressors, using the `newdata` argument and the `typical` function:
+
+```{r}
+pred <- predictions(mod, newdata = typical(woman = 0:1, passengerClass = c("1st", "2nd", "3rd")))
+pred
+```
+
+The `get_posterior_draws` function samples from the posterior distribution of the model, and produces a data frame with `drawid` and `draw` columns.
+
+```{r}
+pred <- get_posterior_draws(pred)
+head(pred)
+```
+
+This "long" format makes it easy to plots results:
+
+```{r}
+ggplot(pred, aes(x = draw, fill = factor(woman))) +
+    geom_density() +
+    facet_grid(~ passengerClass, labeller = label_both) +
+    labs(x = "Predicted probability of survival", y = "", fill = "Woman")
 ```
 
 ## Marginal effects
 
-Use `marginaleffects()` to compute marginal effects for each row of the dataset, and use `summary()` to compute "Average Marginal Effects": 
+Use `marginaleffects()` to [compute marginal effects (slopes of the regression equation)](https://vincentarelbundock.github.io/marginaleffects/articles/mfx.html) for each row of the dataset, and use `summary()` to compute "Average Marginal Effects", that is, the average of all observation-level marginal effects: 
 
 ```{r}
 mfx <- marginaleffects(mod)
@@ -72,10 +112,16 @@ summary(mfx)
 Compute marginal effects with some regressors fixed at user-specified values, and other regressors held at their means:
 
 ```{r}
-marginaleffects(mod, newdata = typical(hp = c(110, 130)))
+marginaleffects(mod, newdata = typical(woman = 1, passengerClass = "1st"))
 ```
 
-The `get_posterior_draws` produces a dataset with `drawid` and `draw` columns.
+Compute and plot conditional marginal effects:
+
+```{r}
+plot_cme(mod, effect = "woman", condition = "age")
+```
+
+The `get_posterior_draws` produces a dataset with `drawid` and `draw` columns:
 
 ```{r}
 draws <- get_posterior_draws(mfx)
@@ -85,38 +131,19 @@ dim(draws)
 head(draws)
 ```
 
-We can use this dataset to plot our results. For example, to plot the posterior density of the marginal effect when the `vs` variable is equal to 0 or 1:
+We can use this dataset to plot our results. For example, to plot the posterior density of the marginal effect of `age` when the `woman` variable is equal to 0 or 1:
 
 ```{r}
-mfx <- marginaleffects(mod, 
-                       variables = "mpg", 
-                       newdata = typical(vs = 0:1)) |>
+mfx <- marginaleffects(mod,
+                       variables = "age",
+                       newdata = typical(woman = 0:1)) |>
        get_posterior_draws()
 
-ggplot(mfx, aes(x = draw, fill = factor(vs))) +
+ggplot(mfx, aes(x = draw, fill = factor(woman))) +
     stat_halfeye(slab_alpha = .5) +
-    labs(x = "Marginal effect of Miles per Gallon",
+    labs(x = "Marginal Effect of Age on Survival",
          y = "Posterior density",
-         fill = "Engine shape (vs)")
-```
-
-## Adjusted predictions
-
-A similar strategy can be used to compute and display model predictions with the `predictions` function:
-
-```{r, message = FALSE, warning = FALSE, results = "hide"}
-mod <- brm(mpg ~ hp * vs + am, data = mtcars)
-```
-
-```{r}
-pred <- predictions(mod, newdata = typical(vs = 0:1, hp = c(100, 200))) |>
-        get_posterior_draws()
-
-ggplot(pred, aes(y = factor(vs), x = draw)) +
-    stat_gradientinterval() +
-    facet_wrap(~ hp) +
-    labs(x = "Predicted Miles per Gallon",
-         y = "Engine shape (vs)")
+         fill = "Woman")
 ```
 
 # Random effects model
@@ -242,7 +269,7 @@ ggplot(pred, aes(x = civil_liberties, y = draw)) +
 The slope of this line for different values of civil liberties can be obtained with:
 
 ```{r}
-mfx <- marginaleffects(mod, 
+mfx <- marginaleffects(mod,
                        newdata = typical(civil_liberties = c(.2, .5, .8),
                                          party_autonomy = FALSE,
                                          region = "Middle East and North Africa"),
