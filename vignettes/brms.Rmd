@@ -2,7 +2,7 @@
 title: "Bayesian analysis with `brms` and `marginaleffects`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Marginal Effects}
+  %\VignetteIndexEntry{Bayesian analysis with brms}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
