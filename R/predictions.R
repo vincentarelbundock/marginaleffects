@@ -149,5 +149,9 @@ predictions <- function(model,
         attr(out, "posterior_draws") <- draws
     }
 
+    if ("group" %in% names(out) && all(out$group == "main_marginaleffect")) {
+        out$group <- NULL
+    }
+
     return(out)
 }

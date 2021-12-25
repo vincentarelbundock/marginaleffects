@@ -171,14 +171,19 @@ get_contrasts_character <- function(model,
                                     variable,
                                     type = "response",
                                     ...) {
+
+    # factors store all levels, but characters do not, so we need to extract the
+    # original data from the model.
+    tmp <- insight::get_data(model)
+    levs <- sort(unique(tmp[[variable]]))
+
     baseline <- newdata
     pred_list <- list()
-    levs <- sort(unique(baseline[[variable]]))
-    baseline[[variable]] <- levs[1]
     baseline_prediction <- get_predict(model,
                                        newdata = baseline,
                                        type = type,
                                        ...)
+
     draws_list <- list()
     for (i in 2:length(levs)) {
         pred <- baseline
@@ -221,7 +226,6 @@ get_contrasts_numeric <- function(model,
                                   ...) {
 
     baseline <- newdata
-
 
     pred_baseline <- get_predict(model,
                                  newdata = baseline,
