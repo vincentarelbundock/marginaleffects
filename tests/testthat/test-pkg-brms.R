@@ -3,14 +3,18 @@ skip_if_not_installed("brms")
 requiet("brms")
 requiet("cmdstanr")
 
+
 void <- capture.output({
     dat <- mtcars
     dat$logic <- as.logical(dat$vs)
     dat$cyl_fac <- as.factor(dat$cyl)
+    dat$cyl_cha <- as.character(dat$cyl)
     mod_one <- brm(am ~ hp, data = dat, family = bernoulli(),
                    backend = "cmdstanr", seed = 1024, silent = 2, chains = 4, iter = 1000)
     mod_two <- brm(am ~ mpg + hp, data = dat, family = bernoulli(),
                    backend = "cmdstanr", seed = 1024, silent = 2, chains = 4, iter = 1000)
+    mod_character <- brm(am ~ mpg + cyl_cha, data = dat, family = bernoulli(),
+                         backend = "cmdstanr", seed = 1024, silent = 2, chains = 4, iter = 1000)
     mod_factor <- brm(am ~ mpg + cyl_fac, data = dat, family = bernoulli(),
                       backend = "cmdstanr", seed = 1024, silent = 2, chains = 4, iter = 1000)
     mod_factor_formula <- brm(am ~ mpg + factor(cyl), data = dat, family = bernoulli(),
@@ -273,3 +277,11 @@ test_that("bugs stay dead: factor indexing for posterior draws", {
     tmp <- predictions(mod_factor, newdata = typical(cyl_fac = 4, mpg = c(10, 20))) 
     expect_error(get_posterior_draws(tmp), NA)
 })
+
+test_that("bugs stay dead: character regressors used to produce duplicates", {
+    expect_marginaleffects(mod_character, se = FALSE)
+    mfx <- marginaleffects(mod_character)
+    ti <- tidy(mfx)
+    expect_true(length(unique(ti$estimate)) == nrow(ti))
+})
+
