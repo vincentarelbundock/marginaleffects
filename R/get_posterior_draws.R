@@ -4,7 +4,10 @@
 #' @return A data.frame with `drawid` and `draw` columns.
 #' @export
 get_posterior_draws <- function(x) {
+
+    # long format can be very slow to merge, so we use `data.table`
     assert_dependency("data.table")
+
     if (!inherits(x, "marginaleffects") && !inherits(x, "predictions")) {
         warning('The `get_posterior_draws` function only supports objects of type "marginaleffects" or "predictions" produced by the `marginaleffects` package.')
         return(x)
@@ -17,13 +20,15 @@ get_posterior_draws <- function(x) {
     if (nrow(draws) != nrow(x)) {
         stop('The number of parameters in the object does not match the number of parameters for which posterior draws are available.')
     }
+
     out <- x
     idx <- lapply(unique(out$type), function(x) out$type == x)
     names(idx) <- unique(out$type)
     draws_by_type <- lapply(idx, function(x) draws[x, , drop = FALSE])
     out_by_type <- lapply(idx, function(x) out[x, , drop = FALSE])
     out_by_type <- lapply(out_by_type, function(x) transform(x, rowid_internal = 1:nrow(x)))
-    out <- bind_rows(out_by_type)
+    out <- data.table::rbindlist(out_by_type)
+
     reshape_draws <- function(k) {
         z <- draws_by_type[[k]]
         data.frame(
@@ -33,8 +38,9 @@ get_posterior_draws <- function(x) {
             draw = as.vector(z))
     }
     draws_by_type <- lapply(names(draws_by_type), reshape_draws)
-    draws_df <- bind_rows(draws_by_type)
-    draws_df <- left_join(draws_df, out, by = c("type", "rowid_internal"))
-    draws_df$rowid_internal <- NULL
-    return(draws_df)
+    draws_df <- data.table::rbindlist(draws_by_type)
+
+    out <- merge(draws_df, out, all.x = TRUE, by = c("type", "rowid_internal"))
+
+    return(out)
 }

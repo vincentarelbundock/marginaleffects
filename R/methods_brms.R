@@ -13,7 +13,6 @@ get_coef.brmsfit <- function(model, ...) {
 get_predict.brmsfit <- function(model,
                                 newdata = insight::get_data(model),
                                 type = "response",
-                                group_name = NULL,
                                 ...) {
 
     assert_dependency("rstantools")
