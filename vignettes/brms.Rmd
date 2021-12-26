@@ -30,14 +30,32 @@ theme_clean <- function() {
 ggplot2::theme_set(theme_clean())
 ```
 
-Support for `brms` is only available in the development version of `marginaleffects`:
+The `marginaleffects` package offers convenience functions to compute and display predictions, contrasts, and marginal effects from bayesian models estimated by the `brms` package. To compute these quantities, `marginaleffects` relies on workshorse functions from the `brms` package to draw from the posterior distribution. The type of draws used is controlled by using the `type` argument of the `predictions` or `marginaleffects` functions:
+
+* `type = "response"`: Compute posterior draws of the expected value using the `brms::posterior_epred` function.
+* `type = "link"`: Compute posterior draws of the linear predictor using the `brms::posterior_linpred` function.
+* `type = "prediction"`: Compute posterior draws of the posterior predictive distribution using the `brms::posterior_predict` function.
+
+The `predictions` and `marginaleffects` functions can also pass additional arguments to the `brms` prediction functions via the `...` ellipsis. For example, if `mod` is a mixed-effects model, then this command will compute 10 draws from the posterior predictive distribution, while ignoring all group-level effects:
+
+```{r, eval = FALSE}
+predictions(mod, type = "prediction", ndraws = 10, re_formula = NA)
+```
+
+See the `brms` documentation for a list of available arguments:
+
+```{r, eval = FALSE}
+?brms::posterior_epred
+?brms::posterior_linpred
+?brms::posterior_predict
+```
+
+Note that support for `brms` will be available in version 0.3.0 of `marginaleffects`. Until that version is released on CRAN, it can be installed from the development repository:
 
 ```{r, eval = FALSE}
 library(remotes)
 install_github("vincentarelbundock/marginaleffects")
 ```
-
-Bug reports and feature requests can be submitted here: https://github.com/vincentarelbundock/marginaleffects/issues
 
 # Logistic regression with multiplicative interactions
 
@@ -56,9 +74,10 @@ dat$woman <- ifelse(dat$sex == "female", 1, 0)
 
 Fit a logit model with a multiplicative interaction:
 
-```{r, message = FALSE, warning = FALSE, results = "hide"}
+```{r fit-titanic, message = FALSE, warning = FALSE, results = "hide"}
 mod <- brm(survived ~ woman * age + passengerClass,
            family = bernoulli(link = "logit"),
+           backend = "cmdstanr", cores = 4,
            data = dat)
 ```
 
@@ -182,14 +201,14 @@ vdem_2015 <- vdem %>%
 
 Fit a basic model:
 
-```{r, results = "hide"}
+```{r fit-vdem, results = "hide"}
 mod <- brm(
   bf(media_index ~ party_autonomy + civil_liberties + (1 | region),
      phi ~ (1 | region)),
   data = vdem_2015,
   family = Beta(),
   control = list(adapt_delta = 0.9),
-  cores = 4,
+  backend = "cmdstanr", cores = 4,
   seed = 12345)
 ```
 
@@ -399,6 +418,7 @@ ggplot(pred, aes(x = draw, y = region , fill = party_autonomy)) +
          y = "",
          fill = "Party autonomy")
 ```
+
 TRUE/FALSE contrasts (marginal effects) of party autonomy by region:
 
 ```{r, fig.asp = .9}
@@ -417,20 +437,84 @@ ggplot(mfx, aes(x = draw, y = region , fill = party_autonomy)) +
 
 ## Hypothetical groups
 
-We can also obtain predictions or marginal effects for a hypothetical group instead of one of the observed regions. To achieve this, we create a dataset with `NA` in the `region` column. Then, we call the `marginaleffects` or `predictions` functions with the `re_formula=NULL` argument. This argument is pushed through via the ellipsis (`...`) to the `predict` function of `brms`:
+We can also obtain predictions or marginal effects for a hypothetical group instead of one of the observed regions. To achieve this, we create a dataset with `NA` in the `region` column. Then, we call the `marginaleffects` or `predictions` functions with the `re_formula=NA` argument. This argument is pushed through via the ellipsis (`...`) to the `posterior_epred` function of the `brms` package:
 
 ```{r}
 dat <- data.frame(civil_liberties = .5,
                   party_autonomy = FALSE,
-                  region = "Atlantis")
+                  region = NA)
 
-marginaleffects(mod,
-                variables = "party_autonomy",
-                type = "response",
-                newdata = dat,
-                allow_new_levels = TRUE,
-                re_formula = NULL) |>
-     get_posterior_draws() |>
-     ggplot(aes(x = draw)) +
-     stat_halfeye()
+mfx <- marginaleffects(
+    mod,
+    variables = "party_autonomy",
+    re_formula = NA,
+    newdata = dat)
+
+draws <- get_posterior_draws(mfx)
+
+ggplot(draws, aes(x = draw)) +
+     stat_halfeye() +
+     labs(x = "Marginal effect of party autonomy in a generic world region", y = "")
+```
+
+# Multinomial logit
+
+Fit a model with categorical outcome (heating system choice in California houses) and logit link:
+
+```{r}
+
+dat <- "https://vincentarelbundock.github.io/Rdatasets/csv/Ecdat/Heating.csv"
+dat <- read.csv(dat)
+
+mod <- brm(depvar ~ ic.gc + oc.gc,
+           data = dat,
+           backend = "cmdstanr", cores = 4,
+           family = categorical(link = "logit"))
+
+mod
+mod <- brm(gear ~ mpg + hp, data = mtcars, family = categorical(link = "logit"))
+```
+
+## Adjusted predictions
+
+Compute predicted probabilities for each level of the outcome variable:
+
+```{r}
+pred <- predictions(mod)
+
+head(pred)
+```
+
+Extract posterior draws and plot them:
+
+```{r}
+draws <- get_posterior_draws(pred)
+
+ggplot(draws, aes(x = draw, fill = group)) +
+    geom_density(alpha = .1)
+```
+
+Use the `plot_cap` function to plot conditional adjusted predictions for each level of the outcome variable `gear`, conditional on the value of the `mpg` regressor:
+
+```{r}
+plot_cap(mod, condition = "oc.gc") + facet_wrap(~ group)
+```
+
+## Marginal effects
+
+```{r}
+mfx <- marginaleffects(mod)
+summary(mfx)
+```
+
+Extract draws and plot them:
+
+
+```{r}
+draws <- get_posterior_draws(mfx)
+
+ggplot(draws, aes(x = draw)) +
+    geom_density() +
+    facet_grid(term ~ group) +
+    xlab("Marginal effect")
 ```

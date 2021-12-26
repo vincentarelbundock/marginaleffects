@@ -71,8 +71,14 @@ get_predict.default <- function(model,
             type_insight <- type
         }
 
-        if (all(c("include_random", "re.form") %in% names(dots))) {
-            stop("The `include_random` and `re.form` arguments cannot be used together.")
+        if ("include_random" %in% names(dots)) {
+            if (any(c("re.form", "re_formula") %in% names(dots))) {
+                stop("The `include_random` and `re.form` (or `re_formula`) arguments cannot be used together.")
+            }
+        }
+
+        if ("re_formula" %in% names(dots)) {
+            dots[["re.form"]] <- dots[["re_formula"]]
         }
 
         if ("re.form" %in% names(dots)) {
