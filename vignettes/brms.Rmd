@@ -148,7 +148,7 @@ ggplot(mfx, aes(x = draw, fill = factor(woman))) +
 
 # Random effects model
 
-Andrew Heiss publishes a ton of useful resources on statistics in R on his website. In this section, I replicate his analysis of a random effects model published in this post: ["A guide to correctly calculating posterior predictions and average marginal effects with multilievel Bayesian models."](https://www.andrewheiss.com/blog/2021/11/10/ame-bayes-re-guide) My goal is only to illustrate the use of `marginaleffects`. Please refer to the original post for a detailed discussion of the quantities computed below.
+This section replicates some of the analyses of a random effects model published in Andrew Heiss' blog post: ["A guide to correctly calculating posterior predictions and average marginal effects with multilievel Bayesian models."](https://www.andrewheiss.com/blog/2021/11/10/ame-bayes-re-guide) The objective is mainly to illustrate the use of `marginaleffects`. Please refer to the original post for a detailed discussion of the quantities computed below.
 
 Load libraries and clean data:
 

@@ -144,7 +144,7 @@ predictions <- function(model,
     # bayesian: store draws posterior density draws
     attr(out, "posterior_draws") <- draws
     if (!is.null(draws)) {
-        tmp <- apply(draws, 1, get_hdi)
+        tmp <- apply(draws, 1, get_hdi, credMass = conf.level)
         out[["predicted"]] <- apply(draws, 1, stats::median)
         out[["std.error"]] <- NULL
         out[["conf.low"]] <- tmp[1, ]
