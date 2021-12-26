@@ -98,7 +98,15 @@ tidy.marginaleffects <- function(x,
 
 #' @export
 glance.marginaleffects <- function(x, ...) {
-    out <- attr(x, "glance")
+    assert_dependency("modelsummary")
+    model <- attr(x, "model")
+    gl <- suppressMessages(suppressWarnings(try(
+        modelsummary::get_gof(model, ...), silent = TRUE)))
+    if (inherits(gl, "data.frame")) {
+        out <- data.frame(gl)
+    } else {
+        out <- NULL
+    }
     return(out)
 }
 
@@ -150,7 +158,8 @@ tidy.marginalmeans <- function(x,
 
 
 #' @export
-glance.marginalmeans <- function(x, ...) {
-    out <- attr(x, "glance")
-    return(out)
-}
+glance.marginalmeans <- glance.marginaleffects
+
+
+#' @export
+glance.predictions <- glance.marginaleffects

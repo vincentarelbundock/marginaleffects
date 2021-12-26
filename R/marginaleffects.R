@@ -128,18 +128,8 @@ marginaleffects <- function(model,
     # DO NOT sort rows because we want draws to match
     row.names(out) <- NULL
 
-    # attributes
-    if (isTRUE(check_dependency("modelsummary"))) {
-        gl <- suppressMessages(suppressWarnings(try(modelsummary::get_gof(model), silent = TRUE)))
-        if (inherits(gl, "data.frame")) {
-            attr(out, "glance") <- data.frame(gl)
-        } else {
-            attr(out, "glance") <- NULL
-        }
-    } else {
-        attr(out, "glance") <- NULL
-    }
     class(out) <- c("marginaleffects", class(out))
+    attr(out, "model") <- model
     attr(out, "type") <- type
     attr(out, "numDeriv_method") <- numDeriv_method
     attr(out, "model_type") <- class(model)[1]
