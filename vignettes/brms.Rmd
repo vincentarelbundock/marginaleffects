@@ -440,7 +440,7 @@ ggplot(draws, aes(x = draw)) +
 
 Fit a model with categorical outcome (heating system choice in California houses) and logit link:
 
-```{r}
+```{r, results = "hide"}
 dat <- "https://vincentarelbundock.github.io/Rdatasets/csv/Ecdat/Heating.csv"
 dat <- read.csv(dat)
 
