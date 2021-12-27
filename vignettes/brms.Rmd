@@ -256,7 +256,6 @@ pred <- predictions(mod,
                                       civil_liberties = seq(0, 1, by = 0.05))) |>
         get_posterior_draws()
 
-
 ggplot(pred, aes(x = civil_liberties, y = draw)) +
     stat_lineribbon() +
     scale_fill_brewer(palette = "Reds") +
@@ -467,7 +466,7 @@ draws <- get_posterior_draws(pred)
 
 ggplot(draws, aes(x = draw, fill = group)) +
     geom_density(alpha = .2, color = "white") +
-    labs(x = "Predicted probability", 
+    labs(x = "Predicted probability",
          y = "Density",
          fill = "Heating system")
 ```
@@ -475,7 +474,7 @@ ggplot(draws, aes(x = draw, fill = group)) +
 Use the `plot_cap` function to plot conditional adjusted predictions for each level of the outcome variable `gear`, conditional on the value of the `mpg` regressor:
 
 ```{r}
-plot_cap(mod, condition = "oc.gc") + 
+plot_cap(mod, condition = "oc.gc") +
     facet_wrap(~ group) +
     labs(y = "Predicted probability")
 ```
@@ -485,16 +484,4 @@ plot_cap(mod, condition = "oc.gc") +
 ```{r}
 mfx <- marginaleffects(mod)
 summary(mfx)
-```
-
-Extract draws and plot them:
-
-
-```{r}
-draws <- get_posterior_draws(mfx)
-
-ggplot(draws, aes(x = draw)) +
-    geom_density() +
-    facet_grid(term ~ group) +
-    xlab("Marginal effect")
 ```

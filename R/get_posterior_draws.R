@@ -42,5 +42,8 @@ get_posterior_draws <- function(x) {
 
     out <- left_join(draws_df, out, all.x = TRUE, by = c("type", "rowid_internal"))
 
+    # always return a data.frame, even when data.table is used to speed things up
+    out <- as.data.frame(out)
+
     return(out)
 }
