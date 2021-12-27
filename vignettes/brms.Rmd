@@ -168,34 +168,17 @@ ggplot(mfx, aes(x = draw, fill = factor(woman))) +
 
 This section replicates some of the analyses of a random effects model published in Andrew Heiss' blog post: ["A guide to correctly calculating posterior predictions and average marginal effects with multilievel Bayesian models."](https://www.andrewheiss.com/blog/2021/11/10/ame-bayes-re-guide) The objective is mainly to illustrate the use of `marginaleffects`. Please refer to the original post for a detailed discussion of the quantities computed below.
 
-Load libraries and clean data:
-
-```{r, eval = FALSE}
-remotes::install_github("vdeminstitute/vdemdata")
-```
+Load libraries and download data:
 
 ```{r, message = FALSE}
-library(vdemdata)
-library(tidyverse)
-library(marginaleffects)
 library(brms)
 library(ggdist)
 library(patchwork)
+library(marginaleffects)
 
-vdem_2015 <- vdem %>%
-  select(country_name, country_text_id, year, region = e_regionpol_6C,
-         media_index = v2xme_altinf, party_autonomy_ord = v2psoppaut_ord,
-         polyarchy = v2x_polyarchy, civil_liberties = v2x_civlib) %>%
-  filter(year == 2015) %>%
-  mutate(party_autonomy = party_autonomy_ord >= 3,
-         party_autonomy = ifelse(is.na(party_autonomy), FALSE, party_autonomy)) %>%
-  mutate(region = factor(region,
-                         labels = c("Eastern Europe and Central Asia",
-                                    "Latin America and the Caribbean",
-                                    "Middle East and North Africa",
-                                    "Sub-Saharan Africa",
-                                    "Western Europe and North America",
-                                    "Asia and Pacific")))
+vdem_2015 <- read.csv("https://github.com/vincentarelbundock/marginaleffects/raw/main/data-raw/vdem_2015.csv")
+
+head(vdem_2015)
 ```
 
 Fit a basic model:
