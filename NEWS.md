@@ -9,11 +9,19 @@ Support for new models and packages:
 * `brms`
 * `rstanarm`
 
-Misc:
+Documentation:
 
-* New vignette on Bayesian models
-* Bugfix: inverted logical contrasts
-* Bugfix: erroneous label in `plot_cme`
+* Vignette on Bayesian models with `brms`
+* Vignette on Mixed effects models with `lme4`
+
+Performance: 
+
+* If the `data.table` package is installed, `marginaleffects` will automatically use it to speed things up.
+
+Bugs:
+
+* Inverted logical contrasts
+* Erroneous label in `plot_cme`
 
 # marginaleffects 0.2.0
 
