@@ -7,11 +7,14 @@ test_that("old bug: counterfactual with a single regressor", {
     expect_equal(nrow(x), 64)
 })
 
+
 test_that("marginal effects does not overwrite counterfactual rowid", {
     mod <- glm(am ~ mpg + factor(cyl), data = mtcars, family = binomial)
     mfx <- marginaleffects(mod, newdata = counterfactual(cyl = c(4, 6, 8)))
-    expect_true(all(mfx$rowid %in% 1:32))
+    expect_true(all(mfx$rowid_original %in% 1:32))
+    expect_true(all(mfx$rowid %in% 1:96))
 })
+
 
 test_that("alternative syntaxes", {
     mod <- lm(mpg ~ hp + drat + wt, mtcars)
@@ -20,7 +23,7 @@ test_that("alternative syntaxes", {
     x <- marginaleffects(mod, newdata = typical(wt = 3, hp = c(100, 110)))
     y <- marginaleffects(mod, newdata = nd1)
     z <- marginaleffects(mod, newdata = nd2)
-    z <- z[, colnames(x)]
+    z <- z[, colnames(x), drop = FALSE]
     expect_true(all(x == y))
     expect_true(all(x == z))
 })
@@ -54,6 +57,7 @@ test_that("counterfactual(): factor, logical, automatic variable", {
     expect_equal(dim(res), c(128, 5))
 })
 
+
 test_that("typical(): factor, logical, numeric", {
     tmp <- mtcars
     tmp$am <- as.logical(tmp$am)
@@ -65,6 +69,7 @@ test_that("typical(): factor, logical, numeric", {
     expect_equal(sum(sapply(res, is.factor)), 1)
     expect_equal(sum(sapply(res, is.numeric)), 9)
 })
+
 
 test_that("typical number of rows", {
     mod <- lm(mpg ~ hp * wt, data = mtcars)

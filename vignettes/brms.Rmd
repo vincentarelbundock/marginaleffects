@@ -77,7 +77,6 @@ Fit a logit model with a multiplicative interaction:
 ```{r fit-titanic, message = FALSE, warning = FALSE, results = "hide"}
 mod <- brm(survived ~ woman * age + passengerClass,
            family = bernoulli(link = "logit"),
-           backend = "cmdstanr", cores = 4,
            data = dat)
 ```
 
@@ -207,9 +206,7 @@ mod <- brm(
      phi ~ (1 | region)),
   data = vdem_2015,
   family = Beta(),
-  control = list(adapt_delta = 0.9),
-  backend = "cmdstanr", cores = 4,
-  seed = 12345)
+  control = list(adapt_delta = 0.9))
 ```
 
 ## Posterior predictions
@@ -462,17 +459,12 @@ ggplot(draws, aes(x = draw)) +
 Fit a model with categorical outcome (heating system choice in California houses) and logit link:
 
 ```{r}
-
 dat <- "https://vincentarelbundock.github.io/Rdatasets/csv/Ecdat/Heating.csv"
 dat <- read.csv(dat)
 
 mod <- brm(depvar ~ ic.gc + oc.gc,
            data = dat,
-           backend = "cmdstanr", cores = 4,
            family = categorical(link = "logit"))
-
-mod
-mod <- brm(gear ~ mpg + hp, data = mtcars, family = categorical(link = "logit"))
 ```
 
 ## Adjusted predictions
@@ -491,13 +483,18 @@ Extract posterior draws and plot them:
 draws <- get_posterior_draws(pred)
 
 ggplot(draws, aes(x = draw, fill = group)) +
-    geom_density(alpha = .1)
+    geom_density(alpha = .2, color = "white") +
+    labs(x = "Predicted probability", 
+         y = "Density",
+         fill = "Heating system")
 ```
 
 Use the `plot_cap` function to plot conditional adjusted predictions for each level of the outcome variable `gear`, conditional on the value of the `mpg` regressor:
 
 ```{r}
-plot_cap(mod, condition = "oc.gc") + facet_wrap(~ group)
+plot_cap(mod, condition = "oc.gc") + 
+    facet_wrap(~ group) +
+    labs(y = "Predicted probability")
 ```
 
 ## Marginal effects

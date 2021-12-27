@@ -41,32 +41,32 @@ bind_cols <- function(...) {
 #' bind rows
 #' @noRd
 bind_rows <- function(..., .id = NULL) {
-  lsts <- list(...)
-  lsts <- flatten(lsts)
-  lsts <- Filter(Negate(is.null), lsts)
-  lapply(lsts, function(x) is_df_or_vector(x))
-  lapply(lsts, function(x) if (is.atomic(x) && !is_named(x)) stop("Vectors must be named."))
+    lsts <- list(...)
+    lsts <- flatten(lsts)
+    lsts <- Filter(Negate(is.null), lsts)
+    lapply(lsts, function(x) is_df_or_vector(x))
+    lapply(lsts, function(x) if (is.atomic(x) && !is_named(x)) stop("Vectors must be named."))
 
-  if (!missing(.id)) {
-    lsts <- lapply(seq_along(lsts), function(i) {
-      nms <- names(lsts)
-      id_df <- data.frame(id = if (is.null(nms)) as.character(i) else nms[i], stringsAsFactors = FALSE)
-      colnames(id_df) <- .id
-      cbind(id_df, lsts[[i]])
+    if (!missing(.id)) {
+        lsts <- lapply(seq_along(lsts), function(i) {
+                           nms <- names(lsts)
+                           id_df <- data.frame(id = if (is.null(nms)) as.character(i) else nms[i], stringsAsFactors = FALSE)
+                           colnames(id_df) <- .id
+                           cbind(id_df, lsts[[i]])
     })
-  }
-
-  nms <- unique(unlist(lapply(lsts, names)))
-  lsts <- lapply(
-    lsts,
-    function(x) {
-      if (!is.data.frame(x)) x <- data.frame(as.list(x), stringsAsFactors = FALSE)
-      for (i in nms[!nms %in% names(x)]) x[[i]] <- NA
-      x
     }
-  )
-  names(lsts) <- NULL
-  do.call(rbind, lsts)
+
+    nms <- unique(unlist(lapply(lsts, names)))
+    lsts <- lapply(
+                   lsts,
+                   function(x) {
+                       if (!is.data.frame(x)) x <- data.frame(as.list(x), stringsAsFactors = FALSE)
+                       for (i in nms[!nms %in% names(x)]) x[[i]] <- NA
+                       x
+                   }
+    )
+    names(lsts) <- NULL
+    do.call(rbind, lsts)
 }
 
 #' Move entries within a list up one level
@@ -124,7 +124,13 @@ inner_join <- function(x, y, by = NULL, suffix = c(".x", ".y"), ..., na_matches 
 
 #' @noRd
 left_join <- function(x, y, by = NULL, suffix = c(".x", ".y"), ..., keep = FALSE, na_matches = c("na", "never")) {
-  join_worker(x = x, y = y, by = by, suffix = suffix, all.x = TRUE, ..., keep = keep, na_matches = na_matches)
+  if (isTRUE(check_dependency("data.table"))) {
+      x <- data.table::data.table(x)
+      y <- data.table::data.table(y)
+      merge(x, y, all.x = TRUE, by = by, sort = FALSE)
+  } else {
+      join_worker(x = x, y = y, by = by, suffix = suffix, all.x = TRUE, ..., keep = keep, na_matches = na_matches)
+  }
 }
 
 #' @noRd
