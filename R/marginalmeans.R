@@ -157,7 +157,7 @@ marginalmeans <- function(model,
             colnames(se)[match(colnames(se), v)] <- "value"
             se$term <- v
             se$std.error <- sqrt(colSums(t(modmat_tmp %*% vcov) * t(modmat_tmp)))
-            out <- merge(yhat, se)
+            out <- left_join(yhat, se)
         } else {
             out <- yhat
         }
@@ -183,6 +183,9 @@ marginalmeans <- function(model,
     }
     out <- do.call("rbind", out_list)
     row.names(out) <- NULL
+
+    # we want consistent output, regardless of whether `data.table` is installed/used or not
+    out <- as.data.frame(out)
 
     # attributes
     class(out) <- c("marginalmeans", class(out))

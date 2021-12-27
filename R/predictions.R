@@ -121,20 +121,12 @@ predictions <- function(model,
                   sort(grep("^predicted", colnames(newdata), value = TRUE)))
     cols <- intersect(stubcols, colnames(out))
     cols <- unique(c(cols, colnames(out)))
-    out <- out[, cols]
+    out <- out[, cols, drop = FALSE]
     row.names(out) <- NULL
 
-    # attach model info
-    # if (isTRUE(check_dependency("modelsummary"))) {
-    #     gl <- suppressMessages(suppressWarnings(try(modelsummary::get_gof(model), silent = TRUE)))
-    #     if (inherits(gl, "data.frame")) {
-    #         attr(out, "glance") <- data.frame(gl)
-    #     } else {
-    #         attr(out, "glance") <- NULL
-    #     }
-    # } else {
-        attr(out, "glance") <- NULL
-    # }
+    # we want consistent output, regardless of whether `data.table` is installed/used or not
+    out <- as.data.frame(out)
+
     class(out) <- c("predictions", class(out))
     attr(out, "model") <- model
     attr(out, "type") <- type

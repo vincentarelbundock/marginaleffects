@@ -111,7 +111,7 @@ marginaleffects <- function(model,
 
     # merge newdata if requested and restore attributes
     if (isTRUE(return_data)) {
-        out <- merge(out, newdata, by = "rowid", sort = FALSE)
+        out <- left_join(out, newdata, by = "rowid")
     }
 
     # clean columns
@@ -127,6 +127,9 @@ marginaleffects <- function(model,
 
     # DO NOT sort rows because we want draws to match
     row.names(out) <- NULL
+
+    # we want consistent output, regardless of whether `data.table` is installed/used or not
+    out <- as.data.frame(out)
 
     class(out) <- c("marginaleffects", class(out))
     attr(out, "model") <- model

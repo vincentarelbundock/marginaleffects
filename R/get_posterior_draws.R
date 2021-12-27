@@ -40,7 +40,7 @@ get_posterior_draws <- function(x) {
     draws_by_type <- lapply(names(draws_by_type), reshape_draws)
     draws_df <- data.table::rbindlist(draws_by_type)
 
-    out <- merge(draws_df, out, all.x = TRUE, by = c("type", "rowid_internal"))
+    out <- left_join(draws_df, out, all.x = TRUE, by = c("type", "rowid_internal"))
 
     return(out)
 }

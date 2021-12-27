@@ -45,7 +45,7 @@ counterfactual <- function(..., model = NULL, newdata = NULL) {
     at <- lapply(at, unique)
     at <- expand.grid(at, stringsAsFactors = FALSE)
 
-    rowid <- data.frame(rowid = 1:nrow(dat))
+    rowid <- data.frame(rowid_original = 1:nrow(dat))
     if (length(variables_automatic) > 0) {
         dat_automatic <- dat[, variables_automatic, drop = FALSE]
         dat_automatic <- cbind(rowid, dat_automatic)

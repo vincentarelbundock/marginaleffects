@@ -26,7 +26,7 @@ Depends:
 Imports: 
     checkmate,
     generics,
-    insight (> 0.14.5),
+    insight (>= 0.14.5),
     methods,
     numDeriv
 Suggests: 
