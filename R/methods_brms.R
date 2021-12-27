@@ -40,10 +40,18 @@ get_predict.brmsfit <- function(model,
             ...)
     }
 
+    if ("rowid_internal" %in% colnames(newdata)) {
+        idx <- newdata[["rowid_internal"]]
+    } else if ("rowid" %in% colnames(newdata)) {
+        idx <- newdata[["rowid"]]
+    } else {
+        idx <- 1:nrow(newdata)
+    }
+
     # 1d outcome
     if (length(dim(draws)) == 2) {
         out <- data.frame(
-            rowid = 1:nrow(newdata),
+            rowid = idx,
             group = "main_marginaleffect",
             predicted = apply(draws, 2, stats::median))
 
@@ -52,7 +60,7 @@ get_predict.brmsfit <- function(model,
         out <- apply(draws, c(2, 3), stats::median)
         colnames(out) <- dimnames(draws)[[3]]
         out <- data.frame(
-            rowid = rep(1:nrow(out), times = ncol(out)),
+            rowid = rep(idx, times = ncol(out)),
             group = rep(colnames(out), each = nrow(out)),
             predicted = c(out))
     } else {
