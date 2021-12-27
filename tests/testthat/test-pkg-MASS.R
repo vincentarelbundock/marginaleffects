@@ -5,6 +5,7 @@ skip_if_not_installed("margins")
 requiet("margins")
 requiet("MASS")
 requiet("emmeans")
+requiet("broom")
 
 
 ### marginaleffects
