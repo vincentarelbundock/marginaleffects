@@ -33,7 +33,7 @@ ggplot2::theme_set(theme_clean())
 This vignette replicates some of the analyses in this excellent blog post by Solomon Kurz: [Use `emmeans()` to include 95% CIs around your `lme4`-based fitted lines](https://solomonkurz.netlify.app/post/2021-12-16-use-emmeans-to-include-95-cis-around-your-lme4-based-fitted-lines/)
 
 
-Load librairies and fit two models of chick weights:
+Load libraries and fit two models of chick weights:
 
 ```{r, message = FALSE, warning = FALSE}
 library(lme4)
