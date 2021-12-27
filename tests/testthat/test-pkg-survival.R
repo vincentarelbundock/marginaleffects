@@ -2,11 +2,11 @@ requiet("survival")
 
 test_that("coxph vs. Stata", {
     stata <- readRDS(test_path("stata/stata.rds"))$survival_coxph_01
-    test1 <- list(time=c(4,3,1,1,2,2,3), 
-                  status=c(1,1,1,0,1,1,0), 
-                  x=c(0,2,1,1,1,0,0), 
-                  sex=c(0,0,0,0,1,1,1)) 
-    mod <- coxph(Surv(time, status) ~ x + strata(sex), 
+    test1 <- list(time=c(4,3,1,1,2,2,3),
+                  status=c(1,1,1,0,1,1,0),
+                  x=c(0,2,1,1,1,0,0),
+                  sex=c(0,0,0,0,1,1,1))
+    mod <- coxph(Surv(time, status) ~ x + strata(sex),
                  data = test1,
                  ties = "breslow")
     mfx <- merge(tidy(marginaleffects(mod, type = "lp")), stata)

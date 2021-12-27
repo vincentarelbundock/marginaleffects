@@ -125,12 +125,17 @@ inner_join <- function(x, y, by = NULL, suffix = c(".x", ".y"), ..., na_matches 
 #' @noRd
 left_join <- function(x, y, by = NULL, suffix = c(".x", ".y"), ..., keep = FALSE, na_matches = c("na", "never")) {
   if (isTRUE(check_dependency("data.table"))) {
-      x <- data.table::data.table(x)
-      y <- data.table::data.table(y)
-      merge(x, y, all.x = TRUE, by = by, sort = FALSE)
-  } else {
-      join_worker(x = x, y = y, by = by, suffix = suffix, all.x = TRUE, ..., keep = keep, na_matches = na_matches)
+      # as.data.table breaks with `Surv` column from `survival` package
+      x_dt <- try(data.table::data.table(x), silent = TRUE)
+      y_dt <- try(data.table::data.table(y), silent = TRUE)
+      if (inherits(x_dt, "data.table") && inherits(y_dt, "data.table")) {
+          out <- merge(x_dt, y_dt, all.x = TRUE, by = by, sort = FALSE)
+          return(out)
+      }
   }
+  out <- join_worker(x = x, y = y, by = by, suffix = suffix, 
+                     all.x = TRUE, ..., keep = keep, na_matches = na_matches)
+  return(out)
 }
 
 #' @noRd
