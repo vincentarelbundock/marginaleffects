@@ -3,6 +3,7 @@ sanity_type <- function(model, type) {
 
     type_error <- c(
         "multinom" = "probs",
+        "brmultinom" = "probs",
         "clm" = c("prob", "cum.prob", "linear_predictor")
     )
 

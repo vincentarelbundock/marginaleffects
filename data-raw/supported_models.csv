@@ -7,6 +7,7 @@ betareg,betareg,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE
 bife,bife,TRUE,TRUE,,,,
 brglm2,brglmFit,TRUE,TRUE,,,TRUE,TRUE
 brglm2,brnb,TRUE,TRUE,,,,
+brglm2,brmultinom,TRUE,TRUE,,,,
 brms,brm,TRUE,TRUE,,,,
 crch,crch,TRUE,TRUE,,,,
 crch,hxlr,TRUE,TRUE,,,,
