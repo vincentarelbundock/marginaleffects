@@ -52,6 +52,7 @@ Suggests:
     tidyverse,
     vdiffr,
     AER,
+    aod,
     betareg,
     bife,
     brglm2,
