@@ -99,6 +99,7 @@ Collate:
     'mean_or_mode.R'
     'set_coef.R'
     'methods_MASS.R'
+    'methods_aod.R'
     'methods_betareg.R'
     'methods_bife.R'
     'sanity_model.R'
