@@ -9,6 +9,7 @@ Support for new models and packages:
 * `brms::brm`
 * `rstanarm::stanglm`
 * `brglm2::brmultinom`
+* `aod::betabin`
 
 Documentation:
 
