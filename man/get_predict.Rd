@@ -3,6 +3,8 @@
 %   R/methods_aod.R, R/methods_nnet.R, R/methods_brglm2.R, R/methods_brms.R,
 %   R/methods_crch.R, R/methods_lme4.R, R/methods_ordinal.R,
 %   R/methods_rstanarm.R
+%   R/methods_nnet.R, R/methods_brglm2.R, R/methods_brms.R, R/methods_crch.R,
+%   R/methods_lme4.R, R/methods_ordinal.R, R/methods_rstanarm.R
 \name{get_predict}
 \alias{get_predict}
 \alias{get_predict.default}
@@ -35,8 +37,11 @@ get_predict(model, newdata, type, ...)
   ...
 )
 
+<<<<<<< HEAD
 \method{get_predict}{glimML}(model, newdata = insight::get_data(model), type = "response", ...)
 
+=======
+>>>>>>> brmultinom
 \method{get_predict}{multinom}(model, newdata = insight::get_data(model), type = "probs", ...)
 
 \method{get_predict}{brmultinom}(model, newdata = insight::get_data(model), type = "probs", ...)
