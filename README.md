@@ -44,10 +44,11 @@ consult these pages:
 
   - [List of supported
     models](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
-  - [Case study: `brms` for Bayesian
-    analysis](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)
-  - [Case study: `lme4` for Multi-level
-    modeling](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)
+  - Case studies:
+      - [Bayesian analyses with
+        `brms`](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)
+      - [Mixed effects models with
+        `lme4`](https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html)
 
 ## Why?
 
@@ -162,11 +163,11 @@ full results with functions like `head`, as you would with any other
 mfx <- marginaleffects(mod)
 
 head(mfx, 4)
-#>   rowid     type term        dydx  std.error mpg  hp    wt am
-#> 1     1 response   hp -0.03690556 0.01850168  21 110 2.620  1
-#> 2     1 response   wt -6.61454909 1.86622482  21 110 2.620  1
-#> 3     1 response   am  0.32517359 1.68220195  21 110 2.620  1
-#> 4     2 response   hp -0.02868936 0.01562768  21 110 2.875  1
+#>   rowid     type term        dydx  std.error  mpg  hp    wt am
+#> 1     1 response   hp -0.03690556 0.01850168 21.0 110 2.620  1
+#> 2     2 response   hp -0.02868936 0.01562768 21.0 110 2.875  1
+#> 3     3 response   hp -0.04657166 0.02259121 22.8  93 2.320  1
+#> 4     4 response   hp -0.04227128 0.01328275 21.4 110 3.215  0
 ```
 
 The function `summary` calculates the “Average Marginal Effect,” that
