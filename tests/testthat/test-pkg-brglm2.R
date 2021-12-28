@@ -30,3 +30,13 @@ test_that("predictions: brglm2::brglm_fit: no validity", {
     expect_predictions(pred1, n_row = nrow(endometrial), se = TRUE)
     expect_predictions(pred2, n_row = 6, se = TRUE)
 })
+
+
+test_that("brmultinom: no validity", {
+    data("housing", package = "MASS")
+    mod <- brmultinom(Sat ~ Infl + Type + Cont, weights = Freq,
+                      data = housing, type = "ML", ref = 1)
+    expect_marginaleffects(mod, type = "probs")
+    expect_predictions(predictions(mod, type = "probs"), se = FALSE)
+})
+

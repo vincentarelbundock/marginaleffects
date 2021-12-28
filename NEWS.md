@@ -6,8 +6,9 @@ Breaking change:
 
 Support for new models and packages:
 
-* `brms`
-* `rstanarm`
+* `brms::brm`
+* `rstanarm::stanglm`
+* `brglm2::brmultinom`
 
 Documentation:
 
