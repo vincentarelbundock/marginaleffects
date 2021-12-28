@@ -6,6 +6,7 @@
 \alias{set_coef}
 \alias{set_coef.default}
 \alias{set_coef.polr}
+\alias{set_coef.glmmPQL}
 \alias{set_coef.betareg}
 \alias{set_coef.crch}
 \alias{set_coef.hlxr}
@@ -24,6 +25,8 @@ set_coef(model, coefs)
 \method{set_coef}{default}(model, coefs)
 
 \method{set_coef}{polr}(model, coefs)
+
+\method{set_coef}{glmmPQL}(model, coefs)
 
 \method{set_coef}{betareg}(model, coefs)
 

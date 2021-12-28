@@ -8,6 +8,8 @@ requiet("emmeans")
 requiet("broom")
 
 
+
+
 ### marginaleffects
 
 test_that("rlm: marginaleffects: vs. margins", {
@@ -89,7 +91,7 @@ test_that("glm.nb: marginalmeans: vs. emmeans", {
     expect_equal(ti$std.error, em$std.error)
 })
 
-library(testthat)
+
 test_that("rlm: marginalmeans: vs. emmeans", {
     skip_if_not_installed("insight", minimum_version = "0.14.4.1")
     dat <- mtcars
@@ -102,4 +104,19 @@ test_that("rlm: marginalmeans: vs. emmeans", {
     em <- tidy(emmeans::emmeans(model, "cyl"))
     expect_equal(ti$estimate, em$estimate)
     expect_equal(ti$std.error, em$std.error)
+})
+
+
+# glmmPQL
+
+test_that("glmmPQL: no validity", {
+    tmp <- bacteria
+    tmp$week_bin <- tmp$week > 2
+    mod <- glmmPQL(y ~ trt + week_bin, random = ~ 1 | ID,
+                   family = binomial,
+                   verbose = FALSE,
+                   data = tmp)
+    expect_marginaleffects(mod, type = "link", n_unique = 1)
+    expect_marginaleffects(mod, type = "response")
+    expect_predictions(predictions(mod), se = FALSE)
 })
