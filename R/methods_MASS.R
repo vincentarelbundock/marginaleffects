@@ -43,3 +43,29 @@ get_vcov.polr <- function(model, ...) {
     out <- suppressMessages(insight::get_varcov(model))
     return(out)
 }
+
+
+#' @include set_coef.R
+#' @rdname set_coef
+#' @export
+set_coef.glmmPQL <- function(model, coefs) {
+    model[["coefficients"]][["fixed"]][names(coefs)] <- coefs
+    model
+}
+
+
+#' @rdname get_predict
+#' @export
+get_predict.glmmPQL <- function(model,
+                                newdata = insight::get_data(model),
+                                type = "response",
+                                conf.level = NULL,
+                                ...) {
+
+    out <- stats::predict(model, newdata = newdata, type = type, ...)
+    out <- data.frame(
+        rowid = 1:nrow(newdata),
+        predicted = out)
+    return(out)
+}
+

@@ -34,6 +34,7 @@ sanity_model_supported_class <- function(model) {
                       "gls",
                       "glmerMod",
                       "glmrob",
+                      c("glmmPQL", "lme"),
                       "glmx",
                       "hurdle",
                       "hxlr",
