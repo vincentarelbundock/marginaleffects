@@ -167,7 +167,7 @@ test_that("marginaleffects vs. emmeans: multiple types are correctly aligned", {
     expect_equal(mfx[mfx$type == "response", "conf.high"], em_r$upper.HPD, tolerance = .01)
 
     # easier to see correct alignment of draws in a density plot
-    tmp <- get_posterior_draws(mfx)
+    tmp <- posteriordraws(mfx)
     p <- ggplot(tmp, aes(x = draw, fill = factor(vs))) +
          geom_density(alpha = .4) +
          facet_grid(~type, scales = "free")
@@ -275,7 +275,7 @@ test_that("factor in formula", {
 
 test_that("bugs stay dead: factor indexing for posterior draws", {
     tmp <- predictions(mod_factor, newdata = typical(cyl_fac = 4, mpg = c(10, 20))) 
-    expect_error(get_posterior_draws(tmp), NA)
+    expect_error(posteriordraws(tmp), NA)
 })
 
 test_that("bugs stay dead: character regressors used to produce duplicates", {
