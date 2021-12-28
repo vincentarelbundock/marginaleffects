@@ -10,7 +10,7 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  fig.width = 6,
+  fig.width = 9,
   fig.asp = .4,
   out.width = "100%",
   warning = FALSE,
@@ -31,7 +31,6 @@ ggplot2::theme_set(theme_clean())
 ```
 
 This vignette replicates some of the analyses in this excellent blog post by Solomon Kurz: [Use `emmeans()` to include 95% CIs around your `lme4`-based fitted lines](https://solomonkurz.netlify.app/post/2021-12-16-use-emmeans-to-include-95-cis-around-your-lme4-based-fitted-lines/)
-
 
 Load libraries and fit two models of chick weights:
 
@@ -76,21 +75,32 @@ p2 <- ggplot(pred2, aes(Time, predicted, level = Chick)) +
 p1 + p2
 ```
 
-## Conditional / Counterfactual predictions
-
 Predictions for each chick, in the 4 counterfactual worlds with different values for the `Diet` variable:
 
 ```{r}
-pred <- predictions(fit2,
-                    newdata = typical(Chick = ChickWeight$Chick,
-                                      Diet = 1:4,
-                                      Time = 0:21))
+pred <- predictions(fit2)
 
 ggplot(pred, aes(Time, predicted, level = Chick)) +
     geom_line() +
-    facet_wrap(~ Diet, labeller = label_both) +
-    labs(y = "Predicted weight", x = "Time", title = "Quadratic growth model")
+    ylab("Predicted Weight") +
+    facet_wrap(~ Diet, labeller = label_both)
 ```
 
 ## Population-level predictions
 
+To make population-level predictions, we set the `Chick` variable to `NA`, and set `include_ranom=FALSE`. This last argument is offered by the `insight::get_predicted` function which is used behind the scenes to compute predictions:
+
+```{r}
+pred <- predictions(
+    fit2,
+    newdata = typical(Chick = NA,
+                      Diet = 1:4,
+                      Time = 0:21),
+    include_random = FALSE)
+
+ggplot(pred, aes(x = Time, y = predicted, ymin = conf.low, ymax = conf.high)) +
+    geom_ribbon(alpha = .1, fill = "red") +
+    geom_line() +
+    facet_wrap(~ Diet, labeller = label_both) +
+    labs(title = "Population-level trajectories")
+```

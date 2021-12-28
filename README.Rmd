@@ -37,9 +37,9 @@ The `marginaleffects` package allows `R` users to compute and plot four principa
 The rest of this page includes a "Getting Started" tutorial with simple examples. To go beyond these simple examples, please read the vignettes linked above, for each of the four quantities. In addition, you can consult these pages:
 
 * [List of supported models](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
-* [Case study: `brms` for Bayesian analysis](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)
-* [Case study: `lme4` for Multi-level modeling](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)
-
+* Case studies:
+    - [Bayesian analyses with `brms`](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)
+    - [Mixed effects models with `lme4`](https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html)
 
 ## Why?
 
