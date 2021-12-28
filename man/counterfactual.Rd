@@ -42,7 +42,7 @@ cd[cd$rowid \%in\% 1:3,]
 # We get the same result by feeding a model instead of a data.frame
 mod <- lm(mpg ~ hp + wt, mtcars)
 cd <- counterfactual(model = mod, hp = c(100, 110))
-cd[cd$rowid \%in\% 1:3,]
+cd[cd$rowid_original \%in\% 1:3,]
 
 # Use in `marginaleffects` to compute "Counterfactual Average Marginal Effects"
 marginaleffects(mod, newdata = counterfactual(hp = c(100, 110)))

@@ -19,7 +19,7 @@ get_coef(model, ...)
 
 \method{get_coef}{betareg}(model, ...)
 
-\method{get_coef}{brmultinom}(x)
+\method{get_coef}{brmultinom}(model, ...)
 
 \method{get_coef}{brmsfit}(model, ...)
 
