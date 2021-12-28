@@ -87,6 +87,38 @@ predictions(mod, newdata = typical())
 predictions(mod, newdata = typical(cyl = c(4, 6, 8)))
 ```
 
+## `counterfactual`
+
+An alternative function to construct grids of predictors is to use `counterfactual()`. This function will duplicate the *whole* dataset, with the different values specified by the user. 
+
+For example, the `mtcars` dataset has 32 rows. This command produces a new dataset with 64 rows, with each row of the original dataset duplicated with the two values of the `am` variable supplied (0 and 1):
+
+```{r}
+mod <- glm(vs ~ hp + am, data = mtcars, family = binomial)
+
+nd <- counterfactual(model = mod, am = 0:1)
+
+dim(nd)
+```
+
+Then, we can use this dataset and the `predictions` function to create interesting visualizations:
+
+```{r, fig.asp = 1}
+pred <- predictions(mod, newdata = counterfactual(am = 0:1)) %>%
+    select(am, predicted, rowid_original) %>%
+    pivot_wider(id_cols = rowid_original, 
+                names_from = am,
+                values_from = predicted)
+
+ggplot(pred, aes(x = `0`, y = `1`)) +
+    geom_point() +
+    geom_abline(intercept = 0, slope = 1) +
+    labs(x = "Predicted Pr(vs=1), when am = 0",
+         y = "Predicted Pr(vs=1), when am = 1")
+```
+
+In this graph, each dot represents the predicted probability that `vs=1` for one observation of the dataset, in the counterfactual worlds where `am` is either 0 or 1. 
+
 # Plot: Conditional Predictions
 
 First, we download the `ggplot2movies` dataset from the [RDatasets archive](https://vincentarelbundock.github.io/Rdatasets/articles/data.html). Then, we create a variable called `certified_fresh` for movies with a rating of at least 8. Finally, we discard some outliers and fit a logistic regression model: 
