@@ -24,21 +24,24 @@ library("gt")
 
 supported_models <- read.csv("https://raw.githubusercontent.com/vincentarelbundock/marginaleffects/main/data-raw/supported_models.csv", check.names = FALSE, encoding = "utf8")
 
+
 tmp <- supported_models
 for (i in nrow(tmp):2) {
-    if (tmp$Package[i] == tmp$Package[i-1]) {
+    if (tmp$Package[i] == tmp$Package[i - 1]) {
         tmp$Package[i] <- ""
     }
 }
 
-colnames(tmp) <- c("Package", 
-                   "Function", 
-                   "dY/dX", 
-                   "Std. Error", 
-                   "dY/dX ", 
+colnames(tmp) <- c("Package",
+                   "Function",
+                   "dY/dX",
+                   "Std. Error",
+                   "dY/dX ",
                    "Std. Error ",
                    "dY/dX  ",
-                   "Std. Error  ")
+                   "Std. Error  ",
+                   "dY/dX   ",
+                   "Std. Error   ")
 
 idx_green <- lapply(tmp, function(x) x == TRUE)
 idx_red <- lapply(tmp, function(x) x == FALSE)
@@ -47,10 +50,18 @@ for (i in 3:ncol(tmp)) {
     tmp[[i]] <- ""
 }
 
+unsupported_mfx_emmeans <- c(
+    "betabin",
+    "bife")
+
+idx <- tmp$Function %in% unsupported_mfx_emmeans
+tmp[[9]][idx] <- tmp[[10]][idx] <- "N/A"
+
 tab <- gt(tmp) %>%
   tab_spanner(label = "Support", columns = 3:4) %>%
   tab_spanner(label = "Validity: Stata", columns = 5:6) %>%
   tab_spanner(label = "Validity: margins", columns = 7:8) %>%
+  tab_spanner(label = "Validity: emmeans", columns = 9:10) %>%
   tab_style(style = list(cell_borders(sides = c("left", "right"), color = "black", weight = px(1))),
             locations = list(cells_body(columns = 3:ncol(tmp)))) %>%
   tab_style(style = list(cell_borders(sides = c("bottom", "top"), color = "black", weight = px(1))),
