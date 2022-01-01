@@ -19,6 +19,7 @@ summary.marginaleffects <- function(object, conf.level = 0.95, ...) {
 #' Print a `marginaleffects` summary
 #'
 #' @export
+#' @noRd
 #' @inheritParams summary.marginaleffects
 #' @param x an object produced by the `marginaleffects` function.
 #' @param digits the number of significant digits to use when printing.
@@ -102,6 +103,7 @@ summary.marginalmeans <- function(object, conf.level = 0.95, ...) {
 #' Print a `marginalmeans` summary
 #'
 #' @export
+#' @noRd
 #' @inheritParams summary.marginalmeans
 #' @param x an object produced by the `marginaleffects` function.
 #' @param digits the number of significant digits to use when printing.

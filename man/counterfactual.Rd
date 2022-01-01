@@ -2,7 +2,7 @@
 % Please edit documentation in R/counterfactual_typical.R
 \name{counterfactual}
 \alias{counterfactual}
-\title{Generate "counterfactual" datasets for use in \code{marginaleffects}'s \code{newdata} argument}
+\title{Generate a data grid of "counterfactual" values for use in \code{marginaleffects}'s \code{newdata} argument}
 \usage{
 counterfactual(..., model = NULL, newdata = NULL)
 }
@@ -20,7 +20,7 @@ times for each of the values of the variables in the \code{at} list. See example
 below.
 }
 \description{
-Generate "counterfactual" datasets for use in \code{marginaleffects}'s \code{newdata} argument
+Generate a data grid of "counterfactual" values for use in \code{marginaleffects}'s \code{newdata} argument
 }
 \details{
 If \code{counterfactual} is used in a \code{marginaleffects} or \code{predictions} call as

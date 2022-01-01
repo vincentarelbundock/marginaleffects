@@ -2,9 +2,18 @@
 % Please edit documentation in R/counterfactual_typical.R
 \name{typical}
 \alias{typical}
-\title{Generate "typical" datasets for use in \code{marginaleffects}'s \code{newdata} argument}
+\title{Generate a data grid of "typical" or user-specified values for use in \code{marginaleffects}'s \code{newdata} argument}
 \usage{
-typical(..., model = NULL, newdata = NULL)
+typical(
+  ...,
+  model = NULL,
+  newdata = NULL,
+  FUN.character = Mode,
+  FUN.factor = Mode,
+  FUN.logical = Mode,
+  FUN.numeric = function(x) mean(x, na.rm = TRUE),
+  FUN.other = function(x) mean(x, na.rm = TRUE)
+)
 }
 \arguments{
 \item{...}{named arguments with vectors of values for the typical variables
@@ -13,7 +22,17 @@ combinations of unique values from these vectors}
 
 \item{model}{Model object}
 
-\item{newdata}{data.frame (one and only one of the \code{model} and \code{newdata} arguments
+\item{newdata}{data.frame (one and only one of the \code{model} and \code{newdata} arguments}
+
+\item{FUN.character}{the function to be applied to character variables.}
+
+\item{FUN.factor}{the function to be applied to factor variables.}
+
+\item{FUN.logical}{the function to be applied to factor variables.}
+
+\item{FUN.numeric}{the function to be applied to numeric variables.}
+
+\item{FUN.other}{the function to be applied to other variable types.
 must be true).}
 }
 \value{
@@ -22,7 +41,7 @@ predictors supplied by the user via the \code{...} dots. Variables which are not
 explicitly defined are held at their mean or mode.
 }
 \description{
-Generate "typical" datasets for use in \code{marginaleffects}'s \code{newdata} argument
+Generate a data grid of "typical" or user-specified values for use in \code{marginaleffects}'s \code{newdata} argument
 }
 \details{
 If \code{typical} is used in a \code{marginaleffects} or \code{predictions} call as the
