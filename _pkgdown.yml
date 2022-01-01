@@ -14,7 +14,7 @@ navbar:
   - text: "Marginal means"
     href: https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html
   right:
-  - text: Reference
+  - text: Functions
     href: reference/index.html
   - text: Changelog
     href: news/index.html

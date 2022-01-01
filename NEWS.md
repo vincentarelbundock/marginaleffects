@@ -2,7 +2,7 @@
 
 Breaking change:
 
-* `predictions` returns predictions for every observation in the original dataset instead of `newdata=typical()`.
+* `predictions` returns predictions for every observation in the original dataset instead of `newdata=datagrid()`.
 
 Support for new models and packages:
 
