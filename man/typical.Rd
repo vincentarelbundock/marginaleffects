@@ -8,10 +8,10 @@ typical(
   ...,
   model = NULL,
   newdata = NULL,
-  FUN.character = mean_or_mode,
-  FUN.factor = mean_or_mode.factor,
-  FUN.numeric = mean_or_mode,
-  FUN.other = mean_or_mode
+  FUN.character = Mode,
+  FUN.factor = Mode,
+  FUN.numeric = function(x) mean(x, na.rm = TRUE),
+  FUN.other = function(x) mean(x, na.rm = TRUE)
 )
 }
 \arguments{
