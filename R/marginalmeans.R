@@ -12,7 +12,7 @@
 #'   predictors. This grid can be very large when there are many variables and
 #'   many response levels, so it is advisable to select a limited number of
 #'   variables in the `variables` and `variables_grid` arguments.
-#' @param type Type(s) of prediction as string or vector This can
+#' @param type Type(s) of prediction (string or character vector). This can
 #'   differ based on the model type, but will typically be a string such as:
 #'   "response", "link", "probs", or "zero".
 #' @details

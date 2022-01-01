@@ -33,7 +33,7 @@ variables in the \code{variables} and \code{variables_grid} arguments.}
 \item Named square matrix: computes standard errors with a user-supplied variance-covariance matrix. This matrix must be square and have dimensions equal to the number of coefficients in \code{get_coef(model)}.
 }}
 
-\item{type}{Type(s) of prediction as string or vector This can
+\item{type}{Type(s) of prediction (string or character vector). This can
 differ based on the model type, but will typically be a string such as:
 "response", "link", "probs", or "zero".}
 }
