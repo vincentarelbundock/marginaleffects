@@ -2,16 +2,26 @@ skip_if_not_installed("betareg")
 skip_if_not_installed("margins")
 skip_if_not_installed("emmeans")
 skip_if_not_installed("broom")
+requiet("betareg")
 
-test_that("marginaleffects: vs. margins", {
+test_that("marginaleffects: vs. margins vs. emmeans", {
     set.seed(1024)
     data("GasolineYield", package = "betareg")
-    mod <- betareg::betareg(yield ~ batch + temp, data = GasolineYield)
+    tmp <- GasolineYield 
+    tmp$batch <- factor(tmp$batch)
+    mod <- betareg::betareg(yield ~ batch + temp, data = tmp)
     suppressWarnings({
         res <- marginaleffects(mod, variables = "temp")
         mar <- data.frame(margins::margins(mod, unit_ses = TRUE))
     })
     expect_true(test_against_margins(res, mar, tolerance = 0.1))
+    # emtrends
+    mfx <- marginaleffects(mod, newdata = datagrid(batch = 1), variables = "temp")
+    em <- suppressWarnings(
+        emtrends(mod, ~temp, "temp", at = list("batch" = GasolineYield$batch[1])))
+    em <- tidy(em)
+    expect_equal(mfx$dydx, em$temp.trend, tolerance = .001)
+    expect_equal(mfx$std.error, em$std.error, tolerance = .001)
 })
 
 test_that("marginaleffects: vs. Stata", {

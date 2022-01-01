@@ -2,14 +2,24 @@ skip_if_not_installed("brglm2")
 requiet("brglm2")
 requiet("margins")
 
-test_that("brglm2::brglm_fit vs. margins", {
+test_that("brglm2::brglm_fit vs. margins vs. emtrends", {
     data("endometrial", package = "brglm2")
     model <- glm(HG ~ NV + PI + EH, family = binomial("probit"), data = endometrial)
     model <- update(model, method = "brglm_fit")
+    # margins
     mar <- margins(model)
     mfx <- marginaleffects(model)
     expect_marginaleffects(model)
     expect_true(test_against_margins(mar, mfx))
+    # emtrends
+    em <- emtrends(model, ~PI, "PI", at = list(PI = 15, EH = 2, NV = 0))
+    em <- tidy(em)
+    mfx <- marginaleffects(model,
+                           variables = "PI",
+                           newdata = datagrid(PI = 15, EH = 2, NV = 0), 
+                           type = "link")
+    expect_equal(mfx$dydx, em$PI.trend)
+    expect_equal(mfx$std.error, em$std.error, tolerance = .00001)
 })
 
 test_that("brglm2::brglm_fit no validity check", {

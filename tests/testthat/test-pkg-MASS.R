@@ -1,3 +1,4 @@
+# TODO: emtrends not clear what it computes for polr
 skip_if_not_installed("MASS")
 skip_if_not_installed("emmeans")
 skip_if_not_installed("margins")
@@ -8,16 +9,22 @@ requiet("emmeans")
 requiet("broom")
 
 
-
-
 ### marginaleffects
-
-test_that("rlm: marginaleffects: vs. margins", {
+test_that("rlm: marginaleffects: vs. margins vs. emmeans", {
     model <- MASS::rlm(mpg ~ hp + drat, mtcars)
     mfx <- marginaleffects(model)
     expect_marginaleffects(model, n_unique = 1)
     mar <- margins(model)
     expect_true(test_against_margins(mfx, mar))
+    mfx <- marginaleffects(model, newdata = datagrid(drat = 3.9, hp = 110))
+    em1 <- emmeans::emtrends(model, ~hp, "hp", at = list(hp = 110, drat = 3.9))
+    em2 <- emmeans::emtrends(model, ~drat, "drat", at = list(hp = 110, drat = 3.9))
+    em1 <- tidy(em1)
+    em2 <- tidy(em2)
+    expect_equal(mfx$dydx[1], em1$hp.trend)
+    expect_equal(mfx$std.error[1], em1$std.error, tolerance = .001)
+    expect_equal(mfx$dydx[2], em2$drat.trend)
+    expect_equal(mfx$std.error[2], em2$std.error, tolerance = .002)
 })
 
 test_that("glm.nb: marginaleffects: vs. margins", {
@@ -26,6 +33,12 @@ test_that("glm.nb: marginaleffects: vs. margins", {
     mfx <- marginaleffects(model)
     mar <- margins(model)
     expect_true(test_against_margins(mfx, mar))
+    # emtrends
+    mfx <- marginaleffects(model, newdata = datagrid(wt = 2.6, cyl = 4), type = "link")
+    em <- emtrends(model, ~wt, "wt", at = list(wt = 2.6, cyl = 4))
+    em <- tidy(em)
+    expect_equal(mfx$dydx[1], em$wt.trend)
+    expect_equal(mfx$std.error[1], em$std.error)
 })
 
 test_that("glm.nb: marginaleffects: vs. Stata", {
@@ -119,4 +132,11 @@ test_that("glmmPQL: no validity", {
     expect_marginaleffects(mod, type = "link", n_unique = 1)
     expect_marginaleffects(mod, type = "response")
     expect_predictions(predictions(mod), se = FALSE)
+
+    # emtrends
+    em <- emmeans::emtrends(mod, ~week_bin, "week_bin", at = list(week_bin = 0))
+    em <- tidy(em)
+    mfx <- marginaleffects(mod, newdata = datagrid(week_bin = 0), type = "link")
+    expect_equal(mfx$dydx[3], em$week_bin.trend)
+    expect_equal(mfx$std.error[3], em$std.error, tolerance = .01)
 })
