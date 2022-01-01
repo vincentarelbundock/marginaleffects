@@ -2,9 +2,17 @@
 % Please edit documentation in R/counterfactual_typical.R
 \name{typical}
 \alias{typical}
-\title{Generate "typical" datasets for use in \code{marginaleffects}'s \code{newdata} argument}
+\title{Generate a "typical" data grid for use in \code{marginaleffects}'s \code{newdata} argument}
 \usage{
-typical(..., model = NULL, newdata = NULL)
+typical(
+  ...,
+  model = NULL,
+  newdata = NULL,
+  FUN.character = mean_or_mode,
+  FUN.factor = mean_or_mode.factor,
+  FUN.numeric = mean_or_mode,
+  FUN.other = mean_or_mode
+)
 }
 \arguments{
 \item{...}{named arguments with vectors of values for the typical variables
@@ -13,7 +21,15 @@ combinations of unique values from these vectors}
 
 \item{model}{Model object}
 
-\item{newdata}{data.frame (one and only one of the \code{model} and \code{newdata} arguments
+\item{newdata}{data.frame (one and only one of the \code{model} and \code{newdata} arguments}
+
+\item{FUN_character}{the function to be applied to character variables.}
+
+\item{FUN_factor}{the function to be applied to factor variables.}
+
+\item{FUN_numeric}{the function to be applied to numeric variables.}
+
+\item{FUN_other}{the function to be applied to other variable types.
 must be true).}
 }
 \value{
@@ -22,7 +38,7 @@ predictors supplied by the user via the \code{...} dots. Variables which are not
 explicitly defined are held at their mean or mode.
 }
 \description{
-Generate "typical" datasets for use in \code{marginaleffects}'s \code{newdata} argument
+Generate a "typical" data grid for use in \code{marginaleffects}'s \code{newdata} argument
 }
 \details{
 If \code{typical} is used in a \code{marginaleffects} or \code{predictions} call as the

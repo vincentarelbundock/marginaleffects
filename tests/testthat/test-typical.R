@@ -15,7 +15,6 @@ test_that("typical(x = NA)", {
     expect_true(all(is.na(nd$gear)))
 })
 
-
 test_that("unique values", {
     tmp <- mtcars
     tmp$am <- as.logical(tmp$am)
@@ -24,6 +23,20 @@ test_that("unique values", {
                            newdata = typical(cyl = tmp$cyl),
                            variables = "am")
     expect_equal(nrow(mfx), 3)
+})
+
+test_that("typical FUN.*", {
+    tmp <- mtcars
+    tmp$am <- as.logical(tmp$am)
+    tmp$cyl <- as.factor(tmp$cyl)
+    tmp$gear <- as.character(tmp$gear)
+    typ <- typical(newdata = tmp,
+                   FUN.character = max,
+                   FUN.factor = \(x) sort(x)[1],
+                   FUN.numeric = stats::median)
+    expect_equal(typ$drat, stats::median(mtcars$drat))
+    expect_equal(typ$cyl, factor("4", levels = c("4", "6", "8")))
+    expect_equal(typ$gear, "5")
 })
 
 test_that("all manual", {
