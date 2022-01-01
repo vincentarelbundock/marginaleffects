@@ -47,7 +47,7 @@ test_that("get_predict: low-level tests", {
     expect_equal(w, y$Predicted, ignore_attr = TRUE)
 
     # grand mean with new data
-    nd <- typical(model = mod, clus = NA, x1 = -1:1)
+    nd <- datagrid(model = mod, clus = NA, x1 = -1:1)
     w <- predict(mod, newdata = nd, re.form = NA, type = "response")
     x <- get_predict(mod, newdata = nd, re.form = NA)
     y <- predictions(mod, newdata = nd, re.form = NA, type = "response")

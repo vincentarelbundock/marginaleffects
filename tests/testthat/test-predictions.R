@@ -22,7 +22,7 @@ test_that("default predicts for all observations", {
 
 test_that("bugfix: counterfactual predictions keep rowid", {
   mod <- lm(mpg ~ hp + am, mtcars)
-  pred <- predictions(mod, newdata = counterfactual(am = 0:1))
+  pred <- predictions(mod, newdata = datagrid(am = 0:1, grid.type = "counterfactual"))
   expect_predictions(pred, n_row = 64)
   expect_true("rowid_original" %in% colnames(pred))
 })
@@ -34,7 +34,7 @@ test_that("bugfix: counterfactual predictions keep rowid", {
 
 test_that("conf.level argument changes width of interval", {
     for (L in c(.4, .7, .9, .95, .99, .999)) {
-        nd <- typical(model = mod)
+        nd <- datagrid(model = mod)
         unknown <- predictions(mod, newdata = nd, conf.level = L)
         known <- predict(mod, newdata = nd, se.fit = TRUE, interval = "confidence", level = L)$fit
         expect_equal(unknown$conf.low, known[, "lwr"])
@@ -47,7 +47,7 @@ test_that("conf.level argument changes width of interval", {
 ######################################
 
 test_that("predictions() = predict()", {
-    nd <- typical(model = mod, cyl = c(4, 6, 8))
+    nd <- datagrid(model = mod, cyl = c(4, 6, 8))
     mm <- predictions(mod, newdata = nd)
     expect_equal(mm$predicted, unname(predict(mod, newdata = nd)))
 })
@@ -101,28 +101,28 @@ test_that("`newdata`: mtcars has 32 rows", {
 })
  
 test_that("`typical`: all factors", {
-    mm <- predictions(mod, newdata = typical(cyl = c(4, 6, 8)))
+    mm <- predictions(mod, newdata = datagrid(cyl = c(4, 6, 8)))
     expect_equal(nrow(mm), 3)
 })
 
 test_that("`typical`: two missing factors", {
-    mm <- predictions(mod, newdata = typical(cyl = 4))
+    mm <- predictions(mod, newdata = datagrid(cyl = 4))
     expect_equal(nrow(mm), 1)
 })
 
 test_that("`typical`: one missing factor", {
-    mm <- predictions(mod, newdata = typical(cyl = c(4, 6)))
+    mm <- predictions(mod, newdata = datagrid(cyl = c(4, 6)))
     expect_equal(nrow(mm), 2)
 })
 
 test_that("`typical`: all logical", {
-    mm <- predictions(mod, newdata = typical(am = c(TRUE, FALSE)))
+    mm <- predictions(mod, newdata = datagrid(am = c(TRUE, FALSE)))
     expect_equal(nrow(mm), 2)
     expect_equal(length(unique(mm$predicted)), nrow(mm))
 })
 
 test_that("`typical`: missing logical", {
-    mm <- predictions(mod, newdata = typical(am = TRUE))
+    mm <- predictions(mod, newdata = datagrid(am = TRUE))
     expect_equal(nrow(mm), 1)
 })
 

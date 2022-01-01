@@ -68,10 +68,10 @@ In models with multiplicative interactions, the contrasts of a categorical varia
 mod_int <- lm(mpg ~ am * factor(cyl), tmp)
 ```
 
-We can now use the `newdata` argument of the `marginaleffects` function to compute contrasts for different values of the other regressors. As in [the marginal effects vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx.html), the `typical` function can be handy. Since we only care about the logical `am` contrast, we use the `variables` to indicate the subset of results to report:
+We can now use the `newdata` argument of the `marginaleffects` function to compute contrasts for different values of the other regressors. As in [the marginal effects vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx.html), the `datagrid` function can be handy. Since we only care about the logical `am` contrast, we use the `variables` to indicate the subset of results to report:
 
 ```{r}
-marginaleffects(mod_int, newdata = typical(cyl = tmp$cyl), variables = "am")
+marginaleffects(mod_int, newdata = datagrid(cyl = tmp$cyl), variables = "am")
 ```
 
 Once again, we obtain the same results with `emmeans`:

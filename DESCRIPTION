@@ -85,7 +85,7 @@ Suggests:
     spelling
 Collate: 
     'complete_levels.R'
-    'counterfactual_typical.R'
+    'datagrid.R'
     'get_coef.R'
     'get_contrasts.R'
     'get_dydx.R'

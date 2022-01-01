@@ -57,12 +57,10 @@ head(mfx)
 plot(mfx)
 
 # typical marginal effects
-marginaleffects(mod,
-                newdata = typical(hp = c(100, 110)))
+marginaleffects(mod, newdata = datagrid(hp = c(100, 110)))
 
 # counterfactual average marginal effects
-marginaleffects(mod,
-                newdata = counterfactual(hp = c(100, 110)))
+marginaleffects(mod, newdata = datagrid(hp = c(100, 110), grid.type = "counterfactual"))
 
 # heteroskedasticity robust standard errors
 marginaleffects(mod, vcov = sandwich::vcovHC(mod))
