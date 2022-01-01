@@ -11,6 +11,12 @@ Support for new models and packages:
 * `brglm2::brmultinom`
 * `aod::betabin`
 
+New function:
+
+* `datagrid` supersedes `typical` and `counterfactual` with the `grid.type`
+  argument. The `typical` and `counterfactual` functions will remain available
+  and exported, but their use is not encouraged.
+
 Documentation:
 
 * Vignette on Bayesian models with `brms`

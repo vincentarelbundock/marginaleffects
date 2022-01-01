@@ -26,6 +26,6 @@ test_that("bug be dead: all levels appear", {
     tmp <- mtcars
     tmp$am <- as.logical(tmp$am)
     mod <- lm(mpg ~ am + factor(cyl), tmp)
-    mfx = marginaleffects(mod, newdata = typical(cyl = c(4, 6)))
+    mfx = marginaleffects(mod, newdata = datagrid(cyl = c(4, 6)))
     expect_equal(nrow(mfx), 6)
 })

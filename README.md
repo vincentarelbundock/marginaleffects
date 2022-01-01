@@ -217,12 +217,12 @@ predictions(mod, variables = c("am", "wt"))
 #> 10 response  5.901966 5.8149853 -6.099574  17.90351 146.6875  1 5.4240
 ```
 
-The [`typical` function gives us an even more powerful
-way](https://vincentarelbundock.github.io/marginaleffects/reference/typical.html)
+The [`datagrid` function gives us an even more powerful
+way](https://vincentarelbundock.github.io/marginaleffects/reference/datagrid.html)
 to customize the grid:
 
 ``` r
-predictions(mod, newdata = typical(am = 0, wt = c(2, 4)))
+predictions(mod, newdata = datagrid(am = 0, wt = c(2, 4)))
 #>       type predicted std.error conf.low conf.high       hp am wt
 #> 1 response  21.95621  2.038630 17.74868  26.16373 146.6875  0  2
 #> 2 response  16.60387  1.083201 14.36826  18.83949 146.6875  0  4
@@ -243,9 +243,9 @@ Or you can work with the output of the `predictions` or
 library(tidyverse)
 
 predictions(mod, 
-              newdata = typical(am = 0:1, 
-                                wt = fivenum(mtcars$wt), 
-                                hp = seq(100, 300, 10))) %>%
+              newdata = datagrid(am = 0:1,
+                                 wt = fivenum(mtcars$wt),
+                                 hp = seq(100, 300, 10))) %>%
     ggplot(aes(x = hp, y = predicted, ymin = conf.low, ymax = conf.high)) +
     geom_ribbon(aes(fill = factor(wt)), alpha = .2) +
     geom_line(aes(color = factor(wt))) +

@@ -33,12 +33,10 @@
 #' plot(mfx)
 #'
 #' # typical marginal effects
-#' marginaleffects(mod,
-#'                 newdata = typical(hp = c(100, 110)))
+#' marginaleffects(mod, newdata = datagrid(hp = c(100, 110)))
 #'
 #' # counterfactual average marginal effects
-#' marginaleffects(mod,
-#'                 newdata = counterfactual(hp = c(100, 110)))
+#' marginaleffects(mod, newdata = datagrid(hp = c(100, 110), grid.type = "counterfactual"))
 #'
 #' # heteroskedasticity robust standard errors
 #' marginaleffects(mod, vcov = sandwich::vcovHC(mod))
@@ -61,9 +59,9 @@ marginaleffects <- function(model,
     numDeriv_method <- "simple"
     return_data <- TRUE
 
-    # if `newdata` is a call to `typical()` or `counterfactual()`, insert `model`
+    # if `newdata` is a call to `datagrid`, `typical` or `counterfactual`, insert `model`
     scall <- substitute(newdata)
-    if (is.call(scall) && as.character(scall)[1] %in% c("typical", "counterfactual")) {
+    if (is.call(scall) && as.character(scall)[1] %in% c("datagrid", "typical", "counterfactual")) {
         lcall <- as.list(scall)
         if (!any(c("model", "data") %in% names(lcall))) {
             lcall <- c(lcall, list("model" = model))

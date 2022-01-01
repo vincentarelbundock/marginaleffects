@@ -1,37 +1,97 @@
-#' Generate a data grid of "counterfactual" values for use in `marginaleffects`'s `newdata` argument
+#' Generate a data grid of "typical," "counterfactual," or user-specified values for use in the `newdata` argument of the `marginaleffects` or `predictions` functions.
 #'
-#' @param ... named arguments with vectors of values for the variables to construct (see Examples below.)
+#' @param ... named arguments with vectors of values for user-specified
+#' variables. The output will include all combinations of these variables (see
+#' Examples below.)
 #' @param model Model object
 #' @param newdata data.frame (one and only one of the `model` and `newdata` arguments
+#' @param grid.type character
+#'   * "typical": variables whose values are not explicitly specified by the user in `...` are set to the output of the functions supplied to the `FUN.type` arguments.
+#'   * "counterfactual": the entire dataset is duplicated for each combination of the variable values specified in `...`.
+#' @param FUN.character the function to be applied to character variables.
+#' @param FUN.factor the function to be applied to factor variables.
+#' @param FUN.logical the function to be applied to factor variables.
+#' @param FUN.numeric the function to be applied to numeric variables.
+#' @param FUN.other the function to be applied to other variable types.
 #' must be true).
 #' @details
-#' If `counterfactual` is used in a `marginaleffects` or `predictions` call as
-#' the `newdata` argument, users do not need to specify the `model` or `newdata`
+#' If `datagrid` is used in a `marginaleffects` or `predictions` call as the
+#' `newdata` argument, users do not need to specify the `model` or `newdata`
 #' argument. The data is extracted automatically from the model.
 #'
 #' If users supply a model, the data used to fit that model is retrieved using
 #' the `insight::get_data` function.
-#'
-#' If users supply a model, the data used to fit that model is retrieved using
-#' the `insight::get_data` function, and then replicated with different values
-#' of the variables in the `at` list.
 #' @return
-#' A `data.frame` where each row of the original data is repeated multiple
-#' times for each of the values of the variables in the `at` list. See example
-#' below.
+#' A `data.frame` in which each row corresponds to one combination of the named
+#' predictors supplied by the user via the `...` dots. Variables which are not
+#' explicitly defined are held at their mean or mode.
 #' @export
 #' @examples
-#' # All rows are repeated twice, with different values of `hp`
-#' cd <- counterfactual(newdata = mtcars, hp = c(100, 110))
-#' cd[cd$rowid %in% 1:3,]
+#' # The output only has 2 rows, and all the variables except `hp` are at their
+#' # mean or mode.
+#' datagrid(newdata = mtcars, hp = c(100, 110))
 #'
 #' # We get the same result by feeding a model instead of a data.frame
-#' mod <- lm(mpg ~ hp + wt, mtcars)
-#' cd <- counterfactual(model = mod, hp = c(100, 110))
-#' cd[cd$rowid_original %in% 1:3,]
+#' mod <- lm(mpg ~ hp, mtcars)
+#' datagrid(model = mod, hp = c(100, 110))
 #'
-#' # Use in `marginaleffects` to compute "Counterfactual Average Marginal Effects"
-#' marginaleffects(mod, newdata = counterfactual(hp = c(100, 110)))
+#' # Use in `marginaleffects` to compute "Typical Marginal Effects". When used
+#' # in `marginaleffects()` or `predictions()` we do not need to specify the
+#' #`model` or `newdata` arguments.
+#' marginaleffects(mod, newdata = datagrid(hp = c(100, 110)))
+#'
+#' # The full dataset is duplicated with each observation given counterfactual
+#' # values of 100 and 110 for the `hp` variable. The original `mtcars` includes
+#' # 32 rows, so the resulting dataset includes 64 rows.
+#' dg <- datagrid(newdata = mtcars, hp = c(100, 110), grid.type = "counterfactual")
+#' dim(dg)
+#'
+#' # We get the same result by feeding a model instead of a data.frame
+#' mod <- lm(mpg ~ hp, mtcars)
+#' dg <- datagrid(model = mod, hp = c(100, 110))
+#' dim(dg)
+datagrid <- function(
+    ...,
+    model = NULL,
+    newdata = NULL,
+    grid.type = "typical",
+    FUN.character = Mode,
+    # need to be explicit for numeric variables transfered to factor in model formula
+    FUN.factor = Mode,
+    FUN.logical = Mode,
+    FUN.numeric = function(x) mean(x, na.rm = TRUE),
+    FUN.other = function(x) mean(x, na.rm = TRUE)) {
+
+    checkmate::assert_choice(grid.type, choices = c("typical", "counterfactual"))
+    checkmate::assert_function(FUN.character)
+    checkmate::assert_function(FUN.factor)
+    checkmate::assert_function(FUN.logical)
+    checkmate::assert_function(FUN.numeric)
+    checkmate::assert_function(FUN.other)
+
+    if (grid.type == "typical") {
+        out <- typical(...,
+                       model = model,
+                       newdata = newdata,
+                       FUN.character = FUN.character,
+                       FUN.factor = FUN.factor,
+                       FUN.logical = FUN.logical,
+                       FUN.numeric = FUN.numeric,
+                       FUN.other = FUN.other)
+    } else {
+        out <- counterfactual(...,
+                              model = model,
+                              newdata = newdata)
+    }
+
+    return(out)
+}
+
+
+#' Superseded by datagrid(..., grid.type = "counterfactual")
+#'
+#' @inheritParams datagrid
+#' @export
 counterfactual <- function(..., model = NULL, newdata = NULL) {
 
     tmp <- prep_counterfactual_typical(..., model = model, newdata = newdata)
@@ -58,42 +118,10 @@ counterfactual <- function(..., model = NULL, newdata = NULL) {
 }
 
 
-#' Generate a data grid of "typical" or user-specified values for use in `marginaleffects`'s `newdata` argument
+#' Superseded by datagrid(...)
 #'
-#' @param ... named arguments with vectors of values for the typical variables
-#' to construct (see Examples below.) The typical data will include
-#' combinations of unique values from these vectors
-#' @param model Model object
-#' @param newdata data.frame (one and only one of the `model` and `newdata` arguments
-#' @param FUN.character the function to be applied to character variables.
-#' @param FUN.factor the function to be applied to factor variables.
-#' @param FUN.logical the function to be applied to factor variables.
-#' @param FUN.numeric the function to be applied to numeric variables.
-#' @param FUN.other the function to be applied to other variable types.
-#' must be true).
-#' @details
-#' If `typical` is used in a `marginaleffects` or `predictions` call as the
-#' `newdata` argument, users do not need to specify the `model` or `newdata`
-#' argument. The data is extracted automatically from the model.
-#'
-#' If users supply a model, the data used to fit that model is retrieved using
-#' the `insight::get_data` function.
-#' @return
-#' A `data.frame` in which each row corresponds to one combination of the named
-#' predictors supplied by the user via the `...` dots. Variables which are not
-#' explicitly defined are held at their mean or mode.
+#' @inheritParams datagrid
 #' @export
-#' @examples
-#' # The output only has 2 rows, and all the variables except `hp` are at their
-#' # mean or mode.
-#' typical(newdata = mtcars, hp = c(100, 110))
-#'
-#' # We get the same result by feeding a model instead of a data.frame
-#' mod <- lm(mpg ~ hp, mtcars)
-#' typical(model = mod, hp = c(100, 110))
-#'
-#' # Use in `marginaleffects` to compute "Typical Marginal Effects"
-#' marginaleffects(mod, newdata = typical(hp = c(100, 110)))
 typical <- function(
     ...,
     model = NULL,

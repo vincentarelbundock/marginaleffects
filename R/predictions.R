@@ -23,16 +23,16 @@ predictions <- function(model,
                         type = "response",
                         ...) {
 
-    # sanity checks and pre-processing
+    # sanitcounterfactualy checks and pre-processing
     type <- sanity_type(model, type)
 
     ## do not check this because `insight` supports more models than `marginaleffects`
     # model <- sanity_model(model)
 
     # order of the first few paragraphs is important
-    # if `newdata` is a call to `typical()` or `counterfactual()`, insert `model`
+    # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
     scall <- substitute(newdata)
-    if (is.call(scall) && as.character(scall)[1] %in% c("typical", "counterfactual")) {
+    if (is.call(scall) && as.character(scall)[1] %in% c("datagrid", "typical", "counterfactual")) {
         lcall <- as.list(scall)
         if (!any(c("model", "newdata") %in% names(lcall))) {
             lcall <- c(lcall, list("model" = model))
