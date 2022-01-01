@@ -1,4 +1,4 @@
-#' Conditional adjusted predictions plot
+#' Plot Conditional Adjusted Predictions
 #'
 #' This function plots the adjusted predictions of the outcome (y-axis)
 #' against values of one or more predictors.

@@ -295,5 +295,5 @@ Create a file called `tests/testthat/test-PKGNAME.R` and write a few tests. Idea
 Add your new model class to the lists of supported models in:
 
 * The `sanity_model` function of the `R/sanity.R` file.
-* The supported models CSV table in `data-raw/supported_models.csv`. Then, run the `data-raw/supported_models.R` script to propagate your change throughout the package documentation.
+* The supported models CSV table in `data-raw/supported_models.csv`
 * The "Suggests" list in the `DESCRIPTION` file.

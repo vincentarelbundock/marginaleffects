@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_cap.R
 \name{plot_cap}
 \alias{plot_cap}
-\title{Conditional adjusted predictions plot}
+\title{Plot Conditional Adjusted Predictions}
 \usage{
 plot_cap(
   model,

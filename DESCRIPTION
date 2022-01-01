@@ -127,7 +127,6 @@ Collate:
     'sanity.R'
     'sanity_type.R'
     'summary.R'
-    'supported_models.R'
     'tidy.R'
     'utils.R'
 Language: en-US

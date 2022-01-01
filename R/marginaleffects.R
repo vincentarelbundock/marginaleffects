@@ -5,8 +5,9 @@
 #' differentiation to compute marginal effects for a vast array of models,
 #' including non-linear models with transformations (e.g., polynomials). The
 #' list of supported models and of models whose numerical results have been
-#' validated against external software (`Stata` or `margins`) is held in the
-#' `supported_models` dataset which accompanies this package.
+#' validated against external software (`Stata`, `margins`, and/or `emmeans`)
+#' is reported on the package website:
+#' https://vincentarelbundock.github.io/marginaleffects/
 #'
 #' @param model Model object
 #' @param variables Variables to consider (character vector). `NULL`

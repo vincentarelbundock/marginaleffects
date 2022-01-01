@@ -1,4 +1,4 @@
-#' Conditional marginal effects plot
+#' Plot Conditional Marginal Effects
 #' 
 #' In models where two continuous variables are interacted, the marginal effect
 #' of one variable is conditional on the value of the other variable. This

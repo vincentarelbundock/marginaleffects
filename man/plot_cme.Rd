@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_cme.R
 \name{plot_cme}
 \alias{plot_cme}
-\title{Conditional marginal effects plot}
+\title{Plot Conditional Marginal Effects}
 \usage{
 plot_cme(
   model,
