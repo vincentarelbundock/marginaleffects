@@ -44,8 +44,9 @@ with respect to a variable in the model. This function uses automatic
 differentiation to compute marginal effects for a vast array of models,
 including non-linear models with transformations (e.g., polynomials). The
 list of supported models and of models whose numerical results have been
-validated against external software (\code{Stata} or \code{margins}) is held in the
-\code{supported_models} dataset which accompanies this package.
+validated against external software (\code{Stata}, \code{margins}, and/or \code{emmeans})
+is reported on the package website:
+https://vincentarelbundock.github.io/marginaleffects/
 }
 \examples{
 
