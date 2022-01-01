@@ -1,14 +1,23 @@
 skip_if_not_installed("gam")
 
 requiet("gam")
+requiet("emmeans")
+requiet("broom")
 
-test_that("gam: marginaleffects: no validity", {
+test_that("gam: marginaleffects vs. emtrends", {
   data(kyphosis, package = "gam")
   model <- gam::gam(Kyphosis ~ s(Age,4) + Number,
                     family = binomial, data = kyphosis)
   mfx <- marginaleffects(model)
   expect_s3_class(mfx, "data.frame")
   expect_false(any(mfx$std.error == 0))
+
+  # emmeans
+  mfx <- marginaleffects(model, newdata = datagrid(Age = 60, Number = 4), variables = "Number", type = "link")
+  em <- emtrends(model, ~Number, "Number", at = list(Age = 60, Number = 4))
+  em <- tidy(em)
+  expect_equal(mfx$dydx, em$Number.trend)
+  expect_equal(mfx$std.error, em$std.error)
 })
 
 test_that("gam: predictions: no validity", {

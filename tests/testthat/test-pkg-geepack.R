@@ -9,13 +9,19 @@ requiet("broom")
 # xtset Pig Time
 # xtgee Weight i.Cu, family(poisson) link(identity) corr(ar 1)
 
-test_that("marginaleffects: geepack::geeglm: no validity", {
+test_that("geepack::geeglm: marginaleffects vs. emtrends", {
     data(dietox, package = "geepack")
     dietox$Cu <- as.factor(dietox$Cu)
     mf <- formula(Weight ~ Cu * (Time + I(Time^2) + I(Time^3)))
     model <- suppressWarnings(geeglm(mf, data=dietox, id=Pig, 
                                      family=poisson("identity"), corstr="ar1"))
     expect_marginaleffects(model)
+    # emmeans
+    mfx <- marginaleffects(model, variables = "Time", newdata = datagrid(Time = 10, Cu = "Cu000"), type = "link")
+    em <- emtrends(model, ~Time, var = "Time", at = list(Time = 10, Cu = "Cu000"))
+    em <- tidy(em)
+    expect_equal(mfx$dydx, em$Time.trend, tolerance = .001)
+    expect_equal(mfx$std.error, em$std.error, tolerance = .01)
 })
 
 test_that("predictions: geepack::geeglm: no validity", {

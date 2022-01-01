@@ -1,10 +1,18 @@
 skip_if_not_installed("rms")
+requiet("rms")
+requiet("emmeans")
+requiet("broom")
 
-test_that("marginaleffects: rms: no validity", {
+test_that("lmr: marginaleffects vs emtrends", {
     model <- rms::lrm(am ~ mpg, mtcars)
     void <- capture.output({
         expect_marginaleffects(model, type = "lp", n_unique = 1)
     })
+    mfx <- marginaleffects(model, newdata = data.frame(mpg = 30), type = "lp")
+    em <- emtrends(model, ~mpg, "mpg", at = list(mpg = 30))
+    em <- tidy(em)
+    expect_equal(mfx$dydx, em$mpg.trend)
+    expect_equal(mfx$std.error, em$std.error, tolerance = .0001)
 })
 
 test_that("predictions: rms: no validity", {
