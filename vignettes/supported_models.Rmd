@@ -20,10 +20,10 @@ I am *very* eager to add support for new models. Feel free to file a request on 
 Warning: When using `marginaleffects` with different models, you will probably have to adjust the `type` argument. Refer to the documentation of your modeling package to see what `type` argument is allowed in the `predict` function. 
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
-library("gt")
+library("data.table")
+library("kableExtra")
 
 supported_models <- read.csv("https://raw.githubusercontent.com/vincentarelbundock/marginaleffects/main/data-raw/supported_models.csv", check.names = FALSE, encoding = "utf8")
-
 
 tmp <- supported_models
 for (i in nrow(tmp):2) {
@@ -35,46 +35,35 @@ for (i in nrow(tmp):2) {
 colnames(tmp) <- c("Package",
                    "Function",
                    "dY/dX",
-                   "Std. Error",
+                   "SE",
                    "dY/dX ",
-                   "Std. Error ",
+                   "SE ",
                    "dY/dX  ",
-                   "Std. Error  ",
+                   "SE  ",
                    "dY/dX   ",
-                   "Std. Error   ")
+                   "SE   ")
 
-idx_green <- lapply(tmp, function(x) x == TRUE)
-idx_red <- lapply(tmp, function(x) x == FALSE)
-
-for (i in 3:ncol(tmp)) {
-    tmp[[i]] <- ""
-}
-
-unsupported_mfx_emmeans <- c(
-    "betabin",
-    "bife")
-
-idx <- tmp$Function %in% unsupported_mfx_emmeans
-tmp[[9]][idx] <- tmp[[10]][idx] <- "N/A"
-
-tab <- gt(tmp) %>%
-  tab_spanner(label = "Support", columns = 3:4) %>%
-  tab_spanner(label = "Validity: Stata", columns = 5:6) %>%
-  tab_spanner(label = "Validity: margins", columns = 7:8) %>%
-  tab_spanner(label = "Validity: emmeans", columns = 9:10) %>%
-  tab_style(style = list(cell_borders(sides = c("left", "right"), color = "black", weight = px(1))),
-            locations = list(cells_body(columns = 3:ncol(tmp)))) %>%
-  tab_style(style = list(cell_borders(sides = c("bottom", "top"), color = "black", weight = px(1))),
-            locations = cells_body())
+f <- function(x) fcase(is.na(x), "grey", x == TRUE, "green", x == FALSE, "red")
+idx <- lapply(tmp, f)
 
 for (i in 3:ncol(tmp)) {
-    tab <- tab %>%
-    tab_style(style = cell_fill(color = "#c1e1c1"), 
-              locations = cells_body(columns = i, rows = (idx_green[[i]] == TRUE))) %>%
-    tab_style(style = cell_fill(color = "#ff6961"), 
-              locations = cells_body(columns = i, rows = (idx_red[[i]] == TRUE)))
+    tmp[[i]] <- as.character(tmp[[i]])
+    tmp[[i]] <- fcase(tmp[[i]] == "TRUE", "✓",
+                      tmp[[i]] == "FALSE", "✖",
+                      tmp[[i]] == "U", "U",
+                      default = "")
 }
 
+# kableExtra
+tab <- kbl(tmp, align = c("l", "l", rep("c", 8)), full_width = FALSE)
+tab <- kable_styling(tab)
+for (i in 3:ncol(tmp)) {
+    tab <- column_spec(tab, column = i, color = idx[[i]])
+}
+for (i in 1:nrow(tmp)) {
+    tab <- row_spec(tab, row = i)
+}
+tab <- add_header_above(tab, c(" " = 2, "Supported" = 2, "Stata" = 2, "margins" = 2, "emtrends" = 2))
+tab <- add_header_above(tab, c(" " = 4, "Numerical equivalence" = 6))
 tab
-# gt::gtsave(tab, "man/figures/README-supported_models.png")
 ```
