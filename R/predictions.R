@@ -15,6 +15,17 @@
 #' confidence interval.
 #' @param ... Additional arguments are pushed forward to `predict()`.
 #' @return A `data.frame` with a `predicted` column with predictions.
+#' @examples
+#' # Predicted outcomes for every row of the original dataset
+#' mod <- lm(mpg ~ hp + factor(cyl), data = mtcars)
+#' pred <- predictions(mod)
+#' head(pred)
+#'
+#' # Predicted outcomes for user-specified values of the regressors
+#' predictions(mod, newdata = datagrid(hp = c(100, 120), cyl = 4))
+#'
+#' # Plot of predicted outcomes for different values of the regressor
+#' plot_cap(mod, condition = "hp")
 #' @export
 predictions <- function(model,
                         variables = NULL,
