@@ -30,7 +30,7 @@ test_against_margins <- function(results,
     }
 
     # std.error
-    if ("std.error" %in% colnames(results)) {
+    if (isTRUE(se) && "std.error" %in% colnames(results)) {
         for (tn in term_names) {
             lab <- paste0("SE_dydx_", tn)
             if (lab %in% colnames(margins_object)) {

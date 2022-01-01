@@ -22,13 +22,16 @@ test_that("brglm2::brglm_fit vs. margins vs. emtrends", {
     expect_equal(mfx$std.error, em$std.error, tolerance = .00001)
 })
 
-test_that("brglm2::brglm_fit no validity check", {
+test_that("brglm2::brglm_fit vs. margins", {
     salmonella <- data.frame(freq = c(15, 16, 16, 27, 33, 20, 21, 18, 26, 41, 38, 27, 29, 21, 33, 60, 41, 42),
                              dose = rep(c(0, 10, 33, 100, 333, 1000), 3),
                              observation = rep(1:3, each = 6))
     salmonella_fm <- freq ~ dose + log(dose + 10)
     model <- brnb(salmonella_fm, data = salmonella, link = "log", transformation = "inverse", type = "ML")
     suppressWarnings(expect_marginaleffects(model, n_unique = 6))
+    mfx <- suppressWarnings(marginaleffects(model))
+    mar <- suppressWarnings(margins(model))
+    expect_true(test_against_margins(mar, mfx))
 })
 
 test_that("predictions: brglm2::brglm_fit: no validity", {

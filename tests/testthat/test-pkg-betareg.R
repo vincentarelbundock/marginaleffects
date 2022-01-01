@@ -3,6 +3,8 @@ skip_if_not_installed("margins")
 skip_if_not_installed("emmeans")
 skip_if_not_installed("broom")
 requiet("betareg")
+requiet("emmeans")
+requiet("broom")
 
 test_that("marginaleffects: vs. margins vs. emmeans", {
     set.seed(1024)

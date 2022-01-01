@@ -1,10 +1,12 @@
 skip_if_not_installed("pscl")
 requiet("pscl")
+requiet("emmeans")
+requiet("broom")
 
 
 ### marginaleffects
 
-test_that("marginaleffects: hurdle: set_coef", {
+test_that("hurdle: set_coef", {
     data("bioChemists", package = "pscl")
     mod1 <- hurdle(art ~ phd + fem | ment, data = bioChemists, dist = "negbin")
     beta <- stats::setNames(rep(0, length(coef(mod1))), names(coef(mod1)))
@@ -12,7 +14,7 @@ test_that("marginaleffects: hurdle: set_coef", {
     expect_true(all(coef(mod1) != coef(mod2)))
 })
 
-test_that("marginaleffects: hurdle: no validity check", {
+test_that("hurdle: marginaleffects vs margins vs emtrends", {
     data("bioChemists", package = "pscl")
     model <- hurdle(art ~ phd + fem | ment, data = bioChemists, dist = "negbin")
     mfx1 <- marginaleffects(model, type = "response")
@@ -25,6 +27,20 @@ test_that("marginaleffects: hurdle: no validity check", {
     expect_false(any(mfx2$std.error == 0))
     expect_s3_class(mfx1, "data.frame")
     expect_s3_class(mfx2, "data.frame")
+
+    # emtrends
+    em <- emtrends(model, ~phd, "phd", at = list(fem = "Men", phd = 2))
+    em <- tidy(em)
+    mfx <- marginaleffects(model, newdata = datagrid(fem = "Men", phd = 2), variables = "phd")
+    expect_equal(mfx$dydx, em$phd.trend, tolerance = .001)
+    # standard errors do not match
+    # expect_equal(mfx$std.error, em$std.error)
+
+    # margins: standard errors are not supported (all zeros)
+    res <- marginaleffects(model, newdata = head(bioChemists, 2))
+    mar <- margins(model, data = head(bioChemists, 2), unit_ses = TRUE)
+    expect_equal(res$dydx[1:2], mar$dydx_phd, tolerance = .00001, ignore_attr = TRUE)
+    expect_equal(res$dydx[3:4], mar$dydx_femWomen, tolerance = .00001, ignore_attr = TRUE)
 })
 
 
@@ -39,17 +55,28 @@ test_that("bugs stay dead: hurdle with multi-level regressor", {
 })
 
 
-test_that("marginaleffects: zeroinfl vs. Stata", {
+test_that("marginaleffects: zeroinfl vs. Stata vs. emtrends", {
     data("bioChemists", package = "pscl")
     model <- zeroinfl(art ~ kid5 + phd | ment,
                       dist = "negbin",
                       data = bioChemists)
+    # stata
     stata <- readRDS(test_path("stata/stata.rds"))$pscl_zeroinfl_01
     mfx <- merge(tidy(marginaleffects(model)), stata)
     expect_marginaleffects(model)
     expect_equal(mfx$estimate, mfx$dydxstata, tolerance = .00001)
     expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = .001)
     mfx <- marginaleffects(model)
+    # emtrends
+    mfx <- marginaleffects(model, variables = "phd", newdata = datagrid(kid5 = 2, ment = 7, phd = 2))
+    em <- emtrends(model, ~phd, "phd", at = list(kid5 = 2, ment = 7, phd = 2))
+    em <- tidy(em)
+    expect_equal(mfx$dydx, em$phd.trend, tolerance = .0001)
+    expect_equal(mfx$std.error, em$std.error, tolerance = .0001)
+    # margins: does not support standard errors (all zeros)
+    mar <- margins(model, data = head(bioChemists), unit_ses = TRUE)
+    mfx <- marginaleffects(model, newdata = head(bioChemists))
+    expect_true(test_against_margins(mfx, mar, se = FALSE, verbose = TRUE))
 })
 
 

@@ -82,7 +82,7 @@ test_that("lm with interactions vs. margins vs. emmeans: marginaleffects", {
     expect_equal(res$dydx[1], em1$hp.trend)
     expect_equal(res$std.error[1], em1$std.error, tolerance = .001)
     expect_equal(res$dydx[2], em2$hp.trend)
-    expect_equal(res$std.error[2], em2$std.error, tolerance = .00001)
+    expect_equal(res$std.error[2], em2$std.error, tolerance = .0001)
 })
 
 

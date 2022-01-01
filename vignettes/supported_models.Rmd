@@ -23,7 +23,9 @@ Warning: When using `marginaleffects` with different models, you will probably h
 library("data.table")
 library("kableExtra")
 
-supported_models <- read.csv("https://raw.githubusercontent.com/vincentarelbundock/marginaleffects/main/data-raw/supported_models.csv", check.names = FALSE, encoding = "utf8")
+dat <- "https://raw.githubusercontent.com/vincentarelbundock/marginaleffects/main/data-raw/supported_models.csv"
+#dat <- "data-raw/supported_models.csv"
+supported_models <- fread(dat, colClasses = rep("character", 10))
 
 tmp <- supported_models
 for (i in nrow(tmp):2) {
@@ -43,7 +45,7 @@ colnames(tmp) <- c("Package",
                    "dY/dX   ",
                    "SE   ")
 
-f <- function(x) fcase(is.na(x), "grey", x == TRUE, "green", x == FALSE, "red")
+f <- function(x) fcase(x == TRUE, "green", x == FALSE, "red", default = "grey")
 idx <- lapply(tmp, f)
 
 for (i in 3:ncol(tmp)) {

@@ -1,13 +1,19 @@
 skip_if_not_installed("nlme")
 requiet("nlme")
 
-test_that("marginaleffects: nlme::gls: no validity", {
+test_that("nlme::gls: marginaleffects vs. emtrends", {
     model <- gls(follicles ~ sin(2*pi*Time) + cos(2*pi*Time), Ovary,
                  correlation = corAR1(form = ~ 1 | Mare))
     mfx <- marginaleffects(model)
     expect_s3_class(mfx, "data.frame")
     expect_false(any(mfx$dydx == 0 |  is.na(mfx$dydx)))
     expect_false(any(mfx$std.error == 0 |  is.na(mfx$std.error)))
+    # emtrends
+    mfx <- marginaleffects(model, variables = "Time", type = "link", newdata = datagrid(Time = 1)) 
+    em <- emtrends(model, ~Time, "Time", mode = "df.error", at = list(Time = 1))
+    em <- tidy(em)
+    expect_equal(mfx$std.error, em$std.error, tolerance = .001)
+    expect_equal(mfx$dydx, em$Time.trend, tolerance = .01)
 })
 
 test_that("predictions: nlme::gls: no validity", {
