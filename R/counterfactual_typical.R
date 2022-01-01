@@ -1,4 +1,4 @@
-#' Generate "counterfactual" datasets for use in `marginaleffects`'s `newdata` argument
+#' Generate a data grid of "counterfactual" values for use in `marginaleffects`'s `newdata` argument
 #'
 #' @param ... named arguments with vectors of values for the variables to construct (see Examples below.)
 #' @param model Model object
@@ -11,11 +11,11 @@
 #'
 #' If users supply a model, the data used to fit that model is retrieved using
 #' the `insight::get_data` function.
-#' 
+#'
 #' If users supply a model, the data used to fit that model is retrieved using
 #' the `insight::get_data` function, and then replicated with different values
 #' of the variables in the `at` list.
-#' @return 
+#' @return
 #' A `data.frame` where each row of the original data is repeated multiple
 #' times for each of the values of the variables in the `at` list. See example
 #' below.
@@ -45,7 +45,7 @@ counterfactual <- function(..., model = NULL, newdata = NULL) {
     at <- lapply(at, unique)
     at <- expand.grid(at, stringsAsFactors = FALSE)
 
-    rowid <- data.frame(rowid_original = 1:nrow(dat))
+    rowid <- data.frame(rowid_original = seq_len(nrow(dat)))
     if (length(variables_automatic) > 0) {
         dat_automatic <- dat[, variables_automatic, drop = FALSE]
         dat_automatic <- cbind(rowid, dat_automatic)
@@ -58,13 +58,18 @@ counterfactual <- function(..., model = NULL, newdata = NULL) {
 }
 
 
-#' Generate "typical" datasets for use in `marginaleffects`'s `newdata` argument
+#' Generate a data grid of "typical" or user-specified values for use in `marginaleffects`'s `newdata` argument
 #'
 #' @param ... named arguments with vectors of values for the typical variables
 #' to construct (see Examples below.) The typical data will include
 #' combinations of unique values from these vectors
 #' @param model Model object
 #' @param newdata data.frame (one and only one of the `model` and `newdata` arguments
+#' @param FUN.character the function to be applied to character variables.
+#' @param FUN.factor the function to be applied to factor variables.
+#' @param FUN.logical the function to be applied to factor variables.
+#' @param FUN.numeric the function to be applied to numeric variables.
+#' @param FUN.other the function to be applied to other variable types.
 #' must be true).
 #' @details
 #' If `typical` is used in a `marginaleffects` or `predictions` call as the
@@ -89,7 +94,16 @@ counterfactual <- function(..., model = NULL, newdata = NULL) {
 #'
 #' # Use in `marginaleffects` to compute "Typical Marginal Effects"
 #' marginaleffects(mod, newdata = typical(hp = c(100, 110)))
-typical <- function(..., model = NULL, newdata = NULL) {
+typical <- function(
+    ...,
+    model = NULL,
+    newdata = NULL,
+    FUN.character = Mode,
+    # need to be explicit for numeric variables transfered to factor in model formula
+    FUN.factor = Mode,
+    FUN.logical = Mode,
+    FUN.numeric = function(x) mean(x, na.rm = TRUE),
+    FUN.other = function(x) mean(x, na.rm = TRUE)) {
 
     tmp <- prep_counterfactual_typical(..., model = model, newdata = newdata)
     at <- tmp$at
@@ -101,12 +115,23 @@ typical <- function(..., model = NULL, newdata = NULL) {
     if (length(variables_automatic) > 0) {
         dat_automatic <- dat[, variables_automatic, drop = FALSE]
         dat_automatic <- stats::na.omit(dat_automatic)
+        out <- list()
         # na.omit destroys attributes, and we need the "factor" attribute
         # created by insight::get_data
         for (n in names(dat_automatic)) {
-            attr(dat_automatic[[n]], "factor") <- attr(dat[[n]], "factor")
+            # factor before character because of attribute check
+            if (is.factor(dat_automatic[[n]]) || isTRUE(attr(dat[[n]], "factor"))) {
+                out[[n]] <- FUN.factor(dat_automatic[[n]])
+            } else if (is.logical(dat_automatic[[n]])) {
+                out[[n]] <- FUN.logical(dat_automatic[[n]])
+            } else if (is.character(dat_automatic[[n]])) {
+                out[[n]] <- FUN.character(dat_automatic[[n]])
+            } else if (is.numeric(dat_automatic[[n]])) {
+                out[[n]] <- FUN.numeric(dat_automatic[[n]])
+            } else {
+                out[[n]] <- FUN.other(dat_automatic[[n]])
+            }
         }
-        out <- mean_or_mode(dat_automatic)
     } else {
         out <- list()
     }
@@ -133,7 +158,6 @@ typical <- function(..., model = NULL, newdata = NULL) {
         attr(out[[n]], "factor") <- attr(dat[[n]], "factor")
     }
 
-
     return(out)
 }
 
@@ -155,12 +179,14 @@ prep_counterfactual_typical <- function(..., model = NULL, newdata = NULL) {
     # data: all variables
     if (!is.null(newdata)) {
         variables <- colnames(newdata)
-    # model: variables=NULL because otherwise `sanity_variables` excludes others
+    # model: variables = NULL because otherwise `sanity_variables` excludes others
     } else {
         variables <- NULL
     }
 
-    variables_list <- sanity_variables(model = model, newdata = newdata, variables = variables)
+    variables_list <- sanity_variables(model = model,
+                                       newdata = newdata,
+                                       variables = variables)
     variables_all <- unique(unlist(variables_list))
     variables_manual <- names(at)
     variables_automatic <- setdiff(variables_all, variables_manual)
@@ -173,7 +199,7 @@ prep_counterfactual_typical <- function(..., model = NULL, newdata = NULL) {
     # check `at` names
     variables_missing <- setdiff(names(at), variables_all)
     if (length(variables_missing) > 0) {
-        warning(sprintf("Elements of the `variables` argument are missing from the model data: %s", 
+        warning(sprintf("Some of the variable names are missing from the model data: %s",
                         paste(variables_missing, collapse = ", ")))
     }
 
@@ -210,8 +236,8 @@ prep_counterfactual_typical <- function(..., model = NULL, newdata = NULL) {
 
     out <- list("newdata" = newdata,
                 "at" = at,
-                "variables_all" = variables_all, 
-                "variables_manual" = variables_manual, 
+                "variables_all" = variables_all,
+                "variables_manual" = variables_manual,
                 "variables_automatic" = variables_automatic)
     return(out)
 }
