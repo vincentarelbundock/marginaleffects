@@ -1,4 +1,4 @@
-#' Generate a "counterfactual" data grid for use in `marginaleffects`'s `newdata` argument
+#' Generate a data grid of "counterfactual" values for use in `marginaleffects`'s `newdata` argument
 #'
 #' @param ... named arguments with vectors of values for the variables to construct (see Examples below.)
 #' @param model Model object
@@ -58,17 +58,18 @@ counterfactual <- function(..., model = NULL, newdata = NULL) {
 }
 
 
-#' Generate a "typical" data grid for use in `marginaleffects`'s `newdata` argument
+#' Generate a data grid of "typical" or user-specified values for use in `marginaleffects`'s `newdata` argument
 #'
 #' @param ... named arguments with vectors of values for the typical variables
 #' to construct (see Examples below.) The typical data will include
 #' combinations of unique values from these vectors
 #' @param model Model object
 #' @param newdata data.frame (one and only one of the `model` and `newdata` arguments
-#' @param FUN_character the function to be applied to character variables.
-#' @param FUN_factor the function to be applied to factor variables.
-#' @param FUN_numeric the function to be applied to numeric variables.
-#' @param FUN_other the function to be applied to other variable types.
+#' @param FUN.character the function to be applied to character variables.
+#' @param FUN.factor the function to be applied to factor variables.
+#' @param FUN.logical the function to be applied to factor variables.
+#' @param FUN.numeric the function to be applied to numeric variables.
+#' @param FUN.other the function to be applied to other variable types.
 #' must be true).
 #' @details
 #' If `typical` is used in a `marginaleffects` or `predictions` call as the
@@ -100,6 +101,7 @@ typical <- function(
     FUN.character = Mode,
     # need to be explicit for numeric variables transfered to factor in model formula
     FUN.factor = Mode,
+    FUN.logical = Mode,
     FUN.numeric = function(x) mean(x, na.rm = TRUE),
     FUN.other = function(x) mean(x, na.rm = TRUE)) {
 
@@ -120,6 +122,8 @@ typical <- function(
             # factor before character because of attribute check
             if (is.factor(dat_automatic[[n]]) || isTRUE(attr(dat[[n]], "factor"))) {
                 out[[n]] <- FUN.factor(dat_automatic[[n]])
+            } else if (is.logical(dat_automatic[[n]])) {
+                out[[n]] <- FUN.logical(dat_automatic[[n]])
             } else if (is.character(dat_automatic[[n]])) {
                 out[[n]] <- FUN.character(dat_automatic[[n]])
             } else if (is.numeric(dat_automatic[[n]])) {

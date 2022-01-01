@@ -1,6 +1,7 @@
 skip_if_not_installed("fixest")
 
 
+
 test_that("typical(x = NA)", {
     # numeric
     nd <- typical(newdata = mtcars, mpg = NA, hp = 1:4)
@@ -57,4 +58,13 @@ test_that("errors and warnings", {
 
     mod <- fixest::feols(mpg ~ hp | cyl, data = mtcars)
     expect_warning(typical(model = mod), regexp = "cluster")
+})
+
+test_that("bugs stay dead: FUN.logical", {
+    tmp <- mtcars
+    tmp$am <- as.logical(tmp$am)
+    mod <- lm(mpg ~ am * factor(cyl), data = tmp)
+    mfx <- marginaleffects(mod, newdata = typical(cyl = tmp$cyl), variables = "am")
+    expect_s3_class(mfx, "marginaleffects")
+    expect_equal(nrow(mfx), 3)
 })
