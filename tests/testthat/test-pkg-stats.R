@@ -29,6 +29,14 @@ test_that("glm: marginaleffects", {
     res <- marginaleffects(mod)
     mar <- margins(mod, unit_ses = TRUE)
     expect_true(test_against_margins(res, mar, tolerance = 0.1, verbose=TRUE))
+
+    # emmeans comparison
+    # type = "response" works at lower tolerance
+    em <- emmeans::emtrends(mod, ~x2, var = "x2", at = list(x1 = 0, x2 = 0, x3 = 0, x4 = 0))
+    em <- tidy(em)
+    mfx <- marginaleffects(mod, newdata = datagrid(x1 = 0, x2 = 0, x3 = 0, x4 = 0), variable = "x2", type = "link")
+    expect_equal(mfx$dydx, em$x2.trend)
+    expect_equal(mfx$std.error, em$std.error)
 })
 
 
@@ -56,12 +64,25 @@ test_that("lm vs. Stata: marginaleffects", {
 })
 
 
-test_that("lm with interactions vs. margins: marginaleffects", {
+test_that("lm with interactions vs. margins vs. emmeans: marginaleffects", {
     counterfactuals <- expand.grid(hp = 100, am = 0:1)
     mod <- lm(mpg ~ hp * am, data = mtcars)
     res <- marginaleffects(mod, variable = "hp", newdata = counterfactuals)
     mar <- margins(mod, variable = "hp", data = counterfactuals, unit_ses = TRUE)
     expect_true(test_against_margins(res, mar, tolerance = 1e-3))
+
+    # emmeans
+    void <- capture.output({
+        em1 <- emmeans::emtrends(mod, ~hp, var = "hp", at = list(hp = 100, am = 0))
+        em2 <- emmeans::emtrends(mod, ~hp, var = "hp", at = list(hp = 100, am = 1))
+        em1 <- tidy(em1)
+        em2 <- tidy(em2)
+    })
+    res <- marginaleffects(mod, variable = "hp", newdata = counterfactuals)
+    expect_equal(res$dydx[1], em1$hp.trend)
+    expect_equal(res$std.error[1], em1$std.error, tolerance = .001)
+    expect_equal(res$dydx[2], em2$hp.trend)
+    expect_equal(res$std.error[2], em2$std.error, tolerance = .00001)
 })
 
 
