@@ -62,8 +62,8 @@ test_that("bugfix: nnet single row predictions", {
     dat <- read.csv(test_path("stata/databases/MASS_polr_01.csv"))
     void <- capture.output(mod <-
         nnet::multinom(factor(y) ~ x1 + x2, data = dat, quiet = true))
-    expect_warning(marginaleffects(mod, newdata = typical(), type = "probs"))
-    mfx <- suppressWarnings(marginaleffects(mod, newdata = typical(), type = "probs"))
+    expect_warning(marginaleffects(mod, newdata = datagrid(), type = "probs"))
+    mfx <- suppressWarnings(marginaleffects(mod, newdata = datagrid(), type = "probs"))
     expect_s3_class(mfx, "data.frame")
     expect_equal(nrow(mfx), 6)
 })

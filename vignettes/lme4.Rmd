@@ -57,16 +57,16 @@ Predict weight of each chick over time:
 
 ```{r}
 pred1 <- predictions(fit1,
-                     newdata = typical(Chick = ChickWeight$Chick,
-                                       Time = 0:21))
+                     newdata = datagrid(Chick = ChickWeight$Chick,
+                                        Time = 0:21))
 
 p1 <- ggplot(pred1, aes(Time, predicted, level = Chick)) +
       geom_line() +
       labs(y = "Predicted weight", x = "Time", title = "Linear growth model")
 
 pred2 <- predictions(fit2,
-                     newdata = typical(Chick = ChickWeight$Chick,
-                                       Time = 0:21))
+                     newdata = datagrid(Chick = ChickWeight$Chick,
+                                        Time = 0:21))
 
 p2 <- ggplot(pred2, aes(Time, predicted, level = Chick)) +
       geom_line() +
@@ -93,9 +93,9 @@ To make population-level predictions, we set the `Chick` variable to `NA`, and s
 ```{r}
 pred <- predictions(
     fit2,
-    newdata = typical(Chick = NA,
-                      Diet = 1:4,
-                      Time = 0:21),
+    newdata = datagrid(Chick = NA,
+                       Diet = 1:4,
+                       Time = 0:21),
     include_random = FALSE)
 
 ggplot(pred, aes(x = Time, y = predicted, ymin = conf.low, ymax = conf.high)) +

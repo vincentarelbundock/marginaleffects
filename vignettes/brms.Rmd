@@ -95,12 +95,12 @@ To visualize the relationship between the outcome and one of the regressors, we 
 plot_cap(mod, condition = "age")
 ```
 
-Compute adjusted predictions for some user-specified values of the regressors, using the `newdata` argument and the `typical` function:
+Compute adjusted predictions for some user-specified values of the regressors, using the `newdata` argument and the `datagrid` function:
 
 ```{r}
 pred <- predictions(mod,
-                    newdata = typical(woman = 0:1, 
-                    passengerClass = c("1st", "2nd", "3rd")))
+                    newdata = datagrid(woman = 0:1,
+                                       passengerClass = c("1st", "2nd", "3rd")))
 pred
 ```
 
@@ -133,8 +133,8 @@ Compute marginal effects with some regressors fixed at user-specified values, an
 
 ```{r}
 marginaleffects(mod,
-                newdata = typical(woman = 1, 
-                                  passengerClass = "1st"))
+                newdata = datagrid(woman = 1,
+                                   passengerClass = "1st"))
 ```
 
 Compute and plot conditional marginal effects:
@@ -158,7 +158,7 @@ We can use this dataset to plot our results. For example, to plot the posterior 
 ```{r}
 mfx <- marginaleffects(mod,
                        variables = "age",
-                       newdata = typical(woman = 0:1)) |>
+                       newdata = datagrid(woman = 0:1)) |>
        posteriordraws()
 
 ggplot(mfx, aes(x = draw, fill = factor(woman))) +
@@ -198,14 +198,14 @@ mod <- brm(
 
 ## Posterior predictions
 
-To compute posterior predictions for specific values of the regressors, we use the `newdata` argument and the `typical` function. We also use the `type` argument to compute two types of predictions: accounting for residual (observation-level) residual variance (`prediction`) or ignoring it (`response`).
+To compute posterior predictions for specific values of the regressors, we use the `newdata` argument and the `datagrid` function. We also use the `type` argument to compute two types of predictions: accounting for residual (observation-level) residual variance (`prediction`) or ignoring it (`response`).
 
 ```{r}
 pred <- predictions(mod,
                     type = c("response", "prediction"),
-                    newdata = typical(party_autonomy = c(TRUE, FALSE),
-                                      civil_liberties = .5,
-                                      region = "Middle East and North Africa"))
+                    newdata = datagrid(party_autonomy = c(TRUE, FALSE),
+                                       civil_liberties = .5,
+                                       region = "Middle East and North Africa"))
 pred
 ```
 
@@ -228,8 +228,8 @@ As noted in the [Marginal Effects vignette](https://vincentarelbundock.github.io
 
 ```{r}
 mfx <- marginaleffects(mod,
-                       newdata = typical(civil_liberties = .5,
-                                         region = "Middle East and North Africa"))
+                       newdata = datagrid(civil_liberties = .5,
+                                          region = "Middle East and North Africa"))
 mfx
 ```
 
@@ -255,9 +255,9 @@ plot_cme(mod,
 
 ```{r, fig.asp = .6}
 pred <- predictions(mod,
-                    newdata = typical(party_autonomy = FALSE,
-                                      region = "Middle East and North Africa",
-                                      civil_liberties = seq(0, 1, by = 0.05))) |>
+                    newdata = datagrid(party_autonomy = FALSE,
+                                       region = "Middle East and North Africa",
+                                       civil_liberties = seq(0, 1, by = 0.05))) |>
         posteriordraws()
 
 ggplot(pred, aes(x = civil_liberties, y = draw)) +
@@ -272,9 +272,9 @@ The slope of this line for different values of civil liberties can be obtained w
 
 ```{r}
 mfx <- marginaleffects(mod,
-                       newdata = typical(civil_liberties = c(.2, .5, .8),
-                                         party_autonomy = FALSE,
-                                         region = "Middle East and North Africa"),
+                       newdata = datagrid(civil_liberties = c(.2, .5, .8),
+                                          party_autonomy = FALSE,
+                                          region = "Middle East and North Africa"),
                        variables = "civil_liberties")
 mfx
 ```
@@ -295,9 +295,9 @@ The `marginaleffects` function can use the ellipsis (`...`) to push any argument
 
 ```{r}
 mfx <- marginaleffects(mod,
-                       newdata = typical(civil_liberties = c(.2, .5, .8),
-                                         party_autonomy = FALSE,
-                                         region = "Middle East and North Africa"),
+                       newdata = datagrid(civil_liberties = c(.2, .5, .8),
+                                          party_autonomy = FALSE,
+                                          region = "Middle East and North Africa"),
                        variables = "civil_liberties",
                        re_formula = NA) |>
        posteriordraws()
@@ -325,7 +325,7 @@ emtrends(mod,
 ```{r, fig.width = 9}
 pred <- predictions(mod,
                     re_formula = NA,
-                    newdata = typical(party_autonomy = c(TRUE, FALSE))) |>
+                    newdata = datagrid(party_autonomy = c(TRUE, FALSE))) |>
         posteriordraws()
 
 mfx <- marginaleffects(mod,
@@ -355,9 +355,9 @@ Predicted media index by region and level of civil liberties:
 
 ```{r, out.width = "100%", fig.width = 9}
 pred <- predictions(mod,
-                    newdata = typical(region = vdem_2015$region,
-                                      party_autonomy = FALSE, 
-                                      civil_liberties = seq(0, 1, length.out = 100))) |> 
+                    newdata = datagrid(region = vdem_2015$region,
+                                       party_autonomy = FALSE, 
+                                       civil_liberties = seq(0, 1, length.out = 100))) |> 
         posteriordraws()
 
 ggplot(pred, aes(x = civil_liberties, y = draw)) +
@@ -373,8 +373,8 @@ Predicted media index by region and level of civil liberties:
 
 ```{r, out.width = "100%", fig.width = 9}
 pred <- predictions(mod,
-                    newdata = typical(region = vdem_2015$region,
-                                      civil_liberties = c(.2, .8),
+                    newdata = datagrid(region = vdem_2015$region,
+                                       civil_liberties = c(.2, .8),
                                       party_autonomy = FALSE)) |>
         posteriordraws()
 
@@ -390,9 +390,9 @@ Predicted media index by region and party autonomy:
 
 ```{r, fig.asp = .9}
 pred <- predictions(mod,
-                    newdata = typical(region = vdem_2015$region,
-                                      party_autonomy = c(TRUE, FALSE),
-                                      civil_liberties = .5)) |>
+                    newdata = datagrid(region = vdem_2015$region,
+                                       party_autonomy = c(TRUE, FALSE),
+                                       civil_liberties = .5)) |>
         posteriordraws()
 
 ggplot(pred, aes(x = draw, y = region , fill = party_autonomy)) +
@@ -407,8 +407,8 @@ TRUE/FALSE contrasts (marginal effects) of party autonomy by region:
 ```{r, fig.asp = .9}
 mfx <- marginaleffects(mod,
                        variables = "party_autonomy",
-                       newdata = typical(region = vdem_2015$region,
-                                         civil_liberties = .5)) |>
+                       newdata = datagrid(region = vdem_2015$region,
+                                          civil_liberties = .5)) |>
         posteriordraws()
 
 ggplot(mfx, aes(x = draw, y = region , fill = party_autonomy)) +

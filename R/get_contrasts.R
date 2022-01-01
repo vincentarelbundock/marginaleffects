@@ -6,9 +6,9 @@ get_contrasts <- function(model,
                           contrast_to_dydx = FALSE,
                           ...) {
 
-    # if `newdata` is a call to `typical()` or `counterfactual()`, insert `model`
+    # if `newdata` is a call to `datagrid`, `typical`, or `counterfactual`, insert `model`
     scall <- substitute(newdata)
-    if (is.call(scall) && as.character(scall)[1] %in% c("typical", "counterfactual")) {
+    if (is.call(scall) && as.character(scall)[1] %in% c("datagrid", "typical", "counterfactual")) {
         lcall <- as.list(scall)
         if (!any(c("model", "data") %in% names(lcall))) {
             lcall <- c(lcall, list("model" = model))

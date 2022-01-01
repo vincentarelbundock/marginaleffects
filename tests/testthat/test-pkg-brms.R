@@ -45,7 +45,7 @@ test_that("brms: logical regressor", {
 
 test_that("predictions: hypothetical group", {
     mod <- insight::download_model("brms_mixed_3")
-    nd <- typical(model = mod, grp = 4, subgrp = 12)
+    nd <- datagrid(model = mod, grp = 4, subgrp = 12)
     nd$Subject <- 1000
     set.seed(1024)
     p1 <- predictions(mod, newdata = nd, allow_new_levels = TRUE)
@@ -101,7 +101,7 @@ test_that("marginaleffects: ordinal no validity", {
 
 
 test_that("predict new unit: no validity", {
-    dat1 <- dat2 <- typical(model = mod_epi)
+    dat1 <- dat2 <- datagrid(model = mod_epi)
     dat2$patient <- NA
     set.seed(1024)
     mfx1 <- marginaleffects(mod_epi, newdata = dat1)
@@ -122,14 +122,14 @@ test_that("tidy()", {
 
 test_that("predictions: no validity", {
     # simple
-    pred <- predictions(mod_two, newdata = typical(hp = c(100, 120)))
+    pred <- predictions(mod_two, newdata = datagrid(hp = c(100, 120)))
     expect_predictions(pred, se = FALSE) 
     expect_equal(dim(attr(pred, "posterior_draws")), c(2, 2000))
     # interaction
-    pred <- predictions(mod_int, newdata = typical(mpg = c(20, 25)))
+    pred <- predictions(mod_int, newdata = datagrid(mpg = c(20, 25)))
     expect_predictions(pred, se = FALSE)
     # factor in data frame
-    pred <- predictions(mod_factor, newdata = typical())
+    pred <- predictions(mod_factor, newdata = datagrid())
     expect_predictions(pred, se = FALSE)
 })
 
@@ -141,8 +141,8 @@ test_that("predictions: prediction vs. expectation vs. include_random", {
     expect_true(all(p1$conf.low < p2$conf.low))
     expect_true(all(p1$conf.high > p2$conf.high))
     # re.form
-    p1 <- predictions(mod_epi, newdata = typical(patient = 1))
-    p2 <- predictions(mod_epi, newdata = typical(patient = 1), re.form = NA)
+    p1 <- predictions(mod_epi, newdata = datagrid(patient = 1))
+    p2 <- predictions(mod_epi, newdata = datagrid(patient = 1), re.form = NA)
     expect_false(p1$predicted == p2$predicted)
     expect_false(p1$conf.low == p2$conf.low)
     expect_false(p1$conf.high == p2$conf.high)
@@ -154,7 +154,7 @@ test_that("marginaleffects vs. emmeans: multiple types are correctly aligned", {
     skip_if_not_installed("emmeans")
     library(ggplot2)
     mfx <- marginaleffects(mod_int, variables = "mpg", type = c("response", "link"),
-                           newdata = typical(vs = 0:1, mpg = 20))
+                           newdata = datagrid(vs = 0:1, mpg = 20))
     em_r <- emmeans::emtrends(mod_int, ~vs, var = "mpg", at = list(vs = c(0, 1), mpg = 20), epred = TRUE)
     em_l <- emmeans::emtrends(mod_int, ~vs, var = "mpg", at = list(vs = c(0, 1), mpg = 20))
     em_r <- data.frame(em_r)
@@ -179,7 +179,7 @@ test_that("predictions vs. emmeans", {
     skip_if_not_installed("emmeans")
     em <- emmeans::emmeans(mod_one, ~hp, "hp", at = list(hp = c(100, 120)))
     em <- data.frame(em)
-    pred <- predictions(mod_one, newdata = typical(hp = c(100, 120)), type = "link")
+    pred <- predictions(mod_one, newdata = datagrid(hp = c(100, 120)), type = "link")
     expect_equal(pred$predicted, em$emmean)
     expect_equal(pred$conf.low, em$lower.HPD)
     expect_equal(pred$conf.high, em$upper.HPD)
@@ -214,25 +214,25 @@ test_that("marginaleffects vs. emmeans", {
 
     ## known frequentist example to compare syntax
     # mod_one_freq <- glm(am ~ hp, data = mtcars, family = binomial)
-    # marginaleffects(mod_one_freq, newdata = typical(hp = 147), type = "link")
+    # marginaleffects(mod_one_freq, newdata = datagrid(hp = 147), type = "link")
     # emmeans::emtrends(mod_one_freq, specs = ~hp, var = "hp", at = list(hp = 147))
 
     # one variable: link scale
-    mfx1 <- marginaleffects(mod_one, variables = "hp", newdata = typical(hp = 110), type = "link")
+    mfx1 <- marginaleffects(mod_one, variables = "hp", newdata = datagrid(hp = 110), type = "link")
     mfx2 <- as.data.frame(emmeans::emtrends(mod_one, ~hp, var = "hp", at = list(hp = 110)))
     expect_equal(mfx1$dydx, mfx2$hp.trend)
     expect_equal(mfx1$conf.low, mfx2$lower.HPD)
     expect_equal(mfx1$conf.high, mfx2$upper.HPD)
 
     ## one variable: response scale
-    mfx1 <- marginaleffects(mod_one, variables = "hp", newdata = typical(hp = 110))
+    mfx1 <- marginaleffects(mod_one, variables = "hp", newdata = datagrid(hp = 110))
     mfx2 <- as.data.frame(emmeans::emtrends(mod_one, ~hp, var = "hp", at = list(hp = 110), transform = "response"))
     expect_equal(mfx1$dydx, mfx2$hp.trend, tolerance = .001)
     expect_equal(mfx1$conf.low, mfx2$lower.HPD, tolerance = .001)
     expect_equal(mfx1$conf.high, mfx2$upper.HPD, tolerance = .001)
 
     # numeric + factor: numeric variable
-    dat <- typical(model = mod_factor, mpg = 25, cyl_fac = 4)
+    dat <- datagrid(model = mod_factor, mpg = 25, cyl_fac = 4)
     mfx1 <- marginaleffects(mod_factor, variables = "mpg", newdata = dat, type = "link")
     mfx2 <- as.data.frame(emmeans::emtrends(mod_factor, ~mpg, var = "mpg", at = list(mpg = 25, cyl_fac = 4)))
     expect_equal(mfx1$dydx, mfx2$mpg.trend, tolerance = .001)
@@ -240,7 +240,7 @@ test_that("marginaleffects vs. emmeans", {
     expect_equal(mfx1$conf.high, mfx2$upper.HPD, tolerance = .001)
 
     # numeric + factor: factor
-    dat <- typical(model = mod_factor, mpg = 25, cyl_fac = 4)
+    dat <- datagrid(model = mod_factor, mpg = 25, cyl_fac = 4)
     mfx1 <- marginaleffects(mod_factor, variables = "cyl_fac", newdata = dat, type = "link")
     mfx2 <- emmeans::emmeans(mod_factor, ~ cyl_fac, var = "cyl_fac", at = list(mpg = 25))
     mfx2 <- emmeans::contrast(mfx2, method = "revpairwise")
@@ -268,13 +268,13 @@ test_that("factor in formula", {
     # marginaleffects
     expect_marginaleffects(mod_factor_formula, se = FALSE)
     # predictions
-    pred <- predictions(mod_factor_formula, newdata = typical())
+    pred <- predictions(mod_factor_formula, newdata = datagrid())
     expect_predictions(pred, se = FALSE)
 })
 
 
 test_that("bugs stay dead: factor indexing for posterior draws", {
-    tmp <- predictions(mod_factor, newdata = typical(cyl_fac = 4, mpg = c(10, 20))) 
+    tmp <- predictions(mod_factor, newdata = datagrid(cyl_fac = 4, mpg = c(10, 20))) 
     expect_error(posteriordraws(tmp), NA)
 })
 
