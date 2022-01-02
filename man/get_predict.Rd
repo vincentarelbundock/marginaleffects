@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_predict.R, R/methods_MASS.R,
 %   R/methods_aod.R, R/methods_nnet.R, R/methods_brglm2.R, R/methods_brms.R,
 %   R/methods_crch.R, R/methods_lme4.R, R/methods_ordinal.R,
-%   R/methods_rstanarm.R
+%   R/methods_rstanarm.R, R/methods_survival.R
 \name{get_predict}
 \alias{get_predict}
 \alias{get_predict.default}
@@ -15,6 +15,7 @@
 \alias{get_predict.merMod}
 \alias{get_predict.clm}
 \alias{get_predict.stanreg}
+\alias{get_predict.coxph}
 \title{Get predicted values from a model object (internal function)}
 \usage{
 get_predict(model, newdata, type, ...)
@@ -56,6 +57,14 @@ get_predict(model, newdata, type, ...)
 \method{get_predict}{clm}(model, newdata = insight::get_data(model), type = "response", ...)
 
 \method{get_predict}{stanreg}(model, newdata = insight::get_data(model), type = "response", ...)
+
+\method{get_predict}{coxph}(
+  model,
+  newdata = insight::get_data(model),
+  type = "lp",
+  conf.level = NULL,
+  ...
+)
 }
 \arguments{
 \item{model}{Model object}
