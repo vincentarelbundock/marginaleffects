@@ -5,6 +5,8 @@ requiet("margins")
 requiet("haven")
 requiet("lme4")
 requiet("insight")
+requiet("emmeans")
+requiet("broom")
 
 
 test_that("get_predict: low-level tests", {
@@ -56,7 +58,7 @@ test_that("get_predict: low-level tests", {
 
 })
 
-test_that("glmer vs. stata", {
+test_that("glmer vs. stata vs. emtrends", {
     dat <- haven::read_dta(test_path("stata/databases/lme4_02.dta"))
     mod <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = dat, family = binomial)
     stata <- readRDS(test_path("stata/stata.rds"))$lme4_glmer
@@ -64,6 +66,13 @@ test_that("glmer vs. stata", {
     expect_marginaleffects(mod)
     expect_equal(mfx$estimate, mfx$dydxstata, tolerance = .01)
     expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = .01)
+    # emtrends
+    mod <- glmer(y ~ x1 + x2 + (1 | clus), data = dat, family = binomial)
+    mfx <- marginaleffects(mod, variables = "x1", newdata = datagrid(x1 = 0, x2 = 0, clus = 1), type = "link")
+    em <- emtrends(mod, ~x1, "x1", at = list(x1 = 0, x2 = 0, clus = 1))
+    em <- tidy(em)
+    expect_equal(mfx$dydx, em$x1.trend)
+    expect_equal(mfx$std.error, em$std.error)
 })
 
 test_that("lmer vs. stata", {
@@ -74,6 +83,13 @@ test_that("lmer vs. stata", {
     expect_marginaleffects(mod)
     expect_equal(mfx$estimate, mfx$dydxstata, tolerance = .001)
     expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = .001)
+    # emtrends
+    mod <- lmer(y ~ x1 + x2 + (1 | clus), data = dat)
+    mfx <- marginaleffects(mod, variables = "x1", newdata = datagrid(x1 = 0, x2 = 0, clus = 1), type = "link")
+    em <- emtrends(mod, ~x1, "x1", at = list(x1 = 0, x2 = 0, clus = 1))
+    em <- tidy(em)
+    expect_equal(mfx$dydx, em$x1.trend)
+    expect_equal(mfx$std.error, em$std.error, tolerance = .001)
 })
 
 test_that("vs. margins (dydx only)", {
@@ -119,10 +135,11 @@ test_that("predictions: glmer: no validity", {
 })
 
 
-test_that("marginaleffects: glmer.nb: no validity", {
+test_that("glmer.nb: marginaleffects vs. emtrends", {
     set.seed(101)
-    dd <- expand.grid(f1 = factor(1:3), f2 = LETTERS[1:2], g = 1:9, rep = 1:15, 
+    dd <- expand.grid(f1 = factor(1:3), f2 = LETTERS[1:2], g = 1:9, rep = 1:15,
                       KEEP.OUT.ATTRS = FALSE)
+    dd$x <- rnorm(nrow(dd))
     mu <- 5 * (-4 + with(dd, as.integer(f1) + 4 * as.numeric(f2)))
     dd$y <- rnbinom(nrow(dd), mu = mu, size = 0.5)
     model <- suppressMessages(glmer.nb(y ~ f1 * f2 + (1 | g), data = dd, verbose = FALSE))
@@ -130,7 +147,19 @@ test_that("marginaleffects: glmer.nb: no validity", {
         expect_marginaleffects(model, n_unique = 2)
     )
 
-    marginaleffects(model)
+    # emtrends
+    mod <- suppressMessages(glmer.nb(y ~ x + (1 | g), data = dd, verbose = FALSE))
+    mfx <- marginaleffects(mod, variables = "x", newdata = datagrid(g = 2), type = "link")
+    em <- emtrends(mod, ~x, "x", at = list(g = 2))
+    em <- tidy(em)
+    expect_equal(mfx$dydx, em$x.trend)
+    expect_equal(mfx$std.error, em$std.error)
+
+    # margins
+    mar <- tidy(margins(mod))
+    mfx <- tidy(marginaleffects(mod))
+    expect_equal(mfx$estimate, mar$estimate, tolerance = .0001, ignore_attr = TRUE)
+    expect_equal(mfx$std.error, mar$std.error, tolerance = .0001, ignore_attr = TRUE)
 })
 
 

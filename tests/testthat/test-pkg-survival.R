@@ -36,6 +36,7 @@ test_that("coxph: no validity", {
 
 
 test_that("bugs stay dead: conf.level forces get_predicted which doesn't process 'type'", {
+    skip("https://github.com/vincentarelbundock/marginaleffects/issues/160")
     test1 <- list(time = c(4, 3, 1, 1, 2, 2, 3),
                   status = c(1, 1, 1, 0, 1, 1, 0),
                   x = c(0, 2, 1, 1, 1, 0, 0),

@@ -1,5 +1,6 @@
 skip_if_not_installed("plm")
 requiet("plm")
+requiet("margins")
 
 data("Grunfeld", package = "plm")
 
@@ -27,6 +28,11 @@ test_that("Swamy-Arora vs. Stata", {
     expect_marginaleffects(mod)
     expect_equal(mfx$estimate, mfx$dydxstata)
     expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = .0001)
+    # margins
+    mfx <- tidy(marginaleffects(mod))
+    mar <- tidy(margins(mod))
+    expect_equal(mfx$estimate, mar$estimate, ignore_attr = TRUE)
+    expect_equal(mfx$std.error, mar$std.error, ignore_attr = TRUE, tolerance = .0001)
 })
 
 
@@ -35,10 +41,24 @@ test_that("no validity checks", {
                    data = Grunfeld, model = "random", random.method = "amemiya",
                    effect = "twoways")
     expect_marginaleffects(amemiya)
+
+    # margins
+    mfx <- tidy(marginaleffects(amemiya))
+    mar <- tidy(margins(amemiya))
+    expect_equal(mfx$estimate, mar$estimate, ignore_attr = TRUE)
+    expect_equal(mfx$std.error, mar$std.error, ignore_attr = TRUE, tolerance = .001)
+
+
     walhus <- plm(inv ~ value * capital,
                   data = Grunfeld, model = "random", random.method = "walhus",
                   effect = "twoways")
     expect_marginaleffects(walhus)
+
+    # margins
+    mfx <- tidy(marginaleffects(walhus))
+    mar <- tidy(margins(walhus))
+    expect_equal(mfx$estimate, mar$estimate, ignore_attr = TRUE)
+    expect_equal(mfx$std.error, mar$std.error, ignore_attr = TRUE, tolerance = .001)
 })
 
 

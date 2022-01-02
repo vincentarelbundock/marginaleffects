@@ -2,6 +2,8 @@ skip_if_not_installed("cmdstanr")
 skip_if_not_installed("brms")
 requiet("brms")
 requiet("cmdstanr")
+requiet("emmeans")
+requiet("broom")
 
 
 void <- capture.output({
@@ -31,6 +33,23 @@ void <- capture.output({
                    silent = 2, backend = "cmdstanr")
 })
 
+test_that("marginaleffects vs. emmeans", {
+    mfx <- marginaleffects(mod_two, newdata = datagrid(mpg = 20, hp = 100),
+                           variables = "mpg", type = "link")
+    em <- emtrends(mod_two, ~mpg, "mpg", at = list(mpg = 20, hp = 100))
+    em <- tidy(em)
+    expect_equal(mfx$dydx, em$mpg.trend)
+    expect_equal(mfx$conf.low, em$lower.HPD)
+    expect_equal(mfx$conf.high, em$upper.HPD)
+    # tolerance is less good for back-transformed response
+    mfx <- marginaleffects(mod_two, newdata = datagrid(mpg = 20, hp = 100),
+                           variables = "mpg", type = "response")
+    em <- emtrends(mod_two, ~mpg, "mpg", at = list(mpg = 20, hp = 100), trans = TRUE)
+    em <- tidy(em)
+    expect_equal(mfx$dydx, em$mpg.trend, tolerance = .1)
+    expect_equal(mfx$conf.low, em$lower.HPD, tolerance = .01)
+    expect_equal(mfx$conf.high, em$upper.HPD, tolerance = .1)
+})
 
 test_that("brms: cumulative: marginaleffects: no validity", {
     expect_marginaleffects(mod_ran, se = FALSE)

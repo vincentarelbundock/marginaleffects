@@ -1,5 +1,8 @@
 skip_if_not_installed("estimatr")
 requiet("estimatr")
+requiet("emmeans")
+requiet("margins")
+requiet("broom")
 
 test_that("iv_robust vs. stata", {
     data(Kmenta, package = "ivreg")
@@ -14,8 +17,8 @@ test_that("iv_robust vs. stata", {
 })
 
 
-test_that("lm_robust vs. stata", {
-    model <- lm_robust(carb ~ wt + factor(cyl), 
+test_that("lm_robust vs. stata vs. emtrends", {
+    model <- lm_robust(carb ~ wt + factor(cyl),
                        se_type = "stata",
                        data = mtcars)
     stata <- readRDS(test_path("stata/stata.rds"))$estimatr_lm_robust
@@ -23,6 +26,19 @@ test_that("lm_robust vs. stata", {
     mfx <- merge(mfx, stata)
     expect_equal(mfx$dydx, mfx$dydxstata)
     expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = .01)
+    # emtrends
+    mfx <- marginaleffects(model, newdata = datagrid(cyl = 4, wt = 2), variables = "wt")
+    em <- emtrends(model, ~wt, "wt", at = list(cyl = 4, wt = 2))
+    em <- tidy(em)
+    expect_equal(mfx$dydx, em$wt.trend)
+    expect_equal(mfx$std.error, em$std.error)
+    # margins does not support standard errors
+    tmp <- mtcars
+    tmp$cyl <- factor(tmp$cyl)
+    mod <- lm_robust(carb ~ wt + cyl, data = tmp, se_type = "stata")
+    mar <- margins(mod, data = head(tmp))
+    mfx <- marginaleffects(mod, newdata = head(tmp))
+    expect_true(test_against_margins(mfx, mar, se = FALSE))
 })
 
 

@@ -9,15 +9,18 @@ vignette: >
 
 # Adjusted predictions and marginal means
 
-Under the hood, `marginaleffects`'s `predictions` function uses the `insight` package to retrieve adjusted predictions from a wide variety of models. Currently, `insight` [supports over many model types](https://easystats.github.io/insight/), and most should work out-of-the-box with the `predictions` function. If you run into problems, do not hesitate to report them on Github or via email.
+Under the hood, `marginaleffects`'s `predictions` and `marginalmeans` functions use the `insight` package to retrieve adjusted predictions from a wide variety of models. Currently, `insight` [supports very many model types](https://easystats.github.io/insight/#list-of-supported-models-by-class), and most should work out-of-the-box with the `predictions` function. If you run into problems, do not hesitate to [report them on Github or via email.](https://github.com/vincentarelbundock/marginaleffects/issues)
 
 # Marginal effects and contrasts
 
-This table shows the list of models supported by the `marginaleffects` function, and shows which numerical results -- marginal effects (dY/dX) or standard errors (Std. Error) -- have been checked against alternative software packages: Stata's `margins` command and R's `margins` package. Empty cells mean that the results of a model have not yet been validated against external software. Green cells indicate that the results of [at least one model from the test suite](https://github.com/vincentarelbundock/marginaleffects/tree/main/tests/testthat) match to a reasonable tolerance. Red cells mean that `marginaleffects` results do *not* match those produced by alternative software packages. Obviously, caution is especially warranted when working with estimates from red cells.
+This table shows the list of model types for which the `marginaleffects` function can compute slopes and contrasts. There are three main alternative software packages to compute such slopes (1) `Stata`'s `margins` command, (2) `R`'s `margins::margins`  function, and (3) `R`'s `emmeans::emtrends` function. The [test suite hosted on Github](https://github.com/vincentarelbundock/marginaleffects/tree/main/tests/testthat) compares the numerical equivalence of results produced by `marginaleffects` to those produced by all 3 alternative software packages:
 
-I am *very* eager to add support for new models. Feel free to file a request on Github or -- even better -- submit some code.
+* ✓: a green check means that the results of at least one model are equal to a reasonable tolerance.
+* ✖: a red cross means that the results are *not* identical; extra caution is warranted.
+* U: a grey U means that computing slopes for a model type is *unsupported* by alternative packages, but supported by `marginaleffects`.
+* An empty cell means means that no comparison has been made yet.
 
-Warning: When using `marginaleffects` with different models, you will probably have to adjust the `type` argument. Refer to the documentation of your modeling package to see what `type` argument is allowed in the `predict` function. 
+I am *very* eager to add support for new models. Feel free to file a request or submit code on Github.
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
 library("data.table")
@@ -45,6 +48,10 @@ colnames(tmp) <- c("Package",
                    "dY/dX   ",
                    "SE   ")
 
+# remove "supported" columns which feel useless since everything is supported
+tmp[[3]] <- tmp[[4]] <- NULL
+
+# colors & icons
 f <- function(x) fcase(x == TRUE, "green", x == FALSE, "red", default = "grey")
 idx <- lapply(tmp, f)
 
@@ -56,16 +63,14 @@ for (i in 3:ncol(tmp)) {
                       default = "")
 }
 
+
 # kableExtra
-tab <- kbl(tmp, align = c("l", "l", rep("c", 8)), full_width = FALSE)
+tab <- kbl(tmp, align = c("l", "l", rep("c", 6)), full_width = FALSE)
 tab <- kable_styling(tab)
 for (i in 3:ncol(tmp)) {
     tab <- column_spec(tab, column = i, color = idx[[i]])
 }
-for (i in 1:nrow(tmp)) {
-    tab <- row_spec(tab, row = i)
-}
-tab <- add_header_above(tab, c(" " = 2, "Supported" = 2, "Stata" = 2, "margins" = 2, "emtrends" = 2))
-tab <- add_header_above(tab, c(" " = 4, "Numerical equivalence" = 6))
+tab <- add_header_above(tab, c("Supported by marginaleffects" = 2, "Stata" = 2, "margins" = 2, "emtrends" = 2))
+tab <- add_header_above(tab, c(" " = 2, "Numerical equivalence" = 6))
 tab
 ```

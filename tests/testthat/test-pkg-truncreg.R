@@ -1,6 +1,7 @@
 skip_if_not_installed("truncreg")
 requiet("truncreg")
 
+
 test_that("truncreg: no validity check", {
     data("tobin", package = "survival")
     model <- truncreg(durable ~ age + quant, data = tobin, subset = durable > 0)
@@ -26,4 +27,8 @@ test_that("truncreg vs. Stata", {
     mfx <- merge(tidy(marginaleffects(model)), stata)
     expect_equal(mfx$estimate, mfx$dydxstata, tolerance = .0001)
     expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = .001)
+    # margins
+    mar <- margins(model, unit_ses = TRUE)
+    mfx <- marginaleffects(model)
+    expect_true(test_against_margins(mfx, mar, tolerance = .0001))
 })

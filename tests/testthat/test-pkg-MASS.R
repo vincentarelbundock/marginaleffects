@@ -12,10 +12,15 @@ requiet("broom")
 ### marginaleffects
 test_that("rlm: marginaleffects: vs. margins vs. emmeans", {
     model <- MASS::rlm(mpg ~ hp + drat, mtcars)
-    mfx <- marginaleffects(model)
     expect_marginaleffects(model, n_unique = 1)
-    mar <- margins(model)
-    expect_true(test_against_margins(mfx, mar))
+
+    # margins
+    mfx <- tidy(marginaleffects(model))
+    mar <- tidy(margins(model))
+    expect_equal(mfx$estimate, mar$estimate, ignore_attr = TRUE)
+    expect_equal(mfx$std.error, mar$std.error, ignore_attr = TRUE, tolerance = .00001)
+
+    # emmeans
     mfx <- marginaleffects(model, newdata = datagrid(drat = 3.9, hp = 110))
     em1 <- emmeans::emtrends(model, ~hp, "hp", at = list(hp = 110, drat = 3.9))
     em2 <- emmeans::emtrends(model, ~drat, "drat", at = list(hp = 110, drat = 3.9))
@@ -30,9 +35,10 @@ test_that("rlm: marginaleffects: vs. margins vs. emmeans", {
 test_that("glm.nb: marginaleffects: vs. margins", {
     # margins does not support unit-level standard errors
     model <- suppressWarnings(MASS::glm.nb(carb ~ wt + factor(cyl), data = mtcars))
-    mfx <- marginaleffects(model)
-    mar <- margins(model)
-    expect_true(test_against_margins(mfx, mar))
+    mfx <- tidy(marginaleffects(model))
+    mar <- tidy(margins(model))
+    expect_equal(mfx$estimate, mar$estimate, ignore_attr = TRUE, tolerance = .0001)
+    expect_equal(mfx$std.error, mar$std.error, ignore_attr = TRUE, tolerance = .001)
     # emtrends
     mfx <- marginaleffects(model, newdata = datagrid(wt = 2.6, cyl = 4), type = "link")
     em <- emtrends(model, ~wt, "wt", at = list(wt = 2.6, cyl = 4))
