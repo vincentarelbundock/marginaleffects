@@ -83,10 +83,10 @@ test_that("glm.nb: marginaleffects: vs. Stata", {
 })
 
 test_that("polr: marginaleffects: vs. Stata", {
-    skip("works interactively")
+    # Hess=TRUE otherwise breaks in the test environment via MASS:::vcov() -> update()
     stata <- readRDS(test_path("stata/stata.rds"))[["MASS_polr_01"]]
     dat <- read.csv(test_path("stata/databases/MASS_polr_01.csv"))
-    mod <- MASS::polr(factor(y) ~ x1 + x2, data = dat)
+    mod <- MASS::polr(factor(y) ~ x1 + x2, data = dat, Hess = TRUE)
     mfx <- marginaleffects(mod, type = "probs")
     mfx <- tidy(mfx)
     mfx <- merge(mfx, stata)
@@ -96,23 +96,23 @@ test_that("polr: marginaleffects: vs. Stata", {
 })
 
 test_that("bugs stay dead: polr with 1 row newdata", {
-    skip("works interactively")
+    # Hess=TRUE otherwise breaks in the test environment via MASS:::vcov() -> update()
     dat <- read.csv(test_path("stata/databases/MASS_polr_01.csv"))
     dat$y <- factor(dat$y)
-    mod <- MASS::polr(y ~ x1, data = dat)
+    mod <- MASS::polr(y ~ x1, data = dat, Hess = TRUE)
     mfx <- marginaleffects(mod, type = "probs", newdata = datagrid(x1 = 0))
     expect_s3_class(mfx, "marginaleffects")
 })
 
 test_that("marginaleffects vs. emmeans", {
-    skip("works interactively")
+    # Hess=TRUE otherwise breaks in the test environment via MASS:::vcov() -> update()
     # TODO: Check this
     # this is very close, but I don't know where the slope is evaluated by
     # `emmeans`, and setting `at = list(x1 = 0)` in `emmeans` errors when 
     # post-processing with `contrast`
     dat <- read.csv(test_path("stata/databases/MASS_polr_01.csv"))
     dat$y <- factor(dat$y)
-    mod <- MASS::polr(y ~ x1, data = dat)
+    mod <- MASS::polr(y ~ x1, data = dat, Hess = TRUE)
     mfx <- marginaleffects(mod, type = "probs", newdata = datagrid(x1 = 0))
     em <- emmeans(mod, ~ x1 | y, mode = "prob",
                   cov.reduce = list(x1 = function(v) mean(v) + c(.00001, 0)))
