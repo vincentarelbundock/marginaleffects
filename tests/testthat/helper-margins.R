@@ -1,6 +1,6 @@
-test_against_margins <- function(results, 
-                                 margins_object, 
-                                 se = TRUE, 
+test_against_margins <- function(results,
+                                 margins_object,
+                                 se = TRUE,
                                  tolerance = 1e-5,
                                  verbose = FALSE) {
 
@@ -32,15 +32,27 @@ test_against_margins <- function(results,
     # std.error
     if (isTRUE(se) && "std.error" %in% colnames(results)) {
         for (tn in term_names) {
-            lab <- paste0("SE_dydx_", tn)
-            if (lab %in% colnames(margins_object)) {
+            lab_se <- paste0("SE_dydx_", tn)
+            lab_var <- paste0("Var_dydx_", tn)
+            if (lab_se %in% colnames(margins_object)) {
                 unknown <- results[results$term == tn, "std.error"]
-                known <- as.numeric(margins_object[, lab])
+                known <- as.numeric(margins_object[, lab_se])
                 tmp <- is_equal(known, unknown)
                 if (isFALSE(tmp)) {
                     flag <- FALSE
                     if (isTRUE(verbose)) print(sprintf("se: %s", tn))
                 }
+            } else if (lab_var %in% colnames(margins_object)) {
+                unknown <- results[results$term == tn, "std.error"]
+                known <- sqrt(as.numeric(margins_object[, lab_var]))
+                tmp <- is_equal(known, unknown)
+                if (isFALSE(tmp)) {
+                    flag <- FALSE
+                    if (isTRUE(verbose)) print(sprintf("Var: %s", tn))
+                }
+            } else {
+                flag <- FALSE
+                if (isTRUE(verbose)) print(sprintf("missing column: %s", lab))
             }
         }
     }

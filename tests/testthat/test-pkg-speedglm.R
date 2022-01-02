@@ -9,6 +9,11 @@ test_that("glm vs. Stata", {
     expect_marginaleffects(mod)
     expect_equal(mfx$estimate, mfx$dydxstata, tolerance = .00001)
     expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = .0001)
+
+    # margins: wrong standard errors
+    mfx <- marginaleffects(mod)
+    mar <- margins(mod, unit_ses = TRUE)
+    expect_true(test_against_margins(mfx, mar, tolerance = .001))
 })
 
 
@@ -20,4 +25,9 @@ test_that("lm vs. Stata", {
     expect_marginaleffects(mod)
     expect_equal(mfx$estimate, mfx$dydxstata, tolerance = .00001)
     expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = .0001)
+
+    # margins: wrong standard errors
+    mfx <- marginaleffects(mod)
+    mar <- margins(mod, unit_ses = TRUE)
+    expect_true(test_against_margins(mfx, mar, tolerance = .0001))
 })

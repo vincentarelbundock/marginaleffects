@@ -1,12 +1,17 @@
 requiet("glmx")
 requiet("MASS")
 
-test_that("marginaleffects: glmx: no validity check", {
+test_that("glmx: marginaleffects vs. margins", {
     d <- data.frame(x = runif(200, -1, 1))
     d$y <- rnbinom(200, mu = exp(0 + 3 * d$x), size = 1)
     model <- glmx(y ~ x, data = d, family = negative.binomial, 
                   xlink = "log", xstart = 0)
     expect_marginaleffects(model)
+
+    # margins produces all zeros for se
+    mar <- margins(model, unit_ses = TRUE)
+    mfx <- marginaleffects(model)
+    expect_true(test_against_margins(mfx, mar, se = FALSE, tolerance = .001))
 })
 
 test_that("predictions: glmx: no validity check", {

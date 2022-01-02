@@ -93,7 +93,7 @@ datagrid <- function(
 #' @export
 counterfactual <- function(..., model = NULL, newdata = NULL) {
 
-    tmp <- prep_counterfactual_typical(..., model = model, newdata = newdata)
+    tmp <- prep_datagrid(..., model = model, newdata = newdata)
     at <- tmp$at
     dat <- tmp$newdata
     variables_all <- tmp$all
@@ -132,7 +132,7 @@ typical <- function(
     FUN.numeric = function(x) mean(x, na.rm = TRUE),
     FUN.other = function(x) mean(x, na.rm = TRUE)) {
 
-    tmp <- prep_counterfactual_typical(..., model = model, newdata = newdata)
+    tmp <- prep_datagrid(..., model = model, newdata = newdata)
     at <- tmp$at
     dat <- tmp$newdata
     variables_all <- tmp$all
@@ -189,7 +189,7 @@ typical <- function(
 }
 
 
-prep_counterfactual_typical <- function(..., model = NULL, newdata = NULL) {
+prep_datagrid <- function(..., model = NULL, newdata = NULL) {
 
     checkmate::assert_data_frame(newdata, null.ok = TRUE)
 

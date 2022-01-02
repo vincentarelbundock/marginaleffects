@@ -17,3 +17,27 @@ test_that("factor on LHS and RHS at the same time.", {
     expect_s3_class(mfx, "marginaleffects")
     expect_true(all(c("Low", "Medium", "High") %in% mfx$group))
 })
+
+test_that("warn when there are no factors in newdata but there is a factor tranform in the term labels", {
+    skip_if_not_installed("estimatr")
+    model <- estimatr::lm_robust(carb ~ wt + factor(cyl),
+                                 se_type = "stata",
+                                 data = mtcars)
+    expect_error(suppressWarnings(marginaleffects(model, newdata = mtcars)))
+    expect_warning(expect_warning(expect_error(marginaleffects(model, newdata = mtcars))))
+})
+
+
+test_that("bugs stay dead: factor in survreg", {
+    skip("https://github.com/vincentarelbundock/marginaleffects/issues/160")
+    requiet("survival")
+    stata <- readRDS(test_path("stata/stata.rds"))$survival_coxph_01
+    test1 <- list(time = c(4,3,1,1,2,2,3),
+                  status = c(1,1,1,0,1,1,0),
+                  x = c(0,2,1,1,1,0,0),
+                  sex = c(0,0,0,0,1,1,1))
+    mod <- coxph(Surv(time, status) ~ x + strata(sex),
+                 data = test1,
+                 ties = "breslow")
+    mfx <- marginaleffects(mod, variables = "x", newdata = datagrid(sex = 0), type = "lp")
+})

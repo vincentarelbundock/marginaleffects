@@ -5,6 +5,18 @@ get_dydx <- function(model,
                      numDeriv_method,
                      ...) {
 
+    # if there are no categorical variables in `newdata`, check the terms to
+    # find transformation and warn accordingly.
+    categorical_variables <- find_categorical(newdata)
+    if (length(categorical_variables) == 0) {
+        termlabs <- try(attr(stats::terms(model), "term.labels"), silent = TRUE)
+        termlabs <- try(any(grepl("^factor\\(|^as.factor\\(|^as.logical\\(", termlabs)), silent = TRUE)
+        if (isTRUE(termlabs)) {
+            warning("When using `marginaleffects`, it is safer to convert variables to factors or logicals in the dataset *before* fitting the model, rather than by wrapping terms in `factor()` or `as.logical() in the model formula.")
+        }
+    }
+
+
     if (variable %in% find_categorical(newdata) || isTRUE(attr(newdata[[variable]], "factor"))) {
         dydx_fun <- get_contrasts
     } else if (inherits(model, "brmsfit") || inherits(model, "stanreg")) {
