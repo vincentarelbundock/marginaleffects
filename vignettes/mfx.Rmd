@@ -96,7 +96,7 @@ library(marginaleffects)
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv")
 dat$large_penguin <- ifelse(dat$body_mass_g > median(dat$body_mass_g, na.rm = TRUE), 1, 0)
 
-mod <- glm(large_penguin ~ bill_length_mm + flipper_length_mm, 
+mod <- glm(large_penguin ~ bill_length_mm + flipper_length_mm + species,
            data = dat, family = binomial)
 ```
 
@@ -228,9 +228,9 @@ mfx <- marginaleffects(mod, type = c("response", "link"))
 summary(mfx)
 ```
 
-# Regression tables
+# Regression tables and coefficient plots
 
-Average marginal effects are easy to display in a regression table using packages like `modelsummary`:
+Average marginal effects are easy to display in a regression table using packages like `modelsummary`.
 
 ```{r, echo = FALSE}
 options(modelsummary_factory_default = "markdown")
@@ -238,17 +238,35 @@ options(modelsummary_factory_default = "markdown")
 
 ```{r}
 library(modelsummary)
+library(marginaleffects)
 
 # fit models and store them in a named list
 mod <- list(
-    "Logit" = glm(large_penguin ~ flipper_length_mm + species, data = dat, family = binomial),
-    "OLS" = lm(body_mass_g ~ flipper_length_mm + bill_length_mm + species, data = dat))
+    "Short model" = glm(large_penguin ~ flipper_length_mm, data = dat, family = binomial),
+    "Long model" = glm(large_penguin ~ flipper_length_mm + bill_length_mm, data = dat, family = binomial))
 
 # apply the `marginaleffects` function to all the models using `lapply`
 mfx <- lapply(mod, marginaleffects)
 
-# build a table
 modelsummary(mfx)
+```
+
+The same results can be presented in a coefficient plot:
+
+```{r}
+modelplot(mfx) + ggplot2::xlab("Average Marginal Effects with 95% Confidence Intervals")
+```
+
+When the models include contrasts, we can use `modelsummary`'s `group` argument to display them cleanly:
+
+```{r}
+mod <- list(
+    "Logit" = glm(large_penguin ~ flipper_length_mm + species, data = dat, family = binomial),
+    "OLS" = lm(body_mass_g ~ flipper_length_mm + bill_length_mm + species, data = dat))
+
+mfx <- lapply(mod, marginaleffects)
+
+modelsummary(mfx, group = term + contrast ~ model)
 ```
 
 # Supporting new models
