@@ -16,7 +16,8 @@ status](https://www.r-pkg.org/badges/version/marginaleffects)](https://CRAN.R-pr
 ## What?
 
 The `marginaleffects` package allows `R` users to compute and plot four
-principal quantities of interest for a *wide* variety of models:
+principal quantities of interest for [a very wide variety of
+models:](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
 
   - [*Marginal Effect*
     (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/mfx.html)
@@ -176,10 +177,10 @@ is, the average of all unit-specific marginal effects:
 ``` r
 summary(mfx)
 #> Average marginal effects 
-#>       type Term   Effect Std. Error  z value   Pr(>|z|)    2.5 %   97.5 %
-#> 1 response   am -0.04811    1.85260 -0.02597 0.97928233 -3.67913  3.58291
-#> 2 response   hp -0.03807    0.01279 -2.97717 0.00290923 -0.06314 -0.01301
-#> 3 response   wt -3.93909    1.08596 -3.62728 0.00028642 -6.06754 -1.81065
+#>   Term   Effect Std. Error  z value   Pr(>|z|)    2.5 %   97.5 %
+#> 1   am -0.04811    1.85260 -0.02597 0.97928233 -3.67913  3.58291
+#> 2   hp -0.03807    0.01279 -2.97717 0.00290923 -0.06314 -0.01301
+#> 3   wt -3.93909    1.08596 -3.62728 0.00028642 -6.06754 -1.81065
 #> 
 #> Model type:  lm 
 #> Prediction type:  response
