@@ -45,6 +45,36 @@ get_vcov.polr <- function(model, ...) {
 }
 
 
+#' @rdname get_predict
+#' @export
+get_predict.polr <- function(model,
+                             newdata = insight::get_data(model),
+                             type = "probs",
+                             conf.level = NULL,
+                             ...) {
+
+    # hack: 1-row newdata returns a vector, so get_predict.default does not learn about groups
+    if (nrow(newdata) == 1) {
+        hack <- TRUE
+        newdata <- newdata[c(1, 1), , drop = FALSE]
+    } else {
+        hack <- FALSE
+    }
+
+    out <- get_predict.default(model,
+                               newdata = newdata,
+                               type = type,
+                               conf.level = conf.level,
+                               ...)
+
+    if (isTRUE(hack)) {
+        out <- out[out$rowid == 1, ]
+    }
+
+    return(out)
+}
+
+
 #' @include set_coef.R
 #' @rdname set_coef
 #' @export
@@ -61,7 +91,6 @@ get_predict.glmmPQL <- function(model,
                                 type = "response",
                                 conf.level = NULL,
                                 ...) {
-
     out <- stats::predict(model, newdata = newdata, type = type, ...)
     out <- data.frame(
         rowid = 1:nrow(newdata),

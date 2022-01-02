@@ -43,6 +43,7 @@ test_that("multinom vs. Stata", {
     mfx <- merge(tidy(mfx), stata, all = TRUE)
     # standard errors don't match
     expect_equal(mfx$estimate, mfx$dydxstata, tolerance = .0001)
+    # expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = .0001)
 })
 
 test_that("set_coef", {

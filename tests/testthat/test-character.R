@@ -4,7 +4,8 @@ test_that("character variable", {
     mod <- glm(large_penguin ~ bill_length_mm + flipper_length_mm + species, data = dat, family = binomial)
     mfx <- marginaleffects(mod)
     tid <- tidy(mfx)
-    expect_true(all(c("bill_length_mm", "flipper_length_mm", "speciesChinstrap", "speciesGentoo") %in% mfx$term))
+    expect_true(all(c("bill_length_mm", "flipper_length_mm", "species") %in% mfx$term))
+    expect_true(all(c("Chinstrap - Adelie", "Gentoo - Adelie") %in% mfx$contrast))
 })
 
 

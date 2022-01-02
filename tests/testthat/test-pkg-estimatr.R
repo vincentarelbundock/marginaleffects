@@ -19,13 +19,15 @@ test_that("iv_robust vs. stata", {
 
 test_that("lm_robust vs. stata vs. emtrends", {
     model <- lm_robust(carb ~ wt + factor(cyl),
-                       se_type = "stata",
+                       se_type = "HC2",
                        data = mtcars)
     stata <- readRDS(test_path("stata/stata.rds"))$estimatr_lm_robust
     mfx <- tidy(marginaleffects(model))
+    mfx$term <- ifelse(mfx$contrast == "6 - 4", "6.cyl", mfx$term)
+    mfx$term <- ifelse(mfx$contrast == "8 - 4", "8.cyl", mfx$term)
     mfx <- merge(mfx, stata)
     expect_equal(mfx$dydx, mfx$dydxstata)
-    expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = .01)
+    expect_equal(mfx$std.error, mfx$std.errorstata)
     # emtrends
     mfx <- marginaleffects(model, newdata = datagrid(cyl = 4, wt = 2), variables = "wt")
     em <- emtrends(model, ~wt, "wt", at = list(cyl = 4, wt = 2))
@@ -40,7 +42,6 @@ test_that("lm_robust vs. stata vs. emtrends", {
     mfx <- marginaleffects(mod, newdata = head(tmp))
     expect_true(test_against_margins(mfx, mar, se = FALSE))
 })
-
 
 test_that("iv_robust: predictions: no validity", {
     data(Kmenta, package = "ivreg")

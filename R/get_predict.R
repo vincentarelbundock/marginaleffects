@@ -24,7 +24,7 @@ get_predict.default <- function(model,
     dots <- list(...)
 
     # some predict methods raise warnings on unused arguments 
-    unused <- c("contrast_to_dydx", "step_size", "numDeriv_method")
+    unused <- c("normalize_dydx", "step_size", "numDeriv_method")
     dots <- dots[setdiff(names(dots), unused)]
 
     # `stats::predict` is faster than `insight::get_predicted`

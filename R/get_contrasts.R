@@ -3,7 +3,7 @@ get_contrasts <- function(model,
                           newdata = insight::get_data(model),
                           type = "response",
                           step_size = 1,
-                          contrast_to_dydx = FALSE,
+                          normalize_dydx = FALSE,
                           ...) {
 
     # if `newdata` is a call to `datagrid`, `typical`, or `counterfactual`, insert `model`
@@ -19,9 +19,8 @@ get_contrasts <- function(model,
 
     # Create counterfactual datasets with different factor values and compare the predictions
     if (!"rowid" %in% colnames(newdata)) {
-        newdata$rowid <- 1:nrow(newdata)
+        newdata$rowid <- seq_len(nrow(newdata))
     }
-
 
     if (is.factor(newdata[[variable]]) || isTRUE(attr(newdata[[variable]], "factor"))) {
         get_contrasts_fun <- get_contrasts_factor
@@ -32,8 +31,8 @@ get_contrasts <- function(model,
     } else if (is.numeric(newdata[[variable]])) {
         get_contrasts_fun <- get_contrasts_numeric
     } else {
-        stop(sprintf("Cannot compute contrasts for variable %s of class %s", 
-                     variable, 
+        stop(sprintf("Cannot compute contrasts for variable %s of class %s",
+                     variable,
                      class(newdata[[variable]])))
     }
 
@@ -42,7 +41,7 @@ get_contrasts <- function(model,
                              newdata = newdata,
                              type = type,
                              step_size = step_size,
-                             contrast_to_dydx = contrast_to_dydx,
+                             normalize_dydx = normalize_dydx,
                              ...)
 
     # required for merging in models with multiple response levels
@@ -72,9 +71,10 @@ get_contrasts_logical <- function(model,
                              type = type,
                              ...)
 
-    baseline$contrast <- pred_true$predicted - pred_false$predicted
-    baseline$term <- sprintf("%sTRUE", variable)
-    pred <- baseline[, c("rowid", "term", "contrast")]
+    baseline$estimate <- pred_true$predicted - pred_false$predicted
+    baseline$term <- variable
+    baseline$contrast <- "TRUE - FALSE"
+    pred <- baseline[, c("rowid", "term", "contrast", "estimate")]
     row.names(pred) <- NULL
 
     # bayes: posterior draws and credible intervals
@@ -117,9 +117,10 @@ get_contrasts_factor <- function(model,
                                               newdata = baseline,
                                               type = type,
                                               ...)
-        incremented_prediction$contrast <- incremented_prediction$predicted -
+        incremented_prediction$term <- variable
+        incremented_prediction$contrast <- sprintf("%s - %s", levs[i], levs[1])
+        incremented_prediction$estimate <- incremented_prediction$predicted -
                                            baseline_prediction$predicted
-        incremented_prediction$term <- levs[i]
         incremented_prediction$predicted <- NULL
         pred_list[[i]] <- incremented_prediction
 
@@ -132,33 +133,33 @@ get_contrasts_factor <- function(model,
     pred <- do.call("rbind", pred_list)
     draws <- do.call("rbind", draws_list)
 
-    # term labels in two possible label formats for factor level coefficients: 
-    # factor(cyl)4 vs. cyl4
-    levs <- levs[2:length(levs)]
-    lab_fmt1 <- sprintf("factor(%s)%s", variable, levs)
-    lab_fmt2 <- sprintf("%s%s", variable, levs)
-    lab_fmt3 <- sprintf("b_%s%s", variable, levs) # brms
+    # # term labels in two possible label formats for factor level coefficients:
+    # # factor(cyl)4 vs. cyl4
+    # levs <- levs[2:length(levs)]
+    # lab_fmt1 <- sprintf("factor(%s)%s", variable, levs)
+    # lab_fmt2 <- sprintf("%s%s", variable, levs)
+    # lab_fmt3 <- sprintf("b_%s%s", variable, levs) # brms
 
-    coef_names <- names(get_coef(model))
+    # coef_names <- names(get_coef(model))
 
-    # clean for hurdle models from package `pscl`
-    coef_names <- gsub("count_|zero_", "", coef_names)
+    # # clean for hurdle models from package `pscl`
+    # coef_names <- gsub("count_|zero_", "", coef_names)
 
-    # factor in formula
-    if (all(lab_fmt1 %in% coef_names)) {
-        pred$term <- sprintf("factor(%s)%s", variable, pred$term)
-    # factor in original data
-    } else if (all(lab_fmt2 %in% coef_names)) {
-        pred$term <- sprintf("%s%s", variable, pred$term)
-    # brmsfit
-    } else if (all(lab_fmt3 %in% coef_names)) {
-        pred$term <- sprintf("b_%s%s", variable, pred$term)
-    } else {
-        pred$term <- variable
-    }
+    # # factor in formula
+    # if (all(lab_fmt1 %in% coef_names)) {
+    #     pred$term <- sprintf("factor(%s)%s", variable, pred$term)
+    # # factor in original data
+    # } else if (all(lab_fmt2 %in% coef_names)) {
+    #     pred$term <- sprintf("%s%s", variable, pred$term)
+    # # brmsfit
+    # } else if (all(lab_fmt3 %in% coef_names)) {
+    #     pred$term <- sprintf("b_%s%s", variable, pred$term)
+    # } else {
+    #     pred$term <- variable
+    # }
 
     # output
-    cols <- intersect(colnames(pred), c("rowid", "group", "term", "contrast"))
+    cols <- intersect(colnames(pred), c("rowid", "group", "term", "contrast", "estimate"))
     row.names(pred) <- NULL
     attr(pred, "posterior_draws") <- draws
 
@@ -202,14 +203,16 @@ get_contrasts_character <- function(model,
                                attr(baseline_prediction, "posterior_draws")
         }
 
-        pred$contrast <- contr
-        pred$term <- sprintf("%s%s", variable, pred[[variable]])
-        pred_list[[i - 1]] <- pred[, c("rowid", "term", "contrast")]
+        pred$term <- variable
+        pred$contrast <- sprintf("%s - %s", levs[i], levs[1])
+        pred$estimate <- contr
+        # pred$term <- sprintf("%s%s", variable, pred[[variable]])
+        pred_list[[i - 1]] <- pred[, c("rowid", "term", "contrast", "estimate")]
     }
 
     pred <- do.call("rbind", pred_list)
     draws <- do.call("rbind", draws_list)
-    pred <- pred[, c("rowid", "term", "contrast")]
+    pred <- pred[, c("rowid", "term", "contrast", "estimate")]
     row.names(pred) <- NULL
     attr(pred, "posterior_draws") <- draws
     return(pred)
@@ -240,30 +243,34 @@ get_contrasts_numeric <- function(model,
 
     contr <- as.vector(pred_increment$predicted) - as.vector(pred_baseline$predicted)
 
+    pred_increment$term <- variable
+
     if (isTRUE(normalize_dydx)) {
         contr <- contr / step_size
-        pred_increment[["dydx"]] <- contr
+        pred_increment$contrast <- "dydx"
+        pred_increment$estimate <- contr
     } else {
-        pred_increment[["contrast"]] <- contr
+        pred_increment$contrast <- sprintf("+%s", step_size)
+        pred_increment$estimate <- contr
     }
     pred_increment$predicted <- NULL
 
     out <- pred_increment
 
-    # term reveals the increment size, which is analogous to level for factor/character/logical variables
-    if (!"term" %in% colnames(out)) {
-        # slope
-        if (isTRUE(normalize_dydx)) {
-            out$term <- variable
-        # pure contrast
-        } else {
-            out$term <- sprintf("%s + %s", variable, step_size)
-        }
-    }
+    # # term reveals the increment size, which is analogous to level for factor/character/logical variables
+    # if (!"term" %in% colnames(out)) {
+    #     # slope
+    #     if (isTRUE(normalize_dydx)) {
+    #         out$term <- variable
+    #     # pure contrast
+    #     } else {
+    #         out$term <- sprintf("%s + %s", variable, step_size)
+    #     }
+    # }
 
     # subset columns before assigning attributes later
     if (!isTRUE(return_data)) {
-        cols <- intersect(colnames(out), c("rowid", "term", "group", "dydx", "contrast", "conf.low", "conf.high"))
+        cols <- intersect(colnames(out), c("rowid", "term", "group", "variable", "term", "contrast", "estimate", "conf.low", "conf.high"))
         out <- out[, cols]
     } else {
         out <- merge(out, newdata, all.x = TRUE)

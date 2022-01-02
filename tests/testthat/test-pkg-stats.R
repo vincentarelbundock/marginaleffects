@@ -1,9 +1,3 @@
-# pkgload::load_all()
-# mod <- glm(am ~ hp + mpg, data = mtcars, family = binomial)
-# marginaleffects(mod) |> tidy()
-
-
-
 skip_if_not_installed("margins")
 skip_if_not_installed("emmeans")
 skip_if_not_installed("dplyr")
@@ -44,11 +38,9 @@ test_that("glm vs. Stata: marginaleffects", {
     stata <- readRDS(test_path("stata/stata.rds"))[["stats_glm_01"]]
     dat <- read.csv(test_path("stata/databases/stats_glm_01.csv"))
     mod <- glm(y ~ x1 * x2, family = binomial, data = dat)
-    ame <- marginaleffects(mod) %>%
-           group_by(term) %>%
-           summarize(dydx = mean(dydx), std.error = mean(std.error)) %>%
-           inner_join(stata, by = "term")
-    expect_equal(ame$dydx, ame$dydxstata, tolerance = 0.00001)
+    ame <- merge(tidy(marginaleffects(mod)), stata)
+    expect_equal(ame$dydx, ame$dydxstata)
+    expect_equal(ame$std.error, ame$std.errorstata, tolerance = 0.0001)
 })
 
 
@@ -56,11 +48,9 @@ test_that("lm vs. Stata: marginaleffects", {
     stata <- readRDS(test_path("stata/stata.rds"))[["stats_lm_01"]]
     dat <- read.csv(test_path("stata/databases/stats_lm_01.csv"))
     mod <- lm(y ~ x1 * x2, data = dat)
-    ame <- marginaleffects(mod) %>%
-           group_by(term) %>%
-           summarize(dydx = mean(dydx), std.error = mean(std.error)) %>%
-           inner_join(stata, by = "term")
-    expect_equal(ame$dydx, ame$dydxstata, tolerance = 0.00001)
+    ame <- merge(tidy(marginaleffects(mod)), stata)
+    expect_equal(ame$dydx, ame$dydxstata)
+    expect_equal(ame$std.error, ame$std.errorstata)
 })
 
 

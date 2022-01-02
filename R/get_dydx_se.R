@@ -38,7 +38,9 @@ get_dydx_se <- function(model,
                       variable = variable,
                       type = type,
                       numDeriv_method = numDeriv_method)
-        colnames(g)[colnames(g) == "contrast"] <- "dydx"
+        if (all(c("term", "contrast", "estimate") %in% colnames(g))) {
+            colnames(g)[colnames(g) == "estimate"] <- "dydx"
+        }
         return(g$dydx)
     }
 
@@ -47,10 +49,12 @@ get_dydx_se <- function(model,
                             method = numDeriv_method)
     colnames(J) <- names(get_coef(model))
 
-    J_mean <- stats::aggregate(J, by = out[, c("term", "group")],
-                               FUN = mean, na.rm = TRUE)
+
+    idx <- intersect(c("term", "group", "contrast"), colnames(out))
+    J_mean <- stats::aggregate(J, by = out[, idx], FUN = mean, na.rm = TRUE)
 
     # Unit-level standard errors are much slower to compute (are they, though?)
+    # In any case, we need them to match Stata and `margins`
     # Var(dydx) = J Var(beta) J'
     # computing the full matrix is memory-expensive, and we only need the diagonal
     # algebra trick: https://stackoverflow.com/a/42569902/342331
