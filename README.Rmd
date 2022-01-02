@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 
 ## What?
 
-The `marginaleffects` package allows `R` users to compute and plot four principal quantities of interest for a *wide* variety of models:
+The `marginaleffects` package allows `R` users to compute and plot four principal quantities of interest for [a very wide variety of models:](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
 
 * [_Marginal Effect_ (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/mfx.html) 
     - A partial derivative (slope) of the regression equation with respect to a regressor of interest.
