@@ -27,6 +27,7 @@ test_that("marginaleffects: vs. margins vs. emmeans", {
 })
 
 test_that("marginaleffects: vs. Stata", {
+    # stata does not include contrasts
     stata <- readRDS(test_path("stata/stata.rds"))[["betareg_betareg_01"]]
     dat <- read.csv(test_path("stata/databases/betareg_betareg_01.csv"))
     mod <- betareg::betareg(yield ~ factor(batch) + temp, data = dat)

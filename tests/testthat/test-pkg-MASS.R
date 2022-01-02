@@ -8,7 +8,6 @@ requiet("MASS")
 requiet("emmeans")
 requiet("broom")
 
-
 ### marginaleffects
 test_that("rlm: marginaleffects: vs. margins vs. emmeans", {
     model <- MASS::rlm(mpg ~ hp + drat, mtcars)
@@ -32,26 +31,54 @@ test_that("rlm: marginaleffects: vs. margins vs. emmeans", {
     expect_equal(mfx$std.error[2], em2$std.error, tolerance = .002)
 })
 
-test_that("glm.nb: marginaleffects: vs. margins", {
+test_that("glm.nb: marginaleffects: vs. margins vs. emmeans", {
+
     # margins does not support unit-level standard errors
     model <- suppressWarnings(MASS::glm.nb(carb ~ wt + factor(cyl), data = mtcars))
-    mfx <- tidy(marginaleffects(model))
-    mar <- tidy(margins(model))
+    mfx <- marginaleffects(model)
+    mar <- margins(model)
+    expect_equal(mfx$dydx[mfx$term == "wt"], mar$dydx_wt, tolerance = .0001, ignore_attr = TRUE)
+    expect_equal(mfx$dydx[mfx$contrast == "6 - 4"], mar$dydx_cyl6, tolerance = .0001, ignore_attr = TRUE)
+    expect_equal(mfx$dydx[mfx$contrast == "8 - 4"], mar$dydx_cyl8, tolerance = .0001, ignore_attr = TRUE)
+
+    pkgload::load_all()
+    mfx <- marginaleffects(model)
+    mar <- margins(model)
+
+    # margins: standard errors at mean gradient
+    mfx <- tidy(mfx)
+    mar <- tidy(mar)
     expect_equal(mfx$estimate, mar$estimate, ignore_attr = TRUE, tolerance = .0001)
     expect_equal(mfx$std.error, mar$std.error, ignore_attr = TRUE, tolerance = .001)
-    # emtrends
+
+    # emmeans::emtrends
     mfx <- marginaleffects(model, newdata = datagrid(wt = 2.6, cyl = 4), type = "link")
     em <- emtrends(model, ~wt, "wt", at = list(wt = 2.6, cyl = 4))
     em <- tidy(em)
     expect_equal(mfx$dydx[1], em$wt.trend)
     expect_equal(mfx$std.error[1], em$std.error)
+
+    # emmeans contrasts
+    mfx <- marginaleffects(model, type = "link", newdata = datagrid(wt = 3, cyl = 4))
+    em <- emmeans(model, specs = "cyl") 
+    em <- contrast(em, method = "revpairwise", at = list(wt = 3, cyl = 4))
+    em <- tidy(em)
+    expect_equal(mfx$dydx[mfx$contrast == "6 - 4"], em$estimate[em$contrast == "6 - 4"])
+    expect_equal(mfx$std.error[mfx$contrast == "6 - 4"], em$std.error[em$contrast == "6 - 4"])
+    expect_equal(mfx$dydx[mfx$contrast == "8 - 4"], em$estimate[em$contrast == "8 - 4"])
+    expect_equal(mfx$std.error[mfx$contrast == "8 - 4"], em$std.error[em$contrast == "8 - 4"])
+
 })
 
 test_that("glm.nb: marginaleffects: vs. Stata", {
     stata <- readRDS(test_path("stata/stata.rds"))$mass_glm_nb
     model <- suppressWarnings(
         MASS::glm.nb(carb ~ wt + factor(cyl), data = mtcars))
-    mfx <- merge(tidy(marginaleffects(model)), stata)
+    mfx <- tidy(marginaleffects(model))
+    stata$contrast <- ifelse(stata$term == "factor(cyl)6", "6 - 4", "")
+    stata$contrast <- ifelse(stata$term == "factor(cyl)8", "8 - 4", stata$contrast)
+    stata$term <- ifelse(grepl("cyl", stata$term), "cyl", stata$term)
+    mfx <- merge(mfx, stata)
     expect_equal(mfx$estimate, mfx$dydxstata, tolerance = .0001)
     expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = .001)
 })
@@ -69,6 +96,49 @@ test_that("polr: marginaleffects: vs. Stata", {
     expect_marginaleffects(mod, type = "probs")
 })
 
+test_that("bugs stay dead: polr with 1 row newdata", {
+    dat <- read.csv(test_path("stata/databases/MASS_polr_01.csv"))
+    dat$y <- factor(dat$y)
+    mod <- MASS::polr(y ~ x1, data = dat)
+    mfx <- marginaleffects(mod, type = "probs", newdata = datagrid(x1 = 0))
+    expect_s3_class(mfx, "marginaleffects")
+})
+
+test_that("marginaleffects vs. emmeans", {
+    # TODO: Check this
+    # this is very close, but I don't know where the slope is evaluated by
+    # `emmeans`, and setting `at = list(x1 = 0)` in `emmeans` errors when 
+    # post-processing with `contrast`
+    dat <- read.csv(test_path("stata/databases/MASS_polr_01.csv"))
+    dat$y <- factor(dat$y)
+    mod <- MASS::polr(y ~ x1, data = dat)
+    mfx <- marginaleffects(mod, type = "probs", newdata = datagrid(x1 = 0))
+
+    em <- emmeans(mod, ~ x1 | y, mode = "prob",
+                  cov.reduce = list(x1 = function(v) mean(v) + c(.00001, 0)))
+    em <- contrast(em, method = "pairwise", scale = 1 / .00001)
+    em <- update(em, by = NULL, adjust = "none")
+    em <- tidy(em)
+    mfx <- tidy(marginaleffects(mod, type = "probs", newdata = datagrid(x1 = 0)))
+
+    expect_equal(mfx$estimate, em$estimate, tolerance = .01)
+    expect_equal(mfx$std.error, em$std.error, tolerance = .01)
+})
+
+#> 
+#> Re-fitting to get Hessian
+
+#>  contrast                            Sat     estimate      SE  df z.ratio
+#>  23.4302222222222 - 23.3472222222222 Low    -2.90e-03 0.00309 Inf  -0.938
+#>  23.4302222222222 - 23.3472222222222 Medium -3.18e-05 0.00043 Inf  -0.074
+#>  23.4302222222222 - 23.3472222222222 High    2.93e-03 0.00316 Inf   0.927
+#>  p.value
+#>   0.3482
+#>   0.9410
+#>   0.3537
+#> 
+#> Results are averaged over the levels of: Infl
+    0
 
 ### predictions
 

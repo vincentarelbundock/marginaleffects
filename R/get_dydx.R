@@ -30,11 +30,13 @@ get_dydx <- function(model,
                     v = variable,
                     type = type,
                     numDeriv_method = numDeriv_method,
-                    contrast_to_dydx = TRUE,
+                    normalize_dydx = TRUE,
                     ...)
 
     # normalize names to merge when requesting dydx
-    colnames(out)[colnames(out) == "contrast"] <- "dydx"
+    if (all(c("contrast", "estimate") %in% colnames(out))) {
+        colnames(out)[colnames(out) == "estimate"] <- "dydx"
+    }
 
     return(out)
 }
@@ -85,6 +87,7 @@ get_dydx_via_contrasts <- function(model,
                                    variable,
                                    group_name = NULL,
                                    type = "response",
+                                   normalize_dydx = TRUE,
                                    ...) {
     out <- get_contrasts(model = model,
                   newdata = newdata,
@@ -92,7 +95,7 @@ get_dydx_via_contrasts <- function(model,
                   group_name = group_name,
                   type = type,
                   step_size = 1e-5,
-                  normalize_dydx = TRUE,
+                  normalize_dydx = normalize_dydx,
                   return_data = FALSE,
                   ...)
     return(out)

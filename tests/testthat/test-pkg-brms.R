@@ -134,7 +134,7 @@ test_that("tidy()", {
     mfx <- marginaleffects(mod_factor)
     ti <- tidy(mfx)
     expect_s3_class(ti, "data.frame")
-    expect_equal(dim(ti), c(3, 5))
+    expect_equal(dim(ti), c(3, 6))
     expect_true(all(c("term", "estimate", "conf.low") %in% colnames(ti)))
 })
 

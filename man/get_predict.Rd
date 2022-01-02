@@ -6,6 +6,7 @@
 \name{get_predict}
 \alias{get_predict}
 \alias{get_predict.default}
+\alias{get_predict.polr}
 \alias{get_predict.glmmPQL}
 \alias{get_predict.glimML}
 \alias{get_predict.multinom}
@@ -24,6 +25,14 @@ get_predict(model, newdata, type, ...)
   model,
   newdata = insight::get_data(model),
   type = "response",
+  conf.level = NULL,
+  ...
+)
+
+\method{get_predict}{polr}(
+  model,
+  newdata = insight::get_data(model),
+  type = "probs",
   conf.level = NULL,
   ...
 )

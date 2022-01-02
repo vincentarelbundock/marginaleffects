@@ -3,9 +3,9 @@ mfx <- marginaleffects(mod)
 
 test_that("tidy: minimal", {
     ti <- tidy(mfx)
-    expect_equal(dim(ti), c(2, 8))
+    expect_equal(dim(ti), c(2, 9))
     ti <- tidy(mfx, conf.int = FALSE)
-    expect_equal(dim(ti), c(2, 6))
+    expect_equal(dim(ti), c(2, 7))
     ti1 <- tidy(mfx, conf.level = .90)
     ti2 <- tidy(mfx, conf.level = .99)
     expect_true(all(ti1$conf.low > ti2$conf.low))
@@ -32,28 +32,28 @@ test_that("tidy: with and without contrasts", {
 
     # numeric only
     x <- tidy(marginaleffects(lm(mpg ~ hp, tmp)))
-    expect_equal(dim(x), c(1, 8))
+    expect_equal(dim(x), c(1, 9))
 
     # logical only
     model <- lm(mpg ~ am, tmp)
     x <- tidy(marginaleffects(model))
-    expect_equal(dim(x), c(1, 8))
+    expect_equal(dim(x), c(1, 9))
 
     # factor only
     model <- lm(mpg ~ factor(gear), tmp)
     x <- tidy(marginaleffects(model))
-    expect_equal(dim(x), c(2, 8))
+    expect_equal(dim(x), c(2, 9))
 
     # combinations
     x <- tidy(marginaleffects(lm(mpg ~ hp + am, tmp)))
-    expect_equal(dim(x), c(2, 8))
+    expect_equal(dim(x), c(2, 9))
 
     x <- tidy(marginaleffects(lm(mpg ~ hp + factor(gear), tmp)))
-    expect_equal(dim(x), c(3, 8))
+    expect_equal(dim(x), c(3, 9))
 
     x <- tidy(marginaleffects(lm(mpg ~ am + factor(gear), tmp)))
-    expect_equal(dim(x), c(3, 8))
+    expect_equal(dim(x), c(3, 9))
 
     x <- tidy(marginaleffects(lm(mpg ~ hp + am + factor(gear), tmp)))
-    expect_equal(dim(x), c(4, 8))
+    expect_equal(dim(x), c(4, 9))
 })

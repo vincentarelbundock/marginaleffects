@@ -37,7 +37,7 @@ tidy.marginaleffects <- function(x,
     # model
     if ("term" %in% colnames(x)) {
         lhs <- intersect(c("dydx", "conf.low", "conf.high"), colnames(x))
-        rhs <- intersect(c("type", "group", "term"), colnames(x))
+        rhs <- intersect(c("type", "group", "term", "contrast"), colnames(x))
         lhs <- sprintf("cbind(%s)", paste(lhs, collapse = ", "))
         rhs <- paste(rhs, collapse = " + ")
         form <- sprintf("%s ~ %s", lhs, rhs)

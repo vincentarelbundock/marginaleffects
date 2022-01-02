@@ -50,6 +50,15 @@ print.marginaleffects.summary <- function(x,
       alpha <- 100 * (1 - attr(x, "conf.level"))
   }
 
+  # contrast is sometimes useless
+  if ("contrast" %in% colnames(out) && all(out$contrast == "")) {
+      out$contrast <- NULL
+  }
+
+  if ("type" %in% colnames(out) && length(unique(out$type)) == 1) {
+      out$type <- NULL
+  }
+
   # rename
   dict <- c("group" = "Group",
             "term" = "Term",
@@ -68,6 +77,7 @@ print.marginaleffects.summary <- function(x,
   for (i in seq_along(dict)) {
     colnames(out)[colnames(out) == names(dict)[i]] <- dict[i]
   }
+
 
   # avoid infinite recursion by stripping marginaleffect.summary class
   out <- as.data.frame(out)

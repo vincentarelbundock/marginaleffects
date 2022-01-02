@@ -114,7 +114,7 @@ marginaleffects <- function(model,
     }
 
     # clean columns
-    stubcols <- c("rowid", "type", "group", "term", "dydx", "std.error",
+    stubcols <- c("rowid", "type", "group", "term", "contrast", "dydx", "std.error",
                   sort(grep("^predicted", colnames(newdata), value = TRUE)))
     cols <- intersect(stubcols, colnames(out))
     cols <- unique(c(cols, colnames(out)))
@@ -122,6 +122,15 @@ marginaleffects <- function(model,
 
     if ("group" %in% colnames(out) && all(out$group == "main_marginaleffect")) {
         out$group <- NULL
+    }
+
+    # return contrast column only when relevant
+    if ("contrast" %in% colnames(out)) {
+        if (all(is.na(out$contrast))) {
+            out$contrast <- NULL
+        } else {
+            out$contrast[is.na(out$contrast)] <- ""
+        }
     }
 
     # DO NOT sort rows because we want draws to match

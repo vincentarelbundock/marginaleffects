@@ -15,7 +15,7 @@ test_that("marginaleffects: clm: vs. MASS", {
 })
 
 
-test_that("marginaleffects: protect against corner cases", { 
+test_that("marginaleffects: protect against corner cases", {
     # do not convert numeric to factor in formula
     stata <- readRDS(test_path("stata/stata.rds"))[["MASS_polr_01"]]
     dat <- read.csv(test_path("stata/databases/MASS_polr_01.csv"))

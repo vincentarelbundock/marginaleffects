@@ -8,8 +8,13 @@ get_dydx_and_se <- function(model,
 
     coefs <- get_coef(model)
 
-    if (!is.null(vcov) && all(names(coefs) %in% colnames(vcov))) {
-        vcov <- vcov[names(coefs), names(coefs), drop = FALSE]
+    # Needed for `AER::tobit` and others where `vcov` includes Log(scale) but `coef` does not
+    # Dangerous for `oridinal::clm` and others where there are important duplicate column names
+    # in `vcov`, and selecting with [,] repeats the first instance.
+    if (anyDuplicated(names(vcov)) == 0) {
+        if (!is.null(vcov) && all(names(coefs) %in% colnames(vcov))) {
+            vcov <- vcov[names(coefs), names(coefs), drop = FALSE]
+        }
     }
 
     mfx_list <- list()
@@ -45,11 +50,16 @@ get_dydx_and_se <- function(model,
 
             J_mean <- attr(mfx, "J_mean")
             if (!is.null(J_mean)) {
-                J_mean_mat <- as.matrix(J_mean[, 3:ncol(J_mean)])
+                idx <- !colnames(J_mean) %in% c("group", "term", "contrast")
+                J_mean_mat <- J_mean[, idx, drop = FALSE]
+                J_mean_mat <- as.matrix(J_mean_mat)
                 # J_mean is NULL in bayesian models and where the delta method breaks
                 if (!is.null(vcov) && !is.null(J_mean)) {
                     V <- colSums(t(J_mean_mat %*% vcov) * t(J_mean_mat))
-                    tmp <- J_mean[, 1:2]
+                    tmp <- J_mean[, intersect(colnames(J_mean), c("group", "term", "contrast")), drop = FALSE]
+                    if (!"contrast" %in% colnames(tmp)) {
+                        tmp$contrast <- ""
+                    }
                     tmp$type <- predt
                     tmp$std.error <- sqrt(V)
                     se_mean_list <- c(se_mean_list, list(tmp))
