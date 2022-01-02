@@ -1,5 +1,6 @@
 requiet("glmx")
 requiet("MASS")
+requiet("margins")
 
 test_that("glmx: marginaleffects vs. margins", {
     d <- data.frame(x = runif(200, -1, 1))
