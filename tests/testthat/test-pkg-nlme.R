@@ -1,5 +1,7 @@
 skip_if_not_installed("nlme")
 requiet("nlme")
+requiet("emmeans")
+requiet("broom")
 
 test_that("nlme::gls: marginaleffects vs. emtrends", {
     model <- gls(follicles ~ sin(2*pi*Time) + cos(2*pi*Time), Ovary,
@@ -25,12 +27,17 @@ test_that("predictions: nlme::gls: no validity", {
     expect_predictions(pred2, n_row = 6, se = FALSE)
 })
 
-test_that("marginalmeans: nlme::gls: no validity", {
+test_that("glm: marginalmeans vs emmeans", {
     skip("works interactively")
-    tmp <- nlme::Ovary
+    data(package = "nlme", "Ovary")
+    tmp <- Ovary
     tmp$categ <- factor(sample(letters[1:5], nrow(tmp), replace = TRUE))
     mod <- gls(follicles ~ sin(2*pi*Time) + cos(2*pi*Time) + categ,
                data = tmp, correlation = corAR1(form = ~ 1 | Mare))
-    mm <- marginalmeans(mod)
+    em <- emmeans(mod, specs = "categ")
+    em <- tidy(em)
+    mm <- marginalmeans(mod, variables = "categ")
     expect_marginalmeans(mm)
+    expect_equal(mm$predicted, em$estimate)
+    expect_equal(mm$std.error, em$std.error)
 })
