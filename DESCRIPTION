@@ -117,6 +117,7 @@ Collate:
     'methods_quantreg.R'
     'methods_rstanarm.R'
     'methods_stats.R'
+    'methods_survival.R'
     'package.R'
     'plot.R'
     'plot_cap.R'
