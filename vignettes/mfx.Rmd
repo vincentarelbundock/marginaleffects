@@ -242,8 +242,8 @@ library(marginaleffects)
 
 # fit models and store them in a named list
 mod <- list(
-    "Short model" = glm(large_penguin ~ flipper_length_mm, data = dat, family = binomial),
-    "Long model" = glm(large_penguin ~ flipper_length_mm + bill_length_mm, data = dat, family = binomial))
+    "Short" = glm(large_penguin ~ flipper_length_mm, data = dat, family = binomial),
+    "Long" = glm(large_penguin ~ flipper_length_mm + bill_length_mm, data = dat, family = binomial))
 
 # apply the `marginaleffects` function to all the models using `lapply`
 mfx <- lapply(mod, marginaleffects)
