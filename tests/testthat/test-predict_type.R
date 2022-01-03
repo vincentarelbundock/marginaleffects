@@ -1,5 +1,7 @@
 test_that("type dictionary does not include duplicates", {
     x <- marginaleffects:::type_dictionary
+    y <- type_dictionary_build()
+    expect_equal(x, y) # for codecov
     dup <- x[!x$base %in% c("link", "prediction"), ]
     dup <- stats::na.omit(dup)
     expect_false(any(dup$base == dup$insight))
