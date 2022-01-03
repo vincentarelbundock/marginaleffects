@@ -4,14 +4,12 @@
 #' @return A warning, an error, or nothing
 #' @rdname sanity_model_specific
 #' @keywords internal
-#' @export
 sanity_model_specific <- function (model, ...) {
     UseMethod("sanity_model_specific", model)
 }
 
 
 #' @rdname sanity_model_specific
-#' @export
 sanity_model_specific.default <- function(model, ...) {
     return(invisible(NULL))
 }
