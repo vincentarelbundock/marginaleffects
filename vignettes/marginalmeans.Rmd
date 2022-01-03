@@ -85,13 +85,13 @@ emmeans(mod, specs = "am")
 The `summary`, `tidy`, and `glance` functions are also available to summarize and manipulate the results:
 
 ```{r}
-me <- marginalmeans(mod)
+mm <- marginalmeans(mod)
 
-tidy(me)
+tidy(mm)
 
-glance(me)
+glance(mm)
 
-summary(me)
+summary(mm)
 ```
 
 Thanks to those tidiers, we can also present the results in the style of a regression table [using the `modelsummary` package:](https://vincentarelbundock.github.io/modelsummary/)
@@ -99,7 +99,7 @@ Thanks to those tidiers, we can also present the results in the style of a regre
 ```{r}
 library("modelsummary")
 
-modelsummary(me,
+modelsummary(mm,
              title = "Estimated Marginal Means",
              estimate = "{estimate} ({std.error}){stars}",
              statistic = NULL,
@@ -132,16 +132,9 @@ void <- capture.output({
 })
 ```
 
-Try to compute marginal means, but realize that you are trying to get marginal means for the wrong type of prediction:
-
-
-```{r, eval=FALSE}
-marginalmeans(mod)
-```
-
 Try to compute marginal means, but realize that your grid won’t fit in memory:
 
-```{r, eval=FALSE}
+```{r, error = TRUE}
 marginalmeans(mod, type = "probs")
 ```
 
