@@ -85,7 +85,8 @@ test_that("lmer vs. stata", {
     expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = .001)
     # emtrends
     mod <- lmer(y ~ x1 + x2 + (1 | clus), data = dat)
-    mfx <- marginaleffects(mod, variables = "x1", newdata = datagrid(x1 = 0, x2 = 0, clus = 1), type = "link")
+    mfx <- marginaleffects(mod, variables = "x1",
+                           newdata = datagrid(x1 = 0, x2 = 0, clus = 1))
     em <- emtrends(mod, ~x1, "x1", at = list(x1 = 0, x2 = 0, clus = 1))
     em <- tidy(em)
     expect_equal(mfx$dydx, em$x1.trend)

@@ -1,3 +1,17 @@
+test_that("type dictionary does not include duplicates", {
+    x <- marginaleffects:::type_dictionary
+    dup <- x[!x$base %in% c("link", "prediction"), ]
+    dup <- stats::na.omit(dup)
+    expect_false(any(dup$base == dup$insight))
+    dup <- stats::na.omit(x[, c("class", "base")])
+    dup <- paste(dup$class, dup$base)
+    expect_true(anyDuplicated(dup) == 0)
+    dup <- stats::na.omit(x[, c("class", "insight")])
+    dup <- paste(dup$class, dup$insight)
+    expect_true(anyDuplicated(dup) == 0)
+})
+
+
 test_that("multiple prediction types", {
     skip_if_not_installed("pscl")
     requiet("pscl")

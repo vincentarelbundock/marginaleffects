@@ -71,7 +71,7 @@ marginaleffects <- function(model,
     }
 
     # sanity checks and pre-processing
-    model <- sanity_model(model = model, 
+    model <- sanity_model(model = model,
                           newdata = newdata,
                           variables = variables,
                           vcov = vcov,
@@ -81,7 +81,6 @@ marginaleffects <- function(model,
     newdata <- sanity_newdata(model, newdata)
     variables <- sanity_variables(model, newdata, variables)
     vcov <- sanity_vcov(model, vcov)
-    type <- sanity_type(model, type)
     return_data <- sanity_return_data(return_data)
 
     # rowid is required for later merge

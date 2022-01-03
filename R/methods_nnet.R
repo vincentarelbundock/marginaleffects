@@ -60,6 +60,8 @@ get_predict.multinom <- function(model,
                                  type = "probs",
                                  ...) {
 
+    type <- sanity_type(model, type)
+
     # needed because `predict.multinom` uses `data` rather than `newdata`
     pred <- stats::predict(model,
                            newdata = newdata,

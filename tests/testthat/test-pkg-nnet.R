@@ -13,7 +13,7 @@ test_that("error: bad type", {
     dat <- read.csv(test_path("stata/databases/MASS_polr_01.csv"))
     void <- capture.output(mod <- 
         nnet::multinom(factor(y) ~ x1 + x2, data = dat, quiet = true))
-    expect_warning(expect_error(marginaleffects(mod), regexp = "type.*supported"))
+    expect_warning(expect_error(marginaleffects(mod), regexp = "must be an element"))
 })
    
 test_that("multinom basic", {
