@@ -234,6 +234,7 @@ Average marginal effects are easy to display in a regression table using package
 
 ```{r, echo = FALSE}
 options(modelsummary_factory_default = "markdown")
+
 ```
 
 ```{r}
