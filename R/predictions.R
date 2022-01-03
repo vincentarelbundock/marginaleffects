@@ -34,9 +34,6 @@ predictions <- function(model,
                         type = "response",
                         ...) {
 
-    # sanitcounterfactualy checks and pre-processing
-    type <- sanity_type(model, type)
-
     ## do not check this because `insight` supports more models than `marginaleffects`
     # model <- sanity_model(model)
 

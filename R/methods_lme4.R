@@ -27,9 +27,6 @@ get_predict.merMod <- function(model,
                                conf.level = NULL,
                                ...) {
 
-
-    checkmate::assert_choice(type, choices = c("response", "link"))
-
     get_predict.default(model,
                         newdata = newdata,
                         type = type,

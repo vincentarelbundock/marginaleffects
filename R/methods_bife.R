@@ -7,6 +7,8 @@ get_predict.bife <- function(model,
                              type = "response",
                              ...) {
 
+    type <- sanity_type(model, type)
+
     pred <- stats::predict(model,
                            X_new = newdata,
                            type = type)

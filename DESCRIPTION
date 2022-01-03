@@ -124,11 +124,11 @@ Collate:
     'plot_cme.R'
     'poorman.R'
     'posteriordraws.R'
-    'predict_type.R'
     'predictions.R'
     'sanity.R'
     'sanity_type.R'
     'summary.R'
     'tidy.R'
+    'type_dictionary.R'
     'utils.R'
 Language: en-US

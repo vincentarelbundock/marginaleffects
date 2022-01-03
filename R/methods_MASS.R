@@ -53,6 +53,8 @@ get_predict.polr <- function(model,
                              conf.level = NULL,
                              ...) {
 
+    type <- sanity_type(model, type)
+
     # hack: 1-row newdata returns a vector, so get_predict.default does not learn about groups
     if (nrow(newdata) == 1) {
         hack <- TRUE
@@ -91,9 +93,12 @@ get_predict.glmmPQL <- function(model,
                                 type = "response",
                                 conf.level = NULL,
                                 ...) {
+
+    type <- sanity_type(model, type)
+
     out <- stats::predict(model, newdata = newdata, type = type, ...)
     out <- data.frame(
-        rowid = 1:nrow(newdata),
+        rowid = seq_len(nrow(newdata)),
         predicted = out)
     return(out)
 }

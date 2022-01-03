@@ -21,6 +21,11 @@ get_predict.default <- function(model,
                                 conf.level = NULL,
                                 ...) {
 
+
+    type <- sanity_type(model, type)
+    type_base <- unname(type)
+    type_insight <- names(type)
+
     dots <- list(...)
 
     # some predict methods raise warnings on unused arguments 
@@ -28,11 +33,11 @@ get_predict.default <- function(model,
     dots <- dots[setdiff(names(dots), unused)]
 
     # `stats::predict` is faster than `insight::get_predicted`
-    if (is.null(conf.level) && !"include_random" %in% names(dots)) {
+    if (is.na(type_insight) || (is.null(conf.level) && !"include_random" %in% names(dots))) {
 
         # first argument in the predict methods is not always named "x" or "model"
         dots[["newdata"]] <- newdata
-        dots[["type"]] <- type
+        dots[["type"]] <- type_base
         args <- c(list(model), dots)
 
         fun <- stats::predict
@@ -63,13 +68,6 @@ get_predict.default <- function(model,
 
     # `insight::get_predicted` yields back-transformed confidence intervals
     } else {
-
-        # insight uses its own type names 
-        if (type %in% c("response", "expectation", "prob", "probs")) {
-            type_insight <- "expectation"
-        } else {
-            type_insight <- type
-        }
 
         if ("include_random" %in% names(dots)) {
             if (any(c("re.form", "re_formula") %in% names(dots))) {
