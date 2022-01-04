@@ -10,7 +10,7 @@ dat$enssd <- apply(dat[,grep('^rainfc',names(dat))], 1, sd)
 dat$ensmean <- apply(dat[,grep('^rainfc',names(dat))], 1, mean)
 dat <- subset(dat, enssd > 0)
 
-test_that("marginalmeans: crch gaussian: no validity", {
+test_that("marginaleffects: crch gaussian: no validity", {
     model <- crch(sqrt(rain) ~ sqrtensmean + sqrtenssd, data = dat, dist = "gaussian")
     expect_marginaleffects(model, n_unique = 1, type = "location")
 })
@@ -55,5 +55,5 @@ test_that("marginalmeans: crch gaussian: no validity", {
     model <- crch(sqrt(rain) ~ sqrtensmean + sqrtenssd + categ, 
                   data = tmp, dist = "gaussian")
     mm <- marginalmeans(model)
-    expect_marginalmeans(mm, n_row = 5, se = FALSE)
+    expect_marginalmeans(mm, n_row = 5)
 })

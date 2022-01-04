@@ -1,8 +1,11 @@
 # marginaleffects 0.2.0.9000
 
-Breaking change:
+Breaking changes:
 
-* `predictions` returns predictions for every observation in the original dataset instead of `newdata=datagrid()`.
+* `predictions` returns predictions for every observation in the original
+  dataset instead of `newdata=datagrid()`.
+* `marginalmeans` objects have new column names, as do the corresponding `tidy`
+  and `summary` outputs.
 
 Support for new models and packages:
 
@@ -16,6 +19,10 @@ New function:
 * `datagrid` supersedes `typical` and `counterfactual` with the `grid.type`
   argument. The `typical` and `counterfactual` functions will remain available
   and exported, but their use is not encouraged.
+
+`marginalmeans`:
+
+* Standard errors are now computed using the delta method fo r
 
 Documentation:
 

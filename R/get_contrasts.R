@@ -133,30 +133,9 @@ get_contrasts_factor <- function(model,
     pred <- do.call("rbind", pred_list)
     draws <- do.call("rbind", draws_list)
 
-    # # term labels in two possible label formats for factor level coefficients:
-    # # factor(cyl)4 vs. cyl4
-    # levs <- levs[2:length(levs)]
-    # lab_fmt1 <- sprintf("factor(%s)%s", variable, levs)
-    # lab_fmt2 <- sprintf("%s%s", variable, levs)
-    # lab_fmt3 <- sprintf("b_%s%s", variable, levs) # brms
-
-    # coef_names <- names(get_coef(model))
-
+    # TODO: check if this is still relevant
     # # clean for hurdle models from package `pscl`
     # coef_names <- gsub("count_|zero_", "", coef_names)
-
-    # # factor in formula
-    # if (all(lab_fmt1 %in% coef_names)) {
-    #     pred$term <- sprintf("factor(%s)%s", variable, pred$term)
-    # # factor in original data
-    # } else if (all(lab_fmt2 %in% coef_names)) {
-    #     pred$term <- sprintf("%s%s", variable, pred$term)
-    # # brmsfit
-    # } else if (all(lab_fmt3 %in% coef_names)) {
-    #     pred$term <- sprintf("b_%s%s", variable, pred$term)
-    # } else {
-    #     pred$term <- variable
-    # }
 
     # output
     cols <- intersect(colnames(pred), c("rowid", "group", "term", "contrast", "estimate"))
@@ -256,17 +235,6 @@ get_contrasts_numeric <- function(model,
     pred_increment$predicted <- NULL
 
     out <- pred_increment
-
-    # # term reveals the increment size, which is analogous to level for factor/character/logical variables
-    # if (!"term" %in% colnames(out)) {
-    #     # slope
-    #     if (isTRUE(normalize_dydx)) {
-    #         out$term <- variable
-    #     # pure contrast
-    #     } else {
-    #         out$term <- sprintf("%s + %s", variable, step_size)
-    #     }
-    # }
 
     # subset columns before assigning attributes later
     if (!isTRUE(return_data)) {

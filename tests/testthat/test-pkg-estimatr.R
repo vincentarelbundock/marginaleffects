@@ -61,5 +61,5 @@ test_that("lm_robust: marginalmeans predictions: no validity", {
                        data = tmp)
     expect_predictions(predictions(model), se = FALSE, n_row = nrow(tmp))
     expect_predictions(predictions(model, newdata = head(tmp)), se = FALSE, n_row = 6)
-    expect_marginalmeans(marginalmeans(model), se = TRUE)
+    expect_marginalmeans(marginalmeans(model))
 })

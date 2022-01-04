@@ -47,12 +47,15 @@ test_that("predictions: no validity", {
  })
 
 test_that("marginalmeans: vs. emmeans", {
+    # TODO: Bad tolerance
     set.seed(1024)
     data("GasolineYield", package = "betareg")
     mod <- betareg::betareg(yield ~ batch + temp, data = GasolineYield)
-    mm <- marginalmeans(mod)
-    ti <- tidy(mm)
+    # link
+    mm <- marginalmeans(mod, type = "link")
+    expect_marginalmeans(mm, n_row = 10)
+    mm <- tidy(mm)
     em <- broom::tidy(emmeans::emmeans(mod, "batch"))
-    expect_marginalmeans(mm, n_row = 10, n_col = 3, se = FALSE)
-    expect_equal(ti$estimate, em$estimate)
- })
+    expect_equal(mm$estimate, em$estimate)
+    expect_equal(mm$std.error, em$std.error, tolerance = .1)
+})

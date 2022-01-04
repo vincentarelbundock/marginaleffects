@@ -119,13 +119,12 @@ glance.marginaleffects <- function(x, ...) {
 #' `broom` package specification.
 #' @export
 tidy.marginalmeans <- function(x,
-                                 conf.int = TRUE,
-                                 conf.level = 0.95,
-                                 ...) {
+                               conf.int = TRUE,
+                               conf.level = 0.95,
+                               ...) {
 
     out <- x
-    colnames(out)[colnames(out) == "value"] <- "group"
-    colnames(out)[colnames(out) == "predicted"] <- "estimate"
+    colnames(out)[colnames(out) == "marginalmean"] <- "estimate"
 
     if (!"statistic" %in% colnames(out) && "std.error" %in% colnames(out)) {
         out$statistic <- out$estimate / out$std.error
@@ -147,7 +146,7 @@ tidy.marginalmeans <- function(x,
     }
 
     # sort and subset columns
-    cols <- c("type", "term", "group", "estimate", "std.error", "statistic", "p.value", "conf.low", "conf.high")
+    cols <- c("type", "term", "value", "estimate", "std.error", "statistic", "p.value", "conf.low", "conf.high")
     out <- out[, intersect(cols, colnames(out)), drop = FALSE]
     out <- as.data.frame(out)
 

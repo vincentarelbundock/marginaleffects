@@ -96,11 +96,16 @@ test_that("marginaleffects: zeroinfl: no validity", {
 
 ### marginalmeans
 
-test_that("marginalmeans: zeroinfl: no validity", {
+test_that("zeroinfl: marginalmeans vs. emmeans", {
     data("bioChemists", package = "pscl")
     model <- zeroinfl(art ~ kid5 + phd + mar | ment,
                       dist = "negbin",
                       data = bioChemists)
     mm <- marginalmeans(model)
-    expect_marginalmeans(mm, se = FALSE)
+    expect_marginalmeans(mm)
+    # response
+    mm <- tidy(marginalmeans(model, type = "response"))
+    em <- tidy(emmeans(model, specs = "mar"))
+    expect_equal(mm$estimate, em$estimate)
+    expect_equal(mm$std.error, em$std.error, tolerance = .001)
 })

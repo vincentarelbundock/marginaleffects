@@ -13,7 +13,7 @@ expect_marginalmeans <- function(object,
   cl <- class(object)[1]
   ro <- nrow(object)
   co <- ncol(object)
-  predcol <- "predicted" %in% colnames(object)
+  predcol <- "marginalmean" %in% colnames(object)
   secol <- "std.error" %in% colnames(object)
   msg <- sprintf("Class: %s. Rows: %s. Columns: %s. predicted_col: %s, se_col: %s",
                  cl, ro, co, predcol, secol)

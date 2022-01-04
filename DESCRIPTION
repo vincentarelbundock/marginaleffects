@@ -86,6 +86,7 @@ Suggests:
 Collate: 
     'complete_levels.R'
     'datagrid.R'
+    'delta_se.R'
     'get_coef.R'
     'get_contrasts.R'
     'get_dydx.R'
