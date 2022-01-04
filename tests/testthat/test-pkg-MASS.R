@@ -105,25 +105,18 @@ test_that("bugs stay dead: polr with 1 row newdata", {
 })
 
 test_that("marginaleffects vs. emmeans", {
+    skip_if_not_installed("emmeans", minimum_version = "1.7.1.9")
     # Hess=TRUE otherwise breaks in the test environment via MASS:::vcov() -> update()
-    # TODO: Check this
-    # this is very close, but I don't know where the slope is evaluated by
-    # `emmeans`, and setting `at = list(x1 = 0)` in `emmeans` errors when 
-    # post-processing with `contrast`
     dat <- read.csv(test_path("stata/databases/MASS_polr_01.csv"))
     dat$y <- factor(dat$y)
-    mod <- MASS::polr(y ~ x1, data = dat, Hess = TRUE)
-    mfx <- marginaleffects(mod, type = "probs", newdata = datagrid(x1 = 0))
-    em <- emmeans(mod, ~ x1 | y, mode = "prob",
-                  cov.reduce = list(x1 = function(v) mean(v) + c(.00001, 0)))
-    em <- contrast(em, method = "pairwise", scale = 1 / .00001)
-    em <- update(em, by = NULL, adjust = "none")
+    mod <- MASS::polr(y ~ x1 + x2, data = dat, Hess = TRUE)
+    em <- emmeans::emtrends(mod, ~y, var = "x1", mode = "prob", at = list(x1 = 0, x2 = 0))
     em <- tidy(em)
-    mfx <- tidy(marginaleffects(mod, type = "probs", newdata = datagrid(x1 = 0)))
-    expect_equal(mfx$estimate, em$estimate, tolerance = .01)
+    mfx <- marginaleffects(mod, newdata = datagrid(x1 = 0, x2 = 0), 
+                           type = "probs", variables = "x1")
+    expect_equal(mfx$dydx, em$x1.trend, tolerance = .01)
     expect_equal(mfx$std.error, em$std.error, tolerance = .01)
 })
-
 
 ### predictions
 
