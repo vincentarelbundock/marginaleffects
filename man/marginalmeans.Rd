@@ -8,7 +8,7 @@ marginalmeans(
   model,
   variables = NULL,
   variables_grid = NULL,
-  vcov = insight::get_varcov(model),
+  vcov = NULL,
   type = "response"
 )
 }

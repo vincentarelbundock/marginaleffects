@@ -46,7 +46,7 @@
       print(s)
     Output
       Estimated marginal means 
-        Term Group  Mean Std. Error z value   Pr(>|z|) 2.5 % 97.5 %
+        Term Value  Mean Std. Error z value   Pr(>|z|) 2.5 % 97.5 %
       1 gear     3 21.64      1.603   13.50 < 2.22e-16 18.49  24.78
       2 gear     4 21.09      1.264   16.69 < 2.22e-16 18.61  23.57
       3 gear     5 19.97      1.969   10.14 < 2.22e-16 16.11  23.83

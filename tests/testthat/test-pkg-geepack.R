@@ -44,8 +44,9 @@ test_that("marginalmeans: geepack::geeglm: vs. emmeans", {
     model <- suppressWarnings(geeglm(mf, data=dietox, id=Pig, 
                                      family=poisson("identity"), corstr="ar1"))
     mm <- marginalmeans(model, variables = "Cu")
-    expect_marginalmeans(mm, n_row = 3, se = FALSE)
-    ti <- tidy(mm)
+    expect_marginalmeans(mm, n_row = 3)
+    mm <- tidy(mm)
     em <- broom::tidy(emmeans::emmeans(model, "Cu"))
-    expect_equal(ti$estimate, em$estimate)
+    expect_equal(mm$estimate, em$estimate)
+    expect_equal(mm$std.error, em$std.error)
 })
