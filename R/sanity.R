@@ -34,9 +34,18 @@ sanity_newdata <- function(model, newdata) {
     if (is.null(newdata)) {
         newdata <- insight::get_data(model)
     }
-    # if ("group" %in% colnames(newdata)) {
-    #     stop('The string "group" cannot be a column name in `newdata`. It is used in the generic, standardized, and tidy output of the `marginaleffects` function. Sharing a column name could cause confusion. Please use a more descriptive variable name in your dataset.')
-    # }
+
+    # if there are no categorical variables in `newdata`, check the model terms
+    # to find transformation and warn accordingly.
+    categorical_variables <- find_categorical(newdata)
+    if (length(categorical_variables) == 0) {
+        termlabs <- try(attr(stats::terms(model), "term.labels"), silent = TRUE)
+        termlabs <- try(any(grepl("^factor\\(|^as.factor\\(|^as.logical\\(", termlabs)), silent = TRUE)
+        if (isTRUE(termlabs)) {
+            warning("When using `marginaleffects`, it is safer to convert variables to factors or logicals in the dataset before fitting the model, rather than by wrapping terms in `factor()` or `as.logical() in the model formula.")
+        }
+    }
+
     return(newdata)
 }
 

@@ -23,54 +23,83 @@ get_dydx_and_se <- function(model,
     mfx_list <- list()
     se_mean_list <- list()
     draws_list <- list()
+    J_list <- list()
+    J_mean_list <- list()
     for (predt in type) {
         for (variable in variables) {
             mfx <- get_dydx(model = model,
                             variable = variable,
                             newdata = newdata,
                             type = predt,
-                            numDeriv_method = numDeriv_method,
                             ...)
+            mfx$type <- predt
 
+            # bayesian draws
             if (!is.null(attr(mfx, "posterior_draws"))) {
                 draws_list <- c(draws_list, list(attr(mfx, "posterior_draws")))
+                J <- J_mean <- NULL
+            # standard errors via delta method
+            } else if (!is.null(vcov)) {
+                idx <- intersect(colnames(mfx), c("group", "term", "contrast"))
+                idx <- mfx[, idx, drop = FALSE]
+                se <- delta_se(model,
+                               vcov = vcov,
+                               type = predt,
+                               FUN = delta_se_marginaleffects,
+                               newdata = newdata,
+                               index = idx,
+                               variable = variable)
+                mfx$std.error <- as.numeric(se)
+                J <- attr(se, "J")
+                J_mean <- attr(se, "J_mean")
             } else {
-                mfx <- get_dydx_se(model = model,
-                                   mfx = mfx,
-                                   vcov = vcov,
-                                   variable = variable,
-                                   newdata = newdata,
-                                   type = predt,
-                                   numDeriv_method = numDeriv_method,
-                                   ...)
+                J <- J_mean <- NULL
             }
-
-            mfx$type <- predt
             mfx_list <- c(mfx_list, list(mfx))
+            J_list <- c(J_list, list(J))
+            J_mean_list <- c(J_mean_list, list(J_mean))
 
-            J_mean <- attr(mfx, "J_mean")
-            if (!is.null(J_mean)) {
-                idx <- !colnames(J_mean) %in% c("group", "term", "contrast")
-                J_mean_mat <- J_mean[, idx, drop = FALSE]
-                J_mean_mat <- as.matrix(J_mean_mat)
-                # J_mean is NULL in bayesian models and where the delta method breaks
-                if (!is.null(vcov) && !is.null(J_mean)) {
-                    V <- colSums(t(J_mean_mat %*% vcov) * t(J_mean_mat))
-                    tmp <- J_mean[, intersect(colnames(J_mean), c("group", "term", "contrast")), drop = FALSE]
-                    if (!"contrast" %in% colnames(tmp)) {
-                        tmp$contrast <- ""
-                    }
-                    tmp$type <- predt
-                    tmp$std.error <- sqrt(V)
-                    se_mean_list <- c(se_mean_list, list(tmp))
-                }
-            }
         }
     }
 
     # could have different columns, so `rbind` won't do
     out <- bind_rows(mfx_list)
     row.names(out) <- NULL
+
+    J <- do.call("rbind", J_list) # bind_rows does not work for matrices
+    J_mean <- bind_rows(J_mean_list) # bind_rows need because some have contrast col
+
+    # empty contrasts equal "". important for merging in `tidy()`
+    if ("contrast" %in% colnames(J_mean)) {
+        J_mean$contrast <- ifelse(is.na(J_mean$contrast), "", J_mean$contrast)
+    }
+
+    # standard error at mean gradient
+    # J_mean is NULL in bayesian models and where the delta method breaks
+    if (!is.null(J_mean) && !is.null(vcov)) {
+        idx <- !colnames(J_mean) %in% c("group", "term", "contrast")
+        tmp <- J_mean[, !idx, drop = FALSE]
+        J_mean_mat <- as.matrix(J_mean[, idx, drop = FALSE])
+        # converting to data.frame can sometimes break colnames
+        colnames(J_mean_mat) <- colnames(J)
+        # aggressive check. probably needs to be relaxed.
+        if (any(colnames(J_mean_mat) != colnames(vcov))) {
+            browser()
+            tmp <- NULL
+            warning("The variance covariance matrix and the Jacobian do not match. `marginaleffects` is unable to compute standard errors using the delta method.")
+        } else {
+            V <- colSums(t(J_mean_mat %*% vcov) * t(J_mean_mat))
+            tmp$std.error <- sqrt(V)
+        }
+        se_at_mean_gradient <- tmp
+    } else {
+        se_at_mean_gradient <- NULL
+    }
+
+    # attributes
+    attr(out, "J") <- J
+    attr(out, "J_mean") <- J_mean
+    attr(out, "se_at_mean_gradient") <- se_at_mean_gradient
 
     # bayesian posterior draws
     draws <- do.call("rbind", draws_list)
@@ -83,17 +112,6 @@ get_dydx_and_se <- function(model,
             out[["conf.low"]] <- tmp[1, ]
             out[["conf.high"]] <- tmp[2, ]
         }
-    }
-
-    # standard errors
-    if (!is.null(vcov)) {
-        # group: outcome level
-        # term: variable
-        se <- bind_rows(se_mean_list)
-        if ("group" %in% colnames(se) && all(se$group == "main_marginaleffect")) {
-            se$group <- NULL
-        }
-        attr(out, "se_at_mean_gradient") <- se
     }
 
     return(out)

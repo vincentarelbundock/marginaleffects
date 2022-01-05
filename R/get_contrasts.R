@@ -4,6 +4,7 @@ get_contrasts <- function(model,
                           type = "response",
                           step_size = 1,
                           normalize_dydx = FALSE,
+                          numDeriv_method = NULL, # do not push to ...
                           ...) {
 
     # if `newdata` is a call to `datagrid`, `typical`, or `counterfactual`, insert `model`

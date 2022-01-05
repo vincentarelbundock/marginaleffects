@@ -4,8 +4,9 @@ get_dydx_se <- function(model,
                         variable,
                         newdata,
                         type,
-                        numDeriv_method,
                         ...) {
+
+    numDeriv_method <- "simple"
 
     coefs <- get_coef(model)
 

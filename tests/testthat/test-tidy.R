@@ -3,9 +3,9 @@ mfx <- marginaleffects(mod)
 
 test_that("tidy: minimal", {
     ti <- tidy(mfx)
-    expect_equal(dim(ti), c(2, 9))
+    expect_equal(dim(ti), c(2, 8))
     ti <- tidy(mfx, conf.int = FALSE)
-    expect_equal(dim(ti), c(2, 7))
+    expect_equal(dim(ti), c(2, 6))
     ti1 <- tidy(mfx, conf.level = .90)
     ti2 <- tidy(mfx, conf.level = .99)
     expect_true(all(ti1$conf.low > ti2$conf.low))
@@ -32,7 +32,7 @@ test_that("tidy: with and without contrasts", {
 
     # numeric only
     x <- tidy(marginaleffects(lm(mpg ~ hp, tmp)))
-    expect_equal(dim(x), c(1, 9))
+    expect_equal(dim(x), c(1, 8))
 
     # logical only
     model <- lm(mpg ~ am, tmp)

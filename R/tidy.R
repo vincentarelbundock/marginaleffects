@@ -53,6 +53,10 @@ tidy.marginaleffects <- function(x,
 
         se <- attr(x, "se_at_mean_gradient")
         if (!is.null(se)) {
+            if ("group" %in% colnames(se) && 
+                all(se$group == "main_marginaleffect")) {
+                se$group <- NULL
+            }
             dydx <- merge(dydx, se, all.x = TRUE)
         }
         colnames(dydx)[match("dydx", colnames(dydx))] <- "estimate"
