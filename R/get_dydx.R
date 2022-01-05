@@ -2,19 +2,9 @@ get_dydx <- function(model,
                      variable,
                      newdata,
                      type,
-                     numDeriv_method,
                      ...) {
 
-    # if there are no categorical variables in `newdata`, check the terms to
-    # find transformation and warn accordingly.
-    categorical_variables <- find_categorical(newdata)
-    if (length(categorical_variables) == 0) {
-        termlabs <- try(attr(stats::terms(model), "term.labels"), silent = TRUE)
-        termlabs <- try(any(grepl("^factor\\(|^as.factor\\(|^as.logical\\(", termlabs)), silent = TRUE)
-        if (isTRUE(termlabs)) {
-            warning("When using `marginaleffects`, it is safer to convert variables to factors or logicals in the dataset *before* fitting the model, rather than by wrapping terms in `factor()` or `as.logical() in the model formula.")
-        }
-    }
+    numDeriv_method <- getOption("marginaleffects_numDeriv_method", default = "simple")
 
 
     if (variable %in% find_categorical(newdata) || isTRUE(attr(newdata[[variable]], "factor"))) {
@@ -27,7 +17,7 @@ get_dydx <- function(model,
 
     out <- dydx_fun(model = model,
                     newdata = newdata,
-                    v = variable,
+                    variable = variable,
                     type = type,
                     numDeriv_method = numDeriv_method,
                     normalize_dydx = TRUE,
@@ -46,6 +36,9 @@ get_dydx_continuous <- function(model,
                                 newdata = insight::get_data(model),
                                 type = "response",
                                 numDeriv_method = "simple",
+                                normalize_dydx = NULL, # do not push to ...
+                                vcov = NULL, # not not push to ...
+                                step_size = NULL, # not not push to ...
                                 ...) {
 
     # we need to loop over group names because the input and output of grad()
@@ -59,10 +52,13 @@ get_dydx_continuous <- function(model,
         newdata_tmp <- newdata
         inner <- function(x) {
             newdata_tmp[[variable]] <- x
+
+            # some predict methods raise warnings on unused arguments
             tmp <- get_predict(model = model,
                                newdata = newdata_tmp,
                                type = type,
                                ...)
+
             if (gn != "main_marginaleffect") {
                 tmp$predicted[tmp$group == gn]
             } else {
@@ -80,7 +76,6 @@ get_dydx_continuous <- function(model,
     out <- bind_rows(out_list)
     return(out)
 }
-
 
 get_dydx_via_contrasts <- function(model,
                                    newdata,
@@ -100,3 +95,4 @@ get_dydx_via_contrasts <- function(model,
                   ...)
     return(out)
 }
+

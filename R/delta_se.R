@@ -1,13 +1,25 @@
 delta_se_marginalmeans <- function(model,
-                                   variables = NULL,
-                                   variables_grid = NULL,
-                                   type = "response",
+                                   variables,
+                                   variables_grid,
+                                   type,
                                    ...) {
     get_marginalmeans(model = model,
                       variables = variables,
                       variables_grid = variables_grid,
                       type = type,
                       ...)$marginalmean
+}
+
+delta_se_marginaleffects <- function(model,
+                                     variable,
+                                     newdata,
+                                     type,
+                                     ...) {
+    get_dydx(model = model,
+             variable = variable,
+             newdata = newdata,
+             type = type,
+             ...)$dydx
 }
 
 #' @return vector of standard errors
@@ -28,7 +40,7 @@ delta_se <- function(model,
     # output: gradient
     inner <- function(x) {
         model_tmp <- set_coef(model, stats::setNames(x, names(coefs)))
-        g <- FUN(model = model_tmp, type = type, vcov = vcov, ...)
+        g <- FUN(model = model_tmp, type = type, ...)
         return(g)
     }
 
@@ -49,6 +61,7 @@ delta_se <- function(model,
     # computing the full matrix is memory-expensive, and we only need the diagonal
     # algebra trick: https://stackoverflow.com/a/42569902/342331
     se <- sqrt(colSums(t(J %*% vcov) * t(J)))
+
 
     attr(se, "J") <- J
     attr(se, "J_mean") <- J_mean

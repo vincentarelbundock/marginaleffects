@@ -20,13 +20,14 @@ test_that("factor on LHS and RHS at the same time.", {
 
 test_that("warn when there are no factors in newdata but there is a factor tranform in the term labels", {
     skip_if_not_installed("estimatr")
-    model <- estimatr::lm_robust(carb ~ wt + factor(cyl),
-                                 se_type = "stata",
-                                 data = mtcars)
-    expect_error(suppressWarnings(marginaleffects(model, newdata = mtcars)))
-    expect_warning(expect_warning(expect_error(marginaleffects(model, newdata = mtcars))))
+    requiet("estimatr")
+    model <- lm_robust(carb ~ wt + factor(cyl), se_type = "stata", data = mtcars)
+    k <- marginaleffects(model)
+    expect_warning(
+        expect_error(marginaleffects(model, newdata = mtcars),
+                     regexp = "new levels"),
+        regexp = "before fitting")
 })
-
 
 test_that("bugs stay dead: factor in survreg", {
     skip("https://github.com/vincentarelbundock/marginaleffects/issues/160")
