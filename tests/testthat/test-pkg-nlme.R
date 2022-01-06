@@ -23,8 +23,8 @@ test_that("predictions: nlme::gls: no validity", {
                  data = Ovary, correlation = corAR1(form = ~ 1 | Mare))
     pred1 <- predictions(model)
     pred2 <- predictions(model, newdata = head(Ovary))
-    expect_predictions(pred1, n_row = nrow(Ovary), se = FALSE)
-    expect_predictions(pred2, n_row = 6, se = FALSE)
+    expect_predictions(pred1, n_row = nrow(Ovary))
+    expect_predictions(pred2, n_row = 6)
 })
 
 test_that("glm: marginalmeans vs emmeans", {

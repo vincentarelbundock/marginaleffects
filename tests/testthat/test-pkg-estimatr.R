@@ -48,8 +48,8 @@ test_that("iv_robust: predictions: no validity", {
     model <- iv_robust(Q ~ P + D | D + F + A, 
                        se_type = "stata",
                        data = Kmenta)
-    expect_predictions(predictions(model), se = FALSE, n_row = nrow(Kmenta))
-    expect_predictions(predictions(model, newdata = head(Kmenta)), se = FALSE, n_row = 6)
+    expect_predictions(predictions(model), n_row = nrow(Kmenta))
+    expect_predictions(predictions(model, newdata = head(Kmenta)), n_row = 6)
 })
 
 test_that("lm_robust: marginalmeans predictions: no validity", {
@@ -59,7 +59,7 @@ test_that("lm_robust: marginalmeans predictions: no validity", {
     model <- lm_robust(carb ~ wt + am + cyl,
                        se_type = "stata",
                        data = tmp)
-    expect_predictions(predictions(model), se = FALSE, n_row = nrow(tmp))
-    expect_predictions(predictions(model, newdata = head(tmp)), se = FALSE, n_row = 6)
+    expect_predictions(predictions(model), n_row = nrow(tmp))
+    expect_predictions(predictions(model, newdata = head(tmp)), n_row = 6)
     expect_marginalmeans(marginalmeans(model))
 })

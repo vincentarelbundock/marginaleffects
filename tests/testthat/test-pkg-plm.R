@@ -76,6 +76,6 @@ test_that("predictions: pooling no validity", {
     pool <- plm(inv ~ value * capital, data = Grunfeld, model = "pooling")
     pred1 <- predictions(pool)
     pred2 <- predictions(pool, newdata = head(Grunfeld))
-    expect_predictions(pred1, n_row = nrow(Grunfeld), se = FALSE)
-    expect_predictions(pred2, n_row = 6, se = FALSE)
+    expect_predictions(pred1, n_row = nrow(Grunfeld))
+    expect_predictions(pred2, n_row = 6)
 })

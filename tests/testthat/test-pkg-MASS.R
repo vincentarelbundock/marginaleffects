@@ -124,22 +124,22 @@ test_that("polr: predictions: no validity", {
     skip_if_not_installed("insight", minimum_version = "0.14.4.1")
     mod <- MASS::polr(factor(gear) ~ mpg + factor(cyl), data = mtcars)
     pred <- predictions(mod, type = "probs")
-    expect_predictions(pred, se = FALSE)
+    expect_predictions(pred)
 })
 
 test_that("glm.nb: predictions: no validity", {
     model <- suppressWarnings(MASS::glm.nb(carb ~ wt + factor(cyl), data = mtcars))
     pred <- predictions(model)
-    expect_predictions(pred, se = TRUE)
+    expect_predictions(pred)
 })
 
 test_that("rlm: predictions: no validity", {
     skip_if_not_installed("insight", minimum_version = "0.14.4.1")
     model <- MASS::rlm(mpg ~ hp + drat, mtcars)
     pred <- predictions(model)
-    expect_predictions(pred, se = TRUE, n_row = nrow(mtcars))
+    expect_predictions(pred, n_row = nrow(mtcars))
     pred <- predictions(model, newdata = head(mtcars))
-    expect_predictions(pred, se = TRUE, n_row = 6)
+    expect_predictions(pred, n_row = 6)
 })
 
 
@@ -185,7 +185,7 @@ test_that("glmmPQL: no validity", {
                    data = tmp)
     expect_marginaleffects(mod, type = "link", n_unique = 1)
     expect_marginaleffects(mod, type = "response")
-    expect_predictions(predictions(mod), se = FALSE)
+    expect_predictions(predictions(mod))
 
     # emtrends
     em <- emmeans::emtrends(mod, ~week_bin, "week_bin", at = list(week_bin = 0))

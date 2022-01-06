@@ -103,6 +103,21 @@ predictions <- function(model,
             tmp <- data.frame(newdata$rowid_internal, predt, tmp)
             colnames(tmp) <- c("rowid_internal", "type", "predicted")
         }
+
+        # try to extract standard errors via the delta method if necessary
+        if (is.numeric(conf.level) && !any(c("std.error", "conf.low") %in% colnames(tmp))) {
+            fun <- function(...) get_predict(...)[["predicted"]]
+            se <- standard_errors_delta(model,
+                                        newdata = newdata,
+                                        vcov = get_vcov(model),
+                                        type = predt,
+                                        FUN = fun,
+                                        ...)
+            if (is.numeric(se) && length(se) == nrow(tmp)) {
+                tmp[["std.error"]] <- se
+            }
+        }
+
         out_list[[predt]] <- tmp
         draws <- attr(tmp, "posterior_draws")
         draws_list[[predt]] <- draws

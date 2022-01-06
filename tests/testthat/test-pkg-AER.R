@@ -43,5 +43,5 @@ test_that("predictions: tobit: no validity", {
     affairs ~ age + yearsmarried + religiousness + occupation + rating, 
     data = Affairs)
   pred <- predictions(mod)
-  expect_predictions(pred, n_row = nrow(Affairs), se = FALSE)
+  expect_predictions(pred, n_row = nrow(Affairs))
 })

@@ -44,8 +44,8 @@ test_that("predictions: crch gaussian: no validity", {
     model <- crch(sqrt(rain) ~ sqrtensmean + sqrtenssd, data = dat, dist = "gaussian")
     pred1 <- predictions(model)
     pred2 <- predictions(model, newdata = head(dat))
-    expect_predictions(pred1, n_row = nrow(dat), se = FALSE)
-    expect_predictions(pred2, n_row = 6, se = FALSE)
+    expect_predictions(pred1, n_row = nrow(dat))
+    expect_predictions(pred2, n_row = 6)
 })
 
 

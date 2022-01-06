@@ -56,8 +56,8 @@ test_that("fixest::feols: predictions", {
     model <- feols(Euros ~ dist_km | Destination + Origin, data = trade)
     pred1 <- predictions(model)
     pred2 <- predictions(model, newdata = head(trade))
-    expect_predictions(pred1, se = FALSE)
-    expect_predictions(pred2, n_row = 6, se = FALSE)
+    expect_predictions(pred1)
+    expect_predictions(pred2, n_row = 6)
 })
 
 test_that("numeric cluster variable raises warning", {
