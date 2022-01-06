@@ -176,6 +176,20 @@ test_that("rlm: marginalmeans: vs. emmeans", {
 })
 
 
+test_that("polr: marginalmeans vs. emmeans", {
+    skip("works interactively")
+    tmp <- mtcars
+    tmp$vs <- as.factor(tmp$vs)
+    tmp$am <- as.logical(tmp$am)
+    mod <- suppressWarnings(MASS::polr(factor(gear) ~ vs + am, data = tmp))
+    # TODO: emmeans seems broken at the moment
+    # em <- emmeans(mod, specs = "am", transform = "response")
+    # em <- tidy(em)
+    mm <- marginalmeans(mod, variables = "am", type = "probs")
+    expect_equal(nrow(mm), 6)
+})
+
+
 # glmmPQL
 
 test_that("glmmPQL: no validity", {
