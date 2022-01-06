@@ -3,7 +3,7 @@ requiet("AER")
 requiet("emmeans")
 requiet("broom")
 
-test_that("marginaleffects: tobit: no validity", {
+test_that("tobit: marginaleffects vs. Stata", {
   data("Affairs", package = "AER")
   stata <- readRDS(test_path("stata/stata.rds"))$aer_tobit
   mod1 <- AER::tobit(
@@ -22,6 +22,23 @@ test_that("marginaleffects: tobit: no validity", {
   expect_equal(mfx$estimate, mfx$dydxstata, tolerance = .1)
   expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = .1)
 })
+
+
+test_that("tobit: marginalmeans vs. emmeans", {
+  skip("works interactively")
+  data("Affairs", package = "AER")
+  tmp <- Affairs
+  tmp$religiousness <- as.logical(tmp$religiousness)
+  mod <- AER::tobit(
+    affairs ~ age + yearsmarried + religiousness + occupation + rating,
+    data = tmp)
+  em <- emmeans(mod, specs = "religiousness")
+  em <- tidy(em)
+  mm <- tidy(marginalmeans(mod, variables = "religiousness"))
+  expect_equal(mm$estimate, em$estimate)
+  expect_equal(mm$std.error, em$std.error)
+})
+
 
 test_that("marginaleffects vs. emtrends", {
   data("Affairs", package = "AER")
