@@ -35,8 +35,8 @@ test_that("predictions: no validity", {
     mod <- ivreg::ivreg(Q ~ P * D | D + F + A, data = Kmenta)
     pred1 <- predictions(mod)
     pred2 <- predictions(mod, newdata = head(Kmenta))
-    expect_predictions(pred1, n_row = nrow(Kmenta), se = FALSE)
-    expect_predictions(pred2, n_row = 6, se = FALSE)
+    expect_predictions(pred1, n_row = nrow(Kmenta))
+    expect_predictions(pred2, n_row = 6)
 })
 
 test_that("marginalmeans: no validity", {

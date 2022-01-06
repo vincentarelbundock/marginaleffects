@@ -9,7 +9,7 @@ requiet("broom")
 test_that("marginaleffects: vs. margins vs. emmeans", {
     set.seed(1024)
     data("GasolineYield", package = "betareg")
-    tmp <- GasolineYield 
+    tmp <- GasolineYield
     tmp$batch <- factor(tmp$batch)
     mod <- betareg::betareg(yield ~ batch + temp, data = tmp)
     suppressWarnings({
@@ -41,9 +41,9 @@ test_that("predictions: no validity", {
     data("GasolineYield", package = "betareg")
     mod <- betareg::betareg(yield ~ batch + temp, data = GasolineYield)
     pred <- predictions(mod)
-    expect_predictions(pred, n_row = nrow(GasolineYield), n_col = 5, se = FALSE)
+    expect_predictions(pred, n_row = nrow(GasolineYield))
     pred <- predictions(mod, newdata = datagrid(batch = 1:3, temp = c(300, 350)))
-    expect_predictions(pred, n_row = 6, n_col = 4, se = FALSE)
+    expect_predictions(pred, n_row = 6)
  })
 
 test_that("marginalmeans: vs. emmeans", {
@@ -51,8 +51,8 @@ test_that("marginalmeans: vs. emmeans", {
     set.seed(1024)
     data("GasolineYield", package = "betareg")
     mod <- betareg::betareg(yield ~ batch + temp, data = GasolineYield)
-    # link
-    mm <- marginalmeans(mod, type = "link")
+
+    mm <- marginalmeans(mod)
     expect_marginalmeans(mm, n_row = 10)
     mm <- tidy(mm)
     em <- broom::tidy(emmeans::emmeans(mod, "batch"))

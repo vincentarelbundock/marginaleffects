@@ -94,13 +94,13 @@ test_that("predictions with multinomial outcome", {
     # small predictions
     pred1 <- predictions(m1, type = "probs")
     pred2 <- predictions(m1, type = "probs", variables = "x")
-    expect_predictions(pred1, n_row = nrow(dat) * 3, se = FALSE)
-    expect_predictions(pred2, n_row = 9, se = FALSE)
+    expect_predictions(pred1, n_row = nrow(dat) * 3)
+    expect_predictions(pred2, n_row = 9)
 
     # large predictions
     idx <- 3:7
     pred <- predictions(m2, type = "probs", variables = colnames(dat)[idx])
-    expect_predictions(pred, n_row = 729, se = FALSE)
+    expect_predictions(pred, n_row = 729)
 
     # massive prediction raises error
     expect_error(predictions(m2, type = "probs", variables = colnames(dat)[3:ncol(dat)]),

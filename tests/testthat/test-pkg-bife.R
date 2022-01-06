@@ -16,5 +16,5 @@ test_that("predictions: bife: no validity", {
     dataset <- bife::psid
     mod <- bife(LFP ~ AGE + I(INCH / 1000) + KID1 + KID2 + KID3 | ID, data = dataset)
     pred <- predictions(mod)
-    expect_predictions(pred, n_row = nrow(insight::get_data(mod)), se = FALSE)
+    expect_predictions(pred, n_row = nrow(insight::get_data(mod)))
 })

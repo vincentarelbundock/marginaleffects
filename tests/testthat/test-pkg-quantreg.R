@@ -25,8 +25,8 @@ test_that("predictions: rq: no validity", {
     model <- quantreg::rq(mpg ~ hp * wt + factor(cyl), data = mtcars)
     pred1 <- predictions(model)
     pred2 <- suppressWarnings(predictions(model, newdata = head(mtcars)))
-    expect_predictions(pred1, n_row = nrow(mtcars), se = FALSE)
-    expect_predictions(pred2, n_row = 6, se = FALSE)
+    expect_predictions(pred1, n_row = nrow(mtcars))
+    expect_predictions(pred2, n_row = 6)
 })
 
 test_that("marginalmeans: rq: no validity", {

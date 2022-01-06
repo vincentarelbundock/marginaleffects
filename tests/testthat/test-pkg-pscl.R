@@ -2,6 +2,7 @@ skip_if_not_installed("pscl")
 requiet("pscl")
 requiet("emmeans")
 requiet("broom")
+requiet("margins")
 
 
 ### marginaleffects

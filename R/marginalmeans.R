@@ -156,7 +156,12 @@ get_marginalmeans <- function(model,
                               ...) {
 
     # predictions for each cell of all categorical data, but not the response
-    pred <- predictions(model = model, variables = variables_grid, type = type)
+    pred <- predictions(
+        model = model, 
+        variables = variables_grid, 
+        type = type, 
+        conf.level = NULL,
+        ...)
 
     # marginal means
     mm <- list()
