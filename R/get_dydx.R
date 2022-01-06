@@ -1,11 +1,10 @@
+#' Compute marginal effect for of single regressor, for a single prediction type
+#' @noRd
 get_dydx <- function(model,
                      variable,
                      newdata,
                      type,
                      ...) {
-
-    numDeriv_method <- getOption("marginaleffects_numDeriv_method", default = "simple")
-
 
     if (variable %in% find_categorical(newdata) || isTRUE(attr(newdata[[variable]], "factor"))) {
         dydx_fun <- get_contrasts
@@ -19,7 +18,6 @@ get_dydx <- function(model,
                     newdata = newdata,
                     variable = variable,
                     type = type,
-                    numDeriv_method = numDeriv_method,
                     normalize_dydx = TRUE,
                     ...)
 
@@ -31,14 +29,16 @@ get_dydx <- function(model,
     return(out)
 }
 
+
+#' Compute marginal effect for a continuous regressor
+#' @noRd
 get_dydx_continuous <- function(model,
                                 variable,
                                 newdata = insight::get_data(model),
                                 type = "response",
-                                numDeriv_method = "simple",
                                 normalize_dydx = NULL, # do not push to ...
-                                vcov = NULL, # not not push to ...
-                                step_size = NULL, # not not push to ...
+                                vcov = NULL, # do not push to ...
+                                step_size = NULL, # do not push to ...
                                 ...) {
 
     # we need to loop over group names because the input and output of grad()
@@ -46,6 +46,8 @@ get_dydx_continuous <- function(model,
     # grouped/categorical outcomes, but VAB cannot currently think of a good
     # way to avoid this.
     group_names <- get_group_names(model, type = type)
+
+    numDeriv_method <- sanitize_numDeriv_method()
 
     out_list <- list()
     for (gn in group_names) {
@@ -77,17 +79,21 @@ get_dydx_continuous <- function(model,
     return(out)
 }
 
+
+#' In some cases (e.g., Bayesian models) the automatic differentiation approach
+#' with `numDeriv` does not apply straightforwardly. We use the `get_contrasts`
+#' function with a small step to get a very small contrast. Then normalize by
+#' dividing by the step via the `normalize_dydx` argument.
+#' @noRd
 get_dydx_via_contrasts <- function(model,
                                    newdata,
                                    variable,
-                                   group_name = NULL,
                                    type = "response",
                                    normalize_dydx = TRUE,
                                    ...) {
     out <- get_contrasts(model = model,
                   newdata = newdata,
                   variable = variable,
-                  group_name = group_name,
                   type = type,
                   step_size = 1e-5,
                   normalize_dydx = normalize_dydx,

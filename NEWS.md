@@ -22,7 +22,7 @@ New function:
 
 `marginalmeans`:
 
-* Standard errors are now computed using the delta method fo r
+* Standard errors are now computed using the delta method for
 
 Documentation:
 

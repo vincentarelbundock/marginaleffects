@@ -20,16 +20,23 @@ assert_dependency <- checkmate::makeAssertionFunction(check_dependency)
 # }
 
 
-sanity_return_data <- function(return_data) {
+sanitize_return_data <- function() {
+    return_data <- getOption("marginaleffects_return_data", default = TRUE)
     checkmate::assert_flag(return_data)
     return(return_data)
 }
 
 
+sanitize_numDeriv_method <- function() {
+    numDeriv_method <- getOption("marginaleffects_numDeriv_method", default = "simple")
+    checkmate::assert_choice(numDeriv_method, choices = c("simple", "complex", "Richardson"))
+    return(numDeriv_method)
+}
+
 
 sanity_newdata <- function(model, newdata) {
-    checkmate::check_data_frame(newdata, 
-                                null.ok = TRUE, 
+    checkmate::check_data_frame(newdata,
+                                null.ok = TRUE,
                                 any.missing = FALSE)
     if (is.null(newdata)) {
         newdata <- insight::get_data(model)
@@ -99,7 +106,7 @@ sanity_variables <- function(model, newdata, variables) {
 }
 
 
-sanity_vcov <- function(model, vcov) {
+sanitize_vcov <- function(model, vcov) {
 
     # lme4 produces a distinct matrix type
     if (inherits(vcov, "dpoMatrix")) {
@@ -127,8 +134,22 @@ sanity_vcov <- function(model, vcov) {
         vcov <- as.matrix(vcov)
     }
 
-    # TODO: Test if the names of the matrix match the names of the coefficients.
-    # This could be dangerous, so leaving as a Github issue until I have time for serious work.
+    # align vcov and coefs
+    if (is.matrix(vcov)) {
+        coefs <- get_coef(model)
+        if (anyDuplicated(names(vcov)) == 0) {
+            # 1) Check above is needed for `AER::tobit` and others where `vcov`
+            # includes Log(scale) but `coef` does not Dangerous for `oridinal::clm`
+            # and others where there are important duplicate column names in
+            # `vcov`, and selecting with [,] repeats the first instance.
+
+            # 2) Sometimes vcov has more columns than coefs (e.g., betareg)
+            if (all(names(coefs) %in% colnames(vcov))) {
+                vcov <- vcov[names(coefs), names(coefs), drop = FALSE]
+            }
+        }
+    }
+
     if (isFALSE(vcov)) {
         vcov <- NULL
     }

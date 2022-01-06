@@ -121,13 +121,13 @@ marginalmeans <- function(model,
     out <- as.data.frame(mm)
 
     # standard errors via delta method
-    se <- delta_se(model,
-                   vcov = vcov,
-                   type = type,
-                   FUN = delta_se_marginalmeans,
-                   index = NULL,
-                   variables = variables,
-                   variables_grid = variables_grid)
+    se <- standard_errors_delta(model,
+                                vcov = vcov,
+                                type = type,
+                                FUN = standard_errors_delta_marginalmeans,
+                                index = NULL,
+                                variables = variables,
+                                variables_grid = variables_grid)
 
     # get rid of attributes in column
     out[["std.error"]] <- as.numeric(se)

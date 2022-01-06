@@ -49,17 +49,6 @@ marginaleffects <- function(model,
                             type = "response",
                             ...) {
 
-
-    # should I expose this to users? For now, keep the UI simple
-    # @param numDeriv_method One of "simple", "Richardson", or "complex",
-    #   indicating the method to use for the approximation. See
-    #   [numDeriv::grad()] for details.
-    # @param return_data boolean If `TRUE`, the original data used to fit the
-    #   model is attached to the output. `FALSE` will objects which take up less
-    #   space in memory.
-    numDeriv_method <- "simple"
-    return_data <- TRUE
-
     # if `newdata` is a call to `datagrid`, `typical` or `counterfactual`, insert `model`
     scall <- substitute(newdata)
     if (is.call(scall) && as.character(scall)[1] %in% c("datagrid", "typical", "counterfactual")) {
@@ -78,36 +67,110 @@ marginaleffects <- function(model,
                           type = type,
                           return_data = return_data,
                           ...)
+
     newdata <- sanity_newdata(model, newdata)
     variables <- sanity_variables(model, newdata, variables)
-    vcov <- sanity_vcov(model, vcov)
-    return_data <- sanity_return_data(return_data)
+    vcov <- sanitize_vcov(model, vcov)
 
     # rowid is required for later merge
     if (!"rowid" %in% colnames(newdata)) {
         newdata$rowid <- 1:nrow(newdata)
     }
 
-    # variables is a list, get_dydx_and_se() needs a vector
+    # variables is a list but we need a vector
     variables_vec <- unlist(variables[names(variables) %in% c("conditional")])
 
-    # compute marginal effects and standard errors
-    out <- get_dydx_and_se(
-        model = model,
-        newdata = newdata,
-        variables = variables_vec,
-        vcov = vcov,
-        type = type,
-        numDeriv_method = numDeriv_method,
-        ...)
+    mfx_list <- list()
 
-    # backup attributes
-    attributes_backup <- list()
-    for (n in names(attributes(out))) {
-        attributes_backup[[n]] <- attr(out, n)
+    # compute marginal effects and standard errors
+    mfx_list <- list()
+    se_mean_list <- list()
+    draws_list <- list()
+    J_list <- list()
+    J_mean_list <- list()
+    for (predt in type) {
+        for (v in variables_vec) {
+            mfx <- get_dydx(model = model,
+                            variable = v,
+                            newdata = newdata,
+                            type = predt,
+                            ...)
+            mfx$type <- predt
+
+            # bayesian draws
+            if (!is.null(attr(mfx, "posterior_draws"))) {
+                draws_list <- c(draws_list, list(attr(mfx, "posterior_draws")))
+                J <- J_mean <- NULL
+            # standard errors via delta method
+            } else if (!is.null(vcov)) {
+                idx <- intersect(colnames(mfx), c("group", "term", "contrast"))
+                idx <- mfx[, idx, drop = FALSE]
+                se <- standard_errors_delta(model,
+                                            vcov = vcov,
+                                            type = predt,
+                                            FUN = standard_errors_delta_marginaleffects,
+                                            newdata = newdata,
+                                            index = idx,
+                                            variable = v)
+                mfx$std.error <- as.numeric(se)
+                J <- attr(se, "J")
+                J_mean <- attr(se, "J_mean")
+            } else {
+                J <- J_mean <- NULL
+            }
+            mfx_list <- c(mfx_list, list(mfx))
+            J_list <- c(J_list, list(J))
+            J_mean_list <- c(J_mean_list, list(J_mean))
+
+        }
+    }
+
+    # could have different columns, so `rbind` won't do
+    out <- bind_rows(mfx_list)
+
+    J <- do.call("rbind", J_list) # bind_rows does not work for matrices
+    J_mean <- bind_rows(J_mean_list) # bind_rows need because some have contrast col
+
+    # empty contrasts equal "". important for merging in `tidy()`
+    if ("contrast" %in% colnames(J_mean)) {
+        J_mean$contrast <- ifelse(is.na(J_mean$contrast), "", J_mean$contrast)
+    }
+
+    # standard error at mean gradient (this is what Stata and R's `margins` compute)
+    # J_mean is NULL in bayesian models and where the delta method breaks
+    if (!is.null(J_mean) && !is.null(vcov)) {
+        idx <- !colnames(J_mean) %in% c("group", "term", "contrast")
+        tmp <- J_mean[, !idx, drop = FALSE]
+        J_mean_mat <- as.matrix(J_mean[, idx, drop = FALSE])
+        # converting to data.frame can sometimes break colnames
+        colnames(J_mean_mat) <- colnames(J)
+        # aggressive check. probably needs to be relaxed.
+        if (any(colnames(J_mean_mat) != colnames(vcov))) {
+            tmp <- NULL
+            warning("The variance covariance matrix and the Jacobian do not match. `marginaleffects` is unable to compute standard errors using the delta method.")
+        } else {
+            V <- colSums(t(J_mean_mat %*% vcov) * t(J_mean_mat))
+            tmp$std.error <- sqrt(V)
+        }
+        se_at_mean_gradient <- tmp
+    } else {
+        se_at_mean_gradient <- NULL
+    }
+
+    # bayesian posterior draws
+    draws <- do.call("rbind", draws_list)
+    if (!is.null(draws)) {
+        if (!"conf.low" %in% colnames(out)) {
+            tmp <- apply(draws, 1, get_hdi)
+            out[["std.error"]] <- NULL
+            out[["dydx"]] <- apply(draws, 1, stats::median)
+            out[["conf.low"]] <- tmp[1, ]
+            out[["conf.high"]] <- tmp[2, ]
+        }
     }
 
     # merge newdata if requested and restore attributes
+    return_data <- sanitize_return_data()
     if (isTRUE(return_data)) {
         out <- left_join(out, newdata, by = "rowid")
     }
@@ -139,17 +202,14 @@ marginaleffects <- function(model,
     out <- as.data.frame(out)
 
     class(out) <- c("marginaleffects", class(out))
+    attr(out, "posterior_draws") <- draws
     attr(out, "model") <- model
     attr(out, "type") <- type
-    attr(out, "numDeriv_method") <- numDeriv_method
     attr(out, "model_type") <- class(model)[1]
     attr(out, "variables") <- variables
-
-    for (n in names(attributes_backup)) {
-        if (!n %in% names(attributes(out))) {
-            attr(out, n) <- attributes_backup[[n]]
-        }
-    }
+    attr(out, "J") <- J
+    attr(out, "J_mean") <- J_mean
+    attr(out, "se_at_mean_gradient") <- se_at_mean_gradient
 
     return(out)
 }
