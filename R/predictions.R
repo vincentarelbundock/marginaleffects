@@ -14,7 +14,14 @@
 #' and less than 1. Defaults to 0.95, which corresponds to a 95 percent
 #' confidence interval.
 #' @param ... Additional arguments are pushed forward to `predict()`.
-#' @return A `data.frame` with a `predicted` column with predictions.
+#' @return A `data.frame` with one row per observation and several columns:
+#' * `rowid`: row number of the `newdata` data frame
+#' * `type`: prediction type, as defined by the `type` argument
+#' * `group`: (optional) value of the grouped outcome (e.g., categorical outcome models)
+#' * `predicted`: predicted outcome
+#' * `std.error`: standard errors computed by the `insight::get_predicted` function or, if unavailable, via `marginaleffects` delta method functionality.
+#' * `conf.low`: lower bound of the confidence or highest density interval (for bayesian models)
+#' * `conf.high`: upper bound of the confidence or highest density interval (for bayesian models)
 #' @examples
 #' # Predicted outcomes for every row of the original dataset
 #' mod <- lm(mpg ~ hp + factor(cyl), data = mtcars)
