@@ -45,6 +45,7 @@ get_vcov.polr <- function(model, ...) {
 }
 
 
+#' @include get_predict.R
 #' @rdname get_predict
 #' @export
 get_predict.polr <- function(model,

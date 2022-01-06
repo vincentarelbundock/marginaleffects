@@ -79,7 +79,6 @@ multinom,probs,expectation,TRUE,TRUE
 multinom,class,classification,FALSE,TRUE
 negbin,link,link,TRUE,TRUE
 negbin,response,expectation,TRUE,TRUE
-polr,link,link,TRUE,TRUE
 polr,probs,expectation,TRUE,TRUE
 rlm,response,expectation,TRUE,TRUE
 speedlm,response,expectation,TRUE,TRUE

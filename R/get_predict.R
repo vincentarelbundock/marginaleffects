@@ -102,6 +102,9 @@ get_predict.default <- function(model,
         pred <- do.call("f", args)
 
         out <- data.frame(pred)
+
+        colnames(out)[colnames(out) == "Row"] <- "rowid"
+        colnames(out)[colnames(out) == "Response"] <- "group"
     }
 
     return(out)

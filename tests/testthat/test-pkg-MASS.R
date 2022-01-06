@@ -125,6 +125,8 @@ test_that("polr: predictions: no validity", {
     mod <- MASS::polr(factor(gear) ~ mpg + factor(cyl), data = mtcars)
     pred <- predictions(mod, type = "probs")
     expect_predictions(pred)
+    # bugs stay dead
+    expect_true(all(c("rowid", "type", "predicted", "std.error", "group") %in% colnames(pred)))
 })
 
 test_that("glm.nb: predictions: no validity", {

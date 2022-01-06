@@ -5,7 +5,7 @@
 \alias{type_dictionary}
 \title{type dictionary}
 \format{
-An object of class \code{data.frame} with 89 rows and 5 columns.
+An object of class \code{data.frame} with 88 rows and 5 columns.
 }
 \usage{
 type_dictionary
