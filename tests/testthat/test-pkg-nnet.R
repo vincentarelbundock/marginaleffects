@@ -1,5 +1,3 @@
-skip_if(getRversion() == "3.6.3") 
-skip_if_not_installed("nnet")
 requiet("nnet")
 
 test_that("warning: standard error mismatch", {

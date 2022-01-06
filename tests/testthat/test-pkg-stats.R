@@ -116,6 +116,12 @@ test_that('glm: marginalmeans vs. emmeans', {
     expect_equal(as.character(mm$value), em$MainCity)
     expect_equal(mm$estimate, em$estimate)
     expect_equal(mm$std.error, em$std.error)
+
+    mm <- tidy(marginalmeans(mod, type = "response", variables = "MainCity"))
+    em <- tidy(emmeans::emmeans(mod, specs = "MainCity", transform = "response"))
+    expect_equal(as.character(mm$value), em$MainCity)
+    expect_equal(mm$estimate, em$prob)
+    expect_equal(mm$std.error, em$std.error, tolerance = .0001)
 })
 
 

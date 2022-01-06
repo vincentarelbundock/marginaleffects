@@ -57,5 +57,5 @@ test_that("marginalmeans: vs. emmeans", {
     mm <- tidy(mm)
     em <- broom::tidy(emmeans::emmeans(mod, "batch"))
     expect_equal(mm$estimate, em$estimate)
-    expect_equal(mm$std.error, em$std.error, tolerance = .1)
+    expect_equal(mm$std.error, em$std.error, tolerance = .01)
 })
