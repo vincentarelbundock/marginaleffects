@@ -9,7 +9,6 @@
 summary.marginaleffects <- function(object, conf.level = 0.95, ...) {
     out <- tidy(object, conf.level = conf.level, ...)
     class(out) <- c("marginaleffects.summary", class(out))
-    attr(out, "numDeriv_method") <- attr(object, "numDeriv_method")
     attr(out, "type") <- attr(object, "type")
     attr(out, "model_type") <- attr(object, "model_type")
     return(out)

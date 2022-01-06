@@ -1,8 +1,8 @@
-delta_se_marginalmeans <- function(model,
-                                   variables,
-                                   variables_grid,
-                                   type,
-                                   ...) {
+standard_errors_delta_marginalmeans <- function(model,
+                                                variables,
+                                                variables_grid,
+                                                type,
+                                                ...) {
     get_marginalmeans(model = model,
                       variables = variables,
                       variables_grid = variables_grid,
@@ -10,11 +10,11 @@ delta_se_marginalmeans <- function(model,
                       ...)$marginalmean
 }
 
-delta_se_marginaleffects <- function(model,
-                                     variable,
-                                     newdata,
-                                     type,
-                                     ...) {
+standard_errors_delta_marginaleffects <- function(model,
+                                                  variable,
+                                                  newdata,
+                                                  type,
+                                                  ...) {
     get_dydx(model = model,
              variable = variable,
              newdata = newdata,
@@ -22,13 +22,20 @@ delta_se_marginaleffects <- function(model,
              ...)$dydx
 }
 
+#' Compute standard errors using the delta method
+#'
+#' @inheritParams marginaleffects
+#' @param FUN a function which accepts a `model` and other inputs and returns a
+#'   vector of estimates (marginal effects, marginal means, etc.)
+#' @param index data.frame over which we aggregate J_mean (matches tidy() output)
 #' @return vector of standard errors
-delta_se <- function(model,
-                     vcov,
-                     type,
-                     FUN,
-                     index = NULL,
-                     ...) {
+#' @noRd
+standard_errors_delta <- function(model,
+                                  vcov,
+                                  type,
+                                  FUN,
+                                  index = NULL,
+                                  ...) {
 
     numDeriv_method = "simple"
 
@@ -55,8 +62,6 @@ delta_se <- function(model,
         J_mean <- NULL
     }
 
-    # Unit-level standard errors are much slower to compute (are they, though?)
-    # In any case, we need them to match Stata and `margins`
     # Var(dydx) = J Var(beta) J'
     # computing the full matrix is memory-expensive, and we only need the diagonal
     # algebra trick: https://stackoverflow.com/a/42569902/342331
