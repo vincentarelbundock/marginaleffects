@@ -132,6 +132,12 @@ marginalmeans <- function(model,
     # get rid of attributes in column
     out[["std.error"]] <- as.numeric(se)
 
+    # column order
+    cols <- c("type", "group", "term", "value", "marginalmean", "std.error", sort(colnames(out)))
+    cols <- unique(cols)
+    cols <- intersect(cols, colnames(out))
+    out <- out[, cols, drop = FALSE]
+
     # attributes
     class(out) <- c("marginalmeans", class(out))
     attr(out, "J") <- attr(se, "J")
@@ -157,20 +163,25 @@ get_marginalmeans <- function(model,
 
     # predictions for each cell of all categorical data, but not the response
     pred <- predictions(
-        model = model, 
-        variables = variables_grid, 
-        type = type, 
+        model = model,
+        variables = variables_grid,
+        type = type,
         conf.level = NULL,
         ...)
 
     # marginal means
     mm <- list()
     for (v in variables) {
-        f <- stats::as.formula(paste("predicted ~", v))
+        lhs <- "predicted ~"
+        rhs <- intersect(colnames(pred), c("group", v))
+        rhs <- paste(rhs, collapse = " + ")
+        f <- stats::as.formula(paste(lhs, rhs))
         tmp <- stats::aggregate(f, data = pred, FUN = mean)
-        tmp$term <- v
-        tmp <- tmp[, c("term", v, "predicted")]
-        colnames(tmp) <- c("term", "value", "marginalmean")
+        cols <- intersect(c("term", "group", v, "predicted"), colnames(tmp))
+        tmp <- tmp[, cols]
+        tmp[["term"]] <- v
+        colnames(tmp)[colnames(tmp) == v] <- "value"
+        colnames(tmp)[colnames(tmp) == "predicted"] <- "marginalmean"
         mm[[v]] <- tmp
     }
 
