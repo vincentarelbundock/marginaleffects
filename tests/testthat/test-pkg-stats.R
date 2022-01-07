@@ -1,7 +1,3 @@
-skip_if_not_installed("margins")
-skip_if_not_installed("emmeans")
-skip_if_not_installed("dplyr")
-skip_if_not_installed("broom")
 requiet("margins")
 requiet("broom")
 requiet("emmeans")

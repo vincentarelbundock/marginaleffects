@@ -1,6 +1,3 @@
-skip_if_not_installed("geepack")
-skip_if_not_installed("emmeans")
-skip_if_not_installed("broom")
 requiet("geepack")
 requiet("emmeans")
 requiet("broom")

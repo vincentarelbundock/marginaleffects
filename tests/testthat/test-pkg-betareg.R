@@ -1,8 +1,5 @@
-skip_if_not_installed("betareg")
-skip_if_not_installed("margins")
-skip_if_not_installed("emmeans")
-skip_if_not_installed("broom")
 requiet("betareg")
+requiet("margins")
 requiet("emmeans")
 requiet("broom")
 

@@ -1,8 +1,4 @@
 # TODO: emtrends not clear what it computes for polr
-skip_if_not_installed("MASS")
-skip_if_not_installed("emmeans")
-skip_if_not_installed("margins")
-
 requiet("margins")
 requiet("MASS")
 requiet("emmeans")

@@ -1,4 +1,3 @@
-skip_if_not_installed("speedglm")
 requiet("speedglm")
 
 test_that("glm vs. Stata", {

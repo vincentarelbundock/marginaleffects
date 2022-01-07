@@ -1,5 +1,3 @@
-skip_if_not_installed("survey")
-
 requiet("margins")
 requiet("emmeans")
 requiet("broom")

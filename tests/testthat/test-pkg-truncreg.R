@@ -1,4 +1,3 @@
-skip_if_not_installed("truncreg")
 requiet("truncreg")
 
 

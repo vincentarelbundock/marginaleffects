@@ -1,4 +1,3 @@
-skip_if_not_installed("ivreg")
 requiet("margins")
 requiet("dplyr")
 requiet("ivreg")

@@ -1,4 +1,4 @@
-skip_if_not_installed("sandwich")
+requiet("sandwich")
 
 test_that("working but no validity check", {
     mod <- lm(mpg ~ hp + drat, mtcars)

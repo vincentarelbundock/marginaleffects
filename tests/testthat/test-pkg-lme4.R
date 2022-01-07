@@ -1,6 +1,3 @@
-skip_if_not_installed("lme4")
-skip_if_not_installed("haven")
-skip_if_not_installed("margins")
 requiet("margins")
 requiet("haven")
 requiet("lme4")

@@ -1,5 +1,3 @@
-skip_if_not_installed("cmdstanr")
-skip_if_not_installed("brms")
 requiet("brms")
 requiet("cmdstanr")
 requiet("emmeans")

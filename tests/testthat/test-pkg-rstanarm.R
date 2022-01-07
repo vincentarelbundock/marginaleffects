@@ -1,4 +1,3 @@
-skip_if_not_installed("rstanarm")
 requiet("rstanarm")
 requiet("emmeans")
 requiet("broom")
