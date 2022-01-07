@@ -1,6 +1,7 @@
 mod <- glm(vs ~ hp * mpg, data = mtcars, family = binomial)
 mfx <- marginaleffects(mod)
 
+
 test_that("tidy: minimal", {
     ti <- tidy(mfx)
     expect_equal(dim(ti), c(2, 8))
@@ -56,4 +57,12 @@ test_that("tidy: with and without contrasts", {
 
     x <- tidy(marginaleffects(lm(mpg ~ hp + am + factor(gear), tmp)))
     expect_equal(dim(x), c(4, 9))
+})
+
+
+test_that("bugs stay dead: multi-type are not duplicated", {
+    mod <- glm(am ~ mpg, family = binomial, data = mtcars)
+    mfx <- marginaleffects(mod, type = c("response", "link"))
+    ti <- tidy(mfx)
+    expect_equal(nrow(ti), 2)
 })
