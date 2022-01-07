@@ -103,7 +103,7 @@ modelsummary(mm,
              title = "Estimated Marginal Means",
              estimate = "{estimate} ({std.error}){stars}",
              statistic = NULL,
-             group = term + group ~ model)
+             group = term + value ~ model)
 ```
 
 # Case study: Multinomial Logit
@@ -140,7 +140,7 @@ marginalmeans(mod, type = "probs")
 
 Use the `variables` and `variables_grid` arguments to compute marginal means over a more reasonably sized grid:
 
-```{r, eval=FALSE}
+```{r}
 marginalmeans(mod,
               type = "probs",
               variables = c("x", "V1"),
