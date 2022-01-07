@@ -28,8 +28,8 @@ test_that("gam: predictions: no validity", {
   expect_predictions(pred2, n_row = 6, se = TRUE)
 })
 
-test_that("gam: marginalmeans: no validity", {
-  skip("PROBLEM TODO")
+test_that("gam: marginalmeans vs. emmeans", {
+  skip("gam: marginalmeans != emmeans")
   data(kyphosis, package = "gam")
   tmp <- kyphosis
   tmp$categ <- as.factor(sample(letters[1:5], nrow(tmp), replace = TRUE))
@@ -38,7 +38,6 @@ test_that("gam: marginalmeans: no validity", {
   mm <- marginalmeans(model)
   expect_marginalmeans(mm)
 
-  # TODO: response std.error do not match
   mm <- tidy(mm)
   em <- tidy(emmeans(model, specs = "categ", transform = "response"))
   expect_equal(mm$estimate, em$prob)

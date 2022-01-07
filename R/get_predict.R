@@ -43,8 +43,17 @@ get_predict.default <- function(model,
         fun <- stats::predict
         pred <- do.call("fun", args)
 
-        # 1-d array to vector (e.g., mgcv)
+        # 1-d array to vector (e.g., {mgcv})
         if (is.array(pred) && length(dim(pred)) == 1) {
+            pred <- as.vector(pred)
+        }
+
+        # 1-d array to vector (e.g., Gam from {gam})
+        if (is.array(pred) &&
+            length(dim(pred)) == 3 &&
+            dim(pred)[1] == 1 &&
+            dim(pred)[2] == 1 &&
+            dim(pred)[3] > 1) {
             pred <- as.vector(pred)
         }
 
@@ -63,7 +72,7 @@ get_predict.default <- function(model,
                 predicted = c(pred))
 
         } else {
-            stop(sprintf("Unable to extractpreditions of type %s from a model of class %s. Please report this problem, along with reproducible code and data on Github: https://github.com/vincentarelbundock/marginaleffects/issues", type, class(model)[1]))
+            stop(sprintf("Unable to extract predictions of type %s from a model of class %s. Please report this problem, along with reproducible code and data on Github: https://github.com/vincentarelbundock/marginaleffects/issues", type, class(model)[1]))
         }
 
     # `insight::get_predicted` yields back-transformed confidence intervals
