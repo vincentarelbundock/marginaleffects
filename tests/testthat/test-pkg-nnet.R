@@ -1,3 +1,4 @@
+skip_if_not_installed("nnet")
 requiet("nnet")
 
 test_that("warning: standard error mismatch", {
