@@ -36,7 +36,15 @@ differ based on the model type, but will typically be a string such as:
 \item{...}{Additional arguments are pushed forward to \code{predict()}.}
 }
 \value{
-A data.frame of marginal effect estimates with one row per observation per marginal effect.
+A \code{data.frame} with one row per observation (per term/group) and several columns:
+\itemize{
+\item \code{rowid}: row number of the \code{newdata} data frame
+\item \code{type}: prediction type, as defined by the \code{type} argument
+\item \code{group}: (optional) value of the grouped outcome (e.g., categorical outcome models)
+\item \code{term}: the variable whose marginal effect is computed
+\item \code{dydx}: marginal effect of the term on the outcome for a given combination of regressor values
+\item \code{std.error}: standard errors computed by via the delta method.
+}
 }
 \description{
 A "marginal effect" is the partial derivative of the regression equation

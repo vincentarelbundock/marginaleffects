@@ -22,7 +22,13 @@
 #' differ based on the model type, but will typically be a string such as:
 #' "response", "link", "probs", or "zero".
 #' @param ... Additional arguments are pushed forward to `predict()`.
-#' @return A data.frame of marginal effect estimates with one row per observation per marginal effect.
+#' @return A `data.frame` with one row per observation (per term/group) and several columns:
+#' * `rowid`: row number of the `newdata` data frame
+#' * `type`: prediction type, as defined by the `type` argument
+#' * `group`: (optional) value of the grouped outcome (e.g., categorical outcome models)
+#' * `term`: the variable whose marginal effect is computed
+#' * `dydx`: marginal effect of the term on the outcome for a given combination of regressor values
+#' * `std.error`: standard errors computed by via the delta method. 
 #' @export
 #' @examples
 #'
@@ -103,7 +109,7 @@ marginaleffects <- function(model,
                 J <- J_mean <- NULL
             # standard errors via delta method
             } else if (!is.null(vcov)) {
-                idx <- intersect(colnames(mfx), c("group", "term", "contrast"))
+                idx <- intersect(colnames(mfx), c("type", "group", "term", "contrast"))
                 idx <- mfx[, idx, drop = FALSE]
                 se <- standard_errors_delta(model,
                                             vcov = vcov,
@@ -121,7 +127,6 @@ marginaleffects <- function(model,
             mfx_list <- c(mfx_list, list(mfx))
             J_list <- c(J_list, list(J))
             J_mean_list <- c(J_mean_list, list(J_mean))
-
         }
     }
 
@@ -139,7 +144,7 @@ marginaleffects <- function(model,
     # standard error at mean gradient (this is what Stata and R's `margins` compute)
     # J_mean is NULL in bayesian models and where the delta method breaks
     if (!is.null(J_mean) && !is.null(vcov)) {
-        idx <- !colnames(J_mean) %in% c("group", "term", "contrast")
+        idx <- !colnames(J_mean) %in% c("type", "group", "term", "contrast")
         tmp <- J_mean[, !idx, drop = FALSE]
         J_mean_mat <- as.matrix(J_mean[, idx, drop = FALSE])
         # converting to data.frame can sometimes break colnames
