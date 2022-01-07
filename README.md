@@ -282,7 +282,7 @@ mod <- lm(mpg ~ am + cyl + hp, data = dat)
 mm <- marginalmeans(mod)
 summary(mm)
 #> Estimated marginal means 
-#>   Term Group  Mean Std. Error z value   Pr(>|z|) 2.5 % 97.5 %
+#>   Term Value  Mean Std. Error z value   Pr(>|z|) 2.5 % 97.5 %
 #> 1   am FALSE 18.32     0.7854   23.33 < 2.22e-16 16.78  19.86
 #> 2   am  TRUE 22.48     0.8343   26.94 < 2.22e-16 20.84  24.11
 #> 3  cyl     4 22.88     1.3566   16.87 < 2.22e-16 20.23  25.54
