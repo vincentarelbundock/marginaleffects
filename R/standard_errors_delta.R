@@ -1,11 +1,11 @@
 standard_errors_delta_marginalmeans <- function(model,
                                                 variables,
-                                                variables_grid,
+                                                newdata,
                                                 type,
                                                 ...) {
     get_marginalmeans(model = model,
                       variables = variables,
-                      variables_grid = variables_grid,
+                      newdata = newdata,
                       type = type,
                       ...)$marginalmean
 }
