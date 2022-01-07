@@ -55,7 +55,7 @@ marginalmeans <- function(model,
                           vcov = NULL,
                           type = "response") {
 
-    dat <- insight::get_data(model)
+    newdata <- insight::get_data(model)
 
     if (is.null(vcov)) {
         vcov <- get_vcov(model)
@@ -67,7 +67,7 @@ marginalmeans <- function(model,
     }
     checkmate::assert_character(variables, min.len = 1, null.ok = TRUE)
     if (!is.null(variables)) {
-        bad <- setdiff(variables, colnames(dat))
+        bad <- setdiff(variables, colnames(newdata))
         if (length(bad) > 0) {
             stop(sprintf("Elements of the `variables` argument were not found as column names in the data used to fit the model: %s", paste(bad, collapse = ", ")))
         }
@@ -75,7 +75,7 @@ marginalmeans <- function(model,
 
     checkmate::assert_character(variables_grid, min.len = 1, null.ok = TRUE)
     if (!is.null(variables_grid)) {
-        bad <- setdiff(variables_grid, colnames(dat))
+        bad <- setdiff(variables_grid, colnames(newdata))
         if (length(bad) > 0) {
             stop(sprintf("Elements of the `variables_grid` argument were not found as column names in the data used to fit the model: %s", paste(bad, collapse = ", ")))
         }
@@ -89,9 +89,9 @@ marginalmeans <- function(model,
     }
 
     # categorical variables, excluding response
-    column_labels <- colnames(dat)
+    column_labels <- colnames(newdata)
     term_labels <- insight::find_terms(model, flatten = TRUE)
-    variables_categorical <- find_categorical(dat)
+    variables_categorical <- find_categorical(newdata)
     variables_categorical <- setdiff(variables_categorical, insight::find_response(model, flatten = TRUE))
     variables_categorical <- intersect(variables_categorical, term_labels)
     if (length(variables_categorical) == 0) {
@@ -112,10 +112,15 @@ marginalmeans <- function(model,
     }
     variables_grid <- unique(c(variables, variables_grid))
 
+    args <- lapply(variables_grid, function(x) unique(newdata[[x]]))
+    args <- setNames(args, variables_grid)
+    args[["newdata"]] <- newdata
+    newgrid <- do.call("datagrid", args)
+
     mm <- get_marginalmeans(model = model,
-                            variables = variables,
-                            variables_grid = variables_grid,
-                            type = type)
+                            newdata = newgrid,
+                            type = type,
+                            variables = variables)
 
     # we want consistent output, regardless of whether `data.table` is installed/used or not
     out <- as.data.frame(mm)
@@ -127,7 +132,7 @@ marginalmeans <- function(model,
                                 FUN = standard_errors_delta_marginalmeans,
                                 index = NULL,
                                 variables = variables,
-                                variables_grid = variables_grid)
+                                newdata = newgrid)
 
     # get rid of attributes in column
     out[["std.error"]] <- as.numeric(se)
@@ -154,17 +159,18 @@ marginalmeans <- function(model,
 #'
 #' Needs to be separate because we also need it in `delta_method`
 #' @inheritParams marginalmeans
+#' @inheritParams predictions
 #' @param ... absorb useless arguments from other get_* workhorse functions
 get_marginalmeans <- function(model,
-                              variables,
-                              variables_grid,
+                              newdata,
                               type,
+                              variables,
                               ...) {
 
     # predictions for each cell of all categorical data, but not the response
     pred <- predictions(
         model = model,
-        variables = variables_grid,
+        newdata = newdata,
         type = type,
         conf.level = NULL,
         ...)

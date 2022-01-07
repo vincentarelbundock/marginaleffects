@@ -4,25 +4,21 @@
 \alias{get_marginalmeans}
 \title{Workhorse function for \code{marginalmeans}}
 \usage{
-get_marginalmeans(model, variables, variables_grid, type, ...)
+get_marginalmeans(model, newdata, type, variables, ...)
 }
 \arguments{
 \item{model}{Model object}
 
-\item{variables}{Categorical predictors over which to compute marginal means
-(character vector). \code{NULL} calculates marginal means for all logical,
-character, or factor variables in the dataset used to fit \code{model}.}
-
-\item{variables_grid}{Categorical predictors used to construct the
-prediction grid over which adjusted predictions are averaged (character
-vector). \code{NULL} creates a grid with all combinations of all categorical
-predictors. This grid can be very large when there are many variables and
-many response levels, so it is advisable to select a limited number of
-variables in the \code{variables} and \code{variables_grid} arguments.}
+\item{newdata}{A dataset over which to compute adjusted predictions. \code{NULL} uses
+the original data used to fit the model.}
 
 \item{type}{Type(s) of prediction (string or character vector). This can
 differ based on the model type, but will typically be a string such as:
 "response", "link", "probs", or "zero".}
+
+\item{variables}{Categorical predictors over which to compute marginal means
+(character vector). \code{NULL} calculates marginal means for all logical,
+character, or factor variables in the dataset used to fit \code{model}.}
 
 \item{...}{absorb useless arguments from other get_* workhorse functions}
 }

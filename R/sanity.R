@@ -60,7 +60,7 @@ sanity_variables <- function(model, newdata, variables) {
     checkmate::assert_character(variables, min.len = 1, null.ok = TRUE)
     checkmate::assert_data_frame(newdata, min.row = 1, null.ok = TRUE)
 
-    if (!is.null(model)) {
+    if (!is.null(model) & is.null(newdata)) {
         origindata <- insight::get_data(model)
     } else {
         origindata <- newdata
