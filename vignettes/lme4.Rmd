@@ -1,5 +1,5 @@
 ---
-title: "Mixed effects models with `lme4`"
+title: "Mixed effects models with lme4"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Mixed effects models with lme4}
