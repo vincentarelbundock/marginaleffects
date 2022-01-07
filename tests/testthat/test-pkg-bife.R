@@ -1,4 +1,3 @@
-skip_if_not_installed("bife")
 requiet("bife")
 
 test_that("marginaleffects: bife: no validity", {

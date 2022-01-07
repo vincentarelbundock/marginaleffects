@@ -1,5 +1,3 @@
-skip_if_not_installed("crch")
-skip_if_not_installed("ordinal")
 requiet("crch")
 requiet("ordinal")
 

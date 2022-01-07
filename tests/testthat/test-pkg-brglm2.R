@@ -1,4 +1,3 @@
-skip_if_not_installed("brglm2")
 requiet("brglm2")
 requiet("margins")
 requiet("emmeans")

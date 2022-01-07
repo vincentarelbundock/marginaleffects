@@ -1,5 +1,3 @@
-skip_if_not_installed("gam")
-
 requiet("gam")
 requiet("emmeans")
 requiet("broom")

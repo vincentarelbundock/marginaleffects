@@ -1,6 +1,3 @@
-# TODO: emtrends does not report trends for each level of the outcome
-skip_if_not_installed("ordinal")
-skip_if_not_installed("MASS")
 requiet("MASS")
 requiet("ordinal")
 
