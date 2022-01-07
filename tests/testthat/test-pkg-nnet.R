@@ -1,4 +1,5 @@
 skip_if_not_installed("nnet")
+skip_if(getRversion() < 4.0) # problem on github actions with oldrel
 requiet("nnet")
 
 test_that("warning: standard error mismatch", {
