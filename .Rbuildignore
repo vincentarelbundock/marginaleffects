@@ -13,3 +13,4 @@
 ^\.covrignore$
 ^cran-comments\.md
 ^vignettes/brms.Rmd
+^vignettes/benchmark.Rmd
