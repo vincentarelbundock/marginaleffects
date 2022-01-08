@@ -140,9 +140,9 @@ marginalmeans(mod, type = "probs")
 
 Use the `variables` and `variables_grid` arguments to compute marginal means over a more reasonably sized grid:
 
-```{r}
+```{r, eval = FALSE}
 marginalmeans(mod,
               type = "probs",
               variables = c("x", "V1"),
-              variables_grid = paste0("V", 2:5))
+              variables_grid = paste0("V", 2:3))
 ```
