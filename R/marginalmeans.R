@@ -113,7 +113,7 @@ marginalmeans <- function(model,
     variables_grid <- unique(c(variables, variables_grid))
 
     args <- lapply(variables_grid, function(x) unique(newdata[[x]]))
-    args <- setNames(args, variables_grid)
+    args <- stats::setNames(args, variables_grid)
     args[["newdata"]] <- newdata
     newgrid <- do.call("datagrid", args)
 
