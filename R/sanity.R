@@ -127,8 +127,8 @@ sanitize_vcov <- function(model, vcov) {
     if (isTRUE(vcov)) {
         vcov <- try(get_vcov(model), silent = TRUE)
         if (inherits(vcov, "try-error")) {
-            vcov <- NULL
             warning(sprintf('Unable to extract a variance-covariance matrix from model of class "%s" using the `stats::vcov` function. The `vcov` argument was switched to `FALSE`. Please supply a named matrix to produce uncertainty estimates.', class(model)[1]))
+            return(NULL)
             # dpoMatrix conversion
         }
         vcov <- as.matrix(vcov)
