@@ -78,6 +78,7 @@ Suggests:
     rstantools,
     rstanarm,
     sandwich,
+    scam,
     speedglm,
     survey,
     survival,
