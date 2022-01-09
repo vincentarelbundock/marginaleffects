@@ -65,6 +65,7 @@ Suggests:
     ivreg,
     lme4,
     MASS,
+    mclogit,
     mgcv,
     nlme,
     nnet,
