@@ -116,6 +116,7 @@ Collate:
     'methods_pscl.R'
     'methods_quantreg.R'
     'methods_rstanarm.R'
+    'methods_scam.R'
     'methods_stats.R'
     'methods_survival.R'
     'package.R'
