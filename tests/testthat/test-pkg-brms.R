@@ -2,6 +2,7 @@ requiet("brms")
 requiet("cmdstanr")
 requiet("emmeans")
 requiet("broom")
+skip_if_not_installed("data.table") # cmdstanr
 
 
 void <- capture.output({
