@@ -1,4 +1,5 @@
 requiet("truncreg")
+requiet("margins")
 
 
 test_that("truncreg: no validity check", {

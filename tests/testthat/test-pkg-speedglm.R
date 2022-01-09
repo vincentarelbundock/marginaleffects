@@ -1,4 +1,5 @@
 requiet("speedglm")
+requiet("margins")
 
 test_that("glm vs. Stata", {
     stata <- readRDS(test_path("stata/stata.rds"))[["stats_glm_01"]]
