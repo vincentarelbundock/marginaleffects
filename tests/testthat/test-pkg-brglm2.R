@@ -53,3 +53,13 @@ test_that("brmultinom: no validity", {
     expect_predictions(predictions(mod, type = "probs"))
 })
 
+
+test_that("bracl: no validity", {
+    data("stemcell", package = "brglm2")
+    dat <- stemcell
+    dat$religion <- as.numeric(dat$religion)
+    mod <- bracl(research ~ as.numeric(religion) + gender, weights = frequency,
+                 data = dat, type = "ML")
+    expect_predictions(predictions(mod, type = "probs"))
+    expect_marginaleffects(mod, type = "probs")
+})

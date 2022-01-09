@@ -7,6 +7,7 @@
 \alias{get_coef.polr}
 \alias{get_coef.betareg}
 \alias{get_coef.brmultinom}
+\alias{get_coef.bracl}
 \alias{get_coef.brmsfit}
 \alias{get_coef.gam}
 \title{Get a named vector of coefficients from a model object (internal function)}
@@ -20,6 +21,8 @@ get_coef(model, ...)
 \method{get_coef}{betareg}(model, ...)
 
 \method{get_coef}{brmultinom}(model, ...)
+
+\method{get_coef}{bracl}(model, ...)
 
 \method{get_coef}{brmsfit}(model, ...)
 
