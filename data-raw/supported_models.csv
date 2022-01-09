@@ -6,6 +6,7 @@ AER,tobit,TRUE,TRUE,TRUE,TRUE,U,U,TRUE,TRUE
 aod,betabin,TRUE,TRUE,,,U,U,U,U
 betareg,betareg,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE
 bife,bife,TRUE,TRUE,,,U,U,U,U
+brglm2,bracl,,,,,FALSE,FALSE,FALSE,FALSE
 brglm2,brglmFit,TRUE,TRUE,,,TRUE,TRUE,TRUE,TRUE
 brglm2,brnb,TRUE,TRUE,,,TRUE,TRUE,U,U
 brglm2,brmultinom,TRUE,TRUE,,,U,U,U,U

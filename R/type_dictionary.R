@@ -15,7 +15,6 @@ betareg,quantile,NA,TRUE,TRUE
 betareg,variance,NA,TRUE,TRUE
 bife,response,expectation,TRUE,TRUE
 bife,link,link,TRUE,TRUE
-bracl,class,classification,FALSE,TRUE
 bracl,probs,expectation,TRUE,TRUE
 brglmFit,link,link,TRUE,TRUE
 brglmFit,response,expectation,TRUE,TRUE

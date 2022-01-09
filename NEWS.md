@@ -2,6 +2,7 @@
 
 Support for new models and packages:
 
+* `brglm2::bracl`
 * `mclogit::mblogit`
 
 # marginaleffects 0.3.1

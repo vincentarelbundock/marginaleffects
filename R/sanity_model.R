@@ -20,6 +20,7 @@ sanity_model_supported_class <- function(model) {
                       "bife",
                       "brglmFit",
                       "brmsfit",
+                      c("bracl", "brmultinom", "brglmFit"),
                       c("brnb", "negbin", "glm"),
                       "clm",
                       "coxph",
