@@ -112,16 +112,21 @@ predictions <- function(model,
         }
 
         # try to extract standard errors via the delta method if necessary
-        if (is.numeric(conf.level) && !any(c("std.error", "conf.low") %in% colnames(tmp))) {
-            fun <- function(...) get_predict(...)[["predicted"]]
-            se <- standard_errors_delta(model,
-                                        newdata = newdata,
-                                        vcov = get_vcov(model),
-                                        type = predt,
-                                        FUN = fun,
-                                        ...)
-            if (is.numeric(se) && length(se) == nrow(tmp)) {
-                tmp[["std.error"]] <- se
+        if (is.numeric(conf.level) && 
+            !any(c("std.error", "conf.low") %in% colnames(tmp))) {
+
+            vcov <- try(get_vcov(model), silent = TRUE)
+            if (!inherits(vcov, "try-error") && is.matrix(vcov)) {
+                fun <- function(...) get_predict(...)[["predicted"]]
+                se <- standard_errors_delta(model,
+                                            newdata = newdata,
+                                            vcov = get_vcov(model),
+                                            type = predt,
+                                            FUN = fun,
+                                            ...)
+                if (is.numeric(se) && length(se) == nrow(tmp)) {
+                    tmp[["std.error"]] <- se
+                }
             }
         }
 
