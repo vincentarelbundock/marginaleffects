@@ -29,7 +29,7 @@ set_coef.glimML <- function(model, coefs) {
 
 #' @rdname get_vcov
 #' @export
-get_vcov.default <- function(model, ...) {
+get_vcov.aod <- function(model, ...) {
     assert_dependency("aod")
     out <- aod::vcov(model)
     return(out)
