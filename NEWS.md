@@ -1,3 +1,9 @@
+# marginaleffects 0.3.1.9000
+
+Support for new models and packages:
+
+* `mclogit::mblogit`
+
 # marginaleffects 0.3.0
 
 Breaking changes:
