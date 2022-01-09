@@ -5,7 +5,7 @@
 \alias{get_vcov}
 \alias{get_vcov.default}
 \alias{get_vcov.polr}
-\alias{get_vcov.aod}
+\alias{get_vcov.glimML}
 \alias{get_vcov.multinom}
 \alias{get_vcov.crch}
 \title{Get a named variance-covariance matrix from a model object (internal function)}
@@ -16,7 +16,7 @@ get_vcov(model, ...)
 
 \method{get_vcov}{polr}(model, ...)
 
-\method{get_vcov}{aod}(model, ...)
+\method{get_vcov}{glimML}(model, ...)
 
 \method{get_vcov}{multinom}(model, ...)
 
