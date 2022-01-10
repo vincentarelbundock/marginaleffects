@@ -10,6 +10,6 @@ test_that("no validity", {
     y <- f1 + f2 + rnorm(n) * .5
     dat <- data.frame(x1 = x1, x2 = x2, y = y)
     mod <- scam(y ~ s(x1, bs = "cr") + s(x2, bs = "mpi"), data = dat)
-    suppressWarnings(expect_marginaleffects(mod, se = FALSE))
-    expect_predictions(predictions(mod), se = FALSE)
+    suppressWarnings(expect_marginaleffects(mod))
+    expect_predictions(predictions(mod))
 })

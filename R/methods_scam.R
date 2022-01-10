@@ -10,11 +10,18 @@ set_coef.scam <- function(model, coefs) {
 #' @rdname get_coef
 #' @export
 get_coef.scam <- function(model, ...) {
-    ## faster
-    # out <-  stats::coef(model)
+    model$coefficients.t
+}
 
-    # more general
-    out <- insight::get_parameters(model)
-    out <- stats::setNames(out$Estimate, out$Parameter)
-    return(out)
+
+#' @rdname get_vcov
+#' @export
+get_vcov.scam <- function(model, ...) {
+    V <- model$Vp.t
+    b <- model$coefficients.t
+    if (length(b) != nrow(V)) {
+        stop("The size of the variance-covariance matrix does not match the length of the coefficients vector.")
+    }
+    colnames(V) <- row.names(V) <- names(b)
+    return(V)
 }
