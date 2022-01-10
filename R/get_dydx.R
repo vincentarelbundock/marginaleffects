@@ -67,9 +67,7 @@ get_dydx_continuous <- function(model,
                 tmp$predicted
             }
         }
-        gr <- numDeriv::grad(func = inner,
-                             x = newdata[[variable]],
-                             method = numDeriv_method)
+        gr <- get_gradient(func = inner, x = newdata[[variable]])
         out_list[[gn]] <- data.frame(rowid = 1:nrow(newdata),
                                      group = gn,
                                      term = variable,
