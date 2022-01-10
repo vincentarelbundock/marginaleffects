@@ -26,8 +26,7 @@ Imports:
     checkmate,
     generics,
     insight (>= 0.14.5),
-    methods,
-    numDeriv
+    methods
 Suggests: 
     bench,
     brms,
@@ -91,8 +90,10 @@ Collate:
     'get_coef.R'
     'get_contrasts.R'
     'get_dydx.R'
+    'get_gradient.R'
     'get_group_names.R'
     'get_hdi.R'
+    'get_jacobian.R'
     'get_predict.R'
     'get_vcov.R'
     'marginaleffects.R'

@@ -5,6 +5,11 @@ Support for new models and packages:
 * `brglm2::bracl`
 * `mclogit::mblogit`
 
+Misc:
+
+* Drop `numDeriv` dependency, but make it available via a global option:
+  options("marginaleffects_numDeriv" = list(method = "Richardson", method.args = list(eps = 1e-5, d = 0.0001)))
+
 # marginaleffects 0.3.1
 
 documentation bugfix

@@ -57,9 +57,8 @@ standard_errors_delta <- function(model,
         return(g)
     }
 
-    J <- numDeriv::jacobian(func = inner,
-                            x = coefs,
-                            method = numDeriv_method)
+    J <- get_jacobian(func = inner, x = coefs)
+
     colnames(J) <- names(get_coef(model))
 
     if (!is.null(index)) {
