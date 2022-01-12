@@ -58,3 +58,16 @@
       Model type:  lm 
       Prediction type:  response 
 
+# bugs stay dead: summary manipulation
+
+    Code
+      summary(mfx) %>% dplyr::select(term, estimate, conf.low, conf.high)
+    Output
+      Average marginal effects 
+        Term    Effect    CI low   CI high
+      1   hp  0.002654 -0.001151  0.006458
+      2   wt -0.435727 -0.635690 -0.235764
+      
+      Model type:  
+      Prediction type:  
+

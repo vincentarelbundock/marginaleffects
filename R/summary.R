@@ -70,7 +70,7 @@ print.marginaleffects.summary <- function(x,
                                 "CI low",
                                 sprintf("%.1f %%", alpha / 2)),
             "conf.high" = ifelse(is.null(alpha),
-                                "CI low",
+                                "CI high",
                                 sprintf("%.1f %%", 100 - alpha / 2)))
 
   for (i in seq_along(dict)) {
@@ -156,7 +156,7 @@ print.marginalmeans.summary <- function(x,
                                 "CI low",
                                 sprintf("%.1f %%", alpha / 2)),
             "conf.high" = ifelse(is.null(alpha),
-                                "CI low",
+                                "CI high",
                                 sprintf("%.1f %%", 100 - alpha / 2)))
 
   for (i in seq_along(dict)) {

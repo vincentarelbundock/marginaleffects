@@ -28,3 +28,14 @@ test_that("summary: marginal means", {
     s <- summary(mm)
     expect_snapshot(print(s))
 })
+
+
+test_that("bugs stay dead: summary manipulation", {
+    requiet("dplyr")
+    mod <- glm(am ~ hp * wt, data = mtcars, family = binomial)
+    mfx <- marginaleffects(mod)
+    expect_snapshot(
+        summary(mfx) %>%
+        dplyr::select(term, estimate, conf.low, conf.high)
+    )
+})
