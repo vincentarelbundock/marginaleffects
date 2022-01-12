@@ -1,12 +1,19 @@
 #' Marginal effects using numerical derivatives
 #'
+#' This function calculates marginal effects (slopes) for each row of the
+#' dataset. The resulting object can processed by the `tidy()` or `summary()` ,
+#' which compute and print Average Marginal Effects (AME). The `datagrid()`
+#' function and the `newdata` argument can be used to calculate Marginal
+#' Effects at the Mean. See below for details and examples.
+#'
 #' A "marginal effect" is the partial derivative of the regression equation
 #' with respect to a variable in the model. This function uses automatic
 #' differentiation to compute marginal effects for a vast array of models,
-#' including non-linear models with transformations (e.g., polynomials). The
-#' list of supported models and of models whose numerical results have been
-#' validated against external software (`Stata`, `margins`, and/or `emmeans`)
-#' is reported on the package website:
+#' including non-linear models with transformations (e.g., polynomials).
+#'
+#' A detailed vignette on marginal effects and a list of supported models can
+#' be found on the package website:
+#'
 #' https://vincentarelbundock.github.io/marginaleffects/
 #'
 #' @param model Model object
@@ -34,18 +41,24 @@
 #'
 #' mod <- glm(am ~ hp * wt, data = mtcars, family = binomial)
 #' mfx <- marginaleffects(mod)
+#' head(mfx)
+
+#' # Average Marginal Effect (AME)
 #' summary(mfx)
 #' tidy(mfx)
-#' head(mfx)
 #' plot(mfx)
 #'
-#' # typical marginal effects
+#' # Marginal Effect at the Mean (MEM)
+#' marginaleffects(mod, newdata = datagrid())
+#'
+#' # Marginal Effect at User-Specified Values (Counterfactual)
 #' marginaleffects(mod, newdata = datagrid(hp = c(100, 110)))
 #'
-#' # counterfactual average marginal effects
-#' marginaleffects(mod, newdata = datagrid(hp = c(100, 110), grid.type = "counterfactual"))
+#' # Marginal Effects at User-Specified Values (Counterfactual)
+#' mfx <- marginaleffects(mod, newdata = datagrid(hp = c(100, 110), grid.type = "counterfactual"))
+#' head(mfx)
 #'
-#' # heteroskedasticity robust standard errors
+#' # Heteroskedasticity robust standard errors
 #' marginaleffects(mod, vcov = sandwich::vcovHC(mod))
 #'
 marginaleffects <- function(model,

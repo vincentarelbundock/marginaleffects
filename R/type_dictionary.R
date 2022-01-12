@@ -109,4 +109,5 @@ return(out)
 #' insight::get_predict accepts a `predict` argument
 #' stats::predict accepts a `type` argument
 #' this dictionary converts
+#' @noRd
 type_dictionary <- type_dictionary_build()

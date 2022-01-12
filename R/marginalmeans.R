@@ -161,6 +161,7 @@ marginalmeans <- function(model,
 #' @inheritParams marginalmeans
 #' @inheritParams predictions
 #' @param ... absorb useless arguments from other get_* workhorse functions
+#' @noRd
 get_marginalmeans <- function(model,
                               newdata,
                               type,
