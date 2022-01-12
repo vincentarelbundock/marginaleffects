@@ -27,7 +27,7 @@ Examples below.)}
 
 \item{grid.type}{character
 \itemize{
-\item "typical": variables whose values are not explicitly specified by the user in \code{...} are set to the output of the functions supplied to the \code{FUN.type} arguments.
+\item "typical": variables whose values are not explicitly specified by the user in \code{...} are set to their mean or mode, or to the output of the functions supplied to \code{FUN.type} arguments.
 \item "counterfactual": the entire dataset is duplicated for each combination of the variable values specified in \code{...}.
 }}
 

@@ -1,5 +1,22 @@
 #' Adjusted Predictions
 #'
+#' This function calculates adjusted predictions for each row of the dataset.
+#' The `datagrid()` function and the `newdata` argument can be used to
+#' calculate Average Adjusted Predictions (AAP), Average Prediction at the Mean
+#' (APM), or Predictions at User-Specified Values of the regressors. See below
+#' for details and examples.
+#'
+#' An "ajusted prediction" is the outcome predicted by a model for some
+#' combination of the regressors’ values, such as their means or factor levels
+#' (a.k.a. “reference grid”). When possible, this function uses the delta
+#' method to compute the standard error associated with the adjusted
+#' predictions.
+#'
+#' A detailed vignette on adjusted predictions and a list of supported models
+#' are published on the package website:
+#'
+#' https://vincentarelbundock.github.io/marginaleffects/
+
 #' Compute model-adjusted predictions (fitted values) for a "grid" of regressor values.
 #' @inheritParams marginaleffects
 #' @param model Model object
@@ -23,15 +40,26 @@
 #' * `conf.low`: lower bound of the confidence or highest density interval (for bayesian models)
 #' * `conf.high`: upper bound of the confidence or highest density interval (for bayesian models)
 #' @examples
-#' # Predicted outcomes for every row of the original dataset
+#' # Adjusted Prediction for every row of the original dataset
 #' mod <- lm(mpg ~ hp + factor(cyl), data = mtcars)
 #' pred <- predictions(mod)
 #' head(pred)
 #'
-#' # Predicted outcomes for user-specified values of the regressors
+#' # Adjusted Predictions at User-Specified Values of the Regressors
 #' predictions(mod, newdata = datagrid(hp = c(100, 120), cyl = 4))
 #'
-#' # Plot of predicted outcomes for different values of the regressor
+#' # Average Adjusted Predictions (AAP)
+#' library(dplyr)
+#' mod <- lm(mpg ~ hp * am * vs, mtcars)
+#'
+#' predictions(mod, newdata = datagrid(am = 0, grid.type = "counterfactual")) |>
+#'     summarize(across(c(predicted, std.error), mean))
+#'
+#' predictions(mod, newdata = datagrid(am = 0:1, grid.type = "counterfactual")) |>
+#'     group_by(am) |>
+#'     summarize(across(c(predicted, std.error), mean))
+#'
+#' # Conditional Adjusted Predictions
 #' plot_cap(mod, condition = "hp")
 #' @export
 predictions <- function(model,

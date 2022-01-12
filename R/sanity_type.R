@@ -4,6 +4,7 @@
 #' @param type character vector
 #' @return Named vector where value is the Base R `type` and name is the
 #' insight::get_predicted `predict`
+#' @noRd
 sanity_type <- function(model, type) {
 
     checkmate::assert_character(type, min.len = 1, null.ok = FALSE)

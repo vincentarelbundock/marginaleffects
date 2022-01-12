@@ -121,6 +121,36 @@ ggplot(pred, aes(x = `0`, y = `1`)) +
 
 In this graph, each dot represents the predicted probability that `vs=1` for one observation of the dataset, in the counterfactual worlds where `am` is either 0 or 1. 
 
+# Average Adjusted Predictions (AAP)
+
+An "Average Adjusted Prediction" is the outcome of a two step process:
+
+1. Create a new dataset with each of the original regressor values, but fixing some regressors to values of interest.
+2. Take the average of the predicted values in this new dataset.
+
+We can compute the AAP by using the `datagrid` function and some `dplyr` magic:
+
+```{r}
+predictions(mod, newdata = datagrid(am = 0, grid.type = "counterfactual")) %>%
+    summarize(across(c(predicted, std.error), mean))
+```
+
+Or we can compute several AAPs simultaneously:
+
+```{r}
+predictions(mod, newdata = datagrid(am = 0:1, grid.type = "counterfactual")) %>%
+    group_by(am) %>%
+    summarize(across(c(predicted, std.error), mean))
+```
+
+# Adjusted Prediction at the Mean (APM)
+
+Some analysts may want to calculate an "Adjusted Prediction at the Mean," that is, the predicted outcome when all the regressors are held at their mean (or mode). To achieve this, we use the `datagrid` function. By default, this function produces a grid of data with regressors at their means or modes, so all we need to do to get the APM is:
+
+```{r}
+predictions(mod, newdata = datagrid())
+```
+
 # Plot: Conditional Predictions
 
 First, we download the `ggplot2movies` dataset from the [RDatasets archive](https://vincentarelbundock.github.io/Rdatasets/articles/data.html). Then, we create a variable called `certified_fresh` for movies with a rating of at least 8. Finally, we discard some outliers and fit a logistic regression model: 

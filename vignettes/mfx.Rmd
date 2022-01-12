@@ -105,7 +105,7 @@ mfx <- marginaleffects(mod)
 head(mfx)
 ```
 
-# Average MFX
+# Average Marginal Effect (AME)
 
 A dataset with one marginal effect estimate per unit of observation is a bit unwieldy and difficult to interpret. Many analysts like to report the "Average Marginal Effect", that is, the average of all the observation-specific marginal effects. These are easy to compute based on the full `data.frame` shown above, but the `summary` function is convenient:
 
@@ -123,9 +123,9 @@ tidy(mfx)
 glance(mfx)
 ```
 
-# Typical MFX
+# Marginal Effect at User-Specified Values
 
-Sometimes, we are not interested in *all* the unit-specific marginal effects, but would rather look at the estimated marginal effects for certain "typical" individuals. The `datagrid` function helps us build a data grid full of "typical" rows. For example, to generate artificial Adelies and Gentoos with 180mm flippers:
+Sometimes, we are not interested in *all* the unit-specific marginal effects, but would rather look at the estimated marginal effects for certain "typical" individuals, or for user-specified values of the regressors. The `datagrid` function helps us build a data grid full of "typical" rows. For example, to generate artificial Adelies and Gentoos with 180mm flippers:
 
 ```{r}
 datagrid(flipper_length_mm = 180,
@@ -143,7 +143,15 @@ marginaleffects(mod,
 
 When variables are omitted from the `datagrid` call, they will automatically be set at their median or mode (depending on variable type).
 
-# Counterfactual MFX
+# Marginal Effect at the Mean (MEM)
+
+The "Marginal Effect at the Mean" is a marginal effect calculated for a hypothetical observation where each regressor is set at its mean or mode. By default, the `datagrid` function that we used in the previous section sets all regressors to their means or modes. To calculate the MEM, we can simply type:
+
+```{r}
+marginaleffects(mod, newdata = datagrid())
+```
+
+# Counterfactual Marginal Effects
 
 The `datagrid` function allowed us look at completely fictional individuals. Setting the `grid.type` argument of this function to `"counterfactual"` lets us compute the marginal effects for the actual observations in our dataset, but with a few manipulated values. For example, this code will create a `data.frame` twice as long as the original `dat`, where each observation is repeated with different values of the `flipper_length_mm` variable:
 
@@ -167,7 +175,7 @@ marginaleffects(mod, newdata = nd) %>%
     summarize(across(dydx:std.error, median))
 ```
 
-# Conditional MFX (Plot)
+# Conditional Marginal Effects (Plot)
 
 The `plot_cme` function can be used to draw "Conditional Marginal Effects." This is useful when a model includes interaction terms and we want to plot how the marginal effect of a variable changes as the value of a "condition" (or "moderator") variable changes:
 
