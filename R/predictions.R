@@ -52,11 +52,11 @@
 #' library(dplyr)
 #' mod <- lm(mpg ~ hp * am * vs, mtcars)
 #'
-#' predictions(mod, newdata = datagrid(am = 0, grid.type = "counterfactual")) |>
+#' pred <- predictions(mod, newdata = datagrid(am = 0, grid.type = "counterfactual")) %>%
 #'     summarize(across(c(predicted, std.error), mean))
 #'
-#' predictions(mod, newdata = datagrid(am = 0:1, grid.type = "counterfactual")) |>
-#'     group_by(am) |>
+#' predictions(mod, newdata = datagrid(am = 0:1, grid.type = "counterfactual")) %>% 
+#'     group_by(am) %>%
 #'     summarize(across(c(predicted, std.error), mean))
 #'
 #' # Conditional Adjusted Predictions
