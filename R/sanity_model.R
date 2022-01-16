@@ -54,6 +54,7 @@ sanity_model_supported_class <- function(model) {
                       c("plm", "panelmodel"),
                       "polr",
                       "rq",
+                      c("scam", "glm", "lm"),
                       "speedglm",
                       "speedlm",
                       "stanreg",
@@ -73,7 +74,7 @@ sanity_model_supported_class <- function(model) {
 
 Supported model classes include: %s. 
  
-New modeling packages can usually be supported by `marginaleffects` if they include a working `predict` method. If you believe that this is the case, please file a feature request on Github: https://github.com/vincentarelbundock/marginaleffects/issues' 
+New modeling packages can usually be supported by `marginaleffects` if they include a working `predict()` method. If you believe that this is the case, please file a feature request on Github: https://github.com/vincentarelbundock/marginaleffects/issues' 
         msg <- sprintf(msg, class(model)[1], support)
         stop(msg)
     }
