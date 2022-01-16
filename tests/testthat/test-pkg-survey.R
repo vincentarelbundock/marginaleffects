@@ -1,6 +1,7 @@
 requiet("margins")
 requiet("emmeans")
 requiet("broom")
+requiet("survey")
 
 test_that("survey: marginaleffects vs. margins vs. emtrends", {
     data("fpc", package = "survey")
@@ -21,6 +22,6 @@ test_that("survey: marginaleffects vs. margins vs. emtrends", {
     em <- emtrends(mod, ~nh, "nh", at = list(nh = 4))
     em <- tidy(em)
     mfx <- marginaleffects(mod, type = "link", newdata = data.frame(nh = 4))
-    expect_equal(mfx$dydx, em$nh.trend)
-    expect_equal(mfx$std.error, em$std.error)
+    expect_equal(mfx$dydx, em$nh.trend, tolerance = .001) # CRAN tolerance
+    expect_equal(mfx$std.error, em$std.error, tolerance = .001)
 })

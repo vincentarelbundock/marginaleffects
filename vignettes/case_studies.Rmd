@@ -1,0 +1,26 @@
+---
+title: "Case Studies"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Case Studies}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  fig.width = 9,
+  fig.asp = .4,
+  out.width = "100%",
+  warning = FALSE,
+  message = FALSE,
+  comment = "#>"
+)
+```
+
+The `marginaleffects` website (https://vincentarelbundock.github.io/marginaleffects/) includes several case studies, including:
+
+- [Bayesian analyses with `brms`](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)
+- [Mixed effects models](https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html)
+
