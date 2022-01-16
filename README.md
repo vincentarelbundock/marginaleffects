@@ -48,8 +48,8 @@ consult these pages:
   - Case studies:
       - [Bayesian analyses with
         `brms`](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)
-      - [Mixed effects models with
-        `lme4`](https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html)
+      - [Mixed effects
+        models](https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html)
 
 ## Why?
 
