@@ -1,4 +1,4 @@
-# marginaleffects 0.3.1.9000
+# marginaleffects 0.3.2
 
 Support for new models and packages:
 
@@ -13,6 +13,7 @@ Misc:
   options("marginaleffects_numDeriv" = list(method = "Richardson", method.args = list(eps = 1e-5, d = 0.0001)))
 * Bugfixes
 * Documentation improvements
+* CRAN tests
 
 # marginaleffects 0.3.1
 
