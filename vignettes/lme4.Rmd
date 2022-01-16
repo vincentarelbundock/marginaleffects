@@ -8,6 +8,9 @@ vignette: >
 ---
 
 ```{r, include = FALSE}
+# this vignette is in .Rbuildignore because lme4 is not available on old CRAN
+# test machines.
+
 knitr::opts_chunk$set(
   collapse = TRUE,
   fig.width = 9,

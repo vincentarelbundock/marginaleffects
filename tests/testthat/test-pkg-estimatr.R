@@ -2,6 +2,7 @@ requiet("estimatr")
 requiet("emmeans")
 requiet("margins")
 requiet("broom")
+requiet("ivreg") # Kmenta data
 
 test_that("iv_robust vs. stata", {
     data(Kmenta, package = "ivreg")
@@ -31,8 +32,8 @@ test_that("lm_robust vs. stata vs. emtrends", {
     mfx <- marginaleffects(model, newdata = datagrid(cyl = 4, wt = 2), variables = "wt")
     em <- emtrends(model, ~wt, "wt", at = list(cyl = 4, wt = 2))
     em <- tidy(em)
-    expect_equal(mfx$dydx, em$wt.trend)
-    expect_equal(mfx$std.error, em$std.error)
+    expect_equal(mfx$dydx, em$wt.trend, tolerance = .001)
+    expect_equal(mfx$std.error, em$std.error, tolerance = .001)
     # margins does not support standard errors
     tmp <- mtcars
     tmp$cyl <- factor(tmp$cyl)

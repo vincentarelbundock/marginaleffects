@@ -189,6 +189,7 @@ test_that("polr: marginalmeans vs. emmeans", {
 # glmmPQL
 
 test_that("glmmPQL: no validity", {
+    requiet("lme4") # glmmPQL fails when lme4 is not installed
     tmp <- bacteria
     tmp$week_bin <- tmp$week > 2
     mod <- glmmPQL(y ~ trt + week_bin, random = ~ 1 | ID,
