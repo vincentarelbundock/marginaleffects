@@ -1,6 +1,5 @@
 requiet("fixest")
 
-
 test_that("bugs stay dead: logit with transformations", {
     skip("works interactively")
     dat <- mtcars
@@ -74,6 +73,7 @@ test_that("numeric cluster variable raises warning", {
     expect_warning(plot_cme(mod2, effect = "x", condition = "w", draw = FALSE), NA)
 })
 
+
 test_that("plot_cme: extracts all required data", {
     skip("works interactively")
     fe <- data.frame(unit = 1:25, fe = rnorm(25))
@@ -90,4 +90,32 @@ test_that("plot_cme: extracts all required data", {
     expect_s3_class(k, "data.frame")
     expect_false(anyNA(k$dydx))
     expect_false(any(k$dydx == 0))
+})
+
+
+test_that("predictions: bugs stay dead: Issue #203", {
+    skip("works interactively")
+    dat <- mtcars
+    dat$factor_am = factor(dat$am)
+    m1 <- feols(mpg ~ hp * am, data = dat)
+    m2 <- feols(mpg ~ hp * factor_am, data = dat)
+    m3 <- feols(mpg ~ hp * wt, data = dat)
+    m4 <- feols(mpg ~ i(am, hp), data = dat)
+    m5 <- feglm(am ~ hp | gear, data = dat)
+    pred1 <- predictions(m1)
+    pred2 <- predictions(m2)
+    pred3 <- predictions(m3)
+    pred4 <- predictions(m4)
+    pred5 <- predictions(m5)
+    expect_predictions(pred1)
+    expect_predictions(pred2)
+    expect_predictions(pred3)
+    expect_predictions(pred4)
+    expect_predictions(pred5)
+    expect_warning(plot_cap(m1, condition = c("hp", "am")), NA)
+    expect_warning(plot_cap(m2, condition = c("hp", "factor_am")), NA)
+    expect_warning(plot_cap(m3, condition = c("hp", "wt")), NA)
+    expect_warning(plot_cap(m4, condition = c("hp", "am")), NA)
+    vdiffr::expect_doppelganger("fixest plot_cap with i()",
+                                plot_cap(m4, condition = c("hp", "am")))
 })

@@ -1,3 +1,9 @@
+# marginaleffects 0.3.2.9000
+
+`predictions()`:
+
+* Support `fixest` confidence intervals 
+
 # marginaleffects 0.3.2
 
 Support for new models and packages:

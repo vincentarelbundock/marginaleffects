@@ -1,3 +1,8 @@
+AAP
+AAPs
+AME
+APM
+MEM
 Adelies
 Avina
 Bugfix
@@ -22,6 +27,7 @@ datagrid
 dX
 dY
 emmeans
+eps
 frac
 ggeffects
 github
@@ -31,6 +37,7 @@ io
 jacobians
 lme
 modelbased
+numDeriv
 probs
 regressand
 regressors’

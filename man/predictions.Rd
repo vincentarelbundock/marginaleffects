@@ -55,7 +55,7 @@ calculate Average Adjusted Predictions (AAP), Average Prediction at the Mean
 for details and examples.
 }
 \details{
-An "ajusted prediction" is the outcome predicted by a model for some
+An "adjusted prediction" is the outcome predicted by a model for some
 combination of the regressors’ values, such as their means or factor levels
 (a.k.a. “reference grid”). When possible, this function uses the delta
 method to compute the standard error associated with the adjusted
