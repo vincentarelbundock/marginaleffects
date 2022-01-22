@@ -1,19 +1,21 @@
 #' Adjusted Predictions
 #'
-#' This function calculates adjusted predictions for each row of the dataset.
-#' The `datagrid()` function and the `newdata` argument can be used to
-#' calculate Average Adjusted Predictions (AAP), Average Prediction at the Mean
-#' (APM), or Predictions at User-Specified Values of the regressors. See below
-#' for details and examples.
+#' Calculate adjusted predictions for each row of the dataset. The `datagrid()`
+#' function and the `newdata` argument can be used to calculate Average
+#' Adjusted Predictions (AAP), Average Predictions at the Mean (APM), or
+#' Predictions at User-Specified Values of the regressors (aka Adjusted
+#' Predictions at Representative values, APR). See the Details and Examples
+#' sections below.
 #'
 #' An "adjusted prediction" is the outcome predicted by a model for some
-#' combination of the regressors’ values, such as their means or factor levels
-#' (a.k.a. “reference grid”). When possible, this function uses the delta
-#' method to compute the standard error associated with the adjusted
-#' predictions.
+#' combination of the regressors' values, such as their observed values, their
+#' means, or factor levels (a.k.a. “reference grid”). 
+
+#' When possible, this function uses the delta method to compute the standard
+#' error associated with the adjusted predictions.
 #'
-#' A detailed vignette on adjusted predictions and a list of supported models
-#' are published on the package website:
+#' A detailed vignette on adjusted predictions is published on the package
+#' website:
 #'
 #' https://vincentarelbundock.github.io/marginaleffects/
 

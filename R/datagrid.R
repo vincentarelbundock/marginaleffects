@@ -7,7 +7,7 @@
 #' @param newdata data.frame (one and only one of the `model` and `newdata` arguments
 #' @param grid.type character
 #'   * "typical": variables whose values are not explicitly specified by the user in `...` are set to their mean or mode, or to the output of the functions supplied to `FUN.type` arguments.
-#'   * "counterfactual": the entire dataset is duplicated for each combination of the variable values specified in `...`.
+#'   * "counterfactual": the entire dataset is duplicated for each combination of the variable values specified in `...`. Variables not explicitly supplied to `datagrid()` are set to their observed values in the original dataset.
 #' @param FUN.character the function to be applied to character variables.
 #' @param FUN.factor the function to be applied to factor variables.
 #' @param FUN.logical the function to be applied to factor variables.

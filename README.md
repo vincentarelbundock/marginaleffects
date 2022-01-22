@@ -26,8 +26,8 @@ models:](https://vincentarelbundock.github.io/marginaleffects/articles/supported
   - [*Adjusted Prediction*
     (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html)
       - The outcome predicted by a model for some combination of the
-        regressors’ values, such as their means or factor levels (a.k.a.
-        “reference grid”).
+        regressors’ values, such as their observed values, their means,
+        or factor levels (a.k.a. “reference grid”).
   - [*Contrast*
     (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)
       - The difference between two adjusted predictions, calculated for
