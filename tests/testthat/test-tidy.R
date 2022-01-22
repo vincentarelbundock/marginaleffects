@@ -1,5 +1,30 @@
 mod <- glm(vs ~ hp * mpg, data = mtcars, family = binomial)
 mfx <- marginaleffects(mod)
+pred <- predictions(mod)
+
+test_that("tidy.predictions", {
+    requiet("MASS")
+    mod1 <- glm(vs ~ hp * mpg, data = mtcars, family = binomial)
+    mod2 <- polr(factor(gear) ~ hp * mpg, data = mtcars)
+    pred1 <- predictions(mod1)
+    pred2 <- predictions(mod2, type = "probs")
+    ti1 <- tidy(pred1)
+    ti2 <- tidy(pred2)
+    expect_s3_class(ti1, "data.frame")
+    expect_s3_class(ti2, "data.frame")
+    expect_equal(nrow(ti1), 1)
+    expect_equal(nrow(ti2), 3)
+
+    # Stata comparisons (manually collected)
+    mod <- lm(mpg ~ hp + wt, data = mtcars)
+    pred <- predictions(mod)
+    ti <- tidy(pred)
+    expect_equal(ti$estimate, 20.09062, tolerance = .0001)
+    # not supported yet
+    # expect_equal(ti$std.error, 45.84548, tolerance = .0001)
+    # expect_equal(ti$conf.low, 19.15298, tolerance = .0001)
+    # expect_equal(ti$conf.high, 21.02827, tolerance = .0001)
+})
 
 
 test_that("tidy: minimal", {
@@ -13,11 +38,13 @@ test_that("tidy: minimal", {
     expect_true(all(ti1$conf.high < ti2$conf.high))
 })
 
+
 test_that("glance: with modelsummary", {
     skip_if_not_installed("modelsummary", minimum_version = "0.9.3")
     gl <- glance(mfx)
     expect_equal(dim(glance(mfx)), c(1, 9))
 })
+
 
 test_that("bug: emmeans contrast rename in binomial", {
     x <- glm(am ~ mpg + factor(cyl), data = mtcars, family = binomial)
@@ -26,6 +53,7 @@ test_that("bug: emmeans contrast rename in binomial", {
     expect_s3_class(x, "data.frame") 
     expect_equal(nrow(x), 3)
 })
+
 
 test_that("tidy: with and without contrasts", {
     tmp <- mtcars

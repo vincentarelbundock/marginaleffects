@@ -166,3 +166,54 @@ glance.marginalmeans <- glance.marginaleffects
 
 #' @export
 glance.predictions <- glance.marginaleffects
+
+
+
+
+#' Tidy a `predictions` object
+#'
+#' Calculate average adjusted predictions by taking the mean of all the
+#' unit-level adjusted predictions computed by the `predictions` function.
+#'
+#' @param x An object produced by the `predictions` function.
+#' @inheritParams predictions
+#' @return A "tidy" `data.frame` of summary statistics which conforms to the
+#' `broom` package specification.
+#' @export
+#' @examples
+#' mod <- lm(mpg ~ hp * wt + factor(gear), data = mtcars)
+#' mfx <- predictions(mod)
+#' tidy(mfx)
+tidy.predictions <- function(x, ...) {
+
+    # Average Adjusted Predictions
+    # empty initial mfx data.frame means there were no numeric variables in the
+    # model
+    # lhs <- intersect(c("predicted", "std.error", "conf.low", "conf.high"), colnames(x))
+    lhs <- intersect(c("predicted"), colnames(x))
+    rhs <- intersect(c("type", "group"), colnames(x))
+    lhs <- sprintf("cbind(%s)", paste(lhs, collapse = ", "))
+    rhs <- paste(rhs, collapse = " + ")
+    form <- sprintf("%s ~ %s", lhs, rhs)
+    form <- stats::as.formula(form)
+    predicted <- stats::aggregate(form, data = x, FUN = mean, na.rm = TRUE)
+
+    ## This might be a useful implementation of weights
+    # if (is.null(attr(x, "weights"))) {
+    #     dydx <- stats::aggregate(f, data = x, FUN = mean)
+    # } else {
+    #     dydx <- stats::aggregate(f, data = x, FUN = weighted.mean, w = attr(x, "weights"))
+    # }
+
+    colnames(predicted)[match("predicted", colnames(predicted))] <- "estimate"
+
+    out <- predicted
+
+    # sort and subset columns
+    cols <- c("type", "group", "term", "contrast", "estimate", "std.error",
+              "statistic", "p.value", "conf.low", "conf.high")
+    out <- out[, intersect(cols, colnames(out)), drop = FALSE]
+    out <- as.data.frame(out)
+
+    return(out)
+}
