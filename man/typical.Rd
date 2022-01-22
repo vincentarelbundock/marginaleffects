@@ -37,3 +37,4 @@ Examples below.)}
 \description{
 Superseded by datagrid(...)
 }
+\keyword{internal}
