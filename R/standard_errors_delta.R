@@ -22,6 +22,7 @@ standard_errors_delta_marginaleffects <- function(model,
              ...)$dydx
 }
 
+
 #' Compute standard errors using the delta method
 #'
 #' @inheritParams marginaleffects
