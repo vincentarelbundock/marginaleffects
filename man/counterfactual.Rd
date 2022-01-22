@@ -18,3 +18,4 @@ Examples below.)}
 \description{
 Superseded by datagrid(..., grid.type = "counterfactual")
 }
+\keyword{internal}

@@ -90,6 +90,7 @@ datagrid <- function(
 #' Superseded by datagrid(..., grid.type = "counterfactual")
 #'
 #' @inheritParams datagrid
+#' @keywords internal
 #' @export
 counterfactual <- function(..., model = NULL, newdata = NULL) {
 
@@ -120,6 +121,7 @@ counterfactual <- function(..., model = NULL, newdata = NULL) {
 #' Superseded by datagrid(...)
 #'
 #' @inheritParams datagrid
+#' @keywords internal
 #' @export
 typical <- function(
     ...,
