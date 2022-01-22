@@ -26,7 +26,7 @@ theme_set(theme_minimal())
 
 In the context of this package, an "Adjusted Prediction" is defined as:
 
-> The response predicted by a model for some combination of the regressors' values, such as their means or factor levels (a.k.a. "reference grid"). 
+> The outcome predicted by a model for some combination of the regressors' values, such as their observed values, their means, or factor levels (a.k.a. "reference grid"). 
 
 An adjusted prediction is thus the regression-adjusted response variable (or link, or other fitted value), for a given combination (or grid) of predictors. This grid may or may not correspond to the actual observations in a dataset.
 

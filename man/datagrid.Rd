@@ -28,7 +28,7 @@ Examples below.)}
 \item{grid.type}{character
 \itemize{
 \item "typical": variables whose values are not explicitly specified by the user in \code{...} are set to their mean or mode, or to the output of the functions supplied to \code{FUN.type} arguments.
-\item "counterfactual": the entire dataset is duplicated for each combination of the variable values specified in \code{...}.
+\item "counterfactual": the entire dataset is duplicated for each combination of the variable values specified in \code{...}. Variables not explicitly supplied to \code{datagrid()} are set to their observed values in the original dataset.
 }}
 
 \item{FUN.character}{the function to be applied to character variables.}

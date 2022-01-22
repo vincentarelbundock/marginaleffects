@@ -51,11 +51,18 @@
 #' # Marginal Effect at the Mean (MEM)
 #' marginaleffects(mod, newdata = datagrid())
 #'
-#' # Marginal Effect at User-Specified Values (Counterfactual)
-#' marginaleffects(mod, newdata = datagrid(hp = c(100, 110)))
+#' # Marginal Effect at User-Specified Values
+#' # Variables not explicitly included in `datagrid()` are held at their means
+#' marginaleffects(mod,
+#'                 newdata = datagrid(hp = c(100, 110)))
 #'
-#' # Marginal Effects at User-Specified Values (Counterfactual)
-#' mfx <- marginaleffects(mod, newdata = datagrid(hp = c(100, 110), grid.type = "counterfactual"))
+#' # Marginal Effects at User-Specified Values (counterfactual)
+#' # Variables not explicitly included in `datagrid()` are held at their
+#' # original values, and the whole dataset is duplicated once for each
+#' # combination of the values in `datagrid()`
+#' mfx <- marginaleffects(mod,
+#'                        newdata = datagrid(hp = c(100, 110),
+#'                                           grid.type = "counterfactual"))
 #' head(mfx)
 #'
 #' # Heteroskedasticity robust standard errors
