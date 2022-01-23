@@ -55,6 +55,7 @@ sanity_model_supported_class <- function(model) {
                       c("negbin", "glm", "lm"),
                       c("plm", "panelmodel"),
                       "polr",
+                      "rlmerMod",
                       "rq",
                       c("scam", "glm", "lm"),
                       "speedglm",

@@ -44,6 +44,7 @@ rms,lrm,TRUE,TRUE,,,U,U,TRUE,TRUE
 robust,lmRob,TRUE,TRUE,,,U,U,U,U
 robustbase,glmrob,TRUE,TRUE,,,TRUE,TRUE,U,U
 robustbase,lmrob,TRUE,TRUE,,,TRUE,TRUE,U,U
+robustlmm,rlmer,TRUE,TRUE,,,U,U,,
 rstanarm,stan_glm,TRUE,TRUE,,,FALSE,U,TRUE,TRUE
 scam,scam,TRUE,TRUE,,,U,U,U,U
 speedglm,speedglm,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,U,U
