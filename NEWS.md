@@ -2,7 +2,11 @@
 
 `predictions()`:
 
-* Support `fixest` confidence intervals 
+* Support `fixest` confidence intervals
+
+Misc:
+
+* Support `modelbased::visualisation_matrix` in `newdata` without having to specify `x` excplicitly. 
 
 # marginaleffects 0.3.2
 

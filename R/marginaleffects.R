@@ -75,15 +75,31 @@ marginaleffects <- function(model,
                             type = "response",
                             ...) {
 
-    # if `newdata` is a call to `datagrid`, `typical` or `counterfactual`, insert `model`
+
+    # order of the first few paragraphs is important
+    # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
     scall <- substitute(newdata)
-    if (is.call(scall) && as.character(scall)[1] %in% c("datagrid", "typical", "counterfactual")) {
+    if (is.call(scall)) {
         lcall <- as.list(scall)
-        if (!any(c("model", "data") %in% names(lcall))) {
-            lcall <- c(lcall, list("model" = model))
-            newdata <- eval.parent(as.call(lcall))
+        fun_name <- as.character(scall)[1]
+        if (fun_name %in% c("datagrid", "typical", "counterfactual")) {
+            if (!any(c("model", "newdata") %in% names(lcall))) {
+                lcall <- c(lcall, list("model" = model))
+                newdata <- eval.parent(as.call(lcall))
+            }
+        } else if (fun_name == "visualisation_matrix") {
+            if (!"x" %in% names(lcall)) {
+                lcall <- c(lcall, list("x" = insight::get_data(model)))
+                newdata <- eval.parent(as.call(lcall))
+            }
         }
     }
+
+    # modelbased::visualisation_matrix attaches useful info for plotting
+    attributes_newdata <- attributes(newdata)
+    idx <- c("class", "row.names", "names", "data", "reference")
+    idx <- !names(attributes_newdata) %in% idx
+    attributes_newdata <- attributes_newdata[idx]
 
     # sanity checks and pre-processing
     model <- sanity_model(model = model,
@@ -235,6 +251,11 @@ marginaleffects <- function(model,
     attr(out, "J") <- J
     attr(out, "J_mean") <- J_mean
     attr(out, "se_at_mean_gradient") <- se_at_mean_gradient
+
+    # modelbased::visualisation_matrix attaches useful info for plotting
+    for (a in names(attributes_newdata)) {
+        attr(out, paste0("newdata_", a)) <- attributes_newdata[[a]]
+    }
 
     return(out)
 }
