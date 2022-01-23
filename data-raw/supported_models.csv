@@ -41,6 +41,7 @@ pscl,hurdle,TRUE,TRUE,,,TRUE,U,TRUE,FALSE
 pscl,zeroinfl,TRUE,TRUE,TRUE,TRUE,TRUE,U,TRUE,TRUE
 quantreg,rq,TRUE,TRUE,TRUE,TRUE,U,U,TRUE,TRUE
 rms,lrm,TRUE,TRUE,,,U,U,TRUE,TRUE
+robust,lmRob,TRUE,TRUE,,,U,U,U,U
 robustbase,glmrob,TRUE,TRUE,,,TRUE,TRUE,U,U
 robustbase,lmrob,TRUE,TRUE,,,TRUE,TRUE,U,U
 rstanarm,stan_glm,TRUE,TRUE,,,FALSE,U,TRUE,TRUE

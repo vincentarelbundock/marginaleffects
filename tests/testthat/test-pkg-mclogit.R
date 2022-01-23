@@ -16,7 +16,7 @@ test_that("mclogit: no validity", {
     expect_error(marginaleffects(model, type = "response"), regexp = "type. argument")
 
     expect_marginaleffects(model, type = "link", n_unique = 1)
-    pred <- predictions(model)
+    pred <- predictions(model, type = "link")
     expect_predictions(pred)
 })
 

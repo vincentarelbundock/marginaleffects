@@ -73,6 +73,7 @@ Suggests:
     pscl,
     quantreg,
     rms,
+    robust,
     robustbase,
     rstantools,
     rstanarm,
@@ -118,6 +119,7 @@ Collate:
     'methods_plm.R'
     'methods_pscl.R'
     'methods_quantreg.R'
+    'methods_robust.R'
     'methods_rstanarm.R'
     'methods_scam.R'
     'methods_stats.R'
