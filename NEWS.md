@@ -4,6 +4,7 @@ New models:
 
 * `mclogit::mclogit`
 * `robust::lmRob`
+* `robustlmm::rlmer`
 * `fixest` confidence intervals in `predictions`
 
 Misc:

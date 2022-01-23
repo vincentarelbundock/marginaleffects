@@ -75,6 +75,7 @@ Suggests:
     rms,
     robust,
     robustbase,
+    robustlmm,
     rstantools,
     rstanarm,
     sandwich,
@@ -120,6 +121,7 @@ Collate:
     'methods_pscl.R'
     'methods_quantreg.R'
     'methods_robust.R'
+    'methods_robustlmm.R'
     'methods_rstanarm.R'
     'methods_scam.R'
     'methods_stats.R'
