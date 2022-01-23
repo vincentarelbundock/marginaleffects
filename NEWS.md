@@ -1,8 +1,9 @@
 # marginaleffects 0.3.2.9000
 
-`predictions()`:
+Model support:
 
-* Support `fixest` confidence intervals
+* Support `fixest` confidence intervals in `predictions`
+* Support `mclogit::mclogit` models
 
 Misc:
 

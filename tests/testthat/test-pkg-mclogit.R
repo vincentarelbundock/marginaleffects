@@ -5,6 +5,22 @@ requiet("emmeans")
 requiet("broom")
 
 
+test_that("mclogit: no validity", {
+    data(Transport, package = "mclogit")
+    void <- capture.output(
+        model <- mclogit(cbind(resp, suburb) ~ distance + cost, data = Transport)
+    )
+
+    # type = "response" produces 0 dydx and standard error. Not sure why
+    # because `get_predict(newdata)` seems to work
+    expect_error(marginaleffects(model, type = "response"), regexp = "type. argument")
+
+    expect_marginaleffects(model, type = "link", n_unique = 1)
+    pred <- predictions(model)
+    expect_predictions(pred)
+})
+
+
 test_that("mblogit: no validity", {
     data("housing", package = "MASS")
     dat <- housing
