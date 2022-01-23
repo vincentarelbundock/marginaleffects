@@ -77,6 +77,7 @@ lm_robust,response,expectation,TRUE,TRUE
 mblogit,response,expectation,TRUE,TRUE
 mblogit,link,link,TRUE,TRUE
 mclogit,link,link,TRUE,TRUE
+mclogit,response,expectation,FALSE,TRUE
 multinom,probs,expectation,TRUE,TRUE
 multinom,class,classification,FALSE,TRUE
 negbin,link,link,TRUE,TRUE

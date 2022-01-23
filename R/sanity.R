@@ -45,12 +45,24 @@ sanity_newdata <- function(model, newdata) {
     # if there are no categorical variables in `newdata`, check the model terms
     # to find transformation and warn accordingly.
     categorical_variables <- find_categorical(newdata)
+    flag <- FALSE
     if (length(categorical_variables) == 0) {
         termlabs <- try(attr(stats::terms(model), "term.labels"), silent = TRUE)
         termlabs <- try(any(grepl("^factor\\(|^as.factor\\(|^as.logical\\(", termlabs)), silent = TRUE)
         if (isTRUE(termlabs)) {
-            warning("When using `marginaleffects`, it is safer to convert variables to factors or logicals in the dataset before fitting the model, rather than by wrapping terms in `factor()` or `as.logical() in the model formula.")
+            flag <- TRUE
         }
+    }
+    # This may be useful but it raises way too many warnings
+    #} else {
+    #     for (cv in categorical_variables) {
+    #         if (is.numeric(newdata[[cv]])) {
+    #             flag <- TRUE
+    #         }
+    #     }
+    # }
+    if (isTRUE(flag)) {
+        warning("When using `marginaleffects`, it is safer to convert variables to factors or logicals in the dataset before fitting the model, rather than by wrapping terms in `factor()` or `as.logical() in the model formula.")
     }
 
     return(newdata)

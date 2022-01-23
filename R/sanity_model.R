@@ -44,6 +44,7 @@ sanity_model_supported_class <- function(model) {
                       "lmerMod",
                       "lmerModLmerTest",
                       "lmrob",
+                      "lmRob",
                       "lm_robust",
                       "loess",
                       c("lrm", "lm"),

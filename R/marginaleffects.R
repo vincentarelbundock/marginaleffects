@@ -109,7 +109,7 @@ marginaleffects <- function(model,
                           type = type,
                           return_data = return_data,
                           ...)
-
+    sanity_type(model = model, type = type, calling_function = "marginaleffects")
     newdata <- sanity_newdata(model, newdata)
     variables <- sanity_variables(model, newdata, variables)
     vcov <- sanitize_vcov(model, vcov)
