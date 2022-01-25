@@ -1,15 +1,19 @@
-#' Marginal effects using numerical derivatives
+#' Marginal Effects
 #'
 #' This function calculates marginal effects (slopes) for each row of the
-#' dataset. The resulting object can processed by the `tidy()` or `summary()` ,
-#' which compute and print Average Marginal Effects (AME). The `datagrid()`
+#' dataset. The resulting object can processed by the `tidy()` or `summary()`
+#' functions, which compute Average Marginal Effects (AME). The `datagrid()`
 #' function and the `newdata` argument can be used to calculate Marginal
-#' Effects at the Mean. See below for details and examples.
+#' Effects at the Mean (MEM) or Marginal Effects at User-Specified values (aka
+#' Marginal Effects at Representative values, MER). Additional information can
+#' be found in the Details and Examples sections below, and in the vignette on
+#' the `marginaleffects` website.
 #'
 #' A "marginal effect" is the partial derivative of the regression equation
 #' with respect to a variable in the model. This function uses automatic
 #' differentiation to compute marginal effects for a vast array of models,
 #' including non-linear models with transformations (e.g., polynomials).
+#' Uncertainty estimates are computed using the delta method.
 #'
 #' A detailed vignette on marginal effects and a list of supported models can
 #' be found on the package website:
