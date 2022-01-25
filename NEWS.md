@@ -1,6 +1,6 @@
 # marginaleffects 0.3.2.9000
 
-New models:
+Supported models:
 
 * `mclogit::mclogit`
 * `robust::lmRob`
@@ -10,6 +10,8 @@ New models:
 Misc:
 
 * Support `modelbased::visualisation_matrix` in `newdata` without having to specify `x` excplicitly. 
+* `tidy.predictions()` and `summary.predictions()` methods.
+* Documentation improvements.
 
 # marginaleffects 0.3.2
 
