@@ -2,7 +2,7 @@
 % Please edit documentation in R/marginaleffects.R
 \name{marginaleffects}
 \alias{marginaleffects}
-\title{Marginal effects using numerical derivatives}
+\title{Marginal effects}
 \usage{
 marginaleffects(
   model,
@@ -48,10 +48,13 @@ A \code{data.frame} with one row per observation (per term/group) and several co
 }
 \description{
 This function calculates marginal effects (slopes) for each row of the
-dataset. The resulting object can processed by the \code{tidy()} or \code{summary()} ,
-which compute and print Average Marginal Effects (AME). The \code{datagrid()}
+dataset. The resulting object can processed by the \code{tidy()} or \code{summary()}
+functions, which compute Average Marginal Effects (AME). The \code{datagrid()}
 function and the \code{newdata} argument can be used to calculate Marginal
-Effects at the Mean. See below for details and examples.
+Effects at the Mean (MEM) or Marginal Effects at User-Specified values (aka
+Marginal Effects at Representative values, MER). Additional information can
+be found in the Details and Examples sections below, and in the vignette on
+the \code{marginaleffects} website.
 }
 \details{
 A "marginal effect" is the partial derivative of the regression equation
