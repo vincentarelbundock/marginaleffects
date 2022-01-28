@@ -63,6 +63,7 @@ Suggests:
     glmx,
     ivreg,
     lme4,
+    lmerTest,
     MASS,
     mclogit,
     mgcv,

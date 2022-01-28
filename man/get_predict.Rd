@@ -16,6 +16,7 @@
 \alias{get_predict.crch}
 \alias{get_predict.fixest}
 \alias{get_predict.merMod}
+\alias{get_predict.lmerModLmerTest}
 \alias{get_predict.clm}
 \alias{get_predict.rq}
 \alias{get_predict.rlmerMod}
@@ -68,6 +69,14 @@ get_predict(model, newdata, type, ...)
 )
 
 \method{get_predict}{merMod}(
+  model,
+  newdata = insight::get_data(model),
+  type = "response",
+  conf.level = NULL,
+  ...
+)
+
+\method{get_predict}{lmerModLmerTest}(
   model,
   newdata = insight::get_data(model),
   type = "response",
