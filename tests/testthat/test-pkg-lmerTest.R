@@ -24,6 +24,19 @@ test_that("vs. emmeans vs. margins", {
     me <- tidy(me)
     ma <- margins(mod)
     ma <- tidy(ma)
-    expect_equal(me$std.error, ma$std.error, ignore_attr = TRUE)
+    expect_equal(me$std.error, ma$std.error, ignore_attr = TRUE, tolerance = .0001)
     expect_equal(me$estimate, ma$estimate, ignore_attr = TRUE)
+})
+
+
+test_that("bug: population-level predictions() when {lmerTest} is loaded", {
+    mod <- suppressMessages(lmer(
+      weight ~ 1 + Time + I(Time^2) + Diet + Time:Diet + I(Time^2):Diet + (1 + Time + I(Time^2) | Chick),
+      data = ChickWeight))
+    expect_warning(predictions(mod,
+                               newdata = datagrid(Chick = NA,
+                                                  Diet = 1:4,
+                                                  Time = 0:21),
+                               include_random = FALSE),
+                   NA)
 })

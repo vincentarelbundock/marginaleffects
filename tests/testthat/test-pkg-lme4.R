@@ -161,18 +161,6 @@ test_that("glmer.nb: marginaleffects vs. emtrends", {
 })
 
 
-test_that("bug: population-level predictions() when {lmerTest} is loaded", {
-    requiet("lmerTest")
-    mod <- suppressMessages(lmer(
-      weight ~ 1 + Time + I(Time^2) + Diet + Time:Diet + I(Time^2):Diet + (1 + Time + I(Time^2) | Chick),
-      data = ChickWeight))
-    expect_warning(predictions(mod,
-                               newdata = datagrid(Chick = NA,
-                                                  Diet = 1:4,
-                                                  Time = 0:21),
-                               include_random = FALSE),
-                   NA)
-})
 
 
 # test_that("'group' cannot be a column name because of conflict with tidy output", {
