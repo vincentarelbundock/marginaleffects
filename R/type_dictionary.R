@@ -72,6 +72,7 @@ glmmPQL,response,expectation,TRUE,TRUE
 glmx,response,expectation,TRUE,TRUE
 ivreg,response,expectation,TRUE,TRUE
 lmerMod,response,expectation,TRUE,TRUE
+lmerModLmerTest,response,expectation,TRUE,TRUE
 lmrob,response,expectation,TRUE,TRUE
 lm_robust,response,expectation,TRUE,TRUE
 mblogit,response,expectation,TRUE,TRUE
