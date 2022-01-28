@@ -1,3 +1,7 @@
+# marginaleffects 0.3.3.9000
+
+* Bug fixes
+
 # marginaleffects 0.3.3
 
 Supported models:
