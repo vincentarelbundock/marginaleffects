@@ -75,6 +75,7 @@ predictions <- function(model,
 
     ## do not check this because `insight` supports more models than `marginaleffects`
     # model <- sanity_model(model)
+    sanity_dots(model = model, ...)
 
     # order of the first few paragraphs is important
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`

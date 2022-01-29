@@ -110,6 +110,7 @@ marginaleffects <- function(model,
 
     # sanity checks and pre-processing
     model <- sanity_model(model = model, ...)
+    sanity_dots(model = model, ...)
     sanity_type(model = model, type = type, calling_function = "marginaleffects")
     newdata <- sanity_newdata(model, newdata)
     variables <- sanity_variables(model, newdata, variables)

@@ -45,6 +45,7 @@ Suggests:
     margins,
     modelsummary,
     patchwork,
+    quantreg,
     rlang,
     rmarkdown,
     testthat (>= 3.0.0),
@@ -72,7 +73,6 @@ Suggests:
     ordinal,
     plm,
     pscl,
-    quantreg,
     rms,
     robust,
     robustbase,
@@ -135,6 +135,7 @@ Collate:
     'posteriordraws.R'
     'predictions.R'
     'sanity.R'
+    'sanity_dots.R'
     'sanity_type.R'
     'standard_errors_delta.R'
     'summary.R'

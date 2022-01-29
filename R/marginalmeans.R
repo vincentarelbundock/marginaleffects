@@ -63,6 +63,7 @@ marginalmeans <- function(model,
     }
 
     # sanity
+    sanity_dots(model = model, ...)
     if (inherits(model, "brmsfit")) {
         stop("`brmsfit` objects are yet not supported by the `marginalmeans` function. Follow this link to track progress: https://github.com/vincentarelbundock/marginaleffects/issues/137")
     }

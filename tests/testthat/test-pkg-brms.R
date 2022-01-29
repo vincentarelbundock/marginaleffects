@@ -95,9 +95,9 @@ test_that("predictions w/ random effects", {
 
     # no random effects
     w1 <- apply(posterior_epred(mod), 2, stats::median)
-    w2 <- apply(posterior_epred(mod, re.form = NA), 2, stats::median)
-    x <- get_predict(mod, re.form = NA, type = "response")
-    y <- predictions(mod, re.form = NA, type = "response")
+    w2 <- apply(posterior_epred(mod, re_formula = NA), 2, stats::median)
+    x <- get_predict(mod, re_formula = NA, type = "response")
+    y <- predictions(mod, re_formula = NA, type = "response")
     expect_true(all(w1 != w2))
     expect_equal(w2, x$predicted, ignore_attr = TRUE)
     expect_equal(w2, y$predicted, ignore_attr = TRUE)
@@ -106,7 +106,7 @@ test_that("predictions w/ random effects", {
 test_that("brms: cumulative: predictions: no validity", {
     set.seed(1024)
     p1 <- predictions(mod_ran)
-    p2 <- predictions(mod_ran, re.form = NA)
+    p2 <- predictions(mod_ran, re_formula = NA)
     expect_true(mean(p1$conf.low < p2$conf.low) > .99) # tolerance
     expect_true(mean(p1$conf.high > p2$conf.high) > .99) # tolerance
     expect_error(predictions(mod_ran, include_random = FALSE)) # only for lme4
@@ -158,9 +158,9 @@ test_that("predictions: prediction vs. expectation vs. include_random", {
     p2 <- suppressWarnings(predictions(mod_epi, type = "response"))
     expect_true(all(p1$conf.low < p2$conf.low))
     expect_true(all(p1$conf.high > p2$conf.high))
-    # re.form
+    # re_formula
     p1 <- predictions(mod_epi, newdata = datagrid(patient = 1))
-    p2 <- predictions(mod_epi, newdata = datagrid(patient = 1), re.form = NA)
+    p2 <- predictions(mod_epi, newdata = datagrid(patient = 1), re_formula = NA)
     expect_false(p1$predicted == p2$predicted)
     expect_false(p1$conf.low == p2$conf.low)
     expect_false(p1$conf.high == p2$conf.high)
