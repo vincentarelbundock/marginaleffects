@@ -29,11 +29,11 @@ calculates marginal effects for all terms in the model object.}
 \item Named square matrix: computes standard errors with a user-supplied variance-covariance matrix. This matrix must be square and have dimensions equal to the number of coefficients in \code{get_coef(model)}.
 }}
 
-\item{type}{Type(s) of prediction as string or vector This can
+\item{type}{Type(s) of prediction as string or character vector. This can
 differ based on the model type, but will typically be a string such as:
 "response", "link", "probs", or "zero".}
 
-\item{...}{Additional arguments are pushed forward to \code{predict()}.}
+\item{...}{The "Model-Specific Arguments" section below gives a list of arguments which can modify the behavior of this function for certain models (e.g., mixed-effects or bayesian).}
 }
 \value{
 A \code{data.frame} with one row per observation (per term/group) and several columns:
@@ -68,11 +68,27 @@ be found on the package website:
 
 https://vincentarelbundock.github.io/marginaleffects/
 }
+\section{Model-Specific Arguments}{
+
+
+Some model types allow model-specific arguments to modify the nature of
+marginal effects, predictions, marginal means, and contrasts.\tabular{llll}{
+   Package \tab Class \tab Argument \tab Documentation \cr
+   \code{brms} \tab \code{brmsfit} \tab \code{ndraws} \tab \link[brms:posterior_predict.brmsfit]{brms::posterior_predict} \cr
+    \tab  \tab \code{re_formula} \tab  \cr
+   \code{lme4} \tab \code{merMod} \tab \code{include_random} \tab \link[insight:get_predicted]{insight::get_predicted} \cr
+    \tab  \tab \code{re.form} \tab \link[lme4:predict.merMod]{lme4::predict.merMod} \cr
+    \tab  \tab \code{allow.new.levels} \tab \link[lme4:predict.merMod]{lme4::predict.merMod} \cr
+    \tab  \tab \code{random.only} \tab \link[lme4:predict.merMod]{lme4::predict.merMod} \cr
+}
+}
+
 \examples{
 
 mod <- glm(am ~ hp * wt, data = mtcars, family = binomial)
 mfx <- marginaleffects(mod)
 head(mfx)
+
 # Average Marginal Effect (AME)
 summary(mfx)
 tidy(mfx)

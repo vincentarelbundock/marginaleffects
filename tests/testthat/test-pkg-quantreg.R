@@ -1,3 +1,4 @@
+skip_on_ci()
 requiet("quantreg")
 requiet("emmeans")
 requiet("broom")

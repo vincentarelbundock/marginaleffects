@@ -12,9 +12,6 @@
 #'   predictors. This grid can be very large when there are many variables and
 #'   many response levels, so it is advisable to select a limited number of
 #'   variables in the `variables` and `variables_grid` arguments.
-#' @param type Type(s) of prediction (string or character vector). This can
-#'   differ based on the model type, but will typically be a string such as:
-#'   "response", "link", "probs", or "zero".
 #' @details
 #'   This function begins by calling the `predictions` function to obtain a
 #'   grid of predictors, and adjusted predictions for each cell. The grid
@@ -34,6 +31,9 @@
 #'   The `marginaleffects` website compares the output of this function to the
 #'   popular `emmeans` package, which provides similar but more advanced
 #'   functionality: https://vincentarelbundock.github.io/marginaleffects/
+#'
+#' @template model_specific_arguments
+#'
 #' @return Data frame of marginal means with one row per variable-value
 #' combination.
 #' @export
@@ -53,7 +53,8 @@ marginalmeans <- function(model,
                           variables = NULL,
                           variables_grid = NULL,
                           vcov = NULL,
-                          type = "response") {
+                          type = "response",
+                          ...) {
 
     newdata <- insight::get_data(model)
 
@@ -62,6 +63,7 @@ marginalmeans <- function(model,
     }
 
     # sanity
+    sanity_dots(model = model, ...)
     if (inherits(model, "brmsfit")) {
         stop("`brmsfit` objects are yet not supported by the `marginalmeans` function. Follow this link to track progress: https://github.com/vincentarelbundock/marginaleffects/issues/137")
     }
@@ -120,7 +122,8 @@ marginalmeans <- function(model,
     mm <- get_marginalmeans(model = model,
                             newdata = newgrid,
                             type = type,
-                            variables = variables)
+                            variables = variables,
+                            ...)
 
     # we want consistent output, regardless of whether `data.table` is installed/used or not
     out <- as.data.frame(mm)

@@ -28,7 +28,7 @@ get_vcov(model, ...)
 \arguments{
 \item{model}{Model object}
 
-\item{...}{Additional arguments are pushed forward to \code{predict()}.}
+\item{...}{The "Model-Specific Arguments" section below gives a list of arguments which can modify the behavior of this function for certain models (e.g., mixed-effects or bayesian).}
 }
 \value{
 A named square matrix of variance and covariances. The names must match the coefficient names.

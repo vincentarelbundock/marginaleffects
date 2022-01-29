@@ -29,10 +29,12 @@
 #' @param newdata A dataset over which to compute adjusted predictions. `NULL` uses
 #'   the original data used to fit the model.
 #' @param conf.level The confidence level to use for the confidence interval.
-#' No interval is computed if `conf.int=NULL`.  Must be strictly greater than 0
-#' and less than 1. Defaults to 0.95, which corresponds to a 95 percent
-#' confidence interval.
-#' @param ... Additional arguments are pushed forward to `predict()`.
+#'   No interval is computed if `conf.int=NULL`.  Must be strictly greater than 0
+#'   and less than 1. Defaults to 0.95, which corresponds to a 95 percent
+#'   confidence interval.
+#'
+#' @template model_specific_arguments
+#'
 #' @return A `data.frame` with one row per observation and several columns:
 #' * `rowid`: row number of the `newdata` data frame
 #' * `type`: prediction type, as defined by the `type` argument
@@ -73,6 +75,7 @@ predictions <- function(model,
 
     ## do not check this because `insight` supports more models than `marginaleffects`
     # model <- sanity_model(model)
+    sanity_dots(model = model, ...)
 
     # order of the first few paragraphs is important
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`

@@ -11,6 +11,7 @@ set_coef.merMod <- function(model, coefs) {
     model
 }
 
+
 #' @include get_coef.R
 #' @rdname @get_coef
 #' @export
