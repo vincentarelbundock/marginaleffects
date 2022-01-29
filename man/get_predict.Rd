@@ -112,11 +112,11 @@ get_predict(model, newdata, type, ...)
 \item{newdata}{A dataset over which to compute marginal effects. \code{NULL} uses
 the original data used to fit the model.}
 
-\item{type}{Type(s) of prediction as string or vector This can
+\item{type}{Type(s) of prediction as string or character vector. This can
 differ based on the model type, but will typically be a string such as:
 "response", "link", "probs", or "zero".}
 
-\item{...}{Additional arguments are pushed forward to \code{predict()}.}
+\item{...}{The "Model-Specific Arguments" section below gives a list of arguments which can modify the behavior of this function for certain models (e.g., mixed-effects or bayesian).}
 }
 \value{
 A vector of predicted values of length equal to the number of rows

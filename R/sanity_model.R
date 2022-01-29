@@ -1,5 +1,5 @@
 #' Method to raise model-specific warnings and errors
-#' 
+#'
 #' @inheritParams marginaleffects
 #' @return A warning, an error, or nothing
 #' @rdname sanity_model_specific
@@ -11,6 +11,10 @@ sanity_model_specific <- function (model, ...) {
 
 #' @rdname sanity_model_specific
 sanity_model_specific.default <- function(model, ...) {
+    dots <- list(...)
+    # if (length(dots) > 0) {
+    #     warning(sprintf("The following arguments will be ignored: %s. Please refer to the documentation for a list of supported model-specific arguments.", paste(sort(names(dots)), collapse = ", ")))
+    # }
     return(invisible(NULL))
 }
 
@@ -72,19 +76,20 @@ sanity_model_supported_class <- function(model) {
     }
     if (isFALSE(flag)) {
         support <- paste(sort(unique(sapply(supported, function(x) x[1]))), collapse = ", ")
-        msg <- 
-'Models of class "%s" are not supported. 
+        msg <-
+'Models of class "%s" are not supported.
 
-Supported model classes include: %s. 
- 
-New modeling packages can usually be supported by `marginaleffects` if they include a working `predict()` method. If you believe that this is the case, please file a feature request on Github: https://github.com/vincentarelbundock/marginaleffects/issues' 
+Supported model classes include: %s.
+
+New modeling packages can usually be supported by `marginaleffects` if they include a working `predict()` method. If you believe that this is the case, please file a feature request on Github: https://github.com/vincentarelbundock/marginaleffects/issues'
         msg <- sprintf(msg, class(model)[1], support)
         stop(msg)
     }
 }
 
 
-sanity_model <- function(model, ...) {
+sanity_model <- function(model,
+                         ...) {
     sanity_model_specific(model, ...)
     sanity_model_supported_class(model)
     return(model)

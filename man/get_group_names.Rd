@@ -35,9 +35,9 @@ get_group_names(model, ...)
 \arguments{
 \item{model}{Model object}
 
-\item{...}{Additional arguments are pushed forward to \code{predict()}.}
+\item{...}{The "Model-Specific Arguments" section below gives a list of arguments which can modify the behavior of this function for certain models (e.g., mixed-effects or bayesian).}
 
-\item{type}{Type(s) of prediction as string or vector This can
+\item{type}{Type(s) of prediction as string or character vector. This can
 differ based on the model type, but will typically be a string such as:
 "response", "link", "probs", or "zero".}
 }

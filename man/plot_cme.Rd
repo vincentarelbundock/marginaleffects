@@ -23,7 +23,7 @@ plot_cme(
 name to be displayed on the x-axis. The second is a variable whose values
 will be displayed in different colors.}
 
-\item{type}{Type(s) of prediction as string or vector This can
+\item{type}{Type(s) of prediction as string or character vector. This can
 differ based on the model type, but will typically be a string such as:
 "response", "link", "probs", or "zero".}
 

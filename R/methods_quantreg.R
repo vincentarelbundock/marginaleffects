@@ -11,6 +11,7 @@ get_vcov.rq <- function(model, ...) {
     return(out)
 }
 
+
 #' @rdname get_predict
 #' @export
 get_predict.rq <- function(model,
@@ -30,12 +31,9 @@ get_predict.rq <- function(model,
 }
 
 
-
 #' @include sanity_model.R
 #' @rdname sanity_model_specific
 #' @keywords internal
 sanity_model_specific.rqs <- function(model, ...) {
     stop("`marginaleffects` only supports `quantreg::rq` models with a single `tau` value.")
 }
-
-
