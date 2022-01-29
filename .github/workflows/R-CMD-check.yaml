@@ -30,12 +30,10 @@ jobs:
           # Use older ubuntu to maximise backward compatibility
           - {os: ubuntu-18.04,   r: 'devel', http-user-agent: 'release'}
           - {os: ubuntu-18.04,   r: 'release'}
-          - {os: ubuntu-18.04,   r: 'oldrel-1'}
-          - {os: ubuntu-18.04,   r: 'oldrel-2'}
           # Breaks on install of suggests, even with _R_CHECK_FORCE_SUGGESTS_: false
+          # - {os: ubuntu-18.04,   r: 'oldrel-1'}
+          # - {os: ubuntu-18.04,   r: 'oldrel-2'}
           # - {os: ubuntu-18.04,   r: 'oldrel-3'}
-          # `marginaleffects` requires 3.5.0
-          # - {os: ubuntu-18.04,   r: 'oldrel-4'}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}

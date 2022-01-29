@@ -15,3 +15,4 @@
 ^vignettes/brms.Rmd
 ^vignettes/lme4.Rmd
 ^vignettes/benchmark.Rmd
+man-roxygen
