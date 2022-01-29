@@ -29,24 +29,26 @@
 #'   + Named square matrix: computes standard errors with a user-supplied variance-covariance matrix. This matrix must be square and have dimensions equal to the number of coefficients in `get_coef(model)`.
 #' @param newdata A dataset over which to compute marginal effects. `NULL` uses
 #'   the original data used to fit the model.
-#' @param type Type(s) of prediction as string or vector This can
-#' differ based on the model type, but will typically be a string such as:
-#' "response", "link", "probs", or "zero".
-#' @param ... Additional arguments are pushed forward to `predict()`.
+#' @param type Type(s) of prediction as string or character vector. This can
+#'   differ based on the model type, but will typically be a string such as:
+#'   "response", "link", "probs", or "zero".
+#' @param ... The "Model-Specific Arguments" section below gives a list of arguments which can modify the behavior of this function for certain models (e.g., mixed-effects or bayesian).
+#'
+#' @template model_specific_arguments
+#'
 #' @return A `data.frame` with one row per observation (per term/group) and several columns:
 #' * `rowid`: row number of the `newdata` data frame
 #' * `type`: prediction type, as defined by the `type` argument
 #' * `group`: (optional) value of the grouped outcome (e.g., categorical outcome models)
 #' * `term`: the variable whose marginal effect is computed
 #' * `dydx`: marginal effect of the term on the outcome for a given combination of regressor values
-#' * `std.error`: standard errors computed by via the delta method. 
-#' @export
+#' * `std.error`: standard errors computed by via the delta method.
 #' @examples
 #'
 #' mod <- glm(am ~ hp * wt, data = mtcars, family = binomial)
 #' mfx <- marginaleffects(mod)
 #' head(mfx)
-
+#'
 #' # Average Marginal Effect (AME)
 #' summary(mfx)
 #' tidy(mfx)
@@ -72,6 +74,7 @@
 #' # Heteroskedasticity robust standard errors
 #' marginaleffects(mod, vcov = sandwich::vcovHC(mod))
 #'
+#' @export
 marginaleffects <- function(model,
                             newdata = NULL,
                             variables = NULL,
@@ -106,13 +109,7 @@ marginaleffects <- function(model,
     attributes_newdata <- attributes_newdata[idx]
 
     # sanity checks and pre-processing
-    model <- sanity_model(model = model,
-                          newdata = newdata,
-                          variables = variables,
-                          vcov = vcov,
-                          type = type,
-                          return_data = return_data,
-                          ...)
+    model <- sanity_model(model = model, ...)
     sanity_type(model = model, type = type, calling_function = "marginaleffects")
     newdata <- sanity_newdata(model, newdata)
     variables <- sanity_variables(model, newdata, variables)
