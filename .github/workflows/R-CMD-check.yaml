@@ -40,6 +40,7 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
+      R_CHECK_FORCE_SUGGESTS: false
       _R_CHECK_FORCE_SUGGESTS_: false
 
     steps:
