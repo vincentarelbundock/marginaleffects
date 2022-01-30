@@ -71,6 +71,11 @@ get_predict.default <- function(model,
             out <- data.frame(pred)
             colnames(out)[colnames(out) == "Row"] <- "rowid"
             colnames(out)[colnames(out) == "Response"] <- "group"
+            colnames(out)[colnames(out) == "SE"] <- "std.error"
+            colnames(out)[colnames(out) == "Predicted"] <- "predicted"
+            if (!"rowid" %in% colnames(out)) {
+                out$rowid <- seq_len(nrow(out))
+            }
             return(out)
         }
     }

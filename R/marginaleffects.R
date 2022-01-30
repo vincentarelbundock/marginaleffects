@@ -155,7 +155,8 @@ marginaleffects <- function(model,
                                             FUN = standard_errors_delta_marginaleffects,
                                             newdata = newdata,
                                             index = idx,
-                                            variable = v)
+                                            variable = v,
+                                            ...)
                 mfx$std.error <- as.numeric(se)
                 J <- attr(se, "J")
                 J_mean <- attr(se, "J_mean")
