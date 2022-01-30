@@ -20,7 +20,7 @@ test_that("get_predict: low-level tests", {
     y <- get_predict(mod, type = "link", conf.level = .9)
     z <- get_predicted(mod, predict = "link")
     expect_equal(w, x$predicted, ignore_attr = TRUE)
-    expect_equal(w, y$Predicted, ignore_attr = TRUE)
+    expect_equal(w, y$predicted, ignore_attr = TRUE)
     expect_equal(w, z, ignore_attr = TRUE)
 
     # type = "response"
@@ -29,7 +29,7 @@ test_that("get_predict: low-level tests", {
     y <- get_predict(mod, type = "response", conf.level = .9)
     z <- get_predicted(mod, predict = "expectation")
     expect_equal(w, x$predicted, ignore_attr = TRUE)
-    expect_equal(w, y$Predicted, ignore_attr = TRUE)
+    expect_equal(w, y$predicted, ignore_attr = TRUE)
     expect_equal(w, z, ignore_attr = TRUE)
 
     # confidence intervals (weak test)
@@ -43,7 +43,7 @@ test_that("get_predict: low-level tests", {
     x <- get_predict(mod, re.form = NA, type = "response")
     y <- get_predict(mod, include_random = FALSE, type = "response")
     expect_equal(w, x$predicted, ignore_attr = TRUE)
-    expect_equal(w, y$Predicted, ignore_attr = TRUE)
+    expect_equal(w, y$predicted, ignore_attr = TRUE)
 
     # grand mean with new data
     nd <- datagrid(model = mod, clus = NA, x1 = -1:1)
@@ -161,6 +161,59 @@ test_that("glmer.nb: marginaleffects vs. emtrends", {
 })
 
 
+test_that("population-level", {
+    # Some contrasts are identical with include_random TRUE/FALSE because on Time has a random effect
+    mod <- suppressMessages(lmer(
+      weight ~ 1 + Time + I(Time^2) + Diet + Time:Diet + I(Time^2):Diet + (1 + Time + I(Time^2) | Chick),
+      data = ChickWeight))
+
+    mfx1 <- marginaleffects(
+        mod,
+        newdata = datagrid(Chick = NA,
+                           Diet = 1:4,
+                           Time = 0:21),
+        include_random = FALSE)
+    mfx2 <- marginaleffects(
+        mod,
+        newdata = datagrid(Chick = NA,
+                           Diet = 1:4,
+                           Time = 0:21),
+        re.form = NA)
+    mfx3 <- marginaleffects(
+        mod,
+        newdata = datagrid(Chick = "1",
+                           Diet = 1:4,
+                           Time = 0:21))
+    expect_s3_class(mfx1, "marginaleffects")
+    expect_s3_class(mfx2, "marginaleffects")
+    expect_s3_class(mfx3, "marginaleffects")
+    expect_equal(mfx1$dydx, mfx2$dydx)
+    expect_equal(mfx1$std.error, mfx2$std.error)
+
+    pred1 <- predictions(
+        mod,
+        newdata = datagrid(Chick = NA,
+                           Diet = 1:4,
+                           Time = 0:21),
+        include_random = FALSE)
+    pred2 <- predictions(
+        mod,
+        newdata = datagrid(Chick = NA,
+                           Diet = 1:4,
+                           Time = 0:21),
+        re.form = NA)
+    pred3 <- predictions(
+        mod,
+        newdata = datagrid(Chick = "1",
+                           Diet = 1:4,
+                           Time = 0:21))
+    expect_s3_class(pred1, "predictions")
+    expect_s3_class(pred2, "predictions")
+    expect_s3_class(pred3, "predictions")
+    expect_equal(pred1$dydx, pred2$dydx)
+    expect_equal(pred1$std.error, pred2$std.error)
+    expect_true(all(pred1$predicted != pred3$predicted))
+})
 
 
 # test_that("'group' cannot be a column name because of conflict with tidy output", {

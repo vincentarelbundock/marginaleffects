@@ -11,6 +11,7 @@
 \alias{get_coef.bracl}
 \alias{get_coef.brmsfit}
 \alias{get_coef.lmerModLmerTest}
+\alias{get_coef.lmerMod}
 \alias{get_coef.gam}
 \alias{get_coef.scam}
 \title{Get a named vector of coefficients from a model object (internal function)}
@@ -30,6 +31,8 @@ get_coef(model, ...)
 \method{get_coef}{brmsfit}(model, ...)
 
 \method{get_coef}{lmerModLmerTest}(model, ...)
+
+\method{get_coef}{lmerMod}(model, ...)
 
 \method{get_coef}{gam}(model, ...)
 

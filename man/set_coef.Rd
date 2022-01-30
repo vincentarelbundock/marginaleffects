@@ -15,6 +15,7 @@
 \alias{set_coef.hlxr}
 \alias{set_coef.glmx}
 \alias{set_coef.lmerModLmerTest}
+\alias{set_coef.lmerMod}
 \alias{set_coef.hurdle}
 \alias{set_coef.zeroinfl}
 \alias{set_coef.rlmerMod}
@@ -46,6 +47,8 @@ set_coef(model, coefs)
 \method{set_coef}{glmx}(model, coefs)
 
 \method{set_coef}{lmerModLmerTest}(model, coefs)
+
+\method{set_coef}{lmerMod}(model, coefs)
 
 \method{set_coef}{hurdle}(model, coefs)
 
