@@ -4,6 +4,9 @@ requiet("MASS")
 requiet("emmeans")
 requiet("broom")
 
+
+
+
 ### marginaleffects
 test_that("rlm: marginaleffects: vs. margins vs. emmeans", {
     model <- MASS::rlm(mpg ~ hp + drat, mtcars)
@@ -206,4 +209,15 @@ test_that("glmmPQL: no validity", {
     mfx <- marginaleffects(mod, newdata = datagrid(week_bin = 0), type = "link")
     expect_equal(mfx$dydx[3], em$week_bin.trend)
     expect_equal(mfx$std.error[3], em$std.error, tolerance = .01)
+})
+
+
+
+test_that("bugs stay dead: character regressor with categorical outcome", {
+    dat <- mtcars
+    dat$cyl <- as.character(dat$cyl)
+    mod <- polr(factor(gear) ~ cyl, data = dat)
+    mfx <- marginaleffects(mod, type = "probs")
+    tid <- tidy(mfx)
+    expect_equal(nrow(tid), 6)
 })

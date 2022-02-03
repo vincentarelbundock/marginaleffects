@@ -75,7 +75,9 @@ get_contrasts_logical <- function(model,
     baseline$estimate <- pred_true$predicted - pred_false$predicted
     baseline$term <- variable
     baseline$contrast <- "TRUE - FALSE"
-    pred <- baseline[, c("rowid", "term", "contrast", "estimate")]
+    cols <- intersect(colnames(baseline),
+                      c("rowid", "group", "term", "contrast", "estimate"))
+    pred <- baseline[, cols]
     row.names(pred) <- NULL
 
     # bayes: posterior draws and credible intervals
@@ -158,8 +160,9 @@ get_contrasts_character <- function(model,
     tmp <- insight::get_data(model)
     levs <- sort(unique(tmp[[variable]]))
 
-    baseline <- newdata
     pred_list <- list()
+    baseline <- newdata
+    baseline[[variable]] <- levs[1]
     baseline_prediction <- get_predict(model,
                                        newdata = baseline,
                                        type = type,
@@ -183,16 +186,18 @@ get_contrasts_character <- function(model,
                                attr(baseline_prediction, "posterior_draws")
         }
 
-        pred$term <- variable
-        pred$contrast <- sprintf("%s - %s", levs[i], levs[1])
-        pred$estimate <- contr
-        # pred$term <- sprintf("%s%s", variable, pred[[variable]])
-        pred_list[[i - 1]] <- pred[, c("rowid", "term", "contrast", "estimate")]
+        tmp <- incremented_prediction
+        tmp$predicted <- NULL
+        tmp$term <- variable
+        tmp$contrast <- sprintf("%s - %s", levs[i], levs[1])
+        tmp$estimate <- contr
+        pred_list[[i - 1]] <- tmp
     }
 
     pred <- do.call("rbind", pred_list)
     draws <- do.call("rbind", draws_list)
-    pred <- pred[, c("rowid", "term", "contrast", "estimate")]
+    cols <- intersect(c("rowid", "group", "term", "contrast", "estimate"), colnames(pred))
+    pred <- pred[, cols]
     row.names(pred) <- NULL
     attr(pred, "posterior_draws") <- draws
     return(pred)
