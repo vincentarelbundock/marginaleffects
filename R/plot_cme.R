@@ -1,10 +1,10 @@
 #' Plot Conditional Marginal Effects
-#' 
-#' In models where two continuous variables are interacted, the marginal effect
-#' of one variable is conditional on the value of the other variable. This
-#' function draws a plot of the marginal effect of the `effect` variable for
-#' different values of the `condition` variable.
-#' 
+#'
+#' This function plots marginal effects (y-axis) against values of predictor(s)
+#' variable(s) (x-axis and colors). This is especially useful in models with
+#' interactions, where the values of marginal effects depend on the values of
+#' "condition" variables.
+#'
 #' @param effect Name of the variable whose marginal effect we want to plot on the y-axis
 #' @param condition String or vector of two strings. The first is a variable
 #' name to be displayed on the x-axis. The second is a variable whose values
