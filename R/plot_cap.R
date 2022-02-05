@@ -1,7 +1,7 @@
 #' Plot Conditional Adjusted Predictions
 #'
-#' This function plots the adjusted predictions of the outcome (y-axis)
-#' against values of one or more predictors.
+#' This function plots adjusted predictions (y-axis) against values of one or
+#' more predictors (x-axis and colors).
 #'
 #' @param condition String or vector of two strings. The first is a variable
 #' name to be displayed on the x-axis. The second is a variable whose values

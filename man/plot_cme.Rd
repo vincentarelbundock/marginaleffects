@@ -39,10 +39,10 @@ to 0.95, which corresponds to a 95 percent confidence interval.}
 A \code{ggplot2} object
 }
 \description{
-In models where two continuous variables are interacted, the marginal effect
-of one variable is conditional on the value of the other variable. This
-function draws a plot of the marginal effect of the \code{effect} variable for
-different values of the \code{condition} variable.
+This function plots marginal effects (y-axis) against values of predictor(s)
+variable(s) (x-axis and colors). This is especially useful in models with
+interactions, where the values of marginal effects depend on the values of
+"condition" variables.
 }
 \examples{
 mod <- lm(mpg ~ hp * wt, data = mtcars)

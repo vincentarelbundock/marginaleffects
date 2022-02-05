@@ -36,8 +36,8 @@ to 0.95, which corresponds to a 95 percent confidence interval.}
 A \code{ggplot2} object
 }
 \description{
-This function plots the adjusted predictions of the outcome (y-axis)
-against values of one or more predictors.
+This function plots adjusted predictions (y-axis) against values of one or
+more predictors (x-axis and colors).
 }
 \examples{
 mod <- lm(mpg ~ hp + wt, data = mtcars)
