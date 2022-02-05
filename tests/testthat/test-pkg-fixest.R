@@ -119,3 +119,15 @@ test_that("predictions: bugs stay dead: Issue #203", {
     vdiffr::expect_doppelganger("fixest plot_cap with i()",
                                 plot_cap(m4, condition = c("hp", "am")))
 })
+
+
+test_that("bug stay dead: insight::get_data doesn't get all columns", {
+    skip_if_not_installed("insight", minimum_version = 0.15.1)
+    reg <- feols(
+        Sepal.Width ~ Petal.Length | Species | Sepal.Length ~ Petal.Width, 
+        data = iris)
+    mfx1 <- marginaleffects(reg, newdata = iris)
+    mfx2 <- marginaleffects(reg)
+    expect_s3_class(mfx1, "marginaleffects")
+    expect_s3_class(mfx2, "marginaleffects")
+})
