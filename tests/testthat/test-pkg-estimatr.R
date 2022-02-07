@@ -4,6 +4,14 @@ requiet("margins")
 requiet("broom")
 requiet("ivreg") # Kmenta data
 
+test_that("lm_lin: no validity", {
+    dat <- mtcars
+    dat$cyl <- factor(dat$cyl)
+    mod <- lm_lin(mpg ~ am, ~ hp + cyl, data = mtcars)
+    expect_marginaleffects(mod, n_unique = 9)
+})
+
+
 test_that("iv_robust vs. stata", {
     data(Kmenta, package = "ivreg")
     model <- iv_robust(Q ~ P + D | D + F + A, 
