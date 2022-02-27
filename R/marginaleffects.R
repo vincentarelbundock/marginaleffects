@@ -173,7 +173,21 @@ marginaleffects <- function(model,
     out <- bind_rows(mfx_list)
 
     J <- do.call("rbind", J_list) # bind_rows does not work for matrices
+
+    # duplicate colnames can occur for grouped outcome models, so we can't just
+    # use `poorman::bind_rows()`. Instead, ugly hack to make colnames unique
+    # with a weird string.
+    for (i in seq_along(J_mean_list)) {
+        if (inherits(J_mean_list[[i]], "data.frame")) {
+            newnames <- make.unique(names(J_mean_list[[i]]), sep = "______")
+            J_mean_list[[i]] <- stats::setNames(J_mean_list[[i]], newnames)
+        }
+    }
     J_mean <- bind_rows(J_mean_list) # bind_rows need because some have contrast col
+    if (inherits(J_mean, "data.frame")) {
+        J_mean <- stats::setNames(J_mean, gsub("______.*$", "", colnames(J_mean)))
+    }
+
 
     # empty contrasts equal "". important for merging in `tidy()`
     if ("contrast" %in% colnames(J_mean)) {
