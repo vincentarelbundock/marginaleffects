@@ -105,3 +105,15 @@ test_that("predictions with multinomial outcome", {
     expect_error(predictions(m2, type = "probs", variables = colnames(dat)[3:ncol(dat)]),
                  regexp = "1 billion rows")
 })
+
+
+test_that("bugs stay dead #218", {
+    set.seed(42)
+    dat <- data.frame(y = factor(sample(c(rep(4, 29), rep(3, 15), rep(2, 4), rep(1, 2)))),
+                      x = factor(sample(c(rep(1, 17), rep(2, 12), rep(2, 12), rep(1, 9)))),
+                      z1 = sample(1:2, 50, replace=TRUE), z2=runif(50, 16, 18))
+    void <- capture.output(
+        model <- nnet::multinom(y ~ x + z1 + z2, data = dat, verbose = FALSE, hessian = TRUE))
+    mfx <- suppressWarnings(marginaleffects(model, type = "probs"))
+    expect_s3_class(mfx, "marginaleffects")
+})
