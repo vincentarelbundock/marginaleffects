@@ -5,8 +5,6 @@ requiet("emmeans")
 requiet("broom")
 
 
-
-
 ### marginaleffects
 test_that("rlm: marginaleffects: vs. margins vs. emmeans", {
     model <- MASS::rlm(mpg ~ hp + drat, mtcars)
@@ -214,6 +212,7 @@ test_that("glmmPQL: no validity", {
 
 
 test_that("bugs stay dead: character regressor with categorical outcome", {
+    requiet("MASS")
     dat <- mtcars
     dat$cyl <- as.character(dat$cyl)
     mod <- polr(factor(gear) ~ cyl, data = dat)
