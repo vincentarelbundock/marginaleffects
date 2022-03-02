@@ -40,9 +40,8 @@ test_that("tidy: minimal", {
 
 
 test_that("glance: with modelsummary", {
-    skip_if_not_installed("modelsummary", minimum_version = "0.9.3")
     gl <- glance(mfx)
-    expect_equal(dim(glance(mfx)), c(1, 9))
+    expect_equal(dim(glance(mfx)), c(1, 10))
 })
 
 
