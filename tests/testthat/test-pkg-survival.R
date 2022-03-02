@@ -7,7 +7,7 @@ test_that("coxph vs. Stata", {
     test1 <- list(time = c(4, 3, 1, 1, 2, 2, 3),
                   status = c(1, 1, 1, 0, 1, 1, 0),
                   x = c(0, 2, 1, 1, 1, 0, 0),
-                  sex = c(0, 0, 0, 0, 1, 1, 1))
+                  sex = factor(c(0, 0, 0, 0, 1, 1, 1)))
     mod <- coxph(Surv(time, status) ~ x + strata(sex),
                  data = test1,
                  ties = "breslow")
@@ -17,7 +17,7 @@ test_that("coxph vs. Stata", {
     expect_equal(mfx$std.error, mfx$std.errorstata)
 
     # emtrends
-    em <- emtrends(mod, ~x, "x", at = list(time = 4, status = 1, x = 0, sex = 0))
+    em <- emtrends(mod, ~x, "x", at = list(time = 4, status = 1, x = 0, sex = factor(0, levels = 0:1)))
     em <- tidy(em)
     mfx <- marginaleffects(mod, variables = "x", type = "lp")
     expect_equal(mfx$dydx[1], em$x.trend)
@@ -36,11 +36,10 @@ test_that("coxph: no validity", {
 
 
 test_that("bugs stay dead: conf.level forces get_predicted which doesn't process 'type'", {
-    skip("https://github.com/vincentarelbundock/marginaleffects/issues/160")
     test1 <- list(time = c(4, 3, 1, 1, 2, 2, 3),
                   status = c(1, 1, 1, 0, 1, 1, 0),
                   x = c(0, 2, 1, 1, 1, 0, 0),
-                  sex = c(0, 0, 0, 0, 1, 1, 1))
+                  sex = factor(c(0, 0, 0, 0, 1, 1, 1)))
     mod <- coxph(Surv(time, status) ~ x + strata(sex),
                  data = test1,
                  ties = "breslow")
@@ -48,3 +47,26 @@ test_that("bugs stay dead: conf.level forces get_predicted which doesn't process
     p2 <- predictions(mod, type = "risk")
     expect_true(all(p1$predicted != p2$predicted))
 })
+
+
+test_that("bugs stay dead: numeric vs factor strata", {
+    skip_if_not_installed("insight", minimum_version = "0.16.1")
+    test1 <- list(time = c(4, 3, 1, 1, 2, 2, 3),
+                  status = c(1, 1, 1, 0, 1, 1, 0),
+                  x = c(0, 2, 1, 1, 1, 0, 0),
+                  sex = factor(c(0, 0, 0, 0, 1, 1, 1)))
+    test2 <- list(time = c(4, 3, 1, 1, 2, 2, 3),
+                  status = c(1, 1, 1, 0, 1, 1, 0),
+                  x = c(0, 2, 1, 1, 1, 0, 0),
+                  sex = c(0, 0, 0, 0, 1, 1, 1))
+    mod1 <- coxph(Surv(time, status) ~ x + strata(sex),
+                 data = test1,
+                 ties = "breslow")
+    mod2 <- coxph(Surv(time, status) ~ x + strata(sex),
+                 data = test2,
+                 ties = "breslow")
+    mfx1 <- merge(tidy(marginaleffects(mod1, type = "lp")), stata)
+    mfx2 <- merge(tidy(marginaleffects(mod2, type = "lp")), stata)
+    expect_equal(mfx1$dydx, mfx2$dydx)
+})
+
