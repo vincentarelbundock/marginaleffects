@@ -40,7 +40,9 @@ get_group_names.polr <- function(model, ...) {
 #' @rdname get_vcov
 #' @export
 get_vcov.polr <- function(model, ...) {
-    out <- suppressMessages(insight::get_varcov(model))
+    # out <- suppressMessages(insight::get_varcov(model))
+    fun <- utils::getFromNamespace("vcov.polr", ns = "MASS")
+    out <- suppressMessages(fun(model))
     return(out)
 }
 

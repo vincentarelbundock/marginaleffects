@@ -216,7 +216,8 @@ test_that("bugs stay dead: character regressor with categorical outcome", {
     dat <- mtcars
     dat$cyl <- as.character(dat$cyl)
     mod <- polr(factor(gear) ~ cyl, data = dat)
-    mfx <- marginaleffects(mod, type = "probs")
+    # not clear why this generates a warning only on CI
+    mfx <- suppressWarnings(marginaleffects(mod, type = "probs"))
     tid <- tidy(mfx)
     expect_equal(nrow(tid), 6)
 })
