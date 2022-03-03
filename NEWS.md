@@ -1,4 +1,4 @@
-# marginaleffects 0.3.3.9000
+# marginaleffects 0.3.4
 
 * Bug fixes
 
