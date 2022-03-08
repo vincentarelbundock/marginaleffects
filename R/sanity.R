@@ -44,7 +44,7 @@ sanity_newdata <- function(model, newdata) {
 
     # if there are no categorical variables in `newdata`, check the model terms
     # to find transformation and warn accordingly.
-    categorical_variables <- find_categorical(newdata)
+    categorical_variables <- find_categorical(newdata = newdata, model = model)
     flag <- FALSE
     if (length(categorical_variables) == 0) {
         termlabs <- try(attr(stats::terms(model), "term.labels"), silent = TRUE)
