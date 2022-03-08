@@ -23,12 +23,13 @@ get_contrasts <- function(model,
         newdata$rowid <- seq_len(nrow(newdata))
     }
 
-    if (is.factor(newdata[[variable]]) || isTRUE(attr(newdata[[variable]], "factor"))) {
-        get_contrasts_fun <- get_contrasts_factor
-    } else if (is.logical(newdata[[variable]])) {
+    # logical and character before factor, because they get picked up by find_categorical
+    if (is.logical(newdata[[variable]])) {
         get_contrasts_fun <- get_contrasts_logical
     } else if (is.character(newdata[[variable]])) {
         get_contrasts_fun <- get_contrasts_character
+    } else if (is.factor(newdata[[variable]]) || variable %in% find_categorical(newdata = newdata, model = model) || isTRUE(attr(newdata[[variable]], "factor"))) {
+        get_contrasts_fun <- get_contrasts_factor
     } else if (is.numeric(newdata[[variable]])) {
         get_contrasts_fun <- get_contrasts_numeric
     } else {
@@ -99,15 +100,25 @@ get_contrasts_factor <- function(model,
     pred_list <- list()
     if (is.factor(baseline[[variable]])) {
         levs <- levels(baseline[[variable]])
+        convert_to_factor <- TRUE
     } else {
         original_data <- insight::get_data(model)
         if (is.factor(original_data[[variable]])) {
             levs <- levels(original_data[[variable]])
+            convert_to_factor <- TRUE
         } else {
             levs <- sort(unique(original_data[[variable]]))
+            convert_to_factor <- FALSE
         }
     }
-    baseline[[variable]] <- factor(levs[1], levels = levs)
+
+    # when factor() is called in a formula and the original data is numeric
+    if (isTRUE(convert_to_factor)) {
+        baseline[[variable]] <- factor(levs[1], levels = levs)
+    } else {
+        baseline[[variable]] <- levs[1]
+    }
+
     baseline_prediction <- get_predict(model,
                                        newdata = baseline,
                                        type = type,
@@ -115,7 +126,13 @@ get_contrasts_factor <- function(model,
     draws_list <- list()
 
     for (i in 2:length(levs)) {
-        baseline[[variable]] <- factor(levs[i], levels = levs)
+        # when factor() is called in a formula and the original data is numeric
+        if (isTRUE(convert_to_factor)) {
+            baseline[[variable]] <- factor(levs[i], levels = levs)
+        } else {
+            baseline[[variable]] <- levs[i]
+        }
+
         incremented_prediction <- get_predict(model = model,
                                               newdata = baseline,
                                               type = type,

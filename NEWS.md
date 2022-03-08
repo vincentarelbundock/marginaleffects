@@ -1,3 +1,7 @@
+# marginaleffects 0.3.5
+
+* More robust handling of in-formula functions: factor(), strata(), mo()
+
 # marginaleffects 0.3.4
 
 * Bug fixes

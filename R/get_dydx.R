@@ -6,7 +6,7 @@ get_dydx <- function(model,
                      type,
                      ...) {
 
-    if (variable %in% find_categorical(newdata) || isTRUE(attr(newdata[[variable]], "factor"))) {
+    if (variable %in% find_categorical(newdata = newdata, model = model) || isTRUE(attr(newdata[[variable]], "factor"))) {
         dydx_fun <- get_contrasts
     } else if (inherits(model, "brmsfit") || inherits(model, "stanreg")) {
         dydx_fun <- get_dydx_via_contrasts

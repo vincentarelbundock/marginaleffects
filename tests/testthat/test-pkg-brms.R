@@ -30,6 +30,8 @@ void <- capture.output({
                    seed = 1024, iter = 1000, silent = 2, backend = "cmdstanr")
     mod_ran <- brm(rating ~ treat + period + (1 | subject), family = cumulative(), data = inhaler,
                    silent = 2, backend = "cmdstanr")
+    mod_mo1 <- brm(mpg ~ hp + mo(carb), data = mtcars, silent = 2, backend = "cmdstanr")
+    mod_mo2 <- brm(mpg ~ hp + factor(cyl) + mo(carb), data = mtcars, silent = 2, backend = "cmdstanr")
 })
 
 test_that("marginaleffects vs. emmeans", {
@@ -303,3 +305,11 @@ test_that("bugs stay dead: character regressors used to produce duplicates", {
     expect_true(length(unique(ti$estimate)) == nrow(ti))
 })
 
+
+test_that("mo() recognized as factor: Issue #220", {
+    mfx1 <- marginaleffects(mod_mo1)
+    mfx2 <- marginaleffects(mod_mo1, variable = "carb")
+    expect_error(marginaleffects(mod_mo2), regexp = "cannot be used")
+    expect_s3_class(mfx1, "marginaleffects")
+    expect_s3_class(mfx2, "marginaleffects")
+})
