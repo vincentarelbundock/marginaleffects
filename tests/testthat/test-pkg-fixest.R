@@ -28,6 +28,7 @@ test_that("bugs stay dead: logit with transformations", {
 
 
 test_that("fixest::feols vs. Stata", {
+    requiet("plm")
     data(EmplUK, package = "plm")
     stata <- readRDS(test_path("stata/stata.rds"))$fixest_feols
     model <- feols(wage ~ capital * output | firm, EmplUK)
@@ -38,6 +39,7 @@ test_that("fixest::feols vs. Stata", {
 })
 
 test_that("fixest::fepois vs. Stata", {
+    requiet("plm")
     data(EmplUK, package = "plm")
     stata <- readRDS(test_path("stata/stata.rds"))$fixest_fepois
     model <- fepois(log(wage) ~ capital * output | firm, EmplUK)
