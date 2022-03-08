@@ -139,7 +139,10 @@ plot_cap <- function(model,
                            fill = condition2,
                            linetype = condition3)
 
-     # theme and return
-    p <- p + ggplot2::theme_minimal()
+    # set a new theme only if the default is theme_grey. this prevents user's
+    # theme_set() from being overwritten
+    if (identical(ggplot2::theme_get(), ggplot2::theme_grey())) {
+        p <- p + ggplot2::theme_minimal()
+    }
     return(p) 
 }
