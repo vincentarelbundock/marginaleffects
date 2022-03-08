@@ -1,6 +1,7 @@
 # marginaleffects 0.3.5
 
 * More robust handling of in-formula functions: factor(), strata(), mo()
+* Do not overwrite user's `ggplot2::theme_set()` call
 
 # marginaleffects 0.3.4
 
