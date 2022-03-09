@@ -78,8 +78,8 @@ get_contrasts_factor <- function(model,
                                               ...)
         incremented_prediction$term <- variable
         incremented_prediction$contrast <- levs_idx[i, "label"]
-        incremented_prediction$estimate <- incremented_prediction$predicted -
-                                           baseline_prediction$predicted
+        incremented_prediction$comparison <- incremented_prediction$predicted -
+                                             baseline_prediction$predicted
         incremented_prediction$predicted <- NULL
         pred_list[[i]] <- incremented_prediction
 
@@ -97,7 +97,7 @@ get_contrasts_factor <- function(model,
     # coef_names <- gsub("count_|zero_", "", coef_names)
 
     # output
-    cols <- intersect(colnames(pred), c("rowid", "group", "term", "contrast", "estimate"))
+    cols <- intersect(colnames(pred), c("rowid", "group", "term", "contrast", "comparison"))
     row.names(pred) <- NULL
     attr(pred, "posterior_draws") <- draws
 

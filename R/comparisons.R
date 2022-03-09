@@ -11,7 +11,7 @@
 #'
 #' A "contrast" is the difference between two adjusted predictions, calculated
 #' for meaningfully different regressor values (e.g., College graduates vs.
-#' Others). Uncertainty estimates are computed using the delta method.
+#' Others). Uncertainty ,ffestimates are computed using the delta method.
 #'
 #' Detailed vignettes on contrasts, marginal effects, predictions, and marginal
 #' means, as well as a list of supported models can be found on the package
@@ -125,6 +125,7 @@ comparisons <- function(model,
         }
     }
 
+
     out <- bind_rows(mfx_list)
 
     # duplicate colnames can occur for grouped outcome models, so we can't just
@@ -174,7 +175,7 @@ comparisons <- function(model,
         if (!"conf.low" %in% colnames(out)) {
             tmp <- apply(draws, 1, get_hdi)
             out[["std.error"]] <- NULL
-            out[["estimate"]] <- apply(draws, 1, stats::median)
+            out[["comparison"]] <- apply(draws, 1, stats::median)
             out[["conf.low"]] <- tmp[1, ]
             out[["conf.high"]] <- tmp[2, ]
         }
@@ -195,7 +196,7 @@ comparisons <- function(model,
     }
 
     # clean columns
-    stubcols <- c("rowid", "type", "group", "term", "contrast", "estimate", "std.error",
+    stubcols <- c("rowid", "type", "group", "term", "contrast", "comparison", "std.error",
                   sort(grep("^predicted", colnames(newdata), value = TRUE)))
     cols <- intersect(stubcols, colnames(out))
     cols <- unique(c(cols, colnames(out)))
