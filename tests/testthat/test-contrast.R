@@ -33,12 +33,12 @@ test_that("bug be dead: all levels appear", {
 
 test_that("numeric contrasts", {
     mod <- lm(mpg ~ hp, data = mtcars)
-    expect_error(get_contrasts(mod, contrast_numeric = "bad", variable = "hp"), regexp = "Assertion failed")
-    contr1 <- get_contrasts(mod, contrast_numeric = 1, variable = "hp")
-    contr2 <- get_contrasts(mod, contrast_numeric = "iqr", variable = "hp")
-    contr3 <- get_contrasts(mod, contrast_numeric = "minmax", variable = "hp")
-    contr4 <- get_contrasts(mod, contrast_numeric = "sd", variable = "hp")
-    contr5 <- get_contrasts(mod, contrast_numeric = "2sd", variable = "hp")
+    expect_error(comparisons(mod, contrast_numeric = "bad", variable = "hp"), regexp = "Assertion failed")
+    contr1 <- comparisons(mod, contrast_numeric = 1, variable = "hp")
+    contr2 <- comparisons(mod, contrast_numeric = "iqr", variable = "hp")
+    contr3 <- comparisons(mod, contrast_numeric = "minmax", variable = "hp")
+    contr4 <- comparisons(mod, contrast_numeric = "sd", variable = "hp")
+    contr5 <- comparisons(mod, contrast_numeric = "2sd", variable = "hp")
     iqr <- diff(quantile(mtcars$hp, probs = c(.25, .75))) * coef(mod)["hp"]
     minmax <- (max(mtcars$hp) - min(mtcars$hp)) * coef(mod)["hp"]
     sd1 <- sd(mtcars$hp) * coef(mod)["hp"]

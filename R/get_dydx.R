@@ -7,7 +7,7 @@ get_dydx <- function(model,
                      ...) {
 
     if (variable %in% find_categorical(newdata = newdata, model = model) || isTRUE(attr(newdata[[variable]], "factor"))) {
-        dydx_fun <- get_contrasts
+        dydx_fun <- comparisons
     } else if (inherits(model, "brmsfit") || inherits(model, "stanreg")) {
         dydx_fun <- get_dydx_via_contrasts
     } else {
@@ -79,7 +79,7 @@ get_dydx_continuous <- function(model,
 
 
 #' In some cases (e.g., Bayesian models) the automatic differentiation approach
-#' with `numDeriv` does not apply straightforwardly. We use the `get_contrasts`
+#' with `numDeriv` does not apply straightforwardly. We use the `comparisons`
 #' function with a small step to get a very small contrast. Then normalize by
 #' dividing by the step via the `normalize_dydx` argument.
 #' @noRd
@@ -90,13 +90,13 @@ get_dydx_via_contrasts <- function(model,
                                    contrast_numeric = 1e-5,
                                    contrast_numeric_slope = TRUE,
                                    ...) {
-    out <- get_contrasts(model = model,
-                  newdata = newdata,
-                  variable = variable,
-                  type = type,
-                  contrast_numeric = contrast_numeric,
-                  contrast_numeric_slope = contrast_numeric_slope,
-                  ...)
+    out <- comparisons(model = model,
+                       newdata = newdata,
+                       variable = variable,
+                       type = type,
+                       contrast_numeric = contrast_numeric,
+                       contrast_numeric_slope = contrast_numeric_slope,
+                       ...)
     return(out)
 }
 
