@@ -307,9 +307,19 @@ test_that("bugs stay dead: character regressors used to produce duplicates", {
 
 
 test_that("mo() recognized as factor: Issue #220", {
+    # marginaleffects
     mfx1 <- marginaleffects(mod_mo1)
     mfx2 <- marginaleffects(mod_mo1, variable = "carb")
     expect_error(marginaleffects(mod_mo2), regexp = "cannot be used")
     expect_s3_class(mfx1, "marginaleffects")
     expect_s3_class(mfx2, "marginaleffects")
+
+    # comparisons
+    expect_error(comparisons(mod_mo2), regexp = "cannot be used")
+    contr1 <- tidy(comparisons(mod_mo1))
+    expect_true(all(paste(c(2, 3, 4, 6, 8), "-", 1) %in% contr1$contrast))
+    contr2 <- tidy(comparisons(mod_mo1, contrast_factor = "revpairwise", variables = "carb"))
+    expect_equal(nrow(contr2), 15)
+    contr3 <- tidy(comparisons(mod_mo1, contrast_factor = "pairwise", variables = "carb"))
+    expect_equal(sort(abs(contr2$estimate)), sort(abs(contr3$estimate)))
 })
