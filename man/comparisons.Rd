@@ -6,7 +6,7 @@
 \usage{
 comparisons(
   model,
-  variables,
+  variables = NULL,
   newdata = insight::get_data(model),
   type = "response",
   contrast_factor = "reference",

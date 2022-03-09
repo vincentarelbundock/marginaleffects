@@ -21,25 +21,54 @@ get_contrasts_factor <- function(model,
         }
     }
 
-    # when factor() is called in a formula and the original data is numeric
-    if (isTRUE(convert_to_factor)) {
-        baseline[[variable]] <- factor(levs[1], levels = levs)
+    # index contrast orders based on contrast_factor
+    if (contrast_factor == "reference") {
+        levs_idx <- data.frame(low = levs[1],
+                              high = levs[2:length(levs)])
+    } else if (contrast_factor == "pairwise") {
+        levs_idx <- expand.grid(low = levs,
+                               high = levs,
+                               stringsAsFactors = FALSE)
+        levs_idx <- levs_idx[levs_idx$high != levs_idx$low,]
+        levs_idx <- levs_idx[match(levs_idx$low, levs) < match(levs_idx$high, levs),]
+    } else if (contrast_factor == "revpairwise") {
+        levs_idx <- expand.grid(low = levs,
+                               high = levs,
+                               stringsAsFactors = FALSE)
+        levs_idx <- levs_idx[levs_idx$high != levs_idx$low,]
+        levs_idx <- levs_idx[match(levs_idx$low, levs) > match(levs_idx$high, levs),]
+    } else if (contrast_factor == "sequential") {
+        levs_idx <- data.frame(low = levs[1:(length(levs) - 1)],
+                              high = levs[2:length(levs)])
+    } else if (contrast_factor == "revsequential") {
+        levs_idx <- data.frame(low = levs[2:length(levs)],
+                              high = levs[1:(length(levs) - 1)])
     } else {
-        baseline[[variable]] <- levs[1]
+        stop("%s is not a supported value for the `contrast_factor` argument.", contrast_factor)
     }
 
-    baseline_prediction <- get_predict(model,
-                                       newdata = baseline,
-                                       type = type,
-                                       ...)
+    levs_idx$label <- sprintf("%s - %s", levs_idx$high, levs_idx$low)
+
     draws_list <- list()
 
-    for (i in 2:length(levs)) {
+    for (i in seq_len(nrow(levs_idx))) {
+
         # when factor() is called in a formula and the original data is numeric
         if (isTRUE(convert_to_factor)) {
-            baseline[[variable]] <- factor(levs[i], levels = levs)
+            baseline[[variable]] <- factor(levs_idx[i, "low"], levels = levs)
         } else {
-            baseline[[variable]] <- levs[i]
+            baseline[[variable]] <- levs_idx[i, "low"]
+        }
+        baseline_prediction <- get_predict(model,
+                                           newdata = baseline,
+                                           type = type,
+                                           ...)
+
+        # when factor() is called in a formula and the original data is numeric
+        if (isTRUE(convert_to_factor)) {
+            baseline[[variable]] <- factor(levs_idx[i, "high"], levels = levs)
+        } else {
+            baseline[[variable]] <- levs_idx[i, "high"]
         }
 
         incremented_prediction <- get_predict(model = model,
@@ -47,7 +76,7 @@ get_contrasts_factor <- function(model,
                                               type = type,
                                               ...)
         incremented_prediction$term <- variable
-        incremented_prediction$contrast <- sprintf("%s - %s", levs[i], levs[1])
+        incremented_prediction$contrast <- levs_idx[i, "label"]
         incremented_prediction$estimate <- incremented_prediction$predicted -
                                            baseline_prediction$predicted
         incremented_prediction$predicted <- NULL

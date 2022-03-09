@@ -48,3 +48,17 @@ test_that("numeric contrasts", {
     expect_equal(contr4$estimate, rep(sd1, 32), ignore_attr = TRUE)
     expect_equal(contr5$estimate, rep(sd2, 32), ignore_attr = TRUE)
 })
+
+
+test_that("factor", {
+              skip("WIP: comparisons")
+
+mod <- lm(mpg ~ factor(cyl), data = mtcars)
+comparisons(mod, contrast_factor = "reference") |> tidy()
+comparisons(mod, contrast_factor = "pairwise") |> tidy()
+comparisons(mod, contrast_factor = "revpairwise") |> tidy()
+comparisons(mod, contrast_factor = "sequential") |> tidy()
+comparisons(mod, contrast_factor = "revsequential") |> tidy()
+
+})
+

@@ -168,6 +168,8 @@ glance.marginalmeans <- glance.marginaleffects
 glance.predictions <- glance.marginaleffects
 
 
+#' @export
+glance.comparisons <- glance.marginaleffects
 
 
 #' Tidy a `predictions` object
@@ -217,3 +219,93 @@ tidy.predictions <- function(x, ...) {
 
     return(out)
 }
+
+
+#' Tidy a `comparisons` object
+#'
+#' Calculate average contrasts by taking the mean of all the
+#' unit-level contrasts computed by the `predictions` function.
+#'
+#' @param x An object produced by the `comparisons` function.
+#' @inheritParams comparisons
+#' @inheritParams tidy.marginaleffects
+#' @return A "tidy" `data.frame` of summary statistics which conforms to the
+#' `broom` package specification.
+#' @export
+#' @examples
+#' mod <- lm(mpg ~ factor(gear), data = mtcars)
+#' contr <- comparisons(mod, contrast_factor = "sequential")
+#' tidy(contr)
+tidy.comparisons <- function(x,
+                             conf.int = TRUE,
+                             conf.level = 0.95,
+                             ...) {
+
+    # dydx averages
+    # empty initial mfx data.frame means there were no numeric variables in the
+    # model
+    if ("term" %in% colnames(x)) {
+        lhs <- intersect(c("estimate", "conf.low", "conf.high"), colnames(x))
+        rhs <- intersect(c("type", "group", "term", "contrast"), colnames(x))
+        lhs <- sprintf("cbind(%s)", paste(lhs, collapse = ", "))
+        rhs <- paste(rhs, collapse = " + ")
+        form <- sprintf("%s ~ %s", lhs, rhs)
+        form <- stats::as.formula(form)
+        dydx <- stats::aggregate(form, data = x, FUN = mean, na.rm = TRUE)
+
+        ## This might be a useful implementation of weights
+        # if (is.null(attr(x, "weights"))) {
+        #     dydx <- stats::aggregate(f, data = x, FUN = mean)
+        # } else {
+        #     dydx <- stats::aggregate(f, data = x, FUN = weighted.mean, w = attr(x, "weights"))
+        # }
+
+        se <- attr(x, "se_at_mean_gradient")
+        if (!is.null(se)) {
+            if ("group" %in% colnames(se) && 
+                all(se$group == "main_marginaleffect")) {
+                se$group <- NULL
+            }
+            dydx <- merge(dydx, se, all.x = TRUE)
+        }
+        colnames(dydx)[match("dydx", colnames(dydx))] <- "estimate"
+    } else {
+        # avoids namespace conflict with `margins`
+        dydx <- data.frame()
+    }
+
+    if (!"statistic" %in% colnames(dydx) && "std.error" %in% colnames(dydx)) {
+        dydx$statistic <- dydx$estimate / dydx$std.error
+    }
+
+    if (!"p.value" %in% colnames(dydx) && "std.error" %in% colnames(dydx)) {
+        dydx$p.value <- 2 * (1 - stats::pnorm(abs(dydx$statistic)))
+    }
+
+    out <- dydx
+
+    # confidence intervals
+    if ("std.error" %in% colnames(out)) {
+        if (isTRUE(conf.int) && !"conf.low" %in% colnames(out)) {
+            alpha <- 1 - conf.level
+            out$conf.low <- out$estimate + stats::qnorm(alpha / 2) * out$std.error
+            out$conf.high <- out$estimate - stats::qnorm(alpha / 2) * out$std.error
+        }
+    }
+
+    # remove terms with precise zero estimates. typically the case in
+    # multi-equation models where some terms only affect one response
+    out <- out[out$estimate != 0,]
+
+    # sort and subset columns
+    cols <- c("type", "group", "term", "contrast", "estimate", "std.error",
+              "statistic", "p.value", "conf.low", "conf.high")
+    out <- out[, intersect(cols, colnames(out)), drop = FALSE]
+    out <- as.data.frame(out)
+
+    attr(out, "conf.level") <- conf.level
+
+    return(out)
+}
+
+
