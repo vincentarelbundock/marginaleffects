@@ -154,6 +154,7 @@ marginaleffects <- function(model,
             if (!is.null(attr(mfx, "posterior_draws"))) {
                 draws_list <- c(draws_list, list(attr(mfx, "posterior_draws")))
                 J <- J_mean <- NULL
+
             # standard errors via delta method
             } else if (!is.null(vcov)) {
                 idx <- intersect(colnames(mfx), c("type", "group", "term", "contrast"))
@@ -169,9 +170,12 @@ marginaleffects <- function(model,
                 mfx$std.error <- as.numeric(se)
                 J <- attr(se, "J")
                 J_mean <- attr(se, "J_mean")
+
+            # no standard error
             } else {
                 J <- J_mean <- NULL
             }
+
             mfx_list <- c(mfx_list, list(mfx))
             J_list <- c(J_list, list(J))
             J_mean_list <- c(J_mean_list, list(J_mean))

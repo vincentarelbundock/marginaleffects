@@ -85,23 +85,34 @@ comparisons <- function(model,
                                  contrast_factor = contrast_factor,
                                  contrast_numeric = contrast_numeric,
                                  ...)
+            # bayesian draws
+            if (!is.null(attr(mfx, "posterior_draws"))) {
+                draws_list <- c(draws_list, list(attr(mfx, "posterior_draws")))
+                J <- J_mean <- NULL
 
-            idx <- intersect(colnames(mfx), c("type", "group", "term", "contrast"))
-            idx <- mfx[, idx, drop = FALSE]
-            se <- standard_errors_delta(model,
-                                        vcov = vcov,
-                                        type = predt,
-                                        FUN = standard_errors_delta_contrasts,
-                                        newdata = newdata,
-                                        index = idx,
-                                        variable = variable,
-                                        contrast_factor = contrast_factor,
-                                        contrast_numeric = contrast_numeric,
-                                        ...)
+            # standard errors via delta method
+            } else if (!is.null(vcov)) {
+                idx <- intersect(colnames(mfx), c("type", "group", "term", "contrast"))
+                idx <- mfx[, idx, drop = FALSE]
+                se <- standard_errors_delta(model,
+                                            vcov = vcov,
+                                            type = predt,
+                                            FUN = standard_errors_delta_contrasts,
+                                            newdata = newdata,
+                                            index = idx,
+                                            variable = variable,
+                                            contrast_factor = contrast_factor,
+                                            contrast_numeric = contrast_numeric,
+                                            ...)
+                mfx$std.error <- as.numeric(se)
+                J <- attr(se, "J")
+                J_mean <- attr(se, "J_mean")
 
-            mfx$std.error <- as.numeric(se)
-            J <- attr(se, "J")
-            J_mean <- attr(se, "J_mean")
+            # no standard error
+            } else {
+                J <- J_mean <- NULL
+            }
+
             mfx_list <- c(mfx_list, list(mfx))
             J_list <- c(J_list, list(J))
             J_mean_list <- c(J_mean_list, list(J_mean))
@@ -157,7 +168,7 @@ comparisons <- function(model,
         if (!"conf.low" %in% colnames(out)) {
             tmp <- apply(draws, 1, get_hdi)
             out[["std.error"]] <- NULL
-            out[["dydx"]] <- apply(draws, 1, stats::median)
+            out[["estimate"]] <- apply(draws, 1, stats::median)
             out[["conf.low"]] <- tmp[1, ]
             out[["conf.high"]] <- tmp[2, ]
         }
