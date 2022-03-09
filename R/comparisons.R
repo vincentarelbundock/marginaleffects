@@ -23,6 +23,9 @@
 #' @param contrast_factor "reference" or "sequential"
 #' * "reference": Each factor level is compared to the factor reference (base) level
 #' * "sequential": Each factor level is compared to the previous factor level
+#' * "revsequential": Same as "sequential" but in the reverse order
+#' * "pairwise": Each factor level is compared to all other levels
+#' * "revpairwise": Same as pairwise, but with the reverse order of subtraction
 #' @param contrast_numeric string or numeric
 #' * Numeric of length 1: Contrast between the observed value and the observed value plus `contrast_numeric`
 #' * Numeric vector of length 2: Contrast between the 2nd element and the 1st element of the `contrast_numeric` vector.
@@ -32,18 +35,19 @@
 #' * "minmax": Contrast between the maximum and the minimum values of the regressor.
 #' @export
 comparisons <- function(model,
-                        variables,
+                        variables = NULL,
                         newdata = insight::get_data(model),
                         type = "response",
+                        vcov = TRUE,
                         contrast_factor = "reference",
                         contrast_numeric = 1,
                         ...) {
 
 
-    sanity_variables(model = model, newdata = newdata, variables = variables)
     sanity_newdata(model = model, newdata = newdata)
     sanity_type(model = model, type = type)
-    checkmate::assert_choice(contrast_factor, choices = c("reference", "sequential"))
+    variables <- unlist(sanity_variables(model = model, newdata = newdata, variables = variables))
+    checkmate::assert_choice(contrast_factor, choices = c("reference", "sequential", "revsequential", "pairwise", "revpairwise"))
     checkmate::assert(
         checkmate::check_numeric(contrast_numeric, min.len = 1, max.len = 2),
         checkmate::check_choice(contrast_numeric, choices = c("iqr", "minmax", "sd", "2sd")))
@@ -66,46 +70,50 @@ comparisons <- function(model,
 
     out_list <- list()
 
-    for (variable in variables) {
-        # logical and character before factor, because they get picked up by find_categorical
-        if (is.logical(newdata[[variable]])) {
-            out_list[[variable]] <- get_contrasts_logical(
-                model = model,
-                newdata = newdata,
-                variable = variable,
-                type = type,
-                ...)
+    for (predt in type) {
+        for (variable in variables) {
+            # logical and character before factor, because they get picked up by find_categorical
+            if (is.logical(newdata[[variable]])) {
+                out_list[[variable]] <- get_contrasts_logical(
+                    model = model,
+                    newdata = newdata,
+                    variable = variable,
+                    type = predt,
+                    ...)
 
-        } else if (is.character(newdata[[variable]])) {
-            out_list[[variable]] <- get_contrasts_character(
-                model = model,
-                newdata = newdata,
-                variable = variable,
-                type = type,
-                ...)
+            } else if (is.character(newdata[[variable]])) {
+                out_list[[variable]] <- get_contrasts_character(
+                    model = model,
+                    newdata = newdata,
+                    variable = variable,
+                    type = predt,
+                    ...)
 
-        } else if (is.factor(newdata[[variable]]) || variable %in% find_categorical(newdata = newdata, model = model) || isTRUE(attr(newdata[[variable]], "factor"))) {
-           out_list[[variable]] <- get_contrasts_factor(
-                model = model,
-                newdata = newdata,
-                type = type,
-                variable = variable,
-                contrast_factor = contrast_factor,
-                ...)
+            } else if (is.factor(newdata[[variable]]) ||
+                       variable %in% find_categorical(newdata = newdata, model = model) ||
+                       isTRUE(attr(newdata[[variable]], "factor"))) {
+               out_list[[variable]] <- get_contrasts_factor(
+                    model = model,
+                    newdata = newdata,
+                    type = predt,
+                    variable = variable,
+                    contrast_factor = contrast_factor,
+                    ...)
 
-        } else if (is.numeric(newdata[[variable]])) {
-            out_list[[variable]] <- get_contrasts_numeric(
-                model = model,
-                newdata = newdata,
-                variable = variable,
-                type = type,
-                contrast_numeric = contrast_numeric,
-                ...)
+            } else if (is.numeric(newdata[[variable]])) {
+                out_list[[variable]] <- get_contrasts_numeric(
+                    model = model,
+                    newdata = newdata,
+                    variable = variable,
+                    type = predt,
+                    contrast_numeric = contrast_numeric,
+                    ...)
 
-        } else {
-            stop(sprintf("Cannot compute contrasts for variable %s of class %s",
-                         variable,
-                         class(newdata[[variable]])))
+            } else {
+                stop(sprintf("Cannot compute contrasts for variable %s of class %s",
+                             variable,
+                             class(newdata[[variable]])))
+            }
         }
     }
 
@@ -115,6 +123,8 @@ comparisons <- function(model,
     if (!"group" %in% colnames(out)) {
         out$group <- "main_marginaleffect"
     }
+
+    class(out) <- c("comparisons", class(out))
 
     return(out)
 }
