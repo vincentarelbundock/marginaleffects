@@ -2,6 +2,8 @@ get_contrasts_character <- function(model,
                                     newdata,
                                     variable,
                                     type = "response",
+                                    contrast_numeric = 1, # do not push forward
+                                    contrast_factor = "reference",
                                     ...) {
 
     # factors store all levels, but characters do not, so we need to extract the

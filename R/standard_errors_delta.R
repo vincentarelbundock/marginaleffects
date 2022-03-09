@@ -10,6 +10,24 @@ standard_errors_delta_marginalmeans <- function(model,
                       ...)$marginalmean
 }
 
+
+standard_errors_delta_contrasts <- function(model,
+                                            variable,
+                                            newdata,
+                                            type,
+                                            contrast_factor,
+                                            contrast_numeric,
+                                            ...) {
+    get_contrasts(model,
+                  newdata = newdata,
+                  variable = variable,
+                  type = type,
+                  contrast_factor = contrast_factor,
+                  contrast_numeric = contrast_numeric,
+                  ...)$estimate
+}
+
+
 standard_errors_delta_marginaleffects <- function(model,
                                                   variable,
                                                   newdata,

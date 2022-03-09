@@ -1,6 +1,7 @@
 requiet("brglm2")
 requiet("margins")
 requiet("emmeans")
+requiet("broom")
 
 test_that("brglm2::brglm_fit vs. margins vs. emtrends", {
     data("endometrial", package = "brglm2")
