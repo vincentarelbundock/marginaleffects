@@ -43,6 +43,7 @@
 #' * `term`: the variable whose marginal effect is computed
 #' * `dydx`: marginal effect of the term on the outcome for a given combination of regressor values
 #' * `std.error`: standard errors computed by via the delta method.
+#' @examplesIf interactive()
 #' @examples
 #'
 #' mod <- glm(am ~ hp * wt, data = mtcars, family = binomial)
