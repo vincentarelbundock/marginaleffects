@@ -18,7 +18,7 @@ get_dydx <- function(model,
                     newdata = newdata,
                     variable = variable,
                     type = type,
-                    normalize_dydx = TRUE,
+                    contrast_numeric_slope = TRUE,
                     ...)
 
     # normalize names to merge when requesting dydx
