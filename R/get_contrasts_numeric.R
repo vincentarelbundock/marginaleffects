@@ -6,14 +6,48 @@ get_contrasts_numeric <- function(model,
                                   contrast_numeric_slope = FALSE,
                                   ...) {
 
+    checkmate::assert(
+        checkmate::check_numeric(contrast_numeric, min.len = 1, max.len = 2),
+        checkmate::check_choice(contrast_numeric, choices = c("iqr", "minmax", "sd", "2sd"))
+    )
+
+    if (is.numeric(contrast_numeric) && length(contrast_numeric) == 1) {
+        low <- newdata[[variable]]
+        high <- newdata[[variable]] + contrast_numeric
+        lab <- sprintf("+%s", contrast_numeric)
+    } else if (is.numeric(contrast_numeric) && length(contrast_numeric) == 2) {
+        contrast_numeric <- sort(contrast_numeric)
+        low <- contrast_numeric[1]
+        high <- contrast_numeric[2]
+        gap <- diff(contrast_numeric)
+    } else if (contrast_numeric == "sd") {
+        low <- mean(newdata[[variable]], na.rm = TRUE) - sd(newdata[[variable]], na.rm = TRUE) / 2
+        high <- mean(newdata[[variable]], na.rm = TRUE) + sd(newdata[[variable]], na.rm = TRUE) / 2
+        lab <- "sd"
+    } else if (contrast_numeric == "2sd") {
+        low <- mean(newdata[[variable]], na.rm = TRUE) - sd(newdata[[variable]], na.rm = TRUE)
+        high <- mean(newdata[[variable]], na.rm = TRUE) + sd(newdata[[variable]], na.rm = TRUE)
+        lab <- "2sd"
+    } else if (contrast_numeric == "iqr") {
+        low <- quantile(newdata[[variable]], probs = .25, na.rm = TRUE)
+        high <- quantile(newdata[[variable]], probs = .75, na.rm = TRUE)
+        lab <- "IQR"
+    } else if (contrast_numeric == "minmax") {
+        low <- min(newdata[[variable]], na.rm = TRUE)
+        high <- max(newdata[[variable]], na.rm = TRUE)
+        lab <- "Max - Min"
+    }
+    gap <- high - low
+
     baseline <- newdata
 
+    baseline[[variable]] <- low
     pred_baseline <- get_predict(model,
                                  newdata = baseline,
                                  type = type,
                                  ...)
 
-    baseline[[variable]] <- baseline[[variable]] + contrast_numeric
+    baseline[[variable]] <- high
     pred_increment <- get_predict(model,
                                   newdata = baseline,
                                   type = type,
@@ -24,11 +58,11 @@ get_contrasts_numeric <- function(model,
     pred_increment$term <- variable
 
     if (isTRUE(contrast_numeric_slope)) {
-        contr <- contr / contrast_numeric
+        contr <- contr / gap
         pred_increment$contrast <- "dydx"
         pred_increment$estimate <- contr
     } else {
-        pred_increment$contrast <- sprintf("+%s", contrast_numeric)
+        pred_increment$contrast <- lab
         pred_increment$estimate <- contr
     }
     pred_increment$predicted <- NULL
