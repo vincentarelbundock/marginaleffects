@@ -35,7 +35,14 @@ get_group_names(model, ...)
 \arguments{
 \item{model}{Model object}
 
-\item{...}{The "Model-Specific Arguments" section below gives a list of arguments which can modify the behavior of this function for certain models (e.g., mixed-effects or bayesian).}
+\item{...}{Additional arguments are passed to the \code{predict()} method used to
+compute adjusted predictions. These arguments are particularly useful for
+mixed-effects or bayesian models (see the online vignettes on the
+\code{marginaleffects} website). Available arguments can vary from model to
+model, depending on the range of supported arguments by each modeling
+package. See the "Model-Specific Arguments" section of the
+\code{?marginaleffects} document for a non-exhaustive list of available
+arguments.}
 
 \item{type}{Type(s) of prediction as string or character vector. This can
 differ based on the model type, but will typically be a string such as:

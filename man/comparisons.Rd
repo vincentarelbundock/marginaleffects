@@ -6,17 +6,19 @@
 \usage{
 comparisons(
   model,
-  variable,
+  variables,
   newdata = insight::get_data(model),
   type = "response",
   contrast_factor = "reference",
   contrast_numeric = 1,
-  contrast_numeric_slope = FALSE,
   ...
 )
 }
 \arguments{
 \item{model}{Model object}
+
+\item{variables}{Variables to consider (character vector). \code{NULL}
+calculates marginal effects for all terms in the model object.}
 
 \item{newdata}{A dataset over which to compute marginal effects. \code{NULL} uses
 the original data used to fit the model.}
@@ -25,7 +27,30 @@ the original data used to fit the model.}
 differ based on the model type, but will typically be a string such as:
 "response", "link", "probs", or "zero".}
 
-\item{...}{The "Model-Specific Arguments" section below gives a list of arguments which can modify the behavior of this function for certain models (e.g., mixed-effects or bayesian).}
+\item{contrast_factor}{"reference" or "sequential"
+\itemize{
+\item "reference": Each factor level is compared to the factor reference (base) level
+\item "sequential": Each factor level is compared to the previous factor level
+}}
+
+\item{contrast_numeric}{string or numeric
+\itemize{
+\item Numeric of length 1: Contrast between the observed value and the observed value plus \code{contrast_numeric}
+\item Numeric vector of length 2: Contrast between the 2nd element and the 1st element of the \code{contrast_numeric} vector.
+\item "iqr": Contrast across the interquartile range of the regressor.
+\item "sd": Contrast across one standard deviation around the regressor mean.
+\item "2sd": Contrast across two standard deviations around the regressor mean.
+\item "minmax": Contrast between the maximum and the minimum values of the regressor.
+}}
+
+\item{...}{Additional arguments are passed to the \code{predict()} method used to
+compute adjusted predictions. These arguments are particularly useful for
+mixed-effects or bayesian models (see the online vignettes on the
+\code{marginaleffects} website). Available arguments can vary from model to
+model, depending on the range of supported arguments by each modeling
+package. See the "Model-Specific Arguments" section of the
+\code{?marginaleffects} document for a non-exhaustive list of available
+arguments.}
 }
 \description{
 This function calculates contrasts (or comparisons) between adjusted
