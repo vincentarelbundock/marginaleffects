@@ -20,7 +20,7 @@ get_contrasts_logical <- function(model,
 
     baseline$comparison <- pred_true$predicted - pred_false$predicted
     baseline$term <- variable
-    baseline$comparison <- "TRUE - FALSE"
+    baseline$contrast <- "TRUE - FALSE"
     cols <- intersect(colnames(baseline),
                       c("rowid", "group", "term", "contrast", "comparison"))
     pred <- baseline[, cols]

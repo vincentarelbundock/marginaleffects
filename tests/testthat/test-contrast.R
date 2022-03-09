@@ -44,10 +44,10 @@ test_that("numeric contrasts", {
     minmax <- (max(mtcars$hp) - min(mtcars$hp)) * coef(mod)["hp"]
     sd1 <- sd(mtcars$hp) * coef(mod)["hp"]
     sd2 <- 2 * sd(mtcars$hp) * coef(mod)["hp"]
-    expect_equal(contr2$estimate, rep(iqr, 32), ignore_attr = TRUE)
-    expect_equal(contr3$estimate, rep(minmax, 32), ignore_attr = TRUE)
-    expect_equal(contr4$estimate, rep(sd1, 32), ignore_attr = TRUE)
-    expect_equal(contr5$estimate, rep(sd2, 32), ignore_attr = TRUE)
+    expect_equal(contr2$comparison, rep(iqr, 32), ignore_attr = TRUE)
+    expect_equal(contr3$comparison, rep(minmax, 32), ignore_attr = TRUE)
+    expect_equal(contr4$comparison, rep(sd1, 32), ignore_attr = TRUE)
+    expect_equal(contr5$comparison, rep(sd2, 32), ignore_attr = TRUE)
 })
 
 

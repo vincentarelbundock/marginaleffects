@@ -84,3 +84,30 @@ website:
 
 https://vincentarelbundock.github.io/marginaleffects/
 }
+\examples{
+library(marginaleffects)
+library(magrittr)
+
+# Linear model
+tmp <- mtcars
+tmp$am <- as.logical(tmp$am)
+mod <- lm(mpg ~ am + factor(cyl), tmp)
+comparisons(mod, contrast_factor = "sequential") \%>\% tidy()
+comparisons(mod, contrast_factor = "pairwise") \%>\% tidy()
+comparisons(mod, contrast_factor = "revpairwise") \%>\% tidy()
+
+# GLM with different scale types
+mod <- glm(am ~ factor(gear), data = mtcars)
+comparisons(mod) \%>\% tidy()
+comparisons(mod, type = "link") \%>\% tidy()
+
+# Numeric contrasts
+mod <- lm(mpg ~ hp, data = mtcars)
+comparisons(mod, contrast_numeric = 1) \%>\% tidy()
+comparisons(mod, contrast_numeric = 5) \%>\% tidy()
+comparisons(mod, contrast_numeric = c(90, 100)) \%>\% tidy()
+comparisons(mod, contrast_numeric = "iqr") \%>\% tidy()
+comparisons(mod, contrast_numeric = "sd") \%>\% tidy()
+comparisons(mod, contrast_numeric = "minmax") \%>\% tidy()
+
+}

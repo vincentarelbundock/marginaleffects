@@ -30,12 +30,13 @@ theme_set(theme_minimal())
 
 The `marginaleffects()` function automatically calculates contrasts instead of derivatives for factor, logical, or character variables. The `comparisons()` function gives users more powerful features to compute different contrasts.
 
-# Simple contrasts
+# Contrasts: logical and factor variables
 
 Consider a simple model with a logical and a factor variable:
 
 ```{r}
 library(marginaleffects)
+library(magrittr)
 
 tmp <- mtcars
 tmp$am <- as.logical(tmp$am)
@@ -51,7 +52,16 @@ summary(mfx)
 
 The summary printed above says that moving from the reference category `4` to the level `6` on the `cyl` factor variable is associated with a change of `r sprintf("%.3f", tidy(mfx)$estimate[2])` in the adjusted prediction. Similarly, the contrast from `FALSE` to `TRUE` on the `am` variable is equal to `r sprintf("%.3f", tidy(mfx)$estimate[1])`.
 
-We can obtain the same results using the `emmeans` package:
+We can obtain different contrasts by using the `comparisons()` function. For example:
+
+
+```{r}
+comparisons(mod, contrast_factor = "sequential") %>% tidy()
+comparisons(mod, contrast_factor = "pairwise") %>% tidy()
+comparisons(mod, contrast_factor = "revpairwise") %>% tidy()
+```
+
+For comparison, this code produces the same results using the `emmeans` package:
 
 ```{r}
 library(emmeans)
@@ -60,6 +70,46 @@ contrast(emm, method = "revpairwise")
 
 emm <- emmeans(mod, specs = "am")
 contrast(emm, method = "revpairwise")
+```
+
+Note that these commands also work on for other types of models, such as GLMs, on different scales:
+
+```{r}
+mod_logit <- glm(am ~ factor(gear), data = mtcars, family = binomial)
+
+comparisons(mod_logit) %>% tidy()
+
+comparisons(mod_logit, type = "link") %>% tidy()
+```
+
+# Contrasts: numeric variables
+
+We can also compute contrasts for differences in numeric variables. For example, we can see what happens to the adjusted predictions when we increment the `hp` variable by 1 unit (default) or by 5 units:
+
+```{r}
+mod <- lm(mpg ~ hp, data = mtcars)
+
+comparisons(mod) %>% tidy()
+
+comparisons(mod, contrast_numeric = 5) %>% tidy()
+```
+
+Compare adjusted predictions for a change in the regressor between two arbitrary values:
+
+```{r}
+comparisons(mod, contrast_numeric = c(90, 110)) %>% tidy()
+```
+
+Compare adjusted predictions when the regressor changes across the interquartile range, across one or two standard deviations about its mean, or from across its full range:
+
+```{r}
+comparisons(mod, contrast_numeric = "iqr") %>% tidy()
+
+comparisons(mod, contrast_numeric = "sd") %>% tidy()
+
+comparisons(mod, contrast_numeric = "2sd") %>% tidy()
+
+comparisons(mod, contrast_numeric = "minmax") %>% tidy()
 ```
 
 # Contrasts with interactions
@@ -73,7 +123,7 @@ mod_int <- lm(mpg ~ am * factor(cyl), tmp)
 We can now use the `newdata` argument of the `marginaleffects` function to compute contrasts for different values of the other regressors. As in [the marginal effects vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx.html), the `datagrid` function can be handy. Since we only care about the logical `am` contrast, we use the `variables` to indicate the subset of results to report:
 
 ```{r}
-marginaleffects(mod_int, newdata = datagrid(cyl = tmp$cyl), variables = "am")
+comparisons(mod_int, newdata = datagrid(cyl = tmp$cyl), variables = "am")
 ```
 
 Once again, we obtain the same results with `emmeans`:

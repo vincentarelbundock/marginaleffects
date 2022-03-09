@@ -11,7 +11,7 @@
 #'
 #' A "contrast" is the difference between two adjusted predictions, calculated
 #' for meaningfully different regressor values (e.g., College graduates vs.
-#' Others). Uncertainty ,ffestimates are computed using the delta method.
+#' Others). Uncertainty estimates are computed using the delta method.
 #'
 #' Detailed vignettes on contrasts, marginal effects, predictions, and marginal
 #' means, as well as a list of supported models can be found on the package
@@ -33,6 +33,33 @@
 #' * "sd": Contrast across one standard deviation around the regressor mean.
 #' * "2sd": Contrast across two standard deviations around the regressor mean.
 #' * "minmax": Contrast between the maximum and the minimum values of the regressor.
+#' @examples
+
+#' library(marginaleffects)
+#' library(magrittr)
+#'
+#' # Linear model
+#' tmp <- mtcars
+#' tmp$am <- as.logical(tmp$am)
+#' mod <- lm(mpg ~ am + factor(cyl), tmp)
+#' comparisons(mod, contrast_factor = "sequential") %>% tidy()
+#' comparisons(mod, contrast_factor = "pairwise") %>% tidy()
+#' comparisons(mod, contrast_factor = "revpairwise") %>% tidy()
+#'
+#' # GLM with different scale types
+#' mod <- glm(am ~ factor(gear), data = mtcars)
+#' comparisons(mod) %>% tidy()
+#' comparisons(mod, type = "link") %>% tidy()
+#' 
+#' # Numeric contrasts
+#' mod <- lm(mpg ~ hp, data = mtcars)
+#' comparisons(mod, contrast_numeric = 1) %>% tidy()
+#' comparisons(mod, contrast_numeric = 5) %>% tidy()
+#' comparisons(mod, contrast_numeric = c(90, 100)) %>% tidy()
+#' comparisons(mod, contrast_numeric = "iqr") %>% tidy()
+#' comparisons(mod, contrast_numeric = "sd") %>% tidy()
+#' comparisons(mod, contrast_numeric = "minmax") %>% tidy()
+#'
 #' @export
 comparisons <- function(model,
                         variables = NULL,
@@ -43,20 +70,6 @@ comparisons <- function(model,
                         contrast_numeric = 1,
                         ...) {
 
-    # don't run sanity checks if this is an internal call
-    # secret argument
-    if (!isTRUE(list(...)[["internal_call"]])) {
-        model <- sanity_model(model = model, ...)
-        sanity_newdata(model = model, newdata = newdata)
-        sanity_type(model = model, type = type)
-        variables <- unlist(sanity_variables(model = model, newdata = newdata, variables = variables)[["conditional"]])
-    }
-
-    vcov <- sanitize_vcov(model, vcov)
-    checkmate::assert_choice(contrast_factor, choices = c("reference", "sequential", "revsequential", "pairwise", "revpairwise"))
-    checkmate::assert(
-        checkmate::check_numeric(contrast_numeric, min.len = 1, max.len = 2),
-        checkmate::check_choice(contrast_numeric, choices = c("iqr", "minmax", "sd", "2sd")))
 
     # if `newdata` is a call to `datagrid`, `typical`, or `counterfactual`, insert `model`
     scall <- substitute(newdata)
@@ -68,6 +81,18 @@ comparisons <- function(model,
         }
     }
     newdata <- sanity_newdata(model, newdata)
+
+    # TODO: don't run sanity checks if this is an internal call. But
+    # this can create problems.
+    # secret argument
+    model <- sanity_model(model = model, ...)
+    sanity_type(model = model, type = type)
+    variables <- unlist(sanity_variables(model = model, newdata = newdata, variables = variables)[["conditional"]])
+    vcov <- sanitize_vcov(model, vcov)
+    checkmate::assert_choice(contrast_factor, choices = c("reference", "sequential", "revsequential", "pairwise", "revpairwise"))
+    checkmate::assert(
+        checkmate::check_numeric(contrast_numeric, min.len = 1, max.len = 2),
+        checkmate::check_choice(contrast_numeric, choices = c("iqr", "minmax", "sd", "2sd")))
 
     # modelbased::visualisation_matrix attaches useful info for plotting
     attributes_newdata <- attributes(newdata)
@@ -204,6 +229,15 @@ comparisons <- function(model,
 
     # we want consistent output, regardless of whether `data.table` is installed/used or not
     out <- as.data.frame(out)
+
+    # merge newdata if requested and restore attributes
+    # secret argument
+    if (!isTRUE(list(...)[["internal_call"]])) {
+        return_data <- sanitize_return_data()
+        if (isTRUE(return_data)) {
+            out <- left_join(out, newdata, by = "rowid")
+        }
+    }
 
     class(out) <- c("comparisons", class(out))
     attr(out, "posterior_draws") <- draws

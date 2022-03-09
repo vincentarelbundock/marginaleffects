@@ -23,16 +23,20 @@ knitr::opts_chunk$set(
 
 ## What?
 
-The `marginaleffects` package allows `R` users to compute and plot four principal quantities of interest for [a very wide variety of models:](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
+The `marginaleffects` package allows `R` users to compute and plot four principal quantities of interest for [a very wide variety of models:](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html) 
 
-* [_Marginal Effect_ (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/mfx.html) 
+* [_Marginal Effect_(Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/mfx.html) 
     - A partial derivative (slope) of the regression equation with respect to a regressor of interest.
+    - [`marginaleffects()` function documentation](https://vincentarelbundock.github.io/marginaleffects/reference/marginaleffects.html)
 * [_Adjusted Prediction_ (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html) 
     - The outcome predicted by a model for some combination of the regressors' values, such as their observed values, their means, or factor levels (a.k.a. "reference grid"). 
+    - [`predictions()` function documentation](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html)
 * [_Contrast_ (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html) 
     - The difference between two adjusted predictions, calculated for meaningfully different regressor values (e.g., College graduates vs. Others).
+    - [`comparisons()` function documentation](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)
 * [_Marginal Mean_ (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) 
     - Adjusted predictions of a model, averaged across a "reference grid" of categorical predictors.
+    - [`marginalmeans()` function documentation](https://vincentarelbundock.github.io/marginaleffects/reference/marginalmeans.html)
 
 The rest of this page includes a "Getting Started" tutorial with simple examples. To go beyond these simple examples, please read the vignettes linked above, for each of the four quantities. In addition, you can consult these pages:
 
