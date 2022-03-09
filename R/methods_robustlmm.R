@@ -13,7 +13,7 @@ get_predict.rlmerMod <- function(model,
                                  ...) {
     args <- list(...)
     # some predict methods raise warnings on unused arguments
-    unused <- c("type", "normalize_dydx", "step_size", "numDeriv_method", "conf.level")
+    unused <- c("type", "normalize_dydx", "step_size", "numDeriv_method", "conf.level", "internal_call", "contrast_numeric_slope")
     args <- args[setdiff(names(args), unused)]
     args[["object"]] <- model
     args[["newdata"]] <- newdata

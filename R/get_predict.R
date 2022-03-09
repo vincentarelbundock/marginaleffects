@@ -29,7 +29,7 @@ get_predict.default <- function(model,
     dots <- list(...)
 
     # some predict methods raise warnings on unused arguments 
-    unused <- c("normalize_dydx", "step_size", "numDeriv_method")
+    unused <- c("normalize_dydx", "step_size", "numDeriv_method", "internal_call", "contrast_numeric_slope")
     dots <- dots[setdiff(names(dots), unused)]
 
     # `insight::get_predicted` yields back-transformed confidence intervals

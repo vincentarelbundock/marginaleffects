@@ -9,6 +9,7 @@ comparisons(
   variables = NULL,
   newdata = insight::get_data(model),
   type = "response",
+  vcov = TRUE,
   contrast_factor = "reference",
   contrast_numeric = 1,
   ...
@@ -27,10 +28,20 @@ the original data used to fit the model.}
 differ based on the model type, but will typically be a string such as:
 "response", "link", "probs", or "zero".}
 
+\item{vcov}{Matrix or boolean
+\itemize{
+\item FALSE: does not compute unit-level standard errors.
+\item TRUE: computes unit-level standard errors using the default \code{vcov(model)} variance-covariance matrix.
+\item Named square matrix: computes standard errors with a user-supplied variance-covariance matrix. This matrix must be square and have dimensions equal to the number of coefficients in \code{get_coef(model)}.
+}}
+
 \item{contrast_factor}{"reference" or "sequential"
 \itemize{
 \item "reference": Each factor level is compared to the factor reference (base) level
 \item "sequential": Each factor level is compared to the previous factor level
+\item "revsequential": Same as "sequential" but in the reverse order
+\item "pairwise": Each factor level is compared to all other levels
+\item "revpairwise": Same as pairwise, but with the reverse order of subtraction
 }}
 
 \item{contrast_numeric}{string or numeric

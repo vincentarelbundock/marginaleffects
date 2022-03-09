@@ -2,6 +2,8 @@ get_contrasts_logical <- function(model,
                                   newdata,
                                   variable,
                                   type = "response",
+                                  contrast_numeric = 1, # do not push forward
+                                  contrast_factor = "reference",
                                   ...) {
 
     baseline <- newdata

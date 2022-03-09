@@ -146,6 +146,7 @@ marginaleffects <- function(model,
                             variable = v,
                             newdata = newdata,
                             type = predt,
+                            internal_call = TRUE, # for group column in comparisons
                             ...)
             mfx$type <- predt
 

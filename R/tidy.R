@@ -297,6 +297,11 @@ tidy.comparisons <- function(x,
     # multi-equation models where some terms only affect one response
     out <- out[out$estimate != 0,]
 
+    # drop group if useless
+    if (all(out$group == "main_marginaleffect")) {
+        out$group <- NULL
+    }
+
     # sort and subset columns
     cols <- c("type", "group", "term", "contrast", "estimate", "std.error",
               "statistic", "p.value", "conf.low", "conf.high")

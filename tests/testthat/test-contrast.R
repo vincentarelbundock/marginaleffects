@@ -2,7 +2,8 @@ test_that("simple contrasts: no validity check", {
     dat <- mtcars
     dat$am <- as.logical(dat$am)
     mod <- lm(mpg ~ hp + am + factor(cyl), data = dat)
-    res <- tidy(marginaleffects(mod))
+    mfx <- marginaleffects(mod)
+    res <- tidy(mfx)
     expect_s3_class(res, "data.frame")
     expect_equal(dim(res), c(4, 9))
 })
@@ -50,15 +51,33 @@ test_that("numeric contrasts", {
 })
 
 
-test_that("factor", {
-              skip("WIP: comparisons")
+test_that("factor: linear model", {
+    mod <- lm(mpg ~ factor(cyl), data = mtcars)
+    ti <- tidy(comparisons(mod, contrast_factor = "reference"))
+    re <- coef(mod)[2:3]
+    expect_equal(ti$estimate, re, ignore_attr = TRUE)
 
-mod <- lm(mpg ~ factor(cyl), data = mtcars)
-comparisons(mod, contrast_factor = "reference") |> tidy()
-comparisons(mod, contrast_factor = "pairwise") |> tidy()
-comparisons(mod, contrast_factor = "revpairwise") |> tidy()
-comparisons(mod, contrast_factor = "sequential") |> tidy()
-comparisons(mod, contrast_factor = "revsequential") |> tidy()
+    ti <- tidy(comparisons(mod, contrast_factor = "pairwise"))
+    pw <- c(coef(mod)[2:3], coef(mod)[3] - coef(mod)[2])
+    expect_equal(ti$estimate, pw, ignore_attr = TRUE)
 
+    ti <- tidy(comparisons(mod, contrast_factor = "revpairwise"))
+    expect_equal(ti$estimate, -1 * pw, ignore_attr = TRUE)
+
+    ti <- tidy(comparisons(mod, contrast_factor = "sequential"))
+    se <- c(coef(mod)[2], coef(mod)[3] - coef(mod)[2])
+    expect_equal(ti$estimate, se, ignore_attr = TRUE)
+
+    ti <- tidy(comparisons(mod, contrast_factor = "revsequential"))
+    expect_equal(ti$estimate, -1 * se, ignore_attr = TRUE)
 })
 
+
+test_that("factor glm", {
+    mod <- glm(am ~ factor(cyl), data = mtcars, family = binomial)
+    pred <- predictions(mod, newdata = datagrid(cyl = mtcars$cyl))
+    contr <- tidy(comparisons(mod))
+    expect_equal(contr$estimate[1], pred$predicted[pred$cyl == 6] - pred$predicted[pred$cyl == 4])
+    expect_equal(contr$estimate[2], pred$predicted[pred$cyl == 8] - pred$predicted[pred$cyl == 4])
+})
+  
