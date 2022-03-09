@@ -29,3 +29,22 @@ test_that("bug be dead: all levels appear", {
     mfx = marginaleffects(mod, newdata = datagrid(cyl = c(4, 6)))
     expect_equal(nrow(mfx), 6)
 })
+
+
+test_that("numeric contrasts", {
+    mod <- lm(mpg ~ hp, data = mtcars)
+    expect_error(get_contrasts(mod, contrast_numeric = "bad", variable = "hp"), regexp = "Assertion failed")
+    contr1 <- get_contrasts(mod, contrast_numeric = 1, variable = "hp")
+    contr2 <- get_contrasts(mod, contrast_numeric = "iqr", variable = "hp")
+    contr3 <- get_contrasts(mod, contrast_numeric = "minmax", variable = "hp")
+    contr4 <- get_contrasts(mod, contrast_numeric = "sd", variable = "hp")
+    contr5 <- get_contrasts(mod, contrast_numeric = "2sd", variable = "hp")
+    iqr <- diff(quantile(mtcars$hp, probs = c(.25, .75))) * coef(mod)["hp"]
+    minmax <- (max(mtcars$hp) - min(mtcars$hp)) * coef(mod)["hp"]
+    sd1 <- sd(mtcars$hp) * coef(mod)["hp"]
+    sd2 <- 2 * sd(mtcars$hp) * coef(mod)["hp"]
+    expect_equal(contr2$estimate, rep(iqr, 32), ignore_attr = TRUE)
+    expect_equal(contr3$estimate, rep(minmax, 32), ignore_attr = TRUE)
+    expect_equal(contr4$estimate, rep(sd1, 32), ignore_attr = TRUE)
+    expect_equal(contr5$estimate, rep(sd2, 32), ignore_attr = TRUE)
+})
