@@ -2,7 +2,7 @@
 % Please edit documentation in R/comparisons.R
 \name{comparisons}
 \alias{comparisons}
-\title{Contrasts between adjusted predictions}
+\title{Experimental function to compute contrasts between adjusted predictions}
 \usage{
 comparisons(
   model,

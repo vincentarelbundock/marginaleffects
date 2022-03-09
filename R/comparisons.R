@@ -1,4 +1,4 @@
-#' Contrasts between adjusted predictions
+#' Experimental function to compute contrasts between adjusted predictions
 #'
 #' This function calculates contrasts (or comparisons) between adjusted
 #' predictions for each row of the dataset. The resulting object can processed
