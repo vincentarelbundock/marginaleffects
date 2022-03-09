@@ -14,6 +14,7 @@ get_contrasts_numeric <- function(model,
         low <- contrast_numeric[1]
         high <- contrast_numeric[2]
         gap <- diff(contrast_numeric)
+        lab  <- paste(contrast_numeric[2], "-", contrast_numeric[1])
     } else if (contrast_numeric == "sd") {
         low <- mean(newdata[[variable]], na.rm = TRUE) - stats::sd(newdata[[variable]], na.rm = TRUE) / 2
         high <- mean(newdata[[variable]], na.rm = TRUE) + stats::sd(newdata[[variable]], na.rm = TRUE) / 2
