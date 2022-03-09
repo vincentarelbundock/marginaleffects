@@ -20,15 +20,33 @@
 #' https://vincentarelbundock.github.io/marginaleffects/
 #'
 #' @inheritParams marginaleffects
+#' @param contrast_factor "reference" or "sequential"
+#' * "reference": Each factor level is compared to the factor reference (base) level
+#' * "sequential": Each factor level is compared to the previous factor level
+#' @param contrast_numeric string or numeric
+#' * Numeric of length 1: Contrast between the observed value and the observed value plus `contrast_numeric`
+#' * Numeric vector of length 2: Contrast between the 2nd element and the 1st element of the `contrast_numeric` vector.
+#' * "iqr": Contrast across the interquartile range of the regressor.
+#' * "sd": Contrast across one standard deviation around the regressor mean.
+#' * "2sd": Contrast across two standard deviations around the regressor mean.
+#' * "minmax": Contrast between the maximum and the minimum values of the regressor.
 #' @export
 comparisons <- function(model,
-                        variable,
+                        variables,
                         newdata = insight::get_data(model),
                         type = "response",
                         contrast_factor = "reference",
                         contrast_numeric = 1,
-                        contrast_numeric_slope = FALSE,
                         ...) {
+
+
+    sanity_variables(model = model, newdata = newdata, variables = variables)
+    sanity_newdata(model = model, newdata = newdata)
+    sanity_type(model = model, type = type)
+    checkmate::assert_choice(contrast_factor, choices = c("reference", "sequential"))
+    checkmate::assert(
+        checkmate::check_numeric(contrast_numeric, min.len = 1, max.len = 2),
+        checkmate::check_choice(contrast_numeric, choices = c("iqr", "minmax", "sd", "2sd")))
 
     # if `newdata` is a call to `datagrid`, `typical`, or `counterfactual`, insert `model`
     scall <- substitute(newdata)
@@ -46,47 +64,52 @@ comparisons <- function(model,
         newdata$rowid <- seq_len(nrow(newdata))
     }
 
-    # logical and character before factor, because they get picked up by find_categorical
-    if (is.logical(newdata[[variable]])) {
-        out <- get_contrasts_logical(
-            model = model,
-            newdata = newdata,
-            variable = variable,
-            type = type,
-            ...)
+    out_list <- list()
 
-    } else if (is.character(newdata[[variable]])) {
-        out <- get_contrasts_character(
-            model = model,
-            newdata = newdata,
-            variable = variable,
-            type = type,
-            ...)
+    for (variable in variables) {
+        # logical and character before factor, because they get picked up by find_categorical
+        if (is.logical(newdata[[variable]])) {
+            out_list[[variable]] <- get_contrasts_logical(
+                model = model,
+                newdata = newdata,
+                variable = variable,
+                type = type,
+                ...)
 
-    } else if (is.factor(newdata[[variable]]) || variable %in% find_categorical(newdata = newdata, model = model) || isTRUE(attr(newdata[[variable]], "factor"))) {
-       out <- get_contrasts_factor(
-            model = model,
-            newdata = newdata,
-            type = type,
-            variable = variable,
-            contrast_factor = contrast_factor,
-            ...)
+        } else if (is.character(newdata[[variable]])) {
+            out_list[[variable]] <- get_contrasts_character(
+                model = model,
+                newdata = newdata,
+                variable = variable,
+                type = type,
+                ...)
 
-    } else if (is.numeric(newdata[[variable]])) {
-        out <- get_contrasts_numeric(
-            model = model,
-            newdata = newdata,
-            variable = variable,
-            type = type,
-            contrast_numeric = contrast_numeric,
-            contrast_numeric_slope = contrast_numeric_slope,
-            ...)
+        } else if (is.factor(newdata[[variable]]) || variable %in% find_categorical(newdata = newdata, model = model) || isTRUE(attr(newdata[[variable]], "factor"))) {
+           out_list[[variable]] <- get_contrasts_factor(
+                model = model,
+                newdata = newdata,
+                type = type,
+                variable = variable,
+                contrast_factor = contrast_factor,
+                ...)
 
-    } else {
-        stop(sprintf("Cannot compute contrasts for variable %s of class %s",
-                     variable,
-                     class(newdata[[variable]])))
+        } else if (is.numeric(newdata[[variable]])) {
+            out_list[[variable]] <- get_contrasts_numeric(
+                model = model,
+                newdata = newdata,
+                variable = variable,
+                type = type,
+                contrast_numeric = contrast_numeric,
+                ...)
+
+        } else {
+            stop(sprintf("Cannot compute contrasts for variable %s of class %s",
+                         variable,
+                         class(newdata[[variable]])))
+        }
     }
+
+    out <- bind_rows(out_list)
 
     # required for merging in models with multiple response levels
     if (!"group" %in% colnames(out)) {

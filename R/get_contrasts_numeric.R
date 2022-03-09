@@ -3,13 +3,7 @@ get_contrasts_numeric <- function(model,
                                   variable,
                                   type = "response",
                                   contrast_numeric = 1,
-                                  contrast_numeric_slope = FALSE,
                                   ...) {
-
-    checkmate::assert(
-        checkmate::check_numeric(contrast_numeric, min.len = 1, max.len = 2),
-        checkmate::check_choice(contrast_numeric, choices = c("iqr", "minmax", "sd", "2sd"))
-    )
 
     if (is.numeric(contrast_numeric) && length(contrast_numeric) == 1) {
         low <- newdata[[variable]]
@@ -21,16 +15,16 @@ get_contrasts_numeric <- function(model,
         high <- contrast_numeric[2]
         gap <- diff(contrast_numeric)
     } else if (contrast_numeric == "sd") {
-        low <- mean(newdata[[variable]], na.rm = TRUE) - sd(newdata[[variable]], na.rm = TRUE) / 2
-        high <- mean(newdata[[variable]], na.rm = TRUE) + sd(newdata[[variable]], na.rm = TRUE) / 2
+        low <- mean(newdata[[variable]], na.rm = TRUE) - stats::sd(newdata[[variable]], na.rm = TRUE) / 2
+        high <- mean(newdata[[variable]], na.rm = TRUE) + stats::sd(newdata[[variable]], na.rm = TRUE) / 2
         lab <- "sd"
     } else if (contrast_numeric == "2sd") {
-        low <- mean(newdata[[variable]], na.rm = TRUE) - sd(newdata[[variable]], na.rm = TRUE)
-        high <- mean(newdata[[variable]], na.rm = TRUE) + sd(newdata[[variable]], na.rm = TRUE)
+        low <- mean(newdata[[variable]], na.rm = TRUE) - stats::sd(newdata[[variable]], na.rm = TRUE)
+        high <- mean(newdata[[variable]], na.rm = TRUE) + stats::sd(newdata[[variable]], na.rm = TRUE)
         lab <- "2sd"
     } else if (contrast_numeric == "iqr") {
-        low <- quantile(newdata[[variable]], probs = .25, na.rm = TRUE)
-        high <- quantile(newdata[[variable]], probs = .75, na.rm = TRUE)
+        low <- stats::quantile(newdata[[variable]], probs = .25, na.rm = TRUE)
+        high <- stats::quantile(newdata[[variable]], probs = .75, na.rm = TRUE)
         lab <- "IQR"
     } else if (contrast_numeric == "minmax") {
         low <- min(newdata[[variable]], na.rm = TRUE)
@@ -57,7 +51,8 @@ get_contrasts_numeric <- function(model,
 
     pred_increment$term <- variable
 
-    if (isTRUE(contrast_numeric_slope)) {
+    # secret argument
+    if (isTRUE(list(...)[["contrast_numeric_slope"]])) {
         contr <- contr / gap
         pred_increment$contrast <- "dydx"
         pred_increment$estimate <- contr
@@ -72,7 +67,7 @@ get_contrasts_numeric <- function(model,
     # bayes: posterior draws and credible intervals
     if ("posterior_draws" %in% names(attributes(pred_increment))) {
         draws <- attr(pred_increment, "posterior_draws") - attr(pred_baseline, "posterior_draws")
-        if (isTRUE(contrast_numeric_slope)) {
+        if (isTRUE(list(...)[["contrast_numeric_slope"]])) {
             attr(out, "posterior_draws") <- draws / contrast_numeric
         } else {
             attr(out, "posterior_draws") <- draws

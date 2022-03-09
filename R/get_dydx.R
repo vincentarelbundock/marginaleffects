@@ -38,7 +38,6 @@ get_dydx_continuous <- function(model,
                                 type = "response",
                                 vcov = NULL, # do not push to ...
                                 contrast_numeric = 1e-5, # do not push to ...
-                                contrast_numeric_slope = TRUE, # do not push to ...
                                 ...) {
 
     # we need to loop over group names because the input and output of grad()
@@ -88,14 +87,13 @@ get_dydx_via_contrasts <- function(model,
                                    variable,
                                    type = "response",
                                    contrast_numeric = 1e-5,
-                                   contrast_numeric_slope = TRUE,
                                    ...) {
     out <- comparisons(model = model,
                        newdata = newdata,
-                       variable = variable,
+                       variables = variable,
                        type = type,
                        contrast_numeric = contrast_numeric,
-                       contrast_numeric_slope = contrast_numeric_slope,
+                       contrast_numeric_slope = TRUE,
                        ...)
     return(out)
 }

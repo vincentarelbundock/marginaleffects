@@ -32,7 +32,14 @@
 #' @param type Type(s) of prediction as string or character vector. This can
 #'   differ based on the model type, but will typically be a string such as:
 #'   "response", "link", "probs", or "zero".
-#' @param ... The "Model-Specific Arguments" section below gives a list of arguments which can modify the behavior of this function for certain models (e.g., mixed-effects or bayesian).
+#' @param ... Additional arguments are passed to the `predict()` method used to
+#'   compute adjusted predictions. These arguments are particularly useful for
+#'   mixed-effects or bayesian models (see the online vignettes on the
+#'   `marginaleffects` website). Available arguments can vary from model to
+#'   model, depending on the range of supported arguments by each modeling
+#'   package. See the "Model-Specific Arguments" section of the
+#'   `?marginaleffects` document for a non-exhaustive list of available
+#'   arguments.
 #'
 #' @template model_specific_arguments
 #'
