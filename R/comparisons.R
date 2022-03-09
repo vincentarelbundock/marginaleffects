@@ -43,10 +43,16 @@ comparisons <- function(model,
                         contrast_numeric = 1,
                         ...) {
 
-    sanity_newdata(model = model, newdata = newdata)
-    sanity_type(model = model, type = type)
-    variables <- unlist(sanity_variables(model = model, newdata = newdata, variables = variables)[["conditional"]])
-    vcov <- sanitize_vcov(model, vcov)
+    # don't run sanity checks if this is an internal call
+    # secret argument
+    if (!isTRUE(list(...)[["internal_call"]])) {
+        model <- sanity_model(model = model, ...)
+        sanity_newdata(model = model, newdata = newdata)
+        sanity_type(model = model, type = type)
+        variables <- unlist(sanity_variables(model = model, newdata = newdata, variables = variables)[["conditional"]])
+        vcov <- sanitize_vcov(model, vcov)
+    }
+
     checkmate::assert_choice(contrast_factor, choices = c("reference", "sequential", "revsequential", "pairwise", "revpairwise"))
     checkmate::assert(
         checkmate::check_numeric(contrast_numeric, min.len = 1, max.len = 2),

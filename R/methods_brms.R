@@ -5,7 +5,7 @@ sanity_model_specific.brmsfit <- function(model, ...) {
     # terms: brmsfit objects do not have terms immediately available
     te <- tryCatch(attr(stats::terms(stats::formula(model)$formula), "term.labels"), error = function(e) NULL)
     if (any(grepl("^factor\\(", te))) {
-        stop("The `factor()` function cannot be used in the model formula of a `brmsfit` model. Please convert your variable to a factor before fitting the model, or use the `mo()` function to specific monotonic variables (see the `brms` vignette on monotonic variables).")
+        stop("The `factor()` function cannot be used in the model formula of a `brmsfit` model. Please convert your variable to a factor before fitting the model, or use the `mo()` function to specify monotonic variables (see the `brms` vignette on monotonic variables).")
     }
 }
 
