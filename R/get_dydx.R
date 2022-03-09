@@ -36,9 +36,9 @@ get_dydx_continuous <- function(model,
                                 variable,
                                 newdata = insight::get_data(model),
                                 type = "response",
-                                normalize_dydx = NULL, # do not push to ...
                                 vcov = NULL, # do not push to ...
-                                step_size = NULL, # do not push to ...
+                                contrast_numeric = 1e-5, # do not push to ...
+                                contrast_numeric_slope = TRUE, # do not push to ...
                                 ...) {
 
     # we need to loop over group names because the input and output of grad()
@@ -87,15 +87,15 @@ get_dydx_via_contrasts <- function(model,
                                    newdata,
                                    variable,
                                    type = "response",
-                                   normalize_dydx = TRUE,
+                                   contrast_numeric = 1e-5,
+                                   contrast_numeric_slope = TRUE,
                                    ...) {
     out <- get_contrasts(model = model,
                   newdata = newdata,
                   variable = variable,
                   type = type,
-                  step_size = 1e-5,
-                  normalize_dydx = normalize_dydx,
-                  return_data = FALSE,
+                  contrast_numeric = contrast_numeric,
+                  contrast_numeric_slope = contrast_numeric_slope,
                   ...)
     return(out)
 }
