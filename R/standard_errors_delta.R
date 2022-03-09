@@ -24,7 +24,7 @@ standard_errors_delta_contrasts <- function(model,
                   type = type,
                   contrast_factor = contrast_factor,
                   contrast_numeric = contrast_numeric,
-                  ...)$estimate
+                  ...)$comparison
 }
 
 
