@@ -305,7 +305,6 @@ test_that("bugs stay dead: character regressors used to produce duplicates", {
     expect_true(length(unique(ti$estimate)) == nrow(ti))
 })
 
-
 test_that("mo() recognized as factor: Issue #220", {
     # marginaleffects
     mfx1 <- marginaleffects(mod_mo1)
@@ -321,5 +320,5 @@ test_that("mo() recognized as factor: Issue #220", {
     contr2 <- tidy(comparisons(mod_mo1, contrast_factor = "revpairwise", variables = "carb"))
     expect_equal(nrow(contr2), 15)
     contr3 <- tidy(comparisons(mod_mo1, contrast_factor = "pairwise", variables = "carb"))
-    expect_equal(sort(abs(contr2$estimate)), sort(abs(contr3$estimate)))
+    expect_equal(sort(abs(contr2$comparison)), sort(abs(contr3$comparison)))
 })

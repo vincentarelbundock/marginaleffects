@@ -22,8 +22,8 @@ get_dydx <- function(model,
                     ...)
 
     # normalize names to merge when requesting dydx
-    if (all(c("contrast", "estimate") %in% colnames(out))) {
-        colnames(out)[colnames(out) == "estimate"] <- "dydx"
+    if (all(c("contrast", "comparison") %in% colnames(out))) {
+        colnames(out)[colnames(out) == "comparison"] <- "dydx"
     }
 
     return(out)

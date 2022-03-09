@@ -55,10 +55,10 @@ get_contrasts_numeric <- function(model,
     if (isTRUE(list(...)[["contrast_numeric_slope"]])) {
         contr <- contr / gap
         pred_increment$contrast <- "dydx"
-        pred_increment$estimate <- contr
+        pred_increment$comparison <- contr
     } else {
         pred_increment$contrast <- lab
-        pred_increment$estimate <- contr
+        pred_increment$comparison <- contr
     }
     pred_increment$predicted <- NULL
 

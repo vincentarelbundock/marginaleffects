@@ -41,13 +41,13 @@ get_contrasts_character <- function(model,
         tmp$predicted <- NULL
         tmp$term <- variable
         tmp$contrast <- sprintf("%s - %s", levs[i], levs[1])
-        tmp$estimate <- contr
+        tmp$comparison <- contr
         pred_list[[i - 1]] <- tmp
     }
 
     pred <- do.call("rbind", pred_list)
     draws <- do.call("rbind", draws_list)
-    cols <- intersect(c("rowid", "group", "term", "contrast", "estimate"), colnames(pred))
+    cols <- intersect(c("rowid", "group", "term", "contrast", "comparison"), colnames(pred))
     pred <- pred[, cols]
     row.names(pred) <- NULL
     attr(pred, "posterior_draws") <- draws

@@ -245,7 +245,7 @@ tidy.comparisons <- function(x,
     # empty initial mfx data.frame means there were no numeric variables in the
     # model
     if ("term" %in% colnames(x)) {
-        lhs <- intersect(c("estimate", "conf.low", "conf.high"), colnames(x))
+        lhs <- intersect(c("comparison", "conf.low", "conf.high"), colnames(x))
         rhs <- intersect(c("type", "group", "term", "contrast"), colnames(x))
         lhs <- sprintf("cbind(%s)", paste(lhs, collapse = ", "))
         rhs <- paste(rhs, collapse = " + ")
@@ -268,7 +268,7 @@ tidy.comparisons <- function(x,
             }
             dydx <- merge(dydx, se, all.x = TRUE)
         }
-        colnames(dydx)[match("dydx", colnames(dydx))] <- "estimate"
+        colnames(dydx)[match("comparison", colnames(dydx))] <- "estimate"
     } else {
         # avoids namespace conflict with `margins`
         dydx <- data.frame()
