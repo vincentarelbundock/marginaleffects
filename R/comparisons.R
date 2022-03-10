@@ -237,6 +237,10 @@ comparisons <- function(model,
         if (isTRUE(return_data)) {
             out <- left_join(out, newdata, by = "rowid")
         }
+
+        if ("group" %in% colnames(out) && all(out$group == "main_marginaleffect")) {
+            out$group <- NULL
+        }
     }
 
     class(out) <- c("comparisons", class(out))
