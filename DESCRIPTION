@@ -149,4 +149,5 @@ Collate:
     'tidy.R'
     'type_dictionary.R'
     'utils.R'
+    'warn_once.R'
 Language: en-US
