@@ -39,9 +39,7 @@ differ based on the model type, but will typically be a string such as:
 \itemize{
 \item "reference": Each factor level is compared to the factor reference (base) level
 \item "sequential": Each factor level is compared to the previous factor level
-\item "revsequential": Same as "sequential" but in the reverse order
 \item "pairwise": Each factor level is compared to all other levels
-\item "revpairwise": Same as pairwise, but with the reverse order of subtraction
 }}
 
 \item{contrast_numeric}{string or numeric
@@ -92,9 +90,9 @@ library(magrittr)
 tmp <- mtcars
 tmp$am <- as.logical(tmp$am)
 mod <- lm(mpg ~ am + factor(cyl), tmp)
+comparisons(mod, contrast_factor = "reference") \%>\% tidy()
 comparisons(mod, contrast_factor = "sequential") \%>\% tidy()
 comparisons(mod, contrast_factor = "pairwise") \%>\% tidy()
-comparisons(mod, contrast_factor = "revpairwise") \%>\% tidy()
 
 # GLM with different scale types
 mod <- glm(am ~ factor(gear), data = mtcars)

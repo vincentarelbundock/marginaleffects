@@ -23,9 +23,7 @@
 #' @param contrast_factor "reference" or "sequential"
 #' * "reference": Each factor level is compared to the factor reference (base) level
 #' * "sequential": Each factor level is compared to the previous factor level
-#' * "revsequential": Same as "sequential" but in the reverse order
 #' * "pairwise": Each factor level is compared to all other levels
-#' * "revpairwise": Same as pairwise, but with the reverse order of subtraction
 #' @param contrast_numeric string or numeric
 #' * Numeric of length 1: Contrast between the observed value and the observed value plus `contrast_numeric`
 #' * Numeric vector of length 2: Contrast between the 2nd element and the 1st element of the `contrast_numeric` vector.
@@ -42,15 +40,15 @@
 #' tmp <- mtcars
 #' tmp$am <- as.logical(tmp$am)
 #' mod <- lm(mpg ~ am + factor(cyl), tmp)
+#' comparisons(mod, contrast_factor = "reference") %>% tidy()
 #' comparisons(mod, contrast_factor = "sequential") %>% tidy()
 #' comparisons(mod, contrast_factor = "pairwise") %>% tidy()
-#' comparisons(mod, contrast_factor = "revpairwise") %>% tidy()
 #'
 #' # GLM with different scale types
 #' mod <- glm(am ~ factor(gear), data = mtcars)
 #' comparisons(mod) %>% tidy()
 #' comparisons(mod, type = "link") %>% tidy()
-#' 
+#'
 #' # Numeric contrasts
 #' mod <- lm(mpg ~ hp, data = mtcars)
 #' comparisons(mod, contrast_numeric = 1) %>% tidy()
@@ -89,7 +87,7 @@ comparisons <- function(model,
     sanity_type(model = model, type = type)
     variables <- unlist(sanity_variables(model = model, newdata = newdata, variables = variables)[["conditional"]])
     vcov <- sanitize_vcov(model, vcov)
-    checkmate::assert_choice(contrast_factor, choices = c("reference", "sequential", "revsequential", "pairwise", "revpairwise"))
+    checkmate::assert_choice(contrast_factor, choices = c("reference", "sequential", "pairwise"))
     checkmate::assert(
         checkmate::check_numeric(contrast_numeric, min.len = 1, max.len = 2),
         checkmate::check_choice(contrast_numeric, choices = c("iqr", "minmax", "sd", "2sd")))

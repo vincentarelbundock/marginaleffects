@@ -47,8 +47,6 @@ pairwise
 probs
 regressand
 regressors’
-revpairwise
-revsequential
 rowid
 sd
 sequential

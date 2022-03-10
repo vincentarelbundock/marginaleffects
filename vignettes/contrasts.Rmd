@@ -58,7 +58,7 @@ We can obtain different contrasts by using the `comparisons()` function. For exa
 ```{r}
 comparisons(mod, contrast_factor = "sequential") %>% tidy()
 comparisons(mod, contrast_factor = "pairwise") %>% tidy()
-comparisons(mod, contrast_factor = "revpairwise") %>% tidy()
+comparisons(mod, contrast_factor = "reference") %>% tidy()
 ```
 
 For comparison, this code produces the same results using the `emmeans` package:
