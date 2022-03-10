@@ -7,7 +7,7 @@
 comparisons(
   model,
   variables = NULL,
-  newdata = insight::get_data(model),
+  newdata = NULL,
   type = "response",
   vcov = TRUE,
   contrast_factor = "reference",

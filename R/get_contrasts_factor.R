@@ -12,8 +12,10 @@ get_contrasts_factor <- function(model,
         levs <- levels(baseline[[variable]])
         convert_to_factor <- TRUE
     } else {
-        original_data <- newdata
-        # original_data <- insight::get_data(model)
+        msg <- sprintf("The `%s` variable is treated as a categorical (factor) variable, but the original data is of class %s. It is safer and faster to convert such variables to factor before fitting the model and calling `marginaleffects` functions.", variable, class(baseline[[variable]])[1])
+        warn_once(msg, "marginaleffects_warning_factor_on_the_fly_conversion")
+
+        original_data <- insight::get_data(model)
         if (is.factor(original_data[[variable]])) {
             levs <- levels(original_data[[variable]])
             convert_to_factor <- TRUE

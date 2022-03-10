@@ -25,6 +25,14 @@ test_that("smart detect factor() in formula", {
     expect_true(all(c("", "8 - 4") %in% k$contrast))
 })
 
+test_that("factor in formula with incomplete newdata", {
+    mod <- lm(mpg ~ factor(cyl), data = mtcars)
+    mfx1 <- marginaleffects(mod, newdata = data.frame(cyl = 4))
+    mfx2 <- marginaleffects(mod, newdata = datagrid(cyl = 4))
+    expect_equal(mfx1[, 1:6], mfx2[, 1:6], ignore_attr = TRUE)
+})
+
+
 test_that("bugs stay dead: strata in coxph", {
     requiet("survival")
     skip("works interactively")
