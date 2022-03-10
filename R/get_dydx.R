@@ -34,7 +34,7 @@ get_dydx <- function(model,
 #' @noRd
 get_dydx_continuous <- function(model,
                                 variable,
-                                newdata = insight::get_data(model),
+                                newdata,
                                 type = "response",
                                 vcov = NULL, # do not push to ...
                                 contrast_numeric = 1e-5, # do not push to ...
@@ -88,12 +88,14 @@ get_dydx_via_contrasts <- function(model,
                                    type = "response",
                                    contrast_numeric = 1e-5,
                                    ...) {
+
     out <- comparisons(model = model,
                        newdata = newdata,
                        variables = variable,
                        type = type,
                        contrast_numeric = contrast_numeric,
                        contrast_numeric_slope = TRUE,
+                       internal_call = TRUE,
                        ...)
     return(out)
 }

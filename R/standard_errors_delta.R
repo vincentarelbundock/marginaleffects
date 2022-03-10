@@ -52,6 +52,7 @@ standard_errors_delta_marginaleffects <- function(model,
 standard_errors_delta <- function(model,
                                   vcov,
                                   type,
+                                  newdata,
                                   FUN,
                                   index = NULL,
                                   ...) {
@@ -72,7 +73,7 @@ standard_errors_delta <- function(model,
     # output: gradient
     inner <- function(x) {
         model_tmp <- set_coef(model, stats::setNames(x, names(coefs)))
-        g <- FUN(model = model_tmp, type = type, ...)
+        g <- FUN(model = model_tmp, newdata = newdata, type = type, ...)
         return(g)
     }
 

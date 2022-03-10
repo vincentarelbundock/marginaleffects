@@ -61,7 +61,7 @@
 #' @export
 comparisons <- function(model,
                         variables = NULL,
-                        newdata = insight::get_data(model),
+                        newdata = NULL,
                         type = "response",
                         vcov = TRUE,
                         contrast_factor = "reference",
@@ -69,16 +69,18 @@ comparisons <- function(model,
                         ...) {
 
 
-    # if `newdata` is a call to `datagrid`, `typical`, or `counterfactual`, insert `model`
-    scall <- substitute(newdata)
-    if (is.call(scall) && as.character(scall)[1] %in% c("datagrid", "typical", "counterfactual")) {
-        lcall <- as.list(scall)
-        if (!any(c("model", "data") %in% names(lcall))) {
-            lcall <- c(lcall, list("model" = model))
-            newdata <- eval.parent(as.call(lcall))
+    if (!isTRUE(list(...)[["internal_call"]])) {
+        # if `newdata` is a call to `datagrid`, `typical`, or `counterfactual`, insert `model`
+        scall <- substitute(newdata)
+        if (is.call(scall) && as.character(scall)[1] %in% c("datagrid", "typical", "counterfactual")) {
+            lcall <- as.list(scall)
+            if (!any(c("model", "data") %in% names(lcall))) {
+                lcall <- c(lcall, list("model" = model))
+                newdata <- eval.parent(as.call(lcall))
+            }
         }
+        newdata <- sanity_newdata(model, newdata)
     }
-    newdata <- sanity_newdata(model, newdata)
 
     # TODO: don't run sanity checks if this is an internal call. But
     # this can create problems.
