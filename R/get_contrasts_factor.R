@@ -12,7 +12,8 @@ get_contrasts_factor <- function(model,
         levs <- levels(baseline[[variable]])
         convert_to_factor <- TRUE
     } else {
-        original_data <- insight::get_data(model)
+        original_data <- newdata
+        # original_data <- insight::get_data(model)
         if (is.factor(original_data[[variable]])) {
             levs <- levels(original_data[[variable]])
             convert_to_factor <- TRUE
