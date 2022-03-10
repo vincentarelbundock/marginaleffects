@@ -32,20 +32,9 @@ get_contrasts_factor <- function(model,
                                stringsAsFactors = FALSE)
         levs_idx <- levs_idx[levs_idx$high != levs_idx$low,]
         levs_idx <- levs_idx[match(levs_idx$low, levs) < match(levs_idx$high, levs),]
-    } else if (contrast_factor == "revpairwise") {
-        levs_idx <- expand.grid(low = levs,
-                               high = levs,
-                               stringsAsFactors = FALSE)
-        levs_idx <- levs_idx[levs_idx$high != levs_idx$low,]
-        levs_idx <- levs_idx[match(levs_idx$low, levs) > match(levs_idx$high, levs),]
     } else if (contrast_factor == "sequential") {
         levs_idx <- data.frame(low = levs[1:(length(levs) - 1)],
                               high = levs[2:length(levs)])
-    } else if (contrast_factor == "revsequential") {
-        levs_idx <- data.frame(low = levs[2:length(levs)],
-                              high = levs[1:(length(levs) - 1)])
-    } else {
-        stop("%s is not a supported value for the `contrast_factor` argument.", contrast_factor)
     }
 
     levs_idx$label <- sprintf("%s - %s", levs_idx$high, levs_idx$low)

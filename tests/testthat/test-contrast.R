@@ -61,15 +61,9 @@ test_that("factor: linear model", {
     pw <- c(coef(mod)[2:3], coef(mod)[3] - coef(mod)[2])
     expect_equal(ti$estimate, pw, ignore_attr = TRUE)
 
-    ti <- tidy(comparisons(mod, contrast_factor = "revpairwise"))
-    expect_equal(ti$estimate, -1 * pw, ignore_attr = TRUE)
-
     ti <- tidy(comparisons(mod, contrast_factor = "sequential"))
     se <- c(coef(mod)[2], coef(mod)[3] - coef(mod)[2])
     expect_equal(ti$estimate, se, ignore_attr = TRUE)
-
-    ti <- tidy(comparisons(mod, contrast_factor = "revsequential"))
-    expect_equal(ti$estimate, -1 * se, ignore_attr = TRUE)
 })
 
 
