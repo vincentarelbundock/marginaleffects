@@ -24,6 +24,7 @@ standard_errors_delta_contrasts <- function(model,
                   type = type,
                   contrast_factor = contrast_factor,
                   contrast_numeric = contrast_numeric,
+                  vcov = FALSE,
                   ...)$comparison
 }
 
@@ -37,6 +38,7 @@ standard_errors_delta_marginaleffects <- function(model,
              variable = variable,
              newdata = newdata,
              type = type,
+             vcov = FALSE,
              ...)$dydx
 }
 
