@@ -4,6 +4,7 @@ get_contrasts <- function(model,
                           type = "response",
                           contrast_factor = "reference",
                           contrast_numeric = 1,
+                          vcov = TRUE,
                           ...) {
 
     # logical and character before factor, because they get picked up by find_categorical

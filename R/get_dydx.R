@@ -4,6 +4,7 @@ get_dydx <- function(model,
                      variable,
                      newdata,
                      type,
+                     vcov,
                      ...) {
 
     if (variable %in% find_categorical(newdata = newdata, model = model) || isTRUE(attr(newdata[[variable]], "factor"))) {
@@ -19,6 +20,7 @@ get_dydx <- function(model,
                     variable = variable,
                     type = type,
                     contrast_numeric_slope = TRUE,
+                    vcov = vcov,
                     ...)
 
     # normalize names to merge when requesting dydx
@@ -36,7 +38,7 @@ get_dydx_continuous <- function(model,
                                 variable,
                                 newdata,
                                 type = "response",
-                                vcov = NULL, # do not push to ...
+                                vcov, # do not push to ...
                                 contrast_numeric = 1e-5, # do not push to ...
                                 ...) {
 
@@ -85,6 +87,7 @@ get_dydx_continuous <- function(model,
 get_dydx_via_contrasts <- function(model,
                                    newdata,
                                    variable,
+                                   vcov,
                                    type = "response",
                                    contrast_numeric = 1e-5,
                                    ...) {
@@ -92,6 +95,7 @@ get_dydx_via_contrasts <- function(model,
     out <- comparisons(model = model,
                        newdata = newdata,
                        variables = variable,
+                       vcov = vcov,
                        type = type,
                        contrast_numeric = contrast_numeric,
                        contrast_numeric_slope = TRUE,

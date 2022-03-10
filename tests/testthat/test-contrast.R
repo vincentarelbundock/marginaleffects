@@ -2,7 +2,7 @@ test_that("simple contrasts: no validity check", {
     dat <- mtcars
     dat$am <- as.logical(dat$am)
     mod <- lm(mpg ~ hp + am + factor(cyl), data = dat)
-    mfx <- marginaleffects(mod)
+    mfx <- suppressWarnings(marginaleffects(mod))
     res <- tidy(mfx)
     expect_s3_class(res, "data.frame")
     expect_equal(dim(res), c(4, 9))

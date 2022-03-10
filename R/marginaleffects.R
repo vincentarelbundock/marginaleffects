@@ -24,7 +24,7 @@
 #' @param variables Variables to consider (character vector). `NULL`
 #'   calculates marginal effects for all terms in the model object.
 #' @param vcov Matrix or boolean
-#'   + FALSE: does not compute unit-level standard errors.
+#'   + FALSE: does not compute unit-level standard errors. This can speed up computation considerably. 
 #'   + TRUE: computes unit-level standard errors using the default `vcov(model)` variance-covariance matrix.
 #'   + Named square matrix: computes standard errors with a user-supplied variance-covariance matrix. This matrix must be square and have dimensions equal to the number of coefficients in `get_coef(model)`.
 #' @param newdata A dataset over which to compute marginal effects. `NULL` uses
@@ -146,6 +146,7 @@ marginaleffects <- function(model,
                             variable = v,
                             newdata = newdata,
                             type = predt,
+                            vcov = vcov,
                             internal_call = TRUE, # for group column in comparisons
                             ...)
             mfx$type <- predt
