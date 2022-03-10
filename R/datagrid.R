@@ -148,18 +148,12 @@ typical <- function(
         # na.omit destroys attributes, and we need the "factor" attribute
         # created by insight::get_data
         for (n in names(dat_automatic)) {
-            # factor before character because of attribute check
-            if (is.factor(dat_automatic[[n]]) || isTRUE(attr(dat[[n]], "factor"))) {
-                out[[n]] <- FUN.factor(dat_automatic[[n]])
-            } else if (is.logical(dat_automatic[[n]])) {
-                out[[n]] <- FUN.logical(dat_automatic[[n]])
-            } else if (is.character(dat_automatic[[n]])) {
-                out[[n]] <- FUN.character(dat_automatic[[n]])
-            } else if (is.numeric(dat_automatic[[n]])) {
-                out[[n]] <- FUN.numeric(dat_automatic[[n]])
-            } else {
-                out[[n]] <- FUN.other(dat_automatic[[n]])
-            }
+            variable_class <- find_variable_class(n, newdata = dat_automatic, model = model)
+            if (variable_class == "factor") out[[n]] <- FUN.factor(dat_automatic[[n]])
+            if (variable_class == "logical") out[[n]] <- FUN.logical(dat_automatic[[n]])
+            if (variable_class == "character") out[[n]] <- FUN.character(dat_automatic[[n]])
+            if (variable_class == "numeric") out[[n]] <- FUN.numeric(dat_automatic[[n]])
+            if (variable_class == "other") out[[n]] <- FUN.other(dat_automatic[[n]])
         }
     } else {
         out <- list()

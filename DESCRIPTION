@@ -92,6 +92,7 @@ Collate:
     'comparisons.R'
     'complete_levels.R'
     'datagrid.R'
+    'find_variable_class.R'
     'get_coef.R'
     'get_contrasts.R'
     'get_contrasts_character.R'

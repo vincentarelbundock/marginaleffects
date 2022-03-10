@@ -7,21 +7,11 @@ get_contrasts <- function(model,
                           ...) {
 
    # logical and character before factor, because they get picked up by find_categorical
-    if (is.logical(newdata[[variable]])) {
-        get_contrasts_fun <- get_contrasts_logical
-    } else if (is.character(newdata[[variable]])) {
-        get_contrasts_fun <- get_contrasts_character
-    } else if (is.factor(newdata[[variable]]) ||
-               variable %in% find_categorical(newdata = newdata, model = model) ||
-               isTRUE(attr(newdata[[variable]], "factor"))) {
-        get_contrasts_fun <- get_contrasts_factor
-    } else if (is.numeric(newdata[[variable]])) {
-        get_contrasts_fun <- get_contrasts_numeric
-    } else {
-        stop(sprintf("Cannot compute contrasts for variable %s of class %s",
-                     variable,
-                     class(newdata[[variable]])))
-    }
+   variable_class <- find_variable_class(variable = variable, newdata = newdata, model = model)
+   if (variable_class == "logical") get_contrasts_fun <- get_contrasts_logical
+   if (variable_class == "factor") get_contrasts_fun <- get_contrasts_factor
+   if (variable_class == "numeric") get_contrasts_fun <- get_contrasts_numeric
+   if (variable_class == "character") get_contrasts_fun <- get_contrasts_character
 
     out <- get_contrasts_fun(
         model = model,
