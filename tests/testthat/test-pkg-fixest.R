@@ -133,3 +133,12 @@ test_that("bug stay dead: insight::get_data doesn't get all columns", {
     expect_s3_class(mfx1, "marginaleffects")
     expect_s3_class(mfx2, "marginaleffects")
 })
+
+
+test_that("feols linear plot_cap includes confidence intervals", {
+    mod <- feols(mpg ~ hp, data = mtcars)
+    p <- plot_cap(mod, condition = "hp", conf.level = .5)
+    vdiffr::expect_doppelganger("plot_cap: feols small conf.level", p)
+    p <- plot_cap(mod, condition = "hp", conf.level = .99)
+    vdiffr::expect_doppelganger("plot_cap: feols large conf.level", p)
+})

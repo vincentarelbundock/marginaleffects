@@ -7,6 +7,7 @@ New function:
 Misc:
 
 * Speed optimizations
+* `predictions()` and `plot_cap()` includes confidence intervals for linear models
 * More robust handling of in-formula functions: factor(), strata(), mo()
 * Do not overwrite user's `ggplot2::theme_set()` call
 

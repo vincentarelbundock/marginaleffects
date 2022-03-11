@@ -159,7 +159,7 @@ predictions <- function(model,
         }
 
         # try to extract standard errors via the delta method if necessary
-        if (is.numeric(conf.level) && 
+        if (is.numeric(conf.level) &&
             !any(c("std.error", "conf.low") %in% colnames(tmp))) {
 
             vcov <- try(get_vcov(model), silent = TRUE)
@@ -173,6 +173,13 @@ predictions <- function(model,
                                             ...)
                 if (is.numeric(se) && length(se) == nrow(tmp)) {
                     tmp[["std.error"]] <- se
+                    flag <- tryCatch(insight::model_info(model)$is_linear,
+                                     error = function(e) FALSE)
+                    if (isTRUE(flag)) {
+                        critical_z <- abs(qnorm((1 - conf.level) / 2))
+                        tmp[["conf.low"]] <- tmp[["predicted"]] - critical_z * tmp[["std.error"]]
+                        tmp[["conf.high"]] <- tmp[["predicted"]] + critical_z * tmp[["std.error"]]
+                    }
                 }
             }
         }
