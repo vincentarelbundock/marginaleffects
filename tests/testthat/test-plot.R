@@ -14,3 +14,14 @@ test_that("plot(mfx)", {
     p <- plot(mfx)
     vdiffr::expect_doppelganger("plot basic", p)
 })
+
+test_that("bugfix: contrasts overlap", {
+    dat <- mtcars
+    dat$cyl <- factor(dat$cyl)
+    mod <- lm(mpg ~ hp + cyl, data = dat)
+    mfx <- marginaleffects(mod)
+    p <- plot(mfx)
+    vdiffr::expect_doppelganger("plot contrast overlap", p)
+})
+
+
