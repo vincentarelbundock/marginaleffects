@@ -29,7 +29,7 @@ variables in the \code{variables} and \code{variables_grid} arguments.}
 
 \item{vcov}{Matrix or boolean
 \itemize{
-\item FALSE: does not compute unit-level standard errors.
+\item FALSE: does not compute unit-level standard errors. This can speed up computation considerably.
 \item TRUE: computes unit-level standard errors using the default \code{vcov(model)} variance-covariance matrix.
 \item Named square matrix: computes standard errors with a user-supplied variance-covariance matrix. This matrix must be square and have dimensions equal to the number of coefficients in \code{get_coef(model)}.
 }}

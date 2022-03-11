@@ -24,7 +24,7 @@ calculates marginal effects for all terms in the model object.}
 
 \item{vcov}{Matrix or boolean
 \itemize{
-\item FALSE: does not compute unit-level standard errors.
+\item FALSE: does not compute unit-level standard errors. This can speed up computation considerably.
 \item TRUE: computes unit-level standard errors using the default \code{vcov(model)} variance-covariance matrix.
 \item Named square matrix: computes standard errors with a user-supplied variance-covariance matrix. This matrix must be square and have dimensions equal to the number of coefficients in \code{get_coef(model)}.
 }}
@@ -91,6 +91,8 @@ marginal effects, predictions, marginal means, and contrasts.\tabular{llll}{
 }
 
 \examples{
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{\}) # examplesIf}
 
 mod <- glm(am ~ hp * wt, data = mtcars, family = binomial)
 mfx <- marginaleffects(mod)
