@@ -20,7 +20,7 @@
 #' https://vincentarelbundock.github.io/marginaleffects/
 #'
 #' @inheritParams marginaleffects
-#' @param contrast_factor "reference" or "sequential"
+#' @param contrast_factor string
 #' * "reference": Each factor level is compared to the factor reference (base) level
 #' * "sequential": Each factor level is compared to the previous factor level
 #' * "pairwise": Each factor level is compared to all other levels

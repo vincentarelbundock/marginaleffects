@@ -35,7 +35,7 @@ differ based on the model type, but will typically be a string such as:
 \item Named square matrix: computes standard errors with a user-supplied variance-covariance matrix. This matrix must be square and have dimensions equal to the number of coefficients in \code{get_coef(model)}.
 }}
 
-\item{contrast_factor}{"reference" or "sequential"
+\item{contrast_factor}{string
 \itemize{
 \item "reference": Each factor level is compared to the factor reference (base) level
 \item "sequential": Each factor level is compared to the previous factor level
