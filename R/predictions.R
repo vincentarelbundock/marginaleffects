@@ -176,7 +176,7 @@ predictions <- function(model,
                     flag <- tryCatch(insight::model_info(model)$is_linear,
                                      error = function(e) FALSE)
                     if (isTRUE(flag)) {
-                        critical_z <- abs(qnorm((1 - conf.level) / 2))
+                        critical_z <- abs(stats::qnorm((1 - conf.level) / 2))
                         tmp[["conf.low"]] <- tmp[["predicted"]] - critical_z * tmp[["std.error"]]
                         tmp[["conf.high"]] <- tmp[["predicted"]] + critical_z * tmp[["std.error"]]
                     }
