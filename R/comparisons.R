@@ -87,11 +87,21 @@ comparisons <- function(model,
     # secret argument
     model <- sanity_model(model = model, ...)
     sanity_type(model = model, type = type)
-    variables <- unlist(sanity_variables(model = model, newdata = newdata, variables = variables)[["conditional"]])
     checkmate::assert_choice(contrast_factor, choices = c("reference", "sequential", "pairwise"))
     checkmate::assert(
         checkmate::check_numeric(contrast_numeric, min.len = 1, max.len = 2),
         checkmate::check_choice(contrast_numeric, choices = c("iqr", "minmax", "sd", "2sd")))
+
+    # variables vector
+    variables_list <- sanity_variables(model = model, newdata = newdata, variables = variables)
+    variables <- unique(unlist(variables_list))
+    # this won't be triggered for multivariate outcomes in `brms`, which
+    # produces a list of lists where top level names correspond to names of the
+    # outcomes. There should be a more robust way to handle those, but it seems
+    # to work for now.
+    if ("conditional" %in% names(variables)) {
+        variables <- intersect(variables, variables[["conditional"]])
+    }
 
     # modelbased::visualisation_matrix attaches useful info for plotting
     attributes_newdata <- attributes(newdata)

@@ -130,7 +130,14 @@ marginaleffects <- function(model,
     }
 
     # variables is a list but we need a vector
-    variables_vec <- unlist(variables[names(variables) %in% c("conditional")])
+    variables_vec <- unique(unlist(variables))
+    # this won't be triggered for multivariate outcomes in `brms`, which
+    # produces a list of lists where top level names correspond to names of the
+    # outcomes. There should be a more robust way to handle those, but it seems
+    # to work for now.
+    if ("conditional" %in% names(variables)) {
+        variables_vec <- intersect(variables_vec, variables[["conditional"]])
+    }
 
     mfx_list <- list()
 
