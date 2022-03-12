@@ -1,4 +1,4 @@
-find_variable_class <- function(variable, newdata, model) {
+find_variable_class <- function(variable, newdata, model = NULL) {
    # logical and character before factor, because they get picked up by find_categorical
     if (is.logical(newdata[[variable]])) {
         return("logical")
@@ -13,7 +13,7 @@ find_variable_class <- function(variable, newdata, model) {
     if (is.numeric(newdata[[variable]])) {
         return("numeric")
     }
-    stop(sprintf("Cannot compute contrasts for variable %s of class %s",
+    stop(sprintf("Cannot compute contrasts for variable %s of class `%s`.",
                  variable, class(newdata[[variable]])))
 }
 

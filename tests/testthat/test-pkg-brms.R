@@ -320,3 +320,36 @@ test_that("mo() recognized as factor: Issue #220", {
     contr2 <- tidy(comparisons(mod_mo1, contrast_factor = "pairwise", variables = "carb"))
     expect_equal(nrow(contr2), 15)
 })
+
+
+
+test_that("multivariate outcome", {
+    mod <- insight::download_model("brms_mv_1")
+
+    beta <- get_coef(mod)
+    expect_equal(length(beta), 12)
+
+    mfx <- marginaleffects(mod)
+    expect_s3_class(mfx, "marginaleffects")
+
+    pred <- predictions(mod)
+    expect_s3_class(pred, "predictions")
+
+    comp <- comparisons(mod)
+    expect_s3_class(comp, "comparisons")
+})
+
+
+test_that("categorical outcome", {
+    mod <- insight::download_model("brms_categorical_1_wt")
+
+    mfx <- marginaleffects(mod)
+    expect_s3_class(mfx, "marginaleffects")
+
+    pred <- predictions(mod)
+    expect_s3_class(pred, "predictions")
+
+    comp <- comparisons(mod)
+    expect_s3_class(comp, "comparisons")
+})
+
