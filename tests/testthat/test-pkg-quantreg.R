@@ -1,11 +1,10 @@
-skip_on_ci()
 requiet("quantreg")
 requiet("emmeans")
 requiet("broom")
 
 test_that("marginaleffects: rq: Stata", {
     stata <- readRDS(test_path("stata/stata.rds"))$quantreg_rq_01
-    model <- quantreg::rq(mpg ~ hp * wt + factor(cyl), data = mtcars)
+    model <- suppressWarnings(quantreg::rq(mpg ~ hp * wt + factor(cyl), data = mtcars))
     expect_marginaleffects(model)
     mfx <- merge(tidy(marginaleffects(model)), stata)
     expect_equal(mfx$estimate, mfx$dydxstata, tolerance = .0001)
