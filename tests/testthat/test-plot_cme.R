@@ -1,4 +1,4 @@
-skip_on_ci() # different graphics engine produce different snapshots
+skip_if(getRversion() < "4.1.0") # different graphics engines
 skip_on_cran()
 
 test_that("character predictors", {

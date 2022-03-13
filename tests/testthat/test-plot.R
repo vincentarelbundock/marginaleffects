@@ -1,5 +1,4 @@
-skip_if(getRversion() < 4.1) # different graphics engines
-skip_on_ci()
+skip_if(getRversion() < "4.1.0") # different graphics engines
 skip_on_cran()
 
 test_that("plot_cme(mod, 'hp', 'wt')", {
