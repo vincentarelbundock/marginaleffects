@@ -1,8 +1,8 @@
 requiet("brms")
-requiet("cmdstanr")
 requiet("emmeans")
 requiet("broom")
-skip_if_not_installed("data.table") # cmdstanr
+requiet("data.table") # cmdstanr
+requiet("cmdstanr")
 
 
 void <- capture.output({
@@ -337,6 +337,10 @@ test_that("multivariate outcome", {
 
     comp <- comparisons(mod)
     expect_s3_class(comp, "comparisons")
+
+    draws <- posteriordraws(mfx)
+    expect_s3_class(draws, "data.frame")
+    expect_true(all(c("drawid", "draw", "rowid") %in% colnames(draws)))
 })
 
 
@@ -351,5 +355,17 @@ test_that("categorical outcome", {
 
     comp <- comparisons(mod)
     expect_s3_class(comp, "comparisons")
+
+    draws <- posteriordraws(mfx)
+    expect_s3_class(draws, "data.frame")
+    expect_true(all(c("drawid", "draw", "rowid") %in% colnames(draws)))
 })
 
+
+test_that("factor in formula errors", {
+    mod <- brm(mpg ~ hp + factor(cyl), data = mtcars, backend = "cmdstanr")
+    expect_error(marginaleffects(mod), regexp = "cannot be used")
+})
+
+
+    

@@ -14,6 +14,13 @@ test_that("plot(mfx)", {
     vdiffr::expect_doppelganger("plot basic", p)
 })
 
+test_that("plot(mfx): no CI", {
+    mod <- glm(am ~ hp + wt, data = mtcars)
+    mfx <- marginaleffects(mod, vcov = FALSE)
+    p <- plot(mfx)
+    vdiffr::expect_doppelganger("plot no CI", p)
+})
+
 test_that("bugfix: contrasts overlap", {
     dat <- mtcars
     dat$cyl <- factor(dat$cyl)
