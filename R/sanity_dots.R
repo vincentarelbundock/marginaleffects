@@ -1,13 +1,13 @@
 # This function is very strict.
 sanity_dots <- function(model, ...) {
-    valid <- list(
-        "merMod" = c("include_random", "re.form", "allow.new.levels", "random.only"),
-        "lmerMod" = c("include_random", "re.form", "allow.new.levels", "random.only"),
-        "glmerMod" = c("include_random", "re.form", "allow.new.levels", "random.only"),
-        "lmerModLmerTest" = c("include_random", "re.form", "allow.new.levels", "random.only"),
-        "glmerModLmerTest" = c("include_random", "re.form", "allow.new.levels", "random.only"),
-        "brmsfit" = c("ndraws", "re_formula", "allow_new_levels", "sample_new_levels")
-    )
+    valid <- list()
+
+    # mixed effects
+    valid[["merMod"]] <- valid[["lmerMod"]] <- valid[["glmerMod"]] <- valid[["lmerModLmerTest"]] <-
+        c("include_random", "re.form", "allow.new.levels", "random.only")
+
+    # bayesian
+    valid[["brmsfit"]] <- c("ndraws", "re_formula", "allow_new_levels", "sample_new_levels")
 
     white_list <- c("conf.int")
 
