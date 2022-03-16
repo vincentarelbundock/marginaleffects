@@ -46,3 +46,22 @@ test_that("predictions: no validity", {
     expect_predictions(pred1, n_row = nrow(dat))
     expect_predictions(pred2, n_row = 6)
 })
+
+
+test_that("exclude a smooth", {
+    requiet("itsadug")
+    data(simdat)
+    simdat$Subject <- as.factor(simdat$Subject)
+    model <- bam(Y ~ Group + s(Time, by = Group) + s(Subject, bs = "re"), data = simdat)
+    nd <- datagrid(model = model,
+                   Subject = "a01",
+                   Group = "Adults")
+
+    expect_equal(predictions(model, newdata = nd)$predicted,
+                 predict(model, newdata = nd),
+                 ignore_attr = TRUE)
+
+    expect_equal(predictions(model, newdata = nd, exclude = "s(Subject)")$predicted,
+                 predict(model, newdata = nd, exclude = "s(Subject)"),
+                 ignore_attr = TRUE)
+})

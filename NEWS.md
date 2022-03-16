@@ -1,3 +1,7 @@
+# marginaleffects 0.4.0.9000
+
+* `mgcv::bam` models allow `exclude` argument. 
+
 # marginaleffects 0.4.0
 
 New function:

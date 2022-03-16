@@ -63,6 +63,7 @@ Suggests:
     gam,
     geepack,
     glmx,
+    itsadug,
     ivreg,
     lme4,
     lmerTest,
