@@ -40,9 +40,8 @@ get_predict.default <- function(model,
 
     # should we try to compute predictions with `insight::get_predicted()`?
     # confidence interval with known `predict` argument
-    is_insight <- (!is.null(conf.level) &&
-                   !is.na(type_insight)) ||
-                  c("include_random", "include_smooth") %in% names(dots)
+    is_insight <- (!is.null(conf.level) && !is.na(type_insight)) ||
+                  any(c("include_random", "include_smooth") %in% names(dots))
 
     # `insight::get_predicted` yields back-transformed confidence intervals
     if (isTRUE(is_insight)) {
