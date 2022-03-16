@@ -9,6 +9,9 @@ sanity_dots <- function(model, ...) {
     # bayesian
     valid[["brmsfit"]] <- c("ndraws", "re_formula", "allow_new_levels", "sample_new_levels")
 
+    # misc
+    valid[["bam"]] <- c("exclude")
+
     white_list <- c("conf.int")
 
     dots <- list(...)
