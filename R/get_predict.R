@@ -32,14 +32,20 @@ get_predict.default <- function(model,
     unused <- c("normalize_dydx", "step_size", "numDeriv_method", "internal_call", "contrast_numeric_slope")
     dots <- dots[setdiff(names(dots), unused)]
 
-    # `insight::get_predicted` yields back-transformed confidence intervals
-    if (!is.na(type_insight) && (!is.null(conf.level) || "include_random" %in% names(dots))) {
-        if ("include_random" %in% names(dots)) {
-            if (any(c("re.form", "re_formula") %in% names(dots))) {
-                stop("The `include_random` and `re.form` (or `re_formula`) arguments cannot be used together.")
-            }
-        }
+    # incompatible arguments
+    if (any(c("include_smooth", "include_random") %in% names(dots)) &&
+        any(c("re.form", "re_formula") %in% names(dots))) {
+        stop("The `include_random` and `include_smooth` arguments can be used together, but not with `re.form` or `re_formula`.")
+    }
 
+    # should we try to compute predictions with `insight::get_predicted()`?
+    # confidence interval with known `predict` argument
+    is_insight <- (!is.null(conf.level) &&
+                   !is.na(type_insight)) ||
+                  c("include_random", "include_smooth") %in% names(dots)
+
+    # `insight::get_predicted` yields back-transformed confidence intervals
+    if (isTRUE(is_insight)) {
         if ("re_formula" %in% names(dots)) {
             dots[["re.form"]] <- dots[["re_formula"]]
         }
