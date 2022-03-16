@@ -92,7 +92,7 @@ get_predict.default <- function(model,
     args <- c(list(model), dots)
 
     fun <- stats::predict
-    pred <- do.call("fun", args)
+    pred <- suppressWarnings(do.call("fun", args))
 
     # 1-d array to vector (e.g., {mgcv})
     if (is.array(pred) && length(dim(pred)) == 1) {
