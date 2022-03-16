@@ -87,6 +87,7 @@ marginal effects, predictions, marginal means, and contrasts.\tabular{llll}{
     \tab  \tab \code{re.form} \tab \link[lme4:predict.merMod]{lme4::predict.merMod} \cr
     \tab  \tab \code{allow.new.levels} \tab \link[lme4:predict.merMod]{lme4::predict.merMod} \cr
     \tab  \tab \code{random.only} \tab \link[lme4:predict.merMod]{lme4::predict.merMod} \cr
+   \code{mgcv} \tab \code{bam} \tab \code{exclude} \tab \link[mgcv:predict.bam]{mgcv::predict.bam} \cr
 }
 }
 

@@ -11,4 +11,5 @@
 #' |         |           | `re.form`          |[lme4::predict.merMod]|
 #' |         |           | `allow.new.levels` |[lme4::predict.merMod]|
 #' |         |           | `random.only`      |[lme4::predict.merMod]|
+#' | `mgcv`  | `bam`     | `exclude`          |[mgcv::predict.bam]|
 #'
