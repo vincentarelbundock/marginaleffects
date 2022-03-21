@@ -9,7 +9,6 @@ coverage](https://codecov.io/gh/vincentarelbundock/marginaleffects/branch/main/g
 [![CRAN
 status](https://www.r-pkg.org/badges/version/marginaleffects)](https://CRAN.R-project.org/package=marginaleffects)
 [![status](https://tinyverse.netlify.com/badge/marginaleffects)](https://CRAN.R-project.org/package=marginaleffects)
-[![downloads](http://cranlogs.r-pkg.org/badges/grand-total/marginaleffects?color=green)](https://cran.r-project.org/package=marginaleffects)
 <!-- badges: end -->
 
 ## What?
