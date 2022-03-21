@@ -9,7 +9,6 @@ output: github_document
 [![R-CMD-check](https://github.com/vincentarelbundock/marginaleffects/workflows/R-CMD-check/badge.svg)](https://github.com/vincentarelbundock/marginaleffects/actions)
 [![CRAN status](https://www.r-pkg.org/badges/version/marginaleffects)](https://CRAN.R-project.org/package=marginaleffects)
 [![status](https://tinyverse.netlify.com/badge/marginaleffects)](https://CRAN.R-project.org/package=marginaleffects)
-[![downloads](http://cranlogs.r-pkg.org/badges/grand-total/marginaleffects?color=green)](https://cran.r-project.org/package=marginaleffects)
 <!-- badges: end -->
 
 ```{r, include = FALSE}
