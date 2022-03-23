@@ -50,7 +50,6 @@ test_that("bugs stay dead: conf.level forces get_predicted which doesn't process
 
 
 test_that("bugs stay dead: numeric vs factor strata", {
-    skip_if_not_installed("insight", minimum_version = "0.16.1")
     test1 <- list(time = c(4, 3, 1, 1, 2, 2, 3),
                   status = c(1, 1, 1, 0, 1, 1, 0),
                   x = c(0, 2, 1, 1, 1, 0, 0),
