@@ -1,8 +1,10 @@
 #' @include sanity_model.R
 #' @rdname sanity_model_specific
 #' @export
-sanity_model_specific.multinom <- function(...) {
-    warning("The standard errors estimated by `marginaleffects` do not match those produced by Stata for `nnet::multinom` models. Please be very careful when interpreting the results.")
+sanity_model_specific.multinom <- function(model, calling_function = "marginaleffects", ...) {
+    if (calling_function == "marginaleffects") {
+        warning("The standard errors estimated by `marginaleffects` do not match those produced by Stata for `nnet::multinom` models. Please be very careful when interpreting the results.")
+    }
 }
 
 
