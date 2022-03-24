@@ -95,6 +95,7 @@ comparisons <- function(model,
     # variables vector
     variables_list <- sanitize_variables(model = model, newdata = newdata, variables = variables)
     variables <- unique(unlist(variables_list))
+    variables <- setdiff(variables, variables_list[["weights"]])
     # this won't be triggered for multivariate outcomes in `brms`, which
     # produces a list of lists where top level names correspond to names of the
     # outcomes. There should be a more robust way to handle those, but it seems

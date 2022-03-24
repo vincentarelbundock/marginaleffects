@@ -50,6 +50,7 @@ test_that("bugs stay dead: conf.level forces get_predicted which doesn't process
 
 
 test_that("bugs stay dead: numeric vs factor strata", {
+    skip_if_not_installed("insight", minimum_version = "0.17.0")
     stata <- readRDS(test_path("stata/stata.rds"))$survival_coxph_01
     test1 <<- data.frame(time = c(4, 3, 1, 1, 2, 2, 3),
                          status = c(1, 1, 1, 0, 1, 1, 0),
