@@ -111,14 +111,13 @@ test_that("brms: cumulative: predictions: no validity", {
     p2 <- predictions(mod_ran, re_formula = NA)
     expect_true(mean(p1$conf.low < p2$conf.low) > .99) # tolerance
     expect_true(mean(p1$conf.high > p2$conf.high) > .99) # tolerance
-    expect_error(predictions(mod_ran, include_random = FALSE)) # only for lme4
+    expect_warning(predictions(mod_ran, include_random = FALSE)) # only for lme4
 })
 
 test_that("marginaleffects: ordinal no validity", {
     mod <- insight::download_model("brms_ordinal_1")
     expect_marginaleffects(mod, se = FALSE)
 })
-
 
 test_that("predict new unit: no validity", {
     dat1 <- dat2 <- datagrid(model = mod_epi)
@@ -284,12 +283,10 @@ test_that("plot_cap: no validity", {
 
 
 test_that("factor in formula", {
-    skip("https://github.com/easystats/insight/issues/469")
-    # marginaleffects
-    expect_marginaleffects(mod_factor_formula, se = FALSE)
-    # predictions
-    pred <- predictions(mod_factor_formula, newdata = datagrid())
-    expect_predictions(pred, se = FALSE)
+    expect_error(marginaleffects(mod_factor_formula),
+                 regexp = "factor")
+    expect_error(predictions(mod_factor_formula),
+                 regexp = "factor")
 })
 
 

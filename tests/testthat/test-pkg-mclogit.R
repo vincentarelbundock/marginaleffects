@@ -42,7 +42,7 @@ test_that("mblogit: works on factor regressors", {
 })
 
 test_that("mblogit: marginaleffects vs. emmeans", {
-    skip("emmeans does not support")
+    skip("emmeans does not support `mblogit`")
     mm <- marginalmeans(mod, variables = c("Infl"))
     em <- emmeans(mod, ~Infl)
     em <- tidy(emmeans::emtrends(mod, ~x, "x"))

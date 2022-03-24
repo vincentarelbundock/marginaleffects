@@ -29,10 +29,6 @@ get_predict.brmsfit <- function(model,
 
     assert_dependency("rstantools")
 
-    if ("include_random" %in% names(list(...))) {
-        stop("The `include_random` argument is not available for models of this class. Consider using the `re.form` argument, which will be pushed forward to the `posterior_linpred`, `posterior_epred`, or `posterior_predict` function.")
-    }
-
     checkmate::assert_choice(type, choices = c("response", "link", "prediction"))
 
     if (type == "link") {
