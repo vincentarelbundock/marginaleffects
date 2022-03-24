@@ -35,3 +35,10 @@ test_that("bad condition raises error", {
     mod <- lm(mpg ~ hp * wt * am, data = mtcars)
     expect_error(plot_cap(mod, condition = c("bad", "wt")))
 })
+
+test_that("Issue #230: glm w/ weights includes confidence intervals", {
+    mod <- glm(am ~ mpg * cyl, data = mtcars, family = binomial(link = "logit"), weights = carb)
+    p <- plot_cap(mod, condition = c("mpg", "cyl"), draw = FALSE)
+    expect_true("conf.low" %in% colnames(p))
+    expect_true("conf.high" %in% colnames(p))
+})

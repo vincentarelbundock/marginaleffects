@@ -68,9 +68,10 @@ sanity_newdata <- function(model, newdata) {
     return(newdata)
 }
 
-sanity_variables <- function(model, newdata, variables) {
+sanitize_variables <- function(model, newdata, variables) {
     checkmate::assert_character(variables, min.len = 1, null.ok = TRUE)
     checkmate::assert_data_frame(newdata, min.row = 1, null.ok = TRUE)
+
 
     if (!is.null(model) & is.null(newdata)) {
         origindata <- insight::get_data(model)
@@ -90,6 +91,13 @@ sanity_variables <- function(model, newdata, variables) {
         variables_list <- list("conditional" = variables)
     }
     variables <- unique(unlist(variables_list))
+
+    # weights
+    if (!is.null(model)) {
+        w <- insight::find_weights(model)
+        variables <- unique(c(variables, w))
+        variables_list[["weights"]] <- w
+    }
 
     # check missing character levels
     # Character variables are treated as factors by model-fitting functions,

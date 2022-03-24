@@ -104,7 +104,7 @@ predictions <- function(model,
 
     # save all character levels for padding
     # later we call call this function again for different purposes
-    levels_character <- attr(sanity_variables(model, newdata, variables), "levels_character")
+    levels_character <- attr(sanitize_variables(model, newdata, variables), "levels_character")
 
     # check before inferring `newdata`
     if (!is.null(variables) && !is.null(newdata)) {
@@ -112,7 +112,7 @@ predictions <- function(model,
     } else if (!is.null(variables)) {
         # get new data if it doesn't exist
         newdata <- sanity_newdata(model, newdata)
-        variables <- sanity_variables(model, newdata, variables)
+        variables <- sanitize_variables(model, newdata, variables)
         variables <- unique(unlist(variables))
         args <- list("model" = model)
         for (v in variables) {
@@ -125,7 +125,7 @@ predictions <- function(model,
         newdata <- do.call("typical", args)
     } else {
         newdata <- sanity_newdata(model, newdata)
-        variables <- sanity_variables(model, newdata, variables)
+        variables <- sanitize_variables(model, newdata, variables)
     }
 
     # for merging later

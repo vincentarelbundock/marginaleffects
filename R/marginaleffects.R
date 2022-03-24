@@ -121,7 +121,7 @@ marginaleffects <- function(model,
     sanity_dots(model = model, ...)
     sanity_type(model = model, type = type, calling_function = "marginaleffects")
     newdata <- sanity_newdata(model, newdata)
-    variables <- sanity_variables(model, newdata, variables)
+    variables <- sanitize_variables(model, newdata, variables)
     vcov <- sanitize_vcov(model, vcov)
 
     # rowid is required for later merge
