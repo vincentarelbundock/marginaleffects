@@ -8,6 +8,7 @@ test_that("marginaleffects: vs. margins vs. emmeans", {
     data("GasolineYield", package = "betareg")
     tmp <- GasolineYield
     tmp$batch <- factor(tmp$batch)
+    tmp <<- tmp
     mod <- betareg::betareg(yield ~ batch + temp, data = tmp)
     suppressWarnings({
         res <- marginaleffects(mod, variables = "temp")
@@ -27,7 +28,9 @@ test_that("marginaleffects: vs. Stata", {
     # stata does not include contrasts
     stata <- readRDS(test_path("stata/stata.rds"))[["betareg_betareg_01"]]
     dat <- read.csv(test_path("stata/databases/betareg_betareg_01.csv"))
-    mod <- betareg::betareg(yield ~ factor(batch) + temp, data = dat)
+    dat$batch <- factor(dat$batch)
+    dat <<- dat
+    mod <- betareg::betareg(yield ~ batch + temp, data = dat)
     mfx <- merge(tidy(marginaleffects(mod)), stata)
     expect_equal(mfx$estimate, mfx$dydxstata, tolerance = .0001)
     expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = .0001)
