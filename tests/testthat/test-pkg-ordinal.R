@@ -41,6 +41,7 @@ test_that("marginaleffects: clm: no validity", {
     dimnames(tab26)[[2]] <- c("Sure", "Not Sure", "Guess", "Guess", "Not Sure", "Sure")
     dat26 <- expand.grid(sureness = as.factor(1:6), prod = c("Ref", "Test"))
     dat26$wghts <- c(t(tab26))
+    dat26 <<- dat26
     m1 <- clm(sureness ~ prod, scale = ~prod, data = dat26, weights = wghts, link = "logit")
     m2 <- update(m1, link = "probit")
     m3 <- update(m1, link = "cloglog")
