@@ -52,6 +52,7 @@ test_that("lm_robust vs. stata vs. emtrends", {
 })
 
 test_that("iv_robust: predictions: no validity", {
+    skip_if_not_installed("insight", minimum_version = "0.17.1")
     data(Kmenta, package = "ivreg")
     model <- iv_robust(Q ~ P + D | D + F + A, 
                        se_type = "stata",
@@ -61,6 +62,7 @@ test_that("iv_robust: predictions: no validity", {
 })
 
 test_that("lm_robust: marginalmeans predictions: no validity", {
+    skip_if_not_installed("insight", minimum_version = "0.17.1")
     tmp <- mtcars
     tmp$cyl <- as.factor(tmp$cyl)
     tmp$am <- as.logical(tmp$am)
