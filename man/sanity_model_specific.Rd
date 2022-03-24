@@ -13,15 +13,15 @@
 \alias{sanity_model_specific.lmRob}
 \title{Method to raise model-specific warnings and errors}
 \usage{
-sanity_model_specific(model, ...)
+sanity_model_specific(model, calling_function = "marginaleffects", ...)
 
-\method{sanity_model_specific}{default}(model, ...)
+\method{sanity_model_specific}{default}(model, calling_function = "marginaleffects", ...)
 
-\method{sanity_model_specific}{multinom}(...)
+\method{sanity_model_specific}{multinom}(model, calling_function = "marginaleffects", ...)
 
 \method{sanity_model_specific}{brmsfit}(model, ...)
 
-\method{sanity_model_specific}{mblogit}(model, ...)
+\method{sanity_model_specific}{mblogit}(model, calling_function = "marginaleffects", ...)
 
 \method{sanity_model_specific}{plm}(model, ...)
 
