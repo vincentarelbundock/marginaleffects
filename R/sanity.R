@@ -94,7 +94,8 @@ sanitize_variables <- function(model, newdata, variables) {
 
     # weights
     if (!is.null(model)) {
-        w <- insight::find_weights(model)
+        w <- tryCatch(insight::find_weights(model), error = function(e) NULL)
+        w <- intersect(w, colnames(newdata))
         variables <- unique(c(variables, w))
         variables_list[["weights"]] <- w
     }
