@@ -24,11 +24,10 @@ test_that("tobit: marginaleffects vs. Stata", {
 
 
 test_that("tobit: marginalmeans vs. emmeans", {
-  skip("works interactively")
   data("Affairs", package = "AER")
-  tmp <- Affairs
-  tmp$religiousness <- as.logical(tmp$religiousness)
-  mod <- AER::tobit(
+  tmp <<- Affairs
+  tmp$religiousness <<- as.logical(tmp$religiousness)
+  mod <- tobit(
     affairs ~ age + yearsmarried + religiousness + occupation + rating,
     data = tmp)
   em <- emmeans(mod, specs = "religiousness")
