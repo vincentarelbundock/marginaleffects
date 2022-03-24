@@ -122,12 +122,11 @@ test_that("bug stay dead: tidy without std.error", {
 })
 
 test_that("predictions: glmer: no validity", {
-    skip("https://github.com/easystats/insight/issues/441")
     dat <- haven::read_dta(test_path("stata/databases/lme4_02.dta"))
     dat$clus <- as.factor(dat$clus)
     model <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = dat, family = binomial)
-    pred1 <- predictions(model)
-    pred2 <- predictions(model, head(dat))
+    pred1 <- predictions(model, newdata = datagrid())
+    pred2 <- predictions(model, newdata = head(dat))
     expect_predictions(pred1, n_row = 1)
     expect_predictions(pred2, n_row = 6)
 })
