@@ -93,7 +93,7 @@ comparisons <- function(model,
         checkmate::check_choice(contrast_numeric, choices = c("iqr", "minmax", "sd", "2sd")))
 
     # variables vector
-    variables_list <- sanity_variables(model = model, newdata = newdata, variables = variables)
+    variables_list <- sanitize_variables(model = model, newdata = newdata, variables = variables)
     variables <- unique(unlist(variables_list))
     # this won't be triggered for multivariate outcomes in `brms`, which
     # produces a list of lists where top level names correspond to names of the

@@ -202,14 +202,14 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
     # data: all variables
     if (!is.null(newdata)) {
         variables <- colnames(newdata)
-    # model: variables = NULL because otherwise `sanity_variables` excludes others
+    # model: variables = NULL because otherwise `sanitize_variables` excludes others
     } else {
         variables <- NULL
     }
 
-    variables_list <- sanity_variables(model = model,
-                                       newdata = newdata,
-                                       variables = variables)
+    variables_list <- sanitize_variables(model = model,
+                                         newdata = newdata,
+                                         variables = variables)
     variables_all <- unique(unlist(variables_list))
     variables_manual <- names(at)
     variables_automatic <- setdiff(variables_all, variables_manual)
