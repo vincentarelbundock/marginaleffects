@@ -1,9 +1,9 @@
 requiet("fixest")
 
 test_that("bugs stay dead: logit with transformations", {
-    skip("works interactively")
     dat <- mtcars
     dat$gear <- as.factor(dat$gear)
+    dat <<- dat
     mod1 <- suppressMessages(feglm(am ~ mpg + mpg^2 | gear, family = binomial(link = "logit"), data = dat, warn = FALSE))
     mod2 <- suppressMessages(feglm(am ~ mpg | gear, family = binomial(link = "logit"), data = dat, warn = FALSE))
     mod3 <- suppressMessages(feglm(am ~ mpg + mpg^2 | gear, family = binomial(link = "logit"), data = mtcars, warn = FALSE))
@@ -60,16 +60,17 @@ test_that("fixest::feols: predictions", {
 })
 
 test_that("numeric cluster variable raises warning", {
-    skip("works interactively")
     fe <- data.frame(unit = 1:25, fe = rnorm(25))
     dat <- expand.grid(unit = 1:25, time = 1:50)
     dat <- merge(dat, fe, by = "unit")
     dat$x <- rnorm(nrow(dat)) + dat$fe
     dat$w <- rnorm(nrow(dat))
     dat$y <- dat$x + dat$w + dat$x * dat$w + dat$fe + rnorm(nrow(dat), sd = 10)
-    mod1 <- feols(y ~ x * w | unit, data = dat)
+    dat <<- dat
     dat2 <- dat
     dat2$unit <- as.factor(dat2$unit)
+    dat2 <<- dat2
+    mod1 <- feols(y ~ x * w | unit, data = dat)
     mod2 <- fixest::feols(y ~ x * w | unit, data = dat2)
     expect_warning(plot_cme(mod1, effect = "x", condition = "w", draw = FALSE))
     expect_warning(plot_cme(mod2, effect = "x", condition = "w", draw = FALSE), NA)
@@ -77,16 +78,17 @@ test_that("numeric cluster variable raises warning", {
 
 
 test_that("plot_cme: extracts all required data", {
-    skip("works interactively")
     fe <- data.frame(unit = 1:25, fe = rnorm(25))
     dat <- expand.grid(unit = 1:25, time = 1:50)
     dat <- merge(dat, fe, by = "unit")
     dat$x <- rnorm(nrow(dat)) + dat$fe
     dat$w <- rnorm(nrow(dat))
     dat$y <- dat$x + dat$w + dat$x * dat$w + dat$fe + rnorm(nrow(dat), sd = 10)
+    dat <<- dat
     mod1 <- fixest::feols(y ~ x * w | unit, data = dat)
     dat2 <- dat
     dat2$unit <- as.factor(dat2$unit)
+    dat2 <<- dat2
     mod2 <- fixest::feols(y ~ x * w | unit, data = dat2)
     k <- plot_cme(mod2, effect = "x", condition = "w", draw = FALSE)
     expect_s3_class(k, "data.frame")
@@ -96,9 +98,9 @@ test_that("plot_cme: extracts all required data", {
 
 
 test_that("predictions: bugs stay dead: Issue #203", {
-    skip("works interactively")
     dat <- mtcars
     dat$factor_am = factor(dat$am)
+    dat <<- dat
     m1 <- feols(mpg ~ hp * am, data = dat)
     m2 <- feols(mpg ~ hp * factor_am, data = dat)
     m3 <- feols(mpg ~ hp * wt, data = dat)

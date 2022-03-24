@@ -50,20 +50,21 @@ test_that("bugs stay dead: conf.level forces get_predicted which doesn't process
 
 
 test_that("bugs stay dead: numeric vs factor strata", {
-    test1 <- list(time = c(4, 3, 1, 1, 2, 2, 3),
-                  status = c(1, 1, 1, 0, 1, 1, 0),
-                  x = c(0, 2, 1, 1, 1, 0, 0),
-                  sex = factor(c(0, 0, 0, 0, 1, 1, 1)))
-    test2 <- list(time = c(4, 3, 1, 1, 2, 2, 3),
-                  status = c(1, 1, 1, 0, 1, 1, 0),
-                  x = c(0, 2, 1, 1, 1, 0, 0),
-                  sex = c(0, 0, 0, 0, 1, 1, 1))
+    stata <- readRDS(test_path("stata/stata.rds"))$survival_coxph_01
+    test1 <<- data.frame(time = c(4, 3, 1, 1, 2, 2, 3),
+                         status = c(1, 1, 1, 0, 1, 1, 0),
+                         x = c(0, 2, 1, 1, 1, 0, 0),
+                         sex = factor(c(0, 0, 0, 0, 1, 1, 1)))
+    test2 <<- data.frame(time = c(4, 3, 1, 1, 2, 2, 3),
+                         status = c(1, 1, 1, 0, 1, 1, 0),
+                         x = c(0, 2, 1, 1, 1, 0, 0),
+                         sex = c(0, 0, 0, 0, 1, 1, 1))
     mod1 <- coxph(Surv(time, status) ~ x + strata(sex),
-                 data = test1,
-                 ties = "breslow")
+                  data = test1,
+                  ties = "breslow")
     mod2 <- coxph(Surv(time, status) ~ x + strata(sex),
-                 data = test2,
-                 ties = "breslow")
+                  data = test2,
+                  ties = "breslow")
     mfx1 <- merge(tidy(marginaleffects(mod1, type = "lp")), stata)
     mfx2 <- merge(tidy(marginaleffects(mod2, type = "lp")), stata)
     expect_equal(mfx1$dydx, mfx2$dydx)

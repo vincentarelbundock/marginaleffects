@@ -1,4 +1,3 @@
-
 test_that("factor before fitting or in formula is the same", {
     tmp <- mtcars
     tmp$cyl <- factor(tmp$cyl)
@@ -32,18 +31,19 @@ test_that("factor in formula with incomplete newdata", {
     expect_equal(mfx1[, 1:6], mfx2[, 1:6], ignore_attr = TRUE)
 })
 
-
-test_that("bugs stay dead: strata in coxph", {
+test_that("bugs stay dead: get_data.coxph() with strata()", {
     requiet("survival")
-    skip("works interactively")
-    skip_if_not_installed("insight", minimum_version = "0.16.0.7") # bug in get_data.coxph()
-    test1 <- data.frame(time = c(4,3,1,1,2,2,3),
-                        status = c(1,1,1,0,1,1,0),
-                        x = c(0,2,1,1,1,0,0),
-                        sex = c(0,0,0,0,1,1,1))
+    skip_if_not_installed("insight", minimum_version = "0.16.0.7") 
+    test1 <<- data.frame(time = c(4,3,1,1,2,2,3),
+                         status = c(1,1,1,0,1,1,0),
+                         x = c(0,2,1,1,1,0,0),
+                         sex = c(0,0,0,0,1,1,1))
     mod <- coxph(Surv(time, status) ~ x + strata(sex),
                  data = test1,
                  ties = "breslow")
-    mfx <- marginaleffects(mod, variables = "x", newdata = datagrid(sex = 0), type = "lp")
+    mfx <- marginaleffects(mod,
+                           variables = "x",
+                           newdata = datagrid(sex = 0),
+                           type = "lp")
     expect_s3_class(mfx, "marginaleffects")
 })
