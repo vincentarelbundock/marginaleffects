@@ -1,7 +1,7 @@
 Package,Function,dydx,se,stata_dydx,stata_se,margins_dydx,margins_se,emmeans_dydx,emmeans_se
 stats,lm,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE
 stats,glm,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE
-stats,loess,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE
+stats,loess,TRUE,FALSE,,,TRUE,,U,U
 AER,ivreg,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,U,U
 AER,tobit,TRUE,TRUE,TRUE,TRUE,U,U,TRUE,TRUE
 aod,betabin,TRUE,TRUE,,,U,U,U,U
@@ -48,6 +48,8 @@ robustbase,glmrob,TRUE,TRUE,,,TRUE,TRUE,U,U
 robustbase,lmrob,TRUE,TRUE,,,TRUE,TRUE,U,U
 robustlmm,rlmer,TRUE,TRUE,,,U,U,,
 rstanarm,stan_glm,TRUE,TRUE,,,FALSE,U,TRUE,TRUE
+sampleSelection,selection,TRUE,TRUE,,,U,U,U,U
+sampleSelection,heckiet,TRUE,FALSE,,,U,U,U,U
 scam,scam,TRUE,TRUE,,,U,U,U,U
 speedglm,speedglm,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,U,U
 speedglm,speedlm,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,U,U
