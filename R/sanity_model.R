@@ -66,6 +66,7 @@ sanity_model_supported_class <- function(model) {
                       "rlmerMod",
                       "rq",
                       c("scam", "glm", "lm"),
+                      c("selection", "selection", "list"),
                       "speedglm",
                       "speedlm",
                       "stanreg",

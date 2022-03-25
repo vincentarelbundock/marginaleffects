@@ -133,6 +133,7 @@ Collate:
     'methods_robust.R'
     'methods_robustlmm.R'
     'methods_rstanarm.R'
+    'methods_sampleSelection.R'
     'methods_scam.R'
     'methods_stats.R'
     'methods_survival.R'
