@@ -1,6 +1,7 @@
 Package,Function,dydx,se,stata_dydx,stata_se,margins_dydx,margins_se,emmeans_dydx,emmeans_se
 stats,lm,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE
 stats,glm,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE
+stats,loess,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE
 AER,ivreg,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,U,U
 AER,tobit,TRUE,TRUE,TRUE,TRUE,U,U,TRUE,TRUE
 aod,betabin,TRUE,TRUE,,,U,U,U,U
