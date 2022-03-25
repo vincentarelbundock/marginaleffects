@@ -82,6 +82,7 @@ Suggests:
     robustlmm,
     rstantools,
     rstanarm,
+    sampleSelection,
     sandwich,
     scam,
     speedglm,
