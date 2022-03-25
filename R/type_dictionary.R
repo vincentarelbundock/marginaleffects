@@ -85,6 +85,9 @@ negbin,link,link,TRUE,TRUE
 negbin,response,expectation,TRUE,TRUE
 polr,probs,expectation,TRUE,TRUE
 rlm,response,expectation,TRUE,TRUE
+selection,response,NA,TRUE,TRUE
+selection,link,NA,TRUE,TRUE
+selection,unconditional,NA,TRUE,TRUE
 speedlm,response,expectation,TRUE,TRUE
 speedglm,link,link,TRUE,TRUE
 speedglm,response,expectation,TRUE,TRUE

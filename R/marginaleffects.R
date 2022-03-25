@@ -136,7 +136,8 @@ marginaleffects <- function(model,
     # outcomes. There should be a more robust way to handle those, but it seems
     # to work for now.
     if ("conditional" %in% names(variables)) {
-        variables_vec <- intersect(variables_vec, variables[["conditional"]])
+        # unlist() needed for sampleSelection objects, which nest "outcome" and "selection" variables
+        variables_vec <- intersect(variables_vec, unlist(variables[["conditional"]]))
     }
 
     mfx_list <- list()
