@@ -13,7 +13,7 @@ Under the hood, `marginaleffects`'s `predictions` and `marginalmeans` functions 
 
 # Marginal effects and contrasts
 
-This table shows the list of model types for which the `marginaleffects` function can compute slopes and contrasts. There are three main alternative software packages to compute such slopes (1) `Stata`'s `margins` command, (2) `R`'s `margins::margins`  function, and (3) `R`'s `emmeans::emtrends` function. The [test suite hosted on Github](https://github.com/vincentarelbundock/marginaleffects/tree/main/tests/testthat) compares the numerical equivalence of results produced by `marginaleffects` to those produced by all 3 alternative software packages:
+This table shows the list of model types for which the `marginaleffects()` function can compute slopes and contrasts. There are three main alternative software packages to compute such slopes (1) `Stata`'s `margins` command, (2) `R`'s `margins::margins`  function, and (3) `R`'s `emmeans::emtrends` function. The [test suite hosted on Github](https://github.com/vincentarelbundock/marginaleffects/tree/main/tests/testthat) compares the numerical equivalence of results produced by `marginaleffects` to those produced by all 3 alternative software packages:
 
 * ✓: a green check means that the results of at least one model are equal to a reasonable tolerance.
 * ✖: a red cross means that the results are *not* identical; extra caution is warranted.
