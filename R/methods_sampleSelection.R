@@ -1,14 +1,9 @@
+# TODO: heckit standard errors are not available because `vcov` is block diagonal with NAs
+
 #' @rdname get_vcov
 #' @export
 get_vcov.selection <- function(model, ...) {
-    # sampleSelection::selection
-    if (as.list(model$call)[[1]] == "selection") {
-        out <- model$estimate
-    # sampleSelection::heckit
-    } else if (as.list(model$call)[[1]] == "heckit") {
-        out <- model$coefficients
-        out[is.na(out)] <- 0
-    }
+    out <- insight::get_varcov(model)
     return(out)
 }
 
