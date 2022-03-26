@@ -87,7 +87,8 @@ marginalmeans <- function(model,
     # stats::terms does not work with brmsfit
     interactions <- try(any(grepl(":", attr(stats::terms(model), "term.labels"))), silent = TRUE)
     if (isTRUE(interactions)) {
-        warning("The `marginalmeans` function does not support models with interactions. The reported standard errors may be misleading.")
+        warning("The `marginalmeans` function does not support models with interactions. The reported standard errors may be misleading.",
+                call. = FALSE)
     }
 
     # categorical variables, excluding response
