@@ -194,7 +194,8 @@ comparisons <- function(model,
         # aggressive check. probably needs to be relaxed.
         if (any(colnames(J_mean_mat) != colnames(vcov))) {
             tmp <- NULL
-            warning("The variance covariance matrix and the Jacobian do not match. `marginaleffects` is unable to compute standard errors using the delta method.")
+            warning("The variance covariance matrix and the Jacobian do not match. `marginaleffects` is unable to compute standard errors using the delta method.",
+                    call. = FALSE)
         } else {
             V <- colSums(t(J_mean_mat %*% vcov) * t(J_mean_mat))
             tmp$std.error <- sqrt(V)

@@ -34,6 +34,6 @@ sanity_dots <- function(model, ...) {
             msg <- sprintf("These arguments are not supported for models of class `%s`: %s. Please file a request on Github if you believe that additional arguments should be supported: https://github.com/vincentarelbundock/marginaleffects/issues",
                        model_class, paste(bad, collapse = ", "))
         }
-        warning(msg)
+        warning(msg, call. = FALSE)
     }
 }

@@ -62,7 +62,8 @@ sanity_newdata <- function(model, newdata) {
     #     }
     # }
     if (isTRUE(flag)) {
-        warning("When using `marginaleffects`, it is safer to convert variables to factors or logicals in the dataset before fitting the model, rather than by wrapping terms in `factor()` or `as.logical() in the model formula.")
+        warning("When using `marginaleffects`, it is safer to convert variables to factors or logicals in the dataset before fitting the model, rather than by wrapping terms in `factor()` or `as.logical() in the model formula.",
+                call. = FALSE)
     }
 
     return(newdata)
@@ -148,7 +149,8 @@ sanitize_vcov <- function(model, vcov) {
     if (isTRUE(vcov)) {
         vcov <- try(get_vcov(model), silent = TRUE)
         if (inherits(vcov, "try-error") && !inherits(model, "brmsfit")) {
-            warning(sprintf('Unable to extract a variance-covariance matrix from model of class "%s" using the `stats::vcov` function. The `vcov` argument was switched to `FALSE`. Please supply a named matrix to produce uncertainty estimates.', class(model)[1]))
+            warning(sprintf('Unable to extract a variance-covariance matrix from model of class "%s" using the `stats::vcov` function. The `vcov` argument was switched to `FALSE`. Please supply a named matrix to produce uncertainty estimates.', class(model)[1]),
+                    call. = FALSE)
             return(NULL)
             # dpoMatrix conversion
         }

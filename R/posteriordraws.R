@@ -9,11 +9,13 @@ posteriordraws <- function(x) {
     assert_dependency("data.table")
 
     if (!inherits(x, "marginaleffects") && !inherits(x, "predictions")) {
-        warning('The `posteriordraws` function only supports objects of type "marginaleffects" or "predictions" produced by the `marginaleffects` package.')
+        warning('The `posteriordraws` function only supports objects of type "marginaleffects" or "predictions" produced by the `marginaleffects` package.',
+                call. = FALSE)
         return(x)
     }
     if (is.null(attr(x, "posterior_draws"))) {
-        warning('This object does not include a "posterior_draws" attribute. The `posteriordraws` function only supports bayesian models produced by the `marginaleffects` or `predictions` functions of the `marginaleffects` package.')
+        warning('This object does not include a "posterior_draws" attribute. The `posteriordraws` function only supports bayesian models produced by the `marginaleffects` or `predictions` functions of the `marginaleffects` package.',
+                call. = FALSE)
         return(x)
     }
     draws <- attr(x, "posterior_draws")
