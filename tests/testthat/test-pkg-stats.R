@@ -91,6 +91,7 @@ test_that("lm vs. emmeans: marginalmeans", {
 test_that('glm: marginalmeans vs. emmeans', {
     # factors seem to behave differently in model.matrix
     skip_if(getRversion() == "3.6.3")
+    skip_if_not_installed("emmeans", minimum_version = "1.7.3")
     dat <- guerry
     dat$binary <- dat$Crime_prop > median(dat$Crime_prop)
     # character variables sometimes break the order
@@ -114,7 +115,7 @@ test_that('glm: marginalmeans vs. emmeans', {
     expect_equal(mm$std.error, em$std.error)
 
     mm <- tidy(marginalmeans(mod, type = "response", variables = "MainCity"))
-    em <- tidy(emmeans::emmeans(mod, specs = "MainCity", transform = "response"))
+    em <- tidy(emmeans(mod, specs = "MainCity", regrid = "response"))
     expect_equal(as.character(mm$value), em$MainCity)
     expect_equal(mm$estimate, em$prob)
     expect_equal(mm$std.error, em$std.error, tolerance = .0001)

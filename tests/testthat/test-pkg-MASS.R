@@ -180,7 +180,7 @@ test_that("polr: marginalmeans vs. emmeans", {
     tmp <<- tmp
     mod <- suppressWarnings(MASS::polr(factor(gear) ~ vs + am, data = tmp))
     # TODO: emmeans seems broken at the moment
-    # em <- emmeans(mod, specs = "am", transform = "response")
+    # em <- emmeans(mod, specs = "am", regrid = "response")
     # em <- tidy(em)
     mm <- marginalmeans(mod, variables = "am", type = "probs")
     expect_equal(nrow(mm), 6)

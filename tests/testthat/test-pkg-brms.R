@@ -169,13 +169,11 @@ test_that("predictions: prediction vs. expectation vs. include_random", {
 
 
 test_that("marginaleffects vs. emmeans: multiple types are correctly aligned", {
-    skip_if_not_installed("ggplot2")
-    skip_if_not_installed("emmeans")
-    library(ggplot2)
+    requiet("ggplot2")
     mfx <- marginaleffects(mod_int, variables = "mpg", type = c("response", "link"),
                            newdata = datagrid(vs = 0:1, mpg = 20))
-    em_r <- emmeans::emtrends(mod_int, ~vs, var = "mpg", at = list(vs = c(0, 1), mpg = 20), epred = TRUE)
-    em_l <- emmeans::emtrends(mod_int, ~vs, var = "mpg", at = list(vs = c(0, 1), mpg = 20))
+    em_r <- emtrends(mod_int, ~vs, var = "mpg", at = list(vs = c(0, 1), mpg = 20), epred = TRUE)
+    em_l <- emtrends(mod_int, ~vs, var = "mpg", at = list(vs = c(0, 1), mpg = 20))
     em_r <- data.frame(em_r)
     em_l <- data.frame(em_l)
     expect_equal(mfx[mfx$type == "link", "dydx"], em_l$mpg.trend)
@@ -245,7 +243,7 @@ test_that("marginaleffects vs. emmeans", {
 
     ## one variable: response scale
     mfx1 <- marginaleffects(mod_one, variables = "hp", newdata = datagrid(hp = 110))
-    mfx2 <- as.data.frame(emmeans::emtrends(mod_one, ~hp, var = "hp", at = list(hp = 110), transform = "response"))
+    mfx2 <- as.data.frame(emtrends(mod_one, ~hp, var = "hp", at = list(hp = 110), regrid = "response"))
     expect_equal(mfx1$dydx, mfx2$hp.trend, tolerance = .001)
     expect_equal(mfx1$conf.low, mfx2$lower.HPD, tolerance = .001)
     expect_equal(mfx1$conf.high, mfx2$upper.HPD, tolerance = .001)

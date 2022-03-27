@@ -1,5 +1,3 @@
-skip_if_not_installed("emmeans")
-skip_if_not_installed("broom")
 requiet("emmeans")
 requiet("broom")
 
@@ -34,6 +32,7 @@ test_that("tidy and glance", {
 })
 
 test_that("marginalmeans vs. emmeans: poisson link or response", {
+    skip_if_not_installed("emmeans", minimum_version = "1.7.3") # transform -> regrid
     dat <- mtcars
     dat$am <- factor(dat$am)
     dat$cyl <- factor(dat$cyl)
@@ -45,7 +44,7 @@ test_that("marginalmeans vs. emmeans: poisson link or response", {
     expect_equal(mm$std.error, em$std.error)
     # response
     mm <- tidy(marginalmeans(mod, variables = "cyl", type = "response"))
-    em <- tidy(emmeans(mod, specs = "cyl", transform = "response"))
+    em <- tidy(emmeans(mod, specs = "cyl", regrid = "response"))
     expect_equal(mm$estimate, em$rate)
     expect_equal(mm$std.error, em$std.error, tolerance = .0001)
 })
