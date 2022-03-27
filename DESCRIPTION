@@ -38,7 +38,6 @@ Suggests:
     ggdist,
     ggplot2,
     ggbeeswarm,
-    gt,
     haven,
     kableExtra,
     knitr,
