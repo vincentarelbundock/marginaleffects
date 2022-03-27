@@ -49,7 +49,7 @@ robustbase,lmrob,TRUE,TRUE,,,TRUE,TRUE,U,U
 robustlmm,rlmer,TRUE,TRUE,,,U,U,,
 rstanarm,stan_glm,TRUE,TRUE,,,FALSE,U,TRUE,TRUE
 sampleSelection,selection,TRUE,TRUE,,,U,U,U,U
-sampleSelection,heckiet,TRUE,FALSE,,,U,U,U,U
+sampleSelection,heckit,TRUE,FALSE,,,U,U,U,U
 scam,scam,TRUE,TRUE,,,U,U,U,U
 speedglm,speedglm,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,U,U
 speedglm,speedlm,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,U,U
