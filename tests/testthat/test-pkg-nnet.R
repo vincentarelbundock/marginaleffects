@@ -69,8 +69,6 @@ test_that("bugfix: nnet single row predictions", {
 })
 
 test_that("predictions with multinomial outcome", {
-    skip_if_not_installed("insight", minimum_version = "0.14.4.1")
-
     set.seed(1839)
     n <- 1200
     x <- factor(sample(letters[1:3], n, TRUE))

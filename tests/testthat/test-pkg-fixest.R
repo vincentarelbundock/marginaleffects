@@ -50,7 +50,6 @@ test_that("fixest::fepois vs. Stata", {
 })
 
 test_that("fixest::feols: predictions", {
-    skip_if_not_installed("insight", minimum_version = "0.14.4.1")
     data(trade, package = "fixest")
     model <- feols(Euros ~ dist_km | Destination + Origin, data = trade)
     pred1 <- predictions(model)
@@ -126,7 +125,6 @@ test_that("predictions: bugs stay dead: Issue #203", {
 
 
 test_that("bug stay dead: insight::get_data doesn't get all columns", {
-    skip_if_not_installed("insight", minimum_version = "0.15.1")
     reg <- feols(
         Sepal.Width ~ Petal.Length | Species | Sepal.Length ~ Petal.Width, 
         data = iris)
