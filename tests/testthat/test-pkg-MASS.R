@@ -118,7 +118,6 @@ test_that("marginaleffects vs. emmeans", {
 ### predictions
 
 test_that("polr: predictions: no validity", {
-    skip_if_not_installed("insight", minimum_version = "0.14.4.1")
     mod <- MASS::polr(factor(gear) ~ mpg + factor(cyl), data = mtcars)
     pred <- predictions(mod, type = "probs")
     expect_predictions(pred)
@@ -133,7 +132,6 @@ test_that("glm.nb: predictions: no validity", {
 })
 
 test_that("rlm: predictions: no validity", {
-    skip_if_not_installed("insight", minimum_version = "0.14.4.1")
     model <- MASS::rlm(mpg ~ hp + drat, mtcars)
     pred <- predictions(model)
     expect_predictions(pred, n_row = nrow(mtcars))
@@ -159,7 +157,6 @@ test_that("glm.nb: marginalmeans: vs. emmeans", {
 
 
 test_that("rlm: marginalmeans: vs. emmeans", {
-    skip_if_not_installed("insight", minimum_version = "0.14.4.1")
     dat <- mtcars
     dat$cyl <- as.factor(dat$cyl)
     dat$am <- as.logical(dat$am)

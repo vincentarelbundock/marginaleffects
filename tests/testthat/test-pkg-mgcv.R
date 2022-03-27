@@ -3,7 +3,6 @@ requiet("emmeans")
 requiet("broom")
 
 test_that("marginaleffects vs. emtrends", {
-    skip_if_not_installed("insight", minimum_version = "0.14.4.1")
     set.seed(2)
     void <- capture.output(dat <- gamSim(1, n = 400, dist = "normal", scale = 2))
     void <- capture.output(dat2 <- gamSim(1, n = 2000, dist = "poisson", scale = .1))
@@ -37,7 +36,6 @@ test_that("marginaleffects vs. emtrends", {
 
 
 test_that("predictions: no validity", {
-    skip_if_not_installed("insight", minimum_version = "0.14.4.1")
     set.seed(2)
     void <- capture.output(dat <- gamSim(1, n = 400, dist = "normal", scale = 2))
     mod <- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3), data = dat)

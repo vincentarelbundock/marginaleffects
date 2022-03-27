@@ -81,7 +81,6 @@ test_that("marginaleffects: zeroinfl vs. Stata vs. emtrends", {
 
 ### predictions
 test_that("marginaleffects: zeroinfl: no validity", {
-    skip_if_not_installed("insight", minimum_version = "0.14.6")
     data("bioChemists", package = "pscl")
     model <- zeroinfl(art ~ kid5 + phd | ment,
                       dist = "negbin",

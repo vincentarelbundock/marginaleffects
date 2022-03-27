@@ -1,5 +1,4 @@
 test_that("padding with interactions", {
-    skip_if_not_installed("insight", minimum_version = "0.14.4.1")
     dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/ggplot2movies/movies.csv")
     dat$style <- ifelse(dat$Action == 1, "Action", "Other")
     dat$style <- ifelse(dat$Comedy == 1, "Comedy", dat$style)

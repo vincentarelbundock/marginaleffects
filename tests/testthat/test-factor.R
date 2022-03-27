@@ -33,7 +33,7 @@ test_that("factor in formula with incomplete newdata", {
 
 test_that("bugs stay dead: get_data.coxph() with strata()", {
     requiet("survival")
-    skip_if_not_installed("insight", minimum_version = "0.16.0.7") 
+    skip_if_not_installed("insight", minimum_version = "0.17.0") 
     test1 <<- data.frame(time = c(4,3,1,1,2,2,3),
                          status = c(1,1,1,0,1,1,0),
                          x = c(0,2,1,1,1,0,0),
