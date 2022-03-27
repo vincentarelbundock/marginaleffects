@@ -29,6 +29,7 @@ test_that("gam: predictions: no validity", {
 
 test_that("gam: marginalmeans vs. emmeans", {
   skip("gam: marginalmeans != emmeans")
+  skip_if_not_installed("emmeans", minimum_version = "1.7.3")
   data(kyphosis, package = "gam")
   tmp <- kyphosis
   tmp$categ <- as.factor(sample(letters[1:5], nrow(tmp), replace = TRUE))
@@ -38,7 +39,7 @@ test_that("gam: marginalmeans vs. emmeans", {
   expect_marginalmeans(mm)
 
   mm <- tidy(mm)
-  em <- tidy(emmeans(model, specs = "categ", transform = "response"))
+  em <- tidy(emmeans(model, specs = "categ", regrid = "response"))
   expect_equal(mm$estimate, em$prob)
   expect_equal(mm$std.error, em$std.error)
 
