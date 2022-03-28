@@ -1,4 +1,6 @@
-# marginaleffects 0.4.0.9000
+# marginaleffects 0.4.1.9000
+
+# marginaleffects 0.4.1
 
 Supported models:
 
