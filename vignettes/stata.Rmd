@@ -1,0 +1,190 @@
+---
+title: "Comparison with Stata's `margins` command" 
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Comparison with Stata's `margins` command}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  fig.width = 6,
+  fig.asp = .4,
+  warning = FALSE,
+  message = FALSE,
+  comment = "#>"
+)
+```
+
+## Average Marginal Effect (AMEs)
+
+### Stata
+
+Both Stata's `margins` command and the `marginaleffects` function can calculate average marginal effects (AMEs). Here is an example showing how to estimate AMEs in Stata: 
+
+```
+quietly reg mpg cyl hp wt
+margins, dydx(*)
+
+Average marginal effects                        Number of obs     =         32
+Model VCE    : OLS
+ 
+Expression   : Linear prediction, predict()
+dy/dx w.r.t. : cyl hp wt
+ 
+------------------------------------------------------------------------------
+    |            Delta-method
+    |      dy/dx   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+cyl |  -.9416168   .5509164    -1.71   0.098    -2.070118    .1868842
+ hp |  -.0180381   .0118762    -1.52   0.140    -.0423655    .0062893
+ wt |  -3.166973   .7405759    -4.28   0.000    -4.683974   -1.649972
+------------------------------------------------------------------------------
+```
+
+### marginaleffects
+
+The same results can be obtained with `marginaleffects()` and `summary()` like this:
+
+```{r}
+library("marginaleffects")
+mod <- lm(mpg ~ cyl + hp + wt, data = mtcars)
+mfx <- marginaleffects(mod)
+summary(mfx)
+```
+
+
+## Counterfactual Marginal Effects
+
+### Stata
+
+With the `at` argument, Stata's `margins` command estimates average _counterfactual_ marginal effects. Here is an example:
+
+```
+quietly reg mpg i.cyl##c.hp wt
+margins, dydx(hp) at(cyl = (4 6 8))
+
+Average marginal effects                        Number of obs     =         32
+Model VCE    : OLS
+
+Expression   : Linear prediction, predict()
+dy/dx w.r.t. : hp
+
+1._at        : cyl             =           4
+
+2._at        : cyl             =           6
+
+3._at        : cyl             =           8
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+hp           |
+         _at |
+          1  |   -.099466   .0348665    -2.85   0.009    -.1712749   -.0276571
+          2  |  -.0213768    .038822    -0.55   0.587    -.1013323    .0585787
+          3  |   -.013441   .0125138    -1.07   0.293    -.0392137    .0123317
+------------------------------------------------------------------------------
+```
+
+<!-- Adapted from this GitHub issue: https://github.com/strengejacke/ggeffects/issues/249 -->
+
+Concretely, this is what Stata does in the background:
+
+  1. It duplicates the whole dataset 3 times and sets the values of `cyl` to the three specified values in each of those subsets.
+  2. It calculates marginal effects for that large grid.
+  3. It takes the average marginal effect for each value of cyl. 
+
+### marginaleffects
+
+You can estimate average counterfactual marginal effects with `marginaleffects()` by, first, setting the `grid.type` argument of `data.grid()` to `"counterfactual"` and, second, by averaging these effects, for example using `aggregate()` or `dplyr::summarise()`. 
+
+```{r}
+mod <- lm(mpg ~ as.factor(cyl) * hp + wt, data = mtcars)
+
+nd <- datagrid(model = mod,
+               cyl = as.factor(c(4, 6, 8)),
+               grid.type = "counterfactual")
+
+mfx <- marginaleffects(mod,
+                       variables = "hp",
+                       newdata = nd) 
+
+aggregate(mfx$dydx, by = list(mfx$cyl), FUN = mean)
+```
+
+<!-- Taken from https://github.com/vincentarelbundock/marginaleffects/issues/226 -->
+
+To obtain standard errors, the “average Jacobian” has to be calculated. The Jacobian is stored in an attribute of the `marginaleffects` object. You can proceed as follows:
+
+```{r}
+J <- attr(mfx, "J")
+J_mean <- aggregate(J, by = list(mfx$cyl), FUN = mean)
+J_mean <- as.matrix(J_mean[, 2:ncol(J_mean)])
+sqrt(diag(J_mean %*% vcov(mod) %*% t(J_mean)))
+```
+
+
+## Average Counterfactual Adjusted Predictions
+
+### Stata
+
+Just like Stata's `margins` command computes average counterfactual marginal effects, it can also estimate _average counterfactual adjusted predictions_.  
+
+Here is an example:
+
+```
+quietly reg mpg i.cyl##c.hp wt
+margins, at(cyl = (4 6 8))
+
+Predictive margins                              Number of obs     =         32
+Model VCE    : OLS
+
+Expression   : Linear prediction, predict()
+
+1._at        : cyl             =           4
+
+2._at        : cyl             =           6
+
+3._at        : cyl             =           8
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |     Margin   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         _at |
+          1  |   17.44233   2.372914     7.35   0.000     12.55522    22.32944
+          2  |    18.9149   1.291483    14.65   0.000     16.25505    21.57476
+          3  |   18.33318   1.123874    16.31   0.000     16.01852    20.64785
+------------------------------------------------------------------------------
+```
+
+Again, this is what Stata does in the background:
+
+  1. It duplicates the whole dataset 3 times and sets the values of `cyl` to the three specified values in each of those subsets.
+  2. It calculates predictions for that large grid.
+  3. It takes the average prediction for each value of `cyl`.
+  
+In other words, average counterfactual adjusted predictions as implemented by Stata are a hybrid between predictions at the observed values (the default in `marginaleffects::predictions`) and predictions at representative values. 
+
+### marginaleffects
+
+You can estimate average counterfactual adjusted predictions with `predictions()` by, first, setting the `grid.type` argument of `data.grid()` to `"counterfactual"` and, second, by averaging the predictions, for example using `aggregate()` or `dplyr::summarise()`.
+
+```{r}
+mod <- lm(mpg ~ as.factor(cyl) * hp + wt, data = mtcars)
+
+nd <- datagrid(model = mod,
+               cyl = as.factor(c(4, 6, 8)),
+               grid.type = "counterfactual")
+
+pred <- predictions(mod,
+                    newdata = nd) 
+aggregate(pred$predicted, by = list(pred$cyl), FUN = mean)
+
+```
+
+Note that standard errors are not yet available for average counterfactual adjusted predictions.
