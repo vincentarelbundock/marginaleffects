@@ -216,9 +216,11 @@ library(margins)
 
 mod <- lm(mpg ~ cyl + hp + wt, data = mtcars)
 
-margins(mod) |> summary()
+mfx <- margins(mod)
+summary(mfx)
 
-marginaleffects(mod) |> summary()
+mfx <- marginaleffects(mod)
+summary(mfx)
 ```
 
 We can also use `margins` to compute "counterfactual average marginal effects" (see the `Stata` section for identical results):
