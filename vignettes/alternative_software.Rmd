@@ -18,7 +18,15 @@ knitr::opts_chunk$set(
 )
 ```
 
-If you do not like `marginaleffects`, you may want to consider one of the free alternatives described below (or `Stata`, if you must).
+If you do not like `marginaleffects`, you may want to consider one of the alternatives described below:
+
+* [`margins`](https://cran.r-project.org/web/packages/margins/index.html)
+* [`prediction`](https://cran.r-project.org/web/packages/prediction/index.html)
+* [`emmeans`](https://cran.r-project.org/web/packages/emmeans/index.html)
+* [`effects`](https://cran.r-project.org/web/packages/effects/index.html)
+* [`modelbased`](https://easystats.github.io/modelbased/)
+* [`ggeffects`](https://strengejacke.github.io/ggeffects/)
+* `Stata`
 
 # `Stata`
 
@@ -197,10 +205,9 @@ aggregate(pred$predicted, by = list(pred$cyl), FUN = mean)
 
 Note that standard errors are not yet available for average counterfactual adjusted predictions.
 
-
 # `margins`
 
-The `margins` and `predictions` packages for `R` were designed by Thomas Leeper to emulate the behavior of the `margins` command from `Stata`. These packages are trailblazers and strongly influenced the development of `marginaleffects`. The main benefits of `marginaleffects` over these packages are:
+The [`margins`](https://cran.r-project.org/web/packages/margins/index.html) and [`prediction`](https://cran.r-project.org/web/packages/prediction/index.html) packages for `R` were designed by Thomas Leeper to emulate the behavior of the `margins` command from `Stata`. These packages are trailblazers and strongly influenced the development of `marginaleffects`. The main benefits of `marginaleffects` over these packages are:
 
 * Support more model types
 * Faster
@@ -234,10 +241,54 @@ margins(mod, at = list(cyl = c(4, 6, 8)))
 
 # `emmeans`
 
+The [`emmeans` package](https://cran.r-project.org/web/packages/emmeans/index.html) is developed by Russell V. Lenth and colleagues. It is an extremely powerful package which focuses on the computation of marginal means, but which can also compute slopes. In my (Vincent's) biased opinion, the main benefits of `marginaleffects` over `emmeans`:
+
+* Support more model types
+* Simpler and more intuitive user interface
+* Easier to compute marginal effects (slopes) for custom grids and continuous regressors
+* Common plots are easier to create with the `plot_cap()` and `plot_cme()` functions
+
+Many of `marginaleffects` advantages come down to subjective preferences over user interface. Readers are thus encouraged to try both packages to see which interface they prefer. Please keep in mind that `emmeans` offers many features which are not yet available in `marginaleffects`, including:
+
+* Transformations and link functions
+  - `marginaleffects` can compute quantities on different scales with the `type` argument, but `emmeans` offers a richer array of possibilities for back transforms.
+* Custom contrasts and linear functions
+  - Compare to the `contrast_factor` and `contrast_numeric` arguments of the `marginaleffects::comparisons` function.
+* Multiplicity adjustments.
+* Joint tests.
+* Equivalence tests.
+* Various plots.
+
 # `effects`
+
+The [`effects` package](https://cran.r-project.org/eb/packages/effects/index.html) was created by John Fox and colleagues
+
++ `marginaleffects` supports 30+ more model types than `effects`.
++ `effects` focuses on the computation of ["adjusted predictions."](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html) The plots it produces are roughly equivalent to the ones produced by the `plot_cap` and `predictions` functions in `marginaleffects`.
++ `effects` does not appear support marginal effects (slopes), marginal means, or contrasts 
++ `effects` uses Base graphics whereas `marginaleffects` uses `ggplot2`
++ `effects` includes *a lot* of very powerful options to customize plots. In contrast, `marginaleffects` produces objects which can be customized by chaining `ggplot2` functions. Users can also call `plot_cap(model, draw=FALSE)` to create a prediction grid, and then work the raw data directly to create the plot they need
+
+`effects` also offers several options which are not available in `marginaleffects`, including:
+
+* Partial residuals plots
+* Many types of plots. See the [package's excellent vignette](https://cran.r-project.org/web/packages/effects/vignettes/predictor-effects-gallery.pdf)
 
 # `ggeffects`
 
+The [`ggeffects`](https://strengejacke.github.io/ggeffects/) package is developed by Daniel Lüdecke.
+
+This section is incomplete. Contributions are welcome.
+
+* Wrapper around `emmeans` to compute marginal means.
+
 # `modelbased`
+
+The [`modelbased` package](https://easystats.github.io/modelbased/) is developed by the `easystats` team.
+
+This section is incomplete. Contributions are welcome.
+
+* Wrapper around `emmeans` to compute marginal means and marginal effects.
+* Powerful functions to create beautiful plots.
 
 
