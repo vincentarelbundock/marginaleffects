@@ -1,5 +1,5 @@
 ---
-title: "Comparison with Stata's `margins` command" 
+title: "Comparison to alternative software" 
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Comparison with Stata's `margins` command}
@@ -17,6 +17,10 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
+
+# `Stata`
+
+`Stata` is a good but very expensive software package for statistical analysis. This section compares `Stata`'s `margins` command to the `marginaleffects`.
 
 ## Average Marginal Effect (AMEs)
 
@@ -105,15 +109,20 @@ You can estimate average counterfactual marginal effects with `marginaleffects()
 ```{r}
 mod <- lm(mpg ~ as.factor(cyl) * hp + wt, data = mtcars)
 
-nd <- datagrid(model = mod,
-               cyl = as.factor(c(4, 6, 8)),
-               grid.type = "counterfactual")
-
-mfx <- marginaleffects(mod,
-                       variables = "hp",
-                       newdata = nd) 
+mfx <- marginaleffects(
+    mod,
+    variables = "hp",
+    newdata = datagrid(cyl = c(4, 6, 8),
+                       grid.type = "counterfactual"))
 
 aggregate(mfx$dydx, by = list(mfx$cyl), FUN = mean)
+```
+
+Or with `dplyr`:
+
+```{r}
+library(dplyr)
+mfx %>% group_by(term, cyl) %>% summarize(dydx = mean(dydx))
 ```
 
 <!-- Taken from https://github.com/vincentarelbundock/marginaleffects/issues/226 -->
@@ -126,7 +135,6 @@ J_mean <- aggregate(J, by = list(mfx$cyl), FUN = mean)
 J_mean <- as.matrix(J_mean[, 2:ncol(J_mean)])
 sqrt(diag(J_mean %*% vcov(mod) %*% t(J_mean)))
 ```
-
 
 ## Average Counterfactual Adjusted Predictions
 
@@ -177,14 +185,55 @@ You can estimate average counterfactual adjusted predictions with `predictions()
 ```{r}
 mod <- lm(mpg ~ as.factor(cyl) * hp + wt, data = mtcars)
 
-nd <- datagrid(model = mod,
-               cyl = as.factor(c(4, 6, 8)),
-               grid.type = "counterfactual")
 
 pred <- predictions(mod,
-                    newdata = nd) 
-aggregate(pred$predicted, by = list(pred$cyl), FUN = mean)
+                    newdata = datagrid(cyl = c(4, 6, 8),
+                                       grid.type = "counterfactual"))
 
+aggregate(pred$predicted, by = list(pred$cyl), FUN = mean)
 ```
 
 Note that standard errors are not yet available for average counterfactual adjusted predictions.
+
+
+# `margins`
+
+The `margins` and `predictions` packages for `R` were designed by Thomas Leeper to emulate the behavior of the `margins` command from `Stata`. These packages are trailblazers and strongly influenced the development of `marginaleffects`. The main benefits of `marginaleffects` over these packages are:
+
+* Support more model types
+* Faster
+* Memory efficient
+* Plots using `ggplot2` instead of Base R
+* More extensive test suite
+* Active development
+
+The syntax of the two packages is very similar:
+
+```{r}
+library(margins)
+
+mod <- lm(mpg ~ cyl + hp + wt, data = mtcars)
+
+margins(mod) |> summary()
+
+marginaleffects(mod) |> summary()
+```
+
+We can also use `margins` to compute "counterfactual average marginal effects" (see the `Stata` section for identical results):
+
+```{r}
+dat <- mtcars
+dat$cyl <- factor(dat$cyl)
+mod <- lm(mpg ~ cyl * hp + wt, data = mtcars)
+margins(mod, at = list(cyl = c(4, 6, 8)))
+```
+
+# `emmeans`
+
+# `effects`
+
+# `ggeffects`
+
+# `modelbased`
+
+
