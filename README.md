@@ -50,6 +50,8 @@ consult these pages:
 
   - [List of supported
     models](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
+  - [Comparisons to alternative
+    software](https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html)
   - Case studies:
       - [Bayesian analyses with
         `brms`](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)
