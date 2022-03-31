@@ -20,19 +20,21 @@ knitr::opts_chunk$set(
 
 If you do not like `marginaleffects`, you may want to consider one of the alternatives described below:
 
-* [`margins`](https://cran.r-project.org/web/packages/margins/index.html)
-* [`prediction`](https://cran.r-project.org/web/packages/prediction/index.html)
-* [`emmeans`](https://cran.r-project.org/web/packages/emmeans/index.html)
-* [`effects`](https://cran.r-project.org/web/packages/effects/index.html)
-* [`modelbased`](https://easystats.github.io/modelbased/)
-* [`ggeffects`](https://strengejacke.github.io/ggeffects/)
-* `Stata`
+* `margins`: https://cran.r-project.org/web/packages/margins/index.html
+* `prediction`: https://cran.r-project.org/web/packages/prediction/index.html
+* `emmeans`: https://cran.r-project.org/web/packages/emmeans/index.html
+* `effects`: https://cran.r-project.org/web/packages/effects/index.html
+* `modelbased`: https://easystats.github.io/modelbased/
+* `ggeffects`: https://strengejacke.github.io/ggeffects/
+* `Stata` by StataCorp LLC
 
 # `Stata`
 
-`Stata` is a good but very expensive software package for statistical analysis. This section compares `Stata`'s `margins` command to the `marginaleffects`.
+`Stata` is a good but expensive software package for statistical analysis. It is published by StataCorp LLC. This section compares `Stata`'s `margins` command to `marginaleffects`.
 
 ## Average Marginal Effect (AMEs)
+
+Marginal effects are unit-level quantities. To compute "average marginal effects", we first calculate marginal effects for each observation in a dataset. Then, we take the mean of those unit-level marginal effects. 
 
 ### Stata
 
@@ -51,7 +53,7 @@ dy/dx w.r.t. : cyl hp wt
 ------------------------------------------------------------------------------
     |            Delta-method
     |      dy/dx   Std. Err.      t    P>|t|     [95% Conf. Interval]
--------------+----------------------------------------------------------------
+------------------------------------------------------------------------------
 cyl |  -.9416168   .5509164    -1.71   0.098    -2.070118    .1868842
  hp |  -.0180381   .0118762    -1.52   0.140    -.0423655    .0062893
  wt |  -3.166973   .7405759    -4.28   0.000    -4.683974   -1.649972
@@ -69,8 +71,15 @@ mfx <- marginaleffects(mod)
 summary(mfx)
 ```
 
-
 ## Counterfactual Marginal Effects
+
+A "counterfactual marginal effect" is a special quantity obtained by replicating a dataset while fixing some regressor to user-defined values.
+
+Concretely, Stata computes counterfactual marginal effects in 3 steps:
+
+  1. Duplicate the whole dataset 3 times and sets the values of `cyl` to the three specified values in each of those subsets.
+  2. Calculate marginal effects for each observation in that large grid.
+  3. Take the average of marginal effects for each value of the variable of interest. 
 
 ### Stata
 
@@ -106,12 +115,6 @@ hp           |
 
 <!-- Adapted from this GitHub issue: https://github.com/strengejacke/ggeffects/issues/249 -->
 
-Concretely, this is what Stata does in the background:
-
-  1. It duplicates the whole dataset 3 times and sets the values of `cyl` to the three specified values in each of those subsets.
-  2. It calculates marginal effects for that large grid.
-  3. It takes the average marginal effect for each value of cyl. 
-
 ### marginaleffects
 
 You can estimate average counterfactual marginal effects with `marginaleffects()` by, first, setting the `grid.type` argument of `data.grid()` to `"counterfactual"` and, second, by averaging these effects, for example using `aggregate()` or `dplyr::summarise()`. 
@@ -137,10 +140,18 @@ mfx %>% group_by(term, cyl) %>% summarize(dydx = mean(dydx))
 
 <!-- Taken from https://github.com/vincentarelbundock/marginaleffects/issues/226 -->
 
-To obtain standard errors, the “average Jacobian” has to be calculated. The Jacobian is stored in an attribute of the `marginaleffects` object. You can proceed as follows:
+The standard errors produced by `Stata` for counterfactual marginal effects use a "Jacobian at the mean." 
+
+The Jacobian is stored in an attribute of the `marginaleffects` object. This Jacobian has a number of rows equal to the dataset, multiplied by the number of unique values in the variable of interest (remember that we replicated the whole dataset several times):
 
 ```{r}
 J <- attr(mfx, "J")
+dim(J)
+```
+
+To compute the same standard errors as `Stata`, we use the mean Jacobian:
+
+```{r}
 J_mean <- aggregate(J, by = list(mfx$cyl), FUN = mean)
 J_mean <- as.matrix(J_mean[, 2:ncol(J_mean)])
 sqrt(diag(J_mean %*% vcov(mod) %*% t(J_mean)))
@@ -261,7 +272,7 @@ Many of `marginaleffects` advantages come down to subjective preferences over us
 
 # `effects`
 
-The [`effects` package](https://cran.r-project.org/eb/packages/effects/index.html) was created by John Fox and colleagues
+The [`effects` package](https://cran.r-project.org/eb/packages/effects/index.html) was created by John Fox and colleagues.
 
 + `marginaleffects` supports 30+ more model types than `effects`.
 + `effects` focuses on the computation of ["adjusted predictions."](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html) The plots it produces are roughly equivalent to the ones produced by the `plot_cap` and `predictions` functions in `marginaleffects`.
@@ -269,26 +280,25 @@ The [`effects` package](https://cran.r-project.org/eb/packages/effects/index.htm
 + `effects` uses Base graphics whereas `marginaleffects` uses `ggplot2`
 + `effects` includes *a lot* of very powerful options to customize plots. In contrast, `marginaleffects` produces objects which can be customized by chaining `ggplot2` functions. Users can also call `plot_cap(model, draw=FALSE)` to create a prediction grid, and then work the raw data directly to create the plot they need
 
-`effects` also offers several options which are not available in `marginaleffects`, including:
+`effects` offers several options which are not currently available in `marginaleffects`, including:
 
 * Partial residuals plots
-* Many types of plots. See the [package's excellent vignette](https://cran.r-project.org/web/packages/effects/vignettes/predictor-effects-gallery.pdf)
-
-# `ggeffects`
-
-The [`ggeffects`](https://strengejacke.github.io/ggeffects/) package is developed by Daniel Lüdecke.
-
-This section is incomplete. Contributions are welcome.
-
-* Wrapper around `emmeans` to compute marginal means.
+* Many types of ways to plot adjusted predictions: [package vignette](https://cran.r-project.org/web/packages/effects/vignettes/predictor-effects-gallery.pdf)
 
 # `modelbased`
 
 The [`modelbased` package](https://easystats.github.io/modelbased/) is developed by the `easystats` team.
 
-This section is incomplete. Contributions are welcome.
+This section is incomplete; contributions are welcome.
 
 * Wrapper around `emmeans` to compute marginal means and marginal effects.
 * Powerful functions to create beautiful plots.
 
+# `ggeffects`
+
+The [`ggeffects`](https://strengejacke.github.io/ggeffects/) package is developed by Daniel Lüdecke.
+
+This section is incomplete; contributions are welcome.
+
+* Wrapper around `emmeans` to compute marginal means.
 
