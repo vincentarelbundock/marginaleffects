@@ -237,13 +237,18 @@ mfx <- marginaleffects(mod)
 summary(mfx)
 ```
 
-We can also use `margins` to compute "counterfactual average marginal effects" (see the `Stata` section for identical results):
+We can also use `margins` to compute "counterfactual average marginal effects" for different subsets of the data (see the `Stata` section for identical results):
 
 ```{r}
 dat <- mtcars
 dat$cyl <- factor(dat$cyl)
 mod <- lm(mpg ~ cyl * hp + wt, data = mtcars)
-margins(mod, at = list(cyl = c(4, 6, 8)))
+
+mar <- margins(mod, at = list(cyl = c(4, 6, 8)))
+summary(mar)
+
+mfx <- marginaleffects(mod, newdata = datagrid(cyl = c(4, 6, 8), grid.type = "counterfactual"))
+summary(mfx, by = "cyl")
 ```
 
 # `emmeans`
