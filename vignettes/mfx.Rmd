@@ -235,7 +235,13 @@ marginaleffects(mod, newdata = datagrid(x = -2:2))  %>%
     select(dydx, truth)
 ```
 
-We can also plot the result with the `plot_cme` function (see section below):
+We can plot conditional adjusted predictions with `plot_cap` function:
+
+```{r}
+plot_cap(mod, condition = "x")
+```
+
+We can plot conditional marginal effects with the `plot_cme` function (see section below):
 
 ```{r}
 plot_cme(mod, effect = "x", condition = "x")
