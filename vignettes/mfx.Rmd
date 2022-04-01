@@ -125,11 +125,11 @@ glance(mfx)
 
 # Group-Average Marginal Effect (G-AME)
 
-We can also use the `group` argument of the `summary` or `tidy` functions to compute the average marginal effects *within different subgroups* of the observed data, based on values of the regressors. For example, to compute the average marginal effects of Bill Length for each Species, we do:
+We can also use the `by` argument of the `summary` or `tidy` functions to compute the average marginal effects *within different subgroups* of the observed data, based on values of the regressors. For example, to compute the average marginal effects of Bill Length for each Species, we do:
 
 ```{r}
 mfx2 <- marginaleffects(mod, variables = "bill_length_mm")
-summary(mfx2, group = "species")
+summary(mfx2, by = "species")
 ```
 
 This is equivalent to manually taking the mean of the observation-level marginal effect for each species sub-group:

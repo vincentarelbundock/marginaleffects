@@ -15,7 +15,7 @@ generics::glance
 #' @param conf.level The confidence level to use for the confidence interval if
 #'   `conf.int=TRUE`. Must be strictly greater than 0 and less than 1. Defaults
 #'   to 0.95, which corresponds to a 95 percent confidence interval.
-#' @param group Character vector of variable names over which to compute group-averaged marginal effects.
+#' @param by Character vector of variable names over which to compute group-averaged marginal effects.
 #' @inheritParams marginaleffects
 #' @return A "tidy" `data.frame` of summary statistics which conforms to the
 #' `broom` package specification.
@@ -31,15 +31,15 @@ generics::glance
 tidy.marginaleffects <- function(x,
                                  conf.int = TRUE,
                                  conf.level = 0.95,
-                                 group = NULL,
+                                 by = NULL,
                                  ...) {
 
     # group averages
-    if (!is.null(group)) {
-        flag <- isTRUE(checkmate::check_character(group)) &&
-                isTRUE(checkmate::check_true(all(group %in% colnames(x))))
+    if (!is.null(by)) {
+        flag <- isTRUE(checkmate::check_character(by)) &&
+                isTRUE(checkmate::check_true(all(by %in% colnames(x))))
         if (!isTRUE(flag)) {
-            msg <- "The `group` argument must be a character vector and every element of the vector must correspond to a column name in the `x` marginal effects object."
+            msg <- "The `by` argument must be a character vector and every element of the vector must correspond to a column name in the `x` marginal effects object."
             stop(msg, call. = FALSE)
         }
     }
@@ -48,7 +48,7 @@ tidy.marginaleffects <- function(x,
     # model
     if ("term" %in% colnames(x)) {
         lhs <- intersect(c("dydx", "conf.low", "conf.high"), colnames(x))
-        rhs <- intersect(c("type", "group", "term", "contrast", group), colnames(x))
+        rhs <- intersect(c("type", "group", "term", "contrast", by), colnames(x))
         lhs <- sprintf("cbind(%s)", paste(lhs, collapse = ", "))
         rhs <- paste(rhs, collapse = " + ")
         form <- sprintf("%s ~ %s", lhs, rhs)
@@ -63,7 +63,7 @@ tidy.marginaleffects <- function(x,
         # }
 
         # standard errors at the average
-        if (is.null(group)) {
+        if (is.null(by)) {
             se <- attr(x, "se_at_mean_gradient")
             if (!is.null(se)) {
                 if ("group" %in% colnames(se) && 
@@ -78,7 +78,7 @@ tidy.marginaleffects <- function(x,
             J <- attr(x, "J")
             V <- attr(x, "vcov")
             if (!is.null(J) && !is.null(V)) {
-                idx <- intersect(c("type", "group", "term", "contrast", group), colnames(x))
+                idx <- intersect(c("type", "group", "term", "contrast", by), colnames(x))
                 J_mean <- stats::aggregate(J, by = as.list(x[, idx]), FUN = mean)
                 J_mean <- J_mean[, -match(idx, colnames(J_mean))]
                 J_mean <- as.matrix(J_mean)
@@ -118,7 +118,7 @@ tidy.marginaleffects <- function(x,
     out <- out[out$estimate != 0,]
 
     # sort and subset columns
-    cols <- c("type", "group", "term", "contrast", group, "estimate", "std.error",
+    cols <- c("type", "group", "term", "contrast", by, "estimate", "std.error",
               "statistic", "p.value", "conf.low", "conf.high")
     out <- out[, intersect(cols, colnames(out)), drop = FALSE]
     out <- as.data.frame(out)
@@ -256,7 +256,7 @@ tidy.predictions <- function(x, ...) {
 #' unit-level contrasts computed by the `predictions` function.
 #'
 #' @param x An object produced by the `comparisons` function.
-#' @param group Character vector of variable names over which to compute group-averaged contrasts.
+#' @param by Character vector of variable names over which to compute group-averaged contrasts.
 #' @inheritParams comparisons
 #' @inheritParams tidy.marginaleffects
 #' @return A "tidy" `data.frame` of summary statistics which conforms to the
@@ -269,15 +269,15 @@ tidy.predictions <- function(x, ...) {
 tidy.comparisons <- function(x,
                              conf.int = TRUE,
                              conf.level = 0.95,
-                             group = NULL,
+                             by = NULL,
                              ...) {
 
     # group averages
-    if (!is.null(group)) {
-        flag <- isTRUE(checkmate::check_character(group)) &&
-                isTRUE(checkmate::check_true(all(group %in% colnames(x))))
+    if (!is.null(by)) {
+        flag <- isTRUE(checkmate::check_character(by)) &&
+                isTRUE(checkmate::check_true(all(by %in% colnames(x))))
         if (!isTRUE(flag)) {
-            msg <- "The `group` argument must be a character vector and every element of the vector must correspond to a column name in the `x` comparisons object."
+            msg <- "The `by` argument must be a character vector and every element of the vector must correspond to a column name in the `x` comparisons object."
             stop(msg, call. = FALSE)
         }
     }
@@ -287,7 +287,7 @@ tidy.comparisons <- function(x,
     # model
     if ("term" %in% colnames(x)) {
         lhs <- intersect(c("comparison", "conf.low", "conf.high"), colnames(x))
-        rhs <- intersect(c("type", "group", "term", "contrast", group), colnames(x))
+        rhs <- intersect(c("type", "group", "term", "contrast", by), colnames(x))
         lhs <- sprintf("cbind(%s)", paste(lhs, collapse = ", "))
         rhs <- paste(rhs, collapse = " + ")
         form <- sprintf("%s ~ %s", lhs, rhs)
@@ -302,7 +302,7 @@ tidy.comparisons <- function(x,
         # }
 
         # standard errors at the average
-        if (is.null(group)) {
+        if (is.null(by)) {
             se <- attr(x, "se_at_mean_gradient")
             if (!is.null(se)) {
                 if ("group" %in% colnames(se) && 
@@ -317,7 +317,7 @@ tidy.comparisons <- function(x,
             J <- attr(x, "J")
             V <- attr(x, "vcov")
             if (!is.null(J) && !is.null(V)) {
-                idx <- intersect(c("type", "group", "term", "contrast", group), colnames(x))
+                idx <- intersect(c("type", "group", "term", "contrast", by), colnames(x))
                 J_mean <- stats::aggregate(J, by = as.list(x[, idx]), FUN = mean)
                 J_mean <- J_mean[, -match(idx, colnames(J_mean))]
                 J_mean <- as.matrix(J_mean)
@@ -362,7 +362,7 @@ tidy.comparisons <- function(x,
     }
 
     # sort and subset columns
-    cols <- c("type", "group", "term", "contrast", group, "estimate", "std.error",
+    cols <- c("type", "group", "term", "contrast", by, "estimate", "std.error",
               "statistic", "p.value", "conf.low", "conf.high")
     out <- out[, intersect(cols, colnames(out)), drop = FALSE]
     out <- as.data.frame(out)

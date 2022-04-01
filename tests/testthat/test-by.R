@@ -10,7 +10,7 @@ test_that("marginaleffects poisson vs. margins", {
         newdata = datagrid(cyl = dat$cyl,
                            am = dat$am,
                            grid.type = "counterfactual"))
-    mfx <- tidy(mfx, group = c("cyl", "am")) %>% arrange(term, cyl, am)
+    mfx <- tidy(mfx, by = c("cyl", "am")) %>% arrange(term, cyl, am)
     mar <- margins(mod, at = list(cyl = unique(dat$cyl), am = unique(dat$am)))
     mar <- summary(mar)
     expect_equal(mfx$estimate, mar$AME, ignore_attr = TRUE, tolerance = 1e-4)
@@ -28,7 +28,7 @@ test_that("comparisons poisson vs. margins", {
         newdata = datagrid(cyl = dat$cyl,
                            am = dat$am,
                            grid.type = "counterfactual"))
-    mfx <- tidy(mfx, group = c("cyl", "am")) %>% arrange(term, contrast, cyl, am)
+    mfx <- tidy(mfx, by = c("cyl", "am")) %>% arrange(term, contrast, cyl, am)
     mar <- margins(mod, at = list(cyl = unique(dat$cyl), am = unique(dat$am)))
     mar <- summary(mar)
     expect_equal(mfx$estimate, mar$AME, ignore_attr = TRUE, tolerance = 1e-4)
@@ -40,6 +40,6 @@ test_that("input checks", {
     mod <- lm(mpg ~ hp, mtcars)
     mfx <- marginaleffects(mod)
     com <- comparisons(mod)
-    expect_error(tidy(mfx, group = "am"), regexp = "group")
-    expect_error(tidy(com, group = "am"), regexp = "group")
+    expect_error(tidy(mfx, by = "am"), regexp = "by` argument")
+    expect_error(tidy(com, by = "am"), regexp = "by` argument")
 })
