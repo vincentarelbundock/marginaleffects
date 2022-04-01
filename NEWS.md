@@ -1,3 +1,7 @@
+# marginaleffects 0.4.1.9000
+
+* Group-averaged marginal effects and comparisons
+
 # marginaleffects 0.4.1
 
 Supported models:

@@ -177,6 +177,27 @@ comparisons <- function(model,
         J_mean <- stats::setNames(J_mean, gsub("______.*$", "", colnames(J_mean)))
     }
 
+    # duplicate colnames can occur for grouped outcome models, so we can't just
+    # use `poorman::bind_rows()`. Instead, ugly hack to make colnames unique
+    # with a weird string.
+    for (i in seq_along(J_list)) {
+        if (inherits(J_list[[i]], "data.frame")) {
+            newnames <- make.unique(names(J_list[[i]]), sep = "______")
+            J_list[[i]] <- stats::setNames(J_list[[i]], newnames)
+        }
+    }
+
+    # bind_rows need because some have contrast col 
+    J <- try(bind_rows(J_list), silent = TRUE)
+
+    # sometimes binding is hard
+    if (inherits(J, "try-error")) {
+        J <- tryCatch(do.call("rbind", J_list), error = function(e) NULL)
+    }
+
+    if (inherits(J, "data.frame")) {
+        J <- stats::setNames(J, gsub("______.*$", "", colnames(J)))
+    }
 
     # empty contrasts equal "". important for merging in `tidy()`
     if ("contrast" %in% colnames(J_mean)) {
@@ -263,6 +284,7 @@ comparisons <- function(model,
     attr(out, "J") <- J
     attr(out, "J_mean") <- J_mean
     attr(out, "se_at_mean_gradient") <- se_at_mean_gradient
+    attr(out, "vcov") <- vcov
 
     # modelbased::visualisation_matrix attaches useful info for plotting
     for (a in names(attributes_newdata)) {

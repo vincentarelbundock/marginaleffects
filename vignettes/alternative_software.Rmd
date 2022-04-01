@@ -117,7 +117,7 @@ hp           |
 
 ### marginaleffects
 
-You can estimate average counterfactual marginal effects with `marginaleffects()` by, first, setting the `grid.type` argument of `data.grid()` to `"counterfactual"` and, second, by averaging these effects, for example using `aggregate()` or `dplyr::summarise()`. 
+You can estimate average counterfactual marginal effects with `marginaleffects()` by, first, setting the `grid.type` argument of `data.grid()` to `"counterfactual"` and, second, by telling the `summary` function that you want to average within groups:
 
 ```{r}
 mod <- lm(mpg ~ as.factor(cyl) * hp + wt, data = mtcars)
@@ -128,10 +128,10 @@ mfx <- marginaleffects(
     newdata = datagrid(cyl = c(4, 6, 8),
                        grid.type = "counterfactual"))
 
-aggregate(mfx$dydx, by = list(mfx$cyl), FUN = mean)
+summary(mfx, group = "cyl")
 ```
 
-Or with `dplyr`:
+This is equivalent to taking the group-wise mean of observation-level marginal effects:
 
 ```{r}
 library(dplyr)
@@ -140,18 +140,11 @@ mfx %>% group_by(term, cyl) %>% summarize(dydx = mean(dydx))
 
 <!-- Taken from https://github.com/vincentarelbundock/marginaleffects/issues/226 -->
 
-The standard errors produced by `Stata` for counterfactual marginal effects use a "Jacobian at the mean." 
+Note that following `Stata`, the standard errors for group-averaged marginal effects are computed by taking the "Jacobian at the mean:" 
 
-The Jacobian is stored in an attribute of the `marginaleffects` object. This Jacobian has a number of rows equal to the dataset, multiplied by the number of unique values in the variable of interest (remember that we replicated the whole dataset several times):
 
 ```{r}
 J <- attr(mfx, "J")
-dim(J)
-```
-
-To compute the same standard errors as `Stata`, we use the mean Jacobian:
-
-```{r}
 J_mean <- aggregate(J, by = list(mfx$cyl), FUN = mean)
 J_mean <- as.matrix(J_mean[, 2:ncol(J_mean)])
 sqrt(diag(J_mean %*% vcov(mod) %*% t(J_mean)))
@@ -214,7 +207,7 @@ pred <- predictions(mod,
 aggregate(pred$predicted, by = list(pred$cyl), FUN = mean)
 ```
 
-Note that standard errors are not yet available for average counterfactual adjusted predictions.
+Note that standard errors are not yet available for average adjusted predictions.
 
 # `margins`
 
