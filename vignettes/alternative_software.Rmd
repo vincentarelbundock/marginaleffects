@@ -128,7 +128,7 @@ mfx <- marginaleffects(
     newdata = datagrid(cyl = c(4, 6, 8),
                        grid.type = "counterfactual"))
 
-summary(mfx, group = "cyl")
+summary(mfx, by = "cyl")
 ```
 
 This is equivalent to taking the group-wise mean of observation-level marginal effects:

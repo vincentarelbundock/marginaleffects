@@ -4,7 +4,7 @@
 \alias{summary.marginaleffects}
 \title{Summarize a \code{marginaleffects} object}
 \usage{
-\method{summary}{marginaleffects}(object, conf.level = 0.95, group = NULL, ...)
+\method{summary}{marginaleffects}(object, conf.level = 0.95, by = NULL, ...)
 }
 \arguments{
 \item{object}{An object produced by the \code{marginaleffects} function}
@@ -13,7 +13,7 @@
 \code{conf.int=TRUE}. Must be strictly greater than 0 and less than 1. Defaults
 to 0.95, which corresponds to a 95 percent confidence interval.}
 
-\item{group}{Character vector of variable names over which to compute group-averaged marginal effects.}
+\item{by}{Character vector of variable names over which to compute group-averaged marginal effects.}
 
 \item{...}{Additional arguments are passed to the \code{predict()} method used to
 compute adjusted predictions. These arguments are particularly useful for

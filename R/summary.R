@@ -6,8 +6,8 @@
 #' @return Data frame of summary statistics for an object produced by the
 #' `marginaleffects` function
 #' @export
-summary.marginaleffects <- function(object, conf.level = 0.95, group = NULL, ...) {
-    out <- tidy(object, conf.level = conf.level, group = group, ...)
+summary.marginaleffects <- function(object, conf.level = 0.95, by = NULL, ...) {
+    out <- tidy(object, conf.level = conf.level, by = by, ...)
     class(out) <- c("marginaleffects.summary", class(out))
     attr(out, "type") <- attr(object, "type")
     attr(out, "model_type") <- attr(object, "model_type")
@@ -281,8 +281,8 @@ print.predictions.summary <- function(x,
 #' @return Data frame of summary statistics for an object produced by the
 #' `comparisons` function
 #' @export
-summary.comparisons <- function(object, conf.level = 0.95, group = NULL, ...) {
-    out <- tidy(object, conf.level = conf.level, group = group, ...)
+summary.comparisons <- function(object, conf.level = 0.95, by = NULL, ...) {
+    out <- tidy(object, conf.level = conf.level, by = by, ...)
     class(out) <- c("comparisons.summary", class(out))
     attr(out, "type") <- attr(object, "type")
     attr(out, "model_type") <- attr(object, "model_type")

@@ -4,7 +4,7 @@
 \alias{tidy.comparisons}
 \title{Tidy a \code{comparisons} object}
 \usage{
-\method{tidy}{comparisons}(x, conf.int = TRUE, conf.level = 0.95, group = NULL, ...)
+\method{tidy}{comparisons}(x, conf.int = TRUE, conf.level = 0.95, by = NULL, ...)
 }
 \arguments{
 \item{x}{An object produced by the \code{comparisons} function.}
@@ -15,7 +15,7 @@
 \code{conf.int=TRUE}. Must be strictly greater than 0 and less than 1. Defaults
 to 0.95, which corresponds to a 95 percent confidence interval.}
 
-\item{group}{Character vector of variable names over which to compute group-averaged contrasts.}
+\item{by}{Character vector of variable names over which to compute group-averaged contrasts.}
 
 \item{...}{Additional arguments are passed to the \code{predict()} method used to
 compute adjusted predictions. These arguments are particularly useful for
