@@ -189,8 +189,9 @@ We can use the observation-level marginal effects to compute average (or median,
 ```{r, message=FALSE, warning=FALSE}
 library(dplyr)
 
-m %>% group_by(term) %>%
-      summarize(dydx = median(dydx))
+marginaleffects(mod, newdata = nd) %>%
+    group_by(term) %>%
+    summarize(dydx = median(dydx))
 ```
 
 # Conditional Marginal Effects (Plot)
