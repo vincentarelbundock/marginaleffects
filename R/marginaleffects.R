@@ -291,6 +291,7 @@ marginaleffects <- function(model,
     attr(out, "J") <- J
     attr(out, "J_mean") <- J_mean
     attr(out, "se_at_mean_gradient") <- se_at_mean_gradient
+    attr(out, "vcov") <- vcov
 
     # modelbased::visualisation_matrix attaches useful info for plotting
     for (a in names(attributes_newdata)) {

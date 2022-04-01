@@ -123,6 +123,23 @@ tidy(mfx)
 glance(mfx)
 ```
 
+# Group-Average Marginal Effect (G-AME)
+
+We can also use the `group` argument of the `summary` or `tidy` functions to compute the average marginal effects *within different subgroups* of the observed data, based on values of the regressors. For example, to compute the average marginal effects of Bill Length for each Species, we do:
+
+```{r}
+mfx2 <- marginaleffects(mod, variables = "bill_length_mm")
+summary(mfx2, group = "species")
+```
+
+This is equivalent to manually taking the mean of the observation-level marginal effect for each species sub-group:
+
+```{r}
+aggregate(dydx ~ species, data = mfx2, FUN = mean)
+```
+
+Note that `marginaleffects` follows `Stata` and the `margins` package in computing standard errors using the group-wise averaged Jacobian.
+
 # Marginal Effect at User-Specified Values
 
 Sometimes, we are not interested in *all* the unit-specific marginal effects, but would rather look at the estimated marginal effects for certain "typical" individuals, or for user-specified values of the regressors. The `datagrid` function helps us build a data grid full of "typical" rows. For example, to generate artificial Adelies and Gentoos with 180mm flippers:
