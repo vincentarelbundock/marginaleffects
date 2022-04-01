@@ -32,6 +32,8 @@ If you do not like `marginaleffects`, you may want to consider one of the altern
 
 `Stata` is a good but expensive software package for statistical analysis. It is published by StataCorp LLC. This section compares `Stata`'s `margins` command to `marginaleffects`.
 
+The results produced by `marginaleffects` are extensively tested against `Stata`. See the [test suite](https://github.com/vincentarelbundock/marginaleffects/tree/main/tests/testthat/stata) for a list of the dozens of models where we compared estimates and standard errors.
+
 ## Average Marginal Effect (AMEs)
 
 Marginal effects are unit-level quantities. To compute "average marginal effects", we first calculate marginal effects for each observation in a dataset. Then, we take the mean of those unit-level marginal effects. 
