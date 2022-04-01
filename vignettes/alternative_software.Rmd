@@ -138,8 +138,7 @@ summary(mfx, by = "cyl")
 This is equivalent to taking the group-wise mean of observation-level marginal effects:
 
 ```{r}
-library(dplyr)
-mfx %>% group_by(term, cyl) %>% summarize(dydx = mean(dydx))
+aggregate(dydx ~ term + cyl, data = mfx, FUN = mean)
 ```
 
 <!-- Taken from https://github.com/vincentarelbundock/marginaleffects/issues/226 -->
