@@ -71,6 +71,8 @@ mfx <- marginaleffects(mod)
 summary(mfx)
 ```
 
+Note that `Stata` reports t statistics while `marginaleffects` reports Z. This produces slightly different p-values because this model has low degrees of freedom: `mtcars` only has 32 rows
+
 ## Counterfactual Marginal Effects
 
 A "counterfactual marginal effect" is a special quantity obtained by replicating a dataset while fixing some regressor to user-defined values.
