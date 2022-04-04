@@ -91,6 +91,27 @@ marginal effects, predictions, marginal means, and contrasts.\tabular{llll}{
 }
 }
 
+\section{Parallel computation}{
+
+
+The \code{marginaleffects()} and \code{comparisons()} functions can use parallelism to
+speed up computation. Operations are parallelized at the "term" or
+"variable" level. This means that no speed gain is available when the user
+computes marginal effects for only one right-hand side variable. There is
+always some overhead when using parallel computation. Thus, parallel
+computation is most likely to be useful when:
+\enumerate{
+\item The model includes many right-hand side variables.
+\item \code{marginaleffects} must compute pairwise contrasts for multiple factor variables.
+}
+
+To activate parallel computation, users must load the \code{future.apply} package
+and call \code{plan()} function. For example:\if{html}{\out{<div class="sourceCode r">}}\preformatted{library(future.apply)
+plan("multisession")
+marginaleffects(model)
+}\if{html}{\out{</div>}}
+}
+
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 \dontshow{\}) # examplesIf}

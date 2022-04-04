@@ -41,7 +41,7 @@ The rest of this page includes a "Getting Started" tutorial with simple examples
 
 * [List of supported models](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
 * [Comparisons to alternative software](https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html)
-* [Parallel computation](https://vincentarelbundock.github.io/marginaleffects/articles/parallel.html)
+* [Performance and Parallel Computation](https://vincentarelbundock.github.io/marginaleffects/articles/parallel.html)
 * Case studies:
     - [Bayesian analyses with `brms`](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)
     - [Mixed effects models](https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html)
@@ -60,8 +60,8 @@ So why did I write a clone?
 
 * _Powerful:_ Marginal effects and contrasts can be computed for about 40 different kinds of models. Adjusted predictions and marginal means can be computed for about 100 model types. 
 * _Extensible:_ Adding support for new models is very easy, often requiring less than 10 lines of new code. Please submit [feature requests on Github.](https://github.com/vincentarelbundock/marginaleffects/issues)
-* _Fast:_ [In one benchmark,](https://vincentarelbundock.github.io/marginaleffects/articles/benchmark.html) computing unit-level standard errors is over 400x faster with `marginaleffects` (minutes vs. milliseconds).
-* _Efficient:_ Smaller memory footprint (1.8GB vs 52MB in the same example).
+* _Fast:_ [Computing unit-level standard errors](https://vincentarelbundock.github.io/marginaleffects/articles/parallel.html) can be orders of magnitude faster in large datasets.
+* _Efficient:_ Much smaller memory footprint.
 * _Valid:_  When possible, numerical results are checked against alternative software like `Stata`, or other `R` packages.
 * _Beautiful:_ `ggplot2` support for plotting (conditional) marginal effects and adjusted predictions.
 * _Tidy:_ The results produced by `marginaleffects` follow "tidy" principles. They are easy to program with and feed to [other packages like `modelsummary`.](https://vincentarelbundock.github.io/marginaleffects/) 
