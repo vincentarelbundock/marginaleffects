@@ -140,56 +140,70 @@ marginaleffects <- function(model,
         variables_vec <- intersect(variables_vec, unlist(variables[["conditional"]]))
     }
 
-    mfx_list <- list()
-
     # compute marginal effects and standard errors
-    mfx_list <- list()
-    se_mean_list <- list()
-    draws_list <- list()
-    J_list <- list()
-    J_mean_list <- list()
-    for (predt in type) {
-        for (v in variables_vec) {
-            mfx <- get_dydx(model = model,
-                            variable = v,
-                            newdata = newdata,
-                            type = predt,
-                            vcov = vcov,
-                            internal_call = TRUE, # for group column in comparisons
-                            ...)
-            mfx$type <- predt
+    # do.call and dots to avoid unused argument error in future_lapply
+    dots <- list(...)
+    loop <- function(predt, v) {
 
-            # bayesian draws
-            if (!is.null(attr(mfx, "posterior_draws"))) {
-                draws_list <- c(draws_list, list(attr(mfx, "posterior_draws")))
-                J <- J_mean <- NULL
+        args <- list(model = model,
+                     variable = v,
+                     newdata = newdata,
+                     type = predt,
+                     vcov = vcov,
+                     internal_call = TRUE) # for group column in comparisons
+        args <- c(args, dots)
+        mfx <- do.call("get_dydx", args)
+        mfx$type <- predt
 
-            # standard errors via delta method
-            } else if (!is.null(vcov)) {
-                idx <- intersect(colnames(mfx), c("type", "group", "term", "contrast"))
-                idx <- mfx[, idx, drop = FALSE]
-                se <- standard_errors_delta(model,
-                                            vcov = vcov,
-                                            type = predt,
-                                            FUN = standard_errors_delta_marginaleffects,
-                                            newdata = newdata,
-                                            index = idx,
-                                            variable = v,
-                                            ...)
-                mfx$std.error <- as.numeric(se)
-                J <- attr(se, "J")
-                J_mean <- attr(se, "J_mean")
+        # bayesian draws
+        if (!is.null(attr(mfx, "posterior_draws"))) {
+            draws <- attr(mfx, "posterior_draws")
+            J <- J_mean <- NULL
 
-            # no standard error
-            } else {
-                J <- J_mean <- NULL
-            }
+        # standard errors via delta method
+        } else if (!is.null(vcov)) {
+            idx <- intersect(colnames(mfx), c("type", "group", "term", "contrast"))
+            idx <- mfx[, idx, drop = FALSE]
+            args <- list(model,
+                         vcov = vcov,
+                         type = predt,
+                         FUN = standard_errors_delta_marginaleffects,
+                         newdata = newdata,
+                         index = idx,
+                         variable = v)
+            args <- c(args, dots)
+            se <- do.call("standard_errors_delta", args)
+            mfx$std.error <- as.numeric(se)
+            J <- attr(se, "J")
+            J_mean <- attr(se, "J_mean")
+            draws <- NULL
 
-            mfx_list <- c(mfx_list, list(mfx))
-            J_list <- c(J_list, list(J))
-            J_mean_list <- c(J_mean_list, list(J_mean))
+        # no standard error
+        } else {
+            J <- J_mean <- draws <- NULL
         }
+
+        # loop output
+        out <- list(mfx = mfx,
+                    J = J,
+                    J_mean = J_mean,
+                    draws = draws)
+        return(out)
     }
+
+    idx <- expand.grid(type, variables_vec, stringsAsFactors = FALSE)
+
+    # parallelization
+    if (isTRUE(check_dependency("future.apply"))) {
+        tmp <- future.apply::future_lapply(seq_len(nrow(idx)), function(i) loop(idx[i, 1], idx[i, 2]))
+    } else {
+        tmp <- lapply(seq_len(nrow(idx)), function(i) loop(idx[i, 1], idx[i, 2]))
+    }
+
+    mfx_list <- lapply(tmp, function(x) x[["mfx"]])
+    J_list <- lapply(tmp, function(x) x[["J"]])
+    J_mean_list <- lapply(tmp, function(x) x[["J_mean"]])
+    draws_list <- lapply(tmp, function(x) x[["draws"]])
 
     # could have different columns, so `rbind` won't do
     out <- bind_rows(mfx_list)
@@ -216,6 +230,7 @@ marginaleffects <- function(model,
         J_mean$contrast <- ifelse(is.na(J_mean$contrast), "", J_mean$contrast)
     }
 
+    # TODO: This should only be in `tidy()`
     # standard error at mean gradient (this is what Stata and R's `margins` compute)
     # J_mean is NULL in bayesian models and where the delta method breaks
     if (!is.null(J_mean) && !is.null(vcov)) {
