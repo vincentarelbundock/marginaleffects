@@ -194,7 +194,8 @@ marginaleffects <- function(model,
     idx <- expand.grid(type, variables_vec, stringsAsFactors = FALSE)
 
     # parallelization
-    if (isTRUE(check_dependency("future.apply"))) {
+    if (isTRUE(check_dependency("future.apply")) &&
+        !"sequential" %in% attributes(future::plan())$class) {
         tmp <- future.apply::future_lapply(seq_len(nrow(idx)), function(i) loop(idx[i, 1], idx[i, 2]))
     } else {
         tmp <- lapply(seq_len(nrow(idx)), function(i) loop(idx[i, 1], idx[i, 2]))
