@@ -28,34 +28,35 @@ get_contrasts_factor <- function(model,
     # index contrast orders based on contrast_factor
     if (contrast_factor == "reference") {
         levs_idx <- data.frame(low = levs[1],
-                              high = levs[2:length(levs)])
+                               high = levs[2:length(levs)])
     } else if (contrast_factor == "pairwise") {
         levs_idx <- expand.grid(low = levs,
-                               high = levs,
-                               stringsAsFactors = FALSE)
+                                high = levs,
+                                stringsAsFactors = FALSE)
         levs_idx <- levs_idx[levs_idx$high != levs_idx$low,]
         levs_idx <- levs_idx[match(levs_idx$low, levs) < match(levs_idx$high, levs),]
     } else if (contrast_factor == "sequential") {
         levs_idx <- data.frame(low = levs[1:(length(levs) - 1)],
-                              high = levs[2:length(levs)])
+                               high = levs[2:length(levs)])
     }
 
     levs_idx$label <- sprintf("%s - %s", levs_idx$high, levs_idx$low)
 
-    draws_list <- list()
-
-    for (i in seq_len(nrow(levs_idx))) {
-
+    # loop over factor levels
+    # do.call and dots to avoid unused argument error in future_lapply
+    dots <- list(...)
+    loop <- function(i) {
         # when factor() is called in a formula and the original data is numeric
         if (isTRUE(convert_to_factor)) {
             baseline[[variable]] <- factor(levs_idx[i, "low"], levels = levs)
         } else {
             baseline[[variable]] <- levs_idx[i, "low"]
         }
-        baseline_prediction <- get_predict(model,
-                                           newdata = baseline,
-                                           type = type,
-                                           ...)
+        args <- list(model,
+                     newdata = baseline,
+                     type = type)
+        args <- c(args, dots)
+        baseline_prediction <- do.call("get_predict", args)
 
         # when factor() is called in a formula and the original data is numeric
         if (isTRUE(convert_to_factor)) {
@@ -64,25 +65,41 @@ get_contrasts_factor <- function(model,
             baseline[[variable]] <- levs_idx[i, "high"]
         }
 
-        incremented_prediction <- get_predict(model = model,
-                                              newdata = baseline,
-                                              type = type,
-                                              ...)
+        args <- list(model = model,
+                     newdata = baseline,
+                     type = type)
+        args <- c(args, dots)
+        incremented_prediction <- do.call("get_predict", args)
         incremented_prediction$term <- variable
         incremented_prediction$contrast <- levs_idx[i, "label"]
         incremented_prediction$comparison <- incremented_prediction$predicted -
                                              baseline_prediction$predicted
         incremented_prediction$predicted <- NULL
-        pred_list[[i]] <- incremented_prediction
+        pred <- incremented_prediction
 
         # bayes: posterior draws and credible intervals
         if ("posterior_draws" %in% names(attributes(baseline_prediction))) {
-            draws_list[[i]] <- attr(incremented_prediction, "posterior_draws") -
-                               attr(baseline_prediction, "posterior_draws")
+            draws <- attr(incremented_prediction, "posterior_draws") -
+                     attr(baseline_prediction, "posterior_draws")
+        } else {
+            draws <- NULL
         }
+
+        out <- list(pred = pred, draws = draws)
     }
-    pred <- do.call("rbind", pred_list)
-    draws <- do.call("rbind", draws_list)
+
+    # parallelization
+    # Nested within parallelized `comparisons()` call, so not activated unless the user calls: 
+    # plan(list(sequential, multisession)) 
+    # This appears to work but it is very slow, probably because of overhead. Undocumented because no benefit.
+    if (isTRUE(check_dependency("future.apply"))) {
+        tmp <- future.apply::future_lapply(seq_len(nrow(levs_idx)), loop)
+    } else {
+        tmp <- lapply(seq_len(nrow(levs_idx)), loop)
+    }
+
+    pred <- do.call("rbind", lapply(tmp, function(x) x[["pred"]]))
+    draws <- do.call("rbind", lapply(tmp, function(x) x[["draws"]]))
 
     # TODO: check if this is still relevant
     # # clean for hurdle models from package `pscl`
