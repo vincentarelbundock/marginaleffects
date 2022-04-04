@@ -115,51 +115,71 @@ comparisons <- function(model,
         newdata$rowid <- seq_len(nrow(newdata))
     }
 
-    mfx_list <- se_mean_list <- draws_list <- J_list <- J_mean_list <- list()
 
-    for (variable in variables) {
-        for (predt in type) {
-            mfx <- get_contrasts(model,
-                                 newdata = newdata,
-                                 variable = variable,
-                                 type = predt,
-                                 contrast_factor = contrast_factor,
-                                 contrast_numeric = contrast_numeric,
-                                 ...)
-            # bayesian draws
-            if (!is.null(attr(mfx, "posterior_draws"))) {
-                draws_list <- c(draws_list, list(attr(mfx, "posterior_draws")))
-                J <- J_mean <- NULL
+    # compute contrasts and standard errors
+    # do.call and dots to avoid unused argument error in future_lapply
+    dots <- list(...)
+    loop <- function(predt, variable) {
+        args <- list(model,
+                     newdata = newdata,
+                     variable = variable,
+                     type = predt,
+                     contrast_factor = contrast_factor,
+                     contrast_numeric = contrast_numeric)
+        args <- c(args, dots)
+        mfx <- do.call("get_contrasts", args)
 
-            # standard errors via delta method
-            } else if (!is.null(vcov)) {
-                idx <- intersect(colnames(mfx), c("type", "group", "term", "contrast"))
-                idx <- mfx[, idx, drop = FALSE]
-                se <- standard_errors_delta(model,
-                                            vcov = vcov,
-                                            type = predt,
-                                            FUN = standard_errors_delta_contrasts,
-                                            newdata = newdata,
-                                            index = idx,
-                                            variable = variable,
-                                            contrast_factor = contrast_factor,
-                                            contrast_numeric = contrast_numeric,
-                                            ...)
-                mfx$std.error <- as.numeric(se)
-                J <- attr(se, "J")
-                J_mean <- attr(se, "J_mean")
+        # bayesian draws
+        if (!is.null(attr(mfx, "posterior_draws"))) {
+            draws <- attr(mfx, "posterior_draws")
+            J <- J_mean <- NULL
 
-            # no standard error
-            } else {
-                J <- J_mean <- NULL
-            }
+        # standard errors via delta method
+        } else if (!is.null(vcov)) {
+            idx <- intersect(colnames(mfx), c("type", "group", "term", "contrast"))
+            idx <- mfx[, idx, drop = FALSE]
+            args <- list(model,
+                         vcov = vcov,
+                         type = predt,
+                         FUN = standard_errors_delta_contrasts,
+                         newdata = newdata,
+                         index = idx,
+                         variable = variable,
+                         contrast_factor = contrast_factor,
+                         contrast_numeric = contrast_numeric)
+            args <- c(args, dots)
+            se <- do.call("standard_errors_delta", args)
+            mfx$std.error <- as.numeric(se)
+            J <- attr(se, "J")
+            J_mean <- attr(se, "J_mean")
+            draws <- NULL
 
-            mfx_list <- c(mfx_list, list(mfx))
-            J_list <- c(J_list, list(J))
-            J_mean_list <- c(J_mean_list, list(J_mean))
+        # no standard error
+        } else {
+            J <- J_mean <- draws <- NULL
         }
+
+        # loop output
+        out <- list(mfx = mfx,
+                    J = J,
+                    J_mean = J_mean,
+                    draws = draws)
+        return(out)
     }
 
+    idx <- expand.grid(type, variables, stringsAsFactors = FALSE)
+
+    # parallelization
+    if (isTRUE(check_dependency("future.apply"))) {
+        tmp <- future.apply::future_lapply(seq_len(nrow(idx)), function(i) loop(idx[i, 1], idx[i, 2]))
+    } else {
+        tmp <- lapply(seq_len(nrow(idx)), function(i) loop(idx[i, 1], idx[i, 2]))
+    }
+
+    mfx_list <- lapply(tmp, function(x) x[["mfx"]])
+    J_list <- lapply(tmp, function(x) x[["J"]])
+    J_mean_list <- lapply(tmp, function(x) x[["J_mean"]])
+    draws_list <- lapply(tmp, function(x) x[["draws"]])
 
     out <- bind_rows(mfx_list)
 

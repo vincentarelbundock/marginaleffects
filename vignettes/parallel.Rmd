@@ -1,0 +1,53 @@
+---
+title: "Parallel computation"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Parallel computation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  fig.width = 9,
+  fig.asp = .4,
+  out.width = "100%",
+  warning = FALSE,
+  message = FALSE,
+  comment = "#>"
+)
+```
+
+```{r, eval = FALSE}
+library(future)
+library(marginaleffects)
+
+availableCores()
+# system
+#      8
+
+# simulate data
+dat <- data.frame(matrix(rnorm(1e6), ncol = 50))
+dat$y <- sample(0:1, nrow(dat), replace = TRUE)
+mod <- glm(y ~ ., family = binomial, data = dat)
+
+# sequential
+plan(sequential)
+system.time({
+    marginaleffects(mod)
+})
+
+ #   user  system elapsed
+ # 84.756   0.123  84.266
+
+# parallel
+plan(multisession)
+system.time({
+    marginaleffects(mod)
+})
+
+  #  user  system elapsed
+  # 5.182   0.887  35.474
+```
+
