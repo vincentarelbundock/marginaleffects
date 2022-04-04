@@ -19,13 +19,12 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r, eval = FALSE}
-library(future)
-library(marginaleffects)
+Computing marginal effects for a large number of variables can take a long time. Parallel computation can speed things up a bit. `marginaleffects` can use the `future.apply` package to parallelize. All that users need to do is load the `future.apply` library and call the `plan()` function.
 
-availableCores()
-# system
-#      8
+Sequential computation (default):
+
+```{r, eval = FALSE}
+library(marginaleffects)
 
 # simulate data
 dat <- data.frame(matrix(rnorm(1e6), ncol = 50))
@@ -33,21 +32,27 @@ dat$y <- sample(0:1, nrow(dat), replace = TRUE)
 mod <- glm(y ~ ., family = binomial, data = dat)
 
 # sequential
-plan(sequential)
 system.time({
     marginaleffects(mod)
 })
 
  #   user  system elapsed
- # 84.756   0.123  84.266
+ # 69.751   1.740  70.947
+```
 
-# parallel
-plan(multisession)
+Parallel computation:
+
+```{r, eval = FALSE}
+library(future.apply)
+plan("multisession")
+
 system.time({
     marginaleffects(mod)
 })
 
   #  user  system elapsed
-  # 5.182   0.887  35.474
+  # 4.767   0.894  34.307
 ```
+
+Note that many expensive operations inside `marginaleffects` cannot be parallelized, so the speed gains are not directly proportional to the number of available cores.
 
