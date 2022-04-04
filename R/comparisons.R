@@ -231,7 +231,8 @@ comparisons <- function(model,
 
     # standard error at mean gradient (this is what Stata and R's `margins` compute)
     # J_mean is NULL in bayesian models and where the delta method breaks
-    if (!is.null(J_mean) && !is.null(vcov)) {
+    # J_mean is nrow == 0 in bayesian models and we have data.table
+    if (!is.null(J_mean) && !is.null(vcov) && nrow(J_mean) != 0) {
         idx <- !colnames(J_mean) %in% c("type", "group", "term", "contrast")
         tmp <- J_mean[, !idx, drop = FALSE]
         J_mean_mat <- as.matrix(J_mean[, idx, drop = FALSE])
