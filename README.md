@@ -52,8 +52,8 @@ consult these pages:
     models](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
   - [Comparisons to alternative
     software](https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html)
-  - [Parallel
-    computation](https://vincentarelbundock.github.io/marginaleffects/articles/parallel.html)
+  - [Performance and Parallel
+    Computation](https://vincentarelbundock.github.io/marginaleffects/articles/parallel.html)
   - Case studies:
       - [Bayesian analyses with
         `brms`](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)
@@ -97,12 +97,10 @@ So why did I write a clone?
     requiring less than 10 lines of new code. Please submit [feature
     requests on
     Github.](https://github.com/vincentarelbundock/marginaleffects/issues)
-  - *Fast:* [In one
-    benchmark,](https://vincentarelbundock.github.io/marginaleffects/articles/benchmark.html)
-    computing unit-level standard errors is over 400x faster with
-    `marginaleffects` (minutes vs. milliseconds).
-  - *Efficient:* Smaller memory footprint (1.8GB vs 52MB in the same
-    example).
+  - *Fast:* [Computing unit-level standard
+    errors](https://vincentarelbundock.github.io/marginaleffects/articles/parallel.html)
+    can be orders of magnitude faster in large datasets.
+  - *Efficient:* Much smaller memory footprint.
   - *Valid:* When possible, numerical results are checked against
     alternative software like `Stata`, or other `R` packages.
   - *Beautiful:* `ggplot2` support for plotting (conditional) marginal
