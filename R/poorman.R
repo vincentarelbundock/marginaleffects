@@ -41,6 +41,12 @@ bind_cols <- function(...) {
 #' bind rows
 #' @noRd
 bind_rows <- function(..., .id = NULL) {
+
+    if (isTRUE(check_dependency("data.table"))) {
+        out <- data.table::rbindlist(..., fill = TRUE)
+        return(out)
+    }
+
     lsts <- list(...)
     lsts <- flatten(lsts)
     lsts <- Filter(Negate(is.null), lsts)
