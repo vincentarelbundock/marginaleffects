@@ -52,6 +52,8 @@ consult these pages:
     models](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
   - [Comparisons to alternative
     software](https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html)
+  - [Parallel
+    computation](https://vincentarelbundock.github.io/marginaleffects/articles/parallel.html)
   - Case studies:
       - [Bayesian analyses with
         `brms`](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)
