@@ -3,6 +3,9 @@ requiet("emmeans")
 requiet("broom")
 
 test_that("stan_glm: no validity", {
+    # mysterious "Execution Halted" error on Github Actions
+    skip_on_ci()
+
     # interactions
     void <- capture.output(
       mod <- stan_glm(am ~ hp + mpg * vs, data = mtcars, family = binomial(link = "logit"))
