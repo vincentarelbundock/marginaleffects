@@ -1,8 +1,8 @@
 ---
-title: "Parallel computation"
+title: "Performance and Parallel Computation"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Parallel computation}
+  %\VignetteIndexEntry{Performance and Parallel Computation}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -19,14 +19,108 @@ knitr::opts_chunk$set(
 )
 ```
 
-Computing marginal effects for a large number of variables can take a long time. Parallel computation can speed things up a bit. `marginaleffects` can use the `future.apply` package to parallelize. All that users need to do is load the `future.apply` library and call the `plan()` function.
+# Speed comparison
 
-Sequential computation (default):
+`marginaleffects` function is relatively fast. This simulation was conducted using the development version of the package on 2022-04-04:
+
+```{r, eval = FALSE}
+library(marginaleffects)
+library(margins)
+
+N <- 1e3
+dat <- data.frame(
+    y = sample(0:1, N, replace = TRUE),
+    x1 = rnorm(N),
+    x2 = rnorm(N),
+    x3 = rnorm(N),
+    x4 = factor(sample(letters[1:5], N, replace = TRUE)))
+mod <- glm(y ~ x1 + x2 + x3 + x4, data = dat, family = binomial)
+```
+
+`marginaleffects` is 2.6x faster than `margins` when unit-level standard errors are *not* computed:
+
+```{r, eval = FALSE}
+bench::mark(
+    marginaleffects(mod, vcov = FALSE),
+    margins(mod, unit_ses = FALSE),
+    check = FALSE, relative = TRUE, iterations = 1)
+
+#   expression                           median 
+# 1 marginaleffects(mod, vcov = FALSE)   1     
+# 2 margins(mod, unit_ses = FALSE)       2.62  
+```
+
+`marginaleffects` is 65 times faster than `margins` when unit-level standard errors are computed:
+
+```{r, eval = FALSE}
+bench::mark(
+    marginaleffects(mod, vcov = TRUE),
+    margins(mod, unit_ses = TRUE),
+    check = FALSE, relative = TRUE, iterations = 1)
+
+#   expression                         median 
+# 1 marginaleffects(mod, vcov = TRUE)  1
+# 2 margins(mod, unit_ses = TRUE)      65.1
+```
+
+Models estimated on larger datasets (> 1000 observations) can be difficult to process using the `margins` package, because of memory and time constraints. In contrast, `marginaleffects` can work well on much larger datasets.
+
+# Parallel computation
+
+Some -- but not all -- of the computations in `marginaleffects` can be parallelized. This can *sometimes* be useful when a model includes many variables, or when the marginal effects for each variable take a long time to compute.
+
+### Use-case 1: Factor variables
+
+Models which include several factor variables can take a while to process because the `marginaleffects()` or `comparisons()` functions need to compute all the pairwise contrasts. By loading the `future.apply` package and calling the `plan` function, we can instruct `marginaleffects` to treat each variable in parallel.
+
+Sequential computing:
 
 ```{r, eval = FALSE}
 library(marginaleffects)
 
-# simulate data
+N <- 1e3
+dat <- data.frame(
+    y = sample(0:1, N, replace = TRUE),
+    x1 = factor(sample(letters[1:10], N, replace = TRUE)),
+    x2 = factor(sample(letters[1:10], N, replace = TRUE)),
+    x3 = factor(sample(letters[1:10], N, replace = TRUE)))
+mod <- glm(y ~ x1 + x2 + x3, data = dat, family = binomial)
+
+system.time({
+    marginaleffects(mod)
+})
+
+#   user  system elapsed
+# 27.381   0.071  22.316
+```
+
+Parallel computing is twice as fast:
+
+```{r, eval = FALSE}
+library(future.apply)
+plan("multisession")
+
+system.time({
+    marginaleffects(mod)
+})
+
+#  user  system elapsed
+# 0.564   0.001  10.991
+```
+
+Restore sequential computing:
+
+```{r, eval = FALSE}
+plan("sequential")
+```
+
+### Use-case 2: Many variables
+
+All that users need to do is load the `future.apply` library and call the `plan()` function.
+
+Sequential computation (default):
+
+```{r, eval = FALSE}
 dat <- data.frame(matrix(rnorm(1e6), ncol = 50))
 dat$y <- sample(0:1, nrow(dat), replace = TRUE)
 mod <- glm(y ~ ., family = binomial, data = dat)
@@ -36,8 +130,8 @@ system.time({
     marginaleffects(mod)
 })
 
- #   user  system elapsed
- # 69.751   1.740  70.947
+#   user  system elapsed
+# 69.751   1.740  70.947
 ```
 
 Parallel computation:
@@ -50,9 +144,10 @@ system.time({
     marginaleffects(mod)
 })
 
-  #  user  system elapsed
-  # 4.767   0.894  34.307
+#  user  system elapsed
+# 4.767   0.894  34.307
 ```
 
-Note that many expensive operations inside `marginaleffects` cannot be parallelized, so the speed gains are not directly proportional to the number of available cores.
+# `data.table`
 
+When the `data.table` package is installed locally in the user's `R` library, `marginaleffects` will automatically use that package to speed up bind and merge operations. This can result in significant speed-ups.

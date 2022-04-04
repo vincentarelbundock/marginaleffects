@@ -31,8 +31,12 @@
 #' * "sd": Contrast across one standard deviation around the regressor mean.
 #' * "2sd": Contrast across two standard deviations around the regressor mean.
 #' * "minmax": Contrast between the maximum and the minimum values of the regressor.
+#' 
+#' @template model_specific_arguments
+#' @template parallel
+#'
 #' @examples
-
+#'
 #' library(marginaleffects)
 #' library(magrittr)
 #'

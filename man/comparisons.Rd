@@ -82,7 +82,45 @@ website:
 
 https://vincentarelbundock.github.io/marginaleffects/
 }
+\section{Model-Specific Arguments}{
+
+
+Some model types allow model-specific arguments to modify the nature of
+marginal effects, predictions, marginal means, and contrasts.\tabular{llll}{
+   Package \tab Class \tab Argument \tab Documentation \cr
+   \code{brms} \tab \code{brmsfit} \tab \code{ndraws} \tab \link[brms:posterior_predict.brmsfit]{brms::posterior_predict} \cr
+    \tab  \tab \code{re_formula} \tab  \cr
+   \code{lme4} \tab \code{merMod} \tab \code{include_random} \tab \link[insight:get_predicted]{insight::get_predicted} \cr
+    \tab  \tab \code{re.form} \tab \link[lme4:predict.merMod]{lme4::predict.merMod} \cr
+    \tab  \tab \code{allow.new.levels} \tab \link[lme4:predict.merMod]{lme4::predict.merMod} \cr
+    \tab  \tab \code{random.only} \tab \link[lme4:predict.merMod]{lme4::predict.merMod} \cr
+   \code{mgcv} \tab \code{bam} \tab \code{exclude} \tab \link[mgcv:predict.bam]{mgcv::predict.bam} \cr
+}
+}
+
+\section{Parallel computation}{
+
+
+The \code{marginaleffects()} and \code{comparisons()} functions can use parallelism to
+speed up computation. Operations are parallelized at the "term" or
+"variable" level. This means that no speed gain is available when the user
+computes marginal effects for only one right-hand side variable. There is
+always some overhead when using parallel computation. Thus, parallel
+computation is most likely to be useful when:
+\enumerate{
+\item The model includes many right-hand side variables.
+\item \code{marginaleffects} must compute pairwise contrasts for multiple factor variables.
+}
+
+To activate parallel computation, users must load the \code{future.apply} package
+and call \code{plan()} function. For example:\if{html}{\out{<div class="sourceCode r">}}\preformatted{library(future.apply)
+plan("multisession")
+marginaleffects(model)
+}\if{html}{\out{</div>}}
+}
+
 \examples{
+
 library(marginaleffects)
 library(magrittr)
 
