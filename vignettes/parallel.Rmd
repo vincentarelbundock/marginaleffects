@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 
 # Speed comparison
 
-`marginaleffects` function is relatively fast. This simulation was conducted using the development version of the package on 2022-04-04:
+The `marginaleffects` functions are relatively fast. This simulation was conducted using the development version of the package on 2022-04-04:
 
 ```{r, eval = FALSE}
 library(marginaleffects)
