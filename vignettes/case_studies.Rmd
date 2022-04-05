@@ -1,8 +1,8 @@
 ---
-title: "Case Studies"
+title: "Case Studies: Bayes, Mixed-Models, GAM, etc."
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Case Studies}
+  %\VignetteIndexEntry{Case Studies: Bayes, Mixed-Models, GAM, etc.}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -23,4 +23,5 @@ The `marginaleffects` website (https://vincentarelbundock.github.io/marginaleffe
 
 - [Bayesian analyses with `brms`](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)
 - [Mixed effects models](https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html)
+- [Performance and parallel computation](https://vincentarelbundock.github.io/marginaleffects/articles/parallel.html)
 

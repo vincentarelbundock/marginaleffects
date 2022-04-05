@@ -45,6 +45,7 @@ The rest of this page includes a "Getting Started" tutorial with simple examples
 * Case studies:
     - [Bayesian analyses with `brms`](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)
     - [Mixed effects models](https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html)
+    - [Generalized Additive Models](https://vincentarelbundock.github.io/marginaleffects/articles/gam.html)
 
 ## Why?
 
