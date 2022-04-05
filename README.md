@@ -59,6 +59,8 @@ consult these pages:
         `brms`](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)
       - [Mixed effects
         models](https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html)
+      - [Generalized Additive
+        Models](https://vincentarelbundock.github.io/marginaleffects/articles/gam.html)
 
 ## Why?
 
@@ -201,7 +203,7 @@ interaction):
 plot_cme(mod, effect = "hp", condition = c("wt", "am"))
 ```
 
-<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
+<img src="README-unnamed-chunk-7-1.png" width="100%" />
 
 #### Adjusted predictions
 
@@ -242,7 +244,7 @@ We can plot the adjusted predictions with the `plot_cap` function:
 plot_cap(mod, condition = c("hp", "wt"))
 ```
 
-<img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
+<img src="README-unnamed-chunk-10-1.png" width="100%" />
 
 Or you can work with the output of the `predictions` or
 `marginaleffects` directly to create your own plots. For example:
@@ -260,7 +262,7 @@ predictions(mod,
     facet_wrap(~am)
 ```
 
-<img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />
+<img src="README-unnamed-chunk-11-1.png" width="100%" />
 
 And of course, categorical variables work too:
 
@@ -269,7 +271,7 @@ mod <- lm(mpg ~ factor(cyl), data = mtcars)
 plot_cap(mod, condition = "cyl")
 ```
 
-<img src="man/figures/README-unnamed-chunk-12-1.png" width="100%" />
+<img src="README-unnamed-chunk-12-1.png" width="100%" />
 
 #### Marginal means
 
