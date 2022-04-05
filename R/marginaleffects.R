@@ -38,7 +38,7 @@
 #'   `marginaleffects` website). Available arguments can vary from model to
 #'   model, depending on the range of supported arguments by each modeling
 #'   package. See the "Model-Specific Arguments" section of the
-#'   `?marginaleffects` document for a non-exhaustive list of available
+#'   `?marginaleffects` documentation for a non-exhaustive list of available
 #'   arguments.
 #'
 #' @template model_specific_arguments
@@ -63,6 +63,7 @@
 #' tidy(mfx)
 #' plot(mfx)
 #'
+#' 
 #' # Marginal Effect at the Mean (MEM)
 #' marginaleffects(mod, newdata = datagrid())
 #'
@@ -70,6 +71,14 @@
 #' # Variables not explicitly included in `datagrid()` are held at their means
 #' marginaleffects(mod,
 #'                 newdata = datagrid(hp = c(100, 110)))
+#'
+#' # Group-Average Marginal Effects (G-AME)
+#' # Calculate marginal effects for each observation, and then take the average
+#' # marginal effect within each subset of observations with different observed
+#' # values for the `cyl` variable:
+#' mod2 <- lm(mpg ~ hp * cyl, data = mtcars)
+#' mfx2 <- marginaleffects(mod2, variables = "hp")
+#' summary(mfx2, by = "cyl")
 #'
 #' # Marginal Effects at User-Specified Values (counterfactual)
 #' # Variables not explicitly included in `datagrid()` are held at their
