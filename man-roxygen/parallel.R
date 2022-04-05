@@ -19,3 +19,8 @@
 #' marginaleffects(model)
 #' ```
 #'
+#' To disable parallelism in `marginaleffects` altogether, you can set a global option:
+#' 
+#' ```{r, eval = FALSE}
+#' options(marginaleffects_parallel = FALSE)
+#'
