@@ -110,6 +110,9 @@ and call \code{plan()} function. For example:\if{html}{\out{<div class="sourceCo
 plan("multisession")
 marginaleffects(model)
 }\if{html}{\out{</div>}}
+
+To disable parallelism in \code{marginaleffects} altogether, you can set a global option:\if{html}{\out{<div class="sourceCode r">}}\preformatted{options(marginaleffects_parallel = FALSE)
+}\if{html}{\out{</div>}}
 }
 
 \examples{
