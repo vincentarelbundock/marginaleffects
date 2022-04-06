@@ -67,9 +67,13 @@ standard_errors_delta <- function(model,
         return(NULL)
     }
 
-    # TODO: this is a terrible sanity check
     coefs <- get_coef(model)
-    vcov <- vcov[names(coefs), names(coefs), drop = FALSE]
+
+    # TODO: this is a terrible sanity check
+    # some vcov methods return an unnamed matrix
+    if (!is.null(dimnames(vcov))) {
+        vcov <- vcov[names(coefs), names(coefs), drop = FALSE]
+    }
 
     # input: named vector of coefficients
     # output: gradient
