@@ -153,3 +153,12 @@ test_that("regression test Issue #232: namespace collision with `rep()`", {
   expect_s3_class(mfx, "marginaleffects")
 })
 
+
+test_that("Issue #229", {
+    skip_if_not_installed("fixest", minimum_version = "0.10.5")
+    requiet("fixest")
+    data(trade)
+    dat <<- trade
+    mod <- feNmlm(Euros ~ log(dist_km) | Product, data = dat)
+    expect_marginaleffects(mod)
+})
