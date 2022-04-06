@@ -160,16 +160,22 @@ sanitize_vcov <- function(model, vcov) {
     # align vcov and coefs
     if (is.matrix(vcov)) {
         coefs <- get_coef(model)
-        if (anyDuplicated(names(vcov)) == 0) {
-            # 1) Check above is needed for `AER::tobit` and others where `vcov`
-            # includes Log(scale) but `coef` does not Dangerous for `oridinal::clm`
-            # and others where there are important duplicate column names in
-            # `vcov`, and selecting with [,] repeats the first instance.
 
-            # 2) Sometimes vcov has more columns than coefs (e.g., betareg)
-            if (all(names(coefs) %in% colnames(vcov))) {
-                vcov <- vcov[names(coefs), names(coefs), drop = FALSE]
+        # some models return unnamed vcov. this is bad but rare
+        if (!is.null(dimnames(vcov))) {
+            if (anyDuplicated(names(vcov)) == 0) {
+                # 1) Check above is needed for `AER::tobit` and others where `vcov`
+                # includes Log(scale) but `coef` does not Dangerous for `oridinal::clm`
+                # and others where there are important duplicate column names in
+                # `vcov`, and selecting with [,] repeats the first instance.
+
+                # 2) Sometimes vcov has more columns than coefs (e.g., betareg)
+                if (all(names(coefs) %in% colnames(vcov))) {
+                    vcov <- vcov[names(coefs), names(coefs), drop = FALSE]
+                }
             }
+        } else if (ncol(vcov) == length(coefs)) {
+            row.names(vcov) <- colnames(vcov) <- names(coefs)
         }
     }
 
