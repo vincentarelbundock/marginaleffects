@@ -88,15 +88,10 @@ get_contrasts_factor <- function(model,
         out <- list(pred = pred, draws = draws)
     }
 
-    # parallelization
-    # Nested within parallelized `comparisons()` call, so not activated unless the user calls: 
-    # plan(list(sequential, multisession)) 
-    # This appears to work but it is very slow, probably because of overhead. Undocumented because no benefit.
-    if (isTRUE(check_dependency("future.apply"))) {
-        tmp <- future.apply::future_lapply(seq_len(nrow(levs_idx)), loop)
-    } else {
-        tmp <- lapply(seq_len(nrow(levs_idx)), loop)
-    }
+    # Nested parallelization is very slow in all cases I tried, and it makes
+    # traceback() unreadable.
+    # tmp <- future.apply::future_lapply(seq_len(nrow(levs_idx)), loop)
+    tmp <- lapply(seq_len(nrow(levs_idx)), loop)
 
     pred <- do.call("rbind", lapply(tmp, function(x) x[["pred"]]))
     draws <- do.call("rbind", lapply(tmp, function(x) x[["draws"]]))
