@@ -170,6 +170,12 @@ marginaleffects <- function(model,
             draws <- attr(mfx, "posterior_draws")
             J <- J_mean <- NULL
 
+        # standard errors already computed by `comparisons()`
+        } else if ("std.error" %in% colnames(mfx)) {
+            J <- attr(mfx, "J")
+            J_mean <- attr(mfx, "J_mean")
+            draws <- attr(mfx, "draws")
+
         # standard errors via delta method
         } else if (!is.null(vcov)) {
             idx <- intersect(colnames(mfx), c("type", "group", "term", "contrast"))

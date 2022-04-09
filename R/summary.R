@@ -5,6 +5,15 @@
 #' @inheritParams tidy.marginaleffects
 #' @return Data frame of summary statistics for an object produced by the
 #' `marginaleffects` function
+#' @examples
+#' mod <- lm(mpg ~ hp * wt + factor(gear), data = mtcars)
+#' mfx <- marginaleffects(mod)
+#'
+#' # average marginal effects
+#' summary(mfx)
+#'
+#' # average marginal effects by group
+#' summary(mfx, by = "gear")
 #' @export
 summary.marginaleffects <- function(object, conf.level = 0.95, by = NULL, ...) {
     out <- tidy(object, conf.level = conf.level, by = by, ...)
@@ -280,6 +289,17 @@ print.predictions.summary <- function(x,
 #' @inheritParams tidy.comparisons
 #' @return Data frame of summary statistics for an object produced by the
 #' `comparisons` function
+#' @examples
+#' mod <- lm(mpg ~ hp * wt + factor(gear), data = mtcars)
+#' con <- comparisons(mod)
+#'
+#' # average marginal effects
+#' summary(con)
+#'
+#' # average marginal effects by group
+#' summary(con, by = "gear")
+#' @export
+
 #' @export
 summary.comparisons <- function(object, conf.level = 0.95, by = NULL, ...) {
     out <- tidy(object, conf.level = conf.level, by = by, ...)

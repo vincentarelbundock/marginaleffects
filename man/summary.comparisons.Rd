@@ -31,3 +31,13 @@ Data frame of summary statistics for an object produced by the
 \description{
 Summarize a \code{comparisons} object
 }
+\examples{
+mod <- lm(mpg ~ hp * wt + factor(gear), data = mtcars)
+con <- comparisons(mod)
+
+# average marginal effects
+summary(con)
+
+# average marginal effects by group
+summary(con, by = "gear")
+}

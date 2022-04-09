@@ -1,3 +1,4 @@
+
 test_that("factor before fitting or in formula is the same", {
     tmp <- mtcars
     tmp$cyl <- factor(tmp$cyl)

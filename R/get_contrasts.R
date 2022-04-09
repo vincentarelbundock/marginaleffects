@@ -24,6 +24,8 @@ get_contrasts <- function(model,
         internal_call = TRUE,
         ...)
 
+    out[["type"]] <- type
+
     if (isTRUE(list(...)[["internal_call"]]) && !"group" %in% colnames(out)) {
         out[["group"]] <- "main_marginaleffect"
     }
