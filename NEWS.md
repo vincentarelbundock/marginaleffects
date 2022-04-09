@@ -1,8 +1,15 @@
 # marginaleffects 0.4.1.9000
 
+Supported models: 
+
+* `glmmTMB`
+
+Misc:
+
 * Parallel computation in the `marginaleffects()` and `comparisons()` functions using the `future.apply` package.
 * `by` argument in `tidy()` and `summary()` computes group-average marginal effects and comparisons.
 * New vignette on alternative software packages
+* Bug fixes and performance improvements
 
 # marginaleffects 0.4.1
 

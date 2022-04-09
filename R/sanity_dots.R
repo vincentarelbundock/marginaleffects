@@ -12,6 +12,9 @@ sanity_dots <- function(model, ...) {
     # sampleSelection
     valid[["selection"]] <- c("part")
 
+    # glmmTMB
+    valid[["glmmTMB"]] <- c("re.form", "allow.new.levels", "zitype")
+
     # misc
     valid[["bam"]] <- c("exclude")
 

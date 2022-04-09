@@ -27,7 +27,12 @@ generics::glance
 #' @examples
 #' mod <- lm(mpg ~ hp * wt + factor(gear), data = mtcars)
 #' mfx <- marginaleffects(mod)
+#'
+#' # average marginal effects
 #' tidy(mfx)
+#'
+#' # average marginal effects by group
+#' tidy(mfx, by = "gear")
 tidy.marginaleffects <- function(x,
                                  conf.int = TRUE,
                                  conf.level = 0.95,
