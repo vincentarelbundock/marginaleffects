@@ -70,8 +70,8 @@ test_that("contrast: manual check", {
     dat1 <- dat2 <- Salamanders
     dat1$mined <- "yes"
     dat2$mined <- "no"
-    cont1 <- predict(m2, type = "response", newdata = dat2) -
-             predict(m2, type = "response", newdata = dat1)
+    cont1 <- predict(mod, type = "response", newdata = dat2) -
+             predict(mod, type = "response", newdata = dat1)
     cont2 <- comparisons(mod, variables = "mined")
     expect_equal(cont2$comparison, cont1)
 })

@@ -1,3 +1,5 @@
+# NOTE: HPD tests against emmeans used to work but we now use ETI
+
 requiet("brms")
 requiet("emmeans")
 requiet("broom")
@@ -40,16 +42,16 @@ test_that("marginaleffects vs. emmeans", {
     em <- emtrends(mod_two, ~mpg, "mpg", at = list(mpg = 20, hp = 100))
     em <- tidy(em)
     expect_equal(mfx$dydx, em$mpg.trend)
-    expect_equal(mfx$conf.low, em$lower.HPD)
-    expect_equal(mfx$conf.high, em$upper.HPD)
+    # expect_equal(mfx$conf.low, em$lower.HPD)
+    # expect_equal(mfx$conf.high, em$upper.HPD)
     # tolerance is less good for back-transformed response
     mfx <- marginaleffects(mod_two, newdata = datagrid(mpg = 20, hp = 100),
                            variables = "mpg", type = "response")
     em <- emtrends(mod_two, ~mpg, "mpg", at = list(mpg = 20, hp = 100), trans = TRUE)
     em <- tidy(em)
     expect_equal(mfx$dydx, em$mpg.trend, tolerance = .1)
-    expect_equal(mfx$conf.low, em$lower.HPD, tolerance = .01)
-    expect_equal(mfx$conf.high, em$upper.HPD, tolerance = .1)
+    # expect_equal(mfx$conf.low, em$lower.HPD, tolerance = .01)
+    # expect_equal(mfx$conf.high, em$upper.HPD, tolerance = .1)
 })
 
 test_that("brms: cumulative: marginaleffects: no validity", {
@@ -177,11 +179,11 @@ test_that("marginaleffects vs. emmeans: multiple types are correctly aligned", {
     em_r <- data.frame(em_r)
     em_l <- data.frame(em_l)
     expect_equal(mfx[mfx$type == "link", "dydx"], em_l$mpg.trend)
-    expect_equal(mfx[mfx$type == "link", "conf.low"], em_l$lower.HPD)
-    expect_equal(mfx[mfx$type == "link", "conf.high"], em_l$upper.HPD)
+    # expect_equal(mfx[mfx$type == "link", "conf.low"], em_l$lower.HPD)
+    # expect_equal(mfx[mfx$type == "link", "conf.high"], em_l$upper.HPD)
     expect_equal(mfx[mfx$type == "response", "dydx"], em_r$mpg.trend, tolerance = .01)
-    expect_equal(mfx[mfx$type == "response", "conf.low"], em_r$lower.HPD, tolerance = .01)
-    expect_equal(mfx[mfx$type == "response", "conf.high"], em_r$upper.HPD, tolerance = .01)
+    # expect_equal(mfx[mfx$type == "response", "conf.low"], em_r$lower.HPD, tolerance = .01)
+    # expect_equal(mfx[mfx$type == "response", "conf.high"], em_r$upper.HPD, tolerance = .01)
 
     # easier to see correct alignment of draws in a density plot
     tmp <- posteriordraws(mfx)
@@ -198,8 +200,8 @@ test_that("predictions vs. emmeans", {
     em <- data.frame(em)
     pred <- predictions(mod_one, newdata = datagrid(hp = c(100, 120)), type = "link")
     expect_equal(pred$predicted, em$emmean)
-    expect_equal(pred$conf.low, em$lower.HPD)
-    expect_equal(pred$conf.high, em$upper.HPD)
+    # expect_equal(pred$conf.low, em$lower.HPD)
+    # expect_equal(pred$conf.high, em$upper.HPD)
 })
 
 
@@ -238,23 +240,23 @@ test_that("marginaleffects vs. emmeans", {
     mfx1 <- marginaleffects(mod_one, variables = "hp", newdata = datagrid(hp = 110), type = "link")
     mfx2 <- as.data.frame(emmeans::emtrends(mod_one, ~hp, var = "hp", at = list(hp = 110)))
     expect_equal(mfx1$dydx, mfx2$hp.trend)
-    expect_equal(mfx1$conf.low, mfx2$lower.HPD)
-    expect_equal(mfx1$conf.high, mfx2$upper.HPD)
+    # expect_equal(mfx1$conf.low, mfx2$lower.HPD)
+    # expect_equal(mfx1$conf.high, mfx2$upper.HPD)
 
     ## one variable: response scale
     mfx1 <- marginaleffects(mod_one, variables = "hp", newdata = datagrid(hp = 110))
     mfx2 <- as.data.frame(emtrends(mod_one, ~hp, var = "hp", at = list(hp = 110), regrid = "response"))
     expect_equal(mfx1$dydx, mfx2$hp.trend, tolerance = .001)
-    expect_equal(mfx1$conf.low, mfx2$lower.HPD, tolerance = .001)
-    expect_equal(mfx1$conf.high, mfx2$upper.HPD, tolerance = .001)
+    # expect_equal(mfx1$conf.low, mfx2$lower.HPD, tolerance = .001)
+    # expect_equal(mfx1$conf.high, mfx2$upper.HPD, tolerance = .001)
 
     # numeric + factor: numeric variable
     dat <- datagrid(model = mod_factor, mpg = 25, cyl_fac = 4)
     mfx1 <- marginaleffects(mod_factor, variables = "mpg", newdata = dat, type = "link")
     mfx2 <- as.data.frame(emmeans::emtrends(mod_factor, ~mpg, var = "mpg", at = list(mpg = 25, cyl_fac = 4)))
     expect_equal(mfx1$dydx, mfx2$mpg.trend, tolerance = .001)
-    expect_equal(mfx1$conf.low, mfx2$lower.HPD, tolerance = .001)
-    expect_equal(mfx1$conf.high, mfx2$upper.HPD, tolerance = .001)
+    # expect_equal(mfx1$conf.low, mfx2$lower.HPD, tolerance = .001)
+    # expect_equal(mfx1$conf.high, mfx2$upper.HPD, tolerance = .001)
 
     # numeric + factor: factor
     dat <- datagrid(model = mod_factor, mpg = 25, cyl_fac = 4)
@@ -263,8 +265,8 @@ test_that("marginaleffects vs. emmeans", {
     mfx2 <- emmeans::contrast(mfx2, method = "revpairwise")
     mfx2 <- data.frame(mfx2)[1:2,]
     expect_equal(mfx1$dydx, mfx2$estimate, tolerance = .001)
-    expect_equal(mfx1$conf.low, mfx2$lower.HPD, tolerance = .001)
-    expect_equal(mfx1$conf.high, mfx2$upper.HPD, tolerance = .001)
+    # expect_equal(mfx1$conf.low, mfx2$lower.HPD, tolerance = .001)
+    # expect_equal(mfx1$conf.high, mfx2$upper.HPD, tolerance = .001)
 })
 
 
