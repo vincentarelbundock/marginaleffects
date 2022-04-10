@@ -63,6 +63,7 @@ Suggests:
     fixest (>= 0.10.1),
     gam,
     geepack,
+    glmmTMB,
     glmx,
     itsadug,
     ivreg,
@@ -103,6 +104,7 @@ Collate:
     'get_contrasts_logical.R'
     'get_contrasts_numeric.R'
     'get_dydx.R'
+    'get_eti.R'
     'get_gradient.R'
     'get_group_names.R'
     'get_hdi.R'

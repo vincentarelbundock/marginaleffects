@@ -23,8 +23,12 @@ test_that("stan_glm: no validity", {
     em <- emtrends(mod, ~hp, "hp", at = list(hp = 110, mpg = 20, vs = 0))
     em <- tidy(em)
     expect_equal(mfx$dydx, em$hp.trend)
-    expect_equal(mfx$conf.low, em$lower.HPD, tolerance = .00001)
-    expect_equal(mfx$conf.high, em$upper.HPD)
+    # These used to compare correctly, but we no longer compute HPD because
+    # they are highly dependent on assumptions implicit in the
+    # estimation methods. Michael Betancourt, for example, strongly
+    # recommends against HDI.
+    # expect_equal(mfx$conf.low, em$lower.HPD, tolerance = .00001)
+    # expect_equal(mfx$conf.high, em$upper.HPD)
 
     # margins: var is all zeroes and dydx don't match precisely
     # mar <- margins(mod, unit_ses = TRUE, at = list(hp = 110, mpg = 20, vs = 0))

@@ -277,7 +277,7 @@ marginaleffects <- function(model,
     draws <- do.call("rbind", draws_list)
     if (!is.null(draws)) {
         if (!"conf.low" %in% colnames(out)) {
-            tmp <- apply(draws, 1, get_hdi)
+            tmp <- apply(draws, 1, get_eti)
             out[["std.error"]] <- NULL
             out[["dydx"]] <- apply(draws, 1, stats::median)
             out[["conf.low"]] <- tmp[1, ]

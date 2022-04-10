@@ -41,8 +41,8 @@
 #' * `group`: (optional) value of the grouped outcome (e.g., categorical outcome models)
 #' * `predicted`: predicted outcome
 #' * `std.error`: standard errors computed by the `insight::get_predicted` function or, if unavailable, via `marginaleffects` delta method functionality.
-#' * `conf.low`: lower bound of the confidence or highest density interval (for bayesian models)
-#' * `conf.high`: upper bound of the confidence or highest density interval (for bayesian models)
+#' * `conf.low`: lower bound of the confidence interval (or equal-tailed interval for bayesian models)
+#' * `conf.high`: upper bound of the confidence interval (or equal-tailed interval for bayesian models)
 #' @examples
 #' # Adjusted Prediction for every row of the original dataset
 #' mod <- lm(mpg ~ hp + factor(cyl), data = mtcars)
@@ -231,7 +231,7 @@ predictions <- function(model,
     # bayesian: store draws posterior density draws
     attr(out, "posterior_draws") <- draws
     if (!is.null(draws)) {
-        tmp <- apply(draws, 1, get_hdi, credMass = conf.level)
+        tmp <- apply(draws, 1, get_eti, credMass = conf.level)
         out[["predicted"]] <- apply(draws, 1, stats::median)
         out[["std.error"]] <- NULL
         out[["conf.low"]] <- tmp[1, ]
