@@ -22,12 +22,43 @@ knitr::opts_chunk$set(
 )
 ```
 
+# What to do when `marginaleffects` is slow?
+
+Some options:
+
+1. Only compute marginal effects for a subset of variables, paying special attention to exclude factor variables which can be particularly costly to process: `variables` argument.
+2. Do not compute standard errors: `vcov = FALSE` argument.
+3. Parallel computation (see section below).
+
+This simulation illustrates how computation time varies for a model with 25 regressors and 100,000 observations:
+
+```{r}
+library(marginaleffects)
+
+# simulate data and fit a large model
+N <- 1e5
+dat <- data.frame(matrix(rnorm(N * 26), ncol = 26))
+mod <- lm(X1 ~ ., dat)
+
+results <- bench::mark(
+    # 1 variable; no standard error
+    marginaleffects(mod, vcov = FALSE, variables = "X3"),
+    # 1 variable
+    marginaleffects(mod, variables = "X3"),
+    # 26 variables; no standard error
+    marginaleffects(mod, vcov = FALSE),
+    # 26 variables
+    marginaleffects(mod),
+    iterations = 1, check = FALSE)
+
+results[, c(1, 3, 5)]
+```
+
 # Speed comparison
 
 The `marginaleffects` functions are relatively fast. This simulation was conducted using the development version of the package on 2022-04-04:
 
 ```{r, eval = FALSE}
-library(marginaleffects)
 library(margins)
 
 N <- 1e3
@@ -67,6 +98,8 @@ bench::mark(
 ```
 
 Models estimated on larger datasets (> 1000 observations) can be difficult to process using the `margins` package, because of memory and time constraints. In contrast, `marginaleffects` can work well on much larger datasets.
+
+In some cases, `marginaleffects` will be considerably slower than packages like `emmeans` or `modmarg`. This is because these packages make extensive use of hard-coded analytical derivatives, or reimplement their own fast prediction functions.
 
 # Parallel computation
 
