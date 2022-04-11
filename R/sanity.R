@@ -109,10 +109,8 @@ sanitize_variables <- function(model, newdata, variables) {
     # factor levels.
     levels_character <- list()
     for (v in variables) {
-        if (v %in% colnames(origindata)) {
-            if (is.character(origindata[[v]])) {
-                levels_character[[v]] <- unique(origindata[[v]])
-            }
+        if (v %in% colnames(origindata) && is.character(origindata[[v]])) {
+            levels_character[[v]] <- unique(origindata[[v]])
         }
     }
     attr(variables_list, "levels_character") <- levels_character

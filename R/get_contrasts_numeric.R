@@ -1,11 +1,20 @@
-get_contrasts_numeric <- function(model,
-                                  newdata,
-                                  variable,
-                                  type = "response",
-                                  contrast_numeric = 1,
-                                  ...) {
+get_contrast_data_numeric <- function(model,
+                                      newdata,
+                                      variable,
+                                      contrast_numeric = 1,
+                                      ...) {
 
-    if (is.numeric(contrast_numeric) && length(contrast_numeric) == 1) {
+
+    eps <- getOption("marginaleffects_deriv_eps", default = 1e-5)
+
+    # slope
+    if (contrast_numeric == "dydx") {
+        low <- newdata[[variable]]
+        high <- newdata[[variable]] + eps
+        lab <- "dydx"
+
+    # other contrasts
+    } else if (is.numeric(contrast_numeric) && length(contrast_numeric) == 1) {
         low <- newdata[[variable]]
         high <- newdata[[variable]] + contrast_numeric
         lab <- sprintf("+%s", contrast_numeric)
@@ -32,48 +41,15 @@ get_contrasts_numeric <- function(model,
         high <- max(newdata[[variable]], na.rm = TRUE)
         lab <- "Max - Min"
     }
-    gap <- high - low
 
-    baseline <- newdata
-
-    baseline[[variable]] <- low
-    pred_baseline <- get_predict(model,
-                                 newdata = baseline,
-                                 type = type,
-                                 ...)
-
-    baseline[[variable]] <- high
-    pred_increment <- get_predict(model,
-                                  newdata = baseline,
-                                  type = type,
-                                  ...)
-
-    contr <- as.vector(pred_increment$predicted) - as.vector(pred_baseline$predicted)
-
-    pred_increment$term <- variable
-
-    # secret argument
-    if (isTRUE(list(...)[["contrast_numeric_slope"]])) {
-        contr <- contr / gap
-        pred_increment$contrast <- "dydx"
-        pred_increment$comparison <- contr
-    } else {
-        pred_increment$contrast <- lab
-        pred_increment$comparison <- contr
-    }
-    pred_increment$predicted <- NULL
-
-    out <- pred_increment
-
-    # bayes: posterior draws and credible intervals
-    if ("posterior_draws" %in% names(attributes(pred_increment))) {
-        draws <- attr(pred_increment, "posterior_draws") - attr(pred_baseline, "posterior_draws")
-        if (isTRUE(list(...)[["contrast_numeric_slope"]])) {
-            attr(out, "posterior_draws") <- draws / contrast_numeric
-        } else {
-            attr(out, "posterior_draws") <- draws
-        }
-    }
-
+    lo <- hi <- newdata
+    lo[[variable]] <- low
+    hi[[variable]] <- high
+    out <- list(rowid = seq_len(nrow(newdata)),
+                lo = lo,
+                hi = hi,
+                original = newdata,
+                ter = rep(variable, nrow(newdata)),
+                lab = rep(lab, nrow(newdata)))
     return(out)
 }

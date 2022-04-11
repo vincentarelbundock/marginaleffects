@@ -62,6 +62,7 @@ get_predict.polr <- function(model,
     if (nrow(newdata) == 1) {
         hack <- TRUE
         newdata <- newdata[c(1, 1), , drop = FALSE]
+        newdata$rowid[1] <- -Inf
     } else {
         hack <- FALSE
     }
@@ -72,9 +73,8 @@ get_predict.polr <- function(model,
                                conf.level = conf.level,
                                ...)
 
-    if (isTRUE(hack)) {
-        out <- out[out$rowid == 1, ]
-    }
+    # hack
+    out <- out[out$rowid != -Inf, ]
 
     return(out)
 }

@@ -13,7 +13,7 @@ test_that("contrast as difference and CI make sense", {
     # problem reported with suggested fix by E.Book in Issue 58
     dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv")
     dat$large_penguin <- ifelse(dat$body_mass_g > median(dat$body_mass_g, na.rm = TRUE), 1, 0)
-    mod <- glm(large_penguin ~ bill_length_mm + flipper_length_mm + species, 
+    mod <- glm(large_penguin ~ bill_length_mm + flipper_length_mm + species,
                data = dat, family = binomial)
     mfx <- marginaleffects(mod)
     ti <- tidy(mfx)

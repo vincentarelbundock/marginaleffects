@@ -24,8 +24,9 @@ Depends:
     R (>= 3.5.0)
 Imports: 
     checkmate,
+    data.table,
     generics,
-    insight (>= 0.16.0),
+    insight (>= 0.17.0),
     methods
 Suggests: 
     bench,

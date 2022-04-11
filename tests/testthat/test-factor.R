@@ -29,7 +29,7 @@ test_that("factor in formula with incomplete newdata", {
     mod <- lm(mpg ~ factor(cyl), data = mtcars)
     mfx1 <- marginaleffects(mod, newdata = data.frame(cyl = 4))
     mfx2 <- marginaleffects(mod, newdata = datagrid(cyl = 4))
-    expect_equal(mfx1[, 1:6], mfx2[, 1:6], ignore_attr = TRUE)
+    expect_equal(mfx1[, 1:5], mfx2[, 1:5], ignore_attr = TRUE)
 })
 
 test_that("bugs stay dead: get_data.coxph() with strata()", {

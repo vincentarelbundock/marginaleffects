@@ -94,18 +94,17 @@ comparisons <- function(model,
     checkmate::assert_choice(contrast_factor, choices = c("reference", "sequential", "pairwise"))
     checkmate::assert(
         checkmate::check_numeric(contrast_numeric, min.len = 1, max.len = 2),
-        checkmate::check_choice(contrast_numeric, choices = c("iqr", "minmax", "sd", "2sd")))
+        checkmate::check_choice(contrast_numeric, choices = c("iqr", "minmax", "sd", "2sd", "dydx")))
 
     # variables vector
     variables_list <- sanitize_variables(model = model, newdata = newdata, variables = variables)
-    variables <- unique(unlist(variables_list))
-    variables <- setdiff(variables, variables_list[["weights"]])
+    variables <- unique(unlist(variables_list, recursive = TRUE))
     # this won't be triggered for multivariate outcomes in `brms`, which
     # produces a list of lists where top level names correspond to names of the
     # outcomes. There should be a more robust way to handle those, but it seems
     # to work for now.
-    if ("conditional" %in% names(variables)) {
-        variables <- intersect(variables, variables[["conditional"]])
+    if ("conditional" %in% names(variables_list)) {
+        variables <- intersect(variables, variables_list[["conditional"]])
     }
 
     # modelbased::visualisation_matrix attaches useful info for plotting
@@ -114,193 +113,110 @@ comparisons <- function(model,
     idx <- !names(attributes_newdata) %in% idx
     attributes_newdata <- attributes_newdata[idx]
 
-    # Create counterfactual datasets with different factor values and compare the predictions
+    # rowid_counterfactual is returned by datagrid(grid.type = "counterfactual")
+    # rowid: row in `newdata`
+    # rowid_counterfactual: row in the original data counterfactualized by data.grid
     if (!"rowid" %in% colnames(newdata)) {
         newdata$rowid <- seq_len(nrow(newdata))
     }
 
-
     # compute contrasts and standard errors
     # do.call and dots to avoid unused argument error in future_lapply
     dots <- list(...)
-    loop <- function(predt, variable) {
+    cache <- get_contrast_data(
+        model = model,
+        newdata = newdata,
+        variables = variables,
+        contrast_factor = contrast_factor,
+        contrast_numeric = contrast_numeric,
+        ...)
+    args <- list(model,
+                 newdata = newdata,
+                 variables = variables,
+                 type = type,
+                 contrast_factor = contrast_factor,
+                 contrast_numeric = contrast_numeric,
+                 cache = cache)
+    args <- c(args, dots)
+    mfx <- do.call("get_contrasts", args)
+
+    # bayesian draws
+    if (!is.null(attr(mfx, "posterior_draws"))) {
+        draws <- attr(mfx, "posterior_draws")
+        J <- NULL
+
+    # standard errors via delta method
+    } else if (!is.null(vcov)) {
+        idx <- intersect(colnames(mfx), c("type", "group", "term", "contrast"))
+        idx <- mfx[, (idx), drop = FALSE]
         args <- list(model,
+                     vcov = vcov,
+                     type = type,
+                     FUN = standard_errors_delta_contrasts,
                      newdata = newdata,
-                     variable = variable,
-                     type = predt,
+                     index = idx,
+                     variables = variables,
+                     cache = cache,
                      contrast_factor = contrast_factor,
                      contrast_numeric = contrast_numeric)
         args <- c(args, dots)
-        mfx <- do.call("get_contrasts", args)
+        se <- do.call("standard_errors_delta", args)
+        mfx$std.error <- as.numeric(se)
+        J <- attr(se, "J")
+        draws <- NULL
 
-        # bayesian draws
-        if (!is.null(attr(mfx, "posterior_draws"))) {
-            draws <- attr(mfx, "posterior_draws")
-            J <- J_mean <- NULL
-
-        # standard errors via delta method
-        } else if (!is.null(vcov)) {
-            idx <- intersect(colnames(mfx), c("type", "group", "term", "contrast"))
-            idx <- mfx[, idx, drop = FALSE]
-            args <- list(model,
-                         vcov = vcov,
-                         type = predt,
-                         FUN = standard_errors_delta_contrasts,
-                         newdata = newdata,
-                         index = idx,
-                         variable = variable,
-                         contrast_factor = contrast_factor,
-                         contrast_numeric = contrast_numeric)
-            args <- c(args, dots)
-            se <- do.call("standard_errors_delta", args)
-            mfx$std.error <- as.numeric(se)
-            J <- attr(se, "J")
-            J_mean <- attr(se, "J_mean")
-            draws <- NULL
-
-        # no standard error
-        } else {
-            J <- J_mean <- draws <- NULL
-        }
-
-        # loop output
-        out <- list(mfx = mfx,
-                    J = J,
-                    J_mean = J_mean,
-                    draws = draws)
-        return(out)
-    }
-
-    idx <- expand.grid(type, variables, stringsAsFactors = FALSE)
-
-    # parallelization
-    flag <- getOption("marginaleffects_parallel", default = TRUE)
-    if (isTRUE(flag) &&
-        isTRUE(check_dependency("future.apply")) &&
-        !"sequential" %in% attributes(future::plan())$class) {
-        tmp <- future.apply::future_lapply(seq_len(nrow(idx)), function(i) loop(idx[i, 1], idx[i, 2]))
+    # no standard error
     } else {
-        tmp <- lapply(seq_len(nrow(idx)), function(i) loop(idx[i, 1], idx[i, 2]))
+        J <- draws <- NULL
     }
 
-    mfx_list <- lapply(tmp, function(x) x[["mfx"]])
-    J_list <- lapply(tmp, function(x) x[["J"]])
-    J_mean_list <- lapply(tmp, function(x) x[["J_mean"]])
-    draws_list <- lapply(tmp, function(x) x[["draws"]])
-
-    out <- bind_rows(mfx_list)
-
-    # duplicate colnames can occur for grouped outcome models, so we can't just
-    # use `poorman::bind_rows()`. Instead, ugly hack to make colnames unique
-    # with a weird string.
-    for (i in seq_along(J_mean_list)) {
-        if (inherits(J_mean_list[[i]], "data.frame")) {
-            newnames <- make.unique(names(J_mean_list[[i]]), sep = "______")
-            J_mean_list[[i]] <- stats::setNames(J_mean_list[[i]], newnames)
-        }
-    }
-    J_mean <- bind_rows(J_mean_list) # bind_rows need because some have contrast col
-    if (inherits(J_mean, "data.frame")) {
-        J_mean <- stats::setNames(J_mean, gsub("______.*$", "", colnames(J_mean)))
-    }
-
-    # duplicate colnames can occur for grouped outcome models, so we can't just
-    # use `poorman::bind_rows()`. Instead, ugly hack to make colnames unique
-    # with a weird string.
-    for (i in seq_along(J_list)) {
-        if (inherits(J_list[[i]], "data.frame")) {
-            newnames <- make.unique(names(J_list[[i]]), sep = "______")
-            J_list[[i]] <- stats::setNames(J_list[[i]], newnames)
-        }
-    }
-
-    # bind_rows need because some have contrast col 
-    J <- try(bind_rows(J_list), silent = TRUE)
-
-    # sometimes binding is hard
-    if (inherits(J, "try-error")) {
-        J <- tryCatch(do.call("rbind", J_list), error = function(e) NULL)
-    }
-
-    if (inherits(J, "data.frame")) {
-        J <- stats::setNames(J, gsub("______.*$", "", colnames(J)))
-    }
-
-    # empty contrasts equal "". important for merging in `tidy()`
-    if ("contrast" %in% colnames(J_mean)) {
-        J_mean$contrast <- ifelse(is.na(J_mean$contrast), "", J_mean$contrast)
-    }
-
-    # standard error at mean gradient (this is what Stata and R's `margins` compute)
-    # J_mean is NULL in bayesian models and where the delta method breaks
-    # J_mean is nrow == 0 in bayesian models and we have data.table
-    if (!is.null(J_mean) && !is.null(vcov) && nrow(J_mean) != 0) {
-        idx <- !colnames(J_mean) %in% c("type", "group", "term", "contrast")
-        tmp <- J_mean[, !idx, drop = FALSE]
-        J_mean_mat <- as.matrix(J_mean[, idx, drop = FALSE])
-        # converting to data.frame can sometimes break colnames
-        colnames(J_mean_mat) <- colnames(J)
-        # aggressive check. probably needs to be relaxed.
-        if (any(colnames(J_mean_mat) != colnames(vcov))) {
-            tmp <- NULL
-            warning("The variance covariance matrix and the Jacobian do not match. `marginaleffects` is unable to compute standard errors using the delta method.",
-                    call. = FALSE)
-        } else {
-            V <- colSums(t(J_mean_mat %*% vcov) * t(J_mean_mat))
-            tmp$std.error <- sqrt(V)
-        }
-        se_at_mean_gradient <- tmp
-    } else {
-        se_at_mean_gradient <- NULL
-    }
+    # meta info
+    mfx[["type"]] <- type
 
     # bayesian posterior draws
-    draws <- do.call("rbind", draws_list)
     if (!is.null(draws)) {
-        if (!"conf.low" %in% colnames(out)) {
+        if (!"conf.low" %in% colnames(mfx)) {
             tmp <- apply(draws, 1, get_eti)
-            out[["std.error"]] <- NULL
-            out[["comparison"]] <- apply(draws, 1, stats::median)
-            out[["conf.low"]] <- tmp[1, ]
-            out[["conf.high"]] <- tmp[2, ]
+            mfx[["std.error"]] <- NULL
+            mfx[["comparison"]] <- apply(draws, 1, stats::median)
+            mfx[["conf.low"]] <- tmp[1, ]
+            mfx[["conf.high"]] <- tmp[2, ]
         }
     }
 
-    # # merge newdata if requested and restore attributes
-    # return_data <- sanitize_return_data()
-    # if (isTRUE(return_data)) {
-    #     out <- left_join(out, newdata, by = "rowid")
-    # }
-
     # DO NOT sort rows because we want draws to match
-    row.names(out) <- NULL
+    row.names(mfx) <- NULL
+
 
     # group id: useful for merging, only if it's an internal call and not user-initiated
-    if (isTRUE(list(...)$internal_call) && !"group" %in% colnames(out)) {
-         out$group <- "main_marginaleffect"
+    if (isTRUE(list(...)$internal_call) && !"group" %in% colnames(mfx)) {
+         mfx$group <- "main_marginaleffect"
     }
 
     # clean columns
-    stubcols <- c("rowid", "type", "group", "term", "contrast", "comparison", "std.error",
+    stubcols <- c("rowid", "rowid_counterfactual", "type", "group", "term", "contrast", "comparison", "std.error",
                   sort(grep("^predicted", colnames(newdata), value = TRUE)))
-    cols <- intersect(stubcols, colnames(out))
-    cols <- unique(c(cols, colnames(out)))
-    out <- out[, cols]
-
-    # we want consistent output, regardless of whether `data.table` is installed/used or not
-    out <- as.data.frame(out)
+    cols <- intersect(stubcols, colnames(mfx))
+    cols <- unique(c(cols, colnames(mfx)))
+    mfx <- mfx[, ..cols, drop = FALSE]
 
     # merge newdata if requested and restore attributes
     # secret argument
     if (!isTRUE(list(...)[["internal_call"]])) {
         return_data <- sanitize_return_data()
         if (isTRUE(return_data)) {
-            out <- left_join(out, newdata, by = "rowid")
+            mfx <- merge(mfx, newdata, by = "rowid")
         }
 
-        if ("group" %in% colnames(out) && all(out$group == "main_marginaleffect")) {
-            out$group <- NULL
+        if ("group" %in% colnames(mfx) && all(mfx$group == "main_marginaleffect")) {
+            mfx$group <- NULL
         }
+    }
+
+    out <- mfx
+
+    if (!isTRUE(list(...)[["return_class"]] == "data.table")) {
+        setDF(out)
     }
 
     class(out) <- c("comparisons", class(out))
@@ -310,8 +226,6 @@ comparisons <- function(model,
     attr(out, "model_type") <- class(model)[1]
     attr(out, "variables") <- variables
     attr(out, "J") <- J
-    attr(out, "J_mean") <- J_mean
-    attr(out, "se_at_mean_gradient") <- se_at_mean_gradient
     attr(out, "vcov") <- vcov
 
     # modelbased::visualisation_matrix attaches useful info for plotting

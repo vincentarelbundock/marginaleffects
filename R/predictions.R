@@ -97,6 +97,7 @@ predictions <- function(model,
         }
     }
 
+
     # modelbased::visualisation_matrix attaches useful info for plotting
     attributes_newdata <- attributes(newdata)
     idx <- c("class", "row.names", "names", "data", "reference")
@@ -104,8 +105,8 @@ predictions <- function(model,
     attributes_newdata <- attributes_newdata[idx]
 
     # save all character levels for padding
-    # later we call call this function again for different purposes
-    levels_character <- attr(sanitize_variables(model, newdata, variables), "levels_character")
+    # later we call this function again for different purposes
+    levels_character <- attr(sanitize_variables(model, newdata = NULL, variables), "levels_character")
 
     # check before inferring `newdata`
     if (!is.null(variables) && !is.null(newdata)) {
@@ -129,93 +130,86 @@ predictions <- function(model,
         variables <- sanitize_variables(model, newdata, variables)
     }
 
-    # for merging later
-    newdata$rowid_internal <- 1:nrow(newdata)
+    # trust newdata$rowid
+    if (!"rowid" %in% colnames(newdata)) {
+        newdata[["rowid"]] <- seq_len(nrow(newdata))
+    }
 
     # pad factors: `get_predicted/model.matrix` break when factor levels are missing
     padding <- complete_levels(newdata, levels_character)
-    newdata <- rbind(padding, newdata)
+    newdata <- rbindlist(list(padding, newdata))
 
     # predictions
-    out_list <- list()
-    draws_list <- list()
-    for (predt in type) {
-        # extract
-        tmp <- get_predict(model,
-                           newdata = newdata,
-                           type = predt,
-                           conf.level = conf.level,
-                           ...)
+    tmp <- get_predict(model,
+                       newdata = newdata,
+                       type = type,
+                       conf.level = conf.level,
+                       ...)
 
-        if (inherits(tmp, "data.frame")) {
-            colnames(tmp)[colnames(tmp) == "Predicted"] <- "predicted"
-            colnames(tmp)[colnames(tmp) == "SE"] <- "std.error"
-            colnames(tmp)[colnames(tmp) == "CI_low"] <- "conf.low"
-            colnames(tmp)[colnames(tmp) == "CI_high"] <- "conf.high"
-            tmp$rowid_internal <- newdata$rowid_internal
-            tmp$type <- predt
-        } else {
-            tmp <- data.frame(newdata$rowid_internal, predt, tmp)
-            colnames(tmp) <- c("rowid_internal", "type", "predicted")
+    # two cases when tmp is a data.frame
+    # insight::get_predicted gets us Predicted et al. but now rowid
+    # get_predict gets us rowid with the original rows
+    if (inherits(tmp, "data.frame")) {
+        setnames(tmp,
+                 old = c("Predicted", "SE", "CI_low", "CI_high"),
+                 new = c("predicted", "std.error", "conf.low", "conf.high"),
+                 skip_absent = TRUE)
+    } else {
+        tmp <- data.frame(newdata$rowid, type, tmp)
+        colnames(tmp) <- c("rowid", "type", "predicted")
+        if ("rowid_counterfactual" %in% colnames(newdata)) {
+            tmp[["rowid_counterfactual"]] <- newdata[["rowid_counterfactual"]]
         }
+    }
+    tmp$type <- type
 
-        # try to extract standard errors via the delta method if necessary
-        if (is.numeric(conf.level) &&
-            !any(c("std.error", "conf.low") %in% colnames(tmp))) {
+    if (!"rowid" %in% colnames(tmp) && nrow(tmp) == nrow(newdata)) {
+        tmp$rowid <- newdata$rowid
+    }
 
-            vcov <- try(get_vcov(model), silent = TRUE)
-            if (!inherits(vcov, "try-error") && is.matrix(vcov)) {
-                fun <- function(...) get_predict(...)[["predicted"]]
-                se <- standard_errors_delta(model,
-                                            newdata = newdata,
-                                            vcov = get_vcov(model),
-                                            type = predt,
-                                            FUN = fun,
-                                            ...)
-                if (is.numeric(se) && length(se) == nrow(tmp)) {
-                    tmp[["std.error"]] <- se
-                    flag <- tryCatch(insight::model_info(model)$is_linear,
-                                     error = function(e) FALSE)
-                    if (isTRUE(flag)) {
-                        critical_z <- abs(stats::qnorm((1 - conf.level) / 2))
-                        tmp[["conf.low"]] <- tmp[["predicted"]] - critical_z * tmp[["std.error"]]
-                        tmp[["conf.high"]] <- tmp[["predicted"]] + critical_z * tmp[["std.error"]]
-                    }
+    # try to extract standard errors via the delta method if necessary
+    if (is.numeric(conf.level) &&
+        !any(c("std.error", "conf.low") %in% colnames(tmp))) {
+
+        vcov <- try(get_vcov(model), silent = TRUE)
+        if (!inherits(vcov, "try-error") && is.matrix(vcov)) {
+            fun <- function(...) get_predict(...)[["predicted"]]
+            se <- standard_errors_delta(model,
+                                        newdata = newdata,
+                                        vcov = get_vcov(model),
+                                        type = type,
+                                        FUN = fun,
+                                        ...)
+            if (is.numeric(se) && length(se) == nrow(tmp)) {
+                tmp[["std.error"]] <- se
+                flag <- tryCatch(insight::model_info(model)$is_linear,
+                                 error = function(e) FALSE)
+                if (isTRUE(flag)) {
+                    critical_z <- abs(stats::qnorm((1 - conf.level) / 2))
+                    tmp[["conf.low"]] <- tmp[["predicted"]] - critical_z * tmp[["std.error"]]
+                    tmp[["conf.high"]] <- tmp[["predicted"]] + critical_z * tmp[["std.error"]]
                 }
             }
         }
-
-        out_list[[predt]] <- tmp
-        draws <- attr(tmp, "posterior_draws")
-        draws_list[[predt]] <- draws
     }
 
-    out <- bind_rows(out_list)
-    draws <- do.call("rbind", draws_list) # poorman::bind_rows does not work on matrices
+    out <- data.table(tmp)
+    draws <- attr(tmp, "posterior_draws")
 
     # unpad factors
-    idx <- out$rowid_internal > 0
-    out <- out[idx, , drop = FALSE]
-    draws <- draws[idx, , drop = FALSE]
+    out <- out[(nrow(padding) + 1):nrow(out),]
+    newdata <- newdata[(nrow(padding) + 1):nrow(newdata),]
 
     # return data
     # base::merge() mixes row order
-    out <- left_join(out, newdata, by = "rowid_internal")
-
-    # rowid does not make sense here because the grid is made up
-    # Wrong! rowid does make sense when we use `counterfactual()` in `newdata`
-    out$rowid_internal <- NULL
+    out <- merge(out, newdata, by = "rowid")
 
     # clean columns
     stubcols <- c("rowid", "type", "term", "group", "predicted", "std.error", "conf.low", "conf.high",
                   sort(grep("^predicted", colnames(newdata), value = TRUE)))
     cols <- intersect(stubcols, colnames(out))
     cols <- unique(c(cols, colnames(out)))
-    out <- out[, cols, drop = FALSE]
-    row.names(out) <- NULL
-
-    # we want consistent output, regardless of whether `data.table` is installed/used or not
-    out <- as.data.frame(out)
+    out <- out[, cols, drop = FALSE, with = FALSE]
 
     class(out) <- c("predictions", class(out))
     attr(out, "model") <- model

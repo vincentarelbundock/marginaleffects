@@ -11,7 +11,7 @@ test_that("old bug: counterfactual with a single regressor", {
 test_that("marginal effects does not overwrite counterfactual rowid", {
     mod <- glm(am ~ mpg + factor(cyl), data = mtcars, family = binomial)
     mfx <- marginaleffects(mod, newdata = datagrid(cyl = c(4, 6, 8), grid.type = "counterfactual"))
-    expect_true(all(mfx$rowid_original %in% 1:32))
+    expect_true(all(mfx$rowid_counterfactual %in% 1:32))
     expect_true(all(mfx$rowid %in% 1:96))
 })
 
