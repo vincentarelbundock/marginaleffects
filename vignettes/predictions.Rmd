@@ -107,8 +107,8 @@ Then, we can use this dataset and the `predictions` function to create interesti
 
 ```{r, fig.asp = 1}
 pred <- predictions(mod, newdata = datagrid(am = 0:1, grid.type = "counterfactual")) %>%
-    select(am, predicted, rowid_original) %>%
-    pivot_wider(id_cols = rowid_original, 
+    select(am, predicted, rowid_counterfactual) %>%
+    pivot_wider(id_cols = rowid_counterfactual, 
                 names_from = am,
                 values_from = predicted)
 

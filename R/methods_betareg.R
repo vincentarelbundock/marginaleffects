@@ -8,10 +8,13 @@ set_coef.betareg <- function(model, coefs) {
     model
 }
 
-
 #' @include get_coef.R
 #' @rdname get_coef
 #' @export
 get_coef.betareg <- function(model, ...) {
     model$coefficients$mean
 }
+
+
+
+

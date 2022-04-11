@@ -10,12 +10,20 @@ get_jacobian <- function(func, x) {
     if (isTRUE(flag)) {
         eps <- 1e-4
         baseline <- func(x)
-        df <- matrix(NA, length(baseline), length(x))
+        # df <- matrix(NA, length(baseline), length(x))
+        # for (i in seq_along(x)) {
+        #     dx <- x
+        #     dx[i] <- dx[i] + eps
+        #     df[, i] <- (func(dx) - baseline) / eps
+        # }
+        df <- data.table(matrix(NA_real_, length(baseline), length(x)))
         for (i in seq_along(x)) {
             dx <- x
             dx[i] <- dx[i] + eps
-            df[, i] <- (func(dx) - baseline) / eps
+            df[, (i) := (func(dx) - baseline) / eps]
         }
+        df <- as.matrix(df)
+        colnames(df) <- NULL
 
     # numDeriv package (more flexible)
     } else {

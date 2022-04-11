@@ -12,7 +12,7 @@ standard_errors_delta_marginalmeans <- function(model,
 
 
 standard_errors_delta_contrasts <- function(model,
-                                            variable,
+                                            variables,
                                             newdata,
                                             type,
                                             contrast_factor,
@@ -20,7 +20,7 @@ standard_errors_delta_contrasts <- function(model,
                                             ...) {
     get_contrasts(model,
                   newdata = newdata,
-                  variable = variable,
+                  variables = variables,
                   type = type,
                   contrast_factor = contrast_factor,
                   contrast_numeric = contrast_numeric,
@@ -87,12 +87,6 @@ standard_errors_delta <- function(model,
 
     colnames(J) <- names(get_coef(model))
 
-    if (!is.null(index)) {
-        J_mean <- stats::aggregate(J, by = index, FUN = mean, na.rm = TRUE)
-    } else {
-        J_mean <- NULL
-    }
-
     # Var(dydx) = J Var(beta) J'
     # computing the full matrix is memory-expensive, and we only need the diagonal
     # algebra trick: https://stackoverflow.com/a/42569902/342331
@@ -100,7 +94,6 @@ standard_errors_delta <- function(model,
 
 
     attr(se, "J") <- J
-    attr(se, "J_mean") <- J_mean
 
     return(se)
 }

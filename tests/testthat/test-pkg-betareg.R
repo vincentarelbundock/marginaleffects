@@ -40,7 +40,7 @@ test_that("predictions: no validity", {
     set.seed(1024)
     data("GasolineYield", package = "betareg")
     mod <- betareg::betareg(yield ~ batch + temp, data = GasolineYield)
-    pred <- predictions(mod)
+    pred <- suppressWarnings(predictions(mod))
     expect_predictions(pred, n_row = nrow(GasolineYield))
     pred <- predictions(mod, newdata = datagrid(batch = 1:3, temp = c(300, 350)))
     expect_predictions(pred, n_row = 6)

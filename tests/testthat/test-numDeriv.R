@@ -1,3 +1,5 @@
+skip("numDeriv is no longer supported")
+
 skip_if_not_installed("numDeriv")
 
 test_that("numDeriv global options", {

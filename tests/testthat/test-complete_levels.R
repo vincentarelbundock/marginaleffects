@@ -7,6 +7,6 @@ test_that("padding with interactions", {
     dat$certified_fresh <- dat$rating >= 8
     dat <- dat[dat$length < 240,]
     mod <- glm(certified_fresh ~ length * style, data = dat, family = binomial)
-    res <- predictions(mod, type = c("response", "link"))
-    expect_predictions(res, n_row = nrow(dat) * 2)
+    res <- predictions(mod, type = "response")
+    expect_predictions(res, n_row = nrow(dat))
 })

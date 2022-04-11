@@ -69,7 +69,7 @@ test_that("glmer vs. stata vs. emtrends", {
     em <- emtrends(mod, ~x1, "x1", at = list(x1 = 0, x2 = 0, clus = 1))
     em <- tidy(em)
     expect_equal(mfx$dydx, em$x1.trend)
-    expect_equal(mfx$std.error, em$std.error)
+    expect_equal(mfx$std.error, em$std.error, tolerance = 1e-6)
 })
 
 test_that("lmer vs. stata", {
@@ -150,7 +150,7 @@ test_that("glmer.nb: marginaleffects vs. emtrends", {
     em <- emtrends(mod, ~x, "x", at = list(g = 2))
     em <- tidy(em)
     expect_equal(mfx$dydx, em$x.trend)
-    expect_equal(mfx$std.error, em$std.error)
+    expect_equal(mfx$std.error, em$std.error, tolerance = 1e-6)
 
     # margins
     mar <- tidy(margins(mod))

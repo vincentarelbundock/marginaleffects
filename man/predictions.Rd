@@ -50,8 +50,8 @@ A \code{data.frame} with one row per observation and several columns:
 \item \code{group}: (optional) value of the grouped outcome (e.g., categorical outcome models)
 \item \code{predicted}: predicted outcome
 \item \code{std.error}: standard errors computed by the \code{insight::get_predicted} function or, if unavailable, via \code{marginaleffects} delta method functionality.
-\item \code{conf.low}: lower bound of the confidence or highest density interval (for bayesian models)
-\item \code{conf.high}: upper bound of the confidence or highest density interval (for bayesian models)
+\item \code{conf.low}: lower bound of the confidence interval (or equal-tailed interval for bayesian models)
+\item \code{conf.high}: upper bound of the confidence interval (or equal-tailed interval for bayesian models)
 }
 }
 \description{

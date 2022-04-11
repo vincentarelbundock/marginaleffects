@@ -38,98 +38,13 @@ tidy.marginaleffects <- function(x,
                                  conf.level = 0.95,
                                  by = NULL,
                                  ...) {
-
-    # group averages
-    if (!is.null(by)) {
-        flag <- isTRUE(checkmate::check_character(by)) &&
-                isTRUE(checkmate::check_true(all(by %in% colnames(x))))
-        if (!isTRUE(flag)) {
-            msg <- "The `by` argument must be a character vector and every element of the vector must correspond to a column name in the `x` marginal effects object."
-            stop(msg, call. = FALSE)
-        }
-    }
-
-    # empty initial mfx data.frame means there were no numeric variables in the
-    # model
-    if ("term" %in% colnames(x)) {
-        lhs <- intersect(c("dydx", "conf.low", "conf.high"), colnames(x))
-        rhs <- intersect(c("type", "group", "term", "contrast", by), colnames(x))
-        lhs <- sprintf("cbind(%s)", paste(lhs, collapse = ", "))
-        rhs <- paste(rhs, collapse = " + ")
-        form <- sprintf("%s ~ %s", lhs, rhs)
-        form <- stats::as.formula(form)
-        dydx <- stats::aggregate(form, data = x, FUN = mean, na.rm = TRUE)
-
-        ## This might be a useful implementation of weights
-        # if (is.null(attr(x, "weights"))) {
-        #     dydx <- stats::aggregate(f, data = x, FUN = mean)
-        # } else {
-        #     dydx <- stats::aggregate(f, data = x, FUN = weighted.mean, w = attr(x, "weights"))
-        # }
-
-        # standard errors at the average
-        if (is.null(by)) {
-            se <- attr(x, "se_at_mean_gradient")
-            if (!is.null(se)) {
-                if ("group" %in% colnames(se) && 
-                    all(se$group == "main_marginaleffect")) {
-                    se$group <- NULL
-                }
-                dydx <- merge(dydx, se, all.x = TRUE)
-            }
-
-        # standard errors at the group average
-        } else {
-            J <- attr(x, "J")
-            V <- attr(x, "vcov")
-            if (!is.null(J) && !is.null(V)) {
-                idx <- intersect(c("type", "group", "term", "contrast", by), colnames(x))
-                J_mean <- stats::aggregate(J, by = as.list(x[, idx]), FUN = mean)
-                J_mean <- J_mean[, -match(idx, colnames(J_mean))]
-                J_mean <- as.matrix(J_mean)
-                V <- colSums(t(J_mean %*% V) * t(J_mean))
-                dydx$std.error <- sqrt(V)
-            }
-        }
-
-        colnames(dydx)[match("dydx", colnames(dydx))] <- "estimate"
-
-    } else {
-        # avoids namespace conflict with `margins`
-        dydx <- data.frame()
-    }
-
-    if (!"statistic" %in% colnames(dydx) && "std.error" %in% colnames(dydx)) {
-        dydx$statistic <- dydx$estimate / dydx$std.error
-    }
-
-    if (!"p.value" %in% colnames(dydx) && "std.error" %in% colnames(dydx)) {
-        dydx$p.value <- 2 * (1 - stats::pnorm(abs(dydx$statistic)))
-    }
-
-    out <- dydx
-
-    # confidence intervals
-    if ("std.error" %in% colnames(out)) {
-        if (isTRUE(conf.int) && !"conf.low" %in% colnames(out)) {
-            alpha <- 1 - conf.level
-            out$conf.low <- out$estimate + stats::qnorm(alpha / 2) * out$std.error
-            out$conf.high <- out$estimate - stats::qnorm(alpha / 2) * out$std.error
-        }
-    }
-
-    # remove terms with precise zero estimates. typically the case in
-    # multi-equation models where some terms only affect one response
-    out <- out[out$estimate != 0,]
-
-    # sort and subset columns
-    cols <- c("type", "group", "term", "contrast", by, "estimate", "std.error",
-              "statistic", "p.value", "conf.low", "conf.high")
-    out <- out[, intersect(cols, colnames(out)), drop = FALSE]
-    out <- as.data.frame(out)
-
-    attr(out, "conf.level") <- conf.level
-
+    x_dt <- copy(x)
+    setnames(x_dt, old = "dydx", new = "comparison")
+    out <- tidy.comparisons(x_dt,
+                            conf.int = conf.int,
+                            conf.level = conf.level,
+                            by = by,
+                            ...)
     return(out)
 }
 
@@ -282,71 +197,65 @@ tidy.comparisons <- function(x,
         flag <- isTRUE(checkmate::check_character(by)) &&
                 isTRUE(checkmate::check_true(all(by %in% colnames(x))))
         if (!isTRUE(flag)) {
-            msg <- "The `by` argument must be a character vector and every element of the vector must correspond to a column name in the `x` comparisons object."
+            msg <- "The `by` argument must be a character vector and every element of the vector must correspond to a column name in the `x` marginal effects object."
             stop(msg, call. = FALSE)
         }
     }
 
-    # dydx averages
+    x_dt <- data.table(x)
+
     # empty initial mfx data.frame means there were no numeric variables in the
     # model
-    if ("term" %in% colnames(x)) {
-        lhs <- intersect(c("comparison", "conf.low", "conf.high"), colnames(x))
-        rhs <- intersect(c("type", "group", "term", "contrast", by), colnames(x))
-        lhs <- sprintf("cbind(%s)", paste(lhs, collapse = ", "))
-        rhs <- paste(rhs, collapse = " + ")
-        form <- sprintf("%s ~ %s", lhs, rhs)
-        form <- stats::as.formula(form)
-        dydx <- stats::aggregate(form, data = x, FUN = mean, na.rm = TRUE)
+    if ("term" %in% colnames(x_dt)) {
 
-        ## This might be a useful implementation of weights
-        # if (is.null(attr(x, "weights"))) {
-        #     dydx <- stats::aggregate(f, data = x, FUN = mean)
-        # } else {
-        #     dydx <- stats::aggregate(f, data = x, FUN = weighted.mean, w = attr(x, "weights"))
-        # }
+        J <- attr(x, "J")
+        V <- attr(x, "vcov")
 
-        # standard errors at the average
-        if (is.null(by)) {
-            se <- attr(x, "se_at_mean_gradient")
-            if (!is.null(se)) {
-                if ("group" %in% colnames(se) && 
-                    all(se$group == "main_marginaleffect")) {
-                    se$group <- NULL
-                }
-                dydx <- merge(dydx, se, all.x = TRUE)
-            }
+        idx_by <- intersect(c("type", "group", "term", "contrast", by), colnames(x_dt))
+        idx_na <- is.na(x_dt$comparison)
 
-        # standard errors at the group average
-        } else {
-            J <- attr(x, "J")
-            V <- attr(x, "vcov")
-            if (!is.null(J) && !is.null(V)) {
-                idx <- intersect(c("type", "group", "term", "contrast", by), colnames(x))
-                J_mean <- stats::aggregate(J, by = as.list(x[, idx]), FUN = mean)
-                J_mean <- J_mean[, -match(idx, colnames(J_mean))]
-                J_mean <- as.matrix(J_mean)
-                V <- colSums(t(J_mean %*% V) * t(J_mean))
-                dydx$std.error <- sqrt(V)
-            }
+        # average marginal effects
+        ame <- x_dt[idx_na == FALSE, .(estimate = mean(comparison, na.rm = TRUE)), keyby = idx_by]
+
+        if (is.matrix(J) && is.matrix(V)) {
+            # Jacobian at the group mean
+            # use weird colnames to avoid collision
+            idx_pad <- x_dt[, ..idx_by]
+            idx_col_old <- colnames(idx_pad)
+            idx_col_new <- paste0(idx_col_old, "_marginaleffects_index")
+            setnames(idx_pad,
+                     old = colnames(idx_pad),
+                     new = paste0(colnames(idx_pad), "_marginaleffects_index"))
+
+            J <- data.table(idx_pad, J)
+
+            J <- J[idx_na == FALSE,]
+            x_dt <- x_dt[idx_na == FALSE,]
+
+            tmp <- paste0(idx_by, "_marginaleffects_index")
+            J_mean <- J[, lapply(.SD, mean, na.rm = TRUE), keyby = tmp]
+            J_mean <- J_mean[, !..tmp]
+            J_mean <- as.matrix(J_mean)
+
+            # standard errors at the group mean
+            se <- sqrt(colSums(t(J_mean %*% V) * t(J_mean)))
+            ame[, std.error := se]
         }
-
-        colnames(dydx)[match("comparison", colnames(dydx))] <- "estimate"
 
     } else {
         # avoids namespace conflict with `margins`
-        dydx <- data.frame()
+        ame <- data.frame()
     }
 
-    if (!"statistic" %in% colnames(dydx) && "std.error" %in% colnames(dydx)) {
-        dydx$statistic <- dydx$estimate / dydx$std.error
+    if (!"statistic" %in% colnames(ame) && "std.error" %in% colnames(ame)) {
+        ame$statistic <- ame$estimate / ame$std.error
     }
 
-    if (!"p.value" %in% colnames(dydx) && "std.error" %in% colnames(dydx)) {
-        dydx$p.value <- 2 * (1 - stats::pnorm(abs(dydx$statistic)))
+    if (!"p.value" %in% colnames(ame) && "std.error" %in% colnames(ame)) {
+        ame$p.value <- 2 * (1 - stats::pnorm(abs(ame$statistic)))
     }
 
-    out <- dydx
+    out <- ame
 
     # confidence intervals
     if ("std.error" %in% colnames(out)) {
@@ -361,20 +270,19 @@ tidy.comparisons <- function(x,
     # multi-equation models where some terms only affect one response
     out <- out[out$estimate != 0,]
 
-    # drop group if useless
-    if (all(out$group == "main_marginaleffect")) {
-        out$group <- NULL
-    }
-
     # sort and subset columns
     cols <- c("type", "group", "term", "contrast", by, "estimate", "std.error",
               "statistic", "p.value", "conf.low", "conf.high")
-    out <- out[, intersect(cols, colnames(out)), drop = FALSE]
-    out <- as.data.frame(out)
+    cols <- intersect(cols, colnames(out))
+    out <- out[, cols, drop = FALSE, with = FALSE]
+
+    setDF(out)
 
     attr(out, "conf.level") <- conf.level
 
+    if (exists("J_mean")) {
+        attr(out, "J") <- J_mean
+    }
+
     return(out)
 }
-
-

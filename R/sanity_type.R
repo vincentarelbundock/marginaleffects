@@ -7,7 +7,7 @@
 #' @noRd
 sanity_type <- function(model, type, calling_function = NULL) {
 
-    checkmate::assert_character(type, min.len = 1, null.ok = FALSE)
+    checkmate::assert_character(type, len = 1, null.ok = FALSE)
     checkmate::assert_choice(calling_function,
                              choices = c("comparisons", "marginaleffects", "predictions"),
                              null.ok = TRUE)
