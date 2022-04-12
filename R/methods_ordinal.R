@@ -31,9 +31,15 @@ get_predict.clm <- function(model,
                            type = type)$fit
 
     out <- data.frame(
-        rowid = rep(1:nrow(pred), times = ncol(pred)),
         group = rep(colnames(pred), each = nrow(pred)),
         predicted = c(pred))
+
+    # often an internal call
+    if ("rowid" %in% colnames(newdata)) {
+        out$rowid <- rep(newdata$rowid, times = ncol(pred))
+    } else {
+        out$rowid <- rep(1:nrow(pred), times = ncol(pred))
+    }
 
     return(out)
 }

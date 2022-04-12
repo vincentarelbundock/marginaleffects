@@ -67,8 +67,8 @@
 #' plot_cap(mod, condition = "hp")
 #' @export
 predictions <- function(model,
-                        variables = NULL,
                         newdata = NULL,
+                        variables = NULL,
                         conf.level = 0.95,
                         type = "response",
                         ...) {
@@ -198,11 +198,14 @@ predictions <- function(model,
 
     # unpad factors
     out <- out[(nrow(padding) + 1):nrow(out),]
-    newdata <- newdata[(nrow(padding) + 1):nrow(newdata),]
+    newdata <- newdata[(nrow(padding) + 1):nrow(newdata), , drop = FALSE]
+    if (!is.null(draws)) {
+        draws <- draws[(nrow(padding) + 1):nrow(draws), , drop = FALSE]
+    }
 
     # return data
-    # base::merge() mixes row order
-    out <- merge(out, newdata, by = "rowid")
+    # very import to avoid sorting, otherwise bayesian draws won't fit predictions
+    out <- merge(out, newdata, by = "rowid", sort = FALSE)
 
     # clean columns
     stubcols <- c("rowid", "type", "term", "group", "predicted", "std.error", "conf.low", "conf.high",
@@ -225,7 +228,12 @@ predictions <- function(model,
     # bayesian: store draws posterior density draws
     attr(out, "posterior_draws") <- draws
     if (!is.null(draws)) {
-        tmp <- apply(draws, 1, get_eti, credMass = conf.level)
+        flag <- getOption("marginaleffects_credible_interval", default = "eti")
+        if (isTRUE(flag == "hdi")) {
+            tmp <- apply(draws, 1, get_hdi, credMass = conf.level)
+        } else {
+            tmp <- apply(draws, 1, get_eti, credMass = conf.level)
+        }
         out[["predicted"]] <- apply(draws, 1, stats::median)
         out[["std.error"]] <- NULL
         out[["conf.low"]] <- tmp[1, ]

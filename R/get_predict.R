@@ -107,23 +107,35 @@ get_predict.default <- function(model,
     # atomic vector
     if (isTRUE(checkmate::check_atomic_vector(pred))) {
         # strip weird attributes added by some methods (e.g., predict.svyglm)
-        out <- data.table(predicted = as.numeric(pred))
+        if (length(pred) == nrow(newdata)) {
+            if ("rowid" %in% colnames(newdata)) {
+                out <- data.table(predicted = as.numeric(pred),
+                                  rowid = newdata$rowid)
+            } else {
+                out <- data.table(predicted = as.numeric(pred),
+                                  rowid = seq_len(length(pred)))
+            }
+        }
 
     # matrix with outcome levels as columns
     } else if (is.matrix(pred)) {
         # internal calls always includes "rowid" as a column in `newdata`
         if ("rowid" %in% colnames(newdata)) {
-            rowid <- rep(newdata[["rowid"]], times = ncol(pred))
+            out <- data.table(
+                rowid = rep(newdata[["rowid"]], times = ncol(pred)),
+                group = rep(colnames(pred), each = nrow(pred)),
+                predicted = c(pred))
         } else {
-            rowid <- rep(seq_len(nrow(pred)), times = ncol(pred))
+            out <- data.table(
+                rowid = rep(seq_len(nrow(pred)), times = ncol(pred)),
+                group = rep(colnames(pred), each = nrow(pred)),
+                predicted = c(pred))
         }
-        out <- data.table(
-            rowid = rowid,
-            group = rep(colnames(pred), each = nrow(pred)),
-            predicted = c(pred))
     } else {
         stop(sprintf("Unable to extract predictions of type %s from a model of class %s. Please report this problem, along with reproducible code and data on Github: https://github.com/vincentarelbundock/marginaleffects/issues", type, class(model)[1]))
     }
+
+    setDF(out)
 
     return(out)
 }

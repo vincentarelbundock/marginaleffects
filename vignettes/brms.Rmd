@@ -50,13 +50,6 @@ See the `brms` documentation for a list of available arguments:
 ?brms::posterior_predict
 ```
 
-Note that support for `brms` will be available in version 0.3.0 of `marginaleffects`. Until that version is released on CRAN, it can be installed from the development repository:
-
-```{r, eval = FALSE}
-library(remotes)
-install_github("vincentarelbundock/marginaleffects")
-```
-
 # Logistic regression with multiplicative interactions
 
 Load libraries and download data on passengers of the Titanic from [the Rdatasets archive:](https://vincentarelbundock.github.io/Rdatasets/)
@@ -201,19 +194,20 @@ mod <- brm(
 To compute posterior predictions for specific values of the regressors, we use the `newdata` argument and the `datagrid` function. We also use the `type` argument to compute two types of predictions: accounting for residual (observation-level) residual variance (`prediction`) or ignoring it (`response`).
 
 ```{r}
-pred <- predictions(mod,
-                    type = c("response", "prediction"),
-                    newdata = datagrid(party_autonomy = c(TRUE, FALSE),
-                                       civil_liberties = .5,
-                                       region = "Middle East and North Africa"))
-pred
+nd = datagrid(model = mod,
+              party_autonomy = c(TRUE, FALSE),
+              civil_liberties = .5,
+              region = "Middle East and North Africa")
+p1 <- predictions(mod, type = "response", newdata = nd) %>%
+    posteriordraws()
+p2 <- predictions(mod, type = "prediction", newdata = nd) %>%
+    posteriordraws()
+pred <- rbind(p1, p2)
 ```
 
 Extract posterior draws and plot them:
 
 ```{r}
-pred <- posteriordraws(pred)
-
 ggplot(pred, aes(x = draw, fill = party_autonomy)) +
     stat_halfeye(alpha = .5) +
     facet_wrap(~ type) +

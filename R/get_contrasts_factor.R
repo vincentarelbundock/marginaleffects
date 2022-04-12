@@ -35,7 +35,7 @@ get_contrast_data_factor <- function(model,
                                            hi = levs[2:length(levs)])
     }
     levs_idx$label <- sprintf("%s - %s", levs_idx$hi, levs_idx$lo)
-    levs_idx <- setNames(levs_idx, paste0("marginaleffects_contrast_", colnames(levs_idx)))
+    levs_idx <- stats::setNames(levs_idx, paste0("marginaleffects_contrast_", colnames(levs_idx)))
 
     # https://github.com/Rdatatable/data.table/issues/1717#issuecomment-545758165
     CJDT <- function(...) {

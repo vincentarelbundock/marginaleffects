@@ -257,7 +257,10 @@ Typical values include `"response"` and `"link"`, but users should refer to the 
 
 ```{r}
 mod <- glm(am ~ mpg, family = binomial, data = mtcars)
-mfx <- marginaleffects(mod, type = c("response", "link"))
+mfx <- marginaleffects(mod, type = "response")
+summary(mfx)
+
+mfx <- marginaleffects(mod, type = "link")
 summary(mfx)
 ```
 

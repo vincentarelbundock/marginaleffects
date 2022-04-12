@@ -80,7 +80,6 @@ mblogit,link,link,TRUE,TRUE
 mclogit,link,link,TRUE,TRUE
 mclogit,response,expectation,FALSE,TRUE
 multinom,probs,expectation,TRUE,TRUE
-multinom,class,classification,FALSE,TRUE
 negbin,link,link,TRUE,TRUE
 negbin,response,expectation,TRUE,TRUE
 polr,probs,expectation,TRUE,TRUE

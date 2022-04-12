@@ -32,7 +32,6 @@ Suggests:
     bench,
     brms,
     broom,
-    data.table,
     dplyr,
     emmeans,
     future,
@@ -58,6 +57,7 @@ Suggests:
     aod,
     betareg,
     bife,
+    BH,
     brglm2,
     crch,
     estimatr,
@@ -78,6 +78,7 @@ Suggests:
     ordinal,
     plm,
     pscl,
+    RcppEigen,
     rms,
     robust,
     robustbase,
@@ -104,9 +105,7 @@ Collate:
     'get_contrasts_factor.R'
     'get_contrasts_logical.R'
     'get_contrasts_numeric.R'
-    'get_dydx.R'
     'get_eti.R'
-    'get_gradient.R'
     'get_group_names.R'
     'get_hdi.R'
     'get_jacobian.R'
@@ -135,7 +134,6 @@ Collate:
     'methods_plm.R'
     'methods_pscl.R'
     'methods_quantreg.R'
-    'methods_robust.R'
     'methods_robustlmm.R'
     'methods_rstanarm.R'
     'methods_sampleSelection.R'
@@ -146,7 +144,6 @@ Collate:
     'plot.R'
     'plot_cap.R'
     'plot_cme.R'
-    'poorman.R'
     'posteriordraws.R'
     'predictions.R'
     'sanity.R'

@@ -90,6 +90,7 @@ test_that("tidy: with and without contrasts", {
 
 
 test_that("bugs stay dead: multi-type are not duplicated", {
+    skip("type vector")
     mod <- glm(am ~ mpg, family = binomial, data = mtcars)
     mfx <- marginaleffects(mod, type = c("response", "link"))
     ti <- tidy(mfx)

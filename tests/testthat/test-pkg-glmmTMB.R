@@ -1,5 +1,4 @@
 requiet("glmmTMB")
-requiet("broom")
 
 test_that("marginaleffects no validity", {
     Owls <- transform(Owls,
@@ -27,6 +26,8 @@ test_that("marginaleffects no validity", {
 
 
 test_that("comparisons vs. emmeans", {
+    requiet("emmeans")
+    requiet("broom")
     # Zero-inflated negative binomial model
     m2 <- glmmTMB(count ~ spp + mined + (1 | site),
       zi = ~spp + mined,

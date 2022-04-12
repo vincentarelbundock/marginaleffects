@@ -12,9 +12,6 @@ generics::glance
 #'
 #' @param x An object produced by the `marginaleffects` function.
 #' @param conf.int Logical indicating whether or not to include a confidence interval.
-#' @param conf.level The confidence level to use for the confidence interval if
-#'   `conf.int=TRUE`. Must be strictly greater than 0 and less than 1. Defaults
-#'   to 0.95, which corresponds to a 95 percent confidence interval.
 #' @param by Character vector of variable names over which to compute group-averaged marginal effects.
 #' @inheritParams marginaleffects
 #' @return A "tidy" `data.frame` of summary statistics which conforms to the
@@ -138,16 +135,8 @@ glance.comparisons <- glance.marginaleffects
 tidy.predictions <- function(x, ...) {
 
     # Average Adjusted Predictions
-    # empty initial mfx data.frame means there were no numeric variables in the
-    # model
-    # lhs <- intersect(c("predicted", "std.error", "conf.low", "conf.high"), colnames(x))
-    lhs <- intersect(c("predicted"), colnames(x))
-    rhs <- intersect(c("type", "group"), colnames(x))
-    lhs <- sprintf("cbind(%s)", paste(lhs, collapse = ", "))
-    rhs <- paste(rhs, collapse = " + ")
-    form <- sprintf("%s ~ %s", lhs, rhs)
-    form <- stats::as.formula(form)
-    predicted <- stats::aggregate(form, data = x, FUN = mean, na.rm = TRUE)
+    idx <- intersect(colnames(x), c("type", "group"))
+    out <- data.table(x)[, .(estimate = mean(predicted, na.rm = TRUE)), by = idx]
 
     ## This might be a useful implementation of weights
     # if (is.null(attr(x, "weights"))) {
@@ -156,16 +145,7 @@ tidy.predictions <- function(x, ...) {
     #     dydx <- stats::aggregate(f, data = x, FUN = weighted.mean, w = attr(x, "weights"))
     # }
 
-    colnames(predicted)[match("predicted", colnames(predicted))] <- "estimate"
-
-    out <- predicted
-
-    # sort and subset columns
-    cols <- c("type", "group", "term", "contrast", "estimate", "std.error",
-              "statistic", "p.value", "conf.low", "conf.high")
-    out <- out[, intersect(cols, colnames(out)), drop = FALSE]
-    out <- as.data.frame(out)
-
+    setDF(out)
     return(out)
 }
 
@@ -192,6 +172,12 @@ tidy.comparisons <- function(x,
                              by = NULL,
                              ...) {
 
+    checkmate::assert_numeric(conf.level, len = 1)
+    checkmate::assert_true(conf.level > 0)
+    checkmate::assert_true(conf.level < 1)
+    checkmate::assert_flag(conf.int)
+    checkmate::assert_character(by, null.ok = TRUE)
+
     # group averages
     if (!is.null(by)) {
         flag <- isTRUE(checkmate::check_character(by)) &&
@@ -210,12 +196,13 @@ tidy.comparisons <- function(x,
 
         J <- attr(x, "J")
         V <- attr(x, "vcov")
+        draws <- attr(x, "posterior_draws")
 
         idx_by <- intersect(c("type", "group", "term", "contrast", by), colnames(x_dt))
         idx_na <- is.na(x_dt$comparison)
 
         # average marginal effects
-        ame <- x_dt[idx_na == FALSE, .(estimate = mean(comparison, na.rm = TRUE)), keyby = idx_by]
+        ame <- x_dt[idx_na == FALSE, .(estimate = mean(comparison, na.rm = TRUE)), by = idx_by]
 
         if (is.matrix(J) && is.matrix(V)) {
             # Jacobian at the group mean
@@ -233,13 +220,23 @@ tidy.comparisons <- function(x,
             x_dt <- x_dt[idx_na == FALSE,]
 
             tmp <- paste0(idx_by, "_marginaleffects_index")
-            J_mean <- J[, lapply(.SD, mean, na.rm = TRUE), keyby = tmp]
+            J_mean <- J[, lapply(.SD, mean, na.rm = TRUE), by = tmp]
             J_mean <- J_mean[, !..tmp]
             J_mean <- as.matrix(J_mean)
 
             # standard errors at the group mean
             se <- sqrt(colSums(t(J_mean %*% V) * t(J_mean)))
             ame[, std.error := se]
+
+        } else if (!is.null(draws)) {
+            draws <- posteriordraws(x)
+            setDT(draws)
+            ame[, "estimate" := NULL]
+            idx_by <- intersect(colnames(draws), idx_by)
+            es <- draws[, .(estimate = stats::median(draw)), by = idx_by]
+            ci <- draws[, as.list(get_hdi(draw, credMass = conf.level)), by = idx_by]
+            setnames(ci, old = c("lower", "upper"), new = c("conf.low", "conf.high"))
+            ame <- merge(merge(ame, es, sort = FALSE), ci, sort = FALSE)
         }
 
     } else {

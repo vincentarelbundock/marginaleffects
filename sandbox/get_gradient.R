@@ -1,14 +1,14 @@
-# adapted from the numDeriv package for R by Paul Gilbert published under GPL2 license
+# No longer used. Kept here in case we want to support `numDeriv` in the future
 
 get_gradient <- function(func, x) {
 
     # global options are used to switch between homemade and numDeriv
+    eps <- getOption("marginaleffects_deriv_eps", default = 0.0001)
     marginaleffects_numDeriv <- getOption("marginaleffects_numDeriv", default = NULL)
     flag <- is.null(marginaleffects_numDeriv)
 
     # dependency-free
     if (isTRUE(flag)) {
-        eps <- 1e-4
         df <- (func(x + eps) - func(x)) / eps
 
     # numDeriv package (more flexible)

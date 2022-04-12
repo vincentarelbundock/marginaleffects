@@ -5,16 +5,10 @@ get_contrast_data_numeric <- function(model,
                                       ...) {
 
 
-    eps <- getOption("marginaleffects_deriv_eps", default = 1e-5)
+    eps <- getOption("marginaleffects_deriv_eps", default = 0.0001)
 
-    # slope
-    if (contrast_numeric == "dydx") {
-        low <- newdata[[variable]]
-        high <- newdata[[variable]] + eps
-        lab <- "dydx"
-
-    # other contrasts
-    } else if (is.numeric(contrast_numeric) && length(contrast_numeric) == 1) {
+    # numeric contrasts first
+    if (is.numeric(contrast_numeric) && length(contrast_numeric) == 1) {
         low <- newdata[[variable]]
         high <- newdata[[variable]] + contrast_numeric
         lab <- sprintf("+%s", contrast_numeric)
@@ -24,19 +18,27 @@ get_contrast_data_numeric <- function(model,
         high <- contrast_numeric[2]
         gap <- diff(contrast_numeric)
         lab  <- paste(contrast_numeric[2], "-", contrast_numeric[1])
-    } else if (contrast_numeric == "sd") {
+
+    # character contrasts
+    # slope
+    } else if (isTRUE(contrast_numeric == "dydx")) {
+        low <- newdata[[variable]]
+        high <- newdata[[variable]] + eps
+        lab <- "dydx"
+    # other contrasts
+    } else if (isTRUE(contrast_numeric == "sd")) {
         low <- mean(newdata[[variable]], na.rm = TRUE) - stats::sd(newdata[[variable]], na.rm = TRUE) / 2
         high <- mean(newdata[[variable]], na.rm = TRUE) + stats::sd(newdata[[variable]], na.rm = TRUE) / 2
         lab <- "sd"
-    } else if (contrast_numeric == "2sd") {
+    } else if (isTRUE(contrast_numeric == "2sd")) {
         low <- mean(newdata[[variable]], na.rm = TRUE) - stats::sd(newdata[[variable]], na.rm = TRUE)
         high <- mean(newdata[[variable]], na.rm = TRUE) + stats::sd(newdata[[variable]], na.rm = TRUE)
         lab <- "2sd"
-    } else if (contrast_numeric == "iqr") {
+    } else if (isTRUE(contrast_numeric == "iqr")) {
         low <- stats::quantile(newdata[[variable]], probs = .25, na.rm = TRUE)
         high <- stats::quantile(newdata[[variable]], probs = .75, na.rm = TRUE)
         lab <- "IQR"
-    } else if (contrast_numeric == "minmax") {
+    } else if (isTRUE(contrast_numeric == "minmax")) {
         low <- min(newdata[[variable]], na.rm = TRUE)
         high <- max(newdata[[variable]], na.rm = TRUE)
         lab <- "Max - Min"

@@ -1,14 +1,19 @@
 # marginaleffects 0.4.1.9000
 
+Breaking change:
+
+* `type` no longer accepts a character vector. Must be a single string.
+
 Supported models: 
 
 * `glmmTMB`
 
 Misc:
 
-* Parallel computation in the `marginaleffects()` and `comparisons()` functions using the `future.apply` package.
 * `by` argument in `tidy()` and `summary()` computes group-average marginal effects and comparisons.
-* New vignette on alternative software packages
+* `marginaleffects` and `comparisons` now report confidence intervals by default.
+* New dependency on the `data.table` yields substantial performance improvements.
+* New vignette on alternative software packages.
 * Bug fixes and performance improvements
 
 # marginaleffects 0.4.1

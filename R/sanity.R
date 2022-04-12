@@ -38,9 +38,14 @@ sanity_newdata <- function(model, newdata) {
     checkmate::check_data_frame(newdata,
                                 null.ok = TRUE,
                                 any.missing = FALSE)
+
     if (is.null(newdata)) {
         newdata <- insight::get_data(model)
     }
+
+    # rbindlist breaks on matrix columns
+    idx <- sapply(newdata, function(x) class(x)[1] != "matrix")
+    newdata <- newdata[, idx, drop = FALSE]
 
     # if there are no categorical variables in `newdata`, check the model terms
     # to find transformation and warn accordingly.
@@ -61,9 +66,11 @@ sanity_newdata <- function(model, newdata) {
     #         }
     #     }
     # }
-    if (isTRUE(flag)) {
-        warning("When using `marginaleffects`, it is safer to convert variables to factors or logicals in the dataset before fitting the model, rather than by wrapping terms in `factor()` or `as.logical() in the model formula.",
-                call. = FALSE)
+
+    # we will need this to merge the original data back in, and it is better to
+    # do it in a centralized upfront way.
+    if (!"rowid" %in% colnames(newdata)) {
+        newdata$rowid <- seq_len(nrow(newdata))
     }
 
     return(newdata)

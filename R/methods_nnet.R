@@ -78,9 +78,15 @@ get_predict.multinom <- function(model,
 
     # matrix with outcome levels as columns
     out <- data.frame(
-        rowid = rep(1:nrow(pred), times = ncol(pred)),
         group = rep(colnames(pred), each = nrow(pred)),
         predicted = c(pred))
+
+    # usually when `newdata` is supplied by `comparisons`
+    if ("rowid" %in% colnames(newdata)) {
+        out$rowid <- rep(newdata$rowid, times = ncol(pred))
+    } else {
+        out$rowid <- rep(seq_len(nrow(pred)), times = ncol(pred))
+    }
 
     return(out)
 }

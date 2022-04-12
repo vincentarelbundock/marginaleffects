@@ -8,8 +8,8 @@ posteriordraws <- function(x) {
     # long format can be very slow to merge, so we use `data.table`
     assert_dependency("data.table")
 
-    if (!inherits(x, "marginaleffects") && !inherits(x, "predictions")) {
-        warning('The `posteriordraws` function only supports objects of type "marginaleffects" or "predictions" produced by the `marginaleffects` package.',
+    if (!inherits(x, "marginaleffects") && !inherits(x, "predictions") && !inherits(x, "comparisons")) {
+        warning('The `posteriordraws` function only supports objects of type "marginaleffects", "comparisons", or "predictions" produced by the `marginaleffects` package.',
                 call. = FALSE)
         return(x)
     }
@@ -23,29 +23,21 @@ posteriordraws <- function(x) {
         stop('The number of parameters in the object does not match the number of parameters for which posterior draws are available.')
     }
 
-    out <- x
-    idx <- lapply(unique(out$type), function(x) out$type == x)
-    names(idx) <- unique(out$type)
-    draws_by_type <- lapply(idx, function(x) draws[x, , drop = FALSE])
-    out_by_type <- lapply(idx, function(x) out[x, , drop = FALSE])
-    out_by_type <- lapply(out_by_type, function(x) transform(x, rowid_internal = 1:nrow(x)))
-    out <- data.table::rbindlist(out_by_type)
-
-    reshape_draws <- function(k) {
-        z <- draws_by_type[[k]]
-        data.frame(
-            type = k,
-            rowid_internal = rep(1:nrow(z), by = ncol(z)),
-            drawid = rep(1:ncol(z),  each = nrow(z)),
-            draw = as.vector(z))
+    draws <- attr(x, "posterior_draws")
+    draws <- data.table(draws)
+    setnames(draws, as.character(seq_len(ncol(draws))))
+    idx <- intersect(colnames(x), c("rowid", "term", "group", "contrast", "type"))
+    for (i in idx) {
+        draws[, (i) := x[[i]]]
     }
-    draws_by_type <- lapply(names(draws_by_type), reshape_draws)
-    draws_df <- data.table::rbindlist(draws_by_type)
 
-    out <- left_join(draws_df, out, all.x = TRUE, by = c("type", "rowid_internal"))
+    out <- melt(
+        draws,
+        id.vars = idx,
+        variable.name = "drawid",
+        value.name = "draw")
 
-    # always return a data.frame, even when data.table is used to speed things up
-    out <- as.data.frame(out)
+    setDF(out)
 
     return(out)
 }

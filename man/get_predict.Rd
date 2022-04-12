@@ -136,6 +136,10 @@ model, depending on the range of supported arguments by each modeling
 package. See the "Model-Specific Arguments" section of the
 \code{?marginaleffects} documentation for a non-exhaustive list of available
 arguments.}
+
+\item{conf.level}{The confidence level to use for the confidence interval if
+\code{conf.int=TRUE}. Must be strictly greater than 0 and less than 1. Defaults
+to 0.95, which corresponds to a 95 percent confidence interval.}
 }
 \value{
 A vector of predicted values of length equal to the number of rows
