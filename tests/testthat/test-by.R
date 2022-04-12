@@ -1,5 +1,7 @@
 requiet("margins")
 requiet("dplyr")
+tol <- 1e-4
+tol_se <- 1e-3
 
 test_that("marginaleffects poisson vs. margins", {
     dat <- mtcars
@@ -9,16 +11,15 @@ test_that("marginaleffects poisson vs. margins", {
         newdata = datagrid(cyl = dat$cyl,
                            am = dat$am,
                            grid.type = "counterfactual"))
-    mfx <- tidy(mfx, by = c("cyl", "am")) %>% arrange(term, cyl, am)
+    tid <- tidy(mfx, by = c("cyl", "am")) %>% arrange(term, cyl, am)
     mar <- margins(mod, at = list(cyl = unique(dat$cyl), am = unique(dat$am)))
     mar <- summary(mar)
-    expect_equal(mfx$estimate, mar$AME, ignore_attr = TRUE, tolerance = 1e-4)
-    expect_equal(mfx$std.error, mar$SE, ignore_attr = TRUE, tolerance = 1e-3)
+    expect_equal(tid$estimate, mar$AME, ignore_attr = TRUE, tolerance = tol)
+    expect_equal(tid$std.error, mar$SE, ignore_attr = TRUE, tolerance = tol_se)
 })
 
 
 test_that("comparisons poisson vs. margins", {
-    skip("TODO: CHECK THIS")
     dat <- mtcars
     dat$cyl <- factor(dat$cyl)
     dat$am <- as.logical(dat$am)
@@ -31,8 +32,8 @@ test_that("comparisons poisson vs. margins", {
     mfx <- tidy(mfx, by = c("cyl", "am")) %>% arrange(term, contrast, cyl, am)
     mar <- margins(mod, at = list(cyl = unique(dat$cyl), am = unique(dat$am)))
     mar <- summary(mar)
-    expect_equal(mfx$estimate, mar$AME, ignore_attr = TRUE, tolerance = 1e-4)
-    expect_equal(mfx$std.error, mar$SE, ignore_attr = TRUE, tolerance = 1e-3)
+    expect_equal(mfx$estimate, mar$AME, ignore_attr = TRUE, tolerance = tol)
+    expect_equal(mfx$std.error, mar$SE, ignore_attr = TRUE, tolerance = tol_se)
 })
 
 

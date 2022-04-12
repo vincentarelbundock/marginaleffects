@@ -183,16 +183,10 @@ get_marginalmeans <- function(model,
     # marginal means
     mm <- list()
     for (v in variables) {
-        lhs <- "predicted ~"
-        rhs <- intersect(colnames(pred), c("group", v))
-        rhs <- paste(rhs, collapse = " + ")
-        f <- stats::as.formula(paste(lhs, rhs))
-        tmp <- stats::aggregate(f, data = pred, FUN = mean)
-        cols <- intersect(c("term", "group", v, "predicted"), colnames(tmp))
-        tmp <- tmp[, cols]
-        tmp[["term"]] <- v
-        colnames(tmp)[colnames(tmp) == v] <- "value"
-        colnames(tmp)[colnames(tmp) == "predicted"] <- "marginalmean"
+        idx <- intersect(colnames(pred), c("term", "group", v))
+        tmp <- data.table(pred)[, .(marginalmean = mean(predicted, na.rm = TRUE)), by = idx]
+        tmp[, "term" := v]
+        setnames(tmp, old = v, new = "value")
         mm[[v]] <- tmp
     }
 
@@ -203,7 +197,9 @@ get_marginalmeans <- function(model,
             mm[[i]]$value <- as.character(mm[[i]]$value)
         }
     }
-    out <- bind_rows(mm)
+
+    out <- rbindlist(mm)
+    setorder(out, "term", "value")
 
     return(out)
 }

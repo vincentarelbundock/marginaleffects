@@ -191,9 +191,12 @@ mod <- glm(certified_fresh ~ length * style, data = dat, family = binomial)
 plot_cap(mod, condition = c("length", "style"))
 ```
 
+````{comment}
+REQUIRES TYPE VECTOR
+
 Of course, you can also design your own plots or tables by working with the `predictions` output directly:
 
-```{r}
+```{r, eval = FALSE}
 predictions(mod,
             type = c("response", "link"),
             newdata = datagrid(length = 90:120,
@@ -202,17 +205,22 @@ predictions(mod,
     geom_line() +
     facet_wrap(~type, scales = "free_y")
 ```
+````
 
 # Prediction types
 
-The `predictions` function computes model-adjusted means on the scale of the output of the `predict(model)` function. By default, `predict` produces predictions on the `"response"` scale, so the adjusted predictions should be interpreted on that scale. However, users can pass a string or a vector of strings to the `type` argument, and `predictions` will consider different outcomes. 
+The `predictions` function computes model-adjusted means on the scale of the output of the `predict(model)` function. By default, `predict` produces predictions on the `"response"` scale, so the adjusted predictions should be interpreted on that scale. However, users can pass a string to the `type` argument, and `predictions` will consider different outcomes. 
 
 Typical values include `"response"` and `"link"`, but users should refer to the documentation of the `predict` of the package they used to fit the model to know what values are allowable. documentation. 
 
 ```{r}
 mod <- glm(am ~ mpg, family = binomial, data = mtcars)
-pred <- predictions(mod, type = c("response", "link"))
+pred <- predictions(mod, type = "response")
 head(pred)
+
+pred <- predictions(mod, type = "link")
+head(pred)
+
 ```
 
 Users who need more control over the type of adjusted predictions to compute, including a host of options for back-transformation, may want to consider the [`emmeans` package.](https://cran.r-project.org/package=emmeans)

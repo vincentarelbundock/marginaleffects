@@ -15,6 +15,7 @@ test_that("type dictionary does not include duplicates", {
 
 
 test_that("multiple prediction types", {
+    skip("type vector")
     skip_if_not_installed("pscl")
     requiet("pscl")
     data("bioChemists", package = "pscl")
@@ -25,6 +26,7 @@ test_that("multiple prediction types", {
 
 
 test_that("predicted values are added to the data.frame", {
+    skip("type vector")
     mod <- glm(am ~ mpg * wt, data = mtcars, family = binomial)
     mfx <- marginaleffects(mod, type = "response")
     expect_true("response" %in% mfx$type)
@@ -34,6 +36,7 @@ test_that("predicted values are added to the data.frame", {
 
 
 test_that("multiple prediction types", {
+    skip("type vector")
     skip_if_not_installed("pscl")
     requiet("pscl")
     data("bioChemists", package = "pscl")

@@ -1,5 +1,10 @@
+# HPD tests against emmeans, which uses HDI, but our default is ETI
+# HDI is implemented specifically for these tests
+# https://github.com/vincentarelbundock/marginaleffects/issues/240
+options("marginaleffects_credible_interval" = "hdi")
 requiet("rstanarm")
 requiet("emmeans")
+requiet("margins")
 requiet("broom")
 
 test_that("stan_glm: no validity", {
@@ -23,14 +28,10 @@ test_that("stan_glm: no validity", {
     em <- emtrends(mod, ~hp, "hp", at = list(hp = 110, mpg = 20, vs = 0))
     em <- tidy(em)
     expect_equal(mfx$dydx, em$hp.trend)
-    # These used to compare correctly, but we no longer compute HPD because
-    # they are highly dependent on assumptions implicit in the
-    # estimation methods. Michael Betancourt, for example, strongly
-    # recommends against HDI.
-    # expect_equal(mfx$conf.low, em$lower.HPD, tolerance = .00001)
-    # expect_equal(mfx$conf.high, em$upper.HPD)
+    expect_equal(mfx$conf.low, em$lower.HPD, tolerance = 1e-5)
+    expect_equal(mfx$conf.high, em$upper.HPD)
 
-    # margins: var is all zeroes and dydx don't match precisely
+    # # margins: var is all zeroes and dydx don't match precisely
     # mar <- margins(mod, unit_ses = TRUE, at = list(hp = 110, mpg = 20, vs = 0))
     # mfx <- marginaleffects(mod, variables = "hp", at = list(hp = 110, mpg = 20, vs = 0))
     # expect_equal(mfx$dydx, mar$dydx_hp)

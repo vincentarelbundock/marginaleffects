@@ -6,8 +6,8 @@
 \usage{
 predictions(
   model,
-  variables = NULL,
   newdata = NULL,
+  variables = NULL,
   conf.level = 0.95,
   type = "response",
   ...
@@ -16,13 +16,13 @@ predictions(
 \arguments{
 \item{model}{Model object}
 
+\item{newdata}{A dataset over which to compute adjusted predictions. \code{NULL} uses
+the original data used to fit the model.}
+
 \item{variables}{Character vector. Compute Adjusted Predictions for
 combinations of each of these variables. Factor levels are considered at
 each of their levels. Numeric variables variables are considered at Tukey's
 Five-Number Summaries. \code{NULL} uses the original data used to fit the model.}
-
-\item{newdata}{A dataset over which to compute adjusted predictions. \code{NULL} uses
-the original data used to fit the model.}
 
 \item{conf.level}{The confidence level to use for the confidence interval.
 No interval is computed if \code{conf.int=NULL}.  Must be strictly greater than 0
@@ -90,6 +90,8 @@ marginal effects, predictions, marginal means, and contrasts.\tabular{llll}{
    \code{glmmTMB} \tab \code{glmmTMB} \tab \code{allow.new.levels} \tab \link[glmmTMB:predict.glmmTMB]{glmmTMB::predict.glmmTMB} \cr
    \code{glmmTMB} \tab \code{glmmTMB} \tab \code{zitype} \tab \link[glmmTMB:predict.glmmTMB]{glmmTMB::predict.glmmTMB} \cr
    \code{mgcv} \tab \code{bam} \tab \code{exclude} \tab \link[mgcv:predict.bam]{mgcv::predict.bam} \cr
+   \code{robustlmm} \tab \code{rlmerMod} \tab \code{re.form} \tab \link[robustlmm:rlmerMod-class]{robustlmm::predict.rlmerMod} \cr
+   \code{robustlmm} \tab \code{rlmerMod} \tab \code{allow.new.levels} \tab \link[robustlmm:rlmerMod-class]{robustlmm::predict.rlmerMod} \cr
 }
 }
 

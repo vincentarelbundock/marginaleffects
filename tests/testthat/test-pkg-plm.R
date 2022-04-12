@@ -1,8 +1,10 @@
 requiet("plm")
 requiet("margins")
+requiet("broom")
+tol <- .0001
+tol_se <- .001
 
 data("Grunfeld", package = "plm")
-
 
 ### marginaleffects
 
@@ -11,8 +13,8 @@ test_that("pooling vs. Stata", {
     pool <- plm(inv ~ value * capital, data = Grunfeld, model = "pooling")
     mfx <- merge(tidy(marginaleffects(pool)), stata)
     expect_marginaleffects(pool, n_unique = 1)
-    expect_equal(mfx$estimate, mfx$dydxstata)
-    expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = .0001)
+    expect_equal(mfx$estimate, mfx$dydxstata, tolerance = tol)
+    expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = tol_se)
 })
 
 
@@ -25,13 +27,15 @@ test_that("Swamy-Arora vs. Stata", {
                model = "random", effect = "individual")
     mfx <- merge(tidy(marginaleffects(mod)), stata)
     expect_marginaleffects(mod)
-    expect_equal(mfx$estimate, mfx$dydxstata)
-    expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = .0001)
+    expect_equal(mfx$estimate, mfx$dydxstata, tolerance = tol)
+    expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = tol_se)
+
     # margins
     mfx <- tidy(marginaleffects(mod))
     mar <- tidy(margins(mod))
-    expect_equal(mfx$estimate, mar$estimate, ignore_attr = TRUE)
-    expect_equal(mfx$std.error, mar$std.error, ignore_attr = TRUE, tolerance = .0001)
+    mfx <- mfx[order(mfx$term),]
+    expect_equal(mfx$estimate, mar$estimate, ignore_attr = TRUE, tolerance = tol)
+    expect_equal(mfx$std.error, mar$std.error, ignore_attr = TRUE, tolerance = tol_se)
 })
 
 
@@ -44,8 +48,9 @@ test_that("no validity checks", {
     # margins
     mfx <- tidy(marginaleffects(amemiya))
     mar <- tidy(margins(amemiya))
-    expect_equal(mfx$estimate, mar$estimate, ignore_attr = TRUE)
-    expect_equal(mfx$std.error, mar$std.error, ignore_attr = TRUE, tolerance = .001)
+    mfx <- mfx[order(mfx$term),]
+    expect_equal(mfx$estimate, mar$estimate, ignore_attr = TRUE, tolerance = tol)
+    expect_equal(mfx$std.error, mar$std.error, ignore_attr = TRUE, tolerance = tol_se)
 
 
     walhus <- plm(inv ~ value * capital,
@@ -56,8 +61,9 @@ test_that("no validity checks", {
     # margins
     mfx <- tidy(marginaleffects(walhus))
     mar <- tidy(margins(walhus))
-    expect_equal(mfx$estimate, mar$estimate, ignore_attr = TRUE)
-    expect_equal(mfx$std.error, mar$std.error, ignore_attr = TRUE, tolerance = .001)
+    mfx <- mfx[order(mfx$term),]
+    expect_equal(mfx$estimate, mar$estimate, ignore_attr = TRUE, tolerance = tol)
+    expect_equal(mfx$std.error, mar$std.error, ignore_attr = TRUE, tolerance = tol_se)
 })
 
 

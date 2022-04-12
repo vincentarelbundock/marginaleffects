@@ -1,4 +1,4 @@
-#' Marginal Effects
+#' Marginal Effects (Slopes)
 #'
 #' This function calculates marginal effects (slopes) for each row of the
 #' dataset. The resulting object can processed by the `tidy()` or `summary()`
@@ -23,12 +23,15 @@
 #' @param model Model object
 #' @param variables Variables to consider (character vector). `NULL`
 #'   calculates marginal effects for all terms in the model object.
+#' @param newdata A dataset over which to compute marginal effects. `NULL` uses
+#'   the original data used to fit the model.
 #' @param vcov Matrix or boolean
 #'   + FALSE: does not compute unit-level standard errors. This can speed up computation considerably. 
 #'   + TRUE: computes unit-level standard errors using the default `vcov(model)` variance-covariance matrix.
 #'   + Named square matrix: computes standard errors with a user-supplied variance-covariance matrix. This matrix must be square and have dimensions equal to the number of coefficients in `get_coef(model)`.
-#' @param newdata A dataset over which to compute marginal effects. `NULL` uses
-#'   the original data used to fit the model.
+#' @param conf.level The confidence level to use for the confidence interval if
+#'   `conf.int=TRUE`. Must be strictly greater than 0 and less than 1. Defaults
+#'   to 0.95, which corresponds to a 95 percent confidence interval.
 #' @param type Type(s) of prediction as string or character vector. This can
 #'   differ based on the model type, but will typically be a string such as:
 #'   "response", "link", "probs", or "zero".
@@ -97,6 +100,7 @@ marginaleffects <- function(model,
                             newdata = NULL,
                             variables = NULL,
                             vcov = TRUE,
+                            conf.level = 0.95,
                             type = "response",
                             ...) {
 
@@ -127,17 +131,12 @@ marginaleffects <- function(model,
     attributes_newdata <- attributes_newdata[idx]
 
     # sanity checks and pre-processing
-    model <- sanity_model(model = model, ...)
+    model <- sanity_model(model = model, calling_function = "marginaleffects", ...)
     sanity_dots(model = model, ...)
     sanity_type(model = model, type = type, calling_function = "marginaleffects")
     newdata <- sanity_newdata(model, newdata)
     variables <- sanitize_variables(model, newdata, variables)
     vcov <- sanitize_vcov(model, vcov)
-
-    # rowid is required for later merge
-    if (!"rowid" %in% colnames(newdata)) {
-        newdata$rowid <- 1:nrow(newdata)
-    }
 
     # variables is a list but we need a vector (and we drop cluster)
     variables_vec <- unique(unlist(variables))
@@ -155,13 +154,15 @@ marginaleffects <- function(model,
         newdata = newdata,
         variables = variables_vec,
         vcov = vcov,
+        conf.level = conf.level,
         type = type,
         contrast_numeric = "dydx",
         contrast_factor = "reference",
         # secret arguments
         internal_call = TRUE,
-        return_format = "data.table",
         ...)
+
+    setDT(out)
 
     # report slope, not contrast
     setnames(out, old = "comparison", new = "dydx")
@@ -172,18 +173,12 @@ marginaleffects <- function(model,
     idx <- !names(attributes_comparisons) %in% idx
     attributes_comparisons <- attributes_comparisons[idx]
 
-    # merge newdata if requested and restore attributes
-    return_data <- sanitize_return_data()
-    if (isTRUE(return_data)) {
-        out <- left_join(out, newdata, by = "rowid")
-    }
-
     # clean columns
-    stubcols <- c("rowid", "type", "group", "term", "contrast", "dydx", "std.error",
+    stubcols <- c("rowid", "type", "group", "term", "contrast", "dydx", "std.error", "conf.low", "conf.high",
                   sort(grep("^predicted", colnames(newdata), value = TRUE)))
     cols <- intersect(stubcols, colnames(out))
     cols <- unique(c(cols, colnames(out)))
-    out <- out[, cols, with = FALSE]
+    out <- out[, ..cols]
 
     if ("group" %in% colnames(out) && all(out$group == "main_marginaleffect")) {
         out$group <- NULL
@@ -193,7 +188,7 @@ marginaleffects <- function(model,
     if ("contrast" %in% colnames(out)) {
         out[is.na(contrast), "contrast" := ""]
         out[contrast == "dydx", "contrast" := ""]
-        if (all(is.na(out$contrast)) || length(unique(out$contrast)) == 1) {
+        if (all(out$contrast == "")) {
             out[, "contrast" := NULL]
         }
     }

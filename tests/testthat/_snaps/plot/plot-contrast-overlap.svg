@@ -34,12 +34,12 @@
 <polyline points='227.02,545.11 227.02,22.78 ' style='stroke-width: 1.07; stroke: #EBEBEB; stroke-linecap: butt;' />
 <polyline points='455.67,545.11 455.67,22.78 ' style='stroke-width: 1.07; stroke: #EBEBEB; stroke-linecap: butt;' />
 <polyline points='684.32,545.11 684.32,22.78 ' style='stroke-width: 1.07; stroke: #EBEBEB; stroke-linecap: butt;' />
+<line x1='681.84' y1='120.72' x2='684.60' y2='120.72' style='stroke-width: 1.07; stroke-linecap: butt;' />
 <line x1='264.50' y1='447.18' x2='558.35' y2='447.18' style='stroke-width: 1.07; stroke-linecap: butt;' />
 <line x1='86.18' y1='283.95' x2='503.15' y2='283.95' style='stroke-width: 1.07; stroke-linecap: butt;' />
-<line x1='681.84' y1='120.72' x2='684.60' y2='120.72' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<circle cx='683.22' cy='120.72' r='2.84' style='stroke-width: 1.42; fill: #000000;' />
 <circle cx='411.42' cy='447.18' r='2.84' style='stroke-width: 1.42; fill: #000000;' />
 <circle cx='294.67' cy='283.95' r='2.84' style='stroke-width: 1.42; fill: #000000;' />
-<circle cx='683.22' cy='120.72' r='2.84' style='stroke-width: 1.42; fill: #000000;' />
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
 <text x='51.33' y='450.20' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='33.26px' lengthAdjust='spacingAndGlyphs'>cyl: 6 - 4</text>

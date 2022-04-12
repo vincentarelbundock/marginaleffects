@@ -6,7 +6,7 @@ get_eti <- function(object, credMass = 0.95, ...) {
   checkmate::assert_true(credMass > 0)
   checkmate::assert_true(credMass < 1)
   critical <- (1 - credMass) / 2
-  out <- quantile(object, probs = c(critical, 1 - critical))
-  out <- setNames(out, c("lower", "upper"))
+  out <- stats::quantile(object, probs = c(critical, 1 - critical))
+  out <- stats::setNames(out, c("lower", "upper"))
   return(out)
 }

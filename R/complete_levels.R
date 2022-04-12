@@ -6,7 +6,14 @@
 #' factor levels are inevitably missing.
 #' @keywords internal
 complete_levels <- function(x, levels_character = NULL) {
+
     checkmate::assert_data_frame(x)
+
+    # fixest returned an empty list()
+    if (is.null(levels_character) || length(levels_character) == 0) {
+        return(data.frame())
+    }
+
     # store variables with missing factors or characters
     vault <- list()
     for (v in colnames(x)) {

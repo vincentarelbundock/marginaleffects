@@ -1,4 +1,4 @@
-#' Experimental function to compute contrasts between adjusted predictions
+#' Contrasts Between Adjusted Predictions
 #'
 #' This function calculates contrasts (or comparisons) between adjusted
 #' predictions for each row of the dataset. The resulting object can processed
@@ -31,7 +31,7 @@
 #' * "sd": Contrast across one standard deviation around the regressor mean.
 #' * "2sd": Contrast across two standard deviations around the regressor mean.
 #' * "minmax": Contrast between the maximum and the minimum values of the regressor.
-#' 
+#'
 #' @template model_specific_arguments
 #' @template parallel
 #'
@@ -50,7 +50,7 @@
 #'
 #' # GLM with different scale types
 #' mod <- glm(am ~ factor(gear), data = mtcars)
-#' comparisons(mod) %>% tidy()
+#' comparisons(mod, type = "response") %>% tidy()
 #' comparisons(mod, type = "link") %>% tidy()
 #'
 #' # Numeric contrasts
@@ -64,10 +64,11 @@
 #'
 #' @export
 comparisons <- function(model,
-                        variables = NULL,
                         newdata = NULL,
+                        variables = NULL,
                         type = "response",
                         vcov = TRUE,
+                        conf.level = 0.95,
                         contrast_factor = "reference",
                         contrast_numeric = 1,
                         ...) {
@@ -89,8 +90,11 @@ comparisons <- function(model,
     # TODO: don't run sanity checks if this is an internal call. But
     # this can create problems.
     # secret argument
-    model <- sanity_model(model = model, ...)
+    model <- sanity_model(model = model, calling_function = "comparisons", ...)
     sanity_type(model = model, type = type)
+    checkmate::assert_numeric(conf.level, len = 1)
+    checkmate::assert_true(conf.level > 0)
+    checkmate::assert_true(conf.level < 1)
     checkmate::assert_choice(contrast_factor, choices = c("reference", "sequential", "pairwise"))
     checkmate::assert(
         checkmate::check_numeric(contrast_numeric, min.len = 1, max.len = 2),
@@ -112,13 +116,6 @@ comparisons <- function(model,
     idx <- c("class", "row.names", "names", "data", "reference")
     idx <- !names(attributes_newdata) %in% idx
     attributes_newdata <- attributes_newdata[idx]
-
-    # rowid_counterfactual is returned by datagrid(grid.type = "counterfactual")
-    # rowid: row in `newdata`
-    # rowid_counterfactual: row in the original data counterfactualized by data.grid
-    if (!"rowid" %in% colnames(newdata)) {
-        newdata$rowid <- seq_len(nrow(newdata))
-    }
 
     # compute contrasts and standard errors
     # do.call and dots to avoid unused argument error in future_lapply
@@ -170,13 +167,25 @@ comparisons <- function(model,
         J <- draws <- NULL
     }
 
+    # merge original data back in
+    # HACK: relies on NO sorting at ANY point
+    if (nrow(mfx) == nrow(cache$original)) {
+        idx <- setdiff(colnames(cache$original), colnames(mfx))
+        mfx <- data.table(mfx, cache$original[, ..idx])
+    }
+
     # meta info
     mfx[["type"]] <- type
 
     # bayesian posterior draws
     if (!is.null(draws)) {
         if (!"conf.low" %in% colnames(mfx)) {
-            tmp <- apply(draws, 1, get_eti)
+            flag <- getOption("marginaleffects_credible_interval", default = "eti")
+            if (isTRUE(flag == "hdi")) {
+                tmp <- apply(draws, 1, get_hdi, credMass = conf.level)
+            } else {
+                tmp <- apply(draws, 1, get_eti, credMass = conf.level)
+            }
             mfx[["std.error"]] <- NULL
             mfx[["comparison"]] <- apply(draws, 1, stats::median)
             mfx[["conf.low"]] <- tmp[1, ]
@@ -184,9 +193,11 @@ comparisons <- function(model,
         }
     }
 
-    # DO NOT sort rows because we want draws to match
-    row.names(mfx) <- NULL
-
+    if ("std.error" %in% colnames(mfx) && !"conf.low" %in% colnames(mfx)) {
+        critical_z <- stats::qnorm((1 - conf.level) / 2)
+        mfx[["conf.low"]] <- mfx$comparison + critical_z * mfx$std.error
+        mfx[["conf.high"]] <- mfx$comparison + abs(critical_z) * mfx$std.error
+    }
 
     # group id: useful for merging, only if it's an internal call and not user-initiated
     if (isTRUE(list(...)$internal_call) && !"group" %in% colnames(mfx)) {
@@ -194,24 +205,11 @@ comparisons <- function(model,
     }
 
     # clean columns
-    stubcols <- c("rowid", "rowid_counterfactual", "type", "group", "term", "contrast", "comparison", "std.error",
+    stubcols <- c("rowid", "rowid_counterfactual", "type", "group", "term", "contrast", "comparison", "std.error", "conf.low", "conf.high",
                   sort(grep("^predicted", colnames(newdata), value = TRUE)))
     cols <- intersect(stubcols, colnames(mfx))
     cols <- unique(c(cols, colnames(mfx)))
     mfx <- mfx[, ..cols, drop = FALSE]
-
-    # merge newdata if requested and restore attributes
-    # secret argument
-    if (!isTRUE(list(...)[["internal_call"]])) {
-        return_data <- sanitize_return_data()
-        if (isTRUE(return_data)) {
-            mfx <- merge(mfx, newdata, by = "rowid")
-        }
-
-        if ("group" %in% colnames(mfx) && all(mfx$group == "main_marginaleffect")) {
-            mfx$group <- NULL
-        }
-    }
 
     out <- mfx
 

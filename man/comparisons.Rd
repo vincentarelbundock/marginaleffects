@@ -2,14 +2,15 @@
 % Please edit documentation in R/comparisons.R
 \name{comparisons}
 \alias{comparisons}
-\title{Experimental function to compute contrasts between adjusted predictions}
+\title{Contrasts Between Adjusted Predictions}
 \usage{
 comparisons(
   model,
-  variables = NULL,
   newdata = NULL,
+  variables = NULL,
   type = "response",
   vcov = TRUE,
+  conf.level = 0.95,
   contrast_factor = "reference",
   contrast_numeric = 1,
   ...
@@ -18,11 +19,11 @@ comparisons(
 \arguments{
 \item{model}{Model object}
 
-\item{variables}{Variables to consider (character vector). \code{NULL}
-calculates marginal effects for all terms in the model object.}
-
 \item{newdata}{A dataset over which to compute marginal effects. \code{NULL} uses
 the original data used to fit the model.}
+
+\item{variables}{Variables to consider (character vector). \code{NULL}
+calculates marginal effects for all terms in the model object.}
 
 \item{type}{Type(s) of prediction as string or character vector. This can
 differ based on the model type, but will typically be a string such as:
@@ -34,6 +35,10 @@ differ based on the model type, but will typically be a string such as:
 \item TRUE: computes unit-level standard errors using the default \code{vcov(model)} variance-covariance matrix.
 \item Named square matrix: computes standard errors with a user-supplied variance-covariance matrix. This matrix must be square and have dimensions equal to the number of coefficients in \code{get_coef(model)}.
 }}
+
+\item{conf.level}{The confidence level to use for the confidence interval if
+\code{conf.int=TRUE}. Must be strictly greater than 0 and less than 1. Defaults
+to 0.95, which corresponds to a 95 percent confidence interval.}
 
 \item{contrast_factor}{string
 \itemize{
@@ -97,6 +102,8 @@ marginal effects, predictions, marginal means, and contrasts.\tabular{llll}{
    \code{glmmTMB} \tab \code{glmmTMB} \tab \code{allow.new.levels} \tab \link[glmmTMB:predict.glmmTMB]{glmmTMB::predict.glmmTMB} \cr
    \code{glmmTMB} \tab \code{glmmTMB} \tab \code{zitype} \tab \link[glmmTMB:predict.glmmTMB]{glmmTMB::predict.glmmTMB} \cr
    \code{mgcv} \tab \code{bam} \tab \code{exclude} \tab \link[mgcv:predict.bam]{mgcv::predict.bam} \cr
+   \code{robustlmm} \tab \code{rlmerMod} \tab \code{re.form} \tab \link[robustlmm:rlmerMod-class]{robustlmm::predict.rlmerMod} \cr
+   \code{robustlmm} \tab \code{rlmerMod} \tab \code{allow.new.levels} \tab \link[robustlmm:rlmerMod-class]{robustlmm::predict.rlmerMod} \cr
 }
 }
 
@@ -139,7 +146,7 @@ comparisons(mod, contrast_factor = "pairwise") \%>\% tidy()
 
 # GLM with different scale types
 mod <- glm(am ~ factor(gear), data = mtcars)
-comparisons(mod) \%>\% tidy()
+comparisons(mod, type = "response") \%>\% tidy()
 comparisons(mod, type = "link") \%>\% tidy()
 
 # Numeric contrasts

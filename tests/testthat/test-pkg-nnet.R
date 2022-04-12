@@ -40,6 +40,8 @@ test_that("multinom vs. Stata", {
         nnet::multinom(y ~ x1 + x2, data = dat, quiet = true))
     mfx <- suppressWarnings(marginaleffects(mod, type = "probs"))
     mfx <- merge(tidy(mfx), stata, all = TRUE)
+    mfx <- na.omit(mfx)
+    expect_true(nrow(mfx) == 6) # na.omit doesn't trash everything
     # standard errors don't match
     expect_equal(mfx$estimate, mfx$dydxstata, tolerance = .0001)
     # expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = .0001)
@@ -63,9 +65,14 @@ test_that("bugfix: nnet single row predictions", {
     void <- capture.output(mod <-
         nnet::multinom(factor(y) ~ x1 + x2, data = dat, quiet = true))
     expect_warning(marginaleffects(mod, newdata = datagrid(), type = "probs"))
-    mfx <- suppressWarnings(marginaleffects(mod, newdata = datagrid(), type = "probs"))
+    mfx <- suppressWarnings(marginaleffects(mod, variables = "x1",
+                                            newdata = datagrid(), type = "probs"))
     expect_s3_class(mfx, "data.frame")
-    expect_equal(nrow(mfx), 6)
+    expect_equal(nrow(mfx), 4)
+    mfx <- suppressWarnings(marginaleffects(mod,
+                                            newdata = datagrid(), type = "probs"))
+    expect_s3_class(mfx, "data.frame")
+    expect_equal(nrow(mfx), 8)
 })
 
 test_that("predictions with multinomial outcome", {
@@ -85,8 +92,8 @@ test_that("predictions with multinomial outcome", {
     })
 
     # class outcome not supported
-    expect_error(predictions(m1, variables = "x"), regex = "type")
-    expect_error(marginalmeans(m1, variables = "x"), regex = "type")
+    expect_error(predictions(m1, type = "class", variables = "x"), regex = "type")
+    expect_error(marginalmeans(m1, type = "class", variables = "x"), regex = "type")
 
     # small predictions
     pred1 <- predictions(m1, type = "probs")
@@ -95,9 +102,12 @@ test_that("predictions with multinomial outcome", {
     expect_predictions(pred2, n_row = 9)
 
     # large predictions
-    idx <- 3:7
+    idx <- 3:5
+    n_row <- sapply(dat[, idx], function(x) length(unique(x)))
+    n_row <- prod(n_row) * length(idx) * length(unique(dat$y))
+    n_row
     pred <- predictions(m2, type = "probs", variables = colnames(dat)[idx])
-    expect_predictions(pred, n_row = 729)
+    expect_predictions(pred, n_row = n_row)
 
     # massive prediction raises error
     expect_error(predictions(m2, type = "probs", variables = colnames(dat)[3:ncol(dat)]),

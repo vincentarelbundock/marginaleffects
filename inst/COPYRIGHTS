@@ -6,10 +6,6 @@ Functions in the `R/get_hdi.R` were extracted from the `HDInterval` package for 
 
 ########################
 
-Methods in the `R/poorman.R` were extracted from the `poorman` package for `R`.  Copyright (c) 2021,	Nathan Eastwood, shared under the MIT License (copied below).
-
-########################
-
 Some of the methods in the `R/mean_or_mode.R` file were adapted from the
 `prediction` R package, copyright Thomas J. Leeper, shared under the MIT License
 (copied below).

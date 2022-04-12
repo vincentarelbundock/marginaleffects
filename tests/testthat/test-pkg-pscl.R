@@ -2,6 +2,8 @@ requiet("pscl")
 requiet("emmeans")
 requiet("broom")
 requiet("margins")
+tol <- 0.0001
+tol_se <- 0.001
 
 ### marginaleffects
 
@@ -59,19 +61,21 @@ test_that("marginaleffects: zeroinfl vs. Stata vs. emtrends", {
     model <- zeroinfl(art ~ kid5 + phd | ment,
                       dist = "negbin",
                       data = bioChemists)
+
     # stata
     stata <- readRDS(test_path("stata/stata.rds"))$pscl_zeroinfl_01
     mfx <- merge(tidy(marginaleffects(model)), stata)
     expect_marginaleffects(model)
-    expect_equal(mfx$estimate, mfx$dydxstata, tolerance = .00001)
-    expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = .001)
-    mfx <- marginaleffects(model)
+    expect_equal(mfx$estimate, mfx$dydxstata, tolerance = tol)
+    expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = tol_se)
+
     # emtrends
     mfx <- marginaleffects(model, variables = "phd", newdata = datagrid(kid5 = 2, ment = 7, phd = 2))
     em <- emtrends(model, ~phd, "phd", at = list(kid5 = 2, ment = 7, phd = 2))
     em <- tidy(em)
     expect_equal(mfx$dydx, em$phd.trend, tolerance = .0001)
-    expect_equal(mfx$std.error, em$std.error, tolerance = .0001)
+    expect_equal(mfx$std.error, em$std.error, tolerance = .01)
+
     # margins: does not support standard errors (all zeros)
     mar <- margins(model, data = head(bioChemists), unit_ses = TRUE)
     mfx <- marginaleffects(model, newdata = head(bioChemists))

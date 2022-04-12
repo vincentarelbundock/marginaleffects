@@ -1,3 +1,5 @@
+# this is only used for tests to match emmeans. we use ETI as default for bayesian models.
+
 get_hdi <- function(object, credMass = 0.95, ...) {
     result <- c(NA_real_, NA_real_)
     if (is.numeric(object)) {

@@ -40,7 +40,7 @@ test_that("numeric contrasts", {
     contr3 <- comparisons(mod, contrast_numeric = "minmax", variables = "hp")
     contr4 <- comparisons(mod, contrast_numeric = "sd", variables = "hp")
     contr5 <- comparisons(mod, contrast_numeric = "2sd", variables = "hp")
-    iqr <- diff(quantile(mtcars$hp, probs = c(.25, .75))) * coef(mod)["hp"]
+    iqr <- diff(stats::quantile(mtcars$hp, probs = c(.25, .75))) * coef(mod)["hp"]
     minmax <- (max(mtcars$hp) - min(mtcars$hp)) * coef(mod)["hp"]
     sd1 <- sd(mtcars$hp) * coef(mod)["hp"]
     sd2 <- 2 * sd(mtcars$hp) * coef(mod)["hp"]
