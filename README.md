@@ -52,8 +52,8 @@ consult these pages:
     models](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
   - [Comparisons to alternative
     software](https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html)
-  - [Performance and Parallel
-    Computation](https://vincentarelbundock.github.io/marginaleffects/articles/parallel.html)
+  - [Performance
+    tips](https://vincentarelbundock.github.io/marginaleffects/articles/parallel.html)
   - Case studies:
       - [Bayesian analyses with
         `brms`](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)
@@ -173,11 +173,16 @@ full results with functions like `head`, as you would with any other
 mfx <- marginaleffects(mod)
 
 head(mfx, 4)
-#>   rowid     type term        dydx  std.error  mpg  hp    wt am
-#> 1     1 response   hp -0.03690556 0.01850168 21.0 110 2.620  1
-#> 2     2 response   hp -0.02868936 0.01562768 21.0 110 2.875  1
-#> 3     3 response   hp -0.04657166 0.02259121 22.8  93 2.320  1
-#> 4     4 response   hp -0.04227128 0.01328275 21.4 110 3.215  0
+#>   rowid     type term        dydx  std.error    conf.low     conf.high  mpg  hp
+#> 1     1 response   hp -0.03690556 0.01850168 -0.07316818 -0.0006429255 21.0 110
+#> 2     2 response   hp -0.02868936 0.01562768 -0.05931905  0.0019403284 21.0 110
+#> 3     3 response   hp -0.04657166 0.02259121 -0.09084963 -0.0022936972 22.8  93
+#> 4     4 response   hp -0.04227128 0.01328275 -0.06830499 -0.0162375732 21.4 110
+#>      wt am
+#> 1 2.620  1
+#> 2 2.875  1
+#> 3 2.320  1
+#> 4 3.215  0
 ```
 
 The function `summary` calculates the “Average Marginal Effect,” that
@@ -187,9 +192,9 @@ is, the average of all unit-specific marginal effects:
 summary(mfx)
 #> Average marginal effects 
 #>   Term   Effect Std. Error  z value   Pr(>|z|)    2.5 %   97.5 %
-#> 1   am -0.04811    1.85260 -0.02597 0.97928233 -3.67913  3.58291
-#> 2   hp -0.03807    0.01279 -2.97717 0.00290923 -0.06314 -0.01301
-#> 3   wt -3.93909    1.08596 -3.62728 0.00028642 -6.06754 -1.81065
+#> 1   hp -0.03807    0.01279 -2.97717 0.00290923 -0.06314 -0.01301
+#> 2   wt -3.93909    1.08596 -3.62728 0.00028642 -6.06754 -1.81065
+#> 3   am -0.04811    1.85260 -0.02597 0.97928233 -3.67913  3.58291
 #> 
 #> Model type:  lm 
 #> Prediction type:  response
@@ -214,17 +219,17 @@ a “grid” of predictor values over which to compute means/predictions:
 
 ``` r
 predictions(mod, variables = c("am", "wt"))
-#>    rowid     type predicted std.error  conf.low conf.high       hp am     wt
-#> 1      1 response 23.259500 2.7059342 17.674726  28.84427 146.6875  0 1.5130
-#> 2      2 response 27.148334 2.8518051 21.262498  33.03417 146.6875  1 1.5130
-#> 3      3 response 20.504387 1.3244556 17.770845  23.23793 146.6875  0 2.5425
-#> 4      4 response 21.555612 1.0723852 19.342318  23.76891 146.6875  1 2.5425
-#> 5      5 response 18.410286 0.6151016 17.140779  19.67979 146.6875  0 3.3250
-#> 6      6 response 17.304709 1.5528055 14.099876  20.50954 146.6875  1 3.3250
-#> 7      7 response 17.540532 0.7293676 16.035192  19.04587 146.6875  0 3.6500
-#> 8      8 response 15.539158 2.1453449 11.111383  19.96693 146.6875  1 3.6500
-#> 9      9 response 12.793013 2.9784942  6.645703  18.94032 146.6875  0 5.4240
-#> 10    10 response  5.901966 5.8149853 -6.099574  17.90351 146.6875  1 5.4240
+#>     rowid     type predicted std.error  conf.low conf.high       hp am     wt
+#>  1:     1 response 23.259500 2.7059342 17.674726  28.84427 146.6875  0 1.5130
+#>  2:     2 response 27.148334 2.8518051 21.262498  33.03417 146.6875  1 1.5130
+#>  3:     3 response 20.504387 1.3244556 17.770845  23.23793 146.6875  0 2.5425
+#>  4:     4 response 21.555612 1.0723852 19.342318  23.76891 146.6875  1 2.5425
+#>  5:     5 response 18.410286 0.6151016 17.140779  19.67979 146.6875  0 3.3250
+#>  6:     6 response 17.304709 1.5528055 14.099876  20.50954 146.6875  1 3.3250
+#>  7:     7 response 17.540532 0.7293676 16.035192  19.04587 146.6875  0 3.6500
+#>  8:     8 response 15.539158 2.1453449 11.111383  19.96693 146.6875  1 3.6500
+#>  9:     9 response 12.793013 2.9784942  6.645703  18.94032 146.6875  0 5.4240
+#> 10:    10 response  5.901966 5.8149853 -6.099574  17.90351 146.6875  1 5.4240
 ```
 
 The [`datagrid` function gives us an even more powerful
@@ -233,9 +238,9 @@ to customize the grid:
 
 ``` r
 predictions(mod, newdata = datagrid(am = 0, wt = c(2, 4)))
-#>   rowid     type predicted std.error conf.low conf.high       hp am wt
-#> 1     1 response  21.95621  2.038630 17.74868  26.16373 146.6875  0  2
-#> 2     2 response  16.60387  1.083201 14.36826  18.83949 146.6875  0  4
+#>    rowid     type predicted std.error conf.low conf.high       hp am wt
+#> 1:     1 response  21.95621  2.038630 17.74868  26.16373 146.6875  0  2
+#> 2:     2 response  16.60387  1.083201 14.36826  18.83949 146.6875  0  4
 ```
 
 We can plot the adjusted predictions with the `plot_cap` function:
