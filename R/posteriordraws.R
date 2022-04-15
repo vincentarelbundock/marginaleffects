@@ -37,6 +37,11 @@ posteriordraws <- function(x) {
         variable.name = "drawid",
         value.name = "draw")
 
+    idx <- setdiff(
+        colnames(x),
+        c("predicted", "dydx", "comparison", "marginalmean", "conf.low", "conf.high"))
+    out <- merge(out, data.table(x)[, ..idx])
+
     setDF(out)
 
     return(out)
