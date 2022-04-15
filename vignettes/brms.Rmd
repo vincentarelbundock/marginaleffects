@@ -57,8 +57,9 @@ Load libraries and download data on passengers of the Titanic from [the Rdataset
 ```{r, message = FALSE}
 library(marginaleffects)
 library(brms)
-library(tidyverse)
+library(ggplot2)
 library(ggdist)
+library(magrittr)
 
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/carData/TitanicSurvival.csv")
 dat$survived <- ifelse(dat$survived == "yes", 1, 0)
