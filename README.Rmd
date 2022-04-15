@@ -41,7 +41,7 @@ The rest of this page includes a "Getting Started" tutorial with simple examples
 
 * [List of supported models](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
 * [Comparisons to alternative software](https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html)
-* [Performance and Parallel Computation](https://vincentarelbundock.github.io/marginaleffects/articles/parallel.html)
+* [Performance tips](https://vincentarelbundock.github.io/marginaleffects/articles/parallel.html)
 * Case studies:
     - [Bayesian analyses with `brms`](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)
     - [Mixed effects models](https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html)
