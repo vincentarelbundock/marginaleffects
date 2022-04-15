@@ -2,16 +2,16 @@
 % Please edit documentation in R/posteriordraws.R
 \name{posteriordraws}
 \alias{posteriordraws}
-\title{Extract posterior draws from a \code{predictions} or \code{marginaleffects} object derived from Bayesian \code{brms} models}
+\title{Extract posterior draws from a \code{predictions} or \code{marginaleffects} object derived from Bayesian models}
 \usage{
 posteriordraws(x)
 }
 \arguments{
-\item{x}{An object produced by the \code{predictions} or the \code{marginaleffects} functions}
+\item{x}{An object produced by the \code{marginaleffects}, \code{comparisons}, or \code{predictions} functions}
 }
 \value{
 A data.frame with \code{drawid} and \code{draw} columns.
 }
 \description{
-Extract posterior draws from a \code{predictions} or \code{marginaleffects} object derived from Bayesian \code{brms} models
+Extract posterior draws from a \code{predictions} or \code{marginaleffects} object derived from Bayesian models
 }
