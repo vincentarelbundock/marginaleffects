@@ -1,6 +1,7 @@
 requiet("AER")
 requiet("emmeans")
 requiet("broom")
+tol_se <- 1e-4
 
 test_that("tobit: marginaleffects vs. Stata", {
   data("Affairs", package = "AER")
@@ -34,7 +35,7 @@ test_that("tobit: marginalmeans vs. emmeans", {
   em <- tidy(em)
   mm <- tidy(marginalmeans(mod, variables = "religiousness"))
   expect_equal(mm$estimate, em$estimate)
-  expect_equal(mm$std.error, em$std.error)
+  expect_equal(mm$std.error, em$std.error, tolerance = tol_se)
 })
 
 

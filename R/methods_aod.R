@@ -25,12 +25,3 @@ set_coef.glimML <- function(model, coefs) {
     model@fixed.param[names(coefs)] <- coefs
     model
 }
-
-
-#' @rdname get_vcov
-#' @export
-get_vcov.glimML <- function(model, ...) {
-    assert_dependency("aod")
-    out <- aod::vcov(model)
-    return(out)
-}

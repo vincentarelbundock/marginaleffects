@@ -1,17 +1,3 @@
-#' @include get_vcov.R
-#' @rdname @get_vcov
-#' @export
-get_vcov.rq <- function(model, ...) {
-    out <- insight::get_varcov(model)
-    if (is.null(row.names(out))) {
-        termnames <- names(stats::coef(model))
-        colnames(out) <- termnames
-        row.names(out) <- termnames
-    }
-    return(out)
-}
-
-
 #' @rdname get_predict
 #' @export
 get_predict.rq <- function(model,

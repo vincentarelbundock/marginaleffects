@@ -10,8 +10,9 @@ test_that("geepack::geeglm: marginaleffects vs. emtrends", {
     data(dietox, package = "geepack")
     dietox$Cu <- as.factor(dietox$Cu)
     mf <- formula(Weight ~ Cu * (Time + I(Time^2) + I(Time^3)))
-    model <- suppressWarnings(geeglm(mf, data=dietox, id=Pig, 
-                                     family=poisson("identity"), corstr="ar1"))
+    model <- suppressWarnings(geeglm(mf,
+        data = dietox, id = Pig,
+        family = poisson("identity"), corstr = "ar1"))
     expect_marginaleffects(model)
     # emmeans
     mfx <- marginaleffects(model, variables = "Time", newdata = datagrid(Time = 10, Cu = "Cu000"), type = "link")

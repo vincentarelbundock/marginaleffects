@@ -8,6 +8,7 @@ predictions(
   model,
   newdata = NULL,
   variables = NULL,
+  vcov = TRUE,
   conf.level = 0.95,
   type = "response",
   ...
@@ -23,6 +24,13 @@ the original data used to fit the model.}
 combinations of each of these variables. Factor levels are considered at
 each of their levels. Numeric variables variables are considered at Tukey's
 Five-Number Summaries. \code{NULL} uses the original data used to fit the model.}
+
+\item{vcov}{Matrix or boolean
+\itemize{
+\item FALSE: does not compute unit-level standard errors. This can speed up computation considerably.
+\item TRUE: computes unit-level standard errors using the default \code{vcov(model)} variance-covariance matrix.
+\item Named square matrix: computes standard errors with a user-supplied variance-covariance matrix. This matrix must be square and have dimensions equal to the number of coefficients in \code{get_coef(model)}.
+}}
 
 \item{conf.level}{The confidence level to use for the confidence interval.
 No interval is computed if \code{conf.int=NULL}.  Must be strictly greater than 0

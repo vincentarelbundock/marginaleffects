@@ -15,15 +15,6 @@ set_coef.crch <- function(model, coefs) {
 }
 
 
-#' @include get_vcov.R
-#' @rdname get_vcov
-#' @export
-get_vcov.crch <- function(model, ...) {
-    cn <- names(get_coef(model))
-    stats::vcov(model)
-}
-
-
 #' @include get_predict.R
 #' @rdname get_predict
 #' @export
@@ -59,5 +50,4 @@ set_coef.hlxr <- function(model, coefs) {
 }
 
 
-get_vcov.hlxr <- get_vcov.crch
 get_predict.hlxr <- get_predict.crch

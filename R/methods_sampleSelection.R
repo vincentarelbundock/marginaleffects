@@ -1,12 +1,5 @@
 # TODO: heckit standard errors are not available because `vcov` is block diagonal with NAs
 
-#' @rdname get_vcov
-#' @export
-get_vcov.selection <- function(model, ...) {
-    out <- insight::get_varcov(model)
-    return(out)
-}
-
 
 #' @rdname get_coef
 #' @export

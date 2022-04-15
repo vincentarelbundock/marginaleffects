@@ -8,7 +8,8 @@ marginalmeans(
   model,
   variables = NULL,
   variables_grid = NULL,
-  vcov = NULL,
+  vcov = TRUE,
+  conf.level = 0.95,
   type = "response",
   ...
 )
@@ -33,6 +34,10 @@ variables in the \code{variables} and \code{variables_grid} arguments.}
 \item TRUE: computes unit-level standard errors using the default \code{vcov(model)} variance-covariance matrix.
 \item Named square matrix: computes standard errors with a user-supplied variance-covariance matrix. This matrix must be square and have dimensions equal to the number of coefficients in \code{get_coef(model)}.
 }}
+
+\item{conf.level}{The confidence level to use for the confidence interval if
+\code{conf.int=TRUE}. Must be strictly greater than 0 and less than 1. Defaults
+to 0.95, which corresponds to a 95 percent confidence interval.}
 
 \item{type}{Type(s) of prediction as string or character vector. This can
 differ based on the model type, but will typically be a string such as:

@@ -31,8 +31,9 @@ get_predict(model, newdata, type, ...)
 \method{get_predict}{default}(
   model,
   newdata = insight::get_data(model),
-  type = "response",
+  vcov = FALSE,
   conf.level = NULL,
+  type = "response",
   ...
 )
 
@@ -136,6 +137,13 @@ model, depending on the range of supported arguments by each modeling
 package. See the "Model-Specific Arguments" section of the
 \code{?marginaleffects} documentation for a non-exhaustive list of available
 arguments.}
+
+\item{vcov}{Matrix or boolean
+\itemize{
+\item FALSE: does not compute unit-level standard errors. This can speed up computation considerably.
+\item TRUE: computes unit-level standard errors using the default \code{vcov(model)} variance-covariance matrix.
+\item Named square matrix: computes standard errors with a user-supplied variance-covariance matrix. This matrix must be square and have dimensions equal to the number of coefficients in \code{get_coef(model)}.
+}}
 
 \item{conf.level}{The confidence level to use for the confidence interval if
 \code{conf.int=TRUE}. Must be strictly greater than 0 and less than 1. Defaults

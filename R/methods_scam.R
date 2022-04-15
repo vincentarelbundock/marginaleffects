@@ -16,7 +16,19 @@ get_coef.scam <- function(model, ...) {
 
 #' @rdname get_vcov
 #' @export
-get_vcov.scam <- function(model, ...) {
+get_vcov.scam <- function(model,
+                          vcov = NULL,
+                          ...) {
+
+    # email from developer Natalya Pya
+    # "one of the elements of the returned 'scam' object is 'Vp.t' which is an
+    # estimated covariance matrix for the reparametrized parameters,
+    # 'model$coefficients.t'."
+
+    if (!is.null(vcov)) {
+        stop("The `vcov` argument is not supported for models of class `scam`.", .call = FALSE)
+    }
+
     V <- model$Vp.t
     b <- model$coefficients.t
     if (length(b) != nrow(V)) {
