@@ -3,7 +3,7 @@
 #' @noRd
 check_dependency <- function(library_name) {
   flag <- requireNamespace(library_name, quietly = TRUE)
-  if (isFALSE(flag)) {
+  if (!isTRUE(flag)) {
       msg <- sprintf("Please install the `%s` package.", library_name)
       return(msg)
   } else {
@@ -12,26 +12,6 @@ check_dependency <- function(library_name) {
 }
 assert_dependency <- checkmate::makeAssertionFunction(check_dependency)
 
-
-## unused for now
-# sanity_weights <- function(mfx, weights) {
-#     checkmate::assert_numeric(weights, null.ok = TRUE, len = length(unique(mfx$rowid)))
-#     return(weights)
-# }
-
-
-sanitize_return_data <- function() {
-    return_data <- getOption("marginaleffects_return_data", default = TRUE)
-    checkmate::assert_flag(return_data)
-    return(return_data)
-}
-
-
-sanitize_numDeriv_method <- function() {
-    numDeriv_method <- getOption("marginaleffects_numDeriv_method", default = "simple")
-    checkmate::assert_choice(numDeriv_method, choices = c("simple", "complex", "Richardson"))
-    return(numDeriv_method)
-}
 
 
 sanity_newdata <- function(model, newdata) {
@@ -154,8 +134,8 @@ sanitize_vcov <- function(model, vcov) {
     if (isTRUE(vcov)) {
         vcov <- try(get_vcov(model), silent = TRUE)
         if (inherits(vcov, "try-error") && !inherits(model, "brmsfit")) {
-            warning(sprintf('Unable to extract a variance-covariance matrix from model of class "%s" using the `stats::vcov` function. The `vcov` argument was switched to `FALSE`. Please supply a named matrix to produce uncertainty estimates.', class(model)[1]),
-                    call. = FALSE)
+            msg <- sprintf('Unable to extract a variance-covariance matrix from model of class "%s" using the `stats::vcov` function. The `vcov` argument was switched to `FALSE`. Please supply a named matrix to produce uncertainty estimates.', class(model)[1])
+            warning(msg, call. = FALSE)
             return(NULL)
             # dpoMatrix conversion
         }
@@ -198,7 +178,7 @@ sanity_predict_vector <- function(pred, model, newdata, type) {
         msg <- sprintf(
 '`predict(model, type = "%s")` was called on a model of class `%s`, but this command did not produce the expected outcome: A numeric vector of length %s. This can sometimes happen when users try compute a marginal effect for some models with grouped or multivariate outcome which are not supported yet by `marginaleffects` package. Please consult your modeling package documentation to learn what alternative `type` arguments are accepted by the `predict` method, or file a feature request on Github:  https://github.com/vincentarelbundock/marginaleffects/issues',
         type, class(model)[1], nrow(newdata))
-        stop(msg)
+        stop(msg, call. = FALSE)
     }
 }
 
@@ -211,3 +191,20 @@ sanity_predict_numeric <- function(pred, model, newdata, type) {
         stop(msg)
     }
 }
+
+
+
+# OBSOLETE CHECKS KEPT FOR POSTERITY
+
+# sanitize_return_data <- function() {
+#     return_data <- getOption("marginaleffects_return_data", default = TRUE)
+#     checkmate::assert_flag(return_data)
+#     return(return_data)
+# }
+
+
+# sanitize_numDeriv_method <- function() {
+#     numDeriv_method <- getOption("marginaleffects_numDeriv_method", default = "simple")
+#     checkmate::assert_choice(numDeriv_method, choices = c("simple", "complex", "Richardson"))
+#     return(numDeriv_method)
+# }

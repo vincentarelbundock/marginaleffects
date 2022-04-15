@@ -45,8 +45,6 @@ standard_errors_delta <- function(model,
                                   index = NULL,
                                   ...) {
 
-    numDeriv_method <- sanitize_numDeriv_method()
-
     # delta method does not work for these models
     bad <- c("brmsfit", "stanreg")
     if (any(bad %in% class(model))) {
