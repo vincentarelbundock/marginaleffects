@@ -203,7 +203,7 @@ marginaleffects <- function(model,
         attr(out, paste0("newdata_", a)) <- attributes_newdata[[a]]
     }
     for (a in names(attributes_comparisons)) {
-        if(!a %in% names(attributes(out))) {
+        if (!a %in% names(attributes(out))) {
             attr(out, a) <- attributes_comparisons[[a]]
         }
     }

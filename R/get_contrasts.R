@@ -8,7 +8,7 @@ get_contrast_data <- function(model,
     lo <- hi <- ter <- lab <- original <- rowid <- list()
 
     for (v in variables) {
-        # logical and character before factor, because they get picked up by find_categorical
+        # logical and character before factor because they get picked up by find_categorical
         variable_class <- find_variable_class(variable = v, newdata = newdata, model = model)
 
         if (variable_class == "logical") {
@@ -90,7 +90,7 @@ get_contrasts <- function(model,
     lo <- cache[["lo"]]
     hi <- cache[["hi"]]
 
-    # some predict() methods need data frames, and will convert data.tables
+    # some predict() methods need data frames and will convert data.tables
     # internally, which can be very expensive if done many times. we do it once
     # here.
     setDF(lo)
@@ -102,9 +102,6 @@ get_contrasts <- function(model,
     pred_lo$term <- cache[["ter"]]
     pred_hi$term <- cache[["ter"]]
 
-    out <- pred_lo
-    setDT(out)
-
     draws_lo <- attr(pred_lo, "posterior_draws")
     draws_hi <- attr(pred_hi, "posterior_draws")
     if (is.null(draws_lo)) {
@@ -112,6 +109,9 @@ get_contrasts <- function(model,
     } else {
         draws <- draws_hi - draws_lo
     }
+
+    out <- pred_lo
+    setDT(out)
 
     out[, "comparison" := pred_hi$predicted - predicted]
     out[, "predicted" := NULL]
@@ -138,7 +138,7 @@ get_contrasts <- function(model,
     idx <- out$contrast == "dydx"
     out[idx == TRUE, "comparison" := comparison / eps]
     if (!is.null(draws)) {
-        draws[idx == TRUE,] <- draws[idx == TRUE,] / eps
+        draws[idx == TRUE, ] <- draws[idx == TRUE, ] / eps
     }
 
     # output
