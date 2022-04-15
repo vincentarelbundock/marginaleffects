@@ -53,7 +53,7 @@ consult these pages:
   - [Comparisons to alternative
     software](https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html)
   - [Performance
-    tips](https://vincentarelbundock.github.io/marginaleffects/articles/parallel.html)
+    tips](https://vincentarelbundock.github.io/marginaleffects/articles/performance.html)
   - Case studies:
       - [Bayesian analyses with
         `brms`](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)
