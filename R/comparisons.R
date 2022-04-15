@@ -73,7 +73,9 @@ comparisons <- function(model,
                         contrast_numeric = 1,
                         ...) {
 
-    if (!isTRUE(list(...)[["internal_call"]])) {
+    internal_call <- list(...)[["internal_call"]]
+
+    if (!isTRUE(internal_call)) {
         # if `newdata` is a call to `datagrid`, `typical`, or `counterfactual`, insert `model`
         scall <- substitute(newdata)
         if (is.call(scall) && as.character(scall)[1] %in% c("datagrid", "typical", "counterfactual")) {
@@ -87,18 +89,18 @@ comparisons <- function(model,
         vcov <- sanitize_vcov(model, vcov)
     }
 
-    # TODO: don't run sanity checks if this is an internal call. But
-    # this can create problems.
-    # secret argument
-    model <- sanity_model(model = model, calling_function = "comparisons", ...)
-    sanity_type(model = model, type = type)
-    checkmate::assert_numeric(conf.level, len = 1)
-    checkmate::assert_true(conf.level > 0)
-    checkmate::assert_true(conf.level < 1)
-    checkmate::assert_choice(contrast_factor, choices = c("reference", "sequential", "pairwise"))
-    checkmate::assert(
-        checkmate::check_numeric(contrast_numeric, min.len = 1, max.len = 2),
-        checkmate::check_choice(contrast_numeric, choices = c("iqr", "minmax", "sd", "2sd", "dydx")))
+    # `marginaleffects()` must run its own sanity checks before any transforms
+    if (!isTRUE(internal_call)) {
+        model <- sanity_model(model = model, calling_function = "comparisons", ...)
+        sanity_type(model = model, type = type)
+        checkmate::assert_numeric(conf.level, len = 1)
+        checkmate::assert_true(conf.level > 0)
+        checkmate::assert_true(conf.level < 1)
+        checkmate::assert_choice(contrast_factor, choices = c("reference", "sequential", "pairwise"))
+        checkmate::assert(
+            checkmate::check_numeric(contrast_numeric, min.len = 1, max.len = 2),
+            checkmate::check_choice(contrast_numeric, choices = c("iqr", "minmax", "sd", "2sd", "dydx")))
+    }
 
     # variables vector
     variables_list <- sanitize_variables(model = model, newdata = newdata, variables = variables)
@@ -118,7 +120,6 @@ comparisons <- function(model,
     attributes_newdata <- attributes_newdata[idx]
 
     # compute contrasts and standard errors
-    # do.call and dots to avoid unused argument error in future_lapply
     dots <- list(...)
     cache <- get_contrast_data(
         model = model,
@@ -137,7 +138,7 @@ comparisons <- function(model,
     args <- c(args, dots)
     mfx <- do.call("get_contrasts", args)
 
-    # bayesian draws
+    # bayesian posterior
     if (!is.null(attr(mfx, "posterior_draws"))) {
         draws <- attr(mfx, "posterior_draws")
         J <- NULL
@@ -200,7 +201,7 @@ comparisons <- function(model,
     }
 
     # group id: useful for merging, only if it's an internal call and not user-initiated
-    if (isTRUE(list(...)$internal_call) && !"group" %in% colnames(mfx)) {
+    if (isTRUE(internal_call) && !"group" %in% colnames(mfx)) {
          mfx$group <- "main_marginaleffect"
     }
 
@@ -212,10 +213,6 @@ comparisons <- function(model,
     mfx <- mfx[, ..cols, drop = FALSE]
 
     out <- mfx
-
-    if (!isTRUE(list(...)[["return_class"]] == "data.table")) {
-        setDF(out)
-    }
 
     class(out) <- c("comparisons", class(out))
     attr(out, "posterior_draws") <- draws
