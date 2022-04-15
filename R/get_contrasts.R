@@ -96,8 +96,21 @@ get_contrasts <- function(model,
     setDF(lo)
     setDF(hi)
 
-    pred_lo <- get_predict(model, type = type, newdata = lo, ...)
-    pred_hi <- get_predict(model, type = type, newdata = hi, ...)
+    pred_lo <- get_predict(
+        model,
+        type = type,
+        vcov = FALSE,
+        conf.level = NULL,
+        newdata = lo,
+        ...)
+
+    pred_hi <- get_predict(
+        model,
+        type = type,
+        vcov = FALSE,
+        conf.level = NULL,
+        newdata = hi,
+        ...)
 
     pred_lo$term <- cache[["ter"]]
     pred_hi$term <- cache[["ter"]]

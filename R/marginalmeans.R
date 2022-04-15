@@ -52,15 +52,15 @@
 marginalmeans <- function(model,
                           variables = NULL,
                           variables_grid = NULL,
-                          vcov = NULL,
+                          vcov = TRUE,
+                          conf.level = 0.95,
                           type = "response",
                           ...) {
 
     newdata <- insight::get_data(model)
 
-    if (is.null(vcov)) {
-        vcov <- get_vcov(model)
-    }
+    # avoid warning for unsupported models in insight::get_varcov
+    vcov <- get_vcov(model, vcov = vcov)
 
     # sanity
     sanity_dots(model = model, ...)
@@ -177,6 +177,7 @@ get_marginalmeans <- function(model,
         model = model,
         newdata = newdata,
         type = type,
+        vcov = FALSE,
         conf.level = NULL,
         ...)
 

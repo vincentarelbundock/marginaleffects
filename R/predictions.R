@@ -69,6 +69,7 @@
 predictions <- function(model,
                         newdata = NULL,
                         variables = NULL,
+                        vcov = TRUE,
                         conf.level = 0.95,
                         type = "response",
                         ...) {
@@ -139,10 +140,16 @@ predictions <- function(model,
     padding <- complete_levels(newdata, levels_character)
     newdata <- rbindlist(list(padding, newdata))
 
+    # vcov = FALSE produces warnings and errors in insight::get_predicted
+    if (isTRUE(vcov)) {
+        vcov <- NULL
+    }
+
     # predictions
     tmp <- get_predict(model,
                        newdata = newdata,
                        type = type,
+                       vcov = vcov,
                        conf.level = conf.level,
                        ...)
 
@@ -171,12 +178,12 @@ predictions <- function(model,
     if (is.numeric(conf.level) &&
         !any(c("std.error", "conf.low") %in% colnames(tmp))) {
 
-        vcov <- try(get_vcov(model), silent = TRUE)
+        vcov <- try(get_vcov(model, vcov = vcov), silent = TRUE)
         if (!inherits(vcov, "try-error") && is.matrix(vcov)) {
             fun <- function(...) get_predict(...)[["predicted"]]
             se <- standard_errors_delta(model,
                                         newdata = newdata,
-                                        vcov = get_vcov(model),
+                                        vcov = vcov,
                                         type = type,
                                         FUN = fun,
                                         ...)

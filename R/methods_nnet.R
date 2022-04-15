@@ -25,21 +25,6 @@ set_coef.multinom <- function(model, coefs) {
 }
 
 
-#' @include get_vcov.R
-#' @rdname get_vcov
-#' @export
-get_vcov.multinom <- function(model, ...) {
-    out <- suppressMessages(insight::get_varcov(model))
-    coefs <- get_coef(model)
-    if (ncol(out) == length(coefs)) {
-        row.names(out) <- names(coefs)
-        colnames(out) <- names(coefs)
-    } else {
-        out <- NULL
-    }
-    return(out)
-}
-
 
 #' @include get_group_names.R
 #' @rdname get_group_names

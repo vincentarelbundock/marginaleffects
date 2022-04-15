@@ -17,8 +17,9 @@ get_predict <- function(model, newdata, type, ...) {
 #' @export
 get_predict.default <- function(model,
                                 newdata = insight::get_data(model),
-                                type = "response",
+                                vcov = FALSE,
                                 conf.level = NULL,
+                                type = "response",
                                 ...) {
 
     type <- sanity_type(model, type)
@@ -39,7 +40,7 @@ get_predict.default <- function(model,
 
     # should we try to compute predictions with `insight::get_predicted()`?
     # confidence interval with known `predict` argument
-    is_insight <- (!is.null(conf.level) && !is.na(type_insight)) ||
+    is_insight <- (!isFALSE(vcov) && !is.null(conf.level) && !is.na(type_insight)) ||
                   any(c("include_random", "include_smooth") %in% names(dots))
 
     # `insight::get_predicted` yields back-transformed confidence intervals
@@ -63,6 +64,7 @@ get_predict.default <- function(model,
             x = model,
             data = newdata,
             predict = type_insight,
+            vcov = vcov,
             ci = conf.level)
 
         args <- c(args, dots)
