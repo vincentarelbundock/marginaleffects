@@ -55,9 +55,9 @@ See the `brms` documentation for a list of available arguments:
 Load libraries and download data on passengers of the Titanic from [the Rdatasets archive:](https://vincentarelbundock.github.io/Rdatasets/)
 
 ```{r, message = FALSE}
-library(brms)
 library(marginaleffects)
-library(ggplot2)
+library(brms)
+library(tidyverse)
 library(ggdist)
 
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/carData/TitanicSurvival.csv")
