@@ -136,7 +136,6 @@ marginaleffects <- function(model,
     sanity_type(model = model, type = type, calling_function = "marginaleffects")
     newdata <- sanity_newdata(model, newdata)
     variables <- sanitize_variables(model, newdata, variables)
-    vcov <- sanitize_vcov(model, vcov)
 
     # variables is a list but we need a vector (and we drop cluster)
     variables_vec <- unique(unlist(variables))

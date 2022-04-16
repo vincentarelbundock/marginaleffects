@@ -20,6 +20,10 @@ get_vcov.scam <- function(model,
                           vcov = NULL,
                           ...) {
 
+    if (!isTRUE(checkmate::check_matrix(vcov))) {
+        return(vcov)
+    }
+
     # email from developer Natalya Pya
     # "one of the elements of the returned 'scam' object is 'Vp.t' which is an
     # estimated covariance matrix for the reparametrized parameters,
