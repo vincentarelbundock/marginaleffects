@@ -86,7 +86,6 @@ comparisons <- function(model,
             }
         }
         newdata <- sanity_newdata(model, newdata)
-        vcov <- sanitize_vcov(model, vcov)
     }
 
     # `marginaleffects()` must run its own sanity checks before any transforms
@@ -101,6 +100,9 @@ comparisons <- function(model,
             checkmate::check_numeric(contrast_numeric, min.len = 1, max.len = 2),
             checkmate::check_choice(contrast_numeric, choices = c("iqr", "minmax", "sd", "2sd", "dydx")))
     }
+
+    # variance-covariance matrix
+    vcov <- get_vcov(model, vcov = vcov)
 
     # variables vector
     variables_list <- sanitize_variables(model = model, newdata = newdata, variables = variables)

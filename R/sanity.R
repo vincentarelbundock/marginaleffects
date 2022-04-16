@@ -113,65 +113,6 @@ sanitize_variables <- function(model, newdata, variables) {
 }
 
 
-sanitize_vcov <- function(model, vcov) {
-
-    # lme4 produces a distinct matrix type
-    if (inherits(vcov, "dpoMatrix")) {
-        vcov <- as.matrix(vcov)
-    }
-
-    # assert affer dpoMatrix conversion
-    checkmate::assert(
-        checkmate::check_flag(vcov),
-        checkmate::check_matrix(vcov, col.names = "unique", row.names = "unique", null.ok = TRUE))
-
-    # skip
-    if (isFALSE(vcov)) {
-        vcov <- FALSE
-    }
-
-    # TRUE: try to extract a vcov
-    if (isTRUE(vcov)) {
-        vcov <- try(get_vcov(model), silent = TRUE)
-        if (inherits(vcov, "try-error") && !inherits(model, "brmsfit")) {
-            msg <- sprintf('Unable to extract a variance-covariance matrix from model of class "%s" using the `stats::vcov` function. The `vcov` argument was switched to `FALSE`. Please supply a named matrix to produce uncertainty estimates.', class(model)[1])
-            warning(msg, call. = FALSE)
-            return(NULL)
-            # dpoMatrix conversion
-        }
-        vcov <- as.matrix(vcov)
-    }
-
-    # align vcov and coefs
-    if (is.matrix(vcov)) {
-        coefs <- get_coef(model)
-
-        # some models return unnamed vcov. this is bad but rare
-        if (!is.null(dimnames(vcov))) {
-            if (anyDuplicated(names(vcov)) == 0) {
-                # 1) Check above is needed for `AER::tobit` and others where `vcov`
-                # includes Log(scale) but `coef` does not Dangerous for `oridinal::clm`
-                # and others where there are important duplicate column names in
-                # `vcov`, and selecting with [,] repeats the first instance.
-
-                # 2) Sometimes vcov has more columns than coefs (e.g., betareg)
-                if (all(names(coefs) %in% colnames(vcov))) {
-                    vcov <- vcov[names(coefs), names(coefs), drop = FALSE]
-                }
-            }
-        } else if (ncol(vcov) == length(coefs)) {
-            row.names(vcov) <- colnames(vcov) <- names(coefs)
-        }
-    }
-
-    if (isFALSE(vcov)) {
-        vcov <- NULL
-    }
-
-    return(vcov)
-}
-
-
 sanity_predict_vector <- function(pred, model, newdata, type) {
     if (!isTRUE(checkmate::check_atomic_vector(pred)) &&
         !isTRUE(checkmate::check_array(pred, d = 1))) {

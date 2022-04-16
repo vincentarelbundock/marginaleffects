@@ -128,7 +128,7 @@ test_that('glm: marginalmeans vs. emmeans', {
 
 test_that("vcov(loess) does not exist", {
     mod <- loess(mpg ~ wt, data = mtcars)
-    expect_warning(marginaleffects(mod), regexp = "vcov")
+    expect_warning(marginaleffects(mod), regexp = "Unable")
 })
 
 test_that("loess vs. margins", {
@@ -142,5 +142,8 @@ test_that("loess vs. margins", {
 
 test_that("loess predictions", {
     mod <- loess(mpg ~ wt, data = mtcars)
-    expect_predictions(predictions(mod), se = FALSE)
+    expect_warning(predictions(mod))
+    expect_warning(predictions(mod, vcov = FALSE), NA)
+    pred <- predictions(mod, vcov = FALSE)
+    expect_predictions(pred, se = FALSE)
 })
