@@ -140,10 +140,8 @@ predictions <- function(model,
     padding <- complete_levels(newdata, levels_character)
     newdata <- rbindlist(list(padding, newdata))
 
-    # vcov = FALSE produces warnings and errors in insight::get_predicted
-    if (isTRUE(vcov)) {
-        vcov <- NULL
-    }
+    # Fancy processing of the `vcov` argument to accept "HC3" strings, etc.
+    vcov <- get_vcov(model, vcov)
 
     # predictions
     tmp <- get_predict(model,
