@@ -36,9 +36,7 @@ get_vcov.default <- function(model,
         checkmate::check_formula(vcov),
         checkmate::check_choice(
             vcov,
-            choices = c("iid", "classical", "constant", "stata", "robust",
-                        "HC", "HC0", "HC1", "HC2", "HC3", "HC4", "HC4m", "HC5",
-                        "HAC", "NeweyWest", "kernHAC", "OPG")))
+            choices = c("stata", "robust", "HC", "HC0", "HC1", "HC2", "HC3", "HC4", "HC4m", "HC5", "HAC", "NeweyWest", "kernHAC", "OPG")))
 
     out <- vcov
 
@@ -118,11 +116,6 @@ get_varcov_args <- function(model, vcov) {
     if (isTRUE(checkmate::check_formula(vcov))) {
         out <- list("vcov" = "vcovCL", "vcov_args" = list("cluster" = vcov))
         return(out)
-    }
-
-    if (vcov %in% c("iid", "classical", "constant")) {
-        out <- list()
-        return(NULL)
     }
 
     out <- switch(vcov,
