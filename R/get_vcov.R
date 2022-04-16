@@ -56,7 +56,7 @@ get_vcov.default <- function(model,
         out <- try(suppressMessages(stats::vcov(model)), silent = TRUE)
     }
 
-    # lme4 produces a distinct matrix type
+    # 2nd try: lme4 produces a distinct matrix type
     if (inherits(out, "dpoMatrix")) {
         out <- as.matrix(out)
     }
