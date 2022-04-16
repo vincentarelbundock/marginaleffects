@@ -107,7 +107,7 @@ test_that("vs. margins (dydx only)", {
 test_that("sanity check on dpoMatrix", {
     dat <- haven::read_dta(test_path("stata/databases/lme4_02.dta"))
     mod <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = dat, family = binomial)
-    k <- marginaleffects(mod, vcov = stats::vcov(mod))
+    k <- marginaleffects(mod, vcov = as.matrix(stats::vcov(mod)))
     expect_s3_class(k, "data.frame")
 })
 

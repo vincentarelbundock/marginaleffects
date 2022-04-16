@@ -20,7 +20,7 @@ get_vcov.scam <- function(model,
                           vcov = NULL,
                           ...) {
 
-    if (!isTRUE(checkmate::check_matrix(vcov))) {
+    if (isTRUE(checkmate::check_matrix(vcov))) {
         return(vcov)
     }
 
@@ -29,7 +29,7 @@ get_vcov.scam <- function(model,
     # estimated covariance matrix for the reparametrized parameters,
     # 'model$coefficients.t'."
 
-    if (!is.null(vcov)) {
+    if (!is.null(vcov) && !is.logical(vcov)) {
         stop("The `vcov` argument is not supported for models of class `scam`.", .call = FALSE)
     }
 
