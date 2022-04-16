@@ -146,7 +146,7 @@ comparisons <- function(model,
         J <- NULL
 
     # standard errors via delta method
-    } else if (!is.null(vcov)) {
+    } else if (isTRUE(checkmate::check_matrix(vcov))) {
         idx <- intersect(colnames(mfx), c("type", "group", "term", "contrast"))
         idx <- mfx[, (idx), drop = FALSE]
         args <- list(model,

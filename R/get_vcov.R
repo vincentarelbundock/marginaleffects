@@ -18,9 +18,11 @@ get_vcov.default <- function(model,
 
     # user-level default can be boolean.
     if (isFALSE(vcov)) {
-        return(NULL)
+        return(FALSE)
+    }
+
     # TRUE generates a warning in `insight::get_varcov` for some models
-    } else if (isTRUE(vcov)) {
+    if (isTRUE(vcov)) {
         vcov <- NULL
     }
 

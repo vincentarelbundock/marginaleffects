@@ -43,6 +43,12 @@ get_predict.default <- function(model,
     is_insight <- (!isFALSE(vcov) && !is.null(conf.level) && !is.na(type_insight)) ||
                   any(c("include_random", "include_smooth") %in% names(dots))
 
+    # classes not supported by insight
+    unsupported <- c("betareg") # `vcov` not supported. delta method doesn't work on response scale
+    if (any(inherits(model, what = unsupported, which = TRUE) == 1)) {
+        is_insight <- FALSE
+    }
+
     # `insight::get_predicted` yields back-transformed confidence intervals
     if (isTRUE(is_insight)) {
         if ("re_formula" %in% names(dots)) {
