@@ -59,7 +59,7 @@ marginalmeans <- function(model,
 
     newdata <- insight::get_data(model)
 
-    # avoid warning for unsupported models in insight::get_varcov
+    # fancy vcov processing to allow strings like "HC3"
     vcov <- get_vcov(model, vcov = vcov)
 
     # sanity

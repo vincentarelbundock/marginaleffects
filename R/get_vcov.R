@@ -25,7 +25,7 @@ get_vcov.default <- function(model,
     }
 
     bad <- c("brmsfit", "stanreg")
-    if (any(inherits(mod, bad, which = TRUE) == 1)) {
+    if (any(inherits(model, bad, which = TRUE) == 1)) {
         return(NULL)
     }
 
@@ -108,13 +108,14 @@ get_vcov.default <- function(model,
 #' Take a `modelsummary()` style `vcov` argument and convert it to
 #' `insight::get_varcov()`
 #'
+#' @keywords internal
 get_varcov_args <- function(model, vcov) {
     if (is.null(vcov)) {
         out <- list()
         return(out)
     }
 
-    if (isTRUE(check_formula(vcov))) {
+    if (isTRUE(checkmate::check_formula(vcov))) {
         out <- list("vcov" = "vcovCL", "vcov_args" = list("cluster" = vcov))
         return(out)
     }

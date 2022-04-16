@@ -26,9 +26,19 @@
 #' @param newdata A dataset over which to compute marginal effects. `NULL` uses
 #'   the original data used to fit the model.
 #' @param vcov Matrix or boolean
-#'   + FALSE: does not compute unit-level standard errors. This can speed up computation considerably. 
+#'   + FALSE: does not compute unit-level standard errors. This can speed up computation considerably.
 #'   + TRUE: computes unit-level standard errors using the default `vcov(model)` variance-covariance matrix.
 #'   + Named square matrix: computes standard errors with a user-supplied variance-covariance matrix. This matrix must be square and have dimensions equal to the number of coefficients in `get_coef(model)`.
+#' @param vcov Variance-covariance matrix used to compute uncertainty estimates (e.g., for robust standard errors). Acceptable values are:
+#'  * TRUE: Default uncertainy estimates of the model object.
+#'  * FALSE: Omit uncertainty estimates.
+#'  * A string which indicates the kind of uncertainty estimates to return.
+#'    - Heteroskedasticity-consistent: ``"HC"`, `"HC0"`, `"HC1"`, `"HC2"`, `"HC3"`, `"HC4"`, `"HC4m"`, `"HC5"`. See `?sandwich::vcovHC`
+#'    - Heteroskedasticity and autocorrelation consistent: `"HAC"`
+#'    - Other: `"NeweyWest"`, `"HerHAC"`, `"OPG"`. See the `sandwich` package documentation.
+#'  * A one-sided formula which indicates the name of cluster variables (e.g., `~unitid`). This formula is passed to the `cluster` argument of the `sandwich::vcovCL` function.
+#'  * A square covariance matrix
+#'  * A function which returns a covariance matrix (e.g., `stats::vcov(model)`)
 #' @param conf.level The confidence level to use for the confidence interval if
 #'   `conf.int=TRUE`. Must be strictly greater than 0 and less than 1. Defaults
 #'   to 0.95, which corresponds to a 95 percent confidence interval.

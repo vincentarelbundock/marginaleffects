@@ -29,11 +29,19 @@ calculates marginal effects for all terms in the model object.}
 differ based on the model type, but will typically be a string such as:
 "response", "link", "probs", or "zero".}
 
-\item{vcov}{Matrix or boolean
+\item{vcov}{Variance-covariance matrix used to compute uncertainty estimates (e.g., for robust standard errors). Acceptable values are:
 \itemize{
-\item FALSE: does not compute unit-level standard errors. This can speed up computation considerably.
-\item TRUE: computes unit-level standard errors using the default \code{vcov(model)} variance-covariance matrix.
-\item Named square matrix: computes standard errors with a user-supplied variance-covariance matrix. This matrix must be square and have dimensions equal to the number of coefficients in \code{get_coef(model)}.
+\item TRUE: Default uncertainy estimates of the model object.
+\item FALSE: Omit uncertainty estimates.
+\item A string which indicates the kind of uncertainty estimates to return.
+\itemize{
+\item Heteroskedasticity-consistent: ``"HC"\verb{, }"HC0"`, `"HC1"`, `"HC2"`, `"HC3"`, `"HC4"`, `"HC4m"`, `"HC5"`. See `?sandwich::vcovHC`
+\item Heteroskedasticity and autocorrelation consistent: \code{"HAC"}
+\item Other: \code{"NeweyWest"}, \code{"HerHAC"}, \code{"OPG"}. See the \code{sandwich} package documentation.
+}
+\item A one-sided formula which indicates the name of cluster variables (e.g., \code{~unitid}). This formula is passed to the \code{cluster} argument of the \code{sandwich::vcovCL} function.
+\item A square covariance matrix
+\item A function which returns a covariance matrix (e.g., \code{stats::vcov(model)})
 }}
 
 \item{conf.level}{The confidence level to use for the confidence interval if
