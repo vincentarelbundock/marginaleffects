@@ -16,43 +16,55 @@ get_vcov.default <- function(model,
                              vcov = NULL,
                              ...) {
 
-
+    # user-level default can be boolean.
     if (isFALSE(vcov)) {
         return(NULL)
-    }
-
-    # user-level default is TRUE, but this generates a warning in
-    # `insight::get_varcov` for some models
-    if (isTRUE(vcov)) {
+    # TRUE generates a warning in `insight::get_varcov` for some models
+    } else if (isTRUE(vcov)) {
         vcov <- NULL
     }
 
-    out <- vcov
-
-    # ignore `vcov` completely
     bad <- c("brmsfit", "stanreg")
-    bad <- any(sapply(bad, function(x) inherits(model, x)))
-    if (isTRUE(bad)) {
+    if (any(inherits(mod, bad, which = TRUE) == 1)) {
         return(NULL)
     }
 
-    if (!isTRUE(checkmate::check_matrix(out))) {
-        out <- try(insight::get_varcov(model, vcov = vcov, component = "all"), silent = TRUE)
+    checkmate::assert(
+        checkmate::check_null(vcov),
+        checkmate::check_function(vcov),
+        checkmate::check_matrix(vcov),
+        checkmate::check_formula(vcov),
+        checkmate::check_choice(
+            vcov,
+            choices = c("iid", "classical", "constant", "stata", "robust",
+                        "HC", "HC0", "HC1", "HC2", "HC3", "HC4", "HC4m", "HC5",
+                        "HAC", "NeweyWest", "kernHAC", "OPG")))
+
+    out <- vcov
+
+    if (isTRUE(checkmate::check_matrix(out))) {
+        if (ncol(out) != nrow(out)) stop("The `vcov` matrix must be square.", call. = FALSE)
+        return(out)
     }
 
+    # {insight}
+    args <- get_varcov_args(model, vcov)
+    args[["x"]] <- model
+    args[["component"]] <- "all"
+    fun <- get("get_varcov", asNamespace("insight"))
+    out <- try(do.call("fun", args), silent = TRUE)
+
+    # {stats}
     if (!isTRUE(checkmate::check_matrix(out))) {
         # suppress: "Re-fitting to get Hessian"
-        out <- try(suppressMessages(stats::vcov(model)), silent = TRUE)
+        out <- try(suppressMessages(stats::vcov(model)),
+                   silent = TRUE)
     }
 
-    # 2nd try: lme4 produces a distinct matrix type
-    if (inherits(out, "dpoMatrix")) {
-        out <- as.matrix(out)
-    }
-
-    # give up: brms, loess, and other models without vcov
+    # give up: loess and other models without vcov
     if (!isTRUE(checkmate::check_matrix(out))) {
-        msg <- sprintf("Unable to extract a variance-covariance matrix for model of class `%s`.", class(model)[1])
+        msg <- sprintf("Unable to extract a variance-covariance matrix for model of class `%s`.",
+                       class(model)[1])
         warning(msg, .call = FALSE)
         return(NULL)
     }
@@ -89,4 +101,35 @@ get_vcov.default <- function(model,
 
     # NOTES:
     # survival::coxph with 1 regressor produces a vector
+}
+
+
+
+#' Take a `modelsummary()` style `vcov` argument and convert it to
+#' `insight::get_varcov()`
+#'
+get_varcov_args <- function(model, vcov) {
+    if (is.null(vcov)) {
+        out <- list()
+        return(out)
+    }
+
+    if (isTRUE(check_formula(vcov))) {
+        out <- list("vcov" = "vcovCL", "vcov_args" = list("cluster" = vcov))
+        return(out)
+    }
+
+    if (vcov %in% c("iid", "classical", "constant")) {
+        out <- list()
+        return(NULL)
+    }
+
+    out <- switch(vcov,
+        "stata" = list(vcov = "HC2"),
+        "robust" = list(vcov = "HC3"),
+        "bootstrap" = list(vcov = "BS"),
+        "outer-product" = list(vcov = "OPG"),
+        list(vcov = vcov))
+
+    return(out)
 }
