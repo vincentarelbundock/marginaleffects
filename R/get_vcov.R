@@ -29,22 +29,11 @@ get_vcov.default <- function(model,
 
     out <- vcov
 
-    # ignore `vcov` completely 
-    bad <- c("brmsfit", "stanreg") 
+    # ignore `vcov` completely
+    bad <- c("brmsfit", "stanreg")
     bad <- any(sapply(bad, function(x) inherits(model, x)))
     if (isTRUE(bad)) {
         return(NULL)
-    }
-
-    # classes for which `insight::get_varcov` produces unexpected results
-    bad <- c("betareg", "plm", "geeglm", "glmmTMB", "ivreg", "lmerMod", "glmerMod", "scam")
-    bad <- any(sapply(bad, function(x) inherits(model, x)))
-    if (!isTRUE(checkmate::check_matrix(out)) && isTRUE(bad)) {
-        if (!is.null(out) && !is.logical(out)) {
-            stop("The `vcov` argument is not supported for objects of this class.",
-                 call. = FALSE)
-        }
-        out <- try(stats::vcov(model), silent = TRUE)
     }
 
     if (!isTRUE(checkmate::check_matrix(out))) {
