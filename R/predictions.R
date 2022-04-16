@@ -140,9 +140,6 @@ predictions <- function(model,
     padding <- complete_levels(newdata, levels_character)
     newdata <- rbindlist(list(padding, newdata))
 
-    # Fancy processing of the `vcov` argument to accept "HC3" strings, etc.
-    vcov <- get_vcov(model, vcov)
-
     # predictions
     tmp <- get_predict(model,
                        newdata = newdata,
@@ -173,26 +170,25 @@ predictions <- function(model,
     }
 
     # try to extract standard errors via the delta method if necessary
-    if (!isFALSE(vcov) &&
-        !any(c("std.error", "conf.low") %in% colnames(tmp)) &&
-        !inherits(vcov, "try-error") &&
-        is.matrix(vcov)) {
-
-        fun <- function(...) get_predict(...)[["predicted"]]
-        se <- standard_errors_delta(model,
-                                    newdata = newdata,
-                                    vcov = vcov,
-                                    type = type,
-                                    FUN = fun,
-                                    ...)
-        if (is.numeric(se) && length(se) == nrow(tmp)) {
-            tmp[["std.error"]] <- se
-            flag <- tryCatch(insight::model_info(model)$is_linear,
-                             error = function(e) FALSE)
-            if (isTRUE(flag) && is.numeric(conf.level)) {
-                critical_z <- abs(stats::qnorm((1 - conf.level) / 2))
-                tmp[["conf.low"]] <- tmp[["predicted"]] - critical_z * tmp[["std.error"]]
-                tmp[["conf.high"]] <- tmp[["predicted"]] + critical_z * tmp[["std.error"]]
+    # check conf.low in case it's a bayesian model
+    if (!isFALSE(vcov) && !any(c("std.error", "conf.low") %in% colnames(tmp))) {
+        if (isTRUE(checkmate::check_matrix)) {
+            fun <- function(...) get_predict(...)[["predicted"]]
+            se <- standard_errors_delta(model,
+                                        newdata = newdata,
+                                        vcov = vcov,
+                                        type = type,
+                                        FUN = fun,
+                                        ...)
+            if (is.numeric(se) && length(se) == nrow(tmp)) {
+                tmp[["std.error"]] <- se
+                flag <- tryCatch(insight::model_info(model)$is_linear,
+                                 error = function(e) FALSE)
+                if (isTRUE(flag) && is.numeric(conf.level)) {
+                    critical_z <- abs(stats::qnorm((1 - conf.level) / 2))
+                    tmp[["conf.low"]] <- tmp[["predicted"]] - critical_z * tmp[["std.error"]]
+                    tmp[["conf.high"]] <- tmp[["predicted"]] + critical_z * tmp[["std.error"]]
+                }
             }
         }
     }

@@ -44,7 +44,7 @@ test_that("predictions: no validity", {
     expect_predictions(pred, n_row = nrow(GasolineYield))
     pred <- predictions(mod, newdata = datagrid(batch = 1:3, temp = c(300, 350)))
     expect_predictions(pred, n_row = 6)
- })
+})
 
 test_that("marginalmeans: vs. emmeans", {
     # TODO: Bad tolerance

@@ -28,7 +28,7 @@ get_predict.default <- function(model,
 
     dots <- list(...)
 
-    # some predict methods raise warnings on unused arguments 
+    # some predict methods raise warnings on unused arguments
     unused <- c("normalize_dydx", "step_size", "numDeriv_method", "internal_call", "contrast_numeric_slope")
     dots <- dots[setdiff(names(dots), unused)]
 
@@ -64,8 +64,15 @@ get_predict.default <- function(model,
             x = model,
             data = newdata,
             predict = type_insight,
-            vcov = vcov,
             ci = conf.level)
+
+        # `get_predicted` issues a warning even with `vcov=NULL` when the
+        # argument is not supported, so we do this here instead of in `predictions`
+        if (is.logical(vcov)) {
+            args[["vcov"]] <- NULL
+        } else if (!is.logical(vcov) && !is.null(vcov)) {
+            args[["vcov"]] <- get_vcov(model, vcov = vcov)
+        }
 
         args <- c(args, dots)
 
