@@ -130,16 +130,20 @@ marginalmeans <- function(model,
     out <- as.data.frame(mm)
 
     # standard errors via delta method
-    se <- standard_errors_delta(model,
-                                vcov = vcov,
-                                type = type,
-                                FUN = standard_errors_delta_marginalmeans,
-                                index = NULL,
-                                variables = variables,
-                                newdata = newgrid)
+    J <- NULL
+    if (!isFALSE(vcov)) {
+        se <- standard_errors_delta(model,
+                                    vcov = vcov,
+                                    type = type,
+                                    FUN = standard_errors_delta_marginalmeans,
+                                    index = NULL,
+                                    variables = variables,
+                                    newdata = newgrid)
 
-    # get rid of attributes in column
-    out[["std.error"]] <- as.numeric(se)
+        # get rid of attributes in column
+        out[["std.error"]] <- as.numeric(se)
+        J <- attr(se, "J")
+    }
 
     # column order
     cols <- c("type", "group", "term", "value", "marginalmean", "std.error", sort(colnames(out)))
@@ -149,8 +153,8 @@ marginalmeans <- function(model,
 
     # attributes
     class(out) <- c("marginalmeans", class(out))
-    attr(out, "J") <- attr(se, "J")
     attr(out, "model") <- model
+    attr(out, "J") <- J
     attr(out, "type") <- type
     attr(out, "model_type") <- class(model)[1]
     attr(out, "variables") <- variables
