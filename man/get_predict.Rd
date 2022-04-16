@@ -31,9 +31,9 @@ get_predict(model, newdata, type, ...)
 \method{get_predict}{default}(
   model,
   newdata = insight::get_data(model),
+  type = "response",
   vcov = FALSE,
   conf.level = NULL,
-  type = "response",
   ...
 )
 

@@ -17,9 +17,9 @@ get_predict <- function(model, newdata, type, ...) {
 #' @export
 get_predict.default <- function(model,
                                 newdata = insight::get_data(model),
+                                type = "response",
                                 vcov = FALSE,
                                 conf.level = NULL,
-                                type = "response",
                                 ...) {
 
     type <- sanity_type(model, type)
