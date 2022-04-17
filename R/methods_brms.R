@@ -24,10 +24,13 @@ get_coef.brmsfit <- function(model, ...) {
 #' @export
 get_predict.brmsfit <- function(model,
                                 newdata = insight::get_data(model),
+                                vcov = NULL,
                                 type = "response",
                                 ...) {
 
     assert_dependency("rstantools")
+
+    if (!isTRUE(check_flag(vcov, null.ok = TRUE))) stop("The `vcov` argument is not supported for this model class.")
 
     checkmate::assert_choice(type, choices = c("response", "link", "prediction"))
 

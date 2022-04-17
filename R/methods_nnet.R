@@ -45,9 +45,11 @@ get_group_names.multinom <- function(model, ...) {
 #' @export
 get_predict.multinom <- function(model,
                                  newdata = insight::get_data(model),
+                                 vcov = NULL,
                                  type = "probs",
                                  ...) {
 
+    if (!isTRUE(check_flag(vcov, null.ok = TRUE))) stop("The `vcov` argument is not supported for this model class.")
     type <- sanity_type(model, type)
 
     # needed because `predict.multinom` uses `data` rather than `newdata`

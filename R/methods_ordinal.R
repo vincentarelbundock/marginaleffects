@@ -2,9 +2,11 @@
 #' @export
 get_predict.clm <- function(model,
                             newdata = insight::get_data(model),
+                            vcov = NULL,
                             type = "response",
                             ...) {
 
+    if (!isTRUE(check_flag(vcov, null.ok = TRUE))) stop("The `vcov` argument is not supported for this model class.")
     checkmate::assert_choice(type, choices = c("response", "prob"))
 
     if (type == "response") {

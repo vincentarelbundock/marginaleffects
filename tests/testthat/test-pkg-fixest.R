@@ -162,3 +162,4 @@ test_that("Issue #229", {
     mod <- feNmlm(Euros ~ log(dist_km) | Product, data = dat)
     expect_marginaleffects(mod)
 })
+

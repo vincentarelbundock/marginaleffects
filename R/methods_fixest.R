@@ -3,6 +3,7 @@
 get_predict.fixest <- function(model,
                                newdata = insight::get_data(model),
                                type = "response",
+                               vcov = NULL,
                                conf.level = NULL,
                                ...) {
 
@@ -29,6 +30,14 @@ get_predict.fixest <- function(model,
             args[["interval"]] <- "confidence"
         } else {
             args[["interval"]] <- dots[["interval"]]
+        }
+
+        # vcov
+        if (!isTRUE(checkmate::check_matrix(vcov, null.ok = TRUE))) {
+            V <- get_vcov(model, vcov = vcov)
+        }
+        if (isTRUE(checkmate::check_matrix(V, null.ok = TRUE))) {
+            args[["vcov"]] <- V
         }
     }
 
