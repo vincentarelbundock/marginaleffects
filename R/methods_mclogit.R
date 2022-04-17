@@ -33,7 +33,7 @@ get_predict.mblogit <- function(model,
                                 vcov = NULL,
                                 type = "probs",
                                 ...) {
-    if (!isTRUE(check_flag(vcov, null.ok = TRUE))) stop("The `vcov` argument is not supported for this model class.")
+    if (!isTRUE(checkmate::check_flag(vcov, null.ok = TRUE))) stop("The `vcov` argument is not supported for this model class.")
     out <- suppressMessages(
         get_predict.multinom(model = model,
                              newdata = newdata,

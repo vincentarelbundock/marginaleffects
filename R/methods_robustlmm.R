@@ -13,7 +13,7 @@ get_predict.rlmerMod <- function(model,
                                  vcov = NULL,
                                  ...) {
 
-    if (!isTRUE(check_flag(vcov, null.ok = TRUE))) stop("The `vcov` argument is not supported for this model class.")
+    if (!isTRUE(checkmate::check_flag(vcov, null.ok = TRUE))) stop("The `vcov` argument is not supported for this model class.")
 
     args <- list(...)
     # some predict methods raise warnings on unused arguments

@@ -6,7 +6,7 @@ get_predict.clm <- function(model,
                             type = "response",
                             ...) {
 
-    if (!isTRUE(check_flag(vcov, null.ok = TRUE))) stop("The `vcov` argument is not supported for this model class.")
+    if (!isTRUE(checkmate::check_flag(vcov, null.ok = TRUE))) stop("The `vcov` argument is not supported for this model class.")
     checkmate::assert_choice(type, choices = c("response", "prob"))
 
     if (type == "response") {
