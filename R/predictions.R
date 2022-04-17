@@ -143,9 +143,9 @@ predictions <- function(model,
     # predictions
     tmp <- get_predict(model,
                        newdata = newdata,
-                       type = type,
                        vcov = vcov,
                        conf.level = conf.level,
+                       type = type,
                        ...)
 
     # two cases when tmp is a data.frame

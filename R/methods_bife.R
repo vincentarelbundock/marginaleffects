@@ -9,8 +9,6 @@ get_predict.bife <- function(model,
                              type = "response",
                              ...) {
 
-    if (!isTRUE(checkmate::check_flag(vcov, null.ok = TRUE))) stop("The `vcov` argument is not supported for this model class.")
-
     type <- sanity_type(model, type)
 
     pred <- stats::predict(model,
