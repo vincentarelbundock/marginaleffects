@@ -41,6 +41,7 @@ get_predict(model, newdata, type, ...)
   model,
   newdata = insight::get_data(model),
   type = "probs",
+  vcov = NULL,
   conf.level = NULL,
   ...
 )
@@ -53,20 +54,45 @@ get_predict(model, newdata, type, ...)
   ...
 )
 
-\method{get_predict}{glimML}(model, newdata = insight::get_data(model), type = "response", ...)
+\method{get_predict}{glimML}(
+  model,
+  newdata = insight::get_data(model),
+  vcov = NULL,
+  type = "response",
+  ...
+)
 
-\method{get_predict}{multinom}(model, newdata = insight::get_data(model), type = "probs", ...)
+\method{get_predict}{multinom}(
+  model,
+  newdata = insight::get_data(model),
+  vcov = NULL,
+  type = "probs",
+  ...
+)
 
-\method{get_predict}{brmultinom}(model, newdata = insight::get_data(model), type = "probs", ...)
+\method{get_predict}{brmultinom}(
+  model,
+  newdata = insight::get_data(model),
+  vcov = NULL,
+  type = "probs",
+  ...
+)
 
-\method{get_predict}{brmsfit}(model, newdata = insight::get_data(model), type = "response", ...)
+\method{get_predict}{brmsfit}(
+  model,
+  newdata = insight::get_data(model),
+  vcov = NULL,
+  type = "response",
+  ...
+)
 
-\method{get_predict}{crch}(model, newdata = NULL, type = "location", ...)
+\method{get_predict}{crch}(model, newdata = NULL, vcov = NULL, type = "location", ...)
 
 \method{get_predict}{fixest}(
   model,
   newdata = insight::get_data(model),
   type = "response",
+  vcov = NULL,
   conf.level = NULL,
   ...
 )
@@ -95,9 +121,21 @@ get_predict(model, newdata, type, ...)
   ...
 )
 
-\method{get_predict}{mblogit}(model, newdata = insight::get_data(model), type = "probs", ...)
+\method{get_predict}{mblogit}(
+  model,
+  newdata = insight::get_data(model),
+  vcov = NULL,
+  type = "probs",
+  ...
+)
 
-\method{get_predict}{clm}(model, newdata = insight::get_data(model), type = "response", ...)
+\method{get_predict}{clm}(
+  model,
+  newdata = insight::get_data(model),
+  vcov = NULL,
+  type = "response",
+  ...
+)
 
 \method{get_predict}{rq}(
   model,
@@ -107,13 +145,20 @@ get_predict(model, newdata, type, ...)
   ...
 )
 
-\method{get_predict}{rlmerMod}(model, newdata = insight::get_data(model), ...)
+\method{get_predict}{rlmerMod}(model, newdata = insight::get_data(model), vcov = NULL, ...)
 
-\method{get_predict}{stanreg}(model, newdata = insight::get_data(model), type = "response", ...)
+\method{get_predict}{stanreg}(
+  model,
+  newdata = insight::get_data(model),
+  vcov = NULL,
+  type = "response",
+  ...
+)
 
 \method{get_predict}{coxph}(
   model,
   newdata = insight::get_data(model),
+  vcov = NULL,
   type = "lp",
   conf.level = NULL,
   ...
