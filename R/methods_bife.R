@@ -4,7 +4,8 @@
 #' @export
 get_predict.bife <- function(model,
                              newdata = insight::get_data(model),
-                             vcov = NULL,
+                             vcov = FALSE,
+                             conf.level = 0.95,
                              type = "response",
                              ...) {
 

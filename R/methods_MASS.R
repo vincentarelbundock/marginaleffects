@@ -41,9 +41,9 @@ get_group_names.polr <- function(model, ...) {
 #' @export
 get_predict.polr <- function(model,
                              newdata = insight::get_data(model),
+                             vcov = FALSE,
+                             conf.level = 0.95,
                              type = "probs",
-                             vcov = NULL,
-                             conf.level = NULL,
                              ...) {
 
     if (!isTRUE(checkmate::check_flag(vcov, null.ok = TRUE))) stop("The `vcov` argument is not supported for this model class.")
@@ -60,8 +60,9 @@ get_predict.polr <- function(model,
 
     out <- get_predict.default(model,
                                newdata = newdata,
-                               type = type,
+                               vcov = vcov,
                                conf.level = conf.level,
+                               type = type,
                                ...)
 
     # hack
@@ -84,8 +85,9 @@ set_coef.glmmPQL <- function(model, coefs) {
 #' @export
 get_predict.glmmPQL <- function(model,
                                 newdata = insight::get_data(model),
+                                vcov = FALSE,
+                                conf.level = 0.95,
                                 type = "response",
-                                conf.level = NULL,
                                 ...) {
 
     type <- sanity_type(model, type)

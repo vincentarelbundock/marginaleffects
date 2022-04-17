@@ -10,7 +10,9 @@ set_coef.rlmerMod <- function(model, coefs) {
 #' @export
 get_predict.rlmerMod <- function(model,
                                  newdata = insight::get_data(model),
-                                 vcov = NULL,
+                                 vcov = FALSE,
+                                 conf.level = 0.95,
+                                 type = "response",
                                  ...) {
 
     if (!isTRUE(checkmate::check_flag(vcov, null.ok = TRUE))) stop("The `vcov` argument is not supported for this model class.")

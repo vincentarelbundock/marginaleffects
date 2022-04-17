@@ -30,7 +30,8 @@ sanity_model_specific.mblogit <- function(model, calling_function = "marginaleff
 #' @export
 get_predict.mblogit <- function(model,
                                 newdata = insight::get_data(model),
-                                vcov = NULL,
+                                vcov = FALSE,
+                                conf.level = 0.95,
                                 type = "probs",
                                 ...) {
     if (!isTRUE(checkmate::check_flag(vcov, null.ok = TRUE))) stop("The `vcov` argument is not supported for this model class.")
