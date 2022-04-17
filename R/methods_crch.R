@@ -24,8 +24,6 @@ get_predict.crch <- function(model,
                              conf.level = NULL,
                              type = "location", ...) {
 
-    if (!isTRUE(checkmate::check_flag(vcov, null.ok = TRUE))) stop("The `vcov` argument is not supported for this model class.")
-
     pred <- stats::predict(model, newdata = newdata, type = type)
     sanity_predict_vector(pred = pred, model = model, newdata = newdata, type = type)
     sanity_predict_numeric(pred = pred, model = model, newdata = newdata, type = type)

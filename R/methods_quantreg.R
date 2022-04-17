@@ -7,8 +7,6 @@ get_predict.rq <- function(model,
                            type = NULL,
                            ...) {
 
-    if (!isTRUE(checkmate::check_flag(vcov, null.ok = TRUE))) stop("The `vcov` argument is not supported for this model class.")
-
     # type argument of the method is used to specify confidence interval type
     # TODO: add support for this in `insight`
     assert_dependency("quantreg") # predict method must be available

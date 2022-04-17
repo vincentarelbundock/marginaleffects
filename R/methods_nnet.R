@@ -50,7 +50,6 @@ get_predict.multinom <- function(model,
                                  type = "probs",
                                  ...) {
 
-    if (!isTRUE(checkmate::check_flag(vcov, null.ok = TRUE))) stop("The `vcov` argument is not supported for this model class.")
     type <- sanity_type(model, type)
 
     # needed because `predict.multinom` uses `data` rather than `newdata`
