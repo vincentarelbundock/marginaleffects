@@ -2,9 +2,9 @@
 #' @export
 get_predict.fixest <- function(model,
                                newdata = insight::get_data(model),
+                               vcov = FALSE,
+                               conf.level = 0.95,
                                type = "response",
-                               vcov = NULL,
-                               conf.level = NULL,
                                ...) {
 
     assert_dependency("fixest")

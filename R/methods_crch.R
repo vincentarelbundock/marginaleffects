@@ -18,7 +18,11 @@ set_coef.crch <- function(model, coefs) {
 #' @include get_predict.R
 #' @rdname get_predict
 #' @export
-get_predict.crch <- function(model, newdata = NULL, vcov = NULL, type = "location", ...) {
+get_predict.crch <- function(model,
+                             newdata = NULL,
+                             vcov = FALSE,
+                             conf.level = NULL,
+                             type = "location", ...) {
 
     if (!isTRUE(checkmate::check_flag(vcov, null.ok = TRUE))) stop("The `vcov` argument is not supported for this model class.")
 

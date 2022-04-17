@@ -2,9 +2,9 @@
 #' @export
 get_predict.rq <- function(model,
                            newdata = insight::get_data(model),
-                           type = NULL,
                            vcov = NULL,
-                           conf.level = NULL,
+                           conf.level = 0.95,
+                           type = NULL,
                            ...) {
 
     if (!isTRUE(checkmate::check_flag(vcov, null.ok = TRUE))) stop("The `vcov` argument is not supported for this model class.")

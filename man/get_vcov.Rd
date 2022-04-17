@@ -26,7 +26,7 @@ arguments.}
 
 \item{vcov}{Variance-covariance matrix used to compute uncertainty estimates (e.g., for robust standard errors). Acceptable values are:
 \itemize{
-\item TRUE: Default uncertainy estimates of the model object.
+\item TRUE: Default uncertainty estimates of the model object.
 \item FALSE: Omit uncertainty estimates.
 \item A string which indicates the kind of uncertainty estimates to return.
 \itemize{

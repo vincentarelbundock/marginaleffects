@@ -26,38 +26,40 @@
 \alias{get_predict.coxph}
 \title{Get predicted values from a model object (internal function)}
 \usage{
-get_predict(model, newdata, type, ...)
+get_predict(model, newdata, vcov, conf.level, type, ...)
 
 \method{get_predict}{default}(
   model,
   newdata = insight::get_data(model),
-  type = "response",
   vcov = FALSE,
-  conf.level = NULL,
+  conf.level = 0.95,
+  type = "response",
   ...
 )
 
 \method{get_predict}{polr}(
   model,
   newdata = insight::get_data(model),
+  vcov = FALSE,
+  conf.level = 0.95,
   type = "probs",
-  vcov = NULL,
-  conf.level = NULL,
   ...
 )
 
 \method{get_predict}{glmmPQL}(
   model,
   newdata = insight::get_data(model),
+  vcov = FALSE,
+  conf.level = 0.95,
   type = "response",
-  conf.level = NULL,
   ...
 )
 
 \method{get_predict}{glimML}(
   model,
   newdata = insight::get_data(model),
-  vcov = NULL,
+  vcov = FALSE,
+  conf.level = 0.95,
   type = "response",
   ...
 )
@@ -65,7 +67,8 @@ get_predict(model, newdata, type, ...)
 \method{get_predict}{multinom}(
   model,
   newdata = insight::get_data(model),
-  vcov = NULL,
+  vcov = FALSE,
+  conf.level = 0.95,
   type = "probs",
   ...
 )
@@ -73,7 +76,8 @@ get_predict(model, newdata, type, ...)
 \method{get_predict}{brmultinom}(
   model,
   newdata = insight::get_data(model),
-  vcov = NULL,
+  vcov = FALSE,
+  conf.level = 0.95,
   type = "probs",
   ...
 )
@@ -81,50 +85,62 @@ get_predict(model, newdata, type, ...)
 \method{get_predict}{brmsfit}(
   model,
   newdata = insight::get_data(model),
-  vcov = NULL,
+  vcov = FALSE,
+  conf.level = 0.95,
   type = "response",
   ...
 )
 
-\method{get_predict}{crch}(model, newdata = NULL, vcov = NULL, type = "location", ...)
+\method{get_predict}{crch}(
+  model,
+  newdata = NULL,
+  vcov = FALSE,
+  conf.level = NULL,
+  type = "location",
+  ...
+)
 
 \method{get_predict}{fixest}(
   model,
   newdata = insight::get_data(model),
+  vcov = FALSE,
+  conf.level = 0.95,
   type = "response",
-  vcov = NULL,
-  conf.level = NULL,
   ...
 )
 
 \method{get_predict}{merMod}(
   model,
   newdata = insight::get_data(model),
+  vcov = FALSE,
+  conf.level = 0.95,
   type = "response",
-  conf.level = NULL,
   ...
 )
 
 \method{get_predict}{lmerModLmerTest}(
   model,
   newdata = insight::get_data(model),
+  vcov = FALSE,
+  conf.level = 0.95,
   type = "response",
-  conf.level = NULL,
   ...
 )
 
 \method{get_predict}{lmerMod}(
   model,
   newdata = insight::get_data(model),
+  vcov = FALSE,
+  conf.level = 0.95,
   type = "response",
-  conf.level = NULL,
   ...
 )
 
 \method{get_predict}{mblogit}(
   model,
   newdata = insight::get_data(model),
-  vcov = NULL,
+  vcov = FALSE,
+  conf.level = 0.95,
   type = "probs",
   ...
 )
@@ -132,7 +148,8 @@ get_predict(model, newdata, type, ...)
 \method{get_predict}{clm}(
   model,
   newdata = insight::get_data(model),
-  vcov = NULL,
+  vcov = FALSE,
+  conf.level = 0.95,
   type = "response",
   ...
 )
@@ -140,17 +157,26 @@ get_predict(model, newdata, type, ...)
 \method{get_predict}{rq}(
   model,
   newdata = insight::get_data(model),
+  vcov = NULL,
+  conf.level = 0.95,
   type = NULL,
-  conf.level = NULL,
   ...
 )
 
-\method{get_predict}{rlmerMod}(model, newdata = insight::get_data(model), vcov = NULL, ...)
+\method{get_predict}{rlmerMod}(
+  model,
+  newdata = insight::get_data(model),
+  vcov = FALSE,
+  conf.level = 0.95,
+  type = "response",
+  ...
+)
 
 \method{get_predict}{stanreg}(
   model,
   newdata = insight::get_data(model),
-  vcov = NULL,
+  vcov = FALSE,
+  conf.level = 0.95,
   type = "response",
   ...
 )
@@ -158,9 +184,9 @@ get_predict(model, newdata, type, ...)
 \method{get_predict}{coxph}(
   model,
   newdata = insight::get_data(model),
-  vcov = NULL,
-  type = "lp",
+  vcov = FALSE,
   conf.level = NULL,
+  type = "lp",
   ...
 )
 }
@@ -170,22 +196,9 @@ get_predict(model, newdata, type, ...)
 \item{newdata}{A dataset over which to compute marginal effects. \code{NULL} uses
 the original data used to fit the model.}
 
-\item{type}{Type(s) of prediction as string or character vector. This can
-differ based on the model type, but will typically be a string such as:
-"response", "link", "probs", or "zero".}
-
-\item{...}{Additional arguments are passed to the \code{predict()} method used to
-compute adjusted predictions. These arguments are particularly useful for
-mixed-effects or bayesian models (see the online vignettes on the
-\code{marginaleffects} website). Available arguments can vary from model to
-model, depending on the range of supported arguments by each modeling
-package. See the "Model-Specific Arguments" section of the
-\code{?marginaleffects} documentation for a non-exhaustive list of available
-arguments.}
-
 \item{vcov}{Variance-covariance matrix used to compute uncertainty estimates (e.g., for robust standard errors). Acceptable values are:
 \itemize{
-\item TRUE: Default uncertainy estimates of the model object.
+\item TRUE: Default uncertainty estimates of the model object.
 \item FALSE: Omit uncertainty estimates.
 \item A string which indicates the kind of uncertainty estimates to return.
 \itemize{
@@ -201,6 +214,19 @@ arguments.}
 \item{conf.level}{The confidence level to use for the confidence interval if
 \code{conf.int=TRUE}. Must be strictly greater than 0 and less than 1. Defaults
 to 0.95, which corresponds to a 95 percent confidence interval.}
+
+\item{type}{Type(s) of prediction as string or character vector. This can
+differ based on the model type, but will typically be a string such as:
+"response", "link", "probs", or "zero".}
+
+\item{...}{Additional arguments are passed to the \code{predict()} method used to
+compute adjusted predictions. These arguments are particularly useful for
+mixed-effects or bayesian models (see the online vignettes on the
+\code{marginaleffects} website). Available arguments can vary from model to
+model, depending on the range of supported arguments by each modeling
+package. See the "Model-Specific Arguments" section of the
+\code{?marginaleffects} documentation for a non-exhaustive list of available
+arguments.}
 }
 \value{
 A vector of predicted values of length equal to the number of rows

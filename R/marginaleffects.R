@@ -30,7 +30,7 @@
 #'   + TRUE: computes unit-level standard errors using the default `vcov(model)` variance-covariance matrix.
 #'   + Named square matrix: computes standard errors with a user-supplied variance-covariance matrix. This matrix must be square and have dimensions equal to the number of coefficients in `get_coef(model)`.
 #' @param vcov Variance-covariance matrix used to compute uncertainty estimates (e.g., for robust standard errors). Acceptable values are:
-#'  * TRUE: Default uncertainy estimates of the model object.
+#'  * TRUE: Default uncertainty estimates of the model object.
 #'  * FALSE: Omit uncertainty estimates.
 #'  * A string which indicates the kind of uncertainty estimates to return.
 #'    - Heteroskedasticity-consistent: ``"HC"`, `"HC0"`, `"HC1"`, `"HC2"`, `"HC3"`, `"HC4"`, `"HC4m"`, `"HC5"`. See `?sandwich::vcovHC`

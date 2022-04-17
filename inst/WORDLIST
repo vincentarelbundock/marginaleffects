@@ -10,6 +10,8 @@ CMD
 Codecov
 Gentoos
 Github
+HC
+Heteroskedasticity
 Kurz
 Leeper
 Lenth
@@ -54,4 +56,5 @@ sequential
 tidiers
 varepsilon
 vincentarelbundock
+vcovHC
 ’s
