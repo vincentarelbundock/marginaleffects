@@ -3,6 +3,7 @@
 get_predict.rq <- function(model,
                            newdata = insight::get_data(model),
                            type = NULL,
+                           vcov = NULL,
                            conf.level = NULL,
                            ...) {
 
