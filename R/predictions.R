@@ -172,11 +172,12 @@ predictions <- function(model,
     # try to extract standard errors via the delta method if necessary
     # check conf.low in case it's a bayesian model
     if (!isFALSE(vcov) && !any(c("std.error", "conf.low") %in% colnames(tmp))) {
-        if (isTRUE(checkmate::check_matrix)) {
+        V <- get_vcov(model, vcov = vcov)
+        if (isTRUE(checkmate::check_matrix(V))) {
             fun <- function(...) get_predict(...)[["predicted"]]
             se <- standard_errors_delta(model,
                                         newdata = newdata,
-                                        vcov = vcov,
+                                        vcov = V,
                                         type = type,
                                         FUN = fun,
                                         ...)
