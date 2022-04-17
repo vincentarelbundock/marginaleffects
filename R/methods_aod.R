@@ -6,7 +6,7 @@ get_predict.glimML <- function(model,
                                type = "response",
                                ...) {
 
-    if (!isTRUE(check_flag(vcov, null.ok = TRUE))) stop("The `vcov` argument is not supported for this model class.")
+    if (!isTRUE(checkmate::check_flag(vcov, null.ok = TRUE))) stop("The `vcov` argument is not supported for this model class.")
 
     assert_dependency("aod") # need access to the predict method
     out <- aod::predict(model, 

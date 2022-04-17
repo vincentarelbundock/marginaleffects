@@ -7,7 +7,7 @@ get_predict.coxph <- function(model,
                               conf.level = NULL,
                               ...) {
 
-    if (!isTRUE(check_flag(vcov, null.ok = TRUE))) stop("The `vcov` argument is not supported for this model class.")
+    if (!isTRUE(checkmate::check_flag(vcov, null.ok = TRUE))) stop("The `vcov` argument is not supported for this model class.")
 
     out <- stats::predict(model,
                           newdata = newdata,

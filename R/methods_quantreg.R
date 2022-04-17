@@ -6,7 +6,7 @@ get_predict.rq <- function(model,
                            conf.level = NULL,
                            ...) {
 
-    if (!isTRUE(check_flag(vcov, null.ok = TRUE))) stop("The `vcov` argument is not supported for this model class.")
+    if (!isTRUE(checkmate::check_flag(vcov, null.ok = TRUE))) stop("The `vcov` argument is not supported for this model class.")
 
     # type argument of the method is used to specify confidence interval type
     # TODO: add support for this in `insight`

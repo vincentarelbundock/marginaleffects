@@ -46,7 +46,7 @@ get_predict.polr <- function(model,
                              conf.level = NULL,
                              ...) {
 
-    if (!isTRUE(check_flag(vcov, null.ok = TRUE))) stop("The `vcov` argument is not supported for this model class.")
+    if (!isTRUE(checkmate::check_flag(vcov, null.ok = TRUE))) stop("The `vcov` argument is not supported for this model class.")
     type <- sanity_type(model, type)
 
     # hack: 1-row newdata returns a vector, so get_predict.default does not learn about groups
