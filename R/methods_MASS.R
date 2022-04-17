@@ -42,9 +42,11 @@ get_group_names.polr <- function(model, ...) {
 get_predict.polr <- function(model,
                              newdata = insight::get_data(model),
                              type = "probs",
+                             vcov = NULL,
                              conf.level = NULL,
                              ...) {
 
+    if (!isTRUE(check_flag(vcov, null.ok = TRUE))) stop("The `vcov` argument is not supported for this model class.")
     type <- sanity_type(model, type)
 
     # hack: 1-row newdata returns a vector, so get_predict.default does not learn about groups

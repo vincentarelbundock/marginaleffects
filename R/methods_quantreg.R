@@ -5,9 +5,12 @@ get_predict.rq <- function(model,
                            type = NULL,
                            conf.level = NULL,
                            ...) {
-    assert_dependency("quantreg")
+
+    if (!isTRUE(check_flag(vcov, null.ok = TRUE))) stop("The `vcov` argument is not supported for this model class.")
+
     # type argument of the method is used to specify confidence interval type
     # TODO: add support for this in `insight`
+    assert_dependency("quantreg") # predict method must be available
     out <- quantreg::predict.rq(model,
                                 newdata = newdata,
                                 ...)

@@ -4,8 +4,11 @@
 #' @export
 get_predict.bife <- function(model,
                              newdata = insight::get_data(model),
+                             vcov = NULL,
                              type = "response",
                              ...) {
+
+    if (!isTRUE(check_flag(vcov, null.ok = TRUE))) stop("The `vcov` argument is not supported for this model class.")
 
     type <- sanity_type(model, type)
 

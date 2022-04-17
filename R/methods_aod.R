@@ -2,10 +2,13 @@
 #' @export
 get_predict.glimML <- function(model,
                                newdata = insight::get_data(model),
+                               vcov = NULL,
                                type = "response",
                                ...) {
 
-    assert_dependency("aod")
+    if (!isTRUE(check_flag(vcov, null.ok = TRUE))) stop("The `vcov` argument is not supported for this model class.")
+
+    assert_dependency("aod") # need access to the predict method
     out <- aod::predict(model, 
                         newdata = newdata,
                         type = type,
