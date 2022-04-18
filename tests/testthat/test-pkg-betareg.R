@@ -41,9 +41,9 @@ test_that("predictions: no validity", {
     data("GasolineYield", package = "betareg")
     mod <- betareg::betareg(yield ~ batch + temp, data = GasolineYield)
     pred <- suppressWarnings(predictions(mod))
-    expect_predictions(pred, n_row = nrow(GasolineYield))
+    expect_predictions(pred, n_row = nrow(GasolineYield), se = FALSE)
     pred <- predictions(mod, newdata = datagrid(batch = 1:3, temp = c(300, 350)))
-    expect_predictions(pred, n_row = 6)
+    expect_predictions(pred, n_row = 6, se = FALSE
 })
 
 test_that("marginalmeans: vs. emmeans", {
