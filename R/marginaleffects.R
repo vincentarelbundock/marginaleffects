@@ -22,9 +22,14 @@
 #'
 #' @param model Model object
 #' @param variables Variables to consider (character vector). `NULL`
-#'   calculates marginal effects for all terms in the model object.
-#' @param newdata A dataset over which to compute marginal effects. `NULL` uses
-#'   the original data used to fit the model.
+#'   considers all the terms in the model object. Computing quantities for a
+#'   subset of terms is typically faster. 
+#' @param newdata A data frame over which to compute quantities of interest.
+#'   + `NULL`: marginal effects for each observed value in the original dataset.
+#'   + The [datagrid()] function can be used to specify a custom grid of regressors. For example:
+#'       - `newdata = datagrid()`: marginal effect at the mean
+#'       - `newdata = datagrid(cyl = c(4, 6))`: `cyl` variable equal to 4 and 6 and other regressors fixed at their means or modes.
+#'       - See the Examples section and the [datagrid()] documentation for more.
 #' @param vcov Matrix or boolean
 #'   + FALSE: does not compute unit-level standard errors. This can speed up computation considerably.
 #'   + TRUE: computes unit-level standard errors using the default `vcov(model)` variance-covariance matrix.

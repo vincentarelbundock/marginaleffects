@@ -19,11 +19,20 @@ comparisons(
 \arguments{
 \item{model}{Model object}
 
-\item{newdata}{A dataset over which to compute marginal effects. \code{NULL} uses
-the original data used to fit the model.}
+\item{newdata}{A data frame over which to compute quantities of interest.
+\itemize{
+\item \code{NULL}: contrasts for each observed value in the original dataset.
+\item The \code{\link[=datagrid]{datagrid()}} function can be used to specify a custom grid of regressors. For example:
+\itemize{
+\item \code{newdata = datagrid()}: contrast at the mean
+\item \code{newdata = datagrid(cyl = c(4, 6))}: \code{cyl} variable equal to 4 and 6 and other regressors fixed at their means or modes.
+\item See the Examples section and the \code{\link[=datagrid]{datagrid()}} documentation for more.
+}
+}}
 
 \item{variables}{Variables to consider (character vector). \code{NULL}
-calculates marginal effects for all terms in the model object.}
+considers all the terms in the model object. Computing quantities for a
+subset of terms is typically faster.}
 
 \item{type}{Type(s) of prediction as string or character vector. This can
 differ based on the model type, but will typically be a string such as:
