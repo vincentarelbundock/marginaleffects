@@ -17,8 +17,16 @@ predictions(
 \arguments{
 \item{model}{Model object}
 
-\item{newdata}{A dataset over which to compute adjusted predictions. \code{NULL} uses
-the original data used to fit the model.}
+\item{newdata}{A data frame over which to compute quantities of interest.
+\itemize{
+\item \code{NULL}: adjusted predictions for each observed value in the original dataset.
+\item The \code{\link[=datagrid]{datagrid()}} function can be used to specify a custom grid of regressors. For example:
+\itemize{
+\item \code{newdata = datagrid()}: contrast at the mean
+\item \code{newdata = datagrid(cyl = c(4, 6))}: \code{cyl} variable equal to 4 and 6 and other regressors fixed at their means or modes.
+\item See the Examples section and the \code{\link[=datagrid]{datagrid()}} documentation for more.
+}
+}}
 
 \item{variables}{Character vector. Compute Adjusted Predictions for
 combinations of each of these variables. Factor levels are considered at

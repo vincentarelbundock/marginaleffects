@@ -24,6 +24,12 @@
 #' * "reference": Each factor level is compared to the factor reference (base) level
 #' * "sequential": Each factor level is compared to the previous factor level
 #' * "pairwise": Each factor level is compared to all other levels
+#' @param newdata A data frame over which to compute quantities of interest.
+#'   + `NULL`: contrasts for each observed value in the original dataset.
+#'   + The [datagrid()] function can be used to specify a custom grid of regressors. For example:
+#'       - `newdata = datagrid()`: contrast at the mean
+#'       - `newdata = datagrid(cyl = c(4, 6))`: `cyl` variable equal to 4 and 6 and other regressors fixed at their means or modes.
+#'       - See the Examples section and the [datagrid()] documentation for more.
 #' @param contrast_numeric string or numeric
 #' * Numeric of length 1: Contrast between the observed value and the observed value plus `contrast_numeric`
 #' * Numeric vector of length 2: Contrast between the 2nd element and the 1st element of the `contrast_numeric` vector.

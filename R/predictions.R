@@ -26,8 +26,12 @@
 #'   combinations of each of these variables. Factor levels are considered at
 #'   each of their levels. Numeric variables variables are considered at Tukey's
 #'   Five-Number Summaries. `NULL` uses the original data used to fit the model.
-#' @param newdata A dataset over which to compute adjusted predictions. `NULL` uses
-#'   the original data used to fit the model.
+#' @param newdata A data frame over which to compute quantities of interest.
+#'   + `NULL`: adjusted predictions for each observed value in the original dataset.
+#'   + The [datagrid()] function can be used to specify a custom grid of regressors. For example:
+#'       - `newdata = datagrid()`: contrast at the mean
+#'       - `newdata = datagrid(cyl = c(4, 6))`: `cyl` variable equal to 4 and 6 and other regressors fixed at their means or modes.
+#'       - See the Examples section and the [datagrid()] documentation for more.
 #' @param conf.level The confidence level to use for the confidence interval.
 #'   No interval is computed if `conf.int=NULL`.  Must be strictly greater than 0
 #'   and less than 1. Defaults to 0.95, which corresponds to a 95 percent
