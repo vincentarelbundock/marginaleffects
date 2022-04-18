@@ -173,6 +173,9 @@ predictions <- function(model,
         tmp$rowid <- newdata$rowid
     }
 
+    # bayesian posterior draws
+    draws <- attr(tmp, "posterior_draws")
+
     # try to extract standard errors via the delta method if missing
     if (!isFALSE(vcov) &&
         !"std.error" %in% colnames(tmp) &&
@@ -205,7 +208,6 @@ predictions <- function(model,
     }
 
     out <- data.table(tmp)
-    draws <- attr(tmp, "posterior_draws")
 
     # unpad factors
     out <- out[(nrow(padding) + 1):nrow(out),]
