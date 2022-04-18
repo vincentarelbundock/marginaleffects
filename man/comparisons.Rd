@@ -107,36 +107,12 @@ marginal effects, predictions, marginal means, and contrasts.\tabular{llll}{
     \tab  \tab \code{re.form} \tab \link[lme4:predict.merMod]{lme4::predict.merMod} \cr
     \tab  \tab \code{allow.new.levels} \tab \link[lme4:predict.merMod]{lme4::predict.merMod} \cr
    \code{glmmTMB} \tab \code{glmmTMB} \tab \code{re.form} \tab \link[glmmTMB:predict.glmmTMB]{glmmTMB::predict.glmmTMB} \cr
-   \code{glmmTMB} \tab \code{glmmTMB} \tab \code{allow.new.levels} \tab \link[glmmTMB:predict.glmmTMB]{glmmTMB::predict.glmmTMB} \cr
-   \code{glmmTMB} \tab \code{glmmTMB} \tab \code{zitype} \tab \link[glmmTMB:predict.glmmTMB]{glmmTMB::predict.glmmTMB} \cr
+    \tab  \tab \code{allow.new.levels} \tab \link[glmmTMB:predict.glmmTMB]{glmmTMB::predict.glmmTMB} \cr
+    \tab  \tab \code{zitype} \tab \link[glmmTMB:predict.glmmTMB]{glmmTMB::predict.glmmTMB} \cr
    \code{mgcv} \tab \code{bam} \tab \code{exclude} \tab \link[mgcv:predict.bam]{mgcv::predict.bam} \cr
    \code{robustlmm} \tab \code{rlmerMod} \tab \code{re.form} \tab \link[robustlmm:predict.rlmerMod]{robustlmm::predict.rlmerMod} \cr
-   \code{robustlmm} \tab \code{rlmerMod} \tab \code{allow.new.levels} \tab \link[robustlmm:predict.rlmerMod]{robustlmm::predict.rlmerMod} \cr
+    \tab  \tab \code{allow.new.levels} \tab \link[robustlmm:predict.rlmerMod]{robustlmm::predict.rlmerMod} \cr
 }
-}
-
-\section{Parallel computation}{
-
-
-The \code{marginaleffects()} and \code{comparisons()} functions can use parallelism to
-speed up computation. Operations are parallelized at the "term" or
-"variable" level. This means that no speed gain is available when the user
-computes marginal effects for only one right-hand side variable. There is
-always some overhead when using parallel computation. Thus, parallel
-computation is most likely to be useful when:
-\enumerate{
-\item The model includes many right-hand side variables.
-\item \code{marginaleffects} must compute pairwise contrasts for multiple factor variables.
-}
-
-To activate parallel computation, users must load the \code{future.apply} package
-and call \code{plan()} function. For example:\if{html}{\out{<div class="sourceCode r">}}\preformatted{library(future.apply)
-plan("multisession")
-marginaleffects(model)
-}\if{html}{\out{</div>}}
-
-To disable parallelism in \code{marginaleffects} altogether, you can set a global option:\if{html}{\out{<div class="sourceCode r">}}\preformatted{options(marginaleffects_parallel = FALSE)
-}\if{html}{\out{</div>}}
 }
 
 \examples{

@@ -33,7 +33,6 @@
 #' * "minmax": Contrast between the maximum and the minimum values of the regressor.
 #'
 #' @template model_specific_arguments
-#' @template parallel
 #'
 #' @examples
 #'
