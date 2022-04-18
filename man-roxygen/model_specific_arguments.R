@@ -11,9 +11,9 @@
 #' |             |           | `re.form`          |[lme4::predict.merMod]|
 #' |             |           | `allow.new.levels` |[lme4::predict.merMod]|
 #' | `glmmTMB`   | `glmmTMB` | `re.form`          |[glmmTMB::predict.glmmTMB]|
-#' | `glmmTMB`   | `glmmTMB` | `allow.new.levels` |[glmmTMB::predict.glmmTMB]|
-#' | `glmmTMB`   | `glmmTMB` | `zitype`           |[glmmTMB::predict.glmmTMB]|
+#' |             |           | `allow.new.levels` |[glmmTMB::predict.glmmTMB]|
+#' |             |           | `zitype`           |[glmmTMB::predict.glmmTMB]|
 #' | `mgcv`      | `bam`     | `exclude`          |[mgcv::predict.bam]|
 #' | `robustlmm` | `rlmerMod`| `re.form`          |[robustlmm::predict.rlmerMod]|
-#' | `robustlmm` | `rlmerMod`| `allow.new.levels` |[robustlmm::predict.rlmerMod]|
+#' |             |           | `allow.new.levels` |[robustlmm::predict.rlmerMod]|
 #'
