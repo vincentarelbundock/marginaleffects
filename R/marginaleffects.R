@@ -33,10 +33,10 @@
 #'  * TRUE: Default uncertainty estimates of the model object.
 #'  * FALSE: Omit uncertainty estimates.
 #'  * A string which indicates the kind of uncertainty estimates to return.
-#'    - Heteroskedasticity-consistent: ``"HC"`, `"HC0"`, `"HC1"`, `"HC2"`, `"HC3"`, `"HC4"`, `"HC4m"`, `"HC5"`. See `?sandwich::vcovHC`
+#'    - Heteroskedasticity-consistent: `"HC"`, `"HC0"`, `"HC1"`, `"HC2"`, `"HC3"`, `"HC4"`, `"HC4m"`, `"HC5"`. See `?sandwich::vcovHC`
 #'    - Heteroskedasticity and autocorrelation consistent: `"HAC"`
-#'    - Other: `"NeweyWest"`, `"HerHAC"`, `"OPG"`. See the `sandwich` package documentation.
-#'  * A one-sided formula which indicates the name of cluster variables (e.g., `~unitid`). This formula is passed to the `cluster` argument of the `sandwich::vcovCL` function.
+#'    - Other: `"NeweyWest"`, `"KernHAC"`, `"OPG"`. See the `sandwich` package documentation.
+#'  * A one-sided formula which indicates the name of cluster variables (e.g., `~unit_id`). This formula is passed to the `cluster` argument of the `sandwich::vcovCL` function.
 #'  * A square covariance matrix
 #'  * A function which returns a covariance matrix (e.g., `stats::vcov(model)`)
 #' @param conf.level The confidence level to use for the confidence interval if

@@ -29,11 +29,11 @@ calculates marginal effects for all terms in the model object.}
 \item FALSE: Omit uncertainty estimates.
 \item A string which indicates the kind of uncertainty estimates to return.
 \itemize{
-\item Heteroskedasticity-consistent: ``"HC"\verb{, }"HC0"`, `"HC1"`, `"HC2"`, `"HC3"`, `"HC4"`, `"HC4m"`, `"HC5"`. See `?sandwich::vcovHC`
+\item Heteroskedasticity-consistent: \code{"HC"}, \code{"HC0"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"}, \code{"HC4"}, \code{"HC4m"}, \code{"HC5"}. See \code{?sandwich::vcovHC}
 \item Heteroskedasticity and autocorrelation consistent: \code{"HAC"}
-\item Other: \code{"NeweyWest"}, \code{"HerHAC"}, \code{"OPG"}. See the \code{sandwich} package documentation.
+\item Other: \code{"NeweyWest"}, \code{"KernHAC"}, \code{"OPG"}. See the \code{sandwich} package documentation.
 }
-\item A one-sided formula which indicates the name of cluster variables (e.g., \code{~unitid}). This formula is passed to the \code{cluster} argument of the \code{sandwich::vcovCL} function.
+\item A one-sided formula which indicates the name of cluster variables (e.g., \code{~unit_id}). This formula is passed to the \code{cluster} argument of the \code{sandwich::vcovCL} function.
 \item A square covariance matrix
 \item A function which returns a covariance matrix (e.g., \code{stats::vcov(model)})
 }}
@@ -103,8 +103,8 @@ marginal effects, predictions, marginal means, and contrasts.\tabular{llll}{
    \code{glmmTMB} \tab \code{glmmTMB} \tab \code{allow.new.levels} \tab \link[glmmTMB:predict.glmmTMB]{glmmTMB::predict.glmmTMB} \cr
    \code{glmmTMB} \tab \code{glmmTMB} \tab \code{zitype} \tab \link[glmmTMB:predict.glmmTMB]{glmmTMB::predict.glmmTMB} \cr
    \code{mgcv} \tab \code{bam} \tab \code{exclude} \tab \link[mgcv:predict.bam]{mgcv::predict.bam} \cr
-   \code{robustlmm} \tab \code{rlmerMod} \tab \code{re.form} \tab \link[robustlmm:rlmerMod-class]{robustlmm::predict.rlmerMod} \cr
-   \code{robustlmm} \tab \code{rlmerMod} \tab \code{allow.new.levels} \tab \link[robustlmm:rlmerMod-class]{robustlmm::predict.rlmerMod} \cr
+   \code{robustlmm} \tab \code{rlmerMod} \tab \code{re.form} \tab \link[robustlmm:predict.rlmerMod]{robustlmm::predict.rlmerMod} \cr
+   \code{robustlmm} \tab \code{rlmerMod} \tab \code{allow.new.levels} \tab \link[robustlmm:predict.rlmerMod]{robustlmm::predict.rlmerMod} \cr
 }
 }
 
