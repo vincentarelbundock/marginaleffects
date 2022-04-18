@@ -173,9 +173,11 @@ predictions <- function(model,
         tmp$rowid <- newdata$rowid
     }
 
-    # try to extract standard errors via the delta method if necessary
-    # check conf.low in case it's a bayesian model
-    if (!isFALSE(vcov) && !any(c("std.error", "conf.low") %in% colnames(tmp))) {
+    # try to extract standard errors via the delta method if missing
+    if (!isFALSE(vcov) &&
+        !"std.error" %in% colnames(tmp) &&
+        is.null(draws)) {
+
         V <- get_vcov(model, vcov = vcov)
         if (isTRUE(checkmate::check_matrix(V))) {
             # vcov = FALSE to speed things up
@@ -190,7 +192,10 @@ predictions <- function(model,
                 tmp[["std.error"]] <- se
                 flag <- tryCatch(insight::model_info(model)$is_linear,
                                  error = function(e) FALSE)
-                if (isTRUE(flag) && is.numeric(conf.level)) {
+                if (isTRUE(flag) &&
+                    is.numeric(conf.level) &&
+                    # sometimes get_predicted fails on SE but succeeds on CI (e.g., betareg)
+                    !"conf.low" %in% colnames(tmp)) {
                     critical_z <- abs(stats::qnorm((1 - conf.level) / 2))
                     tmp[["conf.low"]] <- tmp[["predicted"]] - critical_z * tmp[["std.error"]]
                     tmp[["conf.high"]] <- tmp[["predicted"]] + critical_z * tmp[["std.error"]]
