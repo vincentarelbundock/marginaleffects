@@ -35,8 +35,11 @@ get_predict.fixest <- function(model,
         # vcov
         if (!isTRUE(checkmate::check_matrix(vcov, null.ok = TRUE))) {
             V <- get_vcov(model, vcov = vcov)
+        } else {
+            V <- NULL
         }
-        if (isTRUE(checkmate::check_matrix(V, null.ok = TRUE))) {
+
+        if (isTRUE(checkmate::check_matrix(V))) {
             args[["vcov"]] <- V
         }
     }
