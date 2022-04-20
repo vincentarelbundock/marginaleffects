@@ -232,6 +232,7 @@ predictions <- function(model,
     attr(out, "type") <- type
     attr(out, "model_type") <- class(model)[1]
     attr(out, "variables") <- variables
+    attr(out, "vcov.type") <- get_vcov_label(vcov)
 
     # modelbased::visualisation_matrix attaches useful info for plotting
     for (a in names(attributes_newdata)) {
