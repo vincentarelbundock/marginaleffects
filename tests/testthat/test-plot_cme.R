@@ -27,3 +27,17 @@ test_that("two conditions", {
     vdiffr::expect_doppelganger("cme plot with 2 conditions",
                                 plot_cme(mod, effect = "hp", condition = c("wt", "am")))
 })
+
+
+test_that("vcov", {
+    mod <- lm(mpg ~ hp * wt, data = mtcars)
+    mfx1 <- plot_cme(mod, effect = "hp", condition = "wt", draw = FALSE)
+    mfx2 <- plot_cme(mod, effect = "hp", condition = "wt", vcov = "HC3", draw = FALSE)
+    mfx3 <- plot_cme(mod, effect = "hp", condition = "wt", vcov = ~cyl, draw = FALSE)
+    expect_true(all(mfx1$std.error != mfx2$std.error))
+    expect_true(all(mfx1$std.error != mfx3$std.error))
+    expect_true(all(mfx2$std.error != mfx3$std.error))
+    expect_true(all(mfx1$conf.low != mfx2$conf.low))
+    expect_true(all(mfx1$conf.low != mfx3$conf.low))
+    expect_true(all(mfx2$conf.low != mfx3$conf.low))
+})

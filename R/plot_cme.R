@@ -25,6 +25,7 @@ plot_cme <- function(model,
                      effect,
                      condition,
                      type = "response",
+                     vcov = NULL,
                      conf.int = TRUE,
                      conf.level = 0.95,
                      draw = TRUE) {
@@ -88,11 +89,11 @@ plot_cme <- function(model,
     # create data
     at_list[["model"]] = model
     nd <- do.call("typical", at_list)
-    datplot <- marginaleffects(model, newdata = nd, variables = effect)
+    datplot <- marginaleffects(model, newdata = nd, vcov = vcov, conf.level = conf.level, variables = effect)
     colnames(datplot)[colnames(datplot) == condition1] <- "condition1"
     colnames(datplot)[colnames(datplot) == condition2] <- "condition2"
     colnames(datplot)[colnames(datplot) == condition3] <- "condition3"
-    
+
     # colors and linetypes are categorical attributes
     if ("condition2" %in% colnames(datplot)) datplot$condition2 <- factor(datplot$condition2)
     if ("condition3" %in% colnames(datplot)) datplot$condition3 <- factor(datplot$condition3)
@@ -112,9 +113,9 @@ plot_cme <- function(model,
     }
 
     # ggplot2
-    p <- ggplot2::ggplot(datplot, ggplot2::aes(x = condition1, 
-                                               y = dydx, 
-                                               ymin = conf.low, 
+    p <- ggplot2::ggplot(datplot, ggplot2::aes(x = condition1,
+                                               y = dydx,
+                                               ymin = conf.low,
                                                ymax = conf.high))
 
     # continuous x-axis
@@ -129,7 +130,7 @@ plot_cme <- function(model,
              if (is.null(condition2)) {
                  p <- p + ggplot2::geom_pointrange()
              } else {
-                 p <- p + ggplot2::geom_pointrange(ggplot2::aes(color = condition2), 
+                 p <- p + ggplot2::geom_pointrange(ggplot2::aes(color = condition2),
                                                    position = ggplot2::position_dodge(.15))
              }
         } else {
@@ -137,7 +138,7 @@ plot_cme <- function(model,
         }
     }
 
-    p <- p + ggplot2::labs(x = condition1, 
+    p <- p + ggplot2::labs(x = condition1,
                            y = sprintf("Marginal effect of %s on %s", effect, resp),
                            color = condition2,
                            fill = condition2,
