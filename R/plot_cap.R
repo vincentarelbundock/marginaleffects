@@ -18,9 +18,10 @@
 #' mod <- lm(mpg ~ hp * wt * am, data = mtcars)
 #' plot_cap(mod, condition = c("hp", "wt"))
 #'
-plot_cap <- function(model, 
+plot_cap <- function(model,
                      condition,
                      type = "response",
+                     vcov = NULL,
                      conf.int = TRUE,
                      conf.level = 0.95,
                      draw = TRUE) {
@@ -85,6 +86,7 @@ plot_cap <- function(model,
     datplot <- predictions(model,
                            newdata = nd,
                            type = type,
+                           vcov = vcov, 
                            conf.int = conf.int,
                            conf.level = conf.level)
     colnames(datplot)[colnames(datplot) == condition1] <- "condition1"

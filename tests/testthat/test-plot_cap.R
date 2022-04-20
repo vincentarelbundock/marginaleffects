@@ -42,3 +42,17 @@ test_that("Issue #230: glm w/ weights includes confidence intervals", {
     expect_true("conf.low" %in% colnames(p))
     expect_true("conf.high" %in% colnames(p))
 })
+
+
+test_that("vcov", {
+    mod <- lm(mpg ~ hp * wt, data = mtcars)
+    mfx1 <- plot_cap(mod, condition = "wt", draw = FALSE)
+    mfx2 <- plot_cap(mod, condition = "wt", vcov = "HC3", draw = FALSE)
+    mfx3 <- plot_cap(mod, condition = "wt", vcov = ~cyl, draw = FALSE)
+    expect_true(all(mfx1$std.error != mfx2$std.error))
+    expect_true(all(mfx1$std.error != mfx3$std.error))
+    expect_true(all(mfx2$std.error != mfx3$std.error))
+    expect_true(all(mfx1$conf.low != mfx2$conf.low))
+    expect_true(all(mfx1$conf.low != mfx3$conf.low))
+    expect_true(all(mfx2$conf.low != mfx3$conf.low))
+})
