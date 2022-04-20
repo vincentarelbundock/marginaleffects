@@ -107,6 +107,7 @@ comparisons <- function(model,
     }
 
     # variance-covariance matrix
+    vcov_label <- get_vcov_label(vcov)
     vcov <- get_vcov(model, vcov = vcov)
 
     # variables vector
@@ -229,6 +230,7 @@ comparisons <- function(model,
     attr(out, "variables") <- variables
     attr(out, "J") <- J
     attr(out, "vcov") <- vcov
+    attr(out, "vcov.type") <- get_vcov_label(vcov)
 
     # modelbased::visualisation_matrix attaches useful info for plotting
     for (a in names(attributes_newdata)) {

@@ -57,6 +57,12 @@ glance.marginaleffects <- function(x, ...) {
     } else {
         out <- NULL
     }
+    vcov.type <- attr(x, "vcov.type")
+    if (is.null(out) && !is.null(vcov.type)) {
+        out <- data.frame("vcov.type" = vcov.type)
+    } else if (!is.null(out)) {
+        out[["vcov.type"]] <- vcov.type
+    }
     return(out)
 }
 

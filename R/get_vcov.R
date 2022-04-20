@@ -129,3 +129,32 @@ get_varcov_args <- function(model, vcov) {
 
     return(out)
 }
+
+
+
+
+get_vcov_label <- function(vcov) {
+    if (is.null(vcov)) vcov <- ""
+    if (!is.character(vcov)) return(NULL)
+ 
+    out <- switch(vcov,
+        "stata" = "Stata",
+        "robust" = "Robust",
+        "HC" = ,
+        "HC0" = ,
+        "HC1" = ,
+        "HC2" = ,
+        "HC3" = ,
+        "HC4" = ,
+        "HC4m" = ,
+        "HC5" = ,
+        "HAC" = ,
+        "OPG" = vcov,
+        "NeweyWest" = "Newey-West",
+        "kernHAC" = "Kernel HAC",
+        vcov
+    )
+    return(out)
+}
+
+

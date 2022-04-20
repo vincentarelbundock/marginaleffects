@@ -221,6 +221,8 @@ marginaleffects <- function(model,
         }
     }
 
+    attr(out, "vcov.type") <- get_vcov_label(vcov)
+
     return(out)
 }
 
