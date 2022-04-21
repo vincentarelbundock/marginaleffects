@@ -95,6 +95,9 @@ stanreg,response,expectation,TRUE,TRUE
 svyglm,response,expectation,TRUE,TRUE
 svyglm,link,link,TRUE,TRUE
 tobit,response,expectation,TRUE,TRUE
+tobit1,linpred,NA,TRUE,TRUE
+tobit1,expvalue,NA,TRUE,TRUE
+tobit1,prob,NA,TRUE,TRUE
 zeroinfl,response,expectation,TRUE,TRUE
 zeroinfl,prob,NA,TRUE,TRUE
 zeroinfl,count,NA,TRUE,TRUE

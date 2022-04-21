@@ -3,7 +3,7 @@
 %   R/methods_aod.R, R/methods_nnet.R, R/methods_brglm2.R, R/methods_brms.R,
 %   R/methods_crch.R, R/methods_fixest.R, R/methods_lme4.R, R/methods_mclogit.R,
 %   R/methods_ordinal.R, R/methods_quantreg.R, R/methods_robustlmm.R,
-%   R/methods_rstanarm.R, R/methods_survival.R
+%   R/methods_rstanarm.R, R/methods_survival.R, R/methods_tobit1.R
 \name{get_predict}
 \alias{get_predict}
 \alias{get_predict.default}
@@ -24,6 +24,7 @@
 \alias{get_predict.rlmerMod}
 \alias{get_predict.stanreg}
 \alias{get_predict.coxph}
+\alias{get_predict.tobit1}
 \title{Get predicted values from a model object (internal function)}
 \usage{
 get_predict(model, newdata, vcov, conf.level, type, ...)
@@ -189,6 +190,8 @@ get_predict(model, newdata, vcov, conf.level, type, ...)
   type = "lp",
   ...
 )
+
+\method{get_predict}{tobit1}(model, newdata = insight::get_data(model), type = "response", ...)
 }
 \arguments{
 \item{model}{Model object}
