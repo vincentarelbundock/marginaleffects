@@ -6,6 +6,7 @@ Breaking change:
 
 Supported packages: 
 
+* `mhurdle`
 * `tobit1`
 * `glmmTMB`
 
