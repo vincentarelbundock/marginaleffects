@@ -49,6 +49,19 @@ get_contrast_data <- function(model,
         rowid <- c(rowid, list(tmp$rowid))
     }
 
+    # clean before merge: tobit1 introduces AsIs columns
+    clean <- function(x) {
+        for (col in colnames(x)) {
+            if (inherits(x[[col]], "AsIs")) {
+                x[[col]] <- as.numeric(x[[col]])
+             }
+        }
+        return(x)
+    }
+    lo <- lapply(lo, clean)
+    hi <- lapply(hi, clean)
+    original <- lapply(original, clean)
+
     lo <- rbindlist(lo)
     hi <- rbindlist(hi)
     original <- rbindlist(original)

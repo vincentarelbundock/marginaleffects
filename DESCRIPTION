@@ -141,6 +141,7 @@ Collate:
     'methods_scam.R'
     'methods_stats.R'
     'methods_survival.R'
+    'methods_tobit1.R'
     'package.R'
     'plot.R'
     'plot_cap.R'
