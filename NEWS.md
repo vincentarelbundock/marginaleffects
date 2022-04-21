@@ -4,8 +4,9 @@ Breaking change:
 
 * `type` no longer accepts a character vector. Must be a single string.
 
-Supported models: 
+Supported packages: 
 
+* `tobit1`
 * `glmmTMB`
 
 Misc:
