@@ -89,7 +89,7 @@ plot_cme <- function(model,
     # create data
     at_list[["model"]] = model
     nd <- do.call("typical", at_list)
-    datplot <- marginaleffects(model, newdata = nd, vcov = vcov, conf.level = conf.level, variables = effect)
+    datplot <- marginaleffects(model, newdata = nd, type = type, vcov = vcov, conf.level = conf.level, variables = effect)
     colnames(datplot)[colnames(datplot) == condition1] <- "condition1"
     colnames(datplot)[colnames(datplot) == condition2] <- "condition2"
     colnames(datplot)[colnames(datplot) == condition3] <- "condition3"
