@@ -230,6 +230,11 @@ tidy.comparisons <- function(x,
             J_mean <- J_mean[, !..tmp]
             J_mean <- as.matrix(J_mean)
 
+            # HACK: align J_mean and V if they don't match
+            if (all(colnames(J_mean) %in% colnames(V))) {
+                V <- V[colnames(J_mean), colnames(J_mean)]
+            }
+
             # standard errors at the group mean
             se <- sqrt(colSums(t(J_mean %*% V) * t(J_mean)))
             ame[, std.error := se]
