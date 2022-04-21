@@ -2,8 +2,9 @@
 % Please edit documentation in R/get_predict.R, R/methods_MASS.R,
 %   R/methods_aod.R, R/methods_nnet.R, R/methods_brglm2.R, R/methods_brms.R,
 %   R/methods_crch.R, R/methods_fixest.R, R/methods_lme4.R, R/methods_mclogit.R,
-%   R/methods_ordinal.R, R/methods_quantreg.R, R/methods_robustlmm.R,
-%   R/methods_rstanarm.R, R/methods_survival.R, R/methods_tobit1.R
+%   R/methods_mhurdle.R, R/methods_ordinal.R, R/methods_quantreg.R,
+%   R/methods_robustlmm.R, R/methods_rstanarm.R, R/methods_survival.R,
+%   R/methods_tobit1.R
 \name{get_predict}
 \alias{get_predict}
 \alias{get_predict.default}
@@ -19,6 +20,7 @@
 \alias{get_predict.lmerModLmerTest}
 \alias{get_predict.lmerMod}
 \alias{get_predict.mblogit}
+\alias{get_predict.mhurdle}
 \alias{get_predict.clm}
 \alias{get_predict.rq}
 \alias{get_predict.rlmerMod}
@@ -145,6 +147,8 @@ get_predict(model, newdata, vcov, conf.level, type, ...)
   type = "probs",
   ...
 )
+
+\method{get_predict}{mhurdle}(model, newdata = insight::get_data(model), type = "response", ...)
 
 \method{get_predict}{clm}(
   model,

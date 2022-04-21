@@ -60,6 +60,7 @@ sanity_model_supported_class <- function(model) {
                       c("lrm", "rms", "glm"),
                       c("mblogit", "mclogit"),
                       c("mclogit", "lm"),
+                      "mhurdle",
                       c("multinom", "nnet"),
                       c("negbin", "glm", "lm"),
                       c("plm", "panelmodel"),
