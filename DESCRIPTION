@@ -74,6 +74,7 @@ Suggests:
     MASS,
     mclogit,
     mgcv,
+    mhurdle,
     nlme,
     nnet,
     ordinal,
@@ -92,6 +93,7 @@ Suggests:
     speedglm,
     survey,
     survival,
+    tobit1,
     truncreg,
     covr,
     spelling

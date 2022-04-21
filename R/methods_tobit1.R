@@ -2,6 +2,8 @@
 #' @export
 get_predict.tobit1 <- function(model,
                                newdata = insight::get_data(model),
+                               vcov = NULL,
+                               conf.level = 0.95,
                                type = "response",
                                ...) {
 
@@ -9,4 +11,3 @@ get_predict.tobit1 <- function(model,
     out <- data.frame(rowid = seq_len(length(out)), predicted = out)
     return(out)
 }
-

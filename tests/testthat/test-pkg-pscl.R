@@ -79,7 +79,7 @@ test_that("marginaleffects: zeroinfl vs. Stata vs. emtrends", {
     # margins: does not support standard errors (all zeros)
     mar <- margins(model, data = head(bioChemists), unit_ses = TRUE)
     mfx <- marginaleffects(model, newdata = head(bioChemists))
-    expect_true(test_against_margins(mfx, mar, se = FALSE, verbose = TRUE))
+    expect_true(test_against_margins(mfx, mar, se = FALSE, verbose = TRUE, tolerance = 0.001))
 })
 
 
