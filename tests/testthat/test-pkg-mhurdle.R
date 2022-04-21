@@ -12,8 +12,7 @@ m2 <- mhurdle(shows ~ educ + size | linc | smsa + age, data = Interview,
 test_that("marginaleffects vs. margins (unit-level SEs)", {
     set.seed(1024)
     nd <- Interview[sample(seq_len(nrow(Interview)), 10),]
-    vars <- insight::find_predictors(m2, flatten = TRUE)
-    mfx <- marginaleffects(m2, variables = vars, newdata = nd, type = "E")
+    mfx <- marginaleffects(m2, newdata = nd, type = "E")
     mar <- margins(m2, type = "response", data = nd, unit_ses = TRUE)
 
     expect_equal(mfx[mfx$term == "linc", "dydx"], mar$dydx_linc, tolerance = tol, ignore_attr = TRUE)
@@ -27,8 +26,7 @@ test_that("marginaleffects vs. margins (unit-level SEs)", {
 
 
 test_that("marginaleffects vs. margins: AME ", {
-    vars <- insight::find_predictors(mod, flatten = TRUE)
-    mfx <- marginaleffects(m2, variables = vars, type = "E")
+    mfx <- marginaleffects(m2, type = "E")
     mfx <- tidy(mfx)
     mfx <- mfx[match(c("age", "educ", "linc", "size", "smsa"), mfx$term),]
     mar <- margins(m2)

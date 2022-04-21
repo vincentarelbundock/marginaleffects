@@ -148,7 +148,14 @@ get_predict(model, newdata, vcov, conf.level, type, ...)
   ...
 )
 
-\method{get_predict}{mhurdle}(model, newdata = insight::get_data(model), type = "response", ...)
+\method{get_predict}{mhurdle}(
+  model,
+  newdata = insight::get_data(model),
+  vcov = NULL,
+  conf.level = 0.95,
+  type = "response",
+  ...
+)
 
 \method{get_predict}{clm}(
   model,
@@ -195,7 +202,14 @@ get_predict(model, newdata, vcov, conf.level, type, ...)
   ...
 )
 
-\method{get_predict}{tobit1}(model, newdata = insight::get_data(model), type = "response", ...)
+\method{get_predict}{tobit1}(
+  model,
+  newdata = insight::get_data(model),
+  vcov = NULL,
+  conf.level = 0.95,
+  type = "response",
+  ...
+)
 }
 \arguments{
 \item{model}{Model object}

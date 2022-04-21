@@ -80,6 +80,11 @@ sanitize_variables <- function(model, newdata, variables) {
     }
     variables <- unique(unlist(variables_list))
 
+    # mhurdle names the variables weirdly
+    if (inherits(model, "mhurdle")) {
+        variables_list <- list("conditional" = insight::find_predictors(model, flatten = TRUE))
+    }
+
     # weights
     if (!is.null(model)) {
         w <- tryCatch(insight::find_weights(model), error = function(e) NULL)
