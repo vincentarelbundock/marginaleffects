@@ -23,12 +23,12 @@ predictions, marginal effects, contrasts, and marginal means for a
     started](https://vincentarelbundock.github.io/marginaleffects/#getting-started)
   - Vignettes:
       - [Adjusted
-        predictions](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html)
+        predictions](https://vincentarelbundock.github.io/marginaleffects/articles/1_predictions.html)
       - [Marginal
-        effects](https://vincentarelbundock.github.io/marginaleffects/articles/mfx.html)
-      - [Contrasts](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)
+        effects](https://vincentarelbundock.github.io/marginaleffects/articles/2_mfx.html)
+      - [Contrasts](https://vincentarelbundock.github.io/marginaleffects/articles/3_contrasts.html)
       - [Marginal
-        means](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html)
+        means](https://vincentarelbundock.github.io/marginaleffects/articles/4_marginalmeans.html)
   - [60 supported
     models](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
   - [Performance
@@ -40,6 +40,10 @@ predictions, marginal effects, contrasts, and marginal means for a
         models](https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html)
       - [Generalized Additive
         Models](https://vincentarelbundock.github.io/marginaleffects/articles/gam.html)
+      - [Tables and
+        plots](https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html)
+      - [Robust standard errors and
+        more](https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html)
   - [Alternative
     software](https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html)
 
@@ -49,27 +53,27 @@ The `marginaleffects` package allows `R` users to compute and plot four
 principal quantities of interest for [60 different types of
 models:](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
 
-  - [*Marginal
-    Effect*](https://vincentarelbundock.github.io/marginaleffects/articles/mfx.html)
-      - A partial derivative (slope) of the regression equation with
-        respect to a regressor of interest.
-      - [`marginaleffects(),`](https://vincentarelbundock.github.io/marginaleffects/reference/marginaleffects.html)
-        [`plot(),`](https://vincentarelbundock.github.io/marginaleffects/reference/plot.marginaleffects.html)
-        [`plot_cme()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cme.html)
   - [*Adjusted
-    Prediction*](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html)
+    Prediction*](https://vincentarelbundock.github.io/marginaleffects/articles/1_predictions.html)
       - The outcome predicted by a model for some combination of the
         regressors’ values, such as their observed values, their means,
         or factor levels (a.k.a. “reference grid”).
       - [`predictions(),`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html)
         [`plot_cap()`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html)
-  - [*Contrast*](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)
+  - [*Marginal
+    Effect*](https://vincentarelbundock.github.io/marginaleffects/articles/2_mfx.html)
+      - A partial derivative (slope) of the regression equation with
+        respect to a regressor of interest.
+      - [`marginaleffects(),`](https://vincentarelbundock.github.io/marginaleffects/reference/marginaleffects.html)
+        [`plot(),`](https://vincentarelbundock.github.io/marginaleffects/reference/plot.marginaleffects.html)
+        [`plot_cme()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cme.html)
+  - [*Contrast*](https://vincentarelbundock.github.io/marginaleffects/articles/3_contrasts.html)
       - The difference between two adjusted predictions, calculated for
         meaningfully different regressor values (e.g., College graduates
         vs. Others).
       - [`comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)
   - [*Marginal
-    Mean*](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html)
+    Mean*](https://vincentarelbundock.github.io/marginaleffects/articles/4_marginalmeans.html)
       - Adjusted predictions of a model, averaged across a “reference
         grid” of categorical predictors.
       - [`marginalmeans()`](https://vincentarelbundock.github.io/marginaleffects/reference/marginalmeans.html)
@@ -313,17 +317,10 @@ summary(mm)
 
 #### More
 
-There is *much* more you can do with `marginaleffects`. Please read the
-other articles on this website to learn how to report marginal effects
-and means in [nice tables with the `modelsummary`
+There is *much* more you can do with `marginaleffects`. Return to the
+[Table of
+Contents](https://vincentarelbundock.github.io/marginaleffects/#getting-started)
+to read the vignettes, learn how to report marginal effects and means in
+[nice tables with the `modelsummary`
 package](https://vincentarelbundock.github.io/modelsummary/), how to
-define your own prediction “grid”, and more:
-
-  - [*Marginal Effect*
-    (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/mfx.html)
-  - [*Adjusted Prediction*
-    (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html)
-  - [*Contrast*
-    (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)
-  - [*Marginal Mean*
-    (Vignette)](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html)
+define your own prediction “grid”, and much more.
