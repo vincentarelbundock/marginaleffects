@@ -22,7 +22,14 @@ knitr::opts_chunk$set(
 
 ## What?
 
-The `marginaleffects` package allows `R` users to compute and plot four principal quantities of interest for [a very wide variety of models:](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html) 
+```{r}
+#| echo = FALSE
+url <- "https://raw.githubusercontent.com/vincentarelbundock/marginaleffects/main/data-raw/supported_models.csv"
+dat <- read.csv(url)
+n_support <- nrow(dat)
+```
+
+The `marginaleffects` package allows `R` users to compute and plot four principal quantities of interest for [`r n_support` different types of models:](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html) 
 
 * [_Marginal Effect_:  Vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx.html) 
     - A partial derivative (slope) of the regression equation with respect to a regressor of interest.
@@ -39,7 +46,7 @@ The `marginaleffects` package allows `R` users to compute and plot four principa
 
 The rest of this page includes a "Getting Started" tutorial with simple examples. To go beyond these simple examples, please read the vignettes linked above, for each of the four quantities. In addition, you can consult these pages:
 
-* [List of supported models](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
+* [List of `r n_support` supported models](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
 * [Comparisons to alternative software](https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html)
 * [Performance tips](https://vincentarelbundock.github.io/marginaleffects/articles/performance.html)
 * Case studies:
@@ -67,7 +74,7 @@ So why did I write a clone?
 * _Beautiful:_ `ggplot2` support for plotting (conditional) marginal effects and adjusted predictions.
 * _Tidy:_ The results produced by `marginaleffects` follow "tidy" principles. They are easy to program with and feed to [other packages like `modelsummary`.](https://vincentarelbundock.github.io/marginaleffects/) 
 * _Simple:_ All functions share a simple, unified, and well-documented interface.
-* _Thin:_ The package requires few dependencies.
+* _Thin:_ The package requires relatively few dependencies.
 * _Safe:_  User input is checked extensively before computation. When needed, functions fail gracefully with informative error messages.
 * _Active development_
 
@@ -75,12 +82,7 @@ Downsides of `marginaleffects` include:
 
 * Functions to estimate contrasts and marginal means are considerably less flexible than `emmeans`.
 * Simulation-based inference is not supported.
-* Newer package with a smaller (read: nonexistent) user base.
-
-## How?
-
-By using [the `numDeriv` package](https://cran.r-project.org/package=numDeriv) to compute gradients and jacobians, and [the `insight` package](https://easystats.github.io/insight/) to extract information from model objects. That's it. That's the secret sauce.
-
+* Newer package with a smaller user base.
 
 ## Installation
 

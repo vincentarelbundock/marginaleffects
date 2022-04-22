@@ -14,7 +14,7 @@ status](https://www.r-pkg.org/badges/version/marginaleffects)](https://CRAN.R-pr
 ## What?
 
 The `marginaleffects` package allows `R` users to compute and plot four
-principal quantities of interest for [a very wide variety of
+principal quantities of interest for [60 different types of
 models:](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
 
   - [*Marginal Effect*:
@@ -48,7 +48,7 @@ examples. To go beyond these simple examples, please read the vignettes
 linked above, for each of the four quantities. In addition, you can
 consult these pages:
 
-  - [List of supported
+  - [List of 60 supported
     models](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
   - [Comparisons to alternative
     software](https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html)
@@ -113,7 +113,7 @@ So why did I write a clone?
     `modelsummary`.](https://vincentarelbundock.github.io/marginaleffects/)
   - *Simple:* All functions share a simple, unified, and well-documented
     interface.
-  - *Thin:* The package requires few dependencies.
+  - *Thin:* The package requires relatively few dependencies.
   - *Safe:* User input is checked extensively before computation. When
     needed, functions fail gracefully with informative error messages.
   - *Active development*
@@ -123,15 +123,7 @@ Downsides of `marginaleffects` include:
   - Functions to estimate contrasts and marginal means are considerably
     less flexible than `emmeans`.
   - Simulation-based inference is not supported.
-  - Newer package with a smaller (read: nonexistent) user base.
-
-## How?
-
-By using [the `numDeriv`
-package](https://cran.r-project.org/package=numDeriv) to compute
-gradients and jacobians, and [the `insight`
-package](https://easystats.github.io/insight/) to extract information
-from model objects. That’s it. That’s the secret sauce.
+  - Newer package with a smaller user base.
 
 ## Installation
 
@@ -208,7 +200,7 @@ interaction):
 plot_cme(mod, effect = "hp", condition = c("wt", "am"))
 ```
 
-<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
 
 #### Adjusted predictions
 
@@ -249,7 +241,7 @@ We can plot the adjusted predictions with the `plot_cap` function:
 plot_cap(mod, condition = c("hp", "wt"))
 ```
 
-<img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />
 
 Or you can work with the output of the `predictions` or
 `marginaleffects` directly to create your own plots. For example:
@@ -267,7 +259,7 @@ predictions(mod,
     facet_wrap(~am)
 ```
 
-<img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-12-1.png" width="100%" />
 
 And of course, categorical variables work too:
 
@@ -276,7 +268,7 @@ mod <- lm(mpg ~ factor(cyl), data = mtcars)
 plot_cap(mod, condition = "cyl")
 ```
 
-<img src="man/figures/README-unnamed-chunk-12-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-13-1.png" width="100%" />
 
 #### Marginal means
 
