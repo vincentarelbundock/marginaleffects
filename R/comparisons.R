@@ -113,7 +113,7 @@ comparisons <- function(model,
     # }
 
     # get dof before transforming the vcov arg
-    if (isTRUE(vcov %in% c("satterthwaite", "kenward-roger"))) {
+    if (isTRUE(vcov =="satterthwaite") || isTRUE(vcov == "kenward-roger")) {
         mi <- insight::model_info(model)
         V <- get_vcov(model, vcov = vcov)
         df <- insight::find_response(model)
