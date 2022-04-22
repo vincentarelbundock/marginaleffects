@@ -27,10 +27,27 @@ test_that("satterthwaite (no validity)", {
     expect_true(all(x$conf.low != y$conf.low))
     expect_true(all(x$conf.low != z$conf.low))
     expect_true(all(y$conf.low != z$conf.low))
-    # kenward-roger adjusts vcov but not satterthwaite
     expect_true(all(x$std.error == y$std.error))
     expect_true(all(x$std.error != z$std.error))
     expect_true(all(y$std.error != z$std.error))
+
+    # comparisons
+    x <- comparisons(mod)
+    y <- comparisons(mod, vcov = "satterthwaite")
+    z <- comparisons(mod, vcov = "kenward-roger")
+    expect_true(all(x$conf.low != y$conf.low))
+    expect_true(all(x$conf.low != z$conf.low))
+    expect_true(all(y$conf.low != z$conf.low))
+    expect_true(all(x$std.error == y$std.error))
+    expect_true(all(x$std.error != z$std.error))
+    expect_true(all(y$std.error != z$std.error))
+
+    # GLM not supported
+    mod <- glmer(am ~ hp + (1 | cyl), family = binomial, data = dat)
+    expect_error(comparisons(mod, vcov = "satterthwaite"), regexp = "Satter")
+    expect_error(comparisons(mod, vcov = "kenward-roger"), regexp = "Satter")
+    expect_error(predictions(mod, vcov = "satterthwaite"), regexp = "Satter")
+    expect_error(predictions(mod, vcov = "kenward-roger"), regexp = "Satter")
 })
 
 

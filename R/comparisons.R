@@ -107,10 +107,20 @@ comparisons <- function(model,
     }
 
     # variance-covariance matrix
+    # if (isTRUE(vcov %in% c("satterthwaite", "kenward-roger"))) {
+    #     stop('The "satterthwaite" and "kenward-roger" adjustements are only available via the `vcov` argument in the `predictions()` function.',
+    #          call. = FALSE)
+    # }
+
+    # get dof before transforming the vcov arg
     if (isTRUE(vcov %in% c("satterthwaite", "kenward-roger"))) {
-        stop('The "satterthwaite" and "kenward-roger" adjustements are only available via the `vcov` argument in the `predictions()` function.',
-             call. = FALSE)
+        mi <- insight::model_info(model)
+        V <- get_vcov(model, vcov = vcov)
+        dof <- insight::get_df(model, type = vcov, data = newdata)
+    } else {
+        dof <- NULL
     }
+
     vcov_label <- get_vcov_label(vcov)
     vcov <- get_vcov(model, vcov = vcov)
 
@@ -206,10 +216,18 @@ comparisons <- function(model,
         }
     }
 
+    if (is.null(dof)) {
+        critical_val <- stats::qnorm((1 - conf.level) / 2)
+    } else {
+        critical_val <- stats::qt((1 - conf.level) / 2, df = dof)
+        if (!"df" %in% colnames(mfx)) {
+            mfx[["df"]] <- dof
+        }
+    }
+
     if ("std.error" %in% colnames(mfx) && !"conf.low" %in% colnames(mfx)) {
-        critical_z <- stats::qnorm((1 - conf.level) / 2)
-        mfx[["conf.low"]] <- mfx$comparison + critical_z * mfx$std.error
-        mfx[["conf.high"]] <- mfx$comparison + abs(critical_z) * mfx$std.error
+        mfx[["conf.low"]] <- mfx$comparison + critical_val * mfx$std.error
+        mfx[["conf.high"]] <- mfx$comparison + abs(critical_val) * mfx$std.error
     }
 
     # group id: useful for merging, only if it's an internal call and not user-initiated
@@ -218,7 +236,7 @@ comparisons <- function(model,
     }
 
     # clean columns
-    stubcols <- c("rowid", "rowid_counterfactual", "type", "group", "term", "contrast", "comparison", "std.error", "conf.low", "conf.high",
+    stubcols <- c("rowid", "rowid_counterfactual", "type", "group", "term", "contrast", "comparison", "std.error", "conf.low", "conf.high", "df",
                   sort(grep("^predicted", colnames(newdata), value = TRUE)))
     cols <- intersect(stubcols, colnames(mfx))
     cols <- unique(c(cols, colnames(mfx)))
@@ -226,6 +244,9 @@ comparisons <- function(model,
 
     out <- mfx
 
+    if (!isTRUE(internal_call)) {
+        setDF(out)
+    }
     class(out) <- c("comparisons", class(out))
     attr(out, "posterior_draws") <- draws
     attr(out, "model") <- model
