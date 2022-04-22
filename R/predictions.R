@@ -227,6 +227,7 @@ predictions <- function(model,
     cols <- unique(c(cols, colnames(out)))
     out <- out[, cols, drop = FALSE, with = FALSE]
 
+    setDF(out)
     class(out) <- c("predictions", class(out))
     attr(out, "model") <- model
     attr(out, "type") <- type
