@@ -38,7 +38,9 @@ get_vcov.default <- function(model,
         checkmate::check_formula(vcov),
         checkmate::check_choice(
             vcov,
-            choices = c("stata", "robust", "HC", "HC0", "HC1", "HC2", "HC3", "HC4", "HC4m", "HC5", "HAC", "NeweyWest", "kernHAC", "OPG")))
+            choices = c("stata", "robust", "HC", "HC0", "HC1", "HC2", "HC3",
+                        "HC4", "HC4m", "HC5", "HAC", "NeweyWest", "kernHAC",
+                        "OPG", "satterthwaite", "kenward-roger")))
 
     out <- vcov
 
@@ -51,6 +53,7 @@ get_vcov.default <- function(model,
     args <- get_varcov_args(model, vcov)
     args[["x"]] <- model
     args[["component"]] <- "all"
+
     fun <- get("get_varcov", asNamespace("insight"))
     out <- try(do.call("fun", args), silent = TRUE)
 
@@ -120,26 +123,33 @@ get_varcov_args <- function(model, vcov) {
         return(out)
     }
 
+    if (isTRUE(vcov == "satterthwaite") || isTRUE(vcov == "kenward-roger")) {
+        out <- list()
+        out[["vcov"]] <- NULL
+        out[["ci_method"]] <- vcov
+        return(out)
+    }
+
     out <- switch(vcov,
         "stata" = list(vcov = "HC2"),
         "robust" = list(vcov = "HC3"),
         "bootstrap" = list(vcov = "BS"),
         "outer-product" = list(vcov = "OPG"),
         list(vcov = vcov))
-
     return(out)
 }
-
 
 
 
 get_vcov_label <- function(vcov) {
     if (is.null(vcov)) vcov <- ""
     if (!is.character(vcov)) return(NULL)
- 
+
     out <- switch(vcov,
         "stata" = "Stata",
         "robust" = "Robust",
+        "kenward-roger" = "Kenward-Roger",
+        "satterthwaite" = "Satterthwaite",
         "HC" = ,
         "HC0" = ,
         "HC1" = ,

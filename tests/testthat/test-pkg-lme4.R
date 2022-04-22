@@ -6,6 +6,34 @@ requiet("emmeans")
 requiet("broom")
 
 
+test_that("satterthwaite (no validity)", {
+    dat <- mtcars
+    dat$cyl <- factor(dat$cyl)
+    mod <- lmer(mpg ~ hp + (1 | cyl), data = dat)
+    x <- predictions(mod)
+    y <- predictions(mod, vcov = "satterthwaite")
+    z <- predictions(mod, vcov = "kenward-roger")
+    expect_true(all(x$conf.low != y$conf.low))
+    expect_true(all(x$conf.low != z$conf.low))
+    expect_true(all(y$conf.low != z$conf.low))
+    # kenward-roger adjusts vcov but not satterthwaite
+    expect_true(all(x$std.error == y$std.error))
+    expect_true(all(x$std.error != z$std.error))
+    expect_true(all(y$std.error != z$std.error))
+
+    x <- plot_cap(mod, condition = "hp", draw = FALSE)
+    y <- plot_cap(mod, condition = "hp", vcov = "satterthwaite", draw = FALSE)
+    z <- plot_cap(mod, condition = "hp", vcov = "kenward-roger", draw = FALSE)
+    expect_true(all(x$conf.low != y$conf.low))
+    expect_true(all(x$conf.low != z$conf.low))
+    expect_true(all(y$conf.low != z$conf.low))
+    # kenward-roger adjusts vcov but not satterthwaite
+    expect_true(all(x$std.error == y$std.error))
+    expect_true(all(x$std.error != z$std.error))
+    expect_true(all(y$std.error != z$std.error))
+})
+
+
 test_that("get_predict: low-level tests", {
 
     dat <- haven::read_dta(test_path("stata/databases/lme4_02.dta"))
