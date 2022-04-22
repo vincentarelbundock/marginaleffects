@@ -116,6 +116,11 @@ comparisons <- function(model,
     if (isTRUE(vcov %in% c("satterthwaite", "kenward-roger"))) {
         mi <- insight::model_info(model)
         V <- get_vcov(model, vcov = vcov)
+        df <- insight::find_response(model)
+        # predict.lmerTest requires the DV
+        if (!df %in% colnames(newdata)) {
+            newdata[[df]] <- mean(insight::get_response(model))
+        }
         dof <- insight::get_df(model, type = vcov, data = newdata)
     } else {
         dof <- NULL

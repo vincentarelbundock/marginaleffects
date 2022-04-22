@@ -42,6 +42,13 @@ test_that("satterthwaite (no validity)", {
     expect_true(all(x$std.error != z$std.error))
     expect_true(all(y$std.error != z$std.error))
 
+    # at the mean (regression test)
+    mfx <- marginaleffects(
+        mod,
+        newdata = datagrid(),
+        vcov = "satterthwaite")
+    expect_s3_class(mfx, "marginaleffects")
+
     # GLM not supported
     mod <- glmer(am ~ hp + (1 | cyl), family = binomial, data = dat)
     expect_error(comparisons(mod, vcov = "satterthwaite"), regexp = "Satter")
