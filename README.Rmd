@@ -18,41 +18,49 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
-```
-
-## What?
-
-```{r}
 #| echo = FALSE
 url <- "https://raw.githubusercontent.com/vincentarelbundock/marginaleffects/main/data-raw/supported_models.csv"
 dat <- read.csv(url)
 n_support <- nrow(dat)
 ```
 
-The `marginaleffects` package allows `R` users to compute and plot four principal quantities of interest for [`r n_support` different types of models:](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html) 
+`marginaleffects` is an R package to compute and plot adjusted predictions, marginal effects, contrasts, and marginal means for a *wide* variety of models.
 
-* [_Marginal Effect_:  Vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx.html) 
-    - A partial derivative (slope) of the regression equation with respect to a regressor of interest.
-    - [`marginaleffects(),`](https://vincentarelbundock.github.io/marginaleffects/reference/marginaleffects.html) [`plot(),`](https://vincentarelbundock.github.io/marginaleffects/reference/plot.marginaleffects.html) [`plot_cme()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cme.html)
-* [_Adjusted Prediction:_ Vignette](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html) 
-    - The outcome predicted by a model for some combination of the regressors' values, such as their observed values, their means, or factor levels (a.k.a. "reference grid"). 
-    - [`predictions(),`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html) [`plot_cap()`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html)
-* [_Contrast:_ Vignette](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html) 
-    - The difference between two adjusted predictions, calculated for meaningfully different regressor values (e.g., College graduates vs. Others).
-    - [`comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)
-* [_Marginal Mean:_ Vignette](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) 
-    - Adjusted predictions of a model, averaged across a "reference grid" of categorical predictors.
-    - [`marginalmeans()`](https://vincentarelbundock.github.io/marginaleffects/reference/marginalmeans.html)
+## Table of contents
 
-The rest of this page includes a "Getting Started" tutorial with simple examples. To go beyond these simple examples, please read the vignettes linked above, for each of the four quantities. In addition, you can consult these pages:
-
-* [List of `r n_support` supported models](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
-* [Comparisons to alternative software](https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html)
+* [What?](https://vincentarelbundock.github.io/marginaleffects/#what)
+* [Why?](https://vincentarelbundock.github.io/marginaleffects/#why)
+* [Getting started](https://vincentarelbundock.github.io/marginaleffects/#getting-started)
+* Vignettes:
+    - [Adjusted predictions](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html) 
+    - [Marginal effects](https://vincentarelbundock.github.io/marginaleffects/articles/mfx.html) 
+    - [Contrasts](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html) 
+    - [Marginal means](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) 
+* [`r n_support` supported models](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
 * [Performance tips](https://vincentarelbundock.github.io/marginaleffects/articles/performance.html)
 * Case studies:
     - [Bayesian analyses with `brms`](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)
     - [Mixed effects models](https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html)
     - [Generalized Additive Models](https://vincentarelbundock.github.io/marginaleffects/articles/gam.html)
+* [Alternative software](https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html)
+
+## What?
+
+
+The `marginaleffects` package allows `R` users to compute and plot four principal quantities of interest for [`r n_support` different types of models:](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html) 
+
+* [_Marginal Effect_](https://vincentarelbundock.github.io/marginaleffects/articles/mfx.html) 
+    - A partial derivative (slope) of the regression equation with respect to a regressor of interest.
+    - [`marginaleffects(),`](https://vincentarelbundock.github.io/marginaleffects/reference/marginaleffects.html) [`plot(),`](https://vincentarelbundock.github.io/marginaleffects/reference/plot.marginaleffects.html) [`plot_cme()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cme.html)
+* [_Adjusted Prediction_](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html) 
+    - The outcome predicted by a model for some combination of the regressors' values, such as their observed values, their means, or factor levels (a.k.a. "reference grid"). 
+    - [`predictions(),`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html) [`plot_cap()`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html)
+* [_Contrast_ ](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html) 
+    - The difference between two adjusted predictions, calculated for meaningfully different regressor values (e.g., College graduates vs. Others).
+    - [`comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)
+* [_Marginal Mean_](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) 
+    - Adjusted predictions of a model, averaged across a "reference grid" of categorical predictors.
+    - [`marginalmeans()`](https://vincentarelbundock.github.io/marginaleffects/reference/marginalmeans.html)
 
 ## Why?
 
@@ -84,7 +92,9 @@ Downsides of `marginaleffects` include:
 * Simulation-based inference is not supported.
 * Newer package with a smaller user base.
 
-## Installation
+## Getting started
+
+#### Installation
 
 You can install the released version of `marginaleffects` from CRAN:
 
@@ -97,8 +107,6 @@ You can install the development version of `marginaleffects` from Github:
 ```{r, eval=FALSE}
 remotes::install_github("vincentarelbundock/marginaleffects")
 ```
-
-## Getting started
 
 First, we estimate a linear regression model with multiplicative interactions:
 
