@@ -23,5 +23,7 @@ The `marginaleffects` website (https://vincentarelbundock.github.io/marginaleffe
 
 - [Bayesian analyses with `brms`](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)
 - [Mixed effects models](https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html)
+- [Generalized Additive Models](https://vincentarelbundock.github.io/marginaleffects/articles/gam.html)
+- [Robust standard errors and more](https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html)
+- [Tables and Plots](https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html)
 - [Performance and parallel computation](https://vincentarelbundock.github.io/marginaleffects/articles/parallel.html)
-

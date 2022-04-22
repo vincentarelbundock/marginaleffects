@@ -16,5 +16,7 @@
 ^vignettes/lme4.Rmd
 ^vignettes/alternative_software.Rmd
 ^vignettes/performance.Rmd
+^vignettes/sandwich.Rmd
 ^vignettes/benchmark.Rmd
+^vignettes/modelsummary.Rmd
 man-roxygen

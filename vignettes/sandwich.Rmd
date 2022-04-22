@@ -1,0 +1,92 @@
+---
+title: "Robust standard errors and more"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Robust standard errors and more}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+# this vignette is in .Rbuildignore because lme4 is not available on old CRAN
+# test machines.
+
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  fig.width = 9,
+  fig.asp = .4,
+  out.width = "100%",
+  warning = FALSE,
+  message = FALSE,
+  comment = "#>"
+)
+```
+
+# Robust standard errors 
+
+All the functions in the `marginaleffects` package can compute robust standard errors on the fly for any model type supported by [the `sandwich` package.](https://sandwich.r-forge.r-project.org/) The `vcov` argument supports string shortcuts like `"HC3"`, a one-sided formula to request clustered standard errors, variance-covariance matrices, or functions which return such matrices. Here are a few examples.
+
+Adjusted predictions with classical or heteroskedasticity-robust standard errors:
+
+```{r}
+library(marginaleffects)
+library(patchwork)
+mod <- lm(mpg ~ hp, data = mtcars)
+
+p <- predictions(mod)
+head(p, 2)
+
+p <- predictions(mod, vcov = "HC3")
+head(p, 2)
+```
+
+Marginal effects with cluster-robust standard errors:
+
+```{r}
+mfx <- marginaleffects(mod, vcov = ~cyl)
+summary(mfx)
+```
+
+Comparing adjusted predictions with classical and robust standard errors:
+
+```{r, fig.asp = .4}
+p1 <- plot_cap(mod, condition = "hp")
+p2 <- plot_cap(mod, condition = "hp", vcov = "HC3")
+p1 + p2
+```
+
+# Mixed effects models: Satterthwaite and Kenward-Roger corrections
+
+For linear mixed effects models we can apply the Satterthwaite and Kenward-Roger corrections in the same way as above:
+
+```{r, message = FALSE}
+library(marginaleffects)
+library(patchwork)
+library(lme4)
+
+dat <- mtcars
+dat$cyl <- factor(dat$cyl)
+dat$am <- as.logical(dat$am)
+mod <- lmer(mpg ~ hp + am + (1 | cyl), data = dat)
+```
+
+Marginal effects at the mean with classical standard errors and z-statistic:
+
+```{r}
+marginaleffects(mod, newdata = datagrid())
+```
+
+Marginal effects at the mean with Kenward-Roger adjusted variance-covariance and degrees of freedom:
+
+```{r}
+marginaleffects(mod,
+                newdata = datagrid(),
+                vcov = "kenward-roger")
+```
+
+We can use the same option in any of the package's core functions, including:
+
+```{r}
+plot_cap(mod, condition = "hp", vcov = "satterthwaite")
+```
+

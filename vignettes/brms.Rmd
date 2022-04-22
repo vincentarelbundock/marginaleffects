@@ -1,5 +1,5 @@
 ---
-title: "Bayesian analysis with `brms` and `marginaleffects`"
+title: "Bayesian analysis with brms"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Bayesian analysis with brms}
