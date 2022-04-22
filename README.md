@@ -23,12 +23,12 @@ predictions, marginal effects, contrasts, and marginal means for a
     started](https://vincentarelbundock.github.io/marginaleffects/#getting-started)
   - Vignettes:
       - [Adjusted
-        predictions](https://vincentarelbundock.github.io/marginaleffects/articles/1_predictions.html)
+        predictions](https://vincentarelbundock.github.io/marginaleffects/articles/mfx01_predictions.html)
       - [Marginal
-        effects](https://vincentarelbundock.github.io/marginaleffects/articles/2_mfx.html)
-      - [Contrasts](https://vincentarelbundock.github.io/marginaleffects/articles/3_contrasts.html)
+        effects](https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_mfx.html)
+      - [Contrasts](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_contrasts.html)
       - [Marginal
-        means](https://vincentarelbundock.github.io/marginaleffects/articles/4_marginalmeans.html)
+        means](https://vincentarelbundock.github.io/marginaleffects/articles/mfx04_marginalmeans.html)
   - [60 supported
     models](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
   - [Performance
@@ -54,26 +54,26 @@ principal quantities of interest for [60 different types of
 models:](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
 
   - [*Adjusted
-    Prediction*](https://vincentarelbundock.github.io/marginaleffects/articles/1_predictions.html)
+    Prediction*](https://vincentarelbundock.github.io/marginaleffects/articles/mfx01_predictions.html)
       - The outcome predicted by a model for some combination of the
         regressors’ values, such as their observed values, their means,
         or factor levels (a.k.a. “reference grid”).
       - [`predictions(),`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html)
         [`plot_cap()`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html)
   - [*Marginal
-    Effect*](https://vincentarelbundock.github.io/marginaleffects/articles/2_mfx.html)
+    Effect*](https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_mfx.html)
       - A partial derivative (slope) of the regression equation with
         respect to a regressor of interest.
       - [`marginaleffects(),`](https://vincentarelbundock.github.io/marginaleffects/reference/marginaleffects.html)
         [`plot(),`](https://vincentarelbundock.github.io/marginaleffects/reference/plot.marginaleffects.html)
         [`plot_cme()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cme.html)
-  - [*Contrast*](https://vincentarelbundock.github.io/marginaleffects/articles/3_contrasts.html)
+  - [*Contrast*](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_contrasts.html)
       - The difference between two adjusted predictions, calculated for
         meaningfully different regressor values (e.g., College graduates
         vs. Others).
       - [`comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)
   - [*Marginal
-    Mean*](https://vincentarelbundock.github.io/marginaleffects/articles/4_marginalmeans.html)
+    Mean*](https://vincentarelbundock.github.io/marginaleffects/articles/mfx04_marginalmeans.html)
       - Adjusted predictions of a model, averaged across a “reference
         grid” of categorical predictors.
       - [`marginalmeans()`](https://vincentarelbundock.github.io/marginaleffects/reference/marginalmeans.html)
@@ -181,16 +181,11 @@ full results with functions like `head`, as you would with any other
 mfx <- marginaleffects(mod)
 
 head(mfx, 4)
-#>   rowid     type term        dydx  std.error    conf.low     conf.high  mpg  hp
-#> 1     1 response   hp -0.03690556 0.01850168 -0.07316818 -0.0006429255 21.0 110
-#> 2     2 response   hp -0.02868936 0.01562768 -0.05931905  0.0019403284 21.0 110
-#> 3     3 response   hp -0.04657166 0.02259121 -0.09084963 -0.0022936972 22.8  93
-#> 4     4 response   hp -0.04227128 0.01328275 -0.06830499 -0.0162375732 21.4 110
-#>      wt am
-#> 1 2.620  1
-#> 2 2.875  1
-#> 3 2.320  1
-#> 4 3.215  0
+#>   rowid     type term        dydx  std.error    conf.low     conf.high  mpg  hp    wt am
+#> 1     1 response   hp -0.03690556 0.01850168 -0.07316818 -0.0006429255 21.0 110 2.620  1
+#> 2     2 response   hp -0.02868936 0.01562768 -0.05931905  0.0019403284 21.0 110 2.875  1
+#> 3     3 response   hp -0.04657166 0.02259121 -0.09084963 -0.0022936972 22.8  93 2.320  1
+#> 4     4 response   hp -0.04227128 0.01328275 -0.06830499 -0.0162375732 21.4 110 3.215  0
 ```
 
 The function `summary` calculates the “Average Marginal Effect,” that
@@ -227,17 +222,17 @@ a “grid” of predictor values over which to compute means/predictions:
 
 ``` r
 predictions(mod, variables = c("am", "wt"))
-#>    rowid     type predicted std.error  conf.low conf.high       hp am     wt
-#> 1      1 response 23.259500 2.7059342 17.674726  28.84427 146.6875  0 1.5130
-#> 2      2 response 27.148334 2.8518051 21.262498  33.03417 146.6875  1 1.5130
-#> 3      3 response 20.504387 1.3244556 17.770845  23.23793 146.6875  0 2.5425
-#> 4      4 response 21.555612 1.0723852 19.342318  23.76891 146.6875  1 2.5425
-#> 5      5 response 18.410286 0.6151016 17.140779  19.67979 146.6875  0 3.3250
-#> 6      6 response 17.304709 1.5528055 14.099876  20.50954 146.6875  1 3.3250
-#> 7      7 response 17.540532 0.7293676 16.035192  19.04587 146.6875  0 3.6500
-#> 8      8 response 15.539158 2.1453449 11.111383  19.96693 146.6875  1 3.6500
-#> 9      9 response 12.793013 2.9784942  6.645703  18.94032 146.6875  0 5.4240
-#> 10    10 response  5.901966 5.8149853 -6.099574  17.90351 146.6875  1 5.4240
+#>     rowid     type predicted std.error  conf.low conf.high       hp am     wt
+#>  1:     1 response 23.259500 2.7059342 17.674726  28.84427 146.6875  0 1.5130
+#>  2:     2 response 27.148334 2.8518051 21.262498  33.03417 146.6875  1 1.5130
+#>  3:     3 response 20.504387 1.3244556 17.770845  23.23793 146.6875  0 2.5425
+#>  4:     4 response 21.555612 1.0723852 19.342318  23.76891 146.6875  1 2.5425
+#>  5:     5 response 18.410286 0.6151016 17.140779  19.67979 146.6875  0 3.3250
+#>  6:     6 response 17.304709 1.5528055 14.099876  20.50954 146.6875  1 3.3250
+#>  7:     7 response 17.540532 0.7293676 16.035192  19.04587 146.6875  0 3.6500
+#>  8:     8 response 15.539158 2.1453449 11.111383  19.96693 146.6875  1 3.6500
+#>  9:     9 response 12.793013 2.9784942  6.645703  18.94032 146.6875  0 5.4240
+#> 10:    10 response  5.901966 5.8149853 -6.099574  17.90351 146.6875  1 5.4240
 ```
 
 The [`datagrid` function gives us an even more powerful
@@ -246,9 +241,9 @@ to customize the grid:
 
 ``` r
 predictions(mod, newdata = datagrid(am = 0, wt = c(2, 4)))
-#>   rowid     type predicted std.error conf.low conf.high       hp am wt
-#> 1     1 response  21.95621  2.038630 17.74868  26.16373 146.6875  0  2
-#> 2     2 response  16.60387  1.083201 14.36826  18.83949 146.6875  0  4
+#>    rowid     type predicted std.error conf.low conf.high       hp am wt
+#> 1:     1 response  21.95621  2.038630 17.74868  26.16373 146.6875  0  2
+#> 2:     2 response  16.60387  1.083201 14.36826  18.83949 146.6875  0  4
 ```
 
 We can plot the adjusted predictions with the `plot_cap` function:
