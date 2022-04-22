@@ -1,6 +1,8 @@
 template:
   params:
     bootswatch: readable
+  bslib:
+    primary: "#306cc9"
 navbar:
   title: marginaleffects
   type: default
