@@ -12,11 +12,14 @@
 ^logo$
 ^\.covrignore$
 ^cran-comments\.md
-^vignettes/brms.Rmd
-^vignettes/lme4.Rmd
 ^vignettes/alternative_software.Rmd
+^vignettes/brms.Rmd
+^vignettes/gam.Rmd
+^vignettes/lme4.Rmd
 ^vignettes/performance.Rmd
 ^vignettes/sandwich.Rmd
 ^vignettes/benchmark.Rmd
 ^vignettes/modelsummary.Rmd
+^vignettes/performance.Rmd
+^vignettes/sandwich.Rmd
 man-roxygen
