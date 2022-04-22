@@ -68,7 +68,14 @@ get_predict.default <- function(model,
 
         # `get_predicted` issues a warning even with `vcov=NULL` when the
         # argument is not supported, so we do this here instead of in `predictions`
-        if (is.logical(vcov)) {
+        if (isTRUE(vcov == "satterthwaite") || isTRUE(vcov == "kenward-roger")) {
+            args[["ci_method"]] <- vcov
+            # lmerTest predict method fails when the DV is not there
+            dv <- insight::find_response(model)
+            newdata_tmp <- newdata
+            newdata_tmp[[dv]] <- mean(insight::get_response(model))
+            args[["data"]] <- newdata_tmp
+        } else if (is.logical(vcov)) {
             args[["vcov"]] <- NULL
         } else if (!is.logical(vcov) && !is.null(vcov)) {
             args[["vcov"]] <- get_vcov(model, vcov = vcov)

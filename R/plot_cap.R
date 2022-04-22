@@ -86,7 +86,7 @@ plot_cap <- function(model,
     datplot <- predictions(model,
                            newdata = nd,
                            type = type,
-                           vcov = vcov, 
+                           vcov = vcov,
                            conf.int = conf.int,
                            conf.level = conf.level)
     colnames(datplot)[colnames(datplot) == condition1] <- "condition1"

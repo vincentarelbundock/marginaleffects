@@ -13,9 +13,16 @@ Supported packages:
 Misc:
 
 * `by` argument in `tidy()` and `summary()` computes group-average marginal effects and comparisons.
+* Robust standard errors with the `vcov` argument
+  - `sandwich` package shortcuts: `vcov = "HC3"`, `"HC2"`, `"NeweyWest"`, and more.
+  - Mixed effects models: `vcov = "satterthwaite"` or `"kenward-roger"`
+  - One-sided formula to clusters: `vcov = ~cluster_variable`
+  - Variance-covariance matrix
+  - Function which returns a named squared matrix
 * `marginaleffects` and `comparisons` now report confidence intervals by default.
 * New dependency on the `data.table` yields substantial performance improvements.
 * New vignette on alternative software packages.
+* New vignette on performance.
 * Bug fixes and performance improvements
 
 # marginaleffects 0.4.1
