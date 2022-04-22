@@ -107,6 +107,10 @@ comparisons <- function(model,
     }
 
     # variance-covariance matrix
+    if (isTRUE(vcov %in% c("satterthwaite", "kenward-roger"))) {
+        stop('The "satterthwaite" and "kenward-roger" adjustements are only available via the `vcov` argument in the `predictions()` function.',
+             call. = FALSE)
+    }
     vcov_label <- get_vcov_label(vcov)
     vcov <- get_vcov(model, vcov = vcov)
 
