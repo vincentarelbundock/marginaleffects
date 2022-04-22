@@ -1,0 +1,74 @@
+---
+title: "Tables and Plots"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Tables and Plots}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+# this vignette is in .Rbuildignore because lme4 is not available on old CRAN
+# test machines.
+
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  fig.width = 9,
+  fig.asp = .4,
+  out.width = "100%",
+  warning = FALSE,
+  message = FALSE,
+  comment = "#>"
+)
+```
+
+# Marginal effects
+
+We can summarize the results of the `comparisons()` or `marginaleffects()` functions using [the `modelsummary` package.](https://github.com/vincentarelbundock/modelsummary)
+
+```{r}
+library(modelsummary)
+library(marginaleffects)
+
+mod <- glm(am ~ wt + drat, family = binomial, data = mtcars)
+mfx <- marginaleffects(mod)
+
+modelsummary(mfx)
+```
+
+The same results can be visualized with `modelplot()`:
+
+```{r}
+modelplot(mfx)
+```
+
+We can display several models or marginal effects side by side:
+
+```{r}
+models <- list(
+    glm(am ~ drat, family = binomial, data = mtcars),
+    glm(am ~ wt + drat, family = binomial, data = mtcars))
+models[[1]] <- marginaleffects(models[[1]])
+models[[2]] <- marginaleffects(models[[2]], vcov = "HC3")
+modelsummary(models)
+```
+
+# Contrasts
+
+When using the `comparisons()` function (or the `marginaleffects()` function with categorical variables), the output will include two columns to uniquely identify the quantities of interest: `term` and `contrast`.
+
+```{r}
+dat <- mtcars
+dat$gear <- as.factor(dat$gear)
+mod <- glm(vs ~ gear + mpg, data = dat, family = binomial)
+
+mfx <- marginaleffects(mod)
+tidy(mfx)
+```
+
+We can use the `group` argument of the `modelsummary` function to structure the table properly:
+
+```{r}
+modelsummary(mfx, group = term + contrast ~ model)
+```
+
