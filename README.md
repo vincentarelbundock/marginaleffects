@@ -139,6 +139,9 @@ Downsides of `marginaleffects` include:
   - Functions to estimate contrasts and marginal means are considerably
     less flexible than `emmeans`.
   - Simulation-based inference is not supported.
+  - Lack of multiplicity adjustements.
+  - Limited support for custom contrasts (but see the `comparisons()`
+    function documentation).
   - Newer package with a smaller user base.
 
 ## Getting started
