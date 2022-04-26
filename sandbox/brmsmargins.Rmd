@@ -1,0 +1,235 @@
+---
+output: html_document
+---
+
+# `brmsmargins`
+
+[The `brmsmargins` package](https://joshuawiley.com/brmsmargins/) is developed by Joshua Wiley:
+
+> This package has functions to calculate marginal effects from brms models ( http://paul-buerkner.github.io/brms/ ). A central motivator is to calculate average marginal effects (AMEs) for continuous and discrete predictors in fixed effects only and mixed effects regression models including location scale models.
+
+This section replicates some of the analyses from the `brmsmargins` vignettes to highlight the parallels and differences in syntax.
+
+## TODO
+
+Probably not supported by `marginaleffects`:
+
+* `brmsmargins::marginalcoef()`
+
+Not quite sure how to replicate:
+
+* Contrasts for discrete predictors
+* Link scale and backtransform example
+
+## AMEs for Logistic Regression
+
+Estimate a logistic regression model with `brms`:
+
+```{r, message = FALSE, warning = FALSE}
+library(brms)
+library(brmsmargins)
+library(marginaleffects)
+library(data.table)
+library(withr)
+h <- 5e-5
+
+void <- capture.output(
+    bayes.logistic <- brm(
+      vs ~ am + mpg, data = mtcars,
+      family = "bernoulli", seed = 1234,
+      silent = 2, refresh = 0,
+      chains = 4L, cores = 4L, backend = "cmdstanr")
+)
+```
+
+Compute AMEs manually:
+
+```{r}
+d1 <- d2 <- mtcars
+d2$mpg <- d2$mpg + h
+p1 <- posterior_epred(bayes.logistic, newdata = d1)
+p2 <- posterior_epred(bayes.logistic, newdata = d2)
+m <- (p2 - p1) / h
+sprintf("%.6f [%.6f, %.6f]",
+        mean(m),
+        quantile(m, .025),
+        quantile(m, .975))
+```
+
+Compute AMEs with `brmsmargins`:
+
+```{r}
+bm <- brmsmargins(
+  bayes.logistic,
+  add = data.frame(mpg = c(0, 0 + h)),
+  contrasts = cbind("AME MPG" = c(-1 / h, 1 / h)),
+  CI = 0.95, CIType = "ETI")
+data.frame(bm$ContrastSummary)
+```
+
+Compute AMEs using `marginaleffects`:
+
+```{r}
+mfx <- marginaleffects(bayes.logistic) 
+```
+
+By default, `marginaleffects` reports the median of the posterior distribution for bayesian models:
+
+```{r}
+summary(mfx)
+```
+
+We can use the `FUN` argument to compute the mean of the posterior distribution instead, which yields results that are numerically identical to those produced by `brmsmargins`:
+
+```{r}
+summary(mfx, FUN = mean)
+```
+
+## AMEs for Mixed Effects Logistic Regression
+
+Estimate a mixed effects logistic regression model with `brms`:
+
+```{r, message = FALSE, warning = TRUE}
+d <- withr::with_seed(
+  seed = 12345, code = {
+    nGroups <- 100
+    nObs <- 20
+    theta.location <- matrix(rnorm(nGroups * 2), nrow = nGroups, ncol = 2)
+    theta.location[, 1] <- theta.location[, 1] - mean(theta.location[, 1])
+    theta.location[, 2] <- theta.location[, 2] - mean(theta.location[, 2])
+    theta.location[, 1] <- theta.location[, 1] / sd(theta.location[, 1])
+    theta.location[, 2] <- theta.location[, 2] / sd(theta.location[, 2])
+    theta.location <- theta.location %*% chol(matrix(c(1.5, -.25, -.25, .5^2), 2))
+    theta.location[, 1] <- theta.location[, 1] - 2.5
+    theta.location[, 2] <- theta.location[, 2] + 1
+    d <- data.table(
+      x = rep(rep(0:1, each = nObs / 2), times = nGroups))
+    d[, ID := rep(seq_len(nGroups), each = nObs)]
+
+    for (i in seq_len(nGroups)) {
+      d[ID == i, y := rbinom(
+        n = nObs,
+        size = 1,
+        prob = plogis(theta.location[i, 1] + theta.location[i, 2] * x))
+        ]
+    }
+    copy(d)
+  })
+
+void <- capture.output(
+    mlogit <- brms::brm(
+      y ~ 1 + x + (1 + x | ID), family = "bernoulli",
+      data = d, seed = 1234,
+      silent = 2, refresh = 0,
+      chains = 4L, cores = 4L, backend = "cmdstanr")
+)
+```
+
+## AMEs: Default
+
+```{r}
+bm <- brmsmargins(
+  mlogit,
+  add = data.frame(x = c(0, h)),
+  contrasts = cbind("AME x" = c(-1 / h, 1 / h)),
+  CIType = "ETI",
+  k = 100L, seed = 1234)
+data.frame(bm$ContrastSummary)
+
+mfx <- marginaleffects(mlogit, re_formula = NA) 
+summary(mfx, FUN = mean)
+```
+
+## AMEs: Integrate Out Random Effects
+
+```{r}
+bm <- brmsmargins(
+  mlogit,
+  add = data.frame(x = c(0, h)),
+  contrasts = cbind("AME x" = c(-1 / h, 1 / h)),
+  CIType = "ETI",
+  effects = "integrateoutRE",
+  k = 100L, seed = 1234)
+data.frame(bm$ContrastSummary)
+
+mfx <- marginaleffects(mlogit) 
+summary(mfx, FUN = mean)
+```
+
+## AMEs for Fixed Effects Location Scale Models
+
+Estimate a fixed effects location scale model with `brms`:
+
+```{r, message = FALSE, warning = FALSE}
+d <- withr::with_seed(
+  seed = 12345, code = {
+    nObs <- 1000L
+    d <- data.table(
+      grp = rep(0:1, each = nObs / 2L),
+      x = rnorm(nObs, mean = 0, sd = 0.25))
+    d[, y := rnorm(nObs,
+                   mean = x + grp,
+                   sd = exp(1 + x + grp))]
+    copy(d)
+  })
+
+void <- capture.output(
+    ls.fe <- brm(bf(
+      y ~ 1 + x + grp,
+      sigma ~ 1 + x + grp),
+      family = "gaussian",
+      data = d, seed = 1234,
+      silent = 2, refresh = 0,
+      chains = 4L, cores = 4L, backend = "cmdstanr")
+)
+```
+
+Fixed effects only:
+
+```{r}
+bm <- brmsmargins(
+  ls.fe,
+  add = data.frame(x = c(0, h)),
+  contrasts = cbind("AME x" = c(-1 / h, 1 / h)),
+  CI = 0.95, CIType = "ETI",
+  effects = "fixedonly")
+data.frame(bm$ContrastSummary)
+
+mfx <- marginaleffects(ls.fe, re_formula = NA)
+summary(mfx, FUN = mean)
+```
+
+Discrete change (contrast) -- Not sure:
+
+```{r}
+bm <- brmsmargins(
+  ls.fe,
+  at = data.frame(grp = c(0, 1)),
+  contrasts = cbind("AME grp" = c(-1, 1)),
+  CI = 0.95, CIType = "ETI", dpar = "sigma",
+  effects = "fixedonly")
+data.frame(bm$ContrastSummary)
+
+mfx <- comparisons(
+  ls.fe,
+  variables = "grp",
+  re_formula = NA,
+  contrast_numeric = c(0, 1))
+summary(mfx, FUN = mean)
+```
+
+Link scale -- Not sure:
+
+```{r}
+bm <- brmsmargins(
+  ls.fe,
+  add = data.frame(x = c(0, h)),
+  contrasts = cbind("AME x" = c(-1 / h, 1 / h)),
+  CI = 0.95, CIType = "ETI", dpar = "sigma",
+  effects = "fixedonly")
+data.frame(bm$ContrastSummary)
+
+mfx <- marginaleffects(ls.fe, type = "link", re_formula = NA)
+summary(mfx, FUN = mean)
+```
+
