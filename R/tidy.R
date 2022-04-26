@@ -268,7 +268,7 @@ tidy.comparisons <- function(x,
             idx_by <- intersect(colnames(draws), idx_by)
             es <- draws[, .(estimate = FUN_draws(draw)), by = idx_by]
             flag <- 
-            if (isTRUE(getOption("marginaleffects_credible_interval", default = "eti") == "hdi") {
+            if (isTRUE(getOption("marginaleffects_credible_interval", default = "eti") == "hdi")) {
                 f_ci <- get_hdi
             } else {
                 f_ci <- get_eti
