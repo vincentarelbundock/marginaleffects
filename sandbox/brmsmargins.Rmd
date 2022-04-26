@@ -15,12 +15,6 @@ These features are probably not supported by `marginaleffects`:
 * `brmsmargins::marginalcoef()`
 * What else?
 
-Questions I would like to ask the `brmsmargins` developer:
-
-* How are LL and UL computed? In `brmsfit$ContrastSummary` they do not match quantiles of the posterior.
-* How is the Mdn column computed?
-* Do we know why there are small numerical difference in the "integrate out" example?
-
 ## Marginal Effects for Fixed Effects Models
 
 ### AMEs for Logistic Regression
