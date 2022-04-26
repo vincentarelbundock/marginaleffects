@@ -51,7 +51,7 @@ test_that("marginaleffects vs. emmeans", {
     mfx <- marginaleffects(brms_numeric2, newdata = datagrid(mpg = 20, hp = 100),
                            variables = "mpg", type = "link")
     em <- emtrends(brms_numeric2, ~mpg, "mpg", at = list(mpg = 20, hp = 100))
-    em <- tidy(em)
+    em <- tidy(em, FUN = median)
     expect_equal(mfx$dydx, em$mpg.trend)
     expect_equal(mfx$conf.low, em$lower.HPD)
     expect_equal(mfx$conf.high, em$upper.HPD)
@@ -59,7 +59,7 @@ test_that("marginaleffects vs. emmeans", {
     mfx <- marginaleffects(brms_numeric2, newdata = datagrid(mpg = 20, hp = 100),
                            variables = "mpg", type = "response")
     em <- emtrends(brms_numeric2, ~mpg, "mpg", at = list(mpg = 20, hp = 100), regrid = "response")
-    em <- tidy(em)
+    em <- tidy(em, FUN = median)
     expect_equal(mfx$dydx, em$mpg.trend, tolerance = .1)
     expect_equal(mfx$conf.low, em$lower.HPD, tolerance = .01)
     expect_equal(mfx$conf.high, em$upper.HPD, tolerance = .1)
@@ -151,7 +151,7 @@ test_that("tidy()", {
     dat$cyl_fac <- as.factor(dat$cyl)
     dat$cyl_cha <- as.character(dat$cyl)
     mfx <- marginaleffects(brms_factor, newdata = dat)
-    ti <- tidy(mfx)
+    ti <- tidy(mfx, FUN = median)
     expect_s3_class(ti, "data.frame")
     expect_equal(dim(ti), c(3, 6))
     expect_true(all(c("term", "estimate", "conf.low") %in% colnames(ti)))
@@ -323,9 +323,9 @@ test_that("mo() recognized as factor: Issue #220", {
 
     # comparisons
     expect_error(comparisons(brms_monotonic_factor), regexp = "cannot be used")
-    contr1 <- tidy(comparisons(brms_monotonic))
+    contr1 <- tidy(comparisons(brms_monotonic), FUN = median)
     expect_true(all(paste(c(2, 3, 4, 6, 8), "-", 1) %in% contr1$contrast))
-    contr2 <- tidy(comparisons(brms_monotonic, contrast_factor = "pairwise", variables = "carb"))
+    contr2 <- tidy(comparisons(brms_monotonic, contrast_factor = "pairwise", variables = "carb"), FUN = median)
     expect_equal(nrow(contr2), 15)
 })
 
@@ -391,6 +391,6 @@ test_that("vignette vdem example", {
 test_that("bugs stay dead: character regressors used to produce duplicates", {
     expect_marginaleffects(brms_character, se = FALSE)
     mfx <- marginaleffects(brms_character)
-    ti <- tidy(mfx)
+    ti <- tidy(mfx, FUN = median)
     expect_true(length(unique(ti$estimate)) == nrow(ti))
 })

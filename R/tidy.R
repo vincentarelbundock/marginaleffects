@@ -13,9 +13,9 @@ generics::glance
 #' @param x An object produced by the `marginaleffects` function.
 #' @param conf.int Logical indicating whether or not to include a confidence interval.
 #' @param by Character vector of variable names over which to compute group-averaged marginal effects.
-#' @param FUN function used to summarize unit-level marginal effects. `NULL`
-#' (default) computes the median of the posterior distribution in bayesian
-#' models and the average marginal effects in all other models.
+#' @param FUN function used to summarize unit-level marginal effects (e.g., `mean` or
+#' `median`). The default value `NULL` uses the `mean` function. See Details
+#' below.
 #' @inheritParams marginaleffects
 #' @return A "tidy" `data.frame` of summary statistics which conforms to the
 #' `broom` package specification.
@@ -23,6 +23,24 @@ generics::glance
 #' The `tidy` function calculates average marginal effects by taking the mean
 #' of all the unit-level marginal effects computed by the `marginaleffects`
 #' function.
+#'
+#' In frequentist models, the `FUN` function is applied to the unit-level
+#' marginal effects. If `FUN` is the mean function (or `NULL` default), this
+#' yields an "Average Marginal Effect". If `FUN` is the median function, this
+#' yields a "Median Marginal Effect".
+#' 
+#' To compute standard errors around those quantities, we begin by applying the
+#' `FUN` function to each column of the Jacobian. When `FUN` is the mean, this
+#' yields a "Jacobian at the mean". Then, we use this matrix in the Delta
+#' method to obtained standard errors.
+#'
+#' In Bayesian models (e.g., `brms`), we compute Average (or Median) Marginal
+#' Effects by applying the `FUN` function twice. First, we apply `FUN` to all
+#' marginal effects for each posterior draw, thereby estimating one Average (or
+#' Median) Marginal Effect per iteration of the MCMC chain. Second, we apply
+#' `FUN` and the `quantile` function to the results of Step 1 to obtain the
+#' Average (or Median) Marginal Effect and its associated interval.
+#'
 #' @export
 #' @examples
 #' mod <- lm(mpg ~ hp * wt + factor(gear), data = mtcars)
@@ -168,10 +186,32 @@ tidy.predictions <- function(x, ...) {
 #'
 #' @param x An object produced by the `comparisons` function.
 #' @param by Character vector of variable names over which to compute group-averaged contrasts.
+#' @param FUN function used to summarize unit-level contrasts (e.g., `mean` or
+#' `median`). The default value `NULL` uses the `mean` function. See Details
+#' below.
 #' @inheritParams comparisons
 #' @inheritParams tidy.marginaleffects
 #' @return A "tidy" `data.frame` of summary statistics which conforms to the
 #' `broom` package specification.
+#' @details
+#'
+#' In frequentist models, the `FUN` function is applied to the unit-level
+#' marginal effects. If `FUN` is the mean function (or `NULL` default), this
+#' yields an "Average Marginal Effect". If `FUN` is the median function, this
+#' yields a "Median Marginal Effect".
+#' 
+#' To compute standard errors around those quantities, we begin by applying the
+#' `FUN` function to each column of the Jacobian. When `FUN` is the mean, this
+#' yields a "Jacobian at the mean". Then, we use this matrix in the Delta
+#' method to obtained standard errors.
+#'
+#' In Bayesian models (e.g., `brms`), we compute Average (or Median) Marginal
+#' Effects by applying the `FUN` function twice. First, we apply `FUN` to all
+#' marginal effects for each posterior draw, thereby estimating one Average (or
+#' Median) Marginal Effect per iteration of the MCMC chain. Second, we apply
+#' `FUN` and the `quantile` function to the results of Step 1 to obtain the
+#' Average (or Median) Marginal Effect and its associated interval.
+#'
 #' @export
 #' @examples
 #' mod <- lm(mpg ~ factor(gear), data = mtcars)
@@ -193,16 +233,10 @@ tidy.comparisons <- function(x,
 
     # custom summary function
     if (is.null(FUN)) {
-        FUN_draws <- median
         FUN <- mean
-        if (is.null(attr(x, "posterior_draws"))) {
-            FUN_label <- "mean"
-        }  else {
-            FUN_label <- "median"
-        }
+        FUN_label <- "mean"
     } else {
         FUN_label <- NULL
-        FUN_draws <- FUN
     }
 
     # group averages
@@ -270,8 +304,8 @@ tidy.comparisons <- function(x,
             # uncertainty around the average marginal effect in two steps:
             # 1. mean for each draw gives 4000 samples of the average mfx
             # 2. quantiles of the means
-            drawavg <- draws[, .(estimate = FUN_draws(draw)), by = c(idx_by, "drawid")]
-            es <- drawavg[, .(estimate = FUN_draws(estimate)), by = idx_by]
+            drawavg <- draws[, .(estimate = FUN(draw)), by = c(idx_by, "drawid")]
+            es <- drawavg[, .(estimate = FUN(estimate)), by = idx_by]
             if (isTRUE(getOption("marginaleffects_credible_interval", default = "eti") == "hdi")) {
                 f_ci <- get_hdi
             } else {

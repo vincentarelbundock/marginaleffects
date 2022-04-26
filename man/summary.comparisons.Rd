@@ -15,9 +15,9 @@ to 0.95, which corresponds to a 95 percent confidence interval.}
 
 \item{by}{Character vector of variable names over which to compute group-averaged contrasts.}
 
-\item{FUN}{function used to summarize unit-level marginal effects. \code{NULL}
-(default) computes the median of the posterior distribution in bayesian
-models and the average marginal effects in all other models.}
+\item{FUN}{function used to summarize unit-level contrasts (e.g., \code{mean} or
+\code{median}). The default value \code{NULL} uses the \code{mean} function. See Details
+below.}
 
 \item{...}{Additional arguments are passed to the \code{predict()} method used to
 compute adjusted predictions. These arguments are particularly useful for

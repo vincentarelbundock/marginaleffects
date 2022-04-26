@@ -34,6 +34,23 @@ Uses the \code{ggplot2} package to draw a point-range plot of the average margin
 The \code{tidy} function calculates average marginal effects by taking the mean
 of all the unit-level marginal effects computed by the \code{marginaleffects}
 function.
+
+In frequentist models, the \code{FUN} function is applied to the unit-level
+marginal effects. If \code{FUN} is the mean function (or \code{NULL} default), this
+yields an "Average Marginal Effect". If \code{FUN} is the median function, this
+yields a "Median Marginal Effect".
+
+To compute standard errors around those quantities, we begin by applying the
+\code{FUN} function to each column of the Jacobian. When \code{FUN} is the mean, this
+yields a "Jacobian at the mean". Then, we use this matrix in the Delta
+method to obtained standard errors.
+
+In Bayesian models (e.g., \code{brms}), we compute Average (or Median) Marginal
+Effects by applying the \code{FUN} function twice. First, we apply \code{FUN} to all
+marginal effects for each posterior draw, thereby estimating one Average (or
+Median) Marginal Effect per iteration of the MCMC chain. Second, we apply
+\code{FUN} and the \code{quantile} function to the results of Step 1 to obtain the
+Average (or Median) Marginal Effect and its associated interval.
 }
 \examples{
 mod <- glm(am ~ hp + wt, data = mtcars)
