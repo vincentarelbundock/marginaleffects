@@ -16,10 +16,11 @@ Probably not supported by `marginaleffects`:
 
 * `brmsmargins::marginalcoef()`
 
-Not quite sure how to replicate:
+Not sure how to replicate:
 
-* Contrasts for discrete predictors
-* Link scale and backtransform example
+* How are LL and UL computed? In `brmsfit$ContrastSummary` they do not match quantiles of the posterior.
+* Small numerical difference in the "integrate out" example.
+* I need to look into the link scale and back-transform example
 
 ## AMEs for Logistic Regression
 
@@ -74,16 +75,12 @@ mfx <- marginaleffects(bayes.logistic)
 summary(mfx, FUN = mean)
 ```
 
-Note that we used `FUN = mean` because `marginaleffects` reports the median of the posterior distribution by default for bayesian models.
+The `mpg` element of the `Effect` column from `marginaleffects` matches the the `M` column of the output from `brmsmargins`.
+
+Above we used `FUN = mean` because `marginaleffects` reports the median of the posterior distribution by default for bayesian models:
 
 ```{r}
-summary(mfx, FUN = mean)
-```
-
-```{r}
-options("marginaleffects_credible_interval" = "eti")
-mfx <- marginaleffects(bayes.logistic) 
-summary(mfx, FUN = mean)
+summary(mfx)
 ```
 
 ## AMEs for Mixed Effects Logistic Regression
@@ -126,7 +123,7 @@ void <- capture.output(
 )
 ```
 
-## AMEs: Default
+## AMEs: Grand Mean
 
 ```{r}
 bm <- brmsmargins(
@@ -200,6 +197,8 @@ mfx <- marginaleffects(ls.fe, re_formula = NA)
 summary(mfx, FUN = mean)
 ```
 
+## Discrete change
+
 Discrete change (contrast) -- Not sure:
 
 ```{r}
@@ -211,11 +210,10 @@ bm <- brmsmargins(
   effects = "fixedonly")
 data.frame(bm$ContrastSummary)
 
-mfx <- comparisons(
+mfx <- marginaleffects(
   ls.fe,
-  variables = "grp",
   re_formula = NA,
-  contrast_numeric = c(0, 1))
+  dpar = "sigma")
 summary(mfx, FUN = mean)
 ```
 
