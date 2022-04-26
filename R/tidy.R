@@ -201,11 +201,7 @@ tidy.comparisons <- function(x,
             FUN_label <- "median"
         }
     } else {
-        if (all.equal(FUN, mean)) {
-            FUN_label <- "mean"
-        } else {
-            FUN_label <- NULL
-        }
+        FUN_label <- NULL
         FUN_draws <- FUN
     }
 
@@ -233,7 +229,7 @@ tidy.comparisons <- function(x,
         idx_na <- is.na(x_dt$comparison)
 
         # average marginal effects
-        ame <- x_dt[idx_na == FALSE, .(estimate = mean(comparison, na.rm = TRUE)), by = idx_by]
+        ame <- x_dt[idx_na == FALSE, .(estimate = FUN(comparison, na.rm = TRUE)), by = idx_by]
 
         if (is.matrix(J) && is.matrix(V)) {
             # Jacobian at the group mean

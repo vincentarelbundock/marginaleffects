@@ -113,6 +113,12 @@ A dataset with one marginal effect estimate per unit of observation is a bit unw
 summary(mfx)
 ```
 
+We can compute other summaries of unit-level marginal effects by setting the `FUN` argument. For example, to compute "median marginal effects":
+
+```{r}
+summary(mfx, FUN = median)
+```
+
 Note that since marginal effects are derivatives, they are only properly defined for continuous numeric variables. When the model also includes categorical regressors, the `summary` function will try to display relevant (regression-adjusted) contrasts between different categories, as shown above.
 
 You can also extract average marginal effects using `tidy` and `glance` methods which conform to the [`broom` package specification](https://broom.tidymodels.org/):

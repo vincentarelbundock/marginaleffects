@@ -13,6 +13,7 @@ Supported packages:
 Misc:
 
 * `by` argument in `tidy()` and `summary()` computes group-average marginal effects and comparisons.
+* `by` argument in `tidy()` and `summary()` to compute mean, median, or arbitrary summaries of unit-level marginal effects.
 * Robust standard errors with the `vcov` argument
   - `sandwich` package shortcuts: `vcov = "HC3"`, `"HC2"`, `"NeweyWest"`, and more.
   - Mixed effects models: `vcov = "satterthwaite"` or `"kenward-roger"`
