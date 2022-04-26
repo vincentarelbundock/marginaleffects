@@ -129,6 +129,11 @@ data.frame(bm$ContrastSummary)
 
 mfx <- marginaleffects(mlogit, re_formula = NA) 
 summary(mfx, FUN = mean)
+
+draws <- posteriordraws(mfx) |> data.table()
+
+draws[, .(me = median(draw)), by = drawid][
+      , .(ame = mean(me), quantile(me, c(.025, .975)))]
 ```
 
 ### AMEs: Integrate Out Random Effects
