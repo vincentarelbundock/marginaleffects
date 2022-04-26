@@ -15,8 +15,12 @@
 #' # average marginal effects by group
 #' summary(mfx, by = "gear")
 #' @export
-summary.marginaleffects <- function(object, conf.level = 0.95, by = NULL, ...) {
-    out <- tidy(object, conf.level = conf.level, by = by, ...)
+summary.marginaleffects <- function(object,
+                                    conf.level = 0.95,
+                                    by = NULL,
+                                    FUN = NULL,
+                                    ...) {
+    out <- tidy(object, conf.level = conf.level, by = by, FUN = FUN, ...)
     class(out) <- c("marginaleffects.summary", class(out))
     attr(out, "type") <- attr(object, "type")
     attr(out, "model_type") <- attr(object, "model_type")
@@ -39,7 +43,13 @@ print.marginaleffects.summary <- function(x,
   out <- x
 
   # title
-  tit <- "Average marginal effects"
+  if (isTRUE(attr(x, "FUN") == "mean")) {
+      tit <- "Average marginal effects"
+  } else if (isTRUE(attr(x, "FUN") == "median")) {
+      tit <- "Median marginal effects"
+  } else { 
+      tit <- "Marginal effects"
+  }
 
   # round and replace NAs
   for (col in c("estimate", "std.error", "statistic", "conf.low", "conf.high")) {
@@ -301,8 +311,12 @@ print.predictions.summary <- function(x,
 #' @export
 
 #' @export
-summary.comparisons <- function(object, conf.level = 0.95, by = NULL, ...) {
-    out <- tidy(object, conf.level = conf.level, by = by, ...)
+summary.comparisons <- function(object,
+                                conf.level = 0.95,
+                                by = NULL,
+                                FUN = NULL,
+                                ...) {
+    out <- tidy(object, conf.level = conf.level, by = by, FUN = FUN, ...)
     class(out) <- c("comparisons.summary", class(out))
     attr(out, "type") <- attr(object, "type")
     attr(out, "model_type") <- attr(object, "model_type")
@@ -325,7 +339,13 @@ print.comparisons.summary <- function(x,
   out <- x
 
   # title
-  tit <- "Average contrasts"
+  if (isTRUE(attr(x, "FUN") == "mean")) {
+      tit <- "Average contrasts"
+  } else if (isTRUE(attr(x, "FUN") == "median")) {
+      tit <- "Median contrasts"
+  } else { 
+      tit <- "Contrasts"
+  }
 
   # round and replace NAs
   for (col in c("estimate", "std.error", "statistic", "conf.low", "conf.high")) {

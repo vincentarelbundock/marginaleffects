@@ -13,6 +13,9 @@ generics::glance
 #' @param x An object produced by the `marginaleffects` function.
 #' @param conf.int Logical indicating whether or not to include a confidence interval.
 #' @param by Character vector of variable names over which to compute group-averaged marginal effects.
+#' @param FUN function used to summarize unit-level marginal effects. `NULL`
+#' (default) computes the median of the posterior distribution in bayesian
+#' models and the average marginal effects in all other models.
 #' @inheritParams marginaleffects
 #' @return A "tidy" `data.frame` of summary statistics which conforms to the
 #' `broom` package specification.
@@ -34,6 +37,7 @@ tidy.marginaleffects <- function(x,
                                  conf.int = TRUE,
                                  conf.level = 0.95,
                                  by = NULL,
+                                 FUN = NULL,
                                  ...) {
     x_dt <- copy(x)
     setnames(x_dt, old = "dydx", new = "comparison")
@@ -41,6 +45,7 @@ tidy.marginaleffects <- function(x,
                             conf.int = conf.int,
                             conf.level = conf.level,
                             by = by,
+                            FUN = FUN,
                             ...)
     return(out)
 }
@@ -176,6 +181,7 @@ tidy.comparisons <- function(x,
                              conf.int = TRUE,
                              conf.level = 0.95,
                              by = NULL,
+                             FUN = NULL,
                              ...) {
 
     checkmate::assert_numeric(conf.level, len = 1)
@@ -183,6 +189,25 @@ tidy.comparisons <- function(x,
     checkmate::assert_true(conf.level < 1)
     checkmate::assert_flag(conf.int)
     checkmate::assert_character(by, null.ok = TRUE)
+    checkmate::assert_function(FUN, null.ok = TRUE)
+
+    # custom summary function
+    if (is.null(FUN)) {
+        FUN_draws <- median
+        FUN <- mean
+        if (is.null(attr(x, "posterior_draws"))) {
+            FUN_label <- "mean"
+        }  else {
+            FUN_label <- "median"
+        }
+    } else {
+        if (all.equal(FUN, mean)) {
+            FUN_label <- "mean"
+        } else {
+            FUN_label <- NULL
+        }
+        FUN_draws <- FUN
+    }
 
     # group averages
     if (!is.null(by)) {
@@ -225,8 +250,9 @@ tidy.comparisons <- function(x,
             J <- J[idx_na == FALSE,]
             x_dt <- x_dt[idx_na == FALSE,]
 
+
             tmp <- paste0(idx_by, "_marginaleffects_index")
-            J_mean <- J[, lapply(.SD, mean, na.rm = TRUE), by = tmp]
+            J_mean <- J[, lapply(.SD, FUN, na.rm = TRUE), by = tmp]
             J_mean <- J_mean[, !..tmp]
             J_mean <- as.matrix(J_mean)
 
@@ -244,7 +270,7 @@ tidy.comparisons <- function(x,
             setDT(draws)
             ame[, "estimate" := NULL]
             idx_by <- intersect(colnames(draws), idx_by)
-            es <- draws[, .(estimate = stats::median(draw)), by = idx_by]
+            es <- draws[, .(estimate = FUN_draws(draw)), by = idx_by]
             ci <- draws[, as.list(get_hdi(draw, credMass = conf.level)), by = idx_by]
             setnames(ci, old = c("lower", "upper"), new = c("conf.low", "conf.high"))
             ame <- merge(merge(ame, es, sort = FALSE), ci, sort = FALSE)
@@ -287,6 +313,7 @@ tidy.comparisons <- function(x,
     setDF(out)
 
     attr(out, "conf.level") <- conf.level
+    attr(out, "FUN") <- FUN_label
 
     if (exists("J_mean")) {
         attr(out, "J") <- J_mean
