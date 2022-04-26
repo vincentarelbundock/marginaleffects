@@ -4,7 +4,7 @@ Breaking change:
 
 * `type` no longer accepts a character vector. Must be a single string.
 
-Supported packages: 
+New supported packages and models: 
 
 * `mhurdle`
 * `tobit1`
@@ -13,7 +13,7 @@ Supported packages:
 Misc:
 
 * `by` argument in `tidy()` and `summary()` computes group-average marginal effects and comparisons.
-* `by` argument in `tidy()` and `summary()` to compute mean, median, or arbitrary summaries of unit-level marginal effects.
+* `FUN` argument in `tidy()` and `summary()` to compute mean, median, or arbitrary summaries of unit-level marginal effects.
 * Robust standard errors with the `vcov` argument
   - `sandwich` package shortcuts: `vcov = "HC3"`, `"HC2"`, `"NeweyWest"`, and more.
   - Mixed effects models: `vcov = "satterthwaite"` or `"kenward-roger"`
@@ -21,14 +21,14 @@ Misc:
   - Variance-covariance matrix
   - Function which returns a named squared matrix
 * `marginaleffects` and `comparisons` now report confidence intervals by default.
-* New dependency on the `data.table` yields substantial performance improvements.
+* New dependency on the `data.table` package yields substantial performance improvements.
 * New vignette on alternative software packages.
 * New vignette on performance.
 * Bug fixes and performance improvements
 
 # marginaleffects 0.4.1
 
-Supported models:
+New supported packages and models: 
 
 * `stats::loess`
 * `sampleSelection::selection`
@@ -60,7 +60,7 @@ Misc:
 
 # marginaleffects 0.3.3
 
-Supported models:
+New supported models:
 
 * `mclogit::mclogit`
 * `robust::lmRob`
@@ -104,7 +104,7 @@ Breaking changes:
 * `marginalmeans` objects have new column names, as do the corresponding `tidy`
   and `summary` outputs.
 
-Support for new models and packages:
+New supported packages and models:
 
 * `brms::brm`
 * `rstanarm::stanglm`
@@ -136,12 +136,12 @@ Breaking change:
 
 * `data` argument becomes `newdata` in all functions.
 
-`marginaleffects`:
+New supported packages and models:
 
-* Support `lme4:glmer.nb`
-* Support `mgcv::gam`
-* Support `ordinal::clm`
-* Support `mgcv`
+* `lme4:glmer.nb`
+* `mgcv::gam`
+* `ordinal::clm`
+* `mgcv`
 
 `marginalmeans`:
 
