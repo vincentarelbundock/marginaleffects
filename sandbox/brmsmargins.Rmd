@@ -71,17 +71,18 @@ Compute AMEs using `marginaleffects`:
 
 ```{r}
 mfx <- marginaleffects(bayes.logistic) 
+summary(mfx, FUN = mean)
 ```
 
-By default, `marginaleffects` reports the median of the posterior distribution for bayesian models:
+Note that we used `FUN = mean` because `marginaleffects` reports the median of the posterior distribution by default for bayesian models.
 
 ```{r}
-summary(mfx)
+summary(mfx, FUN = mean)
 ```
 
-We can use the `FUN` argument to compute the mean of the posterior distribution instead, which yields results that are numerically identical to those produced by `brmsmargins`:
-
 ```{r}
+options("marginaleffects_credible_interval" = "eti")
+mfx <- marginaleffects(bayes.logistic) 
 summary(mfx, FUN = mean)
 ```
 
