@@ -4,7 +4,7 @@
 \alias{tidy.marginaleffects}
 \title{Tidy a \code{marginaleffects} object}
 \usage{
-\method{tidy}{marginaleffects}(x, conf.int = TRUE, conf.level = 0.95, by = NULL, ...)
+\method{tidy}{marginaleffects}(x, conf.int = TRUE, conf.level = 0.95, by = NULL, FUN = NULL, ...)
 }
 \arguments{
 \item{x}{An object produced by the \code{marginaleffects} function.}
@@ -16,6 +16,10 @@
 to 0.95, which corresponds to a 95 percent confidence interval.}
 
 \item{by}{Character vector of variable names over which to compute group-averaged marginal effects.}
+
+\item{FUN}{function used to summarize unit-level marginal effects. \code{NULL}
+(default) computes the median of the posterior distribution in bayesian
+models and the average marginal effects in all other models.}
 
 \item{...}{Additional arguments are passed to the \code{predict()} method used to
 compute adjusted predictions. These arguments are particularly useful for
