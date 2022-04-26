@@ -46,11 +46,9 @@ d2$mpg <- d2$mpg + h
 p1 <- posterior_epred(bayes.logistic, newdata = d1)
 p2 <- posterior_epred(bayes.logistic, newdata = d2)
 m <- (p2 - p1) / h
-sprintf("%.6f [%.6f, %.6f]",
-        mean(m),
-        quantile(m, .025),
-        quantile(m, .975))
+quantile(rowMeans(m), c(.5, .025, .975))
 ```
+
 
 Compute AMEs with `brmsmargins`:
 
