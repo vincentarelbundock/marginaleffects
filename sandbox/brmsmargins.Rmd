@@ -65,16 +65,10 @@ Compute AMEs using `marginaleffects`:
 
 ```{r}
 mfx <- marginaleffects(bayes.logistic) 
-summary(mfx, FUN = mean)
+summary(mfx)
 ```
 
 The `mpg` element of the `Effect` column from `marginaleffects` matches the the `M` column of the output from `brmsmargins`.
-
-Above we used `FUN = mean` because `marginaleffects` reports the median of the posterior distribution by default for bayesian models:
-
-```{r}
-summary(mfx)
-```
 
 ## Marginal Effects for Mixed Effects Models
 
@@ -128,12 +122,7 @@ bm <- brmsmargins(
 data.frame(bm$ContrastSummary)
 
 mfx <- marginaleffects(mlogit, re_formula = NA) 
-summary(mfx, FUN = mean)
-
-draws <- posteriordraws(mfx) |> data.table()
-
-draws[, .(me = median(draw)), by = drawid][
-      , .(ame = mean(me), quantile(me, c(.025, .975)))]
+summary(mfx)
 ```
 
 ### AMEs: Integrate Out Random Effects
@@ -149,7 +138,7 @@ bm <- brmsmargins(
 data.frame(bm$ContrastSummary)
 
 mfx <- marginaleffects(mlogit) 
-summary(mfx, FUN = mean)
+summary(mfx)
 ```
 
 ## Marginal Effects for Location Scale Models
@@ -194,7 +183,7 @@ bm <- brmsmargins(
 data.frame(bm$ContrastSummary)
 
 mfx <- marginaleffects(ls.fe, re_formula = NA)
-summary(mfx, FUN = mean)
+summary(mfx)
 ```
 
 ### Discrete change and distributional parameter (`dpar`)
@@ -218,7 +207,7 @@ cmp <- comparisons(
   ls.fe,
   contrast_numeric = 0:1,
   dpar = "sigma")
-summary(cmp, FUN = mean)
+summary(cmp)
 ```
 
 ### Marginal effect (continuous) on sigma
@@ -233,5 +222,5 @@ bm <- brmsmargins(
 data.frame(bm$ContrastSummary)
 
 mfx <- marginaleffects(ls.fe, dpar = "sigma", re_formula = NA)
-summary(mfx, FUN = mean)
+summary(mfx)
 ```
