@@ -7,14 +7,14 @@ navbar:
   title: marginaleffects
   type: default
   left:
-  - text: "Marginal effects"
-    href: https://vincentarelbundock.github.io/marginaleffects/articles/mfx.html
   - text: "Adjusted predictions"
-    href: https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html
+    href: https://vincentarelbundock.github.io/marginaleffects/articles/mfx01_predictions.html
+  - text: "Marginal effects"
+    href: https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_mfx.html
   - text: "Contrasts"
-    href: https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html
+    href: https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_contrasts.html
   - text: "Marginal means"
-    href: https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html
+    href: https://vincentarelbundock.github.io/marginaleffects/articles/mfx04_marginalmeans.html
   right:
   - text: Functions
     href: reference/index.html
