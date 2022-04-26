@@ -19,9 +19,13 @@ sanity_newdata <- function(model, newdata) {
                                 null.ok = TRUE,
                                 any.missing = FALSE)
 
+
     if (is.null(newdata)) {
         newdata <- insight::get_data(model)
     }
+
+    # required for the type of column indexing to follow
+    data.table::setDF(newdata)
 
     # rbindlist breaks on matrix columns
     idx <- sapply(newdata, function(x) class(x)[1] != "matrix")
