@@ -10,7 +10,7 @@ New supported packages and models:
 * `tobit1`
 * `glmmTMB`
 
-Misc:
+New features:
 
 * `by` argument in `tidy()` and `summary()` computes group-average marginal effects and comparisons.
 * `FUN` argument in `tidy()` and `summary()` to compute mean, median, or arbitrary summaries of unit-level marginal effects.
@@ -22,9 +22,13 @@ Misc:
   - Function which returns a named squared matrix
 * `marginaleffects` and `comparisons` now report confidence intervals by default.
 * New dependency on the `data.table` package yields substantial performance improvements.
-* New vignette on alternative software packages.
-* New vignette on performance.
 * Bug fixes and performance improvements
+
+New vignettes 
+
+* Alternative software packages.
+* Robust standard errors (and more)
+* Performance.
 
 # marginaleffects 0.4.1
 
