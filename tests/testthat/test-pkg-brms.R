@@ -6,6 +6,9 @@ options("marginaleffects_credible_interval" = "hdi")
 requiet("brms")
 requiet("emmeans")
 requiet("broom")
+requiet("brmsmargins")
+tol <- 0.0001
+tol_se <- 0.001
 
 
 # download models
@@ -21,6 +24,27 @@ brms_cumulative_random <- download_model("brms_cumulative_random")
 brms_monotonic <- download_model("brms_monotonic")
 brms_monotonic_factor <- download_model("brms_monotonic_factor")
 brms_vdem <- download_model("brms_vdem")
+
+
+test_that("average marginal effects brmsmargins", {
+  options("marginaleffects_credible_interval" = "eti")
+  h <- 5e-5
+  bm <- brmsmargins(
+      brms_numeric,
+      add = data.frame(hp = c(0, 0 + h)),
+      contrasts = cbind("AME MPG" = c(-1 / h, 1 / h)),
+      CI = 0.95, CIType = "ETI") 
+  bm <- data.frame(bm$ContrastSummary)
+
+  mfx <- marginaleffects(brms_numeric)
+  mfx <- tidy(mfx, FUN = mean)
+
+  expect_equal(mfx$estimate, bm$M, tolerance = tol)
+  expect_equal(mfx$conf.low, bm$LL, tolerance = tol)
+  expect_equal(mfx$conf.high, bm$UL, tolerance = tol)
+  
+  options("marginaleffects_credible_interval" = "hdi")
+})
 
 
 test_that("marginaleffects vs. emmeans", {

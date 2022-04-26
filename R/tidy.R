@@ -266,14 +266,18 @@ tidy.comparisons <- function(x,
             setDT(draws)
             ame[, "estimate" := NULL]
             idx_by <- intersect(colnames(draws), idx_by)
-            es <- draws[, .(estimate = FUN_draws(draw)), by = idx_by]
-            flag <- 
+
+            # uncertainty around the average marginal effect in two steps:
+            # 1. mean for each draw gives 4000 samples of the average mfx
+            # 2. quantiles of the means
+            drawavg <- draws[, .(estimate = FUN_draws(draw)), by = c(idx_by, "drawid")]
+            es <- drawavg[, .(estimate = FUN_draws(estimate)), by = idx_by]
             if (isTRUE(getOption("marginaleffects_credible_interval", default = "eti") == "hdi")) {
                 f_ci <- get_hdi
             } else {
                 f_ci <- get_eti
             }
-            ci <- draws[, as.list(f_ci(draw, credMass = conf.level)), by = idx_by]
+            ci <- drawavg[, as.list(f_ci(estimate, credMass = conf.level)), by = idx_by]
             setnames(ci, old = c("lower", "upper"), new = c("conf.low", "conf.high"))
             ame <- merge(merge(ame, es, sort = FALSE), ci, sort = FALSE)
         }

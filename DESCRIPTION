@@ -60,6 +60,7 @@ Suggests:
     bife,
     BH,
     brglm2,
+    brmsmargins,
     crch,
     estimatr,
     fixest (>= 0.10.1),
