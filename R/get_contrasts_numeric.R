@@ -9,8 +9,8 @@ get_contrast_data_numeric <- function(model,
 
     # numeric contrasts first
     if (is.numeric(contrast_numeric) && length(contrast_numeric) == 1) {
-        low <- newdata[[variable]]
-        high <- newdata[[variable]] + contrast_numeric
+        low <- newdata[[variable]] - contrast_numeric / 2
+        high <- newdata[[variable]] + contrast_numeric / 2
         lab <- sprintf("+%s", contrast_numeric)
     } else if (is.numeric(contrast_numeric) && length(contrast_numeric) == 2) {
         contrast_numeric <- sort(contrast_numeric)

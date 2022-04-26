@@ -66,7 +66,7 @@ to 0.95, which corresponds to a 95 percent confidence interval.}
 
 \item{contrast_numeric}{string or numeric
 \itemize{
-\item Numeric of length 1: Contrast between the observed value and the observed value plus \code{contrast_numeric}
+\item Numeric of length 1: Contrast for a gap of \code{contrast_numeric}, computed at the observed value plus and minus \code{contrast_numeric / 2}
 \item Numeric vector of length 2: Contrast between the 2nd element and the 1st element of the \code{contrast_numeric} vector.
 \item "iqr": Contrast across the interquartile range of the regressor.
 \item "sd": Contrast across one standard deviation around the regressor mean.
