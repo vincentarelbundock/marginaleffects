@@ -19,10 +19,13 @@ Probably not supported by `marginaleffects`:
 Not sure how to replicate:
 
 * How are LL and UL computed? In `brmsfit$ContrastSummary` they do not match quantiles of the posterior.
+* How is the Mdn column computed?
 * Small numerical difference in the "integrate out" example.
 * I need to look into the link scale and back-transform example
 
-## AMEs for Logistic Regression
+## Marginal Effects for Fixed Effects Models
+
+### AMEs for Logistic Regression
 
 Estimate a logistic regression model with `brms`:
 
@@ -83,7 +86,7 @@ Above we used `FUN = mean` because `marginaleffects` reports the median of the p
 summary(mfx)
 ```
 
-## AMEs for Mixed Effects Logistic Regression
+## Marginal Effects for Mixed Effects Models
 
 Estimate a mixed effects logistic regression model with `brms`:
 
@@ -123,7 +126,7 @@ void <- capture.output(
 )
 ```
 
-## AMEs: Grand Mean
+### AMEs: Grand Mean
 
 ```{r}
 bm <- brmsmargins(
@@ -138,7 +141,7 @@ mfx <- marginaleffects(mlogit, re_formula = NA)
 summary(mfx, FUN = mean)
 ```
 
-## AMEs: Integrate Out Random Effects
+### AMEs: Integrate Out Random Effects
 
 ```{r}
 bm <- brmsmargins(
@@ -154,7 +157,9 @@ mfx <- marginaleffects(mlogit)
 summary(mfx, FUN = mean)
 ```
 
-## AMEs for Fixed Effects Location Scale Models
+## Marginal Effects for Location Scale Models
+
+### AMEs for Fixed Effects Location Scale Models
 
 Estimate a fixed effects location scale model with `brms`:
 
@@ -182,7 +187,7 @@ void <- capture.output(
 )
 ```
 
-Fixed effects only:
+### Fixed effects only
 
 ```{r}
 bm <- brmsmargins(
@@ -197,9 +202,9 @@ mfx <- marginaleffects(ls.fe, re_formula = NA)
 summary(mfx, FUN = mean)
 ```
 
-## Discrete change
+### Discrete change and distributional parameter (`dpar`)
 
-Discrete change (contrast) -- Not sure:
+Compute the contrast between adjusted predictions on the `sigma` parameter, when `grp=0` and `grp=1`:
 
 ```{r}
 bm <- brmsmargins(
@@ -209,15 +214,19 @@ bm <- brmsmargins(
   CI = 0.95, CIType = "ETI", dpar = "sigma",
   effects = "fixedonly")
 data.frame(bm$ContrastSummary)
-
-mfx <- marginaleffects(
-  ls.fe,
-  re_formula = NA,
-  dpar = "sigma")
-summary(mfx, FUN = mean)
 ```
 
-Link scale -- Not sure:
+In `marginaleffects` we use the `comparisons()` function and the `contrast_numeric` argument:
+
+```{r}
+cmp <- comparisons(
+  ls.fe,
+  contrast_numeric = 0:1,
+  dpar = "sigma")
+summary(cmp, FUN = mean)
+```
+
+### Marginal effect (continuous) on sigma
 
 ```{r}
 bm <- brmsmargins(
@@ -228,7 +237,6 @@ bm <- brmsmargins(
   effects = "fixedonly")
 data.frame(bm$ContrastSummary)
 
-mfx <- marginaleffects(ls.fe, type = "link", re_formula = NA)
+mfx <- marginaleffects(ls.fe, dpar = "sigma", re_formula = NA)
 summary(mfx, FUN = mean)
 ```
-
