@@ -23,10 +23,164 @@ If you do not like `marginaleffects`, you may want to consider one of the altern
 * `margins`: https://cran.r-project.org/web/packages/margins/index.html
 * `prediction`: https://cran.r-project.org/web/packages/prediction/index.html
 * `emmeans`: https://cran.r-project.org/web/packages/emmeans/index.html
+* `brmsmargins`: https://joshuawiley.com/brmsmargins/
 * `effects`: https://cran.r-project.org/web/packages/effects/index.html
 * `modelbased`: https://easystats.github.io/modelbased/
 * `ggeffects`: https://strengejacke.github.io/ggeffects/
 * `Stata` by StataCorp LLC
+
+# `emmeans`
+
+The [`emmeans` package](https://cran.r-project.org/web/packages/emmeans/index.html) is developed by Russell V. Lenth and colleagues. It is an extremely powerful package which focuses on the computation of marginal means, but which can also compute slopes. 
+
+In my (Vincent's) biased opinion, the main benefits of `marginaleffects` over `emmeans`:
+
+* Support more model types.
+* Simpler and more intuitive user interface.
+* Easier to compute average marginal effects and unit-level marginal effects for whole datasets.
+* Easier to compute marginal effects (slopes) for custom grids and continuous regressors.
+* Common plots are easy with the `plot_cap()` and `plot_cme()` functions.
+
+Many of `marginaleffects` advantages come down to subjective preferences over user interface. Readers are thus encouraged to try both packages to see which interface they prefer. Please keep in mind that `emmeans` offers many features which are not yet available in `marginaleffects`, including:
+
+* Transformations and link functions
+  - `marginaleffects` can compute quantities on different scales with the `type` argument, but `emmeans` offers a richer array of possibilities for back transforms.
+* Custom contrasts and linear functions
+  - Compare to the `contrast_factor` and `contrast_numeric` arguments of the `marginaleffects::comparisons` function.
+* Multiplicity adjustments.
+* Joint tests.
+* Equivalence tests.
+* Various plots.
+
+The [Marginal Means Vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx04_marginalmeans.html) includes side-by-side comparisons of `emmeans` and `marginaleffects` to compute marginal means. The rest of this section compares the syntax for contrasts and marginaleffects.
+
+## Contrasts: `emmeans` vs `marginaleffects`
+
+AFAICT, `emmeans` does not provide an easy way to compute unit-level contrasts for every row of the dataset used to fit our model. Therefore, the side-by-side syntax shown below will always include `newdata=datagrid()` to specify that we want to compute only one contrast: at the mean values of the regressors. In day-to-day practice with `marginaleffects()`, however, this extra argument would not be necessary.
+
+Fit a model:
+
+```{r}
+library(emmeans)
+library(marginaleffects)
+
+mod <- glm(vs ~ hp + factor(cyl), data = mtcars, family = binomial)
+```
+
+Response scale, reference groups:
+
+```{r}
+emm <- emmeans(mod, specs = "cyl", regrid = "response")
+contrast(emm, method = "trt.vs.ctrl1")
+
+comparisons(mod, newdata = datagrid())
+```
+
+Link scale, pairwise contrasts:
+
+```{r}
+emm <- emmeans(mod, specs = "cyl")
+contrast(emm, method = "revpairwise")
+
+comparisons(mod,
+            type = "link",
+            newdata = datagrid(),
+            contrast_factor = "pairwise")
+```
+
+## Marginal Effects
+
+AFAICT, `emmeans::emtrends` makes it easier to compute marginal effects for a few user-specified values than for large grids or for the full original dataset.
+
+Response scale, user-specified values:
+
+```{r}
+emtrends(mod, ~hp, "hp", regrid = "response", at = list(cyl = 4))
+
+marginaleffects(mod, newdata = datagrid(cyl = 4))
+```
+
+Link scale, user-specified values:
+
+```{r}
+emtrends(mod, ~hp, "hp", at = list(cyl = 4))
+
+marginaleffects(mod, type = "link", newdata = datagrid(cyl = 4))
+```
+
+# `margins` and `prediction`
+
+The [`margins`](https://cran.r-project.org/web/packages/margins/index.html) and [`prediction`](https://cran.r-project.org/web/packages/prediction/index.html) packages for `R` were designed by Thomas Leeper to emulate the behavior of the `margins` command from `Stata`. These packages are trailblazers and strongly influenced the development of `marginaleffects`. The main benefits of `marginaleffects` over these packages are:
+
+* Support more model types
+* Faster
+* Memory efficient
+* Plots using `ggplot2` instead of Base R
+* More extensive test suite
+* Active development
+
+The syntax of the two packages is very similar.
+
+## Average Marginal Effects
+
+```{r}
+library(margins)
+library(marginaleffects)
+
+mod <- lm(mpg ~ cyl + hp + wt, data = mtcars)
+
+mar <- margins(mod)
+summary(mar)
+
+mfx <- marginaleffects(mod)
+summary(mfx)
+```
+
+## Individual-Level Marginal Effects
+
+Marginal effects in a user-specified data frame:
+
+```{r}
+head(data.frame(mar))
+
+head(mfx)
+nd <- data.frame(cyl = 4, hp = 110, wt = 3)
+```
+
+## Marginal Effects at the Mean
+
+```{r}
+mar <- margins(mod, data = data.frame(mean_or_mode(mtcars)), unit_ses = TRUE)
+data.frame(mar)
+
+marginaleffects(mod, newdata = datagrid())
+```
+
+## Counterfactual Average Marginal Effects
+
+The `at` argument of the `margins` package emulates `Stata` by fixing the values of some variables at user-specified values, and by replicating the full dataset several times for each combination of the supplied values (see the `Stata` section below). For example, if the dataset includes 32 rows and the user calls `at=list(cyl=c(4, 6))`, `margins` will compute 64 unit-level marginal effects estimates:
+
+```{r}
+dat <- mtcars
+dat$cyl <- factor(dat$cyl)
+mod <- lm(mpg ~ cyl * hp + wt, data = mtcars)
+
+mar <- margins(mod, at = list(cyl = c(4, 6, 8)))
+summary(mar)
+
+mfx <- marginaleffects(mod, newdata = datagrid(cyl = c(4, 6, 8), grid.type = "counterfactual"))
+summary(mfx, by = "cyl")
+```
+
+## Adjusted Presdictions
+
+The syntax to compute adjusted predictions using the `predictions` package or `marginaleffects` is very similar:
+
+```{r}
+prediction::prediction(mod) |> head()
+
+marginaleffects::predictions(mod) |> head()
+```
 
 # `Stata`
 
@@ -212,64 +366,236 @@ aggregate(pred$predicted, by = list(pred$cyl), FUN = mean)
 
 Note that standard errors are not yet available for average adjusted predictions.
 
-# `margins`
 
-The [`margins`](https://cran.r-project.org/web/packages/margins/index.html) and [`prediction`](https://cran.r-project.org/web/packages/prediction/index.html) packages for `R` were designed by Thomas Leeper to emulate the behavior of the `margins` command from `Stata`. These packages are trailblazers and strongly influenced the development of `marginaleffects`. The main benefits of `marginaleffects` over these packages are:
+# `brmsmargins`
 
-* Support more model types
-* Faster
-* Memory efficient
-* Plots using `ggplot2` instead of Base R
-* More extensive test suite
-* Active development
+[The `brmsmargins` package](https://joshuawiley.com/brmsmargins/) is developed by Joshua Wiley:
 
-The syntax of the two packages is very similar:
+> This package has functions to calculate marginal effects from brms models ( http://paul-buerkner.github.io/brms/ ). A central motivator is to calculate average marginal effects (AMEs) for continuous and discrete predictors in fixed effects only and mixed effects regression models including location scale models.
+
+The two main advantages of `brmsmargins` over `marginaleffects` are:
+
+1. Ability to compute "Marginal Coefficients" following the method described in [Hedeker et al (2012).](https://doi.org/10.1111/biom.12707)
+2. Ability to ["integrate out random effects."](https://joshuawiley.com/brmsmargins/articles/mixed-effects-marginaleffects.html)
+
+The main advantages of `marginaleffects` over `brmsmargins` are:
+
+1. Support for 60+ model types, rather than just the `brms` package.
+2. Simpler user interface (subjective).
+
+The rest of this section presents side-by-side replications of some of the analyses from the `brmsmargins` vignettes in order to show highlight parallels and differences in syntax.
+
+## Marginal Effects for Fixed Effects Models
+
+### AMEs for Logistic Regression
+
+Estimate a logistic regression model with `brms`:
+
+```{r, message = FALSE, warning = FALSE}
+library(brms)
+library(brmsmargins)
+library(marginaleffects)
+library(data.table)
+library(withr)
+h <- 1e-4
+
+void <- capture.output(
+    bayes.logistic <- brm(
+      vs ~ am + mpg, data = mtcars,
+      family = "bernoulli", seed = 1234,
+      silent = 2, refresh = 0,
+      chains = 4L, cores = 4L)
+)
+```
+
+Compute AMEs manually:
 
 ```{r}
-library(margins)
+d1 <- d2 <- mtcars
+d2$mpg <- d2$mpg + h
+p1 <- posterior_epred(bayes.logistic, newdata = d1)
+p2 <- posterior_epred(bayes.logistic, newdata = d2)
+m <- (p2 - p1) / h
+quantile(rowMeans(m), c(.5, .025, .975))
+```
 
-mod <- lm(mpg ~ cyl + hp + wt, data = mtcars)
 
-mfx <- margins(mod)
-summary(mfx)
+Compute AMEs with `brmsmargins`:
 
-mfx <- marginaleffects(mod)
+```{r}
+bm <- brmsmargins(
+  bayes.logistic,
+  add = data.frame(mpg = c(0, 0 + h)),
+  contrasts = cbind("AME MPG" = c(-1 / h, 1 / h)),
+  CI = 0.95,
+  CIType = "ETI")
+data.frame(bm$ContrastSummary)
+```
+
+Compute AMEs using `marginaleffects`:
+
+```{r}
+mfx <- marginaleffects(bayes.logistic) 
 summary(mfx)
 ```
 
-We can also use `margins` to compute "counterfactual average marginal effects" for different subsets of the data (see the `Stata` section for identical results):
+The `mpg` element of the `Effect` column from `marginaleffects` matches the the `M` column of the output from `brmsmargins`.
 
-```{r}
-dat <- mtcars
-dat$cyl <- factor(dat$cyl)
-mod <- lm(mpg ~ cyl * hp + wt, data = mtcars)
+## Marginal Effects for Mixed Effects Models
 
-mar <- margins(mod, at = list(cyl = c(4, 6, 8)))
-summary(mar)
+Estimate a mixed effects logistic regression model with `brms`:
 
-mfx <- marginaleffects(mod, newdata = datagrid(cyl = c(4, 6, 8), grid.type = "counterfactual"))
-summary(mfx, by = "cyl")
+```{r, message = FALSE, warning = TRUE}
+d <- withr::with_seed(
+  seed = 12345, code = {
+    nGroups <- 100
+    nObs <- 20
+    theta.location <- matrix(rnorm(nGroups * 2), nrow = nGroups, ncol = 2)
+    theta.location[, 1] <- theta.location[, 1] - mean(theta.location[, 1])
+    theta.location[, 2] <- theta.location[, 2] - mean(theta.location[, 2])
+    theta.location[, 1] <- theta.location[, 1] / sd(theta.location[, 1])
+    theta.location[, 2] <- theta.location[, 2] / sd(theta.location[, 2])
+    theta.location <- theta.location %*% chol(matrix(c(1.5, -.25, -.25, .5^2), 2))
+    theta.location[, 1] <- theta.location[, 1] - 2.5
+    theta.location[, 2] <- theta.location[, 2] + 1
+    d <- data.table(
+      x = rep(rep(0:1, each = nObs / 2), times = nGroups))
+    d[, ID := rep(seq_len(nGroups), each = nObs)]
+
+    for (i in seq_len(nGroups)) {
+      d[ID == i, y := rbinom(
+        n = nObs,
+        size = 1,
+        prob = plogis(theta.location[i, 1] + theta.location[i, 2] * x))
+        ]
+    }
+    copy(d)
+  })
+
+void <- capture.output(
+    mlogit <- brms::brm(
+      y ~ 1 + x + (1 + x | ID), family = "bernoulli",
+      data = d, seed = 1234,
+      silent = 2, refresh = 0,
+      chains = 4L, cores = 4L)
+)
 ```
 
-# `emmeans`
+### AME: Including Random Effects
 
-The [`emmeans` package](https://cran.r-project.org/web/packages/emmeans/index.html) is developed by Russell V. Lenth and colleagues. It is an extremely powerful package which focuses on the computation of marginal means, but which can also compute slopes. In my (Vincent's) biased opinion, the main benefits of `marginaleffects` over `emmeans`:
+```{r}
+bm <- brmsmargins(
+  mlogit,
+  add = data.frame(x = c(0, h)),
+  contrasts = cbind("AME x" = c(-1 / h, 1 / h)),
+  effects = "includeRE",
+  CI = .95,
+  CIType = "ETI")
+data.frame(bm$ContrastSummary)
 
-* Support more model types
-* Simpler and more intuitive user interface
-* Easier to compute marginal effects (slopes) for custom grids and continuous regressors
-* Common plots are easier to create with the `plot_cap()` and `plot_cme()` functions
+mfx <- marginaleffects(mlogit)
+summary(mfx)
+```
 
-Many of `marginaleffects` advantages come down to subjective preferences over user interface. Readers are thus encouraged to try both packages to see which interface they prefer. Please keep in mind that `emmeans` offers many features which are not yet available in `marginaleffects`, including:
+### AME: Fixed Effects Only (Grand Mean)
 
-* Transformations and link functions
-  - `marginaleffects` can compute quantities on different scales with the `type` argument, but `emmeans` offers a richer array of possibilities for back transforms.
-* Custom contrasts and linear functions
-  - Compare to the `contrast_factor` and `contrast_numeric` arguments of the `marginaleffects::comparisons` function.
-* Multiplicity adjustments.
-* Joint tests.
-* Equivalence tests.
-* Various plots.
+```{r}
+bm <- brmsmargins(
+  mlogit,
+  add = data.frame(x = c(0, h)),
+  contrasts = cbind("AME x" = c(-1 / h, 1 / h)),
+  effects = "fixedonly",
+  CI = .95,
+  CIType = "ETI")
+data.frame(bm$ContrastSummary)
+
+mfx <- marginaleffects(mlogit, re_formula = NA)
+summary(mfx)
+```
+
+## Marginal Effects for Location Scale Models
+
+### AMEs for Fixed Effects Location Scale Models
+
+Estimate a fixed effects location scale model with `brms`:
+
+```{r, message = FALSE, warning = FALSE}
+d <- withr::with_seed(
+  seed = 12345, code = {
+    nObs <- 1000L
+    d <- data.table(
+      grp = rep(0:1, each = nObs / 2L),
+      x = rnorm(nObs, mean = 0, sd = 0.25))
+    d[, y := rnorm(nObs,
+                   mean = x + grp,
+                   sd = exp(1 + x + grp))]
+    copy(d)
+  })
+
+void <- capture.output(
+    ls.fe <- brm(bf(
+      y ~ 1 + x + grp,
+      sigma ~ 1 + x + grp),
+      family = "gaussian",
+      data = d, seed = 1234,
+      silent = 2, refresh = 0,
+      chains = 4L, cores = 4L)
+)
+```
+
+### Fixed effects only
+
+```{r}
+bm <- brmsmargins(
+  ls.fe,
+  add = data.frame(x = c(0, h)),
+  contrasts = cbind("AME x" = c(-1 / h, 1 / h)),
+  CI = 0.95, CIType = "ETI",
+  effects = "fixedonly")
+data.frame(bm$ContrastSummary)
+
+mfx <- marginaleffects(ls.fe, re_formula = NA)
+summary(mfx)
+```
+
+### Discrete change and distributional parameter (`dpar`)
+
+Compute the contrast between adjusted predictions on the `sigma` parameter, when `grp=0` and `grp=1`:
+
+```{r}
+bm <- brmsmargins(
+  ls.fe,
+  at = data.frame(grp = c(0, 1)),
+  contrasts = cbind("AME grp" = c(-1, 1)),
+  CI = 0.95, CIType = "ETI", dpar = "sigma",
+  effects = "fixedonly")
+data.frame(bm$ContrastSummary)
+```
+
+In `marginaleffects` we use the `comparisons()` function and the `contrast_numeric` argument:
+
+```{r}
+cmp <- comparisons(
+  ls.fe,
+  contrast_numeric = 0:1,
+  dpar = "sigma")
+summary(cmp)
+```
+
+### Marginal effect (continuous) on sigma
+
+```{r}
+bm <- brmsmargins(
+  ls.fe,
+  add = data.frame(x = c(0, h)),
+  contrasts = cbind("AME x" = c(-1 / h, 1 / h)),
+  CI = 0.95, CIType = "ETI", dpar = "sigma",
+  effects = "fixedonly")
+data.frame(bm$ContrastSummary)
+
+mfx <- marginaleffects(ls.fe, dpar = "sigma", re_formula = NA)
+summary(mfx)
+```
 
 # `effects`
 
