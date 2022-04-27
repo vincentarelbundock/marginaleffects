@@ -96,6 +96,7 @@ Suggests:
     survival,
     tobit1,
     truncreg,
+    withr,
     covr,
     spelling
 Collate: 
