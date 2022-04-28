@@ -90,7 +90,8 @@ sanitize_variables <- function(model, newdata, variables) {
     }
 
     # weights
-    if (!is.null(model)) {
+    # HACK: find_weights sometimes mysteriously fails on brms models
+    if (!is.null(model) && !inherits(model, "brmsfit") && !inherits(model, "stanreg")) {
         w <- tryCatch(insight::find_weights(model), error = function(e) NULL)
         w <- intersect(w, colnames(newdata))
         variables <- unique(c(variables, w))
