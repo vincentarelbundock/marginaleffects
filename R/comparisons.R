@@ -254,9 +254,19 @@ comparisons <- function(model,
         }
     }
 
-    if ("std.error" %in% colnames(mfx) && !"conf.low" %in% colnames(mfx)) {
-        mfx[["conf.low"]] <- mfx$comparison + critical_val * mfx$std.error
-        mfx[["conf.high"]] <- mfx$comparison + abs(critical_val) * mfx$std.error
+    if ("std.error" %in% colnames(mfx)) {
+        mfx[["std.error"]] <- ifelse(is.na(mfx[["std.error"]]) | mfx[["std.error"]] == 0, NA, mfx[["std.error"]])
+
+        if (!"statistic" %in% colnames(mfx)) {
+            mfx$statistic <- mfx$comparison / mfx$std.error
+        }
+        if (!"p.value" %in% colnames(mfx) && "statistic" %in% colnames(mfx)) {
+            mfx$p.value <- ifelse(is.na(mfx$statistic), NA, 2 * pnorm(-abs(mfx$statistic)))
+        }
+        if (!"conf.low" %in% colnames(mfx)) {
+            mfx$conf.low <- mfx$comparison + critical_val * mfx$std.error
+            mfx$conf.high <- mfx$comparison + abs(critical_val) * mfx$std.error
+        }
     }
 
     # group id: useful for merging, only if it's an internal call and not user-initiated
@@ -267,7 +277,7 @@ comparisons <- function(model,
     # clean columns
     stubcols <- c("rowid", "rowid_counterfactual", "type", "group", "term",
                   grep("^contrast", colnames(mfx), value = TRUE),
-                  "comparison", "std.error", "conf.low", "conf.high", "df",
+                  "comparison", "std.error", "statistic", "p.value", "conf.low", "conf.high", "df",
                   sort(grep("^predicted", colnames(newdata), value = TRUE)))
     cols <- intersect(stubcols, colnames(mfx))
     cols <- unique(c(cols, colnames(mfx)))
