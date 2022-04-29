@@ -14,8 +14,16 @@ test_that("interaction vs. emmeans", {
 })
 
 
-test_that("interaction (no validity)", {
+test_that("tidy does not error (no validity)", {
+    mod <- lm(mpg ~ factor(am) + factor(cyl) + wt + gear, data = mtcars)
+    cmp <- comparisons(mod, interaction = TRUE)
+    tid <- tidy(cmp)
+    expect_true(all(tid$term == "interaction"))
+})
+  
 
+
+test_that("interaction (no validity)", {
     mod <- lm(mpg ~ factor(am) + factor(cyl) + wt + gear, data = mtcars)
 
     expect_warning(comparisons(mod, newdata = mtcars, interaction = TRUE))
@@ -25,19 +33,29 @@ test_that("interaction (no validity)", {
         variables = c("cyl", "am"),
         contrast_factor = "all",
         interaction = TRUE)
-    expect_equal(nrow(cmp), 18)
+    expect_equal(nrow(cmp), 24)
+
     cmp <- comparisons(
         mod,
         variables = c("cyl", "am"),
         contrast_factor = "sequential",
         interaction = TRUE)
     expect_equal(nrow(cmp), 2)
+
     cmp <- comparisons(
         mod,
-        variables = c("cyl", "am"),
+        variables = c("cyl", "am", "wt"),
         contrast_factor = "pairwise",
         interaction = TRUE)
     expect_equal(nrow(cmp), 3)
+
+    cmp <- comparisons(
+        mod,
+        variables = c("cyl", "am", "wt"),
+        contrast_factor = "pairwise",
+        interaction = FALSE)
+    cmp <- tidy(cmp)
+    expect_equal(nrow(cmp), 5)
 })
 
 

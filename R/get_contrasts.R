@@ -84,10 +84,8 @@ get_contrasts <- function(model,
             idx <- unique(idx)
             out <- out[, ..idx]
         }
+        out[, "term" := "interaction"]
     }
-
-    # self contrasts return precise zeros
-    out <- out[comparison != 0]
 
     # normalize slope
     # not available for cross-contrasts
