@@ -30,6 +30,8 @@ get_contrast_data_factor <- function(model,
         levs_idx <- CJ(lo = levs, hi = levs)
         levs_idx <- levs_idx[levs_idx$hi != levs_idx$lo,]
         levs_idx <- levs_idx[match(levs_idx$lo, levs) < match(levs_idx$hi, levs),]
+    } else if (contrast_factor == "crosspair") {
+        levs_idx <- CJ(lo = levs, hi = levs)
     } else if (contrast_factor == "sequential") {
         levs_idx <- data.table::data.table(lo = levs[1:(length(levs) - 1)],
                                            hi = levs[2:length(levs)])
