@@ -138,7 +138,7 @@ test_that("predict new unit: no validity", {
     set.seed(1024)
     mfx1 <- marginaleffects(brms_epi, newdata = dat1)
     set.seed(1024)
-    mfx2 <- marginaleffects(brms_epi, newdata = dat2, re_formula = NULL)
+    mfx2 <- marginaleffects(brms_epi, newdata = dat2, allow_new_levels = TRUE)
     expect_false(any(mfx1$dydx == mfx2$dydx))
 })
 
