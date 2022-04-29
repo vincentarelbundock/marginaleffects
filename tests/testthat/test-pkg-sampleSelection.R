@@ -27,5 +27,4 @@ test_that("selection: no validity", {
     expect_s3_class(mfx, "marginaleffects")
     mfx <- marginaleffects(mod, part = "outcome", type = "unconditional")
     expect_s3_class(mfx, "marginaleffects")
-    expect_false(anyNA(mfx$std.error))
 })
