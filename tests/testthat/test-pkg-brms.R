@@ -133,10 +133,8 @@ test_that("marginaleffects: ordinal no validity", {
 })
 
 test_that("predict new unit: no validity", {
-    # error on Github Actions: 
-    skip("NAs are not allowed in grouping variables.")
     dat1 <- dat2 <- datagrid(model = brms_epi)
-    dat2$patient <- NA
+    dat2$patient <- 9999
     set.seed(1024)
     mfx1 <- marginaleffects(brms_epi, newdata = dat1)
     set.seed(1024)
