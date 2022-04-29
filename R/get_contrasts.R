@@ -90,7 +90,7 @@ get_contrasts <- function(model,
     out <- out[comparison != 0]
 
     # HACK: duplicate estimates with with inverted sign
-    if (isTRUE(contrast_factor == "crosspair")) {
+    if (isTRUE(contrast_factor == "all")) {
         idx <- duplicated(abs(out$comparison))
         out <- out[!idx,]
     }

@@ -1,7 +1,7 @@
 get_contrast_data_character <- function(model,
                                         newdata,
                                         variable,
-                                        type = "response",
+                                        contrast_factor,
                                         ...) {
 
     # factors store all levels, but characters do not, so we need to extract the
@@ -9,7 +9,20 @@ get_contrast_data_character <- function(model,
     tmp <- insight::get_data(model)
     levs <- sort(unique(tmp[[variable]]))
 
-    levs_idx <- data.table::data.table(lo = levs[1], hi = levs[2:length(levs)])
+    # index contrast orders based on contrast_factor
+    if (contrast_factor == "reference") {
+        levs_idx <- data.table::data.table(lo = levs[1],
+                                           hi = levs[2:length(levs)])
+    } else if (contrast_factor == "pairwise") {
+        levs_idx <- CJ(lo = levs, hi = levs)
+        levs_idx <- levs_idx[levs_idx$hi != levs_idx$lo,]
+        levs_idx <- levs_idx[match(levs_idx$lo, levs) < match(levs_idx$hi, levs),]
+    } else if (contrast_factor == "all") {
+        levs_idx <- CJ(lo = levs, hi = levs)
+    } else if (contrast_factor == "sequential") {
+        levs_idx <- data.table::data.table(lo = levs[1:(length(levs) - 1)],
+                                           hi = levs[2:length(levs)])
+    }
     levs_idx$label <- sprintf("%s - %s", levs_idx$hi, levs_idx$lo)
     levs_idx <- stats::setNames(levs_idx, paste0("marginaleffects_contrast_", colnames(levs_idx)))
 

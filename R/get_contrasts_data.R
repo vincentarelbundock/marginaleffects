@@ -3,7 +3,7 @@ get_contrast_data <- function(model,
                               variables = NULL,
                               contrast_factor = "reference",
                               contrast_numeric = 1,
-                              crosscontrast = FALSE,
+                              interaction = FALSE,
                               ...) {
 
     lo <- hi <- ter <- lab <- original <- rowid <- list()
@@ -39,6 +39,7 @@ get_contrast_data <- function(model,
                 model,
                 newdata,
                 v,
+                contrast_factor,
                 ...)
         } else {
             stop("variable class not supported.")
@@ -66,7 +67,7 @@ get_contrast_data <- function(model,
     original <- lapply(original, clean)
 
     # single contrast
-    if (!isTRUE(crosscontrast)) {
+    if (!isTRUE(interaction)) {
         lo <- rbindlist(lo)
         hi <- rbindlist(hi)
         original <- rbindlist(original)
