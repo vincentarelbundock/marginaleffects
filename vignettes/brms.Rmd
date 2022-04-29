@@ -415,17 +415,17 @@ ggplot(mfx, aes(x = draw, y = region , fill = party_autonomy)) +
 
 ## Hypothetical groups
 
-We can also obtain predictions or marginal effects for a hypothetical group instead of one of the observed regions. To achieve this, we create a dataset with `NA` in the `region` column. Then, we call the `marginaleffects` or `predictions` functions with the `re_formula=NA` argument. This argument is pushed through via the ellipsis (`...`) to the `posterior_epred` function of the `brms` package:
+We can also obtain predictions or marginal effects for a hypothetical group instead of one of the observed regions. To achieve this, we create a dataset with `NA` in the `region` column. Then we call the `marginaleffects` or `predictions` functions with the `allow_new_levels` argument. This argument is pushed through via the ellipsis (`...`) to the `posterior_epred` function of the `brms` package:
 
 ```{r}
 dat <- data.frame(civil_liberties = .5,
                   party_autonomy = FALSE,
-                  region = NA)
+                  region = "New Region")
 
 mfx <- marginaleffects(
     mod,
     variables = "party_autonomy",
-    re_formula = NA,
+    allow_new_levels = TRUE,
     newdata = dat)
 
 draws <- posteriordraws(mfx)
