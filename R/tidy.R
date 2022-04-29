@@ -259,7 +259,9 @@ tidy.comparisons <- function(x,
         V <- attr(x, "vcov")
         draws <- attr(x, "posterior_draws")
 
-        idx_by <- intersect(c("type", "group", "term", "contrast", by), colnames(x_dt))
+        idx_by <- c("type", "group", "term", "contrast", by,
+                    grep("^contrast_\\w+", colnames(x_dt), value = TRUE))
+        idx_by <- intersect(idx_by, colnames(x_dt))
         idx_na <- is.na(x_dt$comparison)
 
         # average marginal effects
@@ -345,8 +347,9 @@ tidy.comparisons <- function(x,
     out <- out[out$estimate != 0,]
 
     # sort and subset columns
-    cols <- c("type", "group", "term", "contrast", by, "estimate", "std.error",
-              "statistic", "p.value", "conf.low", "conf.high")
+    cols <- c("type", "group", "term", "contrast", by,
+              grep("^contrast_\\w+", colnames(x_dt), value = TRUE),
+              "estimate", "std.error", "statistic", "p.value", "conf.low", "conf.high")
     cols <- intersect(cols, colnames(out))
     out <- out[, cols, drop = FALSE, with = FALSE]
 

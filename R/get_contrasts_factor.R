@@ -50,6 +50,7 @@ get_contrast_data_factor <- function(model,
         levs_idx <- levs_idx[match(levs_idx$hi, levs) >= match(levs_idx$lo, levs),]
     }
 
+    levs_idx$isNULL <- levs_idx$hi == levs_idx$lo
     levs_idx$label <- sprintf("%s - %s", levs_idx$hi, levs_idx$lo)
     levs_idx <- stats::setNames(levs_idx, paste0("marginaleffects_contrast_", colnames(levs_idx)))
 
@@ -66,6 +67,7 @@ get_contrast_data_factor <- function(model,
     }
 
     contrast_label <- hi$marginaleffects_contrast_label
+    contrast_null <- hi$marginaleffects_contrast_hi == hi$marginaleffects_contrast_lo
 
     idx <- grepl("^marginaleffects_contrast", colnames(lo))
     lo <- lo[, !idx, with = FALSE]
@@ -76,6 +78,7 @@ get_contrast_data_factor <- function(model,
                 hi = hi,
                 original = original,
                 ter = rep(variable, nrow(lo)), # lo can be different dimension than newdata
-                lab = contrast_label)
+                lab = contrast_label,
+                contrast_null = contrast_null)
     return(out)
 }

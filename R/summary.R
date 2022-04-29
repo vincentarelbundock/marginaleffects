@@ -162,6 +162,7 @@ print.marginalmeans.summary <- function(x,
       alpha <- 100 * (1 - attr(x, "conf.level"))
   }
 
+
   # rename
   dict <- c("group" = "Group",
             "term" = "Term",
@@ -339,7 +340,9 @@ print.comparisons.summary <- function(x,
   out <- x
 
   # title
-  if (isTRUE(attr(x, "FUN") == "mean")) {
+  if ("term" %in% colnames(x) && all(x[["term"]] == "interaction")) {
+      tit <- "Contrast interactions"
+  } else if (isTRUE(attr(x, "FUN") == "mean")) {
       tit <- "Average contrasts"
   } else if (isTRUE(attr(x, "FUN") == "median")) {
       tit <- "Median contrasts"
@@ -387,6 +390,11 @@ print.comparisons.summary <- function(x,
             "conf.high" = ifelse(is.null(alpha),
                                 "CI high",
                                 sprintf("%.1f %%", 100 - alpha / 2)))
+
+  if (all(out$term == "interaction")) {
+    out[["term"]] <- NULL
+    colnames(out) <- gsub("^contrast_", "", colnames(out))
+  }
 
   for (i in seq_along(dict)) {
     colnames(out)[colnames(out) == names(dict)[i]] <- dict[i]

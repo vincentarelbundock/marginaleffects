@@ -104,13 +104,14 @@ get_contrast_data <- function(model,
                 # exclude rowid and variables excluded from `variables`, for
                 # which we do not compute cross-contrasts
                 idx <- c(setdiff(names(lo[[i]]), variables),
-                         setdiff(variables, names(lo)[i]))
+                         setdiff(variables, names(lo)[[i]]))
             }
             lo[[i]] <- data.table(lo[[i]])[, !..idx]
             hi[[i]] <- data.table(hi[[i]])[, !..idx]
             lo[[i]][[paste0("contrast_", names(lo)[i])]] <- lab[[i]]
             hi[[i]][[paste0("contrast_", names(lo)[i])]] <- lab[[i]]
         }
+
         lo <- cjdt(lo)
         hi <- cjdt(hi)
         original <- NULL
