@@ -1,88 +1,51 @@
-# todo:
-# warn for large contrast matrix
-# test nrow > 1
-# test brms
-# test partial cross-contrasts: variables does not include all the model terms
+test_that("interaction vs. emmeans", {
+    requiet("emmeans")
+    mod <- lm(mpg ~ factor(am) + factor(cyl) + wt + gear, data = mtcars)
+    cmp <- comparisons(
+        mod,
+        variables = c("cyl", "am"),
+        contrast_factor = "all",
+        interaction = TRUE)
+    em <- emmeans(mod, c("cyl", "am"))
+    em <- contrast(em, method = "revpairwise")
+    em <- data.frame(em)
+    expect_true(all(round(abs(em$estimate), 5) %in% round(abs(cmp$comparison), 5)))
+    expect_true(all(round(abs(em$SE), 5) %in% round(abs(cmp$std.error), 5)))
+})
 
-# test_that("vs. emmeans", {
-#
-#     dat <- mtcars
-#     dat$cyl <- factor(dat$cyl)
-#     dat$am <- as.logical(dat$am)
-#     dat$gear <- as.character(dat$gear)
-#     mod <- lm(mpg ~ am + cyl + wt + gear, data = dat)
-#     cmp <- comparisons(
-#         mod,
-#         variables = c("cyl", "gear"),
-#         contrast_factor = "all",
-#         interaction = TRUE)
-#     cmp
-#     cmp <- comparisons(
-#         mod,
-#         variables = c("cyl", "gear"),
-#         contrast_factor = "reference",
-#         interaction = TRUE)
-#
-# cmp <- comparisons(
-#         mod,
-#         newdata = datagrid(),
-#         variables = c("cyl", "gear"),
-#         contrast_factor = "reference",
-#         interaction = FALSE)
-#
-#
-#     cmp <- comparisons(
-#         mod,
-#         newdata = head(dat),
-#         variables = c("cyl", "gear"),
-#         contrast_factor = "all",
-#         interaction = TRUE)
-#
-#     cmp <- comparisons(
-#         mod,
-#         newdata = datagrid(),
-#         variables = c("cyl", "gear"),
-#         contrast_factor = "all",
-#         interaction = TRUE)
-#
-#             
-# cmp <- comparisons(
-#     mod,
-#     newdata = datagrid(),
-#     variables = c("gear", "cyl"),
-#     contrast_factor = "all",
-#     interaction = TRUE)
-#
-# #
-# # # variables is the full model
-# # comparisons(mod,
-# #             newdata = datagrid(),
-# #             interaction = FALSE)
-# #
-# # # variables is a subset of the model
-# # comparisons(mod,
-# #             variables = c("am", "gear"),
-# #             newdata = datagrid(am = c(TRUE, FALSE)),
-# #             interaction = TRUE)
-# #
-# # # nrow > 1
-# # comparisons(mod,
-# #             newdata = datagrid(am = c(TRUE, FALSE)),
-# #             interaction = TRUE)
-# #
-# #
-#
-#
-# dat <- mtcar
-#
-# em <- emmeans(m, c("c172code_f", "e16sex_f"))
-# em <- contrast(em, method = "revpairwise")
-# em <- model_parameters(em)
-# #
-#
-# cmp1 <- comparisons(m,
-#                     newdata = datagrid(),
-#                     variables = c("c172code_f", "e16sex_f"),
-#                     contrast_factor = "all",
-#                     interaction = TRUE)
-# cmp1
+
+test_that("interaction (no validity)", {
+
+    mod <- lm(mpg ~ factor(am) + factor(cyl) + wt + gear, data = mtcars)
+
+    expect_warning(comparisons(mod, newdata = mtcars, interaction = TRUE))
+
+    cmp <- comparisons(
+        mod,
+        variables = c("cyl", "am"),
+        contrast_factor = "all",
+        interaction = TRUE)
+    expect_equal(nrow(cmp), 18)
+    cmp <- comparisons(
+        mod,
+        variables = c("cyl", "am"),
+        contrast_factor = "sequential",
+        interaction = TRUE)
+    expect_equal(nrow(cmp), 2)
+    cmp <- comparisons(
+        mod,
+        variables = c("cyl", "am"),
+        contrast_factor = "pairwise",
+        interaction = TRUE)
+    expect_equal(nrow(cmp), 3)
+})
+
+
+test_that("brms + order of first character doesn't matter", {
+    mod <- download_model("brms_factor")
+    cmp1 <- comparisons(mod, variables = c("cyl_fac", "mpg"), interaction = TRUE, contrast_factor = "all")
+    cmp2 <- comparisons(mod, variables = c("mpg", "cyl_fac"), interaction = TRUE, contrast_factor = "all")
+    expect_equal(nrow(cmp1), 6)
+    expect_equal(nrow(cmp1), nrow(cmp2))
+    expect_equal(cmp1$comparison, cmp2$comparison)
+})

@@ -2,6 +2,7 @@ get_contrast_data_character <- function(model,
                                         newdata,
                                         variable,
                                         contrast_factor,
+                                        first_interaction,
                                         ...) {
 
     # factors store all levels, but characters do not, so we need to extract the
@@ -14,15 +15,28 @@ get_contrast_data_character <- function(model,
         levs_idx <- data.table::data.table(lo = levs[1],
                                            hi = levs[2:length(levs)])
     } else if (contrast_factor == "pairwise") {
-        levs_idx <- CJ(lo = levs, hi = levs)
+        levs_idx <- CJ(lo = levs, hi = levs, sorted = FALSE)
         levs_idx <- levs_idx[levs_idx$hi != levs_idx$lo,]
         levs_idx <- levs_idx[match(levs_idx$lo, levs) < match(levs_idx$hi, levs),]
+
     } else if (contrast_factor == "all") {
-        levs_idx <- CJ(lo = levs, hi = levs)
+        levs_idx <- CJ(lo = levs, hi = levs, sorted = FALSE)
+
+    # internal option applied to the first of several contrasts when
+    # interaction=TRUE to avoid duplication
+    } else if (contrast_factor == "half_all") {
+        levs_idx <- CJ(lo = levs, hi = levs, sorted = FALSE)
+        levs_idx <- levs_idx[match(levs_idx$hi, levs) >= match(levs_idx$lo, levs),]
+
     } else if (contrast_factor == "sequential") {
         levs_idx <- data.table::data.table(lo = levs[1:(length(levs) - 1)],
                                            hi = levs[2:length(levs)])
     }
+
+    if (isTRUE(first_interaction)) {
+        levs_idx <- levs_idx[match(levs_idx$hi, levs) >= match(levs_idx$lo, levs),]
+    }
+
     levs_idx$label <- sprintf("%s - %s", levs_idx$hi, levs_idx$lo)
     levs_idx <- stats::setNames(levs_idx, paste0("marginaleffects_contrast_", colnames(levs_idx)))
 
