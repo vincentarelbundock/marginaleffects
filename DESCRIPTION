@@ -33,6 +33,7 @@ Suggests:
     bench,
     brms,
     broom,
+    datawizard,
     dplyr,
     emmeans,
     future,

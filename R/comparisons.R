@@ -100,7 +100,7 @@ comparisons <- function(model,
         checkmate::assert_numeric(conf.level, len = 1)
         checkmate::assert_true(conf.level > 0)
         checkmate::assert_true(conf.level < 1)
-        checkmate::assert_choice(contrast_factor, choices = c("reference", "sequential", "pairwise"))
+        checkmate::assert_choice(contrast_factor, choices = c("reference", "sequential", "pairwise", "crosspair"))
         checkmate::assert(
             checkmate::check_numeric(contrast_numeric, min.len = 1, max.len = 2),
             checkmate::check_choice(contrast_numeric, choices = c("iqr", "minmax", "sd", "2sd", "dydx")))

@@ -86,6 +86,15 @@ get_contrasts <- function(model,
         }
     }
 
+    # self contrasts return precise zeros
+    out <- out[comparison != 0]
+
+    # HACK: duplicate estimates with with inverted sign
+    if (isTRUE(contrast_factor == "crosspair")) {
+        idx <- duplicated(abs(out$comparison))
+        out <- out[!idx,]
+    }
+
     # normalize slope
     # not available for cross-contrasts
     eps <- getOption("marginaleffects_deriv_eps", default = 0.0001)
