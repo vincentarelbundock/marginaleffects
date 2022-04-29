@@ -1,85 +1,3 @@
-get_contrast_data <- function(model,
-                              newdata = NULL,
-                              variables = NULL,
-                              contrast_factor = "reference",
-                              contrast_numeric = 1,
-                              ...) {
-
-    lo <- hi <- ter <- lab <- original <- rowid <- list()
-
-    for (v in variables) {
-        # logical and character before factor because they get picked up by find_categorical
-        variable_class <- find_variable_class(variable = v, newdata = newdata, model = model)
-
-        if (variable_class == "logical") {
-            tmp <- get_contrast_data_logical(
-                model,
-                newdata,
-                v,
-                ...)
-        } else if (variable_class == "factor") {
-            tmp <- get_contrast_data_factor(
-                model,
-                newdata,
-                v,
-                contrast_factor = contrast_factor,
-                ...)
-        } else if (variable_class == "numeric") {
-            tmp <- get_contrast_data_numeric(
-                model,
-                newdata,
-                v,
-                contrast_numeric = contrast_numeric,
-                ...)
-        } else if (variable_class == "character") {
-            tmp <- get_contrast_data_character(
-                model,
-                newdata,
-                v,
-                ...)
-        } else {
-            stop("variable class not supported.")
-        }
-
-        lo <- c(lo, list(tmp$lo))
-        hi <- c(hi, list(tmp$hi))
-        ter <- c(ter, list(tmp$ter))
-        lab <- c(lab, list(tmp$lab))
-        original <- c(original, list(tmp$original))
-        rowid <- c(rowid, list(tmp$rowid))
-    }
-
-    # clean before merge: tobit1 introduces AsIs columns
-    clean <- function(x) {
-        for (col in colnames(x)) {
-            if (inherits(x[[col]], "AsIs")) {
-                x[[col]] <- as.numeric(x[[col]])
-             }
-        }
-        return(x)
-    }
-    lo <- lapply(lo, clean)
-    hi <- lapply(hi, clean)
-    original <- lapply(original, clean)
-
-    lo <- rbindlist(lo)
-    hi <- rbindlist(hi)
-    original <- rbindlist(original)
-    ter <- unlist(ter)
-    lab <- unlist(lab)
-    lo[, "term" := ter]
-    hi[, "term" := ter]
-    original[, "term" := ter]
-    lo[, "contrast" := lab]
-    hi[, "contrast" := lab]
-    original[, "contrast" := lab]
-
-    out <- list(lo = lo, hi = hi, original = original)
-
-    return(out)
-}
-
-
 get_contrasts <- function(model,
                           newdata = NULL,
                           type = "response",
@@ -146,25 +64,37 @@ get_contrasts <- function(model,
     # original is the "composite" data that we constructed by binding terms and
     # compute predictions. It includes a term column, which we need to
     # replicate for each group.
-    if (nrow(out) == nrow(original)) {
+    mult <- nrow(out) / nrow(original)
+    if (isTRUE(mult == 1)) {
         out[, "term" := original[["term"]]]
         out[, "contrast" := original[["contrast"]]]
 
     # group or multivariate outcomes
+    } else if (isTRUE(mult > 1)) {
+        out[, "term" := rep(original$term, times = mult)]
+        out[, "contrast" := rep(original$contrast, times = mult)]
+
+    # cross-contrasts or weird cases
     } else {
-        mult <- nrow(out) / nrow(original)
-        if (mult > 1) {
-            out[, "term" := rep(original$term, times = mult)]
-            out[, "contrast" := rep(original$contrast, times = mult)]
+        out <- merge(out, newdata, by = "rowid")
+        if (isTRUE(nrow(out) == nrow(lo))) {
+            tmp <- data.table(lo)[, .SD, .SDcols = patterns("^contrast")]
+            out <- cbind(out, tmp)
+            idx <- c("rowid", grep("^contrast", colnames(out), value = TRUE), colnames(out))
+            idx <- unique(idx)
+            out <- out[, ..idx]
         }
     }
 
     # normalize slope
+    # not available for cross-contrasts
     eps <- getOption("marginaleffects_deriv_eps", default = 0.0001)
-    idx <- out$contrast == "dydx"
-    out[idx == TRUE, "comparison" := comparison / eps]
-    if (!is.null(draws)) {
-        draws[idx == TRUE, ] <- draws[idx == TRUE, ] / eps
+    if ("contrast" %in% colnames(out)) {
+        idx <- out$contrast == "dydx"
+        out[idx == TRUE, "comparison" := comparison / eps]
+        if (!is.null(draws)) {
+            draws[idx == TRUE, ] <- draws[idx == TRUE, ] / eps
+        }
     }
 
     # output

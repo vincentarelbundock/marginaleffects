@@ -107,6 +107,7 @@ Collate:
     'get_coef.R'
     'get_contrasts.R'
     'get_contrasts_character.R'
+    'get_contrasts_data.R'
     'get_contrasts_factor.R'
     'get_contrasts_logical.R'
     'get_contrasts_numeric.R'
@@ -161,5 +162,6 @@ Collate:
     'tidy.R'
     'type_dictionary.R'
     'utils.R'
+    'utils_cjdt.R'
     'warn_once.R'
 Language: en-US

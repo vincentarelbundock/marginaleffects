@@ -197,7 +197,7 @@ comparisons <- function(model,
 
     # merge original data back in
     # HACK: relies on NO sorting at ANY point
-    if (nrow(mfx) == nrow(cache$original)) {
+    if (isTRUE(nrow(mfx) == nrow(cache$original))) {
         idx <- setdiff(colnames(cache$original), colnames(mfx))
         mfx <- data.table(mfx, cache$original[, ..idx])
     }
@@ -241,7 +241,9 @@ comparisons <- function(model,
     }
 
     # clean columns
-    stubcols <- c("rowid", "rowid_counterfactual", "type", "group", "term", "contrast", "comparison", "std.error", "conf.low", "conf.high", "df",
+    stubcols <- c("rowid", "rowid_counterfactual", "type", "group", "term",
+                  grep("^contrast", colnames(mfx), value = TRUE),
+                  "comparison", "std.error", "conf.low", "conf.high", "df",
                   sort(grep("^predicted", colnames(newdata), value = TRUE)))
     cols <- intersect(stubcols, colnames(mfx))
     cols <- unique(c(cols, colnames(mfx)))
