@@ -22,6 +22,7 @@
 #' @inheritParams marginaleffects
 #' @param contrast_factor string
 #' * "reference": Each factor level is compared to the factor reference (base) level
+#' * "all": All combinations of observed levels
 #' * "sequential": Each factor level is compared to the previous factor level
 #' * "pairwise": Each factor level is compared to all other levels
 #' @param newdata A data frame over which to compute quantities of interest.
@@ -37,7 +38,9 @@
 #' * "sd": Contrast across one standard deviation around the regressor mean.
 #' * "2sd": Contrast across two standard deviations around the regressor mean.
 #' * "minmax": Contrast between the maximum and the minimum values of the regressor.
-#'
+#' @param interaction boolean
+#' * FALSE: Contrasts represent the change in adjusted predictions when one predictor changes and all other variables are held constant.
+#' * TRUE: Contrasts represent the changes in adjusted predictions when several predictors are manipulated simultaneously. When `interaction=TRUE`, the `newdata` argument must either be `NULL` or be a 1-row data frame, otherwise contrast interactions could be too costly to compute.
 #' @template model_specific_arguments
 #'
 #' @examples
@@ -67,6 +70,8 @@
 #' comparisons(mod, contrast_numeric = "sd") %>% tidy()
 #' comparisons(mod, contrast_numeric = "minmax") %>% tidy()
 #'
+#' # Interactions between contrasts
+#' 
 #' @export
 comparisons <- function(model,
                         newdata = NULL,

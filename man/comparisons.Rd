@@ -13,6 +13,7 @@ comparisons(
   conf.level = 0.95,
   contrast_factor = "reference",
   contrast_numeric = 1,
+  interaction = FALSE,
   ...
 )
 }
@@ -60,6 +61,7 @@ to 0.95, which corresponds to a 95 percent confidence interval.}
 \item{contrast_factor}{string
 \itemize{
 \item "reference": Each factor level is compared to the factor reference (base) level
+\item "all": All combinations of observed levels
 \item "sequential": Each factor level is compared to the previous factor level
 \item "pairwise": Each factor level is compared to all other levels
 }}
@@ -72,6 +74,12 @@ to 0.95, which corresponds to a 95 percent confidence interval.}
 \item "sd": Contrast across one standard deviation around the regressor mean.
 \item "2sd": Contrast across two standard deviations around the regressor mean.
 \item "minmax": Contrast between the maximum and the minimum values of the regressor.
+}}
+
+\item{interaction}{boolean
+\itemize{
+\item FALSE: Contrasts represent the change in adjusted predictions when one predictor changes and all other variables are held constant.
+\item TRUE: Contrasts represent the changes in adjusted predictions when several predictors are manipulated simultaneously. When \code{interaction=TRUE}, the \code{newdata} argument must either be \code{NULL} or be a 1-row data frame, otherwise contrast interactions could be too costly to compute.
 }}
 
 \item{...}{Additional arguments are passed to the \code{predict()} method used to
@@ -119,8 +127,8 @@ marginal effects, predictions, marginal means, and contrasts.\tabular{llll}{
     \tab  \tab \code{allow.new.levels} \tab \link[glmmTMB:predict.glmmTMB]{glmmTMB::predict.glmmTMB} \cr
     \tab  \tab \code{zitype} \tab \link[glmmTMB:predict.glmmTMB]{glmmTMB::predict.glmmTMB} \cr
    \code{mgcv} \tab \code{bam} \tab \code{exclude} \tab \link[mgcv:predict.bam]{mgcv::predict.bam} \cr
-   \code{robustlmm} \tab \code{rlmerMod} \tab \code{re.form} \tab \link[robustlmm:predict.rlmerMod]{robustlmm::predict.rlmerMod} \cr
-    \tab  \tab \code{allow.new.levels} \tab \link[robustlmm:predict.rlmerMod]{robustlmm::predict.rlmerMod} \cr
+   \code{robustlmm} \tab \code{rlmerMod} \tab \code{re.form} \tab \link[robustlmm:rlmerMod-class]{robustlmm::predict.rlmerMod} \cr
+    \tab  \tab \code{allow.new.levels} \tab \link[robustlmm:rlmerMod-class]{robustlmm::predict.rlmerMod} \cr
 }
 }
 
@@ -150,5 +158,7 @@ comparisons(mod, contrast_numeric = c(90, 100)) \%>\% tidy()
 comparisons(mod, contrast_numeric = "iqr") \%>\% tidy()
 comparisons(mod, contrast_numeric = "sd") \%>\% tidy()
 comparisons(mod, contrast_numeric = "minmax") \%>\% tidy()
+
+# Interactions between contrasts
 
 }
