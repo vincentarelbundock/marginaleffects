@@ -8,6 +8,13 @@ get_contrast_data <- function(model,
 
     lo <- hi <- ter <- lab <- original <- rowid <- list()
 
+    variable_classes <- sapply(variables, function(x) find_variable_class(
+                               variable = x,
+                               newdata = newdata,
+                               model = model))
+    if (any(c("factor", "character") %in% variable_classes)) {
+        first_interaction <- names(variable_classes[variable_classes %in% c("factor", "character")])[1]
+    }
     for (v in variables) {
         # logical and character before factor because they get picked up by find_categorical
         variable_class <- find_variable_class(variable = v,
@@ -20,13 +27,25 @@ get_contrast_data <- function(model,
                 newdata,
                 v,
                 ...)
+
         } else if (variable_class == "factor") {
             tmp <- get_contrast_data_factor(
                 model,
                 newdata,
                 v,
                 contrast_factor = contrast_factor,
+                first_interaction = isTRUE(v == first_interaction),
                 ...)
+
+        } else if (variable_class == "character") {
+            tmp <- get_contrast_data_character(
+                model,
+                newdata,
+                v,
+                contrast_factor,
+                first_interaction = isTRUE(v == first_interaction),
+                ...)
+
         } else if (variable_class == "numeric") {
             tmp <- get_contrast_data_numeric(
                 model,
@@ -34,13 +53,7 @@ get_contrast_data <- function(model,
                 v,
                 contrast_numeric = contrast_numeric,
                 ...)
-        } else if (variable_class == "character") {
-            tmp <- get_contrast_data_character(
-                model,
-                newdata,
-                v,
-                contrast_factor,
-                ...)
+
         } else {
             stop("variable class not supported.")
         }
