@@ -76,6 +76,7 @@ comparisons <- function(model,
                         conf.level = 0.95,
                         contrast_factor = "reference",
                         contrast_numeric = 1,
+                        interaction = FALSE,
                         ...) {
 
     internal_call <- list(...)[["internal_call"]]
@@ -90,8 +91,25 @@ comparisons <- function(model,
                 newdata <- eval.parent(as.call(lcall))
             }
         }
-        newdata <- sanity_newdata(model, newdata)
+
+        # `interaction=TRUE` defaults to contrasts at mean, otherwise the size of the cross-joined data can explode
+        if (isTRUE(interaction)) {
+            if (is.null(newdata)) {
+                newdata <- datagrid(model = model)
+                newdata <- sanity_newdata(model, newdata)
+            } else if (!isTRUE(checkmate::check_data_frame(newdata, nrows = 1, null.ok = FALSE))) {
+                newdata <- datagrid(model = model)
+                newdata <- sanity_newdata(model, newdata)
+                msg <- "When `interaction=TRUE`, the `newdata` argument must either be NULL or a 1-row data frame (e.g., with all variables set to their mean or mode)."
+                warning(msg, call. = FALSE)
+            } else {
+            }
+            newdata[["rowid"]] <- 1
+        } else {
+            newdata <- sanity_newdata(model, newdata)
+        }
     }
+
 
     # `marginaleffects()` must run its own sanity checks before any transforms
     if (!isTRUE(internal_call)) {
@@ -100,7 +118,7 @@ comparisons <- function(model,
         checkmate::assert_numeric(conf.level, len = 1)
         checkmate::assert_true(conf.level > 0)
         checkmate::assert_true(conf.level < 1)
-        checkmate::assert_choice(contrast_factor, choices = c("reference", "sequential", "pairwise", "crosspair"))
+        checkmate::assert_choice(contrast_factor, choices = c("reference", "sequential", "pairwise", "all"))
         checkmate::assert(
             checkmate::check_numeric(contrast_numeric, min.len = 1, max.len = 2),
             checkmate::check_choice(contrast_numeric, choices = c("iqr", "minmax", "sd", "2sd", "dydx")))
@@ -154,6 +172,7 @@ comparisons <- function(model,
         variables = variables,
         contrast_factor = contrast_factor,
         contrast_numeric = contrast_numeric,
+        interaction = interaction,
         ...)
     args <- list(model,
                  newdata = newdata,
