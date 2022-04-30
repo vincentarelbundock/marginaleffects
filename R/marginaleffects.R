@@ -2,7 +2,8 @@
 #'
 #' This function calculates marginal effects (slopes) for each row of the
 #' dataset. The resulting object can processed by the `tidy()` or `summary()`
-#' functions, which compute Average Marginal Effects (AME). The `datagrid()`
+#' functions, which compute Average Marginal Effects (AME) or Group-Average
+#' Marginal Effects (G-AME). See `?summary.marginaleffects`. The `datagrid()`
 #' function and the `newdata` argument can be used to calculate Marginal
 #' Effects at the Mean (MEM) or Marginal Effects at User-Specified values (aka
 #' Marginal Effects at Representative values, MER). Additional information can

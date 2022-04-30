@@ -78,7 +78,8 @@ A \code{data.frame} with one row per observation (per term/group) and several co
 \description{
 This function calculates marginal effects (slopes) for each row of the
 dataset. The resulting object can processed by the \code{tidy()} or \code{summary()}
-functions, which compute Average Marginal Effects (AME). The \code{datagrid()}
+functions, which compute Average Marginal Effects (AME) or Group-Average
+Marginal Effects (G-AME). See \code{?summary.marginaleffects}. The \code{datagrid()}
 function and the \code{newdata} argument can be used to calculate Marginal
 Effects at the Mean (MEM) or Marginal Effects at User-Specified values (aka
 Marginal Effects at Representative values, MER). Additional information can
