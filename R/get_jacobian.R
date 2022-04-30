@@ -1,11 +1,10 @@
 # adapted from the numDeriv package for R by Paul Gilbert published under GPL2 license
 
-get_jacobian <- function(func, x) {
+get_jacobian <- function(func, x, eps) {
 
     # global options are used to switch between homemade and numDeriv
     marginaleffects_numDeriv <- getOption("marginaleffects_numDeriv", default = NULL)
     flag <- is.null(marginaleffects_numDeriv)
-    eps <- getOption("marginaleffects_deriv_eps", default = 0.0001)
 
     # dependency-free
     if (isTRUE(flag)) {

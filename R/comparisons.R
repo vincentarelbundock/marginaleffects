@@ -84,7 +84,19 @@ comparisons <- function(model,
                         interaction = FALSE,
                         ...) {
 
-    internal_call <- list(...)[["internal_call"]]
+    dots <- list(...)
+
+    internal_call <- dots[["internal_call"]]
+
+    if (isTRUE(is.numeric(dots[["eps"]]))) {
+        eps <- dots[["eps"]]
+        dots[["eps"]] <- NULL # otherwise argument is duplicated
+    } else if (isTRUE(contrast_numeric == "dydx")) {
+        eps <- 1e-4
+    } else {
+        eps <- 1
+    }
+
 
     if (!isTRUE(internal_call)) {
         # if `newdata` is a call to `datagrid`, `typical`, or `counterfactual`, insert `model`
@@ -137,7 +149,7 @@ comparisons <- function(model,
     # }
 
     # get dof before transforming the vcov arg
-    if (isTRUE(vcov =="satterthwaite") || isTRUE(vcov == "kenward-roger")) {
+    if (isTRUE(vcov == "satterthwaite") || isTRUE(vcov == "kenward-roger")) {
         mi <- insight::model_info(model)
         V <- get_vcov(model, vcov = vcov)
         df <- insight::find_response(model)
@@ -171,21 +183,23 @@ comparisons <- function(model,
     attributes_newdata <- attributes_newdata[idx]
 
     # compute contrasts and standard errors
-    dots <- list(...)
-    cache <- get_contrast_data(
-        model = model,
-        newdata = newdata,
-        variables = variables,
-        contrast_factor = contrast_factor,
-        contrast_numeric = contrast_numeric,
-        interaction = interaction,
-        ...)
+    args <- list(model = model,
+                 newdata = newdata,
+                 variables = variables,
+                 contrast_factor = contrast_factor,
+                 contrast_numeric = contrast_numeric,
+                 interaction = interaction,
+                 eps = eps)
+    args <- c(args, dots)
+    cache <- do.call("get_contrast_data", args)
+
     args <- list(model,
                  newdata = newdata,
                  variables = variables,
                  type = type,
                  contrast_factor = contrast_factor,
                  contrast_numeric = contrast_numeric,
+                 eps = eps,
                  cache = cache)
     args <- c(args, dots)
     mfx <- do.call("get_contrasts", args)
@@ -208,7 +222,8 @@ comparisons <- function(model,
                      variables = variables,
                      cache = cache,
                      contrast_factor = contrast_factor,
-                     contrast_numeric = contrast_numeric)
+                     contrast_numeric = contrast_numeric,
+                     eps = eps)
         args <- c(args, dots)
         se <- do.call("standard_errors_delta", args)
         mfx$std.error <- as.numeric(se)

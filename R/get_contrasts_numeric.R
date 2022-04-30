@@ -2,10 +2,8 @@ get_contrast_data_numeric <- function(model,
                                       newdata,
                                       variable,
                                       contrast_numeric = 1,
+                                      eps,
                                       ...) {
-
-
-    eps <- getOption("marginaleffects_deriv_eps", default = 0.0001)
 
     # numeric contrasts first
     if (is.numeric(contrast_numeric) && length(contrast_numeric) == 1) {

@@ -4,6 +4,7 @@ get_contrast_data <- function(model,
                               contrast_factor = "reference",
                               contrast_numeric = 1,
                               interaction = FALSE,
+                              eps = 1e-4,
                               ...) {
 
     lo <- hi <- ter <- lab <- original <- rowid <- list()
@@ -52,6 +53,7 @@ get_contrast_data <- function(model,
                 newdata,
                 v,
                 contrast_numeric = contrast_numeric,
+                eps = eps,
                 ...)
 
         } else {
