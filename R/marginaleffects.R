@@ -200,8 +200,8 @@ marginaleffects <- function(model,
     # return contrast column only when relevant
     if ("contrast" %in% colnames(out)) {
         out[is.na(contrast), "contrast" := ""]
-        out[contrast == "dydx", "contrast" := ""]
-        if (all(out$contrast == "")) {
+        out[contrast == "dydx", "contrast" := "dY/dX"]
+        if (all(out$contrast == "dY/dX")) {
             out[, "contrast" := NULL]
         }
     }
