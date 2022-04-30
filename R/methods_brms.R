@@ -106,7 +106,7 @@ get_group_names.brmsfit <- function(model, ...) {
 get_vcov.brmsfit <- function(model,
                              vcov = NULL,
                              ...) {
-    if (!is.null(vcov)) {
+    if (!is.null(vcov) && !is.logical(vcov)) {
         msg <- "The `vcov` argument is not supported for models of this class."
         warning(msg, call. = FALSE)
     }
