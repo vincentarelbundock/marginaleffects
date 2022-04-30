@@ -12,6 +12,7 @@ get_contrast_data_numeric <- function(model,
         low <- newdata[[variable]] - contrast_numeric / 2
         high <- newdata[[variable]] + contrast_numeric / 2
         lab <- sprintf("+%s", contrast_numeric)
+
     } else if (is.numeric(contrast_numeric) && length(contrast_numeric) == 2) {
         contrast_numeric <- sort(contrast_numeric)
         low <- contrast_numeric[1]
@@ -25,19 +26,23 @@ get_contrast_data_numeric <- function(model,
         low <- newdata[[variable]]
         high <- newdata[[variable]] + eps
         lab <- "dydx"
+
     # other contrasts
     } else if (isTRUE(contrast_numeric == "sd")) {
         low <- mean(newdata[[variable]], na.rm = TRUE) - stats::sd(newdata[[variable]], na.rm = TRUE) / 2
         high <- mean(newdata[[variable]], na.rm = TRUE) + stats::sd(newdata[[variable]], na.rm = TRUE) / 2
         lab <- "sd"
+
     } else if (isTRUE(contrast_numeric == "2sd")) {
         low <- mean(newdata[[variable]], na.rm = TRUE) - stats::sd(newdata[[variable]], na.rm = TRUE)
         high <- mean(newdata[[variable]], na.rm = TRUE) + stats::sd(newdata[[variable]], na.rm = TRUE)
         lab <- "2sd"
+
     } else if (isTRUE(contrast_numeric == "iqr")) {
         low <- stats::quantile(newdata[[variable]], probs = .25, na.rm = TRUE)
         high <- stats::quantile(newdata[[variable]], probs = .75, na.rm = TRUE)
         lab <- "IQR"
+
     } else if (isTRUE(contrast_numeric == "minmax")) {
         low <- min(newdata[[variable]], na.rm = TRUE)
         high <- max(newdata[[variable]], na.rm = TRUE)
