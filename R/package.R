@@ -8,6 +8,6 @@ utils::globalVariables(c('.', 'term', 'part', 'estimate', 'conf.high',
                          'section', 'position', 'where', 'ticks', 'statistic1',
                          'model', 'tmp_grp', 'condition_variable', 'conf_int',
                          'conf_level', 'group', 'contrast', 'm', 'dydx',
-                         'rowid', 'predicted', 'gn',
+                         "patterns", 'rowid', 'predicted', 'gn',
                          # data.table calls
                          'comparison', "..idx", "..idx_by", "..tmp", "draw", "..cols"))

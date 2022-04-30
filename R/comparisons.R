@@ -255,13 +255,17 @@ comparisons <- function(model,
     }
 
     if ("std.error" %in% colnames(mfx)) {
-        mfx[["std.error"]] <- ifelse(is.na(mfx[["std.error"]]) | mfx[["std.error"]] == 0, NA, mfx[["std.error"]])
+        mfx[["std.error"]] <- ifelse(is.na(mfx[["std.error"]]) | mfx[["std.error"]] == 0,
+                                     NA,
+                                     mfx[["std.error"]])
 
         if (!"statistic" %in% colnames(mfx)) {
             mfx$statistic <- mfx$comparison / mfx$std.error
         }
         if (!"p.value" %in% colnames(mfx) && "statistic" %in% colnames(mfx)) {
-            mfx$p.value <- ifelse(is.na(mfx$statistic), NA, 2 * pnorm(-abs(mfx$statistic)))
+            mfx$p.value <- ifelse(is.na(mfx$statistic),
+                                  NA,
+                                  2 * stats::pnorm(-abs(mfx$statistic)))
         }
         if (!"conf.low" %in% colnames(mfx)) {
             mfx$conf.low <- mfx$comparison + critical_val * mfx$std.error
