@@ -14,6 +14,17 @@ test_that("type dictionary does not include duplicates", {
 })
 
 
+test_that("sanity gives informative error for all the functions", {
+    dat <- mtcars
+    dat$cyl <- factor(dat$cyl)
+    mod <- lm(mpg ~ hp + cyl, data = dat)
+    expect_error(comparisons(mod, type = "junk"), regexp = "type.*argument")
+    expect_error(predictions(mod, type = "junk"), regexp = "type.*argument")
+    expect_error(marginaleffects(mod, type = "junk"), regexp = "type.*argument")
+    expect_error(marginalmeans(mod, type = "junk"), regexp = "type.*argument")
+})
+
+
 test_that("multiple prediction types", {
     skip("type vector")
     skip_if_not_installed("pscl")
