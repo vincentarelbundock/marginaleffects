@@ -99,3 +99,17 @@ get_group_names.brmsfit <- function(model, ...) {
     }
     return(out)
 }
+
+
+#' @rdname get_vcov
+#' @export
+get_vcov.brmsfit <- function(model,
+                             vcov = NULL,
+                             ...) {
+    if (!is.null(vcov)) {
+        msg <- "The `vcov` argument is not supported for models of this class."
+        warning(msg, call. = FALSE)
+    }
+    return(NULL)
+}
+

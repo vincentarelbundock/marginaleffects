@@ -392,3 +392,9 @@ test_that("bugs stay dead: character regressors used to produce duplicates", {
     ti <- tidy(mfx, FUN = median)
     expect_true(length(unique(ti$estimate)) == nrow(ti))
 })
+
+
+test_that("warning: vcov not supported", {
+    expect_warning(marginaleffects(brms_numeric, vcov = "HC3"),
+                   regexp = "vcov.*not supported")
+})
