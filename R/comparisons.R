@@ -2,12 +2,12 @@
 #'
 #' This function calculates contrasts (or comparisons) between adjusted
 #' predictions for each row of the dataset. The resulting object can processed
-#' by the `tidy()` or `summary()` functions, which compute Average Contrasts.
-#' The `datagrid()` function and the `newdata` argument can be used to
-#' calculate contrasts Contrasts at the Mean or Contrasts at User-Specified
-#' values (aka Contrasts at Representative values). Additional information can
-#' be found in the Details and Examples sections below, and in the vignette on
-#' the `marginaleffects` website.
+#' by the `tidy()` or `summary()` functions, which compute Average Contrasts
+#' (see `?summary.marginaleffects`). The `datagrid()` function and the
+#' `newdata` argument can be used to calculate contrasts Contrasts at the Mean
+#' or Contrasts at User-Specified values (aka Contrasts at Representative
+#' values). Additional information can be found in the Details and Examples
+#' sections below, and in the vignette on the `marginaleffects` website.
 #'
 #' A "contrast" is the difference between two adjusted predictions, calculated
 #' for meaningfully different regressor values (e.g., College graduates vs.
@@ -126,7 +126,8 @@ comparisons <- function(model,
         checkmate::assert_choice(contrast_factor, choices = c("reference", "sequential", "pairwise", "all"))
         checkmate::assert(
             checkmate::check_numeric(contrast_numeric, min.len = 1, max.len = 2),
-            checkmate::check_choice(contrast_numeric, choices = c("iqr", "minmax", "sd", "2sd", "dydx")))
+            checkmate::check_choice(contrast_numeric,
+                                    choices = c("iqr", "minmax", "sd", "2sd", "dydx")))
     }
 
     # variance-covariance matrix

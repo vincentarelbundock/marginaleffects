@@ -94,12 +94,12 @@ arguments.}
 \description{
 This function calculates contrasts (or comparisons) between adjusted
 predictions for each row of the dataset. The resulting object can processed
-by the \code{tidy()} or \code{summary()} functions, which compute Average Contrasts.
-The \code{datagrid()} function and the \code{newdata} argument can be used to
-calculate contrasts Contrasts at the Mean or Contrasts at User-Specified
-values (aka Contrasts at Representative values). Additional information can
-be found in the Details and Examples sections below, and in the vignette on
-the \code{marginaleffects} website.
+by the \code{tidy()} or \code{summary()} functions, which compute Average Contrasts
+(see \code{?summary.marginaleffects}). The \code{datagrid()} function and the
+\code{newdata} argument can be used to calculate contrasts Contrasts at the Mean
+or Contrasts at User-Specified values (aka Contrasts at Representative
+values). Additional information can be found in the Details and Examples
+sections below, and in the vignette on the \code{marginaleffects} website.
 }
 \details{
 A "contrast" is the difference between two adjusted predictions, calculated
