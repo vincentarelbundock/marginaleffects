@@ -22,7 +22,7 @@ test_that("smart detect factor() in formula", {
     requiet("estimatr")
     model <- lm_robust(carb ~ wt + factor(cyl), se_type = "stata", data = mtcars)
     k <- marginaleffects(model)
-    expect_true(all(c("", "8 - 4") %in% k$contrast))
+    expect_true(all(c("dY/dX", "8 - 4") %in% k$contrast))
 })
 
 test_that("factor in formula with incomplete newdata", {

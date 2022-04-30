@@ -23,7 +23,9 @@ plot.marginaleffects <- function(x,
 
     # combine term and contrast to avoid overlap
     if (all(c("term", "contrast") %in% colnames(dat))) {
-        dat$term <- sprintf("%s: %s", dat$term, dat$contrast)
+        dat$term <- ifelse(dat$contrast == "dY/dX",
+                           dat$term,
+                           sprintf("%s: %s", dat$term, dat$contrast))
     }
 
     if ("conf.low" %in% colnames(dat)) {
