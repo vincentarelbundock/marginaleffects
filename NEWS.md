@@ -12,6 +12,7 @@ New supported packages and models:
 
 New features:
 
+* `interaction` argument in `comparisons()` to compute interactions between contrasts (cross-contrasts).
 * `by` argument in `tidy()` and `summary()` computes group-average marginal effects and comparisons.
 * `FUN` argument in `tidy()` and `summary()` to compute mean, median, or arbitrary summaries of unit-level marginal effects.
 * Robust standard errors with the `vcov` argument
@@ -20,6 +21,7 @@ New features:
   - One-sided formula to clusters: `vcov = ~cluster_variable`
   - Variance-covariance matrix
   - Function which returns a named squared matrix
+* `eps` argument for step size of numerical derivative
 * `marginaleffects` and `comparisons` now report confidence intervals by default.
 * New dependency on the `data.table` package yields substantial performance improvements.
 * Bug fixes and performance improvements
