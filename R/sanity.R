@@ -115,8 +115,9 @@ sanitize_variables <- function(model, newdata, variables) {
     # check missing variables
     miss <- setdiff(variables, colnames(newdata))
     if (length(miss) > 0) {
-        stop(sprintf("Variables missing from `newdata` and/or the data extracted from the model objects: %s", 
-                     paste(miss, collapse = ", ")))
+        stop(sprintf("Variables missing from `newdata` and/or the data extracted from the model objects: %s",
+                     paste(miss, collapse = ", ")),
+             call. = FALSE)
     }
 
     return(variables_list)
