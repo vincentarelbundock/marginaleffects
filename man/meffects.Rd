@@ -11,6 +11,7 @@ meffects(
   vcov = TRUE,
   conf.level = 0.95,
   type = "response",
+  eps = 1e-04,
   ...
 )
 }
@@ -55,6 +56,11 @@ to 0.95, which corresponds to a 95 percent confidence interval.}
 differ based on the model type, but will typically be a string such as:
 "response", "link", "probs", or "zero".}
 
+\item{eps}{A numeric value specifying the “step” to use when calculating
+numerical derivatives. See the Details section below. Note
+that the marginal effects computed for certain models can be especially
+sensitive to the choice of step value (e.g., Bayesian mixed effects).}
+
 \item{...}{Additional arguments are passed to the \code{predict()} method used to
 compute adjusted predictions. These arguments are particularly useful for
 mixed-effects or bayesian models (see the online vignettes on the
@@ -97,6 +103,17 @@ A detailed vignette on marginal effects and a list of supported models can
 be found on the package website:
 
 https://vincentarelbundock.github.io/marginaleffects/
+
+Numerical derivatives for the \code{marginaleffects} function are calculated using a simple epsilon difference approach: \eqn{\partial Y / \partial X = (f(X + \varpesilon) - f(X)) / \varepsilon}{dY/dX = (f(X + e) - f(X)) / e}, where f is the \code{predict()} method associated with the model class, and \eqn{\varepsilon}{e} is determined by the \code{eps} argument.
+
+Warning: Some models are particularly sensitive to \code{eps}, so it is good
+practice to try different values of this argument.
+
+Standard errors for the marginal effects are obtained using the Delta
+method. First, we construct a Jacobian J with number of rows equal to the
+number of observations in \code{newdata} and number of columns equal to the
+number of coefficients. Then, we take the square root of the diagonal from JVJ',
+where V is the model's variance-covariance matrix.
 }
 \section{Model-Specific Arguments}{
 

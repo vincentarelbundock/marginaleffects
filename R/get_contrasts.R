@@ -5,6 +5,7 @@ get_contrasts <- function(model,
                           contrast_factor = "reference",
                           contrast_numeric = 1,
                           cache = NULL,
+                          eps = 1e-4,
                           ...) {
 
     # cache is efficient for the delta method Jacobian when we need to manipulate
@@ -15,6 +16,7 @@ get_contrasts <- function(model,
                 variables = variables,
                 contrast_factor = contrast_factor,
                 contrast_numeric = contrast_numeric,
+                eps = eps,
                 ...)
     }
     original <- cache[["original"]]
@@ -89,7 +91,6 @@ get_contrasts <- function(model,
 
     # normalize slope
     # not available for cross-contrasts
-    eps <- getOption("marginaleffects_deriv_eps", default = 0.0001)
     if ("contrast" %in% colnames(out)) {
         idx <- out$contrast == "dydx"
         out[idx == TRUE, "comparison" := comparison / eps]

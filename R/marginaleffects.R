@@ -21,6 +21,17 @@
 #'
 #' https://vincentarelbundock.github.io/marginaleffects/
 #'
+#' Numerical derivatives for the `marginaleffects` function are calculated using a simple epsilon difference approach: \eqn{\partial Y / \partial X = (f(X + \varpesilon) - f(X)) / \varepsilon}{dY/dX = (f(X + e) - f(X)) / e}, where f is the `predict()` method associated with the model class, and \eqn{\varepsilon}{e} is determined by the `eps` argument.
+#'
+#' Warning: Some models are particularly sensitive to `eps`, so it is good
+#' practice to try different values of this argument.
+#'
+#' Standard errors for the marginal effects are obtained using the Delta
+#' method. First, we construct a Jacobian J with number of rows equal to the
+#' number of observations in `newdata` and number of columns equal to the
+#' number of coefficients. Then, we take the square root of the diagonal from JVJ',
+#' where V is the model's variance-covariance matrix.
+#'
 #' @param model Model object
 #' @param variables Variables to consider (character vector). `NULL`
 #'   considers all the terms in the model object. Computing quantities for a
@@ -51,6 +62,10 @@
 #' @param type Type(s) of prediction as string or character vector. This can
 #'   differ based on the model type, but will typically be a string such as:
 #'   "response", "link", "probs", or "zero".
+#' @param eps A numeric value specifying the “step” to use when calculating
+#' numerical derivatives. See the Details section below. Note
+#' that the marginal effects computed for certain models can be especially
+#' sensitive to the choice of step value (e.g., Bayesian mixed effects).
 #' @param ... Additional arguments are passed to the `predict()` method used to
 #'   compute adjusted predictions. These arguments are particularly useful for
 #'   mixed-effects or bayesian models (see the online vignettes on the
@@ -117,6 +132,7 @@ marginaleffects <- function(model,
                             vcov = TRUE,
                             conf.level = 0.95,
                             type = "response",
+                            eps = 1e-4,
                             ...) {
 
 
@@ -174,6 +190,7 @@ marginaleffects <- function(model,
         contrast_factor = "reference",
         # secret arguments
         internal_call = TRUE,
+        eps = eps,
         ...)
 
     setDT(out)

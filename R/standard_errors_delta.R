@@ -17,6 +17,7 @@ standard_errors_delta_contrasts <- function(model,
                                             type,
                                             contrast_factor,
                                             contrast_numeric,
+                                            eps,
                                             ...) {
     get_contrasts(model,
                   newdata = newdata,
@@ -24,6 +25,7 @@ standard_errors_delta_contrasts <- function(model,
                   type = type,
                   contrast_factor = contrast_factor,
                   contrast_numeric = contrast_numeric,
+                  eps = eps,
                   ...)$comparison
 }
 
@@ -43,6 +45,7 @@ standard_errors_delta <- function(model,
                                   newdata,
                                   FUN,
                                   index = NULL,
+                                  eps,
                                   ...) {
 
     # delta method does not work for these models
@@ -63,11 +66,11 @@ standard_errors_delta <- function(model,
     # output: gradient
     inner <- function(x) {
         model_tmp <- set_coef(model, stats::setNames(x, names(coefs)))
-        g <- FUN(model = model_tmp, newdata = newdata, type = type, ...)
+        g <- FUN(model = model_tmp, newdata = newdata, type = type, eps = eps, ...)
         return(g)
     }
 
-    J <- get_jacobian(func = inner, x = coefs)
+    J <- get_jacobian(func = inner, x = coefs, eps = eps)
 
     colnames(J) <- names(get_coef(model))
 
