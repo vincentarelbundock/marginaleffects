@@ -82,21 +82,12 @@ comparisons <- function(model,
                         contrast_factor = "reference",
                         contrast_numeric = 1,
                         interaction = FALSE,
+                        eps = 1e-4,
                         ...) {
 
     dots <- list(...)
 
     internal_call <- dots[["internal_call"]]
-
-    if (isTRUE(is.numeric(dots[["eps"]]))) {
-        eps <- dots[["eps"]]
-        dots[["eps"]] <- NULL # otherwise argument is duplicated
-    } else if (isTRUE(contrast_numeric == "dydx")) {
-        eps <- 1e-4
-    } else {
-        eps <- 1
-    }
-
 
     if (!isTRUE(internal_call)) {
         # if `newdata` is a call to `datagrid`, `typical`, or `counterfactual`, insert `model`

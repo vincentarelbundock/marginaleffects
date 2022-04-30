@@ -190,7 +190,7 @@ predictions <- function(model,
                                         vcov = V,
                                         type = type,
                                         FUN = fun,
-                                        eps = 1e-4,
+                                        eps = 1e-4, # avoid pushing through ...
                                         ...)
             if (is.numeric(se) && length(se) == nrow(tmp)) {
                 tmp[["std.error"]] <- se

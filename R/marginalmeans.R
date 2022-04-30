@@ -138,8 +138,7 @@ marginalmeans <- function(model,
                                     FUN = standard_errors_delta_marginalmeans,
                                     index = NULL,
                                     variables = variables,
-                                    newdata = newgrid,
-                                    eps = 1e-4)
+                                    newdata = newgrid)
 
         # get rid of attributes in column
         out[["std.error"]] <- as.numeric(se)
