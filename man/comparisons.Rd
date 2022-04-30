@@ -14,6 +14,7 @@ comparisons(
   contrast_factor = "reference",
   contrast_numeric = 1,
   interaction = FALSE,
+  eps = 1e-04,
   ...
 )
 }
@@ -81,6 +82,11 @@ to 0.95, which corresponds to a 95 percent confidence interval.}
 \item FALSE: Contrasts represent the change in adjusted predictions when one predictor changes and all other variables are held constant.
 \item TRUE: Contrasts represent the changes in adjusted predictions when several predictors are manipulated simultaneously. When \code{interaction=TRUE}, the \code{newdata} argument must either be \code{NULL} or be a 1-row data frame, otherwise contrast interactions could be too costly to compute.
 }}
+
+\item{eps}{A numeric value specifying the “step” to use when calculating
+numerical derivatives. See the Details section below. Note
+that the marginal effects computed for certain models can be especially
+sensitive to the choice of step value (e.g., Bayesian mixed effects).}
 
 \item{...}{Additional arguments are passed to the \code{predict()} method used to
 compute adjusted predictions. These arguments are particularly useful for

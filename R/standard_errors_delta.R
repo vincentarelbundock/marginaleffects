@@ -2,6 +2,7 @@ standard_errors_delta_marginalmeans <- function(model,
                                                 variables,
                                                 newdata,
                                                 type,
+                                                eps = 1e-4, # avoid pushing through ...
                                                 ...) {
     get_marginalmeans(model = model,
                       variables = variables,
@@ -45,7 +46,7 @@ standard_errors_delta <- function(model,
                                   newdata,
                                   FUN,
                                   index = NULL,
-                                  eps,
+                                  eps = 1e-4,
                                   ...) {
 
     # delta method does not work for these models
