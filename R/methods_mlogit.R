@@ -31,7 +31,7 @@ get_predict.mlogit <- function(model,
                                newdata,
                                ...) {
 
-    out <- stats::predict(x, newdata = newdata)
+    out <- stats::predict(model, newdata = newdata)
     out <- as.vector(out)
 
     group_idx <- model[["model"]][["idx"]][[2]]
