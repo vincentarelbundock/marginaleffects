@@ -83,7 +83,7 @@ multinom,probs,expectation,TRUE,TRUE
 mhurdle,E,NA,TRUE,TRUE
 mhurdle,Ep,NA,TRUE,TRUE
 mhurdle,p,NA,TRUE,TRUE
-mlogit,response,response,TRUE,TRUE
+mlogit,response,NA,TRUE,TRUE
 negbin,link,link,TRUE,TRUE
 negbin,response,expectation,TRUE,TRUE
 polr,probs,expectation,TRUE,TRUE
