@@ -138,6 +138,7 @@ Collate:
     'methods_mclogit.R'
     'methods_mgcv.R'
     'methods_mhurdle.R'
+    'methods_mlogit.R'
     'methods_ordinal.R'
     'methods_plm.R'
     'methods_pscl.R'

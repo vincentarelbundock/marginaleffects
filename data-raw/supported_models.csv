@@ -37,6 +37,7 @@ mclogit,mblogit,TRUE,TRUE,,,U,U,U,U
 mclogit,mclogit,TRUE,TRUE,,,U,U,U,U 
 mgcv,gam,TRUE,TRUE,,,U,U,TRUE,TRUE
 mhurdle,mhurdle,TRUE,TRUE,,,TRUE,TRUE,U,U
+mlogit,mlogit,TRUE,TRUE,,,U,U,U,U
 nlme,gls,TRUE,TRUE,,,U,U,TRUE,TRUE
 nnet,multinom,TRUE,TRUE,TRUE,FALSE,U,U,U,U
 ordinal,clm,TRUE,TRUE,TRUE,TRUE,U,U,U,U
