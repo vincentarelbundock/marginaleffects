@@ -26,3 +26,23 @@ test_that("no validity", {
     expect_error(marginaleffects(mod, newdata = TravelMode), regexp = "newdata.*supported")
     expect_true("group" %in% colnames(tid))
 })
+
+
+test_that("vs. nnet::multinom", {
+    requiet("nnet")
+    requiet("data.table")
+    data("Fishing", package = "mlogit")
+    Fish <- dfidx(Fishing, varying = 2:9, shape = "wide", choice = "mode")
+    m1 <- mlogit(mode ~ 0 | income, data = Fish)
+    m2 <- nnet::multinom(mode ~ income, data = Fishing, trace = FALSE)
+    mfx1 <- marginaleffects(m1)
+    mfx2 <- marginaleffects(m2, type = "probs")
+    setDT(mfx1)
+    setDT(mfx2)
+    setkey(mfx1, rowid, group)
+    setkey(mfx2, rowid, group)
+    expect_equal(mfx1$dydx, mfx2$dydx, tolerance = 1e-5)
+    expect_equal(mfx1$dydx, mfx2$dydx, tolerance = 1e-5)
+})
+
+
