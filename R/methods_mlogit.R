@@ -27,16 +27,19 @@
 
 #' @rdname get_predict
 #' @export
-get_predict.mlogit <- function(x, newdata, ...) {
+get_predict.mlogit <- function(model,
+                               newdata,
+                               ...) {
+
     out <- stats::predict(x, newdata = newdata)
     out <- as.vector(out)
 
-    group_idx <- x[["model"]][["idx"]][[2]]
+    group_idx <- model[["model"]][["idx"]][[2]]
 
     if (nrow(newdata) %% length(group_idx) != 0) {
         stop("mlogit: Unable to extract a choice index that matches the size of the prediction vector.", call. = FALSE)
-    }
 
+    }
     n_terms <- length(out) / table(group_idx)[1]
 
     out <- data.frame(rowid = newdata[["rowid"]],

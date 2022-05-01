@@ -158,7 +158,7 @@ get_predict(model, newdata, vcov, conf.level, type, ...)
   ...
 )
 
-\method{get_predict}{mlogit}(x, newdata, ...)
+\method{get_predict}{mlogit}(model, newdata, ...)
 
 \method{get_predict}{clm}(
   model,
