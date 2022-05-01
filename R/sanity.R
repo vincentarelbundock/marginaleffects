@@ -31,6 +31,14 @@ sanity_newdata <- function(model, newdata) {
     # required for the type of column indexing to follow
     data.table::setDF(newdata)
 
+    # mlogit: each row is an individual-choice, but the index is not easily
+    # trackable, so we pre-sort it here, and the sort in `get_predict()`. We
+    # need to cross our fingers, but this probably works.
+    if (inherits(model, "mlogit") && isTRUE(inherits(newdata[["idx"]], "idx"))) {
+        idx <- list(newdata[["idx"]][, 1], newdata[["idx"]][, 2])
+        newdata <- newdata[order(newdata[["idx"]][, 1], newdata[["idx"]][, 2]),]
+    }
+
     # rbindlist breaks on matrix columns
     idx <- sapply(newdata, function(x) class(x)[1] != "matrix")
     newdata <- newdata[, idx, drop = FALSE]
