@@ -1,3 +1,7 @@
+skip("alignement is broken")
+# Not supported because group and rowid are not properly aligned in the output
+
+
 # why `newdata` is not supported
 
 # here the `newdata` does not include the individual or choice variabls at all,
