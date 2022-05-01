@@ -1,7 +1,3 @@
-skip("alignement is broken")
-# Not supported because group and rowid are not properly aligned in the output
-
-
 # why `newdata` is not supported
 
 # here the `newdata` does not include the individual or choice variabls at all,
@@ -30,5 +26,3 @@ test_that("no validity", {
     expect_error(marginaleffects(mod, newdata = TravelMode), regexp = "newdata.*supported")
     expect_true("group" %in% colnames(tid))
 })
-
-

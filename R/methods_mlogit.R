@@ -37,6 +37,7 @@ get_predict.mlogit <- function(model,
                 id.vars = "rowid",
                 variable.name = "group",
                 value.name = "predicted")
+    setkey(out, rowid, group)
     if ("term" %in% colnames(newdata)) {
         out[, "term" := newdata[["term"]]]
     }
