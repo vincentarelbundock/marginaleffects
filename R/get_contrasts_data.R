@@ -77,7 +77,6 @@ get_contrast_data <- function(model,
             # mlogit uses a `newdata` with one row per unit-choice and returns
             # an `idx` column with the choice label in second position
             if (inherits(model, "mlogit") && inherits(x[[col]], "idx")) {
-                x[["group"]] <- x$idx[[2]]
                 x[[col]] <- NULL
             }
         }

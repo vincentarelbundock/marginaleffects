@@ -121,7 +121,7 @@ comparisons <- function(model,
 
     # `marginaleffects()` must run its own sanity checks before any transforms
     if (!isTRUE(internal_call)) {
-        model <- sanity_model(model = model, calling_function = "comparisons", ...)
+        model <- sanity_model(model = model, newdata = newdata, calling_function = "comparisons", ...)
         sanity_type(model = model, type = type)
         checkmate::assert_numeric(conf.level, len = 1)
         checkmate::assert_true(conf.level > 0)
