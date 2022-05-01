@@ -19,7 +19,7 @@ get_predict.rlmerMod <- function(model,
     # some predict methods raise warnings on unused arguments
     unused <- c("type", "normalize_dydx", "step_size", "numDeriv_method",
                 "conf.level", "internal_call", "contrast_numeric_slope",
-                "conf.level", "return_format", "vcov")
+                "conf.level", "return_format", "vcov", "eps")
     args <- args[setdiff(names(args), unused)]
     args[["object"]] <- model
     args[["newdata"]] <- newdata
