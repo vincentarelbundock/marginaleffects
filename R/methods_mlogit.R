@@ -30,13 +30,11 @@
 get_predict.mlogit <- function(model,
                                newdata,
                                ...) {
-    out <- stats::predict(model, newdata = newdata)
-    out <- data.table(out)
-    out[, "rowid" := seq_len(.N)]
-    out <- melt(out,
-                id.vars = "rowid",
-                variable.name = "group",
-                value.name = "predicted")
+
+    mat <- stats::predict(model, newdata = newdata)
+    out <- data.table(rowid = rep(seq_len(nrow(mat)), rep = ncol(mat)),
+                      group = rep(colnames(mat), each = nrow(mat)),
+                      predicted = as.vector(mat))
     setkey(out, rowid, group)
     if ("term" %in% colnames(newdata)) {
         out[, "term" := newdata[["term"]]]
