@@ -30,6 +30,7 @@ test_that("two conditions", {
 
 
 test_that("vcov", {
+    skip_if_not_installed("insight", minimum_version = "0.17.0.6")
     mod <- lm(mpg ~ hp * wt, data = mtcars)
     mfx1 <- plot_cme(mod, effect = "hp", condition = "wt", draw = FALSE)
     mfx2 <- plot_cme(mod, effect = "hp", condition = "wt", vcov = "HC3", draw = FALSE)

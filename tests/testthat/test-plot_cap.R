@@ -45,6 +45,7 @@ test_that("Issue #230: glm w/ weights includes confidence intervals", {
 
 
 test_that("vcov", {
+    skip_if_not_installed("insight", minimum_version = "0.17.0.6")
     mod <- lm(mpg ~ hp * wt, data = mtcars)
     mfx1 <- plot_cap(mod, condition = "wt", draw = FALSE)
     mfx2 <- plot_cap(mod, condition = "wt", vcov = "HC3", draw = FALSE)
