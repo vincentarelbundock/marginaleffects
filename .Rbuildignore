@@ -22,4 +22,5 @@
 ^vignettes/modelsummary.Rmd
 ^vignettes/performance.Rmd
 ^vignettes/sandwich.Rmd
+^vignettes/technical_notes.Rmd
 man-roxygen
