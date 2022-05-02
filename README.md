@@ -29,7 +29,7 @@ predictions, marginal effects, contrasts, and marginal means for a
       - [Contrasts](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_contrasts.html)
       - [Marginal
         means](https://vincentarelbundock.github.io/marginaleffects/articles/mfx04_marginalmeans.html)
-  - [60 supported
+  - [61 supported
     models](https://vincentarelbundock.github.io/marginaleffects/articles/mfx06_supported_models.html)
   - [Performance
     tips](https://vincentarelbundock.github.io/marginaleffects/articles/performance.html)
@@ -50,7 +50,7 @@ predictions, marginal effects, contrasts, and marginal means for a
 ## What?
 
 The `marginaleffects` package allows `R` users to compute and plot four
-principal quantities of interest for [60 different types of
+principal quantities of interest for [61 different types of
 models:](https://vincentarelbundock.github.io/marginaleffects/articles/mfx06_supported_models.html)
 
   - [*Adjusted
