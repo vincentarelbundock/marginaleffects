@@ -18,7 +18,7 @@ test_that("marginaleffects: vs. margins vs. emmeans", {
     # emtrends
     mfx <- marginaleffects(mod, newdata = datagrid(batch = 1), variables = "temp")
     em <- suppressWarnings(
-        emtrends(mod, ~temp, "temp", at = list("batch" = GasolineYield$batch[1])))
+        emtrends(mod, ~temp, "temp", at = list("batch" = tmp$batch[1])))
     em <- tidy(em)
     expect_equal(mfx$dydx, em$temp.trend, tolerance = .001)
     expect_equal(mfx$std.error, em$std.error, tolerance = .001)
@@ -26,8 +26,8 @@ test_that("marginaleffects: vs. margins vs. emmeans", {
 
 test_that("marginaleffects: vs. Stata", {
     # stata does not include contrasts
-    stata <- readRDS(test_path("stata/stata.rds"))[["betareg_betareg_01"]]
-    dat <- read.csv(test_path("stata/databases/betareg_betareg_01.csv"))
+    stata <<- readRDS(test_path("stata/stata.rds"))[["betareg_betareg_01"]]
+    dat <<- read.csv(test_path("stata/databases/betareg_betareg_01.csv"))
     dat$batch <- factor(dat$batch)
     dat <<- dat
     mod <- betareg::betareg(yield ~ batch + temp, data = dat)
@@ -50,7 +50,8 @@ test_that("marginalmeans: vs. emmeans", {
     # TODO: Bad tolerance
     set.seed(1024)
     data("GasolineYield", package = "betareg")
-    mod <- betareg::betareg(yield ~ batch + temp, data = GasolineYield)
+    dat <<- GasolineYield
+    mod <- betareg::betareg(yield ~ batch + temp, data = dat)
 
     mm <- marginalmeans(mod)
     expect_marginalmeans(mm, n_row = 10)
