@@ -275,8 +275,8 @@ comparisons <- function(model,
                                   2 * stats::pnorm(-abs(mfx$statistic)))
         }
         if (!"conf.low" %in% colnames(mfx)) {
-            mfx$conf.low <- mfx$comparison + abs(critical_val) * mfx$std.error
-            mfx$conf.high <- mfx$comparison - abs(critical_val) * mfx$std.error
+            mfx$conf.low <- mfx$comparison - abs(critical_val) * mfx$std.error
+            mfx$conf.high <- mfx$comparison + abs(critical_val) * mfx$std.error
         }
     }
 
