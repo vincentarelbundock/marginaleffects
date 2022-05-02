@@ -1,11 +1,11 @@
 test_that("interaction vs. emmeans", {
     requiet("emmeans")
     mod <- lm(mpg ~ factor(am) + factor(cyl) + wt + gear, data = mtcars)
-    cmp <- comparisons(
+    cmp <- suppressWarnings(comparisons(
         mod,
         variables = c("cyl", "am"),
         contrast_factor = "all",
-        interaction = TRUE)
+        interaction = TRUE))
     em <- emmeans(mod, c("cyl", "am"))
     em <- contrast(em, method = "revpairwise")
     em <- data.frame(em)
