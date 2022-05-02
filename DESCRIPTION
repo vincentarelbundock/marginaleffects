@@ -46,6 +46,7 @@ Suggests:
     magrittr,
     margins,
     modelsummary,
+    mlogit,
     systemfonts,
     patchwork,
     quantreg,
