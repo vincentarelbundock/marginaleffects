@@ -1,3 +1,4 @@
+skip_on_ci() # comparisons fail on github but work interactively
 requiet("betareg")
 requiet("margins")
 requiet("emmeans")
