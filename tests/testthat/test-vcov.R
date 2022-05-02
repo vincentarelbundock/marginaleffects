@@ -1,4 +1,5 @@
 requiet("sandwich")
+skip_if_not_installed("insight", minimum_version = "0.17.0.6")
 
 test_that("working but no validity check", {
     mod <- lm(mpg ~ hp + drat, mtcars)

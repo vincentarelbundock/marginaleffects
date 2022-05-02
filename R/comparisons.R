@@ -133,14 +133,8 @@ comparisons <- function(model,
                                     choices = c("iqr", "minmax", "sd", "2sd", "dydx")))
     }
 
-    # variance-covariance matrix
-    # if (isTRUE(vcov %in% c("satterthwaite", "kenward-roger"))) {
-    #     stop('The "satterthwaite" and "kenward-roger" adjustements are only available via the `vcov` argument in the `predictions()` function.',
-    #          call. = FALSE)
-    # }
-
     # get dof before transforming the vcov arg
-    if (isTRUE(vcov == "satterthwaite") || isTRUE(vcov == "kenward-roger")) {
+    if (is.character(vcov) && (isTRUE(vcov == "satterthwaite") || isTRUE(vcov == "kenward-roger"))) {
         mi <- insight::model_info(model)
         V <- get_vcov(model, vcov = vcov)
         df <- insight::find_response(model)
