@@ -36,7 +36,7 @@ test_that("vs. nnet::multinom", {
     m1 <- mlogit(mode ~ 0 | income, data = Fish)
     m2 <- nnet::multinom(mode ~ income, data = Fishing, trace = FALSE)
     mfx1 <- marginaleffects(m1)
-    mfx2 <- marginaleffects(m2, type = "probs")
+    mfx2 <- suppressWarnings(marginaleffects(m2, type = "probs"))
     setDT(mfx1)
     setDT(mfx2)
     setkey(mfx1, rowid, group)
