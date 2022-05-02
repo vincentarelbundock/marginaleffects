@@ -1,4 +1,5 @@
 requiet("fixest")
+fixest::setFixest_nthreads(1)
 
 test_that("bugs stay dead: logit with transformations", {
     dat <- mtcars

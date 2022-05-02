@@ -41,10 +41,3 @@ test_that("mblogit: works on factor regressors", {
     expect_s3_class(mfx, "marginaleffects")
 })
 
-test_that("mblogit: marginaleffects vs. emmeans", {
-    skip("emmeans does not support `mblogit`")
-    mm <- marginalmeans(mod, variables = c("Infl"))
-    em <- emmeans(mod, ~Infl)
-    em <- tidy(emmeans::emtrends(mod, ~x, "x"))
-    mfx <- marginaleffects(mod)
-})
