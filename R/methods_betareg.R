@@ -16,5 +16,12 @@ get_coef.betareg <- function(model, ...) {
 }
 
 
-
-
+#' @include get_predict.R
+#' @rdname get_predict
+#' @export
+get_predict.betareg <- function(model, newdata, ...) {
+    out <- stats::predict(model, newdata = newdata)
+    out <- data.frame(rowid = seq_len(nrow(newdata)),
+                      predicted = out)
+    return(out)
+}
