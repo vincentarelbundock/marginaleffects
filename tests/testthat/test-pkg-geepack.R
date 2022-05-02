@@ -1,3 +1,4 @@
+skip_on_ci() # works interactively
 requiet("geepack")
 requiet("emmeans")
 requiet("broom")
