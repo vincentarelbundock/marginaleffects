@@ -185,30 +185,6 @@ test_that("predictions: prediction vs. expectation vs. include_random", {
 })
 
 
-test_that("marginaleffects vs. emmeans: multiple types are correctly aligned", {
-    skip("type vector")
-    requiet("ggplot2")
-    mfx <- marginaleffects(brms_interaction, variables = "mpg", type = c("response", "link"),
-                           newdata = datagrid(vs = 0:1, mpg = 20))
-    em_r <- emtrends(brms_interaction, ~vs, var = "mpg", at = list(vs = c(0, 1), mpg = 20), epred = TRUE)
-    em_l <- emtrends(brms_interaction, ~vs, var = "mpg", at = list(vs = c(0, 1), mpg = 20))
-    em_r <- data.frame(em_r)
-    em_l <- data.frame(em_l)
-    expect_equal(mfx[mfx$type == "link", "dydx"], em_l$mpg.trend)
-    expect_equal(mfx[mfx$type == "link", "conf.low"], em_l$lower.HPD)
-    expect_equal(mfx[mfx$type == "link", "conf.high"], em_l$upper.HPD)
-    expect_equal(mfx[mfx$type == "response", "dydx"], em_r$mpg.trend, tolerance = .01)
-    expect_equal(mfx[mfx$type == "response", "conf.low"], em_r$lower.HPD, tolerance = .01)
-    expect_equal(mfx[mfx$type == "response", "conf.high"], em_r$upper.HPD, tolerance = .01)
-    # easier to see correct alignment of draws in a density plot
-    tmp <- posteriordraws(mfx)
-    p <- ggplot(tmp, aes(x = draw, fill = factor(vs))) +
-         geom_density(alpha = .4) +
-         facet_grid(~type, scales = "free")
-    vdiffr::expect_doppelganger("posterior_draws alignment with multi-type mfx", p)
-})
-
-
 test_that("predictions vs. emmeans", {
     requiet("emmeans")
     em <- emmeans::emmeans(brms_numeric, ~hp, "hp", at = list(hp = c(100, 120)))
