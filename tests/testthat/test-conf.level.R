@@ -15,3 +15,14 @@ test_that("conf.level argument changes conf.int size", {
     expect_true(all(pre95$conf.low > pre99$conf.low))
     expect_true(all(pre95$conf.high < pre99$conf.high))
 })
+
+
+test_that("conf.low manual", {
+    mod <- lm(mpg ~ hp, data = mtcars)
+    cmp <- comparisons(mod)
+    critical_z <- qnorm(.025)
+    lb <- cmp$comparison - abs(critical_z) * cmp$std.error
+    ub <- cmp$comparison + abs(critical_z) * cmp$std.error
+    expect_equal(cmp$conf.low, lb)
+    expect_equal(cmp$conf.high, ub)
+})
