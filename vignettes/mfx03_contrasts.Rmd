@@ -114,7 +114,7 @@ comparisons(mod, contrast_numeric = "minmax") %>% tidy()
 
 # Interactions between contrasts
 
-In some contexts we would like to know what happens when two predictors change at the same time. In the `marginaleffects` package terminology, this is an "interaction between contrasts."
+In some contexts we would like to know what happens when two (or more) predictors change at the same time. In the `marginaleffects` package terminology, this is an "interaction between contrasts."
 
 For example, consider a model with two factor variables: 
 
