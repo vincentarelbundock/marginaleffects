@@ -88,11 +88,3 @@ test_that("tidy: with and without contrasts", {
     expect_equal(dim(x), c(4, 9))
 })
 
-
-test_that("bugs stay dead: multi-type are not duplicated", {
-    skip("type vector")
-    mod <- glm(am ~ mpg, family = binomial, data = mtcars)
-    mfx <- marginaleffects(mod, type = c("response", "link"))
-    ti <- tidy(mfx)
-    expect_equal(nrow(ti), 2)
-})

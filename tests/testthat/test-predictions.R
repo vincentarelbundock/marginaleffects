@@ -12,14 +12,6 @@ test_that("insight > 0.14.1 allows us to support `type`", {
 })
 
 
-test_that("default predicts for all observations", {
-    skip("type vector")
-    logit <- glm(am ~ hp + wt, data = mtcars, family = binomial)
-    pred <- predictions(logit)
-    expect_equal(nrow(pred), nrow(mtcars))
-    pred <- predictions(logit, type = c("link", "response"))
-    expect_equal(nrow(pred), 2 * nrow(mtcars))
-})
 
 test_that("bugfix: counterfactual predictions keep rowid", {
   mod <- lm(mpg ~ hp + am, mtcars)
