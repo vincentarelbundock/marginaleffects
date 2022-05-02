@@ -63,6 +63,7 @@ Suggests:
     brglm2,
     brmsmargins,
     crch,
+    dfidx,
     estimatr,
     fixest (>= 0.10.1),
     gam,
