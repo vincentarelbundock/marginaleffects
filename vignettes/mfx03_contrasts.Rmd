@@ -112,27 +112,18 @@ comparisons(mod, contrast_numeric = "2sd") %>% tidy()
 comparisons(mod, contrast_numeric = "minmax") %>% tidy()
 ```
 
-# Contrasts with interactions
+# Interactions between contrasts
 
-In models with multiplicative interactions, the contrasts of a categorical variable will depend on the values of the interacted variable:
+In some contexts we would like to know what happens when two predictors change at the same time. In the `marginaleffects` package terminology, this is an "interaction between contrasts."
 
-```{r}
-mod_int <- lm(mpg ~ am * factor(cyl), tmp)
-```
-
-We can now use the `newdata` argument of the `marginaleffects` function to compute contrasts for different values of the other regressors. As in [the marginal effects vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx.html), the `datagrid` function can be handy. Since we only care about the logical `am` contrast, we use the `variables` to indicate the subset of results to report:
+For example, consider a model with two factor variables: 
 
 ```{r}
-comparisons(mod_int, newdata = datagrid(cyl = tmp$cyl), variables = "am")
+mod <- lm(mpg ~ am * factor(cyl), data = mtcars)
 ```
 
-Once again, we obtain the same results with `emmeans`:
+What happens if `am` increases by 1 unit and `cyl` changes from a baseline reference to another level? 
 
 ```{r}
-emm <- emmeans(mod_int, specs = "am", by = "cyl")
-contrast(emm, method = "revpairwise")
+comparisons(mod, interaction = TRUE)
 ```
-
-# Complex queries
-
-As described above, the `marginaleffects` package includes limited support to compute contrasts. Users who require more powerful features are encouraged to consider alternative packages such as [emmeans](https://cran.r-project.org/package=emmeans), [modelbased](https://github.com/easystats/modelbased), or [ggeffects.](https://strengejacke.github.io/ggeffects/index.html) These packages offer useful features such as automatic back-transforms, p value correction for multiple comparisons, and more.
