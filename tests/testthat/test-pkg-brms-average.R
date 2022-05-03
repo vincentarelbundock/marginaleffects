@@ -47,3 +47,14 @@ comparisons(m1,
             type = "average",
             contrast_numeric = 20,
             newdata = head(mtcars))
+
+
+# we can pass any of the arguments accepted by `pp_average`, including `method`
+set.seed(1024)
+comparisons(m1,
+            m2 = m2,
+            m3 = m3,
+            type = "average",
+            method = "posterior_epred",
+            contrast_numeric = 20,
+            newdata = head(mtcars))
