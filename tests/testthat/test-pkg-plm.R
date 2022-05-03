@@ -1,4 +1,7 @@
-skip_on_ci() # comparisons fail on github but work interactively
+# comparisons fail on github but work interactively
+skip_on_ci() 
+# ripley emergency email about tiny numerical differences
+skip_on_cran() 
 requiet("plm")
 requiet("margins")
 requiet("broom")
