@@ -8,6 +8,7 @@ m1 <- brm(mpg ~ hp, data = mtcars, backend = "cmdstanr")
 m2 <- brm(mpg ~ hp + drat, data = mtcars, backend = "cmdstanr")
 m3 <- brm(mpg ~ hp + drat + mo(cyl), data = mtcars, backend = "cmdstanr")
 
+# pp_average() vs. predictions()
 pp_average(m1,
            m2 = m2,
            m3 = m3,
@@ -19,26 +20,18 @@ predictions(m1,
             type = "average",
             newdata = head(mtcars))
 
-cmp <- comparisons(m1,
-            m2 = m2,
-            m3 = m3,
-            type = "average",
-            newdata = head(mtcars))
-cmp
-
-
-# Manual computation: contrast of 20 about the observed values
+# manual vs. comparisons(): contrast of 20 about the observed values
 set.seed(1024)
 dat_lo <- dat_hi <- head(mtcars)
 dat_hi$hp <- dat_hi$hp + 10
 dat_lo$hp <- dat_lo$hp - 10
-avg1 = pp_average(
+avg1 <- pp_average(
     m1,
     m2 = m2,
     m3 = m3,
     summary = FALSE,
     newdata = dat_lo)
-avg2 = pp_average(
+avg2 <- pp_average(
     m1,
     m2 = m2,
     m3 = m3,
@@ -47,7 +40,6 @@ avg2 = pp_average(
 contr <- avg2 - avg1
 t(apply(contr, 2, quantile, c(.5, .025, .975)))
 
-# Automatic = Manual
 set.seed(1024)
 comparisons(m1,
             m2 = m2,
