@@ -26,6 +26,32 @@ cmp <- comparisons(m1,
             newdata = head(mtcars))
 cmp
 
-# not sure why the intervals are so large
-draws <- attr(cmp, "posterior_draws")
-t(apply(draws, 1, quantile, c(.5, .025, .975)))
+
+# Manual computation: contrast of 20 about the observed values
+set.seed(1024)
+dat_lo <- dat_hi <- head(mtcars)
+dat_hi$hp <- dat_hi$hp + 10
+dat_lo$hp <- dat_lo$hp - 10
+avg1 = pp_average(
+    m1,
+    m2 = m2,
+    m3 = m3,
+    summary = FALSE,
+    newdata = dat_lo)
+avg2 = pp_average(
+    m1,
+    m2 = m2,
+    m3 = m3,
+    summary = FALSE,
+    newdata = dat_hi)
+contr <- avg2 - avg1
+t(apply(contr, 2, quantile, c(.5, .025, .975)))
+
+# Automatic = Manual
+set.seed(1024)
+comparisons(m1,
+            m2 = m2,
+            m3 = m3,
+            type = "average",
+            contrast_numeric = 20,
+            newdata = head(mtcars))
