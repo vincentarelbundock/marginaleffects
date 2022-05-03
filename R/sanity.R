@@ -20,9 +20,9 @@ sanity_newdata <- function(model, newdata) {
                                 any.missing = FALSE)
 
 
-    # if (inherits(model, "mlogit") && !is.null(newdata)) {
-    #     stop("The `newdata` argument is not supported for models of class `mlogit`.", call. = FALSE)
-    # }
+    if (inherits(model, "mlogit") && !is.null(newdata)) {
+        stop("The `newdata` argument is not supported for models of class `mlogit`.", call. = FALSE)
+    }
 
     if (is.null(newdata)) {
         newdata <- suppressWarnings(insight::get_data(model))
