@@ -1,7 +1,7 @@
 test_that("error: supported model classes", {
     model <- mtcars
     class(model) <- "junk"
-    expect_error(marginaleffects(model), regexp = "data from")
+    expect_error(marginaleffects(model), regexp = "not supported")
 })
 
 
