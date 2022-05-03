@@ -194,6 +194,7 @@ plot_cap(mod, condition = c("length", "style"))
 Since the output of `plot_cap()` is a `ggplot2` object, it is very easy to customize. For example, we can add points for the actual observations of our dataset like so:
 
 ```{r}
+#| fig.asp = .7
 library(ggplot2)
 library(ggrepel)
 
@@ -210,7 +211,7 @@ plot_cap(mod, condition = "hp") +
     theme_classic()
 ```
 
-Noticed that we had to use the `inherit.aes = FALSE` argument in `geom_point()`. This is because we want to avoid conflicts between the `mtcars` data set from which we want to draw points, and the other dataset that `plot_cap()` uses internally to draw the original plot.
+Note that we had to use the `inherit.aes = FALSE` argument. This is because we want to avoid conflicts between the `mtcars` data set from which we want to draw points, and the other dataset that `plot_cap()` uses under-the-hood to draw the original plot.
 
 # Prediction types
 
