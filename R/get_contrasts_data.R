@@ -5,6 +5,7 @@ get_contrast_data <- function(model,
                               contrast_numeric = 1,
                               interaction = FALSE,
                               eps = 1e-4,
+                              contrast_types = NULL,
                               ...) {
 
     lo <- hi <- ter <- lab <- original <- rowid <- list()
@@ -30,29 +31,44 @@ get_contrast_data <- function(model,
                 ...)
 
         } else if (variable_class == "factor") {
+            if (isTRUE(v %in% names(contrast_types))) {
+                ctype <- contrast_types[[v]]
+            } else {
+                ctype <- contrast_factor
+            }
             tmp <- get_contrast_data_factor(
                 model,
                 newdata,
                 v,
-                contrast_factor = contrast_factor,
+                contrast_factor = ctype,
                 first_interaction = isTRUE(v == first_interaction),
                 ...)
 
         } else if (variable_class == "character") {
+            if (isTRUE(v %in% names(contrast_types))) {
+                ctype <- contrast_types[[v]]
+            } else {
+                ctype <- contrast_factor
+            }
             tmp <- get_contrast_data_character(
                 model,
                 newdata,
                 v,
-                contrast_factor,
+                ctype,
                 first_interaction = isTRUE(v == first_interaction),
                 ...)
 
         } else if (variable_class == "numeric") {
+            if (isTRUE(v %in% names(contrast_types))) {
+                ctype <- contrast_types[[v]]
+            } else {
+                ctype <- contrast_numeric
+            }
             tmp <- get_contrast_data_numeric(
                 model,
                 newdata,
                 v,
-                contrast_numeric = contrast_numeric,
+                contrast_numeric = ctype,
                 eps = eps,
                 ...)
 

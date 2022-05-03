@@ -77,70 +77,6 @@ sanity_newdata <- function(model, newdata) {
     return(newdata)
 }
 
-sanitize_variables <- function(model, newdata, variables) {
-    checkmate::assert_character(variables, min.len = 1, null.ok = TRUE)
-    checkmate::assert_data_frame(newdata, min.row = 1, null.ok = TRUE)
-
-
-    if (!is.null(model) & is.null(newdata)) {
-        origindata <- insight::get_data(model)
-    } else {
-        origindata <- newdata
-    }
-
-    if (is.null(newdata)) {
-        newdata <- origindata
-    }
-
-    # get variables
-    if (is.null(variables)) {
-        variables_list <- insight::find_variables(model)
-        variables_list[["response"]] <- NULL
-    } else {
-        variables_list <- list("conditional" = variables)
-    }
-    variables <- unique(unlist(variables_list))
-
-    # mhurdle names the variables weirdly
-    if (inherits(model, "mhurdle")) {
-        variables_list <- list("conditional" = insight::find_predictors(model, flatten = TRUE))
-    }
-
-    # weights
-    # HACK: find_weights sometimes mysteriously fails on brms models
-    if (!is.null(model) && !inherits(model, "brmsfit") && !inherits(model, "stanreg")) {
-        w <- tryCatch(insight::find_weights(model), error = function(e) NULL)
-        w <- intersect(w, colnames(newdata))
-        variables <- unique(c(variables, w))
-        variables_list[["weights"]] <- w
-    }
-
-    # check missing character levels
-    # Character variables are treated as factors by model-fitting functions,
-    # but unlike factors, they do not not keep a record of all factor levels.
-    # This poses problem when feeding `newdata` to `predict`, which often
-    # breaks (via `model.matrix`) when the data does not include all possible
-    # factor levels.
-    levels_character <- list()
-    for (v in variables) {
-        if (v %in% colnames(origindata) && is.character(origindata[[v]])) {
-            levels_character[[v]] <- unique(origindata[[v]])
-        }
-    }
-    attr(variables_list, "levels_character") <- levels_character
-
-    # check missing variables
-    miss <- setdiff(variables, colnames(newdata))
-    if (length(miss) > 0) {
-        stop(sprintf("Variables missing from `newdata` and/or the data extracted from the model objects: %s",
-                     paste(miss, collapse = ", ")),
-             call. = FALSE)
-    }
-
-    return(variables_list)
-}
-
-
 sanity_predict_vector <- function(pred, model, newdata, type) {
     if (!isTRUE(checkmate::check_atomic_vector(pred)) &&
         !isTRUE(checkmate::check_array(pred, d = 1))) {
@@ -158,6 +94,29 @@ sanity_predict_numeric <- function(pred, model, newdata, type) {
 '`predict(model, type = "%s")` was called on a model of class `%s`, but this command did not produce the expected outcome: A numeric vector of length %s. This can sometimes happen when users try compute a marginal effect for an outcome type which is unsupported, or which cannot be differentiated. Please consult your modeling package documentation to learn what alternative `type` arguments are accepted by the `predict` method.',
         type, class(model)[1], nrow(newdata))
         stop(msg)
+    }
+}
+
+
+sanity_contrast_numeric <- function(contrast_numeric, assertion = TRUE) {
+    flag <- isTRUE(checkmate::check_numeric(contrast_numeric, min.len = 1, max.len = 2)) ||
+            isTRUE(checkmate::check_choice(contrast_numeric, choices = c("iqr", "minmax", "sd", "2sd", "dydx")))
+    if (isTRUE(assertion) && !isTRUE(flag)) {
+        stop('Contrasts for numeric variables can be a single numeric value, a numeric vector of length 2, or one of the following strings: "iqr", "minmax", "sd", "2sd", "dydx"', call. = FALSE)
+    } else {
+        return(flag)
+    }
+}
+
+
+sanity_contrast_factor <- function(contrast_factor, assertion = TRUE) {
+    flag <- checkmate::check_choice(
+        contrast_factor,
+        choices = c("reference", "sequential", "pairwise", "all"))
+    if (isTRUE(assertion) && !isTRUE(flag)) {
+        stop('Contrasts for factor or character variables can be: "reference", "sequential", "pairwise", or "all".', call. = FALSE)
+    } else {
+        return(flag)
     }
 }
 
