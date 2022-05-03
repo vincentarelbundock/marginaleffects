@@ -6,6 +6,7 @@ Breaking change:
 
 New supported packages and models: 
 
+* `mlogit`
 * `mhurdle`
 * `tobit1`
 * `glmmTMB`
