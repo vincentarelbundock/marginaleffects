@@ -25,7 +25,12 @@ sanity_newdata <- function(model, newdata) {
     }
 
     if (is.null(newdata)) {
-        newdata <- insight::get_data(model)
+        newdata <- suppressWarnings(insight::get_data(model))
+    }
+
+    if (!inherits(newdata, "data.frame")) {
+        msg <- sprintf("Unable to extract the data from model of class `%s`.", class(model)[1])
+        stop(msg, call. = FALSE)
     }
 
     # required for the type of column indexing to follow
