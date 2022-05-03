@@ -34,7 +34,7 @@ test_that("bug be dead: all levels appear", {
 
 test_that("numeric contrasts", {
     mod <- lm(mpg ~ hp, data = mtcars)
-    expect_error(comparisons(mod, contrast_numeric = "bad", variables = "hp"), regexp = "Assertion failed")
+    expect_error(comparisons(mod, contrast_numeric = "bad", variables = "hp"), regexp = "Contrasts for numeric")
     contr1 <- comparisons(mod, contrast_numeric = 1, variables = "hp")
     contr2 <- comparisons(mod, contrast_numeric = "iqr", variables = "hp")
     contr3 <- comparisons(mod, contrast_numeric = "minmax", variables = "hp")

@@ -20,6 +20,13 @@
 #' https://vincentarelbundock.github.io/marginaleffects/
 #'
 #' @inheritParams marginaleffects
+#' @param variables
+#' * `NULL`: compute contrasts for all the variables in the model object (can be slow). 
+#' * Character vector: subset of variables (usually faster).
+#' * Named list: subset of variables with the type of contrasts to use, following the conventions in the `contrast_factor` and `contrast_numeric` arguments. Examples:
+#'   + `variables = list(gear = "pairwise", hp = 10)`
+#'   + `variables = list(gear = "sequential", hp = c(100, 120))`
+#'   + See the Examples section below.
 #' @param contrast_factor string
 #' * "reference": Each factor level is compared to the factor reference (base) level
 #' * "all": All combinations of observed levels
@@ -71,6 +78,13 @@
 #' comparisons(mod, contrast_numeric = "minmax") %>% tidy()
 #'
 #' # Interactions between contrasts
+#' mod <- lm(mpg ~ factor(cyl) + factor(gear) + hp, data = mtcars)
+#' cmp <- comparisons(mod, interaction = TRUE)
+#' summary(cmp)
+#'
+#' # variable-specific contrasts
+#' cmp <- comparisons(mod, variables = list(gear = "sequential", hp = 10))
+#' summary(cmp)
 #' 
 #' @export
 comparisons <- function(model,
@@ -126,11 +140,8 @@ comparisons <- function(model,
         checkmate::assert_numeric(conf.level, len = 1)
         checkmate::assert_true(conf.level > 0)
         checkmate::assert_true(conf.level < 1)
-        checkmate::assert_choice(contrast_factor, choices = c("reference", "sequential", "pairwise", "all"))
-        checkmate::assert(
-            checkmate::check_numeric(contrast_numeric, min.len = 1, max.len = 2),
-            checkmate::check_choice(contrast_numeric,
-                                    choices = c("iqr", "minmax", "sd", "2sd", "dydx")))
+        sanity_contrast_factor(contrast_factor)
+        sanity_contrast_numeric(contrast_numeric)
     }
 
     # get dof before transforming the vcov arg
@@ -152,6 +163,7 @@ comparisons <- function(model,
 
     # variables vector
     variables_list <- sanitize_variables(model = model, newdata = newdata, variables = variables)
+    contrast_types <- attr(variables_list, "contrast_types")
     variables <- unique(unlist(variables_list, recursive = TRUE))
     # this won't be triggered for multivariate outcomes in `brms`, which
     # produces a list of lists where top level names correspond to names of the
@@ -174,6 +186,7 @@ comparisons <- function(model,
                  contrast_factor = contrast_factor,
                  contrast_numeric = contrast_numeric,
                  interaction = interaction,
+                 contrast_types = contrast_types,
                  eps = eps)
     args <- c(args, dots)
     cache <- do.call("get_contrast_data", args)

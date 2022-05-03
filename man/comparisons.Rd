@@ -32,9 +32,16 @@ comparisons(
 }
 }}
 
-\item{variables}{Variables to consider (character vector). \code{NULL}
-considers all the terms in the model object. Computing quantities for a
-subset of terms is typically faster.}
+\item{variables}{\itemize{
+\item \code{NULL}: compute contrasts for all the variables in the model object (can be slow).
+\item Character vector: subset of variables (usually faster).
+\item Named list: subset of variables with the type of contrasts to use, following the conventions in the \code{contrast_factor} and \code{contrast_numeric} arguments. Examples:
+\itemize{
+\item \code{variables = list(gear = "pairwise", hp = 10)}
+\item \code{variables = list(gear = "sequential", hp = c(100, 120))}
+\item See the Examples section below.
+}
+}}
 
 \item{type}{Type(s) of prediction as string or character vector. This can
 differ based on the model type, but will typically be a string such as:
@@ -166,5 +173,12 @@ comparisons(mod, contrast_numeric = "sd") \%>\% tidy()
 comparisons(mod, contrast_numeric = "minmax") \%>\% tidy()
 
 # Interactions between contrasts
+mod <- lm(mpg ~ factor(cyl) + factor(gear) + hp, data = mtcars)
+cmp <- comparisons(mod, interaction = TRUE)
+summary(cmp)
+
+# variable-specific contrasts
+cmp <- comparisons(mod, variables = list(gear = "sequential", hp = 10))
+summary(cmp)
 
 }
