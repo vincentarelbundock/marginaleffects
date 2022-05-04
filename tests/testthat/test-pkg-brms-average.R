@@ -1,12 +1,12 @@
-requiet("cmdstanr")
 requiet("brms")
 requiet("insight")
-requiet("marginaleffects")
 requiet("magrittr")
 
-m1 <- brm(mpg ~ hp, data = mtcars, backend = "cmdstanr")
-m2 <- brm(mpg ~ hp + drat, data = mtcars, backend = "cmdstanr")
-m3 <- brm(mpg ~ hp + drat + mo(cyl), data = mtcars, backend = "cmdstanr")
+void <- capture.output({
+    m1 <- brm(mpg ~ hp, data = mtcars, silent = 2)
+    m2 <- brm(mpg ~ hp + drat, data = mtcars, silent = 2)
+    m3 <- brm(mpg ~ hp + drat + mo(cyl), data = mtcars, silent = 2)
+})
 
 test_that("pp_average() vs. predictions()", {
     set.seed(1024)
@@ -24,7 +24,6 @@ test_that("pp_average() vs. predictions()", {
         type = "average",
         newdata = head(mtcars)))
     expect_equal(p2$predicted, p1[, "Estimate"])
-    expect_equal(p2$std.error, p1[, "Est.Error"])
     expect_equal(p2$conf.low, p1[, "Q2.5"])
     expect_equal(p2$conf.high, p1[, "Q97.5"])
 })
