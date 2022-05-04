@@ -236,6 +236,14 @@ predictions <- function(model,
     out <- merge(out, newdata, by = "rowid", sort = FALSE)
 
     setDF(out)
+
+    # clean columns
+    stubcols <- c("rowid", "type", "term", "group", "predicted", "std.error", "statistic", "p.value", "conf.low", "conf.high",
+                  sort(grep("^predicted", colnames(newdata), value = TRUE)))
+    cols <- intersect(stubcols, colnames(out))
+    cols <- unique(c(cols, colnames(out)))
+    out <- out[, cols, drop = FALSE]
+
     class(out) <- c("predictions", class(out))
     attr(out, "model") <- model
     attr(out, "type") <- type
@@ -264,12 +272,6 @@ predictions <- function(model,
         attr(out, "posterior_draws") <- draws
     }
 
-    # clean columns
-    stubcols <- c("rowid", "type", "term", "group", "predicted", "std.error", "statistic", "p.value", "conf.low", "conf.high",
-                  sort(grep("^predicted", colnames(newdata), value = TRUE)))
-    cols <- intersect(stubcols, colnames(out))
-    cols <- unique(c(cols, colnames(out)))
-    out <- out[, cols, drop = FALSE]
 
     if ("group" %in% names(out) && all(out$group == "main_marginaleffect")) {
         out$group <- NULL
