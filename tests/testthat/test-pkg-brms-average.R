@@ -1,3 +1,4 @@
+skip_on_ci() # brms is hard on Github or CRAN
 requiet("brms")
 requiet("insight")
 requiet("magrittr")
