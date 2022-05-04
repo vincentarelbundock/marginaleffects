@@ -24,9 +24,7 @@ sanity_model_specific.default <- function(model,
 
 
 sanity_model_supported_class <- function(model) {
-    supported <- getOption("marginaleffects_supported_models", default = NULL)
-    supported <- list(supported,
-                      "betareg",
+    supported <- list("betareg",
                       "bife",
                       "brglmFit",
                       "brmsfit",
@@ -81,7 +79,7 @@ sanity_model_supported_class <- function(model) {
                       "zeroinfl")
     flag <- FALSE
     for (sup in supported) {
-        if (all(sup %in% class(model))) {
+        if (!is.null(sup) && isTRUE(all(sup %in% class(model)))) {
             flag <- TRUE
         }
     }
