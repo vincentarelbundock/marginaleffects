@@ -235,13 +235,6 @@ predictions <- function(model,
     # very import to avoid sorting, otherwise bayesian draws won't fit predictions
     out <- merge(out, newdata, by = "rowid", sort = FALSE)
 
-    # clean columns
-    stubcols <- c("rowid", "type", "term", "group", "predicted", "std.error", "statistic", "p.value", "conf.low", "conf.high",
-                  sort(grep("^predicted", colnames(newdata), value = TRUE)))
-    cols <- intersect(stubcols, colnames(out))
-    cols <- unique(c(cols, colnames(out)))
-    out <- out[, cols, drop = FALSE, with = FALSE]
-
     setDF(out)
     class(out) <- c("predictions", class(out))
     attr(out, "model") <- model
@@ -270,6 +263,13 @@ predictions <- function(model,
         out[["conf.high"]] <- tmp[2, ]
         attr(out, "posterior_draws") <- draws
     }
+
+    # clean columns
+    stubcols <- c("rowid", "type", "term", "group", "predicted", "std.error", "statistic", "p.value", "conf.low", "conf.high",
+                  sort(grep("^predicted", colnames(newdata), value = TRUE)))
+    cols <- intersect(stubcols, colnames(out))
+    cols <- unique(c(cols, colnames(out)))
+    out <- out[, cols, drop = FALSE]
 
     if ("group" %in% names(out) && all(out$group == "main_marginaleffect")) {
         out$group <- NULL

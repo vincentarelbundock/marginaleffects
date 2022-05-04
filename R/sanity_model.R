@@ -24,7 +24,9 @@ sanity_model_specific.default <- function(model,
 
 
 sanity_model_supported_class <- function(model) {
-    supported <- list("betareg",
+    supported <- getOption("marginaleffects_supported_models", default = NULL)
+    supported <- list(supported,
+                      "betareg",
                       "bife",
                       "brglmFit",
                       "brmsfit",
