@@ -205,7 +205,7 @@ marginaleffects <- function(model,
     attributes_comparisons <- attributes_comparisons[idx]
 
     # clean columns
-    stubcols <- c("rowid", "type", "group", "term", "contrast", "dydx", "std.error", "conf.low", "conf.high",
+    stubcols <- c("rowid", "type", "group", "term", "contrast", "dydx", "std.error", "statistic", "p.value", "conf.low", "conf.high",
                   sort(grep("^predicted", colnames(newdata), value = TRUE)))
     cols <- intersect(stubcols, colnames(out))
     cols <- unique(c(cols, colnames(out)))
