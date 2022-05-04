@@ -78,6 +78,7 @@ Suggests:
     mclogit,
     mgcv,
     mhurdle,
+    mlogit,
     modelbased,
     nlme,
     nnet,
