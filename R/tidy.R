@@ -29,10 +29,9 @@ generics::glance
 #' yields an "Average Marginal Effect". If `FUN` is the median function, this
 #' yields a "Median Marginal Effect".
 #' 
-#' To compute standard errors around those quantities, we begin by applying the
-#' `FUN` function to each column of the Jacobian. When `FUN` is the mean, this
-#' yields a "Jacobian at the mean". Then, we use this matrix in the Delta
-#' method to obtained standard errors.
+#' When `FUN` is the `mean()` function, we can compute standard errors by first
+#' taking the mean of each column of the Jacobian. . Then, we use this
+#' "Jacobian at the mean" in the Delta method to obtained standard errors.
 #'
 #' In Bayesian models (e.g., `brms`), we compute Average (or Median) Marginal
 #' Effects by applying the `FUN` function twice. First, we apply `FUN` to all
@@ -231,6 +230,14 @@ tidy.comparisons <- function(x,
     checkmate::assert_character(by, null.ok = TRUE)
     checkmate::assert_function(FUN, null.ok = TRUE)
 
+    # we only know the delta method formula for the average marginal effect,
+    # not for arbitrary functions
+    if (is.null(FUN)) {
+        include_se <- TRUE
+    } else {
+        include_se <- FALSE
+    }
+
     # custom summary function
     if (is.null(FUN)) {
         FUN <- mean
@@ -284,18 +291,21 @@ tidy.comparisons <- function(x,
 
 
             tmp <- paste0(idx_by, "_marginaleffects_index")
-            J_mean <- J[, lapply(.SD, FUN, na.rm = TRUE), by = tmp]
-            J_mean <- J_mean[, !..tmp]
-            J_mean <- as.matrix(J_mean)
 
-            # HACK: align J_mean and V if they don't match
-            if (all(colnames(J_mean) %in% colnames(V))) {
-                V <- V[colnames(J_mean), colnames(J_mean)]
+            if (isTRUE(include_se)) {
+                J_mean <- J[, lapply(.SD, FUN, na.rm = TRUE), by = tmp]
+                J_mean <- J_mean[, !..tmp]
+                J_mean <- as.matrix(J_mean)
+
+                # HACK: align J_mean and V if they don't match
+                if (all(colnames(J_mean) %in% colnames(V))) {
+                    V <- V[colnames(J_mean), colnames(J_mean)]
+                }
+
+                # standard errors at the group mean
+                se <- sqrt(colSums(t(J_mean %*% V) * t(J_mean)))
+                ame[, std.error := se]
             }
-
-            # standard errors at the group mean
-            se <- sqrt(colSums(t(J_mean %*% V) * t(J_mean)))
-            ame[, std.error := se]
 
         } else if (!is.null(draws)) {
             draws <- posteriordraws(x)
