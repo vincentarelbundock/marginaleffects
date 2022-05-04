@@ -266,7 +266,7 @@ predictions <- function(model,
     }
 
     # clean columns
-    stubcols <- c("rowid", "type", "term", "group", "predicted", "std.error", "conf.low", "conf.high",
+    stubcols <- c("rowid", "type", "term", "group", "predicted", "std.error", "statistic", "p.value", "conf.low", "conf.high",
                   sort(grep("^predicted", colnames(newdata), value = TRUE)))
     cols <- intersect(stubcols, colnames(out))
     cols <- unique(c(cols, colnames(out)))
