@@ -24,7 +24,7 @@ library(ggplot2)
 theme_set(theme_minimal())
 ```
 
-[In a previous vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx.html), we introduced the "marginal effect" as a partial derivative. Since derivatives are only properly defined for continuous variables, we cannot use them to interpret the effects of changes in categorical variables. For this, we turn to *contrasts* between [Adjusted predictions.](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html) In the context of this package, a "Contrast" is defined as:
+[In a previous vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_mfx.html), we introduced the "marginal effect" as a partial derivative. Since derivatives are only properly defined for continuous variables, we cannot use them to interpret the effects of changes in categorical variables. For this, we turn to *contrasts* between [Adjusted predictions.](https://vincentarelbundock.github.io/marginaleffects/articles/mfx01_predictions.html) In the context of this package, a "Contrast" is defined as:
 
 > The difference between two adjusted predictions, calculated for meaningfully different regressor values (e.g., College graduates vs. Others).
 
