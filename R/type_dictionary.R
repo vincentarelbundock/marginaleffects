@@ -21,6 +21,7 @@ brglmFit,response,expectation,TRUE,TRUE
 brmsfit,response,expectation,TRUE,TRUE
 brmsfit,link,link,TRUE,TRUE
 brmsfit,prediction,prediction,TRUE,TRUE
+brmsfit,average,NA,TRUE,TRUE
 brmultinom,class,classification,FALSE,TRUE
 brmultinom,probs,expectation,TRUE,TRUE
 clm,prob,response,TRUE,TRUE
