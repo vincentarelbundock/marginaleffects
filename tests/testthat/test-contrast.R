@@ -75,3 +75,33 @@ test_that("factor glm", {
     expect_equal(contr$estimate[2], pred$predicted[pred$cyl == 8] - pred$predicted[pred$cyl == 4])
 })
   
+
+test_that("emmeans w/ back-transforms is similar to comparisons with direct delta method", {
+    requiet("emmeans")
+    tol <- 1e-4
+
+    dat <- mtcars
+    dat$cyl <- as.factor(dat$cyl)
+    mod <- glm(am ~ cyl, data = dat, family = binomial)
+
+    # link scale
+    cmp <- comparisons(mod, type = "link", newdata = datagrid(), contrast_factor = "pairwise")
+    emm <- emmeans(mod, specs = "cyl")
+    emm <- contrast(emm, method = "revpairwise", df = Inf, adjust = NULL)
+    emm <- data.frame(confint(emm))
+    expect_equal(cmp$comparison, emm$estimate)
+    expect_equal(cmp$std.error, emm$SE)
+    expect_equal(cmp$conf.low, emm$asymp.LCL)
+    expect_equal(cmp$conf.high, emm$asymp.UCL)
+
+    # response scale
+    cmp <- comparisons(mod, type = "response", newdata = datagrid(), contrast_factor = "pairwise")
+    emm <- emmeans(mod, specs = "cyl")
+    emm <- contrast(regrid(emm), method = "revpairwise", df = Inf, adjust = NULL,
+        type = "response", ratios = FALSE)
+    emm <- data.frame(confint(emm))
+    expect_equal(cmp$comparison, emm$estimate, tolerance = tol)
+    expect_equal(cmp$std.error, emm$SE, tolerance = tol)
+    expect_equal(cmp$conf.low, emm$asymp.LCL, tolerance = tol)
+    expect_equal(cmp$conf.high, emm$asymp.UCL, tolerance = tol)
+})
