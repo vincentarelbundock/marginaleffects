@@ -40,7 +40,7 @@ predictions, marginal effects, contrasts, and marginal means for a
         models](https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html)
       - [Generalized Additive
         Models](https://vincentarelbundock.github.io/marginaleffects/articles/gam.html)
-      - [Multinomial Logit Models and Discrete Choice
+      - [Multinomial Logit and Discrete Choice
         Models](https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html)
       - [Tables and
         plots](https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html)
