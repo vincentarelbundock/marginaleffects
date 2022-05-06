@@ -8,6 +8,8 @@ get_contrasts <- function(model,
                           eps = 1e-4,
                           ...) {
 
+    dots <- list(...)
+
     # cache is efficient for the delta method Jacobian when we need to manipulate
     # the coefficients but don't need to rebuild the contrast data every time.
     if (is.null(cache)) {
