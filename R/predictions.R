@@ -103,6 +103,7 @@ predictions <- function(model,
     sanity_dots(model = model, ...)
     sanity_model_specific(model = model, newdata = newdata, calling_function = "predictions", ...)
 
+
     # modelbased::visualisation_matrix attaches useful info for plotting
     attributes_newdata <- attributes(newdata)
     idx <- c("class", "row.names", "names", "data", "reference")
