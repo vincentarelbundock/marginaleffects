@@ -53,13 +53,23 @@ get_contrasts <- function(model,
     if (is.null(draws_lo)) {
         draws <- NULL
     } else {
+        # TODO: Transformation is not available
+        if (isTRUE(is.function(dots[["transformation"]]))) {
+            warning("The `transformation` argument is ignored for Bayesian models.")
+        }
         draws <- draws_hi - draws_lo
     }
 
     out <- pred_lo
     setDT(out)
 
-    out[, "comparison" := pred_hi$predicted - predicted]
+    dots <- list(...)
+    if (isTRUE(is.function(dots[["transformation"]]))) {
+        fun <- dots[["transformation"]]
+        out[, "comparison" := fun(pred_hi[["predicted"]], predicted)]
+    } else {
+        out[, "comparison" := pred_hi$predicted - predicted]
+    }
     out[, "predicted" := NULL]
 
     # univariate outcome:
