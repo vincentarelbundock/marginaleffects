@@ -78,10 +78,6 @@ predictions <- function(model,
                         type = "response",
                         ...) {
 
-    ## do not check this because `insight` supports more models than `marginaleffects`
-    # model <- sanity_model(model)
-    sanity_dots(model = model, ...)
-    sanity_model_specific(model = model, newdata = newdata, calling_function = "predictions", ...)
 
     # order of the first few paragraphs is important
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
@@ -102,6 +98,10 @@ predictions <- function(model,
         }
     }
 
+    ## do not check this because `insight` supports more models than `marginaleffects`
+    # model <- sanity_model(model)
+    sanity_dots(model = model, ...)
+    sanity_model_specific(model = model, newdata = newdata, calling_function = "predictions", ...)
 
     # modelbased::visualisation_matrix attaches useful info for plotting
     attributes_newdata <- attributes(newdata)
