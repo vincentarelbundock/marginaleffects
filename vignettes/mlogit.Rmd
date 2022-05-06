@@ -1,0 +1,109 @@
+---
+title: "Multinomial Logit and Discrete Choice Models "
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Multinomial Logit Models and Discrete Choice Models}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+# this vignette is in .Rbuildignore because lme4 is not available on old CRAN
+# test machines.
+
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  fig.width = 9,
+  fig.asp = .4,
+  out.width = "100%",
+  warning = FALSE,
+  message = FALSE,
+  comment = "#>"
+)
+
+library(ggplot2)
+
+theme_clean <- function() {
+  theme_minimal() +
+    theme(panel.grid.minor = element_blank(),
+          strip.text = element_text(size = rel(1), hjust = 0),
+          strip.background = element_blank(),
+          legend.position = "bottom")
+}
+ggplot2::theme_set(theme_clean())
+```
+
+Several packages in the `R` ecosystem allow users to estimate multinomial logit model and discrete choice models. This case study illustrates the use of `marginaleffects` with the `nnet` and `mlogit` packages.
+
+# `nnet` package
+
+The `multinom` function of the `nnet` package allows users to fit log-lienar models via neural networks. The `data` used for this function is a data frame with one observation per row, and the response variable is coded a factor. All the `marginaleffects` package function work seamlessly with this model. For example, we can estimate a model and compute average marginal effects as follows:
+
+```{r, message = FALSE}
+library(nnet)
+library(tidyverse)
+
+head(mtcars)
+
+mod <- multinom(factor(gear) ~ hp + mpg, data = mtcars, trace = FALSE)
+
+marginaleffects(mod, type = "probs") %>% summary() 
+```
+
+Notice that in such models, we get one marginal effect for each term, for each level of the response variable.
+
+# `mlogit` package
+
+The `mlogit` package uses `data` in a slightly different structure, with one row per observation-choice combination. For example, this data on choice of travel mode includes 4 rows per individual, one for each mode of transportation:
+
+```{r, message = FALSE}
+library("AER")
+library("mlogit")
+library(tidyverse)
+data("TravelMode", package = "AER")
+
+head(TravelMode)
+
+mod <- mlogit(choice ~ wait + gcost | income + size, TravelMode)
+
+marginaleffects(mod, variables = c("income", "size")) %>% summary()
+```
+
+Note that the `marginaleffects` function will always return estimates of zero for regressors before the vertical bar in the formula. This is because the `predict()` function supplied by the `mlogit` package does not produce different predictions for different values of these variables.
+
+To compute different kinds of marginal effects, we can construct customized data frames and feed them to the `newdata` argument of the `marginaleffects` function. 
+
+**Important:** The `newdata` argument for `mlogit` models must be a "balanced" data frame, that is, it must have a number of rows that is a multiple of the number of choices.
+
+If we want to compute the slope of the response function (marginal effecs) when each of the predictors is fixed to its global mean, we can do:
+
+```{r}
+nd <- TravelMode %>%
+    summarize(across(c("wait", "gcost", "income", "size"),
+              function(x) rep(mean(x), 4)))
+nd
+
+marginaleffects(mod, newdata = nd, variables = c("income", "size")) |> summary()
+```
+
+If we want to compute marginal effects with the `gcost` and `wait` fixed at their mean value, *conditional* on the choice of transportation mode:
+
+```{r}
+nd <- TravelMode %>%
+    group_by(mode) %>%
+    summarize(across(c("wait", "gcost", "income", "size"), mean))
+nd
+
+marginaleffects(mod, newdata = nd, variables = c("income", "size")) |> summary()
+```
+
+We can also explore more complex alternatives. Here, for example, only one alternative is affected by cost reduction:
+
+```{r}
+nd <- datagrid(mode = TravelMode$mode, newdata = TravelMode)
+nd <- lapply(1:4, function(i) mutate(nd, gcost = ifelse(1:4 == i, 30, gcost)))
+nd <- bind_rows(nd)
+nd
+
+marginaleffects(mod, newdata = nd, variables = c("income", "size")) |> summary()
+```

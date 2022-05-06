@@ -20,3 +20,17 @@ get_predict.mlogit <- function(model,
     }
     return(out)
 }
+
+
+#' @include sanity_model.R
+#' @rdname sanity_model_specific
+#' @keywords internal
+sanity_model_specific.mlogit <- function(model, newdata, ...) {
+    if (!is.null(newdata)) {
+        nchoices <- length(unique(model$model$idx[, 2]))
+        if (!isTRUE(nrow(newdata) %% nchoices == 0)) {
+            msg <- sprintf("The `newdata` argument for `mlogit` models must be a data frame with a number of rows equal to a multiple of the number of choices: %s.", nchoices)
+            stop(msg, call. = FALSE)
+        }
+    }
+}

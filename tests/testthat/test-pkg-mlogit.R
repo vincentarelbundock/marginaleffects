@@ -27,6 +27,12 @@ test_that("no validity", {
     expect_true("group" %in% colnames(tid))
 })
 
+test_that("error on bad newdata", {
+    mod <- mlogit(choice ~ wait + gcost | income + size, TravelMode)
+    nd <- head(TravelMode, 5)
+    expect_error(comparisons(mod, newdata = nd), regexp = "number of choices")
+})
+
 # mlogit doesn't install on Github actions, so we can't have it in DESCRIPTION,
 # but if we use the Fishing data, this raises an error in check()
 
