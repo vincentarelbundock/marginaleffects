@@ -47,10 +47,9 @@ marginal effects. If \code{FUN} is the mean function (or \code{NULL} default), t
 yields an "Average Marginal Effect". If \code{FUN} is the median function, this
 yields a "Median Marginal Effect".
 
-To compute standard errors around those quantities, we begin by applying the
-\code{FUN} function to each column of the Jacobian. When \code{FUN} is the mean, this
-yields a "Jacobian at the mean". Then, we use this matrix in the Delta
-method to obtained standard errors.
+When \code{FUN} is the \code{mean()} function, we can compute standard errors by first
+taking the mean of each column of the Jacobian. . Then, we use this
+"Jacobian at the mean" in the Delta method to obtained standard errors.
 
 In Bayesian models (e.g., \code{brms}), we compute Average (or Median) Marginal
 Effects by applying the \code{FUN} function twice. First, we apply \code{FUN} to all

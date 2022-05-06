@@ -40,6 +40,8 @@ predictions, marginal effects, contrasts, and marginal means for a
         models](https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html)
       - [Generalized Additive
         Models](https://vincentarelbundock.github.io/marginaleffects/articles/gam.html)
+      - [Multinomial Logit Models and Discrete Choice
+        Models](https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html)
       - [Tables and
         plots](https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html)
       - [Robust standard errors and
@@ -184,16 +186,16 @@ full results with functions like `head`, as you would with any other
 mfx <- marginaleffects(mod)
 
 head(mfx, 4)
-#>   rowid     type term        dydx  std.error    conf.low     conf.high
-#> 1     1 response   hp -0.03690556 0.01850168 -0.07316818 -0.0006429255
-#> 2     2 response   hp -0.02868936 0.01562768 -0.05931905  0.0019403284
-#> 3     3 response   hp -0.04657166 0.02259121 -0.09084963 -0.0022936972
-#> 4     4 response   hp -0.04227128 0.01328275 -0.06830499 -0.0162375732
-#>   statistic    p.value  mpg  hp    wt am
-#> 1 -1.994714 0.04607413 21.0 110 2.620  1
-#> 2 -1.835804 0.06638661 21.0 110 2.875  1
-#> 3 -2.061494 0.03925589 22.8  93 2.320  1
-#> 4 -3.182420 0.00146050 21.4 110 3.215  0
+#>   rowid     type term        dydx  std.error statistic    p.value    conf.low
+#> 1     1 response   hp -0.03690556 0.01850168 -1.994714 0.04607413 -0.07316818
+#> 2     2 response   hp -0.02868936 0.01562768 -1.835804 0.06638661 -0.05931905
+#> 3     3 response   hp -0.04657166 0.02259121 -2.061494 0.03925589 -0.09084963
+#> 4     4 response   hp -0.04227128 0.01328275 -3.182420 0.00146050 -0.06830499
+#>       conf.high  mpg  hp    wt am
+#> 1 -0.0006429255 21.0 110 2.620  1
+#> 2  0.0019403284 21.0 110 2.875  1
+#> 3 -0.0022936972 22.8  93 2.320  1
+#> 4 -0.0162375732 21.4 110 3.215  0
 ```
 
 The function `summary` calculates the “Average Marginal Effect,” that
