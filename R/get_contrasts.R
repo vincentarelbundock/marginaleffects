@@ -66,10 +66,16 @@ get_contrasts <- function(model,
     dots <- list(...)
     if (isTRUE(is.function(dots[["transformation"]]))) {
         fun <- dots[["transformation"]]
-        out[, "comparison" := fun(pred_hi[["predicted"]], predicted)]
     } else {
-        out[, "comparison" := pred_hi$predicted - predicted]
+        fun <- function(hi, lo) hi - lo
     }
+
+    con <- try(fun(pred_hi[["predicted"]], pred_lo[["predicted"]]), silent = TRUE)
+    if (!isTRUE(checkmate::check_numeric(con, len = nrow(out)))) {
+        msg <- sprintf("The function supplied to the `transformation` argument must accept two numeric vectors of predicted probabilities of length %s, and return a single numeric vector of the same length.", nrow(out))
+        stop(msg, call. = FALSE)
+    }
+    out[, "comparison" := con]
     out[, "predicted" := NULL]
 
     # univariate outcome:
