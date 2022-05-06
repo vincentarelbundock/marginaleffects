@@ -2,7 +2,7 @@
 title: "Multinomial Logit and Discrete Choice Models "
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Multinomial Logit Models and Discrete Choice Models}
+  %\VignetteIndexEntry{Multinomial Logit and Discrete Choice Models}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
