@@ -21,9 +21,6 @@ test_that("no validity", {
     expect_s3_class(cmp, "comparisons")
     expect_s3_class(pre, "predictions")
     expect_marginaleffects(mod)
-    expect_error(comparisons(mod, newdata = TravelMode), regexp = "newdata.*supported")
-    expect_error(predictions(mod, newdata = TravelMode), regexp = "newdata.*supported")
-    expect_error(marginaleffects(mod, newdata = TravelMode), regexp = "newdata.*supported")
     expect_true("group" %in% colnames(tid))
 })
 
