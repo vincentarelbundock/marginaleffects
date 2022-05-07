@@ -110,12 +110,12 @@ emmeans(mod, specs = "btype", by = "resp") |>
 
 What did `emmeans` do to obtain these results? Roughly speaking:
 
-1. Create a prediction grid with one cell for each combination of categorical predictor in the model, and all numeric variables held at their means.
+1. Create a prediction grid with one cell for each combination of categorical predictors in the model, and all numeric variables held at their means.
 2. Make adjusted predictions in each cell of the prediction grid.
 3. Take the average of those predictions (marginal means) for each combination of `btype` (focal variable) and `resp` (group `by` variable).
 4. Compute pairwise differences (contrasts) in marginal means across different levels of the focal variable `btype`.
 
-In short, `emmeans` computes pairwise contrasts *between marginal means*. This is different from the default types of contrasts produced by `comparisons()`, which does *not* average across a pre-specified grid of predictors. What does `comparisons()` do instead? 
+In short, `emmeans` computes pairwise contrasts between *marginal means*, which are themselves averages of adjusted predictions. This is different from the default types of contrasts produced by `comparisons()`, which reports contrasts between adjusted predictions, *without* averaging across a pre-specified grid of predictors. What does `comparisons()` do instead? 
 
 Let `newdata` be a data frame supplied by the user (or the original data frame used to fit the model), then:
 
