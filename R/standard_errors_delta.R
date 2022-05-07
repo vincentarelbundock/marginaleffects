@@ -78,10 +78,10 @@ standard_errors_delta <- function(model,
     # Var(dydx) = J Var(beta) J'
     # computing the full matrix is memory-expensive, and we only need the diagonal
     # algebra trick: https://stackoverflow.com/a/42569902/342331
-    se <- sqrt(colSums(t(J %*% vcov) * t(J)))
+    JV <- align_J_V(J, vcov)
+    se <- sqrt(colSums(t(JV$J %*% JV$V) * t(JV$J)))
 
-
-    attr(se, "J") <- J
+    attr(se, "J") <- JV$J
 
     return(se)
 }
