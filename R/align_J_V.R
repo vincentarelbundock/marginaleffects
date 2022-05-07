@@ -1,10 +1,14 @@
 align_J_V <- function(J, V) {
-    cols <- intersect(colnames(J), colnames(V))
-    if (length(cols) == 0) {
-        stop("The Jacobian does not match the variance-covariance matrix.")
-    }
-    V <- V[cols, cols]
-    J <- J[, cols, drop = FALSE]
-    out <- list(V = V, J = J)
+    if (ncol(J) == ncol(V)) {
+        out <- list(J = J, V = V)
+    } else {
+        cols <- intersect(colnames(J), colnames(V))
+        if (length(cols) == 0) {
+            stop("The Jacobian does not match the variance-covariance matrix.")
+        }
+        V <- V[cols, cols]
+        J <- J[, cols, drop = FALSE]
+        out <- list(J = J, V = V)
+    } 
     return(out)
 }
