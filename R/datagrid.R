@@ -165,6 +165,9 @@ typical <- function(
         }
     }
 
+    # unique before counting
+    out <- lapply(out, unique)
+
     # warn on very large prediction grid
     num <- as.numeric(sapply(out, length)) # avoid integer overflow
     num <- Reduce(f = "*", num)
@@ -172,7 +175,6 @@ typical <- function(
         stop("You are trying to create a prediction grid with more than 1 billion rows, which is likely to exceed the memory and computational power available on your local machine. Presumably this is because you are considering many variables with many levels. All of the functions in the `marginaleffects` package include arguments to specify a restricted list of variables over which to create a prediction grid.")
     }
 
-    out <- lapply(out, unique)
     out <- expand.grid(out, stringsAsFactors = FALSE)
 
     # na.omit destroys attributes, and we need the "factor" attribute
@@ -245,17 +247,19 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
         }
     }
 
-    # warn if cluster variables are numeric. users probably do not want to take
-    # their means, because this makes prediction impossible in many models
-    # (e.g., `fixest::feols(mpg ~ hp | cyl)`)
+    # warn if cluster variables after the | in the random effects formula are
+    # numeric. users probably do not want to take their means, because this
+    # makes prediction impossible in many models (e.g., `fixest::feols(mpg ~ hp
+    # | cyl)`)
+    # insight::find
     variables_cluster <- unlist(c(variables_list$cluster, variables_list$random))
-    variables_cluster <- intersect(variables_automatic, variables_cluster)
+    variables_cluster <- intersect(variables_cluster, variables_automatic)
     if (length(variables_cluster) > 0) {
-        idx <- sapply(variables_cluster, function(x) is.numeric(newdata[[x]]))
-        if (any(idx)) {
-            idx <- paste(sprintf('"%s"', variables_cluster[idx]), collapse = ", ")
-            warning(sprintf("Unless otherwise instructed, this function sets numeric variables to their mean. This is probably inappropriate in the case of cluster variables or group identifiers like %s. A safer strategy is to convert cluster variables to factors before fitting the model.", idx),
-                    call. = FALSE)
+        cluster_ids <- insight::find_random(model, flatten = TRUE)
+        cluster_ids <- cluster_ids[sapply(cluster_ids, function(x) is.numeric(newdata[[x]]))]
+        if (length(cluster_ids) > 0) {
+            msg <- "Some cluster or group identifiers are numeric. Unless otherwise instructed, `datagrid()` sets all numeric variables to their mean. This is probably inappropriate in the case of cluster or group identifiers. A safer strategy is to convert them to factors before fitting the model."
+            warning(msg, call. = FALSE)
         }
     }
 
