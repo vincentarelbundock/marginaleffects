@@ -256,7 +256,18 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
     variables_cluster <- intersect(variables_cluster, variables_automatic)
     if (length(variables_cluster) > 0) {
         cluster_ids <- insight::find_random(model, flatten = TRUE)
-        cluster_ids <- cluster_ids[sapply(cluster_ids, function(x) is.numeric(newdata[[x]]))]
+
+        # random effects component only cyl after pipe: hp ~ drat + (1 + mpg | cyl)
+        if (length(cluster_ids) > 0) {
+            idx <- sapply(cluster_ids, function(x) is.numeric(newdata[[x]]))
+            cluster_ids <- cluster_ids[idx]
+
+        # fixest et al. everything after the pipe: hp ~ drat | cyl + gear
+        } else {
+            idx <- sapply(variables_cluster, function(x) is.numeric(newdata[[x]]))
+            cluster_ids <- variables_cluster[idx]
+        }
+
         if (length(cluster_ids) > 0) {
             msg <- "Some cluster or group identifiers are numeric. Unless otherwise instructed, `datagrid()` sets all numeric variables to their mean. This is probably inappropriate in the case of cluster or group identifiers. A safer strategy is to convert them to factors before fitting the model."
             warning(msg, call. = FALSE)
