@@ -110,7 +110,7 @@ emmeans(mod, specs = "btype", by = "resp") |>
 
 What did `emmeans` do to obtain these results? Roughly speaking:
 
-1. Create a prediction grid with one cell for each combination of categorical predictor in the model.
+1. Create a prediction grid with one cell for each combination of categorical predictor in the model, and all numeric variables held at their means.
 2. Make adjusted predictions in each cell of the prediction grid.
 3. Take the average of those predictions (marginal means) for each combination of `btype` and `resp`, the focal variable, and the group variable specified in the `by` argument.
 4. Compute pairwise differences (contrasts) in marginal means across different levels of the focal variable `btype`.
