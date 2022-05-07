@@ -54,12 +54,11 @@ Many of `marginaleffects` advantages come down to subjective preferences over us
 
 The [Marginal Means Vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx04_marginalmeans.html) includes side-by-side comparisons of `emmeans` and `marginaleffects` to compute marginal means. The rest of this section compares the syntax for contrasts and marginaleffects.
 
-## Contrasts: `emmeans` vs `marginaleffects`
+## Contrasts
 
 AFAICT, `emmeans` does not provide an easy way to compute unit-level contrasts for every row of the dataset used to fit our model. Therefore, the side-by-side syntax shown below will always include `newdata=datagrid()` to specify that we want to compute only one contrast: at the mean values of the regressors. In day-to-day practice with `marginaleffects()`, however, this extra argument would not be necessary.
 
 Fit a model:
-
 ```{r}
 library(emmeans)
 library(marginaleffects)
@@ -88,6 +87,76 @@ comparisons(mod,
             contrast_factor = "pairwise")
 ```
 
+## Contrasts by group
+
+Here is a slightly more complicated example with contrasts estimated by subgroup in a `glmmTMB` mixed effects model. First we estimate a model and compute pairwise contrasts by subgroup using `emmeans`:
+
+```{r}
+library(dplyr)
+library(glmmTMB)
+library(emmeans)
+
+dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/lme4/VerbAgg.csv")
+dat$woman <- as.numeric(dat$Gender == "F")
+
+mod <- glmmTMB(
+    woman ~ btype * resp + situ + (1 + Anger | item),
+    family = binomial,
+    data = dat)
+
+emmeans(mod, specs = "btype", by = "resp") |>
+    contrast(method = "revpairwise", adjust = "none")
+```
+
+What did `emmeans` do to obtain these results? Roughly speaking:
+
+1. Create a prediction grid with one cell for each combination of categorical predictor in the model.
+2. Make adjusted predictions in each cell of the prediction grid.
+3. Take the average of those predictions (marginal means) for each combination of `btype` and `resp`, the focal variable, and the group variable specified in the `by` argument.
+4. Compute pairwise differences (contrasts) in marginal means across different levels of the focal variable `btype`.
+
+In short, `emmeans` computes pairwise contrasts *between marginal means*. This is different from the default types of contrasts produced by `comparisons()`, which does *not* average across a pre-specified grid of predictors. What does `comparisons()` do instead? 
+
+Let `newdata` be a data frame supplied by the user (or the original data frame used to fit the model), then:
+
+1. Create a new data frame called `newdata2`, which is identical to `newdata` except that the focal variable is incremented by one level.
+2. Compute contrasts as the difference between adjusted predictions made on the two datasets: 
+   - `predict(model, newdata = newdata2) - predict(model, newdata = newdata)`
+
+Although it is not idiomatic, we can use still use `comparisons()` to emulate the `emmeans` results. First, we create a prediction grid with one cell for each combination of categorical predictor in the model:
+
+```{r}
+nd <- datagrid(
+    model = mod,
+    resp = dat$resp,
+    situ = dat$situ,
+    btype = dat$btype)
+nrow(nd)
+```
+
+This grid has 18 rows, one for each combination of levels for the `resp` (3), `situ` (2), and `btype` (3) variables (3 * 2 * 3 = 18). 
+
+Then we compute pairwise contrasts over this grid:
+
+```{r}
+cmp <- comparisons(mod,
+    variables = "btype",
+    newdata = nd,
+    contrast_factor = "pairwise",
+    type = "link")
+nrow(cmp)
+```
+
+There are 3 pairwise contrasts, corresponding to the 3 pairwise comparisons possible between the 3 levels of the focal variable `btype`: `scold-curse`, `shout-scold`, `shout-curse`. The `comparisons()` estimates contrasts for each row of `newdata`, so we get $18 \times 3 = 54$ rows.
+
+Finally, we wanted contrasts for each subgroup of the `resp` variable, so we average out the contrasts using the `summary()` and the `by` argument:
+
+```{r}
+cmp |> summary(by = "resp")
+```
+
+These results are identical to those produced by `emmeans` (except for $t$ vs. $z$).
+
 ## Marginal Effects
 
 AFAICT, `emmeans::emtrends` makes it easier to compute marginal effects for a few user-specified values than for large grids or for the full original dataset.
@@ -95,6 +164,8 @@ AFAICT, `emmeans::emtrends` makes it easier to compute marginal effects for a fe
 Response scale, user-specified values:
 
 ```{r}
+mod <- glm(vs ~ hp + factor(cyl), data = mtcars, family = binomial)
+
 emtrends(mod, ~hp, "hp", regrid = "response", at = list(cyl = 4))
 
 marginaleffects(mod, newdata = datagrid(cyl = 4))
