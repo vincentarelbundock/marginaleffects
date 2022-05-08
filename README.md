@@ -48,6 +48,8 @@ predictions, marginal effects, contrasts, and marginal means for a
         more](https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html)
   - [Alternative
     software](https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html)
+  - [Technical
+    notes](https://vincentarelbundock.github.io/marginaleffects/articles/technical_notes.html)
 
 ## What?
 
