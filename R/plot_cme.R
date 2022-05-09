@@ -90,8 +90,15 @@ plot_cme <- function(model,
     # create data
     at_list[["model"]] = model
     nd <- do.call("typical", at_list)
-    datplot <- marginaleffects(model, newdata = nd, type = type, vcov = vcov,
-        conf.level = conf.level, variables = effect, ...)
+    datplot <- marginaleffects(
+        model,
+        newdata = nd,
+        type = type,
+        vcov = vcov,
+        conf.level = conf.level,
+        variables = effect,
+        ...)
+    draws <- attr(datplot, "posterior_draws")
     colnames(datplot)[colnames(datplot) == condition1] <- "condition1"
     colnames(datplot)[colnames(datplot) == condition2] <- "condition2"
     colnames(datplot)[colnames(datplot) == condition3] <- "condition3"
@@ -109,6 +116,7 @@ plot_cme <- function(model,
 
     # return immediately if the user doesn't want a plot
     if (isFALSE(draw)) {
+        attr(datplot, "posterior_draws") <- draws
         return(datplot)
     } else {
         assert_dependency("ggplot2")
