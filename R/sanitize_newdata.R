@@ -8,12 +8,13 @@ sanity_newdata <- function(model, newdata) {
     if (is.null(newdata)) {
         newdata <- suppressWarnings(insight::get_data(model))
 
-    } else if (isTRUE(newdata == "mean")) {
+    } else if (isTRUE(checkmate::check_choice(newdata, "mean"))) {
         newdata <- datagrid(model = model)
 
-    } else if (isTRUE(newdata == "median")) {
+    } else if (isTRUE(checkmate::check_choice(newdata, "median"))) {
         newdata <- datagrid(model = model, FUN.numeric = function(x) stats::median(x, na.rm = TRUE))
-    } else if (isTRUE(newdata == "marginalmeans")) {
+
+    } else if (isTRUE(checkmate::check_choice(newdata, "marginalmeans"))) {
         newdata <- datagrid(
             model = model,
             FUN.factor = unique,

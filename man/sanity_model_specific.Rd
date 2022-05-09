@@ -41,14 +41,17 @@ package. See the "Model-Specific Arguments" section of the
 \code{?marginaleffects} documentation for a non-exhaustive list of available
 arguments.}
 
-\item{newdata}{A data frame over which to compute quantities of interest.
+\item{newdata}{\code{NULL}, a data frame or a string which determines the predictor values for which to compute marginaleffects.
 \itemize{
-\item \code{NULL}: marginal effects for each observed value in the original dataset.
+\item \code{NULL} (default): Unit-level marginal effects for each observed value in the original dataset.
+\item A data frame: Unit-level marginal effects for each row of the \code{newdata} data frame.
+\item "mean": Marginal Effects at the Mean. Marginal effects when each predictor is held at its mean or mode.
+\item "median": Marginal Effects at the Median. Marginal effects when each predictor is held at its mean or mode.
+\item "marginalmeans": Marginal Effects at Marginal Means. See Details section below.
 \item The \code{\link[=datagrid]{datagrid()}} function can be used to specify a custom grid of regressors. For example:
 \itemize{
-\item \code{newdata = datagrid()}: marginal effect at the mean
 \item \code{newdata = datagrid(cyl = c(4, 6))}: \code{cyl} variable equal to 4 and 6 and other regressors fixed at their means or modes.
-\item See the Examples section and the \code{\link[=datagrid]{datagrid()}} documentation for more.
+\item See the Examples section and the \code{\link[=datagrid]{datagrid()}} documentation.
 }
 }}
 }
