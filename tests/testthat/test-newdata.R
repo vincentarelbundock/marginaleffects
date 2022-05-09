@@ -58,6 +58,7 @@ test_that("interaction: newdata = 'marginalmeans'", {
     emm <- emmeans(mod, specs = c("species", "island"))
     emm <- data.frame(contrast(emm, method = "trt.vs.ctrl1"))
 
-    expect_equal(cmp$comparison, emm$estimate)
-    expect_equal(cmp$std.error, emm$SE)
+    # hack: not sure if they are well aligned
+    expect_equal(sort(cmp$comparison), sort(emm$estimate))
+    expect_equal(sort(cmp$std.error), sort(emm$SE))
 })
