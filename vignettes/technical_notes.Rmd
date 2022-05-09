@@ -100,10 +100,10 @@ This graph display the effect of a change of 1 unit in the `mpg` variable, for e
 
 An alternative which used to be very common but has now fallen into a bit of disfavor is to compute "Contrasts at the mean." The idea is to create a "synthetic" or "hypothetical" individual (row of the dataset) whose characteristics are completely average. Then, we compute and report the contrast for this specific hypothetical individual. 
 
-This can be achieved by calling using the `newdata` argument and the `datagrid()` function, which fixes variables to their mean by default:
+This can be achieved by setting `newdata="mean"` or to `newdata=datagrid()`, both of which fix variables to their means or modes:
 
 ```{r}
-comparisons(mod, variables = "mpg", newdata = datagrid())
+comparisons(mod, variables = "mpg", newdata = "mean")
 ```
 
 Contrasts at the mean can differ substantially from average contrasts.
@@ -128,7 +128,29 @@ b) It is a weighted average of unit-level contrasts, where weights assume a perf
 
 With respect to (a), the analyst should ask themselves: Is my quantity of interest the contrast for a perfectly average hypothetical individual? With respect to (b), the analyst should ask themselves: Is my quantity of interest the contrast in a model estimated using (potentially) unbalanced data, but interpreted *as if* the data were perfectly balanced? 
 
-If the answer to both questions is "yes", then it is easy to use the `comparisons()` to estimate contrasts between marginal means. The [`emmeans` section of the Alternative Software vignette](https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html#emmeans) shows several examples with parallel code examples to highlight parallels between `marginaleffects` and `emmeans`.
+If the answer to both questions is "yes", then it is easy to use the `comparisons()` to estimate contrasts between marginal means. The `newdata` determines the values of the predictors at which we want to compute contrasts. We can set `newdata="marginalmeans"` to emulate the `emmeans` behavior. For example, here we compute contrasts in a model with an interaction:
+
+```{r}
+dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv")
+mod <- lm(bill_length_mm ~ species * sex + island + body_mass_g, data = dat)
+
+cmp <- comparisons(
+    mod,
+    newdata = "marginalmeans",
+    variables = c("species", "island"))
+summary(cmp)
+```
+
+Which is equivalent to this in `emmeans`:
+
+```{r}
+emm <- emmeans(
+    mod,
+    specs = c("species", "island"))
+contrast(emm, method = "trt.vs.ctrl1")
+```
+
+The [`emmeans` section of the Alternative Software vignette](https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html#emmeans) shows further examples.
 
 The [excellent vignette of the `emmeans` package](https://cran.r-project.org/web/packages/emmeans/vignettes/basics.html) discuss the same issues in a slightly different (and more positive) way:
 

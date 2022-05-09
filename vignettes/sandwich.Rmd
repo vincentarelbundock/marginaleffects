@@ -73,14 +73,14 @@ mod <- lmer(mpg ~ hp + am + (1 | cyl), data = dat)
 Marginal effects at the mean with classical standard errors and z-statistic:
 
 ```{r}
-marginaleffects(mod, newdata = datagrid())
+marginaleffects(mod, newdata = "mean")
 ```
 
 Marginal effects at the mean with Kenward-Roger adjusted variance-covariance and degrees of freedom:
 
 ```{r}
 marginaleffects(mod,
-                newdata = datagrid(),
+                newdata = "mean",
                 vcov = "kenward-roger")
 ```
 

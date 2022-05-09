@@ -126,6 +126,13 @@ In this graph, each dot represents the predicted probability that `vs=1` for one
 Some analysts may want to calculate an "Adjusted Prediction at the Mean," that is, the predicted outcome when all the regressors are held at their mean (or mode). To achieve this, we use the `datagrid` function. By default, this function produces a grid of data with regressors at their means or modes, so all we need to do to get the APM is:
 
 ```{r}
+predictions(mod, newdata = "mean")
+```
+
+
+This is equivalent to calling:
+
+```{r}
 predictions(mod, newdata = datagrid())
 ```
 
