@@ -8,6 +8,7 @@ get_contrasts <- function(model,
                           eps = 1e-4,
                           ...) {
 
+    dots <- list(...)
 
     # cache is efficient for the delta method Jacobian when we need to manipulate
     # the coefficients but don't need to rebuild the contrast data every time.
@@ -54,13 +55,29 @@ get_contrasts <- function(model,
     if (is.null(draws_lo)) {
         draws <- NULL
     } else {
+        # TODO: Transformation is not available
+        if (isTRUE(is.function(dots[["transformation"]]))) {
+            warning("The `transformation` argument is ignored for Bayesian models.")
+        }
         draws <- draws_hi - draws_lo
     }
 
     out <- pred_lo
     setDT(out)
 
-    out[, "comparison" := pred_hi$predicted - predicted]
+    dots <- list(...)
+    if (isTRUE(is.function(dots[["transformation"]]))) {
+        fun <- dots[["transformation"]]
+    } else {
+        fun <- function(hi, lo) hi - lo
+    }
+
+    con <- try(fun(pred_hi[["predicted"]], pred_lo[["predicted"]]), silent = TRUE)
+    if (!isTRUE(checkmate::check_numeric(con, len = nrow(out)))) {
+        msg <- sprintf("The function supplied to the `transformation` argument must accept two numeric vectors of predicted probabilities of length %s, and return a single numeric vector of the same length.", nrow(out))
+        stop(msg, call. = FALSE)
+    }
+    out[, "comparison" := con]
     out[, "predicted" := NULL]
 
     # univariate outcome:
