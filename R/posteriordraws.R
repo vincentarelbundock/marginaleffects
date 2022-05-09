@@ -26,23 +26,19 @@ posteriordraws <- function(x) {
     draws <- attr(x, "posterior_draws")
     draws <- data.table(draws)
     setnames(draws, as.character(seq_len(ncol(draws))))
-    idx <- intersect(colnames(x), c("rowid", "term", "group", "contrast", "type"))
-    for (i in idx) {
-        draws[, (i) := x[[i]]]
+
+    for (v in colnames(x)) {
+        draws[[v]] <- x[[v]]
     }
 
     out <- melt(
         draws,
-        id.vars = idx,
+        id.vars = colnames(x),
         variable.name = "drawid",
         value.name = "draw")
 
-    idx <- setdiff(
-        colnames(x),
-        c("predicted", "dydx", "comparison", "marginalmean", "conf.low", "conf.high"))
-    out <- merge(out, data.table(x)[, ..idx])
-
+    cols <- unique(c("drawid", "draw", "rowid", colnames(out)))
+    setcolorder(out, cols)
     setDF(out)
-
     return(out)
 }
