@@ -132,6 +132,10 @@ comparisons <- function(model,
         }
     }
 
+    if (isTRUE(interaction) && is.null(variables)) {
+        msg <- "When `interaction=TRUE` you must use the `variables` argument to specify which variables should be interacted."
+        stop(msg, call. = TRUE)
+    }
 
     # `marginaleffects()` must run its own sanity checks before any transforms
     if (!isTRUE(internal_call)) {
