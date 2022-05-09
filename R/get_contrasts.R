@@ -6,6 +6,7 @@ get_contrasts <- function(model,
                           contrast_numeric = 1,
                           cache = NULL,
                           eps = 1e-4,
+                          marginalmeans = FALSE,
                           ...) {
 
     dots <- list(...)
@@ -55,7 +56,6 @@ get_contrasts <- function(model,
     if (is.null(draws_lo)) {
         draws <- NULL
     } else {
-        # TODO: Transformation is not available
         if (isTRUE(is.function(dots[["transformation"]]))) {
             warning("The `transformation` argument is ignored for Bayesian models.")
         }
@@ -64,23 +64,6 @@ get_contrasts <- function(model,
 
     out <- pred_lo
     setDT(out)
-
-    dots <- list(...)
-    if (isTRUE(is.function(dots[["transformation"]]))) {
-        fun <- dots[["transformation"]]
-    } else {
-        fun <- function(hi, lo) hi - lo
-    }
-
-    con <- try(fun(pred_hi[["predicted"]], pred_lo[["predicted"]]), silent = TRUE)
-
-    if (!isTRUE(checkmate::check_numeric(con, len = nrow(out))) &&
-        !isTRUE(checkmate::check_numeric(con, len = 1))) {
-        msg <- sprintf("The function supplied to the `transformation` argument must accept two numeric vectors of predicted probabilities of length %s, and return a numeric value, or a numeric vector of length %s.", nrow(out), nrow(out))
-        stop(msg, call. = FALSE)
-    }
-    out[, "comparison" := con]
-    out[, "predicted" := NULL]
 
     # univariate outcome:
     # original is the "composite" data that we constructed by binding terms and
@@ -108,6 +91,34 @@ get_contrasts <- function(model,
         }
         out[, "term" := "interaction"]
     }
+
+    if (isTRUE(is.function(dots[["transformation"]]))) {
+        fun <- dots[["transformation"]]
+    } else {
+        fun <- function(hi, lo) hi - lo
+    }
+
+
+    marginalmeans_flag <- TRUE
+    if (isTRUE(marginalmeans_flag)) {
+        out[, predicted_lo := pred_lo$predicted]
+        out[, predicted_hi := pred_hi$predicted]
+        idx <- grep("^contrast_", colnames(out), value = TRUE)
+        out <- out[, .(predicted_lo = mean(predicted_lo), predicted_hi = mean(predicted_hi)), by = idx]
+        out[, "comparison" := fun(predicted_hi, predicted_lo)]
+        out[, c("predicted_hi", "predicted_lo") := NULL]
+
+    } else {
+        con <- try(fun(pred_hi[["predicted"]], pred_lo[["predicted"]]), silent = TRUE)
+        if (!isTRUE(checkmate::check_numeric(con, len = nrow(out))) &&
+            !isTRUE(checkmate::check_numeric(con, len = 1))) {
+            msg <- sprintf("The function supplied to the `transformation` argument must accept two numeric vectors of predicted probabilities of length %s, and return a numeric value, or a numeric vector of length %s.", nrow(out), nrow(out))
+            stop(msg, call. = FALSE)
+        }
+        out[, "comparison" := con]
+        out[, "predicted" := NULL]
+    }
+
 
     # normalize slope
     # not available for cross-contrasts

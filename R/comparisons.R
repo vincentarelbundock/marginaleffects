@@ -130,6 +130,7 @@ comparisons <- function(model,
         sanity_contrast_numeric(contrast_numeric)
     }
 
+    marginalmeans <- isTRUE(newdata == "marginalmeans")
     newdata <- sanity_newdata(model = model, newdata = newdata)
 
     # get dof before transforming the vcov arg
@@ -175,6 +176,7 @@ comparisons <- function(model,
                  contrast_numeric = contrast_numeric,
                  interaction = interaction,
                  contrast_types = contrast_types,
+                 marginalmeans = marginalmeans,
                  eps = eps)
     args <- c(args, dots)
     cache <- do.call("get_contrast_data", args)
