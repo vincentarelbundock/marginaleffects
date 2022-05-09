@@ -21,14 +21,17 @@ comparisons(
 \arguments{
 \item{model}{Model object}
 
-\item{newdata}{A data frame over which to compute quantities of interest.
+\item{newdata}{\code{NULL}, a data frame or a string which determines the predictor values for which to compute contrasts.
 \itemize{
-\item \code{NULL}: contrasts for each observed value in the original dataset.
+\item \code{NULL} (default): Unit-level contrasts for each observed value in the original dataset.
+\item A data frame: Unit-level contrasts for each row of the \code{newdata} data frame.
+\item "mean": Contrasts at the Mean. Contrasts when each predictor is held at its mean or mode.
+\item "median": Contrasts at the Median. Contrasts when each predictor is held at its mean or mode.
+\item "marginalmeans": Contrasts in Marginal Means. See Details section below.
 \item The \code{\link[=datagrid]{datagrid()}} function can be used to specify a custom grid of regressors. For example:
 \itemize{
-\item \code{newdata = datagrid()}: contrast at the mean
 \item \code{newdata = datagrid(cyl = c(4, 6))}: \code{cyl} variable equal to 4 and 6 and other regressors fixed at their means or modes.
-\item See the Examples section and the \code{\link[=datagrid]{datagrid()}} documentation for more.
+\item See the Examples section and the \code{\link[=datagrid]{datagrid()}} documentation.
 }
 }}
 
@@ -109,11 +112,12 @@ arguments.}
 This function calculates contrasts (or comparisons) between adjusted
 predictions for each row of the dataset. The resulting object can processed
 by the \code{tidy()} or \code{summary()} functions, which compute Average Contrasts
-(see \code{?summary.marginaleffects}). The \code{datagrid()} function and the
-\code{newdata} argument can be used to calculate contrasts Contrasts at the Mean
-or Contrasts at User-Specified values (aka Contrasts at Representative
-values). Additional information can be found in the Details and Examples
-sections below, and in the vignette on the \code{marginaleffects} website.
+(see \code{?summary.marginaleffects}). The \code{newdata} argument can be used to
+calculate a variety of contrasts, including "Contrasts at the Mean,"
+"Contrasts at User-Specified values" (aka Contrasts at Representative
+values), or "Contrasts in Marginal Means." Additional information can be
+found in the Details and Examples sections below, and in the vignette on the
+\code{marginaleffects} website.
 }
 \details{
 A "contrast" is the difference between two adjusted predictions, calculated
