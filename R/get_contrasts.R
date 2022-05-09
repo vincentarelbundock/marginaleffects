@@ -98,12 +98,10 @@ get_contrasts <- function(model,
         fun <- function(hi, lo) hi - lo
     }
 
-
-    marginalmeans_flag <- TRUE
-    if (isTRUE(marginalmeans_flag)) {
+    if (isTRUE(marginalmeans)) {
         out[, predicted_lo := pred_lo$predicted]
         out[, predicted_hi := pred_hi$predicted]
-        idx <- grep("^contrast_", colnames(out), value = TRUE)
+        idx <- grep("^contrast|^term$", colnames(out), value = TRUE)
         out <- out[, .(predicted_lo = mean(predicted_lo), predicted_hi = mean(predicted_hi)), by = idx]
         out[, "comparison" := fun(predicted_hi, predicted_lo)]
         out[, c("predicted_hi", "predicted_lo") := NULL]

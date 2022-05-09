@@ -42,6 +42,7 @@ get_contrast_data <- function(model,
                 newdata,
                 v,
                 contrast_factor = ctype,
+                interaction = interaction,
                 first_interaction = isTRUE(v == first_interaction),
                 ...)
 
@@ -56,6 +57,7 @@ get_contrast_data <- function(model,
                 newdata,
                 v,
                 ctype,
+                interaction = interaction,
                 first_interaction = isTRUE(v == first_interaction),
                 ...)
 
