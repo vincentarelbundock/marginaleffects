@@ -78,6 +78,9 @@ get_contrast_data <- function(model,
         }
 
         lo[[v]] <- tmp$lo
+        if (isTRUE(interaction)) {
+            lo[[v]][[paste0("null_contrast_", v)]] <- tmp$contrast_null
+        }
         hi[[v]] <- tmp$hi
         ter[[v]] <- tmp$ter
         lab[[v]] <- tmp$lab
@@ -103,6 +106,7 @@ get_contrast_data <- function(model,
     hi <- lapply(hi, clean)
     original <- lapply(original, clean)
 
+
     # single contrast
     if (!isTRUE(interaction)) {
         lo <- rbindlist(lo)
@@ -123,15 +127,19 @@ get_contrast_data <- function(model,
         for (i in seq_along(lo)) {
             if (i == 1) {
                 # keep rowid and original data only in one of the datasets
-                idx <- setdiff(variables, names(lo)[i])
+                idx_lo <- setdiff(variables, names(lo)[i])
+                idx_hi <- setdiff(variables, names(hi)[i])
             } else {
                 # exclude rowid and variables excluded from `variables`, for
                 # which we do not compute cross-contrasts
-                idx <- c(setdiff(names(lo[[i]]), variables),
-                         setdiff(variables, names(lo)[[i]]))
+                contrast_null <- grep("^null_contrast_", colnames(lo[[i]]), value = TRUE)
+                idx_lo <- c(setdiff(names(lo[[i]]), c(contrast_null, variables)),
+                            setdiff(variables, names(lo)[[i]]))
+                idx_hi <- c(setdiff(names(hi[[i]]), variables),
+                            setdiff(variables, names(hi)[[i]]))
             }
-            lo[[i]] <- data.table(lo[[i]])[, !..idx]
-            hi[[i]] <- data.table(hi[[i]])[, !..idx]
+            lo[[i]] <- data.table(lo[[i]])[, !..idx_lo]
+            hi[[i]] <- data.table(hi[[i]])[, !..idx_hi]
             lo[[i]][[paste0("contrast_", names(lo)[i])]] <- lab[[i]]
             hi[[i]][[paste0("contrast_", names(lo)[i])]] <- lab[[i]]
         }
@@ -139,6 +147,18 @@ get_contrast_data <- function(model,
         lo <- cjdt(lo)
         hi <- cjdt(hi)
         original <- NULL
+
+
+        # if there are fewer null_contrast_* columns, then there is at least
+        # one always non-null variable type, so we keep everything
+        idx <- grepl("^null_contrast_", colnames(lo))
+        idx_df <- lo[, ..idx]
+        lo <- lo[, !..idx]
+        if (sum(idx) == length(variables)) {
+            idx <- rowSums(idx_df) < ncol(idx_df)
+            lo <- lo[idx]
+            hi <- hi[idx]
+        }
     }
 
     out <- list(lo = lo, hi = hi, original = original)
