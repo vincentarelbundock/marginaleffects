@@ -188,7 +188,8 @@ comparisons <- function(model,
                  contrast_factor = contrast_factor,
                  contrast_numeric = contrast_numeric,
                  eps = eps,
-                 cache = cache)
+                 cache = cache,
+                 marginalmeans = marginalmeans)
     args <- c(args, dots)
     mfx <- do.call("get_contrasts", args)
 
@@ -211,6 +212,7 @@ comparisons <- function(model,
                      cache = cache,
                      contrast_factor = contrast_factor,
                      contrast_numeric = contrast_numeric,
+                     marginalmeans = marginalmeans,
                      eps = eps)
         args <- c(args, dots)
         se <- do.call("standard_errors_delta", args)

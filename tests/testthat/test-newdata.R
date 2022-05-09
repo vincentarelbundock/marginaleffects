@@ -1,4 +1,3 @@
-skip()
 
 test_that("visualisation_matrix() without `x` variable", {
     requiet("modelbased")
@@ -37,7 +36,7 @@ test_that("newdata = 'marginalmeans'", {
     cmp <- comparisons(mod, newdata = "marginalmeans", variables = "gear")
     cmp <- tidy(cmp)
 
-    emm <- emmeans(mod, specs = "gear") 
+    emm <- emmeans(mod, specs = "gear")
     emm <- data.frame(contrast(emm, method = "trt.vs.ctrl1"))
 
     expect_equal(cmp$estimate, emm$estimate)
@@ -54,11 +53,11 @@ test_that("interaction: newdata = 'marginalmeans'", {
     cmp <- comparisons(
         mod,
         newdata = "marginalmeans",
-        variables = c("species", "island"))[, 2:5]
-
-    summary(tmp, by = c("contrast_species", "contrast_island"))
+        variables = c("species", "island"))
 
     emm <- emmeans(mod, specs = c("species", "island"))
     emm <- data.frame(contrast(emm, method = "trt.vs.ctrl1"))
-    emm
+
+    expect_equal(cmp$comparison, emm$estimate)
+    expect_equal(cmp$std.error, emm$SE)
 })
