@@ -1,0 +1,142 @@
+---
+output: html_document
+---
+
+# Load packages, download data, and fit a bayesian hurdle model
+
+```{r, message = FALSE}
+library(gapminder)
+library(tidyverse)
+library(brms)
+library(ggplot2)
+library(ggdist)
+library(cmdstanr)
+library(patchwork)
+library(marginaleffects)
+set.seed(1234)
+CHAINS <- 4
+ITER <- 2000
+WARMUP <- 1000
+BAYES_SEED <- 1234
+
+gapminder <- gapminder::gapminder |> 
+  filter(continent != "Oceania") |> 
+  # Make a bunch of GDP values 0
+  mutate(prob_zero = ifelse(lifeExp < 50, 0.3, 0.02),
+         will_be_zero = rbinom(n(), 1, prob = prob_zero),
+         gdpPercap = ifelse(will_be_zero, 0, gdpPercap)) |> 
+  select(-prob_zero, -will_be_zero) |> 
+  # Make a logged version of GDP per capita
+  mutate(log_gdpPercap = log1p(gdpPercap)) |> 
+  mutate(is_zero = gdpPercap == 0)
+```
+
+```{r, eval = FALSE}
+mod <- brm(
+  bf(gdpPercap ~ lifeExp + year + (1 + lifeExp + year | continent),
+     hu ~ lifeExp),
+  data = gapminder,
+  backend = "cmdstanr",
+  family = hurdle_lognormal(),
+  cores = 2,
+  chains = CHAINS, iter = ITER, warmup = WARMUP, seed = BAYES_SEED,
+  silent = 2)
+
+saveRDS(mod, file = "brms_hurdle_heiss.rds")
+```
+
+# Adjusted predictions
+
+Compute adjusted predictions for every observation in the original data:
+
+```{r}
+predictions(mod) |> head()
+```
+
+Compute adjusted predictions for the `hu` parameter:
+
+```{r}
+predictions(mod, dpar = "hu") |> head()
+```
+
+Predictions on a different scale:
+
+```{r}
+predictions(mod, type = "link", dpar = "hu") |> head()
+```
+
+Plot adjusted predictions as a function of `lifeExp`:
+
+```{r}
+plot_cap(
+    mod,
+    condition = "lifeExp") +
+    labs(y = "mu") +
+plot_cap(
+    mod,
+    dpar = "hu",
+    condition = "lifeExp") +
+    labs(y = "hu")
+```
+
+# Extract draws with `posteriordraws()`
+
+The `posteriordraws()` function extract raw samples from the posterior from objects produced by `marginaleffects`. This allows us to use richer geoms and summaries, such as those in the `ggdist` package:
+
+```{r}
+
+plot_cap(mod, condition = "lifeExp") %>%
+    posteriordraws() %>%
+    ggplot(aes(x, draw)) +
+    stat_linerribbon()
+
+```
+
+
+# Contrasts
+
+What happens to the `gdpPercap` when `lifeExp` increases by one standard deviation?
+
+```{r}
+comparisons(mod, variables = list(lifeExp = "sd")) %>%
+    summary()
+```
+
+What happens to the `gdpPercap` when `lifeExp` increases from 50 to 60 and  `pop` simultaneously increases by an interquartile range?
+
+```{r}
+comparisons(
+    mod,
+    variables = list(lifeExp = c(50, 60),
+                     pop = "iqr")) %>%
+    summary()
+```
+
+# Marginal effects (slopes)
+
+```{r}
+# Marginal effect of lifeExp on mu
+marginaleffects(
+    model_gdp_hurdle_life) |> summary()
+
+# Marginal effects
+plot_cme(
+    model_gdp_hurdle_life,
+    effect = "lifeExp",
+    condition = "lifeExp", draw = FALSE)
+plot_cme(
+    model_gdp_hurdle_life,
+    dpar = "hu",
+    effect = "lifeExp",
+    condition = "lifeExp")
+```
+
+
+# `brms` arguments: `re_formula` et al.
+
+```{r}
+comparisons(mod, re_formula = NULL)
+```
+
+```
+

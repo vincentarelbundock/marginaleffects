@@ -368,6 +368,11 @@ tidy.comparisons <- function(x,
     attr(out, "conf.level") <- conf.level
     attr(out, "FUN") <- FUN_label
 
+    if (exists("drawavg")) {
+        class(drawavg) <- c("posterior_draws", class(drawavg))
+        attr(out, "posterior_draws") <- drawavg
+    }
+
     if (exists("J_mean")) {
         attr(out, "J") <- J_mean
     }
