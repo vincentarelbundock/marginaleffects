@@ -3,11 +3,12 @@
 #' This function calculates contrasts (or comparisons) between adjusted
 #' predictions for each row of the dataset. The resulting object can processed
 #' by the `tidy()` or `summary()` functions, which compute Average Contrasts
-#' (see `?summary.marginaleffects`). The `datagrid()` function and the
-#' `newdata` argument can be used to calculate contrasts Contrasts at the Mean
-#' or Contrasts at User-Specified values (aka Contrasts at Representative
-#' values). Additional information can be found in the Details and Examples
-#' sections below, and in the vignette on the `marginaleffects` website.
+#' (see `?summary.marginaleffects`). The `newdata` argument can be used to
+#' calculate a variety of contrasts, including "Contrasts at the Mean,"
+#' "Contrasts at User-Specified values" (aka Contrasts at Representative
+#' values), or "Contrasts in Marginal Means." Additional information can be
+#' found in the Details and Examples sections below, and in the vignette on the
+#' `marginaleffects` website.
 #'
 #' A "contrast" is the difference between two adjusted predictions, calculated
 #' for meaningfully different regressor values (e.g., College graduates vs.
@@ -32,13 +33,16 @@
 #' * "all": All combinations of observed levels
 #' * "sequential": Each factor level is compared to the previous factor level
 #' * "pairwise": Each factor level is compared to all other levels
-#' @param newdata A data frame over which to compute quantities of interest.
-#'   + `NULL`: contrasts for each observed value in the original dataset.
+#' @param newdata `NULL`, a data frame or a string which determines the predictor values for which to compute contrasts.
+#'   + `NULL` (default): Unit-level contrasts for each observed value in the original dataset.
+#'   + A data frame: Unit-level contrasts for each row of the `newdata` data frame.
+#'   + "mean": Contrasts at the Mean. Contrasts when each predictor is held at its mean or mode.
+#'   + "median": Contrasts at the Median. Contrasts when each predictor is held at its mean or mode.
+#'   + "marginalmeans": Contrasts in Marginal Means. See Details section below. 
 #'   + The [datagrid()] function can be used to specify a custom grid of regressors. For example:
-#'       - `newdata = datagrid()`: contrast at the mean
 #'       - `newdata = datagrid(cyl = c(4, 6))`: `cyl` variable equal to 4 and 6 and other regressors fixed at their means or modes.
-#'       - See the Examples section and the [datagrid()] documentation for more.
-#' @param contrast_numeric string or numeric
+#'       - See the Examples section and the [datagrid()] documentation.
+#' for more. @param contrast_numeric string or numeric
 #' * Numeric of length 1: Contrast for a gap of `contrast_numeric`, computed at the observed value plus and minus `contrast_numeric / 2`
 #' * Numeric vector of length 2: Contrast between the 2nd element and the 1st element of the `contrast_numeric` vector.
 #' * "iqr": Contrast across the interquartile range of the regressor.
