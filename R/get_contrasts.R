@@ -73,8 +73,10 @@ get_contrasts <- function(model,
     }
 
     con <- try(fun(pred_hi[["predicted"]], pred_lo[["predicted"]]), silent = TRUE)
-    if (!isTRUE(checkmate::check_numeric(con, len = nrow(out)))) {
-        msg <- sprintf("The function supplied to the `transformation` argument must accept two numeric vectors of predicted probabilities of length %s, and return a single numeric vector of the same length.", nrow(out))
+
+    if (!isTRUE(checkmate::check_numeric(con, len = nrow(out))) &&
+        !isTRUE(checkmate::check_numeric(con, len = 1))) {
+        msg <- sprintf("The function supplied to the `transformation` argument must accept two numeric vectors of predicted probabilities of length %s, and return a numeric value, or a numeric vector of length %s.", nrow(out), nrow(out))
         stop(msg, call. = FALSE)
     }
     out[, "comparison" := con]
