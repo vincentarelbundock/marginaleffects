@@ -105,7 +105,8 @@ counterfactual <- function(..., model = NULL, newdata = NULL) {
     at <- lapply(at, unique)
 
     fun <- data.table::CJ
-    at <- do.call("fun", at)
+    args <- c(at, list(sorted = FALSE))
+    at <- do.call("fun", args)
 
     rowid <- data.frame(rowid_counterfactual = seq_len(nrow(dat)))
     if (length(variables_automatic) > 0) {
@@ -178,7 +179,8 @@ typical <- function(
     }
 
     fun <- data.table::CJ
-    out <- do.call("fun", out)
+    args <- c(out, list(sorted = FALSE))
+    out <- do.call("fun", args)
 
     # na.omit destroys attributes, and we need the "factor" attribute
     # created by insight::get_data
