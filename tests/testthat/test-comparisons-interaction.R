@@ -1,3 +1,18 @@
+test_that("interaction automatic flip from NULL to useful", {
+    dat <- mtcars
+    dat$gear <- factor(dat$gear)
+    dat$cyl <- factor(dat$cyl)
+    mod1 <- lm(mpg ~ gear + cyl + wt + gear, data = dat)
+    mod2 <- lm(mpg ~ gear * cyl + wt + gear, data = dat)
+    cmp1 <- comparisons(mod1, newdata = datagrid())
+    cmp2 <- suppressWarnings(comparisons(mod2, newdata = datagrid()))
+    cmp3 <- suppressWarnings(comparisons(mod2, variables = c("cyl", "gear"), newdata = datagrid()))
+    expect_true("contrast" %in% colnames(cmp1))
+    expect_true("contrast" %in% colnames(cmp2))
+    expect_true(all(c("contrast_cyl", "contrast_gear") %in% colnames(cmp3)))
+})
+
+
 test_that("interaction vs. emmeans", {
     requiet("emmeans")
     mod <- lm(mpg ~ factor(am) + factor(cyl) + wt + gear, data = mtcars)

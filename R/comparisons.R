@@ -45,9 +45,10 @@
 #' * "sd": Contrast across one standard deviation around the regressor mean.
 #' * "2sd": Contrast across two standard deviations around the regressor mean.
 #' * "minmax": Contrast between the maximum and the minimum values of the regressor.
-#' @param interaction boolean
-#' * FALSE: Contrasts represent the change in adjusted predictions when one predictor changes and all other variables are held constant.
-#' * TRUE: Contrasts represent the changes in adjusted predictions when several predictors are manipulated simultaneously. When `interaction=TRUE`, the `newdata` argument must either be `NULL` or be a 1-row data frame, otherwise contrast interactions could be too costly to compute.
+#' @param interaction TRUE, FALSE, or NULL
+#' * `FALSE`: Contrasts represent the change in adjusted predictions when one predictor changes and all other variables are held constant.
+#' * `TRUE`: Contrasts represent the changes in adjusted predictions when the predictors specified in the `variables` argument are manipulated simultaneously.
+#' * `NULL` (default): Behaves like `TRUE` when the `variables` argument is specified and the model formula includes interactions. Behaves like `FALSE` otherwise.
 #' @template model_specific_arguments
 #'
 #' @examples
@@ -95,7 +96,7 @@ comparisons <- function(model,
                         conf.level = 0.95,
                         contrast_factor = "reference",
                         contrast_numeric = 1,
-                        interaction = FALSE,
+                        interaction = NULL,
                         eps = 1e-4,
                         ...) {
 
@@ -115,10 +116,8 @@ comparisons <- function(model,
         }
     }
 
-    if (isTRUE(interaction) && is.null(variables)) {
-        msg <- "When `interaction=TRUE` you must use the `variables` argument to specify which variables should be interacted."
-        stop(msg, call. = TRUE)
-    }
+    # interaction: flip NULL to TRUE if there are interactions in the formula and FALSE otherwise
+    interaction <- sanitize_interaction(interaction, variables, model)
 
     # `marginaleffects()` must run its own sanity checks before any transforms
     if (!isTRUE(internal_call)) {

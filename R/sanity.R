@@ -121,6 +121,27 @@ sanity_contrast_factor <- function(contrast_factor, assertion = TRUE) {
 }
 
 
+sanitize_interaction <- function(interaction, variables, model) {
+
+    checkmate::assert_flag(interaction, null.ok = TRUE)
+
+    if (isTRUE(interaction) && is.null(variables)) {
+        msg <- "When `interaction=TRUE` you must use the `variables` argument to specify which variables should be interacted."
+        stop(msg, call. = TRUE)
+    }
+
+    if (isTRUE(checkmate::check_flag(interaction))) {
+        return(interaction)
+    }
+
+    inter <- try(insight::find_interactions(model, flatten = TRUE), silent = TRUE)
+    if (!is.null(variables) && isTRUE(length(inter) > 0)) {
+        return(TRUE)
+    } else {
+        return(FALSE)
+    }
+}
+
 
 # OBSOLETE CHECKS KEPT FOR POSTERITY
 
@@ -136,3 +157,5 @@ sanity_contrast_factor <- function(contrast_factor, assertion = TRUE) {
 #     checkmate::assert_choice(numDeriv_method, choices = c("simple", "complex", "Richardson"))
 #     return(numDeriv_method)
 # }
+
+
