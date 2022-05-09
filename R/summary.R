@@ -42,6 +42,11 @@ print.marginaleffects.summary <- function(x,
 
   out <- x
 
+  if ("group" %in% colnames(out) &&
+      all(out$group == "main_marginaleffects")) {
+      out$group <- NULL
+  }
+
   # title
   if (isTRUE(attr(x, "FUN") == "mean")) {
       tit <- "Average marginal effects"
@@ -338,6 +343,7 @@ print.comparisons.summary <- function(x,
                                       ...) {
 
   out <- x
+
 
   # title
   if ("term" %in% colnames(x) && all(x[["term"]] == "interaction")) {
