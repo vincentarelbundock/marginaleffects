@@ -672,7 +672,7 @@ comparisons(
     mod,
     type = "link",
     variables = "lifeExp",
-    newdata = datagrid(lifeExp = c(40, 70), grid.type = "counterfactual")) %>%
+    newdata = datagrid(lifeExp = c(40, 70), continent = gapminder$continent)) %>%
     posteriordraws() %>%
     ggplot(aes(draw, continent, fill = continent)) +
     stat_slabinterval() +
