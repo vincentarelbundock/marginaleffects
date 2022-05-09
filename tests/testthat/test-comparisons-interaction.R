@@ -61,30 +61,28 @@ test_that("interaction (no validity)", {
     cmp <- comparisons(
         mod,
         variables = c("cyl", "am"),
-        contrast_factor = "sequential",
-        interaction = TRUE)
+        contrast_factor = "sequential")
+    expect_equal(nrow(cmp), 64)
     expect_equal(nrow(tidy(cmp)), 2)
 
     cmp <- comparisons(
         mod,
-        variables = c("cyl", "am", "wt"),
-        contrast_factor = "pairwise",
-        interaction = TRUE)
-    expect_equal(nrow(tidy(cmp)), 3)
+        variables = c("cyl", "am", "wt"))
+    expect_equal(nrow(cmp), 192)
+    expect_equal(nrow(tidy(cmp)), 6)
 
     cmp <- comparisons(
         mod,
         variables = c("cyl", "am", "wt"),
-        contrast_factor = "pairwise",
-        interaction = FALSE)
-    expect_equal(nrow(cmp), 160)
-    expect_equal(nrow(tidy(cmp)), 5)
+        contrast_factor = "pairwise")
+    expect_equal(nrow(cmp), 768)
+    expect_equal(nrow(tidy(cmp)), 24)
 })
 
 
 test_that("brms + order of first character doesn't matter", {
     mod <- download_model("brms_factor")
     cmp <- comparisons(mod, variables = c("cyl_fac", "mpg"), interaction = TRUE, contrast_factor = "all")
-    expect_equal(nrow(cmp), 6144)
+    expect_equal(nrow(cmp), 192)
     expect_equal(nrow(tidy(cmp)), 6)
 })

@@ -133,10 +133,10 @@ get_contrast_data <- function(model,
             } else {
                 # exclude rowid and variables excluded from `variables`, for
                 # which we do not compute cross-contrasts
-                contrast_null <- grep("^null_contrast_", colnames(lo[[i]]), value = TRUE)
+                contrast_null <- grep("rowid|^null_contrast_", colnames(lo[[i]]), value = TRUE)
                 idx_lo <- c(setdiff(names(lo[[i]]), c(contrast_null, variables)),
                             setdiff(variables, names(lo)[[i]]))
-                idx_hi <- c(setdiff(names(hi[[i]]), variables),
+                idx_hi <- c(setdiff(names(hi[[i]]), c(contrast_null, variables)),
                             setdiff(variables, names(hi)[[i]]))
             }
             lo[[i]] <- data.table(lo[[i]])[, !..idx_lo]
@@ -145,10 +145,14 @@ get_contrast_data <- function(model,
             hi[[i]][[paste0("contrast_", names(lo)[i])]] <- lab[[i]]
         }
 
-        lo <- cjdt(lo)
-        hi <- cjdt(hi)
+        fun <- function(x, y) merge(x, y, all = TRUE, allow.cartesian = TRUE)
+        lo <- Reduce("fun", lo)
+        hi <- Reduce("fun", hi)
         original <- NULL
 
+        # faster to rbind, but creates massive datasets. need cartesian join on rowid
+        # lo <- cjdt(lo)
+        # hi <- cjdt(hi)
 
         # if there are fewer null_contrast_* columns, then there is at least
         # one always non-null variable type, so we keep everything
