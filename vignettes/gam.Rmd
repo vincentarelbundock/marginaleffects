@@ -96,7 +96,7 @@ The marginal effects in this plot can be interpreted as measuring the change in 
 The `predict()` method of the `mgcv` package allows users to "exclude" some smoothing terms, using the `exclude` argument. You can pass the same argument to any function in the `marginaleffects` package:
 
 ```{r}
-predictions(model, newdata = datagrid(), exclude = "s(Subject)")
+predictions(model, newdata = "mean", exclude = "s(Subject)")
 ```
 
 See the documentation in `?mgcv:::predict.bam` for details.

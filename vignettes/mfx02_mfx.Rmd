@@ -168,10 +168,10 @@ When variables are omitted from the `datagrid` call, they will automatically be 
 
 # Marginal Effect at the Mean (MEM)
 
-The "Marginal Effect at the Mean" is a marginal effect calculated for a hypothetical observation where each regressor is set at its mean or mode. By default, the `datagrid` function that we used in the previous section sets all regressors to their means or modes. To calculate the MEM, we can simply type:
+The "Marginal Effect at the Mean" is a marginal effect calculated for a hypothetical observation where each regressor is set at its mean or mode. By default, the `datagrid` function that we used in the previous section sets all regressors to their means or modes. To calculate the MEM, we can set the `newdata` argument, which determines the values of predictors at which we want to compute marginal effects:
 
 ```{r}
-marginaleffects(mod, newdata = datagrid())
+marginaleffects(mod, newdata = "mean")
 ```
 
 # Counterfactual Marginal Effects

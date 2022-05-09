@@ -72,7 +72,7 @@ Response scale, reference groups:
 emm <- emmeans(mod, specs = "cyl", regrid = "response")
 contrast(emm, method = "trt.vs.ctrl1")
 
-comparisons(mod, newdata = datagrid())
+comparisons(mod, newdata = "mean")
 ```
 
 Link scale, pairwise contrasts:
@@ -83,7 +83,7 @@ contrast(emm, method = "revpairwise")
 
 comparisons(mod,
             type = "link",
-            newdata = datagrid(),
+            newdata = "mean",
             contrast_factor = "pairwise")
 ```
 
@@ -224,7 +224,7 @@ nd <- data.frame(cyl = 4, hp = 110, wt = 3)
 mar <- margins(mod, data = data.frame(mean_or_mode(mtcars)), unit_ses = TRUE)
 data.frame(mar)
 
-marginaleffects(mod, newdata = datagrid())
+marginaleffects(mod, newdata = "mean")
 ```
 
 ## Counterfactual Average Marginal Effects
