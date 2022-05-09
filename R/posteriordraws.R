@@ -8,6 +8,10 @@ posteriordraws <- function(x) {
     # long format can be very slow to merge, so we use `data.table`
     assert_dependency("data.table")
 
+    # tidy.comparisons() saves draws in a nice format already
+    draws <- attr(x, "posterior_draws")
+    if (inherits(draws, "posterior_draws")) return(draws)
+
     if (!inherits(x, "marginaleffects") && !inherits(x, "predictions") && !inherits(x, "comparisons")) {
         warning('The `posteriordraws` function only supports objects of type "marginaleffects", "comparisons", or "predictions" produced by the `marginaleffects` package.',
                 call. = FALSE)
