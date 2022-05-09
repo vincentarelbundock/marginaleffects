@@ -1,4 +1,4 @@
-# TODO: confidence intervals don't match Stata [1:2]
+# TODO: CI: See comment in last test for how the intervals are back transformed
 
 requiet("modelsummary")
 tol <- .0001
@@ -77,18 +77,25 @@ test_that("health insurance vs. Stata", {
     mod <- glm(health ~ insurance + gender + ethnicity + married + age,
                data = HealthInsurance, family = binomial)
 
-    ard_r <- comparisons(mod, variables = "insurance", transformation = function(hi, lo) hi - lo)
-    arr_r <- comparisons(mod, variables = "insurance", transformation = function(hi, lo) mean(hi) / mean(lo))
+    # # Stata CI: exp(r(lnARR)-invnorm(0.975)*r(lnARR_se))
+    # lnarr_r <- comparisons(
+    #     mod, variables = "insurance",
+    #     transformation = function(hi, lo) log(mean(hi) / mean(lo)))
+    # lnarr_r <- tidy(lnarr_r)
+    # exp(lnarr_r$estimate - qnorm(0.975) * lnarr_r$std.error)
+    # exp(lnarr_r$estimate - qnorm(0.025) * lnarr_r$std.error)
+
+    ard_r <- comparisons(
+        mod, variables = "insurance",
+        transformation = function(hi, lo) hi - lo)
+
+    arr_r <- comparisons(
+        mod, variables = "insurance",
+        transformation = function(hi, lo) mean(hi) / mean(lo))
 
     cols <- c("estimate", "std.error", "conf.low", "conf.high")
     ard_r <- unlist(tidy(ard_r)[, cols])
     arr_r <- unlist(tidy(arr_r)[, cols])
-
-    # # Stata not sure how CIs are built in Stata
-    # critical_t <- qt(0.025, df = 1999)
-    # arr_r <- tidy(arr_r)
-    # arr_r$estimate - abs(critical_t) * arr_r$std.error
-    # arr_r$estimate + abs(critical_t) * arr_r$std.error
 
     expect_equal(ard_r[1:2], ard_s[1:2], tolerance = tol, ignore_attr = TRUE)
     expect_equal(arr_r[1:2], arr_s[1:2], tolerance = tol, ignore_attr = TRUE)
