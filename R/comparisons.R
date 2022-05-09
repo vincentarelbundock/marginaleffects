@@ -113,23 +113,6 @@ comparisons <- function(model,
                 newdata <- eval.parent(as.call(lcall))
             }
         }
-
-        # `interaction=TRUE` defaults to contrasts at mean, otherwise the size of the cross-joined data can explode
-        if (isTRUE(interaction)) {
-            if (is.null(newdata)) {
-                newdata <- datagrid(model = model)
-                newdata <- sanity_newdata(model, newdata)
-            } else if (!isTRUE(checkmate::check_data_frame(newdata, nrows = 1, null.ok = FALSE))) {
-                newdata <- datagrid(model = model)
-                newdata <- sanity_newdata(model, newdata)
-                msg <- "When `interaction=TRUE`, the `newdata` argument must either be NULL or a 1-row data frame (e.g., with all variables set to their mean or mode)."
-                warning(msg, call. = FALSE)
-            } else {
-            }
-            newdata[["rowid"]] <- 1
-        } else {
-            newdata <- sanity_newdata(model, newdata)
-        }
     }
 
     if (isTRUE(interaction) && is.null(variables)) {
@@ -147,6 +130,8 @@ comparisons <- function(model,
         sanity_contrast_factor(contrast_factor)
         sanity_contrast_numeric(contrast_numeric)
     }
+
+    newdata <- sanity_newdata(model = model, newdata = newdata)
 
     # get dof before transforming the vcov arg
     if (is.character(vcov) && (isTRUE(vcov == "satterthwaite") || isTRUE(vcov == "kenward-roger"))) {
