@@ -31,6 +31,7 @@ complete_levels <- function(x, levels_character = NULL) {
     # create padding
     if (length(vault) > 0) {
         padding <- utils::head(x, 1)
+        setDF(padding) # not sure why, but this is needed
         for (v in names(vault)) {
             padding[[v]] <- NULL
         }

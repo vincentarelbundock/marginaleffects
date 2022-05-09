@@ -105,7 +105,6 @@ test_that("predictions with multinomial outcome", {
     idx <- 3:5
     n_row <- sapply(dat[, idx], function(x) length(unique(x)))
     n_row <- prod(n_row) * length(idx) * length(unique(dat$y))
-    n_row
     pred <- predictions(m2, type = "probs", variables = colnames(dat)[idx])
     expect_predictions(pred, n_row = n_row)
 
