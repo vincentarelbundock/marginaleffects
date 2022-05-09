@@ -8,6 +8,7 @@ get_contrast_data <- function(model,
                               contrast_types = NULL,
                               ...) {
 
+
     lo <- hi <- ter <- lab <- original <- rowid <- list()
 
     variable_classes <- sapply(variables, function(x) find_variable_class(
