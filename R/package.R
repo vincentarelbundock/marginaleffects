@@ -10,4 +10,4 @@ utils::globalVariables(c('.', 'term', 'part', 'estimate', 'conf.high',
                          'conf_level', 'group', 'contrast', 'm', 'dydx',
                          "patterns", 'rowid', 'predicted', 'gn',
                          # data.table calls
-                         'comparison', "..idx", "..idx_by", "..tmp", "draw", "..cols"))
+                         'comparison', "..idx", "..idx_by", "..idx_lo", "..idx_hi", "..tmp", "draw", "..cols"))

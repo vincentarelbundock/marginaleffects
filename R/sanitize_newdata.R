@@ -1,7 +1,7 @@
 sanity_newdata <- function(model, newdata) {
 
     checkmate::assert(
-        checkmate::check_data_frame(newdata, null.ok = TRUE, any.missing = FALSE),
+        checkmate::check_data_frame(newdata, null.ok = TRUE),
         checkmate::check_choice(newdata, choices = c("mean", "median", "marginalmeans")),
         combine = "or")
 
