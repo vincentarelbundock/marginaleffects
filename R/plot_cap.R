@@ -24,7 +24,8 @@ plot_cap <- function(model,
                      vcov = NULL,
                      conf.int = TRUE,
                      conf.level = 0.95,
-                     draw = TRUE) {
+                     draw = TRUE,
+                     ...) {
 
     # get data to know over what range of values we should plot
     dat <- insight::get_data(model)
@@ -88,7 +89,8 @@ plot_cap <- function(model,
                            type = type,
                            vcov = vcov,
                            conf.int = conf.int,
-                           conf.level = conf.level)
+                           conf.level = conf.level,
+                           ...)
     colnames(datplot)[colnames(datplot) == condition1] <- "condition1"
     colnames(datplot)[colnames(datplot) == condition2] <- "condition2"
     colnames(datplot)[colnames(datplot) == condition3] <- "condition3"
