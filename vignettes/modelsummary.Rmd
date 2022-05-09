@@ -42,6 +42,7 @@ The same results can be visualized with `modelplot()`:
 modelplot(mfx)
 ```
 
+````{comment}
 We can display several models or marginal effects side by side:
 
 ```{r}
@@ -52,6 +53,7 @@ models[[1]] <- marginaleffects(models[[1]])
 models[[2]] <- marginaleffects(models[[2]], vcov = "HC3")
 modelsummary(models)
 ```
+````
 
 # Contrasts
 
