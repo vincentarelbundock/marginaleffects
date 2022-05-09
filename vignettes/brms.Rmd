@@ -484,3 +484,198 @@ plot_cap(mod, condition = "oc.gc") +
 mfx <- marginaleffects(mod)
 summary(mfx)
 ```
+
+# Hurdle models
+
+
+This section replicates some analyses from [yet another amazing blog post by Andrew Heiss.](https://www.andrewheiss.com/blog/2022/05/09/hurdle-lognormal-gaussian-brms/#emmeans-with-hurdle-models)
+
+To begin, we estimate a hurdle model in `brms` with random effects, using data from the `gapminder` package:
+
+```{r, eval = FALSE}
+library(gapminder)
+library(brms)
+library(dplyr)
+library(ggplot2)
+library(ggdist)
+library(cmdstanr)
+library(patchwork)
+library(marginaleffects)
+
+set.seed(1024)
+
+CHAINS <- 4
+ITER <- 2000
+WARMUP <- 1000
+BAYES_SEED <- 1234
+
+gapminder <- gapminder::gapminder |> 
+  filter(continent != "Oceania") |> 
+  # Make a bunch of GDP values 0
+  mutate(prob_zero = ifelse(lifeExp < 50, 0.3, 0.02),
+         will_be_zero = rbinom(n(), 1, prob = prob_zero),
+         gdpPercap = ifelse(will_be_zero, 0, gdpPercap)) |> 
+  select(-prob_zero, -will_be_zero) |> 
+  # Make a logged version of GDP per capita
+  mutate(log_gdpPercap = log1p(gdpPercap)) |> 
+  mutate(is_zero = gdpPercap == 0)
+
+mod <- brm(
+  bf(gdpPercap ~ lifeExp + year + (1 + lifeExp + year | continent),
+     hu ~ lifeExp),
+  data = gapminder,
+  backend = "cmdstanr",
+  family = hurdle_lognormal(),
+  cores = 2,
+  chains = CHAINS, iter = ITER, warmup = WARMUP, seed = BAYES_SEED,
+  silent = 2)
+```
+
+```{r, include = FALSE}
+url <- "https://github.com/vincentarelbundock/modelarchive/raw/main/data/brms_hurdle_heiss.rds"
+tmp <- tempfile()
+download.file(url, tmp)
+mod <- readRDS(tmp)
+gapminder <- mod$data
+```
+
+## Adjusted predictions
+
+Adjusted predictions for every observation in the original data:
+
+```{r}
+predictions(mod) %>% head()
+```
+
+Adjusted predictions for the `hu` parameter:
+
+```{r}
+predictions(mod, dpar = "hu") %>% head()
+```
+
+Predictions on a different scale:
+
+```{r}
+predictions(mod, type = "link", dpar = "hu") %>% head()
+```
+
+Plot adjusted predictions as a function of `lifeExp`:
+
+```{r}
+plot_cap(
+    mod,
+    condition = "lifeExp") +
+    labs(y = "mu") +
+plot_cap(
+    mod,
+    dpar = "hu",
+    condition = "lifeExp") +
+    labs(y = "hu")
+```
+
+Predictions with more than one condition and the `re_formula` argument from `brms`:
+
+```{r}
+plot_cap(
+    mod,
+    re_formula = NULL,
+    condition = c("lifeExp", "continent"))
+```
+
+## Extract draws with `posteriordraws()`
+
+The `posteriordraws()` function extract raw samples from the posterior from objects produced by `marginaleffects`. This allows us to use richer geoms and summaries, such as those in the `ggdist` package:
+
+```{r}
+predictions(
+    mod,
+    re_formula = NULL,
+    newdata = datagrid(model = mod,
+                       continent = gapminder$continent,
+                       year = c(1952, 2007),
+                       lifeExp = seq(30, 80, 1))) %>%
+    posteriordraws() %>%
+    ggplot(aes(lifeExp, draw, fill = continent, color = continent)) +
+    stat_lineribbon(alpha = .25) +
+    facet_grid(year ~ continent)
+```
+
+## Average Contrasts
+
+What happens to `gdpPercap` when `lifeExp` increases by one?
+
+```{r}
+comparisons(mod) %>% summary()
+```
+What happens to `gdpPercap` when `lifeExp` increases by one standard deviation?
+
+```{r}
+comparisons(mod, variables = list(lifeExp = "sd")) %>% summary()
+```
+
+What happens to `gdpPercap` when `lifeExp` increases from 50 to 60 and  `year` simultaneously increases its min to its max?
+
+```{r}
+comparisons(
+    mod,
+    variables = list(lifeExp = c(50, 60), year = "minmax"),
+    interaction = TRUE) %>%
+    summary()
+```
+
+Plot draws from the posterior distribution of average contrasts (*not* the same thing as draws from the posterior distribution of contrasts):
+
+```{r}
+comparisons(mod) %>%
+    summary() %>%
+    posteriordraws() %>%
+    ggplot(aes(estimate, term)) +
+    stat_slabinterval() +
+    labs(x = "Posterior distribution of average contrasts", y = "")
+```
+
+## Marginal effects (slopes)
+
+Average Marginal Effect of `lifeExp` on different scales and for different parameters:
+
+```{r}
+marginaleffects(mod) |> summary()
+
+marginaleffects(mod, type = "link") |> summary()
+
+marginaleffects(mod, dpar = "hu") |> summary()
+
+marginaleffects(mod, dpar = "hu", type = "link") |> summary()
+```
+
+Plot Conditional Marginal Effects
+
+```{r}
+plot_cme(
+    mod,
+    effect = "lifeExp",
+    condition = "lifeExp") +
+    labs(y = "mu") +
+
+plot_cme(
+    mod,
+    dpar = "hu",
+    effect = "lifeExp",
+    condition = "lifeExp") +
+    labs(y = "hu")
+```
+
+Or we can call `marginaleffects()` or `comparisons()` with `posteriordraws()` function to have even more control:
+
+```{r}
+comparisons(
+    mod,
+    type = "link",
+    variables = "lifeExp",
+    newdata = datagrid(lifeExp = c(40, 70), grid.type = "counterfactual")) %>%
+    posteriordraws() %>%
+    ggplot(aes(draw, continent, fill = continent)) +
+    stat_slabinterval() +
+    facet_grid(lifeExp ~ .) +
+    labs(x = "Effect of a 1 unit change in Life Expectancy")
+```
