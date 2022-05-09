@@ -75,7 +75,7 @@ test_that("health insurance vs. Stata", {
     dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/AER/HealthInsurance.csv")
     dat$health <- as.factor(dat$health)
     mod <- glm(health ~ insurance + gender + ethnicity + married + age,
-               data = HealthInsurance, family = binomial)
+               data = dat, family = binomial)
 
     # # Stata CI: exp(r(lnARR)-invnorm(0.975)*r(lnARR_se))
     # lnarr_r <- comparisons(

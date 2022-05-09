@@ -3,7 +3,7 @@ get_contrast_data <- function(model,
                               variables = NULL,
                               contrast_factor = "reference",
                               contrast_numeric = 1,
-                              interaction = FALSE,
+                              interaction = NULL,
                               eps = 1e-4,
                               contrast_types = NULL,
                               ...) {
