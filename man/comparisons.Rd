@@ -13,7 +13,7 @@ comparisons(
   conf.level = 0.95,
   contrast_factor = "reference",
   contrast_numeric = 1,
-  interaction = FALSE,
+  interaction = NULL,
   eps = 1e-04,
   ...
 )
@@ -84,10 +84,11 @@ to 0.95, which corresponds to a 95 percent confidence interval.}
 \item "minmax": Contrast between the maximum and the minimum values of the regressor.
 }}
 
-\item{interaction}{boolean
+\item{interaction}{TRUE, FALSE, or NULL
 \itemize{
-\item FALSE: Contrasts represent the change in adjusted predictions when one predictor changes and all other variables are held constant.
-\item TRUE: Contrasts represent the changes in adjusted predictions when several predictors are manipulated simultaneously. When \code{interaction=TRUE}, the \code{newdata} argument must either be \code{NULL} or be a 1-row data frame, otherwise contrast interactions could be too costly to compute.
+\item \code{FALSE}: Contrasts represent the change in adjusted predictions when one predictor changes and all other variables are held constant.
+\item \code{TRUE}: Contrasts represent the changes in adjusted predictions when the predictors specified in the \code{variables} argument are manipulated simultaneously.
+\item \code{NULL} (default): Behaves like \code{TRUE} when the \code{variables} argument is specified and the model formula includes interactions. Behaves like \code{FALSE} otherwise.
 }}
 
 \item{eps}{A numeric value specifying the “step” to use when calculating
