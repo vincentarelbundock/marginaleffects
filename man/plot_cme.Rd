@@ -12,7 +12,8 @@ plot_cme(
   vcov = NULL,
   conf.int = TRUE,
   conf.level = 0.95,
-  draw = TRUE
+  draw = TRUE,
+  ...
 )
 }
 \arguments{
@@ -50,6 +51,15 @@ differ based on the model type, but will typically be a string such as:
 to 0.95, which corresponds to a 95 percent confidence interval.}
 
 \item{draw}{\code{TRUE} returns a \code{ggplot2} plot. \code{FALSE} returns a \code{data.frame} of the underlying data.}
+
+\item{...}{Additional arguments are passed to the \code{predict()} method used to
+compute adjusted predictions. These arguments are particularly useful for
+mixed-effects or bayesian models (see the online vignettes on the
+\code{marginaleffects} website). Available arguments can vary from model to
+model, depending on the range of supported arguments by each modeling
+package. See the "Model-Specific Arguments" section of the
+\code{?marginaleffects} documentation for a non-exhaustive list of available
+arguments.}
 }
 \value{
 A \code{ggplot2} object
