@@ -175,7 +175,7 @@ comparisons(mod, contrast_numeric = "minmax") \%>\% tidy()
 
 # Interactions between contrasts
 mod <- lm(mpg ~ factor(cyl) + factor(gear) + hp, data = mtcars)
-cmp <- comparisons(mod, interaction = TRUE)
+cmp <- comparisons(mod, variables = c("cyl", "gear"))
 summary(cmp)
 
 # variable-specific contrasts

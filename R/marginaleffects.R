@@ -188,6 +188,7 @@ marginaleffects <- function(model,
         type = type,
         contrast_numeric = "dydx",
         contrast_factor = "reference",
+        interaction = FALSE,
         # secret arguments
         internal_call = TRUE,
         eps = eps,
