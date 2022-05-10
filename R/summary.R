@@ -313,7 +313,6 @@ print.predictions.summary <- function(x,
 summary.comparisons <- function(object,
                                 conf.level = 0.95,
                                 by = NULL,
-                                FUN = NULL,
                                 ...) {
     out <- tidy(object, conf.level = conf.level, by = by, ...)
     class(out) <- c("comparisons.summary", class(out))
