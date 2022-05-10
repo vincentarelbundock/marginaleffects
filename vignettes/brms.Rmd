@@ -630,7 +630,7 @@ comparisons(mod) %>%
     summary() %>%
     posteriordraws() %>%
     ggplot(aes(estimate, term)) +
-    stat_slabinterval() +
+    stat_dotsinterval() +
     labs(x = "Posterior distribution of average contrasts", y = "")
 ```
 
@@ -675,7 +675,7 @@ comparisons(
     newdata = datagrid(lifeExp = c(40, 70), continent = gapminder$continent)) %>%
     posteriordraws() %>%
     ggplot(aes(draw, continent, fill = continent)) +
-    stat_slabinterval() +
+    stat_dotsinterval() +
     facet_grid(lifeExp ~ .) +
     labs(x = "Effect of a 1 unit change in Life Expectancy")
 ```
