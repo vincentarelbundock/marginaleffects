@@ -33,8 +33,6 @@ test_that("tidy.predictions", {
 test_that("tidy: minimal", {
     ti <- tidy(mfx)
     expect_equal(dim(ti), c(2, 8))
-    ti <- tidy(mfx, conf.int = FALSE)
-    expect_equal(dim(ti), c(2, 6))
     ti1 <- tidy(mfx, conf.level = .90)
     ti2 <- tidy(mfx, conf.level = .99)
     expect_true(all(ti1$conf.low > ti2$conf.low))

@@ -13,13 +13,12 @@
 #' plot(mfx)
 #'
 plot.marginaleffects <- function(x,
-                                 conf.int = TRUE,
-                                 conf.level = 0.95,
+                                 conf_level = 0.95,
                                  ...) {
 
     assert_dependency("ggplot2")
 
-    dat <- tidy(x, conf.int = conf.int, conf.level = conf.level)
+    dat <- tidy(x, conf_level = conf_level)
 
     # combine term and contrast to avoid overlap
     if (all(c("term", "contrast") %in% colnames(dat))) {
@@ -41,7 +40,7 @@ plot.marginaleffects <- function(x,
                                                    xmin = conf.low,
                                                    xmax = conf.high))
         }
-        xlab <- sprintf("Estimates with %s%% confidence intervals", sprintf("%.0f", conf.level * 100))
+        xlab <- sprintf("Estimates with %s%% confidence intervals", sprintf("%.0f", conf_level * 100))
         p <- p +
              ggplot2::geom_pointrange() +
              ggplot2::labs(x = xlab, y = "")
@@ -51,7 +50,7 @@ plot.marginaleffects <- function(x,
         } else {
             p <- ggplot2::ggplot(dat, ggplot2::aes(y = term, x = estimate))
         }
-        xlab <- sprintf("Estimates with %s%% confidence intervals", sprintf("%.0f", conf.level * 100))
+        xlab <- sprintf("Estimates with %s%% confidence intervals", sprintf("%.0f", conf_level * 100))
         p <- p +
              ggplot2::geom_point() +
              ggplot2::labs(x = xlab, y = "")

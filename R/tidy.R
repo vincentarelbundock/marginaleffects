@@ -11,7 +11,6 @@ generics::glance
 #' Tidy a `marginaleffects` object
 #'
 #' @param x An object produced by the `marginaleffects` function.
-#' @param conf.int Logical indicating whether or not to include a confidence interval.
 #' @param by Character vector of variable names over which to compute group-averaged marginal effects.
 #' @inheritParams marginaleffects
 #' @return A "tidy" `data.frame` of summary statistics which conforms to the
@@ -43,15 +42,13 @@ generics::glance
 #' # average marginal effects by group
 #' tidy(mfx, by = "gear")
 tidy.marginaleffects <- function(x,
-                                 conf.int = TRUE,
-                                 conf.level = 0.95,
+                                 conf_level = 0.95,
                                  by = NULL,
                                  ...) {
     x_dt <- copy(x)
     setnames(x_dt, old = "dydx", new = "comparison")
     out <- tidy.comparisons(x_dt,
-                            conf.int = conf.int,
-                            conf.level = conf.level,
+                            conf_level = conf_level,
                             by = by,
                             ...)
     return(out)
@@ -87,10 +84,11 @@ glance.marginaleffects <- function(x, ...) {
 #' `broom` package specification.
 #' @export
 tidy.marginalmeans <- function(x,
-                               conf.int = TRUE,
-                               conf.level = 0.95,
+                               conf_level = 0.95,
                                ...) {
 
+
+    conf_level <- sanitize_conf_level(conf_level, ...)
     out <- x
     colnames(out)[colnames(out) == "marginalmean"] <- "estimate"
 
@@ -106,8 +104,8 @@ tidy.marginalmeans <- function(x,
 
     # confidence intervals
     if ("std.error" %in% colnames(out)) {
-        if (isTRUE(conf.int) && !"conf.low" %in% colnames(out)) {
-            alpha <- 1 - conf.level
+        if (!"conf.low" %in% colnames(out)) {
+            alpha <- 1 - conf_level
             out$conf.low <- out$estimate + stats::qnorm(alpha / 2) * out$std.error
             out$conf.high <- out$estimate - stats::qnorm(alpha / 2) * out$std.error
         }
@@ -118,7 +116,7 @@ tidy.marginalmeans <- function(x,
     out <- out[, intersect(cols, colnames(out)), drop = FALSE]
     out <- as.data.frame(out)
 
-    attr(out, "conf.level") <- conf.level
+    attr(out, "conf_level") <- conf_level
 
     return(out)
 }
@@ -198,17 +196,13 @@ tidy.predictions <- function(x, ...) {
 #' contr <- comparisons(mod, contrast_factor = "sequential")
 #' tidy(contr)
 tidy.comparisons <- function(x,
-                             conf.int = TRUE,
-                             conf.level = 0.95,
+                             conf_level = 0.95,
                              by = NULL,
                              ...) {
 
     dots <- list(...)
     FUN <- mean
-    checkmate::assert_numeric(conf.level, len = 1)
-    checkmate::assert_true(conf.level > 0)
-    checkmate::assert_true(conf.level < 1)
-    checkmate::assert_flag(conf.int)
+    conf_level <- sanitize_conf_level(conf_level, ...)
     checkmate::assert_character(by, null.ok = TRUE)
 
     # we only know the delta method formula for the average marginal effect,
@@ -295,7 +289,7 @@ tidy.comparisons <- function(x,
             } else {
                 f_ci <- get_eti
             }
-            ci <- drawavg[, as.list(f_ci(estimate, credMass = conf.level)), by = idx_by]
+            ci <- drawavg[, as.list(f_ci(estimate, credMass = conf_level)), by = idx_by]
             setnames(ci, old = c("lower", "upper"), new = c("conf.low", "conf.high"))
             ame <- merge(merge(ame, es, sort = FALSE), ci, sort = FALSE)
         }
@@ -317,8 +311,8 @@ tidy.comparisons <- function(x,
 
     # confidence intervals
     if ("std.error" %in% colnames(out)) {
-        if (isTRUE(conf.int) && !"conf.low" %in% colnames(out)) {
-            alpha <- 1 - conf.level
+        if (!"conf.low" %in% colnames(out)) {
+            alpha <- 1 - conf_level
             out$conf.low <- out$estimate + stats::qnorm(alpha / 2) * out$std.error
             out$conf.high <- out$estimate - stats::qnorm(alpha / 2) * out$std.error
         }
@@ -342,7 +336,7 @@ tidy.comparisons <- function(x,
 
     setDF(out)
 
-    attr(out, "conf.level") <- conf.level
+    attr(out, "conf_level") <- conf_level
     attr(out, "FUN") <- FUN_label
 
     if (exists("drawavg")) {

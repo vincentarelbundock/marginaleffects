@@ -31,7 +31,7 @@ sanity_model_specific.mblogit <- function(model, calling_function = "marginaleff
 get_predict.mblogit <- function(model,
                                 newdata = insight::get_data(model),
                                 vcov = FALSE,
-                                conf.level = 0.95,
+                                conf_level = 0.95,
                                 type = "probs",
                                 ...) {
 

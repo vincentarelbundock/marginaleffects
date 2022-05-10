@@ -8,7 +8,7 @@
 #' @inheritParams marginaleffects
 #' @keywords internal
 #' @export
-get_predict <- function(model, newdata, vcov, conf.level, type, ...) {
+get_predict <- function(model, newdata, vcov, conf_level, type, ...) {
     UseMethod("get_predict", model)
 }
 
@@ -18,7 +18,7 @@ get_predict <- function(model, newdata, vcov, conf.level, type, ...) {
 get_predict.default <- function(model,
                                 newdata = insight::get_data(model),
                                 vcov = FALSE,
-                                conf.level = 0.95,
+                                conf_level = 0.95,
                                 type = "response",
                                 ...) {
 
@@ -64,7 +64,7 @@ get_predict.default <- function(model,
             x = model,
             data = newdata,
             predict = type_insight,
-            ci = conf.level)
+            ci = conf_level)
 
         # `get_predicted` issues a warning even with `vcov=NULL` when the
         # argument is not supported, so we do this here instead of in `predictions`

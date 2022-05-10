@@ -25,14 +25,14 @@ get_coef.merMod <- function(model, ...) {
 get_predict.merMod <- function(model,
                                newdata = insight::get_data(model),
                                vcov = FALSE,
-                               conf.level = 0.95,
+                               conf_level = 0.95,
                                type = "response",
                                ...) {
 
     get_predict.default(model,
                         newdata = newdata,
                         vcov = vcov,
-                        conf.level = conf.level,
+                        conf_level = conf_level,
                         type = type,
                         ...)
 }

@@ -37,7 +37,7 @@
 #'   - "marginalmeans": Contrasts at Marginal Means. See Details section below.
 #' + [datagrid()] call to specify a custom grid of regressors. For example:
 #'   - `newdata = datagrid(cyl = c(4, 6))`: `cyl` variable equal to 4 and 6 and other regressors fixed at their means or modes.
-#'   - See the Examples section and the [?datagrid] documentation.
+#'   - See the Examples section and the [datagrid] documentation.
 #' @param contrast_function string or function. How should pairs of adjusted predictions be contrasted?
 #' * string: shortcuts to common contrast functions.
 #'   - "difference" (default): `function(hi, lo) hi - lo`
@@ -116,7 +116,7 @@ comparisons <- function(model,
                         variables = NULL,
                         type = "response",
                         vcov = TRUE,
-                        conf.level = 0.95,
+                        conf_level = 0.95,
                         contrast_function = "difference",
                         contrast_factor = "reference",
                         contrast_numeric = 1,
@@ -143,12 +143,8 @@ comparisons <- function(model,
 
     # `marginaleffects()` must run its own sanity checks before any transforms
     if (!isTRUE(internal_call)) {
-        checkmate::assert(
-            checkmate::check_numeric(conf.level, len = 1),
-            checkmate::check_true(conf.level > 0),
-            checkmate::check_true(conf.level < 1),
-            combine = "and")
         model <- sanitize_model(model = model, newdata = newdata, calling_function = "comparisons", ...)
+        conf_level <- sanitize_conf_level(conf_level, ...)
         sanity_type(model = model, type = type)
         sanity_contrast_factor(contrast_factor) # hardcoded in marginaleffects()
         sanity_contrast_numeric(contrast_numeric) # hardcoded in marginaleffects()
@@ -268,9 +264,9 @@ comparisons <- function(model,
         if (!"conf.low" %in% colnames(mfx)) {
             flag <- getOption("marginaleffects_credible_interval", default = "eti")
             if (isTRUE(flag == "hdi")) {
-                tmp <- apply(draws, 1, get_hdi, credMass = conf.level)
+                tmp <- apply(draws, 1, get_hdi, credMass = conf_level)
             } else {
-                tmp <- apply(draws, 1, get_eti, credMass = conf.level)
+                tmp <- apply(draws, 1, get_eti, credMass = conf_level)
             }
             mfx[["std.error"]] <- NULL
             mfx[["comparison"]] <- apply(draws, 1, stats::median)
@@ -280,9 +276,9 @@ comparisons <- function(model,
     }
 
     if (is.null(dof)) {
-        critical_val <- stats::qnorm((1 - conf.level) / 2)
+        critical_val <- stats::qnorm((1 - conf_level) / 2)
     } else {
-        critical_val <- stats::qt((1 - conf.level) / 2, df = dof)
+        critical_val <- stats::qt((1 - conf_level) / 2, df = dof)
         if (!"df" %in% colnames(mfx)) {
             mfx[["df"]] <- dof
         }

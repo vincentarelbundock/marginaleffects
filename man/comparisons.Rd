@@ -10,7 +10,7 @@ comparisons(
   variables = NULL,
   type = "response",
   vcov = TRUE,
-  conf.level = 0.95,
+  conf_level = 0.95,
   contrast_function = "difference",
   contrast_factor = "reference",
   contrast_numeric = 1,
@@ -35,7 +35,7 @@ comparisons(
 \item \code{\link[=datagrid]{datagrid()}} call to specify a custom grid of regressors. For example:
 \itemize{
 \item \code{newdata = datagrid(cyl = c(4, 6))}: \code{cyl} variable equal to 4 and 6 and other regressors fixed at their means or modes.
-\item See the Examples section and the \link{?datagrid} documentation.
+\item See the Examples section and the \link{datagrid} documentation.
 }
 }}
 
@@ -70,9 +70,7 @@ differ based on the model type, but will typically be a string such as:
 \item Function which returns a covariance matrix (e.g., \code{stats::vcov(model)})
 }}
 
-\item{conf.level}{The confidence level to use for the confidence interval if
-\code{conf.int=TRUE}. Must be strictly greater than 0 and less than 1. Defaults
-to 0.95, which corresponds to a 95 percent confidence interval.}
+\item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
 
 \item{contrast_function}{string or function. How should pairs of adjusted predictions be contrasted?
 \itemize{

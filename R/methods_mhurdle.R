@@ -4,7 +4,7 @@
 get_predict.mhurdle <- function(model,
                                 newdata = insight::get_data(model),
                                 vcov = NULL,
-                                conf.level = 0.95,
+                                conf_level = 0.95,
                                 type = "response",
                                 ...) {
 

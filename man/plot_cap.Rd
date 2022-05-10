@@ -9,8 +9,7 @@ plot_cap(
   condition,
   type = "response",
   vcov = NULL,
-  conf.int = TRUE,
-  conf.level = 0.95,
+  conf_level = 0.95,
   draw = TRUE,
   ...
 )
@@ -41,11 +40,7 @@ differ based on the model type, but will typically be a string such as:
 \item Function which returns a covariance matrix (e.g., \code{stats::vcov(model)})
 }}
 
-\item{conf.int}{Logical indicating whether or not to include a confidence interval.}
-
-\item{conf.level}{The confidence level to use for the confidence interval if
-\code{conf.int=TRUE}. Must be strictly greater than 0 and less than 1. Defaults
-to 0.95, which corresponds to a 95 percent confidence interval.}
+\item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
 
 \item{draw}{\code{TRUE} returns a \code{ggplot2} plot. \code{FALSE} returns a \code{data.frame} of the underlying data.}
 

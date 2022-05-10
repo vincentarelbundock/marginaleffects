@@ -26,8 +26,7 @@ plot_cme <- function(model,
                      condition,
                      type = "response",
                      vcov = NULL,
-                     conf.int = TRUE,
-                     conf.level = 0.95,
+                     conf_level = 0.95,
                      draw = TRUE,
                      ...) {
 
@@ -95,7 +94,7 @@ plot_cme <- function(model,
         newdata = nd,
         type = type,
         vcov = vcov,
-        conf.level = conf.level,
+        conf_level = conf_level,
         variables = effect,
         ...)
     draws <- attr(datplot, "posterior_draws")
@@ -108,8 +107,8 @@ plot_cme <- function(model,
     if ("condition3" %in% colnames(datplot)) datplot$condition3 <- factor(datplot$condition3)
 
     # CIs are automatically added to predictions but not marginaleffects output
-    if (isTRUE(conf.int) && !"conf.low" %in% colnames(datplot)) {
-        alpha <- 1 - conf.level
+    if (!"conf.low" %in% colnames(datplot)) {
+        alpha <- 1 - conf_level
         datplot$conf.low <- datplot$dydx + stats::qnorm(alpha / 2) * datplot$std.error
         datplot$conf.high <- datplot$dydx - stats::qnorm(alpha / 2) * datplot$std.error
     }
@@ -130,13 +129,13 @@ plot_cme <- function(model,
 
     # continuous x-axis
     if (is.numeric(datplot$condition1)) {
-        if (isTRUE(conf.int) && "conf.low" %in% colnames(datplot)) {
+        if ("conf.low" %in% colnames(datplot)) {
              p <- p + ggplot2::geom_ribbon(ggplot2::aes(fill = condition2), alpha = .1)
         }
         p <- p + ggplot2::geom_line(ggplot2::aes(color = condition2, linetype = condition3))
     # categorical x-axis
     } else {
-        if (isTRUE(conf.int) && "conf.low" %in% colnames(datplot)) {
+        if ("conf.low" %in% colnames(datplot)) {
              if (is.null(condition2)) {
                  p <- p + ggplot2::geom_pointrange()
              } else {
