@@ -99,7 +99,7 @@ predictions <- function(model,
     }
 
     ## do not check this because `insight` supports more models than `marginaleffects`
-    # model <- sanity_model(model)
+    # model <- sanitize_model(model)
     sanity_dots(model = model, ...)
     sanity_model_specific(model = model, newdata = newdata, calling_function = "predictions", ...)
 

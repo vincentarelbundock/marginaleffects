@@ -18,37 +18,42 @@ meffects(
 \arguments{
 \item{model}{Model object}
 
-\item{newdata}{\code{NULL}, a data frame or a string which determines the predictor values for which to compute marginaleffects.
+\item{newdata}{\code{NULL}, data frame, string, or \code{datagrid()} call. Determines the predictor values for which to compute marginal effects.
 \itemize{
 \item \code{NULL} (default): Unit-level marginal effects for each observed value in the original dataset.
-\item A data frame: Unit-level marginal effects for each row of the \code{newdata} data frame.
+\item data frame: Unit-level marginal effects for each row of the \code{newdata} data frame.
+\item string:
+\itemize{
 \item "mean": Marginal Effects at the Mean. Marginal effects when each predictor is held at its mean or mode.
 \item "median": Marginal Effects at the Median. Marginal effects when each predictor is held at its mean or mode.
 \item "marginalmeans": Marginal Effects at Marginal Means. See Details section below.
-\item The \code{\link[=datagrid]{datagrid()}} function can be used to specify a custom grid of regressors. For example:
+}
+\item \code{\link[=datagrid]{datagrid()}} call to specify a custom grid of regressors. For example:
 \itemize{
 \item \code{newdata = datagrid(cyl = c(4, 6))}: \code{cyl} variable equal to 4 and 6 and other regressors fixed at their means or modes.
 \item See the Examples section and the \code{\link[=datagrid]{datagrid()}} documentation.
 }
 }}
 
-\item{variables}{Variables to consider (character vector). \code{NULL}
-considers all the terms in the model object. Computing quantities for a
-subset of terms is typically faster.}
-
-\item{vcov}{Variance-covariance matrix used to compute uncertainty estimates (e.g., for robust standard errors). Acceptable values are:
+\item{variables}{\code{NULL} or character vector. The subset of variables for which to compute marginal effects.
 \itemize{
-\item TRUE: Default uncertainty estimates of the model object.
-\item FALSE: Omit uncertainty estimates.
-\item A string which indicates the kind of uncertainty estimates to return.
+\item \code{NULL}: compute contrasts for all the variables in the model object (can be slow).
+\item Character vector: subset of variables (usually faster).
+}}
+
+\item{vcov}{Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
+\itemize{
+\item FALSE: Do not compute standard errors. This can speed up computation considerably.
+\item TRUE: Unit-level standard errors using the default \code{vcov(model)} variance-covariance matrix.
+\item String which indicates the kind of uncertainty estimates to return.
 \itemize{
 \item Heteroskedasticity-consistent: \code{"HC"}, \code{"HC0"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"}, \code{"HC4"}, \code{"HC4m"}, \code{"HC5"}. See \code{?sandwich::vcovHC}
 \item Heteroskedasticity and autocorrelation consistent: \code{"HAC"}
 \item Other: \code{"NeweyWest"}, \code{"KernHAC"}, \code{"OPG"}. See the \code{sandwich} package documentation.
 }
-\item A one-sided formula which indicates the name of cluster variables (e.g., \code{~unit_id}). This formula is passed to the \code{cluster} argument of the \code{sandwich::vcovCL} function.
-\item A square covariance matrix
-\item A function which returns a covariance matrix (e.g., \code{stats::vcov(model)})
+\item One-sided formula which indicates the name of cluster variables (e.g., \code{~unit_id}). This formula is passed to the \code{cluster} argument of the \code{sandwich::vcovCL} function.
+\item Square covariance matrix
+\item Function which returns a covariance matrix (e.g., \code{stats::vcov(model)})
 }}
 
 \item{conf.level}{The confidence level to use for the confidence interval if
@@ -107,16 +112,16 @@ be found on the package website:
 
 https://vincentarelbundock.github.io/marginaleffects/
 
-Numerical derivatives for the \code{marginaleffects} function are calculated using a simple epsilon difference approach: \eqn{\partial Y / \partial X = (f(X + \varpesilon) - f(X)) / \varepsilon}{dY/dX = (f(X + e) - f(X)) / e}, where f is the \code{predict()} method associated with the model class, and \eqn{\varepsilon}{e} is determined by the \code{eps} argument.
+Numerical derivatives for the \code{marginaleffects} function are calculated
+using a simple epsilon difference approach: \eqn{\partial Y / \partial X = (f(X + \varpesilon) - f(X)) / \varepsilon}{dY/dX = (f(X + e) - f(X)) / e},
+where f is the \code{predict()} method associated with the model class, and
+\eqn{\varepsilon}{e} is determined by the \code{eps} argument.
 
 Warning: Some models are particularly sensitive to \code{eps}, so it is good
 practice to try different values of this argument.
 
 Standard errors for the marginal effects are obtained using the Delta
-method. First, we construct a Jacobian J with number of rows equal to the
-number of observations in \code{newdata} and number of columns equal to the
-number of coefficients. Then, we take the square root of the diagonal from JVJ',
-where V is the model's variance-covariance matrix.
+method. See the "Technical Notes" vignette on the package website for details.
 }
 \section{Model-Specific Arguments}{
 

@@ -161,6 +161,7 @@ Collate:
     'plot_cme.R'
     'posteriordraws.R'
     'predictions.R'
+    'sanitize_contrast_function.R'
     'sanitize_newdata.R'
     'sanitize_variables.R'
     'sanity.R'

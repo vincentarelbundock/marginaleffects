@@ -21,28 +21,38 @@
 #' https://vincentarelbundock.github.io/marginaleffects/
 #'
 #' @inheritParams marginaleffects
-#' @param variables
-#' * `NULL`: compute contrasts for all the variables in the model object (can be slow). 
+#' @param variables `NULL`, character vector, or named list. The subset of variables for which to compute contrasts.
+#' * `NULL`: compute contrasts for all the variables in the model object (can be slow).
 #' * Character vector: subset of variables (usually faster).
 #' * Named list: subset of variables with the type of contrasts to use, following the conventions in the `contrast_factor` and `contrast_numeric` arguments. Examples:
 #'   + `variables = list(gear = "pairwise", hp = 10)`
 #'   + `variables = list(gear = "sequential", hp = c(100, 120))`
 #'   + See the Examples section below.
-#' @param contrast_factor string
+#' @param newdata `NULL`, data frame, string, or `datagrid()` call. Determines the predictor values for which to compute contrasts.
+#' + `NULL` (default): Unit-level contrasts for each observed value in the original dataset.
+#' + data frame: Unit-level contrasts for each row of the `newdata` data frame.
+#' + string:
+#'   - "mean": Contrasts at the Mean. Contrasts when each predictor is held at its mean or mode.
+#'   - "median": Contrasts at the Median. Contrasts when each predictor is held at its mean or mode.
+#'   - "marginalmeans": Contrasts at Marginal Means. See Details section below.
+#' + [datagrid()] call to specify a custom grid of regressors. For example:
+#'   - `newdata = datagrid(cyl = c(4, 6))`: `cyl` variable equal to 4 and 6 and other regressors fixed at their means or modes.
+#'   - See the Examples section and the [?datagrid] documentation.
+#' @param contrast_function string or function. How should pairs of adjusted predictions be contrasted?
+#' * string: shortcuts to common contrast functions.
+#'   - "difference" (default): `function(hi, lo) hi - lo`
+#'   - "differenceavg": `function(hi, lo) mean(hi) - mean(lo)`
+#'   - "ratio": `function(hi, lo) hi / lo`
+#'   - "lnratio": `function(hi, lo) log(hi / lo)`
+#'   - "ratioavg": `function(hi, lo) mean(hi) / mean(lo)`
+#'   - "lnratioavg": `function(hi, lo) log(mean(hi) / mean(lo))`
+#' * function: accept two equal-length numeric vectors of adjusted predictions (`hi` and `lo`) and returns a vector of contrasts of the same length, or a unique numeric value.
+#' @param contrast_factor string. Which pairs of factors should be contrasted?
 #' * "reference": Each factor level is compared to the factor reference (base) level
 #' * "all": All combinations of observed levels
 #' * "sequential": Each factor level is compared to the previous factor level
 #' * "pairwise": Each factor level is compared to all other levels
-#' @param newdata `NULL`, a data frame or a string which determines the predictor values for which to compute contrasts.
-#'   + `NULL` (default): Unit-level contrasts for each observed value in the original dataset.
-#'   + A data frame: Unit-level contrasts for each row of the `newdata` data frame.
-#'   + "mean": Contrasts at the Mean. Contrasts when each predictor is held at its mean or mode.
-#'   + "median": Contrasts at the Median. Contrasts when each predictor is held at its mean or mode.
-#'   + "marginalmeans": Contrasts in Marginal Means. See Details section below. 
-#'   + The [datagrid()] function can be used to specify a custom grid of regressors. For example:
-#'       - `newdata = datagrid(cyl = c(4, 6))`: `cyl` variable equal to 4 and 6 and other regressors fixed at their means or modes.
-#'       - See the Examples section and the [datagrid()] documentation.
-#' @param contrast_numeric string or numeric
+#' @param contrast_numeric string or numeric. Which pairs of numeric values should be contrasted?
 #' * Numeric of length 1: Contrast for a gap of `contrast_numeric`, computed at the observed value plus and minus `contrast_numeric / 2`
 #' * Numeric vector of length 2: Contrast between the 2nd element and the 1st element of the `contrast_numeric` vector.
 #' * "iqr": Contrast across the interquartile range of the regressor.
@@ -73,6 +83,15 @@
 #' comparisons(mod, type = "response") %>% tidy()
 #' comparisons(mod, type = "link") %>% tidy()
 #'
+#' # Contrasts at the mean
+#' comparisons(mod, newdata = "mean")
+#'
+#' # Contrasts between marginal means
+#' comparisons(mod, newdata = "marginalmeans")
+#'
+#' # Contrasts at user-specified values
+#' comparisons(mod, newdata = datagrid(am = 0, cyl = tmp$cyl))
+#'
 #' # Numeric contrasts
 #' mod <- lm(mpg ~ hp, data = mtcars)
 #' comparisons(mod, contrast_numeric = 1) %>% tidy()
@@ -83,14 +102,14 @@
 #' comparisons(mod, contrast_numeric = "minmax") %>% tidy()
 #'
 #' # Interactions between contrasts
-#' mod <- lm(mpg ~ factor(cyl) + factor(gear) + hp, data = mtcars)
+#' mod <- lm(mpg ~ factor(cyl) * factor(gear) + hp, data = mtcars)
 #' cmp <- comparisons(mod, variables = c("cyl", "gear"))
 #' summary(cmp)
 #'
 #' # variable-specific contrasts
 #' cmp <- comparisons(mod, variables = list(gear = "sequential", hp = 10))
 #' summary(cmp)
-#' 
+#'
 #' @export
 comparisons <- function(model,
                         newdata = NULL,
@@ -98,6 +117,7 @@ comparisons <- function(model,
                         type = "response",
                         vcov = TRUE,
                         conf.level = 0.95,
+                        contrast_function = "difference",
                         contrast_factor = "reference",
                         contrast_numeric = 1,
                         interaction = NULL,
@@ -110,6 +130,7 @@ comparisons <- function(model,
 
     if (!isTRUE(internal_call)) {
         # if `newdata` is a call to `datagrid`, `typical`, or `counterfactual`, insert `model`
+        # should probably not be nested too deeply in the call stack since we eval.parent() (not sure about this)
         scall <- substitute(newdata)
         if (is.call(scall) && as.character(scall)[1] %in% c("datagrid", "typical", "counterfactual")) {
             lcall <- as.list(scall)
@@ -120,21 +141,22 @@ comparisons <- function(model,
         }
     }
 
-    # interaction: flip NULL to TRUE if there are interactions in the formula and FALSE otherwise
-    interaction <- sanitize_interaction(interaction, variables, model)
-
     # `marginaleffects()` must run its own sanity checks before any transforms
     if (!isTRUE(internal_call)) {
-        model <- sanity_model(model = model, newdata = newdata, calling_function = "comparisons", ...)
+        checkmate::assert(
+            checkmate::check_numeric(conf.level, len = 1),
+            checkmate::check_true(conf.level > 0),
+            checkmate::check_true(conf.level < 1),
+            combine = "and")
+        model <- sanitize_model(model = model, newdata = newdata, calling_function = "comparisons", ...)
         sanity_type(model = model, type = type)
-        checkmate::assert_numeric(conf.level, len = 1)
-        checkmate::assert_true(conf.level > 0)
-        checkmate::assert_true(conf.level < 1)
-        sanity_contrast_factor(contrast_factor)
-        sanity_contrast_numeric(contrast_numeric)
+        sanity_contrast_factor(contrast_factor) # hardcoded in marginaleffects()
+        sanity_contrast_numeric(contrast_numeric) # hardcoded in marginaleffects()
     }
 
     marginalmeans <- isTRUE(checkmate::check_choice(newdata, choices = "marginalmeans"))
+    interaction <- sanitize_interaction(interaction, variables, model)
+    contrast_function <- sanitize_contrast_function(contrast_function)
     newdata <- sanity_newdata(model = model, newdata = newdata)
 
     # get dof before transforming the vcov arg
@@ -189,6 +211,7 @@ comparisons <- function(model,
                  newdata = newdata,
                  variables = variables,
                  type = type,
+                 contrast_function = contrast_function,
                  contrast_factor = contrast_factor,
                  contrast_numeric = contrast_numeric,
                  eps = eps,
@@ -214,6 +237,7 @@ comparisons <- function(model,
                      index = idx,
                      variables = variables,
                      cache = cache,
+                     contrast_function = contrast_function,
                      contrast_factor = contrast_factor,
                      contrast_numeric = contrast_numeric,
                      marginalmeans = marginalmeans,

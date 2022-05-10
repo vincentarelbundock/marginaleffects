@@ -1,12 +1,13 @@
 get_contrasts <- function(model,
-                          newdata = NULL,
-                          type = "response",
-                          variables = NULL,
-                          contrast_factor = "reference",
-                          contrast_numeric = 1,
+                          newdata,
+                          type,
+                          variables,
+                          contrast_function,
+                          contrast_factor,
+                          contrast_numeric,
                           cache = NULL,
                           eps = 1e-4,
-                          marginalmeans = FALSE,
+                          marginalmeans,
                           ...) {
 
     dots <- list(...)
@@ -48,14 +49,15 @@ get_contrasts <- function(model,
         newdata = hi,
         ...)
 
+
+    # bayes
     draws_lo <- attr(pred_lo, "posterior_draws")
     draws_hi <- attr(pred_hi, "posterior_draws")
     if (is.null(draws_lo)) {
         draws <- NULL
+    } else if (!is.null(contrast_function)) {
+        stop("The `contrast_function` argument is not supported for Bayesian models.")
     } else {
-        if (isTRUE(is.function(dots[["contrast_function"]]))) {
-            warning("The `contrast_function` argument is ignored for Bayesian models.")
-        }
         draws <- draws_hi - draws_lo
     }
 
@@ -89,10 +91,10 @@ get_contrasts <- function(model,
         out[, "term" := "interaction"]
     }
 
-    if (isTRUE(is.function(dots[["contrast_function"]]))) {
-        fun <- dots[["contrast_function"]]
-    } else {
-        fun <- function(hi, lo) hi - lo
+    # sanitize_contrast_function returns NULL by default to allow us to warn
+    # when the argument is not supported
+    if (is.null(contrast_function)) {
+        contrast_function <- function(hi, lo) hi - lo
     }
 
     idx <- grep("^contrast|^group$|^term$", colnames(out), value = TRUE)
@@ -100,15 +102,15 @@ get_contrasts <- function(model,
     out[, predicted_hi := pred_hi$predicted]
     if (isTRUE(marginalmeans)) {
         out <- out[, .(predicted_lo = mean(predicted_lo), predicted_hi = mean(predicted_hi)), by = idx]
-        out[, "comparison" := fun(predicted_hi, predicted_lo)]
+        out[, "comparison" := contrast_function(predicted_hi, predicted_lo)]
         out[, c("predicted_hi", "predicted_lo") := NULL]
 
     } else {
         wrapfun <- function(hi, lo, n) {
-            con <- try(fun(hi, lo), silent = TRUE)
+            con <- try(contrast_function(hi, lo), silent = TRUE)
             if (!isTRUE(checkmate::check_numeric(con, len = n)) &&
                 !isTRUE(checkmate::check_numeric(con, len = 1))) {
-                msg <- sprintf("The function supplied to the `contrast_function` argument must accept two numeric vectors of predicted probabilities of length %s, and return a numeric value, or a numeric vector of length %s.", n, n)
+                msg <- sprintf("The function supplied to the `contrast_function` argument must accept two numeric vectors of predicted probabilities of length %s, and return a single numeric value or a numeric vector of length %s, with no missing value.", n, n)
                 stop(msg, call. = FALSE)
             }
             return(con)

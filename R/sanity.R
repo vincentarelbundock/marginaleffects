@@ -59,6 +59,7 @@ sanity_contrast_factor <- function(contrast_factor, assertion = TRUE) {
 
 
 sanitize_interaction <- function(interaction, variables, model) {
+    # interaction: flip NULL to TRUE if there are interactions in the formula and FALSE otherwise
 
     checkmate::assert_flag(interaction, null.ok = TRUE)
 

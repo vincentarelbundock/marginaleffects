@@ -11,7 +11,7 @@ test_that("error when function breaks or returns a bad vector", {
     dat$female <- dat$riagendr == 2
     dat$race <- sprintf("race%s", dat$race)
     mod <- glm(hi_chol ~ female, data = dat, family = binomial)
-    expect_error(comparisons(mod, contrast_function = mean),
+    expect_error(comparisons(mod, contrast_function = function(x) rep(1, 1234)),
                  regexp = "numeric vector")
     expect_error(comparisons(mod, contrast_function = function(hi, lo) head(hi - lo)),
                  regexp = "numeric vector")
@@ -19,7 +19,6 @@ test_that("error when function breaks or returns a bad vector", {
 
 
 test_that("univariate vs. Stata", {
-
     # known stata results
     arr_s <- c(arr.est = 0.94026450, arr.std_err = 0.09584693, arr.ci_l = 0.76998425, arr.ci_h = 1.14820184)
     ard_s <- c(ard.est = -0.00996557, ard.std_err = 0.01647135, ard.ci_l = -0.04224882, ard.ci_h = 0.02231767)
