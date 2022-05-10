@@ -1,5 +1,24 @@
 # This function is very strict.
-sanity_dots <- function(model, ...) {
+sanity_dots <- function(model, calling_function = NULL, ...) {
+    dots <- list(...)
+
+
+    if (isTRUE(calling_function == "marginaleffects")) {
+        # contrast_function: this would break `dydx` normalization
+        # interaction: cross countrast+slope do not make sense
+        # contrast_numeric: steer power users toward comparisons()
+        # contrast_factor: steer power users toward comparisons()
+        # transformation: should we really be back-transforming slopes?
+        unsupported <- c("contrast_function", "contrast_numeric", "contrast_factor", "transformation", "interaction")
+        unsupported <- intersect(names(dots), unsupported)
+        if (length(unsupported) > 0) {
+            msg <- sprintf(
+                "These arguments are supported by the `comparisons()` function but not by the `marginaleffects()` function: %s",
+                paste(unsupported, collapse = ", "))
+            stop(msg, call. = FALSE)
+        }
+    }
+
     valid <- list()
 
     # mixed effects
@@ -13,7 +32,6 @@ sanity_dots <- function(model, ...) {
 
     white_list <- c("conf.int")
 
-    dots <- list(...)
     model_class <- class(model)[1]
 
     good <- NULL
