@@ -18,9 +18,8 @@
 summary.marginaleffects <- function(object,
                                     conf.level = 0.95,
                                     by = NULL,
-                                    FUN = NULL,
                                     ...) {
-    out <- tidy(object, conf.level = conf.level, by = by, FUN = FUN, ...)
+    out <- tidy(object, conf.level = conf.level, by = by, ...)
     class(out) <- c("marginaleffects.summary", class(out))
     attr(out, "type") <- attr(object, "type")
     attr(out, "model_type") <- attr(object, "model_type")
@@ -48,13 +47,7 @@ print.marginaleffects.summary <- function(x,
   }
 
   # title
-  if (isTRUE(attr(x, "FUN") == "mean")) {
-      tit <- "Average marginal effects"
-  } else if (isTRUE(attr(x, "FUN") == "median")) {
-      tit <- "Median marginal effects"
-  } else { 
-      tit <- "Marginal effects"
-  }
+  tit <- "Average marginal effects"
 
   # round and replace NAs
   for (col in c("estimate", "std.error", "statistic", "conf.low", "conf.high")) {
@@ -322,7 +315,7 @@ summary.comparisons <- function(object,
                                 by = NULL,
                                 FUN = NULL,
                                 ...) {
-    out <- tidy(object, conf.level = conf.level, by = by, FUN = FUN, ...)
+    out <- tidy(object, conf.level = conf.level, by = by, ...)
     class(out) <- c("comparisons.summary", class(out))
     attr(out, "type") <- attr(object, "type")
     attr(out, "model_type") <- attr(object, "model_type")
@@ -346,15 +339,7 @@ print.comparisons.summary <- function(x,
 
 
   # title
-  if ("term" %in% colnames(x) && all(x[["term"]] == "interaction")) {
-      tit <- "Contrast interactions"
-  } else if (isTRUE(attr(x, "FUN") == "mean")) {
-      tit <- "Average contrasts"
-  } else if (isTRUE(attr(x, "FUN") == "median")) {
-      tit <- "Median contrasts"
-  } else { 
-      tit <- "Contrasts"
-  }
+  tit <- "Average contrasts"
 
   # round and replace NAs
   for (col in c("estimate", "std.error", "statistic", "conf.low", "conf.high")) {
