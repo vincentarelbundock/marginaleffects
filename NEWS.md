@@ -16,6 +16,7 @@ New features:
 
 * `interaction` argument in `comparisons()` to compute interactions between contrasts (cross-contrasts).
 * `by` argument in `tidy()` and `summary()` computes group-average marginal effects and comparisons.
+* `transformation` argument allows back transformation before returning the final results: `summary()`, `tidy()`, `comparisons()`, `marginaleffects()`
 * The `variables` argument of the `comparisons()` function accepts a named list to specify variable-specific contrast types.
 * Robust standard errors with the `vcov` argument. This requires version > 0.17.0 of the `insight` package, which may only be available on github: `remotes::install_github("easystats/insight")`
   - `sandwich` package shortcuts: `vcov = "HC3"`, `"HC2"`, `"NeweyWest"`, and more.
