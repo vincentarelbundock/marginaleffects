@@ -48,9 +48,6 @@ get_contrasts <- function(model,
         newdata = hi,
         ...)
 
-    pred_lo$term <- cache[["ter"]]
-    pred_hi$term <- cache[["ter"]]
-
     draws_lo <- attr(pred_lo, "posterior_draws")
     draws_hi <- attr(pred_hi, "posterior_draws")
     if (is.null(draws_lo)) {
@@ -98,23 +95,26 @@ get_contrasts <- function(model,
         fun <- function(hi, lo) hi - lo
     }
 
+    idx <- grep("^contrast|^group$|^term$", colnames(out), value = TRUE)
+    out[, predicted_lo := pred_lo$predicted]
+    out[, predicted_hi := pred_hi$predicted]
     if (isTRUE(marginalmeans)) {
-        out[, predicted_lo := pred_lo$predicted]
-        out[, predicted_hi := pred_hi$predicted]
-        idx <- grep("^contrast|^term$", colnames(out), value = TRUE)
         out <- out[, .(predicted_lo = mean(predicted_lo), predicted_hi = mean(predicted_hi)), by = idx]
         out[, "comparison" := fun(predicted_hi, predicted_lo)]
         out[, c("predicted_hi", "predicted_lo") := NULL]
 
     } else {
-        con <- try(fun(pred_hi[["predicted"]], pred_lo[["predicted"]]), silent = TRUE)
-        if (!isTRUE(checkmate::check_numeric(con, len = nrow(out))) &&
-            !isTRUE(checkmate::check_numeric(con, len = 1))) {
-            msg <- sprintf("The function supplied to the `transformation` argument must accept two numeric vectors of predicted probabilities of length %s, and return a numeric value, or a numeric vector of length %s.", nrow(out), nrow(out))
-            stop(msg, call. = FALSE)
+        wrapfun <- function(hi, lo, n) {
+            con <- try(fun(hi, lo), silent = TRUE)
+            if (!isTRUE(checkmate::check_numeric(con, len = n)) &&
+                !isTRUE(checkmate::check_numeric(con, len = 1))) {
+                msg <- sprintf("The function supplied to the `transformation` argument must accept two numeric vectors of predicted probabilities of length %s, and return a numeric value, or a numeric vector of length %s.", n, n)
+                stop(msg, call. = FALSE)
+            }
+            return(con)
         }
-        out[, "comparison" := con]
-        out[, "predicted" := NULL]
+        out[, "comparison" := wrapfun(predicted_hi, predicted_lo, .N), by = idx]
+        out[, c("predicted_hi", "predicted_lo", "predicted") := NULL]
     }
 
 
