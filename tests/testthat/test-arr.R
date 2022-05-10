@@ -102,3 +102,13 @@ test_that("health insurance vs. Stata", {
 })
 
 
+test_that("bugfix: multiple terms w/ n=1 transform", {
+    # the function must be applied to each group if it takes a mean or something similar
+    dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/carData/TitanicSurvival.csv")
+    dat$survived <- as.factor(dat$survived)
+    mod <- glm(survived ~ passengerClass + sex, data = dat, family = binomial)
+    cmp <- tidy(comparisons(mod, transformation = function(hi, lo) mean(hi - lo)))
+    # bug created duplicate estimates
+    expect_equal(length(unique(cmp$estimate)), nrow(cmp))
+})
+
