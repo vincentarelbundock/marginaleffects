@@ -141,19 +141,19 @@ comparisons <- function(model,
         }
     }
 
-    # `marginaleffects()` must run its own sanity checks before any transforms
+    # `marginaleffects()` runs its own sanity checks and hardcodes valid arguments
     if (!isTRUE(internal_call)) {
         model <- sanitize_model(model = model, newdata = newdata, calling_function = "comparisons", ...)
         conf_level <- sanitize_conf_level(conf_level, ...)
+        interaction <- sanitize_interaction(interaction, variables, model)
         sanity_type(model = model, type = type)
         sanity_contrast_factor(contrast_factor) # hardcoded in marginaleffects()
         sanity_contrast_numeric(contrast_numeric) # hardcoded in marginaleffects()
     }
 
-    marginalmeans <- isTRUE(checkmate::check_choice(newdata, choices = "marginalmeans"))
-    interaction <- sanitize_interaction(interaction, variables, model)
-    contrast_function <- sanitize_contrast_function(contrast_function)
+    marginalmeans <- isTRUE(checkmate::check_choice(newdata, choices = "marginalmeans")) # before sanitize_newdata
     newdata <- sanity_newdata(model = model, newdata = newdata)
+    contrast_function <- sanitize_contrast_function(contrast_function)
 
     # get dof before transforming the vcov arg
     if (is.character(vcov) && (isTRUE(vcov == "satterthwaite") || isTRUE(vcov == "kenward-roger"))) {
@@ -199,6 +199,7 @@ comparisons <- function(model,
                  interaction = interaction,
                  contrast_types = contrast_types,
                  marginalmeans = marginalmeans,
+                 contrast_label = contrast_function[["label"]],
                  eps = eps)
     args <- c(args, dots)
     cache <- do.call("get_contrast_data", args)
@@ -207,7 +208,7 @@ comparisons <- function(model,
                  newdata = newdata,
                  variables = variables,
                  type = type,
-                 contrast_function = contrast_function,
+                 contrast_function = contrast_function[["function"]],
                  contrast_factor = contrast_factor,
                  contrast_numeric = contrast_numeric,
                  eps = eps,
@@ -233,7 +234,7 @@ comparisons <- function(model,
                      index = idx,
                      variables = variables,
                      cache = cache,
-                     contrast_function = contrast_function,
+                     contrast_function = contrast_function[["function"]],
                      contrast_factor = contrast_factor,
                      contrast_numeric = contrast_numeric,
                      marginalmeans = marginalmeans,

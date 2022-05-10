@@ -1,8 +1,9 @@
 get_contrast_data_factor <- function(model,
                                      newdata,
                                      variable,
-                                     contrast_factor = "reference",
-                                     interaction = interaction,
+                                     contrast_factor,
+                                     contrast_label,
+                                     interaction,
                                      first_interaction,
                                      ...) {
 
@@ -57,7 +58,7 @@ get_contrast_data_factor <- function(model,
     }
 
     levs_idx$isNULL <- levs_idx$hi == levs_idx$lo
-    levs_idx$label <- sprintf("%s - %s", levs_idx$hi, levs_idx$lo)
+    levs_idx$label <- sprintf(contrast_label, levs_idx$hi, levs_idx$lo)
     levs_idx <- stats::setNames(levs_idx, paste0("marginaleffects_contrast_", colnames(levs_idx)))
 
     lo <- hi <- cjdt(list(newdata, levs_idx))
