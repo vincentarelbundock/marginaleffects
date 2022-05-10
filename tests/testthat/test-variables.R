@@ -8,7 +8,7 @@ test_that("named list", {
 
     cmp1 <- comparisons(mod, variables = "hp", newdata = head(tmp, 1))
     expect_equal(cmp1$term, "hp")
-    expect_equal(cmp1$contrast, "+1")
+    expect_equal(cmp1$contrast, "(x + 1) - x")
 
     cmp2 <- comparisons(mod, variables = list("hp" = 1), newdata = head(tmp, 1))
     expect_equal(cmp1, cmp2)
@@ -17,7 +17,7 @@ test_that("named list", {
         mod,
         variables = list(gear = "sequential", hp = 10, cyl = "pairwise"))
     cmp <- tidy(cmp)
-    known <- c("4 - 3", "5 - 4", "+10", "6 - 4", "8 - 4", "8 - 6")
+    known <- c("4 - 3", "5 - 4", "(x + 10) - x", "6 - 4", "8 - 4", "8 - 6")
     expect_true(all(known %in% cmp$contrast))
 
     # informative errors
