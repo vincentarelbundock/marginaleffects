@@ -44,12 +44,14 @@ generics::glance
 tidy.marginaleffects <- function(x,
                                  conf_level = 0.95,
                                  by = NULL,
+                                 transformation = NULL,
                                  ...) {
     x_dt <- copy(x)
     setnames(x_dt, old = "dydx", new = "comparison")
     out <- tidy.comparisons(x_dt,
                             conf_level = conf_level,
                             by = by,
+                            transformation = transformation,
                             ...)
     return(out)
 }
@@ -198,12 +200,14 @@ tidy.predictions <- function(x, ...) {
 tidy.comparisons <- function(x,
                              conf_level = 0.95,
                              by = NULL,
+                             transformation = NULL,
                              ...) {
 
     dots <- list(...)
     FUN <- mean
     conf_level <- sanitize_conf_level(conf_level, ...)
     checkmate::assert_character(by, null.ok = TRUE)
+    checkmate::assert_function(transformation, null.ok = TRUE)
 
     # we only know the delta method formula for the average marginal effect,
     # not for arbitrary functions
@@ -323,8 +327,11 @@ tidy.comparisons <- function(x,
     out <- out[out$estimate != 0, ]
 
     # back transformation
-    if ("transformation" %in% names(dots)) {
-        out <- backtransform(out, dots[["transformation"]])
+    if (!is.null(transformation)) {
+        if (!is.null(attr(x, "transformation"))) {
+            warning("Estimates were transformed twice: once during the initial computation, and once more when summarizing the results in `tidy()` or `summary()`.", call. = FALSE)
+        }
+        out <- backtransform(out, transformation)
     }
 
     # sort and subset columns

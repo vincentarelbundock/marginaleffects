@@ -47,7 +47,8 @@ variables in the \code{variables} and \code{variables_grid} arguments.}
 
 \item{type}{Type(s) of prediction as string or character vector. This can
 differ based on the model type, but will typically be a string such as:
-"response", "link", "probs", or "zero".}
+"response", "link", "probs", or "zero". When an unsupported string is
+entered, the list of acceptable values is return in an error message.}
 
 \item{...}{Additional arguments are passed to the \code{predict()} method used to
 compute adjusted predictions. These arguments are particularly useful for

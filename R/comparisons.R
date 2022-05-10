@@ -38,7 +38,7 @@
 #' + [datagrid()] call to specify a custom grid of regressors. For example:
 #'   - `newdata = datagrid(cyl = c(4, 6))`: `cyl` variable equal to 4 and 6 and other regressors fixed at their means or modes.
 #'   - See the Examples section and the [datagrid] documentation.
-#' @param contrast_function string or function. How should pairs of adjusted predictions be contrasted?
+#' @param contrast_function [experimental] string or function. How should pairs of adjusted predictions be contrasted?
 #' * string: shortcuts to common contrast functions.
 #'   - "difference" (default): `function(hi, lo) hi - lo`
 #'   - "differenceavg": `function(hi, lo) mean(hi) - mean(lo)`
@@ -59,6 +59,7 @@
 #' * "sd": Contrast across one standard deviation around the regressor mean.
 #' * "2sd": Contrast across two standard deviations around the regressor mean.
 #' * "minmax": Contrast between the maximum and the minimum values of the regressor.
+#' @param transformation [experimental] A function applied to the estimate and confidence interval just before returning the final results. For example, users can exponentiate their final results by setting `transformation=exp` or transform contrasts made on the link scale for ease of interpretation.
 #' @param interaction TRUE, FALSE, or NULL
 #' * `FALSE`: Contrasts represent the change in adjusted predictions when one predictor changes and all other variables are held constant.
 #' * `TRUE`: Contrasts represent the changes in adjusted predictions when the predictors specified in the `variables` argument are manipulated simultaneously.
@@ -121,6 +122,7 @@ comparisons <- function(model,
                         contrast_factor = "reference",
                         contrast_numeric = 1,
                         interaction = NULL,
+                        transformation = NULL,
                         eps = 1e-4,
                         ...) {
 
@@ -149,6 +151,7 @@ comparisons <- function(model,
         sanity_type(model = model, type = type)
         sanity_contrast_factor(contrast_factor) # hardcoded in marginaleffects()
         sanity_contrast_numeric(contrast_numeric) # hardcoded in marginaleffects()
+        checkmate::assert_function(transformation, null.ok = TRUE)
     }
 
     marginalmeans <- isTRUE(checkmate::check_choice(newdata, choices = "marginalmeans")) # before sanitize_newdata
@@ -309,9 +312,8 @@ comparisons <- function(model,
          mfx$group <- "main_marginaleffect"
     }
 
-    # back transformation
-    if ("transformation" %in% names(dots)) {
-        mfx <- backtransform(mfx, dots[["transformation"]])
+    if (!is.null(transformation)) {
+        mfx <- backtransform(mfx, transformation)
     }
 
     # clean columns
@@ -337,6 +339,9 @@ comparisons <- function(model,
     attr(out, "J") <- J
     attr(out, "vcov") <- vcov
     attr(out, "vcov.type") <- get_vcov_label(vcov)
+    if (!is.null(transformation)) {
+        attr(out, "transformation") <- transformation
+    }
 
     # modelbased::visualisation_matrix attaches useful info for plotting
     for (a in names(attributes_newdata)) {

@@ -4,7 +4,7 @@
 \alias{tidy.comparisons}
 \title{Tidy a \code{comparisons} object}
 \usage{
-\method{tidy}{comparisons}(x, conf_level = 0.95, by = NULL, ...)
+\method{tidy}{comparisons}(x, conf_level = 0.95, by = NULL, transformation = NULL, ...)
 }
 \arguments{
 \item{x}{An object produced by the \code{comparisons} function.}
@@ -12,6 +12,8 @@
 \item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
 
 \item{by}{Character vector of variable names over which to compute group-averaged contrasts.}
+
+\item{transformation}{\link{experimental} A function applied to the estimate and confidence interval just before returning the final results. For example, users can exponentiate their final results by setting \code{transformation=exp} or transform contrasts made on the link scale for ease of interpretation.}
 
 \item{...}{Additional arguments are passed to the \code{predict()} method used to
 compute adjusted predictions. These arguments are particularly useful for

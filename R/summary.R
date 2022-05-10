@@ -18,8 +18,9 @@
 summary.marginaleffects <- function(object,
                                     conf_level = 0.95,
                                     by = NULL,
+                                    transformation = NULL,
                                     ...) {
-    out <- tidy(object, conf_level = conf_level, by = by, ...)
+    out <- tidy(object, conf_level = conf_level, by = by, transformation = transformation, ...)
     class(out) <- c("marginaleffects.summary", class(out))
     attr(out, "type") <- attr(object, "type")
     attr(out, "model_type") <- attr(object, "model_type")
@@ -313,8 +314,9 @@ print.predictions.summary <- function(x,
 summary.comparisons <- function(object,
                                 conf_level = 0.95,
                                 by = NULL,
+                                transformation = NULL,
                                 ...) {
-    out <- tidy(object, conf_level = conf_level, by = by, ...)
+    out <- tidy(object, conf_level = conf_level, by = by, transformation = transformation, ...)
     class(out) <- c("comparisons.summary", class(out))
     attr(out, "type") <- attr(object, "type")
     attr(out, "model_type") <- attr(object, "model_type")

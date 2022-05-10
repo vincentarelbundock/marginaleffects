@@ -4,7 +4,7 @@
 \alias{summary.marginaleffects}
 \title{Summarize a \code{marginaleffects} object}
 \usage{
-\method{summary}{marginaleffects}(object, conf_level = 0.95, by = NULL, ...)
+\method{summary}{marginaleffects}(object, conf_level = 0.95, by = NULL, transformation = NULL, ...)
 }
 \arguments{
 \item{object}{An object produced by the \code{marginaleffects} function}
