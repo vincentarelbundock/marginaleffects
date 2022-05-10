@@ -16,22 +16,28 @@ New features:
 * `interaction` argument in `comparisons()` to compute interactions between contrasts (cross-contrasts).
 * `by` argument in `tidy()` and `summary()` computes group-average marginal effects and comparisons.
 * The `variables` argument of the `comparisons()` function accepts a named list to specify variable-specific contrast types.
-* Robust standard errors with the `vcov` argument (requires {insight} > 0.17.0)
+* Robust standard errors with the `vcov` argument. This requires version > 0.17.0 of the `insight` package, which may only be available on github: `remotes::install_github("easystats/insight")`
   - `sandwich` package shortcuts: `vcov = "HC3"`, `"HC2"`, `"NeweyWest"`, and more.
   - Mixed effects models: `vcov = "satterthwaite"` or `"kenward-roger"`
   - One-sided formula to clusters: `vcov = ~cluster_variable`
   - Variance-covariance matrix
   - Function which returns a named squared matrix
+* Bayesian Model Averaging for `brms` models using `type = "average"`. See vignette on the `marginaleffects` website.
 * `eps` argument for step size of numerical derivative
 * `marginaleffects` and `comparisons` now report confidence intervals by default.
 * New dependency on the `data.table` package yields substantial performance improvements.
 * Bug fixes and performance improvements
 
-New vignettes 
+New pages on the `marginaleffects` website: https://vincentarelbundock.github.io/marginaleffects/
 
-* Alternative software packages.
+* Alternative software packages
 * Robust standard errors (and more)
-* Performance.
+* Performance tips
+* Tables and plots
+* Case studies
+  - Multinomial Logit and Discrete Choice Models
+  - Generalized Additive Models
+  - Mixed effects models (Bayesian and Frequentist)
 
 # marginaleffects 0.4.1
 
