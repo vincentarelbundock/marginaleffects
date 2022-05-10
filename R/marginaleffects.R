@@ -58,8 +58,9 @@
 #'  * Function which returns a covariance matrix (e.g., `stats::vcov(model)`)
 #' @param conf_level numeric value between 0 and 1. Confidence level to use to build a confidence interval.
 #' @param type Type(s) of prediction as string or character vector. This can
-#'   differ based on the model type, but will typically be a string such as:
-#'   "response", "link", "probs", or "zero".
+#' differ based on the model type, but will typically be a string such as:
+#' "response", "link", "probs", or "zero". When an unsupported string is
+#' entered, the list of acceptable values is return in an error message.
 #' @param eps A numeric value specifying the “step” to use when calculating
 #' numerical derivatives. See the Details section below. Note
 #' that the marginal effects computed for certain models can be especially

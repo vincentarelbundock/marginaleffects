@@ -1,11 +1,12 @@
 get_contrast_data <- function(model,
-                              newdata = NULL,
-                              variables = NULL,
-                              contrast_factor = "reference",
-                              contrast_numeric = 1,
-                              interaction = NULL,
-                              eps = 1e-4,
-                              contrast_types = NULL,
+                              newdata,
+                              variables,
+                              contrast_factor,
+                              contrast_numeric,
+                              interaction,
+                              eps,
+                              contrast_types,
+                              contrast_label,
                               ...) {
 
 
@@ -29,6 +30,7 @@ get_contrast_data <- function(model,
                 model,
                 newdata,
                 v,
+                contrast_label = contrast_label,
                 ...)
 
         } else if (variable_class == "factor") {
@@ -43,6 +45,7 @@ get_contrast_data <- function(model,
                 v,
                 contrast_factor = ctype,
                 interaction = interaction,
+                contrast_label = contrast_label,
                 first_interaction = isTRUE(v == first_interaction),
                 ...)
 
@@ -58,6 +61,7 @@ get_contrast_data <- function(model,
                 v,
                 ctype,
                 interaction = interaction,
+                contrast_label = contrast_label,
                 first_interaction = isTRUE(v == first_interaction),
                 ...)
 
@@ -72,6 +76,7 @@ get_contrast_data <- function(model,
                 newdata,
                 v,
                 contrast_numeric = ctype,
+                contrast_label = contrast_label,
                 eps = eps,
                 ...)
 

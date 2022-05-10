@@ -105,3 +105,39 @@ test_that("emmeans w/ back-transforms is similar to comparisons with direct delt
     expect_equal(cmp$conf.low, emm$asymp.LCL, tolerance = tol)
     expect_equal(cmp$conf.high, emm$asymp.UCL, tolerance = tol)
 })
+
+
+test_that("smart contrast labels", {
+    dat <- mtcars
+    dat$am <- as.logical(dat$am)
+    dat$cyl <- as.factor(dat$cyl)
+    dat$gear <- as.character(dat$gear)
+    mod <- lm(mpg ~ hp + am + cyl + gear, data = dat)
+
+    cmp1 <- comparisons(
+        mod,
+        newdata = "mean")
+    expect_equal(
+        cmp1$contrast,
+        c("(x + 1) - x", "TRUE - FALSE", "6 - 4", "8 - 4", "4 - 3", "5 - 3"))
+
+    cmp2 <- comparisons(
+        mod,
+        contrast_numeric = "sd",
+        contrast_function = "ratio",
+        newdata = "mean")
+    expect_equal(
+        cmp2$contrast,
+        c("(x + sd/2) / (x - sd/2)", "TRUE / FALSE", "6 / 4", "8 / 4", "4 / 3", "5 / 3"))
+
+    cmp3 <- comparisons(
+        mod,
+        contrast_numeric = "iqr",
+        contrast_function = "lnratioavg",
+        newdata = "mean")
+    expect_equal(
+        cmp3$contrast,
+        c("ln(mean(Q3) / mean(Q1))", "ln(mean(TRUE) / mean(FALSE))", "ln(mean(6) / mean(4))", "ln(mean(8) / mean(4))", "ln(mean(4) / mean(3))", "ln(mean(5) / mean(3))"))
+})
+
+
