@@ -11,7 +11,8 @@ sanitize_contrast_function <- function(contrast_function) {
     )
 
     if (is.function(contrast_function)) {
-        return(contrast_function)
+        out <- list("label" = "%s, %s", "function" = contrast_function)
+        return(out)
     }
 
     fun <- list(
