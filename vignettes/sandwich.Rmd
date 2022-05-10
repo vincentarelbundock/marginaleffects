@@ -22,6 +22,16 @@ knitr::opts_chunk$set(
 )
 ```
 
+The code in this vignette requires installing version 0.17.1 or greater of the `insight` package. On 2022-03-29, this version was not yet available on CRAN, but the development version could be installed from Github:am
+
+```{r}
+#| eval = FALSE
+library(remotes)
+install_github("easystats/insight")
+```
+
+Restart `R` completely after installation.
+
 # Robust standard errors 
 
 All the functions in the `marginaleffects` package can compute robust standard errors on the fly for any model type supported by [the `sandwich` package.](https://sandwich.r-forge.r-project.org/) The `vcov` argument supports string shortcuts like `"HC3"`, a one-sided formula to request clustered standard errors, variance-covariance matrices, or functions which return such matrices. Here are a few examples.
