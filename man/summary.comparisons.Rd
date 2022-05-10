@@ -15,10 +15,6 @@ to 0.95, which corresponds to a 95 percent confidence interval.}
 
 \item{by}{Character vector of variable names over which to compute group-averaged contrasts.}
 
-\item{FUN}{function used to summarize unit-level contrasts (e.g., \code{mean} or
-\code{median}). The default value \code{NULL} uses the \code{mean} function. See Details
-below.}
-
 \item{...}{Additional arguments are passed to the \code{predict()} method used to
 compute adjusted predictions. These arguments are particularly useful for
 mixed-effects or bayesian models (see the online vignettes on the

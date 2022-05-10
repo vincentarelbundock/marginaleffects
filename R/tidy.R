@@ -28,8 +28,8 @@ generics::glance
 #' In Bayesian models (e.g., `brms`), we compute Average Marginal
 #' Effects by applying the mean function twice. First, we apply it to all
 #' marginal effects for each posterior draw, thereby estimating one Average (or
-#' Median) Marginal Effect per iteration of the MCMC chain. Second, we apply
-#' `FUN` and the `quantile` function to the results of Step 1 to obtain the
+#' Median) Marginal Effect per iteration of the MCMC chain. Second, we take
+#' the `mean` and `quantile` function to the results of Step 1 to obtain the
 #' Average (or Median) Marginal Effect and its associated interval.
 #'
 #' @export
@@ -175,9 +175,6 @@ tidy.predictions <- function(x, ...) {
 #'
 #' @param x An object produced by the `comparisons` function.
 #' @param by Character vector of variable names over which to compute group-averaged contrasts.
-#' @param FUN function used to summarize unit-level contrasts (e.g., `mean` or
-#' `median`). The default value `NULL` uses the `mean` function. See Details
-#' below.
 #' @inheritParams comparisons
 #' @inheritParams tidy.marginaleffects
 #' @return A "tidy" `data.frame` of summary statistics which conforms to the
