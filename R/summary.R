@@ -16,10 +16,10 @@
 #' summary(mfx, by = "gear")
 #' @export
 summary.marginaleffects <- function(object,
-                                    conf.level = 0.95,
+                                    conf_level = 0.95,
                                     by = NULL,
                                     ...) {
-    out <- tidy(object, conf.level = conf.level, by = by, ...)
+    out <- tidy(object, conf_level = conf_level, by = by, ...)
     class(out) <- c("marginaleffects.summary", class(out))
     attr(out, "type") <- attr(object, "type")
     attr(out, "model_type") <- attr(object, "model_type")
@@ -60,10 +60,10 @@ print.marginaleffects.summary <- function(x,
   }
 
 
-  if (is.null(attr(x, "conf.level"))) {
+  if (is.null(attr(x, "conf_level"))) {
       alpha <- NULL
   } else {
-      alpha <- 100 * (1 - attr(x, "conf.level"))
+      alpha <- 100 * (1 - attr(x, "conf_level"))
   }
 
   # contrast is sometimes useless
@@ -117,8 +117,8 @@ print.marginaleffects.summary <- function(x,
 #' @return Data frame of summary statistics for an object produced by the
 #' `marginalmeans` function
 #' @export
-summary.marginalmeans <- function(object, conf.level = 0.95, ...) {
-    out <- tidy(object, conf.level = conf.level, ...)
+summary.marginalmeans <- function(object, conf_level = 0.95, ...) {
+    out <- tidy(object, conf_level = conf_level, ...)
     class(out) <- c("marginalmeans.summary", class(out))
     attr(out, "type") <- attr(object, "type")
     attr(out, "model_type") <- attr(object, "model_type")
@@ -154,10 +154,10 @@ print.marginalmeans.summary <- function(x,
   }
 
 
-  if (is.null(attr(x, "conf.level"))) {
+  if (is.null(attr(x, "conf_level"))) {
       alpha <- NULL
   } else {
-      alpha <- 100 * (1 - attr(x, "conf.level"))
+      alpha <- 100 * (1 - attr(x, "conf_level"))
   }
 
 
@@ -240,10 +240,10 @@ print.predictions.summary <- function(x,
   }
 
 
-  if (is.null(attr(x, "conf.level"))) {
+  if (is.null(attr(x, "conf_level"))) {
       alpha <- NULL
   } else {
-      alpha <- 100 * (1 - attr(x, "conf.level"))
+      alpha <- 100 * (1 - attr(x, "conf_level"))
   }
 
   # contrast is sometimes useless
@@ -311,10 +311,10 @@ print.predictions.summary <- function(x,
 
 #' @export
 summary.comparisons <- function(object,
-                                conf.level = 0.95,
+                                conf_level = 0.95,
                                 by = NULL,
                                 ...) {
-    out <- tidy(object, conf.level = conf.level, by = by, ...)
+    out <- tidy(object, conf_level = conf_level, by = by, ...)
     class(out) <- c("comparisons.summary", class(out))
     attr(out, "type") <- attr(object, "type")
     attr(out, "model_type") <- attr(object, "model_type")
@@ -351,10 +351,10 @@ print.comparisons.summary <- function(x,
   }
 
 
-  if (is.null(attr(x, "conf.level"))) {
+  if (is.null(attr(x, "conf_level"))) {
       alpha <- NULL
   } else {
-      alpha <- 100 * (1 - attr(x, "conf.level"))
+      alpha <- 100 * (1 - attr(x, "conf_level"))
   }
 
   # contrast is sometimes useless

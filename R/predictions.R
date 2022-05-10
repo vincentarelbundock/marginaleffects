@@ -32,10 +32,6 @@
 #'       - `newdata = datagrid()`: contrast at the mean
 #'       - `newdata = datagrid(cyl = c(4, 6))`: `cyl` variable equal to 4 and 6 and other regressors fixed at their means or modes.
 #'       - See the Examples section and the [datagrid()] documentation for more.
-#' @param conf.level The confidence level to use for the confidence interval.
-#'   No interval is computed if `conf.int=NULL`.  Must be strictly greater than 0
-#'   and less than 1. Defaults to 0.95, which corresponds to a 95 percent
-#'   confidence interval.
 #'
 #' @template model_specific_arguments
 #'
@@ -74,7 +70,7 @@ predictions <- function(model,
                         newdata = NULL,
                         variables = NULL,
                         vcov = TRUE,
-                        conf.level = 0.95,
+                        conf_level = 0.95,
                         type = "response",
                         ...) {
 
@@ -98,11 +94,11 @@ predictions <- function(model,
         }
     }
 
-    ## do not check this because `insight` supports more models than `marginaleffects`
+    # do not check this because `insight` supports more models than `marginaleffects`
     # model <- sanitize_model(model)
     sanity_dots(model = model, ...)
     sanity_model_specific(model = model, newdata = newdata, calling_function = "predictions", ...)
-
+    conf_level <- sanitize_conf_level(conf_level, ...)
 
     # modelbased::visualisation_matrix attaches useful info for plotting
     attributes_newdata <- attributes(newdata)
@@ -163,7 +159,7 @@ predictions <- function(model,
     tmp <- get_predict(model,
                        newdata = newdata,
                        vcov = vcov,
-                       conf.level = conf.level,
+                       conf_level = conf_level,
                        type = type,
                        ...)
 
@@ -212,10 +208,10 @@ predictions <- function(model,
                 flag <- tryCatch(insight::model_info(model)$is_linear,
                                  error = function(e) FALSE)
                 if (isTRUE(flag) &&
-                    is.numeric(conf.level) &&
+                    is.numeric(conf_level) &&
                     # sometimes get_predicted fails on SE but succeeds on CI (e.g., betareg)
                     !"conf.low" %in% colnames(tmp)) {
-                    critical_z <- abs(stats::qnorm((1 - conf.level) / 2))
+                    critical_z <- abs(stats::qnorm((1 - conf_level) / 2))
                     tmp[["conf.low"]] <- tmp[["predicted"]] - critical_z * tmp[["std.error"]]
                     tmp[["conf.high"]] <- tmp[["predicted"]] + critical_z * tmp[["std.error"]]
                 }
@@ -262,9 +258,9 @@ predictions <- function(model,
     if (!is.null(draws)) {
         flag <- getOption("marginaleffects_credible_interval", default = "eti")
         if (isTRUE(flag == "hdi")) {
-            tmp <- apply(draws, 1, get_hdi, credMass = conf.level)
+            tmp <- apply(draws, 1, get_hdi, credMass = conf_level)
         } else {
-            tmp <- apply(draws, 1, get_eti, credMass = conf.level)
+            tmp <- apply(draws, 1, get_eti, credMass = conf_level)
         }
         out[["predicted"]] <- apply(draws, 1, stats::median)
         out[["std.error"]] <- NULL

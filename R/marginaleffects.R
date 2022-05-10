@@ -56,9 +56,7 @@
 #'  * One-sided formula which indicates the name of cluster variables (e.g., `~unit_id`). This formula is passed to the `cluster` argument of the `sandwich::vcovCL` function.
 #'  * Square covariance matrix
 #'  * Function which returns a covariance matrix (e.g., `stats::vcov(model)`)
-#' @param conf.level The confidence level to use for the confidence interval if
-#'   `conf.int=TRUE`. Must be strictly greater than 0 and less than 1. Defaults
-#'   to 0.95, which corresponds to a 95 percent confidence interval.
+#' @param conf_level numeric value between 0 and 1. Confidence level to use to build a confidence interval.
 #' @param type Type(s) of prediction as string or character vector. This can
 #'   differ based on the model type, but will typically be a string such as:
 #'   "response", "link", "probs", or "zero".
@@ -130,7 +128,7 @@ marginaleffects <- function(model,
                             newdata = NULL,
                             variables = NULL,
                             vcov = TRUE,
-                            conf.level = 0.95,
+                            conf_level = 0.95,
                             type = "response",
                             eps = 1e-4,
                             ...) {
@@ -166,6 +164,7 @@ marginaleffects <- function(model,
     model <- sanitize_model(model = model, newdata = newdata, calling_function = "marginaleffects", ...)
     sanity_dots(model = model, calling_function = "marginaleffects", ...)
     sanity_type(model = model, type = type, calling_function = "marginaleffects")
+    conf_level <- sanitize_conf_level(conf_level, ...)
     newdata <- sanity_newdata(model, newdata)
     variables <- sanitize_variables(model, newdata, variables)
 
@@ -185,7 +184,7 @@ marginaleffects <- function(model,
         newdata = newdata,
         variables = variables_vec,
         vcov = vcov,
-        conf.level = conf.level,
+        conf_level = conf_level,
         type = type,
         eps = eps,
         # hard-coded. Users should use comparisons() for more flexibility

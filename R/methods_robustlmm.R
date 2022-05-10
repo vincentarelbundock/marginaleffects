@@ -11,15 +11,15 @@ set_coef.rlmerMod <- function(model, coefs) {
 get_predict.rlmerMod <- function(model,
                                  newdata = insight::get_data(model),
                                  vcov = FALSE,
-                                 conf.level = 0.95,
+                                 conf_level = 0.95,
                                  type = "response",
                                  ...) {
 
     args <- list(...)
     # some predict methods raise warnings on unused arguments
     unused <- c("type", "normalize_dydx", "step_size", "numDeriv_method",
-                "conf.level", "internal_call", "contrast_numeric_slope",
-                "conf.level", "return_format", "vcov", "eps")
+                "conf_level", "conf.level", "internal_call", "contrast_numeric_slope",
+                "return_format", "vcov", "eps")
     args <- args[setdiff(names(args), unused)]
     args[["object"]] <- model
     args[["newdata"]] <- newdata

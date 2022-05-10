@@ -53,7 +53,7 @@ marginalmeans <- function(model,
                           variables = NULL,
                           variables_grid = NULL,
                           vcov = TRUE,
-                          conf.level = 0.95,
+                          conf_level = 0.95,
                           type = "response",
                           ...) {
 
@@ -182,7 +182,6 @@ get_marginalmeans <- function(model,
         newdata = newdata,
         type = type,
         vcov = FALSE,
-        conf.level = NULL,
         ...)
 
     # marginal means

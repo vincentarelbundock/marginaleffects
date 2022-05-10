@@ -22,8 +22,7 @@ plot_cap <- function(model,
                      condition,
                      type = "response",
                      vcov = NULL,
-                     conf.int = TRUE,
-                     conf.level = 0.95,
+                     conf_level = 0.95,
                      draw = TRUE,
                      ...) {
 
@@ -88,8 +87,7 @@ plot_cap <- function(model,
                            newdata = nd,
                            type = type,
                            vcov = vcov,
-                           conf.int = conf.int,
-                           conf.level = conf.level,
+                           conf_level = conf_level,
                            ...)
     colnames(datplot)[colnames(datplot) == condition1] <- "condition1"
     colnames(datplot)[colnames(datplot) == condition2] <- "condition2"
@@ -119,13 +117,13 @@ plot_cap <- function(model,
 
     # continuous x-axis
     if (is.numeric(datplot$condition1)) {
-        if (isTRUE(conf.int) && "conf.low" %in% colnames(datplot)) {
+        if (!isTRUE(vcov) && "conf.low" %in% colnames(datplot)) {
              p <- p + ggplot2::geom_ribbon(ggplot2::aes(fill = condition2), alpha = .1)
         }
         p <- p + ggplot2::geom_line(ggplot2::aes(color = condition2, linetype = condition3))
     # categorical x-axis
     } else {
-        if (isTRUE(conf.int) && "conf.low" %in% colnames(datplot)) {
+        if (!isTRUE(vcov) && "conf.low" %in% colnames(datplot)) {
              if (is.null(condition2)) {
                  p <- p + ggplot2::geom_pointrange()
              } else {

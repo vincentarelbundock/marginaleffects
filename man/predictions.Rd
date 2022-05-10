@@ -9,7 +9,7 @@ predictions(
   newdata = NULL,
   variables = NULL,
   vcov = TRUE,
-  conf.level = 0.95,
+  conf_level = 0.95,
   type = "response",
   ...
 )
@@ -48,10 +48,7 @@ Five-Number Summaries. \code{NULL} uses the original data used to fit the model.
 \item Function which returns a covariance matrix (e.g., \code{stats::vcov(model)})
 }}
 
-\item{conf.level}{The confidence level to use for the confidence interval.
-No interval is computed if \code{conf.int=NULL}.  Must be strictly greater than 0
-and less than 1. Defaults to 0.95, which corresponds to a 95 percent
-confidence interval.}
+\item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
 
 \item{type}{Type(s) of prediction as string or character vector. This can
 differ based on the model type, but will typically be a string such as:

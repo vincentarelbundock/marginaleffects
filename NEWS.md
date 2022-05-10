@@ -1,8 +1,9 @@
 # marginaleffects 0.4.1.9000
 
-Breaking change:
+Breaking changes:
 
 * `type` no longer accepts a character vector. Must be a single string.
+* `conf.int` argument deprecated. Use `vcov = FALSE` instead.
 
 New supported packages and models: 
 
@@ -26,6 +27,7 @@ New features:
 * `eps` argument for step size of numerical derivative
 * `marginaleffects` and `comparisons` now report confidence intervals by default.
 * New dependency on the `data.table` package yields substantial performance improvements.
+* Argument name change: `conf.level` -> `conf_level`
 * Bug fixes and performance improvements
 
 New pages on the `marginaleffects` website: https://vincentarelbundock.github.io/marginaleffects/

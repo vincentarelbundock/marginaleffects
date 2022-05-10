@@ -3,7 +3,7 @@
 get_predict.fixest <- function(model,
                                newdata = insight::get_data(model),
                                vcov = FALSE,
-                               conf.level = 0.95,
+                               conf_level = 0.95,
                                type = "response",
                                ...) {
 
@@ -23,8 +23,8 @@ get_predict.fixest <- function(model,
         newdata = newdata,
         type = type)
 
-    if (!is.null(conf.level)) {
-        args[["level"]] <- conf.level
+    if (!is.null(conf_level)) {
+        args[["level"]] <- conf_level
         # interval can be "none", "confidence", or "prediction"
         if (!"interval" %in% names(dots)) {
             args[["interval"]] <- "confidence"
@@ -49,7 +49,7 @@ get_predict.fixest <- function(model,
     pred <- try(do.call("fun", args), silent = TRUE)
 
     # unable to compute confidence intervals; try again
-    if (!is.null(conf.level) && inherits(pred, "try-error")) {
+    if (!is.null(conf_level) && inherits(pred, "try-error")) {
         args[["interval"]] <- "none"
         args[["level"]] <- NULL
         pred <- try(do.call("fun", args), silent = TRUE)

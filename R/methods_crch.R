@@ -21,7 +21,7 @@ set_coef.crch <- function(model, coefs) {
 get_predict.crch <- function(model,
                              newdata = NULL,
                              vcov = FALSE,
-                             conf.level = NULL,
+                             conf_level = 0.95,
                              type = "location", ...) {
 
     pred <- stats::predict(model, newdata = newdata, type = type)

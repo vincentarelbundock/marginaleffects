@@ -3,7 +3,7 @@
 get_predict.coxph <- function(model,
                               newdata = insight::get_data(model),
                               vcov = FALSE,
-                              conf.level = NULL,
+                              conf_level = 0.95,
                               type = "lp",
                               ...) {
 

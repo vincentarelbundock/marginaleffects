@@ -2,7 +2,6 @@
 sanity_dots <- function(model, calling_function = NULL, ...) {
     dots <- list(...)
 
-
     if (isTRUE(calling_function == "marginaleffects")) {
         # contrast_function: this would break `dydx` normalization
         # interaction: cross countrast+slope do not make sense
@@ -38,6 +37,9 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
     if (model_class %in% names(valid)) {
         good <- valid[[model_class]]
     }
+
+    backward_compatibility <- c("conf.level")
+    good <- c(good, backward_compatibility)
 
     bad <- setdiff(names(dots), c(good, white_list))
     if (length(bad) > 0) {

@@ -31,13 +31,13 @@
 \alias{get_predict.tobit1}
 \title{Get predicted values from a model object (internal function)}
 \usage{
-get_predict(model, newdata, vcov, conf.level, type, ...)
+get_predict(model, newdata, vcov, conf_level, type, ...)
 
 \method{get_predict}{default}(
   model,
   newdata = insight::get_data(model),
   vcov = FALSE,
-  conf.level = 0.95,
+  conf_level = 0.95,
   type = "response",
   ...
 )
@@ -46,7 +46,7 @@ get_predict(model, newdata, vcov, conf.level, type, ...)
   model,
   newdata = insight::get_data(model),
   vcov = FALSE,
-  conf.level = 0.95,
+  conf_level = 0.95,
   type = "probs",
   ...
 )
@@ -55,7 +55,7 @@ get_predict(model, newdata, vcov, conf.level, type, ...)
   model,
   newdata = insight::get_data(model),
   vcov = FALSE,
-  conf.level = 0.95,
+  conf_level = 0.95,
   type = "response",
   ...
 )
@@ -64,7 +64,7 @@ get_predict(model, newdata, vcov, conf.level, type, ...)
   model,
   newdata = insight::get_data(model),
   vcov = FALSE,
-  conf.level = 0.95,
+  conf_level = 0.95,
   type = "response",
   ...
 )
@@ -75,7 +75,7 @@ get_predict(model, newdata, vcov, conf.level, type, ...)
   model,
   newdata = insight::get_data(model),
   vcov = FALSE,
-  conf.level = 0.95,
+  conf_level = 0.95,
   type = "probs",
   ...
 )
@@ -84,7 +84,7 @@ get_predict(model, newdata, vcov, conf.level, type, ...)
   model,
   newdata = insight::get_data(model),
   vcov = FALSE,
-  conf.level = 0.95,
+  conf_level = 0.95,
   type = "probs",
   ...
 )
@@ -93,7 +93,7 @@ get_predict(model, newdata, vcov, conf.level, type, ...)
   model,
   newdata = insight::get_data(model),
   vcov = FALSE,
-  conf.level = 0.95,
+  conf_level = 0.95,
   type = "response",
   ...
 )
@@ -102,7 +102,7 @@ get_predict(model, newdata, vcov, conf.level, type, ...)
   model,
   newdata = NULL,
   vcov = FALSE,
-  conf.level = NULL,
+  conf_level = 0.95,
   type = "location",
   ...
 )
@@ -111,7 +111,7 @@ get_predict(model, newdata, vcov, conf.level, type, ...)
   model,
   newdata = insight::get_data(model),
   vcov = FALSE,
-  conf.level = 0.95,
+  conf_level = 0.95,
   type = "response",
   ...
 )
@@ -120,7 +120,7 @@ get_predict(model, newdata, vcov, conf.level, type, ...)
   model,
   newdata = insight::get_data(model),
   vcov = FALSE,
-  conf.level = 0.95,
+  conf_level = 0.95,
   type = "response",
   ...
 )
@@ -129,7 +129,7 @@ get_predict(model, newdata, vcov, conf.level, type, ...)
   model,
   newdata = insight::get_data(model),
   vcov = FALSE,
-  conf.level = 0.95,
+  conf_level = 0.95,
   type = "response",
   ...
 )
@@ -138,7 +138,7 @@ get_predict(model, newdata, vcov, conf.level, type, ...)
   model,
   newdata = insight::get_data(model),
   vcov = FALSE,
-  conf.level = 0.95,
+  conf_level = 0.95,
   type = "response",
   ...
 )
@@ -147,7 +147,7 @@ get_predict(model, newdata, vcov, conf.level, type, ...)
   model,
   newdata = insight::get_data(model),
   vcov = FALSE,
-  conf.level = 0.95,
+  conf_level = 0.95,
   type = "probs",
   ...
 )
@@ -156,7 +156,7 @@ get_predict(model, newdata, vcov, conf.level, type, ...)
   model,
   newdata = insight::get_data(model),
   vcov = NULL,
-  conf.level = 0.95,
+  conf_level = 0.95,
   type = "response",
   ...
 )
@@ -167,7 +167,7 @@ get_predict(model, newdata, vcov, conf.level, type, ...)
   model,
   newdata = insight::get_data(model),
   vcov = FALSE,
-  conf.level = 0.95,
+  conf_level = 0.95,
   type = "response",
   ...
 )
@@ -176,7 +176,7 @@ get_predict(model, newdata, vcov, conf.level, type, ...)
   model,
   newdata = insight::get_data(model),
   vcov = NULL,
-  conf.level = 0.95,
+  conf_level = 0.95,
   type = NULL,
   ...
 )
@@ -185,7 +185,7 @@ get_predict(model, newdata, vcov, conf.level, type, ...)
   model,
   newdata = insight::get_data(model),
   vcov = FALSE,
-  conf.level = 0.95,
+  conf_level = 0.95,
   type = "response",
   ...
 )
@@ -194,7 +194,7 @@ get_predict(model, newdata, vcov, conf.level, type, ...)
   model,
   newdata = insight::get_data(model),
   vcov = FALSE,
-  conf.level = 0.95,
+  conf_level = 0.95,
   type = "response",
   ...
 )
@@ -203,7 +203,7 @@ get_predict(model, newdata, vcov, conf.level, type, ...)
   model,
   newdata = insight::get_data(model),
   vcov = FALSE,
-  conf.level = NULL,
+  conf_level = 0.95,
   type = "lp",
   ...
 )
@@ -212,7 +212,7 @@ get_predict(model, newdata, vcov, conf.level, type, ...)
   model,
   newdata = insight::get_data(model),
   vcov = NULL,
-  conf.level = 0.95,
+  conf_level = 0.95,
   type = "response",
   ...
 )
@@ -252,9 +252,7 @@ get_predict(model, newdata, vcov, conf.level, type, ...)
 \item Function which returns a covariance matrix (e.g., \code{stats::vcov(model)})
 }}
 
-\item{conf.level}{The confidence level to use for the confidence interval if
-\code{conf.int=TRUE}. Must be strictly greater than 0 and less than 1. Defaults
-to 0.95, which corresponds to a 95 percent confidence interval.}
+\item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
 
 \item{type}{Type(s) of prediction as string or character vector. This can
 differ based on the model type, but will typically be a string such as:

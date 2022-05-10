@@ -37,7 +37,6 @@ get_contrasts <- function(model,
         model,
         type = type,
         vcov = FALSE,
-        conf.level = NULL,
         newdata = lo,
         ...)
 
@@ -45,7 +44,6 @@ get_contrasts <- function(model,
         model,
         type = type,
         vcov = FALSE,
-        conf.level = NULL,
         newdata = hi,
         ...)
 

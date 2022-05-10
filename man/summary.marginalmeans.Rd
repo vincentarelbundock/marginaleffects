@@ -4,14 +4,12 @@
 \alias{summary.marginalmeans}
 \title{Summarize a \code{marginalmeans} object}
 \usage{
-\method{summary}{marginalmeans}(object, conf.level = 0.95, ...)
+\method{summary}{marginalmeans}(object, conf_level = 0.95, ...)
 }
 \arguments{
 \item{object}{An object produced by the \code{marginalmeans} function}
 
-\item{conf.level}{The confidence level to use for the confidence interval if
-\code{conf.int=TRUE}. Must be strictly greater than 0 and less than 1. Defaults
-to 0.95, which corresponds to a 95 percent confidence interval.}
+\item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
 
 \item{...}{Additional arguments are passed to the \code{predict()} method used to
 compute adjusted predictions. These arguments are particularly useful for
