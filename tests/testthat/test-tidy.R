@@ -3,15 +3,6 @@ mfx <- marginaleffects(mod)
 pred <- predictions(mod)
 
 
-test_that("tidy(FUN)", {
-    # we only know the delta method for the default (average) jacobian
-    ti1 <- tidy(mfx)
-    ti2 <- tidy(mfx, FUN = median)
-    expect_true("std.error" %in% colnames(ti1))
-    expect_true(!"std.error" %in% colnames(ti2))
-})
-
-
 test_that("tidy.predictions", {
     requiet("MASS")
     mod1 <- glm(vs ~ hp * mpg, data = mtcars, family = binomial)
