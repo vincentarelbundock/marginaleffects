@@ -15,6 +15,7 @@ comparisons(
   contrast_factor = "reference",
   contrast_numeric = 1,
   interaction = NULL,
+  transformation = NULL,
   eps = 1e-04,
   ...
 )
@@ -53,7 +54,8 @@ comparisons(
 
 \item{type}{Type(s) of prediction as string or character vector. This can
 differ based on the model type, but will typically be a string such as:
-"response", "link", "probs", or "zero".}
+"response", "link", "probs", or "zero". When an unsupported string is
+entered, the list of acceptable values is return in an error message.}
 
 \item{vcov}{Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
 \itemize{
@@ -72,7 +74,7 @@ differ based on the model type, but will typically be a string such as:
 
 \item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
 
-\item{contrast_function}{string or function. How should pairs of adjusted predictions be contrasted?
+\item{contrast_function}{\link{experimental} string or function. How should pairs of adjusted predictions be contrasted?
 \itemize{
 \item string: shortcuts to common contrast functions.
 \itemize{
@@ -110,6 +112,8 @@ differ based on the model type, but will typically be a string such as:
 \item \code{TRUE}: Contrasts represent the changes in adjusted predictions when the predictors specified in the \code{variables} argument are manipulated simultaneously.
 \item \code{NULL} (default): Behaves like \code{TRUE} when the \code{variables} argument is specified and the model formula includes interactions. Behaves like \code{FALSE} otherwise.
 }}
+
+\item{transformation}{\link{experimental} A function applied to the estimate and confidence interval just before returning the final results. For example, users can exponentiate their final results by setting \code{transformation=exp} or transform contrasts made on the link scale for ease of interpretation.}
 
 \item{eps}{A numeric value specifying the “step” to use when calculating
 numerical derivatives. See the Details section below. Note

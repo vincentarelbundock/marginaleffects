@@ -23,7 +23,8 @@ will be displayed in different colors.}
 
 \item{type}{Type(s) of prediction as string or character vector. This can
 differ based on the model type, but will typically be a string such as:
-"response", "link", "probs", or "zero".}
+"response", "link", "probs", or "zero". When an unsupported string is
+entered, the list of acceptable values is return in an error message.}
 
 \item{vcov}{Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
 \itemize{
