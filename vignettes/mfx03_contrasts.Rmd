@@ -216,7 +216,9 @@ b) It is a weighted average of unit-level contrasts, where weights assume a perf
 
 With respect to (a), the analyst should ask themselves: Is my quantity of interest the contrast for a perfectly average hypothetical individual? With respect to (b), the analyst should ask themselves: Is my quantity of interest the contrast in a model estimated using (potentially) unbalanced data, but interpreted *as if* the data were perfectly balanced? 
 
-If the answer to both questions is "yes", then it is easy to use the `comparisons()` to estimate contrasts between marginal means. The `newdata` determines the values of the predictors at which we want to compute contrasts. We can set `newdata="marginalmeans"` to emulate the `emmeans` behavior. For example, here we compute contrasts in a model with an interaction:
+For example, imagine that one of the control variables in your model is a variable measuring educational attainment in 4 categories: No high schoo, High school, Some college, Completed college. The contrast between marginal is a weighted average of contrasts estimated in the 4 cells, and each of those contrasts will be weighted equally in the overall estimate. If the population of interest is highly unbalanced in the educational categories, then the estimate computed in this way will not be most useful.
+
+If the contrasts between marginal means is really the quantity of interest, it is easy to use the `comparisons()` to estimate contrasts between marginal means. The `newdata` determines the values of the predictors at which we want to compute contrasts. We can set `newdata="marginalmeans"` to emulate the `emmeans` behavior. For example, here we compute contrasts in a model with an interaction:
 
 ```{r}
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv")
