@@ -104,6 +104,7 @@ Suggests:
     spelling
 Collate: 
     'align_J_V.R'
+    'backtransform.R'
     'comparisons.R'
     'complete_levels.R'
     'datagrid.R'

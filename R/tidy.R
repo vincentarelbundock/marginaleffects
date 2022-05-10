@@ -13,9 +13,6 @@ generics::glance
 #' @param x An object produced by the `marginaleffects` function.
 #' @param conf.int Logical indicating whether or not to include a confidence interval.
 #' @param by Character vector of variable names over which to compute group-averaged marginal effects.
-#' @param FUN function used to summarize unit-level marginal effects (e.g., `mean` or
-#' `median`). The default value `NULL` uses the `mean` function. See Details
-#' below.
 #' @inheritParams marginaleffects
 #' @return A "tidy" `data.frame` of summary statistics which conforms to the
 #' `broom` package specification.
@@ -24,17 +21,12 @@ generics::glance
 #' of all the unit-level marginal effects computed by the `marginaleffects`
 #' function.
 #'
-#' In frequentist models, the `FUN` function is applied to the unit-level
-#' marginal effects. If `FUN` is the mean function (or `NULL` default), this
-#' yields an "Average Marginal Effect". If `FUN` is the median function, this
-#' yields a "Median Marginal Effect".
-#' 
-#' When `FUN` is the `mean()` function, we can compute standard errors by first
+#' The standard error of the average marginal effects is obtained by 
 #' taking the mean of each column of the Jacobian. . Then, we use this
 #' "Jacobian at the mean" in the Delta method to obtained standard errors.
 #'
-#' In Bayesian models (e.g., `brms`), we compute Average (or Median) Marginal
-#' Effects by applying the `FUN` function twice. First, we apply `FUN` to all
+#' In Bayesian models (e.g., `brms`), we compute Average Marginal
+#' Effects by applying the mean function twice. First, we apply it to all
 #' marginal effects for each posterior draw, thereby estimating one Average (or
 #' Median) Marginal Effect per iteration of the MCMC chain. Second, we apply
 #' `FUN` and the `quantile` function to the results of Step 1 to obtain the
@@ -54,7 +46,6 @@ tidy.marginaleffects <- function(x,
                                  conf.int = TRUE,
                                  conf.level = 0.95,
                                  by = NULL,
-                                 FUN = NULL,
                                  ...) {
     x_dt <- copy(x)
     setnames(x_dt, old = "dydx", new = "comparison")
@@ -62,7 +53,6 @@ tidy.marginaleffects <- function(x,
                             conf.int = conf.int,
                             conf.level = conf.level,
                             by = by,
-                            FUN = FUN,
                             ...)
     return(out)
 }
@@ -194,22 +184,16 @@ tidy.predictions <- function(x, ...) {
 #' `broom` package specification.
 #' @details
 #'
-#' In frequentist models, the `FUN` function is applied to the unit-level
-#' marginal effects. If `FUN` is the mean function (or `NULL` default), this
-#' yields an "Average Marginal Effect". If `FUN` is the median function, this
-#' yields a "Median Marginal Effect".
-#' 
-#' To compute standard errors around those quantities, we begin by applying the
-#' `FUN` function to each column of the Jacobian. When `FUN` is the mean, this
-#' yields a "Jacobian at the mean". Then, we use this matrix in the Delta
+#' To compute standard errors around the average marginaleffects, we begin by applying the
+#' mean function to each column of the Jacobian. Then, we use this matrix in the Delta
 #' method to obtained standard errors.
 #'
-#' In Bayesian models (e.g., `brms`), we compute Average (or Median) Marginal
-#' Effects by applying the `FUN` function twice. First, we apply `FUN` to all
+#' In Bayesian models (e.g., `brms`), we compute Average Marginal
+#' Effects by applying the mean function twice. First, we apply it to all
 #' marginal effects for each posterior draw, thereby estimating one Average (or
-#' Median) Marginal Effect per iteration of the MCMC chain. Second, we apply
-#' `FUN` and the `quantile` function to the results of Step 1 to obtain the
-#' Average (or Median) Marginal Effect and its associated interval.
+#' Median) Marginal Effect per iteration of the MCMC chain. Second, we
+#' calculate the mean and the `quantile` function to the results of Step 1 to
+#' obtain the Average Marginal Effect and its associated interval.
 #'
 #' @export
 #' @examples
@@ -220,31 +204,22 @@ tidy.comparisons <- function(x,
                              conf.int = TRUE,
                              conf.level = 0.95,
                              by = NULL,
-                             FUN = NULL,
                              ...) {
 
+    dots <- list(...)
+    FUN <- mean
     checkmate::assert_numeric(conf.level, len = 1)
     checkmate::assert_true(conf.level > 0)
     checkmate::assert_true(conf.level < 1)
     checkmate::assert_flag(conf.int)
     checkmate::assert_character(by, null.ok = TRUE)
-    checkmate::assert_function(FUN, null.ok = TRUE)
 
     # we only know the delta method formula for the average marginal effect,
     # not for arbitrary functions
-    if (is.null(FUN)) {
-        include_se <- TRUE
-    } else {
-        include_se <- FALSE
-    }
+    include_se <- TRUE
 
     # custom summary function
-    if (is.null(FUN)) {
-        FUN <- mean
-        FUN_label <- "mean"
-    } else {
-        FUN_label <- NULL
-    }
+    FUN_label <- "mean"
 
     # group averages
     if (!is.null(by)) {
@@ -354,7 +329,12 @@ tidy.comparisons <- function(x,
 
     # remove terms with precise zero estimates. typically the case in
     # multi-equation models where some terms only affect one response
-    out <- out[out$estimate != 0,]
+    out <- out[out$estimate != 0, ]
+
+    # back transformation
+    if ("transformation" %in% names(dots)) {
+        out <- backtransform(out, dots[["transformation"]])
+    }
 
     # sort and subset columns
     cols <- c("type", "group", "term", "contrast", by,

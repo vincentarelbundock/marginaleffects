@@ -288,6 +288,11 @@ comparisons <- function(model,
          mfx$group <- "main_marginaleffect"
     }
 
+    # back transformation
+    if ("transformation" %in% names(dots)) {
+        mfx <- backtransform(mfx, dots[["transformation"]])
+    }
+
     # clean columns
     stubcols <- c("rowid", "rowid_counterfactual", "type", "group", "term",
                   grep("^contrast", colnames(mfx), value = TRUE),

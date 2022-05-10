@@ -4,7 +4,7 @@
 \alias{tidy.comparisons}
 \title{Tidy a \code{comparisons} object}
 \usage{
-\method{tidy}{comparisons}(x, conf.int = TRUE, conf.level = 0.95, by = NULL, FUN = NULL, ...)
+\method{tidy}{comparisons}(x, conf.int = TRUE, conf.level = 0.95, by = NULL, ...)
 }
 \arguments{
 \item{x}{An object produced by the \code{comparisons} function.}
@@ -17,10 +17,6 @@ to 0.95, which corresponds to a 95 percent confidence interval.}
 
 \item{by}{Character vector of variable names over which to compute group-averaged contrasts.}
 
-\item{FUN}{function used to summarize unit-level contrasts (e.g., \code{mean} or
-\code{median}). The default value \code{NULL} uses the \code{mean} function. See Details
-below.}
-
 \item{...}{Additional arguments are passed to the \code{predict()} method used to
 compute adjusted predictions. These arguments are particularly useful for
 mixed-effects or bayesian models (see the online vignettes on the
@@ -29,6 +25,10 @@ model, depending on the range of supported arguments by each modeling
 package. See the "Model-Specific Arguments" section of the
 \code{?marginaleffects} documentation for a non-exhaustive list of available
 arguments.}
+
+\item{FUN}{function used to summarize unit-level contrasts (e.g., \code{mean} or
+\code{median}). The default value \code{NULL} uses the \code{mean} function. See Details
+below.}
 }
 \value{
 A "tidy" \code{data.frame} of summary statistics which conforms to the
@@ -39,22 +39,16 @@ Calculate average contrasts by taking the mean of all the
 unit-level contrasts computed by the \code{predictions} function.
 }
 \details{
-In frequentist models, the \code{FUN} function is applied to the unit-level
-marginal effects. If \code{FUN} is the mean function (or \code{NULL} default), this
-yields an "Average Marginal Effect". If \code{FUN} is the median function, this
-yields a "Median Marginal Effect".
-
-To compute standard errors around those quantities, we begin by applying the
-\code{FUN} function to each column of the Jacobian. When \code{FUN} is the mean, this
-yields a "Jacobian at the mean". Then, we use this matrix in the Delta
+To compute standard errors around the average marginaleffects, we begin by applying the
+mean function to each column of the Jacobian. Then, we use this matrix in the Delta
 method to obtained standard errors.
 
-In Bayesian models (e.g., \code{brms}), we compute Average (or Median) Marginal
-Effects by applying the \code{FUN} function twice. First, we apply \code{FUN} to all
+In Bayesian models (e.g., \code{brms}), we compute Average Marginal
+Effects by applying the mean function twice. First, we apply it to all
 marginal effects for each posterior draw, thereby estimating one Average (or
-Median) Marginal Effect per iteration of the MCMC chain. Second, we apply
-\code{FUN} and the \code{quantile} function to the results of Step 1 to obtain the
-Average (or Median) Marginal Effect and its associated interval.
+Median) Marginal Effect per iteration of the MCMC chain. Second, we
+calculate the mean and the \code{quantile} function to the results of Step 1 to
+obtain the Average Marginal Effect and its associated interval.
 }
 \examples{
 mod <- lm(mpg ~ factor(gear), data = mtcars)
