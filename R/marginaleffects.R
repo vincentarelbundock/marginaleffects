@@ -21,44 +21,41 @@
 #'
 #' https://vincentarelbundock.github.io/marginaleffects/
 #'
-#' Numerical derivatives for the `marginaleffects` function are calculated using a simple epsilon difference approach: \eqn{\partial Y / \partial X = (f(X + \varpesilon) - f(X)) / \varepsilon}{dY/dX = (f(X + e) - f(X)) / e}, where f is the `predict()` method associated with the model class, and \eqn{\varepsilon}{e} is determined by the `eps` argument.
+#' Numerical derivatives for the `marginaleffects` function are calculated
+#' using a simple epsilon difference approach: \eqn{\partial Y / \partial X = (f(X + \varpesilon) - f(X)) / \varepsilon}{dY/dX = (f(X + e) - f(X)) / e},
+#' where f is the `predict()` method associated with the model class, and
+#' \eqn{\varepsilon}{e} is determined by the `eps` argument.
 #'
 #' Warning: Some models are particularly sensitive to `eps`, so it is good
 #' practice to try different values of this argument.
 #'
 #' Standard errors for the marginal effects are obtained using the Delta
-#' method. First, we construct a Jacobian J with number of rows equal to the
-#' number of observations in `newdata` and number of columns equal to the
-#' number of coefficients. Then, we take the square root of the diagonal from JVJ',
-#' where V is the model's variance-covariance matrix.
+#' method. See the "Technical Notes" vignette on the package website for details.
 #'
 #' @param model Model object
-#' @param variables Variables to consider (character vector). `NULL`
-#'   considers all the terms in the model object. Computing quantities for a
-#'   subset of terms is typically faster. 
-#' @param newdata `NULL`, a data frame or a string which determines the predictor values for which to compute marginaleffects.
-#'   + `NULL` (default): Unit-level marginal effects for each observed value in the original dataset.
-#'   + A data frame: Unit-level marginal effects for each row of the `newdata` data frame.
-#'   + "mean": Marginal Effects at the Mean. Marginal effects when each predictor is held at its mean or mode.
-#'   + "median": Marginal Effects at the Median. Marginal effects when each predictor is held at its mean or mode.
-#'   + "marginalmeans": Marginal Effects at Marginal Means. See Details section below.
-#'   + The [datagrid()] function can be used to specify a custom grid of regressors. For example:
-#'       - `newdata = datagrid(cyl = c(4, 6))`: `cyl` variable equal to 4 and 6 and other regressors fixed at their means or modes.
-#'       - See the Examples section and the [datagrid()] documentation.
-#' @param vcov Matrix or boolean
-#'   + FALSE: does not compute unit-level standard errors. This can speed up computation considerably.
-#'   + TRUE: computes unit-level standard errors using the default `vcov(model)` variance-covariance matrix.
-#'   + Named square matrix: computes standard errors with a user-supplied variance-covariance matrix. This matrix must be square and have dimensions equal to the number of coefficients in `get_coef(model)`.
-#' @param vcov Variance-covariance matrix used to compute uncertainty estimates (e.g., for robust standard errors). Acceptable values are:
-#'  * TRUE: Default uncertainty estimates of the model object.
-#'  * FALSE: Omit uncertainty estimates.
-#'  * A string which indicates the kind of uncertainty estimates to return.
+#' @param variables `NULL` or character vector. The subset of variables for which to compute marginal effects.
+#' * `NULL`: compute contrasts for all the variables in the model object (can be slow). 
+#' * Character vector: subset of variables (usually faster).
+#' @param newdata `NULL`, data frame, string, or `datagrid()` call. Determines the predictor values for which to compute marginal effects.
+#' + `NULL` (default): Unit-level marginal effects for each observed value in the original dataset.
+#' + data frame: Unit-level marginal effects for each row of the `newdata` data frame.
+#' + string:
+#'   - "mean": Marginal Effects at the Mean. Marginal effects when each predictor is held at its mean or mode.
+#'   - "median": Marginal Effects at the Median. Marginal effects when each predictor is held at its mean or mode.
+#'   - "marginalmeans": Marginal Effects at Marginal Means. See Details section below.
+#' + [datagrid()] call to specify a custom grid of regressors. For example:
+#'   - `newdata = datagrid(cyl = c(4, 6))`: `cyl` variable equal to 4 and 6 and other regressors fixed at their means or modes.
+#'   - See the Examples section and the [datagrid()] documentation.
+#' @param vcov Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
+#'  * FALSE: Do not compute standard errors. This can speed up computation considerably.
+#'  * TRUE: Unit-level standard errors using the default `vcov(model)` variance-covariance matrix.
+#'  * String which indicates the kind of uncertainty estimates to return.
 #'    - Heteroskedasticity-consistent: `"HC"`, `"HC0"`, `"HC1"`, `"HC2"`, `"HC3"`, `"HC4"`, `"HC4m"`, `"HC5"`. See `?sandwich::vcovHC`
 #'    - Heteroskedasticity and autocorrelation consistent: `"HAC"`
 #'    - Other: `"NeweyWest"`, `"KernHAC"`, `"OPG"`. See the `sandwich` package documentation.
-#'  * A one-sided formula which indicates the name of cluster variables (e.g., `~unit_id`). This formula is passed to the `cluster` argument of the `sandwich::vcovCL` function.
-#'  * A square covariance matrix
-#'  * A function which returns a covariance matrix (e.g., `stats::vcov(model)`)
+#'  * One-sided formula which indicates the name of cluster variables (e.g., `~unit_id`). This formula is passed to the `cluster` argument of the `sandwich::vcovCL` function.
+#'  * Square covariance matrix
+#'  * Function which returns a covariance matrix (e.g., `stats::vcov(model)`)
 #' @param conf.level The confidence level to use for the confidence interval if
 #'   `conf.int=TRUE`. Must be strictly greater than 0 and less than 1. Defaults
 #'   to 0.95, which corresponds to a 95 percent confidence interval.
@@ -141,6 +138,7 @@ marginaleffects <- function(model,
 
     # order of the first few paragraphs is important
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
+    # should probably not be nested too deeply in the call stack since we eval.parent() (not sure about this)
     scall <- substitute(newdata)
     if (is.call(scall)) {
         lcall <- as.list(scall)
@@ -165,7 +163,7 @@ marginaleffects <- function(model,
     attributes_newdata <- attributes_newdata[idx]
 
     # sanity checks and pre-processing
-    model <- sanity_model(model = model, newdata = newdata, calling_function = "marginaleffects", ...)
+    model <- sanitize_model(model = model, newdata = newdata, calling_function = "marginaleffects", ...)
     sanity_dots(model = model, calling_function = "marginaleffects", ...)
     sanity_type(model = model, type = type, calling_function = "marginaleffects")
     newdata <- sanity_newdata(model, newdata)
@@ -189,12 +187,14 @@ marginaleffects <- function(model,
         vcov = vcov,
         conf.level = conf.level,
         type = type,
+        eps = eps,
+        # hard-coded. Users should use comparisons() for more flexibility
+        contrast_function = "difference",
         contrast_numeric = "dydx",
         contrast_factor = "reference",
         interaction = FALSE,
         # secret arguments
         internal_call = TRUE,
-        eps = eps,
         ...)
 
     setDT(out)

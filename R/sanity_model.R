@@ -97,9 +97,9 @@ New modeling packages can usually be supported by `marginaleffects` if they incl
 }
 
 
-sanity_model <- function(model,
-                         newdata,
-                         ...) {
+sanitize_model <- function(model,
+                           newdata,
+                           ...) {
     sanity_model_specific(model, newdata = newdata, ...)
     sanity_model_supported_class(model)
     return(model)

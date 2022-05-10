@@ -11,6 +11,7 @@ comparisons(
   type = "response",
   vcov = TRUE,
   conf.level = 0.95,
+  contrast_function = "difference",
   contrast_factor = "reference",
   contrast_numeric = 1,
   interaction = NULL,
@@ -21,21 +22,25 @@ comparisons(
 \arguments{
 \item{model}{Model object}
 
-\item{newdata}{\code{NULL}, a data frame or a string which determines the predictor values for which to compute contrasts.
+\item{newdata}{\code{NULL}, data frame, string, or \code{datagrid()} call. Determines the predictor values for which to compute contrasts.
 \itemize{
 \item \code{NULL} (default): Unit-level contrasts for each observed value in the original dataset.
-\item A data frame: Unit-level contrasts for each row of the \code{newdata} data frame.
+\item data frame: Unit-level contrasts for each row of the \code{newdata} data frame.
+\item string:
+\itemize{
 \item "mean": Contrasts at the Mean. Contrasts when each predictor is held at its mean or mode.
 \item "median": Contrasts at the Median. Contrasts when each predictor is held at its mean or mode.
-\item "marginalmeans": Contrasts in Marginal Means. See Details section below.
-\item The \code{\link[=datagrid]{datagrid()}} function can be used to specify a custom grid of regressors. For example:
+\item "marginalmeans": Contrasts at Marginal Means. See Details section below.
+}
+\item \code{\link[=datagrid]{datagrid()}} call to specify a custom grid of regressors. For example:
 \itemize{
 \item \code{newdata = datagrid(cyl = c(4, 6))}: \code{cyl} variable equal to 4 and 6 and other regressors fixed at their means or modes.
-\item See the Examples section and the \code{\link[=datagrid]{datagrid()}} documentation.
+\item See the Examples section and the \link{?datagrid} documentation.
 }
 }}
 
-\item{variables}{\itemize{
+\item{variables}{\code{NULL}, character vector, or named list. The subset of variables for which to compute contrasts.
+\itemize{
 \item \code{NULL}: compute contrasts for all the variables in the model object (can be slow).
 \item Character vector: subset of variables (usually faster).
 \item Named list: subset of variables with the type of contrasts to use, following the conventions in the \code{contrast_factor} and \code{contrast_numeric} arguments. Examples:
@@ -50,26 +55,40 @@ comparisons(
 differ based on the model type, but will typically be a string such as:
 "response", "link", "probs", or "zero".}
 
-\item{vcov}{Variance-covariance matrix used to compute uncertainty estimates (e.g., for robust standard errors). Acceptable values are:
+\item{vcov}{Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
 \itemize{
-\item TRUE: Default uncertainty estimates of the model object.
-\item FALSE: Omit uncertainty estimates.
-\item A string which indicates the kind of uncertainty estimates to return.
+\item FALSE: Do not compute standard errors. This can speed up computation considerably.
+\item TRUE: Unit-level standard errors using the default \code{vcov(model)} variance-covariance matrix.
+\item String which indicates the kind of uncertainty estimates to return.
 \itemize{
 \item Heteroskedasticity-consistent: \code{"HC"}, \code{"HC0"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"}, \code{"HC4"}, \code{"HC4m"}, \code{"HC5"}. See \code{?sandwich::vcovHC}
 \item Heteroskedasticity and autocorrelation consistent: \code{"HAC"}
 \item Other: \code{"NeweyWest"}, \code{"KernHAC"}, \code{"OPG"}. See the \code{sandwich} package documentation.
 }
-\item A one-sided formula which indicates the name of cluster variables (e.g., \code{~unit_id}). This formula is passed to the \code{cluster} argument of the \code{sandwich::vcovCL} function.
-\item A square covariance matrix
-\item A function which returns a covariance matrix (e.g., \code{stats::vcov(model)})
+\item One-sided formula which indicates the name of cluster variables (e.g., \code{~unit_id}). This formula is passed to the \code{cluster} argument of the \code{sandwich::vcovCL} function.
+\item Square covariance matrix
+\item Function which returns a covariance matrix (e.g., \code{stats::vcov(model)})
 }}
 
 \item{conf.level}{The confidence level to use for the confidence interval if
 \code{conf.int=TRUE}. Must be strictly greater than 0 and less than 1. Defaults
 to 0.95, which corresponds to a 95 percent confidence interval.}
 
-\item{contrast_factor}{string
+\item{contrast_function}{string or function. How should pairs of adjusted predictions be contrasted?
+\itemize{
+\item string: shortcuts to common contrast functions.
+\itemize{
+\item "difference" (default): \code{function(hi, lo) hi - lo}
+\item "differenceavg": \code{function(hi, lo) mean(hi) - mean(lo)}
+\item "ratio": \code{function(hi, lo) hi / lo}
+\item "lnratio": \code{function(hi, lo) log(hi / lo)}
+\item "ratioavg": \code{function(hi, lo) mean(hi) / mean(lo)}
+\item "lnratioavg": \code{function(hi, lo) log(mean(hi) / mean(lo))}
+}
+\item function: accept two equal-length numeric vectors of adjusted predictions (\code{hi} and \code{lo}) and returns a vector of contrasts of the same length, or a unique numeric value.
+}}
+
+\item{contrast_factor}{string. Which pairs of factors should be contrasted?
 \itemize{
 \item "reference": Each factor level is compared to the factor reference (base) level
 \item "all": All combinations of observed levels
@@ -77,7 +96,7 @@ to 0.95, which corresponds to a 95 percent confidence interval.}
 \item "pairwise": Each factor level is compared to all other levels
 }}
 
-\item{contrast_numeric}{string or numeric
+\item{contrast_numeric}{string or numeric. Which pairs of numeric values should be contrasted?
 \itemize{
 \item Numeric of length 1: Contrast for a gap of \code{contrast_numeric}, computed at the observed value plus and minus \code{contrast_numeric / 2}
 \item Numeric vector of length 2: Contrast between the 2nd element and the 1st element of the \code{contrast_numeric} vector.
@@ -168,6 +187,15 @@ mod <- glm(am ~ factor(gear), data = mtcars)
 comparisons(mod, type = "response") \%>\% tidy()
 comparisons(mod, type = "link") \%>\% tidy()
 
+# Contrasts at the mean
+comparisons(mod, newdata = "mean")
+
+# Contrasts between marginal means
+comparisons(mod, newdata = "marginalmeans")
+
+# Contrasts at user-specified values
+comparisons(mod, newdata = datagrid(am = 0, cyl = tmp$cyl))
+
 # Numeric contrasts
 mod <- lm(mpg ~ hp, data = mtcars)
 comparisons(mod, contrast_numeric = 1) \%>\% tidy()
@@ -178,7 +206,7 @@ comparisons(mod, contrast_numeric = "sd") \%>\% tidy()
 comparisons(mod, contrast_numeric = "minmax") \%>\% tidy()
 
 # Interactions between contrasts
-mod <- lm(mpg ~ factor(cyl) + factor(gear) + hp, data = mtcars)
+mod <- lm(mpg ~ factor(cyl) * factor(gear) + hp, data = mtcars)
 cmp <- comparisons(mod, variables = c("cyl", "gear"))
 summary(cmp)
 

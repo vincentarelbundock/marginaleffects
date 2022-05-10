@@ -220,33 +220,36 @@ get_predict(model, newdata, vcov, conf.level, type, ...)
 \arguments{
 \item{model}{Model object}
 
-\item{newdata}{\code{NULL}, a data frame or a string which determines the predictor values for which to compute marginaleffects.
+\item{newdata}{\code{NULL}, data frame, string, or \code{datagrid()} call. Determines the predictor values for which to compute marginal effects.
 \itemize{
 \item \code{NULL} (default): Unit-level marginal effects for each observed value in the original dataset.
-\item A data frame: Unit-level marginal effects for each row of the \code{newdata} data frame.
+\item data frame: Unit-level marginal effects for each row of the \code{newdata} data frame.
+\item string:
+\itemize{
 \item "mean": Marginal Effects at the Mean. Marginal effects when each predictor is held at its mean or mode.
 \item "median": Marginal Effects at the Median. Marginal effects when each predictor is held at its mean or mode.
 \item "marginalmeans": Marginal Effects at Marginal Means. See Details section below.
-\item The \code{\link[=datagrid]{datagrid()}} function can be used to specify a custom grid of regressors. For example:
+}
+\item \code{\link[=datagrid]{datagrid()}} call to specify a custom grid of regressors. For example:
 \itemize{
 \item \code{newdata = datagrid(cyl = c(4, 6))}: \code{cyl} variable equal to 4 and 6 and other regressors fixed at their means or modes.
 \item See the Examples section and the \code{\link[=datagrid]{datagrid()}} documentation.
 }
 }}
 
-\item{vcov}{Variance-covariance matrix used to compute uncertainty estimates (e.g., for robust standard errors). Acceptable values are:
+\item{vcov}{Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
 \itemize{
-\item TRUE: Default uncertainty estimates of the model object.
-\item FALSE: Omit uncertainty estimates.
-\item A string which indicates the kind of uncertainty estimates to return.
+\item FALSE: Do not compute standard errors. This can speed up computation considerably.
+\item TRUE: Unit-level standard errors using the default \code{vcov(model)} variance-covariance matrix.
+\item String which indicates the kind of uncertainty estimates to return.
 \itemize{
 \item Heteroskedasticity-consistent: \code{"HC"}, \code{"HC0"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"}, \code{"HC4"}, \code{"HC4m"}, \code{"HC5"}. See \code{?sandwich::vcovHC}
 \item Heteroskedasticity and autocorrelation consistent: \code{"HAC"}
 \item Other: \code{"NeweyWest"}, \code{"KernHAC"}, \code{"OPG"}. See the \code{sandwich} package documentation.
 }
-\item A one-sided formula which indicates the name of cluster variables (e.g., \code{~unit_id}). This formula is passed to the \code{cluster} argument of the \code{sandwich::vcovCL} function.
-\item A square covariance matrix
-\item A function which returns a covariance matrix (e.g., \code{stats::vcov(model)})
+\item One-sided formula which indicates the name of cluster variables (e.g., \code{~unit_id}). This formula is passed to the \code{cluster} argument of the \code{sandwich::vcovCL} function.
+\item Square covariance matrix
+\item Function which returns a covariance matrix (e.g., \code{stats::vcov(model)})
 }}
 
 \item{conf.level}{The confidence level to use for the confidence interval if
