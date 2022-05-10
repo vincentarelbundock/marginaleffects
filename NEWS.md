@@ -15,7 +15,6 @@ New features:
 
 * `interaction` argument in `comparisons()` to compute interactions between contrasts (cross-contrasts).
 * `by` argument in `tidy()` and `summary()` computes group-average marginal effects and comparisons.
-* `FUN` argument in `tidy()` and `summary()` to compute mean, median, or arbitrary summaries of unit-level marginal effects.
 * The `variables` argument of the `comparisons()` function accepts a named list to specify variable-specific contrast types.
 * Robust standard errors with the `vcov` argument (requires {insight} > 0.17.0)
   - `sandwich` package shortcuts: `vcov = "HC3"`, `"HC2"`, `"NeweyWest"`, and more.
