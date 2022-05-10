@@ -53,8 +53,8 @@ get_contrasts <- function(model,
     if (is.null(draws_lo)) {
         draws <- NULL
     } else {
-        if (isTRUE(is.function(dots[["transformation"]]))) {
-            warning("The `transformation` argument is ignored for Bayesian models.")
+        if (isTRUE(is.function(dots[["contrast_function"]]))) {
+            warning("The `contrast_function` argument is ignored for Bayesian models.")
         }
         draws <- draws_hi - draws_lo
     }
@@ -89,8 +89,8 @@ get_contrasts <- function(model,
         out[, "term" := "interaction"]
     }
 
-    if (isTRUE(is.function(dots[["transformation"]]))) {
-        fun <- dots[["transformation"]]
+    if (isTRUE(is.function(dots[["contrast_function"]]))) {
+        fun <- dots[["contrast_function"]]
     } else {
         fun <- function(hi, lo) hi - lo
     }
@@ -108,7 +108,7 @@ get_contrasts <- function(model,
             con <- try(fun(hi, lo), silent = TRUE)
             if (!isTRUE(checkmate::check_numeric(con, len = n)) &&
                 !isTRUE(checkmate::check_numeric(con, len = 1))) {
-                msg <- sprintf("The function supplied to the `transformation` argument must accept two numeric vectors of predicted probabilities of length %s, and return a numeric value, or a numeric vector of length %s.", n, n)
+                msg <- sprintf("The function supplied to the `contrast_function` argument must accept two numeric vectors of predicted probabilities of length %s, and return a numeric value, or a numeric vector of length %s.", n, n)
                 stop(msg, call. = FALSE)
             }
             return(con)
@@ -117,9 +117,8 @@ get_contrasts <- function(model,
         out[, c("predicted_hi", "predicted_lo", "predicted") := NULL]
     }
 
-
     # normalize slope
-    # not available for cross-contrasts
+    # not available for interactions
     if ("contrast" %in% colnames(out)) {
         idx <- out$contrast == "dydx"
         out[idx == TRUE, "comparison" := comparison / eps]
@@ -127,6 +126,7 @@ get_contrasts <- function(model,
             draws[idx == TRUE, ] <- draws[idx == TRUE, ] / eps
         }
     }
+
 
     # output
     attr(out, "posterior_draws") <- draws

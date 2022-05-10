@@ -11,9 +11,9 @@ test_that("error when function breaks or returns a bad vector", {
     dat$female <- dat$riagendr == 2
     dat$race <- sprintf("race%s", dat$race)
     mod <- glm(hi_chol ~ female, data = dat, family = binomial)
-    expect_error(comparisons(mod, transformation = mean),
+    expect_error(comparisons(mod, contrast_function = mean),
                  regexp = "numeric vector")
-    expect_error(comparisons(mod, transformation = function(hi, lo) head(hi - lo)),
+    expect_error(comparisons(mod, contrast_function = function(hi, lo) head(hi - lo)),
                  regexp = "numeric vector")
 })
 
@@ -28,8 +28,8 @@ test_that("univariate vs. Stata", {
     acs12$disability <- as.numeric(acs12$disability == "yes")
     mod <- glm(disability ~ gender, data = acs12, family = binomial)
 
-    ard_r <- comparisons(mod, transformation = function(hi, lo) lo - hi)
-    arr_r <- comparisons(mod, transformation = function(hi, lo) mean(lo) / mean(hi))
+    ard_r <- comparisons(mod, contrast_function = function(hi, lo) lo - hi)
+    arr_r <- comparisons(mod, contrast_function = function(hi, lo) mean(lo) / mean(hi))
 
     cols <- c("estimate", "std.error", "conf.low", "conf.high")
     ard_r <- unlist(tidy(ard_r)[, cols])
@@ -49,8 +49,8 @@ test_that("multivariate vs. Stata", {
     acs12$disability <- as.numeric(acs12$disability == "yes")
     mod <- glm(disability ~ gender + race + married + age, data = acs12, family = binomial)
 
-    ard_r <- comparisons(mod, variables = "gender", transformation = function(hi, lo) lo - hi)
-    arr_r <- comparisons(mod, variables = "gender", transformation = function(hi, lo) mean(lo) / mean(hi))
+    ard_r <- comparisons(mod, variables = "gender", contrast_function = function(hi, lo) lo - hi)
+    arr_r <- comparisons(mod, variables = "gender", contrast_function = function(hi, lo) mean(lo) / mean(hi))
 
     cols <- c("estimate", "std.error", "conf.low", "conf.high")
     ard_r <- unlist(tidy(ard_r)[, cols])
@@ -80,18 +80,18 @@ test_that("health insurance vs. Stata", {
     # # Stata CI: exp(r(lnARR)-invnorm(0.975)*r(lnARR_se))
     # lnarr_r <- comparisons(
     #     mod, variables = "insurance",
-    #     transformation = function(hi, lo) log(mean(hi) / mean(lo)))
+    #     contrast_function = function(hi, lo) log(mean(hi) / mean(lo)))
     # lnarr_r <- tidy(lnarr_r)
     # exp(lnarr_r$estimate - qnorm(0.975) * lnarr_r$std.error)
     # exp(lnarr_r$estimate - qnorm(0.025) * lnarr_r$std.error)
 
     ard_r <- comparisons(
         mod, variables = "insurance",
-        transformation = function(hi, lo) hi - lo)
+        contrast_function = function(hi, lo) hi - lo)
 
     arr_r <- comparisons(
         mod, variables = "insurance",
-        transformation = function(hi, lo) mean(hi) / mean(lo))
+        contrast_function = function(hi, lo) mean(hi) / mean(lo))
 
     cols <- c("estimate", "std.error", "conf.low", "conf.high")
     ard_r <- unlist(tidy(ard_r)[, cols])
@@ -99,6 +99,15 @@ test_that("health insurance vs. Stata", {
 
     expect_equal(ard_r[1:2], ard_s[1:2], tolerance = tol, ignore_attr = TRUE)
     expect_equal(arr_r[1:2], arr_s[1:2], tolerance = tol, ignore_attr = TRUE)
+
+    # Using manual back-transformation
+    cols <- c("estimate", "conf.low", "conf.high")
+    arr_r <- comparisons(
+        mod,
+        variables = "insurance",
+        contrast_function = function(hi, lo) log(mean(hi) / mean(lo)))
+    arr_r <- unlist(tidy(arr_r, transformation = exp)[, cols])
+    expect_equal(arr_r, arr_s[c(1, 3, 4)], ignore_attr = TRUE, tolerance = tol)
 })
 
 
@@ -107,7 +116,7 @@ test_that("bugfix: multiple terms w/ n=1 transform", {
     dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/carData/TitanicSurvival.csv")
     dat$survived <- as.factor(dat$survived)
     mod <- glm(survived ~ passengerClass + sex, data = dat, family = binomial)
-    cmp <- tidy(comparisons(mod, transformation = function(hi, lo) mean(hi - lo)))
+    cmp <- tidy(comparisons(mod, contrast_function = function(hi, lo) mean(hi - lo)))
     # bug created duplicate estimates
     expect_equal(length(unique(cmp$estimate)), nrow(cmp))
 })
