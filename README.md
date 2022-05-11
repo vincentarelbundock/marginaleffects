@@ -341,7 +341,7 @@ measure of association between a change in a regressor and a change in
 the regressand. The `marginaleffects()` function uses numerical
 derivatives to estimate the slope of the regression equation with
 respect to each of the variables in the model (or contrasts for
-cateogrical variables).
+categorical variables).
 
 By default, `marginaleffects()` estimates the slope for each row of the
 original dataset that was used to fit the model:

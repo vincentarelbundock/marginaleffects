@@ -2,7 +2,7 @@
 title: "Case Studies and More: Bayes, Mixed-Effects, GAMs, etc."
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Case Studies and More: Bayes, Mixed-Effects, GAM, etc.}
+  %\VignetteIndexEntry{Case Studies and More: Bayes, Mixed-Effects, GAMs, etc.}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

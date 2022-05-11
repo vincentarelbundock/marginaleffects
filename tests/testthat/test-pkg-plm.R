@@ -1,12 +1,8 @@
-# comparisons fail on github but work interactively
-# skip_on_ci()
-# ripley emergency email about tiny numerical differences
-# skip_on_cran()
 requiet("plm")
 requiet("margins")
 requiet("broom")
-tol <- .0001
-tol_se <- .001
+tol <- .001
+tol_se <- .01 # BDR emergency email about tiny numerical differences
 
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/plm/Grunfeld.csv")
 dat$X <- NULL
