@@ -6,8 +6,9 @@
 #' (see `?summary.marginaleffects`). The `newdata` argument can be used to
 #' calculate a variety of contrasts, including "Contrasts at the Mean,"
 #' "Contrasts at User-Specified values" (aka Contrasts at Representative
-#' values), or "Contrasts in Marginal Means." Additional information can be
-#' found in the Details and Examples sections below, and in the vignette on the
+#' values), "Contrasts in Marginal Means", "Adjusted Risk Ratios", and much
+#' more. Additional information can be found in the Details and Examples
+#' sections below, and in an extensive series of vignettes on the
 #' `marginaleffects` website.
 #'
 #' A "contrast" is the difference between two adjusted predictions, calculated
@@ -102,6 +103,15 @@
 #' comparisons(mod, contrast_numeric = "sd") %>% tidy()
 #' comparisons(mod, contrast_numeric = "minmax") %>% tidy()
 #'
+#' # Adjusted Risk Ratio (see Case Study vignette on the website)
+#' mod <- glm(vs ~ mpg, data = mtcars, family = binomial)
+#' cmp <- comparisons(mod, transform_pre = "lnratioavg")
+#' summary(cmp, transform_post = exp)
+#'
+#' # Adjusted Risk Ratio: Manual specification of the `transform_pre`
+#' cmp <- comparisons(mod, transform_pre = function(hi, lo) log(mean(hi) / mean(lo)))
+#' summary(cmp, transform_post = exp)
+#
 #' # Interactions between contrasts
 #' mod <- lm(mpg ~ factor(cyl) * factor(gear) + hp, data = mtcars)
 #' cmp <- comparisons(mod, variables = c("cyl", "gear"))
