@@ -431,6 +431,10 @@ summary(mm)
 #> Prediction type:  response
 ```
 
+[The Marginal Means
+vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx04_marginalmeans.html)
+offers more detail.
+
 #### More
 
 There is *much* more you can do with `marginaleffects`. Return to the
