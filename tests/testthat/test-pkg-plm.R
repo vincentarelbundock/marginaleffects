@@ -1,7 +1,7 @@
 # comparisons fail on github but work interactively
-skip_on_ci() 
+# skip_on_ci()
 # ripley emergency email about tiny numerical differences
-skip_on_cran() 
+# skip_on_cran()
 requiet("plm")
 requiet("margins")
 requiet("broom")
@@ -50,6 +50,8 @@ test_that("no validity checks", {
     expect_marginaleffects(amemiya)
 
     # margins
+    tidy(marginaleffects(amemiya, type = "link"))
+    tidy(marginaleffects(amemiya, type = "response"))
     mfx <- tidy(marginaleffects(amemiya))
     mar <- tidy(margins(amemiya))
     mfx <- mfx[order(mfx$term),]
