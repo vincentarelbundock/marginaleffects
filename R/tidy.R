@@ -44,14 +44,12 @@ generics::glance
 tidy.marginaleffects <- function(x,
                                  conf_level = 0.95,
                                  by = NULL,
-                                 transformation = NULL,
                                  ...) {
     x_dt <- copy(x)
     setnames(x_dt, old = "dydx", new = "comparison")
     out <- tidy.comparisons(x_dt,
                             conf_level = conf_level,
                             by = by,
-                            transformation = transformation,
                             ...)
     return(out)
 }
