@@ -1,3 +1,6 @@
+test_that("informative errors", {
+    expect_error(datagrid(Petal.Length = 4.6), regexp = "inside")
+})
 
 test_that("numeric clusters warning", {
     requiet("lme4")

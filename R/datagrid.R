@@ -199,11 +199,13 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
     at <- list(...)
 
     if (!is.null(model) & !is.null(newdata)) {
-        stop("One of the `model` or `newdata` arguments must be `NULL`.")
+        msg <- "One of the `model` or `newdata` arguments must be `NULL`."
+        stop(msg, call. = FALSE)
     }
 
     if (is.null(model) & is.null(newdata)) {
-        stop("The `model` and `newdata` arguments should not both be `NULL`.")
+        msg <- "When calling `datagrid()` *inside* the `marginaleffects()` or `comparisons()` functions, the `model` and `newdata` arguments can both be omitted. However, when calling `datagrid()` on its own, users must specify either the `model` or the `newdata` argument (but not both)."
+        stop(msg, call. = FALSE)
     }
 
     # data: all variables
