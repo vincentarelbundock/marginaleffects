@@ -46,6 +46,8 @@ predictions, marginal effects, contrasts, and marginal means for a
         plots](https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html)
       - [Robust standard errors and
         more](https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html)
+      - [Transformations and Custom Contrasts: Adjusted Risk Ratio
+        Example](https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html)
   - [Alternative
     software](https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html)
   - [Technical
@@ -236,14 +238,14 @@ a “grid” of predictor values over which to compute means/predictions:
 predictions(mod, variables = c("am", "wt"))
 #>    rowid     type predicted std.error  conf.low conf.high       hp am     wt
 #> 1      1 response 23.259500 2.7059342 17.674726  28.84427 146.6875  0 1.5130
-#> 2      2 response 27.148334 2.8518051 21.262498  33.03417 146.6875  1 1.5130
-#> 3      3 response 20.504387 1.3244556 17.770845  23.23793 146.6875  0 2.5425
-#> 4      4 response 21.555612 1.0723852 19.342318  23.76891 146.6875  1 2.5425
-#> 5      5 response 18.410286 0.6151016 17.140779  19.67979 146.6875  0 3.3250
-#> 6      6 response 17.304709 1.5528055 14.099876  20.50954 146.6875  1 3.3250
-#> 7      7 response 17.540532 0.7293676 16.035192  19.04587 146.6875  0 3.6500
-#> 8      8 response 15.539158 2.1453449 11.111383  19.96693 146.6875  1 3.6500
-#> 9      9 response 12.793013 2.9784942  6.645703  18.94032 146.6875  0 5.4240
+#> 2      2 response 20.504387 1.3244556 17.770845  23.23793 146.6875  0 2.5425
+#> 3      3 response 18.410286 0.6151016 17.140779  19.67979 146.6875  0 3.3250
+#> 4      4 response 17.540532 0.7293676 16.035192  19.04587 146.6875  0 3.6500
+#> 5      5 response 12.793013 2.9784942  6.645703  18.94032 146.6875  0 5.4240
+#> 6      6 response 27.148334 2.8518051 21.262498  33.03417 146.6875  1 1.5130
+#> 7      7 response 21.555612 1.0723852 19.342318  23.76891 146.6875  1 2.5425
+#> 8      8 response 17.304709 1.5528055 14.099876  20.50954 146.6875  1 3.3250
+#> 9      9 response 15.539158 2.1453449 11.111383  19.96693 146.6875  1 3.6500
 #> 10    10 response  5.901966 5.8149853 -6.099574  17.90351 146.6875  1 5.4240
 ```
 
