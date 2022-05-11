@@ -236,8 +236,6 @@ head(pred)
 
 ```
 
-Users who need more control over the type of adjusted predictions to compute, including a host of options for back-transformation, may want to consider the [`emmeans` package.](https://cran.r-project.org/package=emmeans)
-
 We can also plot predictions on different outcome scales:
 
 ```{r}
