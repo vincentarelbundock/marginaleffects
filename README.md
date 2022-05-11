@@ -212,8 +212,9 @@ predictions(mod, newdata = datagrid(am = 0, wt = seq(2, 3, .2)))
 #> 6     6 response  19.28004 0.8063905 17.61573  20.94435 146.6875  0 3.0
 ```
 
-We can plot how predictions change for different values of a variable –
-Conditional Adjusted Predictions – using the `plot_cap` function:
+We can plot how predictions change for different values of one or more
+variables – Conditional Adjusted Predictions – using the `plot_cap`
+function:
 
 ``` r
 plot_cap(mod, condition = c("hp", "wt"))
@@ -237,8 +238,8 @@ compute a wide variety of quantities of interest:
     Representative Values)
   - Adjusted Predictions at the Mean
   - Average Predictions at the Mean
-  - Conditional Predictions at the Mean
-  - Adjusted predictions on different scales (e.g., link or response)
+  - Conditional Predictions
+  - Adjusted Predictions on different scales (e.g., link or response)
 
 #### Contrasts
 
@@ -273,24 +274,38 @@ summary(cmp)
 #> Prediction type:  response
 ```
 
-What happens to the ratio of predicted probabilities for survival when
-`PClass` changes from one category to the next (“sequential”) and `Age`
-changes by 2 standard deviations simultaneously (i.e., Adjusted Risk
-Ratio with an interaction)?
+The contrast above used a simple difference between adjusted
+predictions. We can also used different functions to combine and
+contrast predictions in different ways. For instance, researchers often
+compute Adjusted Risk Ratios, which are ratios of predicted
+probabilities. We can compute such ratios by applying a transformation
+using the `transform_pre` argument. We can also present the results of
+“interactions” between contrasts. What happens to the ratio of
+predicted probabilities for survival when `PClass` changes between each
+pair of factor levels (“pairwise”) and `Age` changes by 2 standard
+deviations simultaneously:
 
 ``` r
 cmp <- comparisons(
     mod3,
     transform_pre = "ratio",
-    variables = list(Age = "2sd", PClass = "sequential"))
+    variables = list(Age = "2sd", PClass = "pairwise"))
 summary(cmp)
 #> Average contrasts 
 #>                   Age    PClass Effect Std. Error z value   Pr(>|z|)  2.5 %
-#> 1 (x + sd) / (x - sd) 2nd / 1st 0.3185    0.05566   5.723 1.0442e-08 0.2095
-#> 2 (x + sd) / (x - sd) 3rd / 2nd 0.3162    0.07023   4.503 6.7096e-06 0.1786
+#> 1 (x + sd) / (x - sd) 1st / 1st 0.7043    0.05946  11.846 < 2.22e-16 0.5878
+#> 2 (x + sd) / (x - sd) 2nd / 1st 0.3185    0.05566   5.723 1.0442e-08 0.2095
+#> 3 (x + sd) / (x - sd) 3rd / 1st 0.2604    0.05308   4.907 9.2681e-07 0.1564
+#> 4 (x + sd) / (x - sd) 2nd / 2nd 0.3926    0.08101   4.846 1.2588e-06 0.2338
+#> 5 (x + sd) / (x - sd) 3rd / 2nd 0.3162    0.07023   4.503 6.7096e-06 0.1786
+#> 6 (x + sd) / (x - sd) 3rd / 3rd 0.7053    0.20273   3.479 0.00050342 0.3079
 #>   97.5 %
-#> 1 0.4276
-#> 2 0.4539
+#> 1 0.8209
+#> 2 0.4276
+#> 3 0.3645
+#> 4 0.5514
+#> 5 0.4539
+#> 6 1.1026
 #> 
 #> Model type:  glm 
 #> Prediction type:  response

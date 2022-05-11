@@ -138,7 +138,7 @@ The [`datagrid` function gives us a powerful way to define a grid of predictors.
 predictions(mod, newdata = datagrid(am = 0, wt = seq(2, 3, .2)))
 ```
 
-We can plot how predictions change for different values of a variable -- Conditional Adjusted Predictions -- using the `plot_cap` function:
+We can plot how predictions change for different values of one or more variables -- Conditional Adjusted Predictions -- using the `plot_cap` function:
 
 ```{r}
 plot_cap(mod, condition = c("hp", "wt"))
@@ -154,8 +154,8 @@ plot_cap(mod2, condition = "cyl")
 * Adjusted Predictions at User-Specified Values (aka Predictions at Representative Values)
 * Adjusted Predictions at the Mean
 * Average Predictions at the Mean
-* Conditional Predictions at the Mean
-* Adjusted predictions on different scales (e.g., link or response)
+* Conditional Predictions
+* Adjusted Predictions on different scales (e.g., link or response)
 
 #### Contrasts
 
@@ -172,13 +172,14 @@ cmp <- comparisons(mod3)
 summary(cmp)
 ```
 
-What happens to the ratio of predicted probabilities for survival when `PClass` changes from one category to the next ("sequential") and `Age` changes by 2 standard deviations simultaneously (i.e., Adjusted Risk Ratio with an interaction)?
+The contrast above used a simple difference between adjusted predictions. We can also used different functions to combine and contrast predictions in different ways. For instance, researchers often compute Adjusted Risk Ratios, which are ratios of predicted probabilities. We can compute such ratios by applying a transformation using the `transform_pre` argument. We can also present the results of "interactions" between contrasts. 
+What happens to the ratio of predicted probabilities for survival when `PClass` changes between each pair of factor levels ("pairwise") and `Age` changes by 2 standard deviations simultaneously:
 
 ```{r}
 cmp <- comparisons(
     mod3,
     transform_pre = "ratio",
-    variables = list(Age = "2sd", PClass = "sequential"))
+    variables = list(Age = "2sd", PClass = "pairwise"))
 summary(cmp)
 ```
 
