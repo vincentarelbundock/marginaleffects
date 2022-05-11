@@ -335,13 +335,16 @@ of quantities of interest:
 
 #### Marginal effects
 
-A “marginal effect” is a unit-specific measure of association between a
-change in a regressor and a change in the regressand. The
-`marginaleffects` function thus computes a distinct estimate of the
-marginal effect and of the standard error for each regressor (“term”),
-for each unit of observation (“rowid”). You can view and manipulate the
-full results with functions like `head`, as you would with any other
-`data.frame`:
+A “marginal effect” is a partial derivative (slope) of the regression
+equation with respect to a regressor of interest. It is unit-specific
+measure of association between a change in a regressor and a change in
+the regressand. The `marginaleffects()` function uses numerical
+derivatives to estimate the slope of the regression equation with
+respect to each of the variables in the model (or contrasts for
+cateogrical variables).
+
+By default, `marginaleffects()` estimates the slope for each row of the
+original dataset that was used to fit the model:
 
 ``` r
 mfx <- marginaleffects(mod)
