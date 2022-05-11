@@ -240,7 +240,7 @@ tidy.comparisons <- function(x,
         idx_na <- is.na(x_dt$comparison)
 
         # average marginal effects
-        ame <- x_dt[idx_na == FALSE, .(estimate = FUN(comparison, na.rm = TRUE)), by = idx_by]
+        ame <- x_dt[idx_na == FALSE, .(estimate = mean(comparison, na.rm = TRUE)), by = idx_by]
 
         if (is.matrix(J) && is.matrix(V)) {
             # Jacobian at the group mean
