@@ -176,6 +176,148 @@ library(marginaleffects)
 mod <- lm(mpg ~ hp * wt * am, data = mtcars)
 ```
 
+#### Adjusted predictions
+
+An “adjusted prediction” is the outcome predicted by a model for some
+combination of the regressors’ values, such as their observed values,
+their means, or factor levels (a.k.a. “reference grid”).
+
+By default, the `predictions()` function returns adjusted predictions
+for every value in original dataset:
+
+``` r
+predictions(mod) |> head()
+#>   rowid     type predicted std.error conf.low conf.high  mpg  hp    wt am
+#> 1     1 response  22.48857 0.8841487 20.66378  24.31336 21.0 110 2.620  1
+#> 2     2 response  20.80186 1.1942050 18.33714  23.26658 21.0 110 2.875  1
+#> 3     3 response  25.26465 0.7085307 23.80232  26.72699 22.8  93 2.320  1
+#> 4     4 response  20.25549 0.7044641 18.80155  21.70943 21.4 110 3.215  0
+#> 5     5 response  16.99782 0.7118658 15.52860  18.46704 18.7 175 3.440  0
+#> 6     6 response  19.66353 0.8753226 17.85696  21.47011 18.1 105 3.460  0
+```
+
+The [`datagrid` function gives us a powerful way to define a grid of
+predictors.](https://vincentarelbundock.github.io/marginaleffects/reference/datagrid.html)
+All the variables not mentioned explicitly in `datagrid()` are fixed to
+their mean or mode:
+
+``` r
+predictions(mod, newdata = datagrid(am = 0, wt = seq(2, 3, .2)))
+#>   rowid     type predicted std.error conf.low conf.high       hp am  wt
+#> 1     1 response  21.95621 2.0386301 17.74868  26.16373 146.6875  0 2.0
+#> 2     2 response  21.42097 1.7699036 17.76807  25.07388 146.6875  0 2.2
+#> 3     3 response  20.88574 1.5067373 17.77599  23.99549 146.6875  0 2.4
+#> 4     4 response  20.35051 1.2526403 17.76518  22.93583 146.6875  0 2.6
+#> 5     5 response  19.81527 1.0144509 17.72155  21.90900 146.6875  0 2.8
+#> 6     6 response  19.28004 0.8063905 17.61573  20.94435 146.6875  0 3.0
+```
+
+We can plot how predictions change for different values of a variable –
+Conditional Adjusted Predictions – using the `plot_cap` function:
+
+``` r
+plot_cap(mod, condition = c("hp", "wt"))
+```
+
+<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
+
+``` r
+mod2 <- lm(mpg ~ factor(cyl), data = mtcars)
+plot_cap(mod2, condition = "cyl")
+```
+
+<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
+
+[The Adjusted Predictions
+vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx01_predictions.html)
+shows how to use the `predictions()` and `plot_cap()` functions to
+compute a wide variety of quantities of interest:
+
+  - Adjusted Predictions at User-Specified Values (aka Predictions at
+    Representative Values)
+  - Adjusted Predictions at the Mean
+  - Average Predictions at the Mean
+  - Conditional Predictions at the Mean
+  - Adjusted predictions on different scales (e.g., link or response)
+
+#### Contrasts
+
+A contrast is the difference between two adjusted predictions,
+calculated for meaningfully different regressor values (e.g., College
+graduates vs. Others).
+
+What happens to the predicted outcome when a numeric predictor increases
+by one unit, and logical variable flips from FALSE to TRUE, and a factor
+variable shifts from baseline?
+
+``` r
+titanic <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/Stat2Data/Titanic.csv")
+titanic$Woman <- titanic$Sex == "female"
+mod3 <- glm(Survived ~ Woman + Age * PClass, data = titanic, family = binomial)
+
+cmp <- comparisons(mod3)
+summary(cmp)
+#> Average contrasts 
+#>     Term     Contrast   Effect Std. Error z value   Pr(>|z|)     2.5 %
+#> 1  Woman TRUE - FALSE  0.50329   0.031654  15.899 < 2.22e-16  0.441244
+#> 2    Age  (x + 1) - x -0.00558   0.001084  -5.147 2.6471e-07 -0.007705
+#> 3 PClass    2nd - 1st -0.22603   0.043546  -5.191 2.0950e-07 -0.311383
+#> 4 PClass    3rd - 1st -0.38397   0.041845  -9.176 < 2.22e-16 -0.465985
+#>      97.5 %
+#> 1  0.565327
+#> 2 -0.003455
+#> 3 -0.140686
+#> 4 -0.301957
+#> 
+#> Model type:  glm 
+#> Prediction type:  response
+```
+
+What happens to the ratio of predicted probabilities for survival when
+`PClass` changes from one category to the next (“sequential”) and `Age`
+changes by 2 standard deviations simultaneously (i.e., Adjusted Risk
+Ratio with an interaction)?
+
+``` r
+cmp <- comparisons(
+    mod3,
+    transform_pre = "ratio",
+    variables = list(Age = "2sd", PClass = "sequential"))
+summary(cmp)
+#> Average contrasts 
+#>                   Age    PClass Effect Std. Error z value   Pr(>|z|)  2.5 %
+#> 1 (x + sd) / (x - sd) 2nd / 1st 0.3185    0.05566   5.723 1.0442e-08 0.2095
+#> 2 (x + sd) / (x - sd) 3rd / 2nd 0.3162    0.07023   4.503 6.7096e-06 0.1786
+#>   97.5 %
+#> 1 0.4276
+#> 2 0.4539
+#> 
+#> Model type:  glm 
+#> Prediction type:  response
+```
+
+The code above is explained in detail in the [vignette on
+Transformations and Custom
+Contrasts.](https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html)
+
+[The Contrasts
+vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_contrasts.html)
+shows how to use the `comparisons()` function to compute a wide variety
+of quantities of interest:
+
+  - Custom comparisons for:
+      - Numeric variables (e.g., 1 standard deviation, interquartile
+        range, custom values)
+      - Factor or character
+      - Logical
+  - Contrast interactions
+  - Unit-level Contrasts
+  - Average Contrasts
+  - Group-Average Contrasts
+  - Contrasts at the Mean
+  - Contrasts Between Marginal Means
+  - Adjusted Risk Ratios
+
 #### Marginal effects
 
 A “marginal effect” is a unit-specific measure of association between a
@@ -225,80 +367,27 @@ interaction):
 plot_cme(mod, effect = "hp", condition = c("wt", "am"))
 ```
 
-<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-13-1.png" width="100%" />
 
-#### Adjusted predictions
+[The Marginal Effects
+vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_mfx.html)
+shows how to use the `marginaleffects()` function to compute a wide
+variety of quantities of interest:
 
-Beyond marginal effects, we can also use the `predictions` function to
-estimate – you guessed it – adjusted predicted values. We use the
-`variables` argument to select the categorical variables that will form
-a “grid” of predictor values over which to compute means/predictions:
-
-``` r
-predictions(mod, variables = c("am", "wt"))
-#>    rowid     type predicted std.error  conf.low conf.high       hp am     wt
-#> 1      1 response 23.259500 2.7059342 17.674726  28.84427 146.6875  0 1.5130
-#> 2      2 response 20.504387 1.3244556 17.770845  23.23793 146.6875  0 2.5425
-#> 3      3 response 18.410286 0.6151016 17.140779  19.67979 146.6875  0 3.3250
-#> 4      4 response 17.540532 0.7293676 16.035192  19.04587 146.6875  0 3.6500
-#> 5      5 response 12.793013 2.9784942  6.645703  18.94032 146.6875  0 5.4240
-#> 6      6 response 27.148334 2.8518051 21.262498  33.03417 146.6875  1 1.5130
-#> 7      7 response 21.555612 1.0723852 19.342318  23.76891 146.6875  1 2.5425
-#> 8      8 response 17.304709 1.5528055 14.099876  20.50954 146.6875  1 3.3250
-#> 9      9 response 15.539158 2.1453449 11.111383  19.96693 146.6875  1 3.6500
-#> 10    10 response  5.901966 5.8149853 -6.099574  17.90351 146.6875  1 5.4240
-```
-
-The [`datagrid` function gives us an even more powerful
-way](https://vincentarelbundock.github.io/marginaleffects/reference/datagrid.html)
-to customize the grid:
-
-``` r
-predictions(mod, newdata = datagrid(am = 0, wt = c(2, 4)))
-#>   rowid     type predicted std.error conf.low conf.high       hp am wt
-#> 1     1 response  21.95621  2.038630 17.74868  26.16373 146.6875  0  2
-#> 2     2 response  16.60387  1.083201 14.36826  18.83949 146.6875  0  4
-```
-
-We can plot the adjusted predictions with the `plot_cap` function:
-
-``` r
-plot_cap(mod, condition = c("hp", "wt"))
-```
-
-<img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
-
-Or you can work with the output of the `predictions` or
-`marginaleffects` directly to create your own plots. For example:
-
-``` r
-library(tidyverse)
-
-predictions(mod,
-            newdata = datagrid(am = 0:1,
-                               wt = fivenum(mtcars$wt),
-                               hp = seq(100, 300, 10))) %>%
-    ggplot(aes(x = hp, y = predicted, ymin = conf.low, ymax = conf.high)) +
-    geom_ribbon(aes(fill = factor(wt)), alpha = .2) +
-    geom_line(aes(color = factor(wt))) +
-    facet_wrap(~am)
-```
-
-<img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />
-
-And of course, categorical variables work too:
-
-``` r
-mod <- lm(mpg ~ factor(cyl), data = mtcars)
-plot_cap(mod, condition = "cyl")
-```
-
-<img src="man/figures/README-unnamed-chunk-12-1.png" width="100%" />
+  - Unit-level Marginal Effects
+  - Average Marginal Effects
+  - Group-Average Marginal Effects
+  - Marginal Effects at the Mean
+  - Marginal Effects Between Marginal Means
+  - Conditional Marginal Effects
+  - Tables and Plots
 
 #### Marginal means
 
-To compute marginal means, we first need to make sure that the
-categorical variables of our model are coded as such in the dataset:
+Marginal Means are the adjusted predictions of a model, averaged across
+a “reference grid” of categorical predictors. To compute marginal means,
+we first need to make sure that the categorical variables of our model
+are coded as such in the dataset:
 
 ``` r
 dat <- mtcars

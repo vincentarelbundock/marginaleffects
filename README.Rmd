@@ -122,6 +122,82 @@ library(marginaleffects)
 mod <- lm(mpg ~ hp * wt * am, data = mtcars)
 ```
 
+#### Adjusted predictions
+
+An "adjusted prediction" is the outcome predicted by a model for some combination of the regressors’ values, such as their observed values, their means, or factor levels (a.k.a. “reference grid”).
+
+By default, the `predictions()` function returns adjusted predictions for every value in original dataset:
+
+```{r}
+predictions(mod) |> head()
+```
+
+The [`datagrid` function gives us a powerful way to define a grid of predictors.](https://vincentarelbundock.github.io/marginaleffects/reference/datagrid.html) All the variables not mentioned explicitly in `datagrid()` are fixed to their mean or mode:
+
+```{r}
+predictions(mod, newdata = datagrid(am = 0, wt = seq(2, 3, .2)))
+```
+
+We can plot how predictions change for different values of a variable -- Conditional Adjusted Predictions -- using the `plot_cap` function:
+
+```{r}
+plot_cap(mod, condition = c("hp", "wt"))
+```
+
+```{r}
+mod2 <- lm(mpg ~ factor(cyl), data = mtcars)
+plot_cap(mod2, condition = "cyl")
+```
+
+[The Adjusted Predictions vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx01_predictions.html) shows how to use the `predictions()` and `plot_cap()` functions to compute a wide variety of quantities of interest:
+
+* Adjusted Predictions at User-Specified Values (aka Predictions at Representative Values)
+* Adjusted Predictions at the Mean
+* Average Predictions at the Mean
+* Conditional Predictions at the Mean
+* Adjusted predictions on different scales (e.g., link or response)
+
+#### Contrasts
+
+A contrast is the difference between two adjusted predictions, calculated for meaningfully different regressor values (e.g., College graduates vs. Others).
+
+What happens to the predicted outcome when a numeric predictor increases by one unit, and logical variable flips from FALSE to TRUE, and a factor variable shifts from baseline?
+
+```{r}
+titanic <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/Stat2Data/Titanic.csv")
+titanic$Woman <- titanic$Sex == "female"
+mod3 <- glm(Survived ~ Woman + Age * PClass, data = titanic, family = binomial)
+
+cmp <- comparisons(mod3)
+summary(cmp)
+```
+
+What happens to the ratio of predicted probabilities for survival when `PClass` changes from one category to the next ("sequential") and `Age` changes by 2 standard deviations simultaneously (i.e., Adjusted Risk Ratio with an interaction)?
+
+```{r}
+cmp <- comparisons(
+    mod3,
+    transform_pre = "ratio",
+    variables = list(Age = "2sd", PClass = "sequential"))
+summary(cmp)
+```
+
+The code above is explained in detail in the [vignette on Transformations and Custom Contrasts.](https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html)
+
+[The Contrasts vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_contrasts.html) shows how to use the `comparisons()` function to compute a wide variety of quantities of interest:
+
+* Custom comparisons for:
+  - Numeric variables (e.g., 1 standard deviation, interquartile range, custom values)
+  - Factor or character
+  - Logical
+* Contrast interactions
+* Unit-level Contrasts
+* Average Contrasts
+* Group-Average Contrasts
+* Contrasts at the Mean
+* Contrasts Between Marginal Means
+* Adjusted Risk Ratios
+
 #### Marginal effects
 
 A "marginal effect" is a unit-specific measure of association between a change in a regressor and a change in the regressand. The `marginaleffects` function thus computes a distinct estimate of the marginal effect and of the standard error for each regressor ("term"), for each unit of observation ("rowid"). You can view and manipulate the full results with functions like `head`, as you would with any other `data.frame`:
@@ -144,53 +220,19 @@ The `plot_cme` plots "Conditional Marginal Effects," that is, the marginal effec
 plot_cme(mod, effect = "hp", condition = c("wt", "am"))
 ```
 
-#### Adjusted predictions
+[The Marginal Effects vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_mfx.html) shows how to use the `marginaleffects()` function to compute a wide variety of quantities of interest:
 
-Beyond marginal effects, we can also use the `predictions` function to estimate -- you guessed it -- adjusted predicted values. We use the `variables` argument to select the categorical variables that will form a "grid" of predictor values over which to compute means/predictions:
-
-```{r, message=FALSE}
-predictions(mod, variables = c("am", "wt"))
-```
-
-The [`datagrid` function gives us an even more powerful way](https://vincentarelbundock.github.io/marginaleffects/reference/datagrid.html) to customize the grid:
-
-```{r}
-predictions(mod, newdata = datagrid(am = 0, wt = c(2, 4)))
-```
-
-We can plot the adjusted predictions with the `plot_cap` function:
-
-```{r}
-plot_cap(mod, condition = c("hp", "wt"))
-```
-
-
-Or you can work with the output of the `predictions` or `marginaleffects` directly to create your own plots. For example:
-
-```{r, message = FALSE, warning = FALSE}
-library(tidyverse)
-
-predictions(mod,
-            newdata = datagrid(am = 0:1,
-                               wt = fivenum(mtcars$wt),
-                               hp = seq(100, 300, 10))) %>%
-    ggplot(aes(x = hp, y = predicted, ymin = conf.low, ymax = conf.high)) +
-    geom_ribbon(aes(fill = factor(wt)), alpha = .2) +
-    geom_line(aes(color = factor(wt))) +
-    facet_wrap(~am)
-```
-
-And of course, categorical variables work too:
-
-```{r}
-mod <- lm(mpg ~ factor(cyl), data = mtcars)
-plot_cap(mod, condition = "cyl")
-```
+* Unit-level Marginal Effects
+* Average Marginal Effects
+* Group-Average Marginal Effects
+* Marginal Effects at the Mean
+* Marginal Effects Between Marginal Means
+* Conditional Marginal Effects
+* Tables and Plots
 
 #### Marginal means
 
-To compute marginal means, we first need to make sure that the categorical variables of our model are coded as such in the dataset:
-
+Marginal Means are the adjusted predictions of a model, averaged across a “reference grid” of categorical predictors. To compute marginal means, we first need to make sure that the categorical variables of our model are coded as such in the dataset:
 
 ```{r}
 dat <- mtcars
