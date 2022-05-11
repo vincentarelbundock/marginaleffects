@@ -1,0 +1,143 @@
+---
+title: "Transformations and Custom Contrasts: Adjusted Risk Ratio Example"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Transformations and Custom Contrasts: Log Adjusted Risk Ratio Example}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+# this vignette is in .Rbuildignore because lme4 is not available on old CRAN
+# test machines.
+
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  fig.width = 9,
+  fig.asp = .4,
+  out.width = "100%",
+  warning = FALSE,
+  message = FALSE,
+  comment = "#>"
+)
+
+library(ggplot2)
+
+theme_clean <- function() {
+  theme_minimal() +
+    theme(panel.grid.minor = element_blank(),
+          strip.text = element_text(size = rel(1), hjust = 0),
+          strip.background = element_blank(),
+          legend.position = "bottom")
+}
+ggplot2::theme_set(theme_clean())
+```
+
+[The Contrasts vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_contrasts.html) defined contrasts as:
+
+> The difference between two adjusted predictions.
+
+This vignette shows how to move beyond such simple differences, by estimating "contrasts" that consist of ratios or arbitrary functions of adjusted predictions. It also shows how to back-transform contrasts to change their scales.
+
+Consider the case of a model with a single predictor $x$. To compute average contrasts, we procede as follows:
+
+1. Compute adjusted predictions for each row of the dataset for the observed values $x$: $\hat{y}_x$
+2. Compute adjusted predictions for each row of the dataset for the observed values $x + 1$: $\hat{y}_{x+1}$
+3. Compute unit-level contrasts by taking the difference between (or some other function of) adjusted predictions: $\hat{y}_{x+1} - \hat{y}_x$
+4. Compute the average contrast by taking the mean of unit-level contrasts: $1/N \sum_{i=1}^N \hat{y}_{x+1} - \hat{y}_x$
+5. Return the result directly or transformed.
+
+This vignette shows how to modify steps 3 and 5 to compute custom contrasts: Adjusted Risk Ratios (ARR) and Adjusted Risk Differences (ARD).
+
+# Default contrasts: untransformed differences
+
+In `R` we do:
+
+```{r}
+library(marginaleffects)
+library(magrittr)
+
+mod <- glm(vs ~ mpg, data = mtcars, family = binomial)
+
+# construct data
+mtcars_plus_1 <- mtcars
+mtcars_plus_1$mpg <- mtcars_plus_1$mpg + 1
+
+# adjusted predictions
+yhat <- predict(mod, newdata = mtcars, type = "response")
+yhat_plus_1 <- predict(mod, newdata = mtcars_plus_1, type = "response")
+
+# unit-level contrasts
+con <- yhat_plus_1 - yhat
+
+# average contrasts
+mean(con)
+```
+
+We can use the `comparisons()` and `summary()` functions to obtain the same results:
+
+```{r}
+con <- comparisons(mod)
+summary(con)
+```
+
+# Custom contrasts with `transform_pre`: Ratios
+
+Instead of taking simple differences between adjusted predictions, it can sometimes be useful to compute other forms of contrasts. For example, [the `adjrr` function the `Stata` software package](https://journals.sagepub.com/doi/pdf/10.1177/1536867X1301300304) can compute "adjusted risk ratios", which are ratios of adjusted predictions. To do this in `R`, we use the `transform_pre` argument:
+
+```{r}
+comparisons(mod, transform_pre = "ratio") %>% summary()
+```
+
+This result is the average adjusted risk ratio, that is, the adjusted predictions when the `mpg` are incremented by 1, divided by the adjusted predictions when `mpg` is at its original value.
+
+The `transform_pre` accepts different values for common types of contrasts: 'difference', 'ratio', 'lnratio', 'ratioavg', 'lnratioavg', 'differenceavg'. These strings are shortcuts for functions that accept two vectors of adjusted predictions and returns a single vector of contrasts. For example, these two commands yield identical results:
+
+```{r}
+comparisons(mod, transform_pre = "ratio") %>% summary()
+
+comparisons(mod, transform_pre = function(hi, lo) hi / lo) %>% summary()
+```
+
+This mechanism is powerful, because it lets users create fully customized contrasts. Here is a non-sensical example:
+
+```{r}
+comparisons(mod, transform_pre = function(hi, lo) sqrt(hi) / log(lo + 10)) %>% summary()
+```
+
+# (Back-)Transforming results with `transform_post`: Adjusted Risk Ratios
+
+By default, the standard errors are computed using the delta method on the scale determined by the `type` argument (e.g., "link" or "response"). Some analysts may prefer to proceed differently. For example, in `Stata`, the `adjrr` computes adjusted risk ratios (ARR) in two steps:
+
+1. Compute the natural log of the ratio between the mean of adjusted predictions with $x+1$ and the mean of adjusted predictions with $x$.
+2. Exponentiate the estimate and confidence interval bounds.
+
+Step 1 is easy to achieve with the `transform_pre` argument described above. Step 2 can be achieved with the `transform_post` argument:
+
+```{r}
+comparisons(
+    mod,
+    transform_pre = function(hi, lo) log(mean(hi) / mean(lo)),
+    transform_post = exp) %>%
+    summary()
+```
+
+Note that we can use the `lnratioavg` shortcut instead of defining the function ourselves.
+
+The order of operations in previous command was:
+
+1. Compute the custom unit-level contrasts
+2. Exponentiate them
+3. Take the average using the `summary()` function
+
+There is a very subtle difference between the procedure above and this code:
+
+```{r}
+comparisons(
+    mod,
+    transform_pre = "lnratioavg") %>%
+    summary(transform_post = exp)
+```
+
+Since the `transform_post` argument is now passed to the `summary()` function, the exponentiation is now done only *after* unit-level contrasts have been average. This is what `Stata` does under the hood, and the results are slightly different.
+

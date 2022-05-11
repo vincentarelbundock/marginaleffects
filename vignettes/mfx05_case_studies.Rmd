@@ -1,8 +1,8 @@
 ---
-title: "Case Studies: Bayes, Mixed-Models, GAM, etc."
+title: "Case Studies and More: Bayes, Mixed-Effects, GAMs, etc."
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Case Studies: Bayes, Mixed-Models, GAM, etc.}
+  %\VignetteIndexEntry{Case Studies and More: Bayes, Mixed-Effects, GAM, etc.}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -27,3 +27,10 @@ The `marginaleffects` website (https://vincentarelbundock.github.io/marginaleffe
 - [Robust standard errors and more](https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html)
 - [Tables and Plots](https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html)
 - [Performance and parallel computation](https://vincentarelbundock.github.io/marginaleffects/articles/parallel.html)
+- [Multinomial Logit and Discrete Choice Models](https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html)
+- [Robust standard errors and more](https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html)
+- [Transformations and Custom Contrasts: Adjusted Risk Ratio Example](https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html)
+- [Tables and plots](https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html)
+* [Technical notes](https://vincentarelbundock.github.io/marginaleffects/articles/technical_notes.html)
+* [Alternative software](https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html)
+
