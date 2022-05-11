@@ -190,7 +190,7 @@ marginaleffects <- function(model,
         type = type,
         eps = eps,
         # hard-coded. Users should use comparisons() for more flexibility
-        contrast_function = "difference",
+        transform_pre = "difference",
         contrast_numeric = "dydx",
         contrast_factor = "reference",
         interaction = FALSE,

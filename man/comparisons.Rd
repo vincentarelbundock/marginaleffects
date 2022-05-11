@@ -11,11 +11,11 @@ comparisons(
   type = "response",
   vcov = TRUE,
   conf_level = 0.95,
-  contrast_function = "difference",
   contrast_factor = "reference",
   contrast_numeric = 1,
+  transform_pre = "difference",
+  transform_post = NULL,
   interaction = NULL,
-  transformation = NULL,
   eps = 1e-04,
   ...
 )
@@ -75,20 +75,6 @@ acceptable values is returned in an error message.}
 
 \item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
 
-\item{contrast_function}{\link{experimental} string or function. How should pairs of adjusted predictions be contrasted?
-\itemize{
-\item string: shortcuts to common contrast functions.
-\itemize{
-\item "difference" (default): \code{function(hi, lo) hi - lo}
-\item "differenceavg": \code{function(hi, lo) mean(hi) - mean(lo)}
-\item "ratio": \code{function(hi, lo) hi / lo}
-\item "lnratio": \code{function(hi, lo) log(hi / lo)}
-\item "ratioavg": \code{function(hi, lo) mean(hi) / mean(lo)}
-\item "lnratioavg": \code{function(hi, lo) log(mean(hi) / mean(lo))}
-}
-\item function: accept two equal-length numeric vectors of adjusted predictions (\code{hi} and \code{lo}) and returns a vector of contrasts of the same length, or a unique numeric value.
-}}
-
 \item{contrast_factor}{string. Which pairs of factors should be contrasted?
 \itemize{
 \item "reference": Each factor level is compared to the factor reference (base) level
@@ -107,14 +93,28 @@ acceptable values is returned in an error message.}
 \item "minmax": Contrast between the maximum and the minimum values of the regressor.
 }}
 
+\item{transform_pre}{\link{experimental} string or function. How should pairs of adjusted predictions be contrasted?
+\itemize{
+\item string: shortcuts to common contrast functions.
+\itemize{
+\item "difference" (default): \code{function(hi, lo) hi - lo}
+\item "differenceavg": \code{function(hi, lo) mean(hi) - mean(lo)}
+\item "ratio": \code{function(hi, lo) hi / lo}
+\item "lnratio": \code{function(hi, lo) log(hi / lo)}
+\item "ratioavg": \code{function(hi, lo) mean(hi) / mean(lo)}
+\item "lnratioavg": \code{function(hi, lo) log(mean(hi) / mean(lo))}
+}
+\item function: accept two equal-length numeric vectors of adjusted predictions (\code{hi} and \code{lo}) and returns a vector of contrasts of the same length, or a unique numeric value.
+}}
+
+\item{transform_post}{\link{experimental} A function applied to the estimate and confidence interval just before returning the final results. For example, users can exponentiate their final results by setting \code{transform_post=exp} or transform contrasts made on the link scale for ease of interpretation.}
+
 \item{interaction}{TRUE, FALSE, or NULL
 \itemize{
 \item \code{FALSE}: Contrasts represent the change in adjusted predictions when one predictor changes and all other variables are held constant.
 \item \code{TRUE}: Contrasts represent the changes in adjusted predictions when the predictors specified in the \code{variables} argument are manipulated simultaneously.
 \item \code{NULL} (default): Behaves like \code{TRUE} when the \code{variables} argument is specified and the model formula includes interactions. Behaves like \code{FALSE} otherwise.
 }}
-
-\item{transformation}{\link{experimental} A function applied to the estimate and confidence interval just before returning the final results. For example, users can exponentiate their final results by setting \code{transformation=exp} or transform contrasts made on the link scale for ease of interpretation.}
 
 \item{eps}{A numeric value specifying the “step” size to use when
 calculating numerical derivatives. See the Details section below. Warning:

@@ -1,9 +1,9 @@
-backtransform <- function(x, transformation) {
+backtransform <- function(x, transform_post) {
     checkmate::assert_data_frame(x)
-    checkmate::assert_function(transformation)
+    checkmate::assert_function(transform_post)
     cols <- intersect(colnames(x), c("comparison", "estimate", "conf.low", "conf.high"))
     for (col in cols) {
-        x[[col]] <- transformation(x[[col]])
+        x[[col]] <- transform_post(x[[col]])
     }
     for (col in c("std.error", "statistic")) {
         x[[col]] <- NULL

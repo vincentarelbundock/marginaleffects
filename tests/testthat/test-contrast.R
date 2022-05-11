@@ -124,7 +124,7 @@ test_that("smart contrast labels", {
     cmp2 <- comparisons(
         mod,
         contrast_numeric = "sd",
-        contrast_function = "ratio",
+        transform_pre = "ratio",
         newdata = "mean")
     expect_equal(
         cmp2$contrast,
@@ -133,7 +133,7 @@ test_that("smart contrast labels", {
     cmp3 <- comparisons(
         mod,
         contrast_numeric = "iqr",
-        contrast_function = "lnratioavg",
+        transform_pre = "lnratioavg",
         newdata = "mean")
     expect_equal(
         cmp3$contrast,

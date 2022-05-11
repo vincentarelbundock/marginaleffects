@@ -3,12 +3,12 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
     dots <- list(...)
 
     if (isTRUE(calling_function == "marginaleffects")) {
-        # contrast_function: this would break `dydx` normalization
+        # transform_pre: this would break `dydx` normalization
         # interaction: cross countrast+slope do not make sense
         # contrast_numeric: steer power users toward comparisons()
         # contrast_factor: steer power users toward comparisons()
-        # transformation: should we really be back-transforming slopes?
-        unsupported <- c("contrast_function", "contrast_numeric", "contrast_factor", "transformation", "interaction")
+        # transform_post: should we really be back-transforming slopes?
+        unsupported <- c("transform_pre", "contrast_numeric", "contrast_factor", "transform_post", "interaction")
         unsupported <- intersect(names(dots), unsupported)
         if (length(unsupported) > 0) {
             msg <- sprintf(
