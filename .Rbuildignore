@@ -23,5 +23,6 @@
 ^vignettes/performance.Rmd
 ^vignettes/sandwich.Rmd
 ^vignettes/mlogit.Rmd
+^vignettes/transformation.Rmd
 ^vignettes/technical_notes.Rmd
 man-roxygen

@@ -28,7 +28,9 @@ theme_set(theme_minimal())
 
 > The difference between two adjusted predictions, calculated for meaningfully different regressor values (e.g., College graduates vs. Others).
 
-The `marginaleffects()` function automatically calculates contrasts instead of derivatives for factor, logical, or character variables. The `comparisons()` function gives users more powerful features to compute different contrasts.
+The `marginaleffects()` function automatically calculates contrasts instead of derivatives for factor, logical, or character variables. 
+
+The `comparisons()` function gives users more powerful features to compute different contrasts. For example, it allows users to create custom contrasts like ratios instead of differences, and with different values of the predictors.
 
 # Contrasts: logical and factor variables
 

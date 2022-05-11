@@ -45,6 +45,7 @@ n_support <- nrow(dat)
     - [Multinomial Logit and Discrete Choice Models](https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html)
     - [Tables and plots](https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html)
     - [Robust standard errors and more](https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html)
+    - [Transformations and Custom Contrasts: Adjusted Risk Ratio Example](https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html)
 * [Alternative software](https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html)
 * [Technical notes](https://vincentarelbundock.github.io/marginaleffects/articles/technical_notes.html)
 

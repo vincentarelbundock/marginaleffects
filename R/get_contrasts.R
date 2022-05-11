@@ -2,7 +2,7 @@ get_contrasts <- function(model,
                           newdata,
                           type,
                           variables,
-                          trasnform_pre,
+                          transform_pre,
                           contrast_factor,
                           contrast_numeric,
                           cache = NULL,
@@ -53,8 +53,8 @@ get_contrasts <- function(model,
     draws_hi <- attr(pred_hi, "posterior_draws")
     if (is.null(draws_lo)) {
         draws <- NULL
-    } else if (!is.null(trasnform_pre)) {
-        stop("The `trasnform_pre` argument is not supported for Bayesian models.")
+    } else if (!is.null(transform_pre)) {
+        stop("The `transform_pre` argument is not supported for Bayesian models.")
     } else {
         draws <- draws_hi - draws_lo
     }
@@ -89,10 +89,10 @@ get_contrasts <- function(model,
         out[, "term" := "interaction"]
     }
 
-    # sanitize_trasnform_pre returns NULL by default to allow us to warn
+    # sanitize_transform_pre returns NULL by default to allow us to warn
     # when the argument is not supported
-    if (is.null(trasnform_pre)) {
-        trasnform_pre <- function(hi, lo) hi - lo
+    if (is.null(transform_pre)) {
+        transform_pre <- function(hi, lo) hi - lo
     }
 
     idx <- grep("^contrast|^group$|^term$", colnames(out), value = TRUE)
@@ -100,15 +100,15 @@ get_contrasts <- function(model,
     out[, predicted_hi := pred_hi$predicted]
     if (isTRUE(marginalmeans)) {
         out <- out[, .(predicted_lo = mean(predicted_lo), predicted_hi = mean(predicted_hi)), by = idx]
-        out[, "comparison" := trasnform_pre(predicted_hi, predicted_lo)]
+        out[, "comparison" := transform_pre(predicted_hi, predicted_lo)]
         out[, c("predicted_hi", "predicted_lo") := NULL]
 
     } else {
         wrapfun <- function(hi, lo, n) {
-            con <- try(trasnform_pre(hi, lo), silent = TRUE)
+            con <- try(transform_pre(hi, lo), silent = TRUE)
             if (!isTRUE(checkmate::check_numeric(con, len = n)) &&
                 !isTRUE(checkmate::check_numeric(con, len = 1))) {
-                msg <- sprintf("The function supplied to the `trasnform_pre` argument must accept two numeric vectors of predicted probabilities of length %s, and return a single numeric value or a numeric vector of length %s, with no missing value.", n, n)
+                msg <- sprintf("The function supplied to the `transform_pre` argument must accept two numeric vectors of predicted probabilities of length %s, and return a single numeric value or a numeric vector of length %s, with no missing value.", n, n)
                 stop(msg, call. = FALSE)
             }
             return(con)
