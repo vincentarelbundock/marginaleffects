@@ -29,6 +29,7 @@ New features:
 * `marginaleffects` and `comparisons` now report confidence intervals by default.
 * New dependency on the `data.table` package yields substantial performance improvements.
 * Argument name change: `conf.level` -> `conf_level`
+* More informative error messages and warnings
 * Bug fixes and performance improvements
 
 New pages on the `marginaleffects` website: https://vincentarelbundock.github.io/marginaleffects/

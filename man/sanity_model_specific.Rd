@@ -32,9 +32,9 @@ sanity_model_specific(model, calling_function = "marginaleffects", ...)
 \arguments{
 \item{model}{Model object}
 
-\item{...}{Additional arguments are passed to the \code{predict()} method used to
-compute adjusted predictions. These arguments are particularly useful for
-mixed-effects or bayesian models (see the online vignettes on the
+\item{...}{Additional arguments are passed to the \code{predict()} method
+supplied by the modelling package.These arguments are particularly useful
+for mixed-effects or bayesian models (see the online vignettes on the
 \code{marginaleffects} website). Available arguments can vary from model to
 model, depending on the range of supported arguments by each modeling
 package. See the "Model-Specific Arguments" section of the
@@ -48,7 +48,7 @@ arguments.}
 \item string:
 \itemize{
 \item "mean": Marginal Effects at the Mean. Marginal effects when each predictor is held at its mean or mode.
-\item "median": Marginal Effects at the Median. Marginal effects when each predictor is held at its mean or mode.
+\item "median": Marginal Effects at the Median. Marginal effects when each predictor is held at its median or mode.
 \item "marginalmeans": Marginal Effects at Marginal Means. See Details section below.
 }
 \item \code{\link[=datagrid]{datagrid()}} call to specify a custom grid of regressors. For example:

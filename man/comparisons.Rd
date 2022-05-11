@@ -30,8 +30,8 @@ comparisons(
 \item string:
 \itemize{
 \item "mean": Contrasts at the Mean. Contrasts when each predictor is held at its mean or mode.
-\item "median": Contrasts at the Median. Contrasts when each predictor is held at its mean or mode.
-\item "marginalmeans": Contrasts at Marginal Means. See Details section below.
+\item "median": Contrasts at the Median. Contrasts when each predictor is held at its median or mode.
+\item "marginalmeans": Contrasts at Marginal Means.
 }
 \item \code{\link[=datagrid]{datagrid()}} call to specify a custom grid of regressors. For example:
 \itemize{
@@ -52,10 +52,11 @@ comparisons(
 }
 }}
 
-\item{type}{Type(s) of prediction as string or character vector. This can
-differ based on the model type, but will typically be a string such as:
-"response", "link", "probs", or "zero". When an unsupported string is
-entered, the list of acceptable values is return in an error message.}
+\item{type}{string indicates the type (scale) of the predictions used to
+compute marginal effects or contrasts. This can differ based on the model
+type, but will typically be a string such as: "response", "link", "probs",
+or "zero". When an unsupported string is entered, the model-specific list of
+acceptable values is returned in an error message.}
 
 \item{vcov}{Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
 \itemize{
@@ -115,14 +116,14 @@ entered, the list of acceptable values is return in an error message.}
 
 \item{transformation}{\link{experimental} A function applied to the estimate and confidence interval just before returning the final results. For example, users can exponentiate their final results by setting \code{transformation=exp} or transform contrasts made on the link scale for ease of interpretation.}
 
-\item{eps}{A numeric value specifying the “step” to use when calculating
-numerical derivatives. See the Details section below. Note
-that the marginal effects computed for certain models can be especially
-sensitive to the choice of step value (e.g., Bayesian mixed effects).}
+\item{eps}{A numeric value specifying the “step” size to use when
+calculating numerical derivatives. See the Details section below. Warning:
+the marginal effects computed for certain models can be sensitive to the
+choice of step (e.g., Bayesian mixed effects).}
 
-\item{...}{Additional arguments are passed to the \code{predict()} method used to
-compute adjusted predictions. These arguments are particularly useful for
-mixed-effects or bayesian models (see the online vignettes on the
+\item{...}{Additional arguments are passed to the \code{predict()} method
+supplied by the modelling package.These arguments are particularly useful
+for mixed-effects or bayesian models (see the online vignettes on the
 \code{marginaleffects} website). Available arguments can vary from model to
 model, depending on the range of supported arguments by each modeling
 package. See the "Model-Specific Arguments" section of the

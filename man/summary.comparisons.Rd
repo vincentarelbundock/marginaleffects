@@ -15,9 +15,9 @@
 
 \item{transformation}{\link{experimental} A function applied to the estimate and confidence interval just before returning the final results. For example, users can exponentiate their final results by setting \code{transformation=exp} or transform contrasts made on the link scale for ease of interpretation.}
 
-\item{...}{Additional arguments are passed to the \code{predict()} method used to
-compute adjusted predictions. These arguments are particularly useful for
-mixed-effects or bayesian models (see the online vignettes on the
+\item{...}{Additional arguments are passed to the \code{predict()} method
+supplied by the modelling package.These arguments are particularly useful
+for mixed-effects or bayesian models (see the online vignettes on the
 \code{marginaleffects} website). Available arguments can vary from model to
 model, depending on the range of supported arguments by each modeling
 package. See the "Model-Specific Arguments" section of the

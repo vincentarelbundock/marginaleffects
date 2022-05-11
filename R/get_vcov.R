@@ -53,6 +53,8 @@ get_vcov.default <- function(model,
 
 library(remotes)
 install_github("easystats/insight")
+
+Please make sure you restart `R` completely after installation.
 '
             stop(msg, call. = FALSE)
         }
