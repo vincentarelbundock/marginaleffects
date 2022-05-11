@@ -13,10 +13,10 @@
 
 \item{by}{Character vector of variable names over which to compute group-averaged contrasts.}
 
-\item{transform_post}{\link{experimental} A function applied to the estimate and confidence interval just before returning the final results. For example, users can exponentiate their final results by setting \code{transform_post=exp} or transform contrasts made on the link scale for ease of interpretation.}
+\item{transform_post}{(experimental) A function applied to the estimate and confidence interval just before returning the final results. For example, users can exponentiate their final results by setting \code{transform_post=exp} or transform contrasts made on the link scale for ease of interpretation.}
 
 \item{...}{Additional arguments are passed to the \code{predict()} method
-supplied by the modelling package.These arguments are particularly useful
+supplied by the modeling package.These arguments are particularly useful
 for mixed-effects or bayesian models (see the online vignettes on the
 \code{marginaleffects} website). Available arguments can vary from model to
 model, depending on the range of supported arguments by each modeling

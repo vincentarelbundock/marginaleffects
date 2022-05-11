@@ -14,7 +14,7 @@
 \item{by}{Character vector of variable names over which to compute group-averaged marginal effects.}
 
 \item{...}{Additional arguments are passed to the \code{predict()} method
-supplied by the modelling package.These arguments are particularly useful
+supplied by the modeling package.These arguments are particularly useful
 for mixed-effects or bayesian models (see the online vignettes on the
 \code{marginaleffects} website). Available arguments can vary from model to
 model, depending on the range of supported arguments by each modeling

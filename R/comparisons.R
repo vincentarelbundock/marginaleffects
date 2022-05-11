@@ -39,7 +39,7 @@
 #' + [datagrid()] call to specify a custom grid of regressors. For example:
 #'   - `newdata = datagrid(cyl = c(4, 6))`: `cyl` variable equal to 4 and 6 and other regressors fixed at their means or modes.
 #'   - See the Examples section and the [datagrid] documentation.
-#' @param transform_pre [experimental] string or function. How should pairs of adjusted predictions be contrasted?
+#' @param transform_pre (experimental) string or function. How should pairs of adjusted predictions be contrasted?
 #' * string: shortcuts to common contrast functions.
 #'   - "difference" (default): `function(hi, lo) hi - lo`
 #'   - "differenceavg": `function(hi, lo) mean(hi) - mean(lo)`
@@ -60,7 +60,7 @@
 #' * "sd": Contrast across one standard deviation around the regressor mean.
 #' * "2sd": Contrast across two standard deviations around the regressor mean.
 #' * "minmax": Contrast between the maximum and the minimum values of the regressor.
-#' @param transform_post [experimental] A function applied to the estimate and confidence interval just before returning the final results. For example, users can exponentiate their final results by setting `transform_post=exp` or transform contrasts made on the link scale for ease of interpretation.
+#' @param transform_post (experimental) A function applied to the estimate and confidence interval just before returning the final results. For example, users can exponentiate their final results by setting `transform_post=exp` or transform contrasts made on the link scale for ease of interpretation.
 #' @param interaction TRUE, FALSE, or NULL
 #' * `FALSE`: Contrasts represent the change in adjusted predictions when one predictor changes and all other variables are held constant.
 #' * `TRUE`: Contrasts represent the changes in adjusted predictions when the predictors specified in the `variables` argument are manipulated simultaneously.

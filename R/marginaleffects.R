@@ -67,7 +67,7 @@
 #' the marginal effects computed for certain models can be sensitive to the
 #' choice of step (e.g., Bayesian mixed effects).
 #' @param ... Additional arguments are passed to the `predict()` method
-#' supplied by the modelling package.These arguments are particularly useful
+#' supplied by the modeling package.These arguments are particularly useful
 #' for mixed-effects or bayesian models (see the online vignettes on the
 #' `marginaleffects` website). Available arguments can vary from model to
 #' model, depending on the range of supported arguments by each modeling

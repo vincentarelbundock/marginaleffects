@@ -93,7 +93,7 @@ acceptable values is returned in an error message.}
 \item "minmax": Contrast between the maximum and the minimum values of the regressor.
 }}
 
-\item{transform_pre}{\link{experimental} string or function. How should pairs of adjusted predictions be contrasted?
+\item{transform_pre}{(experimental) string or function. How should pairs of adjusted predictions be contrasted?
 \itemize{
 \item string: shortcuts to common contrast functions.
 \itemize{
@@ -107,7 +107,7 @@ acceptable values is returned in an error message.}
 \item function: accept two equal-length numeric vectors of adjusted predictions (\code{hi} and \code{lo}) and returns a vector of contrasts of the same length, or a unique numeric value.
 }}
 
-\item{transform_post}{\link{experimental} A function applied to the estimate and confidence interval just before returning the final results. For example, users can exponentiate their final results by setting \code{transform_post=exp} or transform contrasts made on the link scale for ease of interpretation.}
+\item{transform_post}{(experimental) A function applied to the estimate and confidence interval just before returning the final results. For example, users can exponentiate their final results by setting \code{transform_post=exp} or transform contrasts made on the link scale for ease of interpretation.}
 
 \item{interaction}{TRUE, FALSE, or NULL
 \itemize{
@@ -122,7 +122,7 @@ the marginal effects computed for certain models can be sensitive to the
 choice of step (e.g., Bayesian mixed effects).}
 
 \item{...}{Additional arguments are passed to the \code{predict()} method
-supplied by the modelling package.These arguments are particularly useful
+supplied by the modeling package.These arguments are particularly useful
 for mixed-effects or bayesian models (see the online vignettes on the
 \code{marginaleffects} website). Available arguments can vary from model to
 model, depending on the range of supported arguments by each modeling
