@@ -6,7 +6,7 @@ test_that("exponentiate", {
     cmp1 <- comparisons(
         mod,
         variables = "gender",
-        contrast_function = "lnratioavg")
+        transform_pre = "lnratioavg")
     cmp2 <- comparisons(
         mod,
         variables = "gender",
