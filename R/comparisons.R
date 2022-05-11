@@ -38,7 +38,7 @@
 #' + [datagrid()] call to specify a custom grid of regressors. For example:
 #'   - `newdata = datagrid(cyl = c(4, 6))`: `cyl` variable equal to 4 and 6 and other regressors fixed at their means or modes.
 #'   - See the Examples section and the [datagrid] documentation.
-#' @param contrast_function [experimental] string or function. How should pairs of adjusted predictions be contrasted?
+#' @param transform_pre [experimental] string or function. How should pairs of adjusted predictions be contrasted?
 #' * string: shortcuts to common contrast functions.
 #'   - "difference" (default): `function(hi, lo) hi - lo`
 #'   - "differenceavg": `function(hi, lo) mean(hi) - mean(lo)`
@@ -59,7 +59,7 @@
 #' * "sd": Contrast across one standard deviation around the regressor mean.
 #' * "2sd": Contrast across two standard deviations around the regressor mean.
 #' * "minmax": Contrast between the maximum and the minimum values of the regressor.
-#' @param transformation [experimental] A function applied to the estimate and confidence interval just before returning the final results. For example, users can exponentiate their final results by setting `transformation=exp` or transform contrasts made on the link scale for ease of interpretation.
+#' @param transform_post [experimental] A function applied to the estimate and confidence interval just before returning the final results. For example, users can exponentiate their final results by setting `transform_post=exp` or transform contrasts made on the link scale for ease of interpretation.
 #' @param interaction TRUE, FALSE, or NULL
 #' * `FALSE`: Contrasts represent the change in adjusted predictions when one predictor changes and all other variables are held constant.
 #' * `TRUE`: Contrasts represent the changes in adjusted predictions when the predictors specified in the `variables` argument are manipulated simultaneously.
@@ -118,11 +118,11 @@ comparisons <- function(model,
                         type = "response",
                         vcov = TRUE,
                         conf_level = 0.95,
-                        contrast_function = "difference",
                         contrast_factor = "reference",
                         contrast_numeric = 1,
+                        transform_pre = "difference",
+                        transform_post = NULL,
                         interaction = NULL,
-                        transformation = NULL,
                         eps = 1e-4,
                         ...) {
 
@@ -151,12 +151,12 @@ comparisons <- function(model,
         sanity_type(model = model, type = type)
         sanity_contrast_factor(contrast_factor) # hardcoded in marginaleffects()
         sanity_contrast_numeric(contrast_numeric) # hardcoded in marginaleffects()
-        checkmate::assert_function(transformation, null.ok = TRUE)
+        checkmate::assert_function(transform_post, null.ok = TRUE)
     }
 
     marginalmeans <- isTRUE(checkmate::check_choice(newdata, choices = "marginalmeans")) # before sanitize_newdata
     newdata <- sanity_newdata(model = model, newdata = newdata)
-    contrast_function <- sanitize_contrast_function(contrast_function)
+    transform_pre <- sanitize_transform_pre(transform_pre)
 
     # get dof before transforming the vcov arg
     if (is.character(vcov) && (isTRUE(vcov == "satterthwaite") || isTRUE(vcov == "kenward-roger"))) {
@@ -202,7 +202,7 @@ comparisons <- function(model,
                  interaction = interaction,
                  contrast_types = contrast_types,
                  marginalmeans = marginalmeans,
-                 contrast_label = contrast_function[["label"]],
+                 contrast_label = transform_pre[["label"]],
                  eps = eps)
     args <- c(args, dots)
     cache <- do.call("get_contrast_data", args)
@@ -211,7 +211,7 @@ comparisons <- function(model,
                  newdata = newdata,
                  variables = variables,
                  type = type,
-                 contrast_function = contrast_function[["function"]],
+                 transform_pre = transform_pre[["function"]],
                  contrast_factor = contrast_factor,
                  contrast_numeric = contrast_numeric,
                  eps = eps,
@@ -237,7 +237,7 @@ comparisons <- function(model,
                      index = idx,
                      variables = variables,
                      cache = cache,
-                     contrast_function = contrast_function[["function"]],
+                     transform_pre = transform_pre[["function"]],
                      contrast_factor = contrast_factor,
                      contrast_numeric = contrast_numeric,
                      marginalmeans = marginalmeans,
@@ -312,8 +312,8 @@ comparisons <- function(model,
          mfx$group <- "main_marginaleffect"
     }
 
-    if (!is.null(transformation)) {
-        mfx <- backtransform(mfx, transformation)
+    if (!is.null(transform_post)) {
+        mfx <- backtransform(mfx, transform_post)
     }
 
     # clean columns
@@ -339,8 +339,8 @@ comparisons <- function(model,
     attr(out, "J") <- J
     attr(out, "vcov") <- vcov
     attr(out, "vcov.type") <- get_vcov_label(vcov)
-    if (!is.null(transformation)) {
-        attr(out, "transformation") <- transformation
+    if (!is.null(transform_post)) {
+        attr(out, "transform_post") <- transform_post
     }
 
     # modelbased::visualisation_matrix attaches useful info for plotting
