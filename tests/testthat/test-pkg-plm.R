@@ -8,13 +8,26 @@ requiet("broom")
 tol <- .0001
 tol_se <- .001
 
-data("Grunfeld", package = "plm")
+dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/plm/Grunfeld.csv")
+dat$X <- NULL
+dat <<- pdata.frame(dat)
+pool <<- plm(inv ~ value * capital, data = dat, model = "pooling")
+swamy <<- plm(
+    inv ~ value * capital, data = dat,
+    model = "random", effect = "individual")
+amemiya <<- plm(
+    inv ~ value * capital,
+    data = dat, model = "random", random.method = "amemiya",
+    effect = "twoways")
+walhus <<- plm(
+    inv ~ value * capital,
+    data = dat, model = "random", random.method = "walhus",
+    effect = "twoways")
 
 ### marginaleffects
 
 test_that("pooling vs. Stata", {
     stata <- readRDS(test_path("stata/stata.rds"))$plm_pooling
-    pool <- plm(inv ~ value * capital, data = Grunfeld, model = "pooling")
     mfx <- merge(tidy(marginaleffects(pool)), stata)
     expect_marginaleffects(pool, n_unique = 1)
     expect_equal(mfx$estimate, mfx$dydxstata, tolerance = tol)
@@ -27,16 +40,14 @@ test_that("Swamy-Arora vs. Stata", {
     # finding the correct threshold by trial and error is difficult on CRAN
     skip_on_cran()
     stata <- readRDS(test_path("stata/stata.rds"))$plm_sa
-    mod <- plm(inv ~ value * capital, data = Grunfeld,
-               model = "random", effect = "individual")
-    mfx <- merge(tidy(marginaleffects(mod)), stata)
-    expect_marginaleffects(mod)
+    mfx <- merge(tidy(marginaleffects(swamy)), stata)
+    expect_marginaleffects(swamy)
     expect_equal(mfx$estimate, mfx$dydxstata, tolerance = tol)
     expect_equal(mfx$std.error, mfx$std.errorstata, tolerance = tol_se)
 
     # margins
-    mfx <- tidy(marginaleffects(mod))
-    mar <- tidy(margins(mod))
+    mfx <- tidy(marginaleffects(swamy))
+    mar <- tidy(margins(swamy))
     mfx <- mfx[order(mfx$term),]
     expect_equal(mfx$estimate, mar$estimate, ignore_attr = TRUE, tolerance = tol)
     expect_equal(mfx$std.error, mar$std.error, ignore_attr = TRUE, tolerance = tol_se)
@@ -44,11 +55,7 @@ test_that("Swamy-Arora vs. Stata", {
 
 
 test_that("no validity checks", {
-    amemiya <- plm(inv ~ value * capital,
-                   data = Grunfeld, model = "random", random.method = "amemiya",
-                   effect = "twoways")
     expect_marginaleffects(amemiya)
-
     # margins
     tidy(marginaleffects(amemiya, type = "link"))
     tidy(marginaleffects(amemiya, type = "response"))
@@ -58,10 +65,6 @@ test_that("no validity checks", {
     expect_equal(mfx$estimate, mar$estimate, ignore_attr = TRUE, tolerance = tol)
     expect_equal(mfx$std.error, mar$std.error, ignore_attr = TRUE, tolerance = tol_se)
 
-
-    walhus <- plm(inv ~ value * capital,
-                  data = Grunfeld, model = "random", random.method = "walhus",
-                  effect = "twoways")
     expect_marginaleffects(walhus)
 
     # margins
@@ -76,7 +79,7 @@ test_that("no validity checks", {
 test_that("within error", {
     # within model are not supported by `predict.plm`
     stata <- readRDS(test_path("stata/stata.rds"))$plm_within
-    mod <- plm(inv ~ value * capital, data = Grunfeld, model = "within", effect = "twoways")
+    mod <- plm(inv ~ value * capital, data = dat, model = "within", effect = "twoways")
     expect_error(marginaleffects(mod), regexp = "appear.*support")
 })
 
@@ -84,9 +87,8 @@ test_that("within error", {
 ### predictions
 
 test_that("predictions: pooling no validity", {
-    pool <- plm(inv ~ value * capital, data = Grunfeld, model = "pooling")
     pred1 <- predictions(pool)
-    pred2 <- predictions(pool, newdata = head(Grunfeld))
-    expect_predictions(pred1, n_row = nrow(Grunfeld))
+    pred2 <- predictions(pool, newdata = head(dat))
+    expect_predictions(pred1, n_row = nrow(dat))
     expect_predictions(pred2, n_row = 6)
 })
