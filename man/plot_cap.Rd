@@ -21,10 +21,11 @@ plot_cap(
 name to be displayed on the x-axis. The second is a variable whose values
 will be displayed in different colors.}
 
-\item{type}{Type(s) of prediction as string or character vector. This can
-differ based on the model type, but will typically be a string such as:
-"response", "link", "probs", or "zero". When an unsupported string is
-entered, the list of acceptable values is return in an error message.}
+\item{type}{string indicates the type (scale) of the predictions used to
+compute marginal effects or contrasts. This can differ based on the model
+type, but will typically be a string such as: "response", "link", "probs",
+or "zero". When an unsupported string is entered, the model-specific list of
+acceptable values is returned in an error message.}
 
 \item{vcov}{Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
 \itemize{
@@ -45,9 +46,9 @@ entered, the list of acceptable values is return in an error message.}
 
 \item{draw}{\code{TRUE} returns a \code{ggplot2} plot. \code{FALSE} returns a \code{data.frame} of the underlying data.}
 
-\item{...}{Additional arguments are passed to the \code{predict()} method used to
-compute adjusted predictions. These arguments are particularly useful for
-mixed-effects or bayesian models (see the online vignettes on the
+\item{...}{Additional arguments are passed to the \code{predict()} method
+supplied by the modelling package.These arguments are particularly useful
+for mixed-effects or bayesian models (see the online vignettes on the
 \code{marginaleffects} website). Available arguments can vary from model to
 model, depending on the range of supported arguments by each modeling
 package. See the "Model-Specific Arguments" section of the

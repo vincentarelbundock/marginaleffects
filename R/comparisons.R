@@ -33,8 +33,8 @@
 #' + data frame: Unit-level contrasts for each row of the `newdata` data frame.
 #' + string:
 #'   - "mean": Contrasts at the Mean. Contrasts when each predictor is held at its mean or mode.
-#'   - "median": Contrasts at the Median. Contrasts when each predictor is held at its mean or mode.
-#'   - "marginalmeans": Contrasts at Marginal Means. See Details section below.
+#'   - "median": Contrasts at the Median. Contrasts when each predictor is held at its median or mode.
+#'   - "marginalmeans": Contrasts at Marginal Means.
 #' + [datagrid()] call to specify a custom grid of regressors. For example:
 #'   - `newdata = datagrid(cyl = c(4, 6))`: `cyl` variable equal to 4 and 6 and other regressors fixed at their means or modes.
 #'   - See the Examples section and the [datagrid] documentation.

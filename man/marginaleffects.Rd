@@ -25,7 +25,7 @@ marginaleffects(
 \item string:
 \itemize{
 \item "mean": Marginal Effects at the Mean. Marginal effects when each predictor is held at its mean or mode.
-\item "median": Marginal Effects at the Median. Marginal effects when each predictor is held at its mean or mode.
+\item "median": Marginal Effects at the Median. Marginal effects when each predictor is held at its median or mode.
 \item "marginalmeans": Marginal Effects at Marginal Means. See Details section below.
 }
 \item \code{\link[=datagrid]{datagrid()}} call to specify a custom grid of regressors. For example:
@@ -58,19 +58,20 @@ marginaleffects(
 
 \item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
 
-\item{type}{Type(s) of prediction as string or character vector. This can
-differ based on the model type, but will typically be a string such as:
-"response", "link", "probs", or "zero". When an unsupported string is
-entered, the list of acceptable values is return in an error message.}
+\item{type}{string indicates the type (scale) of the predictions used to
+compute marginal effects or contrasts. This can differ based on the model
+type, but will typically be a string such as: "response", "link", "probs",
+or "zero". When an unsupported string is entered, the model-specific list of
+acceptable values is returned in an error message.}
 
-\item{eps}{A numeric value specifying the “step” to use when calculating
-numerical derivatives. See the Details section below. Note
-that the marginal effects computed for certain models can be especially
-sensitive to the choice of step value (e.g., Bayesian mixed effects).}
+\item{eps}{A numeric value specifying the “step” size to use when
+calculating numerical derivatives. See the Details section below. Warning:
+the marginal effects computed for certain models can be sensitive to the
+choice of step (e.g., Bayesian mixed effects).}
 
-\item{...}{Additional arguments are passed to the \code{predict()} method used to
-compute adjusted predictions. These arguments are particularly useful for
-mixed-effects or bayesian models (see the online vignettes on the
+\item{...}{Additional arguments are passed to the \code{predict()} method
+supplied by the modelling package.These arguments are particularly useful
+for mixed-effects or bayesian models (see the online vignettes on the
 \code{marginaleffects} website). Available arguments can vary from model to
 model, depending on the range of supported arguments by each modeling
 package. See the "Model-Specific Arguments" section of the
