@@ -251,6 +251,8 @@ mm <- marginalmeans(mod)
 summary(mm)
 ```
 
+[The Marginal Means vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx04_marginalmeans.html) offers more detail.
+
 #### More
 
 There is *much* more you can do with `marginaleffects`. Return to the [Table of Contents](https://vincentarelbundock.github.io/marginaleffects/#getting-started) to read the vignettes, learn how to report marginal effects and means in [nice tables with the `modelsummary` package](https://vincentarelbundock.github.io/modelsummary/), how to define your own prediction "grid", and much more.
