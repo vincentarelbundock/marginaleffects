@@ -4,7 +4,7 @@
 \alias{tidy.marginaleffects}
 \title{Tidy a \code{marginaleffects} object}
 \usage{
-\method{tidy}{marginaleffects}(x, conf_level = 0.95, by = NULL, transformation = NULL, ...)
+\method{tidy}{marginaleffects}(x, conf_level = 0.95, by = NULL, ...)
 }
 \arguments{
 \item{x}{An object produced by the \code{marginaleffects} function.}

@@ -18,9 +18,8 @@
 summary.marginaleffects <- function(object,
                                     conf_level = 0.95,
                                     by = NULL,
-                                    transformation = NULL,
                                     ...) {
-    out <- tidy(object, conf_level = conf_level, by = by, transformation = transformation, ...)
+    out <- tidy(object, conf_level = conf_level, by = by, ...)
     class(out) <- c("marginaleffects.summary", class(out))
     attr(out, "type") <- attr(object, "type")
     attr(out, "model_type") <- attr(object, "model_type")
