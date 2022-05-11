@@ -201,7 +201,7 @@ The code above is explained in detail in the [vignette on Transformations and Cu
 
 #### Marginal effects
 
-A "marginal effect" is a partial derivative (slope) of the regression equation with respect to a regressor of interest. It is unit-specific measure of association between a change in a regressor and a change in the regressand. The `marginaleffects()` function uses numerical derivatives to estimate the slope of the regression equation with respect to each of the variables in the model (or contrasts for cateogrical variables). 
+A "marginal effect" is a partial derivative (slope) of the regression equation with respect to a regressor of interest. It is unit-specific measure of association between a change in a regressor and a change in the regressand. The `marginaleffects()` function uses numerical derivatives to estimate the slope of the regression equation with respect to each of the variables in the model (or contrasts for categorical variables). 
 
 By default, `marginaleffects()` estimates the slope for each row of the original dataset that was used to fit the model:
 
