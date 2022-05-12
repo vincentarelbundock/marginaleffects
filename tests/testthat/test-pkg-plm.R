@@ -1,7 +1,10 @@
 # bug fix submitted for this version
 skip_if_not_installed("insight", minimum_version = "0.17.0.6")
 
+requiet("margins")
+requiet("broom")
 requiet("plm")
+
 tol <- .001
 tol_se <- .01 # BDR emergency email about tiny numerical differences
 
@@ -33,12 +36,6 @@ test_that("pooling vs. Stata", {
 
 
 test_that("Swamy-Arora vs. Stata", {
-    requiet("margins")
-    requiet("broom")
-
-    # numeric differences could be resolved with different tolerance, but
-    # finding the correct threshold by trial and error is difficult on CRAN
-    skip_on_cran()
     stata <- readRDS(test_path("stata/stata.rds"))$plm_sa
     mfx <- merge(tidy(marginaleffects(swamy)), stata)
     expect_marginaleffects(swamy)
@@ -55,8 +52,6 @@ test_that("Swamy-Arora vs. Stata", {
 
 
 test_that("no validity checks", {
-    requiet("margins")
-    requiet("broom")
     expect_marginaleffects(amemiya)
     # margins
     tidy(marginaleffects(amemiya, type = "link"))
