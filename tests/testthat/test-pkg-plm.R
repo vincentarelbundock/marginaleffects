@@ -1,3 +1,6 @@
+# bug fix submitted for this version
+skip_if_not_installed("insight", minimum_version = "0.17.0.6")
+
 requiet("plm")
 tol <- .001
 tol_se <- .01 # BDR emergency email about tiny numerical differences

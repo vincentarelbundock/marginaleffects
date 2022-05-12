@@ -6,3 +6,9 @@ sanity_model_specific.plm <- function(model, ...) {
         stop('The `plm::predict` function does not appear to support the `newdata` argument when `plm(model="within")`. Therefore, `marginaleffects` cannot support "within" models, even if it supports many other models produced by the `plm` package. You may want to try the `fixest` package instead.')
     }
 }
+
+
+#' @rdname sanity_model_specific
+sanity_model_specific.plm <- function(model, ...) {
+    insight::check_if_installed("insight", minimum_version = "0.17.0.6")
+}
