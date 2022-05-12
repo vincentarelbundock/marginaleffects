@@ -106,9 +106,9 @@ predictions <- function(model,
     idx <- !names(attributes_newdata) %in% idx
     attributes_newdata <- attributes_newdata[idx]
 
-    # save all character levels for padding
-    # later we call this function again for different purposes
-    levels_character <- attr(sanitize_variables(model, newdata = NULL, variables), "levels_character")
+
+    # we transform this now but need the input later
+    variables_user_input <- variables
 
     # check before inferring `newdata`
     if (!is.null(variables) && !is.null(newdata)) {
@@ -130,6 +130,17 @@ predictions <- function(model,
     } else {
         newdata <- sanity_newdata(model, newdata)
         variables <- sanitize_variables(model, newdata, variables)
+    }
+
+    # save all character levels for padding
+    # this does not always work in nested functions because of obscure call stack issues
+    # which means that padding may break when `predictions` is nested inside another function
+    levels_character <- try(suppressWarnings(insight::get_data(model)), silent = TRUE)
+    if (inherits(levels_character, "data.frame")) {
+        idx <- sapply(levels_character, is.character)
+        levels_character <- as.list(levels_character[, idx])
+    } else {
+        levels_character <- list()
     }
 
     # trust newdata$rowid
