@@ -13,3 +13,24 @@ test_that("predictions() call is nested in a function", {
     expect_s3_class(p, "predictions")
     expect_equal(nrow(p), 3)
 })
+
+test_that("informative error", {
+    test <- function() {
+        data(mtcars)
+        test_data <- mtcars
+        mod <- feols(mpg ~ hp + factor(cyl), data = test_data)
+        return(mod)
+    }
+    expect_error(predictions(test(), variables = "cyl"), regexp = "Please.*explicitly")
+})
+
+
+test <- function() {
+    data(mtcars)
+    test_data <- mtcars
+    mod <- feols(mpg ~ hp + factor(cyl), data = test_data)
+    predictions(mod, variables = "cyl", newdata = test_data)
+    return(mod)
+}
+test()
+
