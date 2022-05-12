@@ -24,9 +24,9 @@ predictions, marginal effects, contrasts, and marginal means for a
   - Vignettes:
       - [Adjusted
         predictions](https://vincentarelbundock.github.io/marginaleffects/articles/mfx01_predictions.html)
+      - [Contrasts](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_contrasts.html)
       - [Marginal
         effects](https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_mfx.html)
-      - [Contrasts](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_contrasts.html)
       - [Marginal
         means](https://vincentarelbundock.github.io/marginaleffects/articles/mfx04_marginalmeans.html)
   - [61 supported
