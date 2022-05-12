@@ -25,3 +25,10 @@ get_predict.betareg <- function(model, newdata, ...) {
                       predicted = out)
     return(out)
 }
+
+
+#' @rdname sanity_model_specific
+sanity_model_specific.betareg <- function(model, ...) {
+    insight::check_if_installed("insight", minimum_version = "0.17.0.6")
+}
+

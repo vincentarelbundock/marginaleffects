@@ -1,7 +1,11 @@
+# bug fix submitted for this version of insight
+skip_if_not_installed("insight", minimum_version = "0.17.0.6")
+
 requiet("betareg")
 requiet("margins")
 requiet("emmeans")
 requiet("broom")
+
 tol <- 0.01 # bad tolerance for some results
 
 data("GasolineYield", package = "betareg")
