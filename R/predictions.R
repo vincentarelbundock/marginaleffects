@@ -111,9 +111,7 @@ predictions <- function(model,
     variables_user_input <- variables
 
     # check before inferring `newdata`
-    if (!is.null(variables) && !is.null(newdata)) {
-        stop("The `variables` and `newdata` arguments cannot be used simultaneously.")
-    } else if (!is.null(variables)) {
+    if (!is.null(variables)) {
         # get new data if it doesn't exist
         newdata <- sanity_newdata(model, newdata)
         variables <- sanitize_variables(model, newdata, variables)

@@ -23,7 +23,7 @@ sanity_newdata <- function(model, newdata) {
     }
 
     if (!inherits(newdata, "data.frame")) {
-        msg <- sprintf("Unable to extract the data from model of class `%s`.", class(model)[1])
+        msg <- sprintf("Unable to extract the data from model of class `%s`. Please supply a data frame explicitly via the `newdata` argument.", class(model)[1])
         stop(msg, call. = FALSE)
     }
 
