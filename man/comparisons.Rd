@@ -138,9 +138,24 @@ by the \code{tidy()} or \code{summary()} functions, which compute Average Contra
 calculate a variety of contrasts, including "Contrasts at the Mean,"
 "Contrasts at User-Specified values" (aka Contrasts at Representative
 values), "Contrasts in Marginal Means", "Adjusted Risk Ratios", and much
-more. Additional information can be found in the Details and Examples
-sections below, and in an extensive series of vignettes on the
-\code{marginaleffects} website.
+more. For more information, see the Details and Examples sections below, and
+in the vignettes on the \code{marginaleffects} website:
+\link{https://vincentarelbundock.github.io/marginaleffects/}
+\itemize{
+\item \href{https://vincentarelbundock.github.io/marginaleffects/#getting-started}{Getting Started}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_contrasts.html}{Contrasts Vignette}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx06_supported_models.html}{Supported Models}
+\item Case Studies
+\itemize{
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/brms.html}{Bayesian analyses with \code{brms}}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html}{Mixed effects models}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/gam.html}{Generalized Additive Models}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html}{Multinomial Logit and Discrete Choice Models}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html}{Tables and plots}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html}{Robust standard errors and more}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html}{Transformations and Custom Contrasts: Adjusted Risk Ratio Example}
+}
+}
 }
 \details{
 A "contrast" is the difference between two adjusted predictions, calculated
