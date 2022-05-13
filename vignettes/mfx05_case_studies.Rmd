@@ -26,7 +26,7 @@ The `marginaleffects` website (https://vincentarelbundock.github.io/marginaleffe
 - [Generalized Additive Models](https://vincentarelbundock.github.io/marginaleffects/articles/gam.html)
 - [Robust standard errors and more](https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html)
 - [Tables and Plots](https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html)
-- [Performance and parallel computation](https://vincentarelbundock.github.io/marginaleffects/articles/parallel.html)
+- [Performance tips](https://vincentarelbundock.github.io/marginaleffects/articles/performance.html)
 - [Multinomial Logit and Discrete Choice Models](https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html)
 - [Robust standard errors and more](https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html)
 - [Transformations and Custom Contrasts: Adjusted Risk Ratio Example](https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html)
