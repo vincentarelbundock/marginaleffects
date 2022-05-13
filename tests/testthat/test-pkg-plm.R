@@ -77,7 +77,7 @@ test_that("within error", {
     # within model are not supported by `predict.plm`
     stata <- readRDS(test_path("stata/stata.rds"))$plm_within
     mod <- plm(inv ~ value * capital, data = dat, model = "within", effect = "twoways")
-    expect_error(marginaleffects(mod), regexp = "appear.*support")
+    expect_error(marginaleffects(mod), regexp = "Unable")
 })
 
 

@@ -33,20 +33,23 @@ get_contrasts <- function(model,
     setDF(lo)
     setDF(hi)
 
-    pred_lo <- get_predict(
+    pred_lo <- try(get_predict(
         model,
         type = type,
         vcov = FALSE,
         newdata = lo,
-        ...)
+        ...), silent = TRUE)
 
-    pred_hi <- get_predict(
+    pred_hi <- try(get_predict(
         model,
         type = type,
         vcov = FALSE,
         newdata = hi,
-        ...)
+        ...), silent = TRUE)
 
+    if (inherits(pred_hi, "try-error") && inherits(pred_lo, "try-error")) {
+        stop("Unable to compute adjusted predictions from model of class %s. Either the `newdata` does not meet the requirements of the model's `predict()` method, or this model is not supported. If you believe this model should be supported, you can file a report on the Github Issue Tracker: https://github.com/vincentarelbundock/marginaleffects/issues", call. = FALSE)
+    }
 
     # bayes
     draws_lo <- attr(pred_lo, "posterior_draws")
