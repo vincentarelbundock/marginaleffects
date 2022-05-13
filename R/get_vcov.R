@@ -31,34 +31,21 @@ get_vcov.default <- function(model,
         return(NULL)
     }
 
-
-    # insight::get_varcov supports strings only since 0.17.0.6
-    if (isTRUE(utils::packageVersion("insight") >= "0.17.0.6")) {
-        checkmate::assert(
-            checkmate::check_null(vcov),
-            checkmate::check_function(vcov),
-            checkmate::check_matrix(vcov),
-            checkmate::check_formula(vcov),
-            checkmate::check_choice(
-                vcov,
-                choices = c("stata", "robust", "HC", "HC0", "HC1", "HC2", "HC3",
-                            "HC4", "HC4m", "HC5", "HAC", "NeweyWest", "kernHAC",
-                            "OPG", "satterthwaite", "kenward-roger")))
-    } else {
-        flag <- isTRUE(checkmate::check_null(vcov)) ||
-                isTRUE(checkmate::check_function(vcov)) ||
-                isTRUE(checkmate::check_matrix(vcov))
-        if (!isTRUE(flag)) {
-            msg <- 'The `vcov` argument must be `NULL`, a variance-covariance matrix, or a function which accepts a model and returns a variance-covariance matrix. Users who want to use shortcut strings like "HC3" or "sattertwhaite", or formulas to specify cluster-robust standard errors, must install version 0.17.0.6 or greater of the `insight` package. This version may (or may not) be available on CRAN. Alternatively, the latest version of `insight` can be obtained from Github:
-
-library(remotes)
-install_github("easystats/insight")
-
-Please make sure you restart `R` completely after installation.
-'
-            stop(msg, call. = FALSE)
-        }
+    # strings and formulas are only available with insight 0.17.1
+    vcov_strings <- c("stata", "robust", "HC", "HC0", "HC1", "HC2", "HC3",
+                      "HC4", "HC4m", "HC5", "HAC", "NeweyWest", "kernHAC", "OPG",
+                      "satterthwaite", "kenward-roger")
+    if (isTRUE(checkmate::check_formula(vcov)) ||
+        isTRUE(checkmate::check_choice(vcov, choices = vcov_strings))) {
+        insight::check_if_installed("insight", minimum_version = "0.17.1")
     }
+
+    checkmate::assert(
+        checkmate::check_null(vcov),
+        checkmate::check_function(vcov),
+        checkmate::check_matrix(vcov),
+        checkmate::check_formula(vcov),
+        checkmate::check_choice(vcov, choices = vcov_strings))
 
     out <- vcov
 

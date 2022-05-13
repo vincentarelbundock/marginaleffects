@@ -1,5 +1,5 @@
 # bug fix submitted for this version
-skip_if_not_installed("insight", minimum_version = "0.17.0.6")
+skip_if_not_installed("insight", minimum_version = "0.17.1")
 
 requiet("margins")
 requiet("broom")

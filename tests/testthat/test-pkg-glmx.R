@@ -15,7 +15,7 @@ test_that("glmx: marginaleffects vs. margins", {
 })
 
 test_that("predictions: glmx: no validity check", {
-    skip_if_not_installed("insight", minimum_version = "0.17.0.6")
+    skip_if_not_installed("insight", minimum_version = "0.17.1")
     d <- data.frame(x = runif(200, -1, 1))
     d$y <- rnbinom(200, mu = exp(0 + 3 * d$x), size = 1)
     model <- glmx(y ~ x, data = d, family = negative.binomial,

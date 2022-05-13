@@ -7,7 +7,7 @@ requiet("broom")
 
 
 test_that("satterthwaite (no validity)", {
-    skip_if_not_installed("insight", minimum_version = "0.17.0.6")
+    skip_if_not_installed("insight", minimum_version = "0.17.1")
     dat <- mtcars
     dat$cyl <- factor(dat$cyl)
     mod <- lmer(mpg ~ hp + (1 | cyl), data = dat)

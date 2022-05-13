@@ -19,7 +19,7 @@ New features:
 * `transform_pre` argument can define custom contrasts between adjusted predictions (e.g., log adjusted risk ratios). Available in `comparisons()`.
 * `transform_post` argument allows back transformation before returning the final results. Available in `comparisons()`, `summary()`, `tidy()`.
 * The `variables` argument of the `comparisons()` function accepts a named list to specify variable-specific contrast types.
-* Robust standard errors with the `vcov` argument. This requires version > 0.17.0 of the `insight` package, which may only be available on github: `remotes::install_github("easystats/insight")`
+* Robust standard errors with the `vcov` argument. This requires version 0.17.1 of the `insight` package.
   - `sandwich` package shortcuts: `vcov = "HC3"`, `"HC2"`, `"NeweyWest"`, and more.
   - Mixed effects models: `vcov = "satterthwaite"` or `"kenward-roger"`
   - One-sided formula to clusters: `vcov = ~cluster_variable`

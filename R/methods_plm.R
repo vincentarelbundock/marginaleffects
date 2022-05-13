@@ -10,5 +10,5 @@ sanity_model_specific.plm <- function(model, ...) {
 
 #' @rdname sanity_model_specific
 sanity_model_specific.plm <- function(model, ...) {
-    insight::check_if_installed("insight", minimum_version = "0.17.0.6")
+    insight::check_if_installed("insight", minimum_version = "0.17.1")
 }
