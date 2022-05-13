@@ -239,7 +239,7 @@ mod <- lm(mpg ~ cyl * hp + wt, data = mtcars)
 mar <- margins(mod, at = list(cyl = c(4, 6, 8)))
 summary(mar)
 
-mfx <- marginaleffects(mod, newdata = datagrid(cyl = c(4, 6, 8), grid.type = "counterfactual"))
+mfx <- marginaleffects(mod, newdata = datagrid(cyl = c(4, 6, 8), grid_type = "counterfactual"))
 summary(mfx, by = "cyl")
 ```
 
@@ -346,7 +346,7 @@ hp           |
 
 ### marginaleffects
 
-You can estimate average counterfactual marginal effects with `marginaleffects()` by, first, setting the `grid.type` argument of `data.grid()` to `"counterfactual"` and, second, by telling the `summary` function that you want to average within groups:
+You can estimate average counterfactual marginal effects with `marginaleffects()` by, first, setting the `grid_type` argument of `data.grid()` to `"counterfactual"` and, second, by telling the `summary` function that you want to average within groups:
 
 ```{r}
 mod <- lm(mpg ~ as.factor(cyl) * hp + wt, data = mtcars)
@@ -355,7 +355,7 @@ mfx <- marginaleffects(
     mod,
     variables = "hp",
     newdata = datagrid(cyl = c(4, 6, 8),
-                       grid.type = "counterfactual"))
+                       grid_type = "counterfactual"))
 
 summary(mfx, by = "cyl")
 ```
@@ -422,7 +422,7 @@ In other words, average counterfactual adjusted predictions as implemented by St
 
 ### marginaleffects
 
-You can estimate average counterfactual adjusted predictions with `predictions()` by, first, setting the `grid.type` argument of `data.grid()` to `"counterfactual"` and, second, by averaging the predictions, for example using `aggregate()` or `dplyr::summarise()`.
+You can estimate average counterfactual adjusted predictions with `predictions()` by, first, setting the `grid_type` argument of `data.grid()` to `"counterfactual"` and, second, by averaging the predictions, for example using `aggregate()` or `dplyr::summarise()`.
 
 ```{r}
 mod <- lm(mpg ~ as.factor(cyl) * hp + wt, data = mtcars)
@@ -430,7 +430,7 @@ mod <- lm(mpg ~ as.factor(cyl) * hp + wt, data = mtcars)
 
 pred <- predictions(mod,
                     newdata = datagrid(cyl = c(4, 6, 8),
-                                       grid.type = "counterfactual"))
+                                       grid_type = "counterfactual"))
 
 aggregate(pred$predicted, by = list(pred$cyl), FUN = mean)
 ```

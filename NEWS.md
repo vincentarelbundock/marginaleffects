@@ -29,7 +29,6 @@ New features:
 * `eps` argument for step size of numerical derivative
 * `marginaleffects` and `comparisons` now report confidence intervals by default.
 * New dependency on the `data.table` package yields substantial performance improvements.
-* Argument name change: `conf.level` -> `conf_level`
 * More informative error messages and warnings
 * Bug fixes and performance improvements
 
@@ -39,10 +38,18 @@ New pages on the `marginaleffects` website: https://vincentarelbundock.github.io
 * Robust standard errors (and more)
 * Performance tips
 * Tables and plots
-* Case studies
-  - Multinomial Logit and Discrete Choice Models
-  - Generalized Additive Models
-  - Mixed effects models (Bayesian and Frequentist)
+* Multinomial Logit and Discrete Choice Models
+* Generalized Additive Models
+* Mixed effects models (Bayesian and Frequentist)
+* Transformations and Custom Contrasts: Adjusted Risk Ratio Example
+
+Argument name changes (backward compatibility is preserved:
+
+* Everywhere:
+    - `conf.level` -> `conf_level` 
+* `datagrid()`:
+    - `FUN.factor` -> `FUN_factor` (same for related arguments)
+    - `grid.type` -> `grid_type`
 
 # marginaleffects 0.4.1
 

@@ -176,12 +176,12 @@ marginaleffects(mod, newdata = "mean")
 
 # Counterfactual Marginal Effects
 
-The `datagrid` function allowed us look at completely fictional individuals. Setting the `grid.type` argument of this function to `"counterfactual"` lets us compute the marginal effects for the actual observations in our dataset, but with a few manipulated values. For example, this code will create a `data.frame` twice as long as the original `dat`, where each observation is repeated with different values of the `flipper_length_mm` variable:
+The `datagrid` function allowed us look at completely fictional individuals. Setting the `grid_type` argument of this function to `"counterfactual"` lets us compute the marginal effects for the actual observations in our dataset, but with a few manipulated values. For example, this code will create a `data.frame` twice as long as the original `dat`, where each observation is repeated with different values of the `flipper_length_mm` variable:
 
 ```{r}
 nd <- datagrid(flipper_length_mm = c(160, 180),
                model = mod,
-               grid.type = "counterfactual")
+               grid_type = "counterfactual")
 ```
 
 We see that the rows 1, 2, and 3 of the original dataset have been replicated twice, with different values of the `flipper_length_mm` variable:

@@ -60,10 +60,10 @@
 #' library(dplyr)
 #' mod <- lm(mpg ~ hp * am * vs, mtcars)
 #'
-#' pred <- predictions(mod, newdata = datagrid(am = 0, grid.type = "counterfactual")) %>%
+#' pred <- predictions(mod, newdata = datagrid(am = 0, grid_type = "counterfactual")) %>%
 #'     summarize(across(c(predicted, std.error), mean))
 #'
-#' predictions(mod, newdata = datagrid(am = 0:1, grid.type = "counterfactual")) %>% 
+#' predictions(mod, newdata = datagrid(am = 0:1, grid_type = "counterfactual")) %>% 
 #'     group_by(am) %>%
 #'     summarize(across(c(predicted, std.error), mean))
 #'

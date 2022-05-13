@@ -8,11 +8,11 @@ typical(
   ...,
   model = NULL,
   newdata = NULL,
-  FUN.character = Mode,
-  FUN.factor = Mode,
-  FUN.logical = Mode,
-  FUN.numeric = function(x) mean(x, na.rm = TRUE),
-  FUN.other = function(x) mean(x, na.rm = TRUE)
+  FUN_character = Mode,
+  FUN_factor = Mode,
+  FUN_logical = Mode,
+  FUN_numeric = function(x) mean(x, na.rm = TRUE),
+  FUN_other = function(x) mean(x, na.rm = TRUE)
 )
 }
 \arguments{
@@ -24,15 +24,15 @@ Examples below.)}
 
 \item{newdata}{data.frame (one and only one of the \code{model} and \code{newdata} arguments}
 
-\item{FUN.character}{the function to be applied to character variables.}
+\item{FUN_character}{the function to be applied to character variables.}
 
-\item{FUN.factor}{the function to be applied to factor variables.}
+\item{FUN_factor}{the function to be applied to factor variables.}
 
-\item{FUN.logical}{the function to be applied to factor variables.}
+\item{FUN_logical}{the function to be applied to factor variables.}
 
-\item{FUN.numeric}{the function to be applied to numeric variables.}
+\item{FUN_numeric}{the function to be applied to numeric variables.}
 
-\item{FUN.other}{the function to be applied to other variable types.}
+\item{FUN_other}{the function to be applied to other variable types.}
 }
 \description{
 Superseded by datagrid(...)
