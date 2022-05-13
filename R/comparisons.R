@@ -7,9 +7,21 @@
 #' calculate a variety of contrasts, including "Contrasts at the Mean,"
 #' "Contrasts at User-Specified values" (aka Contrasts at Representative
 #' values), "Contrasts in Marginal Means", "Adjusted Risk Ratios", and much
-#' more. Additional information can be found in the Details and Examples
-#' sections below, and in an extensive series of vignettes on the
-#' `marginaleffects` website.
+#' more. For more information, see the Details and Examples sections below, and
+#' in the vignettes on the `marginaleffects` website:
+#' [https://vincentarelbundock.github.io/marginaleffects/]
+#' * [Getting Started](https://vincentarelbundock.github.io/marginaleffects/#getting-started)
+#' * [Contrasts Vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_contrasts.html)
+#' * [Supported Models](https://vincentarelbundock.github.io/marginaleffects/articles/mfx06_supported_models.html)
+#' * Case Studies
+#'    - [Bayesian analyses with `brms`](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)
+#'    - [Mixed effects models](https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html)
+#'    - [Generalized Additive Models](https://vincentarelbundock.github.io/marginaleffects/articles/gam.html)
+#'    - [Multinomial Logit and Discrete Choice Models](https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html)
+#'    - [Tables and plots](https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html)
+#'    - [Robust standard errors and more](https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html)
+#'    - [Transformations and Custom Contrasts: Adjusted Risk Ratio Example](https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html)
+#'
 #'
 #' A "contrast" is the difference between two adjusted predictions, calculated
 #' for meaningfully different regressor values (e.g., College graduates vs.

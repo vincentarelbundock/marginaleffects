@@ -3,12 +3,23 @@
 #' This function calculates marginal effects (slopes) for each row of the
 #' dataset. The resulting object can processed by the `tidy()` or `summary()`
 #' functions, which compute Average Marginal Effects (AME) or Group-Average
-#' Marginal Effects (G-AME). See `?summary.marginaleffects`. The `datagrid()`
-#' function and the `newdata` argument can be used to calculate Marginal
-#' Effects at the Mean (MEM) or Marginal Effects at User-Specified values (aka
-#' Marginal Effects at Representative values, MER). Additional information can
-#' be found in the Details and Examples sections below, and in the vignette on
-#' the `marginaleffects` website.
+#' Marginal Effects (G-AME). The `datagrid()` function and the `newdata`
+#' argument can be used to calculate Marginal Effects at the Mean (MEM) or
+#' Marginal Effects at User-Specified values (aka Marginal Effects at
+#' Representative values, MER). For more information, see the Details and
+#' Examples sections below, and in the vignettes on the `marginaleffects`
+#' website: [https://vincentarelbundock.github.io/marginaleffects/]
+#' * [Getting Started](https://vincentarelbundock.github.io/marginaleffects/#getting-started)
+#' * [Marginal Effects Vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_mfx.html)
+#' * [Supported Models](https://vincentarelbundock.github.io/marginaleffects/articles/mfx06_supported_models.html)
+#' * Case Studies
+#'    - [Bayesian analyses with `brms`](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)
+#'    - [Mixed effects models](https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html)
+#'    - [Generalized Additive Models](https://vincentarelbundock.github.io/marginaleffects/articles/gam.html)
+#'    - [Multinomial Logit and Discrete Choice Models](https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html)
+#'    - [Tables and plots](https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html)
+#'    - [Robust standard errors and more](https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html)
+#'    - [Transformations and Custom Contrasts: Adjusted Risk Ratio Example](https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html)
 #'
 #' A "marginal effect" is the partial derivative of the regression equation
 #' with respect to a variable in the model. This function uses automatic

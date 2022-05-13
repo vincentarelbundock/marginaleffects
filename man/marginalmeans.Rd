@@ -65,7 +65,16 @@ Data frame of marginal means with one row per variable-value
 combination.
 }
 \description{
-Compute estimated marginal means for specified factors.
+Compute estimated marginal means for specified factors. Marginal means are
+adjusted predictions, averaged across a grid of categorical predictors,
+holding other numeric predictors at their means. For more information, see
+the Details and Examples sections below, and in the vignettes on the
+\code{marginaleffects} website:
+\link{https://vincentarelbundock.github.io/marginaleffects/}
+\itemize{
+\item \href{https://vincentarelbundock.github.io/marginaleffects/#getting-started}{Getting Started}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx04_marginalmeans.html}{Marginal Means Vignette}
+}
 }
 \details{
 This function begins by calling the \code{predictions} function to obtain a

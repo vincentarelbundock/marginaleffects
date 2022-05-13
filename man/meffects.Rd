@@ -93,12 +93,27 @@ A \code{data.frame} with one row per observation (per term/group) and several co
 This function calculates marginal effects (slopes) for each row of the
 dataset. The resulting object can processed by the \code{tidy()} or \code{summary()}
 functions, which compute Average Marginal Effects (AME) or Group-Average
-Marginal Effects (G-AME). See \code{?summary.marginaleffects}. The \code{datagrid()}
-function and the \code{newdata} argument can be used to calculate Marginal
-Effects at the Mean (MEM) or Marginal Effects at User-Specified values (aka
-Marginal Effects at Representative values, MER). Additional information can
-be found in the Details and Examples sections below, and in the vignette on
-the \code{marginaleffects} website.
+Marginal Effects (G-AME). The \code{datagrid()} function and the \code{newdata}
+argument can be used to calculate Marginal Effects at the Mean (MEM) or
+Marginal Effects at User-Specified values (aka Marginal Effects at
+Representative values, MER). For more information, see the Details and
+Examples sections below, and in the vignettes on the \code{marginaleffects}
+website: \link{https://vincentarelbundock.github.io/marginaleffects/}
+\itemize{
+\item \href{https://vincentarelbundock.github.io/marginaleffects/#getting-started}{Getting Started}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_mfx.html}{Marginal Effects Vignette}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx06_supported_models.html}{Supported Models}
+\item Case Studies
+\itemize{
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/brms.html}{Bayesian analyses with \code{brms}}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html}{Mixed effects models}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/gam.html}{Generalized Additive Models}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html}{Multinomial Logit and Discrete Choice Models}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html}{Tables and plots}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html}{Robust standard errors and more}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html}{Transformations and Custom Contrasts: Adjusted Risk Ratio Example}
+}
+}
 }
 \details{
 A "marginal effect" is the partial derivative of the regression equation

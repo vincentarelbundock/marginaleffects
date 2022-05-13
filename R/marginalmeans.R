@@ -1,6 +1,13 @@
 #' Marginal Means
 #'
-#' Compute estimated marginal means for specified factors.
+#' Compute estimated marginal means for specified factors. Marginal means are
+#' adjusted predictions, averaged across a grid of categorical predictors,
+#' holding other numeric predictors at their means. For more information, see
+#' the Details and Examples sections below, and in the vignettes on the
+#' `marginaleffects` website:
+#' [https://vincentarelbundock.github.io/marginaleffects/]
+#' * [Getting Started](https://vincentarelbundock.github.io/marginaleffects/#getting-started)
+#' * [Marginal Means Vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx04_marginalmeans.html)
 #'
 #' @inheritParams marginaleffects
 #' @param variables Categorical predictors over which to compute marginal means
