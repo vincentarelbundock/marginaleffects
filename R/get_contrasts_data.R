@@ -81,7 +81,7 @@ get_contrast_data <- function(model,
                 ...)
 
         } else {
-            stop("variable class not supported.")
+            stop("variable class not supported.", call. = FALSE)
         }
 
         lo[[v]] <- tmp$lo

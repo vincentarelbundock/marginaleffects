@@ -27,7 +27,7 @@ sanity_type <- function(model, type, calling_function = NULL) {
         if (!all(type %in% c(valid$base, valid$insight))) {
             msg <- sprintf("The `type` argument for models of class `%s` must be an element of: %s",
                            class(model)[1], paste(sort(valid$base), collapse = ", "))
-            stop(msg)
+            stop(msg, call. = FALSE)
         } else {
             base_from_insight <- valid$base[match(type, valid$insight)]
             base <- ifelse(is.na(base_from_insight), type, base_from_insight)

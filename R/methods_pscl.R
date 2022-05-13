@@ -13,7 +13,8 @@ set_coef.hurdle <- function(model, coefs) {
         idx <- match(idx, names(coefs))
         # probably too conservative
         if (anyNA(idx)) {
-            stop("Mismatched coefficients names. Please check the `marginaleffects::`set_coef.hurdle` or `set_coef.zeroinfl` function.")
+            stop("Mismatched coefficients names. Please check the `marginaleffects::`set_coef.hurdle` or `set_coef.zeroinfl` function.",
+                 call. = FALSE)
         }
         out$coefficients[[lab]] <- stats::setNames(coefs[idx], names(out$coefficients[[lab]]))
     }

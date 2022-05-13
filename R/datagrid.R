@@ -263,7 +263,7 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
             at[[n]] <- as.character(at[[n]])
             if (!all(at[[n]] %in% c(levs, NA))) {
                 msg <- sprintf('The "%s" element of the `at` list corresponds to a factor variable. The values entered in the `at` list must be one of the factor levels: "%s".', n, paste(levels(newdata[[n]]), collapse = '", "'))
-                stop(msg)
+                stop(msg, call. = FALSE)
             } else {
                 at[[n]] <- factor(at[[n]], levels = levs)
             }

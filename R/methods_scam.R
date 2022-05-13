@@ -36,7 +36,7 @@ get_vcov.scam <- function(model,
     V <- model$Vp.t
     b <- model$coefficients.t
     if (length(b) != nrow(V)) {
-        stop("The size of the variance-covariance matrix does not match the length of the coefficients vector.")
+        stop("The size of the variance-covariance matrix does not match the length of the coefficients vector.", call. = FALSE)
     }
     colnames(V) <- row.names(V) <- names(b)
     return(V)

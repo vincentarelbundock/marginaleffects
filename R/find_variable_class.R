@@ -14,6 +14,6 @@ find_variable_class <- function(variable, newdata, model = NULL) {
         return("numeric")
     }
     stop(sprintf("Cannot compute contrasts for variable %s of class `%s`.",
-                 variable, class(newdata[[variable]])))
+                 variable, class(newdata[[variable]])), call. = FALSE)
 }
 

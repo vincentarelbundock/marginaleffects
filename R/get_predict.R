@@ -35,7 +35,7 @@ get_predict.default <- function(model,
     # incompatible arguments
     if (any(c("include_smooth", "include_random") %in% names(dots)) &&
         any(c("re.form", "re_formula") %in% names(dots))) {
-        stop("The `include_random` and `include_smooth` arguments can be used together, but not with `re.form` or `re_formula`.")
+        stop("The `include_random` and `include_smooth` arguments can be used together, but not with `re.form` or `re_formula`.", call. = FALSE)
     }
 
     # should we try to compute predictions with `insight::get_predicted()`?
@@ -148,7 +148,7 @@ get_predict.default <- function(model,
                 predicted = c(pred))
         }
     } else {
-        stop(sprintf("Unable to extract predictions of type %s from a model of class %s. Please report this problem, along with reproducible code and data on Github: https://github.com/vincentarelbundock/marginaleffects/issues", type, class(model)[1]))
+        stop(sprintf("Unable to extract predictions of type %s from a model of class %s. Please report this problem, along with reproducible code and data on Github: https://github.com/vincentarelbundock/marginaleffects/issues", type, class(model)[1]), call. = FALSE)
     }
 
     setDF(out)

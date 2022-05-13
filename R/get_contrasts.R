@@ -57,7 +57,7 @@ get_contrasts <- function(model,
     if (is.null(draws_lo)) {
         draws <- NULL
     } else if (!is.null(transform_pre)) {
-        stop("The `transform_pre` argument is not supported for Bayesian models.")
+        stop("The `transform_pre` argument is not supported for Bayesian models.", call. = FALSE)
     } else {
         draws <- draws_hi - draws_lo
     }
