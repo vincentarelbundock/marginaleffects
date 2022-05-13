@@ -94,11 +94,15 @@ predictions <- function(model,
         }
     }
 
-    # do not check this because `insight` supports more models than `marginaleffects`
+    # do not check the model because `insight` supports more models than `marginaleffects`
     # model <- sanitize_model(model)
+
+    # input sanity checks
     sanity_dots(model = model, ...)
     sanity_model_specific(model = model, newdata = newdata, calling_function = "predictions", ...)
     conf_level <- sanitize_conf_level(conf_level, ...)
+    newdata <- sanity_newdata(model, newdata)
+    levels_character <- attr(variables, "levels_character")
 
     # modelbased::visualisation_matrix attaches useful info for plotting
     attributes_newdata <- attributes(newdata)
@@ -106,39 +110,24 @@ predictions <- function(model,
     idx <- !names(attributes_newdata) %in% idx
     attributes_newdata <- attributes_newdata[idx]
 
-
-    # we transform this now but need the input later
-    variables_user_input <- variables
-
     # check before inferring `newdata`
     if (!is.null(variables)) {
-        # get new data if it doesn't exist
-        newdata <- sanity_newdata(model, newdata)
         variables <- sanitize_variables(model, newdata, variables)
+        # get new data if it doesn't exist
         variables <- unique(unlist(variables))
-        args <- list("model" = model)
+        args <- list("newdata" = newdata, "model" = model)
         for (v in variables) {
-            if (is.numeric(newdata[[v]])) {
+            vcl <- find_variable_class(v, newdata = newdata, model = model)
+            if (isTRUE(vcl == "numeric")) {
                 args[[v]] <- stats::fivenum(newdata[[v]])
-            } else if (is.factor(newdata[[v]]) || is.character(newdata[[v]]) || is.logical(newdata[[v]])) {
+            } else {
                 args[[v]] <- unique(newdata[[v]])
             }
         }
-        newdata <- do.call("typical", args)
+        newdata <- do.call("datagrid", args)
+        newdata[["rowid"]] <- NULL # the original rowids are no longer valid after averaging et al.
     } else {
-        newdata <- sanity_newdata(model, newdata)
         variables <- sanitize_variables(model, newdata, variables)
-    }
-
-    # save all character levels for padding
-    # this does not always work in nested functions because of obscure call stack issues
-    # which means that padding may break when `predictions` is nested inside another function
-    levels_character <- try(suppressWarnings(insight::get_data(model)), silent = TRUE)
-    if (inherits(levels_character, "data.frame")) {
-        idx <- sapply(levels_character, is.character)
-        levels_character <- as.list(levels_character[, idx])
-    } else {
-        levels_character <- list()
     }
 
     # trust newdata$rowid
@@ -242,6 +231,7 @@ predictions <- function(model,
     out <- merge(out, newdata, by = "rowid", sort = FALSE)
 
     setDF(out)
+
 
     # clean columns
     stubcols <- c("rowid", "type", "term", "group", "predicted", "std.error", "statistic", "p.value", "conf.low", "conf.high",

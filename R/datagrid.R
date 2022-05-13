@@ -168,6 +168,7 @@ typical <- function(
         }
     }
 
+
     # unique before counting
     out <- lapply(out, unique)
 
@@ -198,10 +199,10 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
 
     at <- list(...)
 
-    if (!is.null(model) & !is.null(newdata)) {
-        msg <- "One of the `model` or `newdata` arguments must be `NULL`."
-        stop(msg, call. = FALSE)
-    }
+    # if (!is.null(model) & !is.null(newdata)) {
+    #     msg <- "One of the `model` or `newdata` arguments must be `NULL`."
+    #     stop(msg, call. = FALSE)
+    # }
 
     if (is.null(model) & is.null(newdata)) {
         msg <- "When calling `datagrid()` *inside* the `marginaleffects()` or `comparisons()` functions, the `model` and `newdata` arguments can both be omitted. However, when calling `datagrid()` on its own, users must specify either the `model` or the `newdata` argument (but not both)."
