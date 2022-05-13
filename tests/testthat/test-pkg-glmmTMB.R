@@ -76,3 +76,19 @@ test_that("contrast: manual check", {
     cont2 <- comparisons(mod, variables = "mined")
     expect_equal(cont2$comparison, cont1)
 })
+
+
+test_that("informative errors", {
+    dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/lme4/VerbAgg.csv")
+    dat$woman <- as.numeric(dat$Gender == "F")
+    dat$item <- as.factor(dat$item)
+    mod <- glmmTMB(
+        woman ~ btype + resp + (1 + Anger | item),
+        family = binomial,
+        data = dat)
+    expect_error(predictions(mod, newdata = datagrid(), vcov = "HC3"), regexp = "not supported")
+    expect_error(predictions(mod, newdata = datagrid(), vcov = NULL), NA)
+    expect_error(predictions(mod, newdata = datagrid(), vcov = FALSE), NA)
+    expect_error(predictions(mod, newdata = datagrid(), vcov = TRUE), NA)
+    expect_error(predictions(mod, newdata = datagrid(), vcov = stats::vcov(mod)), NA)
+})
