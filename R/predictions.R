@@ -101,7 +101,6 @@ predictions <- function(model,
     sanity_dots(model = model, ...)
     sanity_model_specific(model = model, newdata = newdata, calling_function = "predictions", ...)
     conf_level <- sanitize_conf_level(conf_level, ...)
-    newdata <- sanity_newdata(model, newdata)
     levels_character <- attr(variables, "levels_character")
 
     # modelbased::visualisation_matrix attaches useful info for plotting
@@ -109,6 +108,9 @@ predictions <- function(model,
     idx <- c("class", "row.names", "names", "data", "reference")
     idx <- !names(attributes_newdata) %in% idx
     attributes_newdata <- attributes_newdata[idx]
+
+    # after modelbased attribute extraction
+    newdata <- sanity_newdata(model, newdata)
 
     # check before inferring `newdata`
     if (!is.null(variables)) {
