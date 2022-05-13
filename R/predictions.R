@@ -6,8 +6,7 @@
 #' Predictions at User-Specified Values of the regressors (aka Adjusted
 #' Predictions at Representative values, APR). For more information, see the
 #' Details and Examples sections below, and in the vignettes on the
-#' `marginaleffects` website:
-#' [https://vincentarelbundock.github.io/marginaleffects/]
+#' `marginaleffects` website: <https://vincentarelbundock.github.io/marginaleffects/>
 #' * [Getting Started](https://vincentarelbundock.github.io/marginaleffects/#getting-started)
 #' * [Predictions Vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx01_predictions.html)
 #' * [Supported Models](https://vincentarelbundock.github.io/marginaleffects/articles/mfx06_supported_models.html)

@@ -84,8 +84,7 @@ Adjusted Predictions (AAP), Average Predictions at the Mean (APM), or
 Predictions at User-Specified Values of the regressors (aka Adjusted
 Predictions at Representative values, APR). For more information, see the
 Details and Examples sections below, and in the vignettes on the
-\code{marginaleffects} website:
-\link{https://vincentarelbundock.github.io/marginaleffects/}
+\code{marginaleffects} website: \url{https://vincentarelbundock.github.io/marginaleffects/}
 \itemize{
 \item \href{https://vincentarelbundock.github.io/marginaleffects/#getting-started}{Getting Started}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx01_predictions.html}{Predictions Vignette}
