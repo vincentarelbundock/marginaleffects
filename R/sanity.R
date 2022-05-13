@@ -30,7 +30,7 @@ sanity_predict_numeric <- function(pred, model, newdata, type) {
         msg <- sprintf(
 '`predict(model, type = "%s")` was called on a model of class `%s`, but this command did not produce the expected outcome: A numeric vector of length %s. This can sometimes happen when users try compute a marginal effect for an outcome type which is unsupported, or which cannot be differentiated. Please consult your modeling package documentation to learn what alternative `type` arguments are accepted by the `predict` method.',
         type, class(model)[1], nrow(newdata))
-        stop(msg)
+        stop(msg, call. = FALSE)
     }
 }
 

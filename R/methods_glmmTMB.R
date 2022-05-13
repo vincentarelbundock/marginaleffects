@@ -9,7 +9,6 @@ get_predict.glmmTMB <- function(model,
                                 type = "response",
                                 ...) {
 
-
     if (inherits(vcov, "vcov.glmmTMB")) {
         vcov <- vcov[[1]]
     }
@@ -53,7 +52,7 @@ set_coef.glmmTMB <- function(model, coefs) {
 
 
 #' @rdname sanity_model_specific
-sanity_model_specific.glmmTMB <- function(model, vcov, ...) {
+sanity_model_specific.glmmTMB <- function(model, vcov = NULL, ...) {
     # we need an explicit check because predict.glmmTMB() generates other
     # warnings related to openMP, so our default warning-detection does not
     # work

@@ -20,7 +20,7 @@ sanity_model_specific.mblogit <- function(model, calling_function = "marginaleff
         dat <- dat[, intersect(variables, colnames(dat))]
         flag <- any(sapply(dat, is.character))
         if (isTRUE(flag)) {
-            stop("Cannot compute marginal effects for models of class `mblogit` when the data includes character variables. Please convert character variables to factors in the dataset before fitting the model, and call `marginaleffects` again.")
+            stop("Cannot compute marginal effects for models of class `mblogit` when the data includes character variables. Please convert character variables to factors in the dataset before fitting the model, and call `marginaleffects` again.", call. = FALSE)
         }
     }
 }
@@ -37,7 +37,7 @@ get_predict.mblogit <- function(model,
 
     if (!isTRUE(checkmate::check_flag(vcov, null.ok = TRUE)) &&
         isTRUE(list(...)$calling_function == "predictions")) {
-        stop("The `vcov` argument is not supported for this model class.")
+        stop("The `vcov` argument is not supported for this model class.", call. = FALSE)
     }
 
     out <- suppressMessages(

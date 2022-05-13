@@ -24,7 +24,7 @@ posteriordraws <- function(x) {
     }
     draws <- attr(x, "posterior_draws")
     if (nrow(draws) != nrow(x)) {
-        stop('The number of parameters in the object does not match the number of parameters for which posterior draws are available.')
+        stop('The number of parameters in the object does not match the number of parameters for which posterior draws are available.', call. = FALSE)
     }
 
     draws <- attr(x, "posterior_draws")

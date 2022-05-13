@@ -92,7 +92,7 @@ Supported model classes include: %s.
 
 New modeling packages can usually be supported by `marginaleffects` if they include a working `predict()` method. If you believe that this is the case, please file a feature request on Github: https://github.com/vincentarelbundock/marginaleffects/issues'
         msg <- sprintf(msg, class(model)[1], support)
-        stop(msg)
+        stop(msg, call. = FALSE)
     }
 }
 

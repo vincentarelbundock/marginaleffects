@@ -53,6 +53,7 @@ sanity_model_specific.clm <- function(model, ...) {
     # missing from `newdata`.
     lhs <- names(attr(stats::terms(model), "dataClasses"))[1]
     if (isTRUE(grepl("^factor\\(", lhs))) {
-        stop("The response variable should not be transformed to a factor in the formula. Please convert the variable to factor before fitting your model.")
+        stop("The response variable should not be transformed to a factor in the formula. Please convert the variable to factor before fitting your model.",
+             call. = FALSE)
     }
 }
