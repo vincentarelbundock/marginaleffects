@@ -169,8 +169,7 @@ predictions <- function(model,
         ...))
 
     if (isTRUE(grepl("type.*models", tmp[["error"]]))) {
-        msg <- gsub(".*: ", "", tmp$error)
-        stop(msg, call. = TRUE)
+        stop(tmp$error$message, call. = FALSE)
     } else if (!inherits(tmp[["value"]], "data.frame")) {
         msg <- sprintf("Unable to compute adjusted predictions for model of class `%s`. You can try specifying a different value for the `newdata` argument. If this does not work and you believe that this model class should be supported by `marginaleffects`, please file a feature request on the Github issue tracker: https://github.com/vincentarelbundock/marginaleffects/issues", 
                        class(model)[1])
@@ -183,8 +182,7 @@ predictions <- function(model,
                        class(model)[1])
         stop(msg, call. = FALSE)
     } else if (inherits(tmp[["warning"]], "warning")) {
-        msg <- tmp$warning
-        msg <- gsub(".*:", "", msg)
+        msg <- tmp$warning$message
         warning(msg, call. = FALSE)
     } else {
         tmp <- tmp[["value"]]
