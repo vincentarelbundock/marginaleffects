@@ -48,7 +48,7 @@ get_contrasts <- function(model,
         ...), silent = TRUE)
 
     if (inherits(pred_hi, "try-error") && inherits(pred_lo, "try-error")) {
-        stop("Unable to compute adjusted predictions from model of class %s. Either the `newdata` does not meet the requirements of the model's `predict()` method, or this model is not supported. If you believe this model should be supported, you can file a report on the Github Issue Tracker: https://github.com/vincentarelbundock/marginaleffects/issues", call. = FALSE)
+        stop("Unable to compute adjusted predictions for this model. Either the `newdata` does not meet the requirements of the model's `predict()` method, or this model is not supported. If you believe this model should be supported, you can file a report on the Github Issue Tracker: https://github.com/vincentarelbundock/marginaleffects/issues", call. = FALSE)
     }
 
     # bayes

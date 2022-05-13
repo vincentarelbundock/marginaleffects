@@ -18,13 +18,6 @@ get_predict.clm <- function(model,
     resp <- insight::find_response(model)
     newdata <- newdata[, setdiff(colnames(newdata), resp), drop = FALSE]
 
-    # Corner case: The `predict.clm` method does not make predictions when the
-    # response was transformed to a factor in the formula AND the response is
-    # missing from `newdata`.
-    lhs <- names(attr(stats::terms(model), "dataClasses"))[1]
-    if (isTRUE(grepl("^factor\\(", lhs))) {
-        stop("The response variable should not be transformed to a factor in the formula. Please convert the variable to factor before fitting your model.")
-    }
 
     pred <- stats::predict(model,
                            newdata = newdata,
@@ -48,3 +41,18 @@ get_predict.clm <- function(model,
 #' @rdname get_group_names
 #' @export
 get_group_names.clm <- get_group_names.polr
+
+
+#' @include sanity_model.R
+#' @rdname sanity_model_specific
+#' @keywords internal
+sanity_model_specific.clm <- function(model, ...) {
+
+    # Corner case: The `predict.clm` method does not make predictions when the
+    # response was transformed to a factor in the formula AND the response is
+    # missing from `newdata`.
+    lhs <- names(attr(stats::terms(model), "dataClasses"))[1]
+    if (isTRUE(grepl("^factor\\(", lhs))) {
+        stop("The response variable should not be transformed to a factor in the formula. Please convert the variable to factor before fitting your model.")
+    }
+}
