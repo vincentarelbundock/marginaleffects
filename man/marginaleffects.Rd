@@ -98,7 +98,7 @@ argument can be used to calculate Marginal Effects at the Mean (MEM) or
 Marginal Effects at User-Specified values (aka Marginal Effects at
 Representative values, MER). For more information, see the Details and
 Examples sections below, and in the vignettes on the \code{marginaleffects}
-website: \link{https://vincentarelbundock.github.io/marginaleffects/}
+website: \url{https://vincentarelbundock.github.io/marginaleffects/}
 \itemize{
 \item \href{https://vincentarelbundock.github.io/marginaleffects/#getting-started}{Getting Started}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_mfx.html}{Marginal Effects Vignette}

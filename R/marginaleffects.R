@@ -8,7 +8,7 @@
 #' Marginal Effects at User-Specified values (aka Marginal Effects at
 #' Representative values, MER). For more information, see the Details and
 #' Examples sections below, and in the vignettes on the `marginaleffects`
-#' website: [https://vincentarelbundock.github.io/marginaleffects/]
+#' website: <https://vincentarelbundock.github.io/marginaleffects/>
 #' * [Getting Started](https://vincentarelbundock.github.io/marginaleffects/#getting-started)
 #' * [Marginal Effects Vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_mfx.html)
 #' * [Supported Models](https://vincentarelbundock.github.io/marginaleffects/articles/mfx06_supported_models.html)

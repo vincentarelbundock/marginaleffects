@@ -8,8 +8,7 @@
 #' "Contrasts at User-Specified values" (aka Contrasts at Representative
 #' values), "Contrasts in Marginal Means", "Adjusted Risk Ratios", and much
 #' more. For more information, see the Details and Examples sections below, and
-#' in the vignettes on the `marginaleffects` website:
-#' [https://vincentarelbundock.github.io/marginaleffects/]
+#' in the vignettes on the `marginaleffects` website: <https://vincentarelbundock.github.io/marginaleffects/>
 #' * [Getting Started](https://vincentarelbundock.github.io/marginaleffects/#getting-started)
 #' * [Contrasts Vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_contrasts.html)
 #' * [Supported Models](https://vincentarelbundock.github.io/marginaleffects/articles/mfx06_supported_models.html)

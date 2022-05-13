@@ -139,8 +139,7 @@ calculate a variety of contrasts, including "Contrasts at the Mean,"
 "Contrasts at User-Specified values" (aka Contrasts at Representative
 values), "Contrasts in Marginal Means", "Adjusted Risk Ratios", and much
 more. For more information, see the Details and Examples sections below, and
-in the vignettes on the \code{marginaleffects} website:
-\link{https://vincentarelbundock.github.io/marginaleffects/}
+in the vignettes on the \code{marginaleffects} website: \url{https://vincentarelbundock.github.io/marginaleffects/}
 \itemize{
 \item \href{https://vincentarelbundock.github.io/marginaleffects/#getting-started}{Getting Started}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_contrasts.html}{Contrasts Vignette}
