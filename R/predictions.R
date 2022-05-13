@@ -184,6 +184,7 @@ predictions <- function(model,
     } else if (inherits(tmp[["warning"]], "warning")) {
         msg <- tmp$warning$message
         warning(msg, call. = FALSE)
+        tmp <- tmp[["value"]]
     } else {
         tmp <- tmp[["value"]]
     }
