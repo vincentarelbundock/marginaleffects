@@ -61,8 +61,8 @@ plot_cme <- function(model,
 
     # condition 1
     if (is.numeric(dat[[condition1]]) && !isTRUE(attr(dat[[condition1]], "factor"))) {
-        at_list[[condition1]] <- seq(min(dat[[condition1]], na.rm = TRUE), 
-                                     max(dat[[condition1]], na.rm = TRUE), 
+        at_list[[condition1]] <- seq(min(dat[[condition1]], na.rm = TRUE),
+                                     max(dat[[condition1]], na.rm = TRUE),
                                      length.out = 25)
     } else {
         at_list[[condition1]] <- unique(dat[[condition1]])
@@ -106,7 +106,7 @@ plot_cme <- function(model,
     if ("condition2" %in% colnames(datplot)) datplot$condition2 <- factor(datplot$condition2)
     if ("condition3" %in% colnames(datplot)) datplot$condition3 <- factor(datplot$condition3)
 
-    # CIs are automatically added to predictions but not marginaleffects output
+    # CIs are automatically added to predictions but (maybe) not marginaleffects output
     if (!"conf.low" %in% colnames(datplot)) {
         alpha <- 1 - conf_level
         datplot$conf.low <- datplot$dydx + stats::qnorm(alpha / 2) * datplot$std.error
@@ -121,6 +121,7 @@ plot_cme <- function(model,
         assert_dependency("ggplot2")
     }
 
+
     # ggplot2
     p <- ggplot2::ggplot(datplot, ggplot2::aes(x = condition1,
                                                y = dydx,
@@ -133,6 +134,7 @@ plot_cme <- function(model,
              p <- p + ggplot2::geom_ribbon(ggplot2::aes(fill = condition2), alpha = .1)
         }
         p <- p + ggplot2::geom_line(ggplot2::aes(color = condition2, linetype = condition3))
+
     # categorical x-axis
     } else {
         if ("conf.low" %in% colnames(datplot)) {
@@ -152,6 +154,12 @@ plot_cme <- function(model,
                            color = condition2,
                            fill = condition2,
                            linetype = condition3)
+
+    # `effect` is a categorical variable. We plot them in different facets
+    if ("contrast" %in% colnames(datplot) && !all(datplot$contrast == "dY/dX")) {
+        p <- p + ggplot2::facet_wrap(~ contrast)
+    }
+
 
     # set a new theme only if the default is theme_grey. this prevents user's
     # theme_set() from being overwritten

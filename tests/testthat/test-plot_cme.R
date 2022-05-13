@@ -42,3 +42,12 @@ test_that("vcov", {
     expect_true(all(mfx1$conf.low != mfx3$conf.low))
     expect_true(all(mfx2$conf.low != mfx3$conf.low))
 })
+
+
+test_that("factor effects are plotted in different facets", {
+    dat <- mtcars
+    dat$gear_fct <- factor(dat$gear)
+    mod <- lm(cyl ~ mpg * gear_fct, data = dat)
+    p <- plot_cme(mod, effect = "gear_fct", condition = "mpg")
+    vdiffr::expect_doppelganger("factor effects in facets", p)
+})
