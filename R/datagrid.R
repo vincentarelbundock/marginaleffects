@@ -5,14 +5,14 @@
 #' Examples below.)
 #' @param model Model object
 #' @param newdata data.frame (one and only one of the `model` and `newdata` arguments
-#' @param grid.type character
-#'   * "typical": variables whose values are not explicitly specified by the user in `...` are set to their mean or mode, or to the output of the functions supplied to `FUN.type` arguments.
+#' @param grid_type character
+#'   * "typical": variables whose values are not explicitly specified by the user in `...` are set to their mean or mode, or to the output of the functions supplied to `FUN_type` arguments.
 #'   * "counterfactual": the entire dataset is duplicated for each combination of the variable values specified in `...`. Variables not explicitly supplied to `datagrid()` are set to their observed values in the original dataset.
-#' @param FUN.character the function to be applied to character variables.
-#' @param FUN.factor the function to be applied to factor variables.
-#' @param FUN.logical the function to be applied to factor variables.
-#' @param FUN.numeric the function to be applied to numeric variables.
-#' @param FUN.other the function to be applied to other variable types.
+#' @param FUN_character the function to be applied to character variables.
+#' @param FUN_factor the function to be applied to factor variables.
+#' @param FUN_logical the function to be applied to factor variables.
+#' @param FUN_numeric the function to be applied to numeric variables.
+#' @param FUN_other the function to be applied to other variable types.
 #' @details
 #' If `datagrid` is used in a `marginaleffects` or `predictions` call as the
 #' `newdata` argument, users do not need to specify the `model` or `newdata`
@@ -42,52 +42,67 @@
 #' # The full dataset is duplicated with each observation given counterfactual
 #' # values of 100 and 110 for the `hp` variable. The original `mtcars` includes
 #' # 32 rows, so the resulting dataset includes 64 rows.
-#' dg <- datagrid(newdata = mtcars, hp = c(100, 110), grid.type = "counterfactual")
+#' dg <- datagrid(newdata = mtcars, hp = c(100, 110), grid_type = "counterfactual")
 #' nrow(dg)
 #'
 #' # We get the same result by feeding a model instead of a data.frame
 #' mod <- lm(mpg ~ hp, mtcars)
-#' dg <- datagrid(model = mod, hp = c(100, 110), grid.type = "counterfactual")
+#' dg <- datagrid(model = mod, hp = c(100, 110), grid_type = "counterfactual")
 #' nrow(dg)
 datagrid <- function(
     ...,
     model = NULL,
     newdata = NULL,
-    grid.type = "typical",
-    FUN.character = Mode,
+    grid_type = "typical",
+    FUN_character = Mode,
     # need to be explicit for numeric variables transfered to factor in model formula
-    FUN.factor = Mode,
-    FUN.logical = Mode,
-    FUN.numeric = function(x) mean(x, na.rm = TRUE),
-    FUN.other = function(x) mean(x, na.rm = TRUE)) {
+    FUN_factor = Mode,
+    FUN_logical = Mode,
+    FUN_numeric = function(x) mean(x, na.rm = TRUE),
+    FUN_other = function(x) mean(x, na.rm = TRUE)) {
 
-    checkmate::assert_choice(grid.type, choices = c("typical", "counterfactual"))
-    checkmate::assert_function(FUN.character)
-    checkmate::assert_function(FUN.factor)
-    checkmate::assert_function(FUN.logical)
-    checkmate::assert_function(FUN.numeric)
-    checkmate::assert_function(FUN.other)
+    # backward compatibility
+    dots <- list(...)
+    FUN_character <- arg_name_change(FUN_character, "FUN.character", dots)
+    FUN_factor <- arg_name_change(FUN_factor, "FUN.factor", dots)
+    FUN_logical <- arg_name_change(FUN_logical, "FUN.logical", dots)
+    FUN_numeric <- arg_name_change(FUN_numeric, "FUN.numeric", dots)
+    FUN_other <- arg_name_change(FUN_other, "FUN.other", dots)
+    grid_type <- arg_name_change(grid_type, "grid.type", dots)
+    idx <- !grepl("^FUN\\.|grid\\.type", names(dots))
+    dots <- dots[idx]
 
-    if (grid.type == "typical") {
-        out <- typical(...,
-                       model = model,
-                       newdata = newdata,
-                       FUN.character = FUN.character,
-                       FUN.factor = FUN.factor,
-                       FUN.logical = FUN.logical,
-                       FUN.numeric = FUN.numeric,
-                       FUN.other = FUN.other)
+    # sanity
+    checkmate::assert_choice(grid_type, choices = c("typical", "counterfactual"))
+    checkmate::assert_function(FUN_character)
+    checkmate::assert_function(FUN_factor)
+    checkmate::assert_function(FUN_logical)
+    checkmate::assert_function(FUN_numeric)
+    checkmate::assert_function(FUN_other)
+
+    if (grid_type == "typical") {
+        args <- list( # cleaned for backward compatibility
+            model = model,
+            newdata = newdata,
+            FUN_character = FUN_character,
+            FUN_factor = FUN_factor,
+            FUN_logical = FUN_logical,
+            FUN_numeric = FUN_numeric,
+            FUN_other = FUN_other)
+        args <- c(dots, args)
+        out <- do.call("typical", args)
     } else {
-        out <- counterfactual(...,
-                              model = model,
-                              newdata = newdata)
+        args <- list(
+            model = model,
+            newdata = newdata)
+        args <- c(dots, args)
+        out <- do.call("counterfactual", args)
     }
-
     return(out)
 }
 
 
-#' Superseded by datagrid(..., grid.type = "counterfactual")
+#' Superseded by datagrid(..., grid_type = "counterfactual")
 #'
 #' @inheritParams datagrid
 #' @keywords internal
@@ -130,12 +145,12 @@ typical <- function(
     ...,
     model = NULL,
     newdata = NULL,
-    FUN.character = Mode,
+    FUN_character = Mode,
     # need to be explicit for numeric variables transfered to factor in model formula
-    FUN.factor = Mode,
-    FUN.logical = Mode,
-    FUN.numeric = function(x) mean(x, na.rm = TRUE),
-    FUN.other = function(x) mean(x, na.rm = TRUE)) {
+    FUN_factor = Mode,
+    FUN_logical = Mode,
+    FUN_numeric = function(x) mean(x, na.rm = TRUE),
+    FUN_other = function(x) mean(x, na.rm = TRUE)) {
 
     tmp <- prep_datagrid(..., model = model, newdata = newdata)
     at <- tmp$at
@@ -152,11 +167,11 @@ typical <- function(
         # created by insight::get_data
         for (n in names(dat_automatic)) {
             variable_class <- find_variable_class(n, newdata = dat_automatic, model = model)
-            if (variable_class == "factor") out[[n]] <- FUN.factor(dat_automatic[[n]])
-            if (variable_class == "logical") out[[n]] <- FUN.logical(dat_automatic[[n]])
-            if (variable_class == "character") out[[n]] <- FUN.character(dat_automatic[[n]])
-            if (variable_class == "numeric") out[[n]] <- FUN.numeric(dat_automatic[[n]])
-            if (variable_class == "other") out[[n]] <- FUN.other(dat_automatic[[n]])
+            if (variable_class == "factor") out[[n]] <- FUN_factor(dat_automatic[[n]])
+            if (variable_class == "logical") out[[n]] <- FUN_logical(dat_automatic[[n]])
+            if (variable_class == "character") out[[n]] <- FUN_character(dat_automatic[[n]])
+            if (variable_class == "numeric") out[[n]] <- FUN_numeric(dat_automatic[[n]])
+            if (variable_class == "other") out[[n]] <- FUN_other(dat_automatic[[n]])
         }
     } else {
         out <- list()

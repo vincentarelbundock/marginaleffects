@@ -194,7 +194,7 @@ summary(mfx2, by = "cyl")
 # combination of the values in `datagrid()`
 mfx <- marginaleffects(mod,
                        newdata = datagrid(hp = c(100, 110),
-                                          grid.type = "counterfactual"))
+                                          grid_type = "counterfactual"))
 head(mfx)
 
 # Heteroskedasticity robust standard errors

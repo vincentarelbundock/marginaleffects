@@ -91,14 +91,14 @@ Users can change the summary function used to summarize each type of variables u
 
 ## `counterfactual` data grid
 
-An alternative approach to construct grids of predictors is to use `grid.type = "counterfactual"` argument value. This will duplicate the *whole* dataset, with the different values specified by the user. 
+An alternative approach to construct grids of predictors is to use `grid_type = "counterfactual"` argument value. This will duplicate the *whole* dataset, with the different values specified by the user. 
 
 For example, the `mtcars` dataset has 32 rows. This command produces a new dataset with 64 rows, with each row of the original dataset duplicated with the two values of the `am` variable supplied (0 and 1):
 
 ```{r}
 mod <- glm(vs ~ hp + am, data = mtcars, family = binomial)
 
-nd <- datagrid(model = mod, am = 0:1, grid.type = "counterfactual")
+nd <- datagrid(model = mod, am = 0:1, grid_type = "counterfactual")
 
 dim(nd)
 ```
@@ -106,7 +106,7 @@ dim(nd)
 Then, we can use this dataset and the `predictions` function to create interesting visualizations:
 
 ```{r, fig.asp = 1}
-pred <- predictions(mod, newdata = datagrid(am = 0:1, grid.type = "counterfactual")) %>%
+pred <- predictions(mod, newdata = datagrid(am = 0:1, grid_type = "counterfactual")) %>%
     select(am, predicted, rowid_counterfactual) %>%
     pivot_wider(id_cols = rowid_counterfactual, 
                 names_from = am,
@@ -159,7 +159,7 @@ pred %>% summarize(AAP = mean(predicted))
 We can also compute the AAP for multiple values of the regressors. For example, here use create a "counterfactual" data grid where each observation of the dataset are repeated twice, with different values of the `am` variable, and all other variables held at the observed values. Then, we use some `dplyr` magic:
 
 ```{r}
-predictions(mod, newdata = datagrid(am = 0:1, grid.type = "counterfactual")) %>%
+predictions(mod, newdata = datagrid(am = 0:1, grid_type = "counterfactual")) %>%
     group_by(am) %>%
     summarize(across(c(predicted, std.error), mean))
 ```

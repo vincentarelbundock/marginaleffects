@@ -2,7 +2,7 @@
 % Please edit documentation in R/datagrid.R
 \name{counterfactual}
 \alias{counterfactual}
-\title{Superseded by datagrid(..., grid.type = "counterfactual")}
+\title{Superseded by datagrid(..., grid_type = "counterfactual")}
 \usage{
 counterfactual(..., model = NULL, newdata = NULL)
 }
@@ -16,6 +16,6 @@ Examples below.)}
 \item{newdata}{data.frame (one and only one of the \code{model} and \code{newdata} arguments}
 }
 \description{
-Superseded by datagrid(..., grid.type = "counterfactual")
+Superseded by datagrid(..., grid_type = "counterfactual")
 }
 \keyword{internal}
