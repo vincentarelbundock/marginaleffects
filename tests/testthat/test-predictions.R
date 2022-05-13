@@ -130,3 +130,6 @@ test_that("hurdle predictions", {
     expect_s3_class(pred, "data.frame")
     expect_true("predicted" %in% colnames(pred))
 })
+
+
+

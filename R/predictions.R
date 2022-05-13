@@ -103,7 +103,7 @@ predictions <- function(model,
 
     # input sanity checks
     sanity_dots(model = model, ...)
-    sanity_model_specific(model = model, newdata = newdata, calling_function = "predictions", ...)
+    sanity_model_specific(model = model, newdata = newdata, vcov = vcov, calling_function = "predictions", ...)
     conf_level <- sanitize_conf_level(conf_level, ...)
     levels_character <- attr(variables, "levels_character")
 
@@ -160,12 +160,29 @@ predictions <- function(model,
     }
 
     # predictions
-    tmp <- get_predict(model,
-                       newdata = newdata,
-                       vcov = vcov,
-                       conf_level = conf_level,
-                       type = type,
-                       ...)
+    tmp <- myTryCatch(get_predict(
+        model,
+        newdata = newdata,
+        vcov = vcov,
+        conf_level = conf_level,
+        type = type,
+        ...))
+
+
+    if (!inherits(tmp[["value"]], "data.frame") || inherits(tmp[["error"]], "error")) {
+        msg <- sprintf("Unable to compute adjusted predictions for model of class `%s`. You can try specifying a different value for the `newdata` argument. If this does not work and you believe that this model class should be supported by `marginaleffects`, please file a feature request on the Github issue tracker: https://github.com/vincentarelbundock/marginaleffects/issues", 
+                       class(model)[1])
+        stop(msg, call. = FALSE)
+    } else if (inherits(tmp[["warning"]], "warning") &&
+               isTRUE(grepl("vcov.*supported", tmp)) &&
+               !is.null(vcov) &&
+               !isFALSE(vcov)) {
+        msg <- sprintf("The object passed to the `vcov` argument is of class `%s`, which is not supported for models of class `%s`. Please set `vcov` to `TRUE`, `FALSE`, `NULL`, or supply a variance-covariance `matrix` object.",
+                       class(model)[1])
+        stop(msg, call. = FALSE)
+    } else {
+        tmp <- tmp[["value"]]
+    }
 
     # two cases when tmp is a data.frame
     # insight::get_predicted gets us Predicted et al. but now rowid

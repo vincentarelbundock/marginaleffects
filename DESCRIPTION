@@ -155,6 +155,7 @@ Collate:
     'methods_stats.R'
     'methods_survival.R'
     'methods_tobit1.R'
+    'myTryCatch.R'
     'package.R'
     'plot.R'
     'plot_cap.R'
