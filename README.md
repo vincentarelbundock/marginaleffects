@@ -17,40 +17,40 @@ predictions, marginal effects, contrasts, and marginal means for a
 
 ## Table of contents
 
-  - [What?](https://vincentarelbundock.github.io/marginaleffects/#what)
-  - [Why?](https://vincentarelbundock.github.io/marginaleffects/#why)
-  - [Getting
+-   [What?](https://vincentarelbundock.github.io/marginaleffects/#what)
+-   [Why?](https://vincentarelbundock.github.io/marginaleffects/#why)
+-   [Getting
     started](https://vincentarelbundock.github.io/marginaleffects/#getting-started)
-  - Vignettes:
-      - [Adjusted
+-   Vignettes:
+    -   [Adjusted
         predictions](https://vincentarelbundock.github.io/marginaleffects/articles/mfx01_predictions.html)
-      - [Contrasts](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_contrasts.html)
-      - [Marginal
+    -   [Contrasts](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_contrasts.html)
+    -   [Marginal
         effects](https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_mfx.html)
-      - [Marginal
+    -   [Marginal
         means](https://vincentarelbundock.github.io/marginaleffects/articles/mfx04_marginalmeans.html)
-  - [61 supported
+-   [61 supported
     models](https://vincentarelbundock.github.io/marginaleffects/articles/mfx06_supported_models.html)
-  - [Performance
+-   [Performance
     tips](https://vincentarelbundock.github.io/marginaleffects/articles/performance.html)
-  - Case studies:
-      - [Bayesian analyses with
+-   Case studies:
+    -   [Bayesian analyses with
         `brms`](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)
-      - [Mixed effects
+    -   [Mixed effects
         models](https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html)
-      - [Generalized Additive
+    -   [Generalized Additive
         Models](https://vincentarelbundock.github.io/marginaleffects/articles/gam.html)
-      - [Multinomial Logit and Discrete Choice
+    -   [Multinomial Logit and Discrete Choice
         Models](https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html)
-      - [Tables and
+    -   [Tables and
         plots](https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html)
-      - [Robust standard errors and
+    -   [Robust standard errors and
         more](https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html)
-      - [Transformations and Custom Contrasts: Adjusted Risk Ratio
+    -   [Transformations and Custom Contrasts: Adjusted Risk Ratio
         Example](https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html)
-  - [Alternative
+-   [Alternative
     software](https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html)
-  - [Technical
+-   [Technical
     notes](https://vincentarelbundock.github.io/marginaleffects/articles/technical_notes.html)
 
 ## What?
@@ -59,30 +59,30 @@ The `marginaleffects` package allows `R` users to compute and plot four
 principal quantities of interest for [61 different types of
 models:](https://vincentarelbundock.github.io/marginaleffects/articles/mfx06_supported_models.html)
 
-  - [*Adjusted
+-   [*Adjusted
     Prediction*](https://vincentarelbundock.github.io/marginaleffects/articles/mfx01_predictions.html)
-      - The outcome predicted by a model for some combination of the
+    -   The outcome predicted by a model for some combination of the
         regressors’ values, such as their observed values, their means,
         or factor levels (a.k.a. “reference grid”).
-      - [`predictions(),`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html)
+    -   [`predictions(),`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html)
         [`plot_cap()`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html)
-  - [*Marginal
+-   [*Marginal
     Effect*](https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_mfx.html)
-      - A partial derivative (slope) of the regression equation with
+    -   A partial derivative (slope) of the regression equation with
         respect to a regressor of interest.
-      - [`marginaleffects(),`](https://vincentarelbundock.github.io/marginaleffects/reference/marginaleffects.html)
+    -   [`marginaleffects(),`](https://vincentarelbundock.github.io/marginaleffects/reference/marginaleffects.html)
         [`plot(),`](https://vincentarelbundock.github.io/marginaleffects/reference/plot.marginaleffects.html)
         [`plot_cme()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cme.html)
-  - [*Contrast*](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_contrasts.html)
-      - The difference between two adjusted predictions, calculated for
+-   [*Contrast*](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_contrasts.html)
+    -   The difference between two adjusted predictions, calculated for
         meaningfully different regressor values (e.g., College graduates
         vs. Others).
-      - [`comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)
-  - [*Marginal
+    -   [`comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)
+-   [*Marginal
     Mean*](https://vincentarelbundock.github.io/marginaleffects/articles/mfx04_marginalmeans.html)
-      - Adjusted predictions of a model, averaged across a “reference
+    -   Adjusted predictions of a model, averaged across a “reference
         grid” of categorical predictors.
-      - [`marginalmeans()`](https://vincentarelbundock.github.io/marginaleffects/reference/marginalmeans.html)
+    -   [`marginalmeans()`](https://vincentarelbundock.github.io/marginaleffects/reference/marginalmeans.html)
 
 ## Why?
 
@@ -114,41 +114,41 @@ additional features from `emmeans`.
 
 So why did I write a clone?
 
-  - *Powerful:* Marginal effects and contrasts can be computed for about
+-   *Powerful:* Marginal effects and contrasts can be computed for about
     40 different kinds of models. Adjusted predictions and marginal
     means can be computed for about 100 model types.
-  - *Extensible:* Adding support for new models is very easy, often
+-   *Extensible:* Adding support for new models is very easy, often
     requiring less than 10 lines of new code. Please submit [feature
     requests on
     Github.](https://github.com/vincentarelbundock/marginaleffects/issues)
-  - *Fast:* [Computing unit-level standard
-    errors](https://vincentarelbundock.github.io/marginaleffects/articles/parallel.html)
+-   *Fast:* [Computing unit-level standard
+    errors](https://vincentarelbundock.github.io/marginaleffects/articles/performance.html)
     can be orders of magnitude faster in large datasets.
-  - *Efficient:* Much smaller memory footprint.
-  - *Valid:* When possible, numerical results are checked against
+-   *Efficient:* Much smaller memory footprint.
+-   *Valid:* When possible, numerical results are checked against
     alternative software like `Stata`, or other `R` packages.
-  - *Beautiful:* `ggplot2` support for plotting (conditional) marginal
+-   *Beautiful:* `ggplot2` support for plotting (conditional) marginal
     effects and adjusted predictions.
-  - *Tidy:* The results produced by `marginaleffects` follow “tidy”
+-   *Tidy:* The results produced by `marginaleffects` follow “tidy”
     principles. They are easy to program with and feed to [other
     packages like
     `modelsummary`.](https://vincentarelbundock.github.io/marginaleffects/)
-  - *Simple:* All functions share a simple, unified, and well-documented
+-   *Simple:* All functions share a simple, unified, and well-documented
     interface.
-  - *Thin:* The package requires relatively few dependencies.
-  - *Safe:* User input is checked extensively before computation. When
+-   *Thin:* The package requires relatively few dependencies.
+-   *Safe:* User input is checked extensively before computation. When
     needed, functions fail gracefully with informative error messages.
-  - *Active development*
+-   *Active development*
 
 Downsides of `marginaleffects` include:
 
-  - Functions to estimate contrasts and marginal means are considerably
+-   Functions to estimate contrasts and marginal means are considerably
     less flexible than `emmeans`.
-  - Simulation-based inference is not supported.
-  - Lack of multiplicity adjustments.
-  - Limited support for custom contrasts (but see the `comparisons()`
+-   Simulation-based inference is not supported.
+-   Lack of multiplicity adjustments.
+-   Limited support for custom contrasts (but see the `comparisons()`
     function documentation).
-  - Newer package with a smaller user base.
+-   Newer package with a smaller user base.
 
 ## Getting started
 
@@ -234,12 +234,12 @@ vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx01_pr
 shows how to use the `predictions()` and `plot_cap()` functions to
 compute a wide variety of quantities of interest:
 
-  - Adjusted Predictions at User-Specified Values (aka Predictions at
+-   Adjusted Predictions at User-Specified Values (aka Predictions at
     Representative Values)
-  - Adjusted Predictions at the Mean
-  - Average Predictions at the Mean
-  - Conditional Predictions
-  - Adjusted Predictions on different scales (e.g., link or response)
+-   Adjusted Predictions at the Mean
+-   Average Predictions at the Mean
+-   Conditional Predictions
+-   Adjusted Predictions on different scales (e.g., link or response)
 
 #### Contrasts
 
@@ -259,16 +259,11 @@ mod3 <- glm(Survived ~ Woman + Age * PClass, data = titanic, family = binomial)
 cmp <- comparisons(mod3)
 summary(cmp)
 #> Average contrasts 
-#>     Term     Contrast   Effect Std. Error z value   Pr(>|z|)     2.5 %
-#> 1  Woman TRUE - FALSE  0.50329   0.031654  15.899 < 2.22e-16  0.441244
-#> 2    Age  (x + 1) - x -0.00558   0.001084  -5.147 2.6471e-07 -0.007705
-#> 3 PClass    2nd - 1st -0.22603   0.043546  -5.191 2.0950e-07 -0.311383
-#> 4 PClass    3rd - 1st -0.38397   0.041845  -9.176 < 2.22e-16 -0.465985
-#>      97.5 %
-#> 1  0.565327
-#> 2 -0.003455
-#> 3 -0.140686
-#> 4 -0.301957
+#>     Term     Contrast   Effect Std. Error z value   Pr(>|z|)     2.5 %    97.5 %
+#> 1  Woman TRUE - FALSE  0.50329   0.031654  15.899 < 2.22e-16  0.441244  0.565327
+#> 2    Age  (x + 1) - x -0.00558   0.001084  -5.147 2.6471e-07 -0.007705 -0.003455
+#> 3 PClass    2nd - 1st -0.22603   0.043546  -5.191 2.0950e-07 -0.311383 -0.140686
+#> 4 PClass    3rd - 1st -0.38397   0.041845  -9.176 < 2.22e-16 -0.465985 -0.301957
 #> 
 #> Model type:  glm 
 #> Prediction type:  response
@@ -280,10 +275,10 @@ contrast predictions in different ways. For instance, researchers often
 compute Adjusted Risk Ratios, which are ratios of predicted
 probabilities. We can compute such ratios by applying a transformation
 using the `transform_pre` argument. We can also present the results of
-“interactions” between contrasts. What happens to the ratio of
-predicted probabilities for survival when `PClass` changes between each
-pair of factor levels (“pairwise”) and `Age` changes by 2 standard
-deviations simultaneously:
+“interactions” between contrasts. What happens to the ratio of predicted
+probabilities for survival when `PClass` changes between each pair of
+factor levels (“pairwise”) and `Age` changes by 2 standard deviations
+simultaneously:
 
 ``` r
 cmp <- comparisons(
@@ -292,20 +287,13 @@ cmp <- comparisons(
     variables = list(Age = "2sd", PClass = "pairwise"))
 summary(cmp)
 #> Average contrasts 
-#>                   Age    PClass Effect Std. Error z value   Pr(>|z|)  2.5 %
-#> 1 (x + sd) / (x - sd) 1st / 1st 0.7043    0.05946  11.846 < 2.22e-16 0.5878
-#> 2 (x + sd) / (x - sd) 2nd / 1st 0.3185    0.05566   5.723 1.0442e-08 0.2095
-#> 3 (x + sd) / (x - sd) 3rd / 1st 0.2604    0.05308   4.907 9.2681e-07 0.1564
-#> 4 (x + sd) / (x - sd) 2nd / 2nd 0.3926    0.08101   4.846 1.2588e-06 0.2338
-#> 5 (x + sd) / (x - sd) 3rd / 2nd 0.3162    0.07023   4.503 6.7096e-06 0.1786
-#> 6 (x + sd) / (x - sd) 3rd / 3rd 0.7053    0.20273   3.479 0.00050342 0.3079
-#>   97.5 %
-#> 1 0.8209
-#> 2 0.4276
-#> 3 0.3645
-#> 4 0.5514
-#> 5 0.4539
-#> 6 1.1026
+#>                   Age    PClass Effect Std. Error z value   Pr(>|z|)  2.5 % 97.5 %
+#> 1 (x + sd) / (x - sd) 1st / 1st 0.7043    0.05946  11.846 < 2.22e-16 0.5878 0.8209
+#> 2 (x + sd) / (x - sd) 2nd / 1st 0.3185    0.05566   5.723 1.0442e-08 0.2095 0.4276
+#> 3 (x + sd) / (x - sd) 3rd / 1st 0.2604    0.05308   4.907 9.2681e-07 0.1564 0.3645
+#> 4 (x + sd) / (x - sd) 2nd / 2nd 0.3926    0.08101   4.846 1.2588e-06 0.2338 0.5514
+#> 5 (x + sd) / (x - sd) 3rd / 2nd 0.3162    0.07023   4.503 6.7096e-06 0.1786 0.4539
+#> 6 (x + sd) / (x - sd) 3rd / 3rd 0.7053    0.20273   3.479 0.00050342 0.3079 1.1026
 #> 
 #> Model type:  glm 
 #> Prediction type:  response
@@ -316,22 +304,22 @@ Transformations and Custom
 Contrasts.](https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html)
 
 [The Contrasts
-vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_contrasts.html)
+vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_contrasts.html)
 shows how to use the `comparisons()` function to compute a wide variety
 of quantities of interest:
 
-  - Custom comparisons for:
-      - Numeric variables (e.g., 1 standard deviation, interquartile
+-   Custom comparisons for:
+    -   Numeric variables (e.g., 1 standard deviation, interquartile
         range, custom values)
-      - Factor or character
-      - Logical
-  - Contrast interactions
-  - Unit-level Contrasts
-  - Average Contrasts
-  - Group-Average Contrasts
-  - Contrasts at the Mean
-  - Contrasts Between Marginal Means
-  - Adjusted Risk Ratios
+    -   Factor or character
+    -   Logical
+-   Contrast interactions
+-   Unit-level Contrasts
+-   Average Contrasts
+-   Group-Average Contrasts
+-   Contrasts at the Mean
+-   Contrasts Between Marginal Means
+-   Adjusted Risk Ratios
 
 #### Marginal effects
 
@@ -350,16 +338,11 @@ original dataset that was used to fit the model:
 mfx <- marginaleffects(mod)
 
 head(mfx, 4)
-#>   rowid     type term        dydx  std.error statistic    p.value    conf.low
-#> 1     1 response   hp -0.03690556 0.01850168 -1.994714 0.04607413 -0.07316818
-#> 2     2 response   hp -0.02868936 0.01562768 -1.835804 0.06638661 -0.05931905
-#> 3     3 response   hp -0.04657166 0.02259121 -2.061494 0.03925589 -0.09084963
-#> 4     4 response   hp -0.04227128 0.01328275 -3.182420 0.00146050 -0.06830499
-#>       conf.high  mpg  hp    wt am
-#> 1 -0.0006429255 21.0 110 2.620  1
-#> 2  0.0019403284 21.0 110 2.875  1
-#> 3 -0.0022936972 22.8  93 2.320  1
-#> 4 -0.0162375732 21.4 110 3.215  0
+#>   rowid     type term        dydx  std.error statistic    p.value    conf.low     conf.high  mpg  hp    wt am
+#> 1     1 response   hp -0.03690556 0.01850168 -1.994714 0.04607413 -0.07316818 -0.0006429255 21.0 110 2.620  1
+#> 2     2 response   hp -0.02868936 0.01562768 -1.835804 0.06638661 -0.05931905  0.0019403284 21.0 110 2.875  1
+#> 3     3 response   hp -0.04657166 0.02259121 -2.061494 0.03925589 -0.09084963 -0.0022936972 22.8  93 2.320  1
+#> 4     4 response   hp -0.04227128 0.01328275 -3.182420 0.00146050 -0.06830499 -0.0162375732 21.4 110 3.215  0
 ```
 
 The function `summary` calculates the “Average Marginal Effect,” that
@@ -388,17 +371,17 @@ plot_cme(mod, effect = "hp", condition = c("wt", "am"))
 <img src="man/figures/README-unnamed-chunk-13-1.png" width="100%" />
 
 [The Marginal Effects
-vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_mfx.html)
+vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_mfx.html)
 shows how to use the `marginaleffects()` function to compute a wide
 variety of quantities of interest:
 
-  - Unit-level Marginal Effects
-  - Average Marginal Effects
-  - Group-Average Marginal Effects
-  - Marginal Effects at the Mean
-  - Marginal Effects Between Marginal Means
-  - Conditional Marginal Effects
-  - Tables and Plots
+-   Unit-level Marginal Effects
+-   Average Marginal Effects
+-   Group-Average Marginal Effects
+-   Marginal Effects at the Mean
+-   Marginal Effects Between Marginal Means
+-   Conditional Marginal Effects
+-   Tables and Plots
 
 #### Marginal means
 

@@ -245,7 +245,7 @@ contrast(emm, method = "trt.vs.ctrl1")
 
 The [`emmeans` section of the Alternative Software vignette](https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html#emmeans) shows further examples.
 
-The [excellent vignette of the `emmeans` package](https://cran.r-project.org/web/packages/emmeans/vignettes/basics.html) discuss the same issues in a slightly different (and more positive) way:
+The [excellent vignette of the `emmeans` package](https://CRAN.R-project.org/package=emmeans/vignettes/basics.html) discuss the same issues in a slightly different (and more positive) way:
 
 > The point is that the marginal means of cell.means give equal weight to each cell. In many situations (especially with experimental data), that is a much fairer way to compute marginal means, in that they are not biased by imbalances in the data. We are, in a sense, estimating what the marginal means would be, had the experiment been balanced. Estimated marginal means (EMMs) serve that need.
 

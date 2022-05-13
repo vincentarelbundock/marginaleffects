@@ -80,7 +80,7 @@ So why did I write a clone?
 
 * _Powerful:_ Marginal effects and contrasts can be computed for about 40 different kinds of models. Adjusted predictions and marginal means can be computed for about 100 model types. 
 * _Extensible:_ Adding support for new models is very easy, often requiring less than 10 lines of new code. Please submit [feature requests on Github.](https://github.com/vincentarelbundock/marginaleffects/issues)
-* _Fast:_ [Computing unit-level standard errors](https://vincentarelbundock.github.io/marginaleffects/articles/parallel.html) can be orders of magnitude faster in large datasets.
+* _Fast:_ [Computing unit-level standard errors](https://vincentarelbundock.github.io/marginaleffects/articles/performance.html) can be orders of magnitude faster in large datasets.
 * _Efficient:_ Much smaller memory footprint.
 * _Valid:_  When possible, numerical results are checked against alternative software like `Stata`, or other `R` packages.
 * _Beautiful:_ `ggplot2` support for plotting (conditional) marginal effects and adjusted predictions.
@@ -185,7 +185,7 @@ summary(cmp)
 
 The code above is explained in detail in the [vignette on Transformations and Custom Contrasts.](https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html)
 
-[The Contrasts vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_contrasts.html) shows how to use the `comparisons()` function to compute a wide variety of quantities of interest:
+[The Contrasts vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_contrasts.html) shows how to use the `comparisons()` function to compute a wide variety of quantities of interest:
 
 * Custom comparisons for:
   - Numeric variables (e.g., 1 standard deviation, interquartile range, custom values)
@@ -223,7 +223,7 @@ The `plot_cme` plots "Conditional Marginal Effects," that is, the marginal effec
 plot_cme(mod, effect = "hp", condition = c("wt", "am"))
 ```
 
-[The Marginal Effects vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_mfx.html) shows how to use the `marginaleffects()` function to compute a wide variety of quantities of interest:
+[The Marginal Effects vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_mfx.html) shows how to use the `marginaleffects()` function to compute a wide variety of quantities of interest:
 
 * Unit-level Marginal Effects
 * Average Marginal Effects
