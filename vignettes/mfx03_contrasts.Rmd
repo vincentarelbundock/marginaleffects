@@ -127,7 +127,8 @@ mod <- lm(mpg ~ am * factor(cyl), data = mtcars)
 What happens if `am` increases by 1 unit and `cyl` changes from a baseline reference to another level? 
 
 ```{r}
-comparisons(mod, variables = c("cyl", "am"))
+cmp <- comparisons(mod, variables = c("cyl", "am"))
+summary(cmp)
 ```
 
 When the `variables` argument is used and the model formula includes interactions, the "cross-contrasts" contrasts will automatically be displayed. You can also force `comparisons()` to do it by setting `interactions=TRUE` and using the `variables` argument to specify which variables should be manipulated simultaneously.
