@@ -26,7 +26,7 @@ Imports:
     checkmate,
     data.table,
     generics,
-    insight (>= 0.17.0),
+    insight (>= 0.17.1),
     methods
 Suggests: 
     bench,
@@ -104,6 +104,7 @@ Suggests:
     spelling
 Collate: 
     'align_J_V.R'
+    'arg_name_change.R'
     'backtransform.R'
     'comparisons.R'
     'complete_levels.R'
