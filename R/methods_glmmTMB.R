@@ -13,12 +13,14 @@ get_predict.glmmTMB <- function(model,
         vcov <- vcov[[1]]
     }
 
-    get_predict.default(model = model,
-                        newdata = newdata,
-                        vcov = vcov,
-                        conf_level = conf_level,
-                        type = type,
-                        ...)
+    get_predict.default(
+        model = model,
+        newdata = newdata,
+        vcov = vcov,
+        conf_level = conf_level,
+        type = type,
+        allow.new.levels = TRUE, # otherwise we get errors in marginalmeans()
+        ...)
 }
 
 

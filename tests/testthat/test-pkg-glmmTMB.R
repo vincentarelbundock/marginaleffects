@@ -115,3 +115,10 @@ test_that("marginalmeans (no validity)", {
 })
 
 
+test_that("regression bug: needs allow.new.levels = TRUE", {
+    m1 <- glmmTMB(
+        count ~ mined + (1 | site),
+        zi = ~mined,
+        family = poisson, data = Salamanders)
+    expect_error(marginalmeans(m1, variables = "mined"), NA)
+})
