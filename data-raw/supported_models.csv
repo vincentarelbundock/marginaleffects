@@ -40,6 +40,7 @@ mhurdle,mhurdle,TRUE,TRUE,,,TRUE,TRUE,U,U
 mlogit,mlogit,TRUE,TRUE,,,U,U,U,U
 nlme,gls,TRUE,TRUE,,,U,U,TRUE,TRUE
 nnet,multinom,TRUE,TRUE,TRUE,FALSE,U,U,U,U
+ordbetareg,ordbetareg,TRUE,TRUE,,,U,U,,
 ordinal,clm,TRUE,TRUE,TRUE,TRUE,U,U,U,U
 plm,plm,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,U,U
 pscl,hurdle,TRUE,TRUE,,,TRUE,U,TRUE,FALSE
