@@ -1,4 +1,4 @@
-# marginaleffects 0.4.1.9000
+# marginaleffects 0.5.0
 
 Breaking changes:
 
