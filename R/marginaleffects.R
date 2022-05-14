@@ -33,7 +33,7 @@
 #' https://vincentarelbundock.github.io/marginaleffects/
 #'
 #' Numerical derivatives for the `marginaleffects` function are calculated
-#' using a simple epsilon difference approach: \eqn{\partial Y / \partial X = (f(X + \varpesilon) - f(X)) / \varepsilon}{dY/dX = (f(X + e) - f(X)) / e},
+#' using a simple epsilon difference approach: \eqn{\partial Y / \partial X = (f(X + \varepsilon) - f(X)) / \varepsilon}{dY/dX = (f(X + e) - f(X)) / e},
 #' where f is the `predict()` method associated with the model class, and
 #' \eqn{\varepsilon}{e} is determined by the `eps` argument.
 #'
