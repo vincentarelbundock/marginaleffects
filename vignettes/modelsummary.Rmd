@@ -74,3 +74,21 @@ We can use the `group` argument of the `modelsummary` function to structure the 
 modelsummary(mfx, group = term + contrast ~ model)
 ```
 
+# Marginal means
+
+```{r}
+library(marginaleffects)
+library("modelsummary")
+
+dat <- mtcars
+dat$cyl <- as.factor(dat$cyl)
+dat$am <- as.logical(dat$am)
+mod <- lm(mpg ~ hp + cyl + am, data = dat)
+mm <- marginalmeans(mod)
+
+modelsummary(mm,
+             title = "Estimated Marginal Means",
+             estimate = "{estimate} ({std.error}){stars}",
+             statistic = NULL,
+             group = term + value ~ model)
+```

@@ -94,17 +94,8 @@ glance(mm)
 summary(mm)
 ```
 
-Thanks to those tidiers, we can also present the results in the style of a regression table [using the `modelsummary` package:](https://vincentarelbundock.github.io/modelsummary/)
+Thanks to those tidiers, we can also present the results in the style of a regression table [using the `modelsummary` package.](https://vincentarelbundock.github.io/modelsummary/) For examples, see [the tables and plots vignette.](https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html)
 
-```{r}
-library("modelsummary")
-
-modelsummary(mm,
-             title = "Estimated Marginal Means",
-             estimate = "{estimate} ({std.error}){stars}",
-             statistic = NULL,
-             group = term + value ~ model)
-```
 
 # Case study: Multinomial Logit
 
