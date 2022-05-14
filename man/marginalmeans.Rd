@@ -55,6 +55,8 @@ type, but will typically be a string such as: "response", "link", "probs",
 or "zero". When an unsupported string is entered, the model-specific list of
 acceptable values is returned in an error message.}
 
+\item{transform_post}{(experimental) A function applied to the estimate and confidence interval just before returning the final results. For example, users can exponentiate their final results by setting \code{transform_post=exp} or transform contrasts made on the link scale for ease of interpretation.}
+
 \item{interaction}{TRUE, FALSE, or NULL
 \itemize{
 \item \code{FALSE}: Marginal means are computed for each predictor individually.
