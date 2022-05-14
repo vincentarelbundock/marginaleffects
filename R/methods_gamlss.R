@@ -17,6 +17,7 @@ get_predict.gamlss <- function(model,
     # predict.gamlss() breaks when `newdata` includes unknown variables
     origindata <- insight::get_data(model)
     originvars <- colnames(origindata)
+    setDF(newdata)
     tmp <- newdata[, originvars]
     out <- stats::predict(model, newdata = tmp, type = type, ...)
 
@@ -27,5 +28,27 @@ get_predict.gamlss <- function(model,
     }
 
     return(out)
+}
+
+
+#' @include set_coef.R
+#' @rdname set_coef
+#' @export
+set_coef.gamlss <- function(model, coefs) {
+    # in gamlss
+    if (length(coefs) == length(model$mu.coefficients)) {
+        names(coefs) <- names(model$mu.coefficients)
+    } else {
+        stop("Unable not manipulate the coefficients of this model. Standard errors cannot be computed.", call. = FALSE)
+    }
+    model[["mu.coefficients"]] <- coefs
+    return(model)
+}
+
+
+#' @rdname get_coef
+#' @export
+get_coef.gamlss <- function(model, ...) {
+    stats::coef(model)
 }
 

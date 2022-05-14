@@ -1,10 +1,10 @@
 # requiet("gamlss")
 # data(abdom)
 # mod <- gamlss(y ~ pb(x),
-#     sigma.fo = ~ pb(x), family = BCT, data = dat,
+#     sigma.fo = ~ pb(x), family = BCT, data = abdom,
 #     method = mixed(1, 20))
 #
-# predictions(mod) |> tail()
+# predictions(mod) |> head()
 #
 # dim(abdom)
 # dat <- abdom
