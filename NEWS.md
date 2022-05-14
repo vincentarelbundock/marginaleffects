@@ -17,7 +17,7 @@ New features:
 * `interaction` argument in `comparisons()` to compute interactions between contrasts (cross-contrasts).
 * `by` argument in `tidy()` and `summary()` computes group-average marginal effects and comparisons.
 * `transform_pre` argument can define custom contrasts between adjusted predictions (e.g., log adjusted risk ratios). Available in `comparisons()`.
-* `transform_post` argument allows back transformation before returning the final results. Available in `comparisons()`, `summary()`, `tidy()`.
+* `transform_post` argument allows back transformation before returning the final results. Available in `comparisons()`, `marginalmeans()`, `summary()`, `tidy()`.
 * The `variables` argument of the `comparisons()` function accepts a named list to specify variable-specific contrast types.
 * Robust standard errors with the `vcov` argument. This requires version 0.17.1 of the `insight` package.
   - `sandwich` package shortcuts: `vcov = "HC3"`, `"HC2"`, `"NeweyWest"`, and more.
@@ -25,6 +25,7 @@ New features:
   - One-sided formula to clusters: `vcov = ~cluster_variable`
   - Variance-covariance matrix
   - Function which returns a named squared matrix
+* `marginalmeans()` allows interactions
 * Bayesian Model Averaging for `brms` models using `type = "average"`. See vignette on the `marginaleffects` website.
 * `eps` argument for step size of numerical derivative
 * `marginaleffects` and `comparisons` now report confidence intervals by default.
