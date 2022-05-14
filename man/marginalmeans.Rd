@@ -11,17 +11,21 @@ marginalmeans(
   vcov = TRUE,
   conf_level = 0.95,
   type = "response",
+  transform_post = NULL,
+  interaction = NULL,
   ...
 )
 }
 \arguments{
 \item{model}{Model object}
 
-\item{variables}{Categorical predictors over which to compute marginal means
-(character vector). \code{NULL} calculates marginal means for all logical,
-character, or factor variables in the dataset used to fit \code{model}.}
+\item{variables}{character vector Categorical predictors over which to
+compute marginal means. \code{NULL} calculates marginal means for all logical,
+character, or factor variables in the dataset used to fit \code{model}. Set
+\code{interaction=TRUE} to compute marginal means at combinations of the
+predictors specified in the \code{variables} argument.}
 
-\item{variables_grid}{Categorical predictors used to construct the
+\item{variables_grid}{character vector Categorical predictors used to construct the
 prediction grid over which adjusted predictions are averaged (character
 vector). \code{NULL} creates a grid with all combinations of all categorical
 predictors. This grid can be very large when there are many variables and
@@ -50,6 +54,13 @@ compute marginal effects or contrasts. This can differ based on the model
 type, but will typically be a string such as: "response", "link", "probs",
 or "zero". When an unsupported string is entered, the model-specific list of
 acceptable values is returned in an error message.}
+
+\item{interaction}{TRUE, FALSE, or NULL
+\itemize{
+\item \code{FALSE}: Marginal means are computed for each predictor individually.
+\item \code{TRUE}: Marginal means are computed for each combination of predictors specified in the \code{variables} argument.
+\item \code{NULL} (default): Behaves like \code{TRUE} when the \code{variables} argument is specified and the model formula includes interactions. Behaves like \code{FALSE} otherwise.
+}}
 
 \item{...}{Additional arguments are passed to the \code{predict()} method
 supplied by the modeling package.These arguments are particularly useful

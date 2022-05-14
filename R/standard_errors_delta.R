@@ -3,11 +3,13 @@ standard_errors_delta_marginalmeans <- function(model,
                                                 newdata,
                                                 type,
                                                 eps = 1e-4, # avoid pushing through ...
+                                                interaction = FALSE,
                                                 ...) {
     get_marginalmeans(model = model,
                       variables = variables,
                       newdata = newdata,
                       type = type,
+                      interaction = interaction,
                       ...)$marginalmean
 }
 
