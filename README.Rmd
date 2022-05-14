@@ -78,7 +78,7 @@ The main packages in the `R` ecosystem to compute marginal effects are the trail
 
 So why did I write a clone?
 
-* _Powerful:_ Marginal effects and contrasts can be computed for about 40 different kinds of models. Adjusted predictions and marginal means can be computed for about 100 model types. 
+* _Powerful:_ Marginal effects and contrasts can be computed for about `r n_support` different kinds of models. Adjusted predictions and marginal means can be computed for about 100 model types. 
 * _Extensible:_ Adding support for new models is very easy, often requiring less than 10 lines of new code. Please submit [feature requests on Github.](https://github.com/vincentarelbundock/marginaleffects/issues)
 * _Fast:_ [Computing unit-level standard errors](https://vincentarelbundock.github.io/marginaleffects/articles/performance.html) can be orders of magnitude faster in large datasets.
 * _Efficient:_ Much smaller memory footprint.
