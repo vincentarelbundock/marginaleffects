@@ -128,7 +128,7 @@ be found on the package website:
 https://vincentarelbundock.github.io/marginaleffects/
 
 Numerical derivatives for the \code{marginaleffects} function are calculated
-using a simple epsilon difference approach: \eqn{\partial Y / \partial X = (f(X + \varpesilon) - f(X)) / \varepsilon}{dY/dX = (f(X + e) - f(X)) / e},
+using a simple epsilon difference approach: \eqn{\partial Y / \partial X = (f(X + \varepsilon) - f(X)) / \varepsilon}{dY/dX = (f(X + e) - f(X)) / e},
 where f is the \code{predict()} method associated with the model class, and
 \eqn{\varepsilon}{e} is determined by the \code{eps} argument.
 
