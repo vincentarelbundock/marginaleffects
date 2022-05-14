@@ -66,12 +66,12 @@ test_that("interactions", {
     # standard errors do not match emmeans
     mod <- lm(mpg ~ cyl * am, dat)
     em <- suppressMessages(broom::tidy(emmeans::emmeans(mod, "cyl")))
-    me <- suppressWarnings(marginalmeans(mod, variables = "cyl"))
-    expect_warning(marginalmeans(mod, variables = "cyl"), regex = "interactions")
+    me <- marginalmeans(mod, variables = "cyl")
+    me <- me[order(me$cyl),]
     expect_equal(me$marginalmean, em$estimate)
     em <- suppressMessages(broom::tidy(emmeans::emmeans(mod, "am")))
     me <- suppressWarnings(marginalmeans(mod, variables = "am"))
-    expect_warning(marginalmeans(mod, variables = "am"), regex = "interactions")
+    me <- me[order(me$am),]
     expect_equal(me$marginalmean, em$estimate)
 })
 
