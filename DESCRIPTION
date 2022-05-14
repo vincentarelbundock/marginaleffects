@@ -26,7 +26,7 @@ Imports:
     checkmate,
     data.table,
     generics,
-    insight (>= 0.17.0),
+    insight (>= 0.17.1),
     methods
 Suggests: 
     bench,
