@@ -13,14 +13,15 @@ Copyright: inst/COPYRIGHTS
 LazyData: true
 Encoding: UTF-8
 URL: https://vincentarelbundock.github.io/marginaleffects/
-    https://github.com/vincentarelbundock/marginaleffects
-BugReports: https://github.com/vincentarelbundock/marginaleffects/issues
+        https://github.com/vincentarelbundock/marginaleffects
+BugReports:
+        https://github.com/vincentarelbundock/marginaleffects/issues
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 Config/testthat/parallel: true
-Depends:
+Depends: 
     R (>= 3.5.0)
 Imports: 
     checkmate,
@@ -101,7 +102,7 @@ Suggests:
     truncreg,
     withr,
     covr,
-    spelling
+    spelling, tinytest
 Collate: 
     'align_J_V.R'
     'arg_name_change.R'
@@ -162,6 +163,7 @@ Collate:
     'plot_cme.R'
     'posteriordraws.R'
     'predictions.R'
+    'requiet.R'
     'sanitize_conf_level.R'
     'sanitize_newdata.R'
     'sanitize_transform_pre.R'
