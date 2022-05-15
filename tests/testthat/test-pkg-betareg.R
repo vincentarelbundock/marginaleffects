@@ -5,7 +5,6 @@ requiet("betareg")
 requiet("margins")
 requiet("emmeans")
 requiet("broom")
-
 tol <- 0.01 # bad tolerance for some results
 
 data("GasolineYield", package = "betareg")
