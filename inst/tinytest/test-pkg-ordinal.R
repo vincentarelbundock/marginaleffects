@@ -4,7 +4,7 @@ requiet("ordinal")
 # marginaleffects: clm: vs. MASS
 data(housing, package = "MASS")
 known <- MASS::polr(Sat ~ Infl + Type + Cont, weights = Freq, data = housing)
-known <- tidy(marginaleffects(known, type = "probs"))
+known <- tidy(suppressMessages(marginaleffects(known, type = "probs")))
 unknown <- clm(Sat ~ Infl + Type + Cont, weights = Freq, data = housing)
 unknown <- tidy(marginaleffects(unknown))
 expect_equivalent(unknown$estimate, known$estimate, tolerance = .00001)
