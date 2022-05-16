@@ -1,3 +1,5 @@
+source("helpers.R")
+
 # old bug: counterfactual with a single regressor
 mod <- lm(mpg ~ hp + drat + wt, mtcars)
 x <- datagrid(model = mod, hp = c(100, 110), grid.type = "counterfactual")

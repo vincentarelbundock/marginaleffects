@@ -1,3 +1,5 @@
+source("helpers.R")
+
 # Bug stay dead: Issue 55
 # Error: Argument 1 must have names.
 # vab: possibly caused by a version of `emmeans` < 1.6.3

@@ -1,3 +1,5 @@
+source("helpers.R")
+
 # simple contrasts: no validity check
 dat <- mtcars
 dat$am <- as.logical(dat$am)
@@ -6,7 +8,6 @@ mfx <- suppressWarnings(marginaleffects(mod))
 res <- tidy(mfx)
 expect_inherits(res, "data.frame")
 expect_equivalent(dim(res), c(4, 9))
-
 
 
 # contrast as difference and CI make sense
@@ -22,14 +23,12 @@ reject_p <- ti$p.value < 0.05
 expect_equivalent(reject_ci, reject_p)
 
 
-
 # bug be dead: all levels appear
 tmp <- mtcars
 tmp$am <- as.logical(tmp$am)
 mod <- lm(mpg ~ am + factor(cyl), tmp)
 mfx = marginaleffects(mod, newdata = datagrid(cyl = c(4, 6)))
 expect_equivalent(nrow(mfx), 6)
-
 
 
 # numeric contrasts
@@ -50,7 +49,6 @@ expect_equivalent(contr4$comparison, rep(sd1, 32))
 expect_equivalent(contr5$comparison, rep(sd2, 32))
 
 
-
 # factor: linear model
 mod <- lm(mpg ~ factor(cyl), data = mtcars)
 ti <- tidy(comparisons(mod, contrast_factor = "reference"))
@@ -66,14 +64,12 @@ se <- c(coef(mod)[2], coef(mod)[3] - coef(mod)[2])
 expect_equivalent(ti$estimate, se)
 
 
-
 # factor glm
 mod <- glm(am ~ factor(cyl), data = mtcars, family = binomial)
 pred <- predictions(mod, newdata = datagrid(cyl = mtcars$cyl))
 contr <- tidy(comparisons(mod))
 expect_equivalent(contr$estimate[1], pred$predicted[pred$cyl == 6] - pred$predicted[pred$cyl == 4])
 expect_equivalent(contr$estimate[2], pred$predicted[pred$cyl == 8] - pred$predicted[pred$cyl == 4])
-
 
 
 # emmeans w/ back-transforms is similar to comparisons with direct delta method

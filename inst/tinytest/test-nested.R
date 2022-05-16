@@ -1,3 +1,4 @@
+source("helpers.R")
 requiet("fixest")
 
 # predictions() call is nested in a function

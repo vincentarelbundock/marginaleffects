@@ -1,3 +1,6 @@
+
+source("helpers.R")
+
 # simple summary output
 mod <- lm(mpg ~ hp + factor(cyl), mtcars)
 mfx <- marginaleffects(mod)
@@ -5,13 +8,11 @@ s <- summary(mfx)
 # expect_snapshot(print(summary(mfx), digits = 3))
 
 
-
 # summary conf.level
 mod <- lm(mpg ~ hp + factor(cyl), mtcars)
 mfx <- marginaleffects(mod)
 # expect_snapshot(print(summary(mfx, conf.level = .9)))
 # expect_snapshot(print(summary(mfx, conf.level = .2)))
-
 
 
 # summary: marginal means
@@ -23,7 +24,6 @@ mod <- lm(mpg ~ gear + am + vs, dat)
 mm <- marginalmeans(mod)
 s <- summary(mm)
 # expect_snapshot(print(s))
-#
 
 
 # bugs stay dead: summary manipulation

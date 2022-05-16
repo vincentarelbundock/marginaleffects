@@ -1,5 +1,6 @@
-# TODO: CI: See comment in last test for how the intervals are back transformed
 
+# TODO: CI: See comment in last test for how the intervals are back transformed
+source("helpers.R")
 requiet("modelsummary")
 tol <- .0001
 

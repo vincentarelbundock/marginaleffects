@@ -1,3 +1,5 @@
+source("helpers.R")
+
 # lm quadratic
 set.seed(1027)
 f <- y ~ x + I(x^2)

@@ -1,3 +1,5 @@
+source("helpers.R")
+
 # lme4::lmer
 requiet("lme4")
 mod <- lmer(mpg ~ hp + (1 | gear), data = mtcars)

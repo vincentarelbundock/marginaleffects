@@ -1,3 +1,5 @@
+source("helpers.R")
+
 # padding with interactions
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/ggplot2movies/movies.csv")
 dat$style <- ifelse(dat$Action == 1, "Action", "Other")

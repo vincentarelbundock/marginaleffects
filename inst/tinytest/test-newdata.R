@@ -1,6 +1,9 @@
+source("helpers.R")
+requiet("modelbased")
+requiet("emmeans")
+
 
 # visualisation_matrix() without `x` variable
-requiet("modelbased")
 mod <- lm(mpg ~ hp + factor(cyl), mtcars)
 
 p1 <- predictions(mod, newdata = datagrid(cyl = mtcars$cyl))
@@ -14,7 +17,6 @@ expect_equivalent(nrow(m1), nrow(m2))
 expect_true(all(c("newdata_adjusted_for", "newdata_at_specs") %in% names(attributes(m2))))
 
 
-
 # shortcut labels
 mod <- glm(vs ~ hp + factor(cyl), family = binomial, data = mtcars)
 cmp1 <- comparisons(mod, newdata = "mean")
@@ -26,7 +28,6 @@ expect_true(all(cmp2$comparison != cmp1$comparison))
 
 
 # newdata = 'marginalmeans'
-requiet("emmeans")
 
 dat <- mtcars
 dat$gear <- factor(dat$gear)
@@ -45,8 +46,6 @@ expect_equivalent(cmp$std.error, emm$SE)
 
 
 # interaction: newdata = 'marginalmeans'
-requiet("emmeans")
-
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv")
 mod <- lm(bill_length_mm ~ species * sex + island + body_mass_g, data = dat)
 

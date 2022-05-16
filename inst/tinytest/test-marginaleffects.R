@@ -1,3 +1,5 @@
+source("helpers.R")
+
 # marginal effects at the mean
 mod <- glm(am ~ hp + mpg, data = mtcars, family = binomial)
 mfx1 <- marginaleffects(mod, newdata = datagrid())

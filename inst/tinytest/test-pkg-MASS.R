@@ -1,4 +1,6 @@
+
 # TODO: emtrends not clear what it computes for polr
+source("helpers.R")
 requiet("margins")
 requiet("MASS")
 requiet("emmeans")

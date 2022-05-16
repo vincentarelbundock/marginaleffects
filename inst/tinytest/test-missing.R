@@ -1,8 +1,10 @@
+source("helpers.R")
+
 tmp <- mtcars
 tmp$am <- as.logical(tmp$am)
 tmp$gear <- as.factor(tmp$gear)
 for (i in seq_along(tmp)) {
-tmp[[i]][sample(1:nrow(tmp), 1)] <- NA
+    tmp[[i]][sample(1:nrow(tmp), 1)] <- NA
 }
 
 # original data with NAs do not pose problems in glm and lm.

@@ -1,3 +1,5 @@
+source("helpers.R")
+
 # eps argument affects results as expected
 mod <- glm(vs ~ mpg + hp, data = mtcars, family = binomial)
 nd <- datagrid(model = mod)

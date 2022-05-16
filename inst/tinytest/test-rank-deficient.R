@@ -1,3 +1,5 @@
+
+source("helpers.R")
 # rank deficient
 dat <<- mtcars
 dat$gear <- as.factor(dat$gear)

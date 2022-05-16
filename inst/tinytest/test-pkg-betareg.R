@@ -1,6 +1,6 @@
 # bug fix submitted for this version of insight
 #skip_if_not_installed("insight", minimum_version = "0.17.1")
-
+source("helpers.R")
 requiet("betareg")
 requiet("margins")
 requiet("emmeans")
