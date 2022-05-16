@@ -10,7 +10,7 @@ mod1 <- glm(vs ~ hp * mpg, data = mtcars, family = binomial)
 # negative variances and NaN standard errors
 mod2 <- polr(factor(gear) ~ hp + mpg, data = mtcars)
 pred1 <- predictions(mod1)
-pred2 <- predictions(mod2, type = "probs")
+pred2 <- suppressMessages(predictions(mod2, type = "probs"))
 ti1 <- tidy(pred1)
 ti2 <- tidy(pred2)
 expect_inherits(ti1, "data.frame")
