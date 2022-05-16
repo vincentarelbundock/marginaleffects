@@ -29,7 +29,7 @@ predictions, marginal effects, contrasts, and marginal means for a
         effects](https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_mfx.html)
       - [Marginal
         means](https://vincentarelbundock.github.io/marginaleffects/articles/mfx04_marginalmeans.html)
-  - [62 supported
+  - [62 supported classes of
     models](https://vincentarelbundock.github.io/marginaleffects/articles/mfx06_supported_models.html)
   - [Performance
     tips](https://vincentarelbundock.github.io/marginaleffects/articles/performance.html)
@@ -56,7 +56,7 @@ predictions, marginal effects, contrasts, and marginal means for a
 ## What?
 
 The `marginaleffects` package allows `R` users to compute and plot four
-principal quantities of interest for [62 different types of
+principal quantities of interest for [62 different classes of
 models:](https://vincentarelbundock.github.io/marginaleffects/articles/mfx06_supported_models.html)
 
   - [*Adjusted
@@ -114,9 +114,9 @@ additional features from `emmeans`.
 
 So why did I write a clone?
 
-  - *Powerful:* Marginal effects and contrasts can be computed for about
-    62 different kinds of models. Adjusted predictions and marginal
-    means can be computed for about 100 model types.
+  - *Powerful:* Marginal effects and contrasts can be computed for 62
+    different classes of models. Adjusted predictions and marginal means
+    can be computed for about 100 model types.
   - *Extensible:* Adding support for new models is very easy, often
     requiring less than 10 lines of new code. Please submit [feature
     requests on
@@ -142,12 +142,9 @@ So why did I write a clone?
 
 Downsides of `marginaleffects` include:
 
-  - Functions to estimate contrasts and marginal means are considerably
-    less flexible than `emmeans`.
-  - Simulation-based inference is not supported.
-  - Lack of multiplicity adjustments.
-  - Limited support for custom contrasts (but see the `comparisons()`
-    function documentation).
+  - No simulation-based inference.
+  - No multiplicity adjustments.
+  - No equivalence tests.
   - Newer package with a smaller user base.
 
 ## Getting started

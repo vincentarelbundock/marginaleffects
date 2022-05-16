@@ -36,7 +36,7 @@ n_support <- nrow(dat)
     - [Contrasts](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_contrasts.html) 
     - [Marginal effects](https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_mfx.html) 
     - [Marginal means](https://vincentarelbundock.github.io/marginaleffects/articles/mfx04_marginalmeans.html) 
-* [`r n_support` supported models](https://vincentarelbundock.github.io/marginaleffects/articles/mfx06_supported_models.html)
+* [`r n_support` supported classes of models](https://vincentarelbundock.github.io/marginaleffects/articles/mfx06_supported_models.html)
 * [Performance tips](https://vincentarelbundock.github.io/marginaleffects/articles/performance.html)
 * Case studies:
     - [Bayesian analyses with `brms`](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)
@@ -51,7 +51,7 @@ n_support <- nrow(dat)
 
 ## What?
 
-The `marginaleffects` package allows `R` users to compute and plot four principal quantities of interest for [`r n_support` different types of models:](https://vincentarelbundock.github.io/marginaleffects/articles/mfx06_supported_models.html) 
+The `marginaleffects` package allows `R` users to compute and plot four principal quantities of interest for [`r n_support` different classes of models:](https://vincentarelbundock.github.io/marginaleffects/articles/mfx06_supported_models.html) 
 
 * [_Adjusted Prediction_](https://vincentarelbundock.github.io/marginaleffects/articles/mfx01_predictions.html) 
     - The outcome predicted by a model for some combination of the regressors' values, such as their observed values, their means, or factor levels (a.k.a. "reference grid"). 
@@ -78,7 +78,7 @@ The main packages in the `R` ecosystem to compute marginal effects are the trail
 
 So why did I write a clone?
 
-* _Powerful:_ Marginal effects and contrasts can be computed for about `r n_support` different kinds of models. Adjusted predictions and marginal means can be computed for about 100 model types. 
+* _Powerful:_ Marginal effects and contrasts can be computed for `r n_support` different classes of models. Adjusted predictions and marginal means can be computed for about 100 model types. 
 * _Extensible:_ Adding support for new models is very easy, often requiring less than 10 lines of new code. Please submit [feature requests on Github.](https://github.com/vincentarelbundock/marginaleffects/issues)
 * _Fast:_ [Computing unit-level standard errors](https://vincentarelbundock.github.io/marginaleffects/articles/performance.html) can be orders of magnitude faster in large datasets.
 * _Efficient:_ Much smaller memory footprint.
@@ -92,10 +92,9 @@ So why did I write a clone?
 
 Downsides of `marginaleffects` include:
 
-* Functions to estimate contrasts and marginal means are considerably less flexible than `emmeans`.
-* Simulation-based inference is not supported.
-* Lack of multiplicity adjustments.
-* Limited support for custom contrasts (but see the `comparisons()` function documentation).
+* No simulation-based inference.
+* No multiplicity adjustments.
+* No equivalence tests.
 * Newer package with a smaller user base.
 
 ## Getting started
