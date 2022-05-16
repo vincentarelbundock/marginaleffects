@@ -1,5 +1,10 @@
 testing_path <- function(x) {
-    paste0(get_call_wd(), "/", x)
+    wd <- tinytest::get_call_wd()
+    if (wd != "") {
+        return(x)
+    } else {
+        return(paste0(wd, "/", x))
+    }
 }
 
 

@@ -40,8 +40,8 @@ expect_equivalent(mfx$dydx, em$phd.trend, tolerance = .001)
 # margins: standard errors are not supported (all zeros)
 res <- marginaleffects(model, newdata = head(bioChemists, 2))
 mar <- margins(model, data = head(bioChemists, 2), unit_ses = TRUE)
-expect_equivalent(res$dydx[1:2], mar$dydx_phd, tolerance = .00001)
-expect_equivalent(res$dydx[3:4], mar$dydx_femWomen, tolerance = .00001)
+expect_equivalent(res$dydx[1:2], as.numeric(mar$dydx_phd), tolerance = .00001)
+expect_equivalent(res$dydx[3:4], as.numeric(mar$dydx_femWomen), tolerance = .00001)
 
 
 

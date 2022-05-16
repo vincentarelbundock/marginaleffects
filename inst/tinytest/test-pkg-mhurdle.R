@@ -15,9 +15,9 @@ nd <- Interview[sample(seq_len(nrow(Interview)), 10),]
 mfx <- marginaleffects(m2, newdata = nd, type = "E")
 mar <- margins(m2, type = "response", data = nd, unit_ses = TRUE)
 
-expect_equivalent(mfx[mfx$term == "linc", "dydx"], mar$dydx_linc, tolerance = tol)
-expect_equivalent(mfx[mfx$term == "educ", "dydx"], mar$dydx_educ, tolerance = tol)
-expect_equivalent(mfx[mfx$term == "age", "dydx"], mar$dydx_age, tolerance = tol)
+expect_equivalent(mfx[mfx$term == "linc", "dydx"], as.numeric(mar$dydx_linc), tolerance = tol)
+expect_equivalent(mfx[mfx$term == "educ", "dydx"], as.numeric(mar$dydx_educ), tolerance = tol)
+expect_equivalent(mfx[mfx$term == "age", "dydx"], as.numeric(mar$dydx_age), tolerance = tol)
 
 expect_equivalent(mfx[mfx$term == "linc", "std.error"], mar$SE_dydx_linc, tolerance = tol_se)
 expect_equivalent(mfx[mfx$term == "educ", "std.error"], mar$SE_dydx_educ, tolerance = tol_se)

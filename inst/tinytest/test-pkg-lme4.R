@@ -61,6 +61,7 @@ expect_error(predictions(mod, vcov = "kenward-roger"), pattern = "Satter")
 
 # get_predict: low-level tests
 
+dat <- haven::read_dta("stata/databases/lme4_02.dta")
 dat <- haven::read_dta(testing_path("stata/databases/lme4_02.dta"))
 mod <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = dat, family = binomial)
 
@@ -83,7 +84,7 @@ y <- get_predict(mod, type = "response", conf.level = .9)
 z <- get_predicted(mod, predict = "expectation")
 expect_equivalent(w, x$predicted)
 expect_equivalent(w, y$predicted)
-expect_equivalent(w, z)
+expect_equivalent(w, as.numeric(z))
 
 # confidence intervals (weak test)
 w <- get_predict(mod, conf.level = .95)
