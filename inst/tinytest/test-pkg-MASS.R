@@ -1,10 +1,9 @@
-
 # TODO: emtrends not clear what it computes for polr
 source("helpers.R")
 requiet("margins")
 requiet("MASS")
-requiet("emmeans")
 requiet("broom")
+requiet("emmeans", minimum_version = "1.7.4")
 tol <- 0.0001
 tol_se <- 0.001
 
@@ -59,11 +58,10 @@ mfx <- marginaleffects(model, type = "link", newdata = datagrid(wt = 3, cyl = 4)
 em <- emmeans(model, specs = "cyl") 
 em <- contrast(em, method = "revpairwise", at = list(wt = 3, cyl = 4))
 em <- tidy(em)
-expect_equivalent(mfx$dydx[mfx$contrast == "6 - 4"], em$estimate[em$contrast == "6 - 4"])
-expect_equivalent(mfx$std.error[mfx$contrast == "6 - 4"], em$std.error[em$contrast == "6 - 4"])
-expect_equivalent(mfx$dydx[mfx$contrast == "8 - 4"], em$estimate[em$contrast == "8 - 4"])
-expect_equivalent(mfx$std.error[mfx$contrast == "8 - 4"], em$std.error[em$contrast == "8 - 4"])
-
+expect_equivalent(mfx$dydx[mfx$contrast == "6 - 4"], em$estimate[em$contrast == "cyl6 - cyl4"])
+expect_equivalent(mfx$std.error[mfx$contrast == "6 - 4"], em$std.error[em$contrast == "cyl6 - cyl4"])
+expect_equivalent(mfx$dydx[mfx$contrast == "8 - 4"], em$estimate[em$contrast == "cyl8 - cyl4"])
+expect_equivalent(mfx$std.error[mfx$contrast == "8 - 4"], em$std.error[em$contrast == "cyl8 - cyl4"])
 
 
 # glm.nb: marginaleffects: vs. Stata

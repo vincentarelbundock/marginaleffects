@@ -10,22 +10,24 @@ requiet <- function(package, minimum_version = NULL) {
                 "Installed ", package, " is version ", installed_version, "; ",
                 "but ", minimum_version, " is required"
             ))
+            return(invisible(NULL))
         }
-    } else {
-        suppressPackageStartupMessages(
-            require(package, warn.conflicts = FALSE, character.only = TRUE)
-        )
     }
+    suppressPackageStartupMessages(
+        require(package, warn.conflicts = FALSE, character.only = TRUE)
+    )
 }
 
 
 testing_path <- function(x) {
     wd <- tinytest::get_call_wd()
-    if (wd != "") {
-        return(x)
+    if (isTRUE(wd != "")) {
+        out <- x
     } else {
-        return(paste0(wd, "/", x))
+        out <- paste0(wd, "/", x)
     }
+    out <- gsub("^\\/", "", out)
+    return(out)
 }
 
 
