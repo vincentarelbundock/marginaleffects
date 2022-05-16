@@ -1,3 +1,6 @@
+
+source("helpers.R")
+
 # type dictionary does not include duplicates
 x <- marginaleffects:::type_dictionary
 y <- marginaleffects:::type_dictionary_build()

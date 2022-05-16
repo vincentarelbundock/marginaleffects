@@ -1,3 +1,5 @@
+source("helpers.R")
+
 # exponentiate
 acs12 <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/acs12.csv")
 acs12$disability <- as.numeric(acs12$disability == "yes")

@@ -1,3 +1,5 @@
+source("helpers.R")
+
 # conf.level argument changes conf.int size
 dat <- mtcars
 dat$cyl <- factor(dat$cyl)

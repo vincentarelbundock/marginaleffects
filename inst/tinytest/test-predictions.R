@@ -1,3 +1,5 @@
+
+source("helpers.R")
 requiet("pscl")
 
 tmp <- mtcars

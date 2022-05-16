@@ -1,3 +1,5 @@
+source("helpers.R")
+
 # Stata comparisons produces identical results
 mod <- lm(mpg ~ cyl + hp + wt, data = mtcars)
 mfx <- marginaleffects(mod)

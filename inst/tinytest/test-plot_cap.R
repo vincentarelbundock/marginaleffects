@@ -1,3 +1,6 @@
+
+source("helpers.R")
+
 # two conditions
 mod <- lm(mpg ~ hp * wt * am, data = mtcars)
 p <- plot_cap(mod, condition = c("hp", "wt"))

@@ -1,3 +1,24 @@
+# requiet adapted from testthat::skip_if_not_installed (MIT license)
+requiet <- function(package, minimum_version = NULL) {
+    if (suppressPackageStartupMessages(!requireNamespace(package, quietly = TRUE))) {
+        exit_file(paste0(package, " cannot be loaded"))
+    }
+    if (!is.null(minimum_version)) {
+        installed_version <- utils::packageVersion(package)
+        if (installed_version < minimum_version) {
+            tinytest::exit_file(paste0(
+                "Installed ", package, " is version ", installed_version, "; ",
+                "but ", minimum_version, " is required"
+            ))
+        }
+    } else {
+        suppressPackageStartupMessages(
+            require(package, warn.conflicts = FALSE, character.only = TRUE)
+        )
+    }
+}
+
+
 testing_path <- function(x) {
     wd <- tinytest::get_call_wd()
     if (wd != "") {
@@ -5,13 +26,6 @@ testing_path <- function(x) {
     } else {
         return(paste0(wd, "/", x))
     }
-}
-
-
-requiet <- function(package) {
-  suppressPackageStartupMessages(
-    require(package, warn.conflicts = FALSE, character.only = TRUE)
-  )
 }
 
 

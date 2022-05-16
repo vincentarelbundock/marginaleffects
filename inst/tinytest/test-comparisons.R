@@ -1,3 +1,4 @@
+source("helpers.R")
 
 # print.comparisons.summary
 dat <- mtcars

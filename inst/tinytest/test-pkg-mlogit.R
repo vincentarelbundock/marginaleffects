@@ -1,3 +1,4 @@
+
 # why `newdata` is not supported
 
 # here the `newdata` does not include the individual or choice variabls at all,
@@ -9,6 +10,7 @@
 # nd <- TravelMode[, 3:ncol(TravelMode)]
 # predict(mod, newdata = head(nd, 12))
 
+source("helpers.R")
 requiet("mlogit")
 requiet("AER")
 data("TravelMode", package = "AER")

@@ -1,6 +1,7 @@
 # HPD tests against emmeans, which uses HDI, but our default is ETI
 # HDI is implemented specifically for these tests
 # https://github.com/vincentarelbundock/marginaleffects/issues/240
+source("helpers.R")
 options("marginaleffects_credible_interval" = "hdi")
 requiet("rstanarm")
 requiet("emmeans")
