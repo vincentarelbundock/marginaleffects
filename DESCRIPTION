@@ -19,7 +19,6 @@ BugReports:
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 VignetteBuilder: knitr
-Config/testthat/edition: 3
 Depends: 
     R (>= 3.5.0)
 Imports: 
@@ -53,7 +52,6 @@ Suggests:
     quantreg,
     rlang,
     rmarkdown,
-    testthat (>= 3.0.0),
     tidyverse,
     vdiffr,
     AER,
@@ -103,8 +101,7 @@ Suggests:
     withr,
     covr,
     spelling,
-    tinytest,
-    vdiffr
+    tinytest
 Collate: 
     'align_J_V.R'
     'arg_name_change.R'
