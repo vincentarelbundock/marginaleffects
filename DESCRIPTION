@@ -44,6 +44,7 @@ Suggests:
     ggbeeswarm,
     haven,
     kableExtra,
+    here,
     knitr,
     magrittr,
     margins,
@@ -102,7 +103,9 @@ Suggests:
     truncreg,
     withr,
     covr,
-    spelling, tinytest
+    spelling,
+    tinytest,
+    vdiffr
 Collate: 
     'align_J_V.R'
     'arg_name_change.R'
@@ -163,7 +166,6 @@ Collate:
     'plot_cme.R'
     'posteriordraws.R'
     'predictions.R'
-    'requiet.R'
     'sanitize_conf_level.R'
     'sanitize_newdata.R'
     'sanitize_transform_pre.R'

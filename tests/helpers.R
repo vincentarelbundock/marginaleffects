@@ -1,33 +1,34 @@
 testing_path <- function(x) {
-    insight::check_if_installed("here")
-    here::here("inst/tinytest/", x)
+    paste0(get_call_wd(), "/", x)
 }
 
+
 requiet <- function(package) {
-  # skip_if_not_installed(package)
   suppressPackageStartupMessages(
     require(package, warn.conflicts = FALSE, character.only = TRUE)
   )
 }
 
+
 download_model <- function(name) {
     tmp <- tempfile()
     url <- paste0("https://raw.github.com/vincentarelbundock/modelarchive/main/data/", name, ".rds")
-    try(download.file(url, tmp, quiet = TRUE), silent = TRUE)
+    try(utils::download.file(url, tmp, quiet = TRUE), silent = TRUE)
     out <- try(readRDS(tmp), silent = TRUE)
     return(out)
 }
+
 
 expect_predictions <- function(object,
                                se = TRUE,
                                n_col = NULL,
                                n_row = NULL) {
-    expect_inherits(object, "predictions")
-    expect_true("type" %in% colnames(object))
-    expect_true("predicted" %in% colnames(object))
-    if (isTRUE(se)) expect_true("std.error" %in% colnames(object))
-    if (!is.null(n_col)) expect_true(ncol(object) >= n_col)
-    if (!is.null(n_row)) expect_true(nrow(object) >= n_row)
+    tinytest::expect_inherits(object, "predictions")
+    tinytest::expect_true("type" %in% colnames(object))
+    tinytest::expect_true("predicted" %in% colnames(object))
+    if (isTRUE(se)) tinytest::expect_true("std.error" %in% colnames(object))
+    if (!is.null(n_col)) tinytest::expect_true(ncol(object) >= n_col)
+    if (!is.null(n_row)) tinytest::expect_true(nrow(object) >= n_row)
 }
 
 
@@ -37,7 +38,6 @@ expect_marginaleffects <- function(
     n_unique = 10,
     pct_na = 5,
     se = TRUE) {
-
 
     # Compute
     mfx <- marginaleffects(object, type = type)
@@ -60,15 +60,15 @@ expect_marginaleffects <- function(
         std.error_na <- NULL
     }
 
-    expect_inherits(mfx, "marginaleffects")
-    expect_inherits(tid, "data.frame")
-    expect_true(nrow(mfx) > 0)
-    expect_true(nrow(tid) > 0)
-    expect_true(dydx_unique >= n_unique)
-    expect_true(dydx_na <= pct_na)
+    tinytest::expect_inherits(mfx, "marginaleffects")
+    tinytest::expect_inherits(tid, "data.frame")
+    tinytest::expect_true(nrow(mfx) > 0)
+    tinytest::expect_true(nrow(tid) > 0)
+    tinytest::expect_true(dydx_unique >= n_unique)
+    tinytest::expect_true(dydx_na <= pct_na)
     if (!is.null(std.error_na)) {
-        expect_true(std.error_unique >= n_unique)
-        expect_true(std.error_na <= pct_na)
+        tinytest::expect_true(std.error_unique >= n_unique)
+        tinytest::expect_true(std.error_na <= pct_na)
     }
 }
 
@@ -77,10 +77,10 @@ expect_marginalmeans <- function(object,
                                  se = TRUE,
                                  n_col = NULL,
                                  n_row = NULL) {
-    expect_inherits(object, "marginalmeans")
-    expect_true(nrow(object) >= n_row)
-    expect_true(ncol(object) >= n_col)
-    if (isTRUE(se)) expect_true("std.error" %in% colnames(object))
+    tinytest::expect_inherits(object, "marginalmeans")
+    tinytest::expect_true(nrow(object) >= n_row)
+    tinytest::expect_true(ncol(object) >= n_col)
+    if (isTRUE(se)) tinytest::expect_true("std.error" %in% colnames(object))
 }
 
 
@@ -143,6 +143,6 @@ expect_margins <- function(results,
         }
     }
 
-    expect_true(flag)
+    tinytest::expect_true(flag)
 }
 

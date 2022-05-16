@@ -1,6 +1,6 @@
 # type dictionary does not include duplicates
 x <- marginaleffects:::type_dictionary
-y <- type_dictionary_build()
+y <- marginaleffects:::type_dictionary_build()
 expect_equivalent(x, y) # for codecov
 dup <- x[!x$base %in% c("link", "prediction"), ]
 dup <- stats::na.omit(dup)
