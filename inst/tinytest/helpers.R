@@ -56,10 +56,11 @@ expect_marginaleffects <- function(
     type = "response",
     n_unique = 10,
     pct_na = 5,
-    se = TRUE) {
+    se = TRUE,
+    ...) {
 
     # Compute
-    mfx <- marginaleffects(object, type = type)
+    mfx <- marginaleffects(object, type = type, ...)
     tid <- tidy(mfx)
 
     # Check
