@@ -6,7 +6,7 @@ if (minver("emmeans", "1.7.4")) exit_file("emmeans 1.7.4")
 requiet("margins")
 requiet("MASS")
 requiet("broom")
-requiet("emmeans", minimum_version = "1.7.4")
+requiet("emmeans")
 tol <- 0.0001
 tol_se <- 0.001
 
