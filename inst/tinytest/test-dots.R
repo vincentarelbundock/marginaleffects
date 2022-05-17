@@ -1,7 +1,8 @@
 source("helpers.R")
+if (ON_CRAN) exit_file("on cran")
+requiet("lme4")
 
 # lme4::lmer
-requiet("lme4")
 mod <- lmer(mpg ~ hp + (1 | gear), data = mtcars)
 expect_inherits(marginaleffects(mod), "marginaleffects")
 expect_warning(marginaleffects(mod, blah = 2), pattern = "Valid.*Github")

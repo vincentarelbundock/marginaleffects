@@ -1,5 +1,5 @@
-
 source("helpers.R")
+if (ON_CRAN) exit_file("on cran")
 requiet("mclogit")
 requiet("MASS")
 requiet("emmeans")
@@ -42,5 +42,3 @@ mod <- mblogit(Sat ~ Infl + Type + Cont + x, weights = Freq, data = dat))
 expect_predictions(predictions(mod))
 mfx <- marginaleffects(mod, type = "link")
 expect_inherits(mfx, "marginaleffects")
-
-

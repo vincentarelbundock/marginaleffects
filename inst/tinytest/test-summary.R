@@ -1,5 +1,6 @@
-
 source("helpers.R")
+if (ON_CRAN) exit_file("on cran")
+requiet("dplyr")
 
 # simple summary output
 mod <- lm(mpg ~ hp + factor(cyl), mtcars)
@@ -27,11 +28,9 @@ s <- summary(mm)
 
 
 # bugs stay dead: summary manipulation
-requiet("dplyr")
 mod <- glm(am ~ hp * wt, data = mtcars, family = binomial)
 mfx <- marginaleffects(mod)
 # expect_snapshot(
 #     summary(mfx) %>%
 #     dplyr::select(term, estimate, conf.low, conf.high)
 # )
-

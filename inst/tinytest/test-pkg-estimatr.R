@@ -1,4 +1,5 @@
 source("helpers.R")
+if (ON_CRAN) exit_file("on cran")
 requiet("estimatr")
 requiet("emmeans")
 requiet("margins")

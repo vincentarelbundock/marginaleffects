@@ -1,5 +1,5 @@
-
 source("helpers.R")
+if (ON_CRAN) exit_file("on cran")
 requiet("mhurdle")
 
 tol <- 0.0001
@@ -9,7 +9,6 @@ data("Interview", package = "mhurdle")
 m1 <- mhurdle(shows ~ 0 | linc + smsa + age + educ + size, data = Interview, h2 = TRUE, dist = "n", method = "bhhh")
 m2 <- mhurdle(shows ~ educ + size | linc | smsa + age, data = Interview,
 h2 = FALSE, method = "bhhh", corr = TRUE, finalHessian = TRUE)
-
 
 # marginaleffects vs. margins (unit-level SEs)
 set.seed(1024)
@@ -25,8 +24,6 @@ expect_equivalent(mfx[mfx$term == "linc", "std.error"], mar$SE_dydx_linc, tolera
 expect_equivalent(mfx[mfx$term == "educ", "std.error"], mar$SE_dydx_educ, tolerance = tol_se)
 expect_equivalent(mfx[mfx$term == "age", "std.error"], mar$SE_dydx_age, tolerance = tol_se)
 
-
-
 # marginaleffects vs. margins: AME 
 mfx <- marginaleffects(m2, type = "E")
 mfx <- tidy(mfx)
@@ -35,4 +32,3 @@ mar <- margins(m2)
 mar <- summary(mar)
 expect_equivalent(mfx$estimate, mar$AME, tolerance = tol)
 expect_equivalent(mfx$std.error, mar$SE, tolerance = tol_se)
-

@@ -1,4 +1,5 @@
 source("helpers.R")
+if (ON_CRAN) exit_file("on cran")
 requiet("margins")
 tol <- 1e-4
 tol_se <- 1e-3

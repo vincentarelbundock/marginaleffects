@@ -1,6 +1,5 @@
-
 source("helpers.R")
-#skip_if_not_installed("fixest")
+if (ON_CRAN) exit_file("on cran")
 
 # datagrid(x = NA)
 # numeric

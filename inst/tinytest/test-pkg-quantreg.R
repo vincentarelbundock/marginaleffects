@@ -1,5 +1,5 @@
-
 source("helpers.R")
+if (ON_CRAN) exit_file("on cran")
 requiet("quantreg")
 requiet("emmeans")
 requiet("broom")
@@ -37,4 +37,3 @@ tmp$cyl <- factor(tmp$cyl)
 model <- quantreg::rq(mpg ~ hp + wt + cyl, data = tmp)
 mm <- marginalmeans(model)
 expect_marginalmeans(mm)
-

@@ -1,5 +1,5 @@
-
 source("helpers.R")
+if (ON_CRAN) exit_file("on cran")
 requiet("sampleSelection")
 
 data("Mroz87", package = "sampleSelection")
