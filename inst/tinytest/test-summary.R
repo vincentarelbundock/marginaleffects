@@ -5,15 +5,40 @@ requiet("dplyr")
 # simple summary output
 mod <- lm(mpg ~ hp + factor(cyl), mtcars)
 mfx <- marginaleffects(mod)
-s <- summary(mfx)
-# expect_snapshot(print(summary(mfx), digits = 3))
+known <- "Average marginal effects
+  Term Contrast   Effect Std. Error z value  Pr(>|z|)     2.5 %   97.5 %
+1   hp    dY/dX -0.02404    0.01541  -1.560 0.1187213  -0.05424  0.00616
+2  cyl    6 - 4 -5.96766    1.63928  -3.640 0.0002722  -9.18058 -2.75473
+3  cyl    8 - 4 -8.52085    2.32607  -3.663 0.0002491 -13.07987 -3.96183
+
+Model type:  lm
+Prediction type:  response"
+expect_print(summary(mfx), known)
 
 
 # summary conf.level
 mod <- lm(mpg ~ hp + factor(cyl), mtcars)
 mfx <- marginaleffects(mod)
-# expect_snapshot(print(summary(mfx, conf.level = .9)))
-# expect_snapshot(print(summary(mfx, conf.level = .2)))
+
+known <- "Average marginal effects
+  Term Contrast   Effect Std. Error z value  Pr(>|z|)     5.0 %    95.0 %
+1   hp    dY/dX -0.02404    0.01541  -1.560 0.1187213  -0.04938  0.001305
+2  cyl    6 - 4 -5.96766    1.63928  -3.640 0.0002722  -8.66403 -3.271283
+3  cyl    8 - 4 -8.52085    2.32607  -3.663 0.0002491 -12.34690 -4.694798
+
+Model type:  lm
+Prediction type:  response"
+expect_print(summary(mfx, conf_level = .9), known)
+
+known <- "Average marginal effects
+  Term Contrast   Effect Std. Error z value  Pr(>|z|)   40.0 %   60.0 %
+1   hp    dY/dX -0.02404    0.01541  -1.560 0.1187213 -0.02794 -0.02014
+2  cyl    6 - 4 -5.96766    1.63928  -3.640 0.0002722 -6.38296 -5.55235
+3  cyl    8 - 4 -8.52085    2.32607  -3.663 0.0002491 -9.11016 -7.93155
+
+Model type:  lm
+Prediction type:  response"
+expect_print(summary(mfx, conf_level = .2), known)
 
 
 # summary: marginal means
@@ -23,14 +48,31 @@ dat$vs <- as.logical(dat$vs)
 dat$gear <- as.factor(dat$gear)
 mod <- lm(mpg ~ gear + am + vs, dat)
 mm <- marginalmeans(mod)
-s <- summary(mm)
-# expect_snapshot(print(s))
+known <- "Estimated marginal means
+  Term Value  Mean Std. Error z value   Pr(>|z|) 2.5 % 97.5 %
+1   am FALSE 17.43      1.416   12.31 < 2.22e-16 14.65  20.20
+2   am  TRUE 24.37      1.253   19.45 < 2.22e-16 21.91  26.82
+3 gear     3 21.64      1.603   13.50 < 2.22e-16 18.49  24.78
+4 gear     4 21.09      1.264   16.69 < 2.22e-16 18.61  23.57
+5 gear     5 19.97      1.969   10.14 < 2.22e-16 16.11  23.83
+6   vs FALSE 17.47      1.007   17.35 < 2.22e-16 15.49  19.44
+7   vs  TRUE 24.33      1.194   20.37 < 2.22e-16 21.99  26.67
+
+Model type:  lm
+Prediction type:  response"
+expect_print(summary(mm), known)
 
 
 # bugs stay dead: summary manipulation
 mod <- glm(am ~ hp * wt, data = mtcars, family = binomial)
 mfx <- marginaleffects(mod)
-# expect_snapshot(
-#     summary(mfx) %>%
-#     dplyr::select(term, estimate, conf.low, conf.high)
-# )
+known <- "Average marginal effects
+  Term    Effect    CI low   CI high
+1   hp  0.002654 -0.001151  0.006458
+2   wt -0.435727 -0.635690 -0.235764
+
+Model type:
+Prediction type:"
+expect_print(
+    summary(mfx) %>% dplyr::select(term, estimate, conf.low, conf.high),
+    known)

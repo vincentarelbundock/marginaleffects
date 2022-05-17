@@ -38,6 +38,13 @@ download_model <- function(name) {
 }
 
 
+expect_print <- function(unknown, known) {
+    known <- trimws(unlist(strsplit(known, split = "\\n")))
+    unknown <- trimws(capture.output(unknown))
+    expect_equivalent(known, unknown)
+}
+
+
 expect_predictions <- function(object,
                                se = TRUE,
                                n_col = NULL,
