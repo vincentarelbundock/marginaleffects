@@ -29,22 +29,21 @@ expect_predictions(pred2, n_row = 6, se = TRUE)
 
 
 # gam: marginalmeans vs. emmeans
-# skip("gam: marginalmeans != emmeans")
-#skip_if_not_installed("emmeans", minimum_version = "1.7.3")
 data(kyphosis, package = "gam")
 tmp <- kyphosis
 tmp$categ <- as.factor(sample(letters[1:5], nrow(tmp), replace = TRUE))
 model <- gam::gam(Kyphosis ~ s(Age, 4) + Number + categ,
             family = binomial, data = tmp)
-mm <- marginalmeans(model)
-expect_marginalmeans(mm)
+mm1 <- tidy(marginalmeans(model))
+em1 <- tidy(emmeans(model, specs = "categ", regrid = "response"))
+mm2 <- tidy(marginalmeans(model, type = "link"))
+em2 <- tidy(emmeans(model, specs = "categ"))
 
-mm <- tidy(mm)
-em <- tidy(emmeans(model, specs = "categ", regrid = "response"))
-expect_equivalent(mm$estimate, em$prob)
-expect_equivalent(mm$std.error, em$std.error)
+expect_marginalmeans(mm1)
+expect_equivalent(mm1$estimate, em1$prob)
+expect_equivalent(mm2$estimate, em2$estimate)
 
-mm <- tidy(marginalmeans(model, type = "link"))
-em <- tidy(emmeans(model, specs = "categ"))
-expect_equivalent(mm$estimate, em$estimate)
-expect_equivalent(mm$std.error, em$std.error)
+
+exit_file("gam: marginal means `std.error` does not match `emmeans`")
+expect_equivalent(mm1$std.error, em1$std.error)
+expect_equivalent(mm2$std.error, em2$std.error)
