@@ -1,4 +1,3 @@
-
 source("helpers.R")
 requiet("margins")
 requiet("emmeans")
@@ -7,13 +6,14 @@ requiet("survey")
 
 # survey: marginaleffects vs. margins vs. emtrends
 data("fpc", package = "survey")
-svyd <- survey::svydesign(weights=~weight, 
-                          ids=~psuid, 
-                          strata=~stratid, 
-                          fpc=~Nh, 
-                          variables=~x + nh, 
-                          data=fpc, 
-                          nest=TRUE)
+svyd <- survey::svydesign(
+    weights = ~weight,
+    ids = ~psuid,
+    strata = ~stratid,
+    fpc = ~Nh,
+    variables = ~ x + nh,
+    data = fpc,
+    nest = TRUE)
 mod <- survey::svyglm(x ~ nh, design = svyd)
 res <- marginaleffects(mod)
 mar <- suppressMessages(data.frame(margins(mod, unit_ses = TRUE)))

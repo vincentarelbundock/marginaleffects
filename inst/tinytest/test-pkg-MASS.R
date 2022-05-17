@@ -1,8 +1,12 @@
 # TODO: emtrends not clear what it computes for polr
+
 source("helpers.R")
+if (ON_GH) exit("skip on github")
 if (utils::packageVersion("emmeans") < "1.7.4") {
     exit_file("need emmeans >=1.7.4")
 }
+
+
 requiet("margins")
 requiet("MASS")
 requiet("broom")

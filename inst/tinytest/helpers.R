@@ -1,3 +1,6 @@
+ON_CRAN <- !identical(Sys.getenv("R_NOT_CRAN"), "true")
+ON_GH <- identical(Sys.getenv("R_GH"), "true")
+
 # requiet adapted from testthat::skip_if_not_installed (MIT license)
 requiet <- function(package, minimum_version = NULL) {
     suppressPackageStartupMessages(
