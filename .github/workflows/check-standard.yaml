@@ -27,9 +27,12 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
-      NOT_CRAN: yes
+      NOT_CRAN: true
 
     steps:
+      # - name: "say environment variables"
+      #   run: echo "is on CRAN? $NOT_CRAN"
+
       - uses: actions/checkout@v2
 
       - uses: r-lib/actions/setup-pandoc@v2
