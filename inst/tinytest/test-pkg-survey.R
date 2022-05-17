@@ -1,4 +1,5 @@
 source("helpers.R")
+if (ON_CRAN) exit_file("on cran")
 requiet("margins")
 requiet("emmeans")
 requiet("broom")
@@ -26,4 +27,3 @@ em <- tidy(em)
 mfx <- marginaleffects(mod, type = "link", newdata = data.frame(nh = 4))
 expect_equivalent(mfx$dydx, em$nh.trend, tolerance = .001) # CRAN tolerance
 expect_equivalent(mfx$std.error, em$std.error, tolerance = .001)
-

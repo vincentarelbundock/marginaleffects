@@ -1,8 +1,7 @@
-
 source("helpers.R")
+if (ON_CRAN) exit_file("on cran")
 requiet("robustbase")
 requiet("margins")
-
 
 # lmrob vs. margins
 data(coleman, package = "robustbase")
@@ -11,8 +10,6 @@ expect_marginaleffects(model, n_unique = 1)
 mar <- margins::margins(model, unit_ses = TRUE)
 mfx <- marginaleffects(model)
 expect_true(expect_margins(mar, mfx))
-
-
 
 # glmrob vs. margins
 data(epilepsy, package = "robustbase")
@@ -23,4 +20,3 @@ expect_marginaleffects(model)
 mar <- margins::margins(model, unit_ses = TRUE)
 mfx <- marginaleffects(model)
 expect_true(expect_margins(mar, mfx))
-

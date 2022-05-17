@@ -1,5 +1,5 @@
-
 source("helpers.R")
+if (ON_CRAN) exit_file("on cran")
 requiet("speedglm")
 requiet("margins")
 
@@ -17,8 +17,6 @@ mfx <- marginaleffects(mod)
 mar <- margins(mod, unit_ses = TRUE)
 expect_true(expect_margins(mfx, mar, tolerance = .001))
 
-
-
 # lm vs. Stata
 stata <- readRDS(testing_path("stata/stata.rds"))[["stats_lm_01"]]
 dat <- read.csv(testing_path("stata/databases/stats_lm_01.csv"))
@@ -32,4 +30,3 @@ expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .0001)
 mfx <- marginaleffects(mod)
 mar <- margins(mod, unit_ses = TRUE)
 expect_true(expect_margins(mfx, mar, tolerance = .0001))
-

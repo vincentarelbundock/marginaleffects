@@ -1,4 +1,5 @@
 source("helpers.R")
+if (ON_CRAN) exit_file("on cran")
 requiet("emmeans")
 
 # interaction automatic flip from NULL to useful

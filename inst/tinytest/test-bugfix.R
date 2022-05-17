@@ -1,4 +1,5 @@
 source("helpers.R")
+if (ON_CRAN) exit_file("on cran")
 
 # Bug stay dead: Issue 55
 # Error: Argument 1 must have names.

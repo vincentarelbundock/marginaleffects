@@ -1,4 +1,5 @@
 source("helpers.R")
+if (ON_CRAN) exit_file("on cran")
 
 # simple contrasts: no validity check
 dat <- mtcars

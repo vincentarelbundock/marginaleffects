@@ -1,6 +1,6 @@
 source("helpers.R")
+if (ON_CRAN) exit_file("on cran")
 requiet("sandwich")
-#skip_if_not_installed("insight", minimum_version = "0.17.1")
 
 # working but no validity check
 mod <- lm(mpg ~ hp + drat, mtcars)

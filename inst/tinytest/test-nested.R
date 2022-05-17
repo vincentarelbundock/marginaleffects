@@ -1,4 +1,5 @@
 source("helpers.R")
+if (ON_CRAN) exit_file("on cran")
 requiet("fixest")
 
 # predictions() call is nested in a function

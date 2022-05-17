@@ -1,5 +1,6 @@
 ON_CRAN <- !identical(Sys.getenv("R_NOT_CRAN"), "true")
 ON_GH <- identical(Sys.getenv("R_GH"), "true")
+ON_CI <- isTRUE(ON_CRAN) || isTRUE(ON_GH)
 
 minver <- function(pkg, ver) {
     isTRUE(utils::packageVersion(pkg) < as.character(ver))

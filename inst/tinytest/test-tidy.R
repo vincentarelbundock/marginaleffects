@@ -1,4 +1,5 @@
 source("helpers.R")
+if (ON_CRAN) exit_file("on cran")
 
 
 mod <- glm(vs ~ hp * mpg, data = mtcars, family = binomial)

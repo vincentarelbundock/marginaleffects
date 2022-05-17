@@ -1,4 +1,3 @@
-
 source("helpers.R")
 
 # character predictors
@@ -12,7 +11,6 @@ expect_equivalent(nrow(p), 25)
 expect_false(anyNA(p$dydx))
 
 
-
 # continuous vs. categorical x-axis
 mod <- lm(mpg ~ hp * wt * factor(cyl), mtcars)
 p <- plot_cme(mod, effect = "hp", condition = "cyl")
@@ -21,12 +19,10 @@ p <- plot_cme(mod, effect = "hp", condition = "wt")
 # vdiffr::expect_doppelganger("cme continuous x-axis", p)
 
 
-
 # two conditions
 mod <- lm(mpg ~ hp * wt * am, data = mtcars)
 # vdiffr::expect_doppelganger("cme plot with 2 conditions",
 #                             plot_cme(mod, effect = "hp", condition = c("wt", "am")))
-
 
 
 # vcov
@@ -43,11 +39,9 @@ expect_true(all(mfx1$conf.low != mfx3$conf.low))
 expect_true(all(mfx2$conf.low != mfx3$conf.low))
 
 
-
 # factor effects are plotted in different facets
 dat <- mtcars
 dat$gear_fct <- factor(dat$gear)
 mod <- lm(cyl ~ mpg * gear_fct, data = dat)
 p <- plot_cme(mod, effect = "gear_fct", condition = "mpg")
 # vdiffr::expect_doppelganger("factor effects in facets", p)
-

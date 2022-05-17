@@ -1,4 +1,5 @@
 source("helpers.R")
+if (ON_CRAN) exit_file("on cran")
 
 # marginal effects at the mean
 mod <- glm(am ~ hp + mpg, data = mtcars, family = binomial)

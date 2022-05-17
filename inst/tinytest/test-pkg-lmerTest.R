@@ -1,5 +1,5 @@
-
 source("helpers.R")
+if (ON_CRAN) exit_file("on cran")
 requiet("lmerTest")
 requiet("emmeans")
 requiet("broom")

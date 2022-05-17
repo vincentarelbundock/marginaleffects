@@ -1,6 +1,7 @@
 # bug fix submitted for this version of insight
-#skip_if_not_installed("insight", minimum_version = "0.17.1")
 source("helpers.R")
+if (ON_CRAN) exit_file("on cran")
+if (minver("insight", "0.17.1")) exit_file("insight 0.17.1")
 requiet("betareg")
 requiet("margins")
 requiet("emmeans")

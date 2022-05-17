@@ -1,5 +1,5 @@
-
 source("helpers.R")
+if (ON_CRAN) exit_file("on cran")
 requiet("margins")
 requiet("haven")
 requiet("lme4")
