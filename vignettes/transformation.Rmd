@@ -33,7 +33,7 @@ theme_clean <- function() {
 ggplot2::theme_set(theme_clean())
 ```
 
-[The Contrasts vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_contrasts.html) defined contrasts as:
+[The Contrasts vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_contrasts.html) defined contrasts as:
 
 > The difference between two adjusted predictions.
 

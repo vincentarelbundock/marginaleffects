@@ -24,9 +24,9 @@ predictions, marginal effects, contrasts, and marginal means for a
   - Vignettes:
       - [Adjusted
         predictions](https://vincentarelbundock.github.io/marginaleffects/articles/mfx01_predictions.html)
-      - [Contrasts](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_contrasts.html)
+      - [Contrasts](https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_contrasts.html)
       - [Marginal
-        effects](https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_mfx.html)
+        effects](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_mfx.html)
       - [Marginal
         means](https://vincentarelbundock.github.io/marginaleffects/articles/mfx04_marginalmeans.html)
   - [62 supported classes of
@@ -67,13 +67,13 @@ models:](https://vincentarelbundock.github.io/marginaleffects/articles/mfx06_sup
       - [`predictions(),`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html)
         [`plot_cap()`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html)
   - [*Marginal
-    Effect*](https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_mfx.html)
+    Effect*](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_mfx.html)
       - A partial derivative (slope) of the regression equation with
         respect to a regressor of interest.
       - [`marginaleffects(),`](https://vincentarelbundock.github.io/marginaleffects/reference/marginaleffects.html)
         [`plot(),`](https://vincentarelbundock.github.io/marginaleffects/reference/plot.marginaleffects.html)
         [`plot_cme()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cme.html)
-  - [*Contrast*](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_contrasts.html)
+  - [*Contrast*](https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_contrasts.html)
       - The difference between two adjusted predictions, calculated for
         meaningfully different regressor values (e.g., College graduates
         vs. Others).
@@ -313,7 +313,7 @@ Transformations and Custom
 Contrasts.](https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html)
 
 [The Contrasts
-vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_contrasts.html)
+vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_contrasts.html)
 shows how to use the `comparisons()` function to compute a wide variety
 of quantities of interest:
 
@@ -385,7 +385,7 @@ plot_cme(mod, effect = "hp", condition = c("wt", "am"))
 <img src="man/figures/README-unnamed-chunk-13-1.png" width="100%" />
 
 [The Marginal Effects
-vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_mfx.html)
+vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_mfx.html)
 shows how to use the `marginaleffects()` function to compute a wide
 variety of quantities of interest:
 

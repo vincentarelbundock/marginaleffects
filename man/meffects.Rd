@@ -101,7 +101,7 @@ Examples sections below, and in the vignettes on the \code{marginaleffects}
 website: \url{https://vincentarelbundock.github.io/marginaleffects/}
 \itemize{
 \item \href{https://vincentarelbundock.github.io/marginaleffects/#getting-started}{Getting Started}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_mfx.html}{Marginal Effects Vignette}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_mfx.html}{Marginal Effects Vignette}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx06_supported_models.html}{Supported Models}
 \item Case Studies
 \itemize{

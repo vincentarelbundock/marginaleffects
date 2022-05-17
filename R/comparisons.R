@@ -10,7 +10,7 @@
 #' more. For more information, see the Details and Examples sections below, and
 #' in the vignettes on the `marginaleffects` website: <https://vincentarelbundock.github.io/marginaleffects/>
 #' * [Getting Started](https://vincentarelbundock.github.io/marginaleffects/#getting-started)
-#' * [Contrasts Vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_contrasts.html)
+#' * [Contrasts Vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_contrasts.html)
 #' * [Supported Models](https://vincentarelbundock.github.io/marginaleffects/articles/mfx06_supported_models.html)
 #' * Case Studies
 #'    - [Bayesian analyses with `brms`](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)

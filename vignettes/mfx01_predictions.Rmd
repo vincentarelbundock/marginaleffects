@@ -47,7 +47,7 @@ In many cases, this is too limiting, and researchers will want to specify a grid
 
 # Adjusted Predictions at User-Specified values (aka Adjusted Predictions at Representative values, APR)
 
-There are two main ways to select the reference grid over which we want to compute adjusted predictions. The first is using the `variables` argument. The second is with the `newdata` argument and the [`datagrid()` function](https://vincentarelbundock.github.io/marginaleffects/reference/datagrid.html) that we already introduced in the [marginal effects vignette.](https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_mfx.html) 
+There are two main ways to select the reference grid over which we want to compute adjusted predictions. The first is using the `variables` argument. The second is with the `newdata` argument and the [`datagrid()` function](https://vincentarelbundock.github.io/marginaleffects/reference/datagrid.html) that we already introduced in the [marginal effects vignette.](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_mfx.html) 
 
 ## `variables`: Levels and Tukey's 5 numbers 
 
