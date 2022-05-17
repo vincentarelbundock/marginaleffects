@@ -13,6 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_NOT_CRAN: true
+      R_GH: true
 
     steps:
       - uses: actions/checkout@v2
