@@ -38,7 +38,7 @@ mod <- tobit(
     data = tmp)
 em <- emmeans(mod, specs = "religiousness")
 em <- tidy(em)
-mm <- tidy(marginalmeans(mod, variables = "religiousness"))
+mm <- tidy(marginalmeans(mod))
 expect_equivalent(mm$estimate, em$estimate)
 expect_equivalent(mm$std.error, em$std.error, tolerance = tol_se)
 
