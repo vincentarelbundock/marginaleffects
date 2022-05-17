@@ -33,8 +33,8 @@ n_support <- nrow(dat)
 * [Getting started](https://vincentarelbundock.github.io/marginaleffects/#getting-started)
 * Vignettes:
     - [Adjusted predictions](https://vincentarelbundock.github.io/marginaleffects/articles/mfx01_predictions.html) 
-    - [Contrasts](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_contrasts.html) 
-    - [Marginal effects](https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_mfx.html) 
+    - [Contrasts](https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_contrasts.html) 
+    - [Marginal effects](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_mfx.html) 
     - [Marginal means](https://vincentarelbundock.github.io/marginaleffects/articles/mfx04_marginalmeans.html) 
 * [`r n_support` supported classes of models](https://vincentarelbundock.github.io/marginaleffects/articles/mfx06_supported_models.html)
 * [Performance tips](https://vincentarelbundock.github.io/marginaleffects/articles/performance.html)
@@ -56,10 +56,10 @@ The `marginaleffects` package allows `R` users to compute and plot four principa
 * [_Adjusted Prediction_](https://vincentarelbundock.github.io/marginaleffects/articles/mfx01_predictions.html) 
     - The outcome predicted by a model for some combination of the regressors' values, such as their observed values, their means, or factor levels (a.k.a. "reference grid"). 
     - [`predictions(),`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html) [`plot_cap()`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html)
-* [_Marginal Effect_](https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_mfx.html) 
+* [_Marginal Effect_](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_mfx.html) 
     - A partial derivative (slope) of the regression equation with respect to a regressor of interest.
     - [`marginaleffects(),`](https://vincentarelbundock.github.io/marginaleffects/reference/marginaleffects.html) [`plot(),`](https://vincentarelbundock.github.io/marginaleffects/reference/plot.marginaleffects.html) [`plot_cme()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cme.html)
-* [_Contrast_ ](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_contrasts.html) 
+* [_Contrast_ ](https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_contrasts.html) 
     - The difference between two adjusted predictions, calculated for meaningfully different regressor values (e.g., College graduates vs. Others).
     - [`comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)
 * [_Marginal Mean_](https://vincentarelbundock.github.io/marginaleffects/articles/mfx04_marginalmeans.html) 
@@ -184,7 +184,7 @@ summary(cmp)
 
 The code above is explained in detail in the [vignette on Transformations and Custom Contrasts.](https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html)
 
-[The Contrasts vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_contrasts.html) shows how to use the `comparisons()` function to compute a wide variety of quantities of interest:
+[The Contrasts vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_contrasts.html) shows how to use the `comparisons()` function to compute a wide variety of quantities of interest:
 
 * Custom comparisons for:
   - Numeric variables (e.g., 1 standard deviation, interquartile range, custom values)
@@ -222,7 +222,7 @@ The `plot_cme` plots "Conditional Marginal Effects," that is, the marginal effec
 plot_cme(mod, effect = "hp", condition = c("wt", "am"))
 ```
 
-[The Marginal Effects vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_mfx.html) shows how to use the `marginaleffects()` function to compute a wide variety of quantities of interest:
+[The Marginal Effects vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_mfx.html) shows how to use the `marginaleffects()` function to compute a wide variety of quantities of interest:
 
 * Unit-level Marginal Effects
 * Average Marginal Effects

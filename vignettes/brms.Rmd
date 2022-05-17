@@ -116,7 +116,7 @@ ggplot(pred, aes(x = draw, fill = factor(woman))) +
 
 ## Marginal effects
 
-Use `marginaleffects()` to [compute marginal effects (slopes of the regression equation)](https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_mfx.html) for each row of the dataset, and use `summary()` to compute "Average Marginal Effects", that is, the average of all observation-level marginal effects: 
+Use `marginaleffects()` to [compute marginal effects (slopes of the regression equation)](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_mfx.html) for each row of the dataset, and use `summary()` to compute "Average Marginal Effects", that is, the average of all observation-level marginal effects: 
 
 ```{r}
 mfx <- marginaleffects(mod)
@@ -219,7 +219,7 @@ ggplot(pred, aes(x = draw, fill = party_autonomy)) +
 
 ## Marginal effects and contrasts
 
-As noted in the [Marginal Effects vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_mfx.html), there should be one distinct marginal effect for each combination of regressor values. Here, we consider only one combination of regressor values, where `region` is "Middle East and North Africa", and `civil_liberties` is 0.5. Then, we calculate the mean of the posterior distribution of marginal effects:
+As noted in the [Marginal Effects vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_mfx.html), there should be one distinct marginal effect for each combination of regressor values. Here, we consider only one combination of regressor values, where `region` is "Middle East and North Africa", and `civil_liberties` is 0.5. Then, we calculate the mean of the posterior distribution of marginal effects:
 
 ```{r}
 mfx <- marginaleffects(mod,
