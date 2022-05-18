@@ -1,33 +1,36 @@
 source("helpers.R")
+if (minver("tinyviztest")) exit_file("install tinyviztest")
+using("tinyviztest")
+
 
 # two conditions
 mod <- lm(mpg ~ hp * wt * am, data = mtcars)
 p <- plot_cap(mod, condition = c("hp", "wt"))
-# vdiffr::expect_doppelganger("cmm plot with 2 conditions", p)
+expect_vdiff(p, "plot_cap")
 
 
 # continuous vs. categorical x-axis
 mod <- lm(mpg ~ hp * wt * factor(cyl), mtcars)
 p <- plot_cap(mod, condition = c("cyl", "wt"))
-# vdiffr::expect_doppelganger("cmm categorical x-axis", p)
+expect_vdiff(p, "plot_cap vs categorical x-axis")
 p <- plot_cap(mod, condition = c("wt", "cyl"))
-# vdiffr::expect_doppelganger("cmm continuous x-axis", p)
+expect_vdiff(p, "plot_cap vs continuous x-axis")
 
 
 # conf.level in plots
 mod <- lm(mpg ~ hp * wt * am, data = mtcars)
 p1 <- plot_cap(mod, condition = "hp", conf.level = .99)
 p2 <- plot_cap(mod, condition = "hp", conf.level = .4)
-# vdiffr::expect_doppelganger("plot_cap large ci", p1)
-# vdiffr::expect_doppelganger("plot_cap small ci", p2)
+expect_vdiff(p1, "plot_cap conf 99")
+expect_vdiff(p2, "plot_cap conf 40")
 
 
 # link vs response
 mod <- glm(am ~ hp + wt, data = mtcars, family = binomial)
 p1 <- plot_cap(mod, condition = "hp", type = "response")
 p2 <- plot_cap(mod, condition = "hp", type = "link")
-# vdiffr::expect_doppelganger("plot_cap logit response", p1)
-# vdiffr::expect_doppelganger("plot_cap logit link", p2)
+expect_vdiff(p1, "plot_cap conf 99")
+expect_vdiff(p2, "plot_cap conf 40")
 
 
 # bad condition raises error
@@ -40,7 +43,6 @@ mod <- glm(am ~ mpg * cyl, data = mtcars, family = binomial(link = "logit"), wei
 p <- plot_cap(mod, condition = c("mpg", "cyl"), draw = FALSE)
 expect_true("conf.low" %in% colnames(p))
 expect_true("conf.high" %in% colnames(p))
-
 
 
 # vcov
@@ -57,4 +59,3 @@ expect_true(all(mfx2$std.error != mfx3$std.error))
 expect_true(all(mfx1$conf.low != mfx2$conf.low))
 expect_true(all(mfx1$conf.low != mfx3$conf.low))
 expect_true(all(mfx2$conf.low != mfx3$conf.low))
-
