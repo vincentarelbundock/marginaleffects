@@ -1,7 +1,6 @@
 source("helpers.R")
 if (minver("tinyviztest")) exit_file("install tinyviztest")
-using("tinyviztest")
-
+library("tinyviztest")
 
 # two conditions
 mod <- lm(mpg ~ hp * wt * am, data = mtcars)

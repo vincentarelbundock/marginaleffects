@@ -1,7 +1,6 @@
 source("helpers.R")
 if (minver("tinyviztest")) exit_file("install tinyviztest")
-using("tinyviztest")
-
+library("tinyviztest")
 
 # character predictors
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv")

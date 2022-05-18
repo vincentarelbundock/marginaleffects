@@ -1,20 +1,19 @@
 source("helpers.R")
 if (minver("tinyviztest")) exit_file("install tinyviztest")
-using("tinyviztest")
-
+library("tinyviztest")
 
 # basic plot.marginaleffects()
 mod <- glm(am ~ hp + wt, data = mtcars)
 mfx <- marginaleffects(mod)
 p <- plot(mfx)
-expect_vdiff(p, "plot.marginaleffects")
+expect_vdiff(p, "plot marginaleffects")
 
 
 # plot(mfx): no CI
 mod <- glm(am ~ hp + wt, data = mtcars)
 mfx <- marginaleffects(mod, vcov = FALSE)
 p <- plot(mfx)
-expect_vdiff(p, "plot.marginaleffects no CI")
+expect_vdiff(p, "plot marginaleffects no CI")
 
 
 # bugfix: contrasts overlap
@@ -23,5 +22,5 @@ dat$cyl <- factor(dat$cyl)
 mod <- lm(mpg ~ hp + cyl, data = dat)
 mfx <- marginaleffects(mod)
 p <- plot(mfx)
-expect_vdiff(p, "plot.marginaleffects contrast overlap bug fix")
+expect_vdiff(p, "plot contrast overlap bug fix")
 
