@@ -47,4 +47,4 @@ dat <- mtcars
 dat$gear_fct <- factor(dat$gear)
 mod <- lm(cyl ~ mpg * gear_fct, data = dat)
 p <- plot_cme(mod, effect = "gear_fct", condition = "mpg")
-expect_vdiff(p, "plot_cme factor effects in facets")
+expect_vdiff(p, "plot_cme factor facets")

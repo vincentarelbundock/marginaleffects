@@ -29,8 +29,8 @@ expect_vdiff(p2, "plot_cap conf 40")
 mod <- glm(am ~ hp + wt, data = mtcars, family = binomial)
 p1 <- plot_cap(mod, condition = "hp", type = "response")
 p2 <- plot_cap(mod, condition = "hp", type = "link")
-expect_vdiff(p1, "plot_cap conf 99")
-expect_vdiff(p2, "plot_cap conf 40")
+expect_vdiff(p1, "plot_cap response")
+expect_vdiff(p2, "plot_cap link")
 
 
 # bad condition raises error
