@@ -1,6 +1,7 @@
 # these should only be called once. plot.R
 # library("tinytest")
 # using("tinyviztest")
+library("tinyviztest")
 
 # two conditions
 mod <- lm(mpg ~ hp * wt * am, data = mtcars)
