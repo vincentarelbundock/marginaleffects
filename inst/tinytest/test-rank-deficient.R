@@ -1,4 +1,4 @@
-source("helpers.R")
+source("helpers.R", local = TRUE)
 
 # rank deficient
 dat <<- mtcars

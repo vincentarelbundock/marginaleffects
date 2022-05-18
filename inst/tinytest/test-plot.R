@@ -1,7 +1,10 @@
-source("helpers.R")
+source("helpers.R", local = TRUE)
+if (ON_CRAN) exit_file("on cran")
 if (minver("tinyviztest")) exit_file("install tinyviztest")
 if (minver("pdftools")) exit_file("install pdftools") # github actions fail
 library("tinyviztest")
+tinytest::using(tinyviztest)
+
 
 # basic plot.marginaleffects()
 mod <- glm(am ~ hp + wt, data = mtcars)
@@ -23,5 +26,5 @@ dat$cyl <- factor(dat$cyl)
 mod <- lm(mpg ~ hp + cyl, data = dat)
 mfx <- marginaleffects(mod)
 p <- plot(mfx)
+p <- function() plot(mtcars$hp, mtcars$mpg)
 expect_vdiff(p, "plot contrast overlap bug fix")
-

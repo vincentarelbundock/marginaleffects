@@ -1,4 +1,4 @@
-source("helpers.R")
+source("helpers.R", local = TRUE)
 
 # old bug: counterfactual with a single regressor
 mod <- lm(mpg ~ hp + drat + wt, mtcars)

@@ -1,4 +1,4 @@
-source("helpers.R")
+source("helpers.R", local = TRUE)
 
 # character variable
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv")

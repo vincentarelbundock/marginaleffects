@@ -1,5 +1,5 @@
 # TODO: CI: See comment in last test for how the intervals are back transformed
-source("helpers.R")
+source("helpers.R", local = TRUE)
 if (ON_CRAN) exit_file("on cran")
 requiet("modelsummary")
 tol <- .0001

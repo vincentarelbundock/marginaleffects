@@ -1,5 +1,5 @@
 # bug fix submitted for this version of insight
-source("helpers.R")
+source("helpers.R", local = TRUE)
 if (ON_CRAN) exit_file("on cran")
 if (minver("insight", "0.17.1")) exit_file("insight 0.17.1")
 requiet("betareg")

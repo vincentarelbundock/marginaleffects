@@ -1,4 +1,4 @@
-source("helpers.R")
+source("helpers.R", local = TRUE)
 
 # find_variable_class: unsupported contrast
 dat <- mtcars

@@ -1,4 +1,4 @@
-source("helpers.R")
+source("helpers.R", local = TRUE)
 if (ON_CI) exit_file("on ci")
 requiet("brms")
 requiet("insight")
