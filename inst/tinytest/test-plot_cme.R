@@ -1,7 +1,4 @@
-# these should only be called once. plot.R
-# library("tinytest")
-# using("tinyviztest")
-library("tinyviztest")
+using(tinyviztest)
 
 # character predictors
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv")
