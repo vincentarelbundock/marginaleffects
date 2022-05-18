@@ -1,4 +1,5 @@
-using(tinyviztest)
+library("tinytest")
+using("tinyviztest")
 
 # character predictors
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv")
