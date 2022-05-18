@@ -1,3 +1,4 @@
+# load
 library("tinytest")
 using("tinyviztest")
 
