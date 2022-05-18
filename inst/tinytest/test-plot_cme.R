@@ -1,5 +1,6 @@
 source("helpers.R")
 if (minver("tinyviztest")) exit_file("install tinyviztest")
+if (minver("pdftools")) exit_file("install pdftools")# github actions fail
 library("tinyviztest")
 
 # character predictors
