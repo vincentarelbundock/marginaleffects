@@ -1,5 +1,6 @@
 source("helpers.R")
 if (minver("tinyviztest")) exit_file("install tinyviztest")
+pkgload::load_all("~/repos/tinyviztest")
 using("tinyviztest")
 
 
