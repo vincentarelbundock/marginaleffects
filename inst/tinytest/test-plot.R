@@ -1,7 +1,4 @@
-source("helpers.R", local = TRUE)
-if (ON_CRAN) exit_file("on cran")
-if (minver("tinyviztest")) exit_file("install tinyviztest")
-if (minver("pdftools")) exit_file("install pdftools") # github actions fail
+# these should only be called once. plot.R
 library("tinytest")
 using("tinyviztest")
 

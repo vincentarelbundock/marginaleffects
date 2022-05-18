@@ -1,8 +1,6 @@
-source("helpers.R", local = TRUE)
-if (minver("tinyviztest")) exit_file("install tinyviztest")
-if (minver("pdftools")) exit_file("install pdftools")# github actions fail
-library("tinytest")
-using("tinyviztest")
+# these should only be called once. plot.R
+# library("tinytest")
+# using("tinyviztest")
 
 # character predictors
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv")
