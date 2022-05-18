@@ -2,8 +2,8 @@ source("helpers.R", local = TRUE)
 if (ON_CRAN) exit_file("on cran")
 if (minver("tinyviztest")) exit_file("install tinyviztest")
 if (minver("pdftools")) exit_file("install pdftools") # github actions fail
-library("tinyviztest")
-tinytest::using(tinyviztest)
+library("tinytest")
+using("tinyviztest")
 
 
 # basic plot.marginaleffects()
@@ -17,6 +17,7 @@ expect_vdiff(p, "plot marginaleffects")
 mod <- glm(am ~ hp + wt, data = mtcars)
 mfx <- marginaleffects(mod, vcov = FALSE)
 p <- plot(mfx)
+expect_vdiff(p, "plot marginaleffects") # TODO: intentional test failure
 expect_vdiff(p, "plot marginaleffects no CI")
 
 
