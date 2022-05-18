@@ -1,5 +1,4 @@
-library(tinytest)
-library(tinyviztest)
+# library(tinytest)
 library(marginaleffects)
 
 ON_CRAN <- !identical(Sys.getenv("R_NOT_CRAN"), "true")
