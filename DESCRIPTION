@@ -19,6 +19,7 @@ BugReports:
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 VignetteBuilder: knitr
+Remotes: vincentarelbundock/tinyviztest
 Depends: 
     R (>= 3.5.0)
 Imports: 
@@ -101,6 +102,7 @@ Suggests:
     withr,
     covr,
     spelling,
+    tinyviztest,
     tinytest
 Collate: 
     'align_J_V.R'
