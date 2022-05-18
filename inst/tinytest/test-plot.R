@@ -1,24 +1,20 @@
 source("helpers.R")
-# skip_if(getRversion() < "4.1.0") # different graphics engines
+if (minver("tinyviztest")) exit_file("install tinyviztest")
+using("tinyviztest")
 
-# plot_cme(mod, 'hp', 'wt')
-mod <- lm(mpg ~ hp * wt, data = mtcars)
-p <- plot_cme(mod, effect = "hp", condition = "wt")
-# vdiffr::expect_doppelganger("plot_cme basic", p)
-#
 
-# plot(mfx)
+# basic plot.marginaleffects()
 mod <- glm(am ~ hp + wt, data = mtcars)
 mfx <- marginaleffects(mod)
 p <- plot(mfx)
-# vdiffr::expect_doppelganger("plot basic", p)
+expect_vdiff(p, "plot.marginaleffects")
 
 
 # plot(mfx): no CI
 mod <- glm(am ~ hp + wt, data = mtcars)
 mfx <- marginaleffects(mod, vcov = FALSE)
 p <- plot(mfx)
-# vdiffr::expect_doppelganger("plot no CI", p)
+expect_vdiff(p, "plot.marginaleffects no CI")
 
 
 # bugfix: contrasts overlap
@@ -27,7 +23,5 @@ dat$cyl <- factor(dat$cyl)
 mod <- lm(mpg ~ hp + cyl, data = dat)
 mfx <- marginaleffects(mod)
 p <- plot(mfx)
-# vdiffr::expect_doppelganger("plot contrast overlap", p)
-
-
+expect_vdiff(p, "plot.marginaleffects contrast overlap bug fix")
 

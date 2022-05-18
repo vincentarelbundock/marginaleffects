@@ -5,8 +5,13 @@ ON_CRAN <- !identical(Sys.getenv("R_NOT_CRAN"), "true")
 ON_GH <- identical(Sys.getenv("R_GH"), "true")
 ON_CI <- isTRUE(ON_CRAN) || isTRUE(ON_GH)
 
-minver <- function(pkg, ver) {
-    isTRUE(utils::packageVersion(pkg) < as.character(ver))
+minver <- function(pkg, ver = NULL) {
+    ins <- try(utils::packageVersion(pkg), silent = TRUE)
+    if (is.null(ver)) {
+        isTRUE(inherits(ins, "try-error"))
+    } else {
+        isTRUE(ins < ver)
+    }
 }
 
 # requiet adapted from testthat::skip_if_not_installed (MIT license)
