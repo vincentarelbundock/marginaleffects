@@ -1,10 +1,11 @@
-using(tinyviztest)
+library("tinytest")
+using("tinyviztest")
 
-# # two conditions
-# mod <- lm(mpg ~ hp * wt * am, data = mtcars)
-# p <- plot_cap(mod, condition = c("hp", "wt"))
-# expect_vdiff(p, "plot_cap")
-#
+# two conditions
+mod <- lm(mpg ~ hp * wt * am, data = mtcars)
+p <- plot_cap(mod, condition = c("hp", "wt"))
+expect_vdiff(p, "plot_cap")
+
 #
 # # continuous vs. categorical x-axis
 # mod <- lm(mpg ~ hp * wt * factor(cyl), mtcars)
