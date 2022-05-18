@@ -1,9 +1,11 @@
-source("helpers.R")
+source("helpers.R", local = TRUE)
 if (ON_CRAN) exit_file("on cran")
 requiet("margins")
 requiet("broom")
 requiet("emmeans")
 requiet("dplyr")
+
+
 
 guerry <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/HistData/Guerry.csv")
 
@@ -21,6 +23,11 @@ mod <- glm(y ~ x1 + x2 + x3 * x4, data = dat, family = binomial)
 res <- marginaleffects(mod)
 mar <- margins(mod, unit_ses = TRUE)
 expect_true(expect_margins(res, mar, tolerance = 0.1, verbose=TRUE))
+
+
+# predictions
+pre <- predictions(mod)
+expect_predictions(pre)
 
 # emmeans comparison
 # type = "response" works at lower tolerance

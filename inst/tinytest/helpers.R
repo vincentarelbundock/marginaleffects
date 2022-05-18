@@ -50,13 +50,32 @@ expect_print <- function(unknown, known) {
 }
 
 
+check_predictions <- function(object,
+                              se = TRUE,
+                              n_col = NULL,
+                              n_row = NULL) {
+    flag <- inherits(object, "predictions") &&
+            "type" %in% colnames(predictions) &&
+            "predicted" %in% colnames(predictions)
+    if (isTRUE(se) && !"std.error" %in% colnames(object)) {
+        flag <- FALSE
+    }
+    if (!is.null(n_col) && ncol(object) >= n_col) {
+        flag <- FALSE
+    }
+    if (!is.null(n_row) && nrow(object) >= n_row) {
+        flag <- FALSE
+    }
+    return(flag)
+}
+
 expect_predictions <- function(object,
                                se = TRUE,
                                n_col = NULL,
                                n_row = NULL) {
-    tinytest::expect_inherits(object, "predictions")
-    tinytest::expect_true("type" %in% colnames(object))
-    tinytest::expect_true("predicted" %in% colnames(object))
+    expect_inherits(object, "predictions")
+    expect_true("type" %in% colnames(object))
+    expect_true("predicted" %in% colnames(object))
     if (isTRUE(se)) tinytest::expect_true("std.error" %in% colnames(object))
     if (!is.null(n_col)) tinytest::expect_true(ncol(object) >= n_col)
     if (!is.null(n_row)) tinytest::expect_true(nrow(object) >= n_row)

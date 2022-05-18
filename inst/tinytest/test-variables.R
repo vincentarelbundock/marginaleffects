@@ -1,5 +1,5 @@
 
-source("helpers.R")
+source("helpers.R", local = TRUE)
 # named list
 
 tmp <- mtcars

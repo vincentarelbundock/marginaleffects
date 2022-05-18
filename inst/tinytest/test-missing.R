@@ -1,4 +1,4 @@
-source("helpers.R")
+source("helpers.R", local = TRUE)
 
 tmp <- mtcars
 tmp$am <- as.logical(tmp$am)

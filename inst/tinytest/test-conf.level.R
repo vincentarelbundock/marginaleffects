@@ -1,4 +1,4 @@
-source("helpers.R")
+source("helpers.R", local = TRUE)
 
 # conf.level argument changes conf.int size
 dat <- mtcars

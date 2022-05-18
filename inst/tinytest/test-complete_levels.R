@@ -1,4 +1,4 @@
-source("helpers.R")
+source("helpers.R", local = TRUE)
 
 # padding with interactions
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/ggplot2movies/movies.csv")
@@ -11,4 +11,3 @@ dat <- dat[dat$length < 240,]
 mod <- glm(certified_fresh ~ length * style, data = dat, family = binomial)
 res <- predictions(mod, type = "response")
 expect_predictions(res, n_row = nrow(dat))
-

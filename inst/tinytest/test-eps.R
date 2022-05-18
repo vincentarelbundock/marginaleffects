@@ -1,4 +1,4 @@
-source("helpers.R")
+source("helpers.R", local = TRUE)
 
 # eps argument affects results as expected
 mod <- glm(vs ~ mpg + hp, data = mtcars, family = binomial)
