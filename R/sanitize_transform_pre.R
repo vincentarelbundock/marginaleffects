@@ -7,6 +7,7 @@ sanitize_transform_pre <- function(transform_pre) {
                                             "lnratio",
                                             "ratioavg",
                                             "lnratioavg",
+                                            "lnoravg",
                                             "differenceavg"))
     )
 
@@ -21,7 +22,8 @@ sanitize_transform_pre <- function(transform_pre) {
         "ratio" = function(hi, lo) hi / lo,
         "lnratio" = function(hi, lo) log(hi / lo),
         "ratioavg" = function(hi, lo) mean(hi) / mean(lo),
-        "lnratioavg" = function(hi, lo) log(mean(hi) / mean(lo))
+        "lnratioavg" = function(hi, lo) log(mean(hi) / mean(lo)),
+        "lnoravg" = function(hi, lo) {m_hi <- mean(hi); m_lo <- mean(lo); log((m_hi / (1 - m_hi)) / (m_lo / (1 - m_lo)))}
     )[[transform_pre]]
 
     lab <- list(
@@ -30,7 +32,8 @@ sanitize_transform_pre <- function(transform_pre) {
         "ratio" = "%s / %s",
         "lnratio" = "ln(%s / %s)",
         "ratioavg" = "mean(%s) / mean(%s)",
-        "lnratioavg" = "ln(mean(%s) / mean(%s))"
+        "lnratioavg" = "ln(mean(%s) / mean(%s))",
+        "lnoravg" = "ln(odds(%s) / odds(%s))"
     )[[transform_pre]]
 
     out <- list("label" = lab, "function" = fun)

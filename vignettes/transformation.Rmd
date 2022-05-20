@@ -39,7 +39,7 @@ ggplot2::theme_set(theme_clean())
 
 This vignette shows how to move beyond such simple differences, by estimating "contrasts" that consist of ratios or arbitrary functions of adjusted predictions. It also shows how to back-transform contrasts to change their scales.
 
-Consider the case of a model with a single predictor $x$. To compute average contrasts, we procede as follows:
+Consider the case of a model with a single predictor $x$. To compute average contrasts, we proceed as follows:
 
 1. Compute adjusted predictions for each row of the dataset for the observed values $x$: $\hat{y}_x$
 2. Compute adjusted predictions for each row of the dataset for the observed values $x + 1$: $\hat{y}_{x+1}$
@@ -91,7 +91,7 @@ comparisons(mod, transform_pre = "ratio") %>% summary()
 
 This result is the average adjusted risk ratio, that is, the adjusted predictions when the `mpg` are incremented by 1, divided by the adjusted predictions when `mpg` is at its original value.
 
-The `transform_pre` accepts different values for common types of contrasts: 'difference', 'ratio', 'lnratio', 'ratioavg', 'lnratioavg', 'differenceavg'. These strings are shortcuts for functions that accept two vectors of adjusted predictions and returns a single vector of contrasts. For example, these two commands yield identical results:
+The `transform_pre` accepts different values for common types of contrasts: 'difference', 'ratio', 'lnratio', 'ratioavg', 'lnratioavg', 'lnoravg', 'differenceavg'. These strings are shortcuts for functions that accept two vectors of adjusted predictions and returns a single vector of contrasts. For example, these two commands yield identical results:
 
 ```{r}
 comparisons(mod, transform_pre = "ratio") %>% summary()
