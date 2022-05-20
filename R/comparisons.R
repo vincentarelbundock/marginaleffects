@@ -164,6 +164,15 @@ comparisons <- function(model,
         }
     }
 
+    # transformation labels
+    transform_pre_label <- transform_post_label <- NULL
+    if (is.function(transform_pre)) {
+        transform_pre_label <- deparse(substitute(transform_pre))
+    }
+    if (!is.null(transform_post)) {
+        transform_post_label <- deparse(substitute(transform_post))
+    }
+
     # `marginaleffects()` runs its own sanity checks and hardcodes valid arguments
     if (!isTRUE(internal_call)) {
         model <- sanitize_model(model = model, newdata = newdata, calling_function = "comparisons", ...)
@@ -360,9 +369,8 @@ comparisons <- function(model,
     attr(out, "J") <- J
     attr(out, "vcov") <- vcov
     attr(out, "vcov.type") <- get_vcov_label(vcov)
-    if (!is.null(transform_post)) {
-        attr(out, "transform_post") <- transform_post
-    }
+    attr(out, "transform_pre") <- transform_pre_label
+    attr(out, "transform_post") <- transform_post_label
 
     # modelbased::visualisation_matrix attaches useful info for plotting
     for (a in names(attributes_newdata)) {
