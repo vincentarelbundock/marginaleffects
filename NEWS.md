@@ -1,3 +1,7 @@
+# marginaleffects 0.5.0.9000
+
+* `comparisons()` now supports "log of marginal odds ratio" in the `transform_pre` argument. Thanks to Noah Greifer!
+
 # marginaleffects 0.5.0
 
 Breaking changes:
