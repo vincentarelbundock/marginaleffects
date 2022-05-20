@@ -130,7 +130,6 @@ get_contrasts <- function(model,
         }
     }
 
-
     # output
     attr(out, "posterior_draws") <- draws
     attr(out, "original") <- cache[["original"]]
