@@ -58,6 +58,7 @@
 #'   - "lnratio": `function(hi, lo) log(hi / lo)`
 #'   - "ratioavg": `function(hi, lo) mean(hi) / mean(lo)`
 #'   - "lnratioavg": `function(hi, lo) log(mean(hi) / mean(lo))`
+#'   - "lnoravg": `function(hi, lo) log((mean(hi)/(1 - mean(hi))) / (mean(lo)/(1 - mean(lo))))`
 #' * function: accept two equal-length numeric vectors of adjusted predictions (`hi` and `lo`) and returns a vector of contrasts of the same length, or a unique numeric value.
 #' @param contrast_factor string. Which pairs of factors should be contrasted?
 #' * "reference": Each factor level is compared to the factor reference (base) level
