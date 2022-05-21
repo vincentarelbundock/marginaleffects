@@ -12,3 +12,16 @@ mfx <- marginaleffects(mod, variables = "species")
 expect_inherits(mfx, "data.frame")
 expect_true(nrow(mfx) > 0)
 expect_true(ncol(mfx) > 0)
+
+
+# Hernan & Robins replication: bug would not detect `as.factor()` in formula()
+nhefs <- read.csv("https://raw.githubusercontent.com/vincentarelbundock/modelarchive/main/data-raw/nhefs.csv")
+f <- wt82_71 ~ qsmk + sex + race + age + I(age*age) + factor(education) +
+     smokeintensity + I(smokeintensity*smokeintensity) + smokeyrs +
+     I(smokeyrs*smokeyrs) + as.factor(exercise) + as.factor(active) + wt71 +
+     I(wt71*wt71) + I(qsmk*smokeintensity)
+
+fit <- glm(f, data = nhefs)
+pre <- predictions(fit, newdata = nhefs)
+cmp <- comparisons(fit, newdata = nhefs)
+mfx <- marginaleffects(fit, newdata = nhefs)

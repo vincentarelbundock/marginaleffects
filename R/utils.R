@@ -19,10 +19,10 @@ find_categorical <- function(newdata = NULL, model = NULL) {
         }
 
         if (!is.null(te) && is.character(te)) {
-            te <- te[grepl("^factor\\(|^mo\\(|^strata\\(", te)]
+            te <- te[grepl("^as\\.factor|^factor\\(|^mo\\(|^strata\\(", te)]
             # some functions like strata() take arguments, but that is difficult to support
             te <- te[!grepl(",", te)]
-            te <- gsub("^(factor|mo|strata)\\((.*)\\)", "\\2", te)
+            te <- gsub("^(^as\\.factor|^factor|mo|strata)\\((.*)\\)", "\\2", te)
             out_model <- te
         }
     }
