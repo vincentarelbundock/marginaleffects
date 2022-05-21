@@ -126,7 +126,7 @@ mean(onesample[which(onesample$interv == 1), ]$predicted_meanY)
 
 ## Contrast
 
-Now we want to compute the treatment effect, as the difference in average predicted outcomes in the two counterfactual datasets. To do This is equivalent to applying the parametric g-formula. There are three important things to note in the command that follows:
+Now we want to compute the treatment effect with the parametric g-formula, which is the difference in average predicted outcomes in the two counterfactual datasets. This is equivalent to taking the average contrast with the `comparisons()` function. There are three important things to note in the command that follows:
 
 * The `variables` argument is used to indicate that we want to estimate a "contrast" between adjusted predictions when `qsmk` is equal to 1 or 0.
 * The `datagrid()` function is used with the `grid_type="counterfactual"` argument. This replicates the entire dataset once for every combination of the specified regressors. In this case, we specified `qsmk = c(0, 1)`, so this will replicate the dataset twice.
