@@ -38,6 +38,7 @@ Suggests:
     emmeans,
     future,
     future.apply,
+    ggdag,
     ggdist,
     ggplot2,
     ggrepel,
