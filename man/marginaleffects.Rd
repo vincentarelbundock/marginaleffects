@@ -11,6 +11,7 @@ marginaleffects(
   vcov = TRUE,
   conf_level = 0.95,
   type = "response",
+  weights = NULL,
   eps = 1e-04,
   ...
 )
@@ -63,6 +64,8 @@ compute marginal effects or contrasts. This can differ based on the model
 type, but will typically be a string such as: "response", "link", "probs",
 or "zero". When an unsupported string is entered, the model-specific list of
 acceptable values is returned in an error message.}
+
+\item{weights}{column name of the weights variable in \code{newdata}, or numeric vector of length equal to the number of rows in the original data or in \code{newdata} (if supplied).}
 
 \item{eps}{A numeric value specifying the “step” size to use when
 calculating numerical derivatives. See the Details section below. Warning:

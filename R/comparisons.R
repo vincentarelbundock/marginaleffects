@@ -191,6 +191,10 @@ comparisons <- function(model,
     transform_pre <- sanitize_transform_pre(transform_pre)
     sanity_weights(weights, newdata) # after sanity_newdata
 
+    if (!isTRUE(checkmate::check_string(weights))) {
+        newdata[["marginaleffects_weights"]] <- weights
+        weights <- "marginaleffects_weights"
+    }
 
     # get dof before transforming the vcov arg
     if (is.character(vcov) && (isTRUE(vcov == "satterthwaite") || isTRUE(vcov == "kenward-roger"))) {

@@ -19,6 +19,12 @@ mfx <- tidy(mfx)
 mfx <- unlist(mfx[, 3:4])
 expect_equivalent(mfx, stata, tolerance = 0.002)
 
+# vs. Stata (not clear what SE they use, so we give tolerance)
+stata <- c("estimate" = .0441066, "std.error" = .0061046)
+mfx <- marginaleffects(mod, weights = dat$weights, vcov = "HC1")
+mfx <- tidy(mfx)
+mfx <- unlist(mfx[, 3:4])
+expect_equivalent(mfx, stata, tolerance = 0.002)
 
 # . logit am mpg [pw=weights]
 #

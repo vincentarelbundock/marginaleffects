@@ -16,6 +16,7 @@ comparisons(
   transform_pre = "difference",
   transform_post = NULL,
   interaction = NULL,
+  weights = NULL,
   eps = 1e-04,
   ...
 )
@@ -116,6 +117,8 @@ acceptable values is returned in an error message.}
 \item \code{TRUE}: Contrasts represent the changes in adjusted predictions when the predictors specified in the \code{variables} argument are manipulated simultaneously.
 \item \code{NULL} (default): Behaves like \code{TRUE} when the \code{variables} argument is specified and the model formula includes interactions. Behaves like \code{FALSE} otherwise.
 }}
+
+\item{weights}{column name of the weights variable in \code{newdata}, or numeric vector of length equal to the number of rows in the original data or in \code{newdata} (if supplied).}
 
 \item{eps}{A numeric value specifying the “step” size to use when
 calculating numerical derivatives. See the Details section below. Warning:
