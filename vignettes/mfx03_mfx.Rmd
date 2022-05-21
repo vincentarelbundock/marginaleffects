@@ -105,6 +105,25 @@ mfx <- marginaleffects(mod)
 head(mfx)
 ```
 
+# The Marginal Effects Zoo
+
+A dataset with one marginal effect estimate per unit of observation is a bit unwieldy and difficult to interpret. There are ways to make this information easier to digest, by computing various quantities of interest. [In a characteristically excellent blog post,](https://www.andrewheiss.com/blog/2022/05/20/marginalia/) Professor Andrew Heiss introduces many such quantites:
+
+* Average Marginal Effects
+* Group-Average Marginal Effects
+* Marginal Effects at User-Specified Values (or Representative Values)
+* Marginal Effects at the Mean
+* Counterfactual Marginal Effects
+* Conditional Marginal Effects
+
+The rest of this vignette defines each of those quantities and explains how to use the marginaleffects() and plot_cme() functions to compute them. The main differences between these quantities pertain to (a) the regressor values at which we estimate marginal effects, and (b) the way in which unit-level marginal effects are aggregated.
+
+Heiss drew this exceedingly helpful graph which summarizes the information in the rest of this vignette:
+
+```{r, echo = FALSE, out.width = "100%"}
+knitr::include_graphics("heiss_marginaleffects](https://user-images.githubusercontent.com/987057/169581274-f0d2beb6-0146-453e-91ca-a320c6ef7144.png")
+```
+
 # Average Marginal Effect (AME)
 
 A dataset with one marginal effect estimate per unit of observation is a bit unwieldy and difficult to interpret. Many analysts like to report the "Average Marginal Effect", that is, the average of all the observation-specific marginal effects. These are easy to compute based on the full `data.frame` shown above, but the `summary` function is convenient:
