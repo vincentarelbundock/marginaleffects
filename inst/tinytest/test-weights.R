@@ -1,36 +1,18 @@
-# See below for Stata output
-
-library(margins)
+source("helpers.R")
+requiet("margins")
 
 dat <- mtcars
 dat$weights <- 1:32
 mod <- glm(
     am ~ mpg, data = dat,
-    family = binomial, weights = weights)
-
-mod_no_w <- glm(
-    am ~ mpg, data = dat,
-    family = binomial)
-marginaleffects(mod_no_w) |> summary()
-
-margins(mod, weights = dat$weights) |> broom::tidy()
-
-weighted.mean(3:1, 1:3)
+    family = binomial,
+    weights = weights)
 
 # sanity check
 expect_error(comparisons(mod, weights = "junk"), pattern = "explicitly")
 expect_error(marginaleffects(mod, weights = "junk"), pattern = "explicitly")
 
-# vs. margins
-mar <- margins(mod, weights = dat$weights)
-mar <- data.frame(summary(mar))[, c("AME", "SE")]
-mfx <- marginaleffects(mod, weights = "weights")
-mfx <- tidy(mfx)[, c("estimate", "std.error")]
-expect_equivalent(mar, mfx)
-
-
-
-# vs. Stata
+# vs. Stata (not clear what SE they use, so we give tolerance)
 stata <- c("estimate" = .0441066, "std.error" = .0061046)
 mfx <- marginaleffects(mod, weights = "weights", vcov = "HC1")
 mfx <- tidy(mfx)
