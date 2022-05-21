@@ -73,6 +73,7 @@
 #' type, but will typically be a string such as: "response", "link", "probs",
 #' or "zero". When an unsupported string is entered, the model-specific list of
 #' acceptable values is returned in an error message.
+#' @param weights column name of the weights variable in `newdata`, or numeric vector of length equal to the number of rows in the original data or in `newdata` (if supplied).
 #' @param eps A numeric value specifying the “step” size to use when
 #' calculating numerical derivatives. See the Details section below. Warning:
 #' the marginal effects computed for certain models can be sensitive to the
