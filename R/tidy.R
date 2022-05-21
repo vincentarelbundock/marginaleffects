@@ -202,7 +202,6 @@ tidy.comparisons <- function(x,
                              ...) {
 
     dots <- list(...)
-    FUN <- mean
     conf_level <- sanitize_conf_level(conf_level, ...)
     checkmate::assert_character(by, null.ok = TRUE)
     checkmate::assert_function(transform_post, null.ok = TRUE)
@@ -226,6 +225,9 @@ tidy.comparisons <- function(x,
 
     x_dt <- data.table(x)
 
+    w <- attr(x, "weights")
+    if (!is.null(w)) w <- x[[w]]
+
     # empty initial mfx data.frame means there were no numeric variables in the
     # model
     if ("term" %in% colnames(x_dt)) {
@@ -240,7 +242,11 @@ tidy.comparisons <- function(x,
         idx_na <- is.na(x_dt$comparison)
 
         # average marginal effects
-        ame <- x_dt[idx_na == FALSE, .(estimate = mean(comparison, na.rm = TRUE)), by = idx_by]
+        if (is.null(w)) {
+            ame <- x_dt[idx_na == FALSE, .(estimate = mean(comparison, na.rm = TRUE)), by = idx_by]
+        } else {
+            ame <- x_dt[idx_na == FALSE, .(estimate = weighted.mean(comparison, w, na.rm = TRUE)), by = idx_by]
+        }
 
         if (is.matrix(J) && is.matrix(V)) {
             # Jacobian at the group mean
@@ -261,7 +267,11 @@ tidy.comparisons <- function(x,
             tmp <- paste0(idx_by, "_marginaleffects_index")
 
             if (isTRUE(include_se)) {
-                J_mean <- J[, lapply(.SD, FUN, na.rm = TRUE), by = tmp]
+                if (is.null(w)) {
+                    J_mean <- J[, lapply(.SD, mean, na.rm = TRUE), by = tmp]
+                } else {
+                    J_mean <- J[, lapply(.SD, weighted.mean, w = w, na.rm = TRUE), by = tmp]
+                }
                 J_mean <- J_mean[, !..tmp]
                 J_mean <- as.matrix(J_mean)
 
