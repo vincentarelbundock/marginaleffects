@@ -29,6 +29,7 @@ Imports:
     insight (>= 0.17.1),
     methods
 Suggests: 
+    afex,
     bench,
     brms,
     broom,
