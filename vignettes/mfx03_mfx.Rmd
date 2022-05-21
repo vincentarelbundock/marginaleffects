@@ -121,7 +121,7 @@ The rest of this vignette defines each of those quantities and explains how to u
 Heiss drew this exceedingly helpful graph which summarizes the information in the rest of this vignette:
 
 ```{r, echo = FALSE, out.width = "100%"}
-knitr::include_graphics("heiss_marginaleffects](https://user-images.githubusercontent.com/987057/169581274-f0d2beb6-0146-453e-91ca-a320c6ef7144.png")
+knitr::include_graphics("https://user-images.githubusercontent.com/987057/169581274-f0d2beb6-0146-453e-91ca-a320c6ef7144.png")
 ```
 
 # Average Marginal Effect (AME)
