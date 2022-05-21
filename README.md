@@ -29,7 +29,7 @@ predictions, marginal effects, contrasts, and marginal means for a
         effects](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_mfx.html)
       - [Marginal
         means](https://vincentarelbundock.github.io/marginaleffects/articles/mfx04_marginalmeans.html)
-  - [62 supported classes of
+  - [63 supported classes of
     models](https://vincentarelbundock.github.io/marginaleffects/articles/mfx06_supported_models.html)
   - [Performance
     tips](https://vincentarelbundock.github.io/marginaleffects/articles/performance.html)
@@ -42,6 +42,8 @@ predictions, marginal effects, contrasts, and marginal means for a
         Models](https://vincentarelbundock.github.io/marginaleffects/articles/gam.html)
       - [Multinomial Logit and Discrete Choice
         Models](https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html)
+      - [Causal Inference with the
+        g-Formula](https://vincentarelbundock.github.io/marginaleffects/articles/gformula.html)
       - [Tables and
         plots](https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html)
       - [Robust standard errors and
@@ -56,7 +58,7 @@ predictions, marginal effects, contrasts, and marginal means for a
 ## What?
 
 The `marginaleffects` package allows `R` users to compute and plot four
-principal quantities of interest for [62 different classes of
+principal quantities of interest for [63 different classes of
 models:](https://vincentarelbundock.github.io/marginaleffects/articles/mfx06_supported_models.html)
 
   - [*Adjusted
@@ -114,7 +116,7 @@ additional features from `emmeans`.
 
 So why did I write a clone?
 
-  - *Powerful:* Marginal effects and contrasts can be computed for 62
+  - *Powerful:* Marginal effects and contrasts can be computed for 63
     different classes of models. Adjusted predictions and marginal means
     can be computed for about 100 model types.
   - *Extensible:* Adding support for new models is very easy, often
@@ -347,16 +349,16 @@ original dataset that was used to fit the model:
 mfx <- marginaleffects(mod)
 
 head(mfx, 4)
-#>   rowid     type term        dydx  std.error statistic    p.value    conf.low
-#> 1     1 response   hp -0.03690556 0.01850168 -1.994714 0.04607413 -0.07316818
-#> 2     2 response   hp -0.02868936 0.01562768 -1.835804 0.06638661 -0.05931905
-#> 3     3 response   hp -0.04657166 0.02259121 -2.061494 0.03925589 -0.09084963
-#> 4     4 response   hp -0.04227128 0.01328275 -3.182420 0.00146050 -0.06830499
+#>   rowid     type term        dydx  std.error statistic     p.value    conf.low
+#> 1     1 response   hp -0.03690556 0.01850168 -1.994714 0.046074078 -0.07316818
+#> 2     2 response   hp -0.02868936 0.01562783 -1.835787 0.066389187 -0.05931934
+#> 3     3 response   hp -0.04657166 0.02258719 -2.061862 0.039220870 -0.09084174
+#> 4     4 response   hp -0.04227128 0.01328278 -3.182411 0.001460543 -0.06830506
 #>       conf.high  mpg  hp    wt am
-#> 1 -0.0006429255 21.0 110 2.620  1
-#> 2  0.0019403284 21.0 110 2.875  1
-#> 3 -0.0022936972 22.8  93 2.320  1
-#> 4 -0.0162375732 21.4 110 3.215  0
+#> 1 -0.0006429342 21.0 110 2.620  1
+#> 2  0.0019406190 21.0 110 2.875  1
+#> 3 -0.0023015909 22.8  93 2.320  1
+#> 4 -0.0162375041 21.4 110 3.215  0
 ```
 
 The function `summary` calculates the “Average Marginal Effect,” that
@@ -366,9 +368,9 @@ is, the average of all unit-specific marginal effects:
 summary(mfx)
 #> Average marginal effects 
 #>   Term   Effect Std. Error  z value   Pr(>|z|)    2.5 %   97.5 %
-#> 1   hp -0.03807    0.01279 -2.97717 0.00290923 -0.06314 -0.01301
+#> 1   hp -0.03807    0.01279 -2.97730 0.00290798 -0.06314 -0.01301
 #> 2   wt -3.93909    1.08596 -3.62728 0.00028642 -6.06754 -1.81065
-#> 3   am -0.04811    1.85260 -0.02597 0.97928233 -3.67913  3.58291
+#> 3   am -0.04811    1.85260 -0.02597 0.97928234 -3.67913  3.58292
 #> 
 #> Model type:  lm 
 #> Prediction type:  response
