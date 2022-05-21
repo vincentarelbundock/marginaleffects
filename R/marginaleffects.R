@@ -143,6 +143,7 @@ marginaleffects <- function(model,
                             vcov = TRUE,
                             conf_level = 0.95,
                             type = "response",
+                            weights = NULL,
                             eps = 1e-4,
                             ...) {
 
@@ -199,6 +200,7 @@ marginaleffects <- function(model,
         vcov = vcov,
         conf_level = conf_level,
         type = type,
+        weights = weights,
         eps = eps,
         # hard-coded. Users should use comparisons() for more flexibility
         transform_pre = "difference",

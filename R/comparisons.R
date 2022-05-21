@@ -145,6 +145,7 @@ comparisons <- function(model,
                         transform_pre = "difference",
                         transform_post = NULL,
                         interaction = NULL,
+                        weights = NULL,
                         eps = 1e-4,
                         ...) {
 
@@ -188,6 +189,8 @@ comparisons <- function(model,
     marginalmeans <- isTRUE(checkmate::check_choice(newdata, choices = "marginalmeans")) # before sanitize_newdata
     newdata <- sanity_newdata(model = model, newdata = newdata)
     transform_pre <- sanitize_transform_pre(transform_pre)
+    sanity_weights(weights, newdata) # after sanity_newdata
+
 
     # get dof before transforming the vcov arg
     if (is.character(vcov) && (isTRUE(vcov == "satterthwaite") || isTRUE(vcov == "kenward-roger"))) {
@@ -372,6 +375,7 @@ comparisons <- function(model,
     attr(out, "vcov.type") <- get_vcov_label(vcov)
     attr(out, "transform_pre") <- transform_pre_label
     attr(out, "transform_post") <- transform_post_label
+    attr(out, "weights") <- weights
 
     # modelbased::visualisation_matrix attaches useful info for plotting
     for (a in names(attributes_newdata)) {
