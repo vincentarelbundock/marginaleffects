@@ -18,11 +18,14 @@ sanity_weights <- function(weights, newdata) {
     # `tidy()`, because comparisons will often duplicate newdata for
     # multivariate outcomes and the like. We need to track which row matches
     # which.
-    flag <- isTRUE(checkmate::check_string(weights)) &&
-            isTRUE(weights %in% colnames(newdata))
-    if (!isTRUE(flag)) {
-        stop("The `weights` argument must be a string, and it must match one of the column names in `newdata`. If you did not supply a `newdata` explicitly, `marginaleffects` extracted it automatically from the model object, and the `weights` variable may not have been available. We recommend that you supply the original data frame -- including weights variable -- explicitly to the `newdata` argument.",
-            call. = FALSE)
+    if (!is.null(weights)) {
+        flag <- isTRUE(checkmate::check_string(weights)) &&
+                isTRUE(weights %in% colnames(newdata))
+        if (!isTRUE(flag)) {
+            stop("The `weights` argument must be a string, and it must match one of the column names in `newdata`. If you did not supply a `newdata` explicitly, `marginaleffects` extracted it automatically from the model object, and the `weights` variable may not have been available. We recommend that you supply the original data frame -- including weights variable -- explicitly to the `newdata` argument.",
+                call. = FALSE
+            )
+        }
     }
 }
 
