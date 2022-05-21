@@ -1,6 +1,7 @@
 # marginaleffects 0.5.0.9000
 
-* `comparisons()` now supports "log of marginal odds ratio" in the `transform_pre` argument. Thanks to Noah Greifer!
+* `comparisons()` now supports "log of marginal odds ratio" in the `transform_pre` argument. Thanks to Noah Greifer.
+* Vignette on "Causal Inference with the g-Formula." Thanks to Rohan Kapre for the idea.
 
 # marginaleffects 0.5.0
 
