@@ -1,3 +1,4 @@
+if (ON_CI) exit_file("on ci")
 library("tinytest")
 using("tinyviztest")
 
