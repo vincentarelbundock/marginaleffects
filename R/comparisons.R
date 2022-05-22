@@ -271,7 +271,7 @@ comparisons <- function(model,
         args <- list(model,
                      vcov = vcov,
                      type = type,
-                     FUN = standard_errors_delta_contrasts,
+                     FUN = get_se_delta_contrasts,
                      newdata = newdata,
                      index = idx,
                      variables = variables,
@@ -282,7 +282,7 @@ comparisons <- function(model,
                      marginalmeans = marginalmeans,
                      eps = eps)
         args <- c(args, dots)
-        se <- do.call("standard_errors_delta", args)
+        se <- do.call("get_se_delta", args)
         mfx$std.error <- as.numeric(se)
         J <- attr(se, "J")
         draws <- NULL

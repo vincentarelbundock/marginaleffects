@@ -144,10 +144,10 @@ marginalmeans <- function(model,
     # standard errors via delta method
     J <- NULL
     if (!isFALSE(vcov)) {
-        se <- standard_errors_delta(model,
+        se <- get_se_delta(model,
                                     vcov = vcov,
                                     type = type,
-                                    FUN = standard_errors_delta_marginalmeans,
+                                    FUN = get_se_delta_marginalmeans,
                                     index = NULL,
                                     variables = variables,
                                     newdata = newgrid,
