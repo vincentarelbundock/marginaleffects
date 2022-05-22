@@ -302,29 +302,15 @@ comparisons <- function(model,
     # meta info
     mfx[["type"]] <- type
 
-    # bayesian posterior draws
-    if (!is.null(draws)) {
-        if (!"conf.low" %in% colnames(mfx)) {
-            flag <- getOption("marginaleffects_credible_interval", default = "eti")
-            if (isTRUE(flag == "hdi")) {
-                tmp <- apply(draws, 1, get_hdi, credMass = conf_level)
-            } else {
-                tmp <- apply(draws, 1, get_eti, credMass = conf_level)
-            }
-            mfx[["std.error"]] <- NULL
-            mfx[["comparison"]] <- apply(draws, 1, stats::median)
-            mfx[["conf.low"]] <- tmp[1, ]
-            mfx[["conf.high"]] <- tmp[2, ]
-        }
-    }
-
     mfx <- get_ci(
         mfx,
         conf_level = conf_level,
         # sometimes get_predicted fails on SE but succeeds on CI (e.g., betareg)
         df = dof,
         overwrite = FALSE,
+        draws = draws,
         estimate = "comparison")
+
 
     # group id: useful for merging, only if it's an internal call and not user-initiated
     if (isTRUE(internal_call) && !"group" %in% colnames(mfx)) {

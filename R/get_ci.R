@@ -3,7 +3,18 @@ get_ci <- function(
     conf_level,
     estimate,
     df = NULL,
+    draws = NULL,
     overwrite = FALSE) {
+
+    if (!is.null(draws)) {
+        out <- get_ci_draws(
+            x,
+            conf_level = conf_level,
+            estimate = estimate,
+            draws = draws,
+            overwrite = overwrite)
+        return(out)
+    }
 
     required <- c(estimate, "std.error")
     if (!inherits(x, "data.frame") || any(!required %in% colnames(x))) {
@@ -40,4 +51,27 @@ get_ci <- function(
 
     return(x)
 }
+
+
+get_ci_draws <- function(
+    x,
+    conf_level,
+    draws,
+    estimate,
+    overwrite = FALSE) {
+
+    flag <- getOption("marginaleffects_credible_interval", default = "eti")
+    FUN <- ifelse(isTRUE(flag == "hdi"), get_hdi, get_eti)
+
+    if (!"conf.low" %in% colnames(x) || isTRUE(overwrite)) {
+        tmp <- apply(draws, 1, FUN, credMass = conf_level)
+        x[["std.error"]] <- NULL
+        x[[estimate]] <- apply(draws, 1, stats::median)
+        x[["conf.low"]] <- tmp[1, ]
+        x[["conf.high"]] <- tmp[2, ]
+    }
+
+    return(x)
+}
+
 

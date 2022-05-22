@@ -215,38 +215,40 @@ predictions <- function(model,
     # bayesian posterior draws
     draws <- attr(tmp, "posterior_draws")
 
-    # try to extract standard errors via the delta method if missing
-    if (!isFALSE(vcov) &&
-        !"std.error" %in% colnames(tmp) &&
-        is.null(draws)) {
+    if (!isFALSE(vcov)) {
 
-        V <- get_vcov(model, vcov = vcov)
-        if (isTRUE(checkmate::check_matrix(V))) {
-            # vcov = FALSE to speed things up
-            fun <- function(...) get_predict(vcov = FALSE, ...)[["predicted"]]
-            se <- standard_errors_delta(model,
-                                        newdata = newdata,
-                                        vcov = V,
-                                        type = type,
-                                        FUN = fun,
-                                        eps = 1e-4, # avoid pushing through ...
-                                        ...)
-            if (is.numeric(se) && length(se) == nrow(tmp)) {
-                tmp[["std.error"]] <- se
-                flag <- tryCatch(insight::model_info(model)$is_linear,
-                                 error = function(e) FALSE)
-                if (isTRUE(flag) &&
-                    is.numeric(conf_level) &&
-                    !"conf.low" %in% colnames(tmp)) {
-                    tmp <- get_ci(
-                        tmp,
-                        conf_level = conf_level,
-                        # sometimes get_predicted fails on SE but succeeds on CI (e.g., betareg)
-                        overwrite = FALSE,
-                        estimate = "predicted")
+        # Delta method
+        if (!"std.error" %in% colnames(tmp) && is.null(draws)) {
+            V <- get_vcov(model, vcov = vcov)
+            if (isTRUE(checkmate::check_matrix(V))) {
+                # vcov = FALSE to speed things up
+                fun <- function(...) get_predict(vcov = FALSE, ...)[["predicted"]]
+                se <- standard_errors_delta(model,
+                                            newdata = newdata,
+                                            vcov = V,
+                                            type = type,
+                                            FUN = fun,
+                                            eps = 1e-4, # avoid pushing through ...
+                                            ...)
+                if (is.numeric(se) && length(se) == nrow(tmp)) {
+                    tmp[["std.error"]] <- se
                 }
             }
         }
+
+        # Manual confidence intervals only in linear or Bayesian models
+        # others rely on `insight::get_predicted()`
+        linpred <- tryCatch(insight::model_info(model)$is_linear, error = function(e) FALSE)
+        if (!is.null(draws) || isTRUE(linpred)) {
+            tmp <- get_ci(
+                tmp,
+                conf_level = conf_level,
+                # sometimes insight::get_predicted fails on SE but succeeds on CI (e.g., betareg)
+                overwrite = FALSE,
+                draws = draws,
+                estimate = "predicted")
+        }
+
     }
 
     out <- data.table(tmp)
