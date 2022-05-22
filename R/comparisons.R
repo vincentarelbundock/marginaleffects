@@ -180,7 +180,7 @@ comparisons <- function(model,
         model <- sanitize_model(model = model, newdata = newdata, calling_function = "comparisons", ...)
         conf_level <- sanitize_conf_level(conf_level, ...)
         interaction <- sanitize_interaction(interaction, variables, model)
-        sanity_type(model = model, type = type)
+        sanitize_type(model = model, type = type)
         sanity_contrast_factor(contrast_factor) # hardcoded in marginaleffects()
         sanity_contrast_numeric(contrast_numeric) # hardcoded in marginaleffects()
         checkmate::assert_function(transform_post, null.ok = TRUE)

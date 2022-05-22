@@ -22,7 +22,7 @@ get_predict.default <- function(model,
                                 type = "response",
                                 ...) {
 
-    type <- sanity_type(model, type)
+    type <- sanitize_type(model, type)
     type_base <- unname(type)
     type_insight <- names(type)
 

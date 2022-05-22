@@ -5,7 +5,7 @@
 #' @return Named vector where value is the Base R `type` and name is the
 #' insight::get_predicted `predict`
 #' @noRd
-sanity_type <- function(model, type, calling_function = NULL) {
+sanitize_type <- function(model, type, calling_function = NULL) {
 
     checkmate::assert_character(type, len = 1, null.ok = FALSE)
     checkmate::assert_choice(calling_function,

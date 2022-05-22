@@ -10,7 +10,7 @@ get_predict.fixest <- function(model,
     assert_dependency("fixest")
 
     # names = base, value = insight
-    type <- unname(sanity_type(model, type))
+    type <- unname(sanitize_type(model, type))
 
     dots <- list(...)
 
