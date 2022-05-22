@@ -294,8 +294,8 @@ tidy.comparisons <- function(x,
             # uncertainty around the average marginal effect in two steps:
             # 1. mean for each draw gives 4000 samples of the average mfx
             # 2. quantiles of the means
-            drawavg <- draws[, .(estimate = FUN(draw)), by = c(idx_by, "drawid")]
-            es <- drawavg[, .(estimate = FUN(estimate)), by = idx_by]
+            drawavg <- draws[, .(estimate = mean(draw)), by = c(idx_by, "drawid")]
+            es <- drawavg[, .(estimate = mean(estimate)), by = idx_by]
             if (isTRUE(getOption("marginaleffects_credible_interval", default = "eti") == "hdi")) {
                 f_ci <- get_hdi
             } else {
