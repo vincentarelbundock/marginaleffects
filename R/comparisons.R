@@ -189,8 +189,9 @@ comparisons <- function(model,
     marginalmeans <- isTRUE(checkmate::check_choice(newdata, choices = "marginalmeans")) # before sanitize_newdata
     newdata <- sanity_newdata(model = model, newdata = newdata)
     transform_pre <- sanitize_transform_pre(transform_pre)
-    sanity_weights(weights, newdata) # after sanity_newdata
 
+    # weights
+    sanity_weights(weights, newdata) # after sanity_newdata
     if (!isTRUE(checkmate::check_string(weights))) {
         newdata[["marginaleffects_weights"]] <- weights
         weights <- "marginaleffects_weights"
