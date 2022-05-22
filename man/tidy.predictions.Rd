@@ -4,10 +4,12 @@
 \alias{tidy.predictions}
 \title{Tidy a \code{predictions} object}
 \usage{
-\method{tidy}{predictions}(x, ...)
+\method{tidy}{predictions}(x, conf_level = 0.95, by = NULL, ...)
 }
 \arguments{
 \item{x}{An object produced by the \code{predictions} function.}
+
+\item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
 
 \item{...}{Additional arguments are passed to the \code{predict()} method
 supplied by the modeling package.These arguments are particularly useful
