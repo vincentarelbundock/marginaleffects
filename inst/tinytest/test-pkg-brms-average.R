@@ -1,4 +1,5 @@
 source("helpers.R", local = TRUE)
+exit_file("expensive")
 if (ON_CI) exit_file("on ci")
 requiet("brms")
 requiet("insight")

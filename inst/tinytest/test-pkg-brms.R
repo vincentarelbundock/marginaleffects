@@ -2,6 +2,7 @@
 # HDI is implemented specifically for these tests
 # https://github.com/vincentarelbundock/marginaleffects/issues/240
 source("helpers.R", local = TRUE)
+exit_file("expensive")
 if (ON_CI) exit_file("on ci")
 options("marginaleffects_credible_interval" = "hdi")
 requiet("brms")
