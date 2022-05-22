@@ -192,7 +192,7 @@ comparisons <- function(model,
 
     # weights
     sanity_weights(weights, newdata) # after sanity_newdata
-    if (!isTRUE(checkmate::check_string(weights))) {
+    if (!is.null(weights) && !isTRUE(checkmate::check_string(weights))) {
         newdata[["marginaleffects_weights"]] <- weights
         weights <- "marginaleffects_weights"
     }
