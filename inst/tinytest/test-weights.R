@@ -1,6 +1,30 @@
 source("helpers.R")
-requiet("margins")
 
+
+
+# # WIP: weighted data, get average predictions using a `comparisons()` hack
+# library(survey)
+# data(nhanes)
+# nhanes$RIAGENDR <- factor(nhanes$RIAGENDR, labels = c("male", "female"))
+#
+# svydsgn <- svydesign(
+#     id = ~SDMVPSU, strata = ~SDMVSTRA, weights = ~WTMEC2YR,
+#     nest = TRUE, data = nhanes)
+# mod <- suppressWarnings(svyglm(
+#     HI_CHOL ~ RIAGENDR + agecat, design = svydsgn, family = binomial))
+#
+# nd <- insight::get_data(svymod)
+# nd$wts <- svymod$prior.weights
+# comparisons(
+#     mod,
+#     weights = "wts",
+#     transform_pre = function(hi, lo) hi,
+#     newdata = nd,
+#     variables = "RIAGENDR") |> summary()
+#
+
+
+# mtcars logit
 dat <- mtcars
 dat$weights <- 1:32
 mod <- glm(
