@@ -148,7 +148,7 @@ tidy.predictions <- function(x, ...) {
     # if (is.null(attr(x, "weights"))) {
     #     dydx <- stats::aggregate(f, data = x, FUN = mean)
     # } else {
-    #     dydx <- stats::aggregate(f, data = x, FUN = weighted.mean, w = attr(x, "weights"))
+    #     dydx <- stats::aggregate(f, data = x, FUN = stats::weighted.mean, w = attr(x, "weights"))
     # }
 
     setDF(out)
@@ -235,7 +235,7 @@ tidy.comparisons <- function(x,
         if (is.null(w)) {
             ame <- x_dt[idx_na == FALSE, .(estimate = mean(comparison, na.rm = TRUE)), by = idx_by]
         } else {
-            ame <- x_dt[idx_na == FALSE, .(estimate = weighted.mean(comparison, w, na.rm = TRUE)), by = idx_by]
+            ame <- x_dt[idx_na == FALSE, .(estimate = stats::weighted.mean(comparison, w, na.rm = TRUE)), by = idx_by]
         }
 
         if (is.matrix(J) && is.matrix(V)) {
@@ -260,7 +260,7 @@ tidy.comparisons <- function(x,
                 if (is.null(w)) {
                     J_mean <- J[, lapply(.SD, mean, na.rm = TRUE), by = tmp]
                 } else {
-                    J_mean <- J[, lapply(.SD, weighted.mean, w = w, na.rm = TRUE), by = tmp]
+                    J_mean <- J[, lapply(.SD, stats::weighted.mean, w = w, na.rm = TRUE), by = tmp]
                 }
                 J_mean <- J_mean[, !..tmp]
                 J_mean <- as.matrix(J_mean)
