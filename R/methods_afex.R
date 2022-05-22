@@ -15,7 +15,7 @@ set_coef.afex_aov <- function(model, coefs, ...) {
 #' @export
 get_coef.afex_aov <- function(model, ...) {
     b <- insight::get_parameters(model)
-    b <- setNames(b$Estimate, paste(b$Parameter, b$Response, sep = ":"))
+    b <- stats::setNames(b$Estimate, paste(b$Parameter, b$Response, sep = ":"))
     return(b)
 }
 
