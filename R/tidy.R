@@ -92,24 +92,14 @@ tidy.marginalmeans <- function(x,
     out <- x
     colnames(out)[colnames(out) == "marginalmean"] <- "estimate"
 
-    if (!"statistic" %in% colnames(out) && "std.error" %in% colnames(out)) {
-        out$statistic <- out$estimate / out$std.error
-    }
+    draws <- attr(x, "posterior_draws")
 
-    if (!"p.value" %in% colnames(out) && "std.error" %in% colnames(out)) {
-        out$p.value <- 2 * (1 - stats::pnorm(abs(out$statistic)))
-    }
-
-    out <- out
-
-    # confidence intervals
-    if ("std.error" %in% colnames(out)) {
-        if (!"conf.low" %in% colnames(out)) {
-            alpha <- 1 - conf_level
-            out$conf.low <- out$estimate + stats::qnorm(alpha / 2) * out$std.error
-            out$conf.high <- out$estimate - stats::qnorm(alpha / 2) * out$std.error
-        }
-    }
+    out <- get_ci(
+        out,
+        overwrite = FALSE,
+        conf_level = conf_level,
+        draws = draws,
+        estimate = "estimate")
 
     # sort and subset columns
     cols <- c("type", "term", "value", "estimate", "std.error", "statistic", "p.value", "conf.low", "conf.high")
@@ -311,24 +301,12 @@ tidy.comparisons <- function(x,
         ame <- data.frame()
     }
 
-    if (!"statistic" %in% colnames(ame) && "std.error" %in% colnames(ame)) {
-        ame$statistic <- ame$estimate / ame$std.error
-    }
-
-    if (!"p.value" %in% colnames(ame) && "std.error" %in% colnames(ame)) {
-        ame$p.value <- 2 * (1 - stats::pnorm(abs(ame$statistic)))
-    }
-
-    out <- ame
-
-    # confidence intervals
-    if ("std.error" %in% colnames(out)) {
-        if (!"conf.low" %in% colnames(out)) {
-            alpha <- 1 - conf_level
-            out$conf.low <- out$estimate + stats::qnorm(alpha / 2) * out$std.error
-            out$conf.high <- out$estimate - stats::qnorm(alpha / 2) * out$std.error
-        }
-    }
+    out <- get_ci(
+        ame,
+        overwrite = FALSE,
+        conf_level = conf_level,
+        draws = draws,
+        estimate = "estimate")
 
     # remove terms with precise zero estimates. typically the case in
     # multi-equation models where some terms only affect one response
