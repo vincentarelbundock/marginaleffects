@@ -1,4 +1,5 @@
 source("helpers.R", local = TRUE)
+exit_file("TODO: works interactively")
 if (ON_CRAN) exit_file("on cran")
 requiet("pscl")
 
