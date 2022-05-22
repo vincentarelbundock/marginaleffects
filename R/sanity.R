@@ -22,7 +22,7 @@ sanity_weights <- function(weights, newdata) {
         flag1 <- isTRUE(checkmate::check_string(weights)) && isTRUE(weights %in% colnames(newdata))
         flag2 <- isTRUE(checkmate::check_numeric(weights, len = nrow(newdata)))
         if (!flag1 && !flag2) {
-            msg <- sprintf("The `weights` argument must be a numeric vector of length %s, or a string which matches a column name in `newdata`. If you did not supply a `newdata` explicitly, `marginaleffects` extracted it automatically from the model object, and the `weights` variable may not have been available. One option is to supply the original data frame -- including weights variable -- explicitly to the `newdata` argument.",
+            msg <- sprintf("The `weights` argument must be a numeric vector of length %s, or a string which matches a column name in `newdata`. If you did not supply a `newdata` explicitly, `marginaleffects` extracted it automatically from the model object, and the `weights` variable may not have been available. The easiest strategy is often to supply a data frame such as the original data to `newdata` explicitly, and to make sure that it includes an appropriate column of weights.",
                            nrow(newdata))
             stop(msg, call. = FALSE)
         }
