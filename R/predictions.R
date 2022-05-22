@@ -223,7 +223,7 @@ predictions <- function(model,
             if (isTRUE(checkmate::check_matrix(V))) {
                 # vcov = FALSE to speed things up
                 fun <- function(...) get_predict(vcov = FALSE, ...)[["predicted"]]
-                se <- standard_errors_delta(model,
+                se <- get_se_delta(model,
                                             newdata = newdata,
                                             vcov = V,
                                             type = type,
