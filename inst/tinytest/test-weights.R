@@ -1,27 +1,38 @@
-source("helpers.R")
-
-
-
-# # WIP: weighted data, get average predictions using a `comparisons()` hack
+# source("helpers.R")
+#
+#
+#
+# # # WIP: weighted data, get average predictions using a `comparisons()` hack
+#
 # library(survey)
 # data(nhanes)
 # nhanes$RIAGENDR <- factor(nhanes$RIAGENDR, labels = c("male", "female"))
-#
+# #
 # svydsgn <- svydesign(
 #     id = ~SDMVPSU, strata = ~SDMVSTRA, weights = ~WTMEC2YR,
 #     nest = TRUE, data = nhanes)
 # mod <- suppressWarnings(svyglm(
 #     HI_CHOL ~ RIAGENDR + agecat, design = svydsgn, family = binomial))
-#
+# #
 # nd <- insight::get_data(svymod)
 # nd$wts <- svymod$prior.weights
-# comparisons(
+# cmp <- comparisons(
 #     mod,
+#     type = "link",
 #     weights = "wts",
 #     transform_pre = function(hi, lo) hi,
 #     newdata = nd,
-#     variables = "RIAGENDR") |> summary()
+#     variables = "RIAGENDR")
 #
+# On the link-scale, the predictions jacobian == model.matrix
+# Interesting because it allows us to get fast standard errors
+
+# J <- attr(cmp, "J")
+# M <- insight::get_modelmatrix(mod)
+# V <- attr(cmp, "vcov")
+# sqrt(colSums(t(J %*% V) * t(J))) |> head()
+# sqrt(colSums(t(M %*% V) * t(M))) |> head()
+
 
 
 # mtcars logit
