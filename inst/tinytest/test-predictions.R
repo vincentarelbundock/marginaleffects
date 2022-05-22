@@ -20,11 +20,11 @@ expect_true("rowid_counterfactual" %in% colnames(pred))
 
 # conf.level argument changes width of interval
 for (L in c(.4, .7, .9, .95, .99, .999)) {
-nd <- datagrid(model = mod)
-unknown <- predictions(mod, newdata = nd, conf.level = L)
-known <- predict(mod, newdata = nd, se.fit = TRUE, interval = "confidence", level = L)$fit
-expect_equivalent(unknown$conf.low, known[, "lwr"])
-expect_equivalent(unknown$conf.high, known[, "upr"])
+    nd <- datagrid(model = mod)
+    unknown <- predictions(mod, newdata = nd, conf.level = L)
+    known <- predict(mod, newdata = nd, se.fit = TRUE, interval = "confidence", level = L)$fit
+    expect_equivalent(unknown$conf.low, known[, "lwr"])
+    expect_equivalent(unknown$conf.high, known[, "upr"])
 }
 
 

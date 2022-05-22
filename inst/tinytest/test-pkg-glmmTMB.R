@@ -102,9 +102,9 @@ dat <- "https://vincentarelbundock.github.io/Rdatasets/csv/Stat2Data/Titanic.csv
 dat <- read.csv(dat)
 dat$z <- factor(sample(1:4, nrow(dat), replace = TRUE))
 mod <- glmmTMB(
-Survived ~ Sex + z + (1 + Age | PClass),
-family = binomial,
-data = dat)
+    Survived ~ Sex + z + (1 + Age | PClass),
+    family = binomial,
+    data = dat)
 mm1 <- marginalmeans(mod, type = "response", variables = c("Sex", "PClass"))
 mm2 <- marginalmeans(mod, type = "link", variables = c("Sex", "PClass"))
 mm3 <- marginalmeans(mod, type = "response", variables = c("Sex", "PClass"), interaction = TRUE)
@@ -119,8 +119,8 @@ expect_true(nrow(mm3) > nrow(mm1))
 
 # regression bug: needs allow.new.levels = TRUE
 m1 <- glmmTMB(
-count ~ mined + (1 | site),
-zi = ~mined,
-family = poisson, data = Salamanders)
+    count ~ mined + (1 | site),
+    zi = ~mined,
+    family = poisson, data = Salamanders)
 expect_inherits(marginalmeans(m1, variables = "mined"), "marginalmeans")
 

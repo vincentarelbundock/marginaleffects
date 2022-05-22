@@ -160,10 +160,30 @@ predictions <- function(model,
     }
 
     # predictions
+    # the default get_predict() method tries to get confidence intervals using
+    # `insight::get_predicted`. That function does not preserve J, which we
+    # need for average adjusted predictions. So we take fast predictions and
+    # handle SE internally for known models.
+    flag <- isTRUE(class(model)[1] == "lm") ||
+            (isTRUE(class(model)[1] == "glm") && isTRUE(type == "link"))
+
+    if (isTRUE(flag)) {
+        vcov_tmp <- FALSE
+        # get_modelmatrix() sometimes breaks when there is no outcome in `data`
+        resp <- insight::find_response(model)
+        if (!resp %in% colnames(newdata)) {
+            newdata[[resp]] <- 0
+        }
+        J <- insight::get_modelmatrix(model, data = newdata)
+    } else {
+        vcov_tmp <- vcov
+        J <- NULL
+    }
+                        
     tmp <- myTryCatch(get_predict(
         model,
         newdata = newdata,
-        vcov = vcov,
+        vcov = vcov_tmp,
         conf_level = conf_level,
         type = type,
         ...))
@@ -228,21 +248,25 @@ predictions <- function(model,
     # bayesian posterior draws
     draws <- attr(tmp, "posterior_draws")
 
+    V <- NULL
     if (!isFALSE(vcov)) {
+
+        V <- get_vcov(model, vcov = vcov)
 
         # Delta method
         if (!"std.error" %in% colnames(tmp) && is.null(draws)) {
-            V <- get_vcov(model, vcov = vcov)
             if (isTRUE(checkmate::check_matrix(V))) {
                 # vcov = FALSE to speed things up
                 fun <- function(...) get_predict(vcov = FALSE, ...)[["predicted"]]
-                se <- get_se_delta(model,
-                                            newdata = newdata,
-                                            vcov = V,
-                                            type = type,
-                                            FUN = fun,
-                                            eps = 1e-4, # avoid pushing through ...
-                                            ...)
+                se <- get_se_delta(
+                    model,
+                    newdata = newdata,
+                    vcov = V,
+                    type = type,
+                    FUN = fun,
+                    J = J,
+                    eps = 1e-4, # avoid pushing through ...
+                    ...)
                 if (is.numeric(se) && length(se) == nrow(tmp)) {
                     tmp[["std.error"]] <- se
                 }
@@ -251,7 +275,9 @@ predictions <- function(model,
 
         # Manual confidence intervals only in linear or Bayesian models
         # others rely on `insight::get_predicted()`
-        linpred <- tryCatch(insight::model_info(model)$is_linear, error = function(e) FALSE)
+        linpred <- tryCatch(
+            insight::model_info(model)$is_linear || type == "link",
+            error = function(e) FALSE)
         if (!is.null(draws) || isTRUE(linpred)) {
             tmp <- get_ci(
                 tmp,
@@ -294,28 +320,13 @@ predictions <- function(model,
     attr(out, "model_type") <- class(model)[1]
     attr(out, "variables") <- variables
     attr(out, "vcov.type") <- get_vcov_label(vcov)
+    attr(out, "J") <- J
+    attr(out, "vcov") <- V
 
     # modelbased::visualisation_matrix attaches useful info for plotting
     for (a in names(attributes_newdata)) {
         attr(out, paste0("newdata_", a)) <- attributes_newdata[[a]]
     }
-
-    # bayesian: store draws posterior density draws
-    attr(out, "posterior_draws") <- draws
-    if (!is.null(draws)) {
-        flag <- getOption("marginaleffects_credible_interval", default = "eti")
-        if (isTRUE(flag == "hdi")) {
-            tmp <- apply(draws, 1, get_hdi, credMass = conf_level)
-        } else {
-            tmp <- apply(draws, 1, get_eti, credMass = conf_level)
-        }
-        out[["predicted"]] <- apply(draws, 1, stats::median)
-        out[["std.error"]] <- NULL
-        out[["conf.low"]] <- tmp[1, ]
-        out[["conf.high"]] <- tmp[2, ]
-        attr(out, "posterior_draws") <- draws
-    }
-
 
     if ("group" %in% names(out) && all(out$group == "main_marginaleffect")) {
         out$group <- NULL
@@ -324,6 +335,6 @@ predictions <- function(model,
     return(out)
 }
 
+ 
 
-
-
+ 

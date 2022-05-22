@@ -138,20 +138,16 @@ glance.comparisons <- glance.marginaleffects
 #' mod <- lm(mpg ~ hp * wt + factor(gear), data = mtcars)
 #' mfx <- predictions(mod)
 #' tidy(mfx)
-tidy.predictions <- function(x, ...) {
-
-    # Average Adjusted Predictions
-    idx <- intersect(colnames(x), c("type", "group"))
-    out <- data.table(x)[, .(estimate = mean(predicted, na.rm = TRUE)), by = idx]
-
-    ## This might be a useful implementation of weights
-    # if (is.null(attr(x, "weights"))) {
-    #     dydx <- stats::aggregate(f, data = x, FUN = mean)
-    # } else {
-    #     dydx <- stats::aggregate(f, data = x, FUN = stats::weighted.mean, w = attr(x, "weights"))
-    # }
-
-    setDF(out)
+tidy.predictions <- function(x,
+                             conf_level = 0.95,
+                             by = NULL,
+                             ...) {
+    x_dt <- copy(x)
+    setnames(x_dt, old = "predicted", new = "comparison")
+    out <- tidy.comparisons(x_dt,
+                            conf_level = conf_level,
+                            by = by,
+                            ...)
     return(out)
 }
 
@@ -218,13 +214,14 @@ tidy.comparisons <- function(x,
     w <- attr(x, "weights")
     if (!is.null(w)) w <- x[[w]]
 
+    draws <- attr(x, "posterior_draws")
+
     # empty initial mfx data.frame means there were no numeric variables in the
     # model
-    if ("term" %in% colnames(x_dt)) {
+    if ("term" %in% colnames(x_dt) || inherits(x, "predictions")) {
 
         J <- attr(x, "J")
         V <- attr(x, "vcov")
-        draws <- attr(x, "posterior_draws")
 
         idx_by <- c("type", "group", "term", "contrast", by,
                     grep("^contrast_\\w+", colnames(x_dt), value = TRUE))
