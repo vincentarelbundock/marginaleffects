@@ -183,6 +183,13 @@ marginaleffects <- function(model,
     newdata <- sanity_newdata(model, newdata)
     variables <- sanitize_variables(model, newdata, variables)
 
+    # weights
+    sanity_weights(weights, newdata) # after sanity_newdata
+    if (!isTRUE(checkmate::check_string(weights))) {
+        newdata[["marginaleffects_weights"]] <- weights
+        weights <- "marginaleffects_weights"
+    }
+
     # variables is a list but we need a vector (and we drop cluster)
     variables_vec <- unique(unlist(variables))
     # this won't be triggered for multivariate outcomes in `brms`, which
