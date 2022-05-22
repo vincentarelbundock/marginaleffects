@@ -318,33 +318,13 @@ comparisons <- function(model,
         }
     }
 
-    if (is.null(dof)) {
-        critical_val <- stats::qnorm((1 - conf_level) / 2)
-    } else {
-        critical_val <- stats::qt((1 - conf_level) / 2, df = dof)
-        if (!"df" %in% colnames(mfx)) {
-            mfx[["df"]] <- dof
-        }
-    }
-
-    if ("std.error" %in% colnames(mfx)) {
-        mfx[["std.error"]] <- ifelse(is.na(mfx[["std.error"]]) | mfx[["std.error"]] == 0,
-                                     NA,
-                                     mfx[["std.error"]])
-
-        if (!"statistic" %in% colnames(mfx)) {
-            mfx$statistic <- mfx$comparison / mfx$std.error
-        }
-        if (!"p.value" %in% colnames(mfx) && "statistic" %in% colnames(mfx)) {
-            mfx$p.value <- ifelse(is.na(mfx$statistic),
-                                  NA,
-                                  2 * stats::pnorm(-abs(mfx$statistic)))
-        }
-        if (!"conf.low" %in% colnames(mfx)) {
-            mfx$conf.low <- mfx$comparison - abs(critical_val) * mfx$std.error
-            mfx$conf.high <- mfx$comparison + abs(critical_val) * mfx$std.error
-        }
-    }
+    mfx <- get_ci(
+        mfx,
+        conf_level = conf_level,
+        # sometimes get_predicted fails on SE but succeeds on CI (e.g., betareg)
+        df = dof,
+        overwrite = FALSE,
+        estimate = "comparison")
 
     # group id: useful for merging, only if it's an internal call and not user-initiated
     if (isTRUE(internal_call) && !"group" %in% colnames(mfx)) {

@@ -237,11 +237,13 @@ predictions <- function(model,
                                  error = function(e) FALSE)
                 if (isTRUE(flag) &&
                     is.numeric(conf_level) &&
-                    # sometimes get_predicted fails on SE but succeeds on CI (e.g., betareg)
                     !"conf.low" %in% colnames(tmp)) {
-                    critical_z <- abs(stats::qnorm((1 - conf_level) / 2))
-                    tmp[["conf.low"]] <- tmp[["predicted"]] - critical_z * tmp[["std.error"]]
-                    tmp[["conf.high"]] <- tmp[["predicted"]] + critical_z * tmp[["std.error"]]
+                    tmp <- get_ci(
+                        tmp,
+                        conf_level = conf_level,
+                        # sometimes get_predicted fails on SE but succeeds on CI (e.g., betareg)
+                        overwrite = FALSE,
+                        estimate = "predicted")
                 }
             }
         }
