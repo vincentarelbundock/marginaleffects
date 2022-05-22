@@ -52,6 +52,7 @@ Suggests:
     modelsummary,
     systemfonts,
     patchwork,
+    prediction,
     quantreg,
     rlang,
     rmarkdown,

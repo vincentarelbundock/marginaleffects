@@ -54,6 +54,7 @@ get_se_delta <- function(model,
                          FUN,
                          index = NULL,
                          eps = 1e-4,
+                         J = NULL,
                          ...) {
 
     # delta method does not work for these models
@@ -78,9 +79,10 @@ get_se_delta <- function(model,
         return(g)
     }
 
-    J <- get_jacobian(func = inner, x = coefs, eps = eps)
-
-    colnames(J) <- names(get_coef(model))
+    if (is.null(J)) {
+        J <- get_jacobian(func = inner, x = coefs, eps = eps)
+        colnames(J) <- names(get_coef(model))
+    }
 
     # Var(dydx) = J Var(beta) J'
     # computing the full matrix is memory-expensive, and we only need the diagonal

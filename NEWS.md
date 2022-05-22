@@ -2,6 +2,7 @@
 
 * `comparisons()` now supports "log of marginal odds ratio" in the `transform_pre` argument. Thanks to Noah Greifer.
 * Vignette on "Causal Inference with the g-Formula." Thanks to Rohan Kapre for the idea.
+* `tidy.predictions()` can compute standard errors and confidence intervals for linear models or GLM on the link scale.
 
 # marginaleffects 0.5.0
 
