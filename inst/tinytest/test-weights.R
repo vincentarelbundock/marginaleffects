@@ -34,14 +34,16 @@
 # sqrt(colSums(t(M %*% V) * t(M))) |> head()
 
 
+source("helpers.R")
+requiet("survey")
 
 # mtcars logit
 dat <- mtcars
 dat$weights <- 1:32
-mod <- glm(
-    am ~ mpg, data = dat,
-    family = binomial,
-    weights = weights)
+mod <- suppressWarnings(svyglm(
+    am ~ mpg,
+    design = svydesign(ids = ~1, weights = ~weights, data = dat),
+    family = binomial))
 
 # sanity check
 expect_error(comparisons(mod, weights = "junk"), pattern = "explicitly")
@@ -49,17 +51,10 @@ expect_error(marginaleffects(mod, weights = "junk"), pattern = "explicitly")
 
 # vs. Stata (not clear what SE they use, so we give tolerance)
 stata <- c("estimate" = .0441066, "std.error" = .0061046)
-mfx <- marginaleffects(mod, weights = "weights", vcov = "HC1")
+mfx <- marginaleffects(mod, weights = mod$prior.weights)
 mfx <- tidy(mfx)
 mfx <- unlist(mfx[, 3:4])
-expect_equivalent(mfx, stata, tolerance = 0.002)
-
-# vs. Stata (not clear what SE they use, so we give tolerance)
-stata <- c("estimate" = .0441066, "std.error" = .0061046)
-mfx <- marginaleffects(mod, weights = dat$weights, vcov = "HC1")
-mfx <- tidy(mfx)
-mfx <- unlist(mfx[, 3:4])
-expect_equivalent(mfx, stata, tolerance = 0.002)
+expect_equivalent(mfx, stata, tolerance = 0.0002)
 
 # . logit am mpg [pw=weights]
 #
