@@ -170,23 +170,36 @@ predictions <- function(model,
 
     if (isTRUE(grepl("type.*models", tmp[["error"]]))) {
         stop(tmp$error$message, call. = FALSE)
+
     } else if (!inherits(tmp[["value"]], "data.frame")) {
         if (!is.null(tmp$warning)) warning(tmp$warning$message, call. = FALSE)
         if (!is.null(tmp$error)) warning(tmp$error$message, call. = FALSE)
-        msg <- sprintf("Unable to compute adjusted predictions for model of class `%s`. You can try specifying a different value for the `newdata` argument. If this does not work and you believe that this model class should be supported by `marginaleffects`, please file a feature request on the Github issue tracker: https://github.com/vincentarelbundock/marginaleffects/issues", 
-                       class(model)[1])
+        msg <- format_msg(
+            "Unable to compute adjusted predictions for model of class `%s`. You can try to
+            specify a different value for the `newdata` argument. If this does not work and
+            you believe that this model class should be supported by `marginaleffects`,
+            please file a feature request on the Github issue tracker:
+
+            https://github.com/vincentarelbundock/marginaleffects/issues")
+        msg <- sprintf(msg, class(model)[1])
         stop(msg, call. = FALSE)
+
     } else if (inherits(tmp[["warning"]], "warning") &&
                isTRUE(grepl("vcov.*supported", tmp)) &&
                !is.null(vcov) &&
                !isFALSE(vcov)) {
-        msg <- sprintf("The object passed to the `vcov` argument is of class `%s`, which is not supported for models of class `%s`. Please set `vcov` to `TRUE`, `FALSE`, `NULL`, or supply a variance-covariance `matrix` object.",
-                       class(model)[1])
+        msg <- format_msg(
+            "The object passed to the `vcov` argument is of class `%s`, which is not
+            supported for models of class `%s`. Please set `vcov` to `TRUE`, `FALSE`,
+            `NULL`, or supply a variance-covariance `matrix` object.")
+        msg <- sprintf(msg, class(model)[1])
         stop(msg, call. = FALSE)
+
     } else if (inherits(tmp[["warning"]], "warning")) {
         msg <- tmp$warning$message
         warning(msg, call. = FALSE)
         tmp <- tmp[["value"]]
+
     } else {
         tmp <- tmp[["value"]]
     }
@@ -266,10 +279,11 @@ predictions <- function(model,
 
     setDF(out)
 
-
     # clean columns
-    stubcols <- c("rowid", "type", "term", "group", "predicted", "std.error", "statistic", "p.value", "conf.low", "conf.high",
-                  sort(grep("^predicted", colnames(newdata), value = TRUE)))
+    stubcols <- c(
+        "rowid", "type", "term", "group", "predicted", "std.error",
+        "statistic", "p.value", "conf.low", "conf.high",
+        sort(grep("^predicted", colnames(newdata), value = TRUE)))
     cols <- intersect(stubcols, colnames(out))
     cols <- unique(c(cols, colnames(out)))
     out <- out[, cols, drop = FALSE]
@@ -309,3 +323,7 @@ predictions <- function(model,
 
     return(out)
 }
+
+
+
+

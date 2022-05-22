@@ -48,7 +48,13 @@ get_contrasts <- function(model,
         ...), silent = TRUE)
 
     if (inherits(pred_hi, "try-error") || inherits(pred_lo, "try-error")) {
-        stop("Unable to compute adjusted predictions for this model. Either the `newdata` does not meet the requirements of the model's `predict()` method, or this model is not supported. If you believe this model should be supported, you can file a report on the Github Issue Tracker: https://github.com/vincentarelbundock/marginaleffects/issues", call. = FALSE)
+        msg <- format_msg(
+        "Unable to compute adjusted predictions for this model. Either the
+        `newdata` does not meet the requirements of the model's `predict()`
+        method, or this model is not supported. If you believe this model
+        should be supported, you can file a report on the Github Issue Tracker:
+        https://github.com/vincentarelbundock/marginaleffects/issues")
+        stop(msg, call. = FALSE)
     }
 
     # bayes
@@ -57,7 +63,8 @@ get_contrasts <- function(model,
     if (is.null(draws_lo)) {
         draws <- NULL
     } else if (!is.null(transform_pre)) {
-        stop("The `transform_pre` argument is not supported for Bayesian models.", call. = FALSE)
+        msg <- "The `transform_pre` argument is not supported for Bayesian models."
+        stop(msg, call. = FALSE)
     } else {
         draws <- draws_hi - draws_lo
     }
@@ -111,7 +118,11 @@ get_contrasts <- function(model,
             con <- try(transform_pre(hi, lo), silent = TRUE)
             if (!isTRUE(checkmate::check_numeric(con, len = n)) &&
                 !isTRUE(checkmate::check_numeric(con, len = 1))) {
-                msg <- sprintf("The function supplied to the `transform_pre` argument must accept two numeric vectors of predicted probabilities of length %s, and return a single numeric value or a numeric vector of length %s, with no missing value.", n, n)
+                msg <- format_msg(
+                "The function supplied to the `transform_pre` argument must accept two numeric
+                vectors of predicted probabilities of length %s, and return a single numeric
+                value or a numeric vector of length %s, with no missing value.")
+                msg <- sprintf(msg, n, n)
                 stop(msg, call. = FALSE)
             }
             return(con)
@@ -135,3 +146,4 @@ get_contrasts <- function(model,
     attr(out, "original") <- cache[["original"]]
     return(out)
 }
+

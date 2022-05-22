@@ -114,6 +114,7 @@ Collate:
     'complete_levels.R'
     'datagrid.R'
     'find_variable_class.R'
+    'format_msg.R'
     'get_ci.R'
     'get_coef.R'
     'get_contrasts.R'
