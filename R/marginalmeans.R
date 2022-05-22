@@ -159,19 +159,12 @@ marginalmeans <- function(model,
 
     lin <- tryCatch(insight::model_info(model)$is_linear, error = function(e) FALSE)
     if (isTRUE(type == "link") || isTRUE(lin)) {
-
         out <- get_ci(
             out,
             conf_level = conf_level,
             df = NULL,
             overwrite = FALSE,
             estimate = "marginalmean")
-
-        if ("std.error" %in% colnames(out) && !"conf.low" %in% colnames(out)) {
-            critical_z <- abs(stats::qnorm((1 - conf_level) / 2))
-            out[["conf.low"]] <- out[["marginalmean"]] - critical_z * out[["std.error"]]
-            out[["conf.high"]] <- out[["marginalmean"]] + critical_z * out[["std.error"]]
-        }
     }
 
     if (!is.null(transform_post)) {
