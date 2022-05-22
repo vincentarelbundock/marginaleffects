@@ -38,3 +38,15 @@ emm <- emmeans(mod, c("noise", "angle"))
 emm <- data.frame(emm)
 expect_equivalent(pre$predicted, emm$emmean)
 expect_equivalent(pre$std.error, emm$SE)
+
+
+# coefficient matrix (ANOVA on full design)
+data(obk.long, package = "afex")
+mod <- suppressMessages(aov_car(
+    value ~ treatment * gender + Error(id/(phase*hour)), 
+    data = obk.long, observed = "gender"))
+
+em <- data.frame(emmeans(mod, ~ phase))
+mm <- marginalmeans(mod, "phase")
+expect_equivalent(mm$marginalmean, em$emmean)
+expect_equivalent(mm$std.error, em$SE)
