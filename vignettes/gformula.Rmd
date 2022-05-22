@@ -73,8 +73,18 @@ nhefs <- na.omit(nhefs[, all.vars(f)])
 fit <- glm(f, data = nhefs)
 ```
 
-Steps 2 and 3 require us to replicate the full dataset by setting the `qsmk` treatment to counterfactual values. We can accomplish this using the `datagrid()` function and its `grid_type="counterfactual"` argument. This function can be used in combination with any of the functions from the `marginaleffects` package. 
+Steps 2 and 3 require us to replicate the full dataset by setting the `qsmk` treatment to counterfactual values. We can do this automatically by calling `comparisons()`.
 
+## TLDR
+
+These single-line command does everything we need to use the parametric g-formula:
+
+```{r}
+cmp <- comparisons(fit, variables = list(qsmk = 0:1))
+summary(cmp)
+```
+
+The rest of the vignette walks through the process in a bit more detail and compares to replication code from Hernán and Robins.
 
 ## Adjusted Predictions
 
@@ -124,21 +134,29 @@ mean(onesample[which(onesample$interv == 0), ]$predicted_meanY)
 mean(onesample[which(onesample$interv == 1), ]$predicted_meanY)
 ```
 
+It may be useful to note that the `datagrid()` function provided by `marginaleffects` can create counterfactual datasets automatically. This is equivalent to the `onesample` dataset:
+
+```{r}
+nd <- datagrid(
+    model = fit,
+    qsmk = c(0, 1),
+    grid_type = "counterfactual")
+```
+
+
 ## Contrast
 
 Now we want to compute the treatment effect with the parametric g-formula, which is the difference in average predicted outcomes in the two counterfactual datasets. This is equivalent to taking the average contrast with the `comparisons()` function. There are three important things to note in the command that follows:
 
 * The `variables` argument is used to indicate that we want to estimate a "contrast" between adjusted predictions when `qsmk` is equal to 1 or 0.
-* The `datagrid()` function is used with the `grid_type="counterfactual"` argument. This replicates the entire dataset once for every combination of the specified regressors. In this case, we specified `qsmk = c(0, 1)`, so this will replicate the dataset twice.
 * `comparisons()` automatically produces estimates of uncertainty.
 
 ```{r}
-cmp <- comparisons(
-    std,
-    variables = list(qsmk = 0:1),
-    newdata = datagrid(qsmk = 0:1, grid_type = "counterfactual"))
+cmp <- comparisons(std, variables = list(qsmk = 0:1))
 summary(cmp)
 ```
+
+Under the hood, `comparisons()` did exactly what we described in the g-formula steps above:
 
 We can obtain the same result by manually computing the quantities, using the replication code from Hernán and Robins:
 
