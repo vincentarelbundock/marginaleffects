@@ -1,17 +1,18 @@
 source("helpers.R", local = TRUE)
+exit_file("TODO: works interactively")
 if (ON_CRAN) exit_file("on cran")
 requiet("glmmTMB")
 
 # marginaleffects no validity
 Owls <- transform(Owls,
-Nest = reorder(Nest, NegPerChick),
-NCalls = SiblingNegotiation,
-FT = FoodTreatment)
+    Nest = reorder(Nest, NegPerChick),
+    NCalls = SiblingNegotiation,
+    FT = FoodTreatment)
 
 m0 <- glmmTMB(NCalls ~ (FT + ArrivalTime) * SexParent + offset(log(BroodSize)) + (1 | Nest),
-data = Owls,
-ziformula = ~1,
-family = poisson)
+    data = Owls,
+    ziformula = ~1,
+    family = poisson)
 expect_marginaleffects(m0)
 
 m1 <- glmmTMB(count ~ mined + (1 | site),
@@ -85,9 +86,9 @@ dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/lme4/VerbAgg
 dat$woman <- as.numeric(dat$Gender == "F")
 dat$item <- as.factor(dat$item)
 mod <- glmmTMB(
-woman ~ btype + resp + (1 + Anger | item),
-family = binomial,
-data = dat)
+    woman ~ btype + resp + (1 + Anger | item),
+    family = binomial,
+    data = dat)
 expect_error(predictions(mod, newdata = datagrid(), vcov = "HC3"), pattern = "not supported")
 expect_inherits(predictions(mod, newdata = datagrid(), vcov = NULL), "predictions")
 expect_inherits(predictions(mod, newdata = datagrid(), vcov = FALSE), "predictions")
