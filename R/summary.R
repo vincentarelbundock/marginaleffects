@@ -122,6 +122,8 @@ summary.marginalmeans <- function(object, conf_level = 0.95, ...) {
     class(out) <- c("marginalmeans.summary", class(out))
     attr(out, "type") <- attr(object, "type")
     attr(out, "model_type") <- attr(object, "model_type")
+    attr(out, "variables") <- attr(object, "variables")
+    attr(out, "variables_grid") <- attr(object, "variables_grid")
     return(out)
 }
 
@@ -189,6 +191,12 @@ print.marginalmeans.summary <- function(x,
   cat("\n")
   cat("Model type: ", attr(x, "model_type"), "\n")
   cat("Prediction type: ", attr(x, "type"), "\n")
+
+  vg <- attr(x, "variables_grid")
+  if (length(vg) > 0) {
+    cat(sprintf("Results averaged over levels of: %s",
+                paste(vg, collapse = ", ")), "\n")
+  }
 
   return(invisible(x))
 }

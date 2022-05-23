@@ -14,12 +14,12 @@
 #' character, or factor variables in the dataset used to fit `model`. Set
 #' `interaction=TRUE` to compute marginal means at combinations of the
 #' predictors specified in the `variables` argument.
-#' @param variables_grid character vector Categorical predictors used to construct the
-#'   prediction grid over which adjusted predictions are averaged (character
-#'   vector). `NULL` creates a grid with all combinations of all categorical
-#'   predictors. This grid can be very large when there are many variables and
-#'   many response levels, so it is advisable to select a limited number of
-#'   variables in the `variables` and `variables_grid` arguments.
+#' @param variables_grid character vector Categorical predictors used to
+#' construct the prediction grid over which adjusted predictions are averaged
+#' (character vector). `NULL` creates a grid with all combinations of all
+#' categorical predictors. This grid can be very large when there are many
+#' variables and many response levels, so it is advisable to select a limited
+#' number of variables in the `variables` and `variables_grid` arguments.
 #' @param interaction TRUE, FALSE, or NULL
 #' * `FALSE`: Marginal means are computed for each predictor individually.
 #' * `TRUE`: Marginal means are computed for each combination of predictors specified in the `variables` argument.
@@ -84,13 +84,23 @@ marginalmeans <- function(model,
     # sanity
     sanity_dots(model = model, ...)
     if (inherits(model, "brmsfit")) {
-        stop("`brmsfit` objects are yet not supported by the `marginalmeans` function. Follow this link to track progress: https://github.com/vincentarelbundock/marginaleffects/issues/137", call. = FALSE)
+        msg <- format_msg(
+        "`brmsfit` objects are yet not supported by the `marginalmeans` function.
+        Follow this link to track progress:
+
+        https://github.com/vincentarelbundock/marginaleffects/issues/137")
+        stop(msg, call. = FALSE)
     }
+
     checkmate::assert_character(variables, min.len = 1, null.ok = TRUE)
     if (!is.null(variables)) {
         bad <- setdiff(variables, colnames(newdata))
         if (length(bad) > 0) {
-            stop(sprintf("Elements of the `variables` argument were not found as column names in the data used to fit the model: %s", paste(bad, collapse = ", ")), call. = FALSE)
+            msg <- format_msg(
+            "Elements of the `variables` argument were not found as column names in the
+            data used to fit the model: %s")
+            msg <- sprintf(msg, paste(bad, collapse = ", "))
+            stop(msg, call. = FALSE)
         }
     }
 
@@ -98,7 +108,11 @@ marginalmeans <- function(model,
     if (!is.null(variables_grid)) {
         bad <- setdiff(variables_grid, colnames(newdata))
         if (length(bad) > 0) {
-            stop(sprintf("Elements of the `variables_grid` argument were not found as column names in the data used to fit the model: %s", paste(bad, collapse = ", ")), call. = FALSE)
+            msg <- format_msg(
+            "Elements of the `variables_grid` argument were not found as column names in
+            the data used to fit the model: %s")
+            msg <- sprintf(msg, paste(bad, collapse = ", "))
+            stop(msg, call. = FALSE)
         }
     }
 
@@ -109,7 +123,12 @@ marginalmeans <- function(model,
     variables_categorical <- setdiff(variables_categorical, insight::find_response(model, flatten = TRUE))
     variables_categorical <- intersect(variables_categorical, term_labels)
     if (length(variables_categorical) == 0) {
-        stop("No logical, factor, or character variable was found in the dataset used to fit the `model` object. This error is often raised when users convert variables to factor in the model formula (e.g., `lm(y ~ factor(x)`). If this is the case, you may consider converting variables in the dataset before fitting the model.", call. = FALSE)
+        msg <- format_msg(
+        "No logical, factor, or character variable was found in the dataset used to fit
+        the `model` object. This error is often raised when users convert variables to
+        factor in the model formula (e.g., `lm(y ~ factor(x)`). If this is the case,
+        you may consider converting variables in the dataset before fitting the model.")
+        stop(msg, call. = FALSE)
     }
 
     # subset variables and grid
@@ -185,6 +204,11 @@ marginalmeans <- function(model,
     attr(out, "type") <- type
     attr(out, "model_type") <- class(model)[1]
     attr(out, "variables") <- variables
+    if (isTRUE(interaction)) {
+        attr(out, "variables_grid") <- setdiff(variables_grid, variables)
+    } else {
+        attr(out, "variables_grid") <- unique(c(variables_grid, variables))
+    }
 
     return(out)
 }
@@ -239,5 +263,4 @@ get_marginalmeans <- function(model,
 
     return(out)
 }
-
 
