@@ -130,6 +130,7 @@ glance.comparisons <- glance.marginaleffects
 #' unit-level adjusted predictions computed by the `predictions` function.
 #'
 #' @param x An object produced by the `predictions` function.
+#' @param by Character vector of variable names over which to compute group-averaged contrasts.
 #' @inheritParams predictions
 #' @return A "tidy" `data.frame` of summary statistics which conforms to the
 #' `broom` package specification.

@@ -11,6 +11,8 @@
 
 \item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
 
+\item{by}{Character vector of variable names over which to compute group-averaged contrasts.}
+
 \item{...}{Additional arguments are passed to the \code{predict()} method
 supplied by the modeling package.These arguments are particularly useful
 for mixed-effects or bayesian models (see the online vignettes on the

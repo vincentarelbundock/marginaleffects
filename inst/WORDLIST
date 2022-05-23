@@ -9,6 +9,7 @@ bayesian
 bugfix
 cdot
 CMD
+cme
 Codecov
 datagrid
 differenceavg
@@ -23,9 +24,10 @@ Gam
 Gentoos
 ggeffects
 Github
-github
+Greifer
 grey
 HC
+Heiss
 Heteroskedasticity
 https
 io
@@ -33,11 +35,13 @@ iqr
 issuecomment
 jacobians
 JVJ
+Kapre
 Kurz
 Leeper
 Lenth
 Lifecycle
 lme
+lnoravg
 lnratio
 lnratioavg
 marginalmeans
@@ -56,6 +60,7 @@ Rdatatable
 regressand
 regressors’
 Resul
+Rohan
 rowid
 Satterthwaite
 sd
