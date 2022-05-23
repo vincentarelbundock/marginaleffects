@@ -6,6 +6,8 @@ New supported packages and models:
 
 Misc:
 
+* `tidy.predictions()` computes standard errors using the delta method for average predictions
+* new `weights` argument in `predictions()` only affects average predictions in `tidy()` or `summary()`.
 * `comparisons()` now supports "log of marginal odds ratio" in the `transform_pre` argument. Thanks to Noah Greifer.
 * Vignette on "Causal Inference with the g-Formula." Thanks to Rohan Kapre for the idea.
 * `tidy.predictions()` can compute standard errors and confidence intervals for linear models or GLM on the link scale.

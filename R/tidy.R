@@ -143,12 +143,47 @@ tidy.predictions <- function(x,
                              conf_level = 0.95,
                              by = NULL,
                              ...) {
-    x_dt <- copy(x)
-    setnames(x_dt, old = "predicted", new = "comparison")
-    out <- tidy.comparisons(x_dt,
-                            conf_level = conf_level,
-                            by = by,
-                            ...)
+    x_dt <- copy(data.table(x))
+
+    w <- attr(x, "weights")
+    if (!is.null(w)) w <- x[[w]]
+
+    fun <- function(...) {
+        dots <- list(...)
+        dots[["eps"]] <- NULL
+        dots[["vcov"]] <- FALSE
+        out <- data.table(do.call("predictions", dots))
+        if (!is.null(w)) {
+            out <- out[,
+                .(estimate = stats::weighted.mean(predicted, w, na.rm = TRUE)),
+                by = by]
+        } else {
+            out <- out[,
+                .(estimate = mean(predicted)),
+                by = by]
+        }
+        return(out$estimate)
+    }
+
+    if (!is.null(w)) {
+        x_dt <- x_dt[,
+            .(estimate = stats::weighted.mean(predicted, w, na.rm = TRUE)),
+            by = by]
+    } else {
+        x_dt <- x_dt[,
+            .(estimate = mean(predicted)),
+            by = by]
+    }
+
+    se <- get_se_delta(
+        model = attr(x, "model"),
+        newdata = attr(x, "newdata"),
+        vcov = attr(x, "vcov"),
+        type = attr(x, "type"),
+        FUN = fun,
+        ...)
+    x_dt[, "std.error" := se]
+    out <- get_ci(x_dt, estimate = "estimate", conf_level = conf_level)
     return(out)
 }
 

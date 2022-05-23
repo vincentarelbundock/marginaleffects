@@ -76,6 +76,7 @@ predictions <- function(model,
                         vcov = TRUE,
                         conf_level = 0.95,
                         type = "response",
+                        weights = NULL,
                         ...) {
 
 
@@ -134,6 +135,13 @@ predictions <- function(model,
         newdata[["rowid"]] <- NULL # the original rowids are no longer valid after averaging et al.
     } else {
         variables <- sanitize_variables(model, newdata, variables)
+    }
+
+    # weights
+    sanity_weights(weights, newdata) # after sanity_newdata
+    if (!is.null(weights) && !isTRUE(checkmate::check_string(weights))) {
+        newdata[["marginaleffects_weights"]] <- weights
+        weights <- "marginaleffects_weights"
     }
 
     # trust newdata$rowid
@@ -323,6 +331,8 @@ predictions <- function(model,
     attr(out, "J") <- J
     attr(out, "vcov") <- V
     attr(out, "posterior_draws") <- draws
+    attr(out, "newdata") <- newdata
+    attr(out, "weights") <- weights
 
     # modelbased::visualisation_matrix attaches useful info for plotting
     for (a in names(attributes_newdata)) {
