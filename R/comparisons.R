@@ -177,7 +177,9 @@ comparisons <- function(model,
 
     # `marginaleffects()` runs its own sanity checks and hardcodes valid arguments
     if (!isTRUE(internal_call)) {
-        model <- sanitize_model(model = model, newdata = newdata, calling_function = "comparisons", ...)
+        model <- sanitize_model(
+            model = model, newdata = newdata, weights = weights,
+            calling_function = "comparisons", ...)
         conf_level <- sanitize_conf_level(conf_level, ...)
         interaction <- sanitize_interaction(interaction, variables, model)
         sanitize_type(model = model, type = type)

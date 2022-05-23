@@ -28,6 +28,10 @@ brms_monotonic_factor <- download_model("brms_monotonic_factor")
 brms_vdem <- download_model("brms_vdem")
 
 
+# warning: weights not supported
+cmp <- comparisons(brms_numeric, weights = mtcars$cyl)
+expect_warning(tidy(cmp), pattern = "Weights")
+
 # average marginal effects brmsmargins
 options("marginaleffects_credible_interval" = "eti")
 h <- 5e-5

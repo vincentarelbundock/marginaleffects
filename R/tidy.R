@@ -204,7 +204,9 @@ tidy.comparisons <- function(x,
         flag <- isTRUE(checkmate::check_character(by)) &&
                 isTRUE(checkmate::check_true(all(by %in% colnames(x))))
         if (!isTRUE(flag)) {
-            msg <- "The `by` argument must be a character vector and every element of the vector must correspond to a column name in the `x` marginal effects object."
+            msg <- format_msg(
+            "The `by` argument must be a character vector and every element of the vector
+            must correspond to a column name in the `x` marginal effects object.")
             stop(msg, call. = FALSE)
         }
     }
@@ -273,6 +275,10 @@ tidy.comparisons <- function(x,
             }
 
         } else if (!is.null(draws)) {
+            if (!is.null(w)) {
+                msg <- "Weights are not supported for models of this class."
+                warning(msg, call. = FALSE)
+            }
             draws <- posteriordraws(x)
             setDT(draws)
             ame[, "estimate" := NULL]

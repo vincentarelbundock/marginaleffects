@@ -176,7 +176,7 @@ marginaleffects <- function(model,
     attributes_newdata <- attributes_newdata[idx]
 
     # sanity checks and pre-processing
-    model <- sanitize_model(model = model, newdata = newdata, calling_function = "marginaleffects", ...)
+    model <- sanitize_model(model = model, newdata = newdata, weights = weights, calling_function = "marginaleffects", ...)
     sanity_dots(model = model, calling_function = "marginaleffects", ...)
     sanitize_type(model = model, type = type, calling_function = "marginaleffects")
     conf_level <- sanitize_conf_level(conf_level, ...)
