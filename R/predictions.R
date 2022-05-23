@@ -322,6 +322,7 @@ predictions <- function(model,
     attr(out, "vcov.type") <- get_vcov_label(vcov)
     attr(out, "J") <- J
     attr(out, "vcov") <- V
+    attr(out, "posterior_draws") <- draws
 
     # modelbased::visualisation_matrix attaches useful info for plotting
     for (a in names(attributes_newdata)) {
