@@ -59,7 +59,8 @@ known <- "Estimated marginal means
 7   vs  TRUE 24.33      1.194   20.37 < 2.22e-16 21.99  26.67
 
 Model type:  lm
-Prediction type:  response"
+Prediction type:  response
+Results averaged over levels of: gear, am, vs"
 expect_print(summary(mm), known)
 
 
@@ -67,9 +68,9 @@ expect_print(summary(mm), known)
 mod <- glm(am ~ hp * wt, data = mtcars, family = binomial)
 mfx <- marginaleffects(mod)
 known <- "Average marginal effects
-  Term    Effect    CI low   CI high
-1   hp  0.002654 -0.001151  0.006458
-2   wt -0.435727 -0.635690 -0.235764
+  Term    Effect   CI low   CI high
+1   hp  0.002654 -0.00115  0.006457
+2   wt -0.435727 -0.63569 -0.235764
 
 Model type:
 Prediction type:"
