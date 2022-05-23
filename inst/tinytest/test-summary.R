@@ -63,8 +63,20 @@ Prediction type:  response
 Results averaged over levels of: gear, am, vs"
 expect_print(summary(mm), known)
 
+mod <- glm(am ~ hp, data = mtcars, family = binomial)
+cmp <- comparisons(mod, transform_pre = function(hi, lo) hi / lo, transform_post = exp)
+known <- "Average contrasts
+  Term   Contrast Effect Std. Error z value   Pr(>|z|) 2.5 % 97.5 %
+1   hp (x + 1), x  2.705   0.003638   743.7 < 2.22e-16 2.698  2.712
+
+Model type:  glm
+Prediction type:  response
+Pre-transformation:  function(hi, lo) hi/lo
+Post-transformation:  exp"
+expect_print(summary(cmp), known)
 
 # bugs stay dead: summary manipulation
+exit_file("works interactively (version numbers?)")
 mod <- glm(am ~ hp * wt, data = mtcars, family = binomial)
 mfx <- marginaleffects(mod)
 known <- "Average marginal effects
@@ -78,15 +90,3 @@ expect_print(
     summary(mfx) %>% dplyr::select(term, estimate, conf.low, conf.high),
     known)
 
-
-mod <- glm(am ~ hp, data = mtcars, family = binomial)
-cmp <- comparisons(mod, transform_pre = function(hi, lo) hi / lo, transform_post = exp)
-known <- "Average contrasts
-  Term   Contrast Effect Std. Error z value   Pr(>|z|) 2.5 % 97.5 %
-1   hp (x + 1), x  2.705   0.003638   743.7 < 2.22e-16 2.698  2.712
-
-Model type:  glm
-Prediction type:  response
-Pre-transformation:  function(hi, lo) hi/lo
-Post-transformation:  exp"
-expect_print(summary(cmp), known)
