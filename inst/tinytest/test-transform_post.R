@@ -19,8 +19,8 @@ expect_equivalent(exp(cmp1$conf.low), cmp2$conf.low)
 expect_equivalent(exp(cmp1$conf.high), cmp2$conf.high)
 
 # argument name deprecation
-expect_warning(tidy(cmp2, transform_post = exp))
-expect_warning(summary(cmp2, transform_post = exp))
+expect_warning(tidy(cmp2, transform_avg = exp))
+expect_warning(summary(cmp2, transform_avg = exp))
 
 tid1 <- tidy(cmp1)
 tid2 <- tidy(cmp1, transform_avg = exp)
