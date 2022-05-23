@@ -93,6 +93,7 @@ set.seed(1024)
 p3 <- predictions(mod, newdata = nd, allow_new_levels = TRUE, sample_new_levels = "uncertainty")
 expect_false(any(p1$predicted == p2$predicted))
 expect_equivalent(p1, p3)
+expect_inherits(posteriordraws(p3), "data.frame")
 
 
 # predictions w/ random effects
