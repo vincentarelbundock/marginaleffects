@@ -100,6 +100,7 @@ Suggests:
     speedglm,
     survey,
     survival,
+    tidymodels,
     tobit1,
     truncreg,
     withr,

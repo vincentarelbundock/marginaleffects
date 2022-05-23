@@ -102,6 +102,12 @@ New modeling packages can usually be supported by `marginaleffects` if they incl
 sanitize_model <- function(model,
                            newdata,
                            ...) {
+
+    # tidymodels appear to store the model fit in `model[["fit"]]`
+    if (inherits(model, "model_fit") && "fit" %in% names(model)) {
+        model <- model[["fit"]]
+    }
+
     sanity_model_specific(model, newdata = newdata, ...)
     sanity_model_supported_class(model)
     return(model)

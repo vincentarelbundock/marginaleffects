@@ -1,8 +1,15 @@
 # marginaleffects 0.5.0.9000
 
+New supported packages and models:
+
+* `tidymodels` objects of class `tidy_model` are supported if the fit engine is supported by `marginaleffects`.
+
+Misc:
+
 * `comparisons()` now supports "log of marginal odds ratio" in the `transform_pre` argument. Thanks to Noah Greifer.
 * Vignette on "Causal Inference with the g-Formula." Thanks to Rohan Kapre for the idea.
 * `tidy.predictions()` can compute standard errors and confidence intervals for linear models or GLM on the link scale.
+* The `transform_post` argument in `tidy()` and `summary()` is renamed to `transform_avg` to disambiguate against the argument of the same name in `comparisons()`.
 
 # marginaleffects 0.5.0
 
