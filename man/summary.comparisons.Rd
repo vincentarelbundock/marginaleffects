@@ -4,7 +4,7 @@
 \alias{summary.comparisons}
 \title{Summarize a \code{comparisons} object}
 \usage{
-\method{summary}{comparisons}(object, conf_level = 0.95, by = NULL, transform_post = NULL, ...)
+\method{summary}{comparisons}(object, conf_level = 0.95, by = NULL, transform_avg = NULL, ...)
 }
 \arguments{
 \item{object}{An object produced by the \code{comparisons} function}
@@ -13,7 +13,7 @@
 
 \item{by}{Character vector of variable names over which to compute group-averaged contrasts.}
 
-\item{transform_post}{(experimental) A function applied to the estimate and confidence interval just before returning the final results. For example, users can exponentiate their final results by setting \code{transform_post=exp} or transform contrasts made on the link scale for ease of interpretation.}
+\item{transform_avg}{(experimental) A function applied to the estimates and confidence intervals \emph{after} the unit-level estimates have been averaged.}
 
 \item{...}{Additional arguments are passed to the \code{predict()} method
 supplied by the modeling package.These arguments are particularly useful

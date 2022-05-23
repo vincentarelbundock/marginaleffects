@@ -114,6 +114,7 @@ Collate:
     'comparisons.R'
     'complete_levels.R'
     'datagrid.R'
+    'deprecate_arg.R'
     'find_variable_class.R'
     'format_msg.R'
     'get_ci.R'

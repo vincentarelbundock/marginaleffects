@@ -160,6 +160,7 @@ tidy.predictions <- function(x,
 #'
 #' @param x An object produced by the `comparisons` function.
 #' @param by Character vector of variable names over which to compute group-averaged contrasts.
+#' @param transform_avg (experimental) A function applied to the estimates and confidence intervals *after* the unit-level estimates have been averaged.
 #' @inheritParams comparisons
 #' @inheritParams tidy.marginaleffects
 #' @return A "tidy" `data.frame` of summary statistics which conforms to the
@@ -185,13 +186,19 @@ tidy.predictions <- function(x,
 tidy.comparisons <- function(x,
                              conf_level = 0.95,
                              by = NULL,
-                             transform_post = NULL,
+                             transform_avg = NULL,
                              ...) {
 
     dots <- list(...)
     conf_level <- sanitize_conf_level(conf_level, ...)
     checkmate::assert_character(by, null.ok = TRUE)
-    checkmate::assert_function(transform_post, null.ok = TRUE)
+    checkmate::assert_function(transform_avg, null.ok = TRUE)
+
+    transform_avg <- deprecation_arg(
+        transform_avg,
+        newname = "transform_avg",
+        oldname = "transform_post",
+        ...)
 
     # we only know the delta method formula for the average marginal effect,
     # not for arbitrary functions
@@ -317,11 +324,11 @@ tidy.comparisons <- function(x,
     out <- out[out$estimate != 0, ]
 
     # back transformation
-    if (!is.null(transform_post)) {
-        if (!is.null(attr(x, "transform_post"))) {
+    if (!is.null(transform_avg)) {
+        if (!is.null(attr(x, "transform_avg"))) {
             warning("Estimates were transformed twice: once during the initial computation, and once more when summarizing the results in `tidy()` or `summary()`.", call. = FALSE)
         }
-        out <- backtransform(out, transform_post)
+        out <- backtransform(out, transform_avg)
     }
 
     # sort and subset columns

@@ -25,12 +25,12 @@ character, or factor variables in the dataset used to fit \code{model}. Set
 \code{interaction=TRUE} to compute marginal means at combinations of the
 predictors specified in the \code{variables} argument.}
 
-\item{variables_grid}{character vector Categorical predictors used to construct the
-prediction grid over which adjusted predictions are averaged (character
-vector). \code{NULL} creates a grid with all combinations of all categorical
-predictors. This grid can be very large when there are many variables and
-many response levels, so it is advisable to select a limited number of
-variables in the \code{variables} and \code{variables_grid} arguments.}
+\item{variables_grid}{character vector Categorical predictors used to
+construct the prediction grid over which adjusted predictions are averaged
+(character vector). \code{NULL} creates a grid with all combinations of all
+categorical predictors. This grid can be very large when there are many
+variables and many response levels, so it is advisable to select a limited
+number of variables in the \code{variables} and \code{variables_grid} arguments.}
 
 \item{vcov}{Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
 \itemize{
@@ -55,7 +55,7 @@ type, but will typically be a string such as: "response", "link", "probs",
 or "zero". When an unsupported string is entered, the model-specific list of
 acceptable values is returned in an error message.}
 
-\item{transform_post}{(experimental) A function applied to the estimate and confidence interval just before returning the final results. For example, users can exponentiate their final results by setting \code{transform_post=exp} or transform contrasts made on the link scale for ease of interpretation.}
+\item{transform_post}{(experimental) A function applied to unit-level estimates and confidence intervals just before the function returns results.}
 
 \item{interaction}{TRUE, FALSE, or NULL
 \itemize{

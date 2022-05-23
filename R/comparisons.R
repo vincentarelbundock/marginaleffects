@@ -60,6 +60,7 @@
 #'   - "lnratioavg": `function(hi, lo) log(mean(hi) / mean(lo))`
 #'   - "lnoravg": `function(hi, lo) log((mean(hi)/(1 - mean(hi))) / (mean(lo)/(1 - mean(lo))))`
 #' * function: accept two equal-length numeric vectors of adjusted predictions (`hi` and `lo`) and returns a vector of contrasts of the same length, or a unique numeric value.
+#' @param transform_post (experimental) A function applied to unit-level estimates and confidence intervals just before the function returns results.
 #' @param contrast_factor string. Which pairs of factors should be contrasted?
 #' * "reference": Each factor level is compared to the factor reference (base) level
 #' * "all": All combinations of observed levels
@@ -72,7 +73,6 @@
 #' * "sd": Contrast across one standard deviation around the regressor mean.
 #' * "2sd": Contrast across two standard deviations around the regressor mean.
 #' * "minmax": Contrast between the maximum and the minimum values of the regressor.
-#' @param transform_post (experimental) A function applied to the estimate and confidence interval just before returning the final results. For example, users can exponentiate their final results by setting `transform_post=exp` or transform contrasts made on the link scale for ease of interpretation.
 #' @param interaction TRUE, FALSE, or NULL
 #' * `FALSE`: Contrasts represent the change in adjusted predictions when one predictor changes and all other variables are held constant.
 #' * `TRUE`: Contrasts represent the changes in adjusted predictions when the predictors specified in the `variables` argument are manipulated simultaneously.

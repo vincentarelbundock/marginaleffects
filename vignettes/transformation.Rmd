@@ -39,15 +39,37 @@ ggplot2::theme_set(theme_clean())
 
 This vignette shows how to move beyond such simple differences, by estimating "contrasts" that consist of ratios or arbitrary functions of adjusted predictions. It also shows how to back-transform contrasts to change their scales.
 
+Powerful transformations and custom contrasts are made possible by using three arguments which act at different stages of the computation process:
+
+* `transform_pre`
+* `transform_post`
+* `transform_avg`
+
 Consider the case of a model with a single predictor $x$. To compute average contrasts, we proceed as follows:
 
 1. Compute adjusted predictions for each row of the dataset for the observed values $x$: $\hat{y}_x$
 2. Compute adjusted predictions for each row of the dataset for the observed values $x + 1$: $\hat{y}_{x+1}$
-3. Compute unit-level contrasts by taking the difference between (or some other function of) adjusted predictions: $\hat{y}_{x+1} - \hat{y}_x$
-4. Compute the average contrast by taking the mean of unit-level contrasts: $1/N \sum_{i=1}^N \hat{y}_{x+1} - \hat{y}_x$
-5. Return the result directly or transformed.
+3. `transform_pre`: Compute unit-level contrasts by taking the difference between (or some other function of) adjusted predictions: $\hat{y}_{x+1} - \hat{y}_x$
+4. `transform_post`: Transform the unit-level contrasts or return them as-is.
+5. Compute the average contrast by taking the mean of unit-level contrasts: $1/N \sum_{i=1}^N \hat{y}_{x+1} - \hat{y}_x$
+6. `transform_avg`: Transform the average contrast or return them as-is.
 
-This vignette shows how to modify steps 3 and 5 to compute custom contrasts: Adjusted Risk Ratios (ARR) and Adjusted Risk Differences (ARD).
+The `transform_pre` argument of the `comparisons()` function determines how adjusted predictions are combined to create a contrast. By default, we take a simple difference between predictions with `hi` value of $x$, and predictions with a `lo` value of $x$: `function(hi, lo) hi-lo`.
+
+The `transform_post` argument of the `comparisons()` function applies a custom transformation to the unit-level contrasts.
+
+The `transform_avg` argument is available in the `tidy()` and `summary()` functions. It applies a custom transformation to the average contrast.
+
+The difference between `transform_post` and `transform_avg` is that the former is applied *before* we take the average, and the latter is applied *to the average*. This seems like a subtle distinction, but it can be important practical implications, since a function of the average is rarely the same as the average of a function:
+
+```{r}
+set.seed(1024)
+x <- rnorm(100)
+exp(mean(x))
+mean(exp(x))
+```
+
+This vignette shows how to modify steps 3, 4, and 6 to compute custom contrasts: Adjusted Risk Ratios (ARR) and Adjusted Risk Differences (ARD).
 
 # Default contrasts: untransformed differences
 
@@ -136,8 +158,8 @@ There is a very subtle difference between the procedure above and this code:
 comparisons(
     mod,
     transform_pre = "lnratioavg") %>%
-    summary(transform_post = exp)
+    summary(transform_avg = exp)
 ```
 
-Since the `transform_post` argument is now passed to the `summary()` function, the exponentiation is now done only *after* unit-level contrasts have been average. This is what `Stata` does under the hood, and the results are slightly different.
+Since the `exp` function is now passed to the `transform_avg` argument of `summary()` function, the exponentiation is now done only *after* unit-level contrasts have been averaged. This is what `Stata` appears to does under the hood, and the results are slightly different.
 

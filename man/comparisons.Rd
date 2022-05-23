@@ -109,7 +109,7 @@ acceptable values is returned in an error message.}
 \item function: accept two equal-length numeric vectors of adjusted predictions (\code{hi} and \code{lo}) and returns a vector of contrasts of the same length, or a unique numeric value.
 }}
 
-\item{transform_post}{(experimental) A function applied to the estimate and confidence interval just before returning the final results. For example, users can exponentiate their final results by setting \code{transform_post=exp} or transform contrasts made on the link scale for ease of interpretation.}
+\item{transform_post}{(experimental) A function applied to unit-level estimates and confidence intervals just before the function returns results.}
 
 \item{interaction}{TRUE, FALSE, or NULL
 \itemize{

@@ -163,14 +163,15 @@ marginalmeans <- function(model,
     # standard errors via delta method
     J <- NULL
     if (!isFALSE(vcov)) {
-        se <- get_se_delta(model,
-                                    vcov = vcov,
-                                    type = type,
-                                    FUN = get_se_delta_marginalmeans,
-                                    index = NULL,
-                                    variables = variables,
-                                    newdata = newgrid,
-                                    interaction = interaction)
+        se <- get_se_delta(
+            model,
+            vcov = vcov,
+            type = type,
+            FUN = get_se_delta_marginalmeans,
+            index = NULL,
+            variables = variables,
+            newdata = newgrid,
+            interaction = interaction)
         # get rid of attributes in column
         out[["std.error"]] <- as.numeric(se)
         J <- attr(se, "J")
