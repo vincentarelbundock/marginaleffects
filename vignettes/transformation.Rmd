@@ -301,10 +301,10 @@ plot_cap(
        subtitle = "Dollar-scale predictions")
 ```
 
-For **marginal effects**, we need to transform the predictions *before* calculating the instantaneous slopes. We also can't use the `marginaleffects()` function directly—we need to use `comparisons()` and do the delta method ourselves (i.e. predict `gdpPercap` at `lifeExp` of 40 and 40.001 and calculate the slope between those predictions). We can use the `transform_pre` argument to pass the pair of predicted values to `exp()` before calculating the slopes:
+For **marginal effects**, we need to transform the predictions *before* calculating the instantaneous slopes. We also can't use the `marginaleffects()` function directly—we need to use `comparisons()` and compute the numerical derivative ourselves (i.e. predict `gdpPercap` at `lifeExp` of 40 and 40.001 and calculate the slope between those predictions). We can use the `transform_pre` argument to pass the pair of predicted values to `exp()` before calculating the slopes:
 
 ```{r}
-# Tiny amount to use in the delta method (i.e. 40 vs 40.001)
+# step size of the numerical derivative
 eps <- 0.001
 
 comparisons(
@@ -312,8 +312,8 @@ comparisons(
   dpar = "mu",
   variables = list(lifeExp = eps),
   newdata = datagrid(lifeExp = seq(40, 80, 20)),
-  # Use the delta method with exponentiated predctions
-  # i.e. (exp(40.001) - exp(40)) / exp(0.001)
+  # rescale the elements of the slope
+  # (exp(40.001) - exp(40)) / exp(0.001)
   transform_pre = function(hi, lo) ((exp(hi) - exp(lo)) / exp(eps)) / eps
 )
 ```
