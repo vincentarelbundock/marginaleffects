@@ -165,3 +165,186 @@ comparisons(
 
 Since the `exp` function is now passed to the `transform_avg` argument of `summary()` function, the exponentiation is now done only *after* unit-level contrasts have been averaged. This is what `Stata` appears to does under the hood, and the results are slightly different.
 
+
+# Back transforming lognormal hurdle models
+
+With hurdle models, we can fit two separate models simultaneously: 
+
+1. A model that predicts if the outcome is zero or not zero
+2. If the outcome is not zero, a model that predicts what the value of the outcome is
+
+We can calculate predictions and marginal effects for each of these hurdle model processes, but doing so requires some variable transformation since the stages of these models use different link functions.
+
+The `hurdle_lognormal()` family in `brms` uses logistic regression (with a logit link) for the hurdle part of the model and lognormal regression (where the outcome is logged before getting used in the model) for the non-hurdled part. Let's look at an example of predicting GDP per capita (which is distributed exponentially) using life expectancy. We'll add some artificial zeros so that we can work with a hurdle stage of the model.
+
+```{r run-hurdle-lognormal-fake, eval=FALSE}
+library(dplyr)
+library(ggplot2)
+library(patchwork)
+library(brms)
+library(marginaleffects)
+library(gapminder)
+
+# Build some 0s into the GDP column
+set.seed(1234)
+gapminder <- gapminder::gapminder |> 
+  filter(continent != "Oceania") |> 
+  # Make a bunch of GDP values 0
+  mutate(prob_zero = ifelse(lifeExp < 50, 0.3, 0.02),
+         will_be_zero = rbinom(n(), 1, prob = prob_zero),
+         gdpPercap0 = ifelse(will_be_zero, 0, gdpPercap)) |> 
+  select(-prob_zero, -will_be_zero)
+
+mod <- brm(
+  bf(gdpPercap0 ~ lifeExp,
+     hu ~ lifeExp),
+  data = gapminder,
+  family = hurdle_lognormal(),
+  chains = 4, cores = 4, seed = 1234)
+```
+
+```{r load-model-real, include=FALSE}
+library(dplyr)
+library(ggplot2)
+library(patchwork)
+library(brms)
+library(marginaleffects)
+library(gapminder)
+set.seed(1234)
+
+source("../inst/tinytest/helpers.R")
+mod <- download_model("brms_lognormal_hurdle")
+```
+
+We have two different sets of coefficients here for the two different processes. The hurdle part (`hu`) uses a logit link, and the non-hurdle part (`mu`) uses an identity link. However, that's a slight misnomer—a true identity link would show the coefficients on a non-logged dollar value scale. Because we're using a `lognormal` family, GDP per capita is pre-logged, so the "original" identity scale is actually logged dollars.
+
+```{r model-summary-fake, eval=FALSE}
+summary(mod)
+```
+
+```{r model-summary-truncated, echo=FALSE}
+cat(c(capture.output(summary(mod))[1:14], "..."), sep = "\n")
+```
+
+We can get predictions for the `hu` part of the model on the link (logit) scale:
+
+```{r}
+predictions(mod, dpar = "hu", type = "link",
+            newdata = datagrid(lifeExp = seq(40, 80, 20)))
+```
+
+…or on the response (percentage point) scale:
+
+```{r}
+predictions(mod, dpar = "hu", type = "response",
+            newdata = datagrid(lifeExp = seq(40, 80, 20)))
+```
+
+We can also get slopes for the `hu` part of the model on the link (logit) or response (percentage point) scales:
+
+```{r}
+marginaleffects(mod, dpar = "hu", type = "link",
+                newdata = datagrid(lifeExp = seq(40, 80, 20)))
+
+marginaleffects(mod, dpar = "hu", type = "response",
+                newdata = datagrid(lifeExp = seq(40, 80, 20)))
+```
+
+Working with the `mu` part of the model is trickier. Switching between `type = "link"` and `type = "response"` doesn't change anything, since the outcome is pre-logged:
+
+```{r}
+predictions(mod, dpar = "mu", type = "link",
+            newdata = datagrid(lifeExp = seq(40, 80, 20)))
+predictions(mod, dpar = "mu", type = "response",
+            newdata = datagrid(lifeExp = seq(40, 80, 20)))
+```
+
+For **predictions**, we need to exponentiate the results to scale them back up to dollar amounts. We can do this by post-processing the results (e.g. with `dplyr::mutate(predicted = exp(predicted))`), or we can use the `transform_post` argument in `predictions()` to pass the results to `exp()` after getting calculated:
+
+```{r}
+predictions(mod, dpar = "mu", 
+            newdata = datagrid(lifeExp = seq(40, 80, 20)),
+            transform_post = exp)
+```
+
+We can pass `transform_post = exp` to `plot_cap()` too:
+
+```{r plot-hurdle-parts, fig.width=8, fig.asp=0.618}
+plot_cap(
+  mod,
+  dpar = "hu",
+  type = "link",
+  condition = "lifeExp") +
+  labs(y = "hu",
+       title = "Hurdle part (hu)",
+       subtitle = "Logit-scale predictions") +
+plot_cap(
+  mod,
+  dpar = "hu",
+  type = "response",
+  condition = "lifeExp") +
+  labs(y = "hu",
+       subtitle = "Percentage point-scale predictions") +
+plot_cap(
+  mod,
+  dpar = "mu",
+  condition = "lifeExp") +
+  labs(y = "mu",
+       title = "Non-hurdle part (mu)",
+       subtitle = "Log-scale predictions") +
+plot_cap(
+  mod,
+  dpar = "mu",
+  transform_post = exp,
+  condition = "lifeExp") +
+  labs(y = "mu",
+       subtitle = "Dollar-scale predictions")
+```
+
+For **marginal effects**, we need to transform the predictions *before* calculating the instantaneous slopes. We also can't use the `marginaleffects()` function directly—we need to use `comparisons()` and do the delta method ourselves (i.e. predict `gdpPercap` at `lifeExp` of 40 and 40.001 and calculate the slope between those predictions). We can use the `transform_pre` argument to pass the pair of predicted values to `exp()` before calculating the slopes:
+
+```{r}
+# Tiny amount to use in the delta method (i.e. 40 vs 40.001)
+eps <- 0.001
+
+comparisons(
+  mod,
+  dpar = "mu",
+  variables = list(lifeExp = eps),
+  newdata = datagrid(lifeExp = seq(40, 80, 20)),
+  # Use the delta method with exponentiated predctions
+  # i.e. (exp(40.001) - exp(40)) / exp(0.001)
+  transform_pre = function(hi, lo) ((exp(hi) - exp(lo)) / exp(eps)) / eps
+)
+```
+
+We can visually confirm that these are the instantaneous slopes at each of these levels of life expectancy:
+
+```{r hurdle-dollar-slopes, fig.width=7, fig.asp=0.618}
+predictions_data <- predictions(
+  mod,
+  newdata = datagrid(lifeExp = seq(30, 80, 1)),
+  dpar = "mu",
+  transform_post = exp
+)
+
+slopes_data <- comparisons(
+  mod,
+  dpar = "mu",
+  variables = list(lifeExp = eps),
+  newdata = datagrid(lifeExp = seq(40, 80, 20)),
+  transform_pre = function(hi, lo) ((exp(hi) - exp(lo)) / exp(eps)) / eps
+) |> 
+  left_join(predictions_data, by = "lifeExp") |> 
+  # Point-slope formula: (y - y1) = m(x - x1)
+  mutate(intercept = comparison * (-lifeExp) + predicted)
+
+ggplot(predictions_data, aes(x = lifeExp, y = predicted)) +
+  geom_line(size = 1) + 
+  geom_abline(data = slopes_data, aes(slope = comparison, intercept = intercept), 
+              size = 0.5, color = "red") +
+  geom_point(data = slopes_data) +
+  geom_label(data = slopes_data, aes(label = paste0("Slope: ", round(comparison, 1))),
+             nudge_x = -1, hjust = 1) +
+  theme_minimal()
+```
