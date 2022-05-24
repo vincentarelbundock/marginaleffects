@@ -6,12 +6,13 @@ New supported packages and models:
 
 Misc:
 
+* New `transform_post` argument in `predictions()`
 * `tidy.predictions()` computes standard errors using the delta method for average predictions
 * new `weights` argument in `predictions()` only affects average predictions in `tidy()` or `summary()`.
 * `comparisons()` now supports "log of marginal odds ratio" in the `transform_pre` argument. Thanks to Noah Greifer.
 * Vignette on "Causal Inference with the g-Formula." Thanks to Rohan Kapre for the idea.
 * `tidy.predictions()` can compute standard errors and confidence intervals for linear models or GLM on the link scale.
-* The `transform_post` argument in `tidy()` and `summary()` is renamed to `transform_avg` to disambiguate against the argument of the same name in `comparisons()`.
+* The `transform_post` argument in `tidy()` and `summary()` is renamed to `transform_avg` to disambiguate against the argument of the same name in `comparisons()`. Backward compatibility is preserved.
 
 # marginaleffects 0.5.0
 

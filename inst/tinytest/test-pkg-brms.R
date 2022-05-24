@@ -26,6 +26,7 @@ brms_cumulative_random <- download_model("brms_cumulative_random")
 brms_monotonic <- download_model("brms_monotonic")
 brms_monotonic_factor <- download_model("brms_monotonic_factor")
 brms_vdem <- download_model("brms_vdem")
+brms_lognormal_hurdle <- download_model("brms_lognormal_hurdle")
 
 
 # warning: weights not supported
@@ -374,3 +375,33 @@ expect_true(length(unique(ti$estimate)) == nrow(ti))
 expect_warning(marginaleffects(brms_numeric, vcov = "HC3"),
            pattern = "vcov.*not supported")
 
+# Andrew Heiss says that lognormal_hurdle are tricky because the link is
+# identity even if the response is actually logged
+# https://github.com/vincentarelbundock/marginaleffects/issues/343
+
+# non-hurdle part: post-calculation exponentiation
+p1 <- predictions(
+    brms_lognormal_hurdle,
+    newdata = datagrid(lifeExp = seq(30, 80, 10)),
+    transform_post = exp,
+    dpar = "mu")
+p2 <- predictions(
+    brms_lognormal_hurdle,
+    newdata = datagrid(lifeExp = seq(30, 80, 10)),
+    dpar = "mu")
+expect_true(all(p1$predicted != p2$predicted))
+
+eps <- 0.01
+cmp1 <- comparisons(
+    brms_lognormal_hurdle,
+    variables = list(lifeExp = eps),
+    newdata = datagrid(lifeExp = seq(30, 80, 10)),
+    transform_pre = function(hi, lo) (exp(hi) - exp(lo)) / exp(eps),
+    dpar = "mu")
+cmp2 <- comparisons(
+    brms_lognormal_hurdle,
+    variables = list(lifeExp = eps),
+    newdata = datagrid(lifeExp = seq(30, 80, 10)),
+    transform_pre = function(hi, lo) exp((hi - lo) / eps),
+    dpar = "mu")
+expect_true(all(cmp1$comparison != cmp2$comparison))

@@ -186,7 +186,11 @@ tidy.predictions <- function(x,
         type = attr(x, "type"),
         FUN = fun,
         ...)
-    x_dt[, "std.error" := se]
+
+    if (!is.null(se)) {
+        x_dt[, "std.error" := se]
+    }
+
     out <- get_ci(x_dt, estimate = "estimate", conf_level = conf_level)
     return(out)
 }

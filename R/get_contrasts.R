@@ -57,16 +57,19 @@ get_contrasts <- function(model,
         stop(msg, call. = FALSE)
     }
 
+    # sanitize_transform_pre returns NULL by default to allow us to warn
+    # when the argument is not supported
+    if (is.null(transform_pre)) {
+        transform_pre <- function(hi, lo) hi - lo
+    }
+
     # bayes
     draws_lo <- attr(pred_lo, "posterior_draws")
     draws_hi <- attr(pred_hi, "posterior_draws")
     if (is.null(draws_lo)) {
         draws <- NULL
-    } else if (!is.null(transform_pre)) {
-        msg <- "The `transform_pre` argument is not supported for Bayesian models."
-        stop(msg, call. = FALSE)
     } else {
-        draws <- draws_hi - draws_lo
+        draws <- transform_pre(draws_hi, draws_lo)
     }
 
     out <- pred_lo
@@ -99,11 +102,6 @@ get_contrasts <- function(model,
         out[, "term" := "interaction"]
     }
 
-    # sanitize_transform_pre returns NULL by default to allow us to warn
-    # when the argument is not supported
-    if (is.null(transform_pre)) {
-        transform_pre <- function(hi, lo) hi - lo
-    }
 
     idx <- grep("^contrast|^group$|^term$", colnames(out), value = TRUE)
     out[, predicted_lo := pred_lo$predicted]

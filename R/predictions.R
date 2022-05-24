@@ -36,6 +36,7 @@
 #'       - `newdata = datagrid()`: contrast at the mean
 #'       - `newdata = datagrid(cyl = c(4, 6))`: `cyl` variable equal to 4 and 6 and other regressors fixed at their means or modes.
 #'       - See the Examples section and the [datagrid()] documentation for more.
+#' @param transform_post (experimental) A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.
 #'
 #' @template model_specific_arguments
 #'
@@ -77,6 +78,7 @@ predictions <- function(model,
                         conf_level = 0.95,
                         type = "response",
                         weights = NULL,
+                        transform_post = NULL,
                         ...) {
 
 
@@ -103,6 +105,7 @@ predictions <- function(model,
     # model <- sanitize_model(model)
 
     # input sanity checks
+    checkmate::assert_function(transform_post, null.ok = TRUE)
     sanity_dots(model = model, ...)
     sanity_model_specific(model = model, newdata = newdata, vcov = vcov, calling_function = "predictions", ...)
     conf_level <- sanitize_conf_level(conf_level, ...)
@@ -255,6 +258,9 @@ predictions <- function(model,
 
     # bayesian posterior draws
     draws <- attr(tmp, "posterior_draws")
+    if (!is.null(transform_post)) {
+        draws <- transform_post(draws)
+    }
 
     V <- NULL
     if (!isFALSE(vcov)) {
@@ -312,6 +318,11 @@ predictions <- function(model,
     out <- merge(out, newdata, by = "rowid", sort = FALSE)
 
     setDF(out)
+
+    # transform already applied to bayesian draws before computing confidence interval
+    if (is.null(draws)) {
+        out <- backtransform(out, transform_post = transform_post)
+    }
 
     # clean columns
     stubcols <- c(
