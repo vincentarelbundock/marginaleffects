@@ -42,14 +42,17 @@ predictions, marginal effects, contrasts, and marginal means for a
         Models](https://vincentarelbundock.github.io/marginaleffects/articles/gam.html)
       - [Multinomial Logit and Discrete Choice
         Models](https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html)
+      - [Multiple
+        Imputation](https://vincentarelbundock.github.io/marginaleffects/articles/multiple_imputation.html)
       - [Causal Inference with the
         g-Formula](https://vincentarelbundock.github.io/marginaleffects/articles/gformula.html)
       - [Tables and
         plots](https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html)
       - [Robust standard errors and
         more](https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html)
-      - [Transformations and Custom Contrasts: Adjusted Risk Ratio
-        Example](https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html)
+      - [Transformations and Custom Contrasts: Risk Ratio,
+        Exponentiation,
+        etc.](https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html)
   - [Alternative
     software](https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html)
   - [Technical
@@ -258,16 +261,11 @@ mod3 <- glm(Survived ~ Woman + Age * PClass, data = titanic, family = binomial)
 cmp <- comparisons(mod3)
 summary(cmp)
 #> Average contrasts 
-#>     Term     Contrast   Effect Std. Error z value   Pr(>|z|)     2.5 %
-#> 1  Woman TRUE - FALSE  0.50329   0.031654  15.899 < 2.22e-16  0.441244
-#> 2    Age  (x + 1) - x -0.00558   0.001084  -5.147 2.6471e-07 -0.007705
-#> 3 PClass    2nd - 1st -0.22603   0.043546  -5.191 2.0950e-07 -0.311383
-#> 4 PClass    3rd - 1st -0.38397   0.041845  -9.176 < 2.22e-16 -0.465985
-#>      97.5 %
-#> 1  0.565327
-#> 2 -0.003455
-#> 3 -0.140686
-#> 4 -0.301957
+#>     Term     Contrast   Effect Std. Error z value   Pr(>|z|)     2.5 %    97.5 %
+#> 1  Woman TRUE - FALSE  0.50329   0.031654  15.899 < 2.22e-16  0.441244  0.565327
+#> 2    Age  (x + 1) - x -0.00558   0.001084  -5.147 2.6471e-07 -0.007705 -0.003455
+#> 3 PClass    2nd - 1st -0.22603   0.043546  -5.191 2.0950e-07 -0.311383 -0.140686
+#> 4 PClass    3rd - 1st -0.38397   0.041845  -9.176 < 2.22e-16 -0.465985 -0.301957
 #> 
 #> Model type:  glm 
 #> Prediction type:  response
@@ -291,20 +289,13 @@ cmp <- comparisons(
     variables = list(Age = "2sd", PClass = "pairwise"))
 summary(cmp)
 #> Average contrasts 
-#>                   Age    PClass Effect Std. Error z value   Pr(>|z|)  2.5 %
-#> 1 (x + sd) / (x - sd) 1st / 1st 0.7043    0.05946  11.846 < 2.22e-16 0.5878
-#> 2 (x + sd) / (x - sd) 2nd / 1st 0.3185    0.05566   5.723 1.0442e-08 0.2095
-#> 3 (x + sd) / (x - sd) 3rd / 1st 0.2604    0.05308   4.907 9.2681e-07 0.1564
-#> 4 (x + sd) / (x - sd) 2nd / 2nd 0.3926    0.08101   4.846 1.2588e-06 0.2338
-#> 5 (x + sd) / (x - sd) 3rd / 2nd 0.3162    0.07023   4.503 6.7096e-06 0.1786
-#> 6 (x + sd) / (x - sd) 3rd / 3rd 0.7053    0.20273   3.479 0.00050342 0.3079
-#>   97.5 %
-#> 1 0.8209
-#> 2 0.4276
-#> 3 0.3645
-#> 4 0.5514
-#> 5 0.4539
-#> 6 1.1026
+#>                   Age    PClass Effect Std. Error z value   Pr(>|z|)  2.5 % 97.5 %
+#> 1 (x + sd) / (x - sd) 1st / 1st 0.7043    0.05946  11.846 < 2.22e-16 0.5878 0.8209
+#> 2 (x + sd) / (x - sd) 2nd / 1st 0.3185    0.05566   5.723 1.0442e-08 0.2095 0.4276
+#> 3 (x + sd) / (x - sd) 3rd / 1st 0.2604    0.05308   4.907 9.2681e-07 0.1564 0.3645
+#> 4 (x + sd) / (x - sd) 2nd / 2nd 0.3926    0.08101   4.846 1.2588e-06 0.2338 0.5514
+#> 5 (x + sd) / (x - sd) 3rd / 2nd 0.3162    0.07023   4.503 6.7096e-06 0.1786 0.4539
+#> 6 (x + sd) / (x - sd) 3rd / 3rd 0.7053    0.20273   3.479 0.00050342 0.3079 1.1026
 #> 
 #> Model type:  glm 
 #> Prediction type:  response

@@ -1,8 +1,8 @@
 ---
-title: "Marginal Effects with Multiple Imputation"
+title: "Multiple Imputation"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Marginal Effects with Multiple Imputation}
+  %\VignetteIndexEntry{Multiple Imputation}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -32,9 +32,10 @@ To highlight the workflow, we can consider 3 situations: linear regression, logi
 
 Let's first set up the data.
 
-```{r, eval = FALSE}
+```{r}
 library(mice)
 library(marginaleffects)
+library(modelsummary)
 
 dat <- mtcars
 dat$am[c(2, 5, 9, 12)] <- NA
@@ -51,7 +52,7 @@ dat_mice <- complete(dat_mice, "all")
 
 To work with the list of data sets, we'll create a function (in this case called `fit_reg`) that fits the model and computes the marginal effects.
 
-```{r, eval = FALSE}
+```{r}
 fit_reg <- function(dat) {
     mod <- lm(mpg ~ hp, data = dat)
     out <- marginaleffects(mod, newdata = dat)
@@ -61,29 +62,34 @@ fit_reg <- function(dat) {
 
 Using this function, we can apply it to each data set in the `dat_mice` list using `lapply()`. From there, we can pool and get a summary.
 
-```{r, eval = FALSE}
-mod_reg <- lapply(dat_mice, fit_reg)
-mod_reg <- pool(mod_reg)
+```{r, message = FALSE, warning = FALSE}
+mod_imputation <- lapply(dat_mice, fit_reg)
+mod_imputation <- pool(mod_imputation)
 
-summary(mod_reg)
+summary(mod_imputation)
 ```
 
 We can compare this with what the model would have looked like without any missing data. The estimates are very similar (within one standard error) and the p-value for the imputed models is slightly higher than the full model (as expected).
 
-```{r}
-mod_reg2 <- lm(mpg ~ hp, data = mtcars)
-marginaleffects(mod_reg2) |>
-  summary()
+```{r, warning = FALSE, message = FALSE}
+mod_missing <- lm(mpg ~ hp, data = dat)
+mod_missing <- marginaleffects(mod_missing)
+mod_complete <- lm(mpg ~ hp, data = mtcars)
+mod_complete <- marginaleffects(mod_complete)
+
+models <- list(
+    "Listwise Deletion" = mod_missing,
+    "Complete" = mod_complete,
+    "Multiple Imputation" = mod_imputation)
+
+modelsummary(models)
 ```
-
-
-
 
 # Logistic Regression with `mice`
 
 For the logistic regression, we'll work with the same `dat_mice` imputed data sets. We'll update our function to run the logistic regression that we want and call it `fit_logistic`.
 
-```{r, eval = FALSE}
+```{r}
 fit_logistic <- function(dat) {
     mod <- glm(am ~ mpg, data = dat, family = binomial)
     out <- marginaleffects(mod, newdata = dat)
@@ -93,28 +99,34 @@ fit_logistic <- function(dat) {
 
 Using this function, we can apply it to each data set in the `dat_mice` list using `lapply()`. From there, we can pool and get a summary.
 
-```{r, eval = FALSE}
-mod_logistic <- lapply(dat_mice, fit_logistic)
-mod_logistic <- pool(mod_logistic)
+```{r, message = FALSE, warning = FALSE}
+mod_imputation <- lapply(dat_mice, fit_logistic)
+mod_imputation <- pool(mod_imputation)
 
-summary(mod_logistic)
+summary(mod_imputation)
 ```
 
 Again, we can compare this with what the model would have looked like without any missing data. The estimates, again, are very similar (within one standard error) and the p-value for the imputed models is slightly higher than the full model (as expected).
 
-```{r}
-mod_logistic2 <- glm(am ~ mpg, data = mtcars, family = binomial)
-marginaleffects(mod_logistic2) |>
-  summary()
-```
+```{r, warning = FALSE, message = FALSE}
+mod_missing <- glm(am ~ mpg, data = dat, family = binomial)
+mod_complete <- glm(am ~ mpg, data = mtcars, family = binomial)
+mod_missing <- marginaleffects(mod_missing)
+mod_complete <- marginaleffects(mod_complete)
 
+models <- list(
+    "Listwise Deletion" = mod_missing,
+    "Complete" = mod_complete,
+    "Multiple Imputation" = mod_imputation)
+
+modelsummary(models)
+```
 
 # Multilevel Modeling with `lme4`
 
-
 Our last example with use data from `lme4` known as `sleepstudy`. Let's first set up the data. We randomly create missing in the outcome variable known as `Reaction`.
 
-```{r, eval = FALSE}
+```{r, message = FALSE, warning = FALSE}
 library(lme4)
 data("sleepstudy")
 
@@ -126,14 +138,14 @@ dat2$Reaction[sample(1:180, 10)] <- NA
 
 As before, the next steps are to use `mice` to create the imputed data sets. 
 
-```{r}
+```{r, message = FALSE, warning = FALSE}
 dat_mice2 <- mice(dat2, m = 20, printFlag = FALSE, .Random.seed = 1024)
 dat_mice2 <- complete(dat_mice2, "all")
 ```
 
 To work with the list of data sets, we'll create a function (in this case called `fit_reg`) that fits the model and computes the marginal effects.
 
-```{r, eval = FALSE}
+```{r, message = FALSE, warning = FALSE}
 fit_mlm <- function(dat) {
     mod <- lmer(Reaction ~ Days + (1 + Days|Subject), data = dat)
     out <- marginaleffects(mod, newdata = dat)
@@ -143,20 +155,26 @@ fit_mlm <- function(dat) {
 
 Using this function, we can apply it to each data set in the `dat_mice` list using `lapply()`. From there, we can pool and get a summary.
 
-```{r, eval = FALSE}
-mod_mlm <- lapply(dat_mice2, fit_mlm)
-mod_mlm <- pool(mod_mlm)
+```{r, message = FALSE, warning = FALSE}
+mod_imputation <- lapply(dat_mice2, fit_mlm)
+mod_imputation <- pool(mod_imputation)
 
-summary(mod_mlm)
+summary(mod_imputation)
 ```
 
 Like the previous models, we can compare this with what the model would have looked like without any missing data. The estimates are very similar (within one standard error) and the p-value for the imputed models is slightly higher than the full model (as expected).
 
-```{r}
-mod_mlm2 <- lmer(Reaction ~ Days + (1 + Days|Subject), data = sleepstudy)
-marginaleffects(mod_mlm2) |>
-  summary()
+```{r, warning = FALSE, message = FALSE}
+mod_complete <- lmer(Reaction ~ Days + (1 + Days|Subject), data = sleepstudy)
+mod_missing <- lmer(Reaction ~ Days + (1 + Days|Subject), data = dat2)
+mod_complete <- marginaleffects(mod_complete)
+mod_missing <- marginaleffects(mod_missing)
+
+models <- list(
+    "Listwise Deletion" = mod_missing,
+    "Complete" = mod_complete,
+    "Multiple Imputation" = mod_imputation)
+
+modelsummary(models)
 ```
-
-
 
