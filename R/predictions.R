@@ -320,7 +320,7 @@ predictions <- function(model,
     setDF(out)
 
     # transform already applied to bayesian draws before computing confidence interval
-    if (is.null(draws)) {
+    if (is.null(draws) && !is.null(transform_post)) {
         out <- backtransform(out, transform_post = transform_post)
     }
 
