@@ -1,8 +1,8 @@
 ---
-title: "Transformations and Custom Contrasts: Adjusted Risk Ratio Example"
+title: "Transformations and Custom Contrasts"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Transformations and Custom Contrasts: Log Adjusted Risk Ratio Example}
+  %\VignetteIndexEntry{Transformations and Custom Contrasts}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -34,6 +34,8 @@ ggplot2::theme_set(theme_clean())
 ```
 
 The content of this vignette requires `marginaleffects` version 0.5.1 which was not yet available on CRAN at the time of writing. [You can always install the development version from github.](https://vincentarelbundock.github.io/marginaleffects/#installation)
+
+This vignette explains how to create custom contrasts and slopes, and how to transform predictions, contrasts, and slopes using arbirary functions.
 
 [The Contrasts vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_contrasts.html) defined contrasts as:
 
