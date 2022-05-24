@@ -5,6 +5,20 @@ requiet("modelsummary")
 tol <- .0001
 
 
+# manual average contrast
+mod <- glm(am ~ vs + mpg, data = mtcars, family = binomial)
+cmp1 <- comparisons(
+    mod,
+    variables = list(vs = 0:1),
+    transform_pre = function(hi, lo) mean(hi - lo))[1,]
+cmp2 <- comparisons(
+    mod,
+    variables = list(vs = 0:1))
+cmp2 <- tidy(cmp2)
+expect_equivalent(cmp1$comparison, cmp2$estimate)
+expect_equivalent(cmp1$std.error, cmp2$std.error)
+
+
 # error when function breaks or returns a bad vector
 requiet("survey")
 data(nhanes, package = "survey")
