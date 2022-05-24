@@ -9,6 +9,7 @@
 #' @param draw `TRUE` returns a `ggplot2` plot. `FALSE` returns a `data.frame` of the underlying data.
 #' @inheritParams plot.marginaleffects
 #' @inheritParams plot_cme
+#' @inheritParams predictions
 #' @return A `ggplot2` object
 #' @export
 #' @examples
@@ -23,6 +24,7 @@ plot_cap <- function(model,
                      type = "response",
                      vcov = NULL,
                      conf_level = 0.95,
+                     transform_post = NULL,
                      draw = TRUE,
                      ...) {
 
@@ -88,6 +90,7 @@ plot_cap <- function(model,
                            type = type,
                            vcov = vcov,
                            conf_level = conf_level,
+                           transform_post = transform_post,
                            ...)
     colnames(datplot)[colnames(datplot) == condition1] <- "condition1"
     colnames(datplot)[colnames(datplot) == condition2] <- "condition2"
