@@ -189,12 +189,12 @@ library(gapminder)
 
 # Build some 0s into the GDP column
 set.seed(1234)
-gapminder <- gapminder::gapminder |> 
-  filter(continent != "Oceania") |> 
+gapminder <- gapminder::gapminder %>% 
+  filter(continent != "Oceania") %>% 
   # Make a bunch of GDP values 0
   mutate(prob_zero = ifelse(lifeExp < 50, 0.3, 0.02),
          will_be_zero = rbinom(n(), 1, prob = prob_zero),
-         gdpPercap0 = ifelse(will_be_zero, 0, gdpPercap)) |> 
+         gdpPercap0 = ifelse(will_be_zero, 0, gdpPercap)) %>% 
   select(-prob_zero, -will_be_zero)
 
 mod <- brm(
@@ -209,9 +209,7 @@ mod <- brm(
 library(dplyr)
 library(ggplot2)
 library(patchwork)
-library(brms)
 library(marginaleffects)
-library(gapminder)
 set.seed(1234)
 
 source("../inst/tinytest/helpers.R")
@@ -336,8 +334,8 @@ slopes_data <- comparisons(
   variables = list(lifeExp = eps),
   newdata = datagrid(lifeExp = seq(40, 80, 20)),
   transform_pre = function(hi, lo) ((exp(hi) - exp(lo)) / exp(eps)) / eps
-) |> 
-  left_join(predictions_data, by = "lifeExp") |> 
+) %>% 
+  left_join(predictions_data, by = "lifeExp") %>%
   # Point-slope formula: (y - y1) = m(x - x1)
   mutate(intercept = comparison * (-lifeExp) + predicted)
 
