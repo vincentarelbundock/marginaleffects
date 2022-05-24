@@ -148,6 +148,10 @@ tidy.predictions <- function(x,
     w <- attr(x, "weights")
     if (!is.null(w)) w <- x[[w]]
 
+    by <- c("group", by)
+    by <- intersect(by, colnames(x))
+    if (length(by) == 0) by <- NULL
+
     fun <- function(...) {
         dots <- list(...)
         dots[["eps"]] <- NULL

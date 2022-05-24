@@ -31,8 +31,8 @@ expect_equivalent(pre$predicted, ins$Predicted)
 expect_equivalent(pre$std.error, ins$SE)
 expect_equivalent(pre$conf.low, ins$CI_low)
 expect_equivalent(pre$conf.high, ins$CI_high)
-expect_false("std.error" %in% colnames(tid))
-expect_false("conf.low" %in% colnames(tid))
+expect_true("std.error" %in% colnames(tid))
+expect_true("conf.low" %in% colnames(tid))
 
 # glm link scale: CI fully supported
 mod <- glm(am ~ mpg + drat + factor(cyl), data = mtcars, family = binomial)
