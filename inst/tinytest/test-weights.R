@@ -39,11 +39,19 @@ requiet("survey")
 
 # mtcars logit
 dat <- mtcars
-dat$weights <- 1:32
+dat$weights <- dat$w <- 1:32
 mod <- suppressWarnings(svyglm(
     am ~ mpg,
     design = svydesign(ids = ~1, weights = ~weights, data = dat),
     family = binomial))
+p1 <- predictions(mod, newdata = dat)
+p2 <- predictions(mod, weights = "weights", newdata = dat)
+p3 <- predictions(mod, weights = "w", newdata = dat)
+p4 <- predictions(mod, weights = dat$weights)
+expect_false(tidy(p1)$estimate == tidy(p2)$estimate)
+expect_false(tidy(p1)$std.error == tidy(p2)$std.error)
+expect_equal(tidy(p2), tidy(p3))
+expect_equal(tidy(p2), tidy(p4))
 
 # sanity check
 expect_error(comparisons(mod, weights = "junk"), pattern = "explicitly")

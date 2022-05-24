@@ -159,7 +159,7 @@ tidy.predictions <- function(x,
         out <- data.table(do.call("predictions", dots))
         if (!is.null(w)) {
             out <- out[,
-                .(estimate = stats::weighted.mean(predicted, w, na.rm = TRUE)),
+                .(estimate = stats::weighted.mean(predicted, ..w, na.rm = TRUE)),
                 by = by]
         } else {
             out <- out[,
@@ -171,7 +171,7 @@ tidy.predictions <- function(x,
 
     if (!is.null(w)) {
         x_dt <- x_dt[,
-            .(estimate = stats::weighted.mean(predicted, w, na.rm = TRUE)),
+            .(estimate = stats::weighted.mean(predicted, ..w, na.rm = TRUE)),
             by = by]
     } else {
         x_dt <- x_dt[,
@@ -281,7 +281,7 @@ tidy.comparisons <- function(x,
         if (is.null(w)) {
             ame <- x_dt[idx_na == FALSE, .(estimate = mean(comparison, na.rm = TRUE)), by = idx_by]
         } else {
-            ame <- x_dt[idx_na == FALSE, .(estimate = stats::weighted.mean(comparison, w, na.rm = TRUE)), by = idx_by]
+            ame <- x_dt[idx_na == FALSE, .(estimate = stats::weighted.mean(comparison, ..w, na.rm = TRUE)), by = idx_by]
         }
 
         if (is.matrix(J) && is.matrix(V)) {
@@ -306,7 +306,7 @@ tidy.comparisons <- function(x,
                 if (is.null(w)) {
                     J_mean <- J[, lapply(.SD, mean, na.rm = TRUE), by = tmp]
                 } else {
-                    J_mean <- J[, lapply(.SD, stats::weighted.mean, w = w, na.rm = TRUE), by = tmp]
+                    J_mean <- J[, lapply(.SD, stats::weighted.mean, w = ..w, na.rm = TRUE), by = tmp]
                 }
                 J_mean <- J_mean[, !..tmp]
                 J_mean <- as.matrix(J_mean)
