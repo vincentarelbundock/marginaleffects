@@ -141,7 +141,7 @@ get_contrasts <- function(model,
         idx <- out$contrast == "dydx"
         out[idx == TRUE, "comparison" := comparison / eps]
         if (!is.null(draws)) {
-            draws[idx == TRUE, ] <- draws[idx == TRUE, ] / out$eps
+            draws[idx == TRUE, ] <- draws[idx == TRUE, ] / out$eps[idx == TRUE]
         }
     }
   
