@@ -1,3 +1,4 @@
+exit_file("works interactively")
 source("helpers.R", local = TRUE)
 
 # eps argument affects results as expected
