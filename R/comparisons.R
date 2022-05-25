@@ -43,8 +43,7 @@
 #'     * "sequential": Each factor level is compared to the previous factor level
 #'     * "pairwise": Each factor level is compared to all other levels
 #'   - Logical variables:
-#'     * "TRUEvsFALSE"
-#'     * "FALSEvsTRUE"
+#'     * NULL: contrast between TRUE and FALSE
 #'   - Numeric variables:
 #'     * Numeric of length 1: Contrast for a gap of `contrast_numeric`, computed at the observed value plus and minus `contrast_numeric / 2`
 #'     * Numeric vector of length 2: Contrast between the 2nd element and the 1st element of the `contrast_numeric` vector.

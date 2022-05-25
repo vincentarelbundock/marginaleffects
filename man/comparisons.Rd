@@ -54,8 +54,7 @@ comparisons(
 }
 \item Logical variables:
 \itemize{
-\item "TRUEvsFALSE"
-\item "FALSEvsTRUE"
+\item NULL: contrast between TRUE and FALSE
 }
 \item Numeric variables:
 \itemize{
