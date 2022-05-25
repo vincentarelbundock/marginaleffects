@@ -75,8 +75,7 @@ Pre-transformation:  function(hi, lo) hi/lo
 Post-transformation:  exp"
 expect_print(summary(cmp), known)
 
-# bugs stay dead: summary manipulation
-exit_file("works interactively (version numbers?)")
+# bugs stay dead: summary manipulation (destroys attributes, unfortunately)
 mod <- glm(am ~ hp * wt, data = mtcars, family = binomial)
 mfx <- marginaleffects(mod)
 known <- "Average marginal effects

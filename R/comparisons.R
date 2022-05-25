@@ -187,6 +187,16 @@ comparisons <- function(model,
 
     marginalmeans <- isTRUE(checkmate::check_choice(newdata, choices = "marginalmeans")) # before sanitize_newdata
     newdata <- sanity_newdata(model = model, newdata = newdata)
+
+
+    # transformation labels (before sanitation)
+    transform_pre_label <- transform_post_label <- NULL
+    if (is.function(transform_pre)) {
+        transform_pre_label <- deparse(substitute(transform_pre))
+    }
+    if (!is.null(transform_post)) {
+        transform_post_label <- deparse(substitute(transform_post))
+    }
     transform_pre <- sanitize_transform_pre(transform_pre)
 
 
@@ -206,14 +216,6 @@ comparisons <- function(model,
     sanity_contrast_factor(contrast_factor) # hardcoded in marginaleffects()
     sanity_contrast_numeric(contrast_numeric) # hardcoded in marginaleffects()
 
-    # transformation labels
-    transform_pre_label <- transform_post_label <- NULL
-    if (is.function(transform_pre)) {
-        transform_pre_label <- deparse(substitute(transform_pre))
-    }
-    if (!is.null(transform_post)) {
-        transform_post_label <- deparse(substitute(transform_post))
-    }
 
 
     # weights
