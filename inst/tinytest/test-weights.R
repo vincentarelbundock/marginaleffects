@@ -36,6 +36,10 @@ expect_error(comparisons(mod, weights = "junk"), pattern = "explicitly")
 expect_error(marginaleffects(mod, weights = "junk"), pattern = "explicitly")
 
 # vs. Stata (not clear what SE they use, so we give tolerance)
+mod <- suppressWarnings(svyglm(
+    am ~ mpg,
+    design = svydesign(ids = ~1, weights = ~weights, data = dat),
+    family = binomial))
 stata <- c("estimate" = .0441066, "std.error" = .0061046)
 mfx <- marginaleffects(mod, weights = mod$prior.weights)
 mfx <- tidy(mfx)
