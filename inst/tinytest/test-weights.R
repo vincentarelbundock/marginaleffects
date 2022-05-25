@@ -1,39 +1,3 @@
-# source("helpers.R")
-#
-#
-#
-# # # WIP: weighted data, get average predictions using a `comparisons()` hack
-#
-# library(survey)
-# data(nhanes)
-# nhanes$RIAGENDR <- factor(nhanes$RIAGENDR, labels = c("male", "female"))
-# #
-# svydsgn <- svydesign(
-#     id = ~SDMVPSU, strata = ~SDMVSTRA, weights = ~WTMEC2YR,
-#     nest = TRUE, data = nhanes)
-# mod <- suppressWarnings(svyglm(
-#     HI_CHOL ~ RIAGENDR + agecat, design = svydsgn, family = binomial))
-# #
-# nd <- insight::get_data(svymod)
-# nd$wts <- svymod$prior.weights
-# cmp <- comparisons(
-#     mod,
-#     type = "link",
-#     weights = "wts",
-#     transform_pre = function(hi, lo) hi,
-#     newdata = nd,
-#     variables = "RIAGENDR")
-#
-# On the link-scale, the predictions jacobian == model.matrix
-# Interesting because it allows us to get fast standard errors
-
-# J <- attr(cmp, "J")
-# M <- insight::get_modelmatrix(mod)
-# V <- attr(cmp, "vcov")
-# sqrt(colSums(t(J %*% V) * t(J))) |> head()
-# sqrt(colSums(t(M %*% V) * t(M))) |> head()
-
-
 source("helpers.R")
 requiet("survey")
 
@@ -41,12 +5,9 @@ requiet("survey")
 dat <- mtcars
 dat$weights <- dat$w <- 1:32
 mod <- suppressWarnings(svyglm(
-    am ~ mpg,
+    am ~ mpg + cyl,
     design = svydesign(ids = ~1, weights = ~weights, data = dat),
     family = binomial))
-
-p2 <- predictions(mod, weights = "weights", newdata = dat)
-tidy(p2)
 
 p1 <- predictions(mod, newdata = dat)
 p2 <- predictions(mod, weights = "weights", newdata = dat)
@@ -56,6 +17,11 @@ expect_false(tidy(p1)$estimate == tidy(p2)$estimate)
 expect_false(tidy(p1)$std.error == tidy(p2)$std.error)
 expect_equal(tidy(p2), tidy(p3))
 expect_equal(tidy(p2), tidy(p4))
+
+# by supports weights
+p1 <- predictions(mod, weights = "weights", newdata = dat)
+p1 <- tidy(p1, by = "cyl")
+expect_inherits(p1, "data.frame")
 
 # sanity check
 expect_error(comparisons(mod, weights = "junk"), pattern = "explicitly")

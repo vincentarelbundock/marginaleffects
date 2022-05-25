@@ -157,6 +157,7 @@ tidy.predictions <- function(x,
         dots[["vcov"]] <- FALSE
         out <- data.table(do.call("predictions", dots))
         if (!is.null(marginaleffects_weights_internal)) {
+            out[, "marginaleffects_weights_internal" := marginaleffects_weights_internal]
             out <- out[,
                 .(estimate = stats::weighted.mean(
                     predicted,
@@ -172,6 +173,7 @@ tidy.predictions <- function(x,
     }
 
     if (!is.null(marginaleffects_weights_internal)) {
+        x_dt[, "marginaleffects_weights_internal" := marginaleffects_weights_internal]
         x_dt <- x_dt[,
             .(estimate = stats::weighted.mean(
                 predicted,
@@ -289,6 +291,7 @@ tidy.comparisons <- function(x,
         if (is.null(marginaleffects_weights_internal)) {
             ame <- x_dt[idx_na == FALSE, .(estimate = mean(comparison, na.rm = TRUE)), by = idx_by]
         } else {
+            ame[, "marginaleffects_weights_internal" := marginaleffects_weights_internal]
             ame <- x_dt[idx_na == FALSE,
                         .(estimate = stats::weighted.mean(
                             comparison,
@@ -319,6 +322,7 @@ tidy.comparisons <- function(x,
                 if (is.null(marginaleffects_weights_internal)) {
                     J_mean <- J[, lapply(.SD, mean, na.rm = TRUE), by = tmp]
                 } else {
+                    J[, "marginaleffects_weights_internal" := marginaleffects_weights_internal]
                     J_mean <- J[,
                     lapply(.SD,
                            stats::weighted.mean,
