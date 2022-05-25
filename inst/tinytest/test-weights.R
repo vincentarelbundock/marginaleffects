@@ -18,10 +18,18 @@ expect_false(tidy(p1)$std.error == tidy(p2)$std.error)
 expect_equal(tidy(p2), tidy(p3))
 expect_equal(tidy(p2), tidy(p4))
 
+
 # by supports weights
 p1 <- predictions(mod, weights = "weights", newdata = dat)
 p1 <- tidy(p1, by = "cyl")
 expect_inherits(p1, "data.frame")
+m1 <- marginaleffects(mod, weights = "weights", newdata = dat)
+m1 <- tidy(m1, by = "cyl")
+expect_inherits(m1, "data.frame")
+c1 <- comparisons(mod, weights = "weights", newdata = dat)
+c1 <- tidy(c1, by = "cyl")
+expect_inherits(c1, "data.frame")
+
 
 # sanity check
 expect_error(comparisons(mod, weights = "junk"), pattern = "explicitly")

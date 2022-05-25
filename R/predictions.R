@@ -143,7 +143,9 @@ predictions <- function(model,
     # weights
     sanity_weights(weights, newdata) # after sanity_newdata
     if (!is.null(weights) && isTRUE(checkmate::check_string(weights))) {
-        weights <- newdata[[weights]]
+        newdata[["marginaleffects_weights_internal"]] <- newdata[[weights]]
+    } else {
+        newdata[["marginaleffects_weights_internal"]] <- weights
     }
 
     # trust newdata$rowid
@@ -318,6 +320,10 @@ predictions <- function(model,
 
     setDF(out)
 
+    # save as attribute and not column
+    marginaleffects_weights_internal <- out[["marginaleffects_weights_internal"]]
+    out[["marginaleffects_weights_internal"]] <- NULL
+
     # transform already applied to bayesian draws before computing confidence interval
     if (is.null(draws) && !is.null(transform_post)) {
         out <- backtransform(out, transform_post = transform_post)
@@ -342,7 +348,7 @@ predictions <- function(model,
     attr(out, "vcov") <- V
     attr(out, "posterior_draws") <- draws
     attr(out, "newdata") <- newdata
-    attr(out, "weights") <- weights
+    attr(out, "weights") <- marginaleffects_weights_internal
 
     # modelbased::visualisation_matrix attaches useful info for plotting
     for (a in names(attributes_newdata)) {

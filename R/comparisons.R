@@ -195,7 +195,9 @@ comparisons <- function(model,
     # weights
     sanity_weights(weights, newdata) # after sanity_newdata
     if (!is.null(weights) && isTRUE(checkmate::check_string(weights))) {
-        weights <- newdata[[weights]]
+        newdata[["marginaleffects_weights_internal"]] <- newdata[[weights]]
+    } else {
+        newdata[["marginaleffects_weights_internal"]] <- weights
     }
 
     # get dof before transforming the vcov arg
@@ -331,6 +333,10 @@ comparisons <- function(model,
     cols <- unique(c(cols, colnames(mfx)))
     mfx <- mfx[, ..cols, drop = FALSE]
 
+    # save as attribute and not column
+    marginaleffects_weights_internal <- mfx[["marginaleffects_weights_internal"]]
+    mfx[["marginaleffects_weights_internal"]] <- NULL
+
     out <- mfx
 
     if (!isTRUE(internal_call)) {
@@ -347,7 +353,7 @@ comparisons <- function(model,
     attr(out, "vcov.type") <- get_vcov_label(vcov)
     attr(out, "transform_pre") <- transform_pre_label
     attr(out, "transform_post") <- transform_post_label
-    attr(out, "weights") <- weights
+    attr(out, "weights") <- marginaleffects_weights_internal
 
     # modelbased::visualisation_matrix attaches useful info for plotting
     for (a in names(attributes_newdata)) {

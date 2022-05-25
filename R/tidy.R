@@ -291,7 +291,7 @@ tidy.comparisons <- function(x,
         if (is.null(marginaleffects_weights_internal)) {
             ame <- x_dt[idx_na == FALSE, .(estimate = mean(comparison, na.rm = TRUE)), by = idx_by]
         } else {
-            ame[, "marginaleffects_weights_internal" := marginaleffects_weights_internal]
+            x_dt[, "marginaleffects_weights_internal" := marginaleffects_weights_internal]
             ame <- x_dt[idx_na == FALSE,
                         .(estimate = stats::weighted.mean(
                             comparison,
@@ -330,6 +330,7 @@ tidy.comparisons <- function(x,
                            na.rm = TRUE),
                     by = tmp]
                 }
+                tmp <- c("marginaleffects_weights_internal", tmp)
                 J_mean <- J_mean[, !..tmp]
                 J_mean <- as.matrix(J_mean)
 
