@@ -75,6 +75,7 @@ Pre-transformation:  function(hi, lo) hi/lo
 Post-transformation:  exp"
 expect_print(summary(cmp), known)
 
+exit_file("works interactively")
 # bugs stay dead: summary manipulation (destroys attributes, unfortunately)
 mod <- glm(am ~ hp * wt, data = mtcars, family = binomial)
 mfx <- marginaleffects(mod)
