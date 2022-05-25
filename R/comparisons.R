@@ -194,9 +194,8 @@ comparisons <- function(model,
 
     # weights
     sanity_weights(weights, newdata) # after sanity_newdata
-    if (!is.null(weights) && !isTRUE(checkmate::check_string(weights))) {
-        newdata[["marginaleffects_weights"]] <- weights
-        weights <- "marginaleffects_weights"
+    if (!is.null(weights) && isTRUE(checkmate::check_string(weights))) {
+        weights <- newdata[[weights]]
     }
 
     # get dof before transforming the vcov arg

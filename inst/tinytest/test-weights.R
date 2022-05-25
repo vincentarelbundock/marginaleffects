@@ -44,6 +44,10 @@ mod <- suppressWarnings(svyglm(
     am ~ mpg,
     design = svydesign(ids = ~1, weights = ~weights, data = dat),
     family = binomial))
+
+p2 <- predictions(mod, weights = "weights", newdata = dat)
+tidy(p2)
+
 p1 <- predictions(mod, newdata = dat)
 p2 <- predictions(mod, weights = "weights", newdata = dat)
 p3 <- predictions(mod, weights = "w", newdata = dat)

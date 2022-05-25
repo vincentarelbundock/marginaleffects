@@ -142,9 +142,8 @@ predictions <- function(model,
 
     # weights
     sanity_weights(weights, newdata) # after sanity_newdata
-    if (!is.null(weights) && !isTRUE(checkmate::check_string(weights))) {
-        newdata[["marginaleffects_weights"]] <- weights
-        weights <- "marginaleffects_weights"
+    if (!is.null(weights) && isTRUE(checkmate::check_string(weights))) {
+        weights <- newdata[[weights]]
     }
 
     # trust newdata$rowid
@@ -327,7 +326,7 @@ predictions <- function(model,
     # clean columns
     stubcols <- c(
         "rowid", "type", "term", "group", "predicted", "std.error",
-        "statistic", "p.value", "conf.low", "conf.high",
+        "statistic", "p.value", "conf.low", "conf.high", "marginaleffects_weights",
         sort(grep("^predicted", colnames(newdata), value = TRUE)))
     cols <- intersect(stubcols, colnames(out))
     cols <- unique(c(cols, colnames(out)))
