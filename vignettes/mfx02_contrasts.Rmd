@@ -58,9 +58,9 @@ We can obtain different contrasts by using the `comparisons()` function. For exa
 
 
 ```{r}
-comparisons(mod, contrast_factor = "sequential") %>% tidy()
-comparisons(mod, contrast_factor = "pairwise") %>% tidy()
-comparisons(mod, contrast_factor = "reference") %>% tidy()
+comparisons(mod, variables = list(cyl = "sequential")) %>% tidy()
+comparisons(mod, variables = list(cyl = "pairwise")) %>% tidy()
+comparisons(mod, variables = list(cyl = "reference")) %>% tidy()
 ```
 
 For comparison, this code produces the same results using the `emmeans` package:
@@ -93,25 +93,27 @@ mod <- lm(mpg ~ hp, data = mtcars)
 
 comparisons(mod) %>% tidy()
 
-comparisons(mod, contrast_numeric = 5) %>% tidy()
+comparisons(
+    mod,
+    variables = list(hp = 5)) %>% tidy()
 ```
 
 Compare adjusted predictions for a change in the regressor between two arbitrary values:
 
 ```{r}
-comparisons(mod, contrast_numeric = c(90, 110)) %>% tidy()
+comparisons(mod, variables = list(hp = c(90, 110))) %>% tidy()
 ```
 
 Compare adjusted predictions when the regressor changes across the interquartile range, across one or two standard deviations about its mean, or from across its full range:
 
 ```{r}
-comparisons(mod, contrast_numeric = "iqr") %>% tidy()
+comparisons(mod, variables = list(hp = "iqr")) %>% tidy()
 
-comparisons(mod, contrast_numeric = "sd") %>% tidy()
+comparisons(mod, variables = list(hp = "sd")) %>% tidy()
 
-comparisons(mod, contrast_numeric = "2sd") %>% tidy()
+comparisons(mod, variables = list(hp = "2sd")) %>% tidy()
 
-comparisons(mod, contrast_numeric = "minmax") %>% tidy()
+comparisons(mod, variables = list(hp = "minmax")) %>% tidy()
 ```
 
 # Interactions between contrasts

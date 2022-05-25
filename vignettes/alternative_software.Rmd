@@ -41,16 +41,12 @@ In my (Vincent's) biased opinion, the main benefits of `marginaleffects` over `e
 * Easier to compute marginal effects (slopes) for custom grids and continuous regressors.
 * Common plots are easy with the `plot_cap()` and `plot_cme()` functions.
 
-Many of `marginaleffects` advantages come down to subjective preferences over user interface. Readers are thus encouraged to try both packages to see which interface they prefer. Please keep in mind that `emmeans` offers many features which are not yet available in `marginaleffects`, including:
+Many of `marginaleffects` advantages come down to subjective preferences over user interface. Readers are thus encouraged to try both packages to see which interface they prefer. Please keep in mind that `emmeans` offers several features which are not yet available in `marginaleffects`, including:
 
-* Transformations and link functions
-  - `marginaleffects` can compute quantities on different scales with the `type` argument, but `emmeans` offers a richer array of possibilities for back transforms.
-* Custom contrasts and linear functions
-  - Compare to the `contrast_factor` and `contrast_numeric` arguments of the `marginaleffects::comparisons` function.
-* Multiplicity adjustments.
-* Joint tests.
 * Equivalence tests.
-* Various plots.
+* Multiplicity adjustments.
+* Hypothesis tests on linear combinations of contrasts.
+* Some plots.
 
 The [Marginal Means Vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx04_marginalmeans.html) includes side-by-side comparisons of `emmeans` and `marginaleffects` to compute marginal means. The rest of this section compares the syntax for contrasts and marginaleffects.
 
@@ -84,7 +80,7 @@ contrast(emm, method = "revpairwise")
 comparisons(mod,
             type = "link",
             newdata = "mean",
-            contrast_factor = "pairwise")
+            variables = list(cyl = "pairwise"))
 ```
 
 ## Contrasts by group
@@ -140,9 +136,8 @@ Then we compute pairwise contrasts over this grid:
 
 ```{r}
 cmp <- comparisons(mod,
-    variables = "btype",
+    variables = list("btype" = "pairwise"),
     newdata = nd,
-    contrast_factor = "pairwise",
     type = "link")
 nrow(cmp)
 ```
@@ -644,12 +639,12 @@ bm <- brmsmargins(
 data.frame(bm$ContrastSummary)
 ```
 
-In `marginaleffects` we use the `comparisons()` function and the `contrast_numeric` argument:
+In `marginaleffects` we use the `comparisons()` function and the `variables` argument:
 
 ```{r}
 cmp <- comparisons(
   ls.fe,
-  contrast_numeric = 0:1,
+  variables = list(grp = 0:1),
   dpar = "sigma")
 summary(cmp)
 ```

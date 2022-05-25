@@ -19,7 +19,8 @@
 #'    - [Multinomial Logit and Discrete Choice Models](https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html)
 #'    - [Tables and plots](https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html)
 #'    - [Robust standard errors and more](https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html)
-#'    - [Transformations and Custom Contrasts: Adjusted Risk Ratio Example](https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html)
+#'    - [Transformations and Custom Contrasts: Risk Ratio, Exponentiation, etc.](https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html)
+#'    - [Multiple Imputation](https://vincentarelbundock.github.io/marginaleffects/articles/multiple_imputation.html)
 #'
 #' A "marginal effect" is the partial derivative of the regression equation
 #' with respect to a variable in the model. This function uses automatic

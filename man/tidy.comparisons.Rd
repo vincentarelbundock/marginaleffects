@@ -46,6 +46,6 @@ obtain the Average Marginal Effect and its associated interval.
 }
 \examples{
 mod <- lm(mpg ~ factor(gear), data = mtcars)
-contr <- comparisons(mod, contrast_factor = "sequential")
+contr <- comparisons(mod, variables = list(gear = "sequential"))
 tidy(contr)
 }

@@ -19,8 +19,8 @@
 #'    - [Multinomial Logit and Discrete Choice Models](https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html)
 #'    - [Tables and plots](https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html)
 #'    - [Robust standard errors and more](https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html)
-#'    - [Transformations and Custom Contrasts: Adjusted Risk Ratio Example](https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html)
-#'
+#'    - [Transformations and Custom Contrasts: Risk Ratio, Exponentiation, etc.](https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html)
+#'    - [Multiple Imputation](https://vincentarelbundock.github.io/marginaleffects/articles/multiple_imputation.html)
 #'
 #' A "contrast" is the difference between two adjusted predictions, calculated
 #' for meaningfully different regressor values (e.g., College graduates vs.
@@ -36,10 +36,26 @@
 #' @param variables `NULL`, character vector, or named list. The subset of variables for which to compute contrasts.
 #' * `NULL`: compute contrasts for all the variables in the model object (can be slow).
 #' * Character vector: subset of variables (usually faster).
-#' * Named list: subset of variables with the type of contrasts to use, following the conventions in the `contrast_factor` and `contrast_numeric` arguments. Examples:
-#'   + `variables = list(gear = "pairwise", hp = 10)`
-#'   + `variables = list(gear = "sequential", hp = c(100, 120))`
-#'   + See the Examples section below.
+#' * Named list: names identify the subset of variables of interest, and values define the type of contrast to compute. Acceptable values depend on the variable type:
+#'   - Factor or character variables:
+#'     * "reference": Each factor level is compared to the factor reference (base) level
+#'     * "all": All combinations of observed levels
+#'     * "sequential": Each factor level is compared to the previous factor level
+#'     * "pairwise": Each factor level is compared to all other levels
+#'   - Logical variables:
+#'     * "TRUEvsFALSE"
+#'     * "FALSEvsTRUE"
+#'   - Numeric variables:
+#'     * Numeric of length 1: Contrast for a gap of `contrast_numeric`, computed at the observed value plus and minus `contrast_numeric / 2`
+#'     * Numeric vector of length 2: Contrast between the 2nd element and the 1st element of the `contrast_numeric` vector.
+#'     * "iqr": Contrast across the interquartile range of the regressor.
+#'     * "sd": Contrast across one standard deviation around the regressor mean.
+#'     * "2sd": Contrast across two standard deviations around the regressor mean.
+#'     * "minmax": Contrast between the maximum and the minimum values of the regressor.
+#'   - Examples:
+#'     + `variables = list(gear = "pairwise", hp = 10)`
+#'     + `variables = list(gear = "sequential", hp = c(100, 120))`
+#'     + See the Examples section below for more.
 #' @param newdata `NULL`, data frame, string, or `datagrid()` call. Determines the predictor values for which to compute contrasts.
 #' + `NULL` (default): Unit-level contrasts for each observed value in the original dataset.
 #' + data frame: Unit-level contrasts for each row of the `newdata` data frame.
@@ -61,18 +77,6 @@
 #'   - "lnoravg": `function(hi, lo) log((mean(hi)/(1 - mean(hi))) / (mean(lo)/(1 - mean(lo))))`
 #' * function: accept two equal-length numeric vectors of adjusted predictions (`hi` and `lo`) and returns a vector of contrasts of the same length, or a unique numeric value.
 #' @param transform_post (experimental) A function applied to unit-level estimates and confidence intervals just before the function returns results.
-#' @param contrast_factor string. Which pairs of factors should be contrasted?
-#' * "reference": Each factor level is compared to the factor reference (base) level
-#' * "all": All combinations of observed levels
-#' * "sequential": Each factor level is compared to the previous factor level
-#' * "pairwise": Each factor level is compared to all other levels
-#' @param contrast_numeric string or numeric. Which pairs of numeric values should be contrasted?
-#' * Numeric of length 1: Contrast for a gap of `contrast_numeric`, computed at the observed value plus and minus `contrast_numeric / 2`
-#' * Numeric vector of length 2: Contrast between the 2nd element and the 1st element of the `contrast_numeric` vector.
-#' * "iqr": Contrast across the interquartile range of the regressor.
-#' * "sd": Contrast across one standard deviation around the regressor mean.
-#' * "2sd": Contrast across two standard deviations around the regressor mean.
-#' * "minmax": Contrast between the maximum and the minimum values of the regressor.
 #' @param interaction TRUE, FALSE, or NULL
 #' * `FALSE`: Contrasts represent the change in adjusted predictions when one predictor changes and all other variables are held constant.
 #' * `TRUE`: Contrasts represent the changes in adjusted predictions when the predictors specified in the `variables` argument are manipulated simultaneously.
@@ -88,9 +92,9 @@
 #' tmp <- mtcars
 #' tmp$am <- as.logical(tmp$am)
 #' mod <- lm(mpg ~ am + factor(cyl), tmp)
-#' comparisons(mod, contrast_factor = "reference") %>% tidy()
-#' comparisons(mod, contrast_factor = "sequential") %>% tidy()
-#' comparisons(mod, contrast_factor = "pairwise") %>% tidy()
+#' comparisons(mod, variables = list(cyl = "reference")) %>% tidy()
+#' comparisons(mod, variables = list(cyl = "sequential")) %>% tidy()
+#' comparisons(mod, variables = list(cyl = "pairwise")) %>% tidy()
 #'
 #' # GLM with different scale types
 #' mod <- glm(am ~ factor(gear), data = mtcars)
@@ -108,12 +112,12 @@
 #'
 #' # Numeric contrasts
 #' mod <- lm(mpg ~ hp, data = mtcars)
-#' comparisons(mod, contrast_numeric = 1) %>% tidy()
-#' comparisons(mod, contrast_numeric = 5) %>% tidy()
-#' comparisons(mod, contrast_numeric = c(90, 100)) %>% tidy()
-#' comparisons(mod, contrast_numeric = "iqr") %>% tidy()
-#' comparisons(mod, contrast_numeric = "sd") %>% tidy()
-#' comparisons(mod, contrast_numeric = "minmax") %>% tidy()
+#' comparisons(mod, variables = list(hp = 1)) %>% tidy()
+#' comparisons(mod, variables = list(hp = 5)) %>% tidy()
+#' comparisons(mod, variables = list(hp = c(90, 100))) %>% tidy()
+#' comparisons(mod, variables = list(hp = "iqr")) %>% tidy()
+#' comparisons(mod, variables = list(hp = "sd")) %>% tidy()
+#' comparisons(mod, variables = list(hp = "minmax")) %>% tidy()
 #'
 #' # Adjusted Risk Ratio (see Case Study vignette on the website)
 #' mod <- glm(vs ~ mpg, data = mtcars, family = binomial)
@@ -140,8 +144,6 @@ comparisons <- function(model,
                         type = "response",
                         vcov = TRUE,
                         conf_level = 0.95,
-                        contrast_factor = "reference",
-                        contrast_numeric = 1,
                         transform_pre = "difference",
                         transform_post = NULL,
                         interaction = NULL,
@@ -151,8 +153,21 @@ comparisons <- function(model,
 
     dots <- list(...)
 
-    internal_call <- dots[["internal_call"]]
+    # deprecated arguments still used internally and should be kept for backward compatibility
+    if ("contrast_factor" %in% names(dots)) {
+        contrast_factor <- dots[["contrast_factor"]]
+        dots[["contrast_factor"]] <- NULL
+    } else {
+        contrast_factor <- "reference"
+    }
+    if ("contrast_numeric" %in% names(dots)) {
+        contrast_numeric <- dots[["contrast_numeric"]]
+        dots[["contrast_numeric"]] <- NULL
+    } else {
+        contrast_numeric <- 1
+    }
 
+    internal_call <- dots[["internal_call"]]
     if (!isTRUE(internal_call)) {
         # if `newdata` is a call to `datagrid`, `typical`, or `counterfactual`, insert `model`
         # should probably not be nested too deeply in the call stack since we eval.parent() (not sure about this)

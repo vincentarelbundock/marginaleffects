@@ -231,7 +231,7 @@ tidy.predictions <- function(x,
 #' @export
 #' @examples
 #' mod <- lm(mpg ~ factor(gear), data = mtcars)
-#' contr <- comparisons(mod, contrast_factor = "sequential")
+#' contr <- comparisons(mod, variables = list(gear = "sequential"))
 #' tidy(contr)
 tidy.comparisons <- function(x,
                              conf_level = 0.95,

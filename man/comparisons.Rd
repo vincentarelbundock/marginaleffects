@@ -11,8 +11,6 @@ comparisons(
   type = "response",
   vcov = TRUE,
   conf_level = 0.95,
-  contrast_factor = "reference",
-  contrast_numeric = 1,
   transform_pre = "difference",
   transform_post = NULL,
   interaction = NULL,
@@ -45,11 +43,35 @@ comparisons(
 \itemize{
 \item \code{NULL}: compute contrasts for all the variables in the model object (can be slow).
 \item Character vector: subset of variables (usually faster).
-\item Named list: subset of variables with the type of contrasts to use, following the conventions in the \code{contrast_factor} and \code{contrast_numeric} arguments. Examples:
+\item Named list: names identify the subset of variables of interest, and values define the type of contrast to compute. Acceptable values depend on the variable type:
+\itemize{
+\item Factor or character variables:
+\itemize{
+\item "reference": Each factor level is compared to the factor reference (base) level
+\item "all": All combinations of observed levels
+\item "sequential": Each factor level is compared to the previous factor level
+\item "pairwise": Each factor level is compared to all other levels
+}
+\item Logical variables:
+\itemize{
+\item "TRUEvsFALSE"
+\item "FALSEvsTRUE"
+}
+\item Numeric variables:
+\itemize{
+\item Numeric of length 1: Contrast for a gap of \code{contrast_numeric}, computed at the observed value plus and minus \code{contrast_numeric / 2}
+\item Numeric vector of length 2: Contrast between the 2nd element and the 1st element of the \code{contrast_numeric} vector.
+\item "iqr": Contrast across the interquartile range of the regressor.
+\item "sd": Contrast across one standard deviation around the regressor mean.
+\item "2sd": Contrast across two standard deviations around the regressor mean.
+\item "minmax": Contrast between the maximum and the minimum values of the regressor.
+}
+\item Examples:
 \itemize{
 \item \code{variables = list(gear = "pairwise", hp = 10)}
 \item \code{variables = list(gear = "sequential", hp = c(100, 120))}
-\item See the Examples section below.
+\item See the Examples section below for more.
+}
 }
 }}
 
@@ -75,24 +97,6 @@ acceptable values is returned in an error message.}
 }}
 
 \item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
-
-\item{contrast_factor}{string. Which pairs of factors should be contrasted?
-\itemize{
-\item "reference": Each factor level is compared to the factor reference (base) level
-\item "all": All combinations of observed levels
-\item "sequential": Each factor level is compared to the previous factor level
-\item "pairwise": Each factor level is compared to all other levels
-}}
-
-\item{contrast_numeric}{string or numeric. Which pairs of numeric values should be contrasted?
-\itemize{
-\item Numeric of length 1: Contrast for a gap of \code{contrast_numeric}, computed at the observed value plus and minus \code{contrast_numeric / 2}
-\item Numeric vector of length 2: Contrast between the 2nd element and the 1st element of the \code{contrast_numeric} vector.
-\item "iqr": Contrast across the interquartile range of the regressor.
-\item "sd": Contrast across one standard deviation around the regressor mean.
-\item "2sd": Contrast across two standard deviations around the regressor mean.
-\item "minmax": Contrast between the maximum and the minimum values of the regressor.
-}}
 
 \item{transform_pre}{(experimental) string or function. How should pairs of adjusted predictions be contrasted?
 \itemize{
@@ -156,7 +160,8 @@ in the vignettes on the \code{marginaleffects} website: \url{https://vincentarel
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html}{Multinomial Logit and Discrete Choice Models}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html}{Tables and plots}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html}{Robust standard errors and more}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html}{Transformations and Custom Contrasts: Adjusted Risk Ratio Example}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html}{Transformations and Custom Contrasts: Risk Ratio, Exponentiation, etc.}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/multiple_imputation.html}{Multiple Imputation}
 }
 }
 }
@@ -200,9 +205,9 @@ library(magrittr)
 tmp <- mtcars
 tmp$am <- as.logical(tmp$am)
 mod <- lm(mpg ~ am + factor(cyl), tmp)
-comparisons(mod, contrast_factor = "reference") \%>\% tidy()
-comparisons(mod, contrast_factor = "sequential") \%>\% tidy()
-comparisons(mod, contrast_factor = "pairwise") \%>\% tidy()
+comparisons(mod, variables = list(cyl = "reference")) \%>\% tidy()
+comparisons(mod, variables = list(cyl = "sequential")) \%>\% tidy()
+comparisons(mod, variables = list(cyl = "pairwise")) \%>\% tidy()
 
 # GLM with different scale types
 mod <- glm(am ~ factor(gear), data = mtcars)
@@ -220,12 +225,12 @@ comparisons(mod, newdata = datagrid(am = 0, cyl = tmp$cyl))
 
 # Numeric contrasts
 mod <- lm(mpg ~ hp, data = mtcars)
-comparisons(mod, contrast_numeric = 1) \%>\% tidy()
-comparisons(mod, contrast_numeric = 5) \%>\% tidy()
-comparisons(mod, contrast_numeric = c(90, 100)) \%>\% tidy()
-comparisons(mod, contrast_numeric = "iqr") \%>\% tidy()
-comparisons(mod, contrast_numeric = "sd") \%>\% tidy()
-comparisons(mod, contrast_numeric = "minmax") \%>\% tidy()
+comparisons(mod, variables = list(hp = 1)) \%>\% tidy()
+comparisons(mod, variables = list(hp = 5)) \%>\% tidy()
+comparisons(mod, variables = list(hp = c(90, 100))) \%>\% tidy()
+comparisons(mod, variables = list(hp = "iqr")) \%>\% tidy()
+comparisons(mod, variables = list(hp = "sd")) \%>\% tidy()
+comparisons(mod, variables = list(hp = "minmax")) \%>\% tidy()
 
 # Adjusted Risk Ratio (see Case Study vignette on the website)
 mod <- glm(vs ~ mpg, data = mtcars, family = binomial)

@@ -114,7 +114,8 @@ website: \url{https://vincentarelbundock.github.io/marginaleffects/}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html}{Multinomial Logit and Discrete Choice Models}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html}{Tables and plots}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html}{Robust standard errors and more}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html}{Transformations and Custom Contrasts: Adjusted Risk Ratio Example}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html}{Transformations and Custom Contrasts: Risk Ratio, Exponentiation, etc.}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/multiple_imputation.html}{Multiple Imputation}
 }
 }
 }

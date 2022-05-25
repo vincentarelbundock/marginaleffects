@@ -29,7 +29,7 @@ get_predict.default <- function(model,
     dots <- list(...)
 
     # some predict methods raise warnings on unused arguments
-    unused <- c("normalize_dydx", "eps", "numDeriv_method", "internal_call", "contrast_numeric_slope")
+    unused <- c("normalize_dydx", "eps", "numDeriv_method", "internal_call", "contrast_numeric_slope", "contrast_numeric", "contrast_factor")
     dots <- dots[setdiff(names(dots), unused)]
 
     # incompatible arguments
