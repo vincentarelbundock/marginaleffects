@@ -1,5 +1,5 @@
 ---
-title: "Multinomial Logit and Discrete Choice Models "
+title: "Multinomial Logit and Discrete Choice Models"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Multinomial Logit and Discrete Choice Models}

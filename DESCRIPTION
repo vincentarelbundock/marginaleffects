@@ -49,6 +49,7 @@ Suggests:
     knitr,
     magrittr,
     margins,
+    mice,
     modelsummary,
     systemfonts,
     patchwork,
