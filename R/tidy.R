@@ -330,7 +330,9 @@ tidy.comparisons <- function(x,
                            na.rm = TRUE),
                     by = tmp]
                 }
-                tmp <- c("marginaleffects_weights_internal", tmp)
+                if ("marginaleffects_weights_internal" %in% colnames(J_mean)) {
+                    tmp <- c("marginaleffects_weights_internal", tmp)
+                }
                 J_mean <- J_mean[, !..tmp]
                 J_mean <- as.matrix(J_mean)
 
