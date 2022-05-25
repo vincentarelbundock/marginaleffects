@@ -75,10 +75,11 @@
 #' or "zero". When an unsupported string is entered, the model-specific list of
 #' acceptable values is returned in an error message.
 #' @param weights column name of the weights variable in `newdata`, or numeric vector of length equal to the number of rows in the original data or in `newdata` (if supplied).
-#' @param eps A numeric value specifying the “step” size to use when
-#' calculating numerical derivatives. See the Details section below. Warning:
-#' the marginal effects computed for certain models can be sensitive to the
-#' choice of step (e.g., Bayesian mixed effects).
+#' @param eps NULL or numeric value which determines step size to use when
+#' calculating numerical derivatives: (f(x+eps)-f(x))/eps. When `eps` is
+#' `NULL`, the step size is step to 0.0001 multiplied by the range of the
+#' variable with respect to which we are taking the derivative. Changing this
+#' value may be necessary to avoid numerical problems in certain models.
 #' @param ... Additional arguments are passed to the `predict()` method
 #' supplied by the modeling package.These arguments are particularly useful
 #' for mixed-effects or bayesian models (see the online vignettes on the
@@ -183,6 +184,7 @@ marginaleffects <- function(model,
     conf_level <- sanitize_conf_level(conf_level, ...)
     newdata <- sanity_newdata(model, newdata)
     variables <- sanitize_variables(model, newdata, variables)
+    eps <- sanitize_eps(eps = eps, model = model, variables = variables)
 
     # weights
     sanity_weights(weights, newdata) # after sanity_newdata

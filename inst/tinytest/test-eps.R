@@ -9,3 +9,22 @@ cmp2 <- comparisons(mod, newdata = nd, variables = "mpg", contrast_numeric = c(n
 expect_true(all(cmp1$dydx == cmp2$comparison))
 expect_true(all(cmp0$dydx != cmp1$dydx))
 
+# adaptive eps should matter for logit but not ols
+mod <- glm(am ~ hp + mpg, data = mtcars, family = binomial)
+m1 <- marginaleffects(mod, eps = NULL)
+m2 <- marginaleffects(mod, eps = 1)
+m3 <- marginaleffects(mod, eps = 1e-4)
+expect_false(expect_equivalent(m1$dydx, m2$dydx))
+expect_false(expect_equivalent(m1$dydx, m3$dydx))
+expect_false(expect_equivalent(m2$dydx, m3$dydx))
+mod <- lm(am ~ hp + mpg, data = mtcars)
+m1 <- marginaleffects(mod, eps = NULL)
+m2 <- marginaleffects(mod, eps = 1)
+m3 <- marginaleffects(mod, eps = 1e-4)
+expect_equivalent(m1$dydx, m2$dydx)
+expect_equivalent(m1$dydx, m3$dydx)
+expect_equivalent(m2$dydx, m3$dydx)
+
+# errors and warnings
+expect_false(expect_warning(marginaleffects(mod, eps = 1)))
+expect_error(comparisons(mod, eps = 1))

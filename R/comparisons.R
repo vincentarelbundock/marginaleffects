@@ -147,10 +147,48 @@ comparisons <- function(model,
                         transform_post = NULL,
                         interaction = NULL,
                         weights = NULL,
-                        eps = 1e-4,
                         ...) {
 
     dots <- list(...)
+
+    internal_call <- dots[["internal_call"]]
+    if (!isTRUE(internal_call)) {
+        # if `newdata` is a call to `datagrid`, `typical`, or `counterfactual`, insert `model`
+        # should probably not be nested too deeply in the call stack since we eval.parent() (not sure about this)
+        scall <- substitute(newdata)
+        if (is.call(scall) && as.character(scall)[1] %in% c("datagrid", "typical", "counterfactual")) {
+            lcall <- as.list(scall)
+            if (!any(c("model", "data") %in% names(lcall))) {
+                lcall <- c(lcall, list("model" = model))
+                newdata <- eval.parent(as.call(lcall))
+            }
+        }
+
+        # marginaleffects()` **must** run its own sanity checks and hardcode valid arguments
+        model <- sanitize_model(
+            model = model, newdata = newdata, weights = weights,
+            calling_function = "comparisons", ...)
+        conf_level <- sanitize_conf_level(conf_level, ...)
+        interaction <- sanitize_interaction(interaction, variables, model)
+        sanitize_type(model = model, type = type)
+        checkmate::assert_function(transform_post, null.ok = TRUE)
+        if ("eps" %in% names(dots)) {
+            stop("The `eps` argument is only supported by the `marginaleffects()` function.", call. = FALSE)
+        }
+    }
+
+    # step size is only used and sanitized by `marginaleffects()`
+    if ("eps" %in% names(dots)) {
+        eps <- dots[["eps"]]
+        dots[["eps"]] <- NULL
+    } else {
+        eps <- list(default_eps = 1e-4)
+    }
+
+    marginalmeans <- isTRUE(checkmate::check_choice(newdata, choices = "marginalmeans")) # before sanitize_newdata
+    newdata <- sanity_newdata(model = model, newdata = newdata)
+    transform_pre <- sanitize_transform_pre(transform_pre)
+
 
     # deprecated arguments still used internally and should be kept for backward compatibility
     if ("contrast_factor" %in% names(dots)) {
@@ -165,20 +203,8 @@ comparisons <- function(model,
     } else {
         contrast_numeric <- 1
     }
-
-    internal_call <- dots[["internal_call"]]
-    if (!isTRUE(internal_call)) {
-        # if `newdata` is a call to `datagrid`, `typical`, or `counterfactual`, insert `model`
-        # should probably not be nested too deeply in the call stack since we eval.parent() (not sure about this)
-        scall <- substitute(newdata)
-        if (is.call(scall) && as.character(scall)[1] %in% c("datagrid", "typical", "counterfactual")) {
-            lcall <- as.list(scall)
-            if (!any(c("model", "data") %in% names(lcall))) {
-                lcall <- c(lcall, list("model" = model))
-                newdata <- eval.parent(as.call(lcall))
-            }
-        }
-    }
+    sanity_contrast_factor(contrast_factor) # hardcoded in marginaleffects()
+    sanity_contrast_numeric(contrast_numeric) # hardcoded in marginaleffects()
 
     # transformation labels
     transform_pre_label <- transform_post_label <- NULL
@@ -189,22 +215,6 @@ comparisons <- function(model,
         transform_post_label <- deparse(substitute(transform_post))
     }
 
-    # `marginaleffects()` runs its own sanity checks and hardcodes valid arguments
-    if (!isTRUE(internal_call)) {
-        model <- sanitize_model(
-            model = model, newdata = newdata, weights = weights,
-            calling_function = "comparisons", ...)
-        conf_level <- sanitize_conf_level(conf_level, ...)
-        interaction <- sanitize_interaction(interaction, variables, model)
-        sanitize_type(model = model, type = type)
-        sanity_contrast_factor(contrast_factor) # hardcoded in marginaleffects()
-        sanity_contrast_numeric(contrast_numeric) # hardcoded in marginaleffects()
-        checkmate::assert_function(transform_post, null.ok = TRUE)
-    }
-
-    marginalmeans <- isTRUE(checkmate::check_choice(newdata, choices = "marginalmeans")) # before sanitize_newdata
-    newdata <- sanity_newdata(model = model, newdata = newdata)
-    transform_pre <- sanitize_transform_pre(transform_pre)
 
     # weights
     sanity_weights(weights, newdata) # after sanity_newdata
@@ -297,7 +307,7 @@ comparisons <- function(model,
                      contrast_factor = contrast_factor,
                      contrast_numeric = contrast_numeric,
                      marginalmeans = marginalmeans,
-                     eps = eps)
+                     eps = 1e-4)
         args <- c(args, dots)
         se <- do.call("get_se_delta", args)
         mfx$std.error <- as.numeric(se)
@@ -346,6 +356,7 @@ comparisons <- function(model,
     cols <- intersect(stubcols, colnames(mfx))
     cols <- unique(c(cols, colnames(mfx)))
     mfx <- mfx[, ..cols, drop = FALSE]
+    mfx[["eps"]] <- NULL
 
     # save as attribute and not column
     marginaleffects_weights_internal <- mfx[["marginaleffects_weights_internal"]]

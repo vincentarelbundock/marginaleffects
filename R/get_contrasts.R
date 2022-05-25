@@ -83,17 +83,23 @@ get_contrasts <- function(model,
     if (isTRUE(mult == 1)) {
         out[, "term" := original[["term"]]]
         out[, "contrast" := original[["contrast"]]]
+        if ("eps" %in% colnames(original)) {
+            out[, "eps" := original[["eps"]]]
+        }
 
     # group or multivariate outcomes
     } else if (isTRUE(mult > 1)) {
         out[, "term" := rep(original$term, times = mult)]
         out[, "contrast" := rep(original$contrast, times = mult)]
+        if ("eps" %in% colnames(original)) {
+            out[, "eps" := rep(original$eps, times = mult)]
+        }
 
     # cross-contrasts or weird cases
     } else {
         out <- merge(out, newdata, by = "rowid")
         if (isTRUE(nrow(out) == nrow(lo))) {
-            tmp <- data.table(lo)[, .SD, .SDcols = patterns("^contrast")]
+            tmp <- data.table(lo)[, .SD, .SDcols = patterns("^contrast|eps")]
             out <- cbind(out, tmp)
             idx <- c("rowid", grep("^contrast", colnames(out), value = TRUE), colnames(out))
             idx <- unique(idx)
@@ -135,10 +141,10 @@ get_contrasts <- function(model,
         idx <- out$contrast == "dydx"
         out[idx == TRUE, "comparison" := comparison / eps]
         if (!is.null(draws)) {
-            draws[idx == TRUE, ] <- draws[idx == TRUE, ] / eps
+            draws[idx == TRUE, ] <- draws[idx == TRUE, ] / out$eps
         }
     }
-
+  
     # output
     attr(out, "posterior_draws") <- draws
     attr(out, "original") <- cache[["original"]]

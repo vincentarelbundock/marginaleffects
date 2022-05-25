@@ -71,14 +71,16 @@ get_contrast_data <- function(model,
             } else {
                 ctype <- contrast_numeric
             }
+            eps_v <- ifelse(isTRUE(v %in% names(eps)), eps[[v]], eps[["default_eps"]])
             tmp <- get_contrast_data_numeric(
                 model,
                 newdata,
                 v,
                 contrast_numeric = ctype,
                 contrast_label = contrast_label,
-                eps = eps,
+                eps = eps_v,
                 ...)
+            tmp[["original"]][["eps"]] <- eps_v
 
         } else {
             stop("variable class not supported.", call. = FALSE)
@@ -94,6 +96,7 @@ get_contrast_data <- function(model,
         original[[v]] <- tmp$original
         rowid[[v]] <- tmp$rowid
     }
+
 
     # clean before merge: tobit1 introduces AsIs columns
     clean <- function(x) {
@@ -115,9 +118,9 @@ get_contrast_data <- function(model,
 
     # single contrast
     if (!isTRUE(interaction)) {
-        lo <- rbindlist(lo)
-        hi <- rbindlist(hi)
-        original <- rbindlist(original)
+        lo <- rbindlist(lo, fill = TRUE)
+        hi <- rbindlist(hi, fill = TRUE)
+        original <- rbindlist(original, fill = TRUE)
         ter <- unlist(ter)
         lab <- unlist(lab)
         lo[, "term" := ter]

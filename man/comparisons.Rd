@@ -15,7 +15,6 @@ comparisons(
   transform_post = NULL,
   interaction = NULL,
   weights = NULL,
-  eps = 1e-04,
   ...
 )
 }
@@ -122,11 +121,6 @@ acceptable values is returned in an error message.}
 }}
 
 \item{weights}{column name of the weights variable in \code{newdata}, or numeric vector of length equal to the number of rows in the original data or in \code{newdata} (if supplied).}
-
-\item{eps}{A numeric value specifying the “step” size to use when
-calculating numerical derivatives. See the Details section below. Warning:
-the marginal effects computed for certain models can be sensitive to the
-choice of step (e.g., Bayesian mixed effects).}
 
 \item{...}{Additional arguments are passed to the \code{predict()} method
 supplied by the modeling package.These arguments are particularly useful
