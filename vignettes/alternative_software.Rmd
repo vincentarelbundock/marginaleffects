@@ -453,6 +453,7 @@ The main advantages of `marginaleffects` over `brmsmargins` are:
 
 1. Support for 60+ model types, rather than just the `brms` package.
 2. Simpler user interface (subjective).
+3. At the time of writing (2022-05-25) `brmsmargins` did not support certain `brms` models such as those with multivariate or multinomial outcomes. It also did not support custom outcome transformations.
 
 The rest of this section presents side-by-side replications of some of the analyses from the `brmsmargins` vignettes in order to show highlight parallels and differences in syntax.
 
