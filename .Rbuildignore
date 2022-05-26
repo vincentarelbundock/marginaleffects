@@ -17,6 +17,7 @@
 ^vignettes/brms.Rmd
 ^vignettes/gam.Rmd
 ^vignettes/gformula.Rmd
+^vignettes/lincom.Rmd
 ^vignettes/lme4.Rmd
 ^vignettes/mlogit.Rmd
 ^vignettes/modelsummary.Rmd

@@ -13,6 +13,7 @@ marginalmeans(
   type = "response",
   transform_post = NULL,
   interaction = NULL,
+  lincom = NULL,
   ...
 )
 }
@@ -63,6 +64,12 @@ acceptable values is returned in an error message.}
 \item \code{TRUE}: Marginal means are computed for each combination of predictors specified in the \code{variables} argument.
 \item \code{NULL} (default): Behaves like \code{TRUE} when the \code{variables} argument is specified and the model formula includes interactions. Behaves like \code{FALSE} otherwise.
 }}
+
+\item{lincom}{numeric vector to compute linear combinations and custom
+contrasts between marginal means. The \code{lincom} argument must be a numeric
+vector of length equal to the number of rows in the data frame produced by
+\code{marginalmeans()}. See below for examples and visit the website for a
+detailed tutorial on linear combinations and custom contrasts.}
 
 \item{...}{Additional arguments are passed to the \code{predict()} method
 supplied by the modeling package.These arguments are particularly useful
@@ -140,4 +147,16 @@ mod <- lm(mpg ~ hp + cyl + am, data = dat)
 # Compute and summarize marginal means
 mm <- marginalmeans(mod)
 summary(mm)
+
+# Contrast between marginal means (carb2 - carb1)
+# see the vignette on "Custom Contrasts and Linear Combinations" on the
+# `marginaleffects` website.
+dat <- mtcars
+dat$carb <- factor(dat$carb)
+dat$cyl <- factor(dat$cyl)
+dat$am <- as.logical(dat$am)
+mod <- lm(mpg ~ carb + cyl, dat)
+lc <- c(-1, 1, 0, 0, 0, 0)
+marginalmeans(mod, variables = "carb", lincom = lc)
+
 }

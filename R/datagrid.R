@@ -15,8 +15,12 @@
 #' @param FUN_other the function to be applied to other variable types.
 #' @details
 #' If `datagrid` is used in a `marginaleffects` or `predictions` call as the
-#' `newdata` argument, users do not need to specify the `model` or `newdata`
-#' argument. The data is extracted automatically from the model.
+#' `newdata` argument, the model is automatically inserted in the function
+#' call, and users do not need to specify either the `model` or `newdata`
+#' arguments. Note that only the variables used to fit the models will be
+#' attached to the results. If a user wants to attach other variables as well
+#' (e.g., weights or grouping variables), they can supply a data.frame
+#' explicitly to the `newdata` argument inside `datagrid()`.
 #'
 #' If users supply a model, the data used to fit that model is retrieved using
 #' the `insight::get_data` function.

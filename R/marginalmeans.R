@@ -20,6 +20,11 @@
 #' categorical predictors. This grid can be very large when there are many
 #' variables and many response levels, so it is advisable to select a limited
 #' number of variables in the `variables` and `variables_grid` arguments.
+#' @param lincom numeric vector to compute linear combinations and custom
+#' contrasts between marginal means. The `lincom` argument must be a numeric
+#' vector of length equal to the number of rows in the data frame produced by
+#' `marginalmeans()`. See below for examples and visit the website for a
+#' detailed tutorial on linear combinations and custom contrasts.
 #' @param interaction TRUE, FALSE, or NULL
 #' * `FALSE`: Marginal means are computed for each predictor individually.
 #' * `TRUE`: Marginal means are computed for each combination of predictors specified in the `variables` argument.
@@ -62,6 +67,18 @@
 #' # Compute and summarize marginal means
 #' mm <- marginalmeans(mod)
 #' summary(mm)
+#' 
+#' # Contrast between marginal means (carb2 - carb1)
+#' # see the vignette on "Custom Contrasts and Linear Combinations" on the
+#' # `marginaleffects` website.
+#' dat <- mtcars
+#' dat$carb <- factor(dat$carb)
+#' dat$cyl <- factor(dat$cyl)
+#' dat$am <- as.logical(dat$am)
+#' mod <- lm(mpg ~ carb + cyl, dat)
+#' lc <- c(-1, 1, 0, 0, 0, 0)
+#' marginalmeans(mod, variables = "carb", lincom = lc)
+#'
 marginalmeans <- function(model,
                           variables = NULL,
                           variables_grid = NULL,
@@ -70,6 +87,7 @@ marginalmeans <- function(model,
                           type = "response",
                           transform_post = NULL,
                           interaction = NULL,
+                          lincom = NULL,
                           ...) {
 
     newdata <- insight::get_data(model)
@@ -155,6 +173,7 @@ marginalmeans <- function(model,
                             type = type,
                             variables = variables,
                             interaction = interaction,
+                            lincom = lincom,
                             ...)
 
     # we want consistent output, regardless of whether `data.table` is installed/used or not
@@ -171,7 +190,8 @@ marginalmeans <- function(model,
             index = NULL,
             variables = variables,
             newdata = newgrid,
-            interaction = interaction)
+            interaction = interaction,
+            lincom = lincom)
         # get rid of attributes in column
         out[["std.error"]] <- as.numeric(se)
         J <- attr(se, "jacobian")
@@ -227,6 +247,7 @@ get_marginalmeans <- function(model,
                               type,
                               variables,
                               interaction,
+                              lincom = NULL,
                               ...) {
 
     # predictions for each cell of all categorical data, but not the response
@@ -260,6 +281,13 @@ get_marginalmeans <- function(model,
     } else {
         idx <- intersect(colnames(pred), c("term", "group", variables))
         out <- data.table(pred)[, .(marginalmean = mean(predicted, na.rm = TRUE)), by = idx]
+    }
+
+    checkmate::assert_numeric(lincom, len = nrow(out), null.ok = TRUE)
+    if (!is.null(lincom)) {
+        out <- data.table(
+            term = "lincom",
+            marginalmean = as.vector(out$marginalmean %*% lincom))
     }
 
     return(out)

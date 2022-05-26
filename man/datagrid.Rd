@@ -51,8 +51,12 @@ Generate a data grid of "typical," "counterfactual," or user-specified values fo
 }
 \details{
 If \code{datagrid} is used in a \code{marginaleffects} or \code{predictions} call as the
-\code{newdata} argument, users do not need to specify the \code{model} or \code{newdata}
-argument. The data is extracted automatically from the model.
+\code{newdata} argument, the model is automatically inserted in the function
+call, and users do not need to specify either the \code{model} or \code{newdata}
+arguments. Note that only the variables used to fit the models will be
+attached to the results. If a user wants to attach other variables as well
+(e.g., weights or grouping variables), they can supply a data.frame
+explicitly to the \code{newdata} argument inside \code{datagrid()}.
 
 If users supply a model, the data used to fit that model is retrieved using
 the \code{insight::get_data} function.

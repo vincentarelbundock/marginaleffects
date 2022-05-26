@@ -6,6 +6,7 @@ New supported packages and models:
 
 New arguments:
 
+* `lincom` in `marginalmeans()` allows custom contrasts and linear combinations
 * `transform_post` in `predictions()`
 * `weights` argument in `predictions()` only affects average predictions in `tidy()` or `summary()`.
 
