@@ -90,7 +90,7 @@ get_se_delta <- function(model,
     JV <- align_J_V(J, vcov)
     se <- sqrt(colSums(t(JV$J %*% JV$V) * t(JV$J)))
 
-    attr(se, "J") <- JV$J
+    attr(se, "jacobian") <- JV$J
 
     return(se)
 }

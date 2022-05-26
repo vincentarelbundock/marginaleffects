@@ -10,9 +10,9 @@ mod <- suppressWarnings(svyglm(
     family = binomial))
 
 p1 <- predictions(mod, newdata = dat)
-p2 <- predictions(mod, weights = "weights", newdata = dat)
-p3 <- predictions(mod, weights = "w", newdata = dat)
-p4 <- predictions(mod, weights = dat$weights)
+p2 <- predictions(mod, wts = "weights", newdata = dat)
+p3 <- predictions(mod, wts = "w", newdata = dat)
+p4 <- predictions(mod, wts = dat$weights)
 expect_false(tidy(p1)$estimate == tidy(p2)$estimate)
 expect_false(tidy(p1)$std.error == tidy(p2)$std.error)
 expect_equal(tidy(p2), tidy(p3))
@@ -20,20 +20,20 @@ expect_equal(tidy(p2), tidy(p4))
 
 
 # by supports weights
-p1 <- predictions(mod, weights = "weights", newdata = dat)
+p1 <- predictions(mod, wts = "weights", newdata = dat)
 p1 <- tidy(p1, by = "cyl")
 expect_inherits(p1, "data.frame")
-m1 <- marginaleffects(mod, weights = "weights", newdata = dat)
+m1 <- marginaleffects(mod, wts = "weights", newdata = dat)
 m1 <- tidy(m1, by = "cyl")
 expect_inherits(m1, "data.frame")
-c1 <- comparisons(mod, weights = "weights", newdata = dat)
+c1 <- comparisons(mod, wts = "weights", newdata = dat)
 c1 <- tidy(c1, by = "cyl")
 expect_inherits(c1, "data.frame")
 
 
 # sanity check
-expect_error(comparisons(mod, weights = "junk"), pattern = "explicitly")
-expect_error(marginaleffects(mod, weights = "junk"), pattern = "explicitly")
+expect_error(comparisons(mod, wts = "junk"), pattern = "explicitly")
+expect_error(marginaleffects(mod, wts = "junk"), pattern = "explicitly")
 
 # vs. Stata (not clear what SE they use, so we give tolerance)
 mod <- suppressWarnings(svyglm(
@@ -41,7 +41,7 @@ mod <- suppressWarnings(svyglm(
     design = svydesign(ids = ~1, weights = ~weights, data = dat),
     family = binomial))
 stata <- c("estimate" = .0441066, "std.error" = .0061046)
-mfx <- marginaleffects(mod, weights = mod$prior.weights)
+mfx <- marginaleffects(mod, wts = mod$prior.weights)
 mfx <- tidy(mfx)
 mfx <- unlist(mfx[, 3:4])
 expect_equivalent(mfx, stata, tolerance = 0.0002)

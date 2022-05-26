@@ -68,8 +68,10 @@
 #' type, but will typically be a string such as: "response", "link", "probs",
 #' or "zero". When an unsupported string is entered, the model-specific list of
 #' acceptable values is returned in an error message.
-#' @param weights column name of the weights variable in `newdata`, or numeric vector of length equal to the number of rows in the original data or in `newdata` (if supplied).
-#' @param eps NULL or numeric value which determines step size to use when
+#' @param wts string or numeric: weights to use when computing average contrasts or marginaleffects.
+#' + string: column name of the weights variable in `newdata`. When supplying a column name to `wts`, it is recommended to supply the original data (including the weights variable) explicitly to `newdata`.
+#' + numeric: vector of length equal to the number of rows in the original data or in `newdata` (if supplied). 
+#' @param eps NULL or numeric value which determines the step size to use when
 #' calculating numerical derivatives: (f(x+eps)-f(x))/eps. When `eps` is
 #' `NULL`, the step size is step to 0.0001 multiplied by the range of the
 #' variable with respect to which we are taking the derivative. Changing this
@@ -140,7 +142,7 @@ marginaleffects <- function(model,
                             vcov = TRUE,
                             conf_level = 0.95,
                             type = "response",
-                            weights = NULL,
+                            wts = NULL,
                             eps = 1e-4,
                             ...) {
 
@@ -172,7 +174,7 @@ marginaleffects <- function(model,
     attributes_newdata <- attributes_newdata[idx]
 
     # sanity checks and pre-processing
-    model <- sanitize_model(model = model, newdata = newdata, weights = weights, calling_function = "marginaleffects", ...)
+    model <- sanitize_model(model = model, newdata = newdata, wts = wts, calling_function = "marginaleffects", ...)
     sanity_dots(model = model, calling_function = "marginaleffects", ...)
     sanitize_type(model = model, type = type, calling_function = "marginaleffects")
     conf_level <- sanitize_conf_level(conf_level, ...)
@@ -181,10 +183,10 @@ marginaleffects <- function(model,
     eps <- sanitize_eps(eps = eps, model = model, variables = variables)
 
     # weights
-    sanity_weights(weights, newdata) # after sanity_newdata
-    if (!is.null(weights) && !isTRUE(checkmate::check_string(weights))) {
-        newdata[["marginaleffects_weights"]] <- weights
-        weights <- "marginaleffects_weights"
+    sanity_wts(wts, newdata) # after sanity_newdata
+    if (!is.null(wts) && !isTRUE(checkmate::check_string(wts))) {
+        newdata[["marginaleffects_wts"]] <- wts
+        wts <- "marginaleffects_wts"
     }
 
     # variables is a list but we need a vector (and we drop cluster)
@@ -205,7 +207,7 @@ marginaleffects <- function(model,
         vcov = vcov,
         conf_level = conf_level,
         type = type,
-        weights = weights,
+        wts = wts,
         eps = eps,
         # hard-coded. Users should use comparisons() for more flexibility
         transform_pre = "difference",

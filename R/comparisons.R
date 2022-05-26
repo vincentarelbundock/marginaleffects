@@ -142,7 +142,7 @@ comparisons <- function(model,
                         transform_pre = "difference",
                         transform_post = NULL,
                         interaction = NULL,
-                        weights = NULL,
+                        wts = NULL,
                         ...) {
 
     dots <- list(...)
@@ -162,7 +162,7 @@ comparisons <- function(model,
 
         # marginaleffects()` **must** run its own sanity checks and hardcode valid arguments
         model <- sanitize_model(
-            model = model, newdata = newdata, weights = weights,
+            model = model, newdata = newdata, wts = wts,
             calling_function = "comparisons", ...)
         conf_level <- sanitize_conf_level(conf_level, ...)
         interaction <- sanitize_interaction(interaction, variables, model)
@@ -215,11 +215,11 @@ comparisons <- function(model,
 
 
     # weights
-    sanity_weights(weights, newdata) # after sanity_newdata
-    if (!is.null(weights) && isTRUE(checkmate::check_string(weights))) {
-        newdata[["marginaleffects_weights_internal"]] <- newdata[[weights]]
+    sanity_wts(wts, newdata) # after sanity_newdata
+    if (!is.null(wts) && isTRUE(checkmate::check_string(wts))) {
+        newdata[["marginaleffects_wts_internal"]] <- newdata[[wts]]
     } else {
-        newdata[["marginaleffects_weights_internal"]] <- weights
+        newdata[["marginaleffects_wts_internal"]] <- wts
     }
 
     # get dof before transforming the vcov arg
@@ -309,7 +309,7 @@ comparisons <- function(model,
         args <- c(args, dots)
         se <- do.call("get_se_delta", args)
         mfx$std.error <- as.numeric(se)
-        J <- attr(se, "J")
+        J <- attr(se, "jacobian")
         draws <- NULL
 
     # no standard error
@@ -357,8 +357,8 @@ comparisons <- function(model,
     mfx[["eps"]] <- NULL
 
     # save as attribute and not column
-    marginaleffects_weights_internal <- mfx[["marginaleffects_weights_internal"]]
-    mfx[["marginaleffects_weights_internal"]] <- NULL
+    marginaleffects_wts_internal <- mfx[["marginaleffects_wts_internal"]]
+    mfx[["marginaleffects_wts_internal"]] <- NULL
 
     out <- mfx
 
@@ -371,12 +371,12 @@ comparisons <- function(model,
     attr(out, "type") <- type
     attr(out, "model_type") <- class(model)[1]
     attr(out, "variables") <- variables
-    attr(out, "J") <- J
+    attr(out, "jacobian") <- J
     attr(out, "vcov") <- vcov
     attr(out, "vcov.type") <- get_vcov_label(vcov)
     attr(out, "transform_pre") <- transform_pre_label
     attr(out, "transform_post") <- transform_post_label
-    attr(out, "weights") <- marginaleffects_weights_internal
+    attr(out, "weights") <- marginaleffects_wts_internal
 
     # modelbased::visualisation_matrix attaches useful info for plotting
     for (a in names(attributes_newdata)) {

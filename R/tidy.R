@@ -145,7 +145,7 @@ tidy.predictions <- function(x,
                              ...) {
     x_dt <- copy(data.table(x))
 
-    marginaleffects_weights_internal <- attr(x, "weights")
+    marginaleffects_wts_internal <- attr(x, "weights")
 
     by <- c("group", by)
     by <- intersect(by, colnames(x))
@@ -156,12 +156,12 @@ tidy.predictions <- function(x,
         dots[["eps"]] <- NULL
         dots[["vcov"]] <- FALSE
         out <- data.table(do.call("predictions", dots))
-        if (!is.null(marginaleffects_weights_internal)) {
-            out[, "marginaleffects_weights_internal" := marginaleffects_weights_internal]
+        if (!is.null(marginaleffects_wts_internal)) {
+            out[, "marginaleffects_wts_internal" := marginaleffects_wts_internal]
             out <- out[,
                 .(estimate = stats::weighted.mean(
                     predicted,
-                    marginaleffects_weights_internal,
+                    marginaleffects_wts_internal,
                     na.rm = TRUE)),
                 by = by]
         } else {
@@ -172,12 +172,12 @@ tidy.predictions <- function(x,
         return(out$estimate)
     }
 
-    if (!is.null(marginaleffects_weights_internal)) {
-        x_dt[, "marginaleffects_weights_internal" := marginaleffects_weights_internal]
+    if (!is.null(marginaleffects_wts_internal)) {
+        x_dt[, "marginaleffects_wts_internal" := marginaleffects_wts_internal]
         x_dt <- x_dt[,
             .(estimate = stats::weighted.mean(
                 predicted,
-                marginaleffects_weights_internal,
+                marginaleffects_wts_internal,
                 na.rm = TRUE)),
             by = by]
     } else {
@@ -271,7 +271,7 @@ tidy.comparisons <- function(x,
 
     x_dt <- data.table(x)
 
-    marginaleffects_weights_internal <- attr(x, "weights")
+    marginaleffects_wts_internal <- attr(x, "weights")
 
     draws <- attr(x, "posterior_draws")
 
@@ -279,7 +279,7 @@ tidy.comparisons <- function(x,
     # model
     if ("term" %in% colnames(x_dt) || inherits(x, "predictions")) {
 
-        J <- attr(x, "J")
+        J <- attr(x, "jacobian")
         V <- attr(x, "vcov")
 
         idx_by <- c("type", "group", "term", "contrast", by,
@@ -288,14 +288,14 @@ tidy.comparisons <- function(x,
         idx_na <- is.na(x_dt$comparison)
 
         # average marginal effects
-        if (is.null(marginaleffects_weights_internal)) {
+        if (is.null(marginaleffects_wts_internal)) {
             ame <- x_dt[idx_na == FALSE, .(estimate = mean(comparison, na.rm = TRUE)), by = idx_by]
         } else {
-            x_dt[, "marginaleffects_weights_internal" := marginaleffects_weights_internal]
+            x_dt[, "marginaleffects_wts_internal" := marginaleffects_wts_internal]
             ame <- x_dt[idx_na == FALSE,
                         .(estimate = stats::weighted.mean(
                             comparison,
-                            marginaleffects_weights_internal,
+                            marginaleffects_wts_internal,
                             na.rm = TRUE)),
                         by = idx_by]
         }
@@ -319,19 +319,19 @@ tidy.comparisons <- function(x,
             tmp <- paste0(idx_by, "_marginaleffects_index")
 
             if (isTRUE(include_se)) {
-                if (is.null(marginaleffects_weights_internal)) {
+                if (is.null(marginaleffects_wts_internal)) {
                     J_mean <- J[, lapply(.SD, mean, na.rm = TRUE), by = tmp]
                 } else {
-                    J[, "marginaleffects_weights_internal" := marginaleffects_weights_internal]
+                    J[, "marginaleffects_wts_internal" := marginaleffects_wts_internal]
                     J_mean <- J[,
                     lapply(.SD,
                            stats::weighted.mean,
-                           w = marginaleffects_weights_internal,
+                           w = marginaleffects_wts_internal,
                            na.rm = TRUE),
                     by = tmp]
                 }
-                if ("marginaleffects_weights_internal" %in% colnames(J_mean)) {
-                    tmp <- c("marginaleffects_weights_internal", tmp)
+                if ("marginaleffects_wts_internal" %in% colnames(J_mean)) {
+                    tmp <- c("marginaleffects_wts_internal", tmp)
                 }
                 J_mean <- J_mean[, !..tmp]
                 J_mean <- as.matrix(J_mean)
@@ -348,7 +348,7 @@ tidy.comparisons <- function(x,
 
         } else if (!is.null(draws)) {
             # bayes not supported: what to do with CI?
-            if (!is.null(marginaleffects_weights_internal)) {
+            if (!is.null(marginaleffects_wts_internal)) {
                 msg <- "Weights are not supported for models of this class."
                 warning(msg, call. = FALSE)
             }
@@ -414,7 +414,7 @@ tidy.comparisons <- function(x,
     }
 
     if (exists("J_mean")) {
-        attr(out, "J") <- J_mean
+        attr(out, "jacobian") <- J_mean
     }
 
     return(out)

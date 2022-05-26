@@ -30,7 +30,7 @@ brms_lognormal_hurdle <- download_model("brms_lognormal_hurdle")
 
 
 # warning: weights not supported
-cmp <- comparisons(brms_numeric, weights = mtcars$cyl)
+cmp <- comparisons(brms_numeric, wts = mtcars$cyl)
 expect_warning(tidy(cmp), pattern = "Weights")
 
 # average marginal effects brmsmargins

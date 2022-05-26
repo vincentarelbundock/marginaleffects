@@ -77,7 +77,7 @@ predictions <- function(model,
                         vcov = TRUE,
                         conf_level = 0.95,
                         type = "response",
-                        weights = NULL,
+                        wts = NULL,
                         transform_post = NULL,
                         ...) {
 
@@ -141,11 +141,11 @@ predictions <- function(model,
     }
 
     # weights
-    sanity_weights(weights, newdata) # after sanity_newdata
-    if (!is.null(weights) && isTRUE(checkmate::check_string(weights))) {
-        newdata[["marginaleffects_weights_internal"]] <- newdata[[weights]]
+    sanity_wts(wts, newdata) # after sanity_newdata
+    if (!is.null(wts) && isTRUE(checkmate::check_string(wts))) {
+        newdata[["marginaleffects_wts_internal"]] <- newdata[[wts]]
     } else {
-        newdata[["marginaleffects_weights_internal"]] <- weights
+        newdata[["marginaleffects_wts_internal"]] <- wts
     }
 
     # trust newdata$rowid
@@ -321,8 +321,8 @@ predictions <- function(model,
     setDF(out)
 
     # save as attribute and not column
-    marginaleffects_weights_internal <- out[["marginaleffects_weights_internal"]]
-    out[["marginaleffects_weights_internal"]] <- NULL
+    marginaleffects_wts_internal <- out[["marginaleffects_wts_internal"]]
+    out[["marginaleffects_wts_internal"]] <- NULL
 
     # transform already applied to bayesian draws before computing confidence interval
     if (is.null(draws) && !is.null(transform_post)) {
@@ -332,7 +332,7 @@ predictions <- function(model,
     # clean columns
     stubcols <- c(
         "rowid", "type", "term", "group", "predicted", "std.error",
-        "statistic", "p.value", "conf.low", "conf.high", "marginaleffects_weights",
+        "statistic", "p.value", "conf.low", "conf.high", "marginaleffects_wts",
         sort(grep("^predicted", colnames(newdata), value = TRUE)))
     cols <- intersect(stubcols, colnames(out))
     cols <- unique(c(cols, colnames(out)))
@@ -344,11 +344,11 @@ predictions <- function(model,
     attr(out, "model_type") <- class(model)[1]
     attr(out, "variables") <- variables
     attr(out, "vcov.type") <- get_vcov_label(vcov)
-    attr(out, "J") <- J
+    attr(out, "jacobian") <- J
     attr(out, "vcov") <- V
     attr(out, "posterior_draws") <- draws
     attr(out, "newdata") <- newdata
-    attr(out, "weights") <- marginaleffects_weights_internal
+    attr(out, "weights") <- marginaleffects_wts_internal
 
     # modelbased::visualisation_matrix attaches useful info for plotting
     for (a in names(attributes_newdata)) {

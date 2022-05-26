@@ -174,7 +174,7 @@ marginalmeans <- function(model,
             interaction = interaction)
         # get rid of attributes in column
         out[["std.error"]] <- as.numeric(se)
-        J <- attr(se, "J")
+        J <- attr(se, "jacobian")
     }
 
     lin <- tryCatch(insight::model_info(model)$is_linear, error = function(e) FALSE)
@@ -201,7 +201,7 @@ marginalmeans <- function(model,
     # attributes
     class(out) <- c("marginalmeans", class(out))
     attr(out, "model") <- model
-    attr(out, "J") <- J
+    attr(out, "jacobian") <- J
     attr(out, "type") <- type
     attr(out, "model_type") <- class(model)[1]
     attr(out, "variables") <- variables

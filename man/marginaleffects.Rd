@@ -11,7 +11,7 @@ marginaleffects(
   vcov = TRUE,
   conf_level = 0.95,
   type = "response",
-  weights = NULL,
+  wts = NULL,
   eps = 1e-04,
   ...
 )
@@ -65,9 +65,13 @@ type, but will typically be a string such as: "response", "link", "probs",
 or "zero". When an unsupported string is entered, the model-specific list of
 acceptable values is returned in an error message.}
 
-\item{weights}{column name of the weights variable in \code{newdata}, or numeric vector of length equal to the number of rows in the original data or in \code{newdata} (if supplied).}
+\item{wts}{string or numeric: weights to use when computing average contrasts or marginaleffects.
+\itemize{
+\item string: column name of the weights variable in \code{newdata}. When supplying a column name to \code{wts}, it is recommended to supply the original data (including the weights variable) explicitly to \code{newdata}.
+\item numeric: vector of length equal to the number of rows in the original data or in \code{newdata} (if supplied).
+}}
 
-\item{eps}{NULL or numeric value which determines step size to use when
+\item{eps}{NULL or numeric value which determines the step size to use when
 calculating numerical derivatives: (f(x+eps)-f(x))/eps. When \code{eps} is
 \code{NULL}, the step size is step to 0.0001 multiplied by the range of the
 variable with respect to which we are taking the derivative. Changing this
@@ -125,7 +129,6 @@ Case studies and technical information:
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/performance.html}{Performance Tips}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html}{Standard Errors and Hypothesis Tests}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html}{Tables and Plots}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/technical_notes.html}{Technical Notes}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html}{Transformations and Custom Contrasts: Risk Ratio, Exponentiation, etc.}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html}{Alternative Software}
 }
