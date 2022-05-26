@@ -25,8 +25,8 @@ main <- tempfile(fileext = "Rmd")
 internal <- tempfile(fileext = "Rmd")
 on.exit(unlink(main))
 on.exit(unlink(internal))
-download.file("https://raw.githubusercontent.com/vincentarelbundock/marginaleffects/main/vignettes/links_main.Rmd", main)
-download.file("https://raw.githubusercontent.com/vincentarelbundock/marginaleffects/main/vignettes/links_internal.Rmd", internal)
+download.file("https://raw.githubusercontent.com/vincentarelbundock/marginaleffects/main/vignettes/links_main.Rmd", main, method = "wget")
+download.file("https://raw.githubusercontent.com/vincentarelbundock/marginaleffects/main/vignettes/links_internal.Rmd", internal, method = "wget")
 
 ```
 
