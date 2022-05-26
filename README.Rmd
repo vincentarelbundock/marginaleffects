@@ -50,6 +50,9 @@ n_support <- nrow(dat)
     - [Transformations and Custom Contrasts: Risk Ratio, Exponentiation, etc.](https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html)
 * [Alternative software](https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html)
 * [Technical notes](https://vincentarelbundock.github.io/marginaleffects/articles/technical_notes.html)
+* External links:
+    - [Bayesian Model Averaged Marginal Effects](https://www.ajordannafa.com/blog/2022/05/24/bma-ames/) by A. Jordan Nafa
+    - [Marginalia: A guide to figuring out what the heck marginal effects, marginal slopes, average marginal effects, marginal effects at the mean, and all these other marginal things are](https://www.andrewheiss.com/blog/2022/05/20/marginalia/) by Andrew Heiss
 
 ## What?
 
