@@ -6,31 +6,27 @@
 #' (see `?summary.marginaleffects`). The `newdata` argument can be used to
 #' calculate a variety of contrasts, including "Contrasts at the Mean,"
 #' "Contrasts at User-Specified values" (aka Contrasts at Representative
-#' values), "Contrasts in Marginal Means", "Adjusted Risk Ratios", and much
-#' more. For more information, see the Details and Examples sections below, and
-#' in the vignettes on the `marginaleffects` website: <https://vincentarelbundock.github.io/marginaleffects/>
-#' * [Getting Started](https://vincentarelbundock.github.io/marginaleffects/#getting-started)
-#' * [Contrasts Vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_contrasts.html)
-#' * [Supported Models](https://vincentarelbundock.github.io/marginaleffects/articles/mfx06_supported_models.html)
-#' * Case Studies
-#'    - [Bayesian analyses with `brms`](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)
-#'    - [Mixed effects models](https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html)
-#'    - [Generalized Additive Models](https://vincentarelbundock.github.io/marginaleffects/articles/gam.html)
-#'    - [Multinomial Logit and Discrete Choice Models](https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html)
-#'    - [Tables and plots](https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html)
-#'    - [Robust standard errors and more](https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html)
-#'    - [Transformations and Custom Contrasts: Risk Ratio, Exponentiation, etc.](https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html)
-#'    - [Multiple Imputation](https://vincentarelbundock.github.io/marginaleffects/articles/multiple_imputation.html)
+#' values), and "Contrasts in Marginal Means". The `transform_pre` argument can
+#' be used to compute other quantities such as "Adjusted Risk Ratios" or
+#' "Marginal Odds Ratios." See below for a list of vignettes and examples, and
+#' visit the `marginaleffects` website for more:
+#' <https://vincentarelbundock.github.io/marginaleffects/>
 #'
-#' A "contrast" is the difference between two adjusted predictions, calculated
-#' for meaningfully different regressor values (e.g., College graduates vs.
-#' Others). Uncertainty estimates are computed using the delta method.
+#' Vignettes:
 #'
-#' Detailed vignettes on contrasts, marginal effects, predictions, and marginal
-#' means, as well as a list of supported models can be found on the package
-#' website:
+#' ```{r child = "vignettes/links_main.Rmd"}
+#' ```
+#' 
+#' Case studies and technical information:
+#' 
+#' ```{r, child="vignettes/links_internal.Rmd"}
+#' ```
 #'
-#' https://vincentarelbundock.github.io/marginaleffects/
+#' A "contrast" is the difference between (or some other function of) two
+#' adjusted predictions, calculated for meaningfully different regressor values
+#' (e.g., College graduates vs. Others). Uncertainty estimates are computed
+#' using the delta method.
+#'
 #'
 #' @inheritParams marginaleffects
 #' @param variables `NULL`, character vector, or named list. The subset of variables for which to compute contrasts.

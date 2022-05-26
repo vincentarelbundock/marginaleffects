@@ -138,36 +138,42 @@ by the \code{tidy()} or \code{summary()} functions, which compute Average Contra
 (see \code{?summary.marginaleffects}). The \code{newdata} argument can be used to
 calculate a variety of contrasts, including "Contrasts at the Mean,"
 "Contrasts at User-Specified values" (aka Contrasts at Representative
-values), "Contrasts in Marginal Means", "Adjusted Risk Ratios", and much
-more. For more information, see the Details and Examples sections below, and
-in the vignettes on the \code{marginaleffects} website: \url{https://vincentarelbundock.github.io/marginaleffects/}
-\itemize{
-\item \href{https://vincentarelbundock.github.io/marginaleffects/#getting-started}{Getting Started}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_contrasts.html}{Contrasts Vignette}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx06_supported_models.html}{Supported Models}
-\item Case Studies
-\itemize{
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/brms.html}{Bayesian analyses with \code{brms}}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html}{Mixed effects models}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/gam.html}{Generalized Additive Models}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html}{Multinomial Logit and Discrete Choice Models}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html}{Tables and plots}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html}{Robust standard errors and more}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html}{Transformations and Custom Contrasts: Risk Ratio, Exponentiation, etc.}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/multiple_imputation.html}{Multiple Imputation}
-}
-}
+values), and "Contrasts in Marginal Means". The \code{transform_pre} argument can
+be used to compute other quantities such as "Adjusted Risk Ratios" or
+"Marginal Odds Ratios." See below for a list of vignettes and examples, and
+visit the \code{marginaleffects} website for more:
+\url{https://vincentarelbundock.github.io/marginaleffects/}
 }
 \details{
-A "contrast" is the difference between two adjusted predictions, calculated
-for meaningfully different regressor values (e.g., College graduates vs.
-Others). Uncertainty estimates are computed using the delta method.
+Vignettes:
+\itemize{
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx01_predictions.html}{Adjusted predictions}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_contrasts.html}{Contrasts}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_mfx.html}{Marginal effects}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx04_marginalmeans.html}{Marginal means}
+}
 
-Detailed vignettes on contrasts, marginal effects, predictions, and marginal
-means, as well as a list of supported models can be found on the package
-website:
+Case studies and technical information:
+\itemize{
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx06_supported_models.html}{63 Supported Classes of Models}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/brms.html}{Bayesian Analyses with \code{brms}}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/gformula.html}{Causal Inference with the g-Formula}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/gam.html}{Generalized Additive Models}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html}{Mixed effects models}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html}{Multinomial Logit and Discrete Choice Models}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/multiple_imputation.html}{Multiple Imputation}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/performance.html}{Performance Tips}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html}{Standard Errors and Hypothesis Tests}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html}{Tables and Plots}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/technical_notes.html}{Technical Notes}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html}{Transformations and Custom Contrasts: Risk Ratio, Exponentiation, etc.}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html}{Alternative Software}
+}
 
-https://vincentarelbundock.github.io/marginaleffects/
+A "contrast" is the difference between (or some other function of) two
+adjusted predictions, calculated for meaningfully different regressor values
+(e.g., College graduates vs. Others). Uncertainty estimates are computed
+using the delta method.
 }
 \section{Model-Specific Arguments}{
 

@@ -24,6 +24,7 @@ library(ggplot2)
 theme_set(theme_minimal())
 ```
 
+See https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html
 
 # Standard Error of the Average Marginal Effect
 

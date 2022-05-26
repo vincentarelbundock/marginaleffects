@@ -28,31 +28,26 @@ n_support <- nrow(dat)
 
 ## Table of contents
 
+Introduction:
+
 * [What?](https://vincentarelbundock.github.io/marginaleffects/#what)
 * [Why?](https://vincentarelbundock.github.io/marginaleffects/#why)
 * [Getting started](https://vincentarelbundock.github.io/marginaleffects/#getting-started)
-* Vignettes:
-    - [Adjusted predictions](https://vincentarelbundock.github.io/marginaleffects/articles/mfx01_predictions.html) 
-    - [Contrasts](https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_contrasts.html) 
-    - [Marginal effects](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_mfx.html) 
-    - [Marginal means](https://vincentarelbundock.github.io/marginaleffects/articles/mfx04_marginalmeans.html) 
-* [`r n_support` supported classes of models](https://vincentarelbundock.github.io/marginaleffects/articles/mfx06_supported_models.html)
-* [Performance tips](https://vincentarelbundock.github.io/marginaleffects/articles/performance.html)
-* Case studies:
-    - [Bayesian analyses with `brms`](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)
-    - [Mixed effects models](https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html)
-    - [Generalized Additive Models](https://vincentarelbundock.github.io/marginaleffects/articles/gam.html)
-    - [Multinomial Logit and Discrete Choice Models](https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html)
-    - [Multiple Imputation](https://vincentarelbundock.github.io/marginaleffects/articles/multiple_imputation.html)
-    - [Causal Inference with the g-Formula](https://vincentarelbundock.github.io/marginaleffects/articles/gformula.html)
-    - [Tables and plots](https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html)
-    - [Robust standard errors and more](https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html)
-    - [Transformations and Custom Contrasts: Risk Ratio, Exponentiation, etc.](https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html)
-* [Alternative software](https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html)
-* [Technical notes](https://vincentarelbundock.github.io/marginaleffects/articles/technical_notes.html)
-* External links:
-    - [Bayesian Model Averaged Marginal Effects](https://www.ajordannafa.com/blog/2022/05/24/bma-ames/) by A. Jordan Nafa
-    - [Marginalia: A guide to figuring out what the heck marginal effects, marginal slopes, average marginal effects, marginal effects at the mean, and all these other marginal things are](https://www.andrewheiss.com/blog/2022/05/20/marginalia/) by Andrew Heiss
+
+Vignettes:
+
+```{r, child="vignettes/links_main.Rmd"}
+```
+
+Case studies and technical information:
+
+```{r, child="vignettes/links_internal.Rmd"}
+```
+
+External links:
+
+```{r, child="vignettes/links_external.Rmd"}
+```
 
 ## What?
 

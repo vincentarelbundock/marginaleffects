@@ -17,24 +17,22 @@ knitr::opts_chunk$set(
   message = FALSE,
   comment = "#>"
 )
+url <- "https://raw.githubusercontent.com/vincentarelbundock/marginaleffects/main/data-raw/supported_models.csv"
+dat <- read.csv(url)
+n_support <- nrow(dat)
 ```
 
-The `marginaleffects` website (https://vincentarelbundock.github.io/marginaleffects/) includes several case studies, including:
+The `marginaleffects` website (https://vincentarelbundock.github.io/marginaleffects/) includes several vignettes and case studies. Main vignettes:
 
-- [Bayesian analyses with `brms`](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)
-- [Mixed effects models](https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html)
-- [Generalized Additive Models](https://vincentarelbundock.github.io/marginaleffects/articles/gam.html)
-- [Robust standard errors, Satterthwaite, etc.](https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html)
-- [Performance tips](https://vincentarelbundock.github.io/marginaleffects/articles/performance.html)
-- [Causal Inference with the g-Formula](https://vincentarelbundock.github.io/marginaleffects/articles/gformula.html)
-- [Multinomial Logit and Discrete Choice Models](https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html)
-- [Multiple Imputation](https://vincentarelbundock.github.io/marginaleffects/articles/multiple_imputation.html)
-- [Tables and Plots](https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html)
-- [Transformations and Custom Contrasts: Risk Ratio, Exponentiation, etc.](https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html)
-- [Tables and plots](https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html)
-- [Technical notes](https://vincentarelbundock.github.io/marginaleffects/articles/technical_notes.html)
-- [Alternative software](https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html)
-- External links:
-    - [Bayesian Model Averaged Marginal Effects](https://www.ajordannafa.com/blog/2022/05/24/bma-ames/) by A. Jordan Nafa
-    - [Marginalia: A guide to figuring out what the heck marginal effects, marginal slopes, average marginal effects, marginal effects at the mean, and all these other marginal things are](https://www.andrewheiss.com/blog/2022/05/20/marginalia/) by Andrew Heiss
+```{r, child = "links_main.Rmd"}
+```
 
+Case studies:
+
+```{r, child = "links_internal.Rmd"}
+```
+
+External links:
+
+```{r, child = "links_external.Rmd"}
+```

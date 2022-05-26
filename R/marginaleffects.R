@@ -6,32 +6,25 @@
 #' Marginal Effects (G-AME). The `datagrid()` function and the `newdata`
 #' argument can be used to calculate Marginal Effects at the Mean (MEM) or
 #' Marginal Effects at User-Specified values (aka Marginal Effects at
-#' Representative values, MER). For more information, see the Details and
-#' Examples sections below, and in the vignettes on the `marginaleffects`
-#' website: <https://vincentarelbundock.github.io/marginaleffects/>
-#' * [Getting Started](https://vincentarelbundock.github.io/marginaleffects/#getting-started)
-#' * [Marginal Effects Vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_mfx.html)
-#' * [Supported Models](https://vincentarelbundock.github.io/marginaleffects/articles/mfx06_supported_models.html)
-#' * Case Studies
-#'    - [Bayesian analyses with `brms`](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)
-#'    - [Mixed effects models](https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html)
-#'    - [Generalized Additive Models](https://vincentarelbundock.github.io/marginaleffects/articles/gam.html)
-#'    - [Multinomial Logit and Discrete Choice Models](https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html)
-#'    - [Tables and plots](https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html)
-#'    - [Robust standard errors and more](https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html)
-#'    - [Transformations and Custom Contrasts: Risk Ratio, Exponentiation, etc.](https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html)
-#'    - [Multiple Imputation](https://vincentarelbundock.github.io/marginaleffects/articles/multiple_imputation.html)
+#' Representative values, MER). See below for a list of vignettes and examples,
+#' and visit the `marginaleffects` website for more:
+#' <https://vincentarelbundock.github.io/marginaleffects/>
 #'
+#' Vignettes:
+#'
+#' ```{r child = "vignettes/links_main.Rmd"}
+#' ```
+#' 
+#' Case studies and technical information:
+#' 
+#' ```{r, child="vignettes/links_internal.Rmd"}
+#' ```
+#' 
 #' A "marginal effect" is the partial derivative of the regression equation
 #' with respect to a variable in the model. This function uses automatic
 #' differentiation to compute marginal effects for a vast array of models,
 #' including non-linear models with transformations (e.g., polynomials).
 #' Uncertainty estimates are computed using the delta method.
-#'
-#' A detailed vignette on marginal effects and a list of supported models can
-#' be found on the package website:
-#'
-#' https://vincentarelbundock.github.io/marginaleffects/
 #'
 #' Numerical derivatives for the `marginaleffects` function are calculated
 #' using a simple epsilon difference approach: \eqn{\partial Y / \partial X = (f(X + \varepsilon) - f(X)) / \varepsilon}{dY/dX = (f(X + e) - f(X)) / e},
@@ -42,7 +35,8 @@
 #' practice to try different values of this argument.
 #'
 #' Standard errors for the marginal effects are obtained using the Delta
-#' method. See the "Technical Notes" vignette on the package website for details.
+#' method. See the "Standard Errors and Hypothesis Tests" vignette on the
+#' package website for details (link above).
 #'
 #' @param model Model object
 #' @param variables `NULL` or character vector. The subset of variables for which to compute marginal effects.
