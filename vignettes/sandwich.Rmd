@@ -117,6 +117,10 @@ Consider the case of the `marginalmeans()` function. When a user calls this func
 
 The main function used to compute standard errors in `marginaleffects` is here: https://github.com/vincentarelbundock/marginaleffects/blob/main/R/get_se_delta.R
 
+The `predictions()` function behaves slightly differently. For GLM and mixed effects models, `predictions()` function delegates the computation of standard errors and confidence intervals to the `get_predicted()` function of the `insight` package. The benefit is that `insight` tries to compute predictions and confidence intervals on the link scale, and then transforms them to the response scale. This ensures that, for example, confidence intervals around predicted probabilities do not stretch outside the $[0,1]$ interval.
+
+This type of transformation is not done automatically in the case of `marginalmeans()`, `comparisons()` or `marginaleffects()` function. Similar results can be achieved in `marginalmeans()` by using the `type="link"` argument and by supplying an appropriate transformation function to the `transform_post` argument (available in version 0.5.1 of the package). The `insight::link_inverse()` function could be helpful here.
+
 # Standard Error of the Average Marginal Effect or Contrast
 
 The `summary()` and `tidy()` functions compute the average marginal effect (or contrast) when they are applied to an object produced by `marginaleffects()` (or `comparisons()`). This is done in 3 steps:
