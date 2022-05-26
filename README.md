@@ -238,14 +238,14 @@ function:
 plot_cap(mod, condition = c("hp", "wt"))
 ```
 
-<img src="README-unnamed-chunk-10-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
 
 ``` r
 mod2 <- lm(mpg ~ factor(cyl), data = mtcars)
 plot_cap(mod2, condition = "cyl")
 ```
 
-<img src="README-unnamed-chunk-11-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />
 
 [The Adjusted Predictions
 vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx01_predictions.html)
@@ -386,7 +386,7 @@ interaction):
 plot_cme(mod, effect = "hp", condition = c("wt", "am"))
 ```
 
-<img src="README-unnamed-chunk-16-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-16-1.png" width="100%" />
 
 [The Marginal Effects
 vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_mfx.html)
