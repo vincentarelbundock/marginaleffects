@@ -367,7 +367,7 @@ Note that following `Stata`, the standard errors for group-averaged marginal eff
 
 
 ```{r}
-J <- attr(mfx, "J")
+J <- attr(mfx, "jacobian")
 J_mean <- aggregate(J, by = list(mfx$cyl), FUN = mean)
 J_mean <- as.matrix(J_mean[, 2:ncol(J_mean)])
 sqrt(diag(J_mean %*% vcov(mod) %*% t(J_mean)))
