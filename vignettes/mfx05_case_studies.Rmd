@@ -24,15 +24,10 @@ n_support <- nrow(dat)
 
 The `marginaleffects` website (https://vincentarelbundock.github.io/marginaleffects/) includes several vignettes and case studies. Main vignettes:
 
-```{r, child = "links_main.Rmd"}
+```{r, child = "https://raw.githubusercontent.com/vincentarelbundock/marginaleffects/main/vignettes/links_main.Rmd"}
 ```
 
 Case studies:
 
-```{r, child = "links_internal.Rmd"}
-```
-
-External links:
-
-```{r, child = "links_external.Rmd"}
+```{r, child = "https://raw.githubusercontent.com/vincentarelbundock/marginaleffects/main/vignettes/links_internal.Rmd"}
 ```
