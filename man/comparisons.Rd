@@ -120,7 +120,9 @@ acceptable values is returned in an error message.}
 \item \code{NULL} (default): Behaves like \code{TRUE} when the \code{variables} argument is specified and the model formula includes interactions. Behaves like \code{FALSE} otherwise.
 }}
 
-\item{wts}{string or numeric: weights to use when computing average contrasts or marginaleffects.
+\item{wts}{string or numeric: weights to use when computing average
+contrasts or marginaleffects. These weights only affect the averaging in
+\code{tidy()} or \code{summary()}, and not the unit-level estimates themselves.
 \itemize{
 \item string: column name of the weights variable in \code{newdata}. When supplying a column name to \code{wts}, it is recommended to supply the original data (including the weights variable) explicitly to \code{newdata}.
 \item numeric: vector of length equal to the number of rows in the original data or in \code{newdata} (if supplied).
