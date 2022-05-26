@@ -20,14 +20,23 @@ knitr::opts_chunk$set(
 url <- "https://raw.githubusercontent.com/vincentarelbundock/marginaleffects/main/data-raw/supported_models.csv"
 dat <- read.csv(url)
 n_support <- nrow(dat)
+
+main <- tempfile(fileext = "Rmd")
+internal <- tempfile(fileext = "Rmd")
+on.exit(unlink(main))
+on.exit(unlink(internal))
+download.file("https://raw.githubusercontent.com/vincentarelbundock/marginaleffects/main/vignettes/links_main.Rmd", main)
+download.file("https://raw.githubusercontent.com/vincentarelbundock/marginaleffects/main/vignettes/links_internal.Rmd", internal)
+
 ```
 
-The `marginaleffects` website (https://vincentarelbundock.github.io/marginaleffects/) includes several vignettes and case studies. Main vignettes:
 
-```{r, child = "https://raw.githubusercontent.com/vincentarelbundock/marginaleffects/main/vignettes/links_main.Rmd"}
+[The `marginaleffects` website](https://vincentarelbundock.github.io/marginaleffects/) includes several vignettes and case studies. Main vignettes:
+
+```{r, child = main}
 ```
 
 Case studies:
 
-```{r, child = "https://raw.githubusercontent.com/vincentarelbundock/marginaleffects/main/vignettes/links_internal.Rmd"}
+```{r, child = internal}
 ```
