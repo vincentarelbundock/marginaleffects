@@ -1,0 +1,28 @@
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  fig.width = 9,
+  fig.asp = .4,
+  out.width = "100%",
+  warning = FALSE,
+  message = FALSE,
+  comment = "#>"
+)
+url <- "https://raw.githubusercontent.com/vincentarelbundock/marginaleffects/main/data-raw/supported_models.csv"
+dat <- read.csv(url)
+n_support <- nrow(dat)
+```
+
+- [`r n_support` Supported Classes of Models](https://vincentarelbundock.github.io/marginaleffects/articles/mfx06_supported_models.html)
+- [Bayesian Analyses with `brms`](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)
+- [Causal Inference with the g-Formula](https://vincentarelbundock.github.io/marginaleffects/articles/gformula.html)
+- [Generalized Additive Models](https://vincentarelbundock.github.io/marginaleffects/articles/gam.html)
+- [Mixed effects models](https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html)
+- [Multinomial Logit and Discrete Choice Models](https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html)
+- [Multiple Imputation](https://vincentarelbundock.github.io/marginaleffects/articles/multiple_imputation.html)
+- [Performance Tips](https://vincentarelbundock.github.io/marginaleffects/articles/performance.html)
+- [Standard Errors and Hypothesis Tests](https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html)
+- [Tables and Plots](https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html)
+- [Technical Notes](https://vincentarelbundock.github.io/marginaleffects/articles/technical_notes.html)
+- [Transformations and Custom Contrasts: Risk Ratio, Exponentiation, etc.](https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html)
+- [Alternative Software](https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html)
