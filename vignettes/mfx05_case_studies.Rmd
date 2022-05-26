@@ -34,4 +34,7 @@ The `marginaleffects` website (https://vincentarelbundock.github.io/marginaleffe
 - [Tables and plots](https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html)
 - [Technical notes](https://vincentarelbundock.github.io/marginaleffects/articles/technical_notes.html)
 - [Alternative software](https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html)
+- External links:
+    - [Bayesian Model Averaged Marginal Effects](https://www.ajordannafa.com/blog/2022/05/24/bma-ames/) by A. Jordan Nafa
+    - [Marginalia: A guide to figuring out what the heck marginal effects, marginal slopes, average marginal effects, marginal effects at the mean, and all these other marginal things are](https://www.andrewheiss.com/blog/2022/05/20/marginalia/) by Andrew Heiss
 
