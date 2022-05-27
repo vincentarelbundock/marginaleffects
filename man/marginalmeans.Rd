@@ -74,7 +74,10 @@ detailed tutorial on linear combinations and custom contrasts.}
 
 \item{by}{character vector of categorical variables included in the
 \code{variables_grid}. Marginal means are computed within each subgroup
-corresponding to combinations of values in the \code{by} variables.}
+corresponding to combinations of values in the \code{by} variables. Note that the
+\code{by} argument works differently for other functions in the package
+(\code{predictions()}, \code{marginaleffects()}, \code{comparisons()}), where \code{by} is used
+for post-processing in the \code{tidy()} or \code{summary()} functions.}
 
 \item{...}{Additional arguments are passed to the \code{predict()} method
 supplied by the modeling package.These arguments are particularly useful

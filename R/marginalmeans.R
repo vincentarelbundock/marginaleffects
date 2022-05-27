@@ -31,7 +31,10 @@
 #' * `NULL` (default): Behaves like `TRUE` when the `variables` argument is specified and the model formula includes interactions. Behaves like `FALSE` otherwise.
 #' @param by character vector of categorical variables included in the
 #' `variables_grid`. Marginal means are computed within each subgroup
-#' corresponding to combinations of values in the `by` variables.
+#' corresponding to combinations of values in the `by` variables. Note that the
+#' `by` argument works differently for other functions in the package
+#' (`predictions()`, `marginaleffects()`, `comparisons()`), where `by` is used
+#' for post-processing in the `tidy()` or `summary()` functions.
 #' @inheritParams comparisons
 #' @details
 #'   This function begins by calling the `predictions` function to obtain a
