@@ -81,3 +81,15 @@ expect_equivalent(me$marginalmean, em$estimate)
 mod <- lm(hp ~ mpg, mtcars)
 expect_error(marginalmeans(mod), pattern = "was found")
 
+
+# by argument
+dat <- mtcars
+dat$am <- factor(dat$am)
+dat$vs <- factor(dat$vs)
+dat$cyl <- factor(dat$cyl)
+mod <- glm(gear ~ cyl + vs + am, data = dat, family = poisson)
+mm <- marginalmeans(mod, by = "am")
+expect_inherits(mm, "marginalmeans")
+expect_equal(nrow(mm), 10)
+
+

@@ -141,6 +141,20 @@ marginalmeans(
     variables = c("Sex", "PClass"))
 ```
 
+# Subgroup analyses with the `by` argument
+
+We can compute marginal means within subgroups using the `by` argument:
+
+```{r}
+dat <- mtcars
+dat$am <- factor(dat$am)
+dat$vs <- factor(dat$vs)
+dat$cyl <- factor(dat$cyl)
+mod <- glm(gear ~ cyl + vs + am, data = dat, family = poisson)
+
+marginalmeans(mod, by = "am")
+```
+
 # Tidy summaries
 
 The `summary`, `tidy`, and `glance` functions are also available to summarize and manipulate the results:

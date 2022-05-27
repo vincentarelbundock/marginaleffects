@@ -14,6 +14,7 @@ marginalmeans(
   transform_post = NULL,
   interaction = NULL,
   lincom = NULL,
+  by = NULL,
   ...
 )
 }
@@ -70,6 +71,10 @@ contrasts between marginal means. The \code{lincom} argument must be a numeric
 vector of length equal to the number of rows in the data frame produced by
 \code{marginalmeans()}. See below for examples and visit the website for a
 detailed tutorial on linear combinations and custom contrasts.}
+
+\item{by}{character vector of categorical variables included in the
+\code{variables_grid}. Marginal means are computed within each subgroup
+corresponding to combinations of values in the \code{by} variables.}
 
 \item{...}{Additional arguments are passed to the \code{predict()} method
 supplied by the modeling package.These arguments are particularly useful

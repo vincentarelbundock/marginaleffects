@@ -29,6 +29,9 @@
 #' * `FALSE`: Marginal means are computed for each predictor individually.
 #' * `TRUE`: Marginal means are computed for each combination of predictors specified in the `variables` argument.
 #' * `NULL` (default): Behaves like `TRUE` when the `variables` argument is specified and the model formula includes interactions. Behaves like `FALSE` otherwise.
+#' @param by character vector of categorical variables included in the
+#' `variables_grid`. Marginal means are computed within each subgroup
+#' corresponding to combinations of values in the `by` variables.
 #' @inheritParams comparisons
 #' @details
 #'   This function begins by calling the `predictions` function to obtain a
@@ -88,10 +91,12 @@ marginalmeans <- function(model,
                           transform_post = NULL,
                           interaction = NULL,
                           lincom = NULL,
+                          by = NULL,
                           ...) {
 
     newdata <- insight::get_data(model)
 
+    checkmate::assert_character(by, null.ok = TRUE)
     checkmate::assert_function(transform_post, null.ok = TRUE)
     interaction <- sanitize_interaction(interaction, variables, model)
     conf_level <- sanitize_conf_level(conf_level, ...)
@@ -163,6 +168,15 @@ marginalmeans <- function(model,
     }
     variables_grid <- unique(c(variables, variables_grid))
 
+    if (!is.null(by)) {
+        if (!all(by %in% variables_grid)) {
+            msg <- format_msg(sprintf(
+            "Elements of `by` must be part of: %s",
+            paste(variables_grid, collapse = ", ")))
+        }
+        variables <- setdiff(variables, by)
+    }
+
     args <- lapply(variables_grid, function(x) unique(newdata[[x]]))
     args <- stats::setNames(args, variables_grid)
     args[["newdata"]] <- newdata
@@ -174,6 +188,7 @@ marginalmeans <- function(model,
                             variables = variables,
                             interaction = interaction,
                             lincom = lincom,
+                            by = by,
                             ...)
 
     # we want consistent output, regardless of whether `data.table` is installed/used or not
@@ -212,7 +227,7 @@ marginalmeans <- function(model,
     }
 
     # column order
-    cols <- c("type", "group", "term", "value", variables, "marginalmean",
+    cols <- c("type", "group", by, "term", "value", variables, "marginalmean",
               "std.error", "conf.low", "conf.high", sort(colnames(out)))
     cols <- unique(cols)
     cols <- intersect(cols, colnames(out))
@@ -248,7 +263,9 @@ get_marginalmeans <- function(model,
                               variables,
                               interaction,
                               lincom = NULL,
+                              by = NULL,
                               ...) {
+
 
     # predictions for each cell of all categorical data, but not the response
     pred <- predictions(
@@ -262,7 +279,7 @@ get_marginalmeans <- function(model,
     if (!isTRUE(interaction)) {
         mm <- list()
         for (v in variables) {
-            idx <- intersect(colnames(pred), c("term", "group", v))
+            idx <- intersect(colnames(pred), c("term", "group", v, by))
             tmp <- data.table(pred)[, .(marginalmean = mean(predicted, na.rm = TRUE)), by = idx]
             tmp[, "term" := v]
             setnames(tmp, old = v, new = "value")
