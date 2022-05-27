@@ -84,7 +84,7 @@ expect_error(marginalmeans(mod), pattern = "was found")
 
 # by argument
 dat <- mtcars
-dat$am <- factor(dat$am)
+dat$am <- as.logical(dat$am)
 dat$vs <- factor(dat$vs)
 dat$cyl <- factor(dat$cyl)
 mod <- glm(gear ~ cyl + vs + am, data = dat, family = poisson)

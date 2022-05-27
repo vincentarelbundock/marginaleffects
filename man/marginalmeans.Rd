@@ -66,11 +66,14 @@ acceptable values is returned in an error message.}
 \item \code{NULL} (default): Behaves like \code{TRUE} when the \code{variables} argument is specified and the model formula includes interactions. Behaves like \code{FALSE} otherwise.
 }}
 
-\item{lincom}{numeric vector to compute linear combinations and custom
-contrasts between marginal means. The \code{lincom} argument must be a numeric
-vector of length equal to the number of rows in the data frame produced by
-\code{marginalmeans()}. See below for examples and visit the website for a
-detailed tutorial on linear combinations and custom contrasts.}
+\item{lincom}{numeric vector or matrix. Elements of \code{lincom} are the weights
+used to compute linear combinations and custom contrasts between marginal
+means. \code{lincom} cectors must be of length equal to the to the number of rows in the
+data frame produced by \code{marginalmeans()}. In \code{lincom} matrices, each column
+represents a distinct linear combination, and the number of rows must be
+equal to the number of rows in the output of \code{marginalmeans()}. See below
+for examples and visit the website for a detailed tutorial on linear
+combinations and custom contrasts.}
 
 \item{by}{character vector of categorical variables included in the
 \code{variables_grid}. Marginal means are computed within each subgroup
@@ -156,15 +159,24 @@ mod <- lm(mpg ~ hp + cyl + am, data = dat)
 mm <- marginalmeans(mod)
 summary(mm)
 
-# Contrast between marginal means (carb2 - carb1)
-# see the vignette on "Custom Contrasts and Linear Combinations" on the
-# `marginaleffects` website.
+# Marginal means by subgroup
 dat <- mtcars
 dat$carb <- factor(dat$carb)
 dat$cyl <- factor(dat$cyl)
 dat$am <- as.logical(dat$am)
-mod <- lm(mpg ~ carb + cyl, dat)
+mod <- lm(mpg ~ carb + cyl + am, dat)
+marginalmeans(mod, variables = "cyl", by = "am")
+
+# Contrast between marginal means (carb2 - carb1)
+# see the vignette on "Custom Contrasts and Linear Combinations" on the
+# `marginaleffects` website.
 lc <- c(-1, 1, 0, 0, 0, 0)
+marginalmeans(mod, variables = "carb", lincom = lc)
+
+lc <- matrix(c(
+    -2, 1, 1, 0, -1, 1,
+    -1, 1, 0, 0, 0, 0
+    ), ncol = 2)
 marginalmeans(mod, variables = "carb", lincom = lc)
 
 }

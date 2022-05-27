@@ -96,6 +96,20 @@ lc <- data.frame(custom_contrast = c(-2, 1, 1, 0, -1, 1))
 contrast(em, method = lc)
 ```
 
+# Multiple custom contrasts
+
+Users can also compute multiple linear combinations simultaneously by supplying a numeric matrix to `lincom`. This matrix must have the same number of rows as the output of `marginaleffects()`, and each column represents a distinct set of weights for different linear combinations. For example:
+
+```{r}
+lc <- matrix(c(
+    -2, 1, 1, 0, -1, 1,
+    -1, 1, 0, 0, 0, 0
+    ), ncol = 2)
+lc
+
+marginalmeans(mod, variables = "carb", lincom = lc)
+```
+
 # Linear combinations across response levels
 
 In models with multinomial outcomes, one may be interested in comparing outcomes or contrasts across response levels. For example, in this model there are 18 estimated marginal means, across 6 outcome levels (the `group` column):

@@ -20,11 +20,14 @@
 #' categorical predictors. This grid can be very large when there are many
 #' variables and many response levels, so it is advisable to select a limited
 #' number of variables in the `variables` and `variables_grid` arguments.
-#' @param lincom numeric vector to compute linear combinations and custom
-#' contrasts between marginal means. The `lincom` argument must be a numeric
-#' vector of length equal to the number of rows in the data frame produced by
-#' `marginalmeans()`. See below for examples and visit the website for a
-#' detailed tutorial on linear combinations and custom contrasts.
+#' @param lincom numeric vector or matrix. Elements of `lincom` are the weights
+#' used to compute linear combinations and custom contrasts between marginal
+#' means. `lincom` cectors must be of length equal to the to the number of rows in the
+#' data frame produced by `marginalmeans()`. In `lincom` matrices, each column
+#' represents a distinct linear combination, and the number of rows must be
+#' equal to the number of rows in the output of `marginalmeans()`. See below
+#' for examples and visit the website for a detailed tutorial on linear
+#' combinations and custom contrasts.
 #' @param interaction TRUE, FALSE, or NULL
 #' * `FALSE`: Marginal means are computed for each predictor individually.
 #' * `TRUE`: Marginal means are computed for each combination of predictors specified in the `variables` argument.
@@ -74,17 +77,26 @@
 #' mm <- marginalmeans(mod)
 #' summary(mm)
 #' 
-#' # Contrast between marginal means (carb2 - carb1)
-#' # see the vignette on "Custom Contrasts and Linear Combinations" on the
-#' # `marginaleffects` website.
+#' # Marginal means by subgroup
 #' dat <- mtcars
 #' dat$carb <- factor(dat$carb)
 #' dat$cyl <- factor(dat$cyl)
 #' dat$am <- as.logical(dat$am)
-#' mod <- lm(mpg ~ carb + cyl, dat)
+#' mod <- lm(mpg ~ carb + cyl + am, dat)
+#' marginalmeans(mod, variables = "cyl", by = "am")
+#'
+#' # Contrast between marginal means (carb2 - carb1)
+#' # see the vignette on "Custom Contrasts and Linear Combinations" on the
+#' # `marginaleffects` website.
 #' lc <- c(-1, 1, 0, 0, 0, 0)
 #' marginalmeans(mod, variables = "carb", lincom = lc)
 #'
+#' lc <- matrix(c(
+#'     -2, 1, 1, 0, -1, 1,
+#'     -1, 1, 0, 0, 0, 0
+#'     ), ncol = 2)
+#' marginalmeans(mod, variables = "carb", lincom = lc)
+#' 
 marginalmeans <- function(model,
                           variables = NULL,
                           variables_grid = NULL,
@@ -303,7 +315,10 @@ get_marginalmeans <- function(model,
         out <- data.table(pred)[, .(marginalmean = mean(predicted, na.rm = TRUE)), by = idx]
     }
 
-    checkmate::assert_numeric(lincom, len = nrow(out), null.ok = TRUE)
+    checkmate::assert(
+        checkmate::check_numeric(lincom, len = nrow(out), null.ok = TRUE),
+        checkmate::check_matrix(lincom, nrows = nrow(out)))
+
     if (!is.null(lincom)) {
         out <- data.table(
             term = "lincom",

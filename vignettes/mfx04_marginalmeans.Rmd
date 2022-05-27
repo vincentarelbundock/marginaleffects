@@ -155,6 +155,10 @@ mod <- glm(gear ~ cyl + vs + am, data = dat, family = poisson)
 marginalmeans(mod, by = "am")
 ```
 
+# Custom Contrasts and Linear Combinations
+
+See the vignette on [Custom Contrasts and Combinations](https://vincentarelbundock.github.io/marginaleffects/articles/lincom.html)
+
 # Tidy summaries
 
 The `summary`, `tidy`, and `glance` functions are also available to summarize and manipulate the results:
