@@ -8,9 +8,10 @@ dat$am <- as.logical(dat$am)
 dat$cyl <- as.factor(dat$cyl)
 dat$vs <- as.factor(dat$vs)
 
-# variables_grid errors
+# sanity check
 mod <- lm(mpg ~ cyl + am + vs + hp, dat)
 expect_error(marginalmeans(mod, variables_grid = "junk"), pattern = "not found")
+expect_error(marginalmeans(mod, variables = "mpg"), pattern = "response")
 
 
 # changing the prediction grid changes marginal means

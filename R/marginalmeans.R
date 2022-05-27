@@ -141,6 +141,9 @@ marginalmeans <- function(model,
             stop(msg, call. = FALSE)
         }
     }
+    if (any(variables %in% insight::find_response(model))) {
+        stop("The `variables` vector cannot include the response.")
+    }
 
     checkmate::assert_character(variables_grid, min.len = 1, null.ok = TRUE)
     if (!is.null(variables_grid)) {
