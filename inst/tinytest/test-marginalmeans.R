@@ -3,6 +3,14 @@ if (ON_CRAN) exit_file("on cran")
 requiet("emmeans")
 requiet("broom")
 
+# as.factor and as.logical in formula
+mod <- lm(mpg ~ factor(cyl) + as.factor(gear) + as.logical(am), data = mtcars)
+mm <- marginalmeans(mod, variables = "cyl", by = "am")
+expect_inherits(mm, "marginalmeans")
+expect_equal(nrow(mm), 6)
+
+
+# old tests used to require pre-conversion
 dat <- mtcars
 dat$am <- as.logical(dat$am)
 dat$cyl <- as.factor(dat$cyl)

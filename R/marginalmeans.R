@@ -159,10 +159,13 @@ marginalmeans <- function(model,
 
     # categorical variables, excluding response
     column_labels <- colnames(newdata)
-    term_labels <- insight::find_terms(model, flatten = TRUE)
     variables_categorical <- find_categorical(newdata = newdata, model = model)
-    variables_categorical <- setdiff(variables_categorical, insight::find_response(model, flatten = TRUE))
-    variables_categorical <- intersect(variables_categorical, term_labels)
+    variables_categorical <- unique(variables_categorical)
+    idx <- !grepl("as\\.logical", variables_categorical)
+    variables_categorical <- variables_categorical[idx]
+    variables_categorical <- setdiff(
+        variables_categorical,
+        insight::find_response(model, flatten = TRUE))
     if (length(variables_categorical) == 0) {
         msg <- format_msg(
         "No logical, factor, or character variable was found in the dataset used to fit

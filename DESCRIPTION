@@ -117,6 +117,7 @@ Collate:
     'complete_levels.R'
     'datagrid.R'
     'deprecate_arg.R'
+    'find_categorical.R'
     'find_variable_class.R'
     'format_msg.R'
     'get_ci.R'
@@ -185,7 +186,6 @@ Collate:
     'summary.R'
     'tidy.R'
     'type_dictionary.R'
-    'utils.R'
     'utils_cjdt.R'
     'warn_once.R'
 Language: en-US
