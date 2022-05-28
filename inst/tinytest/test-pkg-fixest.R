@@ -137,9 +137,9 @@ expect_inherits(mfx2, "marginaleffects")
 # bug stays dead
 dt <- mtcars
 dt$cyl <- factor(dt$cyl)
-fit1 <- feols(mpg ~ 0 | carb | vs ~ am, data = dt)
-fit2 <- feols(mpg ~ cyl | carb | vs ~ am, data = dt)
-fit3 <- feols(mpg ~ 0 | carb | vs:cyl ~ am:cyl, data = dt)
+fit1 <- suppressMessages(feols(mpg ~ 0 | carb | vs ~ am, data = dt))
+fit2 <- suppressMessages(feols(mpg ~ cyl | carb | vs ~ am, data = dt))
+fit3 <- suppressMessages(feols(mpg ~ 0 | carb | vs:cyl ~ am:cyl, data = dt))
 mfx1 <- marginaleffects(fit1)
 mfx2 <- marginaleffects(fit2)
 mfx3 <- marginaleffects(fit3)
