@@ -13,7 +13,10 @@ cmp <- comparisons(mod)
 expect_inherits(cmp, "comparisons")
 
 # marginalmeans vs. emmeans
-mm <- marginalmeans(mod)
+mm <- marginalmeans(
+    mod,
+    variables = c("angle", "noise"),
+    interaction = FALSE)
 em1 <- data.frame(emmeans(mod, ~angle))
 em2 <- data.frame(emmeans(mod, ~noise))
 expect_equal(mm$marginalmean, c(em1$emmean, em2$emmean))

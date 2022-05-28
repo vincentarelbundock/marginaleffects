@@ -177,6 +177,7 @@ Collate:
     'predictions.R'
     'sanitize_conf_level.R'
     'sanitize_eps.R'
+    'sanitize_interaction.R'
     'sanitize_newdata.R'
     'sanitize_transform_pre.R'
     'sanitize_type.R'
