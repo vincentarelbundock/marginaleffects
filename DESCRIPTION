@@ -104,12 +104,12 @@ Suggests:
     systemfonts,
     tidymodels,
     tidyverse,
-    tinytest
+    tinytest,
     tinyviztest,
     tobit1,
     truncreg,
     vdiffr,
-    withr,
+    withr
 Collate: 
     'align_J_V.R'
     'arg_name_change.R'
