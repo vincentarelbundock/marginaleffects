@@ -46,6 +46,16 @@ sanitize_variables <- function(model,
         contrast_types <- NULL
     }
 
+    # sometimes `insight` returns interaction component as if it were a constituent variable
+    for (n in names(variables_list)) {
+        idx <- grepl(":", variables_list[[n]])
+        variables_list[[n]] <- variables_list[[n]][!idx]
+        if (length(variables_list[[n]]) == 0) {
+            variables_list[[n]] <- NULL
+        }
+    }
+
+
     variables <- unique(unlist(variables_list))
 
     # mhurdle names the variables weirdly
@@ -73,6 +83,7 @@ sanitize_variables <- function(model,
     }
     attr(variables_list, "levels_character") <- levels_character
     attr(variables_list, "contrast_types") <- contrast_types
+
 
     # check missing variables
     miss <- setdiff(variables, colnames(newdata))
