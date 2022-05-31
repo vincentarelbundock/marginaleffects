@@ -6,9 +6,20 @@ get_contrast_data_numeric <- function(model,
                                       eps,
                                       ...) {
 
+    # slope
+    # by default contrast_numeric = 1, so we need to check this first
+    if (isTRUE(contrast_numeric == "dydx") || isTRUE(contrast_label == "dydx")) {
+        low <- newdata[[variable]]
+        high <- newdata[[variable]] + eps
+        lab <- "dydx" 
+    } else if (isTRUE(contrast_numeric == "expdydx") || isTRUE(contrast_label == "expdydx")) {
+        low <- newdata[[variable]]
+        high <- newdata[[variable]] + eps
+        lab <- "expdydx" 
+
     # contrast_label is designed for categorical predictors
     # numeric contrasts first
-    if (is.numeric(contrast_numeric) && length(contrast_numeric) == 1) {
+    } else if (is.numeric(contrast_numeric) && length(contrast_numeric) == 1) {
         low <- newdata[[variable]] - contrast_numeric / 2
         high <- newdata[[variable]] + contrast_numeric / 2
         lab <- sprintf("x + %s", contrast_numeric)
@@ -25,13 +36,6 @@ get_contrast_data_numeric <- function(model,
         lab <- sprintf(contrast_label, contrast_numeric[2], contrast_numeric[1])
 
     # character contrasts
-    # slope
-    } else if (isTRUE(contrast_numeric == "dydx")) {
-        low <- newdata[[variable]]
-        high <- newdata[[variable]] + eps
-        lab <- "dydx"
-
-    # other contrasts
     } else if (isTRUE(contrast_numeric == "sd")) {
         low <- mean(newdata[[variable]], na.rm = TRUE) - stats::sd(newdata[[variable]], na.rm = TRUE) / 2
         high <- mean(newdata[[variable]], na.rm = TRUE) + stats::sd(newdata[[variable]], na.rm = TRUE) / 2

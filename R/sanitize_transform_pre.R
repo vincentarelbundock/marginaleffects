@@ -8,7 +8,9 @@ sanitize_transform_pre <- function(transform_pre) {
                                             "ratioavg",
                                             "lnratioavg",
                                             "lnoravg",
-                                            "differenceavg"))
+                                            "differenceavg",
+                                            "dydx",
+                                            "expdydx"))
     )
 
     if (is.function(transform_pre)) {
@@ -23,7 +25,9 @@ sanitize_transform_pre <- function(transform_pre) {
         "lnratio" = function(hi, lo) log(hi / lo),
         "ratioavg" = function(hi, lo) mean(hi) / mean(lo),
         "lnratioavg" = function(hi, lo) log(mean(hi) / mean(lo)),
-        "lnoravg" = function(hi, lo) {m_hi <- mean(hi); m_lo <- mean(lo); log((m_hi / (1 - m_hi)) / (m_lo / (1 - m_lo)))}
+        "lnoravg" = function(hi, lo) {m_hi <- mean(hi); m_lo <- mean(lo); log((m_hi / (1 - m_hi)) / (m_lo / (1 - m_lo)))},
+        "dydx" = function(hi, lo, eps) (hi - lo) / eps,
+        "expdydx" = function(hi, lo, eps) ((exp(hi) - exp(lo)) / exp(exp)) / eps
     )[[transform_pre]]
 
     lab <- list(
@@ -33,7 +37,9 @@ sanitize_transform_pre <- function(transform_pre) {
         "lnratio" = "ln(%s / %s)",
         "ratioavg" = "mean(%s) / mean(%s)",
         "lnratioavg" = "ln(mean(%s) / mean(%s))",
-        "lnoravg" = "ln(odds(%s) / odds(%s))"
+        "lnoravg" = "ln(odds(%s) / odds(%s))",
+        "dydx" = "dydx",
+        "expdydx" = "exp(dydx)"
     )[[transform_pre]]
 
     out <- list("label" = lab, "function" = fun)

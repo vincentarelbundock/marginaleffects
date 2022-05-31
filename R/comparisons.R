@@ -41,8 +41,8 @@
 #'   - Logical variables:
 #'     * NULL: contrast between TRUE and FALSE
 #'   - Numeric variables:
-#'     * Numeric of length 1: Contrast for a gap of `contrast_numeric`, computed at the observed value plus and minus `contrast_numeric / 2`
-#'     * Numeric vector of length 2: Contrast between the 2nd element and the 1st element of the `contrast_numeric` vector.
+#'     * Numeric of length 1: Contrast for a gap of `x`, computed at the observed value plus and minus `x / 2`
+#'     * Numeric vector of length 2: Contrast between the 2nd element and the 1st element of the `x` vector.
 #'     * "iqr": Contrast across the interquartile range of the regressor.
 #'     * "sd": Contrast across one standard deviation around the regressor mean.
 #'     * "2sd": Contrast across two standard deviations around the regressor mean.

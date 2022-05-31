@@ -405,3 +405,6 @@ cmp2 <- comparisons(
     transform_pre = function(hi, lo) exp((hi - lo) / eps),
     dpar = "mu")
 expect_true(all(cmp1$comparison != cmp2$comparison))
+
+
+

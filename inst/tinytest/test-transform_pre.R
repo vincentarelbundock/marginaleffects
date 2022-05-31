@@ -135,3 +135,10 @@ cmp <- tidy(comparisons(mod, transform_pre = function(hi, lo) mean(hi - lo)))
 expect_equivalent(length(unique(cmp$estimate)), nrow(cmp))
 
 
+
+# transform_pre slope vs marginaleffects()
+mod <- glm(vs ~ mpg + hp, data = mtcars, family = binomial)
+mfx1 <- marginaleffects(mod, eps = 1e-4)
+mfx2 <- comparisons(mod, transform_pre = "dydx")
+expect_equivalent(mfx1$dydx, mfx2$comparison)
+expect_equivalent(mfx1$std.error, mfx2$std.error)
