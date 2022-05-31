@@ -77,5 +77,5 @@ expect_equivalent(sum(sapply(res, is.numeric)), 9)
 # typical number of rows
 mod <- lm(mpg ~ hp * wt, data = mtcars)
 nd <- datagrid(model = mod, hp = c(100, 110))
-expect_equivalent(dim(marginaleffects(mod, newdata = nd)), c(4, 11))
+expect_equivalent(nrow(marginaleffects(mod, newdata = nd)), 4)
 

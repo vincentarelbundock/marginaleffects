@@ -417,7 +417,7 @@ cmp <- comparisons(
     transform_pre = "expdydx")
 expect_equivalent(cmp$comparison, 
     c(-0.0483582312992919, -0.035158983842012, -0.0255763979591749),
-    tolerance = .001)
+    tolerance = .01)
 
 # emt <- emtrends(mod, ~disp, var = "disp", dpar = "mu", 
 #     regrid = "response", tran = "log", type = "response",
