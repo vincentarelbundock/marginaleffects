@@ -12,7 +12,8 @@ get_contrast_data_numeric <- function(model,
         low <- newdata[[variable]]
         high <- newdata[[variable]] + eps
         lab <- "dydx" 
-    } else if (isTRUE(contrast_numeric == "expdydx") || isTRUE(contrast_label == "expdydx")) {
+
+    } else if (isTRUE(contrast_numeric == "expdydx") || isTRUE(contrast_label == "exp(dydx)")) {
         low <- newdata[[variable]]
         high <- newdata[[variable]] + eps
         lab <- "expdydx" 

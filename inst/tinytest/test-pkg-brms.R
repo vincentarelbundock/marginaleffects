@@ -406,5 +406,14 @@ cmp2 <- comparisons(
     dpar = "mu")
 expect_true(all(cmp1$comparison != cmp2$comparison))
 
+mod <- brm(
+    bf(mpg ~ disp, hu ~ disp),
+    data = mtcars,
+    family = hurdle_lognormal())
 
+
+comparisons(
+    mod,
+    datagrid(disp = c(150, 300, 450)),
+    transform_pre = "expdydx")
 
