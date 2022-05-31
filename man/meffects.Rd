@@ -112,29 +112,12 @@ and visit the \code{marginaleffects} website for more:
 }
 \details{
 Vignettes:
-\itemize{
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx01_predictions.html}{Adjusted predictions}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_contrasts.html}{Contrasts}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_mfx.html}{Marginal effects}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx04_marginalmeans.html}{Marginal means}
-}
+
+\if{html}{\out{<div class="sourceCode {r child = "vignettes/links_main.Rmd"}">}}\preformatted{}\if{html}{\out{</div>}}
 
 Case studies and technical information:
-\itemize{
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx06_supported_models.html}{63 Supported Classes of Models}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/brms.html}{Bayesian Analyses with \code{brms}}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/gformula.html}{Causal Inference with the g-Formula}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html}{Custom Contrasts and Transformations: Risk Ratio, Exponentiation, etc.}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/gam.html}{Generalized Additive Models}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/lincom.html}{Linear Combinations and Custom Contrasts}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html}{Mixed Effects Models}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html}{Multinomial Logit and Discrete Choice Models}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/multiple_imputation.html}{Multiple Imputation}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/performance.html}{Performance Tips}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html}{Standard Errors and Hypothesis Tests}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html}{Tables and Plots}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html}{Alternative Software}
-}
+
+\if{html}{\out{<div class="sourceCode {r, child="vignettes/links_internal.Rmd"}">}}\preformatted{}\if{html}{\out{</div>}}
 
 A "marginal effect" is the partial derivative of the regression equation
 with respect to a variable in the model. This function uses automatic

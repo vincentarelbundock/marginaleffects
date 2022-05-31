@@ -107,6 +107,8 @@ acceptable values is returned in an error message.}
 \item "ratioavg": \code{function(hi, lo) mean(hi) / mean(lo)}
 \item "lnratioavg": \code{function(hi, lo) log(mean(hi) / mean(lo))}
 \item "lnoravg": \code{function(hi, lo) log((mean(hi)/(1 - mean(hi))) / (mean(lo)/(1 - mean(lo))))}
+\item "dydx": \code{function(hi, lo) (hi - lo) / eps}
+\item "expdydx": \code{function(hi, lo) ((exp(hi) - exp(lo)) / exp(e)) / e}
 }
 \item function: accept two equal-length numeric vectors of adjusted predictions (\code{hi} and \code{lo}) and returns a vector of contrasts of the same length, or a unique numeric value.
 }}
@@ -152,29 +154,12 @@ visit the \code{marginaleffects} website for more:
 }
 \details{
 Vignettes:
-\itemize{
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx01_predictions.html}{Adjusted predictions}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_contrasts.html}{Contrasts}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_mfx.html}{Marginal effects}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx04_marginalmeans.html}{Marginal means}
-}
+
+\if{html}{\out{<div class="sourceCode {r child = "vignettes/links_main.Rmd"}">}}\preformatted{}\if{html}{\out{</div>}}
 
 Case studies and technical information:
-\itemize{
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx06_supported_models.html}{63 Supported Classes of Models}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/brms.html}{Bayesian Analyses with \code{brms}}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/gformula.html}{Causal Inference with the g-Formula}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html}{Custom Contrasts and Transformations: Risk Ratio, Exponentiation, etc.}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/gam.html}{Generalized Additive Models}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/lincom.html}{Linear Combinations and Custom Contrasts}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html}{Mixed Effects Models}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html}{Multinomial Logit and Discrete Choice Models}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/multiple_imputation.html}{Multiple Imputation}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/performance.html}{Performance Tips}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html}{Standard Errors and Hypothesis Tests}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html}{Tables and Plots}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html}{Alternative Software}
-}
+
+\if{html}{\out{<div class="sourceCode {r, child="vignettes/links_internal.Rmd"}">}}\preformatted{}\if{html}{\out{</div>}}
 
 A "contrast" is the difference between (or some other function of) two
 adjusted predictions, calculated for meaningfully different regressor values
