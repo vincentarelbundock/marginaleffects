@@ -3,6 +3,7 @@ if (ON_CRAN) exit_file("on cran")
 requiet("fixest")
 fixest::setFixest_nthreads(1)
 
+
 # bugs stay dead: logit with transformations
 dat <- mtcars
 dat$gear <- as.factor(dat$gear)
@@ -146,7 +147,7 @@ mfx3 <- marginaleffects(fit3)
 expect_inherits(mfx1, "marginaleffects")
 expect_inherits(mfx2, "marginaleffects")
 expect_inherits(mfx3, "marginaleffects")
-
+expect_false(expect_warning(marginaleffects(fit3)))
 
 # # feols linear plot_cap includes confidence intervals
 # mod <- feols(mpg ~ hp, data = mtcars)
