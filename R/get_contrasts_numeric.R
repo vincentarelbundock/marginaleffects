@@ -16,7 +16,7 @@ get_contrast_data_numeric <- function(model,
     } else if (isTRUE(contrast_numeric == "expdydx") || isTRUE(contrast_label == "exp(dydx)")) {
         low <- newdata[[variable]]
         high <- newdata[[variable]] + eps
-        lab <- "expdydx" 
+        lab <- "exp(dY/dX)" 
 
     # contrast_label is designed for categorical predictors
     # numeric contrasts first

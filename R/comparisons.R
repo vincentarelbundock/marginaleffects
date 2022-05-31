@@ -383,5 +383,11 @@ comparisons <- function(model,
         attr(out, paste0("newdata_", a)) <- attributes_newdata[[a]]
     }
 
+    if (!isTRUE(internal_call)) {
+        if ("group" %in% names(out) && all(out$group == "main_marginaleffect")) {
+            out$group <- NULL
+        }
+    }
+
     return(out)
 }

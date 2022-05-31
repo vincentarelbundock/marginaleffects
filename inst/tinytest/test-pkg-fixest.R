@@ -1,4 +1,5 @@
 source("helpers.R", local = TRUE)
+if (utils::packageVersion("fixest") < "0.10.5") exit_file("fixest version")
 if (ON_CRAN) exit_file("on cran")
 requiet("fixest")
 fixest::setFixest_nthreads(1)

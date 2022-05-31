@@ -115,9 +115,15 @@ get_contrasts <- function(model,
     # only 1 transformation supported when explicitly called
     } else {
         out[, "transform_pre_idx" := 1]
-        transform_pre_list <- list(
-            function(hi, lo, ...) transform_pre(hi, lo, ...)
-        )
+        if (!"eps" %in% names(formals(transform_pre))) {
+            transform_pre_list <- list(
+                function(hi, lo, ...) transform_pre(hi, lo, ...)
+            )
+        } else {
+            transform_pre_list <- list(
+                function(hi, lo, eps, ...) transform_pre(hi, lo, eps, ...)
+            )
+        }
     }
     
     # bayes

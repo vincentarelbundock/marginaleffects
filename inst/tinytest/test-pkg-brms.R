@@ -410,10 +410,16 @@ mod <- brm(
     bf(mpg ~ disp, hu ~ disp),
     data = mtcars,
     family = hurdle_lognormal())
-
-
-comparisons(
+cmp <- comparisons(
     mod,
+    dpar = "mu",
     datagrid(disp = c(150, 300, 450)),
     transform_pre = "expdydx")
+expect_equivalent(cmp$comparison, 
+    c(-0.0483582312992919, -0.035158983842012, -0.0255763979591749),
+    tolerance = .001)
+
+# emt <- emtrends(mod, ~disp, var = "disp", dpar = "mu", 
+#     regrid = "response", tran = "log", type = "response",
+    # at = list(disp = c(150, 300, 450)))
 

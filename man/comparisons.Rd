@@ -57,8 +57,8 @@ comparisons(
 }
 \item Numeric variables:
 \itemize{
-\item Numeric of length 1: Contrast for a gap of \code{contrast_numeric}, computed at the observed value plus and minus \code{contrast_numeric / 2}
-\item Numeric vector of length 2: Contrast between the 2nd element and the 1st element of the \code{contrast_numeric} vector.
+\item Numeric of length 1: Contrast for a gap of \code{x}, computed at the observed value plus and minus \code{x / 2}
+\item Numeric vector of length 2: Contrast between the 2nd element and the 1st element of the \code{x} vector.
 \item "iqr": Contrast across the interquartile range of the regressor.
 \item "sd": Contrast across one standard deviation around the regressor mean.
 \item "2sd": Contrast across two standard deviations around the regressor mean.
