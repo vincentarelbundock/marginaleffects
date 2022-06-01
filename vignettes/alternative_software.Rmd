@@ -238,7 +238,7 @@ mfx <- marginaleffects(mod, newdata = datagrid(cyl = c(4, 6, 8), grid_type = "co
 summary(mfx, by = "cyl")
 ```
 
-## Adjusted Presdictions
+## Adjusted Predictions
 
 The syntax to compute adjusted predictions using the `predictions` package or `marginaleffects` is very similar:
 
@@ -341,7 +341,7 @@ hp           |
 
 ### marginaleffects
 
-You can estimate average counterfactual marginal effects with `marginaleffects()` by, first, setting the `grid_type` argument of `data.grid()` to `"counterfactual"` and, second, by telling the `summary` function that you want to average within groups:
+You can estimate average counterfactual marginal effects with `marginaleffects()` by, first, setting the `grid_type` argument of `datagrid()` to `"counterfactual"` and, second, by telling the `summary` function that you want to average within groups:
 
 ```{r}
 mod <- lm(mpg ~ as.factor(cyl) * hp + wt, data = mtcars)
@@ -417,21 +417,21 @@ In other words, average counterfactual adjusted predictions as implemented by St
 
 ### marginaleffects
 
-You can estimate average counterfactual adjusted predictions with `predictions()` by, first, setting the `grid_type` argument of `data.grid()` to `"counterfactual"` and, second, by averaging the predictions, for example using `aggregate()` or `dplyr::summarise()`.
+You can estimate average counterfactual adjusted predictions with `predictions()` by, first, setting the `grid_type` argument of `datagrid()` to `"counterfactual"` and, second, by averaging the predictions using the `by` argument of `summary()`, or a manual function like `dplyr::summarise()`.
 
 ```{r}
 mod <- lm(mpg ~ as.factor(cyl) * hp + wt, data = mtcars)
 
+pred <- predictions(
+    mod,
+    newdata = datagrid(cyl = c(4, 6, 8),
+                       grid_type = "counterfactual"))
+summary(pred, by = "cyl")
 
-pred <- predictions(mod,
-                    newdata = datagrid(cyl = c(4, 6, 8),
-                                       grid_type = "counterfactual"))
-
-aggregate(pred$predicted, by = list(pred$cyl), FUN = mean)
+pred %>%
+    group_by(cyl) %>%
+    summarize(AAP = mean(predicted))
 ```
-
-Note that standard errors are not yet available for average adjusted predictions.
-
 
 # `brmsmargins`
 
