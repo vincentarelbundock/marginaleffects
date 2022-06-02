@@ -8,6 +8,8 @@ text <-
 other,class,classification,FALSE,TRUE
 other,response,expectation,TRUE,TRUE
 other,link,link,TRUE,TRUE
+bam,response,expectation,TRUE,TRUE
+bam,link,link,TRUE,TRUE
 betareg,response,expectation,TRUE,TRUE
 betareg,link,link,TRUE,TRUE
 betareg,precision,NA,TRUE,TRUE

@@ -47,6 +47,19 @@ expect_predictions(pred1, n_row = nrow(dat))
 expect_predictions(pred2, n_row = 6)
 
 
+# Issue #364: predictions confidence intervals for binomial models
+void <- capture.output(
+    dat <- suppressMessages(gamSim(1, n = 400, dist = "binary", scale = .33)))
+m <- bam(
+  y ~ s(x0) + s(x1) + s(x2) + s(x3),
+  family = binomial,
+  data = dat,
+  method = "REML"
+)
+p <- predictions(m)
+expect_true("conf.low" %in% colnames(p))
+expect_true("conf.high" %in% colnames(p))
+
 
 # exclude a smooth
 requiet("itsadug")
@@ -56,6 +69,8 @@ model <- bam(Y ~ Group + s(Time, by = Group) + s(Subject, bs = "re"), data = sim
 nd <- datagrid(model = model,
            Subject = "a01",
            Group = "Adults")
+
+
 
 expect_equivalent(
     predictions(model, newdata = nd)$predicted,
