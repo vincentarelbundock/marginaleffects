@@ -1,4 +1,4 @@
-`unpack_matrix_cols` <- function(x) {
+unpack_matrix_cols <- function(x) {
     # what data types are we working with
     dcs <- sapply(x, function(x) class(x)[1])
 

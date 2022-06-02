@@ -188,6 +188,7 @@ Collate:
     'summary.R'
     'tidy.R'
     'type_dictionary.R'
+    'unpack_matrix_cols.R'
     'utils_cjdt.R'
     'warn_once.R'
 Language: en-US
