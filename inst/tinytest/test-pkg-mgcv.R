@@ -86,3 +86,25 @@ expect_equivalent(mfx$dydx, emt$Time.trend, tolerance = 1e-2)
 
 exit_file("mismatch between emmeans and marginaleffects")
 expect_equivalent(mfx$std.error, emt$SE, tolerance = 1e-2)
+
+
+# Issue #363
+library(dplyr)
+library(mgcv)
+library(marginaleffects)
+test1 <- function(x,z,sx=0.3,sz=0.4) { 
+  x <- x*20
+  (pi**sx*sz)*(1.2*exp(-(x-0.2)^2/sx^2-(z-0.3)^2/sz^2)+
+                 0.8*exp(-(x-0.7)^2/sx^2-(z-0.8)^2/sz^2))
+}
+n <- 500
+x <- runif(n)/20;z <- runif(n);
+f <- test1(x,z)
+y <- f + rnorm(n)*0.2
+df <- tibble(y, x, z) %>% 
+  mutate(x_lags = tsModel::Lag(x, 0:10),
+         L = matrix(0:10, nrow = 1))
+b <- gam(y~s(z) + te(x_lags,L), data = df)
+expect_marginaleffects(b)
+p <- predictions(b)
+expect_inherits(p, "predictions")

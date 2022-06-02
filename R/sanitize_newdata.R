@@ -39,8 +39,11 @@ sanity_newdata <- function(model, newdata) {
     }
 
     # rbindlist breaks on matrix columns
-    idx <- sapply(newdata, function(x) class(x)[1] != "matrix")
-    newdata <- newdata[, idx, drop = FALSE]
+    idx <- sapply(newdata, function(x) class(x)[1] == "matrix")
+    if (any(idx)) {
+        newdata <- unpack_matrix_cols(newdata)
+    }
+    # newdata <- newdata[, !idx, drop = FALSE]
 
     # if there are no categorical variables in `newdata`, check the model terms
     # to find transformation and warn accordingly.
