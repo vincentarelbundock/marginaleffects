@@ -8,7 +8,7 @@ New arguments:
 
 * `lincom` in `marginalmeans()` allows custom contrasts and linear combinations
 * `transform_post` in `predictions()`
-* `weights` argument in `predictions()` only affects average predictions in `tidy()` or `summary()`.
+* `wts` argument in `predictions()` only affects average predictions in `tidy()` or `summary()`.
 
 Deprecated or renamed arguments:
 
@@ -19,8 +19,10 @@ Misc:
 
 * `tidy.predictions()` computes standard errors using the delta method for average predictions
 * `comparisons()` now supports "log of marginal odds ratio" in the `transform_pre` argument. Thanks to Noah Greifer.
+* New `transform_pre` shortcuts.
 * Vignette on "Causal Inference with the g-Formula." Thanks to Rohan Kapre for the idea.
 * `tidy.predictions()` can compute standard errors and confidence intervals for linear models or GLM on the link scale.
+* Support `gam` models with matrix columns.
 
 # marginaleffects 0.5.0
 
