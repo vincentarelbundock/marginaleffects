@@ -123,37 +123,67 @@ plot_cme <- function(model,
 
 
     # ggplot2
-    p <- ggplot2::ggplot(datplot, ggplot2::aes(x = condition1,
-                                               y = dydx,
-                                               ymin = conf.low,
-                                               ymax = conf.high))
+    p <- ggplot2::ggplot()
 
     # continuous x-axis
     if (is.numeric(datplot$condition1)) {
         if ("conf.low" %in% colnames(datplot)) {
-             p <- p + ggplot2::geom_ribbon(ggplot2::aes(fill = condition2), alpha = .1)
+             p <- p + ggplot2::geom_ribbon(
+                data = datplot,
+                alpha = .1,
+                ggplot2::aes(
+                    x = condition1,
+                    y = dydx,
+                    ymin = conf.low,
+                    ymax = conf.high,
+                    color = condition2,
+                    fill = condition2))
         }
-        p <- p + ggplot2::geom_line(ggplot2::aes(color = condition2, linetype = condition3))
+        p <- p + ggplot2::geom_line(
+            data = datplot,
+            ggplot2::aes(
+                    x = condition1,
+                    y = dydx,
+                    color = condition2,
+                    fill = condition2,
+                    linetype = condition3))
 
     # categorical x-axis
     } else {
         if ("conf.low" %in% colnames(datplot)) {
              if (is.null(condition2)) {
-                 p <- p + ggplot2::geom_pointrange()
+                 p <- p + ggplot2::geom_pointrange(
+                     data = datplot,
+                     ggplot2::aes(
+                        x = condition1,
+                        y = dydx,
+                        ymin = conf.low,
+                        ymax = conf.high,
+                        color = condition2))
              } else {
-                 p <- p + ggplot2::geom_pointrange(ggplot2::aes(color = condition2),
-                                                   position = ggplot2::position_dodge(.15))
+                 p <- p + ggplot2::geom_pointrange(
+                    data = datplot,
+                    position = ggplot2::position_dodge(.15),
+                    ggplot2::aes(
+                        x = condition1,
+                        y = dydx,
+                        ymin = conf.low,
+                        ymax = conf.high,
+                        color = condition2))
              }
         } else {
-            p <- p + ggplot2::geom_point(ggplot2::aes(color = condition2))
+            p <- p + ggplot2::geom_point(
+                data = datplot,
+                ggplot2::aes(color = condition2))
         }
     }
 
-    p <- p + ggplot2::labs(x = condition1,
-                           y = sprintf("Marginal effect of %s on %s", effect, resp),
-                           color = condition2,
-                           fill = condition2,
-                           linetype = condition3)
+    p <- p + ggplot2::labs(
+        x = condition1,
+        y = sprintf("Marginal effect of %s on %s", effect, resp),
+        color = condition2,
+        fill = condition2,
+        linetype = condition3)
 
     # `effect` is a categorical variable. We plot them in different facets
     if ("contrast" %in% colnames(datplot) && !all(datplot$contrast == "dY/dX")) {
@@ -166,6 +196,8 @@ plot_cme <- function(model,
     if (identical(ggplot2::theme_get(), ggplot2::theme_grey())) {
         p <- p + ggplot2::theme_minimal()
     }
+
+    attr(p, "data") <- dat
 
     return(p)
 }

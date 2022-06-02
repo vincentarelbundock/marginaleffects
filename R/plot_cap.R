@@ -108,33 +108,61 @@ plot_cap <- function(model,
     }
 
     # ggplot2
-    if ("conf.low" %in% colnames(datplot)) {
-        p <- ggplot2::ggplot(datplot, ggplot2::aes(x = condition1,
-                                                   y = predicted,
-                                                   ymin = conf.low,
-                                                   ymax = conf.high))
-    } else {
-        p <- ggplot2::ggplot(datplot, ggplot2::aes(x = condition1, y = predicted))
-    }
-
+    p <- ggplot2::ggplot()
 
     # continuous x-axis
     if (is.numeric(datplot$condition1)) {
         if (!isTRUE(vcov) && "conf.low" %in% colnames(datplot)) {
-             p <- p + ggplot2::geom_ribbon(ggplot2::aes(fill = condition2), alpha = .1)
+             p <- p + ggplot2::geom_ribbon(
+                data = datplot,
+                ggplot2::aes(
+                    x = condition1,
+                    y = predicted,
+                    ymin = conf.low,
+                    ymax = conf.high,
+                    fill = condition2),
+                alpha = .1)
         }
-        p <- p + ggplot2::geom_line(ggplot2::aes(color = condition2, linetype = condition3))
+        p <- p + ggplot2::geom_line(
+            data = datplot,
+            ggplot2::aes(
+                x = condition1,
+                y = predicted,
+                color = condition2,
+                linetype = condition3))
+
     # categorical x-axis
     } else {
         if (!isTRUE(vcov) && "conf.low" %in% colnames(datplot)) {
              if (is.null(condition2)) {
-                 p <- p + ggplot2::geom_pointrange()
+                 p <- p + ggplot2::geom_pointrange(
+                     data = datplot,
+                     ggplot2::aes(
+                         x = condition1,
+                         y = predicted,
+                         ymin = conf.low,
+                         ymax = conf.high,
+                         color = condition2))
+
              } else {
-                 p <- p + ggplot2::geom_pointrange(ggplot2::aes(color = condition2), 
-                                                   position = ggplot2::position_dodge(.15))
+                 p <- p + ggplot2::geom_pointrange(
+                    data = datplot,
+                    position = ggplot2::position_dodge(.15),
+                    ggplot2::aes(
+                        x = condition1,
+                        y = predicted,
+                        ymin = conf.low,
+                        ymax = conf.high,
+                        color = condition2))
              }
+
         } else {
-            p <- p + ggplot2::geom_point(ggplot2::aes(color = condition2))
+            p <- p + ggplot2::geom_point(
+                data = datplot,
+                ggplot2::aes(
+                    x = condition1,
+                    y = predicted,
+                    color = condition2))
         }
     }
 
