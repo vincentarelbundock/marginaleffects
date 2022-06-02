@@ -85,6 +85,54 @@ models <- list(
 modelsummary(models)
 ```
 
+# Categories and Contrasts: Problem and Solution
+
+One particular problem arises in the cases of contrasts and categorical predictors. To see it, notice that when there are contrasts or categorical predictors, the `tidy()` method of `marginaleffects` identifies unique estimates using two columns called `term` and `contrast`:
+
+```{r, warning = FALSE}
+mod <- lm(mpg ~ factor(cyl), data = dat)
+mfx <- marginaleffects(mod)
+tidy(mfx)
+```
+
+This poses problems because the `mice::pool` function merges estimates based *only* on the `term` column. This means that our original procedure will erroneously combine different contrast levels. For example:
+
+```{r}
+fit_reg <- function(dat) {
+    mod <- lm(mpg ~ factor(cyl), data = dat)
+    out <- marginaleffects(mod, newdata = dat)
+    return(out)
+}
+mod_imputation <- lapply(dat_mice, fit_reg)
+mod_imputation <- pool(mod_imputation)
+
+summary(mod_imputation)
+```
+
+One hack to work around this limitation is to assign a custom class to the object and to create a custom `tidy` method that combines the `term` and `contrast` columns:
+
+```{r}
+fit_reg <- function(dat) {
+    mod <- lm(mpg ~ factor(cyl), data = dat)
+    out <- marginaleffects(mod, newdata = dat)
+    # the next line assigns a custom class
+    class(out) <- c("custom", class(out))
+    return(out)
+}
+
+# this custom method will be called automatically for all objects produced by fit_reg()
+tidy.custom <- function(x, ...) {
+    out <- marginaleffects:::tidy.marginaleffects(x, ...)
+    out$term <- paste(out$term, out$contrast)
+    return(out)
+}
+
+mod_imputation <- lapply(dat_mice, fit_reg)
+mod_imputation <- pool(mod_imputation)
+
+summary(mod_imputation)
+```
+
 # Logistic Regression with `mice`
 
 For the logistic regression, we'll work with the same `dat_mice` imputed data sets. We'll update our function to run the logistic regression that we want and call it `fit_logistic`.
