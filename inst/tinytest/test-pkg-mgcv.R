@@ -65,3 +65,9 @@ expect_equivalent(
     predictions(model, newdata = nd, exclude = "s(Subject)")$predicted,
     predict(model, newdata = nd, exclude = "s(Subject)")[1])
 
+mfx <- marginaleffects(model, newdata = "mean", variables = "Time", type = "link")
+emt <- suppressMessages(data.frame(emtrends(model, ~Time, "Time")))
+expect_equivalent(mfx$dydx, emt$Time.trend, tolerance = 1e-2)
+
+exit_file("mismatch between emmeans and marginaleffects")
+expect_equivalent(mfx$std.error, emt$SE, tolerance = 1e-2)
