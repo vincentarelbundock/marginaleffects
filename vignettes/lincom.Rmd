@@ -46,7 +46,7 @@ mm
 The contrast between marginal means for `carb==1` and `carb==2` is:
 
 ```{r}
-21.34058 - 21.66232 
+21.66232 - 21.34058 
 ```
 
 or
@@ -103,7 +103,7 @@ Users can also compute multiple linear combinations simultaneously by supplying 
 ```{r}
 lc <- matrix(c(
     -2, 1, 1, 0, -1, 1,
-    -1, 1, 0, 0, 0, 0
+    1, -1, 0, 0, 0, 0
     ), ncol = 2)
 lc
 
