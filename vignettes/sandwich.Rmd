@@ -127,7 +127,7 @@ The `marginaleffects` package handles the calculation of standard errors and con
 
 First step: Try to outsource the computation of adjusted predictions to the `get_predicted()` function of the `insight` package. The benefit of using package is that it can make predictions on the link scale and then apply back transformations to make sure that confidence intervals make sense (e.g., stay inside 0 and 1 in logit models). The downside of relying on `insight` is that `insight` can only compute confidence intervals and standard errors for a limited range of models. 
 
-Second step: If `insight` does not return confidence intervals or standard errors for adjusted predictions, `marginaleffects` uses the delta method to compute standard errors on the scale defined by the `type` argument. That standard error thus estimated [have desirable properties under the normal assumptions.](https://en.wikipedia.org/wiki/Delta_method), but since there is no back-transformation, it is not always advisable to use them to construct symmetric confidence intervals around adjusted predictions.
+Second step: If `insight` does not return confidence intervals or standard errors for adjusted predictions, `marginaleffects` uses the delta method to compute standard errors on the scale defined by the `type` argument. The standard errors thus estimated [have desirable properties under normal assumptions.](https://en.wikipedia.org/wiki/Delta_method), but since there is no back-transformation, it is not always advisable to use them to construct symmetric confidence intervals around adjusted predictions.
 
 # Standard Error of the Average Marginal Effect or Contrast
 
