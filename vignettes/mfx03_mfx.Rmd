@@ -231,6 +231,14 @@ plot_cme(mod, effect = "hp", condition = "wt")
 
 The marginal effects in the plot above were computed with values of all regressors -- except the `effect` and the `condition` -- held at their means or modes, depending on variable type.
 
+Since `plot_cme()` produces a `ggplot2` object, it is easy to customize. For example:
+
+```{r}
+plot_cme(mod, effect = "hp", condition = "wt") +
+    geom_rug(aes(x = wt), data = mtcars) +
+    theme_classic()
+```
+
 # Example: Quadratic
 
 In the "Definition" section of this vignette, we considered how marginal effects can be computed analytically in a simple quadratic equation context. We can now use the `marginaleffects` function to replicate our analysis of the quadratic function in a regression application. 

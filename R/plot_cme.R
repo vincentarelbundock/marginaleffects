@@ -145,7 +145,6 @@ plot_cme <- function(model,
                     x = condition1,
                     y = dydx,
                     color = condition2,
-                    fill = condition2,
                     linetype = condition3))
 
     # categorical x-axis
@@ -174,21 +173,21 @@ plot_cme <- function(model,
         } else {
             p <- p + ggplot2::geom_point(
                 data = datplot,
-                ggplot2::aes(color = condition2))
+                ggplot2::aes(
+                    x = condition1,
+                    y = dydx,
+                    color = condition2))
         }
     }
 
     p <- p + ggplot2::labs(
         x = condition1,
-        y = sprintf("Marginal effect of %s on %s", effect, resp),
-        color = condition2,
-        fill = condition2,
-        linetype = condition3)
+        y = sprintf("Marginal effect of %s on %s", effect, resp))
 
-    # `effect` is a categorical variable. We plot them in different facets
-    if ("contrast" %in% colnames(datplot) && !all(datplot$contrast == "dY/dX")) {
-        p <- p + ggplot2::facet_wrap(~ contrast)
-    }
+    # # `effect` is a categorical variable. We plot them in different facets
+    # if ("contrast" %in% colnames(datplot) && !all(datplot$contrast == "dY/dX")) {
+    #     p <- p + ggplot2::facet_wrap(~ contrast)
+    # }
 
 
     # set a new theme only if the default is theme_grey. this prevents user's
