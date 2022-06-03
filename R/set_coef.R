@@ -1,4 +1,4 @@
-#' @title Internal function to set coefficients
+#' Internal function to set coefficients
 #'
 #' Set the coefficients in a model to different values and return the modified object (internal function)
 #'

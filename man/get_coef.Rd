@@ -11,6 +11,7 @@
 \alias{get_coef.brmultinom}
 \alias{get_coef.bracl}
 \alias{get_coef.brmsfit}
+\alias{get_coef.merMod}
 \alias{get_coef.lmerModLmerTest}
 \alias{get_coef.lmerMod}
 \alias{get_coef.gam}
@@ -33,6 +34,8 @@ get_coef(model, ...)
 \method{get_coef}{bracl}(model, ...)
 
 \method{get_coef}{brmsfit}(model, ...)
+
+\method{get_coef}{merMod}(model, ...)
 
 \method{get_coef}{lmerModLmerTest}(model, ...)
 

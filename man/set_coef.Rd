@@ -17,6 +17,7 @@
 \alias{set_coef.hlxr}
 \alias{set_coef.glmmTMB}
 \alias{set_coef.glmx}
+\alias{set_coef.merMod}
 \alias{set_coef.lmerModLmerTest}
 \alias{set_coef.lmerMod}
 \alias{set_coef.hurdle}
@@ -26,9 +27,7 @@
 \alias{set_coef.scam}
 \alias{set_coef.glm}
 \alias{set_coef.lm}
-\title{Internal function to set coefficients
-
-Set the coefficients in a model to different values and return the modified object (internal function)}
+\title{Internal function to set coefficients}
 \usage{
 set_coef(model, coefs)
 
@@ -53,6 +52,8 @@ set_coef(model, coefs)
 \method{set_coef}{glmmTMB}(model, coefs)
 
 \method{set_coef}{glmx}(model, coefs)
+
+\method{set_coef}{merMod}(model, coefs)
 
 \method{set_coef}{lmerModLmerTest}(model, coefs)
 
@@ -82,8 +83,6 @@ Model object of the same class as the \code{model} argument, but with
 different stored coefficients.
 }
 \description{
-Internal function to set coefficients
-
 Set the coefficients in a model to different values and return the modified object (internal function)
 }
 \details{

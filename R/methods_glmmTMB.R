@@ -1,5 +1,5 @@
 #' @include get_predict.R
-#' @rdname @get_predict
+#' @rdname get_predict
 #' @keywords internal
 #' @export
 get_predict.glmmTMB <- function(model,
