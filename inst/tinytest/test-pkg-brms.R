@@ -4,6 +4,7 @@
 source("helpers.R", local = TRUE)
 # exit_file("expensive")
 # if (ON_CI) exit_file("on ci")
+if (ON_WINDOWS) exit_file("on windows")
 options("marginaleffects_credible_interval" = "hdi")
 requiet("brms")
 requiet("emmeans")
