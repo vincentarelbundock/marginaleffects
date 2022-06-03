@@ -85,7 +85,7 @@ expect_inherits(p, "predictions")
 
 
 # Issue #365: exclude argument changes predictions
-if (packageVersion("insight") > "0.17.1.5") {
+if (packageVersion("insight") > "0.17.1.6") {
     void <- capture.output(
         dat <- gamSim(1,n=400,dist="normal",scale=2)
     )
@@ -97,6 +97,7 @@ if (packageVersion("insight") > "0.17.1.5") {
 
     # exclude a smooth
     requiet("itsadug")
+    set.seed(1024)
     data(simdat)
     simdat$Subject <- as.factor(simdat$Subject)
     model <- bam(Y ~ Group + s(Time, by = Group) + s(Subject, bs = "re"), data = simdat)
@@ -112,15 +113,9 @@ if (packageVersion("insight") > "0.17.1.5") {
         predictions(model, newdata = nd, exclude = "s(Subject)")$predicted,
         predict(model, newdata = nd, exclude = "s(Subject)")[1])
 
-    get_predict(model, newdata = nd)
-    predict(model, newdata = nd)
-    predictions(model, newdata = nd, exclude = "s(Subject)")
-    insight::get_predicted(model, predict = "link", data = nd)
-
     mfx <- marginaleffects(model, newdata = "mean", variables = "Time", type = "link")
-    emt <- suppressMessages(data.frame(emtrends(model, ~Time, "Time")))
+    emt <- suppressMessages(data.frame(
+        emtrends(model, ~Time, "Time", at = list(Time = 1000, Subject = "a01", Group = "Adults"))))
     expect_equivalent(mfx$dydx, emt$Time.trend, tolerance = 1e-2)
-
-    exit_file("mismatch between emmeans and marginaleffects")
-    expect_equivalent(mfx$std.error, emt$SE, tolerance = 1e-2)
+    expect_equivalent(mfx$std.error, emt$SE, tolerance = 1e-3)
 }
