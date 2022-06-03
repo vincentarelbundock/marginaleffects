@@ -3,6 +3,8 @@ if (ON_CRAN) exit_file("on cran")
 requiet("mgcv")
 requiet("emmeans")
 requiet("broom")
+requiet("dplyr")
+requiet("tsModel")
 
 # marginaleffects vs. emtrends
 set.seed(2)
@@ -89,9 +91,6 @@ expect_equivalent(mfx$std.error, emt$SE, tolerance = 1e-2)
 
 
 # Issue #363
-library(dplyr)
-library(mgcv)
-library(marginaleffects)
 test1 <- function(x,z,sx=0.3,sz=0.4) { 
   x <- x*20
   (pi**sx*sz)*(1.2*exp(-(x-0.2)^2/sx^2-(z-0.3)^2/sz^2)+
@@ -108,3 +107,14 @@ b <- gam(y~s(z) + te(x_lags,L), data = df)
 expect_marginaleffects(b)
 p <- predictions(b)
 expect_inherits(p, "predictions")
+
+
+# Issue #365: exclude argument changes predictions
+void <- capture.output(
+    dat <- gamSim(1,n=400,dist="normal",scale=2)
+)
+b <- bam(y~s(x0)+s(x1)+s(x2)+s(x3),data=dat)
+p1 <- predictions(b)
+p2 <- predictions(b, exclude = "s(x3)")
+expect_true(all(p1$predicted != p2$predicted))
+

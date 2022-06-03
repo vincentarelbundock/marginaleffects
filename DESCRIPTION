@@ -108,6 +108,7 @@ Suggests:
     tinyviztest,
     tobit1,
     truncreg,
+    tsModel,
     vdiffr,
     withr
 Collate: 
