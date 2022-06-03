@@ -8,7 +8,7 @@ minver <- function(pkg, ver = NULL) {
     if (is.null(ver)) {
         isTRUE(inherits(ins, "try-error"))
     } else {
-        isTRUE(ins < ver)
+        isTRUE(as.character(ins) >= ver)
     }
 }
 
