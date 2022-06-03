@@ -63,32 +63,6 @@ expect_true("conf.low" %in% colnames(p))
 expect_true("conf.high" %in% colnames(p))
 
 
-# exclude a smooth
-requiet("itsadug")
-data(simdat)
-simdat$Subject <- as.factor(simdat$Subject)
-model <- bam(Y ~ Group + s(Time, by = Group) + s(Subject, bs = "re"), data = simdat)
-nd <- datagrid(model = model,
-           Subject = "a01",
-           Group = "Adults")
-
-
-
-expect_equivalent(
-    predictions(model, newdata = nd)$predicted,
-    predict(model, newdata = nd)[1])
-
-expect_equivalent(
-    predictions(model, newdata = nd, exclude = "s(Subject)")$predicted,
-    predict(model, newdata = nd, exclude = "s(Subject)")[1])
-
-mfx <- marginaleffects(model, newdata = "mean", variables = "Time", type = "link")
-emt <- suppressMessages(data.frame(emtrends(model, ~Time, "Time")))
-expect_equivalent(mfx$dydx, emt$Time.trend, tolerance = 1e-2)
-
-exit_file("mismatch between emmeans and marginaleffects")
-expect_equivalent(mfx$std.error, emt$SE, tolerance = 1e-2)
-
 
 # Issue #363
 test1 <- function(x,z,sx=0.3,sz=0.4) { 
@@ -117,4 +91,30 @@ b <- bam(y~s(x0)+s(x1)+s(x2)+s(x3),data=dat)
 p1 <- predictions(b)
 p2 <- predictions(b, exclude = "s(x3)")
 expect_true(all(p1$predicted != p2$predicted))
+
+
+# exclude a smooth
+requiet("itsadug")
+data(simdat)
+simdat$Subject <- as.factor(simdat$Subject)
+model <- bam(Y ~ Group + s(Time, by = Group) + s(Subject, bs = "re"), data = simdat)
+nd <- datagrid(model = model,
+           Subject = "a01",
+           Group = "Adults")
+
+expect_equivalent(
+    predictions(model, newdata = nd)$predicted,
+    predict(model, newdata = nd)[1])
+
+expect_equivalent(
+    predictions(model, newdata = nd, exclude = "s(Subject)")$predicted,
+    predict(model, newdata = nd, exclude = "s(Subject)")[1])
+
+mfx <- marginaleffects(model, newdata = "mean", variables = "Time", type = "link")
+emt <- suppressMessages(data.frame(emtrends(model, ~Time, "Time")))
+expect_equivalent(mfx$dydx, emt$Time.trend, tolerance = 1e-2)
+
+exit_file("mismatch between emmeans and marginaleffects")
+expect_equivalent(mfx$std.error, emt$SE, tolerance = 1e-2)
+
 
