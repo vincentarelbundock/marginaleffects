@@ -236,16 +236,23 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
         variables <- NULL
     }
 
-    variables_list <- sanitize_variables(model = model,
-                                         newdata = newdata,
-                                         variables = variables)
+    variables_list <- suppressWarnings(
+        sanitize_variables(model = model,
+            newdata = newdata,
+            variables = variables))
     variables_all <- unique(unlist(variables_list))
     variables_manual <- names(at)
     variables_automatic <- setdiff(variables_all, variables_manual)
 
     # fill in missing data after sanity checks
     if (is.null(newdata)) {
-        newdata <- insight::get_data(model)
+        newdata <- suppressWarnings(insight::get_data(model))
+    }
+
+    if (any(sapply(newdata, function(x) "matrix" %in% class(x)))) {
+        msg <-
+        "The `datagrid()`, `marginalmeans()`, `plot_cap()`, and `plot_cme()` functions do not support datasets with matrix columns."
+        stop(msg, call. = FALSE)
     }
 
     # check `at` names

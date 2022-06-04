@@ -22,8 +22,8 @@
 #' plot_cme(mod, effect = "hp", condition = c("wt", "am"))
 #'
 plot_cme <- function(model,
-                     effect,
-                     condition,
+                     effect = NULL,
+                     condition = NULL,
                      type = "response",
                      vcov = NULL,
                      conf_level = 0.95,
@@ -31,7 +31,7 @@ plot_cme <- function(model,
                      ...) {
 
     # get data to know over what range of values we should plot
-    dat <- insight::get_data(model)
+    dat <- suppressWarnings(insight::get_data(model))
     resp <- insight::find_response(model)[1]
 
     # eventually we might allow multiple conditions and/or effects

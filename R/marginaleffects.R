@@ -181,8 +181,15 @@ marginaleffects <- function(model,
     sanitize_type(model = model, type = type, calling_function = "marginaleffects")
     conf_level <- sanitize_conf_level(conf_level, ...)
     newdata <- sanity_newdata(model, newdata)
-    variables <- sanitize_variables(model, newdata, variables)
-    eps <- sanitize_eps(eps = eps, model = model, variables = variables)
+    variables_list <- sanitize_variables(model, newdata, variables)
+    eps <- sanitize_eps(eps = eps, model = model, variables = variables_list)
+
+    # matrix columns not supported
+    matrix_columns <- attr(newdata, "matrix_columns")
+    if (any(matrix_columns %in% c(names(variables), variables))) {
+        msg <- "Matrix columns are not supported by the `variables` argument."
+        stop(msg, call. = FALSE)
+    }
 
     # weights
     sanity_wts(wts, newdata) # after sanity_newdata
@@ -192,15 +199,17 @@ marginaleffects <- function(model,
     }
 
     # variables is a list but we need a vector (and we drop cluster)
-    variables_vec <- unique(unlist(variables))
+    variables_vec <- unique(unlist(variables_list))
     # this won't be triggered for multivariate outcomes in `brms`, which
     # produces a list of lists where top level names correspond to names of the
     # outcomes. There should be a more robust way to handle those, but it seems
     # to work for now.
-    if ("conditional" %in% names(variables)) {
+    if ("conditional" %in% names(variables_list)) {
         # unlist() needed for sampleSelection objects, which nest "outcome" and "selection" variables
-        variables_vec <- intersect(variables_vec, unlist(variables[["conditional"]]))
+        variables_vec <- intersect(variables_vec, unlist(variables_list[["conditional"]]))
     }
+
+    variables_vec <- setdiff(variables_vec, matrix_columns)
 
     out <- comparisons(
         model,

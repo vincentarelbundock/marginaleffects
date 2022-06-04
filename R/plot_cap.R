@@ -20,7 +20,7 @@
 #' plot_cap(mod, condition = c("hp", "wt"))
 #'
 plot_cap <- function(model,
-                     condition,
+                     condition = NULL,
                      type = "response",
                      vcov = NULL,
                      conf_level = 0.95,
@@ -28,12 +28,12 @@ plot_cap <- function(model,
                      draw = TRUE,
                      ...) {
 
-    # get data to know over what range of values we should plot
-    dat <- insight::get_data(model)
-    resp <- insight::find_response(model)[1]
-
     # allow multiple conditions and/or effects
     checkmate::assert_character(condition, min.len = 1, max.len = 2)
+
+    # get data to know over what range of values we should plot
+    dat <- suppressWarnings(suppressWarnings(insight::get_data(model)))
+    resp <- insight::find_response(model)[1]
 
     checkmate::assert_true(all(condition %in% colnames(dat)))
 

@@ -52,36 +52,51 @@ expect_predictions(pred2, n_row = 6)
 
 
 # Issue #364: predictions confidence intervals for binomial models
-void <- capture.output(
-    dat <- suppressMessages(gamSim(1, n = 400, dist = "binary", scale = .33)))
-m <- bam(
-  y ~ s(x0) + s(x1) + s(x2) + s(x3),
-  family = binomial,
-  data = dat,
-  method = "REML"
-)
-p <- predictions(m)
-expect_true("conf.low" %in% colnames(p))
-expect_true("conf.high" %in% colnames(p))
+if (packageVersion("insight") > "0.17.1.6") {
+    void <- capture.output(
+        dat <- suppressMessages(gamSim(1, n = 400, dist = "binary", scale = .33)))
+    m <- bam(
+      y ~ s(x0) + s(x1) + s(x2) + s(x3),
+      family = binomial,
+      data = dat,
+      method = "REML"
+    )
+    p <- predictions(m)
+    expect_true("conf.low" %in% colnames(p))
+    expect_true("conf.high" %in% colnames(p))
+}
 
 
 # Issue #363: matrix column in predictors
-test1 <- function(x,z,sx=0.3,sz=0.4) { 
-  x <- x*20
-  (pi**sx*sz)*(1.2*exp(-(x-0.2)^2/sx^2-(z-0.3)^2/sz^2)+
-                 0.8*exp(-(x-0.7)^2/sx^2-(z-0.8)^2/sz^2))
+if (packageVersion("insight") > "0.17.1.6") {
+    test1 <- function(x,z,sx=0.3,sz=0.4) { 
+      x <- x*20
+      (pi**sx*sz)*(1.2*exp(-(x-0.2)^2/sx^2-(z-0.3)^2/sz^2)+
+                     0.8*exp(-(x-0.7)^2/sx^2-(z-0.8)^2/sz^2))
+    }
+    n <- 500
+    x <- runif(n)/20;z <- runif(n);
+    f <- test1(x,z)
+    y <- f + rnorm(n)*0.2
+    df <- tibble(y, x, z) %>% 
+      mutate(x_lags = tsModel::Lag(x, 0:10),
+             L = matrix(0:10, nrow = 1))
+    b <- gam(y~s(z) + te(x_lags,L), data = df)
+    mfx <- marginaleffects(b)
+    pre <- predictions(b)
+    cmp <- comparisons(b)
+    expect_inherits(pre, "predictions")
+    expect_inherits(mfx, "marginaleffects")
+    expect_inherits(cmp, "comparisons")
+    # only one regressor since others are matrix columns
+    expect_true(all(mfx$term == "z"))
+    expect_true(all(cmp$term == "z"))
+
+    expect_error(marginaleffects(b, variables = "L"), pattern = "supported")
+    expect_error(comparisons(b, variables = "L"), pattern = "supported")
+    expect_error(plot_cap(b, condition = "z"), pattern = "support")
+    expect_error(plot_cme(b, effect = "L", condition = "z"), pattern = "support")
 }
-n <- 500
-x <- runif(n)/20;z <- runif(n);
-f <- test1(x,z)
-y <- f + rnorm(n)*0.2
-df <- tibble(y, x, z) %>% 
-  mutate(x_lags = tsModel::Lag(x, 0:10),
-         L = matrix(0:10, nrow = 1))
-b <- gam(y~s(z) + te(x_lags,L), data = df)
-expect_marginaleffects(b)
-p <- predictions(b)
-expect_inherits(p, "predictions")
 
 
 # Issue #365: exclude argument changes predictions

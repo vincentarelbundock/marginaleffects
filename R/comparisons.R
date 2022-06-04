@@ -175,6 +175,7 @@ comparisons <- function(model,
         }
     }
 
+
     # step size is only used and sanitized by `marginaleffects()`
     if ("eps" %in% names(dots)) {
         eps <- dots[["eps"]]
@@ -186,6 +187,12 @@ comparisons <- function(model,
     marginalmeans <- isTRUE(checkmate::check_choice(newdata, choices = "marginalmeans")) # before sanitize_newdata
     newdata <- sanity_newdata(model = model, newdata = newdata)
 
+    # matrix columns not supported
+    matrix_columns <- attr(newdata, "matrix_columns")
+    if (any(matrix_columns %in% c(names(variables), variables))) {
+        msg <- "Matrix columns are not supported by the `variables` argument."
+        stop(msg, call. = FALSE)
+    }
 
     # transformation labels (before sanitation)
     transform_pre_label <- transform_post_label <- NULL
@@ -244,14 +251,17 @@ comparisons <- function(model,
     # variables vector
     variables_list <- sanitize_variables(model = model, newdata = newdata, variables = variables)
     contrast_types <- attr(variables_list, "contrast_types")
-    variables <- unique(unlist(variables_list, recursive = TRUE))
+    variables_vec <- unique(unlist(variables_list, recursive = TRUE))
     # this won't be triggered for multivariate outcomes in `brms`, which
     # produces a list of lists where top level names correspond to names of the
     # outcomes. There should be a more robust way to handle those, but it seems
     # to work for now.
     if ("conditional" %in% names(variables_list)) {
-        variables <- intersect(variables, variables_list[["conditional"]])
+        variables_vec <- intersect(variables_vec, variables_list[["conditional"]])
     }
+
+    # matrix columns are not supported
+    variables_vec <- setdiff(variables_vec, matrix_columns)
 
     # modelbased::visualisation_matrix attaches useful info for plotting
     attributes_newdata <- attributes(newdata)
@@ -262,7 +272,7 @@ comparisons <- function(model,
     # compute contrasts and standard errors
     args <- list(model = model,
                  newdata = newdata,
-                 variables = variables,
+                 variables = variables_vec,
                  contrast_factor = contrast_factor,
                  contrast_numeric = contrast_numeric,
                  interaction = interaction,
@@ -275,7 +285,7 @@ comparisons <- function(model,
 
     args <- list(model,
                  newdata = newdata,
-                 variables = variables,
+                 variables = variables_vec,
                  type = type,
                  transform_pre = transform_pre[["function"]],
                  contrast_factor = contrast_factor,
@@ -301,7 +311,7 @@ comparisons <- function(model,
                      FUN = get_se_delta_contrasts,
                      newdata = newdata,
                      index = idx,
-                     variables = variables,
+                     variables = variables_vec,
                      cache = cache,
                      transform_pre = transform_pre[["function"]],
                      contrast_factor = contrast_factor,
@@ -372,7 +382,7 @@ comparisons <- function(model,
     attr(out, "model") <- model
     attr(out, "type") <- type
     attr(out, "model_type") <- class(model)[1]
-    attr(out, "variables") <- variables
+    attr(out, "variables") <- variables_vec
     attr(out, "jacobian") <- J
     attr(out, "vcov") <- vcov
     attr(out, "vcov.type") <- get_vcov_label(vcov)
