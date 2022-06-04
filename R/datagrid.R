@@ -250,8 +250,11 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
     }
 
     if (any(sapply(newdata, function(x) "matrix" %in% class(x)))) {
-        msg <-
-        "The `datagrid()`, `marginalmeans()`, `plot_cap()`, and `plot_cme()` functions do not support datasets with matrix columns."
+        msg <- format_msg(
+        "The `datagrid()`, `marginalmeans()`, `plot_cap()`, and `plot_cme()` functions
+        do not support datasets with matrix columns. You can construct your own
+        prediction dataset and supply it explicitly to the `newdata` argument of the
+        `predictions()`, `marginaleffects()`, or `comparisons()` functions instead.")
         stop(msg, call. = FALSE)
     }
 
