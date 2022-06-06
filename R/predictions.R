@@ -37,14 +37,6 @@
 #'       - `newdata = datagrid(cyl = c(4, 6))`: `cyl` variable equal to 4 and 6 and other regressors fixed at their means or modes.
 #'       - See the Examples section and the [datagrid()] documentation for more.
 #' @param transform_post (experimental) A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.
-#' @param lincom numeric vector or matrix. Elements of `lincom` are the weights
-#' used to compute linear combinations of estimates. `lincom` vectors must be
-#' of length equal to the to the number of rows in the data frame produced by
-#' `marginalmeans()`. In `lincom` matrices, each column represents a distinct
-#' linear combination, and the number of rows must be equal to the number of
-#' rows in the output of `marginalmeans()`. See below for examples and visit
-#' the website for a detailed tutorial on linear combinations and custom
-#' contrasts.
 #'
 #' @template model_specific_arguments
 #'

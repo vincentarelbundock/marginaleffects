@@ -73,6 +73,14 @@
 #' `tidy()` or `summary()`, and not the unit-level estimates themselves.
 #' + string: column name of the weights variable in `newdata`. When supplying a column name to `wts`, it is recommended to supply the original data (including the weights variable) explicitly to `newdata`.
 #' + numeric: vector of length equal to the number of rows in the original data or in `newdata` (if supplied). 
+#' @param lincom numeric vector or matrix. Elements of `lincom` are the weights
+#' used to compute linear combinations of estimates. `lincom` vectors must be
+#' of length equal to the to the number of rows in the data frame produced by
+#' `marginalmeans()`. In `lincom` matrices, each column represents a distinct
+#' linear combination, and the number of rows must be equal to the number of
+#' rows in the output of `marginalmeans()`. See below for examples and visit
+#' the website for a detailed tutorial on linear combinations and custom
+#' contrasts.
 #' @param eps NULL or numeric value which determines the step size to use when
 #' calculating numerical derivatives: (f(x+eps)-f(x))/eps. When `eps` is
 #' `NULL`, the step size is step to 0.0001 multiplied by the range of the
