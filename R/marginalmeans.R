@@ -8,7 +8,6 @@
 #' * [Getting Started](https://vincentarelbundock.github.io/marginaleffects/#getting-started)
 #' * [Marginal Means Vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx04_marginalmeans.html)
 #'
-#' @inheritParams marginaleffects
 #' @param variables character vector Categorical predictors over which to
 #' compute marginal means. `NULL` calculates marginal means for all logical,
 #' character, or factor variables in the dataset used to fit `model`. Set
@@ -20,14 +19,6 @@
 #' categorical predictors. This grid can be very large when there are many
 #' variables and many response levels, so it is advisable to select a limited
 #' number of variables in the `variables` and `variables_grid` arguments.
-#' @param lincom numeric vector or matrix. Elements of `lincom` are the weights
-#' used to compute linear combinations and custom contrasts between marginal
-#' means. `lincom` cectors must be of length equal to the to the number of rows in the
-#' data frame produced by `marginalmeans()`. In `lincom` matrices, each column
-#' represents a distinct linear combination, and the number of rows must be
-#' equal to the number of rows in the output of `marginalmeans()`. See below
-#' for examples and visit the website for a detailed tutorial on linear
-#' combinations and custom contrasts.
 #' @param interaction TRUE, FALSE, or NULL
 #' * `FALSE`: Marginal means are computed for each predictor individually.
 #' * `TRUE`: Marginal means are computed for each combination of predictors specified in the `variables` argument.
@@ -38,6 +29,8 @@
 #' `by` argument works differently for other functions in the package
 #' (`predictions()`, `marginaleffects()`, `comparisons()`), where `by` is used
 #' for post-processing in the `tidy()` or `summary()` functions.
+#' @inheritParams marginaleffects
+#' @inheritParams predictions
 #' @inheritParams comparisons
 #' @details
 #'   This function begins by calling the `predictions` function to obtain a

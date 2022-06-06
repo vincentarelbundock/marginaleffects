@@ -55,6 +55,7 @@ get_se_delta <- function(model,
                          index = NULL,
                          eps = 1e-4,
                          J = NULL,
+                         lincom = NULL,
                          ...) {
 
     # delta method does not work for these models
@@ -75,11 +76,11 @@ get_se_delta <- function(model,
     # output: gradient
     inner <- function(x) {
         model_tmp <- set_coef(model, stats::setNames(x, names(coefs)))
-        g <- FUN(model = model_tmp, newdata = newdata, type = type, eps = eps, ...)
+        g <- FUN(model = model_tmp, newdata = newdata, type = type, eps = eps, lincom = lincom, ...)
         return(g)
     }
 
-    if (is.null(J)) {
+    if (is.null(J) || !is.null(lincom)) {
         J <- get_jacobian(func = inner, x = coefs, eps = eps)
         colnames(J) <- names(get_coef(model))
     }

@@ -13,6 +13,7 @@ predictions(
   type = "response",
   wts = NULL,
   transform_post = NULL,
+  lincom = NULL,
   ...
 )
 }
@@ -67,6 +68,15 @@ contrasts or marginaleffects. These weights only affect the averaging in
 }}
 
 \item{transform_post}{(experimental) A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.}
+
+\item{lincom}{numeric vector or matrix. Elements of \code{lincom} are the weights
+used to compute linear combinations of estimates. \code{lincom} vectors must be
+of length equal to the to the number of rows in the data frame produced by
+\code{marginalmeans()}. In \code{lincom} matrices, each column represents a distinct
+linear combination, and the number of rows must be equal to the number of
+rows in the output of \code{marginalmeans()}. See below for examples and visit
+the website for a detailed tutorial on linear combinations and custom
+contrasts.}
 
 \item{...}{Additional arguments are passed to the \code{predict()} method
 supplied by the modeling package.These arguments are particularly useful

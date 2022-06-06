@@ -37,6 +37,14 @@
 #'       - `newdata = datagrid(cyl = c(4, 6))`: `cyl` variable equal to 4 and 6 and other regressors fixed at their means or modes.
 #'       - See the Examples section and the [datagrid()] documentation for more.
 #' @param transform_post (experimental) A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.
+#' @param lincom numeric vector or matrix. Elements of `lincom` are the weights
+#' used to compute linear combinations of estimates. `lincom` vectors must be
+#' of length equal to the to the number of rows in the data frame produced by
+#' `marginalmeans()`. In `lincom` matrices, each column represents a distinct
+#' linear combination, and the number of rows must be equal to the number of
+#' rows in the output of `marginalmeans()`. See below for examples and visit
+#' the website for a detailed tutorial on linear combinations and custom
+#' contrasts.
 #'
 #' @template model_specific_arguments
 #'
@@ -79,6 +87,7 @@ predictions <- function(model,
                         type = "response",
                         wts = NULL,
                         transform_post = NULL,
+                        lincom = NULL,
                         ...) {
 
 
@@ -192,12 +201,13 @@ predictions <- function(model,
         J <- NULL
     }
                         
-    tmp <- myTryCatch(get_predict(
+    tmp <- myTryCatch(get_predictions(
         model,
         newdata = newdata,
         vcov = vcov_tmp,
         conf_level = conf_level,
         type = type,
+        lincom = lincom,
         ...))
 
     if (isTRUE(grepl("type.*models", tmp[["error"]]))) {
@@ -272,7 +282,7 @@ predictions <- function(model,
         if (!"std.error" %in% colnames(tmp) && is.null(draws)) {
             if (isTRUE(checkmate::check_matrix(V))) {
                 # vcov = FALSE to speed things up
-                fun <- function(...) get_predict(vcov = FALSE, ...)[["predicted"]]
+                fun <- function(...) get_predictions(vcov = FALSE, ...)$predicted
                 se <- get_se_delta(
                     model,
                     newdata = newdata,
@@ -281,6 +291,7 @@ predictions <- function(model,
                     FUN = fun,
                     J = J,
                     eps = 1e-4, # avoid pushing through ...
+                    lincom = lincom,
                     ...)
                 if (is.numeric(se) && length(se) == nrow(tmp)) {
                     tmp[["std.error"]] <- se
@@ -316,7 +327,10 @@ predictions <- function(model,
 
     # return data
     # very import to avoid sorting, otherwise bayesian draws won't fit predictions
-    out <- merge(out, newdata, by = "rowid", sort = FALSE)
+    # merge only with rowid; not available for lincom
+    if ("rowid" %in% colnames(out)) {
+        out <- merge(out, newdata, by = "rowid", sort = FALSE)
+    }
 
     setDF(out)
 
@@ -363,5 +377,13 @@ predictions <- function(model,
 }
 
  
-
- 
+# wrapper used only for standard_error_delta
+get_predictions <- function(..., lincom = NULL) {
+    out <- get_predict(...)
+    if (!is.null(lincom)) {
+        out <- data.table(
+            term = "lincom",
+            predicted = as.vector(out$predicted %*% lincom))
+    }
+    return(out)
+}

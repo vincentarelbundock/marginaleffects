@@ -6,8 +6,8 @@
 \usage{
 plot_cme(
   model,
-  effect,
-  condition,
+  effect = NULL,
+  condition = NULL,
   type = "response",
   vcov = NULL,
   conf_level = 0.95,

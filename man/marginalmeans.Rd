@@ -57,7 +57,7 @@ type, but will typically be a string such as: "response", "link", "probs",
 or "zero". When an unsupported string is entered, the model-specific list of
 acceptable values is returned in an error message.}
 
-\item{transform_post}{(experimental) A function applied to unit-level estimates and confidence intervals just before the function returns results.}
+\item{transform_post}{(experimental) A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.}
 
 \item{interaction}{TRUE, FALSE, or NULL
 \itemize{
@@ -67,13 +67,13 @@ acceptable values is returned in an error message.}
 }}
 
 \item{lincom}{numeric vector or matrix. Elements of \code{lincom} are the weights
-used to compute linear combinations and custom contrasts between marginal
-means. \code{lincom} cectors must be of length equal to the to the number of rows in the
-data frame produced by \code{marginalmeans()}. In \code{lincom} matrices, each column
-represents a distinct linear combination, and the number of rows must be
-equal to the number of rows in the output of \code{marginalmeans()}. See below
-for examples and visit the website for a detailed tutorial on linear
-combinations and custom contrasts.}
+used to compute linear combinations of estimates. \code{lincom} vectors must be
+of length equal to the to the number of rows in the data frame produced by
+\code{marginalmeans()}. In \code{lincom} matrices, each column represents a distinct
+linear combination, and the number of rows must be equal to the number of
+rows in the output of \code{marginalmeans()}. See below for examples and visit
+the website for a detailed tutorial on linear combinations and custom
+contrasts.}
 
 \item{by}{character vector of categorical variables included in the
 \code{variables_grid}. Marginal means are computed within each subgroup

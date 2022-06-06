@@ -6,7 +6,7 @@
 \usage{
 plot_cap(
   model,
-  condition,
+  condition = NULL,
   type = "response",
   vcov = NULL,
   conf_level = 0.95,
