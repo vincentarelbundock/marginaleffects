@@ -145,6 +145,7 @@ marginaleffects <- function(model,
                             conf_level = 0.95,
                             type = "response",
                             wts = NULL,
+                            lincom = NULL,
                             eps = 1e-4,
                             ...) {
 
@@ -219,6 +220,7 @@ marginaleffects <- function(model,
         conf_level = conf_level,
         type = type,
         wts = wts,
+        lincom = lincom,
         eps = eps,
         # hard-coded. Users should use comparisons() for more flexibility
         transform_pre = "difference",

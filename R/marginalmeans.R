@@ -241,7 +241,7 @@ marginalmeans <- function(model,
     }
 
     # column order
-    cols <- c("type", "group", by, "term", "value", variables, "marginalmean",
+    cols <- c("type", "group", by, "term", "lincom", "value", variables, "marginalmean",
               "std.error", "conf.low", "conf.high", sort(colnames(out)))
     cols <- unique(cols)
     cols <- intersect(cols, colnames(out))
@@ -314,14 +314,8 @@ get_marginalmeans <- function(model,
         out <- data.table(pred)[, .(marginalmean = mean(predicted, na.rm = TRUE)), by = idx]
     }
 
-    checkmate::assert(
-        checkmate::check_numeric(lincom, len = nrow(out), null.ok = TRUE),
-        checkmate::check_matrix(lincom, nrows = nrow(out)))
-
     if (!is.null(lincom)) {
-        out <- data.table(
-            term = "lincom",
-            marginalmean = as.vector(out$marginalmean %*% lincom))
+        out <- get_lincom(out, lincom, "marginalmean")
     }
 
     return(out)

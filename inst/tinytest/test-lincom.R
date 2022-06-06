@@ -6,6 +6,29 @@ dat$carb <- factor(dat$carb)
 dat$cyl <- factor(dat$cyl)
 mod <- lm(mpg ~ carb + cyl, dat)
 
+# contrasts: lincom
+cmp1 <- comparisons(
+    mod,
+    variables = "cyl",
+    newdata = "mean")
+cmp2 <- comparisons(
+    mod,
+    variables = "cyl",
+    newdata = "mean",
+    lincom = "pairwise")
+expect_equivalent(diff(cmp1$comparison), cmp2$comparison)
+
+
+# marginaleffects: lincom
+mfx <- marginaleffects(
+    mod,
+    newdata = "mean",
+    variables = "cyl",
+    lincom = "pairwise")
+expect_inherits(mfx, "marginaleffects")
+expect_equivalent(nrow(mfx), 1)
+
+
 # predictions: lincom
 p1 <- predictions(
     mod,
@@ -16,6 +39,15 @@ p2 <- predictions(
     datagrid(cyl = c(4, 6)))
 expect_equivalent(p1$predicted, diff(p2$predicted))
 
+lc <- matrix(c(
+    -1, 1,
+    -1, 0
+    ), ncol = 2)
+p3 <- predictions(
+    mod,
+    datagrid(cyl = c(4, 6)),
+    lincom = lc)
+expect_inherits(p3, "predictions")
 
 
 # marginalmeans: lincom complex
@@ -27,6 +59,10 @@ mm <- marginalmeans(mod, variables = "carb", lincom = lc)
 expect_equivalent(mm$marginalmean, em$estimate)
 expect_equivalent(mm$std.error, em$SE)
 
+# marginalmeans: lincom shortcut
+mm <- marginalmeans(mod, variables = "carb", lincom = "reference")
+expect_equivalent(nrow(mm), 5)
+
 # marginalmeans: lincom complex matrix
 lc <- matrix(c(
     -2, 1, 1, 0, -1, 1,
@@ -35,6 +71,3 @@ lc <- matrix(c(
 mm <- marginalmeans(mod, variables = "carb", lincom = lc)
 expect_inherits(mm, "marginalmeans")
 expect_equal(nrow(mm), 2)
-
-f <- y ~ x1 + x2 + (1 + x3 | group)
-insight::find_predictors(f)$conditional

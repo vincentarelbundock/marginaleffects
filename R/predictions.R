@@ -115,6 +115,7 @@ predictions <- function(model,
 
     # input sanity checks
     checkmate::assert_function(transform_post, null.ok = TRUE)
+    sanity_lincom(lincom)
     sanity_dots(model = model, ...)
     sanity_model_specific(model = model, newdata = newdata, vcov = vcov, calling_function = "predictions", ...)
     conf_level <- sanitize_conf_level(conf_level, ...)
@@ -345,7 +346,7 @@ predictions <- function(model,
 
     # clean columns
     stubcols <- c(
-        "rowid", "type", "term", "group", "predicted", "std.error",
+        "rowid", "type", "term", "group", "lincom", "predicted", "std.error",
         "statistic", "p.value", "conf.low", "conf.high", "marginaleffects_wts",
         sort(grep("^predicted", colnames(newdata), value = TRUE)))
     cols <- intersect(stubcols, colnames(out))
@@ -381,9 +382,7 @@ predictions <- function(model,
 get_predictions <- function(..., lincom = NULL) {
     out <- get_predict(...)
     if (!is.null(lincom)) {
-        out <- data.table(
-            term = "lincom",
-            predicted = as.vector(out$predicted %*% lincom))
+        out <- get_lincom(out, lincom, column = "predicted")
     }
     return(out)
 }

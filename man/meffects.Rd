@@ -12,6 +12,7 @@ meffects(
   conf_level = 0.95,
   type = "response",
   wts = NULL,
+  lincom = NULL,
   eps = 1e-04,
   ...
 )

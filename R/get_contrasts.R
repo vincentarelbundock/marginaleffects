@@ -8,6 +8,7 @@ get_contrasts <- function(model,
                           cache = NULL,
                           eps = 1e-4,
                           marginalmeans,
+                          lincom = NULL,
                           ...) {
 
     dots <- list(...)
@@ -183,6 +184,8 @@ get_contrasts <- function(model,
                                       eps_tmp = eps_tmp), by = idx]
         out[, c("predicted_hi", "predicted_lo", "predicted") := NULL]
     }
+
+    out <- get_lincom(out, lincom, "comparison")
 
     if ("transform_pre_idx" %in% colnames(out)) out[, "transform_pre_idx" := NULL]
 

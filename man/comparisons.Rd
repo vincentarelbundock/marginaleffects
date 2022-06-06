@@ -15,6 +15,7 @@ comparisons(
   transform_post = NULL,
   interaction = NULL,
   wts = NULL,
+  lincom = NULL,
   ...
 )
 }
@@ -129,6 +130,15 @@ contrasts or marginaleffects. These weights only affect the averaging in
 \item string: column name of the weights variable in \code{newdata}. When supplying a column name to \code{wts}, it is recommended to supply the original data (including the weights variable) explicitly to \code{newdata}.
 \item numeric: vector of length equal to the number of rows in the original data or in \code{newdata} (if supplied).
 }}
+
+\item{lincom}{numeric vector or matrix. Elements of \code{lincom} are the weights
+used to compute linear combinations of estimates. \code{lincom} vectors must be
+of length equal to the to the number of rows in the data frame produced by
+\code{marginalmeans()}. In \code{lincom} matrices, each column represents a distinct
+linear combination, and the number of rows must be equal to the number of
+rows in the output of \code{marginalmeans()}. See below for examples and visit
+the website for a detailed tutorial on linear combinations and custom
+contrasts.}
 
 \item{...}{Additional arguments are passed to the \code{predict()} method
 supplied by the modeling package.These arguments are particularly useful

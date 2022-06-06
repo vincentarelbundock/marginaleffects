@@ -29,6 +29,7 @@
 #'
 #'
 #' @inheritParams marginaleffects
+#' @inheritParams predictions
 #' @param variables `NULL`, character vector, or named list. The subset of variables for which to compute contrasts.
 #' * `NULL`: compute contrasts for all the variables in the model object (can be slow).
 #' * Character vector: subset of variables (usually faster).
@@ -145,6 +146,7 @@ comparisons <- function(model,
                         transform_post = NULL,
                         interaction = NULL,
                         wts = NULL,
+                        lincom = NULL,
                         ...) {
 
     dots <- list(...)
@@ -292,7 +294,8 @@ comparisons <- function(model,
                  contrast_numeric = contrast_numeric,
                  eps = eps,
                  cache = cache,
-                 marginalmeans = marginalmeans)
+                 marginalmeans = marginalmeans,
+                 lincom = lincom)
     args <- c(args, dots)
     mfx <- do.call("get_contrasts", args)
 
@@ -317,6 +320,7 @@ comparisons <- function(model,
                      contrast_factor = contrast_factor,
                      contrast_numeric = contrast_numeric,
                      marginalmeans = marginalmeans,
+                     lincom = lincom,
                      eps = 1e-4)
         args <- c(args, dots)
         se <- do.call("get_se_delta", args)
@@ -359,7 +363,7 @@ comparisons <- function(model,
     }
 
     # clean columns
-    stubcols <- c("rowid", "rowid_counterfactual", "type", "group", "term",
+    stubcols <- c("rowid", "rowid_counterfactual", "type", "group", "term", "lincom",
                   grep("^contrast", colnames(mfx), value = TRUE),
                   "comparison", "std.error", "statistic", "p.value", "conf.low", "conf.high", "df",
                   sort(grep("^predicted", colnames(newdata), value = TRUE)))
