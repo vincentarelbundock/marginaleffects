@@ -107,9 +107,9 @@ predictions <- function(model,
 
     # input sanity checks
     checkmate::assert_function(transform_post, null.ok = TRUE)
-    sanity_lincom(lincom)
     sanity_dots(model = model, ...)
     sanity_model_specific(model = model, newdata = newdata, vcov = vcov, calling_function = "predictions", ...)
+    lincom <- sanitize_lincom(lincom)
     conf_level <- sanitize_conf_level(conf_level, ...)
     levels_character <- attr(variables, "levels_character")
 

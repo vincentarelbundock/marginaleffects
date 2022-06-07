@@ -177,6 +177,8 @@ comparisons <- function(model,
         }
     }
 
+    lincom <- sanitize_lincom(lincom)
+
 
     # step size is only used and sanitized by `marginaleffects()`
     if ("eps" %in% names(dots)) {

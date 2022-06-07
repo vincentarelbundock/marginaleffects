@@ -6,6 +6,18 @@ dat$carb <- factor(dat$carb)
 dat$cyl <- factor(dat$cyl)
 mod <- lm(mpg ~ carb + cyl, dat)
 
+
+# marginaleffects: lincom
+mfx <- marginaleffects(
+    mod,
+    newdata = "mean",
+    variables = "cyl",
+    lincom = "pairwise")
+
+expect_inherits(mfx, "marginaleffects")
+expect_equivalent(nrow(mfx), 1)
+
+
 # contrasts: lincom
 cmp1 <- comparisons(
     mod,
@@ -27,7 +39,6 @@ mfx <- marginaleffects(
     lincom = "pairwise")
 expect_inherits(mfx, "marginaleffects")
 expect_equivalent(nrow(mfx), 1)
-
 
 # predictions: lincom
 p1 <- predictions(
@@ -71,3 +82,30 @@ lc <- matrix(c(
 mm <- marginalmeans(mod, variables = "carb", lincom = lc)
 expect_inherits(mm, "marginalmeans")
 expect_equal(nrow(mm), 2)
+
+
+# marginaleffects: string function
+mod <- lm(mpg ~ hp + drat, data = mtcars)
+mfx1 <- marginaleffects(
+    mod,
+    newdata = "mean",
+    lincom = "exp(x1 + x2) = 100")
+mfx2 <- marginaleffects(
+    mod,
+    newdata = "mean",
+    lincom = "exp(hp + drat) = 100")
+expect_inherits(mfx1, "marginaleffects")
+expect_equivalent(mfx1$dydx, mfx2$dydx)
+expect_equivalent(mfx1$std.error, mfx2$std.error)
+
+
+# predictions: string formulas
+p1 <- predictions(
+    mod,
+    newdata = datagrid(hp = c(100, 110, 120)))
+p2 <- predictions(
+    mod,
+    lincom = "x1 + x2 + x3 = 10",
+    newdata = datagrid(hp = c(100, 110, 120)))
+expect_equivalent(sum(p1$predicted) - 10, p2$predicted)
+

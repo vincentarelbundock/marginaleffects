@@ -9,6 +9,8 @@ get_lincom <- function(x, lincom, column) {
             term = "lincom",
             lincom = "custom",
             tmp = as.vector(x[[column]] %*% lincom))
+        setnames(out, old = "tmp", new = column)
+        return(out)
     }
 
     if (isTRUE(lincom == "reference")) {
@@ -27,6 +29,8 @@ get_lincom <- function(x, lincom, column) {
             lincom = lab,
             tmp = as.vector(x[[column]] %*% lc))
         out <- out[out$term != "1 - 1", , drop = FALSE]
+        setnames(out, old = "tmp", new = column)
+        return(out)
     }
 
     if (isTRUE(lincom == "pairwise")) {
@@ -48,9 +52,35 @@ get_lincom <- function(x, lincom, column) {
             term = "lincom",
             lincom = lab,
             tmp = as.vector(x[[column]] %*% lc))
+        setnames(out, old = "tmp", new = column)
+        return(out)
     }
 
-    setnames(out, old = "tmp", new = column)
+    if (is.character(lincom)) {
+        envir <- parent.frame()
 
-    return(out)
+        if (isTRUE(grepl("\\bx\\d", lincom))) {
+            lab <- lincom
+            for (i in seq_len(nrow(x))) {
+                tmp <- paste0("marginaleffects__", i)
+                lincom <- gsub(paste0("x", i), tmp, lincom)
+                assign(tmp, x[[column]][i], envir = envir)
+            }
+        } else {
+            for (i in seq_len(nrow(x))) {
+                tmp <- x$term[i]
+                assign(tmp, x[[column]][i], envir = envir)
+            }
+        }
+        out <- eval(parse(text = lincom), envir = envir)
+        out <- data.table(
+            term = "lincom",
+            lincom = gsub("\\s+", "", attr(lincom, "label")),
+            tmp = out)
+        setnames(out, old = "tmp", new = column)
+        return(out)
+    }
+
+    stop("`lincom` is broken. Please report this bug: https://github.com/vincentarelbundock/marginaleffects/issues.", call. = FALSE)
+
 }
