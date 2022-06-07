@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-The code in this vignette requires `marginaleffects` version 0.5.1 or the development version hosted on Github.
+The code in this vignette requires `marginaleffects` version 0.5.1 or [the development version hosted on Github.](https://vincentarelbundock.github.io/marginaleffects/#installation)
 
 # Hypothesis Test Formulas: Linear and Non-Linear
 
