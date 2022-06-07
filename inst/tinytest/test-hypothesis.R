@@ -37,10 +37,6 @@ expect_error(
     marginaleffects(mod, hypothesis = "reference"),
     pattern = "smaller")
 
-expect_false(expect_error(
-    marginalmeans(mod, hypothesis = "pairwise"),
-    pattern = "smaller"))
-
 expect_error(marginaleffects(
     mod,
     newdata = "mean",
