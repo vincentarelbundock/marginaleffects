@@ -1,14 +1,14 @@
-get_lincom <- function(x, lincom, column) {
+get_hypothesis <- function(x, hypothesis, column) {
 
-    if (is.null(lincom)) {
+    if (is.null(hypothesis)) {
         return(x)
     }
 
     # must be checked here when we know how many rows the output has
-    if (isTRUE(lincom %in% c("pairwise", "reference"))) {
+    if (isTRUE(hypothesis %in% c("pairwise", "reference"))) {
         if (nrow(x) > 25) {
             msg <- format_msg(
-            'The "pairwise" option of the `lincom` argument is not supported for
+            'The "pairwise" option of the `hypothesis` argument is not supported for
             `marginaleffects` commands which generate more than 25 rows of results. Use the
             `newdata` and/or the `variables` arguments to compute a smaller set of
             results.')
@@ -16,35 +16,35 @@ get_lincom <- function(x, lincom, column) {
         }
     }
 
-    if (isTRUE(checkmate::check_numeric(lincom)) && isTRUE(checkmate::check_atomic_vector(lincom))) {
-        if (length(lincom) != nrow(x)) {
+    if (isTRUE(checkmate::check_numeric(hypothesis)) && isTRUE(checkmate::check_atomic_vector(hypothesis))) {
+        if (length(hypothesis) != nrow(x)) {
             msg <- sprintf(
-            "The `lincom` vector must be of length %s.", nrow(x))
+            "The `hypothesis` vector must be of length %s.", nrow(x))
             stop(msg, call. = FALSE)
         }
         out <- data.table(
-            term = "lincom",
-            lincom = "custom",
-            tmp = as.vector(x[[column]] %*% lincom))
+            term = "hypothesis",
+            hypothesis = "custom",
+            tmp = as.vector(x[[column]] %*% hypothesis))
         setnames(out, old = "tmp", new = column)
         return(out)
     }
 
-    if (isTRUE(checkmate::check_matrix(lincom))) {
-        if (nrow(lincom) != nrow(x)) {
+    if (isTRUE(checkmate::check_matrix(hypothesis))) {
+        if (nrow(hypothesis) != nrow(x)) {
             msg <- sprintf(
-            "The `lincom` matrix must be have %s rows.", nrow(x))
+            "The `hypothesis` matrix must be have %s rows.", nrow(x))
             stop(msg, call. = FALSE)
         }
         out <- data.table(
-            term = "lincom",
-            lincom = "custom",
-            tmp = as.vector(x[[column]] %*% lincom))
+            term = "hypothesis",
+            hypothesis = "custom",
+            tmp = as.vector(x[[column]] %*% hypothesis))
         setnames(out, old = "tmp", new = column)
         return(out)
     }
 
-    if (isTRUE(lincom == "reference")) {
+    if (isTRUE(hypothesis == "reference")) {
         lab <- NULL
         mat <- list()
         for (j in 2:nrow(x)) {
@@ -56,15 +56,15 @@ get_lincom <- function(x, lincom, column) {
         }
         lc <- do.call("cbind", mat)
         out <- data.table(
-            term = "lincom",
-            lincom = lab,
+            term = "hypothesis",
+            hypothesis = lab,
             tmp = as.vector(x[[column]] %*% lc))
         out <- out[out$term != "1 - 1", , drop = FALSE]
         setnames(out, old = "tmp", new = column)
         return(out)
     }
 
-    if (isTRUE(lincom == "pairwise")) {
+    if (isTRUE(hypothesis == "pairwise")) {
         lab <- NULL
         mat <- list()
         for (i in 1:nrow(x)) {
@@ -80,33 +80,34 @@ get_lincom <- function(x, lincom, column) {
         }
         lc <- do.call("cbind", mat)
         out <- data.table(
-            term = "lincom",
-            lincom = lab,
+            term = "hypothesis",
+            hypothesis = lab,
             tmp = as.vector(x[[column]] %*% lc))
         setnames(out, old = "tmp", new = column)
         return(out)
     }
 
     # we assume this is a string formula
-    if (is.character(lincom)) {
+    if (is.character(hypothesis)) {
         envir <- parent.frame()
 
-        # row indices: `lincom` includes them, but `term` does not
-        if (isTRUE(grepl("\\br\\d+\\b", lincom)) && !any(grepl("\\br\\d+\\b", x[["term"]]))) {
-            lab <- lincom
+        # row indices: `hypothesis` includes them, but `term` does not
+        if (isTRUE(grepl("\\br\\d+\\b", hypothesis)) && !any(grepl("\\br\\d+\\b", x[["term"]]))) {
+            lab <- hypothesis
             for (i in seq_len(nrow(x))) {
                 tmp <- paste0("marginaleffects__", i)
-                lincom <- gsub(paste0("r", i), tmp, lincom)
+                hypothesis <- gsub(paste0("r", i), tmp, hypothesis)
                 assign(tmp, x[[column]][i], envir = envir)
             }
 
         # term names
         } else {
-            if (anyDuplicated(x$term) > 0) {
+            if (!"term" %in% colnames(x) || anyDuplicated(x$term) > 0) {
                 msg <- format_msg(
-                "There are duplicate term names. Please use row indices
-                instead of term names in the the `lincom` formula. Ex:
-                `r1 + r2 = 0`")
+                'To use term names in a `hypothesis` string, the same function call without
+                `hypothesis` argument must produce a `term` column with unique row identifiers.
+                Please use row indices instead of term names in the `hypothesis` string Ex:
+                "r1 + r2 = 0"')
                 stop(msg, call. = FALSE)
             }
 
@@ -116,19 +117,18 @@ get_lincom <- function(x, lincom, column) {
             }
         }
 
-        out <- eval(parse(text = lincom), envir = envir)
+        out <- eval(parse(text = hypothesis), envir = envir)
         out <- data.table(
-            term = "lincom",
-            lincom = gsub("\\s+", "", attr(lincom, "label")),
+            term = "hypothesis",
+            hypothesis = gsub("\\s+", "", attr(hypothesis, "label")),
             tmp = out)
         setnames(out, old = "tmp", new = column)
         return(out)
     }
 
     msg <- 
-    "`lincom` is broken. Please report this bug:
+    "`hypothesis` is broken. Please report this bug:
     https://github.com/vincentarelbundock/marginaleffects/issues."
     stop(msg, call. = FALSE)
 
 }
-

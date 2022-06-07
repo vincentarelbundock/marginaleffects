@@ -70,6 +70,37 @@
 #'
 #' # Conditional Adjusted Predictions
 #' plot_cap(mod, condition = "hp")
+#'
+#' # hypothesis test: is the prediction in the 1st row equal to the prediction in the 2nd row
+#' mod <- lm(mpg ~ wt + drat, data = mtcars)
+#' 
+#' predictions(
+#'     mod,
+#'     newdata = datagrid(wt = 2:3),
+#'     hypothesis = "r1 = r2")
+#' 
+#' # same hypothesis test using row indices
+#' predictions(
+#'     mod,
+#'     newdata = datagrid(wt = 2:3),
+#'     hypothesis = "r1 - r2 = 0")
+#' 
+#' # same hypothesis test using numeric vector of weights
+#' predictions(
+#'     mod,
+#'     newdata = datagrid(wt = 2:3),
+#'     hypothesis = c(1, -1))
+#' 
+#' # two custom contrasts using a matrix of weights
+#' lc <- matrix(c(
+#'     1, -1,
+#'     2, 3),
+#'     ncol = 2)
+#' predictions(
+#'     mod,
+#'     newdata = datagrid(wt = 2:3),
+#'     hypothesis = lc)
+#' 
 #' @export
 predictions <- function(model,
                         newdata = NULL,
@@ -79,7 +110,7 @@ predictions <- function(model,
                         type = "response",
                         wts = NULL,
                         transform_post = NULL,
-                        lincom = NULL,
+                        hypothesis = NULL,
                         ...) {
 
 
@@ -109,7 +140,7 @@ predictions <- function(model,
     checkmate::assert_function(transform_post, null.ok = TRUE)
     sanity_dots(model = model, ...)
     sanity_model_specific(model = model, newdata = newdata, vcov = vcov, calling_function = "predictions", ...)
-    lincom <- sanitize_lincom(lincom)
+    hypothesis <- sanitize_hypothesis(hypothesis, ...)
     conf_level <- sanitize_conf_level(conf_level, ...)
     levels_character <- attr(variables, "levels_character")
 
@@ -200,13 +231,14 @@ predictions <- function(model,
         vcov = vcov_tmp,
         conf_level = conf_level,
         type = type,
-        lincom = lincom,
+        hypothesis = hypothesis,
         ...))
 
     if (isTRUE(grepl("type.*models", tmp[["error"]]))) {
         stop(tmp$error$message, call. = FALSE)
 
     } else if (!inherits(tmp[["value"]], "data.frame")) {
+        if (isTRUE(grepl("row indices", tmp$error$message))) stop(tmp$error$message, call. = FALSE)
         if (!is.null(tmp$warning)) warning(tmp$warning$message, call. = FALSE)
         if (!is.null(tmp$error)) warning(tmp$error$message, call. = FALSE)
         msg <- format_msg(
@@ -284,7 +316,7 @@ predictions <- function(model,
                     FUN = fun,
                     J = J,
                     eps = 1e-4, # avoid pushing through ...
-                    lincom = lincom,
+                    hypothesis = hypothesis,
                     ...)
                 if (is.numeric(se) && length(se) == nrow(tmp)) {
                     tmp[["std.error"]] <- se
@@ -320,7 +352,7 @@ predictions <- function(model,
 
     # return data
     # very import to avoid sorting, otherwise bayesian draws won't fit predictions
-    # merge only with rowid; not available for lincom
+    # merge only with rowid; not available for hypothesis
     if ("rowid" %in% colnames(out)) {
         out <- merge(out, newdata, by = "rowid", sort = FALSE)
     }
@@ -338,7 +370,7 @@ predictions <- function(model,
 
     # clean columns
     stubcols <- c(
-        "rowid", "type", "term", "group", "lincom", "predicted", "std.error",
+        "rowid", "type", "term", "group", "hypothesis", "predicted", "std.error",
         "statistic", "p.value", "conf.low", "conf.high", "marginaleffects_wts",
         sort(grep("^predicted", colnames(newdata), value = TRUE)))
     cols <- intersect(stubcols, colnames(out))
@@ -371,10 +403,10 @@ predictions <- function(model,
 
  
 # wrapper used only for standard_error_delta
-get_predictions <- function(..., lincom = NULL) {
+get_predictions <- function(..., hypothesis = NULL) {
     out <- get_predict(...)
-    if (!is.null(lincom)) {
-        out <- get_lincom(out, lincom, column = "predicted")
+    if (!is.null(hypothesis)) {
+        out <- get_hypothesis(out, hypothesis, column = "predicted")
     }
     return(out)
 }

@@ -24,7 +24,7 @@ get_se_delta_contrasts <- function(model,
                                    contrast_factor,
                                    contrast_numeric,
                                    eps,
-                                   lincom,
+                                   hypothesis,
                                    ...) {
     get_contrasts(model,
         newdata = newdata,
@@ -34,7 +34,7 @@ get_se_delta_contrasts <- function(model,
         contrast_factor = contrast_factor,
         contrast_numeric = contrast_numeric,
         eps = eps,
-        lincom = lincom,
+        hypothesis = hypothesis,
         ...
     )$comparison
 }
@@ -57,7 +57,7 @@ get_se_delta <- function(model,
                          index = NULL,
                          eps = 1e-4,
                          J = NULL,
-                         lincom = NULL,
+                         hypothesis = NULL,
                          ...) {
 
     # delta method does not work for these models
@@ -78,11 +78,11 @@ get_se_delta <- function(model,
     # output: gradient
     inner <- function(x) {
         model_tmp <- set_coef(model, stats::setNames(x, names(coefs)))
-        g <- FUN(model = model_tmp, newdata = newdata, type = type, eps = eps, lincom = lincom, ...)
+        g <- FUN(model = model_tmp, newdata = newdata, type = type, eps = eps, hypothesis = hypothesis, ...)
         return(g)
     }
 
-    if (is.null(J) || !is.null(lincom)) {
+    if (is.null(J) || !is.null(hypothesis)) {
         J <- get_jacobian(func = inner, x = coefs, eps = eps)
         colnames(J) <- names(get_coef(model))
     }

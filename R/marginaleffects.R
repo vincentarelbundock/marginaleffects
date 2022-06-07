@@ -73,10 +73,21 @@
 #' `tidy()` or `summary()`, and not the unit-level estimates themselves.
 #' + string: column name of the weights variable in `newdata`. When supplying a column name to `wts`, it is recommended to supply the original data (including the weights variable) explicitly to `newdata`.
 #' + numeric: vector of length equal to the number of rows in the original data or in `newdata` (if supplied). 
-#' @param lincom numeric vector or matrix. Elements of `lincom` are the weights
-#' used to compute linear combinations of estimates. `lincom` vectors must be
+#' @param hypothesis specify a hypothesis test or custom contrast using a vector, matrix, string, or string formula.
+#' + String:
+#'   - "pairwise": pairwise differences between estimates in each row.
+#'   - "reference": differences between the estimates in each row and the estimate in the first row.
+#' + String formula to specify linear or non-linear hypothesis tests. If the `term` column uniquely identifies rows, terms can be used in the formula. Otherwise, use `r1`, `r2`, etc. to identify row numbers. Examples:
+#'   - `hp = drat`
+#'   - `hp + drat = 12`
+#'   - `r1 + r2 + r3 = 0`
+#' + Numeric vector: Weights to compute a linear combination of (custom contrast between) estimates. Length equal to the number of rows of the function' output, without the `hypothesis` argument.
+#' + Numeric matrix: Each column is a vector of weights used to compute a distinct linear combination of (contrast between) estimates.
+#' + See the Examples section below and the vignette: https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html
+#' 
+#' used to compute linear combinations of estimates. `hypothesis` vectors must be
 #' of length equal to the to the number of rows in the data frame produced by
-#' `marginalmeans()`. In `lincom` matrices, each column represents a distinct
+#' `marginalmeans()`. In `hypothesis` matrices, each column represents a distinct
 #' linear combination, and the number of rows must be equal to the number of
 #' rows in the output of `marginalmeans()`. See below for examples and visit
 #' the website for a detailed tutorial on linear combinations and custom
@@ -145,15 +156,46 @@
 #' # Heteroskedasticity robust standard errors
 #' marginaleffects(mod, vcov = sandwich::vcovHC(mod))
 #'
+#' # hypothesis test: is the `hp` marginal effect at the mean equal to the `drat` marginal effect
+#' mod <- lm(mpg ~ wt + drat, data = mtcars)
+#'
+#' marginaleffects(
+#'     mod,
+#'     newdata = "mean",
+#'     hypothesis = "wt = drat")
+#' 
+#' # same hypothesis test using row indices
+#' marginaleffects(
+#'     mod,
+#'     newdata = "mean",
+#'     hypothesis = "r1 - r2 = 0")
+#' 
+#' # same hypothesis test using numeric vector of weights
+#' marginaleffects(
+#'     mod,
+#'     newdata = "mean",
+#'     hypothesis = c(1, -1))
+#' 
+#' # two custom contrasts using a matrix of weights
+#' lc <- matrix(c(
+#'     1, -1,
+#'     2, 3),
+#'     ncol = 2)
+#' marginaleffects(
+#'     mod,
+#'     newdata = "mean",
+#'     hypothesis = lc)
+#' 
 #' @export
 marginaleffects <- function(model,
+
                             newdata = NULL,
                             variables = NULL,
                             vcov = TRUE,
                             conf_level = 0.95,
                             type = "response",
                             wts = NULL,
-                            lincom = NULL,
+                            hypothesis = NULL,
                             eps = 1e-4,
                             ...) {
 
@@ -228,7 +270,7 @@ marginaleffects <- function(model,
         conf_level = conf_level,
         type = type,
         wts = wts,
-        lincom = lincom,
+        hypothesis = hypothesis,
         eps = eps,
         # hard-coded. Users should use comparisons() for more flexibility
         transform_pre = "difference",
@@ -251,7 +293,7 @@ marginaleffects <- function(model,
     attributes_comparisons <- attributes_comparisons[idx]
 
     # clean columns
-    stubcols <- c("rowid", "type", "group", "term", "contrast", "lincom", "dydx", "std.error", "statistic", "p.value", "conf.low", "conf.high",
+    stubcols <- c("rowid", "type", "group", "term", "contrast", "hypothesis", "dydx", "std.error", "statistic", "p.value", "conf.low", "conf.high",
                   sort(grep("^predicted", colnames(newdata), value = TRUE)))
     cols <- intersect(stubcols, colnames(out))
     cols <- unique(c(cols, colnames(out)))

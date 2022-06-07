@@ -13,7 +13,7 @@ marginalmeans(
   type = "response",
   transform_post = NULL,
   interaction = NULL,
-  lincom = NULL,
+  hypothesis = NULL,
   by = NULL,
   ...
 )
@@ -66,10 +66,27 @@ acceptable values is returned in an error message.}
 \item \code{NULL} (default): Behaves like \code{TRUE} when the \code{variables} argument is specified and the model formula includes interactions. Behaves like \code{FALSE} otherwise.
 }}
 
-\item{lincom}{numeric vector or matrix. Elements of \code{lincom} are the weights
-used to compute linear combinations of estimates. \code{lincom} vectors must be
+\item{hypothesis}{specify a hypothesis test or custom contrast using a vector, matrix, string, or string formula.
+\itemize{
+\item String:
+\itemize{
+\item "pairwise": pairwise differences between estimates in each row.
+\item "reference": differences between the estimates in each row and the estimate in the first row.
+}
+\item String formula to specify linear or non-linear hypothesis tests. If the \code{term} column uniquely identifies rows, terms can be used in the formula. Otherwise, use \code{r1}, \code{r2}, etc. to identify row numbers. Examples:
+\itemize{
+\item \code{hp = drat}
+\item \code{hp + drat = 12}
+\item \code{r1 + r2 + r3 = 0}
+}
+\item Numeric vector: Weights to compute a linear combination of (custom contrast between) estimates. Length equal to the number of rows of the function' output, without the \code{hypothesis} argument.
+\item Numeric matrix: Each column is a vector of weights used to compute a distinct linear combination of (contrast between) estimates.
+\item See the Examples section below and the vignette: https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html
+}
+
+used to compute linear combinations of estimates. \code{hypothesis} vectors must be
 of length equal to the to the number of rows in the data frame produced by
-\code{marginalmeans()}. In \code{lincom} matrices, each column represents a distinct
+\code{marginalmeans()}. In \code{hypothesis} matrices, each column represents a distinct
 linear combination, and the number of rows must be equal to the number of
 rows in the output of \code{marginalmeans()}. See below for examples and visit
 the website for a detailed tutorial on linear combinations and custom
@@ -167,16 +184,18 @@ dat$am <- as.logical(dat$am)
 mod <- lm(mpg ~ carb + cyl + am, dat)
 marginalmeans(mod, variables = "cyl", by = "am")
 
-# Contrast between marginal means (carb2 - carb1)
-# see the vignette on "Custom Contrasts and Linear Combinations" on the
-# `marginaleffects` website.
+# Contrast between marginal means (carb2 - carb1), or "is the 1st marginal means equal to the 2nd?"
+# see the vignette on "Hypothesis Tests and Custom Contrasts" on the `marginaleffects` website.
 lc <- c(-1, 1, 0, 0, 0, 0)
-marginalmeans(mod, variables = "carb", lincom = lc)
+marginalmeans(mod, variables = "carb", hypothesis = "r2 = r1")
 
+marginalmeans(mod, variables = "carb", hypothesis = lc)
+
+# Multiple custom contrasts
 lc <- matrix(c(
     -2, 1, 1, 0, -1, 1,
     -1, 1, 0, 0, 0, 0
     ), ncol = 2)
-marginalmeans(mod, variables = "carb", lincom = lc)
+marginalmeans(mod, variables = "carb", hypothesis = lc)
 
 }

@@ -78,17 +78,19 @@
 #' mod <- lm(mpg ~ carb + cyl + am, dat)
 #' marginalmeans(mod, variables = "cyl", by = "am")
 #'
-#' # Contrast between marginal means (carb2 - carb1)
-#' # see the vignette on "Custom Contrasts and Linear Combinations" on the
-#' # `marginaleffects` website.
+#' # Contrast between marginal means (carb2 - carb1), or "is the 1st marginal means equal to the 2nd?"
+#' # see the vignette on "Hypothesis Tests and Custom Contrasts" on the `marginaleffects` website.
 #' lc <- c(-1, 1, 0, 0, 0, 0)
-#' marginalmeans(mod, variables = "carb", lincom = lc)
+#' marginalmeans(mod, variables = "carb", hypothesis = "r2 = r1")
 #'
+#' marginalmeans(mod, variables = "carb", hypothesis = lc)
+#'
+#' # Multiple custom contrasts
 #' lc <- matrix(c(
 #'     -2, 1, 1, 0, -1, 1,
 #'     -1, 1, 0, 0, 0, 0
 #'     ), ncol = 2)
-#' marginalmeans(mod, variables = "carb", lincom = lc)
+#' marginalmeans(mod, variables = "carb", hypothesis = lc)
 #' 
 marginalmeans <- function(model,
                           variables = NULL,
@@ -98,7 +100,7 @@ marginalmeans <- function(model,
                           type = "response",
                           transform_post = NULL,
                           interaction = NULL,
-                          lincom = NULL,
+                          hypothesis = NULL,
                           by = NULL,
                           ...) {
 
@@ -108,7 +110,7 @@ marginalmeans <- function(model,
     checkmate::assert_function(transform_post, null.ok = TRUE)
     interaction <- sanitize_interaction(interaction, variables, model)
     conf_level <- sanitize_conf_level(conf_level, ...)
-    lincom <- sanitize_lincom(lincom)
+    hypothesis <- sanitize_hypothesis(hypothesis, ...)
 
     # fancy vcov processing to allow strings like "HC3"
     vcov <- get_vcov(model, vcov = vcov)
@@ -202,7 +204,7 @@ marginalmeans <- function(model,
                             type = type,
                             variables = variables,
                             interaction = interaction,
-                            lincom = lincom,
+                            hypothesis = hypothesis,
                             by = by,
                             ...)
 
@@ -221,7 +223,7 @@ marginalmeans <- function(model,
             variables = variables,
             newdata = newgrid,
             interaction = interaction,
-            lincom = lincom)
+            hypothesis = hypothesis)
         # get rid of attributes in column
         out[["std.error"]] <- as.numeric(se)
         J <- attr(se, "jacobian")
@@ -242,7 +244,7 @@ marginalmeans <- function(model,
     }
 
     # column order
-    cols <- c("type", "group", by, "term", "lincom", "value", variables, "marginalmean",
+    cols <- c("type", "group", by, "term", "hypothesis", "value", variables, "marginalmean",
               "std.error", "conf.low", "conf.high", sort(colnames(out)))
     cols <- unique(cols)
     cols <- intersect(cols, colnames(out))
@@ -277,7 +279,7 @@ get_marginalmeans <- function(model,
                               type,
                               variables,
                               interaction,
-                              lincom = NULL,
+                              hypothesis = NULL,
                               by = NULL,
                               ...) {
 
@@ -315,8 +317,8 @@ get_marginalmeans <- function(model,
         out <- data.table(pred)[, .(marginalmean = mean(predicted, na.rm = TRUE)), by = idx]
     }
 
-    if (!is.null(lincom)) {
-        out <- get_lincom(out, lincom, "marginalmean")
+    if (!is.null(hypothesis)) {
+        out <- get_hypothesis(out, hypothesis, "marginalmean")
     }
 
     return(out)

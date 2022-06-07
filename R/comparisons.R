@@ -135,6 +135,36 @@
 #' cmp <- comparisons(mod, variables = list(gear = "sequential", hp = 10))
 #' summary(cmp)
 #'
+#' # hypothesis test: is the `hp` marginal effect at the mean equal to the `drat` marginal effect
+#' mod <- lm(mpg ~ wt + drat, data = mtcars)
+#'
+#' comparisons(
+#'     mod,
+#'     newdata = "mean",
+#'     hypothesis = "wt = drat")
+#' 
+#' # same hypothesis test using row indices
+#' comparisons(
+#'     mod,
+#'     newdata = "mean",
+#'     hypothesis = "r1 - r2 = 0")
+#' 
+#' # same hypothesis test using numeric vector of weights
+#' comparisons(
+#'     mod,
+#'     newdata = "mean",
+#'     hypothesis = c(1, -1))
+#' 
+#' # two custom contrasts using a matrix of weights
+#' lc <- matrix(c(
+#'     1, -1,
+#'     2, 3),
+#'     ncol = 2)
+#' comparisons(
+#'     mod,
+#'     newdata = "mean",
+#'     hypothesis = lc)
+#' 
 #' @export
 comparisons <- function(model,
                         newdata = NULL,
@@ -146,7 +176,7 @@ comparisons <- function(model,
                         transform_post = NULL,
                         interaction = NULL,
                         wts = NULL,
-                        lincom = NULL,
+                        hypothesis = NULL,
                         ...) {
 
     dots <- list(...)
@@ -177,7 +207,7 @@ comparisons <- function(model,
         }
     }
 
-    lincom <- sanitize_lincom(lincom)
+    hypothesis <- sanitize_hypothesis(hypothesis, ...)
 
 
     # step size is only used and sanitized by `marginaleffects()`
@@ -297,7 +327,7 @@ comparisons <- function(model,
                  eps = eps,
                  cache = cache,
                  marginalmeans = marginalmeans,
-                 lincom = lincom)
+                 hypothesis = hypothesis)
     args <- c(args, dots)
     mfx <- do.call("get_contrasts", args)
 
@@ -322,7 +352,7 @@ comparisons <- function(model,
                      contrast_factor = contrast_factor,
                      contrast_numeric = contrast_numeric,
                      marginalmeans = marginalmeans,
-                     lincom = lincom,
+                     hypothesis = hypothesis,
                      eps = 1e-4)
         args <- c(args, dots)
         se <- do.call("get_se_delta", args)
@@ -365,7 +395,7 @@ comparisons <- function(model,
     }
 
     # clean columns
-    stubcols <- c("rowid", "rowid_counterfactual", "type", "group", "term", "lincom",
+    stubcols <- c("rowid", "rowid_counterfactual", "type", "group", "term", "hypothesis",
                   grep("^contrast", colnames(mfx), value = TRUE),
                   "comparison", "std.error", "statistic", "p.value", "conf.low", "conf.high", "df",
                   sort(grep("^predicted", colnames(newdata), value = TRUE)))

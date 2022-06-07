@@ -12,7 +12,7 @@ meffects(
   conf_level = 0.95,
   type = "response",
   wts = NULL,
-  lincom = NULL,
+  hypothesis = NULL,
   eps = 1e-04,
   ...
 )
@@ -74,10 +74,27 @@ contrasts or marginaleffects. These weights only affect the averaging in
 \item numeric: vector of length equal to the number of rows in the original data or in \code{newdata} (if supplied).
 }}
 
-\item{lincom}{numeric vector or matrix. Elements of \code{lincom} are the weights
-used to compute linear combinations of estimates. \code{lincom} vectors must be
+\item{hypothesis}{specify a hypothesis test or custom contrast using a vector, matrix, string, or string formula.
+\itemize{
+\item String:
+\itemize{
+\item "pairwise": pairwise differences between estimates in each row.
+\item "reference": differences between the estimates in each row and the estimate in the first row.
+}
+\item String formula to specify linear or non-linear hypothesis tests. If the \code{term} column uniquely identifies rows, terms can be used in the formula. Otherwise, use \code{r1}, \code{r2}, etc. to identify row numbers. Examples:
+\itemize{
+\item \code{hp = drat}
+\item \code{hp + drat = 12}
+\item \code{r1 + r2 + r3 = 0}
+}
+\item Numeric vector: Weights to compute a linear combination of (custom contrast between) estimates. Length equal to the number of rows of the function' output, without the \code{hypothesis} argument.
+\item Numeric matrix: Each column is a vector of weights used to compute a distinct linear combination of (contrast between) estimates.
+\item See the Examples section below and the vignette: https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html
+}
+
+used to compute linear combinations of estimates. \code{hypothesis} vectors must be
 of length equal to the to the number of rows in the data frame produced by
-\code{marginalmeans()}. In \code{lincom} matrices, each column represents a distinct
+\code{marginalmeans()}. In \code{hypothesis} matrices, each column represents a distinct
 linear combination, and the number of rows must be equal to the number of
 rows in the output of \code{marginalmeans()}. See below for examples and visit
 the website for a detailed tutorial on linear combinations and custom
@@ -136,7 +153,7 @@ Case studies and technical information:
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/gformula.html}{Causal Inference with the g-Formula}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html}{Custom Contrasts and Transformations: Risk Ratio, Exponentiation, etc.}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/gam.html}{Generalized Additive Models}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/lincom.html}{Linear Combinations and Custom Contrasts}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html}{Linear Combinations and Custom Contrasts}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html}{Mixed Effects Models}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html}{Multinomial Logit and Discrete Choice Models}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/multiple_imputation.html}{Multiple Imputation}
@@ -225,6 +242,36 @@ head(mfx)
 
 # Heteroskedasticity robust standard errors
 marginaleffects(mod, vcov = sandwich::vcovHC(mod))
+
+# hypothesis test: is the `hp` marginal effect at the mean equal to the `drat` marginal effect
+mod <- lm(mpg ~ wt + drat, data = mtcars)
+
+marginaleffects(
+    mod,
+    newdata = "mean",
+    hypothesis = "wt = drat")
+
+# same hypothesis test using row indices
+marginaleffects(
+    mod,
+    newdata = "mean",
+    hypothesis = "r1 - r2 = 0")
+
+# same hypothesis test using numeric vector of weights
+marginaleffects(
+    mod,
+    newdata = "mean",
+    hypothesis = c(1, -1))
+
+# two custom contrasts using a matrix of weights
+lc <- matrix(c(
+    1, -1,
+    2, 3),
+    ncol = 2)
+marginaleffects(
+    mod,
+    newdata = "mean",
+    hypothesis = lc)
 
 }
 \keyword{internal}

@@ -1,0 +1,241 @@
+---
+title: "Hypothesis Tests and Custom Contrasts"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Hypothesis Tests and Custom Contrasts}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+# this vignette is in .Rbuildignore because lme4 is not available on old CRAN
+# test machines.
+
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  fig.width = 9,
+  fig.asp = .4,
+  out.width = "100%",
+  warning = FALSE,
+  message = FALSE,
+  comment = "#>"
+)
+```
+
+The code in this vignette requires `marginaleffects` version 0.5.1 or the development version hosted on Github.
+
+# Hypothesis Test Formulas: Linear and Non-Linear
+
+Each of the 4 core functions of the package support a `hypothesis` argument which allows users to specify custom hypothesis tests and contrasts. 
+
+
+## Marginal effects
+
+For example, let's fit a model and compute some [marginal effects at the mean:](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_mfx.html#marginal-effect-at-the-mean-mem)
+
+```{r}
+library(marginaleffects)
+
+mod <- lm(mpg ~ am + vs, data = mtcars)
+
+marginaleffects(mod, newdata = "mean")
+```
+
+Is the marginal effect of `am` different from the marginal effect of `vs`? To answer this question we can run a linear hypothesis test:
+
+```{r}
+library(marginaleffects)
+
+mod <- lm(mpg ~ am + vs, data = mtcars)
+
+marginaleffects(
+    mod,
+    newdata = "mean",
+    hypothesis = "am = vs")
+```
+
+The `hypothesis` string can include any valid `R` expression, so we can run some silly non-linear tests:
+
+```{r}
+marginaleffects(
+    mod,
+    newdata = "mean",
+    hypothesis = "exp(am) - 2 * vs = -400")
+```
+
+## Adjusted Predictions
+
+Now consider the case of adjusted predictions:
+
+```{r}
+p <- predictions(
+    mod,
+    newdata = datagrid(am = 0:1, vs = 0:1))
+p
+```
+
+Since there is no `term` column in the output of the `predictions` function, we must use row identifiers like `r1`, `r2`, etc. to determine which estimates we want to compare:
+
+```{r}
+predictions(
+    mod,
+    hypothesis = "r1 = r2",
+    newdata = datagrid(am = 0:1, vs = 0:1))
+
+p$predicted[1] - p$predicted[2]
+
+predictions(
+    mod,
+    hypothesis = "r1 + r2 = 30",
+    newdata = datagrid(am = 0:1, vs = 0:1))
+
+p$predicted[1] + p$predicted[2] - 30
+
+predictions(
+    mod,
+    hypothesis = "(r2 - r1) / (r3 - r2) = 0",
+    newdata = datagrid(am = 0:1, vs = 0:1))
+```
+
+# Custom Contrasts with Vectors and Matrices
+
+The `marginalmeans()` function computes [estimated marginal means.](https://vincentarelbundock.github.io/marginaleffects/articles/mfx04_marginalmeans.html) The `hypothesis` argument of that function offers a powerful mechanism to estimate custom contrasts between marginal means, by way of linear combination.
+
+Consider a simple example:
+
+```{r}
+library(marginaleffects)
+library(emmeans)
+library(nnet)
+
+dat <- mtcars
+dat$carb <- factor(dat$carb)
+dat$cyl <- factor(dat$cyl)
+dat$am <- as.logical(dat$am)
+
+mod <- lm(mpg ~ carb + cyl, dat)
+mm <- marginalmeans(mod, variables = "carb")
+mm
+```
+
+The contrast between marginal means for `carb==1` and `carb==2` is:
+
+```{r}
+21.66232 - 21.34058 
+```
+
+or
+
+```{r}
+21.66232 + -(21.34058)
+```
+
+or
+
+```{r}
+sum(c(21.66232, 21.34058) * c(1, -1))
+```
+
+or 
+
+```{r}
+c(21.66232, 21.34058) %*% c(1, -1)
+```
+
+The last two commands express the contrast of interest as [a linear combination](https://en.wikipedia.org/wiki/Linear_combination) of marginal means.
+
+## Simple contrast between marginal means
+
+In the `marginalmeans()` function, we can supply a `hypothesis` argument to compute linear combinations of marginal means. This argument must be a numeric vector of the same length as the number of rows in the output of `marginalmeans()`. For example, in the previous there were six rows, and the two marginal means we want to compare are at in the first two positions:
+
+```{r}
+lc <- c(1, -1, 0, 0, 0, 0)
+marginalmeans(mod, variables = "carb", hypothesis = lc)
+```
+
+## Complex contrast between marginal means
+
+Of course, we can also estimate more complex contrasts:
+
+```{r}
+lc <- c(-2, 1, 1, 0, -1, 1)
+marginalmeans(mod, variables = "carb", hypothesis = lc)
+```
+
+`emmeans` produces similar results:
+
+```{r}
+library(emmeans)
+em <- emmeans(mod, "carb")
+lc <- data.frame(custom_contrast = c(-2, 1, 1, 0, -1, 1))
+contrast(em, method = lc)
+```
+
+# Multiple custom contrasts
+
+Users can also compute multiple linear combinations simultaneously by supplying a numeric matrix to `hypothesis`. This matrix must have the same number of rows as the output of `marginaleffects()`, and each column represents a distinct set of weights for different linear combinations. For example:
+
+```{r}
+lc <- matrix(c(
+    -2, 1, 1, 0, -1, 1,
+    1, -1, 0, 0, 0, 0
+    ), ncol = 2)
+lc
+
+marginalmeans(mod, variables = "carb", hypothesis = lc)
+```
+
+# Linear combinations across response levels
+
+In models with multinomial outcomes, one may be interested in comparing outcomes or contrasts across response levels. For example, in this model there are 18 estimated marginal means, across 6 outcome levels (the `group` column):
+
+```{r}
+library(nnet)
+mod <- multinom(carb ~ mpg + cyl, data = dat, trace = FALSE)
+mm <- marginalmeans(mod, type = "probs")
+mm
+```
+
+Let's contrast the marginal means in the first outcome level when `cyl` equals 4 and 6. These marginal means are located in rows 1 and 7 respectively:
+
+```{r}
+lc <- rep(0, nrow(mm))
+lc[1] <- -1
+lc[7] <- 1
+marginalmeans(
+    mod,
+    type = "probs",
+    hypothesis = lc)
+```
+
+This is indeed equal to the results we would have obtained manually:
+
+```{r}
+2.828726e-01 - 3.678521e-01
+```
+
+Now let's say we want to calculate a "contrast in contrasts", that is, the outcome of a 3-step process:
+
+1. Contrast between `cyl=6` and `cyl=4` in the 1st outcome level
+2. Contrast between `cyl=6` and `cyl=4` in the 2nd outcome level
+3. Contrast between the contrasts defined in steps 1 and 2.
+
+We create the linear combination weights as follows:
+
+```{r}
+lc <- rep(0, nrow(mm))
+lc[c(1, 8)] <- -1
+lc[c(7, 2)] <- 1
+```
+
+To make sure that the weights are correct, we can display them side by side with the original `marginalmeans()` output:
+
+```{r}
+transform(mm[, 1:3], lc = lc)
+```
+
+Compute the results:
+
+```{r}
+marginalmeans(mod, type = "probs", hypothesis = lc)
+```

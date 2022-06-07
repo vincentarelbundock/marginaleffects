@@ -6,9 +6,14 @@ New supported packages and models:
 
 New arguments:
 
-* `lincom` in `marginalmeans()` allows custom contrasts and linear combinations
+* `hypothesis` for hypothesis tests and custom contrasts
 * `transform_post` in `predictions()`
 * `wts` argument in `predictions()` only affects average predictions in `tidy()` or `summary()`.
+
+New vignette:
+
+* Hypothesis Tests and Custom Contrasts: https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html
+* Improved vignette on Multiple Imputation: https://vincentarelbundock.github.io/marginaleffects/articles/multiple_imputation.html
 
 Deprecated or renamed arguments:
 

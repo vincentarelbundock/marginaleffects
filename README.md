@@ -36,7 +36,7 @@ Vignettes:
 
 Case studies and technical information:
 
-  - [63 Supported Classes of
+  - [64 Supported Classes of
     Models](https://vincentarelbundock.github.io/marginaleffects/articles/mfx06_supported_models.html)
   - [Bayesian Analyses with
     `brms`](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)
@@ -46,8 +46,8 @@ Case studies and technical information:
     etc.](https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html)
   - [Generalized Additive
     Models](https://vincentarelbundock.github.io/marginaleffects/articles/gam.html)
-  - [Linear Combinations and Custom
-    Contrasts](https://vincentarelbundock.github.io/marginaleffects/articles/lincom.html)
+  - [Hypothesis Tests and Custom
+    Contrasts](https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html)
   - [Mixed Effects
     Models](https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html)
   - [Multinomial Logit and Discrete Choice
@@ -77,7 +77,7 @@ External links:
 ## What?
 
 The `marginaleffects` package allows `R` users to compute and plot four
-principal quantities of interest for [63 different classes of
+principal quantities of interest for [64 different classes of
 models:](https://vincentarelbundock.github.io/marginaleffects/articles/mfx06_supported_models.html)
 
   - [*Adjusted
@@ -135,7 +135,7 @@ additional features from `emmeans`.
 
 So why did I write a clone?
 
-  - *Powerful:* Marginal effects and contrasts can be computed for 63
+  - *Powerful:* Marginal effects and contrasts can be computed for 64
     different classes of models. Adjusted predictions and marginal means
     can be computed for about 100 model types.
   - *Extensible:* Adding support for new models is very easy, often
