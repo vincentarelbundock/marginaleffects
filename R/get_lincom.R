@@ -45,14 +45,6 @@ get_lincom <- function(x, lincom, column) {
     }
 
     if (isTRUE(lincom == "reference")) {
-        if (nrow(x) > 25) {
-            msg <- format_msg(
-            'The "pairwise" option of the `lincom` argument is not supported for
-            `marginaleffects` commands which generate more than 25 rows of results. Use the
-            `newdata` and/or the `variables` arguments to compute a smaller set of
-            results.')
-            stop(msg, call. = FALSE)
-        }
         lab <- NULL
         mat <- list()
         for (j in 2:nrow(x)) {
@@ -95,15 +87,16 @@ get_lincom <- function(x, lincom, column) {
         return(out)
     }
 
+    # we assume this is a string formula
     if (is.character(lincom)) {
         envir <- parent.frame()
 
-        # i indices
-        if (isTRUE(grepl("\\bi\\d", lincom))) {
+        # row indices: `lincom` includes them, but `term` does not
+        if (isTRUE(grepl("\\br\\d+\\b", lincom)) && !any(grepl("\\br\\d+\\b", x[["term"]]))) {
             lab <- lincom
             for (i in seq_len(nrow(x))) {
                 tmp <- paste0("marginaleffects__", i)
-                lincom <- gsub(paste0("i", i), tmp, lincom)
+                lincom <- gsub(paste0("r", i), tmp, lincom)
                 assign(tmp, x[[column]][i], envir = envir)
             }
 
@@ -111,9 +104,9 @@ get_lincom <- function(x, lincom, column) {
         } else {
             if (anyDuplicated(x$term) > 0) {
                 msg <- format_msg(
-                "There are duplicate term names. Please use position indices
+                "There are duplicate term names. Please use row indices
                 instead of term names in the the `lincom` formula. Ex:
-                `i1 + i2 = 0`")
+                `r1 + r2 = 0`")
                 stop(msg, call. = FALSE)
             }
 
