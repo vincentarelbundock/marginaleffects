@@ -83,7 +83,20 @@ predictions(
     newdata = datagrid(am = 0:1, vs = 0:1))
 
 p$predicted[1] - p$predicted[2]
+```
 
+In the next section, we will see that we can get equivalent results by using a vector of contrast weights, which will be used to compute a linear combination of estimates:
+
+```{r}
+predictions(
+    mod,
+    hypothesis = c(1, -1, 0, 0),
+    newdata = datagrid(am = 0:1, vs = 0:1))
+```
+
+There are *many* more possibilities:
+
+```{r}
 predictions(
     mod,
     hypothesis = "r1 + r2 = 30",
