@@ -108,6 +108,7 @@ marginalmeans <- function(model,
     checkmate::assert_function(transform_post, null.ok = TRUE)
     interaction <- sanitize_interaction(interaction, variables, model)
     conf_level <- sanitize_conf_level(conf_level, ...)
+    lincom <- sanitize_lincom(lincom)
 
     # fancy vcov processing to allow strings like "HC3"
     vcov <- get_vcov(model, vcov = vcov)

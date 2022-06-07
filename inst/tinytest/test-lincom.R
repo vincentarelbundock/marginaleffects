@@ -7,12 +7,22 @@ dat$cyl <- factor(dat$cyl)
 mod <- lm(mpg ~ carb + cyl, dat)
 
 
+# errors
+marginaleffects(
+    mod,
+    newdata = "mean",
+    lincom = "carb + cyl = 0")
+
+
+
+
 # marginaleffects: lincom
 mfx <- marginaleffects(
     mod,
     newdata = "mean",
     variables = "cyl",
     lincom = "pairwise")
+
 
 expect_inherits(mfx, "marginaleffects")
 expect_equivalent(nrow(mfx), 1)
@@ -39,6 +49,7 @@ mfx <- marginaleffects(
     lincom = "pairwise")
 expect_inherits(mfx, "marginaleffects")
 expect_equivalent(nrow(mfx), 1)
+
 
 # predictions: lincom
 p1 <- predictions(
@@ -82,6 +93,16 @@ lc <- matrix(c(
 mm <- marginalmeans(mod, variables = "carb", lincom = lc)
 expect_inherits(mm, "marginalmeans")
 expect_equal(nrow(mm), 2)
+
+
+# marginalmeans: string function
+mm1 <- marginalmeans(
+    mod,
+    lincom = "x1 + x2 = 12")
+mm2 <- marginalmeans(mod)
+expect_equivalent(
+    mm2$marginalmean[1] + mm2$marginalmean[2] - 12,
+    mm1$marginalmean)
 
 
 # marginaleffects: string function

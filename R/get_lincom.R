@@ -81,6 +81,9 @@ get_lincom <- function(x, lincom, column) {
         return(out)
     }
 
-    stop("`lincom` is broken. Please report this bug: https://github.com/vincentarelbundock/marginaleffects/issues.", call. = FALSE)
+    msg <- 
+    "`lincom` is broken. Please report this bug:
+    https://github.com/vincentarelbundock/marginaleffects/issues."
+    stop(msg, call. = FALSE)
 
 }
