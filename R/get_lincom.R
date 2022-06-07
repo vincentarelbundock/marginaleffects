@@ -4,7 +4,38 @@ get_lincom <- function(x, lincom, column) {
         return(x)
     }
 
-    if (isTRUE(checkmate::check_numeric(lincom)) || isTRUE(checkmate::check_matrix(lincom))) {
+    # must be checked here when we know how many rows the output has
+    if (isTRUE(lincom %in% c("pairwise", "reference"))) {
+        if (nrow(x) > 25) {
+            msg <- format_msg(
+            'The "pairwise" option of the `lincom` argument is not supported for
+            `marginaleffects` commands which generate more than 25 rows of results. Use the
+            `newdata` and/or the `variables` arguments to compute a smaller set of
+            results.')
+            stop(msg, call. = FALSE)
+        }
+    }
+
+    if (isTRUE(checkmate::check_numeric(lincom)) && isTRUE(checkmate::check_atomic_vector(lincom))) {
+        if (length(lincom) != nrow(x)) {
+            msg <- sprintf(
+            "The `lincom` vector must be of length %s.", nrow(x))
+            stop(msg, call. = FALSE)
+        }
+        out <- data.table(
+            term = "lincom",
+            lincom = "custom",
+            tmp = as.vector(x[[column]] %*% lincom))
+        setnames(out, old = "tmp", new = column)
+        return(out)
+    }
+
+    if (isTRUE(checkmate::check_matrix(lincom))) {
+        if (nrow(lincom) != nrow(x)) {
+            msg <- sprintf(
+            "The `lincom` matrix must be have %s rows.", nrow(x))
+            stop(msg, call. = FALSE)
+        }
         out <- data.table(
             term = "lincom",
             lincom = "custom",
@@ -14,6 +45,14 @@ get_lincom <- function(x, lincom, column) {
     }
 
     if (isTRUE(lincom == "reference")) {
+        if (nrow(x) > 25) {
+            msg <- format_msg(
+            'The "pairwise" option of the `lincom` argument is not supported for
+            `marginaleffects` commands which generate more than 25 rows of results. Use the
+            `newdata` and/or the `variables` arguments to compute a smaller set of
+            results.')
+            stop(msg, call. = FALSE)
+        }
         lab <- NULL
         mat <- list()
         for (j in 2:nrow(x)) {
@@ -59,19 +98,31 @@ get_lincom <- function(x, lincom, column) {
     if (is.character(lincom)) {
         envir <- parent.frame()
 
-        if (isTRUE(grepl("\\bx\\d", lincom))) {
+        # i indices
+        if (isTRUE(grepl("\\bi\\d", lincom))) {
             lab <- lincom
             for (i in seq_len(nrow(x))) {
                 tmp <- paste0("marginaleffects__", i)
-                lincom <- gsub(paste0("x", i), tmp, lincom)
+                lincom <- gsub(paste0("i", i), tmp, lincom)
                 assign(tmp, x[[column]][i], envir = envir)
             }
+
+        # term names
         } else {
+            if (anyDuplicated(x$term) > 0) {
+                msg <- format_msg(
+                "There are duplicate term names. Please use position indices
+                instead of term names in the the `lincom` formula. Ex:
+                `i1 + i2 = 0`")
+                stop(msg, call. = FALSE)
+            }
+
             for (i in seq_len(nrow(x))) {
                 tmp <- x$term[i]
                 assign(tmp, x[[column]][i], envir = envir)
             }
         }
+
         out <- eval(parse(text = lincom), envir = envir)
         out <- data.table(
             term = "lincom",
@@ -87,3 +138,4 @@ get_lincom <- function(x, lincom, column) {
     stop(msg, call. = FALSE)
 
 }
+

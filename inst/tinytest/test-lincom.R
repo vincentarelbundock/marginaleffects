@@ -8,13 +8,42 @@ mod <- lm(mpg ~ carb + cyl, dat)
 
 
 # errors
-marginaleffects(
+expect_error(
+    marginaleffects(mod, lincom = "pairwise"),
+    pattern = "smaller")
+
+tmp <- mtcars
+tmp$gear <- factor(tmp$gear)
+expect_error(
+    comparisons(
+    lm(mpg ~ gear, tmp),
+    newdata = "mean",
+    variables = list(gear = "all"),
+    lincom = "gear = 0"),
+    pattern = "duplicate term names")
+
+expect_error(
+    marginaleffects(mod, lincom = "reference"),
+    pattern = "smaller")
+
+expect_false(expect_error(
+    marginalmeans(mod, lincom = "pairwise"),
+    pattern = "smaller"))
+
+expect_error(marginaleffects(
     mod,
     newdata = "mean",
-    lincom = "carb + cyl = 0")
+    lincom = c(1, 1, 1),
+    variables = "cyl"),
+    pattern = "of length")
 
-
-
+# errors
+expect_error(marginaleffects(
+    mod,
+    newdata = "mean",
+    lincom = matrix(rep(1, 6), ncol = 2),
+    variables = "cyl"),
+    pattern = "2 rows")
 
 # marginaleffects: lincom
 mfx <- marginaleffects(
@@ -22,8 +51,6 @@ mfx <- marginaleffects(
     newdata = "mean",
     variables = "cyl",
     lincom = "pairwise")
-
-
 expect_inherits(mfx, "marginaleffects")
 expect_equivalent(nrow(mfx), 1)
 
@@ -98,7 +125,7 @@ expect_equal(nrow(mm), 2)
 # marginalmeans: string function
 mm1 <- marginalmeans(
     mod,
-    lincom = "x1 + x2 = 12")
+    lincom = "i1 + i2 = 12")
 mm2 <- marginalmeans(mod)
 expect_equivalent(
     mm2$marginalmean[1] + mm2$marginalmean[2] - 12,
@@ -110,7 +137,7 @@ mod <- lm(mpg ~ hp + drat, data = mtcars)
 mfx1 <- marginaleffects(
     mod,
     newdata = "mean",
-    lincom = "exp(x1 + x2) = 100")
+    lincom = "exp(i1 + i2) = 100")
 mfx2 <- marginaleffects(
     mod,
     newdata = "mean",
@@ -126,7 +153,7 @@ p1 <- predictions(
     newdata = datagrid(hp = c(100, 110, 120)))
 p2 <- predictions(
     mod,
-    lincom = "x1 + x2 + x3 = 10",
+    lincom = "i1 + i2 + i3 = 10",
     newdata = datagrid(hp = c(100, 110, 120)))
 expect_equivalent(sum(p1$predicted) - 10, p2$predicted)
 

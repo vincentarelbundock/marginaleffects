@@ -380,6 +380,10 @@ comparisons <- function(model,
 
     out <- mfx
 
+    if ("eps_tmp" %in% colnames(out)) {
+        out[, "eps_tmp" := NULL]
+    }
+
     if (!isTRUE(internal_call)) {
         setDF(out)
     }
