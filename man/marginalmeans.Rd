@@ -82,15 +82,7 @@ acceptable values is returned in an error message.}
 \item Numeric vector: Weights to compute a linear combination of (custom contrast between) estimates. Length equal to the number of rows of the function' output, without the \code{hypothesis} argument.
 \item Numeric matrix: Each column is a vector of weights used to compute a distinct linear combination of (contrast between) estimates.
 \item See the Examples section below and the vignette: https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html
-}
-
-used to compute linear combinations of estimates. \code{hypothesis} vectors must be
-of length equal to the to the number of rows in the data frame produced by
-\code{marginalmeans()}. In \code{hypothesis} matrices, each column represents a distinct
-linear combination, and the number of rows must be equal to the number of
-rows in the output of \code{marginalmeans()}. See below for examples and visit
-the website for a detailed tutorial on linear combinations and custom
-contrasts.}
+}}
 
 \item{by}{character vector of categorical variables included in the
 \code{variables_grid}. Marginal means are computed within each subgroup

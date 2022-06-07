@@ -84,14 +84,6 @@
 #' + Numeric vector: Weights to compute a linear combination of (custom contrast between) estimates. Length equal to the number of rows of the function' output, without the `hypothesis` argument.
 #' + Numeric matrix: Each column is a vector of weights used to compute a distinct linear combination of (contrast between) estimates.
 #' + See the Examples section below and the vignette: https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html
-#' 
-#' used to compute linear combinations of estimates. `hypothesis` vectors must be
-#' of length equal to the to the number of rows in the data frame produced by
-#' `marginalmeans()`. In `hypothesis` matrices, each column represents a distinct
-#' linear combination, and the number of rows must be equal to the number of
-#' rows in the output of `marginalmeans()`. See below for examples and visit
-#' the website for a detailed tutorial on linear combinations and custom
-#' contrasts.
 #' @param eps NULL or numeric value which determines the step size to use when
 #' calculating numerical derivatives: (f(x+eps)-f(x))/eps. When `eps` is
 #' `NULL`, the step size is step to 0.0001 multiplied by the range of the
