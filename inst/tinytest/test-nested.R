@@ -1,3 +1,4 @@
+exit_file("fixest data in the environment")
 source("helpers.R", local = TRUE)
 if (ON_CRAN) exit_file("on cran")
 requiet("fixest")

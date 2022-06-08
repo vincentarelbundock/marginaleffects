@@ -16,7 +16,7 @@ mfx <- marginaleffects(model,
                    variables = "Time",
                    type = "link",
                    newdata = datagrid(Time = 1)) 
-em <- emtrends(model, ~Time, "Time", mode = "df.error", at = list(Time = 1))
+em <- suppressMessages(emtrends(model, ~Time, "Time", mode = "df.error", at = list(Time = 1)))
 em <- tidy(em)
 expect_equivalent(mfx$std.error, em$std.error, tolerance = .001)
 expect_equivalent(mfx$dydx, em$Time.trend, tolerance = .01)
@@ -38,7 +38,7 @@ tmp$categ <- factor(sample(letters[1:5], nrow(tmp), replace = TRUE))
 tmp <<- tmp
 mod <- gls(follicles ~ sin(2*pi*Time) + cos(2*pi*Time) + categ,
        data = tmp, correlation = corAR1(form = ~ 1 | Mare))
-em <- emmeans(mod, specs = "categ")
+em <- suppressMessages(emmeans(mod, specs = "categ"))
 em <- tidy(em)
 mm <- marginalmeans(mod, variables = "categ")
 expect_marginalmeans(mm)

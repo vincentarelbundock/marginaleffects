@@ -14,7 +14,7 @@ expect_marginaleffects(mod)
 expect_predictions(predictions(mod))
 
 # emmeans
-em <- emmeans::emtrends(mod, ~x1, "x1", at = list(x1 = 0, x2 = 0))
+em <- suppressMessages(emmeans::emtrends(mod, ~x1, "x1", at = list(x1 = 0, x2 = 0)))
 em <- tidy(em)
 me <- marginaleffects(mod, newdata = datagrid(x1 = 0, x2 = 0, clus = 1))
 me <- tidy(me)

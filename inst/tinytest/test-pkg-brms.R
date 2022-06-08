@@ -413,7 +413,8 @@ void <- capture.output({
     mod <- brm(
         bf(mpg ~ disp, hu ~ disp),
         data = mtcars,
-        family = hurdle_lognormal())
+        family = hurdle_lognormal(),
+        silent = 2)
 })
 cmp <- comparisons(
     mod,
