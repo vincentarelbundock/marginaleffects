@@ -8,8 +8,11 @@ mod <- lm(mpg ~ carb + cyl, dat)
 
 
 # informative errors and warnings
+tmp <- lm(mpg ~ drat + wt, data = mtcars)
+expect_warning(marginaleffects(tmp, hypothesis = "drat = wt"), pattern = "conjunction")
+
 expect_error(
-    marginaleffects(mod, hypothesis = "pairwise"),
+    marginaleffects(mod, newdata = dat, hypothesis = "pairwise"),
     pattern = "smaller")
 
 expect_warning(
@@ -18,7 +21,7 @@ expect_warning(
 
 tmp <- lm(mpg ~ wt + drat, data = mtcars)
 expect_error(predictions(
-    mod,
+    tmp,
     newdata = datagrid(wt = 2:3),
     hypothesis = "wt = drat"),
     pattern = "unique row")
@@ -34,7 +37,7 @@ expect_error(
     pattern = "row indices")
 
 expect_error(
-    marginaleffects(mod, hypothesis = "reference"),
+    marginaleffects(mod, newdata = dat, hypothesis = "reference"),
     pattern = "smaller")
 
 expect_error(marginaleffects(

@@ -34,35 +34,39 @@ get_contrasts <- function(model,
     setDF(lo)
     setDF(hi)
 
-    pred_lo <- try(get_predict(
+    pred_lo <- myTryCatch(get_predict(
         model,
         type = type,
         vcov = FALSE,
         newdata = lo,
-        ...), silent = TRUE)
+        ...))
 
-    pred_hi <- try(get_predict(
+    pred_hi <- myTryCatch(get_predict(
         model,
         type = type,
         vcov = FALSE,
         newdata = hi,
-        ...), silent = TRUE)
+        ...))
 
-    if (inherits(pred_hi, "try-error") || inherits(pred_lo, "try-error")) {
-        msg <- format_msg(
+    if (inherits(pred_hi$value, "data.frame")) pred_hi <- pred_hi$value
+    if (inherits(pred_lo$value, "data.frame")) pred_lo <- pred_lo$value
+
+    if (!inherits(pred_hi, "data.frame") || !inherits(pred_lo, "data.frame")) {
+        msg <- format_msg(paste(
         "Unable to compute adjusted predictions for this model. Either the
         `newdata` does not meet the requirements of the model's `predict()`
         method, or this model is not supported. If you believe this model
         should be supported, you can file a report on the Github Issue Tracker:
-        https://github.com/vincentarelbundock/marginaleffects/issues")
+        https://github.com/vincentarelbundock/marginaleffects/issues"))
+        if (!is.null(pred_hi$error)) {
+            msg <- paste(msg, "\n\nIn addition:", pred_lo$error)
+        }
         stop(msg, call. = FALSE)
     }
-
 
     # output data.frame
     out <- pred_lo
     setDT(out)
-
 
 
     # univariate outcome:
@@ -82,7 +86,7 @@ get_contrasts <- function(model,
     } else if (isTRUE(mult > 1)) {
         out[, "term" := rep(original$term, times = mult)]
         out[, "contrast" := rep(original$contrast, times = mult)]
-        if ("eps" %in% colnames(original)) {
+        if ("eps" %in% cholnames(original)) {
             out[, "eps_tmp" := rep(original$eps, times = mult)]
         }
 

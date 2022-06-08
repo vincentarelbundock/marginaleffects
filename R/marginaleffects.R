@@ -180,7 +180,6 @@
 #' 
 #' @export
 marginaleffects <- function(model,
-
                             newdata = NULL,
                             variables = NULL,
                             vcov = TRUE,
@@ -209,6 +208,16 @@ marginaleffects <- function(model,
                 lcall <- c(lcall, list("x" = insight::get_data(model)))
                 newdata <- eval.parent(as.call(lcall))
             }
+        }
+
+    } else {
+        if (is.null(newdata) && !is.null(hypothesis)) {
+            newdata <- "mean"
+            msg <- format_msg(
+            'The `hypothesis` argument of the `marginaleffects()` function must be used in
+            conjunction with the `newdata` argument. `newdata` was switched from `NULL` to
+            `"mean"` automatically.')
+            warning(msg, call. = FALSE)
         }
     }
 
@@ -331,3 +340,4 @@ marginaleffects <- function(model,
 #' @keywords internal
 #' @export
 meffects <- marginaleffects
+

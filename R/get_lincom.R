@@ -52,7 +52,7 @@ get_hypothesis <- function(x, hypothesis, column) {
             tmp[1, ] <- -1
             tmp[j, ] <- 1
             mat <- c(mat, list(tmp))
-            lab <- c(lab, paste0(j, " - ", 1))
+            lab <- c(lab, sprintf("Row %s - Row 1", j))
         }
         lc <- do.call("cbind", mat)
         out <- data.table(
@@ -74,7 +74,7 @@ get_hypothesis <- function(x, hypothesis, column) {
                     tmp[i, ] <- -1
                     tmp[j, ] <- 1
                     mat <- c(mat, list(tmp))
-                    lab <- c(lab, paste0(j, " - ", i))
+                    lab <- c(lab, sprintf("Row %s - Row %s", j, i))
                 }
             }
         }
