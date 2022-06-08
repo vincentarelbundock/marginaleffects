@@ -86,7 +86,7 @@ get_contrasts <- function(model,
     } else if (isTRUE(mult > 1)) {
         out[, "term" := rep(original$term, times = mult)]
         out[, "contrast" := rep(original$contrast, times = mult)]
-        if ("eps" %in% cholnames(original)) {
+        if ("eps" %in% colnames(original)) {
             out[, "eps_tmp" := rep(original$eps, times = mult)]
         }
 
