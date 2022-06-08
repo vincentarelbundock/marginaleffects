@@ -409,10 +409,12 @@ cmp2 <- comparisons(
     dpar = "mu")
 expect_true(all(cmp1$comparison != cmp2$comparison))
 
-mod <- brm(
-    bf(mpg ~ disp, hu ~ disp),
-    data = mtcars,
-    family = hurdle_lognormal())
+void <- capture.output({
+    mod <- brm(
+        bf(mpg ~ disp, hu ~ disp),
+        data = mtcars,
+        family = hurdle_lognormal())
+})
 cmp <- comparisons(
     mod,
     dpar = "mu",

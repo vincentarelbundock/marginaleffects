@@ -13,7 +13,7 @@ meffects(
   type = "response",
   wts = NULL,
   hypothesis = NULL,
-  eps = 1e-04,
+  eps = NULL,
   ...
 )
 }
