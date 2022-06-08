@@ -2,7 +2,7 @@ source("helpers.R", local = TRUE)
 if (ON_CRAN) exit_file("on cran")
 requiet("tobit1")
 requiet("broom")
-tol <- 0.0001
+tol <- 0.001
 tol_se <- 0.001
 
 charitable$logdon <- log(charitable$donation) - log(25)

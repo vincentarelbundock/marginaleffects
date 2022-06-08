@@ -2,7 +2,7 @@ source("helpers.R", local = TRUE)
 if (ON_CRAN) exit_file("on cran")
 requiet("mhurdle")
 
-tol <- 0.0001
+tol <- 0.001
 tol_se <- 0.001
 
 data("Interview", package = "mhurdle")

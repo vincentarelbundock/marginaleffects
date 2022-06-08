@@ -9,7 +9,7 @@ dat <- read.csv(testing_path("stata/databases/stats_glm_01.csv"))
 mod <- speedglm(y ~ x1 * x2, family = binomial(), data = dat)
 mfx <- merge(tidy(marginaleffects(mod)), stata)
 expect_marginaleffects(mod)
-expect_equivalent(mfx$estimate, mfx$dydxstata, tolerance = .00001)
+expect_equivalent(mfx$estimate, mfx$dydxstata, tolerance = .0001)
 expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .0001)
 
 # margins: wrong standard errors

@@ -65,7 +65,7 @@ d <- data.frame(w = rnorm(n),
 d[["y"]] <- with(d, w + x + z + w*x + w*z + x*z * w*x*z + rnorm(n))
 
 # set comparison tolerance
-tol <- 0.0001
+tol <- 0.001
 tol_se <- 0.005
 
 # http://mattgolder.com/wp-content/uploads/2015/05/standarderrors1.png

@@ -7,7 +7,7 @@ mod <- lm(mpg ~ hp + factor(cyl), mtcars)
 mfx <- marginaleffects(mod)
 known <- "Average marginal effects
   Term Contrast   Effect Std. Error z value  Pr(>|z|)     2.5 %   97.5 %
-1   hp    dY/dX -0.02404    0.01541  -1.560 0.1187213  -0.05424  0.00616
+1   hp    dY/dX -0.02404    0.01541  -1.560 0.1187214  -0.05424  0.00616
 2  cyl    6 - 4 -5.96766    1.63928  -3.640 0.0002722  -9.18058 -2.75473
 3  cyl    8 - 4 -8.52085    2.32607  -3.663 0.0002491 -13.07987 -3.96183
 
@@ -22,7 +22,7 @@ mfx <- marginaleffects(mod)
 
 known <- "Average marginal effects
   Term Contrast   Effect Std. Error z value  Pr(>|z|)     5.0 %    95.0 %
-1   hp    dY/dX -0.02404    0.01541  -1.560 0.1187213  -0.04938  0.001305
+1   hp    dY/dX -0.02404    0.01541  -1.560 0.1187214  -0.04938  0.001305
 2  cyl    6 - 4 -5.96766    1.63928  -3.640 0.0002722  -8.66403 -3.271283
 3  cyl    8 - 4 -8.52085    2.32607  -3.663 0.0002491 -12.34690 -4.694798
 
@@ -32,7 +32,7 @@ expect_print(summary(mfx, conf_level = .9), known)
 
 known <- "Average marginal effects
   Term Contrast   Effect Std. Error z value  Pr(>|z|)   40.0 %   60.0 %
-1   hp    dY/dX -0.02404    0.01541  -1.560 0.1187213 -0.02794 -0.02014
+1   hp    dY/dX -0.02404    0.01541  -1.560 0.1187214 -0.02794 -0.02014
 2  cyl    6 - 4 -5.96766    1.63928  -3.640 0.0002722 -6.38296 -5.55235
 3  cyl    8 - 4 -8.52085    2.32607  -3.663 0.0002491 -9.11016 -7.93155
 

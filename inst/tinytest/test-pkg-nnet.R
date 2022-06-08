@@ -49,7 +49,7 @@ mfx <- merge(tidy(mfx), stata, all = TRUE)
 mfx <- na.omit(mfx)
 expect_true(nrow(mfx) == 6) # na.omit doesn't trash everything
 # standard errors don't match
-expect_equivalent(mfx$estimate, mfx$dydxstata, tolerance = .0001)
+expect_equivalent(mfx$estimate, mfx$dydxstata, tolerance = .001)
 # expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .0001)
 
 

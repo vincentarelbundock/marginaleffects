@@ -151,7 +151,7 @@ dat <- haven::read_dta(testing_path("stata/databases/lme4_02.dta"))
 mod <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = dat, family = binomial)
 res <- marginaleffects(mod, vcov = FALSE)
 mar <- margins::margins(mod)
-expect_true(expect_margins(res, mar, tolerance = 1e-3))
+expect_true(expect_margins(res, mar, tolerance = 1e-2))
 
 dat <- haven::read_dta(testing_path("stata/databases/lme4_01.dta"))
 mod <- lme4::lmer(y ~ x1 * x2 + (1 | clus), data = dat)
