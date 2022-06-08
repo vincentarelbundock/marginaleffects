@@ -10,6 +10,7 @@ mod <- lm(mpg ~ carb + cyl, dat)
 # informative errors and warnings
 tmp <- lm(mpg ~ drat + wt, data = mtcars)
 expect_warning(marginaleffects(tmp, hypothesis = "drat = wt"), pattern = "conjunction")
+expect_warning(comparisons(tmp, hypothesis = "drat = wt"), pattern = "conjunction")
 
 expect_error(
     marginaleffects(mod, newdata = dat, hypothesis = "pairwise"),

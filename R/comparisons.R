@@ -181,6 +181,7 @@ comparisons <- function(model,
 
     dots <- list(...)
 
+    # marginaleffects()` **must** run its own sanity checks and hardcode valid arguments
     internal_call <- dots[["internal_call"]]
     if (!isTRUE(internal_call)) {
         # if `newdata` is a call to `datagrid`, `typical`, or `counterfactual`, insert `model`
@@ -192,9 +193,18 @@ comparisons <- function(model,
                 lcall <- c(lcall, list("model" = model))
                 newdata <- eval.parent(as.call(lcall))
             }
+
+        } else {
+            if (is.null(newdata) && !is.null(hypothesis)) {
+                newdata <- "mean"
+                msg <- format_msg(
+                'The `hypothesis` argument of the `comparisons()` function must be used in
+                conjunction with the `newdata` argument. `newdata` was switched from NULL to
+                "mean" automatically.')
+                warning(msg, call. = FALSE)
+            }
         }
 
-        # marginaleffects()` **must** run its own sanity checks and hardcode valid arguments
         model <- sanitize_model(
             model = model, newdata = newdata, wts = wts,
             calling_function = "comparisons", ...)

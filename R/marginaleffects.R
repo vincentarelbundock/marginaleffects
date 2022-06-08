@@ -215,8 +215,8 @@ marginaleffects <- function(model,
             newdata <- "mean"
             msg <- format_msg(
             'The `hypothesis` argument of the `marginaleffects()` function must be used in
-            conjunction with the `newdata` argument. `newdata` was switched from `NULL` to
-            `"mean"` automatically.')
+            conjunction with the `newdata` argument. `newdata` was switched from NULL to
+            "mean" automatically.')
             warning(msg, call. = FALSE)
         }
     }
