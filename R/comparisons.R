@@ -289,7 +289,7 @@ comparisons <- function(model,
         dof <- NULL
     }
 
-    vcov_label <- get_vcov_label(vcov)
+    vcov.type <- get_vcov_label(vcov)
     vcov <- get_vcov(model, vcov = vcov)
 
     # variables vector
@@ -435,7 +435,7 @@ comparisons <- function(model,
     attr(out, "variables") <- variables_vec
     attr(out, "jacobian") <- J
     attr(out, "vcov") <- vcov
-    attr(out, "vcov.type") <- get_vcov_label(vcov)
+    attr(out, "vcov.type") <- vcov.type
     attr(out, "transform_pre") <- transform_pre_label
     attr(out, "transform_post") <- transform_post_label
     attr(out, "weights") <- marginaleffects_wts_internal

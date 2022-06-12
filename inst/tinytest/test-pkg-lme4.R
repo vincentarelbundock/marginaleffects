@@ -270,6 +270,21 @@ expect_true(all(pred1$predicted != pred3$predicted))
 
 
 
+# sattertwhaite
+dat <- mtcars
+dat$cyl <- factor(dat$cyl)
+dat$am <- as.logical(dat$am)
+mod <- lmer(mpg ~ hp + am + (1 | cyl), data = dat)
+
+mfx <- marginaleffects(mod, vcov = "kenward-roger")
+cmp <- comparisons(mod, vcov = "kenward-roger")
+expect_equivalent(mfx$dydx, cmp$comparison)
+expect_equivalent(mfx$std.error, cmp$std.error, tolerance = .00001)
+expect_equivalent(attr(mfx, "vcov.type"), "Kenward-Roger")
+expect_equivalent(attr(cmp, "vcov.type"), "Kenward-Roger")
+
+
+
 # # 'group' cannot be a column name because of conflict with tidy output
 #     set.seed(1024)
 #     N <- 1000
