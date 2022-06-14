@@ -37,7 +37,11 @@ plot_cme <- function(model,
     # eventually we might allow multiple conditions and/or effects
     checkmate::assert_character(effect, len = 1)
     effect_mfx <- list()
-    effect_mfx[[effect]] <- "dydx"
+    if (isTRUE(find_variable_class(effect, model = model, newdata = dat) == "numeric")) {
+        effect_mfx[[effect]] <- "dydx"
+    } else {
+        effect_mfx[[effect]] <- "reference"
+    }
 
     # allow multiple conditions and/or effects
     checkmate::assert_character(condition, min.len = 1, max.len = 2)

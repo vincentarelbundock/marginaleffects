@@ -40,7 +40,8 @@ plot_cco <- function(model,
 
     # eventually we might allow multiple conditions and/or effects
     checkmate::assert_true(length(effect) == 1)
-    if (checkmate::check_list(effect) && any(c("sd", "2sd", "minmax", "iqr") %in% effect)) {
+    if (isTRUE(checkmate::check_list(effect)) &&
+        any(c("sd", "2sd", "minmax", "iqr") %in% effect)) {
         msg <- format_msg(
         'The "sd", "2sd", "minmax", and "iqr" options are not available in the
         `effect` argument of this plotting function. You can specify custom
@@ -154,7 +155,6 @@ plot_cco <- function(model,
                     y = comparison,
                     ymin = conf.low,
                     ymax = conf.high,
-                    color = condition2,
                     fill = condition2))
         }
         p <- p + ggplot2::geom_line(
@@ -223,7 +223,9 @@ plot_cco <- function(model,
     # set a new theme only if the default is theme_grey. this prevents user's
     # theme_set() from being overwritten
     if (identical(ggplot2::theme_get(), ggplot2::theme_grey())) {
-        p <- p + ggplot2::theme_minimal()
+        p <- p +
+          ggplot2::theme_minimal() +
+          ggplot2::theme(legend.title = ggplot2::element_blank())
     }
 
     attr(p, "data") <- dat
