@@ -13,7 +13,6 @@ expect_inherits(p, "data.frame")
 expect_equivalent(nrow(p), 25)
 expect_false(anyNA(p$dydx))
 
-
 # continuous vs. categorical x-axis
 mod <- lm(mpg ~ hp * wt * factor(cyl), mtcars)
 p <- plot_cme(mod, effect = "hp", condition = "cyl")
