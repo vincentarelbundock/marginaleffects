@@ -123,9 +123,11 @@ Details and Examples sections below, and in the vignettes on the
 }
 }
 \details{
-An "adjusted prediction" is the outcome predicted by a model for some
-combination of the regressors' values, such as their observed values, their
-means, or factor levels (a.k.a. “reference grid”).
+An "adjusted prediction" is the outcome predicted by a fitted model on a
+specified scale for a given combination of values of the predictor
+variables, such as their observed values, their means, or factor levels
+(a.k.a. "reference grid").
+
 When possible, this function uses the delta method to compute the standard
 error associated with the adjusted predictions.
 

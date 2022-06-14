@@ -26,12 +26,27 @@ theme_set(theme_minimal())
 
 In the context of this package, an "Adjusted Prediction" is defined as:
 
-> The outcome predicted by a model for some combination of the regressors' values, such as their observed values, their means, or factor levels (a.k.a. "reference grid"). 
+> The outcome predicted by a fitted model on a specified scale for a given combination of values of the predictor variables, such as their observed values, their means, or factor levels (a.k.a. "reference grid").
 
-An adjusted prediction is thus the regression-adjusted response variable (or link, or other fitted value), for a given combination (or grid) of predictors. This grid may or may not correspond to the actual observations in a dataset.
+Here, the word "Adjusted" simply means "model-derived" or "model-based."
+
+# Prediction type (or scale)
+
+Using the `type` argument of the `predictions()` function we can specify the "scale" on which to make predictions. This refers to either the scale used to estimate the model (i.e., link scale) or to a more interpretable scale (e.g., response scale). For example, when fitting a linear regression model using the `lm()` function, the link scale and the response scale are identical. An "Adjusted Prediction" computed on either scale will be expressed as the mean value of the response variable at the given values of the predictor variables.
+
+On the other hand, when fitting a binary logistic regression model using the `glm()` function (which uses a binomial family and a logit link ), the link scale and the response scale will be different: an "Adjusted Prediction" computed on the link scale will be expressed as a log odds of a "successful" response at the given values of the predictor variables, whereas an "Adjusted Prediction" computed on the response scale will be expressed as a probability that the response variable equals 1.
+
+The default value of the `type` argument for most models is "response", which means that the `predictions()` function will compute predicted probabilities (binomial family), Poisson means (poisson family), etc.
+
+# Prediction grid
+
+To compute adjusted predictions we must first specify the values of the predictors to consider: a "reference grid." For example, if our model is a linear model fitted with the lm() function which relates the response variable Happiness with the predictor variables Age, Gender and Income, the reference grid could be a `data.frame` with values for Age, Gender and Income: Age = 40, Gender = Male, Income = 60000.
+
+The "reference grid" may or may not correspond to actual observations in the dataset used to fit the model; the example values given above could match the mean values of each variable, or they could represent a specific observed (or hypothetical) individual. The reference grid can include many different rows if we want to make predictions for different combinations of predictors. By default, the `predictions()` function uses the full original dataset as a reference grid, which means it will compute adjusted predictions for each of the individuals observed in the dataset that was used to fit the model.
+
+# The `predictions()` function
 
 By default, `predictions` calculates the regression-adjusted predicted values for every observation in the original dataset:
-
 
 ```{r}
 library(marginaleffects)
