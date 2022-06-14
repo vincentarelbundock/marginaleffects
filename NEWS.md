@@ -10,10 +10,12 @@ New arguments:
 * `transform_post` in `predictions()`
 * `wts` argument in `predictions()` only affects average predictions in `tidy()` or `summary()`.
 
-New vignette:
+New or improved vignettes:
 
 * Hypothesis Tests and Custom Contrasts: https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html
-* Improved vignette on Multiple Imputation: https://vincentarelbundock.github.io/marginaleffects/articles/multiple_imputation.html
+* Multiple Imputation: https://vincentarelbundock.github.io/marginaleffects/articles/multiple_imputation.html
+* Causal Inference with the g-Formula: https://vincentarelbundock.github.io/marginaleffects/articles/gformula.html
+ (Thanks to Rohan Kapre for the idea)
 
 Deprecated or renamed arguments:
 
@@ -23,11 +25,11 @@ Deprecated or renamed arguments:
 Misc:
 
 * `tidy.predictions()` computes standard errors using the delta method for average predictions
-* `comparisons()` now supports "log of marginal odds ratio" in the `transform_pre` argument. Thanks to Noah Greifer.
-* New `transform_pre` shortcuts.
-* Vignette on "Causal Inference with the g-Formula." Thanks to Rohan Kapre for the idea.
-* `tidy.predictions()` can compute standard errors and confidence intervals for linear models or GLM on the link scale.
 * Support `gam` models with matrix columns.
+* `eps` in `marginaleffects()` is now "adaptive" by default: it equals 0.0001 multiplied the range of the predictor variable
+* `comparisons()` now supports "log of marginal odds ratio" in the `transform_pre` argument. Thanks to Noah Greifer.
+* New `transform_pre` shortcuts: dydx, dxpdydx
+* `tidy.predictions()` computes standard errors and confidence intervals for linear models or GLM on the link scale.
 
 # marginaleffects 0.5.0
 

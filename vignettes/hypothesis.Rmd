@@ -110,6 +110,50 @@ predictions(
     newdata = datagrid(am = 0:1, vs = 0:1))
 ```
 
+# Pairwise contrasts & Difference-in-Differences
+
+Now we illustrate how to use the machinery described above to do pairwise comparisons between contrasts, a type of analysis often associated with a "Difference-in-Differences" research design.
+
+First, we simultate data with two treatment groups and pre/post periods:
+
+```{r, message = FALSE}
+library(data.table)
+
+N <- 1000
+did <- data.frame(
+    id = 1:N,
+    pre = rnorm(N),
+    trt = sample(0:1, N, replace = TRUE))
+did$post <- did$pre + did$trt * 0.3 + rnorm(N)
+did <- melt(
+    did,
+    value.name = "y",
+    variable.name = "time",
+    id.vars = c("id", "trt"))
+head(did)
+```
+
+Then, we estimate a linear model with a multiple interaction between the time and the treatment indicators. We alco compute contrasts at the mean for each treatment level:
+
+```{r}
+did_model <- lm(y ~ time * trt, data = did)
+
+comparisons(
+    did_model,
+    newdata = datagrid(trt = 0:1),
+    variables = "time")
+```
+
+Finally, we compute pairwise differences between contrasts. This is the Diff-in-Diff estimate:
+
+```{r}
+comparisons(
+    did_model,
+    variables = "time",
+    newdata = datagrid(trt = 0:1),
+    hypothesis = "pairwise")
+```
+
 # Custom Contrasts with Vectors and Matrices
 
 The `marginalmeans()` function computes [estimated marginal means.](https://vincentarelbundock.github.io/marginaleffects/articles/mfx04_marginalmeans.html) The `hypothesis` argument of that function offers a powerful mechanism to estimate custom contrasts between marginal means, by way of linear combination.
