@@ -175,6 +175,7 @@ Collate:
     'package.R'
     'plot.R'
     'plot_cap.R'
+    'plot_cco.R'
     'plot_cme.R'
     'posteriordraws.R'
     'predictions.R'
