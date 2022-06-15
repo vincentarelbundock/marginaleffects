@@ -133,6 +133,37 @@ This mechanism is powerful, because it lets users create fully customized contra
 comparisons(mod, transform_pre = function(hi, lo) sqrt(hi) / log(lo + 10)) %>% summary()
 ```
 
+The same arguments work in the plotting function `plot_cco()` as well, which allows us to plot various custom contrasts. Here is a comparison of Adjusted Risk Ratio and Adjusted Risk Difference in a model of the probability of survival aboard the Titanic:
+
+```{r}
+library(ggplot2)
+library(patchwork)
+titanic <- "https://vincentarelbundock.github.io/Rdatasets/csv/Stat2Data/Titanic.csv"
+titanic <- read.csv(titanic)
+mod_titanic <- glm(
+    Survived ~ Sex * PClass + Age + I(Age^2),
+    family = binomial,
+    data = dat)
+
+cmp <- comparisons(mod_titanic)
+summary(cmp)
+
+p1 <- plot_cco(
+    mod_titanic,
+    effect = "Age",
+    condition = "Age",
+    transform_pre = "ratio") +
+    ylab("Adjusted Risk Ratio\nP(Survival | Age + 1) / P(Survival | Age)")
+
+p2 <- plot_cco(
+    mod_titanic,
+    effect = "Age",
+    condition = "Age") +
+    ylab("Adjusted Risk Difference\nP(Survival | Age + 1) - P(Survival | Age)")
+
+p1 + p2
+```
+
 # (Back-)Transforming results with `transform_post`: Adjusted Risk Ratios
 
 By default, the standard errors are computed using the delta method on the scale determined by the `type` argument (e.g., "link" or "response"). Some analysts may prefer to proceed differently. For example, in `Stata`, the `adjrr` computes adjusted risk ratios (ARR) in two steps:
