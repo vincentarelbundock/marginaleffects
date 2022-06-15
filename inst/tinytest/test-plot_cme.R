@@ -1,7 +1,3 @@
-# exit_file("tinyviztest")
-library("tinytest")
-using("tinyviztest")
-
 # character predictors
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv")
 dat$large_penguin <- ifelse(dat$body_mass_g > median(dat$body_mass_g, na.rm = TRUE), 1, 0)
@@ -12,19 +8,6 @@ p <- plot_cme(mod, effect = "bill_length_mm", condition = "flipper_length_mm", d
 expect_inherits(p, "data.frame")
 expect_equivalent(nrow(p), 100)
 expect_false(anyNA(p$dydx))
-
-# continuous vs. categorical x-axis
-mod <- lm(mpg ~ hp * wt * factor(cyl), mtcars)
-p <- plot_cme(mod, effect = "hp", condition = "cyl")
-expect_vdiff(p, "plot_cme_categorical")
-p <- plot_cme(mod, effect = "gear_fct", condition = "mpg")
-p <- plot_cme(mod, effect = "hp", condition = "wt")
-expect_vdiff(p, "plot_cme_continuous")
-
-# two conditions
-mod <- lm(mpg ~ hp * wt * am, data = mtcars)
-p <- plot_cme(mod, effect = "hp", condition = c("wt", "am"))
-expect_vdiff(p, "plot_cme_two_conditions")
 
 
 # vcov
@@ -48,3 +31,24 @@ mod <- lm(cyl ~ mpg * gear_fct + am_log, data = dat)
 p <- plot_cme(mod, effect = "gear_fct", condition = "mpg")
 expect_vdiff(p, "plot_cme_factor_facets")
 expect_false(expect_error(plot_cme(mod, effect = "am_log", condition = "mpg")))
+
+
+
+# CI breaks here
+exit_file("tinyviztest")
+library("tinytest")
+using("tinyviztest")
+
+# continuous vs. categorical x-axis
+mod <- lm(mpg ~ hp * wt * factor(cyl), mtcars)
+p <- plot_cme(mod, effect = "hp", condition = "cyl")
+expect_vdiff(p, "plot_cme_categorical")
+p <- plot_cme(mod, effect = "hp", condition = "wt")
+expect_vdiff(p, "plot_cme_continuous")
+
+# two conditions
+mod <- lm(mpg ~ hp * wt * am, data = mtcars)
+p <- plot_cme(mod, effect = "hp", condition = c("wt", "am"))
+expect_vdiff(p, "plot_cme_two_conditions")
+
+

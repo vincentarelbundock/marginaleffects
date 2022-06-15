@@ -1,3 +1,4 @@
+source("helpers.R")
 
 # not supported because datplot is not representative, so we can't take minmax or iqr
 mod <- lm(mpg ~ wt * hp, data = mtcars)
@@ -6,11 +7,3 @@ expect_false(expect_error(plot_cco(mod, effect = list("hp" = c(100, 130)), condi
 
 # one effect at a time
 expect_error(plot_cco(mod, effect = c("hp", "wt"), condition = "wt"), pattern = "length")
-
-mod <- lm(mpg ~ factor(cyl) * wt, data = mtcars)
-
-# plot_cco(mod, effect = list("cyl" = "reference"), condition = "wt", draw = FALSE)
-
-# plot_cco(mod, effect = list("cyl" = "dydx"), condition = "wt")
-
-# plot_cco(mod, condition = "wt")
