@@ -181,17 +181,24 @@ get_contrasts <- function(model,
             }
             return(con)
         }
-        out[, "comparison" := wrapfun(hi = predicted_hi,
-                                      lo = predicted_lo, 
-                                      n = .N,
-                                      transform_pre_idx = transform_pre_idx,
-                                      eps_tmp = eps_tmp), by = idx]
-        out[, c("predicted_hi", "predicted_lo", "predicted") := NULL]
+        tmp <- out[, .(comparison = wrapfun(
+            hi = predicted_hi,
+            lo = predicted_lo, 
+            n = .N,
+            transform_pre_idx = transform_pre_idx,
+            eps_tmp = eps_tmp)),
+            by = idx]
+        if (nrow(tmp) != nrow(out)) {
+            out <- tmp
+        } else {
+            out[, "comparison" := tmp$comparison]
+        }
     }
 
     out <- get_hypothesis(out, hypothesis, "comparison")
 
-    if ("transform_pre_idx" %in% colnames(out)) out[, "transform_pre_idx" := NULL]
+    idx <- which(!colnames(out) %in% c("transform_pre_idx", "predicted_hi", "predicted_lo", "predicted"))
+    out <- out[, ..idx]
 
     # output
     attr(out, "posterior_draws") <- draws

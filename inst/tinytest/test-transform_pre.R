@@ -10,7 +10,7 @@ mod <- glm(am ~ vs + mpg, data = mtcars, family = binomial)
 cmp1 <- comparisons(
     mod,
     variables = list(vs = 0:1),
-    transform_pre = function(hi, lo) mean(hi - lo))[1,]
+    transform_pre = function(hi, lo) mean(hi - lo))
 cmp2 <- comparisons(
     mod,
     variables = list(vs = 0:1))

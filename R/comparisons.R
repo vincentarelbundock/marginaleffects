@@ -427,6 +427,7 @@ comparisons <- function(model,
     if (!isTRUE(internal_call)) {
         setDF(out)
     }
+
     class(out) <- c("comparisons", class(out))
     attr(out, "posterior_draws") <- draws
     attr(out, "model") <- model

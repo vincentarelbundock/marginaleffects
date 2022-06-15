@@ -32,5 +32,5 @@ c1 <- tidy(c1)
 c2 <- comparisons(model_interaction, variable = "group_id")
 c2 <- tidy(c2)
 
-tinytest::expect_equivalent(g1, c1$estimate)
-tinytest::expect_equivalent(g2, c2$estimate)
+expect_equivalent(g1, c1$estimate)
+expect_equivalent(g2, c2$estimate)
