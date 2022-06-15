@@ -4,6 +4,10 @@ New supported packages and models:
 
 * `tidymodels` objects of class `tidy_model` are supported if the fit engine is supported by `marginaleffects`.
 
+New function:
+
+* `plot_cco()`: Conditional contrasts
+
 New arguments:
 
 * `hypothesis` for hypothesis tests and custom contrasts

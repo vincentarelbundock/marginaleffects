@@ -77,7 +77,7 @@ This vignette shows how to modify steps 3, 4, and 6 to compute custom contrasts:
 
 # Default contrasts: untransformed differences
 
-In `R` we do:
+To estimate the effect of a change of 1 unit, we do:
 
 ```{r}
 library(marginaleffects)
@@ -86,15 +86,17 @@ library(magrittr)
 mod <- glm(vs ~ mpg, data = mtcars, family = binomial)
 
 # construct data
-mtcars_plus_1 <- mtcars
-mtcars_plus_1$mpg <- mtcars_plus_1$mpg + 1
+
+mtcars_minus <- mtcars_plus <- mtcars
+mtcars_minus$mpg <- mtcars_minus$mpg - 0.5
+mtcars_plus$mpg <- mtcars_plus$mpg + 0.5
 
 # adjusted predictions
-yhat <- predict(mod, newdata = mtcars, type = "response")
-yhat_plus_1 <- predict(mod, newdata = mtcars_plus_1, type = "response")
+yhat_minus <- predict(mod, newdata = mtcars_minus, type = "response")
+yhat_plus <- predict(mod, newdata = mtcars_plus, type = "response")
 
 # unit-level contrasts
-con <- yhat_plus_1 - yhat
+con <- yhat_plus - yhat_minus
 
 # average contrasts
 mean(con)
@@ -167,6 +169,20 @@ comparisons(
 
 Since the `exp` function is now passed to the `transform_avg` argument of `summary()` function, the exponentiation is now done only *after* unit-level contrasts have been averaged. This is what `Stata` appears to does under the hood, and the results are slightly different.
 
+All the same arguments apply to the plotting functions of the `marginaleffects` package as well. For example we can plot the Adjusted Risk Ratio in a model with a quadratic term:
+
+```{r}
+library(ggplot2)
+
+mod2 <- glm(vs ~ mpg + mpg^2, data = mtcars, family = binomial)
+
+plot_cco(
+    mod2,
+    effect = list("mpg" = 10),
+    condition = "mpg",
+    transformation_pre = "ratio") +
+    ylab("Adjusted Risk Ratio\nP(vs = 1 | mpg + 10) / P(vs = 1 | mpg)")
+```
 
 # Back transforming lognormal hurdle models
 
