@@ -143,7 +143,7 @@ titanic <- read.csv(titanic)
 mod_titanic <- glm(
     Survived ~ Sex * PClass + Age + I(Age^2),
     family = binomial,
-    data = dat)
+    data = titanic)
 
 cmp <- comparisons(mod_titanic)
 summary(cmp)
