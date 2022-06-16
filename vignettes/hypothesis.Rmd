@@ -1,8 +1,8 @@
 ---
-title: "Hypothesis Tests and Custom Contrasts"
+title: "Hypothesis Tests, Delta Method, and Custom Contrasts"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Hypothesis Tests and Custom Contrasts}
+  %\VignetteIndexEntry{Hypothesis Tests, Delta Method, and Custom Contrasts}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -146,6 +146,67 @@ comparisons(
     transform_pre = "dydxavg")
 ```
 
+# Delta method
+
+Version 0.6.0 and [the development version of `marginaleffects`](https://vincentarelbundock.github.io/marginaleffects/#getting-started) include a very flexible function called `deltamethod()` which can be used to estimate and standard errors of functions of model parameters. [`deltamethod()`] emulates the behavior of the excellent and well-established `car::deltaMethod` and `car::linearHypothesis` functions, but it supports more models, requires fewer dependencies, and offers some convenience features like shortcuts for robust standard errors.
+
+```{r}
+library(marginaleffects)
+mod <- lm(mpg ~ hp + wt + factor(cyl), data = mtcars)
+```
+
+When `FUN` and `hypothesis` are `NULL`, `deltamethod()` returns a data.frame of raw estimates:
+
+```{r}
+deltamethod(mod)
+```
+
+Test of equality between coefficients:
+
+```{r}
+deltamethod(mod, "hp = wt")
+```
+
+Non-linear function of coefficients
+
+```{r}
+deltamethod(mod, "exp(hp + wt) = 0.1")
+```
+
+The `vcov` argument behaves in the same was as in the `marginaleffects()` function. Itallows us to easily compute robust standard errors:
+
+```{r}
+deltamethod(mod, "hp = wt", vcov = "HC3")
+```
+
+We can use shortcuts like `r1`, `r2`, `...` to identify the position of each parameter in the output of `FUN`. For example, `r2=r3` is equivalent to `hp = wt` because those term names appear in the 2nd and 3rd row when we call `deltamethod(mod)`. 
+
+```{r}
+deltamethod(mod, "r2 = r3")
+```
+
+Term names with special characters must be enclosed in backticks:
+
+```{r}
+deltamethod(mod, "`factor(cyl)6` = `factor(cyl)8`")
+```
+
+The `FUN` argument can be used to compute standard errors for arbitrary functions of model parameters. This function accepts a model object and returns a numeric vector or a data.frame with two columns named `term` and `value`.
+
+```{r}
+mod <- glm(am ~ hp + mpg, data = mtcars, family = binomial)
+
+f <- function(x) predict(x, type = "link", newdata = mtcars)
+p <- deltamethod(mod, FUN = f)
+head(p)
+```
+
+Test of equality between two predictions (row 2 vs row 1):
+
+```{r}
+f <- function(x) predict(x, type = "link", newdata = mtcars)
+deltamethod(mod, FUN = f, hypothesis = "r1 = r2")
+```
 
 # Pairwise contrasts & Difference-in-Differences
 

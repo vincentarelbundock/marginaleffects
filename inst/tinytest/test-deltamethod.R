@@ -34,7 +34,17 @@ mod <- glm(am ~ hp + mpg, data = mtcars, family = binomial)
 f <- function(x) predict(x, type = "link", newdata = mtcars)
 p <- deltamethod(mod, FUN = f)
 expect_inherits(p, "data.frame")
+expect_true(all(p$std.error > 0))
 
 f <- function(x) predict(x, type = "response", newdata = mtcars)
 p <- deltamethod(mod, FUN = f)
 expect_inherits(p, "data.frame")
+expect_true(all(p$std.error > 0))
+
+# equality between predictions: 1 and 2 equal, 2 and 3 different
+f <- function(x) predict(x, type = "link", newdata = mtcars)
+dmm <- deltamethod(mod, FUN = f, hypothesis = "r1 = r2")
+expect_equivalent(dmm$estimate, 0)
+dmm <- deltamethod(mod, FUN = f, hypothesis = "r3 = r2")
+expect_equivalent(dmm$estimate, 1.33154848763268)
+

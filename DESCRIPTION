@@ -118,7 +118,7 @@ Collate:
     'comparisons.R'
     'complete_levels.R'
     'datagrid.R'
-    'deltam.R'
+    'deltamethod.R'
     'deprecate_arg.R'
     'find_categorical.R'
     'find_variable_class.R'
