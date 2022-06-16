@@ -148,7 +148,7 @@ comparisons(
 
 # Delta method
 
-Version 0.6.0 and [the development version of `marginaleffects`](https://vincentarelbundock.github.io/marginaleffects/#getting-started) include a very flexible function called `deltamethod()` which can be used to estimate and standard errors of functions of model parameters. [`deltamethod()`] emulates the behavior of the excellent and well-established `car::deltaMethod` and `car::linearHypothesis` functions, but it supports more models, requires fewer dependencies, and offers some convenience features like shortcuts for robust standard errors.
+Version 0.6.0 and [the development version of `marginaleffects`](https://vincentarelbundock.github.io/marginaleffects/#getting-started) include a very flexible function called `deltamethod()` which can be used to estimate and standard errors of functions of model parameters. `deltamethod()` emulates the behavior of the excellent and well-established `car::deltaMethod` and `car::linearHypothesis` functions, but it supports more models, requires fewer dependencies, and offers some convenience features like shortcuts for robust standard errors.
 
 ```{r}
 library(marginaleffects)
@@ -173,13 +173,13 @@ Non-linear function of coefficients
 deltamethod(mod, "exp(hp + wt) = 0.1")
 ```
 
-The `vcov` argument behaves in the same was as in the `marginaleffects()` function. Itallows us to easily compute robust standard errors:
+The `vcov` argument behaves in the same was as in the `marginaleffects()` function. It allows us to easily compute robust standard errors:
 
 ```{r}
 deltamethod(mod, "hp = wt", vcov = "HC3")
 ```
 
-We can use shortcuts like `r1`, `r2`, `...` to identify the position of each parameter in the output of `FUN`. For example, `r2=r3` is equivalent to `hp = wt` because those term names appear in the 2nd and 3rd row when we call `deltamethod(mod)`. 
+We can use shortcuts like `r1`, `r2`, `...` to identify the position of each parameter in the output of `FUN`. For example, `r2=r3` is equivalent to `hp=wt` because those term names appear in the 2nd and 3rd row when we call `deltamethod(mod)`. 
 
 ```{r}
 deltamethod(mod, "r2 = r3")
@@ -191,7 +191,7 @@ Term names with special characters must be enclosed in backticks:
 deltamethod(mod, "`factor(cyl)6` = `factor(cyl)8`")
 ```
 
-The `FUN` argument can be used to compute standard errors for arbitrary functions of model parameters. This function accepts a model object and returns a numeric vector or a data.frame with two columns named `term` and `value`.
+The `FUN` argument can be used to compute standard errors for arbitrary functions of model parameters. This user-supplied function must a single model object and return a numeric vector or a data.frame with two columns named `term` and `value`.
 
 ```{r}
 mod <- glm(am ~ hp + mpg, data = mtcars, family = binomial)
@@ -204,9 +204,11 @@ head(p)
 Test of equality between two predictions (row 2 vs row 1):
 
 ```{r}
-f <- function(x) predict(x, type = "link", newdata = mtcars)
-deltamethod(mod, FUN = f, hypothesis = "r1 = r2")
+f <- function(x) predict(x, newdata = mtcars)
+deltamethod(mod, FUN = f, hypothesis = "r2 = r3")
 ```
+
+Note that we specified the `newdata` argument in the `f` function. This is because the `predict()` method associated with `lm` objects will automatically the original fitted values when `newdata` is `NULL`, instead of returning the slightly altered fitted values which we need to compute numerical derivatives in the delta method.
 
 # Pairwise contrasts & Difference-in-Differences
 
