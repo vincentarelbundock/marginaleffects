@@ -51,11 +51,11 @@ get_se_delta_contrasts <- function(model,
 #' @noRd
 get_se_delta <- function(model,
                          vcov,
-                         type,
-                         newdata,
                          FUN,
+                         type = NULL,
+                         newdata = NULL,
                          index = NULL,
-                         eps = 1e-4,
+                         eps = NULL,
                          J = NULL,
                          hypothesis = NULL,
                          ...) {
@@ -78,12 +78,26 @@ get_se_delta <- function(model,
     # output: gradient
     inner <- function(x) {
         model_tmp <- set_coef(model, stats::setNames(x, names(coefs)))
-        g <- FUN(model = model_tmp, newdata = newdata, type = type, eps = eps, hypothesis = hypothesis, ...)
+        # do not pass NULL arguments. Important for `deltam` to allow users to supply FUN without ...
+        args <- c(list(model = model_tmp, hypothesis = hypothesis), list(...))
+        if (!is.null(eps)) args[["eps"]] <- eps
+        if (!is.null(type)) args[["type"]] <- type
+        if (!is.null(newdata)) args[["newdata"]] <- newdata
+        if (!is.null(J)) args[["J"]] <- J
+        g <- do.call("FUN", args)
         return(g)
     }
 
     if (is.null(J) || !is.null(hypothesis)) {
-        J <- get_jacobian(func = inner, x = coefs, eps = eps)
+        args <- list(
+            func = inner,
+            x = coefs)
+        if (is.null(eps)) {
+            args[["eps"]] <- 1e-4
+        } else {
+            args[["eps"]] <- eps
+        }
+        J <- do.call("get_jacobian", args)
         colnames(J) <- names(get_coef(model))
     }
 
