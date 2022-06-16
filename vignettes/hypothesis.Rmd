@@ -220,7 +220,7 @@ First, we simultate data with two treatment groups and pre/post periods:
 library(data.table)
 
 N <- 1000
-did <- data.frame(
+did <- data.table(
     id = 1:N,
     pre = rnorm(N),
     trt = sample(0:1, N, replace = TRUE))

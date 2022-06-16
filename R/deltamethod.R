@@ -100,12 +100,12 @@ deltamethod <- function(
 
     if (!is.null(hypothesis)) {
         out <- data.frame(
-            hypothesis = attr(hypothesis, "label"),
+            term = attr(hypothesis, "label"),
             estimate = b,
             std.error = se)
     } else {
         out <- data.frame(
-            rowid = seq_along(b),
+            term = paste0("r", seq_along(b)),
             estimate = b,
             std.error = se)
     }
