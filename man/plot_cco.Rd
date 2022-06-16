@@ -61,6 +61,7 @@ acceptable values is returned in an error message.}
 \item "lnratioavg": \code{function(hi, lo) log(mean(hi) / mean(lo))}
 \item "lnoravg": \code{function(hi, lo) log((mean(hi)/(1 - mean(hi))) / (mean(lo)/(1 - mean(lo))))}
 \item "dydx": \code{function(hi, lo) (hi - lo) / eps}
+\item "dydx": `function(hi, lo) mean((hi - lo) / eps)'
 \item "expdydx": \code{function(hi, lo) ((exp(hi) - exp(lo)) / exp(e)) / e}
 }
 \item function: accept two equal-length numeric vectors of adjusted predictions (\code{hi} and \code{lo}) and returns a vector of contrasts of the same length, or a unique numeric value.

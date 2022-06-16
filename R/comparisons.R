@@ -72,6 +72,7 @@
 #'   - "lnratioavg": `function(hi, lo) log(mean(hi) / mean(lo))`
 #'   - "lnoravg": `function(hi, lo) log((mean(hi)/(1 - mean(hi))) / (mean(lo)/(1 - mean(lo))))`
 #'   - "dydx": `function(hi, lo) (hi - lo) / eps`
+#'   - "dydx": `function(hi, lo) mean((hi - lo) / eps)'
 #'   - "expdydx": `function(hi, lo) ((exp(hi) - exp(lo)) / exp(e)) / e`
 #' * function: accept two equal-length numeric vectors of adjusted predictions (`hi` and `lo`) and returns a vector of contrasts of the same length, or a unique numeric value.
 #' @param transform_post (experimental) A function applied to unit-level estimates and confidence intervals just before the function returns results.
