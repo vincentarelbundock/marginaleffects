@@ -148,7 +148,7 @@ comparisons(
 
 # Delta method
 
-Version 0.6.0 and [the development version of `marginaleffects`](https://vincentarelbundock.github.io/marginaleffects/#getting-started) include a very flexible function called `deltamethod()` which can be used to estimate and standard errors of functions of model parameters. `deltamethod()` emulates the behavior of the excellent and well-established `car::deltaMethod` and `car::linearHypothesis` functions, but it supports more models, requires fewer dependencies, and offers some convenience features like shortcuts for robust standard errors.
+Version 0.6.0 and [the development version of `marginaleffects`](https://vincentarelbundock.github.io/marginaleffects/#getting-started) include a very flexible function called `deltamethod()` which can be used to compute estimates and standard errors of functions of model parameters. `deltamethod()` emulates the behavior of the excellent and well-established `car::deltaMethod` and `car::linearHypothesis` functions, but it supports more models, requires fewer dependencies, and offers some convenience features like shortcuts for robust standard errors.
 
 ```{r}
 library(marginaleffects)
