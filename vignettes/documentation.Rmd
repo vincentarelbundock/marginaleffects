@@ -1,0 +1,30 @@
+---
+title: "Vignettes and Documentation" 
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignettes and Documentation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  fig.width = 6,
+  fig.asp = .4,
+  warning = FALSE,
+  message = FALSE,
+  comment = "#>"
+)
+
+library(marginaleffects)
+library(patchwork)
+library(ggplot2)
+
+theme_set(theme_minimal())
+```
+
+[The `marginaleffects` package website](https://vincentarelbundock.github.io/marginaleffects/) hosts a large number of vignettes, case studies, and technical documents:
+
+```{r child = "vignettes/toc.Rmd"}
+```
