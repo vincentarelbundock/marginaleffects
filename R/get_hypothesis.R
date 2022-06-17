@@ -92,11 +92,11 @@ get_hypothesis <- function(x, hypothesis, column) {
         envir <- parent.frame()
 
         # row indices: `hypothesis` includes them, but `term` does not
-        if (isTRUE(grepl("\\br\\d+\\b", hypothesis)) && !any(grepl("\\br\\d+\\b", x[["term"]]))) {
+        if (isTRUE(grepl("\\bb\\d+\\b", hypothesis)) && !any(grepl("\\bb\\d+\\b", x[["term"]]))) {
             lab <- hypothesis
             for (i in seq_len(nrow(x))) {
                 tmp <- paste0("marginaleffects__", i)
-                hypothesis <- gsub(paste0("r", i), tmp, hypothesis)
+                hypothesis <- gsub(paste0("b", i), tmp, hypothesis)
                 assign(tmp, x[[column]][i], envir = envir)
             }
 
@@ -104,10 +104,11 @@ get_hypothesis <- function(x, hypothesis, column) {
         } else {
             if (!"term" %in% colnames(x) || anyDuplicated(x$term) > 0) {
                 msg <- format_msg(
-                'To use term names in a `hypothesis` string, the same function call without
-                `hypothesis` argument must produce a `term` column with unique row identifiers.
-                Please use row indices instead of term names in the `hypothesis` string Ex:
-                "r1 + r2 = 0"')
+                'To use term names in a `hypothesis` string, the same function
+                call without `hypothesis` argument must produce a `term`
+                column with unique row identifiers. Please use `b1`, `b2`,
+                etc. indices instead of term names in the `hypothesis` string Ex:
+                "b1 + b2 = 0"')
                 stop(msg, call. = FALSE)
             }
 

@@ -84,7 +84,7 @@
 #' # Contrast between marginal means (carb2 - carb1), or "is the 1st marginal means equal to the 2nd?"
 #' # see the vignette on "Hypothesis Tests and Custom Contrasts" on the `marginaleffects` website.
 #' lc <- c(-1, 1, 0, 0, 0, 0)
-#' marginalmeans(mod, variables = "carb", hypothesis = "r2 = r1")
+#' marginalmeans(mod, variables = "carb", hypothesis = "b2 = b1")
 #'
 #' marginalmeans(mod, variables = "carb", hypothesis = lc)
 #'

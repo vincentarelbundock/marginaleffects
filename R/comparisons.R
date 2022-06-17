@@ -149,7 +149,7 @@
 #' comparisons(
 #'     mod,
 #'     newdata = "mean",
-#'     hypothesis = "r1 - r2 = 0")
+#'     hypothesis = "b1 - b2 = 0")
 #' 
 #' # same hypothesis test using numeric vector of weights
 #' comparisons(

@@ -80,13 +80,13 @@
 #' predictions(
 #'     mod,
 #'     newdata = datagrid(wt = 2:3),
-#'     hypothesis = "r1 = r2")
+#'     hypothesis = "b1 = b2")
 #' 
 #' # same hypothesis test using row indices
 #' predictions(
 #'     mod,
 #'     newdata = datagrid(wt = 2:3),
-#'     hypothesis = "r1 - r2 = 0")
+#'     hypothesis = "b1 - b2 = 0")
 #' 
 #' # same hypothesis test using numeric vector of weights
 #' predictions(

@@ -2,7 +2,7 @@
 % Please edit documentation in R/posteriordraws.R
 \name{posteriordraws}
 \alias{posteriordraws}
-\title{Extract posterior draws from a \code{predictions} or \code{marginaleffects} object derived from Bayesian models}
+\title{Extract posterior draws from a \code{predictions}, \code{comparisons}, or \code{marginaleffects} object derived from Bayesian models.}
 \usage{
 posteriordraws(x)
 }
@@ -13,5 +13,5 @@ posteriordraws(x)
 A data.frame with \code{drawid} and \code{draw} columns.
 }
 \description{
-Extract posterior draws from a \code{predictions} or \code{marginaleffects} object derived from Bayesian models
+Extract posterior draws from a \code{predictions}, \code{comparisons}, or \code{marginaleffects} object derived from Bayesian models.
 }

@@ -26,8 +26,8 @@
 #' # Robust standard errors
 #' deltamethod(mod, "hp = wt", vcov = "HC3")
 #' 
-#' # r1, r2, ... shortcuts can be used to identify rows in the output of FUN
-#' deltamethod(mod, "r2 = r3")
+#' # b1, b2, ... shortcuts can be used to identify the position of the parameters of interest in the output of FUN
+#' deltamethod(mod, "b2 = b3")
 #' 
 #' # term names with special characters have to be enclosed in backticks
 #' deltamethod(mod, "`factor(cyl)6` = `factor(cyl)8`")
@@ -113,7 +113,7 @@ deltamethod <- function(
         }
     } else {
         out <- data.frame(
-            term = paste0("r", seq_along(b)),
+            term = paste0("b", seq_along(b)),
             estimate = b,
             std.error = se)
     }

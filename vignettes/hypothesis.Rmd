@@ -74,12 +74,12 @@ p <- predictions(
 p
 ```
 
-Since there is no `term` column in the output of the `predictions` function, we must use row identifiers like `r1`, `r2`, etc. to determine which estimates we want to compare:
+Since there is no `term` column in the output of the `predictions` function, we must use parameter identifiers like `b1`, `b2`, etc. to determine which estimates we want to compare:
 
 ```{r}
 predictions(
     mod,
-    hypothesis = "r1 = r2",
+    hypothesis = "b1 = b2",
     newdata = datagrid(am = 0:1, vs = 0:1))
 
 p$predicted[1] - p$predicted[2]
@@ -99,14 +99,14 @@ There are *many* more possibilities:
 ```{r}
 predictions(
     mod,
-    hypothesis = "r1 + r2 = 30",
+    hypothesis = "b1 + b2 = 30",
     newdata = datagrid(am = 0:1, vs = 0:1))
 
 p$predicted[1] + p$predicted[2] - 30
 
 predictions(
     mod,
-    hypothesis = "(r2 - r1) / (r3 - r2) = 0",
+    hypothesis = "(b2 - b1) / (b3 - b2) = 0",
     newdata = datagrid(am = 0:1, vs = 0:1))
 ```
 
@@ -179,10 +179,10 @@ The `vcov` argument behaves in the same was as in the `marginaleffects()` functi
 deltamethod(mod, "hp = wt", vcov = "HC3")
 ```
 
-We can use shortcuts like `r1`, `r2`, `...` to identify the position of each parameter in the output of `FUN`. For example, `r2=r3` is equivalent to `hp=wt` because those term names appear in the 2nd and 3rd row when we call `deltamethod(mod)`. 
+We can use shortcuts like `b1`, `b2`, `...` to identify the position of each parameter in the output of `FUN`. For example, `b2=b3` is equivalent to `hp=wt` because those term names appear in the 2nd and 3rd row when we call `deltamethod(mod)`. 
 
 ```{r}
-deltamethod(mod, "r2 = r3")
+deltamethod(mod, "b2 = b3")
 ```
 
 Term names with special characters must be enclosed in backticks:
@@ -205,7 +205,7 @@ Test of equality between two predictions (row 2 vs row 1):
 
 ```{r}
 f <- function(x) predict(x, newdata = mtcars)
-deltamethod(mod, FUN = f, hypothesis = "r2 = r3")
+deltamethod(mod, FUN = f, hypothesis = "b2 = b3")
 ```
 
 Note that we specified the `newdata` argument in the `f` function. This is because the `predict()` method associated with `lm` objects will automatically the original fitted values when `newdata` is `NULL`, instead of returning the slightly altered fitted values which we need to compute numerical derivatives in the delta method.

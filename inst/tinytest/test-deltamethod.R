@@ -20,8 +20,8 @@ expect_inherits(dmm, "data.frame")
 dmm <- deltamethod(mod, "hp = wt", vcov = "HC3")
 expect_inherits(dmm, "data.frame")
 
-# r1, r2, ... shortcuts can be used to identify rows in the output of FUN
-dmm <- deltamethod(mod, "r2 = r3")
+# b1, b2, ... shortcuts can be used to identify rows in the output of FUN
+dmm <- deltamethod(mod, "b2 = b3")
 expect_inherits(dmm, "data.frame")
 
 # term names with special characters have to be enclosed in backticks
@@ -43,8 +43,8 @@ expect_true(all(p$std.error > 0))
 
 # equality between predictions: 1 and 2 equal, 2 and 3 different
 f <- function(x) predict(x, type = "link", newdata = mtcars)
-dmm <- deltamethod(mod, FUN = f, hypothesis = "r1 = r2")
+dmm <- deltamethod(mod, FUN = f, hypothesis = "b1 = b2")
 expect_equivalent(dmm$estimate, 0)
-dmm <- deltamethod(mod, FUN = f, hypothesis = "r3 = r2")
+dmm <- deltamethod(mod, FUN = f, hypothesis = "b3 = b2")
 expect_equivalent(dmm$estimate, 1.33154848763268)
 

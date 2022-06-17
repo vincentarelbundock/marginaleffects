@@ -136,7 +136,7 @@ expect_equal(nrow(mm), 2)
 # marginalmeans: string function
 mm1 <- marginalmeans(
     mod,
-    hypothesis = "r1 + r2 = 12")
+    hypothesis = "b1 + b2 = 12")
 mm2 <- marginalmeans(mod)
 expect_equivalent(
     mm2$marginalmean[1] + mm2$marginalmean[2] - 12,
@@ -148,7 +148,7 @@ mod <- lm(mpg ~ hp + drat, data = mtcars)
 mfx1 <- marginaleffects(
     mod,
     newdata = "mean",
-    hypothesis = "exp(r1 + r2) = 100")
+    hypothesis = "exp(b1 + b2) = 100")
 mfx2 <- marginaleffects(
     mod,
     newdata = "mean",
@@ -164,11 +164,11 @@ p1 <- predictions(
     newdata = datagrid(hp = c(100, 110, 120)))
 p2 <- predictions(
     mod,
-    hypothesis = "r1 + r2 + r3 = 10",
+    hypothesis = "b1 + b2 + b3 = 10",
     newdata = datagrid(hp = c(100, 110, 120)))
 p3 <- predictions(
     mod,
-    hypothesis = "r1 = r2",
+    hypothesis = "b1 = b2",
     newdata = datagrid(hp = c(100, 110, 120)))
 expect_equivalent(sum(p1$predicted) - 10, p2$predicted)
 expect_equivalent(p1$predicted[1] - p1$predicted[2], p3$predicted)
