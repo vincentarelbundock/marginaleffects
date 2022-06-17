@@ -306,7 +306,12 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
         }
 
         if (length(cluster_ids) > 0) {
-            msg <- "Some cluster or group identifiers are numeric. Unless otherwise instructed, `datagrid()` sets all numeric variables to their mean. This is probably inappropriate in the case of cluster or group identifiers. A safer strategy is to convert them to factors before fitting the model."
+            msg <- format_msg(
+            "Some cluster or group identifiers are numeric. Unless otherwise
+            instructed, `datagrid()` sets all numeric variables to their mean.
+            This is probably inappropriate in the case of cluster or group
+            identifiers. A safer strategy is to convert them to factors before
+            fitting the model.")
             warning(msg, call. = FALSE)
         }
     }

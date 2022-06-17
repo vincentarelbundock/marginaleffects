@@ -6,6 +6,11 @@ requiet("fixest")
 fixest::setFixest_nthreads(1)
 
 
+# Issue #375: friendly warning when sandwich fails
+mod <- feols(y ~ x1 + i(period, treat, 5) | id + period, base_did)
+hyp <- as.numeric(1:10 %in% 6:10)
+expect_warning(deltamethod(mod, hypothesis = hyp, vcov = "HC1"), pattern = "sandwich")
+
 # bugs stay dead: logit with transformations
 dat <- mtcars
 dat$gear <- as.factor(dat$gear)

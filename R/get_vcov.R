@@ -64,7 +64,22 @@ get_vcov.default <- function(model,
     args[["component"]] <- "all"
 
     fun <- get("get_varcov", asNamespace("insight"))
-    out <- try(do.call("fun", args), silent = TRUE)
+    out <- myTryCatch(do.call("fun", args))
+    if (!is.matrix(out$value) || !isTRUE(nrow(out$value) > 1)) {
+        out2 <- myTryCatch(insight::get_varcov(model))
+        if (is.matrix(out2$value) && isTRUE(nrow(out2$value) > 1)) {
+            out <- out2$value
+            msg <- format_msg(
+            "Unable to extract a variance-covariance matrix using this `vcov`
+            argument. Standard errors are computed using the default variance
+            instead. Perhaps the model or argument is not supported by the
+            `sandwich` package.")
+            warning(msg, call. = FALSE)
+        } else {
+            msg <- "Unable to extract a variance-covariance matrix from this model."
+            stop(msg, call. = FALSE)
+        }
+    }
 
     # {stats}
     if (!isTRUE(checkmate::check_matrix(out))) {
