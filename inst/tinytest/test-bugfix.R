@@ -25,3 +25,13 @@ fit <- glm(f, data = nhefs)
 pre <- predictions(fit, newdata = nhefs)
 cmp <- comparisons(fit, newdata = nhefs)
 mfx <- marginaleffects(fit, newdata = nhefs)
+
+
+# Issue 372: reserved variable names
+dat <- mtcars
+dat$group <- dat$am
+mod <- lm(mpg ~ group, data = dat)
+expect_error(comparisons(mod), pattern = "reserved")
+mod <- lm(mpg ~ group + hp, data = dat)
+expect_warning(comparisons(mod), pattern = "reserved")
+expect_equivalent(nrow(suppressWarnings(comparisons(mod))), 32)

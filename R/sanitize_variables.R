@@ -46,6 +46,7 @@ sanitize_variables <- function(model,
         contrast_types <- NULL
     }
 
+
     # sometimes `insight` returns interaction component as if it were a constituent variable
     for (n in names(variables_list)) {
         idx <- grepl(":", variables_list[[n]])
@@ -55,19 +56,37 @@ sanitize_variables <- function(model,
         }
     }
 
-
-    variables <- unique(unlist(variables_list))
-
     # mhurdle names the variables weirdly
     if (inherits(model, "mhurdle")) {
         variables_list <- list("conditional" = insight::find_predictors(model, flatten = TRUE))
     }
+
+    # reserved keywords
+    reserved <- c("rowid", "group", "term", "estimate", "std.error", "statistic", "conf.low", "conf.high")
+    if ("conditional" %in% names(variables_list)) {
+        cond <- variables_list[["conditional"]]
+        bad <- intersect(cond, reserved)
+        if (length(bad) > 0) {
+            msg <- format_msg(sprintf(
+            "The `%s` variable name is reserved by `marginaleffects` to avoid conflicts
+            with the column names of the results data frame. Please rename this variable 
+            before fitting the model and try again.", bad[1]))
+            cond <- setdiff(cond, bad)
+            if (length(cond) == 0) stop(msg, call. = FALSE)
+            warning(msg, call. = FALSE)
+            variables_list[["conditional"]] <- cond
+        }
+    }
+
+    # we need a vector
+    variables <- unique(unlist(variables_list))
 
     # weights
     w <- tryCatch(insight::find_weights(model), error = function(e) NULL)
     w <- intersect(w, colnames(newdata))
     variables <- unique(c(variables, w))
     variables_list[["weights"]] <- w
+
 
     # check missing character levels
     # Character variables are treated as factors by model-fitting functions,
