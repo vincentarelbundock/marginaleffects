@@ -1,4 +1,4 @@
-#' Extract posterior draws from a `predictions` or `marginaleffects` object derived from Bayesian models
+#' Extract posterior draws from a `predictions`, `comparisons`, or `marginaleffects` object derived from Bayesian models.
 #'
 #' @param x An object produced by the `marginaleffects`, `comparisons`, or `predictions` functions
 #' @return A data.frame with `drawid` and `draw` columns.
