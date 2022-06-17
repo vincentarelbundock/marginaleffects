@@ -73,11 +73,11 @@ exp(mean(x))
 mean(exp(x))
 ```
 
-This vignette shows how to modify steps 3, 4, and 6 to compute custom contrasts: Adjusted Risk Ratios (ARR) and Adjusted Risk Differences (ARD).
+This vignette shows how to modify steps 3, 4, and 6 to compute custom contrasts and back transformations: Adjusted Risk Ratios (ARR), Adjusted Risk Differences (ARD), Log-Normal Hurdle Models.
 
-# Default contrasts: untransformed differences
+# Differences
 
-To estimate the effect of a change of 1 unit, we do:
+The default contrast calculate by the `comparisons()` function is a (untransformed) difference between two adjusted predictions. For instance, to estimate the effect of a change of 1 unit, we do:
 
 ```{r}
 library(marginaleffects)
@@ -109,7 +109,7 @@ con <- comparisons(mod)
 summary(con)
 ```
 
-# Custom contrasts with `transform_pre`: Ratios
+# Ratios
 
 Instead of taking simple differences between adjusted predictions, it can sometimes be useful to compute other forms of contrasts. For example, [the `adjrr` function the `Stata` software package](https://journals.sagepub.com/doi/pdf/10.1177/1536867X1301300304) can compute "adjusted risk ratios", which are ratios of adjusted predictions. To do this in `R`, we use the `transform_pre` argument:
 
@@ -164,7 +164,7 @@ p2 <- plot_cco(
 p1 + p2
 ```
 
-# (Back-)Transforming results with `transform_post`: Adjusted Risk Ratios
+# Back transform: Ratios
 
 By default, the standard errors are computed using the delta method on the scale determined by the `type` argument (e.g., "link" or "response"). Some analysts may prefer to proceed differently. For example, in `Stata`, the `adjrr` computes adjusted risk ratios (ARR) in two steps:
 
@@ -215,7 +215,7 @@ plot_cco(
     ylab("Adjusted Risk Ratio\nP(vs = 1 | mpg + 10) / P(vs = 1 | mpg)")
 ```
 
-# Back transforming lognormal hurdle models
+# Back transform: lognormal hurdle
 
 With hurdle models, we can fit two separate models simultaneously: 
 
