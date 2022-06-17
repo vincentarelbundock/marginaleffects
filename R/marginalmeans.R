@@ -1,12 +1,10 @@
 #' Marginal Means
 #'
-#' Compute estimated marginal means for specified factors. Marginal means are
-#' adjusted predictions, averaged across a grid of categorical predictors,
-#' holding other numeric predictors at their means. For more information, see
-#' the Details and Examples sections below, and in the vignettes on the
-#' `marginaleffects` website: <https://vincentarelbundock.github.io/marginaleffects/>
-#' * [Getting Started](https://vincentarelbundock.github.io/marginaleffects/#getting-started)
-#' * [Marginal Means Vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx04_marginalmeans.html)
+#' Marginal means are adjusted predictions, averaged across a grid of categorical predictors,
+#' holding other numeric predictors at their means. To learn more, read the marginal means vignette, visit the
+#' package website, or scroll down this page for a full list of vignettes:
+#' * <https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html>
+#' * <https://vincentarelbundock.github.io/marginaleffects/>
 #'
 #' @param variables character vector Categorical predictors over which to
 #' compute marginal means. `NULL` calculates marginal means for all logical,
@@ -32,6 +30,11 @@
 #' @inheritParams marginaleffects
 #' @inheritParams predictions
 #' @inheritParams comparisons
+#' @section Vignettes and documentation:
+#'
+#' ```{r child = "vignettes/toc.Rmd"}
+#' ```
+#'
 #' @details
 #'   This function begins by calling the `predictions` function to obtain a
 #'   grid of predictors, and adjusted predictions for each cell. The grid

@@ -160,49 +160,65 @@ package. See the "Model-Specific Arguments" section of the
 arguments.}
 }
 \description{
-This function calculates contrasts (or comparisons) between adjusted
-predictions for each row of the dataset. The resulting object can processed
-by the \code{tidy()} or \code{summary()} functions, which compute Average Contrasts
-(see \code{?summary.marginaleffects}). The \code{newdata} argument can be used to
-calculate a variety of contrasts, including "Contrasts at the Mean,"
-"Contrasts at User-Specified values" (aka Contrasts at Representative
-values), and "Contrasts in Marginal Means". The \code{transform_pre} argument can
-be used to compute other quantities such as "Adjusted Risk Ratios" or
-"Marginal Odds Ratios." See below for a list of vignettes and examples, and
-visit the \code{marginaleffects} website for more:
-\url{https://vincentarelbundock.github.io/marginaleffects/}
+Difference, ratio, or function of two adjusted predictions, calculated for
+meaningfully different predictor values. The \code{tidy()} and \code{summary()}
+functions can be used to aggregate and summarize the output of
+\code{comparisons()}. To learn more, read the contrasts vignette, visit the
+package website, or scroll down this page for a full list of vignettes:
+\itemize{
+\item \url{https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html}
+\item \url{https://vincentarelbundock.github.io/marginaleffects/}
+}
 }
 \details{
+A "contrast" is a difference, ratio of function of two adjusted predictions,
+calculated for meaningfully different predictor values (e.g., College
+graduates vs. Others). Uncertainty estimates are computed using the delta
+method.
+
+The \code{newdata} argument can be used to control the kind of contrasts to report:
+\itemize{
+\item Average Contrasts
+\item Adjusted Risk Ratios
+\item Adjusted Risk Differences
+\item Group-Average Contrasts
+\item Contrasts at the Mean
+\item Contrasts at User-Specified values (aka Contrasts at Representative values, MER).
+\item Custom contrasts using arbitrary functions
+}
+}
+\section{Vignettes and documentation}{
+
+
 Vignettes:
 \itemize{
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx01_predictions.html}{Adjusted predictions}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_contrasts.html}{Contrasts}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_mfx.html}{Marginal effects}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx04_marginalmeans.html}{Marginal means}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html}{Adjusted Predictions}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html}{Contrasts}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html}{Marginal Effects}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html}{Marginal Means}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html}{Hypothesis Tests, Delta Method, and Custom Contrasts}
 }
 
-Case studies and technical information:
+Case studies:
 \itemize{
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx06_supported_models.html}{64 Supported Classes of Models}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/brms.html}{Bayesian Analyses with \code{brms}}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/gformula.html}{Causal Inference with the g-Formula}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html}{Custom Contrasts and Transformations: Risk Ratio, Exponentiation, etc.}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/gam.html}{Generalized Additive Models}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html}{Hypothesis Tests, Delta Method, and Custom Contrasts}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html}{Mixed Effects Models}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html}{Mixed effects models}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html}{Multinomial Logit and Discrete Choice Models}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/multiple_imputation.html}{Multiple Imputation}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/performance.html}{Performance Tips}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html}{Standard Errors and Hypothesis Tests}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html}{Tables and Plots}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html}{Alternative Software}
 }
 
-A "contrast" is the difference between (or some other function of) two
-adjusted predictions, calculated for meaningfully different regressor values
-(e.g., College graduates vs. Others). Uncertainty estimates are computed
-using the delta method.
+Tips and technical notes:
+\itemize{
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html}{64 Supported Classes of Models}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html}{Standard Errors}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html}{Tables and Plots}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/performance.html}{Performance}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html}{Alternative Software}
 }
+}
+
 \section{Model-Specific Arguments}{
 
 
@@ -259,7 +275,7 @@ comparisons(mod, variables = list(hp = "iqr")) \%>\% tidy()
 comparisons(mod, variables = list(hp = "sd")) \%>\% tidy()
 comparisons(mod, variables = list(hp = "minmax")) \%>\% tidy()
 
-# Adjusted Risk Ratio (see Case Study vignette on the website)
+# Adjusted Risk Ratio: see the contrasts vignette
 mod <- glm(vs ~ mpg, data = mtcars, family = binomial)
 cmp <- comparisons(mod, transform_pre = "lnratioavg")
 summary(cmp, transform_post = exp)

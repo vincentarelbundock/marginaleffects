@@ -1,30 +1,32 @@
 #' Adjusted Predictions
+#' Outcome predicted by a fitted model on a specified scale for a given
+#' combination of values of the predictor variables, such as their observed
+#' values, their means, or factor levels (a.k.a. "reference grid"). The
+#' `tidy()` and `summary()` functions can be used to aggregate the output of
+#' `predictions()`. To learn more, read the predictions vignette, visit the
+#' package website, or scroll down this page for a full list of vignettes:
+#' * <https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html>
+#' * <https://vincentarelbundock.github.io/marginaleffects/>
 #'
-#' Calculate adjusted predictions for each row of the dataset. The `datagrid()`
-#' function and the `newdata` argument can be used to calculate Average
-#' Adjusted Predictions (AAP), Average Predictions at the Mean (APM), or
-#' Predictions at User-Specified Values of the regressors (aka Adjusted
-#' Predictions at Representative values, APR). For more information, see the
-#' Details and Examples sections below, and in the vignettes on the
-#' `marginaleffects` website: <https://vincentarelbundock.github.io/marginaleffects/>
-#' * [Getting Started](https://vincentarelbundock.github.io/marginaleffects/#getting-started)
-#' * [Predictions Vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx01_predictions.html)
-#' * [Supported Models](https://vincentarelbundock.github.io/marginaleffects/articles/mfx06_supported_models.html)
+#' @section Vignettes and documentation:
 #'
-#' An "adjusted prediction" is the outcome predicted by a fitted model on a
-#' specified scale for a given combination of values of the predictor
-#' variables, such as their observed values, their means, or factor levels
-#' (a.k.a. "reference grid").
+#' ```{r child = "vignettes/toc.Rmd"}
+#' ```
 #'
-#' When possible, this function uses the delta method to compute the standard
-#' error associated with the adjusted predictions.
+#' @details
+#' The `newdata` argument, the `tidy()` function, and `datagrid()` function can be used to control the kind of predictions to report:
+#' 
+#' * Average Predictions
+#' * Predictions at the Mean
+#' * Predictions at User-Specified values (aka Predictions at Representative values).
 #'
-#' A detailed vignette on adjusted predictions is published on the package
-#' website:
+#' When possible, `predictions()` delegates the computation of confidence
+#' intervals to the `insight::get_predicted()` function, which uses back
+#' transformation to produce adequate confidence intervals on the scale
+#' specified by the `type` argument. When this is not possible, `predictions()`
+#' uses the Delta Method to compute standard errors around adjusted
+#' predictions.
 #'
-#' https://vincentarelbundock.github.io/marginaleffects/
-
-#' Compute model-adjusted predictions (fitted values) for a "grid" of regressor values.
 #' @inheritParams marginaleffects
 #' @param model Model object
 #' @param variables Character vector. Compute Adjusted Predictions for

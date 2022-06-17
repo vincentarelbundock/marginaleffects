@@ -23,7 +23,6 @@
 ^vignettes/modelsummary.Rmd
 ^vignettes/performance.Rmd
 ^vignettes/sandwich.Rmd
-^vignettes/technical_notes.Rmd
 ^vignettes/links_external.Rmd
 ^vignettes/links_main.Rmd
 ^vignettes/links_internal.Rmd

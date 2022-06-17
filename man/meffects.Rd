@@ -119,47 +119,32 @@ A \code{data.frame} with one row per observation (per term/group) and several co
 }
 }
 \description{
-This function calculates marginal effects (slopes) for each row of the
-dataset. The resulting object can processed by the \code{tidy()} or \code{summary()}
-functions, which compute Average Marginal Effects (AME) or Group-Average
-Marginal Effects (G-AME). The \code{datagrid()} function and the \code{newdata}
-argument can be used to calculate Marginal Effects at the Mean (MEM) or
-Marginal Effects at User-Specified values (aka Marginal Effects at
-Representative values, MER). See below for a list of vignettes and examples,
-and visit the \code{marginaleffects} website for more:
-\url{https://vincentarelbundock.github.io/marginaleffects/}
+Partial derivative (slope) of the regression equation with respect to a
+regressor of interest. The \code{tidy()} and \code{summary()} functions can be used to
+aggregate and summarize the output of \code{marginaleffects()}. To learn more,
+read the marginal effects vignette, visit the package website, or scroll
+down this page for a full list of vignettes:
+\itemize{
+\item \url{https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html}
+\item \url{https://vincentarelbundock.github.io/marginaleffects/}
+}
 }
 \details{
-Vignettes:
-\itemize{
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx01_predictions.html}{Adjusted predictions}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx02_contrasts.html}{Contrasts}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_mfx.html}{Marginal effects}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx04_marginalmeans.html}{Marginal means}
-}
-
-Case studies and technical information:
-\itemize{
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx06_supported_models.html}{64 Supported Classes of Models}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/brms.html}{Bayesian Analyses with \code{brms}}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/gformula.html}{Causal Inference with the g-Formula}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html}{Custom Contrasts and Transformations: Risk Ratio, Exponentiation, etc.}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/gam.html}{Generalized Additive Models}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html}{Hypothesis Tests, Delta Method, and Custom Contrasts}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html}{Mixed Effects Models}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html}{Multinomial Logit and Discrete Choice Models}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/multiple_imputation.html}{Multiple Imputation}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/performance.html}{Performance Tips}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html}{Standard Errors and Hypothesis Tests}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html}{Tables and Plots}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html}{Alternative Software}
-}
-
 A "marginal effect" is the partial derivative of the regression equation
 with respect to a variable in the model. This function uses automatic
 differentiation to compute marginal effects for a vast array of models,
 including non-linear models with transformations (e.g., polynomials).
 Uncertainty estimates are computed using the delta method.
+
+The \code{newdata} argument can be used to control the kind of marginal effects to report:
+\itemize{
+\item Average Marginal Effects (AME)
+\item Group-Average Marginal Effects (G-AME)
+\item Marginal Effects at the Mean (MEM) or
+\item Marginal Effects at User-Specified values (aka Marginal Effects at Representative values, MER).
+}
+
+See the \href{https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html}{marginaleffects vignette for worked-out examples of each kind of marginal effect.}
 
 Numerical derivatives for the \code{marginaleffects} function are calculated
 using a simple epsilon difference approach: \eqn{\partial Y / \partial X = (f(X + \varepsilon) - f(X)) / \varepsilon}{dY/dX = (f(X + e) - f(X)) / e},
@@ -170,9 +155,41 @@ Warning: Some models are particularly sensitive to \code{eps}, so it is good
 practice to try different values of this argument.
 
 Standard errors for the marginal effects are obtained using the Delta
-method. See the "Standard Errors and Hypothesis Tests" vignette on the
-package website for details (link above).
+method. See the "Standard Errors" vignette on the package website for
+details (link above).
 }
+\section{Vignettes and documentation}{
+
+
+Vignettes:
+\itemize{
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html}{Adjusted Predictions}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html}{Contrasts}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html}{Marginal Effects}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html}{Marginal Means}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html}{Hypothesis Tests, Delta Method, and Custom Contrasts}
+}
+
+Case studies:
+\itemize{
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/brms.html}{Bayesian Analyses with \code{brms}}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/gformula.html}{Causal Inference with the g-Formula}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/gam.html}{Generalized Additive Models}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html}{Mixed effects models}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html}{Multinomial Logit and Discrete Choice Models}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/multiple_imputation.html}{Multiple Imputation}
+}
+
+Tips and technical notes:
+\itemize{
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html}{64 Supported Classes of Models}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html}{Standard Errors}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html}{Tables and Plots}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/performance.html}{Performance}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html}{Alternative Software}
+}
+}
+
 \section{Model-Specific Arguments}{
 
 

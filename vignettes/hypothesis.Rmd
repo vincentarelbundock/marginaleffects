@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-The code in this vignette requires `marginaleffects` version 0.5.1 or [the development version hosted on Github.](https://vincentarelbundock.github.io/marginaleffects/#installation)
+The code in this vignette requires `marginaleffects` version 0.6.0 or [the development version hosted on Github.](https://vincentarelbundock.github.io/marginaleffects/#installation)
 
 # Hypothesis Test Formulas: Linear and Non-Linear
 
@@ -31,7 +31,7 @@ Each of the 4 core functions of the package support a `hypothesis` argument whic
 
 ## Marginal effects
 
-For example, let's fit a model and compute some [marginal effects at the mean:](https://vincentarelbundock.github.io/marginaleffects/articles/mfx03_mfx.html#marginal-effect-at-the-mean-mem)
+For example, let's fit a model and compute some [marginal effects at the mean:](https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html#marginal-effect-at-the-mean-mem)
 
 ```{r}
 library(marginaleffects)
@@ -125,7 +125,7 @@ comparisons(
     transform_pre = "differenceavg")
 ```
 
-Notice that in the last one we did not need to use `tidy()` or `summary()`, and yet we still obtained average contrasts. [See the transformations vignette for more details.](https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html)
+Notice that in the last one we did not need to use `tidy()` or `summary()`, and yet we still obtained average contrasts. [See the transformations section of the Contrasts vignette for more details.](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)
 
 With these results in hand, we can finally conduct a linear hypothesis test between average marginal effects:
 
@@ -256,7 +256,7 @@ comparisons(
 
 # Custom Contrasts with Vectors and Matrices
 
-The `marginalmeans()` function computes [estimated marginal means.](https://vincentarelbundock.github.io/marginaleffects/articles/mfx04_marginalmeans.html) The `hypothesis` argument of that function offers a powerful mechanism to estimate custom contrasts between marginal means, by way of linear combination.
+The `marginalmeans()` function computes [estimated marginal means.](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) The `hypothesis` argument of that function offers a powerful mechanism to estimate custom contrasts between marginal means, by way of linear combination.
 
 Consider a simple example:
 

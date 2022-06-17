@@ -1,52 +1,284 @@
 ---
-title: "Transformations and Custom Contrasts"
+title: "Contrasts" 
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Transformations and Custom Contrasts}
+  %\VignetteIndexEntry{Contrasts}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
-# this vignette is in .Rbuildignore because lme4 is not available on old CRAN
-# test machines.
-
 knitr::opts_chunk$set(
   collapse = TRUE,
-  fig.width = 9,
+  fig.width = 6,
   fig.asp = .4,
-  out.width = "100%",
   warning = FALSE,
   message = FALSE,
   comment = "#>"
 )
 
+library(marginaleffects)
+library(patchwork)
 library(ggplot2)
 
-theme_clean <- function() {
-  theme_minimal() +
-    theme(panel.grid.minor = element_blank(),
-          strip.text = element_text(size = rel(1), hjust = 0),
-          strip.background = element_blank(),
-          legend.position = "bottom")
-}
-ggplot2::theme_set(theme_clean())
+theme_set(theme_minimal())
 ```
 
-The content of this vignette requires `marginaleffects` version 0.5.1 which was not yet available on CRAN at the time of writing. [You can always install the development version from github.](https://vincentarelbundock.github.io/marginaleffects/#installation)
+Note: Some of the code in this vignette requires `marginaleffects` version 0.6.0 or [the development version from github.](https://vincentarelbundock.github.io/marginaleffects/#installation)
 
-This vignette explains how to create custom contrasts and slopes, and how to transform predictions, contrasts, and slopes using arbirary functions.
+[In another vignette](https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html), we introduced the "marginal effect" as a partial derivative. Since derivatives are only properly defined for continuous variables, we cannot use them to interpret the effects of changes in categorical variables. For this, we turn to *contrasts* between [Adjusted predictions.](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html) In the context of this package, a "Contrast" is defined as:
 
-[The Contrasts vignette](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html) defined contrasts as:
+> A difference, ratio, or function of two adjusted predictions, calculated for meaningfully different predictor values (e.g., College graduates vs. Others).
 
-> The difference between two adjusted predictions.
+The `marginaleffects()` function automatically calculates contrasts instead of derivatives for factor, logical, or character variables. 
 
+The `comparisons()` function gives users more powerful features to compute different contrasts, such as differences, risk ratios, linear combinations, and transformations.
+
+# Predictor types
+
+## Logical and factor predictors
+
+Consider a simple model with a logical and a factor variable:
+
+```{r}
+library(marginaleffects)
+library(magrittr)
+
+tmp <- mtcars
+tmp$am <- as.logical(tmp$am)
+mod <- lm(mpg ~ am + factor(cyl), tmp)
+```
+
+The `marginaleffects` function automatically computes contrasts for each level of the categorical variables, relative to the baseline category (`FALSE` for logicals, and the reference level for factors), while holding all other values at their mode or mean:
+
+```{r}
+mfx <- marginaleffects(mod)
+summary(mfx)
+```
+
+The summary printed above says that moving from the reference category `4` to the level `6` on the `cyl` factor variable is associated with a change of `r sprintf("%.3f", tidy(mfx)$estimate[2])` in the adjusted prediction. Similarly, the contrast from `FALSE` to `TRUE` on the `am` variable is equal to `r sprintf("%.3f", tidy(mfx)$estimate[1])`.
+
+We can obtain different contrasts by using the `comparisons()` function. For example:
+
+```{r}
+comparisons(mod, variables = list(cyl = "sequential")) %>% tidy()
+comparisons(mod, variables = list(cyl = "pairwise")) %>% tidy()
+comparisons(mod, variables = list(cyl = "reference")) %>% tidy()
+```
+
+For comparison, this code produces the same results using the `emmeans` package:
+
+```{r}
+library(emmeans)
+emm <- emmeans(mod, specs = "cyl")
+contrast(emm, method = "revpairwise")
+
+emm <- emmeans(mod, specs = "am")
+contrast(emm, method = "revpairwise")
+```
+
+Note that these commands also work on for other types of models, such as GLMs, on different scales:
+
+```{r}
+mod_logit <- glm(am ~ factor(gear), data = mtcars, family = binomial)
+
+comparisons(mod_logit) %>% tidy()
+
+comparisons(mod_logit, type = "link") %>% tidy()
+```
+
+## Character predictors
+
+All functions of the `marginaleffects` package attempt to treat character predictors as factor predictors. However, using factors instead of characters when modelling is *strongly* encouraged, because they are much safer and faster. This is because factors hold useful information about the full list of levels, which makes them easier to track and handle internally by `marginaleffects`. Users are strongly encouraged to convert their character variables to factor before fitting their models and using `marginaleffects` functions.
+
+## Numeric predictors
+
+We can also compute contrasts for differences in numeric variables. For example, we can see what happens to the adjusted predictions when we increment the `hp` variable by 1 unit (default) or by 5 units:
+
+```{r}
+mod <- lm(mpg ~ hp, data = mtcars)
+
+comparisons(mod) %>% tidy()
+
+comparisons(
+    mod,
+    variables = list(hp = 5)) %>% tidy()
+```
+
+Compare adjusted predictions for a change in the regressor between two arbitrary values:
+
+```{r}
+comparisons(mod, variables = list(hp = c(90, 110))) %>% tidy()
+```
+
+Compare adjusted predictions when the regressor changes across the interquartile range, across one or two standard deviations about its mean, or from across its full range:
+
+```{r}
+comparisons(mod, variables = list(hp = "iqr")) %>% tidy()
+
+comparisons(mod, variables = list(hp = "sd")) %>% tidy()
+
+comparisons(mod, variables = list(hp = "2sd")) %>% tidy()
+
+comparisons(mod, variables = list(hp = "minmax")) %>% tidy()
+```
+
+# Scale type
+
+We can compute contrasts 
+
+# Interactions
+
+In some contexts we would like to know what happens when two (or more) predictors change at the same time. In the `marginaleffects` package terminology, this is an "interaction between contrasts."
+
+For example, consider a model with two factor variables: 
+
+```{r}
+mod <- lm(mpg ~ am * factor(cyl), data = mtcars)
+```
+
+What happens if `am` increases by 1 unit and `cyl` changes from a baseline reference to another level? 
+
+```{r}
+cmp <- comparisons(mod, variables = c("cyl", "am"))
+summary(cmp)
+```
+
+When the `variables` argument is used and the model formula includes interactions, the "cross-contrasts" contrasts will automatically be displayed. You can also force `comparisons()` to do it by setting `interactions=TRUE` and using the `variables` argument to specify which variables should be manipulated simultaneously.
+
+# Quantities of interest
+
+This section compares 4 quantities:
+
+1. Unit-Level Contrasts
+2. Average Contrast
+3. Contrast at the Mean
+4. Contrast Between Marginal Means
+
+The ideas discussed in this section focus on contrasts, but they carry over directly to analogous types of marginal effects.
+
+## Unit-level contrasts
+
+In models with interactions or non-linear components (e.g., link function), the value of a contrast or marginal effect can depend on the value of all the predictors in the model. As a result, contrasts and marginal effects are fundamentally *unit-level* quantities. The effect of a 1 unit increase in $X$ can be different for Mary or John. Every row of a dataset has a different contrast and marginal effect.
+
+The `mtcars` dataset has 32 rows, so the `comparisons()` function produces 32 contrast estimates:
+
+```{r, warning = FALSE}
+library(marginaleffects)
+mod <- glm(vs ~ factor(gear) + mpg, family = binomial, data = mtcars)
+cmp <- comparisons(mod, variables = "mpg")
+nrow(cmp)
+```
+
+## Average contrasts
+
+By default, the `marginaleffects()` and `comparisons()` functions compute marginal effects and contrasts for every row of the original dataset. These unit-level estimates can be unwieldy and hard to interpret. To help interpretation, the `summary()` function computes the "Average Marginal Effect" or "Average Contrast," by taking the mean of all the unit-level estimates.
+
+```{r}
+summary(cmp)
+```
+
+which is equivalent to:
+
+```{r}
+mean(cmp$comparison)
+```
+
+We could also show the full distribution of contrasts across our dataset with a histogram:
+
+```{r}
+#| fig.asp = .4
+library(ggplot2)
+
+cmp <- comparisons(mod, variables = "gear")
+
+ggplot(cmp, aes(comparison)) +
+    geom_histogram(bins = 30) +
+    facet_wrap(~contrast, scale = "free_x") +
+    labs(x = "Distribution of unit-level contrasts")
+```
+
+This graph display the effect of a change of 1 unit in the `mpg` variable, for each individual in the observed data.
+
+## Contrasts at the mean
+
+An alternative which used to be very common but has now fallen into a bit of disfavor is to compute "Contrasts at the mean." The idea is to create a "synthetic" or "hypothetical" individual (row of the dataset) whose characteristics are completely average. Then, we compute and report the contrast for this specific hypothetical individual. 
+
+This can be achieved by setting `newdata="mean"` or to `newdata=datagrid()`, both of which fix variables to their means or modes:
+
+```{r}
+comparisons(mod, variables = "mpg", newdata = "mean")
+```
+
+Contrasts at the mean can differ substantially from average contrasts.
+
+The advantage of this approach is that it is very cheap and fast computationally. The disadvantage is that the interpretation is somewhat ambiguous. Often times, there simply does not exist an individual who is perfectly average across all dimensions of the dataset. It is also not clear why the analyst should be particularly interested in the contrast for this one, synthetic, perfectly average individual.
+
+## Contrasts between marginal means
+
+Yet another type of contrast is the "Contrast between marginal means." This type of contrast is closely related to the "Contrast at the mean", with a few wrinkles. It is the default approach used by the `emmeans` package for `R`.
+
+Roughly speaking, the procedure is as follows: 
+
+1. Create a prediction grid with one cell for each combination of categorical predictors in the model, and all numeric variables held at their means.
+2. Make adjusted predictions in each cell of the prediction grid.
+3. Take the average of those predictions (marginal means) for each combination of `btype` (focal variable) and `resp` (group `by` variable).
+4. Compute pairwise differences (contrasts) in marginal means across different levels of the focal variable `btype`.
+
+The contrast obtained through this approach has two critical characteristics:
+
+a) It is the contrast for a synthetic individual with perfectly average qualities on every (numeric) predictor.
+b) It is a weighted average of unit-level contrasts, where weights assume a perfectly balanced dataset across every categorical predictor.
+
+With respect to (a), the analyst should ask themselves: Is my quantity of interest the contrast for a perfectly average hypothetical individual? With respect to (b), the analyst should ask themselves: Is my quantity of interest the contrast in a model estimated using (potentially) unbalanced data, but interpreted *as if* the data were perfectly balanced? 
+
+For example, imagine that one of the control variables in your model is a variable measuring educational attainment in 4 categories: No high school, High school, Some college, Completed college. The contrast between marginal is a weighted average of contrasts estimated in the 4 cells, and each of those contrasts will be weighted equally in the overall estimate. If the population of interest is highly unbalanced in the educational categories, then the estimate computed in this way will not be most useful.
+
+If the contrasts between marginal means is really the quantity of interest, it is easy to use the `comparisons()` to estimate contrasts between marginal means. The `newdata` determines the values of the predictors at which we want to compute contrasts. We can set `newdata="marginalmeans"` to emulate the `emmeans` behavior. For example, here we compute contrasts in a model with an interaction:
+
+```{r}
+dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv")
+mod <- lm(bill_length_mm ~ species * sex + island + body_mass_g, data = dat)
+
+cmp <- comparisons(
+    mod,
+    newdata = "marginalmeans",
+    variables = c("species", "island"))
+summary(cmp)
+```
+
+Which is equivalent to this in `emmeans`:
+
+```{r}
+emm <- emmeans(
+    mod,
+    specs = c("species", "island"))
+contrast(emm, method = "trt.vs.ctrl1")
+```
+
+The [`emmeans` section of the Alternative Software vignette](https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html#emmeans) shows further examples.
+
+The [excellent vignette of the `emmeans` package](https://CRAN.R-project.org/package=emmeans/vignettes/basics.html) discuss the same issues in a slightly different (and more positive) way:
+
+> The point is that the marginal means of cell.means give equal weight to each cell. In many situations (especially with experimental data), that is a much fairer way to compute marginal means, in that they are not biased by imbalances in the data. We are, in a sense, estimating what the marginal means would be, had the experiment been balanced. Estimated marginal means (EMMs) serve that need.
+
+> All this said, there are certainly situations where equal weighting is not appropriate. Suppose, for example, we have data on sales of a product given different packaging and features. The data could be unbalanced because customers are more attracted to some combinations than others. If our goal is to understand scientifically what packaging and features are inherently more profitable, then equally weighted EMMs may be appropriate; but if our goal is to predict or maximize profit, the ordinary marginal means provide better estimates of what we can expect in the marketplace.
+
+# Conditional contrasts
+
+Consider a model with an interaction term. What happens to the dependent variable when the `hp` variable increases by 10 units?
+
+```{r}
+mod <- lm(mpg ~ hp * wt, data = mtcars)
+plot_cco(
+    mod,
+    effect = list(hp = 10),
+    condition = "wt")
+```
 
 # Transformations
 
-This vignette shows how to move beyond such simple differences, by estimating "contrasts" that consist of ratios or arbitrary functions of adjusted predictions. It also shows how to back-transform contrasts to change their scales.
-
-Powerful transformations and custom contrasts are made possible by using three arguments which act at different stages of the computation process:
+So far we have focused on simple differences between adjusted predictions. Now, we show how to use ratios, back transformations, and arbitrary functions to estimate a slew of quantities of interest. Powerful transformations and custom contrasts are made possible by using three arguments which act at different stages of the computation process:
 
 * `transform_pre`
 * `transform_post`
@@ -75,8 +307,6 @@ x <- rnorm(100)
 exp(mean(x))
 mean(exp(x))
 ```
-
-This vignette shows how to modify steps 3, 4, and 6 to compute custom contrasts and back transformations: Adjusted Risk Ratios (ARR), Adjusted Risk Differences (ARD), Log-Normal Hurdle Models.
 
 # Differences
 
@@ -167,7 +397,7 @@ p2 <- plot_cco(
 p1 + p2
 ```
 
-# Back transform: Ratios
+# Adjusted Risk Ratios
 
 By default, the standard errors are computed using the delta method on the scale determined by the `type` argument (e.g., "link" or "response"). Some analysts may prefer to proceed differently. For example, in `Stata`, the `adjrr` computes adjusted risk ratios (ARR) in two steps:
 
@@ -218,7 +448,7 @@ plot_cco(
     ylab("Adjusted Risk Ratio\nP(vs = 1 | mpg + 10) / P(vs = 1 | mpg)")
 ```
 
-# Back transform: lognormal hurdle
+# Lognormal hurdle model
 
 With hurdle models, we can fit two separate models simultaneously: 
 

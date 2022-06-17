@@ -1,32 +1,33 @@
 #' Contrasts Between Adjusted Predictions
 #'
-#' This function calculates contrasts (or comparisons) between adjusted
-#' predictions for each row of the dataset. The resulting object can processed
-#' by the `tidy()` or `summary()` functions, which compute Average Contrasts
-#' (see `?summary.marginaleffects`). The `newdata` argument can be used to
-#' calculate a variety of contrasts, including "Contrasts at the Mean,"
-#' "Contrasts at User-Specified values" (aka Contrasts at Representative
-#' values), and "Contrasts in Marginal Means". The `transform_pre` argument can
-#' be used to compute other quantities such as "Adjusted Risk Ratios" or
-#' "Marginal Odds Ratios." See below for a list of vignettes and examples, and
-#' visit the `marginaleffects` website for more:
-#' <https://vincentarelbundock.github.io/marginaleffects/>
+#' Difference, ratio, or function of two adjusted predictions, calculated for
+#' meaningfully different predictor values. The `tidy()` and `summary()`
+#' functions can be used to aggregate and summarize the output of
+#' `comparisons()`. To learn more, read the contrasts vignette, visit the
+#' package website, or scroll down this page for a full list of vignettes:
+#' * <https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html>
+#' * <https://vincentarelbundock.github.io/marginaleffects/>
 #'
-#' Vignettes:
+#' @section Vignettes and documentation:
 #'
-#' ```{r child = "vignettes/links_main.Rmd"}
-#' ```
-#' 
-#' Case studies and technical information:
-#' 
-#' ```{r, child="vignettes/links_internal.Rmd"}
+#' ```{r child = "vignettes/toc.Rmd"}
 #' ```
 #'
-#' A "contrast" is the difference between (or some other function of) two
-#' adjusted predictions, calculated for meaningfully different regressor values
-#' (e.g., College graduates vs. Others). Uncertainty estimates are computed
-#' using the delta method.
+#' @details
+#' A "contrast" is a difference, ratio of function of two adjusted predictions,
+#' calculated for meaningfully different predictor values (e.g., College
+#' graduates vs. Others). Uncertainty estimates are computed using the delta
+#' method.
 #'
+#' The `newdata` argument can be used to control the kind of contrasts to report:
+#' 
+#' * Average Contrasts
+#' * Adjusted Risk Ratios
+#' * Adjusted Risk Differences
+#' * Group-Average Contrasts
+#' * Contrasts at the Mean
+#' * Contrasts at User-Specified values (aka Contrasts at Representative values, MER).
+#' * Custom contrasts using arbitrary functions
 #'
 #' @inheritParams marginaleffects
 #' @inheritParams predictions
@@ -118,7 +119,7 @@
 #' comparisons(mod, variables = list(hp = "sd")) %>% tidy()
 #' comparisons(mod, variables = list(hp = "minmax")) %>% tidy()
 #'
-#' # Adjusted Risk Ratio (see Case Study vignette on the website)
+#' # Adjusted Risk Ratio: see the contrasts vignette
 #' mod <- glm(vs ~ mpg, data = mtcars, family = binomial)
 #' cmp <- comparisons(mod, transform_pre = "lnratioavg")
 #' summary(cmp, transform_post = exp)

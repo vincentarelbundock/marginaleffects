@@ -105,14 +105,12 @@ Data frame of marginal means with one row per variable-value
 combination.
 }
 \description{
-Compute estimated marginal means for specified factors. Marginal means are
-adjusted predictions, averaged across a grid of categorical predictors,
-holding other numeric predictors at their means. For more information, see
-the Details and Examples sections below, and in the vignettes on the
-\code{marginaleffects} website: \url{https://vincentarelbundock.github.io/marginaleffects/}
+Marginal means are adjusted predictions, averaged across a grid of categorical predictors,
+holding other numeric predictors at their means. To learn more, read the marginal means vignette, visit the
+package website, or scroll down this page for a full list of vignettes:
 \itemize{
-\item \href{https://vincentarelbundock.github.io/marginaleffects/#getting-started}{Getting Started}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx04_marginalmeans.html}{Marginal Means Vignette}
+\item \url{https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html}
+\item \url{https://vincentarelbundock.github.io/marginaleffects/}
 }
 }
 \details{
@@ -135,6 +133,38 @@ The \code{marginaleffects} website compares the output of this function to the
 popular \code{emmeans} package, which provides similar but more advanced
 functionality: https://vincentarelbundock.github.io/marginaleffects/
 }
+\section{Vignettes and documentation}{
+
+
+Vignettes:
+\itemize{
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html}{Adjusted Predictions}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html}{Contrasts}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html}{Marginal Effects}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html}{Marginal Means}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html}{Hypothesis Tests, Delta Method, and Custom Contrasts}
+}
+
+Case studies:
+\itemize{
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/brms.html}{Bayesian Analyses with \code{brms}}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/gformula.html}{Causal Inference with the g-Formula}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/gam.html}{Generalized Additive Models}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html}{Mixed effects models}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html}{Multinomial Logit and Discrete Choice Models}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/multiple_imputation.html}{Multiple Imputation}
+}
+
+Tips and technical notes:
+\itemize{
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html}{64 Supported Classes of Models}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html}{Standard Errors}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html}{Tables and Plots}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/performance.html}{Performance}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html}{Alternative Software}
+}
+}
+
 \section{Model-Specific Arguments}{
 
 

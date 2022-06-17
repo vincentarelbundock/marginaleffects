@@ -48,7 +48,7 @@ Many of `marginaleffects` advantages come down to subjective preferences over us
 * Hypothesis tests on linear combinations of contrasts.
 * Some plots.
 
-The [Marginal Means Vignette](https://vincentarelbundock.github.io/marginaleffects/articles/mfx04_marginalmeans.html) includes side-by-side comparisons of `emmeans` and `marginaleffects` to compute marginal means. The rest of this section compares the syntax for contrasts and marginaleffects.
+The [Marginal Means Vignette](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) includes side-by-side comparisons of `emmeans` and `marginaleffects` to compute marginal means. The rest of this section compares the syntax for contrasts and marginaleffects.
 
 ## Contrasts
 
@@ -669,7 +669,7 @@ summary(mfx)
 The [`effects` package](https://cran.r-project.org/eb/packages/effects/index.html) was created by John Fox and colleagues.
 
 + `marginaleffects` supports 30+ more model types than `effects`.
-+ `effects` focuses on the computation of ["adjusted predictions."](https://vincentarelbundock.github.io/marginaleffects/articles/mfx01_predictions.html) The plots it produces are roughly equivalent to the ones produced by the `plot_cap` and `predictions` functions in `marginaleffects`.
++ `effects` focuses on the computation of ["adjusted predictions."](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html) The plots it produces are roughly equivalent to the ones produced by the `plot_cap` and `predictions` functions in `marginaleffects`.
 + `effects` does not appear support marginal effects (slopes), marginal means, or contrasts 
 + `effects` uses Base graphics whereas `marginaleffects` uses `ggplot2`
 + `effects` includes *a lot* of very powerful options to customize plots. In contrast, `marginaleffects` produces objects which can be customized by chaining `ggplot2` functions. Users can also call `plot_cap(model, draw=FALSE)` to create a prediction grid, and then work the raw data directly to create the plot they need

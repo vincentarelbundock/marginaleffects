@@ -13,16 +13,27 @@ dat <- read.csv(url)
 n_support <- nrow(dat)
 ```
 
-- [`r n_support` Supported Classes of Models](https://vincentarelbundock.github.io/marginaleffects/articles/mfx06_supported_models.html)
+Vignettes:
+
+- [Adjusted Predictions](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html) 
+- [Contrasts](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html) 
+- [Marginal Effects](https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html) 
+- [Marginal Means](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) 
+- [Hypothesis Tests, Delta Method, and Custom Contrasts](https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html) 
+
+Case studies:
+
 - [Bayesian Analyses with `brms`](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)
 - [Causal Inference with the g-Formula](https://vincentarelbundock.github.io/marginaleffects/articles/gformula.html)
-- [Custom Contrasts and Transformations: Risk Ratio, Exponentiation, etc.](https://vincentarelbundock.github.io/marginaleffects/articles/transformation.html)
 - [Generalized Additive Models](https://vincentarelbundock.github.io/marginaleffects/articles/gam.html)
-- [Hypothesis Tests, Delta Method, and Custom Contrasts](https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html)
-- [Mixed Effects Models](https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html)
+- [Mixed effects models](https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html)
 - [Multinomial Logit and Discrete Choice Models](https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html)
 - [Multiple Imputation](https://vincentarelbundock.github.io/marginaleffects/articles/multiple_imputation.html)
-- [Performance Tips](https://vincentarelbundock.github.io/marginaleffects/articles/performance.html)
-- [Standard Errors and Hypothesis Tests](https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html)
+
+Tips and technical notes:
+
+- [`r n_support` Supported Classes of Models](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
+- [Standard Errors](https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html)
 - [Tables and Plots](https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html)
+- [Performance](https://vincentarelbundock.github.io/marginaleffects/articles/performance.html)
 - [Alternative Software](https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html)

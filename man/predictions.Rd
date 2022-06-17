@@ -2,7 +2,17 @@
 % Please edit documentation in R/predictions.R
 \name{predictions}
 \alias{predictions}
-\title{Adjusted Predictions}
+\title{Adjusted Predictions
+Outcome predicted by a fitted model on a specified scale for a given
+combination of values of the predictor variables, such as their observed
+values, their means, or factor levels (a.k.a. "reference grid"). The
+\code{tidy()} and \code{summary()} functions can be used to aggregate the output of
+\code{predictions()}. To learn more, read the predictions vignette, visit the
+package website, or scroll down this page for a full list of vignettes:
+\itemize{
+\item \url{https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html}
+\item \url{https://vincentarelbundock.github.io/marginaleffects/}
+}}
 \usage{
 predictions(
   model,
@@ -109,34 +119,65 @@ A \code{data.frame} with one row per observation and several columns:
 }
 }
 \description{
-Calculate adjusted predictions for each row of the dataset. The \code{datagrid()}
-function and the \code{newdata} argument can be used to calculate Average
-Adjusted Predictions (AAP), Average Predictions at the Mean (APM), or
-Predictions at User-Specified Values of the regressors (aka Adjusted
-Predictions at Representative values, APR). For more information, see the
-Details and Examples sections below, and in the vignettes on the
-\code{marginaleffects} website: \url{https://vincentarelbundock.github.io/marginaleffects/}
+Adjusted Predictions
+Outcome predicted by a fitted model on a specified scale for a given
+combination of values of the predictor variables, such as their observed
+values, their means, or factor levels (a.k.a. "reference grid"). The
+\code{tidy()} and \code{summary()} functions can be used to aggregate the output of
+\code{predictions()}. To learn more, read the predictions vignette, visit the
+package website, or scroll down this page for a full list of vignettes:
 \itemize{
-\item \href{https://vincentarelbundock.github.io/marginaleffects/#getting-started}{Getting Started}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx01_predictions.html}{Predictions Vignette}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mfx06_supported_models.html}{Supported Models}
+\item \url{https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html}
+\item \url{https://vincentarelbundock.github.io/marginaleffects/}
 }
 }
 \details{
-An "adjusted prediction" is the outcome predicted by a fitted model on a
-specified scale for a given combination of values of the predictor
-variables, such as their observed values, their means, or factor levels
-(a.k.a. "reference grid").
-
-When possible, this function uses the delta method to compute the standard
-error associated with the adjusted predictions.
-
-A detailed vignette on adjusted predictions is published on the package
-website:
-
-https://vincentarelbundock.github.io/marginaleffects/
-Compute model-adjusted predictions (fitted values) for a "grid" of regressor values.
+The \code{newdata} argument, the \code{tidy()} function, and \code{datagrid()} function can be used to control the kind of predictions to report:
+\itemize{
+\item Average Predictions
+\item Predictions at the Mean
+\item Predictions at User-Specified values (aka Predictions at Representative values).
 }
+
+When possible, \code{predictions()} delegates the computation of confidence
+intervals to the \code{insight::get_predicted()} function, which uses back
+transformation to produce adequate confidence intervals on the scale
+specified by the \code{type} argument. When this is not possible, \code{predictions()}
+uses the Delta Method to compute standard errors around adjusted
+predictions.
+}
+\section{Vignettes and documentation}{
+
+
+Vignettes:
+\itemize{
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html}{Adjusted Predictions}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html}{Contrasts}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html}{Marginal Effects}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html}{Marginal Means}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html}{Hypothesis Tests, Delta Method, and Custom Contrasts}
+}
+
+Case studies:
+\itemize{
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/brms.html}{Bayesian Analyses with \code{brms}}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/gformula.html}{Causal Inference with the g-Formula}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/gam.html}{Generalized Additive Models}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html}{Mixed effects models}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html}{Multinomial Logit and Discrete Choice Models}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/multiple_imputation.html}{Multiple Imputation}
+}
+
+Tips and technical notes:
+\itemize{
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html}{64 Supported Classes of Models}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html}{Standard Errors}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html}{Tables and Plots}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/performance.html}{Performance}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html}{Alternative Software}
+}
+}
+
 \section{Model-Specific Arguments}{
 
 

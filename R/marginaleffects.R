@@ -1,30 +1,33 @@
 #' Marginal Effects (Slopes)
 #'
-#' This function calculates marginal effects (slopes) for each row of the
-#' dataset. The resulting object can processed by the `tidy()` or `summary()`
-#' functions, which compute Average Marginal Effects (AME) or Group-Average
-#' Marginal Effects (G-AME). The `datagrid()` function and the `newdata`
-#' argument can be used to calculate Marginal Effects at the Mean (MEM) or
-#' Marginal Effects at User-Specified values (aka Marginal Effects at
-#' Representative values, MER). See below for a list of vignettes and examples,
-#' and visit the `marginaleffects` website for more:
-#' <https://vincentarelbundock.github.io/marginaleffects/>
+#' Partial derivative (slope) of the regression equation with respect to a
+#' regressor of interest. The `tidy()` and `summary()` functions can be used to
+#' aggregate and summarize the output of `marginaleffects()`. To learn more,
+#' read the marginal effects vignette, visit the package website, or scroll
+#' down this page for a full list of vignettes:
+#' * <https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html>
+#' * <https://vincentarelbundock.github.io/marginaleffects/>
 #'
-#' Vignettes:
+#' @section Vignettes and documentation:
 #'
-#' ```{r child = "vignettes/links_main.Rmd"}
+#' ```{r child = "vignettes/toc.Rmd"}
 #' ```
 #' 
-#' Case studies and technical information:
-#' 
-#' ```{r, child="vignettes/links_internal.Rmd"}
-#' ```
-#' 
+#' @details
 #' A "marginal effect" is the partial derivative of the regression equation
 #' with respect to a variable in the model. This function uses automatic
 #' differentiation to compute marginal effects for a vast array of models,
 #' including non-linear models with transformations (e.g., polynomials).
 #' Uncertainty estimates are computed using the delta method.
+#'
+#' The `newdata` argument can be used to control the kind of marginal effects to report:
+#' 
+#' * Average Marginal Effects (AME)
+#' * Group-Average Marginal Effects (G-AME)
+#' * Marginal Effects at the Mean (MEM) or
+#' * Marginal Effects at User-Specified values (aka Marginal Effects at Representative values, MER).
+#'
+#' See the [marginaleffects vignette for worked-out examples of each kind of marginal effect.](https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html)
 #'
 #' Numerical derivatives for the `marginaleffects` function are calculated
 #' using a simple epsilon difference approach: \eqn{\partial Y / \partial X = (f(X + \varepsilon) - f(X)) / \varepsilon}{dY/dX = (f(X + e) - f(X)) / e},
@@ -35,8 +38,8 @@
 #' practice to try different values of this argument.
 #'
 #' Standard errors for the marginal effects are obtained using the Delta
-#' method. See the "Standard Errors and Hypothesis Tests" vignette on the
-#' package website for details (link above).
+#' method. See the "Standard Errors" vignette on the package website for
+#' details (link above).
 #'
 #' @param model Model object
 #' @param variables `NULL` or character vector. The subset of variables for which to compute marginal effects.
