@@ -191,7 +191,7 @@ Term names with special characters must be enclosed in backticks:
 deltamethod(mod, "`factor(cyl)6` = `factor(cyl)8`")
 ```
 
-The `FUN` argument can be used to compute standard errors for arbitrary functions of model parameters. This user-supplied function must accept a single model object, and return a numeric vector or a data.frame with two columns named `term` and `value`.
+The `FUN` argument can be used to compute standard errors for arbitrary functions of model parameters. This user-supplied function must accept a single model object, and return a numeric vector or a data.frame with two columns named `term` and `estimate`.
 
 ```{r}
 mod <- glm(am ~ hp + mpg, data = mtcars, family = binomial)

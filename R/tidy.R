@@ -3,10 +3,20 @@
 generics::tidy
 
 
-#' @importFrom generics glance
+#' Tidy a `deltamethod` object
 #' @export
-generics::glance
+tidy.deltamethod <- function(x, ...) {
+    if (any(!c("term", "estimate") %in% colnames(x)) || !inherits(x, c("deltamethod", "data.frame"))) {
+        msg <- format_msg(
+        "The `tidy()` method only supports `deltamethod` objects produced by the
+        `marginaleffects::deltamethod()` function.")
+        stop(msg, call. = FALSE)
+    }
 
+    # the object is already in a tidy format. We need this method for
+    # `modelsummary` and other functions that rely on `tidy()`.
+    return(x)
+}
 
 #' Tidy a `marginaleffects` object
 #'
@@ -55,26 +65,6 @@ tidy.marginaleffects <- function(x,
 }
 
 
-#' @export
-glance.marginaleffects <- function(x, ...) {
-    assert_dependency("modelsummary")
-    model <- attr(x, "model")
-    gl <- suppressMessages(suppressWarnings(try(
-        modelsummary::get_gof(model, ...), silent = TRUE)))
-    if (inherits(gl, "data.frame")) {
-        out <- data.frame(gl)
-    } else {
-        out <- NULL
-    }
-    vcov.type <- attr(x, "vcov.type")
-    if (is.null(out) && !is.null(vcov.type)) {
-        out <- data.frame("vcov.type" = vcov.type)
-    } else if (!is.null(out)) {
-        out[["vcov.type"]] <- vcov.type
-    }
-    return(out)
-}
-
 
 #' Tidy a `marginalmeans` object
 #'
@@ -111,17 +101,6 @@ tidy.marginalmeans <- function(x,
     return(out)
 }
 
-
-#' @export
-glance.marginalmeans <- glance.marginaleffects
-
-
-#' @export
-glance.predictions <- glance.marginaleffects
-
-
-#' @export
-glance.comparisons <- glance.marginaleffects
 
 
 #' Tidy a `predictions` object

@@ -35,7 +35,7 @@ deltamethod(
 }}
 
 \item{FUN}{a function which accepts a model object and returns a numeric
-vector or a data.frame with two columns called \code{term} and \code{value}.}
+vector or a data.frame with two columns called \code{term} and \code{estimate}.}
 
 \item{vcov}{Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
 \itemize{

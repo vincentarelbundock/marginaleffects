@@ -9,7 +9,7 @@
 #'
 #' @inheritParams comparisons
 #' @param FUN a function which accepts a model object and returns a numeric
-#' vector or a data.frame with two columns called `term` and `value`.
+#' vector or a data.frame with two columns called `term` and `estimate`.
 #' @examples
 #' library(marginaleffects)
 #' mod <- lm(mpg ~ hp + wt + factor(cyl), data = mtcars)
@@ -59,11 +59,16 @@ deltamethod <- function(
     if (is.null(FUN)) {
         FUNinner <- function(model, ...) {
             param <- insight::get_parameters(model, ...)
-            colnames(param)[1:2] <- c("term", "value")
+            colnames(param)[1:2] <- c("term", "estimate")
             return(param)
         }
         if (is.null(hypothesis)) {
             out <- FUNinner(model, ...)
+            class(out) <- c("deltamethod", class(out))
+            attr(out, "model") <- model
+            attr(out, "model_type") <- class(model)[1]
+            attr(out, "vcov") <- vcov
+            attr(out, "vcov.type") <- vcov.type
             return(out)
         }
     } else {
@@ -76,16 +81,16 @@ deltamethod <- function(
         if (isTRUE(checkmate::check_numeric(out))) {
             out <- data.frame(
                 term = seq_along(out),
-                value = out)
+                estimate = out)
         }
 
-        if (!inherits(out, "data.frame") || any(!c("term", "value") %in% colnames(out))) {
+        if (!inherits(out, "data.frame") || any(!c("term", "estimate") %in% colnames(out))) {
             msg <- format_msg(
-            "`FUN` must return a numeric vector or a data.frame with two columns named `term` and `value`.")
+            "`FUN` must return a numeric vector or a data.frame with two columns named `term` and `estimate`.")
             stop(msg, call. = FALSE)
         }
 
-        out <- get_hypothesis(out, hypothesis = hypothesis, column = "value")$value
+        out <- get_hypothesis(out, hypothesis = hypothesis, column = "estimate")$estimate
         return(out)
     }
 
@@ -102,7 +107,7 @@ deltamethod <- function(
         hyplab <- attr(hypothesis, "label")
         if (!is.null(hyplab)) {
             out <- data.frame(
-                term = attr(hypothesis, "label"),
+                term = hyplab,
                 estimate = b,
                 std.error = se)
         }  else {
@@ -126,6 +131,12 @@ deltamethod <- function(
         overwrite = FALSE,
         draws = NULL,
         estimate = "estimate")
+
+    class(out) <- c("deltamethod", class(out))
+    attr(out, "model") <- model
+    attr(out, "model_type") <- class(model)[1]
+    attr(out, "vcov") <- vcov
+    attr(out, "vcov.type") <- vcov.type
 
     return(out)
 }

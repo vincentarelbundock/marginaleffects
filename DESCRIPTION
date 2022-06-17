@@ -139,6 +139,7 @@ Collate:
     'get_predict.R'
     'get_se_delta.R'
     'get_vcov.R'
+    'glance.R'
     'marginaleffects.R'
     'marginalmeans.R'
     'mean_or_mode.R'
