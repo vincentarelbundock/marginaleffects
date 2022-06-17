@@ -99,10 +99,18 @@ deltamethod <- function(
         ...)
 
     if (!is.null(hypothesis)) {
-        out <- data.frame(
-            term = attr(hypothesis, "label"),
-            estimate = b,
-            std.error = se)
+        hyplab <- attr(hypothesis, "label")
+        if (!is.null(hyplab)) {
+            out <- data.frame(
+                term = attr(hypothesis, "label"),
+                estimate = b,
+                std.error = se)
+        }  else {
+            out <- data.frame(
+                term = "custom",
+                estimate = b,
+                std.error = se)
+        }
     } else {
         out <- data.frame(
             term = paste0("r", seq_along(b)),
