@@ -27,3 +27,14 @@ set_coef.glimML <- function(model, coefs) {
     model@fixed.param[names(coefs)] <- coefs
     model
 }
+
+
+#' @rdname get_vcov
+#' @export
+get_vcov.glimML <- function(model, vcov = NULL, ...) {
+    insight::check_if_installed("aod")
+    if (!is.null(vcov) && !is.logical(vcov)) {
+        stop("The `vcov` argument is not supported for this kind of model.")
+    }
+    aod::vcov(model)
+}
