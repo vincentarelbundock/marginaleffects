@@ -82,7 +82,8 @@ get_vcov.default <- function(model,
 
     if (!isTRUE(checkmate::check_matrix(out$value, min.rows = 1))) {
         msg <- "Unable to extract a variance-covariance matrix from this model."
-        stop(msg, call. = FALSE)
+        warning(msg, call. = FALSE)
+        return(NULL)
 
     # valid matrix with warning
     } else if (!is.null(out$warning)) {

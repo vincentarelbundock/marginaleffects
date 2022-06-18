@@ -2,20 +2,13 @@ source("helpers.R", local = TRUE)
 if (ON_CRAN) exit_file("on cran")
 requiet("nnet")
 
-# warning: standard error mismatch
-dat <- read.csv(testing_path("stata/databases/MASS_polr_01.csv"))
-void <- capture.output(mod <- 
-    nnet::multinom(factor(y) ~ x1 + x2, data = dat, quiet = true)
-)
-expect_warning(marginaleffects(mod, type = "probs"), pattern = "do not match")
-
 
 # error: bad type
 dat <- read.csv(testing_path("stata/databases/MASS_polr_01.csv"))
 void <- capture.output(
     mod <- nnet::multinom(factor(y) ~ x1 + x2, data = dat, quiet = true)
 )
-expect_warning(expect_error(marginaleffects(mod), pattern = "must be an element"))
+expect_error(marginaleffects(mod), pattern = "must be an element")
 
 
 # multinom basic
@@ -23,7 +16,7 @@ dat <- read.csv(testing_path("stata/databases/MASS_polr_01.csv"))
 void <- capture.output(
     mod <- nnet::multinom(factor(y) ~ x1 + x2, data = dat, quiet = true)
 )
-expect_warning(expect_marginaleffects(mod, type = "probs"))
+expect_marginaleffects(mod, type = "probs")
 
 
 # marginaleffects summary
@@ -31,7 +24,7 @@ dat <- read.csv(testing_path("stata/databases/MASS_polr_01.csv"))
 void <- capture.output(
     mod <- nnet::multinom(factor(y) ~ x1 + x2, data = dat, quiet = true)
 )
-mfx <- suppressWarnings(marginaleffects(mod, type = "probs"))
+mfx <- marginaleffects(mod, type = "probs")
 s <- tidy(mfx)
 expect_false(anyNA(s$estimate))
 expect_false(anyNA(s$std.error))
@@ -44,13 +37,13 @@ dat$y <- as.factor(dat$y)
 void <- capture.output(
     mod <- nnet::multinom(y ~ x1 + x2, data = dat, quiet = true)
 )
-mfx <- suppressWarnings(marginaleffects(mod, type = "probs"))
+mfx <- marginaleffects(mod, type = "probs")
 mfx <- merge(tidy(mfx), stata, all = TRUE)
 mfx <- na.omit(mfx)
 expect_true(nrow(mfx) == 6) # na.omit doesn't trash everything
-# standard errors don't match
+# standard errors match now!!
 expect_equivalent(mfx$estimate, mfx$dydxstata, tolerance = .001)
-# expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .0001)
+expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .001)
 
 
 # set_coef
@@ -72,13 +65,11 @@ dat <- read.csv(testing_path("stata/databases/MASS_polr_01.csv"))
 void <- capture.output(
     mod <- nnet::multinom(factor(y) ~ x1 + x2, data = dat, quiet = true)
 )
-expect_warning(marginaleffects(mod, newdata = datagrid(), type = "probs"))
-mfx <- suppressWarnings(marginaleffects(mod, variables = "x1",
-                                    newdata = datagrid(), type = "probs"))
+marginaleffects(mod, newdata = datagrid(), type = "probs")
+mfx <- marginaleffects(mod, variables = "x1", newdata = datagrid(), type = "probs")
 expect_inherits(mfx, "data.frame")
 expect_equivalent(nrow(mfx), 4)
-mfx <- suppressWarnings(marginaleffects(mod,
-                                    newdata = datagrid(), type = "probs"))
+mfx <- marginaleffects(mod, newdata = datagrid(), type = "probs")
 expect_inherits(mfx, "data.frame")
 expect_equivalent(nrow(mfx), 8)
 
@@ -131,6 +122,6 @@ dat <- data.frame(
 void <- capture.output(
     model <- nnet::multinom(y ~ x + z1 + z2, data = dat, verbose = FALSE, hessian = TRUE)
 )
-mfx <- suppressWarnings(marginaleffects(model, type = "probs"))
+mfx <- marginaleffects(model, type = "probs")
 expect_inherits(mfx, "marginaleffects")
 

@@ -1,14 +1,3 @@
-#' @include sanity_model.R
-#' @rdname sanity_model_specific
-#' @export
-sanity_model_specific.multinom <- function(model, calling_function = "marginaleffects", ...) {
-    if (calling_function == "marginaleffects") {
-        warning("The standard errors estimated by `marginaleffects` do not match those produced by Stata for `nnet::multinom` models. Please be very careful when interpreting the results.",
-                call. = FALSE)
-    }
-}
-
-
 #' @include set_coef.R
 #' @rdname set_coef
 #' @export
@@ -17,13 +6,22 @@ set_coef.multinom <- function(model, coefs) {
     # interspersed. When transforming that vector to a matrix, we see that the
     # first row and first column are all zeros. 
     # NOTE: must use `newdata` in predict otherwise returns stored object.
-    coefs <- matrix(coefs, nrow = model$n[3L] - 1)
-    coefs <- rbind(rep(0, ncol(coefs)), coefs)
-    coefs <- cbind(rep(0, nrow(coefs)), coefs)
-    model$wts <- as.vector(t(coefs))
+    b_original <- get_coef(model)
+    model$wts[match(b_original, model$wts)] <- coefs
     return(model)
 }
 
+
+#' @include get_coef.R
+#' @rdname get_coef
+#' @export
+get_coef.multinom <- function(model, ...) {
+    out <- insight::get_parameters(model, ...)
+    out <- stats::setNames(
+        out$Estimate,
+        sprintf("%s:%s", out$Response, out$Parameter))
+    return(out)
+}
 
 
 #' @include get_group_names.R
