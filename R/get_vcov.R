@@ -65,9 +65,9 @@ get_vcov.default <- function(model,
 
     fun <- get("get_varcov", asNamespace("insight"))
     out <- myTryCatch(do.call("fun", args))
-    if (!is.matrix(out$value) || !isTRUE(nrow(out$value) > 1)) {
+    if (!is.matrix(out$value) || !isTRUE(nrow(out$value) > 0)) {
         out2 <- myTryCatch(insight::get_varcov(model))
-        if (is.matrix(out2$value) && isTRUE(nrow(out2$value) > 1)) {
+        if (is.matrix(out2$value) && isTRUE(nrow(out2$value) > 0)) {
             out <- out2$value
             msg <- format_msg(
             "Unable to extract a variance-covariance matrix using this `vcov`
