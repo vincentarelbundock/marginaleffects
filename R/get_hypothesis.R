@@ -23,8 +23,7 @@ get_hypothesis <- function(x, hypothesis, column) {
             stop(msg, call. = FALSE)
         }
         out <- data.table(
-            term = "hypothesis",
-            hypothesis = "custom",
+            term = "custom",
             tmp = as.vector(x[[column]] %*% hypothesis))
         setnames(out, old = "tmp", new = column)
         return(out)
@@ -37,8 +36,7 @@ get_hypothesis <- function(x, hypothesis, column) {
             stop(msg, call. = FALSE)
         }
         out <- data.table(
-            term = "hypothesis",
-            hypothesis = "custom",
+            term = "custom",
             tmp = as.vector(x[[column]] %*% hypothesis))
         setnames(out, old = "tmp", new = column)
         return(out)
@@ -56,8 +54,7 @@ get_hypothesis <- function(x, hypothesis, column) {
         }
         lc <- do.call("cbind", mat)
         out <- data.table(
-            term = "hypothesis",
-            hypothesis = lab,
+            term = lab,
             tmp = as.vector(x[[column]] %*% lc))
         out <- out[out$term != "1 - 1", , drop = FALSE]
         setnames(out, old = "tmp", new = column)
@@ -80,8 +77,7 @@ get_hypothesis <- function(x, hypothesis, column) {
         }
         lc <- do.call("cbind", mat)
         out <- data.table(
-            term = "hypothesis",
-            hypothesis = lab,
+            term = lab,
             tmp = as.vector(x[[column]] %*% lc))
         setnames(out, old = "tmp", new = column)
         return(out)
@@ -120,8 +116,7 @@ get_hypothesis <- function(x, hypothesis, column) {
 
         out <- eval(parse(text = hypothesis), envir = envir)
         out <- data.table(
-            term = "hypothesis",
-            hypothesis = gsub("\\s+", "", attr(hypothesis, "label")),
+            term = gsub("\\s+", "", attr(hypothesis, "label")),
             tmp = out)
         setnames(out, old = "tmp", new = column)
         return(out)

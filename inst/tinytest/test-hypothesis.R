@@ -21,11 +21,11 @@ expect_warning(
     pattern = "lincom")
 
 tmp <- lm(mpg ~ wt + drat, data = mtcars)
-expect_error(predictions(
+expect_warning(expect_error(predictions(
     tmp,
     newdata = datagrid(wt = 2:3),
     hypothesis = "wt = drat"),
-    pattern = "unique row")
+    pattern = "unique row"))
 
 tmp <- mtcars
 tmp$gear <- factor(tmp$gear)
@@ -35,7 +35,7 @@ expect_error(
     newdata = "mean",
     variables = list(gear = "all"),
     hypothesis = "gear = 0"),
-    pattern = "row indices")
+    pattern = "indices")
 
 expect_error(
     marginaleffects(mod, newdata = dat, hypothesis = "reference"),
