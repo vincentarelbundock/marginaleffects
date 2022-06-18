@@ -3,20 +3,6 @@
 generics::tidy
 
 
-#' Tidy a `deltamethod` object
-#' @export
-tidy.deltamethod <- function(x, ...) {
-    if (any(!c("term", "estimate") %in% colnames(x)) || !inherits(x, c("deltamethod", "data.frame"))) {
-        msg <- format_msg(
-        "The `tidy()` method only supports `deltamethod` objects produced by the
-        `marginaleffects::deltamethod()` function.")
-        stop(msg, call. = FALSE)
-    }
-
-    # the object is already in a tidy format. We need this method for
-    # `modelsummary` and other functions that rely on `tidy()`.
-    return(x)
-}
 
 #' Tidy a `marginaleffects` object
 #'
@@ -64,6 +50,21 @@ tidy.marginaleffects <- function(x,
     return(out)
 }
 
+
+#' Tidy a `deltamethod` object
+#' @inheritParams tidy.marginaleffects
+#' @export
+tidy.deltamethod <- function(x, ...) {
+    if (any(!c("term", "estimate") %in% colnames(x)) || !inherits(x, c("deltamethod", "data.frame"))) {
+        msg <- format_msg(
+        "The `tidy()` method only supports `deltamethod` objects produced by the
+        `marginaleffects::deltamethod()` function.")
+        stop(msg, call. = FALSE)
+    }
+    # the object is already in a tidy format. We need this method for
+    # `modelsummary` and other functions that rely on `tidy()`.
+    return(x)
+}
 
 
 #' Tidy a `marginalmeans` object

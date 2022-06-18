@@ -3,6 +3,7 @@
 generics::glance
 
 #' Glance at key characteristics of an object
+#' @inheritParams tidy.marginaleffects
 #' @export
 glance.marginaleffects <- function(x, ...) {
     assert_dependency("modelsummary")

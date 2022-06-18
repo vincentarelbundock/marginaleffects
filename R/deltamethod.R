@@ -26,7 +26,8 @@
 #' # Robust standard errors
 #' deltamethod(mod, "hp = wt", vcov = "HC3")
 #' 
-#' # b1, b2, ... shortcuts can be used to identify the position of the parameters of interest in the output of FUN
+#' # b1, b2, ... shortcuts can be used to identify the position of the
+#' # parameters of interest in the output of FUN
 #' deltamethod(mod, "b2 = b3")
 #' 
 #' # term names with special characters have to be enclosed in backticks
