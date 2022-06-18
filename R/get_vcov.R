@@ -63,38 +63,33 @@ get_vcov.default <- function(model,
     args[["x"]] <- model
     args[["component"]] <- "all"
 
+    # 1st try: with arguments
     fun <- get("get_varcov", asNamespace("insight"))
     out <- myTryCatch(do.call("fun", args))
-    if (!is.matrix(out$value) || !isTRUE(nrow(out$value) > 0)) {
-        out2 <- myTryCatch(insight::get_varcov(model))
-        if (is.matrix(out2$value) && isTRUE(nrow(out2$value) > 0)) {
-            out <- out2$value
+
+    # 2nd try: without arguments
+    if (!isTRUE(checkmate::check_matrix(out$value, min.rows = 1))) {
+        out <- myTryCatch(insight::get_varcov(model))
+        if (isTRUE(checkmate::check_matrix(out$value, min.rows = 1))) {
             msg <- format_msg(
             "Unable to extract a variance-covariance matrix using this `vcov`
             argument. Standard errors are computed using the default variance
             instead. Perhaps the model or argument is not supported by the
             `sandwich` package.")
             warning(msg, call. = FALSE)
-        } else {
-            msg <- "Unable to extract a variance-covariance matrix from this model."
-            stop(msg, call. = FALSE)
         }
     }
 
-    # {stats}
-    if (!isTRUE(checkmate::check_matrix(out))) {
-        # suppress: "Re-fitting to get Hessian"
-        out <- try(suppressMessages(stats::vcov(model)),
-                   silent = TRUE)
+    if (!isTRUE(checkmate::check_matrix(out$value, min.rows = 1))) {
+        msg <- "Unable to extract a variance-covariance matrix from this model."
+        stop(msg, call. = FALSE)
+
+    # valid matrix with warning
+    } else if (!is.null(out$warning)) {
+        warning(out$warning$message, call. = FALSE)
     }
 
-    # give up: loess and other models without vcov
-    if (!isTRUE(checkmate::check_matrix(out))) {
-        msg <- sprintf("Unable to extract a variance-covariance matrix for model of class `%s`.",
-                       class(model)[1])
-        warning(msg, .call = FALSE)
-        return(NULL)
-    }
+    out <- out[["value"]]
 
     # problem: no row.names
     if (is.null(row.names(out))) {
