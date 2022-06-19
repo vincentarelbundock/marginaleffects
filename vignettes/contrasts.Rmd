@@ -123,10 +123,6 @@ comparisons(mod, variables = list(hp = "2sd")) %>% tidy()
 comparisons(mod, variables = list(hp = "minmax")) %>% tidy()
 ```
 
-# Scale type
-
-We can compute contrasts 
-
 # Interactions
 
 In some contexts we would like to know what happens when two (or more) predictors change at the same time. In the `marginaleffects` package terminology, this is an "interaction between contrasts."
@@ -344,7 +340,7 @@ summary(con)
 
 # Ratios
 
-Instead of taking simple differences between adjusted predictions, it can sometimes be useful to compute other forms of contrasts. For example, [the `adjrr` function the `Stata` software package](https://journals.sagepub.com/doi/pdf/10.1177/1536867X1301300304) can compute "adjusted risk ratios", which are ratios of adjusted predictions. To do this in `R`, we use the `transform_pre` argument:
+Instead of taking simple differences between adjusted predictions, it can sometimes be useful to compute ratios or other functions of predictions. For example, [the `adjrr` function the `Stata` software package](https://journals.sagepub.com/doi/pdf/10.1177/1536867X1301300304) can compute "adjusted risk ratios", which are ratios of adjusted predictions. To do this in `R`, we use the `transform_pre` argument:
 
 ```{r}
 comparisons(mod, transform_pre = "ratio") %>% summary()
@@ -397,9 +393,7 @@ p2 <- plot_cco(
 p1 + p2
 ```
 
-# Adjusted Risk Ratios
-
-By default, the standard errors are computed using the delta method on the scale determined by the `type` argument (e.g., "link" or "response"). Some analysts may prefer to proceed differently. For example, in `Stata`, the `adjrr` computes adjusted risk ratios (ARR) in two steps:
+By default, the standard errors around contrasts are computed using the delta method on the scale determined by the `type` argument (e.g., "link" or "response"). Some analysts may prefer to proceed differently. For example, in `Stata`, the `adjrr` computes adjusted risk ratios (ARR) in two steps:
 
 1. Compute the natural log of the ratio between the mean of adjusted predictions with $x+1$ and the mean of adjusted predictions with $x$.
 2. Exponentiate the estimate and confidence interval bounds.
@@ -409,8 +403,8 @@ Step 1 is easy to achieve with the `transform_pre` argument described above. Ste
 ```{r}
 comparisons(
     mod,
-    transform_pre = function(hi, lo) log(mean(hi) / mean(lo)),
-    transform_post = exp) %>%
+    transform_pre = function(hi, lo) log(hi / lo),
+    transform_post = exp) |>
     summary()
 ```
 
@@ -418,7 +412,7 @@ Note that we can use the `lnratioavg` shortcut instead of defining the function 
 
 The order of operations in previous command was:
 
-1. Compute the custom unit-level contrasts
+1. Compute the custom unit-level log ratios
 2. Exponentiate them
 3. Take the average using the `summary()` function
 
@@ -427,11 +421,27 @@ There is a very subtle difference between the procedure above and this code:
 ```{r}
 comparisons(
     mod,
-    transform_pre = "lnratioavg") %>%
+    transform_pre = function(hi, lo) log(hi / lo)) %>%
     summary(transform_avg = exp)
 ```
 
 Since the `exp` function is now passed to the `transform_avg` argument of `summary()` function, the exponentiation is now done only *after* unit-level contrasts have been averaged. This is what `Stata` appears to does under the hood, and the results are slightly different.
+
+```{r}
+comparisons(
+    mod,
+    transform_pre = function(hi, lo) log(mean(hi) / mean(lo)),
+    transform_post = exp)
+```
+
+Note that equivalent results can be obtained using shortcut strings in the `transform_pre` argument: "ratio", "lnratio", "lnratioavg".
+
+```{r}
+comparisons(
+    mod,
+    transform_pre = "lnratioavg",
+    transform_post = exp)
+```
 
 All the same arguments apply to the plotting functions of the `marginaleffects` package as well. For example we can plot the Adjusted Risk Ratio in a model with a quadratic term:
 
