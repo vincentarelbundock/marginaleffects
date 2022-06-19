@@ -1,6 +1,6 @@
 #' Contrasts Between Adjusted Predictions
 #'
-#' Difference, ratio, or function of two adjusted predictions, calculated for
+#' Difference, ratio, or function of adjusted predictions, calculated for
 #' meaningfully different predictor values. The `tidy()` and `summary()`
 #' functions can be used to aggregate and summarize the output of
 #' `comparisons()`. To learn more, read the contrasts vignette, visit the
@@ -14,7 +14,7 @@
 #' ```
 #'
 #' @details
-#' A "contrast" is a difference, ratio of function of two adjusted predictions,
+#' A "contrast" is a difference, ratio of function of adjusted predictions,
 #' calculated for meaningfully different predictor values (e.g., College
 #' graduates vs. Others). Uncertainty estimates are computed using the delta
 #' method.

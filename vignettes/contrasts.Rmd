@@ -28,7 +28,7 @@ Note: Some of the code in this vignette requires `marginaleffects` version 0.6.0
 
 [In another vignette](https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html), we introduced the "marginal effect" as a partial derivative. Since derivatives are only properly defined for continuous variables, we cannot use them to interpret the effects of changes in categorical variables. For this, we turn to *contrasts* between [Adjusted predictions.](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html) In the context of this package, a "Contrast" is defined as:
 
-> A difference, ratio, or function of two adjusted predictions, calculated for meaningfully different predictor values (e.g., College graduates vs. Others).
+> A difference, ratio, or function of adjusted predictions, calculated for meaningfully different predictor values (e.g., College graduates vs. Others).
 
 The `marginaleffects()` function automatically calculates contrasts instead of derivatives for factor, logical, or character variables. 
 

@@ -98,7 +98,7 @@ models:](https://vincentarelbundock.github.io/marginaleffects/articles/supported
         [`plot(),`](https://vincentarelbundock.github.io/marginaleffects/reference/plot.marginaleffects.html)
         [`plot_cme()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cme.html)
   - [*Contrast*](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)
-      - A difference, ratio, or function of two adjusted predictions,
+      - A difference, ratio, or function of adjusted predictions,
         calculated for meaningfully different predictor values (e.g.,
         College graduates vs. Others).
       - [`comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)

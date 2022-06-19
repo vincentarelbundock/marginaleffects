@@ -160,7 +160,7 @@ package. See the "Model-Specific Arguments" section of the
 arguments.}
 }
 \description{
-Difference, ratio, or function of two adjusted predictions, calculated for
+Difference, ratio, or function of adjusted predictions, calculated for
 meaningfully different predictor values. The \code{tidy()} and \code{summary()}
 functions can be used to aggregate and summarize the output of
 \code{comparisons()}. To learn more, read the contrasts vignette, visit the
@@ -171,7 +171,7 @@ package website, or scroll down this page for a full list of vignettes:
 }
 }
 \details{
-A "contrast" is a difference, ratio of function of two adjusted predictions,
+A "contrast" is a difference, ratio of function of adjusted predictions,
 calculated for meaningfully different predictor values (e.g., College
 graduates vs. Others). Uncertainty estimates are computed using the delta
 method.

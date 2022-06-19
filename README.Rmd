@@ -53,7 +53,7 @@ The `marginaleffects` package allows `R` users to compute and plot four principa
     - A partial derivative (slope) of the regression equation with respect to a regressor of interest.
     - [`marginaleffects(),`](https://vincentarelbundock.github.io/marginaleffects/reference/marginaleffects.html) [`plot(),`](https://vincentarelbundock.github.io/marginaleffects/reference/plot.marginaleffects.html) [`plot_cme()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cme.html)
 * [_Contrast_ ](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html) 
-    - A difference, ratio, or function of two adjusted predictions, calculated for meaningfully different predictor values (e.g., College graduates vs. Others).
+    - A difference, ratio, or function of adjusted predictions, calculated for meaningfully different predictor values (e.g., College graduates vs. Others).
     - [`comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)
 * [_Marginal Mean_](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) 
     - Adjusted predictions of a model, averaged across a "reference grid" of categorical predictors.
