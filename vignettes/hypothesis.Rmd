@@ -28,7 +28,7 @@ This vignette introduces the `deltamethod()` function, and the `hypothesis` argu
 
 # Delta method
 
-Version 0.6.0 and [the development version of `marginaleffects`](https://vincentarelbundock.github.io/marginaleffects/#getting-started) include a very simple yet powerful function called `deltamethod()`. This function emulates the behavior of the well-established `car::deltaMethod` and `car::linearHypothesis` functions, but it supports more models, requires fewer dependencies, and offers some convenience features like shortcuts for robust standard errors.
+Version 0.6.0 of `marginaleffects` includes a very simple yet powerful function called `deltamethod()`. This function emulates the behavior of the well-established `car::deltaMethod` and `car::linearHypothesis` functions, but it supports more models, requires fewer dependencies, and offers some convenience features like shortcuts for robust standard errors.
 
 `deltamethod()` can be used to compute estimates and standard errors of arbitrary functions of model parameters. For example, it can be used to conduct tests of equality between coefficients, or to test the value of some linear or non-linear combination of quantities of interest. `deltamethod()` can also be used to conduct hypothesis tests on other functions of a model's parameter, such as adjusted predictions or marginal effects.
 
@@ -104,8 +104,14 @@ See below for more example of how to use string formulas, numeric vectors, or ma
 
 # `hypothesis` Formulas
 
-Each of the 4 core functions of the package support a `hypothesis` argument which allows users to specify custom hypothesis tests and contrasts. 
+Each of the 4 core functions of the package support a `hypothesis` argument which behaves similarly to the `deltamethod()` function. This argument allows users to specify custom hypothesis tests and contrasts, asking questions such as: 
 
+* Are coefficients b1 and b2 equal?
+* Are the marginal effects of X1 and X2 equal?
+* Are the marginal effects of X when W=0 equal to the marginal effect of X when W=1?
+* Is the sum of adjusted predictions values equal to 100?
+* Is the marginal mean in the control group equal to the average of marginal means in the 3 treatment arms?
+* Cross-level contrasts: In a multinomial model, is the effect of X greater on the 1st or the 2nd level?
 
 ## Marginal effects
 
