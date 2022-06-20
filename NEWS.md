@@ -33,7 +33,7 @@ Misc:
 * Support `gam` models with matrix columns.
 * `eps` in `marginaleffects()` is now "adaptive" by default: it equals 0.0001 multiplied the range of the predictor variable
 * `comparisons()` now supports "log of marginal odds ratio" in the `transform_pre` argument. Thanks to Noah Greifer.
-* New `transform_pre` shortcuts: dydx, dxpdydx
+* New `transform_pre` shortcuts: dydx, expdydx
 * `tidy.predictions()` computes standard errors and confidence intervals for linear models or GLM on the link scale.
 
 # marginaleffects 0.5.0
