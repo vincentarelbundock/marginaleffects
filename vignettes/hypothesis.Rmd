@@ -108,9 +108,9 @@ Each of the 4 core functions of the package support a `hypothesis` argument whic
 
 * Are coefficients b1 and b2 equal?
 * Are the marginal effects of X1 and X2 equal?
-* Are the marginal effects of X when W=0 equal to the marginal effect of X when W=1?
-* Is the sum of adjusted predictions values equal to 100?
-* Is the marginal mean in the control group equal to the average of marginal means in the 3 treatment arms?
+* Is the marginal effect of X when W=0 equal to the marginal effect of X when W=1?
+* Is a non-linear function of adjusted predictions equal to 100?
+* Is the marginal mean in the control group equal to the average of marginal means in 3 treatment arms?
 * Cross-level contrasts: In a multinomial model, is the effect of X greater on the 1st or the 2nd level?
 
 ## Marginal effects
