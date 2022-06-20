@@ -140,7 +140,7 @@ cmp <- comparisons(mod, variables = c("cyl", "am"))
 summary(cmp)
 ```
 
-When the `variables` argument is used and the model formula includes interactions, the "cross-contrasts" contrasts will automatically be displayed. You can also force `comparisons()` to do it by setting `interactions=TRUE` and using the `variables` argument to specify which variables should be manipulated simultaneously.
+When the `variables` argument is used and the model formula includes interactions, the "cross-contrasts" will automatically be displayed. You can also force `comparisons()` to do it by setting `interactions=TRUE` and using the `variables` argument to specify which variables should be manipulated simultaneously.
 
 # Quantities of interest
 
