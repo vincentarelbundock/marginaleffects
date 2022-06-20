@@ -19,7 +19,6 @@ BugReports:
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.0
 VignetteBuilder: knitr
-Remotes: vincentarelbundock/tinyviztest, vincentarelbundock/modelsummary, easystats/insight
 Depends: 
     R (>= 3.5.0)
 Imports: 
@@ -105,7 +104,6 @@ Suggests:
     tidymodels,
     tidyverse,
     tinytest,
-    tinyviztest,
     tobit1,
     truncreg,
     tsModel,
