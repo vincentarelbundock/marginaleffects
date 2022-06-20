@@ -106,12 +106,12 @@ See below for more example of how to use string formulas, numeric vectors, or ma
 
 Each of the 4 core functions of the package support a `hypothesis` argument which behaves similarly to the `deltamethod()` function. This argument allows users to specify custom hypothesis tests and contrasts, asking questions such as: 
 
-* Are coefficients b1 and b2 equal?
-* Are the marginal effects of X1 and X2 equal?
-* Is the marginal effect of X when W=0 equal to the marginal effect of X when W=1?
+* Are coefficients $\beta_1$ and $\beta_2$ equal?
+* Are the marginal effects of $X_1$ and $X_2$ equal?
+* Is the marginal effect of $X$ when $W=0$ equal to the marginal effect of $X$ when $W=1$?
 * Is a non-linear function of adjusted predictions equal to 100?
 * Is the marginal mean in the control group equal to the average of marginal means in 3 treatment arms?
-* Cross-level contrasts: In a multinomial model, is the effect of X greater on the 1st or the 2nd level?
+* Cross-level contrasts: In a multinomial model, is the effect of $X$ greater on the 1st or the 2nd outcome level?
 
 ## Marginal effects
 
