@@ -85,7 +85,7 @@ p <- deltamethod(mod, FUN = f)
 head(p)
 ```
 
-Test of equality between two predictions (row 2 vs row 1):
+Test of equality between two predictions (row 2 vs row 3):
 
 ```{r}
 f <- function(x) predict(x, newdata = mtcars)
