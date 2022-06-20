@@ -1,8 +1,8 @@
 ---
-title: "Hypothesis Tests, Delta Method, and Custom Contrasts"
+title: "Hypothesis Tests and Custom Contrasts using the Delta Method"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Hypothesis Tests, Delta Method, and Custom Contrasts}
+  %\VignetteIndexEntry{Hypothesis Tests and Custom Contrasts using the Delta Method}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

@@ -1,4 +1,4 @@
-# marginaleffects 0.5.0.9000
+# marginaleffects 0.6.0
 
 New supported packages and models:
 
@@ -6,7 +6,8 @@ New supported packages and models:
 
 New function:
 
-* `plot_cco()`: Conditional contrasts
+* `deltamethod()`: Hypothesis tests on functions of parameters
+* `plot_cco()`: Plot conditional contrasts
 
 New arguments:
 
@@ -16,7 +17,7 @@ New arguments:
 
 New or improved vignettes:
 
-* Hypothesis Tests and Custom Contrasts: https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html
+* Hypothesis Tests and Custom Contrasts using the Delta Method: https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html
 * Multiple Imputation: https://vincentarelbundock.github.io/marginaleffects/articles/multiple_imputation.html
 * Causal Inference with the g-Formula: https://vincentarelbundock.github.io/marginaleffects/articles/gformula.html
  (Thanks to Rohan Kapre for the idea)

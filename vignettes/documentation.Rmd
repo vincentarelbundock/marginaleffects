@@ -30,7 +30,7 @@ Vignettes:
 - [Contrasts](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html) 
 - [Marginal Effects](https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html) 
 - [Marginal Means](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) 
-- [Hypothesis Tests, Delta Method, and Custom Contrasts](https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html) 
+- [Hypothesis Tests and Custom Contrasts using the Delta Method](https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html) 
 
 Case studies:
 
