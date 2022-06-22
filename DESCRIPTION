@@ -147,6 +147,7 @@ Collate:
     'methods_aod.R'
     'methods_betareg.R'
     'methods_bife.R'
+    'methods_biglm.R'
     'methods_nnet.R'
     'methods_brglm2.R'
     'sanity_model.R'

@@ -8,6 +8,8 @@ afex,afex_aov,TRUE,TRUE,,,U,U,TRUE,TRUE
 aod,betabin,TRUE,TRUE,,,U,U,U,U
 betareg,betareg,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE
 bife,bife,TRUE,TRUE,,,U,U,U,U
+biglm,biglm,TRUE,TRUE,,,,,,
+biglm,bigglm,TRUE,TRUE,,,,,,
 brglm2,bracl,TRUE,TRUE,,,U,U,U,U
 brglm2,brglmFit,TRUE,TRUE,,,TRUE,TRUE,TRUE,TRUE
 brglm2,brnb,TRUE,TRUE,,,TRUE,TRUE,U,U

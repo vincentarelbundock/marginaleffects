@@ -28,6 +28,8 @@ sanity_model_supported_class <- function(model) {
         "afex_aov",
         "betareg",
         "bife",
+        "biglm",
+        c("bigglm", "biglm"),
         "brglmFit",
         "brmsfit",
         c("bracl", "brmultinom", "brglmFit"),
