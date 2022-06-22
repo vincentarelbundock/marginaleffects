@@ -1,21 +1,27 @@
 source("helpers.R")
 requiet("biglm")
 
-x1 <- rnorm(1e5)
-x2 <- rnorm(1e5)
-y <- rbinom(size = 1, n = 1e5, prob = plogis(x1 + x2))
+N <- 1e4
+x1 <- rnorm(N)
+x2 <- rnorm(N)
+y <- rbinom(size = 1, n = N, prob = plogis(x1 + x2))
 dat <- data.frame(y, x1, x2)
 
 big <- bigglm(y ~ x1 + x2, data = dat, family = binomial())
 small <- glm(y ~ x1 + x2, data = dat, family = binomial())
 
-big_m <- comparisons(big, type = "response")
-small_m <- comparisons(small, type = "response")
-tidy(big_m)
-tidy(small_m)
+# vcov not supported
+expect_warning(comparisons(big), pattern = "not supported")
 
-big_m <- marginaleffects(big, type = "link")
-small_m <- marginaleffects(small, type = "link")
-tidy(big_m)
-tidy(small_m)
+# dydx supported
+big_m <- comparisons(big, vcov = FALSE)
+small_m <- comparisons(small, vcov = FALSE)
+t1 <- tidy(big_m)
+t2 <- tidy(small_m)
+expect_equivalent(t1$estimate, t2$estimate)
 
+big_m <- marginaleffects(big, type = "link", vcov = FALSE)
+small_m <- marginaleffects(small, type = "link", vcov = FALSE)
+t1 <- tidy(big_m)
+t2 <- tidy(small_m)
+expect_equivalent(t1$estimate, t2$estimate)

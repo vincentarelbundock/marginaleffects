@@ -35,6 +35,7 @@ Suggests:
     betareg,
     BH,
     bife,
+    biglm,
     brglm2,
     brms,
     brmsmargins,

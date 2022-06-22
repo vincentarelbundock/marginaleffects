@@ -1,3 +1,9 @@
+# marginaleffects 0.6.0.9000
+
+New supported packages and models:
+
+* `biglm`: The main quantities can be computed, but not the delta method standard errors. See https://github.com/vincentarelbundock/marginaleffects/issues/387
+
 # marginaleffects 0.6.0
 
 New supported packages and models:

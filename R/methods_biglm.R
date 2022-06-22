@@ -1,13 +1,3 @@
-#' @rdname set_coef
-#' @export
-set_coef.biglm <- function(model, coefs) {
-    # in basic model classes coefficients are named vector
-    model[["qr"]][["thetab"]] <- coefs
-    model
-}
-
-
-
 #' @rdname get_predict
 #' @export
 get_predict.biglm <- function(model,
@@ -29,3 +19,28 @@ get_predict.biglm <- function(model,
         predicted = out)
     return(out)
 }
+
+
+#' @rdname get_vcov
+#' @export
+get_vcov.biglm <- function(model,
+                           vcov = NULL,
+                           ...) {
+
+    if (!isFALSE(vcov)) {
+        msg <- format_msg(
+        "The `vcov` argument is not supported for this model type. Set `vcov=FALSE` to
+        silence this warning, and visit this link to learn why standard errors for this
+        model are not yet supported and how you can help: 
+
+        https://github.com/vincentarelbundock/marginaleffects/issues/387
+        ")
+        warning(msg, call. = FALSE)
+    }
+
+    return(FALSE)
+}
+
+
+
+
