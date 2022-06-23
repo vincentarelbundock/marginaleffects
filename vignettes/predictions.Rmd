@@ -240,6 +240,33 @@ plot_cap(mod, condition = "hp") +
     theme_classic()
 ```
 
+We can also use `plot_cap()` in models with multinomial outcomes or grouped coefficients. For example, notice that when we call `draw=FALSE`, the result includes a `group` column:
+
+```{r}
+library(MASS)
+library(ggplot2)
+
+mod <- nnet::multinom(factor(gear) ~ mpg, data = mtcars, trace = FALSE)
+
+p <- plot_cap(
+    mod,
+    type = "probs",
+    condition = "mpg",
+    draw = FALSE)
+
+head(p)
+```
+
+Now we use the `group` column:
+
+```{r}
+plot_cap(
+    mod,
+    type = "probs",
+    condition = "mpg") +
+    facet_wrap(~group)
+```
+
 # Prediction types
 
 The `predictions` function computes model-adjusted means on the scale of the output of the `predict(model)` function. By default, `predict` produces predictions on the `"response"` scale, so the adjusted predictions should be interpreted on that scale. However, users can pass a string to the `type` argument, and `predictions` will consider different outcomes. 
