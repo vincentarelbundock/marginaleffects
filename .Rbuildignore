@@ -16,6 +16,7 @@ man-roxygen
 ^vignettes/alternative_software.Rmd
 ^vignettes/brms.Rmd
 ^vignettes/contrasts.Rmd
+^vignettes/faq.Rmd
 ^vignettes/gam.Rmd
 ^vignettes/gformula.Rmd
 ^vignettes/hypothesis.Rmd

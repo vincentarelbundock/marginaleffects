@@ -38,3 +38,4 @@ Tips and technical notes:
 - [Tables and Plots](https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html)
 - [Performance](https://vincentarelbundock.github.io/marginaleffects/articles/performance.html)
 - [Alternative Software](https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html)
+- [Frequently Asked Questions](https://vincentarelbundock.github.io/marginaleffects/articles/faq.html)
