@@ -14,6 +14,23 @@ expect_equivalent(unknown$estimate, known$estimate, tolerance = .00001)
 expect_equivalent(unknown$std.error, known$std.error, tolerance = .00001)
 
 
+# plot
+mod <- clm(Sat ~ Infl + Type + Cont, weights = Freq, data = housing)
+expect_false(expect_error(
+    plot(marginaleffects(mod))
+))
+expect_false(expect_error(
+    plot_cme(mod, effect = "Infl", condition = "Type")
+))
+expect_false(expect_error(
+    plot_cap(mod, condition = "Type")
+))
+
+
+# predictions
+expect_false(expect_error(predictions(mod)))
+
+
 
 # marginaleffects: protect against corner cases
 # do not convert numeric to factor in formula

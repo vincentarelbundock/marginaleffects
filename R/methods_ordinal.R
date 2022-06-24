@@ -16,8 +16,11 @@ get_predict.clm <- function(model,
     # `newdata`, `predict.clm()` makes predictions for all levels, which is
     # what we want.
     resp <- insight::find_response(model)
-    newdata <- newdata[, setdiff(colnames(newdata), resp), drop = FALSE]
 
+    # otherwise `predict.clm` does not see some columns (mystery)
+    setDF(newdata)
+
+    newdata <- newdata[, setdiff(colnames(newdata), resp), drop = FALSE]
 
     pred <- stats::predict(model,
                            newdata = newdata,
