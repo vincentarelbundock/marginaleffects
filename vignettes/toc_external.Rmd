@@ -1,2 +1,3 @@
-- [Bayesian Model Averaged Marginal Effects](https://www.ajordannafa.com/blog/2022/05/24/bma-ames/) by A. Jordan Nafa
+- [Bayesian model averaged marginal effects](https://www.ajordannafa.com/blog/2022/05/24/bma-ames/) by A. Jordan Nafa
 - [Marginalia: A guide to figuring out what the heck marginal effects, marginal slopes, average marginal effects, marginal effects at the mean, and all these other marginal things are](https://www.andrewheiss.com/blog/2022/05/20/marginalia/) by Andrew Heiss
+- [Double propensity score adjustment using g-computation](https://stats.stackexchange.com/questions/580118/adjusting-the-model-by-propensity-scores-after-propensity-score-matching/580174#580174) by Noah Greifer

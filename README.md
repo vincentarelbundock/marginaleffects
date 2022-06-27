@@ -53,7 +53,7 @@ Case studies:
 
 Tips and technical notes:
 
-  - [64 Supported Classes of
+  - [66 Supported Classes of
     Models](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
   - [Index of Functions and
     Documentation](https://vincentarelbundock.github.io/marginaleffects/reference/index.html)
@@ -64,22 +64,27 @@ Tips and technical notes:
   - [Performance](https://vincentarelbundock.github.io/marginaleffects/articles/performance.html)
   - [Alternative
     Software](https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html)
+  - [Frequently Asked
+    Questions](https://vincentarelbundock.github.io/marginaleffects/articles/faq.html)
 
 External links:
 
-  - [Bayesian Model Averaged Marginal
-    Effects](https://www.ajordannafa.com/blog/2022/05/24/bma-ames/) by
+  - [Bayesian model averaged marginal
+    effects](https://www.ajordannafa.com/blog/2022/05/24/bma-ames/) by
     A. Jordan Nafa
   - [Marginalia: A guide to figuring out what the heck marginal effects,
     marginal slopes, average marginal effects, marginal effects at the
     mean, and all these other marginal things
     are](https://www.andrewheiss.com/blog/2022/05/20/marginalia/) by
     Andrew Heiss
+  - [Double propensity score adjustment using
+    g-computation](https://stats.stackexchange.com/questions/580118/adjusting-the-model-by-propensity-scores-after-propensity-score-matching/580174#580174)
+    by Noah Greifer
 
 ## Definitions
 
 The `marginaleffects` package allows `R` users to compute and plot four
-principal quantities of interest for [64 different classes of
+principal quantities of interest for [66 different classes of
 models:](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
 
   - [*Adjusted
@@ -138,7 +143,7 @@ additional features from `emmeans`.
 
 So why did I write a clone?
 
-  - *Powerful:* Marginal effects and contrasts can be computed for 64
+  - *Powerful:* Marginal effects and contrasts can be computed for 66
     different classes of models. Adjusted predictions and marginal means
     can be computed for about 100 model types.
   - *Extensible:* Adding support for new models is very easy, often
