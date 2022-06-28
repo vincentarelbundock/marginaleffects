@@ -13,9 +13,7 @@ Copyright: inst/COPYRIGHTS
 LazyData: true
 Encoding: UTF-8
 URL: https://vincentarelbundock.github.io/marginaleffects/
-        https://github.com/vincentarelbundock/marginaleffects
-BugReports:
-        https://github.com/vincentarelbundock/marginaleffects/issues
+BugReports: https://github.com/vincentarelbundock/marginaleffects/issues
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.0
 VignetteBuilder: knitr
