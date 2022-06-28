@@ -1,5 +1,6 @@
 source("helpers.R", local = TRUE)
 if (ON_CRAN) exit_file("on cran")
+if (!require("tobit1")) exit_file("tobit1")
 requiet("tobit1")
 requiet("broom")
 tol <- 0.001
