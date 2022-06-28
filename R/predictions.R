@@ -1,4 +1,5 @@
 #' Adjusted Predictions
+#'
 #' Outcome predicted by a fitted model on a specified scale for a given
 #' combination of values of the predictor variables, such as their observed
 #' values, their means, or factor levels (a.k.a. "reference grid"). The

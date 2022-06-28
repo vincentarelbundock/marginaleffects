@@ -2,17 +2,7 @@
 % Please edit documentation in R/predictions.R
 \name{predictions}
 \alias{predictions}
-\title{Adjusted Predictions
-Outcome predicted by a fitted model on a specified scale for a given
-combination of values of the predictor variables, such as their observed
-values, their means, or factor levels (a.k.a. "reference grid"). The
-\code{tidy()} and \code{summary()} functions can be used to aggregate the output of
-\code{predictions()}. To learn more, read the predictions vignette, visit the
-package website, or scroll down this page for a full list of vignettes:
-\itemize{
-\item \url{https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html}
-\item \url{https://vincentarelbundock.github.io/marginaleffects/}
-}}
+\title{Adjusted Predictions}
 \usage{
 predictions(
   model,
@@ -119,7 +109,6 @@ A \code{data.frame} with one row per observation and several columns:
 }
 }
 \description{
-Adjusted Predictions
 Outcome predicted by a fitted model on a specified scale for a given
 combination of values of the predictor variables, such as their observed
 values, their means, or factor levels (a.k.a. "reference grid"). The
