@@ -113,6 +113,14 @@ models:](https://vincentarelbundock.github.io/marginaleffects/articles/supported
         grid” of categorical predictors.
       - [`marginalmeans()`](https://vincentarelbundock.github.io/marginaleffects/reference/marginalmeans.html)
 
+One confusing aspect of these definitions is that they use the word
+“marginal” in two different and *opposite* ways. In “marginal
+effects,” we refer to the effect of a tiny (marginal) change in the
+regressor on the outcome. This is a slope, or derivative. In “marginal
+means,” we refer to the process of marginalizing across rows of a
+prediction grid. This is an average, or integral. This is confusing, but
+the vocabulary is so widespread that we must press on…
+
 ## Motivation
 
 To calculate marginal effects we need to take derivatives of the
