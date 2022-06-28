@@ -28,6 +28,9 @@ theme_clean <- function() {
           legend.position = "bottom")
 }
 ggplot2::theme_set(theme_clean())
+
+
+source("https://raw.githubusercontent.com/vincentarelbundock/marginaleffects/5c38b0b7673d5e992aa80022d1001905c49cc755/inst/tinytest/helpers.R")
 ```
 
 The `marginaleffects` package offers convenience functions to compute and display predictions, contrasts, and marginal effects from bayesian models estimated by the `brms` package. To compute these quantities, `marginaleffects` relies on workshorse functions from the `brms` package to draw from the posterior distribution. The type of draws used is controlled by using the `type` argument of the `predictions` or `marginaleffects` functions:
@@ -68,12 +71,15 @@ dat$woman <- ifelse(dat$sex == "female", 1, 0)
 
 Fit a logit model with a multiplicative interaction:
 
-```{r fit-titanic, message = FALSE, warning = FALSE, results = "hide"}
+```{r, eval = FALSE}
 mod <- brm(survived ~ woman * age + passengerClass,
            family = bernoulli(link = "logit"),
            data = dat)
 ```
 
+```{r, include = FALSE}
+mod <- download_model("brms_titanic_int")
+```
 ## Adjusted predictions
 
 We can compute [adjusted predicted values](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html) of the outcome variable (i.e., probability of survival aboard the Titanic) using the `predictions` function. By default, this function calculates predictions for each row of the dataset:
@@ -181,13 +187,17 @@ head(vdem_2015)
 
 Fit a basic model:
 
-```{r fit-vdem, results = "hide"}
+```{r, eval = FALSE}
 mod <- brm(
   bf(media_index ~ party_autonomy + civil_liberties + (1 | region),
      phi ~ (1 | region)),
   data = vdem_2015,
   family = Beta(),
   control = list(adapt_delta = 0.9))
+```
+
+```{r, include = FALSE}
+mod <- download_model("brms_vdem")
 ```
 
 ## Posterior predictions
@@ -439,13 +449,16 @@ ggplot(draws, aes(x = draw)) +
 
 Fit a model with categorical outcome (heating system choice in California houses) and logit link:
 
-```{r, results = "hide"}
+```{r, eval = FALSE}
 dat <- "https://vincentarelbundock.github.io/Rdatasets/csv/Ecdat/Heating.csv"
 dat <- read.csv(dat)
-
 mod <- brm(depvar ~ ic.gc + oc.gc,
            data = dat,
            family = categorical(link = "logit"))
+```
+
+```{r, include = FALSE}
+mod <- download_model("brms_heating")
 ```
 
 ## Adjusted predictions
