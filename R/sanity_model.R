@@ -34,6 +34,7 @@ sanity_model_supported_class <- function(model) {
         "brmsfit",
         c("bracl", "brmultinom", "brglmFit"),
         c("brnb", "negbin", "glm"),
+        c("clogit", "coxph"),
         "clm",
         "coxph",
         "crch",

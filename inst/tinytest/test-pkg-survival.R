@@ -4,6 +4,24 @@ requiet("survival")
 requiet("emmeans")
 requiet("broom")
 
+
+
+# clogit 
+N  <- 100000
+ng <- 50000
+exd <- data.frame(
+    g = rep(1:ng, each = N / ng),
+    out = rep(0L:1L, N / 2),
+    x = sample(0L:1L, N / 2, prob = c(.8, .2), replace = TRUE))
+mod <- clogit(
+    out ~ x + strata(g),
+    method = "exact",
+    data = exd)
+expect_inherits(marginaleffects(mod, type = "lp"), "marginaleffects")
+expect_inherits(comparisons(mod, type = "lp"), "comparisons")
+expect_inherits(predictions(mod, type = "lp"), "predictions")
+
+
 # coxph vs. Stata
 stata <- readRDS(testing_path("stata/stata.rds"))$survival_coxph_01
 test1 <<- data.frame(time = c(4, 3, 1, 1, 2, 2, 3),

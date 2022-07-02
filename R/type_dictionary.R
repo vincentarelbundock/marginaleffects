@@ -30,6 +30,10 @@ clm,prob,response,TRUE,TRUE
 clm,cum.prob,NA,TRUE,TRUE
 clm,linear_predictor,NA,TRUE,TRUE
 clm,class,classification,FALSE,TRUE
+clogit,lp,NA,TRUE,TRUE
+clogit,expected,NA,TRUE,TRUE
+clogit,risk,NA,TRUE,TRUE
+clogit,survival,NA,TRUE,TRUE
 coxph,expected,NA,TRUE,TRUE
 coxph,lp,NA,TRUE,TRUE
 coxph,risk,NA,TRUE,TRUE

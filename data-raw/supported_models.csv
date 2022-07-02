@@ -62,6 +62,7 @@ scam,scam,TRUE,TRUE,,,U,U,U,U
 speedglm,speedglm,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,U,U
 speedglm,speedlm,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,U,U
 survey,svyglm,TRUE,TRUE,,,TRUE,TRUE,TRUE,TRUE
+survival,clogit,TRUE,TRUE,,,,,,
 survival,coxph,TRUE,TRUE,TRUE,TRUE,U,U,TRUE,TRUE
 tobit1,tobit1,TRUE,TRUE,,,TRUE,TRUE,U,U
 truncreg,truncreg,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,U,U
