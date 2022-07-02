@@ -8,6 +8,10 @@ New vignette:
 
 * Frequently Asked Questions
 
+Misc:
+
+* documentation improvements
+
 # marginaleffects 0.6.0
 
 New supported packages and models:

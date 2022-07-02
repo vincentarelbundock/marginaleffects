@@ -8,7 +8,8 @@
 #' @param effect Name of the variable whose contrast we want to plot on the y-axis
 #' @param condition String or vector of two strings. The first is a variable
 #' name to be displayed on the x-axis. The second is a variable whose values
-#' will be displayed in different colors.
+#' will be displayed in different colors. Other numeric variables are held at
+#' their means. Other categorical variables are held at their modes.
 #' @param draw `TRUE` returns a `ggplot2` plot. `FALSE` returns a `data.frame` of the underlying data.
 #' @inheritParams comparisons
 #' @inheritParams plot_cme

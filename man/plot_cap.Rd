@@ -20,7 +20,10 @@ plot_cap(
 
 \item{condition}{String or vector of two strings. The first is a variable
 name to be displayed on the x-axis. The second is a variable whose values
-will be displayed in different colors.}
+will be displayed in different colors. Other numeric variables are held at
+their means. Other categorical variables are held at their modes. Other
+numeric variables are held at their means. Other categorical variables are
+held at their modes.}
 
 \item{type}{string indicates the type (scale) of the predictions used to
 compute marginal effects or contrasts. This can differ based on the model
