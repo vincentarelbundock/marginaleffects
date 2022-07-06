@@ -45,7 +45,6 @@ Many of `marginaleffects` advantages come down to subjective preferences over us
 
 * Equivalence tests.
 * Multiplicity adjustments.
-* Hypothesis tests on linear combinations of contrasts.
 * Some plots.
 
 The [Marginal Means Vignette](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) includes side-by-side comparisons of `emmeans` and `marginaleffects` to compute marginal means. The rest of this section compares the syntax for contrasts and marginaleffects.
