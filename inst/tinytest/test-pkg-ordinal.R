@@ -14,22 +14,6 @@ expect_equivalent(unknown$estimate, known$estimate, tolerance = .00001)
 expect_equivalent(unknown$std.error, known$std.error, tolerance = .00001)
 
 
-# plot
-mod <- clm(Sat ~ Infl + Type + Cont, weights = Freq, data = housing)
-expect_false(expect_error(
-    plot(marginaleffects(mod))
-))
-expect_false(expect_error(
-    plot_cme(mod, effect = "Infl", condition = "Type")
-))
-expect_false(expect_error(
-    plot_cap(mod, condition = "Type")
-))
-
-
-# predictions
-expect_false(expect_error(predictions(mod)))
-
 
 
 # marginaleffects: protect against corner cases
@@ -72,4 +56,24 @@ expect_marginaleffects(m2, n_unique = 6)
 expect_marginaleffects(m3, n_unique = 6)
 expect_marginaleffects(m4, n_unique = 6)
 expect_marginaleffects(m5, n_unique = 6)
+
+
+
+if (ON_CI) exit_file("on ci")
+# plot
+mod <- clm(Sat ~ Infl + Type + Cont, weights = Freq, data = housing)
+expect_false(expect_error(
+    plot(marginaleffects(mod))
+))
+expect_false(expect_error(
+    plot_cme(mod, effect = "Infl", condition = "Type")
+))
+expect_false(expect_error(
+    plot_cap(mod, condition = "Type")
+))
+
+
+# predictions
+expect_false(expect_error(predictions(mod)))
+
 
