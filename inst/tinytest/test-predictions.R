@@ -1,5 +1,4 @@
 source("helpers.R", local = TRUE)
-exit_file("TODO: works interactively")
 if (ON_CRAN) exit_file("on cran")
 requiet("pscl")
 
@@ -45,7 +44,7 @@ expect_equal(nrow(tid2), 2)
 #########################################
 #  weigted average adjusted predictions #
 #########################################
-pre <- predictions(mod, weights = "w", newdata = dat)
+pre <- predictions(mod, wts = "w", newdata = dat)
 tid3 <- tidy(pre)
 tid4 <- tidy(pre, by = "am")
 expect_equal(nrow(tid3), 1)

@@ -208,27 +208,9 @@ predictions <- function(model,
         newdata <- rbindlist(list(padding, newdata))
     }
 
-    # predictions
-    # the default get_predict() method tries to get confidence intervals using
-    # `insight::get_predicted`. That function does not preserve J, which we
-    # need for average adjusted predictions. So we take fast predictions and
-    # handle SE internally for known models.
-    flag <- isTRUE(class(model)[1] == "lm") ||
-            (isTRUE(class(model)[1] == "glm") && isTRUE(type == "link"))
+    vcov_tmp <- vcov
+    J <- NULL
 
-    if (isTRUE(flag)) {
-        vcov_tmp <- FALSE
-        # get_modelmatrix() sometimes breaks when there is no outcome in `data`
-        resp <- insight::find_response(model)
-        if (!resp %in% colnames(newdata)) {
-            newdata[[resp]] <- 0
-        }
-        J <- insight::get_modelmatrix(model, data = newdata)
-    } else {
-        vcov_tmp <- vcov
-        J <- NULL
-    }
-                        
     tmp <- myTryCatch(get_predictions(
         model,
         newdata = newdata,
