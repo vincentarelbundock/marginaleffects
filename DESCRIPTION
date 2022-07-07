@@ -7,7 +7,7 @@ Authors@R:
              role = c("aut", "cre", "cph"),
              email = "vincent.arel-bundock@umontreal.ca",
              comment = c(ORCID = "0000-0003-2042-7063")))
-Description: Compute, summarize, and plot marginal effects, adjusted predictions, contrasts, and marginal means for a wide variety of models.
+Description: Compute and plot adjusted predictions, contrasts, marginal effects, and marginal means for over 65 classes of statistical models in R. Conduct linear and non-linear hypothesis tests using the delta method.
 License: GPL (>= 3)
 Copyright: inst/COPYRIGHTS
 LazyData: true

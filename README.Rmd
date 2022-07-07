@@ -24,7 +24,7 @@ dat <- read.csv(url)
 n_support <- nrow(dat)
 ```
 
-`marginaleffects` is an R package to compute and plot adjusted predictions, marginal effects, contrasts, and marginal means for a *wide* variety of models.
+Compute and plot adjusted predictions, contrasts, marginal effects, and marginal means for `r n_support`classes of statistical models in `R`. Conduct linear and non-linear hypothesis tests using the delta method.
 
 ## Table of contents
 

@@ -11,9 +11,9 @@ status](https://www.r-pkg.org/badges/version/marginaleffects)](https://CRAN.R-pr
 [![status](https://tinyverse.netlify.com/badge/marginaleffects)](https://CRAN.R-project.org/package=marginaleffects)
 <!-- badges: end -->
 
-`marginaleffects` is an R package to compute and plot adjusted
-predictions, marginal effects, contrasts, and marginal means for a
-*wide* variety of models.
+Compute and plot adjusted predictions, contrasts, marginal effects, and
+marginal means for 68classes of statistical models in `R`. Conduct
+linear and non-linear hypothesis tests using the delta method.
 
 ## Table of contents
 
@@ -53,7 +53,7 @@ Case studies:
 
 Tips and technical notes:
 
-  - [66 Supported Classes of
+  - [68 Supported Classes of
     Models](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
   - [Index of Functions and
     Documentation](https://vincentarelbundock.github.io/marginaleffects/reference/index.html)
@@ -84,7 +84,7 @@ External links:
 ## Definitions
 
 The `marginaleffects` package allows `R` users to compute and plot four
-principal quantities of interest for [66 different classes of
+principal quantities of interest for [68 different classes of
 models:](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
 
   - [*Adjusted
@@ -151,7 +151,7 @@ additional features from `emmeans`.
 
 So why did I write a clone?
 
-  - *Powerful:* Marginal effects and contrasts can be computed for 66
+  - *Powerful:* Marginal effects and contrasts can be computed for 68
     different classes of models. Adjusted predictions and marginal means
     can be computed for about 100 model types.
   - *Extensible:* Adding support for new models is very easy, often
@@ -222,12 +222,12 @@ for every value in original dataset:
 ``` r
 predictions(mod) |> head()
 #>   rowid     type predicted std.error statistic       p.value conf.low conf.high
-#> 1     1 response  22.48857 0.8841487  25.43528 1.027254e-142 20.75567  24.22147
-#> 2     2 response  20.80186 1.1942050  17.41900  5.920119e-68 18.46126  23.14246
-#> 3     3 response  25.26465 0.7085307  35.65781 1.783452e-278 23.87596  26.65335
-#> 4     4 response  20.25549 0.7044641  28.75305 8.296026e-182 18.87477  21.63622
-#> 5     5 response  16.99782 0.7118658  23.87784 5.205109e-126 15.60259  18.39305
-#> 6     6 response  19.66353 0.8753226  22.46433 9.270636e-112 17.94793  21.37913
+#> 1     1 response  22.48857 0.8841487  25.43528 1.027254e-142 20.66378  24.31336
+#> 2     2 response  20.80186 1.1942050  17.41900  5.920119e-68 18.33714  23.26658
+#> 3     3 response  25.26465 0.7085307  35.65781 1.783452e-278 23.80232  26.72699
+#> 4     4 response  20.25549 0.7044641  28.75305 8.296026e-182 18.80155  21.70943
+#> 5     5 response  16.99782 0.7118658  23.87784 5.205109e-126 15.52860  18.46704
+#> 6     6 response  19.66353 0.8753226  22.46433 9.270636e-112 17.85696  21.47011
 #>    mpg  hp    wt am
 #> 1 21.0 110 2.620  1
 #> 2 21.0 110 2.875  1
@@ -245,19 +245,19 @@ their mean or mode:
 ``` r
 predictions(mod, newdata = datagrid(am = 0, wt = seq(2, 3, .2)))
 #>   rowid     type predicted std.error statistic       p.value conf.low conf.high
-#> 1     1 response  21.95621 2.0386301  10.77008  4.765935e-27 17.96057  25.95185
-#> 2     2 response  21.42097 1.7699036  12.10290  1.019401e-33 17.95203  24.88992
-#> 3     3 response  20.88574 1.5067373  13.86157  1.082834e-43 17.93259  23.83889
-#> 4     4 response  20.35051 1.2526403  16.24609  2.380723e-59 17.89538  22.80564
-#> 5     5 response  19.81527 1.0144509  19.53301  5.755097e-85 17.82699  21.80356
-#> 6     6 response  19.28004 0.8063905  23.90906 2.465206e-126 17.69954  20.86054
-#>         hp am  wt mpg
-#> 1 146.6875  0 2.0   0
-#> 2 146.6875  0 2.2   0
-#> 3 146.6875  0 2.4   0
-#> 4 146.6875  0 2.6   0
-#> 5 146.6875  0 2.8   0
-#> 6 146.6875  0 3.0   0
+#> 1     1 response  21.95621 2.0386301  10.77008  4.765935e-27 17.74868  26.16373
+#> 2     2 response  21.42097 1.7699036  12.10290  1.019401e-33 17.76807  25.07388
+#> 3     3 response  20.88574 1.5067373  13.86157  1.082834e-43 17.77599  23.99549
+#> 4     4 response  20.35051 1.2526403  16.24609  2.380723e-59 17.76518  22.93583
+#> 5     5 response  19.81527 1.0144509  19.53301  5.755097e-85 17.72155  21.90900
+#> 6     6 response  19.28004 0.8063905  23.90906 2.465206e-126 17.61573  20.94435
+#>         hp am  wt
+#> 1 146.6875  0 2.0
+#> 2 146.6875  0 2.2
+#> 3 146.6875  0 2.4
+#> 4 146.6875  0 2.6
+#> 5 146.6875  0 2.8
+#> 6 146.6875  0 3.0
 ```
 
 We can plot how predictions change for different values of one or more
