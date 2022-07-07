@@ -180,3 +180,38 @@ outreg2 using "results/plm_pooling_01.xls", dec(10) excel replace noaster sidewa
 quiet xtreg inv c.value##c.capital, sa
 quiet margins, dydx(*) post
 outreg2 using "results/plm_sa_01.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
+
+
+******************* ELASTICITY
+
+* stats::glm
+clear
+use databases/stats_glm_01.dta
+
+quiet logit y c.x1##c.x2
+quiet margins, eyex(x1 x2) post
+outreg2 using "results/stats_glm_elasticity_eyex.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
+
+quiet logit y c.x1##c.x2
+quiet margins, dyex(x1 x2) post
+outreg2 using "results/stats_glm_elasticity_dyex.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
+
+quiet logit y c.x1##c.x2
+quiet margins, eydx(x1 x2) post
+outreg2 using "results/stats_glm_elasticity_eydx.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
+
+* stats::lm
+clear
+use databases/stats_lm_01.dta
+
+quiet reg y c.x1##c.x2
+quiet margins, eyex(x1 x2) post
+outreg2 using "results/stats_lm_elasticity_eyex.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
+
+quiet reg y c.x1##c.x2
+quiet margins, dyex(x1 x2) post
+outreg2 using "results/stats_lm_elasticity_dyex.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
+
+quiet reg y c.x1##c.x2
+quiet margins, eydx(x1 x2) post
+outreg2 using "results/stats_lm_elasticity_eydx.xls", dec(10) excel replace noaster sideway noparen stats(coef se)
