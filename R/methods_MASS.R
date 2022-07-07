@@ -12,7 +12,7 @@ get_coef.polr <- function(model, ...) {
 #' @include set_coef.R
 #' @rdname set_coef
 #' @export
-set_coef.polr <- function(model, coefs) {
+set_coef.polr <- function(model, coefs, ...) {
     # in basic model classes coefficients are named vector
     idx <- match(names(model$coefficients), names(coefs))
     model[["coefficients"]] <- coefs[idx]
@@ -74,7 +74,7 @@ get_predict.polr <- function(model,
 #' @include set_coef.R
 #' @rdname set_coef
 #' @export
-set_coef.glmmPQL <- function(model, coefs) {
+set_coef.glmmPQL <- function(model, coefs, ...) {
     model[["coefficients"]][["fixed"]][names(coefs)] <- coefs
     model
 }

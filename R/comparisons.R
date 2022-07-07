@@ -292,7 +292,7 @@ comparisons <- function(model,
     }
 
     vcov.type <- get_vcov_label(vcov)
-    vcov <- get_vcov(model, vcov = vcov)
+    vcov <- get_vcov(model, vcov = vcov, ...)
 
     # variables vector
     variables_list <- sanitize_variables(model = model, newdata = newdata, variables = variables)
