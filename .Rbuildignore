@@ -33,3 +33,5 @@ man-roxygen
 ^vignettes/toc.Rmd
 ^vignettes/toc_external.Rmd
 ^vignettes/transformation.Rmd
+^.*\.Rproj$
+^\.Rproj\.user$
