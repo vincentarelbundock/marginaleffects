@@ -1,7 +1,6 @@
 source("helpers.R", local = TRUE)
-exit_file("TODO: works interactively")
 if (ON_CRAN) exit_file("on cran")
-requiet("glmmTMB")
+if (!requiet("glmmTMB")) exit_file("glmmTMB")
 
 # marginaleffects no validity
 Owls <- transform(Owls,

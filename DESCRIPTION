@@ -54,7 +54,6 @@ Suggests:
     ggdist,
     ggplot2,
     ggrepel,
-    glmmTMB,
     glmx,
     haven,
     here,
