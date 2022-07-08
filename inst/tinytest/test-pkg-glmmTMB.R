@@ -1,6 +1,7 @@
 source("helpers.R", local = TRUE)
 if (ON_CRAN) exit_file("on cran")
-if (!requiet("glmmTMB")) exit_file("glmmTMB")
+if (ON_CI) exit_file("on ci") # install and test fails on Github
+requiet("glmmTMB")
 
 # marginaleffects no validity
 Owls <- transform(Owls,
