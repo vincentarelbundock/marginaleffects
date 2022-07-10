@@ -143,7 +143,7 @@ get_predict(model, newdata, vcov, conf_level, type, ...)
   ...
 )
 
-\method{get_predict}{gamlss}(model, newdata, ...)
+\method{get_predict}{gamlss}(model, newdata, type, ...)
 
 \method{get_predict}{glmmTMB}(
   model,

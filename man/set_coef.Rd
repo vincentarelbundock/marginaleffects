@@ -34,47 +34,47 @@ set_coef(model, coefs, ...)
 
 \method{set_coef}{default}(model, coefs, ...)
 
-\method{set_coef}{polr}(model, coefs)
+\method{set_coef}{polr}(model, coefs, ...)
 
-\method{set_coef}{glmmPQL}(model, coefs)
+\method{set_coef}{glmmPQL}(model, coefs, ...)
 
 \method{set_coef}{afex_aov}(model, coefs, ...)
 
-\method{set_coef}{glimML}(model, coefs)
+\method{set_coef}{glimML}(model, coefs, ...)
 
-\method{set_coef}{betareg}(model, coefs)
+\method{set_coef}{betareg}(model, coefs, ...)
 
-\method{set_coef}{multinom}(model, coefs)
+\method{set_coef}{multinom}(model, coefs, ...)
 
-\method{set_coef}{crch}(model, coefs)
+\method{set_coef}{crch}(model, coefs, ...)
 
-\method{set_coef}{hlxr}(model, coefs)
+\method{set_coef}{hlxr}(model, coefs, ...)
 
 \method{set_coef}{gamlss}(model, coefs, ...)
 
-\method{set_coef}{glmmTMB}(model, coefs)
+\method{set_coef}{glmmTMB}(model, coefs, ...)
 
-\method{set_coef}{glmx}(model, coefs)
+\method{set_coef}{glmx}(model, coefs, ...)
 
-\method{set_coef}{merMod}(model, coefs)
+\method{set_coef}{merMod}(model, coefs, ...)
 
-\method{set_coef}{lmerModLmerTest}(model, coefs)
+\method{set_coef}{lmerModLmerTest}(model, coefs, ...)
 
-\method{set_coef}{lmerMod}(model, coefs)
+\method{set_coef}{lmerMod}(model, coefs, ...)
 
-\method{set_coef}{hurdle}(model, coefs)
+\method{set_coef}{hurdle}(model, coefs, ...)
 
-\method{set_coef}{zeroinfl}(model, coefs)
+\method{set_coef}{zeroinfl}(model, coefs, ...)
 
-\method{set_coef}{rlmerMod}(model, coefs)
+\method{set_coef}{rlmerMod}(model, coefs, ...)
 
-\method{set_coef}{selection}(model, coefs)
+\method{set_coef}{selection}(model, coefs, ...)
 
-\method{set_coef}{scam}(model, coefs)
+\method{set_coef}{scam}(model, coefs, ...)
 
-\method{set_coef}{glm}(model, coefs)
+\method{set_coef}{glm}(model, coefs, ...)
 
-\method{set_coef}{lm}(model, coefs)
+\method{set_coef}{lm}(model, coefs, ...)
 }
 \arguments{
 \item{model}{object to modify}
