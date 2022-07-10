@@ -34,13 +34,11 @@ get_predict.gamlss <- function(model, newdata, type, ...){
   tmp <- newdata[, index]
   out <- stats::predict(model, newdata = tmp, type = type, ...)
   
-  out <- cbind(newdata, predicted = out)
-  
-  # if ("rowid" %in% colnames(newdata)) {
-  #   out <- cbind(newdata, predicted = out)
-  # } else {
-  #   out <- data.frame(rowid = seq_along(out), predicted = out)
-  # }
+  if ("rowid" %in% colnames(newdata)) {
+    out <- data.frame(rowid = newdata$rowid, predicted = out)
+  } else {
+    out <- data.frame(rowid = seq_along(out), predicted = out)
+  }
   
   return(out)
 }
