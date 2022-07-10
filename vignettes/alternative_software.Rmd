@@ -84,17 +84,17 @@ comparisons(mod,
 
 ## Contrasts by group
 
-Here is a slightly more complicated example with contrasts estimated by subgroup in a `glmmTMB` mixed effects model. First we estimate a model and compute pairwise contrasts by subgroup using `emmeans`:
+Here is a slightly more complicated example with contrasts estimated by subgroup in a `lme4` mixed effects model. First we estimate a model and compute pairwise contrasts by subgroup using `emmeans`:
 
 ```{r}
 library(dplyr)
-library(glmmTMB)
+library(lme4)
 library(emmeans)
 
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/lme4/VerbAgg.csv")
 dat$woman <- as.numeric(dat$Gender == "F")
 
-mod <- glmmTMB(
+mod <- glmer(
     woman ~ btype * resp + situ + (1 + Anger | item),
     family = binomial,
     data = dat)

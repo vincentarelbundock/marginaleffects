@@ -1,6 +1,6 @@
 source("helpers.R", local = TRUE)
-exit_file("TODO: works interactively")
 if (ON_CRAN) exit_file("on cran")
+if (ON_CI) exit_file("on ci") # install and test fails on Github
 requiet("glmmTMB")
 
 # marginaleffects no validity

@@ -83,12 +83,12 @@ emmeans(mod, specs = "am")
 
 By default, the `marginalmeans()` function calculates marginal means for each categorical predictor one after the other. We can also compute marginal means for *combinations* of categories by setting `interaction=TRUE`:
 
-```{r}
-library(glmmTMB)
+```{r, message = FALSE, warning = FALSE}
+library(lme4)
 
 dat <- "https://vincentarelbundock.github.io/Rdatasets/csv/Stat2Data/Titanic.csv"
 dat <- read.csv(dat)
-titanic <- glmmTMB(
+titanic <- glmer(
     Survived ~ Sex * PClass + Age + (1 | PClass),
     family = binomial,
     data = dat)
@@ -97,7 +97,8 @@ titanic <- glmmTMB(
 Regardless of the scale of the predictions (`type` argument), `marginalmeans()` always computes standard errors using the Delta Method: 
 
 ```{r}
-marginalmeans(titanic,
+marginalmeans(
+    titanic,
     type = "response",
     variables = c("Sex", "PClass"))
 ```
@@ -114,7 +115,8 @@ marginalmeans(
 It is easy to transform those link-scale marginal means with arbitrary functions using the `transform_post` argument:
 
 ```{r}
-marginalmeans(titanic,
+marginalmeans(
+    titanic,
     type = "link",
     transform_post = insight::link_inverse(titanic),
     variables = c("Sex", "PClass"))
@@ -122,11 +124,12 @@ marginalmeans(titanic,
 
 When a model does not include interactions, `marginalmeans()` defaults to reporting EMMs for each category individually, without interactions:
 
-```{r}
-titanic2 <- glmmTMB(
+```{r, warning = FALSE, message = FALSE}
+titanic2 <- glmer(
     Survived ~ Sex + PClass + Age + (1 | PClass),
     family = binomial,
     data = dat)
+
 marginalmeans(
     titanic2,
     variables = c("Sex", "PClass"))

@@ -265,7 +265,10 @@ The [excellent vignette of the `emmeans` package](https://CRAN.R-project.org/pac
 Consider a model with an interaction term. What happens to the dependent variable when the `hp` variable increases by 10 units?
 
 ```{r}
+library(marginaleffects)
+
 mod <- lm(mpg ~ hp * wt, data = mtcars)
+
 plot_cco(
     mod,
     effect = list(hp = 10),
