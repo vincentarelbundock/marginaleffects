@@ -30,15 +30,17 @@ get_predict.gamlss <- function(model, newdata, type, ...){
   origindata <- insight::get_data(model)
   originvars <- colnames(origindata)
   setDF(newdata)
-  index <- originvars %in% colnames(newdata)
+  index <- which(colnames(newdata) %in% originvars)
   tmp <- newdata[, index]
   out <- stats::predict(model, newdata = tmp, type = type, ...)
   
-  if ("rowid" %in% colnames(newdata)) {
-    out <- data.frame(rowid = newdata$rowid, predicted = out)
-  } else {
-    out <- data.frame(rowid = seq_along(out), predicted = out)
-  }
+  out <- cbind(newdata, predicted = out)
+  
+  # if ("rowid" %in% colnames(newdata)) {
+  #   out <- cbind(newdata, predicted = out)
+  # } else {
+  #   out <- data.frame(rowid = seq_along(out), predicted = out)
+  # }
   
   return(out)
 }
