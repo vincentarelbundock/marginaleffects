@@ -15,13 +15,30 @@ get_coef.gamlss <- function(model, ...){
 #' @include get_predict.R
 #' @rdname get_predict
 #' @export
-get_predict.gamlss <- function(model, newdata, ...){
+get_predict.gamlss <- function(model, newdata, type, ...){
   dots <- list(...)
   
   if (is.null(dots$what))
     stop("Argument `what` indicating the parameter of interest is missing.")
-
-  out <- predict(model, type = dots$type, newdata = newdata, what = dots$what)
+  
+  # if (!isTRUE(checkmate::check_flag(vcov, null.ok = TRUE))) {
+  #   msg <- "The `vcov` argument is not supported for models of this class."
+  #   stop(msg, call. = FALSE)
+  # }
+  
+  # predict.gamlss() breaks when `newdata` includes unknown variables
+  origindata <- insight::get_data(model)
+  originvars <- colnames(origindata)
+  setDF(newdata)
+  index <- originvars %in% colnames(newdata)
+  tmp <- newdata[, index]
+  out <- stats::predict(model, newdata = tmp, type = type, ...)
+  
+  if ("rowid" %in% colnames(newdata)) {
+    out <- data.frame(rowid = newdata$rowid, predicted = out)
+  } else {
+    out <- data.frame(rowid = seq_along(out), predicted = out)
+  }
   
   return(out)
 }
@@ -108,10 +125,8 @@ predict.gamlss <- function (object, what = c("mu", "sigma", "nu", "tau"), parame
   
   # Modified from the original method predict.gamlss to accomodate
   # different data farmes for newdata
-  col.index <- as.numeric(na.exclude(match(names(newdata), names(data))))
-  new.col.index <- as.numeric(na.exclude(match(names(data), names(newdata))))
-  data <- data[col.index]
-  data <- concat(data, newdata[new.col.index])
+  data <- data[match(names(newdata), names(data))]
+  data <- concat(data, newdata)
   parform <- formula(object, what)
   if (length(parform) == 3) 
     parform[2] <- NULL
@@ -233,5 +248,5 @@ predict.gamlss <- function (object, what = c("mu", "sigma", "nu", "tau"), parame
                                                                                                                                                         "linkinv", sep = ".")]](pred)
     }
   }
-  cbind(predicted = pred, newdata[!(1:ncol(newdata) %in% new.col.index)])
+  pred
 }
