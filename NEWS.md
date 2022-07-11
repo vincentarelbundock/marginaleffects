@@ -11,6 +11,7 @@ New vignette:
 
 Misc:
 
+* `vcov` argument string shortcuts are now case-insensitive
 * documentation improvements
 
 # marginaleffects 0.6.0

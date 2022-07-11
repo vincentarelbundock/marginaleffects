@@ -31,12 +31,19 @@ get_vcov.default <- function(model,
         return(NULL)
     }
 
-    # strings and formulas are only available with insight 0.17.1
+    # strings are only available with insight 0.17.1
+    # strings should be case-insensitive
     vcov_strings <- c("stata", "robust", "HC", "HC0", "HC1", "HC2", "HC3",
                       "HC4", "HC4m", "HC5", "HAC", "NeweyWest", "kernHAC", "OPG",
                       "satterthwaite", "kenward-roger")
-    if (isTRUE(checkmate::check_formula(vcov)) ||
-        isTRUE(checkmate::check_choice(vcov, choices = vcov_strings))) {
+    if (isTRUE(checkmate::check_choice(tolower(vcov), choices = tolower(vcov_strings)))) {
+        insight::check_if_installed("insight", minimum_version = "0.17.1")
+        idx <- match(tolower(vcov), tolower(vcov_strings))
+        vcov <- vcov_strings[idx]
+    }
+
+    # formulas are only available with insight 0.17.1
+    if (isTRUE(checkmate::check_formula(vcov))) {
         insight::check_if_installed("insight", minimum_version = "0.17.1")
     }
 
