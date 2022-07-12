@@ -7,8 +7,7 @@
 #' name to be displayed on the x-axis. The second is a variable whose values
 #' will be displayed in different colors. Other numeric variables are held at
 #' their means. Other categorical variables are held at their modes. Other
-#' numeric variables are held at their means. Other categorical variables are
-#' held at their modes.
+#' numeric variables are held at their means.
 #' @param draw `TRUE` returns a `ggplot2` plot. `FALSE` returns a `data.frame` of the underlying data.
 #' @inheritParams plot.marginaleffects
 #' @inheritParams plot_cme
