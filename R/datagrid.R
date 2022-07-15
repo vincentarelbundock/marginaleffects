@@ -240,7 +240,7 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
         sanitize_variables(model = model,
             newdata = newdata,
             variables = variables))
-    variables_all <- unique(unlist(variables_list))
+    variables_all <- unique(names(variables_list$conditional))
     variables_manual <- names(at)
     variables_automatic <- setdiff(variables_all, variables_manual)
 

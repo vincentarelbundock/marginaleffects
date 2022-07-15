@@ -295,7 +295,11 @@ comparisons <- function(model,
     vcov <- get_vcov(model, vcov = vcov)
 
     # variables vector
-    variables_list <- sanitize_variables(model = model, newdata = newdata, variables = variables)
+    variables_list <- sanitize_variables(
+        model = model, newdata = newdata, variables = variables,
+        contrast_numeric = 1,
+        contrast_factor = "reference")
+
     contrast_types <- attr(variables_list, "contrast_types")
     variables_vec <- unique(unlist(variables_list, recursive = TRUE))
     # this won't be triggered for multivariate outcomes in `brms`, which
@@ -318,11 +322,11 @@ comparisons <- function(model,
     # compute contrasts and standard errors
     args <- list(model = model,
                  newdata = newdata,
-                 variables = variables_vec,
+                 variables = names(variables_list$conditional),
+                 contrast_types = unname(variables_list$conditional),
                  contrast_factor = contrast_factor,
                  contrast_numeric = contrast_numeric,
                  interaction = interaction,
-                 contrast_types = contrast_types,
                  marginalmeans = marginalmeans,
                  contrast_label = transform_pre[["label"]],
                  eps = eps)
