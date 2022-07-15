@@ -238,10 +238,14 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
     }
 
     variables_list <- suppressWarnings(
-        sanitize_variables(model = model,
+        sanitize_variables(
+            model = model,
             newdata = newdata,
             variables = variables))
-    variables_all <- c(names(variables_list$conditional), variables_list$cluster)
+    variables_all <- c(
+        names(variables_list$conditional),
+        variables_list$cluster,
+        variables_list$instruments)
     variables_manual <- names(at)
     variables_automatic <- setdiff(variables_all, variables_manual)
 

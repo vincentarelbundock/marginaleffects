@@ -26,7 +26,7 @@ sanitize_variables <- function(model,
 
     # rename to avoid overwriting in case we need info later
     predictors <- variables
-    cluster <- NULL
+    cluster <- instruments <- NULL
 
     # variables is NULL: put all variable names from model
     if (is.null(predictors)) {
@@ -36,7 +36,9 @@ sanitize_variables <- function(model,
         } else {
             predictors <- insight::find_variables(model)
             cluster <- c(predictors[["cluster"]], predictors[["random"]])
-            predictors <- predictors[!names(predictors) %in% c("response", "weights", "random", "cluster")]
+            instruments <- predictors[["instruments"]]
+            bad <- c("response", "weights", "random", "cluster", "instruments")
+            predictors <- predictors[!names(predictors) %in% bad]
             predictors <- unlist(predictors, recursive = TRUE, use.names = FALSE)
         }
     }
@@ -113,6 +115,7 @@ sanitize_variables <- function(model,
     out <- list(
         conditional = predictors,
         cluster = cluster,
+        instruments = instruments,
         weights = w)
 
     # save character levels

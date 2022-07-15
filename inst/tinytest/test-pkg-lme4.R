@@ -282,8 +282,10 @@ mod <- lmer(mpg ~ hp + am + (1 | cyl), data = dat)
 
 mfx <- marginaleffects(mod, vcov = "kenward-roger")
 cmp <- comparisons(mod, vcov = "kenward-roger")
+cmp2 <- comparisons(mod)
+mfx2 <- marginaleffects(mod)
 expect_equivalent(mfx$dydx, cmp$comparison)
-expect_equivalent(mfx$std.error, cmp$std.error, tolerance = .00001)
+expect_equivalent(mfx$std.error, cmp$std.error, tolerance = .0001)
 expect_equivalent(attr(mfx, "vcov.type"), "Kenward-Roger")
 expect_equivalent(attr(cmp, "vcov.type"), "Kenward-Roger")
 
