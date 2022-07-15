@@ -35,10 +35,13 @@ sanitize_variables <- function(model,
             predictors <- insight::find_predictors(model, flatten = TRUE)
         } else {
             predictors <- insight::find_variables(model)
-            cluster <- c(predictors[["cluster"]], predictors[["random"]])
-            instruments <- predictors[["instruments"]]
-            correlation <- predictors[["correlation"]]
-            bad <- c("response", "weights", "random", "cluster", "instruments", "correlation")
+            others <- c(
+                predictors[["instruments"]],
+                predictors[["correlation"]],
+                predictors[["strata"]],
+                predictors[["cluster"]],
+                predictors[["random"]])
+            bad <- c("response", "weights", "random", "cluster", "instruments", "correlation", "strata")
             predictors <- predictors[!names(predictors) %in% bad]
             predictors <- unlist(predictors, recursive = TRUE, use.names = FALSE)
         }
