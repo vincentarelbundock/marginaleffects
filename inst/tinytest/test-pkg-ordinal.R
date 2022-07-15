@@ -41,7 +41,7 @@ expect_marginaleffects(mod)
 
 # marginaleffects: clm: no validity
 data(soup, package = "ordinal")
-(tab26 <- with(soup, table("Product" = PROD, "Response" = SURENESS)))
+tab26 <- with(soup, table("Product" = PROD, "Response" = SURENESS))
 dimnames(tab26)[[2]] <- c("Sure", "Not Sure", "Guess", "Guess", "Not Sure", "Sure")
 dat26 <- expand.grid(sureness = as.factor(1:6), prod = c("Ref", "Test"))
 dat26$wghts <- c(t(tab26))
