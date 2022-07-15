@@ -85,8 +85,8 @@ dat <- data.frame(x = x, y = factor(y))
 tmp <- as.data.frame(replicate(20, factor(sample(letters[7:9], n, TRUE))))
 dat <- cbind(dat, tmp)
 void <- capture.output({
-    m1 <- multinom(y ~ x, dat)
-    m2 <- multinom(y ~ ., dat)
+    m1 <- nnet::multinom(y ~ x, dat)
+    m2 <- nnet::multinom(y ~ ., dat)
 })
 
 # class outcome not supported

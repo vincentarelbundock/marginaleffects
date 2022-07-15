@@ -38,6 +38,7 @@ Suggests:
     brms,
     brmsmargins,
     broom,
+    conflicted,
     covr,
     crch,
     datawizard,
