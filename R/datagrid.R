@@ -245,7 +245,8 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
     variables_all <- c(
         names(variables_list$conditional),
         variables_list$cluster,
-        variables_list$instruments)
+        variables_list$instruments,
+        variables_list$others)
     variables_manual <- names(at)
     variables_automatic <- setdiff(variables_all, variables_manual)
 

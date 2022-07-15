@@ -26,7 +26,7 @@ sanitize_variables <- function(model,
 
     # rename to avoid overwriting in case we need info later
     predictors <- variables
-    cluster <- instruments <- NULL
+    cluster <- instruments <- others <- NULL
 
     # variables is NULL: put all variable names from model
     if (is.null(predictors)) {
@@ -111,11 +111,17 @@ sanitize_variables <- function(model,
              call. = FALSE)
     }
 
+    # cannot compute contrasts for matrix variables
+    idx <- names(predictors) %in% attr(newdata, "matrix_columns")
+    predictors <- predictors[!idx]
+    if (any(idx)) others <- predictors[idx]
+
     # output
     out <- list(
         conditional = predictors,
         cluster = cluster,
         instruments = instruments,
+        others = others,
         weights = w)
 
     # save character levels
