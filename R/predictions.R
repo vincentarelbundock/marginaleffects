@@ -154,16 +154,20 @@ predictions <- function(model,
     idx <- !names(attributes_newdata) %in% idx
     attributes_newdata <- attributes_newdata[idx]
 
+
     # after modelbased attribute extraction
     newdata <- sanity_newdata(model, newdata)
 
+    # type
+    type <- sanitize_type(model = model, type = type, calling_function = "predictions")
+
     # check before inferring `newdata`
     if (!is.null(variables)) {
-        variables <- sanitize_variables(model, newdata, variables)
+        variables_list <- sanitize_variables(model, newdata, variables)
         # get new data if it doesn't exist
-        variables <- unique(unlist(variables))
+        variables_vec <- names(variables_list$conditional)
         args <- list("newdata" = newdata, "model" = model)
-        for (v in variables) {
+        for (v in variables_vec) {
             vcl <- find_variable_class(v, newdata = newdata, model = model)
             if (isTRUE(vcl == "numeric")) {
                 args[[v]] <- stats::fivenum(newdata[[v]])
@@ -174,8 +178,9 @@ predictions <- function(model,
         newdata <- do.call("datagrid", args)
         newdata[["rowid"]] <- NULL # the original rowids are no longer valid after averaging et al.
     } else {
-        variables <- sanitize_variables(model, newdata, variables)
+        variables_list <- sanitize_variables(model, newdata, variables)
     }
+
 
     # weights
     sanity_wts(wts, newdata) # after sanity_newdata
@@ -376,7 +381,7 @@ predictions <- function(model,
     attr(out, "model") <- model
     attr(out, "type") <- type
     attr(out, "model_type") <- class(model)[1]
-    attr(out, "variables") <- variables
+    attr(out, "variables") <- variables_list
     attr(out, "vcov.type") <- get_vcov_label(vcov)
     attr(out, "jacobian") <- J
     attr(out, "vcov") <- V

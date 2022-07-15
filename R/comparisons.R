@@ -212,7 +212,7 @@ comparisons <- function(model,
             calling_function = "comparisons", ...)
         conf_level <- sanitize_conf_level(conf_level, ...)
         interaction <- sanitize_interaction(interaction, variables, model)
-        sanitize_type(model = model, type = type)
+        type <- sanitize_type(model = model, type = type, calling_function = "marginaleffects")
         checkmate::assert_function(transform_post, null.ok = TRUE)
         if ("eps" %in% names(dots)) {
             stop("The `eps` argument is only supported by the `marginaleffects()` function.", call. = FALSE)

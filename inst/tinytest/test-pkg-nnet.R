@@ -65,7 +65,6 @@ dat <- read.csv(testing_path("stata/databases/MASS_polr_01.csv"))
 void <- capture.output(
     mod <- nnet::multinom(factor(y) ~ x1 + x2, data = dat, quiet = true)
 )
-marginaleffects(mod, newdata = datagrid(), type = "probs")
 mfx <- marginaleffects(mod, variables = "x1", newdata = datagrid(), type = "probs")
 expect_inherits(mfx, "data.frame")
 expect_equivalent(nrow(mfx), 4)
@@ -93,6 +92,7 @@ void <- capture.output({
 # class outcome not supported
 expect_error(predictions(m1, type = "class", variables = "x"), pattern = "type")
 expect_error(marginalmeans(m1, type = "class", variables = "x"), pattern = "type")
+expect_error(marginaleffects(m1, type = "class", variables = "x"), pattern = "type")
 
 # small predictions
 pred1 <- predictions(m1, type = "probs")
