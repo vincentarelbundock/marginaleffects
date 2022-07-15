@@ -6,7 +6,7 @@ sanity_newdata <- function(model, newdata) {
         combine = "or")
 
     if (is.null(newdata)) {
-        newdata <- suppressWarnings(insight::get_data(model))
+        newdata <- hush(insight::get_data(model))
 
     } else if (isTRUE(checkmate::check_choice(newdata, "mean"))) {
         newdata <- datagrid(model = model)

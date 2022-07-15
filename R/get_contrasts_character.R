@@ -9,7 +9,7 @@ get_contrast_data_character <- function(model,
 
     # factors store all levels, but characters do not, so we need to extract the
     # original data from the model.
-    tmp <- insight::get_data(model)
+    tmp <- hush(insight::get_data(model))
     levs <- sort(unique(tmp[[variable]]))
 
     # index contrast orders based on contrast_factor

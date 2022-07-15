@@ -15,7 +15,7 @@ sanitize_variables <- function(model,
     checkmate::assert_data_frame(newdata, min.row = 1, null.ok = TRUE)
 
     if (!is.null(model) && is.null(newdata)) {
-        origindata <- insight::get_data(model)
+        origindata <- hush(insight::get_data(model))
     } else {
         origindata <- newdata
     }

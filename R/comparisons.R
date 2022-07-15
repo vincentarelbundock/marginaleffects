@@ -300,15 +300,8 @@ comparisons <- function(model,
         contrast_numeric = 1,
         contrast_factor = "reference")
 
-    contrast_types <- attr(variables_list, "contrast_types")
-    variables_vec <- unique(unlist(variables_list, recursive = TRUE))
-    # this won't be triggered for multivariate outcomes in `brms`, which
-    # produces a list of lists where top level names correspond to names of the
-    # outcomes. There should be a more robust way to handle those, but it seems
-    # to work for now.
-    if ("conditional" %in% names(variables_list)) {
-        variables_vec <- intersect(variables_vec, variables_list[["conditional"]])
-    }
+    contrast_types <- variables_list$conditional
+    variables_vec <- names(variables_list$conditional)
 
     # matrix columns are not supported
     variables_vec <- setdiff(variables_vec, matrix_columns)
@@ -322,8 +315,8 @@ comparisons <- function(model,
     # compute contrasts and standard errors
     args <- list(model = model,
                  newdata = newdata,
-                 variables = names(variables_list$conditional),
-                 contrast_types = unname(variables_list$conditional),
+                 variables = variables_vec,
+                 contrast_types = contrast_types,
                  contrast_factor = contrast_factor,
                  contrast_numeric = contrast_numeric,
                  interaction = interaction,

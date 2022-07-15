@@ -1,4 +1,5 @@
-source("helpers.R", local = TRUE)
+exit_file("works interactively")
+source("helpers.R")
 if (ON_CRAN) exit_file("on cran")
 if (ON_CI) exit_file("on ci")
 requiet("survival")

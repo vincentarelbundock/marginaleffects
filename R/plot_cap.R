@@ -34,7 +34,7 @@ plot_cap <- function(model,
     checkmate::assert_character(condition, min.len = 1, max.len = 2)
 
     # get data to know over what range of values we should plot
-    dat <- suppressWarnings(suppressWarnings(insight::get_data(model)))
+    dat <- hush(insight::get_data(model))
     resp <- insight::find_response(model)[1]
 
     checkmate::assert_true(all(condition %in% colnames(dat)))

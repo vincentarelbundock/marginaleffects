@@ -252,7 +252,7 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
 
     # fill in missing data after sanity checks
     if (is.null(newdata)) {
-        newdata <- suppressWarnings(insight::get_data(model))
+        newdata <- hush(insight::get_data(model))
     }
 
     if (any(sapply(newdata, function(x) "matrix" %in% class(x)))) {

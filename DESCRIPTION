@@ -136,6 +136,7 @@ Collate:
     'get_se_delta.R'
     'get_vcov.R'
     'glance.R'
+    'hush.R'
     'marginaleffects.R'
     'marginalmeans.R'
     'mean_or_mode.R'

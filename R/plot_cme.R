@@ -32,7 +32,7 @@ plot_cme <- function(model,
                      ...) {
 
     # get data to know over what range of values we should plot
-    dat <- suppressWarnings(insight::get_data(model))
+    dat <- hush(insight::get_data(model))
     resp <- insight::find_response(model)[1]
 
     # eventually we might allow multiple conditions and/or effects
