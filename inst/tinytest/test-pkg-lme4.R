@@ -19,10 +19,14 @@ z <- predictions(mod, vcov = "kenward-roger")
 expect_true(all(x$conf.low != y$conf.low))
 expect_true(all(x$conf.low != z$conf.low))
 expect_true(all(y$conf.low != z$conf.low))
+expect_true(all(x$p.value != y$p.value))
+expect_true(all(x$p.value != z$p.value))
+expect_true(all(y$p.value != z$p.value))
 # kenward-roger adjusts vcov but not satterthwaite
 expect_true(all(x$std.error == y$std.error))
 expect_true(all(x$std.error != z$std.error))
 expect_true(all(y$std.error != z$std.error))
+
 
 x <- plot_cap(mod, condition = "hp", draw = FALSE)
 y <- plot_cap(mod, condition = "hp", vcov = "satterthwaite", draw = FALSE)

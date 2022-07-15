@@ -278,6 +278,16 @@ predictions <- function(model,
         tmp$rowid <- newdata$rowid
     }
 
+    # degrees of freedom
+    if (isTRUE(vcov == "satterthwaite") || isTRUE(vcov == "kenward-roger")) {
+        df <- tryCatch(
+            insight::get_df(model, data = newdata, type = vcov),
+            error = function(e) NULL)
+        if (isTRUE(length(df) == nrow(tmp))) {
+            tmp$df <- df
+        }
+    }
+
     # bayesian posterior draws
     draws <- attr(tmp, "posterior_draws")
     if (!is.null(transform_post)) {
@@ -324,7 +334,6 @@ predictions <- function(model,
                 draws = draws,
                 estimate = "predicted")
         }
-
     }
 
     out <- data.table(tmp)
