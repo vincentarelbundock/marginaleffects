@@ -93,7 +93,7 @@ expect_error(predictions(mod, newdata = datagrid(), vcov = "HC3"), pattern = "no
 expect_inherits(predictions(mod, newdata = datagrid(), vcov = NULL), "predictions")
 expect_inherits(predictions(mod, newdata = datagrid(), vcov = FALSE), "predictions")
 expect_inherits(predictions(mod, newdata = datagrid(), vcov = TRUE), "predictions")
-expect_inherits(predictions(mod, newdata = datagrid(), vcov = stats::vcov(mod)), "predictions")
+expect_inherits(predictions(mod, newdata = datagrid(), vcov = insight::get_varcov(mod)), "predictions")
 
 
 
