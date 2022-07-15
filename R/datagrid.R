@@ -117,8 +117,8 @@ counterfactual <- function(..., model = NULL, newdata = NULL) {
     at <- tmp$at
     dat <- tmp$newdata
     variables_all <- tmp$all
-    variables_manual <- tmp$variables_manual
-    variables_automatic <- tmp$variables_automatic
+    variables_manual <- names(at)
+    variables_automatic <- tmp$automatic
 
     # `at` -> `data.frame`
     at <- lapply(at, unique)
@@ -157,11 +157,12 @@ typical <- function(
     FUN_other = function(x) mean(x, na.rm = TRUE)) {
 
     tmp <- prep_datagrid(..., model = model, newdata = newdata)
+
     at <- tmp$at
     dat <- tmp$newdata
     variables_all <- tmp$all
-    variables_manual <- tmp$variables_manual
-    variables_automatic <- tmp$variables_automatic
+    variables_manual <- names(at)
+    variables_automatic <- tmp$automatic
 
     if (length(variables_automatic) > 0) {
         dat_automatic <- dat[, variables_automatic, drop = FALSE]
@@ -240,7 +241,7 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
         sanitize_variables(model = model,
             newdata = newdata,
             variables = variables))
-    variables_all <- unique(names(variables_list$conditional))
+    variables_all <- c(names(variables_list$conditional), variables_list$cluster)
     variables_manual <- names(at)
     variables_automatic <- setdiff(variables_all, variables_manual)
 
@@ -286,11 +287,8 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
 
     # warn if cluster variables after the | in the random effects formula are
     # numeric. users probably do not want to take their means, because this
-    # makes prediction impossible in many models (e.g., `fixest::feols(mpg ~ hp
-    # | cyl)`)
-    # insight::find
-    variables_cluster <- unlist(c(variables_list$cluster, variables_list$random))
-    variables_cluster <- intersect(variables_cluster, variables_automatic)
+    # makes prediction impossible in many models (e.g., `fixest::feols(mpg ~ hp | cyl)`)
+    variables_cluster <- intersect(variables_list[["cluster"]], variables_automatic)
     if (length(variables_cluster) > 0) {
         cluster_ids <- insight::find_random(model, flatten = TRUE)
 
@@ -318,8 +316,8 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
 
     out <- list("newdata" = newdata,
                 "at" = at,
-                "variables_all" = variables_all,
-                "variables_manual" = variables_manual,
-                "variables_automatic" = variables_automatic)
+                "all" = variables_all,
+                "manual" = variables_manual,
+                "automatic" = variables_automatic)
     return(out)
 }

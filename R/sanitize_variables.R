@@ -26,6 +26,7 @@ sanitize_variables <- function(model,
 
     # rename to avoid overwriting in case we need info later
     predictors <- variables
+    cluster <- NULL
 
     # variables is NULL: put all variable names from model
     if (is.null(predictors)) {
@@ -34,7 +35,8 @@ sanitize_variables <- function(model,
             predictors <- insight::find_predictors(model, flatten = TRUE)
         } else {
             predictors <- insight::find_variables(model)
-            predictors[["response"]] <- predictors[["weights"]] <- predictors[["cluster"]] <- NULL
+            cluster <- c(predictors[["cluster"]], predictors[["random"]])
+            predictors <- predictors[!names(predictors) %in% c("response", "weights", "random", "cluster")]
             predictors <- unlist(predictors, recursive = TRUE, use.names = FALSE)
         }
     }
@@ -79,12 +81,12 @@ sanitize_variables <- function(model,
         c("rowid", "group", "term", "estimate", "std.error", "statistic", "conf.low", "conf.high"))
     if (isTRUE(length(reserved) > 0)) {
         msg <- format_msg(sprintf(
-        "The following names are reserved to avoid conflicts with the column names of
-        the outputs produced by the `marginaleffects` package:
+        "The following variable names are forbidden to avoid conflicts with the column 
+        names of the outputs produced by the `marginaleffects` package:
 
         %s
 
-        Please rename your variables before fitting the model.",
+        Please rename your variables before fitting the model or specify the `variables` argument.",
         paste(reserved, collapse = ", ")))
         if (length(reserved) == length(predictors)) {
             stop(msg, call. = FALSE)
@@ -92,6 +94,8 @@ sanitize_variables <- function(model,
             warning(msg, call. = FALSE)
         }
     }
+
+    predictors <- predictors[!names(predictors) %in% reserved]
 
     # weights
     w <- tryCatch(insight::find_weights(model), error = function(e) NULL)
@@ -108,6 +112,7 @@ sanitize_variables <- function(model,
     # output
     out <- list(
         conditional = predictors,
+        cluster = cluster,
         weights = w)
 
     # save character levels
