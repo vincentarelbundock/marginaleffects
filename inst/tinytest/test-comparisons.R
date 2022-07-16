@@ -13,3 +13,10 @@ known <- "Average contrasts
 Model type:  lm
 Prediction type:  response"
 expect_print(summary(cmp), known)
+
+
+# examples from the main documentation
+mod <- lm(mpg ~ hp, data = mtcars)
+cmp <- comparisons(mod, variables = list(hp = c(90, 110)))
+expect_inherits(cmp, "comparisons")
+

@@ -65,10 +65,10 @@ sanitize_variables <- function(model,
         for (n in names(variables)) {
             if (n %in% colnames(newdata)) {
                 if (isTRUE(find_variable_class(n, newdata, model) == "numeric")) {
-                    sanity_contrast_numeric(variables[[n]])
+                    flag <- sanity_contrast_numeric(variables[[n]])
                 }
                 if (isTRUE(find_variable_class(n, newdata, model) %in% c("factor", "character"))) {
-                    sanity_contrast_factor(variables[[n]])
+                    flag <- sanity_contrast_factor(variables[[n]])
                 }
             }
         }
@@ -136,7 +136,7 @@ sanitize_variables <- function(model,
     # breaks (via `model.matrix`) when the data does not include all possible
     # factor levels.
     levels_character <- list()
-    for (v in variables) {
+    for (v in names(variables)) {
         if (v %in% colnames(origindata) && is.character(origindata[[v]])) {
             levels_character[[v]] <- unique(origindata[[v]])
         }

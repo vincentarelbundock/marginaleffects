@@ -4,6 +4,7 @@ get_ci <- function(
     estimate,
     df = NULL,
     draws = NULL,
+    vcov = TRUE,
     overwrite = FALSE) {
 
     if (!is.null(draws)) {

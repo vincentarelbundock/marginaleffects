@@ -129,6 +129,7 @@ deltamethod <- function(
         conf_level = conf_level,
         # sometimes get_predicted fails on SE but succeeds on CI (e.g., betareg)
         df = NULL,
+        vcov = vcov,
         overwrite = FALSE,
         draws = NULL,
         estimate = "estimate")

@@ -335,6 +335,7 @@ predictions <- function(model,
                 tmp,
                 conf_level = conf_level,
                 # sometimes insight::get_predicted fails on SE but succeeds on CI (e.g., betareg)
+                vcov = vcov,
                 overwrite = FALSE,
                 draws = draws,
                 estimate = "predicted")

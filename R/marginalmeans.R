@@ -238,6 +238,7 @@ marginalmeans <- function(model,
             out,
             conf_level = conf_level,
             df = NULL,
+            vcov = vcov,
             overwrite = FALSE,
             estimate = "marginalmean")
     }
