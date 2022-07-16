@@ -251,21 +251,6 @@ comparisons <- function(model,
     transform_pre <- sanitize_transform_pre(transform_pre)
 
 
-    # deprecated arguments still used internally and should be kept for backward compatibility
-    if ("contrast_factor" %in% names(dots)) {
-        contrast_factor <- dots[["contrast_factor"]]
-        dots[["contrast_factor"]] <- NULL
-    } else {
-        contrast_factor <- "reference"
-    }
-    if ("contrast_numeric" %in% names(dots)) {
-        contrast_numeric <- dots[["contrast_numeric"]]
-        dots[["contrast_numeric"]] <- NULL
-    } else {
-        contrast_numeric <- 1
-    }
-    sanity_contrast_factor(contrast_factor) # hardcoded in marginaleffects()
-    sanity_contrast_numeric(contrast_numeric) # hardcoded in marginaleffects()
 
 
 
@@ -294,11 +279,30 @@ comparisons <- function(model,
     vcov.type <- get_vcov_label(vcov)
     vcov <- get_vcov(model, vcov = vcov)
 
+    # deprecated arguments still used internally and should be kept for backward compatibility
+    # before sanitize_variables
+    if ("contrast_factor" %in% names(dots)) {
+        contrast_factor <- dots[["contrast_factor"]]
+        dots[["contrast_factor"]] <- NULL
+    } else {
+        contrast_factor <- "reference"
+    }
+    if ("contrast_numeric" %in% names(dots)) {
+        contrast_numeric <- dots[["contrast_numeric"]]
+        dots[["contrast_numeric"]] <- NULL
+    } else {
+        contrast_numeric <- 1
+    }
+    sanity_contrast_factor(contrast_factor) # hardcoded in marginaleffects()
+    sanity_contrast_numeric(contrast_numeric) # hardcoded in marginaleffects()
+
     # variables vector
     variables_list <- sanitize_variables(
-        model = model, newdata = newdata, variables = variables,
-        contrast_numeric = 1,
-        contrast_factor = "reference")
+        model = model,
+        newdata = newdata,
+        variables = variables,
+        contrast_numeric = contrast_numeric,
+        contrast_factor = contrast_factor)
 
     contrast_types <- variables_list$conditional
     variables_vec <- names(variables_list$conditional)
