@@ -161,7 +161,7 @@ predictions <- function(model,
     # type
     type <- sanitize_type(model = model, type = type, calling_function = "predictions")
 
-    # check before inferring `newdata`
+    # check variables before inferring `newdata`
     if (!is.null(variables)) {
         variables_list <- sanitize_variables(model, newdata, variables)
         # get new data if it doesn't exist
@@ -177,8 +177,10 @@ predictions <- function(model,
         }
         newdata <- do.call("datagrid", args)
         newdata[["rowid"]] <- NULL # the original rowids are no longer valid after averaging et al.
+
+    # sanitize_variables often breaks things, but we need this attributes
     } else {
-        variables_list <- sanitize_variables(model, newdata, variables)
+        variables_list <- NULL
     }
 
 
