@@ -240,7 +240,7 @@ comparisons <- function(model,
         stop(msg, call. = FALSE)
     }
 
-    # transformation labels (before sanitation)
+    # transformation labels for printing (before sanitation)
     transform_pre_label <- transform_post_label <- NULL
     if (is.function(transform_pre)) {
         transform_pre_label <- deparse(substitute(transform_pre))
@@ -249,9 +249,6 @@ comparisons <- function(model,
         transform_post_label <- deparse(substitute(transform_post))
     }
     transform_pre <- sanitize_transform_pre(transform_pre)
-
-
-
 
 
     # weights
@@ -264,8 +261,6 @@ comparisons <- function(model,
 
     # get dof before transforming the vcov arg
     if (is.character(vcov) && (isTRUE(vcov == "satterthwaite") || isTRUE(vcov == "kenward-roger"))) {
-        mi <- insight::model_info(model)
-        V <- get_vcov(model, vcov = vcov)
         df <- insight::find_response(model)
         # predict.lmerTest requires the DV
         if (!df %in% colnames(newdata)) {
@@ -328,17 +323,17 @@ comparisons <- function(model,
                  contrast_label = transform_pre[["label"]],
                  eps = eps)
     args <- c(args, dots)
-    cache <- do.call("get_contrast_data", args)
+    contrast_data <- do.call("get_contrast_data", args)
 
     args <- list(model,
                  newdata = newdata,
                  variables = variables_vec,
                  type = type,
                  transform_pre = transform_pre[["function"]],
-                 contrast_factor = contrast_factor,
-                 contrast_numeric = contrast_numeric,
                  eps = eps,
-                 cache = cache,
+                 original = contrast_data$original,
+                 hi = contrast_data$hi,
+                 lo = contrast_data$lo,
                  marginalmeans = marginalmeans,
                  hypothesis = hypothesis)
     args <- c(args, dots)
@@ -360,12 +355,14 @@ comparisons <- function(model,
                      newdata = newdata,
                      index = idx,
                      variables = variables_vec,
-                     cache = cache,
                      transform_pre = transform_pre[["function"]],
                      contrast_factor = contrast_factor,
                      contrast_numeric = contrast_numeric,
                      marginalmeans = marginalmeans,
                      hypothesis = hypothesis,
+                     hi = contrast_data$hi,
+                     lo = contrast_data$lo,
+                     original = contrast_data$original,
                      eps = 1e-4)
         args <- c(args, dots)
         se <- do.call("get_se_delta", args)
@@ -380,9 +377,9 @@ comparisons <- function(model,
 
     # merge original data back in
     # HACK: relies on NO sorting at ANY point
-    if (isTRUE(nrow(mfx) == nrow(cache$original))) {
-        idx <- setdiff(colnames(cache$original), colnames(mfx))
-        mfx <- data.table(mfx, cache$original[, ..idx])
+    if (isTRUE(nrow(mfx) == nrow(contrast_data$original))) {
+        idx <- setdiff(colnames(contrast_data$original), colnames(mfx))
+        mfx <- data.table(mfx, contrast_data$original[, ..idx])
     }
 
     # meta info

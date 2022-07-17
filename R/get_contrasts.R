@@ -3,9 +3,9 @@ get_contrasts <- function(model,
                           type,
                           variables,
                           transform_pre,
-                          contrast_factor,
-                          contrast_numeric,
-                          cache = NULL,
+                          original,
+                          lo,
+                          hi,
                           eps = 1e-4,
                           marginalmeans,
                           hypothesis = NULL,
@@ -13,20 +13,6 @@ get_contrasts <- function(model,
 
     dots <- list(...)
 
-    # cache is efficient for the delta method Jacobian when we need to manipulate
-    # the coefficients but don't need to rebuild the contrast data every time.
-    if (is.null(cache)) {
-        cache <- get_contrast_data(model,
-                newdata = newdata,
-                variables = variables,
-                contrast_factor = contrast_factor,
-                contrast_numeric = contrast_numeric,
-                eps = eps,
-                ...)
-    }
-    original <- cache[["original"]]
-    lo <- cache[["lo"]]
-    hi <- cache[["hi"]]
 
     # some predict() methods need data frames and will convert data.tables
     # internally, which can be very expensive if done many times. we do it once
@@ -67,7 +53,6 @@ get_contrasts <- function(model,
     # output data.frame
     out <- pred_lo
     setDT(out)
-
 
     # univariate outcome:
     # original is the "composite" data that we constructed by binding terms and
@@ -156,7 +141,11 @@ get_contrasts <- function(model,
     out[, predicted_lo := pred_lo$predicted]
     out[, predicted_hi := pred_hi$predicted]
     if (isTRUE(marginalmeans)) {
-        out <- out[, .(predicted_lo = mean(predicted_lo), predicted_hi = mean(predicted_hi), eps = mean(eps_tmp)), by = idx]
+        out <- out[, .(
+            predicted_lo = mean(predicted_lo),
+            predicted_hi = mean(predicted_hi),
+            eps = mean(eps_tmp)),
+        by = idx]
         out[, "comparison" := transform_pre_list[[transform_pre_idx[1]]](
             out$predicted_hi, out$predicted_lo, out$eps_tmp
         ), by = "term"]
@@ -183,7 +172,7 @@ get_contrasts <- function(model,
         }
         tmp <- out[, .(comparison = wrapfun(
             hi = predicted_hi,
-            lo = predicted_lo, 
+            lo = predicted_lo,
             n = .N,
             transform_pre_idx = transform_pre_idx,
             eps_tmp = eps_tmp)),
@@ -202,7 +191,7 @@ get_contrasts <- function(model,
 
     # output
     attr(out, "posterior_draws") <- draws
-    attr(out, "original") <- cache[["original"]]
+    attr(out, "original") <- original
     return(out)
 }
 

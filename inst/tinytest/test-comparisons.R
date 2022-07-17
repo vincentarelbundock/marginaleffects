@@ -5,6 +5,7 @@ dat <- mtcars
 dat$gear <- factor(dat$gear)
 mod <- lm(mpg ~ gear, data = dat)
 cmp <- comparisons(mod)
+
 known <- "Average contrasts
   Term Contrast Effect Std. Error z value   Pr(>|z|)  2.5 % 97.5 %
 1 gear    4 - 3  8.427      1.823   4.621 3.8123e-06 4.8528  12.00

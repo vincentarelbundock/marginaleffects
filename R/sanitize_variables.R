@@ -28,23 +28,15 @@ sanitize_variables <- function(model,
     predictors <- variables
     cluster <- instruments <- others <- correlation <- NULL
 
-    # variables is NULL: put all variable names from model
+    # variables is NULL: all variable names from model
     if (is.null(predictors)) {
         # mhurdle names the variables weirdly
         if (inherits(model, "mhurdle")) {
             predictors <- insight::find_predictors(model, flatten = TRUE)
         } else {
-            predictors <- insight::find_variables(model)
-            cluster <- c(
-                predictors[["random"]],
-                predictors[["cluster"]],
-                predictors[["strata"]])
-            others <- c(
-                predictors[["instruments"]],
-                predictors[["correlation"]])
-            bad <- c("response", "weights", "random", "cluster", "instruments", "correlation", "strata")
-            predictors <- predictors[!names(predictors) %in% bad]
-            predictors <- unlist(predictors, recursive = TRUE, use.names = FALSE)
+            tmp <- insight::find_variables(model)
+            predictors <- tmp[["conditional"]]
+            others <- setdiff(unlist(tmp, recursive = TRUE, use.names = FALSE), predictors)
         }
     }
 
@@ -85,7 +77,7 @@ sanitize_variables <- function(model,
     # reserved keywords
     reserved <- intersect(
         names(predictors),
-        c("rowid", "group", "term", "estimate", "std.error", "statistic", "conf.low", "conf.high"))
+        c("rowid", "group", "term", "contrast", "estimate", "std.error", "statistic", "conf.low", "conf.high"))
     if (isTRUE(length(reserved) > 0)) {
         msg <- format_msg(sprintf(
         "The following variable names are forbidden to avoid conflicts with the column 
@@ -124,9 +116,7 @@ sanitize_variables <- function(model,
     # output
     out <- list(
         conditional = predictors,
-        cluster = cluster,
-        instruments = instruments,
-        others = c(others, correlation),
+        others = others,
         weights = w)
 
     # save character levels
@@ -146,6 +136,3 @@ sanitize_variables <- function(model,
 
     return(out)
 }
-
-
-
