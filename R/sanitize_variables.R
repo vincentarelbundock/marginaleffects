@@ -35,10 +35,12 @@ sanitize_variables <- function(model,
             predictors <- insight::find_predictors(model, flatten = TRUE)
         } else {
             tmp <- insight::find_variables(model)
-            predictors <- tmp[["conditional"]]
+            predictors <- c("fixed", "conditional")
+            predictors <- unlist(tmp[predictors], recursive = TRUE, use.names = FALSE)
             others <- setdiff(unlist(tmp, recursive = TRUE, use.names = FALSE), predictors)
         }
     }
+
 
     # variables is character vector: convert to named list
     if (isTRUE(checkmate::check_character(predictors))) {
