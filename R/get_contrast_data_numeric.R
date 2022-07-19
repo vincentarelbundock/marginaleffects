@@ -49,7 +49,7 @@ get_contrast_data_numeric <- function(model,
         low <- variable$value[1]
         high <- variable$value[2]
         gap <- diff(variable$value)
-        lab <- make_label(sprintf(variable$label, rev(variable$value)))
+        lab <- make_label(variable$label, rev(variable$value))
 
     # character contrasts
     } else if (identical(variable$value, "sd")) {
@@ -70,7 +70,7 @@ get_contrast_data_numeric <- function(model,
         high <- m + s
         lab <- c("x - sd", "x + sd")
         if (!isTRUE(grepl("mean", variable$label))) {
-            lab <- sprintf("(%s)", lab)
+            lab <- make_label("(%s)", lab)
         }
         lab <- make_label(variable$label, rev(lab))
 
