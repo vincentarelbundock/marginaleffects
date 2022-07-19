@@ -20,7 +20,7 @@
 #' method.
 #'
 #' The `newdata` argument can be used to control the kind of contrasts to report:
-#' 
+#'
 #' * Average Contrasts
 #' * Adjusted Risk Ratios
 #' * Adjusted Risk Differences
@@ -179,15 +179,19 @@ comparisons <- function(model,
                         interaction = NULL,
                         wts = NULL,
                         hypothesis = NULL,
+                        eps = NULL,
                         ...) {
 
     dots <- list(...)
 
+    # TODO: print transform_post_label: deparse(substitute(transform_pre))
+
     # marginaleffects()` **must** run its own sanity checks and hardcode valid arguments
     internal_call <- dots[["internal_call"]]
     if (!isTRUE(internal_call)) {
-        # if `newdata` is a call to `datagrid`, `typical`, or `counterfactual`, insert `model`
-        # should probably not be nested too deeply in the call stack since we eval.parent() (not sure about this)
+        # if `newdata` is a call to `datagrid`, `typical`, or `counterfactual`,
+        # insert `model` should probably not be nested too deeply in the call
+        # stack since we eval.parent() (not sure about this)
         scall <- substitute(newdata)
         if (is.call(scall) && as.character(scall)[1] %in% c("datagrid", "typical", "counterfactual")) {
             lcall <- as.list(scall)
@@ -208,30 +212,48 @@ comparisons <- function(model,
         }
 
         model <- sanitize_model(
-            model = model, newdata = newdata, wts = wts,
-            calling_function = "comparisons", ...)
+            model = model,
+            newdata = newdata,
+            wts = wts,
+            calling_function = "comparisons",
+            ...)
         conf_level <- sanitize_conf_level(conf_level, ...)
         interaction <- sanitize_interaction(interaction, variables, model)
         type <- sanitize_type(model = model, type = type, calling_function = "marginaleffects")
         checkmate::assert_function(transform_post, null.ok = TRUE)
-        if ("eps" %in% names(dots)) {
-            stop("The `eps` argument is only supported by the `marginaleffects()` function.", call. = FALSE)
-        }
     }
+
+    sanity_transform_pre(transform_pre)
+    checkmate::assert_numeric(eps, len = 1, min = 1e-10, null.ok = TRUE)
+
+    # used by `marginaleffects` to hard-code preference 
+    # deprecated as user-level arguments
+    if ("contrast_factor" %in% names(dots)) {
+        contrast_factor <- dots[["contrast_factor"]]
+        dots[["contrast_factor"]] <- NULL
+    } else {
+        contrast_factor <- "reference"
+    }
+    if ("contrast_numeric" %in% names(dots)) {
+        contrast_numeric <- dots[["contrast_numeric"]]
+        dots[["contrast_numeric"]] <- NULL
+    } else {
+        contrast_numeric <- 1
+    }
+    sanity_contrast_factor(contrast_factor) # hardcoded in marginaleffects()
+    sanity_contrast_numeric(contrast_numeric) # hardcoded in marginaleffects()
+    variables_list <- sanitize_variables(
+        model = model,
+        newdata = newdata,
+        variables = variables,
+        contrast_numeric = contrast_numeric,
+        contrast_factor = contrast_factor,
+        transform_pre = transform_pre)
 
     hypothesis <- sanitize_hypothesis(hypothesis, ...)
 
-
-    # step size is only used and sanitized by `marginaleffects()`
-    if ("eps" %in% names(dots)) {
-        eps <- dots[["eps"]]
-        dots[["eps"]] <- NULL
-    } else {
-        eps <- list(default_eps = 1e-4)
-    }
-
     marginalmeans <- isTRUE(checkmate::check_choice(newdata, choices = "marginalmeans")) # before sanitize_newdata
-    newdata <- sanity_newdata(model = model, newdata = newdata)
+    newdata <- sanitize_newdata(model = model, newdata = newdata)
 
     # matrix columns not supported
     matrix_columns <- attr(newdata, "matrix_columns")
@@ -239,17 +261,6 @@ comparisons <- function(model,
         msg <- "Matrix columns are not supported by the `variables` argument."
         stop(msg, call. = FALSE)
     }
-
-    # transformation labels for printing (before sanitation)
-    transform_pre_label <- transform_post_label <- NULL
-    if (is.function(transform_pre)) {
-        transform_pre_label <- deparse(substitute(transform_pre))
-    }
-    if (!is.null(transform_post)) {
-        transform_post_label <- deparse(substitute(transform_post))
-    }
-    transform_pre <- sanitize_transform_pre(transform_pre)
-
 
     # weights
     sanity_wts(wts, newdata) # after sanity_newdata
@@ -274,36 +285,10 @@ comparisons <- function(model,
     vcov.type <- get_vcov_label(vcov)
     vcov <- get_vcov(model, vcov = vcov)
 
-    # deprecated arguments still used internally and should be kept for backward compatibility
-    # before sanitize_variables
-    if ("contrast_factor" %in% names(dots)) {
-        contrast_factor <- dots[["contrast_factor"]]
-        dots[["contrast_factor"]] <- NULL
-    } else {
-        contrast_factor <- "reference"
-    }
-    if ("contrast_numeric" %in% names(dots)) {
-        contrast_numeric <- dots[["contrast_numeric"]]
-        dots[["contrast_numeric"]] <- NULL
-    } else {
-        contrast_numeric <- 1
-    }
-    sanity_contrast_factor(contrast_factor) # hardcoded in marginaleffects()
-    sanity_contrast_numeric(contrast_numeric) # hardcoded in marginaleffects()
-
-    # variables vector
-    variables_list <- sanitize_variables(
-        model = model,
-        newdata = newdata,
-        variables = variables,
-        contrast_numeric = contrast_numeric,
-        contrast_factor = contrast_factor)
-
-    contrast_types <- variables_list$conditional
-    variables_vec <- names(variables_list$conditional)
 
     # matrix columns are not supported
-    variables_vec <- setdiff(variables_vec, matrix_columns)
+    predictors <- variables_list$conditional
+    predictors <- predictors[!names(predictors) %in% matrix_columns]
 
     # modelbased::visualisation_matrix attaches useful info for plotting
     attributes_newdata <- attributes(newdata)
@@ -314,23 +299,17 @@ comparisons <- function(model,
     # compute contrasts and standard errors
     args <- list(model = model,
                  newdata = newdata,
-                 variables = variables_vec,
-                 contrast_types = contrast_types,
-                 contrast_factor = contrast_factor,
-                 contrast_numeric = contrast_numeric,
+                 variables = predictors,
                  interaction = interaction,
                  marginalmeans = marginalmeans,
-                 contrast_label = transform_pre[["label"]],
                  eps = eps)
     args <- c(args, dots)
     contrast_data <- do.call("get_contrast_data", args)
 
     args <- list(model,
                  newdata = newdata,
-                 variables = variables_vec,
+                 variables = predictors,
                  type = type,
-                 transform_pre = transform_pre[["function"]],
-                 eps = eps,
                  original = contrast_data$original,
                  hi = contrast_data$hi,
                  lo = contrast_data$lo,
@@ -354,10 +333,7 @@ comparisons <- function(model,
                      FUN = get_se_delta_contrasts,
                      newdata = newdata,
                      index = idx,
-                     variables = variables_vec,
-                     transform_pre = transform_pre[["function"]],
-                     contrast_factor = contrast_factor,
-                     contrast_numeric = contrast_numeric,
+                     variables = predictors,
                      marginalmeans = marginalmeans,
                      hypothesis = hypothesis,
                      hi = contrast_data$hi,
@@ -405,12 +381,14 @@ comparisons <- function(model,
     }
 
     # clean columns
+    bad <- c("predicted_hi", "predicted_lo", "marginaleffects_x")
     stubcols <- c("rowid", "rowid_counterfactual", "type", "group", "term", "hypothesis",
                   grep("^contrast", colnames(mfx), value = TRUE),
                   "comparison", "std.error", "statistic", "p.value", "conf.low", "conf.high", "df",
                   sort(grep("^predicted", colnames(newdata), value = TRUE)))
     cols <- intersect(stubcols, colnames(mfx))
     cols <- unique(c(cols, colnames(mfx)))
+    cols <- setdiff(cols, bad)
     mfx <- mfx[, ..cols, drop = FALSE]
     mfx[["eps"]] <- NULL
 
@@ -420,8 +398,8 @@ comparisons <- function(model,
 
     out <- mfx
 
-    if ("eps_tmp" %in% colnames(out)) {
-        out[, "eps_tmp" := NULL]
+    if ("marginaleffects_eps" %in% colnames(out)) {
+        out[, "marginaleffects_eps" := NULL]
     }
 
     if (!isTRUE(internal_call)) {
@@ -433,12 +411,12 @@ comparisons <- function(model,
     attr(out, "model") <- model
     attr(out, "type") <- type
     attr(out, "model_type") <- class(model)[1]
-    attr(out, "variables") <- variables_vec
+    attr(out, "variables") <- predictors
     attr(out, "jacobian") <- J
     attr(out, "vcov") <- vcov
     attr(out, "vcov.type") <- vcov.type
-    attr(out, "transform_pre") <- transform_pre_label
-    attr(out, "transform_post") <- transform_post_label
+    attr(out, "transform_pre") <- NULL
+    attr(out, "transform_post") <- NULL
     attr(out, "weights") <- marginaleffects_wts_internal
 
     # modelbased::visualisation_matrix attaches useful info for plotting

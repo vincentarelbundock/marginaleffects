@@ -129,7 +129,7 @@ counterfactual <- function(..., model = NULL, newdata = NULL) {
 
     rowid <- data.frame(rowid_counterfactual = seq_len(nrow(dat)))
     if (length(variables_automatic) > 0) {
-        dat_automatic <- dat[, variables_automatic, drop = FALSE]
+        dat_automatic <- dat[, intersect(variables_automatic, colnames(dat)), drop = FALSE]
         dat_automatic <- cbind(rowid, dat_automatic)
         out <- merge(dat_automatic, at, all = TRUE)
     }  else {
@@ -165,7 +165,7 @@ typical <- function(
     variables_automatic <- tmp$automatic
 
     if (length(variables_automatic) > 0) {
-        dat_automatic <- dat[, variables_automatic, drop = FALSE]
+        dat_automatic <- dat[, intersect(variables_automatic, colnames(dat)), drop = FALSE]
         dat_automatic <- stats::na.omit(dat_automatic)
         out <- list()
         # na.omit destroys attributes, and we need the "factor" attribute
@@ -228,6 +228,7 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
         msg <- "When calling `datagrid()` *inside* the `marginaleffects()` or `comparisons()` functions, the `model` and `newdata` arguments can both be omitted. However, when calling `datagrid()` on its own, users must specify either the `model` or the `newdata` argument (but not both)."
         stop(msg, call. = FALSE)
     }
+
 
     # data: all variables
     if (!is.null(newdata)) {

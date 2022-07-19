@@ -8,5 +8,6 @@ utils::globalVariables( c('.', 'term', 'part', 'estimate', 'conf.high',
     'logLik', 'formatBicLL', 'section', 'position', 'where', 'ticks',
     'statistic1', 'model', 'tmp_grp', 'condition_variable', 'conf_int',
     'conf_level', 'group', 'contrast', 'm', 'dydx', "patterns", 'rowid',
-    'predicted', 'gn',  "predicted_lo", "predicted_hi", 'comparison', "..idx", "eps_tmp", "transform_pre_idx",
+    'predicted', 'gn',  "predicted_lo", "predicted_hi", 'comparison', "..idx",
+    "marginaleffects_eps", "marginaleffects_x", "transform_pre_idx", "marginaleffects_function",
     "..idx_by", "..idx_lo", "..idx_hi", "..tmp", "draw", "..cols", "..w"))

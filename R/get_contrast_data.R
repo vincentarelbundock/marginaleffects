@@ -3,22 +3,23 @@ get_contrast_data <- function(model,
                               variables,
                               contrast_factor,
                               contrast_numeric,
+                              contrast_label,
                               interaction,
                               eps,
-                              contrast_types,
-                              contrast_label,
                               ...) {
 
     lo <- hi <- ter <- lab <- original <- rowid <- list()
 
-    variable_classes <- sapply(variables, function(x) find_variable_class(
+    originaldata <- hush(insight::get_data(model))
+
+    variable_classes <- sapply(names(variables), function(x) find_variable_class(
                                variable = x,
                                newdata = newdata,
                                model = model))
     if (any(c("factor", "character") %in% variable_classes)) {
         first_interaction <- names(variable_classes[variable_classes %in% c("factor", "character")])[1]
     }
-    for (v in variables) {
+    for (v in names(variables)) {
         # logical and character before factor because they get picked up by find_categorical
         variable_class <- find_variable_class(variable = v,
                                               newdata = newdata,
@@ -29,57 +30,46 @@ get_contrast_data <- function(model,
                 model,
                 newdata,
                 v,
-                contrast_label = contrast_label,
+                contrast_label = variables[[v]]$label,
                 ...)
 
         } else if (variable_class == "factor") {
-            if (isTRUE(v %in% names(contrast_types))) {
-                ctype <- contrast_types[[v]]
-            } else {
-                ctype <- contrast_factor
-            }
             tmp <- get_contrast_data_factor(
                 model,
                 newdata,
                 v,
-                contrast_factor = ctype,
+                contrast_factor = variables[[v]]$value,
                 interaction = interaction,
-                contrast_label = contrast_label,
+                contrast_label = variables[[v]]$label,
                 first_interaction = isTRUE(v == first_interaction),
                 ...)
 
         } else if (variable_class == "character") {
-            if (isTRUE(v %in% names(contrast_types))) {
-                ctype <- contrast_types[[v]]
-            } else {
-                ctype <- contrast_factor
-            }
             tmp <- get_contrast_data_character(
                 model,
                 newdata,
                 v,
-                ctype,
                 interaction = interaction,
-                contrast_label = contrast_label,
+                contrast_factor = variables[[v]]$value,
+                contrast_label = variables[[v]]$label,
                 first_interaction = isTRUE(v == first_interaction),
                 ...)
 
         } else if (variable_class == "numeric") {
-            if (isTRUE(v %in% names(contrast_types))) {
-                ctype <- contrast_types[[v]]
+            if (is.null(eps)) {
+                eps_v <- 1e-4 * diff(range(originaldata[[v]], na.rm = TRUE))
             } else {
-                ctype <- contrast_numeric
+                eps_v <- eps
             }
-            eps_v <- ifelse(isTRUE(v %in% names(eps)), eps[[v]], eps[["default_eps"]])
+            # eps is need twice: to build the contrast data and for post hoc normalization
             tmp <- get_contrast_data_numeric(
                 model,
                 newdata,
-                v,
-                contrast_numeric = ctype,
-                contrast_label = contrast_label,
+                variables[[v]],
+                contrast_label <- variables[[v]]$label,
                 eps = eps_v,
                 ...)
-            tmp[["original"]][["eps"]] <- eps_v
+            tmp[["original"]][["marginaleffects_eps"]] <- eps_v
 
         } else {
             stop("variable class not supported.", call. = FALSE)
@@ -133,33 +123,33 @@ get_contrast_data <- function(model,
     } else {
         # drop variables for which we have contrasts
         for (i in seq_along(lo)) {
-            if (i == 1) {
-                # keep rowid and original data only in one of the datasets
-                idx_lo <- setdiff(variables, names(lo)[i])
-                idx_hi <- setdiff(variables, names(hi)[i])
-            } else {
-                # exclude rowid and variables excluded from `variables`, for
-                # which we do not compute cross-contrasts
-                contrast_null <- grep("rowid|^null_contrast_", colnames(lo[[i]]), value = TRUE)
-                idx_lo <- c(setdiff(names(lo[[i]]), c(contrast_null, variables)),
-                            setdiff(variables, names(lo)[[i]]))
-                idx_hi <- c(setdiff(names(hi[[i]]), c(contrast_null, variables)),
-                            setdiff(variables, names(hi)[[i]]))
-            }
-            lo[[i]] <- data.table(lo[[i]])[, !..idx_lo]
-            hi[[i]] <- data.table(hi[[i]])[, !..idx_hi]
-            lo[[i]][[paste0("contrast_", names(lo)[i])]] <- lab[[i]]
-            hi[[i]][[paste0("contrast_", names(lo)[i])]] <- lab[[i]]
+        if (i == 1) {
+            # keep rowid and original data only in one of the datasets
+            idx_lo <- setdiff(names(variables), names(lo)[i])
+            idx_hi <- setdiff(names(variables), names(hi)[i])
+        } else {
+            # exclude rowid and variables excluded from `variables`, for
+            # which we do not compute cross-contrasts
+            contrast_null <- grep("rowid|^null_contrast_", colnames(lo[[i]]), value = TRUE)
+            idx_lo <- c(setdiff(names(lo[[i]]), c(contrast_null, names(variables))),
+                        setdiff(names(variables), names(lo)[[i]]))
+            idx_hi <- c(setdiff(names(hi[[i]]), c(contrast_null, names(variables))),
+                        setdiff(names(variables), names(hi)[[i]]))
         }
+        lo[[i]] <- data.table(lo[[i]])[, !..idx_lo]
+        hi[[i]] <- data.table(hi[[i]])[, !..idx_hi]
+        lo[[i]][[paste0("contrast_", names(lo)[i])]] <- lab[[i]]
+        hi[[i]][[paste0("contrast_", names(lo)[i])]] <- lab[[i]]
+    }
 
-        fun <- function(x, y) merge(x, y, all = TRUE, allow.cartesian = TRUE)
-        lo <- Reduce("fun", lo)
-        hi <- Reduce("fun", hi)
-        original <- NULL
+    fun <- function(x, y) merge(x, y, all = TRUE, allow.cartesian = TRUE)
+    lo <- Reduce("fun", lo)
+    hi <- Reduce("fun", hi)
+    original <- NULL
 
-        # faster to rbind, but creates massive datasets. need cartesian join on rowid
-        # lo <- cjdt(lo)
-        # hi <- cjdt(hi)
+    # faster to rbind, but creates massive datasets. need cartesian join on rowid
+    # lo <- cjdt(lo)
+    # hi <- cjdt(hi)
 
         # if there are fewer null_contrast_* columns, then there is at least
         # one always non-null variable type, so we keep everything

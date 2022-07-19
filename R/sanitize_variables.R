@@ -1,125 +1,180 @@
-# return a list with LL
-sanitize_variables <- function(model,
+# input: character vector or named list
+# output: named list of lists where each element represents a variable with: name, value, function, label
+sanitize_variables <- function(variables,
+                               model,
                                newdata,
-                               variables,
+                               transform_pre = NULL,
                                contrast_numeric = 1,
                                contrast_factor = "reference") {
 
-    # TODO: do we still need this?
-    contrast_types <- NULL
-
+    if (is.null(newdata)) {
+        newdata <- hush(insight::get_data(model))
+    }
+    newdata <- sanitize_newdata(model = model, newdata = newdata)
+    checkmate::assert_data_frame(newdata, min.row = 1, null.ok = TRUE)
     checkmate::assert(
         checkmate::check_character(variables, min.len = 1, null.ok = TRUE),
         checkmate::check_list(variables, names = "unique"),
         combine = "or")
-    checkmate::assert_data_frame(newdata, min.row = 1, null.ok = TRUE)
-
-    if (!is.null(model) && is.null(newdata)) {
-        origindata <- hush(insight::get_data(model))
-    } else {
-        origindata <- newdata
-    }
-
-    if (is.null(newdata)) {
-        newdata <- origindata
-    }
 
     # rename to avoid overwriting in case we need info later
     predictors <- variables
-    cluster <- instruments <- others <- correlation <- NULL
+    others <- NULL
 
-    # variables is NULL: all variable names from model
-    if (is.null(predictors)) {
-        # mhurdle names the variables weirdly
-        if (inherits(model, "mhurdle")) {
-            predictors <- insight::find_predictors(model, flatten = TRUE)
-        } else {
-            tmp <- insight::find_variables(model)
-            predictors <- c("fixed", "conditional")
-            predictors <- unlist(tmp[predictors], recursive = TRUE, use.names = FALSE)
-            others <- setdiff(unlist(tmp, recursive = TRUE, use.names = FALSE), predictors)
+    # all variables
+    if (!is.null(model)) {
+        tmp <- insight::find_variables(model)
+        predictors_all <- unlist(tmp, recursive = TRUE, use.names = FALSE)
+
+        # variables is NULL: all variable names from model
+        if (is.null(predictors)) {
+            # mhurdle names the variables weirdly
+            if (inherits(model, "mhurdle")) {
+                predictors <- insight::find_predictors(model, flatten = TRUE)
+            } else {
+                predictors <- unlist(tmp[c("fixed", "conditional")], recursive = TRUE, use.names = FALSE)
+            }
         }
+    } else {
+        predictors <- predictors_all <- colnames(newdata)
     }
 
+    # variable classes: compute only once
+    variables_class <- list()
+    if (isTRUE(checkmate::check_character(predictors))) {
+        idx <- predictors
+    } else if (isTRUE(checkmate::check_list(predictors))) {
+        idx <- names(predictors)
+    }
+    for (v in idx) {
+        variables_class[[v]] <- find_variable_class(v, newdata = newdata, model = model)
+    }
 
     # variables is character vector: convert to named list
     if (isTRUE(checkmate::check_character(predictors))) {
-        tmp <- list()
+        predictors_new <- list()
         for (v in predictors) {
-            if (isTRUE(find_variable_class(v, newdata, model) == "numeric")) {
-                tmp[[v]] <- contrast_numeric
+            if (isTRUE(variables_class[[v]] == "numeric")) {
+                predictors_new[[v]] <- contrast_numeric
             } else {
-                tmp[[v]] <- contrast_factor
+                predictors_new[[v]] <- contrast_factor
             }
         }
-        predictors <- tmp
-
-    # variables is named list: check validity
-    } else if (isTRUE(checkmate::check_list(predictors, names = "unique"))) {
-        for (n in names(variables)) {
-            if (n %in% colnames(newdata)) {
-                if (isTRUE(find_variable_class(n, newdata, model) == "numeric")) {
-                    flag <- sanity_contrast_numeric(variables[[n]])
-                }
-                if (isTRUE(find_variable_class(n, newdata, model) %in% c("factor", "character"))) {
-                    flag <- sanity_contrast_factor(variables[[n]])
-                }
-            }
-        }
-        predictors <- variables
+        predictors <- predictors_new
     }
+
+    # check validity of elements of predictors list
+    for (n in names(predictors)) {
+        if (n %in% colnames(newdata)) {
+            if (identical(variables_class[v], "numeric")) {
+                sanity_contrast_numeric(predictors[[v]])
+            }
+            if (isTRUE(variables_class[v] %in% c("factor", "character"))) {
+                sanity_contrast_factor(predictors[[v]])
+            }
+        }
+    }
+
+    # check missing variables
+    miss <- setdiff(names(predictors), colnames(newdata))
+    if (length(miss) > 0) {
+        msg <- format_msg(sprintf(
+        "These variables were not found: %s. 
+        Try specifying the `newdata` argument explicitly.",
+        paste(miss, collapse = ", ")))
+    }
+    predictors <- predictors[!names(predictors) %in% miss]
 
     # sometimes `insight` returns interaction component as if it were a constituent variable
     idx <- !grepl(":", names(predictors))
     predictors <- predictors[idx]
-    if (length(predictors) == 0) {
-        stop("Please specify the `variables` argument explicitly.", call. = FALSE)
-    }
 
     # reserved keywords
     reserved <- intersect(
         names(predictors),
         c("rowid", "group", "term", "contrast", "estimate", "std.error", "statistic", "conf.low", "conf.high"))
     if (isTRUE(length(reserved) > 0)) {
+        predictors <- predictors[!names(predictors) %in% reserved]
         msg <- format_msg(sprintf(
         "The following variable names are forbidden to avoid conflicts with the column 
-        names of the outputs produced by the `marginaleffects` package:
-
-        %s
-
+        names of the outputs produced by the `marginaleffects` package: %s
         Please rename your variables before fitting the model or specify the `variables` argument.",
         paste(reserved, collapse = ", ")))
-        if (length(reserved) == length(predictors)) {
-            stop(msg, call. = FALSE)
-        } else {
-            warning(msg, call. = FALSE)
-        }
+        warning(msg, call. = FALSE)
     }
 
-    predictors <- predictors[!names(predictors) %in% reserved]
+    # matrix variables are not supported
+    idx <- names(predictors) %in% attr(newdata, "matrix_columns")
+    if (any(idx)) {
+        predictors <- predictors[!idx]
+        msg <- format_msg("Matrix columns are not supported.")
+        warning(msg, call. = FALSE)
+    }
 
-    # weights
+    # anything left?
+    if (length(predictors) == 0) {
+        stop("There are no valid predictors. Please change the `variables` argument.", call. = FALSE)
+    }
+    others <- setdiff(predictors_all, names(predictors))
+
+    # sometimes weights don't get extracted by `find_variables()`
     w <- tryCatch(insight::find_weights(model), error = function(e) NULL)
     w <- intersect(w, colnames(newdata))
+    others <- c(others, w)
 
-    # check missing variables
-    miss <- setdiff(names(predictors), colnames(newdata))
-    if (length(miss) > 0) {
-        stop(sprintf("Variables missing from `newdata` and/or the data extracted from the model objects: %s",
-                     paste(miss, collapse = ", ")),
-             call. = FALSE)
+    # predictors list elements: name, value, function, label
+    for (v in names(predictors)) {
+        # `variables` character input has two possibilities:
+        if (isTRUE(checkmate::check_character(predictors[[v]]))) {
+            # 1. transform_pre function shortcut. this takes precedence over transform_pre
+            if (predictors[[v]] %in% names(transform_pre_function_dict)) {
+                tmp <- list(
+                    "name" = v,
+                    "function" = transform_pre_function_dict[[predictors[[v]]]],
+                    "label" = transform_pre_label_dict[[predictors[[v]]]],
+                    "value" = NULL)
+            # 2. transform_pre gap value shortcut
+            } else {
+                # transform_pre can be a custom function
+                if (is.function(transform_pre)) {
+                    fun <- transform_pre
+                    lab <- "custom"
+                } else if (is.character(transform_pre)) {
+                    fun <- transform_pre_function_dict[[transform_pre]]
+                    lab <- transform_pre_label_dict[[transform_pre]]
+                } else {
+                    fun <- transform_pre_function_dict[[predictors[[v]]]]
+                    lab <- transform_pre_label_dict[[predictors[[v]]]]
+                }
+                tmp <- list(
+                    "name" = v,
+                    "function" = fun,
+                    "label" = lab,
+                    "value" = predictors[[v]])
+            }
+
+        # `variables` is numeric or other, means it's the value not the function
+        } else {
+            # transform_pre can be a custom function
+            if (is.function(transform_pre)) {
+                fun <- transform_pre
+                lab <- "custom"
+            } else if (is.character(transform_pre)) {
+                fun <- transform_pre_function_dict[[transform_pre]]
+                lab <- transform_pre_label_dict[[transform_pre]]
+            } else {
+                fun <- transform_pre_function_dict[["difference"]]
+                lab <- transform_pre_label_dict[["difference"]]
+            }
+            tmp <- list(
+                "name" = v,
+                "function" = fun,
+                "label" = lab,
+                "value" = predictors[[v]])
+        }
+
+        predictors[[v]] <- tmp
     }
-
-    # cannot compute contrasts for matrix variables
-    idx <- names(predictors) %in% attr(newdata, "matrix_columns")
-    predictors <- predictors[!idx]
-    if (any(idx)) others <- predictors[idx]
-
-    # output
-    out <- list(
-        conditional = predictors,
-        others = others,
-        weights = w)
 
     # save character levels
     # Character variables are treated as factors by model-fitting functions,
@@ -128,13 +183,15 @@ sanitize_variables <- function(model,
     # breaks (via `model.matrix`) when the data does not include all possible
     # factor levels.
     levels_character <- list()
-    for (v in names(variables)) {
-        if (v %in% colnames(origindata) && is.character(origindata[[v]])) {
+    for (v in names(predictors)) {
+        origindata <- hush(insight::get_data(model))
+        if (v %in% names(predictors)) {
             levels_character[[v]] <- unique(origindata[[v]])
         }
     }
-    attr(out, "levels_character") <- levels_character
-    attr(out, "contrast_types") <- contrast_types
+
+    # output
+    out <- list(conditional = predictors, others = others, levels = levels_character)
 
     return(out)
 }

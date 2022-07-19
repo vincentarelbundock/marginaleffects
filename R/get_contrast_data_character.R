@@ -29,14 +29,6 @@ get_contrast_data_character <- function(model,
             levs_idx <- levs_idx[match(levs_idx$lo, levs) < match(levs_idx$hi, levs), ]
         }
 
-    } else if (contrast_factor == "pairwise") {
-        levs_idx <- CJ(lo = levs, hi = levs, sorted = FALSE)
-        # null contrasts are interesting with interactions
-        if (!isTRUE(interaction)) {
-            levs_idx <- levs_idx[levs_idx$hi != levs_idx$lo, ]
-            levs_idx <- levs_idx[match(levs_idx$lo, levs) < match(levs_idx$hi, levs), ]
-        }
-
     } else if (contrast_factor == "all") {
         levs_idx <- CJ(lo = levs, hi = levs, sorted = FALSE)
 
@@ -54,7 +46,9 @@ get_contrast_data_character <- function(model,
     }
 
     levs_idx$isNULL <- levs_idx$hi == levs_idx$lo
-    levs_idx$label <- sprintf(contrast_label, levs_idx$hi, levs_idx$lo)
+    levs_idx$label <- tryCatch(
+        sprintf(contrast_label, levs_idx$hi, levs_idx$lo),
+        error = function(e) contrast_label)
     levs_idx <- stats::setNames(levs_idx, paste0("marginaleffects_contrast_", colnames(levs_idx)))
 
     setDT(newdata)

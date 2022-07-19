@@ -1,4 +1,4 @@
-sanity_newdata <- function(model, newdata) {
+sanitize_newdata <- function(model, newdata) {
 
     checkmate::assert(
         checkmate::check_data_frame(newdata, null.ok = TRUE),

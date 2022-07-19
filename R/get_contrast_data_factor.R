@@ -13,7 +13,12 @@ get_contrast_data_factor <- function(model,
         levs <- levels(newdata[[variable]])
         convert_to_factor <- TRUE
     } else {
-        msg <- sprintf("The `%s` variable is treated as a categorical (factor) variable, but the original data is of class %s. It is safer and faster to convert such variables to factor before fitting the model and calling `marginaleffects` functions.", variable, class(newdata[[variable]])[1])
+
+        msg <- format_msg(
+        "The `%s` variable is treated as a categorical (factor) variable, but the
+        original data is of class %s. It is safer and faster to convert such variables
+        to factor before fitting the model and calling `marginaleffects` functions.")
+        msg <- sprintf(msg, variable, class(newdata[[variable]])[1])
         warn_once(msg, "marginaleffects_warning_factor_on_the_fly_conversion")
         original_data <- hush(insight::get_data(model))
         if (is.factor(original_data[[variable]])) {
@@ -58,7 +63,9 @@ get_contrast_data_factor <- function(model,
     }
 
     levs_idx$isNULL <- levs_idx$hi == levs_idx$lo
-    levs_idx$label <- sprintf(contrast_label, levs_idx$hi, levs_idx$lo)
+    levs_idx$label <- tryCatch(
+        sprintf(contrast_label, levs_idx$hi, levs_idx$lo),
+        error = function(e) contrast_label)
     levs_idx <- stats::setNames(levs_idx, paste0("marginaleffects_contrast_", colnames(levs_idx)))
 
     lo <- hi <- cjdt(list(newdata, levs_idx))
@@ -89,3 +96,4 @@ get_contrast_data_factor <- function(model,
                 contrast_null = contrast_null)
     return(out)
 }
+

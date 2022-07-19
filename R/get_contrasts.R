@@ -2,17 +2,14 @@ get_contrasts <- function(model,
                           newdata,
                           type,
                           variables,
-                          transform_pre,
                           original,
                           lo,
                           hi,
-                          eps = 1e-4,
                           marginalmeans,
                           hypothesis = NULL,
                           ...) {
 
     dots <- list(...)
-
 
     # some predict() methods need data frames and will convert data.tables
     # internally, which can be very expensive if done many times. we do it once
@@ -58,28 +55,28 @@ get_contrasts <- function(model,
     # original is the "composite" data that we constructed by binding terms and
     # compute predictions. It includes a term column, which we need to
     # replicate for each group.
-    out[, "eps_tmp" := NA_real_]
+    out[, "marginaleffects_eps" := NA_real_]
     mult <- nrow(out) / nrow(original)
     if (isTRUE(mult == 1)) {
         out[, "term" := original[["term"]]]
         out[, "contrast" := original[["contrast"]]]
-        if ("eps" %in% colnames(original)) {
-            out[, "eps_tmp" := original[["eps"]]]
+        if ("marginaleffects_eps" %in% colnames(original)) {
+            out[, "marginaleffects_eps" := original[["marginaleffects_eps"]]]
         }
 
     # group or multivariate outcomes
     } else if (isTRUE(mult > 1)) {
         out[, "term" := rep(original$term, times = mult)]
         out[, "contrast" := rep(original$contrast, times = mult)]
-        if ("eps" %in% colnames(original)) {
-            out[, "eps_tmp" := rep(original$eps, times = mult)]
+        if ("marginaleffects_eps" %in% colnames(original)) {
+            out[, "marginaleffects_eps" := rep(original$marginaleffects_eps, times = mult)]
         }
 
     # cross-contrasts or weird cases
     } else {
         out <- merge(out, newdata, by = "rowid")
         if (isTRUE(nrow(out) == nrow(lo))) {
-            tmp <- data.table(lo)[, .SD, .SDcols = patterns("^contrast|eps")]
+            tmp <- data.table(lo)[, .SD, .SDcols = patterns("^contrast|marginaleffects_eps")]
             out <- cbind(out, tmp)
             idx <- c("rowid", grep("^contrast", colnames(out), value = TRUE), colnames(out))
             idx <- unique(idx)
@@ -88,34 +85,28 @@ get_contrasts <- function(model,
         out[, "term" := "interaction"]
     }
 
-    # sanitize_transform_pre returns NULL by default to allow us to warn
-    # when the argument is not supported
-    if (is.null(transform_pre)) {
-        # slope not supported with interactions, where we have `contrast_var1`, `contrast_var2` columns
-        if ("contrast" %in% colnames(out)) {
-            out[, "transform_pre_idx" := fifelse(contrast == "dydx", 1, 2)]
-            transform_pre_list <- list(
-                function(hi, lo, eps, ...) (hi - lo) / eps,
-                function(hi, lo, ...) hi - lo)
-        } else {
-            out[, "transform_pre_idx" := 1]
-            transform_pre_list <- list(
-            function(hi, lo, ...) hi - lo)
-        }
-    # only 1 transformation supported when explicitly called
-    } else {
-        out[, "transform_pre_idx" := 1]
-        if (!"eps" %in% names(formals(transform_pre))) {
-            transform_pre_list <- list(
-                function(hi, lo, ...) transform_pre(hi, lo, ...)
-            )
-        } else {
-            transform_pre_list <- list(
-                function(hi, lo, eps, ...) transform_pre(hi, lo, eps, ...)
-            )
+    # transform_pre function could be different for different terms
+    fun_list <- sapply(names(variables), function(x) variables[[x]][["function"]])
+
+    # elasticity requires the original (properly aligned) predictor values
+    elasticities <- Filter(function(x) x$label %in% c("eyex", "eydx", "dyex"), variables)
+    elasticities <- lapply(variables, function(x) x$name)
+    if (length(elasticities) > 0) {
+        for (v in names(elasticities)) {
+            idx2 <- c("rowid", "term", "type", "group", grep("^contrast", colnames(out), value = TRUE))
+            idx2 <- intersect(idx2, colnames(out))
+            idx2 <- out[, ..idx2]
+            # original is NULL when interaction=TRUE
+            if (!is.null(original)) {
+                idx1 <- c(v, "rowid", "term", "type", "group", grep("^contrast", colnames(original), value = TRUE))
+                idx1 <- intersect(idx1, colnames(original))
+                idx1 <- original[, ..idx1]
+                idx2 <- merge(idx1, idx2)
+            }
+            elasticities[[v]] <- idx2[[v]]
         }
     }
-    
+
     # bayes
     draws_lo <- attr(pred_lo, "posterior_draws")
     draws_hi <- attr(pred_hi, "posterior_draws")
@@ -123,42 +114,42 @@ get_contrasts <- function(model,
         draws <- NULL
     } else {
         draws <- draws_lo
-        for (i in seq_along(transform_pre_list)) {
-            idx <- out[["transform_pre_idx"]] == i
-            if (any(idx)) {
-                f <- transform_pre_list[[i]]
-                if ("eps" %in% names(formals(f))) {
-                    draws[idx, ] <- f(draws_hi[idx, ], draws_lo[idx, ], eps = out[idx][["eps_tmp"]])
-                } else {
-                    draws[idx, ] <- f(draws_hi[idx, ], draws_lo[idx, ])
-                }
-            }
+        termnames <- unique(out$term)
+        for (tn in termnames) {
+            fun <- fun_list[[tn]]
+            idx <- out$term == tn
+            args <- list(
+                hi = draws_hi[idx, ],
+                lo = draws_lo[idx, ],
+                eps = out[idx, marginaleffects_eps],
+                x = elasticities[[tn]][idx])
+            args <- args[intersect(names(args), names(formals(fun)))]
+            draws[idx, ] <- do.call("fun", args)
         }
     }
 
-
-    idx <- grep("^contrast|^group$|^term$|^transform_pre_idx$", colnames(out), value = TRUE)
+    idx <- grep("^contrast|^group$|^term$|^type$|^transform_pre_idx$", colnames(out), value = TRUE)
     out[, predicted_lo := pred_lo$predicted]
     out[, predicted_hi := pred_hi$predicted]
     if (isTRUE(marginalmeans)) {
         out <- out[, .(
             predicted_lo = mean(predicted_lo),
             predicted_hi = mean(predicted_hi),
-            eps = mean(eps_tmp)),
+            eps = mean(marginaleffects_eps)),
         by = idx]
-        out[, "comparison" := transform_pre_list[[transform_pre_idx[1]]](
-            out$predicted_hi, out$predicted_lo, out$eps_tmp
+        out[, "marginaleffects_function" := fun_list[out$term]]
+        out[, "comparison" := fun_list[[term[1]]](
+            out$predicted_hi, out$predicted_lo, out$marginaleffects_eps
         ), by = "term"]
         out[, c("predicted_hi", "predicted_lo") := NULL]
 
     } else {
-        wrapfun <- function(hi, lo, n, transform_pre_idx, eps_tmp) {
-            f <- transform_pre_list[[transform_pre_idx[1]]]
-            if ("eps" %in% names(formals(f))) {
-                con <- try(f(hi, lo, eps = eps_tmp), silent = TRUE)
-            } else {
-                con <- try(f(hi, lo), silent = TRUE)
-            }
+        wrapfun <- function(hi, lo, n, term, eps, x) {
+            fun <- fun_list[[term[1]]]
+            args <- list("hi" = hi, "lo" = lo, "eps" = eps, "x" = elasticities[[term[1]]])
+            args <- args[names(args) %in% names(formals(fun))]
+            con <- try(do.call("fun", args), silent = TRUE)
+            browser()
             if (!isTRUE(checkmate::check_numeric(con, len = n)) &&
                 !isTRUE(checkmate::check_numeric(con, len = 1))) {
                 msg <- format_msg(
@@ -170,12 +161,16 @@ get_contrasts <- function(model,
             }
             return(con)
         }
+        if (!"marginaleffects_x" %in% colnames(out)) {
+            out[, "marginaleffects_x" := NA]
+        }
         tmp <- out[, .(comparison = wrapfun(
             hi = predicted_hi,
             lo = predicted_lo,
             n = .N,
-            transform_pre_idx = transform_pre_idx,
-            eps_tmp = eps_tmp)),
+            term = term,
+            x = elasticities[[term[1]]],
+            eps = marginaleffects_eps)),
             by = idx]
         if (nrow(tmp) != nrow(out)) {
             out <- tmp
@@ -185,9 +180,6 @@ get_contrasts <- function(model,
     }
 
     out <- get_hypothesis(out, hypothesis, "comparison")
-
-    idx <- which(!colnames(out) %in% c("transform_pre_idx", "predicted_hi", "predicted_lo", "predicted"))
-    out <- out[, ..idx]
 
     # output
     attr(out, "posterior_draws") <- draws

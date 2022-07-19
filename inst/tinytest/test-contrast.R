@@ -112,11 +112,11 @@ dat$gear <- as.character(dat$gear)
 mod <- lm(mpg ~ hp + am + cyl + gear, data = dat)
 
 cmp1 <- comparisons(
-mod,
-newdata = "mean")
+    mod,
+    newdata = "mean")
 expect_equivalent(
-cmp1$contrast,
-c("(x + 1) - x", "TRUE - FALSE", "6 - 4", "8 - 4", "4 - 3", "5 - 3"))
+    cmp1$contrast,
+    c("(x + 1) - x", "TRUE - FALSE", "6 - 4", "8 - 4", "4 - 3", "5 - 3"))
 
 cmp2 <- comparisons(
 mod,

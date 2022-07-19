@@ -156,7 +156,7 @@ predictions <- function(model,
 
 
     # after modelbased attribute extraction
-    newdata <- sanity_newdata(model, newdata)
+    newdata <- sanitize_newdata(model, newdata)
 
     # type
     type <- sanitize_type(model = model, type = type, calling_function = "predictions")
