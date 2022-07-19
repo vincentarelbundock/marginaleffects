@@ -31,9 +31,7 @@ transform_pre_label_dict <- list(
     "eydx" = "eydx",
     "dyex" = "dyex",
     "dydxavg" = "mean(dydx)",
-    "expdydx" = "exp(dydx)",
-    "reference" = "%s - %s",
-    "pairwise" = "%s - %s")
+    "expdydx" = "exp(dydx)")
 
 
 sanity_transform_pre <- function(transform_pre) {
@@ -41,18 +39,16 @@ sanity_transform_pre <- function(transform_pre) {
         checkmate::check_function(transform_pre),
         checkmate::check_choice(transform_pre,
                                 choices = c("difference",
+                                            "differenceavg",
                                             "ratio",
                                             "lnratio",
                                             "ratioavg",
                                             "lnratioavg",
                                             "lnoravg",
-                                            "differenceavg",
                                             "dydx",
                                             "eyex",
                                             "eydx",
                                             "dyex",
                                             "dydxavg",
-                                            "expdydx",
-                                            "pairwise",
-                                            "reference")))
+                                            "expdydx")))
 }

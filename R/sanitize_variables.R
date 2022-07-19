@@ -22,22 +22,22 @@ sanitize_variables <- function(variables,
     predictors <- variables
     others <- NULL
 
-    # all variables
-    if (!is.null(model) && is.null(variables)) {
-        tmp <- insight::find_variables(model)
-        predictors_all <- unlist(tmp, recursive = TRUE, use.names = FALSE)
-
-        # variables is NULL: all variable names from model
-        if (is.null(predictors)) {
-            # mhurdle names the variables weirdly
-            if (inherits(model, "mhurdle")) {
-                predictors <- insight::find_predictors(model, flatten = TRUE)
-            } else {
-                predictors <- unlist(tmp[c("fixed", "conditional")], recursive = TRUE, use.names = FALSE)
-            }
-        }
+    # all variable names
+    if (!is.null(model)) {
+        predictors_all <- insight::find_variables(model, flatten = TRUE)
     } else {
-        predictors <- predictors_all <- colnames(newdata)
+        predictors_all <- colnames(newdata)
+    }
+
+    # variables is NULL: all variable names from model
+    if (is.null(predictors)) {
+        # mhurdle names the variables weirdly
+        if (inherits(model, "mhurdle")) {
+            predictors <- insight::find_predictors(model, flatten = TRUE)
+        } else {
+            predictors <- insight::find_variables(model)
+            predictors <- unlist(predictors[c("fixed", "conditional")], recursive = TRUE, use.names = FALSE)
+        }
     }
 
     # variable classes: compute only once
@@ -125,61 +125,42 @@ sanitize_variables <- function(variables,
     w <- intersect(w, colnames(newdata))
     others <- c(others, w)
 
+    # goals:
+    # allow multiple function types: marginaleffects() uses both difference and dydx
+    # when transform_pre is defined, use that if it works or turn back to defaults
     # predictors list elements: name, value, function, label
+    if (is.null(transform_pre)) {
+        fun_numeric <- fun_categorical <- transform_pre_function_dict[["difference"]]
+        lab_numeric <- lab_categorical <- transform_pre_label_dict[["difference"]]
+    } else if (is.function(transform_pre)) {
+        fun_numeric <- fun_categorical <- transform_pre
+        lab_numeric <- lab_categorical <- "custom"
+    } else if (is.character(transform_pre)) {
+        fun_numeric <- fun_categorical <- transform_pre_function_dict[[transform_pre]]
+        lab_numeric <- lab_categorical <- transform_pre_label_dict[[transform_pre]]
+        if (isTRUE(transform_pre %in% c("dydx", "eyex", "eydx", "dyex"))) {
+            fun_categorical <- transform_pre_function_dict[["difference"]]
+            lab_categorical <- transform_pre_label_dict[["difference"]]
+        } 
+    } else {
+        github_issue()
+    }
+
     for (v in names(predictors)) {
-        # `variables` character input has two possibilities:
-        if (isTRUE(checkmate::check_character(predictors[[v]]))) {
-            # 1. transform_pre function shortcut. this takes precedence over transform_pre
-            if (predictors[[v]] %in% names(transform_pre_function_dict)) {
-                tmp <- list(
-                    "name" = v,
-                    "function" = transform_pre_function_dict[[predictors[[v]]]],
-                    "label" = transform_pre_label_dict[[predictors[[v]]]],
-                    "value" = NULL)
-            # 2. transform_pre gap value shortcut
-            } else {
-                # transform_pre can be a custom function
-                if (is.function(transform_pre)) {
-                    fun <- transform_pre
-                    lab <- "custom"
-                } else if (is.character(transform_pre)) {
-                    fun <- transform_pre_function_dict[[transform_pre]]
-                    lab <- transform_pre_label_dict[[transform_pre]]
-                } else if (predictors[[v]] %in% names(transform_pre_function_dict)) {
-                    fun <- transform_pre_function_dict[[predictors[[v]]]]
-                    lab <- transform_pre_label_dict[[predictors[[v]]]]
-                } else {
-                    fun <- transform_pre_function_dict[["difference"]]
-                    lab <- transform_pre_label_dict[["difference"]]
-                }
-                tmp <- list(
-                    "name" = v,
-                    "function" = fun,
-                    "label" = lab,
-                    "value" = predictors[[v]])
-            }
-
-        # `variables` is numeric or other, means it's the value not the function
+        if (isTRUE(variables_class[v] == "numeric")) {
+            sanity_contrast_numeric(predictors[[v]])
+            fun <- fun_numeric
+            lab <- lab_numeric
         } else {
-            # transform_pre can be a custom function
-            if (is.function(transform_pre)) {
-                fun <- transform_pre
-                lab <- "custom"
-            } else if (is.character(transform_pre)) {
-                fun <- transform_pre_function_dict[[transform_pre]]
-                lab <- transform_pre_label_dict[[transform_pre]]
-            } else {
-                fun <- transform_pre_function_dict[["difference"]]
-                lab <- transform_pre_label_dict[["difference"]]
-            }
-            tmp <- list(
-                "name" = v,
-                "function" = fun,
-                "label" = lab,
-                "value" = predictors[[v]])
+            sanity_contrast_factor(predictors[[v]])
+            fun <- fun_categorical
+            lab <- lab_categorical
         }
-
-        predictors[[v]] <- tmp
+        predictors[[v]] <- list(
+            "name" = v,
+            "function" = fun,
+            "label" = lab,
+            "value" = predictors[[v]])
     }
 
     # interaction: must be only one function

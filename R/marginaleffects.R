@@ -224,6 +224,9 @@ marginaleffects <- function(model,
         }
     }
 
+    # marginaleffects() does not support a named list of variables like comparisons()
+    checkmate::assert_character(variables, null.ok = TRUE)
+
     # modelbased::visualisation_matrix attaches useful info for plotting
     attributes_newdata <- attributes(newdata)
     idx <- c("class", "row.names", "names", "data", "reference")
