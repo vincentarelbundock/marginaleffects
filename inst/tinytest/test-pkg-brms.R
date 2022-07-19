@@ -56,7 +56,6 @@ expect_equivalent(mfx$conf.high, bm$UL, tolerance = tol)
 options("marginaleffects_credible_interval" = "hdi")
 
 
-
 # marginaleffects vs. emmeans
 mfx <- marginaleffects(brms_numeric2, newdata = datagrid(mpg = 20, hp = 100),
                    variables = "mpg", type = "link")

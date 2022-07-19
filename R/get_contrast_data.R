@@ -106,7 +106,6 @@ get_contrast_data <- function(model,
     original <- lapply(original, clean)
 
     # single contrast
-    browser()
     if (!isTRUE(interaction)) {
         lo <- rbindlist(lo, fill = TRUE)
         hi <- rbindlist(hi, fill = TRUE)
