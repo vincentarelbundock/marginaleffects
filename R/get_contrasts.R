@@ -149,7 +149,6 @@ get_contrasts <- function(model,
             args <- list("hi" = hi, "lo" = lo, "eps" = eps, "x" = elasticities[[term[1]]])
             args <- args[names(args) %in% names(formals(fun))]
             con <- try(do.call("fun", args), silent = TRUE)
-            browser()
             if (!isTRUE(checkmate::check_numeric(con, len = n)) &&
                 !isTRUE(checkmate::check_numeric(con, len = 1))) {
                 msg <- format_msg(

@@ -221,6 +221,11 @@ comparisons <- function(model,
         interaction <- sanitize_interaction(interaction, variables, model)
         type <- sanitize_type(model = model, type = type, calling_function = "marginaleffects")
         checkmate::assert_function(transform_post, null.ok = TRUE)
+
+    # internal call from `marginaleffects()`
+    } else {
+        # not allowed in `marginaleffects()`
+        interaction <- FALSE
     }
 
     sanity_transform_pre(transform_pre)
@@ -246,6 +251,7 @@ comparisons <- function(model,
         model = model,
         newdata = newdata,
         variables = variables,
+        interaction = interaction,
         contrast_numeric = contrast_numeric,
         contrast_factor = contrast_factor,
         transform_pre = transform_pre)

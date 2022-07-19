@@ -4,6 +4,7 @@ sanitize_variables <- function(variables,
                                model,
                                newdata,
                                transform_pre = NULL,
+                               interaction = FALSE,
                                contrast_numeric = 1,
                                contrast_factor = "reference") {
 
@@ -13,7 +14,7 @@ sanitize_variables <- function(variables,
     newdata <- sanitize_newdata(model = model, newdata = newdata)
     checkmate::assert_data_frame(newdata, min.row = 1, null.ok = TRUE)
     checkmate::assert(
-        checkmate::check_character(variables, min.len = 1, null.ok = TRUE),
+        checkmate::check_character(variables, min.len = 1, null.ok = TRUE, names = "unnamed"),
         checkmate::check_list(variables, names = "unique"),
         combine = "or")
 
@@ -22,7 +23,7 @@ sanitize_variables <- function(variables,
     others <- NULL
 
     # all variables
-    if (!is.null(model)) {
+    if (!is.null(model) && is.null(variables)) {
         tmp <- insight::find_variables(model)
         predictors_all <- unlist(tmp, recursive = TRUE, use.names = FALSE)
 
@@ -47,7 +48,9 @@ sanitize_variables <- function(variables,
         idx <- names(predictors)
     }
     for (v in idx) {
-        variables_class[[v]] <- find_variable_class(v, newdata = newdata, model = model)
+        variables_class[[v]] <- tryCatch(
+            find_variable_class(v, newdata = newdata, model = model),
+            error = function(e) NULL)
     }
 
     # variables is character vector: convert to named list
@@ -142,9 +145,12 @@ sanitize_variables <- function(variables,
                 } else if (is.character(transform_pre)) {
                     fun <- transform_pre_function_dict[[transform_pre]]
                     lab <- transform_pre_label_dict[[transform_pre]]
-                } else {
+                } else if (predictors[[v]] %in% names(transform_pre_function_dict)) {
                     fun <- transform_pre_function_dict[[predictors[[v]]]]
                     lab <- transform_pre_label_dict[[predictors[[v]]]]
+                } else {
+                    fun <- transform_pre_function_dict[["difference"]]
+                    lab <- transform_pre_label_dict[["difference"]]
                 }
                 tmp <- list(
                     "name" = v,
@@ -176,6 +182,17 @@ sanitize_variables <- function(variables,
         predictors[[v]] <- tmp
     }
 
+    # interaction: must be only one function
+    if (isTRUE(interaction)) {
+        for (p in predictors) {
+            flag <- !identical(p[["function"]], predictors[[1]][["function"]])
+            if (flag) {
+                stop("When interaction=TRUE, all variables must use the same contrast function.",
+                     call. = FALSE)
+            }
+        }
+    }
+
     # save character levels
     # Character variables are treated as factors by model-fitting functions,
     # but unlike factors, they do not not keep a record of all factor levels.
@@ -195,3 +212,4 @@ sanitize_variables <- function(variables,
 
     return(out)
 }
+

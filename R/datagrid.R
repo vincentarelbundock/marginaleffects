@@ -230,24 +230,13 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
     }
 
 
-    # data: all variables
-    if (!is.null(newdata)) {
-        variables <- colnames(newdata)
-    # model: variables = NULL because otherwise `sanitize_variables` excludes others
-    } else {
-        variables <- NULL
+    if (!is.null(model)) {
+        variables_list <- insight::find_variables(model)
+        variables_all <- unlist(variables_list, recursive = TRUE)
+    } else if (!is.null(newdata)) {
+        variables_list <- NULL
+        variables_all <- colnames(newdata)
     }
-
-    variables_list <- suppressWarnings(
-        sanitize_variables(
-            model = model,
-            newdata = newdata,
-            variables = variables))
-    variables_all <- c(
-        names(variables_list$conditional),
-        variables_list$cluster,
-        variables_list$instruments,
-        variables_list$others)
     variables_manual <- names(at)
     variables_automatic <- setdiff(variables_all, variables_manual)
 
