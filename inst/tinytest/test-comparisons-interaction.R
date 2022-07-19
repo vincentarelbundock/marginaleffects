@@ -15,11 +15,6 @@ expect_true("contrast" %in% colnames(cmp1))
 expect_true("contrast" %in% colnames(cmp2))
 expect_true(all(c("contrast_cyl", "contrast_gear") %in% colnames(cmp3)))
 
-comparisons(
-    mod2,
-    variables = list("cyl" = "ratio", "gear" = "difference"),
-    newdata = datagrid())
-
 # variables must be unnamed vector
 expect_error(comparisons(
     mod2,

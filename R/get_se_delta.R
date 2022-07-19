@@ -27,6 +27,7 @@ get_se_delta_contrasts <- function(model,
                                    lo,
                                    hi,
                                    original,
+                                   interaction,
                                    ...) {
     get_contrasts(model,
         newdata = newdata,
@@ -37,6 +38,7 @@ get_se_delta_contrasts <- function(model,
         lo = lo,
         hi = hi,
         original = original,
+        interaction = interaction,
         ...
     )$comparison
 }

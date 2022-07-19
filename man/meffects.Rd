@@ -11,6 +11,7 @@ meffects(
   vcov = TRUE,
   conf_level = 0.95,
   type = "response",
+  slope = "dydx",
   wts = NULL,
   hypothesis = NULL,
   eps = NULL,
@@ -65,6 +66,14 @@ compute marginal effects or contrasts. This can differ based on the model
 type, but will typically be a string such as: "response", "link", "probs",
 or "zero". When an unsupported string is entered, the model-specific list of
 acceptable values is returned in an error message.}
+
+\item{slope}{string indicates the type of slope to compute:
+\itemize{
+\item "dydx": slope = dY/dX
+\item "eyex": elasticity = dlog(Y)/dlog(X) = dY/dX * Y / X
+\item "eydx": semi-elasticity = dlog(Y)/dX = dY/dX * Y
+\item "dyxx": semi-elasticity = dY/dlog(X) = dY/dX / X
+}}
 
 \item{wts}{string or numeric: weights to use when computing average
 contrasts or marginaleffects. These weights only affect the averaging in

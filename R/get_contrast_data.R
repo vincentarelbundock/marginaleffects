@@ -123,33 +123,33 @@ get_contrast_data <- function(model,
     } else {
         # drop variables for which we have contrasts
         for (i in seq_along(lo)) {
-        if (i == 1) {
-            # keep rowid and original data only in one of the datasets
-            idx_lo <- setdiff(names(variables), names(lo)[i])
-            idx_hi <- setdiff(names(variables), names(hi)[i])
-        } else {
-            # exclude rowid and variables excluded from `variables`, for
-            # which we do not compute cross-contrasts
-            contrast_null <- grep("rowid|^null_contrast_", colnames(lo[[i]]), value = TRUE)
-            idx_lo <- c(setdiff(names(lo[[i]]), c(contrast_null, names(variables))),
-                        setdiff(names(variables), names(lo)[[i]]))
-            idx_hi <- c(setdiff(names(hi[[i]]), c(contrast_null, names(variables))),
-                        setdiff(names(variables), names(hi)[[i]]))
+            if (i == 1) {
+                # keep rowid and original data only in one of the datasets
+                idx_lo <- setdiff(names(variables), names(lo)[i])
+                idx_hi <- setdiff(names(variables), names(hi)[i])
+            } else {
+                # exclude rowid and variables excluded from `variables`, for
+                # which we do not compute cross-contrasts
+                contrast_null <- grep("rowid|^null_contrast_", colnames(lo[[i]]), value = TRUE)
+                idx_lo <- c(setdiff(names(lo[[i]]), c(contrast_null, names(variables))),
+                    setdiff(names(variables), names(lo)[[i]]))
+                idx_hi <- c(setdiff(names(hi[[i]]), c(contrast_null, names(variables))),
+                    setdiff(names(variables), names(hi)[[i]]))
+            }
+            lo[[i]] <- data.table(lo[[i]])[, !..idx_lo]
+            hi[[i]] <- data.table(hi[[i]])[, !..idx_hi]
+            lo[[i]][[paste0("contrast_", names(lo)[i])]] <- lab[[i]]
+            hi[[i]][[paste0("contrast_", names(lo)[i])]] <- lab[[i]]
         }
-        lo[[i]] <- data.table(lo[[i]])[, !..idx_lo]
-        hi[[i]] <- data.table(hi[[i]])[, !..idx_hi]
-        lo[[i]][[paste0("contrast_", names(lo)[i])]] <- lab[[i]]
-        hi[[i]][[paste0("contrast_", names(lo)[i])]] <- lab[[i]]
-    }
 
-    fun <- function(x, y) merge(x, y, all = TRUE, allow.cartesian = TRUE)
-    lo <- Reduce("fun", lo)
-    hi <- Reduce("fun", hi)
-    original <- NULL
+        fun <- function(x, y) merge(x, y, all = TRUE, allow.cartesian = TRUE)
+        lo <- Reduce("fun", lo)
+        hi <- Reduce("fun", hi)
+        original <- NULL
 
-    # faster to rbind, but creates massive datasets. need cartesian join on rowid
-    # lo <- cjdt(lo)
-    # hi <- cjdt(hi)
+        # faster to rbind, but creates massive datasets. need cartesian join on rowid
+        # lo <- cjdt(lo)
+        # hi <- cjdt(hi)
 
         # if there are fewer null_contrast_* columns, then there is at least
         # one always non-null variable type, so we keep everything

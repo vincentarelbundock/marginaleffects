@@ -163,12 +163,12 @@ sanitize_variables <- function(variables,
             "value" = predictors[[v]])
     }
 
-    # interaction: must be only one function
+    # interaction: get_contrasts() assumes there is only one function when interaction=TRUE
     if (isTRUE(interaction)) {
         for (p in predictors) {
             flag <- !identical(p[["function"]], predictors[[1]][["function"]])
             if (flag) {
-                stop("When interaction=TRUE, all variables must use the same contrast function.",
+                stop("When `interaction=TRUE` all variables must use the same contrast function.",
                      call. = FALSE)
             }
         }

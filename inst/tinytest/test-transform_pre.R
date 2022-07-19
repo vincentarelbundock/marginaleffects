@@ -19,6 +19,12 @@ expect_equivalent(cmp1$comparison, cmp2$estimate)
 expect_equivalent(cmp1$std.error, cmp2$std.error)
 
 
+# label ratios 
+mod <- lm(mpg ~ hp + factor(cyl), data = mtcars)
+cmp <- comparisons(mod, transform_pre = "ratio")
+expect_true(all(grepl("\\/", cmp$contrast)))
+
+
 # error when function breaks or returns a bad vector
 requiet("survey")
 data(nhanes, package = "survey")

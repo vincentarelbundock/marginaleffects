@@ -135,6 +135,7 @@ Collate:
     'get_predict.R'
     'get_se_delta.R'
     'get_vcov.R'
+    'github_issue.R'
     'glance.R'
     'hush.R'
     'marginaleffects.R'

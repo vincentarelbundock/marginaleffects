@@ -12,7 +12,7 @@ transform_pre_function_dict <- list(
         log((m_hi / (1 - m_hi)) / (m_lo / (1 - m_lo)))
     },
     "dydx" = function(hi, lo, eps) (hi - lo) / eps,
-    "eyex" = function(hi, lo, eps, x) (hi - lo) / eps * (hi / x),
+    "eyex" = function(hi, lo, eps, x) (hi - lo) / eps * hi / x,
     "eydx" = function(hi, lo, eps, x) (hi - lo) / eps * hi,
     "dyex" = function(hi, lo, eps, x) (hi - lo) / eps / x,
     "dydxavg" = function(hi, lo, eps) mean((hi - lo) / eps),

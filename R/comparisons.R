@@ -320,6 +320,7 @@ comparisons <- function(model,
                  hi = contrast_data$hi,
                  lo = contrast_data$lo,
                  marginalmeans = marginalmeans,
+                 interaction = interaction,
                  hypothesis = hypothesis)
     args <- c(args, dots)
     mfx <- do.call("get_contrasts", args)
@@ -345,6 +346,7 @@ comparisons <- function(model,
                      hi = contrast_data$hi,
                      lo = contrast_data$lo,
                      original = contrast_data$original,
+                     interaction = interaction,
                      eps = 1e-4)
         args <- c(args, dots)
         se <- do.call("get_se_delta", args)

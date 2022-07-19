@@ -7,6 +7,7 @@ get_contrasts <- function(model,
                           hi,
                           marginalmeans,
                           hypothesis = NULL,
+                          interaction = FALSE,
                           ...) {
 
     dots <- list(...)
@@ -116,7 +117,12 @@ get_contrasts <- function(model,
         draws <- draws_lo
         termnames <- unique(out$term)
         for (tn in termnames) {
-            fun <- fun_list[[tn]]
+            # sanity_variables ensures that all functions are identical when interaction=TRUE
+            if (isTRUE(interaction)) {
+                fun <- fun_list[[1]]
+            } else {
+                fun <- fun_list[[tn]]
+            }
             idx <- out$term == tn
             args <- list(
                 hi = draws_hi[idx, ],
@@ -138,14 +144,25 @@ get_contrasts <- function(model,
             eps = mean(marginaleffects_eps)),
         by = idx]
         out[, "marginaleffects_function" := fun_list[out$term]]
-        out[, "comparison" := fun_list[[term[1]]](
-            out$predicted_hi, out$predicted_lo, out$marginaleffects_eps
-        ), by = "term"]
+        if (isTRUE(interaction)) {
+            browser()
+            out[, "comparison" := fun_list[[1]](
+                out$predicted_hi, out$predicted_lo, out$marginaleffects_eps
+            ), by = "term"]
+        } else {
+            out[, "comparison" := fun_list[[term[1]]](
+                out$predicted_hi, out$predicted_lo, out$marginaleffects_eps
+            ), by = "term"]
+        }
         out[, c("predicted_hi", "predicted_lo") := NULL]
 
     } else {
         wrapfun <- function(hi, lo, n, term, eps, x) {
-            fun <- fun_list[[term[1]]]
+            if (isTRUE(interaction)) {
+                fun <- fun_list[[1]]
+            } else {
+                fun <- fun_list[[term[1]]]
+            }
             args <- list("hi" = hi, "lo" = lo, "eps" = eps, "x" = elasticities[[term[1]]])
             args <- args[names(args) %in% names(formals(fun))]
             con <- try(do.call("fun", args), silent = TRUE)
