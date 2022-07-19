@@ -90,13 +90,16 @@ get_contrasts <- function(model,
     fun_list <- sapply(names(variables), function(x) variables[[x]][["function"]])
 
     # elasticity requires the original (properly aligned) predictor values
+    # this will discard factor variables which are duplicated, so in principle
+    # it should be the "correct" size
     elasticities <- Filter(function(x) x$label %in% c("eyex", "eydx", "dyex"), variables)
-    elasticities <- lapply(variables, function(x) x$name)
+    elasticities <- lapply(elasticities, function(x) x$name)
     if (length(elasticities) > 0) {
         for (v in names(elasticities)) {
             idx2 <- c("rowid", "term", "type", "group", grep("^contrast", colnames(out), value = TRUE))
             idx2 <- intersect(idx2, colnames(out))
-            idx2 <- out[, ..idx2]
+            # discard other terms to get right length vector
+            idx2 <- out[term == v, ..idx2]
             # original is NULL when interaction=TRUE
             if (!is.null(original)) {
                 idx1 <- c(v, "rowid", "term", "type", "group", grep("^contrast", colnames(original), value = TRUE))
@@ -137,62 +140,58 @@ get_contrasts <- function(model,
     idx <- grep("^contrast|^group$|^term$|^type$|^transform_pre_idx$", colnames(out), value = TRUE)
     out[, predicted_lo := pred_lo$predicted]
     out[, predicted_hi := pred_hi$predicted]
+
+    # we feed this column to safefun(), even if it is useless for categoricals
+    if (!"marginaleffects_eps" %in% colnames(out)) {
+        out[, "marginaleffects_eps" := NA]
+    }
+
+    # do not feed unknown arguments to a `transform_pre`
+    safefun <- function(hi, lo, n, term, interaction, eps) {
+        if (isTRUE(interaction)) {
+            fun <- fun_list[[1]]
+        } else {
+            fun <- fun_list[[term[1]]]
+        }
+        args <- list("hi" = hi, "lo" = lo, "eps" = eps, "x" = elasticities[[term[1]]])
+        args <- args[names(args) %in% names(formals(fun))]
+        con <- try(do.call("fun", args), silent = TRUE)
+        if (!isTRUE(checkmate::check_numeric(con, len = n)) &&
+        !isTRUE(checkmate::check_numeric(con, len = 1))) {
+            msg <- format_msg(
+                "The function supplied to the `transform_pre` argument must accept two numeric
+                vectors of predicted probabilities of length %s, and return a single numeric
+                value or a numeric vector of length %s, with no missing value.")
+            msg <- sprintf(msg, n, n)
+            stop(msg, call. = FALSE)
+        }
+        return(con)
+    }
+
     if (isTRUE(marginalmeans)) {
         out <- out[, .(
             predicted_lo = mean(predicted_lo),
             predicted_hi = mean(predicted_hi),
             eps = mean(marginaleffects_eps)),
         by = idx]
-        out[, "marginaleffects_function" := fun_list[out$term]]
-        if (isTRUE(interaction)) {
-            browser()
-            out[, "comparison" := fun_list[[1]](
-                out$predicted_hi, out$predicted_lo, out$marginaleffects_eps
-            ), by = "term"]
-        } else {
-            out[, "comparison" := fun_list[[term[1]]](
-                out$predicted_hi, out$predicted_lo, out$marginaleffects_eps
-            ), by = "term"]
-        }
-        out[, c("predicted_hi", "predicted_lo") := NULL]
-
-    } else {
-        wrapfun <- function(hi, lo, n, term, eps, x) {
-            if (isTRUE(interaction)) {
-                fun <- fun_list[[1]]
-            } else {
-                fun <- fun_list[[term[1]]]
-            }
-            args <- list("hi" = hi, "lo" = lo, "eps" = eps, "x" = elasticities[[term[1]]])
-            args <- args[names(args) %in% names(formals(fun))]
-            con <- try(do.call("fun", args), silent = TRUE)
-            if (!isTRUE(checkmate::check_numeric(con, len = n)) &&
-                !isTRUE(checkmate::check_numeric(con, len = 1))) {
-                msg <- format_msg(
-                "The function supplied to the `transform_pre` argument must accept two numeric
-                vectors of predicted probabilities of length %s, and return a single numeric
-                value or a numeric vector of length %s, with no missing value.")
-                msg <- sprintf(msg, n, n)
-                stop(msg, call. = FALSE)
-            }
-            return(con)
-        }
-        if (!"marginaleffects_x" %in% colnames(out)) {
-            out[, "marginaleffects_x" := NA]
-        }
-        tmp <- out[, .(comparison = wrapfun(
+        out[, "comparison" := safefun(
             hi = predicted_hi,
             lo = predicted_lo,
             n = .N,
             term = term,
-            x = elasticities[[term[1]]],
-            eps = marginaleffects_eps)),
-            by = idx]
-        if (nrow(tmp) != nrow(out)) {
-            out <- tmp
-        } else {
-            out[, "comparison" := tmp$comparison]
-        }
+            interaction = interaction,
+            eps = eps),
+        by = "term"]
+
+    } else {
+        out[, "comparison" := safefun(
+            hi = predicted_hi,
+            lo = predicted_lo,
+            n = .N,
+            term = term,
+            interaction = interaction,
+            eps = marginaleffects_eps),
+        by = idx]
     }
 
     out <- get_hypothesis(out, hypothesis, "comparison")
