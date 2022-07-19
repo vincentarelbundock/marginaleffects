@@ -190,12 +190,15 @@ sanitize_variables <- function(variables,
     for (v in names(predictors)) {
         origindata <- hush(insight::get_data(model))
         if (v %in% names(predictors)) {
-            levels_character[[v]] <- unique(origindata[[v]])
+            if (is.character(origindata[[v]])) {
+                levels_character[[v]] <- unique(origindata[[v]])
+            }
         }
     }
 
     # output
-    out <- list(conditional = predictors, others = others, levels = levels_character)
+    out <- list(conditional = predictors, others = others)
+    attr(out, "levels_character") <- levels_character
 
     return(out)
 }

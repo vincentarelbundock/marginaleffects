@@ -51,13 +51,14 @@ tmp <- mtcars
 tmp$am <- as.logical(tmp$am)
 tmp$gear <- as.factor(tmp$gear)
 mod <- lm(mpg ~ hp * wt + am + gear, data = tmp)
-res <- datagrid(model = mod,
-            hp = c(100, 110),
-            gear = c(3, 4),
-            am = TRUE,
-            grid.type = "counterfactual")
+res <- datagrid(
+    model = mod,
+    hp = c(100, 110),
+    gear = c(3, 4),
+    am = TRUE,
+    grid.type = "counterfactual")
 expect_inherits(res, "data.frame")
-expect_equivalent(dim(res), c(128, 5))
+expect_equivalent(dim(res), c(128, 6))
 
 
 

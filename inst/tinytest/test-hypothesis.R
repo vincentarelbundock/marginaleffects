@@ -93,7 +93,7 @@ expect_equivalent(nrow(mfx), 1)
 # predictions: hypothesis
 p1 <- predictions(
     mod,
-    datagrid(cyl = c(4, 6)),
+    newdata = datagrid(cyl = c(4, 6)),
     hypothesis = c(-1, 1))
 p2 <- predictions(
     mod,

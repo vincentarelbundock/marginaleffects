@@ -30,10 +30,11 @@ tmp <- mtcars
 tmp$am <- as.logical(tmp$am)
 tmp$cyl <- as.factor(tmp$cyl)
 tmp$gear <- as.character(tmp$gear)
-typ <- datagrid(newdata = tmp,
-               FUN.character = max,
-               FUN.factor = function(x) sort(x)[1],
-               FUN.numeric = stats::median)
+typ <- datagrid(
+    newdata = tmp,
+    FUN.character = max,
+    FUN.factor = function(x) sort(x)[1],
+    FUN.numeric = stats::median)
 expect_equivalent(typ$drat, stats::median(mtcars$drat))
 expect_equivalent(typ$cyl, factor("4", levels = c("4", "6", "8")))
 expect_equivalent(typ$gear, "5")
@@ -43,7 +44,7 @@ expect_equivalent(typ$gear, "5")
 mod <- lm(hp ~ mpg, mtcars)
 nd <- datagrid(model = mod, mpg = 110)
 expect_inherits(nd, "data.frame")
-expect_equivalent(dim(nd), c(1, 1))
+expect_equivalent(dim(nd), c(1, 2))
 
 
 # errors and warnings

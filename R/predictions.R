@@ -146,7 +146,6 @@ predictions <- function(model,
     sanity_model_specific(model = model, newdata = newdata, vcov = vcov, calling_function = "predictions", ...)
     hypothesis <- sanitize_hypothesis(hypothesis, ...)
     conf_level <- sanitize_conf_level(conf_level, ...)
-    levels_character <- attr(variables, "levels_character")
 
     # modelbased::visualisation_matrix attaches useful info for plotting
     attributes_newdata <- attributes(newdata)
@@ -178,11 +177,15 @@ predictions <- function(model,
         newdata <- do.call("datagrid", args)
         newdata[["rowid"]] <- NULL # the original rowids are no longer valid after averaging et al.
 
-    # sanitize_variables often breaks things, but we need this attributes
+    # sanitize_variables often breaks things, but we need the levels_characters attributes
     } else {
-        variables_list <- NULL
+        variables_list <- sanitize_variables(
+            variables = variables,
+            model = model,
+            newdata = newdata)
     }
 
+    levels_character <- attr(variables_list, "levels_character")
 
     # weights
     sanity_wts(wts, newdata) # after sanity_newdata
