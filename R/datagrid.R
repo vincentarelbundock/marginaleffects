@@ -225,7 +225,10 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
     # }
 
     if (is.null(model) & is.null(newdata)) {
-        msg <- "When calling `datagrid()` *inside* the `marginaleffects()` or `comparisons()` functions, the `model` and `newdata` arguments can both be omitted. However, when calling `datagrid()` on its own, users must specify either the `model` or the `newdata` argument (but not both)."
+        msg <- "When calling `datagrid()` *inside* the `marginaleffects()` or
+        `comparisons()` functions, the `model` and `newdata` arguments can both
+        be omitted. However, when calling `datagrid()` on its own, users must
+        specify either the `model` or the `newdata` argument (but not both)."
         stop(msg, call. = FALSE)
     }
 
@@ -233,6 +236,8 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
     if (!is.null(model)) {
         variables_list <- insight::find_variables(model)
         variables_all <- unlist(variables_list, recursive = TRUE)
+        # weights are not extracted by default
+        variables_all <- c(variables_all, insight::find_weights(model))
     } else if (!is.null(newdata)) {
         variables_list <- NULL
         variables_all <- colnames(newdata)
