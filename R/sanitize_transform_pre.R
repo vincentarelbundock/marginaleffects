@@ -30,7 +30,7 @@ transform_pre_label_dict <- list(
     "eyex" = "eyex",
     "eydx" = "eydx",
     "dyex" = "dyex",
-    "dydxavg" = "mean(dydx)",
+    "dydxavg" = "dydxavg",
     "expdydx" = "expdydx")
 
 

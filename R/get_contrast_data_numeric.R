@@ -34,6 +34,11 @@ get_contrast_data_numeric <- function(model,
         high <- x + eps
         lab <- "exp(dY/dX)"
 
+    } else if (identical(variable$label, "dydxavg")) {
+        low <- x
+        high <- x + eps
+        lab <- "mean(dY/dX)"
+
     # contrast_label is designed for categorical predictors
     # numeric contrasts first
     } else if (isTRUE(checkmate::check_numeric(variable$value, len = 1))) {
