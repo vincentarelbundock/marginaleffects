@@ -215,7 +215,9 @@ predictions <- function(model,
         padding <- data.frame()
     } else {
         padding <- complete_levels(newdata, levels_character)
-        newdata <- rbindlist(list(padding, newdata))
+        if (nrow(padding) > 0) {
+            newdata <- rbindlist(list(padding, newdata))
+        }
     }
 
     vcov_tmp <- vcov
