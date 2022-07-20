@@ -35,6 +35,20 @@ get_contrasts <- function(model,
     if (inherits(pred_hi$value, "data.frame")) pred_hi <- pred_hi$value
     if (inherits(pred_lo$value, "data.frame")) pred_lo <- pred_lo$value
 
+
+    # needed for elasticities
+    if (any(sapply(variables, function(x) x$label %in% c("eyex", "eydx", "dyex")))) {
+        pred_or <- myTryCatch(get_predict(
+            model,
+            type = type,
+            vcov = FALSE,
+            newdata = original,
+            ...))
+        if (inherits(pred_or$value, "data.frame")) pred_or <- pred_or$value
+    } else {
+        pred_or <- pred_hi
+    }
+
     if (!inherits(pred_hi, "data.frame") || !inherits(pred_lo, "data.frame")) {
         msg <- format_msg(paste(
         "Unable to compute adjusted predictions for this model. Either the
@@ -114,6 +128,7 @@ get_contrasts <- function(model,
     # bayes
     draws_lo <- attr(pred_lo, "posterior_draws")
     draws_hi <- attr(pred_hi, "posterior_draws")
+    draws_or <- attr(pred_or, "posterior_draws")
     if (is.null(draws_lo)) {
         draws <- NULL
     } else {
@@ -138,8 +153,11 @@ get_contrasts <- function(model,
     }
 
     idx <- grep("^contrast|^group$|^term$|^type$|^transform_pre_idx$", colnames(out), value = TRUE)
-    out[, predicted_lo := pred_lo$predicted]
-    out[, predicted_hi := pred_hi$predicted]
+    out[, predicted_lo := pred_lo[["predicted"]]]
+    out[, predicted_hi := pred_hi[["predicted"]]]
+    if (!is.null(pred_or[["predicted"]])) {
+        out[, predicted_or := pred_or[["predicted"]]]
+    }
 
     # we feed this column to safefun(), even if it is useless for categoricals
     if (!"marginaleffects_eps" %in% colnames(out)) {
@@ -147,13 +165,13 @@ get_contrasts <- function(model,
     }
 
     # do not feed unknown arguments to a `transform_pre`
-    safefun <- function(hi, lo, n, term, interaction, eps) {
+    safefun <- function(hi, lo, or, n, term, interaction, eps) {
         if (isTRUE(interaction)) {
             fun <- fun_list[[1]]
         } else {
             fun <- fun_list[[term[1]]]
         }
-        args <- list("hi" = hi, "lo" = lo, "eps" = eps, "x" = elasticities[[term[1]]])
+        args <- list("hi" = hi, "lo" = lo, "or" = or, "eps" = eps, "x" = elasticities[[term[1]]])
         args <- args[names(args) %in% names(formals(fun))]
         con <- try(do.call("fun", args), silent = TRUE)
         if (!isTRUE(checkmate::check_numeric(con, len = n)) &&
@@ -177,6 +195,7 @@ get_contrasts <- function(model,
         out[, "comparison" := safefun(
             hi = predicted_hi,
             lo = predicted_lo,
+            or = predicted_or,
             n = .N,
             term = term,
             interaction = interaction,
@@ -189,6 +208,7 @@ get_contrasts <- function(model,
         tmp <- out[, .(comparison = safefun(
             hi = predicted_hi,
             lo = predicted_lo,
+            or = predicted_or,
             n = .N,
             term = term,
             interaction = interaction,

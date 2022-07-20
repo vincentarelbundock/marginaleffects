@@ -1,24 +1,48 @@
-# source("helpers.R")
+source("helpers.R")
+set.seed(1024)
 
-# # TODO: sanitize_variables: eyex only supported for numeric predictors
-mod <- lm(mpg ~ hp + factor(cyl), data = mtcars)
+tol <- 1e-4
+tolse <- 1e-2
+eps <- 1e-6
 
-# # errors and warnings
-# expect_error(comparisons(mod, variables = list(hp = "eyex")), pattern = "iqr.*minmax")
-# expect_error(marginaleffects(mod, transform_pre = "eyex"), pattern = "supported")
+results <- readRDS(testing_path("stata/stata.rds"))
 
-# marginaleffects(mod, slope = "dydx") |> summary()
-# marginaleffects(mod, slope = "eyex") |> summary()
-# marginaleffects(mod, slope = "eydx") |> summary()
-# marginaleffects(mod, slope = "dyex") |> summary()
+# lm()
+dat <- read.csv(testing_path("stata/databases/stats_lm_01.csv"))
+mod <- lm(y ~ x1 * x2, data = dat)
 
-comparisons(mod, transform_pre = "dydx") |> summary()
-comparisons(mod, transform_pre = "eyex") |> summary()
-comparisons(mod, transform_pre = "eydx") |> summary()
-comparisons(mod, transform_pre = "dyex") |> summary()
+mfx <- tidy(marginaleffects(mod, slope = "eyex"))
+sta <- results$stats_lm_elasticity_eyex
+expect_equivalent(mfx$estimate, sta$dydxstata)
+expect_equivalent(mfx$std.error, sta$std.errorstata, tolerance = tolse)
 
+mfx <- tidy(marginaleffects(mod, slope = "eydx", eps = eps))
+sta <- results$stats_lm_elasticity_eydx
+expect_equivalent(mfx$estimate, sta$dydxstata)
+expect_equivalent(mfx$std.error, sta$std.errorstata, tolerance = tolse)
 
-# # TODO: check label ratios for categorical
-# mod <- lm(mpg ~ hp + factor(cyl), data = mtcars)
-# cmp <- comparisons(mod, transform_pre = "ratio")
+mfx <- tidy(marginaleffects(mod, slope = "dyex", eps = eps))
+sta <- results$stats_lm_elasticity_dyex
+expect_equivalent(mfx$estimate, sta$dydxstata)
+expect_equivalent(mfx$std.error, sta$std.errorstata, tolerance = tolse)
+
+# glm()
+dat <- read.csv(testing_path("stata/databases/stats_glm_01.csv"))
+mod <- glm(y ~ x1 * x2, data = dat, family = binomial)
+
+mfx <- tidy(marginaleffects(mod, slope = "eyex", eps = eps))
+sta <- results$stats_glm_elasticity_eyex
+expect_equivalent(mfx$estimate, sta$dydxstata, tolerance = tol)
+expect_equivalent(mfx$std.error, sta$std.errorstata, tolerance = tolse)
+
+mfx <- tidy(marginaleffects(mod, slope = "eydx", eps = eps))
+sta <- results$stats_glm_elasticity_eydx
+expect_equivalent(mfx$estimate, sta$dydxstata, tolerance = tol)
+expect_equivalent(mfx$std.error, sta$std.errorstata, tolerance = tolse)
+
+mfx <- tidy(marginaleffects(mod, slope = "dyex", eps = eps))
+sta <- results$stats_glm_elasticity_dyex
+expect_equivalent(mfx$estimate, sta$dydxstata, tolerance = tol)
+expect_equivalent(mfx$std.error, sta$std.errorstata, tolerance = tolse)
+
 
