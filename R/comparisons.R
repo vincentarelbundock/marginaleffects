@@ -247,6 +247,13 @@ comparisons <- function(model,
     }
     sanity_contrast_factor(contrast_factor) # hardcoded in marginaleffects()
     sanity_contrast_numeric(contrast_numeric) # hardcoded in marginaleffects()
+
+    # before sanitize_newdata
+    marginalmeans <- isTRUE(checkmate::check_choice(newdata, choices = "marginalmeans")) 
+
+    # before sanitize_variables
+    newdata <- sanitize_newdata(model = model, newdata = newdata)
+
     variables_list <- sanitize_variables(
         model = model,
         newdata = newdata,
@@ -258,8 +265,6 @@ comparisons <- function(model,
 
     hypothesis <- sanitize_hypothesis(hypothesis, ...)
 
-    marginalmeans <- isTRUE(checkmate::check_choice(newdata, choices = "marginalmeans")) # before sanitize_newdata
-    newdata <- sanitize_newdata(model = model, newdata = newdata)
 
     # matrix columns not supported
     matrix_columns <- attr(newdata, "matrix_columns")

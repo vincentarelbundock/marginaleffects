@@ -39,6 +39,8 @@ get_contrast_data_numeric <- function(model,
         low <- x - variable$value / 2
         high <- x + variable$value / 2
         lab <- make_label("x + %s", variable$value)
+        # wrap in parentheses, unless mean() because there are already parentheses
+        # important to display ratios of x+1, etc.
         if (!isTRUE(grepl("mean", variable$label))) {
             lab <- make_label("(%s)", lab)
         }
@@ -57,11 +59,11 @@ get_contrast_data_numeric <- function(model,
         s <- stats::sd(x, na.rm = TRUE)
         low <- m - s / 2
         high <- m + s / 2
-        lab <- c("x - sd/2", "x + sd/2")
+        lab <- c("x + sd/2", "x - sd/2")
         if (!isTRUE(grepl("mean", variable$label))) {
-            lab <- make_label("(%s)", lab)
+            lab <- sprintf("(%s)", lab)
         }
-        lab <- make_label(variable$label, rev(sort(lab)))
+        lab <- make_label(variable$label, lab)
 
     } else if (identical(variable$value, "2sd")) {
         m <- mean(x, na.rm = TRUE)
@@ -70,9 +72,9 @@ get_contrast_data_numeric <- function(model,
         high <- m + s
         lab <- c("x - sd", "x + sd")
         if (!isTRUE(grepl("mean", variable$label))) {
-            lab <- make_label("(%s)", lab)
+            lab <- sprintf("(%s)", lab)
         }
-        lab <- make_label(variable$label, rev(lab))
+        lab <- make_label(variable$label, lab)
 
     } else if (identical(variable$value, "iqr")) {
         low <- stats::quantile(x, probs = .25, na.rm = TRUE)

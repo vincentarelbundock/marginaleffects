@@ -8,11 +8,6 @@ sanitize_variables <- function(variables,
                                contrast_numeric = 1,
                                contrast_factor = "reference") {
 
-    if (is.null(newdata)) {
-        newdata <- hush(insight::get_data(model))
-    }
-    newdata <- sanitize_newdata(model = model, newdata = newdata)
-    checkmate::assert_data_frame(newdata, min.row = 1, null.ok = TRUE)
     checkmate::assert(
         checkmate::check_character(variables, min.len = 1, null.ok = TRUE, names = "unnamed"),
         checkmate::check_list(variables, names = "unique"),
@@ -21,6 +16,10 @@ sanitize_variables <- function(variables,
     # rename to avoid overwriting in case we need info later
     predictors <- variables
     others <- NULL
+
+    if (is.null(newdata)) {
+        newdata <- hush(insight::get_data(model))
+    }
 
     # all variable names
     if (!is.null(model)) {
@@ -84,7 +83,6 @@ sanitize_variables <- function(variables,
         }
     }
 
-    # check missing variables
     miss <- setdiff(names(predictors), colnames(newdata))
     if (length(miss) > 0) {
         msg <- format_msg(sprintf(

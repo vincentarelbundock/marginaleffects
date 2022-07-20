@@ -119,20 +119,20 @@ expect_equivalent(
     c("(x + 1) - x", "TRUE - FALSE", "6 - 4", "8 - 4", "4 - 3", "5 - 3"))
 
 cmp2 <- comparisons(
-mod,
-contrast_numeric = "sd",
-transform_pre = "ratio",
-newdata = "mean")
+    mod,
+    contrast_numeric = "sd",
+    transform_pre = "ratio",
+    newdata = "mean")
 expect_equivalent(
-cmp2$contrast,
-c("(x + sd/2) / (x - sd/2)", "TRUE / FALSE", "6 / 4", "8 / 4", "4 / 3", "5 / 3"))
+    cmp2$contrast,
+    c("(x + sd/2) / (x - sd/2)", "TRUE / FALSE", "6 / 4", "8 / 4", "4 / 3", "5 / 3"))
 
 cmp3 <- comparisons(
-mod,
-contrast_numeric = "iqr",
-transform_pre = "lnratioavg",
-newdata = "mean")
+    mod,
+    contrast_numeric = "iqr",
+    transform_pre = "lnratioavg",
+    newdata = "mean")
 expect_equivalent(
-cmp3$contrast,
-c("ln(mean(Q3) / mean(Q1))", "ln(mean(TRUE) / mean(FALSE))", "ln(mean(6) / mean(4))", "ln(mean(8) / mean(4))", "ln(mean(4) / mean(3))", "ln(mean(5) / mean(3))"))
+    cmp3$contrast,
+    c("ln(mean(Q3) / mean(Q1))", "ln(mean(TRUE) / mean(FALSE))", "ln(mean(6) / mean(4))", "ln(mean(8) / mean(4))", "ln(mean(4) / mean(3))", "ln(mean(5) / mean(3))"))
 
