@@ -36,7 +36,8 @@ get_contrasts <- function(model,
     if (inherits(pred_lo$value, "data.frame")) pred_lo <- pred_lo$value
 
 
-    # needed for elasticities
+    # predicted values on the original data
+    # needed for elasticities but don't waste time if we not needed
     if (any(sapply(variables, function(x) x$label %in% c("eyex", "eydx", "dyex")))) {
         pred_or <- myTryCatch(get_predict(
             model,
@@ -155,6 +156,7 @@ get_contrasts <- function(model,
     idx <- grep("^contrast|^group$|^term$|^type$|^transform_pre_idx$", colnames(out), value = TRUE)
     out[, predicted_lo := pred_lo[["predicted"]]]
     out[, predicted_hi := pred_hi[["predicted"]]]
+
     if (!is.null(pred_or[["predicted"]])) {
         out[, predicted_or := pred_or[["predicted"]]]
     }
@@ -190,6 +192,7 @@ get_contrasts <- function(model,
         out <- out[, .(
             predicted_lo = mean(predicted_lo),
             predicted_hi = mean(predicted_hi),
+            predicted_or = mean(predicted_or),
             eps = mean(marginaleffects_eps)),
         by = idx]
         out[, "comparison" := safefun(
