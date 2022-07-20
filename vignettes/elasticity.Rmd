@@ -46,7 +46,7 @@ A unit increase in $x_1$ is associated to a $\eta_2$ percentage points increase 
 
 $$\eta_3=\frac{\partial \hat{y}}{\partial x_1}\cdot x_1$$
 
-A percentage point increase in $x_1$ is associated to a $\eta_1$ units increase in $y$.
+A percentage point increase in $x_1$ is associated to a $\eta_3$ units increase in $y$.
 
 With the `marginaleffects` package, these quantities are easy to compute:
 
