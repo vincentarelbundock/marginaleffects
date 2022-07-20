@@ -26,10 +26,10 @@ transform_pre_label_dict <- list(
     "ratioavg" = "mean(%s) / mean(%s)",
     "lnratioavg" = "ln(mean(%s) / mean(%s))",
     "lnoravg" = "ln(odds(%s) / odds(%s))",
-    "dydx" = "dY/dX",
-    "eyex" = "dlog(Y)/dlog(X)",
-    "eydx" = "dlog(Y)/dX",
-    "dyex" = "dY/dlog(X)",
+    "dydx" = "dydx",
+    "eyex" = "eyex",
+    "eydx" = "eydx",
+    "dyex" = "dyex",
     "dydxavg" = "mean(dydx)",
     "expdydx" = "exp(dydx)")
 
