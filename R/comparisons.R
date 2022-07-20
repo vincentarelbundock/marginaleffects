@@ -231,7 +231,7 @@ comparisons <- function(model,
     data_attributes <- get_data_attributes(model = model)
 
     sanity_transform_pre(transform_pre)
-    checkmate::assert_numeric(eps, len = 1, min = 1e-10, null.ok = TRUE)
+    checkmate::assert_numeric(eps, len = 1, lower = 1e-10, null.ok = TRUE)
 
     # used by `marginaleffects` to hard-code preference 
     # deprecated as user-level arguments

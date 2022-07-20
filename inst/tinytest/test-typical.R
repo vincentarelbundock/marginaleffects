@@ -57,7 +57,7 @@ expect_error(datagrid(model = mod, cyl = "2"), pattern = "must be one of the fac
 
 # no longer produces a warning: Mode is applied to cluster variables
 mod <- fixest::feols(mpg ~ hp | cyl, data = mtcars)
-expect_false(expect_warning(datagrid(model = mod)))
+expect_false(tinytest::expect_warning(datagrid(model = mod)))
 
 
 # bugs stay dead: FUN.logical
