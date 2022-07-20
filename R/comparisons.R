@@ -277,7 +277,11 @@ comparisons <- function(model,
     }
 
     # get dof before transforming the vcov arg
-    if (is.character(vcov) && (isTRUE(vcov == "satterthwaite") || isTRUE(vcov == "kenward-roger"))) {
+    if (is.character(vcov) &&
+       # get_df() produces a weird warning on non lmerMod. We can skip them
+       # because get_vcov() will produce an informative error later.
+       inherits(model, "lmerMod") && 
+       (isTRUE(vcov == "satterthwaite") || isTRUE(vcov == "kenward-roger"))) {
         df <- insight::find_response(model)
         # predict.lmerTest requires the DV
         if (!df %in% colnames(newdata)) {

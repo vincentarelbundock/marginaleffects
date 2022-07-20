@@ -51,9 +51,9 @@ expect_true(all(y$std.error != z$std.error))
 
 # at the mean (regression test)
 mfx <- marginaleffects(
-mod,
-newdata = datagrid(),
-vcov = "satterthwaite")
+    mod,
+    newdata = datagrid(),
+    vcov = "satterthwaite")
 expect_inherits(mfx, "marginaleffects")
 
 # GLM not supported
@@ -62,7 +62,6 @@ expect_error(comparisons(mod, vcov = "satterthwaite"), pattern = "Satter")
 expect_error(comparisons(mod, vcov = "kenward-roger"), pattern = "Satter")
 expect_error(predictions(mod, vcov = "satterthwaite"), pattern = "Satter")
 expect_error(predictions(mod, vcov = "kenward-roger"), pattern = "Satter")
-
 
 
 # get_predict: low-level tests
