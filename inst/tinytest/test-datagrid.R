@@ -6,11 +6,7 @@ requiet("fixest")
 # informative errors
 expect_error(datagrid(Petal.Length = 4.6), pattern = "inside")
 
-# numeric clusters warning
+# numeric clusters no longer produce a warning; selects mode
 mod <- lmer(mpg ~ hp + (1 + drat | cyl), data = mtcars)
-expect_warning(datagrid(model = mod), pattern = "cluster")
-
-
-# mod <- feols(mpg ~ hp | cyl, data = mtcars)
-# expect_warning(datagrid(model = mod), pattern = "cluster")
-
+expect_false(expect_warning(datagrid(model = mod)))
+expect_true(datagrid(model = mod)$cyl == 8)

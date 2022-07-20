@@ -173,11 +173,17 @@ typical <- function(
         # created by insight::get_data
         for (n in names(dat_automatic)) {
             variable_class <- find_variable_class(n, newdata = dat_automatic, model = model)
-            if (variable_class == "factor") out[[n]] <- FUN_factor(dat_automatic[[n]])
-            if (variable_class == "logical") out[[n]] <- FUN_logical(dat_automatic[[n]])
-            if (variable_class == "character") out[[n]] <- FUN_character(dat_automatic[[n]])
-            if (variable_class == "numeric") out[[n]] <- FUN_numeric(dat_automatic[[n]])
-            if (variable_class == "other") out[[n]] <- FUN_other(dat_automatic[[n]])
+            if (variable_class == "factor" || n %in% tmp[["cluster"]]) {
+                out[[n]] <- FUN_factor(dat_automatic[[n]])
+            } else if (variable_class == "logical") {
+                out[[n]] <- FUN_logical(dat_automatic[[n]])
+            } else if (variable_class == "character")  {
+                out[[n]] <- FUN_character(dat_automatic[[n]])
+            } else if (variable_class == "numeric") {
+                out[[n]] <- FUN_numeric(dat_automatic[[n]]) 
+            } else if (variable_class == "other") {
+                out[[n]] <- FUN_other(dat_automatic[[n]])
+            }
         }
     } else {
         out <- list()
@@ -288,30 +294,21 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
         }
     }
 
-    # warn if cluster variables after the | in the random effects formula are
-    # numeric. users probably do not want to take their means, because this
-    # makes prediction impossible in many models (e.g., `fixest::feols(mpg ~ hp | cyl)`)
+    # cluster identifiers will eventually be treated as factors
     if (!is.null(model)) {
         v <- insight::find_variables(model)
         v <- unlist(v[names(v) %in% c("cluster", "strata")], recursive = TRUE)
         variables_cluster <- c(v, insight::find_random(model, flatten = TRUE))
-        flag <- any(sapply(variables_cluster, function(x) is.numeric(newdata[[x]])))
-        if (isTRUE(flag)) {
-            msg <- format_msg(
-            "Some cluster or group identifiers are numeric. Unless otherwise
-            instructed, `datagrid()` sets all numeric variables to their mean.
-            This is probably inappropriate in the case of cluster or group
-            identifiers. A safer strategy is to convert them to factors before
-            fitting the model.")
-            warning(msg, call. = FALSE)
-        }
+    } else {
+        variables_cluster <- NULL
     }
 
     out <- list("newdata" = newdata,
                 "at" = at,
                 "all" = variables_all,
                 "manual" = variables_manual,
-                "automatic" = variables_automatic)
+                "automatic" = variables_automatic,
+                "cluster" = variables_cluster)
     return(out)
 }
 
