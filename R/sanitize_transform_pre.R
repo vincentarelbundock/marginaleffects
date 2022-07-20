@@ -31,7 +31,7 @@ transform_pre_label_dict <- list(
     "eydx" = "eydx",
     "dyex" = "dyex",
     "dydxavg" = "mean(dydx)",
-    "expdydx" = "exp(dydx)")
+    "expdydx" = "expdydx")
 
 
 sanity_transform_pre <- function(transform_pre) {
