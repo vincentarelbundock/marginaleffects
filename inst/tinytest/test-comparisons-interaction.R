@@ -68,22 +68,22 @@ expect_equivalent(nrow(cmp), 18)
 expect_equivalent(nrow(tidy(cmp)), 18)
 
 cmp <- comparisons(
-mod,
-variables = c("cyl", "am"),
-contrast_factor = "sequential")
+    mod,
+    variables = c("cyl", "am"),
+    contrast_factor = "sequential")
 expect_equivalent(nrow(cmp), 64)
 expect_equivalent(nrow(tidy(cmp)), 2)
 
 cmp <- comparisons(
-mod,
-variables = c("cyl", "am", "wt"))
+    mod,
+    variables = c("cyl", "am", "wt"))
 expect_equivalent(nrow(cmp), 192)
 expect_equivalent(nrow(tidy(cmp)), 6)
 
 cmp <- comparisons(
-mod,
-variables = c("cyl", "am", "wt"),
-contrast_factor = "pairwise")
+    mod,
+    variables = c("cyl", "am", "wt"),
+    contrast_factor = "pairwise")
 expect_equivalent(nrow(cmp), 768)
 expect_equivalent(nrow(tidy(cmp)), 24)
 

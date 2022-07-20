@@ -8,6 +8,7 @@ get_contrast_data_numeric <- function(model,
     x <- newdata[[variable$name]]
 
     make_label <- function(lab, val) {
+        if (identical(lab, "custom")) return(lab)
         args <- append(list(lab), as.list(val))
         out <- tryCatch(
             do.call("sprintf", args),

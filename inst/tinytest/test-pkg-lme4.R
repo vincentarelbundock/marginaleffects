@@ -64,6 +64,7 @@ expect_error(predictions(mod, vcov = "satterthwaite"), pattern = "Satter")
 expect_error(predictions(mod, vcov = "kenward-roger"), pattern = "Satter")
 
 
+
 # get_predict: low-level tests
 
 dat <- haven::read_dta("stata/databases/lme4_02.dta")

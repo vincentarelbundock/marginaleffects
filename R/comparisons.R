@@ -399,7 +399,6 @@ comparisons <- function(model,
     cols <- unique(c(cols, colnames(mfx)))
     cols <- setdiff(cols, bad)
     mfx <- mfx[, ..cols, drop = FALSE]
-    mfx[["eps"]] <- NULL
 
     # save as attribute and not column
     marginaleffects_wts_internal <- mfx[["marginaleffects_wts_internal"]]

@@ -184,14 +184,21 @@ get_contrasts <- function(model,
         by = "term"]
 
     } else {
-        out[, "comparison" := safefun(
+        # tmp needed to avoid recycling when safefun() returns length 1 value
+        # assign back into `out` to preserve `rowid` when possible
+        tmp <- out[, .(comparison = safefun(
             hi = predicted_hi,
             lo = predicted_lo,
             n = .N,
             term = term,
             interaction = interaction,
-            eps = marginaleffects_eps),
+            eps = marginaleffects_eps)),
         by = idx]
+        if (nrow(tmp) != nrow(out)) {
+            out <- tmp
+        } else {
+            out[, "comparison" := tmp$comparison]
+        }
     }
 
     out <- get_hypothesis(out, hypothesis, "comparison")

@@ -46,9 +46,9 @@ get_contrast_data_character <- function(model,
     }
 
     levs_idx$isNULL <- levs_idx$hi == levs_idx$lo
-    levs_idx$label <- tryCatch(
+    levs_idx$label <- suppressWarnings(tryCatch(
         sprintf(contrast_label, levs_idx$hi, levs_idx$lo),
-        error = function(e) contrast_label)
+        error = function(e) contrast_label))
     levs_idx <- stats::setNames(levs_idx, paste0("marginaleffects_contrast_", colnames(levs_idx)))
 
     setDT(newdata)

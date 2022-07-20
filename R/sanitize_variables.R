@@ -151,6 +151,7 @@ sanitize_variables <- function(variables,
         github_issue()
     }
 
+
     for (v in names(predictors)) {
         if (isTRUE(variables_class[v] == "numeric")) {
             sanity_contrast_numeric(predictors[[v]])

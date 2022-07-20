@@ -6,7 +6,9 @@ get_contrast_data_logical <- function(model,
     lo <- hi <- newdata
     lo[[variable]] <- FALSE
     hi[[variable]] <- TRUE
-    lab <- sprintf(contrast_label, TRUE, FALSE)
+    lab <- suppressWarnings(tryCatch(
+        sprintf(contrast_label, TRUE, FALSE),
+        error = function(e) contrast_label))
     out <- list(rowid = seq_len(nrow(newdata)),
         lo = lo,
         hi = hi,

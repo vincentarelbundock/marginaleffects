@@ -7,6 +7,7 @@ get_data_attributes <- function(model = NULL) {
     cl <- Filter(function(x) is.character(dat[[x]]), colnames(dat))
     cl <- lapply(dat[, cl], unique)
     out <- list(
+        "model_data" = dat,
         "matrix_columns" = mc,
         "character_levels" = cl)
     return(out)
