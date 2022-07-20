@@ -92,10 +92,10 @@ if (packageVersion("insight") > "0.17.1.6") {
     expect_true(all(mfx$term == "z"))
     expect_true(all(cmp$term == "z"))
 
-    expect_error(suppressWarnings(marginaleffects(b, variables = "L")), pattern = "supported")
-    expect_error(comparisons(b, variables = "L"), pattern = "supported")
-    expect_error(plot_cap(b, condition = "z"), pattern = "support")
-    expect_error(plot_cme(b, effect = "L", condition = "z"), pattern = "support")
+    expect_error(suppressWarnings(marginaleffects(b, variables = "L")), pattern = "no valid")
+    expect_error(suppressWarnings(comparisons(b, variables = "L")), pattern = "no valid")
+    expect_error(plot_cap(b, condition = "z"), pattern = "not support")
+    expect_error(plot_cme(b, effect = "L", condition = "z"), pattern = "not support")
 }
 
 

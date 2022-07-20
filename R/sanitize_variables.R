@@ -3,6 +3,7 @@
 sanitize_variables <- function(variables,
                                model,
                                newdata,
+                               data_attributes = NULL,
                                transform_pre = NULL,
                                interaction = FALSE,
                                contrast_numeric = 1,
@@ -111,16 +112,16 @@ sanitize_variables <- function(variables,
     }
 
     # matrix variables are not supported
-    idx <- names(predictors) %in% attr(newdata, "matrix_columns")
-    if (any(idx)) {
-        predictors <- predictors[!idx]
+    mc <- data_attributes[["matrix_columns"]]
+    if (length(mc) > 0) {
+        predictors <- predictors[!names(predictors) %in% mc]
         msg <- format_msg("Matrix columns are not supported.")
         warning(msg, call. = FALSE)
     }
 
     # anything left?
     if (length(predictors) == 0) {
-        stop("There are no valid predictors. Please change the `variables` argument.", call. = FALSE)
+        stop("There is no valid predictor variable. Please change the `variables` argument.", call. = FALSE)
     }
     others <- setdiff(predictors_all, names(predictors))
 

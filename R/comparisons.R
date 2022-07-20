@@ -228,6 +228,8 @@ comparisons <- function(model,
         interaction <- FALSE
     }
 
+    data_attributes <- get_data_attributes(model = model)
+
     sanity_transform_pre(transform_pre)
     checkmate::assert_numeric(eps, len = 1, min = 1e-10, null.ok = TRUE)
 
@@ -261,17 +263,10 @@ comparisons <- function(model,
         interaction = interaction,
         contrast_numeric = contrast_numeric,
         contrast_factor = contrast_factor,
+        data_attributes = data_attributes,
         transform_pre = transform_pre)
 
     hypothesis <- sanitize_hypothesis(hypothesis, ...)
-
-
-    # matrix columns not supported
-    matrix_columns <- attr(newdata, "matrix_columns")
-    if (any(matrix_columns %in% c(names(variables), variables))) {
-        msg <- "Matrix columns are not supported by the `variables` argument."
-        stop(msg, call. = FALSE)
-    }
 
     # weights
     sanity_wts(wts, newdata) # after sanity_newdata
@@ -296,10 +291,7 @@ comparisons <- function(model,
     vcov.type <- get_vcov_label(vcov)
     vcov <- get_vcov(model, vcov = vcov)
 
-
-    # matrix columns are not supported
     predictors <- variables_list$conditional
-    predictors <- predictors[!names(predictors) %in% matrix_columns]
 
     # modelbased::visualisation_matrix attaches useful info for plotting
     attributes_newdata <- attributes(newdata)

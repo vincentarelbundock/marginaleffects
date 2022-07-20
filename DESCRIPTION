@@ -127,6 +127,7 @@ Collate:
     'get_contrast_data_logical.R'
     'get_contrast_data_numeric.R'
     'get_contrasts.R'
+    'get_data_attributes.R'
     'get_eti.R'
     'get_group_names.R'
     'get_hdi.R'

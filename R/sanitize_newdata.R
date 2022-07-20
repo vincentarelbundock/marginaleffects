@@ -27,9 +27,6 @@ sanitize_newdata <- function(model, newdata) {
         stop(msg, call. = FALSE)
     }
 
-    # matrix columns are only partially supported
-    matrix_columns <- names(newdata)[sapply(newdata, is.matrix)]
-
     # required for the type of column indexing to follow
     data.table::setDF(newdata)
 
@@ -78,8 +75,6 @@ sanitize_newdata <- function(model, newdata) {
     if (!"rowid" %in% colnames(newdata)) {
         newdata$rowid <- seq_len(nrow(newdata))
     }
-
-    attr(newdata, "matrix_columns") <- matrix_columns
 
     return(newdata)
 }
