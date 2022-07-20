@@ -162,7 +162,7 @@ predictions <- function(model,
 
     # check variables before inferring `newdata`
     if (!is.null(variables)) {
-        variables_list <- sanitize_variables(model, newdata, variables)
+        variables_list <- sanitize_variables(model = model, newdata = newdata, variables = variables)
         # get new data if it doesn't exist
         variables_vec <- names(variables_list$conditional)
         args <- list("newdata" = newdata, "model" = model)
