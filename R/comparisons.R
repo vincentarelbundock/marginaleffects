@@ -390,7 +390,7 @@ comparisons <- function(model,
     }
 
     # clean columns
-    bad <- c("predicted_hi", "predicted_lo")
+    bad <- c("predicted_hi", "predicted_lo", "predicted_or", "predicted")
     stubcols <- c("rowid", "rowid_counterfactual", "type", "group", "term", "hypothesis",
                   grep("^contrast", colnames(mfx), value = TRUE),
                   "comparison", "std.error", "statistic", "p.value", "conf.low", "conf.high", "df",

@@ -618,8 +618,7 @@ predictions_data <- predictions(
   mod,
   newdata = datagrid(lifeExp = seq(30, 80, 1)),
   dpar = "mu",
-  transform_post = exp
-)
+  transform_post = exp)
 
 slopes_data <- comparisons(
   mod,
