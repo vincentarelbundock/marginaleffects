@@ -49,7 +49,7 @@ expect_equivalent(dim(nd), c(1, 2))
 
 # errors and warnings
 mod <- lm(hp ~ mpg, mtcars)
-expect_error(datagrid(), pattern = "can both be omitted")
+expect_error(datagrid(), pattern = "are both .NULL")
 
 mod <- lm(hp ~ factor(cyl), mtcars)
 expect_inherits(datagrid(model = mod, cyl = "4"), "data.frame")

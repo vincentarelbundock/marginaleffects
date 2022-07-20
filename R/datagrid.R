@@ -65,6 +65,7 @@ datagrid <- function(
     FUN_numeric = function(x) mean(x, na.rm = TRUE),
     FUN_other = function(x) mean(x, na.rm = TRUE)) {
 
+
     # backward compatibility
     dots <- list(...)
     FUN_character <- arg_name_change(FUN_character, "FUN.character", dots)
@@ -225,10 +226,12 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
     # }
 
     if (is.null(model) & is.null(newdata)) {
-        msg <- "When calling `datagrid()` *inside* the `marginaleffects()` or
-        `comparisons()` functions, the `model` and `newdata` arguments can both
-        be omitted. However, when calling `datagrid()` on its own, users must
-        specify either the `model` or the `newdata` argument (but not both)."
+        msg <- format_msg(
+        "The `model` and `newdata` arguments are both `NULL`. When calling `datagrid()`
+        *inside* the `marginaleffects()` or `comparisons()` functions, the `model` and
+        `newdata` arguments can both be omitted. However, when calling `datagrid()` on
+        its own, users must specify either the `model` or the `newdata` argument (but
+        not both).")
         stop(msg, call. = FALSE)
     }
 
@@ -289,7 +292,9 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
     # numeric. users probably do not want to take their means, because this
     # makes prediction impossible in many models (e.g., `fixest::feols(mpg ~ hp | cyl)`)
     if (!is.null(model)) {
-        variables_cluster <- insight::find_random(model, flatten = TRUE)
+        v <- insight::find_variables(model)
+        v <- unlist(v[names(v) %in% c("cluster", "strata")], recursive = TRUE)
+        variables_cluster <- c(v, insight::find_random(model, flatten = TRUE))
         flag <- any(sapply(variables_cluster, function(x) is.numeric(newdata[[x]])))
         if (isTRUE(flag)) {
             msg <- format_msg(
@@ -309,3 +314,5 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
                 "automatic" = variables_automatic)
     return(out)
 }
+
+
