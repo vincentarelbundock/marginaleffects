@@ -34,3 +34,6 @@ c2 <- tidy(c2)
 
 expect_equivalent(g1, c1$estimate)
 expect_equivalent(g2, c2$estimate)
+
+
+
