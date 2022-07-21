@@ -71,11 +71,11 @@
 #' type, but will typically be a string such as: "response", "link", "probs",
 #' or "zero". When an unsupported string is entered, the model-specific list of
 #' acceptable values is returned in an error message.
-#' @param slope string indicates the type of slope to compute:
-#' - "dydx": slope = dY/dX
-#' - "eyex": elasticity = dlog(Y)/dlog(X) = dY/dX * Y / X
-#' - "eydx": semi-elasticity = dlog(Y)/dX = dY/dX * Y
-#' - "dyxx": semi-elasticity = dY/dlog(X) = dY/dX / X
+#' @param slope string indicates the type of slope or (semi-)elasticity to compute:
+#' - "dydx": dY/dX
+#' - "eyex": dY/dX * Y / X
+#' - "eydx": dY/dX * Y
+#' - "dyex": dY/dX / X
 #' @param wts string or numeric: weights to use when computing average
 #' contrasts or marginaleffects. These weights only affect the averaging in
 #' `tidy()` or `summary()`, and not the unit-level estimates themselves.

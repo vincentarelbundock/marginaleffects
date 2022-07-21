@@ -69,10 +69,10 @@ acceptable values is returned in an error message.}
 
 \item{slope}{string indicates the type of slope to compute:
 \itemize{
-\item "dydx": slope = dY/dX
-\item "eyex": elasticity = dlog(Y)/dlog(X) = dY/dX * Y / X
-\item "eydx": semi-elasticity = dlog(Y)/dX = dY/dX * Y
-\item "dyxx": semi-elasticity = dY/dlog(X) = dY/dX / X
+\item "dydx": dY/dX
+\item "eyex": dY/dX * Y / X
+\item "eydx": dY/dX * Y
+\item "dyex": dY/dX / X
 }}
 
 \item{wts}{string or numeric: weights to use when computing average
