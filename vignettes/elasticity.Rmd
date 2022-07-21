@@ -48,6 +48,8 @@ with interpretations roughly as follows:
 2. A unit increase in $x_1$ is associated to a $\eta_2$ percentage points increase in $y$.
 3. A percentage point increase in $x_1$ is associated to a $\eta_3$ units increase in $y$.
 
+For further intuition, consider the ratio of change in $y$ to change in $x$: $\frac{\Delta y}{\Delta x}$. We can turn this ratio into a ratio between *relative* changes by dividing both the numerator and the denominator: $\frac{\frac{\Delta y}{y}}{\frac{\Delta x}{x}}$. This is of course linked to the expression for the $\eta_1$ elasticity above.
+
 With the `marginaleffects` package, these quantities are easy to compute:
 
 ```{r}

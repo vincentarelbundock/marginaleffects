@@ -20,9 +20,9 @@ get_contrast_data_numeric <- function(model,
     # by default variable$value = 1, so we need to check this first
     slopes <- c(
         "dY/dX" = "dydx",
-        "dlog(Y)/dlog(X)" = "eyex",
-        "dlog(Y)/dX" = "eydx",
-        "dY/dlogX" = "dyex")
+        "eY/eX" = "eyex",
+        "eY/dX" = "eydx",
+        "dY/eX" = "dyex")
     if (isTRUE(variable$label %in% slopes)) {
         low <- x
         high <- x + eps
