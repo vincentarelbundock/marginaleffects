@@ -14,6 +14,18 @@ expect_predictions(pred, n_row = 64)
 expect_true("rowid_counterfactual" %in% colnames(pred))
 
 
+# `variables` argument: character vector
+p <- predictions(mod, variables = list("am" = 0:1))
+expect_equivalent(nrow(p), 64)
+
+p <- predictions(mod, variables = list("am" = 0:1), newdata = "mean")
+expect_equivalent(nrow(p), 2)
+
+# `variables` argument: character vector
+expect_error(predictions(mod, variables = list(2)), pattern = "names")
+expect_error(predictions(mod, variables = "am"), pattern = "list")
+
+
 ################
 #  conf.level  #
 ################

@@ -32,6 +32,8 @@ comparisons(
 \item "mean": Contrasts at the Mean. Contrasts when each predictor is held at its mean or mode.
 \item "median": Contrasts at the Median. Contrasts when each predictor is held at its median or mode.
 \item "marginalmeans": Contrasts at Marginal Means.
+\item "tukey": Contrasts at Tukey's 5 numbers.
+\item "grid": Contrasts on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
 }
 \item \code{\link[=datagrid]{datagrid()}} call to specify a custom grid of regressors. For example:
 \itemize{

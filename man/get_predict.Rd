@@ -263,6 +263,8 @@ get_predict(model, newdata, vcov, conf_level, type, ...)
 \item "mean": Marginal Effects at the Mean. Marginal effects when each predictor is held at its mean or mode.
 \item "median": Marginal Effects at the Median. Marginal effects when each predictor is held at its median or mode.
 \item "marginalmeans": Marginal Effects at Marginal Means. See Details section below.
+\item "tukey": Marginal Effects at Tukey's 5 numbers.
+\item "grid": Marginal Effects on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
 }
 \item \code{\link[=datagrid]{datagrid()}} call to specify a custom grid of regressors. For example:
 \itemize{

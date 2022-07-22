@@ -30,12 +30,31 @@
 #'
 #' @inheritParams marginaleffects
 #' @param model Model object
-#' @param variables Character vector. Compute Adjusted Predictions for
-#'   combinations of each of these variables. Factor levels are considered at
-#'   each of their levels. Numeric variables variables are considered at Tukey's
-#'   Five-Number Summaries. `NULL` uses the original data used to fit the model.
+#' @param variables Named list of variables with values to create a
+#' counterfactual grid of predictions. The entire dataset will be replicated
+#' for each unique combination of the variables in this list. See the Examples
+#' section below. Warning: This can use a lot of memory if there are many
+#' variables and values, and when the dataset is large.
+#' @param newdata `NULL`, data frame, string, or `datagrid()` call. Determines the grid of predictors on which we make predictions.
+#' + `NULL` (default): Predictions for each observed value in the original dataset.
+#' + data frame: Predictions for each row of the `newdata` data frame.
+#' + string:
+#'   - "mean": Predictions at the Mean. Predictions when each predictor is held at its mean or mode.
+#'   - "median": Predictions at the Median. Predictions when each predictor is held at its median or mode.
+#'   - "marginalmeans": Predictions at Marginal Means. See Details section below.
+#'   - "tukey": Predictions at Tukey's 5 numbers.
+#'   - "grid": Predictions on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
+#' + [datagrid()] call to specify a custom grid of regressors. For example:
+#'   - `newdata = datagrid(cyl = c(4, 6))`: `cyl` variable equal to 4 and 6 and other regressors fixed at their means or modes.
+#'   - See the Examples section and the [datagrid()] documentation.
 #' @param newdata A data frame over which to compute quantities of interest.
 #'   + `NULL`: adjusted predictions for each observed value in the original dataset.
+#'   - "mean": Marginal Effects at the Mean. Marginal effects when each predictor is held at its mean or mode.
+#'   - "median": Marginal Effects at the Median. Marginal effects when each predictor is held at its median or mode.
+#'   - "marginalmeans": Marginal Effects at Marginal Means. See Details section below.
+#'   - "tukey": Marginal Effects at Tukey's 5 numbers.
+#'   - "grid": Marginal Effects on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
+
 #'   + The [datagrid()] function can be used to specify a custom grid of regressors. For example:
 #'       - `newdata = datagrid()`: contrast at the mean
 #'       - `newdata = datagrid(cyl = c(4, 6))`: `cyl` variable equal to 4 and 6 and other regressors fixed at their means or modes.
@@ -74,6 +93,20 @@
 #'
 #' # Conditional Adjusted Predictions
 #' plot_cap(mod, condition = "hp")
+#'
+#' # Counterfactual predictions with the `variables` argument
+#' # the `mtcars` dataset has 32 rows
+#' 
+#' mod <- lm(mpg ~ hp + am, data = mtcars)
+#' p <- predictions(mod)
+#' head(p)
+#' nrow(p)
+#' 
+#' # counterfactual predictions obtained by replicating the entire for different
+#' # values of the predictors
+#' p <- predictions(mod, variables = list(hp = c(90, 100, 110)))
+#' nrow(p)
+#' 
 #'
 #' # hypothesis test: is the prediction in the 1st row equal to the prediction in the 2nd row
 #' mod <- lm(mpg ~ wt + drat, data = mtcars)
@@ -143,33 +176,29 @@ predictions <- function(model,
     # input sanity checks
     checkmate::assert_function(transform_post, null.ok = TRUE)
     sanity_dots(model = model, ...)
-    sanity_model_specific(model = model, newdata = newdata, vcov = vcov, calling_function = "predictions", ...)
+    sanity_model_specific(
+        model = model,
+        newdata = newdata,
+        vcov = vcov,
+        calling_function = "predictions", ...)
     hypothesis <- sanitize_hypothesis(hypothesis, ...)
     conf_level <- sanitize_conf_level(conf_level, ...)
-
-    # after modelbased attribute extraction
+    type <- sanitize_type(model = model, type = type, calling_function = "predictions")
     newdata <- sanitize_newdata(model = model, newdata = newdata)
 
-    # type
-    type <- sanitize_type(model = model, type = type, calling_function = "predictions")
+    # `variables` si character vector: Tukey's 5 or uniques
+    checkmate::assert_list(variables, names = "unique", null.ok = TRUE)
 
-    # TODO: we can simplify this using sanitize_newdata
-    # check variables before inferring `newdata`
+    # analogous to comparisons(variables=list(...))
     if (!is.null(variables)) {
-        variables_list <- sanitize_variables(model = model, newdata = newdata, variables = variables)
-        # get new data if it doesn't exist
-        variables_vec <- names(variables_list$conditional)
-        args <- list("newdata" = newdata, "model" = model)
-        for (v in variables_vec) {
-            vcl <- find_variable_class(v, newdata = newdata, model = model)
-            if (isTRUE(vcl == "numeric")) {
-                args[[v]] <- stats::fivenum(newdata[[v]])
-            } else {
-                args[[v]] <- unique(newdata[[v]])
-            }
-        }
+        args <- list(
+            "model" = model,
+            "newdata" = newdata,
+            "grid_type" = "counterfactual")
+        args <- append(args, variables)
         newdata <- do.call("datagrid", args)
-        newdata[["rowid"]] <- NULL # the original rowids are no longer valid after averaging et al.
+        # the original rowids are no longer valid after averaging et al.
+        newdata[["rowid"]] <- NULL 
     }
 
     character_levels <- attr(newdata, "newdata_character_levels")

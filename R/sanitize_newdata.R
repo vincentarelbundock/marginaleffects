@@ -2,7 +2,7 @@ sanitize_newdata <- function(model, newdata) {
 
     checkmate::assert(
         checkmate::check_data_frame(newdata, null.ok = TRUE),
-        checkmate::check_choice(newdata, choices = c("mean", "median", "marginalmeans")),
+        checkmate::check_choice(newdata, choices = c("mean", "median", "tukey", "grid", "marginalmeans")),
         combine = "or")
 
     # TODO: why do we need this?
@@ -23,6 +23,19 @@ sanitize_newdata <- function(model, newdata) {
         newdata <- datagrid(
             model = model,
             FUN.numeric = function(x) stats::median(x, na.rm = TRUE))
+
+    } else if (identical(newdata, "tukey")) {
+        newdata <- datagrid(
+            model = model,
+            FUN.numeric = function(x) stats::fivenum(x, na.rm = TRUE))
+
+    } else if (identical(newdata, "grid")) {
+        newdata <- datagrid(
+            model = model,
+            FUN.numeric = function(x) stats::fivenum(x, na.rm = TRUE),
+            FUN.factor = unique,
+            FUN.character = unique,
+            FUN.logical = unique)
 
     # grid with all unique values of categorical variables, and numerics at their means
     } else if (identical(newdata, "marginalmeans")) {

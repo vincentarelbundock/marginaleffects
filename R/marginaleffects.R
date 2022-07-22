@@ -52,6 +52,8 @@
 #'   - "mean": Marginal Effects at the Mean. Marginal effects when each predictor is held at its mean or mode.
 #'   - "median": Marginal Effects at the Median. Marginal effects when each predictor is held at its median or mode.
 #'   - "marginalmeans": Marginal Effects at Marginal Means. See Details section below.
+#'   - "tukey": Marginal Effects at Tukey's 5 numbers.
+#'   - "grid": Marginal Effects on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
 #' + [datagrid()] call to specify a custom grid of regressors. For example:
 #'   - `newdata = datagrid(cyl = c(4, 6))`: `cyl` variable equal to 4 and 6 and other regressors fixed at their means or modes.
 #'   - See the Examples section and the [datagrid()] documentation.

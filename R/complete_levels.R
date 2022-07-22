@@ -35,7 +35,9 @@ complete_levels <- function(x, character_levels = NULL) {
         for (v in names(vault)) {
             padding[[v]] <- NULL
         }
-        padding <- merge(padding, expand.grid(vault), all = TRUE)
+        fun <- data.table::CJ
+        gr <- do.call("fun", vault)
+        padding <- merge(padding, gr, all = TRUE)
         padding <- padding[, colnames(x)]
     } else {
         padding <- data.frame()

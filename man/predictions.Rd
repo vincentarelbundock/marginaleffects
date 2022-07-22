@@ -23,6 +23,15 @@ predictions(
 \item{newdata}{A data frame over which to compute quantities of interest.
 \itemize{
 \item \code{NULL}: adjusted predictions for each observed value in the original dataset.
+}
+\itemize{
+\item "mean": Marginal Effects at the Mean. Marginal effects when each predictor is held at its mean or mode.
+\item "median": Marginal Effects at the Median. Marginal effects when each predictor is held at its median or mode.
+\item "marginalmeans": Marginal Effects at Marginal Means. See Details section below.
+\item "tukey": Marginal Effects at Tukey's 5 numbers.
+\item "grid": Marginal Effects on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
+}
+\itemize{
 \item The \code{\link[=datagrid]{datagrid()}} function can be used to specify a custom grid of regressors. For example:
 \itemize{
 \item \code{newdata = datagrid()}: contrast at the mean
@@ -31,10 +40,10 @@ predictions(
 }
 }}
 
-\item{variables}{Character vector. Compute Adjusted Predictions for
-combinations of each of these variables. Factor levels are considered at
-each of their levels. Numeric variables variables are considered at Tukey's
-Five-Number Summaries. \code{NULL} uses the original data used to fit the model.}
+\item{variables}{Named list of variables with values to create a
+counterfactual grid of predictions. The entire dataset will be replicated
+for each unique combination of the variables in this list. See the Examples
+section below.}
 
 \item{vcov}{Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
 \itemize{
@@ -212,6 +221,20 @@ predictions(mod, newdata = datagrid(am = 0:1, grid_type = "counterfactual")) \%>
 
 # Conditional Adjusted Predictions
 plot_cap(mod, condition = "hp")
+
+# Counterfactual predictions with the `variables` argument
+# the `mtcars` dataset has 32 rows
+
+mod <- lm(mpg ~ hp + am, data = mtcars)
+p <- predictions(mod)
+head(p)
+nrow(p)
+
+# counterfactual predictions obtained by replicating the entire for different
+# values of the predictors
+p <- predictions(mod, variables = list(hp = c(90, 100, 110)))
+nrow(p)
+
 
 # hypothesis test: is the prediction in the 1st row equal to the prediction in the 2nd row
 mod <- lm(mpg ~ wt + drat, data = mtcars)

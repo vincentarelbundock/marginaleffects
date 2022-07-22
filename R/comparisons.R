@@ -60,6 +60,8 @@
 #'   - "mean": Contrasts at the Mean. Contrasts when each predictor is held at its mean or mode.
 #'   - "median": Contrasts at the Median. Contrasts when each predictor is held at its median or mode.
 #'   - "marginalmeans": Contrasts at Marginal Means.
+#'   - "tukey": Contrasts at Tukey's 5 numbers.
+#'   - "grid": Contrasts on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
 #' + [datagrid()] call to specify a custom grid of regressors. For example:
 #'   - `newdata = datagrid(cyl = c(4, 6))`: `cyl` variable equal to 4 and 6 and other regressors fixed at their means or modes.
 #'   - See the Examples section and the [datagrid] documentation.

@@ -1,5 +1,9 @@
 # marginaleffects 0.6.0.9000
 
+Breaking change
+
+* Character vectors are no longer supported in the `variables` argument of the `predictions()` function. Use `newdata="fivenum"` or "grid", "mean", or "median" instead.
+
 New supported packages and models:
 
 * `survival::clogit`
@@ -11,6 +15,7 @@ New vignette:
 
 Misc:
 
+* New `newdata` shortcuts: "tukey", "grid"
 * `vcov` argument string shortcuts are now case-insensitive
 * documentation improvements
 

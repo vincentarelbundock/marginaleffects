@@ -90,26 +90,25 @@ void <- capture.output({
 })
 
 # class outcome not supported
-expect_error(predictions(m1, type = "class", variables = "x"), pattern = "type")
-expect_error(marginalmeans(m1, type = "class", variables = "x"), pattern = "type")
-expect_error(marginaleffects(m1, type = "class", variables = "x"), pattern = "type")
+expect_error(predictions(m1, type = "class"), pattern = "type")
+expect_error(marginalmeans(m1, type = "class"), pattern = "type")
+expect_error(marginaleffects(m1, type = "class"), pattern = "type")
 
 # small predictions
 pred1 <- predictions(m1, type = "probs")
-pred2 <- predictions(m1, type = "probs", variables = "x")
+pred2 <- predictions(m1, type = "probs", newdata = "marginalmeans")
 expect_predictions(pred1, n_row = nrow(dat) * 3)
-expect_predictions(pred2, n_row = 9)
+expect_predictions(pred2, n_row = 27)
 
 # large predictions
 idx <- 3:5
 n_row <- sapply(dat[, idx], function(x) length(unique(x)))
 n_row <- prod(n_row) * length(unique(dat$y))
-pred <- predictions(m2, type = "probs", variables = colnames(dat)[idx])
+pred <- predictions(m2, type = "probs", newdata = "mean")
 expect_predictions(pred, n_row = n_row)
 
 # massive prediction raises error
-expect_error(predictions(m2, type = "probs", variables = colnames(dat)[3:ncol(dat)]),
-         pattern = "1 billion rows")
+expect_error(predictions(m2, type = "probs"), pattern = "")
 
 
 
