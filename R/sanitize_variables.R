@@ -3,7 +3,6 @@
 sanitize_variables <- function(variables,
                                model,
                                newdata,
-                               data_attributes = NULL,
                                transform_pre = NULL,
                                interaction = FALSE,
                                contrast_numeric = 1,
@@ -40,30 +39,21 @@ sanitize_variables <- function(variables,
         known <- c("fixed", "conditional")
         if (any(known %in% names(predictors))) {
             predictors <- unlist(predictors[known], recursive = TRUE, use.names = FALSE)
-        # sometimes triggered by multivariate brms models where we get nested list: predictors$gear$hp
+        # sometimes triggered by multivariate brms models where we get nested
+        # list: predictors$gear$hp
         } else {
             predictors <- unlist(predictors, recursive = TRUE, use.names = FALSE)
         }
     }
 
     # variable classes: compute only once
-    variables_class <- list()
-    if (isTRUE(checkmate::check_character(predictors))) {
-        idx <- predictors
-    } else if (isTRUE(checkmate::check_list(predictors))) {
-        idx <- names(predictors)
-    }
-    for (v in idx) {
-        variables_class[[v]] <- tryCatch(
-            find_variable_class(v, newdata = newdata, model = model),
-            error = function(e) NULL)
-    }
+    variable_class <- attr(newdata, "newdata_variable_class")
 
     # variables is character vector: convert to named list
     if (isTRUE(checkmate::check_character(predictors))) {
         predictors_new <- list()
         for (v in predictors) {
-            if (isTRUE(variables_class[[v]] == "numeric")) {
+            if (isTRUE(variable_class[[v]] == "numeric")) {
                 predictors_new[[v]] <- contrast_numeric
             } else {
                 predictors_new[[v]] <- contrast_factor
@@ -73,12 +63,12 @@ sanitize_variables <- function(variables,
     }
 
     # check validity of elements of predictors list
-    for (n in names(predictors)) {
-        if (n %in% colnames(newdata)) {
-            if (identical(variables_class[v], "numeric")) {
+    for (v in names(predictors)) {
+        if (v %in% colnames(newdata)) {
+            if (identical(variable_class[v], "numeric")) {
                 sanity_contrast_numeric(predictors[[v]])
             }
-            if (isTRUE(variables_class[v] %in% c("factor", "character"))) {
+            if (isTRUE(variable_class[v] %in% c("factor", "character"))) {
                 sanity_contrast_factor(predictors[[v]])
             }
         }
@@ -112,7 +102,7 @@ sanitize_variables <- function(variables,
     }
 
     # matrix variables are not supported
-    mc <- data_attributes[["matrix_columns"]]
+    mc <- attr(newdata, "newdata_matrix_columns")
     if (length(mc) > 0) {
         predictors <- predictors[!names(predictors) %in% mc]
         msg <- format_msg("Matrix columns are not supported.")
@@ -151,9 +141,9 @@ sanitize_variables <- function(variables,
         github_issue()
     }
 
-
     for (v in names(predictors)) {
-        if (isTRUE(variables_class[v] == "numeric")) {
+
+        if (isTRUE(variable_class[v] == "numeric")) {
             sanity_contrast_numeric(predictors[[v]])
             fun <- fun_numeric
             lab <- lab_numeric
@@ -180,25 +170,8 @@ sanitize_variables <- function(variables,
         }
     }
 
-    # save character levels
-    # Character variables are treated as factors by model-fitting functions,
-    # but unlike factors, they do not not keep a record of all factor levels.
-    # This poses problem when feeding `newdata` to `predict`, which often
-    # breaks (via `model.matrix`) when the data does not include all possible
-    # factor levels.
-    levels_character <- list()
-    for (v in names(predictors)) {
-        origindata <- hush(insight::get_data(model))
-        if (v %in% names(predictors)) {
-            if (is.character(origindata[[v]])) {
-                levels_character[[v]] <- unique(origindata[[v]])
-            }
-        }
-    }
-
     # output
     out <- list(conditional = predictors, others = others)
-    attr(out, "levels_character") <- levels_character
 
     return(out)
 }

@@ -16,6 +16,10 @@ get_contrast_data_numeric <- function(model,
         return(out)
     }
 
+    if (!is.null(eps)) {
+        newdata$marginaleffects_eps <- eps
+    }
+
     # slope
     # by default variable$value = 1, so we need to check this first
     slopes <- c(
@@ -92,6 +96,8 @@ get_contrast_data_numeric <- function(model,
         high <- max(x, na.rm = TRUE)
         lab <- make_label(variable$label, c("Max", "Min"))
     }
+
+    newdata[["eps"]] <- eps
 
     lo <- hi <- newdata
     lo[[variable$name]] <- low

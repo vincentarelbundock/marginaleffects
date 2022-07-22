@@ -217,7 +217,6 @@ comparisons <- function(model,
             wts = wts,
             calling_function = "comparisons",
             ...)
-        conf_level <- sanitize_conf_level(conf_level, ...)
         interaction <- sanitize_interaction(interaction, variables, model)
         type <- sanitize_type(model = model, type = type, calling_function = "marginaleffects")
         checkmate::assert_function(transform_post, null.ok = TRUE)
@@ -228,8 +227,7 @@ comparisons <- function(model,
         interaction <- FALSE
     }
 
-    data_attributes <- get_data_attributes(model = model)
-
+    conf_level <- sanitize_conf_level(conf_level, ...)
     sanity_transform_pre(transform_pre)
     checkmate::assert_numeric(eps, len = 1, lower = 1e-10, null.ok = TRUE)
 
@@ -250,12 +248,12 @@ comparisons <- function(model,
     sanity_contrast_factor(contrast_factor) # hardcoded in marginaleffects()
     sanity_contrast_numeric(contrast_numeric) # hardcoded in marginaleffects()
 
-    # before sanitize_newdata
     marginalmeans <- isTRUE(checkmate::check_choice(newdata, choices = "marginalmeans")) 
 
     # before sanitize_variables
     newdata <- sanitize_newdata(model = model, newdata = newdata)
 
+    # after sanitize_newdata
     variables_list <- sanitize_variables(
         model = model,
         newdata = newdata,
@@ -263,8 +261,8 @@ comparisons <- function(model,
         interaction = interaction,
         contrast_numeric = contrast_numeric,
         contrast_factor = contrast_factor,
-        data_attributes = data_attributes,
         transform_pre = transform_pre)
+
 
     hypothesis <- sanitize_hypothesis(hypothesis, ...)
 
@@ -296,12 +294,6 @@ comparisons <- function(model,
     vcov <- get_vcov(model, vcov = vcov)
 
     predictors <- variables_list$conditional
-
-    # modelbased::visualisation_matrix attaches useful info for plotting
-    attributes_newdata <- attributes(newdata)
-    idx <- c("class", "row.names", "names", "data", "reference")
-    idx <- !names(attributes_newdata) %in% idx
-    attributes_newdata <- attributes_newdata[idx]
 
     # compute contrasts and standard errors
     args <- list(model = model,
@@ -415,6 +407,9 @@ comparisons <- function(model,
     }
 
     class(out) <- c("comparisons", class(out))
+    out <- set_attributes(
+        out,
+        get_attributes(newdata, include_regex = "^newdata"))
     attr(out, "posterior_draws") <- draws
     attr(out, "model") <- model
     attr(out, "type") <- type
@@ -426,11 +421,6 @@ comparisons <- function(model,
     attr(out, "transform_pre") <- NULL
     attr(out, "transform_post") <- NULL
     attr(out, "weights") <- marginaleffects_wts_internal
-
-    # modelbased::visualisation_matrix attaches useful info for plotting
-    for (a in names(attributes_newdata)) {
-        attr(out, paste0("newdata_", a)) <- attributes_newdata[[a]]
-    }
 
     if (!isTRUE(internal_call)) {
         if ("group" %in% names(out) && all(out$group == "main_marginaleffect")) {

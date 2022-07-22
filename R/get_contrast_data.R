@@ -1,91 +1,61 @@
 get_contrast_data <- function(model,
                               newdata,
                               variables,
-                              contrast_factor,
-                              contrast_numeric,
-                              contrast_label,
                               interaction,
                               eps,
                               ...) {
 
     lo <- hi <- ter <- lab <- original <- rowid <- list()
 
-    originaldata <- hush(insight::get_data(model))
+    modeldata <- attr(newdata, "newdata_modeldata")
+    variable_classes <- attr(newdata, "newdata_variable_class")
 
-    variable_classes <- sapply(names(variables), function(x) find_variable_class(
-                               variable = x,
-                               newdata = newdata,
-                               model = model))
     if (any(c("factor", "character") %in% variable_classes)) {
         first_interaction <- names(variable_classes[variable_classes %in% c("factor", "character")])[1]
+    } else {
+        first_interaction <- NULL
     }
-    for (v in names(variables)) {
-        # logical and character before factor because they get picked up by find_categorical
-        variable_class <- find_variable_class(variable = v,
-                                              newdata = newdata,
-                                              model = model)
 
-        if (variable_class == "logical") {
-            tmp <- get_contrast_data_logical(
-                model,
-                newdata,
-                v,
-                contrast_label = variables[[v]]$label,
-                ...)
-
-        } else if (variable_class == "factor") {
-            tmp <- get_contrast_data_factor(
-                model,
-                newdata,
-                v,
-                contrast_factor = variables[[v]]$value,
-                interaction = interaction,
-                contrast_label = variables[[v]]$label,
-                first_interaction = isTRUE(v == first_interaction),
-                ...)
-
-        } else if (variable_class == "character") {
-            tmp <- get_contrast_data_character(
-                model,
-                newdata,
-                v,
-                interaction = interaction,
-                contrast_factor = variables[[v]]$value,
-                contrast_label = variables[[v]]$label,
-                first_interaction = isTRUE(v == first_interaction),
-                ...)
-
-        } else if (variable_class == "numeric") {
-            if (is.null(eps)) {
-                eps_v <- 1e-4 * diff(range(originaldata[[v]], na.rm = TRUE))
-            } else {
-                eps_v <- eps
-            }
-            # eps is need twice: to build the contrast data and for post hoc normalization
-            tmp <- get_contrast_data_numeric(
-                model,
-                newdata,
-                variables[[v]],
-                contrast_label <- variables[[v]]$label,
-                eps = eps_v,
-                ...)
-            tmp[["original"]][["marginaleffects_eps"]] <- eps_v
-
+    for (v in variables) {
+        args <- list(
+            model = model,
+            newdata = newdata,
+            variable = v,
+            interaction = interaction,
+            first_interaction = identical(v$name, first_interaction))
+        args <- append(args, list(...))
+        if (is.null(eps) && variable_classes[[v$name]] == "numeric") {
+            args[["eps"]] <- 1e-4 * diff(range(modeldata[[v$name]], na.rm = TRUE))
         } else {
-            stop("variable class not supported.", call. = FALSE)
+            args[["eps"]] <- eps
         }
 
-        lo[[v]] <- tmp$lo
+        # logical and character before factor because they get picked up by find_variable_class()
+        if (identical(variable_classes[[v$name]], "logical")) {
+            fun <- get_contrast_data_logical
+        } else if (identical(variable_classes[[v$name]], "character")) {
+            fun <- get_contrast_data_character
+        } else if (identical(variable_classes[[v$name]], "factor")) {
+            fun <- get_contrast_data_factor
+        } else if (identical(variable_classes[[v$name]], "numeric")) {
+            fun <- get_contrast_data_numeric
+        } else {
+            msg <- sprintf("Class of the `%s` variable is class is not supported.", v)
+            stop(msg, call. = FALSE)
+        }
+
+        tmp <- do.call("fun", args)
+
+        lo[[v$name]] <- tmp$lo
         if (isTRUE(interaction)) {
-            lo[[v]][[paste0("null_contrast_", v)]] <- tmp$contrast_null
+            lo[[v$name]][[paste0("null_contrast_", v$name)]] <- tmp$contrast_null
         }
-        hi[[v]] <- tmp$hi
-        ter[[v]] <- tmp$ter
-        lab[[v]] <- tmp$lab
-        original[[v]] <- tmp$original
-        rowid[[v]] <- tmp$rowid
+        hi[[v$name]] <- tmp$hi
+        ter[[v$name]] <- tmp$ter
+        lab[[v$name]] <- tmp$lab
+        original[[v$name]] <- tmp$original
+        rowid[[v$name]] <- tmp$rowid
     }
-
 
     # clean before merge: tobit1 introduces AsIs columns
     clean <- function(x) {
@@ -101,6 +71,8 @@ get_contrast_data <- function(model,
         }
         return(x)
     }
+
+
     lo <- lapply(lo, clean)
     hi <- lapply(hi, clean)
     original <- lapply(original, clean)

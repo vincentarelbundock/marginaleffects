@@ -236,25 +236,10 @@ marginaleffects <- function(model,
     # slope
     checkmate::assert_choice(slope, choices = c("dydx", "eyex", "eydx", "dyex"))
 
-    # modelbased::visualisation_matrix attaches useful info for plotting
-    attributes_newdata <- attributes(newdata)
-    idx <- c("class", "row.names", "names", "data", "reference")
-    idx <- !names(attributes_newdata) %in% idx
-    attributes_newdata <- attributes_newdata[idx]
-
     # sanity checks and pre-processing
     model <- sanitize_model(model = model, newdata = newdata, wts = wts, calling_function = "marginaleffects", ...)
     sanity_dots(model = model, calling_function = "marginaleffects", ...)
     sanitize_type(model = model, type = type, calling_function = "marginaleffects")
-    conf_level <- sanitize_conf_level(conf_level, ...)
-    newdata <- sanitize_newdata(model, newdata)
-
-    # weights
-    sanity_wts(wts, newdata) # after sanity_newdata
-    if (!is.null(wts) && !isTRUE(checkmate::check_string(wts))) {
-        newdata[["marginaleffects_wts"]] <- wts
-        wts <- "marginaleffects_wts"
-    }
 
     out <- comparisons(
         model,
@@ -279,12 +264,6 @@ marginaleffects <- function(model,
 
     # report slope, not contrast
     setnames(out, old = "comparison", new = "dydx")
-
-    # comparisons() useful info
-    attributes_comparisons <- attributes(out)
-    idx <- c("class", "row.names", "names", "data", "reference")
-    idx <- !names(attributes_comparisons) %in% idx
-    attributes_comparisons <- attributes_comparisons[idx]
 
     # clean columns
     stubcols <- c("rowid", "type", "group", "term", "contrast", "hypothesis", "dydx", "std.error", "statistic", "p.value", "conf.low", "conf.high",
@@ -311,15 +290,7 @@ marginaleffects <- function(model,
     class(out) <- setdiff(class(out), "comparisons")
     class(out) <- c("marginaleffects", class(out))
 
-    # restore attributes
-    for (a in names(attributes_newdata)) {
-        attr(out, paste0("newdata_", a)) <- attributes_newdata[[a]]
-    }
-    for (a in names(attributes_comparisons)) {
-        if (!a %in% names(attributes(out))) {
-            attr(out, a) <- attributes_comparisons[[a]]
-        }
-    }
+    # TODO: make sure interesting attributes from `comparisons()` are preserved
 
     attr(out, "vcov.type") <- get_vcov_label(vcov)
 

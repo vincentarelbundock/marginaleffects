@@ -417,11 +417,14 @@ void <- capture.output({
         seed = 1024,
         silent = 2)
 })
+
+
 cmp <- comparisons(
     mod,
     dpar = "mu",
     datagrid(disp = c(150, 300, 450)),
     transform_pre = "expdydx")
+
 expect_equivalent(cmp$comparison, 
     c(-0.0464610297239711, -0.0338017059188856, -0.0245881481374242),
     # seed difference?

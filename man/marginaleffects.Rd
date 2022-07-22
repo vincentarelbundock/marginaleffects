@@ -67,7 +67,7 @@ type, but will typically be a string such as: "response", "link", "probs",
 or "zero". When an unsupported string is entered, the model-specific list of
 acceptable values is returned in an error message.}
 
-\item{slope}{string indicates the type of slope to compute:
+\item{slope}{string indicates the type of slope or (semi-)elasticity to compute:
 \itemize{
 \item "dydx": dY/dX
 \item "eyex": dY/dX * Y / X

@@ -110,6 +110,7 @@ Suggests:
 Collate: 
     'align_J_V.R'
     'arg_name_change.R'
+    'attributes.R'
     'backtransform.R'
     'comparisons.R'
     'complete_levels.R'
@@ -127,7 +128,6 @@ Collate:
     'get_contrast_data_logical.R'
     'get_contrast_data_numeric.R'
     'get_contrasts.R'
-    'get_data_attributes.R'
     'get_eti.R'
     'get_group_names.R'
     'get_hdi.R'

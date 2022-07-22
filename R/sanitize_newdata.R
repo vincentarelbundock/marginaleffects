@@ -5,16 +5,27 @@ sanitize_newdata <- function(model, newdata) {
         checkmate::check_choice(newdata, choices = c("mean", "median", "marginalmeans")),
         combine = "or")
 
-    if (is.null(newdata)) {
-        newdata <- hush(insight::get_data(model))
+    # TODO: why do we need this?
+    if (is.null(model)) {
+        return(NULL)
+    }
 
-    } else if (isTRUE(checkmate::check_choice(newdata, "mean"))) {
+    # we always need this to extract attributes
+    modeldata <- hush(insight::get_data(model))
+
+    if (is.null(newdata)) {
+        newdata <- modeldata
+
+    } else if (identical(newdata, "mean")) {
         newdata <- datagrid(model = model)
 
-    } else if (isTRUE(checkmate::check_choice(newdata, "median"))) {
-        newdata <- datagrid(model = model, FUN.numeric = function(x) stats::median(x, na.rm = TRUE))
+    } else if (identical(newdata, "median")) {
+        newdata <- datagrid(
+            model = model,
+            FUN.numeric = function(x) stats::median(x, na.rm = TRUE))
 
-    } else if (isTRUE(checkmate::check_choice(newdata, "marginalmeans"))) {
+    # grid with all unique values of categorical variables, and numerics at their means
+    } else if (identical(newdata, "marginalmeans")) {
         newdata <- datagrid(
             model = model,
             FUN.factor = unique,
@@ -23,9 +34,28 @@ sanitize_newdata <- function(model, newdata) {
     }
 
     if (!inherits(newdata, "data.frame")) {
-        msg <- sprintf("Unable to extract the data from model of class `%s`. This can happen in a variety of cases, such as when a `marginaleffects` package function is called from inside a user-defined function. Please supply a data frame explicitly via the `newdata` argument.", class(model)[1])
+        msg <- format_msg(
+        "Unable to extract the data from model of class `%s`. This can happen in a
+        variety of cases, such as when a `marginaleffects` package function is called
+        from inside a user-defined function. Please supply a data frame explicitly via
+        the `newdata` argument.")
+        msg <- sprintf(msg, class(model)[1])
         stop(msg, call. = FALSE)
     }
+
+    # column attributes
+    mc <- Filter(function(x) is.matrix(modeldata[[x]]), colnames(modeldata))
+    cl <- Filter(function(x) is.character(modeldata[[x]]), colnames(modeldata))
+    cl <- lapply(modeldata[, cl], unique)
+    vc <- sapply(names(modeldata), find_variable_class, newdata = modeldata, model = model)
+    column_attributes <- list(
+        "matrix_columns" = mc,
+        "character_levels" = cl,
+        "variable_class" = vc)
+
+    # {modelbased} sometimes attaches useful attributes
+    exclude <- c("class", "row.names", "names", "data", "reference")
+    modelbased_attributes <- get_attributes(newdata, exclude = exclude)
 
     # required for the type of column indexing to follow
     data.table::setDF(newdata)
@@ -41,8 +71,8 @@ sanitize_newdata <- function(model, newdata) {
     # rbindlist breaks on matrix columns
     idx <- sapply(newdata, function(x) class(x)[1] == "matrix")
     if (any(idx)) {
-        # unpacking matrix columns works with {mgcv} but breaks {mclogit}
         # Issue #363
+        # unpacking matrix columns works with {mgcv} but breaks {mclogit}
         if (inherits(model, "gam")) {
             newdata <- unpack_matrix_cols(newdata)
         } else {
@@ -61,14 +91,11 @@ sanitize_newdata <- function(model, newdata) {
             flag <- TRUE
         }
     }
-    # This may be useful but it raises way too many warnings
-    #} else {
-    #     for (cv in categorical_variables) {
-    #         if (is.numeric(newdata[[cv]])) {
-    #             flag <- TRUE
-    #         }
-    #     }
-    # }
+
+    # attributes
+    newdata <- set_attributes(newdata, modelbased_attributes, prefix = "newdata_")
+    newdata <- set_attributes(newdata, column_attributes, prefix = "newdata_")
+    attr(newdata, "newdata_modeldata") <- modeldata
 
     # we will need this to merge the original data back in, and it is better to
     # do it in a centralized upfront way.
@@ -78,5 +105,6 @@ sanitize_newdata <- function(model, newdata) {
 
     return(newdata)
 }
+
 
 

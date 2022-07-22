@@ -71,7 +71,7 @@ get_contrasts <- function(model,
     # original is the "composite" data that we constructed by binding terms and
     # compute predictions. It includes a term column, which we need to
     # replicate for each group.
-    out[, "marginaleffects_eps" := NA_real_]
+    out[, "marginaleffects_eps" := NA_real_] # default (probably almost always overwritten)
     mult <- nrow(out) / nrow(original)
     if (isTRUE(mult == 1)) {
         out[, "term" := original[["term"]]]

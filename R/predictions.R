@@ -147,19 +147,13 @@ predictions <- function(model,
     hypothesis <- sanitize_hypothesis(hypothesis, ...)
     conf_level <- sanitize_conf_level(conf_level, ...)
 
-    # modelbased::visualisation_matrix attaches useful info for plotting
-    attributes_newdata <- attributes(newdata)
-    idx <- c("class", "row.names", "names", "data", "reference")
-    idx <- !names(attributes_newdata) %in% idx
-    attributes_newdata <- attributes_newdata[idx]
-
-
     # after modelbased attribute extraction
-    newdata <- sanitize_newdata(model, newdata)
+    newdata <- sanitize_newdata(model = model, newdata = newdata)
 
     # type
     type <- sanitize_type(model = model, type = type, calling_function = "predictions")
 
+    # TODO: we can simplify this using sanitize_newdata
     # check variables before inferring `newdata`
     if (!is.null(variables)) {
         variables_list <- sanitize_variables(model = model, newdata = newdata, variables = variables)
@@ -176,16 +170,9 @@ predictions <- function(model,
         }
         newdata <- do.call("datagrid", args)
         newdata[["rowid"]] <- NULL # the original rowids are no longer valid after averaging et al.
-
-    # sanitize_variables often breaks things, but we need the levels_characters attributes
-    } else {
-        variables_list <- sanitize_variables(
-            variables = variables,
-            model = model,
-            newdata = newdata)
     }
 
-    levels_character <- attr(variables_list, "levels_character")
+    character_levels <- attr(newdata, "newdata_character_levels")
 
     # weights
     sanity_wts(wts, newdata) # after sanity_newdata
@@ -214,7 +201,7 @@ predictions <- function(model,
     if (inherits(model, "mlogit")) {
         padding <- data.frame()
     } else {
-        padding <- complete_levels(newdata, levels_character)
+        padding <- complete_levels(newdata, character_levels)
         if (nrow(padding) > 0) {
             newdata <- rbindlist(list(padding, newdata))
         }
@@ -386,21 +373,18 @@ predictions <- function(model,
     out <- out[, cols, drop = FALSE]
 
     class(out) <- c("predictions", class(out))
+    out <- set_attributes(
+        out,
+        get_attributes(newdata, include_regex = "^newdata"))
     attr(out, "model") <- model
     attr(out, "type") <- type
     attr(out, "model_type") <- class(model)[1]
-    attr(out, "variables") <- variables_list
     attr(out, "vcov.type") <- get_vcov_label(vcov)
     attr(out, "jacobian") <- J
     attr(out, "vcov") <- V
     attr(out, "posterior_draws") <- draws
     attr(out, "newdata") <- newdata
     attr(out, "weights") <- marginaleffects_wts_internal
-
-    # modelbased::visualisation_matrix attaches useful info for plotting
-    for (a in names(attributes_newdata)) {
-        attr(out, paste0("newdata_", a)) <- attributes_newdata[[a]]
-    }
 
     if ("group" %in% names(out) && all(out$group == "main_marginaleffect")) {
         out$group <- NULL
