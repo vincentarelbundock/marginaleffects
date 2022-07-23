@@ -156,6 +156,6 @@ When `insight` does not support a model, `marginaleffects` computes standard err
 
 # Bayesian estimates and credible intervals
 
-[See the `brms` vignette](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html) for a discussion of bayesian estimates and credible intervals.
+[See the `brms` vignette](https://vincentarelbundock.github.io/marginaleffects/reference/brms.html) for a discussion of bayesian estimates and credible intervals.
 
 
