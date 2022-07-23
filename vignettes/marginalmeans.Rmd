@@ -40,13 +40,15 @@ mod <- lm(mpg ~ hp + cyl + am, data = dat)
 Using the `predictions` function, we set the `hp` variable at its mean and compute predictions for all combinations for `am` and `cyl`:
 
 ```{r}
-predictions(mod, variables = c("am", "cyl"))
+p <- predictions(
+    mod,
+    newdata = datagrid(am = dat$am, cyl = dat$cyl))
 ```
 
 For illustration purposes, it is useful to reshape the above results:
 
 ```{r, echo = FALSE}
-pred <- predictions(mod, variables = c("am", "cyl")) %>%
+pred <- p %>%
     select(cyl, am, predicted) %>%
     pivot_wider(names_from = "am", values_from = "predicted") %>%
     rowwise() %>%
