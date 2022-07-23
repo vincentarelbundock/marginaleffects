@@ -41,7 +41,7 @@ predictions(
 }}
 
 \item{variables}{Named list of variables with values to create a
-counterfactual grid of predictions. The entire dataset will be replicated
+counterfactual grid of predictions. The entire dataset replicated
 for each unique combination of the variables in this list. See the Examples
 section below. Warning: This can use a lot of memory if there are many
 variables and values, and when the dataset is large.}
@@ -233,7 +233,7 @@ nrow(p)
 
 # counterfactual predictions obtained by replicating the entire for different
 # values of the predictors
-p <- predictions(mod, variables = list(hp = c(90, 100, 110)))
+p <- predictions(mod, variables = list(hp = c(90, 110)))
 nrow(p)
 
 

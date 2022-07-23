@@ -3,6 +3,9 @@ if (ON_CRAN) exit_file("on cran")
 if (ON_CI) exit_file("on ci") # install and test fails on Github
 requiet("glmmTMB")
 
+
+data("Owls")
+
 # marginaleffects no validity
 Owls <- transform(Owls,
     Nest = reorder(Nest, NegPerChick),
