@@ -5,11 +5,6 @@ sanitize_newdata <- function(model, newdata) {
         checkmate::check_choice(newdata, choices = c("mean", "median", "tukey", "grid", "marginalmeans")),
         combine = "or")
 
-    # TODO: why do we need this?
-    if (is.null(model)) {
-        return(NULL)
-    }
-
     # we always need this to extract attributes
     modeldata <- hush(insight::get_data(model))
 
