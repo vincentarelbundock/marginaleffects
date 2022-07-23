@@ -104,7 +104,7 @@
 #' 
 #' # counterfactual predictions obtained by replicating the entire for different
 #' # values of the predictors
-#' p <- predictions(mod, variables = list(hp = c(90, 100, 110)))
+#' p <- predictions(mod, variables = list(hp = c(90, 110)))
 #' nrow(p)
 #' 
 #'

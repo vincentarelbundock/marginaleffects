@@ -10,4 +10,4 @@ utils::globalVariables( c('.', 'term', 'part', 'estimate', 'conf.high',
     'conf_level', 'group', 'contrast', 'm', 'dydx', "patterns", 'rowid',
     'predicted', 'gn',  "predicted_lo", "predicted_hi", 'comparison', "..idx",
     "marginaleffects_eps", "transform_pre_idx", "marginaleffects_function",
-    "..idx_by", "..idx_lo", "..idx_hi", "..tmp", "draw", "..cols", "..w"))
+    "..idx1", "..idx2", "..idx_by", "..idx_lo", "..idx_hi", "..tmp", "draw", "..cols", "..w", "eps", "predicted_or"))
