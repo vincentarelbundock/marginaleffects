@@ -186,7 +186,14 @@ comparisons <- function(model,
 
     dots <- list(...)
 
-    # TODO: print transform_post_label: deparse(substitute(transform_pre))
+    transform_pre_label <- transform_post_label <- NULL
+    if (is.function(transform_pre)) {
+        transform_pre_label <- deparse(substitute(transform_pre))
+    }
+    if (is.function(transform_post)) {
+        transform_post_label <- deparse(substitute(transform_post))
+    }
+
 
     # marginaleffects()` **must** run its own sanity checks and hardcode valid arguments
     internal_call <- dots[["internal_call"]]
@@ -423,6 +430,8 @@ comparisons <- function(model,
     attr(out, "transform_pre") <- NULL
     attr(out, "transform_post") <- NULL
     attr(out, "weights") <- marginaleffects_wts_internal
+    attr(out, "transform_pre") <- transform_pre_label
+    attr(out, "transform_post") <- transform_post_label
 
     if (!isTRUE(internal_call)) {
         if ("group" %in% names(out) && all(out$group == "main_marginaleffect")) {

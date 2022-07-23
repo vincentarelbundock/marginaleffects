@@ -292,8 +292,6 @@ marginaleffects <- function(model,
     class(out) <- setdiff(class(out), "comparisons")
     class(out) <- c("marginaleffects", class(out))
 
-    # TODO: make sure interesting attributes from `comparisons()` are preserved
-
     attr(out, "vcov.type") <- get_vcov_label(vcov)
 
     return(out)
