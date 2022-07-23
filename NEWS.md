@@ -18,6 +18,7 @@ Misc:
 * New `newdata` shortcuts: "tukey", "grid"
 * `vcov` argument string shortcuts are now case-insensitive
 * documentation improvements
+* Bug fix contrast with interactions. Thanks to @vmikk.
 
 # marginaleffects 0.6.0
 

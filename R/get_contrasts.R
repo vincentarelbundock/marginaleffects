@@ -167,12 +167,13 @@ get_contrasts <- function(model,
     }
 
     # do not feed unknown arguments to a `transform_pre`
-    safefun <- function(hi, lo, or, n, term, interaction, eps) {
+    safefun <- function(hi, lo, or, n, term, interaction, eps, rowidunique = NULL) {
         if (isTRUE(interaction)) {
             fun <- fun_list[[1]]
         } else {
             fun <- fun_list[[term[1]]]
         }
+
         args <- list("hi" = hi, "lo" = lo, "or" = or, "eps" = eps, "x" = elasticities[[term[1]]])
         args <- args[names(args) %in% names(formals(fun))]
         con <- try(do.call("fun", args), silent = TRUE)
@@ -185,7 +186,12 @@ get_contrasts <- function(model,
             msg <- sprintf(msg, n, n)
             stop(msg, call. = FALSE)
         }
-        return(con)
+        if (length(rowidunique) == length(con)) {
+            out = list(rowidunique = rowidunique, comparison = con)
+        } else {
+            out = list(comparison = con)
+        }
+        return(out)
     }
 
     if (isTRUE(marginalmeans)) {
@@ -202,25 +208,31 @@ get_contrasts <- function(model,
             n = .N,
             term = term,
             interaction = interaction,
-            eps = eps),
+            eps = eps)$comparison,
         by = "term"]
 
     } else {
         # tmp needed to avoid recycling when safefun() returns length 1 value
         # assign back into `out` to preserve `rowid` when possible
-        tmp <- out[, .(comparison = safefun(
+        out[, rowidunique := 1:.N]
+        tmp <- out[, safefun(
             hi = predicted_hi,
             lo = predicted_lo,
             or = predicted_or,
             n = .N,
             term = term,
             interaction = interaction,
-            eps = marginaleffects_eps)),
+            eps = marginaleffects_eps,
+            rowidunique = rowidunique),
         by = idx]
         if (nrow(tmp) != nrow(out)) {
             out <- tmp
         } else {
-            out[, "comparison" := tmp$comparison]
+            idx <- c("rowidunique", setdiff(colnames(tmp), colnames(out)))
+            out <- merge(out, tmp[, ..idx], by = "rowidunique")
+        }
+        if ("rowidunique" %in% colnames(out)) {
+            out[, "rowidunique" := NULL]
         }
     }
 
