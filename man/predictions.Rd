@@ -43,7 +43,8 @@ predictions(
 \item{variables}{Named list of variables with values to create a
 counterfactual grid of predictions. The entire dataset will be replicated
 for each unique combination of the variables in this list. See the Examples
-section below.}
+section below. Warning: This can use a lot of memory if there are many
+variables and values, and when the dataset is large.}
 
 \item{vcov}{Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
 \itemize{

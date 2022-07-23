@@ -31,7 +31,7 @@
 #' @inheritParams marginaleffects
 #' @param model Model object
 #' @param variables Named list of variables with values to create a
-#' counterfactual grid of predictions. The entire dataset will be replicated
+#' counterfactual grid of predictions. The entire dataset replicated
 #' for each unique combination of the variables in this list. See the Examples
 #' section below. Warning: This can use a lot of memory if there are many
 #' variables and values, and when the dataset is large.
@@ -195,7 +195,13 @@ predictions <- function(model,
             "model" = model,
             "newdata" = newdata,
             "grid_type" = "counterfactual")
-        args <- append(args, variables)
+        tmp <- sanitize_variables(
+            variables = variables,
+            model = model,
+            newdata = newdata)$conditional
+        for (v in tmp) {
+            args[[v$name]] <- v$value
+        }
         newdata <- do.call("datagrid", args)
         # the original rowids are no longer valid after averaging et al.
         newdata[["rowid"]] <- NULL 
@@ -296,8 +302,8 @@ predictions <- function(model,
     } else {
         tmp <- data.frame(newdata$rowid, type, tmp)
         colnames(tmp) <- c("rowid", "type", "predicted")
-        if ("rowid_counterfactual" %in% colnames(newdata)) {
-            tmp[["rowid_counterfactual"]] <- newdata[["rowid_counterfactual"]]
+        if ("rowidcf" %in% colnames(newdata)) {
+            tmp[["rowidcf"]] <- newdata[["rowidcf"]]
         }
     }
     tmp$type <- type
@@ -393,9 +399,10 @@ predictions <- function(model,
     }
 
     # clean columns
-    stubcols <- c(
-        "rowid", "type", "term", "group", "hypothesis", "predicted", "std.error",
-        "statistic", "p.value", "conf.low", "conf.high", "marginaleffects_wts",
+    stubcols <- c( 
+        "rowid", "rowidcf", "type", "term", "group",
+        "hypothesis", "predicted", "std.error", "statistic", "p.value", "conf.low",
+        "conf.high", "marginaleffects_wts",
         sort(grep("^predicted", colnames(newdata), value = TRUE)))
     cols <- intersect(stubcols, colnames(out))
     cols <- unique(c(cols, colnames(out)))

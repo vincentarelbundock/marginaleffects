@@ -128,7 +128,7 @@ counterfactual <- function(..., model = NULL, newdata = NULL) {
     args <- c(at, list(sorted = FALSE))
     at <- do.call("fun", args)
 
-    rowid <- data.frame(rowid_counterfactual = seq_len(nrow(dat)))
+    rowid <- data.frame(rowidcf = seq_len(nrow(dat)))
     if (length(variables_automatic) > 0) {
         dat_automatic <- dat[, intersect(variables_automatic, colnames(dat)), drop = FALSE]
         dat_automatic <- cbind(rowid, dat_automatic)
@@ -164,6 +164,10 @@ typical <- function(
     variables_all <- tmp$all
     variables_manual <- names(at)
     variables_automatic <- tmp$automatic
+
+    if (!is.null(model)) {
+        variables_automatic <- setdiff(variables_automatic, insight::find_response(model))
+    }
 
     if (length(variables_automatic) > 0) {
         dat_automatic <- dat[, intersect(variables_automatic, colnames(dat)), drop = FALSE]

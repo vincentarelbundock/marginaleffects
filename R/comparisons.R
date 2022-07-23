@@ -385,7 +385,7 @@ comparisons <- function(model,
 
     # clean columns
     bad <- c("predicted_or", "predicted")
-    stubcols <- c("rowid", "rowid_counterfactual", "type", "group", "term", "hypothesis",
+    stubcols <- c("rowid", "rowidcf", "type", "group", "term", "hypothesis",
                   grep("^contrast", colnames(mfx), value = TRUE),
                   "comparison", "std.error", "statistic", "p.value", "conf.low", "conf.high", "df",
                   sort(grep("^predicted", colnames(newdata), value = TRUE)))
