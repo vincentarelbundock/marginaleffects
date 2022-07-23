@@ -13,12 +13,15 @@ New vignette:
 
 * Frequently Asked Questions
 
+Bug fixes:
+
+* Contrasts with interactions were incorrect in version 0.6.0. Thanks to @vmikk.
+
 Misc:
 
 * New `newdata` shortcuts: "tukey", "grid"
 * `vcov` argument string shortcuts are now case-insensitive
 * documentation improvements
-* Bug fix contrast with interactions. Thanks to @vmikk.
 
 # marginaleffects 0.6.0
 
