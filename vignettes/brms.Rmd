@@ -692,3 +692,22 @@ comparisons(
     facet_grid(lifeExp ~ .) +
     labs(x = "Effect of a 1 unit change in Life Expectancy")
 ```
+
+# Bayesian estimates and credible intervals
+
+For bayesian models like those produced by the `brms` or `rstanarm` packages, the `marginaleffects` package functions report the median of the posterior distribution as their main estimates.
+
+The default credible intervals are equal-tailed intervals (quantiles). Users can customize the type of intervals reported by setting a global option. Currently, the only alternative to ETI is the Highest Density Interval (HDI). Note that, in these two commands, the confidence intervals change slightly, but not the median estimates:
+
+```{r}
+library(insight)
+library(marginaleffects)
+
+mod <- insight::download_model("brms_1")
+
+options(marginaleffects_credible_interval = "hdi")
+comparisons(mod) |> summary()
+
+options(marginaleffects_credible_interval = "eti")
+comparisons(mod) |> summary()
+```
