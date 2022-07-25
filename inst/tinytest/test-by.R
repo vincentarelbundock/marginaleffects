@@ -53,6 +53,11 @@ expect_equivalent(nrow(tid), nrow(cmp))
 expect_equivalent(nrow(tid), 4)
 expect_true("am" %in% colnames(tid))
 
+# not supported in bayesian models
+mod <- insight::download_model("brms_1")
+expect_error(comparisons(mod, transform_pre = "dydxavg"), pattern = "supported")
+expect_error(comparisons(mod, by = "am"), pattern = "supported")
+
 
 # marginaleffects poisson vs. margins
 dat <- mtcars

@@ -94,7 +94,8 @@ print.marginaleffects.summary <- function(x,
   # avoid infinite recursion by stripping marginaleffect.summary class
   out <- as.data.frame(out)
 
-  cat(tit, "\n")
+  # some commands do not generate average contrasts/mfx. E.g., `lnro` with `by`
+  # cat(tit)
   print(out)
   cat("\n")
   cat("Model type: ", attr(x, "model_type"), "\n")
@@ -182,7 +183,6 @@ print.marginalmeans.summary <- function(x,
   # avoid infinite recursion by stripping marginaleffect.summary class
   out <- as.data.frame(out)
 
-  cat(tit, "\n")
   print(out)
   cat("\n")
   cat("Model type: ", attr(x, "model_type"), "\n")
@@ -281,7 +281,8 @@ print.predictions.summary <- function(x,
   # avoid infinite recursion by stripping marginaleffect.summary class
   out <- as.data.frame(out)
 
-  cat(tit, "\n")
+  # some commands do not generate average contrasts/mfx. E.g., `lnro` with `by`
+  # cat(tit, "\n")
   print(out)
   cat("\n")
   cat("Model type: ", attr(x, "model_type"), "\n")
@@ -398,7 +399,8 @@ print.comparisons.summary <- function(x,
   # avoid infinite recursion by stripping marginaleffect.summary class
   out <- as.data.frame(out)
 
-  cat(tit, "\n")
+  # some commands do not generate average contrasts/mfx. E.g., `lnro` with `by`
+  # cat(tit, "\n")
   print(out)
   cat("\n")
   cat("Model type: ", attr(x, "model_type"), "\n")
