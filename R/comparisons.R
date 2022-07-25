@@ -65,25 +65,19 @@
 #' + [datagrid()] call to specify a custom grid of regressors. For example:
 #'   - `newdata = datagrid(cyl = c(4, 6))`: `cyl` variable equal to 4 and 6 and other regressors fixed at their means or modes.
 #'   - See the Examples section and the [datagrid] documentation.
-#' @param transform_pre (experimental) string or function. How should pairs of adjusted predictions be contrasted?
+#' @param transform_pre string or function. How should pairs of adjusted predictions be contrasted?
 #' * string: shortcuts to common contrast functions.
-#'   - "difference" (default): `function(hi, lo) hi - lo`
-#'   - "differenceavg": `function(hi, lo) mean(hi) - mean(lo)`
-#'   - "ratio": `function(hi, lo) hi / lo`
-#'   - "lnratio": `function(hi, lo) log(hi / lo)`
-#'   - "ratioavg": `function(hi, lo) mean(hi) / mean(lo)`
-#'   - "lnratioavg": `function(hi, lo) log(mean(hi) / mean(lo))`
-#'   - "lnoravg": `function(hi, lo) log((mean(hi)/(1 - mean(hi))) / (mean(lo)/(1 - mean(lo))))`
-#'   - "dydx": `function(hi, lo) (hi - lo) / eps`
-#'   - "dydx": `function(hi, lo) mean((hi - lo) / eps)'
-#'   - "expdydx": `function(hi, lo) ((exp(hi) - exp(lo)) / exp(e)) / e`
+#'   - Supported shortcuts strings: `r paste(names(marginaleffects:::transform_pre_function_dict), collapse = ", ")`
+#'   - See the Transformations section below for definitions of each transformation.
 #' * function: accept two equal-length numeric vectors of adjusted predictions (`hi` and `lo`) and returns a vector of contrasts of the same length, or a unique numeric value.
+#'   - See the Transformations section below for examples of valid functions.
 #' @param transform_post (experimental) A function applied to unit-level estimates and confidence intervals just before the function returns results.
 #' @param interaction TRUE, FALSE, or NULL
 #' * `FALSE`: Contrasts represent the change in adjusted predictions when one predictor changes and all other variables are held constant.
 #' * `TRUE`: Contrasts represent the changes in adjusted predictions when the predictors specified in the `variables` argument are manipulated simultaneously.
 #' * `NULL` (default): Behaves like `TRUE` when the `variables` argument is specified and the model formula includes interactions. Behaves like `FALSE` otherwise.
 #' @template model_specific_arguments
+#' @template transform_pre_functions
 #'
 #' @examples
 #'

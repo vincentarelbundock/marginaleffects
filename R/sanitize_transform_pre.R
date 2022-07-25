@@ -1,54 +1,65 @@
 transform_pre_function_dict <- list(
-    # return NULL so we can detect the default and warn when not arg not supported (e.g., Bayesian)
+    # default = difference between predictions
     "difference" = function(hi, lo) hi - lo,
     "differenceavg" = function(hi, lo) mean(hi) - mean(lo),
-    "ratio" = function(hi, lo) hi / lo,
-    "lnratio" = function(hi, lo) log(hi / lo),
-    "ratioavg" = function(hi, lo) mean(hi) / mean(lo),
-    "lnratioavg" = function(hi, lo) log(mean(hi) / mean(lo)),
-    "lnoravg" = function(hi, lo) {
-        m_hi <- mean(hi);
-        m_lo <- mean(lo);
-        log((m_hi / (1 - m_hi)) / (m_lo / (1 - m_lo)))
-    },
+
+    # slopes and elasticities
     "dydx" = function(hi, lo, eps) (hi - lo) / eps,
-    "eyex" = function(hi, lo, or, eps, x) (hi - lo) / eps * (x / or),
-    "eydx" = function(hi, lo, or, eps, x) ((hi - lo) / eps) / or,
+    "eyex" = function(hi, lo, eps, y, x) (hi - lo) / eps * (x / y),
+    "eydx" = function(hi, lo, eps, y, x) ((hi - lo) / eps) / y,
     "dyex" = function(hi, lo, eps, x) ((hi - lo) / eps) * x,
+
+    # average slopes and elasticities
     "dydxavg" = function(hi, lo, eps) mean((hi - lo) / eps),
-    "expdydx" = function(hi, lo, eps) ((exp(hi) - exp(lo)) / exp(eps)) / eps)
+    "eyexavg" = function(hi, lo, eps, y, x) mean((hi - lo) / eps * (x / y)),
+    "eydxavg" = function(hi, lo, eps, y, x) mean(((hi - lo) / eps) / y),
+    "dyexavg" = function(hi, lo, eps, x) mean(((hi - lo) / eps) * x),
+
+    # ratios
+    "ratio" = function(hi, lo) hi / lo,
+    "ratioavg" = function(hi, lo) mean(hi) / mean(lo),
+
+    "lnratio" = function(hi, lo) log(hi / lo),
+    "lnratioavg" = function(hi, lo) log(mean(hi) / mean(lo)),
+
+    "lnor" = function(hi, lo) log((hi / (1 - hi)) / (lo / (1 - lo))),
+    "lnoravg" = function(hi, lo) log((mean(hi) / (1 - mean(hi))) / (mean(lo) / (1 - mean(lo)))),
+
+    # others
+    "expdydx" = function(hi, lo, eps) ((exp(hi) - exp(lo)) / exp(eps)) / eps,
+    "expdydxavg" = function(hi, lo, eps) mean(((exp(hi) - exp(lo)) / exp(eps)) / eps)
+)
 
 transform_pre_label_dict <- list(
-    "difference" = "%s - %s", # return NULL so we can detect the default and warn when not arg not supported (e.g., Bayesian)
+    "difference" = "%s - %s",
     "differenceavg" = "mean(%s) - mean(%s)",
-    "ratio" = "%s / %s",
-    "lnratio" = "ln(%s / %s)",
-    "ratioavg" = "mean(%s) / mean(%s)",
-    "lnratioavg" = "ln(mean(%s) / mean(%s))",
-    "lnoravg" = "ln(odds(%s) / odds(%s))",
+
+
     "dydx" = "dydx",
     "eyex" = "eyex",
     "eydx" = "eydx",
     "dyex" = "dyex",
-    "dydxavg" = "dydxavg",
-    "expdydx" = "expdydx")
 
+    "dydxavg" = "mean(dY/dX)",
+    "eyexavg" = "mean(eY/eX)",
+    "eydxavg" = "mean(eY/dX)",
+    "dyexavg" = "mean(dY/eX)",
+
+    "ratio" = "%s / %s",
+    "ratioavg" = "mean(%s) / mean(%s)",
+
+    "lnratio" = "ln(%s / %s)",
+    "lnratioavg" = "ln(mean(%s) / mean(%s))",
+
+    "lnor" = "ln(odds(%s) / odds(%s))",
+    "lnoravg" = "ln(odds(%s) / odds(%s))",
+
+    "expdydx" = "expdydx"
+)
 
 sanity_transform_pre <- function(transform_pre) {
     checkmate::assert(
-        checkmate::check_function(transform_pre),
         checkmate::check_choice(transform_pre,
-                                choices = c("difference",
-                                            "differenceavg",
-                                            "ratio",
-                                            "lnratio",
-                                            "ratioavg",
-                                            "lnratioavg",
-                                            "lnoravg",
-                                            "dydx",
-                                            "eyex",
-                                            "eydx",
-                                            "dyex",
-                                            "dydxavg",
-                                            "expdydx")))
+                                choices = names(transform_pre_function_dict)),
+        checkmate::check_function(transform_pre))
 }

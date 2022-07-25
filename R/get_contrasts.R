@@ -165,7 +165,7 @@ get_contrasts <- function(model,
     }
 
     # do not feed unknown arguments to a `transform_pre`
-    safefun <- function(hi, lo, or, n, term, interaction, eps, recycle = TRUE) {
+    safefun <- function(hi, lo, y, n, term, interaction, eps, recycle = TRUE) {
         # when interaction=TRUE, sanitize_transform_pre enforces a single function
         if (isTRUE(interaction)) {
             fun <- fun_list[[1]]
@@ -173,7 +173,7 @@ get_contrasts <- function(model,
             fun <- fun_list[[term[1]]]
         }
 
-        args <- list("hi" = hi, "lo" = lo, "or" = or, "eps" = eps, "x" = elasticities[[term[1]]])
+        args <- list("hi" = hi, "lo" = lo, "y" = y, "eps" = eps, "x" = elasticities[[term[1]]])
         args <- args[names(args) %in% names(formals(fun))]
         con <- try(do.call("fun", args), silent = TRUE)
         if (!isTRUE(checkmate::check_numeric(con, len = n)) &&
@@ -204,7 +204,7 @@ get_contrasts <- function(model,
         , "comparison" := safefun(
             hi = predicted_hi,
             lo = predicted_lo,
-            or = predicted_or,
+            y = predicted_or,
             n = .N,
             term = term,
             interaction = interaction,
@@ -222,7 +222,7 @@ get_contrasts <- function(model,
             out[, "comparison" := safefun(
                 hi = predicted_hi,
                 lo = predicted_lo,
-                or = predicted_or,
+                y = predicted_or,
                 n = .N,
                 term = term,
                 interaction = interaction,
@@ -235,7 +235,7 @@ get_contrasts <- function(model,
                 out <- out[, .(comparison = safefun(
                     hi = predicted_hi,
                     lo = predicted_lo,
-                    or = predicted_or,
+                    y = predicted_or,
                     n = .N,
                     term = term,
                     interaction = interaction,
