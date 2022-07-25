@@ -20,10 +20,10 @@ get_coef.selection <- function(model, ...) {
 set_coef.selection <- function(model, coefs) {
     # sampleSelection::selection
     if (as.list(model$call)[[1]] == "selection") {
-        model[["estimate"]][names(coefs)] <- coefs
+        model[["estimate"]] <- coefs
     # sampleSelection::heckit
     } else if (as.list(model$call)[[1]] == "heckit") {
-        model[["coefficients"]][names(coefs)] <- coefs
+        model[["coefficients"]] <- coefs
     }
     return(model)
 }
