@@ -22,8 +22,7 @@ plot_cap(
 name to be displayed on the x-axis. The second is a variable whose values
 will be displayed in different colors. Other numeric variables are held at
 their means. Other categorical variables are held at their modes. Other
-numeric variables are held at their means. Other categorical variables are
-held at their modes.}
+numeric variables are held at their means.}
 
 \item{type}{string indicates the type (scale) of the predictions used to
 compute marginal effects or contrasts. This can differ based on the model

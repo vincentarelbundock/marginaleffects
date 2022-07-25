@@ -12,15 +12,15 @@ requiet("tsModel")
 set.seed(2)
 void <- capture.output(dat <- gamSim(1, n = 400, dist = "normal", scale = 2))
 void <- capture.output(dat2 <- gamSim(1, n = 2000, dist = "poisson", scale = .1))
-m1 <- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3), data = dat)
-m2 <- gam(y ~ te(x0, x1, k = 7) + s(x2) + s(x3), data = dat, method = "REML")
-m3 <- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3) + ti(x1, x2, k = 6), data = dat, method = "REML")
-m4 <- gam(y ~ s(x0, x1, k = 40) + s(x2) + s(x3), data = dat, method = "REML")
-m5 <- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3), data = dat, method = "REML", select = TRUE)
-m6 <- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3), sp = c(0.01, -1, -1, -1), data = dat)
-m7 <- gam(y ~ s(x0, sp = .01) + s(x1) + s(x2) + s(x3), data = dat)
-m8 <- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3), min.sp = c(0.001, 0.01, 0, 10), data = dat)
-m9 <- gam(y ~ s(x0, bs = "cr") + s(x1, bs = "cr") + s(x2, bs = "cr") +
+m1 <- mgcv::gam(y ~ s(x0) + s(x1) + s(x2) + s(x3), data = dat)
+m2 <- mgcv::gam(y ~ te(x0, x1, k = 7) + s(x2) + s(x3), data = dat, method = "REML")
+m3 <- mgcv::gam(y ~ s(x0) + s(x1) + s(x2) + s(x3) + ti(x1, x2, k = 6), data = dat, method = "REML")
+m4 <- mgcv::gam(y ~ s(x0, x1, k = 40) + s(x2) + s(x3), data = dat, method = "REML")
+m5 <- mgcv::gam(y ~ s(x0) + s(x1) + s(x2) + s(x3), data = dat, method = "REML", select = TRUE)
+m6 <- mgcv::gam(y ~ s(x0) + s(x1) + s(x2) + s(x3), sp = c(0.01, -1, -1, -1), data = dat)
+m7 <- mgcv::gam(y ~ s(x0, sp = .01) + s(x1) + s(x2) + s(x3), data = dat)
+m8 <- mgcv::gam(y ~ s(x0) + s(x1) + s(x2) + s(x3), min.sp = c(0.001, 0.01, 0, 10), data = dat)
+m9 <- mgcv::gam(y ~ s(x0, bs = "cr") + s(x1, bs = "cr") + s(x2, bs = "cr") +
       s(x3, bs = "cr"), family = poisson, data = dat2, method = "REML")
 expect_marginaleffects(m1)
 expect_marginaleffects(m2)
@@ -44,7 +44,7 @@ expect_equivalent(mfx$std.error, em$std.error, tolerance = .0001)
 # predictions: no validity
 set.seed(2)
 void <- capture.output(dat <- gamSim(1, n = 400, dist = "normal", scale = 2))
-mod <- gam(y ~ s(x0) + s(x1) + s(x2) + s(x3), data = dat)
+mod <- mgcv::gam(y ~ s(x0) + s(x1) + s(x2) + s(x3), data = dat)
 pred1 <- predictions(mod)
 pred2 <- predictions(mod, newdata = head(dat))
 expect_predictions(pred1, n_row = nrow(dat))
@@ -81,10 +81,10 @@ if (packageVersion("insight") > "0.17.1.6") {
     df <- tibble(y, x, z) %>% 
       mutate(x_lags = tsModel::Lag(x, 0:10),
              L = matrix(0:10, nrow = 1))
-    b <- gam(y~s(z) + te(x_lags,L), data = df)
-    mfx <- marginaleffects(b)
+    b <- mgcv::gam(y ~ s(z) + te(x_lags, L), data = df)
+    mfx <- suppressWarnings(marginaleffects(b))
+    cmp <- suppressWarnings(comparisons(b))
     pre <- predictions(b)
-    cmp <- comparisons(b)
     expect_inherits(pre, "predictions")
     expect_inherits(mfx, "marginaleffects")
     expect_inherits(cmp, "comparisons")
@@ -92,10 +92,10 @@ if (packageVersion("insight") > "0.17.1.6") {
     expect_true(all(mfx$term == "z"))
     expect_true(all(cmp$term == "z"))
 
-    expect_error(marginaleffects(b, variables = "L"), pattern = "supported")
-    expect_error(comparisons(b, variables = "L"), pattern = "supported")
-    expect_error(plot_cap(b, condition = "z"), pattern = "support")
-    expect_error(plot_cme(b, effect = "L", condition = "z"), pattern = "support")
+    expect_error(suppressWarnings(marginaleffects(b, variables = "L")), pattern = "no valid")
+    expect_error(suppressWarnings(comparisons(b, variables = "L")), pattern = "no valid")
+    expect_error(plot_cap(b, condition = "z"), pattern = "not support")
+    expect_error(plot_cme(b, effect = "L", condition = "z"), pattern = "not support")
 }
 
 
@@ -104,7 +104,7 @@ if (packageVersion("insight") > "0.17.1.6") {
     void <- capture.output(
         dat <- gamSim(1,n=400,dist="normal",scale=2)
     )
-    b <- bam(y~s(x0)+s(x1)+s(x2)+s(x3),data=dat)
+    b <- bam(y ~ s(x0) + s(x1) + s(x2) + s(x3), data = dat)
     p1 <- predictions(b)
     p2 <- predictions(b, exclude = "s(x3)")
     expect_true(all(p1$predicted != p2$predicted))
@@ -116,9 +116,10 @@ if (packageVersion("insight") > "0.17.1.6") {
     data(simdat)
     simdat$Subject <- as.factor(simdat$Subject)
     model <- bam(Y ~ Group + s(Time, by = Group) + s(Subject, bs = "re"), data = simdat)
-    nd <- datagrid(model = model,
-               Subject = "a01",
-               Group = "Adults")
+    nd <- datagrid(
+        model = model,
+        Subject = "a01",
+        Group = "Adults")
 
     expect_equivalent(
         predictions(model, newdata = nd)$predicted,

@@ -1,32 +1,35 @@
 get_contrast_data_factor <- function(model,
                                      newdata,
                                      variable,
-                                     contrast_factor,
-                                     contrast_label,
                                      interaction,
                                      first_interaction,
                                      ...) {
 
     data.table::setDT(newdata)
 
-    if (is.factor(newdata[[variable]])) {
-        levs <- levels(newdata[[variable]])
+    if (is.factor(newdata[[variable$name]])) {
+        levs <- levels(newdata[[variable$name]])
         convert_to_factor <- TRUE
     } else {
-        msg <- sprintf("The `%s` variable is treated as a categorical (factor) variable, but the original data is of class %s. It is safer and faster to convert such variables to factor before fitting the model and calling `marginaleffects` functions.", variable, class(newdata[[variable]])[1])
+
+        msg <- format_msg(
+        "The `%s` variable is treated as a categorical (factor) variable, but the
+        original data is of class %s. It is safer and faster to convert such variables
+        to factor before fitting the model and calling `marginaleffects` functions.")
+        msg <- sprintf(msg, variable$name, class(newdata[[variable$name]])[1])
         warn_once(msg, "marginaleffects_warning_factor_on_the_fly_conversion")
-        original_data <- insight::get_data(model)
-        if (is.factor(original_data[[variable]])) {
-            levs <- levels(original_data[[variable]])
+        original_data <- hush(insight::get_data(model))
+        if (is.factor(original_data[[variable$name]])) {
+            levs <- levels(original_data[[variable$name]])
             convert_to_factor <- TRUE
         } else {
-            levs <- sort(unique(original_data[[variable]]))
+            levs <- sort(unique(original_data[[variable$name]]))
             convert_to_factor <- FALSE
         }
     }
 
-    # index contrast orders based on contrast_factor
-    if (contrast_factor == "reference") {
+    # index contrast orders based on variable$value
+    if (variable$value == "reference") {
         # null contrasts are interesting with interactions
         if (!isTRUE(interaction)) {
             levs_idx <- data.table::data.table(lo = levs[1], hi = levs[2:length(levs)])
@@ -34,7 +37,7 @@ get_contrast_data_factor <- function(model,
             levs_idx <- data.table::data.table(lo = levs[1], hi = levs)
         }
 
-    } else if (contrast_factor == "pairwise") {
+    } else if (variable$value == "pairwise") {
         levs_idx <- CJ(lo = levs, hi = levs, sorted = FALSE)
         # null contrasts are interesting with interactions
         if (!isTRUE(interaction)) {
@@ -42,10 +45,10 @@ get_contrast_data_factor <- function(model,
             levs_idx <- levs_idx[match(levs_idx$lo, levs) < match(levs_idx$hi, levs),]
         }
 
-    } else if (contrast_factor == "all") {
+    } else if (variable$value == "all") {
         levs_idx <- CJ(lo = levs, hi = levs, sorted = FALSE)
 
-    } else if (contrast_factor == "sequential") {
+    } else if (variable$value == "sequential") {
         levs_idx <- data.table::data.table(lo = levs[1:(length(levs) - 1)], hi = levs[2:length(levs)])
     }
 
@@ -58,19 +61,21 @@ get_contrast_data_factor <- function(model,
     }
 
     levs_idx$isNULL <- levs_idx$hi == levs_idx$lo
-    levs_idx$label <- sprintf(contrast_label, levs_idx$hi, levs_idx$lo)
+    levs_idx$label <- suppressWarnings(tryCatch(
+        sprintf(variable$label, levs_idx$hi, levs_idx$lo),
+        error = function(e) variable$label))
     levs_idx <- stats::setNames(levs_idx, paste0("marginaleffects_contrast_", colnames(levs_idx)))
 
     lo <- hi <- cjdt(list(newdata, levs_idx))
 
     original <- data.table::rbindlist(rep(list(newdata), nrow(levs_idx)))
 
-    if (is.factor(newdata[[variable]]) || isTRUE(convert_to_factor)) {
-        lo[[variable]] <- factor(lo[["marginaleffects_contrast_lo"]], levels = levs)
-        hi[[variable]] <- factor(hi[["marginaleffects_contrast_hi"]], levels = levs)
+    if (is.factor(newdata[[variable$name]]) || isTRUE(convert_to_factor)) {
+        lo[[variable$name]] <- factor(lo[["marginaleffects_contrast_lo"]], levels = levs)
+        hi[[variable$name]] <- factor(hi[["marginaleffects_contrast_hi"]], levels = levs)
     } else {
-        lo[[variable]] <- lo[["marginaleffects_contrast_lo"]]
-        hi[[variable]] <- hi[["marginaleffects_contrast_hi"]]
+        lo[[variable$name]] <- lo[["marginaleffects_contrast_lo"]]
+        hi[[variable$name]] <- hi[["marginaleffects_contrast_hi"]]
     }
 
     contrast_label <- hi$marginaleffects_contrast_label
@@ -84,8 +89,9 @@ get_contrast_data_factor <- function(model,
                 lo = lo,
                 hi = hi,
                 original = original,
-                ter = rep(variable, nrow(lo)), # lo can be different dimension than newdata
+                ter = rep(variable$name, nrow(lo)), # lo can be different dimension than newdata
                 lab = contrast_label,
                 contrast_null = contrast_null)
     return(out)
 }
+

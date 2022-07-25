@@ -18,7 +18,6 @@ svyd <- survey::svydesign(
 mod <- survey::svyglm(x ~ nh, design = svyd)
 res <- marginaleffects(mod)
 mar <- suppressMessages(data.frame(margins(mod, unit_ses = TRUE)))
-# TODO: what explains this mismatch?
 expect_equivalent(res$dydx, as.numeric(mar$dydx_nh))
 expect_equivalent(res$std.error, as.numeric(mar$SE_dydx_nh), tolerance = 0.0001)
 # emtrends

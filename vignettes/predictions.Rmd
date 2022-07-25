@@ -64,26 +64,14 @@ In many cases, this is too limiting, and researchers will want to specify a grid
 
 There are two main ways to select the reference grid over which we want to compute adjusted predictions. The first is using the `variables` argument. The second is with the `newdata` argument and the [`datagrid()` function](https://vincentarelbundock.github.io/marginaleffects/reference/datagrid.html) that we already introduced in the [marginal effects vignette.](https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html) 
 
-## `variables`: Levels and Tukey's 5 numbers 
+## `variables`: Counterfactual predictions
 
-The `variables` argument is a handy shortcut to create grids of predictors. Each of the levels of factor/logical/character variables listed in the `variables` argument will be displayed. For numeric variables, `predictions` will compute adjusted predictions at Tukey's 5 summary numbers. All other variables will be set at their means or modes.
+The `variables` argument is a handy way to create and make predictions on counterfactual datasets. For example, here the dataset that we used to fit the model has 32 rows. The counterfactual dataset with two distinct values of `hp` has 64 rows: each of the original rows appears twice, that is, once with each of the values that we specified in the `variables` argument:
 
 ```{r}
-predictions(mod, variables = c("cyl", "hp"))
-```
-
-The `data.frame` produced by `predictions` is "tidy", which makes it easy to manipulate with other `R` packages and functions:
-
-```{r, message = FALSE}
-library(kableExtra)
-library(tidyverse)
-
-predictions(mod, variables = c("cyl", "hp")) %>%
-    select(hp, cyl, predicted) %>%
-    pivot_wider(values_from = predicted, names_from = cyl) %>%
-    kbl(caption = "A table of Adjusted Predictions") %>%
-    kable_styling() %>%
-    add_header_above(header = c(" " = 1, "cyl" = 3))
+p <- predictions(mod, variables = list(hp = c(100, 120)))
+head(p)
+nrow(p)
 ```
 
 ## `newdata` and `datagrid`
@@ -104,6 +92,23 @@ predictions(mod, newdata = datagrid(cyl = c(4, 6, 8)))
 
 Users can change the summary function used to summarize each type of variables using the `FUN.numeric`, `FUN.factor`, and related arguments, for example substituting the mean for the median.
 
+The `data.frame` produced by `predictions` is "tidy", which makes it easy to manipulate with other `R` packages and functions:
+
+```{r, message = FALSE}
+library(kableExtra)
+library(tidyverse)
+
+predictions(
+    mod,
+    newdata = datagrid(cyl = mtcars$cyl, hp = c(100, 110))) %>%
+    select(hp, cyl, predicted) %>%
+    pivot_wider(values_from = predicted, names_from = cyl) %>%
+    kbl(caption = "A table of Adjusted Predictions") %>%
+    kable_styling() %>%
+    add_header_above(header = c(" " = 1, "cyl" = 3))
+```
+
+
 ## `counterfactual` data grid
 
 An alternative approach to construct grids of predictors is to use `grid_type = "counterfactual"` argument value. This will duplicate the *whole* dataset, with the different values specified by the user. 
@@ -122,8 +127,8 @@ Then, we can use this dataset and the `predictions` function to create interesti
 
 ```{r, fig.asp = 1}
 pred <- predictions(mod, newdata = datagrid(am = 0:1, grid_type = "counterfactual")) %>%
-    select(am, predicted, rowid_counterfactual) %>%
-    pivot_wider(id_cols = rowid_counterfactual, 
+    select(am, predicted, rowidcf) %>%
+    pivot_wider(id_cols = rowidcf, 
                 names_from = am,
                 values_from = predicted)
 

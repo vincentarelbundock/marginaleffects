@@ -146,4 +146,16 @@ References:
 * Dowd, Bryan E, William H Greene, and Edward C Norton. “Computation of Standard Errors.” Health Services Research 49, no. 2 (April 2014): 731–50. https://doi.org/10.1111/1475-6773.12122.
 * https://stats.stackexchange.com/questions/283831/delta-method-for-marginal-effects-of-generalized-linear-model?rq=1
 
+# Uncertainty about predictions
+
+The `marginaleffects` package handles all calculations to compute standard errors, t statistics, p values, and confidence intervals for contrasts (`comparisons()`), marginal effects (`marginaleffects()`), and marginal means (`marginalmeans()`). 
+
+When possible, however, the calculation of standard errors and confidence intervals for the output of `predictions()` is outsourced to the [`insight` package.](https://easystats.github.io/insight/) The benefit of this is that, for many popular models, `insight` can compute confidence intervals via back-transformation, which gives them certain nice properties. For example, this ensures that confidence intervals around the predictions of a logistic regression model will remain in between 0 and 1.
+
+When `insight` does not support a model, `marginaleffects` computes standard errors using the delta method, as described above. In those cases, confidence intervals are not created automatically, but users can easily compute them manually, as usual, by multiplying the standard error by a critical value.
+
+# Bayesian estimates and credible intervals
+
+[See the `brms` vignette](https://vincentarelbundock.github.io/marginaleffects/reference/brms.html) for a discussion of bayesian estimates and credible intervals.
+
 

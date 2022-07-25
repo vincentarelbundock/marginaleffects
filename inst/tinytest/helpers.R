@@ -1,3 +1,17 @@
+library(tinytest)
+
+# important because otherwise testing so many packages is terrible
+conflicted::conflict_prefer(name = "expect_error", winner = "tinytest", quiet = TRUE)
+conflicted::conflict_prefer(name = "expect_warning", winner = "tinytest", quiet = TRUE)
+conflicted::conflict_prefer(name = "lmer", winner = "lme4", quiet = TRUE)
+conflicted::conflict_prefer(name = "s", winner = "gam", quiet = TRUE)
+conflicted::conflict_prefer(name = "ar", winner = "stats", quiet = TRUE)
+conflicted::conflict_prefer(name = "marginal_effects", winner = "margins", quiet = TRUE)
+conflicted::conflict_prefer(name = "kidney", winner = "brms", quiet = TRUE)
+conflicted::conflict_prefer(name = "ngrps", winner = "brms", quiet = TRUE)
+conflicted::conflict_prefer(name = "lizards", winner = "aod", quiet = TRUE)
+conflicted::conflict_prefer(name = "rats", winner = "aod", quiet = TRUE)
+
 ON_CRAN <- !identical(Sys.getenv("R_NOT_CRAN"), "true")
 ON_GH <- identical(Sys.getenv("R_GH"), "true")
 ON_CI <- isTRUE(ON_CRAN) || isTRUE(ON_GH)

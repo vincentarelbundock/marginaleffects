@@ -4,7 +4,7 @@
 \alias{complete_levels}
 \title{Create a data.frame with all factor or character levels}
 \usage{
-complete_levels(x, levels_character = NULL)
+complete_levels(x, character_levels = NULL)
 }
 \description{
 \code{model.matrix} and \code{get_predicted} break when \code{newdata} includes a factor

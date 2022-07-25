@@ -15,16 +15,21 @@ expect_true("contrast" %in% colnames(cmp1))
 expect_true("contrast" %in% colnames(cmp2))
 expect_true(all(c("contrast_cyl", "contrast_gear") %in% colnames(cmp3)))
 
-
+# variables must be unnamed vector
+expect_error(comparisons(
+    mod2,
+    variables = c("cyl" = "ratio", "gear" = "difference"),
+    newdata = datagrid()),
+    pattern = "May not have names")
 
 # interaction vs. emmeans
 mod <- lm(mpg ~ factor(am) + factor(cyl) + wt + gear, data = mtcars)
 cmp <- suppressWarnings(comparisons(
-mod,
-variables = c("cyl", "am"),
-newdata = datagrid(),
-contrast_factor = "all",
-interaction = TRUE))
+    mod,
+    variables = c("cyl", "am"),
+    newdata = datagrid(),
+    contrast_factor = "all",
+    interaction = TRUE))
 em <- emmeans(mod, c("cyl", "am"))
 em <- contrast(em, method = "revpairwise")
 em <- data.frame(em)
@@ -54,33 +59,33 @@ mod <- lm(mpg ~ factor(am) * factor(cyl) + wt + gear, data = mtcars)
 
 # one row only means tidy is same nrows
 cmp <- comparisons(
-mod,
-variables = c("cyl", "am"),
-newdata = datagrid(),
-contrast_factor = "all",
-interaction = TRUE)
-expect_equivalent(nrow(cmp), 18)
-expect_equivalent(nrow(tidy(cmp)), 18)
+    mod,
+    variables = c("cyl", "am"),
+    newdata = datagrid(),
+    contrast_factor = "all",
+    interaction = TRUE)
+expect_equivalent(nrow(cmp), 21)
+expect_equivalent(nrow(tidy(cmp)), 21)
 
 cmp <- comparisons(
-mod,
-variables = c("cyl", "am"),
-contrast_factor = "sequential")
+    mod,
+    variables = c("cyl", "am"),
+    contrast_factor = "sequential")
 expect_equivalent(nrow(cmp), 64)
 expect_equivalent(nrow(tidy(cmp)), 2)
 
 cmp <- comparisons(
-mod,
-variables = c("cyl", "am", "wt"))
+    mod,
+    variables = c("cyl", "am", "wt"))
 expect_equivalent(nrow(cmp), 192)
 expect_equivalent(nrow(tidy(cmp)), 6)
 
 cmp <- comparisons(
-mod,
-variables = c("cyl", "am", "wt"),
-contrast_factor = "pairwise")
-expect_equivalent(nrow(cmp), 768)
-expect_equivalent(nrow(tidy(cmp)), 24)
+    mod,
+    variables = c("cyl", "am", "wt"),
+    contrast_factor = "pairwise")
+expect_equivalent(nrow(cmp), 864)
+expect_equivalent(nrow(tidy(cmp)), 27)
 
 
 

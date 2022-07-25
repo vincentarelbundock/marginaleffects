@@ -1,7 +1,7 @@
 # TODO: emtrends not clear what it computes for polr
 source("helpers.R", local = TRUE)
 if (ON_CRAN) exit_file("on cran")
-if (minver("emmeans", "1.7.4")) exit_file("emmeans 1.7.4")
+if (packageVersion("emmeans") < "1.7.4") exit_file("emmeans 1.7.4")
 requiet("margins")
 requiet("MASS")
 requiet("broom")

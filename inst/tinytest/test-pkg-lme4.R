@@ -19,10 +19,14 @@ z <- predictions(mod, vcov = "kenward-roger")
 expect_true(all(x$conf.low != y$conf.low))
 expect_true(all(x$conf.low != z$conf.low))
 expect_true(all(y$conf.low != z$conf.low))
+expect_true(all(x$p.value != y$p.value))
+expect_true(all(x$p.value != z$p.value))
+expect_true(all(y$p.value != z$p.value))
 # kenward-roger adjusts vcov but not satterthwaite
 expect_true(all(x$std.error == y$std.error))
 expect_true(all(x$std.error != z$std.error))
 expect_true(all(y$std.error != z$std.error))
+
 
 x <- plot_cap(mod, condition = "hp", draw = FALSE)
 y <- plot_cap(mod, condition = "hp", vcov = "satterthwaite", draw = FALSE)
@@ -47,9 +51,9 @@ expect_true(all(y$std.error != z$std.error))
 
 # at the mean (regression test)
 mfx <- marginaleffects(
-mod,
-newdata = datagrid(),
-vcov = "satterthwaite")
+    mod,
+    newdata = datagrid(),
+    vcov = "satterthwaite")
 expect_inherits(mfx, "marginaleffects")
 
 # GLM not supported
@@ -278,8 +282,10 @@ mod <- lmer(mpg ~ hp + am + (1 | cyl), data = dat)
 
 mfx <- marginaleffects(mod, vcov = "kenward-roger")
 cmp <- comparisons(mod, vcov = "kenward-roger")
+cmp2 <- comparisons(mod)
+mfx2 <- marginaleffects(mod)
 expect_equivalent(mfx$dydx, cmp$comparison)
-expect_equivalent(mfx$std.error, cmp$std.error, tolerance = .00001)
+expect_equivalent(mfx$std.error, cmp$std.error, tolerance = .0001)
 expect_equivalent(attr(mfx, "vcov.type"), "Kenward-Roger")
 expect_equivalent(attr(cmp, "vcov.type"), "Kenward-Roger")
 

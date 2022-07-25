@@ -52,9 +52,9 @@ sanity_predict_numeric <- function(pred, model, newdata, type) {
 
 sanity_contrast_numeric <- function(contrast_numeric, assertion = TRUE) {
     flag <- isTRUE(checkmate::check_numeric(contrast_numeric, min.len = 1, max.len = 2)) ||
-            isTRUE(checkmate::check_choice(contrast_numeric, choices = c("iqr", "minmax", "sd", "2sd", "dydx")))
+            isTRUE(checkmate::check_choice(contrast_numeric, choices = c("iqr", "minmax", "sd", "2sd")))
     if (isTRUE(assertion) && !isTRUE(flag)) {
-        stop('Contrasts for numeric variables can be a single numeric value, a numeric vector of length 2, or one of the following strings: "iqr", "minmax", "sd", "2sd", "dydx"', call. = FALSE)
+        stop('Contrasts for numeric variables can be a single numeric value, a numeric vector of length 2, or one of the following strings: "iqr", "minmax", "sd", "2sd"', call. = FALSE)
     } else {
         return(flag)
     }

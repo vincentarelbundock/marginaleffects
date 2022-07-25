@@ -5,8 +5,7 @@ requiet("lme4")
 # lme4::lmer
 mod <- lmer(mpg ~ hp + (1 | gear), data = mtcars)
 expect_inherits(marginaleffects(mod), "marginaleffects")
-expect_warning(marginaleffects(mod, blah = 2), pattern = "Valid.*Github")
-
+expect_warning(marginaleffects(mod, blah = 2), pattern = "Github")
 
 
 # stats::lm

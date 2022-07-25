@@ -52,6 +52,8 @@
 #'   - "mean": Marginal Effects at the Mean. Marginal effects when each predictor is held at its mean or mode.
 #'   - "median": Marginal Effects at the Median. Marginal effects when each predictor is held at its median or mode.
 #'   - "marginalmeans": Marginal Effects at Marginal Means. See Details section below.
+#'   - "tukey": Marginal Effects at Tukey's 5 numbers.
+#'   - "grid": Marginal Effects on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
 #' + [datagrid()] call to specify a custom grid of regressors. For example:
 #'   - `newdata = datagrid(cyl = c(4, 6))`: `cyl` variable equal to 4 and 6 and other regressors fixed at their means or modes.
 #'   - See the Examples section and the [datagrid()] documentation.
@@ -71,6 +73,11 @@
 #' type, but will typically be a string such as: "response", "link", "probs",
 #' or "zero". When an unsupported string is entered, the model-specific list of
 #' acceptable values is returned in an error message.
+#' @param slope string indicates the type of slope or (semi-)elasticity to compute:
+#' - "dydx": dY/dX
+#' - "eyex": dY/dX * Y / X
+#' - "eydx": dY/dX * Y
+#' - "dyex": dY/dX / X
 #' @param wts string or numeric: weights to use when computing average
 #' contrasts or marginaleffects. These weights only affect the averaging in
 #' `tidy()` or `summary()`, and not the unit-level estimates themselves.
@@ -188,6 +195,7 @@ marginaleffects <- function(model,
                             vcov = TRUE,
                             conf_level = 0.95,
                             type = "response",
+                            slope = "dydx",
                             wts = NULL,
                             hypothesis = NULL,
                             eps = NULL,
@@ -208,7 +216,7 @@ marginaleffects <- function(model,
             }
         } else if (fun_name == "visualisation_matrix") {
             if (!"x" %in% names(lcall)) {
-                lcall <- c(lcall, list("x" = insight::get_data(model)))
+                lcall <- c(lcall, list("x" = hush(insight::get_data(model))))
                 newdata <- eval.parent(as.call(lcall))
             }
         }
@@ -224,62 +232,31 @@ marginaleffects <- function(model,
         }
     }
 
-    # modelbased::visualisation_matrix attaches useful info for plotting
-    attributes_newdata <- attributes(newdata)
-    idx <- c("class", "row.names", "names", "data", "reference")
-    idx <- !names(attributes_newdata) %in% idx
-    attributes_newdata <- attributes_newdata[idx]
+    # marginaleffects() does not support a named list of variables like comparisons()
+    checkmate::assert_character(variables, null.ok = TRUE)
+
+    # slope
+    checkmate::assert_choice(slope, choices = c("dydx", "eyex", "eydx", "dyex"))
 
     # sanity checks and pre-processing
     model <- sanitize_model(model = model, newdata = newdata, wts = wts, calling_function = "marginaleffects", ...)
     sanity_dots(model = model, calling_function = "marginaleffects", ...)
     sanitize_type(model = model, type = type, calling_function = "marginaleffects")
-    conf_level <- sanitize_conf_level(conf_level, ...)
-    newdata <- sanity_newdata(model, newdata)
-    variables_list <- sanitize_variables(model, newdata, variables)
-    eps <- sanitize_eps(eps = eps, model = model, variables = variables_list)
-
-    # matrix columns not supported
-    matrix_columns <- attr(newdata, "matrix_columns")
-    if (any(matrix_columns %in% c(names(variables), variables))) {
-        msg <- "Matrix columns are not supported by the `variables` argument."
-        stop(msg, call. = FALSE)
-    }
-
-    # weights
-    sanity_wts(wts, newdata) # after sanity_newdata
-    if (!is.null(wts) && !isTRUE(checkmate::check_string(wts))) {
-        newdata[["marginaleffects_wts"]] <- wts
-        wts <- "marginaleffects_wts"
-    }
-
-    # variables is a list but we need a vector (and we drop cluster)
-    variables_vec <- unique(unlist(variables_list))
-    # this won't be triggered for multivariate outcomes in `brms`, which
-    # produces a list of lists where top level names correspond to names of the
-    # outcomes. There should be a more robust way to handle those, but it seems
-    # to work for now.
-    if ("conditional" %in% names(variables_list)) {
-        # unlist() needed for sampleSelection objects, which nest "outcome" and "selection" variables
-        variables_vec <- intersect(variables_vec, unlist(variables_list[["conditional"]]))
-    }
-
-    variables_vec <- setdiff(variables_vec, matrix_columns)
 
     out <- comparisons(
         model,
         newdata = newdata,
-        variables = variables_vec,
+        variables = variables,
         vcov = vcov,
         conf_level = conf_level,
         type = type,
         wts = wts,
         hypothesis = hypothesis,
         eps = eps,
-        # hard-coded. Users should use comparisons() for more flexibility
-        transform_pre = "difference",
-        contrast_numeric = "dydx",
         contrast_factor = "reference",
+        contrast_numeric = 1,
+        # hard-coded. Users should use comparisons() for more flexibility
+        transform_pre = slope,
         interaction = FALSE,
         # secret arguments
         internal_call = TRUE,
@@ -289,12 +266,6 @@ marginaleffects <- function(model,
 
     # report slope, not contrast
     setnames(out, old = "comparison", new = "dydx")
-
-    # comparisons() useful info
-    attributes_comparisons <- attributes(out)
-    idx <- c("class", "row.names", "names", "data", "reference")
-    idx <- !names(attributes_comparisons) %in% idx
-    attributes_comparisons <- attributes_comparisons[idx]
 
     # clean columns
     stubcols <- c("rowid", "type", "group", "term", "contrast", "hypothesis", "dydx", "std.error", "statistic", "p.value", "conf.low", "conf.high",
@@ -320,16 +291,6 @@ marginaleffects <- function(model,
     setDF(out)
     class(out) <- setdiff(class(out), "comparisons")
     class(out) <- c("marginaleffects", class(out))
-
-    # restore attributes
-    for (a in names(attributes_newdata)) {
-        attr(out, paste0("newdata_", a)) <- attributes_newdata[[a]]
-    }
-    for (a in names(attributes_comparisons)) {
-        if (!a %in% names(attributes(out))) {
-            attr(out, a) <- attributes_comparisons[[a]]
-        }
-    }
 
     attr(out, "vcov.type") <- get_vcov_label(vcov)
 

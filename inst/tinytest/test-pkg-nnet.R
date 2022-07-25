@@ -65,7 +65,6 @@ dat <- read.csv(testing_path("stata/databases/MASS_polr_01.csv"))
 void <- capture.output(
     mod <- nnet::multinom(factor(y) ~ x1 + x2, data = dat, quiet = true)
 )
-marginaleffects(mod, newdata = datagrid(), type = "probs")
 mfx <- marginaleffects(mod, variables = "x1", newdata = datagrid(), type = "probs")
 expect_inherits(mfx, "data.frame")
 expect_equivalent(nrow(mfx), 4)
@@ -86,17 +85,18 @@ dat <- data.frame(x = x, y = factor(y))
 tmp <- as.data.frame(replicate(20, factor(sample(letters[7:9], n, TRUE))))
 dat <- cbind(dat, tmp)
 void <- capture.output({
-    m1 <- multinom(y ~ x, dat)
-    m2 <- multinom(y ~ ., dat)
+    m1 <- nnet::multinom(y ~ x, dat)
+    m2 <- nnet::multinom(y ~ ., dat)
 })
 
 # class outcome not supported
-expect_error(predictions(m1, type = "class", variables = "x"), pattern = "type")
-expect_error(marginalmeans(m1, type = "class", variables = "x"), pattern = "type")
+expect_error(predictions(m1, type = "class"), pattern = "type")
+expect_error(marginalmeans(m1, type = "class"), pattern = "type")
+expect_error(marginaleffects(m1, type = "class"), pattern = "type")
 
 # small predictions
 pred1 <- predictions(m1, type = "probs")
-pred2 <- predictions(m1, type = "probs", variables = "x")
+pred2 <- predictions(m1, type = "probs", newdata = "marginalmeans")
 expect_predictions(pred1, n_row = nrow(dat) * 3)
 expect_predictions(pred2, n_row = 9)
 
@@ -104,13 +104,10 @@ expect_predictions(pred2, n_row = 9)
 idx <- 3:5
 n_row <- sapply(dat[, idx], function(x) length(unique(x)))
 n_row <- prod(n_row) * length(unique(dat$y))
-pred <- predictions(m2, type = "probs", variables = colnames(dat)[idx])
-expect_predictions(pred, n_row = n_row)
+expect_error(predictions(m2, type = "probs", newdata = "mean"), pattern = "Cross product")
 
 # massive prediction raises error
-expect_error(predictions(m2, type = "probs", variables = colnames(dat)[3:ncol(dat)]),
-         pattern = "1 billion rows")
-
+expect_error(predictions(m2, type = "probs"), pattern = "")
 
 
 # bugs stay dead #218

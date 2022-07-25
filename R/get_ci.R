@@ -4,6 +4,7 @@ get_ci <- function(
     estimate,
     df = NULL,
     draws = NULL,
+    vcov = TRUE,
     overwrite = FALSE) {
 
     if (!is.null(draws)) {
@@ -39,7 +40,10 @@ get_ci <- function(
     if (!"p.value" %in% colnames(x) || isTRUE(overwrite)) {
         if ("df" %in% colnames(x)) {
             x[["p.value"]] <- 2 * stats::pt(-abs(x$statistic), df = x[["df"]])
-        } else {
+        # get_predicted does not save DF and does not compute p.value. We try
+        # to extract df in predictions(), but this does not always work
+        # (e.g., with hypothesis). When we don't have DF, normal p.value is misleading.
+        } else if (!identical(vcov, "satterthwaite") || !identical(vcov, "kenward-roger")) {
             x[["p.value"]] <- 2 * stats::pnorm(-abs(x$statistic))
         }
     }

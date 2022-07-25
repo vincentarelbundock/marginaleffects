@@ -39,5 +39,6 @@ sanitize_type <- function(model, type, calling_function = NULL) {
         out <- stats::setNames(type, rep(NA, length(type)))
     }
 
+
     return(out)
 }

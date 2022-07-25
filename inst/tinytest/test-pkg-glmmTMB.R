@@ -1,7 +1,11 @@
 source("helpers.R", local = TRUE)
+exit_file("glmmTMB always causes problems")
 if (ON_CRAN) exit_file("on cran")
 if (ON_CI) exit_file("on ci") # install and test fails on Github
 requiet("glmmTMB")
+
+
+data("Owls")
 
 # marginaleffects no validity
 Owls <- transform(Owls,
@@ -93,7 +97,7 @@ expect_error(predictions(mod, newdata = datagrid(), vcov = "HC3"), pattern = "no
 expect_inherits(predictions(mod, newdata = datagrid(), vcov = NULL), "predictions")
 expect_inherits(predictions(mod, newdata = datagrid(), vcov = FALSE), "predictions")
 expect_inherits(predictions(mod, newdata = datagrid(), vcov = TRUE), "predictions")
-expect_inherits(predictions(mod, newdata = datagrid(), vcov = stats::vcov(mod)), "predictions")
+expect_inherits(predictions(mod, newdata = datagrid(), vcov = insight::get_varcov(mod)), "predictions")
 
 
 

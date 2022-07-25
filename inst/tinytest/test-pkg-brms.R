@@ -56,7 +56,6 @@ expect_equivalent(mfx$conf.high, bm$UL, tolerance = tol)
 options("marginaleffects_credible_interval" = "hdi")
 
 
-
 # marginaleffects vs. emmeans
 mfx <- marginaleffects(brms_numeric2, newdata = datagrid(mpg = 20, hp = 100),
                    variables = "mpg", type = "link")
@@ -409,20 +408,27 @@ cmp2 <- comparisons(
     dpar = "mu")
 expect_true(all(cmp1$comparison != cmp2$comparison))
 
+set.seed(1024)
 void <- capture.output({
     mod <- brm(
         bf(mpg ~ disp, hu ~ disp),
         data = mtcars,
         family = hurdle_lognormal(),
+        seed = 1024,
         silent = 2)
 })
+
+
 cmp <- comparisons(
     mod,
     dpar = "mu",
     datagrid(disp = c(150, 300, 450)),
     transform_pre = "expdydx")
+
 expect_equivalent(cmp$comparison, 
-    c(-0.0483582312992919, -0.035158983842012, -0.0255763979591749),
+    c(-0.0464610297239711, -0.0338017059188856, -0.0245881481374242),
+    # seed difference?
+    # c(-0.0483582312992919, -0.035158983842012, -0.0255763979591749),
     tolerance = .01)
 
 # emt <- emtrends(mod, ~disp, var = "disp", dpar = "mu", 

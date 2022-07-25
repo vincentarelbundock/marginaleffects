@@ -107,7 +107,7 @@ marginalmeans <- function(model,
                           by = NULL,
                           ...) {
 
-    newdata <- insight::get_data(model)
+    newdata <- hush(insight::get_data(model))
 
     checkmate::assert_character(by, null.ok = TRUE)
     checkmate::assert_function(transform_post, null.ok = TRUE)
@@ -238,6 +238,7 @@ marginalmeans <- function(model,
             out,
             conf_level = conf_level,
             df = NULL,
+            vcov = vcov,
             overwrite = FALSE,
             estimate = "marginalmean")
     }

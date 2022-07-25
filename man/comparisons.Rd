@@ -16,6 +16,7 @@ comparisons(
   interaction = NULL,
   wts = NULL,
   hypothesis = NULL,
+  eps = NULL,
   ...
 )
 }
@@ -31,6 +32,8 @@ comparisons(
 \item "mean": Contrasts at the Mean. Contrasts when each predictor is held at its mean or mode.
 \item "median": Contrasts at the Median. Contrasts when each predictor is held at its median or mode.
 \item "marginalmeans": Contrasts at Marginal Means.
+\item "tukey": Contrasts at Tukey's 5 numbers.
+\item "grid": Contrasts on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
 }
 \item \code{\link[=datagrid]{datagrid()}} call to specify a custom grid of regressors. For example:
 \itemize{
@@ -97,22 +100,17 @@ acceptable values is returned in an error message.}
 
 \item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
 
-\item{transform_pre}{(experimental) string or function. How should pairs of adjusted predictions be contrasted?
+\item{transform_pre}{string or function. How should pairs of adjusted predictions be contrasted?
 \itemize{
 \item string: shortcuts to common contrast functions.
 \itemize{
-\item "difference" (default): \code{function(hi, lo) hi - lo}
-\item "differenceavg": \code{function(hi, lo) mean(hi) - mean(lo)}
-\item "ratio": \code{function(hi, lo) hi / lo}
-\item "lnratio": \code{function(hi, lo) log(hi / lo)}
-\item "ratioavg": \code{function(hi, lo) mean(hi) / mean(lo)}
-\item "lnratioavg": \code{function(hi, lo) log(mean(hi) / mean(lo))}
-\item "lnoravg": \code{function(hi, lo) log((mean(hi)/(1 - mean(hi))) / (mean(lo)/(1 - mean(lo))))}
-\item "dydx": \code{function(hi, lo) (hi - lo) / eps}
-\item "dydx": `function(hi, lo) mean((hi - lo) / eps)'
-\item "expdydx": \code{function(hi, lo) ((exp(hi) - exp(lo)) / exp(e)) / e}
+\item Supported shortcuts strings: difference, differenceavg, dydx, eyex, eydx, dyex, dydxavg, eyexavg, eydxavg, dyexavg, ratio, ratioavg, lnratio, lnratioavg, lnor, lnoravg, expdydx, expdydxavg
+\item See the Transformations section below for definitions of each transformation.
 }
 \item function: accept two equal-length numeric vectors of adjusted predictions (\code{hi} and \code{lo}) and returns a vector of contrasts of the same length, or a unique numeric value.
+\itemize{
+\item See the Transformations section below for examples of valid functions.
+}
 }}
 
 \item{transform_post}{(experimental) A function applied to unit-level estimates and confidence intervals just before the function returns results.}
@@ -149,6 +147,12 @@ contrasts or marginaleffects. These weights only affect the averaging in
 \item Numeric matrix: Each column is a vector of weights, as describe above, used to compute a distinct linear combination of (contrast between) estimates.
 \item See the Examples section below and the vignette: https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html
 }}
+
+\item{eps}{NULL or numeric value which determines the step size to use when
+calculating numerical derivatives: (f(x+eps)-f(x))/eps. When \code{eps} is
+\code{NULL}, the step size is step to 0.0001 multiplied by the range of the
+variable with respect to which we are taking the derivative. Changing this
+value may be necessary to avoid numerical problems in certain models.}
 
 \item{...}{Additional arguments are passed to the \code{predict()} method
 supplied by the modeling package.These arguments are particularly useful
@@ -203,6 +207,7 @@ Case studies:
 \itemize{
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/brms.html}{Bayesian Analyses with \code{brms}}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/gformula.html}{Causal Inference with the g-Formula}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/elasticity.html}{Elasticity}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/gam.html}{Generalized Additive Models}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html}{Mixed effects models}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html}{Multinomial Logit and Discrete Choice Models}
@@ -238,6 +243,38 @@ marginal effects, predictions, marginal means, and contrasts.\tabular{llll}{
    \code{mgcv} \tab \code{bam} \tab \code{exclude} \tab \link[mgcv:predict.bam]{mgcv::predict.bam} \cr
    \code{robustlmm} \tab \code{rlmerMod} \tab \code{re.form} \tab \link[robustlmm:predict.rlmerMod]{robustlmm::predict.rlmerMod} \cr
     \tab  \tab \code{allow.new.levels} \tab \link[robustlmm:predict.rlmerMod]{robustlmm::predict.rlmerMod} \cr
+}
+}
+
+\section{Transformations}{
+
+
+The following transformations can be applied by supplying one of the shortcut strings to the
+\code{transform_pre} argument.
+\code{hi} is a vector of adjusted predictions for the "high" side of the
+contrast. \code{lo} is a vector of adjusted predictions for the "low" side of the
+contrast. \code{y} is a vector of adjusted predictions for the original data. \code{x}
+is the predictor in the original data. \code{eps} is the step size to use to
+compute derivatives and elasticities.\tabular{ll}{
+   Shortcut \tab Function \cr
+   difference \tab \(hi, lo) hi - lo \cr
+   differenceavg \tab \(hi, lo) mean(hi) - mean(lo) \cr
+   dydx \tab \(hi, lo, eps) (hi - lo)/eps \cr
+   eyex \tab \(hi, lo, eps, y, x) (hi - lo)/eps * (x/y) \cr
+   eydx \tab \(hi, lo, eps, y, x) ((hi - lo)/eps)/y \cr
+   dyex \tab \(hi, lo, eps, x) ((hi - lo)/eps) * x \cr
+   dydxavg \tab \(hi, lo, eps) mean((hi - lo)/eps) \cr
+   eyexavg \tab \(hi, lo, eps, y, x) mean((hi - lo)/eps * (x/y)) \cr
+   eydxavg \tab \(hi, lo, eps, y, x) mean(((hi - lo)/eps)/y) \cr
+   dyexavg \tab \(hi, lo, eps, x) mean(((hi - lo)/eps) * x) \cr
+   ratio \tab \(hi, lo) hi/lo \cr
+   ratioavg \tab \(hi, lo) mean(hi)/mean(lo) \cr
+   lnratio \tab \(hi, lo) log(hi/lo) \cr
+   lnratioavg \tab \(hi, lo) log(mean(hi)/mean(lo)) \cr
+   lnor \tab \(hi, lo) log((hi/(1 - hi))/(lo/(1 - lo))) \cr
+   lnoravg \tab \(hi, lo) log((mean(hi)/(1 - mean(hi)))/(mean(lo)/(1 - mean(lo)))) \cr
+   expdydx \tab \(hi, lo, eps) ((exp(hi) - exp(lo))/exp(eps))/eps \cr
+   expdydxavg \tab \(hi, lo, eps) mean(((exp(hi) - exp(lo))/exp(eps))/eps) \cr
 }
 }
 
@@ -280,11 +317,11 @@ comparisons(mod, variables = list(hp = "minmax")) \%>\% tidy()
 # Adjusted Risk Ratio: see the contrasts vignette
 mod <- glm(vs ~ mpg, data = mtcars, family = binomial)
 cmp <- comparisons(mod, transform_pre = "lnratioavg")
-summary(cmp, transform_post = exp)
+summary(cmp, transform_avg = exp)
 
 # Adjusted Risk Ratio: Manual specification of the `transform_pre`
 cmp <- comparisons(mod, transform_pre = function(hi, lo) log(mean(hi) / mean(lo)))
-summary(cmp, transform_post = exp)
+summary(cmp, transform_avg = exp)
 # Interactions between contrasts
 mod <- lm(mpg ~ factor(cyl) * factor(gear) + hp, data = mtcars)
 cmp <- comparisons(mod, variables = c("cyl", "gear"))

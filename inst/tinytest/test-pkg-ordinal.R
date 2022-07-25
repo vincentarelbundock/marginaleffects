@@ -1,4 +1,6 @@
 source("helpers.R", local = TRUE)
+library(tinytest)
+
 if (ON_CRAN) exit_file("on cran")
 if (packageVersion("base") < "4.2.0") exit_file("oldrel") 
 requiet("MASS")
@@ -41,7 +43,7 @@ expect_marginaleffects(mod)
 
 # marginaleffects: clm: no validity
 data(soup, package = "ordinal")
-(tab26 <- with(soup, table("Product" = PROD, "Response" = SURENESS)))
+tab26 <- with(soup, table("Product" = PROD, "Response" = SURENESS))
 dimnames(tab26)[[2]] <- c("Sure", "Not Sure", "Guess", "Guess", "Not Sure", "Sure")
 dat26 <- expand.grid(sureness = as.factor(1:6), prod = c("Ref", "Test"))
 dat26$wghts <- c(t(tab26))
@@ -62,18 +64,16 @@ expect_marginaleffects(m5, n_unique = 6)
 if (ON_CI) exit_file("on ci")
 # plot
 mod <- clm(Sat ~ Infl + Type + Cont, weights = Freq, data = housing)
-expect_false(expect_error(
-    plot(marginaleffects(mod))
-))
-expect_false(expect_error(
-    plot_cme(mod, effect = "Infl", condition = "Type")
-))
-expect_false(expect_error(
-    plot_cap(mod, condition = "Type")
-))
+flag <- tinytest::expect_error(plot(marginaleffects(mod)))
+expect_false(flag)
+flag <- tinytest::expect_error(plot_cme(mod, effect = "Infl", condition = "Type"))
+expect_false(flag)
+flag <- tinytest::expect_error(plot_cap(mod, condition = "Type"))
+expect_false(flag)
 
 
 # predictions
-expect_false(expect_error(predictions(mod)))
+flag <- tinytest::expect_error(predictions(mod))
+expect_false(flag)
 
 

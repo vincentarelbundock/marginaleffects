@@ -226,7 +226,7 @@ Computing contrasts between average marginal effects requires a little care to o
 comparisons(
     mod,
     hypothesis = "am = vs",
-    variables = list(am = "dydx", vs = "dydx"),
+    variables = c("am", "vs"),
     transform_pre = "dydxavg")
 ```
 

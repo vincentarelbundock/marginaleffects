@@ -42,6 +42,7 @@ Case studies:
     `brms`](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)
   - [Causal Inference with the
     g-Formula](https://vincentarelbundock.github.io/marginaleffects/articles/gformula.html)
+  - [Elasticity](https://vincentarelbundock.github.io/marginaleffects/articles/elasticity.html)
   - [Generalized Additive
     Models](https://vincentarelbundock.github.io/marginaleffects/articles/gam.html)
   - [Mixed effects
@@ -106,7 +107,8 @@ models:](https://vincentarelbundock.github.io/marginaleffects/articles/supported
       - A difference, ratio, or function of adjusted predictions,
         calculated for meaningfully different predictor values (e.g.,
         College graduates vs. Others).
-      - [`comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)
+      - [`comparisons(),`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)
+        [`plot_cco()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cco.html)
   - [*Marginal
     Mean*](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html)
       - Adjusted predictions of a model, averaged across a “reference
@@ -251,13 +253,13 @@ predictions(mod, newdata = datagrid(am = 0, wt = seq(2, 3, .2)))
 #> 4     4 response  20.35051 1.2526403  16.24609  2.380723e-59 17.76518  22.93583
 #> 5     5 response  19.81527 1.0144509  19.53301  5.755097e-85 17.72155  21.90900
 #> 6     6 response  19.28004 0.8063905  23.90906 2.465206e-126 17.61573  20.94435
-#>         hp am  wt
-#> 1 146.6875  0 2.0
-#> 2 146.6875  0 2.2
-#> 3 146.6875  0 2.4
-#> 4 146.6875  0 2.6
-#> 5 146.6875  0 2.8
-#> 6 146.6875  0 3.0
+#>        mpg       hp am  wt
+#> 1 20.09062 146.6875  0 2.0
+#> 2 20.09062 146.6875  0 2.2
+#> 3 20.09062 146.6875  0 2.4
+#> 4 20.09062 146.6875  0 2.6
+#> 5 20.09062 146.6875  0 2.8
+#> 6 20.09062 146.6875  0 3.0
 ```
 
 We can plot how predictions change for different values of one or more
@@ -341,12 +343,12 @@ cmp <- comparisons(
 summary(cmp)
 #> Average contrasts 
 #>                   Age    PClass Effect Std. Error z value   Pr(>|z|)  2.5 %
-#> 1 (x + sd) / (x - sd) 1st / 1st 0.4583    0.05878   7.798 6.3074e-15 0.3431
-#> 2 (x + sd) / (x - sd) 2nd / 1st 0.4525    0.05876   7.700 1.3580e-14 0.3373
-#> 3 (x + sd) / (x - sd) 3rd / 1st 0.4379    0.05875   7.454 9.0386e-14 0.3228
-#> 4 (x + sd) / (x - sd) 2nd / 2nd 0.4554    0.05877   7.749 9.2602e-15 0.3402
-#> 5 (x + sd) / (x - sd) 3rd / 2nd 0.4263    0.05876   7.255 4.0168e-13 0.3111
-#> 6 (x + sd) / (x - sd) 3rd / 3rd 0.4670    0.05880   7.943 1.9803e-15 0.3518
+#> 1 (x - sd) / (x + sd) 1st / 1st 0.4583    0.05878   7.798 6.3074e-15 0.3431
+#> 2 (x - sd) / (x + sd) 2nd / 1st 0.4525    0.05876   7.700 1.3580e-14 0.3373
+#> 3 (x - sd) / (x + sd) 3rd / 1st 0.4379    0.05875   7.454 9.0386e-14 0.3228
+#> 4 (x - sd) / (x + sd) 2nd / 2nd 0.4554    0.05877   7.749 9.2602e-15 0.3402
+#> 5 (x - sd) / (x + sd) 3rd / 2nd 0.4263    0.05876   7.255 4.0168e-13 0.3111
+#> 6 (x - sd) / (x + sd) 3rd / 3rd 0.4670    0.05880   7.943 1.9803e-15 0.3518
 #>   97.5 %
 #> 1 0.5735
 #> 2 0.5677

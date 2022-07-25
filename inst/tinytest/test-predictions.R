@@ -11,7 +11,19 @@ mod <- lm(mpg ~ hp + wt + factor(cyl) + am, data = tmp)
 mod <- lm(mpg ~ hp + am, mtcars)
 pred <- predictions(mod, newdata = datagrid(am = 0:1, grid.type = "counterfactual"))
 expect_predictions(pred, n_row = 64)
-expect_true("rowid_counterfactual" %in% colnames(pred))
+expect_true("rowidcf" %in% colnames(pred))
+
+
+# `variables` argument: character vector
+p <- predictions(mod, variables = list("am" = 0:1))
+expect_equivalent(nrow(p), 64)
+
+p <- predictions(mod, variables = list("am" = 0:1), newdata = "mean")
+expect_equivalent(nrow(p), 2)
+
+# `variables` argument: character vector
+expect_error(predictions(mod, variables = list(2)), pattern = "names")
+expect_error(predictions(mod, variables = "am"), pattern = "list")
 
 
 ################
@@ -62,42 +74,6 @@ mm <- predictions(mod, newdata = nd)
 expect_equivalent(mm$predicted, unname(predict(mod, newdata = nd)))
 
 
-##############################
-#  size: variables argument  #
-##############################
-
-# `variables` arg: factor
-mm <- predictions(mod, variables = "cyl")
-expect_equivalent(nrow(mm), 3)
-
-
-# `variables` arg: logical
-mm <- predictions(mod, variables = "am")
-expect_equivalent(nrow(mm), 2)
-
-
-# `variables` arg: numeric
-mm <- predictions(mod, variables = "wt")
-expect_equivalent(nrow(mm), 5)
-
-
-# `variables` arg: factor + logical
-mm <- predictions(mod, variables = c("am", "cyl"))
-# logical 2; cyl factor 3
-expect_equivalent(nrow(mm), 2 * 3)
-
-
-
-# `variables` arg: logical + numeric
-mm <- predictions(mod, variables = c("am", "wt"))
-# logical 2; numeric 5 numbers
-expect_equivalent(nrow(mm), 2 * 5)
-
-
-# `variables` arg: factor + numeric
-mm <- predictions(mod, variables = c("cyl", "wt"))
-# logical 2; numeric 5 numbers
-expect_equivalent(nrow(mm), 3 * 5)
 
 
 
@@ -148,5 +124,45 @@ expect_inherits(pred, "data.frame")
 expect_true("predicted" %in% colnames(pred))
 
 
+
+
+
+############## DEPRECATED USE OF VARIABLES
+# ##############################
+# #  size: variables argument  #
+# ##############################
+
+# # `variables` arg: factor
+# mm <- predictions(mod, variables = "cyl")
+# expect_equivalent(nrow(mm), 3)
+
+
+# # `variables` arg: logical
+# mm <- predictions(mod, variables = "am")
+# expect_equivalent(nrow(mm), 2)
+
+
+# # `variables` arg: numeric
+# mm <- predictions(mod, variables = "wt")
+# expect_equivalent(nrow(mm), 5)
+
+
+# # `variables` arg: factor + logical
+# mm <- predictions(mod, variables = c("am", "cyl"))
+# # logical 2; cyl factor 3
+# expect_equivalent(nrow(mm), 2 * 3)
+
+
+
+# # `variables` arg: logical + numeric
+# mm <- predictions(mod, variables = c("am", "wt"))
+# # logical 2; numeric 5 numbers
+# expect_equivalent(nrow(mm), 2 * 5)
+
+
+# # `variables` arg: factor + numeric
+# mm <- predictions(mod, variables = c("cyl", "wt"))
+# # logical 2; numeric 5 numbers
+# expect_equivalent(nrow(mm), 3 * 5)
 
 

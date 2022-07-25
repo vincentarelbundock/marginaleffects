@@ -30,10 +30,11 @@ tmp <- mtcars
 tmp$am <- as.logical(tmp$am)
 tmp$cyl <- as.factor(tmp$cyl)
 tmp$gear <- as.character(tmp$gear)
-typ <- datagrid(newdata = tmp,
-               FUN.character = max,
-               FUN.factor = function(x) sort(x)[1],
-               FUN.numeric = stats::median)
+typ <- datagrid(
+    newdata = tmp,
+    FUN.character = max,
+    FUN.factor = function(x) sort(x)[1],
+    FUN.numeric = stats::median)
 expect_equivalent(typ$drat, stats::median(mtcars$drat))
 expect_equivalent(typ$cyl, factor("4", levels = c("4", "6", "8")))
 expect_equivalent(typ$gear, "5")
@@ -48,14 +49,15 @@ expect_equivalent(dim(nd), c(1, 1))
 
 # errors and warnings
 mod <- lm(hp ~ mpg, mtcars)
-expect_error(datagrid(), pattern = "can both be omitted")
+expect_error(datagrid(), pattern = "are both .NULL")
 
 mod <- lm(hp ~ factor(cyl), mtcars)
 expect_inherits(datagrid(model = mod, cyl = "4"), "data.frame")
 expect_error(datagrid(model = mod, cyl = "2"), pattern = "must be one of the factor levels")
 
+# no longer produces a warning: Mode is applied to cluster variables
 mod <- fixest::feols(mpg ~ hp | cyl, data = mtcars)
-expect_warning(datagrid(model = mod), pattern = "cluster")
+expect_false(tinytest::expect_warning(datagrid(model = mod)))
 
 
 # bugs stay dead: FUN.logical

@@ -6,7 +6,6 @@ requiet("betareg")
 requiet("margins")
 requiet("emmeans")
 requiet("broom")
-tol <- 0.01 # bad tolerance for some results
 
 data("GasolineYield", package = "betareg")
 tmp <- GasolineYield
@@ -20,6 +19,7 @@ res <- marginaleffects(mod, variables = "temp")
 mar <- data.frame(margins::margins(mod, unit_ses = TRUE))
 
 expect_true(expect_margins(res, mar, tolerance = 0.1))
+
 # emtrends
 mfx <- marginaleffects(mod, newdata = datagrid(batch = 1), variables = "temp")
 em <- suppressWarnings(
@@ -45,11 +45,10 @@ expect_predictions(pred, n_row = 6)
 
 
 # marginalmeans: vs. emmeans
-# TODO: Bad tolerance
 mm <- marginalmeans(mod)
 expect_marginalmeans(mm, n_row = 10)
 mm <- tidy(mm)
 em <- broom::tidy(emmeans::emmeans(mod, "batch"))
 expect_equivalent(mm$estimate, em$estimate)
-expect_equivalent(mm$std.error, em$std.error, tolerance = tol)
+expect_equivalent(mm$std.error, em$std.error, tolerance = 0.01)
 

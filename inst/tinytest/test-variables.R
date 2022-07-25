@@ -1,6 +1,4 @@
-
-source("helpers.R", local = TRUE)
-# named list
+source("helpers.R")
 
 tmp <- mtcars
 tmp$gear <- as.factor(tmp$gear)
@@ -14,23 +12,24 @@ expect_equivalent(cmp1$contrast, "(x + 1) - x")
 cmp2 <- comparisons(mod, variables = list("hp" = 1), newdata = head(tmp, 1))
 expect_equivalent(cmp1, cmp2)
 
-cmp <- comparisons(
+cmp1 <- comparisons(
     mod,
     variables = list(gear = "sequential", hp = 10, cyl = "pairwise"))
-cmp <- tidy(cmp)
+cmp1 <- tidy(cmp1)
+cmp2 <- comparisons(
+    mod,
+    variables = list(gear = "sequential", hp = 1, cyl = "pairwise"))
+cmp2 <- tidy(cmp2)
 known <- c("4 - 3", "5 - 4", "(x + 10) - x", "6 - 4", "8 - 4", "8 - 6")
-expect_true(all(known %in% cmp$contrast))
+expect_true(all(known %in% cmp1$contrast))
+expect_equivalent(cmp1$estimate[3], cmp2$estimate[3] * 10)
 
 # informative errors
 expect_error(comparisons(mod, variables = list(gear = "blah")), pattern = "character variables")
 expect_error(comparisons(mod, variables = list(hp = "pairwise"), pattern = "numeric variables"))
 
-
-
-
 # regression test: factor in formula and numeric check
 mod <- lm(mpg ~ factor(cyl), data = mtcars)
 expect_inherits(comparisons(mod, variables = list(cyl = "pairwise")), "comparisons")
 expect_error(comparisons(mod, variables = list(cyl = "iqr")), pattern = "factor")
-
 

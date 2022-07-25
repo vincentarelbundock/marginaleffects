@@ -31,7 +31,8 @@ mfx <- marginaleffects(fit, newdata = nhefs)
 dat <- mtcars
 dat$group <- dat$am
 mod <- lm(mpg ~ group, data = dat)
-expect_error(comparisons(mod), pattern = "reserved")
+expect_warning(comparisons(mod), pattern = "forbidden")
+expect_error(suppressWarnings(comparisons(mod)), pattern = "change")
 mod <- lm(mpg ~ group + hp, data = dat)
-expect_warning(comparisons(mod), pattern = "reserved")
+expect_warning(comparisons(mod), pattern = "forbidden")
 expect_equivalent(nrow(suppressWarnings(comparisons(mod))), 32)

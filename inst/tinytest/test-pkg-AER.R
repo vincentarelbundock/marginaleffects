@@ -6,7 +6,7 @@ requiet("emmeans")
 requiet("broom")
 tol_se <- 1e-4
 
-dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/AER/Affairs.csv")
+dat <<- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/AER/Affairs.csv")
 
 
 # tobit: marginaleffects vs. Stata

@@ -7,8 +7,7 @@
 #' name to be displayed on the x-axis. The second is a variable whose values
 #' will be displayed in different colors. Other numeric variables are held at
 #' their means. Other categorical variables are held at their modes. Other
-#' numeric variables are held at their means. Other categorical variables are
-#' held at their modes.
+#' numeric variables are held at their means.
 #' @param draw `TRUE` returns a `ggplot2` plot. `FALSE` returns a `data.frame` of the underlying data.
 #' @inheritParams plot.marginaleffects
 #' @inheritParams plot_cme
@@ -35,7 +34,7 @@ plot_cap <- function(model,
     checkmate::assert_character(condition, min.len = 1, max.len = 2)
 
     # get data to know over what range of values we should plot
-    dat <- suppressWarnings(suppressWarnings(insight::get_data(model)))
+    dat <- hush(insight::get_data(model))
     resp <- insight::find_response(model)[1]
 
     checkmate::assert_true(all(condition %in% colnames(dat)))

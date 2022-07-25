@@ -50,22 +50,17 @@ acceptable values is returned in an error message.}
 
 \item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
 
-\item{transform_pre}{(experimental) string or function. How should pairs of adjusted predictions be contrasted?
+\item{transform_pre}{string or function. How should pairs of adjusted predictions be contrasted?
 \itemize{
 \item string: shortcuts to common contrast functions.
 \itemize{
-\item "difference" (default): \code{function(hi, lo) hi - lo}
-\item "differenceavg": \code{function(hi, lo) mean(hi) - mean(lo)}
-\item "ratio": \code{function(hi, lo) hi / lo}
-\item "lnratio": \code{function(hi, lo) log(hi / lo)}
-\item "ratioavg": \code{function(hi, lo) mean(hi) / mean(lo)}
-\item "lnratioavg": \code{function(hi, lo) log(mean(hi) / mean(lo))}
-\item "lnoravg": \code{function(hi, lo) log((mean(hi)/(1 - mean(hi))) / (mean(lo)/(1 - mean(lo))))}
-\item "dydx": \code{function(hi, lo) (hi - lo) / eps}
-\item "dydx": `function(hi, lo) mean((hi - lo) / eps)'
-\item "expdydx": \code{function(hi, lo) ((exp(hi) - exp(lo)) / exp(e)) / e}
+\item Supported shortcuts strings: difference, differenceavg, dydx, eyex, eydx, dyex, dydxavg, eyexavg, eydxavg, dyexavg, ratio, ratioavg, lnratio, lnratioavg, lnor, lnoravg, expdydx, expdydxavg
+\item See the Transformations section below for definitions of each transformation.
 }
 \item function: accept two equal-length numeric vectors of adjusted predictions (\code{hi} and \code{lo}) and returns a vector of contrasts of the same length, or a unique numeric value.
+\itemize{
+\item See the Transformations section below for examples of valid functions.
+}
 }}
 
 \item{transform_post}{(experimental) A function applied to unit-level estimates and confidence intervals just before the function returns results.}
