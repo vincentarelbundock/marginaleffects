@@ -431,6 +431,7 @@ predictions <- function(model,
     attr(out, "posterior_draws") <- draws
     attr(out, "newdata") <- newdata
     attr(out, "weights") <- marginaleffects_wts_internal
+    attr(out, "by") <- by
 
     if ("group" %in% names(out) && all(out$group == "main_marginaleffect")) {
         out$group <- NULL

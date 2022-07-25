@@ -138,9 +138,11 @@ tidy.predictions <- function(x,
 
     marginaleffects_wts_internal <- attr(x, "weights")
 
-    by <- c("group", by)
-    by <- intersect(by, colnames(x))
-    if (length(by) == 0) by <- NULL
+    if ("group" %in% colnames(x_dt)) {
+        idx <- "group"
+    } else {
+        idx <- NULL
+    }
 
     fun <- function(...) {
         dots <- list(...)
@@ -150,43 +152,43 @@ tidy.predictions <- function(x,
         if (!is.null(marginaleffects_wts_internal)) {
             out[, "marginaleffects_wts_internal" := marginaleffects_wts_internal]
             out <- out[,
-                .(estimate = stats::weighted.mean(
-                    predicted,
-                    marginaleffects_wts_internal,
-                    na.rm = TRUE)),
-                by = by]
+                .(predicted = stats::weighted.mean(predicted, marginaleffects_wts_internal, na.rm = TRUE)),
+                by = idx]
         } else {
-            out <- out[,
-                .(estimate = mean(predicted)),
-                by = by]
+            out <- out[, .(predicted = mean(predicted)), by = idx]
         }
-        return(out$estimate)
+        return(out$predicted)
     }
-    if (!is.null(marginaleffects_wts_internal)) {
-        x_dt[, "marginaleffects_wts_internal" := marginaleffects_wts_internal]
-        x_dt <- x_dt[,
-            .(estimate = stats::weighted.mean(
+
+    # only aggregate if predictions were not already aggregated before
+    if (is.null(attr(x, "by"))) {
+        if (!is.null(marginaleffects_wts_internal)) {
+            x_dt[, "marginaleffects_wts_internal" := marginaleffects_wts_internal]
+            x_dt <- x_dt[,
+            .(predicted = stats::weighted.mean(
                 predicted,
                 marginaleffects_wts_internal,
                 na.rm = TRUE)),
-            by = by]
-    } else {
-        x_dt <- x_dt[,
-            .(estimate = mean(predicted)),
-            by = by]
+            by = idx]
+        } else {
+            x_dt <- x_dt[, .(predicted = mean(predicted)), by = idx]
+        }
     }
 
-    se <- get_se_delta(
-        model = attr(x, "model"),
-        newdata = attr(x, "newdata"),
-        vcov = attr(x, "vcov"),
-        type = attr(x, "type"),
-        FUN = fun,
-        ...)
-
-    if (!is.null(se)) {
-        x_dt[, "std.error" := se]
+    if (!"std.error" %in% colnames(x_dt)) {
+        se <- get_se_delta(
+            model = attr(x, "model"),
+            newdata = attr(x, "newdata"),
+            vcov = attr(x, "vcov"),
+            type = attr(x, "type"),
+            FUN = fun,
+            ...)
+        if (!is.null(se)) {
+            x_dt[, "std.error" := se]
+        }
     }
+
+    setnames(x_dt, old = "predicted", new = "estimate")
 
     out <- get_ci(x_dt, estimate = "estimate", conf_level = conf_level)
     return(out)
