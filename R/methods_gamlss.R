@@ -125,8 +125,6 @@ predict.gamlss <- function (object, what = c("mu", "sigma", "nu", "tau"), parame
   }
   else data
   
-  # Modified from the original method predict.gamlss to accomodate
-  # different data farmes for newdata
   data <- data[match(names(newdata), names(data))]
   data <- concat(data, newdata)
   parform <- formula(object, what)
@@ -148,12 +146,15 @@ predict.gamlss <- function (object, what = c("mu", "sigma", "nu", "tau"), parame
     n.smooths <- dim(smo.mat)[2]
     y <- (y - smo.mat %*% rep(1, n.smooths))
   }
+  
+  # Modified from the original prediction function.
   # refit <- lm.wfit(X[onlydata, , drop = FALSE], y, w)
   # if (abs(sum(resid(refit))) > 0.1 || abs(sum(coef(object, 
   #                                                  what = what) - coef(refit), na.rm = TRUE)) > 1e-05) 
   #   warning(paste("There is a discrepancy  between the original and the re-fit", 
   #                 " \n used to achieve 'safe' predictions \n ", sep = ""))
   coef <- coef(object, what = what)   # coef <- refit$coef
+  
   nX <- dimnames(X)
   rownames <- nX[[1]][!onlydata]
   nrows <- sum(!onlydata)
