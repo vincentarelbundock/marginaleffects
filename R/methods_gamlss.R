@@ -32,7 +32,9 @@ get_predict.gamlss <- function(model, newdata, type, ...){
   setDF(newdata)
   index <- which(colnames(newdata) %in% originvars)
   tmp <- newdata[, index]
-  out <- stats::predict(model, newdata = tmp, type = type, ...)
+  invisible(capture.output(out <- stats::predict(model, 
+                                                 newdata = tmp, type = type, 
+                                                 data = origindata, ...)))
   
   if ("rowid" %in% colnames(newdata)) {
     out <- data.frame(rowid = newdata$rowid, predicted = out)
