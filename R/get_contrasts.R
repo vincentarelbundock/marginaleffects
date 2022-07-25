@@ -230,17 +230,21 @@ get_contrasts <- function(model,
                 recycle = FALSE)$comparison,
             by = idx]
             , error = function(e) e)
-        if (inherits(e, "error") && identical(e$message, "no recycling allowed")) {
-            out <- out[, .(comparison = safefun(
-                hi = predicted_hi,
-                lo = predicted_lo,
-                or = predicted_or,
-                n = .N,
-                term = term,
-                interaction = interaction,
-                eps = marginaleffects_eps,
-                recycle = TRUE)$comparison),
-            by = idx]
+        if (inherits(e, "error")) {
+            if (identical(e$message, "no recycling allowed")) {
+                out <- out[, .(comparison = safefun(
+                    hi = predicted_hi,
+                    lo = predicted_lo,
+                    or = predicted_or,
+                    n = .N,
+                    term = term,
+                    interaction = interaction,
+                    eps = marginaleffects_eps,
+                    recycle = TRUE)$comparison),
+                by = idx]
+            } else {
+                stop(e$message, call. = FALSE)
+            }
         }
     }
 

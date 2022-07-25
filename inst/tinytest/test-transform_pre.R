@@ -153,10 +153,3 @@ expect_equivalent(mfx1$dydx, mfx2$comparison)
 expect_equivalent(mfx1$std.error, mfx2$std.error)
 expect_equivalent(mfx3$dydx, mfx4$comparison)
 expect_equivalent(mfx3$std.error, mfx4$std.error)
-
-
-# Issue #415: by argument after comparisons()
-fit <- lm(vs ~ am * cyl, data = mtcars)
-comp <- comparisons(fit, variable = list(am = 0:1),
-                    transform_pre = "lnoravg")
-expect_false(isTRUE(tinytest::expect_error(summary(comp, by = "cyl"))))
