@@ -251,7 +251,7 @@ tidy.comparisons <- function(x,
 
     # empty initial mfx data.frame means there were no numeric variables in the
     # model
-    if ("term" %in% colnames(x_dt) || inherits(x, "predictions")) {
+    if (is.null(attr(x, "by")) && ("term" %in% colnames(x_dt) || inherits(x, "predictions"))) {
 
         J <- attr(x, "jacobian")
         V <- attr(x, "vcov")
@@ -348,7 +348,8 @@ tidy.comparisons <- function(x,
 
     } else {
         # avoids namespace conflict with `margins`
-        ame <- data.frame()
+        ame <- x_dt
+        setnames(ame, old = "comparison", new = "estimate")
     }
 
     out <- get_ci(
@@ -372,10 +373,12 @@ tidy.comparisons <- function(x,
 
     # sort and subset columns
     cols <- c("type", "group", "term", "contrast",
+              attr(x, "by"),
               grep("^contrast_\\w+", colnames(x_dt), value = TRUE),
               "estimate", "std.error", "statistic", "p.value", "conf.low", "conf.high")
     cols <- intersect(cols, colnames(out))
     out <- out[, cols, drop = FALSE, with = FALSE]
+
 
     setDF(out)
 

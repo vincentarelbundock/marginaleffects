@@ -445,6 +445,7 @@ comparisons <- function(model,
     attr(out, "weights") <- marginaleffects_wts_internal
     attr(out, "transform_pre") <- transform_pre_label
     attr(out, "transform_post") <- transform_post_label
+    attr(out, "by") <- by
 
     if (!isTRUE(internal_call)) {
         if ("group" %in% names(out) && all(out$group == "main_marginaleffect")) {

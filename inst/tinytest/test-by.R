@@ -36,14 +36,22 @@ expect_equivalent(x$std.error, y$std.error)
 expect_error(marginaleffects(mod, slope = "bad"), pattern = "eyexavg")
 
 # by argument changes to avg automatically
-cmp <- comparisons(mod, by = "am")
-
+cmp <- tidy(mod, by = "am")
 
 # by is deprecated in `summary()` and `tidy()`
 expect_error(summary(comparisons(mod), by = "am"), pattern = "instead")
 expect_error(tidy(comparisons(mod), by = "am"), pattern = "instead")
 
+# by argument
+mod <- glm(am ~ hp + mpg, data = mtcars, family = binomial)
+cmp <- comparisons(mod, by = "am", transform_pre = "lnor")
+expect_equal(nrow(cmp), 4)
 
+cmp <- comparisons(mod, by = "am")
+tid <- tidy(cmp)
+expect_equivalent(nrow(tid), nrow(cmp))
+expect_equivalent(nrow(tid), 4)
+expect_true("am" %in% colnames(tid))
 
 
 # marginaleffects poisson vs. margins
