@@ -167,7 +167,7 @@ get_contrasts <- function(model,
     }
 
     # do not feed unknown arguments to a `transform_pre`
-    safefun <- function(hi, lo, or, n, term, interaction, eps, rowidunique = NULL) {
+    safefun <- function(hi, lo, or, n, term, interaction, eps) {
         if (isTRUE(interaction)) {
             fun <- fun_list[[1]]
         } else {
@@ -186,11 +186,7 @@ get_contrasts <- function(model,
             msg <- sprintf(msg, n, n)
             stop(msg, call. = FALSE)
         }
-        if (length(rowidunique) == length(con)) {
-            out = list(rowidunique = rowidunique, comparison = con)
-        } else {
-            out = list(comparison = con)
-        }
+        out = list(comparison = con)
         return(out)
     }
 
@@ -221,8 +217,7 @@ get_contrasts <- function(model,
             n = .N,
             term = term,
             interaction = interaction,
-            eps = marginaleffects_eps,
-            rowidunique = rowidunique)$comparison,
+            eps = marginaleffects_eps)$comparison,
         by = idx]
     }
 
