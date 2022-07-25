@@ -99,6 +99,7 @@ get_contrast_data <- function(model,
                 # keep rowid and original data only in one of the datasets
                 idx_lo <- setdiff(names(variables), names(lo)[i])
                 idx_hi <- setdiff(names(variables), names(hi)[i])
+                idx_or <- setdiff(names(variables), names(hi)[i])
             } else {
                 # exclude rowid and variables excluded from `variables`, for
                 # which we do not compute cross-contrasts
@@ -107,17 +108,22 @@ get_contrast_data <- function(model,
                     setdiff(names(variables), names(lo)[[i]]))
                 idx_hi <- c(setdiff(names(hi[[i]]), c(contrast_null, names(variables))),
                     setdiff(names(variables), names(hi)[[i]]))
+
+                idx_or <- c(setdiff(names(original[[i]]), c(contrast_null, names(variables))),
+                    setdiff(names(variables), names(original)[[i]]))
             }
             lo[[i]] <- data.table(lo[[i]])[, !..idx_lo]
             hi[[i]] <- data.table(hi[[i]])[, !..idx_hi]
+            original[[i]] <- data.table(original[[i]])[, !..idx_or]
             lo[[i]][[paste0("contrast_", names(lo)[i])]] <- lab[[i]]
-            hi[[i]][[paste0("contrast_", names(lo)[i])]] <- lab[[i]]
+            hi[[i]][[paste0("contrast_", names(hi)[i])]] <- lab[[i]]
+            original[[i]][[paste0("contrast_", names(original)[i])]] <- lab[[i]]
         }
 
         fun <- function(x, y) merge(x, y, all = TRUE, allow.cartesian = TRUE)
         lo <- Reduce("fun", lo)
         hi <- Reduce("fun", hi)
-        original <- NULL
+        original <- Reduce("fun", original)
 
         # faster to rbind, but creates massive datasets. need cartesian join on rowid
         # lo <- cjdt(lo)
@@ -132,6 +138,7 @@ get_contrast_data <- function(model,
             idx <- rowSums(idx_df) < ncol(idx_df)
             lo <- lo[idx]
             hi <- hi[idx]
+            original <- original[idx]
         }
     }
 

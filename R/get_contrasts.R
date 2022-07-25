@@ -35,7 +35,6 @@ get_contrasts <- function(model,
     if (inherits(pred_hi$value, "data.frame")) pred_hi <- pred_hi$value
     if (inherits(pred_lo$value, "data.frame")) pred_lo <- pred_lo$value
 
-
     # predicted values on the original data
     # needed for elasticities but don't waste time if we not needed
     if (any(sapply(variables, function(x) x$label %in% c("eyex", "eydx", "dyex")))) {
@@ -74,18 +73,14 @@ get_contrasts <- function(model,
     out[, "marginaleffects_eps" := NA_real_] # default (probably almost always overwritten)
     mult <- nrow(out) / nrow(original)
     if (isTRUE(mult == 1)) {
-        out[, "term" := original[["term"]]]
-        out[, "contrast" := original[["contrast"]]]
-        if ("marginaleffects_eps" %in% colnames(original)) {
-            out[, "marginaleffects_eps" := original[["marginaleffects_eps"]]]
+        for (v in grep("^term$|^contrast|^marginaleffects_eps$", colnames(original), value = TRUE)) {
+            out[, (v) := original[[v]]]
         }
 
     # group or multivariate outcomes
     } else if (isTRUE(mult > 1)) {
-        out[, "term" := rep(original$term, times = mult)]
-        out[, "contrast" := rep(original$contrast, times = mult)]
-        if ("marginaleffects_eps" %in% colnames(original)) {
-            out[, "marginaleffects_eps" := rep(original$marginaleffects_eps, times = mult)]
+        for (v in grep("^term$|^contrast|^marginaleffects_eps$", colnames(original), value = TRUE)) {
+            out[, (v) := rep(original[[v]], times = mult)]
         }
 
     # cross-contrasts or weird cases
@@ -98,6 +93,9 @@ get_contrasts <- function(model,
             idx <- unique(idx)
             out <- out[, ..idx]
         }
+    }
+
+    if (!"term" %in% colnames(out)) {
         out[, "term" := "interaction"]
     }
 
@@ -167,7 +165,8 @@ get_contrasts <- function(model,
     }
 
     # do not feed unknown arguments to a `transform_pre`
-    safefun <- function(hi, lo, or, n, term, interaction, eps) {
+    safefun <- function(hi, lo, or, n, term, interaction, eps, recycle = TRUE) {
+        # when interaction=TRUE, sanitize_transform_pre enforces a single function
         if (isTRUE(interaction)) {
             fun <- fun_list[[1]]
         } else {
@@ -186,6 +185,11 @@ get_contrasts <- function(model,
             msg <- sprintf(msg, n, n)
             stop(msg, call. = FALSE)
         }
+
+        if (length(con) == 1 && recycle == FALSE) {
+             stop("no recycling allowed", call. = FALSE)
+        }
+
         out = list(comparison = con)
         return(out)
     }
@@ -196,8 +200,8 @@ get_contrasts <- function(model,
             predicted_hi = mean(predicted_hi),
             predicted_or = mean(predicted_or),
             eps = mean(marginaleffects_eps)),
-        by = idx]
-        out[, "comparison" := safefun(
+        by = idx][
+        , "comparison" := safefun(
             hi = predicted_hi,
             lo = predicted_lo,
             or = predicted_or,
@@ -208,17 +212,36 @@ get_contrasts <- function(model,
         by = "term"]
 
     } else {
-        # tmp needed to avoid recycling when safefun() returns length 1 value
-        # assign back into `out` to preserve `rowid` when possible
-        out[, "comparison" := safefun(
-            hi = predicted_hi,
-            lo = predicted_lo,
-            or = predicted_or,
-            n = .N,
-            term = term,
-            interaction = interaction,
-            eps = marginaleffects_eps)$comparison,
-        by = idx]
+        # We want to write the "comparison" column in-place because it safer
+        # than group-merge; there were several bugs related to this in the
+        # past. However, we also want to avoid recycling and return a 1-row
+        # data frame when appropriate. The first call will error when safefun()
+        # returns a vector of length one. Then, we fallback on the group-merge
+        # strategy for 1-row output.
+        e <- tryCatch(
+            out[, "comparison" := safefun(
+                hi = predicted_hi,
+                lo = predicted_lo,
+                or = predicted_or,
+                n = .N,
+                term = term,
+                interaction = interaction,
+                eps = marginaleffects_eps,
+                recycle = FALSE)$comparison,
+            by = idx]
+            , error = function(e) e)
+        if (inherits(e, "error") && identical(e$message, "no recycling allowed")) {
+            out <- out[, .(comparison = safefun(
+                hi = predicted_hi,
+                lo = predicted_lo,
+                or = predicted_or,
+                n = .N,
+                term = term,
+                interaction = interaction,
+                eps = marginaleffects_eps,
+                recycle = TRUE)$comparison),
+            by = idx]
+        }
     }
 
     out <- get_hypothesis(out, hypothesis, "comparison")
