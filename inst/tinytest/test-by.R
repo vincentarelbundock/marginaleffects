@@ -4,9 +4,19 @@ requiet("margins")
 tol <- 1e-4
 tol_se <- 1e-3
 
-mod <- glm(gear ~ cyl + am, family = poisson, data = mtcars)
+mod1 <- glm(gear ~ cyl + am, family = poisson, data = mtcars)
+mod2 <- lm(gear ~ cyl + am, data = mtcars)
+p1 <- predictions(mod1, by = "am")
+p2 <- predictions(mod2, by = "am")
+p3 <- predictions(mod2, by = "am", wts = mtcars$wt)
+expect_false("conf.low" %in% colnames(p1))
+expect_true("conf.low" %in% colnames(p2))
+expect_equivalent(nrow(p1), nrow(p2))
+expect_equivalent(nrow(p1), 2)
+
 
 # use transform_pre to collapse into averages
+mod <- glm(gear ~ cyl + am, family = poisson, data = mtcars)
 x <- tidy(comparisons(mod, transform_pre = "dydx"))
 y <- comparisons(mod, transform_pre = "dydxavg")
 expect_equivalent(x$estimate, y$comparison)

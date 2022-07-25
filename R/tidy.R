@@ -122,8 +122,18 @@ tidy.marginalmeans <- function(x,
 #' tidy(mfx)
 tidy.predictions <- function(x,
                              conf_level = 0.95,
-                             by = NULL,
                              ...) {
+
+    # I left the `by` code below in case I eventually want to revert. Much
+    # of it needs to stay anyway because we need the `delta` in `tidy` for
+    # average predicted values, but Isome stuff could eventually be cleaned up.
+    if ("by" %in% names(list(...))) {
+        msg <- 
+        "The `by` argument is deprecated in this function. You can use `by` in the `comparisons()`, 
+        `marginaleffects()`, and `predictions()` functions instead."
+        stop(msg, call. = FALSE)
+    }
+
     x_dt <- copy(data.table(x))
 
     marginaleffects_wts_internal <- attr(x, "weights")
@@ -152,7 +162,6 @@ tidy.predictions <- function(x,
         }
         return(out$estimate)
     }
-
     if (!is.null(marginaleffects_wts_internal)) {
         x_dt[, "marginaleffects_wts_internal" := marginaleffects_wts_internal]
         x_dt <- x_dt[,
