@@ -21,13 +21,13 @@ expect_equal(tidy(p2), tidy(p4))
 
 # by supports weights
 p1 <- predictions(mod, wts = "weights", newdata = dat)
-p1 <- tidy(p1, by = "cyl")
+p1 <- tidy(p1)
 expect_inherits(p1, "data.frame")
-m1 <- marginaleffects(mod, wts = "weights", newdata = dat)
-m1 <- tidy(m1, by = "cyl")
+m1 <- marginaleffects(mod, wts = "weights", newdata = dat, by = "cyl")
+m1 <- tidy(m1)
 expect_inherits(m1, "data.frame")
-c1 <- comparisons(mod, wts = "weights", newdata = dat)
-c1 <- tidy(c1, by = "cyl")
+c1 <- comparisons(mod, wts = "weights", newdata = dat, by = "cyl")
+c1 <- tidy(c1)
 expect_inherits(c1, "data.frame")
 
 

@@ -18,6 +18,7 @@ get_contrasts <- function(model,
     # here.
     setDF(lo)
     setDF(hi)
+    setDF(original)
 
     pred_lo <- myTryCatch(get_predict(
         model,
@@ -39,6 +40,9 @@ get_contrasts <- function(model,
         vcov = FALSE,
         newdata = original,
         ...))
+
+    # lots of indexing later requires a data.table
+    setDT(original)
 
     if (inherits(pred_hi$value, "data.frame")) pred_hi <- pred_hi$value
     if (inherits(pred_lo$value, "data.frame")) pred_lo <- pred_lo$value
@@ -163,9 +167,10 @@ get_contrasts <- function(model,
     if (!is.null(by)) {
         by_merge <- setdiff(by, colnames(out))
         if (length(by_merge) > 0) {
-            idx_merge <- c("rowid", by_merge)
-            tmp <- original[, ..idx_merge]
-            out <- merge(out, tmp, by = "rowid", sort = FALSE)
+            cols <- c("rowid", by_merge, grep("^contrast", colnames(original), value = TRUE))
+            i <- c("rowid", grep("^contrast", colnames(original), value = TRUE))
+            tmp <- original[, ..cols]
+            out <- merge(out, tmp, by = i, sort = FALSE)
         }
     }
 

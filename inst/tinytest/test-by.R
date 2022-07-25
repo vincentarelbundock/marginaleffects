@@ -35,9 +35,6 @@ expect_equivalent(x$std.error, y$std.error)
 # input sanity check
 expect_error(marginaleffects(mod, slope = "bad"), pattern = "eyexavg")
 
-# by argument changes to avg automatically
-cmp <- tidy(mod, by = "am")
-
 # by is deprecated in `summary()` and `tidy()`
 expect_error(summary(comparisons(mod), by = "am"), pattern = "instead")
 expect_error(tidy(comparisons(mod), by = "am"), pattern = "instead")
@@ -63,11 +60,13 @@ expect_error(comparisons(mod, by = "am"), pattern = "supported")
 dat <- mtcars
 mod <- glm(gear ~ cyl + am, family = poisson, data = dat)
 mfx <- marginaleffects(
-mod,
-newdata = datagrid(cyl = dat$cyl,
-                   am = dat$am,
-                   grid.type = "counterfactual"))
-tid <- tidy(mfx, by = c("cyl", "am"))
+    mod,
+    by = c("cyl", "am"),
+    newdata = datagrid(
+        cyl = dat$cyl,
+        am = dat$am,
+        grid.type = "counterfactual"))
+tid <- tidy(mfx)
 tid <- tid[order(tid$term, tid$cyl, tid$am),]
 mar <- margins(mod, at = list(cyl = unique(dat$cyl), am = unique(dat$am)))
 mar <- summary(mar)
@@ -81,11 +80,13 @@ dat$cyl <- factor(dat$cyl)
 dat$am <- as.logical(dat$am)
 mod <- glm(gear ~ cyl + am, family = poisson, data = dat)
 mfx <- comparisons(
-mod,
-newdata = datagrid(cyl = dat$cyl,
-                   am = dat$am,
-                   grid.type = "counterfactual"))
-mfx <- tidy(mfx, by = c("cyl", "am"))
+    mod,
+    by = c("cyl", "am"),
+    newdata = datagrid(
+        cyl = dat$cyl,
+        am = dat$am,
+        grid.type = "counterfactual"))
+mfx <- tidy(mfx)
 mfx <- mfx[order(mfx$term, mfx$contrast, mfx$cyl, mfx$am),]
 mar <- margins(mod, at = list(cyl = unique(dat$cyl), am = unique(dat$am)))
 mar <- summary(mar)
@@ -95,7 +96,5 @@ expect_equivalent(mfx$std.error, mar$SE, tolerance = tol_se)
 
 # input checks
 mod <- lm(mpg ~ hp, mtcars)
-mfx <- marginaleffects(mod)
-com <- comparisons(mod)
-expect_error(tidy(mfx, by = "am"), pattern = "by` argument")
-expect_error(tidy(com, by = "am"), pattern = "by` argument")
+expect_error(comparisons(mod, by = "am", pattern = "newdata"))
+expect_error(marginaleffects(mod, by = "am"), pattern = "newdata")
