@@ -196,6 +196,7 @@ marginaleffects <- function(model,
                             conf_level = 0.95,
                             type = "response",
                             slope = "dydx",
+                            by = NULL,
                             wts = NULL,
                             hypothesis = NULL,
                             eps = NULL,
@@ -236,7 +237,8 @@ marginaleffects <- function(model,
     checkmate::assert_character(variables, null.ok = TRUE)
 
     # slope
-    checkmate::assert_choice(slope, choices = c("dydx", "eyex", "eydx", "dyex"))
+    valid <- c("dydx", "eyex", "eydx", "dyex", "dydxavg", "eyexavg", "eydxavg", "dyexavg")
+    checkmate::assert_choice(slope, choices = valid)
 
     # sanity checks and pre-processing
     model <- sanitize_model(model = model, newdata = newdata, wts = wts, calling_function = "marginaleffects", ...)
@@ -252,6 +254,7 @@ marginaleffects <- function(model,
         type = type,
         wts = wts,
         hypothesis = hypothesis,
+        by = by,
         eps = eps,
         contrast_factor = "reference",
         contrast_numeric = 1,

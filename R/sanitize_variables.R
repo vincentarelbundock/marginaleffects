@@ -4,6 +4,7 @@ sanitize_variables <- function(variables,
                                model,
                                newdata,
                                transform_pre = NULL,
+                               by = NULL,
                                interaction = FALSE,
                                contrast_numeric = 1,
                                contrast_factor = "reference") {
@@ -131,6 +132,10 @@ sanitize_variables <- function(variables,
         fun_numeric <- fun_categorical <- transform_pre
         lab_numeric <- lab_categorical <- "custom"
     } else if (is.character(transform_pre)) {
+        # switch to the avg version when there is a `by` function
+        if (!is.null(by) && !isTRUE(grepl("avg$", transform_pre))) {
+            transform_pre <- paste0(transform_pre, "avg")
+        }
         fun_numeric <- fun_categorical <- transform_pre_function_dict[[transform_pre]]
         lab_numeric <- lab_categorical <- transform_pre_label_dict[[transform_pre]]
         if (isTRUE(transform_pre %in% c("dydx", "eyex", "eydx", "dyex"))) {

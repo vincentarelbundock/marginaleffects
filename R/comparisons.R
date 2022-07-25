@@ -72,6 +72,7 @@
 #' * function: accept two equal-length numeric vectors of adjusted predictions (`hi` and `lo`) and returns a vector of contrasts of the same length, or a unique numeric value.
 #'   - See the Transformations section below for examples of valid functions.
 #' @param transform_post (experimental) A function applied to unit-level estimates and confidence intervals just before the function returns results.
+#' @param by Character vector of variable names over which to compute group-wise estimates.
 #' @param interaction TRUE, FALSE, or NULL
 #' * `FALSE`: Contrasts represent the change in adjusted predictions when one predictor changes and all other variables are held constant.
 #' * `TRUE`: Contrasts represent the changes in adjusted predictions when the predictors specified in the `variables` argument are manipulated simultaneously.
@@ -173,6 +174,7 @@ comparisons <- function(model,
                         transform_pre = "difference",
                         transform_post = NULL,
                         interaction = NULL,
+                        by = NULL,
                         wts = NULL,
                         hypothesis = NULL,
                         eps = NULL,
@@ -230,6 +232,8 @@ comparisons <- function(model,
         interaction <- FALSE
     }
 
+
+
     conf_level <- sanitize_conf_level(conf_level, ...)
     sanity_transform_pre(transform_pre)
     checkmate::assert_numeric(eps, len = 1, lower = 1e-10, null.ok = TRUE)
@@ -256,16 +260,29 @@ comparisons <- function(model,
     # before sanitize_variables
     newdata <- sanitize_newdata(model = model, newdata = newdata)
 
+    # sanitize by after newdata
+    if (!is.null(by)) {
+        flag <- isTRUE(checkmate::check_character(by)) &&
+                isTRUE(checkmate::check_true(all(by %in% colnames(newdata))))
+        if (!isTRUE(flag)) {
+            msg <- format_msg(
+            "The `by` argument must be a character vector and every element of the vector
+            must correspond to one of the predictors in the model or to one of the columns 
+            of the dataset supplied to the `newdata` argument.")
+            stop(msg, call. = FALSE)
+        }
+    }
+
     # after sanitize_newdata
     variables_list <- sanitize_variables(
         model = model,
         newdata = newdata,
         variables = variables,
         interaction = interaction,
+        by = by,
         contrast_numeric = contrast_numeric,
         contrast_factor = contrast_factor,
         transform_pre = transform_pre)
-
 
     hypothesis <- sanitize_hypothesis(hypothesis, ...)
 
@@ -315,6 +332,7 @@ comparisons <- function(model,
                  original = contrast_data$original,
                  hi = contrast_data$hi,
                  lo = contrast_data$lo,
+                 by = by,
                  marginalmeans = marginalmeans,
                  interaction = interaction,
                  hypothesis = hypothesis)
@@ -342,6 +360,7 @@ comparisons <- function(model,
                      hi = contrast_data$hi,
                      lo = contrast_data$lo,
                      original = contrast_data$original,
+                     by = by,
                      interaction = interaction,
                      eps = 1e-4)
         args <- c(args, dots)

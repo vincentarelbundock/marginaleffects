@@ -39,13 +39,14 @@ generics::tidy
 #' tidy(mfx, by = "gear")
 tidy.marginaleffects <- function(x,
                                  conf_level = 0.95,
-                                 by = NULL,
                                  ...) {
+
+
+
     x_dt <- copy(x)
     setnames(x_dt, old = "dydx", new = "comparison")
     out <- tidy.comparisons(x_dt,
                             conf_level = conf_level,
-                            by = by,
                             ...)
     return(out)
 }
@@ -189,7 +190,6 @@ tidy.predictions <- function(x,
 #' unit-level contrasts computed by the `predictions` function.
 #'
 #' @param x An object produced by the `comparisons` function.
-#' @param by Character vector of variable names over which to compute group-averaged contrasts.
 #' @param transform_avg (experimental) A function applied to the estimates and confidence intervals *after* the unit-level estimates have been averaged.
 #' @inheritParams comparisons
 #' @inheritParams tidy.marginaleffects
@@ -215,13 +215,18 @@ tidy.predictions <- function(x,
 #' tidy(contr)
 tidy.comparisons <- function(x,
                              conf_level = 0.95,
-                             by = NULL,
                              transform_avg = NULL,
                              ...) {
 
+    if ("by" %in% names(list(...))) {
+        msg <- 
+        "The `by` argument is deprecated in this function. You can use `by` in the `comparisons()`, 
+        `marginaleffects()`, and `predictions()` functions instead."
+        stop(msg, call. = FALSE)
+    }
+
     dots <- list(...)
     conf_level <- sanitize_conf_level(conf_level, ...)
-    checkmate::assert_character(by, null.ok = TRUE)
     checkmate::assert_function(transform_avg, null.ok = TRUE)
 
     transform_avg <- deprecation_arg(
@@ -237,17 +242,6 @@ tidy.comparisons <- function(x,
     # custom summary function
     FUN_label <- "mean"
 
-    # group averages
-    if (!is.null(by)) {
-        flag <- isTRUE(checkmate::check_character(by)) &&
-                isTRUE(checkmate::check_true(all(by %in% colnames(x))))
-        if (!isTRUE(flag)) {
-            msg <- format_msg(
-            "The `by` argument must be a character vector and every element of the vector
-            must correspond to a column name in the `x` marginal effects object.")
-            stop(msg, call. = FALSE)
-        }
-    }
 
     x_dt <- data.table(x)
 
@@ -262,7 +256,7 @@ tidy.comparisons <- function(x,
         J <- attr(x, "jacobian")
         V <- attr(x, "vcov")
 
-        idx_by <- c("type", "group", "term", "contrast", by,
+        idx_by <- c("type", "group", "term", "contrast", 
                     grep("^contrast_\\w+", colnames(x_dt), value = TRUE))
         idx_by <- intersect(idx_by, colnames(x_dt))
         idx_na <- is.na(x_dt$comparison)
@@ -377,7 +371,7 @@ tidy.comparisons <- function(x,
     }
 
     # sort and subset columns
-    cols <- c("type", "group", "term", "contrast", by,
+    cols <- c("type", "group", "term", "contrast",
               grep("^contrast_\\w+", colnames(x_dt), value = TRUE),
               "estimate", "std.error", "statistic", "p.value", "conf.low", "conf.high")
     cols <- intersect(cols, colnames(out))

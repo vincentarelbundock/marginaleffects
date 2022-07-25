@@ -6,6 +6,7 @@ get_contrasts <- function(model,
                           lo,
                           hi,
                           marginalmeans,
+                          by = NULL,
                           hypothesis = NULL,
                           interaction = FALSE,
                           ...) {
@@ -32,22 +33,17 @@ get_contrasts <- function(model,
         newdata = hi,
         ...))
 
+    pred_or <- myTryCatch(get_predict(
+        model,
+        type = type,
+        vcov = FALSE,
+        newdata = original,
+        ...))
+
     if (inherits(pred_hi$value, "data.frame")) pred_hi <- pred_hi$value
     if (inherits(pred_lo$value, "data.frame")) pred_lo <- pred_lo$value
+    if (inherits(pred_or$value, "data.frame")) pred_or <- pred_or$value
 
-    # predicted values on the original data
-    # needed for elasticities but don't waste time if we not needed
-    if (any(sapply(variables, function(x) x$label %in% c("eyex", "eydx", "dyex")))) {
-        pred_or <- myTryCatch(get_predict(
-            model,
-            type = type,
-            vcov = FALSE,
-            newdata = original,
-            ...))
-        if (inherits(pred_or$value, "data.frame")) pred_or <- pred_or$value
-    } else {
-        pred_or <- pred_hi
-    }
 
     if (!inherits(pred_hi, "data.frame") || !inherits(pred_lo, "data.frame")) {
         msg <- format_msg(paste(
@@ -105,7 +101,8 @@ get_contrasts <- function(model,
     # elasticity requires the original (properly aligned) predictor values
     # this will discard factor variables which are duplicated, so in principle
     # it should be the "correct" size
-    elasticities <- Filter(function(x) x$label %in% c("eyex", "eydx", "dyex"), variables)
+    elasticities <- c("eyex", "eydx", "dyex", "eyexavg", "eydxavg", "dyexavg")
+    elasticities <- Filter(function(x) x$label %in% elasticities, variables)
     elasticities <- lapply(elasticities, function(x) x$name)
     if (length(elasticities) > 0) {
         for (v in names(elasticities)) {
@@ -152,16 +149,24 @@ get_contrasts <- function(model,
     }
 
     idx <- grep("^contrast|^group$|^term$|^type$|^transform_pre_idx$", colnames(out), value = TRUE)
+    idx <- c(idx, by)
     out[, predicted_lo := pred_lo[["predicted"]]]
     out[, predicted_hi := pred_hi[["predicted"]]]
-
-    if (!is.null(pred_or[["predicted"]])) {
-        out[, predicted_or := pred_or[["predicted"]]]
-    }
+    out[, predicted_or := pred_or[["predicted"]]]
 
     # we feed this column to safefun(), even if it is useless for categoricals
     if (!"marginaleffects_eps" %in% colnames(out)) {
         out[, "marginaleffects_eps" := NA]
+    }
+
+    # make sure the `by` variables are included
+    if (!is.null(by)) {
+        by_merge <- setdiff(by, colnames(out))
+        if (length(by_merge) > 0) {
+            idx_merge <- c("rowid", by_merge)
+            tmp <- original[, ..idx_merge]
+            out <- merge(out, tmp, by = "rowid", sort = FALSE)
+        }
     }
 
     # do not feed unknown arguments to a `transform_pre`

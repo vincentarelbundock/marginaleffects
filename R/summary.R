@@ -11,15 +11,11 @@
 #'
 #' # average marginal effects
 #' summary(mfx)
-#'
-#' # average marginal effects by group
-#' summary(mfx, by = "gear")
 #' @export
 summary.marginaleffects <- function(object,
                                     conf_level = 0.95,
-                                    by = NULL,
                                     ...) {
-    out <- tidy(object, conf_level = conf_level, by = by, ...)
+    out <- tidy(object, conf_level = conf_level, ...)
     class(out) <- c("marginaleffects.summary", class(out))
     attr(out, "type") <- attr(object, "type")
     attr(out, "model_type") <- attr(object, "model_type")
@@ -312,18 +308,14 @@ print.predictions.summary <- function(x,
 #'
 #' # average marginal effects
 #' summary(con)
-#'
-#' # average marginal effects by group
-#' summary(con, by = "gear")
 #' @export
 
 #' @export
 summary.comparisons <- function(object,
                                 conf_level = 0.95,
-                                by = NULL,
                                 transform_avg = NULL,
                                 ...) {
-    out <- tidy(object, conf_level = conf_level, by = by, transform_avg = transform_avg, ...)
+    out <- tidy(object, conf_level = conf_level, transform_avg = transform_avg, ...)
     class(out) <- c("comparisons.summary", class(out))
     attr(out, "type") <- attr(object, "type")
     attr(out, "model_type") <- attr(object, "model_type")

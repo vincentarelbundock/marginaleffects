@@ -4,6 +4,48 @@ requiet("margins")
 tol <- 1e-4
 tol_se <- 1e-3
 
+mod <- glm(gear ~ cyl + am, family = poisson, data = mtcars)
+
+# use transform_pre to collapse into averages
+x <- tidy(comparisons(mod, transform_pre = "dydx"))
+y <- comparisons(mod, transform_pre = "dydxavg")
+expect_equivalent(x$estimate, y$comparison)
+expect_equivalent(x$std.error, y$std.error)
+
+x <- tidy(comparisons(mod, transform_pre = "eyex"))
+y <- comparisons(mod, transform_pre = "eyexavg")
+expect_equivalent(x$estimate, y$comparison)
+expect_equivalent(x$std.error, y$std.error)
+
+x <- tidy(comparisons(mod, transform_pre = "eydx"))
+y <- comparisons(mod, transform_pre = "eydxavg")
+expect_equivalent(x$estimate, y$comparison)
+expect_equivalent(x$std.error, y$std.error)
+
+x <- tidy(comparisons(mod, transform_pre = "dyex"))
+y <- comparisons(mod, transform_pre = "dyexavg")
+expect_equivalent(x$estimate, y$comparison)
+expect_equivalent(x$std.error, y$std.error)
+
+x <- tidy(marginaleffects(mod, slope = "dyex"))
+y <- marginaleffects(mod, slope = "dyexavg")
+expect_equivalent(x$estimate, y$dydx)
+expect_equivalent(x$std.error, y$std.error)
+
+# input sanity check
+expect_error(marginaleffects(mod, slope = "bad"), pattern = "eyexavg")
+
+# by argument changes to avg automatically
+cmp <- comparisons(mod, by = "am")
+
+
+# by is deprecated in `summary()` and `tidy()`
+expect_error(summary(comparisons(mod), by = "am"), pattern = "instead")
+expect_error(tidy(comparisons(mod), by = "am"), pattern = "instead")
+
+
+
+
 # marginaleffects poisson vs. margins
 dat <- mtcars
 mod <- glm(gear ~ cyl + am, family = poisson, data = dat)
