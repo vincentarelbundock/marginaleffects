@@ -214,8 +214,7 @@ get_contrasts <- function(model,
     } else {
         # tmp needed to avoid recycling when safefun() returns length 1 value
         # assign back into `out` to preserve `rowid` when possible
-        out[, rowidunique := 1:.N]
-        tmp <- out[, safefun(
+        out[, "comparison" := safefun(
             hi = predicted_hi,
             lo = predicted_lo,
             or = predicted_or,
@@ -223,17 +222,8 @@ get_contrasts <- function(model,
             term = term,
             interaction = interaction,
             eps = marginaleffects_eps,
-            rowidunique = rowidunique),
+            rowidunique = rowidunique)$comparison,
         by = idx]
-        if (nrow(tmp) != nrow(out)) {
-            out <- tmp
-        } else {
-            idx <- c("rowidunique", setdiff(colnames(tmp), colnames(out)))
-            out <- merge(out, tmp[, ..idx], by = "rowidunique")
-        }
-        if ("rowidunique" %in% colnames(out)) {
-            out[, "rowidunique" := NULL]
-        }
     }
 
     out <- get_hypothesis(out, hypothesis, "comparison")
