@@ -19,8 +19,6 @@ model, depending on the range of supported arguments by each modeling
 package. See the "Model-Specific Arguments" section of the
 \code{?marginaleffects} documentation for a non-exhaustive list of available
 arguments.}
-
-\item{by}{Character vector of variable names over which to compute group-averaged contrasts.}
 }
 \value{
 A "tidy" \code{data.frame} of summary statistics which conforms to the

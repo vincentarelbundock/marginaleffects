@@ -7,7 +7,6 @@ generics::tidy
 #' Tidy a `marginaleffects` object
 #'
 #' @param x An object produced by the `marginaleffects` function.
-#' @param by Character vector of variable names over which to compute group-averaged marginal effects.
 #' @inheritParams marginaleffects
 #' @return A "tidy" `data.frame` of summary statistics which conforms to the
 #' `broom` package specification.
@@ -34,9 +33,6 @@ generics::tidy
 #'
 #' # average marginal effects
 #' tidy(mfx)
-#'
-#' # average marginal effects by group
-#' tidy(mfx, by = "gear")
 tidy.marginaleffects <- function(x,
                                  conf_level = 0.95,
                                  ...) {
@@ -111,7 +107,6 @@ tidy.marginalmeans <- function(x,
 #' unit-level adjusted predictions computed by the `predictions` function.
 #'
 #' @param x An object produced by the `predictions` function.
-#' @param by Character vector of variable names over which to compute group-averaged contrasts.
 #' @inheritParams predictions
 #' @return A "tidy" `data.frame` of summary statistics which conforms to the
 #' `broom` package specification.
