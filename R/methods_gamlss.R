@@ -81,7 +81,8 @@ set_coef.gamlss <- function(model, coefs, ...){
 
 
 predict.gamlss <- function (object, what = c("mu", "sigma", "nu", "tau"), parameter = NULL, 
-          newdata = NULL, type = c("link", "response", "terms"), terms = NULL, 
+          newdata = NULL, type = c("link", "response", "terms"), 
+          refit = TRUE, terms = NULL, 
           se.fit = FALSE, data = NULL, ...) 
 {
   concat <- function(..., names = NULL) {
@@ -148,12 +149,16 @@ predict.gamlss <- function (object, what = c("mu", "sigma", "nu", "tau"), parame
   }
   
   # Modified from the original prediction function.
-  # refit <- lm.wfit(X[onlydata, , drop = FALSE], y, w)
-  # if (abs(sum(resid(refit))) > 0.1 || abs(sum(coef(object, 
-  #                                                  what = what) - coef(refit), na.rm = TRUE)) > 1e-05) 
-  #   warning(paste("There is a discrepancy  between the original and the re-fit", 
-  #                 " \n used to achieve 'safe' predictions \n ", sep = ""))
-  coef <- coef(object, what = what)   # coef <- refit$coef
+  if (refit){
+    refit <- lm.wfit(X[onlydata, , drop = FALSE], y, w)
+    if (abs(sum(resid(refit))) > 0.1 || abs(sum(coef(object,
+                                                     what = what) - coef(refit), na.rm = TRUE)) > 1e-05)
+      warning(paste("There is a discrepancy  between the original and the re-fit",
+                    " \n used to achieve 'safe' predictions \n ", sep = ""))
+    coef <- refit$coef
+  } else {
+    coef <- coef(object, what = what) 
+  } 
   
   nX <- dimnames(X)
   rownames <- nX[[1]][!onlydata]

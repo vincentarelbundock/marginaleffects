@@ -81,9 +81,10 @@ get_se_delta <- function(model,
     # input: named vector of coefficients
     # output: gradient
     inner <- function(x) {
-        model_tmp <- set_coef(model, stats::setNames(x, names(coefs)), ...)
+        model_tmp <- set_coef(model, stats::setNames(x, names(coefs)) ,...)
         # do not pass NULL arguments. Important for `deltam` to allow users to supply FUN without ...
-        args <- c(list(model = model_tmp, hypothesis = hypothesis), list(...))
+        args <- c(list(model = model_tmp, hypothesis = hypothesis), list(...),
+                  refit = FALSE)
         if (!is.null(eps)) args[["eps"]] <- eps
         if (!is.null(type)) args[["type"]] <- type
         if (!is.null(newdata)) args[["newdata"]] <- newdata
