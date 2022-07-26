@@ -26,7 +26,12 @@ get_contrast_data_numeric <- function(model,
         "dY/dX" = "dydx",
         "eY/eX" = "eyex",
         "eY/dX" = "eydx",
-        "dY/eX" = "dyex")
+        "dY/eX" = "dyex",
+        "mean(dY/dX)" = "dydxavg",
+        "mean(eY/eX)" = "eyexavg",
+        "mean(eY/dX)" = "eydxavg",
+        "mean(dY/eX)" = "dyexavg")
+
     if (isTRUE(variable$label %in% slopes)) {
         low <- x
         high <- x + eps

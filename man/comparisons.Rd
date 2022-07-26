@@ -14,6 +14,7 @@ comparisons(
   transform_pre = "difference",
   transform_post = NULL,
   interaction = NULL,
+  by = NULL,
   wts = NULL,
   hypothesis = NULL,
   eps = NULL,
@@ -121,6 +122,8 @@ acceptable values is returned in an error message.}
 \item \code{TRUE}: Contrasts represent the changes in adjusted predictions when the predictors specified in the \code{variables} argument are manipulated simultaneously.
 \item \code{NULL} (default): Behaves like \code{TRUE} when the \code{variables} argument is specified and the model formula includes interactions. Behaves like \code{FALSE} otherwise.
 }}
+
+\item{by}{Character vector of variable names over which to compute group-wise estimates.}
 
 \item{wts}{string or numeric: weights to use when computing average
 contrasts or marginaleffects. These weights only affect the averaging in

@@ -145,6 +145,7 @@ predictions <- function(model,
                         vcov = TRUE,
                         conf_level = 0.95,
                         type = "response",
+                        by = NULL,
                         wts = NULL,
                         transform_post = NULL,
                         hypothesis = NULL,
@@ -242,7 +243,12 @@ predictions <- function(model,
         }
     }
 
-    vcov_tmp <- vcov
+    if (is.null(by)) {
+        vcov_tmp <- vcov
+    } else {
+        vcov_tmp <- FALSE
+    }
+
     J <- NULL
 
     tmp <- myTryCatch(get_predictions(
@@ -252,6 +258,7 @@ predictions <- function(model,
         conf_level = conf_level,
         type = type,
         hypothesis = hypothesis,
+        by = by,
         ...))
 
     if (isTRUE(grepl("type.*models", tmp[["error"]]))) {
@@ -337,7 +344,7 @@ predictions <- function(model,
         if (!"std.error" %in% colnames(tmp) && is.null(draws)) {
             if (isTRUE(checkmate::check_matrix(V))) {
                 # vcov = FALSE to speed things up
-                fun <- function(...) get_predictions(vcov = FALSE, ...)$predicted
+                fun <- function(...) get_predictions(..., vcov = FALSE)$predicted
                 se <- get_se_delta(
                     model,
                     newdata = newdata,
@@ -347,6 +354,8 @@ predictions <- function(model,
                     J = J,
                     eps = 1e-4, # avoid pushing through ...
                     hypothesis = hypothesis,
+                    by = by,
+                    conf_level = conf_level,
                     ...)
                 if (is.numeric(se) && length(se) == nrow(tmp)) {
                     tmp[["std.error"]] <- se
@@ -400,8 +409,9 @@ predictions <- function(model,
 
     # clean columns
     stubcols <- c( 
-        "rowid", "rowidcf", "type", "term", "group",
-        "hypothesis", "predicted", "std.error", "statistic", "p.value", "conf.low",
+        "rowid", "rowidcf", "type", "term", "group", "hypothesis",
+        by,
+        "predicted", "std.error", "statistic", "p.value", "conf.low",
         "conf.high", "marginaleffects_wts",
         sort(grep("^predicted", colnames(newdata), value = TRUE)))
     cols <- intersect(stubcols, colnames(out))
@@ -421,6 +431,7 @@ predictions <- function(model,
     attr(out, "posterior_draws") <- draws
     attr(out, "newdata") <- newdata
     attr(out, "weights") <- marginaleffects_wts_internal
+    attr(out, "by") <- by
 
     if ("group" %in% names(out) && all(out$group == "main_marginaleffect")) {
         out$group <- NULL
@@ -431,10 +442,46 @@ predictions <- function(model,
 
  
 # wrapper used only for standard_error_delta
-get_predictions <- function(..., hypothesis = NULL) {
-    out <- get_predict(...)
+get_predictions <- function(model,
+                            newdata,
+                            vcov,
+                            conf_level,
+                            type,
+                            by = NULL,
+                            hypothesis = NULL,
+                            ...) {
+
+
+    out <- get_predict(
+        model,
+        newdata = newdata,
+        vcov = vcov,
+        conf_level = conf_level,
+        type = type,
+        ...)
+    setDT(out)
+
+    if (!is.null(by)) {
+        tmp <- intersect(c("rowid", "marginaleffects_wts_internal", by), colnames(newdata))
+        tmp <- data.frame(newdata)[, tmp]
+        out <- merge(out, tmp, by = "rowid")
+        if ("marginaleffects_wts_internal" %in% colnames(newdata)) {
+            out <- out[,
+            .(predicted = stats::weighted.mean(
+                predicted,
+                marginaleffects_wts_internal,
+                na.rm = TRUE)),
+            by = by]
+        } else {
+            out <- out[,
+            .(predicted = mean(predicted)),
+            by = by]
+        }
+    }
+
     if (!is.null(hypothesis)) {
         out <- get_hypothesis(out, hypothesis, column = "predicted")
     }
+
     return(out)
 }

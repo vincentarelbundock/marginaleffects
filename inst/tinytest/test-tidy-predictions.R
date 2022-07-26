@@ -14,8 +14,8 @@ expect_equivalent(tid$estimate, lee$Prediction)
 expect_equivalent(tid$std.error, lee$SE)
 
 # lm: Group-Average Prediction (no validity)
-pre <- predictions(mod)
-tid <- tidy(pre, by = "cyl")
+pre <- predictions(mod, by = "cyl")
+tid <- tidy(pre)
 expect_equal(nrow(tid), 3)
 
 # glm response scale
