@@ -12,6 +12,7 @@ meffects(
   conf_level = 0.95,
   type = "response",
   slope = "dydx",
+  by = NULL,
   wts = NULL,
   hypothesis = NULL,
   eps = NULL,

@@ -11,6 +11,7 @@ predictions(
   vcov = TRUE,
   conf_level = 0.95,
   type = "response",
+  by = NULL,
   wts = NULL,
   transform_post = NULL,
   hypothesis = NULL,

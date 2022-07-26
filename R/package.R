@@ -4,11 +4,11 @@
 # solutions"
 #' @import data.table
 utils::globalVariables( c('.', 'term', 'part', 'estimate', 'conf.high',
-    'conf.low', 'value', 'p.value', 'std.error', 'statistic', 'stars_note',
-    'logLik', 'formatBicLL', 'section', 'position', 'where', 'ticks',
-    'statistic1', 'model', 'tmp_grp', 'condition_variable', 'conf_int',
-    'conf_level', 'group', 'contrast', 'm', 'dydx', "patterns", 'rowid',
-    'predicted', 'gn',  "predicted_lo", "predicted_hi", 'comparison', "..idx",
-    "marginaleffects_eps", "transform_pre_idx", "marginaleffects_function",
-    "..idx1", "..idx2", "..idx_by", "..idx_lo", "..idx_hi", "idx_or", "..tmp", "draw",
-    "..cols", "..w", "eps", "predicted_or", "rowidunique"))
+'conf.low', 'value', 'p.value', 'std.error', 'statistic', 'stars_note',
+'logLik', 'formatBicLL', 'section', 'position', 'where', 'ticks', 'statistic1',
+'model', 'tmp_grp', 'condition_variable', 'conf_int', 'conf_level', 'group',
+'contrast', 'm', 'dydx', "patterns", 'rowid', 'predicted', 'gn',
+"predicted_lo", "predicted_hi", 'comparison', "..idx", "marginaleffects_eps",
+"transform_pre_idx", "marginaleffects_wts_internal", "marginaleffects_function",
+"..idx1", "..idx2", "..idx_by", "..idx_lo", "..idx_hi", "..idx_or", "..tmp",
+"draw", "..cols", "..w", "eps", "predicted_or", "rowidunique"))
