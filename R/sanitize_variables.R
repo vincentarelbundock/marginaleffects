@@ -14,6 +14,8 @@ sanitize_variables <- function(variables,
         checkmate::check_list(variables, names = "unique"),
         combine = "or")
 
+    modeldata <- attr(newdata, "newdata_modeldata")
+
     # rename to avoid overwriting in case we need info later
     predictors <- variables
     others <- NULL
@@ -55,7 +57,12 @@ sanitize_variables <- function(variables,
         predictors_new <- list()
         for (v in predictors) {
             if (isTRUE(variable_class[[v]] == "numeric")) {
-                predictors_new[[v]] <- contrast_numeric
+                # binary variables: we take the difference by default
+                if (!is.null(modeldata[[v]]) && all(modeldata[[v]] %in% 0:1)) {
+                    predictors_new[[v]] <- 0:1
+                } else {
+                    predictors_new[[v]] <- contrast_numeric
+                }
             } else {
                 predictors_new[[v]] <- contrast_factor
             }
