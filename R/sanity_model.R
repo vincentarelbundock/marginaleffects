@@ -41,6 +41,7 @@ sanity_model_supported_class <- function(model) {
         "fixest",
         c("Gam", "glm", "lm"), # package: gam
         c("gam", "glm", "lm"), # package: mgcv
+        c("gamlss", "gam", "glm", "lm"), # package: gamlss
         c("geeglm", "gee", "glm"),
         "glm",
         "gls",

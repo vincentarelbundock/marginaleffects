@@ -1,6 +1,6 @@
 #' @rdname set_coef
 #' @export
-set_coef.scam <- function(model, coefs) {
+set_coef.scam <- function(model, coefs, ...) {
     # in basic model classes coefficients are named vector
     model[["coefficients.t"]][names(coefs)] <- coefs
     model

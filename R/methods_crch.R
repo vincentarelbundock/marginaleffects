@@ -1,7 +1,7 @@
 #' @include set_coef.R
 #' @rdname set_coef
 #' @export
-set_coef.crch <- function(model, coefs) {
+set_coef.crch <- function(model, coefs, ...) {
     # in crch::crch, coefficients are held in:
     # model$coefficients$location
     # model$coefficients$scale
@@ -37,7 +37,7 @@ get_predict.crch <- function(model,
 #' @include set_coef.R
 #' @rdname set_coef
 #' @export
-set_coef.hlxr <- function(model, coefs) {
+set_coef.hlxr <- function(model, coefs, ...) {
     # in crch::crch, coefficients are held in:
     # model$coefficients$location
     # model$coefficients$scale

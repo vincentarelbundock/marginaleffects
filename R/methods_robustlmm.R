@@ -1,6 +1,6 @@
 #' @rdname set_coef
 #' @export
-set_coef.rlmerMod <- function(model, coefs) {
+set_coef.rlmerMod <- function(model, coefs, ...) {
     model@beta <- coefs
     model
 }

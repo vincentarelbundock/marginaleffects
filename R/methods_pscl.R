@@ -1,7 +1,7 @@
 #' @include set_coef.R
 #' @rdname set_coef
 #' @export
-set_coef.hurdle <- function(model, coefs) {
+set_coef.hurdle <- function(model, coefs, ...) {
     # in pscl::hurdle, coefficients are held in a named list:
     # model$coefficients. Each element of the list is a vector which
     # corresponds to one equation (e.g., "zero" or "response"). When calling
