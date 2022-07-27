@@ -101,18 +101,49 @@ datagrid <- function(
             model = model,
             newdata = newdata)
         args <- c(dots, args)
-        out <- do.call("counterfactual", args)
+        out <- do.call("counterfactual_internal", args)
     }
     return(out)
 }
 
 
-#' Superseded by datagrid(..., grid_type = "counterfactual")
+#' A "counterfactual" version of the `datagrid()` function.
+#'
+#' For each combination of the variable values specified, this function
+#' duplicates the entire data frame supplied to `newdata`, or the entire
+#' dataset used to fit `model`. This is a convenience shortcut to call the
+#' `datagrid()` function with argument `grid_type="counterfactual"`.
 #'
 #' @inheritParams datagrid
-#' @keywords internal
-#' @export
-counterfactual <- function(..., model = NULL, newdata = NULL) {
+#' @examples
+#' # Fit a model with 32 observations from the `mtcars` dataset.
+#' nrow(mtcars)
+#' 
+#' mod <- lm(mpg ~ hp + am, data = mtcars)
+#' 
+#' # We specify two values for the `am` variable and obtain a counterfactual
+#' # dataset with 64 observations (32 x 2).
+#' dat <- datagridcf(model = mod, am = 0:1)
+#' head(dat)
+#' nrow(dat)
+#' 
+#' # We specify 2 values for the `am` variable and 3 values for the `hp` variable
+#' # and obtained a dataset with 192 observations (2x3x32), corresponding to the
+#' # full original data, with each possible combination of `hp` and `am`.
+#' dat <- datagridcf(am = 0:1, hp = c(100, 110, 120), newdata = mtcars)
+#' head(dat)
+#' dim(dat)
+#'
+#'
+datagridcf <- function(
+    ...,
+    model = NULL,
+    newdata = NULL) {
+    datagrid(..., model = model, newdata = newdata, grid_type = "counterfactual")
+}
+
+
+counterfactual_internal <- function(..., model = NULL, newdata = NULL) {
 
     tmp <- prep_datagrid(..., model = model, newdata = newdata)
     at <- tmp$at

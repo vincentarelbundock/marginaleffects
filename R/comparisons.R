@@ -198,7 +198,7 @@ comparisons <- function(model,
         # insert `model` should probably not be nested too deeply in the call
         # stack since we eval.parent() (not sure about this)
         scall <- substitute(newdata)
-        if (is.call(scall) && as.character(scall)[1] %in% c("datagrid", "typical", "counterfactual")) {
+        if (is.call(scall) && as.character(scall)[1] %in% c("datagrid", "datagridcf", "typical", "counterfactual")) {
             lcall <- as.list(scall)
             if (!any(c("model", "data") %in% names(lcall))) {
                 lcall <- c(lcall, list("model" = model))

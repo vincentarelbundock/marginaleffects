@@ -150,7 +150,8 @@ comparisons(mod,
     by = "resp",
     variables = list("btype" = "pairwise"),
     newdata = nd,
-    type = "link") |> summary()
+    type = "link") |>
+    summary()
 ```
 
 These results are identical to those produced by `emmeans` (except for $t$ vs. $z$).
@@ -237,8 +238,11 @@ mod <- lm(mpg ~ cyl * hp + wt, data = mtcars)
 mar <- margins(mod, at = list(cyl = c(4, 6, 8)))
 summary(mar)
 
-mfx <- marginaleffects(mod, newdata = datagrid(cyl = c(4, 6, 8), grid_type = "counterfactual"))
-summary(mfx, by = "cyl")
+mfx <- marginaleffects(
+    mod,
+    by = "cyl",
+    newdata = datagridcf(cyl = c(4, 6, 8))
+summary(mfx)
 ```
 
 ## Adjusted Predictions
@@ -344,7 +348,7 @@ hp           |
 
 ### marginaleffects
 
-You can estimate average counterfactual marginal effects with `marginaleffects()` by, first, setting the `grid_type` argument of `datagrid()` to `"counterfactual"` and, second, by telling the `summary` function that you want to average within groups:
+You can estimate average counterfactual marginal effects with `marginaleffects()` by using the `datagridcf()` to create a counterfactual dataset in which the full original dataset is replicated for each potential value of the `cyl` variable. Then, we tell the `by` argument to average within groups:
 
 ```{r}
 mod <- lm(mpg ~ as.factor(cyl) * hp + wt, data = mtcars)
@@ -352,10 +356,9 @@ mod <- lm(mpg ~ as.factor(cyl) * hp + wt, data = mtcars)
 mfx <- marginaleffects(
     mod,
     variables = "hp",
-    newdata = datagrid(cyl = c(4, 6, 8),
-                       grid_type = "counterfactual"))
-
-summary(mfx, by = "cyl")
+    by = "cyl",
+    newdata = datagridcf(cyl = c(4, 6, 8)))
+summary(mfx)
 ```
 
 This is equivalent to taking the group-wise mean of observation-level marginal effects:
@@ -427,9 +430,9 @@ mod <- lm(mpg ~ as.factor(cyl) * hp + wt, data = mtcars)
 
 pred <- predictions(
     mod,
-    newdata = datagrid(cyl = c(4, 6, 8),
-                       grid_type = "counterfactual"))
-summary(pred, by = "cyl")
+    by = "cyl",
+    newdata = datagridcf(cyl = c(4, 6, 8)))
+summary(pred)
 
 pred %>%
     group_by(cyl) %>%

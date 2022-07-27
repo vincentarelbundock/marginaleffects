@@ -20,6 +20,7 @@ Bug fixes:
 
 Misc:
 
+* New `datagridcf()` function to create counterfactual datasets. This is a shortcut to the `datagrid()` function with default to `grid_type = "counterfactual"`
 * New `newdata` shortcuts: "tukey", "grid"
 * `vcov` argument string shortcuts are now case-insensitive
 * documentation improvements

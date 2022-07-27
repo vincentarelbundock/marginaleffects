@@ -116,7 +116,7 @@ get_contrasts <- function(model,
             idx2 <- out[term == v, ..idx2]
             # original is NULL when interaction=TRUE
             if (!is.null(original)) {
-                idx1 <- c(v, "rowid", "term", "type", "group", grep("^contrast", colnames(original), value = TRUE))
+                idx1 <- c(v, "rowid", "rowidcf", "term", "type", "group", grep("^contrast", colnames(original), value = TRUE))
                 idx1 <- intersect(idx1, colnames(original))
                 idx1 <- original[, ..idx1]
                 idx2 <- merge(idx1, idx2)
@@ -163,13 +163,14 @@ get_contrasts <- function(model,
         out[, "marginaleffects_eps" := NA]
     }
 
-    # make sure the `by` variables are included
+    # the `by` variables must be included for group-by data.table operations
     if (!is.null(by)) {
         by_merge <- setdiff(by, colnames(out))
         if (length(by_merge) > 0) {
             cols <- c("rowid", by_merge, grep("^contrast", colnames(original), value = TRUE))
             i <- c("rowid", grep("^contrast", colnames(original), value = TRUE))
-            tmp <- original[, ..cols]
+            # unique important for grid_type = "counterfactual"
+            tmp <- unique(original[, ..cols])
             out <- merge(out, tmp, by = i, sort = FALSE)
         }
     }

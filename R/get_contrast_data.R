@@ -77,6 +77,7 @@ get_contrast_data <- function(model,
     hi <- lapply(hi, clean)
     original <- lapply(original, clean)
 
+
     # single contrast
     if (!isTRUE(interaction)) {
         lo <- rbindlist(lo, fill = TRUE)

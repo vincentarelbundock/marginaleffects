@@ -211,7 +211,7 @@ marginaleffects <- function(model,
     if (is.call(scall)) {
         lcall <- as.list(scall)
         fun_name <- as.character(scall)[1]
-        if (fun_name %in% c("datagrid", "typical", "counterfactual")) {
+        if (fun_name %in% c("datagrid", "datagridcf", "typical", "counterfactual")) {
             if (!any(c("model", "newdata") %in% names(lcall))) {
                 lcall <- c(lcall, list("model" = model))
                 newdata <- eval.parent(as.call(lcall))

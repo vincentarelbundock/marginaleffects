@@ -108,3 +108,18 @@ expect_equivalent(mfx$std.error, mar$SE, tolerance = tol_se)
 mod <- lm(mpg ~ hp, mtcars)
 expect_error(comparisons(mod, by = "am", pattern = "newdata"))
 expect_error(marginaleffects(mod, by = "am"), pattern = "newdata")
+
+
+# counterfactual margins at()
+dat <- mtcars
+dat$cyl <- factor(dat$cyl)
+mod <- lm(mpg ~ factor(cyl) * hp + wt, data = dat)
+mar <- margins(mod, at = list(cyl = unique(dat$cyl)))
+mar <- data.frame(summary(mar))
+mfx <- marginaleffects(
+    mod,
+    by = "cyl",
+    newdata = datagridcf(cyl = c(4, 6, 8), grid_type = "counterfactual"))
+expect_equivalent(mfx$dydx, mar$AME)
+expect_equivalent(mfx$std.error, mar$SE, tolerance = 1e6)
+
