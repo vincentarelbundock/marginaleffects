@@ -145,16 +145,19 @@ sanitize_variables <- function(variables,
         }
         fun_numeric <- fun_categorical <- transform_pre_function_dict[[transform_pre]]
         lab_numeric <- lab_categorical <- transform_pre_label_dict[[transform_pre]]
-        if (isTRUE(transform_pre %in% c("dydx", "eyex", "eydx", "dyex"))) {
+        if (isTRUE(grepl("dydxavg|eyexavg|dyexavg|eydxavg", transform_pre))) {
+            fun_categorical <- transform_pre_function_dict[["differenceavg"]]
+            lab_categorical <- transform_pre_label_dict[["differenceavg"]]
+        } else if (isTRUE(grepl("dydx$|eyex$|dyex$|eydx$", transform_pre))) {
             fun_categorical <- transform_pre_function_dict[["difference"]]
             lab_categorical <- transform_pre_label_dict[["difference"]]
         } 
+
     } else {
         github_issue()
     }
 
     for (v in names(predictors)) {
-
         if (isTRUE(variable_class[v] == "numeric")) {
             sanity_contrast_numeric(predictors[[v]])
             fun <- fun_numeric

@@ -25,3 +25,4 @@ n_support <- nrow(dat)
 # Stack Overflow questions
 
 * [`plot_cap()` over a range of unobserved values](https://stackoverflow.com/questions/72723687/plot-cap-response-curve-for-counterfactual-data)
+* [Plot the marginal effects from a `plm` package model](https://stackoverflow.com/questions/73126378/marginal-effects-plot-of-plm/73127507#73127507)

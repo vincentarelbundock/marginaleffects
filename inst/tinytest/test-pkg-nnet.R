@@ -2,6 +2,23 @@ source("helpers.R", local = TRUE)
 if (ON_CRAN) exit_file("on cran")
 requiet("nnet")
 
+# multinom group estimates
+TitanicSurvival <- "https://vincentarelbundock.github.io/Rdatasets/csv/carData/TitanicSurvival.csv"
+TitanicSurvival <- read.csv(TitanicSurvival)
+TitanicSurvival$age3 <- cut(
+    TitanicSurvival$age,
+    include.lowest = TRUE,
+    right = FALSE,
+    dig.lab = 4,
+    breaks = c(0, 25, 50, 80))
+m1 <- multinom(passengerClass ~ sex * age3, data = TitanicSurvival, trace = FALSE)
+mfx <- marginaleffects(
+    m1,
+    type = "probs",
+    variables = "sex",
+    by = "age3",
+    newdata = counterfactual(age3 = c("[0,25)","[25,50)","[50,80]")))
+expect_equivalent(nrow(mfx), 9)
 
 # error: bad type
 dat <- read.csv(testing_path("stata/databases/MASS_polr_01.csv"))
