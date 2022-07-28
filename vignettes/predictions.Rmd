@@ -178,13 +178,14 @@ pred %>% summarize(AAP = mean(predicted))
 summary(pred)
 ```
 
-We can also compute the AAP for multiple values of the regressors. For example, here use create a "counterfactual" data grid where each observation of the dataset are repeated twice, with different values of the `am` variable, and all other variables held at the observed values. Then, we use the `summary()` function's `by` argument or some `dplyr` magic:
+We can also compute the AAP for multiple values of the regressors. For example, here use create a "counterfactual" data grid where each observation of the dataset are repeated twice, with different values of the `am` variable, and all other variables held at the observed values. Then, we use the `by` argument or some `dplyr` magic:
 
 ```{r}
 p <- predictions(
     mod,
+    by = "am",
     newdata = datagrid(am = 0:1, grid_type = "counterfactual"))
-summary(p, by = "am")
+summary(p)
 
 p %>% group_by(am) %>%
       summarize(AAP = mean(predicted))
