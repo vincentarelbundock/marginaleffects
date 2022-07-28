@@ -9,4 +9,12 @@ hush(code)
 \description{
 Execute code silently
 }
+\keyword{Do}
+\keyword{avoid}
+\keyword{conflict}
+\keyword{export}
 \keyword{internal}
+\keyword{modelsummary}
+\keyword{not}
+\keyword{to}
+\keyword{with}
