@@ -115,13 +115,38 @@ models:](https://vincentarelbundock.github.io/marginaleffects/articles/supported
         grid” of categorical predictors.
       - [`marginalmeans()`](https://vincentarelbundock.github.io/marginaleffects/reference/marginalmeans.html)
 
-One confusing aspect of these definitions is that they use the word
-“marginal” in two different and *opposite* ways. In “marginal
-effects,” we refer to the effect of a tiny (marginal) change in the
-regressor on the outcome. This is a slope, or derivative. In “marginal
-means,” we refer to the process of marginalizing across rows of a
-prediction grid. This is an average, or integral. This is confusing, but
-the vocabulary is so widespread that we must press on…
+### What does “marginal” mean?
+
+One confusing aspect of the definitions above is that they use the word
+“marginal” in two different and *opposite* ways:
+
+1.  In “marginal effects,” we refer to the effect of a tiny (marginal)
+    change in the regressor on the outcome. This is a slope, or
+    derivative.
+2.  In “marginal means,” we refer to the process of marginalizing across
+    rows of a prediction grid. This is an average, or integral.
+
+Another potential confusion arises when some analysts use “marginal” to
+distinguish some estimates from “conditional” ones. As noted in [the
+marginal
+effects](https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html)
+and [the
+contrasts](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)
+vignettes, slopes and contrasts often vary from individual to
+individual, based on the values of all the regressors in the model. When
+we estimate a slope or a contrast for a specific combination of
+predictors – for one (possibly representative) individual – some people
+will call this a “conditional” estimate. When we compute the average of
+several individual-level estimates, some people will call this a
+“marginal” estimate.
+
+On this website and in this package, we will reserve the expression
+“marginal effect” to mean a “slope” or “derivative”. When we take the
+average unit-level estimates, we will call this an “average marginal
+effect.”
+
+This is all very confusing, but the terminology is so widespread and
+inconsistent that we must press on…
 
 ## Motivation
 
@@ -223,20 +248,13 @@ for every value in original dataset:
 
 ``` r
 predictions(mod) |> head()
-#>   rowid     type predicted std.error statistic       p.value conf.low conf.high
-#> 1     1 response  22.48857 0.8841487  25.43528 1.027254e-142 20.66378  24.31336
-#> 2     2 response  20.80186 1.1942050  17.41900  5.920119e-68 18.33714  23.26658
-#> 3     3 response  25.26465 0.7085307  35.65781 1.783452e-278 23.80232  26.72699
-#> 4     4 response  20.25549 0.7044641  28.75305 8.296026e-182 18.80155  21.70943
-#> 5     5 response  16.99782 0.7118658  23.87784 5.205109e-126 15.52860  18.46704
-#> 6     6 response  19.66353 0.8753226  22.46433 9.270636e-112 17.85696  21.47011
-#>    mpg  hp    wt am
-#> 1 21.0 110 2.620  1
-#> 2 21.0 110 2.875  1
-#> 3 22.8  93 2.320  1
-#> 4 21.4 110 3.215  0
-#> 5 18.7 175 3.440  0
-#> 6 18.1 105 3.460  0
+#>   rowid     type predicted std.error statistic       p.value conf.low conf.high  mpg  hp    wt am
+#> 1     1 response  22.48857 0.8841487  25.43528 1.027254e-142 20.66378  24.31336 21.0 110 2.620  1
+#> 2     2 response  20.80186 1.1942050  17.41900  5.920119e-68 18.33714  23.26658 21.0 110 2.875  1
+#> 3     3 response  25.26465 0.7085307  35.65781 1.783452e-278 23.80232  26.72699 22.8  93 2.320  1
+#> 4     4 response  20.25549 0.7044641  28.75305 8.296026e-182 18.80155  21.70943 21.4 110 3.215  0
+#> 5     5 response  16.99782 0.7118658  23.87784 5.205109e-126 15.52860  18.46704 18.7 175 3.440  0
+#> 6     6 response  19.66353 0.8753226  22.46433 9.270636e-112 17.85696  21.47011 18.1 105 3.460  0
 ```
 
 The [`datagrid` function gives us a powerful way to define a grid of
@@ -246,20 +264,13 @@ their mean or mode:
 
 ``` r
 predictions(mod, newdata = datagrid(am = 0, wt = seq(2, 3, .2)))
-#>   rowid     type predicted std.error statistic       p.value conf.low conf.high
-#> 1     1 response  21.95621 2.0386301  10.77008  4.765935e-27 17.74868  26.16373
-#> 2     2 response  21.42097 1.7699036  12.10290  1.019401e-33 17.76807  25.07388
-#> 3     3 response  20.88574 1.5067373  13.86157  1.082834e-43 17.77599  23.99549
-#> 4     4 response  20.35051 1.2526403  16.24609  2.380723e-59 17.76518  22.93583
-#> 5     5 response  19.81527 1.0144509  19.53301  5.755097e-85 17.72155  21.90900
-#> 6     6 response  19.28004 0.8063905  23.90906 2.465206e-126 17.61573  20.94435
-#>        mpg       hp am  wt
-#> 1 20.09062 146.6875  0 2.0
-#> 2 20.09062 146.6875  0 2.2
-#> 3 20.09062 146.6875  0 2.4
-#> 4 20.09062 146.6875  0 2.6
-#> 5 20.09062 146.6875  0 2.8
-#> 6 20.09062 146.6875  0 3.0
+#>   rowid     type predicted std.error statistic       p.value conf.low conf.high       hp am  wt
+#> 1     1 response  21.95621 2.0386301  10.77008  4.765935e-27 17.74868  26.16373 146.6875  0 2.0
+#> 2     2 response  21.42097 1.7699036  12.10290  1.019401e-33 17.76807  25.07388 146.6875  0 2.2
+#> 3     3 response  20.88574 1.5067373  13.86157  1.082834e-43 17.77599  23.99549 146.6875  0 2.4
+#> 4     4 response  20.35051 1.2526403  16.24609  2.380723e-59 17.76518  22.93583 146.6875  0 2.6
+#> 5     5 response  19.81527 1.0144509  19.53301  5.755097e-85 17.72155  21.90900 146.6875  0 2.8
+#> 6     6 response  19.28004 0.8063905  23.90906 2.465206e-126 17.61573  20.94435 146.6875  0 3.0
 ```
 
 We can plot how predictions change for different values of one or more
@@ -308,17 +319,11 @@ mod3 <- glm(Survived ~ Woman + Age * PClass, data = titanic, family = binomial)
 
 cmp <- comparisons(mod3)
 summary(cmp)
-#> Average contrasts 
-#>     Term     Contrast   Effect Std. Error z value   Pr(>|z|)     2.5 %
-#> 1  Woman TRUE - FALSE  0.50329   0.031654  15.899 < 2.22e-16  0.441244
-#> 2    Age  (x + 1) - x -0.00558   0.001084  -5.147 2.6471e-07 -0.007705
-#> 3 PClass    2nd - 1st -0.22603   0.043546  -5.191 2.0950e-07 -0.311383
-#> 4 PClass    3rd - 1st -0.38397   0.041845  -9.176 < 2.22e-16 -0.465985
-#>      97.5 %
-#> 1  0.565327
-#> 2 -0.003455
-#> 3 -0.140686
-#> 4 -0.301957
+#>     Term     Contrast   Effect Std. Error z value   Pr(>|z|)     2.5 %    97.5 %
+#> 1  Woman TRUE - FALSE  0.50329   0.031654  15.899 < 2.22e-16  0.441244  0.565327
+#> 2    Age  (x + 1) - x -0.00558   0.001084  -5.147 2.6471e-07 -0.007705 -0.003455
+#> 3 PClass    2nd - 1st -0.22603   0.043546  -5.191 2.0950e-07 -0.311383 -0.140686
+#> 4 PClass    3rd - 1st -0.38397   0.041845  -9.176 < 2.22e-16 -0.465985 -0.301957
 #> 
 #> Model type:  glm 
 #> Prediction type:  response
@@ -341,21 +346,13 @@ cmp <- comparisons(
     transform_pre = "ratio",
     variables = list(Age = "2sd", PClass = "pairwise"))
 summary(cmp)
-#> Average contrasts 
-#>                   Age    PClass Effect Std. Error z value   Pr(>|z|)  2.5 %
-#> 1 (x - sd) / (x + sd) 1st / 1st 0.4583    0.05878   7.798 6.3074e-15 0.3431
-#> 2 (x - sd) / (x + sd) 2nd / 1st 0.4525    0.05876   7.700 1.3580e-14 0.3373
-#> 3 (x - sd) / (x + sd) 3rd / 1st 0.4379    0.05875   7.454 9.0386e-14 0.3228
-#> 4 (x - sd) / (x + sd) 2nd / 2nd 0.4554    0.05877   7.749 9.2602e-15 0.3402
-#> 5 (x - sd) / (x + sd) 3rd / 2nd 0.4263    0.05876   7.255 4.0168e-13 0.3111
-#> 6 (x - sd) / (x + sd) 3rd / 3rd 0.4670    0.05880   7.943 1.9803e-15 0.3518
-#>   97.5 %
-#> 1 0.5735
-#> 2 0.5677
-#> 3 0.5531
-#> 4 0.5706
-#> 5 0.5415
-#> 6 0.5823
+#>                   Age    PClass Effect Std. Error z value   Pr(>|z|)  2.5 % 97.5 %
+#> 1 (x - sd) / (x + sd) 1st / 1st 0.7043    0.05946  11.846 < 2.22e-16 0.5878 0.8209
+#> 2 (x - sd) / (x + sd) 2nd / 1st 0.3185    0.05566   5.723 1.0442e-08 0.2095 0.4276
+#> 3 (x - sd) / (x + sd) 3rd / 1st 0.2604    0.05308   4.907 9.2681e-07 0.1564 0.3645
+#> 4 (x - sd) / (x + sd) 2nd / 2nd 0.3926    0.08101   4.846 1.2588e-06 0.2338 0.5514
+#> 5 (x - sd) / (x + sd) 3rd / 2nd 0.3162    0.07023   4.503 6.7096e-06 0.1786 0.4539
+#> 6 (x - sd) / (x + sd) 3rd / 3rd 0.7053    0.20273   3.479 0.00050342 0.3079 1.1026
 #> 
 #> Model type:  glm 
 #> Prediction type:  response
@@ -400,16 +397,11 @@ original dataset that was used to fit the model:
 mfx <- marginaleffects(mod)
 
 head(mfx, 4)
-#>   rowid     type term        dydx  std.error statistic     p.value    conf.low
-#> 1     1 response   hp -0.03690556 0.01850172 -1.994710 0.046074551 -0.07316825
-#> 2     2 response   hp -0.02868936 0.01562861 -1.835695 0.066402771 -0.05932087
-#> 3     3 response   hp -0.04657166 0.02258715 -2.061866 0.039220507 -0.09084166
-#> 4     4 response   hp -0.04227128 0.01328278 -3.182412 0.001460541 -0.06830506
-#>       conf.high  mpg  hp    wt am
-#> 1 -0.0006428553 21.0 110 2.620  1
-#> 2  0.0019421508 21.0 110 2.875  1
-#> 3 -0.0023016728 22.8  93 2.320  1
-#> 4 -0.0162375066 21.4 110 3.215  0
+#>   rowid     type term        dydx  std.error statistic     p.value    conf.low     conf.high predicted_lo predicted_hi  mpg  hp    wt am    eps
+#> 1     1 response   hp -0.03690556 0.01850172 -1.994710 0.046074551 -0.07316825 -0.0006428553     22.48857     22.48752 21.0 110 2.620  1 0.0283
+#> 2     2 response   hp -0.02868936 0.01562861 -1.835695 0.066402771 -0.05932087  0.0019421508     20.80186     20.80105 21.0 110 2.875  1 0.0283
+#> 3     3 response   hp -0.04657166 0.02258715 -2.061866 0.039220507 -0.09084166 -0.0023016728     25.26465     25.26333 22.8  93 2.320  1 0.0283
+#> 4     4 response   hp -0.04227128 0.01328278 -3.182412 0.001460541 -0.06830506 -0.0162375066     20.25549     20.25430 21.4 110 3.215  0 0.0283
 ```
 
 The function `summary` calculates the “Average Marginal Effect,” that
@@ -417,7 +409,6 @@ is, the average of all unit-specific marginal effects:
 
 ``` r
 summary(mfx)
-#> Average marginal effects 
 #>   Term   Effect Std. Error  z value   Pr(>|z|)    2.5 %   97.5 %
 #> 1   hp -0.03807    0.01279 -2.97725 0.00290848 -0.06314 -0.01301
 #> 2   wt -3.93909    1.08596 -3.62728 0.00028642 -6.06754 -1.81065
@@ -469,7 +460,6 @@ Then, we estimate the model and call the `marginalmeans` function:
 mod <- lm(mpg ~ am + cyl + hp, data = dat)
 mm <- marginalmeans(mod)
 summary(mm)
-#> Estimated marginal means 
 #>   Term Value  Mean Std. Error z value   Pr(>|z|) 2.5 % 97.5 %
 #> 1   am FALSE 18.32     0.7854   23.33 < 2.22e-16 16.78  19.86
 #> 2   am  TRUE 22.48     0.8343   26.94 < 2.22e-16 20.84  24.11

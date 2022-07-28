@@ -59,7 +59,18 @@ The `marginaleffects` package allows `R` users to compute and plot four principa
     - Adjusted predictions of a model, averaged across a "reference grid" of categorical predictors.
     - [`marginalmeans()`](https://vincentarelbundock.github.io/marginaleffects/reference/marginalmeans.html)
 
-One confusing aspect of these definitions is that they use the word "marginal" in two different and *opposite* ways. In "marginal effects," we refer to the effect of a tiny (marginal) change in the regressor on the outcome. This is a slope, or derivative. In "marginal means," we refer to the process of marginalizing across rows of a prediction grid. This is an average, or integral. This is confusing, but the vocabulary is so widespread that we must press on...
+### What does "marginal" mean?
+
+One confusing aspect of the definitions above is that they use the word "marginal" in two different and *opposite* ways: 
+
+1. In "marginal effects," we refer to the effect of a tiny (marginal) change in the regressor on the outcome. This is a slope, or derivative. 
+2. In "marginal means," we refer to the process of marginalizing across rows of a prediction grid. This is an average, or integral. 
+
+Another potential confusion arises when some analysts use "marginal" to distinguish some estimates from "conditional" ones. As noted in [the marginal effects](https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html) and [the contrasts](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html) vignettes, slopes and contrasts often vary from individual to individual, based on the values of all the regressors in the model. When we estimate a slope or a contrast for a specific combination of predictors -- for one (possibly representative) individual -- some people will call this a "conditional" estimate. When we compute the average of several individual-level estimates, some people will call this a "marginal" estimate. 
+
+On this website and in this package, we will reserve the expression "marginal effect" to mean a "slope" or "derivative". When we take the average unit-level estimates, we will call this an "average marginal effect."
+
+This is all very confusing, but the terminology is so widespread and inconsistent that we must press on...
 
 ## Motivation
 
