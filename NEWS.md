@@ -21,7 +21,11 @@ Bug fixes:
 Misc:
 
 * New `datagridcf()` function to create counterfactual datasets. This is a shortcut to the `datagrid()` function with default to `grid_type = "counterfactual"`
+* Elasticity and semi-elasticity using the new `slope` argument in `marginaleffects()`: eyex, dyex, eydx
+* The default contrast in `comparisons()` for binary predictors is now a difference between 1 and 0, rather than +1 relative to baseline.
+* New `by` arguments in `predictions()`, `comparisons()`, `marginaleffects()`
 * New `newdata` shortcuts: "tukey", "grid"
+* New string shortcuts for `transform_pre` in `comparisons()`
 * `vcov` argument string shortcuts are now case-insensitive
 * documentation improvements
 
