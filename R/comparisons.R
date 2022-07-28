@@ -449,11 +449,11 @@ comparisons <- function(model,
     attr(out, "jacobian") <- J
     attr(out, "vcov") <- vcov
     attr(out, "vcov.type") <- vcov.type
-    attr(out, "transform_pre") <- NULL
-    attr(out, "transform_post") <- NULL
     attr(out, "weights") <- marginaleffects_wts_internal
-    attr(out, "transform_pre") <- transform_pre_label
-    attr(out, "transform_post") <- transform_post_label
+    attr(out, "transform_pre") <- transform_pre
+    attr(out, "transform_post") <- transform_post
+    attr(out, "transform_pre_label") <- transform_pre_label
+    attr(out, "transform_post_label") <- transform_post_label
     attr(out, "by") <- by
 
     if (!isTRUE(internal_call)) {

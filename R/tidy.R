@@ -224,6 +224,14 @@ tidy.comparisons <- function(x,
                              transform_avg = NULL,
                              ...) {
 
+    if (identical(attr(x, "transform_pre"), "lnor")) {
+        msg <- 
+        'The `tidy()` and `summary()` functions take the average of estimates
+        over the whole dataset. However, the unit-level estimates you requested 
+        are not collapsible. Please use `transform_pre="lnoravg"` instead.' 
+        stop(msg, call. = FALSE)
+    }
+
     if ("by" %in% names(list(...))) {
         msg <- 
         "The `by` argument is deprecated in this function. You can use `by` in the `comparisons()`, 

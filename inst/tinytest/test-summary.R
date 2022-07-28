@@ -1,7 +1,16 @@
-exit_file("works interactively")
 source("helpers.R", local = TRUE)
 if (ON_CRAN) exit_file("on cran")
 requiet("dplyr")
+
+mod <- glm(am ~ hp, data = mtcars, family = binomial)
+cmp <- comparisons(mod, transform_pre = "lnor")
+expect_error(summary(cmp), pattern = "collapsible")
+expect_error(tidy(cmp), pattern = "collapsible")
+cmp <- comparisons(mod, transform_pre = "lnoravg")
+expect_equivalent(nrow(cmp), 1)
+
+
+exit_file("works interactively")
 
 # simple summary output
 mod <- lm(mpg ~ hp + factor(cyl), mtcars)
