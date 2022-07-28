@@ -3,7 +3,7 @@
 ^\.here$
 ^_pkgdown\.yml$
 ^codecov\.yml$
-\\.dta$
+inst/tinytest/stata/databases/.*\.dta
 ^cran-comments\.md
 ^data-raw$
 ^docs$
