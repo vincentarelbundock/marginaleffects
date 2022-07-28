@@ -145,7 +145,7 @@ datagridcf <- function(
 
 #' Superseded by `datagridcf`
 #' @export
-#' @noRd
+#' @keywords internal
 counterfactual <- function(..., model = NULL, newdata = NULL) {
 
     tmp <- prep_datagrid(..., model = model, newdata = newdata)
