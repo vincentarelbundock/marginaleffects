@@ -101,7 +101,7 @@ datagrid <- function(
             model = model,
             newdata = newdata)
         args <- c(dots, args)
-        out <- do.call("counterfactual_internal", args)
+        out <- do.call("counterfactual", args)
     }
     return(out)
 }
@@ -143,7 +143,10 @@ datagridcf <- function(
 }
 
 
-counterfactual_internal <- function(..., model = NULL, newdata = NULL) {
+#' Superseded by `datagridcf`
+#' @export
+#' @noRd
+counterfactual <- function(..., model = NULL, newdata = NULL) {
 
     tmp <- prep_datagrid(..., model = model, newdata = newdata)
     at <- tmp$at

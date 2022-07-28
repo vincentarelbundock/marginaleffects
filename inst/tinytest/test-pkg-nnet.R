@@ -17,7 +17,7 @@ mfx <- marginaleffects(
     type = "probs",
     variables = "sex",
     by = "age3",
-    newdata = counterfactual(age3 = c("[0,25)","[25,50)","[50,80]")))
+    newdata = datagridcf(age3 = c("[0,25)","[25,50)","[50,80]")))
 expect_equivalent(nrow(mfx), 9)
 
 # error: bad type
