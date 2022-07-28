@@ -84,7 +84,7 @@ get_se_delta <- function(model,
         model_tmp <- set_coef(model, stats::setNames(x, names(coefs)) ,...)
         # do not pass NULL arguments. Important for `deltam` to allow users to supply FUN without ...
         args <- c(list(model = model_tmp, hypothesis = hypothesis), list(...),
-                  refit = FALSE)
+                  safe = FALSE)
         if (!is.null(eps)) args[["eps"]] <- eps
         if (!is.null(type)) args[["type"]] <- type
         if (!is.null(newdata)) args[["newdata"]] <- newdata
