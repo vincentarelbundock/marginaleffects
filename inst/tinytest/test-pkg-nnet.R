@@ -11,7 +11,7 @@ TitanicSurvival$age3 <- cut(
     right = FALSE,
     dig.lab = 4,
     breaks = c(0, 25, 50, 80))
-m1 <- multinom(passengerClass ~ sex * age3, data = TitanicSurvival, trace = FALSE)
+m1 <- nnet::multinom(passengerClass ~ sex * age3, data = TitanicSurvival, trace = FALSE)
 mfx <- marginaleffects(
     m1,
     type = "probs",

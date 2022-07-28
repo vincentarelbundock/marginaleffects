@@ -119,7 +119,7 @@ mar <- data.frame(summary(mar))
 mfx <- marginaleffects(
     mod,
     by = "cyl",
-    newdata = datagridcf(cyl = c(4, 6, 8), grid_type = "counterfactual"))
+    newdata = datagridcf(cyl = c(4, 6, 8)))
 expect_equivalent(mfx$dydx, mar$AME)
 expect_equivalent(mfx$std.error, mar$SE, tolerance = 1e6)
 

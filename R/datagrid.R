@@ -134,7 +134,7 @@ datagrid <- function(
 #' head(dat)
 #' dim(dat)
 #'
-#'
+#' @export
 datagridcf <- function(
     ...,
     model = NULL,

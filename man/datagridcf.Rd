@@ -40,5 +40,4 @@ dat <- datagridcf(am = 0:1, hp = c(100, 110, 120), newdata = mtcars)
 head(dat)
 dim(dat)
 
-
 }
