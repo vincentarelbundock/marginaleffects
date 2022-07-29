@@ -66,9 +66,7 @@ expect_error(predictions(mod, vcov = "kenward-roger"), pattern = "Satter")
 
 
 # get_predict: low-level tests
-
-dat <- haven::read_dta("stata/databases/lme4_02.dta")
-dat <- haven::read_dta(testing_path("stata/databases/lme4_02.dta"))
+dat <- read.csv(testing_path("stata/databases/lme4_02.csv"))
 mod <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = dat, family = binomial)
 
 # incompatible arguments
@@ -116,7 +114,7 @@ expect_equivalent(w, y$predicted)
 
 
 # glmer vs. stata vs. emtrends
-dat <- haven::read_dta(testing_path("stata/databases/lme4_02.dta"))
+dat <- read.csv(testing_path("stata/databases/lme4_02.csv"))
 mod <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = dat, family = binomial)
 stata <- readRDS(testing_path("stata/stata.rds"))$lme4_glmer
 mfx <- merge(tidy(marginaleffects(mod)), stata)
@@ -133,7 +131,7 @@ expect_equivalent(mfx$std.error, em$std.error, tolerance = 1e-6)
 
 
 # lmer vs. stata
-dat <- haven::read_dta(testing_path("stata/databases/lme4_01.dta"))
+dat <- read.csv(testing_path("stata/databases/lme4_01.csv"))
 mod <- lme4::lmer(y ~ x1 * x2 + (1 | clus), data = dat)
 stata <- readRDS(testing_path("stata/stata.rds"))$lme4_lmer
 mfx <- merge(tidy(marginaleffects(mod)), stata)
@@ -151,13 +149,13 @@ expect_equivalent(mfx$std.error, em$std.error, tolerance = .001)
 
 
 # vs. margins (dydx only)
-dat <- haven::read_dta(testing_path("stata/databases/lme4_02.dta"))
+dat <- read.csv(testing_path("stata/databases/lme4_02.csv"))
 mod <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = dat, family = binomial)
 res <- marginaleffects(mod, vcov = FALSE)
 mar <- margins::margins(mod)
 expect_true(expect_margins(res, mar, tolerance = 1e-2))
 
-dat <- haven::read_dta(testing_path("stata/databases/lme4_01.dta"))
+dat <- read.csv(testing_path("stata/databases/lme4_01.csv"))
 mod <- lme4::lmer(y ~ x1 * x2 + (1 | clus), data = dat)
 res <- marginaleffects(mod, vcov = FALSE)
 mar <- margins::margins(mod)
@@ -165,14 +163,14 @@ expect_true(expect_margins(res, mar))
 
 
 # sanity check on dpoMatrix
-dat <- haven::read_dta(testing_path("stata/databases/lme4_02.dta"))
+dat <- read.csv(testing_path("stata/databases/lme4_02.csv"))
 mod <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = dat, family = binomial)
 k <- marginaleffects(mod, vcov = as.matrix(stats::vcov(mod)))
 expect_inherits(k, "data.frame")
 
 
 # bug stay dead: tidy without std.error
-dat <- haven::read_dta(testing_path("stata/databases/lme4_02.dta"))
+dat <- read.csv(testing_path("stata/databases/lme4_02.csv"))
 mod <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = dat, family = binomial)
 res <- marginaleffects(mod, vcov = FALSE)
 tid <- tidy(res)
@@ -181,7 +179,7 @@ expect_equivalent(nrow(tid), 2)
 
 
 # predictions: glmer: no validity
-dat <- haven::read_dta(testing_path("stata/databases/lme4_02.dta"))
+dat <- read.csv(testing_path("stata/databases/lme4_02.csv"))
 dat$clus <- as.factor(dat$clus)
 model <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = dat, family = binomial)
 pred1 <- predictions(model, newdata = datagrid())
