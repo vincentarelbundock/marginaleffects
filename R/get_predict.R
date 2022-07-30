@@ -93,6 +93,12 @@ get_predict.default <- function(model,
             colnames(out)[colnames(out) == "Response"] <- "group"
             colnames(out)[colnames(out) == "SE"] <- "std.error"
             colnames(out)[colnames(out) == "Predicted"] <- "predicted"
+            colnames(out)[colnames(out) == "CI_low"] <- "conf.low"
+            colnames(out)[colnames(out) == "CI_high"] <- "conf.high"
+
+            if (nrow(out) == nrow(newdata) && "rowid" %in% colnames(newdata)) {
+                out$rowid <- newdata$rowid
+            }
             return(out)
         }
     }

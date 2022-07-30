@@ -105,8 +105,17 @@ get_contrasts <- function(model,
     # elasticity requires the original (properly aligned) predictor values
     # this will discard factor variables which are duplicated, so in principle
     # it should be the "correct" size
-    elasticities <- c("eyex", "eydx", "dyex", "eyexavg", "eydxavg", "dyexavg")
-    elasticities <- Filter(function(x) x$label %in% elasticities, variables)
+    elasticities <- c(
+        "dydx",
+        "eyex",
+        "eydx",
+        "dyex",
+        "dydxavg",
+        "eyexavg",
+        "eydxavg",
+        "dyexavg")
+    fun <- function(x) is.character(x$transform_pre) && x$transform_pre %in% elasticities
+    elasticities <- Filter(fun, variables)
     elasticities <- lapply(elasticities, function(x) x$name)
     if (length(elasticities) > 0) {
         for (v in names(elasticities)) {

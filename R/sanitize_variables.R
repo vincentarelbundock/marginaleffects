@@ -171,7 +171,8 @@ sanitize_variables <- function(variables,
             "name" = v,
             "function" = fun,
             "label" = lab,
-            "value" = predictors[[v]])
+            "value" = predictors[[v]],
+            "transform_pre" = transform_pre)
     }
 
     # interaction: get_contrasts() assumes there is only one function when interaction=TRUE

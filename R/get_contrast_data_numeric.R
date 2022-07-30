@@ -21,32 +21,27 @@ get_contrast_data_numeric <- function(model,
     }
 
     # slope
-    # by default variable$value = 1, so we need to check this first
+    # by default variable$value, so we need to check this first
     slopes <- c(
-        "dY/dX" = "dydx",
-        "eY/eX" = "eyex",
-        "eY/dX" = "eydx",
-        "dY/eX" = "dyex",
-        "mean(dY/dX)" = "dydxavg",
-        "mean(eY/eX)" = "eyexavg",
-        "mean(eY/dX)" = "eydxavg",
-        "mean(dY/eX)" = "dyexavg")
+        "dY/dX",
+        "eY/eX",
+        "eY/dX",
+        "dY/eX",
+        "mean(dY/dX)",
+        "mean(eY/eX)",
+        "mean(eY/dX)",
+        "mean(dY/eX)")
 
     if (isTRUE(variable$label %in% slopes)) {
         low <- x
         high <- x + eps
-        lab <- names(slopes)[slopes == variable$label]
+        lab <- variable$label
         newdata$marginaleffects_eps <- eps
 
-    } else if (identical(variable$label, "expdydx")) {
+    } else if (identical(variable$label, "exp(dY/dX)")) {
         low <- x
         high <- x + eps
         lab <- "exp(dY/dX)"
-
-    } else if (identical(variable$label, "dydxavg")) {
-        low <- x
-        high <- x + eps
-        lab <- "mean(dY/dX)"
 
     # contrast_label is designed for categorical predictors
     # numeric contrasts first
