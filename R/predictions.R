@@ -464,7 +464,9 @@ get_predictions <- function(model,
     setDT(out)
 
     # unpad factors before averaging
-    out <- out[rowid > 0, drop = FALSE]
+    if ("rowid" %in% colnames(out)) {
+        out <- out[rowid > 0, drop = FALSE]
+    }
 
     # averaging by groups
     if (!is.null(by)) {
