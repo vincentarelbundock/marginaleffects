@@ -123,3 +123,15 @@ mfx <- marginaleffects(
 expect_equivalent(mfx$dydx, mar$AME)
 expect_equivalent(mfx$std.error, mar$SE, tolerance = 1e6)
 
+
+
+# issue #434 by with character precitors
+dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/AER/Affairs.csv")
+mod <- glm(
+    affairs ~ children + gender + yearsmarried,
+    family = poisson,
+    data = dat)
+p <- predictions(mod, by = "children")
+expect_equivalent(nrow(p), 2)
+expect_false(anyNA(p$predicted))
+

@@ -243,6 +243,7 @@ predictions <- function(model,
         }
     }
 
+
     if (is.null(by)) {
         vcov_tmp <- vcov
     } else {
@@ -329,8 +330,15 @@ predictions <- function(model,
         }
     }
 
+
     # bayesian posterior draws
     draws <- attr(tmp, "posterior_draws")
+
+    # bayesian: unpad draws (done in get_predictions for frequentist)
+    if (!is.null(draws)) {
+        draws <- draws[newdata$rowid > 0]
+    }
+
     if (!is.null(transform_post)) {
         draws <- transform_post(draws)
     }
@@ -382,12 +390,6 @@ predictions <- function(model,
 
     out <- data.table(tmp)
 
-    # unpad factors
-    out <- out[(nrow(padding) + 1):nrow(out),]
-    newdata <- newdata[(nrow(padding) + 1):nrow(newdata), , drop = FALSE]
-    if (!is.null(draws)) {
-        draws <- draws[(nrow(padding) + 1):nrow(draws), , drop = FALSE]
-    }
 
     # return data
     # very import to avoid sorting, otherwise bayesian draws won't fit predictions
@@ -461,8 +463,14 @@ get_predictions <- function(model,
         ...)
     setDT(out)
 
+    # unpad factors before averaging
+    out <- out[rowid > 0, drop = FALSE]
+
+    # averaging by groups
     if (!is.null(by)) {
-        tmp <- intersect(c("rowid", "marginaleffects_wts_internal", by), colnames(newdata))
+        tmp <- intersect(
+            c("rowid", "marginaleffects_wts_internal", by),
+            colnames(newdata))
         tmp <- data.frame(newdata)[, tmp]
         out <- merge(out, tmp, by = "rowid")
         if ("marginaleffects_wts_internal" %in% colnames(newdata)) {

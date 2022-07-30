@@ -43,5 +43,7 @@ complete_levels <- function(x, character_levels = NULL) {
         padding <- data.frame()
     }
 
+    padding$rowid <- -1 * padding$rowid
+
     return(padding)
 }
