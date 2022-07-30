@@ -7,9 +7,12 @@
 datagridcf(..., model = NULL, newdata = NULL)
 }
 \arguments{
-\item{...}{named arguments with vectors of values for user-specified
-variables. The output will include all combinations of these variables (see
-Examples below.)}
+\item{...}{named arguments with vectors of values or functions for user-specified variables.
+\itemize{
+\item Functions are applied to the variable in the \code{model} dataset or \code{newdata}, and must return a vector of the appropriate type.
+\item Character vectors are automatically transformed to factors if necessary.
++The output will include all combinations of these variables (see Examples below.)
+}}
 
 \item{model}{Model object}
 

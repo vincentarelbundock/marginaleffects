@@ -39,6 +39,7 @@ comparisons(
 \item \code{\link[=datagrid]{datagrid()}} call to specify a custom grid of regressors. For example:
 \itemize{
 \item \code{newdata = datagrid(cyl = c(4, 6))}: \code{cyl} variable equal to 4 and 6 and other regressors fixed at their means or modes.
+\item \code{newdata = datagrid(mpg = fivenum)}: \code{mpg} variable held at Tukey's five numbers (using the \code{fivenum} function), and other regressors fixed at their means or modes.
 \item See the Examples section and the \link{datagrid} documentation.
 }
 }}
@@ -306,7 +307,8 @@ comparisons(mod, newdata = "mean")
 comparisons(mod, newdata = "marginalmeans")
 
 # Contrasts at user-specified values
-comparisons(mod, newdata = datagrid(am = 0, cyl = tmp$cyl))
+comparisons(mod, newdata = datagrid(am = 0, gear = tmp$gear))
+comparisons(mod, newdata = datagrid(am = unique, gear = max))
 
 # Numeric contrasts
 mod <- lm(mpg ~ hp, data = mtcars)

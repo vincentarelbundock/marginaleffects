@@ -64,6 +64,7 @@
 #'   - "grid": Contrasts on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
 #' + [datagrid()] call to specify a custom grid of regressors. For example:
 #'   - `newdata = datagrid(cyl = c(4, 6))`: `cyl` variable equal to 4 and 6 and other regressors fixed at their means or modes.
+#'   - `newdata = datagrid(mpg = fivenum)`: `mpg` variable held at Tukey's five numbers (using the `fivenum` function), and other regressors fixed at their means or modes.
 #'   - See the Examples section and the [datagrid] documentation.
 #' @param transform_pre string or function. How should pairs of adjusted predictions be contrasted?
 #' * string: shortcuts to common contrast functions.
@@ -105,7 +106,8 @@
 #' comparisons(mod, newdata = "marginalmeans")
 #'
 #' # Contrasts at user-specified values
-#' comparisons(mod, newdata = datagrid(am = 0, cyl = tmp$cyl))
+#' comparisons(mod, newdata = datagrid(am = 0, gear = tmp$gear))
+#' comparisons(mod, newdata = datagrid(am = unique, gear = max))
 #'
 #' # Numeric contrasts
 #' mod <- lm(mpg ~ hp, data = mtcars)

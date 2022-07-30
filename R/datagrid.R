@@ -1,8 +1,9 @@
 #' Generate a data grid of "typical," "counterfactual," or user-specified values for use in the `newdata` argument of the `marginaleffects` or `predictions` functions.
 #'
-#' @param ... named arguments with vectors of values for user-specified
-#' variables. The output will include all combinations of these variables (see
-#' Examples below.)
+#' @param ... named arguments with vectors of values or functions for user-specified variables. 
+#' + Functions are applied to the variable in the `model` dataset or `newdata`, and must return a vector of the appropriate type. 
+#' + Character vectors are automatically transformed to factors if necessary. 
+#' +The output will include all combinations of these variables (see Examples below.)
 #' @param model Model object
 #' @param newdata data.frame (one and only one of the `model` and `newdata` arguments
 #' @param grid_type character
@@ -43,6 +44,10 @@
 #' #`model` or `newdata` arguments.
 #' marginaleffects(mod, newdata = datagrid(hp = c(100, 110)))
 #'
+#' # datagrid accepts functions
+#' datagrid(hp = range, cyl = unique, newdata = mtcars)
+#' comparisons(mod, newdata = datagrid(hp = fivenum))
+#' 
 #' # The full dataset is duplicated with each observation given counterfactual
 #' # values of 100 and 110 for the `hp` variable. The original `mtcars` includes
 #' # 32 rows, so the resulting dataset includes 64 rows.
@@ -316,6 +321,17 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
 
     # check `at` elements and convert them to factor as needed
     for (n in names(at)) {
+        # functions first otherwise we try to coerce functions to character
+        if (is.function(at[[n]])) {
+            modeldata <- attr(newdata, "newdata_modeldata")
+            if (!is.null(modeldata) && n %in% colnames(modeldata)) {
+                at[[n]] <- at[[n]](modeldata[[n]])
+            } else {
+                at[[n]] <- at[[n]](newdata[[n]])
+            }
+        } 
+
+        # not an "else" situation because we want to process the output of functions too
         if (is.factor(newdata[[n]]) || isTRUE(attributes(newdata[[n]])$factor)) {
             if (is.factor(newdata[[n]])) {
                 levs <- levels(newdata[[n]])
