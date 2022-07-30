@@ -174,3 +174,14 @@ p3 <- predictions(
 expect_equivalent(sum(p1$predicted) - 10, p2$predicted)
 expect_equivalent(p1$predicted[1] - p1$predicted[2], p3$predicted)
 
+
+# pad missing character levels + hypothesis
+dat <- mtcars
+dat$cyl <- as.character(dat$cyl)
+mod <- lm(mpg ~ cyl, data = dat)
+p <- predictions(
+    mod,
+    hypothesis = "b1 = b2",
+    newdata = datagrid(cyl = c("6", "8")))
+expect_inherits(p, "predictions")
+expect_equivalent(nrow(p), 1)
