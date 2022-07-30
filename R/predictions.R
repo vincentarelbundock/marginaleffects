@@ -299,6 +299,7 @@ predictions <- function(model,
         tmp <- tmp[["value"]]
     }
 
+
     # two cases when tmp is a data.frame
     # insight::get_predicted gets us Predicted et al. but now rowid
     # get_predict gets us rowid with the original rows
@@ -394,9 +395,18 @@ predictions <- function(model,
     # return data
     # very import to avoid sorting, otherwise bayesian draws won't fit predictions
     # merge only with rowid; not available for hypothesis
-    if ("rowid" %in% colnames(out)) {
-        out <- merge(out, newdata, by = "rowid", sort = FALSE)
+    mergein <- setdiff(colnames(newdata), colnames(out))
+    if ("rowid" %in% colnames(out) && "rowid" %in% colnames(newdata) && length(mergein) > 0) {
+        idx <- c("rowid", mergein)
+        tmp <- data.table(newdata)[, ..idx]
+        # TODO: this breaks in mclogit. maybe there's a more robust merge
+        # solution for weird grouped data. But it seems fine because
+        # `predictions()` output does include the original predictors.
+        out <- tryCatch(
+            merge(out, tmp, by = "rowid", sort = FALSE),
+            error = function(e) out)
     }
+
 
     setDF(out)
 

@@ -83,13 +83,17 @@ get_predict.default <- function(model,
 
         args <- c(args, dots)
 
-        f <- insight::get_predicted
-        pred <- try(do.call("f", args), silent = TRUE)
+        fun <- insight::get_predicted
+        pred <- try(do.call("fun", args), silent = TRUE)
 
         # return immediately if this worked
         if (inherits(pred, "get_predicted")) {
             out <- data.frame(pred) # cannot use data.table because insight has no as.data.table method
-            colnames(out)[colnames(out) == "Row"] <- "rowid"
+            if ("rowid" %in% colnames(out)) {
+                out[["Row"]] <- NULL
+            } else {
+                colnames(out)[colnames(out) == "Row"] <- "rowid"
+            }
             colnames(out)[colnames(out) == "Response"] <- "group"
             colnames(out)[colnames(out) == "SE"] <- "std.error"
             colnames(out)[colnames(out) == "Predicted"] <- "predicted"

@@ -29,7 +29,6 @@ void <- capture.output(
 expect_predictions(predictions(mod))
 expect_error(marginaleffects(mod, type = "link"), pattern = "character")
 
-
 # mblogit: works on factor regressors
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/MASS/housing.csv")
 dat$x <- rnorm(nrow(dat))
