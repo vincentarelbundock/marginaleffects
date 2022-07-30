@@ -335,8 +335,8 @@ predictions <- function(model,
     draws <- attr(tmp, "posterior_draws")
 
     # bayesian: unpad draws (done in get_predictions for frequentist)
-    if (!is.null(draws)) {
-        draws <- draws[newdata$rowid > 0]
+    if (!is.null(draws) && "rowid" %in% colnames(newdata)) {
+        draws <- draws[newdata$rowid > 0, , drop = FALSE]
     }
 
     if (!is.null(transform_post)) {
