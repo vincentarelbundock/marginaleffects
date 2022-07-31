@@ -63,6 +63,7 @@
 #'  * String which indicates the kind of uncertainty estimates to return.
 #'    - Heteroskedasticity-consistent: `"HC"`, `"HC0"`, `"HC1"`, `"HC2"`, `"HC3"`, `"HC4"`, `"HC4m"`, `"HC5"`. See `?sandwich::vcovHC`
 #'    - Heteroskedasticity and autocorrelation consistent: `"HAC"`
+#'    - Mixed-Models degrees of freedom: "satterthwaite", "kenward-roger"
 #'    - Other: `"NeweyWest"`, `"KernHAC"`, `"OPG"`. See the `sandwich` package documentation.
 #'  * One-sided formula which indicates the name of cluster variables (e.g., `~unit_id`). This formula is passed to the `cluster` argument of the `sandwich::vcovCL` function.
 #'  * Square covariance matrix
