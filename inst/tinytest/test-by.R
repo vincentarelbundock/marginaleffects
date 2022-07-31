@@ -62,7 +62,6 @@ expect_true("am" %in% colnames(tid))
 
 # not supported in bayesian models
 mod <- insight::download_model("brms_1")
-expect_error(comparisons(mod, transform_pre = "dydxavg"), pattern = "supported")
 expect_error(comparisons(mod, by = "am"), pattern = "supported")
 
 

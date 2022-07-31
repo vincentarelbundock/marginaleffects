@@ -76,7 +76,7 @@ get_ci_draws <- function(
             CIs <- unique(CIs)
             Bs <- unique(Bs)
         }
-        x[[estimate]] 
+        x[[estimate]] <- Bs
         x[["conf.low"]] <- CIs[, "lower"]
         x[["conf.high"]] <- CIs[, "upper"]
     }

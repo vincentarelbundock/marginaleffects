@@ -238,8 +238,7 @@ comparisons <- function(model,
     if (!is.null(by)) {
         if (isTRUE(insight::model_info(model)$is_bayesian)) {
             msg <- format_msg(
-            'For bayesian models, the `by` argument is not supported and the `transform_pre`
-            shortcut strings cannot include "avg".')
+            'The `by` argument is not supported for bayesian models. Users can call the `posteriordraws()` function and compute the quantities manually.')
             stop(msg, call. = FALSE)
         }
     }
