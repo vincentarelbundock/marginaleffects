@@ -32,6 +32,8 @@ brms_vdem <- download_model("brms_vdem")
 brms_lognormal_hurdle <- download_model("brms_lognormal_hurdle")
 
 
+
+
 # warning: weights not supported
 cmp <- comparisons(brms_numeric, wts = mtcars$cyl)
 expect_warning(tidy(cmp), pattern = "Weights")
@@ -435,3 +437,14 @@ expect_equivalent(cmp$comparison,
 #     regrid = "response", tran = "log", type = "response",
     # at = list(disp = c(150, 300, 450)))
 
+
+
+# Issue #432: bayes support for transform_pre with output of length 1
+cmp1 <- comparisons(brms_numeric2, transform_pre = "difference")
+cmp2 <- comparisons(brms_numeric2, transform_pre = "differenceavg")
+cmp3 <- comparisons(brms_numeric2, transform_pre = "ratio")
+cmp4 <- comparisons(brms_numeric2, transform_pre = "ratioavg")
+expect_equivalent(nrow(cmp1), 64)
+expect_equivalent(nrow(cmp2), 2)
+expect_equivalent(nrow(cmp3), 64)
+expect_equivalent(nrow(cmp4), 2)

@@ -315,7 +315,14 @@ predictions <- function(model,
             tmp[["rowidcf"]] <- newdata[["rowidcf"]]
         }
     }
-    tmp$type <- type
+
+    # default type column is the `predict()` method
+    if (!is.na(type)) {
+        tmp$type <- type
+    # alternative type is the `insight` name
+    } else {
+        tmp$type <- names(type)
+    }
 
     if (!"rowid" %in% colnames(tmp) && nrow(tmp) == nrow(newdata)) {
         tmp$rowid <- newdata$rowid

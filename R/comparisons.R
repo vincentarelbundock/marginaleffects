@@ -235,8 +235,7 @@ comparisons <- function(model,
     }
 
     # bayesian models do not support `by` and "avg" in `transform_pre`
-    if (!is.null(by) ||
-        (is.character(transform_pre) && isTRUE(grepl("avg", transform_pre)))) {
+    if (!is.null(by)) {
         if (isTRUE(insight::model_info(model)$is_bayesian)) {
             msg <- format_msg(
             'For bayesian models, the `by` argument is not supported and the `transform_pre`
