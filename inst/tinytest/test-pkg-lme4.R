@@ -288,6 +288,53 @@ expect_equivalent(attr(mfx, "vcov.type"), "Kenward-Roger")
 expect_equivalent(attr(cmp, "vcov.type"), "Kenward-Roger")
 
 
+# Issue #436
+# e = number of events
+# n = total
+dat <- data.frame(
+    e = c(
+        1, 1, 134413, 92622, 110747,
+        3625, 35, 64695, 19428, 221, 913, 13, 5710, 121,
+        1339, 1851, 637, 20, 7, 10, 2508),
+    n = c(
+        165, 143, 10458616, 5338995, 6018504, 190810,
+        1607, 2504824, 471821, 5158, 15027, 205, 86371, 1785,
+        10661, 14406, 4048, 102, 916, 1079, 242715),
+    year = round(runif(21, min = 1, max = 24)),
+    sid = as.factor(1:21))
+
+mod <- glmer(
+    cbind(e, n - e) ~ 1 + year + (1 | sid),
+    data = dat,
+    family = binomial())
+
+expect_warning(predictions(
+    mod,
+    newdata = datagrid(
+        year = 1:5,
+        sid = NA),
+    include_random = FALSE),
+    pattern = "Matrix columns")
+
+p <- suppressWarnings(predictions(
+    mod,
+    newdata = datagrid(
+        year = 1:5,
+        sid = NA),
+    include_random = FALSE))
+expect_inherits(suppressWarnings(p), "predictions")
+
+cmp <- suppressWarnings(comparisons(mod,
+    variables = "year",
+    newdata = datagrid(
+        year = 1:5,
+        sid = NA),
+    include_random = FALSE))
+expect_inherits(cmp, "comparisons")
+
+
+
+
 
 # # 'group' cannot be a column name because of conflict with tidy output
 #     set.seed(1024)
@@ -299,3 +346,7 @@ expect_equivalent(attr(cmp, "vcov.type"), "Kenward-Roger")
 #     mod <- lme4::glmer(y ~ x1 + x2 + (1 | group), data = tmp, family = binomial)
 #     expect_error(marginaleffects(mod), pattern = "more descriptive")
 # 
+
+
+
+

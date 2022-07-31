@@ -302,15 +302,6 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
         newdata <- hush(insight::get_data(model))
     }
 
-    if (any(sapply(newdata, function(x) "matrix" %in% class(x)))) {
-        msg <- format_msg(
-        "The `datagrid()`, `marginalmeans()`, `plot_cap()`, and `plot_cme()` functions
-        do not support datasets with matrix columns. You can construct your own
-        prediction dataset and supply it explicitly to the `newdata` argument of the
-        `predictions()`, `marginaleffects()`, or `comparisons()` functions instead.")
-        stop(msg, call. = FALSE)
-    }
-
     # check `at` names
     variables_missing <- setdiff(names(at), variables_all)
     if (length(variables_missing) > 0) {
@@ -318,6 +309,17 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
                         paste(variables_missing, collapse = ", ")),
                 call. = FALSE)
     }
+
+    idx <- sapply(newdata, function(x) "matrix" %in% class(x))
+    if (any(idx)) {
+        msg <- format_msg(
+        "Matrix columns are not supported and are omitted. This may prevent computation 
+        of the quantities of interest. You can construct your own prediction dataset and 
+        supply it explicitly to the `newdata` argument.")
+        warning(msg, call. = FALSE)
+        newdata <- newdata[, !idx, drop = FALSE]
+    }
+
 
     # check `at` elements and convert them to factor as needed
     for (n in names(at)) {

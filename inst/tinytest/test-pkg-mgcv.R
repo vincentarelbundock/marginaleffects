@@ -94,8 +94,8 @@ if (packageVersion("insight") > "0.17.1.6") {
 
     expect_error(suppressWarnings(marginaleffects(b, variables = "L")), pattern = "no valid")
     expect_error(suppressWarnings(comparisons(b, variables = "L")), pattern = "no valid")
-    expect_error(plot_cap(b, condition = "z"), pattern = "not support")
-    expect_error(plot_cme(b, effect = "L", condition = "z"), pattern = "not support")
+    expect_warning(plot_cap(b, condition = "z"), pattern = "Matrix columns")
+    expect_warning(plot_cme(b, effect = "L", condition = "z"), pattern = "Matrix columns")
 }
 
 
