@@ -448,3 +448,33 @@ expect_equivalent(nrow(cmp1), 64)
 expect_equivalent(nrow(cmp2), 2)
 expect_equivalent(nrow(cmp3), 64)
 expect_equivalent(nrow(cmp4), 2)
+
+
+
+
+
+
+# Issue #432
+d  <- structure(list(events = c(1, 1, 1, 0, 11, 12, 125, 1, 1, 3, 0, 1, 1, 4, 19,
+                            173, 0, 0),
+                 total = c(10, 25, 11, 6, 128, 116, 766, 14, 20, 12, 21, 12, 1,
+                           72, 118, 765,2, 14),
+                 tx = c("toci", "toci", "toci", "toci", "toci", "toci", "toci",
+                        "toci", "toci", "control", "control", "control",
+                        "control", "control", "control", "control", "control",
+                        "control")),
+            row.names = c(NA,-18L),
+            class = "data.frame") 
+
+# Issue #432
+mod <- brms::brm(
+    data = d,
+    family = binomial,
+    formula = brms::bf( events | trials(total) ~ 1 + tx),
+    prior = prior(normal(0, 1.5), class = "b"))
+
+cmp <- comparisons(mod, variables = "tx", transform_pre = "lnoravg")
+expect_true(all(cmp$comparison != cmp$conf.low))
+expect_true(all(cmp$comparison != cmp$conf.high))
+expect_true(all(cmp$conf.high != cmp$conf.low))
+

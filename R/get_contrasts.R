@@ -151,13 +151,18 @@ get_contrasts <- function(model,
                 fun <- fun_list[[tn]]
             }
             idx <- out$term == tn
-            args <- list(
-                hi = draws_hi[idx, ],
-                lo = draws_lo[idx, ],
-                eps = out[idx, marginaleffects_eps],
-                x = elasticities[[tn]][idx])
-            args <- args[intersect(names(args), names(formals(fun)))]
-            draws[idx, ] <- do.call("fun", args)
+
+            # need to loop for transform_pre with `mean()`, which takes the
+            # average of the whole matrix and returns a single numeric.
+            for (i in seq_len(ncol(draws_hi))) {
+                args <- list(
+                    hi = draws_hi[idx, i, drop = FALSE],
+                    lo = draws_lo[idx, i, drop = FALSE],
+                    eps = out[idx, marginaleffects_eps, drop = FALSE],
+                    x = elasticities[[tn]][idx])
+                args <- args[intersect(names(args), names(formals(fun)))]
+                draws[idx, i] <- do.call("fun", args)
+            }
         }
     }
 
