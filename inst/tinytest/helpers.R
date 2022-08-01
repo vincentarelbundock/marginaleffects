@@ -1,4 +1,5 @@
-library(tinytest)
+library("tinytest")
+library("tinyviztest")
 
 # important because otherwise testing so many packages is terrible
 conflicted::conflict_prefer(name = "expect_error", winner = "tinytest", quiet = TRUE)

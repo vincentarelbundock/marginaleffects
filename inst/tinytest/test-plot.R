@@ -1,5 +1,4 @@
-exit_file("tinyviztest")
-library("tinytest")
+source("helpers.R")
 using("tinyviztest")
 
 # basic plot.marginaleffects()
