@@ -51,9 +51,9 @@ bm <- brmsmargins(
 bm <- data.frame(bm$ContrastSummary)
 
 mfx <- marginaleffects(brms_numeric)
-mfx <- tidy(mfx, FUN = mean)
+mfx <- tidy(mfx)
 
-expect_equivalent(mfx$estimate, bm$M, tolerance = tol)
+expect_equivalent(mean(posteriordraws(mfx)$estimate), bm$M, tolerance = tol)
 expect_equivalent(mfx$conf.low, bm$LL, tolerance = tol)
 expect_equivalent(mfx$conf.high, bm$UL, tolerance = tol)
 
