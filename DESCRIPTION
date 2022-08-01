@@ -18,7 +18,7 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.0
 VignetteBuilder: knitr
 Remotes: 
-    vincentarelbundock/tinytest/pkg,
+    vincentarelbundock/tinytest,
     vincentarelbundock/tinyviztest
 Depends: 
     R (>= 3.5.0)
