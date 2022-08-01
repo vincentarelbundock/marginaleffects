@@ -100,7 +100,9 @@ get_contrasts <- function(model,
     }
 
     # transform_pre function could be different for different terms
+    # sanitize_variables() ensures all functions are identical when there are interactions
     fun_list <- sapply(names(variables), function(x) variables[[x]][["function"]])
+    fun_list[["interaction"]] <- fun_list[[1]]
 
     # elasticity requires the original (properly aligned) predictor values
     # this will discard factor variables which are duplicated, so in principle
@@ -134,36 +136,69 @@ get_contrasts <- function(model,
         }
     }
 
-    # bayes
-    draws_lo <- attr(pred_lo, "posterior_draws")
-    draws_hi <- attr(pred_hi, "posterior_draws")
-    draws_or <- attr(pred_or, "posterior_draws")
-    if (is.null(draws_lo)) {
+    # frequentist
+    if (is.null(attr(pred_lo, "posterior_draws"))) {
         draws <- NULL
-    } else {
-        draws <- draws_lo
-        termnames <- unique(out$term)
-        for (tn in termnames) {
-            # sanity_variables ensures that all functions are identical when interaction=TRUE
-            if (isTRUE(interaction)) {
-                fun <- fun_list[[1]]
-            } else {
-                fun <- fun_list[[tn]]
-            }
-            idx <- out$term == tn
 
-            # need to loop for transform_pre with `mean()`, which takes the
-            # average of the whole matrix and returns a single numeric.
-            for (i in seq_len(ncol(draws_hi))) {
-                args <- list(
-                    hi = draws_hi[idx, i, drop = FALSE],
-                    lo = draws_lo[idx, i, drop = FALSE],
-                    eps = out[idx, marginaleffects_eps, drop = FALSE],
-                    x = elasticities[[tn]][idx])
-                args <- args[intersect(names(args), names(formals(fun)))]
-                draws[idx, i] <- do.call("fun", args)
-            }
+    # bayes
+    } else {
+        draws_lo <- attr(pred_lo, "posterior_draws")
+        draws_hi <- attr(pred_hi, "posterior_draws")
+        draws_or <- attr(pred_or, "posterior_draws")
+
+        wrapfun <- function(fun, hi, lo, y, x, eps) {
+            args <- list(
+                hi = hi,
+                lo = lo,
+                y = y,
+                x = x,
+                eps = eps)
+            args <- args[intersect(names(args), names(formals(fun)))]
+            out <- do.call("fun", args)
+            return(out)
         }
+
+        # need to loop over columns for transform_pre with `mean()`, which
+        # takes the average of the whole matrix and returns a single
+        # numeric.
+        idx <- grep("^group$|^term$|^contrast", colnames(out), value = TRUE)
+        idx <- apply(out[, ..idx], 1, paste, collapse = "|")
+        draws <- list()
+        for (i in unique(idx)) {
+            idx2 <- i == idx
+            draws_lo_sub <- draws_lo[idx2, , drop = FALSE]
+            draws_hi_sub <- draws_hi[idx2, , drop = FALSE]
+            draws_or_sub <- draws_or[idx2, , drop = FALSE]
+            tn <- out[idx2, term][1]
+            x <- elasticities[[tn]]
+            x <- rep(x, times = nrow(draws_lo) / length(x))[idx2]
+            fun <- fun_list[[tn]]
+
+            draws_sub <- wrapfun(
+                fun = fun,
+                hi = draws_hi_sub,
+                lo = draws_lo_sub,
+                y = draws_or_sub,
+                x = x,
+                eps = out[idx2, marginaleffects_eps])
+
+            # usually happens when `transform_pre` returns a unique value instead of a vector
+            if (!is.matrix(draws_sub)) {
+                draws_sub <- sapply(
+                    seq_len(ncol(draws_hi_sub)),
+                    function(j) wrapfun(
+                        fun = fun,
+                        hi = draws_hi_sub[, j],
+                        lo = draws_lo_sub[, j],
+                        y = draws_or_sub[, j],
+                        x = x,
+                        eps = out[idx2, marginaleffects_eps])
+                )
+                draws_sub <- matrix(draws_sub, nrow = 1)
+            }
+            draws <- append(draws, list(draws_sub))
+        }
+        draws <- do.call("rbind", draws)
     }
 
     idx <- grep("^contrast|^group$|^term$|^type$|^transform_pre_idx$", colnames(out), value = TRUE)
