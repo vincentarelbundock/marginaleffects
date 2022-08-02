@@ -2,6 +2,25 @@ source("helpers.R", local = TRUE)
 if (ON_CRAN) exit_file("on cran")
 requiet("emmeans")
 requiet("broom")
+requiet("insight")
+
+
+# Issue #438: backtransforms allows us to match `emmeans` exactly
+mod <- glm(vs ~ mpg + factor(cyl), data = mtcars, family = binomial)
+em <- emmeans(mod, ~cyl, type = "response")
+mm <- marginalmeans(mod)
+expect_equal(data.frame(em)$prob, mm$marginalmean)
+expect_equal(data.frame(em)$asymp.LCL, mm$conf.low)
+expect_equal(data.frame(em)$asymp.UCL, mm$conf.high)
+
+mod <- glm(breaks ~ wool * tension, family = Gamma, data = warpbreaks)
+em <- suppressMessages(emmeans(mod, ~wool, type = "response", df = Inf))
+mm <- marginalmeans(mod, variables = "wool")
+expect_equal(data.frame(em)$response, mm$marginalmean)
+# TODO: 1/eta link function inverts order of CI. Should we clean this up?
+expect_equal(data.frame(em)$asymp.LCL, mm$conf.high)
+expect_equal(data.frame(em)$asymp.UCL, mm$conf.low)
+
 
 # as.factor and as.logical in formula
 mod <- lm(mpg ~ factor(cyl) + as.factor(gear) + as.logical(am), data = mtcars)
@@ -55,9 +74,9 @@ expect_equivalent(mm$estimate, em$estimate)
 expect_equivalent(mm$std.error, em$std.error)
 # response
 mm <- tidy(marginalmeans(mod, variables = "cyl", type = "response"))
-em <- tidy(emmeans(mod, specs = "cyl", regrid = "response"))
+em <- tidy(emmeans(mod, specs = "cyl", type = "response"))
 expect_equivalent(mm$estimate, em$rate)
-expect_equivalent(mm$std.error, em$std.error, tolerance = .0001)
+expect_equivalent(mm$p.value, em$p.value)
 
 
 

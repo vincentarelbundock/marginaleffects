@@ -224,8 +224,6 @@ marginalmeans <- function(model,
                             by = by,
                             ...)
 
-    print(mm)
-
     # we want consistent output, regardless of whether `data.table` is installed/used or not
     out <- as.data.frame(mm)
 

@@ -34,16 +34,16 @@ tmp <- kyphosis
 tmp$categ <- as.factor(sample(letters[1:5], nrow(tmp), replace = TRUE))
 model <- gam::gam(Kyphosis ~ s(Age, 4) + Number + categ,
             family = binomial, data = tmp)
-mm1 <- tidy(marginalmeans(model))
-em1 <- tidy(emmeans(model, specs = "categ", regrid = "response"))
-mm2 <- tidy(marginalmeans(model, type = "link"))
-em2 <- tidy(emmeans(model, specs = "categ"))
+mm1 <- marginalmeans(model)
+em1 <- data.frame(emmeans(model, specs = "categ", type = "response"))
+mm2 <- marginalmeans(model, type = "link")
+em2 <- data.frame(emmeans(model, specs = "categ"))
 
-expect_marginalmeans(mm1)
-expect_equivalent(mm1$estimate, em1$prob)
-expect_equivalent(mm2$estimate, em2$estimate)
-
+expect_equivalent(mm1$marginalmean, em1$prob)
+expect_equivalent(mm2$marginalmean, em2$emmean)
 
 exit_file("gam: marginal means `std.error` does not match `emmeans`")
-expect_equivalent(mm1$std.error, em1$std.error)
-expect_equivalent(mm2$std.error, em2$std.error)
+expect_equivalent(mm1$conf.low, em1$asymp.LCL)
+expect_equivalent(mm1$conf.high, em1$asymp.UCL)
+expect_equivalent(mm2$conf.low, em1$asymp.LCL)
+expect_equivalent(mm2$conf.high, em1$asymp.UCL)
