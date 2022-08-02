@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Marginal Effects, Marginal Means, Predictions, and Contrasts
-Version: 0.6.0.9002
+Version: 0.7.0
 Authors@R: 
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -15,7 +15,7 @@ Encoding: UTF-8
 URL: https://vincentarelbundock.github.io/marginaleffects/
 BugReports: https://github.com/vincentarelbundock/marginaleffects/issues
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.1
 VignetteBuilder: knitr
 Depends: 
     R (>= 3.5.0)

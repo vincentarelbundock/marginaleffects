@@ -1,4 +1,4 @@
-# marginaleffects 0.6.0.9000
+# marginaleffects 0.7.0
 
 Breaking changes:
 
@@ -26,6 +26,7 @@ New features:
 * New `by` arguments in `predictions()`, `comparisons()`, `marginaleffects()`
 * New `newdata` shortcuts: "tukey", "grid"
 * New string shortcuts for `transform_pre` in `comparisons()`
+* `marginalmeans()` now back transforms confidence intervals when possible.
 * `vcov` argument string shortcuts are now case-insensitive
 * The default contrast in `comparisons()` for binary predictors is now a difference between 1 and 0, rather than +1 relative to baseline.
 * documentation improvements

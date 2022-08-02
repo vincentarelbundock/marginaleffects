@@ -349,7 +349,7 @@ tidy.comparisons <- function(x,
             # 1. mean for each draw gives 4000 samples of the average mfx
             # 2. quantiles of the means
             drawavg <- draws[, .(estimate = mean(draw)), by = c(idx_by, "drawid")]
-            es <- drawavg[, .(estimate = median(estimate)), by = idx_by]
+            es <- drawavg[, .(estimate = stats::median(estimate)), by = idx_by]
             if (isTRUE(getOption("marginaleffects_credible_interval", default = "eti") == "hdi")) {
                 f_ci <- get_hdi
             } else {
