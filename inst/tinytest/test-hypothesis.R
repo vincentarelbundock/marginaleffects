@@ -9,8 +9,8 @@ mod <- lm(mpg ~ carb + cyl, dat)
 
 # informative errors and warnings
 tmp <- lm(mpg ~ drat + wt, data = mtcars)
-expect_warning(marginaleffects(tmp, hypothesis = "drat = wt"), pattern = "conjunction")
-expect_warning(comparisons(tmp, hypothesis = "drat = wt"), pattern = "conjunction")
+expect_error(marginaleffects(tmp, hypothesis = "drat = wt"), pattern = "newdata")
+expect_error(comparisons(tmp, hypothesis = "drat = wt"), pattern = "newdata")
 
 expect_error(
     marginaleffects(mod, newdata = dat, hypothesis = "pairwise"),
@@ -185,3 +185,23 @@ p <- predictions(
     newdata = datagrid(cyl = c("6", "8")))
 expect_inherits(p, "predictions")
 expect_equivalent(nrow(p), 1)
+
+
+
+# Issue #439
+mod <- lm(mpg ~ factor(cyl) * factor(am), data = mtcars)
+cmp <- comparisons(
+    mod,
+    variables = "am",
+    by = "cyl",
+    hypothesis = "pairwise")
+expect_inherits(cmp, "comparisons")
+expect_equivalent(nrow(cmp), 3)
+
+cmp <- comparisons(
+    mod,
+    variables = "am",
+    by = "cyl",
+    hypothesis = "reference")
+expect_inherits(cmp, "comparisons")
+expect_equivalent(nrow(cmp), 2)

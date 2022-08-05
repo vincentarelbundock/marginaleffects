@@ -10,8 +10,8 @@ get_hypothesis <- function(x, hypothesis, column) {
             msg <- format_msg(
             'The "pairwise" option of the `hypothesis` argument is not supported for
             `marginaleffects` commands which generate more than 25 rows of results. Use the
-            `newdata` and/or the `variables` arguments to compute a smaller set of
-            results.')
+            `newdata`, `by`, and/or `variables` arguments to compute a smaller set of
+            results on which to conduct hypothesis tests.')
             stop(msg, call. = FALSE)
         }
     }
@@ -100,11 +100,16 @@ get_hypothesis <- function(x, hypothesis, column) {
         } else {
             if (!"term" %in% colnames(x) || anyDuplicated(x$term) > 0) {
                 msg <- format_msg(
-                'To use term names in a `hypothesis` string, the same function
-                call without `hypothesis` argument must produce a `term`
-                column with unique row identifiers. Please use `b1`, `b2`,
-                etc. indices instead of term names in the `hypothesis` string Ex:
-                "b1 + b2 = 0"')
+                'To use term names in a `hypothesis` string, the same function call without
+                `hypothesis` argument must produce a `term` column with unique row identifiers.
+                You can use `b1`, `b2`, etc. indices instead of term names in the `hypothesis`
+                string Ex: "b1 + b2 = 0" Alternatively, you can use the `newdata`, `variables`,
+                or `by` arguments:
+
+                mod <- lm(mpg ~ am * vs + cyl, data = mtcars)
+                comparisons(mod, newdata = "mean", hypothesis = "am = vs")
+                comparisons(mod, variables = "am", by = "cyl", hypothesis = "pairwise")
+                ')
                 stop(msg, call. = FALSE)
             }
 
@@ -126,5 +131,6 @@ get_hypothesis <- function(x, hypothesis, column) {
     "`hypothesis` is broken. Please report this bug:
     https://github.com/vincentarelbundock/marginaleffects/issues."
     stop(msg, call. = FALSE)
-
 }
+
+

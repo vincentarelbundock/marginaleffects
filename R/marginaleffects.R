@@ -224,15 +224,6 @@ marginaleffects <- function(model,
             }
         }
 
-    } else {
-        if (is.null(newdata) && !is.null(hypothesis)) {
-            newdata <- "mean"
-            msg <- format_msg(
-            'The `hypothesis` argument of the `marginaleffects()` function must be used in
-            conjunction with the `newdata` argument. `newdata` was switched from NULL to
-            "mean" automatically.')
-            warning(msg, call. = FALSE)
-        }
     }
 
     # marginaleffects() does not support a named list of variables like comparisons()
