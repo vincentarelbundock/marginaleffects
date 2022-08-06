@@ -16,6 +16,7 @@ New supported packages and models:
 
 New vignette:
 
+* Elasticity
 * Frequently Asked Questions
 
 New features:
