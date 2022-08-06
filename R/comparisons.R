@@ -265,10 +265,17 @@ comparisons <- function(model,
         flag <- isTRUE(checkmate::check_character(by)) &&
                 isTRUE(checkmate::check_true(all(by %in% colnames(newdata))))
         if (!isTRUE(flag)) {
+            cols <- sort(setdiff(colnames(newdata), "rowid"))
+            cols <- paste(cols, collapse = ", ")
             msg <- format_msg(
             "The `by` argument must be a character vector and every element of the vector
-            must correspond to one of the predictors in the model or to one of the columns 
-            of the dataset supplied to the `newdata` argument.")
+            must be one of the following column names:
+
+            %s. 
+
+            You can supply a data frame with more columns to the `newdata` argument to 
+            group on different categories.")
+            msg <- sprintf(msg, cols)
             stop(msg, call. = FALSE)
         }
     }

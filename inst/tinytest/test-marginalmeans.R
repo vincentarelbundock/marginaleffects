@@ -97,11 +97,11 @@ expect_equivalent(me$std.error, em$std.error)
 mod <- lm(mpg ~ cyl * am, dat)
 em <- suppressMessages(broom::tidy(emmeans::emmeans(mod, "cyl")))
 me <- marginalmeans(mod, variables = "cyl")
-me <- me[order(me$cyl),]
+me <- me[order(me$value),]
 expect_equivalent(me$marginalmean, em$estimate)
 em <- suppressMessages(broom::tidy(emmeans::emmeans(mod, "am")))
 me <- suppressWarnings(marginalmeans(mod, variables = "am"))
-me <- me[order(me$am),]
+me <- me[order(me$value),]
 expect_equivalent(me$marginalmean, em$estimate)
 
 
