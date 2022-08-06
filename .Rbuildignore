@@ -3,8 +3,8 @@
 ^\.here$
 ^_pkgdown\.yml$
 ^codecov\.yml$
-inst/tinytest/stata/databases/.*\.dta
 ^cran-comments\.md
+^CRAN-SUBMISSION$
 ^data-raw$
 ^docs$
 ^LICENSE\.md$
@@ -13,10 +13,10 @@ inst/tinytest/stata/databases/.*\.dta
 ^README\.html$
 ^README\.Rmd$
 ^sandbox$
-man-roxygen
 ^vignettes/alternative_software.Rmd
 ^vignettes/brms.Rmd
 ^vignettes/contrasts.Rmd
+^vignettes/elasticity.Rmd
 ^vignettes/faq.Rmd
 ^vignettes/gam.Rmd
 ^vignettes/gformula.Rmd
@@ -34,3 +34,5 @@ man-roxygen
 ^vignettes/toc.Rmd
 ^vignettes/toc_external.Rmd
 ^vignettes/transformation.Rmd
+inst/tinytest/stata/databases/.*\.dta
+man-roxygen
