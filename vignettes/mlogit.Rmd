@@ -81,7 +81,7 @@ To compute different kinds of marginal effects, we can construct customized data
 
 **Important:** The `newdata` argument for `mlogit` models must be a "balanced" data frame, that is, it must have a number of rows that is a multiple of the number of choices.
 
-If we want to compute the slope of the response function (marginal effecs) when each of the predictors is fixed to its global mean, we can do:
+If we want to compute the slope of the response function (marginal effects) when each of the predictors is fixed to its global mean, we can do:
 
 ```{r}
 nd <- TravelMode %>%
