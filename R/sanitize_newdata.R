@@ -7,6 +7,7 @@ sanitize_newdata <- function(model, newdata) {
 
     # we always need this to extract attributes
     modeldata <- hush(insight::get_data(model))
+    setDF(modeldata) # column subsets later and predict
 
     if (is.null(newdata)) {
         newdata <- modeldata

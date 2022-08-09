@@ -3,7 +3,9 @@ exit_file("problems testing fixest because of `get_data` from environment")
 if (utils::packageVersion("fixest") < "0.10.5") exit_file("fixest version")
 if (ON_CRAN) exit_file("on cran")
 requiet("fixest")
+requiet("data.table")
 fixest::setFixest_nthreads(1)
+
 
 
 # Issue #375: friendly warning when sandwich fails
@@ -155,6 +157,21 @@ expect_inherits(mfx1, "marginaleffects")
 expect_inherits(mfx2, "marginaleffects")
 expect_inherits(mfx3, "marginaleffects")
 
+
+# Issue #443: `newdata` breaks when it is a `data.table`
+d <- data.table(mtcars)
+m <- feols(mpg ~ cyl * disp, d)
+m1 <- marginaleffects(m)
+m2 <- marginaleffects(m, newdata = datagrid(disp = 0))  
+expect_inherits(m1, "marginaleffects")
+expect_inherits(m2, "marginaleffects")
+m1 <- comparisons(m)
+m2 <- comparisons(m, newdata = datagrid(disp = 0))  
+expect_inherits(m1, "comparisons")
+expect_inherits(m2, "comparisons")
+
+
+
 # TODO: works interactively
 # expect_false(expect_warning(marginaleffects(fit3)))
 
@@ -184,5 +201,7 @@ expect_inherits(mfx3, "marginaleffects")
 # dat <<- trade
 # mod <- feNmlm(Euros ~ log(dist_km) | Product, data = dat)
 # expect_marginaleffects(mod)
+
+
 
 
