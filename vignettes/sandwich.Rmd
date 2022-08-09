@@ -173,7 +173,7 @@ bootfun <- function(data, indices, ...) {
     tidy(cmp)$estimate
 }
 
-b <- boot(data = mtcars, statistic = bootfun, R = 10)
+b <- boot(data = mtcars, statistic = bootfun, R = 1000)
 
 b
 boot.ci(b, type = "perc")
