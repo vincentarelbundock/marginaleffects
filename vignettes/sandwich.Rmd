@@ -1,8 +1,8 @@
 ---
-title: "Standard Errors and Hypothesis Tests"
+title: "Standard Errors and Confidence Intervals"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Standard Errors and Hypothesis Tests}
+  %\VignetteIndexEntry{Standard Errors and Confidence Intervals}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -157,6 +157,36 @@ The `marginaleffects` package handles all calculations to compute standard error
 When possible, however, the calculation of standard errors and confidence intervals for the output of `predictions()` is outsourced to the [`insight` package.](https://easystats.github.io/insight/) The benefit of this is that, for many popular models, `insight` can compute confidence intervals via back-transformation, which gives them certain nice properties. For example, this ensures that confidence intervals around the predictions of a logistic regression model will remain in between 0 and 1.
 
 When `insight` does not support a model, `marginaleffects` computes standard errors using the delta method, as described above. In those cases, confidence intervals are not created automatically, but users can easily compute them manually, as usual, by multiplying the standard error by a critical value. The standard errors thus estimated [have desirable properties under normal assumptions.](https://en.wikipedia.org/wiki/Delta_method), but since there is no back-transformation, it is not always advisable to use them to construct symmetric confidence intervals around adjusted predictions.
+
+# Bootstrap
+
+It is easy to use the bootstrap as an alternative strategy to compute standard errors and confidence intervals. Several `R` packages can help us achieve this, including the long-established `boot` package:
+
+```{r}
+library(boot)
+set.seed(123)
+
+bootfun <- function(data, indices, ...) {
+    d <- data[indices, ]
+    mod <- lm(mpg ~ am + hp + factor(cyl), data = d)
+    cmp <- comparisons(mod, newdata = d, vcov = FALSE, variables = "am")
+    tidy(cmp)$estimate
+}
+
+b <- boot(data = mtcars, statistic = bootfun, R = 10)
+
+b
+boot.ci(b, type = "perc")
+```
+
+Note that, in the code above, we set `vcov=FALSE` to avoid computation of delta method standard errors and speed things up.
+
+Compare to the delta method standard errors:
+
+```{r}
+mod <- lm(mpg ~ am + hp + factor(cyl), data = mtcars)
+comparisons(mod, variables = "am") |> summary()
+```
 
 # Bayesian estimates and credible intervals
 

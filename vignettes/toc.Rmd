@@ -35,7 +35,7 @@ Tips and technical notes:
 
 - [`r n_support` Supported Classes of Models](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
 - [Index of Functions and Documentation](https://vincentarelbundock.github.io/marginaleffects/reference/index.html)
-- [Standard Errors](https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html)
+- [Standard Errors and Confidence Intervals](https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html)
 - [Tables and Plots](https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html)
 - [Performance](https://vincentarelbundock.github.io/marginaleffects/articles/performance.html)
 - [Alternative Software](https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html)
