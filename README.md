@@ -58,8 +58,8 @@ Tips and technical notes:
     Models](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
   - [Index of Functions and
     Documentation](https://vincentarelbundock.github.io/marginaleffects/reference/index.html)
-  - [Standard
-    Errors](https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html)
+  - [Standard Errors and Confidence
+    Intervals](https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html)
   - [Tables and
     Plots](https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html)
   - [Performance](https://vincentarelbundock.github.io/marginaleffects/articles/performance.html)
