@@ -7,7 +7,6 @@ sanitize_newdata <- function(model, newdata) {
 
     # we always need this to extract attributes
     modeldata <- hush(insight::get_data(model))
-    setDF(modeldata) # column subsets later and predict
 
     if (is.null(newdata)) {
         newdata <- modeldata
@@ -51,6 +50,9 @@ sanitize_newdata <- function(model, newdata) {
         msg <- sprintf(msg, class(model)[1])
         stop(msg, call. = FALSE)
     }
+
+    # column subsets later and predict
+    setDF(modeldata)
 
     # column attributes
     mc <- Filter(function(x) is.matrix(modeldata[[x]]), colnames(modeldata))

@@ -108,6 +108,10 @@ datagrid <- function(
         args <- c(dots, args)
         out <- do.call("counterfactual", args)
     }
+
+    # better to assume "standard" class as output
+    setDF(out)
+
     return(out)
 }
 
