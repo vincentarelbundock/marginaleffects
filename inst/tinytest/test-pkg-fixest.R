@@ -84,7 +84,6 @@ dat2$unit <- as.factor(dat2$unit)
 dat2 <<- dat2
 mod1 <- feols(y ~ x * w | unit, data = dat)
 mod2 <- fixest::feols(y ~ x * w | unit, data = dat2)
-expect_warning(plot_cme(mod1, effect = "x", condition = "w", draw = FALSE))
 p <- plot_cme(mod2, effect = "x", condition = "w")
 expect_inherits(p, "ggplot")
 

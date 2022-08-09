@@ -170,7 +170,7 @@ counterfactual <- function(..., model = NULL, newdata = NULL) {
     rowid <- data.frame(rowidcf = seq_len(nrow(dat)))
     if (length(variables_automatic) > 0) {
         idx <- intersect(variables_automatic, colnames(dat))
-        dat_automatic <- subset(dat, select = idx)
+        dat_automatic <- dat[, ..idx, drop = FALSE]
         dat_automatic <- cbind(rowid, dat_automatic)
         out <- merge(dat_automatic, at, all = TRUE)
     }  else {
@@ -212,7 +212,7 @@ typical <- function(
 
     if (length(variables_automatic) > 0) {
         idx <- intersect(variables_automatic, colnames(dat))
-        dat_automatic <- subset(dat, select = idx)
+        dat_automatic <- dat[, ..idx, drop = FALSE]
         dat_automatic <- stats::na.omit(dat_automatic)
         out <- list()
         # na.omit destroys attributes, and we need the "factor" attribute
@@ -359,6 +359,8 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
     } else {
         variables_cluster <- NULL
     }
+
+    setDT(newdata)
 
     out <- list("newdata" = newdata,
                 "at" = at,
