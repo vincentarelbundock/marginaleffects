@@ -463,10 +463,12 @@ p1 <- predictions(
     brms_numeric2,
     hypothesis = c(1, -1),
     newdata = datagrid(hp = c(100, 110)))
+
 p2 <- predictions(
     brms_numeric2,
     hypothesis = "b1 = b2",
     newdata = datagrid(hp = c(100, 110)))
+
 expect_inherits(p1, "predictions")
 expect_inherits(p2, "predictions")
 expect_equivalent(nrow(p1), 1)
@@ -485,5 +487,3 @@ expect_inherits(p3, "predictions")
 expect_equivalent(nrow(p3), 2)
 expect_equivalent(p3$term, c("Contrast A", "Contrast B"))
 expect_equivalent(p3$predicted[1], -p3$predicted[2])
-
-
