@@ -459,7 +459,7 @@ predictions <- function(model,
     return(out)
 }
 
- 
+
 # wrapper used only for standard_error_delta
 get_predictions <- function(model,
                             newdata,
@@ -478,6 +478,10 @@ get_predictions <- function(model,
         conf_level = conf_level,
         type = type,
         ...)
+
+    # extract attributes before setDT
+    draws <- attr(out, "posterior_draws")
+
     setDT(out)
 
     # unpad factors before averaging
@@ -487,28 +491,53 @@ get_predictions <- function(model,
 
     # averaging by groups
     if (!is.null(by)) {
+
         tmp <- intersect(
             c("rowid", "marginaleffects_wts_internal", by),
             colnames(newdata))
         tmp <- data.frame(newdata)[, tmp]
-        out <- merge(out, tmp, by = "rowid")
-        if ("marginaleffects_wts_internal" %in% colnames(newdata)) {
-            out <- out[,
-            .(predicted = stats::weighted.mean(
-                predicted,
-                marginaleffects_wts_internal,
-                na.rm = TRUE)),
-            by = by]
+        # todo: merge update leaves the object in memory in place
+        out <- merge(out, tmp, by = "rowid", sort = FALSE)
+
+        # bayesian
+        if (!is.null(draws)) {
+            # {collapse} package is fast and useful when operating on matrices
+            insight::check_if_installed("collapse")
+            g <- collapse::GRP(out, by)
+            w <- out[["marginaleffects_wts_internal"]]
+            draws <- collapse::fmean(
+                draws,
+                g = g,
+                w = w)
+            out <- data.table(
+                g[["groups"]],
+                predicted = apply(draws, 1, stats::median))
+            attr(out, "posterior_draws") <- draws
+
+        # frequentist
         } else {
-            out <- out[,
-            .(predicted = mean(predicted)),
-            by = by]
+            if ("marginaleffects_wts_internal" %in% colnames(newdata)) {
+                out <- out[,
+                .(predicted = stats::weighted.mean(
+                    predicted,
+                    marginaleffects_wts_internal,
+                    na.rm = TRUE)),
+                by = by]
+            } else {
+                out <- out[,
+                .(predicted = mean(predicted)),
+                by = by]
+            }
+
         }
     }
 
     if (!is.null(hypothesis)) {
         out <- get_hypothesis(out, hypothesis, column = "predicted")
+        draws <- attr(out, "posterior_draws")
     }
+
+    attr(out, "posterior_draws") <- draws
 
     return(out)
 }
