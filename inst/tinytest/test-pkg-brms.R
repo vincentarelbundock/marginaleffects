@@ -456,3 +456,14 @@ expect_equivalent(nrow(pd), 4000)
 ti <- tidy(cmp)
 expect_equivalent(nrow(ti), 1)
 expect_inherits(ti, "data.frame")
+
+
+
+
+# hypothesis
+predictions(
+    brms_numeric2,
+    hypothesis = c(1, -1),
+    # hypothesis = "b1 = b2",
+    newdata = datagrid(hp = c(100, 110)))
+

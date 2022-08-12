@@ -4,29 +4,29 @@ get_hypothesis <- function(x, hypothesis, column) {
         return(x)
     }
 
+    lincom <- NULL
+
     # must be checked here when we know how many rows the output has
-    if (isTRUE(hypothesis %in% c("pairwise", "reference"))) {
+    if (isTRUE(hypothesis %in% c("pairwise", "reference", "sequential"))) {
         if (nrow(x) > 25) {
             msg <- format_msg(
-            'The "pairwise" option of the `hypothesis` argument is not supported for
-            `marginaleffects` commands which generate more than 25 rows of results. Use the
-            `newdata`, `by`, and/or `variables` arguments to compute a smaller set of
-            results on which to conduct hypothesis tests.')
+            'The "pairwise", "reference", and "sequential" options of the `hypothesis`
+            argument is not supported for `marginaleffects` commands which generate more
+            than 25 rows of results. Use the `newdata`, `by`, and/or `variables` arguments
+            to compute a smaller set of results on which to conduct hypothesis tests.')
             stop(msg, call. = FALSE)
         }
     }
 
-    if (isTRUE(checkmate::check_numeric(hypothesis)) && isTRUE(checkmate::check_atomic_vector(hypothesis))) {
+    if (isTRUE(checkmate::check_numeric(hypothesis)) &&
+        isTRUE(checkmate::check_atomic_vector(hypothesis))) {
         if (length(hypothesis) != nrow(x)) {
             msg <- sprintf(
             "The `hypothesis` vector must be of length %s.", nrow(x))
             stop(msg, call. = FALSE)
         }
-        out <- data.table(
-            term = "custom",
-            tmp = as.vector(x[[column]] %*% hypothesis))
-        setnames(out, old = "tmp", new = column)
-        return(out)
+        lincom <- as.matrix(hypothesis)
+        colnames(lincom) <- "custom"
     }
 
     if (isTRUE(checkmate::check_matrix(hypothesis))) {
@@ -35,30 +35,23 @@ get_hypothesis <- function(x, hypothesis, column) {
             "The `hypothesis` matrix must be have %s rows.", nrow(x))
             stop(msg, call. = FALSE)
         }
-        out <- data.table(
-            term = "custom",
-            tmp = as.vector(x[[column]] %*% hypothesis))
-        setnames(out, old = "tmp", new = column)
-        return(out)
+        lincom <- hypothesis
+        colnames(lincom) <- rep("custom", ncol(lincom))
     }
 
     if (isTRUE(hypothesis == "reference")) {
-        lab <- NULL
-        mat <- list()
-        for (j in 2:nrow(x)) {
-            tmp <- matrix(0, nrow = nrow(x), ncol = 1)
-            tmp[1, ] <- -1
-            tmp[j, ] <- 1
-            mat <- c(mat, list(tmp))
-            lab <- c(lab, sprintf("Row %s - Row 1", j))
+        lincom <- diag(nrow(x))
+        lincom[1, ] <- -1
+        colnames(lincom) <- sprintf("Row %s - Row 1", 1:ncol(lincom))
+        lincom <- lincom[, 2:ncol(lincom)]
+    }
+
+    if (isTRUE(hypothesis == "sequential")) {
+        lincom <- matrix(0, nrow = nrow(x), ncol = nrow(x) - 1)
+        for (i in 1:ncol(lincom)) {
+            lincom[i:(i + 1), i] <- c(-1, 1)
         }
-        lc <- do.call("cbind", mat)
-        out <- data.table(
-            term = lab,
-            tmp = as.vector(x[[column]] %*% lc))
-        out <- out[out$term != "1 - 1", , drop = FALSE]
-        setnames(out, old = "tmp", new = column)
-        return(out)
+        colnames(lincom) <- sprintf("Row %s - Row %s", (1:ncol(lincom)) + 1, 1:ncol(lincom))
     }
 
     if (isTRUE(hypothesis == "pairwise")) {
@@ -75,16 +68,12 @@ get_hypothesis <- function(x, hypothesis, column) {
                 }
             }
         }
-        lc <- do.call("cbind", mat)
-        out <- data.table(
-            term = lab,
-            tmp = as.vector(x[[column]] %*% lc))
-        setnames(out, old = "tmp", new = column)
-        return(out)
+        lincom <- do.call("cbind", mat)
+        colnames(lincom) <- lab
     }
 
     # we assume this is a string formula
-    if (is.character(hypothesis)) {
+    if (is.character(hypothesis) && is.null(lincom)) {
         envir <- parent.frame()
 
         # row indices: `hypothesis` includes them, but `term` does not
@@ -124,6 +113,33 @@ get_hypothesis <- function(x, hypothesis, column) {
             term = gsub("\\s+", "", attr(hypothesis, "label")),
             tmp = out)
         setnames(out, old = "tmp", new = column)
+        return(out)
+
+    } else if (isTRUE(checkmate::check_numeric(lincom))) {
+
+        # bayesian
+        draws <- attr(x, "posterior_draws")
+        if (!is.null(draws)) {
+            draws <- t(as.matrix(lincom)) %*% draws
+            out <- data.table(
+                term = lab,
+                tmp = apply(draws, 1, stats::median))
+            setnames(out, old = "tmp", new = column)
+            idx <- out$term != "1 - 1"
+            draws <- draws[idx, , drop = FALSE]
+            out <- out[idx, , drop = FALSE]
+            attr(out, "posterior_draws") <- draws
+
+        # frequentist
+        } else {
+
+            out <- data.table(
+                term = colnames(lincom),
+                tmp = as.vector(x[[column]] %*% lincom))
+            setnames(out, old = "tmp", new = column)
+        }
+
+        out <- out[out$term != "1 - 1", , drop = FALSE]
         return(out)
     }
 
