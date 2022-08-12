@@ -11,7 +11,7 @@ get_hypothesis <- function(x, hypothesis, column) {
         if (nrow(x) > 25) {
             msg <- format_msg(
             'The "pairwise", "reference", and "sequential" options of the `hypothesis`
-            argument is not supported for `marginaleffects` commands which generate more
+            argument are not supported for `marginaleffects` commands which generate more
             than 25 rows of results. Use the `newdata`, `by`, and/or `variables` arguments
             to compute a smaller set of results on which to conduct hypothesis tests.')
             stop(msg, call. = FALSE)
@@ -56,10 +56,11 @@ get_hypothesis <- function(x, hypothesis, column) {
         colnames(lincom) <- sprintf("Row %s - Row %s", (1:ncol(lincom)) + 1, 1:ncol(lincom))
     }
 
+    # TODO: simplify this
     if (isTRUE(hypothesis == "pairwise")) {
         lab <- NULL
         mat <- list()
-        for (i in 1:nrow(x)) {
+        for (i in seq_len(nrow(x))) {
             for (j in 2:nrow(x)) {
                 if (i < j) {
                     tmp <- matrix(0, nrow = nrow(x), ncol = 1)
@@ -76,7 +77,6 @@ get_hypothesis <- function(x, hypothesis, column) {
 
     # we assume this is a string formula
     if (is.character(hypothesis) && is.null(lincom)) {
-        envir <- parent.frame()
 
         # row indices: `hypothesis` includes them, but `term` does not
         if (isTRUE(grepl("\\bb\\d+\\b", hypothesis)) && !any(grepl("\\bb\\d+\\b", x[["term"]]))) {
@@ -84,8 +84,8 @@ get_hypothesis <- function(x, hypothesis, column) {
             for (i in seq_len(nrow(x))) {
                 tmp <- paste0("marginaleffects__", i)
                 hypothesis <- gsub(paste0("b", i), tmp, hypothesis)
-                assign(tmp, x[[column]][i], envir = envir)
             }
+            rowlabels <- paste0("marginaleffects__", seq_len(nrow(x)))
 
         # term names
         } else {
@@ -103,18 +103,43 @@ get_hypothesis <- function(x, hypothesis, column) {
                 ')
                 stop(msg, call. = FALSE)
             }
-
-            for (i in seq_len(nrow(x))) {
-                tmp <- x$term[i]
-                assign(tmp, x[[column]][i], envir = envir)
-            }
+            rowlabels <- x$term
         }
 
-        out <- eval(parse(text = hypothesis), envir = envir)
-        out <- data.table(
-            term = gsub("\\s+", "", attr(hypothesis, "label")),
-            tmp = out)
+        eval_string_function <- function(vec, hypothesis, rowlabels) {
+            envir <- parent.frame()
+            void <- sapply(
+                seq_along(vec), function(i)
+                assign(rowlabels[i], vec[i], envir = envir))
+            out <- eval(parse(text = hypothesis), envir = envir)
+            return(out)
+        }
+
+        draws <- attr(x, "posterior_draws")
+        if (!is.null(draws)) {
+            tmp <- apply(
+                draws,
+                MARGIN = 2,
+                FUN = eval_string_function,
+                hypothesis = hypothesis,
+                rowlabels = rowlabels)
+            draws <- matrix(tmp, ncol = ncol(draws))
+            out <- data.table(
+                term = gsub("\\s+", "", attr(hypothesis, "label")),
+                tmp = apply(draws, 1, median))
+
+        } else {
+            out <- eval_string_function(
+                x[[column]],
+                hypothesis = hypothesis,
+                rowlabels = rowlabels)
+            out <- data.table(
+                term = gsub("\\s+", "", attr(hypothesis, "label")),
+                tmp = out)
+        }
+
         setnames(out, old = "tmp", new = column)
+        attr(out, "posterior_draws") <- draws
         return(out)
 
     } else if (isTRUE(checkmate::check_numeric(lincom))) {
