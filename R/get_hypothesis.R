@@ -124,12 +124,9 @@ get_hypothesis <- function(x, hypothesis, column) {
         if (!is.null(draws)) {
             draws <- t(as.matrix(lincom)) %*% draws
             out <- data.table(
-                term = lab,
+                term = colnames(lincom),
                 tmp = apply(draws, 1, stats::median))
             setnames(out, old = "tmp", new = column)
-            idx <- out$term != "1 - 1"
-            draws <- draws[idx, , drop = FALSE]
-            out <- out[idx, , drop = FALSE]
             attr(out, "posterior_draws") <- draws
 
         # frequentist
