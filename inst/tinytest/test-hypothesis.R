@@ -123,6 +123,9 @@ expect_equivalent(mm$std.error, em$SE)
 # marginalmeans: hypothesis shortcut
 mm <- marginalmeans(mod, variables = "carb", hypothesis = "reference")
 expect_equivalent(nrow(mm), 5)
+mm <- marginalmeans(mod, variables = "carb", hypothesis = "sequential")
+expect_equivalent(nrow(mm), 5)
+
 
 # marginalmeans: hypothesis complex matrix
 lc <- matrix(c(
