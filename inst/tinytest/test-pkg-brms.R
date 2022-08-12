@@ -487,3 +487,21 @@ expect_inherits(p3, "predictions")
 expect_equivalent(nrow(p3), 2)
 expect_equivalent(p3$term, c("Contrast A", "Contrast B"))
 expect_equivalent(p3$predicted[1], -p3$predicted[2])
+
+
+# `by` argument is supported for predictions() because it is a simple average.
+# In comparisons(), some transformations are non-collapsible, so we can't just
+# take the average, and we need to rely on more subtle transformations from
+# `transform_pre_function_dict`.
+p <- predictions(
+    brms_factor,
+    by = "cyl_fac")
+expect_inherits(p, "predictions")
+expect_equal(ncol(attr(p, "posterior_draws")), 2000)
+expect_equal(nrow(p), 3)
+expect_true(all(c("conf.low", "conf.high") %in% colnames(p)))
+
+# `by` not supported in comparisons() or marginaleffects()
+expect_error(comparisons(brms_factor, by = "cyl_fac"), pattern = "supported")
+expect_error(marginaleffects(brms_factor, by = "cyl_fac"), pattern = "supported")
+

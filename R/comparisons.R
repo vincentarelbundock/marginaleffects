@@ -192,7 +192,6 @@ comparisons <- function(model,
         transform_post_label <- deparse(substitute(transform_post))
     }
 
-
     # marginaleffects()` **must** run its own sanity checks and hardcode valid arguments
     internal_call <- dots[["internal_call"]]
     if (!isTRUE(internal_call)) {
@@ -229,7 +228,9 @@ comparisons <- function(model,
     if (!is.null(by)) {
         if (isTRUE(insight::model_info(model)$is_bayesian)) {
             msg <- format_msg(
-            'The `by` argument is not supported for bayesian models. Users can call the `posteriordraws()` function and compute the quantities manually.')
+            'The `by` argument of the `comparisons()` and `marginaleffects()`
+            functions is not supported for bayesian models. Users can call
+            the `posteriordraws()` function and compute the quantities manually.')
             stop(msg, call. = FALSE)
         }
     }
@@ -411,14 +412,12 @@ comparisons <- function(model,
     }
 
     # clean columns
-    bad <- c("predicted_or", "predicted")
     stubcols <- c("rowid", "rowidcf", "type", "group", "term", "hypothesis",
                   grep("^contrast", colnames(mfx), value = TRUE),
                   "comparison", "std.error", "statistic", "p.value", "conf.low", "conf.high", "df",
-                  sort(grep("^predicted", colnames(newdata), value = TRUE)))
+                  "predicted", "predicted_hi", "predicted_lo")
     cols <- intersect(stubcols, colnames(mfx))
     cols <- unique(c(cols, colnames(mfx)))
-    cols <- setdiff(cols, bad)
     mfx <- mfx[, ..cols, drop = FALSE]
 
     # save as attribute and not column

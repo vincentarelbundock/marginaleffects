@@ -205,7 +205,7 @@ get_contrasts <- function(model,
     idx <- c(idx, by)
     out[, predicted_lo := pred_lo[["predicted"]]]
     out[, predicted_hi := pred_hi[["predicted"]]]
-    out[, predicted_or := pred_or[["predicted"]]]
+    out[, predicted := pred_or[["predicted"]]]
 
     # we feed this column to safefun(), even if it is useless for categoricals
     if (!"marginaleffects_eps" %in% colnames(out)) {
@@ -258,13 +258,13 @@ get_contrasts <- function(model,
         out <- out[, .(
             predicted_lo = mean(predicted_lo),
             predicted_hi = mean(predicted_hi),
-            predicted_or = mean(predicted_or),
+            predicted = mean(predicted),
             eps = mean(marginaleffects_eps)),
         by = idx][
         , "comparison" := safefun(
             hi = predicted_hi,
             lo = predicted_lo,
-            y = predicted_or,
+            y = predicted,
             n = .N,
             term = term,
             interaction = interaction,
@@ -282,7 +282,7 @@ get_contrasts <- function(model,
             out[, "comparison" := safefun(
                 hi = predicted_hi,
                 lo = predicted_lo,
-                y = predicted_or,
+                y = predicted,
                 n = .N,
                 term = term,
                 interaction = interaction,
@@ -295,7 +295,7 @@ get_contrasts <- function(model,
                 out <- out[, .(comparison = safefun(
                     hi = predicted_hi,
                     lo = predicted_lo,
-                    y = predicted_or,
+                    y = predicted,
                     n = .N,
                     term = term,
                     interaction = interaction,
