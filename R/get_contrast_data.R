@@ -62,7 +62,14 @@ get_contrast_data <- function(model,
         for (col in colnames(x)) {
             if (inherits(x[[col]], "AsIs")) {
                 x[[col]] <- as.numeric(x[[col]])
-             }
+            }
+
+            # strip labelled data which break rbindlist()
+            cl <- class(x[[col]])
+            if (length(cl) == 2 && cl[1] == "labelled") {
+                class(x[[col]]) <- class(x[[col]])[2]
+            }
+
             # mlogit uses a `newdata` with one row per unit-choice and returns
             # an `idx` column with the choice label in second position
             if (inherits(model, "mlogit") && inherits(x[[col]], "idx")) {
