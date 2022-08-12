@@ -36,7 +36,9 @@ get_hypothesis <- function(x, hypothesis, column) {
             stop(msg, call. = FALSE)
         }
         lincom <- hypothesis
-        colnames(lincom) <- rep("custom", ncol(lincom))
+        if (is.null(colnames(lincom))) {
+            colnames(lincom) <- rep("custom", ncol(lincom))
+        }
     }
 
     if (isTRUE(hypothesis == "reference")) {

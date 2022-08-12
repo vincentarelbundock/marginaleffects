@@ -109,7 +109,16 @@ p3 <- predictions(
     datagrid(cyl = c(4, 6)),
     hypothesis = lc)
 expect_inherits(p3, "predictions")
+expect_true(all(p3$term == "custom"))
 
+# hypothesis matrix colnames become labels
+colnames(lc) <- c("Contrast A", "Contrast B")
+p3 <- predictions(
+    mod,
+    datagrid(cyl = c(4, 6)),
+    hypothesis = lc)
+expect_inherits(p3, "predictions")
+expect_equivalent(p3$term, c("Contrast A", "Contrast B"))
 
 # marginalmeans: hypothesis complex
 lc <- c(-2, 1, 1, 0, -1, 1)
