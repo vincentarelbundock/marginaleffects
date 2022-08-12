@@ -1,4 +1,4 @@
-get_hypothesis <- function(x, hypothesis, column) {
+get_hypothesis <- function(x, hypothesis, column, by = NULL) {
 
     if (is.null(hypothesis)) {
         return(x)
@@ -44,21 +44,34 @@ get_hypothesis <- function(x, hypothesis, column) {
     if (isTRUE(hypothesis == "reference")) {
         lincom <- diag(nrow(x))
         lincom[1, ] <- -1
-        colnames(lincom) <- sprintf("Row %s - Row 1", 1:ncol(lincom))
+        lab <- get_hypothesis_row_labels(x, by = by)
+        if (length(lab) == 0 || anyDuplicated(lab) > 0) {
+            lab <- sprintf("Row %s - Row 1", 1:ncol(lincom))
+        } else {
+            lab <- sprintf("%s - %s", lab, lab[1])
+        }
+        colnames(lincom) <- lab
         lincom <- lincom[, 2:ncol(lincom)]
     }
 
     if (isTRUE(hypothesis == "sequential")) {
         lincom <- matrix(0, nrow = nrow(x), ncol = nrow(x) - 1)
+        lab <- get_hypothesis_row_labels(x, by = by)
+        if (length(lab) == 0 || anyDuplicated(lab) > 0) {
+            lab <- sprintf("Row %s - Row %s", 1:ncol(lincom) + 1, 1:ncol(lincom))
+        } else {
+            lab <- sprintf("%s - %s", lab[1:ncol(lincom) + 1], lab[1:ncol(lincom)])
+        }
         for (i in 1:ncol(lincom)) {
             lincom[i:(i + 1), i] <- c(-1, 1)
         }
-        colnames(lincom) <- sprintf("Row %s - Row %s", (1:ncol(lincom)) + 1, 1:ncol(lincom))
+        colnames(lincom) <- lab
     }
 
-    # TODO: simplify this
     if (isTRUE(hypothesis == "pairwise")) {
-        lab <- NULL
+        lab_row <- get_hypothesis_row_labels(x, by = by)
+        lab_col <- NULL
+        flag <- length(lab_row) == 0 || anyDuplicated(lab_row) > 0
         mat <- list()
         for (i in seq_len(nrow(x))) {
             for (j in 2:nrow(x)) {
@@ -67,12 +80,16 @@ get_hypothesis <- function(x, hypothesis, column) {
                     tmp[i, ] <- -1
                     tmp[j, ] <- 1
                     mat <- c(mat, list(tmp))
-                    lab <- c(lab, sprintf("Row %s - Row %s", j, i))
+                    if (isTRUE(flag)) {
+                        lab_col <- c(lab_col, sprintf("Row %s - Row %s", j, i))
+                    } else {
+                        lab_col <- c(lab_col, sprintf("%s - %s", lab_row[j], lab_row[i]))
+                    }
                 }
             }
         }
         lincom <- do.call("cbind", mat)
-        colnames(lincom) <- lab
+        colnames(lincom) <- lab_col
     }
 
     # we assume this is a string formula
@@ -174,3 +191,15 @@ get_hypothesis <- function(x, hypothesis, column) {
 }
 
 
+
+get_hypothesis_row_labels <- function(x, by = NULL) {
+    lab <- grep("^term$|^group$|^value$|^contrast$|^contrast_", colnames(x), value = TRUE)
+    lab <- Filter(function(z) length(unique(x[[z]])) > 1, lab)
+    lab <- c(lab, by)
+    if (length(lab) == 0) {
+        lab <- NULL
+    } else {
+        lab <- apply(data.frame(x)[, lab, drop = FALSE], 1, paste, collapse = ",")
+    }
+    return(lab)
+}

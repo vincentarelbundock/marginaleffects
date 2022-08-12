@@ -308,7 +308,7 @@ get_contrasts <- function(model,
         }
     }
 
-    out <- get_hypothesis(out, hypothesis, "comparison")
+    out <- get_hypothesis(out, hypothesis, column = "comparison", by = by)
 
     # output
     attr(out, "posterior_draws") <- draws
