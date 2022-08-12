@@ -335,7 +335,7 @@ get_marginalmeans <- function(model,
     }
 
     if (!is.null(hypothesis)) {
-        out <- get_hypothesis(out, hypothesis, "marginalmean")
+        out <- get_hypothesis(out, hypothesis, column = "marginalmean", by = by)
     }
 
     return(out)

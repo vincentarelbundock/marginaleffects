@@ -134,7 +134,8 @@ mm <- marginalmeans(mod, variables = "carb", hypothesis = "reference")
 expect_equivalent(nrow(mm), 5)
 mm <- marginalmeans(mod, variables = "carb", hypothesis = "sequential")
 expect_equivalent(nrow(mm), 5)
-
+mm <- marginalmeans(mod, variables = "carb", hypothesis = "pairwise")
+expect_equivalent(nrow(mm), 15)
 
 # marginalmeans: hypothesis complex matrix
 lc <- matrix(c(

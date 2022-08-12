@@ -533,7 +533,7 @@ get_predictions <- function(model,
     }
 
     if (!is.null(hypothesis)) {
-        out <- get_hypothesis(out, hypothesis, column = "predicted")
+        out <- get_hypothesis(out, hypothesis, column = "predicted", by = by)
         draws <- attr(out, "posterior_draws")
     }
 
