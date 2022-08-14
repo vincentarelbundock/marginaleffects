@@ -136,12 +136,16 @@ expect_equivalent(nrow(p), 2)
 expect_false(anyNA(p$predicted))
 
 
-
 # Issue #445: by data frame to collapse response levels
 mod <- multinom(factor(gear) ~ mpg + am * vs, data = mtcars, trace = FALSE)
 
 expect_error(predictions(mod, type = "probs", by = "response"), pattern = "Character vector")
 expect_error(predictions(mod, type = "probs", by = mtcars), pattern = "Character vector")
+
+p <- predictions(mod, type = "probs", by = "group")
+expect_equivalent(nrow(p), 3)
+cmp <- comparisons(mod, type = "probs", by = "group")
+expect_equivalent(nrow(cmp), 9)
 
 by <- data.frame(
     group = c("3", "4", "5"),

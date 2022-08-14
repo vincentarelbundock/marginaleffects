@@ -243,7 +243,7 @@ get_contrasts <- function(model,
             tmp <- intersect(
                 c("rowid", "marginaleffects_wts_internal", by),
                 colnames(newdata))
-            tmp <- data.frame(newdata)[, tmp]
+            tmp <- data.frame(newdata)[, tmp, drop = FALSE]
             out <- merge(out, tmp, by = "rowid", all.x = TRUE, sort = FALSE)
             bycols <- by
         }
