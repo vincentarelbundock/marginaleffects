@@ -21,13 +21,13 @@ knitr::opts_chunk$set(
 )
 ```
 
-Note: This vignette requires `marginaleffects` version 0.7.0.9 onwards.
+Note: This vignette requires version 0.8.0 of `marginaleffects`, or [the development version from Github.](https://vincentarelbundock.github.io/marginaleffects/#installation)
 
 This vignette replicates some of the analyses in this excellent blog post by Frank Harrell: [Avoiding One-Number Summaries of Treatment Effects for RCTs with Binary Outcomes](https://www.fharrell.com/post/rdist/). Here, we show how one-number summaries and the entire distribution unit-level contrasts can be easily computed with `comparisons()`.
 
-Dr. Harrell discusses summaries from logistic regression models in the blog post above. He focus on a context in which one is interested in comparing two groups, such as in randomized controlled trials. He highlights potential pitfalls of presenting "one-number summmaries" --- e.g., odds ratio and mean proportion difference --- and proposes focusing on the entire distribution of proportion difference between groups.
+Dr. Harrell discusses summaries from logistic regression models in the blog post above. He focuses on a context in which one is interested in comparing two groups, such as in randomized controlled trials. He highlights potential pitfalls of presenting "one-number summmaries", e.g., odds ratio and mean proportion difference. Finally, he recommends focusing on the entire distribution of proportion difference between groups.
 
-For clarification, the following terms can be used interchangeably in the context of logistic regression where the covariate of interest is categorical:
+For clarification, we use the following terms interchangeably in the context of logistic regression where the covariate of interest is categorical:
 
 - Contrast
 - Proportion difference
@@ -36,15 +36,18 @@ For clarification, the following terms can be used interchangeably in the contex
 
 # Data
 
-We focus on subset data from the [GUSTO-I study](https://www.nejm.org/doi/full/10.1056/NEJM199309023291001), where patients were randomly assigned to accelerated tissue plasminogen activator (tPA) or streptokinase (SK). 
+We focus on subset data from the [GUSTO-I study](https://www.nejm.org/doi/full/10.1056/NEJM199309023291001), where patients were randomly assigned to accelerated tissue plasminogen activator (tPA) or streptokinase (SK).
 
-Load libraries, data and fit full covariate-adjusted logistic model. 
+Load libraries, data and fit a covariate-adjusted logistic regression model. 
 
 ```{r, message = FALSE, warning = FALSE}
 library(marginaleffects)
 library(rms)
 
-load(url('https://hbiostat.org/data/gusto.rda'))
+load(url(
+"https://github.com/vincentarelbundock/modelarchive/raw/main/data-raw/gusto.rda"
+))
+
 gusto <- subset(gusto, tx %in% c("tPA", "SK"))
 gusto$tx <- factor(gusto$tx, levels = c("tPA", "SK"))
 
@@ -56,29 +59,44 @@ mod <- glm(
 
 ## One-Number Summaries
 
-Marginal (population-averaged) adjusted odds ratio
+Population-averaged (aka "marginal") proportion difference ([see this vignette](https://vincentarelbundock.github.io/marginaleffects/articles/gformula.html)):
 
 ```{r}
-comparisons(mod, variables = "tx",
-            transform_pre = "lnoravg") |> 
-  summary(transform_avg = exp)
+comparisons(
+    mod,
+    variables = "tx") |> 
+    summary()
 ```
 
-Marginal (population-averaged) adjusted risk (proportion) ratio 
+The `comparisons()` function above computed the predicted probability of `day30==1` for each observed row of the data in two couterfactual cases: when `tx` is "SK", and when `tx` is "tPA". Then, it computed the differences between these two sets of predictions. Finally, it computed the population-average of risk differences.
+
+Now we want to obtain population-averaged adjusted odds ratio. Since odds ratios are non-collapsible, we cannot use the same strategy with them. Instead, we call `transform_pre="lnoravg`. Let `hi` be the vector of predicted probabilities when `tx` is "SK", and let `lo` be the vector of predicted probabilities when `tx` is "tPA". Then, the `transform_pre="lnoravg"` applies this function:
+
+```r
+log((mean(hi)/(1 - mean(hi)))/(mean(lo)/(1 - mean(lo))))
+```
+
+Finally, we use `transform_post=exp` to exponentiate the results.
 
 ```{r}
-comparisons(mod, variables = "tx",
-            transform_pre = "lnratioavg") |> 
-  summary(transform_avg = exp)
+comparisons(
+    mod,
+    variables = "tx",
+    transform_pre = "lnoravg",
+    transform_post = exp) |>
+    summary()
 ```
 
-Marginal (population-averaged) proportion difference, already explained in another [vignette](https://vincentarelbundock.github.io/marginaleffects/articles/gformula.html):
+Population-averaged (marginal) adjusted risk ratio (proportion):
 
 ```{r}
-comparisons(mod, variables = "tx") |> 
-  summary()
+comparisons(
+    mod,
+    variables = "tx",
+    transform_pre = "lnratioavg",
+    transform_post = exp) |>
+    summary()
 ```
-
 
 ## Unit-level Summaries
 
@@ -90,15 +108,15 @@ cmp <- comparisons(mod, variables = "tx")
 head(cmp)
 ```
 
-
 Show the predicted probability for individual patients under both treatment alternatives.
 
-```{r}
+```{r, fig.asp = 1}
 plot(x = cmp$predicted_hi,
      y = cmp$predicted_lo,
      main = "Risk of Mortality",
      xlab = "SK",
      ylab = "tPA")
+
 abline(0, 1)
 ```
 
