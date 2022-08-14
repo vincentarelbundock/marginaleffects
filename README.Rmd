@@ -24,7 +24,7 @@ dat <- read.csv(url)
 n_support <- nrow(dat)
 ```
 
-Compute and plot adjusted predictions, contrasts, marginal effects, and marginal means for `r n_support`classes of statistical models in `R`. Conduct linear and non-linear hypothesis tests using the delta method.
+Compute and plot adjusted predictions, contrasts, marginal effects, and marginal means for `r n_support` classes of statistical models in `R`. Conduct linear and non-linear hypothesis tests using the delta method.
 
 ## Table of contents
 
