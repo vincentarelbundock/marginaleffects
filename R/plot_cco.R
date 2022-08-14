@@ -58,7 +58,6 @@ plot_cco <- function(model,
     checkmate::assert_character(condition, min.len = 1, max.len = 2)
 
     ## not sure why this fails in testthat
-    # checkmate::assert_true(condition %in% colnames(dat))
     if (length(condition) == 1) {
         condition1 <- condition[1]
         condition2 <- NULL
@@ -117,6 +116,9 @@ plot_cco <- function(model,
         transform_post = transform_post,
         interaction = FALSE,
         ...)
+
+
+    checkmate::assert_true(all(condition %in% colnames(datplot)))
 
     draws <- attr(datplot, "posterior_draws")
     colnames(datplot)[colnames(datplot) == condition1] <- "condition1"

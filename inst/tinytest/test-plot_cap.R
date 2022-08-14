@@ -1,6 +1,7 @@
 exit_file("tinyviztest")
 source("helpers.R")
 using("tinyviztest")
+requiet("nnet")
 
 # two conditions
 mod <- lm(mpg ~ hp * wt * am, data = mtcars)
@@ -58,3 +59,14 @@ expect_true(all(mfx2$std.error != mfx3$std.error))
 expect_true(all(mfx1$conf.low != mfx2$conf.low))
 expect_true(all(mfx1$conf.low != mfx3$conf.low))
 expect_true(all(mfx2$conf.low != mfx3$conf.low))
+
+
+
+# multinomial
+mod <- multinom(factor(gear) ~ mpg * wt + am, data = mtcars, trace = FALSE)
+p1 <- plot_cap(mod, condition = c("mpg", "group"), type = "probs")
+p2 <- plot_cco(mod, effect = "mpg", condition = c("wt", "group"), type = "probs")
+p3 <- plot_cme(mod, effect = "mpg", condition = c("wt", "group"), type = "probs")
+expect_inherits(p1, "gg")
+expect_inherits(p2, "gg")
+expect_inherits(p3, "gg")

@@ -33,6 +33,8 @@ theme_clean <- function() {
 ggplot2::theme_set(theme_clean())
 ```
 
+Note: This vignette requires version 0.8.0 of `marginaleffects`, or [the development version from Github.](https://vincentarelbundock.github.io/marginaleffects/#installation)
+
 Several packages in the `R` ecosystem allow users to estimate multinomial logit model and discrete choice models. This case study illustrates the use of `marginaleffects` with the `nnet` and `mlogit` packages.
 
 We begin by loading two libraries:
@@ -53,10 +55,24 @@ head(mtcars)
 
 mod <- multinom(factor(gear) ~ hp + mpg, data = mtcars, trace = FALSE)
 
-marginaleffects(mod, type = "probs") %>% summary() 
+marginaleffects(mod, type = "probs") %>% summary()
 ```
 
-Notice that in such models, we get one marginal effect for each term, for each level of the response variable.
+Notice that in such models, we get one marginal effect for each term, for each level of the response variable. For this reason, we should use `"group"` in the `condition` argument (or `facet_*()` function) when calling one of the plotting functions:
+
+```{r}
+library(ggplot2)
+
+plot_cap(mod, condition = c("mpg", "group"), type = "probs")
+
+plot_cap(mod, condition = "mpg", type = "probs") + facet_wrap(~group)
+
+plot_cco(
+    mod,
+    effect = list(mpg = c(15, 30)),
+    condition = "group",
+    type = "probs")
+```
 
 # `mlogit` package
 

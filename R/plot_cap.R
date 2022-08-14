@@ -37,8 +37,6 @@ plot_cap <- function(model,
     dat <- hush(insight::get_data(model))
     resp <- insight::find_response(model)[1]
 
-    checkmate::assert_true(all(condition %in% colnames(dat)))
-
     if (length(condition) == 1) {
         condition1 <- condition[1]
         condition2 <- NULL
@@ -94,6 +92,9 @@ plot_cap <- function(model,
                            conf_level = conf_level,
                            transform_post = transform_post,
                            ...)
+
+    checkmate::assert_true(all(condition %in% colnames(datplot)))
+
     colnames(datplot)[colnames(datplot) == condition1] <- "condition1"
     colnames(datplot)[colnames(datplot) == condition2] <- "condition2"
     colnames(datplot)[colnames(datplot) == condition3] <- "condition3"
@@ -179,5 +180,5 @@ plot_cap <- function(model,
     if (identical(ggplot2::theme_get(), ggplot2::theme_grey())) {
         p <- p + ggplot2::theme_minimal()
     }
-    return(p) 
+    return(p)
 }

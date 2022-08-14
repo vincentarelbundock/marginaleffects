@@ -380,7 +380,7 @@ comparisons <- function(model,
 
     # merge original data back in
     # HACK: relies on NO sorting at ANY point
-    if (isTRUE(nrow(mfx) == nrow(contrast_data$original))) {
+    if (is.null(by) && "rowid" %in% colnames(mfx)) {
         idx <- setdiff(colnames(contrast_data$original), colnames(mfx))
         mfx <- data.table(mfx, contrast_data$original[, ..idx])
     }
