@@ -1,0 +1,144 @@
+---
+title: "Unit-level contrasts in logistic regressions"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Unit-level contrasts in logistic regression}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+# this vignette is in .Rbuildignore
+
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  fig.width = 9,
+  fig.asp = .4,
+  out.width = "100%",
+  warning = FALSE,
+  message = FALSE,
+  comment = "#>"
+)
+```
+
+Note: This vignette requires `marginaleffects` version 0.7.0.9 onwards.
+
+This vignette replicates some of the analyses in this excellent blog post by Frank Harrell: [Avoiding One-Number Summaries of Treatment Effects for RCTs with Binary Outcomes](https://www.fharrell.com/post/rdist/). Here, we show how one-number summaries and the entire distribution unit-level contrasts can be easily computed with `comparisons()`.
+
+Dr. Harrell discusses summaries from logistic regression models in the blog post above. He focus on a context in which one is interested in comparing two groups, such as in randomized controlled trials. He highlights potential pitfalls of presenting "one-number summmaries" --- e.g., odds ratio and mean proportion difference --- and proposes focusing on the entire distribution of proportion difference between groups.
+
+For clarification, the following terms can be used interchangeably in the context of logistic regression where the covariate of interest is categorical:
+
+- Contrast
+- Proportion difference
+- Risk difference
+- Absolute risk reduction
+
+# Data
+
+We focus on subset data from the [GUSTO-I study](https://www.nejm.org/doi/full/10.1056/NEJM199309023291001), where patients were randomly assigned to accelerated tissue plasminogen activator (tPA) or streptokinase (SK). 
+
+Load libraries, data and fit full covariate-adjusted logistic model. 
+
+```{r, message = FALSE, warning = FALSE}
+library(marginaleffects)
+library(rms)
+
+load(url('https://hbiostat.org/data/gusto.rda'))
+gusto <- subset(gusto, tx %in% c("tPA", "SK"))
+gusto$tx <- factor(gusto$tx, levels = c("tPA", "SK"))
+
+mod <- glm(
+    day30 ~ tx + rcs(age, 4) + Killip + pmin(sysbp, 120) + lsp(pulse, 50) +
+    pmi + miloc + sex, family = "binomial",
+    data = gusto)
+```
+
+## One-Number Summaries
+
+Marginal (population-averaged) adjusted odds ratio
+
+```{r}
+comparisons(mod, variables = "tx",
+            transform_pre = "lnoravg") |> 
+  summary(transform_avg = exp)
+```
+
+Marginal (population-averaged) adjusted risk (proportion) ratio 
+
+```{r}
+comparisons(mod, variables = "tx",
+            transform_pre = "lnratioavg") |> 
+  summary(transform_avg = exp)
+```
+
+Marginal (population-averaged) proportion difference, already explained in another [vignette](https://vincentarelbundock.github.io/marginaleffects/articles/gformula.html):
+
+```{r}
+comparisons(mod, variables = "tx") |> 
+  summary()
+```
+
+
+## Unit-level Summaries
+
+Instead of estimating one-number summaries, we can focus on unit-level proportion differences using `comparisons()`. This function applies the fitted logistic regression model to predict outcome probabilities for each patient, i.e., unit-level. 
+
+```{r}
+cmp <- comparisons(mod, variables = "tx")
+
+head(cmp)
+```
+
+
+Show the predicted probability for individual patients under both treatment alternatives.
+
+```{r}
+plot(x = cmp$predicted_hi,
+     y = cmp$predicted_lo,
+     main = "Risk of Mortality",
+     xlab = "SK",
+     ylab = "tPA")
+abline(0, 1)
+```
+
+Lastly, present the entire distribution of unit-level proportion differences and its mean and median.
+
+```{r}
+hist(cmp$comparison,
+     breaks = 100,
+     main = "Distribution of unit-level contrasts",
+     xlab = "SK - tPA")
+abline(v = mean(cmp$comparison), col = "red")
+abline(v = median(cmp$comparison), col = "blue")
+```
+
+
+## Appendix
+
+`comparisons()` performed the following calculations under the hood:
+
+```{r}
+d  <- gusto
+
+d$tx = "SK"
+predicted_hi <- predict(mod, newdata = d, type = "response")
+
+d$tx = "tPA"
+predicted_lo <- predict(mod, newdata = d, type = "response")
+
+comparison <- predicted_hi - predicted_lo
+```
+
+The original dataset contains 30510 patients, thus `comparisons()` generates an output with same amount of rows.
+
+```{r}
+nrow(gusto)
+```
+
+```{r}
+nrow(cmp)
+```
+
+
+

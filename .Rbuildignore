@@ -34,5 +34,6 @@
 ^vignettes/toc.Rmd
 ^vignettes/toc_external.Rmd
 ^vignettes/transformation.Rmd
+^vignettes/logistic_contrasts.Rmd
 inst/tinytest/stata/databases/.*\.dta
 man-roxygen
