@@ -186,7 +186,7 @@ We can compute average adjusted predictions for different subsets of the data wi
 predictions(mod, by = "am") |> summary()
 ```
 
-In the next example, we create a "counterfactual" data grid where each observation of the dataset are repeated twice, with different values of the `am` variable, and all other variables held at the observed values. We also show the equivalent results using `dplyr`:
+In the next example, we create a "counterfactual" data grid where each observation of the dataset is repeated twice, with different values of the `am` variable, and all other variables held at the observed values. We also show the equivalent results using `dplyr`:
 
 ```{r}
 p <- predictions(
