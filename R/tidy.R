@@ -263,17 +263,23 @@ tidy.comparisons <- function(x,
 
     draws <- attr(x, "posterior_draws")
 
+    idx_by <- c("type", "group", "term", "contrast", 
+                grep("^contrast_\\w+", colnames(x_dt), value = TRUE))
+    idx_by <- intersect(idx_by, colnames(x_dt))
+    idx_na <- is.na(x_dt$comparison)
+
+
+    # do not use the standard errors if we already have the final number of rows (e.g., lnoravg)
+    flag_delta <- nrow(unique(x_dt[, ..idx_by])) != nrow(x_dt)
+
     # empty initial mfx data.frame means there were no numeric variables in the
     # model
-    if (is.null(attr(x, "by")) && ("term" %in% colnames(x_dt) || inherits(x, "predictions"))) {
+    if (isTRUE(flag_delta) &&
+        is.null(attr(x, "by")) &&
+        ("term" %in% colnames(x_dt) || inherits(x, "predictions"))) {
 
         J <- attr(x, "jacobian")
         V <- attr(x, "vcov")
-
-        idx_by <- c("type", "group", "term", "contrast", 
-                    grep("^contrast_\\w+", colnames(x_dt), value = TRUE))
-        idx_by <- intersect(idx_by, colnames(x_dt))
-        idx_na <- is.na(x_dt$comparison)
 
         # average marginal effects
         if (is.null(marginaleffects_wts_internal)) {
