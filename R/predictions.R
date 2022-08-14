@@ -517,11 +517,12 @@ get_predictions <- function(model,
                 "The `by` argument must be either:", "",
                 sprintf("1. Character vector in which each element is part of: %s", bycols),
                 "",
-                sprintf("2. A data.frame with a `by` column of labels, and in which all other columns are elements of: %s", bycols)
+                sprintf("2. A data frame with a `by` column of labels, and in which all other columns are elements of: %s", bycols),
+                "",
+                "It can sometimes be useful to supply a data frame explicitly to the `newdata` argument in order to be able to group by all available columns."
              )
             stop(insight::format_message(msg), call. = FALSE)
         }
-
 
         # `by` data.frame
         if (isTRUE(checkmate::check_data_frame(by))) {
@@ -543,7 +544,7 @@ get_predictions <- function(model,
         if (!is.null(draws)) {
             # {collapse} package is fast and useful when operating on matrices
             insight::check_if_installed("collapse")
-            g <- collapse::GRP(out, g = bycols)
+            g <- collapse::GRP(out, by = bycols)
             w <- out[["marginaleffects_wts_internal"]]
             draws <- collapse::fmean(
                 draws,

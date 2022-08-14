@@ -26,7 +26,7 @@
 #' corresponding to combinations of values in the `by` variables. Note that the
 #' `by` argument works differently for other functions in the package
 #' (`predictions()`, `marginaleffects()`, `comparisons()`), where `by` is used
-#' for post-processing in the `tidy()` or `summary()` functions.
+#' to average estimates in subgroup.
 #' @inheritParams marginaleffects
 #' @inheritParams predictions
 #' @inheritParams comparisons

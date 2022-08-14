@@ -501,7 +501,27 @@ expect_equal(ncol(attr(p, "posterior_draws")), 2000)
 expect_equal(nrow(p), 3)
 expect_true(all(c("conf.low", "conf.high") %in% colnames(p)))
 
+
+# `by` data frame to collapse response group
+by <- data.frame(
+    group = as.character(1:4),
+    by = rep(c("(1,2)", "(3,4)"), each = 2))
+p <- predictions(
+    brms_cumulative_random,
+    by = by)
+expect_equivalent(nrow(p), 2)
+p <- predictions(
+    brms_cumulative_random,
+    by = by,
+    hypothesis = "reference")
+expect_equivalent(nrow(p), 1)
+
+
+
 # `by` not supported in comparisons() or marginaleffects()
 expect_error(comparisons(brms_factor, by = "cyl_fac"), pattern = "supported")
 expect_error(marginaleffects(brms_factor, by = "cyl_fac"), pattern = "supported")
+
+
+
 

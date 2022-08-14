@@ -261,26 +261,6 @@ comparisons <- function(model,
     # before sanitize_variables
     newdata <- sanitize_newdata(model = model, newdata = newdata)
 
-    # sanitize by after newdata
-    if (!is.null(by)) {
-        flag <- isTRUE(checkmate::check_character(by)) &&
-                isTRUE(checkmate::check_true(all(by %in% colnames(newdata))))
-        if (!isTRUE(flag)) {
-            cols <- sort(setdiff(colnames(newdata), "rowid"))
-            cols <- paste(cols, collapse = ", ")
-            msg <- format_msg(
-            "The `by` argument must be a character vector and every element of the vector
-            must be one of the following column names:
-
-            %s. 
-
-            You can supply a data frame with more columns to the `newdata` argument to 
-            group on different categories.")
-            msg <- sprintf(msg, cols)
-            stop(msg, call. = FALSE)
-        }
-    }
-
     # after sanitize_newdata
     variables_list <- sanitize_variables(
         model = model,

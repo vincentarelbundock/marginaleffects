@@ -156,3 +156,19 @@ expect_equivalent(p3$predicted, diff(p2$predicted))
 expect_equivalent(nrow(p4), 1)
 expect_equivalent(nrow(p5), 12)
 
+cmp <- comparisons(mod, type = "probs", by = "am")
+expect_equivalent(nrow(cmp), 18)
+
+cmp <- comparisons(
+    mod,
+    variables = "am",
+    by = by,
+    type = "probs")
+expect_equivalent(nrow(cmp), 2)
+cmp <- comparisons(
+    mod,
+    variables = "am",
+    by = by,
+    hypothesis = "sequential",
+    type = "probs")
+expect_equivalent(nrow(cmp), 1)

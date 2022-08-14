@@ -201,30 +201,69 @@ get_contrasts <- function(model,
         draws <- do.call("rbind", draws)
     }
 
-    idx <- grep("^contrast|^group$|^term$|^type$|^transform_pre_idx$", colnames(out), value = TRUE)
-    idx <- c(idx, by)
     out[, predicted_lo := pred_lo[["predicted"]]]
     out[, predicted_hi := pred_hi[["predicted"]]]
     out[, predicted := pred_or[["predicted"]]]
+
+
+    # the `by` variables must be included for group-by data.table operations
+    if (!is.null(by)) {
+
+        bycols <- sort(setdiff(
+            unique(c(colnames(out), colnames(newdata))),
+            c("rowid", "rowidcf", "predicted", "predicted_lo", "predicted_hi", "dydx", "comparison")))
+        bycols <- paste(bycols, collapse = ", ")
+        flagA1 <- checkmate::check_character(by)
+        flagA2 <- checkmate::check_true(all(by %in% c(colnames(out), colnames(newdata))))
+        flagB1 <- checkmate::check_data_frame(by)
+        flagB2 <- checkmate::check_true("by" %in% colnames(by))
+        flagB3 <- checkmate::check_true(all(setdiff(colnames(by), "by") %in% colnames(out)))
+
+        if (!(isTRUE(flagA1) && isTRUE(flagA2)) &&
+            !(isTRUE(flagB1) && isTRUE(flagB2) && isTRUE(flagB3))) {
+            msg <- c(
+                "The `by` argument must be either:", "",
+                sprintf("1. Character vector in which each element is part of: %s", bycols),
+                "",
+                sprintf("2. A data frame with a `by` column of labels, and in which all other columns are elements of: %s", bycols),
+                "",
+                "It can sometimes be useful to supply a data frame explicitly to the `newdata` argument in order to be able to group by all available columns."
+             )
+            stop(insight::format_message(msg), call. = FALSE)
+        }
+
+        # `by` data.frame
+        if (isTRUE(checkmate::check_data_frame(by))) {
+            idx <- setdiff(intersect(colnames(out), colnames(by)), "by")
+            out[by, by := by, on = idx]
+            bycols <- "by"
+
+        # `by` vector
+        } else {
+            tmp <- intersect(
+                c("rowid", "marginaleffects_wts_internal", by),
+                colnames(newdata))
+            tmp <- data.frame(newdata)[, tmp]
+            out <- merge(out, tmp, by = "rowid", all.x = TRUE, sort = FALSE)
+            bycols <- by
+        }
+    } else {
+        bycols <- NULL
+    }
+
+    if ("by" %in% bycols) {
+        idx <- "by"
+    } else {
+        idx <- grep("^contrast|^group$|^term$|^type$|^transform_pre_idx$", colnames(out), value = TRUE)
+        idx <- unique(c(idx, bycols))
+    }
 
     # we feed this column to safefun(), even if it is useless for categoricals
     if (!"marginaleffects_eps" %in% colnames(out)) {
         out[, "marginaleffects_eps" := NA]
     }
 
-    # the `by` variables must be included for group-by data.table operations
-    if (!is.null(by)) {
-        by_merge <- setdiff(by, colnames(out))
-        if (length(by_merge) > 0) {
-            cols <- c("rowid", by_merge, grep("^contrast", colnames(original), value = TRUE))
-            i <- c("rowid", grep("^contrast", colnames(original), value = TRUE))
-            # unique important for grid_type = "counterfactual"
-            tmp <- unique(original[, ..cols])
-            out <- merge(out, tmp, by = i, sort = FALSE)
-        }
-    }
-
-    # do not feed unknown arguments to a `transform_pre`
+        # do not feed unknown arguments to a `transform_pre`
     safefun <- function(hi, lo, y, n, term, interaction, eps, recycle = TRUE) {
         # when interaction=TRUE, sanitize_transform_pre enforces a single function
         if (isTRUE(interaction)) {

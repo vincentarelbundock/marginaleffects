@@ -21,10 +21,10 @@ expect_warning(
     pattern = "lincom")
 
 tmp <- lm(mpg ~ wt + drat, data = mtcars)
-expect_warning(predictions(
+expect_error(predictions(
     tmp,
-    newdata = datagrid(wt = 2:3),
-    hypothesis = "wt = drat"),
+    hypothesis = "wt = drat",
+    newdata = datagrid(wt = 2:3)),
     pattern = "unique row")
 
 

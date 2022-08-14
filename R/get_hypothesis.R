@@ -115,6 +115,7 @@ get_hypothesis <- function(x, hypothesis, column, by = NULL) {
                 or `by` arguments:
 
                 mod <- lm(mpg ~ am * vs + cyl, data = mtcars)
+                comparisons(mod, newdata = "mean", hypothesis = "b1 = b2")
                 comparisons(mod, newdata = "mean", hypothesis = "am = vs")
                 comparisons(mod, variables = "am", by = "cyl", hypothesis = "pairwise")
                 ')
