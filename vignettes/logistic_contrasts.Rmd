@@ -42,6 +42,7 @@ Load libraries, data and fit a covariate-adjusted logistic regression model.
 
 ```{r, message = FALSE, warning = FALSE}
 library(marginaleffects)
+library(modelsummary)
 library(rms)
 
 load(url(
@@ -59,35 +60,33 @@ mod <- glm(
 
 ## One-Number Summaries
 
-Population-averaged (aka "marginal") adjusted risk difference ([see this vignette](https://vincentarelbundock.github.io/marginaleffects/articles/gformula.html)):
+As usual, we can produce a one-number summary of the relationship of interest by exponentiating the coefficients, which yields an Odds Ratio (OR):
+
+```{r, warning = FALSE}
+modelsummary(mod, exponentiate = TRUE, coef_omit = "^(?!txSK)") 
+```
+
+Unlike ORs, adjusted risk differences vary from individual to individual based on the values of the control variables. The `comparisons()` function can compute adjusted risk differences for every individual. Here, we display only the first 6 of them:
 
 ```{r}
 comparisons(
     mod,
-    variables = "tx") |> 
+    variables = "tx") |>
+    head()
+```
+
+Population-averaged (aka "marginal") adjusted risk difference ([see this vignette](https://vincentarelbundock.github.io/marginaleffects/articles/gformula.html)) can be obtained using the `summary()` function:
+
+```{r}
+comparisons(
+    mod,
+    variables = "tx") |>
     summary()
 ```
 
 The `comparisons()` function above computed the predicted probability of mortality (`day30==1`) for each observed row of the data in two couterfactual cases: when `tx` is "SK", and when `tx` is "tPA". Then, it computed the differences between these two sets of predictions. Finally, it computed the population-average of risk differences.
 
-Now we want to obtain population-averaged adjusted odds ratio. Since odds ratios are non-collapsible, we cannot use the same strategy with them. Instead, we call `transform_pre="lnoravg`. Let `hi` be the vector of predicted probabilities when `tx` is "SK", and let `lo` be the vector of predicted probabilities when `tx` is "tPA". Then, the `transform_pre="lnoravg"` applies this function:
-
-```r
-log((mean(hi)/(1 - mean(hi)))/(mean(lo)/(1 - mean(lo))))
-```
-
-Finally, we use `transform_post=exp` to exponentiate the results.
-
-```{r}
-comparisons(
-    mod,
-    variables = "tx",
-    transform_pre = "lnoravg",
-    transform_post = exp) |>
-    summary()
-```
-
-Population-averaged (marginal) adjusted risk ratio:
+Instead of risk *differences*, we could compute population-averaged (marginal) adjusted risk *ratios*:
 
 ```{r}
 comparisons(
@@ -130,7 +129,6 @@ hist(cmp$comparison,
 abline(v = mean(cmp$comparison), col = "red")
 abline(v = median(cmp$comparison), col = "blue")
 ```
-
 
 ## Appendix
 
