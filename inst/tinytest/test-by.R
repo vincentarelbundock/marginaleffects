@@ -1,6 +1,7 @@
 source("helpers.R", local = TRUE)
 if (ON_CRAN) exit_file("on cran")
 requiet("margins")
+requiet("nnet")
 tol <- 1e-4
 tol_se <- 1e-3
 
@@ -133,4 +134,25 @@ mod <- glm(
 p <- predictions(mod, by = "children")
 expect_equivalent(nrow(p), 2)
 expect_false(anyNA(p$predicted))
+
+
+
+# Issue #445: by data frame to collapse response levels
+mod <- multinom(factor(gear) ~ mpg + am * vs, data = mtcars, trace = FALSE)
+
+expect_error(predictions(mod, type = "probs", by = "response"), pattern = "Character vector")
+expect_error(predictions(mod, type = "probs", by = mtcars), pattern = "Character vector")
+
+by <- data.frame(
+    group = c("3", "4", "5"),
+    by = c("(3,4)", "(3,4)", "(5)"))
+p1 <- predictions(mod, type = "probs")
+p2 <- predictions(mod, type = "probs", by = by)
+p3 <- predictions(mod, type = "probs", by = by, hypothesis = "sequential")
+p4 <- predictions(mod, type = "probs", by = by, hypothesis = "reference")
+p5 <- predictions(mod, type = "probs", by = c("am", "vs", "group"))
+expect_equivalent(mean(subset(p1, group == "5")$predicted), p2$predicted[2])
+expect_equivalent(p3$predicted, diff(p2$predicted))
+expect_equivalent(nrow(p4), 1)
+expect_equivalent(nrow(p5), 12)
 

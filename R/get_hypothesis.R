@@ -51,7 +51,7 @@ get_hypothesis <- function(x, hypothesis, column, by = NULL) {
             lab <- sprintf("%s - %s", lab, lab[1])
         }
         colnames(lincom) <- lab
-        lincom <- lincom[, 2:ncol(lincom)]
+        lincom <- lincom[, 2:ncol(lincom), drop = FALSE]
     }
 
     if (isTRUE(hypothesis == "sequential")) {
@@ -173,7 +173,6 @@ get_hypothesis <- function(x, hypothesis, column, by = NULL) {
 
         # frequentist
         } else {
-
             out <- data.table(
                 term = colnames(lincom),
                 tmp = as.vector(x[[column]] %*% lincom))
@@ -193,9 +192,11 @@ get_hypothesis <- function(x, hypothesis, column, by = NULL) {
 
 
 get_hypothesis_row_labels <- function(x, by = NULL) {
-    lab <- grep("^term$|^group$|^value$|^contrast$|^contrast_", colnames(x), value = TRUE)
+    lab <- grep("^term$|^by$|^group$|^value$|^contrast$|^contrast_", colnames(x), value = TRUE)
     lab <- Filter(function(z) length(unique(x[[z]])) > 1, lab)
-    lab <- c(lab, by)
+    if (isTRUE(checkmate::check_character(by))) {
+        lab <- c(lab, by)
+    }
     if (length(lab) == 0) {
         lab <- NULL
     } else {

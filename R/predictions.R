@@ -252,7 +252,7 @@ predictions <- function(model,
 
     J <- NULL
 
-    tmp <- myTryCatch(get_predictions(
+    tmp <- get_predictions(
         model,
         newdata = newdata,
         vcov = vcov_tmp,
@@ -260,44 +260,47 @@ predictions <- function(model,
         type = type,
         hypothesis = hypothesis,
         by = by,
-        ...))
+        ...)
 
-    if (isTRUE(grepl("type.*models", tmp[["error"]]))) {
-        stop(tmp$error$message, call. = FALSE)
+    # These warnings obscure more than then help. We should give more low-level
+    # explicit errors instead.
 
-    } else if (!inherits(tmp[["value"]], "data.frame")) {
-        if (isTRUE(grepl("row indices", tmp$error$message))) stop(tmp$error$message, call. = FALSE)
-        if (!is.null(tmp$warning)) warning(tmp$warning$message, call. = FALSE)
-        if (!is.null(tmp$error)) warning(tmp$error$message, call. = FALSE)
-        msg <- format_msg(
-            "Unable to compute adjusted predictions for model of class `%s`. You can try to
-            specify a different value for the `newdata` argument. If this does not work and
-            you believe that this model class should be supported by `marginaleffects`,
-            please file a feature request on the Github issue tracker:
+    # if (isTRUE(grepl("type.*models", tmp[["error"]]))) {
+    #     stop(tmp$error$message, call. = FALSE)
 
-            https://github.com/vincentarelbundock/marginaleffects/issues")
-        msg <- sprintf(msg, class(model)[1])
-        stop(msg, call. = FALSE)
+    # } else if (!inherits(tmp[["value"]], "data.frame")) {
+    #     if (isTRUE(grepl("row indices", tmp$error$message))) stop(tmp$error$message, call. = FALSE)
+    #     if (!is.null(tmp$warning)) warning(tmp$warning$message, call. = FALSE)
+    #     if (!is.null(tmp$error)) warning(tmp$error$message, call. = FALSE)
+    #     msg <- format_msg(
+    #         "Unable to compute adjusted predictions for model of class `%s`. You can try to
+    #         specify a different value for the `newdata` argument. If this does not work and
+    #         you believe that this model class should be supported by `marginaleffects`,
+    #         please file a feature request on the Github issue tracker:
 
-    } else if (inherits(tmp[["warning"]], "warning") &&
-               isTRUE(grepl("vcov.*supported", tmp)) &&
-               !is.null(vcov) &&
-               !isFALSE(vcov)) {
-        msg <- format_msg(
-            "The object passed to the `vcov` argument is of class `%s`, which is not
-            supported for models of class `%s`. Please set `vcov` to `TRUE`, `FALSE`,
-            `NULL`, or supply a variance-covariance `matrix` object.")
-        msg <- sprintf(msg, class(model)[1])
-        stop(msg, call. = FALSE)
+    #         https://github.com/vincentarelbundock/marginaleffects/issues")
+    #     msg <- sprintf(msg, class(model)[1])
+    #     stop(msg, call. = FALSE)
 
-    } else if (inherits(tmp[["warning"]], "warning")) {
-        msg <- tmp$warning$message
-        warning(msg, call. = FALSE)
-        tmp <- tmp[["value"]]
+    # } else if (inherits(tmp[["warning"]], "warning") &&
+    #            isTRUE(grepl("vcov.*supported", tmp)) &&
+    #            !is.null(vcov) &&
+    #            !isFALSE(vcov)) {
+    #     msg <- format_msg(
+    #         "The object passed to the `vcov` argument is of class `%s`, which is not
+    #         supported for models of class `%s`. Please set `vcov` to `TRUE`, `FALSE`,
+    #         `NULL`, or supply a variance-covariance `matrix` object.")
+    #     msg <- sprintf(msg, class(model)[1])
+    #     stop(msg, call. = FALSE)
 
-    } else {
-        tmp <- tmp[["value"]]
-    }
+    # } else if (inherits(tmp[["warning"]], "warning")) {
+    #     msg <- tmp$warning$message
+    #     warning(msg, call. = FALSE)
+    #     tmp <- tmp[["value"]]
+
+    # } else {
+    #     tmp <- tmp[["value"]]
+    # }
 
 
     # two cases when tmp is a data.frame
@@ -427,9 +430,15 @@ predictions <- function(model,
     }
 
     # clean columns
+    if (isTRUE(checkmate::check_data_frame(by))) {
+        bycols <- setdiff(colnames(by), "by")
+    } else {
+        bycols <- by
+    }
+
     stubcols <- c( 
         "rowid", "rowidcf", "type", "term", "group", "hypothesis",
-        by,
+        bycols,
         "predicted", "std.error", "statistic", "p.value", "conf.low",
         "conf.high", "marginaleffects_wts",
         sort(grep("^predicted", colnames(newdata), value = TRUE)))
@@ -492,18 +501,49 @@ get_predictions <- function(model,
     # averaging by groups
     if (!is.null(by)) {
 
-        tmp <- intersect(
-            c("rowid", "marginaleffects_wts_internal", by),
-            colnames(newdata))
-        tmp <- data.frame(newdata)[, tmp]
-        # todo: merge update leaves the object in memory in place
-        out <- merge(out, tmp, by = "rowid", sort = FALSE)
+        bycols <- sort(setdiff(
+            unique(c(colnames(out), colnames(newdata))),
+            c("rowid", "rowidcf", "predicted", "predicted_lo", "predicted_hi", "dydx", "comparison")))
+        bycols <- paste(bycols, collapse = ", ")
+        flagA1 <- checkmate::check_character(by)
+        flagA2 <- checkmate::check_true(all(by %in% c(colnames(out), colnames(newdata))))
+        flagB1 <- checkmate::check_data_frame(by)
+        flagB2 <- checkmate::check_true("by" %in% colnames(by))
+        flagB3 <- checkmate::check_true(all(setdiff(colnames(by), "by") %in% colnames(out)))
+
+        if (!(isTRUE(flagA1) && isTRUE(flagA2)) &&
+            !(isTRUE(flagB1) && isTRUE(flagB2) && isTRUE(flagB3))) {
+            msg <- c(
+                "The `by` argument must be either:", "",
+                sprintf("1. Character vector in which each element is part of: %s", bycols),
+                "",
+                sprintf("2. A data.frame with a `by` column of labels, and in which all other columns are elements of: %s", bycols)
+             )
+            stop(insight::format_message(msg), call. = FALSE)
+        }
+
+
+        # `by` data.frame
+        if (isTRUE(checkmate::check_data_frame(by))) {
+            idx <- setdiff(intersect(colnames(out), colnames(by)), "by")
+            out[by, by := by, on = idx]
+            bycols <- "by"
+
+        # `by` vector
+        } else {
+            tmp <- intersect(
+                c("rowid", "marginaleffects_wts_internal", by),
+                colnames(newdata))
+            tmp <- data.frame(newdata)[, tmp]
+            out <- merge(out, tmp, by = "rowid", all.x = TRUE, sort = FALSE)
+            bycols <- by
+        }
 
         # bayesian
         if (!is.null(draws)) {
             # {collapse} package is fast and useful when operating on matrices
             insight::check_if_installed("collapse")
-            g <- collapse::GRP(out, by)
+            g <- collapse::GRP(out, g = bycols)
             w <- out[["marginaleffects_wts_internal"]]
             draws <- collapse::fmean(
                 draws,
@@ -522,11 +562,11 @@ get_predictions <- function(model,
                     predicted,
                     marginaleffects_wts_internal,
                     na.rm = TRUE)),
-                by = by]
+                by = bycols]
             } else {
                 out <- out[,
                 .(predicted = mean(predicted)),
-                by = by]
+                by = bycols]
             }
 
         }
