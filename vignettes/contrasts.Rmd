@@ -168,7 +168,7 @@ nrow(cmp)
 
 ## Average contrasts
 
-By default, the `marginaleffects()` and `comparisons()` functions compute marginal effects and contrasts for every row of the original dataset. These unit-level estimates can be unwieldy and hard to interpret. To help interpretation, the `summary()` function computes the "Average Marginal Effect" or "Average Contrast," by taking the mean of all the unit-level estimates.
+By default, the `marginaleffects()` and `comparisons()` functions compute marginal effects and contrasts for every row of the original dataset. These unit-level estimates can be of great interest, as discussed in [another vignette](https://vincentarelbundock.github.io/marginaleffects/articles/logistic_contrasts.html). Nevertheless, one may want to focus on one-number summaries: the `summary()` function computes the "Average Marginal Effect" or "Average Contrast," by taking the mean of all the unit-level estimates.
 
 ```{r}
 summary(cmp)

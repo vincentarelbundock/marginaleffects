@@ -1,5 +1,13 @@
 # marginaleffects 0.7.0.9000
 
+* `by` argument accepts data frames for complex groupings.
+* `by` argument accepts "group" to group by response level.
+* `by` argument works with bayesian models.
+* `hypothesis`: The matrix colnames are used as labels for hypothesis tests.
+* `hypothesis`: Better labels with "sequential", "reference", "pairwise".
+* New vignette: Unit-level contrasts in logistic regressions. Thanks to @arthur-albuquerque.
+* New vignette: Bootstrap example in standard errors vignette.
+
 # marginaleffects 0.7.0
 
 Breaking changes:
