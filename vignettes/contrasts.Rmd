@@ -505,7 +505,7 @@ library(patchwork)
 library(marginaleffects)
 set.seed(1234)
 
-source("../inst/tinytest/helpers.R")
+source(here::here("inst/tinytest/helpers.R"))
 mod <- download_model("brms_lognormal_hurdle")
 ```
 
@@ -618,15 +618,16 @@ predictions_data <- predictions(
   mod,
   newdata = datagrid(lifeExp = seq(30, 80, 1)),
   dpar = "mu",
-  transform_post = exp)
+  transform_post = exp) |>
+  select(lifeExp, predicted)
 
 slopes_data <- comparisons(
   mod,
   dpar = "mu",
   variables = list(lifeExp = eps),
   newdata = datagrid(lifeExp = seq(40, 80, 20)),
-  transform_pre = function(hi, lo) ((exp(hi) - exp(lo)) / exp(eps)) / eps
-) %>% 
+  transform_pre = function(hi, lo) ((exp(hi) - exp(lo)) / exp(eps)) / eps) %>%
+  select(lifeExp, comparison) %>%
   left_join(predictions_data, by = "lifeExp") %>%
   # Point-slope formula: (y - y1) = m(x - x1)
   mutate(intercept = comparison * (-lifeExp) + predicted)
