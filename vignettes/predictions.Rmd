@@ -173,23 +173,62 @@ summary(pred)
 This is equivalent to:
 
 ```{r}
-pred %>% summarize(AAP = mean(predicted))
-
-summary(pred)
+mean(pred$predicted)
 ```
 
-We can also compute the AAP for multiple values of the regressors. For example, here use create a "counterfactual" data grid where each observation of the dataset are repeated twice, with different values of the `am` variable, and all other variables held at the observed values. Then, we use the `by` argument or some `dplyr` magic:
+# Average Adjusted Predictions by Group
+
+The code in this section requires version 0.8.0 of `marginaleffects`, or [the development version from Github.](https://vincentarelbundock.github.io/marginaleffects/#installation)
+
+We can compute average adjusted predictions for different subsets of the data with the `by` argument.
+
+```{r}
+predictions(mod, by = "am") |> summary()
+```
+
+In the next example, we create a "counterfactual" data grid where each observation of the dataset are repeated twice, with different values of the `am` variable, and all other variables held at the observed values. We also show the equivalent results using `dplyr`:
 
 ```{r}
 p <- predictions(
     mod,
     by = "am",
-    newdata = datagrid(am = 0:1, grid_type = "counterfactual"))
+    newdata = datagridcf(am = 0:1))
 summary(p)
 
 p %>% group_by(am) %>%
       summarize(AAP = mean(predicted))
 ```
+
+One place where this is particularly useful is in multinomial models with different response levels. For example, here we compute the average predicted outcome for each outcome level in a multinomial logit model. Note that response levels are identified by the "group" column.
+
+```{r}
+library(nnet)
+nom <- multinom(factor(gear) ~ mpg + am * vs, data = mtcars, trace = FALSE)
+
+# first 5 raw predictions
+predictions(nom, type = "probs") |> head()
+
+# average predictions
+predictions(nom, type = "probs", by = "group") |> summary()
+```
+
+We can use custom aggregations by supplying a data frame to the `by` argument. All columns of this data frame must be present in the output of `predictions()`, and the data frame must also include a `by` column of labels. In this example, we "collapse" response groups:
+
+```{r}
+by <- data.frame(
+    group = c("3", "4", "5"),
+    by = c("3,4", "3,4", "5"))
+
+predictions(nom, type = "probs", by = by)
+```
+
+This can be very useful in combination with the `hypothesis` argument. For example, here we compute the difference between average adjusted predictions for the 3 and 4 response levels, compared to the 5 reponse level:
+
+```{r}
+predictions(nom, type = "probs", by = by, hypothesis = "sequential") |>
+    summary()
+```
+
 
 # Conditional Adjusted Predictions (Plot)
 

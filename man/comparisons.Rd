@@ -125,7 +125,12 @@ acceptable values is returned in an error message.}
 \item \code{NULL} (default): Behaves like \code{TRUE} when the \code{variables} argument is specified and the model formula includes interactions. Behaves like \code{FALSE} otherwise.
 }}
 
-\item{by}{Character vector of variable names over which to compute group-wise estimates.}
+\item{by}{Compute group-wise average estimates. Valid inputs:
+\itemize{
+\item Character vector of column names in \code{newdata} or in the data frame produced by calling the function without the \code{by} argument.
+\item Data frame with a \code{by} column of group labels, and merging columns shared by \code{newdata} or the data frame produced by calling the same function without the \code{by} argument.
+\item See examples below.
+}}
 
 \item{wts}{string or numeric: weights to use when computing average
 contrasts or marginaleffects. These weights only affect the averaging in
@@ -366,5 +371,18 @@ comparisons(
     mod,
     newdata = "mean",
     hypothesis = lc)
+
+
+# `by` argument
+mod <- lm(mpg ~ hp * am * vs, data = mtcars)
+cmp <- comparisons(mod, variables = "hp", by = c("vs", "am"))
+summary(cmp)
+
+library(nnet)
+mod <- multinom(factor(gear) ~ mpg + am * vs, data = mtcars, trace = FALSE)
+by <- data.frame(
+    group = c("3", "4", "5"),
+    by = c("3,4", "3,4", "5"))
+comparisons(mod, type = "probs", by = by)
 
 }

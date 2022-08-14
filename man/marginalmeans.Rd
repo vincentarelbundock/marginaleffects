@@ -90,7 +90,7 @@ acceptable values is returned in an error message.}
 corresponding to combinations of values in the \code{by} variables. Note that the
 \code{by} argument works differently for other functions in the package
 (\code{predictions()}, \code{marginaleffects()}, \code{comparisons()}), where \code{by} is used
-for post-processing in the \code{tidy()} or \code{summary()} functions.}
+to average estimates in subgroup.}
 
 \item{...}{Additional arguments are passed to the \code{predict()} method
 supplied by the modeling package.These arguments are particularly useful

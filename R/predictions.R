@@ -138,6 +138,26 @@
 #'     newdata = datagrid(wt = 2:3),
 #'     hypothesis = lc)
 #' 
+#' 
+#' # `by` argument
+#' mod <- lm(mpg ~ hp * am * vs, data = mtcars)
+#' predictions(mod, by = c("am", "vs")) 
+#' 
+#' library(nnet)
+#' nom <- multinom(factor(gear) ~ mpg + am * vs, data = mtcars, trace = FALSE)
+#' 
+#' # first 5 raw predictions
+#' predictions(nom, type = "probs") |> head()
+#' 
+#' # average predictions
+#' predictions(nom, type = "probs", by = "group") |> summary()
+#' 
+#' by <- data.frame(
+#'     group = c("3", "4", "5"),
+#'     by = c("3,4", "3,4", "5"))
+#' 
+#' predictions(nom, type = "probs", by = by)
+#' 
 #' @export
 predictions <- function(model,
                         newdata = NULL,
