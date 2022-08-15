@@ -114,6 +114,17 @@ sanitize_newdata <- function(model, newdata) {
         newdata$rowid <- seq_len(nrow(newdata))
     }
 
+    # placeholder response; sometimes insight::get_predicted breaks without this
+    resp <- insight::find_response(model)
+    if (isTRUE(checkmate::check_character(resp, len = 1)) &&
+        !resp %in% colnames(newdata)) {
+        y <- insight::get_response(model)
+        # protect df or matrix response
+        if (isTRUE(checkmate::check_atomic_vector(y))) {
+            newdata[[resp]] <- y[1]
+        }
+    }
+
     return(newdata)
 }
 

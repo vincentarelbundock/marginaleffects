@@ -23,9 +23,11 @@ mod <- lm(mpg ~ hp + drat + wt, mtcars)
 nd1 <- datagrid(wt = 3, hp = c(100, 110), model = mod)
 nd2 <- datagrid(wt = 3, hp = c(100, 110), newdata = mtcars)
 x <- marginaleffects(mod, newdata = datagrid(wt = 3, hp = c(100, 110)))
+x$mpg <- NULL # placeholder response in predictions
 y <- marginaleffects(mod, newdata = nd1)
 z <- marginaleffects(mod, newdata = nd2)
 z <- z[, colnames(x), drop = FALSE]
+y <- y[, colnames(x), drop = FALSE]
 expect_true(all(x == y))
 expect_true(all(x == z))
 
