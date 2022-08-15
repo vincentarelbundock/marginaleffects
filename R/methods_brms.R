@@ -30,26 +30,28 @@ get_predict.brmsfit <- function(model,
                                 type = "response",
                                 ...) {
 
-    assert_dependency("rstantools")
-
     checkmate::assert_choice(type, choices = c("response", "link", "prediction", "average"))
 
     if (type == "link") {
+        assert_dependency("rstantools")
         draws <- rstantools::posterior_linpred(
             model,
             newdata = newdata,
             ...)
     } else if (type == "response") {
+        assert_dependency("rstantools")
         draws <- rstantools::posterior_epred(
             model,
             newdata = newdata,
             ...)
     } else if (type == "prediction") {
+        assert_dependency("rstantools")
         draws <- rstantools::posterior_predict(
             model,
             newdata = newdata,
             ...)
     } else if (type == "average") {
+        assert_dependency("brms")
         draws <- brms::pp_average(
             model,
             newdata = newdata,
