@@ -170,6 +170,13 @@ expect_inherits(m1, "comparisons")
 expect_inherits(m2, "comparisons")
 
 
+# Issue #458: fixest with data table
+dat <- data.table(y = rnorm(10), x = rnorm(10))
+model <- feols(y ~ x, dat)
+m <- marginaleffects(model)
+expect_inherits(m, "marginaleffects")
+
+
 
 # TODO: works interactively
 # expect_false(expect_warning(marginaleffects(fit3)))
@@ -200,6 +207,7 @@ expect_inherits(m2, "comparisons")
 # dat <<- trade
 # mod <- feNmlm(Euros ~ log(dist_km) | Product, data = dat)
 # expect_marginaleffects(mod)
+
 
 
 
