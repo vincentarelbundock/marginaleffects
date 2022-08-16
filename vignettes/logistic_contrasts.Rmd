@@ -97,6 +97,17 @@ comparisons(
     summary()
 ```
 
+Population-averaged (marginal) odds ratios:
+
+```{r}
+comparisons(
+    mod,
+    variables = "tx",
+    transform_pre = "lnoravg",
+    transform_post = exp) |>
+    summary()
+```
+
 ## Unit-level Summaries
 
 Instead of estimating one-number summaries, we can focus on unit-level proportion differences using `comparisons()`. This function applies the fitted logistic regression model to predict outcome probabilities for each patient, i.e., unit-level. 
