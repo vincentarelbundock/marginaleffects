@@ -207,8 +207,3 @@ expect_inherits(m, "marginaleffects")
 # dat <<- trade
 # mod <- feNmlm(Euros ~ log(dist_km) | Product, data = dat)
 # expect_marginaleffects(mod)
-
-
-
-
-
