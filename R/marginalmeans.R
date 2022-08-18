@@ -104,6 +104,7 @@ marginalmeans <- function(model,
                           transform_post = NULL,
                           interaction = NULL,
                           hypothesis = NULL,
+                          wts = "equal",
                           by = NULL,
                           ...) {
 
@@ -215,6 +216,13 @@ marginalmeans <- function(model,
     args[["newdata"]] <- newdata
     newgrid <- do.call("datagrid", args)
 
+    newgrid <- get_marginalmeans_wts(
+        model = model,
+        variables = variables,
+        newdata = newdata,
+        newgrid = newgrid,
+        wts = wts)
+
     mm <- get_marginalmeans(model = model,
                             newdata = newgrid,
                             type = type,
@@ -314,7 +322,9 @@ get_marginalmeans <- function(model,
         mm <- list()
         for (v in variables) {
             idx <- intersect(colnames(pred), c("term", "group", v, by))
-            tmp <- data.table(pred)[, .(marginalmean = mean(predicted, na.rm = TRUE)), by = idx]
+            tmp <- data.table(pred)[
+                , .(marginalmean = weighted.mean(predicted, w = wts, na.rm = TRUE)),
+                by = idx]
             tmp[, "term" := v]
             setnames(tmp, old = v, new = "value")
             mm[[v]] <- tmp
@@ -331,7 +341,11 @@ get_marginalmeans <- function(model,
         setorder(out, "term", "value")
     } else {
         idx <- intersect(colnames(pred), c("term", "group", variables))
-        out <- data.table(pred)[, .(marginalmean = mean(predicted, na.rm = TRUE)), by = idx]
+
+
+        out <- data.table(pred)[
+            , .(marginalmean = weighted.mean(predicted, w = wts, na.rm = TRUE)),
+            by = idx]
     }
 
     if (!is.null(hypothesis)) {
@@ -341,3 +355,50 @@ get_marginalmeans <- function(model,
     return(out)
 }
 
+
+get_marginalmeans_wts <- function(model, variables, newgrid, newdata, wts) {
+    resp <- insight::find_response(model)[1]
+    wtsgrid <- newgrid[, colnames(newgrid) != resp]
+    setDT(wtsgrid)
+
+    if (identical(wts, "cells")) {
+        idx <- colnames(wtsgrid)
+        wtsgrid <- data.table(newdata)[
+            , wts := .N, by = idx][
+            , wts := wts / sum(wts)]
+        wtsgrid <- unique(wtsgrid)
+
+    } else if (identical(wts, "proportional")) {
+
+    # "proportional" Weight in proportion to the frequencies (in the original
+    # data) of the factor combinations that are averaged over.
+    # https://stackoverflow.com/questions/66748520/what-is-the-difference-between-weights-cell-and-weights-proportional-in-r-pa
+        idx <- setdiff(colnames(newgrid), c(variables, resp))
+        if (length(idx) == 0) {
+            newgrid[["wts"]] <- 1
+            return(newgrid)
+        }
+        wtsgrid <- data.table(newdata)[
+            , .(wts = .N), by = idx][
+            , wts := wts / sum(wts)]
+        
+    } else {
+        newgrid[["wts"]] <- 1
+        return(newgrid)
+    }
+
+    # harmonize column types for in-formula factors
+    for (v in colnames(newgrid)) {
+        if (v %in% colnames(wtsgrid) && is.factor(newgrid[[v]])) {
+            wtsgrid[[v]] <- factor(wtsgrid[[v]], levels = levels(newgrid[[v]]))
+        }
+    }
+
+    idx <- setdiff(idx, c("wts", resp))
+    setDT(newgrid)
+    newgrid[
+        wtsgrid, "wts" := wts, on = idx][
+        is.na(wts), "wts" := 0]
+
+    return(newgrid)
+}
