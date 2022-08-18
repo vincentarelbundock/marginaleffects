@@ -121,3 +121,71 @@ expect_inherits(mm, "marginalmeans")
 expect_equal(nrow(mm), 10)
 
 
+
+# # wts
+# mod <- lm(mpg ~ factor(am) + factor(gear), data = mtcars)
+# marginalmeans(mod, variables = "am")
+
+
+
+
+
+
+
+
+# library(marginaleffects)
+# library(emmeans)
+
+# mod1 <- glm(vs ~ factor(am) + factor(gear), data = mtcars, family = binomial)
+# mod2 <- glm(vs ~ factor(am) + factor(gear) + mpg, data = mtcars, family = binomial)
+
+# predictions(mod1, type = "link", by = "am") |> summary() 
+
+
+# # equal weights
+# emmeans(mod1, ~am, weights = "equal")
+# marginalmeans(mod1, variables = "am", type = "link")
+
+# emmeans(mod1, ~am, weights = "cells")
+# marginalmeans(mod1, variables = "am", type = "link", wts = "cells")
+
+# emmeans(mod1, ~am, weights = "proportional")
+# marginalmeans(mod1, variables = "am", type = "link", wts = "proportional")
+
+# predictions(
+#     mod1,
+#     newdata = datagrid(am = unique, gear = unique),
+#     by = "am",
+#     type = "link")
+
+
+# # cells weights
+# emmeans(mod1, ~am, weights = "cells")
+
+# predictions(
+#     mod1,
+#     by = "am",
+#     type = "link")
+
+# # cells weights are slightly different with numeric predictors because they are held at their actually observed values rather than arbitrarily fixed to their means.
+# emmeans(mod2, ~am, weights = "cells")
+
+# predictions(
+#     mod2,
+#     by = "am",
+#     type = "link")
+
+
+# # proportional weights
+# library(dplyr)
+# dat <- mtcars |>
+#     mutate(n = n()) |>
+#     group_by(am, gear) |>
+#     mutate(wts = n() / n)
+# p <- predictions(
+#     mod1,
+#     newdata = dat,
+#     type = "link")
+# p |> group_by(am) |>
+#      summarize(mm = weighted.mean(predicted, w = wts))
+
