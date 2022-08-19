@@ -1,5 +1,6 @@
 source("helpers.R")
 requiet("survey")
+requiet("MatchIt")
 
 # mtcars logit
 dat <- mtcars
@@ -29,6 +30,29 @@ expect_inherits(m1, "data.frame")
 c1 <- comparisons(mod, wts = "weights", newdata = dat, by = "cyl")
 c1 <- tidy(c1)
 expect_inherits(c1, "data.frame")
+
+
+# wts + transform_pre="avg"
+requiet("MatchIt")
+data("lalonde", package = "MatchIt")
+set.seed(100)
+lalonde$w <- rchisq(614, 2)
+fit <- lm(re78 ~ treat * (age + educ + race + married + re74),
+          data = lalonde, weights = w)
+cmp1 <- comparisons(fit, variables = "treat", wts = "w")
+cmp2 <- comparisons(fit,variables = "treat", wts = "w", transform_pre = "differenceavg")
+expect_equivalent(tidy(cmp1)$estimate, weighted.mean(cmp1$comparison, lalonde$w))
+expect_equivalent(cmp2$comparison, weighted.mean(cmp$comparison, lalonde$w))
+
+set.seed(1024)
+mod <- download_model("brms_numeric2")
+w <- runif(32)
+cmp1 <- comparisons(mod, transform_pre = "differenceavg")
+cmp2 <- comparisons(mod, wts = w, transform_pre = "differenceavg")
+cmp3 <- comparisons(mod, wts = w, transform_pre = "differenceavgwts")
+expect_true(all(cmp1$comparison != cmp2$comparison))
+expect_equivalent(cmp2$comparison, cmp3$comparison)
+
 
 
 # sanity check
@@ -81,3 +105,5 @@ expect_equivalent(mfx, stata, tolerance = 0.0002)
 # -------------+----------------------------------------------------------------
 #          mpg |   .0441066   .0061046     7.23   0.000     .0321419    .0560714
 # ------------------------------------------------------------------------------
+
+

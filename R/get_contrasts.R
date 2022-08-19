@@ -5,6 +5,7 @@ get_contrasts <- function(model,
                           original,
                           lo,
                           hi,
+                          wts = NULL,
                           marginalmeans,
                           by = NULL,
                           hypothesis = NULL,
@@ -71,15 +72,16 @@ get_contrasts <- function(model,
     # compute predictions. It includes a term column, which we need to
     # replicate for each group.
     out[, "marginaleffects_eps" := NA_real_] # default (probably almost always overwritten)
+    out[, "marginaleffects_wts_internal" := NA_real_] # default (probably almost always overwritten)
     mult <- nrow(out) / nrow(original)
     if (isTRUE(mult == 1)) {
-        for (v in grep("^term$|^contrast|^marginaleffects_eps$", colnames(original), value = TRUE)) {
+        for (v in grep("^term$|^contrast|^marginaleffects_eps$|^marginaleffects_wts_internal$", colnames(original), value = TRUE)) {
             out[, (v) := original[[v]]]
         }
 
     # group or multivariate outcomes
     } else if (isTRUE(mult > 1)) {
-        for (v in grep("^term$|^contrast|^marginaleffects_eps$", colnames(original), value = TRUE)) {
+        for (v in grep("^term$|^contrast|^marginaleffects_eps$|^marginaleffects_wts_internal$", colnames(original), value = TRUE)) {
             out[, (v) := rep(original[[v]], times = mult)]
         }
 
@@ -87,7 +89,7 @@ get_contrasts <- function(model,
     } else {
         out <- merge(out, newdata, by = "rowid")
         if (isTRUE(nrow(out) == nrow(lo))) {
-            tmp <- data.table(lo)[, .SD, .SDcols = patterns("^contrast|marginaleffects_eps")]
+            tmp <- data.table(lo)[, .SD, .SDcols = patterns("^contrast|marginaleffects_eps|marginaleffects_wts_internal")]
             out <- cbind(out, tmp)
             idx <- c("rowid", grep("^contrast", colnames(out), value = TRUE), colnames(out))
             idx <- unique(idx)
@@ -146,12 +148,13 @@ get_contrasts <- function(model,
         draws_hi <- attr(pred_hi, "posterior_draws")
         draws_or <- attr(pred_or, "posterior_draws")
 
-        wrapfun <- function(fun, hi, lo, y, x, eps) {
+        wrapfun <- function(fun, hi, lo, y, x, eps, wts) {
             args <- list(
                 hi = hi,
                 lo = lo,
                 y = y,
                 x = x,
+                w = wts,
                 eps = eps)
             args <- args[intersect(names(args), names(formals(fun)))]
             out <- do.call("fun", args)
@@ -174,13 +177,15 @@ get_contrasts <- function(model,
             x <- rep(x, times = nrow(draws_lo) / length(x))[idx2]
             fun <- fun_list[[tn]]
 
-            draws_sub <- wrapfun(
+            draws_sub <- try(wrapfun(
                 fun = fun,
                 hi = draws_hi_sub,
                 lo = draws_lo_sub,
                 y = draws_or_sub,
                 x = x,
-                eps = out[idx2, marginaleffects_eps])
+                wts = out[idx2, marginaleffects_wts_internal],
+                eps = out[idx2, marginaleffects_eps]),
+                silent = TRUE)
 
             # usually happens when `transform_pre` returns a unique value instead of a vector
             if (!is.matrix(draws_sub)) {
@@ -192,6 +197,7 @@ get_contrasts <- function(model,
                         lo = draws_lo_sub[, j],
                         y = draws_or_sub[, j],
                         x = x,
+                        wts = out[idx2, marginaleffects_wts_internal],
                         eps = out[idx2, marginaleffects_eps])
                 )
                 draws_sub <- matrix(draws_sub, nrow = 1)
@@ -262,9 +268,12 @@ get_contrasts <- function(model,
     if (!"marginaleffects_eps" %in% colnames(out)) {
         out[, "marginaleffects_eps" := NA]
     }
+    if (!"marginaleffects_wts_internal" %in% colnames(out)) {
+        out[, "marginaleffects_wts_internal" := NA]
+    }
 
-        # do not feed unknown arguments to a `transform_pre`
-    safefun <- function(hi, lo, y, n, term, interaction, eps, recycle = TRUE) {
+    # do not feed unknown arguments to a `transform_pre`
+    safefun <- function(hi, lo, y, n, term, interaction, eps, wts, recycle = TRUE) {
         # when interaction=TRUE, sanitize_transform_pre enforces a single function
         if (isTRUE(interaction)) {
             fun <- fun_list[[1]]
@@ -272,7 +281,13 @@ get_contrasts <- function(model,
             fun <- fun_list[[term[1]]]
         }
 
-        args <- list("hi" = hi, "lo" = lo, "y" = y, "eps" = eps, "x" = elasticities[[term[1]]])
+        args <- list(
+            "hi" = hi,
+            "lo" = lo,
+            "y" = y,
+            "eps" = eps,
+            "w" = wts,
+            "x" = elasticities[[term[1]]])
         args <- args[names(args) %in% names(formals(fun))]
         con <- try(do.call("fun", args), silent = TRUE)
         if (!isTRUE(checkmate::check_numeric(con, len = n)) &&
@@ -289,7 +304,7 @@ get_contrasts <- function(model,
              stop("no recycling allowed", call. = FALSE)
         }
 
-        out = list(comparison = con)
+        out <- list(comparison = con)
         return(out)
     }
 
@@ -325,6 +340,7 @@ get_contrasts <- function(model,
                 n = .N,
                 term = term,
                 interaction = interaction,
+                wts = marginaleffects_wts_internal,
                 eps = marginaleffects_eps,
                 recycle = FALSE)$comparison,
             by = idx]
@@ -338,6 +354,7 @@ get_contrasts <- function(model,
                     n = .N,
                     term = term,
                     interaction = interaction,
+                    wts = marginaleffects_wts_internal,
                     eps = marginaleffects_eps,
                     recycle = TRUE)$comparison),
                 by = idx]

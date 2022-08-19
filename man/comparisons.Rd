@@ -107,7 +107,7 @@ acceptable values is returned in an error message.}
 \itemize{
 \item string: shortcuts to common contrast functions.
 \itemize{
-\item Supported shortcuts strings: difference, differenceavg, dydx, eyex, eydx, dyex, dydxavg, eyexavg, eydxavg, dyexavg, ratio, ratioavg, lnratio, lnratioavg, lnor, lnoravg, expdydx, expdydxavg
+\item Supported shortcuts strings: difference, differenceavg, differenceavgwts, dydx, eyex, eydx, dyex, dydxavg, eyexavg, eydxavg, dyexavg, dydxavgwts, eyexavgwts, eydxavgwts, dyexavgwts, ratio, ratioavg, ratioavg, lnratio, lnratioavg, lnratioavg, lnor, lnoravg, lnoravgwts, expdydx, expdydxavg, expdydxavgwts
 \item See the Transformations section below for definitions of each transformation.
 }
 \item function: accept two equal-length numeric vectors of adjusted predictions (\code{hi} and \code{lo}) and returns a vector of contrasts of the same length, or a unique numeric value.
@@ -270,6 +270,7 @@ compute derivatives and elasticities.\tabular{ll}{
    Shortcut \tab Function \cr
    difference \tab \(hi, lo) hi - lo \cr
    differenceavg \tab \(hi, lo) mean(hi) - mean(lo) \cr
+   differenceavgwts \tab \(hi, lo, w) weighted.mean(hi, w) - weighted.mean(lo, w) \cr
    dydx \tab \(hi, lo, eps) (hi - lo)/eps \cr
    eyex \tab \(hi, lo, eps, y, x) (hi - lo)/eps * (x/y) \cr
    eydx \tab \(hi, lo, eps, y, x) ((hi - lo)/eps)/y \cr
@@ -278,14 +279,22 @@ compute derivatives and elasticities.\tabular{ll}{
    eyexavg \tab \(hi, lo, eps, y, x) mean((hi - lo)/eps * (x/y)) \cr
    eydxavg \tab \(hi, lo, eps, y, x) mean(((hi - lo)/eps)/y) \cr
    dyexavg \tab \(hi, lo, eps, x) mean(((hi - lo)/eps) * x) \cr
+   dydxavgwts \tab \(hi, lo, eps, w) weighted.mean((hi - lo)/eps, w) \cr
+   eyexavgwts \tab \(hi, lo, eps, y, x, w) weighted.mean((hi - lo)/eps * (x/y), w) \cr
+   eydxavgwts \tab \(hi, lo, eps, y, x, w) weighted.mean(((hi - lo)/eps)/y, w) \cr
+   dyexavgwts \tab \(hi, lo, eps, x, w) weighted.mean(((hi - lo)/eps) * x, w) \cr
    ratio \tab \(hi, lo) hi/lo \cr
    ratioavg \tab \(hi, lo) mean(hi)/mean(lo) \cr
+   ratioavg \tab \(hi, lo) weighted.mean(hi)/weighted.mean(lo) \cr
    lnratio \tab \(hi, lo) log(hi/lo) \cr
    lnratioavg \tab \(hi, lo) log(mean(hi)/mean(lo)) \cr
+   lnratioavg \tab \(hi, lo) log(weighted.mean(hi)/weighted.mean(lo)) \cr
    lnor \tab \(hi, lo) log((hi/(1 - hi))/(lo/(1 - lo))) \cr
    lnoravg \tab \(hi, lo) log((mean(hi)/(1 - mean(hi)))/(mean(lo)/(1 - mean(lo)))) \cr
+   lnoravgwts \tab \(hi, lo, w) log((weighted.mean(hi, w)/(1 - weighted.mean(hi, w)))/(weighted.mean(lo, w)/(1 - weighted.mean(lo, w)))) \cr
    expdydx \tab \(hi, lo, eps) ((exp(hi) - exp(lo))/exp(eps))/eps \cr
    expdydxavg \tab \(hi, lo, eps) mean(((exp(hi) - exp(lo))/exp(eps))/eps) \cr
+   expdydxavgwts \tab \(hi, lo, eps, w) weighted.mean(((exp(hi) - exp(lo))/exp(eps))/eps, w) \cr
 }
 }
 

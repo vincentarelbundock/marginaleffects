@@ -277,6 +277,14 @@ comparisons <- function(model,
     # before sanitize_variables
     newdata <- sanitize_newdata(model = model, newdata = newdata)
 
+    # weights: before sanitize_variables
+    sanity_wts(wts, newdata) # after sanity_newdata
+    if (!is.null(wts) && isTRUE(checkmate::check_string(wts))) {
+        newdata[["marginaleffects_wts_internal"]] <- newdata[[wts]]
+    } else {
+        newdata[["marginaleffects_wts_internal"]] <- wts
+    }
+
     # after sanitize_newdata
     variables_list <- sanitize_variables(
         model = model,
@@ -290,13 +298,6 @@ comparisons <- function(model,
 
     hypothesis <- sanitize_hypothesis(hypothesis, ...)
 
-    # weights
-    sanity_wts(wts, newdata) # after sanity_newdata
-    if (!is.null(wts) && isTRUE(checkmate::check_string(wts))) {
-        newdata[["marginaleffects_wts_internal"]] <- newdata[[wts]]
-    } else {
-        newdata[["marginaleffects_wts_internal"]] <- wts
-    }
 
     # get dof before transforming the vcov arg
     if (is.character(vcov) &&
@@ -333,9 +334,10 @@ comparisons <- function(model,
                  newdata = newdata,
                  variables = predictors,
                  type = type,
-                 original = contrast_data$original,
-                 hi = contrast_data$hi,
-                 lo = contrast_data$lo,
+                 original = contrast_data[["original"]],
+                 hi = contrast_data[["hi"]],
+                 lo = contrast_data[["lo"]],
+                 wts = contrast_data[["marginaleffects_wts_internal"]],
                  by = by,
                  marginalmeans = marginalmeans,
                  interaction = interaction,
