@@ -11,7 +11,7 @@ Authors@R:
              family = "Diniz",
              role = "ctb",
              email = "marcio.diniz@cshs.org",
-             comment = c(ORCID = "0000-0002-2427-7843"))))
+             comment = c(ORCID = "0000-0002-2427-7843")))
 Description: Compute and plot adjusted predictions, contrasts, marginal effects, and marginal means for over 65 classes of statistical models in R. Conduct linear and non-linear hypothesis tests using the delta method.
 License: GPL (>= 3)
 Copyright: inst/COPYRIGHTS
