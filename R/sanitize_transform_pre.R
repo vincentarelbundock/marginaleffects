@@ -34,16 +34,15 @@ transform_pre_label_dict <- list(
     "difference" = "%s - %s",
     "differenceavg" = "mean(%s) - mean(%s)",
 
+    "dydx" = "dY/dX",
+    "eyex" = "eY/eX",
+    "eydx" = "eY/dX",
+    "dyex" = "dY/eX",
 
-    "dydx" = "dydx",
-    "eyex" = "eyex",
-    "eydx" = "eydx",
-    "dyex" = "dyex",
-
-    "dydxavg" = "dydxavg",
-    "eyexavg" = "eyexavg",
-    "eydxavg" = "eydxavg",
-    "dyexavg" = "dyexavg",
+    "dydxavg" = "mean(dY/dX)",
+    "eyexavg" = "mean(eY/eX)",
+    "eydxavg" = "mean(eY/dX)",
+    "dyexavg" = "mean(dY/eX)",
 
     "ratio" = "%s / %s",
     "ratioavg" = "mean(%s) / mean(%s)",
@@ -54,7 +53,7 @@ transform_pre_label_dict <- list(
     "lnor" = "ln(odds(%s) / odds(%s))",
     "lnoravg" = "ln(odds(%s) / odds(%s))",
 
-    "expdydx" = "expdydx"
+    "expdydx" = "exp(dY/dX)"
 )
 
 sanity_transform_pre <- function(transform_pre) {

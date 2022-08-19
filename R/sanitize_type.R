@@ -29,9 +29,13 @@ sanitize_type <- function(model, type, calling_function = NULL) {
                            class(model)[1], paste(sort(valid$base), collapse = ", "))
             stop(msg, call. = FALSE)
         } else {
-            base_from_insight <- valid$base[match(type, valid$insight)]
-            base <- ifelse(is.na(base_from_insight), type, base_from_insight)
-            insi <- valid$insight[match(base, valid$base)]
+            if (isTRUE(type %in% valid$insight)) {
+                base <- valid$base[match(type, valid$insight)]
+                insi <- type
+            } else {
+                base <- type
+                insi <- valid$insight[match(type, valid$base)]
+            }
             out <- stats::setNames(base, insi)
         }
     # everything else gets a pass (but should be included in the dictionary eventually)

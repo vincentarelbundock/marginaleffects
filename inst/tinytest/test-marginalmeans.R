@@ -2,6 +2,25 @@ source("helpers.R", local = TRUE)
 if (ON_CRAN) exit_file("on cran")
 requiet("emmeans")
 requiet("broom")
+requiet("insight")
+
+
+# Issue #438: backtransforms allows us to match `emmeans` exactly
+mod <- glm(vs ~ mpg + factor(cyl), data = mtcars, family = binomial)
+em <- emmeans(mod, ~cyl, type = "response")
+mm <- marginalmeans(mod)
+expect_equal(data.frame(em)$prob, mm$marginalmean)
+expect_equal(data.frame(em)$asymp.LCL, mm$conf.low)
+expect_equal(data.frame(em)$asymp.UCL, mm$conf.high)
+
+mod <- glm(breaks ~ wool * tension, family = Gamma, data = warpbreaks)
+em <- suppressMessages(emmeans(mod, ~wool, type = "response", df = Inf))
+mm <- marginalmeans(mod, variables = "wool")
+expect_equal(data.frame(em)$response, mm$marginalmean)
+# TODO: 1/eta link function inverts order of CI. Should we clean this up?
+expect_equal(data.frame(em)$asymp.LCL, mm$conf.high)
+expect_equal(data.frame(em)$asymp.UCL, mm$conf.low)
+
 
 # as.factor and as.logical in formula
 mod <- lm(mpg ~ factor(cyl) + as.factor(gear) + as.logical(am), data = mtcars)
@@ -55,9 +74,9 @@ expect_equivalent(mm$estimate, em$estimate)
 expect_equivalent(mm$std.error, em$std.error)
 # response
 mm <- tidy(marginalmeans(mod, variables = "cyl", type = "response"))
-em <- tidy(emmeans(mod, specs = "cyl", regrid = "response"))
+em <- tidy(emmeans(mod, specs = "cyl", type = "response"))
 expect_equivalent(mm$estimate, em$rate)
-expect_equivalent(mm$std.error, em$std.error, tolerance = .0001)
+expect_equivalent(mm$p.value, em$p.value)
 
 
 
@@ -78,11 +97,11 @@ expect_equivalent(me$std.error, em$std.error)
 mod <- lm(mpg ~ cyl * am, dat)
 em <- suppressMessages(broom::tidy(emmeans::emmeans(mod, "cyl")))
 me <- marginalmeans(mod, variables = "cyl")
-me <- me[order(me$cyl),]
+me <- me[order(me$value),]
 expect_equivalent(me$marginalmean, em$estimate)
 em <- suppressMessages(broom::tidy(emmeans::emmeans(mod, "am")))
 me <- suppressWarnings(marginalmeans(mod, variables = "am"))
-me <- me[order(me$am),]
+me <- me[order(me$value),]
 expect_equivalent(me$marginalmean, em$estimate)
 
 
@@ -102,3 +121,30 @@ expect_inherits(mm, "marginalmeans")
 expect_equal(nrow(mm), 10)
 
 
+# wts
+mod1 <- lm(vs ~ factor(am) + factor(gear) + factor(cyl), data = mtcars)
+mod2 <- glm(vs ~ factor(am) + factor(gear) + mpg, data = mtcars, family = binomial)
+
+# wts = "cells"
+em <- data.frame(emmeans(mod1, ~am, weights = "cells"))
+mm <- marginalmeans(mod1, variables = "am", wts = "cells")
+expect_equivalent(mm$marginalmean, em$emmean)
+expect_equivalent(mm$std.error, em$SE)
+
+em <- data.frame(emmeans(mod2, ~am, weights = "cells", type = "response"))
+mm <- marginalmeans(mod2, variables = "am", wts = "cells")
+expect_equivalent(mm$marginalmean, em$prob)
+expect_equivalent(mm$conf.low, em$asymp.LCL)
+expect_equivalent(mm$conf.high, em$asymp.UCL)
+
+# wts = "proportional"
+em <- data.frame(emmeans(mod1, ~am, weights = "proportional"))
+mm <- marginalmeans(mod1, variables = "am", wts = "proportional")
+expect_equivalent(mm$marginalmean, em$emmean)
+expect_equivalent(mm$std.error, em$SE)
+
+em <- data.frame(emmeans(mod2, ~am, weights = "proportional", type = "response"))
+mm <- marginalmeans(mod2, variables = "am", wts = "proportional")
+expect_equivalent(mm$marginalmean, em$prob)
+expect_equivalent(mm$conf.low, em$asymp.LCL)
+expect_equivalent(mm$conf.high, em$asymp.UCL)

@@ -9,8 +9,8 @@ mod <- lm(mpg ~ carb + cyl, dat)
 
 # informative errors and warnings
 tmp <- lm(mpg ~ drat + wt, data = mtcars)
-expect_warning(marginaleffects(tmp, hypothesis = "drat = wt"), pattern = "conjunction")
-expect_warning(comparisons(tmp, hypothesis = "drat = wt"), pattern = "conjunction")
+expect_error(marginaleffects(tmp, hypothesis = "drat = wt"), pattern = "newdata")
+expect_error(comparisons(tmp, hypothesis = "drat = wt"), pattern = "newdata")
 
 expect_error(
     marginaleffects(mod, newdata = dat, hypothesis = "pairwise"),
@@ -21,10 +21,10 @@ expect_warning(
     pattern = "lincom")
 
 tmp <- lm(mpg ~ wt + drat, data = mtcars)
-expect_warning(predictions(
+expect_error(predictions(
     tmp,
-    newdata = datagrid(wt = 2:3),
-    hypothesis = "wt = drat"),
+    hypothesis = "wt = drat",
+    newdata = datagrid(wt = 2:3)),
     pattern = "unique row")
 
 
@@ -109,7 +109,16 @@ p3 <- predictions(
     datagrid(cyl = c(4, 6)),
     hypothesis = lc)
 expect_inherits(p3, "predictions")
+expect_true(all(p3$term == "custom"))
 
+# hypothesis matrix colnames become labels
+colnames(lc) <- c("Contrast A", "Contrast B")
+p3 <- predictions(
+    mod,
+    datagrid(cyl = c(4, 6)),
+    hypothesis = lc)
+expect_inherits(p3, "predictions")
+expect_equivalent(p3$term, c("Contrast A", "Contrast B"))
 
 # marginalmeans: hypothesis complex
 lc <- c(-2, 1, 1, 0, -1, 1)
@@ -123,6 +132,10 @@ expect_equivalent(mm$std.error, em$SE)
 # marginalmeans: hypothesis shortcut
 mm <- marginalmeans(mod, variables = "carb", hypothesis = "reference")
 expect_equivalent(nrow(mm), 5)
+mm <- marginalmeans(mod, variables = "carb", hypothesis = "sequential")
+expect_equivalent(nrow(mm), 5)
+mm <- marginalmeans(mod, variables = "carb", hypothesis = "pairwise")
+expect_equivalent(nrow(mm), 15)
 
 # marginalmeans: hypothesis complex matrix
 lc <- matrix(c(
@@ -174,3 +187,34 @@ p3 <- predictions(
 expect_equivalent(sum(p1$predicted) - 10, p2$predicted)
 expect_equivalent(p1$predicted[1] - p1$predicted[2], p3$predicted)
 
+
+# pad missing character levels + hypothesis
+dat <- mtcars
+dat$cyl <- as.character(dat$cyl)
+mod <- lm(mpg ~ cyl, data = dat)
+p <- predictions(
+    mod,
+    hypothesis = "b1 = b2",
+    newdata = datagrid(cyl = c("6", "8")))
+expect_inherits(p, "predictions")
+expect_equivalent(nrow(p), 1)
+
+
+
+# Issue #439
+mod <- lm(mpg ~ factor(cyl) * factor(am), data = mtcars)
+cmp <- comparisons(
+    mod,
+    variables = "am",
+    by = "cyl",
+    hypothesis = "pairwise")
+expect_inherits(cmp, "comparisons")
+expect_equivalent(nrow(cmp), 3)
+
+cmp <- comparisons(
+    mod,
+    variables = "am",
+    by = "cyl",
+    hypothesis = "reference")
+expect_inherits(cmp, "comparisons")
+expect_equivalent(nrow(cmp), 2)

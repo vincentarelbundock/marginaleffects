@@ -23,5 +23,5 @@ expect_false(anyNA(tid2$std.error))
 expect_equivalent(nrow(subset(cmp1, rowid == 1)), 34)
 expect_equivalent(nrow(subset(cmp2, rowid == 1)), 4)
 
-n_unique <- nrow(unique(subset(cmp2, rowid ==1, "contrast_cut")))
+n_unique <- nrow(unique(subset(cmp2, rowid == 1, "contrast")))
 expect_equivalent(n_unique, 4)

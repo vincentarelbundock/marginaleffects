@@ -66,9 +66,7 @@ expect_error(predictions(mod, vcov = "kenward-roger"), pattern = "Satter")
 
 
 # get_predict: low-level tests
-
-dat <- haven::read_dta("stata/databases/lme4_02.dta")
-dat <- haven::read_dta(testing_path("stata/databases/lme4_02.dta"))
+dat <- read.csv(testing_path("stata/databases/lme4_02.csv"))
 mod <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = dat, family = binomial)
 
 # incompatible arguments
@@ -116,7 +114,7 @@ expect_equivalent(w, y$predicted)
 
 
 # glmer vs. stata vs. emtrends
-dat <- haven::read_dta(testing_path("stata/databases/lme4_02.dta"))
+dat <- read.csv(testing_path("stata/databases/lme4_02.csv"))
 mod <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = dat, family = binomial)
 stata <- readRDS(testing_path("stata/stata.rds"))$lme4_glmer
 mfx <- merge(tidy(marginaleffects(mod)), stata)
@@ -133,7 +131,7 @@ expect_equivalent(mfx$std.error, em$std.error, tolerance = 1e-6)
 
 
 # lmer vs. stata
-dat <- haven::read_dta(testing_path("stata/databases/lme4_01.dta"))
+dat <- read.csv(testing_path("stata/databases/lme4_01.csv"))
 mod <- lme4::lmer(y ~ x1 * x2 + (1 | clus), data = dat)
 stata <- readRDS(testing_path("stata/stata.rds"))$lme4_lmer
 mfx <- merge(tidy(marginaleffects(mod)), stata)
@@ -151,13 +149,13 @@ expect_equivalent(mfx$std.error, em$std.error, tolerance = .001)
 
 
 # vs. margins (dydx only)
-dat <- haven::read_dta(testing_path("stata/databases/lme4_02.dta"))
+dat <- read.csv(testing_path("stata/databases/lme4_02.csv"))
 mod <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = dat, family = binomial)
 res <- marginaleffects(mod, vcov = FALSE)
 mar <- margins::margins(mod)
 expect_true(expect_margins(res, mar, tolerance = 1e-2))
 
-dat <- haven::read_dta(testing_path("stata/databases/lme4_01.dta"))
+dat <- read.csv(testing_path("stata/databases/lme4_01.csv"))
 mod <- lme4::lmer(y ~ x1 * x2 + (1 | clus), data = dat)
 res <- marginaleffects(mod, vcov = FALSE)
 mar <- margins::margins(mod)
@@ -165,14 +163,14 @@ expect_true(expect_margins(res, mar))
 
 
 # sanity check on dpoMatrix
-dat <- haven::read_dta(testing_path("stata/databases/lme4_02.dta"))
+dat <- read.csv(testing_path("stata/databases/lme4_02.csv"))
 mod <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = dat, family = binomial)
 k <- marginaleffects(mod, vcov = as.matrix(stats::vcov(mod)))
 expect_inherits(k, "data.frame")
 
 
 # bug stay dead: tidy without std.error
-dat <- haven::read_dta(testing_path("stata/databases/lme4_02.dta"))
+dat <- read.csv(testing_path("stata/databases/lme4_02.csv"))
 mod <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = dat, family = binomial)
 res <- marginaleffects(mod, vcov = FALSE)
 tid <- tidy(res)
@@ -181,7 +179,7 @@ expect_equivalent(nrow(tid), 2)
 
 
 # predictions: glmer: no validity
-dat <- haven::read_dta(testing_path("stata/databases/lme4_02.dta"))
+dat <- read.csv(testing_path("stata/databases/lme4_02.csv"))
 dat$clus <- as.factor(dat$clus)
 model <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = dat, family = binomial)
 pred1 <- predictions(model, newdata = datagrid())
@@ -290,6 +288,64 @@ expect_equivalent(attr(mfx, "vcov.type"), "Kenward-Roger")
 expect_equivalent(attr(cmp, "vcov.type"), "Kenward-Roger")
 
 
+# # Issue 437: allow `get_predicted()` arguments
+# mod <- lmer(mpg ~ hp + (1 | cyl), data = mtcars)
+# p1 <- predictions(mod, type = "prediction")
+# p2 <- predictions(mod)
+# expect_inherits(p1, "predictions")
+# expect_inherits(p2, "predictions")
+# expect_true("prediction" %in% p1$type)
+# expect_true("response" %in% p2$type)
+# expect_true(all(p1$conf.low < p2$conf.low))
+# expect_true(all(p1$conf.high > p2$conf.high))
+
+# Issue #436
+# e = number of events
+# n = total
+dat <- data.frame(
+    e = c(
+        1, 1, 134413, 92622, 110747,
+        3625, 35, 64695, 19428, 221, 913, 13, 5710, 121,
+        1339, 1851, 637, 20, 7, 10, 2508),
+    n = c(
+        165, 143, 10458616, 5338995, 6018504, 190810,
+        1607, 2504824, 471821, 5158, 15027, 205, 86371, 1785,
+        10661, 14406, 4048, 102, 916, 1079, 242715),
+    year = round(runif(21, min = 1, max = 24)),
+    sid = as.factor(1:21))
+
+mod <- glmer(
+    cbind(e, n - e) ~ 1 + year + (1 | sid),
+    data = dat,
+    family = binomial())
+
+expect_warning(predictions(
+    mod,
+    newdata = datagrid(
+        year = 1:5,
+        sid = NA),
+    include_random = FALSE),
+    pattern = "Matrix columns")
+
+p <- suppressWarnings(predictions(
+    mod,
+    newdata = datagrid(
+        year = 1:5,
+        sid = NA),
+    include_random = FALSE))
+expect_inherits(suppressWarnings(p), "predictions")
+
+cmp <- suppressWarnings(comparisons(mod,
+    variables = "year",
+    newdata = datagrid(
+        year = 1:5,
+        sid = NA),
+    include_random = FALSE))
+expect_inherits(cmp, "comparisons")
+
+
+
+
 
 # # 'group' cannot be a column name because of conflict with tidy output
 #     set.seed(1024)
@@ -301,3 +357,9 @@ expect_equivalent(attr(cmp, "vcov.type"), "Kenward-Roger")
 #     mod <- lme4::glmer(y ~ x1 + x2 + (1 | group), data = tmp, family = binomial)
 #     expect_error(marginaleffects(mod), pattern = "more descriptive")
 # 
+
+
+
+
+
+

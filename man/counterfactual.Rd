@@ -2,20 +2,11 @@
 % Please edit documentation in R/datagrid.R
 \name{counterfactual}
 \alias{counterfactual}
-\title{Superseded by datagrid(..., grid_type = "counterfactual")}
+\title{Superseded by \code{datagridcf}}
 \usage{
 counterfactual(..., model = NULL, newdata = NULL)
 }
-\arguments{
-\item{...}{named arguments with vectors of values for user-specified
-variables. The output will include all combinations of these variables (see
-Examples below.)}
-
-\item{model}{Model object}
-
-\item{newdata}{data.frame (one and only one of the \code{model} and \code{newdata} arguments}
-}
 \description{
-Superseded by datagrid(..., grid_type = "counterfactual")
+Superseded by \code{datagridcf}
 }
 \keyword{internal}

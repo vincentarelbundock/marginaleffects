@@ -306,13 +306,14 @@ contrast(em, method = lc)
 
 ## Multiple contrasts
 
-Users can also compute multiple linear combinations simultaneously by supplying a numeric matrix to `hypothesis`. This matrix must have the same number of rows as the output of `marginaleffects()`, and each column represents a distinct set of weights for different linear combinations. For example:
+Users can also compute multiple linear combinations simultaneously by supplying a numeric matrix to `hypothesis`. This matrix must have the same number of rows as the output of `marginaleffects()`, and each column represents a distinct set of weights for different linear combinations. The column names of the matrix become labels in the output. For example:
 
 ```{r}
 lc <- matrix(c(
     -2, 1, 1, 0, -1, 1,
     1, -1, 0, 0, 0, 0
     ), ncol = 2)
+colnames(lc) <- c("Contrast A", "Contrast B")
 lc
 
 marginalmeans(mod, variables = "carb", hypothesis = lc)

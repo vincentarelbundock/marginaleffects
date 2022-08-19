@@ -4,7 +4,7 @@ sanitize_hypothesis <- function(hypothesis, ...) {
 
     checkmate::assert(
         checkmate::check_string(hypothesis, pattern = "="),
-        checkmate::check_choice(hypothesis, choices = c("reference", "pairwise")),
+        checkmate::check_choice(hypothesis, choices = c("reference", "pairwise", "sequential")),
         checkmate::check_numeric(hypothesis),
         checkmate::check_matrix(hypothesis),
         checkmate::check_null(hypothesis))

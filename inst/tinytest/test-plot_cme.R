@@ -1,4 +1,6 @@
+exit_file("tinyviztest")
 source("helpers.R")
+using("tinyviztest")
 
 # character predictors
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv")
@@ -25,13 +27,7 @@ expect_true(all(mfx1$conf.low != mfx3$conf.low))
 expect_true(all(mfx2$conf.low != mfx3$conf.low))
 
 
-
-
-
 # CI breaks here
-exit_file("tinyviztest")
-library("tinytest")
-using("tinyviztest")
 
 # factor effects are plotted in different facets
 dat <- mtcars
@@ -40,7 +36,8 @@ dat$am_log <- as.logical(dat$am)
 mod <- lm(cyl ~ mpg * gear_fct + am_log, data = dat)
 p <- plot_cme(mod, effect = "gear_fct", condition = "mpg")
 expect_vdiff(p, "plot_cme_factor_facets")
-expect_false(expect_error(plot_cme(mod, effect = "am_log", condition = "mpg")))
+p <- plot_cme(mod, effect = "am_log", condition = "mpg")
+expect_inherits(p, "gg")
 
 # continuous vs. categorical x-axis
 mod <- lm(mpg ~ hp * wt * factor(cyl), mtcars)
@@ -53,5 +50,3 @@ expect_vdiff(p, "plot_cme_continuous")
 mod <- lm(mpg ~ hp * wt * am, data = mtcars)
 p <- plot_cme(mod, effect = "hp", condition = c("wt", "am"))
 expect_vdiff(p, "plot_cme_two_conditions")
-
-

@@ -17,6 +17,10 @@
 #' categorical predictors. This grid can be very large when there are many
 #' variables and many response levels, so it is advisable to select a limited
 #' number of variables in the `variables` and `variables_grid` arguments.
+#' @param wts character value. Weigths to use in the averaging.
+#' + "equal": each combination of variables in `variables_grid` gets an equal weight.
+#' + "cells": each combination of values for the variables in the `variables_grid` gets a weight proportional to its frequency in the original data.
+#' + "proportional": each combination of values for the variables in the `variables_grid` -- except for those in the `variables` argument -- gets a weight proportional to its frequency in the original data.
 #' @param interaction TRUE, FALSE, or NULL
 #' * `FALSE`: Marginal means are computed for each predictor individually.
 #' * `TRUE`: Marginal means are computed for each combination of predictors specified in the `variables` argument.
@@ -26,7 +30,7 @@
 #' corresponding to combinations of values in the `by` variables. Note that the
 #' `by` argument works differently for other functions in the package
 #' (`predictions()`, `marginaleffects()`, `comparisons()`), where `by` is used
-#' for post-processing in the `tidy()` or `summary()` functions.
+#' to average estimates in subgroup.
 #' @inheritParams marginaleffects
 #' @inheritParams predictions
 #' @inheritParams comparisons
@@ -104,16 +108,31 @@ marginalmeans <- function(model,
                           transform_post = NULL,
                           interaction = NULL,
                           hypothesis = NULL,
+                          wts = "equal",
                           by = NULL,
                           ...) {
 
-    newdata <- hush(insight::get_data(model))
+    # backtransform if possible
+    linv <- tryCatch(
+        insight::link_inverse(model),
+        error = function(e) NULL)
+    if (identical(type, "response") &&
+        is.null(transform_post) &&
+        class(model)[1] %in% type_dictionary$class &&
+        isTRUE("link" %in% subset(type_dictionary, class == class(model)[1])$base) &&
+        is.function(linv)) {
+        type <- "link"
+        transform_post <- linv
+    }
+
+    modeldata <- newdata <- hush(insight::get_data(model))
 
     checkmate::assert_character(by, null.ok = TRUE)
     checkmate::assert_function(transform_post, null.ok = TRUE)
     interaction <- sanitize_interaction(interaction, variables, model)
     conf_level <- sanitize_conf_level(conf_level, ...)
     hypothesis <- sanitize_hypothesis(hypothesis, ...)
+    checkmate::assert_choice(wts, choices = c("equal", "cells", "proportional"))
 
     # fancy vcov processing to allow strings like "HC3"
     vcov <- get_vcov(model, vcov = vcov, ...)
@@ -197,10 +216,55 @@ marginalmeans <- function(model,
         variables <- setdiff(variables, by)
     }
 
+    # marginal means grid
     args <- lapply(variables_grid, function(x) unique(newdata[[x]]))
     args <- stats::setNames(args, variables_grid)
     args[["newdata"]] <- newdata
     newgrid <- do.call("datagrid", args)
+
+    # weights
+    wtsgrid <- copy(data.table(newdata)[, ..variables_grid])
+    if (identical(wts, "equal")) {
+        newgrid[["wts"]] <- 1
+
+    } else if (identical(wts, "cells")) {
+        idx <- variables_grid
+        wtsgrid[, N := .N]
+        wtsgrid[, "wts" := .N / N, by = idx]
+        # sometimes datagrid() converts to factors when there is a transformation
+        # in the model formula, so we need to standardize the data
+        for (v in colnames(newgrid)) {
+            if (v %in% colnames(wtsgrid) && is.factor(newgrid[[v]])) {
+                wtsgrid[[v]] <- factor(wtsgrid[[v]], levels = levels(newgrid[[v]]))
+            }
+        }
+        wtsgrid <- unique(wtsgrid)
+        newgrid <- merge(newgrid, wtsgrid, all.x = TRUE)
+        newgrid[["wts"]][is.na(newgrid[["wts"]])] <- 0
+
+    } else if (identical(wts, "proportional")) {
+    # https://stackoverflow.com/questions/66748520/what-is-the-difference-between-weights-cell-and-weights-proportional-in-r-pa
+        idx <- setdiff(variables_grid, variables)
+        if (length(idx) == 0) {
+            newgrid[["wts"]] <- 1
+            return(newgrid)
+        } else {
+            wtsgrid <- data.table(newdata)[
+                , .(wts = .N), by = idx][
+                , wts := wts / sum(wts)]
+            # sometimes datagrid() converts to factors when there is a transformation
+            # in the model formula, so we need to standardize the data
+            for (v in colnames(newgrid)) {
+                if (v %in% colnames(wtsgrid) && is.factor(newgrid[[v]])) {
+                    wtsgrid[[v]] <- factor(wtsgrid[[v]], levels = levels(newgrid[[v]]))
+                }
+            }
+            wtsgrid <- unique(wtsgrid)
+            newgrid <- merge(newgrid, wtsgrid, all.x = TRUE)
+            newgrid[["wts"]][is.na(newgrid[["wts"]])] <- 0
+
+        }
+    }
 
     mm <- get_marginalmeans(model = model,
                             newdata = newgrid,
@@ -209,6 +273,7 @@ marginalmeans <- function(model,
                             interaction = interaction,
                             hypothesis = hypothesis,
                             by = by,
+                            modeldata = modeldata,
                             ...)
 
     # we want consistent output, regardless of whether `data.table` is installed/used or not
@@ -226,6 +291,7 @@ marginalmeans <- function(model,
             variables = variables,
             newdata = newgrid,
             interaction = interaction,
+            modeldata = modeldata,
             hypothesis = hypothesis,
             ...)
         # get rid of attributes in column
@@ -284,6 +350,7 @@ get_marginalmeans <- function(model,
                               type,
                               variables,
                               interaction,
+                              modeldata,
                               hypothesis = NULL,
                               by = NULL,
                               ...) {
@@ -295,6 +362,7 @@ get_marginalmeans <- function(model,
         newdata = newdata,
         type = type,
         vcov = FALSE,
+        modeldata = modeldata,
         ...)
 
     # marginal means
@@ -302,7 +370,9 @@ get_marginalmeans <- function(model,
         mm <- list()
         for (v in variables) {
             idx <- intersect(colnames(pred), c("term", "group", v, by))
-            tmp <- data.table(pred)[, .(marginalmean = mean(predicted, na.rm = TRUE)), by = idx]
+            tmp <- data.table(pred)[
+                , .(marginalmean = weighted.mean(predicted, w = wts, na.rm = TRUE)),
+                by = idx]
             tmp[, "term" := v]
             setnames(tmp, old = v, new = "value")
             mm[[v]] <- tmp
@@ -319,13 +389,16 @@ get_marginalmeans <- function(model,
         setorder(out, "term", "value")
     } else {
         idx <- intersect(colnames(pred), c("term", "group", variables))
-        out <- data.table(pred)[, .(marginalmean = mean(predicted, na.rm = TRUE)), by = idx]
+
+
+        out <- data.table(pred)[
+            , .(marginalmean = weighted.mean(predicted, w = wts, na.rm = TRUE)),
+            by = idx]
     }
 
     if (!is.null(hypothesis)) {
-        out <- get_hypothesis(out, hypothesis, "marginalmean")
+        out <- get_hypothesis(out, hypothesis, column = "marginalmean", by = by)
     }
 
     return(out)
 }
-

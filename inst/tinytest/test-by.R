@@ -1,6 +1,7 @@
 source("helpers.R", local = TRUE)
 if (ON_CRAN) exit_file("on cran")
 requiet("margins")
+requiet("nnet")
 tol <- 1e-4
 tol_se <- 1e-3
 
@@ -62,7 +63,6 @@ expect_true("am" %in% colnames(tid))
 
 # not supported in bayesian models
 mod <- insight::download_model("brms_1")
-expect_error(comparisons(mod, transform_pre = "dydxavg"), pattern = "supported")
 expect_error(comparisons(mod, by = "am"), pattern = "supported")
 
 
@@ -108,3 +108,71 @@ expect_equivalent(mfx$std.error, mar$SE, tolerance = tol_se)
 mod <- lm(mpg ~ hp, mtcars)
 expect_error(comparisons(mod, by = "am", pattern = "newdata"))
 expect_error(marginaleffects(mod, by = "am"), pattern = "newdata")
+
+
+# counterfactual margins at()
+dat <- mtcars
+dat$cyl <- factor(dat$cyl)
+mod <- lm(mpg ~ factor(cyl) * hp + wt, data = dat)
+mar <- margins(mod, at = list(cyl = unique(dat$cyl)))
+mar <- data.frame(summary(mar))
+mfx <- marginaleffects(
+    mod,
+    by = "cyl",
+    newdata = datagridcf(cyl = c(4, 6, 8)))
+expect_equivalent(mfx$dydx, mar$AME)
+expect_equivalent(mfx$std.error, mar$SE, tolerance = 1e6)
+
+
+
+# issue #434 by with character precitors
+dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/AER/Affairs.csv")
+mod <- glm(
+    affairs ~ children + gender + yearsmarried,
+    family = poisson,
+    data = dat)
+p <- predictions(mod, by = "children")
+expect_equivalent(nrow(p), 2)
+expect_false(anyNA(p$predicted))
+
+
+# Issue #445: by data frame to collapse response levels
+mod <- multinom(factor(gear) ~ mpg + am * vs, data = mtcars, trace = FALSE)
+
+expect_error(predictions(mod, type = "probs", by = "response"), pattern = "Character vector")
+expect_error(predictions(mod, type = "probs", by = mtcars), pattern = "Character vector")
+
+p <- predictions(mod, type = "probs", by = "group")
+expect_equivalent(nrow(p), 3)
+cmp <- comparisons(mod, type = "probs", by = "group")
+expect_equivalent(nrow(cmp), 9)
+
+by <- data.frame(
+    group = c("3", "4", "5"),
+    by = c("(3,4)", "(3,4)", "(5)"))
+p1 <- predictions(mod, type = "probs")
+p2 <- predictions(mod, type = "probs", by = by)
+p3 <- predictions(mod, type = "probs", by = by, hypothesis = "sequential")
+p4 <- predictions(mod, type = "probs", by = by, hypothesis = "reference")
+p5 <- predictions(mod, type = "probs", by = c("am", "vs", "group"))
+expect_equivalent(mean(subset(p1, group == "5")$predicted), p2$predicted[2])
+expect_equivalent(p3$predicted, diff(p2$predicted))
+expect_equivalent(nrow(p4), 1)
+expect_equivalent(nrow(p5), 12)
+
+cmp <- comparisons(mod, type = "probs", by = "am")
+expect_equivalent(nrow(cmp), 18)
+
+cmp <- comparisons(
+    mod,
+    variables = "am",
+    by = by,
+    type = "probs")
+expect_equivalent(nrow(cmp), 2)
+cmp <- comparisons(
+    mod,
+    variables = "am",
+    by = by,
+    hypothesis = "sequential",
+    type = "probs")
+expect_equivalent(nrow(cmp), 1)

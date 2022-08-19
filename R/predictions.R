@@ -138,6 +138,26 @@
 #'     newdata = datagrid(wt = 2:3),
 #'     hypothesis = lc)
 #' 
+#' 
+#' # `by` argument
+#' mod <- lm(mpg ~ hp * am * vs, data = mtcars)
+#' predictions(mod, by = c("am", "vs")) 
+#' 
+#' library(nnet)
+#' nom <- multinom(factor(gear) ~ mpg + am * vs, data = mtcars, trace = FALSE)
+#' 
+#' # first 5 raw predictions
+#' predictions(nom, type = "probs") |> head()
+#' 
+#' # average predictions
+#' predictions(nom, type = "probs", by = "group") |> summary()
+#' 
+#' by <- data.frame(
+#'     group = c("3", "4", "5"),
+#'     by = c("3,4", "3,4", "5"))
+#' 
+#' predictions(nom, type = "probs", by = by)
+#' 
 #' @export
 predictions <- function(model,
                         newdata = NULL,
@@ -158,7 +178,7 @@ predictions <- function(model,
     if (is.call(scall)) {
         lcall <- as.list(scall)
         fun_name <- as.character(scall)[1]
-        if (fun_name %in% c("datagrid", "typical", "counterfactual")) {
+        if (fun_name %in% c("datagrid", "datagridcf", "typical", "counterfactual")) {
             if (!any(c("model", "newdata") %in% names(lcall))) {
                 lcall <- c(lcall, list("model" = model))
                 newdata <- eval.parent(as.call(lcall))
@@ -169,6 +189,15 @@ predictions <- function(model,
                 newdata <- eval.parent(as.call(lcall))
             }
         }
+    }
+
+
+    # extracting modeldata repeatedly is slow. this allows marginalmeans to pass modeldata to predictions.
+    dots <- list(...)
+    if ("modeldata" %in% names(dots)) {
+        modeldata <- dots[["modeldata"]]
+    } else {
+        modeldata <- hush(insight::get_data(model))
     }
 
     # do not check the model because `insight` supports more models than `marginaleffects`
@@ -185,7 +214,7 @@ predictions <- function(model,
     hypothesis <- sanitize_hypothesis(hypothesis, ...)
     conf_level <- sanitize_conf_level(conf_level, ...)
     type <- sanitize_type(model = model, type = type, calling_function = "predictions")
-    newdata <- sanitize_newdata(model = model, newdata = newdata)
+    newdata <- sanitize_newdata(model = model, newdata = newdata, modeldata = modeldata)
 
     # `variables` si character vector: Tukey's 5 or uniques
     checkmate::assert_list(variables, names = "unique", null.ok = TRUE)
@@ -243,6 +272,7 @@ predictions <- function(model,
         }
     }
 
+
     if (is.null(by)) {
         vcov_tmp <- vcov
     } else {
@@ -251,7 +281,7 @@ predictions <- function(model,
 
     J <- NULL
 
-    tmp <- myTryCatch(get_predictions(
+    tmp <- get_predictions(
         model,
         newdata = newdata,
         vcov = vcov_tmp,
@@ -259,44 +289,48 @@ predictions <- function(model,
         type = type,
         hypothesis = hypothesis,
         by = by,
-        ...))
+        ...)
 
-    if (isTRUE(grepl("type.*models", tmp[["error"]]))) {
-        stop(tmp$error$message, call. = FALSE)
+    # These warnings obscure more than then help. We should give more low-level
+    # explicit errors instead.
 
-    } else if (!inherits(tmp[["value"]], "data.frame")) {
-        if (isTRUE(grepl("row indices", tmp$error$message))) stop(tmp$error$message, call. = FALSE)
-        if (!is.null(tmp$warning)) warning(tmp$warning$message, call. = FALSE)
-        if (!is.null(tmp$error)) warning(tmp$error$message, call. = FALSE)
-        msg <- format_msg(
-            "Unable to compute adjusted predictions for model of class `%s`. You can try to
-            specify a different value for the `newdata` argument. If this does not work and
-            you believe that this model class should be supported by `marginaleffects`,
-            please file a feature request on the Github issue tracker:
+    # if (isTRUE(grepl("type.*models", tmp[["error"]]))) {
+    #     stop(tmp$error$message, call. = FALSE)
 
-            https://github.com/vincentarelbundock/marginaleffects/issues")
-        msg <- sprintf(msg, class(model)[1])
-        stop(msg, call. = FALSE)
+    # } else if (!inherits(tmp[["value"]], "data.frame")) {
+    #     if (isTRUE(grepl("row indices", tmp$error$message))) stop(tmp$error$message, call. = FALSE)
+    #     if (!is.null(tmp$warning)) warning(tmp$warning$message, call. = FALSE)
+    #     if (!is.null(tmp$error)) warning(tmp$error$message, call. = FALSE)
+    #     msg <- format_msg(
+    #         "Unable to compute adjusted predictions for model of class `%s`. You can try to
+    #         specify a different value for the `newdata` argument. If this does not work and
+    #         you believe that this model class should be supported by `marginaleffects`,
+    #         please file a feature request on the Github issue tracker:
 
-    } else if (inherits(tmp[["warning"]], "warning") &&
-               isTRUE(grepl("vcov.*supported", tmp)) &&
-               !is.null(vcov) &&
-               !isFALSE(vcov)) {
-        msg <- format_msg(
-            "The object passed to the `vcov` argument is of class `%s`, which is not
-            supported for models of class `%s`. Please set `vcov` to `TRUE`, `FALSE`,
-            `NULL`, or supply a variance-covariance `matrix` object.")
-        msg <- sprintf(msg, class(model)[1])
-        stop(msg, call. = FALSE)
+    #         https://github.com/vincentarelbundock/marginaleffects/issues")
+    #     msg <- sprintf(msg, class(model)[1])
+    #     stop(msg, call. = FALSE)
 
-    } else if (inherits(tmp[["warning"]], "warning")) {
-        msg <- tmp$warning$message
-        warning(msg, call. = FALSE)
-        tmp <- tmp[["value"]]
+    # } else if (inherits(tmp[["warning"]], "warning") &&
+    #            isTRUE(grepl("vcov.*supported", tmp)) &&
+    #            !is.null(vcov) &&
+    #            !isFALSE(vcov)) {
+    #     msg <- format_msg(
+    #         "The object passed to the `vcov` argument is of class `%s`, which is not
+    #         supported for models of class `%s`. Please set `vcov` to `TRUE`, `FALSE`,
+    #         `NULL`, or supply a variance-covariance `matrix` object.")
+    #     msg <- sprintf(msg, class(model)[1])
+    #     stop(msg, call. = FALSE)
 
-    } else {
-        tmp <- tmp[["value"]]
-    }
+    # } else if (inherits(tmp[["warning"]], "warning")) {
+    #     msg <- tmp$warning$message
+    #     warning(msg, call. = FALSE)
+    #     tmp <- tmp[["value"]]
+
+    # } else {
+    #     tmp <- tmp[["value"]]
+    # }
+
 
     # two cases when tmp is a data.frame
     # insight::get_predicted gets us Predicted et al. but now rowid
@@ -313,7 +347,14 @@ predictions <- function(model,
             tmp[["rowidcf"]] <- newdata[["rowidcf"]]
         }
     }
-    tmp$type <- type
+
+    # default type column is the `predict()` method
+    if (!is.na(type)) {
+        tmp$type <- type
+    # alternative type is the `insight` name
+    } else {
+        tmp$type <- names(type)
+    }
 
     if (!"rowid" %in% colnames(tmp) && nrow(tmp) == nrow(newdata)) {
         tmp$rowid <- newdata$rowid
@@ -329,8 +370,15 @@ predictions <- function(model,
         }
     }
 
+
     # bayesian posterior draws
     draws <- attr(tmp, "posterior_draws")
+
+    # bayesian: unpad draws (done in get_predictions for frequentist)
+    if (!is.null(draws) && "rowid" %in% colnames(tmp)) {
+        draws <- draws[tmp$rowid > 0, , drop = FALSE]
+    }
+
     if (!is.null(transform_post)) {
         draws <- transform_post(draws)
     }
@@ -382,19 +430,22 @@ predictions <- function(model,
 
     out <- data.table(tmp)
 
-    # unpad factors
-    out <- out[(nrow(padding) + 1):nrow(out),]
-    newdata <- newdata[(nrow(padding) + 1):nrow(newdata), , drop = FALSE]
-    if (!is.null(draws)) {
-        draws <- draws[(nrow(padding) + 1):nrow(draws), , drop = FALSE]
-    }
 
     # return data
     # very import to avoid sorting, otherwise bayesian draws won't fit predictions
     # merge only with rowid; not available for hypothesis
-    if ("rowid" %in% colnames(out)) {
-        out <- merge(out, newdata, by = "rowid", sort = FALSE)
+    mergein <- setdiff(colnames(newdata), colnames(out))
+    if ("rowid" %in% colnames(out) && "rowid" %in% colnames(newdata) && length(mergein) > 0) {
+        idx <- c("rowid", mergein)
+        tmp <- data.table(newdata)[, ..idx]
+        # TODO: this breaks in mclogit. maybe there's a more robust merge
+        # solution for weird grouped data. But it seems fine because
+        # `predictions()` output does include the original predictors.
+        out <- tryCatch(
+            merge(out, tmp, by = "rowid", sort = FALSE),
+            error = function(e) out)
     }
+
 
     setDF(out)
 
@@ -408,9 +459,15 @@ predictions <- function(model,
     }
 
     # clean columns
+    if (isTRUE(checkmate::check_data_frame(by))) {
+        bycols <- setdiff(colnames(by), "by")
+    } else {
+        bycols <- by
+    }
+
     stubcols <- c( 
         "rowid", "rowidcf", "type", "term", "group", "hypothesis",
-        by,
+        bycols,
         "predicted", "std.error", "statistic", "p.value", "conf.low",
         "conf.high", "marginaleffects_wts",
         sort(grep("^predicted", colnames(newdata), value = TRUE)))
@@ -440,7 +497,7 @@ predictions <- function(model,
     return(out)
 }
 
- 
+
 # wrapper used only for standard_error_delta
 get_predictions <- function(model,
                             newdata,
@@ -459,29 +516,98 @@ get_predictions <- function(model,
         conf_level = conf_level,
         type = type,
         ...)
+
+    # extract attributes before setDT
+    draws <- attr(out, "posterior_draws")
+
     setDT(out)
 
+    # unpad factors before averaging
+    if ("rowid" %in% colnames(out)) {
+        out <- out[rowid > 0, drop = FALSE]
+    }
+
+    # averaging by groups
     if (!is.null(by)) {
-        tmp <- intersect(c("rowid", "marginaleffects_wts_internal", by), colnames(newdata))
-        tmp <- data.frame(newdata)[, tmp]
-        out <- merge(out, tmp, by = "rowid")
-        if ("marginaleffects_wts_internal" %in% colnames(newdata)) {
-            out <- out[,
-            .(predicted = stats::weighted.mean(
-                predicted,
-                marginaleffects_wts_internal,
-                na.rm = TRUE)),
-            by = by]
+
+        bycols <- sort(setdiff(
+            unique(c(colnames(out), colnames(newdata))),
+            c("rowid", "rowidcf", "predicted", "predicted_lo", "predicted_hi", "dydx", "comparison")))
+        bycols <- paste(bycols, collapse = ", ")
+        flagA1 <- checkmate::check_character(by)
+        flagA2 <- checkmate::check_true(all(by %in% c(colnames(out), colnames(newdata))))
+        flagB1 <- checkmate::check_data_frame(by)
+        flagB2 <- checkmate::check_true("by" %in% colnames(by))
+        flagB3 <- checkmate::check_true(all(setdiff(colnames(by), "by") %in% colnames(out)))
+
+        if (!(isTRUE(flagA1) && isTRUE(flagA2)) &&
+            !(isTRUE(flagB1) && isTRUE(flagB2) && isTRUE(flagB3))) {
+            msg <- c(
+                "The `by` argument must be either:", "",
+                sprintf("1. Character vector in which each element is part of: %s", bycols),
+                "",
+                sprintf("2. A data frame with a `by` column of labels, and in which all other columns are elements of: %s", bycols),
+                "",
+                "It can sometimes be useful to supply a data frame explicitly to the `newdata` argument in order to be able to group by all available columns."
+             )
+            stop(insight::format_message(msg), call. = FALSE)
+        }
+
+        # `by` data.frame
+        if (isTRUE(checkmate::check_data_frame(by))) {
+            idx <- setdiff(intersect(colnames(out), colnames(by)), "by")
+            out[by, by := by, on = idx]
+            bycols <- "by"
+
+        # `by` vector
         } else {
-            out <- out[,
-            .(predicted = mean(predicted)),
-            by = by]
+            tmp <- intersect(
+                c("rowid", "marginaleffects_wts_internal", by),
+                colnames(newdata))
+            tmp <- data.frame(newdata)[, tmp, drop = FALSE]
+            out <- merge(out, tmp, by = "rowid", all.x = TRUE, sort = FALSE)
+            bycols <- by
+        }
+
+        # bayesian
+        if (!is.null(draws)) {
+            # {collapse} package is fast and useful when operating on matrices
+            insight::check_if_installed("collapse")
+            g <- collapse::GRP(out, by = bycols)
+            w <- out[["marginaleffects_wts_internal"]]
+            draws <- collapse::fmean(
+                draws,
+                g = g,
+                w = w)
+            out <- data.table(
+                g[["groups"]],
+                predicted = apply(draws, 1, stats::median))
+            attr(out, "posterior_draws") <- draws
+
+        # frequentist
+        } else {
+            if ("marginaleffects_wts_internal" %in% colnames(newdata)) {
+                out <- out[,
+                .(predicted = stats::weighted.mean(
+                    predicted,
+                    marginaleffects_wts_internal,
+                    na.rm = TRUE)),
+                by = bycols]
+            } else {
+                out <- out[,
+                .(predicted = mean(predicted)),
+                by = bycols]
+            }
+
         }
     }
 
     if (!is.null(hypothesis)) {
-        out <- get_hypothesis(out, hypothesis, column = "predicted")
+        out <- get_hypothesis(out, hypothesis, column = "predicted", by = by)
+        draws <- attr(out, "posterior_draws")
     }
+
+    attr(out, "posterior_draws") <- draws
 
     return(out)
 }

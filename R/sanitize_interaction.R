@@ -8,7 +8,7 @@ sanitize_interaction <- function(interaction, variables, model) {
         msg <- format_msg(
         "When `interaction=TRUE` you must use the `variables` argument to specify which
         variables should be interacted.")
-        stop(msg, call. = TRUE)
+        stop(msg, call. = FALSE)
     }
 
     if (isTRUE(checkmate::check_flag(interaction))) {
@@ -16,11 +16,14 @@ sanitize_interaction <- function(interaction, variables, model) {
     }
 
     inter <- try(insight::find_interactions(model, flatten = TRUE), silent = TRUE)
-    if (!is.null(variables) && isTRUE(length(inter) > 0)) {
+
+    # variables is length 1 means we don't want an interaction
+    if (length(variables) > 1 && isTRUE(length(inter) > 0)) {
         return(TRUE)
     } else {
         return(FALSE)
     }
+
 }
 
 

@@ -5,11 +5,9 @@
 #' @export
 posteriordraws <- function(x) {
 
-    # long format can be very slow to merge, so we use `data.table`
-    assert_dependency("data.table")
-
     # tidy.comparisons() saves draws in a nice format already
     draws <- attr(x, "posterior_draws")
+
     if (inherits(draws, "posterior_draws")) return(draws)
 
     if (!inherits(x, "marginaleffects") && !inherits(x, "predictions") && !inherits(x, "comparisons")) {
@@ -17,17 +15,17 @@ posteriordraws <- function(x) {
                 call. = FALSE)
         return(x)
     }
+
     if (is.null(attr(x, "posterior_draws"))) {
         warning('This object does not include a "posterior_draws" attribute. The `posteriordraws` function only supports bayesian models produced by the `marginaleffects` or `predictions` functions of the `marginaleffects` package.',
                 call. = FALSE)
         return(x)
     }
-    draws <- attr(x, "posterior_draws")
+
     if (nrow(draws) != nrow(x)) {
         stop('The number of parameters in the object does not match the number of parameters for which posterior draws are available.', call. = FALSE)
     }
 
-    draws <- attr(x, "posterior_draws")
     draws <- data.table(draws)
     setnames(draws, as.character(seq_len(ncol(draws))))
 
@@ -42,6 +40,7 @@ posteriordraws <- function(x) {
         value.name = "draw")
 
     cols <- unique(c("drawid", "draw", "rowid", colnames(out)))
+    cols <- intersect(cols, colnames(out))
     setcolorder(out, cols)
     setDF(out)
     return(out)

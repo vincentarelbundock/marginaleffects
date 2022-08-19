@@ -1,4 +1,4 @@
-sanitize_newdata <- function(model, newdata) {
+sanitize_newdata <- function(model, newdata, modeldata = NULL) {
 
     checkmate::assert(
         checkmate::check_data_frame(newdata, null.ok = TRUE),
@@ -6,7 +6,9 @@ sanitize_newdata <- function(model, newdata) {
         combine = "or")
 
     # we always need this to extract attributes
-    modeldata <- hush(insight::get_data(model))
+    if (is.null(modeldata)) {
+        modeldata <- hush(insight::get_data(model))
+    }
 
     if (is.null(newdata)) {
         newdata <- modeldata
@@ -50,6 +52,9 @@ sanitize_newdata <- function(model, newdata) {
         msg <- sprintf(msg, class(model)[1])
         stop(msg, call. = FALSE)
     }
+
+    # column subsets later and predict
+    setDF(modeldata)
 
     # column attributes
     mc <- Filter(function(x) is.matrix(modeldata[[x]]), colnames(modeldata))
@@ -109,6 +114,17 @@ sanitize_newdata <- function(model, newdata) {
     # do it in a centralized upfront way.
     if (!"rowid" %in% colnames(newdata)) {
         newdata$rowid <- seq_len(nrow(newdata))
+    }
+
+    # placeholder response; sometimes insight::get_predicted breaks without this
+    resp <- insight::find_response(model)
+    if (isTRUE(checkmate::check_character(resp, len = 1)) &&
+        !resp %in% colnames(newdata)) {
+        y <- insight::get_response(model)
+        # protect df or matrix response
+        if (isTRUE(checkmate::check_atomic_vector(y))) {
+            newdata[[resp]] <- y[1]
+        }
     }
 
     return(newdata)

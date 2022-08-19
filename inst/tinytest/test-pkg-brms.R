@@ -30,6 +30,10 @@ brms_monotonic <- download_model("brms_monotonic")
 brms_monotonic_factor <- download_model("brms_monotonic_factor")
 brms_vdem <- download_model("brms_vdem")
 brms_lognormal_hurdle <- download_model("brms_lognormal_hurdle")
+brms_lognormal_hurdle2 <- download_model("brms_lognormal_hurdle2")
+brms_binomial <- download_model("brms_binomial")
+
+
 
 
 # warning: weights not supported
@@ -47,9 +51,9 @@ bm <- brmsmargins(
 bm <- data.frame(bm$ContrastSummary)
 
 mfx <- marginaleffects(brms_numeric)
-mfx <- tidy(mfx, FUN = mean)
+mfx <- tidy(mfx)
 
-expect_equivalent(mfx$estimate, bm$M, tolerance = tol)
+expect_equivalent(mean(posteriordraws(mfx)$estimate), bm$M, tolerance = tol)
 expect_equivalent(mfx$conf.low, bm$LL, tolerance = tol)
 expect_equivalent(mfx$conf.high, bm$UL, tolerance = tol)
 
@@ -57,8 +61,12 @@ options("marginaleffects_credible_interval" = "hdi")
 
 
 # marginaleffects vs. emmeans
-mfx <- marginaleffects(brms_numeric2, newdata = datagrid(mpg = 20, hp = 100),
-                   variables = "mpg", type = "link")
+mfx <- marginaleffects(
+    brms_numeric2,
+    newdata = datagrid(mpg = 20, hp = 100),
+    variables = "mpg",
+    type = "link")
+
 em <- emtrends(brms_numeric2, ~mpg, "mpg", at = list(mpg = 20, hp = 100))
 em <- tidy(em)
 expect_equivalent(mfx$dydx, em$mpg.trend)
@@ -408,19 +416,8 @@ cmp2 <- comparisons(
     dpar = "mu")
 expect_true(all(cmp1$comparison != cmp2$comparison))
 
-set.seed(1024)
-void <- capture.output({
-    mod <- brm(
-        bf(mpg ~ disp, hu ~ disp),
-        data = mtcars,
-        family = hurdle_lognormal(),
-        seed = 1024,
-        silent = 2)
-})
-
-
 cmp <- comparisons(
-    mod,
+    brms_lognormal_hurdle2,
     dpar = "mu",
     datagrid(disp = c(150, 300, 450)),
     transform_pre = "expdydx")
@@ -434,4 +431,97 @@ expect_equivalent(cmp$comparison,
 # emt <- emtrends(mod, ~disp, var = "disp", dpar = "mu", 
 #     regrid = "response", tran = "log", type = "response",
     # at = list(disp = c(150, 300, 450)))
+
+# Issue #432: bayes support for transform_pre with output of length 1
+cmp1 <- comparisons(brms_numeric2, transform_pre = "difference")
+cmp2 <- comparisons(brms_numeric2, transform_pre = "differenceavg")
+cmp3 <- comparisons(brms_numeric2, transform_pre = "ratio")
+cmp4 <- comparisons(brms_numeric2, transform_pre = "ratioavg")
+expect_equivalent(nrow(cmp1), 64)
+expect_equivalent(nrow(cmp2), 2)
+expect_equivalent(nrow(cmp3), 64)
+expect_equivalent(nrow(cmp4), 2)
+
+# Issue #432: comparisons = conf.low = conf.high because mean() returns a
+# single number when applied to the draws matrix
+cmp <- comparisons(brms_binomial, variables = "tx", transform_pre = "lnoravg")
+expect_true(all(cmp$comparison != cmp$conf.low))
+expect_true(all(cmp$comparison != cmp$conf.high))
+expect_true(all(cmp$conf.high != cmp$conf.low))
+
+# Issue #432: posteriordraws() and tidy() error with `transform_pre="avg"`
+pd <- posteriordraws(cmp)
+expect_inherits(pd, "data.frame")
+expect_equivalent(nrow(pd), 4000)
+ti <- tidy(cmp)
+expect_equivalent(nrow(ti), 1)
+expect_inherits(ti, "data.frame")
+
+
+# hypothesis with bayesian models
+p1 <- predictions(
+    brms_numeric2,
+    hypothesis = c(1, -1),
+    newdata = datagrid(hp = c(100, 110)))
+
+p2 <- predictions(
+    brms_numeric2,
+    hypothesis = "b1 = b2",
+    newdata = datagrid(hp = c(100, 110)))
+
+expect_inherits(p1, "predictions")
+expect_inherits(p2, "predictions")
+expect_equivalent(nrow(p1), 1)
+expect_equivalent(nrow(p2), 1)
+expect_equivalent(p1$predicted, p2$predicted)
+expect_true(all(c("conf.low", "conf.high") %in% colnames(p1)))
+expect_true(all(c("conf.low", "conf.high") %in% colnames(p2)))
+
+lc <- matrix(c(1, -1, -1, 1), ncol = 2)
+colnames(lc) <- c("Contrast A", "Contrast B")
+p3 <- predictions(
+    brms_numeric2,
+    hypothesis = lc,
+    newdata = datagrid(hp = c(100, 110)))
+expect_inherits(p3, "predictions")
+expect_equivalent(nrow(p3), 2)
+expect_equivalent(p3$term, c("Contrast A", "Contrast B"))
+expect_equivalent(p3$predicted[1], -p3$predicted[2])
+
+
+# `by` argument is supported for predictions() because it is a simple average.
+# In comparisons(), some transformations are non-collapsible, so we can't just
+# take the average, and we need to rely on more subtle transformations from
+# `transform_pre_function_dict`.
+p <- predictions(
+    brms_factor,
+    by = "cyl_fac")
+expect_inherits(p, "predictions")
+expect_equal(ncol(attr(p, "posterior_draws")), 2000)
+expect_equal(nrow(p), 3)
+expect_true(all(c("conf.low", "conf.high") %in% colnames(p)))
+
+
+# `by` data frame to collapse response group
+by <- data.frame(
+    group = as.character(1:4),
+    by = rep(c("(1,2)", "(3,4)"), each = 2))
+p <- predictions(
+    brms_cumulative_random,
+    by = by)
+expect_equivalent(nrow(p), 2)
+p <- predictions(
+    brms_cumulative_random,
+    by = by,
+    hypothesis = "reference")
+expect_equivalent(nrow(p), 1)
+
+
+
+# `by` not supported in comparisons() or marginaleffects()
+expect_error(comparisons(brms_factor, by = "cyl_fac"), pattern = "supported")
+expect_error(marginaleffects(brms_factor, by = "cyl_fac"), pattern = "supported")
+
+
+
 

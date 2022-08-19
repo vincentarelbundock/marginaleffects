@@ -1,9 +1,24 @@
-# marginaleffects 0.6.0.9000
+# marginaleffects 0.7.0.9000
 
-Breaking change
+* `marginalmeans()` accepts a `wts` argument with values: "equal", "proportional", "cells".
+* `by` argument accepts data frames for complex groupings.
+* `by` argument accepts "group" to group by response level.
+* `by` argument works with bayesian models.
+* `hypothesis`: The matrix column names are used as labels for hypothesis tests.
+* `hypothesis`: Better labels with "sequential", "reference", "pairwise".
+* New vignette: Unit-level contrasts in logistic regressions. Thanks to @arthur-albuquerque.
+* New vignette: Bootstrap example in standard errors vignette.
+
+# marginaleffects 0.7.0
+
+Breaking changes:
 
 * `by` is deprecated in `summary()` and `tidy()`. Use the same `by` argument in the main functions instead: `comparisons()`, `marginaleffects()`, `predictions()`
 * Character vectors are no longer supported in the `variables` argument of the `predictions()` function. Use `newdata="fivenum"` or "grid", "mean", or "median" instead.
+
+Critical bug fix:
+
+* Contrasts with interactions were incorrect in version 0.6.0. The error should have been obvious to most analysts in most cases (weird-looking alignment). Thanks to @vmikk. 
 
 New supported packages and models:
 
@@ -12,16 +27,20 @@ New supported packages and models:
 
 New vignette:
 
+* Elasticity
 * Frequently Asked Questions
 
-Bug fixes:
+New features:
 
-* Contrasts with interactions were incorrect in version 0.6.0. Thanks to @vmikk.
-
-Misc:
-
+* Elasticity and semi-elasticity using the new `slope` argument in `marginaleffects()`: eyex, dyex, eydx
+* `datagrid()` accepts functions: `datagrid(newdata = mtcars, hp = range, mpg = fivenum, wt = sd)`
+* New `datagridcf()` function to create counterfactual datasets. This is a shortcut to the `datagrid()` function with default to `grid_type = "counterfactual"`
+* New `by` arguments in `predictions()`, `comparisons()`, `marginaleffects()`
 * New `newdata` shortcuts: "tukey", "grid"
+* New string shortcuts for `transform_pre` in `comparisons()`
+* `marginalmeans()` now back transforms confidence intervals when possible.
 * `vcov` argument string shortcuts are now case-insensitive
+* The default contrast in `comparisons()` for binary predictors is now a difference between 1 and 0, rather than +1 relative to baseline.
 * documentation improvements
 
 # marginaleffects 0.6.0

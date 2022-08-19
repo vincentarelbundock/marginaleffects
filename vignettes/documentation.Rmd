@@ -36,16 +36,19 @@ Case studies:
 
 - [Bayesian Analyses with `brms`](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)
 - [Causal Inference with the g-Formula](https://vincentarelbundock.github.io/marginaleffects/articles/gformula.html)
+- [Elasticity](https://vincentarelbundock.github.io/marginaleffects/articles/elasticity.html)
 - [Generalized Additive Models](https://vincentarelbundock.github.io/marginaleffects/articles/gam.html)
 - [Mixed effects models](https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html)
 - [Multinomial Logit and Discrete Choice Models](https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html)
 - [Multiple Imputation](https://vincentarelbundock.github.io/marginaleffects/articles/multiple_imputation.html)
+- [Unit-level contrasts in logistic regressions](https://vincentarelbundock.github.io/marginaleffects/articles/logistic_contrasts.html)
 
 Tips and technical notes:
 
 - [`r n_support` Supported Classes of Models](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
 - [Index of Functions and Documentation](https://vincentarelbundock.github.io/marginaleffects/reference/index.html)
-- [Standard Errors](https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html)
+- [Standard Errors and Confidence Intervals](https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html)
 - [Tables and Plots](https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html)
 - [Performance](https://vincentarelbundock.github.io/marginaleffects/articles/performance.html)
 - [Alternative Software](https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html)
+- [Frequently Asked Questions](https://vincentarelbundock.github.io/marginaleffects/articles/faq.html)

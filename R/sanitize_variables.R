@@ -14,6 +14,8 @@ sanitize_variables <- function(variables,
         checkmate::check_list(variables, names = "unique"),
         combine = "or")
 
+    modeldata <- attr(newdata, "newdata_modeldata")
+
     # rename to avoid overwriting in case we need info later
     predictors <- variables
     others <- NULL
@@ -55,7 +57,12 @@ sanitize_variables <- function(variables,
         predictors_new <- list()
         for (v in predictors) {
             if (isTRUE(variable_class[[v]] == "numeric")) {
-                predictors_new[[v]] <- contrast_numeric
+                # binary variables: we take the difference by default
+                if (!is.null(modeldata[[v]]) && all(modeldata[[v]] %in% 0:1)) {
+                    predictors_new[[v]] <- 0:1
+                } else {
+                    predictors_new[[v]] <- contrast_numeric
+                }
             } else {
                 predictors_new[[v]] <- contrast_factor
             }
@@ -138,16 +145,19 @@ sanitize_variables <- function(variables,
         }
         fun_numeric <- fun_categorical <- transform_pre_function_dict[[transform_pre]]
         lab_numeric <- lab_categorical <- transform_pre_label_dict[[transform_pre]]
-        if (isTRUE(transform_pre %in% c("dydx", "eyex", "eydx", "dyex"))) {
+        if (isTRUE(grepl("dydxavg|eyexavg|dyexavg|eydxavg", transform_pre))) {
+            fun_categorical <- transform_pre_function_dict[["differenceavg"]]
+            lab_categorical <- transform_pre_label_dict[["differenceavg"]]
+        } else if (isTRUE(grepl("dydx$|eyex$|dyex$|eydx$", transform_pre))) {
             fun_categorical <- transform_pre_function_dict[["difference"]]
             lab_categorical <- transform_pre_label_dict[["difference"]]
         } 
+
     } else {
         github_issue()
     }
 
     for (v in names(predictors)) {
-
         if (isTRUE(variable_class[v] == "numeric")) {
             sanity_contrast_numeric(predictors[[v]])
             fun <- fun_numeric
@@ -161,7 +171,8 @@ sanitize_variables <- function(variables,
             "name" = v,
             "function" = fun,
             "label" = lab,
-            "value" = predictors[[v]])
+            "value" = predictors[[v]],
+            "transform_pre" = transform_pre)
     }
 
     # interaction: get_contrasts() assumes there is only one function when interaction=TRUE

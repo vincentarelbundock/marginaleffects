@@ -31,32 +31,6 @@ plot_cme <- function(model,
                      draw = TRUE,
                      ...) {
 
-    # get data to know over what range of values we should plot
-    dat <- hush(insight::get_data(model))
-    resp <- insight::find_response(model)[1]
-
-    # eventually we might allow multiple conditions and/or effects
-    checkmate::assert_character(effect, len = 1)
-
-    # allow multiple conditions and/or effects
-    checkmate::assert_character(condition, min.len = 1, max.len = 2)
-
-    ## not sure why this fails in testthat
-    # checkmate::assert_true(condition %in% colnames(dat))
-    if (length(condition) == 1) {
-        condition1 <- condition[1]
-        condition2 <- NULL
-        condition3 <- NULL
-    } else if (length(condition) == 2) {
-        condition1 <- condition[1]
-        condition2 <- condition[2]
-        condition3 <- NULL
-    } else {
-        condition1 <- condition[1]
-        condition2 <- condition[2]
-        condition3 <- condition[3]
-    }
-
     out <- plot_cco(
         model = model,
         effect = effect,
@@ -70,8 +44,8 @@ plot_cme <- function(model,
 
     if (inherits(out, "ggplot")) {
         out <- out + ggplot2::labs(
-            x = condition1,
-            y = sprintf("Marginal effect of %s on %s", effect, resp))
+            x = condition[1],
+            y = sprintf("Marginal effect of %s on %s", effect, insight::find_response(model)[[1]]))
     }
 
     return(out)

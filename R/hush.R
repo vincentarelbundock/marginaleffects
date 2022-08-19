@@ -1,7 +1,7 @@
 #' Execute code silently
 #'
-#' @export
 #' @keywords internal
+#' Do not export to avoid conflict with modelsummary
 hush <- function(code) {
     void <- utils::capture.output({
         out <- invisible(

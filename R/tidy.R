@@ -7,7 +7,6 @@ generics::tidy
 #' Tidy a `marginaleffects` object
 #'
 #' @param x An object produced by the `marginaleffects` function.
-#' @param by Character vector of variable names over which to compute group-averaged marginal effects.
 #' @inheritParams marginaleffects
 #' @return A "tidy" `data.frame` of summary statistics which conforms to the
 #' `broom` package specification.
@@ -34,9 +33,6 @@ generics::tidy
 #'
 #' # average marginal effects
 #' tidy(mfx)
-#'
-#' # average marginal effects by group
-#' tidy(mfx, by = "gear")
 tidy.marginaleffects <- function(x,
                                  conf_level = 0.95,
                                  ...) {
@@ -111,7 +107,6 @@ tidy.marginalmeans <- function(x,
 #' unit-level adjusted predictions computed by the `predictions` function.
 #'
 #' @param x An object produced by the `predictions` function.
-#' @param by Character vector of variable names over which to compute group-averaged contrasts.
 #' @inheritParams predictions
 #' @return A "tidy" `data.frame` of summary statistics which conforms to the
 #' `broom` package specification.
@@ -229,6 +224,14 @@ tidy.comparisons <- function(x,
                              transform_avg = NULL,
                              ...) {
 
+    if (identical(attr(x, "transform_pre"), "lnor")) {
+        msg <- 
+        'The `tidy()` and `summary()` functions take the average of estimates
+        over the whole dataset. However, the unit-level estimates you requested 
+        are not collapsible. Please use `transform_pre="lnoravg"` instead.' 
+        stop(msg, call. = FALSE)
+    }
+
     if ("by" %in% names(list(...))) {
         msg <- 
         "The `by` argument is deprecated in this function. You can use `by` in the `comparisons()`, 
@@ -260,17 +263,23 @@ tidy.comparisons <- function(x,
 
     draws <- attr(x, "posterior_draws")
 
+    idx_by <- c("type", "group", "term", "contrast", 
+                grep("^contrast_\\w+", colnames(x_dt), value = TRUE))
+    idx_by <- intersect(idx_by, colnames(x_dt))
+    idx_na <- is.na(x_dt$comparison)
+
+
+    # do not use the standard errors if we already have the final number of rows (e.g., lnoravg)
+    flag_delta <- nrow(unique(x_dt[, ..idx_by])) != nrow(x_dt)
+
     # empty initial mfx data.frame means there were no numeric variables in the
     # model
-    if (is.null(attr(x, "by")) && ("term" %in% colnames(x_dt) || inherits(x, "predictions"))) {
+    if (isTRUE(flag_delta) &&
+        is.null(attr(x, "by")) &&
+        ("term" %in% colnames(x_dt) || inherits(x, "predictions"))) {
 
         J <- attr(x, "jacobian")
         V <- attr(x, "vcov")
-
-        idx_by <- c("type", "group", "term", "contrast", 
-                    grep("^contrast_\\w+", colnames(x_dt), value = TRUE))
-        idx_by <- intersect(idx_by, colnames(x_dt))
-        idx_na <- is.na(x_dt$comparison)
 
         # average marginal effects
         if (is.null(marginaleffects_wts_internal)) {
@@ -346,7 +355,7 @@ tidy.comparisons <- function(x,
             # 1. mean for each draw gives 4000 samples of the average mfx
             # 2. quantiles of the means
             drawavg <- draws[, .(estimate = mean(draw)), by = c(idx_by, "drawid")]
-            es <- drawavg[, .(estimate = mean(estimate)), by = idx_by]
+            es <- drawavg[, .(estimate = stats::median(estimate)), by = idx_by]
             if (isTRUE(getOption("marginaleffects_credible_interval", default = "eti") == "hdi")) {
                 f_ci <- get_hdi
             } else {

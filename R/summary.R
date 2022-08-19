@@ -320,8 +320,10 @@ summary.comparisons <- function(object,
     class(out) <- c("comparisons.summary", class(out))
     attr(out, "type") <- attr(object, "type")
     attr(out, "model_type") <- attr(object, "model_type")
-    attr(out, "transform_post") <- attr(object, "transform_post")
     attr(out, "transform_pre") <- attr(object, "transform_pre")
+    attr(out, "transform_post") <- attr(object, "transform_post")
+    attr(out, "transform_post_label") <- attr(object, "transform_post_label")
+    attr(out, "transform_pre_label") <- attr(object, "transform_pre_label")
     attr(out, "transform_avg") <- transform_avg
     return(out)
 }
@@ -405,11 +407,11 @@ print.comparisons.summary <- function(x,
   cat("\n")
   cat("Model type: ", attr(x, "model_type"), "\n")
   cat("Prediction type: ", attr(x, "type"), "\n")
-  if (!is.null(attr(x, "transform_pre"))) {
-      cat("Pre-transformation: ", paste(attr(x, "transform_pre"), collapse = ""), "\n")
+  if (!is.null(attr(x, "transform_pre_label"))) {
+      cat("Pre-transformation: ", paste(attr(x, "transform_pre_label"), collapse = ""), "\n")
   }
-  if (!is.null(attr(x, "transform_post"))) {
-      cat("Post-transformation: ", paste(attr(x, "transform_post"), collapse = ""), "\n")
+  if (!is.null(attr(x, "transform_post_label"))) {
+      cat("Post-transformation: ", paste(attr(x, "transform_post_label"), collapse = ""), "\n")
   }
   if (!is.null(attr(x, "transform_avg"))) {
       cat("Average-transformation: ", paste(attr(x, "transform_average"), collapse = ""), "\n")

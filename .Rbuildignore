@@ -4,6 +4,7 @@
 ^_pkgdown\.yml$
 ^codecov\.yml$
 ^cran-comments\.md
+^CRAN-SUBMISSION$
 ^data-raw$
 ^docs$
 ^LICENSE\.md$
@@ -12,10 +13,10 @@
 ^README\.html$
 ^README\.Rmd$
 ^sandbox$
-man-roxygen
 ^vignettes/alternative_software.Rmd
 ^vignettes/brms.Rmd
 ^vignettes/contrasts.Rmd
+^vignettes/elasticity.Rmd
 ^vignettes/faq.Rmd
 ^vignettes/gam.Rmd
 ^vignettes/gformula.Rmd
@@ -33,5 +34,8 @@ man-roxygen
 ^vignettes/toc.Rmd
 ^vignettes/toc_external.Rmd
 ^vignettes/transformation.Rmd
+^vignettes/logistic_contrasts.Rmd
+inst/tinytest/stata/databases/.*\.dta
 ^.*\.Rproj$
 ^\.Rproj\.user$
+man-roxygen

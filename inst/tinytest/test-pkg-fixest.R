@@ -3,7 +3,9 @@ exit_file("problems testing fixest because of `get_data` from environment")
 if (utils::packageVersion("fixest") < "0.10.5") exit_file("fixest version")
 if (ON_CRAN) exit_file("on cran")
 requiet("fixest")
+requiet("data.table")
 fixest::setFixest_nthreads(1)
+
 
 
 # Issue #375: friendly warning when sandwich fails
@@ -82,7 +84,6 @@ dat2$unit <- as.factor(dat2$unit)
 dat2 <<- dat2
 mod1 <- feols(y ~ x * w | unit, data = dat)
 mod2 <- fixest::feols(y ~ x * w | unit, data = dat2)
-expect_warning(plot_cme(mod1, effect = "x", condition = "w", draw = FALSE))
 p <- plot_cme(mod2, effect = "x", condition = "w")
 expect_inherits(p, "ggplot")
 
@@ -155,6 +156,29 @@ expect_inherits(mfx1, "marginaleffects")
 expect_inherits(mfx2, "marginaleffects")
 expect_inherits(mfx3, "marginaleffects")
 
+
+# Issue #443: `newdata` breaks when it is a `data.table`
+d <- data.table(mtcars)
+m <- feols(mpg ~ cyl * disp, d)
+m1 <- marginaleffects(m)
+m2 <- marginaleffects(m, newdata = datagrid(disp = 0))  
+expect_inherits(m1, "marginaleffects")
+expect_inherits(m2, "marginaleffects")
+m1 <- comparisons(m)
+m2 <- comparisons(m, newdata = datagrid(disp = 0))  
+expect_inherits(m1, "comparisons")
+expect_inherits(m2, "comparisons")
+
+
+# Issue #458: fixest with data table
+dat <- data.table(y = rnorm(10), x = rnorm(10))
+model <- feols(y ~ x, dat)
+m <- marginaleffects(model)
+expect_inherits(m, "marginaleffects")
+
+
+
+
 # TODO: works interactively
 # expect_false(expect_warning(marginaleffects(fit3)))
 
@@ -186,3 +210,41 @@ expect_inherits(mfx3, "marginaleffects")
 # expect_marginaleffects(mod)
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Issue #461
+## commetned out because this seems to be an upstream problem. See issue.
+# gen_data <- function(rows) {
+#   data <- data.table(
+#     x1 = rnorm(rows),
+#     x2 = rnorm(rows),
+#     group1 = rep(1:5, rows/5),
+#     group2 = rep(1:2, rows/2),
+#     group3 = rep(1:20, rows/20)
+#   )
+#   data[, y := x1*x2*rnorm(rows, 1, 0.1)]
+#   data[, fe := paste0(group1, group2)]
+#   setDF(data)
+#   return(data)
+# }
+# data <- gen_data(50020)
+# model <- feols(y ~ x1*x2 | group1^group2, data)
+# nd <- datagrid(model = model)
+# expect_error(marginaleffects(model, newdata = "mean"), "combined")

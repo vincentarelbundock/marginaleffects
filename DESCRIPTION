@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Marginal Effects, Marginal Means, Predictions, and Contrasts
-Version: 0.6.0.9000
+Version: 0.7.0.9001
 Authors@R: 
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -20,15 +20,17 @@ Encoding: UTF-8
 URL: https://vincentarelbundock.github.io/marginaleffects/
 BugReports: https://github.com/vincentarelbundock/marginaleffects/issues
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.1
 VignetteBuilder: knitr
+Remotes:
+    RobinHankin/Brobdingnag
 Depends: 
     R (>= 3.5.0)
 Imports: 
     checkmate,
     data.table,
     generics,
-    insight (>= 0.17.1),
+    insight (>= 0.18.0),
     methods
 Suggests: 
     AER,
@@ -43,6 +45,7 @@ Suggests:
     brms,
     brmsmargins,
     broom,
+    collapse,
     conflicted,
     covr,
     crch,

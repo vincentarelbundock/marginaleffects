@@ -100,13 +100,24 @@ get_contrasts <- function(model,
     }
 
     # transform_pre function could be different for different terms
+    # sanitize_variables() ensures all functions are identical when there are interactions
     fun_list <- sapply(names(variables), function(x) variables[[x]][["function"]])
+    fun_list[["interaction"]] <- fun_list[[1]]
 
     # elasticity requires the original (properly aligned) predictor values
     # this will discard factor variables which are duplicated, so in principle
     # it should be the "correct" size
-    elasticities <- c("eyex", "eydx", "dyex", "eyexavg", "eydxavg", "dyexavg")
-    elasticities <- Filter(function(x) x$label %in% elasticities, variables)
+    elasticities <- c(
+        "dydx",
+        "eyex",
+        "eydx",
+        "dyex",
+        "dydxavg",
+        "eyexavg",
+        "eydxavg",
+        "dyexavg")
+    fun <- function(x) is.character(x$transform_pre) && x$transform_pre %in% elasticities
+    elasticities <- Filter(fun, variables)
     elasticities <- lapply(elasticities, function(x) x$name)
     if (length(elasticities) > 0) {
         for (v in names(elasticities)) {
@@ -116,7 +127,7 @@ get_contrasts <- function(model,
             idx2 <- out[term == v, ..idx2]
             # original is NULL when interaction=TRUE
             if (!is.null(original)) {
-                idx1 <- c(v, "rowid", "term", "type", "group", grep("^contrast", colnames(original), value = TRUE))
+                idx1 <- c(v, "rowid", "rowidcf", "term", "type", "group", grep("^contrast", colnames(original), value = TRUE))
                 idx1 <- intersect(idx1, colnames(original))
                 idx1 <- original[, ..idx1]
                 idx2 <- merge(idx1, idx2)
@@ -125,56 +136,134 @@ get_contrasts <- function(model,
         }
     }
 
-    # bayes
-    draws_lo <- attr(pred_lo, "posterior_draws")
-    draws_hi <- attr(pred_hi, "posterior_draws")
-    draws_or <- attr(pred_or, "posterior_draws")
-    if (is.null(draws_lo)) {
+    # frequentist
+    if (is.null(attr(pred_lo, "posterior_draws"))) {
         draws <- NULL
+
+    # bayes
     } else {
-        draws <- draws_lo
-        termnames <- unique(out$term)
-        for (tn in termnames) {
-            # sanity_variables ensures that all functions are identical when interaction=TRUE
-            if (isTRUE(interaction)) {
-                fun <- fun_list[[1]]
-            } else {
-                fun <- fun_list[[tn]]
-            }
-            idx <- out$term == tn
+        draws_lo <- attr(pred_lo, "posterior_draws")
+        draws_hi <- attr(pred_hi, "posterior_draws")
+        draws_or <- attr(pred_or, "posterior_draws")
+
+        wrapfun <- function(fun, hi, lo, y, x, eps) {
             args <- list(
-                hi = draws_hi[idx, ],
-                lo = draws_lo[idx, ],
-                eps = out[idx, marginaleffects_eps],
-                x = elasticities[[tn]][idx])
+                hi = hi,
+                lo = lo,
+                y = y,
+                x = x,
+                eps = eps)
             args <- args[intersect(names(args), names(formals(fun)))]
-            draws[idx, ] <- do.call("fun", args)
+            out <- do.call("fun", args)
+            return(out)
         }
+
+        # need to loop over columns for transform_pre with `mean()`, which
+        # takes the average of the whole matrix and returns a single
+        # numeric.
+        idx <- grep("^group$|^term$|^contrast", colnames(out), value = TRUE)
+        idx <- apply(out[, ..idx], 1, paste, collapse = "|")
+        draws <- list()
+        for (i in unique(idx)) {
+            idx2 <- i == idx
+            draws_lo_sub <- draws_lo[idx2, , drop = FALSE]
+            draws_hi_sub <- draws_hi[idx2, , drop = FALSE]
+            draws_or_sub <- draws_or[idx2, , drop = FALSE]
+            tn <- out[idx2, term][1]
+            x <- elasticities[[tn]]
+            x <- rep(x, times = nrow(draws_lo) / length(x))[idx2]
+            fun <- fun_list[[tn]]
+
+            draws_sub <- wrapfun(
+                fun = fun,
+                hi = draws_hi_sub,
+                lo = draws_lo_sub,
+                y = draws_or_sub,
+                x = x,
+                eps = out[idx2, marginaleffects_eps])
+
+            # usually happens when `transform_pre` returns a unique value instead of a vector
+            if (!is.matrix(draws_sub)) {
+                draws_sub <- sapply(
+                    seq_len(ncol(draws_hi_sub)),
+                    function(j) wrapfun(
+                        fun = fun,
+                        hi = draws_hi_sub[, j],
+                        lo = draws_lo_sub[, j],
+                        y = draws_or_sub[, j],
+                        x = x,
+                        eps = out[idx2, marginaleffects_eps])
+                )
+                draws_sub <- matrix(draws_sub, nrow = 1)
+            }
+            draws <- append(draws, list(draws_sub))
+        }
+        draws <- do.call("rbind", draws)
     }
 
-    idx <- grep("^contrast|^group$|^term$|^type$|^transform_pre_idx$", colnames(out), value = TRUE)
-    idx <- c(idx, by)
     out[, predicted_lo := pred_lo[["predicted"]]]
     out[, predicted_hi := pred_hi[["predicted"]]]
-    out[, predicted_or := pred_or[["predicted"]]]
+    out[, predicted := pred_or[["predicted"]]]
+
+
+    # the `by` variables must be included for group-by data.table operations
+    if (!is.null(by)) {
+
+        bycols <- sort(setdiff(
+            unique(c(colnames(out), colnames(newdata))),
+            c("rowid", "rowidcf", "predicted", "predicted_lo", "predicted_hi", "dydx", "comparison")))
+        bycols <- paste(bycols, collapse = ", ")
+        flagA1 <- checkmate::check_character(by)
+        flagA2 <- checkmate::check_true(all(by %in% c(colnames(out), colnames(newdata))))
+        flagB1 <- checkmate::check_data_frame(by)
+        flagB2 <- checkmate::check_true("by" %in% colnames(by))
+        flagB3 <- checkmate::check_true(all(setdiff(colnames(by), "by") %in% colnames(out)))
+
+        if (!(isTRUE(flagA1) && isTRUE(flagA2)) &&
+            !(isTRUE(flagB1) && isTRUE(flagB2) && isTRUE(flagB3))) {
+            msg <- c(
+                "The `by` argument must be either:", "",
+                sprintf("1. Character vector in which each element is part of: %s", bycols),
+                "",
+                sprintf("2. A data frame with a `by` column of labels, and in which all other columns are elements of: %s", bycols),
+                "",
+                "It can sometimes be useful to supply a data frame explicitly to the `newdata` argument in order to be able to group by all available columns."
+             )
+            stop(insight::format_message(msg), call. = FALSE)
+        }
+
+        # `by` data.frame
+        if (isTRUE(checkmate::check_data_frame(by))) {
+            idx <- setdiff(intersect(colnames(out), colnames(by)), "by")
+            out[by, by := by, on = idx]
+            bycols <- "by"
+
+        # `by` vector
+        } else {
+            tmp <- intersect(
+                c("rowid", "marginaleffects_wts_internal", by),
+                colnames(newdata))
+            tmp <- data.frame(newdata)[, tmp, drop = FALSE]
+            out <- merge(out, tmp, by = "rowid", all.x = TRUE, sort = FALSE)
+            bycols <- by
+        }
+    } else {
+        bycols <- NULL
+    }
+
+    if ("by" %in% bycols) {
+        idx <- "by"
+    } else {
+        idx <- grep("^contrast|^group$|^term$|^type$|^transform_pre_idx$", colnames(out), value = TRUE)
+        idx <- unique(c(idx, bycols))
+    }
 
     # we feed this column to safefun(), even if it is useless for categoricals
     if (!"marginaleffects_eps" %in% colnames(out)) {
         out[, "marginaleffects_eps" := NA]
     }
 
-    # make sure the `by` variables are included
-    if (!is.null(by)) {
-        by_merge <- setdiff(by, colnames(out))
-        if (length(by_merge) > 0) {
-            cols <- c("rowid", by_merge, grep("^contrast", colnames(original), value = TRUE))
-            i <- c("rowid", grep("^contrast", colnames(original), value = TRUE))
-            tmp <- original[, ..cols]
-            out <- merge(out, tmp, by = i, sort = FALSE)
-        }
-    }
-
-    # do not feed unknown arguments to a `transform_pre`
+        # do not feed unknown arguments to a `transform_pre`
     safefun <- function(hi, lo, y, n, term, interaction, eps, recycle = TRUE) {
         # when interaction=TRUE, sanitize_transform_pre enforces a single function
         if (isTRUE(interaction)) {
@@ -208,13 +297,13 @@ get_contrasts <- function(model,
         out <- out[, .(
             predicted_lo = mean(predicted_lo),
             predicted_hi = mean(predicted_hi),
-            predicted_or = mean(predicted_or),
+            predicted = mean(predicted),
             eps = mean(marginaleffects_eps)),
         by = idx][
         , "comparison" := safefun(
             hi = predicted_hi,
             lo = predicted_lo,
-            y = predicted_or,
+            y = predicted,
             n = .N,
             term = term,
             interaction = interaction,
@@ -232,7 +321,7 @@ get_contrasts <- function(model,
             out[, "comparison" := safefun(
                 hi = predicted_hi,
                 lo = predicted_lo,
-                y = predicted_or,
+                y = predicted,
                 n = .N,
                 term = term,
                 interaction = interaction,
@@ -245,7 +334,7 @@ get_contrasts <- function(model,
                 out <- out[, .(comparison = safefun(
                     hi = predicted_hi,
                     lo = predicted_lo,
-                    y = predicted_or,
+                    y = predicted,
                     n = .N,
                     term = term,
                     interaction = interaction,
@@ -258,7 +347,7 @@ get_contrasts <- function(model,
         }
     }
 
-    out <- get_hypothesis(out, hypothesis, "comparison")
+    out <- get_hypothesis(out, hypothesis, column = "comparison", by = by)
 
     # output
     attr(out, "posterior_draws") <- draws

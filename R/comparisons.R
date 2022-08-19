@@ -64,6 +64,7 @@
 #'   - "grid": Contrasts on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
 #' + [datagrid()] call to specify a custom grid of regressors. For example:
 #'   - `newdata = datagrid(cyl = c(4, 6))`: `cyl` variable equal to 4 and 6 and other regressors fixed at their means or modes.
+#'   - `newdata = datagrid(mpg = fivenum)`: `mpg` variable held at Tukey's five numbers (using the `fivenum` function), and other regressors fixed at their means or modes.
 #'   - See the Examples section and the [datagrid] documentation.
 #' @param transform_pre string or function. How should pairs of adjusted predictions be contrasted?
 #' * string: shortcuts to common contrast functions.
@@ -72,7 +73,10 @@
 #' * function: accept two equal-length numeric vectors of adjusted predictions (`hi` and `lo`) and returns a vector of contrasts of the same length, or a unique numeric value.
 #'   - See the Transformations section below for examples of valid functions.
 #' @param transform_post (experimental) A function applied to unit-level estimates and confidence intervals just before the function returns results.
-#' @param by Character vector of variable names over which to compute group-wise estimates.
+#' @param by Compute group-wise average estimates. Valid inputs:
+#'   - Character vector of column names in `newdata` or in the data frame produced by calling the function without the `by` argument.
+#'   - Data frame with a `by` column of group labels, and merging columns shared by `newdata` or the data frame produced by calling the same function without the `by` argument.
+#'   - See examples below.
 #' @param interaction TRUE, FALSE, or NULL
 #' * `FALSE`: Contrasts represent the change in adjusted predictions when one predictor changes and all other variables are held constant.
 #' * `TRUE`: Contrasts represent the changes in adjusted predictions when the predictors specified in the `variables` argument are manipulated simultaneously.
@@ -105,7 +109,8 @@
 #' comparisons(mod, newdata = "marginalmeans")
 #'
 #' # Contrasts at user-specified values
-#' comparisons(mod, newdata = datagrid(am = 0, cyl = tmp$cyl))
+#' comparisons(mod, newdata = datagrid(am = 0, gear = tmp$gear))
+#' comparisons(mod, newdata = datagrid(am = unique, gear = max))
 #'
 #' # Numeric contrasts
 #' mod <- lm(mpg ~ hp, data = mtcars)
@@ -164,6 +169,19 @@
 #'     newdata = "mean",
 #'     hypothesis = lc)
 #' 
+#' 
+#' # `by` argument
+#' mod <- lm(mpg ~ hp * am * vs, data = mtcars)
+#' cmp <- comparisons(mod, variables = "hp", by = c("vs", "am"))
+#' summary(cmp)
+#' 
+#' library(nnet)
+#' mod <- multinom(factor(gear) ~ mpg + am * vs, data = mtcars, trace = FALSE)
+#' by <- data.frame(
+#'     group = c("3", "4", "5"),
+#'     by = c("3,4", "3,4", "5"))
+#' comparisons(mod, type = "probs", by = by)
+#' 
 #' @export
 comparisons <- function(model,
                         newdata = NULL,
@@ -190,7 +208,6 @@ comparisons <- function(model,
         transform_post_label <- deparse(substitute(transform_post))
     }
 
-
     # marginaleffects()` **must** run its own sanity checks and hardcode valid arguments
     internal_call <- dots[["internal_call"]]
     if (!isTRUE(internal_call)) {
@@ -198,22 +215,13 @@ comparisons <- function(model,
         # insert `model` should probably not be nested too deeply in the call
         # stack since we eval.parent() (not sure about this)
         scall <- substitute(newdata)
-        if (is.call(scall) && as.character(scall)[1] %in% c("datagrid", "typical", "counterfactual")) {
+        if (is.call(scall) && as.character(scall)[1] %in% c("datagrid", "datagridcf", "typical", "counterfactual")) {
             lcall <- as.list(scall)
             if (!any(c("model", "data") %in% names(lcall))) {
                 lcall <- c(lcall, list("model" = model))
                 newdata <- eval.parent(as.call(lcall))
             }
 
-        } else {
-            if (is.null(newdata) && !is.null(hypothesis)) {
-                newdata <- "mean"
-                msg <- format_msg(
-                'The `hypothesis` argument of the `comparisons()` function must be used in
-                conjunction with the `newdata` argument. `newdata` was switched from NULL to
-                "mean" automatically.')
-                warning(msg, call. = FALSE)
-            }
         }
 
         model <- sanitize_model(
@@ -233,12 +241,12 @@ comparisons <- function(model,
     }
 
     # bayesian models do not support `by` and "avg" in `transform_pre`
-    if (!is.null(by) ||
-        (is.character(transform_pre) && isTRUE(grepl("avg", transform_pre)))) {
+    if (!is.null(by)) {
         if (isTRUE(insight::model_info(model)$is_bayesian)) {
             msg <- format_msg(
-            'For bayesian models, the `by` argument is not supported and the `transform_pre`
-            shortcut strings cannot include "avg".')
+            'The `by` argument of the `comparisons()` and `marginaleffects()`
+            functions is not supported for bayesian models. Users can call
+            the `posteriordraws()` function and compute the quantities manually.')
             stop(msg, call. = FALSE)
         }
     }
@@ -268,19 +276,6 @@ comparisons <- function(model,
 
     # before sanitize_variables
     newdata <- sanitize_newdata(model = model, newdata = newdata)
-
-    # sanitize by after newdata
-    if (!is.null(by)) {
-        flag <- isTRUE(checkmate::check_character(by)) &&
-                isTRUE(checkmate::check_true(all(by %in% colnames(newdata))))
-        if (!isTRUE(flag)) {
-            msg <- format_msg(
-            "The `by` argument must be a character vector and every element of the vector
-            must correspond to one of the predictors in the model or to one of the columns 
-            of the dataset supplied to the `newdata` argument.")
-            stop(msg, call. = FALSE)
-        }
-    }
 
     # after sanitize_newdata
     variables_list <- sanitize_variables(
@@ -385,7 +380,7 @@ comparisons <- function(model,
 
     # merge original data back in
     # HACK: relies on NO sorting at ANY point
-    if (isTRUE(nrow(mfx) == nrow(contrast_data$original))) {
+    if (is.null(by) && "rowid" %in% colnames(mfx)) {
         idx <- setdiff(colnames(contrast_data$original), colnames(mfx))
         mfx <- data.table(mfx, contrast_data$original[, ..idx])
     }
@@ -413,14 +408,12 @@ comparisons <- function(model,
     }
 
     # clean columns
-    bad <- c("predicted_or", "predicted")
     stubcols <- c("rowid", "rowidcf", "type", "group", "term", "hypothesis",
                   grep("^contrast", colnames(mfx), value = TRUE),
                   "comparison", "std.error", "statistic", "p.value", "conf.low", "conf.high", "df",
-                  sort(grep("^predicted", colnames(newdata), value = TRUE)))
+                  "predicted", "predicted_hi", "predicted_lo")
     cols <- intersect(stubcols, colnames(mfx))
     cols <- unique(c(cols, colnames(mfx)))
-    cols <- setdiff(cols, bad)
     mfx <- mfx[, ..cols, drop = FALSE]
 
     # save as attribute and not column
@@ -449,11 +442,11 @@ comparisons <- function(model,
     attr(out, "jacobian") <- J
     attr(out, "vcov") <- vcov
     attr(out, "vcov.type") <- vcov.type
-    attr(out, "transform_pre") <- NULL
-    attr(out, "transform_post") <- NULL
     attr(out, "weights") <- marginaleffects_wts_internal
-    attr(out, "transform_pre") <- transform_pre_label
-    attr(out, "transform_post") <- transform_post_label
+    attr(out, "transform_pre") <- transform_pre
+    attr(out, "transform_post") <- transform_post
+    attr(out, "transform_pre_label") <- transform_pre_label
+    attr(out, "transform_post_label") <- transform_post_label
     attr(out, "by") <- by
 
     if (!isTRUE(internal_call)) {

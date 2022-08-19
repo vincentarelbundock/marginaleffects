@@ -72,11 +72,12 @@ expect_equivalent(mfx$std.error, mar$std.error, tolerance = tol_se)
 
 
 
-# within error
-# within model are not supported by `predict.plm`
-stata <- readRDS(testing_path("stata/stata.rds"))$plm_within
-mod <- plm(inv ~ value * capital, data = dat, model = "within", effect = "twoways")
-expect_error(marginaleffects(mod), pattern = "Unable")
+# # commented out because the dev version of {plm} now has a fully-working predict method
+# # within error
+# # within model are not supported by `predict.plm`
+# stata <- readRDS(testing_path("stata/stata.rds"))$plm_within
+# mod <- plm(inv ~ value * capital, data = dat, model = "within", effect = "twoways")
+# expect_error(marginaleffects(mod), pattern = "Unable")
 
 
 

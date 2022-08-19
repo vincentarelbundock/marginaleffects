@@ -218,3 +218,31 @@ mfx <- suppressMessages(marginaleffects(mod, type = "probs"))
 tid <- tidy(mfx)
 expect_equivalent(nrow(tid), 6)
 
+
+# polr: average predictions by group against Stata
+mod <- polr(factor(gear) ~ hp, data = mtcars)
+p <- suppressMessages(tidy(predictions(mod, type = "probs")))
+expect_equivalent(
+    p$estimate,
+    c(.4933237, .363384, .1432922),
+    tolerance = tol)
+expect_equivalent(
+    p$std.error,
+    c(.0867256, .0838539, .0591208),
+    tolerance = tol_se)
+
+# Predictive margins                              Number of obs     =         32
+# Model VCE    : OIM
+
+# 1._predict   : Pr(gear==1), predict(pr outcome(1))
+# 2._predict   : Pr(gear==2), predict(pr outcome(2))
+# 3._predict   : Pr(gear==3), predict(pr outcome(3))
+
+# ------------------------------------------------------------------------------
+#              |            Delta-method
+#              |     Margin   Std. Err.      z    P>|z|     [95% Conf. Interval]
+# -------------+----------------------------------------------------------------
+#     _predict |
+#           1  |   .4933237   .0867256     5.69   0.000     .3233448    .6633027
+#           2  |    .363384   .0838539     4.33   0.000     .1990335    .5277346
+#           3  |   .1432922   .0591208     2.42   0.015     .0274175    .2591669

@@ -88,7 +88,6 @@ expect_equivalent(nrow(cmp), 864)
 expect_equivalent(nrow(tidy(cmp)), 27)
 
 
-
 # brms + order of first character doesn't matter
 mod <- download_model("brms_factor")
 cmp <- comparisons(mod, variables = c("cyl_fac", "mpg"), interaction = TRUE, contrast_factor = "all")
