@@ -116,7 +116,7 @@ marginalmeans <- function(model,
     hypothesis <- sanitize_hypothesis(hypothesis, ...)
 
     # fancy vcov processing to allow strings like "HC3"
-    vcov <- get_vcov(model, vcov = vcov)
+    vcov <- get_vcov(model, vcov = vcov, ...)
 
     # sanity
     sanity_dots(model = model, ...)
@@ -226,7 +226,8 @@ marginalmeans <- function(model,
             variables = variables,
             newdata = newgrid,
             interaction = interaction,
-            hypothesis = hypothesis)
+            hypothesis = hypothesis,
+            ...)
         # get rid of attributes in column
         out[["std.error"]] <- as.numeric(se)
         J <- attr(se, "jacobian")
