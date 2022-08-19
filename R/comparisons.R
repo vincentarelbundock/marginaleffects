@@ -419,7 +419,11 @@ comparisons <- function(model,
     mfx <- mfx[, ..cols, drop = FALSE]
 
     # save as attribute and not column
-    marginaleffects_wts_internal <- mfx[["marginaleffects_wts_internal"]]
+    if (any(!is.na(mfx[["marginaleffects_wts_internal"]]))) {
+        marginaleffects_wts_internal <- mfx[["marginaleffects_wts_internal"]]
+    } else {
+        marginaleffects_wts_internal <- NULL
+    }
     mfx[["marginaleffects_wts_internal"]] <- NULL
 
     out <- mfx
