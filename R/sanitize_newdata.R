@@ -1,4 +1,4 @@
-sanitize_newdata <- function(model, newdata) {
+sanitize_newdata <- function(model, newdata, modeldata = NULL) {
 
     checkmate::assert(
         checkmate::check_data_frame(newdata, null.ok = TRUE),
@@ -6,7 +6,9 @@ sanitize_newdata <- function(model, newdata) {
         combine = "or")
 
     # we always need this to extract attributes
-    modeldata <- hush(insight::get_data(model))
+    if (is.null(modeldata)) {
+        modeldata <- hush(insight::get_data(model))
+    }
 
     if (is.null(newdata)) {
         newdata <- modeldata

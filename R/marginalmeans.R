@@ -17,6 +17,10 @@
 #' categorical predictors. This grid can be very large when there are many
 #' variables and many response levels, so it is advisable to select a limited
 #' number of variables in the `variables` and `variables_grid` arguments.
+#' @param wts character value. Weigths to use in the averaging.
+#' + "equal": each combination of variables in `variables_grid` gets an equal weight.
+#' + "cells": each combination of values for the variables in the `variables_grid` gets a weight proportional to its frequency in the original data.
+#' + "proportional": each combination of values for the variables in the `variables_grid` -- except for those in the `variables` argument -- gets a weight proportional to its frequency in the original data.
 #' @param interaction TRUE, FALSE, or NULL
 #' * `FALSE`: Marginal means are computed for each predictor individually.
 #' * `TRUE`: Marginal means are computed for each combination of predictors specified in the `variables` argument.
@@ -121,13 +125,14 @@ marginalmeans <- function(model,
         transform_post <- linv
     }
 
-    newdata <- hush(insight::get_data(model))
+    modeldata <- newdata <- hush(insight::get_data(model))
 
     checkmate::assert_character(by, null.ok = TRUE)
     checkmate::assert_function(transform_post, null.ok = TRUE)
     interaction <- sanitize_interaction(interaction, variables, model)
     conf_level <- sanitize_conf_level(conf_level, ...)
     hypothesis <- sanitize_hypothesis(hypothesis, ...)
+    checkmate::assert_choice(wts, choices = c("equal", "cells", "proportional"))
 
     # fancy vcov processing to allow strings like "HC3"
     vcov <- get_vcov(model, vcov = vcov)
@@ -211,17 +216,55 @@ marginalmeans <- function(model,
         variables <- setdiff(variables, by)
     }
 
+    # marginal means grid
     args <- lapply(variables_grid, function(x) unique(newdata[[x]]))
     args <- stats::setNames(args, variables_grid)
     args[["newdata"]] <- newdata
     newgrid <- do.call("datagrid", args)
 
-    newgrid <- get_marginalmeans_wts(
-        model = model,
-        variables = variables,
-        newdata = newdata,
-        newgrid = newgrid,
-        wts = wts)
+    # weights
+    wtsgrid <- copy(data.table(newdata)[, ..variables_grid])
+    if (identical(wts, "equal")) {
+        newgrid[["wts"]] <- 1
+
+    } else if (identical(wts, "cells")) {
+        idx <- variables_grid
+        wtsgrid[, N := .N]
+        wtsgrid[, "wts" := .N / N, by = idx]
+        # sometimes datagrid() converts to factors when there is a transformation
+        # in the model formula, so we need to standardize the data
+        for (v in colnames(newgrid)) {
+            if (v %in% colnames(wtsgrid) && is.factor(newgrid[[v]])) {
+                wtsgrid[[v]] <- factor(wtsgrid[[v]], levels = levels(newgrid[[v]]))
+            }
+        }
+        wtsgrid <- unique(wtsgrid)
+        newgrid <- merge(newgrid, wtsgrid, all.x = TRUE)
+        newgrid[["wts"]][is.na(newgrid[["wts"]])] <- 0
+
+    } else if (identical(wts, "proportional")) {
+    # https://stackoverflow.com/questions/66748520/what-is-the-difference-between-weights-cell-and-weights-proportional-in-r-pa
+        idx <- setdiff(variables_grid, variables)
+        if (length(idx) == 0) {
+            newgrid[["wts"]] <- 1
+            return(newgrid)
+        } else {
+            wtsgrid <- data.table(newdata)[
+                , .(wts = .N), by = idx][
+                , wts := wts / sum(wts)]
+            # sometimes datagrid() converts to factors when there is a transformation
+            # in the model formula, so we need to standardize the data
+            for (v in colnames(newgrid)) {
+                if (v %in% colnames(wtsgrid) && is.factor(newgrid[[v]])) {
+                    wtsgrid[[v]] <- factor(wtsgrid[[v]], levels = levels(newgrid[[v]]))
+                }
+            }
+            wtsgrid <- unique(wtsgrid)
+            newgrid <- merge(newgrid, wtsgrid, all.x = TRUE)
+            newgrid[["wts"]][is.na(newgrid[["wts"]])] <- 0
+
+        }
+    }
 
     mm <- get_marginalmeans(model = model,
                             newdata = newgrid,
@@ -230,6 +273,7 @@ marginalmeans <- function(model,
                             interaction = interaction,
                             hypothesis = hypothesis,
                             by = by,
+                            modeldata = modeldata,
                             ...)
 
     # we want consistent output, regardless of whether `data.table` is installed/used or not
@@ -247,6 +291,7 @@ marginalmeans <- function(model,
             variables = variables,
             newdata = newgrid,
             interaction = interaction,
+            modeldata = modeldata,
             hypothesis = hypothesis)
         # get rid of attributes in column
         out[["std.error"]] <- as.numeric(se)
@@ -304,6 +349,7 @@ get_marginalmeans <- function(model,
                               type,
                               variables,
                               interaction,
+                              modeldata,
                               hypothesis = NULL,
                               by = NULL,
                               ...) {
@@ -315,6 +361,7 @@ get_marginalmeans <- function(model,
         newdata = newdata,
         type = type,
         vcov = FALSE,
+        modeldata = modeldata,
         ...)
 
     # marginal means
@@ -353,52 +400,4 @@ get_marginalmeans <- function(model,
     }
 
     return(out)
-}
-
-
-get_marginalmeans_wts <- function(model, variables, newgrid, newdata, wts) {
-    resp <- insight::find_response(model)[1]
-    wtsgrid <- newgrid[, colnames(newgrid) != resp]
-    setDT(wtsgrid)
-
-    if (identical(wts, "cells")) {
-        idx <- colnames(wtsgrid)
-        wtsgrid <- data.table(newdata)[
-            , wts := .N, by = idx][
-            , wts := wts / sum(wts)]
-        wtsgrid <- unique(wtsgrid)
-
-    } else if (identical(wts, "proportional")) {
-
-    # "proportional" Weight in proportion to the frequencies (in the original
-    # data) of the factor combinations that are averaged over.
-    # https://stackoverflow.com/questions/66748520/what-is-the-difference-between-weights-cell-and-weights-proportional-in-r-pa
-        idx <- setdiff(colnames(newgrid), c(variables, resp))
-        if (length(idx) == 0) {
-            newgrid[["wts"]] <- 1
-            return(newgrid)
-        }
-        wtsgrid <- data.table(newdata)[
-            , .(wts = .N), by = idx][
-            , wts := wts / sum(wts)]
-        
-    } else {
-        newgrid[["wts"]] <- 1
-        return(newgrid)
-    }
-
-    # harmonize column types for in-formula factors
-    for (v in colnames(newgrid)) {
-        if (v %in% colnames(wtsgrid) && is.factor(newgrid[[v]])) {
-            wtsgrid[[v]] <- factor(wtsgrid[[v]], levels = levels(newgrid[[v]]))
-        }
-    }
-
-    idx <- setdiff(idx, c("wts", resp))
-    setDT(newgrid)
-    newgrid[
-        wtsgrid, "wts" := wts, on = idx][
-        is.na(wts), "wts" := 0]
-
-    return(newgrid)
 }
