@@ -68,6 +68,9 @@ get_predict.fixest <- function(model,
             rowid = 1:nrow(newdata),
             predicted = as.numeric(pred))
     } else {
+        if (inherits(pred, "try-error")) {
+            stop(as.character(pred), call. = FALSE)
+        }
         msg <- format_msg(
         "Unable to extract predictions from a model of type `fixest`. Please
         report this problem, along with replicable code, on the `marginaleffects` issue tracker:
