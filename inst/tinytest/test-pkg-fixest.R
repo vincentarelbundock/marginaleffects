@@ -177,24 +177,6 @@ m <- marginaleffects(model)
 expect_inherits(m, "marginaleffects")
 
 
-# Issue #461
-gen_data <- function(rows) {
-  data <- data.table(
-    x1 = rnorm(rows),
-    x2 = rnorm(rows),
-    group1 = rep(1:5, rows/5),
-    group2 = rep(1:2, rows/2),
-    group3 = rep(1:20, rows/20)
-  )
-  data[, y := x1*x2*rnorm(rows, 1, 0.1)]
-  data[, fe := paste0(group1, group2)]
-  setDF(data)
-  return(data)
-}
-data <- gen_data(50020)
-model <- feols(y ~ x1*x2 | group1^group2, data)
-nd <- datagrid(model = model)
-expect_error(marginaleffects(model, newdata = "mean"), "combined")
 
 
 # TODO: works interactively
@@ -227,3 +209,42 @@ expect_error(marginaleffects(model, newdata = "mean"), "combined")
 # mod <- feNmlm(Euros ~ log(dist_km) | Product, data = dat)
 # expect_marginaleffects(mod)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Issue #461
+## commetned out because this seems to be an upstream problem. See issue.
+# gen_data <- function(rows) {
+#   data <- data.table(
+#     x1 = rnorm(rows),
+#     x2 = rnorm(rows),
+#     group1 = rep(1:5, rows/5),
+#     group2 = rep(1:2, rows/2),
+#     group3 = rep(1:20, rows/20)
+#   )
+#   data[, y := x1*x2*rnorm(rows, 1, 0.1)]
+#   data[, fe := paste0(group1, group2)]
+#   setDF(data)
+#   return(data)
+# }
+# data <- gen_data(50020)
+# model <- feols(y ~ x1*x2 | group1^group2, data)
+# nd <- datagrid(model = model)
+# expect_error(marginaleffects(model, newdata = "mean"), "combined")
