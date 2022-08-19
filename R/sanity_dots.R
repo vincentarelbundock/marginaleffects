@@ -30,7 +30,7 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
     valid[["bam"]] <- c("exclude") # mgcv
     valid[["rlmerMod"]] <- c("re.form", "allow.new.levels")
 
-    white_list <- c("conf.int")
+    white_list <- c("conf.int", "modeldata")
 
     model_class <- class(model)[1]
 

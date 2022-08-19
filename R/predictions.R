@@ -191,6 +191,15 @@ predictions <- function(model,
         }
     }
 
+
+    # extracting modeldata repeatedly is slow. this allows marginalmeans to pass modeldata to predictions.
+    dots <- list(...)
+    if ("modeldata" %in% names(dots)) {
+        modeldata <- dots[["modeldata"]]
+    } else {
+        modeldata <- hush(insight::get_data(model))
+    }
+
     # do not check the model because `insight` supports more models than `marginaleffects`
     # model <- sanitize_model(model)
 
@@ -205,7 +214,7 @@ predictions <- function(model,
     hypothesis <- sanitize_hypothesis(hypothesis, ...)
     conf_level <- sanitize_conf_level(conf_level, ...)
     type <- sanitize_type(model = model, type = type, calling_function = "predictions")
-    newdata <- sanitize_newdata(model = model, newdata = newdata)
+    newdata <- sanitize_newdata(model = model, newdata = newdata, modeldata = modeldata)
 
     # `variables` si character vector: Tukey's 5 or uniques
     checkmate::assert_list(variables, names = "unique", null.ok = TRUE)

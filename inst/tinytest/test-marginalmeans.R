@@ -121,71 +121,30 @@ expect_inherits(mm, "marginalmeans")
 expect_equal(nrow(mm), 10)
 
 
+# wts
+mod1 <- lm(vs ~ factor(am) + factor(gear) + factor(cyl), data = mtcars)
+mod2 <- glm(vs ~ factor(am) + factor(gear) + mpg, data = mtcars, family = binomial)
 
-# # wts
-# mod <- lm(mpg ~ factor(am) + factor(gear), data = mtcars)
-# marginalmeans(mod, variables = "am")
+# wts = "cells"
+em <- data.frame(emmeans(mod1, ~am, weights = "cells"))
+mm <- marginalmeans(mod1, variables = "am", wts = "cells")
+expect_equivalent(mm$marginalmean, em$emmean)
+expect_equivalent(mm$std.error, em$SE)
 
+em <- data.frame(emmeans(mod2, ~am, weights = "cells", type = "response"))
+mm <- marginalmeans(mod2, variables = "am", wts = "cells")
+expect_equivalent(mm$marginalmean, em$prob)
+expect_equivalent(mm$conf.low, em$asymp.LCL)
+expect_equivalent(mm$conf.high, em$asymp.UCL)
 
+# wts = "proportional"
+em <- data.frame(emmeans(mod1, ~am, weights = "proportional"))
+mm <- marginalmeans(mod1, variables = "am", wts = "proportional")
+expect_equivalent(mm$marginalmean, em$emmean)
+expect_equivalent(mm$std.error, em$SE)
 
-
-
-
-
-
-# library(marginaleffects)
-# library(emmeans)
-
-# mod1 <- glm(vs ~ factor(am) + factor(gear), data = mtcars, family = binomial)
-# mod2 <- glm(vs ~ factor(am) + factor(gear) + mpg, data = mtcars, family = binomial)
-
-# predictions(mod1, type = "link", by = "am") |> summary() 
-
-
-# # equal weights
-# emmeans(mod1, ~am, weights = "equal")
-# marginalmeans(mod1, variables = "am", type = "link")
-
-# emmeans(mod1, ~am, weights = "cells")
-# marginalmeans(mod1, variables = "am", type = "link", wts = "cells")
-
-# emmeans(mod1, ~am, weights = "proportional")
-# marginalmeans(mod1, variables = "am", type = "link", wts = "proportional")
-
-# predictions(
-#     mod1,
-#     newdata = datagrid(am = unique, gear = unique),
-#     by = "am",
-#     type = "link")
-
-
-# # cells weights
-# emmeans(mod1, ~am, weights = "cells")
-
-# predictions(
-#     mod1,
-#     by = "am",
-#     type = "link")
-
-# # cells weights are slightly different with numeric predictors because they are held at their actually observed values rather than arbitrarily fixed to their means.
-# emmeans(mod2, ~am, weights = "cells")
-
-# predictions(
-#     mod2,
-#     by = "am",
-#     type = "link")
-
-
-# # proportional weights
-# library(dplyr)
-# dat <- mtcars |>
-#     mutate(n = n()) |>
-#     group_by(am, gear) |>
-#     mutate(wts = n() / n)
-# p <- predictions(
-#     mod1,
-#     newdata = dat,
-#     type = "link")
-# p |> group_by(am) |>
-#      summarize(mm = weighted.mean(predicted, w = wts))
-
+em <- data.frame(emmeans(mod2, ~am, weights = "proportional", type = "response"))
+mm <- marginalmeans(mod2, variables = "am", wts = "proportional")
+expect_equivalent(mm$marginalmean, em$prob)
+expect_equivalent(mm$conf.low, em$asymp.LCL)
+expect_equivalent(mm$conf.high, em$asymp.UCL)
