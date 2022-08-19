@@ -18,6 +18,7 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
         }
     }
 
+
     valid <- list()
 
     # mixed effects
@@ -54,3 +55,4 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
         warning(msg, call. = FALSE)
     }
 }
+

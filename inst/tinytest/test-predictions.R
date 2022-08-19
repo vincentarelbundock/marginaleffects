@@ -46,23 +46,23 @@ for (L in c(.4, .7, .9, .95, .99, .999)) {
 dat <- mtcars
 dat$w <- 1:32
 mod <- lm(mpg ~ hp + am, dat)
-pre <- predictions(mod)
-tid1 <- tidy(pre)
-tid2 <- tidy(pre, by = "am")
-expect_equal(nrow(tid1), 1)
-expect_equal(nrow(tid2), 2)
+pre1 <- predictions(mod, by = "am")
+pre1 <- pre1[order(pre1$am),]
+pre2 <- predictions(mod)
+pre2 <- aggregate(predicted ~ am, FUN = mean, data = pre2)
+expect_equivalent(pre1$predicted, pre2$predicted)
 
 
 #########################################
 #  weigted average adjusted predictions #
 #########################################
-pre <- predictions(mod, wts = "w", newdata = dat)
-tid3 <- tidy(pre)
-tid4 <- tidy(pre, by = "am")
-expect_equal(nrow(tid3), 1)
-expect_equal(nrow(tid4), 2)
-expect_true(all(tid1$estimate != tid3$estimate))
-expect_true(all(tid2$estimate != tid4$estimate))
+pre1 <- predictions(mod, wts = mtcars$w)
+pre2 <- predictions(mod)
+tid1 <- tidy(pre1)
+tid2 <- tidy(pre2)
+expect_equivalent(pre1$predicted, pre2$predicted)
+expect_true(all(tid1$predicted != tid2$predicted))
+
 
 
 ######################################

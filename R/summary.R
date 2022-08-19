@@ -11,15 +11,11 @@
 #'
 #' # average marginal effects
 #' summary(mfx)
-#'
-#' # average marginal effects by group
-#' summary(mfx, by = "gear")
 #' @export
 summary.marginaleffects <- function(object,
                                     conf_level = 0.95,
-                                    by = NULL,
                                     ...) {
-    out <- tidy(object, conf_level = conf_level, by = by, ...)
+    out <- tidy(object, conf_level = conf_level, ...)
     class(out) <- c("marginaleffects.summary", class(out))
     attr(out, "type") <- attr(object, "type")
     attr(out, "model_type") <- attr(object, "model_type")
@@ -98,7 +94,8 @@ print.marginaleffects.summary <- function(x,
   # avoid infinite recursion by stripping marginaleffect.summary class
   out <- as.data.frame(out)
 
-  cat(tit, "\n")
+  # some commands do not generate average contrasts/mfx. E.g., `lnro` with `by`
+  # cat(tit)
   print(out)
   cat("\n")
   cat("Model type: ", attr(x, "model_type"), "\n")
@@ -186,7 +183,6 @@ print.marginalmeans.summary <- function(x,
   # avoid infinite recursion by stripping marginaleffect.summary class
   out <- as.data.frame(out)
 
-  cat(tit, "\n")
   print(out)
   cat("\n")
   cat("Model type: ", attr(x, "model_type"), "\n")
@@ -285,7 +281,8 @@ print.predictions.summary <- function(x,
   # avoid infinite recursion by stripping marginaleffect.summary class
   out <- as.data.frame(out)
 
-  cat(tit, "\n")
+  # some commands do not generate average contrasts/mfx. E.g., `lnro` with `by`
+  # cat(tit, "\n")
   print(out)
   cat("\n")
   cat("Model type: ", attr(x, "model_type"), "\n")
@@ -312,18 +309,14 @@ print.predictions.summary <- function(x,
 #'
 #' # average marginal effects
 #' summary(con)
-#'
-#' # average marginal effects by group
-#' summary(con, by = "gear")
 #' @export
 
 #' @export
 summary.comparisons <- function(object,
                                 conf_level = 0.95,
-                                by = NULL,
                                 transform_avg = NULL,
                                 ...) {
-    out <- tidy(object, conf_level = conf_level, by = by, transform_avg = transform_avg, ...)
+    out <- tidy(object, conf_level = conf_level, transform_avg = transform_avg, ...)
     class(out) <- c("comparisons.summary", class(out))
     attr(out, "type") <- attr(object, "type")
     attr(out, "model_type") <- attr(object, "model_type")
@@ -406,7 +399,8 @@ print.comparisons.summary <- function(x,
   # avoid infinite recursion by stripping marginaleffect.summary class
   out <- as.data.frame(out)
 
-  cat(tit, "\n")
+  # some commands do not generate average contrasts/mfx. E.g., `lnro` with `by`
+  # cat(tit, "\n")
   print(out)
   cat("\n")
   cat("Model type: ", attr(x, "model_type"), "\n")

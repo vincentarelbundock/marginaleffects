@@ -11,6 +11,7 @@ predictions(
   vcov = TRUE,
   conf_level = 0.95,
   type = "response",
+  by = NULL,
   wts = NULL,
   transform_post = NULL,
   hypothesis = NULL,
@@ -68,6 +69,8 @@ compute marginal effects or contrasts. This can differ based on the model
 type, but will typically be a string such as: "response", "link", "probs",
 or "zero". When an unsupported string is entered, the model-specific list of
 acceptable values is returned in an error message.}
+
+\item{by}{Character vector of variable names over which to compute group-wise estimates.}
 
 \item{wts}{string or numeric: weights to use when computing average
 contrasts or marginaleffects. These weights only affect the averaging in

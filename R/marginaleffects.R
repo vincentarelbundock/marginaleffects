@@ -68,6 +68,7 @@
 #'  * Square covariance matrix
 #'  * Function which returns a covariance matrix (e.g., `stats::vcov(model)`)
 #' @param conf_level numeric value between 0 and 1. Confidence level to use to build a confidence interval.
+#' @param by Character vector of variable names over which to compute group-wise estimates.
 #' @param type string indicates the type (scale) of the predictions used to
 #' compute marginal effects or contrasts. This can differ based on the model
 #' type, but will typically be a string such as: "response", "link", "probs",
@@ -143,8 +144,8 @@
 #' # marginal effect within each subset of observations with different observed
 #' # values for the `cyl` variable:
 #' mod2 <- lm(mpg ~ hp * cyl, data = mtcars)
-#' mfx2 <- marginaleffects(mod2, variables = "hp")
-#' summary(mfx2, by = "cyl")
+#' mfx2 <- marginaleffects(mod2, variables = "hp", by = "cyl")
+#' summary(mfx2)
 #'
 #' # Marginal Effects at User-Specified Values (counterfactual)
 #' # Variables not explicitly included in `datagrid()` are held at their
@@ -196,6 +197,7 @@ marginaleffects <- function(model,
                             conf_level = 0.95,
                             type = "response",
                             slope = "dydx",
+                            by = NULL,
                             wts = NULL,
                             hypothesis = NULL,
                             eps = NULL,
@@ -236,7 +238,8 @@ marginaleffects <- function(model,
     checkmate::assert_character(variables, null.ok = TRUE)
 
     # slope
-    checkmate::assert_choice(slope, choices = c("dydx", "eyex", "eydx", "dyex"))
+    valid <- c("dydx", "eyex", "eydx", "dyex", "dydxavg", "eyexavg", "eydxavg", "dyexavg")
+    checkmate::assert_choice(slope, choices = valid)
 
     # sanity checks and pre-processing
     model <- sanitize_model(model = model, newdata = newdata, wts = wts, calling_function = "marginaleffects", ...)
@@ -252,6 +255,7 @@ marginaleffects <- function(model,
         type = type,
         wts = wts,
         hypothesis = hypothesis,
+        by = by,
         eps = eps,
         contrast_factor = "reference",
         contrast_numeric = 1,

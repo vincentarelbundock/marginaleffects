@@ -143,10 +143,14 @@ nrow(cmp)
 
 There are 3 pairwise contrasts, corresponding to the 3 pairwise comparisons possible between the 3 levels of the focal variable `btype`: `scold-curse`, `shout-scold`, `shout-curse`. The `comparisons()` function estimates those 3 contrasts for each row of `newdata`, so we get $18 \times 3 = 54$ rows.
 
-Finally, we wanted contrasts for each subgroup of the `resp` variable, so we average out the contrasts using `summary()` and the `by` argument:
+Finally, if we wanted contrasts averaged over each subgroup of the `resp` variable, we can use the `by` argument:
 
 ```{r}
-cmp |> summary(by = "resp")
+comparisons(mod,
+    by = "resp",
+    variables = list("btype" = "pairwise"),
+    newdata = nd,
+    type = "link") |> summary()
 ```
 
 These results are identical to those produced by `emmeans` (except for $t$ vs. $z$).

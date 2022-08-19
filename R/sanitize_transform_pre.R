@@ -40,10 +40,10 @@ transform_pre_label_dict <- list(
     "eydx" = "eydx",
     "dyex" = "dyex",
 
-    "dydxavg" = "mean(dY/dX)",
-    "eyexavg" = "mean(eY/eX)",
-    "eydxavg" = "mean(eY/dX)",
-    "dyexavg" = "mean(dY/eX)",
+    "dydxavg" = "dydxavg",
+    "eyexavg" = "eyexavg",
+    "eydxavg" = "eydxavg",
+    "dyexavg" = "dyexavg",
 
     "ratio" = "%s / %s",
     "ratioavg" = "mean(%s) / mean(%s)",

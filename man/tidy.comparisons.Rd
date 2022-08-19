@@ -4,14 +4,12 @@
 \alias{tidy.comparisons}
 \title{Tidy a \code{comparisons} object}
 \usage{
-\method{tidy}{comparisons}(x, conf_level = 0.95, by = NULL, transform_avg = NULL, ...)
+\method{tidy}{comparisons}(x, conf_level = 0.95, transform_avg = NULL, ...)
 }
 \arguments{
 \item{x}{An object produced by the \code{comparisons} function.}
 
 \item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
-
-\item{by}{Character vector of variable names over which to compute group-averaged contrasts.}
 
 \item{transform_avg}{(experimental) A function applied to the estimates and confidence intervals \emph{after} the unit-level estimates have been averaged.}
 
