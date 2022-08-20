@@ -6,6 +6,7 @@
 * `by` argument works with bayesian models.
 * `hypothesis`: The matrix column names are used as labels for hypothesis tests.
 * `hypothesis`: Better labels with "sequential", "reference", "pairwise".
+* `wts` argument is respected in `by` argument and with `*avg` shortcuts in the `transform_pre` argument.
 * New vignette: Unit-level contrasts in logistic regressions. Thanks to @arthur-albuquerque.
 * New vignette: Bootstrap example in standard errors vignette.
 
