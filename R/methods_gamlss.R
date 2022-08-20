@@ -12,6 +12,7 @@ get_coef.gamlss <- function(model, ...){
   return(out)
 }
 
+
 #' @include get_predict.R
 #' @rdname get_predict
 #' @export
@@ -21,7 +22,6 @@ get_predict.gamlss <- function(
     vcov = FALSE,
     conf_level = 0.95,
     type = "response",
-    what = "mu",
     ...) {
 
  

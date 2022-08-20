@@ -149,7 +149,6 @@ get_predict(model, newdata, vcov, conf_level, type, ...)
   vcov = FALSE,
   conf_level = 0.95,
   type = "response",
-  what = "mu",
   ...
 )
 
