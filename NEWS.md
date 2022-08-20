@@ -1,5 +1,6 @@
 # marginaleffects 0.7.0.9000
 
+* New supported model class: `gamlss`. Thanks to Marcio Augusto Diniz.
 * `marginalmeans()` accepts a `wts` argument with values: "equal", "proportional", "cells".
 * `by` argument accepts data frames for complex groupings.
 * `by` argument accepts "group" to group by response level.
