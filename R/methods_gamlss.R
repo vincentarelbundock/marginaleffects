@@ -293,7 +293,7 @@ set_coef.gamlss <- function(model, coefs, ...){
           }
       }
       if (type == "response") {
-          if (is(eval(parse(text = object$family[[1]])), "gamlss.family")) {
+          if (methods::is(eval(parse(text = object$family[[1]])), "gamlss.family")) {
               pred <- eval(parse(text = object$family[[1]]))[[paste(what,
                   "linkinv",
                   sep = ".")]](pred)
