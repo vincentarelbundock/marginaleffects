@@ -1,8 +1,12 @@
+wmean <- function(x, w) {
+    stats::weighted.mean(x, w)
+}
+
 transform_pre_function_dict <- list(
     # default = difference between predictions
     "difference" = function(hi, lo) hi - lo,
     "differenceavg" = function(hi, lo) mean(hi) - mean(lo),
-    "differenceavgwts" = function(hi, lo, w) weighted.mean(hi, w) - weighted.mean(lo, w),
+    "differenceavgwts" = function(hi, lo, w) wmean(hi, w) - wmean(lo, w),
 
     # slopes and elasticities
     "dydx" = function(hi, lo, eps) (hi - lo) / eps,
@@ -15,28 +19,28 @@ transform_pre_function_dict <- list(
     "eyexavg" = function(hi, lo, eps, y, x) mean((hi - lo) / eps * (x / y)),
     "eydxavg" = function(hi, lo, eps, y, x) mean(((hi - lo) / eps) / y),
     "dyexavg" = function(hi, lo, eps, x) mean(((hi - lo) / eps) * x),
-    "dydxavgwts" = function(hi, lo, eps, w) weighted.mean((hi - lo) / eps, w),
-    "eyexavgwts" = function(hi, lo, eps, y, x, w) weighted.mean((hi - lo) / eps * (x / y), w),
-    "eydxavgwts" = function(hi, lo, eps, y, x, w) weighted.mean(((hi - lo) / eps) / y, w),
-    "dyexavgwts" = function(hi, lo, eps, x, w) weighted.mean(((hi - lo) / eps) * x, w),
+    "dydxavgwts" = function(hi, lo, eps, w) wmean((hi - lo) / eps, w),
+    "eyexavgwts" = function(hi, lo, eps, y, x, w) wmean((hi - lo) / eps * (x / y), w),
+    "eydxavgwts" = function(hi, lo, eps, y, x, w) wmean(((hi - lo) / eps) / y, w),
+    "dyexavgwts" = function(hi, lo, eps, x, w) wmean(((hi - lo) / eps) * x, w),
 
     # ratios
     "ratio" = function(hi, lo) hi / lo,
     "ratioavg" = function(hi, lo) mean(hi) / mean(lo),
-    "ratioavg" = function(hi, lo) weighted.mean(hi) / weighted.mean(lo),
+    "ratioavg" = function(hi, lo) wmean(hi) / wmean(lo),
 
     "lnratio" = function(hi, lo) log(hi / lo),
     "lnratioavg" = function(hi, lo) log(mean(hi) / mean(lo)),
-    "lnratioavg" = function(hi, lo) log(weighted.mean(hi) / weighted.mean(lo)),
+    "lnratioavg" = function(hi, lo) log(wmean(hi) / wmean(lo)),
 
     "lnor" = function(hi, lo) log((hi / (1 - hi)) / (lo / (1 - lo))),
     "lnoravg" = function(hi, lo) log((mean(hi) / (1 - mean(hi))) / (mean(lo) / (1 - mean(lo)))),
-    "lnoravgwts" = function(hi, lo, w) log((weighted.mean(hi, w) / (1 - weighted.mean(hi, w))) / (weighted.mean(lo, w) / (1 - weighted.mean(lo, w)))),
+    "lnoravgwts" = function(hi, lo, w) log((wmean(hi, w) / (1 - wmean(hi, w))) / (wmean(lo, w) / (1 - wmean(lo, w)))),
 
     # others
     "expdydx" = function(hi, lo, eps) ((exp(hi) - exp(lo)) / exp(eps)) / eps,
     "expdydxavg" = function(hi, lo, eps) mean(((exp(hi) - exp(lo)) / exp(eps)) / eps),
-    "expdydxavgwts" = function(hi, lo, eps, w) weighted.mean(((exp(hi) - exp(lo)) / exp(eps)) / eps, w)
+    "expdydxavgwts" = function(hi, lo, eps, w) wmean(((exp(hi) - exp(lo)) / exp(eps)) / eps, w)
 )
 
 transform_pre_label_dict <- list(

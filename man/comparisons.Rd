@@ -270,7 +270,7 @@ compute derivatives and elasticities.\tabular{ll}{
    Shortcut \tab Function \cr
    difference \tab \(hi, lo) hi - lo \cr
    differenceavg \tab \(hi, lo) mean(hi) - mean(lo) \cr
-   differenceavgwts \tab \(hi, lo, w) weighted.mean(hi, w) - weighted.mean(lo, w) \cr
+   differenceavgwts \tab \(hi, lo, w) wmean(hi, w) - wmean(lo, w) \cr
    dydx \tab \(hi, lo, eps) (hi - lo)/eps \cr
    eyex \tab \(hi, lo, eps, y, x) (hi - lo)/eps * (x/y) \cr
    eydx \tab \(hi, lo, eps, y, x) ((hi - lo)/eps)/y \cr
@@ -279,22 +279,22 @@ compute derivatives and elasticities.\tabular{ll}{
    eyexavg \tab \(hi, lo, eps, y, x) mean((hi - lo)/eps * (x/y)) \cr
    eydxavg \tab \(hi, lo, eps, y, x) mean(((hi - lo)/eps)/y) \cr
    dyexavg \tab \(hi, lo, eps, x) mean(((hi - lo)/eps) * x) \cr
-   dydxavgwts \tab \(hi, lo, eps, w) weighted.mean((hi - lo)/eps, w) \cr
-   eyexavgwts \tab \(hi, lo, eps, y, x, w) weighted.mean((hi - lo)/eps * (x/y), w) \cr
-   eydxavgwts \tab \(hi, lo, eps, y, x, w) weighted.mean(((hi - lo)/eps)/y, w) \cr
-   dyexavgwts \tab \(hi, lo, eps, x, w) weighted.mean(((hi - lo)/eps) * x, w) \cr
+   dydxavgwts \tab \(hi, lo, eps, w) wmean((hi - lo)/eps, w) \cr
+   eyexavgwts \tab \(hi, lo, eps, y, x, w) wmean((hi - lo)/eps * (x/y), w) \cr
+   eydxavgwts \tab \(hi, lo, eps, y, x, w) wmean(((hi - lo)/eps)/y, w) \cr
+   dyexavgwts \tab \(hi, lo, eps, x, w) wmean(((hi - lo)/eps) * x, w) \cr
    ratio \tab \(hi, lo) hi/lo \cr
    ratioavg \tab \(hi, lo) mean(hi)/mean(lo) \cr
-   ratioavg \tab \(hi, lo) weighted.mean(hi)/weighted.mean(lo) \cr
+   ratioavg \tab \(hi, lo) wmean(hi)/wmean(lo) \cr
    lnratio \tab \(hi, lo) log(hi/lo) \cr
    lnratioavg \tab \(hi, lo) log(mean(hi)/mean(lo)) \cr
-   lnratioavg \tab \(hi, lo) log(weighted.mean(hi)/weighted.mean(lo)) \cr
+   lnratioavg \tab \(hi, lo) log(wmean(hi)/wmean(lo)) \cr
    lnor \tab \(hi, lo) log((hi/(1 - hi))/(lo/(1 - lo))) \cr
    lnoravg \tab \(hi, lo) log((mean(hi)/(1 - mean(hi)))/(mean(lo)/(1 - mean(lo)))) \cr
-   lnoravgwts \tab \(hi, lo, w) log((weighted.mean(hi, w)/(1 - weighted.mean(hi, w)))/(weighted.mean(lo, w)/(1 - weighted.mean(lo, w)))) \cr
+   lnoravgwts \tab \(hi, lo, w) log((wmean(hi, w)/(1 - wmean(hi, w)))/(wmean(lo, w)/(1 - wmean(lo, w)))) \cr
    expdydx \tab \(hi, lo, eps) ((exp(hi) - exp(lo))/exp(eps))/eps \cr
    expdydxavg \tab \(hi, lo, eps) mean(((exp(hi) - exp(lo))/exp(eps))/eps) \cr
-   expdydxavgwts \tab \(hi, lo, eps, w) weighted.mean(((exp(hi) - exp(lo))/exp(eps))/eps, w) \cr
+   expdydxavgwts \tab \(hi, lo, eps, w) wmean(((exp(hi) - exp(lo))/exp(eps))/eps, w) \cr
 }
 }
 

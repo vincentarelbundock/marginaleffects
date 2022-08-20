@@ -322,6 +322,7 @@ get_contrasts <- function(model,
             n = .N,
             term = term,
             interaction = interaction,
+            wts = wts,
             eps = eps)$comparison,
         by = "term"]
 

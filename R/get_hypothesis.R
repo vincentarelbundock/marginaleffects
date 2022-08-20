@@ -144,7 +144,7 @@ get_hypothesis <- function(x, hypothesis, column, by = NULL) {
             draws <- matrix(tmp, ncol = ncol(draws))
             out <- data.table(
                 term = gsub("\\s+", "", attr(hypothesis, "label")),
-                tmp = apply(draws, 1, median))
+                tmp = apply(draws, 1, stats::median))
 
         } else {
             out <- eval_string_function(
