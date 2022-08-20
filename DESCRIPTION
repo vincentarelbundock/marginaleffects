@@ -58,6 +58,7 @@ Suggests:
     future.apply,
     gam,
     gamlss,
+    gamlss.dist,
     geepack,
     ggbeeswarm,
     ggdag,

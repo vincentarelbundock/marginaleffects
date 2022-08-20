@@ -7,7 +7,7 @@ get_coef.gamlss <- function(model, ...){
   if (is.null(dots$what))
     stop("Argument `what` indicating the parameter of interest is missing.")
   
-  out <- coef(model, what = dots$what)
+  out <- stats::coef(model, what = dots$what)
   
   return(out)
 }
@@ -43,7 +43,7 @@ get_predict.gamlss <- function(model, newdata, type, ...){
       return(data.frame(data, source = namelist))
     }
     if (is.null(newdata)) {
-      predictor <- lpred(object, what = what, type = type, 
+      predictor <- gamlss::lpred(object, what = what, type = type, 
                          terms = terms, se.fit = se.fit, ...)
       return(predictor)
     }
@@ -67,15 +67,15 @@ get_predict.gamlss <- function(model, newdata, type, ...){
     
     data <- data[match(names(newdata), names(data))]
     data <- concat(data, newdata)
-    parform <- formula(object, what)
+    parform <- stats::formula(object, what)
     if (length(parform) == 3) 
       parform[2] <- NULL
     Terms <- terms(parform)
     offsetVar <- if (!is.null(off.num <- attr(Terms, "offset"))) 
       eval(attr(Terms, "variables")[[off.num + 1]], data)
-    m <- model.frame(Terms, data, xlev = object[[paste(what, 
+    m <- stats::model.frame(Terms, data, xlev = object[[paste(what, 
                                                        "xlevels", sep = ".")]])
-    X <- model.matrix(Terms, data, contrasts = object$contrasts)
+    X <- stats::model.matrix(Terms, data, contrasts = object$contrasts)
     y <- object[[paste(what, "lp", sep = ".")]]
     w <- object[[paste(what, "wt", sep = ".")]]
     onlydata <- data$source == "data"
@@ -89,14 +89,14 @@ get_predict.gamlss <- function(model, newdata, type, ...){
     
     # Modified from the original prediction function.
     if (safe){
-      refit <- lm.wfit(X[onlydata, , drop = FALSE], y, w)
-      if (abs(sum(resid(refit))) > 0.1 || abs(sum(coef(object,
-                                                       what = what) - coef(refit), na.rm = TRUE)) > 1e-05)
+      refit <- stats::lm.wfit(X[onlydata, , drop = FALSE], y, w)
+      if (abs(sum(stats::resid(refit))) > 0.1 || abs(sum(stats::coef(object,
+                                                       what = what) - stats::coef(refit), na.rm = TRUE)) > 1e-05)
         warning(paste("There is a discrepancy  between the original and the re-fit",
                       " \n used to achieve 'safe' predictions \n ", sep = ""))
       coef <- refit$coef
     } else {
-      coef <- coef(object, what = what) 
+      coef <- stats::coef(object, what = what) 
     } 
     
     nX <- dimnames(X)
@@ -187,12 +187,11 @@ get_predict.gamlss <- function(model, newdata, type, ...){
       if (is(eval(parse(text = object$family[[1]])), "gamlss.family")) {
         pred <- eval(parse(text = object$family[[1]]))[[paste(what, 
                                                               "linkinv", sep = ".")]](pred)
-      }
-      else {
-        pred <- gamlss.family(eval(parse(text = paste(family(object)[1], 
-                                                      "(", what, ".link=", eval(parse(text = (paste("object$", 
-                                                                                                    what, ".link", sep = "")))), ")", sep = ""))))[[paste(what, 
-                                                                                                                                                          "linkinv", sep = ".")]](pred)
+      } else {
+        pred <- gamlss.dist::gamlss.family(eval(parse(text = paste(family(object)[1], "(",
+                    what, ".link=", eval(parse(text = (paste("object$", what,
+                        ".link", sep = "")))), ")", sep = ""))))[[paste(what,
+                        "linkinv", sep = ".")]](pred)
       }
     }
     pred
@@ -220,7 +219,7 @@ get_predict.gamlss <- function(model, newdata, type, ...){
   setDF(newdata)
   index <- which(colnames(newdata) %in% originvars)
   tmp <- newdata[, index]
-  invisible(capture.output(out <- predict_gamlss(model, newdata = tmp, type = type, data = origindata, ...)))
+  hush(out <- predict_gamlss(model, newdata = tmp, type = type, data = origindata, ...))
   
   if ("rowid" %in% colnames(newdata)) {
     out <- data.frame(rowid = newdata$rowid, predicted = out)

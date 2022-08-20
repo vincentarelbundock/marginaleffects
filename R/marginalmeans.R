@@ -371,7 +371,7 @@ get_marginalmeans <- function(model,
         for (v in variables) {
             idx <- intersect(colnames(pred), c("term", "group", v, by))
             tmp <- data.table(pred)[
-                , .(marginalmean = weighted.mean(predicted, w = wts, na.rm = TRUE)),
+                , .(marginalmean = stats::weighted.mean(predicted, w = wts, na.rm = TRUE)),
                 by = idx]
             tmp[, "term" := v]
             setnames(tmp, old = v, new = "value")
@@ -392,7 +392,7 @@ get_marginalmeans <- function(model,
 
 
         out <- data.table(pred)[
-            , .(marginalmean = weighted.mean(predicted, w = wts, na.rm = TRUE)),
+            , .(marginalmean = stats::weighted.mean(predicted, w = wts, na.rm = TRUE)),
             by = idx]
     }
 
