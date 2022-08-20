@@ -25,6 +25,7 @@ fixest,feglm,TRUE,TRUE,,,U,U,U,U
 fixest,fenegbin,TRUE,TRUE,,,U,U,U,U
 fixest,fepois,TRUE,TRUE,TRUE,TRUE,U,U,U,U
 gam,gam,TRUE,TRUE,,,U,U,TRUE,TRUE
+gamlss,gamlss,TRUE,TRUE,,,U,U,TRUE,TRUE
 geepack,geeglm,TRUE,TRUE,,,U,U,TRUE,TRUE
 glmmTMB,glmmTMB,TRUE,TRUE,,,U,U,TRUE,TRUE
 glmx,glmx,TRUE,TRUE,,,TRUE,U,U,U

@@ -12,7 +12,7 @@ status](https://www.r-pkg.org/badges/version/marginaleffects)](https://CRAN.R-pr
 <!-- badges: end -->
 
 Compute and plot adjusted predictions, contrasts, marginal effects, and
-marginal means for 68classes of statistical models in `R`. Conduct
+marginal means for 68 classes of statistical models in `R`. Conduct
 linear and non-linear hypothesis tests using the delta method.
 
 ## Table of contents
@@ -250,13 +250,20 @@ for every value in original dataset:
 
 ``` r
 predictions(mod) |> head()
-#>   rowid     type predicted std.error statistic       p.value conf.low conf.high  mpg  hp    wt am
-#> 1     1 response  22.48857 0.8841487  25.43528 1.027254e-142 20.66378  24.31336 21.0 110 2.620  1
-#> 2     2 response  20.80186 1.1942050  17.41900  5.920119e-68 18.33714  23.26658 21.0 110 2.875  1
-#> 3     3 response  25.26465 0.7085307  35.65781 1.783452e-278 23.80232  26.72699 22.8  93 2.320  1
-#> 4     4 response  20.25549 0.7044641  28.75305 8.296026e-182 18.80155  21.70943 21.4 110 3.215  0
-#> 5     5 response  16.99782 0.7118658  23.87784 5.205109e-126 15.52860  18.46704 18.7 175 3.440  0
-#> 6     6 response  19.66353 0.8753226  22.46433 9.270636e-112 17.85696  21.47011 18.1 105 3.460  0
+#>   rowid     type predicted std.error statistic       p.value conf.low
+#> 1     1 response  22.48857 0.8841487  25.43528 1.027254e-142 20.66378
+#> 2     2 response  20.80186 1.1942050  17.41900  5.920119e-68 18.33714
+#> 3     3 response  25.26465 0.7085307  35.65781 1.783452e-278 23.80232
+#> 4     4 response  20.25549 0.7044641  28.75305 8.296026e-182 18.80155
+#> 5     5 response  16.99782 0.7118658  23.87784 5.205109e-126 15.52860
+#> 6     6 response  19.66353 0.8753226  22.46433 9.270636e-112 17.85696
+#>   conf.high  mpg  hp    wt am
+#> 1  24.31336 21.0 110 2.620  1
+#> 2  23.26658 21.0 110 2.875  1
+#> 3  26.72699 22.8  93 2.320  1
+#> 4  21.70943 21.4 110 3.215  0
+#> 5  18.46704 18.7 175 3.440  0
+#> 6  21.47011 18.1 105 3.460  0
 ```
 
 The [`datagrid` function gives us a powerful way to define a grid of
@@ -266,13 +273,20 @@ their mean or mode:
 
 ``` r
 predictions(mod, newdata = datagrid(am = 0, wt = seq(2, 3, .2)))
-#>   rowid     type predicted std.error statistic       p.value conf.low conf.high       hp am  wt
-#> 1     1 response  21.95621 2.0386301  10.77008  4.765935e-27 17.74868  26.16373 146.6875  0 2.0
-#> 2     2 response  21.42097 1.7699036  12.10290  1.019401e-33 17.76807  25.07388 146.6875  0 2.2
-#> 3     3 response  20.88574 1.5067373  13.86157  1.082834e-43 17.77599  23.99549 146.6875  0 2.4
-#> 4     4 response  20.35051 1.2526403  16.24609  2.380723e-59 17.76518  22.93583 146.6875  0 2.6
-#> 5     5 response  19.81527 1.0144509  19.53301  5.755097e-85 17.72155  21.90900 146.6875  0 2.8
-#> 6     6 response  19.28004 0.8063905  23.90906 2.465206e-126 17.61573  20.94435 146.6875  0 3.0
+#>   rowid     type predicted std.error statistic       p.value conf.low
+#> 1     1 response  21.95621 2.0386301  10.77008  4.765935e-27 17.74868
+#> 2     2 response  21.42097 1.7699036  12.10290  1.019401e-33 17.76807
+#> 3     3 response  20.88574 1.5067373  13.86157  1.082834e-43 17.77599
+#> 4     4 response  20.35051 1.2526403  16.24609  2.380723e-59 17.76518
+#> 5     5 response  19.81527 1.0144509  19.53301  5.755097e-85 17.72155
+#> 6     6 response  19.28004 0.8063905  23.90906 2.465206e-126 17.61573
+#>   conf.high       hp am  wt mpg
+#> 1  26.16373 146.6875  0 2.0  21
+#> 2  25.07388 146.6875  0 2.2  21
+#> 3  23.99549 146.6875  0 2.4  21
+#> 4  22.93583 146.6875  0 2.6  21
+#> 5  21.90900 146.6875  0 2.8  21
+#> 6  20.94435 146.6875  0 3.0  21
 ```
 
 We can plot how predictions change for different values of one or more
@@ -321,11 +335,16 @@ mod3 <- glm(Survived ~ Woman + Age * PClass, data = titanic, family = binomial)
 
 cmp <- comparisons(mod3)
 summary(cmp)
-#>     Term     Contrast   Effect Std. Error z value   Pr(>|z|)     2.5 %    97.5 %
-#> 1  Woman TRUE - FALSE  0.50329   0.031654  15.899 < 2.22e-16  0.441244  0.565327
-#> 2    Age  (x + 1) - x -0.00558   0.001084  -5.147 2.6471e-07 -0.007705 -0.003455
-#> 3 PClass    2nd - 1st -0.22603   0.043546  -5.191 2.0950e-07 -0.311383 -0.140686
-#> 4 PClass    3rd - 1st -0.38397   0.041845  -9.176 < 2.22e-16 -0.465985 -0.301957
+#>     Term     Contrast   Effect Std. Error z value   Pr(>|z|)     2.5 %
+#> 1  Woman TRUE - FALSE  0.50329   0.031654  15.899 < 2.22e-16  0.441244
+#> 2    Age  (x + 1) - x -0.00558   0.001084  -5.147 2.6471e-07 -0.007705
+#> 3 PClass    2nd - 1st -0.22603   0.043546  -5.191 2.0950e-07 -0.311383
+#> 4 PClass    3rd - 1st -0.38397   0.041845  -9.176 < 2.22e-16 -0.465985
+#>      97.5 %
+#> 1  0.565327
+#> 2 -0.003455
+#> 3 -0.140686
+#> 4 -0.301957
 #> 
 #> Model type:  glm 
 #> Prediction type:  response
@@ -348,13 +367,20 @@ cmp <- comparisons(
     transform_pre = "ratio",
     variables = list(Age = "2sd", PClass = "pairwise"))
 summary(cmp)
-#>                   Age    PClass Effect Std. Error z value   Pr(>|z|)  2.5 % 97.5 %
-#> 1 (x - sd) / (x + sd) 1st / 1st 0.7043    0.05946  11.846 < 2.22e-16 0.5878 0.8209
-#> 2 (x - sd) / (x + sd) 2nd / 1st 0.3185    0.05566   5.723 1.0442e-08 0.2095 0.4276
-#> 3 (x - sd) / (x + sd) 3rd / 1st 0.2604    0.05308   4.907 9.2681e-07 0.1564 0.3645
-#> 4 (x - sd) / (x + sd) 2nd / 2nd 0.3926    0.08101   4.846 1.2588e-06 0.2338 0.5514
-#> 5 (x - sd) / (x + sd) 3rd / 2nd 0.3162    0.07023   4.503 6.7096e-06 0.1786 0.4539
-#> 6 (x - sd) / (x + sd) 3rd / 3rd 0.7053    0.20273   3.479 0.00050342 0.3079 1.1026
+#>                   Age    PClass Effect Std. Error z value   Pr(>|z|)
+#> 1 (x - sd) / (x + sd) 1st / 1st 0.7043    0.05946  11.846 < 2.22e-16
+#> 2 (x - sd) / (x + sd) 2nd / 1st 0.3185    0.05566   5.723 1.0442e-08
+#> 3 (x - sd) / (x + sd) 3rd / 1st 0.2604    0.05308   4.907 9.2681e-07
+#> 4 (x - sd) / (x + sd) 2nd / 2nd 0.3926    0.08101   4.846 1.2588e-06
+#> 5 (x - sd) / (x + sd) 3rd / 2nd 0.3162    0.07023   4.503 6.7096e-06
+#> 6 (x - sd) / (x + sd) 3rd / 3rd 0.7053    0.20273   3.479 0.00050342
+#>    2.5 % 97.5 %
+#> 1 0.5878 0.8209
+#> 2 0.2095 0.4276
+#> 3 0.1564 0.3645
+#> 4 0.2338 0.5514
+#> 5 0.1786 0.4539
+#> 6 0.3079 1.1026
 #> 
 #> Model type:  glm 
 #> Prediction type:  response
@@ -399,16 +425,21 @@ original dataset that was used to fit the model:
 mfx <- marginaleffects(mod)
 
 head(mfx, 4)
-#>   rowid     type term        dydx  std.error statistic     p.value    conf.low     conf.high predicted
-#> 1     1 response   hp -0.03690556 0.01850172 -1.994710 0.046074551 -0.07316825 -0.0006428553  22.48857
-#> 2     2 response   hp -0.02868936 0.01562861 -1.835695 0.066402771 -0.05932087  0.0019421508  20.80186
-#> 3     3 response   hp -0.04657166 0.02258715 -2.061866 0.039220507 -0.09084166 -0.0023016728  25.26465
-#> 4     4 response   hp -0.04227128 0.01328278 -3.182412 0.001460541 -0.06830506 -0.0162375066  20.25549
-#>   predicted_hi predicted_lo  mpg  hp    wt am    eps
-#> 1     22.48752     22.48857 21.0 110 2.620  1 0.0283
-#> 2     20.80105     20.80186 21.0 110 2.875  1 0.0283
-#> 3     25.26333     25.26465 22.8  93 2.320  1 0.0283
-#> 4     20.25430     20.25549 21.4 110 3.215  0 0.0283
+#>   rowid     type term        dydx  std.error statistic     p.value
+#> 1     1 response   hp -0.03690556 0.01850172 -1.994710 0.046074551
+#> 2     2 response   hp -0.02868936 0.01562861 -1.835695 0.066402771
+#> 3     3 response   hp -0.04657166 0.02258715 -2.061866 0.039220507
+#> 4     4 response   hp -0.04227128 0.01328278 -3.182412 0.001460541
+#>      conf.low     conf.high predicted predicted_hi predicted_lo  mpg  hp
+#> 1 -0.07316825 -0.0006428553  22.48857     22.48752     22.48857 21.0 110
+#> 2 -0.05932087  0.0019421508  20.80186     20.80105     20.80186 21.0 110
+#> 3 -0.09084166 -0.0023016728  25.26465     25.26333     25.26465 22.8  93
+#> 4 -0.06830506 -0.0162375066  20.25549     20.25430     20.25549 21.4 110
+#>      wt am    eps
+#> 1 2.620  1 0.0283
+#> 2 2.875  1 0.0283
+#> 3 2.320  1 0.0283
+#> 4 3.215  0 0.0283
 ```
 
 The function `summary` calculates the “Average Marginal Effect,” that

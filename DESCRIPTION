@@ -113,6 +113,7 @@ Suggests:
     tidymodels,
     tidyverse,
     tinytest,
+    titanic,
     truncreg,
     tsModel,
     vdiffr,
