@@ -42,7 +42,7 @@ fit <- lm(re78 ~ treat * (age + educ + race + married + re74),
 cmp1 <- comparisons(fit, variables = "treat", wts = "w")
 cmp2 <- comparisons(fit,variables = "treat", wts = "w", transform_pre = "differenceavg")
 expect_equivalent(tidy(cmp1)$estimate, weighted.mean(cmp1$comparison, lalonde$w))
-expect_equivalent(cmp2$comparison, weighted.mean(cmp$comparison, lalonde$w))
+expect_equivalent(cmp2$comparison, weighted.mean(cmp1$comparison, lalonde$w))
 
 set.seed(1024)
 mod <- download_model("brms_numeric2")
