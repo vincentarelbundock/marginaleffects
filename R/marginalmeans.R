@@ -135,7 +135,7 @@ marginalmeans <- function(model,
     checkmate::assert_choice(wts, choices = c("equal", "cells", "proportional"))
 
     # fancy vcov processing to allow strings like "HC3"
-    vcov <- get_vcov(model, vcov = vcov)
+    vcov <- get_vcov(model, vcov = vcov, ...)
 
     # sanity
     sanity_dots(model = model, ...)
@@ -292,7 +292,8 @@ marginalmeans <- function(model,
             newdata = newgrid,
             interaction = interaction,
             modeldata = modeldata,
-            hypothesis = hypothesis)
+            hypothesis = hypothesis,
+            ...)
         # get rid of attributes in column
         out[["std.error"]] <- as.numeric(se)
         J <- attr(se, "jacobian")

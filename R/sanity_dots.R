@@ -29,6 +29,7 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
     valid[["glmmTMB"]] <- c("re.form", "allow.new.levels", "zitype") # glmmTMB
     valid[["bam"]] <- c("exclude") # mgcv
     valid[["rlmerMod"]] <- c("re.form", "allow.new.levels")
+    valid[["gamlss"]] <- c("what", "safe") #gamlss
 
     white_list <- c("conf.int", "modeldata")
 

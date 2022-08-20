@@ -17,7 +17,7 @@ get_coef.selection <- function(model, ...) {
 
 #' @rdname set_coef
 #' @export
-set_coef.selection <- function(model, coefs) {
+set_coef.selection <- function(model, coefs, ...) {
     # sampleSelection::selection
     if (as.list(model$call)[[1]] == "selection") {
         model[["estimate"]] <- coefs

@@ -22,7 +22,7 @@ get_predict.glimML <- function(model,
 
 #' @rdname set_coef
 #' @export
-set_coef.glimML <- function(model, coefs) {
+set_coef.glimML <- function(model, coefs, ...) {
     # in basic model classes coefficients are named vector
     model@fixed.param[names(coefs)] <- coefs
     model

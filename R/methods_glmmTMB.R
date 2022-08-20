@@ -28,7 +28,7 @@ get_predict.glmmTMB <- function(model,
 #' @include set_coef.R
 #' @rdname set_coef
 #' @export
-set_coef.glmmTMB <- function(model, coefs) {
+set_coef.glmmTMB <- function(model, coefs, ...) {
     # internally, coefficients are held in model$fit$parfull and in
     # model$fit$par. It looks like we need to manipulate both for the
     # predictions and delta method standard errors to be affected. In both

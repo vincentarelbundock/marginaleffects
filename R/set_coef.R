@@ -14,13 +14,13 @@
 # respect to the model coefficients. These functions manipulate model objects
 # to change the coefficients stored internally, which changes the output of the
 # `predict()` function.
-set_coef <- function(model, coefs) {
+set_coef <- function(model, coefs, ...) {
     UseMethod("set_coef")
 }
 
 #' @rdname set_coef
 #' @export
-set_coef.default <- function(model, coefs) {
+set_coef.default <- function(model, coefs, ...) {
     # in basic model classes coefficients are named vector
     model[["coefficients"]][names(coefs)] <- coefs
     model

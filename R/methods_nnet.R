@@ -1,7 +1,7 @@
 #' @include set_coef.R
 #' @rdname set_coef
 #' @export
-set_coef.multinom <- function(model, coefs) {
+set_coef.multinom <- function(model, coefs, ...) {
     # internally, coefficients are held in the `wts` vector, with 0s
     # interspersed. When transforming that vector to a matrix, we see that the
     # first row and first column are all zeros. 

@@ -6,7 +6,12 @@ Authors@R:
              family = "Arel-Bundock",
              role = c("aut", "cre", "cph"),
              email = "vincent.arel-bundock@umontreal.ca",
-             comment = c(ORCID = "0000-0003-2042-7063")))
+             comment = c(ORCID = "0000-0003-2042-7063")),
+      person(given = "Marcio Augusto",
+             family = "Diniz",
+             role = "ctb",
+             email = "marcio.diniz@cshs.org",
+             comment = c(ORCID = "0000-0002-2427-7843")))
 Description: Compute and plot adjusted predictions, contrasts, marginal effects, and marginal means for over 65 classes of statistical models in R. Conduct linear and non-linear hypothesis tests using the delta method.
 License: GPL (>= 3)
 Copyright: inst/COPYRIGHTS
@@ -52,6 +57,7 @@ Suggests:
     future,
     future.apply,
     gam,
+    gamlss,
     geepack,
     ggbeeswarm,
     ggdag,
@@ -159,6 +165,7 @@ Collate:
     'methods_brms.R'
     'methods_crch.R'
     'methods_fixest.R'
+    'methods_gamlss.R'
     'methods_glmmTMB.R'
     'methods_glmx.R'
     'methods_lme4.R'

@@ -2,10 +2,11 @@
 % Please edit documentation in R/get_predict.R, R/methods_MASS.R,
 %   R/methods_afex.R, R/methods_aod.R, R/methods_betareg.R, R/methods_bife.R,
 %   R/methods_biglm.R, R/methods_nnet.R, R/methods_brglm2.R, R/methods_brms.R,
-%   R/methods_crch.R, R/methods_fixest.R, R/methods_glmmTMB.R, R/methods_lme4.R,
-%   R/methods_mclogit.R, R/methods_mhurdle.R, R/methods_mlogit.R,
-%   R/methods_ordinal.R, R/methods_quantreg.R, R/methods_robustlmm.R,
-%   R/methods_rstanarm.R, R/methods_survival.R, R/methods_tobit1.R
+%   R/methods_crch.R, R/methods_fixest.R, R/methods_gamlss.R,
+%   R/methods_glmmTMB.R, R/methods_lme4.R, R/methods_mclogit.R,
+%   R/methods_mhurdle.R, R/methods_mlogit.R, R/methods_ordinal.R,
+%   R/methods_quantreg.R, R/methods_robustlmm.R, R/methods_rstanarm.R,
+%   R/methods_survival.R, R/methods_tobit1.R
 \name{get_predict}
 \alias{get_predict}
 \alias{get_predict.default}
@@ -21,6 +22,7 @@
 \alias{get_predict.brmsfit}
 \alias{get_predict.crch}
 \alias{get_predict.fixest}
+\alias{get_predict.gamlss}
 \alias{get_predict.glmmTMB}
 \alias{get_predict.merMod}
 \alias{get_predict.lmerModLmerTest}
@@ -140,6 +142,8 @@ get_predict(model, newdata, vcov, conf_level, type, ...)
   type = "response",
   ...
 )
+
+\method{get_predict}{gamlss}(model, newdata, type, ...)
 
 \method{get_predict}{glmmTMB}(
   model,

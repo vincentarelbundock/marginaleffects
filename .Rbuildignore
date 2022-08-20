@@ -36,4 +36,6 @@
 ^vignettes/transformation.Rmd
 ^vignettes/logistic_contrasts.Rmd
 inst/tinytest/stata/databases/.*\.dta
+^.*\.Rproj$
+^\.Rproj\.user$
 man-roxygen

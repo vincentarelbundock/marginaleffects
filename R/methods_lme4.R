@@ -2,7 +2,7 @@
 #' @rdname set_coef
 #' @keywords internal
 #' @export
-set_coef.merMod <- function(model, coefs) {
+set_coef.merMod <- function(model, coefs, ...) {
     # in 'merMod', predictions work the slot called "beta", which is unnamed
     # `fixef(model)` returns the same thing named
     beta <- methods::slot(model, "beta")

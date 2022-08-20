@@ -316,7 +316,7 @@ comparisons <- function(model,
     }
 
     vcov.type <- get_vcov_label(vcov)
-    vcov <- get_vcov(model, vcov = vcov)
+    vcov <- get_vcov(model, vcov = vcov, ...)
 
     predictors <- variables_list$conditional
 
