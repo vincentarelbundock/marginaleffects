@@ -1,8 +1,12 @@
-Copyright (c) 2021, Vincent Arel-Bundock
+Copyright (c) 2022, Vincent Arel-Bundock
 
 ########################
 
-Functions in the `R/get_hdi.R` were extracted from the `HDInterval` package for `R`. Copyright (c) 2020, Mike Meredith and John Kruschke, shared under the GPL3 License.
+Functions in `R/methods_gamlss.R` file were adatped from the `gamlss` package for `R`. Copyright (c) 2022, Mikis Stasinopoulos [aut, cre, cph] shared under the GPL3 License.
+
+########################
+
+Functions in the `R/get_hdi.R` file were extracted from the `HDInterval` package for `R`. Copyright (c) 2020, Mike Meredith and John Kruschke, shared under the GPL3 License.
 
 ########################
 
@@ -13,8 +17,6 @@ Some of the methods in the `R/mean_or_mode.R` file were adapted from the
 Tests in the `tests/testhat/test-analytical.R` were adapted from the `margins` R package, copyright Thomas J. Leeper (2018), shared under the MIT License (copied below).
 
 Copyright (c) 2016-2018, Thomas J. Leeper.
-
-#######################
 
 MIT License
 
