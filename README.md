@@ -12,7 +12,7 @@ status](https://www.r-pkg.org/badges/version/marginaleffects)](https://CRAN.R-pr
 <!-- badges: end -->
 
 Compute and plot adjusted predictions, contrasts, marginal effects, and
-marginal means for 68 classes of statistical models in `R`. Conduct
+marginal means for 69 classes of statistical models in `R`. Conduct
 linear and non-linear hypothesis tests using the delta method.
 
 ## Table of contents
@@ -56,7 +56,7 @@ Case studies:
 
 Tips and technical notes:
 
-  - [68 Supported Classes of
+  - [69 Supported Classes of
     Models](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
   - [Index of Functions and
     Documentation](https://vincentarelbundock.github.io/marginaleffects/reference/index.html)
@@ -87,7 +87,7 @@ External links:
 ## Definitions
 
 The `marginaleffects` package allows `R` users to compute and plot four
-principal quantities of interest for [68 different classes of
+principal quantities of interest for [69 different classes of
 models:](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
 
   - [*Adjusted
@@ -180,7 +180,7 @@ additional features from `emmeans`.
 
 So why did I write a clone?
 
-  - *Powerful:* Marginal effects and contrasts can be computed for 68
+  - *Powerful:* Marginal effects and contrasts can be computed for 69
     different classes of models. Adjusted predictions and marginal means
     can be computed for about 100 model types.
   - *Extensible:* Adding support for new models is very easy, often
