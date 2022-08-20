@@ -18,7 +18,8 @@ get_coef.gamlss <- function(model, ...){
 get_predict.gamlss <- function(model, newdata, type, ...){
   
   # Modified predict method from the R-package gamlss
-  predict.gamlss <- function (object, what = c("mu", "sigma", "nu", "tau"), parameter = NULL, 
+  # Renamed with underscore to avoid conflict with exported method from the package.
+  predict_gamlss <- function (object, what = c("mu", "sigma", "nu", "tau"), parameter = NULL, 
                               newdata = NULL, type = c("link", "response", "terms"), 
                               safe = TRUE, terms = NULL, 
                               se.fit = FALSE, data = NULL, ...) 
@@ -215,9 +216,7 @@ get_predict.gamlss <- function(model, newdata, type, ...){
   setDF(newdata)
   index <- which(colnames(newdata) %in% originvars)
   tmp <- newdata[, index]
-  invisible(capture.output(out <- stats::predict(model, 
-                                                 newdata = tmp, type = type, 
-                                                 data = origindata, ...)))
+  invisible(capture.output(out <- predict_gamlss(model, newdata = tmp, type = type, data = origindata, ...)))
   
   if ("rowid" %in% colnames(newdata)) {
     out <- data.frame(rowid = newdata$rowid, predicted = out)

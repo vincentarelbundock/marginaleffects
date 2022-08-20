@@ -1,7 +1,6 @@
 # bug fix submitted for this version of insight
 source("helpers.R", local = TRUE)
 if (ON_CRAN) exit_file("on cran")
-if (minver("insight", "0.17.1")) exit_file("insight 0.17.1")
 requiet("margins")
 requiet("emmeans")
 requiet("broom")
@@ -9,50 +8,33 @@ requiet("gamlss")
 requiet("titanic")
 
 # Beta regression
-
 data("GasolineYield", package = "betareg")
 tmp <- GasolineYield
 tmp$batch <- factor(tmp$batch)
 dat <- tmp
-mod <- gamlss::gamlss(yield ~ batch + temp, family = "BE", data = dat)
-
-# marginaleffects: vs. margins vs. emmeans
-set.seed(1024)
-res <- marginaleffects(mod, variables = "temp", what = "mu")
-mar <- data.frame(margins::margins(mod, unit_ses = TRUE))
-
-# The R-package margins does not provide support to gamlss.
-# Error in jacobian %*% vcov : non-conformable arguments
-# expect_true(expect_margins(res, mar, tolerance = 0.1))
-
+mod <- gamlss::gamlss(yield ~ batch + temp,
+    family = "BE",
+    data = dat,
+    trace = FALSE)
 
 # EMMeans provides the same results whether regrid = "response" or
 # regrid = "link"
 
 # marginaleffects
-mfx <- marginaleffects(mod, type = "link", 
-                       newdata = datagrid(batch = 1), variables = "temp",
-                       what = "mu")
+mfx <- marginaleffects(
+    mod,
+    type = "link",
+    newdata = datagrid(batch = 1),
+    variables = "temp",
+    what = "mu")
 
-# emtrends with regrid = "link"
-em <- suppressWarnings(
-emtrends(mod, ~temp, "temp",  regrid = "link", 
-         at = list("batch" = tmp$batch[1])))
-em <- tidy(em)
-
-# emtrends with regrid = "response"
-em2 <- suppressWarnings(
-  emtrends(mod, ~temp, "temp",  regrid = "response", 
-           at = list("batch" = tmp$batch[1])))
-em2 <- tidy(em2)
-
-# We do not expect that they will be equivalent
-!expect_equivalent(em2$temp.trend, em$temp.trend, tolerance = .001)
-!expect_equivalent(em2$std.error, em$std.error, tolerance = .001)
+# emtrends
+em <- emtrends(mod, ~temp, "temp", at = list("batch" = tmp$batch[1]))
+em <- data.frame(em)
 
 # We do expect that they will be equivalent
 expect_equivalent(mfx$dydx, em$temp.trend, tolerance = .001)
-expect_equivalent(mfx$std.error, em$std.error, tolerance = .001)
+expect_equivalent(mfx$std.error, em$SE, tolerance = .001)
 
 # predictions: no validity
 pred <- suppressWarnings(predictions(mod, what = "mu"))
@@ -76,12 +58,8 @@ tmp$Pclass <- as.factor(tmp$Pclass)
 dat <- na.omit(tmp)
 
 mod <- gamlss::gamlss(Survived ~ Age + Pclass, 
-                      family = "BI", data = dat)
+                      family = "BI", data = dat, trace = FALSE)
 
-# marginaleffects: vs. margins vs. emmeans
-set.seed(1024)
-res <- marginaleffects(mod, variables = "Pclass", what = "mu")
-mar <- data.frame(margins::margins(mod, unit_ses = TRUE))
 
 # The R-package margins does not provide support to gamlss.
 # Error in tmp[["fit"]] : subscript out of bounds
@@ -91,21 +69,23 @@ mar <- data.frame(margins::margins(mod, unit_ses = TRUE))
 
 
 # emtrends
-mfx <- marginaleffects(mod, type = "link", 
-                       newdata = datagrid(Pclass = "1"), variables = "Age",
-                       what = "mu")
-em <- suppressWarnings(
-  emtrends(mod, ~Age, "Age",  regrid = "link", 
-           at = list("Pclass" = "1")))
+mfx <- marginaleffects(mod,
+    type = "link",
+    newdata = datagrid(Pclass = "1"),
+    variables = "Age",
+    what = "mu")
+em <- emtrends(mod, ~Age, "Age", at = list("Pclass" = "1"))
 em <- tidy(em)
 expect_equivalent(mfx$dydx, em$Age.trend, tolerance = .001)
 expect_equivalent(mfx$std.error, em$std.error, tolerance = .001)
 
 # predictions: no validity
-pred <- suppressWarnings(predictions(mod, what = "mu"))
+pred <- predictions(mod, what = "mu")
 expect_predictions(pred, n_row = nrow(na.omit(titanic_train)))
-pred <- predictions(mod, newdata = datagrid(Pclass = 1:3, Age = c(25, 50)),
-                    what = "mu")
+pred <- predictions(
+    mod,
+    newdata = datagrid(Pclass = 1:3, Age = c(25, 50)),
+    what = "mu")
 expect_predictions(pred, n_row = 6)
 
 
