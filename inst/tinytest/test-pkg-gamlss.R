@@ -17,6 +17,14 @@ mod <- gamlss::gamlss(yield ~ batch + temp,
     data = dat,
     trace = FALSE)
 
+
+expect_error(predictions(mod, newdata = head(dat)), pattern = "what. argument")
+p1 <- predictions(mod, newdata = head(dat), what = "mu")
+p2 <- predictions(mod, newdata = head(dat), what = "sigma")
+expect_inherits(p1, "predictions")
+expect_inherits(p2, "predictions")
+
+
 # EMMeans provides the same results whether regrid = "response" or
 # regrid = "link"
 

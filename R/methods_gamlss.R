@@ -202,8 +202,12 @@ get_predict.gamlss <- function(model, newdata, type, ...){
   
   dots <- list(...)
   
-  if (is.null(dots$what))
-    stop("Argument `what` indicating the parameter of interest is missing.")
+  if (is.null(dots$what)) {
+      msg <- sprintf(
+          "Please specifiy a `what` argument with one of these values: %s",
+          paste(model$parameter, collapse = ", "))
+      stop(msg, call. = FALSE)
+  }
   
   # if (!isTRUE(checkmate::check_flag(vcov, null.ok = TRUE))) {
   #   msg <- "The `vcov` argument is not supported for models of this class."
@@ -233,8 +237,12 @@ get_predict.gamlss <- function(model, newdata, type, ...){
 get_vcov.gamlss <- function(model, ...){
   dots <- list(...)
   
-  if (is.null(dots$what))
-    stop("Argument `what` indicating the parameter of interest is missing.")
+  if (is.null(dots$what)) {
+      msg <- sprintf(
+          "Please specifiy a `what` argument with one of these values: %s",
+          paste(model$parameter, collapse = ", "))
+      stop(msg, call. = FALSE)
+  }
   
   p <- match(dots$what, model$parameters)
   
