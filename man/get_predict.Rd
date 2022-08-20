@@ -143,7 +143,15 @@ get_predict(model, newdata, vcov, conf_level, type, ...)
   ...
 )
 
-\method{get_predict}{gamlss}(model, newdata, type, ...)
+\method{get_predict}{gamlss}(
+  model,
+  newdata = insight::get_data(model),
+  vcov = FALSE,
+  conf_level = 0.95,
+  type = "response",
+  what = "mu",
+  ...
+)
 
 \method{get_predict}{glmmTMB}(
   model,

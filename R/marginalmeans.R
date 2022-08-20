@@ -17,7 +17,7 @@
 #' categorical predictors. This grid can be very large when there are many
 #' variables and many response levels, so it is advisable to select a limited
 #' number of variables in the `variables` and `variables_grid` arguments.
-#' @param wts character value. Weigths to use in the averaging.
+#' @param wts character value. Weights to use in the averaging.
 #' + "equal": each combination of variables in `variables_grid` gets an equal weight.
 #' + "cells": each combination of values for the variables in the `variables_grid` gets a weight proportional to its frequency in the original data.
 #' + "proportional": each combination of values for the variables in the `variables_grid` -- except for those in the `variables` argument -- gets a weight proportional to its frequency in the original data.

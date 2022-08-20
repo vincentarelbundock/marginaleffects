@@ -86,7 +86,7 @@ acceptable values is returned in an error message.}
 \item See the Examples section below and the vignette: https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html
 }}
 
-\item{wts}{character value. Weigths to use in the averaging.
+\item{wts}{character value. Weights to use in the averaging.
 \itemize{
 \item "equal": each combination of variables in \code{variables_grid} gets an equal weight.
 \item "cells": each combination of values for the variables in the \code{variables_grid} gets a weight proportional to its frequency in the original data.
