@@ -107,7 +107,6 @@ Suggests:
     tidymodels,
     tidyverse,
     tinytest,
-    tobit1,
     truncreg,
     tsModel,
     vdiffr,
