@@ -45,10 +45,9 @@ get_coef.glmmTMB <- function(model, ...) {
 set_coef.glmmTMB <- function(model, coefs, ...) {
     # internally, coefficients are held in model$fit$parfull and in
     # model$fit$par. It looks like we need to manipulate both for the
-    # predictions and delta method standard errors to be affected. i
-    # random parameters are ignored: "b"
-    # indices matched on original numeric values because names are inconsistent REML=TRUE/FALSe
-    # this is a HACK!
+    # predictions and delta method standard errors to be affected.
+    # random parameters are ignored: named "b"
+    # the order matters; I think we can rely on it, but this still feels like a HACK
     out <- model
 
     new <- make.unique(names(coefs))
