@@ -86,7 +86,7 @@ So why did I write a clone?
 
 * _Powerful:_ Marginal effects and contrasts can be computed for `r n_support` different classes of models. Adjusted predictions and marginal means can be computed for about 100 model types. 
 * _Extensible:_ Adding support for new models is very easy, often requiring less than 10 lines of new code. Please submit [feature requests on Github.](https://github.com/vincentarelbundock/marginaleffects/issues)
-* _Fast:_ [Computing unit-level standard errors](https://vincentarelbundock.github.io/marginaleffects/articles/performance.html) can be orders of magnitude faster in large datasets.
+* _Fast:_ [Computing unit-level standard errors](https://vincentarelbundock.github.io/marginaleffects/articles/performance.html) can be orders of magnitude faster than `margins` in large datasets.
 * _Efficient:_ Much smaller memory footprint.
 * _Valid:_  When possible, numerical results are checked against alternative software like `Stata`, or other `R` packages.
 * _Beautiful:_ `ggplot2` support for plotting (conditional) marginal effects and adjusted predictions.
@@ -98,10 +98,8 @@ So why did I write a clone?
 
 Downsides of `marginaleffects` include:
 
-* No simulation-based inference.
-* No multiplicity adjustments.
-* No equivalence tests.
-* Newer package with a smaller user base.
+* No multiplicity adjustments. (Use `p.adjust()` instead.)
+* Marginal means are often slower to compute than with `emmeans`.
 
 ## Getting started
 
