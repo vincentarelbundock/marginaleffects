@@ -29,6 +29,7 @@
 #' A `data.frame` in which each row corresponds to one combination of the named
 #' predictors supplied by the user via the `...` dots. Variables which are not
 #' explicitly defined are held at their mean or mode.
+#' @family grid
 #' @export
 #' @examples
 #' # The output only has 2 rows, and all the variables except `hp` are at their
@@ -143,6 +144,7 @@ datagrid <- function(
 #' head(dat)
 #' dim(dat)
 #'
+#' @family grid
 #' @export
 datagridcf <- function(
     ...,

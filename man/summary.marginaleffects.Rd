@@ -34,3 +34,17 @@ mfx <- marginaleffects(mod)
 # average marginal effects
 summary(mfx)
 }
+\seealso{
+Other summary: 
+\code{\link{glance.marginaleffects}()},
+\code{\link{reexports}},
+\code{\link{summary.comparisons}()},
+\code{\link{summary.marginalmeans}()},
+\code{\link{summary.predictions}()},
+\code{\link{tidy.comparisons}()},
+\code{\link{tidy.deltamethod}()},
+\code{\link{tidy.marginaleffects}()},
+\code{\link{tidy.marginalmeans}()},
+\code{\link{tidy.predictions}()}
+}
+\concept{summary}

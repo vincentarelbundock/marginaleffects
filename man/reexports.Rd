@@ -6,6 +6,20 @@
 \alias{glance}
 \alias{tidy}
 \title{Objects exported from other packages}
+\seealso{
+Other summary: 
+\code{\link{glance.marginaleffects}()},
+\code{\link{summary.comparisons}()},
+\code{\link{summary.marginaleffects}()},
+\code{\link{summary.marginalmeans}()},
+\code{\link{summary.predictions}()},
+\code{\link{tidy.comparisons}()},
+\code{\link{tidy.deltamethod}()},
+\code{\link{tidy.marginaleffects}()},
+\code{\link{tidy.marginalmeans}()},
+\code{\link{tidy.predictions}()}
+}
+\concept{summary}
 \keyword{internal}
 \description{
 These objects are imported from other packages. Follow the links

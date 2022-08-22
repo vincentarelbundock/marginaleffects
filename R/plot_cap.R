@@ -13,6 +13,7 @@
 #' @inheritParams plot_cme
 #' @inheritParams predictions
 #' @return A `ggplot2` object
+#' @family plot
 #' @export
 #' @examples
 #' mod <- lm(mpg ~ hp + wt, data = mtcars)

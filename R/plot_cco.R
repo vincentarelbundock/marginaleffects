@@ -16,6 +16,7 @@
 #' @inheritParams plot.marginaleffects
 #' @inheritParams marginaleffects
 #' @return A `ggplot2` object
+#' @family plot
 #' @export
 #' @examples
 #' mod <- lm(mpg ~ hp * wt, data = mtcars)

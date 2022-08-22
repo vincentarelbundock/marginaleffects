@@ -3,6 +3,24 @@ template:
     bootswatch: readable
   bslib:
     primary: "#306cc9"
+reference:
+  - title: Main functions
+    contents:
+    - deltamethod
+    - predictions
+    - comparisons
+    - marginaleffects
+    - marginalmeans
+  - title: Data grids
+    contents:
+    - starts_with("datagrid")
+  - title: Plots
+    contents:
+    - starts_with("plot")
+  - title: Object summaries
+    contents:
+    - posteriordraws
+    - starts_with("summary|glance|tidy")
 navbar:
   title: marginaleffects
   type: default

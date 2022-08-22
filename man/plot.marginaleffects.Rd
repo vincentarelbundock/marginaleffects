@@ -48,3 +48,10 @@ mfx <- marginaleffects(mod)
 plot(mfx)
 
 }
+\seealso{
+Other plot: 
+\code{\link{plot_cap}()},
+\code{\link{plot_cco}()},
+\code{\link{plot_cme}()}
+}
+\concept{plot}

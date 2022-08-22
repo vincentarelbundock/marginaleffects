@@ -27,3 +27,17 @@ Data frame of summary statistics for an object produced by the
 \description{
 Summarize a \code{marginalmeans} object
 }
+\seealso{
+Other summary: 
+\code{\link{glance.marginaleffects}()},
+\code{\link{reexports}},
+\code{\link{summary.comparisons}()},
+\code{\link{summary.marginaleffects}()},
+\code{\link{summary.predictions}()},
+\code{\link{tidy.comparisons}()},
+\code{\link{tidy.deltamethod}()},
+\code{\link{tidy.marginaleffects}()},
+\code{\link{tidy.marginalmeans}()},
+\code{\link{tidy.predictions}()}
+}
+\concept{summary}

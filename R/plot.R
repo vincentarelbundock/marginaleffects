@@ -5,6 +5,7 @@
 #' @inheritParams tidy.marginaleffects
 #' @inherit tidy.marginaleffects details
 #' @return A `ggplot2` object
+#' @family plot
 #' @export
 #'
 #' @examples

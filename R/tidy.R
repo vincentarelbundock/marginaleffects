@@ -26,6 +26,7 @@ generics::tidy
 #' the `mean` and `quantile` function to the results of Step 1 to obtain the
 #' Average (or Median) Marginal Effect and its associated interval.
 #'
+#' @family summary
 #' @export
 #' @examples
 #' mod <- lm(mpg ~ hp * wt + factor(gear), data = mtcars)
@@ -50,6 +51,7 @@ tidy.marginaleffects <- function(x,
 
 #' Tidy a `deltamethod` object
 #' @inheritParams tidy.marginaleffects
+#' @family summary
 #' @export
 tidy.deltamethod <- function(x, ...) {
     if (any(!c("term", "estimate") %in% colnames(x)) || !inherits(x, c("deltamethod", "data.frame"))) {
@@ -70,6 +72,7 @@ tidy.deltamethod <- function(x, ...) {
 #' @inheritParams tidy.marginaleffects
 #' @return A "tidy" `data.frame` of summary statistics which conforms to the
 #' `broom` package specification.
+#' @family summary
 #' @export
 tidy.marginalmeans <- function(x,
                                conf_level = 0.95,
@@ -110,6 +113,7 @@ tidy.marginalmeans <- function(x,
 #' @inheritParams predictions
 #' @return A "tidy" `data.frame` of summary statistics which conforms to the
 #' `broom` package specification.
+#' @family summary
 #' @export
 #' @examples
 #' mod <- lm(mpg ~ hp * wt + factor(gear), data = mtcars)
@@ -214,6 +218,7 @@ tidy.predictions <- function(x,
 #' calculate the mean and the `quantile` function to the results of Step 1 to
 #' obtain the Average Marginal Effect and its associated interval.
 #'
+#' @family summary
 #' @export
 #' @examples
 #' mod <- lm(mpg ~ factor(gear), data = mtcars)

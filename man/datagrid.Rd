@@ -93,3 +93,8 @@ mod <- lm(mpg ~ hp, mtcars)
 dg <- datagrid(model = mod, hp = c(100, 110), grid_type = "counterfactual")
 nrow(dg)
 }
+\seealso{
+Other grid: 
+\code{\link{datagridcf}()}
+}
+\concept{grid}

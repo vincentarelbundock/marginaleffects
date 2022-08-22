@@ -27,3 +27,17 @@ A "tidy" \code{data.frame} of summary statistics which conforms to the
 \description{
 Tidy a \code{marginalmeans} object
 }
+\seealso{
+Other summary: 
+\code{\link{glance.marginaleffects}()},
+\code{\link{reexports}},
+\code{\link{summary.comparisons}()},
+\code{\link{summary.marginaleffects}()},
+\code{\link{summary.marginalmeans}()},
+\code{\link{summary.predictions}()},
+\code{\link{tidy.comparisons}()},
+\code{\link{tidy.deltamethod}()},
+\code{\link{tidy.marginaleffects}()},
+\code{\link{tidy.predictions}()}
+}
+\concept{summary}

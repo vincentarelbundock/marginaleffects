@@ -77,3 +77,10 @@ mod <- lm(mpg ~ hp * wt * am, data = mtcars)
 plot_cme(mod, effect = "hp", condition = c("wt", "am"))
 
 }
+\seealso{
+Other plot: 
+\code{\link{plot.marginaleffects}()},
+\code{\link{plot_cap}()},
+\code{\link{plot_cco}()}
+}
+\concept{plot}

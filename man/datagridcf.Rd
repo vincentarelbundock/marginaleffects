@@ -44,3 +44,8 @@ head(dat)
 dim(dat)
 
 }
+\seealso{
+Other grid: 
+\code{\link{datagrid}()}
+}
+\concept{grid}

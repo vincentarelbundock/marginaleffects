@@ -1,9 +1,11 @@
 #' @importFrom generics glance
+#' @family summary
 #' @export
 generics::glance
 
 #' Glance at key characteristics of an object
 #' @inheritParams tidy.marginaleffects
+#' @family summary
 #' @export
 glance.marginaleffects <- function(x, ...) {
     assert_dependency("modelsummary")
@@ -24,14 +26,18 @@ glance.marginaleffects <- function(x, ...) {
     return(out)
 }
 
+#' @family summary
 #' @export
 glance.marginalmeans <- glance.marginaleffects
 
+#' @family summary
 #' @export
 glance.predictions <- glance.marginaleffects
 
+#' @family summary
 #' @export
 glance.comparisons <- glance.marginaleffects
 
+#' @family summary
 #' @export
 glance.deltamethod <- glance.marginaleffects
