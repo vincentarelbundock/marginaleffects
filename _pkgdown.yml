@@ -1,8 +1,5 @@
 template:
-  params:
-    bootswatch: readable
-  bslib:
-    primary: "#306cc9"
+  bootstrap: 5
 reference:
   - title: Main functions
     contents:
@@ -40,3 +37,5 @@ navbar:
     href: reference/index.html
   - text: Changelog
     href: news/index.html
+  - icon: fab fa-github
+    href: https://github.com/vincentarelbundock/marginaleffects/
