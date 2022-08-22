@@ -20,13 +20,21 @@
 
 sanity_model_specific(model, calling_function = "marginaleffects", ...)
 
-\method{sanity_model_specific}{default}(model, calling_function = "marginaleffects", ...)
+\method{sanity_model_specific}{default}(
+  model,
+  vcov = NULL,
+  calling_function = "marginaleffects",
+  ...
+)
 
 \method{sanity_model_specific}{brmsfit}(model, ...)
 
-\method{sanity_model_specific}{glmmTMB}(model, vcov = NULL, ...)
-
-\method{sanity_model_specific}{glmmTMB}(model, vcov = NULL, ...)
+\method{sanity_model_specific}{glmmTMB}(
+  model,
+  vcov = NULL,
+  calling_function = "marginaleffects",
+  ...
+)
 
 \method{sanity_model_specific}{mblogit}(model, calling_function = "marginaleffects", ...)
 
