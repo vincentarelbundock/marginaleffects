@@ -105,7 +105,7 @@ New modeling packages can usually be supported by `marginaleffects` if they incl
 
 
 sanitize_model <- function(model,
-                           newdata,
+                           newdata = NULL,
                            vcov = NULL,
                            ...) {
 
