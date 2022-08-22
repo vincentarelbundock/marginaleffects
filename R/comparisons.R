@@ -228,6 +228,7 @@ comparisons <- function(model,
             model = model,
             newdata = newdata,
             wts = wts,
+            vcov = vcov,
             calling_function = "comparisons",
             ...)
         interaction <- sanitize_interaction(interaction, variables, model)

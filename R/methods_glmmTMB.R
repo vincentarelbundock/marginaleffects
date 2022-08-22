@@ -13,7 +13,7 @@ get_predict.glmmTMB <- function(model,
         vcov <- vcov[[1]]
     }
 
-    get_predict.default(
+    out <- get_predict.default(
         model = model,
         newdata = newdata,
         vcov = vcov,
@@ -21,8 +21,22 @@ get_predict.glmmTMB <- function(model,
         type = type,
         allow.new.levels = TRUE, # otherwise we get errors in marginalmeans()
         ...)
+    return(out)
 }
 
+
+
+#' @include get_coef.R
+#' @rdname get_coef
+#' @export
+get_coef.glmmTMB <- function(model, ...) {
+    # order matters
+    b <- model$obj$env$parList(model$fit$par, model$fit$parfull)
+    b[["b"]] <- NULL # no random effects
+    b <- unlist(b)
+    names(b) <- gsub("^beta\\d+", "beta", names(b))
+    return(b)
+}
 
 
 #' @include set_coef.R
@@ -31,30 +45,41 @@ get_predict.glmmTMB <- function(model,
 set_coef.glmmTMB <- function(model, coefs, ...) {
     # internally, coefficients are held in model$fit$parfull and in
     # model$fit$par. It looks like we need to manipulate both for the
-    # predictions and delta method standard errors to be affected. In both
-    # vectors, the parameters are named "beta***", so we only replace those,
-    # and check if the length of the vector is OK.
-    idx <- grepl("beta", names(model$fit$parfull))
-    if (sum(idx) != length(coefs)) {
-        msg <- "Could not manipulate the coefficients of this `glmmTMB` model object. Please report this error on the `marginaleffects` Github issue tracker with the data and code necessary to replicate the problem: https://github.com/vincentarelbundock/marginaleffects/issues"
-        stop(msg, call. = FALSE)
-    }
-    model$fit$parfull[idx] <- coefs
+    # predictions and delta method standard errors to be affected. i
+    # random parameters are ignored: "b"
+    # indices matched on original numeric values because names are inconsistent REML=TRUE/FALSe
+    # this is a HACK!
+    out <- model
 
-    idx <- grepl("beta", names(model$fit$par))
-    if (sum(idx) != length(coefs)) {
-        msg <- "Could not manipulate the coefficients of this `glmmTMB` model object. Please report this error on the `marginaleffects` Github issue tracker with the data and code necessary to replicate the problem: https://github.com/vincentarelbundock/marginaleffects/issues"
-        stop(msg, call. = FALSE)
-    }
-    model$fit$par[idx] <- coefs
+    new <- make.unique(names(coefs))
+    old <- make.unique(names(model$fit$parfull))
+    idx <- match(old, new)
+    out$fit$parfull <- stats::setNames(
+        ifelse(is.na(idx), model$fit$parfull, coefs[idx]),
+        names(model$fit$parfull))
 
-    return(model)
+    old <- make.unique(names(model$fit$par))
+    idx <- match(old, new)
+    out$fit$par <- stats::setNames(
+        ifelse(is.na(idx), model$fit$par, coefs[idx]),
+        names(model$fit$par))
+
+    return(out)
 }
 
 
 
 #' @rdname sanity_model_specific
-sanity_model_specific.glmmTMB <- function(model, vcov = NULL, ...) {
+sanity_model_specific.glmmTMB <- function(model, vcov = NULL, calling_function = "marginaleffects", ...) {
+    # insight handles predictions correctly
+    if (!identical(calling_function, "predictions")) {
+        REML <- as.list(insight::get_call(model))[["REML"]]
+        if (isTRUE(REML) && !identical(vcov, FALSE)) {
+            msg <- insight::format_message("Uncertainty estimates cannot be computed for `glmmTMB` models with the `REML=TRUE` option. Set `vcov=FALSE` to avoid this error.")
+            stop(msg, call. = FALSE) 
+        }
+    }
+
     # we need an explicit check because predict.glmmTMB() generates other
     # warnings related to openMP, so our default warning-detection does not
     # work

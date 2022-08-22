@@ -13,6 +13,7 @@ sanity_model_specific <- function (model,
 
 #' @rdname sanity_model_specific
 sanity_model_specific.default <- function(model,
+                                          vcov = NULL,
                                           calling_function = "marginaleffects",
                                           ...) {
     dots <- list(...)
@@ -105,6 +106,7 @@ New modeling packages can usually be supported by `marginaleffects` if they incl
 
 sanitize_model <- function(model,
                            newdata,
+                           vcov = NULL,
                            ...) {
 
     # tidymodels appear to store the model fit in `model[["fit"]]`
@@ -112,7 +114,7 @@ sanitize_model <- function(model,
         model <- model[["fit"]]
     }
 
-    sanity_model_specific(model, newdata = newdata, ...)
+    sanity_model_specific(model, vcov = vcov, newdata = newdata, ...)
     sanity_model_supported_class(model)
     return(model)
 }

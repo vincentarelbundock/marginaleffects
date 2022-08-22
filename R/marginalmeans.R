@@ -132,6 +132,7 @@ marginalmeans <- function(model,
     interaction <- sanitize_interaction(interaction, variables, model)
     conf_level <- sanitize_conf_level(conf_level, ...)
     hypothesis <- sanitize_hypothesis(hypothesis, ...)
+    model <- sanitize_model(model, vcov = vcov, calling_function = "marginalmeans")
     checkmate::assert_choice(wts, choices = c("equal", "cells", "proportional"))
 
     # fancy vcov processing to allow strings like "HC3"

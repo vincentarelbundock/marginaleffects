@@ -3,6 +3,7 @@ exit_file("glmmTMB always causes problems")
 if (ON_CRAN) exit_file("on cran")
 if (ON_CI) exit_file("on ci") # install and test fails on Github
 requiet("glmmTMB")
+requiet("emmeans")
 
 
 data("Owls")
@@ -121,11 +122,54 @@ expect_true(all(mm3$std.error != mm4$std.error))
 expect_true(nrow(mm3) > nrow(mm1))
 
 
+# marginalmeans: some validity
+em <- data.frame(emmeans(mod, ~Sex))
+mm <- marginalmeans(mod, variables = "Sex", type = "link", re.form = NA)
+expect_equivalent(em$emmean, mm$marginalmean)
+expect_equivalent(em$SE, mm$std.error)
 
-# regression bug: needs allow.new.levels = TRUE
+
+mfx <- marginaleffects(m1)
+
+
 m1 <- glmmTMB(
     count ~ mined + (1 | site),
     zi = ~mined,
     family = poisson, data = Salamanders)
 expect_inherits(marginalmeans(m1, variables = "mined"), "marginalmeans")
 
+
+
+# Issue #466: REML not supported
+# Problem is that model$fit$par does not include all the parameters when
+# REML=TRUE, so when we set `set_coef()`, we can't change the fixed effects,
+# and the predictions are not altered. In turn, this produced 0 standard errors
+# in `get_se_delta()`.
+set.seed(42)
+dat <- do.call("rbind", list(
+  transform(PlantGrowth, trial = "A"),
+  transform(PlantGrowth, trial = "B", weight = runif(30) * weight),
+  transform(PlantGrowth, trial = "C", weight = runif(30) * weight)))
+colnames(dat)[2] <- "groupid"
+
+model <- glmmTMB(
+  weight ~ groupid + trial + (1 | groupid:trial),
+  REML = FALSE,
+  data = dat)
+em <- data.frame(emmeans(model, ~trial + groupid, df = Inf))
+mm <- marginalmeans(model, variables = c("trial", "groupid"), interaction = TRUE, re.form = NA)
+mm <- mm[order(mm$groupid, mm$trial),]
+expect_equivalent(mm$marginalmean, em$emmean)
+expect_equivalent(mm$conf.high, em$asymp.UCL)
+
+model_REML <- glmmTMB(
+  weight ~ groupid + trial + (1 | groupid:trial),
+  REML = TRUE,
+  data = dat)
+
+expect_error(marginaleffects(model_REML), pattern = "REML")
+expect_error(comparisons(model_REML), pattern = "REML")
+expect_error(marginalmeans(model_REML), pattern = "REML")
+expect_inherits(marginaleffects(model_REML, vcov = FALSE), "marginaleffects")
+expect_inherits(predictions(model_REML, re.form = NA), "predictions")
+expect_inherits(predictions(model_REML, vcov = FALSE, re.form = NA), "predictions")
