@@ -74,7 +74,7 @@ sanity_model_specific.glmmTMB <- function(model, vcov = NULL, calling_function =
     if (!identical(calling_function, "predictions")) {
         REML <- as.list(insight::get_call(model))[["REML"]]
         if (isTRUE(REML) && !identical(vcov, FALSE)) {
-            msg <- insight::format_message("Uncertainty estimates cannot be computed for `glmmTMB` models with the `REML=TRUE` option. Set `vcov=FALSE` to avoid this error.")
+            msg <- insight::format_message("Uncertainty estimates cannot be computed for `glmmTMB` models with the `REML=TRUE` option. Either set `REML=FALSE` when fitting the model, or set `vcov=FALSE` when calling a `marginaleffects` function to avoid this error.")
             stop(msg, call. = FALSE) 
         }
     }
