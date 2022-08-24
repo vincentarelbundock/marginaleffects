@@ -379,7 +379,7 @@ predictions <- function(model,
         draws <- draws[tmp$rowid > 0, , drop = FALSE]
     }
 
-    if (!is.null(transform_post)) {
+    if (!is.null(transform_post) && !is.null(draws)) {
         draws <- transform_post(draws)
     }
 
@@ -454,6 +454,7 @@ predictions <- function(model,
     out[["marginaleffects_wts_internal"]] <- NULL
 
     # transform already applied to bayesian draws before computing confidence interval
+    # after rename to estimate
     if (is.null(draws) && !is.null(transform_post)) {
         out <- backtransform(out, transform_post = transform_post)
     }

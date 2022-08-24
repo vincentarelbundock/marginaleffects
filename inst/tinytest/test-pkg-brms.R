@@ -32,6 +32,11 @@ brms_vdem <- download_model("brms_vdem")
 brms_lognormal_hurdle <- download_model("brms_lognormal_hurdle")
 brms_lognormal_hurdle2 <- download_model("brms_lognormal_hurdle2")
 brms_binomial <- download_model("brms_binomial")
+brms_mixed_3 <- insight::download_model("brms_mixed_3")
+brms_mv_1 <- download_model("brms_mv_1")
+brms_vdem <- download_model("brms_vdem")
+brms_ordinal_1 <- insight::download_model("brms_ordinal_1")
+brms_categorical_1 <- download_model("brms_categorical_1")
 
 
 
@@ -93,42 +98,40 @@ expect_equivalent(nrow(mfx), nrow(attr(mfx, "posterior_draws")))
 
 
 # predictions: hypothetical group
-mod <- insight::download_model("brms_mixed_3")
-nd <- suppressWarnings(datagrid(model = mod, grp = 4, subgrp = 12))
+nd <- suppressWarnings(datagrid(model = brms_mixed_3, grp = 4, subgrp = 12))
 nd$Subject <- 1000
 set.seed(1024)
-p1 <- predictions(mod, newdata = nd, allow_new_levels = TRUE)
+p1 <- predictions(brms_mixed_3, newdata = nd, allow_new_levels = TRUE)
 set.seed(1024)
-p2 <- predictions(mod, newdata = nd, allow_new_levels = TRUE, sample_new_levels = "gaussian")
+p2 <- predictions(brms_mixed_3, newdata = nd, allow_new_levels = TRUE, sample_new_levels = "gaussian")
 set.seed(1024)
-p3 <- predictions(mod, newdata = nd, allow_new_levels = TRUE, sample_new_levels = "uncertainty")
+p3 <- predictions(brms_mixed_3, newdata = nd, allow_new_levels = TRUE, sample_new_levels = "uncertainty")
 expect_false(any(p1$predicted == p2$predicted))
 expect_equivalent(p1, p3)
 expect_inherits(posteriordraws(p3), "data.frame")
 
 
 # predictions w/ random effects
-mod <- insight::download_model("brms_mixed_3")
 
 # link
-w <- apply(posterior_linpred(mod), 2, stats::median)
-x <- get_predict(mod, type = "link")
-y <- predictions(mod, type = "link")
+w <- apply(posterior_linpred(brms_mixed_3), 2, stats::median)
+x <- get_predict(brms_mixed_3, type = "link")
+y <- predictions(brms_mixed_3, type = "link")
 expect_equivalent(w, x$predicted)
 expect_equivalent(w, y$predicted)
 
 # response
-w <- apply(posterior_epred(mod), 2, stats::median)
-x <- get_predict(mod, type = "response")
-y <- predictions(mod, type = "response")
+w <- apply(posterior_epred(brms_mixed_3), 2, stats::median)
+x <- get_predict(brms_mixed_3, type = "response")
+y <- predictions(brms_mixed_3, type = "response")
 expect_equivalent(w, x$predicted)
 expect_equivalent(w, y$predicted)
 
 # no random effects
-w1 <- apply(posterior_epred(mod), 2, stats::median)
-w2 <- apply(posterior_epred(mod, re_formula = NA), 2, stats::median)
-x <- get_predict(mod, re_formula = NA, type = "response")
-y <- predictions(mod, re_formula = NA, type = "response")
+w1 <- apply(posterior_epred(brms_mixed_3), 2, stats::median)
+w2 <- apply(posterior_epred(brms_mixed_3, re_formula = NA), 2, stats::median)
+x <- get_predict(brms_mixed_3, re_formula = NA, type = "response")
+y <- predictions(brms_mixed_3, re_formula = NA, type = "response")
 expect_true(all(w1 != w2))
 expect_equivalent(w2, x$predicted)
 expect_equivalent(w2, y$predicted)
@@ -144,8 +147,7 @@ expect_warning(predictions(brms_cumulative_random, include_random = FALSE)) # on
 
 
 # marginaleffects: ordinal no validity
-mod <- insight::download_model("brms_ordinal_1")
-expect_marginaleffects(mod, se = FALSE)
+expect_marginaleffects(brms_ordinal_1, se = FALSE)
 
 
 # predict new unit: no validity
@@ -319,18 +321,17 @@ expect_equivalent(nrow(contr2), 15)
 
 
 # multivariate outcome
-mod <- download_model("brms_mv_1")
 
-beta <- get_coef(mod)
+beta <- get_coef(brms_mv_1)
 expect_equivalent(length(beta), 12)
 
-mfx <- marginaleffects(mod)
+mfx <- marginaleffects(brms_mv_1)
 expect_inherits(mfx, "marginaleffects")
 
-pred <- predictions(mod)
+pred <- predictions(brms_mv_1)
 expect_inherits(pred, "predictions")
 
-comp <- comparisons(mod)
+comp <- comparisons(brms_mv_1)
 expect_inherits(comp, "comparisons")
 
 draws <- posteriordraws(mfx)
@@ -338,15 +339,13 @@ expect_inherits(draws, "data.frame")
 expect_true(all(c("drawid", "draw", "rowid") %in% colnames(draws)))
 
 # categorical outcome
-mod <- download_model("brms_categorical_1")
-
-mfx <- marginaleffects(mod)
+mfx <- marginaleffects(brms_categorical_1)
 expect_inherits(mfx, "marginaleffects")
 
-pred <- predictions(mod)
+pred <- predictions(brms_categorical_1)
 expect_inherits(pred, "predictions")
 
-comp <- comparisons(mod)
+comp <- comparisons(brms_categorical_1)
 expect_inherits(comp, "comparisons")
 
 draws <- posteriordraws(mfx)
@@ -355,20 +354,21 @@ expect_true(all(c("drawid", "draw", "rowid") %in% colnames(draws)))
 
 
 # vignette vdem example
-brms_vdem <- download_model("brms_vdem")
 p_response <- predictions(
-brms_vdem,
-type = "response",
-newdata = datagrid(party_autonomy = c(TRUE, FALSE),
-                   civil_liberties = .5,
-                   region = "Middle East and North Africa"))
+    brms_vdem,
+    type = "response",
+    newdata = datagrid(
+        party_autonomy = c(TRUE, FALSE),
+        civil_liberties = .5,
+        region = "Middle East and North Africa"))
 expect_predictions(p_response, se = FALSE)
 p_prediction <- predictions(
-brms_vdem,
-type = "prediction",
-newdata = datagrid(party_autonomy = c(TRUE, FALSE),
-                   civil_liberties = .5,
-                   region = "Middle East and North Africa"))
+    brms_vdem,
+    type = "prediction",
+    newdata = datagrid(
+        party_autonomy = c(TRUE, FALSE),
+        civil_liberties = .5,
+        region = "Middle East and North Africa"))
 expect_predictions(p_prediction, se = FALSE)
 
 

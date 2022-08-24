@@ -70,14 +70,18 @@ tidy.deltamethod <- function(x, ...) {
 #'
 #' @param x An object produced by the `marginalmeans` function.
 #' @inheritParams tidy.marginaleffects
+#' @inheritParams tidy.comparisons
 #' @return A "tidy" `data.frame` of summary statistics which conforms to the
 #' `broom` package specification.
 #' @family summary
 #' @export
 tidy.marginalmeans <- function(x,
                                conf_level = 0.95,
+                               transform_avg = NULL,
                                ...) {
 
+
+    checkmate::assert_function(transform_avg, null.ok = TRUE)
 
     conf_level <- sanitize_conf_level(conf_level, ...)
     out <- x
@@ -91,6 +95,15 @@ tidy.marginalmeans <- function(x,
         conf_level = conf_level,
         draws = draws,
         estimate = "estimate")
+
+    # back transformation
+    if (!is.null(transform_avg)) {
+        if (!is.null(attr(x, "transform_post"))) {
+            msg <- "Estimates were transformed twice: once during the initial computation, and once more when summarizing the results in `tidy()` or `summary()`."
+            warning(insight::format_message(msg), call. = FALSE)
+        }
+        out <- backtransform(out, transform_avg)
+    }
 
     # sort and subset columns
     cols <- c("type", "term", "value", "estimate", "std.error", "statistic", "p.value", "conf.low", "conf.high")
@@ -111,6 +124,7 @@ tidy.marginalmeans <- function(x,
 #'
 #' @param x An object produced by the `predictions` function.
 #' @inheritParams predictions
+#' @inheritParams tidy.comparisons
 #' @return A "tidy" `data.frame` of summary statistics which conforms to the
 #' `broom` package specification.
 #' @family summary
@@ -121,7 +135,10 @@ tidy.marginalmeans <- function(x,
 #' tidy(mfx)
 tidy.predictions <- function(x,
                              conf_level = 0.95,
+                             transform_avg = NULL,
                              ...) {
+
+    checkmate::assert_function(transform_avg, null.ok = TRUE)
 
     # I left the `by` code below in case I eventually want to revert. Much
     # of it needs to stay anyway because we need the `delta` in `tidy` for
@@ -189,7 +206,18 @@ tidy.predictions <- function(x,
 
     setnames(x_dt, old = "predicted", new = "estimate")
 
+    # confidence intervals
     out <- get_ci(x_dt, estimate = "estimate", conf_level = conf_level)
+
+    # back transformation
+    if (!is.null(transform_avg)) {
+        if (!is.null(attr(x, "transform_post"))) {
+            msg <- "Estimates were transformed twice: once during the initial computation, and once more when summarizing the results in `tidy()` or `summary()`."
+            warning(insight::format_message(msg), call. = FALSE)
+        }
+        out <- backtransform(out, transform_avg)
+    }
+
     return(out)
 }
 
@@ -200,7 +228,7 @@ tidy.predictions <- function(x,
 #' unit-level contrasts computed by the `predictions` function.
 #'
 #' @param x An object produced by the `comparisons` function.
-#' @param transform_avg (experimental) A function applied to the estimates and confidence intervals *after* the unit-level estimates have been averaged.
+#' @param transform_avg A function applied to the estimates and confidence intervals *after* the unit-level estimates have been averaged.
 #' @inheritParams comparisons
 #' @inheritParams tidy.marginaleffects
 #' @return A "tidy" `data.frame` of summary statistics which conforms to the
@@ -390,8 +418,9 @@ tidy.comparisons <- function(x,
 
     # back transformation
     if (!is.null(transform_avg)) {
-        if (!is.null(attr(x, "transform_avg"))) {
-            warning("Estimates were transformed twice: once during the initial computation, and once more when summarizing the results in `tidy()` or `summary()`.", call. = FALSE)
+        if (!is.null(attr(x, "transform_post"))) {
+            msg <- "Estimates were transformed twice: once during the initial computation, and once more when summarizing the results in `tidy()` or `summary()`."
+            warning(insight::format_message(msg), call. = FALSE)
         }
         out <- backtransform(out, transform_avg)
     }

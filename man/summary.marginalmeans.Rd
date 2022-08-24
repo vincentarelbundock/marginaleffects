@@ -4,10 +4,12 @@
 \alias{summary.marginalmeans}
 \title{Summarize a \code{marginalmeans} object}
 \usage{
-\method{summary}{marginalmeans}(object, conf_level = 0.95, ...)
+\method{summary}{marginalmeans}(object, transform_avg = NULL, conf_level = 0.95, ...)
 }
 \arguments{
 \item{object}{An object produced by the \code{marginalmeans} function}
+
+\item{transform_avg}{A function applied to the estimates and confidence intervals \emph{after} the unit-level estimates have been averaged.}
 
 \item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
 
