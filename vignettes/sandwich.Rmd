@@ -87,6 +87,7 @@ One special case is when we use the the `tidy()` or `summary()` functions to com
 
 ```{r}
 library(insight)
+library(marginaleffects)
 
 # simulate data
 set.seed(1024)

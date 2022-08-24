@@ -243,7 +243,7 @@ dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/ggplot2movie
                              TRUE ~ "Other"),
            style = factor(style),
            certified_fresh = rating >= 8) %>%
-    filter(length < 240)
+    dplyr::filter(length < 240)
 
 mod <- glm(certified_fresh ~ length * style, data = dat, family = binomial)
 ```
