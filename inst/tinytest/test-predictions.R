@@ -58,6 +58,7 @@ expect_true(p2$conf.high < 1)
 ################
 
 # conf.level argument changes width of interval
+mod <- lm(mpg ~ hp + am, mtcars)
 for (L in c(.4, .7, .9, .95, .99, .999)) {
     nd <- datagrid(model = mod)
     unknown <- predictions(mod, newdata = nd, conf.level = L)
@@ -70,7 +71,7 @@ for (L in c(.4, .7, .9, .95, .99, .999)) {
 #################################
 #  average adjusted predictions #
 #################################
-dadat <- mtcars
+dat <- mtcars
 dat$w <- 1:32
 mod <- lm(mpg ~ hp + am, dat)
 pre1 <- predictions(mod, by = "am")
