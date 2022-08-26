@@ -50,11 +50,30 @@ get_predict.multinom <- function(model,
 
     type <- sanitize_type(model, type)
 
+    if (isTRUE(type == "latent")) {
+        latent <- TRUE
+        type <- "link"
+    } else {
+        latent <- FALSE
+    }
+
     # needed because `predict.multinom` uses `data` rather than `newdata`
     pred <- stats::predict(model,
                            newdata = newdata,
                            type = type,
                            ...)
+
+    if (isTRUE(latent)) {
+        missing_level <- as.character(unique(insight::get_response(model)))
+        missing_level <- setdiff(missing_level, colnames(pred))
+        if (length(missing_level == 1)) {
+            pred <- cbind(0, pred)
+            colnames(pred)[1] <- missing_level
+            pred <- pred - rowMeans(pred)
+        } else {
+            stop("Unable to compute predictions on the latent scale.", call. = FALSE)
+        }
+    }
 
     # atomic vector means there is only one row in `newdata`
     if (isTRUE(checkmate::check_atomic_vector(pred))) {

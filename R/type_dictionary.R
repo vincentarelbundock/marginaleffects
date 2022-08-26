@@ -84,8 +84,10 @@ lmrob,response,expectation,TRUE,TRUE
 lm_robust,response,expectation,TRUE,TRUE
 mblogit,response,expectation,TRUE,TRUE
 mblogit,link,link,TRUE,TRUE
+mblogit,latent,,TRUE,TRUE
 mclogit,link,link,TRUE,TRUE
 mclogit,response,expectation,FALSE,TRUE
+mclogit,latent,,TRUE,TRUE
 multinom,probs,expectation,TRUE,TRUE
 mhurdle,E,NA,TRUE,TRUE
 mhurdle,Ep,NA,TRUE,TRUE
