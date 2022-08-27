@@ -138,4 +138,3 @@ void <- capture.output(
 )
 mfx <- marginaleffects(model, type = "probs")
 expect_inherits(mfx, "marginaleffects")
-

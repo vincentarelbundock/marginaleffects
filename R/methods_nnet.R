@@ -50,12 +50,17 @@ get_predict.multinom <- function(model,
 
     type <- sanitize_type(model, type)
 
-    if (isTRUE(type == "latent")) {
-        latent <- TRUE
+    is_latent <- is_mclogit <- is_nnet <- FALSE
+    if (isTRUE(type == "latent") && inherits(model, c("mblogit", "mclogit"))) {
+        is_latent <- TRUE
+        is_mclogit <- TRUE
         type <- "link"
-    } else {
-        latent <- FALSE
-    }
+
+    } else if (isTRUE(type == "latent") && inherits(model, "multinom")) {
+        is_latent <- TRUE
+        is_nnet <- TRUE
+        type <- "probs"
+    } 
 
     # needed because `predict.multinom` uses `data` rather than `newdata`
     pred <- stats::predict(model,
@@ -63,7 +68,7 @@ get_predict.multinom <- function(model,
                            type = type,
                            ...)
 
-    if (isTRUE(latent)) {
+    if (is_latent && is_mclogit) {
         missing_level <- as.character(unique(insight::get_response(model)))
         missing_level <- setdiff(missing_level, colnames(pred))
         if (length(missing_level == 1)) {
@@ -73,6 +78,13 @@ get_predict.multinom <- function(model,
         } else {
             stop("Unable to compute predictions on the latent scale.", call. = FALSE)
         }
+
+    } else if (is_latent && is_nnet) {
+        inverse_softMax <- function(mu) {
+            log_mu <- log(mu)
+            return(sweep(log_mu, 1, STATS = rowMeans(log_mu), FUN = "-"))
+        }
+        pred <- inverse_softMax(pred)
     }
 
     # atomic vector means there is only one row in `newdata`
