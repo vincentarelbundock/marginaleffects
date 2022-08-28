@@ -221,3 +221,39 @@ marginalmeans(mod,
               variables = c("x", "V1"),
               variables_grid = paste0("V", 2:3))
 ```
+
+
+# Plot conditional marginal means
+
+The `marginaleffects` package offers several functions to plot how some quantities vary as a function of others:
+
+* `plot_cap`: Conditional adjusted predictions -- how does the predicted outcome change as a function of regressors?
+* `plot_cco`: Conditional comparisons -- how do contrasts change as a function of regressors?
+* `plot_cme`: Conditional marginal effects -- how does the slope change as a function of regressors?
+
+There is no analogous function for marginal means. However, it is very easy to achieve a similar effect using the `predictions()` function, its `by` argument, and standard plotting functions. In the example below, we take these steps:
+
+1. Estimate a model with one continuous (`hp`) and one categorical regressor (`cyl`).
+1. Create a perfectly "balanced" data grid for each combination of `hp` and `cyl`. This is specified by the user in the `datagrid()` call.
+1. Compute fitted values (aka "adjusted predictions") for each cell of the grid.
+1. Use the `by` argument to take the average of predicted values for each value of `hp`, across margins of `cyl`.
+1. Compute standard errors around the averaged predicted values (i.e., marginal means).
+1. Create symmetric confidence intervals in the usual manner.
+1. Plot the results.
+
+```{r}
+library(ggplot2)
+
+mod <- lm(mpg ~ hp + factor(cyl), data = mtcars)
+
+p <- predictions(mod,
+    by = "hp",
+    newdata = datagrid(
+        model = mod,
+        hp = seq(100, 120, length.out = 10),
+        cyl = mtcars$cyl))
+
+ggplot(p) +
+    geom_ribbon(aes(hp, ymin = conf.low, ymax = conf.high), alpha = .2) +
+    geom_line(aes(hp, predicted))
+```
