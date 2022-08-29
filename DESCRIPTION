@@ -205,6 +205,8 @@ Collate:
     'sanity_dots.R'
     'summary.R'
     'tidy.R'
+    'tidy.comparisons.R'
+    'tidy.predictions.R'
     'type_dictionary.R'
     'unpack_matrix_cols.R'
     'utils_cjdt.R'

@@ -49,14 +49,8 @@ get_contrasts <- function(model,
     if (inherits(pred_lo$value, "data.frame")) pred_lo <- pred_lo$value
     if (inherits(pred_or$value, "data.frame")) pred_or <- pred_or$value
 
-
     if (!inherits(pred_hi, "data.frame") || !inherits(pred_lo, "data.frame")) {
-        msg <- format_msg(paste(
-        "Unable to compute adjusted predictions for this model. Either the
-        `newdata` does not meet the requirements of the model's `predict()`
-        method, or this model is not supported. If you believe this model
-        should be supported, you can file a report on the Github Issue Tracker:
-        https://github.com/vincentarelbundock/marginaleffects/issues"))
+        msg <- insight::format_message("Unable to compute adjusted predictions for this model. Either the `newdata` does not meet the requirements of the model's `predict()` method, or this model is not supported. If you believe this model should be supported, you can file a report on the Github Issue Tracker: https://github.com/vincentarelbundock/marginaleffects/issues")
         if (!is.null(pred_hi$error)) {
             msg <- paste(msg, "\n\nIn addition:", pred_lo$error)
         }

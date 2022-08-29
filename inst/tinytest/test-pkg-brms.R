@@ -525,3 +525,62 @@ expect_error(marginaleffects(brms_factor, by = "cyl_fac"), pattern = "supported"
 
 
 
+
+
+# interaction is same order of magnitude as frequentist
+library(brms)
+library(marginaleffects)
+dat <- mtcars
+dat$cyl <- as.factor(dat$cyl)
+
+conflicted::conflict_prefer("filter", "dplyr")
+modf <- glm(am ~ cyl * vs, data = dat, family = binomial)
+modb <- brm(am ~ cyl * vs, data = dat, family = bernoulli)
+
+cmpf <- comparisons(modf, variables = c("cyl", "vs"))
+cmpb <- comparisons(modb, variables = c("cyl", "vs"))
+
+summary(cmpf)
+summary(cmpb)
+
+summary(cmpf)
+summary(cmpb)
+
+pkgload::load_all()
+comparisons(modb) |> summary()
+
+
+library(marginaleffects)
+library(brms)
+dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/HistData/Guerry.csv")
+dat$Region <- factor(dat$Region)
+modf <- lm(Literacy ~ Donations * Region, data = dat)
+modb <- brm(Literacy ~ Donations * Region, data = dat)
+
+summary(modf)
+summary(modb)
+
+c1 <- comparisons(modf, variables = c("Donations", "Region"))
+c2 <- comparisons(modb, variables = c("Donations", "Region"))
+
+
+
+mod <- lm(mpg ~ am * factor(cyl), data = mtcars)
+
+library(dplyr)
+# brm()
+mod.b <- brm(
+  data = mtcars %>% 
+    mutate(cyl = factor(cyl)),
+  family = gaussian,
+  mpg ~ am * cyl,
+  cores = 4, seed = 1
+)
+
+c1 <- comparisons(mod, variables = c("am", "cyl"))
+
+pkgload::load_all()
+c2 <- comparisons(mod.b, variables = c("am", "cyl"))
+
+head(c1)
+head(c2)
