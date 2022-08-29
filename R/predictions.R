@@ -572,18 +572,11 @@ get_predictions <- function(model,
 
         # bayesian
         if (!is.null(draws)) {
-            # {collapse} package is fast and useful when operating on matrices
-            insight::check_if_installed("collapse")
-            g <- collapse::GRP(out, by = bycols)
-            w <- out[["marginaleffects_wts_internal"]]
-            draws <- collapse::fmean(
-                draws,
-                g = g,
-                w = w)
-            out <- data.table(
-                g[["groups"]],
-                predicted = apply(draws, 1, stats::median))
-            attr(out, "posterior_draws") <- draws
+            out <- average_draws(
+                data = out,
+                index = bycols,
+                draws = draws,
+                column = "predicted")
 
         # frequentist
         } else {

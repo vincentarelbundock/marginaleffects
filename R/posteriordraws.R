@@ -45,3 +45,36 @@ posteriordraws <- function(x) {
     setDF(out)
     return(out)
 }
+
+
+average_draws <- function(data, index, draws, column) {
+    insight::check_if_installed("collapse")
+    w <- data[["marginaleffects_wts_internal"]]
+    if (is.null(index)) {
+        index <- intersect(
+            colnames(data),
+            c("type"))
+    }
+    if (length(index) > 0) {
+        g <- collapse::GRP(data, by = index)
+        draws <- collapse::fmean(
+            draws,
+            g = g,
+            w = w,
+            drop = FALSE)
+        out <- data.table(
+            g[["groups"]],
+            average = apply(draws, 1, stats::median))
+    } else {
+
+        draws <- collapse::fmean(
+            draws,
+            w = w,
+            drop = FALSE)
+        out <- data.table(
+            average = apply(draws, 1, stats::median))
+    }
+    setnames(out, old = "average", new = column)
+    attr(out, "posterior_draws") <- draws
+    return(out)
+}
