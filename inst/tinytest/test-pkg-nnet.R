@@ -138,3 +138,9 @@ void <- capture.output(
 )
 mfx <- marginaleffects(model, type = "probs")
 expect_inherits(mfx, "marginaleffects")
+
+
+# bug: single row newdata produces vector
+mod <- nnet::multinom(factor(gear) ~ mpg, data = mtcars, trace = FALSE)
+p <- predictions(mod, newdata = head(mtcars, 1), type = "latent")
+expect_equivalent(nrow(p), 3)

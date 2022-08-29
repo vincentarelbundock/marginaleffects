@@ -68,6 +68,11 @@ get_predict.multinom <- function(model,
                            type = type,
                            ...)
 
+    # atomic vector means there is only one row in `newdata`
+    if (isTRUE(checkmate::check_atomic_vector(pred))) {
+        pred <- matrix(pred, nrow = 1, dimnames = list(NULL, names(pred)))
+    }
+
     if (is_latent && is_mclogit) {
         missing_level <- as.character(unique(insight::get_response(model)))
         missing_level <- setdiff(missing_level, colnames(pred))
@@ -87,10 +92,6 @@ get_predict.multinom <- function(model,
         pred <- inverse_softMax(pred)
     }
 
-    # atomic vector means there is only one row in `newdata`
-    if (isTRUE(checkmate::check_atomic_vector(pred))) {
-        pred <- matrix(pred, nrow = 1, dimnames = list(NULL, names(pred)))
-    }
 
     # matrix with outcome levels as columns
     out <- data.frame(
