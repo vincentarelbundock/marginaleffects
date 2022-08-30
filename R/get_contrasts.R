@@ -132,83 +132,25 @@ get_contrasts <- function(model,
         }
     }
 
+    draws <- attr(pred_lo, "posterior_draws")
+
     # frequentist
-    if (is.null(attr(pred_lo, "posterior_draws"))) {
-        draws <- NULL
+    if (is.null(draws)) {
+        draws_lo <- draws_hi <- draws_or <- NULL
 
     # bayes
     } else {
         draws_lo <- attr(pred_lo, "posterior_draws")
         draws_hi <- attr(pred_hi, "posterior_draws")
         draws_or <- attr(pred_or, "posterior_draws")
-
-        wrapfun <- function(fun, hi, lo, y, x, eps, wts) {
-            args <- list(
-                hi = hi,
-                lo = lo,
-                y = y,
-                x = x,
-                w = wts,
-                eps = eps)
-            args <- args[intersect(names(args), names(formals(fun)))]
-            out <- do.call("fun", args)
-            return(out)
-        }
-
-        # need to loop over columns for transform_pre with `mean()`, which
-        # takes the average of the whole matrix and returns a single
-        # numeric.
-        idx <- grep("^group$|^term$|^contrast", colnames(out), value = TRUE)
-        idx <- apply(out[, ..idx], 1, paste, collapse = "|")
-        draws <- list()
-        for (i in unique(idx)) {
-            idx2 <- i == idx
-            draws_lo_sub <- draws_lo[idx2, , drop = FALSE]
-            draws_hi_sub <- draws_hi[idx2, , drop = FALSE]
-            draws_or_sub <- draws_or[idx2, , drop = FALSE]
-            tn <- out[idx2, term][1]
-            x <- elasticities[[tn]]
-            x <- rep(x, times = nrow(draws_lo) / length(x))[idx2]
-            fun <- fun_list[[tn]]
-
-            draws_sub <- try(wrapfun(
-                fun = fun,
-                hi = draws_hi_sub,
-                lo = draws_lo_sub,
-                y = draws_or_sub,
-                x = x,
-                wts = out[idx2, marginaleffects_wts_internal],
-                eps = out[idx2, marginaleffects_eps]),
-                silent = TRUE)
-
-            # usually happens when `transform_pre` returns a unique value instead of a vector
-            if (!is.matrix(draws_sub)) {
-                draws_sub <- sapply(
-                    seq_len(ncol(draws_hi_sub)),
-                    function(j) wrapfun(
-                        fun = fun,
-                        hi = draws_hi_sub[, j],
-                        lo = draws_lo_sub[, j],
-                        y = draws_or_sub[, j],
-                        x = x,
-                        wts = out[idx2, marginaleffects_wts_internal],
-                        eps = out[idx2, marginaleffects_eps])
-                )
-                draws_sub <- matrix(draws_sub, nrow = 1)
-            }
-            draws <- append(draws, list(draws_sub))
-        }
-        draws <- do.call("rbind", draws)
     }
 
     out[, predicted_lo := pred_lo[["predicted"]]]
     out[, predicted_hi := pred_hi[["predicted"]]]
     out[, predicted := pred_or[["predicted"]]]
 
-
     # the `by` variables must be included for group-by data.table operations
     if (!is.null(by)) {
-
         bycols <- sort(setdiff(
             unique(c(colnames(out), colnames(newdata))),
             c("rowid", "rowidcf", "predicted", "predicted_lo", "predicted_hi", "dydx", "comparison")))
@@ -219,8 +161,7 @@ get_contrasts <- function(model,
         flagB2 <- checkmate::check_true("by" %in% colnames(by))
         flagB3 <- checkmate::check_true(all(setdiff(colnames(by), "by") %in% colnames(out)))
 
-        if (!(isTRUE(flagA1) && isTRUE(flagA2)) &&
-            !(isTRUE(flagB1) && isTRUE(flagB2) && isTRUE(flagB3))) {
+        if (!(isTRUE(flagA1) && isTRUE(flagA2)) && !(isTRUE(flagB1) && isTRUE(flagB2) && isTRUE(flagB3))) {
             msg <- c(
                 "The `by` argument must be either:", "",
                 sprintf("1. Character vector in which each element is part of: %s", bycols),
@@ -258,23 +199,31 @@ get_contrasts <- function(model,
         idx <- unique(c(idx, bycols))
     }
 
-    # we feed this column to safefun(), even if it is useless for categoricals
-    if (!"marginaleffects_eps" %in% colnames(out)) {
-        out[, "marginaleffects_eps" := NA]
-    }
-    if (!"marginaleffects_wts_internal" %in% colnames(out)) {
-        out[, "marginaleffects_wts_internal" := NA]
+    # we feed these columns to safefun(), even if they are useless for categoricals
+    if (!"marginaleffects_eps" %in% colnames(out)) out[, "marginaleffects_eps" := NA]
+    if (!"marginaleffects_wts_internal" %in% colnames(out))  out[, "marginaleffects_wts_internal" := NA]
+
+    if (isTRUE(marginalmeans)) {
+        out <- out[, .(
+            predicted_lo = mean(predicted_lo),
+            predicted_hi = mean(predicted_hi),
+            predicted = mean(predicted),
+            marginaleffects_eps = mean(marginaleffects_eps),
+            marginaleffects_wts_internal = mean(marginaleffects_wts_internal)),
+        by = idx]
     }
 
-    # do not feed unknown arguments to a `transform_pre`
-    safefun <- function(hi, lo, y, n, term, interaction, eps, wts, recycle = TRUE) {
+    # safe version of transform_pre
+    # unknown arguments
+    # singleton vs vector
+    # different terms use different functions
+    safefun <- function(hi, lo, y, n, term, interaction, eps, wts) {
         # when interaction=TRUE, sanitize_transform_pre enforces a single function
         if (isTRUE(interaction)) {
             fun <- fun_list[[1]]
         } else {
             fun <- fun_list[[term[1]]]
         }
-
         args <- list(
             "hi" = hi,
             "lo" = lo,
@@ -284,79 +233,54 @@ get_contrasts <- function(model,
             "x" = elasticities[[term[1]]])
         args <- args[names(args) %in% names(formals(fun))]
         con <- try(do.call("fun", args), silent = TRUE)
-        if (!isTRUE(checkmate::check_numeric(con, len = n)) &&
-        !isTRUE(checkmate::check_numeric(con, len = 1))) {
-            msg <- format_msg(
-                "The function supplied to the `transform_pre` argument must accept two numeric
-                vectors of predicted probabilities of length %s, and return a single numeric
-                value or a numeric vector of length %s, with no missing value.")
-            msg <- sprintf(msg, n, n)
-            stop(msg, call. = FALSE)
+        if (!isTRUE(checkmate::check_numeric(con, len = n)) && !isTRUE(checkmate::check_numeric(con, len = 1))) {
+            msg <- insight::format_message("The function supplied to the `transform_pre` argument must accept two numeric vectors of predicted probabilities of length %s, and return a single numeric value or a numeric vector of length %s, with no missing value.") #nolintr
+            stop(sprintf(msg, n, n), call. = FALSE)
         }
-
-        if (length(con) == 1 && recycle == FALSE) {
-             stop("no recycling allowed", call. = FALSE)
+        if (length(con) == 1) {
+            con <- c(con, rep(NA_real_, length(hi) - 1))
         }
-
-        out <- list(comparison = con)
-        return(out)
+        return(con)
     }
 
-    if (isTRUE(marginalmeans)) {
-        out <- out[, .(
-            predicted_lo = mean(predicted_lo),
-            predicted_hi = mean(predicted_hi),
-            predicted = mean(predicted),
-            eps = mean(marginaleffects_eps)),
-        by = idx][
-        , "comparison" := safefun(
+    # bayesian
+    if (!is.null(draws)) {
+        term_names <- unique(out$term)
+        # loop over columns (draws) and term names because different terms could use different functions 
+        for (tn in term_names) {
+            for (i in seq_len(ncol(draws))) {
+                idx <- out$term == tn
+                draws[idx, i] <- safefun(
+                    hi = draws_hi[idx, i],
+                    lo = draws_lo[idx, i],
+                    y = draws_or[idx, i],
+                    n = sum(idx),
+                    term = out$term[idx],
+                    interaction = interaction,
+                    wts = out$marginaleffects_wts_internal[idx],
+                    eps = out$marginaleffects_eps[idx])
+            }
+        }
+        # function returns unique value
+        draws <- draws[!is.na(draws[, 1]), , drop = FALSE]
+
+    # frequentist
+    } else {
+        # We want to write the "comparison" column in-place because it safer
+        # than group-merge; there were several bugs related to this in the past.
+        # safefun() returns 1 value and NAs when the function retunrs a
+        # singleton.
+        out[, "comparison" := safefun(
             hi = predicted_hi,
             lo = predicted_lo,
             y = predicted,
             n = .N,
             term = term,
             interaction = interaction,
-            wts = wts,
-            eps = eps)$comparison,
-        by = "term"]
-
-    } else {
-        # We want to write the "comparison" column in-place because it safer
-        # than group-merge; there were several bugs related to this in the
-        # past. However, we also want to avoid recycling and return a 1-row
-        # data frame when appropriate. The first call will error when safefun()
-        # returns a vector of length one. Then, we fallback on the group-merge
-        # strategy for 1-row output.
-        e <- tryCatch(
-            out[, "comparison" := safefun(
-                hi = predicted_hi,
-                lo = predicted_lo,
-                y = predicted,
-                n = .N,
-                term = term,
-                interaction = interaction,
-                wts = marginaleffects_wts_internal,
-                eps = marginaleffects_eps,
-                recycle = FALSE)$comparison,
-            by = idx]
-            , error = function(e) e)
-        if (inherits(e, "error")) {
-            if (identical(e$message, "no recycling allowed")) {
-                out <- out[, .(comparison = safefun(
-                    hi = predicted_hi,
-                    lo = predicted_lo,
-                    y = predicted,
-                    n = .N,
-                    term = term,
-                    interaction = interaction,
-                    wts = marginaleffects_wts_internal,
-                    eps = marginaleffects_eps,
-                    recycle = TRUE)$comparison),
-                by = idx]
-            } else {
-                stop(e$message, call. = FALSE)
-            }
-        }
+            wts = marginaleffects_wts_internal,
+            eps = marginaleffects_eps),
+        by = idx]
+        out <- out[!is.na(comparison)]
     }
 
     out <- get_hypothesis(out, hypothesis, column = "comparison", by = by)
@@ -366,4 +290,3 @@ get_contrasts <- function(model,
     attr(out, "original") <- original
     return(out)
 }
-

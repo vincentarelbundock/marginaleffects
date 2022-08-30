@@ -29,7 +29,6 @@ expect_true(all(cmp2$comparison != cmp1$comparison))
 
 
 # newdata = 'marginalmeans'
-
 dat <- mtcars
 dat$gear <- factor(dat$gear)
 dat$cyl <- factor(dat$cyl)
