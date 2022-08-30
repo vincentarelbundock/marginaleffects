@@ -437,7 +437,6 @@ comparisons <- function(model,
         setDF(out)
     }
 
-    class(out) <- c("comparisons", class(out))
     out <- set_attributes(
         out,
         get_attributes(newdata, include_regex = "^newdata"))
@@ -462,5 +461,6 @@ comparisons <- function(model,
         }
     }
 
+    class(out) <- c("comparisons", class(out))
     return(out)
 }

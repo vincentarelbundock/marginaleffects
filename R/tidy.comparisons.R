@@ -58,14 +58,6 @@ tidy.comparisons <- function(x,
         oldname = "transform_post",
         ...)
 
-    # we only know the delta method formula for the average marginal effect,
-    # not for arbitrary functions
-    include_se <- TRUE
-
-    # custom summary function
-    FUN_label <- "mean"
-
-
     x_dt <- data.table(x)
 
     marginaleffects_wts_internal <- attr(x, "weights")
@@ -76,7 +68,6 @@ tidy.comparisons <- function(x,
                 grep("^contrast_\\w+", colnames(x_dt), value = TRUE))
     idx_by <- intersect(idx_by, colnames(x_dt))
     idx_na <- is.na(x_dt$comparison)
-
 
     # do not use the standard errors if we already have the final number of rows (e.g., lnoravg)
     flag_delta <- nrow(unique(x_dt[, ..idx_by])) != nrow(x_dt)
@@ -128,39 +119,36 @@ tidy.comparisons <- function(x,
 
             J <- data.table(idx_pad, J)
 
-            J <- J[idx_na == FALSE,]
-            x_dt <- x_dt[idx_na == FALSE,]
-
+            J <- J[idx_na == FALSE, ]
+            x_dt <- x_dt[idx_na == FALSE, ]
 
             tmp <- paste0(idx_by, "_marginaleffects_index")
 
-            if (isTRUE(include_se)) {
-                if (is.null(marginaleffects_wts_internal)) {
-                    J_mean <- J[, lapply(.SD, mean, na.rm = TRUE), by = tmp]
-                } else {
-                    J[, "marginaleffects_wts_internal" := marginaleffects_wts_internal]
-                    J_mean <- J[,
-                    lapply(.SD,
-                           stats::weighted.mean,
-                           w = marginaleffects_wts_internal,
-                           na.rm = TRUE),
-                    by = tmp]
-                }
-                if ("marginaleffects_wts_internal" %in% colnames(J_mean)) {
-                    tmp <- c("marginaleffects_wts_internal", tmp)
-                }
-                J_mean <- J_mean[, !..tmp]
-                J_mean <- as.matrix(J_mean)
-
-                # HACK: align J_mean and V if they don't match
-                if (all(colnames(J_mean) %in% colnames(V))) {
-                    V <- V[colnames(J_mean), colnames(J_mean)]
-                }
-
-                # standard errors at the group mean
-                se <- sqrt(colSums(t(J_mean %*% V) * t(J_mean)))
-                ame[, std.error := se]
+            if (is.null(marginaleffects_wts_internal)) {
+                J_mean <- J[, lapply(.SD, mean, na.rm = TRUE), by = tmp]
+            } else {
+                J[, "marginaleffects_wts_internal" := marginaleffects_wts_internal]
+                J_mean <- J[,
+                lapply(.SD,
+                        stats::weighted.mean,
+                        w = marginaleffects_wts_internal,
+                        na.rm = TRUE),
+                by = tmp]
             }
+            if ("marginaleffects_wts_internal" %in% colnames(J_mean)) {
+                tmp <- c("marginaleffects_wts_internal", tmp)
+            }
+            J_mean <- J_mean[, !..tmp]
+            J_mean <- as.matrix(J_mean)
+
+            # HACK: align J_mean and V if they don't match
+            if (all(colnames(J_mean) %in% colnames(V))) {
+                V <- V[colnames(J_mean), colnames(J_mean)]
+            }
+
+            # standard errors at the group mean
+            se <- sqrt(colSums(t(J_mean %*% V) * t(J_mean)))
+            ame[, std.error := se]
         }
 
     } else {
@@ -201,7 +189,7 @@ tidy.comparisons <- function(x,
     setDF(out)
 
     attr(out, "conf_level") <- conf_level
-    attr(out, "FUN") <- FUN_label
+    attr(out, "FUN") <- "mean"
 
     if (exists("drawavg")) {
         class(drawavg) <- c("posterior_draws", class(drawavg))
@@ -211,6 +199,7 @@ tidy.comparisons <- function(x,
     if (exists("J_mean")) {
         attr(out, "jacobian") <- J_mean
     }
+
 
     return(out)
 }

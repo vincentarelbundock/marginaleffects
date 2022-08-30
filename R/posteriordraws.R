@@ -5,16 +5,9 @@
 #' @export
 posteriordraws <- function(x) {
 
-    # tidy.comparisons() saves draws in a nice format already
+    # tidy.comparisons() sometimes already saves draws in a nice long format
     draws <- attr(x, "posterior_draws")
-
     if (inherits(draws, "posterior_draws")) return(draws)
-
-    if (!inherits(x, "marginaleffects") && !inherits(x, "predictions") && !inherits(x, "comparisons")) {
-        warning('The `posteriordraws` function only supports objects of type "marginaleffects", "comparisons", or "predictions" produced by the `marginaleffects` package.',
-                call. = FALSE)
-        return(x)
-    }
 
     if (is.null(attr(x, "posterior_draws"))) {
         warning('This object does not include a "posterior_draws" attribute. The `posteriordraws` function only supports bayesian models produced by the `marginaleffects` or `predictions` functions of the `marginaleffects` package.',
@@ -50,11 +43,11 @@ posteriordraws <- function(x) {
 average_draws <- function(data, index, draws, column) {
     insight::check_if_installed("collapse")
     w <- data[["marginaleffects_wts_internal"]]
+
     if (is.null(index)) {
-        index <- intersect(
-            colnames(data),
-            c("type"))
+        index <- intersect(colnames(data), "type")
     }
+
     if (length(index) > 0) {
         g <- collapse::GRP(data, by = index)
         draws <- collapse::fmean(
@@ -65,15 +58,15 @@ average_draws <- function(data, index, draws, column) {
         out <- data.table(
             g[["groups"]],
             average = apply(draws, 1, stats::median))
-    } else {
 
+    } else {
         draws <- collapse::fmean(
             draws,
             w = w,
             drop = FALSE)
-        out <- data.table(
-            average = apply(draws, 1, stats::median))
+        out <- data.table(average = apply(draws, 1, stats::median))
     }
+
     setnames(out, old = "average", new = column)
     attr(out, "posterior_draws") <- draws
     return(out)

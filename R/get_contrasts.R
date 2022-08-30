@@ -259,7 +259,16 @@ get_contrasts <- function(model,
             }
         }
         # function returns unique value
-        draws <- draws[!is.na(draws[, 1]), , drop = FALSE]
+        idx <- !is.na(draws[, 1])
+        draws <- draws[idx, , drop = FALSE]
+
+        # if transform_pre returns a single value, then we padded with NA. That
+        # also means we don't want `rowid` otherwise we will merge and have
+        # useless duplicates.
+        if (any(!idx)) {
+            out[, "rowid" := NULL]
+            out <- out[idx, , drop = FALSE]
+        }
 
     # frequentist
     } else {

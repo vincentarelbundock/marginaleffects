@@ -525,7 +525,9 @@ get_predictions <- function(model,
 
     # unpad factors before averaging
     if ("rowid" %in% colnames(out)) {
-        out <- out[rowid > 0, drop = FALSE]
+        idx <- out$rowid > 0
+        out <- out[idx, drop = FALSE]
+        draws <- draws[idx, , drop = FALSE]
     }
 
     # averaging by groups
@@ -598,10 +600,12 @@ get_predictions <- function(model,
 
     if (!is.null(hypothesis)) {
         out <- get_hypothesis(out, hypothesis, column = "predicted", by = by)
-        draws <- attr(out, "posterior_draws")
     }
 
-    attr(out, "posterior_draws") <- draws
+    # do not overwrite what we did in the `by` if{}
+    if (is.null(attr(out, "posterior_draws"))) {
+        attr(out, "posterior_draws") <- draws
+    }
 
     return(out)
 }

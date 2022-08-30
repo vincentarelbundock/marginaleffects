@@ -39,12 +39,6 @@ brms_ordinal_1 <- insight::download_model("brms_ordinal_1")
 brms_categorical_1 <- download_model("brms_categorical_1")
 
 
-
-
-# warning: weights not supported
-cmp <- comparisons(brms_numeric, wts = mtcars$cyl)
-expect_warning(tidy(cmp), pattern = "Weights")
-
 # average marginal effects brmsmargins
 options("marginaleffects_credible_interval" = "eti")
 h <- 5e-5
@@ -58,7 +52,7 @@ bm <- data.frame(bm$ContrastSummary)
 mfx <- marginaleffects(brms_numeric)
 mfx <- tidy(mfx)
 
-expect_equivalent(mean(posteriordraws(mfx)$estimate), bm$M, tolerance = tol)
+expect_equivalent(mean(posteriordraws(mfx)$draw), bm$M, tolerance = tol)
 expect_equivalent(mfx$conf.low, bm$LL, tolerance = tol)
 expect_equivalent(mfx$conf.high, bm$UL, tolerance = tol)
 
@@ -527,60 +521,60 @@ expect_error(marginaleffects(brms_factor, by = "cyl_fac"), pattern = "supported"
 
 
 
-# interaction is same order of magnitude as frequentist
-library(brms)
-library(marginaleffects)
-dat <- mtcars
-dat$cyl <- as.factor(dat$cyl)
+# # interaction is same order of magnitude as frequentist
+# library(brms)
+# library(marginaleffects)
+# dat <- mtcars
+# dat$cyl <- as.factor(dat$cyl)
 
-conflicted::conflict_prefer("filter", "dplyr")
-modf <- glm(am ~ cyl * vs, data = dat, family = binomial)
-modb <- brm(am ~ cyl * vs, data = dat, family = bernoulli)
+# conflicted::conflict_prefer("filter", "dplyr")
+# modf <- glm(am ~ cyl * vs, data = dat, family = binomial)
+# modb <- brm(am ~ cyl * vs, data = dat, family = bernoulli)
 
-cmpf <- comparisons(modf, variables = c("cyl", "vs"))
-cmpb <- comparisons(modb, variables = c("cyl", "vs"))
+# cmpf <- comparisons(modf, variables = c("cyl", "vs"))
+# cmpb <- comparisons(modb, variables = c("cyl", "vs"))
 
-summary(cmpf)
-summary(cmpb)
+# summary(cmpf)
+# summary(cmpb)
 
-summary(cmpf)
-summary(cmpb)
+# summary(cmpf)
+# summary(cmpb)
 
-pkgload::load_all()
-comparisons(modb) |> summary()
-
-
-library(marginaleffects)
-library(brms)
-dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/HistData/Guerry.csv")
-dat$Region <- factor(dat$Region)
-modf <- lm(Literacy ~ Donations * Region, data = dat)
-modb <- brm(Literacy ~ Donations * Region, data = dat)
-
-summary(modf)
-summary(modb)
-
-c1 <- comparisons(modf, variables = c("Donations", "Region"))
-c2 <- comparisons(modb, variables = c("Donations", "Region"))
+# pkgload::load_all()
+# comparisons(modb) |> summary()
 
 
+# library(marginaleffects)
+# library(brms)
+# dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/HistData/Guerry.csv")
+# dat$Region <- factor(dat$Region)
+# modf <- lm(Literacy ~ Donations * Region, data = dat)
+# modb <- brm(Literacy ~ Donations * Region, data = dat)
 
-mod <- lm(mpg ~ am * factor(cyl), data = mtcars)
+# summary(modf)
+# summary(modb)
 
-library(dplyr)
-# brm()
-mod.b <- brm(
-  data = mtcars %>% 
-    mutate(cyl = factor(cyl)),
-  family = gaussian,
-  mpg ~ am * cyl,
-  cores = 4, seed = 1
-)
+# c1 <- comparisons(modf, variables = c("Donations", "Region"))
+# c2 <- comparisons(modb, variables = c("Donations", "Region"))
 
-c1 <- comparisons(mod, variables = c("am", "cyl"))
 
-pkgload::load_all()
-c2 <- comparisons(mod.b, variables = c("am", "cyl"))
 
-head(c1)
-head(c2)
+# mod <- lm(mpg ~ am * factor(cyl), data = mtcars)
+
+# library(dplyr)
+# # brm()
+# mod.b <- brm(
+#   data = mtcars %>% 
+#     mutate(cyl = factor(cyl)),
+#   family = gaussian,
+#   mpg ~ am * cyl,
+#   cores = 4, seed = 1
+# )
+
+# c1 <- comparisons(mod, variables = c("am", "cyl"))
+
+# pkgload::load_all()
+# c2 <- comparisons(mod.b, variables = c("am", "cyl"))
+
+# head(c1)
+# head(c2)
