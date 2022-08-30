@@ -428,7 +428,7 @@ comparisons(
     summary(transform_avg = exp)
 ```
 
-Since the `exp` function is now passed to the `transform_avg` argument of `summary()` function, the exponentiation is now done only *after* unit-level contrasts have been averaged. This is what `Stata` appears to does under the hood, and the results are slightly different.
+Since the `exp` function is now passed to the `transform_avg` argument of `summary()` function, the exponentiation is now done only *after* unit-level contrasts have been averaged. This is what `Stata` appears to do under the hood, and the results are slightly different.
 
 ```{r}
 comparisons(
