@@ -26,30 +26,26 @@ get_contrasts <- function(model,
         type = type,
         vcov = FALSE,
         newdata = lo,
-        ...))
+        ...))[["value"]]
 
     pred_hi <- myTryCatch(get_predict(
         model,
         type = type,
         vcov = FALSE,
         newdata = hi,
-        ...))
+        ...))[["value"]]
 
     pred_or <- myTryCatch(get_predict(
         model,
         type = type,
         vcov = FALSE,
         newdata = original,
-        ...))
+        ...))[["value"]]
 
     # lots of indexing later requires a data.table
     setDT(original)
 
-    if (inherits(pred_hi$value, "data.frame")) pred_hi <- pred_hi$value
-    if (inherits(pred_lo$value, "data.frame")) pred_lo <- pred_lo$value
-    if (inherits(pred_or$value, "data.frame")) pred_or <- pred_or$value
-
-    if (!inherits(pred_hi, "data.frame") || !inherits(pred_lo, "data.frame")) {
+    if (!inherits(pred_hi, "data.frame") || !inherits(pred_lo, "data.frame") || !inherits(pred_or, "data.frame")) {
         msg <- insight::format_message("Unable to compute adjusted predictions for this model. Either the `newdata` does not meet the requirements of the model's `predict()` method, or this model is not supported. If you believe this model should be supported, you can file a report on the Github Issue Tracker: https://github.com/vincentarelbundock/marginaleffects/issues")
         if (!is.null(pred_hi$error)) {
             msg <- paste(msg, "\n\nIn addition:", pred_lo$error)
@@ -112,8 +108,9 @@ get_contrasts <- function(model,
         "eyexavg",
         "eydxavg",
         "dyexavg")
-    fun <- function(x) is.character(x$transform_pre) && x$transform_pre %in% elasticities
-    elasticities <- Filter(fun, variables)
+    elasticities <- Filter(
+        function(x) is.character(x$transform_pre) && x$transform_pre %in% elasticities,
+        variables)
     elasticities <- lapply(elasticities, function(x) x$name)
     if (length(elasticities) > 0) {
         for (v in names(elasticities)) {
@@ -280,6 +277,13 @@ get_contrasts <- function(model,
             wts = marginaleffects_wts_internal,
             eps = marginaleffects_eps),
         by = idx]
+
+        # if transform_pre returns a single value, then we padded with NA. That
+        # also means we don't want `rowid` otherwise we will merge and have
+        # useless duplicates.
+        if (any(is.na(out$comparison))) {
+            out[, "rowid" := NULL]
+        }
         out <- out[!is.na(comparison)]
     }
 
