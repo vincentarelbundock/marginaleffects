@@ -20,13 +20,6 @@ mfx <- marginaleffects(
     newdata = datagridcf(age3 = c("[0,25)","[25,50)","[50,80]")))
 expect_equivalent(nrow(mfx), 9)
 
-# error: bad type
-dat <- read.csv(testing_path("stata/databases/MASS_polr_01.csv"))
-void <- capture.output(
-    mod <- nnet::multinom(factor(y) ~ x1 + x2, data = dat, quiet = true)
-)
-expect_error(marginaleffects(mod), pattern = "must be an element")
-
 
 # multinom basic
 dat <- read.csv(testing_path("stata/databases/MASS_polr_01.csv"))

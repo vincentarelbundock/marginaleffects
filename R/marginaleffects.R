@@ -197,7 +197,7 @@ marginaleffects <- function(model,
                             variables = NULL,
                             vcov = TRUE,
                             conf_level = 0.95,
-                            type = "response",
+                            type = NULL,
                             slope = "dydx",
                             by = NULL,
                             wts = NULL,
@@ -237,7 +237,7 @@ marginaleffects <- function(model,
     # sanity checks and pre-processing
     model <- sanitize_model(model = model, newdata = newdata, wts = wts, vcov = vcov, calling_function = "marginaleffects", ...)
     sanity_dots(model = model, calling_function = "marginaleffects", ...)
-    sanitize_type(model = model, type = type, calling_function = "marginaleffects")
+    type <- sanitize_type(model = model, type = type, calling_function = "marginaleffects")
 
     out <- comparisons(
         model,

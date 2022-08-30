@@ -10,7 +10,7 @@ meffects(
   variables = NULL,
   vcov = TRUE,
   conf_level = 0.95,
-  type = "response",
+  type = NULL,
   slope = "dydx",
   by = NULL,
   wts = NULL,

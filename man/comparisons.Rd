@@ -8,7 +8,7 @@ comparisons(
   model,
   newdata = NULL,
   variables = NULL,
-  type = "response",
+  type = NULL,
   vcov = TRUE,
   conf_level = 0.95,
   transform_pre = "difference",

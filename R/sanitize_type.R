@@ -7,14 +7,24 @@
 #' @noRd
 sanitize_type <- function(model, type, calling_function = NULL) {
 
-    checkmate::assert_character(type, len = 1, null.ok = FALSE)
+    checkmate::assert_character(type, len = 1, null.ok = TRUE)
     checkmate::assert_choice(calling_function,
-                             choices = c("comparisons", "marginaleffects", "predictions"),
+                             choices = c("comparisons", "marginaleffects", "predictions", "marginalmeans"),
                              null.ok = TRUE)
 
     model_class <- class(model)[1]
 
     dict <- type_dictionary
+
+    # default is the first type listed in type_dictionary
+    if (is.null(type)) {
+        idx <- match(model_class, dict$class)
+        if (!is.na(idx)) {
+            type <- dict$base[idx]
+        } else {
+            type <- "response"
+        }
+    }
 
     # optional subsetting
     if (!is.null(calling_function)) {

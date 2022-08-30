@@ -8,7 +8,7 @@ requiet("insight")
 # Issue #438: backtransforms allows us to match `emmeans` exactly
 mod <- glm(vs ~ mpg + factor(cyl), data = mtcars, family = binomial)
 em <- emmeans(mod, ~cyl, type = "response")
-mm <- marginalmeans(mod)
+mm <- marginalmeans(mod, type = "response")
 expect_equal(data.frame(em)$prob, mm$marginalmean)
 expect_equal(data.frame(em)$asymp.LCL, mm$conf.low)
 expect_equal(data.frame(em)$asymp.UCL, mm$conf.high)

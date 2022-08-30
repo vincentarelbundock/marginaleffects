@@ -10,7 +10,7 @@ marginalmeans(
   variables_grid = NULL,
   vcov = TRUE,
   conf_level = 0.95,
-  type = "response",
+  type = NULL,
   transform_post = NULL,
   interaction = NULL,
   hypothesis = NULL,
