@@ -5,6 +5,12 @@ get_contrast_data_numeric <- function(model,
                                       ...) {
 
 
+    modeldata <- hush(insight::get_data(model))
+    s <- m <- NA
+    if (is.numeric(modeldata[[variable$name]])) {
+        s <- sd(modeldata[[variable$name]], na.rm = TRUE)
+        m <- mean(modeldata[[variable$name]], na.rm = TRUE)
+    }
     x <- newdata[[variable$name]]
 
     make_label <- function(lab, val) {
@@ -65,8 +71,6 @@ get_contrast_data_numeric <- function(model,
 
     # character contrasts
     } else if (identical(variable$value, "sd")) {
-        m <- mean(x, na.rm = TRUE)
-        s <- stats::sd(x, na.rm = TRUE)
         low <- m - s / 2
         high <- m + s / 2
         lab <- c("x + sd/2", "x - sd/2")
@@ -76,8 +80,6 @@ get_contrast_data_numeric <- function(model,
         lab <- make_label(variable$label, lab)
 
     } else if (identical(variable$value, "2sd")) {
-        m <- mean(x, na.rm = TRUE)
-        s <- stats::sd(x, na.rm = TRUE)
         low <- m - s
         high <- m + s
         lab <- c("x - sd", "x + sd")
