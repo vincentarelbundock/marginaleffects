@@ -19,10 +19,6 @@ expect_equivalent(cmp1$comparison, cmp2$estimate)
 expect_equivalent(cmp1$std.error, cmp2$std.error)
 
 
-# label ratios 
-mod <- lm(mpg ~ hp + factor(cyl), data = mtcars)
-cmp <- comparisons(mod, transform_pre = "ratio")
-expect_true(all(grepl("\\/", cmp$contrast)))
 
 
 # error when function breaks or returns a bad vector
@@ -153,3 +149,11 @@ expect_equivalent(mfx1$dydx, mfx2$comparison)
 expect_equivalent(mfx1$std.error, mfx2$std.error)
 expect_equivalent(mfx3$dydx, mfx4$comparison)
 expect_equivalent(mfx3$std.error, mfx4$std.error)
+
+
+
+# # label ratios: We don't have fancy ratio labels anymore, because  +1 is a
+# # better label when we do centering.
+# mod <- lm(mpg ~ hp + factor(cyl), data = mtcars)
+# cmp <- comparisons(mod, transform_pre = "ratio")
+# expect_true(all(grepl("\\/", cmp$contrast)))

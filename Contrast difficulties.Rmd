@@ -1,0 +1,141 @@
+---
+title: "Contrast difficulties"
+author: "A Solomon Kurz"
+date: "`r format(Sys.Date())`"
+output:
+  html_document:
+    df_print: paged
+---
+
+I've been working through the [*Contrasts* vignette](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html) to better learn the **marginaleffects** package. As part of that exploration, I've been fittig Bayesian versions of the example models as compliments of the frequentist models in the vignette. Thus, I've been trying to replicate the results in the vignette in three basic ways:
+
+a) with the frequentist models and the **marginaleffects** functions, as seen in the vignette;
+b) with the Bayesian versions of the models and the **marginaleffects** functions, very similar to how they are used in the vignette;
+c) with the Bayesian versions of the models and with functions from **brms**, **tidybayes** and packages in the **tidyverse**, with which I am more familiar than those provided by **marginaleffects**.
+
+As we discussed in a Twitter DM, I ran across some unexpected behavior around the *Contrasts at the mean* subsection. The purpose of this document is to showcase those unexpected results.
+
+## Preliminary
+
+First, we load the primary packages, load the data, and wrangle a little.
+
+```{r, warning = F, message = F}
+# packages
+library(marginaleffects)
+library(brms)
+library(tidyverse)
+library(tidybayes)
+
+# wrangle
+tmp <- mtcars %>% 
+  mutate(am = as.logical(am))
+```
+
+## Quantities of interest
+
+All the fuss is from subsections of this section.
+
+### Unit-level contrasts.
+
+Fit the `glm()`-based `mod` model, as seen in the vignette.
+
+```{r mod}
+mod <- glm(vs ~ factor(gear) + mpg, family = binomial, data = mtcars) 
+```
+
+Now fit the Bayesian analogue with `brms::brm()`. Here we'll use the default priors. In some of my previous explorations with this vignette and others, I found that it works better to make variables factors in the `data` argument, rather than directly in the `formula`, which is why I have done so, here.
+
+```{r mod.b, warning = F, message = F, results = "hide"}
+mod.b <- brm(
+  data = mtcars %>% mutate(gear = factor(gear)),
+  family = binomial, 
+  vs | trials(1) ~ gear + mpg,
+  chains = 4, seed = 1
+)
+```
+
+Compare the model summaries.
+
+```{r}
+summary(mod)
+summary(mod.b)
+```
+
+The parameter summaries aren't as close as one might hope, but the standard errors (and posterior SD's) are pretty large and sloppy, so there's still a lot of overlap. We're stretching these $N = 32$ data pretty thin. Plus, anytime the intercept for a binomial model exceeds like $\pm 6$, you're in trouble. But we digress...
+
+### Average contrasts.
+
+No problems for us, here.
+
+### Contrasts at the mean.
+
+This section is where I ran into the unexpected behavior. I had no problem reproducing the results from the `glm()`-based model and the `comparisons()` code, as seen in the vignette.
+
+```{r}
+comparisons(mod, variables = "mpg", newdata = "mean")
+```
+
+The results are also basically the same for the `brm()`-based model.
+
+```{r}
+# as in the vignette
+comparisons(mod.b, variables = "mpg", newdata = "mean")
+```
+
+As an intermediary step, the results are also the same if I manually define the `newdata`.
+
+```{r}
+# newdata by hand
+nd <- mtcars %>% 
+  summarise(mpg = mean(mpg),
+            gear = Mode(gear))
+
+# glm()
+comparisons(mod, variables = "mpg", newdata = nd)
+
+# brm()
+comparisons(mod.b, variables = "mpg", newdata = nd)
+```
+
+That was just to demonstrate I'm not a dummy. 
+
+Here's my attempt at a `fitted()`-based approach for the Bayesian model.
+
+```{r}
+nd <- mtcars %>% 
+  summarise(mpg = mean(mpg),
+            gear = Mode(gear)) %>% 
+  mutate(`mpg + 1` = mpg + .5,
+         mpg = mpg - .5) %>% 
+  pivot_longer(contains("mpg"), values_to = "mpg")
+
+fitted(mod.b, newdata = nd, summary = F) %>% 
+  data.frame() %>% 
+  set_names(nd %>% pull(name)) %>% 
+  mutate(`(x + 1) - x` = `mpg + 1` - mpg) %>% 
+  median_qi(`(x + 1) - x`)
+```
+
+The results are close, but they do not match up with those above. As we discussed in the DM, `fitted()` works a lot like `posterior_epred()`. It's one of my go-to **brms** post-processing functions. For reference, I've been able to use a `fitted()`-based workflow like this to reproduce the results from other operations with **marginaleffects** functions on **brms** models. Welcome to the mystery.
+
+## Session information
+
+```{r}
+sessionInfo()
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

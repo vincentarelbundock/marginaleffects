@@ -116,7 +116,7 @@ cmp1 <- comparisons(
     newdata = "mean")
 expect_equivalent(
     cmp1$contrast,
-    c("(x + 1) - x", "TRUE - FALSE", "6 - 4", "8 - 4", "4 - 3", "5 - 3"))
+    c("+1", "TRUE - FALSE", "6 - 4", "8 - 4", "4 - 3", "5 - 3"))
 
 cmp2 <- comparisons(
     mod,

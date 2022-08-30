@@ -54,13 +54,14 @@ get_contrast_data_numeric <- function(model,
     } else if (isTRUE(checkmate::check_numeric(variable$value, len = 1))) {
         low <- x - variable$value / 2
         high <- x + variable$value / 2
-        lab <- make_label("x + %s", variable$value)
         # wrap in parentheses, unless mean() because there are already parentheses
         # important to display ratios of x+1, etc.
+        # label should not be `(mpg+1) - mpg` because that is misleading for centered contrast
         if (!isTRUE(grepl("mean", variable$label))) {
-            lab <- make_label("(%s)", lab)
+            lab <- sprintf("+%s", variable$value)
+        } else {
+            lab <- sprintf("mean(+%s)", variable$value)
         }
-        lab <- make_label(variable$label, c(lab, "x"))
 
     } else if (isTRUE(checkmate::check_numeric(variable$value, len = 2))) {
         variable$value <- sort(variable$value)
