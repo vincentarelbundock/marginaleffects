@@ -137,3 +137,18 @@ expect_inherits(mfx, "marginaleffects")
 mod <- nnet::multinom(factor(gear) ~ mpg, data = mtcars, trace = FALSE)
 p <- predictions(mod, newdata = head(mtcars, 1), type = "latent")
 expect_equivalent(nrow(p), 3)
+
+
+# Issue #476: binary dependent variable
+x <- 1:1000
+n <- length(x)
+y1 <- rbinom(n, 10, prob = plogis(-10 + 0.02 * x))
+y2 <- 10 - y1
+dat <- data.frame(x, y1, y2)
+dat_long <- tidyr::pivot_longer(dat, !x, names_to = "y", values_to = "count")
+dat_long <- transform(dat_long, y = factor(y, levels = c("y2", "y1")))
+fit_multinom <- nnet::multinom(y ~ x, weights = count, data = dat_long, trace = FALSE)
+p <- predictions(fit_multinom,
+    newdata = datagrid(x = dat$x),
+    type = "latent")
+expect_inherits(p, "predictions")

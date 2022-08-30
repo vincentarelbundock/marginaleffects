@@ -69,8 +69,17 @@ get_predict.multinom <- function(model,
                            ...)
 
     # atomic vector means there is only one row in `newdata`
+    # two levels DV returns a vector 
     if (isTRUE(checkmate::check_atomic_vector(pred))) {
-        pred <- matrix(pred, nrow = 1, dimnames = list(NULL, names(pred)))
+        y_original <- sort(unique(insight::get_response(model)))
+        two_levels <- length(y_original) == 2
+        if (isTRUE(two_levels)) {
+            pred <- matrix(pred)
+            colnames(pred) <- as.character(y_original[2])
+        } else {
+            pred <- matrix(pred, nrow = 1, dimnames = list(NULL, names(pred)))
+        }
+
     }
 
     if (is_latent && is_mclogit) {
