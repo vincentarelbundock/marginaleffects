@@ -311,6 +311,7 @@ marginalmeans <- function(model,
             estimate = "marginalmean")
     }
 
+    # after assign draws
     if (!is.null(transform_post)) {
         out <- backtransform(out, transform_post)
     }

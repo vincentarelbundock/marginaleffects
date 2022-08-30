@@ -540,3 +540,22 @@ tid.b <- tidy(cmp.b)
 expect_equivalent(tid$estimate, tid.b$estimate, tolerance = 0.1)
 expect_equivalent(tid$conf.low, tid.b$conf.low, tolerance = 0.2)
 expect_equivalent(tid$conf.high, tid.b$conf.high, tolerance = 0.2)
+
+# transform_post works for comparisons() and predictions()
+void <- capture.output(suppressMessages(
+    mod <- brm(gear ~ mpg + hp, data = mtcars, family = poisson)
+))
+
+p1 <- predictions(mod, type = "link")
+p2 <- predictions(mod, type = "link", transform_post = exp)
+expect_equivalent(exp(p1$predicted), p2$predicted)
+expect_equivalent(exp(p1$conf.low), p2$conf.low)
+expect_equivalent(exp(p1$conf.high), p2$conf.high)
+expect_equivalent(exp(attr(p1, "posterior_draws")), attr(p2, "posterior_draws"))
+
+p1 <- comparisons(mod, type = "link")
+p2 <- comparisons(mod, type = "link", transform_post = exp)
+expect_equivalent(exp(p1$comparison), p2$comparison)
+expect_equivalent(exp(p1$conf.low), p2$conf.low)
+expect_equivalent(exp(p1$conf.high), p2$conf.high)
+expect_equivalent(exp(attr(p1, "posterior_draws")), attr(p2, "posterior_draws"))

@@ -379,10 +379,6 @@ predictions <- function(model,
         draws <- draws[tmp$rowid > 0, , drop = FALSE]
     }
 
-    if (!is.null(transform_post) && !is.null(draws)) {
-        draws <- transform_post(draws)
-    }
-
     V <- NULL
     if (!isFALSE(vcov)) {
 
@@ -453,11 +449,6 @@ predictions <- function(model,
     marginaleffects_wts_internal <- out[["marginaleffects_wts_internal"]]
     out[["marginaleffects_wts_internal"]] <- NULL
 
-    # transform already applied to bayesian draws before computing confidence interval
-    # after rename to estimate
-    if (is.null(draws) && !is.null(transform_post)) {
-        out <- backtransform(out, transform_post = transform_post)
-    }
 
     # clean columns
     if (isTRUE(checkmate::check_data_frame(by))) {
@@ -476,6 +467,13 @@ predictions <- function(model,
     cols <- unique(c(cols, colnames(out)))
     out <- out[, cols, drop = FALSE]
 
+    attr(out, "posterior_draws") <- draws
+
+    # after rename to estimate / after assign draws
+    if (is.function(transform_post)) {
+        out <- backtransform(out, transform_post = transform_post)
+    }
+
     class(out) <- c("predictions", class(out))
     out <- set_attributes(
         out,
@@ -486,7 +484,6 @@ predictions <- function(model,
     attr(out, "vcov.type") <- get_vcov_label(vcov)
     attr(out, "jacobian") <- J
     attr(out, "vcov") <- V
-    attr(out, "posterior_draws") <- draws
     attr(out, "newdata") <- newdata
     attr(out, "weights") <- marginaleffects_wts_internal
     attr(out, "by") <- by

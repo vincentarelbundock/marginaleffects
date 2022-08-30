@@ -406,9 +406,6 @@ comparisons <- function(model,
          mfx$group <- "main_marginaleffect"
     }
 
-    if (!is.null(transform_post)) {
-        mfx <- backtransform(mfx, transform_post)
-    }
 
     # clean columns
     stubcols <- c("rowid", "rowidcf", "type", "group", "term", "hypothesis",
@@ -418,6 +415,14 @@ comparisons <- function(model,
     cols <- intersect(stubcols, colnames(mfx))
     cols <- unique(c(cols, colnames(mfx)))
     mfx <- mfx[, ..cols, drop = FALSE]
+
+    # bayesian draws
+    attr(mfx, "posterior_draws") <- draws
+
+    # after draws attribute
+    if (!is.null(transform_post)) {
+        mfx <- backtransform(mfx, transform_post)
+    }
 
     # save as attribute and not column
     if (any(!is.na(mfx[["marginaleffects_wts_internal"]]))) {
@@ -440,7 +445,6 @@ comparisons <- function(model,
     out <- set_attributes(
         out,
         get_attributes(newdata, include_regex = "^newdata"))
-    attr(out, "posterior_draws") <- draws
     attr(out, "model") <- model
     attr(out, "type") <- type
     attr(out, "model_type") <- class(model)[1]
