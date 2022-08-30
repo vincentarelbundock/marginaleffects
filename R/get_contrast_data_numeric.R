@@ -8,7 +8,7 @@ get_contrast_data_numeric <- function(model,
     modeldata <- hush(insight::get_data(model))
     s <- m <- NA
     if (is.numeric(modeldata[[variable$name]])) {
-        s <- sd(modeldata[[variable$name]], na.rm = TRUE)
+        s <- stats::sd(modeldata[[variable$name]], na.rm = TRUE)
         m <- mean(modeldata[[variable$name]], na.rm = TRUE)
     }
     x <- newdata[[variable$name]]
