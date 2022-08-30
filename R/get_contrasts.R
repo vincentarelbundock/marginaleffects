@@ -178,10 +178,11 @@ get_contrasts <- function(model,
 
         # `by` vector
         } else {
-            tmp <- intersect(
-                c("rowid", "marginaleffects_wts_internal", by),
-                colnames(newdata))
-            tmp <- data.frame(newdata)[, tmp, drop = FALSE]
+            # don't double merge the weights
+            bycols <- setdiff("marginaleffects_wts_internal", colnames(out)) 
+            bycols <- c(bycols, "rowid", by)
+            bycols <- intersect(bycols, colnames(newdata))
+            tmp <- data.frame(newdata)[, bycols, drop = FALSE]
             out <- merge(out, tmp, by = "rowid", all.x = TRUE, sort = FALSE)
             bycols <- by
         }
@@ -215,6 +216,7 @@ get_contrasts <- function(model,
     # singleton vs vector
     # different terms use different functions
     safefun <- function(hi, lo, y, n, term, interaction, eps, wts) {
+
         # when interaction=TRUE, sanitize_transform_pre enforces a single function
         if (isTRUE(interaction)) {
             fun <- fun_list[[1]]

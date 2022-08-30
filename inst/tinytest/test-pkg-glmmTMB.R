@@ -6,7 +6,7 @@ requiet("glmmTMB")
 requiet("emmeans")
 
 
-data("Owls")
+data("Owls", package = "glmmTMB")
 
 # marginaleffects no validity
 Owls <- transform(Owls,
