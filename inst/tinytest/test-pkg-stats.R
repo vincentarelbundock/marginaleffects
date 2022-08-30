@@ -143,11 +143,9 @@ expect_warning(marginaleffects(mod), pattern = "Unable")
 
 # loess vs. margins
 mod <- loess(mpg ~ wt, data = mtcars)
-res <- marginaleffects(mod, vcov = FALSE)
-mar <- data.frame(margins(mod))
-matching <- cbind(res$dydx, mar$dydx)
-matching <- na.omit(matching)
-expect_equivalent(matching[, 1], matching[, 2], tolerance = 1e-3)
+res <- marginaleffects(mod, vcov = FALSE, newdata = head(mtcars))$dydx
+mar <- data.frame(margins(mod, data = head(mtcars)))$dydx_wt
+expect_equivalent(as.numeric(res), as.numeric(mar), tolerance = 1e-3)
 
 
 # loess predictions
