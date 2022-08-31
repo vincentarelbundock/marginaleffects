@@ -8,6 +8,10 @@ sanitize_newdata <- function(model, newdata, modeldata = NULL) {
     # we always need this to extract attributes
     if (is.null(modeldata)) {
         modeldata <- hush(insight::get_data(model))
+        # cannot extract data on unsupported custom models (e.g., numpyro)
+        if (is.null(modeldata)) {
+            modeldata <- newdata
+        }
     }
 
     if (is.null(newdata)) {

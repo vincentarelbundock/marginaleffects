@@ -49,6 +49,7 @@ average_draws <- function(data, index, draws, column) {
     }
 
     if (length(index) > 0) {
+        browser()
         g <- collapse::GRP(data, by = index)
         draws <- collapse::fmean(
             draws,

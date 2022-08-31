@@ -26,6 +26,7 @@ sanity_model_specific.default <- function(model,
 
 sanity_model_supported_class <- function(model) {
     supported <- list(
+        "marginaleffects_custom",
         "afex_aov",
         "betareg",
         "bife",

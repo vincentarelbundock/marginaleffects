@@ -27,6 +27,10 @@ sanitize_variables <- function(variables,
     # all variable names
     if (!is.null(model)) {
         predictors_all <- insight::find_variables(model, flatten = TRUE)
+        # unsupported by insight (e.g., numpyro)
+        if (length(predictors_all) == 0) {
+            predictors_all <- colnames(newdata)
+        }
     } else {
         predictors_all <- colnames(newdata)
     }

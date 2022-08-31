@@ -6,6 +6,10 @@ get_contrast_data_numeric <- function(model,
 
 
     modeldata <- hush(insight::get_data(model))
+    if (is.null(modeldata)) {
+        modeldata <- newdata
+    }
+
     s <- m <- NA
     if (is.numeric(modeldata[[variable$name]])) {
         s <- stats::sd(modeldata[[variable$name]], na.rm = TRUE)
