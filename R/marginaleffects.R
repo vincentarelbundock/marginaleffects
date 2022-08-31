@@ -74,7 +74,9 @@
 #' compute marginal effects or contrasts. This can differ based on the model
 #' type, but will typically be a string such as: "response", "link", "probs",
 #' or "zero". When an unsupported string is entered, the model-specific list of
-#' acceptable values is returned in an error message.
+#' acceptable values is returned in an error message. When `type` is `NULL`, the
+#' default value is used. This default is the first model-related row in
+#' the `marginaleffects:::type_dictionary` dataframe.
 #' @param slope string indicates the type of slope or (semi-)elasticity to compute:
 #' - "dydx": dY/dX
 #' - "eyex": dY/dX * Y / X

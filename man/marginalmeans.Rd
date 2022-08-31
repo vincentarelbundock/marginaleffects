@@ -57,7 +57,9 @@ number of variables in the \code{variables} and \code{variables_grid} arguments.
 compute marginal effects or contrasts. This can differ based on the model
 type, but will typically be a string such as: "response", "link", "probs",
 or "zero". When an unsupported string is entered, the model-specific list of
-acceptable values is returned in an error message.}
+acceptable values is returned in an error message. When \code{type} is \code{NULL}, the
+default value is used. This default is the first model-related row in
+the \code{marginaleffects:::type_dictionary} dataframe.}
 
 \item{transform_post}{(experimental) A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.}
 
