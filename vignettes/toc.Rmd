@@ -30,6 +30,7 @@ Case studies:
 - [Mixed effects models](https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html)
 - [Multinomial Logit and Discrete Choice Models](https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html)
 - [Multiple Imputation](https://vincentarelbundock.github.io/marginaleffects/articles/multiple_imputation.html)
+- [Python NumPyro models in `marginaleffects`](https://vincentarelbundock.github.io/marginaleffects/articles/python.html)
 - [Unit-level contrasts in logistic regressions](https://vincentarelbundock.github.io/marginaleffects/articles/logistic_contrasts.html)
 
 Tips and technical notes:

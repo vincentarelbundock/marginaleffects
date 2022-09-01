@@ -25,8 +25,12 @@ sanity_model_specific.default <- function(model,
 
 
 sanity_model_supported_class <- function(model) {
-    supported <- list(
-        "marginaleffects_custom",
+    checkmate::assert_character(
+        getOption("marginaleffects_model_classes", default = NULL),
+        null.ok = TRUE)
+    custom_classes <- getOption("marginaleffects_model_classes", default = NULL)
+    custom_classes <- as.list(custom_classes)
+    supported <- append(custom_classes, list(
         "afex_aov",
         "betareg",
         "bife",
@@ -84,7 +88,7 @@ sanity_model_supported_class <- function(model) {
         c("tobit", "survreg"),
         "tobit1",
         "truncreg",
-        "zeroinfl")
+        "zeroinfl"))
     flag <- FALSE
     for (sup in supported) {
         if (!is.null(sup) && isTRUE(all(sup %in% class(model)))) {
