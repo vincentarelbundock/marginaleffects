@@ -36,6 +36,9 @@ library(reticulate)
 library(marginaleffects)
 
 model <- '
+# Model code adapted from the NumPyro documtation under Apache License:
+# https://num.pyro.ai/en/latest/tutorials/bayesian_hierarchical_linear_regression.html
+
 import pandas as pd
 import numpy as np
 import numpyro
