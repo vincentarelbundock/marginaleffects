@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 
 Note: The code in this vignette requires version 0.7.1 of `marginaleffects` or [the development version from Github.](https://vincentarelbundock.github.io/marginaleffects/#installation)
 
-The Python programming language offers several powerful libraries for (bayesian) statistical analysis, such as [`NumPyro`]() and [`PyMC`.](https://www.pymc.io/welcome.html) This vignette shows how to use the the full power of `marginaleffects` to analyze and interpret the results of model estimated by Markov Chain Monte Carlo using the `NumPyro` Python library.
+The Python programming language offers several powerful libraries for (bayesian) statistical analysis, such as [`NumPyro`]() and [`PyMC`.](https://www.pymc.io/welcome.html) This vignette shows how to use the the full power of `marginaleffects` to analyze and interpret the results of models estimated by Markov Chain Monte Carlo using the `NumPyro` Python library.
 
 # Fitting a `NumPyro` model
 
@@ -157,6 +157,7 @@ predictions(mod, newdata = df) |> head()
 
 # predictions for user-defined predictor values
 predictions(mod, newdata = datagrid(newdata = df, Age = c(60, 70)))
+
 predictions(mod, newdata = datagrid(newdata = df, Age = range))
 
 # average predictions by group
