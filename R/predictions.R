@@ -425,20 +425,6 @@ predictions <- function(model,
     out <- data.table(tmp)
 
 
-    # return data
-    # very import to avoid sorting, otherwise bayesian draws won't fit predictions
-    # merge only with rowid; not available for hypothesis
-    mergein <- setdiff(colnames(newdata), colnames(out))
-    if ("rowid" %in% colnames(out) && "rowid" %in% colnames(newdata) && length(mergein) > 0) {
-        idx <- c("rowid", mergein)
-        tmp <- data.table(newdata)[, ..idx]
-        # TODO: this breaks in mclogit. maybe there's a more robust merge
-        # solution for weird grouped data. But it seems fine because
-        # `predictions()` output does include the original predictors.
-        out <- tryCatch(
-            merge(out, tmp, by = "rowid", sort = FALSE),
-            error = function(e) out)
-    }
 
 
     setDF(out)
@@ -525,6 +511,21 @@ get_predictions <- function(model,
         draws <- draws[idx, , drop = FALSE]
     }
 
+    # return data
+    # very import to avoid sorting, otherwise bayesian draws won't fit predictions
+    # merge only with rowid; not available for hypothesis
+    mergein <- setdiff(colnames(newdata), colnames(out))
+    if ("rowid" %in% colnames(out) && "rowid" %in% colnames(newdata) && length(mergein) > 0) {
+        idx <- c("rowid", mergein)
+        tmp <- data.table(newdata)[, ..idx]
+        # TODO: this breaks in mclogit. maybe there's a more robust merge
+        # solution for weird grouped data. But it seems fine because
+        # `predictions()` output does include the original predictors.
+        out <- tryCatch(
+            merge(out, tmp, by = "rowid", sort = FALSE),
+            error = function(e) out)
+    }
+
     # averaging by groups
     if (!is.null(by)) {
 
@@ -554,16 +555,18 @@ get_predictions <- function(model,
         # `by` data.frame
         if (isTRUE(checkmate::check_data_frame(by))) {
             idx <- setdiff(intersect(colnames(out), colnames(by)), "by")
+            for (v in colnames(by)) {
+                if (isTRUE(is.character(out[[v]])) && isTRUE(is.numeric(by[[v]]))) {
+                    by[[v]] <- as.character(by[[v]])
+                } else if (isTRUE(is.numeric(out[[v]])) && isTRUE(is.character(by[[v]]))) {
+                    by[[v]] <- as.numeric(by[[v]])
+                }
+            }
             out[by, by := by, on = idx]
             bycols <- "by"
 
         # `by` vector
         } else {
-            tmp <- intersect(
-                c("rowid", "marginaleffects_wts_internal", by),
-                colnames(newdata))
-            tmp <- data.frame(newdata)[, tmp, drop = FALSE]
-            out <- merge(out, tmp, by = "rowid", all.x = TRUE, sort = FALSE)
             bycols <- by
         }
 
@@ -593,13 +596,14 @@ get_predictions <- function(model,
         }
     }
 
-    if (!is.null(hypothesis)) {
-        out <- get_hypothesis(out, hypothesis, column = "predicted", by = by)
-    }
-
     # do not overwrite what we did in the `by` if{}
+    # before get_hypothesis
     if (is.null(attr(out, "posterior_draws"))) {
         attr(out, "posterior_draws") <- draws
+    }
+
+    if (!is.null(hypothesis)) {
+        out <- get_hypothesis(out, hypothesis, column = "predicted", by = by)
     }
 
     return(out)

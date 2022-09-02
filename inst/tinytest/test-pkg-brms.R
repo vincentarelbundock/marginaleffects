@@ -315,7 +315,6 @@ expect_equivalent(nrow(contr2), 15)
 
 
 # multivariate outcome
-
 beta <- get_coef(brms_mv_1)
 expect_equivalent(length(beta), 12)
 

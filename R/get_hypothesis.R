@@ -146,6 +146,7 @@ get_hypothesis <- function(x, hypothesis, column, by = NULL) {
                 term = gsub("\\s+", "", attr(hypothesis, "label")),
                 tmp = apply(draws, 1, stats::median))
 
+
         } else {
             out <- eval_string_function(
                 x[[column]],
