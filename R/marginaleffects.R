@@ -100,9 +100,10 @@
 #' + See the Examples section below and the vignette: https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html
 #' @param eps NULL or numeric value which determines the step size to use when
 #' calculating numerical derivatives: (f(x+eps)-f(x))/eps. When `eps` is
-#' `NULL`, the step size is step to 0.0001 multiplied by the range of the
-#' variable with respect to which we are taking the derivative. Changing this
-#' value may be necessary to avoid numerical problems in certain models.
+#' `NULL`, the step size is 0.0001 multiplied by the difference between
+#' the maximum and minimum values of the variable with respect to which we
+#' are taking the derivative. Changing `eps` may be necessary to avoid
+#' numerical problems in certain models.
 #' @param ... Additional arguments are passed to the `predict()` method
 #' supplied by the modeling package.These arguments are particularly useful
 #' for mixed-effects or bayesian models (see the online vignettes on the

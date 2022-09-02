@@ -111,9 +111,10 @@ contrasts or marginaleffects. These weights only affect the averaging in
 
 \item{eps}{NULL or numeric value which determines the step size to use when
 calculating numerical derivatives: (f(x+eps)-f(x))/eps. When \code{eps} is
-\code{NULL}, the step size is step to 0.0001 multiplied by the range of the
-variable with respect to which we are taking the derivative. Changing this
-value may be necessary to avoid numerical problems in certain models.}
+\code{NULL}, the step size is 0.0001 multiplied by the difference between
+the maximum and minimum values of the variable with respect to which we
+are taking the derivative. Changing \code{eps} may be necessary to avoid
+numerical problems in certain models.}
 
 \item{...}{Additional arguments are passed to the \code{predict()} method
 supplied by the modeling package.These arguments are particularly useful

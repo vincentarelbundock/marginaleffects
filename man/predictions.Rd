@@ -221,12 +221,10 @@ predictions(mod, newdata = datagrid(hp = c(100, 120), cyl = 4))
 library(dplyr)
 mod <- lm(mpg ~ hp * am * vs, mtcars)
 
-pred <- predictions(mod, newdata = datagrid(am = 0, grid_type = "counterfactual")) \%>\%
-    summarize(across(c(predicted, std.error), mean))
+pred <- predictions(mod)
+summary(pred)
 
-predictions(mod, newdata = datagrid(am = 0:1, grid_type = "counterfactual")) \%>\% 
-    group_by(am) \%>\%
-    summarize(across(c(predicted, std.error), mean))
+predictions(mod, by = "am")
 
 # Conditional Adjusted Predictions
 plot_cap(mod, condition = "hp")
