@@ -26,7 +26,9 @@
 #' transformation to produce adequate confidence intervals on the scale
 #' specified by the `type` argument. When this is not possible, `predictions()`
 #' uses the Delta Method to compute standard errors around adjusted
-#' predictions.
+#' predictions, and builds symmetric confidence intervals. These naive symmetric
+#' intervals may not always be appropriate. For instance, they may stretch beyond
+#' the bounds of a binary response variables.
 #'
 #' @inheritParams marginaleffects
 #' @param model Model object
@@ -405,31 +407,21 @@ predictions <- function(model,
             }
         }
 
-        # Manual confidence intervals only in linear or Bayesian models
-        # others rely on `insight::get_predicted()`
-        linpred <- tryCatch(
-            insight::model_info(model)$is_linear || type == "link",
-            error = function(e) FALSE)
-        if (!is.null(draws) || isTRUE(linpred)) {
-            tmp <- get_ci(
-                tmp,
-                conf_level = conf_level,
-                # sometimes insight::get_predicted fails on SE but succeeds on CI (e.g., betareg)
-                vcov = vcov,
-                overwrite = FALSE,
-                draws = draws,
-                estimate = "predicted")
-        }
+        tmp <- get_ci(
+            tmp,
+            conf_level = conf_level,
+            # sometimes insight::get_predicted fails on SE but succeeds on CI (e.g., betareg)
+            vcov = vcov,
+            overwrite = FALSE,
+            draws = draws,
+            estimate = "predicted")
     }
 
     out <- data.table(tmp)
 
-
-
-
     setDF(out)
 
-    # save as attribute and not column
+    # save weights as attribute and not column
     marginaleffects_wts_internal <- out[["marginaleffects_wts_internal"]]
     out[["marginaleffects_wts_internal"]] <- NULL
 

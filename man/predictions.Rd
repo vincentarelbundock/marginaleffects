@@ -149,7 +149,9 @@ intervals to the \code{insight::get_predicted()} function, which uses back
 transformation to produce adequate confidence intervals on the scale
 specified by the \code{type} argument. When this is not possible, \code{predictions()}
 uses the Delta Method to compute standard errors around adjusted
-predictions.
+predictions, and builds symmetric confidence intervals. These naive symmetric
+intervals may not always be appropriate. For instance, they may stretch beyond
+the bounds of a binary response variables.
 }
 \section{Vignettes and documentation}{
 
