@@ -177,7 +177,7 @@ marginaleffects(mod,
                                    species = c("Adelie", "Gentoo")))
 ```
 
-When variables are omitted from the `datagrid` call, they will automatically be set at their median or mode (depending on variable type).
+When variables are omitted from the `datagrid` call, they will automatically be set at their mean or mode (depending on variable type).
 
 # Marginal Effect at the Mean (MEM)
 
