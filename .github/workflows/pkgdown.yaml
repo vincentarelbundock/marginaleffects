@@ -23,6 +23,11 @@ jobs:
         with:
           use-public-rspm: true
 
+      - name: Brobdingnag
+        run: |
+          Rscript -e 'install.packages("remotes")'
+          Rscript -e 'remotes::install_github("RobinHankin/Borbdingnag")'
+
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           needs: website
