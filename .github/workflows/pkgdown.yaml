@@ -26,7 +26,7 @@ jobs:
       - name: Brobdingnag
         run: |
           Rscript -e 'install.packages("remotes")'
-          Rscript -e 'remotes::install_github("RobinHankin/Borbdingnag")'
+          Rscript -e 'remotes::install_github("RobinHankin/Brobdingnag")'
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
