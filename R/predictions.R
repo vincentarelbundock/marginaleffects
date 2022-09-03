@@ -203,7 +203,7 @@ predictions <- function(model,
     # do not check the model because `insight` supports more models than `marginaleffects`
     # model <- sanitize_model(model)
 
-    # input sanity checks
+    # input sanity chec.ks
     checkmate::assert_function(transform_post, null.ok = TRUE)
     sanity_dots(model = model, ...)
     sanity_model_specific(

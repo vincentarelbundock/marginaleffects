@@ -90,6 +90,7 @@ mclogit,latent,,TRUE,TRUE
 mclogit,link,link,TRUE,TRUE
 multinom,probs,expectation,TRUE,TRUE
 multinom,latent,NA,TRUE,TRUE
+multinom,link,,TRUE,TRUE
 mhurdle,E,NA,TRUE,TRUE
 mhurdle,Ep,NA,TRUE,TRUE
 mhurdle,p,NA,TRUE,TRUE

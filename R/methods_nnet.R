@@ -50,23 +50,52 @@ get_predict.multinom <- function(model,
 
     type <- sanitize_type(model, type)
 
-    is_latent <- is_mclogit <- is_nnet <- FALSE
+    is_latent <- is_mclogit <- FALSE
+    
+    if (inherits(model, "multinom")) { # && (type == "link" | type == "latent") 
+      mt <- terms(model)
+      rhs <- delete.response(mt)
+      if (missing(newdata)) {
+        m <- model$model
+        na.act <- model$na.action
+      } else {
+        m <- model.frame(rhs, data = newdata, na.action = na.exclude)
+        na.act <- attr(m, "na.action")
+      }
+      X <- model.matrix(rhs, m,
+                        contrasts.arg = model$contrasts,
+                        xlev = model$xlevels)
+      betahat <- t(rbind(0, coef(model ))) # model coefficients, with expicit zero row 
+                                           # added for reference category & transposed
+      pred <- X %*% betahat 
+      colnames(pred) <- model$lev # predictions on the link scale
+                                  # with explicit zero column for reference level
+      if (type == "latent") { # for type=="latent" use centered logit scale
+        pred <- pred - rowMeans(pred) } else if (type == "link") {
+        pred <- pred[,-1] # for type=="link" drop first zero reference level column  
+                          # as in mclogit::predict.mblogit
+      } else if (type == "probs") {
+        # normally I would have used original predict method for type == "probs"
+        # but there is a bug in predict.multinom which for some models causes it
+        # to drop the reference level, so doing it by backtransforming predictions on link scale
+        softMax <- function(eta) {
+          exp_eta <- exp(eta)
+          return(sweep(exp_eta, 1, STATS = rowSums(exp_eta), FUN = "/"))
+        }
+        pred <- softMax(pred)
+      }} else {
+        
     if (isTRUE(type == "latent") && inherits(model, c("mblogit", "mclogit"))) {
         is_latent <- TRUE
         is_mclogit <- TRUE
         type <- "link"
-
-    } else if (isTRUE(type == "latent") && inherits(model, "multinom")) {
-        is_latent <- TRUE
-        is_nnet <- TRUE
-        type <- "probs"
     } 
 
-    # needed because `predict.multinom` uses `data` rather than `newdata`
     pred <- stats::predict(model,
-                           newdata = newdata,
-                           type = type,
-                           ...)
+                    newdata = newdata,
+                    type = type,
+                    ...)
+    }
 
     # atomic vector means there is only one row in `newdata`
     # two levels DV returns a vector 
@@ -79,7 +108,6 @@ get_predict.multinom <- function(model,
         } else {
             pred <- matrix(pred, nrow = 1, dimnames = list(NULL, names(pred)))
         }
-
     }
 
     if (is_latent && is_mclogit) {
@@ -93,12 +121,6 @@ get_predict.multinom <- function(model,
             stop("Unable to compute predictions on the latent scale.", call. = FALSE)
         }
 
-    } else if (is_latent && is_nnet) {
-        inverse_softMax <- function(mu) {
-            log_mu <- log(mu)
-            return(sweep(log_mu, 1, STATS = rowMeans(log_mu), FUN = "-"))
-        }
-        pred <- inverse_softMax(pred)
     }
 
 
