@@ -146,6 +146,7 @@ get_hypothesis <- function(x, hypothesis, column, by = NULL) {
                 term = gsub("\\s+", "", attr(hypothesis, "label")),
                 tmp = apply(draws, 1, stats::median))
 
+
         } else {
             out <- eval_string_function(
                 x[[column]],
@@ -196,7 +197,7 @@ get_hypothesis_row_labels <- function(x, by = NULL) {
     lab <- grep("^term$|^by$|^group$|^value$|^contrast$|^contrast_", colnames(x), value = TRUE)
     lab <- Filter(function(z) length(unique(x[[z]])) > 1, lab)
     if (isTRUE(checkmate::check_character(by))) {
-        lab <- c(lab, by)
+        lab <- unique(c(lab, by))
     }
     if (length(lab) == 0) {
         lab <- NULL

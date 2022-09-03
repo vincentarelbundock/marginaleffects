@@ -29,6 +29,7 @@
 ^vignettes/multiple_imputation.Rmd
 ^vignettes/performance.Rmd
 ^vignettes/predictions.Rmd
+^vignettes/python.Rmd
 ^vignettes/sandwich.Rmd
 ^vignettes/supported_models.Rmd
 ^vignettes/toc.Rmd

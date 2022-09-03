@@ -315,7 +315,6 @@ expect_equivalent(nrow(contr2), 15)
 
 
 # multivariate outcome
-
 beta <- get_coef(brms_mv_1)
 expect_equivalent(length(beta), 12)
 
@@ -537,9 +536,17 @@ cmp.b <- comparisons(mod.b, variables = c("cyl", "am"))
 tid <- tidy(cmp)
 tid.b <- tidy(cmp.b)
 
+
 expect_equivalent(tid$estimate, tid.b$estimate, tolerance = 0.1)
 expect_equivalent(tid$conf.low, tid.b$conf.low, tolerance = 0.2)
 expect_equivalent(tid$conf.high, tid.b$conf.high, tolerance = 0.2)
+
+
+# issue 445 leftover browser()
+p <- predictions(mod, by = "am")
+expect_inherits(p, "predictions")
+expect_equivalent(nrow(p), 2)
+
 
 # transform_post works for comparisons() and predictions()
 void <- capture.output(suppressMessages(

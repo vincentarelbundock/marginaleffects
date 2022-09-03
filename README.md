@@ -51,6 +51,8 @@ Case studies:
     Models](https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html)
   - [Multiple
     Imputation](https://vincentarelbundock.github.io/marginaleffects/articles/multiple_imputation.html)
+  - [Python NumPyro models in
+    `marginaleffects`](https://vincentarelbundock.github.io/marginaleffects/articles/python.html)
   - [Unit-level contrasts in logistic
     regressions](https://vincentarelbundock.github.io/marginaleffects/articles/logistic_contrasts.html)
 
@@ -321,7 +323,7 @@ cmp <- comparisons(mod3)
 summary(cmp)
 #>     Term     Contrast   Effect Std. Error z value   Pr(>|z|)     2.5 %    97.5 %
 #> 1  Woman TRUE - FALSE  0.50329   0.031654  15.899 < 2.22e-16  0.441244  0.565327
-#> 2    Age  (x + 1) - x -0.00558   0.001084  -5.147 2.6471e-07 -0.007705 -0.003455
+#> 2    Age           +1 -0.00558   0.001084  -5.147 2.6471e-07 -0.007705 -0.003455
 #> 3 PClass    2nd - 1st -0.22603   0.043546  -5.191 2.0950e-07 -0.311383 -0.140686
 #> 4 PClass    3rd - 1st -0.38397   0.041845  -9.176 < 2.22e-16 -0.465985 -0.301957
 #> 
@@ -397,16 +399,11 @@ original dataset that was used to fit the model:
 mfx <- marginaleffects(mod)
 
 head(mfx, 4)
-#>   rowid     type term        dydx  std.error statistic     p.value    conf.low     conf.high predicted
-#> 1     1 response   hp -0.03690556 0.01850172 -1.994710 0.046074551 -0.07316825 -0.0006428553  22.48857
-#> 2     2 response   hp -0.02868936 0.01562861 -1.835695 0.066402771 -0.05932087  0.0019421508  20.80186
-#> 3     3 response   hp -0.04657166 0.02258715 -2.061866 0.039220507 -0.09084166 -0.0023016728  25.26465
-#> 4     4 response   hp -0.04227128 0.01328278 -3.182412 0.001460541 -0.06830506 -0.0162375066  20.25549
-#>   predicted_hi predicted_lo  mpg  hp    wt am    eps
-#> 1     22.48752     22.48857 21.0 110 2.620  1 0.0283
-#> 2     20.80105     20.80186 21.0 110 2.875  1 0.0283
-#> 3     25.26333     25.26465 22.8  93 2.320  1 0.0283
-#> 4     20.25430     20.25549 21.4 110 3.215  0 0.0283
+#>   rowid     type term        dydx  std.error statistic     p.value    conf.low     conf.high predicted predicted_hi predicted_lo  mpg  hp    wt am    eps
+#> 1     1 response   hp -0.03690556 0.01850172 -1.994710 0.046074551 -0.07316825 -0.0006428553  22.48857     22.48752     22.48857 21.0 110 2.620  1 0.0283
+#> 2     2 response   hp -0.02868936 0.01562861 -1.835695 0.066402771 -0.05932087  0.0019421508  20.80186     20.80105     20.80186 21.0 110 2.875  1 0.0283
+#> 3     3 response   hp -0.04657166 0.02258715 -2.061866 0.039220507 -0.09084166 -0.0023016728  25.26465     25.26333     25.26465 22.8  93 2.320  1 0.0283
+#> 4     4 response   hp -0.04227128 0.01328278 -3.182412 0.001460541 -0.06830506 -0.0162375066  20.25549     20.25430     20.25549 21.4 110 3.215  0 0.0283
 ```
 
 The function `summary` calculates the “Average Marginal Effect,” that

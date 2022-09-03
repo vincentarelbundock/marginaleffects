@@ -26,7 +26,9 @@
 #' transformation to produce adequate confidence intervals on the scale
 #' specified by the `type` argument. When this is not possible, `predictions()`
 #' uses the Delta Method to compute standard errors around adjusted
-#' predictions.
+#' predictions, and builds symmetric confidence intervals. These naive symmetric
+#' intervals may not always be appropriate. For instance, they may stretch beyond
+#' the bounds of a binary response variables.
 #'
 #' @inheritParams marginaleffects
 #' @param model Model object
@@ -84,12 +86,10 @@
 #' library(dplyr)
 #' mod <- lm(mpg ~ hp * am * vs, mtcars)
 #'
-#' pred <- predictions(mod, newdata = datagrid(am = 0, grid_type = "counterfactual")) %>%
-#'     summarize(across(c(predicted, std.error), mean))
-#'
-#' predictions(mod, newdata = datagrid(am = 0:1, grid_type = "counterfactual")) %>% 
-#'     group_by(am) %>%
-#'     summarize(across(c(predicted, std.error), mean))
+#' pred <- predictions(mod)
+#' summary(pred)
+#' 
+#' predictions(mod, by = "am")
 #'
 #' # Conditional Adjusted Predictions
 #' plot_cap(mod, condition = "hp")
@@ -407,45 +407,21 @@ predictions <- function(model,
             }
         }
 
-        # Manual confidence intervals only in linear or Bayesian models
-        # others rely on `insight::get_predicted()`
-        linpred <- tryCatch(
-            insight::model_info(model)$is_linear || type == "link",
-            error = function(e) FALSE)
-        if (!is.null(draws) || isTRUE(linpred)) {
-            tmp <- get_ci(
-                tmp,
-                conf_level = conf_level,
-                # sometimes insight::get_predicted fails on SE but succeeds on CI (e.g., betareg)
-                vcov = vcov,
-                overwrite = FALSE,
-                draws = draws,
-                estimate = "predicted")
-        }
+        tmp <- get_ci(
+            tmp,
+            conf_level = conf_level,
+            # sometimes insight::get_predicted fails on SE but succeeds on CI (e.g., betareg)
+            vcov = vcov,
+            overwrite = FALSE,
+            draws = draws,
+            estimate = "predicted")
     }
 
     out <- data.table(tmp)
 
-
-    # return data
-    # very import to avoid sorting, otherwise bayesian draws won't fit predictions
-    # merge only with rowid; not available for hypothesis
-    mergein <- setdiff(colnames(newdata), colnames(out))
-    if ("rowid" %in% colnames(out) && "rowid" %in% colnames(newdata) && length(mergein) > 0) {
-        idx <- c("rowid", mergein)
-        tmp <- data.table(newdata)[, ..idx]
-        # TODO: this breaks in mclogit. maybe there's a more robust merge
-        # solution for weird grouped data. But it seems fine because
-        # `predictions()` output does include the original predictors.
-        out <- tryCatch(
-            merge(out, tmp, by = "rowid", sort = FALSE),
-            error = function(e) out)
-    }
-
-
     setDF(out)
 
-    # save as attribute and not column
+    # save weights as attribute and not column
     marginaleffects_wts_internal <- out[["marginaleffects_wts_internal"]]
     out[["marginaleffects_wts_internal"]] <- NULL
 
@@ -527,6 +503,21 @@ get_predictions <- function(model,
         draws <- draws[idx, , drop = FALSE]
     }
 
+    # return data
+    # very import to avoid sorting, otherwise bayesian draws won't fit predictions
+    # merge only with rowid; not available for hypothesis
+    mergein <- setdiff(colnames(newdata), colnames(out))
+    if ("rowid" %in% colnames(out) && "rowid" %in% colnames(newdata) && length(mergein) > 0) {
+        idx <- c("rowid", mergein)
+        tmp <- data.table(newdata)[, ..idx]
+        # TODO: this breaks in mclogit. maybe there's a more robust merge
+        # solution for weird grouped data. But it seems fine because
+        # `predictions()` output does include the original predictors.
+        out <- tryCatch(
+            merge(out, tmp, by = "rowid", sort = FALSE),
+            error = function(e) out)
+    }
+
     # averaging by groups
     if (!is.null(by)) {
 
@@ -556,16 +547,18 @@ get_predictions <- function(model,
         # `by` data.frame
         if (isTRUE(checkmate::check_data_frame(by))) {
             idx <- setdiff(intersect(colnames(out), colnames(by)), "by")
+            for (v in colnames(by)) {
+                if (isTRUE(is.character(out[[v]])) && isTRUE(is.numeric(by[[v]]))) {
+                    by[[v]] <- as.character(by[[v]])
+                } else if (isTRUE(is.numeric(out[[v]])) && isTRUE(is.character(by[[v]]))) {
+                    by[[v]] <- as.numeric(by[[v]])
+                }
+            }
             out[by, by := by, on = idx]
             bycols <- "by"
 
         # `by` vector
         } else {
-            tmp <- intersect(
-                c("rowid", "marginaleffects_wts_internal", by),
-                colnames(newdata))
-            tmp <- data.frame(newdata)[, tmp, drop = FALSE]
-            out <- merge(out, tmp, by = "rowid", all.x = TRUE, sort = FALSE)
             bycols <- by
         }
 
@@ -595,13 +588,14 @@ get_predictions <- function(model,
         }
     }
 
-    if (!is.null(hypothesis)) {
-        out <- get_hypothesis(out, hypothesis, column = "predicted", by = by)
-    }
-
     # do not overwrite what we did in the `by` if{}
+    # before get_hypothesis
     if (is.null(attr(out, "posterior_draws"))) {
         attr(out, "posterior_draws") <- draws
+    }
+
+    if (!is.null(hypothesis)) {
+        out <- get_hypothesis(out, hypothesis, column = "predicted", by = by)
     }
 
     return(out)

@@ -231,6 +231,31 @@ predictions(nom, type = "probs", by = by, hypothesis = "sequential") |>
     summary()
 ```
 
+We can also use more complicated aggregations. Here, we compute the predicted probability of outcome levels for each value of `cyl`, by collapsing the "3" and "4" outcome levels:
+
+```{r}
+nom <- multinom(factor(gear) ~ mpg + factor(cyl), data = mtcars, trace = FALSE)
+
+by <- expand.grid(
+    group = 3:5,
+    cyl = c(4, 6, 8),
+    stringsAsFactors = TRUE) |>
+    # define labels
+    transform(by = ifelse(
+        group %in% 3:4,
+        sprintf("3/4 Gears & %s Cylinders", cyl),
+        sprintf("5 Gears & %s Cylinders", cyl)))
+
+predictions(nom, by = by)
+```
+
+And we can then compare the different groups using the `hypothesis` argument:
+
+```{r}
+predictions(nom, by = by, hypothesis = "pairwise")
+```
+
+
 
 ## Bayesian models
 
