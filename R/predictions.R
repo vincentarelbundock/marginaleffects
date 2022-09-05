@@ -216,7 +216,7 @@ predictions <- function(model,
     type <- sanitize_type(model = model, type = type, calling_function = "predictions")
     newdata <- sanitize_newdata(model = model, newdata = newdata, modeldata = modeldata)
 
-    # `variables` si character vector: Tukey's 5 or uniques
+    # `variables` is character vector: Tukey's 5 or uniques
     checkmate::assert_list(variables, names = "unique", null.ok = TRUE)
 
     # analogous to comparisons(variables=list(...))
@@ -290,46 +290,6 @@ predictions <- function(model,
         hypothesis = hypothesis,
         by = by,
         ...)
-
-    # These warnings obscure more than then help. We should give more low-level
-    # explicit errors instead.
-
-    # if (isTRUE(grepl("type.*models", tmp[["error"]]))) {
-    #     stop(tmp$error$message, call. = FALSE)
-
-    # } else if (!inherits(tmp[["value"]], "data.frame")) {
-    #     if (isTRUE(grepl("row indices", tmp$error$message))) stop(tmp$error$message, call. = FALSE)
-    #     if (!is.null(tmp$warning)) warning(tmp$warning$message, call. = FALSE)
-    #     if (!is.null(tmp$error)) warning(tmp$error$message, call. = FALSE)
-    #     msg <- format_msg(
-    #         "Unable to compute adjusted predictions for model of class `%s`. You can try to
-    #         specify a different value for the `newdata` argument. If this does not work and
-    #         you believe that this model class should be supported by `marginaleffects`,
-    #         please file a feature request on the Github issue tracker:
-
-    #         https://github.com/vincentarelbundock/marginaleffects/issues")
-    #     msg <- sprintf(msg, class(model)[1])
-    #     stop(msg, call. = FALSE)
-
-    # } else if (inherits(tmp[["warning"]], "warning") &&
-    #            isTRUE(grepl("vcov.*supported", tmp)) &&
-    #            !is.null(vcov) &&
-    #            !isFALSE(vcov)) {
-    #     msg <- format_msg(
-    #         "The object passed to the `vcov` argument is of class `%s`, which is not
-    #         supported for models of class `%s`. Please set `vcov` to `TRUE`, `FALSE`,
-    #         `NULL`, or supply a variance-covariance `matrix` object.")
-    #     msg <- sprintf(msg, class(model)[1])
-    #     stop(msg, call. = FALSE)
-
-    # } else if (inherits(tmp[["warning"]], "warning")) {
-    #     msg <- tmp$warning$message
-    #     warning(msg, call. = FALSE)
-    #     tmp <- tmp[["value"]]
-
-    # } else {
-    #     tmp <- tmp[["value"]]
-    # }
 
 
     # two cases when tmp is a data.frame

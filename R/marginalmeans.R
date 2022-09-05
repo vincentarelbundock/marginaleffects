@@ -179,7 +179,6 @@ marginalmeans <- function(model,
     }
 
     # categorical variables, excluding response
-    column_labels <- colnames(newdata)
     variables_categorical <- find_categorical(newdata = newdata, model = model)
     variables_categorical <- unique(variables_categorical)
     idx <- !grepl("as\\.logical", variables_categorical)
