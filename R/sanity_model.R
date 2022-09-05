@@ -97,13 +97,13 @@ sanity_model_supported_class <- function(model) {
     }
     if (isFALSE(flag)) {
         support <- paste(sort(unique(sapply(supported, function(x) x[1]))), collapse = ", ")
-        msg <-
-'Models of class "%s" are not supported.
-
-Supported model classes include: %s.
-
-New modeling packages can usually be supported by `marginaleffects` if they include a working `predict()` method. If you believe that this is the case, please file a feature request on Github: https://github.com/vincentarelbundock/marginaleffects/issues'
-        msg <- sprintf(msg, class(model)[1], support)
+        msg <- c(
+            sprintf('Models of class "%s" are not supported. Supported model classes include:', class(model)[1]),
+            "",
+            support,
+            "",
+            "New modeling packages can usually be supported by `marginaleffects` if they include a working `predict()` method. If you believe that this is the case, please file a feature request on Github: https://github.com/vincentarelbundock/marginaleffects/issues")
+        msg <- insight::format_message(msg)
         stop(msg, call. = FALSE)
     }
 }
