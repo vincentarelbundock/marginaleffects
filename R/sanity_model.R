@@ -16,10 +16,6 @@ sanity_model_specific.default <- function(model,
                                           vcov = NULL,
                                           calling_function = "marginaleffects",
                                           ...) {
-    dots <- list(...)
-    # if (length(dots) > 0) {
-    #     warning(sprintf("The following arguments will be ignored: %s. Please refer to the documentation for a list of supported model-specific arguments.", paste(sort(names(dots)), collapse = ", ")))
-    # }
     return(invisible(NULL))
 }
 
