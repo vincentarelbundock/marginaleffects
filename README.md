@@ -85,6 +85,9 @@ External links:
   - [Double propensity score adjustment using
     g-computation](https://stats.stackexchange.com/questions/580118/adjusting-the-model-by-propensity-scores-after-propensity-score-matching/580174#580174)
     by Noah Greifer
+  - [Subgroup Analysis After Propensity Score Matching Using
+    R](https://ngreifer.github.io/blog/subgroup-analysis-psm/) by Noah
+    Greifer
 
 ## Definitions
 
