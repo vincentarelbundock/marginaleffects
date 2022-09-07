@@ -91,6 +91,8 @@
 #' + String:
 #'   - "pairwise": pairwise differences between estimates in each row.
 #'   - "reference": differences between the estimates in each row and the estimate in the first row.
+#'   - "sequential": difference between an estimate and the estimate in the next row.
+#'   - "revpairwise", "revreference", "revsequential": inverse of the corresponding hypotheses, as described above.
 #' + String formula to specify linear or non-linear hypothesis tests. If the `term` column uniquely identifies rows, terms can be used in the formula. Otherwise, use `b1`, `b2`, etc. to identify the position of each parameter. Examples:
 #'   - `hp = drat`
 #'   - `hp + drat = 12`

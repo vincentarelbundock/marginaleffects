@@ -148,6 +148,8 @@ contrasts or marginaleffects. These weights only affect the averaging in
 \itemize{
 \item "pairwise": pairwise differences between estimates in each row.
 \item "reference": differences between the estimates in each row and the estimate in the first row.
+\item "sequential": difference between an estimate and the estimate in the next row.
+\item "revpairwise", "revreference", "revsequential": inverse of the corresponding hypotheses, as described above.
 }
 \item String formula to specify linear or non-linear hypothesis tests. If the \code{term} column uniquely identifies rows, terms can be used in the formula. Otherwise, use \code{b1}, \code{b2}, etc. to identify the position of each parameter. Examples:
 \itemize{

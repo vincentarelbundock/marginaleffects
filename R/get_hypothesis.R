@@ -1,3 +1,4 @@
+#' This function takes any input from the `hypothesis` argument, builds a lincom matrix and then multiplies it by the estimates
 get_hypothesis <- function(x, hypothesis, column, by = NULL) {
 
     if (is.null(hypothesis)) {
@@ -41,12 +42,25 @@ get_hypothesis <- function(x, hypothesis, column, by = NULL) {
         }
     }
 
+    if (isTRUE(hypothesis == "revreference")) {
+        lincom <- -1 * diag(nrow(x))
+        lincom[1, ] <- 1
+        lab <- get_hypothesis_row_labels(x, by = by)
+        if (length(lab) == 0 || anyDuplicated(lab) > 0) {
+            lab <- sprintf("Row 1 - Row %s", seq_len(ncol(lincom)))
+        } else {
+            lab <- sprintf("%s - %s", lab[1], lab)
+        }
+        colnames(lincom) <- lab
+        lincom <- lincom[, 2:ncol(lincom), drop = FALSE]
+    }
+
     if (isTRUE(hypothesis == "reference")) {
         lincom <- diag(nrow(x))
         lincom[1, ] <- -1
         lab <- get_hypothesis_row_labels(x, by = by)
         if (length(lab) == 0 || anyDuplicated(lab) > 0) {
-            lab <- sprintf("Row %s - Row 1", 1:ncol(lincom))
+            lab <- sprintf("Row %s - Row 1", seq_len(ncol(lincom)))
         } else {
             lab <- sprintf("%s - %s", lab, lab[1])
         }
@@ -54,21 +68,38 @@ get_hypothesis <- function(x, hypothesis, column, by = NULL) {
         lincom <- lincom[, 2:ncol(lincom), drop = FALSE]
     }
 
+    if (isTRUE(hypothesis == "revsequential")) {
+        lincom <- matrix(0, nrow = nrow(x), ncol = nrow(x) - 1)
+        lab <- get_hypothesis_row_labels(x, by = by)
+        if (length(lab) == 0 || anyDuplicated(lab) > 0) {
+            lab <- sprintf("Row %s - Row %s", seq_len(ncol(lincom)), seq_len(ncol(lincom)) + 1)
+        } else {
+            lab <- sprintf("%s - %s", lab[seq_len(ncol(lincom))], lab[seq_len(ncol(lincom)) + 1])
+        }
+        for (i in seq_len(ncol(lincom))) {
+            lincom[i:(i + 1), i] <- c(1, -1)
+        }
+        colnames(lincom) <- lab
+    }
+
     if (isTRUE(hypothesis == "sequential")) {
         lincom <- matrix(0, nrow = nrow(x), ncol = nrow(x) - 1)
         lab <- get_hypothesis_row_labels(x, by = by)
         if (length(lab) == 0 || anyDuplicated(lab) > 0) {
-            lab <- sprintf("Row %s - Row %s", 1:ncol(lincom) + 1, 1:ncol(lincom))
+            lab <- sprintf("Row %s - Row %s", seq_len(ncol(lincom)) + 1, seq_len(ncol(lincom)))
         } else {
-            lab <- sprintf("%s - %s", lab[1:ncol(lincom) + 1], lab[1:ncol(lincom)])
+            lab <- sprintf("%s - %s", lab[seq_len(ncol(lincom)) + 1], lab[seq_len(ncol(lincom))])
         }
-        for (i in 1:ncol(lincom)) {
+        for (i in seq_len(ncol(lincom))) {
             lincom[i:(i + 1), i] <- c(-1, 1)
         }
         colnames(lincom) <- lab
     }
 
-    if (isTRUE(hypothesis == "pairwise")) {
+    # same order as `emmeans`
+    # in simple contrasts, revpairwise is trivially -1*pairwise, but it is
+    # useful to have this option for interactions
+    if (isTRUE(hypothesis == "revpairwise")) {
         lab_row <- get_hypothesis_row_labels(x, by = by)
         lab_col <- NULL
         flag <- length(lab_row) == 0 || anyDuplicated(lab_row) > 0
@@ -84,6 +115,30 @@ get_hypothesis <- function(x, hypothesis, column, by = NULL) {
                         lab_col <- c(lab_col, sprintf("Row %s - Row %s", j, i))
                     } else {
                         lab_col <- c(lab_col, sprintf("%s - %s", lab_row[j], lab_row[i]))
+                    }
+                }
+            }
+        }
+        lincom <- do.call("cbind", mat)
+        colnames(lincom) <- lab_col
+    }
+
+    if (isTRUE(hypothesis == "pairwise")) {
+        lab_row <- get_hypothesis_row_labels(x, by = by)
+        lab_col <- NULL
+        flag <- length(lab_row) == 0 || anyDuplicated(lab_row) > 0
+        mat <- list()
+        for (i in seq_len(nrow(x))) {
+            for (j in 2:nrow(x)) {
+                if (i < j) {
+                    tmp <- matrix(0, nrow = nrow(x), ncol = 1)
+                    tmp[j, ] <- -1
+                    tmp[i, ] <- 1
+                    mat <- c(mat, list(tmp))
+                    if (isTRUE(flag)) {
+                        lab_col <- c(lab_col, sprintf("Row %s - Row %s", i, j))
+                    } else {
+                        lab_col <- c(lab_col, sprintf("%s - %s", lab_row[i], lab_row[j]))
                     }
                 }
             }
