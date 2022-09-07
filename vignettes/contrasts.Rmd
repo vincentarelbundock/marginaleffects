@@ -506,7 +506,7 @@ library(marginaleffects)
 set.seed(1234)
 
 source(here::here("inst/tinytest/helpers.R"))
-mod <- download_model("brms_lognormal_hurdle")
+mod <- marginaleffects:::modelarchive_model("brms_lognormal_hurdle")
 ```
 
 We have two different sets of coefficients here for the two different processes. The hurdle part (`hu`) uses a logit link, and the non-hurdle part (`mu`) uses an identity link. However, that's a slight misnomer—a true identity link would show the coefficients on a non-logged dollar value scale. Because we're using a `lognormal` family, GDP per capita is pre-logged, so the "original" identity scale is actually logged dollars.

@@ -188,6 +188,7 @@ Collate:
     'methods_stats.R'
     'methods_survival.R'
     'methods_tobit1.R'
+    'modelarchive.R'
     'myTryCatch.R'
     'package.R'
     'plot.R'

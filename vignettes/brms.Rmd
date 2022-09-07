@@ -78,7 +78,7 @@ mod <- brm(survived ~ woman * age + passengerClass,
 ```
 
 ```{r, include = FALSE}
-mod <- download_model("brms_titanic_int")
+mod <- marginaleffects:::modelarchive_model("brms_titanic_int")
 ```
 ## Adjusted predictions
 
@@ -197,7 +197,7 @@ mod <- brm(
 ```
 
 ```{r, include = FALSE}
-mod <- download_model("brms_vdem")
+mod <- marginaleffects:::modelarchive_model("brms_vdem")
 ```
 
 ## Posterior predictions
@@ -458,7 +458,7 @@ mod <- brm(depvar ~ ic.gc + oc.gc,
 ```
 
 ```{r, include = FALSE}
-mod <- download_model("brms_heating")
+mod <- marginaleffects:::modelarchive_model("brms_heating")
 ```
 
 ## Adjusted predictions
@@ -711,3 +711,4 @@ comparisons(mod) |> summary()
 options(marginaleffects_credible_interval = "eti")
 comparisons(mod) |> summary()
 ```
+

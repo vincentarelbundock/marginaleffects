@@ -46,16 +46,6 @@ testing_path <- function(x) {
     return(out)
 }
 
-
-download_model <- function(name) {
-    tmp <- tempfile()
-    url <- paste0("https://raw.github.com/vincentarelbundock/modelarchive/main/data/", name, ".rds")
-    try(utils::download.file(url, tmp, quiet = TRUE), silent = TRUE)
-    out <- try(readRDS(tmp), silent = TRUE)
-    return(out)
-}
-
-
 expect_print <- function(unknown, known) {
     known <- trimws(unlist(strsplit(known, split = "\\n")))
     unknown <- trimws(capture.output(unknown))

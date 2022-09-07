@@ -45,7 +45,7 @@ expect_equivalent(tidy(cmp1)$estimate, weighted.mean(cmp1$comparison, lalonde$w)
 expect_equivalent(cmp2$comparison, weighted.mean(cmp1$comparison, lalonde$w))
 
 set.seed(1024)
-mod <- download_model("brms_numeric2")
+mod <- marginaleffects:::modelarchive_model("brms_numeric2")
 w <- runif(32)
 cmp1 <- comparisons(mod, transform_pre = "differenceavg")
 cmp2 <- comparisons(mod, wts = w, transform_pre = "differenceavg")
