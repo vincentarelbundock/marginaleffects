@@ -138,6 +138,7 @@ marginalmeans <- function(model,
     checkmate::assert_choice(wts, choices = c("equal", "cells", "proportional"))
 
     # fancy vcov processing to allow strings like "HC3"
+    vcov_false <- isTRUE(vcov == FALSE)
     vcov <- get_vcov(model, vcov = vcov, ...)
 
     # sanity
@@ -283,7 +284,7 @@ marginalmeans <- function(model,
 
     # standard errors via delta method
     J <- NULL
-    if (!isFALSE(vcov)) {
+    if (!vcov_false) {
         se <- get_se_delta(
             model,
             vcov = vcov,
