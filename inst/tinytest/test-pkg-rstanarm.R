@@ -3,6 +3,7 @@
 # https://github.com/vincentarelbundock/marginaleffects/issues/240
 source("helpers.R", local = TRUE)
 if (ON_CRAN) exit_file("on cran")
+if (!require("rstanarm")) exit_file("rstanarm")
 options("marginaleffects_credible_interval" = "hdi")
 requiet("rstanarm")
 requiet("emmeans")
