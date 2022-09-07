@@ -3,6 +3,7 @@
 * New supported model class: `gamlss`. Thanks to Marcio Augusto Diniz.
 * `marginalmeans()` accepts a `wts` argument with values: "equal", "proportional", "cells".
 * `by` argument accepts data frames for complex groupings.
+* `by` argument in `marginalmeans` only accepts data frames.
 * `by` argument accepts "group" to group by response level.
 * `by` argument works with bayesian models.
 * `hypothesis`: The matrix column names are used as labels for hypothesis tests.

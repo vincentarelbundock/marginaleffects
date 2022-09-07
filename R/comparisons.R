@@ -316,6 +316,7 @@ comparisons <- function(model,
         dof <- NULL
     }
 
+    vcov_false <- isTRUE(vcov == FALSE)
     vcov.type <- get_vcov_label(vcov)
     vcov <- get_vcov(model, vcov = vcov, ...)
 
@@ -352,7 +353,7 @@ comparisons <- function(model,
         J <- NULL
 
     # standard errors via delta method
-    } else if (isTRUE(checkmate::check_matrix(vcov))) {
+    } else if (!vcov_false && isTRUE(checkmate::check_matrix(vcov))) {
         idx <- intersect(colnames(mfx), c("type", "group", "term", "contrast"))
         idx <- mfx[, (idx), drop = FALSE]
         args <- list(model,

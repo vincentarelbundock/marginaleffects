@@ -25,12 +25,7 @@
 #' * `FALSE`: Marginal means are computed for each predictor individually.
 #' * `TRUE`: Marginal means are computed for each combination of predictors specified in the `variables` argument.
 #' * `NULL` (default): Behaves like `TRUE` when the `variables` argument is specified and the model formula includes interactions. Behaves like `FALSE` otherwise.
-#' @param by character vector of categorical variables included in the
-#' `variables_grid`. Marginal means are computed within each subgroup
-#' corresponding to combinations of values in the `by` variables. Note that the
-#' `by` argument works differently for other functions in the package
-#' (`predictions()`, `marginaleffects()`, `comparisons()`), where `by` is used
-#' to average estimates in subgroup.
+#' @param by Collapse marginal means into categories. Data frame with a `by` column of group labels, and merging columns shared by `newdata` or the data frame produced by calling the same function without the `by` argument.
 #' @inheritParams marginaleffects
 #' @inheritParams predictions
 #' @inheritParams comparisons
@@ -129,7 +124,7 @@ marginalmeans <- function(model,
     modeldata <- newdata <- hush(insight::get_data(model))
 
 
-    checkmate::assert_character(by, null.ok = TRUE)
+    checkmate::assert_data_frame(by, null.ok = TRUE)
     checkmate::assert_function(transform_post, null.ok = TRUE)
     interaction <- sanitize_interaction(interaction, variables, model)
     conf_level <- sanitize_conf_level(conf_level, ...)
@@ -179,6 +174,7 @@ marginalmeans <- function(model,
         }
     }
 
+
     # categorical variables, excluding response
     variables_categorical <- find_categorical(newdata = newdata, model = model)
     variables_categorical <- unique(variables_categorical)
@@ -208,6 +204,7 @@ marginalmeans <- function(model,
     } else {
         variables_grid <- intersect(variables_grid, variables_categorical)
     }
+
     variables_grid <- unique(c(variables, variables_grid))
 
     if (!is.null(by)) {
@@ -296,6 +293,7 @@ marginalmeans <- function(model,
             interaction = interaction,
             modeldata = modeldata,
             hypothesis = hypothesis,
+            by = by,
             ...)
         # get rid of attributes in column
         out[["std.error"]] <- as.numeric(se)
@@ -319,7 +317,7 @@ marginalmeans <- function(model,
     }
 
     # column order
-    cols <- c("type", "group", by, "term", "hypothesis", "value", variables, "marginalmean",
+    cols <- c("type", "group", colnames(by), "term", "hypothesis", "value", variables, "marginalmean",
               "std.error", "conf.low", "conf.high", sort(colnames(out)))
     cols <- unique(cols)
     cols <- intersect(cols, colnames(out))
@@ -369,11 +367,16 @@ get_marginalmeans <- function(model,
         modeldata = modeldata,
         ...)
 
+    if (isTRUE(checkmate::check_data_frame(by))) {
+        # warnings for factor vs numeric vs character. merge.data.table usually still works.
+        pred <- suppressWarnings(merge(pred, by))
+    }
+
     # marginal means
     if (!isTRUE(interaction)) {
         mm <- list()
         for (v in variables) {
-            idx <- intersect(colnames(pred), c("term", "group", v, by))
+            idx <- intersect(colnames(pred), c("term", "group", "by", v))
             tmp <- data.table(pred)[
                 , .(marginalmean = stats::weighted.mean(predicted, w = wts, na.rm = TRUE)),
                 by = idx]
@@ -392,12 +395,15 @@ get_marginalmeans <- function(model,
         out <- rbindlist(mm)
         setorder(out, "term", "value")
     } else {
-        idx <- intersect(colnames(pred), c("term", "group", variables))
-
+        idx <- intersect(colnames(pred), c("term", "group", "by", variables))
 
         out <- data.table(pred)[
             , .(marginalmean = stats::weighted.mean(predicted, w = wts, na.rm = TRUE)),
             by = idx]
+    }
+
+    if (isTRUE(checkmate::check_data_frame(by))) {
+        out <- out[, .(marginalmean = mean(marginalmean)), by = "by"]
     }
 
     if (!is.null(hypothesis)) {
