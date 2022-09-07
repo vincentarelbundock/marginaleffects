@@ -62,16 +62,6 @@
 #' @examples
 #' library(marginaleffects)
 #'
-#' # Convert numeric variables to categorical before fitting the model
-#' dat <- mtcars
-#' dat$cyl <- as.factor(dat$cyl)
-#' dat$am <- as.logical(dat$am)
-#' mod <- lm(mpg ~ hp + cyl + am, data = dat)
-#'
-#' # Compute and summarize marginal means
-#' mm <- marginalmeans(mod)
-#' summary(mm)
-#' 
 #' # simple marginal means for each level of `cyl`
 #' dat <- mtcars
 #' dat$carb <- factor(dat$carb)
@@ -111,6 +101,16 @@
 #'   paste("Control:", by$carb),
 #'   paste("Treatment:", by$carb))
 #' 
+#' 
+#' # Convert numeric variables to categorical before fitting the model
+#' dat <- mtcars
+#' dat$cyl <- as.factor(dat$cyl)
+#' dat$am <- as.logical(dat$am)
+#' mod <- lm(mpg ~ hp + cyl + am, data = dat)
+#'
+#' # Compute and summarize marginal means
+#' mm <- marginalmeans(mod)
+#' summary(mm)
 #'
 #' # Contrast between marginal means (carb2 - carb1), or "is the 1st marginal means equal to the 2nd?"
 #' # see the vignette on "Hypothesis Tests and Custom Contrasts" on the `marginaleffects` website.
