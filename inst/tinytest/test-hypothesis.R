@@ -76,7 +76,7 @@ cmp2 <- comparisons(
     mod,
     variables = "cyl",
     newdata = "mean",
-    hypothesis = "pairwise")
+    hypothesis = "revpairwise")
 expect_equivalent(diff(cmp1$comparison), cmp2$comparison)
 
 
