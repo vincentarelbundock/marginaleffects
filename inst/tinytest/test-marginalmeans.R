@@ -22,13 +22,6 @@ expect_equal(data.frame(em)$asymp.LCL, mm$conf.high)
 expect_equal(data.frame(em)$asymp.UCL, mm$conf.low)
 
 
-# as.factor and as.logical in formula
-mod <- lm(mpg ~ factor(cyl) + as.factor(gear) + as.logical(am), data = mtcars)
-mm <- marginalmeans(mod, variables = "cyl", by = "am")
-expect_inherits(mm, "marginalmeans")
-expect_equal(nrow(mm), 6)
-
-
 # old tests used to require pre-conversion
 dat <- mtcars
 dat$am <- as.logical(dat$am)
@@ -108,17 +101,6 @@ expect_equivalent(me$marginalmean, em$estimate)
 # error: no factor
 mod <- lm(hp ~ mpg, mtcars)
 expect_error(marginalmeans(mod), pattern = "was found")
-
-
-# by argument
-dat <- mtcars
-dat$am <- as.logical(dat$am)
-dat$vs <- factor(dat$vs)
-dat$cyl <- factor(dat$cyl)
-mod <- glm(gear ~ cyl + vs + am, data = dat, family = poisson)
-mm <- marginalmeans(mod, by = "am")
-expect_inherits(mm, "marginalmeans")
-expect_equal(nrow(mm), 10)
 
 
 # wts
