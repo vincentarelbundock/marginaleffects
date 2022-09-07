@@ -1,4 +1,4 @@
-#' This function takes any input from the `hypothesis` argument, builds a lincom matrix and then multiplies it by the estimates
+# This function takes any input from the `hypothesis` argument, builds a lincom matrix and then multiplies it by the estimates
 get_hypothesis <- function(x, hypothesis, column, by = NULL) {
 
     if (is.null(hypothesis)) {
