@@ -1,13 +1,11 @@
-Augusto
-Marcio
+’s
 AAP
 AAPs
 Adelies
-Numpy
-NumPyro
 AME
 APM
 args
+Augusto
 Avina
 bayesian
 bugfix
@@ -69,6 +67,7 @@ lnoravg
 lnoravgwts
 lnratio
 lnratioavg
+Marcio
 marginalmeans
 MEM
 MER
@@ -78,6 +77,8 @@ modelbased
 Nafa
 nd
 numDeriv
+Numpy
+NumPyro
 pairwise
 probs
 ratioavg
@@ -86,6 +87,9 @@ Rdatatable
 regressand
 regressors’
 Resul
+revpairwise,
+revreference,
+revsequential,
 Rohan
 rowid
 satterthwaite
@@ -101,4 +105,3 @@ varepsilon
 vcovHC
 vincentarelbundock
 wmean
-’s
