@@ -241,9 +241,9 @@ by$by <- ifelse(
 
 # Convert numeric variables to categorical before fitting the model
 dat <- mtcars
-dat$cyl <- as.factor(dat$cyl)
 dat$am <- as.logical(dat$am)
-mod <- lm(mpg ~ hp + cyl + am, data = dat)
+dat$carb <- as.factor(dat$carb)
+mod <- lm(mpg ~ hp + am + carb, data = dat)
 
 # Compute and summarize marginal means
 mm <- marginalmeans(mod)
@@ -251,8 +251,6 @@ summary(mm)
 
 # Contrast between marginal means (carb2 - carb1), or "is the 1st marginal means equal to the 2nd?"
 # see the vignette on "Hypothesis Tests and Custom Contrasts" on the `marginaleffects` website.
-mod <- lm(mpg ~ hp + cyl + am, data = dat)
-
 lc <- c(-1, 1, 0, 0, 0, 0)
 marginalmeans(mod, variables = "carb", hypothesis = "b2 = b1")
 
@@ -262,7 +260,9 @@ marginalmeans(mod, variables = "carb", hypothesis = lc)
 lc <- matrix(c(
     -2, 1, 1, 0, -1, 1,
     -1, 1, 0, 0, 0, 0
-    ), ncol = 2)
+    ),
+  ncol = 2,
+  dimnames = list(NULL, c("A", "B")))
 marginalmeans(mod, variables = "carb", hypothesis = lc)
 
 }
