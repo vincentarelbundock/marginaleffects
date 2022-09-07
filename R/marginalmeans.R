@@ -72,16 +72,50 @@
 #' mm <- marginalmeans(mod)
 #' summary(mm)
 #' 
-#' # Marginal means by subgroup
+#' # simple marginal means for each level of `cyl`
 #' dat <- mtcars
 #' dat$carb <- factor(dat$carb)
 #' dat$cyl <- factor(dat$cyl)
 #' dat$am <- as.logical(dat$am)
 #' mod <- lm(mpg ~ carb + cyl + am, dat)
-#' marginalmeans(mod, variables = "cyl", by = "am")
+#' 
+#' marginalmeans(
+#'   mod,
+#'   variables = "cyl")
+#' 
+#' # collapse levels of cyl by averaging
+#' by <- data.frame(
+#'   cyl = c(4, 6, 8),
+#'   by = c("4 & 6", "4 & 6", "8"))
+#' marginalmeans(mod,
+#'   variables = "cyl",
+#'   by = by)
+#' 
+#' # pairwise differences between collapsed levels
+#' marginalmeans(mod,
+#'   variables = "cyl",
+#'   by = by,
+#'   hypothesis = "pairwise")
+#' 
+#' # interaction
+#' marginalmeans(mod,
+#'   variables = c("cyl", "carb"),
+#'   interaction = TRUE)
+#' 
+#' # collapsed interaction
+#' by <- expand.grid(
+#'   cyl = unique(mtcars$cyl),
+#'   carb = unique(mtcars$carb))
+#' by$by <- ifelse(
+#'   by$cyl == 4,
+#'   paste("Control:", by$carb),
+#'   paste("Treatment:", by$carb))
+#' 
 #'
 #' # Contrast between marginal means (carb2 - carb1), or "is the 1st marginal means equal to the 2nd?"
 #' # see the vignette on "Hypothesis Tests and Custom Contrasts" on the `marginaleffects` website.
+#' mod <- lm(mpg ~ hp + cyl + am, data = dat)
+#' 
 #' lc <- c(-1, 1, 0, 0, 0, 0)
 #' marginalmeans(mod, variables = "carb", hypothesis = "b2 = b1")
 #'
