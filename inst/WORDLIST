@@ -87,9 +87,9 @@ Rdatatable
 regressand
 regressors’
 Resul
-revpairwise,
-revreference,
-revsequential,
+revpairwise
+revreference
+revsequential
 Rohan
 rowid
 satterthwaite
