@@ -177,6 +177,11 @@ m <- marginaleffects(model)
 expect_inherits(m, "marginaleffects")
 
 
+# Issue #484: i() converts to factors but was treated as numeric
+m <- feols(Ozone ~ i(Month), airquality)
+m <- marginaleffects(m)
+expect_inherits(m, "marginaleffects")
+
 
 
 # TODO: works interactively
@@ -248,3 +253,5 @@ expect_inherits(m, "marginaleffects")
 # model <- feols(y ~ x1*x2 | group1^group2, data)
 # nd <- datagrid(model = model)
 # expect_error(marginaleffects(model, newdata = "mean"), "combined")
+
+
