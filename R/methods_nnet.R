@@ -45,85 +45,123 @@ get_predict.multinom <- function(model,
                                  newdata = insight::get_data(model),
                                  vcov = FALSE,
                                  conf_level = 0.95,
-                                 type = "probs",
+                                 type = ifelse(inherits(model, "multinom"), "probs", "response"),
                                  ...) {
+  
+    softMax <- function(eta){ # softMax transform on matrix with response levels in columns
+      exp_eta <- exp(eta)
+      return(sweep(exp_eta, 1, STATS=rowSums(exp_eta), FUN="/"))
+    }
 
     type <- sanitize_type(model, type)
 
-    is_latent <- is_mclogit <- FALSE
-    
-    if (inherits(model, "multinom")) { # && (type == "link" | type == "latent") 
-      mt <- terms(model)
-      rhs <- delete.response(mt)
-      if (missing(newdata)) {
-        m <- model$model
-        na.act <- model$na.action
-      } else {
-        m <- model.frame(rhs, data = newdata, na.action = na.exclude)
-        na.act <- attr(m, "na.action")
+    if (inherits(model, "multinom")) {
+      # type="link" = additive logratio, "clr" = centered logratio, "ilr" = isometric logratio
+      # and "logit" = logistic
+      # prediction types are not supported by predict.multinom so
+      # we calculate those by hand
+      if ((isTRUE(type=="link") | isTRUE(type=="clr") | isTRUE(type=="ilr") | isTRUE(type=="logit"))) {
+          mt <- terms(model)
+          rhs <- delete.response(mt)
+          if (missing(newdata)) {
+            m <- model$model
+            na.act <- model$na.action
+          } else {
+            m <- model.frame(rhs, data = newdata, na.action = na.exclude) # na.action = na.omit, xlev = model$xlevels
+            na.act <- attr(m, "na.action")
+          }
+          X <- model.matrix(rhs, m,
+                            contrasts.arg = model$contrasts,
+                            xlev = model$xlevels)
+          betahat <- t(rbind(0, coef(model))) # model coefficients, with expicit zero row 
+                                               # added for reference category & transposed
+          pred <- X %*% betahat        # predictions for type="link" = additive logratio
+          colnames(pred) <- model$lev  # with explicit zero column for reference level included
+          
+          # for type=="clr" use centered logit scale
+          if (isTRUE(type=="clr") | isTRUE(type=="ilr")) pred <- pred - rowMeans(pred)
+          
+          # for type=="ilr" convert centered logratio coordinates to isometric logratio coordinates
+          # using given basis ilrBase
+          if (isTRUE(type=="ilr")) { 
+            V <- compositions::ilrBase(D = ncol(pred))
+            pred <- as.matrix(compositions::clr2ilr(pred, V=V))
+            colnames(pred) <- head(model$lev, -1)
+          }
+          
+          if (isTRUE(type=="logit")) { 
+            pred <- softMax(pred) # backtransform link scale to response / probs scale
+            pred <- qlogis(pred) # transform probs to logit scale
+          }
+      } else { 
+        pred <- stats::predict(model, # for type="probs" = response scale
+                               newdata = newdata,
+                               type = gsub("logit", "probs", type),
+                               ...)
+        if ("numeric" %in% class(pred)) pred = as.matrix(t(pred), ncol=1)
       }
-      X <- model.matrix(rhs, m,
-                        contrasts.arg = model$contrasts,
-                        xlev = model$xlevels)
-      betahat <- t(rbind(0, coef(model ))) # model coefficients, with expicit zero row 
-                                           # added for reference category & transposed
-      pred <- X %*% betahat 
-      colnames(pred) <- model$lev # predictions on the link scale
-                                  # with explicit zero column for reference level
-      if (type == "latent") { # for type=="latent" use centered logit scale
-        pred <- pred - rowMeans(pred) } else if (type == "link") {
-        pred <- pred[,-1] # for type=="link" drop first zero reference level column  
-                          # as in mclogit::predict.mblogit
-      } else if (type == "probs") {
-        # normally I would have used original predict method for type == "probs"
-        # but there is a bug in predict.multinom which for some models causes it
-        # to drop the reference level, so doing it by backtransforming predictions on link scale
-        softMax <- function(eta) {
-          exp_eta <- exp(eta)
-          return(sweep(exp_eta, 1, STATS = rowSums(exp_eta), FUN = "/"))
-        }
-        pred <- softMax(pred)
-      }} else {
+    }
+            
+    if (inherits(model, c("mblogit", "mclogit"))) {
+      if (isTRUE(type=="link") | isTRUE(type=="clr") | isTRUE(type=="ilr")) {
+        pred <- stats::predict(model, 
+                               newdata = newdata,
+                               type = "link",
+                               ...)
+        reference_level <- dimnames(model$D)[[1]][[1]] # add explicit zero column for reference level
+        pred <- cbind(0, pred)
+        colnames(pred)[1] <- reference_level
         
-    if (isTRUE(type == "latent") && inherits(model, c("mblogit", "mclogit"))) {
-        is_latent <- TRUE
-        is_mclogit <- TRUE
-        type <- "link"
-    } 
-
-    pred <- stats::predict(model,
-                    newdata = newdata,
-                    type = type,
-                    ...)
+        # for type=="clr" use centered logit scale
+        if (isTRUE(type=="clr") | isTRUE(type=="ilr")) pred <- pred - rowMeans(pred) 
+        
+        # for type=="ilr" convert centered logratio coordinates to isometric logratio coordinates
+        # using given basis ilrBase
+        if (isTRUE(type=="ilr")) { 
+          V <- compositions::ilrBase(D = ncol(pred))
+          pred <- as.matrix(compositions::clr2ilr(pred, V=V))
+          colnames(pred) <- head(model$lev, -1)        
+          }
+      } else { 
+        pred <- stats::predict(model, # for type="response"
+                               newdata = newdata,
+                               type = "response",
+                               ...)
+        if (isTRUE(type=="logit")) pred <- qlogis(pred) # transform probs to logit scale
+      }
     }
+      
+  
 
-    # atomic vector means there is only one row in `newdata`
-    # two levels DV returns a vector 
-    if (isTRUE(checkmate::check_atomic_vector(pred))) {
-        y_original <- sort(unique(insight::get_response(model)))
-        two_levels <- length(y_original) == 2
-        if (isTRUE(two_levels)) {
-            pred <- matrix(pred)
-            colnames(pred) <- as.character(y_original[2])
-        } else {
-            pred <- matrix(pred, nrow = 1, dimnames = list(NULL, names(pred)))
-        }
-    }
+    # # atomic vector means there is only one row in `newdata`
+    # # two levels DV returns a vector 
+    # if (isTRUE(checkmate::check_atomic_vector(pred))) {
+    #     y_original <- sort(unique(insight::get_response(model)))
+    #     two_levels <- length(y_original) == 2
+    #     if (isTRUE(two_levels)) {
+    #         pred <- matrix(pred)
+    #         colnames(pred) <- as.character(y_original[2])
+    #     } else {
+    #         pred <- matrix(pred, nrow = 1, dimnames = list(NULL, names(pred)))
+    #     }
+    # }
 
-    if (is_latent && is_mclogit) {
-        missing_level <- as.character(unique(insight::get_response(model)))
-        missing_level <- setdiff(missing_level, colnames(pred))
-        if (length(missing_level == 1)) {
-            pred <- cbind(0, pred)
-            colnames(pred)[1] <- missing_level
-            pred <- pred - rowMeans(pred)
-        } else {
-            stop("Unable to compute predictions on the latent scale.", call. = FALSE)
-        }
-
-    }
-
-
+    # for mblogit & mclogit models we add an explicit zero column 
+    # for predictions with type="link" for the reference level to match behaviour
+    # of nnet::multinom objects
+    # (this allows predictions with type="link" or "logit"
+    # to be backtransformed to the response scale using the
+    # same softmax transform by rowid)
+    # if (inherits(model, c("mblogit", "mclogit")) & 
+    #     (isTRUE(type == "link") | isTRUE(type == "latent"))) { 
+    #   reference_level <- dimnames(model$D)[[1]][[1]]
+    #   pred <- cbind(0, pred)
+    #   colnames(pred)[1] <- reference_level
+    #   if (is_latent) { # for type=="latent" use centered logit scale
+    #     pred <- pred - rowMeans(pred)
+    #   }
+    # }  
+    
     # matrix with outcome levels as columns
     out <- data.frame(
         group = rep(colnames(pred), each = nrow(pred)),
