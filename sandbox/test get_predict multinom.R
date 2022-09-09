@@ -1,3 +1,5 @@
+library(devtools)
+install_github("tomwenseleers/marginaleffects")
 library(marginaleffects)
 library(nnet)
 library(mclogit)
