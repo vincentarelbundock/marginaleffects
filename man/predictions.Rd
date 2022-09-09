@@ -149,7 +149,9 @@ intervals to the \code{insight::get_predicted()} function, which uses back
 transformation to produce adequate confidence intervals on the scale
 specified by the \code{type} argument. When this is not possible, \code{predictions()}
 uses the Delta Method to compute standard errors around adjusted
-predictions.
+predictions, and builds symmetric confidence intervals. These naive symmetric
+intervals may not always be appropriate. For instance, they may stretch beyond
+the bounds of a binary response variables.
 }
 \section{Vignettes and documentation}{
 
@@ -172,6 +174,7 @@ Case studies:
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html}{Mixed effects models}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html}{Multinomial Logit and Discrete Choice Models}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/multiple_imputation.html}{Multiple Imputation}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/python.html}{Python NumPyro models in \code{marginaleffects}}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/logistic_contrasts.html}{Unit-level contrasts in logistic regressions}
 }
 
@@ -220,12 +223,10 @@ predictions(mod, newdata = datagrid(hp = c(100, 120), cyl = 4))
 library(dplyr)
 mod <- lm(mpg ~ hp * am * vs, mtcars)
 
-pred <- predictions(mod, newdata = datagrid(am = 0, grid_type = "counterfactual")) \%>\%
-    summarize(across(c(predicted, std.error), mean))
+pred <- predictions(mod)
+summary(pred)
 
-predictions(mod, newdata = datagrid(am = 0:1, grid_type = "counterfactual")) \%>\% 
-    group_by(am) \%>\%
-    summarize(across(c(predicted, std.error), mean))
+predictions(mod, by = "am")
 
 # Conditional Adjusted Predictions
 plot_cap(mod, condition = "hp")
