@@ -354,7 +354,7 @@ data.frame(predictions(fit2_multinom,
 
 # TESTS WITH irl (isometric logratio) SCALE ####
 library(compositions)
-V = ilrBase(D=ncol(pred_ilr_wide)) # D= nr of response levels
+V = ilrBase(D=length(fit2_multinom$lev)) # D= nr of response levels
 pred_ilr = data.frame(predictions(fit2_multinom, 
                        type = "ilr") %>%
              transform(conf.low = predicted - 1.96 * std.error,
