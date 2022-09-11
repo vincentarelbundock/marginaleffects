@@ -147,7 +147,7 @@ sanitize_variables <- function(variables,
 
     } else if (is.character(transform_pre)) {
         # switch to the avg version when there is a `by` function
-        if (!is.null(by) && !isTRUE(grepl("avg$", transform_pre))) {
+        if (isTRUE(checkmate::check_character(by)) && !isTRUE(grepl("avg$", transform_pre))) {
             transform_pre <- paste0(transform_pre, "avg")
         }
 

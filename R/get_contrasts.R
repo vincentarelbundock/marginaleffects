@@ -146,55 +146,16 @@ get_contrasts <- function(model,
     out[, predicted_hi := pred_hi[["predicted"]]]
     out[, predicted := pred_or[["predicted"]]]
 
-    # the `by` variables must be included for group-by data.table operations
-    if (!is.null(by)) {
-        bycols <- sort(setdiff(
-            unique(c(colnames(out), colnames(newdata))),
-            c("rowid", "rowidcf", "predicted", "predicted_lo", "predicted_hi", "dydx", "comparison")))
-        bycols <- paste(bycols, collapse = ", ")
-        flagA1 <- checkmate::check_character(by)
-        flagA2 <- checkmate::check_true(all(by %in% c(colnames(out), colnames(newdata))))
-        flagB1 <- checkmate::check_data_frame(by)
-        flagB2 <- checkmate::check_true("by" %in% colnames(by))
-        flagB3 <- checkmate::check_true(all(setdiff(colnames(by), "by") %in% colnames(out)))
+    idx <- grep("^contrast|^group$|^term$|^type$|^transform_pre_idx$", colnames(out), value = TRUE)
 
-        if (!(isTRUE(flagA1) && isTRUE(flagA2)) && !(isTRUE(flagB1) && isTRUE(flagB2) && isTRUE(flagB3))) {
-            msg <- c(
-                "The `by` argument must be either:", "",
-                sprintf("1. Character vector in which each element is part of: %s", bycols),
-                "",
-                sprintf("2. A data frame with a `by` column of labels, and in which all other columns are elements of: %s", bycols),
-                "",
-                "It can sometimes be useful to supply a data frame explicitly to the `newdata` argument in order to be able to group by all available columns."
-             )
-            stop(insight::format_message(msg), call. = FALSE)
-        }
-
-        # `by` data.frame
-        if (isTRUE(checkmate::check_data_frame(by))) {
-            idx <- setdiff(intersect(colnames(out), colnames(by)), "by")
-            out[by, by := by, on = idx]
-            bycols <- "by"
-
-        # `by` vector
-        } else {
-            # don't double merge the weights
-            bycols <- setdiff("marginaleffects_wts_internal", colnames(out)) 
-            bycols <- c(bycols, "rowid", by)
-            bycols <- intersect(bycols, colnames(newdata))
-            tmp <- data.frame(newdata)[, bycols, drop = FALSE]
-            out <- merge(out, tmp, by = "rowid", all.x = TRUE, sort = FALSE)
-            bycols <- by
-        }
+    # when `by` is a character vector, we sometimes modify the transform_pre function on the fly to use the `avg` version.
+    # this is important and convenient because some of the statistics are non-collapsible, so we can't average them at the very end.
+    # when `by` is a data frame, we do this only at the very end.
+    # TODO: What is the UI for this? Doesn't make sense to have different functions.
+    if (isTRUE(checkmate::check_character(by))) {
+        bycols <- by
     } else {
         bycols <- NULL
-    }
-
-    if ("by" %in% bycols) {
-        idx <- "by"
-    } else {
-        idx <- grep("^contrast|^group$|^term$|^type$|^transform_pre_idx$", colnames(out), value = TRUE)
-        idx <- unique(c(idx, bycols))
     }
 
     # we feed these columns to safefun(), even if they are useless for categoricals
@@ -298,6 +259,14 @@ get_contrasts <- function(model,
         out <- out[!is.na(comparison)]
     }
 
+    # averaging by groups
+    # if `by` is a vector, we have done the work already above
+    if (isTRUE(checkmate::check_data_frame(by))) {
+        out <- get_by(out, draws = draws, newdata = newdata, by = by, column = "comparison")
+        draws <- attr(out, "posterior_draws")
+    }
+
+    # hypothesis tests using the delta method
     out <- get_hypothesis(out, hypothesis, column = "comparison", by = by)
 
     # output

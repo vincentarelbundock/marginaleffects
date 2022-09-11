@@ -385,7 +385,6 @@ predictions <- function(model,
     marginaleffects_wts_internal <- out[["marginaleffects_wts_internal"]]
     out[["marginaleffects_wts_internal"]] <- NULL
 
-
     # clean columns
     if (isTRUE(checkmate::check_data_frame(by))) {
         bycols <- setdiff(colnames(by), "by")
@@ -479,13 +478,11 @@ get_predictions <- function(model,
     }
 
     # averaging by groups
-    out <- get_by(out, draws, newdata, by)
+    out <- get_by(out, draws = draws, newdata = newdata, by = by, column = "predicted")
     draws <- attr(out, "posterior_draws")
 
     # hypothesis tests using the delta method
-    if (!is.null(hypothesis)) {
-        out <- get_hypothesis(out, hypothesis, column = "predicted", by = by)
-    }
+    out <- get_hypothesis(out, hypothesis, column = "predicted", by = by)
 
     return(out)
 }

@@ -5,6 +5,7 @@ requiet("nnet")
 tol <- 1e-4
 tol_se <- 1e-3
 
+
 mod1 <- glm(gear ~ cyl + am, family = poisson, data = mtcars)
 mod2 <- lm(gear ~ cyl + am, data = mtcars)
 p1 <- predictions(mod1, by = "am")
