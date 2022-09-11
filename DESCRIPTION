@@ -126,6 +126,7 @@ Collate:
     'arg_name_change.R'
     'attributes.R'
     'backtransform.R'
+    'by.R'
     'comparisons.R'
     'complete_levels.R'
     'datagrid.R'
