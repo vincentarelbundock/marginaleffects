@@ -82,7 +82,9 @@ get_vcov.default <- function(model,
             "Unable to extract a variance-covariance matrix using this `vcov`
             argument. Standard errors are computed using the default variance
             instead. Perhaps the model or argument is not supported by the
-            `sandwich` package.")
+            `sandwich` or `clubSandwich` packages. If you believe that the model
+            is supported by one of these two packages, you can open a feature
+            request on Github.")
             warning(msg, call. = FALSE)
         }
     }

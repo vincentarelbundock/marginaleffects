@@ -7,11 +7,14 @@ requiet("data.table")
 fixest::setFixest_nthreads(1)
 
 
-
 # Issue #375: friendly warning when sandwich fails
 mod <- feols(y ~ x1 + i(period, treat, 5) | id + period, base_did)
 hyp <- as.numeric(1:10 %in% 6:10)
-expect_warning(deltamethod(mod, hypothesis = hyp, vcov = "HC1"), pattern = "sandwich")
+# not supported
+expect_warning(deltamethod(mod, hypothesis = hyp, vcov = "HC0"), pattern = "sandwich")
+# supported
+d <- deltamethod(mod, hypothesis = hyp, vcov = "HC1")
+expect_inherits(d, "data.frame")
 
 # bugs stay dead: logit with transformations
 dat <- mtcars
@@ -33,11 +36,10 @@ expect_marginaleffects(mod2, pct_na = 62.5)
 expect_marginaleffects(mod3, pct_na = 62.5)
 expect_marginaleffects(mod4, pct_na = 62.5)
 
+# 20 observations for which we can't compute results
 mfx <- marginaleffects(mod1, variables = "mpg")
 expect_inherits(mfx, "marginaleffects")
-expect_equivalent(sum(is.na(mfx$dydx)), 20)
-expect_equivalent(sum(is.na(mfx$std.error)), 20)
-
+expect_equivalent(nrow(mfx), 12)
 
 
 # fixest::feols vs. Stata
@@ -86,6 +88,7 @@ mod1 <- feols(y ~ x * w | unit, data = dat)
 mod2 <- fixest::feols(y ~ x * w | unit, data = dat2)
 p <- plot_cme(mod2, effect = "x", condition = "w")
 expect_inherits(p, "ggplot")
+
 
 
 
@@ -155,7 +158,6 @@ mfx3 <- marginaleffects(fit3)
 expect_inherits(mfx1, "marginaleffects")
 expect_inherits(mfx2, "marginaleffects")
 expect_inherits(mfx3, "marginaleffects")
-
 
 # Issue #443: `newdata` breaks when it is a `data.table`
 d <- data.table(mtcars)
@@ -253,5 +255,6 @@ expect_inherits(m, "marginaleffects")
 # model <- feols(y ~ x1*x2 | group1^group2, data)
 # nd <- datagrid(model = model)
 # expect_error(marginaleffects(model, newdata = "mean"), "combined")
+
 
 
