@@ -47,27 +47,31 @@ get_predict.fixest <- function(model,
     # args <- c(args, dots)
     # fun <- stats::predict
     # pred <- try(do.call("fun", args), silent = TRUE)
-    
-    pred <- try(predict(object = args$object, 
-                        newdata = args$newdata, 
-                        type = args$type, 
-                        interval = args$interval,
-                        level = args$level,
-                        vcov = args$vcov,
-                        ...),
-                silent = TRUE)
+
+    # fixest is super slow when using do call because of some `deparse()` call
+    pred <- try(stats::predict(
+        object = args$object,
+        newdata = args$newdata,
+        type = args$type,
+        interval = args$interval,
+        level = args$level,
+        vcov = args$vcov,
+        ...),
+    silent = TRUE)
 
     # unable to compute confidence intervals; try again
     if (!is.null(conf_level) && inherits(pred, "try-error")) {
         args[["interval"]] <- "none"
         args[["level"]] <- NULL
-        pred <- try(predict(object = args$object, 
-                            newdata = args$newdata, 
-                            type = args$type, 
-                            interval = args$interval,
-                            vcov = args$vcov,
-                            ...),
-                    silent = TRUE)
+        # fixest is super slow when using do call because of some `deparse()` call
+        pred <- try(stats::predict(
+            object = args$object,
+            newdata = args$newdata,
+            type = args$type,
+            interval = args$interval,
+            vcov = args$vcov,
+            ...),
+        silent = TRUE)
     }
 
     if (inherits(pred, "data.frame")) {
