@@ -1,4 +1,5 @@
-source("helpers.R", local = TRUE)
+# source("helpers.R", local = TRUE)
+source(here::here("inst/tinytest/helpers.R"))
 if (ON_CRAN) exit_file("on cran")
 requiet("margins")
 requiet("nnet")
@@ -106,8 +107,10 @@ expect_equivalent(mfx$std.error, mar$SE, tolerance = tol_se)
 
 
 # input checks
+Q
+pkgload::load_all()
 mod <- lm(mpg ~ hp, mtcars)
-expect_error(comparisons(mod, by = "am", pattern = "newdata"))
+expect_error(comparisons(mod, by = "am"), pattern = "newdata")
 expect_error(marginaleffects(mod, by = "am"), pattern = "newdata")
 
 

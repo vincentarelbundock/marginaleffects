@@ -62,7 +62,7 @@ get_by <- function(estimates, draws, newdata, by, column) {
             draws = draws,
             column = "estimate")
 
-        # frequentist
+    # frequentist
     } else {
         if ("marginaleffects_wts_internal" %in% colnames(newdata)) {
             estimates <- estimates[,

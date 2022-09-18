@@ -153,9 +153,12 @@ get_contrasts <- function(model,
     # when `by` is a data frame, we do this only at the very end.
     # TODO: What is the UI for this? Doesn't make sense to have different functions.
     if (isTRUE(checkmate::check_character(by))) {
-        bycols <- by
-    } else {
-        bycols <- NULL
+        tmp <- intersect(colnames(newdata), c(by, colnames(out)))
+        if (length(tmp) > 1) {
+            tmp <- subset(newdata, select = tmp)
+            out <- merge(out, tmp, sort = FALSE)
+            idx <- c(idx, by)
+        }
     }
 
     # we feed these columns to safefun(), even if they are useless for categoricals
