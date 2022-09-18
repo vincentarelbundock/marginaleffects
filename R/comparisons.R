@@ -245,9 +245,7 @@ comparisons <- function(model,
     if (!is.null(by)) {
         if (isTRUE(insight::model_info(model)$is_bayesian)) {
             msg <- format_msg(
-            'The `by` argument of the `comparisons()` and `marginaleffects()`
-            functions is not supported for bayesian models. Users can call
-            the `posteriordraws()` function and compute the quantities manually.')
+            "The `by` argument of the `comparisons()` and `marginaleffects()` functions is not supported for bayesian models. Users can call the `posteriordraws()` function and compute the quantities manually.")
             stop(msg, call. = FALSE)
         }
     }
