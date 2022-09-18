@@ -33,6 +33,9 @@
 #' # term names with special characters have to be enclosed in backticks
 #' deltamethod(mod, "`factor(cyl)6` = `factor(cyl)8`")
 #' 
+#' mod2 <- lm(mpg ~ hp * drat, data = mtcars)
+#' deltamethod(mod2, "`hp:drat` = drat")
+#' 
 #' # The `FUN` argument can be used to compute standard errors for fitted values
 #' mod <- glm(am ~ hp + mpg, data = mtcars, family = binomial)
 #' 
