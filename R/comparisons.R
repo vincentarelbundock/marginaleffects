@@ -299,6 +299,9 @@ comparisons <- function(model,
 
     hypothesis <- sanitize_hypothesis(hypothesis, ...)
 
+    # after sanitize_newdata
+    sanity_by(by, newdata)
+
 
     # get dof before transforming the vcov arg
     if (is.character(vcov) &&

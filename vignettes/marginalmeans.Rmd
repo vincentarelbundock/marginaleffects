@@ -151,7 +151,6 @@ marginalmeans(
 We can collapse marginal means via averaging using the `by` argument:
 
 ```{r}
-pkgload::load_all()
 dat <- mtcars
 dat$am <- factor(dat$am)
 dat$vs <- factor(dat$vs)

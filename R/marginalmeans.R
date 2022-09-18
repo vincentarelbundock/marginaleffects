@@ -157,14 +157,16 @@ marginalmeans <- function(model,
 
     modeldata <- newdata <- hush(insight::get_data(model))
 
-
-    checkmate::assert_data_frame(by, null.ok = TRUE)
     checkmate::assert_function(transform_post, null.ok = TRUE)
     interaction <- sanitize_interaction(interaction, variables, model)
     conf_level <- sanitize_conf_level(conf_level, ...)
     hypothesis <- sanitize_hypothesis(hypothesis, ...)
     model <- sanitize_model(model, vcov = vcov, calling_function = "marginalmeans")
     checkmate::assert_choice(wts, choices = c("equal", "cells", "proportional"))
+
+    # by: usual tests + only data frames
+    checkmate::assert_data_frame(by, null.ok = TRUE)
+    sanity_by(by, newdata)
 
     # fancy vcov processing to allow strings like "HC3"
     vcov_false <- isTRUE(vcov == FALSE)

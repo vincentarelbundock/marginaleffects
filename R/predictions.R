@@ -216,6 +216,9 @@ predictions <- function(model,
     type <- sanitize_type(model = model, type = type, calling_function = "predictions")
     newdata <- sanitize_newdata(model = model, newdata = newdata, modeldata = modeldata)
 
+    # after sanitize_newdata
+    sanity_by(by, newdata)
+
     # `variables` is character vector: Tukey's 5 or uniques
     checkmate::assert_list(variables, names = "unique", null.ok = TRUE)
 

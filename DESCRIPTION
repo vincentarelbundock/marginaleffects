@@ -206,6 +206,7 @@ Collate:
     'sanitize_type.R'
     'sanitize_variables.R'
     'sanity.R'
+    'sanity_by.R'
     'sanity_dots.R'
     'summary.R'
     'tidy.R'
