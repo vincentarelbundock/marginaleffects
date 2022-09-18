@@ -146,18 +146,30 @@ marginalmeans(
     variables = c("Sex", "PClass"))
 ```
 
-# Subgroup analyses with the `by` argument
+# Group averages with the `by` argument
 
-We can compute marginal means within subgroups using the `by` argument:
+We can collapse marginal means via averaging using the `by` argument:
 
 ```{r}
+pkgload::load_all()
 dat <- mtcars
 dat$am <- factor(dat$am)
 dat$vs <- factor(dat$vs)
 dat$cyl <- factor(dat$cyl)
+
 mod <- glm(gear ~ cyl + vs + am, data = dat, family = poisson)
 
-marginalmeans(mod, by = "am")
+by <- data.frame(
+    by = c("(4 & 6)", "(4 & 6)", "(8)"),
+    cyl = c(4, 6, 8))
+
+marginalmeans(mod, by = by)
+```
+
+And we can use the `hypothesis` argument to compare those new collapsed subgroups:
+
+```{r}
+marginalmeans(mod, by = by, hypothesis = "pairwise")
 ```
 
 # Custom Contrasts and Linear Combinations
