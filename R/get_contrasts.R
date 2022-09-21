@@ -272,7 +272,8 @@ get_contrasts <- function(model,
 
     # averaging by groups
     # if `by` is a vector, we have done the work already above
-    if (isTRUE(checkmate::check_data_frame(by))) {
+    # if `by` is a column name, then we have merged-in a data frame earlier
+    if (identical(by, "by") && "by" %in% colnames(out)) {
         out <- get_by(out, draws = draws, newdata = newdata, by = by, column = "comparison")
         draws <- attr(out, "posterior_draws")
     }

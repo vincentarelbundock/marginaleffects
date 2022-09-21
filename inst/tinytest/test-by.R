@@ -171,6 +171,7 @@ cmp <- comparisons(
     by = by,
     type = "probs")
 expect_equivalent(nrow(cmp), 2)
+
 cmp <- comparisons(
     mod,
     variables = "am",
