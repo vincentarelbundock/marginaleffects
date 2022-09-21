@@ -15,7 +15,7 @@ void <- capture.output(
 # because `get_predict(newdata)` seems to work
 expect_error(marginaleffects(model, type = "response"), pattern = "type. argument")
 # type = "link" works
-expect_marginaleffects(model, type = "link", n_unique = 1)
+suppressWarnings(expect_marginaleffects(model, type = "link", n_unique = 1))
 pred <- predictions(model, type = "link")
 expect_predictions(pred)
 

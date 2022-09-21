@@ -107,6 +107,7 @@ get_predict.multinom <- function(model,
         group = rep(colnames(pred), each = nrow(pred)),
         predicted = c(pred))
 
+
     # usually when `newdata` is supplied by `comparisons`
     if ("rowid" %in% colnames(newdata)) {
         out$rowid <- rep(newdata$rowid, times = ncol(pred))

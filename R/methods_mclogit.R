@@ -48,3 +48,12 @@ get_predict.mblogit <- function(model,
     return(out)
 }
 
+
+#' @rdname get_coef
+#' @export
+get_coef.mblogit <- function(model, ...) {
+    # get_coef.default uses `insight::get_parameters`, but does not combine
+    # Response and Parameter columns. This also matches naming scheme from
+    # `vcov` 
+    stats::coef(model)
+}
