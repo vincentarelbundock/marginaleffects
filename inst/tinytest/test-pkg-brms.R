@@ -39,6 +39,7 @@ brms_ordinal_1 <- insight::download_model("brms_ordinal_1")
 brms_categorical_1 <- marginaleffects:::modelarchive_model("brms_categorical_1")
 
 
+
 # average marginal effects brmsmargins
 options("marginaleffects_credible_interval" = "eti")
 h <- 5e-5
@@ -566,3 +567,16 @@ expect_equivalent(exp(p1$comparison), p2$comparison)
 expect_equivalent(exp(p1$conf.low), p2$conf.low)
 expect_equivalent(exp(p1$conf.high), p2$conf.high)
 expect_equivalent(exp(attr(p1, "posterior_draws")), attr(p2, "posterior_draws"))
+
+
+# byfun
+by <- data.frame(
+    by = c("1,2", "1,2", "3,4", "3,4"),
+    group = 1:4)
+p1 <- predictions(brms_cumulative_random, newdata = "mean")
+p2 <- predictions(brms_cumulative_random, newdata = "mean", by = by)
+p3 <- predictions(brms_cumulative_random, newdata = "mean", by = by, byfun = sum)
+expect_equivalent(mean(p1$predicted[1:2]), p2$predicted[1], tolerance = 0.1)
+expect_equivalent(mean(p1$predicted[3:4]), p2$predicted[2], tolerance = 0.1)
+expect_equivalent(sum(p1$predicted[1:2]), p3$predicted[1], tolerance = 0.1)
+expect_equivalent(sum(p1$predicted[3:4]), p3$predicted[2], tolerance = 0.1)

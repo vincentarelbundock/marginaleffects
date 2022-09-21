@@ -1,4 +1,5 @@
-get_by <- function(estimates, draws, newdata, by, column) {
+get_by <- function(estimates, draws, newdata, by, column, byfun = NULL, ...) {
+
     if (is.null(by)) {
         out <- estimates
         attr(out, "posterior_draws") <- draws
@@ -44,17 +45,24 @@ get_by <- function(estimates, draws, newdata, by, column) {
             data = estimates,
             index = bycols,
             draws = draws,
-            column = "estimate")
+            column = "estimate",
+            byfun = byfun)
 
     # frequentist
     } else {
-        if ("marginaleffects_wts_internal" %in% colnames(newdata)) {
+        if (!is.null(byfun)) {
+            estimates <- estimates[,
+                .(estimate = byfun(estimate)),
+                by = bycols]
+
+        } else if ("marginaleffects_wts_internal" %in% colnames(newdata)) {
             estimates <- estimates[,
                 .(estimate = stats::weighted.mean(
                     estimate,
                     marginaleffects_wts_internal,
                     na.rm = TRUE)),
                 by = bycols]
+
         } else {
             estimates <- estimates[,
                 .(estimate = mean(estimate)),

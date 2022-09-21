@@ -49,18 +49,12 @@
 #' + [datagrid()] call to specify a custom grid of regressors. For example:
 #'   - `newdata = datagrid(cyl = c(4, 6))`: `cyl` variable equal to 4 and 6 and other regressors fixed at their means or modes.
 #'   - See the Examples section and the [datagrid()] documentation.
-#' @param newdata A data frame over which to compute quantities of interest.
-#'   + `NULL`: adjusted predictions for each observed value in the original dataset.
-#'   - "mean": Marginal Effects at the Mean. Marginal effects when each predictor is held at its mean or mode.
-#'   - "median": Marginal Effects at the Median. Marginal effects when each predictor is held at its median or mode.
-#'   - "marginalmeans": Marginal Effects at Marginal Means. See Details section below.
-#'   - "tukey": Marginal Effects at Tukey's 5 numbers.
-#'   - "grid": Marginal Effects on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
-
-#'   + The [datagrid()] function can be used to specify a custom grid of regressors. For example:
-#'       - `newdata = datagrid()`: contrast at the mean
-#'       - `newdata = datagrid(cyl = c(4, 6))`: `cyl` variable equal to 4 and 6 and other regressors fixed at their means or modes.
-#'       - See the Examples section and the [datagrid()] documentation for more.
+#' @param byfun A function such as `mean()` or `sum()` used to aggregate 
+#' estimates within the subgroups defined by the `by` argument. `NULL` uses the
+#' `mean()` function. Must accept a numeric vector and return a single numeric
+#' value. This is sometimes used to take the sum or mean of predicted
+#' probabilities across outcome or predictor
+#' levels. See examples section.
 #' @param transform_post (experimental) A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.
 #'
 #' @template model_specific_arguments
@@ -158,6 +152,13 @@
 #' 
 #' predictions(nom, type = "probs", by = by)
 #' 
+#' # sum of predicted probabilities for combined response levels
+#' mod <- multinom(factor(cyl) ~ mpg + am, data = mtcars, trace = FALSE)
+#' by <- data.frame(
+#'     by = c("4,6", "4,6", "8"),
+#'     group = as.character(c(4, 6, 8)))
+#' predictions(mod, newdata = "mean", byfun = sum, by = by)
+#' 
 #' @export
 predictions <- function(model,
                         newdata = NULL,
@@ -166,6 +167,7 @@ predictions <- function(model,
                         conf_level = 0.95,
                         type = NULL,
                         by = NULL,
+                        byfun = NULL,
                         wts = NULL,
                         transform_post = NULL,
                         hypothesis = NULL,
@@ -292,6 +294,7 @@ predictions <- function(model,
         type = type,
         hypothesis = hypothesis,
         by = by,
+        byfun = byfun,
         ...)
 
 
@@ -362,6 +365,7 @@ predictions <- function(model,
                     eps = 1e-4, # avoid pushing through ...
                     hypothesis = hypothesis,
                     by = by,
+                    byfun = byfun,
                     conf_level = conf_level,
                     ...)
                 if (is.numeric(se) && length(se) == nrow(tmp)) {
@@ -441,6 +445,7 @@ get_predictions <- function(model,
                             conf_level,
                             type,
                             by = NULL,
+                            byfun = byfun,
                             hypothesis = NULL,
                             ...) {
 
@@ -481,7 +486,15 @@ get_predictions <- function(model,
     }
 
     # averaging by groups
-    out <- get_by(out, draws = draws, newdata = newdata, by = by, column = "predicted")
+    out <- get_by(
+        out,
+        draws = draws,
+        newdata = newdata,
+        by = by,
+        byfun = byfun,
+        column = "predicted",
+        ...)
+
     draws <- attr(out, "posterior_draws")
 
     # hypothesis tests using the delta method

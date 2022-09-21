@@ -12,6 +12,7 @@ predictions(
   conf_level = 0.95,
   type = NULL,
   by = NULL,
+  byfun = NULL,
   wts = NULL,
   transform_post = NULL,
   hypothesis = NULL,
@@ -21,23 +22,22 @@ predictions(
 \arguments{
 \item{model}{Model object}
 
-\item{newdata}{A data frame over which to compute quantities of interest.
+\item{newdata}{\code{NULL}, data frame, string, or \code{datagrid()} call. Determines the grid of predictors on which we make predictions.
 \itemize{
-\item \code{NULL}: adjusted predictions for each observed value in the original dataset.
+\item \code{NULL} (default): Predictions for each observed value in the original dataset.
+\item data frame: Predictions for each row of the \code{newdata} data frame.
+\item string:
+\itemize{
+\item "mean": Predictions at the Mean. Predictions when each predictor is held at its mean or mode.
+\item "median": Predictions at the Median. Predictions when each predictor is held at its median or mode.
+\item "marginalmeans": Predictions at Marginal Means. See Details section below.
+\item "tukey": Predictions at Tukey's 5 numbers.
+\item "grid": Predictions on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
 }
+\item \code{\link[=datagrid]{datagrid()}} call to specify a custom grid of regressors. For example:
 \itemize{
-\item "mean": Marginal Effects at the Mean. Marginal effects when each predictor is held at its mean or mode.
-\item "median": Marginal Effects at the Median. Marginal effects when each predictor is held at its median or mode.
-\item "marginalmeans": Marginal Effects at Marginal Means. See Details section below.
-\item "tukey": Marginal Effects at Tukey's 5 numbers.
-\item "grid": Marginal Effects on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
-}
-\itemize{
-\item The \code{\link[=datagrid]{datagrid()}} function can be used to specify a custom grid of regressors. For example:
-\itemize{
-\item \code{newdata = datagrid()}: contrast at the mean
 \item \code{newdata = datagrid(cyl = c(4, 6))}: \code{cyl} variable equal to 4 and 6 and other regressors fixed at their means or modes.
-\item See the Examples section and the \code{\link[=datagrid]{datagrid()}} documentation for more.
+\item See the Examples section and the \code{\link[=datagrid]{datagrid()}} documentation.
 }
 }}
 
@@ -74,6 +74,13 @@ default value is used. This default is the first model-related row in
 the \code{marginaleffects:::type_dictionary} dataframe.}
 
 \item{by}{Character vector of variable names over which to compute group-wise estimates.}
+
+\item{byfun}{A function such as \code{mean()} or \code{sum()} used to aggregate
+estimates within the subgroups defined by the \code{by} argument. \code{NULL} uses the
+\code{mean()} function. Must accept a numeric vector and return a single numeric
+value. This is sometimes used to take the sum or mean of predicted
+probabilities across outcome or predictor
+levels. See examples section.}
 
 \item{wts}{string or numeric: weights to use when computing average
 contrasts or marginaleffects. These weights only affect the averaging in
@@ -296,5 +303,12 @@ by <- data.frame(
     by = c("3,4", "3,4", "5"))
 
 predictions(nom, type = "probs", by = by)
+
+# sum of predicted probabilities for combined response levels
+mod <- multinom(factor(cyl) ~ mpg + am, data = mtcars, trace = FALSE)
+by <- data.frame(
+    by = c("4,6", "4,6", "8"),
+    group = as.character(c(4, 6, 8)))
+predictions(mod, newdata = "mean", byfun = sum, by = by)
 
 }

@@ -152,3 +152,18 @@ p <- predictions(fit_multinom,
     newdata = datagrid(x = dat$x),
     type = "latent")
 expect_inherits(p, "predictions")
+
+
+# Issue #482: sum of predicted probabilities
+mod <- nnet::multinom(factor(cyl) ~ mpg + am, data = mtcars, trace = FALSE)
+by <- data.frame(
+    by = c("4,6", "4,6", "8"),
+    group = as.character(c(4, 6, 8)))
+p1 <- predictions(mod, newdata = "mean")
+p2 <- predictions(mod, newdata = "mean", byfun = sum, by = by)
+p3 <- predictions(mod, newdata = "mean", byfun = mean, by = by)
+expect_equivalent(nrow(p1), 3)
+expect_equivalent(nrow(p2), 2)
+expect_equivalent(nrow(p3), 2)
+expect_equivalent(sum(p1$predicted[1:2]), p2$predicted[1])
+expect_equivalent(mean(p1$predicted[1:2]), p3$predicted[1])
