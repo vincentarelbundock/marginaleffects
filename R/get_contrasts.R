@@ -91,6 +91,13 @@ get_contrasts <- function(model,
         out[, "term" := "interaction"]
     }
 
+    # by
+    if (isTRUE(checkmate::check_data_frame(by))) {
+        setDT(by)
+        out <- merge(out, by, sort = FALSE)
+        by <- "by"
+    }
+
     # transform_pre function could be different for different terms
     # sanitize_variables() ensures all functions are identical when there are interactions
     fun_list <- sapply(names(variables), function(x) variables[[x]][["function"]])
@@ -148,9 +155,11 @@ get_contrasts <- function(model,
 
     idx <- grep("^contrast|^group$|^term$|^type$|^transform_pre_idx$", colnames(out), value = TRUE)
 
-    # when `by` is a character vector, we sometimes modify the transform_pre function on the fly to use the `avg` version.
-    # this is important and convenient because some of the statistics are non-collapsible, so we can't average them at the very end.
-    # when `by` is a data frame, we do this only at the very end.
+    # when `by` is a character vector, we sometimes modify the transform_pre
+    # function on the fly to use the `avg` version.  this is important and
+    # convenient because some of the statistics are non-collapsible, so we can't
+    # average them at the very end.  when `by` is a data frame, we do this only
+    # at the very end.
     # TODO: What is the UI for this? Doesn't make sense to have different functions.
     if (isTRUE(checkmate::check_character(by))) {
         tmp <- intersect(colnames(newdata), c(by, colnames(out)))
@@ -180,7 +189,6 @@ get_contrasts <- function(model,
     # singleton vs vector
     # different terms use different functions
     safefun <- function(hi, lo, y, n, term, interaction, eps, wts) {
-
         # when interaction=TRUE, sanitize_transform_pre enforces a single function
         if (isTRUE(interaction)) {
             fun <- fun_list[[1]]
