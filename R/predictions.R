@@ -354,7 +354,9 @@ predictions <- function(model,
         if (!"std.error" %in% colnames(tmp) && is.null(draws)) {
             if (isTRUE(checkmate::check_matrix(V))) {
                 # vcov = FALSE to speed things up
-                fun <- function(...) get_predictions(..., vcov = FALSE)$predicted
+                fun <- function(...) {
+                    get_predictions(..., verbose = FALSE, vcov = FALSE)$predicted
+                }
                 se <- get_se_delta(
                     model,
                     newdata = newdata,
@@ -447,6 +449,7 @@ get_predictions <- function(model,
                             by = NULL,
                             byfun = byfun,
                             hypothesis = NULL,
+                            verbose = TRUE,
                             ...) {
 
 
@@ -493,6 +496,7 @@ get_predictions <- function(model,
         by = by,
         byfun = byfun,
         column = "predicted",
+        verbose = verbose,
         ...)
 
     draws <- attr(out, "posterior_draws")

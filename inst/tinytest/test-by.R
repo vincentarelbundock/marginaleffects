@@ -187,3 +187,4 @@ by <- data.frame(
     by = c("4", "5"),
     group = 4:5)
 expect_warning(comparisons(mod, variables = "mpg", newdata = "mean", by = by))
+expect_warning(predictions(mod, newdata = "mean", by = by))
