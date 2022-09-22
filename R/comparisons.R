@@ -274,7 +274,7 @@ comparisons <- function(model,
     marginalmeans <- isTRUE(checkmate::check_choice(newdata, choices = "marginalmeans")) 
 
     # before sanitize_variables
-    newdata <- sanitize_newdata(model = model, newdata = newdata)
+    newdata <- sanitize_newdata(model = model, newdata = newdata, by = by)
 
     # weights: before sanitize_variables
     sanity_wts(wts, newdata) # after sanity_newdata

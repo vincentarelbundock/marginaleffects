@@ -216,7 +216,7 @@ predictions <- function(model,
     hypothesis <- sanitize_hypothesis(hypothesis, ...)
     conf_level <- sanitize_conf_level(conf_level, ...)
     type <- sanitize_type(model = model, type = type, calling_function = "predictions")
-    newdata <- sanitize_newdata(model = model, newdata = newdata, modeldata = modeldata)
+    newdata <- sanitize_newdata(model = model, newdata = newdata, modeldata = modeldata, by = by)
 
     # after sanitize_newdata
     sanity_by(by, newdata)
