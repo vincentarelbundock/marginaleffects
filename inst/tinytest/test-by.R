@@ -139,7 +139,7 @@ expect_false(anyNA(p$predicted))
 
 
 # Issue #445: by data frame to collapse response levels
-mod <- multinom(factor(gear) ~ mpg + am * vs, data = mtcars, trace = FALSE)
+mod <- nnet::multinom(factor(gear) ~ mpg + am * vs, data = mtcars, trace = FALSE)
 
 expect_error(predictions(mod, type = "probs", by = "response"), pattern = "Character vector")
 expect_error(predictions(mod, type = "probs", by = mtcars), pattern = "Character vector")
@@ -179,3 +179,11 @@ cmp <- comparisons(
     hypothesis = "sequential",
     type = "probs")
 expect_equivalent(nrow(cmp), 1)
+
+
+# Issue #481: warning on missing by categories
+mod <- nnet::multinom(factor(gear) ~ mpg + am * vs, data = mtcars, trace = FALSE)
+by <- data.frame(
+    by = c("4", "5"),
+    group = 4:5)
+expect_warning(comparisons(mod, variables = "mpg", newdata = "mean", by = by))

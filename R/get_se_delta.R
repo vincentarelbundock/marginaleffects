@@ -39,6 +39,7 @@ get_se_delta_contrasts <- function(model,
         hi = hi,
         original = original,
         interaction = interaction,
+        verbose = FALSE,
         ...
     )$comparison
 }

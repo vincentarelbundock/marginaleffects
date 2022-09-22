@@ -10,9 +10,8 @@ get_contrasts <- function(model,
                           by = NULL,
                           hypothesis = NULL,
                           interaction = FALSE,
+                          verbose = TRUE,
                           ...) {
-
-    dots <- list(...)
 
     # some predict() methods need data frames and will convert data.tables
     # internally, which can be very expensive if done many times. we do it once
@@ -93,8 +92,18 @@ get_contrasts <- function(model,
 
     # by
     if (isTRUE(checkmate::check_data_frame(by))) {
+        bycols <- "by"
         setDT(by)
-        out <- merge(out, by, sort = FALSE)
+        tmp <- setdiff(intersect(colnames(out), colnames(by)), "by")
+        # harmonize column types
+        for (v in colnames(by)) {
+            if (isTRUE(is.character(out[[v]])) && isTRUE(is.numeric(by[[v]]))) {
+                by[[v]] <- as.character(by[[v]])
+            } else if (isTRUE(is.numeric(out[[v]])) && isTRUE(is.character(by[[v]]))) {
+                by[[v]] <- as.numeric(by[[v]])
+            }
+        }
+        out[by, by := by, on = tmp]
         by <- "by"
     }
 
@@ -274,7 +283,14 @@ get_contrasts <- function(model,
     # if `by` is a vector, we have done the work already above
     # if `by` is a column name, then we have merged-in a data frame earlier
     if (identical(by, "by") && "by" %in% colnames(out)) {
-        out <- get_by(out, draws = draws, newdata = newdata, by = by, column = "comparison")
+        out <- get_by(
+            out,
+            draws = draws,
+            newdata = newdata,
+            by = by,
+            column = "comparison",
+            verbose = verbose)
+
         draws <- attr(out, "posterior_draws")
     }
 
