@@ -76,16 +76,27 @@ get_predict.fixest <- function(model,
 
     if (inherits(pred, "data.frame")) {
         out <- pred
-        out$rowid <- seq_len(nrow(newdata))
+        if (!"rowid" %in% colnames(out)) {
+            if ("rowid" %in% colnames(newdata)) {
+                out$rowid <- newdata$rowid
+            } else {
+                out$rowid <- seq_len(nrow(newdata))
+            }
+        }
         colnames(out)[colnames(out) == "fit"] <- "predicted"
         colnames(out)[colnames(out) == "se.fit"] <- "std.error"
         colnames(out)[colnames(out) == "ci_low"] <- "conf.low"
         colnames(out)[colnames(out) == "ci_high"] <- "conf.high"
-    } else if (isTRUE(checkmate::check_atomic_vector(pred)) &&
-               !inherits(pred, "try-error")) {
-        out <- data.frame(
-            rowid = 1:nrow(newdata),
-            predicted = as.numeric(pred))
+    } else if (isTRUE(checkmate::check_atomic_vector(pred)) && !inherits(pred, "try-error")) {
+        if ("rowid" %in% colnames(newdata)) {
+            out <- data.frame(
+                rowid = newdata$rowid,
+                predicted = as.numeric(pred))
+        } else {
+            out <- data.frame(
+                rowid = 1:nrow(newdata),
+                predicted = as.numeric(pred))
+        }
     } else {
         if (inherits(pred, "try-error")) {
             stop(as.character(pred), call. = FALSE)

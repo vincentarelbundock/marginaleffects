@@ -185,6 +185,19 @@ m <- marginaleffects(m)
 expect_inherits(m, "marginaleffects")
 
 
+# Issue #493
+mod <- feols(vs ~ hp * factor(cyl), data = mtcars)
+cmp <- comparisons(
+    mod,
+    newdata = datagrid(hp = c(80, 100, 120)),
+    by = "hp")
+expect_equivalent(nrow(cmp), 9)
+expect_equivalent(nrow(tidy(cmp)), 9)
+mod <- feglm(vs ~ hp * factor(cyl), data = mtcars, family = "binomial")
+cmp <- comparisons(
+    mod,
+    newdata = datagrid(hp = c(80, 100, 120)),
+    by = "hp")
 
 # TODO: works interactively
 # expect_false(expect_warning(marginaleffects(fit3)))

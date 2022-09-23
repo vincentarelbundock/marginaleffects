@@ -174,10 +174,11 @@ get_contrasts <- function(model,
         tmp <- intersect(colnames(newdata), c(by, colnames(out)))
         if (length(tmp) > 1) {
             tmp <- subset(newdata, select = tmp)
-            out <- merge(out, tmp, sort = FALSE)
+            out <- merge(out, tmp, all.x = TRUE, sort = FALSE)
             idx <- c(idx, by)
         }
     }
+
 
     # we feed these columns to safefun(), even if they are useless for categoricals
     if (!"marginaleffects_eps" %in% colnames(out)) out[, "marginaleffects_eps" := NA]
