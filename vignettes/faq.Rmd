@@ -26,7 +26,7 @@ n_support <- nrow(dat)
 
 * [`plot_cap()` over a range of unobserved values](https://stackoverflow.com/questions/72723687/plot-cap-response-curve-for-counterfactual-data)
 * [Plot the marginal effects from a `plm` package model](https://stackoverflow.com/questions/73126378/marginal-effects-plot-of-plm/73127507#73127507)
-* [Models with de-meaned, polynomials, or transformed variables](https://stackoverflow.com/questions/73303108/marginal-effects-for-de-meaned-polynomials-in-mixed-models/73305398#73305398)
+* [Models with demeaned, polynomials, or transformed variables](https://stackoverflow.com/questions/73303108/marginal-effects-for-de-meaned-polynomials-in-mixed-models/73305398#73305398)
 
 
 # Calling `marginaleffects` in functions, loops, environments, or after re-assigning variables
@@ -39,5 +39,5 @@ A related problem can arise if users fit a model, but then assign a new value to
 
 Recommendations:
 
-1. Supply your dataset explicity to the `newdata` argument of `marginaleffects` functions.
+1. Supply your dataset explicitly to the `newdata` argument of `marginaleffects` functions.
 2. Avoid assigning a new value to a variable that you use to store a dataset for model fitting.

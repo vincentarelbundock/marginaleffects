@@ -172,7 +172,7 @@ mean(onesample[which(onesample$interv == 0), ]$predicted_meanY)
 
 Although manual computation is simple, it does not provide uncertainty estimates. In contrast, `comparisons()` has already computed the standard error and confidence interval using the delta method.
 
-Instead of the delta method, most analysts will rely on bootstraping. For example, the replication code from Hernán and Robins does this:
+Instead of the delta method, most analysts will rely on bootstrapping. For example, the replication code from Hernán and Robins does this:
 
 ```{r}
 # function to calculate difference in means
@@ -222,7 +222,7 @@ bootstrap <- data.frame(
 bootstrap
 ```
 
-The results are close to those that we obtained with `comparisons()`, but the confidence interval differs slightly because of the difference between bootstraping and the delta method.
+The results are close to those that we obtained with `comparisons()`, but the confidence interval differs slightly because of the difference between bootstrapping and the delta method.
 
 ```{r}
 summary(cmp)

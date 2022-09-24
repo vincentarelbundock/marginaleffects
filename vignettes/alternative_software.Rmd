@@ -51,7 +51,7 @@ The [Marginal Means Vignette](https://vincentarelbundock.github.io/marginaleffec
 
 ## Contrasts
 
-AFAICT, `emmeans` does not provide an easy way to compute unit-level contrasts for every row of the dataset used to fit our model. Therefore, the side-by-side syntax shown below will always include `newdata=datagrid()` to specify that we want to compute only one contrast: at the mean values of the regressors. In day-to-day practice with `marginaleffects()`, however, this extra argument would not be necessary.
+As far as I can tell, `emmeans` does not provide an easy way to compute unit-level contrasts for every row of the dataset used to fit our model. Therefore, the side-by-side syntax shown below will always include `newdata=datagrid()` to specify that we want to compute only one contrast: at the mean values of the regressors. In day-to-day practice with `marginaleffects()`, however, this extra argument would not be necessary.
 
 Fit a model:
 ```{r}
@@ -158,7 +158,7 @@ These results are identical to those produced by `emmeans` (except for $t$ vs. $
 
 ## Marginal Effects
 
-AFAICT, `emmeans::emtrends` makes it easier to compute marginal effects for a few user-specified values than for large grids or for the full original dataset.
+As far as I can tell, `emmeans::emtrends` makes it easier to compute marginal effects for a few user-specified values than for large grids or for the full original dataset.
 
 Response scale, user-specified values:
 

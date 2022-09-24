@@ -33,7 +33,7 @@ ggplot2::theme_set(theme_clean())
 source("https://raw.githubusercontent.com/vincentarelbundock/marginaleffects/5c38b0b7673d5e992aa80022d1001905c49cc755/inst/tinytest/helpers.R")
 ```
 
-The `marginaleffects` package offers convenience functions to compute and display predictions, contrasts, and marginal effects from bayesian models estimated by the `brms` package. To compute these quantities, `marginaleffects` relies on workshorse functions from the `brms` package to draw from the posterior distribution. The type of draws used is controlled by using the `type` argument of the `predictions` or `marginaleffects` functions:
+The `marginaleffects` package offers convenience functions to compute and display predictions, contrasts, and marginal effects from bayesian models estimated by the `brms` package. To compute these quantities, `marginaleffects` relies on workhorse functions from the `brms` package to draw from the posterior distribution. The type of draws used is controlled by using the `type` argument of the `predictions` or `marginaleffects` functions:
 
 * `type = "response"`: Compute posterior draws of the expected value using the `brms::posterior_epred` function.
 * `type = "link"`: Compute posterior draws of the linear predictor using the `brms::posterior_linpred` function.
@@ -170,7 +170,7 @@ ggplot(mfx, aes(x = draw, fill = factor(woman))) +
 
 # Random effects model
 
-This section replicates some of the analyses of a random effects model published in Andrew Heiss' blog post: ["A guide to correctly calculating posterior predictions and average marginal effects with multilievel Bayesian models."](https://www.andrewheiss.com/blog/2021/11/10/ame-bayes-re-guide) The objective is mainly to illustrate the use of `marginaleffects`. Please refer to the original post for a detailed discussion of the quantities computed below.
+This section replicates some of the analyses of a random effects model published in Andrew Heiss' blog post: ["A guide to correctly calculating posterior predictions and average marginal effects with multilevel Bayesian models."](https://www.andrewheiss.com/blog/2021/11/10/ame-bayes-re-guide) The objective is mainly to illustrate the use of `marginaleffects`. Please refer to the original post for a detailed discussion of the quantities computed below.
 
 Load libraries and download data:
 
@@ -238,7 +238,7 @@ mfx <- marginaleffects(mod,
 mfx
 ```
 
-Use the `posteriordraws()` to extract draws from the posterio distribution of marginal effects, and plot them:
+Use the `posteriordraws()` to extract draws from the posterior distribution of marginal effects, and plot them:
 
 ```{r}
 mfx <- posteriordraws(mfx)

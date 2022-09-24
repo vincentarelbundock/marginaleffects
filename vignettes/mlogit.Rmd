@@ -46,7 +46,7 @@ library(tidyverse)
 
 # `nnet` package
 
-The `multinom` function of the `nnet` package allows users to fit log-lienar models via neural networks. The `data` used for this function is a data frame with one observation per row, and the response variable is coded a factor. All the `marginaleffects` package function work seamlessly with this model. For example, we can estimate a model and compute average marginal effects as follows:
+The `multinom` function of the `nnet` package allows users to fit log-linear models via neural networks. The `data` used for this function is a data frame with one observation per row, and the response variable is coded a factor. All the `marginaleffects` package function work seamlessly with this model. For example, we can estimate a model and compute average marginal effects as follows:
 
 ```{r, message = FALSE}
 library(nnet)

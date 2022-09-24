@@ -25,7 +25,7 @@ Note: This vignette requires version 0.8.0 of `marginaleffects`, or [the develop
 
 This vignette replicates some of the analyses in this excellent blog post by Frank Harrell: [Avoiding One-Number Summaries of Treatment Effects for RCTs with Binary Outcomes](https://www.fharrell.com/post/rdist/). Here, we show how one-number summaries and the entire distribution unit-level contrasts can be easily computed with `comparisons()`.
 
-Dr. Harrell discusses summaries from logistic regression models in the blog post above. He focuses on a context in which one is interested in comparing two groups, such as in randomized controlled trials. He highlights potential pitfalls of presenting "one-number summmaries", e.g., odds ratio and mean proportion difference. Finally, he recommends focusing on the entire distribution of proportion difference between groups.
+Dr. Harrell discusses summaries from logistic regression models in the blog post above. He focuses on a context in which one is interested in comparing two groups, such as in randomized controlled trials. He highlights potential pitfalls of presenting "one-number summaries", e.g., odds ratio and mean proportion difference. Finally, he recommends focusing on the entire distribution of proportion difference between groups.
 
 For clarification, we use the following terms interchangeably in the context of logistic regression where the covariate of interest is categorical:
 
@@ -84,7 +84,7 @@ comparisons(
     summary()
 ```
 
-The `comparisons()` function above computed the predicted probability of mortality (`day30==1`) for each observed row of the data in two couterfactual cases: when `tx` is "SK", and when `tx` is "tPA". Then, it computed the differences between these two sets of predictions. Finally, it computed the population-average of risk differences.
+The `comparisons()` function above computed the predicted probability of mortality (`day30==1`) for each observed row of the data in two counterfactual cases: when `tx` is "SK", and when `tx` is "tPA". Then, it computed the differences between these two sets of predictions. Finally, it computed the population-average of risk differences.
 
 Instead of risk *differences*, we could compute population-averaged (marginal) adjusted risk *ratios*:
 

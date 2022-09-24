@@ -224,7 +224,7 @@ by <- data.frame(
 predictions(nom, type = "probs", by = by)
 ```
 
-This can be very useful in combination with the `hypothesis` argument. For example, here we compute the difference between average adjusted predictions for the 3 and 4 response levels, compared to the 5 reponse level:
+This can be very useful in combination with the `hypothesis` argument. For example, here we compute the difference between average adjusted predictions for the 3 and 4 response levels, compared to the 5 response level:
 
 ```{r}
 predictions(nom, type = "probs", by = by, hypothesis = "sequential") |>

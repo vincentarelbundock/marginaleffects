@@ -378,7 +378,7 @@ marginalmeans(mod, type = "probs", hypothesis = lc)
 
 Now we illustrate how to use the machinery described above to do pairwise comparisons between contrasts, a type of analysis often associated with a "Difference-in-Differences" research design.
 
-First, we simultate data with two treatment groups and pre/post periods:
+First, we simulate data with two treatment groups and pre/post periods:
 
 ```{r, message = FALSE}
 library(data.table)
@@ -397,7 +397,7 @@ did <- melt(
 head(did)
 ```
 
-Then, we estimate a linear model with a multiple interaction between the time and the treatment indicators. We alco compute contrasts at the mean for each treatment level:
+Then, we estimate a linear model with a multiple interaction between the time and the treatment indicators. We also compute contrasts at the mean for each treatment level:
 
 ```{r}
 did_model <- lm(y ~ time * trt, data = did)

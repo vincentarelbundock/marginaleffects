@@ -89,7 +89,7 @@ comparisons(mod_logit, type = "link") %>% tidy()
 
 ## Character predictors
 
-All functions of the `marginaleffects` package attempt to treat character predictors as factor predictors. However, using factors instead of characters when modelling is *strongly* encouraged, because they are much safer and faster. This is because factors hold useful information about the full list of levels, which makes them easier to track and handle internally by `marginaleffects`. Users are strongly encouraged to convert their character variables to factor before fitting their models and using `marginaleffects` functions.
+All functions of the `marginaleffects` package attempt to treat character predictors as factor predictors. However, using factors instead of characters when modeling is *strongly* encouraged, because they are much safer and faster. This is because factors hold useful information about the full list of levels, which makes them easier to track and handle internally by `marginaleffects`. Users are strongly encouraged to convert their character variables to factor before fitting their models and using `marginaleffects` functions.
 
 ## Numeric predictors
 

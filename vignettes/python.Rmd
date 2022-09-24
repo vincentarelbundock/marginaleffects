@@ -29,7 +29,7 @@ To begin, we load the `reticulate` package which allows us to interact with the 
 * `load_df()` downloads data on pulmonary fibrosis.
 * `model()` defines the `NumPyro` model.
 * `fit_mcmc_model()` fits the model using Markov Chain Monte Carlo.
-* `predict_mcmc()`: accepts a data frame and returns a matrix of draws from the posterior distribution of adjusted predicions (fitted values).
+* `predict_mcmc()`: accepts a data frame and returns a matrix of draws from the posterior distribution of adjusted predictions (fitted values).
 
 ```{r, results = "hide", message=FALSE}
 library(reticulate)
