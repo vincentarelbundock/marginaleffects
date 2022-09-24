@@ -45,10 +45,7 @@ get_contrasts <- function(model,
     setDT(original)
 
     if (!inherits(pred_hi, "data.frame") || !inherits(pred_lo, "data.frame") || !inherits(pred_or, "data.frame")) {
-        msg <- insight::format_message("Unable to compute adjusted predictions for this model. Either the `newdata` does not meet the requirements of the model's `predict()` method, or this model is not supported. Try to supply a new dataset to the `newdata` argument. If this does not work, you can file a report on the Github Issue Tracker: https://github.com/vincentarelbundock/marginaleffects/issues")
-        if (!is.null(pred_hi$error)) {
-            msg <- paste(msg, "\n\nIn addition:", pred_lo$error)
-        }
+        msg <- insight::format_message("Unable to compute predicted values with this model. You can try to supply a different dataset to the `newdata` argument. If this does not work, you can file a report on the Github Issue Tracker: https://github.com/vincentarelbundock/marginaleffects/issues")
         stop(msg, call. = FALSE)
     }
 

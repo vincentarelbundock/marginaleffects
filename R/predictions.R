@@ -453,13 +453,23 @@ get_predictions <- function(model,
                             ...) {
 
 
-    out <- get_predict(
+    out <- myTryCatch(get_predict(
         model,
         newdata = newdata,
         vcov = vcov,
         conf_level = conf_level,
         type = type,
-        ...)
+        ...))
+    
+    if (inherits(out$value, "data.frame")) {
+        out <- out$value
+    } else {
+        msg <- "Unable to compute predicted values with this model. You can try to supply a different dataset to the `newdata` argument. If this does not work, you can file a report on the Github Issue Tracker: https://github.com/vincentarelbundock/marginaleffects/issues"
+        if (!is.null(out$error)) {
+            msg <- c(msg, paste("This error was also raised:", out$error$message))
+        }
+        stop(insight::format_message(msg), call. = FALSE)
+    }
 
     # extract attributes before setDT
     draws <- attr(out, "posterior_draws")
