@@ -123,7 +123,7 @@ sanitize_variables <- function(variables,
 
     # anything left?
     if (length(predictors) == 0) {
-        stop("There is no valid predictor variable. Please change the `variables` argument.", call. = FALSE)
+        stop("There is no valid predictor variable. Please change the `variables` argument or supply a new data frame to the `newdata` argument.", call. = FALSE)
     }
     others <- setdiff(predictors_all, names(predictors))
 
