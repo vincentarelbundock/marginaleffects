@@ -55,10 +55,6 @@ mod <- lm(hp ~ factor(cyl), mtcars)
 expect_inherits(datagrid(model = mod, cyl = "4"), "data.frame")
 expect_error(datagrid(model = mod, cyl = "2"), pattern = "must be one of the factor levels")
 
-# no longer produces a warning: Mode is applied to cluster variables
-mod <- fixest::feols(mpg ~ hp | cyl, data = mtcars)
-expect_false(tinytest::expect_warning(datagrid(model = mod)))
-
 
 # bugs stay dead: FUN.logical
 tmp <- mtcars

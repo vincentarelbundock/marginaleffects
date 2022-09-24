@@ -1,7 +1,6 @@
 # bug fix submitted for this version of insight
 source("helpers.R", local = TRUE)
 if (ON_CRAN) exit_file("on cran")
-if (minver("insight", "0.17.1")) exit_file("insight 0.17.1")
 requiet("betareg")
 requiet("margins")
 requiet("emmeans")
@@ -17,7 +16,6 @@ mod <<- betareg::betareg(yield ~ batch + temp, data = dat)
 set.seed(1024)
 res <- marginaleffects(mod, variables = "temp")
 mar <- data.frame(margins::margins(mod, unit_ses = TRUE))
-
 expect_true(expect_margins(res, mar, tolerance = 0.1))
 
 # emtrends
@@ -45,8 +43,9 @@ expect_predictions(pred, n_row = 6)
 
 
 # marginalmeans: vs. emmeans
-mm <- marginalmeans(mod)
-expect_marginalmeans(mm, n_row = 10)
+mm <- marginalmeans(mod, type = "link")
+expect_inherits(mm, "marginalmeans")
+expect_equal(nrow(mm), 10)
 mm <- tidy(mm)
 em <- broom::tidy(emmeans::emmeans(mod, "batch"))
 expect_equivalent(mm$estimate, em$estimate)

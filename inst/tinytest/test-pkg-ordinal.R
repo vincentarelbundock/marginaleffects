@@ -64,16 +64,14 @@ expect_marginaleffects(m5, n_unique = 6)
 if (ON_CI) exit_file("on ci")
 # plot
 mod <- clm(Sat ~ Infl + Type + Cont, weights = Freq, data = housing)
-flag <- tinytest::expect_error(plot(marginaleffects(mod)))
-expect_false(flag)
-flag <- tinytest::expect_error(plot_cme(mod, effect = "Infl", condition = "Type"))
-expect_false(flag)
-flag <- tinytest::expect_error(plot_cap(mod, condition = "Type"))
-expect_false(flag)
+p <- plot(marginaleffects(mod))
+expect_inherits(p, "gg")
+p <- plot_cme(mod, effect = "Infl", condition = "Type")
+expect_inherits(p, "gg")
+p <- plot_cap(mod, condition = "Type")
+expect_inherits(p, "gg")
 
 
 # predictions
-flag <- tinytest::expect_error(predictions(mod))
-expect_false(flag)
-
-
+p <- predictions(mod)
+expect_inherits(p, "predictions")
