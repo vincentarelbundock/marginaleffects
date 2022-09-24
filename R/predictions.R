@@ -252,6 +252,7 @@ predictions <- function(model,
         newdata[["marginaleffects_wts_internal"]] <- wts
     }
 
+
     # trust newdata$rowid
     if (!"rowid" %in% colnames(newdata)) {
         newdata[["rowid"]] <- seq_len(nrow(newdata))
@@ -276,7 +277,6 @@ predictions <- function(model,
             newdata <- rbindlist(list(padding, newdata))
         }
     }
-
 
     if (is.null(by)) {
         vcov_tmp <- vcov
@@ -460,7 +460,7 @@ get_predictions <- function(model,
         conf_level = conf_level,
         type = type,
         ...))
-    
+
     if (inherits(out$value, "data.frame")) {
         out <- out$value
     } else {
@@ -471,12 +471,21 @@ get_predictions <- function(model,
         stop(insight::format_message(msg), call. = FALSE)
     }
 
+    if (!"rowid" %in% colnames(out) && "rowid" %in% colnames(newdata) && nrow(out) == nrow(newdata)) {
+        out$rowid <- newdata$rowid
+    }
+
     # extract attributes before setDT
     draws <- attr(out, "posterior_draws")
 
     setDT(out)
 
     # unpad factors before averaging
+    # trust `newdata` rowid more than `out` because sometimes `get_predict()` will add a positive index even on padded data
+    # HACK: the padding indexing rowid code is still a mess
+    if ("rowid" %in% colnames(newdata) && nrow(newdata) == nrow(out)) {
+        out$rowid <- newdata$rowid
+    }
     if ("rowid" %in% colnames(out)) {
         idx <- out$rowid > 0
         out <- out[idx, drop = FALSE]
@@ -509,6 +518,7 @@ get_predictions <- function(model,
         verbose = verbose,
         ...)
 
+    # after get_by
     draws <- attr(out, "posterior_draws")
 
     # hypothesis tests using the delta method
