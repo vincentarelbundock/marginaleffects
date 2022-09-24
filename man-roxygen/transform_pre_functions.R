@@ -16,5 +16,5 @@
 #' k <- data.frame(
 #'     Shortcut = names(k),
 #'     Function = k)
-#' knitr::kable(k, row.names = FALSE)
+#' knitr::kable(k, format = "pipe", row.names = FALSE)
 #' ```

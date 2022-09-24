@@ -272,124 +272,36 @@ The following transformations can be applied by supplying one of the shortcut st
 contrast. \code{lo} is a vector of adjusted predictions for the "low" side of the
 contrast. \code{y} is a vector of adjusted predictions for the original data. \code{x}
 is the predictor in the original data. \code{eps} is the step size to use to
-compute derivatives and elasticities.<table>
- <thead>
-  <tr>
-   <th style="text-align:left;"> Shortcut </th>
-   <th style="text-align:left;"> Function </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> difference </td>
-   <td style="text-align:left;"> \\(hi, lo) hi - lo </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> differenceavg </td>
-   <td style="text-align:left;"> \\(hi, lo) mean(hi) - mean(lo) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> differenceavgwts </td>
-   <td style="text-align:left;"> \\(hi, lo, w) wmean(hi, w) - wmean(lo, w) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> dydx </td>
-   <td style="text-align:left;"> \\(hi, lo, eps) (hi - lo)/eps </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> eyex </td>
-   <td style="text-align:left;"> \\(hi, lo, eps, y, x) (hi - lo)/eps * (x/y) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> eydx </td>
-   <td style="text-align:left;"> \\(hi, lo, eps, y, x) ((hi - lo)/eps)/y </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> dyex </td>
-   <td style="text-align:left;"> \\(hi, lo, eps, x) ((hi - lo)/eps) * x </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> dydxavg </td>
-   <td style="text-align:left;"> \\(hi, lo, eps) mean((hi - lo)/eps) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> eyexavg </td>
-   <td style="text-align:left;"> \\(hi, lo, eps, y, x) mean((hi - lo)/eps * (x/y)) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> eydxavg </td>
-   <td style="text-align:left;"> \\(hi, lo, eps, y, x) mean(((hi - lo)/eps)/y) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> dyexavg </td>
-   <td style="text-align:left;"> \\(hi, lo, eps, x) mean(((hi - lo)/eps) * x) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> dydxavgwts </td>
-   <td style="text-align:left;"> \\(hi, lo, eps, w) wmean((hi - lo)/eps, w) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> eyexavgwts </td>
-   <td style="text-align:left;"> \\(hi, lo, eps, y, x, w) wmean((hi - lo)/eps * (x/y), w) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> eydxavgwts </td>
-   <td style="text-align:left;"> \\(hi, lo, eps, y, x, w) wmean(((hi - lo)/eps)/y, w) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> dyexavgwts </td>
-   <td style="text-align:left;"> \\(hi, lo, eps, x, w) wmean(((hi - lo)/eps) * x, w) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> ratio </td>
-   <td style="text-align:left;"> \\(hi, lo) hi/lo </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> ratioavg </td>
-   <td style="text-align:left;"> \\(hi, lo) mean(hi)/mean(lo) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> ratioavg </td>
-   <td style="text-align:left;"> \\(hi, lo) wmean(hi)/wmean(lo) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> lnratio </td>
-   <td style="text-align:left;"> \\(hi, lo) log(hi/lo) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> lnratioavg </td>
-   <td style="text-align:left;"> \\(hi, lo) log(mean(hi)/mean(lo)) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> lnratioavg </td>
-   <td style="text-align:left;"> \\(hi, lo) log(wmean(hi)/wmean(lo)) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> lnor </td>
-   <td style="text-align:left;"> \\(hi, lo) log((hi/(1 - hi))/(lo/(1 - lo))) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> lnoravg </td>
-   <td style="text-align:left;"> \\(hi, lo) log((mean(hi)/(1 - mean(hi)))/(mean(lo)/(1 - mean(lo)))) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> lnoravgwts </td>
-   <td style="text-align:left;"> \\(hi, lo, w) log((wmean(hi, w)/(1 - wmean(hi, w)))/(wmean(lo, w)/(1 - wmean(lo, w)))) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> expdydx </td>
-   <td style="text-align:left;"> \\(hi, lo, eps) ((exp(hi) - exp(lo))/exp(eps))/eps </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> expdydxavg </td>
-   <td style="text-align:left;"> \\(hi, lo, eps) mean(((exp(hi) - exp(lo))/exp(eps))/eps) </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> expdydxavgwts </td>
-   <td style="text-align:left;"> \\(hi, lo, eps, w) wmean(((exp(hi) - exp(lo))/exp(eps))/eps, w) </td>
-  </tr>
-</tbody>
-</table>
+compute derivatives and elasticities.\tabular{ll}{
+   Shortcut \tab Function \cr
+   difference \tab \(hi, lo) hi - lo \cr
+   differenceavg \tab \(hi, lo) mean(hi) - mean(lo) \cr
+   differenceavgwts \tab \(hi, lo, w) wmean(hi, w) - wmean(lo, w) \cr
+   dydx \tab \(hi, lo, eps) (hi - lo)/eps \cr
+   eyex \tab \(hi, lo, eps, y, x) (hi - lo)/eps * (x/y) \cr
+   eydx \tab \(hi, lo, eps, y, x) ((hi - lo)/eps)/y \cr
+   dyex \tab \(hi, lo, eps, x) ((hi - lo)/eps) * x \cr
+   dydxavg \tab \(hi, lo, eps) mean((hi - lo)/eps) \cr
+   eyexavg \tab \(hi, lo, eps, y, x) mean((hi - lo)/eps * (x/y)) \cr
+   eydxavg \tab \(hi, lo, eps, y, x) mean(((hi - lo)/eps)/y) \cr
+   dyexavg \tab \(hi, lo, eps, x) mean(((hi - lo)/eps) * x) \cr
+   dydxavgwts \tab \(hi, lo, eps, w) wmean((hi - lo)/eps, w) \cr
+   eyexavgwts \tab \(hi, lo, eps, y, x, w) wmean((hi - lo)/eps * (x/y), w) \cr
+   eydxavgwts \tab \(hi, lo, eps, y, x, w) wmean(((hi - lo)/eps)/y, w) \cr
+   dyexavgwts \tab \(hi, lo, eps, x, w) wmean(((hi - lo)/eps) * x, w) \cr
+   ratio \tab \(hi, lo) hi/lo \cr
+   ratioavg \tab \(hi, lo) mean(hi)/mean(lo) \cr
+   ratioavg \tab \(hi, lo) wmean(hi)/wmean(lo) \cr
+   lnratio \tab \(hi, lo) log(hi/lo) \cr
+   lnratioavg \tab \(hi, lo) log(mean(hi)/mean(lo)) \cr
+   lnratioavg \tab \(hi, lo) log(wmean(hi)/wmean(lo)) \cr
+   lnor \tab \(hi, lo) log((hi/(1 - hi))/(lo/(1 - lo))) \cr
+   lnoravg \tab \(hi, lo) log((mean(hi)/(1 - mean(hi)))/(mean(lo)/(1 - mean(lo)))) \cr
+   lnoravgwts \tab \(hi, lo, w) log((wmean(hi, w)/(1 - wmean(hi, w)))/(wmean(lo, w)/(1 - wmean(lo, w)))) \cr
+   expdydx \tab \(hi, lo, eps) ((exp(hi) - exp(lo))/exp(eps))/eps \cr
+   expdydxavg \tab \(hi, lo, eps) mean(((exp(hi) - exp(lo))/exp(eps))/eps) \cr
+   expdydxavgwts \tab \(hi, lo, eps, w) wmean(((exp(hi) - exp(lo))/exp(eps))/eps, w) \cr
+}
 }
 
 \examples{
