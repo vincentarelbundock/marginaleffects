@@ -8,7 +8,7 @@
 * `marginalmeans()` accepts a `wts` argument with values: "equal", "proportional", "cells".
 * `by` argument 
   - accepts data frames for complex groupings.
-  - `in `marginalmeans` only accepts data frames.
+  - in `marginalmeans` only accepts data frames.
   - accepts "group" to group by response level.
   - works with bayesian models.
 * `byfun` argument for the `predictions()` function to aggregate using different functions.
