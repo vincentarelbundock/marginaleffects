@@ -91,6 +91,8 @@ get_predict.multinom <- function(model,
           
           if (isTRUE(type=="logit")) { 
             pred <- softMax(pred) # backtransform link scale to response / probs scale
+            pred[pred < 1E-20] <- 1E-20 # to avoid overflows
+            pred[pred > 0.999999999999999] <- 0.999999999999999
             pred <- qlogis(pred) # transform probs to logit scale
           }
       } else { 
@@ -127,7 +129,11 @@ get_predict.multinom <- function(model,
                                newdata = newdata,
                                type = "response",
                                ...)
-        if (isTRUE(type=="logit")) pred <- qlogis(pred) # transform probs to logit scale
+        if (isTRUE(type=="logit")) { 
+          pred[pred < 1E-20] <- 1E-20 # to avoid overflows
+          pred[pred > 0.999999999999999] <- 0.999999999999999
+          pred <- qlogis(pred) # transform probs to logit scale
+        }
       }
     }
       
