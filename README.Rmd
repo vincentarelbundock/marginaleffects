@@ -100,6 +100,7 @@ Downsides of `marginaleffects` include:
 
 * No multiplicity adjustments. (Use `p.adjust()` instead.)
 * Marginal means are often slower to compute than with `emmeans`.
+* No omnibus test
 
 ## Getting started
 
