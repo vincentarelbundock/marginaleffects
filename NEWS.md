@@ -1,3 +1,7 @@
+# marginaleffects 0.7.1.9000
+
+* Interactions with `fixest::i()` are parsed properly as categorical variables
+
 # marginaleffects 0.7.1
 
 * New supported model class: `gamlss`. Thanks to Marcio Augusto Diniz.

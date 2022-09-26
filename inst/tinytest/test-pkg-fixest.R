@@ -199,6 +199,22 @@ cmp <- comparisons(
     newdata = datagrid(hp = c(80, 100, 120)),
     by = "hp")
 
+
+# Issue #484: fixest::i() parsing
+mod1 <- feols(mpg ~ drat + i(cyl, i.gear), data = mtcars)
+mod2 <- feols(mpg ~ drat + i(cyl, gear), data = mtcars)
+mod3 <- feols(mpg ~ drat + i(cyl), data = mtcars)
+mod4 <- feols(mpg ~ drat + i(cyl, wt) + i(gear, i.am), data = mtcars)
+expect_equivalent(find_categorical(model = mod1), c("cyl", "gear"))
+expect_equivalent(find_categorical(model = mod2), c("cyl"))
+expect_equivalent(find_categorical(model = mod3), c("cyl"))
+expect_equivalent(find_categorical(model = mod4), c("cyl", "gear", "am"))
+if (utils::packageVersion("insight") < "0.18.4.4") exit_file("insight version")
+m <- marginaleffects(mod4)
+expect_inherits(m, "marginaleffects")
+
+
+
 # TODO: works interactively
 # expect_false(expect_warning(marginaleffects(fit3)))
 
@@ -268,6 +284,8 @@ cmp <- comparisons(
 # model <- feols(y ~ x1*x2 | group1^group2, data)
 # nd <- datagrid(model = model)
 # expect_error(marginaleffects(model, newdata = "mean"), "combined")
+
+
 
 
 
