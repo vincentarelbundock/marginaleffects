@@ -1,0 +1,132 @@
+
+
+# Support for new models
+
+It is very easy to add support for new models in `marginaleffects`.  All we need is to set a global option and define 4 very simple functions.
+
+
+If you add support for a class of model produced by a CRAN package, please consider submitting your code for inclusion in the package: https://github.com/vincentarelbundock/marginaleffects
+
+The rest of this section illustrates how to add support for a very simple lm_manual model.
+
+## Fit function
+
+To begin, we define a function which fits a model. Normally, this function will be supplied by a modeling package published on CRAN. Here, we create a function called `lm_manual()`, which estimates a linear regression model using simple linear algebra operates:
+
+```{r}
+lm_manual <- function(f, data, ...) {
+    # design matrix
+    X <- model.matrix(f, data = data)
+    # response matrix
+    Y <- data[[as.character(f[2])]]
+    # coefficients
+    b <- solve(crossprod(X)) %*% crossprod(X, Y)
+    Yhat <- X %*% b
+    # variance-covariance matrix
+    e <- Y - Yhat
+    df <- nrow(X) - ncol(X)
+    s2 <- sum(e^2) / df
+    V <- s2 * solve(crossprod(X))
+    # model object
+    out <- list(
+        d = data,
+        f = f,
+        X = X,
+        Y = Y,
+        V = V,
+        b = b)
+    # class name: lm_manual
+    class(out) <- c("lm_manual", "list")
+    return(out)
+}
+```
+
+IMPORTANT: The custom fit function must assign a new class name to the object it returns. In the example above, the model is assigned to be of class `lm_manual` (see the penultimate line of code in the function).
+
+Our new function replicates the results of `lm()`:
+
+```{r}
+model <- lm_manual(mpg ~ hp + drat, data = mtcars)
+model$b
+
+model_lm <- lm(mpg ~ hp + drat, data = mtcars)
+coef(model_lm)
+```
+
+## `marginaleffects` extension
+
+To extend support in `marginaleffects`, the first step is to tell the package that our new class is supported. We do this by defining a global option:
+
+```{r}
+library(marginaleffects)
+
+options("marginaleffects_model_classes" = "lm_manual")
+```
+
+Then, we define 4 methods:
+
+1. `get_coef()`
+    - Input: `model` object and `newdata` data frame.
+    - Output: named vector of parameters (coefficients).
+1. `set_coef()`
+    - Input: `model` object and `coef` vector of coefficients.
+    - Output: A new model object in which the original coefficients were replaced by the new vector.
+1. `get_vcov()`
+    - Input: `model` object.
+    - Output: A square variance-covariance matrix.
+1. `get_predict()`
+    - Input: `model` object and `newdata` data frame.
+    - Output: A data frame with two columns: a unique `rowid` and a column of `predicted` values.
+
+Note that each of these methods will be named with the suffix `.lm_manual` to indicate that they should be used whenever `marginaleffects` needs to process an object of class `lm_manual`.
+
+```{r}
+get_coef.lm_manual <- function(model, ...) {
+    b <- model$b
+    b <- setNames(as.vector(b), row.names(b))
+    return(b)
+}
+
+set_coef.lm_manual <- function(model, coefs, ...) {
+    out <- model
+    out$b <- coefs
+    return(out)
+}
+
+get_vcov.lm_manual <- function(model, ...) {
+    return(model$V)
+}
+
+get_predict.lm_manual <- function(model, newdata, ...) {
+    newX <- model.matrix(model$f, data = newdata)
+    Yhat <- newX %*% model$b
+    out <- data.frame(
+        rowid = seq_len(nrow(Yhat)),
+        predicted = as.vector(Yhat))
+    return(out)
+}
+```
+
+The methods we just defined work as expected:
+
+```{r}
+get_coef(model)
+
+get_vcov(model)
+
+get_predict(model, newdata = head(mtcars))
+```
+
+Now we can use the `marginaleffects` function:
+
+```{r}
+marginaleffects(model, newdata = mtcars, variables = c("hp", "drat")) |>
+    summary()
+
+predictions(model, newdata = mtcars) |>
+    head()
+```
+
+Note that, for custom model, we typically have to supply values for the `newdata` and `variables` arguments explicitly.
+
+## Extend support for existing models
