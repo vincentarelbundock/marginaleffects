@@ -580,3 +580,24 @@ expect_equivalent(mean(p1$predicted[1:2]), p2$predicted[1], tolerance = 0.1)
 expect_equivalent(mean(p1$predicted[3:4]), p2$predicted[2], tolerance = 0.1)
 expect_equivalent(sum(p1$predicted[1:2]), p3$predicted[1], tolerance = 0.1)
 expect_equivalent(sum(p1$predicted[3:4]), p3$predicted[2], tolerance = 0.1)
+
+
+
+# Issue #500
+N <- 1250
+n <- sample(10:100, size = N, replace = T)
+x <- rbinom(N, 1, 0.5)
+w <- rbinom(N, 1, 0.5)
+z <- rbinom(N, 1, 0.5)
+y <- rbinom(N, n, 0.25 + .25 * x + .125 * w + 0.05 * z)
+d <- data.frame(x, w, z, y, n)
+void <- capture.output(suppressMessages(
+    fit <- brm(
+        y | trials(n) ~ .,
+        data = d,
+        family = binomial(),
+        chains = 1,
+        verbose = FALSE)
+))
+p <- plot_cap(fit, condition = "z")
+expect_inherits(p, "gg")
