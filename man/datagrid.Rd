@@ -43,6 +43,8 @@ datagrid(
 
 \item{FUN_numeric}{the function to be applied to numeric variables.}
 
+\item{FUN_integer}{the function to be applied to integer variables.}
+
 \item{FUN_other}{the function to be applied to other variable types.}
 }
 \value{
