@@ -44,7 +44,7 @@ expect_equivalent(typ$gear, "5")
 mod <- lm(hp ~ mpg, mtcars)
 nd <- datagrid(model = mod, mpg = 110)
 expect_inherits(nd, "data.frame")
-expect_equivalent(dim(nd), c(1, 1))
+expect_equivalent(nrow(nd), 1)
 
 
 # errors and warnings

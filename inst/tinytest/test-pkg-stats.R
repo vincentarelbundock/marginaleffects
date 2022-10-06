@@ -114,21 +114,21 @@ mm <- marginalmeans(mod, type = "link", variables = "Region")
 em <- data.frame(emmeans::emmeans(mod, specs = "Region"))
 expect_equivalent(as.character(mm$value), as.character(em$Region))
 expect_equivalent(mm$estimate, em$estimate)
-expect_equivalent(mm$std.error, em$SE)
+expect_equivalent(mm$std.error, em$SE, tol = 0.001)
 
 mm <- marginalmeans(mod, type = "link", variables = "MainCity")
 em <- data.frame(emmeans::emmeans(mod, specs = "MainCity"))
 expect_equivalent(as.character(mm$value), as.character(em$MainCity))
 expect_equivalent(mm$estimate, em$estimate)
-expect_equivalent(mm$std.error, em$SE)
+expect_equivalent(mm$std.error, em$SE, tol = 0.001)
 
 mm <- marginalmeans(mod, type = "response", variables = "MainCity")
 em <- data.frame(emmeans(mod, specs = "MainCity", type = "response"))
 expect_equivalent(as.character(mm$value), as.character(em$MainCity))
-expect_equivalent(mm$marginalmean, em$prob)
-expect_equivalent(mm$std.error, em$std.error, tolerance = .0001)
-expect_equivalent(mm$conf.low, em$asymp.LCL, tolerance = .0001)
-expect_equivalent(mm$conf.high, em$asymp.UCL, tolerance = .0001)
+expect_equivalent(mm$marginalmean, em$prob, tolerance = .01)
+expect_equivalent(mm$std.error, em$std.error, tolerance = .01)
+expect_equivalent(mm$conf.low, em$asymp.LCL, tolerance = .01)
+expect_equivalent(mm$conf.high, em$asymp.UCL, tolerance = .01)
 
 
 
