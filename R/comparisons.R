@@ -312,7 +312,8 @@ comparisons <- function(model,
         if (!df %in% colnames(newdata)) {
             newdata[[df]] <- mean(insight::get_response(model))
         }
-        dof <- insight::get_df(model, type = vcov, data = newdata)
+        # df_per_observation is an undocumented argument introduced in 0.18.4.7 to preserve backward incompatibility
+        dof <- insight::get_df(model, type = vcov, data = newdata, df_per_observation = TRUE)
     } else {
         dof <- NULL
     }

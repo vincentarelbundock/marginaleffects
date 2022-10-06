@@ -30,7 +30,7 @@ Imports:
     checkmate,
     data.table,
     generics,
-    insight (>= 0.18.4.4),
+    insight (>= 0.18.4.7),
     methods
 Suggests: 
     AER,

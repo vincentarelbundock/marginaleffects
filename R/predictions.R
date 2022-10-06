@@ -329,7 +329,8 @@ predictions <- function(model,
     # degrees of freedom
     if (isTRUE(vcov == "satterthwaite") || isTRUE(vcov == "kenward-roger")) {
         df <- tryCatch(
-            insight::get_df(model, data = newdata, type = vcov),
+            # df_per_observation is an undocumented argument introduced in 0.18.4.7 to preserve backward incompatibility
+            insight::get_df(model, data = newdata, type = vcov, df_per_observation = TRUE),
             error = function(e) NULL)
         if (isTRUE(length(df) == nrow(tmp))) {
             tmp$df <- df
