@@ -12,6 +12,7 @@ typical(
   FUN_factor = Mode,
   FUN_logical = Mode,
   FUN_numeric = function(x) mean(x, na.rm = TRUE),
+  FUN_integer = function(x) round(mean(x, na.rm = TRUE)),
   FUN_other = function(x) mean(x, na.rm = TRUE)
 )
 }
