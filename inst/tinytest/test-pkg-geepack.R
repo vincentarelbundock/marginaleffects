@@ -41,12 +41,21 @@ expect_predictions(pred2, n_row = 6)
 data(dietox, package = "geepack")
 dietox$Cu <- as.factor(dietox$Cu)
 mf <- formula(Weight ~ Cu + Time + I(Time^2) + I(Time^3))
-model <- suppressWarnings(geeglm(mf, data=dietox, id=Pig, 
-                             family=poisson("identity"), corstr="ar1"))
-mm <- marginalmeans(model, variables = "Cu")
-em <- emmeans::emmeans(model, ~Cu, type = "response", df = Inf)
-em <- data.frame(em)
-expect_equal(mm$marginalmean, em$emmean)
-expect_equal(mm$conf.low, em$asymp.LCL)
-expect_equal(mm$conf.high, em$asymp.UCL)
+model <- suppressWarnings(geeglm(mf,
+    data = dietox, id = Pig,
+    family = poisson("identity"), corstr = "ar1"))
+
+em <- tidy(emmeans::emmeans(model, ~Cu, df = Inf, at = list(Time = 10)), type = "response")
+pr <- predictions(model, datagrid(Time = 10, Cu = unique))
+expect_equal(em$estimate, pr$predicted)
+expect_equal(em$std.error, pr$std.error)
+
+# TODO: not clear where `emmeans` holds the Time variable
+# em <- emmeans::emmeans(model, ~Cu, type = "response", df = Inf)
+# em <- data.frame(em)
+# expect_equal(mm$marginalmean, em$emmean)
+# expect_equal(mm$conf.low, em$asymp.LCL)
+# expect_equal(mm$conf.high, em$asymp.UCL)
+
+
 

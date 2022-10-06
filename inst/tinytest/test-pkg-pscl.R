@@ -32,10 +32,10 @@ expect_inherits(mfx1, "data.frame")
 expect_inherits(mfx2, "data.frame")
 
 # emtrends
-em <- emtrends(model, ~phd, "phd", at = list(fem = "Men", phd = 2))
+em <- emtrends(model, ~phd, "phd", at = list(fem = "Men", phd = 2), df = Inf)
 em <- tidy(em)
 mfx <- marginaleffects(model, newdata = datagrid(fem = "Men", phd = 2), variables = "phd")
-expect_equivalent(mfx$dydx, em$phd.trend, tolerance = .001)
+expect_equivalent(mfx$dydx, em$phd.trend, tolerance = .01)
 # standard errors do not match
 # expect_equivalent(mfx$std.error, em$std.error)
 
@@ -109,7 +109,7 @@ mm <- marginalmeans(model)
 expect_marginalmeans(mm)
 # response
 mm <- tidy(marginalmeans(model, type = "response"))
-em <- tidy(emmeans(model, specs = "mar"))
-expect_equivalent(mm$estimate, em$estimate)
-expect_equivalent(mm$std.error, em$std.error, tolerance = .001)
+em <- tidy(emmeans(model, specs = "mar", df = Inf))
+expect_equivalent(mm$estimate, em$estimate, tol = 0.01)
+expect_equivalent(mm$std.error, em$std.error, tolerance = .01)
 
