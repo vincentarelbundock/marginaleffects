@@ -18,6 +18,14 @@ expect_true(all(pre95$conf.low > pre99$conf.low))
 expect_true(all(pre95$conf.high < pre99$conf.high))
 
 
+# tidy() inherits conf_level
+cmp95 <- comparisons(mod)
+cmp99 <- comparisons(mod, conf_level = .99)
+tid95 <- tidy(cmp95)
+tid99 <- tidy(cmp99)
+expect_true(all(tid95$conf.low > tid99$conf.low))
+expect_true(all(tid95$conf.high < tid99$conf.high))
+
 
 # conf.low manual
 mod <- lm(mpg ~ hp, data = mtcars)

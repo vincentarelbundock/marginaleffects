@@ -8,6 +8,7 @@ generics::tidy
 #'
 #' @param x An object produced by the `marginaleffects` function.
 #' @inheritParams marginaleffects
+#' @param conf_level numeric value between 0 and 1. Confidence level to use to build a confidence interval. The default `NULL` uses the `conf_level` value used in the original call to `marginaleffects()`.
 #' @return A "tidy" `data.frame` of summary statistics which conforms to the
 #' `broom` package specification.
 #' @details
@@ -35,7 +36,7 @@ generics::tidy
 #' # average marginal effects
 #' tidy(mfx)
 tidy.marginaleffects <- function(x,
-                                 conf_level = 0.95,
+                                 conf_level = NULL,
                                  ...) {
 
 

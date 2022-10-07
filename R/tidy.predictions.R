@@ -6,6 +6,7 @@
 #' @param x An object produced by the `predictions` function.
 #' @inheritParams predictions
 #' @inheritParams tidy.comparisons
+#' @param conf_level numeric value between 0 and 1. Confidence level to use to build a confidence interval. The default `NULL` uses the `conf_level` value used in the original call to `predictions()`.
 #' @return A "tidy" `data.frame` of summary statistics which conforms to the
 #' `broom` package specification.
 #' @family summary
@@ -15,11 +16,16 @@
 #' mfx <- predictions(mod)
 #' tidy(mfx)
 tidy.predictions <- function(x,
-                             conf_level = 0.95,
+                             conf_level = NULL,
                              transform_avg = NULL,
                              ...) {
 
     checkmate::assert_function(transform_avg, null.ok = TRUE)
+
+    # use original conf_level by default
+    if (is.null(conf_level)) {
+        conf_level <- attr(x, "conf_level")
+    }
 
     # I left the `by` code below in case I eventually want to revert. Much
     # of it needs to stay anyway because we need the `delta` in `tidy` for

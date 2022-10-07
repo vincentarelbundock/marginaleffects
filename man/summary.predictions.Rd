@@ -4,7 +4,7 @@
 \alias{summary.predictions}
 \title{Summarize a \code{predictions} object}
 \usage{
-\method{summary}{predictions}(object, conf_level = 0.95, transform_avg = NULL, ...)
+\method{summary}{predictions}(object, conf_level = NULL, transform_avg = NULL, ...)
 }
 \arguments{
 \item{object}{An object produced by the \code{predictions} function}

@@ -4,12 +4,12 @@
 \alias{tidy.predictions}
 \title{Tidy a \code{predictions} object}
 \usage{
-\method{tidy}{predictions}(x, conf_level = 0.95, transform_avg = NULL, ...)
+\method{tidy}{predictions}(x, conf_level = NULL, transform_avg = NULL, ...)
 }
 \arguments{
 \item{x}{An object produced by the \code{predictions} function.}
 
-\item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
+\item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval. The default \code{NULL} uses the \code{conf_level} value used in the original call to \code{predictions()}.}
 
 \item{transform_avg}{A function applied to the estimates and confidence intervals \emph{after} the unit-level estimates have been averaged.}
 

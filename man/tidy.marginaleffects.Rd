@@ -4,12 +4,12 @@
 \alias{tidy.marginaleffects}
 \title{Tidy a \code{marginaleffects} object}
 \usage{
-\method{tidy}{marginaleffects}(x, conf_level = 0.95, ...)
+\method{tidy}{marginaleffects}(x, conf_level = NULL, ...)
 }
 \arguments{
 \item{x}{An object produced by the \code{marginaleffects} function.}
 
-\item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
+\item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval. The default \code{NULL} uses the \code{conf_level} value used in the original call to \code{marginaleffects()}.}
 
 \item{...}{Additional arguments are passed to the \code{predict()} method
 supplied by the modeling package.These arguments are particularly useful

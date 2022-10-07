@@ -5,6 +5,7 @@
 #'
 #' @param x An object produced by the `comparisons` function.
 #' @param transform_avg A function applied to the estimates and confidence intervals *after* the unit-level estimates have been averaged.
+#' @param conf_level numeric value between 0 and 1. Confidence level to use to build a confidence interval. The default `NULL` uses the `conf_level` value used in the original call to `comparisons()`.
 #' @inheritParams comparisons
 #' @inheritParams tidy.marginaleffects
 #' @return A "tidy" `data.frame` of summary statistics which conforms to the
@@ -29,9 +30,14 @@
 #' contr <- comparisons(mod, variables = list(gear = "sequential"))
 #' tidy(contr)
 tidy.comparisons <- function(x,
-                             conf_level = 0.95,
+                             conf_level = NULL,
                              transform_avg = NULL,
                              ...) {
+
+    # use original conf_level by default
+    if (is.null(conf_level)) {
+        conf_level <- attr(x, "conf_level")
+    }
 
     if (identical(attr(x, "transform_pre"), "lnor")) {
         msg <- 

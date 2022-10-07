@@ -14,7 +14,7 @@
 #' @family summary
 #' @export
 summary.marginaleffects <- function(object,
-                                    conf_level = 0.95,
+                                    conf_level = NULL,
                                     ...) {
     out <- tidy(object, conf_level = conf_level, ...)
     class(out) <- c("marginaleffects.summary", class(out))
@@ -217,7 +217,7 @@ print.marginalmeans.summary <- function(x,
 #' @export
 summary.predictions <- function(
     object, 
-    conf_level = 0.95,
+    conf_level = NULL,
     transform_avg = NULL,
     ...) {
 
@@ -325,7 +325,7 @@ print.predictions.summary <- function(x,
 #' @family summary
 #' @export
 summary.comparisons <- function(object,
-                                conf_level = 0.95,
+                                conf_level = NULL,
                                 transform_avg = NULL,
                                 ...) {
     out <- tidy(object, conf_level = conf_level, transform_avg = transform_avg, ...)

@@ -460,6 +460,7 @@ comparisons <- function(model,
     attr(out, "transform_post") <- transform_post
     attr(out, "transform_pre_label") <- transform_pre_label
     attr(out, "transform_post_label") <- transform_post_label
+    attr(out, "conf_level") <- conf_level
     attr(out, "by") <- by
 
     if (!isTRUE(internal_call)) {

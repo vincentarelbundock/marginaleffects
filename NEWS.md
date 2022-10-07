@@ -1,6 +1,7 @@
 # marginaleffects 0.7.1.9000
 
 * Interactions with `fixest::i()` are parsed properly as categorical variables
+* The default value of `conf_level` in `summary()` and `tidy()` is now `NULL`, which inherits the `conf_level` value in the original `comparisons`/`marginaleffects`/`predictions` calls.
 
 # marginaleffects 0.7.1
 
