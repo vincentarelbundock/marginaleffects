@@ -23,14 +23,15 @@ get_contrasts <- function(model,
     # brms models need to be combined to use a single seed when sample_new_levels="gaussian"
     if (inherits(model, "brmsfit")) {
         both <- rbindlist(list(lo, hi))
+        both$rowid <- seq_len(nrow(both))
         pred_both <- myTryCatch(get_predict(
             model,
             type = type,
             vcov = FALSE,
             newdata = both,
             ...))[["value"]]
-        idx_lo <- 1:(nrow(pred_both) / 2)
-        idx_hi <- (nrow(pred_both) / 2 + 1):nrow(pred_both)
+        idx_lo <- pred_both$rowid %in% 1:(nrow(both) / 2)
+        idx_hi <- pred_both$rowid %in% (nrow(both) / 2 + 1):nrow(both)
         pred_lo <- pred_both[idx_lo, , drop = FALSE]
         pred_hi <- pred_both[idx_hi, , drop = FALSE]
         pred_hi$rowid <- pred_lo$rowid
