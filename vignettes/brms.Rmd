@@ -500,8 +500,9 @@ comparisons(
 This is nearly equivalent the `brmsmargins` command output (with slight variations due to different random seeds):
 
 ```{r}
+library(brmsmargins)
 bm <- brmsmargins(
-  k = K,
+  k = 100,
   object = mod,
   at = data.frame(x = c(0, 1)),
   CI = .95,
