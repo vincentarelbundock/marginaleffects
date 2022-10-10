@@ -445,10 +445,7 @@ pred %>%
 
 > This package has functions to calculate marginal effects from brms models ( http://paul-buerkner.github.io/brms/ ). A central motivator is to calculate average marginal effects (AMEs) for continuous and discrete predictors in fixed effects only and mixed effects regression models including location scale models.
 
-The two main advantages of `brmsmargins` over `marginaleffects` are:
-
-1. Ability to compute "Marginal Coefficients" following the method described in [Hedeker et al (2012).](https://doi.org/10.1111/biom.12707)
-2. Ability to ["integrate out random effects."](https://joshuawiley.com/brmsmargins/articles/mixed-effects-marginaleffects.html)
+The main advantage of `brmsmargins` over `marginaleffects` is its ability to compute "Marginal Coefficients" following the method described in [Hedeker et al (2012).](https://doi.org/10.1111/biom.12707)
 
 The main advantages of `marginaleffects` over `brmsmargins` are:
 

@@ -20,19 +20,37 @@ get_contrasts <- function(model,
     setDF(hi)
     setDF(original)
 
-    pred_lo <- myTryCatch(get_predict(
-        model,
-        type = type,
-        vcov = FALSE,
-        newdata = lo,
-        ...))[["value"]]
+    # brms models need to be combined to use a single seed when sample_new_levels="gaussian"
+    if (inherits(model, "brmsfit")) {
+        both <- rbindlist(list(lo, hi))
+        pred_both <- myTryCatch(get_predict(
+            model,
+            type = type,
+            vcov = FALSE,
+            newdata = both,
+            ...))[["value"]]
+        idx_lo <- 1:(nrow(pred_both) / 2)
+        idx_hi <- (nrow(pred_both) / 2 + 1):nrow(pred_both)
+        pred_lo <- pred_both[idx_lo, , drop = FALSE]
+        pred_hi <- pred_both[idx_hi, , drop = FALSE]
+        pred_hi$rowid <- pred_lo$rowid
+        attr(pred_lo, "posterior_draws") <- attr(pred_both, "posterior_draws")[idx_lo, , drop = FALSE]
+        attr(pred_hi, "posterior_draws") <- attr(pred_both, "posterior_draws")[idx_hi, , drop = FALSE]
+    } else {
+        pred_lo <- myTryCatch(get_predict(
+            model,
+            type = type,
+            vcov = FALSE,
+            newdata = lo,
+            ...))[["value"]]
 
-    pred_hi <- myTryCatch(get_predict(
-        model,
-        type = type,
-        vcov = FALSE,
-        newdata = hi,
-        ...))[["value"]]
+        pred_hi <- myTryCatch(get_predict(
+            model,
+            type = type,
+            vcov = FALSE,
+            newdata = hi,
+            ...))[["value"]]
+    }
 
     pred_or <- myTryCatch(get_predict(
         model,

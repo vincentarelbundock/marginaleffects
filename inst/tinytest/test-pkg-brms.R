@@ -37,6 +37,7 @@ brms_mv_1 <- marginaleffects:::modelarchive_model("brms_mv_1")
 brms_vdem <- marginaleffects:::modelarchive_model("brms_vdem")
 brms_ordinal_1 <- insight::download_model("brms_ordinal_1")
 brms_categorical_1 <- marginaleffects:::modelarchive_model("brms_categorical_1")
+brms_logit_re <- marginaleffects:::modelarchive_model("brms_logit_re")
 
 
 
@@ -601,3 +602,28 @@ void <- capture.output(suppressMessages(
 ))
 p <- plot_cap(fit, condition = "z")
 expect_inherits(p, "gg")
+
+
+# Issue #504: integrate out random effects
+set.seed(1024)
+
+K <- 100
+
+cmp <- comparisons(
+    brms_logit_re,
+    newdata = datagrid(firm = sample(1e5:2e6, K)),
+    allow_new_levels = TRUE,
+    sample_new_levels = "gaussian") |>
+    tidy()
+
+bm <- brmsmargins(
+  k = K,
+  object = brms_logit_re,
+  at = data.frame(x = c(0, 1)),
+  CI = .95, CIType = "ETI",
+  contrasts = cbind("AME x" = c(-1, 1)),
+  effects = "integrateoutRE")$ContrastSummary
+
+expect_equivalent(cmp$estimate, bm$Mdn, tolerance = .05)
+expect_equivalent(cmp$conf.low, bm$LL, tolerance = .05)
+expect_equivalent(cmp$conf.high, bm$UL, tolerance = .05)

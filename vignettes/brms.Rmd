@@ -445,6 +445,74 @@ ggplot(draws, aes(x = draw)) +
      labs(x = "Marginal effect of party autonomy in a generic world region", y = "")
 ```
 
+## Averaging, marginalizing, integrating random effects 
+
+Consider a logistic regression model with random effects:
+
+```{r, eval = FALSE}
+dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/plm/EmplUK.csv")
+dat$x <- as.numeric(dat$output > median(dat$output))
+dat$y <- as.numeric(dat$emp > median(dat$emp))
+mod <- brm(y ~ x + (1 | firm), data = dat, backend = "cmdstanr", family = "bernoulli")
+```
+
+```{r, include = FALSE}
+mod <- marginaleffects:::modelarchive_model("brms_logit_re")
+```
+
+We can compute adjusted predictions for a given value of `x` and for each firm (random effects) as follows:
+
+```{r}
+p <- predictions(mod, newdata = datagrid(x = 0, firm = unique))
+head(p)
+```
+
+We can average/marginalize/integrate across random effects with the `tidy` function or the `by` argument:
+
+```{r}
+predictions(mod, newdata = datagrid(x = 0, firm = unique)) |> tidy()
+
+predictions(mod, newdata = datagrid(x = 0:1, firm = unique), by = "x")
+```
+
+We can also draw from the (assumed gaussian) population distribution of random effects, by asking `predictions()` to make predictions for new "levels" of the random effects. If we then take an average of predictions using `tidy()` or `by`, we will have ["integrated out the random effects", as described in the `brmsmargins` package vignette.](https://joshuawiley.com/brmsmargins/articles/mixed-effects-marginaleffects.html#integrating-out-random-effects) In the code below, we make predictions for 100 firm identifiers which were not in the original dataset. We also ask `predictions()` to push forward the `allow_new_levels` and `sample_new_levels` arguments to the `brms::posterior_epred` function:
+
+```{r}
+predictions(
+    mod,
+    newdata = datagrid(x = 0:1, firm = -1:-100),
+    allow_new_levels = TRUE,
+    sample_new_levels = "gaussian",
+    by = "x")
+```
+
+We can "integrate out" random effects in the other `marginaleffects` functions too. For instance,
+
+```{r}
+comparisons(
+    mod,
+    newdata = datagrid(firm = -1:-100),
+    allow_new_levels = TRUE,
+    sample_new_levels = "gaussian") |>
+    summary()
+```
+
+This is nearly equivalent the `brmsmargins` command output (with slight variations due to different random seeds):
+
+```{r}
+bm <- brmsmargins(
+  k = K,
+  object = mod,
+  at = data.frame(x = c(0, 1)),
+  CI = .95,
+  CIType = "ETI",
+  contrasts = cbind("AME x" = c(-1, 1)),
+  effects = "integrateoutRE")
+bm$ContrastSummary |> data.frame()
+```
+
+See the [alternative software vignette](https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html) for more information on `brmsmargins`.
+
 # Multinomial logit
 
 Fit a model with categorical outcome (heating system choice in California houses) and logit link:
