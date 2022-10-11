@@ -96,6 +96,7 @@ Suggests:
     pscl,
     quantreg,
     RcppEigen,
+    remotes,
     rlang,
     rmarkdown,
     rms,
