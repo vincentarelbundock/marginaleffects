@@ -27,11 +27,11 @@ transform_pre_function_dict <- list(
     # ratios
     "ratio" = function(hi, lo) hi / lo,
     "ratioavg" = function(hi, lo) mean(hi) / mean(lo),
-    "ratioavg" = function(hi, lo) wmean(hi) / wmean(lo),
+    "ratioavgwts" = function(hi, lo) wmean(hi) / wmean(lo),
 
     "lnratio" = function(hi, lo) log(hi / lo),
     "lnratioavg" = function(hi, lo) log(mean(hi) / mean(lo)),
-    "lnratioavg" = function(hi, lo) log(wmean(hi) / wmean(lo)),
+    "lnratioavgwts" = function(hi, lo) log(wmean(hi) / wmean(lo)),
 
     "lnor" = function(hi, lo) log((hi / (1 - hi)) / (lo / (1 - lo))),
     "lnoravg" = function(hi, lo) log((mean(hi) / (1 - mean(hi))) / (mean(lo) / (1 - mean(lo)))),

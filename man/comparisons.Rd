@@ -109,7 +109,7 @@ the \code{marginaleffects:::type_dictionary} dataframe.}
 \itemize{
 \item string: shortcuts to common contrast functions.
 \itemize{
-\item Supported shortcuts strings: difference, differenceavg, differenceavgwts, dydx, eyex, eydx, dyex, dydxavg, eyexavg, eydxavg, dyexavg, dydxavgwts, eyexavgwts, eydxavgwts, dyexavgwts, ratio, ratioavg, ratioavg, lnratio, lnratioavg, lnratioavg, lnor, lnoravg, lnoravgwts, expdydx, expdydxavg, expdydxavgwts
+\item Supported shortcuts strings: difference, differenceavg, differenceavgwts, dydx, eyex, eydx, dyex, dydxavg, eyexavg, eydxavg, dyexavg, dydxavgwts, eyexavgwts, eydxavgwts, dyexavgwts, ratio, ratioavg, ratioavgwts, lnratio, lnratioavg, lnratioavgwts, lnor, lnoravg, lnoravgwts, expdydx, expdydxavg, expdydxavgwts
 \item See the Transformations section below for definitions of each transformation.
 }
 \item function: accept two equal-length numeric vectors of adjusted predictions (\code{hi} and \code{lo}) and returns a vector of contrasts of the same length, or a unique numeric value.
@@ -291,10 +291,10 @@ compute derivatives and elasticities.\tabular{ll}{
    dyexavgwts \tab \(hi, lo, eps, x, w) wmean(((hi - lo)/eps) * x, w) \cr
    ratio \tab \(hi, lo) hi/lo \cr
    ratioavg \tab \(hi, lo) mean(hi)/mean(lo) \cr
-   ratioavg \tab \(hi, lo) wmean(hi)/wmean(lo) \cr
+   ratioavgwts \tab \(hi, lo) wmean(hi)/wmean(lo) \cr
    lnratio \tab \(hi, lo) log(hi/lo) \cr
    lnratioavg \tab \(hi, lo) log(mean(hi)/mean(lo)) \cr
-   lnratioavg \tab \(hi, lo) log(wmean(hi)/wmean(lo)) \cr
+   lnratioavgwts \tab \(hi, lo) log(wmean(hi)/wmean(lo)) \cr
    lnor \tab \(hi, lo) log((hi/(1 - hi))/(lo/(1 - lo))) \cr
    lnoravg \tab \(hi, lo) log((mean(hi)/(1 - mean(hi)))/(mean(lo)/(1 - mean(lo)))) \cr
    lnoravgwts \tab \(hi, lo, w) log((wmean(hi, w)/(1 - wmean(hi, w)))/(wmean(lo, w)/(1 - wmean(lo, w)))) \cr
