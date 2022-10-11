@@ -3,6 +3,7 @@
 * `brms` models: Integrate out random effects (see Bayes vignette for details)
 * Interactions with `fixest::i()` are parsed properly as categorical variables
 * The default value of `conf_level` in `summary()` and `tidy()` is now `NULL`, which inherits the `conf_level` value in the original `comparisons`/`marginaleffects`/`predictions` calls.
+* Fix typo in function names for missing "lnratioavgwts"
 
 # marginaleffects 0.7.1
 
