@@ -61,25 +61,25 @@ library(marginaleffects)
 mod <- glm(vs ~ hp + factor(cyl), data = mtcars, family = binomial)
 ```
 
-Response scale, reference groups:
-
-```{r}
-emm <- emmeans(mod, specs = "cyl", regrid = "response")
-contrast(emm, method = "trt.vs.ctrl1")
-
-comparisons(mod, newdata = "mean")
-```
-
 Link scale, pairwise contrasts:
 
 ```{r}
 emm <- emmeans(mod, specs = "cyl")
-contrast(emm, method = "revpairwise")
+contrast(emm, method = "revpairwise", adjust = "none", df = Inf)
 
 comparisons(mod,
             type = "link",
             newdata = "mean",
             variables = list(cyl = "pairwise"))
+```
+
+Response scale, reference groups:
+
+```{r}
+emm <- emmeans(mod, specs = "cyl", regrid = "response")
+contrast(emm, method = "trt.vs.ctrl1", adjust = "none", df = Inf, ratios = FALSE)
+
+comparisons(mod, newdata = "mean")
 ```
 
 ## Contrasts by group
