@@ -112,21 +112,27 @@ You can install the released version of `marginaleffects` from CRAN:
 install.packages("marginaleffects")
 ```
 
-You can install the development version of `marginaleffects` from Github:
+You can install the development version of `marginaleffects` (and its dependency `insight`) from R-Universe:
 
 ```{r, eval=FALSE}
-remotes::install_github("vincentarelbundock/marginaleffects")
+install.packages(
+    c("marginaleffects", "insight"),
+    repos = c(
+        "https://vincentarelbundock.r-universe.dev",
+        "https://easystats.r-universe.dev"))
 ```
 
-First, we estimate a linear regression model with multiplicative interactions:
+**Restart `R` completely before moving on.** 
+
+#### Adjusted predictions
+
+To begin, we estimate a linear regression model with multiplicative interactions:
 
 ```{r}
 library(marginaleffects)
 
 mod <- lm(mpg ~ hp * wt * am, data = mtcars)
 ```
-
-#### Adjusted predictions
 
 An "adjusted prediction" is the outcome predicted by a model for some combination of the regressors’ values, such as their observed values, their means, or factor levels (a.k.a. “reference grid”).
 
