@@ -32,6 +32,7 @@ Introduction:
 
 * [Definitions](https://vincentarelbundock.github.io/marginaleffects/#definitions)
 * [Motivation](https://vincentarelbundock.github.io/marginaleffects/#motivation)
+* [Getting started](https://vincentarelbundock.github.io/marginaleffects/#installation)
 * [Getting started](https://vincentarelbundock.github.io/marginaleffects/#getting-started)
 
 ```{r, child="vignettes/toc.Rmd"}
@@ -102,9 +103,7 @@ Downsides of `marginaleffects` include:
 * Marginal means are often slower to compute than with `emmeans`.
 * No omnibus test
 
-## Getting started
-
-#### Installation
+## Installation
 
 You can install the released version of `marginaleffects` from CRAN:
 
@@ -123,6 +122,8 @@ install.packages(
 ```
 
 **Restart `R` completely before moving on.** 
+
+## Getting started
 
 #### Adjusted predictions
 

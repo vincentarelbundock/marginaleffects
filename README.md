@@ -22,6 +22,8 @@ Introduction:
   - [Definitions](https://vincentarelbundock.github.io/marginaleffects/#definitions)
   - [Motivation](https://vincentarelbundock.github.io/marginaleffects/#motivation)
   - [Getting
+    started](https://vincentarelbundock.github.io/marginaleffects/#installation)
+  - [Getting
     started](https://vincentarelbundock.github.io/marginaleffects/#getting-started)
 
 Vignettes:
@@ -217,9 +219,7 @@ Downsides of `marginaleffects` include:
   - Marginal means are often slower to compute than with `emmeans`.
   - No omnibus test
 
-## Getting started
-
-#### Installation
+## Installation
 
 You can install the released version of `marginaleffects` from CRAN:
 
@@ -239,6 +239,8 @@ install.packages(
 ```
 
 **Restart `R` completely before moving on.**
+
+## Getting started
 
 #### Adjusted predictions
 
@@ -276,13 +278,13 @@ their mean or mode:
 
 ``` r
 predictions(mod, newdata = datagrid(am = 0, wt = seq(2, 3, .2)))
-#>   rowid     type predicted std.error statistic       p.value conf.low conf.high       hp am  wt mpg
-#> 1     1 response  21.95621 2.0386301  10.77008  4.765935e-27 17.74868  26.16373 146.6875  0 2.0  21
-#> 2     2 response  21.42097 1.7699036  12.10290  1.019401e-33 17.76807  25.07388 146.6875  0 2.2  21
-#> 3     3 response  20.88574 1.5067373  13.86157  1.082834e-43 17.77599  23.99549 146.6875  0 2.4  21
-#> 4     4 response  20.35051 1.2526403  16.24609  2.380723e-59 17.76518  22.93583 146.6875  0 2.6  21
-#> 5     5 response  19.81527 1.0144509  19.53301  5.755097e-85 17.72155  21.90900 146.6875  0 2.8  21
-#> 6     6 response  19.28004 0.8063905  23.90906 2.465206e-126 17.61573  20.94435 146.6875  0 3.0  21
+#>   rowid     type predicted std.error statistic       p.value conf.low conf.high      mpg       hp am  wt
+#> 1     1 response  21.95621 2.0386301  10.77008  4.765935e-27 17.74868  26.16373 20.09062 146.6875  0 2.0
+#> 2     2 response  21.42097 1.7699036  12.10290  1.019401e-33 17.76807  25.07388 20.09062 146.6875  0 2.2
+#> 3     3 response  20.88574 1.5067373  13.86157  1.082834e-43 17.77599  23.99549 20.09062 146.6875  0 2.4
+#> 4     4 response  20.35051 1.2526403  16.24609  2.380723e-59 17.76518  22.93583 20.09062 146.6875  0 2.6
+#> 5     5 response  19.81527 1.0144509  19.53301  5.755097e-85 17.72155  21.90900 20.09062 146.6875  0 2.8
+#> 6     6 response  19.28004 0.8063905  23.90906 2.465206e-126 17.61573  20.94435 20.09062 146.6875  0 3.0
 ```
 
 We can plot how predictions change for different values of one or more
@@ -409,16 +411,16 @@ original dataset that was used to fit the model:
 mfx <- marginaleffects(mod)
 
 head(mfx, 4)
-#>   rowid     type term        dydx  std.error statistic     p.value    conf.low     conf.high predicted predicted_hi predicted_lo  mpg  hp    wt
-#> 1     1 response   hp -0.03690556 0.01850172 -1.994710 0.046074551 -0.07316825 -0.0006428553  22.48857     22.48752     22.48857 21.0 110 2.620
-#> 2     2 response   hp -0.02868936 0.01562861 -1.835695 0.066402771 -0.05932087  0.0019421508  20.80186     20.80105     20.80186 21.0 110 2.875
-#> 3     3 response   hp -0.04657166 0.02258715 -2.061866 0.039220507 -0.09084166 -0.0023016728  25.26465     25.26333     25.26465 22.8  93 2.320
-#> 4     4 response   hp -0.04227128 0.01328278 -3.182412 0.001460541 -0.06830506 -0.0162375066  20.25549     20.25430     20.25549 21.4 110 3.215
-#>   am    eps
-#> 1  1 0.0283
-#> 2  1 0.0283
-#> 3  1 0.0283
-#> 4  0 0.0283
+#>   rowid     type term        dydx  std.error statistic     p.value    conf.low     conf.high predicted
+#> 1     1 response   hp -0.03690556 0.01850172 -1.994710 0.046074551 -0.07316825 -0.0006428553  22.48857
+#> 2     2 response   hp -0.02868936 0.01562861 -1.835695 0.066402771 -0.05932087  0.0019421508  20.80186
+#> 3     3 response   hp -0.04657166 0.02258715 -2.061866 0.039220507 -0.09084166 -0.0023016728  25.26465
+#> 4     4 response   hp -0.04227128 0.01328278 -3.182412 0.001460541 -0.06830506 -0.0162375066  20.25549
+#>   predicted_hi predicted_lo  mpg  hp    wt am    eps
+#> 1     22.48752     22.48857 21.0 110 2.620  1 0.0283
+#> 2     20.80105     20.80186 21.0 110 2.875  1 0.0283
+#> 3     25.26333     25.26465 22.8  93 2.320  1 0.0283
+#> 4     20.25430     20.25549 21.4 110 3.215  0 0.0283
 ```
 
 The function `summary` calculates the “Average Marginal Effect,” that
