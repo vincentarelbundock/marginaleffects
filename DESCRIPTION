@@ -22,15 +22,13 @@ BugReports: https://github.com/vincentarelbundock/marginaleffects/issues
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1
 VignetteBuilder: knitr
-Remotes:
-    easystats/insight
 Depends: 
     R (>= 3.5.0)
 Imports: 
     checkmate,
     data.table,
     generics,
-    insight (>= 0.18.4.7),
+    insight (>= 0.18.5),
     methods
 Suggests: 
     AER,
@@ -209,6 +207,7 @@ Collate:
     'sanity.R'
     'sanity_by.R'
     'sanity_dots.R'
+    'settings.R'
     'summary.R'
     'tidy.R'
     'tidy.comparisons.R'
