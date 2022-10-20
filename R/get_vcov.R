@@ -116,14 +116,14 @@ get_vcov.default <- function(model,
     }
 
     # problem: duplicate colnames
-    if (anyDuplicated(names(out)) == 0) {
+    if (anyDuplicated(colnames(out)) == 0) {
         coefs <- get_coef(model)
         # 1) Check above is needed for `AER::tobit` and others where `out`
         # includes Log(scale) but `coef` does not Dangerous for `oridinal::clm`
         # and others where there are important duplicate column names in
         # `out`, and selecting with [,] repeats the first instance.
 
-        # 2) Sometimes out has more columns than coefs (e.g., betareg)
+        # 2) Sometimes out has more columns than coefs
         if (all(names(coefs) %in% colnames(out))) {
             out <- out[names(coefs), names(coefs), drop = FALSE]
         }
