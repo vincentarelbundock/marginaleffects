@@ -111,9 +111,9 @@ mod <- glmmTMB(
     Survived ~ Sex + z + (1 + Age | PClass),
     family = binomial,
     data = dat)
-mm1 <- marginalmeans(mod, type = "response", variables = c("Sex", "PClass"))
+mm1 <- marginalmeans(mod, variables = c("Sex", "PClass"))
 mm2 <- marginalmeans(mod, type = "link", variables = c("Sex", "PClass"))
-mm3 <- marginalmeans(mod, type = "response", variables = c("Sex", "PClass"), interaction = TRUE)
+mm3 <- marginalmeans(mod, variables = c("Sex", "PClass"), interaction = TRUE)
 mm4 <- marginalmeans(mod, type = "link", variables = c("Sex", "PClass"), interaction = TRUE)
 expect_true(all(mm1$marginalmean != mm2$marginalmean))
 expect_true(all(mm1$std.error != mm2$std.error))

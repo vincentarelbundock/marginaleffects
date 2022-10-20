@@ -122,7 +122,7 @@ expect_equivalent(as.character(mm$value), as.character(em$MainCity))
 expect_equivalent(mm$estimate, em$estimate)
 expect_equivalent(mm$std.error, em$SE, tol = 0.001)
 
-mm <- marginalmeans(mod, type = "response", variables = "MainCity")
+mm <- marginalmeans(mod, variables = "MainCity")
 em <- data.frame(emmeans(mod, specs = "MainCity", type = "response"))
 expect_equivalent(as.character(mm$value), as.character(em$MainCity))
 expect_equivalent(mm$marginalmean, em$prob, tolerance = .01)
