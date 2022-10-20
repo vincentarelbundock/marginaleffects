@@ -142,7 +142,7 @@ ma <- aggregate(y ~ city, FUN = mean, data = df)
 m <- glm(y ~ id, data = df, family = binomial)
 by <- data.frame(
   id = 1:5,
-  by = ifelse(1:5 <= 3, "Denver", "Paris"), )
+  by = ifelse(1:5 <= 3, "Denver", "Paris"))
 mm <- marginalmeans(m, by = by, type = "response")
 
 expect_equivalent(mm$marginalmean, ma$y)
