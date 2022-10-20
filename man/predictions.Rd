@@ -191,6 +191,7 @@ Tips and technical notes:
 \itemize{
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html}{69 Supported Classes of Models}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/reference/index.html}{Index of Functions and Documentation}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/extensions.html}{Extending \code{marginaleffects}: add new models or modify existing ones}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html}{Standard Errors and Confidence Intervals}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html}{Tables and Plots}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/performance.html}{Performance}

@@ -6,6 +6,7 @@
 * The default value of `conf_level` in `summary()` and `tidy()` is now `NULL`, which inherits the `conf_level` value in the original `comparisons`/`marginaleffects`/`predictions` calls.
 * Fix typo in function names for missing "lnratioavgwts"
 * New `update_marginaleffects()` function makes it easy to install the dev versions of `marginaleffects` and its dependencies (mostly useful for Vincent and people who report bugs).
+* New vignette: Extending `marginaleffects`
 
 # marginaleffects 0.7.1
 

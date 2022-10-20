@@ -1,9 +1,28 @@
+---
+title: "Extending`marginaleffects`" 
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Extending or modifying marginaleffects}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
 
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  fig.width = 6,
+  fig.asp = .4,
+  warning = FALSE,
+  message = FALSE,
+  comment = "#>"
+)
+``
 
-# Support for new models
+This vignette shows how to add support for new models and add new functionality for supported models. If you add support for a new model object, please consider submitting your code for inclusion in the package.
+
+# Support a new model type
 
 It is very easy to add support for new models in `marginaleffects`.  All we need is to set a global option and define 4 very simple functions.
-
 
 If you add support for a class of model produced by a CRAN package, please consider submitting your code for inclusion in the package: https://github.com/vincentarelbundock/marginaleffects
 
@@ -129,4 +148,59 @@ predictions(model, newdata = mtcars) |>
 
 Note that, for custom model, we typically have to supply values for the `newdata` and `variables` arguments explicitly.
 
-## Extend support for existing models
+# Modify or extend supported models
+
+Let's say you want to estimate a model using the `mclogit::mblogit` function.  That package is already supported by `marginaleffects`, but you want to use a `type` (scale) of predictions that is not currently supported: a "centered link scale." 
+
+To achieve this, we would need to override the `get_predict.mblogit()` method. However, it can be unsafe to reassign methods supplied by a package that we loaded with `library`. To be safe, we assign a new model class to our object ("customclass") which will inherit from `mblogit`. Then, we define a `get_predict.customclass` method to make our new kinds of preditions.  
+
+Load libraries, estimate a model:
+
+```{r}
+library(mclogit)
+library(data.table)
+
+model <- mblogit(
+    factor(gear) ~ am + mpg,
+    data = mtcars,
+    trace = FALSE)
+```
+
+Tell `marginaleffects` that we are adding support for a new class model models, and assign a new inherited class name to a duplicate of the model object:
+
+```{r}
+options("marginaleffects_model_classes" = "customclass")
+
+model_custom <- model
+
+class(model_custom) <- c("customclass", class(model))
+```
+
+Define a new `get_predict.customclass` method. We use the default `predict()` function to obtain predictions. Since this is a multinomial model, `predict()` returns a matrix of predictions with one column per level of the response variable.
+
+Our new `get_predict.customclass` method takes this matrix of predictions, modifies it, and reshapes it to return a data frame with three columns: `rowid`, `group`, and `predicted`:
+
+```{r}
+get_predict.customclass <- function(model, newdata, ...) {
+    out <- predict(model, newdata = newdata, type = "link")
+    out <- cbind(0, out)
+    colnames(out)[1] <- dimnames(model$D)[[1]][[1]]
+    out <- out - rowMeans(out)
+    out <- as.data.frame(out)
+    out$rowid <- seq_len(nrow(out))
+    out <- data.table(out)
+    out <- melt(
+        out,
+        id.vars = "rowid",
+        value.name = "predicted",
+        variable.name = "group")
+}
+```
+
+Finally, we can call any `marginaleffects` function and obtain results. Notice that our object of class `customclass` now produces different results than the default `mblogit` object: `model_custom
+
+```{r}
+predictions(model) |> summary()
+
+predictions(model_custom) |> summary()
+```

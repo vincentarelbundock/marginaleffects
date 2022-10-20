@@ -20,6 +20,7 @@
 ^vignettes/faq.Rmd
 ^vignettes/gam.Rmd
 ^vignettes/gformula.Rmd
+^vignettes/extensions.Rmd
 ^vignettes/hypothesis.Rmd
 ^vignettes/lme4.Rmd
 ^vignettes/marginaleffects.Rmd

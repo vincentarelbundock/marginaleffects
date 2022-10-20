@@ -9,6 +9,7 @@ ARD
 args
 Augusto
 Avina
+backtransforming
 bayesian
 Boca
 brms
@@ -18,6 +19,7 @@ CMD
 cme
 Codecov
 confounders
+cran
 CRC
 datagrid
 demeaned
@@ -31,6 +33,7 @@ dydxavg
 dydxavgwts
 dyex
 dyexavg
+dyexavglnratioavgwts
 dyexavgwts
 elasticities
 elasticities
@@ -112,6 +115,7 @@ poisson
 pre
 probs
 ratioavg
+ratioavgwts
 Raton
 RCTs
 Rdatasets

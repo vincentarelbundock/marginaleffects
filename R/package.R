@@ -3,6 +3,7 @@
 # 2014 hadley updates his own answer with globalVariables as one of "two solutions"
 #' @import data.table
 utils::globalVariables(c(
+"..bycols",
 "..cols",
 "..idx_by",
 "..idx_hi",
