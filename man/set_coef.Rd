@@ -14,7 +14,7 @@
 \alias{set_coef.betareg}
 \alias{set_coef.multinom}
 \alias{set_coef.crch}
-\alias{set_coef.hlxr}
+\alias{set_coef.hxlr}
 \alias{set_coef.gamlss}
 \alias{set_coef.glmmTMB}
 \alias{set_coef.glmx}
@@ -48,7 +48,7 @@ set_coef(model, coefs, ...)
 
 \method{set_coef}{crch}(model, coefs, ...)
 
-\method{set_coef}{hlxr}(model, coefs, ...)
+\method{set_coef}{hxlr}(model, coefs, ...)
 
 \method{set_coef}{gamlss}(model, coefs, ...)
 
