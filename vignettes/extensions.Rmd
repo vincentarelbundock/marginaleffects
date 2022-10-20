@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
   message = FALSE,
   comment = "#>"
 )
-``
+```
 
 This vignette shows how to add support for new models and add new functionality for supported models. If you add support for a new model object, please consider submitting your code for inclusion in the package.
 
