@@ -214,6 +214,17 @@ m <- marginaleffects(mod4)
 expect_inherits(m, "marginaleffects")
 
 
+# Issue #509
+dat <- mtcars
+dat$mpg[1] <- NA
+mod <- suppressMessages(feglm(am ~ mpg, family = binomial, data = dat))
+mfx <- marginaleffects(mod)
+expect_inherits(mfx, "marginaleffects")
+expect_equivalent(nrow(mfx), 31)
+expect_true("mpg" %in% colnames(mfx))
+expect_true("am" %in% colnames(mfx))
+
+
 
 # TODO: works interactively
 # expect_false(expect_warning(marginaleffects(fit3)))
@@ -284,6 +295,9 @@ expect_inherits(m, "marginaleffects")
 # model <- feols(y ~ x1*x2 | group1^group2, data)
 # nd <- datagrid(model = model)
 # expect_error(marginaleffects(model, newdata = "mean"), "combined")
+
+
+
 
 
 

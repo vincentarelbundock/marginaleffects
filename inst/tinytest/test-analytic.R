@@ -14,7 +14,7 @@ res$truth <- truth(res$x)
 expect_equivalent(res$dydx, res$truth, tolerance = .01)
 
 
-k= mtcars
+k = mtcars
 k$cyl = as.character(k$cyl)
 mod = lm(mpg ~ cyl, k)
 

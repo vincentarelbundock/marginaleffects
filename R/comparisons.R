@@ -385,10 +385,21 @@ comparisons <- function(model,
     }
 
     # merge original data back in
-    # HACK: relies on NO sorting at ANY point
     if (is.null(by) && "rowid" %in% colnames(mfx)) {
-        idx <- setdiff(colnames(contrast_data$original), colnames(mfx))
-        mfx <- data.table(mfx, contrast_data$original[, ..idx])
+        if ("rowid" %in% colnames(newdata)) {
+            idx <- c("rowid", "rowidcf", "term", "contrast", "by", setdiff(colnames(contrast_data$original), colnames(mfx)))
+            idx <- intersect(idx, colnames(contrast_data$original))
+            tmp <- contrast_data$original[, ..idx, drop = FALSE]
+            # contrast_data is duplicated to compute contrasts for different terms or pairs
+            bycols <- intersect(colnames(tmp), colnames(mfx))
+            idx <- apply(tmp[, ..bycols], 1, paste, collapse = "|")
+            tmp <- tmp[!duplicated(idx), , drop = FALSE]
+            mfx <- merge(mfx, tmp, all.x = TRUE, by = bycols, sort = FALSE)
+        # HACK: relies on NO sorting at ANY point
+        } else {
+            idx <- setdiff(colnames(contrast_data$original), colnames(mfx))
+            mfx <- data.table(mfx, contrast_data$original[, ..idx])
+        }
     }
 
     # meta info

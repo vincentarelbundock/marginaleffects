@@ -13,6 +13,8 @@ get_contrasts <- function(model,
                           verbose = TRUE,
                           ...) {
 
+    settings_init()
+
     # some predict() methods need data frames and will convert data.tables
     # internally, which can be very expensive if done many times. we do it once
     # here.
@@ -92,7 +94,7 @@ get_contrasts <- function(model,
 
     # cross-contrasts or weird cases
     } else {
-        out <- merge(out, newdata, by = "rowid")
+        out <- merge(out, newdata, by = "rowid", all.x = TRUE)
         if (isTRUE(nrow(out) == nrow(lo))) {
             tmp <- data.table(lo)[, .SD, .SDcols = patterns("^contrast|marginaleffects_eps|marginaleffects_wts_internal")]
             out <- cbind(out, tmp)
@@ -231,11 +233,12 @@ get_contrasts <- function(model,
         args <- args[names(args) %in% names(formals(fun))]
         con <- try(do.call("fun", args), silent = TRUE)
         if (!isTRUE(checkmate::check_numeric(con, len = n)) && !isTRUE(checkmate::check_numeric(con, len = 1))) {
-            msg <- insight::format_message("The function supplied to the `transform_pre` argument must accept two numeric vectors of predicted probabilities of length %s, and return a single numeric value or a numeric vector of length %s, with no missing value.") #nolintr
-            stop(sprintf(msg, n, n), call. = FALSE)
+            msg <- sprintf("The function supplied to the `transform_pre` argument must accept two numeric vectors of predicted probabilities of length %s, and return a single numeric value or a numeric vector of length %s, with no missing value.", n, n) #nolint
+            insight::format_error(msg)
         }
         if (length(con) == 1) {
             con <- c(con, rep(NA_real_, length(hi) - 1))
+            settings_set("marginaleffects_safefun_return1", TRUE)
         }
         return(con)
     }
@@ -266,7 +269,9 @@ get_contrasts <- function(model,
         # also means we don't want `rowid` otherwise we will merge and have
         # useless duplicates.
         if (any(!idx)) {
-            out[, "rowid" := NULL]
+            if (settings_equal("marginaleffects_safefun_return1", TRUE)) {
+                out[, "rowid" := NULL]
+            }
             out <- out[idx, , drop = FALSE]
         }
 
@@ -291,10 +296,13 @@ get_contrasts <- function(model,
         # also means we don't want `rowid` otherwise we will merge and have
         # useless duplicates.
         if (any(is.na(out$comparison))) {
-            out[, "rowid" := NULL]
+            if (settings_equal("marginaleffects_safefun_return1", TRUE)) {
+                out[, "rowid" := NULL]
+            }
         }
         out <- out[!is.na(comparison)]
     }
+
 
     # averaging by groups
     # if `by` is a vector, we have done the work already above
@@ -313,6 +321,9 @@ get_contrasts <- function(model,
 
     # hypothesis tests using the delta method
     out <- get_hypothesis(out, hypothesis, column = "comparison", by = by)
+
+    # reset settings
+    settings_rm("marginaleffects_safefun_return1")
 
     # output
     attr(out, "posterior_draws") <- draws
