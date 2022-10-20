@@ -7,6 +7,8 @@
 * Fix typo in function names for missing "lnratioavgwts"
 * New `update_marginaleffects()` function makes it easy to install the dev versions of `marginaleffects` and its dependencies (mostly useful for Vincent and people who report bugs).
 * New vignette: Extending `marginaleffects`
+* For `betareg` objects, inference can now be done on all coefficients using `deltamethod()`. previously only the location coefficients were available.
+* For objects from `crch` package, a number of bugs have been fixed; standard errors should now be correct for `deltamethod()`, `marginaleffects()`, etc.
 
 # marginaleffects 0.7.1
 

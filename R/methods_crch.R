@@ -2,16 +2,22 @@
 #' @rdname set_coef
 #' @export
 set_coef.crch <- function(model, coefs, ...) {
-    # in crch::crch, coefficients are held in:
-    # model$coefficients$location
-    # model$coefficients$scale
-    out <- model
-    # this is weird, I know
-    out$coefficients["location"]$location <-
-        coefs[1:length(out$coefficients["location"]$location)]
-    out$coefficients["scale"]$scale <-
-        coefs[(length(out$coefficients["location"]$location) + 1):length(coefs)]
-    return(out)
+  # coefs are split between location coefs (which can be length 0) and scale coefs
+  # (which must be length > 0 and always start with "(scale)_" due to get_parameters(),
+  # to match with get_varcov(., component = "all") output). In crch object, these
+  # are stored as two elements in a list, with scale coefs lacking the "(scale)_"
+  # prefix, so we remove it.
+  location_coefs <- coefs[!startsWith(names(coefs), "(scale)_")]
+  scale_coefs <- coefs[startsWith(names(coefs), "(scale)_")]
+  names(scale_coefs) <- sub("(scale)_", "", names(scale_coefs),
+                                fixed = TRUE)
+
+  if (length(location_coefs) > 0) {
+    model[["coefficients"]]$location[names(location_coefs)] <- location_coefs
+  }
+  model[["coefficients"]]$scale[names(scale_coefs)] <- scale_coefs
+
+  model
 }
 
 
@@ -37,22 +43,24 @@ get_predict.crch <- function(model,
 #' @include set_coef.R
 #' @rdname set_coef
 #' @export
-set_coef.hlxr <- function(model, coefs, ...) {
-    # in crch::crch, coefficients are held in:
+set_coef.hxlr <- function(model, coefs, ...) {
+    # in crch::hxlr, coefficients are held in:
+    # model$coefficients$intercept
     # model$coefficients$location
     # model$coefficients$scale
+    #
+    # note: there are no prefixes in coef() output, so coefs may have same name
     out <- model
 
     idx_int <- length(model$coefficients$intercept)
     idx_loc <- length(model$coefficients$location)
 
-    # this is weird, I know
-    out$coefficients["intercept"]$intercept <- coefs[1:idx_int]
-    out$coefficients["location"]$location <- coefs[(idx_int + 1):(idx_int + 1 + idx_loc)]
-    out$coefficients["scale"]$scale <- coefs[(idx_int + idx_loc + 1):length(coefs)]
+    out$coefficients$intercept[] <- coefs[1:idx_int]
+    out$coefficients$location[] <- coefs[idx_int + 1:idx_loc]
+    out$coefficients$scale[] <- coefs[(idx_int + idx_loc + 1):length(coefs)]
 
     return(out)
 }
 
 
-get_predict.hlxr <- get_predict.crch
+get_predict.hxlr <- get_predict.crch

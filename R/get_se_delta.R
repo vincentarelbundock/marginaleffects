@@ -74,8 +74,9 @@ get_se_delta <- function(model,
     coefs <- get_coef(model, ...)
 
     # TODO: this is a terrible sanity check
-    # some vcov methods return an unnamed matrix
-    if (!is.null(dimnames(vcov)) && all(names(coefs) %in% colnames(vcov))) {
+    # some vcov methods return an unnamed matrix, some have duplicate names
+    if (!is.null(dimnames(vcov)) && anyDuplicated(colnames(vcov)) == 0 &&
+        all(names(coefs) %in% colnames(vcov))) {
         vcov <- vcov[names(coefs), names(coefs), drop = FALSE]
     }
 

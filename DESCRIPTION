@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Marginal Effects, Marginal Means, Predictions, and Contrasts
-Version: 0.7.1.9003
+Version: 0.7.1.9004
 Authors@R: 
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -11,7 +11,12 @@ Authors@R:
              family = "Diniz",
              role = "ctb",
              email = "marcio.diniz@cshs.org",
-             comment = c(ORCID = "0000-0002-2427-7843")))
+             comment = c(ORCID = "0000-0002-2427-7843")),
+      person(given = "Noah",
+             family = "Greifer",
+             role = "ctb",
+             email = "noah.greifer@gmail.com",
+             comment = c(ORCID = "0000-0003-3067-7154")))
 Description: Compute and plot adjusted predictions, contrasts, marginal effects, and marginal means for over 70 classes of statistical models in R. Conduct linear and non-linear hypothesis tests using the delta method.
 License: GPL (>= 3)
 Copyright: inst/COPYRIGHTS
