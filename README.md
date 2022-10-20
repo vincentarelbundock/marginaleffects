@@ -21,8 +21,7 @@ Introduction:
 
   - [Definitions](https://vincentarelbundock.github.io/marginaleffects/#definitions)
   - [Motivation](https://vincentarelbundock.github.io/marginaleffects/#motivation)
-  - [Getting
-    started](https://vincentarelbundock.github.io/marginaleffects/#installation)
+  - [Installation](https://vincentarelbundock.github.io/marginaleffects/#installation)
   - [Getting
     started](https://vincentarelbundock.github.io/marginaleffects/#getting-started)
 
