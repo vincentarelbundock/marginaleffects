@@ -130,3 +130,19 @@ mm <- marginalmeans(mod2, variables = "am", wts = "proportional")
 expect_equivalent(mm$marginalmean, em$prob)
 expect_equivalent(mm$conf.low, em$asymp.LCL)
 expect_equivalent(mm$conf.high, em$asymp.UCL)
+
+
+# Issue #508
+df <- data.frame(id = rep(1:5, each = 2e2))
+df$city = ifelse(df$id <= 3, "Denver", "Paris")
+df$y <- rbinom(1e3, 1, prob = plogis(-3 + 1/2 * df$id))
+df$id <- factor(df$id)
+ma <- aggregate(y ~ city, FUN = mean, data = df)
+
+m <- glm(y ~ id, data = df, family = binomial)
+by <- tibble(
+  id = 1:5,
+  by = ifelse(1:5 <= 3, "Denver", "Paris"), )
+mm <- marginalmeans(m, by = by, type = "response")
+
+expect_equivalent(mm$marginalmean, ma$y)

@@ -17,6 +17,15 @@
 #' categorical predictors. This grid can be very large when there are many
 #' variables and many response levels, so it is advisable to select a limited
 #' number of variables in the `variables` and `variables_grid` arguments.
+#' @param type string indicates the type (scale) of the predictions used to
+#' compute marginal effects or contrasts. This can differ based on the model
+#' type, but will typically be a string such as: "response", "link", "probs",
+#' or "zero". When an unsupported string is entered, the model-specific list of
+#' acceptable values is returned in an error message. When `type` is `NULL`, the
+#' default value is used. This default is the first model-related row in
+#' the `marginaleffects:::type_dictionary` dataframe. If `type` is `NULL` and
+#' the default value is "response", the function tries to compute marginal means
+#' on the link scale before backtransforming them using the inverse link function.
 #' @param wts character value. Weights to use in the averaging.
 #' + "equal": each combination of variables in `variables_grid` gets an equal weight.
 #' + "cells": each combination of values for the variables in the `variables_grid` gets a weight proportional to its frequency in the original data.
@@ -141,18 +150,22 @@ marginalmeans <- function(model,
                           by = NULL,
                           ...) {
 
-    # backtransform if possible
-    type <- sanitize_type(model = model, type = type, calling_function = "marginalmeans")
-    linv <- tryCatch(
-        insight::link_inverse(model),
-        error = function(e) NULL)
-    if (type == "response" &&
-        is.null(transform_post) &&
-        class(model)[1] %in% type_dictionary$class &&
-        isTRUE("link" %in% subset(type_dictionary, class == class(model)[1])$base) &&
-        is.function(linv)) {
-        type <- "link"
-        transform_post <- linv
+    # if type is NULL, we backtransform if relevant
+    if (is.null(type)) {
+        type <- sanitize_type(model = model, type = type, calling_function = "marginalmeans")
+        linv <- tryCatch(
+            insight::link_inverse(model),
+            error = function(e) NULL)
+        if (type == "response" &&
+            is.null(transform_post) &&
+            class(model)[1] %in% type_dictionary$class &&
+            isTRUE("link" %in% subset(type_dictionary, class == class(model)[1])$base) &&
+            is.function(linv)) {
+            type <- "link"
+            transform_post <- linv
+        }
+    } else {
+        type <- sanitize_type(model = model, type = type, calling_function = "marginalmeans")
     }
 
     modeldata <- newdata <- hush(insight::get_data(model))
