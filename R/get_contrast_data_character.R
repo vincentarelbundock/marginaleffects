@@ -39,6 +39,19 @@ get_contrast_data_character <- function(model,
     } else if (variable$value == "sequential") {
         levs_idx <- data.table::data.table(lo = levs[1:(length(levs) - 1)],
                                            hi = levs[2:length(levs)])
+
+    } else if (length(variable$value) == 2) {
+        if (is.character(variable$value)) {
+            tmp <- newdata[[variable$name]]
+            idx <- match(variable$value, as.character(tmp))
+            levs_idx <- data.table::data.table(lo = tmp[idx[1]], hi = tmp[idx[[2]]])
+        } else if (is.numeric(variable$value)) {
+            tmp <- newdata[[variable$name]]
+            idx <- match(as.character(variable$value), as.character(tmp))
+            levs_idx <- data.table::data.table(lo = tmp[idx[1]], hi = tmp[idx[[2]]])
+        } else {
+            levs_idx <- data.table::data.table(lo = variable$value[1], hi = variable$value[2])
+        }
     }
 
     # internal option applied to the first of several contrasts when
@@ -46,7 +59,10 @@ get_contrast_data_character <- function(model,
     # flips, we get a negative sign, but if first increases and second
     # decreases, we get different total effects.
     if (isTRUE(first_interaction)) {
-        levs_idx <- levs_idx[match(levs_idx$hi, levs) >= match(levs_idx$lo, levs), ]
+        idx <- match(levs_idx$hi, levs) >= match(levs_idx$lo, levs)
+        if (sum(idx) > 0) {
+            levs_idx <- levs_idx[idx, , drop = FALSE]
+        }
     }
 
     levs_idx$isNULL <- levs_idx$hi == levs_idx$lo

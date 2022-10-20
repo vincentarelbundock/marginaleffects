@@ -51,3 +51,16 @@ mfx <- marginaleffects(mod,
                    type = "lp")
 expect_inherits(mfx, "marginaleffects")
 
+
+
+# Issue #497
+dat <- mtcars
+dat$cyl <- factor(dat$cyl)
+dat$cyl <- as.factor(dat$cyl)
+mod <- lm(mpg ~ cyl, dat)
+cmp1 <- comparisons(mod, variables = list(cyl = c(6, 4)))
+cmp2 <- comparisons(mod, variables = list(cyl = c("4", "6")))
+cmp3 <- comparisons(mod, variables = list(cyl = dat$cyl[2:3]))
+expect_inherits(cmp1, "comparisons")
+expect_inherits(cmp2, "comparisons")
+expect_inherits(cmp3, "comparisons")

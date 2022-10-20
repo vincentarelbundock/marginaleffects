@@ -62,10 +62,14 @@ sanity_contrast_numeric <- function(contrast_numeric, assertion = TRUE) {
 
 
 sanity_contrast_factor <- function(contrast_factor, assertion = TRUE) {
-    flag <- checkmate::check_choice(
+    flag1 <- checkmate::check_choice(
         contrast_factor,
         choices = c("reference", "sequential", "pairwise", "all"))
-    if (isTRUE(assertion) && !isTRUE(flag)) {
+    flag2 <- checkmate::check_vector(
+        contrast_factor,
+        len =2)
+    flag <- isTRUE(flag1) || isTRUE(flag2)
+    if (isTRUE(assertion) && !flag) {
         stop('Contrasts for factor or character variables can be: "reference", "sequential", "pairwise", or "all".', call. = FALSE)
     } else {
         return(flag)
