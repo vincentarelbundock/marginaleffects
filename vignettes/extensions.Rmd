@@ -197,7 +197,7 @@ get_predict.customclass <- function(model, newdata, ...) {
 }
 ```
 
-Finally, we can call any `marginaleffects` function and obtain results. Notice that our object of class `customclass` now produces different results than the default `mblogit` object: `model_custom
+Finally, we can call any `marginaleffects` function and obtain results. Notice that our object of class `customclass` now produces different results than the default `mblogit` object:
 
 ```{r}
 predictions(model) |> summary()
