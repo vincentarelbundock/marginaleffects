@@ -140,7 +140,7 @@ df$id <- factor(df$id)
 ma <- aggregate(y ~ city, FUN = mean, data = df)
 
 m <- glm(y ~ id, data = df, family = binomial)
-by <- tibble(
+by <- data.frame(
   id = 1:5,
   by = ifelse(1:5 <= 3, "Denver", "Paris"), )
 mm <- marginalmeans(m, by = by, type = "response")
