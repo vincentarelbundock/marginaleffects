@@ -7,7 +7,8 @@ sanitize_variables <- function(variables,
                                by = NULL,
                                interaction = FALSE,
                                contrast_numeric = 1,
-                               contrast_factor = "reference") {
+                               contrast_factor = "reference",
+                               calling_function = "comparisons") {
 
     checkmate::assert(
         checkmate::check_character(variables, min.len = 1, null.ok = TRUE, names = "unnamed"),
@@ -15,6 +16,16 @@ sanitize_variables <- function(variables,
         combine = "or")
 
     modeldata <- attr(newdata, "newdata_modeldata")
+
+    # "pairwise" et al. do not make sense in predictions(), where the
+    # `variables` argument creates predictions on a counterfactual dataset
+    if (isTRUE(calling_function == "predictions") && isTRUE(checkmate::check_list(variables))) {
+        bad <- c("pairwise", "reference", "sequential", "revpairwise", "revreference", "revsequential")
+        if (any(sapply(variables, function(x) isTRUE(x %in% bad)))) {
+           msg <- "The `variables` argument of the `predictions()` function must be a named list with predictor values at which we want to make counterfactual predictions. See the Examples section of the documentation in `?predictions`"
+           insight::format_error(msg)
+        }
+    }
 
     # rename to avoid overwriting in case we need info later
     predictors <- variables

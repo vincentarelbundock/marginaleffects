@@ -140,6 +140,24 @@ mm <- predictions(mod, newdata = datagrid(am = TRUE))
 expect_equivalent(nrow(mm), 1)
 
 
+# Issue #496
+mod <- lm(mpg ~ factor(vs), data = mtcars)
+p1 <- predictions(mod, variables = list(vs = 0:1))
+p2 <- predictions(mod, variables = list(vs = c("0", "1")))
+expect_inherits(p1, "predictions")
+expect_inherits(p2, "predictions")
+expect_error(predictions(mod, variables = list(vs = "pairwise")), pattern = "named")
+
+dat <- mtcars
+dat$vs <- factor(dat$vs)
+mod <- lm(mpg ~ vs, data = dat)
+p1 <- predictions(mod, variables = list(vs = 0:1))
+p2 <- predictions(mod, variables = list(vs = c("0", "1")))
+expect_inherits(p1, "predictions")
+expect_inherits(p2, "predictions")
+expect_error(predictions(mod, variables = list(vs = "pairwise")), pattern = "named")
+
+
 #########################################################################
 #  some models do not return data.frame under `insight::get_predicted`  #
 #########################################################################

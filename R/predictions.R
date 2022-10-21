@@ -217,7 +217,11 @@ predictions <- function(model,
     hypothesis <- sanitize_hypothesis(hypothesis, ...)
     conf_level <- sanitize_conf_level(conf_level, ...)
     type <- sanitize_type(model = model, type = type, calling_function = "predictions")
-    newdata <- sanitize_newdata(model = model, newdata = newdata, modeldata = modeldata, by = by)
+    newdata <- sanitize_newdata(
+        model = model,
+        newdata = newdata,
+        modeldata = modeldata,
+        by = by)
 
     # after sanitize_newdata
     sanity_by(by, newdata)
@@ -234,7 +238,9 @@ predictions <- function(model,
         tmp <- sanitize_variables(
             variables = variables,
             model = model,
-            newdata = newdata)$conditional
+            newdata = newdata,
+            calling_function = "predictions"
+            )$conditional
         for (v in tmp) {
             args[[v$name]] <- v$value
         }

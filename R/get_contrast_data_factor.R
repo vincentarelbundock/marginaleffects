@@ -13,10 +13,7 @@ get_contrast_data_factor <- function(model,
 
     } else {
 
-        msg <- format_msg(
-        "The `%s` variable is treated as a categorical (factor) variable, but the
-        original data is of class %s. It is safer and faster to convert such variables
-        to factor before fitting the model and calling `marginaleffects` functions.")
+        msg <- "The `%s` variable is treated as a categorical (factor) variable, but the original data is of class %s. It is safer and faster to convert such variables to factor before fitting the model and calling `marginaleffects` functions." 
         msg <- sprintf(msg, variable$name, class(newdata[[variable$name]])[1])
         warn_once(msg, "marginaleffects_warning_factor_on_the_fly_conversion")
         original_data <- hush(insight::get_data(model))
