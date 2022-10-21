@@ -184,7 +184,8 @@ model_REML <- glmmTMB(
 
 expect_error(marginaleffects(model_REML), pattern = "REML")
 expect_error(comparisons(model_REML), pattern = "REML")
+expect_error(predictions(model_REML), pattern = "REML")
 expect_error(marginalmeans(model_REML), pattern = "REML")
 expect_inherits(marginaleffects(model_REML, vcov = FALSE), "marginaleffects")
-expect_inherits(predictions(model_REML, re.form = NA), "predictions")
+expect_inherits(predictions(model_REML, re.form = NA, vcov = FALSE), "predictions")
 expect_inherits(predictions(model_REML, vcov = FALSE, re.form = NA), "predictions")

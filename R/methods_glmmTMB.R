@@ -70,13 +70,10 @@ set_coef.glmmTMB <- function(model, coefs, ...) {
 
 #' @rdname sanity_model_specific
 sanity_model_specific.glmmTMB <- function(model, vcov = NULL, calling_function = "marginaleffects", ...) {
-    # insight handles predictions correctly
-    if (!identical(calling_function, "predictions")) {
-        REML <- as.list(insight::get_call(model))[["REML"]]
-        if (isTRUE(REML) && !identical(vcov, FALSE)) {
-            msg <- insight::format_message("Uncertainty estimates cannot be computed for `glmmTMB` models with the `REML=TRUE` option. Either set `REML=FALSE` when fitting the model, or set `vcov=FALSE` when calling a `marginaleffects` function to avoid this error.")
-            stop(msg, call. = FALSE) 
-        }
+    REML <- as.list(insight::get_call(model))[["REML"]]
+    if (isTRUE(REML) && !identical(vcov, FALSE)) {
+        msg <- insight::format_message("Uncertainty estimates cannot be computed for `glmmTMB` models with the `REML=TRUE` option. Either set `REML=FALSE` when fitting the model, or set `vcov=FALSE` when calling a `marginaleffects` function to avoid this error.")
+        stop(msg, call. = FALSE)
     }
 
     # we need an explicit check because predict.glmmTMB() generates other
@@ -86,8 +83,8 @@ sanity_model_specific.glmmTMB <- function(model, vcov = NULL, calling_function =
         vcov <- vcov[[1]]
     }
     flag <- !isTRUE(checkmate::check_flag(vcov, null.ok = TRUE)) &&
-            !isTRUE(checkmate::check_matrix(vcov)) &&
-            !isTRUE(checkmate::check_function(vcov))
+        !isTRUE(checkmate::check_matrix(vcov)) &&
+        !isTRUE(checkmate::check_function(vcov))
     if (flag) {
         msg <- sprintf("This value of the `vcov` argument is not supported for models of class `%s`. Please set `vcov` to `TRUE`, `FALSE`, `NULL`, or supply a variance-covariance matrix.", class(model)[1])
         stop(msg, call. = FALSE)
