@@ -4,17 +4,7 @@
 \alias{datagridcf}
 \title{A "counterfactual" version of the \code{datagrid()} function.}
 \usage{
-datagridcf(
-  ...,
-  model = NULL,
-  newdata = NULL,
-  FUN_character = Mode,
-  FUN_factor = Mode,
-  FUN_logical = Mode,
-  FUN_numeric = function(x) mean(x, na.rm = TRUE),
-  FUN_integer = function(x) round(mean(x, na.rm = TRUE)),
-  FUN_other = function(x) mean(x, na.rm = TRUE)
-)
+datagridcf(..., model = NULL, newdata = NULL)
 }
 \arguments{
 \item{...}{named arguments with vectors of values or functions for user-specified variables.
@@ -27,18 +17,6 @@ datagridcf(
 \item{model}{Model object}
 
 \item{newdata}{data.frame (one and only one of the \code{model} and \code{newdata} arguments}
-
-\item{FUN_character}{the function to be applied to character variables.}
-
-\item{FUN_factor}{the function to be applied to factor variables.}
-
-\item{FUN_logical}{the function to be applied to factor variables.}
-
-\item{FUN_numeric}{the function to be applied to numeric variables.}
-
-\item{FUN_integer}{the function to be applied to integer variables.}
-
-\item{FUN_other}{the function to be applied to other variable types.}
 }
 \description{
 For each combination of the variable values specified, this function

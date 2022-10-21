@@ -1,8 +1,8 @@
 #' Generate a data grid of "typical," "counterfactual," or user-specified values for use in the `newdata` argument of the `marginaleffects` or `predictions` functions.
 #'
-#' @param ... named arguments with vectors of values or functions for user-specified variables. 
-#' + Functions are applied to the variable in the `model` dataset or `newdata`, and must return a vector of the appropriate type. 
-#' + Character vectors are automatically transformed to factors if necessary. 
+#' @param ... named arguments with vectors of values or functions for user-specified variables.
+#' + Functions are applied to the variable in the `model` dataset or `newdata`, and must return a vector of the appropriate type.
+#' + Character vectors are automatically transformed to factors if necessary.
 #' +The output will include all combinations of these variables (see Examples below.)
 #' @param model Model object
 #' @param newdata data.frame (one and only one of the `model` and `newdata` arguments
@@ -49,7 +49,7 @@
 #' # datagrid accepts functions
 #' datagrid(hp = range, cyl = unique, newdata = mtcars)
 #' comparisons(mod, newdata = datagrid(hp = fivenum))
-#' 
+#'
 #' # The full dataset is duplicated with each observation given counterfactual
 #' # values of 100 and 110 for the `hp` variable. The original `mtcars` includes
 #' # 32 rows, so the resulting dataset includes 64 rows.
@@ -131,15 +131,15 @@ datagrid <- function(
 #' @examples
 #' # Fit a model with 32 observations from the `mtcars` dataset.
 #' nrow(mtcars)
-#' 
+#'
 #' mod <- lm(mpg ~ hp + am, data = mtcars)
-#' 
+#'
 #' # We specify two values for the `am` variable and obtain a counterfactual
 #' # dataset with 64 observations (32 x 2).
 #' dat <- datagridcf(model = mod, am = 0:1)
 #' head(dat)
 #' nrow(dat)
-#' 
+#'
 #' # We specify 2 values for the `am` variable and 3 values for the `hp` variable
 #' # and obtained a dataset with 192 observations (2x3x32), corresponding to the
 #' # full original data, with each possible combination of `hp` and `am`.
@@ -152,23 +152,11 @@ datagrid <- function(
 datagridcf <- function(
     ...,
     model = NULL,
-    newdata = NULL,
-    FUN_character = Mode,
-    FUN_factor = Mode,
-    FUN_logical = Mode,
-    FUN_numeric = function(x) mean(x, na.rm = TRUE),
-    FUN_integer = function(x) round(mean(x, na.rm = TRUE)),
-    FUN_other = function(x) mean(x, na.rm = TRUE)) {
+    newdata = NULL) {
 
     datagrid(...,
         model = model,
         newdata = newdata,
-        FUN_character = FUN_character,
-        FUN_factor = FUN_factor,
-        FUN_logical = FUN_logical,
-        FUN_numeric = FUN_numeric,
-        FUN_integer = FUN_integer,
-        FUN_other = FUN_other,
         grid_type = "counterfactual")
 }
 
@@ -347,8 +335,8 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
     idx <- sapply(newdata, function(x) "matrix" %in% class(x))
     if (any(idx)) {
         msg <- format_msg(
-        "Matrix columns are not supported and are omitted. This may prevent computation 
-        of the quantities of interest. You can construct your own prediction dataset and 
+        "Matrix columns are not supported and are omitted. This may prevent computation
+        of the quantities of interest. You can construct your own prediction dataset and
         supply it explicitly to the `newdata` argument.")
         warning(msg, call. = FALSE)
         newdata <- newdata[, !idx, drop = FALSE]
@@ -365,7 +353,7 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
             } else {
                 at[[n]] <- at[[n]](newdata[[n]])
             }
-        } 
+        }
 
         # not an "else" situation because we want to process the output of functions too
         if (is.factor(newdata[[n]]) || isTRUE(attributes(newdata[[n]])$factor)) {
