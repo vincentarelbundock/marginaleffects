@@ -9,6 +9,7 @@
 * New vignette: Extending `marginaleffects`
 * For `betareg` objects, inference can now be done on all coefficients using `deltamethod()`. previously only the location coefficients were available.
 * For objects from `crch` package, a number of bugs have been fixed; standard errors should now be correct for `deltamethod()`, `marginaleffects()`, etc.
+* Fixed a bug in the `tidy()` function for `glmmTMB` models without random effects, which caused all t statistics to be identical.
 
 # marginaleffects 0.7.1
 
