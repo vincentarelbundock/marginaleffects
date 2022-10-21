@@ -30,12 +30,11 @@ get_predict.glmmTMB <- function(model,
 #' @rdname get_coef
 #' @export
 get_coef.glmmTMB <- function(model, ...) {
-    # order matters
-    b <- model$obj$env$parList(model$fit$par, model$fit$parfull)
-    b[["b"]] <- NULL # no random effects
-    b <- unlist(b)
-    names(b) <- gsub("^beta\\d+", "beta", names(b))
-    return(b)
+    out <- insight::get_parameters(model, component = "all")
+    out$Parameter <- ifelse(out$Component == "zero_inflated", paste0("zi~", out$Parameter), out$Parameter)
+    out$Parameter <- ifelse(out$Component == "dispersion", paste0("d~", out$Parameter), out$Parameter)
+    out <- stats::setNames(out$Estimate, out$Parameter)
+    return(out)
 }
 
 
@@ -50,18 +49,19 @@ set_coef.glmmTMB <- function(model, coefs, ...) {
     # the order matters; I think we can rely on it, but this still feels like a HACK
     out <- model
 
-    new <- make.unique(names(coefs))
-    old <- make.unique(names(model$fit$parfull))
-    idx <- match(old, new)
-    out$fit$parfull <- stats::setNames(
-        ifelse(is.na(idx), model$fit$parfull, coefs[idx]),
-        names(model$fit$parfull))
+    idx <- !names(out$fit$parfull) %in% c("theta", "b")
+    if (length(coefs) == length(out$fit$parfull[idx])) {
+        out$fit$parfull[idx] <- stats::setNames(coefs, names(out$fit$parfull)[idx])
+    } else {
+        insight::format_error("Unable to compute standard errors for this model.")
+    }
 
-    old <- make.unique(names(model$fit$par))
-    idx <- match(old, new)
-    out$fit$par <- stats::setNames(
-        ifelse(is.na(idx), model$fit$par, coefs[idx]),
-        names(model$fit$par))
+    idx <- !names(out$fit$par) %in% c("theta", "b")
+    if (length(coefs) == length(out$fit$par[idx])) {
+        out$fit$par[idx] <- stats::setNames(coefs, names(out$fit$par)[idx])
+    } else {
+        insight::format_error("Unable to compute standard errors for this model.")
+    }
 
     return(out)
 }

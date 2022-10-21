@@ -4,7 +4,7 @@ if (ON_CRAN) exit_file("on cran")
 if (ON_CI) exit_file("on ci") # install and test fails on Github
 requiet("glmmTMB")
 requiet("emmeans")
-
+requiet("broom")
 
 data("Owls", package = "glmmTMB")
 
@@ -31,16 +31,14 @@ m4 <- glmmTMB(cbind(incidence, size - incidence) ~ period + (1 | herd),
 family = binomial, data = cbpp)
 expect_marginaleffects(m4)
 
-
-
 # comparisons vs. emmeans
-requiet("emmeans")
-requiet("broom")
+
 # Zero-inflated negative binomial model
 m2 <- glmmTMB(count ~ spp + mined + (1 | site),
   zi = ~spp + mined,
   family = nbinom2,
   data = Salamanders)
+
 co <- comparisons(m2,
               type = "link",
               variables = "mined",
@@ -51,6 +49,23 @@ em <- tidy(pairs(emmeans(m2, "mined", at = list(spp = "GP", site = "VF-1"))))
 expect_marginaleffects(m2)
 expect_equivalent(co$comparison, -1 * em$estimate)
 expect_equivalent(co$std.error, em$std.error)
+
+
+# Issue reported by email by Olivier Baumais
+bug <- glmmTMB(count ~ spp + mined,
+  ziformula = ~spp + mined,
+  family = "poisson",
+  data = Salamanders)
+mfx <- marginaleffects(bug)
+tid1 <- comparisons(bug, transform_pre = "dydxavg")
+tid2 <- tidy(marginaleffects(bug))
+
+expect_equivalent(tid1$comparison, tid2$estimate)
+expect_equivalent(tid1$std.error, tid2$std.error)
+expect_equivalent(tid1$statistic, tid2$statistic)
+expect_equivalent(tid1$p.value, tid2$p.value)
+expect_equivalent(length(unique(abs(tid1$statistic))), 7)
+
 
 # Hurdle Poisson model
 m3 <- glmmTMB(count ~ spp + mined + (1 | site),
