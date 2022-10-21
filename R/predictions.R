@@ -212,7 +212,8 @@ predictions <- function(model,
         model = model,
         newdata = newdata,
         vcov = vcov,
-        calling_function = "predictions", ...)
+        calling_function = "predictions",
+        ...)
     hypothesis <- sanitize_hypothesis(hypothesis, ...)
     conf_level <- sanitize_conf_level(conf_level, ...)
     type <- sanitize_type(model = model, type = type, calling_function = "predictions")
