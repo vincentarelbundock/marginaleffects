@@ -68,7 +68,7 @@ model <- zeroinfl(art ~ kid5 + phd | ment,
 stata <- readRDS(testing_path("stata/stata.rds"))$pscl_zeroinfl_01
 mfx <- merge(tidy(marginaleffects(model)), stata)
 expect_marginaleffects(model)
-expect_equivalent(mfx$estimate, mfx$dydxstata, tolerance = tol)
+expect_equivalent(mfx$estimate, mfx$dydxstata, tolerance = 1e-3)
 expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = tol_se)
 
 # emtrends
@@ -80,9 +80,8 @@ expect_equivalent(mfx$std.error, em$std.error, tolerance = .01)
 
 # margins: does not support standard errors (all zeros)
 mar <- margins(model, data = head(bioChemists), unit_ses = TRUE)
-mfx <- marginaleffects(model, newdata = head(bioChemists))
-expect_true(expect_margins(mfx, mar, se = FALSE, verbose = TRUE, tolerance = 0.001))
-
+mfx <- marginaleffects(model, variables = c("kid5", "phd", "ment"), newdata = head(bioChemists))
+expect_equivalent(sort(summary(mar)$AME), sort(summary(mfx)$estimate), tolerance = 1e-3)
 
 
 ### predictions
