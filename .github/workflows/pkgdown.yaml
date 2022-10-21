@@ -23,12 +23,6 @@ jobs:
         with:
           use-public-rspm: true
 
-      - name: pkgdown weirdness
-        run: |
-          Rscript -e 'install.packages("remotes")'
-          Rscript -e 'remotes::install_github("RobinHankin/Brobdingnag")'
-          Rscript -e 'remotes::install_github("vincentarelbundock/marginaleffects")'
-
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           needs: website
