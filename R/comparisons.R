@@ -269,8 +269,6 @@ comparisons <- function(model,
     } else {
         contrast_numeric <- 1
     }
-    sanity_contrast_factor(contrast_factor) # hardcoded in marginaleffects()
-    sanity_contrast_numeric(contrast_numeric) # hardcoded in marginaleffects()
 
     marginalmeans <- isTRUE(checkmate::check_choice(newdata, choices = "marginalmeans")) 
 

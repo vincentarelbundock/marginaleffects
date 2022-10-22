@@ -226,9 +226,6 @@ predictions <- function(model,
     # after sanitize_newdata
     sanity_by(by, newdata)
 
-    # `variables` is character vector: Tukey's 5 or uniques
-    checkmate::assert_list(variables, names = "unique", null.ok = TRUE)
-
     # analogous to comparisons(variables=list(...))
     if (!is.null(variables)) {
         args <- list(
