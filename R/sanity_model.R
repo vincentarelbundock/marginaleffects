@@ -63,7 +63,7 @@ sanity_model_supported_class <- function(model) {
         "lmrob",
         "lmRob",
         "lm_robust",
-        "logitr",
+        # "logitr",
         "loess",
         c("lrm", "lm"),
         c("lrm", "rms", "glm"),
