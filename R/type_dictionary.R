@@ -82,6 +82,7 @@ lmerMod,response,expectation,TRUE,TRUE
 lmerModLmerTest,response,expectation,TRUE,TRUE
 lmrob,response,expectation,TRUE,TRUE
 lm_robust,response,expectation,TRUE,TRUE
+logitr,prob,NA,TRUE,TRUE
 mblogit,response,expectation,TRUE,TRUE
 mblogit,latent,,TRUE,TRUE
 mblogit,link,link,TRUE,TRUE
