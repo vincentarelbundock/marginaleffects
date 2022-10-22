@@ -5,7 +5,7 @@ get_predict.logitr <- function(model,
                                ...) {
     type <- unname(type)
     obsID <- insight::get_call(model)$obsID
-    out <- stats::predict(model, newdata = newdata, type = type, obsID = obsID)
+    out <- stats::predict(model, newdata = newdata, type = type, obsID = obsID, returnData = FALSE)
     out <- data.frame(
         rowid = seq_len(nrow(out)),
         predicted = out[, 2])
