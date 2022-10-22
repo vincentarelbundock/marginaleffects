@@ -22,7 +22,42 @@ predictions(
 \arguments{
 \item{model}{Model object}
 
-\item{newdata}{\code{NULL}, data frame, string, or \code{datagrid()} call. Determines the grid of predictors on which we make predictions.
+\item{newdata}{\code{NULL}, data frame, string, or \code{datagrid()} call. Determines the predictor values for which to compute marginal effects.
+\itemize{
+\item \code{NULL} (default): Unit-level marginal effects for each observed value in the original dataset.
+\item data frame: Unit-level marginal effects for each row of the \code{newdata} data frame.
+\item string:
+\itemize{
+\item "mean": Marginal Effects at the Mean. Marginal effects when each predictor is held at its mean or mode.
+\item "median": Marginal Effects at the Median. Marginal effects when each predictor is held at its median or mode.
+\item "marginalmeans": Marginal Effects at Marginal Means. See Details section below.
+\item "tukey": Marginal Effects at Tukey's 5 numbers.
+\item "grid": Marginal Effects on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
+}
+\item \code{\link[=datagrid]{datagrid()}} call to specify a custom grid of regressors. For example:
+\itemize{
+\item \code{newdata = datagrid(cyl = c(4, 6))}: \code{cyl} variable equal to 4 and 6 and other regressors fixed at their means or modes.
+\item See the Examples section and the \code{\link[=datagrid]{datagrid()}} documentation.
+}
+}}
+
+\item{variables}{\code{NULL}, character vector, or named list. The subset of variables to use for creating a counterfactual grid of predictions. The entire dataset replicated for each unique combination of the variables in this list. See the Examples section below.
+\itemize{
+\item Warning: This can use a lot of memory if there are many variables and values, and when the dataset is large.
+\item \code{NULL}: computes one prediction per row of \code{newdata}
+\item Named list: names identify the subset of variables of interest and their values. For numeric variables, the \code{variables} argument supports functions and string shortcuts:
+\itemize{
+\item A function which returns a numeric value
+\item Numeric vector: Contrast between the 2nd element and the 1st element of the \code{x} vector.
+\item "iqr": Contrast across the interquartile range of the regressor.
+\item "sd": Contrast across one standard deviation around the regressor mean.
+\item "2sd": Contrast across two standard deviations around the regressor mean.
+\item "minmax": Contrast between the maximum and the minimum values of the regressor.
+\item "threenum": mean and 1 standard deviation on both sides
+\item "fivenum": Tukey's five numbers
+#' @param newdata \code{NULL}, data frame, string, or \code{datagrid()} call. Determines the grid of predictors on which we make predictions.
+}
+}
 \itemize{
 \item \code{NULL} (default): Predictions for each observed value in the original dataset.
 \item data frame: Predictions for each row of the \code{newdata} data frame.
@@ -40,12 +75,6 @@ predictions(
 \item See the Examples section and the \code{\link[=datagrid]{datagrid()}} documentation.
 }
 }}
-
-\item{variables}{Named list of variables with values to create a
-counterfactual grid of predictions. The entire dataset replicated
-for each unique combination of the variables in this list. See the Examples
-section below. Warning: This can use a lot of memory if there are many
-variables and values, and when the dataset is large.}
 
 \item{vcov}{Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
 \itemize{

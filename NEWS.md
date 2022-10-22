@@ -4,6 +4,7 @@
 * Can specify pairs of factors to compare in the `variables` argument of the `comparisons` function.
 * Interactions with `fixest::i()` are parsed properly as categorical variables
 * The default value of `conf_level` in `summary()` and `tidy()` is now `NULL`, which inherits the `conf_level` value in the original `comparisons`/`marginaleffects`/`predictions` calls.
+* `variables` argument of the `predictions()` function is now much more powerful, supporting shortcut strings, functions, and vectors of arbitrary length.
 * Fix typo in function names for missing "lnratioavgwts"
 * New `update_marginaleffects()` function makes it easy to install the dev versions of `marginaleffects` and its dependencies (mostly useful for Vincent and people who report bugs).
 * New vignette: Extending `marginaleffects`

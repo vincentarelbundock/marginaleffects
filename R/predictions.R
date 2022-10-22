@@ -32,12 +32,19 @@
 #'
 #' @inheritParams marginaleffects
 #' @param model Model object
-#' @param variables Named list of variables with values to create a
-#' counterfactual grid of predictions. The entire dataset replicated
-#' for each unique combination of the variables in this list. See the Examples
-#' section below. Warning: This can use a lot of memory if there are many
-#' variables and values, and when the dataset is large.
-#' @param newdata `NULL`, data frame, string, or `datagrid()` call. Determines the grid of predictors on which we make predictions.
+#' @param variables `NULL`, character vector, or named list. The subset of variables to use for creating a counterfactual grid of predictions. The entire dataset replicated for each unique combination of the variables in this list. See the Examples section below.
+#' * Warning: This can use a lot of memory if there are many variables and values, and when the dataset is large.
+#' * `NULL`: computes one prediction per row of `newdata`
+#' * Named list: names identify the subset of variables of interest and their values. For numeric variables, the `variables` argument supports functions and string shortcuts:
+#'   - A function which returns a numeric value
+#'   - Numeric vector: Contrast between the 2nd element and the 1st element of the `x` vector.
+#'   - "iqr": Contrast across the interquartile range of the regressor.
+#'   - "sd": Contrast across one standard deviation around the regressor mean.
+#'   - "2sd": Contrast across two standard deviations around the regressor mean.
+#'   - "minmax": Contrast between the maximum and the minimum values of the regressor.
+#'   - "threenum": mean and 1 standard deviation on both sides
+#'   - "fivenum": Tukey's five numbers
+#' #' @param newdata `NULL`, data frame, string, or `datagrid()` call. Determines the grid of predictors on which we make predictions.
 #' + `NULL` (default): Predictions for each observed value in the original dataset.
 #' + data frame: Predictions for each row of the `newdata` data frame.
 #' + string:

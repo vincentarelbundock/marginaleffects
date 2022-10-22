@@ -197,6 +197,15 @@ expect_error(predictions(fit, variables = list(race = "all")), pattern = "Check"
 p <- predictions(fit, newdata = datagridcf(race = c("black", "hispan", "white")))
 expect_equivalent(nrow(p), nrow(lalonde) * 3)
 
+dat <- transform(mtcars, am = as.logical(am))
+mod <- lm(mpg ~ am, dat)
+
+p <- predictions(mod, variables = list("am" = TRUE))
+expect_equivalent(nrow(p), 32)
+
+p <- predictions(mod, variables = "am")
+expect_equivalent(nrow(p), 64)
+
 
 ############## DEPRECATED USE OF VARIABLES
 # ##############################
