@@ -52,6 +52,10 @@ get_contrast_data_factor <- function(model,
     } else if (length(variable$value) == 2) {
         if (is.character(variable$value)) {
             tmp <- newdata[[variable$name]]
+            if (any(!variable$value %in% as.character(tmp))) {
+                msg <- "Some of the values supplied to the `variables` argument were not found in the dataset."
+                insight::format_error(msg)
+            }
             idx <- match(variable$value, as.character(tmp))
             levs_idx <- data.table::data.table(lo = tmp[idx[1]], hi = tmp[idx[[2]]])
         } else if (is.numeric(variable$value)) {
