@@ -1,6 +1,5 @@
 # marginaleffects 0.7.1.9000
 
-* New modeling package supported: {logitr}
 * `brms` models: Integrate out random effects (see Bayes vignette for details)
 * Can specify pairs of factors to compare in the `variables` argument of the `comparisons` function.
 * Interactions with `fixest::i()` are parsed properly as categorical variables

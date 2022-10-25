@@ -178,7 +178,6 @@ Collate:
     'methods_glmmTMB.R'
     'methods_glmx.R'
     'methods_lme4.R'
-    'methods_logitr.R'
     'methods_mclogit.R'
     'methods_mgcv.R'
     'methods_mhurdle.R'
