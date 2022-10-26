@@ -60,8 +60,9 @@ get_contrast_data_factor <- function(model,
             levs_idx <- data.table::data.table(lo = tmp[idx[1]], hi = tmp[idx[[2]]])
         } else if (is.numeric(variable$value)) {
             tmp <- newdata[[variable$name]]
-            idx <- match(as.character(variable$value), as.character(tmp))
-            levs_idx <- data.table::data.table(lo = tmp[idx[1]], hi = tmp[idx[[2]]])
+            levs_idx <- data.table::data.table(
+                lo = factor(as.character(variable$value[1]), levels = levels(tmp)),
+                hi = factor(as.character(variable$value[2]), levels = levels(tmp)))
         } else {
             levs_idx <- data.table::data.table(lo = variable$value[1], hi = variable$value[2])
         }
