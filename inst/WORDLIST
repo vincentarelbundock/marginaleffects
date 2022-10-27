@@ -54,6 +54,7 @@ eydxavgwts
 eyex
 eyexavg
 eyexavgwts
+fivenum
 frac
 Gam
 Gentoos
@@ -94,6 +95,7 @@ lnoravg
 lnoravgwts
 lnratio
 lnratioavg
+lnratioavgwts
 Lüdecke
 Marcio
 marginalmeans
@@ -104,12 +106,14 @@ minmax
 modelbased
 Nafa
 nd
+newdata
 NHEFS
 numDeriv
 Numpy
 NumPyro
 ORs
 pairwise
+param
 plasminogen
 poisson
 pre
@@ -142,6 +146,7 @@ StataCorp
 streptokinase
 tidiers
 TLDR
+threenum
 tPA
 tukey
 Umit

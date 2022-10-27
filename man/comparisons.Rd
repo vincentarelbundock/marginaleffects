@@ -228,13 +228,14 @@ Case studies:
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html}{Mixed effects models}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html}{Multinomial Logit and Discrete Choice Models}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/multiple_imputation.html}{Multiple Imputation}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/plot.html}{Plots: interactions, predictions, contrasts, and slopes}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/python.html}{Python NumPyro models in \code{marginaleffects}}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/logistic_contrasts.html}{Unit-level contrasts in logistic regressions}
 }
 
 Tips and technical notes:
 \itemize{
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html}{70 Supported Classes of Models}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html}{69 Supported Classes of Models}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/reference/index.html}{Index of Functions and Documentation}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/extensions.html}{Extending \code{marginaleffects}: add new models or modify existing ones}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html}{Standard Errors and Confidence Intervals}
