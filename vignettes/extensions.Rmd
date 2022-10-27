@@ -1,5 +1,5 @@
 ---
-title: "Extending`marginaleffects`" 
+title: "Extending or modifying marginaleffects" 
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Extending or modifying marginaleffects}
