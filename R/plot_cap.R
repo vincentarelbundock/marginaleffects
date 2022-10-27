@@ -219,7 +219,7 @@ get_plot_newdata <- function(model, condition, effect = NULL) {
     resp <- insight::get_response(model)
     respname <- insight::find_response(model)
 
-    checkmate::assert_true(all(names(condition) %in% colnames(dat)))
+    checkmate::assert_true(isTRUE(all(names(condition) %in% c(colnames(dat), "group"))))
 
     # condition names
     condition1 <- names(condition)[[1]]
