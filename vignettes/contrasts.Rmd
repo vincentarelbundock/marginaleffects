@@ -60,7 +60,7 @@ Here, the *estimand* is the difference in probabilities for `PClass="1st"` and `
 comparisons(
   mod,
   variables = list(PClass = c("3rd", "1st")),
-  newdata = datagrid(Age = 25, SexCode = 0)))
+  newdata = datagrid(Age = 25, SexCode = 0))
 ```
 
 We can compute the same contrast for different "kinds" of individuals, by changing the `datagrid()` call. This function accepts functions or vectors. Here, we compute the contrast between the probabilities of survival in 1st and 3rd class for the oldest men and women passengers:
