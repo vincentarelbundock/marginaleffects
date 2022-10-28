@@ -128,3 +128,12 @@ plot_cap(mod, condition = c("Age", "PClass")) +
     geom_smooth(data = dat, aes(Age, Survived), method = "lm", se = FALSE, color = "black") +
     geom_smooth(data = dat, aes(Age, Survived), se = FALSE, color = "black")
 ```
+
+# Extreme customization
+
+Designing effective data visualizations requires a lot of customization to the specific context and data. The plotting functions in `marginaleffects` offer a powerful way to iterate quickly between plots and models, but they obviously cannot support all the features that users may want. Thankfully, it is very easy to use the `marginaleffects` functions to generate datasets that can then be used in `ggplot2` or any other data visualization tool. Just use the `draw` argument:
+
+```{r}
+p <- plot_cap(mod, condition = c("Age", "PClass"), draw = FALSE)
+head(p)
+```
