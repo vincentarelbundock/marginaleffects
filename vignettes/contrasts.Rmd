@@ -413,6 +413,56 @@ con <- comparisons(mod)
 summary(con)
 ```
 
+# Difference-in-Differences(-in-Differences)
+
+Going back to our Titanic example:
+
+```{r}
+dat <- "https://vincentarelbundock.github.io/Rdatasets/csv/Stat2Data/Titanic.csv"
+dat <- read.csv(dat)
+titanic <- glm(Survived ~ PClass * SexCode * Age, data = dat, family = binomial)
+```
+
+In this case, a contrast is a difference between predicted probabilities. We can compute that contrast for different types of individuals:
+
+```{r}
+comparisons(
+  titanic,
+  variables = "SexCode",
+  newdata = datagrid(PClass = c("1st", "3rd")))
+```
+
+One we can notice above, is that the gap in predicted probabilities of survival between men and women is larger in 1st class than in 3rd class. Being a woman matters more for your chances of survival if you travel in first class. Is the difference between those contrasts (diff-in-diff) statistically significant?
+
+To answer this question, we can compute a difference-in-difference using the `hypothesis` argument ([see the Hypothesis vignette for details](https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html)). For example, using `b1` and `b2` to refer to the contrasts in the first and second rows of the output above, we can test if the difference between the two quantities is different from 0:
+
+```{r}
+comparisons(
+  titanic,
+  hypothesis = "b1 - b2 = 0",
+  variables = "SexCode",
+  newdata = datagrid(PClass = c("1st", "3rd")))
+```
+
+Now, let's say we consider more types of individuals:
+
+```{r}
+comparisons(
+  titanic,
+  variables = "SexCode",
+  newdata = datagrid(PClass = c("1st", "3rd"), Age = range))
+```
+
+With these results, we could compute a triple difference:
+
+```{r}
+comparisons(
+  titanic,
+  hypothesis = "(b1 - b3) - (b2 - b4) = 0",
+  variables = "SexCode",
+  newdata = datagrid(PClass = c("1st", "3rd"), Age = range))
+```
+
 # Ratios
 
 Instead of taking simple differences between adjusted predictions, it can sometimes be useful to compute ratios or other functions of predictions. For example, [the `adjrr` function the `Stata` software package](https://journals.sagepub.com/doi/pdf/10.1177/1536867X1301300304) can compute "adjusted risk ratios", which are ratios of adjusted predictions. To do this in `R`, we use the `transform_pre` argument:
