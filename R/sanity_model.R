@@ -73,6 +73,8 @@ sanity_model_supported_class <- function(model) {
         "mlogit",
         c("multinom", "nnet"),
         c("negbin", "glm", "lm"),
+        c("ols", "rms", "lm"),
+        c("orm", "rms"),
         c("plm", "panelmodel"),
         "polr",
         "rlmerMod",
