@@ -46,7 +46,6 @@ library(ggplot2)
 Consider a linear model with interactions, where the relationship between `hp` and `mpg` is conditional on the values of `wt` and `cyl`:
 
 ```{r}
-
 mod <- lm(mpg ~ hp * wt * factor(cyl), data = mtcars)
 
 plot_cap(mod, condition = "hp")
@@ -65,7 +64,9 @@ plot_cap(mod, condition = list(hp = 110:120, "wt" = "threenum")) /
 
 plot_cap(mod, condition = list("hp", "wt" = "minmax")) /
 
-plot_cap(mod, condition = list("hp", "wt" = fivenum))
+plot_cap(mod, condition = list("hp", "wt" = fivenum)) /
+
+plot_cap(mod, condition = c("hp", "wt", "cyl"))
 ```
 
 # Customizing plots

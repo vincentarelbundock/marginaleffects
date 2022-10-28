@@ -3,11 +3,10 @@
 #' This function plots adjusted predictions (y-axis) against values of one or
 #' more predictors (x-axis and colors).
 #'
-#' @param condition String or vector of two strings. The first is a variable
-#' name to be displayed on the x-axis. The second is a variable whose values
-#' will be displayed in different colors. Other numeric variables are held at
-#' their means. Other categorical variables are held at their modes. Other
-#' numeric variables are held at their means.
+#' @param condition character vector or named list of length smaller than 4. Character vectors must be the names of the predictor variables to display. The names of the list must The first element is displayed on the x-axis. The second element determines the colors. The third element creates facets. Other variables are held at their means or modes. Lists can include these types of values:
+#' * Numeric vector
+#' * Function which returns a numeric vector or a set of unique categorical values 
+#' * Shortcut strings for common reference values: "minmax", "quartile", "threenum"
 #' @param draw `TRUE` returns a `ggplot2` plot. `FALSE` returns a `data.frame` of the underlying data.
 #' @inheritParams plot.marginaleffects
 #' @inheritParams plot_cme
@@ -21,6 +20,10 @@
 #'
 #' mod <- lm(mpg ~ hp * wt * am, data = mtcars)
 #' plot_cap(mod, condition = c("hp", "wt"))
+#'
+#' plot_cap(mod, condition = list("hp", wt = "threenum"))
+#' 
+#' plot_cap(mod, condition = list("hp", wt = range))
 #'
 plot_cap <- function(model,
                      condition = NULL,

@@ -18,11 +18,12 @@ plot_cap(
 \arguments{
 \item{model}{Model object}
 
-\item{condition}{String or vector of two strings. The first is a variable
-name to be displayed on the x-axis. The second is a variable whose values
-will be displayed in different colors. Other numeric variables are held at
-their means. Other categorical variables are held at their modes. Other
-numeric variables are held at their means.}
+\item{condition}{character vector or named list of length smaller than 4. Character vectors must be the names of the predictor variables to display. The names of the list must The first element is displayed on the x-axis. The second element determines the colors. The third element creates facets. Other variables are held at their means or modes. Lists can include these types of values:
+\itemize{
+\item Numeric vector
+\item Function which returns a numeric vector or a set of unique categorical values
+\item Shortcut strings for common reference values: "minmax", "quartile", "threenum"
+}}
 
 \item{type}{string indicates the type (scale) of the predictions used to
 compute marginal effects or contrasts. This can differ based on the model
@@ -76,6 +77,10 @@ plot_cap(mod, condition = "wt")
 
 mod <- lm(mpg ~ hp * wt * am, data = mtcars)
 plot_cap(mod, condition = c("hp", "wt"))
+
+plot_cap(mod, condition = list("hp", wt = "threenum"))
+
+plot_cap(mod, condition = list("hp", wt = range))
 
 }
 \seealso{
