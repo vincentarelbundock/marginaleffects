@@ -24,7 +24,7 @@ library(ggplot2)
 theme_set(theme_minimal())
 ```
 
-Note: Some of the code in this vignette requires `marginaleffects` version 0.6.0 or [the development version from github.](https://vincentarelbundock.github.io/marginaleffects/#installation)
+Note: Some of the code in this vignette requires `marginaleffects` version 0.7.2 or [the development version from github.](https://vincentarelbundock.github.io/marginaleffects/#installation)
 
 [In another vignette](https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html), we introduced the "marginal effect" as a partial derivative. Since derivatives are only properly defined for continuous variables, we cannot use them to interpret the effects of changes in categorical variables. For this, we turn to *contrasts* between [Adjusted predictions.](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html) In the context of this package, a "Contrast" is defined as:
 
@@ -33,6 +33,78 @@ Note: Some of the code in this vignette requires `marginaleffects` version 0.6.0
 The `marginaleffects()` function automatically calculates contrasts instead of derivatives for factor, logical, or character variables. 
 
 The `comparisons()` function gives users more powerful features to compute different contrasts, such as differences, risk ratios, linear combinations, and transformations.
+
+# Simple example: Titanic
+
+Consider a logistic regression model estimated using the Titanic mortality data:
+
+```{r}
+library(marginaleffects)
+
+dat <- "https://vincentarelbundock.github.io/Rdatasets/csv/Stat2Data/Titanic.csv"
+dat <- read.csv(dat)
+mod <- glm(Survived ~ PClass * SexCode * Age, data = dat, family = binomial)
+```
+
+The question that interests us is:
+
+> How does the probability of survival (outcome) change if a passenger travels in 1st class vs. 3rd class?
+
+The answer to that question is not straightforward because, in non-linear models with interactions, the effect of a change in one variable depends on the values of all the other covariates in the model. Therefore, we need to refine the question:
+
+> How does the probability of survival (outcome) change if a 25 year old man travels in 1st class vs. 3rd class?
+
+Here, the *estimand* is the difference in probabilities for `PClass="1st"` and `PClass="3rd"`, and this estimand is conditional on the values of the covariates `Age=25` and `SexCode=1`. In the `comparisons()` function, the `variables` argument determines the scientific query (estimand or comparison), and the `newdata` argument determines *where* we estimate this query (conditional on what covariate values). For example:
+
+```{r}
+comparisons(
+  mod,
+  variables = list(PClass = c("3rd", "1st")),
+  newdata = datagrid(Age = 25, SexCode = 0)))
+```
+
+We can compute the same contrast for different "kinds" of individuals, by changing the `datagrid()` call. This function accepts functions or vectors. Here, we compute the contrast between the probabilities of survival in 1st and 3rd class for the oldest men and women passengers:
+
+```{r}
+comparisons(
+  mod,
+  variables = list(PClass = c("3rd", "1st")),
+  newdata = datagrid(Age = range, SexCode = 0:1))
+```
+
+If we do *not* specify the `newdata` argument, then `comparisons()` will calculate the contrast for every single combination of covariate values in the original data. This means that we will obtain a data frame of results with the same number of rows as the original data. This makes sense, because in non-linear models or in models with interactions, each individual can have a different contrast:
+
+```{r}
+cmp <- comparisons(
+  mod,
+  variables = list(PClass = c("3rd", "1st")))
+
+# number of contrast estimates
+nrow(cmp)
+
+# number of observations in the model
+nobs(mod)
+```
+
+A big dataset of contrasts like this one can be unwieldy. A common strategy is to summarize the unit-level contrasts by taking their average. This can be achieved using the `tidy()` or `summary()` functions:
+
+```{r}
+cmp <- comparisons(
+  mod,
+  variables = list(PClass = c("3rd", "1st")))
+
+summary(cmp)
+```
+
+We can also compute several average contrasts at the same time:
+
+```{r}
+comparisons(mod) |> summary()
+```
+
+Note that average contrasts often have a nice interpretation in a causal inference context, as the outcome of parametric g-formula estimation. See this vignette: https://vincentarelbundock.github.io/marginaleffects/articles/gformula.html
+
+The rest of this vignette highlights some of the other features of the very flexible and powerful `comparisons()` function.
 
 # Predictor types
 

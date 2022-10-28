@@ -7,7 +7,7 @@ get_contrast_data_character <- function(model,
 
     # factors store all levels, but characters do not, so we need to extract the
     # original data from the model.
-    tmp <- hush(insight::get_data(model))
+    tmp <- modeldata <- hush(insight::get_data(model))
 
     # unsupported by insight (e.g., numpyro)
     if (is.null(tmp)) {
@@ -17,7 +17,7 @@ get_contrast_data_character <- function(model,
     levs <- sort(unique(tmp[[variable$name]]))
 
     # index contrast orders based on variable$value
-    if (variable$value == "reference") {
+    if (isTRUE(variable$value == "reference")) {
         # null contrasts are interesting with interactions
         if (!isTRUE(interaction)) {
             levs_idx <- data.table::data.table(lo = levs[1], hi = levs[2:length(levs)])
@@ -25,7 +25,7 @@ get_contrast_data_character <- function(model,
             levs_idx <- data.table::data.table(lo = levs[1], hi = levs)
         }
 
-    } else if (variable$value == "pairwise") {
+    } else if (isTRUE(variable$value == "pairwise")) {
         levs_idx <- CJ(lo = levs, hi = levs, sorted = FALSE)
         # null contrasts are interesting with interactions
         if (!isTRUE(interaction)) {
@@ -33,22 +33,27 @@ get_contrast_data_character <- function(model,
             levs_idx <- levs_idx[match(levs_idx$lo, levs) < match(levs_idx$hi, levs), ]
         }
 
-    } else if (variable$value == "all") {
+    } else if (isTRUE(variable$value == "all")) {
         levs_idx <- CJ(lo = levs, hi = levs, sorted = FALSE)
 
-    } else if (variable$value == "sequential") {
+    } else if (isTRUE(variable$value == "sequential")) {
         levs_idx <- data.table::data.table(lo = levs[1:(length(levs) - 1)],
                                            hi = levs[2:length(levs)])
 
     } else if (length(variable$value) == 2) {
         if (is.character(variable$value)) {
-            tmp <- newdata[[variable$name]]
+            tmp <- modeldata[[variable$name]]
+            if (any(!variable$value %in% as.character(tmp))) {
+                msg <- "Some of the values supplied to the `variables` argument were not found in the dataset."
+                insight::format_error(msg)
+            }
             idx <- match(variable$value, as.character(tmp))
             levs_idx <- data.table::data.table(lo = tmp[idx[1]], hi = tmp[idx[[2]]])
         } else if (is.numeric(variable$value)) {
             tmp <- newdata[[variable$name]]
-            idx <- match(as.character(variable$value), as.character(tmp))
-            levs_idx <- data.table::data.table(lo = tmp[idx[1]], hi = tmp[idx[[2]]])
+            levs_idx <- data.table::data.table(
+                lo = as.character(variable$value[1]),
+                hi = as.character(variable$value[2]))
         } else {
             levs_idx <- data.table::data.table(lo = variable$value[1], hi = variable$value[2])
         }
