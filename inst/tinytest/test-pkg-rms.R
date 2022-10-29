@@ -26,10 +26,8 @@ expect_predictions(pred2, n_row = 6)
 
 # comparisons
 mod <- ols(mpg ~ hp, mtcars)
-c1 <- comparisons(mod, type = "fitted")
-c2 <- comparisons(mod, type = "lp")
+c1 <- comparisons(mod, type = "lp")
 expect_inherits(c1, "comparisons")
-expect_inherits(c2, "comparisons")
 
 mod <- lrm(am ~ hp, mtcars)
 c1 <- comparisons(mod, type = "fitted")
