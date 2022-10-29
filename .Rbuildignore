@@ -21,6 +21,7 @@
 ^vignettes/gam.Rmd
 ^vignettes/gformula.Rmd
 ^vignettes/extensions.Rmd
+^vignettes/experiments.Rmd
 ^vignettes/hypothesis.Rmd
 ^vignettes/lme4.Rmd
 ^vignettes/marginaleffects.Rmd

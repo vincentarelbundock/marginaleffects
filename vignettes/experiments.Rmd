@@ -1,0 +1,63 @@
+---
+title: "Experiments"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Experiments}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+# this vignette is in .Rbuildignore because lme4 is not available on old CRAN
+# test machines.
+
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  fig.width = 9,
+  fig.asp = .4,
+  out.width = "100%",
+  warning = FALSE,
+  message = FALSE,
+  comment = "#>"
+)
+```
+
+# Regression adjustment in experiments
+
+Many analysts who conduct and analyze experiments wish to use regression adjustment with a linear regression model to improve the precision of their estimate of the treatment effect. Unfortunately, regression adjustment can introduce small-sample bias and other undesirable properties (Freedman 2008). Lin (2013) proposes a simple strategy to fix these problems in sufficiently large samples:
+
+1. Center all predictors by subtracting each of their means.
+2. Estimate a linear model in which the treatment is interacted with each of the covariates.
+
+The `estimatr` package includes a convenient function to implement this strategy:
+
+```{r}
+library(estimatr)
+library(marginaleffects)
+data("lalonde", package = "MatchIt")
+
+mod <- lm_lin(
+    re78 ~ treat,
+    covariates = ~ age + educ + race,
+    data = lalonde,
+    se_type = "HC3")
+summary(mod)
+```
+
+We can obtain the same results by fitting a model with the standard `lm` function and using the `comparisons()` function:
+
+```{r}
+mod <- lm(re78 ~ treat * (age + educ + race), data = lalonde)
+comparisons(
+    mod,
+    variables = "treat",
+    vcov = "HC3") |>
+    summary()
+```
+
+Notice that the `treat` coefficient and associate standard error in the `lm_lin` regression are exactly the same as the estimates produced by the `comparisons()` function.
+
+## References
+
+* Freedman, David A. “On Regression Adjustments to Experimental Data.” Advances in Applied Mathematics 40, no. 2 (February 2008): 180–93.
+* Lin, Winston. “Agnostic Notes on Regression Adjustments to Experimental Data: Reexamining Freedman’s Critique.” Annals of Applied Statistics 7, no. 1 (March 2013): 295–318. https://doi.org/10.1214/12-AOAS583.

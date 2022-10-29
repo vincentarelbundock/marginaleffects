@@ -26,6 +26,7 @@ Case studies:
 - [Bayesian Analyses with `brms`](https://vincentarelbundock.github.io/marginaleffects/articles/brms.html)
 - [Causal Inference with the g-Formula](https://vincentarelbundock.github.io/marginaleffects/articles/gformula.html)
 - [Elasticity](https://vincentarelbundock.github.io/marginaleffects/articles/elasticity.html)
+- [Experiments](https://vincentarelbundock.github.io/marginaleffects/articles/experiments.html)
 - [Generalized Additive Models](https://vincentarelbundock.github.io/marginaleffects/articles/gam.html)
 - [Mixed effects models](https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html)
 - [Multinomial Logit and Discrete Choice Models](https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html)
