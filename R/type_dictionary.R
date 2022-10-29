@@ -84,6 +84,7 @@ lmrob,response,expectation,TRUE,TRUE
 lm_robust,response,expectation,TRUE,TRUE
 lrm,fitted,NA,TRUE,TRUE
 lrm,lp,NA,TRUE,TRUE
+lrm,mean,NA,TRUE,TRUE
 mblogit,response,expectation,TRUE,TRUE
 mblogit,latent,,TRUE,TRUE
 mblogit,link,link,TRUE,TRUE
@@ -100,6 +101,7 @@ negbin,response,expectation,TRUE,TRUE
 negbin,link,link,TRUE,TRUE
 ols,lp,NA,TRUE,TRUE
 orm,fitted,NA,TRUE,TRUE
+orm,mean,NA,TRUE,TRUE
 orm,lp,NA,TRUE,TRUE
 polr,probs,expectation,TRUE,TRUE
 rlm,response,expectation,TRUE,TRUE
