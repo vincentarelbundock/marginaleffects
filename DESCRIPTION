@@ -186,6 +186,7 @@ Collate:
     'methods_plm.R'
     'methods_pscl.R'
     'methods_quantreg.R'
+    'methods_rms.R'
     'methods_robustlmm.R'
     'methods_rstanarm.R'
     'methods_sampleSelection.R'
