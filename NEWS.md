@@ -2,6 +2,7 @@
 
 * `plot_cme()`, `plot_cap()`, and `plot_cco()` are now much more flexible. The `condition` argument accepts lists and shortcuts for common reference values.
 * `brms` models: Integrate out random effects (see Bayes vignette for details)
+* `variables` argument accepts functions to specify custom differences in numeric variables.
 * Can specify pairs of factors to compare in the `variables` argument of the `comparisons` function.
 * Interactions with `fixest::i()` are parsed properly as categorical variables
 * The default value of `conf_level` in `summary()` and `tidy()` is now `NULL`, which inherits the `conf_level` value in the original `comparisons`/`marginaleffects`/`predictions` calls.

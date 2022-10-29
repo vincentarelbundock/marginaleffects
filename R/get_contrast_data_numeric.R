@@ -103,6 +103,12 @@ get_contrast_data_numeric <- function(model,
         low <- min(xmd, na.rm = TRUE)
         high <- max(xmd, na.rm = TRUE)
         lab <- make_label(variable$label, c("Max", "Min"))
+
+    } else if (isTRUE(checkmate::check_function(variable$value))) {
+        tmp <- variable$value(x)
+        low <- tmp[, 1]
+        high <- tmp[, 2]
+        lab <- "custom"
     }
 
     newdata[["eps"]] <- eps

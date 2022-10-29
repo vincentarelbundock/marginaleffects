@@ -66,6 +66,7 @@ comparisons(
 \itemize{
 \item Numeric of length 1: Contrast for a gap of \code{x}, computed at the observed value plus and minus \code{x / 2}. For example, estimating a \code{+1} contrast compares adjusted predictions when the regressor is equal to its observed value minus 0.5 and its observed value plus 0.5.
 \item Numeric vector of length 2: Contrast between the 2nd element and the 1st element of the \code{x} vector.
+\item Function which accepts a numeric vector and returns a data frame with two columsn of "low" and "high" values to compare. See examples.
 \item "iqr": Contrast across the interquartile range of the regressor.
 \item "sd": Contrast across one standard deviation around the regressor mean.
 \item "2sd": Contrast across two standard deviations around the regressor mean.
@@ -343,6 +344,13 @@ comparisons(mod, variables = list(hp = c(90, 100))) \%>\% tidy()
 comparisons(mod, variables = list(hp = "iqr")) \%>\% tidy()
 comparisons(mod, variables = list(hp = "sd")) \%>\% tidy()
 comparisons(mod, variables = list(hp = "minmax")) \%>\% tidy()
+
+# using a function to specify a custom difference in one regressor
+dat <- mtcars
+dat$new_hp <- 49 * (dat$hp - min(dat$hp)) / (max(dat$hp) - min(dat$hp)) + 1
+modlog <- lm(mpg ~ log(new_hp) + factor(cyl), data = dat)
+fdiff <- \(x) data.frame(x, x + 10)
+comparisons(modlog, variables = list(new_hp = fdiff)) \%>\% summary()
 
 # Adjusted Risk Ratio: see the contrasts vignette
 mod <- glm(vs ~ mpg, data = mtcars, family = binomial)
