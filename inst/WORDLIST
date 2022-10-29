@@ -118,6 +118,7 @@ plasminogen
 poisson
 pre
 probs
+quartile
 ratioavg
 ratioavgwts
 Raton
@@ -144,9 +145,9 @@ Stata's
 Stata’s
 StataCorp
 streptokinase
+threenum
 tidiers
 TLDR
-threenum
 tPA
 tukey
 Umit
