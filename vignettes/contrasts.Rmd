@@ -583,6 +583,47 @@ plot_cco(
     ylab("Adjusted Risk Ratio\nP(vs = 1 | mpg + 10) / P(vs = 1 | mpg)")
 ```
 
+# Forward, Backward, Centered, and Custom Differences
+
+By default, the `comparisons()` function computes a "centered" difference. For example, if we ask `comparisons()` to estimate the effect of a 10-unit change in predictor `x` on outcome `y`, `comparisons()` will compare the predicted values with `x-5` and `x+5`. 
+
+```{r}
+dat <- mtcars
+dat$new_hp <- 49 * (mtcars$hp - min(mtcars$hp)) / (max(mtcars$hp) - min(mtcars$hp)) + 1
+mod <- lm(mpg ~ log(new_hp), data = dat)
+
+comparisons(
+  mod,
+  variables = list(new_hp = 10)) |>
+  summary()
+```
+
+Since version 0.7.2 of `marginaleffects`, we can supply arbitrary functions to create custom differences. These functions must accept a vector of values for the predictor of interest, and return a data frame with the same number of rows as the length, and two columns with the values to compare. For example, we can do:
+
+```{r}
+forward_diff <- \(x) data.frame(x, x + 10)
+backward_diff <- \(x) data.frame(x - 10, x)
+center_diff <- \(x) data.frame(x - 5, x + 5)
+
+comparisons(
+  mod,
+  variables = list(new_hp = forward_diff)) |>
+  summary()
+
+comparisons(
+  mod,
+  variables = list(new_hp = backward_diff)) |>
+  summary()
+
+comparisons(
+  mod,
+  variables = list(new_hp = center_diff)) |>
+  summary()
+```
+
+Notice that the last "centered" difference gives the same results as the default `comparisons()` call.
+
+
 # Lognormal hurdle model
 
 With hurdle models, we can fit two separate models simultaneously: 
