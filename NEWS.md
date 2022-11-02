@@ -1,4 +1,4 @@
-# marginaleffects 0.7.1.9010
+# marginaleffects 0.8.0
 
 Breaking change:
 
@@ -13,10 +13,10 @@ Breaking change:
 New features:
 
 * Plots: `plot_cme()`, `plot_cap()`, and `plot_cco()` are now much more flexible in specifying the comparisons to display. The `condition` argument accepts lists, functions, and shortcuts for common reference values, such as "minmax", "threenum", etc.
-* `variables` argument of the `comparisons()` is more flexible:
+* `variables` argument of the `comparisons()` function is more flexible:
   - Accepts functions to specify custom differences in numeric variables (e.g., forward and backward differencing).
   - Can specify pairs of factors to compare in the `variables` argument of the `comparisons` function.
-* `variables` argument of the `predictions()` is more flexible:
+* `variables` argument of the `predictions()` function is more flexible:
   - Accepts shortcut strings, functions, and vectors of arbitrary length.
 * Integrate out random effects in bayesian `brms` models (see Bayesian analysis vignette)
 
