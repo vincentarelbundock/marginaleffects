@@ -533,8 +533,8 @@ void <- capture.output(suppressMessages(
         seed = 1024)
 ))
 
-cmp <- comparisons(mod, variables = c("cyl", "am"))
-cmp.b <- comparisons(mod.b, variables = c("cyl", "am"))
+cmp <- comparisons(mod, variables = c("cyl", "am"), cross = TRUE)
+cmp.b <- comparisons(mod.b, variables = c("cyl", "am"), cross = TRUE)
 tid <- tidy(cmp)
 tid.b <- tidy(cmp.b)
 
