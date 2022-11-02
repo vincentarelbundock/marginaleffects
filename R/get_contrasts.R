@@ -9,7 +9,7 @@ get_contrasts <- function(model,
                           marginalmeans,
                           by = NULL,
                           hypothesis = NULL,
-                          interaction = FALSE,
+                          cross = FALSE,
                           verbose = TRUE,
                           ...) {
 
@@ -105,7 +105,7 @@ get_contrasts <- function(model,
     }
 
     if (!"term" %in% colnames(out)) {
-        out[, "term" := "interaction"]
+        out[, "term" := "cross"]
     }
 
     # by
@@ -126,9 +126,9 @@ get_contrasts <- function(model,
     }
 
     # transform_pre function could be different for different terms
-    # sanitize_variables() ensures all functions are identical when there are interactions
+    # sanitize_variables() ensures all functions are identical when there are cross
     fun_list <- sapply(names(variables), function(x) variables[[x]][["function"]])
-    fun_list[["interaction"]] <- fun_list[[1]]
+    fun_list[["cross"]] <- fun_list[[1]]
 
     # elasticity requires the original (properly aligned) predictor values
     # this will discard factor variables which are duplicated, so in principle
@@ -152,7 +152,7 @@ get_contrasts <- function(model,
             idx2 <- intersect(idx2, colnames(out))
             # discard other terms to get right length vector
             idx2 <- out[term == v, ..idx2]
-            # original is NULL when interaction=TRUE
+            # original is NULL when cross=TRUE
             if (!is.null(original)) {
                 idx1 <- c(v, "rowid", "rowidcf", "term", "type", "group", grep("^contrast", colnames(original), value = TRUE))
                 idx1 <- intersect(idx1, colnames(original))
@@ -216,9 +216,9 @@ get_contrasts <- function(model,
     # unknown arguments
     # singleton vs vector
     # different terms use different functions
-    safefun <- function(hi, lo, y, n, term, interaction, eps, wts) {
-        # when interaction=TRUE, sanitize_transform_pre enforces a single function
-        if (isTRUE(interaction)) {
+    safefun <- function(hi, lo, y, n, term, cross, eps, wts) {
+        # when cross=TRUE, sanitize_transform_pre enforces a single function
+        if (isTRUE(cross)) {
             fun <- fun_list[[1]]
         } else {
             fun <- fun_list[[term[1]]]
@@ -256,7 +256,7 @@ get_contrasts <- function(model,
                     y = draws_or[idx, i],
                     n = sum(idx),
                     term = out$term[idx],
-                    interaction = interaction,
+                    cross = cross,
                     wts = out$marginaleffects_wts_internal[idx],
                     eps = out$marginaleffects_eps[idx])
             }
@@ -287,7 +287,7 @@ get_contrasts <- function(model,
             y = predicted,
             n = .N,
             term = term,
-            interaction = interaction,
+            cross = cross,
             wts = marginaleffects_wts_internal,
             eps = marginaleffects_eps),
         by = idx]

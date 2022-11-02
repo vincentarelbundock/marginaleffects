@@ -15,5 +15,5 @@ expect_error(marginaleffects(mod, contrast_numeric = "sd"), pattern = "supported
 expect_error(marginaleffects(mod, contrast_factor = "pairwise"), pattern = "supported")
 expect_error(marginaleffects(mod, transform_pre = mean), pattern = "supported")
 expect_error(marginaleffects(mod, transform_post = exp), pattern = "supported")
-expect_error(marginaleffects(mod, interaction = TRUE), pattern = "supported")
+expect_error(marginaleffects(mod, cross = TRUE), pattern = "supported")
 

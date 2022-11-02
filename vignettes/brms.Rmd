@@ -701,7 +701,7 @@ What happens to `gdpPercap` when `lifeExp` increases from 50 to 60 and  `year` s
 comparisons(
     mod,
     variables = list(lifeExp = c(50, 60), year = "minmax"),
-    interaction = TRUE) %>%
+    cross = TRUE) %>%
     summary()
 ```
 

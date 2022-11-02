@@ -145,8 +145,8 @@ mod <- glmmTMB(
     data = dat)
 mm1 <- marginalmeans(mod, variables = c("Sex", "PClass"))
 mm2 <- marginalmeans(mod, type = "link", variables = c("Sex", "PClass"))
-mm3 <- marginalmeans(mod, variables = c("Sex", "PClass"), interaction = TRUE)
-mm4 <- marginalmeans(mod, type = "link", variables = c("Sex", "PClass"), interaction = TRUE)
+mm3 <- marginalmeans(mod, variables = c("Sex", "PClass"), cross = TRUE)
+mm4 <- marginalmeans(mod, type = "link", variables = c("Sex", "PClass"), cross = TRUE)
 expect_true(all(mm1$marginalmean != mm2$marginalmean))
 expect_true(all(mm1$std.error != mm2$std.error))
 expect_true(all(mm3$marginalmean != mm4$marginalmean))
@@ -189,7 +189,7 @@ model <- glmmTMB(
   REML = FALSE,
   data = dat)
 em <- data.frame(emmeans(model, ~trial + groupid, df = Inf))
-mm <- marginalmeans(model, variables = c("trial", "groupid"), interaction = TRUE, re.form = NA)
+mm <- marginalmeans(model, variables = c("trial", "groupid"), cross = TRUE, re.form = NA)
 mm <- mm[order(mm$groupid, mm$trial),]
 expect_equivalent(mm$marginalmean, em$emmean)
 expect_equivalent(mm$conf.high, em$asymp.UCL)

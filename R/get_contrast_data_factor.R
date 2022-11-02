@@ -1,8 +1,8 @@
 get_contrast_data_factor <- function(model,
                                      newdata,
                                      variable,
-                                     interaction,
-                                     first_interaction,
+                                     cross,
+                                     first_cross,
                                      ...) {
 
     data.table::setDT(newdata)
@@ -72,7 +72,7 @@ get_contrast_data_factor <- function(model,
     # interaction=TRUE to avoid duplication. when only the first contrast
     # flips, we get a negative sign, but if first increases and second
     # decreases, we get different total effects.
-    if (isTRUE(first_interaction)) {
+    if (isTRUE(first_cross)) {
         idx <- match(levs_idx$hi, levs) >= match(levs_idx$lo, levs)
         if (sum(idx) > 0) {
             levs_idx <- levs_idx[idx, , drop = FALSE]

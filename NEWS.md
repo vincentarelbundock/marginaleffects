@@ -1,16 +1,36 @@
-# marginaleffects 0.7.1.9000
+# marginaleffects 0.7.1.9010
 
-* `plot_cme()`, `plot_cap()`, and `plot_cco()` are now much more flexible. The `condition` argument accepts lists and shortcuts for common reference values.
-* Support `rms` package.
-* `brms` models: Integrate out random effects (see Bayes vignette for details)
-* `variables` argument accepts functions to specify custom differences in numeric variables.
-* Can specify pairs of factors to compare in the `variables` argument of the `comparisons` function.
-* Interactions with `fixest::i()` are parsed properly as categorical variables
+Breaking change:
+
+* The `interaction` argument is deprecated and replaced by the `cross` argument. This is to reduce ambiguity with respect to the `interaction` argument in `emmeans`, which does something completely different, akin to the difference-in-differences illustrated in the Interactions vignette.
+
+71 classes of models supported, including the new:
+
+* `rms::ols`
+* `rms::lrm`
+* `rms::orm`
+
+New features:
+
+* Plots: `plot_cme()`, `plot_cap()`, and `plot_cco()` are now much more flexible in specifying the comparisons to display. The `condition` argument accepts lists, functions, and shortcuts for common reference values, such as "minmax", "threenum", etc.
+* `variables` argument of the `comparisons()` is more flexible:
+  - Accepts functions to specify custom differences in numeric variables (e.g., forward and backward differencing).
+  - Can specify pairs of factors to compare in the `variables` argument of the `comparisons` function.
+* `variables` argument of the `predictions()` is more flexible:
+  - Accepts shortcut strings, functions, and vectors of arbitrary length.
+* Integrate out random effects in bayesian `brms` models (see Bayesian analysis vignette)
+
+New vignettes:
+
+* Experiments
+* Extending marginal effects
+* Integrating out random effects in bayesian models
+
+Bug fixes and minor improvements:
+
 * The default value of `conf_level` in `summary()` and `tidy()` is now `NULL`, which inherits the `conf_level` value in the original `comparisons`/`marginaleffects`/`predictions` calls.
-* `variables` argument of the `predictions()` function is now much more powerful, supporting shortcut strings, functions, and vectors of arbitrary length.
 * Fix typo in function names for missing "lnratioavgwts"
-* New `update_marginaleffects()` function makes it easy to install the development versions of `marginaleffects` and its dependencies (mostly useful for Vincent and people who report bugs).
-* New vignette: Extending `marginaleffects`
+* Interactions with `fixest::i()` are parsed properly as categorical variables
 * For `betareg` objects, inference can now be done on all coefficients using `deltamethod()`. previously only the location coefficients were available.
 * For objects from `crch` package, a number of bugs have been fixed; standard errors should now be correct for `deltamethod()`, `marginaleffects()`, etc.
 * Fixed a bug in the `tidy()` function for `glmmTMB` models without random effects, which caused all t statistics to be identical.

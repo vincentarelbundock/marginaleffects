@@ -13,7 +13,7 @@ comparisons(
   conf_level = 0.95,
   transform_pre = "difference",
   transform_post = NULL,
-  interaction = NULL,
+  cross = FALSE,
   by = NULL,
   wts = NULL,
   hypothesis = NULL,
@@ -122,11 +122,10 @@ the \code{marginaleffects:::type_dictionary} dataframe.}
 
 \item{transform_post}{(experimental) A function applied to unit-level estimates and confidence intervals just before the function returns results.}
 
-\item{interaction}{TRUE, FALSE, or NULL
+\item{cross}{TRUE or FALSE
 \itemize{
 \item \code{FALSE}: Contrasts represent the change in adjusted predictions when one predictor changes and all other variables are held constant.
-\item \code{TRUE}: Contrasts represent the changes in adjusted predictions when the predictors specified in the \code{variables} argument are manipulated simultaneously.
-\item \code{NULL} (default): Behaves like \code{TRUE} when the \code{variables} argument is specified and the model formula includes interactions. Behaves like \code{FALSE} otherwise.
+\item \code{TRUE}: Contrasts represent the changes in adjusted predictions when all the predictors specified in the \code{variables} argument are manipulated simultaneously (a "cross-contrast").
 }}
 
 \item{by}{Compute group-wise average estimates. Valid inputs:
@@ -361,9 +360,9 @@ summary(cmp, transform_avg = exp)
 # Adjusted Risk Ratio: Manual specification of the `transform_pre`
 cmp <- comparisons(mod, transform_pre = function(hi, lo) log(mean(hi) / mean(lo)))
 summary(cmp, transform_avg = exp)
-# Interactions between contrasts
+# cross contrasts
 mod <- lm(mpg ~ factor(cyl) * factor(gear) + hp, data = mtcars)
-cmp <- comparisons(mod, variables = c("cyl", "gear"))
+cmp <- comparisons(mod, variables = c("cyl", "gear"), cross = TRUE)
 summary(cmp)
 
 # variable-specific contrasts

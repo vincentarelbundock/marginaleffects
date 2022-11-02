@@ -5,7 +5,7 @@ sanitize_variables <- function(variables,
                                newdata,
                                transform_pre = NULL,
                                by = NULL,
-                               interaction = FALSE,
+                               cross = FALSE,
                                contrast_numeric = 1,
                                contrast_factor = "reference",
                                calling_function = "comparisons") {

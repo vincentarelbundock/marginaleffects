@@ -259,7 +259,7 @@ marginaleffects <- function(model,
         contrast_numeric = 1,
         # hard-coded. Users should use comparisons() for more flexibility
         transform_pre = slope,
-        interaction = FALSE,
+        cross = FALSE,
         # secret arguments
         internal_call = TRUE,
         ...)

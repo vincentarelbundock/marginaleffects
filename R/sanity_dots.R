@@ -8,7 +8,7 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
         # contrast_numeric: steer power users toward comparisons()
         # contrast_factor: steer power users toward comparisons()
         # transform_post: should we really be back-transforming slopes?
-        unsupported <- c("transform_pre", "contrast_numeric", "contrast_factor", "transform_post", "interaction")
+        unsupported <- c("transform_pre", "contrast_numeric", "contrast_factor", "transform_post", "cross")
         unsupported <- intersect(names(dots), unsupported)
         if (length(unsupported) > 0) {
             msg <- sprintf(
@@ -18,6 +18,11 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
         }
     }
 
+    # deprecated
+    if ("interaction" %in% names(dots)) {
+        msg <- "The `interaction` argument has been deprecated. Please use `cross` instead."
+        insight::format_warning(msg)
+    }
 
     valid <- list()
 

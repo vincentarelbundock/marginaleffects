@@ -12,7 +12,7 @@ marginalmeans(
   conf_level = 0.95,
   type = NULL,
   transform_post = NULL,
-  interaction = NULL,
+  cross = FALSE,
   hypothesis = NULL,
   wts = "equal",
   by = NULL,
@@ -25,7 +25,7 @@ marginalmeans(
 \item{variables}{character vector Categorical predictors over which to
 compute marginal means. \code{NULL} calculates marginal means for all logical,
 character, or factor variables in the dataset used to fit \code{model}. Set
-\code{interaction=TRUE} to compute marginal means at combinations of the
+\code{cross=TRUE} to compute marginal means at combinations of the
 predictors specified in the \code{variables} argument.}
 
 \item{variables_grid}{character vector Categorical predictors used to
@@ -65,11 +65,10 @@ on the link scale before backtransforming them using the inverse link function.}
 
 \item{transform_post}{(experimental) A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.}
 
-\item{interaction}{TRUE, FALSE, or NULL
+\item{cross}{TRUE or FALSE
 \itemize{
-\item \code{FALSE}: Marginal means are computed for each predictor individually.
+\item \code{FALSE} (default): Marginal means are computed for each predictor individually.
 \item \code{TRUE}: Marginal means are computed for each combination of predictors specified in the \code{variables} argument.
-\item \code{NULL} (default): Behaves like \code{TRUE} when the \code{variables} argument is specified and the model formula includes interactions. Behaves like \code{FALSE} otherwise.
 }}
 
 \item{hypothesis}{specify a hypothesis test or custom contrast using a vector, matrix, string, or string formula.
@@ -231,12 +230,12 @@ marginalmeans(mod,
   by = by,
   hypothesis = "pairwise")
 
-# interaction
+# cross
 marginalmeans(mod,
   variables = c("cyl", "carb"),
-  interaction = TRUE)
+  cross = TRUE)
 
-# collapsed interaction
+# collapsed cross
 by <- expand.grid(
   cyl = unique(mtcars$cyl),
   carb = unique(mtcars$carb))

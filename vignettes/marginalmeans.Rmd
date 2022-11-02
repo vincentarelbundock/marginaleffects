@@ -83,7 +83,7 @@ emmeans(mod, specs = "am")
 
 # Interactions
 
-By default, the `marginalmeans()` function calculates marginal means for each categorical predictor one after the other. We can also compute marginal means for *combinations* of categories by setting `interaction=TRUE`:
+By default, the `marginalmeans()` function calculates marginal means for each categorical predictor one after the other. We can also compute marginal means for *combinations* of categories by setting `cross=TRUE`:
 
 ```{r, message = FALSE, warning = FALSE}
 library(lme4)
@@ -124,7 +124,7 @@ marginalmeans(
     variables = c("Sex", "PClass"))
 ```
 
-When a model does not include interactions, `marginalmeans()` defaults to reporting EMMs for each category individually, without interactions:
+`marginalmeans()` defaults to reporting EMMs for each category individually, without cross-margins:
 
 ```{r, warning = FALSE, message = FALSE}
 titanic2 <- glmer(
@@ -137,12 +137,12 @@ marginalmeans(
     variables = c("Sex", "PClass"))
 ```
 
-We can force the interactions:
+We can force the cross:
 
 ```{r}
 marginalmeans(
     titanic2,
-    interaction = TRUE,
+    cross = TRUE,
     variables = c("Sex", "PClass"))
 ```
 

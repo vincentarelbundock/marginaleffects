@@ -31,7 +31,7 @@ The `marginaleffects` package includes several flexible functions to plot estima
    - `plot_cco`: Conditional Contrasts (equivalent to `comparisons()`)
    - `plot_cme`: Conditional Marginal Effects (equivalent to `marginaleffects()`)
 
-The "interaction" function are designed to display how the outcome or how the effect of a predictor changes with respect to another variable.
+The "interaction" or "conditional" plotting functions are designed to display how the outcome or how the effect of a predictor changes with respect to another variable.
 
 This vignette focuses on `plot_cap()`, but the same ideas apply to `plot_cme()` and `plot_cco()` as well.  In the examples below, we will use the `patchwork` package to combine plots and the `ggplot2` package to customize their content and appearance:
 

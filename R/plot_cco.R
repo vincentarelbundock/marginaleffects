@@ -74,7 +74,7 @@ plot_cco <- function(model,
         variables = effect,
         transform_pre = transform_pre,
         transform_post = transform_post,
-        interaction = FALSE,
+        cross = FALSE,
         ...)
 
     draws <- attr(datplot, "posterior_draws")

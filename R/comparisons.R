@@ -79,10 +79,9 @@
 #'   - Character vector of column names in `newdata` or in the data frame produced by calling the function without the `by` argument.
 #'   - Data frame with a `by` column of group labels, and merging columns shared by `newdata` or the data frame produced by calling the same function without the `by` argument.
 #'   - See examples below.
-#' @param interaction TRUE, FALSE, or NULL
+#' @param cross TRUE or FALSE
 #' * `FALSE`: Contrasts represent the change in adjusted predictions when one predictor changes and all other variables are held constant.
-#' * `TRUE`: Contrasts represent the changes in adjusted predictions when the predictors specified in the `variables` argument are manipulated simultaneously.
-#' * `NULL` (default): Behaves like `TRUE` when the `variables` argument is specified and the model formula includes interactions. Behaves like `FALSE` otherwise.
+#' * `TRUE`: Contrasts represent the changes in adjusted predictions when all the predictors specified in the `variables` argument are manipulated simultaneously (a "cross-contrast").
 #' @template model_specific_arguments
 #' @template transform_pre_functions
 #'
@@ -139,9 +138,9 @@
 #' cmp <- comparisons(mod, transform_pre = function(hi, lo) log(mean(hi) / mean(lo)))
 #' summary(cmp, transform_avg = exp)
 #
-#' # Interactions between contrasts
+#' # cross contrasts
 #' mod <- lm(mpg ~ factor(cyl) * factor(gear) + hp, data = mtcars)
-#' cmp <- comparisons(mod, variables = c("cyl", "gear"))
+#' cmp <- comparisons(mod, variables = c("cyl", "gear"), cross = TRUE)
 #' summary(cmp)
 #'
 #' # variable-specific contrasts
@@ -200,7 +199,7 @@ comparisons <- function(model,
                         conf_level = 0.95,
                         transform_pre = "difference",
                         transform_post = NULL,
-                        interaction = NULL,
+                        cross = FALSE,
                         by = NULL,
                         wts = NULL,
                         hypothesis = NULL,
@@ -240,14 +239,14 @@ comparisons <- function(model,
             vcov = vcov,
             calling_function = "comparisons",
             ...)
-        interaction <- sanitize_interaction(interaction, variables, model)
+        cross <- sanitize_cross(cross, variables, model)
         type <- sanitize_type(model = model, type = type, calling_function = "marginaleffects")
         checkmate::assert_function(transform_post, null.ok = TRUE)
 
     # internal call from `marginaleffects()`
     } else {
         # not allowed in `marginaleffects()`
-        interaction <- FALSE
+        cross <- FALSE
     }
 
     # bayesian models do not support `by` and "avg" in `transform_pre`
@@ -261,6 +260,7 @@ comparisons <- function(model,
 
     conf_level <- sanitize_conf_level(conf_level, ...)
     sanity_transform_pre(transform_pre)
+    sanity_dots(model, ...)
     checkmate::assert_numeric(eps, len = 1, lower = 1e-10, null.ok = TRUE)
 
     # used by `marginaleffects` to hard-code preference 
@@ -296,7 +296,7 @@ comparisons <- function(model,
         model = model,
         newdata = newdata,
         variables = variables,
-        interaction = interaction,
+        cross = cross,
         by = by,
         contrast_numeric = contrast_numeric,
         contrast_factor = contrast_factor,
@@ -335,7 +335,7 @@ comparisons <- function(model,
     args <- list(model = model,
                  newdata = newdata,
                  variables = predictors,
-                 interaction = interaction,
+                 cross = cross,
                  marginalmeans = marginalmeans,
                  eps = eps)
     args <- c(args, dots)
@@ -351,7 +351,7 @@ comparisons <- function(model,
                  wts = contrast_data[["marginaleffects_wts_internal"]],
                  by = by,
                  marginalmeans = marginalmeans,
-                 interaction = interaction,
+                 cross = cross,
                  hypothesis = hypothesis)
     args <- c(args, dots)
     mfx <- do.call("get_contrasts", args)
@@ -378,7 +378,7 @@ comparisons <- function(model,
                      lo = contrast_data$lo,
                      original = contrast_data$original,
                      by = by,
-                     interaction = interaction,
+                     cross = cross,
                      eps = 1e-4)
         args <- c(args, dots)
         se <- do.call("get_se_delta", args)
