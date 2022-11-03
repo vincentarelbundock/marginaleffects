@@ -40,7 +40,7 @@ The `marginaleffects` package supplies a `marginalmeans` function which can also
 * How does the average predicted probability of survival differ between treatment and control group? 
 * What is the difference between the predicted wage of college and high school graduates?
 
-For example, let's say we estimate a linear regression model with two continuous regressors and a multiplicative interaction:
+Let's say we estimate a linear regression model with two continuous regressors and a multiplicative interaction:
 
 $$y = \beta_0 + \beta_1 x + \beta_2 z + \beta_3 x \cdot z + \varepsilon$$
 
