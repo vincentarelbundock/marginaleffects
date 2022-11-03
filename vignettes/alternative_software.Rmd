@@ -76,6 +76,8 @@ AFAICT, the main advantages of `emmeans` over `marginaleffects` are:
 * Equivalence and noninferiority tests.
 * Multiplicity adjustments.
 
+Please let me know if you find other features in `emmeans` so I can add them to this list.
+
 The [Marginal Means Vignette](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) includes side-by-side comparisons of `emmeans` and `marginaleffects` to compute marginal means. The rest of this section compares the syntax for contrasts and marginaleffects.
 
 ## Contrasts
