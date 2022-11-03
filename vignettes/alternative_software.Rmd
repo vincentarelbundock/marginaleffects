@@ -56,7 +56,7 @@ comparisons(
 )
 ```
 
-As [the vignettes show,](https://vincentarelbundock.github.io/marginaleffects/index.html#table-of-contents) `marginaleffects` can also compute contrasts on marginal means. It can also compute various quantities of interest like raw fitted values, slopes (partial derivatives), and contrasts between marginal means. It also offers a flexible mechanism to run (non-)linear hypothesis tests using the delta method, and it offers fully customizable mechanisms to compute quantities like odds ratios (or completely arbitrary functions of predicted outcome).
+As [the vignettes show,](https://vincentarelbundock.github.io/marginaleffects/index.html#table-of-contents) `marginaleffects` can also compute contrasts on marginal means. It can also compute various quantities of interest like raw fitted values, slopes (partial derivatives), and contrasts between marginal means. It also offers a flexible mechanism to run (non-)linear hypothesis tests using the delta method, and it offers fully customizable strategy to compute quantities like odds ratios (or completely arbitrary functions of predicted outcome).
 
 Thus, in my (Vincent's) biased opinion, the main benefits of `marginaleffects` over `emmeans` are:
 
