@@ -319,6 +319,9 @@ get_contrasts <- function(model,
         draws <- attr(out, "posterior_draws")
     }
 
+    # issue #531: conf.low and conf.high for predictions sometimes get merged in, and then they are not overwritten later by get_ci()
+    out[["conf.low"]] <- out[["conf.high"]] <- NULL
+
     # before get_hypothesis
     attr(out, "posterior_draws") <- draws
 

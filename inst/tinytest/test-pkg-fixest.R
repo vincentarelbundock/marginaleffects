@@ -225,6 +225,13 @@ expect_true("mpg" %in% colnames(mfx))
 expect_true("am" %in% colnames(mfx))
 
 
+# Issue #531
+mod <- feols(Ozone ~ Wind + i(Month), airquality)
+mfx <- marginaleffects(mod, variable = "Wind")
+expect_true(all(mfx$conf.low < mfx$dydx))
+expect_true(all(mfx$conf.high > mfx$dydx))
+
+
 
 # TODO: works interactively
 # expect_false(expect_warning(marginaleffects(fit3)))
@@ -295,11 +302,5 @@ expect_true("am" %in% colnames(mfx))
 # model <- feols(y ~ x1*x2 | group1^group2, data)
 # nd <- datagrid(model = model)
 # expect_error(marginaleffects(model, newdata = "mean"), "combined")
-
-
-
-
-
-
 
 
