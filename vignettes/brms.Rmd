@@ -781,3 +781,43 @@ options(marginaleffects_credible_interval = "eti")
 comparisons(mod) |> summary()
 ```
 
+# Non-linear hypothesis testing
+
+Note: The rest of this section requires version 0.8.1 of `marginaleffects`, or [the development version.](https://vincentarelbundock.github.io/marginaleffects/#installation)
+
+```{r, include=FALSE}
+mod <- marginaleffects:::modelarchive_model("brms_numeric2")
+```
+
+We begin by estimating a model:
+
+```{r, eval = FALSE}
+mod <- brm(am ~ mpg + hp, data = mtcars, family = bernoulli(),
+           seed = 1024, silent = 2, chains = 4, iter = 1000)
+```
+
+Notice that we can compute average contrasts in two different ways, using the `tidy()` function or the `transform_pre` argument:
+
+```{r}
+comparisons(mod) |> tidy()
+
+comparisons(mod, transform_pre = "differenceavg")
+```
+
+Now, we use the `hypothesis` argument to compare the first to the second rows of the `comparisons()` output:
+
+```{r}
+comparisons(
+    mod,
+    transform_pre = "differenceavg",
+    hypothesis = "b1 - b2 = 0.2")
+```
+
+The `hypothesis` function of the `brms` package can also perform non-linear hypothesis testing, and it generates some convenient statistics and summaries. This function accepts a D-by-P matrix of draws from the posterior distribution, where D is the number of draws and N is the number of parameters. We can obtain such a matrix using the `posteriordraws(x, shape = "DxP")`, and we can simply add a couple calls to our chain of operations: 
+
+```{r}
+comparisons(mod) |>
+    tidy() |>
+    posteriordraws(shape = "DxP") |>
+    brms::hypothesis("b2 - b1 > .2")
+```

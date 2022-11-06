@@ -1,3 +1,11 @@
+# marginaleffects 0.8.0.9000
+
+* `posteriordraws`: new `shape` argument to return MCMC draws in various formats.
+
+Bug fixes:
+
+* `hypothesis` argument with bayesian models and `tidy()` used to raise an error.
+
 # marginaleffects 0.8.0
 
 Breaking change:

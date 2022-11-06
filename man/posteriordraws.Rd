@@ -4,10 +4,17 @@
 \alias{posteriordraws}
 \title{Extract posterior draws from a \code{predictions}, \code{comparisons}, or \code{marginaleffects} object derived from Bayesian models.}
 \usage{
-posteriordraws(x)
+posteriordraws(x, shape = "long")
 }
 \arguments{
 \item{x}{An object produced by the \code{marginaleffects}, \code{comparisons}, or \code{predictions} functions}
+
+\item{shape}{string indicating the shape of the output format:
+\itemize{
+\item "long": long format data frame
+\item "DxP": Matrix with draws as rows and parameters as columns
+\item "PxD": Matrix with draws as rows and parameters as columns
+}}
 }
 \value{
 A data.frame with \code{drawid} and \code{draw} columns.

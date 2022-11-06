@@ -319,6 +319,9 @@ get_contrasts <- function(model,
         draws <- attr(out, "posterior_draws")
     }
 
+    # before get_hypothesis
+    attr(out, "posterior_draws") <- draws
+
     # hypothesis tests using the delta method
     out <- get_hypothesis(out, hypothesis, column = "comparison", by = by)
 
@@ -326,7 +329,6 @@ get_contrasts <- function(model,
     settings_rm("marginaleffects_safefun_return1")
 
     # output
-    attr(out, "posterior_draws") <- draws
     attr(out, "original") <- original
     return(out)
 }

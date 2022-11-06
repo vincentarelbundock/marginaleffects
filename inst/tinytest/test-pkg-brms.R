@@ -16,6 +16,8 @@ tol <- 0.0001
 tol_se <- 0.001
 
 
+
+
 # download models
 brms_numeric <- marginaleffects:::modelarchive_model("brms_numeric")
 brms_numeric2 <- marginaleffects:::modelarchive_model("brms_numeric2")
@@ -627,3 +629,12 @@ bm <- brmsmargins(
 expect_equivalent(cmp$estimate, bm$Mdn, tolerance = .05)
 expect_equivalent(cmp$conf.low, bm$LL, tolerance = .05)
 expect_equivalent(cmp$conf.high, bm$UL, tolerance = .05)
+
+
+
+# posteriordraws(shape = )
+cmp <- comparisons(brms_numeric2)
+tid <- tidy(cmp)
+pd <- posteriordraws(tid, shape = "DxP")
+hyp <- brms::hypothesis(pd, "b1 - b2 > 0")
+expect_inherits(hyp, "brmshypothesis")
