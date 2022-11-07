@@ -319,8 +319,14 @@ get_contrasts <- function(model,
         draws <- attr(out, "posterior_draws")
     }
 
-    # issue #531: conf.low and conf.high for predictions sometimes get merged in, and then they are not overwritten later by get_ci()
-    out[["conf.low"]] <- out[["conf.high"]] <- NULL
+    # issue #531: uncertainy estimates from get_predict() sometimes get retained, but they are not overwritten later by get_ci()
+    # drop by reference for speed
+    bad <- intersect(
+        colnames(out),
+        c("conf.low", "conf.high", "std.error", "statistic", "p.value"))
+    if (length(bad) > 0) {
+        out[, (bad) := NULL]
+    }
 
     # before get_hypothesis
     attr(out, "posterior_draws") <- draws
