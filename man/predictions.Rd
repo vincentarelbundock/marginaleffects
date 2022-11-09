@@ -260,6 +260,9 @@ head(pred)
 # Adjusted Predictions at User-Specified Values of the Regressors
 predictions(mod, newdata = datagrid(hp = c(100, 120), cyl = 4))
 
+m <- lm(mpg ~ hp + drat + factor(cyl) + factor(am), data = mtcars)
+predictions(m, newdata = datagrid(FUN_factor = unique, FUN_numeric = median))
+
 # Average Adjusted Predictions (AAP)
 library(dplyr)
 mod <- lm(mpg ~ hp * am * vs, mtcars)

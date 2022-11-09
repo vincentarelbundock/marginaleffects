@@ -336,6 +336,10 @@ comparisons(mod, newdata = "marginalmeans")
 comparisons(mod, newdata = datagrid(am = 0, gear = tmp$gear))
 comparisons(mod, newdata = datagrid(am = unique, gear = max))
 
+m <- lm(mpg ~ hp + drat + factor(cyl) + factor(am), data = mtcars)
+comparisons(m, variables = "hp", newdata = datagrid(FUN_factor = unique, FUN_numeric = median))
+
+
 # Numeric contrasts
 mod <- lm(mpg ~ hp, data = mtcars)
 comparisons(mod, variables = list(hp = 1)) \%>\% tidy()
