@@ -24,7 +24,7 @@ jobs:
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-      NOT_CRAN: yes
+      R_NOT_CRAN: yes
 
     steps:
       - uses: actions/checkout@v3
