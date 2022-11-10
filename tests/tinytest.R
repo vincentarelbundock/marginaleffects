@@ -1,3 +1,6 @@
+print(Sys.getenv("R_NOT_CRAN"))
+cat(Sys.getenv("R_NOT_CRAN"))
+
 if (requireNamespace("tinytest", quietly = TRUE) && isTRUE(Sys.getenv("R_NOT_CRAN") == "true")) {
     tinytest::test_package("marginaleffects")
 }
