@@ -36,8 +36,11 @@ deltamethod(
 \item See the Examples section below and the vignette: https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html
 }}
 
-\item{FUN}{a function which accepts a model object and returns a numeric
-vector or a data.frame with two columns called \code{term} and \code{estimate}.}
+\item{FUN}{\code{NULL} or function.
+\itemize{
+\item \code{NULL} (default): hypothesis test on the model's coefficients.
+\item Function which accepts a model object and returns a numeric vector or a data.frame with two columns called \code{term} and \code{estimate}. This argument can be useful when users want to conduct a hypothesis test on an arbitrary function of quantities held in a model object.
+}}
 
 \item{vcov}{Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
 \itemize{
@@ -88,23 +91,23 @@ mod <- lm(mpg ~ hp + wt + factor(cyl), data = mtcars)
 deltamethod(mod)
 
 # Test of equality between coefficients
-deltamethod(mod, "hp = wt")
+deltamethod(mod, hypothesis = "hp = wt")
 
 # Non-linear function
-deltamethod(mod, "exp(hp + wt) = 0.1")
+deltamethod(mod, hypothesis = "exp(hp + wt) = 0.1")
 
 # Robust standard errors
-deltamethod(mod, "hp = wt", vcov = "HC3")
+deltamethod(mod, hypothesis = "hp = wt", vcov = "HC3")
 
 # b1, b2, ... shortcuts can be used to identify the position of the
 # parameters of interest in the output of FUN
-deltamethod(mod, "b2 = b3")
+deltamethod(mod, hypothesis = "b2 = b3")
 
 # term names with special characters have to be enclosed in backticks
-deltamethod(mod, "`factor(cyl)6` = `factor(cyl)8`")
+deltamethod(mod, hypothesis = "`factor(cyl)6` = `factor(cyl)8`")
 
 mod2 <- lm(mpg ~ hp * drat, data = mtcars)
-deltamethod(mod2, "`hp:drat` = drat")
+deltamethod(mod2, hypothesis = "`hp:drat` = drat")
 
 # predictions(), comparisons(), and marginaleffects()
 mod <- glm(am ~ hp + mpg, data = mtcars, family = binomial)
