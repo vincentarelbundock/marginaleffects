@@ -210,6 +210,7 @@ comparisons <- function(model,
                         eps = NULL,
                         ...) {
 
+
     dots <- list(...)
 
     transform_pre_label <- transform_post_label <- NULL
@@ -484,6 +485,7 @@ comparisons <- function(model,
     attr(out, "transform_post_label") <- transform_post_label
     attr(out, "conf_level") <- conf_level
     attr(out, "by") <- by
+    attr(out, "call") <- match.call()
 
     if (!isTRUE(internal_call)) {
         if ("group" %in% names(out) && all(out$group == "main_marginaleffect")) {

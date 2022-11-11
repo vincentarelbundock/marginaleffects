@@ -122,10 +122,17 @@ library(marginaleffects)
 
 mod <- lm(mpg ~ am + vs, data = mtcars)
 
-marginaleffects(mod, newdata = "mean")
+mfx <- marginaleffects(mod, newdata = "mean")
+mfx
 ```
 
-Is the marginal effect of `am` different from the marginal effect of `vs`? To answer this question we can run a linear hypothesis test:
+Is the marginal effect of `am` different from the marginal effect of `vs`? To answer this question we can run a linear hypothesis test using the `deltamethod` function:
+
+```{r}
+deltamethod(mfx, hypothesis = "am = vs")
+```
+
+Alternatively, we can specify the hypothesis directly in the original call:
 
 ```{r}
 library(marginaleffects)
@@ -159,6 +166,12 @@ p
 ```
 
 Since there is no `term` column in the output of the `predictions` function, we must use parameter identifiers like `b1`, `b2`, etc. to determine which estimates we want to compare:
+
+```{r}
+deltamethod(p, hypothesis = "b1 = b2")
+```
+
+Or directly:
 
 ```{r}
 predictions(

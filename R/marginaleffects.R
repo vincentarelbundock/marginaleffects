@@ -290,6 +290,7 @@ marginaleffects <- function(model,
     }
 
     attr(out, "vcov.type") <- get_vcov_label(vcov)
+    attr(out, "call") <- match.call()
 
     # class
     setDF(out)

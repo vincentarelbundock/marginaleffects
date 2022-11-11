@@ -1,5 +1,6 @@
 # marginaleffects 0.8.0.9000
 
+* `deltamethod()` can run hypothesis tests on objects produced by the `comparisons()`, `marginaleffects()`, and `predictions()` functions.
 * `posteriordraws`: new `shape` argument to return MCMC draws in various formats.
 
 Bug fixes:

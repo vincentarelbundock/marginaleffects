@@ -447,6 +447,7 @@ predictions <- function(model,
     attr(out, "weights") <- marginaleffects_wts_internal
     attr(out, "conf_level") <- conf_level
     attr(out, "by") <- by
+    attr(out, "call") <- match.call()
 
     if ("group" %in% names(out) && all(out$group == "main_marginaleffect")) {
         out$group <- NULL
