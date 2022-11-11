@@ -88,7 +88,7 @@ Then, we define 4 methods:
     - Mandatory arguments: `model`, `...`
     - Returns: named vector of parameters (coefficients).
 1. `set_coef()`
-    - Mandatory arguments: `model`, `coefs` (named vector), `...`
+    - Mandatory arguments: `model`, `coefs` (named vector of coefficients), `...`
     - Returns: A new model object in which the original coefficients were replaced by the new vector.
     - [Example](https://github.com/vincentarelbundock/marginaleffects/blob/main/R/set_coef.R)
 1. `get_vcov()`
