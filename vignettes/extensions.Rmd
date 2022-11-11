@@ -85,17 +85,20 @@ options("marginaleffects_model_classes" = "lm_manual")
 Then, we define 4 methods:
 
 1. `get_coef()`
-    - Input: `model` object and `newdata` data frame.
-    - Output: named vector of parameters (coefficients).
+    - Mandatory arguments: `model`, `...`
+    - Returns: named vector of parameters (coefficients).
 1. `set_coef()`
-    - Input: `model` object and `coef` vector of coefficients.
-    - Output: A new model object in which the original coefficients were replaced by the new vector.
+    - Mandatory arguments: `model`, `coefs` (named vector), `...`
+    - Returns: A new model object in which the original coefficients were replaced by the new vector.
+    - [Example](https://github.com/vincentarelbundock/marginaleffects/blob/main/R/set_coef.R)
 1. `get_vcov()`
-    - Input: `model` object.
-    - Output: A square variance-covariance matrix.
+    - Mandatory arguments: `model`, `...`.
+    - Optional arguments: `vcov`
+    - Returns: A named square variance-covariance matrix.
 1. `get_predict()`
-    - Input: `model` object and `newdata` data frame.
-    - Output: A data frame with two columns: a unique `rowid` and a column of `predicted` values.
+    - Mandatory arguments: `model`, `newdata` (data frame), `...`
+    - Option arguments: `type` and other model-specific arguments.
+    - Returns: A data frame with two columns: a unique `rowid` and a column of `predicted` values.
 
 Note that each of these methods will be named with the suffix `.lm_manual` to indicate that they should be used whenever `marginaleffects` needs to process an object of class `lm_manual`.
 
