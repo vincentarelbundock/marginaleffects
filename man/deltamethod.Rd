@@ -74,6 +74,12 @@ excellent and well-established \link[car:deltaMethod]{car::deltaMethod} and \lin
 functions, but it supports more models, requires fewer dependencies, and
 offers some convenience features like shortcuts for robust standard errors.
 }
+\details{
+Warning: For hypothesis tests on objects produced by the \code{marginaleffects}
+package, it is safer to use the \code{hypothesis} argument of the original function.
+Using \code{deltamethod()} may not work in certain environments, or when called
+programmatically.
+}
 \examples{
 library(marginaleffects)
 mod <- lm(mpg ~ hp + wt + factor(cyl), data = mtcars)
