@@ -18,13 +18,17 @@ knitr::opts_chunk$set(
 )
 ```
 
-This vignette shows how to add support for new models and add new functionality for supported models. If you add support for a new model object, please consider submitting your code for inclusion in the package.
+This vignette shows how to add support for new models and add new functionality for supported models.
 
 # Support a new model type
 
 It is very easy to add support for new models in `marginaleffects`.  All we need is to set a global option and define 4 very simple functions.
 
-If you add support for a class of model produced by a CRAN package, please consider submitting your code for inclusion in the package: https://github.com/vincentarelbundock/marginaleffects
+If you add support for a class of models produced by a CRAN package, please consider submitting your code for inclusion in the package: https://github.com/vincentarelbundock/marginaleffects
+
+If you add support for a class of models produced by a package hosted *elsewhere* than CRAN, you can submit it for inclusion in the *unsupported* user-submitted library of extensions: Currently 
+
+* [`countreg` package](https://github.com/vincentarelbundock/marginaleffects/blob/main/sandbox/methods_countreg.R). Thanks to Olivier Beaumais.
 
 The rest of this section illustrates how to add support for a very simple lm_manual model.
 
