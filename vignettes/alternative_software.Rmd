@@ -209,6 +209,85 @@ emtrends(mod, ~hp, "hp", at = list(cyl = 4))
 marginaleffects(mod, type = "link", newdata = datagrid(cyl = 4))
 ```
 
+## More examples
+
+Here are a few more `emmeans` vs. `marginaleffects` comparisons:
+
+
+```{r, eval = FALSE}
+# Example of examining a continuous x categorical interaction using emmeans and marginaleffects
+# Authors: Cameron Patrick and Vincent Arel-Bundock
+
+library(tidyverse)
+library(emmeans)
+library(marginaleffects)
+
+# use the mtcars data, set up am as a factor
+data(mtcars)
+mc <- mtcars %>% mutate(am = factor(am))
+
+# fit a linear model to mpg with wt x am interaction
+m <- lm(mpg ~ wt*am, data = mc)
+summary(m)
+
+# 1. means for each level of am at mean wt.
+emmeans(m, "am")
+marginalmeans(m, variables = "am")
+predictions(m, newdata = datagrid(am = 0:1))
+
+# 2. means for each level of am at wt = 2.5, 3, 3.5.
+emmeans(m, c("am", "wt"), at = list(wt = c(2.5, 3, 3.5)))
+predictions(m, newdata = datagrid(am = 0:1, wt = c(2.5, 3, 3.5))
+
+# 3. means for wt = 2.5, 3, 3.5, averaged over levels of am (implicitly!).
+emmeans(m, "wt", at = list(wt = c(2.5, 3, 3.5)))
+
+# same thing, but the averaging is more explicit, using the `by` argument
+predictions(
+  m,
+  newdata = datagrid(am = 0:1, wt = c(2.5, 3, 3.5)),
+  by = "wt")
+
+# 4. graphical version of 2.
+emmip(m, am ~ wt, at = list(wt = c(2.5, 3, 3.5)), CIs = TRUE)
+plot_cap(m, condition = c("wt", "am"))
+
+# 5. compare levels of am at specific values of wt.
+# this is a bit ugly because the emmeans defaults for pairs() are silly.
+# infer = TRUE: enable confidence intervals.
+# adjust = "none": begone, Tukey.
+# reverse = TRUE: contrasts as (later level) - (earlier level)
+pairs(emmeans(m, "am", by = "wt", at = list(wt = c(2.5, 3, 3.5))),
+      infer = TRUE, adjust = "none", reverse = TRUE)
+
+comparisons(
+  m,
+  variables = "am",
+  newdata = datagrid(wt = c(2.5, 3, 3.5)))
+
+# 6. plot of pairswise comparisons
+plot(pairs(emmeans(m, "am", by = "wt", at = list(wt = c(2.5, 3, 3.5))),
+      infer = TRUE, adjust = "none", reverse = TRUE))
+
+# Since `wt` is numeric, the default is to plot it as a continuous variable on
+# the x-axis.  But not that this is the **exact same info** as in the emmeans plot.
+plot_cco(m, effect = "am", condition = "wt")
+
+# You of course customize everything, set draw=FALSE, and feed the raw data to feed to ggplot2
+p <- plot_cco(
+  m,
+  effect = "am",
+  condition = list(wt = c(2.5, 3, 3.5)),
+  draw = FALSE)
+
+ggplot(p, aes(y = condition1, x = comparison, xmin = conf.low, xmax = conf.high)) +
+  geom_pointrange()
+
+# 7. slope of wt for each level of am
+emtrends(m, "am", "wt")
+marginaleffects(m, newdata = datagrid(am = 0:1))
+```
+
 # `margins` and `prediction`
 
 The [`margins`](https://cran.r-project.org/web/packages/margins/index.html) and [`prediction`](https://cran.r-project.org/web/packages/prediction/index.html) packages for `R` were designed by Thomas Leeper to emulate the behavior of the `margins` command from `Stata`. These packages are trailblazers and strongly influenced the development of `marginaleffects`. The main benefits of `marginaleffects` over these packages are:
