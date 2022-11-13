@@ -378,6 +378,7 @@ marginalmeans <- function(model,
     attr(out, "type") <- type
     attr(out, "model_type") <- class(model)[1]
     attr(out, "variables") <- variables
+    attr(out, "call") <- match.call()
     if (isTRUE(cross)) {
         attr(out, "variables_grid") <- setdiff(variables_grid, variables)
     } else {

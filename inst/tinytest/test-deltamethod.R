@@ -49,6 +49,7 @@ dmm <- deltamethod(mod, FUN = f, hypothesis = "b3 = b2")
 expect_equivalent(dmm$estimate, 1.33154848763268)
 
 
+
 # deltamethod() applied to {marginaleffects} package objects
 # commented out because doesn't work in environments because of match.call()
 # mod <- glm(vs ~ hp + am, data = mtcars, family = binomial)
@@ -66,4 +67,10 @@ expect_equivalent(dmm$estimate, 1.33154848763268)
 # pre <- predictions(mod, newdata = datagrid())
 # dm <- deltamethod(pre, hypothesis = "b1 = 0.05")
 # expect_true("b1=0.05" %in% dm$term)
+# expect_equivalent(nrow(dm), 1)
+
+# mod <- glm(vs ~ hp + factor(am), data = mtcars, family = binomial)
+# mm <- marginalmeans(mod, "am")
+# dm <- deltamethod(mm, hypothesis = "b1 = b2")
+# expect_true("b1=b2" %in% dm$term)
 # expect_equivalent(nrow(dm), 1)
