@@ -172,7 +172,14 @@ tidy.comparisons <- function(x,
 
     # remove terms with precise zero estimates. typically the case in
     # multi-equation models where some terms only affect one response
-    out <- out[out$estimate != 0, ]
+    idx <- out$estimate != 0
+    out <- out[idx, , drop = FALSE]
+    if (!is.null(draws)) {
+        draws <- draws[idx, , drop = FALSE]
+    }
+    if (exists("drawavg")) {
+        drawavg <- drawavg[idx, , drop = FALSE]
+    }
 
     # back transformation
     if (!is.null(transform_avg)) {
@@ -200,6 +207,8 @@ tidy.comparisons <- function(x,
     if (exists("drawavg")) {
         class(drawavg) <- c("posterior_draws", class(drawavg))
         attr(out, "posterior_draws") <- drawavg
+    } else {
+        attr(out, "posterior_draws") <- draws
     }
 
     if (exists("J_mean")) {
