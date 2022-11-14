@@ -11,6 +11,7 @@ options("marginaleffects_credible_interval" = "hdi")
 requiet("brms")
 requiet("emmeans")
 requiet("broom")
+requiet("posterior")
 requiet("brmsmargins")
 tol <- 0.0001
 tol_se <- 0.001
@@ -638,3 +639,12 @@ tid <- tidy(cmp)
 pd <- posteriordraws(tid, shape = "DxP")
 hyp <- brms::hypothesis(pd, "b1 - b2 > 0")
 expect_inherits(hyp, "brmshypothesis")
+
+
+
+# posterior::rvar
+cmp <- comparisons(brms_numeric2)
+tid <- tidy(cmp)
+rv <- posteriordraws(tid, "rvar")
+expect_equivalent(nrow(rv), 2)
+expect_inherits(rv$rvar[[1]], "rvar")

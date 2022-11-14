@@ -123,5 +123,8 @@ tidy.predictions <- function(x,
         out <- backtransform(out, transform_avg)
     }
 
+
+    attr(out, "nchains") <- attr(x, "nchains")
+
     return(out)
 }

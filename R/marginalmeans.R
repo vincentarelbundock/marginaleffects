@@ -385,6 +385,11 @@ marginalmeans <- function(model,
         attr(out, "variables_grid") <- unique(c(variables_grid, variables))
     }
 
+    if (inherits(model, "brmsfit")) {
+        insight::check_if_installed("brms")
+        attr(out, "nchains") <- brms::nchains(model)
+    }
+
     return(out)
 }
 

@@ -203,6 +203,7 @@ tidy.comparisons <- function(x,
 
     attr(out, "conf_level") <- conf_level
     attr(out, "FUN") <- "mean"
+    attr(out, "nchains") <- attr(x, "nchains")
 
     if (exists("drawavg")) {
         class(drawavg) <- c("posterior_draws", class(drawavg))

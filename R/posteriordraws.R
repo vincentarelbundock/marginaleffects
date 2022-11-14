@@ -7,9 +7,9 @@
 #' * "PxD": Matrix with draws as rows and parameters as columns
 #' @return A data.frame with `drawid` and `draw` columns.
 #' @export
-posteriordraws <- function(x, shape = "long") {
+posteriordraws <- function(x, shape = "long", ...) {
 
-    checkmate::assert_choice(shape, choices = c("long", "DxP", "PxD"))
+    checkmate::assert_choice(shape, choices = c("long", "DxP", "PxD", "rvar"))
 
     # tidy.comparisons() sometimes already saves draws in a nice long format
     draws <- attr(x, "posterior_draws")
@@ -36,6 +36,17 @@ posteriordraws <- function(x, shape = "long") {
 
     if (shape == "DxP") {
         return(t(draws))
+    }
+
+    if (shape == "rvar") {
+        insight::check_if_installed("posterior")
+        draws <- t(draws)
+        if (!is.null(attr(x, "nchains"))) {
+            x[["rvar"]] <- posterior::rvar(draws, nchains = attr(x, "nchains"))
+        } else {
+            x[["rvar"]] <- posterior::rvar(draws)
+        }
+        return(x)
     }
 
     if (shape == "long") {

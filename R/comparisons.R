@@ -487,6 +487,11 @@ comparisons <- function(model,
     attr(out, "by") <- by
     attr(out, "call") <- match.call()
 
+    if (inherits(model, "brmsfit")) {
+        insight::check_if_installed("brms")
+        attr(out, "nchains") <- brms::nchains(model)
+    }
+
     if (!isTRUE(internal_call)) {
         if ("group" %in% names(out) && all(out$group == "main_marginaleffect")) {
             out$group <- NULL

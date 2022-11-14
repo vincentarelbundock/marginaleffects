@@ -112,6 +112,7 @@ tidy.marginalmeans <- function(x,
     out <- as.data.frame(out)
 
     attr(out, "conf_level") <- conf_level
+    attr(out, "nchains") <- attr(x, "nchains")
 
     return(out)
 }
