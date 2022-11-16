@@ -429,8 +429,10 @@ predictions <- function(model,
     attr(out, "posterior_draws") <- draws
 
     # after rename to estimate / after assign draws
+    transform_post_label <- NULL
     if (is.function(transform_post)) {
         out <- backtransform(out, transform_post = transform_post)
+        transform_post_label <- deparse(substitute(transform_post))
     }
 
     class(out) <- c("predictions", class(out))
@@ -448,6 +450,7 @@ predictions <- function(model,
     attr(out, "conf_level") <- conf_level
     attr(out, "by") <- by
     attr(out, "call") <- match.call()
+    attr(out, "transform_post_label") <- transform_post_label
 
     if (inherits(model, "brmsfit")) {
         insight::check_if_installed("brms")
