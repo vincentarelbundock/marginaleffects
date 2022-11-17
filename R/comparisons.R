@@ -112,7 +112,7 @@
 #' # Contrasts at user-specified values
 #' comparisons(mod, newdata = datagrid(am = 0, gear = tmp$gear))
 #' comparisons(mod, newdata = datagrid(am = unique, gear = max))
-#' 
+#'
 #' m <- lm(mpg ~ hp + drat + factor(cyl) + factor(am), data = mtcars)
 #' comparisons(m, variables = "hp", newdata = datagrid(FUN_factor = unique, FUN_numeric = median))
 #'
@@ -125,7 +125,7 @@
 #' comparisons(mod, variables = list(hp = "iqr")) %>% tidy()
 #' comparisons(mod, variables = list(hp = "sd")) %>% tidy()
 #' comparisons(mod, variables = list(hp = "minmax")) %>% tidy()
-#' 
+#'
 #' # using a function to specify a custom difference in one regressor
 #' dat <- mtcars
 #' dat$new_hp <- 49 * (dat$hp - min(dat$hp)) / (max(dat$hp) - min(dat$hp)) + 1
@@ -158,19 +158,19 @@
 #'     mod,
 #'     newdata = "mean",
 #'     hypothesis = "wt = drat")
-#' 
+#'
 #' # same hypothesis test using row indices
 #' comparisons(
 #'     mod,
 #'     newdata = "mean",
 #'     hypothesis = "b1 - b2 = 0")
-#' 
+#'
 #' # same hypothesis test using numeric vector of weights
 #' comparisons(
 #'     mod,
 #'     newdata = "mean",
 #'     hypothesis = c(1, -1))
-#' 
+#'
 #' # two custom contrasts using a matrix of weights
 #' lc <- matrix(c(
 #'     1, -1,
@@ -180,20 +180,20 @@
 #'     mod,
 #'     newdata = "mean",
 #'     hypothesis = lc)
-#' 
-#' 
+#'
+#'
 #' # `by` argument
 #' mod <- lm(mpg ~ hp * am * vs, data = mtcars)
 #' cmp <- comparisons(mod, variables = "hp", by = c("vs", "am"))
 #' summary(cmp)
-#' 
+#'
 #' library(nnet)
 #' mod <- multinom(factor(gear) ~ mpg + am * vs, data = mtcars, trace = FALSE)
 #' by <- data.frame(
 #'     group = c("3", "4", "5"),
 #'     by = c("3,4", "3,4", "5"))
 #' comparisons(mod, type = "probs", by = by)
-#' 
+#'
 #' @export
 comparisons <- function(model,
                         newdata = NULL,
@@ -268,7 +268,7 @@ comparisons <- function(model,
     sanity_dots(model, ...)
     checkmate::assert_numeric(eps, len = 1, lower = 1e-10, null.ok = TRUE)
 
-    # used by `marginaleffects` to hard-code preference 
+    # used by `marginaleffects` to hard-code preference
     # deprecated as user-level arguments
     if ("contrast_factor" %in% names(dots)) {
         contrast_factor <- dots[["contrast_factor"]]
@@ -283,7 +283,7 @@ comparisons <- function(model,
         contrast_numeric <- 1
     }
 
-    marginalmeans <- isTRUE(checkmate::check_choice(newdata, choices = "marginalmeans")) 
+    marginalmeans <- isTRUE(checkmate::check_choice(newdata, choices = "marginalmeans"))
 
     # before sanitize_variables
     newdata <- sanitize_newdata(model = model, newdata = newdata, by = by)
@@ -317,7 +317,7 @@ comparisons <- function(model,
     if (is.character(vcov) &&
        # get_df() produces a weird warning on non lmerMod. We can skip them
        # because get_vcov() will produce an informative error later.
-       inherits(model, "lmerMod") && 
+       inherits(model, "lmerMod") &&
        (isTRUE(vcov == "satterthwaite") || isTRUE(vcov == "kenward-roger"))) {
         df <- insight::find_response(model)
         # predict.lmerTest requires the DV
@@ -404,7 +404,7 @@ comparisons <- function(model,
             tmp <- contrast_data$original[, ..idx, drop = FALSE]
             # contrast_data is duplicated to compute contrasts for different terms or pairs
             bycols <- intersect(colnames(tmp), colnames(mfx))
-            idx <- apply(tmp[, ..bycols], 1, paste, collapse = "|")
+            idx <- do.call(paste, c(tmp[, ..bycols], sep = "|"))
             tmp <- tmp[!duplicated(idx), , drop = FALSE]
             mfx <- merge(mfx, tmp, all.x = TRUE, by = bycols, sort = FALSE)
         # HACK: relies on NO sorting at ANY point
