@@ -353,10 +353,10 @@ marginalmeans <- function(model,
         out <- get_ci(
             out,
             conf_level = conf_level,
-            df = NULL,
             vcov = vcov,
             overwrite = FALSE,
-            estimate = "marginalmean")
+            estimate = "marginalmean",
+            ...)
     }
 
     # after assign draws

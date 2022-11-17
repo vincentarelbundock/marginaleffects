@@ -112,7 +112,8 @@ tidy.predictions <- function(x,
         x_dt,
         estimate = "estimate",
         conf_level = conf_level,
-        draws = attr(x_dt, "posterior_draws"))
+        draws = attr(x_dt, "posterior_draws"),
+        ...)
 
     # back transformation
     if (!is.null(transform_avg)) {

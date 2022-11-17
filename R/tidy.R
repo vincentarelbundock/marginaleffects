@@ -89,13 +89,14 @@ tidy.marginalmeans <- function(x,
     colnames(out)[colnames(out) == "marginalmean"] <- "estimate"
 
     draws <- attr(x, "posterior_draws")
-
+    
     out <- get_ci(
         out,
         overwrite = FALSE,
         conf_level = conf_level,
         draws = draws,
-        estimate = "estimate")
+        estimate = "estimate",
+        ...)
 
     # back transformation
     if (!is.null(transform_avg)) {

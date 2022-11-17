@@ -327,7 +327,11 @@ comparisons <- function(model,
         # df_per_observation is an undocumented argument introduced in 0.18.4.7 to preserve backward incompatibility
         dof <- insight::get_df(model, type = vcov, data = newdata, df_per_observation = TRUE)
     } else {
-        dof <- NULL
+        if ("df" %in% names(dots)) {
+            dof <- dots[["df"]]
+        } else {
+            dof <- NULL
+        }
     }
 
     vcov_false <- isTRUE(vcov == FALSE)
@@ -425,6 +429,7 @@ comparisons <- function(model,
         overwrite = FALSE,
         draws = draws,
         estimate = "comparison")
+        
 
 
     # group id: useful for merging, only if it's an internal call and not user-initiated

@@ -398,7 +398,8 @@ predictions <- function(model,
             vcov = vcov,
             overwrite = FALSE,
             draws = draws,
-            estimate = "predicted")
+            estimate = "predicted",
+            ...)
     }
 
     out <- data.table(tmp)

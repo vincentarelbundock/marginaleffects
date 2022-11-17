@@ -1,4 +1,4 @@
-# marginaleffects 0.8.0.9000
+# marginaleffects 0.8.0.9003
 
 * `deltamethod()` can run hypothesis tests on objects produced by the `comparisons()`, `marginaleffects()`, `predictions()`, and `marginalmeans()` functions. This feature relies on `match.call()`, which means it may not always work when used programmatically, inside functions and nested environments. It is generally safer and more efficient to use the `hypothesis` argument.
 * `posteriordraws`: new `shape` argument to return MCMC draws in various formats, including the new `rvar` structure from the `posterior` package.

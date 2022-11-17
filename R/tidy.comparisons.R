@@ -168,7 +168,8 @@ tidy.comparisons <- function(x,
         overwrite = FALSE,
         conf_level = conf_level,
         draws = draws,
-        estimate = "estimate")
+        estimate = "estimate",
+        ...)
 
     # remove terms with precise zero estimates. typically the case in
     # multi-equation models where some terms only affect one response

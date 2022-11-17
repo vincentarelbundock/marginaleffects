@@ -171,15 +171,16 @@ deltamethod <- function(
             std.error = se)
     }
 
+
     out <- get_ci(
         out,
         conf_level = conf_level,
         # sometimes get_predicted fails on SE but succeeds on CI (e.g., betareg)
-        df = NULL,
         vcov = vcov,
         overwrite = FALSE,
         draws = NULL,
-        estimate = "estimate")
+        estimate = "estimate",
+        ...)
 
     class(out) <- c("deltamethod", class(out))
     attr(out, "model") <- model
