@@ -75,17 +75,16 @@ This is all very confusing, but the terminology is so widespread and inconsisten
 
 ## Motivation
 
-To calculate marginal effects we need to take derivatives of the regression equation. This can be challenging to do manually, especially when our models are non-linear, or when regressors are transformed or interacted. Computing the variance of a marginal effect is even more difficult. 
+To calculate marginal effects (slopes) we need to take derivatives of the regression equation. To compute standard errors around slopes, predictions, contrasts, or marginal means, we need to apply the delta method. These operations can be challenging to do manually, especially when our models are non-linear, or when regressors are transformed or interacted. Computing the variance of a marginal effect is even more difficult. 
 
 The `marginaleffects` package hopes to do most of this hard work for you.
-
-Many `R` packages advertise their ability to compute "marginal effects." However, most of them do *not* actually compute marginal effects *as defined above*. Instead, they compute "adjusted predictions" for different regressor values, or differences in adjusted predictions (i.e., "contrasts"). The rare packages that actually compute marginal effects are typically limited in the model types they support, and in the range of transformations they allow (interactions, polynomials, etc.).
 
 The main packages in the `R` ecosystem to compute marginal effects are the trailblazing and powerful [`margins` by Thomas J. Leeper](https://cran.r-project.org/package=margins), and [`emmeans` by Russell V. Lenth and contributors.](https://cran.r-project.org/package=emmeans) The `marginaleffects` package is essentially a clone of `margins`, with some additional features from `emmeans`.
 
 So why did I write a clone?
 
-* _Powerful:_ Marginal effects and contrasts can be computed for `r n_support` different classes of models. Adjusted predictions and marginal means can be computed for about 100 model types. 
+* _Powerful:_ Marginal effects and contrasts can be computed for `r n_support` different classes of models. Adjusted predictions and marginal means can be computed for about 100 model types.
+* _Customizable_: Extremely flexible functions to compute custom contrasts and transformations.
 * _Extensible:_ Adding support for new models is very easy, often requiring less than 10 lines of new code. Please submit [feature requests on Github.](https://github.com/vincentarelbundock/marginaleffects/issues)
 * _Fast:_ [Computing unit-level standard errors](https://vincentarelbundock.github.io/marginaleffects/articles/performance.html) can be orders of magnitude faster than `margins` in large datasets.
 * _Efficient:_ Much smaller memory footprint.
