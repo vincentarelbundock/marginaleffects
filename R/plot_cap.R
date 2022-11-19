@@ -286,11 +286,15 @@ get_plot_newdata <- function(model, condition, effect = NULL) {
         }
     }
 
-    at_list[["model"]] = model
+    at_list[["model"]] <- model
 
     if (!is.null(effect)) {
+        # sometimes we use the same condition as effect (e.g., GAM vignette),
+        # but otherwise we don't want it at all
         if (isTRUE(checkmate::check_character(effect))) {
-            at_list[[effect]] <- NULL
+            if (!effect %in% names(condition)) {
+                at_list[[effect]] <- NULL
+            }
         } else {
             at_list[[names(effect)]] <- NULL
         }

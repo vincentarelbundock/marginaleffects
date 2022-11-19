@@ -137,9 +137,14 @@ if (packageVersion("insight") > "0.17.1.6") {
         predictions(model, newdata = nd, exclude = "s(Subject)")$predicted,
         predict(model, newdata = nd, exclude = "s(Subject)")[1])
 
+
     mfx <- marginaleffects(model, newdata = "mean", variables = "Time", type = "link")
     emt <- suppressMessages(data.frame(
         emtrends(model, ~Time, "Time", at = list(Time = 1000, Subject = "a01", Group = "Adults"))))
     expect_equivalent(mfx$dydx, emt$Time.trend, tolerance = 1e-2)
     expect_equivalent(mfx$std.error, emt$SE, tolerance = 1e-3)
+
+    # Issue #545
+    p <- plot_cme(model, effect = "Time", condition = "Time", draw = FALSE)
+    expect_true(nrow(p) > 1)
 }
