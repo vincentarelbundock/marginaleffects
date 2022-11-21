@@ -23,7 +23,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Get Script
-        run: curl -OLs https://eddelbuettel.github.io/r-ci/run.sh && chmod 0755 run.sh
+        run: curl -OLs https://raw.githubusercontent.com/vincentarelbundock/marginaleffects/main/sandbox/run.sh && chmod 0755 run.sh
 
       - name: Bootstrap
         run: ./run.sh bootstrap
