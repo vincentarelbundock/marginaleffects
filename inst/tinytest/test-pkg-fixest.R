@@ -231,51 +231,19 @@ expect_true(all(mfx$conf.low < mfx$dydx))
 expect_true(all(mfx$conf.high > mfx$dydx))
 
 
-
-# TODO: works interactively
-# expect_false(expect_warning(marginaleffects(fit3)))
-
-# # feols linear plot_cap includes confidence intervals
-# mod <- feols(mpg ~ hp, data = mtcars)
-# p <- plot_cap(mod, condition = "hp", conf.level = .5)
-# vdiffr::expect_doppelganger("plot_cap: feols small conf.level", p)
-# p <- plot_cap(mod, condition = "hp", conf.level = .99)
-# vdiffr::expect_doppelganger("plot_cap: feols large conf.level", p)
-
-
-
-# works interactively
 # regression test Issue #232: namespace collision with `rep()`
 # can't override global binding for `rep()`
-# skip("works interactively") 
-# rep <- data.frame(Y = runif(100) > .5, X = rnorm(100))
-# mod <- feglm(Y ~ X, data = rep, family = binomial)
-# mfx <- marginaleffects(mod)
-# expect_inherits(mfx, "marginaleffects")
-#
+rep <- data.frame(Y = runif(100) > .5, X = rnorm(100))
+mod <- feglm(Y ~ X, data = rep, family = binomial)
+mfx <- marginaleffects(mod)
+expect_inherits(mfx, "marginaleffects")
 
 
 # Issue #229
-#skip_if_not_installed("fixest", minimum_version = "0.10.5")
-# data(trade)
-# dat <<- trade
-# mod <- feNmlm(Euros ~ log(dist_km) | Product, data = dat)
-# expect_marginaleffects(mod)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+data(trade)
+dat <<- trade
+mod <- feNmlm(Euros ~ log(dist_km) | Product, data = dat)
+expect_marginaleffects(mod)
 
 
 
