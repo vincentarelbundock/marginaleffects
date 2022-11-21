@@ -125,6 +125,7 @@ tidy.predictions <- function(x,
     }
 
     attr(out, "nchains") <- attr(x, "nchains")
+    attr(out, "transform_post_label") <- attr(x, "transform_post_label")
     attr(out, "transform_average_label") <- names(transform_avg)[1]
 
     return(out)

@@ -36,7 +36,9 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
     valid[["rlmerMod"]] <- c("re.form", "allow.new.levels")
     valid[["gamlss"]] <- c("what", "safe") #gamlss
 
-    white_list <- c("conf.int", "modeldata", "contrast_factor", "contrast_numeric", "internal_call", "df")
+    white_list <- c(
+        "conf.int", "modeldata", "contrast_factor", "contrast_numeric", "internal_call", "df",
+        "transform_avg", "transform_post", "transform_pre")
 
     model_class <- class(model)[1]
 

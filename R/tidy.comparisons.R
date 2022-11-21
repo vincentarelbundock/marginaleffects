@@ -204,6 +204,7 @@ tidy.comparisons <- function(x,
     attr(out, "conf_level") <- conf_level
     attr(out, "FUN") <- "mean"
     attr(out, "nchains") <- attr(x, "nchains")
+    attr(out, "transform_post_label") <- attr(x, "transform_post_label")
     attr(out, "transform_average_label") <- names(transform_avg)[1]
 
     if (exists("drawavg")) {
