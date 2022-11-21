@@ -32,5 +32,4 @@ jobs:
         run: ./run.sh install_all
 
       - name: Coverage
-        if: ${{ matrix.os == 'ubuntu-latest' }}
         run: ./run.sh coverage
