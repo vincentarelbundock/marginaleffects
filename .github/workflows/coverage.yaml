@@ -8,23 +8,16 @@ on:
 
 env:
   _R_CHECK_FORCE_SUGGESTS_: "false"
+  test-coverage:
 
 jobs:
-  ci:
-    strategy:
-      matrix:
-        include:
-          - {os: macOS-latest,   r: 'release'}
-          - {os: windows-latest, r: 'release'}
-          - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release', depends_only: TRUE}
-          - {os: ubuntu-latest,   r: 'release'}
-          - {os: ubuntu-latest,   r: 'oldrel-1'}
-
-    runs-on: ${{ matrix.os }}
+  codecov:
+    runs-on: ubuntu-latest
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_NOT_CRAN: true
+      R_GH: true
 
     steps:
       - uses: actions/checkout@v3
@@ -37,9 +30,6 @@ jobs:
 
       - name: Dependencies
         run: ./run.sh install_all
-
-      - name: Test
-        run: ./run.sh run_tests
 
       - name: Coverage
         if: ${{ matrix.os == 'ubuntu-latest' }}
