@@ -243,7 +243,7 @@ expect_inherits(mfx, "marginaleffects")
 data(trade)
 dat <<- trade
 mod <- feNmlm(Euros ~ log(dist_km) | Product, data = dat)
-expect_marginaleffects(mod)
+expect_marginaleffects(mod, newdata = dat) # environment issue
 
 
 
