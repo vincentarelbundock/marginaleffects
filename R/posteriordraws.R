@@ -7,7 +7,7 @@
 #' * "PxD": Matrix with draws as rows and parameters as columns
 #' @return A data.frame with `drawid` and `draw` columns.
 #' @export
-posteriordraws <- function(x, shape = "long", ...) {
+posteriordraws <- function(x, shape = "long") {
 
     checkmate::assert_choice(shape, choices = c("long", "DxP", "PxD", "rvar"))
 

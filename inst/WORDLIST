@@ -21,6 +21,7 @@ Codecov
 confounders
 cran
 CRC
+Customizable
 datagrid
 demeaned
 differenceavg
@@ -120,6 +121,7 @@ plasminogen
 poisson
 pre
 probs
+programmatically
 PxD
 quartile
 ratioavg

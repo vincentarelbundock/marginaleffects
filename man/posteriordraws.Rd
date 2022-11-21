@@ -4,7 +4,7 @@
 \alias{posteriordraws}
 \title{Extract posterior draws from a \code{predictions}, \code{comparisons}, or \code{marginaleffects} object derived from Bayesian models.}
 \usage{
-posteriordraws(x, shape = "long", ...)
+posteriordraws(x, shape = "long")
 }
 \arguments{
 \item{x}{An object produced by the \code{marginaleffects}, \code{comparisons}, or \code{predictions} functions}

@@ -120,7 +120,7 @@ the \code{marginaleffects:::type_dictionary} dataframe.}
 }
 }}
 
-\item{transform_post}{(experimental) A function applied to unit-level estimates and confidence intervals just before the function returns results.}
+\item{transform_post}{string or function. Transformation applied to unit-level estimates and confidence intervals just before the function returns results. Functions must accept a vector and return a vector of the same length. Support string shortcuts: "exp", "ln"}
 
 \item{cross}{TRUE or FALSE
 \itemize{
