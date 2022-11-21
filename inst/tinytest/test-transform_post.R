@@ -27,3 +27,10 @@ tid2 <- tidy(cmp1, transform_avg = exp)
 expect_equivalent(exp(tid1$estimate), tid2$estimate)
 expect_equivalent(exp(tid1$conf.low), tid2$conf.low)
 expect_equivalent(exp(tid1$conf.high), tid2$conf.high)
+
+# string shortcuts and printout
+mod <- lm(mpg ~ hp, mtcars)
+cmp <- comparisons(mod, transform_post = "exp")
+expect_inherits(cmp, "comparisons")
+pri <- capture.output(summary(cmp))
+expect_equivalent(sum(grepl(" exp ", pri)), 1)

@@ -1,6 +1,4 @@
 source("helpers.R", local = TRUE)
-exit_file("problems testing fixest because of `get_data` from environment")
-if (utils::packageVersion("fixest") < "0.10.5") exit_file("fixest version")
 if (ON_CRAN) exit_file("on cran")
 requiet("fixest")
 requiet("data.table")
@@ -201,6 +199,7 @@ cmp <- comparisons(
 
 
 # Issue #484: fixest::i() parsing
+find_categorical <- marginaleffects:::find_categorical
 mod1 <- feols(mpg ~ drat + i(cyl, i.gear), data = mtcars)
 mod2 <- feols(mpg ~ drat + i(cyl, gear), data = mtcars)
 mod3 <- feols(mpg ~ drat + i(cyl), data = mtcars)

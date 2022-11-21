@@ -88,3 +88,26 @@ sanity_transform_pre <- function(transform_pre) {
                                 choices = names(transform_pre_function_dict)),
         checkmate::check_function(transform_pre))
 }
+
+
+sanitize_transform_post <- function(x) {
+    good <- c("exp", "ln")
+    checkmate::assert(
+        checkmate::check_choice(x, choices = good, null.ok = TRUE),
+        checkmate::check_function(x))
+
+    if (is.null(x)) {
+        return(x) 
+    } else if (is.function(x)) {
+        out <- list(x)
+        names(out) <- deparse(substitute(x))
+    } else if (x == "exp") {
+        out <- list("exp" = exp)
+    } else if (x == "ln") {
+        out <- list("ln" = log)
+    }
+
+    return(out)
+
+}
+

@@ -74,7 +74,7 @@
 #'   - See the Transformations section below for definitions of each transformation.
 #' * function: accept two equal-length numeric vectors of adjusted predictions (`hi` and `lo`) and returns a vector of contrasts of the same length, or a unique numeric value.
 #'   - See the Transformations section below for examples of valid functions.
-#' @param transform_post (experimental) A function applied to unit-level estimates and confidence intervals just before the function returns results.
+#' @param transform_post string or function. Transformation applied to unit-level estimates and confidence intervals just before the function returns results. Functions must accept a vector and return a vector of the same length. Support string shortcuts: "exp", "ln"
 #' @param by Compute group-wise average estimates. Valid inputs:
 #'   - Character vector of column names in `newdata` or in the data frame produced by calling the function without the `by` argument.
 #'   - Data frame with a `by` column of group labels, and merging columns shared by `newdata` or the data frame produced by calling the same function without the `by` argument.
@@ -213,13 +213,6 @@ comparisons <- function(model,
 
     dots <- list(...)
 
-    transform_pre_label <- transform_post_label <- NULL
-    if (is.function(transform_pre)) {
-        transform_pre_label <- deparse(substitute(transform_pre))
-    }
-    if (is.function(transform_post)) {
-        transform_post_label <- deparse(substitute(transform_post))
-    }
 
     # marginaleffects()` **must** run its own sanity checks and hardcode valid arguments
     internal_call <- dots[["internal_call"]]
@@ -246,7 +239,6 @@ comparisons <- function(model,
             ...)
         cross <- sanitize_cross(cross, variables, model)
         type <- sanitize_type(model = model, type = type, calling_function = "marginaleffects")
-        checkmate::assert_function(transform_post, null.ok = TRUE)
 
     # internal call from `marginaleffects()`
     } else {
@@ -264,9 +256,17 @@ comparisons <- function(model,
     }
 
     conf_level <- sanitize_conf_level(conf_level, ...)
-    sanity_transform_pre(transform_pre)
     sanity_dots(model, ...)
     checkmate::assert_numeric(eps, len = 1, lower = 1e-10, null.ok = TRUE)
+
+    # transforms
+    sanity_transform_pre(transform_pre)
+    transform_pre_label <- transform_post_label <- NULL
+    if (is.function(transform_pre)) {
+        transform_pre_label <- deparse(substitute(transform_pre))
+    }
+    transform_post <- sanitize_transform_post(transform_post)
+
 
     # used by `marginaleffects` to hard-code preference
     # deprecated as user-level arguments
@@ -451,9 +451,7 @@ comparisons <- function(model,
     attr(mfx, "posterior_draws") <- draws
 
     # after draws attribute
-    if (!is.null(transform_post)) {
-        mfx <- backtransform(mfx, transform_post)
-    }
+    mfx <- backtransform(mfx, transform_post)
 
     # save as attribute and not column
     if (any(!is.na(mfx[["marginaleffects_wts_internal"]]))) {
@@ -485,9 +483,9 @@ comparisons <- function(model,
     attr(out, "vcov.type") <- vcov.type
     attr(out, "weights") <- marginaleffects_wts_internal
     attr(out, "transform_pre") <- transform_pre
-    attr(out, "transform_post") <- transform_post
+    attr(out, "transform_post") <- transform_post[[1]]
     attr(out, "transform_pre_label") <- transform_pre_label
-    attr(out, "transform_post_label") <- transform_post_label
+    attr(out, "transform_post_label") <- names(transform_post)[1]
     attr(out, "conf_level") <- conf_level
     attr(out, "by") <- by
     attr(out, "call") <- match.call()

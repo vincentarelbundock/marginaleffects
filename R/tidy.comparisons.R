@@ -56,13 +56,14 @@ tidy.comparisons <- function(x,
 
     dots <- list(...)
     conf_level <- sanitize_conf_level(conf_level, ...)
-    checkmate::assert_function(transform_avg, null.ok = TRUE)
 
+    # transformation
     transform_avg <- deprecation_arg(
         transform_avg,
         newname = "transform_avg",
         oldname = "transform_post",
         ...)
+    transform_avg <- sanitize_transform_post(transform_avg)
 
     x_dt <- data.table(x)
 
@@ -183,13 +184,11 @@ tidy.comparisons <- function(x,
     }
 
     # back transformation
-    if (!is.null(transform_avg)) {
-        if (!is.null(attr(x, "transform_post"))) {
-            msg <- "Estimates were transformed twice: once during the initial computation, and once more when summarizing the results in `tidy()` or `summary()`."
-            warning(insight::format_message(msg), call. = FALSE)
-        }
-        out <- backtransform(out, transform_avg)
+    if (!is.null(transform_avg) && !is.null(attr(x, "transform_post"))) {
+        msg <- "Estimates were transformed twice: once during the initial computation, and once more when summarizing the results in `tidy()` or `summary()`."
+        insight::format_warning(msg)
     }
+    out <- backtransform(out, transform_avg)
 
     # sort and subset columns
     cols <- c("type", "group", "term", "contrast",
@@ -205,6 +204,7 @@ tidy.comparisons <- function(x,
     attr(out, "conf_level") <- conf_level
     attr(out, "FUN") <- "mean"
     attr(out, "nchains") <- attr(x, "nchains")
+    attr(out, "transform_average_label") <- names(transform_avg)[1]
 
     if (exists("drawavg")) {
         class(drawavg) <- c("posterior_draws", class(drawavg))

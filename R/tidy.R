@@ -82,7 +82,7 @@ tidy.marginalmeans <- function(x,
                                ...) {
 
 
-    checkmate::assert_function(transform_avg, null.ok = TRUE)
+    transform_avg <- sanitize_transform_post(transform_avg)
 
     conf_level <- sanitize_conf_level(conf_level, ...)
     out <- x
@@ -114,6 +114,7 @@ tidy.marginalmeans <- function(x,
 
     attr(out, "conf_level") <- conf_level
     attr(out, "nchains") <- attr(x, "nchains")
+    attr(out, "transform_avg_label") <- names(transform_avg)[1]
 
     return(out)
 }

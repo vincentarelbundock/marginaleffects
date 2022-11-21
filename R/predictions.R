@@ -216,7 +216,7 @@ predictions <- function(model,
     # model <- sanitize_model(model)
 
     # input sanity checks
-    checkmate::assert_function(transform_post, null.ok = TRUE)
+    transform_post <- sanitize_transform_post(transform_post)
     sanity_dots(model = model, ...)
     sanity_model_specific(
         model = model,
@@ -430,11 +430,7 @@ predictions <- function(model,
     attr(out, "posterior_draws") <- draws
 
     # after rename to estimate / after assign draws
-    transform_post_label <- NULL
-    if (is.function(transform_post)) {
-        out <- backtransform(out, transform_post = transform_post)
-        transform_post_label <- deparse(substitute(transform_post))
-    }
+    out <- backtransform(out, transform_post = transform_post)
 
     class(out) <- c("predictions", class(out))
     out <- set_attributes(
@@ -451,7 +447,8 @@ predictions <- function(model,
     attr(out, "conf_level") <- conf_level
     attr(out, "by") <- by
     attr(out, "call") <- match.call()
-    attr(out, "transform_post_label") <- transform_post_label
+    attr(out, "transform_post_label") <- names(transform_post)[1]
+    attr(out, "transform_post") <- transform_post[[1]]
 
     if (inherits(model, "brmsfit")) {
         insight::check_if_installed("brms")
