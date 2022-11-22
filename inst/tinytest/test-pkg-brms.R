@@ -648,3 +648,8 @@ tid <- tidy(cmp)
 rv <- posteriordraws(tid, "rvar")
 expect_equivalent(nrow(rv), 2)
 expect_inherits(rv$rvar[[1]], "rvar")
+
+
+# Issue #546
+cmp <- comparisons(brms_numeric2, newdata = datagrid())
+expect_false(anyNA(cmp$am))
