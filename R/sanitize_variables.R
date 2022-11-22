@@ -142,9 +142,9 @@ sanitize_variables <- function(variables,
 
     # matrix variables are not supported
     mc <- attr(newdata, "newdata_matrix_columns")
-    predictors <- predictors[!names(predictors) %in% mc]
-    if (length(mc) > 0) {
-        insight::format_warning("Matrix columns are not supported.")
+    if (length(mc) > 0 && any(names(predictors) %in% mc)) {
+      predictors <- predictors[!names(predictors) %in% mc]
+      insight::format_warning("Matrix columns are not supported.")
     }
 
     # anything left?
@@ -216,7 +216,7 @@ sanitize_variables <- function(variables,
                     }
                 }
 
-            } else if (isTRUE(variable_class[[v]] %in% c("factor", "character"))) { 
+            } else if (isTRUE(variable_class[[v]] %in% c("factor", "character"))) {
 
                 if (calling_function == "comparisons") {
                     valid <- c("reference", "sequential", "pairwise", "all")
