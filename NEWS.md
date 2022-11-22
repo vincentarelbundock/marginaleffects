@@ -5,6 +5,7 @@
 * `posteriordraws`: new `shape` argument to return MCMC draws in various formats, including the new `rvar` structure from the `posterior` package.
 * `transform_avg` function gets printed in `summary()` output.
 * `transform_post` and `transform_avg` support string shortcuts: "exp" and "ln"
+* Added support for `mlm` models from `lm()`
 
 Bug fixes:
 
