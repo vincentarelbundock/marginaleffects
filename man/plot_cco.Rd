@@ -22,11 +22,6 @@ plot_cco(
 
 \item{effect}{Name of the variable whose contrast we want to plot on the y-axis}
 
-\item{condition}{String or vector of two strings. The first is a variable
-name to be displayed on the x-axis. The second is a variable whose values
-will be displayed in different colors. Other numeric variables are held at
-their means. Other categorical variables are held at their modes.}
-
 \item{type}{string indicates the type (scale) of the predictions used to
 compute marginal effects or contrasts. This can differ based on the model
 type, but will typically be a string such as: "response", "link", "probs",
@@ -89,11 +84,15 @@ interactions, where the values of contrasts depend on the values of
 "condition" variables.
 }
 \examples{
-mod <- lm(mpg ~ hp * wt, data = mtcars)
-plot_cco(mod, effect = "hp", condition = "wt")
+mod <- lm(mpg ~ hp * drat * factor(am), data = mtcars)
 
-mod <- lm(mpg ~ hp * wt * am, data = mtcars)
-plot_cco(mod, effect = "hp", condition = c("wt", "am"))
+plot_cco(mod, effect = "hp", condition = "drat")
+
+plot_cco(mod, effect = "hp", condition = c("drat", "am"))
+
+plot_cco(mod, effect = "hp", condition = list("am", "drat" = 3:5))
+
+plot_cco(mod, effect = "am", condition = list("hp", "drat" = range))
 
 }
 \seealso{

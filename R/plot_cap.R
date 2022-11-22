@@ -71,7 +71,6 @@ plot_cap <- function(model,
         } else if (identical(condition[[i]], "quartile")) {
             datplot[[v]] <- fun(datplot[[v]], c("Q1", "Q2", "Q3"))
         }
-
     }
 
     # colors and facets are categorical attributes
