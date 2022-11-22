@@ -50,3 +50,8 @@ expect_vdiff(p, "plot_cme_continuous")
 mod <- lm(mpg ~ hp * wt * am, data = mtcars)
 p <- plot_cme(mod, effect = "hp", condition = c("wt", "am"))
 expect_vdiff(p, "plot_cme_two_conditions")
+
+
+# custom values
+p <- plot_cme(mod, effect = "bill_length_mm", condition = list("flipper_length_mm" = 10), draw = FALSE)
+expect_true(p$condition1 == 10)

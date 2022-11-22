@@ -6,10 +6,6 @@
 #' "condition" variables.
 #'
 #' @param effect Name of the variable whose contrast we want to plot on the y-axis
-#' @param condition String or vector of two strings. The first is a variable
-#' name to be displayed on the x-axis. The second is a variable whose values
-#' will be displayed in different colors. Other numeric variables are held at
-#' their means. Other categorical variables are held at their modes.
 #' @param draw `TRUE` returns a `ggplot2` plot. `FALSE` returns a `data.frame` of the underlying data.
 #' @inheritParams comparisons
 #' @inheritParams plot_cme
@@ -19,12 +15,16 @@
 #' @family plot
 #' @export
 #' @examples
-#' mod <- lm(mpg ~ hp * wt, data = mtcars)
-#' plot_cco(mod, effect = "hp", condition = "wt")
+#' mod <- lm(mpg ~ hp * drat * factor(am), data = mtcars)
+#' 
+#' plot_cco(mod, effect = "hp", condition = "drat")
 #'
-#' mod <- lm(mpg ~ hp * wt * am, data = mtcars)
-#' plot_cco(mod, effect = "hp", condition = c("wt", "am"))
-#'
+#' plot_cco(mod, effect = "hp", condition = c("drat", "am"))
+#' 
+#' plot_cco(mod, effect = "hp", condition = list("am", "drat" = 3:5))
+#' 
+#' plot_cco(mod, effect = "am", condition = list("hp", "drat" = range))
+#' 
 plot_cco <- function(model,
                      effect = NULL,
                      condition = NULL,
@@ -91,6 +91,22 @@ plot_cco <- function(model,
         alpha <- 1 - conf_level
         datplot$conf.low <- datplot$comparison + stats::qnorm(alpha / 2) * datplot$std.error
         datplot$conf.high <- datplot$comparison - stats::qnorm(alpha / 2) * datplot$std.error
+    }
+
+    # shortcut labels
+    for (i in seq_along(condition)) {
+        v <- paste0("condition", i)
+        fun <- function(x, lab) {
+            idx <- match(x, sort(unique(x)))
+            factor(lab[idx], labels = lab)
+        }
+        if (identical(condition[[i]], "threenum")) {
+            datplot[[v]] <- fun(datplot[[v]], c("-SD", "Mean", "+SD"))
+        } else if (identical(condition[[i]], "minmax")) {
+            datplot[[v]] <- fun(datplot[[v]], c("Min", "Max"))
+        } else if (identical(condition[[i]], "quartile")) {
+            datplot[[v]] <- fun(datplot[[v]], c("Q1", "Q2", "Q3"))
+        }
     }
 
     # return immediately if the user doesn't want a plot
