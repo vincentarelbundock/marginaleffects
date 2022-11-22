@@ -70,3 +70,18 @@ p3 <- plot_cme(mod, effect = "mpg", condition = c("wt", "group"), type = "probs"
 expect_inherits(p1, "gg")
 expect_inherits(p2, "gg")
 expect_inherits(p3, "gg")
+
+
+
+# Issue #498: New features
+mod <- lm(mpg ~ hp * wt * am, data = mtcars)
+# condition list must be named or single characters
+p <- plot_cap(mod, condition = list("hp", "wt" = c(1.5, 2.5, 3.5), "am" = 0:1))
+expect_inherits(p, "gg")
+p <- plot_cap(mod, condition = list("hp" = seq(110, 140), "wt" = c(1.5, 2.5, 3.5)))
+expect_inherits(p, "gg")
+p <- plot_cap(mod, condition = list("hp", "wt" = "threenum", "am" = "minmax"))
+expect_inherits(p, "gg")
+expect_error(
+    plot_cap(mod, condition = list(100:110, "wt" = c(1.5, 2.5, 3.5))),
+    pattern = "condition")

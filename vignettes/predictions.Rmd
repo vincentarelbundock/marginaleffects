@@ -90,7 +90,12 @@ predictions(mod, newdata = datagrid())
 predictions(mod, newdata = datagrid(cyl = c(4, 6, 8)))
 ```
 
-Users can change the summary function used to summarize each type of variables using the `FUN.numeric`, `FUN.factor`, and related arguments, for example substituting the mean for the median.
+Users can change the summary function used to summarize each type of variables using the `FUN_numeric`, `FUN_factor`, and related arguments. For example:
+
+```{r}
+m <- lm(mpg ~ hp + drat + factor(cyl) + factor(am), data = mtcars)
+predictions(m, newdata = datagrid(FUN_factor = unique, FUN_numeric = median))
+```
 
 The `data.frame` produced by `predictions` is "tidy", which makes it easy to manipulate with other `R` packages and functions:
 

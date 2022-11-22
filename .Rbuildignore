@@ -21,6 +21,7 @@
 ^vignettes/gam.Rmd
 ^vignettes/gformula.Rmd
 ^vignettes/extensions.Rmd
+^vignettes/experiments.Rmd
 ^vignettes/hypothesis.Rmd
 ^vignettes/lme4.Rmd
 ^vignettes/marginaleffects.Rmd
@@ -29,6 +30,7 @@
 ^vignettes/modelsummary.Rmd
 ^vignettes/multiple_imputation.Rmd
 ^vignettes/performance.Rmd
+^vignettes/plot.Rmd
 ^vignettes/predictions.Rmd
 ^vignettes/python.Rmd
 ^vignettes/sandwich.Rmd

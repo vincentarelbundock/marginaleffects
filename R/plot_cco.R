@@ -6,10 +6,6 @@
 #' "condition" variables.
 #'
 #' @param effect Name of the variable whose contrast we want to plot on the y-axis
-#' @param condition String or vector of two strings. The first is a variable
-#' name to be displayed on the x-axis. The second is a variable whose values
-#' will be displayed in different colors. Other numeric variables are held at
-#' their means. Other categorical variables are held at their modes.
 #' @param draw `TRUE` returns a `ggplot2` plot. `FALSE` returns a `data.frame` of the underlying data.
 #' @inheritParams comparisons
 #' @inheritParams plot_cme
@@ -19,12 +15,16 @@
 #' @family plot
 #' @export
 #' @examples
-#' mod <- lm(mpg ~ hp * wt, data = mtcars)
-#' plot_cco(mod, effect = "hp", condition = "wt")
+#' mod <- lm(mpg ~ hp * drat * factor(am), data = mtcars)
+#' 
+#' plot_cco(mod, effect = "hp", condition = "drat")
 #'
-#' mod <- lm(mpg ~ hp * wt * am, data = mtcars)
-#' plot_cco(mod, effect = "hp", condition = c("wt", "am"))
-#'
+#' plot_cco(mod, effect = "hp", condition = c("drat", "am"))
+#' 
+#' plot_cco(mod, effect = "hp", condition = list("am", "drat" = 3:5))
+#' 
+#' plot_cco(mod, effect = "am", condition = list("hp", "drat" = range))
+#' 
 plot_cco <- function(model,
                      effect = NULL,
                      condition = NULL,
@@ -36,76 +36,35 @@ plot_cco <- function(model,
                      draw = TRUE,
                      ...) {
 
-    # get data to know over what range of values we should plot
-    dat <- hush(insight::get_data(model))
-    resp <- insight::find_response(model)[1]
 
-    # eventually we might allow multiple conditions and/or effects
-    checkmate::assert_true(length(effect) == 1)
-    if (isTRUE(checkmate::check_list(effect)) &&
-        any(c("sd", "2sd", "minmax", "iqr") %in% effect)) {
-        msg <- format_msg(
-        'The "sd", "2sd", "minmax", and "iqr" options are not available in the
-        `effect` argument of this plotting function. You can specify custom
-        contrasts by using a numeric vector. Ex:
-
-        model <- lm(mpg ~ hp * wt, data = mtcars)
-        plot_cco(model, effect = list("hp" = c(110, 130)), condition = "wt")
-        ')
-        stop(msg, call. = FALSE)
+    # sanity check
+    if (!isTRUE(length(effect) == 1)) {
+        msg <- "The `effect` argument must be a vector or list of length 1."
+        insight::format_error(msg)
     }
 
-    # allow multiple conditions and/or effects
-    checkmate::assert_character(condition, min.len = 1, max.len = 2)
+    # shared code with plot_cco()
+    tmp <- get_plot_newdata(model, condition, effect)
+    dat <- tmp$modeldata
+    nd <- tmp$newdata
+    condition <- tmp$condition
+    condition1 <- tmp$condition1
+    condition2 <- tmp$condition2
+    condition3 <- tmp$condition3
+    resp <- tmp$resp
+    respname <- tmp$respname
 
-    ## not sure why this fails in testthat
-    if (length(condition) == 1) {
-        condition1 <- condition[1]
-        condition2 <- NULL
-        condition3 <- NULL
-    } else if (length(condition) == 2) {
-        condition1 <- condition[1]
-        condition2 <- condition[2]
-        condition3 <- NULL
-    } else {
-        condition1 <- condition[1]
-        condition2 <- condition[2]
-        condition3 <- condition[3]
-    }
+    # bad test!
+    # plot_cco should actually support a list here as well, since we want to
+    # that be passed to the comparisons() variable
 
-    # build typical dataset with a sequence of values over "condition" range
-    at_list <- list()
+    # flag <- checkmate::check_choice(effect, choices = colnames(dat))
+    # if (!isTRUE(flag)) {
+    #     msg <- "The `effect` argument must be a string representing one of the predictors in the model: %s"
+    #     msg <- sprintf(msg, paste(setdiff(colnames(dat), respname), collapse = ", "))
+    #     insight::format_error(msg)
+    # }
 
-    # condition 1
-    if (is.numeric(dat[[condition1]]) && !isTRUE(attr(dat[[condition1]], "factor"))) {
-        at_list[[condition1]] <- seq(min(dat[[condition1]], na.rm = TRUE),
-                                     max(dat[[condition1]], na.rm = TRUE),
-                                     length.out = 100)
-    } else {
-        at_list[[condition1]] <- unique(dat[[condition1]])
-    }
-
-    # condition 2
-    if (!is.null(condition2)) {
-        if (is.numeric(dat[[condition2]])) {
-            at_list[[condition2]] <- stats::fivenum(dat[[condition2]])
-        } else {
-            at_list[[condition2]] <- unique(dat[[condition2]])
-        }
-    }
-
-    # condition 3
-    if (!is.null(condition3)) {
-        if (is.numeric(dat[[condition3]])) {
-            at_list[[condition3]] <- stats::fivenum(dat[[condition3]])
-        } else {
-            at_list[[condition3]] <- unique(dat[[condition3]])
-        }
-    }
-
-    # create data
-    at_list[["model"]] = model
-    nd <- do.call("typical", at_list)
     datplot <- comparisons(
         model,
         newdata = nd,
@@ -115,11 +74,8 @@ plot_cco <- function(model,
         variables = effect,
         transform_pre = transform_pre,
         transform_post = transform_post,
-        interaction = FALSE,
+        cross = FALSE,
         ...)
-
-
-    checkmate::assert_true(all(condition %in% colnames(datplot)))
 
     draws <- attr(datplot, "posterior_draws")
     colnames(datplot)[colnames(datplot) == condition1] <- "condition1"
@@ -137,6 +93,22 @@ plot_cco <- function(model,
         datplot$conf.high <- datplot$comparison - stats::qnorm(alpha / 2) * datplot$std.error
     }
 
+    # shortcut labels
+    for (i in seq_along(condition)) {
+        v <- paste0("condition", i)
+        fun <- function(x, lab) {
+            idx <- match(x, sort(unique(x)))
+            factor(lab[idx], labels = lab)
+        }
+        if (identical(condition[[i]], "threenum")) {
+            datplot[[v]] <- fun(datplot[[v]], c("-SD", "Mean", "+SD"))
+        } else if (identical(condition[[i]], "minmax")) {
+            datplot[[v]] <- fun(datplot[[v]], c("Min", "Max"))
+        } else if (identical(condition[[i]], "quartile")) {
+            datplot[[v]] <- fun(datplot[[v]], c("Q1", "Q2", "Q3"))
+        }
+    }
+
     # return immediately if the user doesn't want a plot
     if (isFALSE(draw)) {
         attr(datplot, "posterior_draws") <- draws
@@ -144,7 +116,6 @@ plot_cco <- function(model,
     } else {
         assert_dependency("ggplot2")
     }
-
 
     # ggplot2
     p <- ggplot2::ggplot()
@@ -167,13 +138,12 @@ plot_cco <- function(model,
             ggplot2::aes(
                     x = condition1,
                     y = comparison,
-                    color = condition2,
-                    linetype = condition3))
+                    color = condition2))
 
     # categorical x-axis
     } else {
         if ("conf.low" %in% colnames(datplot)) {
-             if (is.null(condition2)) {
+             if (is.null(condition1)) {
                  p <- p + ggplot2::geom_pointrange(
                      data = datplot,
                      ggplot2::aes(
@@ -199,18 +169,18 @@ plot_cco <- function(model,
                 ggplot2::aes(
                     x = condition1,
                     y = comparison,
-                    color = condition2))
+                    color = condition1))
         }
     }
 
     if (is.null(names(effect))) {
         p <- p + ggplot2::labs(
             x = condition1,
-            y = sprintf("Contrast in %s on %s", effect, resp))
+            y = sprintf("Contrast in %s on %s", effect, respname))
     } else {
         p <- p + ggplot2::labs(
             x = condition1,
-            y = sprintf("Contrast in %s on %s", names(effect), resp))
+            y = sprintf("Contrast in %s on %s", names(effect), respname))
     }
 
     # `effect` is a categorical variable. We plot them in different facets
@@ -221,8 +191,16 @@ plot_cco <- function(model,
         }
     }
     if (length(contrast_cols) > 0) {
-        f <- paste("~", paste(contrast_cols, collapse = "+"))
-        p <- p + ggplot2::facet_wrap(f)
+        if (is.null(condition3)) {
+            fo <- sprintf("~ %s", paste(contrast_cols, collapse = "+"))
+            p <- p + ggplot2::facet_wrap(fo)
+        } else {
+            fo <- sprintf("condition3 ~ %s", paste(contrast_cols, collapse = "+"))
+            p <- p + ggplot2::facet_grid(fo)
+        }
+    } else if (!is.null(condition3)) {
+        fo <- ~ condition3
+        p <- p + ggplot2::facet_wrap(fo)
     }
 
     # set a new theme only if the default is theme_grey. this prevents user's
@@ -233,7 +211,8 @@ plot_cco <- function(model,
           ggplot2::theme(legend.title = ggplot2::element_blank())
     }
 
-    attr(p, "data") <- dat
+    # attach model data for each of use
+    attr(p, "modeldata") <- dat
 
     return(p)
 }

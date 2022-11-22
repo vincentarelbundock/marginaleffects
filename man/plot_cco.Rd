@@ -22,10 +22,12 @@ plot_cco(
 
 \item{effect}{Name of the variable whose contrast we want to plot on the y-axis}
 
-\item{condition}{String or vector of two strings. The first is a variable
-name to be displayed on the x-axis. The second is a variable whose values
-will be displayed in different colors. Other numeric variables are held at
-their means. Other categorical variables are held at their modes.}
+\item{condition}{character vector or named list of length smaller than 3. Character vectors must be the names of the predictor variables to display. The names of the list must The first element is displayed on the x-axis. The second element determines the colors. The third element creates facets. Unspecified variables are held at their means or modes. Lists can include these types of values (see Examples section below):
+\itemize{
+\item Numeric vector
+\item Function which returns a numeric vector or a set of unique categorical values
+\item Shortcut strings for common reference values: "minmax", "quartile", "threenum"
+}}
 
 \item{type}{string indicates the type (scale) of the predictions used to
 compute marginal effects or contrasts. This can differ based on the model
@@ -66,7 +68,7 @@ the \code{marginaleffects:::type_dictionary} dataframe.}
 }
 }}
 
-\item{transform_post}{(experimental) A function applied to unit-level estimates and confidence intervals just before the function returns results.}
+\item{transform_post}{string or function. Transformation applied to unit-level estimates and confidence intervals just before the function returns results. Functions must accept a vector and return a vector of the same length. Support string shortcuts: "exp", "ln"}
 
 \item{draw}{\code{TRUE} returns a \code{ggplot2} plot. \code{FALSE} returns a \code{data.frame} of the underlying data.}
 
@@ -89,11 +91,15 @@ interactions, where the values of contrasts depend on the values of
 "condition" variables.
 }
 \examples{
-mod <- lm(mpg ~ hp * wt, data = mtcars)
-plot_cco(mod, effect = "hp", condition = "wt")
+mod <- lm(mpg ~ hp * drat * factor(am), data = mtcars)
 
-mod <- lm(mpg ~ hp * wt * am, data = mtcars)
-plot_cco(mod, effect = "hp", condition = c("wt", "am"))
+plot_cco(mod, effect = "hp", condition = "drat")
+
+plot_cco(mod, effect = "hp", condition = c("drat", "am"))
+
+plot_cco(mod, effect = "hp", condition = list("am", "drat" = 3:5))
+
+plot_cco(mod, effect = "am", condition = list("hp", "drat" = range))
 
 }
 \seealso{

@@ -52,7 +52,9 @@ plm,plm,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,U,U
 pscl,hurdle,TRUE,TRUE,,,TRUE,U,TRUE,FALSE
 pscl,zeroinfl,TRUE,TRUE,TRUE,TRUE,TRUE,U,TRUE,TRUE
 quantreg,rq,TRUE,TRUE,TRUE,TRUE,U,U,TRUE,TRUE
-rms,lrm,TRUE,TRUE,,,U,U,TRUE,TRUE
+rms,ols,TRUE,TRUE,,,,,,
+rms,lrm,TRUE,TRUE,,,,,,
+rms,orm,TRUE,TRUE,,,,,,
 robust,lmRob,TRUE,TRUE,,,U,U,U,U
 robustbase,glmrob,TRUE,TRUE,,,TRUE,TRUE,U,U
 robustbase,lmrob,TRUE,TRUE,,,TRUE,TRUE,U,U

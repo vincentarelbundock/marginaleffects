@@ -9,8 +9,8 @@ dat$cyl <- factor(dat$cyl)
 mod1 <- lm(mpg ~ gear + cyl + wt + gear, data = dat)
 mod2 <- lm(mpg ~ gear * cyl + wt + gear, data = dat)
 cmp1 <- comparisons(mod1, newdata = datagrid())
-cmp2 <- suppressWarnings(comparisons(mod2, newdata = datagrid()))
-cmp3 <- suppressWarnings(comparisons(mod2, variables = c("cyl", "gear"), newdata = datagrid()))
+cmp2 <- suppressWarnings(comparisons(mod2, newdata = datagrid(), cross = FALSE))
+cmp3 <- suppressWarnings(comparisons(mod2, variables = c("cyl", "gear"), newdata = datagrid(), cross = TRUE))
 expect_true("contrast" %in% colnames(cmp1))
 expect_true("contrast" %in% colnames(cmp2))
 expect_true(all(c("contrast_cyl", "contrast_gear") %in% colnames(cmp3)))
@@ -29,7 +29,7 @@ cmp <- suppressWarnings(comparisons(
     variables = c("cyl", "am"),
     newdata = datagrid(),
     contrast_factor = "all",
-    interaction = TRUE))
+    cross = TRUE))
 em <- emmeans(mod, c("cyl", "am"))
 em <- contrast(em, method = "revpairwise")
 em <- data.frame(em)
@@ -40,17 +40,17 @@ expect_true(all(round(abs(em$SE), 5) %in% round(abs(cmp$std.error), 5)))
 
 # tidy does not error (no validity)
 mod <- lm(mpg ~ factor(am) + factor(cyl) + wt + gear, data = mtcars)
-cmp <- comparisons(mod, variables = c("am", "cyl"), interaction = TRUE)
+cmp <- comparisons(mod, variables = c("am", "cyl"), cross = TRUE)
 tid <- tidy(cmp)
-expect_true(all(tid$term == "interaction"))
+expect_true(all(tid$term == "cross"))
 
 
 
 # `variables` must be specified
 mod <- lm(mpg ~ factor(am) + factor(cyl) + wt + gear, data = mtcars)
-cmp <- comparisons(mod, variables = c("am", "cyl"), interaction = TRUE)
+cmp <- comparisons(mod, variables = c("am", "cyl"), cross = TRUE)
 expect_inherits(cmp, "comparisons")
-expect_error(comparisons(mod, interaction = TRUE), pattern = "variables")
+expect_error(comparisons(mod, cross = TRUE), pattern = "variables")
 
 
 
@@ -63,34 +63,41 @@ cmp <- comparisons(
     variables = c("cyl", "am"),
     newdata = datagrid(),
     contrast_factor = "all",
-    interaction = TRUE)
+    cross = TRUE)
 expect_equivalent(nrow(cmp), 21)
 expect_equivalent(nrow(tidy(cmp)), 21)
 
 cmp <- comparisons(
     mod,
     variables = c("cyl", "am"),
-    contrast_factor = "sequential")
+    contrast_factor = "sequential",
+    cross = TRUE)
 expect_equivalent(nrow(cmp), 64)
 expect_equivalent(nrow(tidy(cmp)), 2)
 
 cmp <- comparisons(
     mod,
+    cross = TRUE,
     variables = c("cyl", "am", "wt"))
-expect_equivalent(nrow(cmp), 192)
-expect_equivalent(nrow(tidy(cmp)), 6)
+expect_equivalent(nrow(cmp), 64)
+expect_equivalent(nrow(tidy(cmp)), 2)
 
-cmp <- comparisons(
-    mod,
-    variables = c("cyl", "am", "wt"),
-    contrast_factor = "pairwise")
-expect_equivalent(nrow(cmp), 864)
-expect_equivalent(nrow(tidy(cmp)), 27)
+
+# deprecated argument
+expect_warning(comparisons(mod, interaction = TRUE))
+
+
+# cmp <- comparisons(
+#     mod,
+#     variables = c("cyl", "am", "wt"),
+#     contrast_factor = "pairwise")
+# expect_equivalent(nrow(cmp), 864)
+# expect_equivalent(nrow(tidy(cmp)), 27)
 
 
 # brms + order of first character doesn't matter
 mod <- marginaleffects:::modelarchive_model("brms_factor")
-cmp <- comparisons(mod, variables = c("cyl_fac", "mpg"), interaction = TRUE, contrast_factor = "all")
+cmp <- comparisons(mod, variables = c("cyl_fac", "mpg"), cross = TRUE, contrast_factor = "all")
 expect_equivalent(nrow(cmp), 192)
 expect_equivalent(nrow(tidy(cmp)), 6)
 

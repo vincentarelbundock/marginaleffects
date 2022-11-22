@@ -9,7 +9,7 @@ get_contrasts <- function(model,
                           marginalmeans,
                           by = NULL,
                           hypothesis = NULL,
-                          interaction = FALSE,
+                          cross = FALSE,
                           verbose = TRUE,
                           ...) {
 
@@ -24,19 +24,24 @@ get_contrasts <- function(model,
 
     # brms models need to be combined to use a single seed when sample_new_levels="gaussian"
     if (inherits(model, "brmsfit")) {
+
+        if (!"rowid" %in% colnames(lo)) {
+            lo$rowid <- hi$rowid <- seq_len(nrow(lo))
+        }
+
         both <- rbindlist(list(lo, hi))
-        both$rowid <- seq_len(nrow(both))
+
         pred_both <- myTryCatch(get_predict(
             model,
             type = type,
             vcov = FALSE,
             newdata = both,
             ...))[["value"]]
-        idx_lo <- pred_both$rowid %in% 1:(nrow(both) / 2)
-        idx_hi <- pred_both$rowid %in% (nrow(both) / 2 + 1):nrow(both)
+
+        idx_lo <- 1:(nrow(pred_both) / 2)
+        idx_hi <- (nrow(pred_both) / 2 + 1):nrow(pred_both)
         pred_lo <- pred_both[idx_lo, , drop = FALSE]
         pred_hi <- pred_both[idx_hi, , drop = FALSE]
-        pred_hi$rowid <- pred_lo$rowid
         attr(pred_lo, "posterior_draws") <- attr(pred_both, "posterior_draws")[idx_lo, , drop = FALSE]
         attr(pred_hi, "posterior_draws") <- attr(pred_both, "posterior_draws")[idx_hi, , drop = FALSE]
     } else {
@@ -105,7 +110,7 @@ get_contrasts <- function(model,
     }
 
     if (!"term" %in% colnames(out)) {
-        out[, "term" := "interaction"]
+        out[, "term" := "cross"]
     }
 
     # by
@@ -126,9 +131,9 @@ get_contrasts <- function(model,
     }
 
     # transform_pre function could be different for different terms
-    # sanitize_variables() ensures all functions are identical when there are interactions
+    # sanitize_variables() ensures all functions are identical when there are cross
     fun_list <- sapply(names(variables), function(x) variables[[x]][["function"]])
-    fun_list[["interaction"]] <- fun_list[[1]]
+    fun_list[["cross"]] <- fun_list[[1]]
 
     # elasticity requires the original (properly aligned) predictor values
     # this will discard factor variables which are duplicated, so in principle
@@ -152,7 +157,7 @@ get_contrasts <- function(model,
             idx2 <- intersect(idx2, colnames(out))
             # discard other terms to get right length vector
             idx2 <- out[term == v, ..idx2]
-            # original is NULL when interaction=TRUE
+            # original is NULL when cross=TRUE
             if (!is.null(original)) {
                 idx1 <- c(v, "rowid", "rowidcf", "term", "type", "group", grep("^contrast", colnames(original), value = TRUE))
                 idx1 <- intersect(idx1, colnames(original))
@@ -216,9 +221,9 @@ get_contrasts <- function(model,
     # unknown arguments
     # singleton vs vector
     # different terms use different functions
-    safefun <- function(hi, lo, y, n, term, interaction, eps, wts) {
-        # when interaction=TRUE, sanitize_transform_pre enforces a single function
-        if (isTRUE(interaction)) {
+    safefun <- function(hi, lo, y, n, term, cross, eps, wts) {
+        # when cross=TRUE, sanitize_transform_pre enforces a single function
+        if (isTRUE(cross)) {
             fun <- fun_list[[1]]
         } else {
             fun <- fun_list[[term[1]]]
@@ -256,7 +261,7 @@ get_contrasts <- function(model,
                     y = draws_or[idx, i],
                     n = sum(idx),
                     term = out$term[idx],
-                    interaction = interaction,
+                    cross = cross,
                     wts = out$marginaleffects_wts_internal[idx],
                     eps = out$marginaleffects_eps[idx])
             }
@@ -287,7 +292,7 @@ get_contrasts <- function(model,
             y = predicted,
             n = .N,
             term = term,
-            interaction = interaction,
+            cross = cross,
             wts = marginaleffects_wts_internal,
             eps = marginaleffects_eps),
         by = idx]
@@ -319,6 +324,18 @@ get_contrasts <- function(model,
         draws <- attr(out, "posterior_draws")
     }
 
+    # issue #531: uncertainy estimates from get_predict() sometimes get retained, but they are not overwritten later by get_ci()
+    # drop by reference for speed
+    bad <- intersect(
+        colnames(out),
+        c("conf.low", "conf.high", "std.error", "statistic", "p.value"))
+    if (length(bad) > 0) {
+        out[, (bad) := NULL]
+    }
+
+    # before get_hypothesis
+    attr(out, "posterior_draws") <- draws
+
     # hypothesis tests using the delta method
     out <- get_hypothesis(out, hypothesis, column = "comparison", by = by)
 
@@ -326,7 +343,6 @@ get_contrasts <- function(model,
     settings_rm("marginaleffects_safefun_return1")
 
     # output
-    attr(out, "posterior_draws") <- draws
     attr(out, "original") <- original
     return(out)
 }

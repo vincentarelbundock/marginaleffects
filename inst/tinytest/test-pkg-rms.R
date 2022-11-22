@@ -22,3 +22,30 @@ pred1 <- predictions(model, type = "lp")
 pred2 <- predictions(model, type = "lp", newdata = head(mtcars))
 expect_predictions(pred1, n_row = 32)
 expect_predictions(pred2, n_row = 6)
+
+
+# comparisons
+mod <- ols(mpg ~ hp, mtcars)
+c1 <- comparisons(mod, type = "lp")
+expect_inherits(c1, "comparisons")
+
+mod <- lrm(am ~ hp, mtcars)
+c1 <- comparisons(mod, type = "fitted")
+c2 <- comparisons(mod, type = "lp")
+expect_inherits(c1, "comparisons")
+expect_inherits(c2, "comparisons")
+
+mod <- lrm(cyl ~ hp, mtcars)
+c1 <- comparisons(mod, type = "fitted")
+c2 <- comparisons(mod, type = "lp")
+expect_inherits(c1, "comparisons")
+expect_inherits(c2, "comparisons")
+
+mod <- orm(cyl ~ hp, mtcars)
+c1 <- comparisons(mod, type = "fitted")
+c2 <- comparisons(mod, type = "lp")
+c3 <- comparisons(mod, type = "mean")
+expect_inherits(c1, "comparisons")
+expect_inherits(c2, "comparisons")
+
+expect_error(comparisons(mod, vcov = "HC3"), pattern = "supported") 

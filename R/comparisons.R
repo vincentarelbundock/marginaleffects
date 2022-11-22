@@ -46,6 +46,7 @@
 #'   - Numeric variables:
 #'     * Numeric of length 1: Contrast for a gap of `x`, computed at the observed value plus and minus `x / 2`. For example, estimating a `+1` contrast compares adjusted predictions when the regressor is equal to its observed value minus 0.5 and its observed value plus 0.5.
 #'     * Numeric vector of length 2: Contrast between the 2nd element and the 1st element of the `x` vector.
+#'     * Function which accepts a numeric vector and returns a data frame with two columns of "low" and "high" values to compare. See examples below.
 #'     * "iqr": Contrast across the interquartile range of the regressor.
 #'     * "sd": Contrast across one standard deviation around the regressor mean.
 #'     * "2sd": Contrast across two standard deviations around the regressor mean.
@@ -73,15 +74,14 @@
 #'   - See the Transformations section below for definitions of each transformation.
 #' * function: accept two equal-length numeric vectors of adjusted predictions (`hi` and `lo`) and returns a vector of contrasts of the same length, or a unique numeric value.
 #'   - See the Transformations section below for examples of valid functions.
-#' @param transform_post (experimental) A function applied to unit-level estimates and confidence intervals just before the function returns results.
+#' @param transform_post string or function. Transformation applied to unit-level estimates and confidence intervals just before the function returns results. Functions must accept a vector and return a vector of the same length. Support string shortcuts: "exp", "ln"
 #' @param by Compute group-wise average estimates. Valid inputs:
 #'   - Character vector of column names in `newdata` or in the data frame produced by calling the function without the `by` argument.
 #'   - Data frame with a `by` column of group labels, and merging columns shared by `newdata` or the data frame produced by calling the same function without the `by` argument.
 #'   - See examples below.
-#' @param interaction TRUE, FALSE, or NULL
+#' @param cross TRUE or FALSE
 #' * `FALSE`: Contrasts represent the change in adjusted predictions when one predictor changes and all other variables are held constant.
-#' * `TRUE`: Contrasts represent the changes in adjusted predictions when the predictors specified in the `variables` argument are manipulated simultaneously.
-#' * `NULL` (default): Behaves like `TRUE` when the `variables` argument is specified and the model formula includes interactions. Behaves like `FALSE` otherwise.
+#' * `TRUE`: Contrasts represent the changes in adjusted predictions when all the predictors specified in the `variables` argument are manipulated simultaneously (a "cross-contrast").
 #' @template model_specific_arguments
 #' @template transform_pre_functions
 #'
@@ -113,6 +113,10 @@
 #' comparisons(mod, newdata = datagrid(am = 0, gear = tmp$gear))
 #' comparisons(mod, newdata = datagrid(am = unique, gear = max))
 #'
+#' m <- lm(mpg ~ hp + drat + factor(cyl) + factor(am), data = mtcars)
+#' comparisons(m, variables = "hp", newdata = datagrid(FUN_factor = unique, FUN_numeric = median))
+#'
+#'
 #' # Numeric contrasts
 #' mod <- lm(mpg ~ hp, data = mtcars)
 #' comparisons(mod, variables = list(hp = 1)) %>% tidy()
@@ -121,6 +125,13 @@
 #' comparisons(mod, variables = list(hp = "iqr")) %>% tidy()
 #' comparisons(mod, variables = list(hp = "sd")) %>% tidy()
 #' comparisons(mod, variables = list(hp = "minmax")) %>% tidy()
+#'
+#' # using a function to specify a custom difference in one regressor
+#' dat <- mtcars
+#' dat$new_hp <- 49 * (dat$hp - min(dat$hp)) / (max(dat$hp) - min(dat$hp)) + 1
+#' modlog <- lm(mpg ~ log(new_hp) + factor(cyl), data = dat)
+#' fdiff <- \(x) data.frame(x, x + 10)
+#' comparisons(modlog, variables = list(new_hp = fdiff)) %>% summary()
 #'
 #' # Adjusted Risk Ratio: see the contrasts vignette
 #' mod <- glm(vs ~ mpg, data = mtcars, family = binomial)
@@ -131,9 +142,9 @@
 #' cmp <- comparisons(mod, transform_pre = function(hi, lo) log(mean(hi) / mean(lo)))
 #' summary(cmp, transform_avg = exp)
 #
-#' # Interactions between contrasts
+#' # cross contrasts
 #' mod <- lm(mpg ~ factor(cyl) * factor(gear) + hp, data = mtcars)
-#' cmp <- comparisons(mod, variables = c("cyl", "gear"))
+#' cmp <- comparisons(mod, variables = c("cyl", "gear"), cross = TRUE)
 #' summary(cmp)
 #'
 #' # variable-specific contrasts
@@ -147,19 +158,19 @@
 #'     mod,
 #'     newdata = "mean",
 #'     hypothesis = "wt = drat")
-#' 
+#'
 #' # same hypothesis test using row indices
 #' comparisons(
 #'     mod,
 #'     newdata = "mean",
 #'     hypothesis = "b1 - b2 = 0")
-#' 
+#'
 #' # same hypothesis test using numeric vector of weights
 #' comparisons(
 #'     mod,
 #'     newdata = "mean",
 #'     hypothesis = c(1, -1))
-#' 
+#'
 #' # two custom contrasts using a matrix of weights
 #' lc <- matrix(c(
 #'     1, -1,
@@ -169,20 +180,20 @@
 #'     mod,
 #'     newdata = "mean",
 #'     hypothesis = lc)
-#' 
-#' 
+#'
+#'
 #' # `by` argument
 #' mod <- lm(mpg ~ hp * am * vs, data = mtcars)
 #' cmp <- comparisons(mod, variables = "hp", by = c("vs", "am"))
 #' summary(cmp)
-#' 
+#'
 #' library(nnet)
 #' mod <- multinom(factor(gear) ~ mpg + am * vs, data = mtcars, trace = FALSE)
 #' by <- data.frame(
 #'     group = c("3", "4", "5"),
 #'     by = c("3,4", "3,4", "5"))
 #' comparisons(mod, type = "probs", by = by)
-#' 
+#'
 #' @export
 comparisons <- function(model,
                         newdata = NULL,
@@ -192,22 +203,16 @@ comparisons <- function(model,
                         conf_level = 0.95,
                         transform_pre = "difference",
                         transform_post = NULL,
-                        interaction = NULL,
+                        cross = FALSE,
                         by = NULL,
                         wts = NULL,
                         hypothesis = NULL,
                         eps = NULL,
                         ...) {
 
+
     dots <- list(...)
 
-    transform_pre_label <- transform_post_label <- NULL
-    if (is.function(transform_pre)) {
-        transform_pre_label <- deparse(substitute(transform_pre))
-    }
-    if (is.function(transform_post)) {
-        transform_post_label <- deparse(substitute(transform_post))
-    }
 
     # marginaleffects()` **must** run its own sanity checks and hardcode valid arguments
     internal_call <- dots[["internal_call"]]
@@ -232,14 +237,13 @@ comparisons <- function(model,
             vcov = vcov,
             calling_function = "comparisons",
             ...)
-        interaction <- sanitize_interaction(interaction, variables, model)
+        cross <- sanitize_cross(cross, variables, model)
         type <- sanitize_type(model = model, type = type, calling_function = "marginaleffects")
-        checkmate::assert_function(transform_post, null.ok = TRUE)
 
     # internal call from `marginaleffects()`
     } else {
         # not allowed in `marginaleffects()`
-        interaction <- FALSE
+        cross <- FALSE
     }
 
     # bayesian models do not support `by` and "avg" in `transform_pre`
@@ -252,10 +256,19 @@ comparisons <- function(model,
     }
 
     conf_level <- sanitize_conf_level(conf_level, ...)
-    sanity_transform_pre(transform_pre)
+    sanity_dots(model, ...)
     checkmate::assert_numeric(eps, len = 1, lower = 1e-10, null.ok = TRUE)
 
-    # used by `marginaleffects` to hard-code preference 
+    # transforms
+    sanity_transform_pre(transform_pre)
+    transform_pre_label <- transform_post_label <- NULL
+    if (is.function(transform_pre)) {
+        transform_pre_label <- deparse(substitute(transform_pre))
+    }
+    transform_post <- sanitize_transform_post(transform_post)
+
+
+    # used by `marginaleffects` to hard-code preference
     # deprecated as user-level arguments
     if ("contrast_factor" %in% names(dots)) {
         contrast_factor <- dots[["contrast_factor"]]
@@ -269,10 +282,8 @@ comparisons <- function(model,
     } else {
         contrast_numeric <- 1
     }
-    sanity_contrast_factor(contrast_factor) # hardcoded in marginaleffects()
-    sanity_contrast_numeric(contrast_numeric) # hardcoded in marginaleffects()
 
-    marginalmeans <- isTRUE(checkmate::check_choice(newdata, choices = "marginalmeans")) 
+    marginalmeans <- isTRUE(checkmate::check_choice(newdata, choices = "marginalmeans"))
 
     # before sanitize_variables
     newdata <- sanitize_newdata(model = model, newdata = newdata, by = by)
@@ -290,7 +301,7 @@ comparisons <- function(model,
         model = model,
         newdata = newdata,
         variables = variables,
-        interaction = interaction,
+        cross = cross,
         by = by,
         contrast_numeric = contrast_numeric,
         contrast_factor = contrast_factor,
@@ -306,7 +317,7 @@ comparisons <- function(model,
     if (is.character(vcov) &&
        # get_df() produces a weird warning on non lmerMod. We can skip them
        # because get_vcov() will produce an informative error later.
-       inherits(model, "lmerMod") && 
+       inherits(model, "lmerMod") &&
        (isTRUE(vcov == "satterthwaite") || isTRUE(vcov == "kenward-roger"))) {
         df <- insight::find_response(model)
         # predict.lmerTest requires the DV
@@ -316,7 +327,11 @@ comparisons <- function(model,
         # df_per_observation is an undocumented argument introduced in 0.18.4.7 to preserve backward incompatibility
         dof <- insight::get_df(model, type = vcov, data = newdata, df_per_observation = TRUE)
     } else {
-        dof <- NULL
+        if ("df" %in% names(dots)) {
+            dof <- dots[["df"]]
+        } else {
+            dof <- NULL
+        }
     }
 
     vcov_false <- isTRUE(vcov == FALSE)
@@ -329,7 +344,7 @@ comparisons <- function(model,
     args <- list(model = model,
                  newdata = newdata,
                  variables = predictors,
-                 interaction = interaction,
+                 cross = cross,
                  marginalmeans = marginalmeans,
                  eps = eps)
     args <- c(args, dots)
@@ -345,7 +360,7 @@ comparisons <- function(model,
                  wts = contrast_data[["marginaleffects_wts_internal"]],
                  by = by,
                  marginalmeans = marginalmeans,
-                 interaction = interaction,
+                 cross = cross,
                  hypothesis = hypothesis)
     args <- c(args, dots)
     mfx <- do.call("get_contrasts", args)
@@ -372,7 +387,7 @@ comparisons <- function(model,
                      lo = contrast_data$lo,
                      original = contrast_data$original,
                      by = by,
-                     interaction = interaction,
+                     cross = cross,
                      eps = 1e-4)
         args <- c(args, dots)
         se <- do.call("get_se_delta", args)
@@ -393,7 +408,7 @@ comparisons <- function(model,
             tmp <- contrast_data$original[, ..idx, drop = FALSE]
             # contrast_data is duplicated to compute contrasts for different terms or pairs
             bycols <- intersect(colnames(tmp), colnames(mfx))
-            idx <- apply(tmp[, ..bycols], 1, paste, collapse = "|")
+            idx <- do.call(paste, c(tmp[, ..bycols], sep = "|"))
             tmp <- tmp[!duplicated(idx), , drop = FALSE]
             mfx <- merge(mfx, tmp, all.x = TRUE, by = bycols, sort = FALSE)
         # HACK: relies on NO sorting at ANY point
@@ -414,6 +429,7 @@ comparisons <- function(model,
         overwrite = FALSE,
         draws = draws,
         estimate = "comparison")
+        
 
 
     # group id: useful for merging, only if it's an internal call and not user-initiated
@@ -435,9 +451,7 @@ comparisons <- function(model,
     attr(mfx, "posterior_draws") <- draws
 
     # after draws attribute
-    if (!is.null(transform_post)) {
-        mfx <- backtransform(mfx, transform_post)
-    }
+    mfx <- backtransform(mfx, transform_post)
 
     # save as attribute and not column
     if (any(!is.na(mfx[["marginaleffects_wts_internal"]]))) {
@@ -469,11 +483,17 @@ comparisons <- function(model,
     attr(out, "vcov.type") <- vcov.type
     attr(out, "weights") <- marginaleffects_wts_internal
     attr(out, "transform_pre") <- transform_pre
-    attr(out, "transform_post") <- transform_post
+    attr(out, "transform_post") <- transform_post[[1]]
     attr(out, "transform_pre_label") <- transform_pre_label
-    attr(out, "transform_post_label") <- transform_post_label
+    attr(out, "transform_post_label") <- names(transform_post)[1]
     attr(out, "conf_level") <- conf_level
     attr(out, "by") <- by
+    attr(out, "call") <- match.call()
+
+    if (inherits(model, "brmsfit")) {
+        insight::check_if_installed("brms")
+        attr(out, "nchains") <- brms::nchains(model)
+    }
 
     if (!isTRUE(internal_call)) {
         if ("group" %in% names(out) && all(out$group == "main_marginaleffect")) {

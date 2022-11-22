@@ -49,34 +49,6 @@ sanity_predict_numeric <- function(pred, model, newdata, type) {
     }
 }
 
-
-sanity_contrast_numeric <- function(contrast_numeric, assertion = TRUE) {
-    flag <- isTRUE(checkmate::check_numeric(contrast_numeric, min.len = 1, max.len = 2)) ||
-            isTRUE(checkmate::check_choice(contrast_numeric, choices = c("iqr", "minmax", "sd", "2sd")))
-    if (isTRUE(assertion) && !isTRUE(flag)) {
-        stop('Contrasts for numeric variables can be a single numeric value, a numeric vector of length 2, or one of the following strings: "iqr", "minmax", "sd", "2sd"', call. = FALSE)
-    } else {
-        return(flag)
-    }
-}
-
-
-sanity_contrast_factor <- function(contrast_factor, assertion = TRUE) {
-    flag1 <- checkmate::check_choice(
-        contrast_factor,
-        choices = c("reference", "sequential", "pairwise", "all"))
-    flag2 <- checkmate::check_vector(
-        contrast_factor,
-        len =2)
-    flag <- isTRUE(flag1) || isTRUE(flag2)
-    if (isTRUE(assertion) && !flag) {
-        stop('Contrasts for factor or character variables can be: "reference", "sequential", "pairwise", or "all".', call. = FALSE)
-    } else {
-        return(flag)
-    }
-}
-
-
 # OBSOLETE CHECKS KEPT FOR POSTERITY
 
 # sanitize_return_data <- function() {

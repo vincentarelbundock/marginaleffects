@@ -82,20 +82,21 @@ tidy.marginalmeans <- function(x,
                                ...) {
 
 
-    checkmate::assert_function(transform_avg, null.ok = TRUE)
+    transform_avg <- sanitize_transform_post(transform_avg)
 
     conf_level <- sanitize_conf_level(conf_level, ...)
     out <- x
     colnames(out)[colnames(out) == "marginalmean"] <- "estimate"
 
     draws <- attr(x, "posterior_draws")
-
+    
     out <- get_ci(
         out,
         overwrite = FALSE,
         conf_level = conf_level,
         draws = draws,
-        estimate = "estimate")
+        estimate = "estimate",
+        ...)
 
     # back transformation
     if (!is.null(transform_avg)) {
@@ -112,6 +113,8 @@ tidy.marginalmeans <- function(x,
     out <- as.data.frame(out)
 
     attr(out, "conf_level") <- conf_level
+    attr(out, "nchains") <- attr(x, "nchains")
+    attr(out, "transform_avg_label") <- names(transform_avg)[1]
 
     return(out)
 }

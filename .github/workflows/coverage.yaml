@@ -1,0 +1,35 @@
+# Run CI for R using https://eddelbuettel.github.io/r-ci/
+
+name: codecov
+
+on:
+  push:
+  pull_request:
+
+env:
+  _R_CHECK_FORCE_SUGGESTS_: "false"
+  test-coverage:
+
+jobs:
+  codecov:
+    runs-on: ubuntu-latest
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_NOT_CRAN: true
+      R_GH: true
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Get Script
+        run: curl -OLs https://raw.githubusercontent.com/vincentarelbundock/marginaleffects/main/sandbox/run.sh && chmod 0755 run.sh
+
+      - name: Bootstrap
+        run: ./run.sh bootstrap
+
+      - name: Dependencies
+        run: ./run.sh install_all
+
+      - name: Coverage
+        run: ./run.sh coverage

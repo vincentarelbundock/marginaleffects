@@ -31,21 +31,52 @@ If you do not like `marginaleffects`, you may want to consider one of the altern
 
 # `emmeans`
 
-The [`emmeans` package](https://cran.r-project.org/web/packages/emmeans/index.html) is developed by Russell V. Lenth and colleagues. It is an extremely powerful package which focuses on the computation of marginal means, but which can also compute slopes. 
+The [`emmeans` package](https://cran.r-project.org/web/packages/emmeans/index.html) is developed by Russell V. Lenth and colleagues. `emmeans` is a truly incredible piece of software, and a trailblazer in the `R` ecosystem. It is an *extremely* powerful package whose functionality overlaps `marginaleffects` to a significant degree: marginal means, contrasts, and slopes. Even if the two packages can compute many of the same quantities, `emmeans` and `marginaleffects` have pretty different philosophies with respect to user interface and computation. 
 
-In my (Vincent's) biased opinion, the main benefits of `marginaleffects` over `emmeans`:
+An `emmeans` analysis typically starts by computing ["marginal means"](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) by holding all numeric covariates at their means, and by averaging across a balanced grid of categorical predictors. Then, users can use the `contrast()` function to estimate the difference between marginal means.
+
+The `marginaleffects` package supplies a `marginalmeans` function which can also compute marginal means. However, the typical analysis is more squarely centered on predicted/fitted values. This is a useful starting point because, in many cases, analysts will find it easy and intuitive to express their scientific queries in terms of changes in predicted values. For example, 
+
+* How does the average predicted probability of survival differ between treatment and control group? 
+* What is the difference between the predicted wage of college and high school graduates?
+
+Let's say we estimate a linear regression model with two continuous regressors and a multiplicative interaction:
+
+$$y = \beta_0 + \beta_1 x + \beta_2 z + \beta_3 x \cdot z + \varepsilon$$
+
+In this model, the effect of $x$ on $y$ will depend on the value of covariate $z$. Let's say the user wants to estimate what happens to the predicted value of $y$ when $x$ increases by 1 unit, when $z \in \{-1, 0, 1\}$. To do this, we use the `comparisons()` function. The `variables` argument determines the scientific query of interest, and the `newdata` argument determines the grid of covariate values on which we want to evaluate the query: 
+
+```{r, eval = FALSE}
+model <- lm(y ~ x * z, data)
+
+comparisons(
+  model,
+  variables = list(x = 1), # what is the effect of 1-unit change in x?
+  newdata = datagrid(z = -1:1) # when z is held at values -1, 0, or 1
+)
+```
+
+As [the vignettes show,](https://vincentarelbundock.github.io/marginaleffects/index.html#table-of-contents) `marginaleffects` can also compute contrasts on marginal means. It can also compute various quantities of interest like raw fitted values, slopes (partial derivatives), and contrasts between marginal means. It also offers a flexible mechanism to run (non-)linear hypothesis tests using the delta method, and it offers fully customizable strategy to compute quantities like odds ratios (or completely arbitrary functions of predicted outcome).
+
+Thus, in my (Vincent's) biased opinion, the main benefits of `marginaleffects` over `emmeans` are:
 
 * Support more model types.
-* Simpler and more intuitive user interface.
+* Simpler, more intuitive, and highly consistent user interface.
 * Easier to compute average marginal effects and unit-level marginal effects for whole datasets.
 * Easier to compute marginal effects (slopes) for custom grids and continuous regressors.
-* Common plots are easy with the `plot_cap()` and `plot_cme()` functions.
+* Easier to implement causal inference strategies like the parametric g-formula and regression adjustement in experiments (see vignettes). 
+* Allows the computation of arbitrary quantities of interest via user-supplied functions and automatic delta method inference.
+* Common plots are easy with the `plot_cap()`, `plot_cco()`, and `plot_cme()` functions.
 
-Many of `marginaleffects` advantages come down to subjective preferences over user interface. Readers are thus encouraged to try both packages to see which interface they prefer. Please keep in mind that `emmeans` offers several features which are not yet available in `marginaleffects`, including:
+To be fair, many of the `marginaleffects` advantages listed above come down to subjective preferences over user interface. Readers are thus encouraged to try both packages to see which interface they prefer. 
 
-* Equivalence tests.
+AFAICT, the main advantages of `emmeans` over `marginaleffects` are:
+
+* Omnibus tests.
+* Equivalence and noninferiority tests.
 * Multiplicity adjustments.
-* Some plots.
+
+Please let me know if you find other features in `emmeans` so I can add them to this list.
 
 The [Marginal Means Vignette](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) includes side-by-side comparisons of `emmeans` and `marginaleffects` to compute marginal means. The rest of this section compares the syntax for contrasts and marginaleffects.
 
@@ -178,6 +209,85 @@ emtrends(mod, ~hp, "hp", at = list(cyl = 4))
 marginaleffects(mod, type = "link", newdata = datagrid(cyl = 4))
 ```
 
+## More examples
+
+Here are a few more `emmeans` vs. `marginaleffects` comparisons:
+
+
+```{r, eval = FALSE}
+# Example of examining a continuous x categorical interaction using emmeans and marginaleffects
+# Authors: Cameron Patrick and Vincent Arel-Bundock
+
+library(tidyverse)
+library(emmeans)
+library(marginaleffects)
+
+# use the mtcars data, set up am as a factor
+data(mtcars)
+mc <- mtcars %>% mutate(am = factor(am))
+
+# fit a linear model to mpg with wt x am interaction
+m <- lm(mpg ~ wt*am, data = mc)
+summary(m)
+
+# 1. means for each level of am at mean wt.
+emmeans(m, "am")
+marginalmeans(m, variables = "am")
+predictions(m, newdata = datagrid(am = 0:1))
+
+# 2. means for each level of am at wt = 2.5, 3, 3.5.
+emmeans(m, c("am", "wt"), at = list(wt = c(2.5, 3, 3.5)))
+predictions(m, newdata = datagrid(am = 0:1, wt = c(2.5, 3, 3.5))
+
+# 3. means for wt = 2.5, 3, 3.5, averaged over levels of am (implicitly!).
+emmeans(m, "wt", at = list(wt = c(2.5, 3, 3.5)))
+
+# same thing, but the averaging is more explicit, using the `by` argument
+predictions(
+  m,
+  newdata = datagrid(am = 0:1, wt = c(2.5, 3, 3.5)),
+  by = "wt")
+
+# 4. graphical version of 2.
+emmip(m, am ~ wt, at = list(wt = c(2.5, 3, 3.5)), CIs = TRUE)
+plot_cap(m, condition = c("wt", "am"))
+
+# 5. compare levels of am at specific values of wt.
+# this is a bit ugly because the emmeans defaults for pairs() are silly.
+# infer = TRUE: enable confidence intervals.
+# adjust = "none": begone, Tukey.
+# reverse = TRUE: contrasts as (later level) - (earlier level)
+pairs(emmeans(m, "am", by = "wt", at = list(wt = c(2.5, 3, 3.5))),
+      infer = TRUE, adjust = "none", reverse = TRUE)
+
+comparisons(
+  m,
+  variables = "am",
+  newdata = datagrid(wt = c(2.5, 3, 3.5)))
+
+# 6. plot of pairswise comparisons
+plot(pairs(emmeans(m, "am", by = "wt", at = list(wt = c(2.5, 3, 3.5))),
+      infer = TRUE, adjust = "none", reverse = TRUE))
+
+# Since `wt` is numeric, the default is to plot it as a continuous variable on
+# the x-axis.  But not that this is the **exact same info** as in the emmeans plot.
+plot_cco(m, effect = "am", condition = "wt")
+
+# You of course customize everything, set draw=FALSE, and feed the raw data to feed to ggplot2
+p <- plot_cco(
+  m,
+  effect = "am",
+  condition = list(wt = c(2.5, 3, 3.5)),
+  draw = FALSE)
+
+ggplot(p, aes(y = condition1, x = comparison, xmin = conf.low, xmax = conf.high)) +
+  geom_pointrange()
+
+# 7. slope of wt for each level of am
+emtrends(m, "am", "wt")
+marginaleffects(m, newdata = datagrid(am = 0:1))
+```
+
 # `margins` and `prediction`
 
 The [`margins`](https://cran.r-project.org/web/packages/margins/index.html) and [`prediction`](https://cran.r-project.org/web/packages/prediction/index.html) packages for `R` were designed by Thomas Leeper to emulate the behavior of the `margins` command from `Stata`. These packages are trailblazers and strongly influenced the development of `marginaleffects`. The main benefits of `marginaleffects` over these packages are:
@@ -259,7 +369,7 @@ marginaleffects::predictions(mod) |> head()
 
 `Stata` is a good but expensive software package for statistical analysis. It is published by StataCorp LLC. This section compares `Stata`'s `margins` command to `marginaleffects`.
 
-The results produced by `marginaleffects` are extensively tested against `Stata`. See the [test suite](https://github.com/vincentarelbundock/marginaleffects/tree/main/tests/testthat/stata) for a list of the dozens of models where we compared estimates and standard errors.
+The results produced by `marginaleffects` are extensively tested against `Stata`. See the [test suite](https://github.com/vincentarelbundock/marginaleffects/tree/main/inst/tinytest) for a list of the dozens of models where we compared estimates and standard errors.
 
 ## Average Marginal Effect (AMEs)
 
@@ -698,4 +808,3 @@ The [`ggeffects`](https://strengejacke.github.io/ggeffects/) package is develope
 This section is incomplete; contributions are welcome.
 
 * Wrapper around `emmeans` to compute marginal means.
-

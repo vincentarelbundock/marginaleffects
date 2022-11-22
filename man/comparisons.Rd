@@ -13,7 +13,7 @@ comparisons(
   conf_level = 0.95,
   transform_pre = "difference",
   transform_post = NULL,
-  interaction = NULL,
+  cross = FALSE,
   by = NULL,
   wts = NULL,
   hypothesis = NULL,
@@ -66,6 +66,7 @@ comparisons(
 \itemize{
 \item Numeric of length 1: Contrast for a gap of \code{x}, computed at the observed value plus and minus \code{x / 2}. For example, estimating a \code{+1} contrast compares adjusted predictions when the regressor is equal to its observed value minus 0.5 and its observed value plus 0.5.
 \item Numeric vector of length 2: Contrast between the 2nd element and the 1st element of the \code{x} vector.
+\item Function which accepts a numeric vector and returns a data frame with two columns of "low" and "high" values to compare. See examples below.
 \item "iqr": Contrast across the interquartile range of the regressor.
 \item "sd": Contrast across one standard deviation around the regressor mean.
 \item "2sd": Contrast across two standard deviations around the regressor mean.
@@ -119,13 +120,12 @@ the \code{marginaleffects:::type_dictionary} dataframe.}
 }
 }}
 
-\item{transform_post}{(experimental) A function applied to unit-level estimates and confidence intervals just before the function returns results.}
+\item{transform_post}{string or function. Transformation applied to unit-level estimates and confidence intervals just before the function returns results. Functions must accept a vector and return a vector of the same length. Support string shortcuts: "exp", "ln"}
 
-\item{interaction}{TRUE, FALSE, or NULL
+\item{cross}{TRUE or FALSE
 \itemize{
 \item \code{FALSE}: Contrasts represent the change in adjusted predictions when one predictor changes and all other variables are held constant.
-\item \code{TRUE}: Contrasts represent the changes in adjusted predictions when the predictors specified in the \code{variables} argument are manipulated simultaneously.
-\item \code{NULL} (default): Behaves like \code{TRUE} when the \code{variables} argument is specified and the model formula includes interactions. Behaves like \code{FALSE} otherwise.
+\item \code{TRUE}: Contrasts represent the changes in adjusted predictions when all the predictors specified in the \code{variables} argument are manipulated simultaneously (a "cross-contrast").
 }}
 
 \item{by}{Compute group-wise average estimates. Valid inputs:
@@ -224,17 +224,19 @@ Case studies:
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/brms.html}{Bayesian Analyses with \code{brms}}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/gformula.html}{Causal Inference with the g-Formula}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/elasticity.html}{Elasticity}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/experiments.html}{Experiments}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/gam.html}{Generalized Additive Models}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html}{Mixed effects models}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html}{Multinomial Logit and Discrete Choice Models}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/multiple_imputation.html}{Multiple Imputation}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/plot.html}{Plots: interactions, predictions, contrasts, and slopes}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/python.html}{Python NumPyro models in \code{marginaleffects}}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/logistic_contrasts.html}{Unit-level contrasts in logistic regressions}
 }
 
 Tips and technical notes:
 \itemize{
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html}{69 Supported Classes of Models}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html}{71 Supported Classes of Models}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/reference/index.html}{Index of Functions and Documentation}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/extensions.html}{Extending \code{marginaleffects}: add new models or modify existing ones}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html}{Standard Errors and Confidence Intervals}
@@ -334,6 +336,10 @@ comparisons(mod, newdata = "marginalmeans")
 comparisons(mod, newdata = datagrid(am = 0, gear = tmp$gear))
 comparisons(mod, newdata = datagrid(am = unique, gear = max))
 
+m <- lm(mpg ~ hp + drat + factor(cyl) + factor(am), data = mtcars)
+comparisons(m, variables = "hp", newdata = datagrid(FUN_factor = unique, FUN_numeric = median))
+
+
 # Numeric contrasts
 mod <- lm(mpg ~ hp, data = mtcars)
 comparisons(mod, variables = list(hp = 1)) \%>\% tidy()
@@ -343,6 +349,13 @@ comparisons(mod, variables = list(hp = "iqr")) \%>\% tidy()
 comparisons(mod, variables = list(hp = "sd")) \%>\% tidy()
 comparisons(mod, variables = list(hp = "minmax")) \%>\% tidy()
 
+# using a function to specify a custom difference in one regressor
+dat <- mtcars
+dat$new_hp <- 49 * (dat$hp - min(dat$hp)) / (max(dat$hp) - min(dat$hp)) + 1
+modlog <- lm(mpg ~ log(new_hp) + factor(cyl), data = dat)
+fdiff <- \(x) data.frame(x, x + 10)
+comparisons(modlog, variables = list(new_hp = fdiff)) \%>\% summary()
+
 # Adjusted Risk Ratio: see the contrasts vignette
 mod <- glm(vs ~ mpg, data = mtcars, family = binomial)
 cmp <- comparisons(mod, transform_pre = "lnratioavg")
@@ -351,9 +364,9 @@ summary(cmp, transform_avg = exp)
 # Adjusted Risk Ratio: Manual specification of the `transform_pre`
 cmp <- comparisons(mod, transform_pre = function(hi, lo) log(mean(hi) / mean(lo)))
 summary(cmp, transform_avg = exp)
-# Interactions between contrasts
+# cross contrasts
 mod <- lm(mpg ~ factor(cyl) * factor(gear) + hp, data = mtcars)
-cmp <- comparisons(mod, variables = c("cyl", "gear"))
+cmp <- comparisons(mod, variables = c("cyl", "gear"), cross = TRUE)
 summary(cmp)
 
 # variable-specific contrasts

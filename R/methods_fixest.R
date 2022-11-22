@@ -49,15 +49,26 @@ get_predict.fixest <- function(model,
     # pred <- try(do.call("fun", args), silent = TRUE)
 
     # fixest is super slow when using do call because of some `deparse()` call
-    pred <- try(stats::predict(
-        object = args$object,
-        newdata = args$newdata,
-        type = args$type,
-        interval = args$interval,
-        level = args$level,
-        vcov = args$vcov,
-        ...),
-    silent = TRUE)
+    if (!isFALSE(vcov) && !is.null(conf_level)) {
+        pred <- try(stats::predict(
+            object = args$object,
+            newdata = args$newdata,
+            type = args$type,
+            interval = args$interval,
+            level = args$level,
+            vcov = args$vcov,
+            ...),
+        silent = TRUE)
+    # issue #531: we don't want to waste time computing intervals or risk having
+    # them as leftover columns in contrast computations
+    } else {
+        pred <- try(stats::predict(
+            object = args$object,
+            newdata = args$newdata,
+            type = args$type,
+            ...),
+        silent = TRUE)
+    }
 
     # unable to compute confidence intervals; try again
     if (!is.null(conf_level) && inherits(pred, "try-error")) {

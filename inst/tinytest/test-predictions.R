@@ -23,7 +23,8 @@ expect_equivalent(nrow(p), 2)
 
 # `variables` argument: character vector
 expect_error(predictions(mod, variables = list(2)), pattern = "names")
-expect_error(predictions(mod, variables = "am"), pattern = "list")
+p <- predictions(mod, variables = "am")
+expect_inherits(p, "predictions")
 
 
 # average prediction with delta method are asymptotically equivalent to back transformed
@@ -146,7 +147,7 @@ p1 <- predictions(mod, variables = list(vs = 0:1))
 p2 <- predictions(mod, variables = list(vs = c("0", "1")))
 expect_inherits(p1, "predictions")
 expect_inherits(p2, "predictions")
-expect_error(predictions(mod, variables = list(vs = "pairwise")), pattern = "named")
+expect_error(predictions(mod, variables = list(vs = "pairwise")), pattern = "pairwise")
 
 dat <- mtcars
 dat$vs <- factor(dat$vs)
@@ -155,7 +156,7 @@ p1 <- predictions(mod, variables = list(vs = 0:1))
 p2 <- predictions(mod, variables = list(vs = c("0", "1")))
 expect_inherits(p1, "predictions")
 expect_inherits(p2, "predictions")
-expect_error(predictions(mod, variables = list(vs = "pairwise")), pattern = "named")
+expect_error(predictions(mod, variables = list(vs = "pairwise")), pattern = "pairwise")
 
 
 #########################################################################
@@ -170,7 +171,40 @@ expect_inherits(pred, "data.frame")
 expect_true("predicted" %in% colnames(pred))
 
 
+# Issue 514
+requiet("MatchIt")
+data("lalonde", package = "MatchIt")
 
+fit <- lm(re78 ~ married + race + age, data = lalonde)
+
+p <- predictions(fit, variables = list(age = c(20, 30)))
+expect_equivalent(nrow(p), nrow(lalonde) * 2)
+
+p <- predictions(fit, variables = list(age = c(20, 25, 30)))
+expect_equivalent(nrow(p), nrow(lalonde) * 3)
+
+p <- predictions(fit, variables = list(age = "minmax"))
+expect_equivalent(nrow(p), nrow(lalonde) * 2)
+
+p <- predictions(fit, variables = list(race = c("black", "hispan")))
+expect_equivalent(nrow(p), nrow(lalonde) * 2)
+
+p <- predictions(fit, variables = list(race = c("black", "hispan", "white")))
+expect_equivalent(nrow(p), nrow(lalonde) * 3)
+
+expect_error(predictions(fit, variables = list(race = "all")), pattern = "Check")
+
+p <- predictions(fit, newdata = datagridcf(race = c("black", "hispan", "white")))
+expect_equivalent(nrow(p), nrow(lalonde) * 3)
+
+dat <- transform(mtcars, am = as.logical(am))
+mod <- lm(mpg ~ am, dat)
+
+p <- predictions(mod, variables = list("am" = TRUE))
+expect_equivalent(nrow(p), 32)
+
+p <- predictions(mod, variables = "am")
+expect_equivalent(nrow(p), 64)
 
 
 ############## DEPRECATED USE OF VARIABLES

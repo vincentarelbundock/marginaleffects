@@ -1,0 +1,139 @@
+---
+title: "Plots: interactions, predictions, contrasts, and slopes"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Plots: interactions, predictions, contrasts, and slopes}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+# this vignette is in .Rbuildignore
+
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  fig.width = 9,
+  fig.asp = .4,
+  out.width = "100%",
+  warning = FALSE,
+  message = FALSE,
+  comment = "#>"
+)
+```
+
+Note: This vignette requires version 0.7.2 of `marginaleffects`, or [the development version.](https://vincentarelbundock.github.io/marginaleffects/#installation)
+
+The `marginaleffects` package includes several flexible functions to plot estimates and to display interactions:
+
+* `plot()`: Plot the raw output of `marginaleffects()` or `comparisons()`
+* Interaction / conditional / heterogenous:
+   - `plot_cap`: Conditional Adjusted Predictions (equivalent to `predictions()`)
+   - `plot_cco`: Conditional Contrasts (equivalent to `comparisons()`)
+   - `plot_cme`: Conditional Marginal Effects (equivalent to `marginaleffects()`)
+
+The "interaction" or "conditional" plotting functions are designed to display how the outcome or how the effect of a predictor changes with respect to another variable.
+
+This vignette focuses on `plot_cap()`, but the same ideas apply to `plot_cme()` and `plot_cco()` as well.  In the examples below, we will use the `patchwork` package to combine plots and the `ggplot2` package to customize their content and appearance:
+
+```{r}
+library(marginaleffects)
+library(patchwork)
+library(ggplot2)
+```
+
+# Interactions: Conditional Adjusted Predictions
+
+Consider a linear model with interactions, where the relationship between `hp` and `mpg` is conditional on the values of `wt` and `cyl`:
+
+```{r}
+mod <- lm(mpg ~ hp * wt * factor(cyl), data = mtcars)
+
+plot_cap(mod, condition = "hp")
+```
+
+We can show the predicted values of `mpg` for different values of different predictors:
+
+```{r}
+plot_cap(mod, condition = c("hp", "cyl"))
+```
+
+We can include a 3rd conditioning variable, specify what values we want to consider, and use one of several string shortcuts for common reference values ("threenum", "minmax", "quartile", etc.):
+
+```{r, fig.asp = 1}
+plot_cap(mod, condition = list(hp = 110:120, "wt" = "threenum")) /
+
+plot_cap(mod, condition = list("hp", "wt" = "minmax")) /
+
+plot_cap(mod, condition = list("hp", "wt" = fivenum)) /
+
+plot_cap(mod, condition = c("hp", "wt", "cyl"))
+```
+
+# Customizing plots
+
+A very useful feature of the plotting functions in this package is that they produce normal `ggplot2` objects. So we can customize them to our heart's content, using `ggplot2` itself, or one of the many packages designed to augment its functionalities:
+
+```{r, fig.asp = .7}
+library(ggokabeito)
+library(ggrepel)
+
+mt <- mtcars
+mt$label <- row.names(mt)
+
+mod <- lm(mpg ~ hp * factor(cyl), data = mt)
+
+plot_cap(mod, condition = c("hp", "cyl"), vcov = FALSE) +
+    geom_point(aes(x = hp, y = mpg, color = factor(cyl)), data = mt) +
+    geom_rug(aes(x = hp, y = mpg), data = mt) +
+    geom_text_repel(aes(x = hp, y = mpg, label = label),
+                    data = subset(mt, hp > 250),
+                    nudge_y = 2) +
+    theme_classic() +
+    scale_color_okabe_ito()
+```
+
+All the plotting functions work with all the model supported by the `marginaleffects` package, so we can plot the output of a logistic regression model. This plot shows the probability of survival aboard the Titanic, for different ages and different ticket classes:
+
+```{r, warning = FALSE}
+library(ggdist)
+
+dat <- "https://vincentarelbundock.github.io/Rdatasets/csv/Stat2Data/Titanic.csv"
+dat <- read.csv(dat)
+
+mod <- glm(Survived ~ Age * PClass, data = dat, family = binomial)
+
+plot_cap(mod, condition = c("Age", "PClass")) +
+    geom_dots(
+        alpha = .8,
+        scale = .3,
+        pch = 18,
+        data = dat, aes(
+        x = Age,
+        y = Survived,
+        side = ifelse(Survived == 1, "bottom", "top")))
+```
+
+Thanks to [Andrew Heiss](https://bayesf22-notebook.classes.andrewheiss.com/bayes-rules/13-chapter.html) who inspired this plot.
+
+# Fits and smooths
+
+We can compare the model predictors with fits and smoothers using the `geom_smooth()` function from the `ggplot2` package:
+
+```{r}
+dat <- "https://vincentarelbundock.github.io/Rdatasets/csv/Stat2Data/Titanic.csv"
+dat <- read.csv(dat)
+mod <- glm(Survived ~ Age * PClass, data = dat, family = binomial)
+
+plot_cap(mod, condition = c("Age", "PClass")) +
+    geom_smooth(data = dat, aes(Age, Survived), method = "lm", se = FALSE, color = "black") +
+    geom_smooth(data = dat, aes(Age, Survived), se = FALSE, color = "black")
+```
+
+# Extreme customization
+
+Designing effective data visualizations requires a lot of customization to the specific context and data. The plotting functions in `marginaleffects` offer a powerful way to iterate quickly between plots and models, but they obviously cannot support all the features that users may want. Thankfully, it is very easy to use the `marginaleffects` functions to generate datasets that can then be used in `ggplot2` or any other data visualization tool. Just use the `draw` argument:
+
+```{r}
+p <- plot_cap(mod, condition = c("Age", "PClass"), draw = FALSE)
+head(p)
+```

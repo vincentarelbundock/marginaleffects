@@ -1,3 +1,4 @@
+url: https://vincentarelbundock.github.io/marginaleffects/
 template:
   bootstrap: 5
 reference:
@@ -18,9 +19,6 @@ reference:
     contents:
     - posteriordraws
     - starts_with("summary|glance|tidy")
-  - title: Other
-    contents:
-    - update_marginaleffects
 navbar:
   title: marginaleffects
   type: default

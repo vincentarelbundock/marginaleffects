@@ -1,7 +1,7 @@
 get_contrast_data <- function(model,
                               newdata,
                               variables,
-                              interaction,
+                              cross,
                               eps,
                               ...) {
 
@@ -11,9 +11,9 @@ get_contrast_data <- function(model,
     variable_classes <- attr(newdata, "newdata_variable_class")
 
     if (any(c("factor", "character") %in% variable_classes)) {
-        first_interaction <- names(variable_classes[variable_classes %in% c("factor", "character")])[1]
+        first_cross <- names(variable_classes[variable_classes %in% c("factor", "character")])[1]
     } else {
-        first_interaction <- NULL
+        first_cross <- NULL
     }
 
     for (v in variables) {
@@ -21,8 +21,8 @@ get_contrast_data <- function(model,
             model = model,
             newdata = newdata,
             variable = v,
-            interaction = interaction,
-            first_interaction = identical(v$name, first_interaction))
+            cross = cross,
+            first_cross = identical(v$name, first_cross))
         args <- append(args, list(...))
         if (is.null(eps) && variable_classes[[v$name]] == "numeric") {
             args[["eps"]] <- 1e-4 * diff(range(modeldata[[v$name]], na.rm = TRUE))
@@ -47,7 +47,7 @@ get_contrast_data <- function(model,
         tmp <- do.call("fun", args)
 
         lo[[v$name]] <- tmp$lo
-        if (isTRUE(interaction)) {
+        if (isTRUE(cross)) {
             lo[[v$name]][[paste0("null_contrast_", v$name)]] <- tmp$contrast_null
         }
         hi[[v$name]] <- tmp$hi
@@ -86,7 +86,7 @@ get_contrast_data <- function(model,
 
 
     # single contrast
-    if (!isTRUE(interaction)) {
+    if (!isTRUE(cross)) {
         lo <- rbindlist(lo, fill = TRUE)
         hi <- rbindlist(hi, fill = TRUE)
         original <- rbindlist(original, fill = TRUE)

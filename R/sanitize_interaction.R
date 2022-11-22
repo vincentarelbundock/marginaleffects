@@ -1,18 +1,18 @@
-sanitize_interaction <- function(interaction, variables, model) {
-    # interaction: flip NULL to TRUE if there are interactions in the formula
+sanitize_cross <- function(cross, variables, model) {
+    # cross: flip NULL to TRUE if there are interactions in the formula
     # and FALSE otherwise
 
-    checkmate::assert_flag(interaction, null.ok = TRUE)
+    checkmate::assert_flag(cross, null.ok = FALSE)
 
-    if (isTRUE(interaction) && is.null(variables)) {
+    if (isTRUE(cross) && is.null(variables)) {
         msg <- format_msg(
-        "When `interaction=TRUE` you must use the `variables` argument to specify which
+        "When `cross=TRUE` you must use the `variables` argument to specify which
         variables should be interacted.")
         stop(msg, call. = FALSE)
     }
 
-    if (isTRUE(checkmate::check_flag(interaction))) {
-        return(interaction)
+    if (isTRUE(checkmate::check_flag(cross))) {
+        return(cross)
     }
 
     inter <- try(insight::find_interactions(model, flatten = TRUE), silent = TRUE)

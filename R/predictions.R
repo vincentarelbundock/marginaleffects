@@ -32,12 +32,19 @@
 #'
 #' @inheritParams marginaleffects
 #' @param model Model object
-#' @param variables Named list of variables with values to create a
-#' counterfactual grid of predictions. The entire dataset replicated
-#' for each unique combination of the variables in this list. See the Examples
-#' section below. Warning: This can use a lot of memory if there are many
-#' variables and values, and when the dataset is large.
-#' @param newdata `NULL`, data frame, string, or `datagrid()` call. Determines the grid of predictors on which we make predictions.
+#' @param variables `NULL`, character vector, or named list. The subset of variables to use for creating a counterfactual grid of predictions. The entire dataset replicated for each unique combination of the variables in this list. See the Examples section below.
+#' * Warning: This can use a lot of memory if there are many variables and values, and when the dataset is large.
+#' * `NULL`: computes one prediction per row of `newdata`
+#' * Named list: names identify the subset of variables of interest and their values. For numeric variables, the `variables` argument supports functions and string shortcuts:
+#'   - A function which returns a numeric value
+#'   - Numeric vector: Contrast between the 2nd element and the 1st element of the `x` vector.
+#'   - "iqr": Contrast across the interquartile range of the regressor.
+#'   - "sd": Contrast across one standard deviation around the regressor mean.
+#'   - "2sd": Contrast across two standard deviations around the regressor mean.
+#'   - "minmax": Contrast between the maximum and the minimum values of the regressor.
+#'   - "threenum": mean and 1 standard deviation on both sides
+#'   - "fivenum": Tukey's five numbers
+#' #' @param newdata `NULL`, data frame, string, or `datagrid()` call. Determines the grid of predictors on which we make predictions.
 #' + `NULL` (default): Predictions for each observed value in the original dataset.
 #' + data frame: Predictions for each row of the `newdata` data frame.
 #' + string:
@@ -76,6 +83,9 @@
 #' # Adjusted Predictions at User-Specified Values of the Regressors
 #' predictions(mod, newdata = datagrid(hp = c(100, 120), cyl = 4))
 #'
+#' m <- lm(mpg ~ hp + drat + factor(cyl) + factor(am), data = mtcars)
+#' predictions(m, newdata = datagrid(FUN_factor = unique, FUN_numeric = median))
+#' 
 #' # Average Adjusted Predictions (AAP)
 #' library(dplyr)
 #' mod <- lm(mpg ~ hp * am * vs, mtcars)
@@ -206,7 +216,7 @@ predictions <- function(model,
     # model <- sanitize_model(model)
 
     # input sanity checks
-    checkmate::assert_function(transform_post, null.ok = TRUE)
+    transform_post <- sanitize_transform_post(transform_post)
     sanity_dots(model = model, ...)
     sanity_model_specific(
         model = model,
@@ -225,9 +235,6 @@ predictions <- function(model,
 
     # after sanitize_newdata
     sanity_by(by, newdata)
-
-    # `variables` is character vector: Tukey's 5 or uniques
-    checkmate::assert_list(variables, names = "unique", null.ok = TRUE)
 
     # analogous to comparisons(variables=list(...))
     if (!is.null(variables)) {
@@ -391,7 +398,8 @@ predictions <- function(model,
             vcov = vcov,
             overwrite = FALSE,
             draws = draws,
-            estimate = "predicted")
+            estimate = "predicted",
+            ...)
     }
 
     out <- data.table(tmp)
@@ -422,9 +430,7 @@ predictions <- function(model,
     attr(out, "posterior_draws") <- draws
 
     # after rename to estimate / after assign draws
-    if (is.function(transform_post)) {
-        out <- backtransform(out, transform_post = transform_post)
-    }
+    out <- backtransform(out, transform_post = transform_post)
 
     class(out) <- c("predictions", class(out))
     out <- set_attributes(
@@ -440,6 +446,19 @@ predictions <- function(model,
     attr(out, "weights") <- marginaleffects_wts_internal
     attr(out, "conf_level") <- conf_level
     attr(out, "by") <- by
+    attr(out, "call") <- match.call()
+    attr(out, "transform_post_label") <- names(transform_post)[1]
+    attr(out, "transform_post") <- transform_post[[1]]
+
+    if (inherits(model, "brmsfit")) {
+        insight::check_if_installed("brms")
+        attr(out, "nchains") <- brms::nchains(model)
+    }
+
+    if (inherits(model, "brmsfit")) {
+        insight::check_if_installed("brms")
+        attr(out, "nchains") <- brms::nchains(model)
+    }
 
     if ("group" %in% names(out) && all(out$group == "main_marginaleffect")) {
         out$group <- NULL

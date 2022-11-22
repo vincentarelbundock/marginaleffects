@@ -1,6 +1,4 @@
 source("helpers.R", local = TRUE)
-exit_file("problems testing fixest because of `get_data` from environment")
-if (utils::packageVersion("fixest") < "0.10.5") exit_file("fixest version")
 if (ON_CRAN) exit_file("on cran")
 requiet("fixest")
 requiet("data.table")
@@ -201,6 +199,7 @@ cmp <- comparisons(
 
 
 # Issue #484: fixest::i() parsing
+find_categorical <- marginaleffects:::find_categorical
 mod1 <- feols(mpg ~ drat + i(cyl, i.gear), data = mtcars)
 mod2 <- feols(mpg ~ drat + i(cyl, gear), data = mtcars)
 mod3 <- feols(mpg ~ drat + i(cyl), data = mtcars)
@@ -225,51 +224,26 @@ expect_true("mpg" %in% colnames(mfx))
 expect_true("am" %in% colnames(mfx))
 
 
-
-# TODO: works interactively
-# expect_false(expect_warning(marginaleffects(fit3)))
-
-# # feols linear plot_cap includes confidence intervals
-# mod <- feols(mpg ~ hp, data = mtcars)
-# p <- plot_cap(mod, condition = "hp", conf.level = .5)
-# vdiffr::expect_doppelganger("plot_cap: feols small conf.level", p)
-# p <- plot_cap(mod, condition = "hp", conf.level = .99)
-# vdiffr::expect_doppelganger("plot_cap: feols large conf.level", p)
+# Issue #531
+mod <- feols(Ozone ~ Wind + i(Month), airquality)
+mfx <- marginaleffects(mod, variable = "Wind")
+expect_true(all(mfx$conf.low < mfx$dydx))
+expect_true(all(mfx$conf.high > mfx$dydx))
 
 
-
-# works interactively
 # regression test Issue #232: namespace collision with `rep()`
 # can't override global binding for `rep()`
-# skip("works interactively") 
-# rep <- data.frame(Y = runif(100) > .5, X = rnorm(100))
-# mod <- feglm(Y ~ X, data = rep, family = binomial)
-# mfx <- marginaleffects(mod)
-# expect_inherits(mfx, "marginaleffects")
-#
+rep <- data.frame(Y = runif(100) > .5, X = rnorm(100))
+mod <- feglm(Y ~ X, data = rep, family = binomial)
+mfx <- marginaleffects(mod)
+expect_inherits(mfx, "marginaleffects")
 
 
-# Issue #229
-#skip_if_not_installed("fixest", minimum_version = "0.10.5")
+## Issue #229: works interactively
 # data(trade)
 # dat <<- trade
 # mod <- feNmlm(Euros ~ log(dist_km) | Product, data = dat)
-# expect_marginaleffects(mod)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# expect_marginaleffects(mod, newdata = dat) # environment issue
 
 
 
@@ -295,11 +269,5 @@ expect_true("am" %in% colnames(mfx))
 # model <- feols(y ~ x1*x2 | group1^group2, data)
 # nd <- datagrid(model = model)
 # expect_error(marginaleffects(model, newdata = "mean"), "combined")
-
-
-
-
-
-
 
 

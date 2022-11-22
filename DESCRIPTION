@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Marginal Effects, Marginal Means, Predictions, and Contrasts
-Version: 0.7.1.9005
+Version: 0.8.0.9005
 Authors@R: 
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -95,6 +95,7 @@ Suggests:
     patchwork,
     pkgdown,
     plm,
+    posterior,
     prediction,
     pscl,
     quantreg,
@@ -186,6 +187,7 @@ Collate:
     'methods_plm.R'
     'methods_pscl.R'
     'methods_quantreg.R'
+    'methods_rms.R'
     'methods_robustlmm.R'
     'methods_rstanarm.R'
     'methods_sampleSelection.R'
@@ -219,7 +221,6 @@ Collate:
     'tidy.predictions.R'
     'type_dictionary.R'
     'unpack_matrix_cols.R'
-    'update_marginaleffects.R'
     'utils_cjdt.R'
     'warn_once.R'
 Language: en-US

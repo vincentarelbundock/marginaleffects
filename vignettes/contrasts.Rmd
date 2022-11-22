@@ -24,7 +24,7 @@ library(ggplot2)
 theme_set(theme_minimal())
 ```
 
-Note: Some of the code in this vignette requires `marginaleffects` version 0.6.0 or [the development version from github.](https://vincentarelbundock.github.io/marginaleffects/#installation)
+Note: Some of the code in this vignette requires `marginaleffects` version 0.7.2 or [the development version from github.](https://vincentarelbundock.github.io/marginaleffects/#installation)
 
 [In another vignette](https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html), we introduced the "marginal effect" as a partial derivative. Since derivatives are only properly defined for continuous variables, we cannot use them to interpret the effects of changes in categorical variables. For this, we turn to *contrasts* between [Adjusted predictions.](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html) In the context of this package, a "Contrast" is defined as:
 
@@ -33,6 +33,78 @@ Note: Some of the code in this vignette requires `marginaleffects` version 0.6.0
 The `marginaleffects()` function automatically calculates contrasts instead of derivatives for factor, logical, or character variables. 
 
 The `comparisons()` function gives users more powerful features to compute different contrasts, such as differences, risk ratios, linear combinations, and transformations.
+
+# Simple example: Titanic
+
+Consider a logistic regression model estimated using the Titanic mortality data:
+
+```{r}
+library(marginaleffects)
+
+dat <- "https://vincentarelbundock.github.io/Rdatasets/csv/Stat2Data/Titanic.csv"
+dat <- read.csv(dat)
+mod <- glm(Survived ~ PClass * SexCode * Age, data = dat, family = binomial)
+```
+
+The question that interests us is:
+
+> How does the probability of survival (outcome) change if a passenger travels in 1st class vs. 3rd class?
+
+The answer to that question is not straightforward because, in non-linear models with interactions, the effect of a change in one variable depends on the values of all the other covariates in the model. Therefore, we need to refine the question:
+
+> How does the probability of survival (outcome) change if a 25 year old man travels in 1st class vs. 3rd class?
+
+Here, the *estimand* is the difference in probabilities for `PClass="1st"` and `PClass="3rd"`, and this estimand is conditional on the values of the covariates `Age=25` and `SexCode=1`. In the `comparisons()` function, the `variables` argument determines the scientific query (estimand or comparison), and the `newdata` argument determines *where* we estimate this query (conditional on what covariate values). For example:
+
+```{r}
+comparisons(
+  mod,
+  variables = list(PClass = c("3rd", "1st")),
+  newdata = datagrid(Age = 25, SexCode = 0))
+```
+
+We can compute the same contrast for different "kinds" of individuals, by changing the `datagrid()` call. This function accepts functions or vectors. Here, we compute the contrast between the probabilities of survival in 1st and 3rd class for the oldest men and women passengers:
+
+```{r}
+comparisons(
+  mod,
+  variables = list(PClass = c("3rd", "1st")),
+  newdata = datagrid(Age = range, SexCode = 0:1))
+```
+
+If we do *not* specify the `newdata` argument, then `comparisons()` will calculate the contrast for every single combination of covariate values in the original data. This means that we will obtain a data frame of results with the same number of rows as the original data. This makes sense, because in non-linear models or in models with interactions, each individual can have a different contrast:
+
+```{r}
+cmp <- comparisons(
+  mod,
+  variables = list(PClass = c("3rd", "1st")))
+
+# number of contrast estimates
+nrow(cmp)
+
+# number of observations in the model
+nobs(mod)
+```
+
+A big dataset of contrasts like this one can be unwieldy. A common strategy is to summarize the unit-level contrasts by taking their average. This can be achieved using the `tidy()` or `summary()` functions:
+
+```{r}
+cmp <- comparisons(
+  mod,
+  variables = list(PClass = c("3rd", "1st")))
+
+summary(cmp)
+```
+
+We can also compute several average contrasts at the same time:
+
+```{r}
+comparisons(mod) |> summary()
+```
+
+Note that average contrasts often have a nice interpretation in a causal inference context, as the outcome of parametric g-formula estimation. See this vignette: https://vincentarelbundock.github.io/marginaleffects/articles/gformula.html
+
+The rest of this vignette highlights some of the other features of the very flexible and powerful `comparisons()` function.
 
 # Predictor types
 
@@ -341,6 +413,56 @@ con <- comparisons(mod)
 summary(con)
 ```
 
+# Difference-in-Differences(-in-Differences)
+
+Going back to our Titanic example:
+
+```{r}
+dat <- "https://vincentarelbundock.github.io/Rdatasets/csv/Stat2Data/Titanic.csv"
+dat <- read.csv(dat)
+titanic <- glm(Survived ~ PClass * SexCode * Age, data = dat, family = binomial)
+```
+
+In this case, a contrast is a difference between predicted probabilities. We can compute that contrast for different types of individuals:
+
+```{r}
+comparisons(
+  titanic,
+  variables = "SexCode",
+  newdata = datagrid(PClass = c("1st", "3rd")))
+```
+
+One we can notice above, is that the gap in predicted probabilities of survival between men and women is larger in 1st class than in 3rd class. Being a woman matters more for your chances of survival if you travel in first class. Is the difference between those contrasts (diff-in-diff) statistically significant?
+
+To answer this question, we can compute a difference-in-difference using the `hypothesis` argument ([see the Hypothesis vignette for details](https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html)). For example, using `b1` and `b2` to refer to the contrasts in the first and second rows of the output above, we can test if the difference between the two quantities is different from 0:
+
+```{r}
+comparisons(
+  titanic,
+  hypothesis = "b1 - b2 = 0",
+  variables = "SexCode",
+  newdata = datagrid(PClass = c("1st", "3rd")))
+```
+
+Now, let's say we consider more types of individuals:
+
+```{r}
+comparisons(
+  titanic,
+  variables = "SexCode",
+  newdata = datagrid(PClass = c("1st", "3rd"), Age = range))
+```
+
+With these results, we could compute a triple difference:
+
+```{r}
+comparisons(
+  titanic,
+  hypothesis = "(b1 - b3) - (b2 - b4) = 0",
+  variables = "SexCode",
+  newdata = datagrid(PClass = c("1st", "3rd"), Age = range))
+```
+
 # Ratios
 
 Instead of taking simple differences between adjusted predictions, it can sometimes be useful to compute ratios or other functions of predictions. For example, [the `adjrr` function the `Stata` software package](https://journals.sagepub.com/doi/pdf/10.1177/1536867X1301300304) can compute "adjusted risk ratios", which are ratios of adjusted predictions. To do this in `R`, we use the `transform_pre` argument:
@@ -460,6 +582,47 @@ plot_cco(
     transformation_pre = "ratio") +
     ylab("Adjusted Risk Ratio\nP(vs = 1 | mpg + 10) / P(vs = 1 | mpg)")
 ```
+
+# Forward, Backward, Centered, and Custom Differences
+
+By default, the `comparisons()` function computes a "centered" difference. For example, if we ask `comparisons()` to estimate the effect of a 10-unit change in predictor `x` on outcome `y`, `comparisons()` will compare the predicted values with `x-5` and `x+5`. 
+
+```{r}
+dat <- mtcars
+dat$new_hp <- 49 * (mtcars$hp - min(mtcars$hp)) / (max(mtcars$hp) - min(mtcars$hp)) + 1
+mod <- lm(mpg ~ log(new_hp), data = dat)
+
+comparisons(
+  mod,
+  variables = list(new_hp = 10)) |>
+  summary()
+```
+
+Since version 0.7.2 of `marginaleffects`, we can supply arbitrary functions to create custom differences. These functions must accept a vector of values for the predictor of interest, and return a data frame with the same number of rows as the length, and two columns with the values to compare. For example, we can do:
+
+```{r}
+forward_diff <- \(x) data.frame(x, x + 10)
+backward_diff <- \(x) data.frame(x - 10, x)
+center_diff <- \(x) data.frame(x - 5, x + 5)
+
+comparisons(
+  mod,
+  variables = list(new_hp = forward_diff)) |>
+  summary()
+
+comparisons(
+  mod,
+  variables = list(new_hp = backward_diff)) |>
+  summary()
+
+comparisons(
+  mod,
+  variables = list(new_hp = center_diff)) |>
+  summary()
+```
+
+Notice that the last "centered" difference gives the same results as the default `comparisons()` call.
+
 
 # Lognormal hurdle model
 

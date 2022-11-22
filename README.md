@@ -12,7 +12,7 @@ status](https://www.r-pkg.org/badges/version/marginaleffects)](https://CRAN.R-pr
 <!-- badges: end -->
 
 Compute and plot adjusted predictions, contrasts, marginal effects, and
-marginal means for 69 classes of statistical models in `R`. Conduct
+marginal means for 71 classes of statistical models in `R`. Conduct
 linear and non-linear hypothesis tests using the delta method.
 
 ## Table of contents
@@ -44,6 +44,7 @@ Case studies:
   - [Causal Inference with the
     g-Formula](https://vincentarelbundock.github.io/marginaleffects/articles/gformula.html)
   - [Elasticity](https://vincentarelbundock.github.io/marginaleffects/articles/elasticity.html)
+  - [Experiments](https://vincentarelbundock.github.io/marginaleffects/articles/experiments.html)
   - [Generalized Additive
     Models](https://vincentarelbundock.github.io/marginaleffects/articles/gam.html)
   - [Mixed effects
@@ -52,6 +53,8 @@ Case studies:
     Models](https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html)
   - [Multiple
     Imputation](https://vincentarelbundock.github.io/marginaleffects/articles/multiple_imputation.html)
+  - [Plots: interactions, predictions, contrasts, and
+    slopes](https://vincentarelbundock.github.io/marginaleffects/articles/plot.html)
   - [Python NumPyro models in
     `marginaleffects`](https://vincentarelbundock.github.io/marginaleffects/articles/python.html)
   - [Unit-level contrasts in logistic
@@ -59,7 +62,7 @@ Case studies:
 
 Tips and technical notes:
 
-  - [69 Supported Classes of
+  - [71 Supported Classes of
     Models](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
   - [Index of Functions and
     Documentation](https://vincentarelbundock.github.io/marginaleffects/reference/index.html)
@@ -95,7 +98,7 @@ External links:
 ## Definitions
 
 The `marginaleffects` package allows `R` users to compute and plot four
-principal quantities of interest for [69 different classes of
+principal quantities of interest for [71 different classes of
 models:](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
 
   - [*Adjusted
@@ -160,23 +163,16 @@ inconsistent that we must press on…
 
 ## Motivation
 
-To calculate marginal effects we need to take derivatives of the
-regression equation. This can be challenging to do manually, especially
+To calculate marginal effects (slopes) we need to take derivatives of
+the regression equation. To compute standard errors around slopes,
+predictions, contrasts, or marginal means, we need to apply the delta
+method. These operations can be challenging to do manually, especially
 when our models are non-linear, or when regressors are transformed or
 interacted. Computing the variance of a marginal effect is even more
 difficult.
 
 The `marginaleffects` package hopes to do most of this hard work for
 you.
-
-Many `R` packages advertise their ability to compute “marginal effects.”
-However, most of them do *not* actually compute marginal effects *as
-defined above*. Instead, they compute “adjusted predictions” for
-different regressor values, or differences in adjusted predictions
-(i.e., “contrasts”). The rare packages that actually compute marginal
-effects are typically limited in the model types they support, and in
-the range of transformations they allow (interactions, polynomials,
-etc.).
 
 The main packages in the `R` ecosystem to compute marginal effects are
 the trailblazing and powerful [`margins` by Thomas J.
@@ -188,9 +184,11 @@ additional features from `emmeans`.
 
 So why did I write a clone?
 
-  - *Powerful:* Marginal effects and contrasts can be computed for 69
+  - *Powerful:* Marginal effects and contrasts can be computed for 71
     different classes of models. Adjusted predictions and marginal means
     can be computed for about 100 model types.
+  - *Customizable*: Extremely flexible functions to compute custom
+    contrasts and transformations.
   - *Extensible:* Adding support for new models is very easy, often
     requiring less than 10 lines of new code. Please submit [feature
     requests on
@@ -361,13 +359,11 @@ cmp <- comparisons(
     transform_pre = "ratio",
     variables = list(Age = "2sd", PClass = "pairwise"))
 summary(cmp)
-#>                   Age    PClass Effect Std. Error z value   Pr(>|z|)  2.5 % 97.5 %
-#> 1 (x - sd) / (x + sd) 1st / 1st 0.7043    0.05946  11.846 < 2.22e-16 0.5878 0.8209
-#> 2 (x - sd) / (x + sd) 2nd / 1st 0.3185    0.05566   5.723 1.0442e-08 0.2095 0.4276
-#> 3 (x - sd) / (x + sd) 3rd / 1st 0.2604    0.05308   4.907 9.2681e-07 0.1564 0.3645
-#> 4 (x - sd) / (x + sd) 2nd / 2nd 0.3926    0.08101   4.846 1.2588e-06 0.2338 0.5514
-#> 5 (x - sd) / (x + sd) 3rd / 2nd 0.3162    0.07023   4.503 6.7096e-06 0.1786 0.4539
-#> 6 (x - sd) / (x + sd) 3rd / 3rd 0.7053    0.20273   3.479 0.00050342 0.3079 1.1026
+#>     Term            Contrast Effect Std. Error z value   Pr(>|z|)  2.5 % 97.5 %
+#> 1    Age (x - sd) / (x + sd) 0.6225    0.09166   6.791 1.1126e-11 0.4428 0.8021
+#> 2 PClass           2nd / 1st 0.5636    0.05497  10.253 < 2.22e-16 0.4559 0.6713
+#> 3 PClass           3rd / 1st 0.3351    0.03932   8.523 < 2.22e-16 0.2580 0.4122
+#> 4 PClass           3rd / 2nd 0.6155    0.14373   4.282 1.8484e-05 0.3338 0.8972
 #> 
 #> Model type:  glm 
 #> Prediction type:  response

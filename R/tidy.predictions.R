@@ -20,12 +20,12 @@ tidy.predictions <- function(x,
                              transform_avg = NULL,
                              ...) {
 
-    checkmate::assert_function(transform_avg, null.ok = TRUE)
-
     # use original conf_level by default
     if (is.null(conf_level)) {
         conf_level <- attr(x, "conf_level")
     }
+
+    transform_avg <- sanitize_transform_post(transform_avg)
 
     # I left the `by` code below in case I eventually want to revert. Much
     # of it needs to stay anyway because we need the `delta` in `tidy` for
@@ -112,7 +112,8 @@ tidy.predictions <- function(x,
         x_dt,
         estimate = "estimate",
         conf_level = conf_level,
-        draws = attr(x_dt, "posterior_draws"))
+        draws = attr(x_dt, "posterior_draws"),
+        ...)
 
     # back transformation
     if (!is.null(transform_avg)) {
@@ -122,6 +123,10 @@ tidy.predictions <- function(x,
         }
         out <- backtransform(out, transform_avg)
     }
+
+    attr(out, "nchains") <- attr(x, "nchains")
+    attr(out, "transform_post_label") <- attr(x, "transform_post_label")
+    attr(out, "transform_average_label") <- names(transform_avg)[1]
 
     return(out)
 }

@@ -34,7 +34,7 @@ expect_equivalent(nrow(mfx), 6)
 
 # numeric contrasts
 mod <- lm(mpg ~ hp, data = mtcars)
-expect_error(comparisons(mod, contrast_numeric = "bad", variables = "hp"), pattern = "Contrasts for numeric")
+expect_error(comparisons(mod, contrast_numeric = "bad", variables = "hp"), pattern = "invalid")
 contr1 <- comparisons(mod, contrast_numeric = 1, variables = "hp")
 contr2 <- comparisons(mod, contrast_numeric = "iqr", variables = "hp")
 contr3 <- comparisons(mod, contrast_numeric = "minmax", variables = "hp")

@@ -25,6 +25,10 @@ fit <- glm(f, data = nhefs)
 pre <- predictions(fit, newdata = nhefs)
 cmp <- comparisons(fit, newdata = nhefs)
 mfx <- marginaleffects(fit, newdata = nhefs)
+expect_inherits(pre, "predictions")
+expect_inherits(cmp, "comparisons")
+expect_inherits(mfx, "marginaleffects")
+
 
 
 # Issue 372: reserved variable names
