@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Marginal Effects, Marginal Means, Predictions, and Contrasts
-Version: 0.8.0.9005
+Version: 0.8.0.9006
 Authors@R: 
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -182,6 +182,7 @@ Collate:
     'methods_mclogit.R'
     'methods_mgcv.R'
     'methods_mhurdle.R'
+    'methods_mlm.R'
     'methods_mlogit.R'
     'methods_ordinal.R'
     'methods_plm.R'
