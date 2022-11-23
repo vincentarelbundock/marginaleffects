@@ -193,7 +193,7 @@ get_predict(model, newdata, vcov, conf_level, type, ...)
   newdata = insight::get_data(model),
   vcov = FALSE,
   conf_level = 0.95,
-  type = "probs",
+  type = "response",
   ...
 )
 
