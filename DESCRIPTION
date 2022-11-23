@@ -222,6 +222,7 @@ Collate:
     'tidy.predictions.R'
     'type_dictionary.R'
     'unpack_matrix_cols.R'
+    'utils.R'
     'utils_cjdt.R'
     'warn_once.R'
 Language: en-US

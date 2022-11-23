@@ -320,10 +320,9 @@ package. See the "Model-Specific Arguments" section of the
 arguments.}
 }
 \value{
-A vector of predicted values of length equal to the number of rows
-in \code{newdata}. For models with multi-level outcomes (e.g., multinomial
-logit), this function returns a matrix of predicted values with column names
-equal to each of the levels/groups.
+A data.frame of predicted values with a number of rows equal to the
+number of rows in \code{newdata} and columns "rowid" and "predicted". A "group"
+column is added for multivariate models or models with categorical outcomes.
 }
 \description{
 Get predicted values from a model object (internal function)
