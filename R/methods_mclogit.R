@@ -32,7 +32,7 @@ get_predict.mblogit <- function(model,
                                 newdata = insight::get_data(model),
                                 vcov = FALSE,
                                 conf_level = 0.95,
-                                type = "probs",
+                                type = "response",
                                 ...) {
 
     if (!isTRUE(checkmate::check_flag(vcov, null.ok = TRUE)) &&
