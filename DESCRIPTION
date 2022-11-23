@@ -95,6 +95,7 @@ Suggests:
     patchwork,
     pkgdown,
     plm,
+    polspline,
     posterior,
     prediction,
     pscl,
