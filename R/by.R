@@ -82,7 +82,7 @@ get_by <- function(
 
         } else {
             estimates <- estimates[,
-                .(estimate = mean(estimate)),
+                .(estimate = mean(estimate, na.rm = TRUE)),
                 by = bycols]
         }
     }
