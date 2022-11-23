@@ -154,3 +154,10 @@ expect_warning(predictions(mod))
 pred <- predictions(mod, vcov = FALSE)
 expect_predictions(pred, se = FALSE)
 
+
+# Issue #548: mlm support
+mod <- lm(cbind(mpg, cyl) ~ disp + am, data = mtcars)
+mfx <- marginaleffects(mod)
+tid <- tidy(mfx)
+expect_inherits(mfx, "marginaleffects")
+expect_equivalent(nrow(tid), 4)
