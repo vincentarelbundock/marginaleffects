@@ -161,3 +161,11 @@ mfx <- marginaleffects(mod)
 tid <- tidy(mfx)
 expect_inherits(mfx, "marginaleffects")
 expect_equivalent(nrow(tid), 4)
+
+
+# Issue #547: standardize column order
+mod <- lm(cbind(mpg, cyl) ~ disp + am, data = mtcars)
+expect_equivalent(colnames(get_predict(mod)), c("rowid", "group", "predicted"))
+
+mod <- lm(mpg ~ disp + am, data = mtcars)
+expect_equivalent(colnames(get_predict(mod)), c("rowid", "predicted"))

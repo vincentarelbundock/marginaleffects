@@ -104,6 +104,7 @@ get_predict.default <- function(model,
                 out$rowid <- newdata$rowid
             }
 
+            out <- sort_columns(out, first = c("rowid", "group", "predicted"))
             return(out)
         }
     }
@@ -163,6 +164,8 @@ get_predict.default <- function(model,
     }
 
     setDF(out)
+
+    out <- sort_columns(out, first = c("rowid", "group", "predicted"))
 
     return(out)
 }
