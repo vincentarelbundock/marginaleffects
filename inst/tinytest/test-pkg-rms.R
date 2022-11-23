@@ -1,5 +1,6 @@
 source("helpers.R", local = TRUE)
 if (ON_CRAN) exit_file("on cran")
+if (!requiet("polspline")) exit_file("polspline")
 requiet("rms")
 requiet("emmeans")
 requiet("broom")
