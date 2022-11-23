@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Marginal Effects, Marginal Means, Predictions, and Contrasts
-Version: 0.8.0.9007
+Version: 0.8.0.9008
 Authors@R: 
     c(person(given = "Vincent",
              family = "Arel-Bundock",
