@@ -319,13 +319,6 @@ mod <- glmer(
     data = dat,
     family = binomial())
 
-expect_warning(predictions(
-    mod,
-    newdata = datagrid(
-        year = 1:5,
-        sid = NA),
-    include_random = FALSE),
-    pattern = "Matrix columns")
 
 p <- suppressWarnings(predictions(
     mod,
@@ -344,6 +337,14 @@ cmp <- suppressWarnings(comparisons(mod,
 expect_inherits(cmp, "comparisons")
 
 
+# # maybe no longer relevant?
+# expect_warning(predictions(
+#     mod,
+#     newdata = datagrid(
+#         year = 1:5,
+#         sid = NA),
+#     include_random = FALSE),
+#     pattern = "Matrix columns")
 
 
 
