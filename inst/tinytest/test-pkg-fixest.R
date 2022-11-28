@@ -216,6 +216,7 @@ expect_inherits(m, "marginaleffects")
 # Issue #509
 dat <- mtcars
 dat$mpg[1] <- NA
+dat <<- dat
 mod <- suppressMessages(feglm(am ~ mpg, family = binomial, data = dat))
 mfx <- marginaleffects(mod)
 expect_inherits(mfx, "marginaleffects")

@@ -48,10 +48,13 @@ expect_equivalent(nrow(nd), 1)
 
 
 # errors and warnings
-mod <- lm(hp ~ mpg, mtcars)
+dat <- mtcars
+dat$cyl <- factor(dat$cyl)
+dat <<- dat
+mod <- lm(hp ~ mpg, dat)
 expect_error(datagrid(), pattern = "are both .NULL")
 
-mod <- lm(hp ~ factor(cyl), mtcars)
+mod <- lm(hp ~ factor(cyl), dat)
 expect_inherits(datagrid(model = mod, cyl = "4"), "data.frame")
 expect_error(datagrid(model = mod, cyl = "2"), pattern = "must be one of the factor levels")
 
