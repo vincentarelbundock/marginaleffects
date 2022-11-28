@@ -12,16 +12,17 @@ dat$X <- NULL
 dat <<- pdata.frame(dat)
 pool <<- plm(inv ~ value * capital, data = dat, model = "pooling")
 swamy <<- plm(
-inv ~ value * capital, data = dat,
-model = "random", effect = "individual")
+    inv ~ value * capital,
+    data = dat,
+    model = "random", effect = "individual")
 amemiya <<- plm(
-inv ~ value * capital,
-data = dat, model = "random", random.method = "amemiya",
-effect = "twoways")
+    inv ~ value * capital,
+    data = dat, model = "random", random.method = "amemiya",
+    effect = "twoways")
 walhus <<- plm(
-inv ~ value * capital,
-data = dat, model = "random", random.method = "walhus",
-effect = "twoways")
+    inv ~ value * capital,
+    data = dat, model = "random", random.method = "walhus",
+    effect = "twoways")
 
 ### marginaleffects
 

@@ -57,10 +57,16 @@ get_contrast_data <- function(model,
         rowid[[v$name]] <- tmp$rowid
     }
 
-    # clean before merge: tobit1 introduces AsIs columns
     clean <- function(x) {
         for (col in colnames(x)) {
+            # tobit1 introduces AsIs columns
             if (inherits(x[[col]], "AsIs")) {
+                x[[col]] <- as.numeric(x[[col]])
+            }
+
+            # plm creates c("pseries", "numeric"), but when get_contrast_data
+            # assigns +1 numeric, we lose the inheritance
+            if (inherits(x[[col]], "pseries")) {
                 x[[col]] <- as.numeric(x[[col]])
             }
 

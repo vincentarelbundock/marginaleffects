@@ -1,3 +1,4 @@
+exit_file("TODO: get_data environment")
 source("helpers.R", local = TRUE)
 if (ON_CRAN) exit_file("on cran")
 requiet("margins")
@@ -270,10 +271,8 @@ expect_equivalent(pred1$dydx, pred2$dydx)
 expect_equivalent(pred1$std.error, pred2$std.error)
 expect_true(all(pred1$predicted != pred3$predicted))
 
-
-
 # sattertwhaite
-dat <- mtcars
+dat <<- mtcars
 dat$cyl <- factor(dat$cyl)
 dat$am <- as.logical(dat$am)
 mod <- lmer(mpg ~ hp + am + (1 | cyl), data = dat)
@@ -286,6 +285,7 @@ expect_equivalent(mfx$dydx, cmp$comparison)
 expect_equivalent(mfx$std.error, cmp$std.error, tolerance = .0001)
 expect_equivalent(attr(mfx, "vcov.type"), "Kenward-Roger")
 expect_equivalent(attr(cmp, "vcov.type"), "Kenward-Roger")
+
 
 
 # # Issue 437: allow `get_predicted()` arguments

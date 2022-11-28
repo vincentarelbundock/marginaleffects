@@ -66,6 +66,7 @@ expect_equivalent(mfx$dydx[mfx$contrast == "8 - 4"], em$estimate[em$contrast == 
 expect_equivalent(mfx$std.error[mfx$contrast == "8 - 4"], em$std.error[em$contrast == "cyl8 - cyl4"])
 
 
+
 # glm.nb: marginaleffects: vs. Stata
 stata <- readRDS(testing_path("stata/stata.rds"))$mass_glm_nb
 model <- suppressWarnings(
@@ -138,23 +139,20 @@ expect_predictions(pred, n_row = nrow(mtcars))
 pred <- predictions(model, newdata = head(mtcars))
 expect_predictions(pred, n_row = 6)
 
-
-
 ### marginalmeans
 
 # glm.nb: marginalmeans: vs. emmeans
 dat <- mtcars
 dat$cyl <- as.factor(dat$cyl)
 dat$am <- as.logical(dat$am)
-model <- suppressWarnings(MASS::glm.nb(carb ~ am + cyl, data = dat))
+dat <<- dat
+model <- MASS::glm.nb(carb ~ am + cyl, data = dat)
 mm <- marginalmeans(model, type = "link", variables = "cyl")
 ti <- tidy(mm)
 em <- tidy(emmeans::emmeans(model, "cyl"))
 expect_marginalmeans(mm, se = TRUE)
 expect_equivalent(ti$estimate, em$estimate)
 expect_equivalent(ti$std.error, em$std.error)
-
-
 
 # rlm: marginalmeans: vs. emmeans
 dat <- mtcars

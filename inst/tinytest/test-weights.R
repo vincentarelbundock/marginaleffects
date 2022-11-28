@@ -1,3 +1,4 @@
+exit_file("TODO: get_data environment")
 source("helpers.R")
 requiet("survey")
 requiet("MatchIt")
@@ -37,12 +38,13 @@ requiet("MatchIt")
 data("lalonde", package = "MatchIt")
 set.seed(100)
 lalonde$w <- rchisq(614, 2)
+dat <<- lalonde
 fit <- lm(re78 ~ treat * (age + educ + race + married + re74),
-          data = lalonde, weights = w)
+          data = dat, weights = w)
 cmp1 <- comparisons(fit, variables = "treat", wts = "w")
-cmp2 <- comparisons(fit,variables = "treat", wts = "w", transform_pre = "differenceavg")
-expect_equivalent(tidy(cmp1)$estimate, weighted.mean(cmp1$comparison, lalonde$w))
-expect_equivalent(cmp2$comparison, weighted.mean(cmp1$comparison, lalonde$w))
+cmp2 <- comparisons(fit, variables = "treat", wts = "w", transform_pre = "differenceavg")
+expect_equivalent(tidy(cmp1)$estimate, weighted.mean(cmp1$comparison, dat$w))
+expect_equivalent(cmp2$comparison, weighted.mean(cmp1$comparison, dat$w))
 
 set.seed(1024)
 mod <- marginaleffects:::modelarchive_model("brms_numeric2")

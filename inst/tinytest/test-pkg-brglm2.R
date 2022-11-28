@@ -1,3 +1,5 @@
+exit_file("TODO: fix get_data environment")
+
 source("helpers.R", local = TRUE)
 if (ON_CRAN) exit_file("on cran")
 requiet("brglm2")
@@ -6,9 +8,12 @@ requiet("emmeans")
 requiet("broom")
 
 # brglm2::brglm_fit vs. margins vs. emtrends
-data("endometrial", package = "brglm2")
-model <- glm(HG ~ NV + PI + EH, family = binomial("probit"), data = endometrial)
+data("endometrial", package = "brglm2", envir = environment())
+dat <<- endometrial
+model <- glm(HG ~ NV + PI + EH, family = binomial("probit"), data = dat)
 model <- update(model, method = "brglm_fit")
+
+
 # margins
 mar <- margins(model)
 mfx <- marginaleffects(model)
@@ -17,10 +22,11 @@ expect_true(expect_margins(mar, mfx))
 # emtrends
 em <- emtrends(model, ~PI, "PI", at = list(PI = 15, EH = 2, NV = 0))
 em <- tidy(em)
-mfx <- marginaleffects(model,
-                   variables = "PI",
-                   newdata = datagrid(PI = 15, EH = 2, NV = 0), 
-                   type = "link")
+mfx <- marginaleffects(
+    model,
+    variables = "PI",
+    newdata = datagrid(PI = 15, EH = 2, NV = 0), 
+    type = "link")
 expect_equivalent(mfx$dydx, em$PI.trend)
 expect_equivalent(mfx$std.error, em$std.error, tolerance = .00001)
 
@@ -38,8 +44,9 @@ expect_true(expect_margins(mar, mfx))
 
 
 # predictions: brglm2::brglm_fit: no validity
-data("endometrial", package = "brglm2")
-model <- glm(HG ~ NV + PI + EH, family = binomial("probit"), data = endometrial)
+data("endometrial", package = "brglm2", envir = environment())
+dat <<- endometrial
+model <- glm(HG ~ NV + PI + EH, family = binomial("probit"), data = dat)
 model <- update(model, method = "brglm_fit")
 pred1 <- predictions(model)
 pred2 <- predictions(model, newdata = head(endometrial))
