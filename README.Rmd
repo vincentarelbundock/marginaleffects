@@ -79,9 +79,9 @@ To calculate marginal effects (slopes) we need to take derivatives of the regres
 
 The `marginaleffects` package hopes to do most of this hard work for you.
 
-The main packages in the `R` ecosystem to compute marginal effects are the trailblazing and powerful [`margins` by Thomas J. Leeper](https://cran.r-project.org/package=margins), and [`emmeans` by Russell V. Lenth and contributors.](https://cran.r-project.org/package=emmeans) The `marginaleffects` package is essentially a clone of `margins`, with some additional features from `emmeans`.
+The main packages in the `R` ecosystem to compute marginal effects are the trailblazing and powerful [`margins` by Thomas J. Leeper](https://cran.r-project.org/package=margins), and [`emmeans` by Russell V. Lenth and contributors.](https://cran.r-project.org/package=emmeans) The `marginaleffects` package started as a clone of `margins` with some additional features from `emmeans`. It has now become *much* more than that...
 
-So why did I write a clone?
+So why did I write this package?
 
 * _Powerful:_ Marginal effects and contrasts can be computed for `r n_support` different classes of models. Adjusted predictions and marginal means can be computed for about 100 model types.
 * _Customizable_: Extremely flexible functions to compute custom contrasts and transformations.
