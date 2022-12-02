@@ -29,7 +29,7 @@ get_vcov(model, ...)
 
 \method{get_vcov}{gamlss}(model, ...)
 
-\method{get_vcov}{mhurdle}(model, ...)
+\method{get_vcov}{mhurdle}(model, vcov = NULL, ...)
 
 \method{get_vcov}{orm}(model, vcov = NULL, ...)
 

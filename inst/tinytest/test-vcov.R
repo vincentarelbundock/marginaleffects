@@ -98,3 +98,15 @@ expect_true(all(mm3$std.error != mm5$std.error))
 expect_true(all(mm3$std.error != mm6$std.error))
 expect_true(all(mm5$std.error != mm6$std.error))
 
+
+
+# Issue #554
+mod <- lm(mpg ~ cyl, data = mtcars)
+
+x <- get_vcov(mod, vcov = sandwich::vcovHC)
+y <- get_vcov(mod, vcov = "HC3")
+expect_equivalent(x, y)
+
+x <- marginaleffects(fit, vcov = sandwich::vcovHC)
+y <- marginaleffects(fit, vcov = "HC3")
+expect_equivalent(x, y)

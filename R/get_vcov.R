@@ -16,53 +16,10 @@ get_vcov.default <- function(model,
                              vcov = NULL,
                              ...) {
 
-    # user-level default can be boolean.
-    if (isFALSE(vcov)) {
-        return(FALSE)
-    }
 
-    # TRUE generates a warning in `insight::get_varcov` for some models
-    if (isTRUE(vcov)) {
-        vcov <- NULL
-    }
-
-    bad <- c("brmsfit", "stanreg")
-    if (any(inherits(model, bad, which = TRUE) == 1)) {
-        return(NULL)
-    }
-
-    # strings are only available with insight 0.17.1
-    # strings should be case-insensitive
-    vcov_strings <- c("stata", "robust", "HC", "HC0", "HC1", "HC2", "HC3",
-                      "HC4", "HC4m", "HC5", "HAC", "NeweyWest", "kernHAC", "OPG",
-                      "satterthwaite", "kenward-roger")
-    if (isTRUE(checkmate::check_choice(tolower(vcov), choices = tolower(vcov_strings)))) {
-        insight::check_if_installed("insight", minimum_version = "0.17.1")
-        idx <- match(tolower(vcov), tolower(vcov_strings))
-        vcov <- vcov_strings[idx]
-    }
-
-    # formulas are only available with insight 0.17.1
-    if (isTRUE(checkmate::check_formula(vcov))) {
-        insight::check_if_installed("insight", minimum_version = "0.17.1")
-    }
-
-    checkmate::assert(
-        checkmate::check_null(vcov),
-        checkmate::check_function(vcov),
-        checkmate::check_matrix(vcov),
-        checkmate::check_formula(vcov),
-        checkmate::check_choice(vcov, choices = vcov_strings))
-
-    out <- vcov
-
-    if (isTRUE(checkmate::check_matrix(out))) {
-        if (ncol(out) != nrow(out)) stop("The `vcov` matrix must be square.", call. = FALSE)
-        return(out)
-    }
-
-    if (isTRUE(checkmate::check_function(out))) {
-        return(out(model))
+    vcov <- sanitize_vcov(model = model, vcov = vcov)
+    if (isTRUE(checkmate::check_matrix(vcov))) {
+        return(vcov)
     }
 
     # {insight}
@@ -142,7 +99,7 @@ get_vcov.default <- function(model,
 #'
 #' @keywords internal
 get_varcov_args <- function(model, vcov) {
-    if (is.null(vcov)) {
+    if (is.null(vcov) || isTRUE(checkmate::check_matrix(vcov))) {
         out <- list()
         return(out)
     }

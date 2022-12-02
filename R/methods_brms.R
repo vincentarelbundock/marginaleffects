@@ -116,8 +116,7 @@ get_vcov.brmsfit <- function(model,
                              vcov = NULL,
                              ...) {
     if (!is.null(vcov) && !is.logical(vcov)) {
-        msg <- "The `vcov` argument is not supported for models of this class."
-        warning(msg, call. = FALSE)
+        insight::format_warning("The `vcov` argument is not supported for models of this class.")
     }
     return(NULL)
 }

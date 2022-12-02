@@ -334,7 +334,7 @@ comparisons <- function(model,
         }
     }
 
-    vcov_false <- isTRUE(vcov == FALSE)
+    vcov_false <- isFALSE(vcov)
     vcov.type <- get_vcov_label(vcov)
     vcov <- get_vcov(model, vcov = vcov, ...)
 
