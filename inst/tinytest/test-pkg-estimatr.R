@@ -9,6 +9,7 @@ requiet("ivreg") # Kmenta data
 # lm_lin: no validity
 dat <- mtcars
 dat$cyl <- factor(dat$cyl)
+dat <<- dat
 mod <- lm_lin(mpg ~ am, ~ hp + cyl, data = mtcars)
 expect_marginaleffects(mod, n_unique = 9)
 
@@ -16,9 +17,10 @@ expect_marginaleffects(mod, n_unique = 9)
 
 # iv_robust vs. stata
 data(Kmenta, package = "ivreg")
+dat <<- Kmenta
 model <- iv_robust(Q ~ P + D | D + F + A, 
                se_type = "stata",
-               data = Kmenta)
+               data = dat)
 stata <- readRDS(testing_path("stata/stata.rds"))$estimatr_iv_robust
 mfx <- tidy(marginaleffects(model))
 mfx <- merge(mfx, stata)
@@ -56,9 +58,10 @@ expect_true(expect_margins(mfx, mar, se = FALSE))
 # iv_robust: predictions: no validity
 #skip_if_not_installed("insight", minimum_version = "0.17.1")
 data(Kmenta, package = "ivreg")
+dat <<- Kmenta
 model <- iv_robust(Q ~ P + D | D + F + A, 
                se_type = "stata",
-               data = Kmenta)
+               data = dat)
 expect_predictions(predictions(model), n_row = nrow(Kmenta))
 expect_predictions(predictions(model, newdata = head(Kmenta)), n_row = 6)
 
