@@ -62,8 +62,8 @@ dat <<- Kmenta
 model <- iv_robust(Q ~ P + D | D + F + A, 
                se_type = "stata",
                data = dat)
-expect_predictions(predictions(model), n_row = nrow(Kmenta))
-expect_predictions(predictions(model, newdata = head(Kmenta)), n_row = 6)
+expect_predictions(predictions(model), n_row = nrow(dat))
+expect_predictions(predictions(model, newdata = head(dat)), n_row = 6)
 
 
 # lm_robust: marginalmeans predictions: no validity
