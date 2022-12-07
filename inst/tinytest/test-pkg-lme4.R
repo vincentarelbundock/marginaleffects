@@ -1,4 +1,4 @@
-exit_file("TODO: get_data environment")
+# exit_file("TODO: get_data environment")
 source("helpers.R", local = TRUE)
 if (ON_CRAN) exit_file("on cran")
 requiet("margins")
@@ -13,6 +13,7 @@ requiet("broom")
 #skip_if_not_installed("insight", minimum_version = "0.17.1")
 dat <- mtcars
 dat$cyl <- factor(dat$cyl)
+dat <<- dat
 mod <- lmer(mpg ~ hp + (1 | cyl), data = dat)
 x <- predictions(mod)
 y <- predictions(mod, vcov = "satterthwaite")
@@ -57,21 +58,13 @@ mfx <- marginaleffects(
     vcov = "satterthwaite")
 expect_inherits(mfx, "marginaleffects")
 
+
 # GLM not supported
 mod <- glmer(am ~ hp + (1 | cyl), family = binomial, data = dat)
 expect_error(comparisons(mod, vcov = "satterthwaite"), pattern = "Satter")
 expect_error(comparisons(mod, vcov = "kenward-roger"), pattern = "Satter")
 expect_error(predictions(mod, vcov = "satterthwaite"), pattern = "Satter")
 expect_error(predictions(mod, vcov = "kenward-roger"), pattern = "Satter")
-
-
-
-# get_predict: low-level tests
-dat <- read.csv(testing_path("stata/databases/lme4_02.csv"))
-mod <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = dat, family = binomial)
-
-# incompatible arguments
-expect_error(get_predict(mod, re.form = ~0, include_random = TRUE), pattern = "together")
 
 # type = "link"
 w <- predict(mod, type = "link")
@@ -104,6 +97,23 @@ y <- get_predict(mod, include_random = FALSE, type = "response")
 expect_equivalent(w, x$predicted)
 expect_equivalent(w, y$predicted)
 
+
+# glmer vs. stata vs. emtrends
+tmp <<- read.csv(testing_path("stata/databases/lme4_02.csv"))
+mod <- glmer(y ~ x1 * x2 + (1 | clus), data = tmp, family = binomial)
+stata <- readRDS(testing_path("stata/stata.rds"))$lme4_glmer
+mfx <- merge(tidy(marginaleffects(mod)), stata)
+expect_marginaleffects(mod)
+expect_equivalent(mfx$estimate, mfx$dydxstata, tolerance = .01)
+expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .01)
+# emtrends
+mod <- glmer(y ~ x1 + x2 + (1 | clus), data = tmp, family = binomial)
+mfx <- marginaleffects(mod, variables = "x1", newdata = datagrid(x1 = 0, x2 = 0, clus = 1), type = "link")
+em <- emtrends(mod, ~x1, "x1", at = list(x1 = 0, x2 = 0, clus = 1))
+em <- tidy(em)
+expect_equivalent(mfx$dydx, em$x1.trend)
+expect_equivalent(mfx$std.error, em$std.error, tolerance = 1e-6)
+
 # grand mean with new data
 nd <- datagrid(model = mod, clus = NA, x1 = -1:1)
 w <- predict(mod, newdata = nd, re.form = NA, type = "response")
@@ -113,34 +123,20 @@ expect_equivalent(w, x$predicted)
 expect_equivalent(w, y$predicted)
 
 
-
-# glmer vs. stata vs. emtrends
-dat <- read.csv(testing_path("stata/databases/lme4_02.csv"))
-mod <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = dat, family = binomial)
-stata <- readRDS(testing_path("stata/stata.rds"))$lme4_glmer
-mfx <- merge(tidy(marginaleffects(mod)), stata)
-expect_marginaleffects(mod)
-expect_equivalent(mfx$estimate, mfx$dydxstata, tolerance = .01)
-expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .01)
-# emtrends
-mod <- glmer(y ~ x1 + x2 + (1 | clus), data = dat, family = binomial)
-mfx <- marginaleffects(mod, variables = "x1", newdata = datagrid(x1 = 0, x2 = 0, clus = 1), type = "link")
-em <- emtrends(mod, ~x1, "x1", at = list(x1 = 0, x2 = 0, clus = 1))
-em <- tidy(em)
-expect_equivalent(mfx$dydx, em$x1.trend)
-expect_equivalent(mfx$std.error, em$std.error, tolerance = 1e-6)
-
+# incompatible arguments
+expect_error(get_predict(mod, re.form = ~0, include_random = TRUE), pattern = "together")
 
 # lmer vs. stata
-dat <- read.csv(testing_path("stata/databases/lme4_01.csv"))
-mod <- lme4::lmer(y ~ x1 * x2 + (1 | clus), data = dat)
+tmp <<- read.csv(testing_path("stata/databases/lme4_01.csv"))
+mod <- lme4::lmer(y ~ x1 * x2 + (1 | clus), data = tmp)
 stata <- readRDS(testing_path("stata/stata.rds"))$lme4_lmer
 mfx <- merge(tidy(marginaleffects(mod)), stata)
 expect_marginaleffects(mod)
 expect_equivalent(mfx$estimate, mfx$dydxstata, tolerance = .001)
 expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .001)
+
 # emtrends
-mod <- lmer(y ~ x1 + x2 + (1 | clus), data = dat)
+mod <- lmer(y ~ x1 + x2 + (1 | clus), data = tmp)
 mfx <- marginaleffects(mod, variables = "x1",
                    newdata = datagrid(x1 = 0, x2 = 0, clus = 1))
 em <- emtrends(mod, ~x1, "x1", at = list(x1 = 0, x2 = 0, clus = 1))
@@ -150,29 +146,29 @@ expect_equivalent(mfx$std.error, em$std.error, tolerance = .001)
 
 
 # vs. margins (dydx only)
-dat <- read.csv(testing_path("stata/databases/lme4_02.csv"))
-mod <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = dat, family = binomial)
+tmp <<- read.csv(testing_path("stata/databases/lme4_02.csv"))
+mod <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = tmp, family = binomial)
 res <- marginaleffects(mod, vcov = FALSE)
 mar <- margins::margins(mod)
 expect_true(expect_margins(res, mar, tolerance = 1e-2))
 
-dat <- read.csv(testing_path("stata/databases/lme4_01.csv"))
-mod <- lme4::lmer(y ~ x1 * x2 + (1 | clus), data = dat)
+tmp <<- read.csv(testing_path("stata/databases/lme4_01.csv"))
+mod <- lme4::lmer(y ~ x1 * x2 + (1 | clus), data = tmp)
 res <- marginaleffects(mod, vcov = FALSE)
 mar <- margins::margins(mod)
 expect_true(expect_margins(res, mar))
 
 
 # sanity check on dpoMatrix
-dat <- read.csv(testing_path("stata/databases/lme4_02.csv"))
-mod <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = dat, family = binomial)
+tmp <<- read.csv(testing_path("stata/databases/lme4_02.csv"))
+mod <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = tmp, family = binomial)
 k <- marginaleffects(mod, vcov = as.matrix(stats::vcov(mod)))
 expect_inherits(k, "data.frame")
 
 
 # bug stay dead: tidy without std.error
-dat <- read.csv(testing_path("stata/databases/lme4_02.csv"))
-mod <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = dat, family = binomial)
+tmp <<- read.csv(testing_path("stata/databases/lme4_02.csv"))
+mod <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = tmp, family = binomial)
 res <- marginaleffects(mod, vcov = FALSE)
 tid <- tidy(res)
 expect_inherits(tid, "data.frame")
@@ -180,11 +176,12 @@ expect_equivalent(nrow(tid), 2)
 
 
 # predictions: glmer: no validity
-dat <- read.csv(testing_path("stata/databases/lme4_02.csv"))
-dat$clus <- as.factor(dat$clus)
-model <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = dat, family = binomial)
+tmp <- read.csv(testing_path("stata/databases/lme4_02.csv"))
+tmp$clus <- as.factor(tmp$clus)
+tmp <<- tmp
+model <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = tmp, family = binomial)
 pred1 <- predictions(model, newdata = datagrid())
-pred2 <- predictions(model, newdata = head(dat))
+pred2 <- predictions(model, newdata = head(tmp))
 expect_predictions(pred1, n_row = 1)
 expect_predictions(pred2, n_row = 6)
 
@@ -192,14 +189,16 @@ expect_predictions(pred2, n_row = 6)
 
 # glmer.nb: marginaleffects vs. emtrends
 set.seed(101)
-dd <- expand.grid(f1 = factor(1:3), f2 = LETTERS[1:2], g = 1:9, rep = 1:15,
-              KEEP.OUT.ATTRS = FALSE)
+dd <- expand.grid(
+    f1 = factor(1:3), f2 = LETTERS[1:2], g = 1:9, rep = 1:15,
+    KEEP.OUT.ATTRS = FALSE)
 dd$x <- rnorm(nrow(dd))
 mu <- 5 * (-4 + with(dd, as.integer(f1) + 4 * as.numeric(f2)))
 dd$y <- rnbinom(nrow(dd), mu = mu, size = 0.5)
+dd <<- dd
 model <- suppressMessages(glmer.nb(y ~ f1 * f2 + (1 | g), data = dd, verbose = FALSE))
 void <- capture.output(
-expect_marginaleffects(model, n_unique = 2)
+    expect_marginaleffects(model, n_unique = 2)
 )
 
 # emtrends
@@ -225,22 +224,25 @@ mod <- suppressMessages(lmer(
   data = ChickWeight))
 
 mfx1 <- marginaleffects(
-mod,
-newdata = datagrid(Chick = NA,
-                   Diet = 1:4,
-                   Time = 0:21),
-include_random = FALSE)
+    mod,
+    newdata = datagrid(
+        Chick = NA,
+        Diet = 1:4,
+        Time = 0:21),
+    include_random = FALSE)
 mfx2 <- marginaleffects(
-mod,
-newdata = datagrid(Chick = NA,
-                   Diet = 1:4,
-                   Time = 0:21),
-re.form = NA)
+    mod,
+    newdata = datagrid(
+        Chick = NA,
+        Diet = 1:4,
+        Time = 0:21),
+    re.form = NA)
 mfx3 <- marginaleffects(
-mod,
-newdata = datagrid(Chick = "1",
-                   Diet = 1:4,
-                   Time = 0:21))
+    mod,
+    newdata = datagrid(
+        Chick = "1",
+        Diet = 1:4,
+        Time = 0:21))
 expect_inherits(mfx1, "marginaleffects")
 expect_inherits(mfx2, "marginaleffects")
 expect_inherits(mfx3, "marginaleffects")
@@ -248,22 +250,25 @@ expect_equivalent(mfx1$dydx, mfx2$dydx)
 expect_equivalent(mfx1$std.error, mfx2$std.error)
 
 pred1 <- predictions(
-mod,
-newdata = datagrid(Chick = NA,
-                   Diet = 1:4,
-                   Time = 0:21),
-include_random = FALSE)
+    mod,
+    newdata = datagrid(
+        Chick = NA,
+        Diet = 1:4,
+        Time = 0:21),
+    include_random = FALSE)
 pred2 <- predictions(
-mod,
-newdata = datagrid(Chick = NA,
-                   Diet = 1:4,
-                   Time = 0:21),
-re.form = NA)
+    mod,
+    newdata = datagrid(
+        Chick = NA,
+        Diet = 1:4,
+        Time = 0:21),
+    re.form = NA)
 pred3 <- predictions(
-mod,
-newdata = datagrid(Chick = "1",
-                   Diet = 1:4,
-                   Time = 0:21))
+    mod,
+    newdata = datagrid(
+        Chick = "1",
+        Diet = 1:4,
+        Time = 0:21))
 expect_inherits(pred1, "predictions")
 expect_inherits(pred2, "predictions")
 expect_inherits(pred3, "predictions")
@@ -272,10 +277,11 @@ expect_equivalent(pred1$std.error, pred2$std.error)
 expect_true(all(pred1$predicted != pred3$predicted))
 
 # sattertwhaite
-dat <<- mtcars
-dat$cyl <- factor(dat$cyl)
-dat$am <- as.logical(dat$am)
-mod <- lmer(mpg ~ hp + am + (1 | cyl), data = dat)
+tmp <- mtcars
+tmp$cyl <- factor(tmp$cyl)
+tmp$am <- as.logical(tmp$am)
+tmp <<- tmp
+mod <- lmer(mpg ~ hp + am + (1 | cyl), tmp = tmp)
 
 mfx <- marginaleffects(mod, vcov = "kenward-roger")
 cmp <- comparisons(mod, vcov = "kenward-roger")
@@ -302,7 +308,7 @@ expect_equivalent(attr(cmp, "vcov.type"), "Kenward-Roger")
 # Issue #436
 # e = number of events
 # n = total
-dat <- data.frame(
+dat <<- data.frame(
     e = c(
         1, 1, 134413, 92622, 110747,
         3625, 35, 64695, 19428, 221, 913, 13, 5710, 121,

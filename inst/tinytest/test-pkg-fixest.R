@@ -3,6 +3,7 @@ if (ON_CRAN) exit_file("on cran")
 requiet("fixest")
 requiet("data.table")
 fixest::setFixest_nthreads(1)
+fixest::setFixest_notes(FALSE)
 
 
 # Issue #375: friendly warning when sandwich fails
