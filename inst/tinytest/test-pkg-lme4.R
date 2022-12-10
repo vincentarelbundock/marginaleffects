@@ -281,7 +281,7 @@ tmp <- mtcars
 tmp$cyl <- factor(tmp$cyl)
 tmp$am <- as.logical(tmp$am)
 tmp <<- tmp
-mod <- lmer(mpg ~ hp + am + (1 | cyl), tmp = tmp)
+mod <- lmer(mpg ~ hp + am + (1 | cyl), data = tmp)
 
 mfx <- marginaleffects(mod, vcov = "kenward-roger")
 cmp <- comparisons(mod, vcov = "kenward-roger")
@@ -308,7 +308,7 @@ expect_equivalent(attr(cmp, "vcov.type"), "Kenward-Roger")
 # Issue #436
 # e = number of events
 # n = total
-dat <<- data.frame(
+dat <- data.frame(
     e = c(
         1, 1, 134413, 92622, 110747,
         3625, 35, 64695, 19428, 221, 913, 13, 5710, 121,
@@ -319,10 +319,11 @@ dat <<- data.frame(
         10661, 14406, 4048, 102, 916, 1079, 242715),
     year = round(runif(21, min = 1, max = 24)),
     sid = as.factor(1:21))
+k <<- dat
 
 mod <- glmer(
     cbind(e, n - e) ~ 1 + year + (1 | sid),
-    data = dat,
+    data = k,
     family = binomial())
 
 
@@ -341,32 +342,3 @@ cmp <- suppressWarnings(comparisons(mod,
         sid = NA),
     include_random = FALSE))
 expect_inherits(cmp, "comparisons")
-
-
-# # maybe no longer relevant?
-# expect_warning(predictions(
-#     mod,
-#     newdata = datagrid(
-#         year = 1:5,
-#         sid = NA),
-#     include_random = FALSE),
-#     pattern = "Matrix columns")
-
-
-
-# # 'group' cannot be a column name because of conflict with tidy output
-#     set.seed(1024)
-#     N <- 1000
-#     tmp <- data.frame(x1 = rnorm(N),
-#                       x2 = rnorm(N),
-#                       y = sample(0:1, N, replace = TRUE),
-#                       group = sample(letters[1:10], N, replace = TRUE))
-#     mod <- lme4::glmer(y ~ x1 + x2 + (1 | group), data = tmp, family = binomial)
-#     expect_error(marginaleffects(mod), pattern = "more descriptive")
-# 
-
-
-
-
-
-
