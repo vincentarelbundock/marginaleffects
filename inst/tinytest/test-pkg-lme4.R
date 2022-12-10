@@ -305,6 +305,9 @@ expect_equivalent(attr(cmp, "vcov.type"), "Kenward-Roger")
 # expect_true(all(p1$conf.low < p2$conf.low))
 # expect_true(all(p1$conf.high > p2$conf.high))
 
+
+exit_file("works interactively")
+
 # Issue #436
 # e = number of events
 # n = total
