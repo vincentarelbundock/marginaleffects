@@ -25,7 +25,8 @@ get_contrast_data <- function(model,
             first_cross = identical(v$name, first_cross))
         args <- append(args, list(...))
         if (is.null(eps) && variable_classes[[v$name]] == "numeric") {
-            args[["eps"]] <- 1e-4 * diff(range(modeldata[[v$name]], na.rm = TRUE))
+            browser()
+            args[["eps"]] <- 1e-4 * diff(range(modeldata[[v$name]], na.rm = TRUE, finite = TRUE))
         } else {
             args[["eps"]] <- eps
         }
