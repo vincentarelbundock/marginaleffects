@@ -14,6 +14,7 @@ Bug fixes:
 
 * `hypothesis` argument with bayesian models and `tidy()` used to raise an error.
 * Missing values for some regressors in the `comparisons()` output for `brms` models.
+* Fix corner case for slopes when the dataset includes infinite values.
 
 # marginaleffects 0.8.0
 

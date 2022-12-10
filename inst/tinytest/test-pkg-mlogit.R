@@ -11,11 +11,13 @@
 # predict(mod, newdata = head(nd, 12))
 source("helpers.R", local = TRUE)
 if (ON_CI) exit_file("on ci")
-requiet("mlogit")
 requiet("nnet")
-requiet("AER")
+requiet("mlogit")
 requiet("data.table")
-data("TravelMode", package = "AER")
+
+TravelMode <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/AER/TravelMode.csv")
+TravelMode$X <- NULL # {mlogit} assumes first column is the index
+mod <- mlogit(choice ~ wait + gcost | income + size, data = TravelMode)
 
 # no validity
 mod <- mlogit(choice ~ wait + gcost | income + size, TravelMode)
@@ -66,3 +68,18 @@ setDT(mfx2, key = c("rowid", "term", "group"))
 expect_equivalent(mfx1$dydx, mfx2$dydx, tolerance = 1e-5)
 expect_true(cor(mfx1$dydx, mfx2$dydx) > .98)
 
+
+# Issue #551
+mod1 <- mlogit(choice ~ wait + gcost | income + size, TravelMode) 
+mfx <- marginaleffects(mod1, variables = c("income", "size"))
+expect_inherits(mfx, "marginaleffects")
+
+TravelMode$dsize <- ifelse(TravelMode$size == "1", 1, 0)
+mod2 <- mlogit(choice ~ wait + gcost | income + dsize, TravelMode) 
+mfx <- marginaleffects(mod2, variables = c("income", "dsize"))
+expect_inherits(mfx, "marginaleffects")
+
+TravelMode$dsize <- as.factor(TravelMode$dsize)
+mod3 <- mlogit(choice ~ wait + gcost | income + dsize, TravelMode) 
+mfx <- marginaleffects(mod3, variables = c("income", "dsize"))
+expect_inherits(mfx, "marginaleffects")
