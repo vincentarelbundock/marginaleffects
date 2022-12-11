@@ -57,6 +57,8 @@ modelsummary(models)
 
 # Contrasts
 
+Note: The code in this section requires a version of the `modelsummary` package greater than 1.2.0. If it is not available from CRAN, you can install the development version by following the instructions on [the `modelsummary` website.](https://vincentarelbundock.github.io/modelsummary/)
+
 When using the `comparisons()` function (or the `marginaleffects()` function with categorical variables), the output will include two columns to uniquely identify the quantities of interest: `term` and `contrast`.
 
 ```{r}
@@ -64,14 +66,33 @@ dat <- mtcars
 dat$gear <- as.factor(dat$gear)
 mod <- glm(vs ~ gear + mpg, data = dat, family = binomial)
 
-mfx <- marginaleffects(mod)
-tidy(mfx)
+cmp <- comparisons(mod)
+tidy(cmp)
 ```
 
 We can use the `group` argument of the `modelsummary` function to structure the table properly:
 
 ```{r}
-modelsummary(mfx, group = term + contrast ~ model)
+modelsummary(cmp, group = term + contrast ~ model)
+```
+
+Cross-contrasts can be a bit trickier, since there are multiple simultaneous groups. Consider this example:
+
+```{r}
+mod <- lm(mpg ~ factor(cyl) + factor(gear), data = mtcars)
+cmp <- comparisons(
+  mod,
+  variables = c("gear", "cyl"),
+  cross = TRUE)
+tidy(cmp)
+```
+
+As we can see above, there are two relevant grouping columns: `contrast_gear` and `contrast_cyl`. We can simply plug those names in the `shape` argument:
+
+```{r}
+modelsummary(
+  cmp,
+  shape = contrast_gear + contrast_cyl ~ model)
 ```
 
 # Marginal means
