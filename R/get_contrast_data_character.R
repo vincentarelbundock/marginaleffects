@@ -76,7 +76,6 @@ get_contrast_data_character <- function(model,
         error = function(e) variable$label))
     levs_idx <- stats::setNames(levs_idx, paste0("marginaleffects_contrast_", colnames(levs_idx)))
 
-    setDT(newdata)
     lo <- hi <- cjdt(list(newdata, levs_idx))
 
     lo[[variable$name]] <- lo[["marginaleffects_contrast_lo"]]

@@ -25,8 +25,8 @@ expect_true(all(known %in% cmp1$contrast))
 expect_equivalent(cmp1$estimate[3], cmp2$estimate[3] * 10)
 
 # informative errors
-expect_error(comparisons(mod, variables = list(gear = "blah")), pattern = "element")
-expect_error(comparisons(mod, variables = list(hp = "pairwise"), pattern = "numeric variables"))
+expect_error(suppressWarnings(comparisons(mod, variables = list(gear = "blah"))), pattern = "variables")
+expect_error(suppressWarnings(comparisons(mod, variables = list(hp = "pairwise"))), pattern = "variables")
 
 # regression test: factor in formula and numeric check
 mod <- lm(mpg ~ factor(cyl), data = mtcars)

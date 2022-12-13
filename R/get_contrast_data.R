@@ -16,6 +16,11 @@ get_contrast_data <- function(model,
         first_cross <- NULL
     }
 
+                                    
+    # must use `as.data.table()` because `setDT()` does not handle columns with
+    # more dimensions (e.g., "idx" in {mlogit})
+    newdata <- as.data.table(newdata)
+
     for (v in variables) {
         args <- list(
             model = model,

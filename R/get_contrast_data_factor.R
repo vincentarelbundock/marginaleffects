@@ -5,7 +5,7 @@ get_contrast_data_factor <- function(model,
                                      first_cross,
                                      ...) {
 
-    data.table::setDT(newdata)
+
 
     if (is.factor(newdata[[variable$name]])) {
         levs <- levels(newdata[[variable$name]])
