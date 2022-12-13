@@ -1,6 +1,11 @@
 # marginaleffects 0.8.1.9000
 
-* Bug: the `vcov` argument accepts functions for most several models.
+Bug fixes:
+
+* the `vcov` argument accepts functions for most several models.
+* Fix corner case for slopes when the dataset includes infinite values.
+* `mlogit` error with factors.
+
 # marginaleffects 0.8.1
 
 * `deltamethod()` can run hypothesis tests on objects produced by the `comparisons()`, `marginaleffects()`, `predictions()`, and `marginalmeans()` functions. This feature relies on `match.call()`, which means it may not always work when used programmatically, inside functions and nested environments. It is generally safer and more efficient to use the `hypothesis` argument.
@@ -14,8 +19,6 @@ Bug fixes:
 
 * `hypothesis` argument with bayesian models and `tidy()` used to raise an error.
 * Missing values for some regressors in the `comparisons()` output for `brms` models.
-* Fix corner case for slopes when the dataset includes infinite values.
-* `mlogit` error with factors.
 
 # marginaleffects 0.8.0
 
