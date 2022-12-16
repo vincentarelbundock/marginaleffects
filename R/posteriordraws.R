@@ -5,6 +5,7 @@
 #' * "long": long format data frame
 #' * "DxP": Matrix with draws as rows and parameters as columns
 #' * "PxD": Matrix with draws as rows and parameters as columns
+#' * "rvar": Random variable datatype (see `posterior` package documentation).
 #' @return A data.frame with `drawid` and `draw` columns.
 #' @export
 posteriordraws <- function(x, shape = "long") {

@@ -14,6 +14,7 @@ posteriordraws(x, shape = "long")
 \item "long": long format data frame
 \item "DxP": Matrix with draws as rows and parameters as columns
 \item "PxD": Matrix with draws as rows and parameters as columns
+\item "rvar": Random variable datatype (see \code{posterior} package documentation).
 }}
 }
 \value{
