@@ -154,7 +154,14 @@ datagridcf <- function(
     model = NULL,
     newdata = NULL) {
 
-    datagrid(...,
+    dots <- list(...)
+
+    if (length(dots) == 0) {
+        insight::format_error("Users must specify variable values in the `datagridcf()` call.")
+    }
+
+    datagrid(
+        ...,
         model = model,
         newdata = newdata,
         grid_type = "counterfactual")
