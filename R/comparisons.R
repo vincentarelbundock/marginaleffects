@@ -84,6 +84,7 @@
 #' * `TRUE`: Contrasts represent the changes in adjusted predictions when all the predictors specified in the `variables` argument are manipulated simultaneously (a "cross-contrast").
 #' @template model_specific_arguments
 #' @template transform_pre_functions
+#' @template bayesian
 #'
 #' @examples
 #'

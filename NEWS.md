@@ -1,5 +1,13 @@
 # marginaleffects 0.8.1.9000
 
+New features:
+
+* Bayesian posterior distribution summaries can be customized using global options:
+  - `options("marginaleffects_posterior_interval" = "eti")` 
+  - `options("marginaleffects_posterior_interval" = "hdi")` 
+  - `options("marginaleffects_posterior_center" = median)` 
+  - `options("marginaleffects_posterior_center" = mean)` 
+
 Bug fixes:
 
 * the `vcov` argument accepts functions for most several models.

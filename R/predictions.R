@@ -65,6 +65,7 @@
 #' @param transform_post (experimental) A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.
 #'
 #' @template model_specific_arguments
+#' @template bayesian
 #'
 #' @return A `data.frame` with one row per observation and several columns:
 #' * `rowid`: row number of the `newdata` data frame

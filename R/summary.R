@@ -3,6 +3,7 @@
 #' @param object An object produced by the `marginaleffects` function
 #' @inheritParams marginaleffects
 #' @inheritParams tidy.marginaleffects
+#' @template bayesian
 #' @return Data frame of summary statistics for an object produced by the
 #' `marginaleffects` function
 #' @examples
@@ -31,6 +32,7 @@ summary.marginaleffects <- function(object,
 #' @inheritParams summary.marginaleffects
 #' @param x an object produced by the `marginaleffects` function.
 #' @param digits the number of significant digits to use when printing.
+#' @template bayesian
 #' @return Printed summary of a `marginaleffects` object
 print.marginaleffects.summary <- function(x,
                                           digits = max(3L, getOption("digits") - 3L),
@@ -124,6 +126,7 @@ print.marginaleffects.summary <- function(x,
 #' @inheritParams tidy.marginalmeans
 #' @return Data frame of summary statistics for an object produced by the
 #' `marginalmeans` function
+#' @template bayesian
 #' @family summary
 #' @export
 summary.marginalmeans <- function(
@@ -233,6 +236,7 @@ print.marginalmeans.summary <- function(x,
 #' @inheritParams tidy.predictions
 #' @return Data frame of summary statistics for an object produced by the
 #' `predictions` function
+#' @template bayesian
 #' @family summary
 #' @export
 summary.predictions <- function(
@@ -356,6 +360,7 @@ print.predictions.summary <- function(x,
 #'
 #' # average marginal effects
 #' summary(con)
+#' @template bayesian
 #' @family summary
 #' @export
 summary.comparisons <- function(object,

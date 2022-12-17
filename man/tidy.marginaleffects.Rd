@@ -35,14 +35,35 @@ function.
 The standard error of the average marginal effects is obtained by
 taking the mean of each column of the Jacobian. . Then, we use this
 "Jacobian at the mean" in the Delta method to obtained standard errors.
-
-In Bayesian models (e.g., \code{brms}), we compute Average Marginal
-Effects by applying the mean function twice. First, we apply it to all
-marginal effects for each posterior draw, thereby estimating one Average (or
-Median) Marginal Effect per iteration of the MCMC chain. Second, we take
-the \code{mean} and \code{quantile} function to the results of Step 1 to obtain the
-Average (or Median) Marginal Effect and its associated interval.
 }
+\section{Bayesian posterior summaries}{
+
+
+By default, credible intervals in bayesian models are built as equal-tailed
+intervals. This can be changed to a highest density interval by setting a global
+option:
+
+\code{options("marginaleffects_posterior_interval" = "eti")}
+
+\code{options("marginaleffects_posterior_interval" = "hdi")}
+
+By default, the center of the posterior distribution in bayesian models is
+identified by the median. Users can use a different summary function by setting a
+global option:
+
+\code{options("marginaleffects_posterior_center" = mean)}
+
+\code{options("marginaleffects_posterior_center" = median)}
+
+When estimates are averaged using the \code{by} argument, the \code{tidy()} function, or
+the \code{summary()} function, the posterior distribution is marginalized twice over.
+First, we take the average \emph{across} units but \emph{within} each iteration of the
+MCMC chain, according to what the user requested in \code{by} argument or
+\code{tidy()/summary()} functions. Then, we identify the center of the resulting
+posterior using the function supplied to the
+\code{"marginaleffects_posterior_center"} option (the median by default).
+}
+
 \examples{
 mod <- lm(mpg ~ hp * wt + factor(gear), data = mtcars)
 mfx <- marginaleffects(mod)

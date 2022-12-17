@@ -34,13 +34,6 @@ function.
 The standard error of the average marginal effects is obtained by
 taking the mean of each column of the Jacobian. . Then, we use this
 "Jacobian at the mean" in the Delta method to obtained standard errors.
-
-In Bayesian models (e.g., \code{brms}), we compute Average Marginal
-Effects by applying the mean function twice. First, we apply it to all
-marginal effects for each posterior draw, thereby estimating one Average (or
-Median) Marginal Effect per iteration of the MCMC chain. Second, we take
-the \code{mean} and \code{quantile} function to the results of Step 1 to obtain the
-Average (or Median) Marginal Effect and its associated interval.
 }
 \examples{
 mod <- glm(am ~ hp + wt, data = mtcars)

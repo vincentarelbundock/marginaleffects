@@ -29,6 +29,34 @@ Data frame of summary statistics for an object produced by the
 \description{
 Summarize a \code{predictions} object
 }
+\section{Bayesian posterior summaries}{
+
+
+By default, credible intervals in bayesian models are built as equal-tailed
+intervals. This can be changed to a highest density interval by setting a global
+option:
+
+\code{options("marginaleffects_posterior_interval" = "eti")}
+
+\code{options("marginaleffects_posterior_interval" = "hdi")}
+
+By default, the center of the posterior distribution in bayesian models is
+identified by the median. Users can use a different summary function by setting a
+global option:
+
+\code{options("marginaleffects_posterior_center" = mean)}
+
+\code{options("marginaleffects_posterior_center" = median)}
+
+When estimates are averaged using the \code{by} argument, the \code{tidy()} function, or
+the \code{summary()} function, the posterior distribution is marginalized twice over.
+First, we take the average \emph{across} units but \emph{within} each iteration of the
+MCMC chain, according to what the user requested in \code{by} argument or
+\code{tidy()/summary()} functions. Then, we identify the center of the resulting
+posterior using the function supplied to the
+\code{"marginaleffects_posterior_center"} option (the median by default).
+}
+
 \seealso{
 Other summary: 
 \code{\link{glance.marginaleffects}()},

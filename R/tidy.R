@@ -20,15 +20,10 @@ generics::tidy
 #' taking the mean of each column of the Jacobian. . Then, we use this
 #' "Jacobian at the mean" in the Delta method to obtained standard errors.
 #'
-#' In Bayesian models (e.g., `brms`), we compute Average Marginal
-#' Effects by applying the mean function twice. First, we apply it to all
-#' marginal effects for each posterior draw, thereby estimating one Average (or
-#' Median) Marginal Effect per iteration of the MCMC chain. Second, we take
-#' the `mean` and `quantile` function to the results of Step 1 to obtain the
-#' Average (or Median) Marginal Effect and its associated interval.
 #'
 #' @family summary
 #' @export
+#' @template bayesian 
 #' @examples
 #' mod <- lm(mpg ~ hp * wt + factor(gear), data = mtcars)
 #' mfx <- marginaleffects(mod)
@@ -74,6 +69,7 @@ tidy.deltamethod <- function(x, ...) {
 #' @inheritParams tidy.comparisons
 #' @return A "tidy" `data.frame` of summary statistics which conforms to the
 #' `broom` package specification.
+#' @template bayesian
 #' @family summary
 #' @export
 tidy.marginalmeans <- function(x,

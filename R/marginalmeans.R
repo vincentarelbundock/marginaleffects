@@ -63,6 +63,7 @@
 #'   functionality: https://vincentarelbundock.github.io/marginaleffects/
 #'
 #' @template model_specific_arguments
+#' @template bayesian
 #'
 #' @return Data frame of marginal means with one row per variable-value
 #' combination.

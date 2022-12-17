@@ -70,13 +70,25 @@ get_ci_draws <- function(
     estimate,
     overwrite = FALSE) {
 
-    flag <- getOption("marginaleffects_credible_interval", default = "eti")
-    FUN <- ifelse(isTRUE(flag == "hdi"), get_hdi, get_eti)
+    # option name change
+    FUN_INTERVAL <- getOption("marginaleffects_posterior_interval")
+    if (is.null(FUN_INTERVAL)) {
+        FUN_INTERVAL <- getOption("marginaleffects_credible_interval", default = "eti")
+    }
+    checkmate::assert_choice(FUN_INTERVAL, choices = c("eti", "hdi"))
+    if (FUN_INTERVAL == "hdi") {
+        FUN_INTERVAL <- get_hdi
+    } else {
+        FUN_INTERVAL <- get_eti
+    }
+
+    FUN_CENTER <- getOption("marginaleffects_posterior_center", default = stats::median)
+    checkmate::assert_function(FUN_CENTER)
 
     if (!"conf.low" %in% colnames(x) || isTRUE(overwrite)) {
         x[["std.error"]] <- NULL
-        CIs <- t(apply(draws, 1, FUN, credMass = conf_level))
-        Bs <- apply(draws, 1, stats::median)
+        CIs <- t(apply(draws, 1, FUN_INTERVAL, credMass = conf_level))
+        Bs <- apply(draws, 1, FUN_CENTER)
         # transform_pre returns a single value
         if (nrow(x) < nrow(CIs)) {
             CIs <- unique(CIs)

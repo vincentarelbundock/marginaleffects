@@ -766,7 +766,7 @@ comparisons(
 
 For bayesian models like those produced by the `brms` or `rstanarm` packages, the `marginaleffects` package functions report the median of the posterior distribution as their main estimates.
 
-The default credible intervals are equal-tailed intervals (quantiles). Users can customize the type of intervals reported by setting a global option. Currently, the only alternative to ETI is the Highest Density Interval (HDI). Note that, in these two commands, the confidence intervals change slightly, but not the median estimates:
+The default credible intervals are equal-tailed intervals (quantiles), and the default function to identify the center of the distribution is the median. Users can customize the type of intervals reported by setting global options. Note that both the reported estimate and the intervals change slightly:
 
 ```{r}
 library(insight)
@@ -774,10 +774,12 @@ library(marginaleffects)
 
 mod <- insight::download_model("brms_1")
 
-options(marginaleffects_credible_interval = "hdi")
+options(marginaleffects_posterior_interval = "hdi")
+options(marginaleffects_posterior_center = mean)
 comparisons(mod) |> summary()
 
-options(marginaleffects_credible_interval = "eti")
+options(marginaleffects_posterior_interval = "eti")
+options(marginaleffects_posterior_center = stats::median)
 comparisons(mod) |> summary()
 ```
 
