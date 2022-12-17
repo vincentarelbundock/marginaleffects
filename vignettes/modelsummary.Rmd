@@ -22,6 +22,8 @@ knitr::opts_chunk$set(
 )
 ```
 
+Note: This vignette requires a version of `modelsummary` greater than 1.2.0. If this version is not yet available on CRAN, you can install the development version by following the [instructions on the `modelsummary` website.](https://vincentarelbundock.github.io/modelsummary/)
+
 # Marginal effects
 
 We can summarize the results of the `comparisons()` or `marginaleffects()` functions using [the `modelsummary` package.](https://github.com/vincentarelbundock/modelsummary)
