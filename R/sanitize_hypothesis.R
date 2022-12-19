@@ -13,8 +13,9 @@ sanitize_hypothesis <- function(hypothesis, ...) {
         out <- paste(gsub("=", "-(", hypothesis), ")")
         attr(out, "label") <- hypothesis
         return(out)
-    } else {
-        return(hypothesis)
-    }
+    } else if (isTRUE(checkmate::check_matrix(hypothesis))) {
+        attr(hypothesis, "label") <- colnames(hypothesis)
+    } 
+    return(hypothesis)
 
 }

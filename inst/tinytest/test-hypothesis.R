@@ -218,3 +218,11 @@ cmp <- comparisons(
     hypothesis = "reference")
 expect_inherits(cmp, "comparisons")
 expect_equivalent(nrow(cmp), 2)
+
+
+# Issue #559
+mod <- lm(mpg ~ hp + drat, data = mtcars)
+H <- matrix(c(0, 1, -1, 1/3, 1/3, 1/3), ncol = 2)
+colnames(H) <- c("H1", "H2")
+dm <- deltamethod(mod, hypothesis = H)
+expect_equivalent(dm$term, c("H1", "H2"))
