@@ -189,41 +189,35 @@ marginalmeans <- function(model,
     # sanity
     sanity_dots(model = model, ...)
     if (inherits(model, "brmsfit")) {
-        msg <- format_msg(
-        "`brmsfit` objects are yet not supported by the `marginalmeans` function.
-        Follow this link to track progress:
-
-        https://github.com/vincentarelbundock/marginaleffects/issues/137")
-        stop(msg, call. = FALSE)
+        insight::format_error(c(
+            "`brmsfit` objects are yet not supported by the `marginalmeans` function.  Follow this link to track progress:",
+            "https://github.com/vincentarelbundock/marginaleffects/issues/137"))
     }
 
     checkmate::assert_character(variables, min.len = 1, null.ok = TRUE)
     if (!is.null(variables)) {
         bad <- setdiff(variables, colnames(newdata))
         if (length(bad) > 0) {
-            msg <- format_msg(
-            "Elements of the `variables` argument were not found as column names in the
-            data used to fit the model: %s")
-            msg <- sprintf(msg, paste(bad, collapse = ", "))
-            stop(msg, call. = FALSE)
+            msg <- sprintf(
+                "Elements of the `variables` argument were not found as column names in the data used to fit the model: %s",
+                paste(bad, collapse = ", "))
+            insight::format_error(msg)
         }
     }
     if (any(variables %in% insight::find_response(model))) {
-        stop("The `variables` vector cannot include the response.")
+        insight::format_error("The `variables` vector cannot include the response.")
     }
 
     checkmate::assert_character(variables_grid, min.len = 1, null.ok = TRUE)
     if (!is.null(variables_grid)) {
         bad <- setdiff(variables_grid, colnames(newdata))
         if (length(bad) > 0) {
-            msg <- format_msg(
-            "Elements of the `variables_grid` argument were not found as column names in
-            the data used to fit the model: %s")
-            msg <- sprintf(msg, paste(bad, collapse = ", "))
-            stop(msg, call. = FALSE)
+            msg <- sprintf(
+                "Elements of the `variables_grid` argument were not found as column names in the data used to fit the model: %s",
+                paste(bad, collapse = ", "))
+            insight::format_error(msg)
         }
     }
-
 
     # categorical variables, excluding response
     variables_categorical <- find_categorical(newdata = newdata, model = model)
@@ -234,12 +228,7 @@ marginalmeans <- function(model,
         variables_categorical,
         insight::find_response(model, flatten = TRUE))
     if (length(variables_categorical) == 0) {
-        msg <- format_msg(
-        "No logical, factor, or character variable was found in the dataset used to fit
-        the `model` object. This error is often raised when users convert variables to
-        factor in the model formula (e.g., `lm(y ~ factor(x)`). If this is the case,
-        you may consider converting variables in the dataset before fitting the model.")
-        stop(msg, call. = FALSE)
+        msg <- insight::format_error("No logical, factor, or character variable was found in the dataset used to fit the `model` object. This error is often raised when users convert variables to factor in the model formula (e.g., `lm(y ~ factor(x)`). If this is the case, you may consider converting variables in the dataset before fitting the model.")
     }
 
     # subset variables and grid
@@ -259,9 +248,10 @@ marginalmeans <- function(model,
 
     if (!is.null(by)) {
         if (!all(by %in% variables_grid)) {
-            msg <- format_msg(sprintf(
-            "Elements of `by` must be part of: %s",
-            paste(variables_grid, collapse = ", ")))
+            msg <- sprintf(
+                "All elements of `by` must be part of: %s",
+                paste(variables_grid, collapse = ", "))
+            insight::format_warning(msg)
         }
         variables <- setdiff(variables, by)
     }
@@ -307,7 +297,7 @@ marginalmeans <- function(model,
             for (v in colnames(newgrid)) {
                 if (v %in% colnames(wtsgrid) && is.factor(newgrid[[v]])) {
                     wtsgrid[[v]] <- factor(wtsgrid[[v]], levels = levels(newgrid[[v]]))
-                }
+                 }
             }
             wtsgrid <- unique(wtsgrid)
             newgrid <- merge(newgrid, wtsgrid, all.x = TRUE)
