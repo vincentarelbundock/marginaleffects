@@ -466,9 +466,9 @@ get_marginalmeans <- function(model,
         bycols <- intersect(colnames(out), colnames(by))
         for (b in bycols) {
             if (is.factor(out[[b]]) && is.numeric(by[[b]])) {
-                out[[b]] <- as.numeric(out[[b]])
+                out[[b]] <- as.numeric(as.character(out[[b]]))
             } else if (is.numeric(out[[b]]) && is.factor(by[[b]])) {
-                by[[b]] <- as.numeric(by[[b]])
+                by[[b]] <- as.numeric(as.character(by[[b]]))
             } else if (is.factor(out[[b]]) && is.character(by[[b]])) {
                 out[[b]] <- as.character(out[[b]])
             } else if (is.character(out[[b]]) && is.factor(by[[b]])) {
