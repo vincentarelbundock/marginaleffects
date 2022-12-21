@@ -48,6 +48,14 @@ expect_equivalent(dmm$estimate, 0)
 dmm <- deltamethod(mod, FUN = f, hypothesis = "b3 = b2")
 expect_equivalent(dmm$estimate, 1.33154848763268)
 
+# named matrix
+mod <- lm(mpg ~ factor(cyl), data = mtcars)
+hyp <- matrix(
+    c(0, -1, 1, 1/3, 1/3, 1/3),
+    ncol = 2,
+    dimnames = list(NULL, c("H1", "H2")))
+del <- deltamethod(mod, hypothesis = hyp)
+expect_equivalent(del$term, c("H1", "H2"))
 
 
 # deltamethod() applied to {marginaleffects} package objects
