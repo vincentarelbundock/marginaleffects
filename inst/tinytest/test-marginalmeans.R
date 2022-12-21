@@ -151,18 +151,11 @@ expect_equivalent(mm$marginalmean, ma$y)
 
 
 # simple marginal means for each level of `cyl`
-pkgload::load_all()
 dat <- mtcars
 dat$carb <- factor(dat$carb)
 dat$cyl <- factor(dat$cyl)
 dat$am <- as.logical(dat$am)
 mod <- lm(mpg ~ carb + cyl + am, dat)
-
-marginalmeans(
-  mod,
-  variables = "cyl")
-
-# collapse levels of cyl by averaging
 by <- data.frame(
   cyl = c(4, 6, 8),
   by = c("4 & 6", "4 & 6", "8"))
