@@ -335,6 +335,7 @@ marginalmeans <- function(model,
             hypothesis = hypothesis,
             by = by,
             ...)
+
         # get rid of attributes in column
         out[["std.error"]] <- as.numeric(se)
         J <- attr(se, "jacobian")
@@ -355,7 +356,7 @@ marginalmeans <- function(model,
     out <- backtransform(out, transform_post)
 
     # column order
-    cols <- c("type", "group", colnames(by), "term", "hypothesis", "value", variables, "marginalmean",
+    cols <- c("rowid", "type", "group", colnames(by), "term", "hypothesis", "value", variables, "marginalmean",
               "std.error", "conf.low", "conf.high", sort(colnames(out)))
     cols <- unique(cols)
     cols <- intersect(cols, colnames(out))
@@ -403,52 +404,63 @@ get_marginalmeans <- function(model,
                               by = NULL,
                               ...) {
 
+    if ("wts" %in% colnames(newdata)) {
+        wts <- "wts"
+    } else {
+        wts <- NULL
+    }
 
     # predictions for each cell of all categorical data, but not the response
-    pred <- predictions(
-        model = model,
-        newdata = newdata,
-        type = type,
-        vcov = FALSE,
-        modeldata = modeldata,
-        ...)
+    if (isTRUE(cross) || length(variables) == 1) {
+        out <- predictions(
+            model = model,
+            newdata = newdata,
+            type = type,
+            vcov = FALSE,
+            modeldata = modeldata,
+            wts = wts,
+            by = variables,
+            ...)
+        if (length(variables) == 1) {
+            out$term <- variables
+            data.table::setnames(out, old = variables, new = "value")
+        }
+
+    # predictions for each variable individual, then bind
+    } else {
+        pred_list <- draw_list <- list()
+        for (v in variables) {
+            tmp <- predictions(
+                model = model,
+                newdata = newdata,
+                type = type,
+                vcov = FALSE,
+                modeldata = modeldata,
+                wts = wts,
+                by = v,
+                ...)
+            draw_list[[v]] <- attr(tmp, "posterior_draws")
+            tmp$term <- v
+            data.table::setnames(tmp, old = v, new = "value")
+            pred_list[[v]] <- tmp
+        }
+        # try to preserve term-value class, but convert to character if needed to bind
+        classes <- sapply(pred_list, function(x) class(x$value)[1])
+        if (length(unique(classes)) > 1) {
+            for (i in seq_along(pred_list)) {
+                pred_list[[i]]$value <- as.character(pred_list[[i]]$value)
+            }
+        }
+        out <- rbindlist(pred_list)
+        data.table::setorderv(out, c("term", "value"))
+    }
+
+    data.table::setnames(out, old = "predicted", new = "marginalmean")
+    data.table::setorderv(out, c("term", "value"))
 
     if (isTRUE(checkmate::check_data_frame(by))) {
         # warnings for factor vs numeric vs character. merge.data.table usually still works.
-        pred <- suppressWarnings(merge(pred, by))
-    }
-
-    # marginal means
-    if (!isTRUE(cross)) {
-        mm <- list()
-        for (v in variables) {
-            idx <- intersect(colnames(pred), c("term", "group", "by", v))
-            tmp <- data.table(pred)[
-                , .(marginalmean = stats::weighted.mean(predicted, w = wts, na.rm = TRUE)),
-                by = idx]
-            tmp[, "term" := v]
-            setnames(tmp, old = v, new = "value")
-            mm[[v]] <- tmp
-        }
-
-        # try to preserve term-value class, but convert to character if needed to bind
-        classes <- sapply(mm, function(x) class(x$value)[1])
-        if (length(unique(classes)) > 1) {
-            for (i in seq_along(mm)) {
-                mm[[i]]$value <- as.character(mm[[i]]$value)
-            }
-        }
-        out <- rbindlist(mm)
-        setorder(out, "term", "value")
-    } else {
-        idx <- intersect(colnames(pred), c("term", "group", "by", variables))
-
-        out <- data.table(pred)[
-            , .(marginalmean = stats::weighted.mean(predicted, w = wts, na.rm = TRUE)),
-            by = idx]
-    }
-
-    if (isTRUE(checkmate::check_data_frame(by))) {
+        out <- suppressWarnings(merge(out, by))
         out <- out[, .(marginalmean = mean(marginalmean)), by = "by"]
     }
 
