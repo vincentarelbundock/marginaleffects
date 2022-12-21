@@ -246,7 +246,7 @@ marginalmeans <- function(model,
 
     variables_grid <- unique(c(variables, variables_grid))
 
-    if (!is.null(by)) {
+    if (isTRUE(checkmate::check_character(by))) {
         if (!all(by %in% variables_grid)) {
             msg <- sprintf(
                 "All elements of `by` must be part of: %s",
@@ -320,7 +320,6 @@ marginalmeans <- function(model,
     out <- as.data.frame(mm)
 
     # standard errors via delta method
-    J <- NULL
     if (!vcov_false) {
         se <- get_se_delta(
             model,
@@ -339,6 +338,8 @@ marginalmeans <- function(model,
         # get rid of attributes in column
         out[["std.error"]] <- as.numeric(se)
         J <- attr(se, "jacobian")
+    } else {
+        J <- NULL
     }
 
     lin <- tryCatch(insight::model_info(model)$is_linear, error = function(e) FALSE)
@@ -419,11 +420,11 @@ get_marginalmeans <- function(model,
             vcov = FALSE,
             modeldata = modeldata,
             wts = wts,
-            by = variables,
+            by = c("group", variables),
             ...)
         if (length(variables) == 1) {
             out$term <- variables
-            data.table::setnames(out, old = variables, new = "value")
+            out$value <- out[[variables]]
         }
 
     # predictions for each variable individual, then bind
@@ -437,7 +438,7 @@ get_marginalmeans <- function(model,
                 vcov = FALSE,
                 modeldata = modeldata,
                 wts = wts,
-                by = v,
+                by = c("group", v),
                 ...)
             draw_list[[v]] <- attr(tmp, "posterior_draws")
             tmp$term <- v
@@ -455,12 +456,26 @@ get_marginalmeans <- function(model,
         data.table::setorderv(out, c("term", "value"))
     }
 
+    data.table::setDT(out)
     data.table::setnames(out, old = "predicted", new = "marginalmean")
-    data.table::setorderv(out, c("term", "value"))
+    keys <- intersect(colnames(out), c("term", "value", variables))
+    data.table::setorderv(out, keys)
 
     if (isTRUE(checkmate::check_data_frame(by))) {
         # warnings for factor vs numeric vs character. merge.data.table usually still works.
-        out <- suppressWarnings(merge(out, by))
+        bycols <- intersect(colnames(out), colnames(by))
+        for (b in bycols) {
+            if (is.factor(out[[b]]) && is.numeric(by[[b]])) {
+                out[[b]] <- as.numeric(out[[b]])
+            } else if (is.numeric(out[[b]]) && is.factor(by[[b]])) {
+                by[[b]] <- as.numeric(by[[b]])
+            } else if (is.factor(out[[b]]) && is.character(by[[b]])) {
+                out[[b]] <- as.character(out[[b]])
+            } else if (is.character(out[[b]]) && is.factor(by[[b]])) {
+                by[[b]] <- as.character(by[[b]])
+            }
+        }
+        out <- merge(out, by)
         out <- out[, .(marginalmean = mean(marginalmean)), by = "by"]
     }
 

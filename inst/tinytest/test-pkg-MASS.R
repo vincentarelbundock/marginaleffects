@@ -175,11 +175,10 @@ tmp$am <- as.logical(tmp$am)
 tmp <<- tmp
 mod <- suppressWarnings(MASS::polr(factor(gear) ~ vs + am, data = tmp))
 # TODO: emmeans seems broken at the moment
-# em <- emmeans(mod, specs = "am", regrid = "response")
+# em <- emmeans(mod, specs = "am", type = "response")
 # em <- tidy(em)
 mm <- suppressMessages(marginalmeans(mod, variables = "am", type = "probs"))
 expect_equivalent(nrow(mm), 6)
-
 
 
 # glmmPQL
