@@ -205,7 +205,10 @@ mod2 <- feols(mpg ~ drat + i(cyl, gear), data = mtcars)
 mod3 <- feols(mpg ~ drat + i(cyl), data = mtcars)
 mod4 <- feols(mpg ~ drat + i(cyl, wt) + i(gear, i.am), data = mtcars)
 fun <- function(model) {
-    names(get_variable_class(get_modeldata(model), compare = "categorical"))
+    out <- marginaleffects:::get_modeldata(model)
+    out <- marginaleffects:::get_variable_class(out, compare = "categorical")
+    out <- names(out)
+    return(out)
 }
 expect_equivalent(fun(mod1), c("cyl", "gear"))
 expect_equivalent(fun(mod2), c("cyl"))

@@ -334,7 +334,7 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
     }
 
     # check `at` names
-    variables_missing <- setdiff(names(at), variables_all)
+    variables_missing <- setdiff(names(at), c(variables_all, "group"))
     if (length(variables_missing) > 0) {
         warning(sprintf("Some of the variable names are missing from the model data: %s",
                         paste(variables_missing, collapse = ", ")),
@@ -363,7 +363,7 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
         }
 
         # not an "else" situation because we want to process the output of functions too
-        if (is.factor(newdata[[n]]) || isTRUE(attributes(newdata)$marginaleffects_variable_class[[n]]) == "factor") {
+        if (is.factor(newdata[[n]]) || isTRUE(get_variable_class(newdata, n, "factor"))) {
             if (is.factor(newdata[[n]])) {
                 levs <- levels(newdata[[n]])
             } else {
