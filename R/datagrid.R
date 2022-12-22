@@ -254,7 +254,7 @@ typical <- function(
                 } else {
                     out[[n]] <- FUN_numeric(dat_automatic[[n]])
                 }
-            } else if (get_variable_class == "other") {
+            } else {
                 out[[n]] <- FUN_other(dat_automatic[[n]])
             }
         }
