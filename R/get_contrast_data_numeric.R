@@ -5,7 +5,7 @@ get_contrast_data_numeric <- function(model,
                                       ...) {
 
 
-    modeldata <- hush(insight::get_data(model))
+    modeldata <- get_modeldata(model)
     if (is.null(modeldata)) {
         modeldata <- newdata
     }

@@ -198,7 +198,7 @@ predictions <- function(model,
             }
         } else if (fun_name == "visualisation_matrix") {
             if (!"x" %in% names(lcall)) {
-                lcall <- c(lcall, list("x" = hush(insight::get_data(model))))
+                lcall <- c(lcall, list("x" = get_modeldata))
                 newdata <- eval.parent(as.call(lcall))
             }
         }
@@ -210,7 +210,7 @@ predictions <- function(model,
     if ("modeldata" %in% names(dots)) {
         modeldata <- dots[["modeldata"]]
     } else {
-        modeldata <- hush(insight::get_data(model))
+        modeldata <- get_modeldata(model)
     }
 
     # do not check the model because `insight` supports more models than `marginaleffects`

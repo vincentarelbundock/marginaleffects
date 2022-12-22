@@ -17,7 +17,7 @@ sanitize_variables <- function(variables,
 
     # data
     if (is.null(newdata)) {
-        newdata <- hush(insight::get_data(model))
+        newdata <- get_modeldata(model)
     }
 
     modeldata <- attr(newdata, "newdata_modeldata")

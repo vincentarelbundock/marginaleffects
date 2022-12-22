@@ -16,7 +16,7 @@ sanitize_newdata <- function(model, newdata, by = NULL, modeldata = NULL) {
 
     # we always need this to extract attributes
     if (is.null(modeldata)) {
-        modeldata <- hush(insight::get_data(model))
+        modeldata <- get_modeldata(model)
         # cannot extract data on unsupported custom models (e.g., numpyro)
         if (is.null(modeldata)) {
             modeldata <- newdata
@@ -65,7 +65,7 @@ sanitize_newdata <- function(model, newdata, by = NULL, modeldata = NULL) {
     mc <- Filter(function(x) is.matrix(modeldata[[x]]), colnames(modeldata))
     cl <- Filter(function(x) is.character(modeldata[[x]]), colnames(modeldata))
     cl <- lapply(modeldata[, cl], unique)
-    vc <- sapply(names(modeldata), find_variable_class, newdata = modeldata, model = model)
+    vc <- attributes(modeldata)$marginaleffects_variable_class
     column_attributes <- list(
         "matrix_columns" = mc,
         "character_levels" = cl,
@@ -100,7 +100,7 @@ sanitize_newdata <- function(model, newdata, by = NULL, modeldata = NULL) {
 
     # if there are no categorical variables in `newdata`, check the model terms
     # to find transformation and warn accordingly.
-    categorical_variables <- find_categorical(newdata = newdata, model = model)
+    categorical_variables <- get_variable_class(newdata, compare = "categorical")
     flag <- FALSE
     if (length(categorical_variables) == 0) {
         termlabs <- try(attr(stats::terms(model), "term.labels"), silent = TRUE)

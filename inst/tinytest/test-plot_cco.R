@@ -3,9 +3,6 @@ source("helpers.R")
 # not supported because datplot is not representative, so we can't take minmax or iqr
 mod <- lm(mpg ~ wt * hp, data = mtcars)
 
-
-
-
 p <- plot_cco(mod, effect = list(hp = "minmax"), condition = "wt", draw = FALSE)
 expect_equivalent(length(unique(p$comparison)), 25)
 p <- plot_cco(mod, effect = list(hp = "minmax"), condition = "wt")

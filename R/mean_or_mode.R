@@ -53,7 +53,7 @@ mean_or_mode.data.frame <- function(x) {
     for (n in names(x)) {
         # variables transformed to factor in formula are assigned a "factor"
         # TRUE attribute by insight::get_data
-        if (isTRUE(attributes(x[[n]])$factor)) {
+        if (isTRUE(attributes(x)$marginaleffects_variable_class[[n]] == "factor")) {
             out[[n]] <- mean_or_mode.factor(x[[n]])
         } else {
             out[[n]] <- mean_or_mode(x[[n]])

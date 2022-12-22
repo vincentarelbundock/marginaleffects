@@ -226,7 +226,7 @@ marginaleffects <- function(model,
             }
         } else if (fun_name == "visualisation_matrix") {
             if (!"x" %in% names(lcall)) {
-                lcall <- c(lcall, list("x" = hush(insight::get_data(model))))
+                lcall <- c(lcall, list("x" = get_modeldata(model)))
                 newdata <- eval.parent(as.call(lcall))
             }
         }

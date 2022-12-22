@@ -217,7 +217,7 @@ get_plot_newdata <- function(model, condition, effect = NULL) {
     }
 
     # get data to know over what range of values we should plot
-    dat <- hush(insight::get_data(model))
+    dat <- get_modeldata(model)
     resp <- insight::get_response(model)
     respname <- insight::find_response(model)
 
@@ -235,7 +235,7 @@ get_plot_newdata <- function(model, condition, effect = NULL) {
 
     # condition 1: x-axis
     if (is.null(condition[[1]])) {
-        if (is.numeric(dat[[condition1]]) && !isTRUE(attr(dat[[condition1]], "factor"))) {
+        if (is.numeric(dat[[condition1]]) && !isTRUE(attributes(dat)$marginaleffects_variable_class[[condition1]] == "factor")) {
             at_list[[condition1]] <- seq(
                 min(dat[[condition1]], na.rm = TRUE),
                 max(dat[[condition1]], na.rm = TRUE),

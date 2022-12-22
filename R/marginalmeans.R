@@ -169,7 +169,7 @@ marginalmeans <- function(model,
         type <- sanitize_type(model = model, type = type, calling_function = "marginalmeans")
     }
 
-    modeldata <- newdata <- hush(insight::get_data(model))
+    modeldata <- newdata <- get_modeldata(model)
 
     transform_post <- sanitize_transform_post(transform_post)
     cross <- sanitize_cross(cross, variables, model)
@@ -220,12 +220,10 @@ marginalmeans <- function(model,
     }
 
     # categorical variables, excluding response
-    variables_categorical <- find_categorical(newdata = newdata, model = model)
-    variables_categorical <- unique(variables_categorical)
-    idx <- !grepl("as\\.logical", variables_categorical)
-    variables_categorical <- variables_categorical[idx]
+    variables_categorical <- insight::find_variables(model, flatten = TRUE)
+    idx <- sapply(variables_categorical, function(x) get_variable_class(newdata, x, "categorical"))
     variables_categorical <- setdiff(
-        variables_categorical,
+        unique(variables_categorical[idx]),
         insight::find_response(model, flatten = TRUE))
     if (length(variables_categorical) == 0) {
         msg <- insight::format_error("No logical, factor, or character variable was found in the dataset used to fit the `model` object. This error is often raised when users convert variables to factor in the model formula (e.g., `lm(y ~ factor(x)`). If this is the case, you may consider converting variables in the dataset before fitting the model.")

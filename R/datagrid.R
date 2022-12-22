@@ -242,14 +242,13 @@ typical <- function(
         # na.omit destroys attributes, and we need the "factor" attribute
         # created by insight::get_data
         for (n in names(dat_automatic)) {
-            variable_class <- find_variable_class(n, newdata = dat_automatic, model = model)
-            if (variable_class == "factor" || n %in% tmp[["cluster"]]) {
+            if (get_variable_class(dat, n, "factor") || n %in% tmp[["cluster"]]) {
                 out[[n]] <- FUN_factor(dat_automatic[[n]])
-            } else if (variable_class == "logical") {
+            } else if (get_variable_class(dat, n, "logical")) {
                 out[[n]] <- FUN_logical(dat_automatic[[n]])
-            } else if (variable_class == "character") {
+            } else if (get_variable_class(dat, n, "character")) {
                 out[[n]] <- FUN_character(dat_automatic[[n]])
-            } else if (variable_class == "numeric") {
+            } else if (get_variable_class(dat, n, "numeric")) {
                 if (is.integer(dat_automatic[[n]])) {
                     out[[n]] <- FUN_integer(dat_automatic[[n]])
                 } else {
@@ -286,7 +285,7 @@ typical <- function(
     # na.omit destroys attributes, and we need the "factor" attribute
     # created by insight::get_data
     for (n in names(out)) {
-        attr(out[[n]], "factor") <- attr(dat[[n]], "factor")
+        attr(out, "marginaleffects_variable_class") <- attr(dat, "marginaleffects_variable_class")
     }
 
     return(out)
@@ -319,16 +318,19 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
         variables_all <- unlist(variables_list, recursive = TRUE)
         # weights are not extracted by default
         variables_all <- c(variables_all, insight::find_weights(model))
+
     } else if (!is.null(newdata)) {
         variables_list <- NULL
         variables_all <- colnames(newdata)
+        newdata <- set_variable_class(modeldata = newdata)
     }
+
     variables_manual <- names(at)
     variables_automatic <- setdiff(variables_all, variables_manual)
 
     # fill in missing data after sanity checks
     if (is.null(newdata)) {
-        newdata <- hush(insight::get_data(model))
+        newdata <- get_modeldata(model)
     }
 
     # check `at` names
@@ -361,7 +363,7 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
         }
 
         # not an "else" situation because we want to process the output of functions too
-        if (is.factor(newdata[[n]]) || isTRUE(attributes(newdata[[n]])$factor)) {
+        if (is.factor(newdata[[n]]) || isTRUE(attributes(newdata)$marginaleffects_variable_class[[n]]) == "factor") {
             if (is.factor(newdata[[n]])) {
                 levs <- levels(newdata[[n]])
             } else {

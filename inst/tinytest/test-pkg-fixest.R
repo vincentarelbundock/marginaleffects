@@ -200,15 +200,17 @@ cmp <- comparisons(
 
 
 # Issue #484: fixest::i() parsing
-find_categorical <- marginaleffects:::find_categorical
 mod1 <- feols(mpg ~ drat + i(cyl, i.gear), data = mtcars)
 mod2 <- feols(mpg ~ drat + i(cyl, gear), data = mtcars)
 mod3 <- feols(mpg ~ drat + i(cyl), data = mtcars)
 mod4 <- feols(mpg ~ drat + i(cyl, wt) + i(gear, i.am), data = mtcars)
-expect_equivalent(find_categorical(model = mod1), c("cyl", "gear"))
-expect_equivalent(find_categorical(model = mod2), c("cyl"))
-expect_equivalent(find_categorical(model = mod3), c("cyl"))
-expect_equivalent(find_categorical(model = mod4), c("cyl", "gear", "am"))
+fun <- function(model) {
+    names(get_variable_class(get_modeldata(model), compare = "categorical"))
+}
+expect_equivalent(fun(mod1), c("cyl", "gear"))
+expect_equivalent(fun(mod2), c("cyl"))
+expect_equivalent(fun(mod3), c("cyl"))
+expect_equivalent(fun(mod4), c("cyl", "gear", "am"))
 if (utils::packageVersion("insight") < "0.18.4.4") exit_file("insight version")
 m <- marginaleffects(mod4)
 expect_inherits(m, "marginaleffects")

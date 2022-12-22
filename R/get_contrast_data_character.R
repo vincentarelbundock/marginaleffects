@@ -7,7 +7,7 @@ get_contrast_data_character <- function(model,
 
     # factors store all levels, but characters do not, so we need to extract the
     # original data from the model.
-    tmp <- modeldata <- hush(insight::get_data(model))
+    tmp <- modeldata <- get_modeldata(model)
 
     # unsupported by insight (e.g., numpyro)
     if (is.null(tmp)) {
