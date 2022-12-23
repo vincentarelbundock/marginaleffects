@@ -1,5 +1,4 @@
 source("helpers.R", local = TRUE)
-if (ON_CRAN) exit_file("on cran")
 requiet("estimatr")
 requiet("emmeans")
 requiet("margins")
@@ -11,14 +10,17 @@ Kmenta <<- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/sem/Kmen
 dat <- mtcars
 dat$cyl <- factor(dat$cyl)
 dat <<- dat
-mod <- lm_lin(mpg ~ am, ~ hp + cyl, data = mtcars)
+mod <- lm_lin(mpg ~ am, ~ hp + cyl, data = dat)
+mfx <- marginaleffects(mod)
+expect_inherits(mfx, "marginaleffects")
 expect_marginaleffects(mod, n_unique = 9)
 
 
 # iv_robust vs. stata
-model <- iv_robust(Q ~ P + D | D + F + A, 
-               se_type = "stata",
-               data = Kmenta)
+model <- iv_robust(
+    Q ~ P + D | D + F + A, 
+    se_type = "stata",
+    data = Kmenta)
 stata <- readRDS(testing_path("stata/stata.rds"))$estimatr_iv_robust
 mfx <- tidy(marginaleffects(model))
 mfx <- merge(mfx, stata)
@@ -29,7 +31,7 @@ expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .1)
 # lm_robust vs. stata vs. emtrends
 model <- lm_robust(carb ~ wt + factor(cyl),
                se_type = "HC2",
-               data = mtcars)
+               data = dat)
 stata <- readRDS(testing_path("stata/stata.rds"))$estimatr_lm_robust
 mfx <- tidy(marginaleffects(model))
 mfx$term <- ifelse(mfx$contrast == "6 - 4", "6.cyl", mfx$term)
