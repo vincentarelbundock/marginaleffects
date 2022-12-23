@@ -1,12 +1,63 @@
-exit_file("tinyviztest")
 source("helpers.R")
-using("tinyviztest")
 requiet("nnet")
+
+
+# Issue #567: threenum and minmax are mixed up
+dat <<- transform(mtcars, am_fct = factor(am))
+mod <- lm(wt ~ am_fct * mpg, data = dat)
+
+# minmax
+p1 <- plot_cap(
+    mod,
+    draw = FALSE,
+    condition = list("am_fct", mpg = "minmax")) 
+p2 <- predictions(
+    mod,
+    newdata = datagrid(mpg = range, am_fct = 0:1))
+p2$am_fct <- as.numeric(as.character(p2$am_fct))
+p2 <- p2[order(-p2$am_fct, p2$mpg),]
+expect_equivalent(p1$predicted, p2$predicted)
+
+p1$condition1 <- as.character(p1$condition1)
+p1$condition2 <- as.character(p1$condition2)
+
+x <- p1[p1$condition1 == "1" & p1$condition2 == "Min", "predicted"]
+y <- p2[p2$am_fct == 1 & p2$mpg == 10.4, "predicted"]
+expect_equivalent(x, y)
+
+# threenum
+threenum <- c(
+    mean(dat$mpg) - sd(dat$mpg),
+    mean(dat$mpg),
+    mean(dat$mpg) + sd(dat$mpg))
+
+p1 <- plot_cap(
+    mod,
+    draw = FALSE,
+    condition = list("am_fct", mpg = "threenum")) 
+p2 <- predictions(
+    mod,
+    newdata = datagrid(mpg = threenum, am_fct = 0:1))
+p2$am_fct <- as.numeric(as.character(p2$am_fct))
+p2 <- p2[order(-p2$am_fct, p2$mpg),]
+expect_equivalent(p1$predicted, p2$predicted)
+
+
+
+
+
+######################################
+exit_file("tinyviztest")
+using("tinyviztest")
+######################################
+
+
 
 # two conditions
 mod <- lm(mpg ~ hp * wt * am, data = mtcars)
 p <- plot_cap(mod, condition = c("hp", "wt"))
 expect_vdiff(p, "plot_cap")
+
 
 
 # continuous vs. categorical x-axis
@@ -85,3 +136,5 @@ expect_inherits(p, "gg")
 expect_error(
     plot_cap(mod, condition = list(100:110, "wt" = c(1.5, 2.5, 3.5))),
     pattern = "condition")
+
+

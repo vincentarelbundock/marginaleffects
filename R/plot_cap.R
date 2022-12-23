@@ -62,7 +62,7 @@ plot_cap <- function(model,
         v <- paste0("condition", i)
         fun <- function(x, lab) {
             idx <- match(x, sort(unique(x)))
-            factor(lab[idx], labels = lab)
+            factor(lab[idx], levels = lab)
         }
         if (identical(condition[[i]], "threenum")) {
             datplot[[v]] <- fun(datplot[[v]], c("-SD", "Mean", "+SD"))

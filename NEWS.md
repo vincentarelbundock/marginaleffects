@@ -10,9 +10,10 @@ New features:
 
 Bug fixes:
 
-* the `vcov` argument accepts functions for most several models.
+* Incorrect results: In 0.8.1, `plot_c*()` the `threenum` and `minmax` labels did not correspond to the correct numeric values.
 * Fix corner case for slopes when the dataset includes infinite values.
 * `mlogit` error with factors.
+* The `vcov` argument accepts functions for most models.
 
 # marginaleffects 0.8.1
 
