@@ -15,6 +15,25 @@ sanitize_variables <- function(variables,
         checkmate::check_list(variables, names = "unique"),
         combine = "or")
 
+    # reserved keywords
+    tmp <- insight::find_variables(model, flatten = TRUE)
+    if (isTRUE(checkmate::check_character(tmp))) {
+        reserved_input <- tmp
+    } else if (isTRUE(checkmate::check_list(tmp))) {
+        reserved_input <- names(tmp)
+    } else {
+        reserved_input <- NULL
+    }
+    reserved <- c("rowid", "group", "term", "contrast", "estimate", "std.error", "statistic", "conf.low", "conf.high")
+    bad <- intersect(reserved_input, reserved)
+    if (length(bad) > 0) {
+        msg <- c(
+            "The following variable names are forbidden to avoid conflicts with the column names of the outputs produced by the `marginaleffects` package:",
+            sprintf("%s", paste(sprintf('"%s"', bad), collapse = ", ")),
+            "Please rename your variables before fitting the model or specify the `variables` argument.")
+        insight::format_error(msg)
+    }
+
     # data
     if (is.null(newdata)) {
         newdata <- get_modeldata(model)
@@ -59,35 +78,26 @@ sanitize_variables <- function(variables,
         predictors <- variables
     }
 
-    # variable classes: compute only once
-    variable_class <- attr(newdata, "newdata_variable_class")
-
     # character -> list
     if (isTRUE(checkmate::check_character(predictors))) {
 
-        # when users includes variables not in the model
-        bad <- setdiff(predictors, names(variable_class))
-        if (length(bad) > 0) {
-            msg <- "These elements should not appear in the `variables` argument: %s."
-            msg <- sprintf(msg, paste(bad, collapse = ", "))
-            insight::format_error(msg)
-        }
+        predictors <- setdiff(predictors, reserved)
 
         predictors_new <- list()
 
         for (v in predictors) {
 
-            if (isTRUE(variable_class[[v]] == "numeric")) {
+            if (get_variable_class(newdata, v, "numeric")) {
 
                 # binary variables: we take the difference by default
-                v_unique <- unique(modeldata[[v]])
-                if (all(v_unique %in% 0:1)) {
+                if (all(modeldata[[v]] %in% 0:1)) {
                     predictors_new[[v]] <- 0:1
 
                 } else if (calling_function == "comparisons") {
                     predictors_new[[v]] <- contrast_numeric
 
                 } else if (calling_function == "predictions") {
+                    v_unique <- unique(modeldata[[v]])
                     if (length(v_unique) < 6) {
                         predictors_new[[v]] <- v_unique
                     } else {
@@ -130,15 +140,6 @@ sanitize_variables <- function(variables,
     idx <- !grepl(":", names(predictors))
     predictors <- predictors[idx]
 
-    # reserved keywords
-    reserved <- intersect(
-        names(predictors),
-        c("rowid", "group", "term", "contrast", "estimate", "std.error", "statistic", "conf.low", "conf.high"))
-    if (isTRUE(length(reserved) > 0)) {
-        predictors <- predictors[!names(predictors) %in% reserved]
-        msg <- sprintf("The following variable names are forbidden to avoid conflicts with the column names of the outputs produced by the `marginaleffects` package: %s Please rename your variables before fitting the model or specify the `variables` argument.", paste(reserved, collapse = ", "))
-        insight::format_warning(msg)
-    }
 
     # matrix variables are not supported
     mc <- attr(newdata, "newdata_matrix_columns")
@@ -160,7 +161,7 @@ sanitize_variables <- function(variables,
 
         if (v %in% colnames(newdata)) {
 
-            if (identical(variable_class[[v]], "numeric")) {
+            if (get_variable_class(newdata, v, "numeric")) {
 
                 if (calling_function == "comparisons") {
 
@@ -216,7 +217,7 @@ sanitize_variables <- function(variables,
                     }
                 }
 
-            } else if (isTRUE(variable_class[[v]] %in% c("factor", "character"))) {
+            } else if (get_variable_class(newdata, v, "categorical")) {
 
                 if (calling_function == "comparisons") {
                     valid <- c("reference", "sequential", "pairwise", "all")
@@ -301,7 +302,7 @@ sanitize_variables <- function(variables,
     }
 
     for (v in names(predictors)) {
-        if (isTRUE(variable_class[[v]] == "numeric")) {
+        if (get_variable_class(newdata, v, "numeric") || get_variable_class(newdata, v, "binary")) {
             fun <- fun_numeric
             lab <- lab_numeric
         } else {

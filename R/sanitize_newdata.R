@@ -132,6 +132,10 @@ sanitize_newdata <- function(model, newdata, by = NULL, modeldata = NULL) {
         }
     }
 
+    if (is.null(attr(newdata, "marginaleffects_variable_class"))) {
+        newdata <- set_variable_class(newdata, model = model)
+    }
+
     return(newdata)
 }
 

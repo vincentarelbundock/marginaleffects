@@ -23,8 +23,8 @@ f <- wt82_71 ~ qsmk + sex + race + age + I(age*age) + factor(education) +
 
 fit <- glm(f, data = nhefs)
 pre <- predictions(fit, newdata = nhefs)
-cmp <- comparisons(fit, newdata = nhefs)
 mfx <- marginaleffects(fit, newdata = nhefs)
+cmp <- comparisons(fit, newdata = nhefs)
 expect_inherits(pre, "predictions")
 expect_inherits(cmp, "comparisons")
 expect_inherits(mfx, "marginaleffects")
@@ -35,8 +35,6 @@ expect_inherits(mfx, "marginaleffects")
 dat <- mtcars
 dat$group <- dat$am
 mod <- lm(mpg ~ group, data = dat)
-expect_warning(comparisons(mod), pattern = "forbidden")
-expect_error(suppressWarnings(comparisons(mod)), pattern = "change")
+expect_error(comparisons(mod), pattern = "forbidden")
 mod <- lm(mpg ~ group + hp, data = dat)
-expect_warning(comparisons(mod), pattern = "forbidden")
-expect_equivalent(nrow(suppressWarnings(comparisons(mod))), 32)
+expect_error(comparisons(mod), pattern = "forbidden")
