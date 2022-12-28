@@ -20,6 +20,7 @@ expect_true(anyDuplicated(dup) == 0)
 # sanity gives informative error for all the functions
 dat <- mtcars
 dat$cyl <- factor(dat$cyl)
+dat <<- dat
 mod <- lm(mpg ~ hp + cyl, data = dat)
 expect_error(comparisons(mod, type = "junk"), pattern = "type.*argument")
 expect_error(predictions(mod, type = "junk"), pattern = "type.*argument")
@@ -29,10 +30,9 @@ expect_error(marginalmeans(mod, type = "junk"), pattern = "type.*argument")
 
 
 # error: multivariate
-#skip_if_not_installed("pscl")
 requiet("pscl")
-data("bioChemists", package = "pscl")
-model <- hurdle(art ~ phd + fem | ment, data = bioChemists, dist = "negbin")
+dat2 <<- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/pscl/bioChemists.csv")
+model <- hurdle(art ~ phd + fem | ment, data = dat2, dist = "negbin")
 mfx <- marginaleffects(model, type = "prob")
 expect_true(all(as.character(0:19) %in% mfx$group))
 
