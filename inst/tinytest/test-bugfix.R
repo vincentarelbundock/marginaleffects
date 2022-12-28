@@ -38,3 +38,40 @@ mod <- lm(mpg ~ group, data = dat)
 expect_error(comparisons(mod), pattern = "forbidden")
 mod <- lm(mpg ~ group + hp, data = dat)
 expect_error(comparisons(mod), pattern = "forbidden")
+
+
+
+
+# Issue #556
+library(marginaleffects)
+
+set.seed(12345)
+n = 500
+x = sample(1:3, n, replace = TRUE)
+y = rnorm(n)
+z = ifelse(x + y + rlogis(n) > 1.5, 1, 0)
+data = data.frame(x = factor(x), y = y, z = z)
+
+m1 = glm(z ~ x + y, family = binomial, data = data)
+nd <- datagrid(model = m1, y = seq(-2.5, 2.5, by = 0.25))
+p1 <- predictions(m1, newdata = nd, type = "link")
+p2 <- as.data.frame(predict(m1, newdata = nd, se.fit = TRUE))
+
+expect_equal(p1$predicted, p2$fit)
+expect_equal(p1$std.error, p2$se.fit)
+
+set.seed(12345)
+n = 60
+x = sample(1:3, n, replace = TRUE)
+z = ifelse(x + rlogis(n) > 1.5, 1, 0)
+data = data.frame(x = factor(x), z = z)
+m2 = glm(z ~ I(x==2) + I(x==3), family = binomial, data = data)
+
+p1 <- predictions(m2, type = "link")
+p2 <- predictions(m2, newdata = data, type = "link")
+p3 <- as.data.frame(predict(m2, se.fit = TRUE, type = "link"))
+
+expect_equal(p1$predicted, p3$fit)
+expect_equal(p1$std.error, p3$se.fit)
+expect_equal(p2$predicted, p3$fit)
+expect_equal(p2$std.error, p3$se.fit)
