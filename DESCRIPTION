@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Marginal Effects, Marginal Means, Predictions, and Contrasts
-Version: 0.8.1.9006
+Version: 0.8.1.9007
 Authors@R: 
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -27,13 +27,14 @@ BugReports: https://github.com/vincentarelbundock/marginaleffects/issues
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1
 VignetteBuilder: knitr
+Remotes: easystats/insight
 Depends: 
     R (>= 3.5.0)
 Imports: 
     checkmate,
     data.table,
     generics,
-    insight (>= 0.18.5),
+    insight (> 0.18.8),
     methods
 Suggests: 
     AER,

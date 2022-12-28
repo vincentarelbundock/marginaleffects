@@ -43,6 +43,16 @@ p2 <- p2[order(-p2$am_fct, p2$mpg),]
 expect_equivalent(p1$predicted, p2$predicted)
 
 
+# Issue #550
+x <- abs(rnorm(100, sd = 5)) + 5
+y <- exp(2 + 0.3 * x + rnorm(100, sd = 0.4))
+dat <- data.frame(x = x, y = y)
+dat[["log_x"]] <- log(x)
+dat[["log_y"]] <- log(y)
+model <- lm(log(y) ~ 1 + log(x), data = dat)
+p <- plot_cap(model, condition = "x", draw = FALSE)
+expect_false(any(is.na(p$predicted)))
+expect_equal(nrow(p), 25)
 
 
 
