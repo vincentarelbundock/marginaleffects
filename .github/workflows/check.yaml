@@ -41,5 +41,8 @@ jobs:
       - name: Insight dev
         run: Rscript -e "remotes::install_github('easystats/insight')"
 
+      - name: TMB
+        run: Rscript -e "install.packages('TMB', type = 'source')"
+
       - name: Test
         run: ./run.sh run_tests
