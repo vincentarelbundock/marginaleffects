@@ -38,10 +38,16 @@ jobs:
       - name: Dependencies
         run: ./run.sh install_all
 
-      - name: Insight dev
+      - name: insight dev
         run: Rscript -e "remotes::install_github('easystats/insight')"
 
-      - name: TMB
+      - name: tinytest dev
+        run: Rscript -e "remotes::install_github('markvanderloo/tinytest/pkg')"
+
+      - name: tinyviztest dev
+        run: Rscript -e "remotes::install_github('vincentarelbundock/tinyviztest')"
+
+      - name: TMB source
         run: Rscript -e "install.packages('TMB', type = 'source')"
 
       - name: Test
