@@ -122,7 +122,7 @@ expect_true(all(mfx2$conf.low != mfx3$conf.low))
 
 
 # multinomial
-mod <- multinom(factor(gear) ~ mpg * wt + am, data = mtcars, trace = FALSE)
+mod <- nnet::multinom(factor(gear) ~ mpg * wt + am, data = mtcars, trace = FALSE)
 p1 <- plot_cap(mod, condition = c("mpg", "group"), type = "probs")
 p2 <- plot_cco(mod, effect = "mpg", condition = c("wt", "group"), type = "probs")
 p3 <- plot_cme(mod, effect = "mpg", condition = c("wt", "group"), type = "probs")

@@ -35,6 +35,7 @@ expect_true(all(mfx2$conf.low != mfx3$conf.low))
 dat <- mtcars
 dat$gear_fct <- factor(dat$gear)
 dat$am_log <- as.logical(dat$am)
+dat <<- dat
 mod <- lm(cyl ~ mpg * gear_fct + am_log, data = dat)
 p <- plot_cme(mod, effect = "gear_fct", condition = "mpg")
 expect_vdiff(p, "plot_cme factor facets")

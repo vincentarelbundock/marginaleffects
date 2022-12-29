@@ -18,6 +18,7 @@ expect_vdiff(p, "plot marginaleffects no CI")
 # bugfix: contrasts overlap
 dat <- mtcars
 dat$cyl <- factor(dat$cyl)
+dat <<- dat
 mod <- lm(mpg ~ hp + cyl, data = dat)
 mfx <- marginaleffects(mod)
 p <- plot(mfx)
