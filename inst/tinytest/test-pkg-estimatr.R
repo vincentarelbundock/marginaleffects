@@ -1,3 +1,5 @@
+exit_file("environment?")
+
 source("helpers.R", local = TRUE)
 requiet("estimatr")
 requiet("emmeans")
