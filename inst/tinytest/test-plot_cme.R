@@ -1,4 +1,3 @@
-exit_file("tinyviztest")
 source("helpers.R")
 using("tinyviztest")
 
@@ -10,8 +9,13 @@ mod <- glm(
     family = binomial, data = dat)
 p <- plot_cme(mod, effect = "bill_length_mm", condition = "flipper_length_mm", draw = FALSE)
 expect_inherits(p, "data.frame")
-expect_equivalent(nrow(p), 100)
+expect_equivalent(nrow(p), 25)
 expect_false(anyNA(p$dydx))
+
+
+# custom values
+p <- plot_cme(mod, effect = "bill_length_mm", condition = list("flipper_length_mm" = 10), draw = FALSE)
+expect_true(p$condition1 == 10)
 
 
 # vcov
@@ -27,31 +31,26 @@ expect_true(all(mfx1$conf.low != mfx3$conf.low))
 expect_true(all(mfx2$conf.low != mfx3$conf.low))
 
 
-# CI breaks here
-
 # factor effects are plotted in different facets
 dat <- mtcars
 dat$gear_fct <- factor(dat$gear)
 dat$am_log <- as.logical(dat$am)
 mod <- lm(cyl ~ mpg * gear_fct + am_log, data = dat)
 p <- plot_cme(mod, effect = "gear_fct", condition = "mpg")
-expect_vdiff(p, "plot_cme_factor_facets")
+expect_vdiff(p, "plot_cme factor facets")
 p <- plot_cme(mod, effect = "am_log", condition = "mpg")
 expect_inherits(p, "gg")
 
 # continuous vs. categorical x-axis
 mod <- lm(mpg ~ hp * wt * factor(cyl), mtcars)
 p <- plot_cme(mod, effect = "hp", condition = "cyl")
-expect_vdiff(p, "plot_cme_categorical")
+expect_vdiff(p, "plot_cme categorical")
 p <- plot_cme(mod, effect = "hp", condition = "wt")
-expect_vdiff(p, "plot_cme_continuous")
+expect_vdiff(p, "plot_cme continuous")
 
 # two conditions
 mod <- lm(mpg ~ hp * wt * am, data = mtcars)
 p <- plot_cme(mod, effect = "hp", condition = c("wt", "am"))
-expect_vdiff(p, "plot_cme_two_conditions")
+expect_vdiff(p, "plot_cme two conditions")
 
 
-# custom values
-p <- plot_cme(mod, effect = "bill_length_mm", condition = list("flipper_length_mm" = 10), draw = FALSE)
-expect_true(p$condition1 == 10)

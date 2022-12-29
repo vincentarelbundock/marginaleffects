@@ -1,4 +1,3 @@
-exit_file("tinyviztest")
 source("helpers.R")
 using("tinyviztest")
 

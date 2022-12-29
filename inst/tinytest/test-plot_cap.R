@@ -1,6 +1,6 @@
 source("helpers.R")
+using("tinyviztest")
 requiet("nnet")
-
 
 # Issue #567: threenum and minmax are mixed up
 dat <<- transform(mtcars, am_fct = factor(am))
@@ -57,8 +57,6 @@ expect_equal(nrow(p), 25)
 
 
 ######################################
-exit_file("tinyviztest")
-using("tinyviztest")
 ######################################
 
 
