@@ -3,6 +3,7 @@ library("tinytest")
 
 # important because otherwise testing so many packages is terrible
 conflicted::conflict_prefer(name = "expect_error", winner = "tinytest", quiet = TRUE)
+conflicted::conflict_prefer(name = "expect_true", winner = "tinytest", quiet = TRUE)
 conflicted::conflict_prefer(name = "expect_equal", winner = "tinytest", quiet = TRUE)
 conflicted::conflict_prefer(name = "expect_warning", winner = "tinytest", quiet = TRUE)
 conflicted::conflict_prefer(name = "lmer", winner = "lme4", quiet = TRUE)
