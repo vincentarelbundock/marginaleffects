@@ -8,6 +8,7 @@ on:
 
 env:
   _R_CHECK_FORCE_SUGGESTS_: "false"
+  _R_CHECK_TESTS_NLINES_: 0
 
 jobs:
   ci:
