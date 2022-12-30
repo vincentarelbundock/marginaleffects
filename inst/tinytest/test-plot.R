@@ -1,4 +1,5 @@
 source("helpers.R")
+library("tinyviztest")
 using("tinyviztest")
 
 # basic plot.marginaleffects()
