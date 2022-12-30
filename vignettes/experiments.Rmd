@@ -34,7 +34,7 @@ The `estimatr` package includes a convenient function to implement this strategy
 ```{r}
 library(estimatr)
 library(marginaleffects)
-data("lalonde", package = "MatchIt")
+lalonde <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/MatchIt/lalonde.csv")
 
 mod <- lm_lin(
     re78 ~ treat,
