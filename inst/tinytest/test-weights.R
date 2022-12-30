@@ -1,6 +1,5 @@
 source("helpers.R")
 requiet("survey")
-requiet("MatchIt")
 
 # mtcars logit
 dat <- mtcars
