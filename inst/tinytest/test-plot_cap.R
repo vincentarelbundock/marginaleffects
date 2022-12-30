@@ -71,25 +71,25 @@ expect_vdiff(p, "plot_cap")
 # continuous vs. categorical x-axis
 mod <- lm(mpg ~ hp * wt * factor(cyl), mtcars)
 p <- plot_cap(mod, condition = c("cyl", "wt"))
-expect_vdiff(p, "plot_cap vs categorical x-axis")
+expect_vdiff(p, "plot_cap_vs_categorical_x_axis")
 p <- plot_cap(mod, condition = c("wt", "cyl"))
-expect_vdiff(p, "plot_cap vs continuous x-axis")
+expect_vdiff(p, "plot_cap_vs_continuous_x_axis")
 
 
 # conf.level in plots
 mod <- lm(mpg ~ hp * wt * am, data = mtcars)
 p1 <- plot_cap(mod, condition = "hp", conf.level = .99)
 p2 <- plot_cap(mod, condition = "hp", conf.level = .4)
-expect_vdiff(p1, "plot_cap conf 99")
-expect_vdiff(p2, "plot_cap conf 40")
+expect_vdiff(p1, "plot_cap_conf_99")
+expect_vdiff(p2, "plot_cap_conf_40")
 
 
 # link vs response
 mod <- glm(am ~ hp + wt, data = mtcars, family = binomial)
 p1 <- plot_cap(mod, condition = "hp", type = "response")
 p2 <- plot_cap(mod, condition = "hp", type = "link")
-expect_vdiff(p1, "plot_cap response")
-expect_vdiff(p2, "plot_cap link")
+expect_vdiff(p1, "plot_cap_response")
+expect_vdiff(p2, "plot_cap_link")
 
 
 # bad condition raises error
