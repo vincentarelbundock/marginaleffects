@@ -146,7 +146,7 @@ dat <- mtcars
 dat$cyl <- as.factor(dat$cyl)
 dat$am <- as.logical(dat$am)
 dat <<- dat
-model <- MASS::glm.nb(carb ~ am + cyl, data = dat)
+model <- suppressWarnings(MASS::glm.nb(carb ~ am + cyl, data = dat))
 mm <- marginalmeans(model, type = "link", variables = "cyl")
 ti <- tidy(mm)
 em <- tidy(emmeans::emmeans(model, "cyl"))

@@ -16,6 +16,9 @@ get_vcov.default <- function(model,
                              vcov = NULL,
                              ...) {
 
+    if (isFALSE(vcov)) {
+        return(NULL)
+    }
 
     vcov <- sanitize_vcov(model = model, vcov = vcov)
     if (isTRUE(checkmate::check_matrix(vcov))) {

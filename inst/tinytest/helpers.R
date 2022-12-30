@@ -1,3 +1,5 @@
+Sys.setenv(TZ="America/New_York") # avoids a `timedatectl`` warning
+
 library("tinytest")
 # library("tinyviztest")
 

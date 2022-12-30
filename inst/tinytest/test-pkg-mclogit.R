@@ -8,6 +8,7 @@ requiet("splines")
 
 # mclogit: no validity
 data(Transport, package = "mclogit")
+dat <<- Transport
 void <- capture.output(
     model <- mclogit(cbind(resp, suburb) ~ distance + cost, data = Transport)
 )
@@ -24,6 +25,7 @@ expect_predictions(pred)
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/MASS/housing.csv")
 dat$x <- rnorm(nrow(dat))
 dat$Sat <- factor(dat$Sat)
+dat <<- dat
 void <- capture.output(
     mod <- mblogit(Sat ~ Infl + Type + Cont + x, weights = Freq, data = dat)
 )
@@ -37,6 +39,7 @@ dat$Sat <- factor(dat$Sat)
 dat$Infl <- factor(dat$Infl)
 dat$Cont <- factor(dat$Cont)
 dat$Type <- factor(dat$Type)
+dat <<- dat
 void <- capture.output(
 mod <- mblogit(Sat ~ Infl + Type + Cont + x, weights = Freq, data = dat))
 expect_predictions(predictions(mod))
@@ -49,6 +52,7 @@ dat <- "https://github.com/vincentarelbundock/modelarchive/raw/main/data-raw/cov
 dat <- read.csv(dat)
 dat <- dat[dat$variant %in% c("Alpha", "Beta", "Other"), ]
 dat$variant <- factor(dat$variant, levels = c("Other", "Beta", "Alpha"))
+dat <<- dat
 void <- capture.output(suppressWarnings(
     mod <- mblogit(
         formula = variant ~ ns(collection_date_num, df = 2),
