@@ -1,3 +1,4 @@
+if (Sys.info()["sysname"] == "Darwin") exit_file("osx")
 source("helpers.R")
 using("tinyviztest")
 requiet("nnet")

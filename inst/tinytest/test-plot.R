@@ -1,3 +1,5 @@
+if (Sys.info()["sysname"] == "Darwin") exit_file("osx")
+
 source("helpers.R")
 library("tinyviztest")
 using("tinyviztest")
