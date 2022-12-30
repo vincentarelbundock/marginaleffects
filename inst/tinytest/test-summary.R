@@ -1,4 +1,6 @@
 source("helpers.R", local = TRUE)
+exit_if_not(!ON_OSX)
+
 requiet("dplyr")
 
 dat <<- mtcars
