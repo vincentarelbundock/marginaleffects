@@ -1,5 +1,5 @@
 source("helpers.R", local = TRUE)
-if (ON_CRAN) exit_file("on cran")
+
 requiet("fixest")
 requiet("data.table")
 fixest::setFixest_nthreads(1)

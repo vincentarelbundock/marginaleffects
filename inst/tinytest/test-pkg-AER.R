@@ -1,6 +1,6 @@
 # newdata must be explicit otherwise this only works interactively
 source("helpers.R", local = TRUE)
-if (ON_CRAN) exit_file("on cran")
+
 requiet("AER")
 requiet("emmeans")
 requiet("broom")

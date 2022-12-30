@@ -1,7 +1,7 @@
 exit_file("TODO: fix get_data environment")
 
 source("helpers.R", local = TRUE)
-if (ON_CRAN) exit_file("on cran")
+
 requiet("brglm2")
 requiet("margins")
 requiet("emmeans")

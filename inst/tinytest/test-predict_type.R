@@ -1,5 +1,5 @@
 source("helpers.R", local = TRUE)
-if (ON_CRAN) exit_file("on cran")
+
 
 # type dictionary does not include duplicates
 x <- marginaleffects:::type_dictionary

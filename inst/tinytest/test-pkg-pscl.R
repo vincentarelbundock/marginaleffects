@@ -1,5 +1,5 @@
 source("helpers.R", local = TRUE)
-if (ON_CRAN) exit_file("on cran")
+
 requiet("pscl")
 requiet("emmeans")
 requiet("broom")

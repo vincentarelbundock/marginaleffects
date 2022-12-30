@@ -1,5 +1,5 @@
 source("helpers.R", local = TRUE)
-if (ON_CRAN) exit_file("on cran")
+
 
 
 # factor before fitting or in formula is the same

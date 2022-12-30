@@ -1,6 +1,6 @@
 source("helpers.R", local = TRUE)
 # source(here::here("inst/tinytest/helpers.R"))
-if (ON_CRAN) exit_file("on cran")
+
 requiet("margins")
 requiet("nnet")
 tol <- 1e-4

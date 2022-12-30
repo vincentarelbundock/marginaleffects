@@ -1,6 +1,6 @@
 # bug fix submitted for this version of insight
 source("helpers.R", local = TRUE)
-if (ON_CRAN) exit_file("on cran")
+
 requiet("betareg")
 requiet("margins")
 requiet("emmeans")

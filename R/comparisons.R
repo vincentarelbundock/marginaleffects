@@ -266,7 +266,14 @@ comparisons <- function(model,
     if (is.function(transform_pre)) {
         transform_pre_label <- deparse(substitute(transform_pre))
     }
-    transform_post <- sanitize_transform_post(transform_post)
+    if (is.function(transform_post)) {
+        transform_post_label <- deparse(substitute(transform_post))
+        transform_post <- sanitize_transform_post(transform_post)
+        names(transform_post) <- transform_post_label
+    } else {
+        transform_post <- sanitize_transform_post(transform_post)
+        transform_post_label <- names(transform_post)
+    }
 
 
     # used by `marginaleffects` to hard-code preference
@@ -486,7 +493,7 @@ comparisons <- function(model,
     attr(out, "transform_pre") <- transform_pre
     attr(out, "transform_post") <- transform_post[[1]]
     attr(out, "transform_pre_label") <- transform_pre_label
-    attr(out, "transform_post_label") <- names(transform_post)[1]
+    attr(out, "transform_post_label") <- transform_post_label
     attr(out, "conf_level") <- conf_level
     attr(out, "by") <- by
     attr(out, "call") <- match.call()

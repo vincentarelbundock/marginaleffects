@@ -1,7 +1,7 @@
 source("helpers.R", local = TRUE)
 library(tinytest)
 
-if (ON_CRAN) exit_file("on cran")
+
 if (packageVersion("base") < "4.2.0") exit_file("oldrel") 
 requiet("MASS")
 requiet("ordinal")

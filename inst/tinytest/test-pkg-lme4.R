@@ -1,6 +1,6 @@
 # exit_file("TODO: get_data environment")
 source("helpers.R", local = TRUE)
-if (ON_CRAN) exit_file("on cran")
+
 requiet("margins")
 requiet("haven")
 requiet("lme4")
@@ -306,8 +306,7 @@ expect_equivalent(attr(cmp, "vcov.type"), "Kenward-Roger")
 # expect_true(all(p1$conf.high > p2$conf.high))
 
 
-exit_file("works interactively")
-
+exit_file("TODO: check failing comparisons()")
 # Issue #436
 # e = number of events
 # n = total
@@ -330,18 +329,20 @@ mod <- glmer(
     family = binomial())
 
 
-p <- suppressWarnings(predictions(
+p <- predictions(
     mod,
     newdata = datagrid(
+        newdata = k,
         year = 1:5,
         sid = NA),
-    include_random = FALSE))
+    include_random = FALSE)
 expect_inherits(suppressWarnings(p), "predictions")
 
-cmp <- suppressWarnings(comparisons(mod,
+
+cmp <- comparisons(mod,
     variables = "year",
     newdata = datagrid(
         year = 1:5,
         sid = NA),
-    include_random = FALSE))
+    include_random = FALSE)
 expect_inherits(cmp, "comparisons")

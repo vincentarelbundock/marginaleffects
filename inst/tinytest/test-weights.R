@@ -1,4 +1,3 @@
-exit_file("TODO: get_data environment")
 source("helpers.R")
 requiet("survey")
 requiet("MatchIt")
@@ -34,17 +33,16 @@ expect_inherits(c1, "data.frame")
 
 
 # wts + transform_pre="avg"
-requiet("MatchIt")
-data("lalonde", package = "MatchIt")
 set.seed(100)
+lalonde <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/MatchIt/lalonde.csv")
 lalonde$w <- rchisq(614, 2)
-dat <<- lalonde
+k <<- lalonde
 fit <- lm(re78 ~ treat * (age + educ + race + married + re74),
-          data = dat, weights = w)
+          data = k, weights = w)
 cmp1 <- comparisons(fit, variables = "treat", wts = "w")
 cmp2 <- comparisons(fit, variables = "treat", wts = "w", transform_pre = "differenceavg")
-expect_equivalent(tidy(cmp1)$estimate, weighted.mean(cmp1$comparison, dat$w))
-expect_equivalent(cmp2$comparison, weighted.mean(cmp1$comparison, dat$w))
+expect_equivalent(tidy(cmp1)$estimate, weighted.mean(cmp1$comparison, k$w))
+expect_equivalent(cmp2$comparison, weighted.mean(cmp1$comparison, k$w))
 
 set.seed(1024)
 mod <- marginaleffects:::modelarchive_model("brms_numeric2")

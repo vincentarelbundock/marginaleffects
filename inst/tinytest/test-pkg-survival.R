@@ -1,5 +1,5 @@
 source("helpers.R")
-if (ON_CRAN) exit_file("on cran")
+
 if (ON_CI) exit_file("on ci")
 requiet("survival")
 requiet("emmeans")

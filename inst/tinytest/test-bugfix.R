@@ -1,5 +1,5 @@
 source("helpers.R", local = TRUE)
-if (ON_CRAN) exit_file("on cran")
+
 
 # Bug stay dead: Issue 55
 # Error: Argument 1 must have names.
@@ -42,14 +42,13 @@ expect_error(comparisons(mod), pattern = "forbidden")
 
 
 # Issue #556
-exit_file("works interactively")
-
 set.seed(12345)
 n = 500
 x = sample(1:3, n, replace = TRUE)
 y = rnorm(n)
 z = ifelse(x + y + rlogis(n) > 1.5, 1, 0)
 dat = data.frame(x = factor(x), y = y, z = z)
+dat <<- dat
 
 m1 = glm(z ~ x + y, family = binomial, data = dat)
 nd <- datagrid(model = m1, y = seq(-2.5, 2.5, by = 0.25))
@@ -64,6 +63,7 @@ n = 60
 x = sample(1:3, n, replace = TRUE)
 z = ifelse(x + rlogis(n) > 1.5, 1, 0)
 dat = data.frame(x = factor(x), z = z)
+dat <<- dat
 m2 = glm(z ~ I(x==2) + I(x==3), family = binomial, data = dat)
 
 p1 <- predictions(m2, type = "link")
