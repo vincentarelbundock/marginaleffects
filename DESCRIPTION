@@ -218,6 +218,7 @@ Collate:
     'sanity_dots.R'
     'settings.R'
     'summary.R'
+    'test.R'
     'tidy.R'
     'tidy.comparisons.R'
     'tidy.predictions.R'

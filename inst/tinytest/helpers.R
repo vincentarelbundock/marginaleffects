@@ -1,7 +1,10 @@
 Sys.setenv(TZ="America/New_York") # avoids a `timedatectl`` warning
 
 library("tinytest")
-# library("tinyviztest")
+library("tinyviztest")
+tinytest::register_tinytest_extension(
+    "marginaleffects",
+    c("expect_trash"))
 
 # important because otherwise testing so many packages is terrible
 conflicted::conflict_prefer(name = "expect_error", winner = "tinytest", quiet = TRUE)
