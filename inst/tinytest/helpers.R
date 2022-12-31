@@ -54,13 +54,6 @@ testing_path <- function(x) {
     return(out)
 }
 
-expect_print <- function(unknown, known) {
-    known <- trimws(unlist(strsplit(known, split = "\\n")))
-    unknown <- trimws(capture.output(unknown))
-    expect_equivalent(known, unknown)
-}
-
-
 check_predictions <- function(object,
                               se = TRUE,
                               n_col = NULL,
@@ -207,4 +200,3 @@ expect_margins <- function(results,
 
     tinytest::expect_true(flag)
 }
-
