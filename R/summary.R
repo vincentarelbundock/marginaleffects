@@ -136,6 +136,7 @@ summary.marginalmeans <- function(
     ...) {
 
     out <- tidy(object, conf_level = conf_level, transform_avg = transform_avg, ...)
+    out$type <- NULL
     class(out) <- c("marginalmeans.summary", class(out))
     attr(out, "type") <- attr(object, "type")
     attr(out, "model_type") <- attr(object, "model_type")

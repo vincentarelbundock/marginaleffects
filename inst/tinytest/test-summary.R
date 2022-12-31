@@ -1,4 +1,4 @@
-source("helpers.R", local = TRUE)
+source("helpers.R")
 using("tinyviztest")
 exit_if_not(!ON_OSX)
 

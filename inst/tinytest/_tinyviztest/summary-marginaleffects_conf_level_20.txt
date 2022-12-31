@@ -1,0 +1,7 @@
+  Term Contrast   Effect Std. Error z value  Pr(>|z|)   40.0 %   60.0 %
+1   hp    dY/dX -0.02404    0.01541  -1.560 0.1187214 -0.02794 -0.02014
+2  cyl    6 - 4 -5.96766    1.63928  -3.640 0.0002722 -6.38296 -5.55235
+3  cyl    8 - 4 -8.52085    2.32607  -3.663 0.0002491 -9.11016 -7.93155
+
+Model type:  lm 
+Prediction type:  response 
