@@ -3,9 +3,6 @@ using("tinyviztest")
 exit_if_not(!ON_OSX)
 using("marginaleffects")
 
-expect_trash(1)
-expect_trash("a")
-
 requiet("dplyr")
 
 dat <<- mtcars
