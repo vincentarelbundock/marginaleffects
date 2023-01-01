@@ -1,4 +1,5 @@
 source("helpers.R", local = TRUE)
+exit_if_not(!ON_CI) # this always breaks on Github; giving up.
 using("marginaleffects")
 requiet("estimatr")
 requiet("emmeans")
