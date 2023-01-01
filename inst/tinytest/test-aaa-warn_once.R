@@ -1,4 +1,5 @@
 source("helpers.R", local = TRUE)
+using("marginaleffects")
 
 # factor in formula
 mod <- lm(mpg ~ hp + factor(cyl), data = mtcars)

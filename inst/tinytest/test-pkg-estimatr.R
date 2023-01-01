@@ -1,6 +1,7 @@
 exit_file("environment?")
 
 source("helpers.R", local = TRUE)
+using("marginaleffects")
 requiet("estimatr")
 requiet("emmeans")
 requiet("margins")

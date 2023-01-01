@@ -1,4 +1,5 @@
 source("helpers.R", local = TRUE)
+using("marginaleffects")
 # exit_file("glmmTMB always causes problems")
 
 if (ON_CI) exit_file("on ci") # install and test fails on Github

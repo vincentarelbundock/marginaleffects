@@ -1,4 +1,5 @@
-source("helpers.R", local = TRUE)
+source("helpers.R")
+using("marginaleffects")
 
 # Stata comparisons produces identical results
 mod <- lm(mpg ~ cyl + hp + wt, data = mtcars)

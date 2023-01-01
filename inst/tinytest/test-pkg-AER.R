@@ -1,5 +1,6 @@
 # newdata must be explicit otherwise this only works interactively
 source("helpers.R", local = TRUE)
+using("marginaleffects")
 
 requiet("AER")
 requiet("emmeans")

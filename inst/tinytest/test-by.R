@@ -1,4 +1,5 @@
 source("helpers.R", local = TRUE)
+using("marginaleffects")
 # source(here::here("inst/tinytest/helpers.R"))
 
 requiet("margins")

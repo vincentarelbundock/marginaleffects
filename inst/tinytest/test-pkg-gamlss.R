@@ -1,5 +1,6 @@
 # bug fix submitted for this version of insight
 source("helpers.R", local = TRUE)
+using("marginaleffects")
 
 requiet("margins")
 requiet("emmeans")

@@ -1,5 +1,6 @@
 # TODO: CI: See comment in last test for how the intervals are back transformed
 source("helpers.R", local = TRUE)
+using("marginaleffects")
 
 requiet("modelsummary")
 tol <- .0001

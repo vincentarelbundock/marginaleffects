@@ -1,4 +1,5 @@
 source("helpers.R")
+using("marginaleffects")
 set.seed(1024)
 
 tol <- 1e-4

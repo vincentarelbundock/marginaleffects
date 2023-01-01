@@ -2,6 +2,7 @@
 # HDI is implemented specifically for these tests
 # https://github.com/vincentarelbundock/marginaleffects/issues/240
 source("helpers.R", local = TRUE)
+using("marginaleffects")
 
 options("marginaleffects_credible_interval" = "hdi")
 requiet("rstanarm")

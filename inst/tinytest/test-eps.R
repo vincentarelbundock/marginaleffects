@@ -1,5 +1,6 @@
 # exit_file("works interactively")
 source("helpers.R", local = TRUE)
+using("marginaleffects")
 
 # eps argument affects results as expected
 mod <- glm(vs ~ mpg + hp, data = mtcars, family = binomial)

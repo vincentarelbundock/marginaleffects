@@ -1,5 +1,6 @@
 # exit_file("TODO: get_data environment")
 source("helpers.R", local = TRUE)
+using("marginaleffects")
 
 requiet("margins")
 requiet("haven")

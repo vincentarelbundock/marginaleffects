@@ -1,4 +1,5 @@
 source("helpers.R")
+using("marginaleffects")
 
 # not supported because datplot is not representative, so we can't take minmax or iqr
 mod <- lm(mpg ~ wt * hp, data = mtcars)

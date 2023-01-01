@@ -1,4 +1,5 @@
 source("helpers.R", local = TRUE)
+using("marginaleffects")
 
 # lm quadratic
 set.seed(1027)

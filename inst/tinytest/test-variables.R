@@ -1,4 +1,5 @@
 source("helpers.R")
+using("marginaleffects")
 
 tmp <- mtcars
 tmp$gear <- as.factor(tmp$gear)

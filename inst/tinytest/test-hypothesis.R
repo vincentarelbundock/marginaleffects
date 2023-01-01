@@ -1,4 +1,6 @@
 source("helpers.R")
+using("marginaleffects")
+
 requiet("emmeans")
 
 dat <- mtcars

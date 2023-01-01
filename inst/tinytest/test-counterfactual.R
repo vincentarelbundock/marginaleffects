@@ -1,4 +1,5 @@
 source("helpers.R", local = TRUE)
+using("marginaleffects")
 
 # old bug: counterfactual with a single regressor
 mod <- lm(mpg ~ hp + drat + wt, mtcars)

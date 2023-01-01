@@ -1,4 +1,5 @@
-source("helpers.R", local = TRUE)
+source("helpers.R")
+using("marginaleffects")
 
 # marginaleffects::mean_or_mode
 x <- factor(c("a", "a", "b"))

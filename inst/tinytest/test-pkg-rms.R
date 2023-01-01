@@ -1,4 +1,5 @@
 source("helpers.R", local = TRUE)
+using("marginaleffects")
 
 if (!requiet("polspline")) exit_file("polspline")
 requiet("rms")

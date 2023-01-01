@@ -1,4 +1,5 @@
 source("helpers.R")
+using("marginaleffects")
 if(!isTRUE(requiet("car"))) exit_file("car not installed")
 
 # When `FUN` and `hypothesis` are `NULL`, `deltamethod()` returns a data.frame of parameters

@@ -1,4 +1,5 @@
 source("helpers.R", local = TRUE)
+using("marginaleffects")
 
 # examples from the main documentation
 mod <- lm(mpg ~ hp, data = mtcars)

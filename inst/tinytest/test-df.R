@@ -1,4 +1,5 @@
 requiet("marginaleffects")
+using("marginaleffects")
 requiet("emmeans")
 
 dat <- mtcars

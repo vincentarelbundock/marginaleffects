@@ -1,4 +1,5 @@
 source("helpers.R", local = TRUE)
+using("marginaleffects")
 
 # conf.level argument changes conf.int size
 dat <- mtcars

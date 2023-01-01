@@ -1,4 +1,5 @@
 source("helpers.R")
+using("marginaleffects")
 requiet("tidymodels")
 
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv")

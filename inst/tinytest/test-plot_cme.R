@@ -1,4 +1,5 @@
 source("helpers.R")
+using("marginaleffects")
 exit_if_not(!ON_OSX)
 
 using("tinyviztest")

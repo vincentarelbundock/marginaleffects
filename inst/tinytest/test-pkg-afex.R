@@ -1,4 +1,6 @@
 source("helpers.R")
+using("marginaleffects")
+
 requiet("afex")
 requiet("emmeans")
 

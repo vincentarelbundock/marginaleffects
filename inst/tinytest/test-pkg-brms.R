@@ -2,6 +2,7 @@
 # HDI is implemented specifically for these tests
 # https://github.com/vincentarelbundock/marginaleffects/issues/240
 source("helpers.R", local = TRUE)
+using("marginaleffects")
 exit_file("expensive")
 # if (ON_CI) exit_file("on ci")
 if (ON_WINDOWS) exit_file("on windows")

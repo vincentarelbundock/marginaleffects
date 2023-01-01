@@ -10,6 +10,7 @@
 # nd <- TravelMode[, 3:ncol(TravelMode)]
 # predict(mod, newdata = head(nd, 12))
 source("helpers.R", local = TRUE)
+using("marginaleffects")
 if (ON_CI) exit_file("on ci")
 requiet("nnet")
 requiet("mlogit")

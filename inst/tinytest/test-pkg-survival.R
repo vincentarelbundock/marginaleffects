@@ -1,4 +1,5 @@
 source("helpers.R")
+using("marginaleffects")
 
 if (ON_CI) exit_file("on ci")
 requiet("survival")

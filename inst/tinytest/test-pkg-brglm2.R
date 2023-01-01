@@ -1,6 +1,7 @@
 exit_file("TODO: fix get_data environment")
 
 source("helpers.R", local = TRUE)
+using("marginaleffects")
 
 requiet("brglm2")
 requiet("margins")

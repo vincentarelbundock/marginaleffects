@@ -10,6 +10,8 @@ expect_marginaleffects <- function(
 
     insight::check_if_installed("tinytest")
 
+    object <- hush(marginaleffects(object))
+
     diff <- ""
 
     # class
