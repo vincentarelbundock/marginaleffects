@@ -1,5 +1,3 @@
-exit_file("TODO: fix get_data environment")
-
 source("helpers.R", local = TRUE)
 using("marginaleffects")
 
@@ -12,13 +10,13 @@ requiet("broom")
 data("endometrial", package = "brglm2", envir = environment())
 dat <<- endometrial
 model <- glm(HG ~ NV + PI + EH, family = binomial("probit"), data = dat)
-model <- update(model, method = "brglm_fit")
+model <- update(model, method = "brglm_fit") # probably breaks get_data from environemnt
 
 
 # margins
 mar <- margins(model)
-mfx <- marginaleffects(model)
-expect_marginaleffects(model)
+mfx <- marginaleffects(model, newdata = dat)
+expect_marginaleffects(model, newdata = dat)
 expect_true(expect_margins(mar, mfx))
 # emtrends
 em <- emtrends(model, ~PI, "PI", at = list(PI = 15, EH = 2, NV = 0))
@@ -73,4 +71,6 @@ mod <- bracl(research ~ as.numeric(religion) + gender, weights = frequency,
          data = dat, type = "ML")
 expect_predictions(predictions(mod, type = "probs"))
 expect_marginaleffects(mod, type = "probs")
+
+
 

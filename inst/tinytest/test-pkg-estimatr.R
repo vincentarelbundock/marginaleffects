@@ -1,5 +1,3 @@
-exit_file("environment?")
-
 source("helpers.R", local = TRUE)
 using("marginaleffects")
 requiet("estimatr")
@@ -7,15 +5,14 @@ requiet("emmeans")
 requiet("margins")
 requiet("broom")
 
-Kmenta <<- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/sem/Kmenta.csv")
+Km <<- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/sem/Kmenta.csv")
 
 # lm_lin: no validity
 dat <- mtcars
 dat$cyl <- factor(dat$cyl)
 dat <<- dat
 mod <- lm_lin(mpg ~ am, ~ hp + cyl, data = dat)
-mfx <- marginaleffects(mod)
-expect_inherits(mfx, "marginaleffects")
+expect_marginaleffects(mod)
 expect_marginaleffects(mod, n_unique = 9)
 
 
@@ -23,7 +20,7 @@ expect_marginaleffects(mod, n_unique = 9)
 model <- iv_robust(
     Q ~ P + D | D + F + A, 
     se_type = "stata",
-    data = Kmenta)
+    data = Km)
 stata <- readRDS(testing_path("stata/stata.rds"))$estimatr_iv_robust
 mfx <- tidy(marginaleffects(model))
 mfx <- merge(mfx, stata)
@@ -61,9 +58,9 @@ expect_true(expect_margins(mfx, mar, se = FALSE))
 #skip_if_not_installed("insight", minimum_version = "0.17.1")
 model <- iv_robust(Q ~ P + D | D + F + A, 
                se_type = "stata",
-               data = Kmenta)
-expect_predictions(predictions(model), n_row = nrow(Kmenta))
-expect_predictions(predictions(model, newdata = head(Kmenta)), n_row = 6)
+               data = Km)
+expect_predictions(predictions(model), n_row = nrow(Km))
+expect_predictions(predictions(model, newdata = head(Km)), n_row = 6)
 
 
 # lm_robust: marginalmeans predictions: no validity

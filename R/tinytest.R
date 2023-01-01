@@ -2,7 +2,6 @@
 #' @keywords internal
 expect_marginaleffects <- function(
     object,
-    type = "response",
     n_unique = NULL,
     pct_na = 5,
     se = TRUE,
@@ -10,7 +9,7 @@ expect_marginaleffects <- function(
 
     insight::check_if_installed("tinytest")
 
-    object <- hush(marginaleffects(object))
+    object <- hush(marginaleffects(object, ...))
 
     diff <- ""
 
