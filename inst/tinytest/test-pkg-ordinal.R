@@ -2,8 +2,9 @@ source("helpers.R", local = TRUE)
 using("marginaleffects")
 library(tinytest)
 
+exit_if_not(!ON_CI)
+exit_if_not(packageVersion("base") >= "4.2.0")
 
-if (packageVersion("base") < "4.2.0") exit_file("oldrel") 
 requiet("MASS")
 requiet("ordinal")
 
