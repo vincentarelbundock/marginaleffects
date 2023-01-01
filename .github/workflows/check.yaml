@@ -9,6 +9,8 @@ on:
 env:
   _R_CHECK_FORCE_SUGGESTS_: "false"
   _R_CHECK_TESTS_NLINES_: 0
+  R_NOT_CRAN: true
+  R_GH: true
 
 jobs:
   ci:
@@ -25,7 +27,6 @@ jobs:
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-      R_NOT_CRAN: true
 
     steps:
       - uses: actions/checkout@v3
