@@ -17,29 +17,34 @@ model <- update(model, method = "brglm_fit") # probably breaks get_data from env
 mar <- margins(model)
 mfx <- marginaleffects(model, newdata = dat)
 expect_marginaleffects(model, newdata = dat)
-expect_true(expect_margins(mar, mfx))
+expect_margins(mar, mfx)
 # emtrends
 em <- emtrends(model, ~PI, "PI", at = list(PI = 15, EH = 2, NV = 0))
 em <- tidy(em)
 mfx <- marginaleffects(
     model,
     variables = "PI",
-    newdata = datagrid(PI = 15, EH = 2, NV = 0), 
+    newdata = datagrid(PI = 15, EH = 2, NV = 0, newdata = dat), 
     type = "link")
 expect_equivalent(mfx$dydx, em$PI.trend)
 expect_equivalent(mfx$std.error, em$std.error, tolerance = .00001)
 
 
 # brglm2::brglm_fit vs. margins
-salmonella <- data.frame(freq = c(15, 16, 16, 27, 33, 20, 21, 18, 26, 41, 38, 27, 29, 21, 33, 60, 41, 42),
-                     dose = rep(c(0, 10, 33, 100, 333, 1000), 3),
-                     observation = rep(1:3, each = 6))
-salmonella_fm <- freq ~ dose + log(dose + 10)
-model <- brnb(salmonella_fm, data = salmonella, link = "log", transformation = "inverse", type = "ML")
-suppressWarnings(expect_marginaleffects(model, n_unique = 6))
+sm <<- data.frame(
+    freq = c(15, 16, 16, 27, 33, 20, 21, 18, 26, 41, 38, 27, 29, 21, 33, 60, 41, 42),
+    dose = rep(c(0, 10, 33, 100, 333, 1000), 3),
+    observation = rep(1:3, each = 6))
+model <- brnb(
+    freq ~ dose + log(dose + 10),
+    data = sm,
+    link = "log",
+    transformation = "inverse",
+    type = "ML")
+expect_marginaleffects(model, n_unique = 6, newdata = sm)
 mfx <- suppressWarnings(marginaleffects(model))
 mar <- suppressWarnings(margins(model))
-expect_true(expect_margins(mar, mfx))
+expect_margins(mar, mfx)
 
 
 # predictions: brglm2::brglm_fit: no validity
@@ -67,8 +72,9 @@ expect_predictions(predictions(mod, type = "probs"))
 data("stemcell", package = "brglm2")
 dat <- stemcell
 dat$religion <- as.numeric(dat$religion)
-mod <- bracl(research ~ as.numeric(religion) + gender, weights = frequency,
-         data = dat, type = "ML")
+mod <- bracl(
+    research ~ as.numeric(religion) + gender, weights = frequency,
+    data = dat, type = "ML")
 expect_predictions(predictions(mod, type = "probs"))
 expect_marginaleffects(mod, type = "probs")
 
