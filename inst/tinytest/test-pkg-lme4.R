@@ -1,4 +1,3 @@
-# exit_file("TODO: get_data environment")
 source("helpers.R", local = TRUE)
 using("marginaleffects")
 
@@ -307,11 +306,11 @@ expect_equivalent(attr(cmp, "vcov.type"), "Kenward-Roger")
 # expect_true(all(p1$conf.high > p2$conf.high))
 
 
-exit_file("TODO: check failing comparisons()")
+# exit_file("TODO: check failing comparisons()")
 # Issue #436
 # e = number of events
 # n = total
-dat <- data.frame(
+kdat <<- data.frame(
     e = c(
         1, 1, 134413, 92622, 110747,
         3625, 35, 64695, 19428, 221, 913, 13, 5710, 121,
@@ -322,27 +321,29 @@ dat <- data.frame(
         10661, 14406, 4048, 102, 916, 1079, 242715),
     year = round(runif(21, min = 1, max = 24)),
     sid = as.factor(1:21))
-k <<- dat
 
 mod <- glmer(
     cbind(e, n - e) ~ 1 + year + (1 | sid),
-    data = k,
+    data = kdat,
     family = binomial())
-
 
 p <- predictions(
     mod,
     newdata = datagrid(
-        newdata = k,
+        newdata = kdat,
+        e = 1,
+        n = 160,
         year = 1:5,
         sid = NA),
     include_random = FALSE)
-expect_inherits(suppressWarnings(p), "predictions")
-
+expect_predictions(p)
 
 cmp <- comparisons(mod,
     variables = "year",
     newdata = datagrid(
+        newdata = kdat,
+        e = 1,
+        n = 160,
         year = 1:5,
         sid = NA),
     include_random = FALSE)
