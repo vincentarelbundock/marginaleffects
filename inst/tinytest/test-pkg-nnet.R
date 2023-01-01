@@ -1,4 +1,5 @@
 source("helpers.R", local = TRUE)
+exit_if_not(!ON_CI)
 using("marginaleffects")
 
 requiet("nnet")
