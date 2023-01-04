@@ -41,20 +41,20 @@ dat$am_log <- as.logical(dat$am)
 dat <<- dat
 mod <- lm(cyl ~ mpg * gear_fct + am_log, data = dat)
 p <- plot_cme(mod, effect = "gear_fct", condition = "mpg")
-expect_vdiff(p, "plot_cme_factor_facets")
+expect_snapshot_plot(p, "plot_cme_factor_facets")
 p <- plot_cme(mod, effect = "am_log", condition = "mpg")
 expect_inherits(p, "gg")
 
 # continuous vs. categorical x-axis
 mod <- lm(mpg ~ hp * wt * factor(cyl), mtcars)
 p <- plot_cme(mod, effect = "hp", condition = "cyl")
-expect_vdiff(p, "plot_cme_categorical")
+expect_snapshot_plot(p, "plot_cme_categorical")
 p <- plot_cme(mod, effect = "hp", condition = "wt")
-expect_vdiff(p, "plot_cme_continuous")
+expect_snapshot_plot(p, "plot_cme_continuous")
 
 # two conditions
 mod <- lm(mpg ~ hp * wt * am, data = mtcars)
 p <- plot_cme(mod, effect = "hp", condition = c("wt", "am"))
-expect_vdiff(p, "plot_cme_two_conditions")
+expect_snapshot_plot(p, "plot_cme_two_conditions")
 
 

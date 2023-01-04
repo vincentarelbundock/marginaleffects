@@ -18,14 +18,14 @@ expect_equivalent(nrow(cmp), 1)
 # simple summary output
 mod <- lm(mpg ~ hp + factor(cyl), dat)
 mfx <- marginaleffects(mod)
-expect_pdiff(summary(mfx), "summary-marginaleffects")
+expect_snapshot_print(summary(mfx), "summary-marginaleffects")
 
 
 # summary conf.level
 mod <- lm(mpg ~ hp + factor(cyl), dat)
 mfx <- marginaleffects(mod)
-expect_pdiff(summary(mfx, conf_level = .9), "summary-marginaleffects_conf_level_90")
-expect_pdiff(summary(mfx, conf_level = .2), "summary-marginaleffects_conf_level_20")
+expect_snapshot_print(summary(mfx, conf_level = .9), "summary-marginaleffects_conf_level_90")
+expect_snapshot_print(summary(mfx, conf_level = .2), "summary-marginaleffects_conf_level_20")
 
 
 # summary: marginal means
@@ -36,14 +36,14 @@ dat$gear <- as.factor(dat$gear)
 dat <<- dat
 mod <- lm(mpg ~ gear + am + vs, dat)
 mm <- marginalmeans(mod)
-expect_pdiff(summary(mm), "summary-marginalmeans")
+expect_snapshot_print(summary(mm), "summary-marginalmeans")
 
 
 # bugs stay dead: summary manipulation (destroys attributes, unfortunately)
 dat <<- mtcars
 mod <- glm(am ~ hp * wt, data = dat, family = binomial)
 mfx <- marginaleffects(mod)
-expect_pdiff(
+expect_snapshot_print(
     summary(mfx) %>% dplyr::select(term, estimate, conf.low, conf.high),
     "summary-marginaleffects_dplyr")
 
@@ -52,5 +52,5 @@ expect_pdiff(
 dat <<- mtcars
 mod <- glm(am ~ hp, data = dat, family = binomial)
 cmp <- comparisons(mod, transform_pre = function(hi, lo) hi / lo, transform_post = exp)
-expect_pdiff(summary(cmp), "summary-comparisons_transform_post")
+expect_snapshot_print(summary(cmp), "summary-comparisons_transform_post")
 
