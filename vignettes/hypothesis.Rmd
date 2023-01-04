@@ -26,6 +26,42 @@ The code in this vignette requires `marginaleffects` version 0.6.0 or [the devel
 
 This vignette introduces the `deltamethod()` function, and the `hypothesis` argument of the `comparisons()`, `marginaleffects()`, and `predictions()` function. These features allow users to conduct linear and non-linear hypothesis tests and to compute custom contrasts (linear combinations) between parameters.
 
+# Null hypothesis
+
+The simplest way to modify a hypothesis test is to change the null hypothesis. By default, all functions in the `marginaleffects` package assume that the null is 0. This can be changed by changing the `hypothesis` argument. 
+
+For example, consider a logistic regression model:
+
+```{r}
+library(marginaleffects)
+mod <- glm(am ~ hp + drat, data = mtcars, family = binomial)
+```
+
+We can compute the predicted outcome for a hypothetical unit where all regressors are fixed to their sample means:
+
+```{r}
+predictions(mod, newdata = "mean")
+```
+
+The Z statistic and p value reported above assume that the null hypothesis equals zero. We can change the null with the `hypothesis` argument:
+
+```{r}
+predictions(mod, newdata = "mean", hypothesis = .5)
+```
+
+This can obviously be useful in other contexts. For instance, if we compute risk ratios (at the mean) associated with an increase of 1 unit in `hp`, it makes more sense to test the null hypothesis that the ratio of predictions is 1 rather than 0:
+
+```{r}
+comparisons(
+    mod,
+    newdata = "mean",
+    variables = "hp",
+    transform_pre = "ratio",
+    hypothesis = 1)
+```
+
+Warning: Z statistics and p values are computed *before* applying functions in `transform_post`.
+
 # Delta method
 
 Version 0.6.0 of `marginaleffects` includes a very simple yet powerful function called `deltamethod()`. This function emulates the behavior of the well-established `car::deltaMethod` and `car::linearHypothesis` functions, but it supports more models, requires fewer dependencies, and offers some convenience features like shortcuts for robust standard errors.
