@@ -225,7 +225,11 @@ predictions <- function(model,
         vcov = vcov,
         calling_function = "predictions",
         ...)
-    hypothesis <- sanitize_hypothesis(hypothesis, ...)
+
+    tmp <- sanitize_hypothesis(hypothesis, ...)
+    hypothesis <- tmp$hypothesis
+    hypothesis_null <- tmp$hypothesis_null
+
     conf_level <- sanitize_conf_level(conf_level, ...)
     type <- sanitize_type(model = model, type = type, calling_function = "predictions")
     newdata <- sanitize_newdata(
@@ -400,6 +404,7 @@ predictions <- function(model,
             overwrite = FALSE,
             draws = draws,
             estimate = "predicted",
+            null = hypothesis_null,
             ...)
     }
 

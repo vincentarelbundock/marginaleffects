@@ -100,7 +100,11 @@ deltamethod <- function(
     }
 
     # after re-evaluation
-    hypothesis <- sanitize_hypothesis(hypothesis)
+    tmp <- sanitize_hypothesis(hypothesis, ...)
+    hypothesis <- tmp$hypothesis
+    hypothesis_null <- tmp$hypothesis_null
+
+
     vcov <- get_vcov(model = model, vcov = vcov)
     vcov.type <- get_vcov_label(vcov = vcov)
 
@@ -110,15 +114,15 @@ deltamethod <- function(
             colnames(param)[1:2] <- c("term", "estimate")
             return(param)
         }
-        if (is.null(hypothesis)) {
-            out <- FUNinner(model, ...)
-            class(out) <- c("deltamethod", class(out))
-            attr(out, "model") <- model
-            attr(out, "model_type") <- class(model)[1]
-            attr(out, "vcov") <- vcov
-            attr(out, "vcov.type") <- vcov.type
-            return(out)
-        }
+        # if (is.null(hypothesis)) {
+        #     out <- FUNinner(model, ...)
+        #     class(out) <- c("deltamethod", class(out))
+        #     attr(out, "model") <- model
+        #     attr(out, "model_type") <- class(model)[1]
+        #     attr(out, "vcov") <- vcov
+        #     attr(out, "vcov.type") <- vcov.type
+        #     return(out)
+        # }
     } else {
         FUNinner <- FUN
     }
@@ -180,6 +184,7 @@ deltamethod <- function(
         overwrite = FALSE,
         draws = NULL,
         estimate = "estimate",
+        null = hypothesis_null,
         ...)
 
     class(out) <- c("deltamethod", class(out))

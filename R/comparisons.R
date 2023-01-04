@@ -315,7 +315,9 @@ comparisons <- function(model,
         contrast_factor = contrast_factor,
         transform_pre = transform_pre)
 
-    hypothesis <- sanitize_hypothesis(hypothesis, ...)
+    tmp <- sanitize_hypothesis(hypothesis, ...)
+    hypothesis <- tmp$hypothesis
+    hypothesis_null <- tmp$hypothesis_null
 
     # after sanitize_newdata
     sanity_by(by, newdata)
@@ -436,7 +438,8 @@ comparisons <- function(model,
         df = dof,
         overwrite = FALSE,
         draws = draws,
-        estimate = "comparison")
+        estimate = "comparison",
+        null = hypothesis_null)
         
 
 

@@ -174,9 +174,12 @@ marginalmeans <- function(model,
     transform_post <- sanitize_transform_post(transform_post)
     cross <- sanitize_cross(cross, variables, model)
     conf_level <- sanitize_conf_level(conf_level, ...)
-    hypothesis <- sanitize_hypothesis(hypothesis, ...)
     model <- sanitize_model(model, vcov = vcov, calling_function = "marginalmeans")
     checkmate::assert_choice(wts, choices = c("equal", "cells", "proportional"))
+
+    tmp <- sanitize_hypothesis(hypothesis, ...)
+    hypothesis <- tmp$hypothesis
+    hypothesis_null <- tmp$hypothesis_null
 
     # by: usual tests + only data frames
     checkmate::assert_data_frame(by, null.ok = TRUE)
@@ -348,6 +351,7 @@ marginalmeans <- function(model,
             vcov = vcov,
             overwrite = FALSE,
             estimate = "marginalmean",
+            null = hypothesis_null,
             ...)
     }
 

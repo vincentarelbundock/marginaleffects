@@ -228,3 +228,31 @@ H <- matrix(c(0, 1, -1, 1/3, 1/3, 1/3), ncol = 2)
 colnames(H) <- c("H1", "H2")
 dm <- deltamethod(mod, hypothesis = H)
 expect_equivalent(dm$term, c("H1", "H2"))
+
+
+
+# # Issue #568
+# # TODO: p-value computed before transform_post; null on the pre-transform scale
+# mod <- glm(vs ~ hp, data = mtcars, family = binomial)
+
+# comparisons(mod,
+#     newdata = "mean",
+#     transform_pre = "ratio")
+
+# comparisons(mod,
+#     newdata = "mean",
+#     transform_pre = "ratio",
+#     hypothesis = 0)
+
+# comparisons(mod,
+#     newdata = "mean",
+#     transform_pre = "ratio",
+#     hypothesis = 1)
+
+# marginaleffects
+
+# deltamethod(mod, hypothesis = -2)
+
+# predictions(mod, newdata = "mean", hypothesis = .75)
+
+# marginaleffects(mod, newdata = "mean", hypothesis = .75)

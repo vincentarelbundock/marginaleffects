@@ -6,7 +6,9 @@ get_ci <- function(
     draws = NULL,
     vcov = TRUE,
     overwrite = FALSE,
+    null = 0,
     ...) {
+
 
     if (!is.null(draws)) {
         out <- get_ci_draws(
@@ -17,6 +19,8 @@ get_ci <- function(
             overwrite = overwrite)
         return(out)
     }
+
+    checkmate::assert_numeric(null, len = 1)
 
     required <- c(estimate, "std.error")
     if (!inherits(x, "data.frame") || any(!required %in% colnames(x))) {
@@ -35,20 +39,20 @@ get_ci <- function(
     }
 
     if (!"statistic" %in% colnames(x) || isTRUE(overwrite)) {
-        x[["statistic"]] <- x[[estimate]] / x[["std.error"]]
+        x[["statistic"]] <- (x[[estimate]] - null) / x[["std.error"]]
     }
 
-    if (!"p.value" %in% colnames(x) || isTRUE(overwrite)) {
+    if (!"p.value" %in% colnames(x) || null != 0 || isTRUE(overwrite)) {
         if (!"df" %in% colnames(x) && is.numeric(df)) {
             x[["df"]] <- df
         }
         
         if ("df" %in% colnames(x)) {
             x[["p.value"]] <- 2 * stats::pt(-abs(x$statistic), df = x[["df"]])
+
         # get_predicted does not save DF and does not compute p.value. We try
         # to extract df in predictions(), but this does not always work
         # (e.g., with hypothesis). When we don't have DF, normal p.value is misleading.
-
         } else if (!identical(vcov, "satterthwaite") || !identical(vcov, "kenward-roger")) {
             x[["p.value"]] <- 2 * stats::pnorm(-abs(x$statistic))
         }

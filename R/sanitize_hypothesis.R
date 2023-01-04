@@ -9,13 +9,26 @@ sanitize_hypothesis <- function(hypothesis, ...) {
         checkmate::check_matrix(hypothesis),
         checkmate::check_null(hypothesis))
 
+    hnull <- 0
+
     if (isTRUE(checkmate::check_string(hypothesis, pattern = "="))) {
         out <- paste(gsub("=", "-(", hypothesis), ")")
         attr(out, "label") <- hypothesis
-        return(out)
+        hypothesis <- out
+
     } else if (isTRUE(checkmate::check_matrix(hypothesis))) {
         attr(hypothesis, "label") <- colnames(hypothesis)
-    } 
-    return(hypothesis)
+
+    }  else if (isTRUE(checkmate::check_numeric(hypothesis, len = 1))) {
+        hnull <- hypothesis
+        hypothesis <- NULL
+    }
+
+    out <- list(
+        "hypothesis" = hypothesis,
+        "hypothesis_null" = hnull
+    )
+
+    return(out)
 
 }

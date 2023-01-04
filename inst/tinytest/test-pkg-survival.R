@@ -1,7 +1,7 @@
 source("helpers.R")
 using("marginaleffects")
 
-if (ON_CI) exit_file("on ci")
+exit_if_not(!ON_CI)
 requiet("survival")
 requiet("emmeans")
 requiet("broom")
