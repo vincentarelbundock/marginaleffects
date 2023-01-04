@@ -63,6 +63,7 @@ References:
 * Dowd, Bryan E, William H Greene, and Edward C Norton. “Computation of Standard Errors.” Health Services Research 49, no. 2 (April 2014): 731–50. https://doi.org/10.1111/1475-6773.12122.
 * https://stats.stackexchange.com/questions/283831/delta-method-for-marginal-effects-of-generalized-linear-model?rq=1
 
+
 # Standard errors and intervals for `marginalmeans()`
 
 The `marginalmeans()` function can compute the confidence intervals in two ways. If the following conditions hold:
@@ -233,3 +234,28 @@ plot_cap(mod, condition = "hp", vcov = "satterthwaite")
 
 [See the `brms` vignette](https://vincentarelbundock.github.io/marginaleffects/reference/brms.html) for a discussion of bayesian estimates and credible intervals.
 
+
+# Uncertainty around unit-level or average estimates
+
+Note that it is normal to observe that confidence intervals around average estimates tend to be tighter than those around unit-level estimates:
+
+```{r}
+library(marginaleffects)
+mod <- lm(mpg ~ hp * qsec, mtcars)
+
+# On average CIs around unit-level estimates are:
+pre1 <- predictions(mod)
+as.numeric(mean(pre1$conf.high - pre1$conf.low))
+
+# The CI of the average estimate is:
+pre2 <- tidy(predictions(mod))
+as.numeric(pre2$conf.high - pre2$conf.low)
+
+# On average CIs around unit-level estimates are:
+cmp1 <- comparisons(mod, variables = "hp")
+mean(cmp1$conf.high - cmp1$conf.low)
+
+# The CI of the average estimate is:
+cmp2 <- comparisons(mod, variables = "hp", transform_pre = "differenceavg")
+cmp2$conf.high - cmp2$conf.low
+```
