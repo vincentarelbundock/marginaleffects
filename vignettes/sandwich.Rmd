@@ -259,3 +259,9 @@ mean(cmp1$conf.high - cmp1$conf.low)
 cmp2 <- comparisons(mod, variables = "hp", transform_pre = "differenceavg")
 cmp2$conf.high - cmp2$conf.low
 ```
+
+<!--
+Relevant?
+https://en.wikipedia.org/wiki/Jensen%27s_inequality
+https://math.stackexchange.com/questions/34009/is-the-variance-of-a-convex-function-a-convex-function/34021#34021?newreg=698ab30a481945878307935ac5d6b629
+-->
