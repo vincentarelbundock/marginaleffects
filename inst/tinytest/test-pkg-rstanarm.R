@@ -15,7 +15,7 @@ if (!require("rstanarm")) exit_file("rstanarm") # after requiet to avoid message
 void <- capture.output(
   mod <- stan_glm(am ~ hp + mpg * vs, data = mtcars, family = binomial(link = "logit"))
 )
-expect_marginaleffects(mod, se = FALSE)
+expect_slopes(mod, se = FALSE)
 expect_predictions(predictions(mod), se = FALSE)
 
 # no interactions
@@ -24,7 +24,7 @@ void <- capture.output(
 )
 
 # emtrends
-mfx <- marginaleffects(mod, newdata = datagrid(hp = 110, mpg = 20, vs = 0), variables = "hp", type = "link")
+mfx <- slopes(mod, newdata = datagrid(hp = 110, mpg = 20, vs = 0), variables = "hp", type = "link")
 em <- emtrends(mod, ~hp, "hp", at = list(hp = 110, mpg = 20, vs = 0))
 em <- tidy(em)
 expect_equivalent(mfx$dydx, em$hp.trend)
@@ -33,7 +33,7 @@ expect_equivalent(mfx$conf.high, em$upper.HPD)
 
 # # margins: var is all zeroes and dydx don't match precisely
 # mar <- margins(mod, unit_ses = TRUE, at = list(hp = 110, mpg = 20, vs = 0))
-# mfx <- marginaleffects(mod, variables = "hp", at = list(hp = 110, mpg = 20, vs = 0))
+# mfx <- slopes(mod, variables = "hp", at = list(hp = 110, mpg = 20, vs = 0))
 # expect_equivalent(mfx$dydx, mar$dydx_hp)
 # expect_equivalent(mfx$std.error, mar$dydx_hp)
 

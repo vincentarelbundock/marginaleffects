@@ -10,15 +10,15 @@ dat$c2 <- factor(sample(letters, N, replace = TRUE))
 mod <- lm(X1 ~ ., dat)
 
 pkgload::load_all("~/Downloads/master")
-system.time(marginaleffects(mod))
+system.time(slopes(mod))
 
 pkgload::load_all("~/repos/marginaleffects")
-system.time(marginaleffects(mod))
+system.time(slopes(mod))
 
 
 library(marginaleffects)
 library(profvis)
-profvis(marginaleffects(mod))
+profvis(slopes(mod))
 
 # many variables
 N <- 1e4
@@ -26,10 +26,10 @@ dat <- data.frame(matrix(rnorm(N * 26), ncol = 26))
 mod <- lm(X1 ~ ., dat)
 
 pkgload::load_all("~/Downloads/master")
-system.time(marginaleffects(mod))
+system.time(slopes(mod))
 
 pkgload::load_all("~/repos/marginaleffects")
-system.time(marginaleffects(mod))
+system.time(slopes(mod))
 
 
 # arguments

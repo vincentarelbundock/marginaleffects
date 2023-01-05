@@ -8,10 +8,10 @@ requiet("broom")
 # gam: marginaleffects vs. emtrends
 data(kyphosis, package = "gam")
 model <- gam::gam(Kyphosis ~ s(Age,4) + Number, family = binomial, data = kyphosis)
-expect_marginaleffects(model)
+expect_slopes(model)
 
 # emmeans
-mfx <- marginaleffects(model, newdata = datagrid(Age = 60, Number = 4), variables = "Number", type = "link")
+mfx <- slopes(model, newdata = datagrid(Age = 60, Number = 4), variables = "Number", type = "link")
 em <- emtrends(model, ~Number, "Number", at = list(Age = 60, Number = 4))
 em <- tidy(em)
 expect_equivalent(mfx$dydx, em$Number.trend)

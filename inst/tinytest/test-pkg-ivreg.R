@@ -8,7 +8,7 @@ requiet("ivreg")
 # marginaleffects: vs. margins
 data(Kmenta, package = "ivreg")
 mod <- ivreg::ivreg(Q ~ P * D | D + F + A, data = Kmenta)
-res <- marginaleffects(mod)
+res <- slopes(mod)
 mar <- data.frame(margins(mod, unit_ses = TRUE))
 expect_true(expect_margins(res, mar, tolerance = .1, verbose = TRUE))
 
@@ -24,7 +24,7 @@ expect_inherits(plot_cap(mod, condition = "D"), "ggplot")
 dat <- read.csv(testing_path("stata/databases/ivreg_ivreg_01.csv"))
 stata <- readRDS(testing_path("stata/stata.rds"))[["ivreg_ivreg_01"]]
 mod <- ivreg::ivreg(Q ~ P + D | D + F + A, data = dat)
-ame <- marginaleffects(mod) %>%
+ame <- slopes(mod) %>%
    group_by(term) %>%
    summarize(dydx = mean(dydx),
              std.error = mean(std.error)) %>%

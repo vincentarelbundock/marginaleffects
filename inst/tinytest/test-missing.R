@@ -11,12 +11,12 @@ for (i in seq_along(tmp)) {
 # original data with NAs do not pose problems in glm and lm.
 mod1 <- lm(hp ~ mpg + drat + wt + gear, data = tmp)
 mod2 <- glm(vs ~ mpg + drat + wt + gear, data = tmp, family = binomial)
-expect_inherits(tidy(marginaleffects(mod1)), "data.frame")
-expect_inherits(tidy(marginaleffects(mod2)), "data.frame")
+expect_inherits(tidy(slopes(mod1)), "data.frame")
+expect_inherits(tidy(slopes(mod2)), "data.frame")
 
 
 # newdata with NAs do not pose problems in lm.
 mod <- lm(hp ~ mpg + drat + wt + factor(gear), data = tmp)
-mfx <- marginaleffects(mod, newdata = datagrid(drat = c(NA, 10)))
+mfx <- slopes(mod, newdata = datagrid(drat = c(NA, 10)))
 expect_inherits(tidy(mfx), "data.frame")
 

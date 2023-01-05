@@ -14,15 +14,15 @@ tol_se <- 0.001
 ### marginaleffects
 # rlm: marginaleffects: vs. margins vs. emmeans
 model <- MASS::rlm(mpg ~ hp + drat, mtcars)
-expect_marginaleffects(model, n_unique = 1)
+expect_slopes(model, n_unique = 1)
 
 # margins
-mfx <- marginaleffects(model)
+mfx <- slopes(model)
 mar <- margins(model, unit_ses = TRUE)
 expect_true(expect_margins(mfx, mar, verbose = TRUE, tolerance = tol_se))
 
 # emmeans
-mfx <- marginaleffects(model, newdata = datagrid(drat = 3.9, hp = 110))
+mfx <- slopes(model, newdata = datagrid(drat = 3.9, hp = 110))
 em1 <- emmeans::emtrends(model, ~hp, "hp", at = list(hp = 110, drat = 3.9))
 em2 <- emmeans::emtrends(model, ~drat, "drat", at = list(hp = 110, drat = 3.9))
 em1 <- tidy(em1)
@@ -37,7 +37,7 @@ model <- suppressWarnings(MASS::glm.nb(carb ~ wt + factor(cyl), data = mtcars))
 
 # margins does not support unit-level standard errors
 mar <- margins(model)
-mfx <- marginaleffects(model)
+mfx <- slopes(model)
 expect_margins(mfx, mar, se = FALSE)
 
 
@@ -50,14 +50,14 @@ expect_equivalent(tmp$estimate, tmp$mar_estimate, tolerance = .0001)
 expect_equivalent(tmp$std.error, tmp$mar_std.error, tolerance = .001)
 
 # emmeans::emtrends
-mfx <- marginaleffects(model, newdata = datagrid(wt = 2.6, cyl = 4), type = "link")
+mfx <- slopes(model, newdata = datagrid(wt = 2.6, cyl = 4), type = "link")
 em <- emtrends(model, ~wt, "wt", at = list(wt = 2.6, cyl = 4))
 em <- tidy(em)
 expect_equivalent(mfx$dydx[1], em$wt.trend)
 expect_equivalent(mfx$std.error[1], em$std.error, tolerance = 1e-3)
 
 # emmeans contrasts
-mfx <- marginaleffects(model, type = "link", newdata = datagrid(wt = 3, cyl = 4))
+mfx <- slopes(model, type = "link", newdata = datagrid(wt = 3, cyl = 4))
 em <- emmeans(model, specs = "cyl") 
 em <- contrast(em, method = "revpairwise", at = list(wt = 3, cyl = 4))
 em <- tidy(em)
@@ -72,7 +72,7 @@ expect_equivalent(mfx$std.error[mfx$contrast == "8 - 4"], em$std.error[em$contra
 stata <- readRDS(testing_path("stata/stata.rds"))$mass_glm_nb
 model <- suppressWarnings(
 MASS::glm.nb(carb ~ wt + factor(cyl), data = mtcars))
-mfx <- tidy(marginaleffects(model))
+mfx <- tidy(slopes(model))
 stata$contrast <- ifelse(stata$term == "factor(cyl)6", "6 - 4", "")
 stata$contrast <- ifelse(stata$term == "factor(cyl)8", "8 - 4", stata$contrast)
 stata$term <- ifelse(grepl("cyl", stata$term), "cyl", stata$term)
@@ -86,12 +86,12 @@ expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .001)
 stata <- readRDS(testing_path("stata/stata.rds"))[["MASS_polr_01"]]
 dat <- read.csv(testing_path("stata/databases/MASS_polr_01.csv"))
 mod <- MASS::polr(factor(y) ~ x1 + x2, data = dat, Hess = TRUE)
-mfx <- marginaleffects(mod, type = "probs")
+mfx <- slopes(mod, type = "probs")
 mfx <- tidy(mfx)
 mfx <- merge(mfx, stata)
 expect_equivalent(mfx$estimate, mfx$dydxstata, tolerance = .01)
 expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .01)
-expect_marginaleffects(mod, type = "probs")
+expect_slopes(mod, type = "probs")
 
 
 # bugs stay dead: polr with 1 row newdata
@@ -99,7 +99,7 @@ expect_marginaleffects(mod, type = "probs")
 dat <- read.csv(testing_path("stata/databases/MASS_polr_01.csv"))
 dat$y <- factor(dat$y)
 mod <- MASS::polr(y ~ x1, data = dat, Hess = TRUE)
-mfx <- marginaleffects(mod, type = "probs", newdata = datagrid(x1 = 0))
+mfx <- slopes(mod, type = "probs", newdata = datagrid(x1 = 0))
 expect_inherits(mfx, "marginaleffects")
 
 
@@ -111,7 +111,7 @@ dat$y <- factor(dat$y)
 mod <- MASS::polr(y ~ x1 + x2, data = dat, Hess = TRUE)
 em <- emmeans::emtrends(mod, ~y, var = "x1", mode = "prob", at = list(x1 = 0, x2 = 0))
 em <- tidy(em)
-mfx <- marginaleffects(mod, newdata = datagrid(x1 = 0, x2 = 0),
+mfx <- slopes(mod, newdata = datagrid(x1 = 0, x2 = 0),
                    type = "probs", variables = "x1")
 expect_equivalent(mfx$dydx, em$x1.trend, tolerance = .01)
 expect_equivalent(mfx$std.error, em$std.error, tolerance = .01)
@@ -192,14 +192,14 @@ mod <- glmmPQL(y ~ trt + week_bin, random = ~ 1 | ID,
            family = binomial,
            verbose = FALSE,
            data = tmp)
-expect_marginaleffects(mod, type = "link", n_unique = 1)
-expect_marginaleffects(mod, type = "response")
+expect_slopes(mod, type = "link", n_unique = 1)
+expect_slopes(mod, type = "response")
 expect_predictions(predictions(mod))
 
 # emtrends
 em <- emmeans::emtrends(mod, ~week_bin, "week_bin", at = list(week_bin = 0))
 em <- tidy(em)
-mfx <- marginaleffects(mod, newdata = datagrid(week_bin = 0), type = "link")
+mfx <- slopes(mod, newdata = datagrid(week_bin = 0), type = "link")
 expect_equivalent(mfx$dydx[3], em$week_bin.trend)
 expect_equivalent(mfx$std.error[3], em$std.error, tolerance = .01)
 
@@ -212,7 +212,7 @@ dat$cyl <- as.character(dat$cyl)
 dat <<- dat
 mod <- polr(factor(gear) ~ cyl, data = dat)
 # not clear why this generates a warning only on CI
-mfx <- suppressMessages(marginaleffects(mod, type = "probs"))
+mfx <- suppressMessages(slopes(mod, type = "probs"))
 tid <- tidy(mfx)
 expect_equivalent(nrow(tid), 6)
 

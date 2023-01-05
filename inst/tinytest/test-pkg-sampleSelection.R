@@ -11,11 +11,11 @@ dat <<- Mroz87
 mod <- heckit(lfp ~ age + I( age^2 ) + faminc + kids + educ,
               wage ~ exper + I( exper^2 ) + educ + city, 
               data = dat)
-mfx <- marginaleffects(mod)
+mfx <- slopes(mod)
 expect_inherits(mfx, "marginaleffects")
-mfx <- marginaleffects(mod, part = "selection", type = "link")
+mfx <- slopes(mod, part = "selection", type = "link")
 expect_inherits(mfx, "marginaleffects")
-mfx <- marginaleffects(mod, part = "outcome", type = "unconditional")
+mfx <- slopes(mod, part = "outcome", type = "unconditional")
 expect_inherits(mfx, "marginaleffects")
 expect_true(all(is.na(mfx$std.error)))
 
@@ -24,10 +24,10 @@ expect_true(all(is.na(mfx$std.error)))
 mod <- selection(lfp ~ age + I( age^2 ) + faminc + kids + educ,
                  wage ~ exper + I( exper^2 ) + educ + city, 
                  data = dat)
-mfx <- marginaleffects(mod)
+mfx <- slopes(mod)
 expect_inherits(mfx, "marginaleffects")
-mfx <- marginaleffects(mod, part = "selection", type = "link")
+mfx <- slopes(mod, part = "selection", type = "link")
 expect_inherits(mfx, "marginaleffects")
-mfx <- marginaleffects(mod, part = "outcome", type = "unconditional")
+mfx <- slopes(mod, part = "outcome", type = "unconditional")
 expect_inherits(mfx, "marginaleffects")
 

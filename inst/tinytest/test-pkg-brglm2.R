@@ -15,13 +15,13 @@ model <- update(model, method = "brglm_fit") # probably breaks get_data from env
 
 # margins
 mar <- margins(model)
-mfx <- marginaleffects(model, newdata = dat)
-expect_marginaleffects(model, newdata = dat)
+mfx <- slopes(model, newdata = dat)
+expect_slopes(model, newdata = dat)
 expect_margins(mar, mfx)
 # emtrends
 em <- emtrends(model, ~PI, "PI", at = list(PI = 15, EH = 2, NV = 0))
 em <- tidy(em)
-mfx <- marginaleffects(
+mfx <- slopes(
     model,
     variables = "PI",
     newdata = datagrid(PI = 15, EH = 2, NV = 0, newdata = dat), 
@@ -41,8 +41,8 @@ model <- brnb(
     link = "log",
     transformation = "inverse",
     type = "ML")
-expect_marginaleffects(model, n_unique = 6, newdata = sm)
-mfx <- suppressWarnings(marginaleffects(model))
+expect_slopes(model, n_unique = 6, newdata = sm)
+mfx <- suppressWarnings(slopes(model))
 mar <- suppressWarnings(margins(model))
 expect_margins(mar, mfx)
 
@@ -63,7 +63,7 @@ expect_predictions(pred2, n_row = 6)
 data("housing", package = "MASS")
 mod <- brmultinom(Sat ~ Infl + Type + Cont, weights = Freq,
               data = housing, type = "ML", ref = 1)
-expect_marginaleffects(mod, type = "probs")
+expect_slopes(mod, type = "probs")
 expect_predictions(predictions(mod, type = "probs"))
 
 
@@ -76,7 +76,7 @@ mod <- bracl(
     research ~ as.numeric(religion) + gender, weights = frequency,
     data = dat, type = "ML")
 expect_predictions(predictions(mod, type = "probs"))
-expect_marginaleffects(mod, type = "probs")
+expect_slopes(mod, type = "probs")
 
 
 

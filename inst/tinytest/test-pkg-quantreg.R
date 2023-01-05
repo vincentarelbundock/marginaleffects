@@ -8,8 +8,8 @@ requiet("broom")
 # marginaleffects: rq: Stata
 stata <- readRDS(testing_path("stata/stata.rds"))$quantreg_rq_01
 model <- suppressWarnings(quantreg::rq(mpg ~ hp * wt + factor(cyl), data = mtcars))
-expect_marginaleffects(model)
-mfx <- merge(tidy(marginaleffects(model)), stata)
+expect_slopes(model)
+mfx <- merge(tidy(slopes(model)), stata)
 expect_equivalent(mfx$estimate, mfx$dydxstata, tolerance = .0001)
 expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .0001)
 
@@ -17,7 +17,7 @@ expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .0001)
 # marginaleffects vs. emtrends
 stata <- readRDS(testing_path("stata/stata.rds"))$quantreg_rq_01
 model <- quantreg::rq(mpg ~ hp * wt + factor(cyl), data = mtcars)
-mfx <- marginaleffects(model, variables = "hp", newdata = datagrid(hp = 110, wt = 2, cyl = 4))
+mfx <- slopes(model, variables = "hp", newdata = datagrid(hp = 110, wt = 2, cyl = 4))
 em <- suppressMessages(emtrends(model, ~hp, "hp", at = list(hp = 110, wt = 2, cyl = 4)))
 em <- tidy(em)
 expect_equivalent(mfx$dydx, em$hp.trend, tolerance = .00001)

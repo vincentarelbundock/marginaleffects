@@ -20,7 +20,7 @@ expect_true(all(is.na(nd$gear)))
 tmp <- mtcars
 tmp$am <- as.logical(tmp$am)
 mod_int <- lm(mpg ~ am * factor(cyl), tmp)
-mfx <- marginaleffects(mod_int,
+mfx <- slopes(mod_int,
                        newdata = datagrid(cyl = tmp$cyl),
                        variables = "am")
 expect_equivalent(nrow(mfx), 3)
@@ -64,7 +64,7 @@ expect_error(datagrid(model = mod, cyl = "2"), pattern = "must be one of the fac
 tmp <- mtcars
 tmp$am <- as.logical(tmp$am)
 mod <- lm(mpg ~ am * factor(cyl), data = tmp)
-mfx <- marginaleffects(mod, newdata = datagrid(cyl = tmp$cyl), variables = "am")
+mfx <- slopes(mod, newdata = datagrid(cyl = tmp$cyl), variables = "am")
 expect_inherits(mfx, "marginaleffects")
 expect_equivalent(nrow(mfx), 3)
 

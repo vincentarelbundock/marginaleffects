@@ -14,8 +14,8 @@ requiet("emmeans")
 # expect_equivalent(nrow(p1), nrow(p2))
 # expect_true(all(c("newdata_adjusted_for", "newdata_at_specs") %in% names(attributes(p2))))
 
-# m1 <- marginaleffects(mod, newdata = datagrid(cyl = mtcars$cyl))
-# m2 <- marginaleffects(mod, newdata = visualisation_matrix(at = "cyl"))
+# m1 <- slopes(mod, newdata = datagrid(cyl = mtcars$cyl))
+# m2 <- slopes(mod, newdata = visualisation_matrix(at = "cyl"))
 # expect_equivalent(nrow(m1), nrow(m2))
 # expect_true(all(c("newdata_adjusted_for", "newdata_at_specs") %in% names(attributes(m2))))
 

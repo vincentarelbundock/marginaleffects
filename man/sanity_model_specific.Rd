@@ -48,53 +48,6 @@ sanity_model_specific(model, calling_function = "marginaleffects", ...)
 
 \method{sanity_model_specific}{rqs}(model, ...)
 }
-\arguments{
-\item{model}{Model object}
-
-\item{...}{Additional arguments are passed to the \code{predict()} method
-supplied by the modeling package.These arguments are particularly useful
-for mixed-effects or bayesian models (see the online vignettes on the
-\code{marginaleffects} website). Available arguments can vary from model to
-model, depending on the range of supported arguments by each modeling
-package. See the "Model-Specific Arguments" section of the
-\code{?marginaleffects} documentation for a non-exhaustive list of available
-arguments.}
-
-\item{vcov}{Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
-\itemize{
-\item FALSE: Do not compute standard errors. This can speed up computation considerably.
-\item TRUE: Unit-level standard errors using the default \code{vcov(model)} variance-covariance matrix.
-\item String which indicates the kind of uncertainty estimates to return.
-\itemize{
-\item Heteroskedasticity-consistent: \code{"HC"}, \code{"HC0"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"}, \code{"HC4"}, \code{"HC4m"}, \code{"HC5"}. See \code{?sandwich::vcovHC}
-\item Heteroskedasticity and autocorrelation consistent: \code{"HAC"}
-\item Mixed-Models degrees of freedom: "satterthwaite", "kenward-roger"
-\item Other: \code{"NeweyWest"}, \code{"KernHAC"}, \code{"OPG"}. See the \code{sandwich} package documentation.
-}
-\item One-sided formula which indicates the name of cluster variables (e.g., \code{~unit_id}). This formula is passed to the \code{cluster} argument of the \code{sandwich::vcovCL} function.
-\item Square covariance matrix
-\item Function which returns a covariance matrix (e.g., \code{stats::vcov(model)})
-}}
-
-\item{newdata}{\code{NULL}, data frame, string, or \code{datagrid()} call. Determines the predictor values for which to compute marginal effects.
-\itemize{
-\item \code{NULL} (default): Unit-level marginal effects for each observed value in the original dataset.
-\item data frame: Unit-level marginal effects for each row of the \code{newdata} data frame.
-\item string:
-\itemize{
-\item "mean": Marginal Effects at the Mean. Marginal effects when each predictor is held at its mean or mode.
-\item "median": Marginal Effects at the Median. Marginal effects when each predictor is held at its median or mode.
-\item "marginalmeans": Marginal Effects at Marginal Means. See Details section below.
-\item "tukey": Marginal Effects at Tukey's 5 numbers.
-\item "grid": Marginal Effects on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
-}
-\item \code{\link[=datagrid]{datagrid()}} call to specify a custom grid of regressors. For example:
-\itemize{
-\item \code{newdata = datagrid(cyl = c(4, 6))}: \code{cyl} variable equal to 4 and 6 and other regressors fixed at their means or modes.
-\item See the Examples section and the \code{\link[=datagrid]{datagrid()}} documentation.
-}
-}}
-}
 \value{
 A warning, an error, or nothing
 }

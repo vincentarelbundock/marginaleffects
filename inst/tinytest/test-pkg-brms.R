@@ -55,7 +55,7 @@ bm <- brmsmargins(
   CI = 0.95, CIType = "ETI")
 bm <- data.frame(bm$ContrastSummary)
 
-mfx <- marginaleffects(brms_numeric)
+mfx <- slopes(brms_numeric)
 mfx <- tidy(mfx)
 
 expect_equivalent(mean(posteriordraws(mfx)$draw), bm$M, tolerance = tol)
@@ -66,7 +66,7 @@ options("marginaleffects_credible_interval" = "hdi")
 
 
 # marginaleffects vs. emmeans
-mfx <- marginaleffects(
+mfx <- slopes(
     brms_numeric2,
     newdata = datagrid(mpg = 20, hp = 100),
     variables = "mpg",
@@ -78,7 +78,7 @@ expect_equivalent(mfx$dydx, em$mpg.trend)
 expect_equivalent(mfx$conf.low, em$lower.HPD)
 expect_equivalent(mfx$conf.high, em$upper.HPD)
 # tolerance is less good for back-transformed response
-mfx <- marginaleffects(brms_numeric2, newdata = datagrid(mpg = 20, hp = 100),
+mfx <- slopes(brms_numeric2, newdata = datagrid(mpg = 20, hp = 100),
                    variables = "mpg", type = "response")
 em <- emtrends(brms_numeric2, ~mpg, "mpg", at = list(mpg = 20, hp = 100), regrid = "response")
 em <- tidy(em)
@@ -88,11 +88,11 @@ expect_equivalent(mfx$conf.high, em$upper.HPD, tolerance = .1)
 
 
 # brms: cumulative: marginaleffects: no validity
-expect_marginaleffects(brms_cumulative_random, se = FALSE)
+expect_slopes(brms_cumulative_random, se = FALSE)
 
 
 # brms: logical regressor
-mfx <- marginaleffects(brms_logical)
+mfx <- slopes(brms_logical)
 expect_inherits(mfx, "marginaleffects")
 expect_equivalent(nrow(mfx), nrow(attr(mfx, "posterior_draws")))
 
@@ -147,16 +147,16 @@ expect_warning(predictions(brms_cumulative_random, include_random = FALSE)) # on
 
 
 # marginaleffects: ordinal no validity
-expect_marginaleffects(brms_ordinal_1, se = FALSE)
+expect_slopes(brms_ordinal_1, se = FALSE)
 
 
 # predict new unit: no validity
 dat1 <- dat2 <- datagrid(model = brms_epi)
 dat2$patient <- 9999
 set.seed(1024)
-mfx1 <- marginaleffects(brms_epi, newdata = dat1)
+mfx1 <- slopes(brms_epi, newdata = dat1)
 set.seed(1024)
-mfx2 <- marginaleffects(brms_epi, newdata = dat2, allow_new_levels = TRUE)
+mfx2 <- slopes(brms_epi, newdata = dat2, allow_new_levels = TRUE)
 expect_false(any(mfx1$dydx == mfx2$dydx))
 
 
@@ -166,7 +166,7 @@ dat <- mtcars
 dat$logic <- as.logical(dat$vs)
 dat$cyl_fac <- as.factor(dat$cyl)
 dat$cyl_cha <- as.character(dat$cyl)
-mfx <- marginaleffects(brms_factor, newdata = dat)
+mfx <- slopes(brms_factor, newdata = dat)
 ti <- tidy(mfx)
 expect_inherits(ti, "data.frame")
 expect_equivalent(dim(ti), c(3, 6))
@@ -223,11 +223,11 @@ expect_error(marginalmeans(brms_factor, variables = "cyl_fac", type = "link"), p
 
 
 # marginaleffects: no validity
-expect_marginaleffects(brms_numeric2, se = FALSE)
-expect_marginaleffects(brms_interaction, se = FALSE)
-expect_marginaleffects(brms_factor, se = FALSE)
+expect_slopes(brms_numeric2, se = FALSE)
+expect_slopes(brms_interaction, se = FALSE)
+expect_slopes(brms_factor, se = FALSE)
 # credible intervals and posterior draws
-tmp <- marginaleffects(brms_factor)
+tmp <- slopes(brms_factor)
 expect_true("conf.low" %in% colnames(tmp))
 expect_true(all(tmp$dydx > tmp$conf.low))
 expect_true(all(tmp$dydx < tmp$conf.high))
@@ -241,18 +241,18 @@ requiet("emmeans")
 
 # # known frequentist example to compare syntax
 # brms_numeric_freq <- glm(am ~ hp, data = mtcars, family = binomial)
-# marginaleffects(brms_numeric_freq, newdata = datagrid(hp = 147), type = "link")
+# slopes(brms_numeric_freq, newdata = datagrid(hp = 147), type = "link")
 # emmeans::emtrends(brms_numeric_freq, specs = ~hp, var = "hp", at = list(hp = 147))
 
 # one variable: link scale
-mfx1 <- marginaleffects(brms_numeric, variables = "hp", newdata = datagrid(hp = 110), type = "link")
+mfx1 <- slopes(brms_numeric, variables = "hp", newdata = datagrid(hp = 110), type = "link")
 mfx2 <- as.data.frame(emmeans::emtrends(brms_numeric, ~hp, var = "hp", at = list(hp = 110)))
 expect_equivalent(mfx1$dydx, mfx2$hp.trend)
 expect_equivalent(mfx1$conf.low, mfx2$lower.HPD)
 expect_equivalent(mfx1$conf.high, mfx2$upper.HPD)
 
 # one variable: response scale
-mfx1 <- marginaleffects(brms_numeric, variables = "hp", newdata = datagrid(hp = 110))
+mfx1 <- slopes(brms_numeric, variables = "hp", newdata = datagrid(hp = 110))
 mfx2 <- as.data.frame(emtrends(brms_numeric, ~hp, var = "hp", at = list(hp = 110), regrid = "response"))
 expect_equivalent(mfx1$dydx, mfx2$hp.trend, tolerance = .001)
 expect_equivalent(mfx1$conf.low, mfx2$lower.HPD, tolerance = .001)
@@ -260,7 +260,7 @@ expect_equivalent(mfx1$conf.high, mfx2$upper.HPD, tolerance = .001)
 
 # numeric + factor: numeric variable
 dat <- datagrid(model = brms_factor, mpg = 25, cyl_fac = 4)
-mfx1 <- marginaleffects(brms_factor, variables = "mpg", newdata = dat, type = "link")
+mfx1 <- slopes(brms_factor, variables = "mpg", newdata = dat, type = "link")
 mfx2 <- as.data.frame(emmeans::emtrends(brms_factor, ~mpg, var = "mpg", at = list(mpg = 25, cyl_fac = 4)))
 expect_equivalent(mfx1$dydx, mfx2$mpg.trend, tolerance = .001)
 expect_equivalent(mfx1$conf.low, mfx2$lower.HPD, tolerance = .001)
@@ -268,7 +268,7 @@ expect_equivalent(mfx1$conf.high, mfx2$upper.HPD, tolerance = .001)
 
 # numeric + factor: factor
 dat <- datagrid(model = brms_factor, mpg = 25, cyl_fac = 4)
-mfx1 <- marginaleffects(brms_factor, variables = "cyl_fac", newdata = dat, type = "link")
+mfx1 <- slopes(brms_factor, variables = "cyl_fac", newdata = dat, type = "link")
 mfx2 <- emmeans::emmeans(brms_factor, ~ cyl_fac, var = "cyl_fac", at = list(mpg = 25))
 mfx2 <- emmeans::contrast(mfx2, method = "revpairwise")
 mfx2 <- data.frame(mfx2)[1:2,]
@@ -290,7 +290,7 @@ expect_equivalent(mfx1$conf.high, mfx2$upper.HPD, tolerance = .001)
 
 
 # factor in formula
-expect_error(marginaleffects(brms_factor_formula),
+expect_error(slopes(brms_factor_formula),
          pattern = "factor")
 expect_error(predictions(brms_factor_formula),
          pattern = "factor")
@@ -305,9 +305,9 @@ expect_inherits(posteriordraws(tmp), "data.frame")
 
 # mo() recognized as factor: Issue #220
 # marginaleffects
-mfx1 <- marginaleffects(brms_monotonic)
-mfx2 <- marginaleffects(brms_monotonic, variable = "carb")
-expect_error(marginaleffects(brms_monotonic_factor), pattern = "cannot be used")
+mfx1 <- slopes(brms_monotonic)
+mfx2 <- slopes(brms_monotonic, variable = "carb")
+expect_error(slopes(brms_monotonic_factor), pattern = "cannot be used")
 expect_inherits(mfx1, "marginaleffects")
 expect_inherits(mfx2, "marginaleffects")
 
@@ -324,7 +324,7 @@ expect_equivalent(nrow(contr2), 15)
 beta <- get_coef(brms_mv_1)
 expect_equivalent(length(beta), 12)
 
-mfx <- marginaleffects(brms_mv_1)
+mfx <- slopes(brms_mv_1)
 expect_inherits(mfx, "marginaleffects")
 
 pred <- predictions(brms_mv_1)
@@ -338,7 +338,7 @@ expect_inherits(draws, "data.frame")
 expect_true(all(c("drawid", "draw", "rowid") %in% colnames(draws)))
 
 # categorical outcome
-mfx <- marginaleffects(brms_categorical_1)
+mfx <- slopes(brms_categorical_1)
 expect_inherits(mfx, "marginaleffects")
 
 pred <- predictions(brms_categorical_1)
@@ -373,15 +373,15 @@ expect_predictions(p_prediction, se = FALSE)
 
 
 # bugs stay dead: character regressors used to produce duplicates
-expect_marginaleffects(brms_character, se = FALSE)
-mfx <- marginaleffects(brms_character)
+expect_slopes(brms_character, se = FALSE)
+mfx <- slopes(brms_character)
 ti <- tidy(mfx)
 expect_true(length(unique(ti$estimate)) == nrow(ti))
 
 
 
 # warning: vcov not supported
-expect_warning(marginaleffects(brms_numeric, vcov = "HC3"),
+expect_warning(slopes(brms_numeric, vcov = "HC3"),
            pattern = "vcov.*not supported")
 
 # Andrew Heiss says that lognormal_hurdle are tricky because the link is
@@ -517,9 +517,9 @@ expect_equivalent(nrow(p), 1)
 
 
 
-# `by` not supported in comparisons() or marginaleffects()
+# `by` not supported in comparisons() or slopes()
 expect_error(comparisons(brms_factor, by = "cyl_fac"), pattern = "supported")
-expect_error(marginaleffects(brms_factor, by = "cyl_fac"), pattern = "supported")
+expect_error(slopes(brms_factor, by = "cyl_fac"), pattern = "supported")
 
 
 

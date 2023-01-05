@@ -55,7 +55,7 @@ head(mtcars)
 
 mod <- multinom(factor(gear) ~ hp + mpg, data = mtcars, trace = FALSE)
 
-marginaleffects(mod, type = "probs") %>% summary()
+slopes(mod, type = "probs") %>% summary()
 ```
 
 Notice that in such models, we get one marginal effect for each term, for each level of the response variable. For this reason, we should use `"group"` in the `condition` argument (or `facet_*()` function) when calling one of the plotting functions:
@@ -88,12 +88,12 @@ head(TravelMode)
 
 mod <- mlogit(choice ~ wait + gcost | income + size, TravelMode)
 
-marginaleffects(mod, variables = c("income", "size")) %>% summary()
+slopes(mod, variables = c("income", "size")) %>% summary()
 ```
 
-Note that the `marginaleffects` function will always return estimates of zero for regressors before the vertical bar in the formula. This is because the `predict()` function supplied by the `mlogit` package does not produce different predictions for different values of these variables.
+Note that the `slopes` function will always return estimates of zero for regressors before the vertical bar in the formula. This is because the `predict()` function supplied by the `mlogit` package does not produce different predictions for different values of these variables.
 
-To compute different kinds of marginal effects, we can construct customized data frames and feed them to the `newdata` argument of the `marginaleffects` function. 
+To compute different kinds of marginal effects, we can construct customized data frames and feed them to the `newdata` argument of the `slopes` function. 
 
 **Important:** The `newdata` argument for `mlogit` models must be a "balanced" data frame, that is, it must have a number of rows that is a multiple of the number of choices.
 
@@ -105,7 +105,7 @@ nd <- TravelMode %>%
               function(x) rep(mean(x), 4)))
 nd
 
-marginaleffects(mod, newdata = nd, variables = c("income", "size")) |> summary()
+slopes(mod, newdata = nd, variables = c("income", "size")) |> summary()
 ```
 
 If we want to compute marginal effects with the `gcost` and `wait` fixed at their mean value, *conditional* on the choice of transportation mode:
@@ -116,7 +116,7 @@ nd <- TravelMode %>%
     summarize(across(c("wait", "gcost", "income", "size"), mean))
 nd
 
-marginaleffects(mod, newdata = nd, variables = c("income", "size")) |> summary()
+slopes(mod, newdata = nd, variables = c("income", "size")) |> summary()
 ```
 
 We can also explore more complex alternatives. Here, for example, only one alternative is affected by cost reduction:
@@ -127,5 +127,5 @@ nd <- lapply(1:4, function(i) mutate(nd, gcost = ifelse(1:4 == i, 30, gcost)))
 nd <- bind_rows(nd)
 nd
 
-marginaleffects(mod, newdata = nd, variables = c("income", "size")) |> summary()
+slopes(mod, newdata = nd, variables = c("income", "size")) |> summary()
 ```

@@ -29,31 +29,7 @@ plot_cco(
 \item Shortcut strings for common reference values: "minmax", "quartile", "threenum"
 }}
 
-\item{type}{string indicates the type (scale) of the predictions used to
-compute marginal effects or contrasts. This can differ based on the model
-type, but will typically be a string such as: "response", "link", "probs",
-or "zero". When an unsupported string is entered, the model-specific list of
-acceptable values is returned in an error message. When \code{type} is \code{NULL}, the
-default value is used. This default is the first model-related row in
-the \code{marginaleffects:::type_dictionary} dataframe.}
-
-\item{vcov}{Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
-\itemize{
-\item FALSE: Do not compute standard errors. This can speed up computation considerably.
-\item TRUE: Unit-level standard errors using the default \code{vcov(model)} variance-covariance matrix.
-\item String which indicates the kind of uncertainty estimates to return.
-\itemize{
-\item Heteroskedasticity-consistent: \code{"HC"}, \code{"HC0"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"}, \code{"HC4"}, \code{"HC4m"}, \code{"HC5"}. See \code{?sandwich::vcovHC}
-\item Heteroskedasticity and autocorrelation consistent: \code{"HAC"}
-\item Mixed-Models degrees of freedom: "satterthwaite", "kenward-roger"
-\item Other: \code{"NeweyWest"}, \code{"KernHAC"}, \code{"OPG"}. See the \code{sandwich} package documentation.
-}
-\item One-sided formula which indicates the name of cluster variables (e.g., \code{~unit_id}). This formula is passed to the \code{cluster} argument of the \code{sandwich::vcovCL} function.
-\item Square covariance matrix
-\item Function which returns a covariance matrix (e.g., \code{stats::vcov(model)})
-}}
-
-\item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
+\item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval. The default \code{NULL} uses the \code{conf_level} value used in the original call to \code{slopes()}.}
 
 \item{transform_pre}{string or function. How should pairs of adjusted predictions be contrasted?
 \itemize{
@@ -71,15 +47,6 @@ the \code{marginaleffects:::type_dictionary} dataframe.}
 \item{transform_post}{string or function. Transformation applied to unit-level estimates and confidence intervals just before the function returns results. Functions must accept a vector and return a vector of the same length. Support string shortcuts: "exp", "ln"}
 
 \item{draw}{\code{TRUE} returns a \code{ggplot2} plot. \code{FALSE} returns a \code{data.frame} of the underlying data.}
-
-\item{...}{Additional arguments are passed to the \code{predict()} method
-supplied by the modeling package.These arguments are particularly useful
-for mixed-effects or bayesian models (see the online vignettes on the
-\code{marginaleffects} website). Available arguments can vary from model to
-model, depending on the range of supported arguments by each modeling
-package. See the "Model-Specific Arguments" section of the
-\code{?marginaleffects} documentation for a non-exhaustive list of available
-arguments.}
 }
 \value{
 A \code{ggplot2} object
@@ -104,7 +71,7 @@ plot_cco(mod, effect = "am", condition = list("hp", "drat" = range))
 }
 \seealso{
 Other plot: 
-\code{\link{plot.marginaleffects}()},
+\code{\link{plot.slopes}()},
 \code{\link{plot_cap}()},
 \code{\link{plot_cme}()}
 }

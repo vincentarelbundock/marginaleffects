@@ -14,7 +14,7 @@ h2 = FALSE, method = "bhhh", corr = TRUE, finalHessian = TRUE)
 # marginaleffects vs. margins (unit-level SEs)
 set.seed(1024)
 nd <- Interview[sample(seq_len(nrow(Interview)), 10),]
-mfx <- marginaleffects(m2, newdata = nd, type = "E")
+mfx <- slopes(m2, newdata = nd, type = "E")
 mar <- margins(m2, type = "response", data = nd, unit_ses = TRUE)
 
 expect_equivalent(mfx[mfx$term == "linc", "dydx"], as.numeric(mar$dydx_linc), tolerance = tol)
@@ -26,7 +26,7 @@ expect_equivalent(mfx[mfx$term == "educ", "std.error"], mar$SE_dydx_educ, tolera
 expect_equivalent(mfx[mfx$term == "age", "std.error"], mar$SE_dydx_age, tolerance = tol_se)
 
 # marginaleffects vs. margins: AME 
-mfx <- marginaleffects(m2, type = "E")
+mfx <- slopes(m2, type = "E")
 mfx <- tidy(mfx)
 mfx <- mfx[match(c("age", "educ", "linc", "size", "smsa"), mfx$term),]
 mar <- margins(m2)

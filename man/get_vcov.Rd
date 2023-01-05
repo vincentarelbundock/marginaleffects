@@ -35,34 +35,6 @@ get_vcov(model, ...)
 
 \method{get_vcov}{scam}(model, vcov = NULL, ...)
 }
-\arguments{
-\item{model}{Model object}
-
-\item{...}{Additional arguments are passed to the \code{predict()} method
-supplied by the modeling package.These arguments are particularly useful
-for mixed-effects or bayesian models (see the online vignettes on the
-\code{marginaleffects} website). Available arguments can vary from model to
-model, depending on the range of supported arguments by each modeling
-package. See the "Model-Specific Arguments" section of the
-\code{?marginaleffects} documentation for a non-exhaustive list of available
-arguments.}
-
-\item{vcov}{Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
-\itemize{
-\item FALSE: Do not compute standard errors. This can speed up computation considerably.
-\item TRUE: Unit-level standard errors using the default \code{vcov(model)} variance-covariance matrix.
-\item String which indicates the kind of uncertainty estimates to return.
-\itemize{
-\item Heteroskedasticity-consistent: \code{"HC"}, \code{"HC0"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"}, \code{"HC4"}, \code{"HC4m"}, \code{"HC5"}. See \code{?sandwich::vcovHC}
-\item Heteroskedasticity and autocorrelation consistent: \code{"HAC"}
-\item Mixed-Models degrees of freedom: "satterthwaite", "kenward-roger"
-\item Other: \code{"NeweyWest"}, \code{"KernHAC"}, \code{"OPG"}. See the \code{sandwich} package documentation.
-}
-\item One-sided formula which indicates the name of cluster variables (e.g., \code{~unit_id}). This formula is passed to the \code{cluster} argument of the \code{sandwich::vcovCL} function.
-\item Square covariance matrix
-\item Function which returns a covariance matrix (e.g., \code{stats::vcov(model)})
-}}
-}
 \value{
 A named square matrix of variance and covariances. The names must match the coefficient names.
 }

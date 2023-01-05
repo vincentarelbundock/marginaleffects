@@ -13,7 +13,7 @@ expect_equivalent(nrow(x), 64)
 
 # marginal effects does not overwrite counterfactual rowid
 mod <- glm(am ~ mpg + factor(cyl), data = mtcars, family = binomial)
-mfx <- marginaleffects(mod, newdata = datagrid(cyl = c(4, 6, 8), grid.type = "counterfactual"))
+mfx <- slopes(mod, newdata = datagrid(cyl = c(4, 6, 8), grid.type = "counterfactual"))
 expect_true(all(mfx$rowidcf %in% 1:32))
 expect_true(all(mfx$rowid %in% 1:96))
 
@@ -23,10 +23,10 @@ expect_true(all(mfx$rowid %in% 1:96))
 mod <- lm(mpg ~ hp + drat + wt, mtcars)
 nd1 <- datagrid(wt = 3, hp = c(100, 110), model = mod)
 nd2 <- datagrid(wt = 3, hp = c(100, 110), newdata = mtcars)
-x <- marginaleffects(mod, newdata = datagrid(wt = 3, hp = c(100, 110)))
+x <- slopes(mod, newdata = datagrid(wt = 3, hp = c(100, 110)))
 x$mpg <- NULL # placeholder response in predictions
-y <- marginaleffects(mod, newdata = nd1)
-z <- marginaleffects(mod, newdata = nd2)
+y <- slopes(mod, newdata = nd1)
+z <- slopes(mod, newdata = nd2)
 z <- z[, colnames(x), drop = FALSE]
 y <- y[, colnames(x), drop = FALSE]
 expect_true(all(x == y))
@@ -81,5 +81,5 @@ expect_equivalent(sum(sapply(res, is.numeric)), 9)
 # typical number of rows
 mod <- lm(mpg ~ hp * wt, data = mtcars)
 nd <- datagrid(model = mod, hp = c(100, 110))
-expect_equivalent(nrow(marginaleffects(mod, newdata = nd)), 4)
+expect_equivalent(nrow(slopes(mod, newdata = nd)), 4)
 

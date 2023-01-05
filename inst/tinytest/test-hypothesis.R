@@ -11,15 +11,15 @@ mod <- lm(mpg ~ carb + cyl, dat)
 
 # informative errors and warnings
 tmp <- lm(mpg ~ drat + wt, data = mtcars)
-expect_error(marginaleffects(tmp, hypothesis = "drat = wt"), pattern = "newdata")
+expect_error(slopes(tmp, hypothesis = "drat = wt"), pattern = "newdata")
 expect_error(comparisons(tmp, hypothesis = "drat = wt"), pattern = "newdata")
 
 expect_error(
-    marginaleffects(mod, newdata = dat, hypothesis = "pairwise"),
+    slopes(mod, newdata = dat, hypothesis = "pairwise"),
     pattern = "smaller")
 
 expect_warning(
-    marginaleffects(mod, lincom = "pairwise"),
+    slopes(mod, lincom = "pairwise"),
     pattern = "lincom")
 
 tmp <- lm(mpg ~ wt + drat, data = mtcars)
@@ -41,10 +41,10 @@ expect_error(
     pattern = "indices")
 
 expect_error(
-    marginaleffects(mod, newdata = dat, hypothesis = "reference"),
+    slopes(mod, newdata = dat, hypothesis = "reference"),
     pattern = "smaller")
 
-expect_error(marginaleffects(
+expect_error(slopes(
     mod,
     newdata = "mean",
     hypothesis = c(1, 1, 1),
@@ -52,7 +52,7 @@ expect_error(marginaleffects(
     pattern = "of length")
 
 # errors
-expect_error(marginaleffects(
+expect_error(slopes(
     mod,
     newdata = "mean",
     hypothesis = matrix(rep(1, 6), ncol = 2),
@@ -60,7 +60,7 @@ expect_error(marginaleffects(
     pattern = "2 rows")
 
 # marginaleffects: hypothesis
-mfx <- marginaleffects(
+mfx <- slopes(
     mod,
     newdata = "mean",
     variables = "cyl",
@@ -83,7 +83,7 @@ expect_equivalent(diff(cmp1$comparison), cmp2$comparison)
 
 
 # marginaleffects: hypothesis
-mfx <- marginaleffects(
+mfx <- slopes(
     mod,
     newdata = "mean",
     variables = "cyl",
@@ -161,11 +161,11 @@ expect_equivalent(
 
 # marginaleffects: string function
 mod <- lm(mpg ~ hp + drat, data = mtcars)
-mfx1 <- marginaleffects(
+mfx1 <- slopes(
     mod,
     newdata = "mean",
     hypothesis = "exp(b1 + b2) = 100")
-mfx2 <- marginaleffects(
+mfx2 <- slopes(
     mod,
     newdata = "mean",
     hypothesis = "exp(hp + drat) = 100")
@@ -255,4 +255,4 @@ expect_equivalent(dm$term, c("H1", "H2"))
 
 # predictions(mod, newdata = "mean", hypothesis = .75)
 
-# marginaleffects(mod, newdata = "mean", hypothesis = .75)
+# slopes(mod, newdata = "mean", hypothesis = .75)

@@ -68,7 +68,7 @@ expect_equivalent(del$term, c("H1", "H2"))
 # expect_true("b1=b3" %in% dm$term)
 # expect_equivalent(nrow(dm), 1)
 
-# mfx <- marginaleffects(mod)
+# mfx <- slopes(mod)
 # dm <- deltamethod(mfx, hypothesis = "b1 = b3")
 # expect_true("b1=b3" %in% dm$term)
 # expect_equivalent(nrow(dm), 1)

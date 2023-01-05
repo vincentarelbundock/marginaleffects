@@ -15,9 +15,9 @@ void <- capture.output(
 )
 # type = "response" produces 0 dydx and standard error. Not sure why
 # because `get_predict(newdata)` seems to work
-expect_error(marginaleffects(model, type = "response"), pattern = "type. argument")
+expect_error(slopes(model, type = "response"), pattern = "type. argument")
 # type = "link" works
-suppressWarnings(expect_marginaleffects(model, type = "link", n_unique = 1))
+suppressWarnings(expect_slopes(model, type = "link", n_unique = 1))
 pred <- predictions(model, type = "link")
 expect_predictions(pred)
 
@@ -31,7 +31,7 @@ void <- capture.output(
     mod <- mblogit(Sat ~ Infl + Type + Cont + x, weights = Freq, data = dat)
 )
 expect_predictions(predictions(mod))
-expect_error(marginaleffects(mod, type = "link"), pattern = "character")
+expect_error(slopes(mod, type = "link"), pattern = "character")
 
 # mblogit: works on factor regressors
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/MASS/housing.csv")
@@ -44,7 +44,7 @@ dat <<- dat
 void <- capture.output(
 mod <- mblogit(Sat ~ Infl + Type + Cont + x, weights = Freq, data = dat))
 expect_predictions(predictions(mod))
-mfx <- marginaleffects(mod, type = "link")
+mfx <- slopes(mod, type = "link")
 expect_inherits(mfx, "marginaleffects")
 
 

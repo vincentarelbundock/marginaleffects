@@ -1,6 +1,6 @@
 #' @section Parallel computation:
 #'
-#' The `marginaleffects()` and `comparisons()` functions can use parallelism to
+#' The `slopes()` and `comparisons()` functions can use parallelism to
 #' speed up computation. Operations are parallelized at the "term" or
 #' "variable" level. This means that no speed gain is available when the user
 #' computes marginal effects for only one right-hand side variable. There is
@@ -16,7 +16,7 @@
 #' ```{r, eval = FALSE}
 #' library(future.apply)
 #' plan("multisession")
-#' marginaleffects(model)
+#' slopes(model)
 #' ```
 #'
 #' To disable parallelism in `marginaleffects` altogether, you can set a global option:

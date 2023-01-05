@@ -171,6 +171,6 @@ comparisons(mod, variables = list("Age" = "sd"), newdata = df)  |>
     summary()
 
 # slope (elasticity)
-marginaleffects(mod, variables = "Age", slope = "eyex", newdata = df) |>
+slopes(mod, variables = "Age", slope = "eyex", newdata = df) |>
     summary()
 ```

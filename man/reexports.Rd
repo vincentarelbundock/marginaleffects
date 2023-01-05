@@ -8,16 +8,16 @@
 \title{Objects exported from other packages}
 \seealso{
 Other summary: 
-\code{\link{glance.marginaleffects}()},
+\code{\link{glance.slopes}()},
 \code{\link{summary.comparisons}()},
-\code{\link{summary.marginaleffects}()},
 \code{\link{summary.marginalmeans}()},
 \code{\link{summary.predictions}()},
+\code{\link{summary.slopes}()},
 \code{\link{tidy.comparisons}()},
 \code{\link{tidy.deltamethod}()},
-\code{\link{tidy.marginaleffects}()},
 \code{\link{tidy.marginalmeans}()},
-\code{\link{tidy.predictions}()}
+\code{\link{tidy.predictions}()},
+\code{\link{tidy.slopes}()}
 }
 \concept{summary}
 \keyword{internal}

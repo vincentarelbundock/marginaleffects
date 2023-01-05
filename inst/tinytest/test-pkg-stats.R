@@ -20,7 +20,7 @@ dat <- data.frame(x1 = rnorm(N),
 dat$y <- as.numeric(plogis(
     dat$x1 + dat$x2 + dat$x3 + dat$x4 + dat$x3 * dat$x4 + dat$e) > 0.5)
 mod <- glm(y ~ x1 + x2 + x3 * x4, data = dat, family = binomial)
-res <- marginaleffects(mod)
+res <- slopes(mod)
 mar <- margins(mod, unit_ses = TRUE)
 expect_true(expect_margins(res, mar, tolerance = 0.1, verbose=TRUE))
 
@@ -34,7 +34,7 @@ expect_predictions(pre)
 # type = "response" works at lower tolerance
 em <- emmeans::emtrends(mod, ~x2, var = "x2", at = list(x1 = 0, x2 = 0, x3 = 0, x4 = 0))
 em <- tidy(em)
-mfx <- marginaleffects(mod, newdata = datagrid(x1 = 0, x2 = 0, x3 = 0, x4 = 0), variable = "x2", type = "link")
+mfx <- slopes(mod, newdata = datagrid(x1 = 0, x2 = 0, x3 = 0, x4 = 0), variable = "x2", type = "link")
 expect_equivalent(mfx$dydx, em$x2.trend)
 expect_equivalent(mfx$std.error, em$std.error)
 
@@ -44,7 +44,7 @@ expect_equivalent(mfx$std.error, em$std.error)
 stata <- readRDS(testing_path("stata/stata.rds"))[["stats_glm_01"]]
 dat <- read.csv(testing_path("stata/databases/stats_glm_01.csv"))
 mod <- glm(y ~ x1 * x2, family = binomial, data = dat)
-ame <- merge(tidy(marginaleffects(mod)), stata)
+ame <- merge(tidy(slopes(mod)), stata)
 expect_equivalent(ame$dydx, ame$dydxstata)
 expect_equivalent(ame$std.error, ame$std.errorstata, tolerance = 0.0001)
 
@@ -54,7 +54,7 @@ expect_equivalent(ame$std.error, ame$std.errorstata, tolerance = 0.0001)
 stata <- readRDS(testing_path("stata/stata.rds"))[["stats_lm_01"]]
 dat <- read.csv(testing_path("stata/databases/stats_lm_01.csv"))
 mod <- lm(y ~ x1 * x2, data = dat)
-ame <- merge(tidy(marginaleffects(mod)), stata)
+ame <- merge(tidy(slopes(mod)), stata)
 expect_equivalent(ame$dydx, ame$dydxstata)
 expect_equivalent(ame$std.error, ame$std.errorstata)
 
@@ -63,7 +63,7 @@ expect_equivalent(ame$std.error, ame$std.errorstata)
 # lm with interactions vs. margins vs. emmeans: marginaleffects
 counterfactuals <- expand.grid(hp = 100, am = 0:1)
 mod <- lm(mpg ~ hp * am, data = mtcars)
-res <- marginaleffects(mod, variable = "hp", newdata = counterfactuals)
+res <- slopes(mod, variable = "hp", newdata = counterfactuals)
 mar <- margins(mod, variable = "hp", data = counterfactuals, unit_ses = TRUE)
 expect_true(expect_margins(res, mar, tolerance = 1e-3))
 
@@ -75,7 +75,7 @@ void <- capture.output({
     em2 <- tidy(em2)
 })
 
-res <- marginaleffects(mod, variable = "hp", newdata = counterfactuals)
+res <- slopes(mod, variable = "hp", newdata = counterfactuals)
 expect_equivalent(res$dydx[1], em1$hp.trend)
 expect_equivalent(res$std.error[1], em1$std.error, tolerance = .001)
 expect_equivalent(res$dydx[2], em2$hp.trend)
@@ -139,12 +139,12 @@ expect_equivalent(mm$conf.high, em$asymp.UCL, tolerance = .01)
 
 # vcov(loess) does not exist
 mod <- loess(mpg ~ wt, data = mtcars)
-expect_warning(marginaleffects(mod), pattern = "Unable")
+expect_warning(slopes(mod), pattern = "Unable")
 
 
 # loess vs. margins
 mod <- loess(mpg ~ wt, data = mtcars)
-res <- marginaleffects(mod, vcov = FALSE, newdata = head(mtcars))$dydx
+res <- slopes(mod, vcov = FALSE, newdata = head(mtcars))$dydx
 mar <- data.frame(margins(mod, data = head(mtcars)))$dydx_wt
 expect_equivalent(as.numeric(res), as.numeric(mar), tolerance = 1e-3)
 
@@ -158,7 +158,7 @@ expect_predictions(pred, se = FALSE)
 
 # Issue #548: mlm support
 mod <- lm(cbind(mpg, cyl) ~ disp + am, data = mtcars)
-mfx <- marginaleffects(mod)
+mfx <- slopes(mod)
 tid <- tidy(mfx)
 expect_inherits(mfx, "marginaleffects")
 expect_equivalent(nrow(tid), 4)

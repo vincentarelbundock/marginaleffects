@@ -15,29 +15,29 @@ dat <<- subset(dat, enssd > 0)
 
 # marginaleffects: crch gaussian: no validity
 model <- crch(sqrt(rain) ~ sqrtensmean + sqrtenssd, data = dat, dist = "gaussian")
-expect_marginaleffects(model, n_unique = 1, type = "location")
+expect_slopes(model, n_unique = 1, type = "location")
 
 
 # logistic: no validity
 model <- crch(sqrt(rain) ~ sqrtensmean | sqrtenssd, data = dat, dist = "logistic", left = 0)
-expect_marginaleffects(model, type = "location", n_unique = 1)
+expect_slopes(model, type = "location", n_unique = 1)
 
-mfx <- marginaleffects(model, type = "location", variables = "sqrtensmean")
+mfx <- slopes(model, type = "location", variables = "sqrtensmean")
 expect_true(!any(mfx$dydx == 0))
 
-mfx <- marginaleffects(model, type = "location", variables = "sqrtenssd")
+mfx <- slopes(model, type = "location", variables = "sqrtenssd")
 expect_true(all(mfx$dydx == 0))
 
-mfx <- marginaleffects(model, type = "scale", variables = "sqrtensmean")
+mfx <- slopes(model, type = "scale", variables = "sqrtensmean")
 expect_true(all(mfx$dydx == 0))
 
-mfx <- marginaleffects(model, type = "scale", variables = "sqrtenssd")
+mfx <- slopes(model, type = "scale", variables = "sqrtenssd")
 expect_true(!any(mfx$dydx == 0))
 
 
 # hlxr: no validity
 mod <- hxlr(rain_sqrt ~ sqrtensmean, data = dat, thresholds = sqrt(q))
-expect_marginaleffects(mod, type = "location", n_unique = 1)
+expect_slopes(mod, type = "location", n_unique = 1)
 
 
 # predictions: crch gaussian: no validity

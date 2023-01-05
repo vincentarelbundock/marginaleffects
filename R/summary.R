@@ -1,20 +1,20 @@
 #' Summarize a `marginaleffects` object
 #'
-#' @param object An object produced by the `marginaleffects` function
+#' @param object An object produced by the `slopes` function
 #' @inheritParams marginaleffects
-#' @inheritParams tidy.marginaleffects
+#' @inheritParams tidy.slopes
 #' @template bayesian
 #' @return Data frame of summary statistics for an object produced by the
-#' `marginaleffects` function
+#' `slopes` function
 #' @examples
 #' mod <- lm(mpg ~ hp * wt + factor(gear), data = mtcars)
-#' mfx <- marginaleffects(mod)
+#' mfx <- slopes(mod)
 #'
 #' # average marginal effects
 #' summary(mfx)
 #' @family summary
 #' @export
-summary.marginaleffects <- function(object,
+summary.slopes <- function(object,
                                     conf_level = NULL,
                                     ...) {
     out <- tidy(object, conf_level = conf_level, ...)
@@ -29,12 +29,12 @@ summary.marginaleffects <- function(object,
 #'
 #' @export
 #' @noRd
-#' @inheritParams summary.marginaleffects
-#' @param x an object produced by the `marginaleffects` function.
+#' @inheritParams summary.slopes
+#' @param x an object produced by the `slopes` function.
 #' @param digits the number of significant digits to use when printing.
 #' @template bayesian
 #' @return Printed summary of a `marginaleffects` object
-print.marginaleffects.summary <- function(x,
+print.slopes.summary <- function(x,
                                           digits = max(3L, getOption("digits") - 3L),
                                           ...) {
 
@@ -151,7 +151,7 @@ summary.marginalmeans <- function(
 #' @export
 #' @noRd
 #' @inheritParams summary.marginalmeans
-#' @param x an object produced by the `marginaleffects` function.
+#' @param x an object produced by the `slopes` function.
 #' @param digits the number of significant digits to use when printing.
 #' @return Printed summary of a `marginalmeans` object
 print.marginalmeans.summary <- function(x,
@@ -487,10 +487,10 @@ print.comparisons.summary <- function(x,
 # also breaks when I process a marginaleffects data.frame with dplyr, because
 # the output retains the class even when it drops columns, and then tidy
 # breaks.
-#print.marginaleffects <- function(
+#print.slopes <- function(
 #    x, digits = max(3L, getOption("digits") - 2L), ...) {
-#    print.marginaleffects.summary(
-#        summary.marginaleffects(x),
+#    print.slopes.summary(
+#        summary.slopes(x),
 #        digits = digits,
 #        ...)
 #}

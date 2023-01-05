@@ -39,5 +39,5 @@ A related problem can arise if users fit a model, but then assign a new value to
 
 Recommendations:
 
-1. Supply your dataset explicitly to the `newdata` argument of `marginaleffects` functions.
+1. Supply your dataset explicitly to the `newdata` argument of `slopes` functions.
 2. Avoid assigning a new value to a variable that you use to store a dataset for model fitting.

@@ -77,9 +77,9 @@ mod <- lm(mpg ~ hp, mtcars)
 datagrid(model = mod, hp = c(100, 110))
 
 # Use in `marginaleffects` to compute "Typical Marginal Effects". When used
-# in `marginaleffects()` or `predictions()` we do not need to specify the
+# in `slopes()` or `predictions()` we do not need to specify the
 #`model` or `newdata` arguments.
-marginaleffects(mod, newdata = datagrid(hp = c(100, 110)))
+slopes(mod, newdata = datagrid(hp = c(100, 110)))
 
 # datagrid accepts functions
 datagrid(hp = range, cyl = unique, newdata = mtcars)

@@ -9,7 +9,7 @@
 #' @param draw `TRUE` returns a `ggplot2` plot. `FALSE` returns a `data.frame` of the underlying data.
 #' @inheritParams comparisons
 #' @inheritParams plot_cme
-#' @inheritParams plot.marginaleffects
+#' @inheritParams plot.slopes
 #' @inheritParams marginaleffects
 #' @return A `ggplot2` object
 #' @family plot

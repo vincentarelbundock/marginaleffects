@@ -8,12 +8,12 @@ requiet("broom")
 # nlme::gls: marginaleffects vs. emtrends
 model <- gls(follicles ~ sin(2*pi*Time) + cos(2*pi*Time), Ovary,
          correlation = corAR1(form = ~ 1 | Mare))
-mfx <- marginaleffects(model)
+mfx <- slopes(model)
 expect_inherits(mfx, "data.frame")
 expect_false(any(mfx$dydx == 0 |  is.na(mfx$dydx)))
 expect_false(any(mfx$std.error == 0 |  is.na(mfx$std.error)))
 # emtrends
-mfx <- marginaleffects(model,
+mfx <- slopes(model,
                    variables = "Time",
                    type = "link",
                    newdata = datagrid(Time = 1)) 

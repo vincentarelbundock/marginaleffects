@@ -33,7 +33,7 @@ tidy.predictions <- function(x,
     if ("by" %in% names(list(...))) {
         msg <- 
         "The `by` argument is deprecated in this function. You can use `by` in the `comparisons()`, 
-        `marginaleffects()`, and `predictions()` functions instead."
+        `slopes()`, and `predictions()` functions instead."
         stop(msg, call. = FALSE)
     }
 

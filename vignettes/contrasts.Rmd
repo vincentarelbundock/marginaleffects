@@ -30,7 +30,7 @@ Note: Some of the code in this vignette requires `marginaleffects` version 0.7.2
 
 > A difference, ratio, or function of adjusted predictions, calculated for meaningfully different predictor values (e.g., College graduates vs. Others).
 
-The `marginaleffects()` function automatically calculates contrasts instead of derivatives for factor, logical, or character variables. 
+The `slopes()` function automatically calculates contrasts instead of derivatives for factor, logical, or character variables. 
 
 The `comparisons()` function gives users more powerful features to compute different contrasts, such as differences, risk ratios, linear combinations, and transformations.
 
@@ -121,10 +121,10 @@ tmp$am <- as.logical(tmp$am)
 mod <- lm(mpg ~ am + factor(cyl), tmp)
 ```
 
-The `marginaleffects` function automatically computes contrasts for each level of the categorical variables, relative to the baseline category (`FALSE` for logicals, and the reference level for factors), while holding all other values at their mode or mean:
+The `slopes` function automatically computes contrasts for each level of the categorical variables, relative to the baseline category (`FALSE` for logicals, and the reference level for factors), while holding all other values at their mode or mean:
 
 ```{r}
-mfx <- marginaleffects(mod)
+mfx <- slopes(mod)
 summary(mfx)
 ```
 
@@ -161,7 +161,7 @@ comparisons(mod_logit, type = "link") %>% tidy()
 
 ## Character predictors
 
-All functions of the `marginaleffects` package attempt to treat character predictors as factor predictors. However, using factors instead of characters when modeling is *strongly* encouraged, because they are much safer and faster. This is because factors hold useful information about the full list of levels, which makes them easier to track and handle internally by `marginaleffects`. Users are strongly encouraged to convert their character variables to factor before fitting their models and using `marginaleffects` functions.
+All functions of the `marginaleffects` package attempt to treat character predictors as factor predictors. However, using factors instead of characters when modeling is *strongly* encouraged, because they are much safer and faster. This is because factors hold useful information about the full list of levels, which makes them easier to track and handle internally by `marginaleffects`. Users are strongly encouraged to convert their character variables to factor before fitting their models and using `slopes` functions.
 
 ## Numeric predictors
 
@@ -240,7 +240,7 @@ nrow(cmp)
 
 ## Average contrasts
 
-By default, the `marginaleffects()` and `comparisons()` functions compute marginal effects and contrasts for every row of the original dataset. These unit-level estimates can be of great interest, as discussed in [another vignette](https://vincentarelbundock.github.io/marginaleffects/articles/logistic_contrasts.html). Nevertheless, one may want to focus on one-number summaries: the `summary()` function computes the "Average Marginal Effect" or "Average Contrast," by taking the mean of all the unit-level estimates.
+By default, the `slopes()` and `comparisons()` functions compute marginal effects and contrasts for every row of the original dataset. These unit-level estimates can be of great interest, as discussed in [another vignette](https://vincentarelbundock.github.io/marginaleffects/articles/logistic_contrasts.html). Nevertheless, one may want to focus on one-number summaries: the `summary()` function computes the "Average Marginal Effect" or "Average Contrast," by taking the mean of all the unit-level estimates.
 
 ```{r}
 summary(cmp)
@@ -699,10 +699,10 @@ predictions(mod, dpar = "hu", type = "response",
 We can also get slopes for the `hu` part of the model on the link (logit) or response (percentage point) scales:
 
 ```{r}
-marginaleffects(mod, dpar = "hu", type = "link",
+slopes(mod, dpar = "hu", type = "link",
                 newdata = datagrid(lifeExp = seq(40, 80, 20)))
 
-marginaleffects(mod, dpar = "hu", type = "response",
+slopes(mod, dpar = "hu", type = "response",
                 newdata = datagrid(lifeExp = seq(40, 80, 20)))
 ```
 
@@ -757,7 +757,7 @@ plot_cap(
        subtitle = "Dollar-scale predictions")
 ```
 
-For **marginal effects**, we need to transform the predictions *before* calculating the instantaneous slopes. We also can't use the `marginaleffects()` function directly—we need to use `comparisons()` and compute the numerical derivative ourselves (i.e. predict `gdpPercap` at `lifeExp` of 40 and 40.001 and calculate the slope between those predictions). We can use the `transform_pre` argument to pass the pair of predicted values to `exp()` before calculating the slopes:
+For **marginal effects**, we need to transform the predictions *before* calculating the instantaneous slopes. We also can't use the `slopes()` function directly—we need to use `comparisons()` and compute the numerical derivative ourselves (i.e. predict `gdpPercap` at `lifeExp` of 40 and 40.001 and calculate the slope between those predictions). We can use the `transform_pre` argument to pass the pair of predicted values to `exp()` before calculating the slopes:
 
 ```{r}
 # step size of the numerical derivative

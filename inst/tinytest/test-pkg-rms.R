@@ -9,9 +9,9 @@ requiet("broom")
 # lmr: marginaleffects vs emtrends
 model <- rms::lrm(am ~ mpg, mtcars)
 void <- capture.output({
-    expect_marginaleffects(model, type = "lp", n_unique = 1)
+    expect_slopes(model, type = "lp", n_unique = 1)
 })
-mfx <- marginaleffects(model, newdata = data.frame(mpg = 30), type = "lp")
+mfx <- slopes(model, newdata = data.frame(mpg = 30), type = "lp")
 em <- emtrends(model, ~mpg, "mpg", at = list(mpg = 30))
 em <- tidy(em)
 expect_equivalent(mfx$dydx, em$mpg.trend)

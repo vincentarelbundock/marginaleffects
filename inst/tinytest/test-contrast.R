@@ -6,7 +6,7 @@ using("marginaleffects")
 dat <- mtcars
 dat$am <- as.logical(dat$am)
 mod <- lm(mpg ~ hp + am + factor(cyl), data = dat)
-mfx <- suppressWarnings(marginaleffects(mod))
+mfx <- suppressWarnings(slopes(mod))
 res <- tidy(mfx)
 expect_inherits(res, "data.frame")
 expect_equivalent(dim(res), c(4, 9))
@@ -18,7 +18,7 @@ dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpengui
 dat$large_penguin <- ifelse(dat$body_mass_g > median(dat$body_mass_g, na.rm = TRUE), 1, 0)
 mod <- glm(large_penguin ~ bill_length_mm + flipper_length_mm + species,
        data = dat, family = binomial)
-mfx <- marginaleffects(mod)
+mfx <- slopes(mod)
 ti <- tidy(mfx)
 reject_ci <- ti$conf.high < 0 | ti$conf.low > 0
 reject_p <- ti$p.value < 0.05
@@ -29,7 +29,7 @@ expect_equivalent(reject_ci, reject_p)
 tmp <- mtcars
 tmp$am <- as.logical(tmp$am)
 mod <- lm(mpg ~ am + factor(cyl), tmp)
-mfx = marginaleffects(mod, newdata = datagrid(cyl = c(4, 6)))
+mfx = slopes(mod, newdata = datagrid(cyl = c(4, 6)))
 expect_equivalent(nrow(mfx), 6)
 
 

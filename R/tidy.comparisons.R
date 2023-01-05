@@ -7,7 +7,7 @@
 #' @param transform_avg A function applied to the estimates and confidence intervals *after* the unit-level estimates have been averaged.
 #' @param conf_level numeric value between 0 and 1. Confidence level to use to build a confidence interval. The default `NULL` uses the `conf_level` value used in the original call to `comparisons()`.
 #' @inheritParams comparisons
-#' @inheritParams tidy.marginaleffects
+#' @inheritParams tidy.slopes
 #' @return A "tidy" `data.frame` of summary statistics which conforms to the
 #' `broom` package specification.
 #' @details
@@ -50,7 +50,7 @@ tidy.comparisons <- function(x,
     if ("by" %in% names(list(...))) {
         msg <- 
         "The `by` argument is deprecated in this function. You can use `by` in the `comparisons()`, 
-        `marginaleffects()`, and `predictions()` functions instead."
+        `slopes()`, and `predictions()` functions instead."
         stop(msg, call. = FALSE)
     }
 

@@ -24,7 +24,7 @@ expect_equal(tidy(p2), tidy(p4))
 p1 <- predictions(mod, wts = "weights", newdata = dat)
 p1 <- tidy(p1)
 expect_inherits(p1, "data.frame")
-m1 <- marginaleffects(mod, wts = "weights", newdata = dat, by = "cyl")
+m1 <- slopes(mod, wts = "weights", newdata = dat, by = "cyl")
 m1 <- tidy(m1)
 expect_inherits(m1, "data.frame")
 c1 <- comparisons(mod, wts = "weights", newdata = dat, by = "cyl")
@@ -57,7 +57,7 @@ expect_equivalent(cmp2$comparison, cmp3$comparison)
 
 # sanity check
 expect_error(comparisons(mod, wts = "junk"), pattern = "explicitly")
-expect_error(marginaleffects(mod, wts = "junk"), pattern = "explicitly")
+expect_error(slopes(mod, wts = "junk"), pattern = "explicitly")
 
 # vs. Stata (not clear what SE they use, so we give tolerance)
 mod <- suppressWarnings(svyglm(
@@ -65,7 +65,7 @@ mod <- suppressWarnings(svyglm(
     design = svydesign(ids = ~1, weights = ~weights, data = dat),
     family = binomial))
 stata <- c("estimate" = .0441066, "std.error" = .0061046)
-mfx <- marginaleffects(mod, wts = mod$prior.weights)
+mfx <- slopes(mod, wts = mod$prior.weights)
 mfx <- tidy(mfx)
 mfx <- unlist(mfx[, 3:4])
 expect_equivalent(mfx, stata, tolerance = 0.0002)

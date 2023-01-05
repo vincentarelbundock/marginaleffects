@@ -15,12 +15,12 @@ mod <<- betareg::betareg(yield ~ batch + temp, data = dat)
 
 # marginaleffects: vs. margins vs. emmeans
 set.seed(1024)
-res <- marginaleffects(mod, variables = "temp")
+res <- slopes(mod, variables = "temp")
 mar <- data.frame(margins::margins(mod, unit_ses = TRUE))
 expect_true(expect_margins(res, mar, tolerance = 0.1))
 
 # emtrends
-mfx <- marginaleffects(mod, newdata = datagrid(batch = 1), variables = "temp")
+mfx <- slopes(mod, newdata = datagrid(batch = 1), variables = "temp")
 em <- suppressWarnings(
 emtrends(mod, ~temp, "temp", at = list("batch" = tmp$batch[1])))
 em <- tidy(em)
@@ -31,7 +31,7 @@ expect_equivalent(mfx$std.error, em$std.error, tolerance = .001)
 # marginaleffects: vs. Stata
 # stata does not include contrasts
 stata <<- readRDS(testing_path("stata/stata.rds"))[["betareg_betareg_01"]]
-mfx <- merge(tidy(marginaleffects(mod)), stata)
+mfx <- merge(tidy(slopes(mod)), stata)
 expect_equivalent(mfx$estimate, mfx$dydxstata, tolerance = .0001)
 expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .0001)
 

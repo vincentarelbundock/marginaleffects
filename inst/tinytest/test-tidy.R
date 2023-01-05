@@ -4,7 +4,7 @@ using("marginaleffects")
 
 
 mod <- glm(vs ~ hp * mpg, data = mtcars, family = binomial)
-mfx <- marginaleffects(mod)
+mfx <- slopes(mod)
 pred <- predictions(mod)
 
 
@@ -55,7 +55,7 @@ expect_true(ncol(gl) > 5)
 
 # bug: emmeans contrast rename in binomial
 x <- glm(am ~ mpg + factor(cyl), data = mtcars, family = binomial)
-x <- marginaleffects(x)
+x <- slopes(x)
 x <- tidy(x)
 expect_inherits(x, "data.frame") 
 expect_equivalent(nrow(x), 3)
@@ -67,30 +67,30 @@ tmp <- mtcars
 tmp$am <- as.logical(tmp$am)
 
 # numeric only
-x <- tidy(marginaleffects(lm(mpg ~ hp, tmp)))
+x <- tidy(slopes(lm(mpg ~ hp, tmp)))
 expect_equivalent(dim(x), c(1, 8))
 
 # logical only
 model <- lm(mpg ~ am, tmp)
-x <- tidy(marginaleffects(model))
+x <- tidy(slopes(model))
 expect_equivalent(dim(x), c(1, 9))
 
 # factor only
 model <- lm(mpg ~ factor(gear), tmp)
-x <- tidy(marginaleffects(model))
+x <- tidy(slopes(model))
 expect_equivalent(dim(x), c(2, 9))
 
 # combinations
-x <- tidy(marginaleffects(lm(mpg ~ hp + am, tmp)))
+x <- tidy(slopes(lm(mpg ~ hp + am, tmp)))
 expect_equivalent(dim(x), c(2, 9))
 
-x <- tidy(marginaleffects(lm(mpg ~ hp + factor(gear), tmp)))
+x <- tidy(slopes(lm(mpg ~ hp + factor(gear), tmp)))
 expect_equivalent(dim(x), c(3, 9))
 
-x <- tidy(marginaleffects(lm(mpg ~ am + factor(gear), tmp)))
+x <- tidy(slopes(lm(mpg ~ am + factor(gear), tmp)))
 expect_equivalent(dim(x), c(3, 9))
 
-x <- tidy(marginaleffects(lm(mpg ~ hp + am + factor(gear), tmp)))
+x <- tidy(slopes(lm(mpg ~ hp + am + factor(gear), tmp)))
 expect_equivalent(dim(x), c(4, 9))
 
 

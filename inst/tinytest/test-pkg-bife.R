@@ -9,7 +9,7 @@ mod <- bife(LFP ~ AGE + I(INCH / 1000) + KID1 + KID2 + KID3 | ID, data = dat)
 dat <- data.frame(dat)
 
 # marginaleffects: bife: no validity
-expect_marginaleffects(mod)
+expect_slopes(mod)
 
 # predictions: bife: no validity
 # bife does not store the call, so get_call() does not work and get_data() can

@@ -17,13 +17,13 @@ expect_equivalent(nrow(cmp), 1)
 
 # simple summary output
 mod <- lm(mpg ~ hp + factor(cyl), dat)
-mfx <- marginaleffects(mod)
+mfx <- slopes(mod)
 expect_snapshot_print(summary(mfx), "summary-marginaleffects")
 
 
 # summary conf.level
 mod <- lm(mpg ~ hp + factor(cyl), dat)
-mfx <- marginaleffects(mod)
+mfx <- slopes(mod)
 expect_snapshot_print(summary(mfx, conf_level = .9), "summary-marginaleffects_conf_level_90")
 expect_snapshot_print(summary(mfx, conf_level = .2), "summary-marginaleffects_conf_level_20")
 
@@ -42,7 +42,7 @@ expect_snapshot_print(summary(mm), "summary-marginalmeans")
 # bugs stay dead: summary manipulation (destroys attributes, unfortunately)
 dat <<- mtcars
 mod <- glm(am ~ hp * wt, data = dat, family = binomial)
-mfx <- marginaleffects(mod)
+mfx <- slopes(mod)
 expect_snapshot_print(
     summary(mfx) %>% dplyr::select(term, estimate, conf.low, conf.high),
     "summary-marginaleffects_dplyr")

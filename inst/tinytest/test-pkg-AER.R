@@ -15,8 +15,8 @@ stata <- readRDS(testing_path("stata/stata.rds"))$aer_tobit
 mod1 <- tobit(
     affairs ~ age + yearsmarried + religiousness + occupation + rating,
     data = dat)
-mfx <- merge(tidy(marginaleffects(mod1, newdata = dat)), stata)
-expect_marginaleffects(mod1, n_unique = 1, newdata = dat)
+mfx <- merge(tidy(slopes(mod1, newdata = dat)), stata)
+expect_slopes(mod1, n_unique = 1, newdata = dat)
 expect_equivalent(mfx$estimate, mfx$dydxstata, tolerance = .00001)
 expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .00001)
 
@@ -25,8 +25,8 @@ mod2 <- tobit(
     affairs ~ age + yearsmarried + religiousness + occupation + rating,
     right = 4, data = dat
 )
-mfx <- merge(tidy(marginaleffects(mod2, newdata = dat)), stata)
-expect_marginaleffects(mod2, n_unique = 1, newdata = dat)
+mfx <- merge(tidy(slopes(mod2, newdata = dat)), stata)
+expect_slopes(mod2, n_unique = 1, newdata = dat)
 expect_equivalent(mfx$estimate, mfx$dydxstata, tolerance = .1)
 expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .1)
 
@@ -47,7 +47,7 @@ expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .1)
 
 # marginaleffects vs. emtrends
 mod <- tobit(affairs ~ age + yearsmarried, data = dat)
-mfx <- marginaleffects(mod, newdata = datagrid(age = 30, yearsmarried = 5, newdata = dat))
+mfx <- slopes(mod, newdata = datagrid(age = 30, yearsmarried = 5, newdata = dat))
 em1 <- emmeans::emtrends(mod, ~age, "age", at = list(age = 30, yearsmarried = 5))
 em2 <- emmeans::emtrends(mod, ~yearsmarried, "yearsmarried", at = list(age = 30, yearsmarried = 5))
 em1 <- tidy(em1)

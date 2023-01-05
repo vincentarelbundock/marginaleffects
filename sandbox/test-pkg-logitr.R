@@ -10,7 +10,7 @@ mod <- suppressMessages(logitr(
 p <- predictions(mod)
 expect_inherits(p, "predictions")
 
-mfx <- marginaleffects(mod)
+mfx <- slopes(mod)
 expect_inherits(mfx, "marginaleffects")
 
 cmp <- comparisons(mod)

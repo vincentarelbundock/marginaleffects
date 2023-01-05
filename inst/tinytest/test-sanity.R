@@ -4,4 +4,4 @@ using("marginaleffects")
 # error: supported model classes
 model <- mtcars
 class(model) <- "junk"
-expect_error(marginaleffects(model), pattern = "not supported")
+expect_error(slopes(model), pattern = "not supported")

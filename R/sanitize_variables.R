@@ -266,7 +266,7 @@ sanitize_variables <- function(variables,
     others <- c(others, w)
 
     # goals:
-    # allow multiple function types: marginaleffects() uses both difference and dydx
+    # allow multiple function types: slopes() uses both difference and dydx
     # when transform_pre is defined, use that if it works or turn back to defaults
     # predictors list elements: name, value, function, label
 

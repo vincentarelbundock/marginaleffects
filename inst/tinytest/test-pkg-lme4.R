@@ -52,7 +52,7 @@ expect_true(all(x$std.error != z$std.error))
 expect_true(all(y$std.error != z$std.error))
 
 # at the mean (regression test)
-mfx <- marginaleffects(
+mfx <- slopes(
     mod,
     newdata = datagrid(),
     vcov = "satterthwaite")
@@ -102,13 +102,13 @@ expect_equivalent(w, y$predicted)
 tmp <<- read.csv(testing_path("stata/databases/lme4_02.csv"))
 mod <- glmer(y ~ x1 * x2 + (1 | clus), data = tmp, family = binomial)
 stata <- readRDS(testing_path("stata/stata.rds"))$lme4_glmer
-mfx <- merge(tidy(marginaleffects(mod)), stata)
-expect_marginaleffects(mod)
+mfx <- merge(tidy(slopes(mod)), stata)
+expect_slopes(mod)
 expect_equivalent(mfx$estimate, mfx$dydxstata, tolerance = .01)
 expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .01)
 # emtrends
 mod <- glmer(y ~ x1 + x2 + (1 | clus), data = tmp, family = binomial)
-mfx <- marginaleffects(mod, variables = "x1", newdata = datagrid(x1 = 0, x2 = 0, clus = 1), type = "link")
+mfx <- slopes(mod, variables = "x1", newdata = datagrid(x1 = 0, x2 = 0, clus = 1), type = "link")
 em <- emtrends(mod, ~x1, "x1", at = list(x1 = 0, x2 = 0, clus = 1))
 em <- tidy(em)
 expect_equivalent(mfx$dydx, em$x1.trend)
@@ -130,14 +130,14 @@ expect_error(get_predict(mod, re.form = ~0, include_random = TRUE), pattern = "t
 tmp <<- read.csv(testing_path("stata/databases/lme4_01.csv"))
 mod <- lme4::lmer(y ~ x1 * x2 + (1 | clus), data = tmp)
 stata <- readRDS(testing_path("stata/stata.rds"))$lme4_lmer
-mfx <- merge(tidy(marginaleffects(mod)), stata)
-expect_marginaleffects(mod)
+mfx <- merge(tidy(slopes(mod)), stata)
+expect_slopes(mod)
 expect_equivalent(mfx$estimate, mfx$dydxstata, tolerance = .001)
 expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .001)
 
 # emtrends
 mod <- lmer(y ~ x1 + x2 + (1 | clus), data = tmp)
-mfx <- marginaleffects(mod, variables = "x1",
+mfx <- slopes(mod, variables = "x1",
                    newdata = datagrid(x1 = 0, x2 = 0, clus = 1))
 em <- emtrends(mod, ~x1, "x1", at = list(x1 = 0, x2 = 0, clus = 1))
 em <- tidy(em)
@@ -148,13 +148,13 @@ expect_equivalent(mfx$std.error, em$std.error, tolerance = .001)
 # vs. margins (dydx only)
 tmp <<- read.csv(testing_path("stata/databases/lme4_02.csv"))
 mod <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = tmp, family = binomial)
-res <- marginaleffects(mod, vcov = FALSE)
+res <- slopes(mod, vcov = FALSE)
 mar <- margins::margins(mod)
 expect_true(expect_margins(res, mar, tolerance = 1e-2))
 
 tmp <<- read.csv(testing_path("stata/databases/lme4_01.csv"))
 mod <- lme4::lmer(y ~ x1 * x2 + (1 | clus), data = tmp)
-res <- marginaleffects(mod, vcov = FALSE)
+res <- slopes(mod, vcov = FALSE)
 mar <- margins::margins(mod)
 expect_true(expect_margins(res, mar))
 
@@ -162,14 +162,14 @@ expect_true(expect_margins(res, mar))
 # sanity check on dpoMatrix
 tmp <<- read.csv(testing_path("stata/databases/lme4_02.csv"))
 mod <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = tmp, family = binomial)
-k <- marginaleffects(mod, vcov = as.matrix(stats::vcov(mod)))
+k <- slopes(mod, vcov = as.matrix(stats::vcov(mod)))
 expect_inherits(k, "data.frame")
 
 
 # bug stay dead: tidy without std.error
 tmp <<- read.csv(testing_path("stata/databases/lme4_02.csv"))
 mod <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = tmp, family = binomial)
-res <- marginaleffects(mod, vcov = FALSE)
+res <- slopes(mod, vcov = FALSE)
 tid <- tidy(res)
 expect_inherits(tid, "data.frame")
 expect_equivalent(nrow(tid), 2)
@@ -198,12 +198,12 @@ dd$y <- rnbinom(nrow(dd), mu = mu, size = 0.5)
 dd <<- dd
 model <- suppressMessages(glmer.nb(y ~ f1 * f2 + (1 | g), data = dd, verbose = FALSE))
 void <- capture.output(
-    expect_marginaleffects(model, n_unique = 2)
+    expect_slopes(model, n_unique = 2)
 )
 
 # emtrends
 mod <- suppressMessages(glmer.nb(y ~ x + (1 | g), data = dd, verbose = FALSE))
-mfx <- marginaleffects(mod, variables = "x", newdata = datagrid(g = 2), type = "link")
+mfx <- slopes(mod, variables = "x", newdata = datagrid(g = 2), type = "link")
 em <- emtrends(mod, ~x, "x", at = list(g = 2))
 em <- tidy(em)
 expect_equivalent(mfx$dydx, em$x.trend)
@@ -211,7 +211,7 @@ expect_equivalent(mfx$std.error, em$std.error, tolerance = 1e-6)
 
 # margins
 mar <- tidy(margins(mod))
-mfx <- tidy(marginaleffects(mod))
+mfx <- tidy(slopes(mod))
 expect_equivalent(mfx$estimate, mar$estimate, tolerance = .0001)
 expect_equivalent(mfx$std.error, mar$std.error, tolerance = .0001)
 
@@ -223,21 +223,21 @@ mod <- suppressMessages(lmer(
   weight ~ 1 + Time + I(Time^2) + Diet + Time:Diet + I(Time^2):Diet + (1 + Time + I(Time^2) | Chick),
   data = ChickWeight))
 
-mfx1 <- marginaleffects(
+mfx1 <- slopes(
     mod,
     newdata = datagrid(
         Chick = NA,
         Diet = 1:4,
         Time = 0:21),
     include_random = FALSE)
-mfx2 <- marginaleffects(
+mfx2 <- slopes(
     mod,
     newdata = datagrid(
         Chick = NA,
         Diet = 1:4,
         Time = 0:21),
     re.form = NA)
-mfx3 <- marginaleffects(
+mfx3 <- slopes(
     mod,
     newdata = datagrid(
         Chick = "1",
@@ -283,10 +283,10 @@ tmp$am <- as.logical(tmp$am)
 tmp <<- tmp
 mod <- lmer(mpg ~ hp + am + (1 | cyl), data = tmp)
 
-mfx <- marginaleffects(mod, vcov = "kenward-roger")
+mfx <- slopes(mod, vcov = "kenward-roger")
 cmp <- comparisons(mod, vcov = "kenward-roger")
 cmp2 <- comparisons(mod)
-mfx2 <- marginaleffects(mod)
+mfx2 <- slopes(mod)
 expect_equivalent(mfx$dydx, cmp$comparison)
 expect_equivalent(mfx$std.error, cmp$std.error, tolerance = .0001)
 expect_equivalent(attr(mfx, "vcov.type"), "Kenward-Roger")

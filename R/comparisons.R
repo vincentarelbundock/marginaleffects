@@ -215,7 +215,7 @@ comparisons <- function(model,
     dots <- list(...)
 
 
-    # marginaleffects()` **must** run its own sanity checks and hardcode valid arguments
+    # slopes()` **must** run its own sanity checks and hardcode valid arguments
     internal_call <- dots[["internal_call"]]
     if (!isTRUE(internal_call)) {
         # if `newdata` is a call to `datagrid`, `typical`, or `counterfactual`,
@@ -241,9 +241,9 @@ comparisons <- function(model,
         cross <- sanitize_cross(cross, variables, model)
         type <- sanitize_type(model = model, type = type, calling_function = "marginaleffects")
 
-    # internal call from `marginaleffects()`
+    # internal call from `slopes()`
     } else {
-        # not allowed in `marginaleffects()`
+        # not allowed in `slopes()`
         cross <- FALSE
     }
 
@@ -251,7 +251,7 @@ comparisons <- function(model,
     if (!is.null(by)) {
         if (isTRUE(insight::model_info(model)$is_bayesian)) {
             msg <- format_msg(
-            "The `by` argument of the `comparisons()` and `marginaleffects()` functions is not supported for bayesian models. Users can call the `posteriordraws()` function and compute the quantities manually.")
+            "The `by` argument of the `comparisons()` and `slopes()` functions is not supported for bayesian models. Users can call the `posteriordraws()` function and compute the quantities manually.")
             stop(msg, call. = FALSE)
         }
     }

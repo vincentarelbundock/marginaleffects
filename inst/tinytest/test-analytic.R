@@ -10,7 +10,7 @@ dat <- data.frame(x = rnorm(N))
 dat$y <- 1 + 1 * dat$x + 1 * dat$x^2 + rnorm(N)
 mod <- lm(f, dat)
 nd <- datagrid(newdata = dat, x = c(-2:2))
-res <- marginaleffects(mod, newdata = nd)
+res <- slopes(mod, newdata = nd)
 res$truth <- truth(res$x)
 expect_equivalent(res$dydx, res$truth, tolerance = .01)
 
@@ -29,7 +29,7 @@ dat <- data.frame(x = runif(N))
 dat$y <- log(dat$x) + rnorm(N)
 mod <- lm(f, dat)
 nd <- datagrid(newdata = dat, x = c(1:4))
-res <- marginaleffects(mod, newdata = nd)
+res <- slopes(mod, newdata = nd)
 res$truth <- truth(res$x)
 expect_equivalent(res$dydx, res$truth, tolerance = .01)
 
@@ -46,7 +46,7 @@ dat <- data.frame(x = rnorm(N, sd = 3))
 dat$y <- rbinom(N, 1, pr = plogis(beta0 + beta1 * dat$x))
 mod <- glm(f, data = dat, family = binomial)
 nd <- datagrid(newdata = dat, x = c(-10:10))
-res <- marginaleffects(mod, newdata = nd)
+res <- slopes(mod, newdata = nd)
 res$truth <- truth(res$x)
 expect_equivalent(res$dydx, res$truth, tolerance = .01)
 
@@ -78,7 +78,7 @@ tol_se <- 0.005
 # Golder Interaction Case 1a/1b correct
 f1.1 <- y ~ x + z + x:z
 m <- lm(f1.1, data = d)
-marg <- marginaleffects(m)
+marg <- slopes(m)
 # ME with respect to x
 dydx <- coef(m)["x"] + (d$z * coef(m)["x:z"])
 sedydx <- sqrt(vcov(m)["x","x"] + (d$z^2 * vcov(m)["x:z","x:z"]) + (2 * d$z * vcov(m)["x","x:z"]))
@@ -94,7 +94,7 @@ expect_equivalent(sedydz, as.numeric(marg$std.error[marg$term == "z"]), toleranc
 # Golder Interaction Case 2 correct
 f1.2 <- y ~ x + z + w + x:z + z:w
 m <- lm(f1.2, data = d)
-marg <- marginaleffects(m)
+marg <- slopes(m)
 dydx <- coef(m)["x"] + (d$z * coef(m)["x:z"])
 sedydx <- sqrt(vcov(m)["x","x"] + (d$z^2 * vcov(m)["x:z","x:z"]) + (2 * d$z * vcov(m)["x","x:z"]))
 expect_equivalent(as.numeric(marg$dydx[marg$term == "x"]), dydx, tolerance = tol, label = "dy/dx correct")
@@ -104,7 +104,7 @@ expect_equivalent(sedydx, as.numeric(marg$std.error[marg$term == "x"]), toleranc
 # Golder Interaction Case 3 correct
 f1.3 <- y ~ x + z + w + x:z + x:w + z:w
 m <- lm(f1.3, data = d)
-marg <- marginaleffects(m)
+marg <- slopes(m)
 dydx <- coef(m)["x"] + (d$z * coef(m)["x:z"]) + (d$w * coef(m)["x:w"])
 sedydx <- sqrt(vcov(m)["x","x"] + (d$z^2 * vcov(m)["x:z","x:z"]) + (d$w^2 * vcov(m)["x:w","x:w"]) + 
            (2 * d$z * vcov(m)["x","x:z"]) + (2 * d$w * vcov(m)["x","x:w"]) + (2 * d$z * d$w * vcov(m)["x:z","x:w"]) )
@@ -115,7 +115,7 @@ expect_equivalent(sedydx, as.numeric(marg$std.error[marg$term == "x"]), toleranc
 # Golder Interaction Case 4 correct
 f1.4 <- y ~ x + z + w + x:z + x:w + z:w + x:z:w
 m <- lm(f1.4, data = d)
-marg <- marginaleffects(m)
+marg <- slopes(m)
 dydx <- coef(m)["x"] + (d$z * coef(m)["x:z"]) + (d$w * coef(m)["x:w"]) + (d$z * d$w * coef(m)["x:z:w"])
 sedydx <- sqrt(vcov(m)["x","x"] + (d$z^2 * vcov(m)["x:z","x:z"]) + (d$w^2 * vcov(m)["x:w","x:w"]) + 
            (d$z^2 * d$w^2 * vcov(m)["x:z:w","x:z:w"]) + (2 * d$z * vcov(m)["x","x:z"]) + 
@@ -129,7 +129,7 @@ expect_equivalent(sedydx, as.numeric(marg$std.error[marg$term == "x"]), toleranc
 # Golder Quadratic Case 1 correct
 f2.1 <- y ~ x + I(x^2)
 m <- lm(f2.1, data = d)
-marg <- marginaleffects(m)
+marg <- slopes(m)
 dydx <- coef(m)["x"] + (2 * coef(m)["I(x^2)"] * d$x)
 sedydx <- sqrt(vcov(m)["x","x"] + (4 * d$x^2 * vcov(m)["I(x^2)","I(x^2)"]) + (4 * d$x * vcov(m)["x","I(x^2)"]))
 expect_equivalent(as.numeric(marg$dydx[marg$term == "x"]), dydx, tolerance = tol, label = "dy/dx correct")
@@ -139,7 +139,7 @@ expect_equivalent(sedydx, as.numeric(marg$std.error[marg$term == "x"]), toleranc
 # Golder Quadratic Case 2 correct
 f2.2 <- y ~ x + I(x^2) + z
 m <- lm(f2.2, data = d)
-marg <- marginaleffects(m)
+marg <- slopes(m)
 dydx <- coef(m)["x"] + (2 * coef(m)["I(x^2)"] * d$x)
 sedydx <- sqrt(vcov(m)["x","x"] + (4 * d$x^2 * vcov(m)["I(x^2)","I(x^2)"]) + (4 * d$x * vcov(m)["x","I(x^2)"]))
 expect_equivalent(as.numeric(marg$dydx[marg$term == "x"]), dydx, tolerance = tol, label = "dy/dx correct")
@@ -149,7 +149,7 @@ expect_equivalent(sedydx, as.numeric(marg$std.error[marg$term == "x"]), toleranc
 # Golder Quadratic Case 3a/3b correct
 f2.3 <- y ~ x + I(x^2) + z + x:z
 m <- lm(f2.3, data = d)
-marg <- marginaleffects(m)
+marg <- slopes(m)
 # ME with respect to x
 dydx <- coef(m)["x"] + (2 * coef(m)["I(x^2)"] * d$x) + (d$z * coef(m)["x:z"])
 sedydx <- sqrt(vcov(m)["x","x"] + (4 * d$x^2 * vcov(m)["I(x^2)","I(x^2)"]) + (d$z^2 * vcov(m)["x:z","x:z"]) +
@@ -166,7 +166,7 @@ expect_equivalent(sedydz, as.numeric(marg$std.error[marg$term == "z"]), toleranc
 # Golder Quadratic Case 4a/4b correct
 f2.4 <- y ~ x + I(x^2) + z + x:z + I(x^2):z
 m <- lm(f2.4, data = d)
-marg <- marginaleffects(m)
+marg <- slopes(m)
 # ME with respect to x
 dydx <- coef(m)["x"] + (2 * coef(m)["I(x^2)"] * d$x) + (d$z * coef(m)["x:z"]) + (2 * d$x * d$z * coef(m)["I(x^2):z"])
 sedydx <- sqrt( vcov(m)["x","x"] + (4 * d$x^2 * vcov(m)["I(x^2)","I(x^2)"]) + (d$z^2 * vcov(m)["x:z","x:z"]) +

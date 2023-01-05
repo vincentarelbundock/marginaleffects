@@ -12,7 +12,7 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
         unsupported <- intersect(names(dots), unsupported)
         if (length(unsupported) > 0) {
             msg <- sprintf(
-                "These arguments are supported by the `comparisons()` function but not by the `marginaleffects()` function: %s",
+                "These arguments are supported by the `comparisons()` function but not by the `slopes()` function: %s",
                 paste(unsupported, collapse = ", "))
             stop(msg, call. = FALSE)
         }

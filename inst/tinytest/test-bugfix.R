@@ -9,7 +9,7 @@ dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpengui
 dat$large_penguin <- ifelse(dat$body_mass_g > median(dat$body_mass_g, na.rm = TRUE), 1, 0)
 mod <- glm(large_penguin ~ bill_length_mm + flipper_length_mm + species, 
        data = dat, family = binomial)
-mfx <- marginaleffects(mod, variables = "species")
+mfx <- slopes(mod, variables = "species")
 expect_inherits(mfx, "data.frame")
 expect_true(nrow(mfx) > 0)
 expect_true(ncol(mfx) > 0)
@@ -24,7 +24,7 @@ f <- wt82_71 ~ qsmk + sex + race + age + I(age*age) + factor(education) +
 
 fit <- glm(f, data = nhefs)
 pre <- predictions(fit, newdata = nhefs)
-mfx <- marginaleffects(fit, newdata = nhefs)
+mfx <- slopes(fit, newdata = nhefs)
 cmp <- comparisons(fit, newdata = nhefs)
 expect_inherits(pre, "predictions")
 expect_inherits(cmp, "comparisons")

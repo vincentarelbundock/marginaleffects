@@ -42,9 +42,9 @@
 #' datagrid(model = mod, hp = c(100, 110))
 #'
 #' # Use in `marginaleffects` to compute "Typical Marginal Effects". When used
-#' # in `marginaleffects()` or `predictions()` we do not need to specify the
+#' # in `slopes()` or `predictions()` we do not need to specify the
 #' #`model` or `newdata` arguments.
-#' marginaleffects(mod, newdata = datagrid(hp = c(100, 110)))
+#' slopes(mod, newdata = datagrid(hp = c(100, 110)))
 #'
 #' # datagrid accepts functions
 #' datagrid(hp = range, cyl = unique, newdata = mtcars)
@@ -306,7 +306,7 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
     if (is.null(model) & is.null(newdata)) {
         msg <- format_msg(
         "The `model` and `newdata` arguments are both `NULL`. When calling `datagrid()`
-        *inside* the `marginaleffects()` or `comparisons()` functions, the `model` and
+        *inside* the `slopes()` or `comparisons()` functions, the `model` and
         `newdata` arguments can both be omitted. However, when calling `datagrid()` on
         its own, users must specify either the `model` or the `newdata` argument (but
         not both).")

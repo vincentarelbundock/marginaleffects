@@ -16,9 +16,9 @@ mf <- formula(Weight ~ Cu * (Time + I(Time^2) + I(Time^3)))
 model <- suppressWarnings(geeglm(mf,
 data = dietox, id = Pig,
 family = poisson("identity"), corstr = "ar1"))
-expect_marginaleffects(model)
+expect_slopes(model)
 # emmeans
-mfx <- marginaleffects(model, variables = "Time", newdata = datagrid(Time = 10, Cu = "Cu000"), type = "link")
+mfx <- slopes(model, variables = "Time", newdata = datagrid(Time = 10, Cu = "Cu000"), type = "link")
 em <- suppressMessages(emtrends(model, ~Time, var = "Time", at = list(Time = 10, Cu = "Cu000")))
 em <- tidy(em)
 expect_equivalent(mfx$dydx, em$Time.trend, tolerance = .001)

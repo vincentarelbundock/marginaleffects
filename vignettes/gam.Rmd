@@ -73,12 +73,12 @@ We can easily plot adjusted predictions for different values of a regressor usin
 plot_cap(model, condition = "Time")
 ```
 
-# Marginal Effects: `marginaleffects()` and `plot_cme()`
+# Marginal Effects: `slopes()` and `plot_cme()`
 
-Marginal effects are slopes of the prediction equation. They are an observation-level quantity. The `marginaleffects()` function produces a dataset with the same number of rows as the original data, but with new columns for the slop and uncertainty estimates:
+Marginal effects are slopes of the prediction equation. They are an observation-level quantity. The `slopes()` function produces a dataset with the same number of rows as the original data, but with new columns for the slop and uncertainty estimates:
 
 ```{r}
-mfx <- marginaleffects(model, variables = "Time")
+mfx <- slopes(model, variables = "Time")
 head(mfx)
 ```
 

@@ -6,9 +6,9 @@ generics::tidy
 
 #' Tidy a `marginaleffects` object
 #'
-#' @param x An object produced by the `marginaleffects` function.
+#' @param x An object produced by the `slopes` function.
 #' @inheritParams marginaleffects
-#' @param conf_level numeric value between 0 and 1. Confidence level to use to build a confidence interval. The default `NULL` uses the `conf_level` value used in the original call to `marginaleffects()`.
+#' @param conf_level numeric value between 0 and 1. Confidence level to use to build a confidence interval. The default `NULL` uses the `conf_level` value used in the original call to `slopes()`.
 #' @return A "tidy" `data.frame` of summary statistics which conforms to the
 #' `broom` package specification.
 #' @details
@@ -26,11 +26,11 @@ generics::tidy
 #' @template bayesian 
 #' @examples
 #' mod <- lm(mpg ~ hp * wt + factor(gear), data = mtcars)
-#' mfx <- marginaleffects(mod)
+#' mfx <- slopes(mod)
 #'
 #' # average marginal effects
 #' tidy(mfx)
-tidy.marginaleffects <- function(x,
+tidy.slopes <- function(x,
                                  conf_level = NULL,
                                  ...) {
 
@@ -46,7 +46,7 @@ tidy.marginaleffects <- function(x,
 
 
 #' Tidy a `deltamethod` object
-#' @inheritParams tidy.marginaleffects
+#' @inheritParams tidy.slopes
 #' @family summary
 #' @export
 tidy.deltamethod <- function(x, ...) {
@@ -65,7 +65,7 @@ tidy.deltamethod <- function(x, ...) {
 #' Tidy a `marginalmeans` object
 #'
 #' @param x An object produced by the `marginalmeans` function.
-#' @inheritParams tidy.marginaleffects
+#' @inheritParams tidy.slopes
 #' @inheritParams tidy.comparisons
 #' @return A "tidy" `data.frame` of summary statistics which conforms to the
 #' `broom` package specification.

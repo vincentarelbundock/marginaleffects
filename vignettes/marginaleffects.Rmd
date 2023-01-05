@@ -80,13 +80,13 @@ p1 <- ggplot(dat, aes(x, y)) +
 p1
 ```
 
-Below, we show how to reach the same conclusions in an estimation context, with simulated data and the `marginaleffects` function.
+Below, we show how to reach the same conclusions in an estimation context, with simulated data and the `slopes` function.
 
-# `marginaleffects` function
+# `slopes` function
 
 The marginal effect is a *unit-level* measure of association between changes in a regressor and changes in the response. Except in the simplest linear models, the value of the marginal effect will be different from individual to individual, because it will depend on the values of the other covariates for each individual. 
 
-The `marginaleffects` function thus produces distinct estimates of the marginal effect for each row of the data used to fit the model. The output of `marginaleffects` is a simple `data.frame`, which can be inspected with all the usual `R` commands. 
+The `slopes` function thus produces distinct estimates of the marginal effect for each row of the data used to fit the model. The output of `marginaleffects` is a simple `data.frame`, which can be inspected with all the usual `R` commands. 
 
 To show this, we load the library, download the [Palmer Penguins](https://allisonhorst.github.io/palmerpenguins/) data from the [`Rdatasets` archive](https://vincentarelbundock.github.io/Rdatasets/articles/data.html), and estimate a GLM model:
 
@@ -101,7 +101,7 @@ mod <- glm(large_penguin ~ bill_length_mm + flipper_length_mm + species,
 ```
 
 ```{r}
-mfx <- marginaleffects(mod)
+mfx <- slopes(mod)
 head(mfx)
 ```
 
@@ -116,7 +116,7 @@ A dataset with one marginal effect estimate per unit of observation is a bit unw
 * Counterfactual Marginal Effects
 * Conditional Marginal Effects
 
-The rest of this vignette defines each of those quantities and explains how to use the `marginaleffects()` and `plot_cme()` functions to compute them. The main differences between these quantities pertain to (a) the regressor values at which we estimate marginal effects, and (b) the way in which unit-level marginal effects are aggregated.
+The rest of this vignette defines each of those quantities and explains how to use the `slopes()` and `plot_cme()` functions to compute them. The main differences between these quantities pertain to (a) the regressor values at which we estimate marginal effects, and (b) the way in which unit-level marginal effects are aggregated.
 
 Heiss drew this exceedingly helpful graph which summarizes the information in the rest of this vignette:
 
@@ -147,7 +147,7 @@ glance(mfx)
 We can also use the `by` argument the average marginal effects *within different subgroups* of the observed data, based on values of the regressors. For example, to compute the average marginal effects of Bill Length for each Species, we do:
 
 ```{r}
-mfx2 <- marginaleffects(mod, by = "species", variables = "bill_length_mm")
+mfx2 <- slopes(mod, by = "species", variables = "bill_length_mm")
 summary(mfx2)
 ```
 
@@ -172,7 +172,7 @@ datagrid(flipper_length_mm = 180,
 The same command can be used (omitting the `model` argument) to `marginaleffects`'s `newdata` argument to compute marginal effects for those (fictional) individuals:
 
 ```{r}
-marginaleffects(mod,
+slopes(mod,
                 newdata = datagrid(flipper_length_mm = 180,
                                    species = c("Adelie", "Gentoo")))
 ```
@@ -184,7 +184,7 @@ When variables are omitted from the `datagrid` call, they will automatically be 
 The "Marginal Effect at the Mean" is a marginal effect calculated for a hypothetical observation where each regressor is set at its mean or mode. By default, the `datagrid` function that we used in the previous section sets all regressors to their means or modes. To calculate the MEM, we can set the `newdata` argument, which determines the values of predictors at which we want to compute marginal effects:
 
 ```{r}
-marginaleffects(mod, newdata = "mean")
+slopes(mod, newdata = "mean")
 ```
 
 # Counterfactual Marginal Effects
@@ -208,7 +208,7 @@ We can use the observation-level marginal effects to compute average (or median,
 ```{r, message=FALSE, warning=FALSE}
 library(dplyr)
 
-marginaleffects(mod, newdata = nd) %>%
+slopes(mod, newdata = nd) %>%
     group_by(term) %>%
     summarize(dydx = median(dydx))
 ```
@@ -235,7 +235,7 @@ plot_cme(mod, effect = "hp", condition = "wt") +
 
 # Example: Quadratic
 
-In the "Definition" section of this vignette, we considered how marginal effects can be computed analytically in a simple quadratic equation context. We can now use the `marginaleffects` function to replicate our analysis of the quadratic function in a regression application. 
+In the "Definition" section of this vignette, we considered how marginal effects can be computed analytically in a simple quadratic equation context. We can now use the `slopes` function to replicate our analysis of the quadratic function in a regression application. 
 
 Say you estimate a linear regression model with a quadratic term:
 
@@ -257,7 +257,7 @@ quad <- data.frame(x = rnorm(N))
 quad$y <- 1 + 1 * quad$x + 2 * quad$x^2 + rnorm(N)
 mod <- lm(y ~ x + I(x^2), quad)
 
-marginaleffects(mod, newdata = datagrid(x = -2:2))  %>%
+slopes(mod, newdata = datagrid(x = -2:2))  %>%
     mutate(truth = 1 + 4 * x) %>%
     select(dydx, truth)
 ```
@@ -284,10 +284,10 @@ Typical values include `"response"` and `"link"`, but users should refer to the 
 
 ```{r}
 mod <- glm(am ~ mpg, family = binomial, data = mtcars)
-mfx <- marginaleffects(mod, type = "response")
+mfx <- slopes(mod, type = "response")
 summary(mfx)
 
-mfx <- marginaleffects(mod, type = "link")
+mfx <- slopes(mod, type = "link")
 summary(mfx)
 ```
 

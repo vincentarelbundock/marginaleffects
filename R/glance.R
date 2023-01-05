@@ -4,10 +4,10 @@
 generics::glance
 
 #' Glance at key characteristics of an object
-#' @inheritParams tidy.marginaleffects
+#' @inheritParams tidy.slopes
 #' @family summary
 #' @export
-glance.marginaleffects <- function(x, ...) {
+glance.slopes <- function(x, ...) {
     assert_dependency("modelsummary")
     model <- attr(x, "model")
     gl <- suppressMessages(suppressWarnings(try(
@@ -28,16 +28,16 @@ glance.marginaleffects <- function(x, ...) {
 
 #' @family summary
 #' @export
-glance.marginalmeans <- glance.marginaleffects
+glance.marginalmeans <- glance.slopes
 
 #' @family summary
 #' @export
-glance.predictions <- glance.marginaleffects
+glance.predictions <- glance.slopes
 
 #' @family summary
 #' @export
-glance.comparisons <- glance.marginaleffects
+glance.comparisons <- glance.slopes
 
 #' @family summary
 #' @export
-glance.deltamethod <- glance.marginaleffects
+glance.deltamethod <- glance.slopes

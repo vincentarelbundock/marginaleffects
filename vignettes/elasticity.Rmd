@@ -56,11 +56,11 @@ With the `marginaleffects` package, these quantities are easy to compute:
 library(marginaleffects)
 mod <- lm(mpg ~ hp + wt, data = mtcars)
 
-marginaleffects(mod) |> summary()
+slopes(mod) |> summary()
 
-marginaleffects(mod, slope = "eyex") |> summary()
+slopes(mod, slope = "eyex") |> summary()
 
-marginaleffects(mod, slope = "eydx") |> summary()
+slopes(mod, slope = "eydx") |> summary()
 
-marginaleffects(mod, slope = "dyex") |> summary()
+slopes(mod, slope = "dyex") |> summary()
 ```

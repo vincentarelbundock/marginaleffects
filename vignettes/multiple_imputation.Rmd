@@ -55,7 +55,7 @@ To work with the list of data sets, we'll create a function (in this case called
 ```{r}
 fit_reg <- function(dat) {
     mod <- lm(mpg ~ hp, data = dat)
-    out <- marginaleffects(mod, newdata = dat)
+    out <- slopes(mod, newdata = dat)
     return(out)
 }
 ```
@@ -73,9 +73,9 @@ We can compare this with what the model would have looked like without any missi
 
 ```{r, warning = FALSE, message = FALSE}
 mod_missing <- lm(mpg ~ hp, data = dat)
-mod_missing <- marginaleffects(mod_missing)
+mod_missing <- slopes(mod_missing)
 mod_complete <- lm(mpg ~ hp, data = mtcars)
-mod_complete <- marginaleffects(mod_complete)
+mod_complete <- slopes(mod_complete)
 
 models <- list(
     "Listwise Deletion" = mod_missing,
@@ -91,7 +91,7 @@ One particular problem arises in the cases of contrasts and categorical predicto
 
 ```{r, warning = FALSE}
 mod <- lm(mpg ~ factor(cyl), data = dat)
-mfx <- marginaleffects(mod)
+mfx <- slopes(mod)
 tidy(mfx)
 ```
 
@@ -100,7 +100,7 @@ This poses problems because the `mice::pool` function merges estimates based *on
 ```{r}
 fit_reg <- function(dat) {
     mod <- lm(mpg ~ factor(cyl), data = dat)
-    out <- marginaleffects(mod, newdata = dat)
+    out <- slopes(mod, newdata = dat)
     return(out)
 }
 mod_imputation <- lapply(dat_mice, fit_reg)
@@ -114,7 +114,7 @@ One hack to work around this limitation is to assign a custom class to the objec
 ```{r}
 fit_reg <- function(dat) {
     mod <- lm(mpg ~ factor(cyl), data = dat)
-    out <- marginaleffects(mod, newdata = dat)
+    out <- slopes(mod, newdata = dat)
     # the next line assigns a custom class
     class(out) <- c("custom", class(out))
     return(out)
@@ -122,7 +122,7 @@ fit_reg <- function(dat) {
 
 # this custom method will be called automatically for all objects produced by fit_reg()
 tidy.custom <- function(x, ...) {
-    out <- marginaleffects:::tidy.marginaleffects(x, ...)
+    out <- marginaleffects:::tidy.slopes(x, ...)
     out$term <- paste(out$term, out$contrast)
     return(out)
 }
@@ -140,7 +140,7 @@ For the logistic regression, we'll work with the same `dat_mice` imputed data se
 ```{r}
 fit_logistic <- function(dat) {
     mod <- glm(am ~ mpg, data = dat, family = binomial)
-    out <- marginaleffects(mod, newdata = dat)
+    out <- slopes(mod, newdata = dat)
     return(out)
 }
 ```
@@ -159,8 +159,8 @@ Again, we can compare this with what the model would have looked like without an
 ```{r, warning = FALSE, message = FALSE}
 mod_missing <- glm(am ~ mpg, data = dat, family = binomial)
 mod_complete <- glm(am ~ mpg, data = mtcars, family = binomial)
-mod_missing <- marginaleffects(mod_missing)
-mod_complete <- marginaleffects(mod_complete)
+mod_missing <- slopes(mod_missing)
+mod_complete <- slopes(mod_complete)
 
 models <- list(
     "Listwise Deletion" = mod_missing,
@@ -196,7 +196,7 @@ To work with the list of data sets, we'll create a function (in this case called
 ```{r, message = FALSE, warning = FALSE}
 fit_mlm <- function(dat) {
     mod <- lmer(Reaction ~ Days + (1 + Days|Subject), data = dat)
-    out <- marginaleffects(mod, newdata = dat)
+    out <- slopes(mod, newdata = dat)
     return(out)
 }
 ```
@@ -215,8 +215,8 @@ Like the previous models, we can compare this with what the model would have loo
 ```{r, warning = FALSE, message = FALSE}
 mod_complete <- lmer(Reaction ~ Days + (1 + Days|Subject), data = sleepstudy)
 mod_missing <- lmer(Reaction ~ Days + (1 + Days|Subject), data = dat2)
-mod_complete <- marginaleffects(mod_complete)
-mod_missing <- marginaleffects(mod_missing)
+mod_complete <- slopes(mod_complete)
+mod_missing <- slopes(mod_missing)
 
 models <- list(
     "Listwise Deletion" = mod_missing,

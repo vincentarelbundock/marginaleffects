@@ -293,10 +293,10 @@ predictions(mod, dpar = "hu", type = "response",
 We can also get slopes for the `hu` part of the model on the link (logit) or response (percentage point) scales:
 
 ```{r}
-marginaleffects(mod, dpar = "hu", type = "link",
+slopes(mod, dpar = "hu", type = "link",
                 newdata = datagrid(lifeExp = seq(40, 80, 20)))
 
-marginaleffects(mod, dpar = "hu", type = "response",
+slopes(mod, dpar = "hu", type = "response",
                 newdata = datagrid(lifeExp = seq(40, 80, 20)))
 ```
 
@@ -351,7 +351,7 @@ plot_cap(
        subtitle = "Dollar-scale predictions")
 ```
 
-For **marginal effects**, we need to transform the predictions *before* calculating the instantaneous slopes. We also can't use the `marginaleffects()` function directly—we need to use `comparisons()` and compute the numerical derivative ourselves (i.e. predict `gdpPercap` at `lifeExp` of 40 and 40.001 and calculate the slope between those predictions). We can use the `transform_pre` argument to pass the pair of predicted values to `exp()` before calculating the slopes:
+For **marginal effects**, we need to transform the predictions *before* calculating the instantaneous slopes. We also can't use the `slopes()` function directly—we need to use `comparisons()` and compute the numerical derivative ourselves (i.e. predict `gdpPercap` at `lifeExp` of 40 and 40.001 and calculate the slope between those predictions). We can use the `transform_pre` argument to pass the pair of predicted values to `exp()` before calculating the slopes:
 
 ```{r}
 # step size of the numerical derivative

@@ -19,18 +19,18 @@ m0 <- glmmTMB(NCalls ~ (FT + ArrivalTime) * SexParent + offset(log(BroodSize)) +
     data = Owls,
     ziformula = ~1,
     family = poisson)
-expect_marginaleffects(m0)
+expect_slopes(m0)
 
 m1 <- glmmTMB(count ~ mined + (1 | site),
   zi = ~mined,
   family = poisson, data = Salamanders)
-expect_marginaleffects(m1)
+expect_slopes(m1)
 
 # Binomial model
 data(cbpp, package = "lme4")
 m4 <- glmmTMB(cbind(incidence, size - incidence) ~ period + (1 | herd),
 family = binomial, data = cbpp)
-expect_marginaleffects(m4)
+expect_slopes(m4)
 
 # comparisons vs. emmeans
 
@@ -47,7 +47,7 @@ co <- comparisons(m2,
                                  spp = "GP",
                                  site = "VF-1"))
 em <- tidy(pairs(emmeans(m2, "mined", at = list(spp = "GP", site = "VF-1"))))
-expect_marginaleffects(m2)
+expect_slopes(m2)
 expect_equivalent(co$comparison, -1 * em$estimate)
 expect_equivalent(co$std.error, em$std.error)
 
@@ -57,9 +57,9 @@ bug <- glmmTMB(count ~ spp + mined,
   ziformula = ~spp + mined,
   family = "nbinom2",
   data = Salamanders)
-mfx <- marginaleffects(bug)
+mfx <- slopes(bug)
 tid1 <- comparisons(bug, transform_pre = "dydxavg")
-tid2 <- tidy(marginaleffects(bug))
+tid2 <- tidy(slopes(bug))
 
 expect_equivalent(tid1$comparison, tid2$estimate)
 expect_equivalent(tid1$std.error, tid2$std.error)
@@ -73,7 +73,7 @@ mzip_3 <- glmmTMB(
   ziformula = ~ res + inc + age,
   family = "nbinom2",
   data = bed)
-mfx <- marginaleffects(mzip_3, type = "response")
+mfx <- slopes(mzip_3, type = "response")
 tid <- tidy(mfx)
 
 # checked against Stata
@@ -89,7 +89,7 @@ expect_equivalent(tid$std.error, se)
 m3 <- glmmTMB(count ~ spp + mined + (1 | site),
   zi = ~spp + mined,
   family = truncated_poisson, data = Salamanders)
-expect_marginaleffects(m3)
+expect_slopes(m3)
 co <- comparisons(m3,
               type = "link",
               variables = "mined",
@@ -97,7 +97,7 @@ co <- comparisons(m3,
                                  spp = "GP",
                                  site = "VF-1"))
 em <- tidy(pairs(emmeans(m3, "mined", at = list(spp = "GP", site = "VF-1"))))
-expect_marginaleffects(m3)
+expect_slopes(m3)
 expect_equivalent(co$comparison, -1 * em$estimate)
 expect_equivalent(co$std.error, em$std.error)
 
@@ -162,7 +162,7 @@ expect_equivalent(em$emmean, mm$marginalmean)
 expect_equivalent(em$SE, mm$std.error)
 
 
-mfx <- marginaleffects(m1)
+mfx <- slopes(m1)
 
 
 m1 <- glmmTMB(
@@ -200,10 +200,10 @@ model_REML <- glmmTMB(
   REML = TRUE,
   data = dat)
 
-expect_error(marginaleffects(model_REML), pattern = "REML")
+expect_error(slopes(model_REML), pattern = "REML")
 expect_error(comparisons(model_REML), pattern = "REML")
 expect_error(predictions(model_REML), pattern = "REML")
 expect_error(marginalmeans(model_REML), pattern = "REML")
-expect_inherits(marginaleffects(model_REML, vcov = FALSE), "marginaleffects")
+expect_inherits(slopes(model_REML, vcov = FALSE), "marginaleffects")
 expect_inherits(predictions(model_REML, re.form = NA, vcov = FALSE), "predictions")
 expect_inherits(predictions(model_REML, vcov = FALSE, re.form = NA), "predictions")

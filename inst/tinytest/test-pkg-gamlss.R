@@ -30,7 +30,7 @@ expect_inherits(p2, "predictions")
 # regrid = "link"
 
 # marginaleffects
-mfx <- marginaleffects(
+mfx <- slopes(
     mod,
     type = "link",
     newdata = datagrid(batch = 1),
@@ -78,7 +78,7 @@ mod <- gamlss::gamlss(Survived ~ Age + Pclass,
 
 
 # emtrends
-mfx <- marginaleffects(mod,
+mfx <- slopes(mod,
     type = "link",
     newdata = datagrid(Pclass = "1"),
     variables = "Age",

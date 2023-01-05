@@ -8,7 +8,7 @@ data(md_12.1, package = "afex")
 mod <- aov_ez("id", "rt", md_12.1, within = c("angle", "noise"))
 
 # no validity
-expect_marginaleffects(mod)
+expect_slopes(mod)
 pre <- predictions(mod)
 expect_inherits(pre, "predictions")
 cmp <- comparisons(mod)

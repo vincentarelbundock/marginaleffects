@@ -13,8 +13,8 @@ dat <- mtcars
 dat$cyl <- factor(dat$cyl)
 dat <<- dat
 mod <- lm_lin(mpg ~ am, ~ hp + cyl, data = dat)
-expect_marginaleffects(mod)
-expect_marginaleffects(mod, n_unique = 9)
+expect_slopes(mod)
+expect_slopes(mod, n_unique = 9)
 
 
 # iv_robust vs. stata
@@ -23,7 +23,7 @@ model <- iv_robust(
     se_type = "stata",
     data = Km)
 stata <- readRDS(testing_path("stata/stata.rds"))$estimatr_iv_robust
-mfx <- tidy(marginaleffects(model))
+mfx <- tidy(slopes(model))
 mfx <- merge(mfx, stata)
 expect_equivalent(mfx$dydx, mfx$dydxstata)
 expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .1)
@@ -34,14 +34,14 @@ model <- lm_robust(carb ~ wt + factor(cyl),
                se_type = "HC2",
                data = dat)
 stata <- readRDS(testing_path("stata/stata.rds"))$estimatr_lm_robust
-mfx <- tidy(marginaleffects(model))
+mfx <- tidy(slopes(model))
 mfx$term <- ifelse(mfx$contrast == "6 - 4", "6.cyl", mfx$term)
 mfx$term <- ifelse(mfx$contrast == "8 - 4", "8.cyl", mfx$term)
 mfx <- merge(mfx, stata)
 expect_equivalent(mfx$dydx, mfx$dydxstata)
 expect_equivalent(mfx$std.error, mfx$std.errorstata)
 # emtrends
-mfx <- marginaleffects(model, newdata = datagrid(cyl = 4, wt = 2), variables = "wt")
+mfx <- slopes(model, newdata = datagrid(cyl = 4, wt = 2), variables = "wt")
 em <- emtrends(model, ~wt, "wt", at = list(cyl = 4, wt = 2))
 em <- tidy(em)
 expect_equivalent(mfx$dydx, em$wt.trend, tolerance = .001)
@@ -51,7 +51,7 @@ tmp <- mtcars
 tmp$cyl <- factor(tmp$cyl)
 mod <- lm_robust(carb ~ wt + cyl, data = tmp, se_type = "stata")
 mar <- margins(mod, data = head(tmp))
-mfx <- marginaleffects(mod, newdata = head(tmp))
+mfx <- slopes(mod, newdata = head(tmp))
 expect_true(expect_margins(mfx, mar, se = FALSE))
 
 

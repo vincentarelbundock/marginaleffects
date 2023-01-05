@@ -31,13 +31,13 @@ expect_inherits(insight::get_data(mod2), "data.frame")
 expect_inherits(insight::get_data(mod3), "data.frame")
 expect_inherits(insight::get_data(mod4), "data.frame")
 
-expect_marginaleffects(mod1, pct_na = 62.5)
-expect_marginaleffects(mod2, pct_na = 62.5)
-expect_marginaleffects(mod3, pct_na = 62.5)
-expect_marginaleffects(mod4, pct_na = 62.5)
+expect_slopes(mod1, pct_na = 62.5)
+expect_slopes(mod2, pct_na = 62.5)
+expect_slopes(mod3, pct_na = 62.5)
+expect_slopes(mod4, pct_na = 62.5)
 
 # 20 observations for which we can't compute results
-mfx <- marginaleffects(mod1, variables = "mpg")
+mfx <- slopes(mod1, variables = "mpg")
 expect_inherits(mfx, "marginaleffects")
 expect_equivalent(nrow(mfx), 12)
 
@@ -47,8 +47,8 @@ requiet("plm")
 data(EmplUK, package = "plm")
 stata <- readRDS(testing_path("stata/stata.rds"))$fixest_feols
 model <- feols(wage ~ capital * output | firm, EmplUK)
-mfx <- merge(tidy(marginaleffects(model)), stata)
-expect_marginaleffects(model)
+mfx <- merge(tidy(slopes(model)), stata)
+expect_slopes(model)
 expect_equivalent(mfx$estimate, mfx$dydx)
 expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .00001)
 
@@ -58,8 +58,8 @@ requiet("plm")
 data(EmplUK, package = "plm")
 stata <- readRDS(testing_path("stata/stata.rds"))$fixest_fepois
 model <- fepois(log(wage) ~ capital * output | firm, EmplUK)
-mfx <- merge(tidy(marginaleffects(model, type = "link")), stata)
-expect_marginaleffects(model)
+mfx <- merge(tidy(slopes(model, type = "link")), stata)
+expect_slopes(model)
 expect_equivalent(mfx$estimate, mfx$dydx, tolerance = .000001)
 expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .001)
 
@@ -140,8 +140,8 @@ expect_predictions(pred5)
 reg <- feols(
 Sepal.Width ~ Petal.Length | Species | Sepal.Length ~ Petal.Width, 
 data = iris)
-mfx1 <- marginaleffects(reg, newdata = iris)
-mfx2 <- marginaleffects(reg)
+mfx1 <- slopes(reg, newdata = iris)
+mfx2 <- slopes(reg)
 expect_inherits(mfx1, "marginaleffects")
 expect_inherits(mfx2, "marginaleffects")
 
@@ -152,9 +152,9 @@ dt$cyl <- factor(dt$cyl)
 fit1 <- suppressMessages(feols(mpg ~ 0 | carb | vs ~ am, data = dt))
 fit2 <- suppressMessages(feols(mpg ~ cyl | carb | vs ~ am, data = dt))
 fit3 <- suppressMessages(feols(mpg ~ 0 | carb | vs:cyl ~ am:cyl, data = dt))
-mfx1 <- marginaleffects(fit1)
-mfx2 <- marginaleffects(fit2)
-mfx3 <- marginaleffects(fit3)
+mfx1 <- slopes(fit1)
+mfx2 <- slopes(fit2)
+mfx3 <- slopes(fit3)
 expect_inherits(mfx1, "marginaleffects")
 expect_inherits(mfx2, "marginaleffects")
 expect_inherits(mfx3, "marginaleffects")
@@ -162,8 +162,8 @@ expect_inherits(mfx3, "marginaleffects")
 # Issue #443: `newdata` breaks when it is a `data.table`
 d <- data.table(mtcars)
 m <- feols(mpg ~ cyl * disp, d)
-m1 <- marginaleffects(m)
-m2 <- marginaleffects(m, newdata = datagrid(disp = 0))  
+m1 <- slopes(m)
+m2 <- slopes(m, newdata = datagrid(disp = 0))  
 expect_inherits(m1, "marginaleffects")
 expect_inherits(m2, "marginaleffects")
 m1 <- comparisons(m)
@@ -175,13 +175,13 @@ expect_inherits(m2, "comparisons")
 # Issue #458: fixest with data table
 dat <- data.table(y = rnorm(10), x = rnorm(10))
 model <- feols(y ~ x, dat)
-m <- marginaleffects(model)
+m <- slopes(model)
 expect_inherits(m, "marginaleffects")
 
 
 # Issue #484: i() converts to factors but was treated as numeric
 m <- feols(Ozone ~ i(Month), airquality)
-m <- marginaleffects(m)
+m <- slopes(m)
 expect_inherits(m, "marginaleffects")
 
 
@@ -216,7 +216,7 @@ expect_equivalent(fun(mod2), c("cyl"))
 expect_equivalent(fun(mod3), c("cyl"))
 expect_equivalent(fun(mod4), c("cyl", "gear", "am"))
 if (utils::packageVersion("insight") < "0.18.4.4") exit_file("insight version")
-m <- marginaleffects(mod4)
+m <- slopes(mod4)
 expect_inherits(m, "marginaleffects")
 
 
@@ -225,7 +225,7 @@ dat <- mtcars
 dat$mpg[1] <- NA
 dat <<- dat
 mod <- suppressMessages(feglm(am ~ mpg, family = binomial, data = dat))
-mfx <- marginaleffects(mod)
+mfx <- slopes(mod)
 expect_inherits(mfx, "marginaleffects")
 expect_equivalent(nrow(mfx), 31)
 expect_true("mpg" %in% colnames(mfx))
@@ -234,7 +234,7 @@ expect_true("am" %in% colnames(mfx))
 
 # Issue #531
 mod <- feols(Ozone ~ Wind + i(Month), airquality)
-mfx <- marginaleffects(mod, variable = "Wind")
+mfx <- slopes(mod, variable = "Wind")
 expect_true(all(mfx$conf.low < mfx$dydx))
 expect_true(all(mfx$conf.high > mfx$dydx))
 
@@ -243,7 +243,7 @@ expect_true(all(mfx$conf.high > mfx$dydx))
 # can't override global binding for `rep()`
 rep <- data.frame(Y = runif(100) > .5, X = rnorm(100))
 mod <- feglm(Y ~ X, data = rep, family = binomial)
-mfx <- marginaleffects(mod)
+mfx <- slopes(mod)
 expect_inherits(mfx, "marginaleffects")
 
 
@@ -261,7 +261,7 @@ expect_false(anyNA(p$std.error))
 # data(trade)
 # dat <<- trade
 # mod <- feNmlm(Euros ~ log(dist_km) | Product, data = dat)
-# expect_marginaleffects(mod, newdata = dat) # environment issue
+# expect_slopes(mod, newdata = dat) # environment issue
 
 
 
@@ -286,7 +286,7 @@ expect_false(anyNA(p$std.error))
 # data <- gen_data(50020)
 # model <- feols(y ~ x1*x2 | group1^group2, data)
 # nd <- datagrid(model = model)
-# expect_error(marginaleffects(model, newdata = "mean"), "combined")
+# expect_error(slopes(model, newdata = "mean"), "combined")
 
 
 

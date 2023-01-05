@@ -25,19 +25,19 @@ m7 <- mgcv::gam(y ~ s(x0, sp = .01) + s(x1) + s(x2) + s(x3), data = dat)
 m8 <- mgcv::gam(y ~ s(x0) + s(x1) + s(x2) + s(x3), min.sp = c(0.001, 0.01, 0, 10), data = dat)
 m9 <- mgcv::gam(y ~ s(x0, bs = "cr") + s(x1, bs = "cr") + s(x2, bs = "cr") +
       s(x3, bs = "cr"), family = poisson, data = dat2, method = "REML")
-expect_marginaleffects(m1)
-expect_marginaleffects(m2)
-expect_marginaleffects(m3)
-expect_marginaleffects(m4)
-expect_marginaleffects(m5)
-expect_marginaleffects(m6)
-expect_marginaleffects(m7)
-expect_marginaleffects(m8)
-expect_marginaleffects(m9)
+expect_slopes(m1)
+expect_slopes(m2)
+expect_slopes(m3)
+expect_slopes(m4)
+expect_slopes(m5)
+expect_slopes(m6)
+expect_slopes(m7)
+expect_slopes(m8)
+expect_slopes(m9)
 
 
 # emtrends
-mfx <- marginaleffects(m1,
+mfx <- slopes(m1,
     variables = "x1",
     newdata = datagrid(
         x1 = 0,
@@ -94,7 +94,7 @@ if (packageVersion("insight") > "0.17.1.6") {
       mutate(x_lags = tsModel::Lag(x, 0:10),
              L = matrix(0:10, nrow = 1))
     b <- mgcv::gam(y ~ s(z) + te(x_lags, L), data = df)
-    mfx <- suppressWarnings(marginaleffects(b))
+    mfx <- suppressWarnings(slopes(b))
     cmp <- suppressWarnings(comparisons(b))
     pre <- predictions(b)
     expect_inherits(pre, "predictions")
@@ -104,7 +104,7 @@ if (packageVersion("insight") > "0.17.1.6") {
     expect_true(all(mfx$term == "z"))
     expect_true(all(cmp$term == "z"))
 
-    expect_error(suppressWarnings(marginaleffects(b, variables = "L")), pattern = "no valid")
+    expect_error(suppressWarnings(slopes(b, variables = "L")), pattern = "no valid")
     expect_error(suppressWarnings(comparisons(b, variables = "L")), pattern = "no valid")
     expect_warning(plot_cap(b, condition = "z"), pattern = "Matrix columns")
     expect_warning(plot_cme(b, effect = "L", condition = "z"), pattern = "Matrix columns")
@@ -142,7 +142,7 @@ if (packageVersion("insight") > "0.17.1.6") {
         predict(model, newdata = nd, exclude = "s(Subject)")[1])
 
 
-    mfx <- marginaleffects(model, newdata = "mean", variables = "Time", type = "link")
+    mfx <- slopes(model, newdata = "mean", variables = "Time", type = "link")
     emt <- suppressMessages(data.frame(
         emtrends(model, ~Time, "Time", at = list(Time = 1000, Subject = "a01", Group = "Adults"))))
     expect_equivalent(mfx$dydx, emt$Time.trend, tolerance = 1e-2)

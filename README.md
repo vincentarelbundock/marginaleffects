@@ -115,8 +115,8 @@ models:](https://vincentarelbundock.github.io/marginaleffects/articles/supported
     Effect*](https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html)
       - A partial derivative (slope) of the regression equation with
         respect to a regressor of interest.
-      - [`marginaleffects(),`](https://vincentarelbundock.github.io/marginaleffects/reference/marginaleffects.html)
-        [`plot(),`](https://vincentarelbundock.github.io/marginaleffects/reference/plot.marginaleffects.html)
+      - [`slopes(),`](https://vincentarelbundock.github.io/marginaleffects/reference/marginaleffects.html)
+        [`plot(),`](https://vincentarelbundock.github.io/marginaleffects/reference/plot.slopes.html)
         [`plot_cme()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cme.html)
   - [*Contrast*](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)
       - A difference, ratio, or function of adjusted predictions,
@@ -436,16 +436,16 @@ of quantities of interest:
 A “marginal effect” is a partial derivative (slope) of the regression
 equation with respect to a regressor of interest. It is unit-specific
 measure of association between a change in a regressor and a change in
-the regressand. The `marginaleffects()` function uses numerical
+the regressand. The `slopes()` function uses numerical
 derivatives to estimate the slope of the regression equation with
 respect to each of the variables in the model (or contrasts for
 categorical variables).
 
-By default, `marginaleffects()` estimates the slope for each row of the
+By default, `slopes()` estimates the slope for each row of the
 original dataset that was used to fit the model:
 
 ``` r
-mfx <- marginaleffects(mod)
+mfx <- slopes(mod)
 
 head(mfx, 4)
 #>   rowid     type term        dydx  std.error
@@ -500,7 +500,7 @@ plot_cme(mod, effect = "hp", condition = c("wt", "am"))
 
 [The Marginal Effects
 vignette](https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html)
-shows how to use the `marginaleffects()` function to compute a wide
+shows how to use the `slopes()` function to compute a wide
 variety of quantities of interest:
 
   - Unit-level Marginal Effects

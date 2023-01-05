@@ -25,11 +25,11 @@ Note: This vignette requires version 0.7.2 of `marginaleffects`, or [the develop
 
 The `marginaleffects` package includes several flexible functions to plot estimates and to display interactions:
 
-* `plot()`: Plot the raw output of `marginaleffects()` or `comparisons()`
+* `plot()`: Plot the raw output of `slopes()` or `comparisons()`
 * Interaction / conditional / heterogenous:
    - `plot_cap`: Conditional Adjusted Predictions (equivalent to `predictions()`)
    - `plot_cco`: Conditional Contrasts (equivalent to `comparisons()`)
-   - `plot_cme`: Conditional Marginal Effects (equivalent to `marginaleffects()`)
+   - `plot_cme`: Conditional Marginal Effects (equivalent to `slopes()`)
 
 The "interaction" or "conditional" plotting functions are designed to display how the outcome or how the effect of a predictor changes with respect to another variable.
 
@@ -131,7 +131,7 @@ plot_cap(mod, condition = c("Age", "PClass")) +
 
 # Extreme customization
 
-Designing effective data visualizations requires a lot of customization to the specific context and data. The plotting functions in `marginaleffects` offer a powerful way to iterate quickly between plots and models, but they obviously cannot support all the features that users may want. Thankfully, it is very easy to use the `marginaleffects` functions to generate datasets that can then be used in `ggplot2` or any other data visualization tool. Just use the `draw` argument:
+Designing effective data visualizations requires a lot of customization to the specific context and data. The plotting functions in `marginaleffects` offer a powerful way to iterate quickly between plots and models, but they obviously cannot support all the features that users may want. Thankfully, it is very easy to use the `slopes` functions to generate datasets that can then be used in `ggplot2` or any other data visualization tool. Just use the `draw` argument:
 
 ```{r}
 p <- plot_cap(mod, condition = c("Age", "PClass"), draw = FALSE)

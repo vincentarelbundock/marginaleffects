@@ -1,6 +1,6 @@
 #' @export
 #' @keywords internal
-expect_marginaleffects <- function(
+expect_slopes <- function(
     object,
     n_unique = NULL,
     pct_na = 5,
@@ -9,7 +9,7 @@ expect_marginaleffects <- function(
 
     insight::check_if_installed("tinytest")
 
-    object <- hush(marginaleffects(object, ...))
+    object <- hush(slopes(object, ...))
 
     diff <- ""
 

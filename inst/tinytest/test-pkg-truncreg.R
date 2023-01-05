@@ -8,7 +8,7 @@ requiet("margins")
 # truncreg: no validity check
 data("tobin", package = "survival")
 model <- truncreg(durable ~ age + quant, data = tobin, subset = durable > 0)
-mfx <- marginaleffects(model)
+mfx <- slopes(model)
 tid <- tidy(mfx)
 expect_inherits(tid, "data.frame")
 expect_equivalent(nrow(tid), 2)
@@ -26,11 +26,11 @@ stata <- readRDS(testing_path("stata/stata.rds"))$truncreg_truncreg_01
 data("tobin", package = "survival")
 model <- truncreg::truncreg(durable ~ age + quant, 
                             data = tobin, subset = durable > 0)
-mfx <- merge(tidy(marginaleffects(model)), stata)
+mfx <- merge(tidy(slopes(model)), stata)
 expect_equivalent(mfx$estimate, mfx$dydxstata, tolerance = .0001)
 expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .001)
 # margins
 mar <- margins(model, unit_ses = TRUE)
-mfx <- marginaleffects(model)
+mfx <- slopes(model)
 expect_true(expect_margins(mfx, mar, tolerance = .0001))
 

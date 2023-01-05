@@ -45,6 +45,6 @@ expect_equivalent(nrow(dm), 1)
 
 # Q
 # pkgload::load_all()
-# marginaleffects(modb, slope = "eyex") |> summary()
-# marginaleffects(mod, slope = "eyex") |> summary()
+# slopes(modb, slope = "eyex") |> summary()
+# slopes(mod, slope = "eyex") |> summary()
 

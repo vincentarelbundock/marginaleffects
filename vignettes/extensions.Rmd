@@ -143,10 +143,10 @@ get_vcov(model)
 get_predict(model, newdata = head(mtcars))
 ```
 
-Now we can use the `marginaleffects` function:
+Now we can use the `slopes` function:
 
 ```{r}
-marginaleffects(model, newdata = mtcars, variables = c("hp", "drat")) |>
+slopes(model, newdata = mtcars, variables = c("hp", "drat")) |>
     summary()
 
 predictions(model, newdata = mtcars) |>
@@ -204,7 +204,7 @@ get_predict.customclass <- function(model, newdata, ...) {
 }
 ```
 
-Finally, we can call any `marginaleffects` function and obtain results. Notice that our object of class `customclass` now produces different results than the default `mblogit` object:
+Finally, we can call any `slopes` function and obtain results. Notice that our object of class `customclass` now produces different results than the default `mblogit` object:
 
 ```{r}
 predictions(model) |> summary()

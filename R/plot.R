@@ -2,18 +2,18 @@
 #' 
 #' Uses the `ggplot2` package to draw a point-range plot of the average marginal effects computed by `tidy`.
 #' @inheritParams marginaleffects
-#' @inheritParams tidy.marginaleffects
-#' @inherit tidy.marginaleffects details
+#' @inheritParams tidy.slopes
+#' @inherit tidy.slopes details
 #' @return A `ggplot2` object
 #' @family plot
 #' @export
 #'
 #' @examples
 #' mod <- glm(am ~ hp + wt, data = mtcars)
-#' mfx <- marginaleffects(mod)
+#' mfx <- slopes(mod)
 #' plot(mfx)
 #'
-plot.marginaleffects <- function(x,
+plot.slopes <- function(x,
                                  conf_level = 0.95,
                                  ...) {
 

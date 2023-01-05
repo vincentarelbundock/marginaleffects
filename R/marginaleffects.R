@@ -1,8 +1,8 @@
-#' Marginal Effects (Slopes)
+#' Slopes (aka "Marginal Effects")
 #'
 #' Partial derivative (slope) of the regression equation with respect to a
 #' regressor of interest. The `tidy()` and `summary()` functions can be used to
-#' aggregate and summarize the output of `marginaleffects()`. To learn more,
+#' aggregate and summarize the output of `slopes()`. To learn more,
 #' read the marginal effects vignette, visit the package website, or scroll
 #' down this page for a full list of vignettes:
 #' * <https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html>
@@ -29,7 +29,7 @@
 #'
 #' See the [marginaleffects vignette for worked-out examples of each kind of marginal effect.](https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html)
 #'
-#' Numerical derivatives for the `marginaleffects` function are calculated
+#' Numerical derivatives for the `slopes` function are calculated
 #' using a simple epsilon difference approach: \eqn{\partial Y / \partial X = (f(X + \varepsilon) - f(X)) / \varepsilon}{dY/dX = (f(X + e) - f(X)) / e},
 #' where f is the `predict()` method associated with the model class, and
 #' \eqn{\varepsilon}{e} is determined by the `eps` argument.
@@ -131,7 +131,7 @@
 #' @examples
 #'
 #' mod <- glm(am ~ hp * wt, data = mtcars, family = binomial)
-#' mfx <- marginaleffects(mod)
+#' mfx <- slopes(mod)
 #' head(mfx)
 #'
 #' # Average Marginal Effect (AME)
@@ -141,11 +141,11 @@
 #'
 #' 
 #' # Marginal Effect at the Mean (MEM)
-#' marginaleffects(mod, newdata = datagrid())
+#' slopes(mod, newdata = datagrid())
 #'
 #' # Marginal Effect at User-Specified Values
 #' # Variables not explicitly included in `datagrid()` are held at their means
-#' marginaleffects(mod,
+#' slopes(mod,
 #'                 newdata = datagrid(hp = c(100, 110)))
 #'
 #' # Group-Average Marginal Effects (G-AME)
@@ -153,37 +153,37 @@
 #' # marginal effect within each subset of observations with different observed
 #' # values for the `cyl` variable:
 #' mod2 <- lm(mpg ~ hp * cyl, data = mtcars)
-#' mfx2 <- marginaleffects(mod2, variables = "hp", by = "cyl")
+#' mfx2 <- slopes(mod2, variables = "hp", by = "cyl")
 #' summary(mfx2)
 #'
 #' # Marginal Effects at User-Specified Values (counterfactual)
 #' # Variables not explicitly included in `datagrid()` are held at their
 #' # original values, and the whole dataset is duplicated once for each
 #' # combination of the values in `datagrid()`
-#' mfx <- marginaleffects(mod,
+#' mfx <- slopes(mod,
 #'                        newdata = datagrid(hp = c(100, 110),
 #'                                           grid_type = "counterfactual"))
 #' head(mfx)
 #'
 #' # Heteroskedasticity robust standard errors
-#' marginaleffects(mod, vcov = sandwich::vcovHC(mod))
+#' slopes(mod, vcov = sandwich::vcovHC(mod))
 #'
 #' # hypothesis test: is the `hp` marginal effect at the mean equal to the `drat` marginal effect
 #' mod <- lm(mpg ~ wt + drat, data = mtcars)
 #'
-#' marginaleffects(
+#' slopes(
 #'     mod,
 #'     newdata = "mean",
 #'     hypothesis = "wt = drat")
 #' 
 #' # same hypothesis test using row indices
-#' marginaleffects(
+#' slopes(
 #'     mod,
 #'     newdata = "mean",
 #'     hypothesis = "b1 - b2 = 0")
 #' 
 #' # same hypothesis test using numeric vector of weights
-#' marginaleffects(
+#' slopes(
 #'     mod,
 #'     newdata = "mean",
 #'     hypothesis = c(1, -1))
@@ -194,24 +194,24 @@
 #'     2, 3),
 #'     ncol = 2)
 #' colnames(lc) <- c("Contrast A", "Contrast B")
-#' marginaleffects(
+#' slopes(
 #'     mod,
 #'     newdata = "mean",
 #'     hypothesis = lc)
 #' 
 #' @export
-marginaleffects <- function(model,
-                            newdata = NULL,
-                            variables = NULL,
-                            vcov = TRUE,
-                            conf_level = 0.95,
-                            type = NULL,
-                            slope = "dydx",
-                            by = NULL,
-                            wts = NULL,
-                            hypothesis = NULL,
-                            eps = NULL,
-                            ...) {
+slopes <- function(model,
+                   newdata = NULL,
+                   variables = NULL,
+                   vcov = TRUE,
+                   conf_level = 0.95,
+                   type = NULL,
+                   slope = "dydx",
+                   by = NULL,
+                   wts = NULL,
+                   hypothesis = NULL,
+                   eps = NULL,
+                   ...) {
 
 
     # order of the first few paragraphs is important
@@ -235,7 +235,7 @@ marginaleffects <- function(model,
 
     }
 
-    # marginaleffects() does not support a named list of variables like comparisons()
+    # slopes() does not support a named list of variables like comparisons()
     checkmate::assert_character(variables, null.ok = TRUE)
 
     # slope
@@ -298,15 +298,22 @@ marginaleffects <- function(model,
     # class
     setDF(out)
     class(out) <- setdiff(class(out), "comparisons")
-    class(out) <- c("marginaleffects", class(out))
+    class(out) <- c("slopes", "marginaleffects", class(out))
     return(out)
 }
 
 
-#' `meffects()` is a shortcut to `marginaleffects()`
+#' `meffects()` is an alias to `slopes()`. It is kept for backward compatibility.
 #'
 #' @inherit marginaleffects
 #' @keywords internal
 #' @export
-meffects <- marginaleffects
+meffects <- slopes
 
+
+#' `marginaleffects()` is an alias to `slopes()`. It is kept for backward compatibility.
+#'
+#' @inherit marginaleffects
+#' @keywords internal
+#' @export
+marginaleffects <- slopes

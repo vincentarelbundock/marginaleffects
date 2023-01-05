@@ -26,14 +26,14 @@ Note: This vignette requires a version of `modelsummary` greater than 1.2.0. If 
 
 # Marginal effects
 
-We can summarize the results of the `comparisons()` or `marginaleffects()` functions using [the `modelsummary` package.](https://github.com/vincentarelbundock/modelsummary)
+We can summarize the results of the `comparisons()` or `slopes()` functions using [the `modelsummary` package.](https://github.com/vincentarelbundock/modelsummary)
 
 ```{r}
 library(modelsummary)
 library(marginaleffects)
 
 mod <- glm(am ~ wt + drat, family = binomial, data = mtcars)
-mfx <- marginaleffects(mod)
+mfx <- slopes(mod)
 
 modelsummary(mfx)
 ```
@@ -51,8 +51,8 @@ We can display several models or marginal effects side by side:
 models <- list(
     glm(am ~ drat, family = binomial, data = mtcars),
     glm(am ~ wt + drat, family = binomial, data = mtcars))
-models[[1]] <- marginaleffects(models[[1]])
-models[[2]] <- marginaleffects(models[[2]], vcov = "HC3")
+models[[1]] <- slopes(models[[1]])
+models[[2]] <- slopes(models[[2]], vcov = "HC3")
 modelsummary(models)
 ```
 ````
@@ -61,7 +61,7 @@ modelsummary(models)
 
 Note: The code in this section requires a version of the `modelsummary` package greater than 1.2.0. If it is not available from CRAN, you can install the development version by following the instructions on [the `modelsummary` website.](https://vincentarelbundock.github.io/modelsummary/)
 
-When using the `comparisons()` function (or the `marginaleffects()` function with categorical variables), the output will include two columns to uniquely identify the quantities of interest: `term` and `contrast`.
+When using the `comparisons()` function (or the `slopes()` function with categorical variables), the output will include two columns to uniquely identify the quantities of interest: `term` and `contrast`.
 
 ```{r}
 dat <- mtcars

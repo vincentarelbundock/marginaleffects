@@ -139,12 +139,12 @@ expect_equivalent(length(unique(cmp$estimate)), nrow(cmp))
 
 
 
-# TODO: fix eps to make sure marginaleffects() and comparisons() give same result
-# transform_pre slope vs marginaleffects()
+# TODO: fix eps to make sure slopes() and comparisons() give same result
+# transform_pre slope vs slopes()
 mod <- glm(vs ~ mpg + hp, data = mtcars, family = binomial)
-mfx1 <- marginaleffects(mod)
+mfx1 <- slopes(mod)
 mfx2 <- comparisons(mod, transform_pre = "dydx")
-mfx3 <- marginaleffects(mod, eps = 1e-5)
+mfx3 <- slopes(mod, eps = 1e-5)
 mfx4 <- comparisons(mod, transform_pre = "dydx", eps = 1e-5)
 expect_equivalent(mfx1$dydx, mfx2$comparison)
 expect_equivalent(mfx1$std.error, mfx2$std.error)

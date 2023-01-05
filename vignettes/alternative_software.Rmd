@@ -82,7 +82,7 @@ The [Marginal Means Vignette](https://vincentarelbundock.github.io/marginaleffec
 
 ## Contrasts
 
-As far as I can tell, `emmeans` does not provide an easy way to compute unit-level contrasts for every row of the dataset used to fit our model. Therefore, the side-by-side syntax shown below will always include `newdata=datagrid()` to specify that we want to compute only one contrast: at the mean values of the regressors. In day-to-day practice with `marginaleffects()`, however, this extra argument would not be necessary.
+As far as I can tell, `emmeans` does not provide an easy way to compute unit-level contrasts for every row of the dataset used to fit our model. Therefore, the side-by-side syntax shown below will always include `newdata=datagrid()` to specify that we want to compute only one contrast: at the mean values of the regressors. In day-to-day practice with `slopes()`, however, this extra argument would not be necessary.
 
 Fit a model:
 ```{r}
@@ -198,7 +198,7 @@ mod <- glm(vs ~ hp + factor(cyl), data = mtcars, family = binomial)
 
 emtrends(mod, ~hp, "hp", regrid = "response", at = list(cyl = 4))
 
-marginaleffects(mod, newdata = datagrid(cyl = 4))
+slopes(mod, newdata = datagrid(cyl = 4))
 ```
 
 Link scale, user-specified values:
@@ -206,7 +206,7 @@ Link scale, user-specified values:
 ```{r}
 emtrends(mod, ~hp, "hp", at = list(cyl = 4))
 
-marginaleffects(mod, type = "link", newdata = datagrid(cyl = 4))
+slopes(mod, type = "link", newdata = datagrid(cyl = 4))
 ```
 
 ## More examples
@@ -285,7 +285,7 @@ ggplot(p, aes(y = condition1, x = comparison, xmin = conf.low, xmax = conf.high)
 
 # 7. slope of wt for each level of am
 emtrends(m, "am", "wt")
-marginaleffects(m, newdata = datagrid(am = 0:1))
+slopes(m, newdata = datagrid(am = 0:1))
 ```
 
 # `margins` and `prediction`
@@ -312,7 +312,7 @@ mod <- lm(mpg ~ cyl + hp + wt, data = mtcars)
 mar <- margins(mod)
 summary(mar)
 
-mfx <- marginaleffects(mod)
+mfx <- slopes(mod)
 summary(mfx)
 ```
 
@@ -333,7 +333,7 @@ nd <- data.frame(cyl = 4, hp = 110, wt = 3)
 mar <- margins(mod, data = data.frame(mean_or_mode(mtcars)), unit_ses = TRUE)
 data.frame(mar)
 
-marginaleffects(mod, newdata = "mean")
+slopes(mod, newdata = "mean")
 ```
 
 ## Counterfactual Average Marginal Effects
@@ -348,7 +348,7 @@ mod <- lm(mpg ~ cyl * hp + wt, data = mtcars)
 mar <- margins(mod, at = list(cyl = c(4, 6, 8)))
 summary(mar)
 
-mfx <- marginaleffects(
+mfx <- slopes(
     mod,
     by = "cyl",
     newdata = datagridcf(cyl = c(4, 6, 8)))
@@ -377,7 +377,7 @@ Marginal effects are unit-level quantities. To compute "average marginal effects
 
 ### Stata
 
-Both Stata's `margins` command and the `marginaleffects` function can calculate average marginal effects (AMEs). Here is an example showing how to estimate AMEs in Stata: 
+Both Stata's `margins` command and the `slopes` function can calculate average marginal effects (AMEs). Here is an example showing how to estimate AMEs in Stata: 
 
 ```
 quietly reg mpg cyl hp wt
@@ -401,12 +401,12 @@ cyl |  -.9416168   .5509164    -1.71   0.098    -2.070118    .1868842
 
 ### marginaleffects
 
-The same results can be obtained with `marginaleffects()` and `summary()` like this:
+The same results can be obtained with `slopes()` and `summary()` like this:
 
 ```{r}
 library("marginaleffects")
 mod <- lm(mpg ~ cyl + hp + wt, data = mtcars)
-mfx <- marginaleffects(mod)
+mfx <- slopes(mod)
 summary(mfx)
 ```
 
@@ -458,12 +458,12 @@ hp           |
 
 ### marginaleffects
 
-You can estimate average counterfactual marginal effects with `marginaleffects()` by using the `datagridcf()` to create a counterfactual dataset in which the full original dataset is replicated for each potential value of the `cyl` variable. Then, we tell the `by` argument to average within groups:
+You can estimate average counterfactual marginal effects with `slopes()` by using the `datagridcf()` to create a counterfactual dataset in which the full original dataset is replicated for each potential value of the `cyl` variable. Then, we tell the `by` argument to average within groups:
 
 ```{r}
 mod <- lm(mpg ~ as.factor(cyl) * hp + wt, data = mtcars)
 
-mfx <- marginaleffects(
+mfx <- slopes(
     mod,
     variables = "hp",
     by = "cyl",
@@ -615,7 +615,7 @@ data.frame(bm$ContrastSummary)
 Compute AMEs using `marginaleffects`:
 
 ```{r}
-mfx <- marginaleffects(bayes.logistic) 
+mfx <- slopes(bayes.logistic) 
 summary(mfx)
 ```
 
@@ -673,7 +673,7 @@ bm <- brmsmargins(
   CIType = "ETI")
 data.frame(bm$ContrastSummary)
 
-mfx <- marginaleffects(mlogit)
+mfx <- slopes(mlogit)
 summary(mfx)
 ```
 
@@ -689,7 +689,7 @@ bm <- brmsmargins(
   CIType = "ETI")
 data.frame(bm$ContrastSummary)
 
-mfx <- marginaleffects(mlogit, re_formula = NA)
+mfx <- slopes(mlogit, re_formula = NA)
 summary(mfx)
 ```
 
@@ -734,7 +734,7 @@ bm <- brmsmargins(
   effects = "fixedonly")
 data.frame(bm$ContrastSummary)
 
-mfx <- marginaleffects(ls.fe, re_formula = NA)
+mfx <- slopes(ls.fe, re_formula = NA)
 summary(mfx)
 ```
 
@@ -773,7 +773,7 @@ bm <- brmsmargins(
   effects = "fixedonly")
 data.frame(bm$ContrastSummary)
 
-mfx <- marginaleffects(ls.fe, dpar = "sigma", re_formula = NA)
+mfx <- slopes(ls.fe, dpar = "sigma", re_formula = NA)
 summary(mfx)
 ```
 

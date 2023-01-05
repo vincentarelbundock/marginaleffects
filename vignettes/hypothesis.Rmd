@@ -24,7 +24,7 @@ knitr::opts_chunk$set(
 
 The code in this vignette requires `marginaleffects` version 0.6.0 or [the development version hosted on Github.](https://vincentarelbundock.github.io/marginaleffects/#installation)
 
-This vignette introduces the `deltamethod()` function, and the `hypothesis` argument of the `comparisons()`, `marginaleffects()`, and `predictions()` function. These features allow users to conduct linear and non-linear hypothesis tests and to compute custom contrasts (linear combinations) between parameters.
+This vignette introduces the `deltamethod()` function, and the `hypothesis` argument of the `comparisons()`, `slopes()`, and `predictions()` function. These features allow users to conduct linear and non-linear hypothesis tests and to compute custom contrasts (linear combinations) between parameters.
 
 # Null hypothesis
 
@@ -93,7 +93,7 @@ Non-linear function of coefficients
 deltamethod(mod, "exp(hp + wt) = 0.1")
 ```
 
-The `vcov` argument behaves in the same was as in the `marginaleffects()` function. It allows us to easily compute robust standard errors:
+The `vcov` argument behaves in the same was as in the `slopes()` function. It allows us to easily compute robust standard errors:
 
 ```{r}
 deltamethod(mod, "hp = wt", vcov = "HC3")
@@ -158,7 +158,7 @@ library(marginaleffects)
 
 mod <- lm(mpg ~ am + vs, data = mtcars)
 
-mfx <- marginaleffects(mod, newdata = "mean")
+mfx <- slopes(mod, newdata = "mean")
 mfx
 ```
 
@@ -175,7 +175,7 @@ library(marginaleffects)
 
 mod <- lm(mpg ~ am + vs, data = mtcars)
 
-marginaleffects(
+slopes(
     mod,
     newdata = "mean",
     hypothesis = "am = vs")
@@ -184,7 +184,7 @@ marginaleffects(
 The `hypothesis` string can include any valid `R` expression, so we can run some silly non-linear tests:
 
 ```{r}
-marginaleffects(
+slopes(
     mod,
     newdata = "mean",
     hypothesis = "exp(am) - 2 * vs = -400")
@@ -245,7 +245,7 @@ predictions(
 
 ## Average contrasts or marginal effects
 
-The standard workflow with the `marginaleffects` package is to first call a function like `marginaleffects()` or `comparisons()` to compute unit-level quantities, and then to call `summary()` to aggregate the unit-level quantities into "Average Marginal Effects" or "Average Contrasts." Unfortunately, the `summary()` and `tidy()` functions do not have a `hypothesis` argument, so we cannot use it to conduct hypothesis tests on aggregated quantities. Instead, we can use the `transform_pre` argument to emulate the behavior of `summary()`, computing average marginal effects in a single step.
+The standard workflow with the `marginaleffects` package is to first call a function like `slopes()` or `comparisons()` to compute unit-level quantities, and then to call `summary()` to aggregate the unit-level quantities into "Average Marginal Effects" or "Average Contrasts." Unfortunately, the `summary()` and `tidy()` functions do not have a `hypothesis` argument, so we cannot use it to conduct hypothesis tests on aggregated quantities. Instead, we can use the `transform_pre` argument to emulate the behavior of `summary()`, computing average marginal effects in a single step.
 
 First, note that these three commands produce the same results:
 
@@ -355,7 +355,7 @@ contrast(em, method = lc)
 
 ## Multiple contrasts
 
-Users can also compute multiple linear combinations simultaneously by supplying a numeric matrix to `hypothesis`. This matrix must have the same number of rows as the output of `marginaleffects()`, and each column represents a distinct set of weights for different linear combinations. The column names of the matrix become labels in the output. For example:
+Users can also compute multiple linear combinations simultaneously by supplying a numeric matrix to `hypothesis`. This matrix must have the same number of rows as the output of `slopes()`, and each column represents a distinct set of weights for different linear combinations. The column names of the matrix become labels in the output. For example:
 
 ```{r}
 lc <- matrix(c(

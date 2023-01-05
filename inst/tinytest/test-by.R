@@ -41,13 +41,13 @@ y <- comparisons(mod, transform_pre = "dyexavg")
 expect_equivalent(x$estimate, y$comparison)
 expect_equivalent(x$std.error, y$std.error)
 
-x <- tidy(marginaleffects(mod, slope = "dyex"))
-y <- marginaleffects(mod, slope = "dyexavg")
+x <- tidy(slopes(mod, slope = "dyex"))
+y <- slopes(mod, slope = "dyexavg")
 expect_equivalent(x$estimate, y$dydx)
 expect_equivalent(x$std.error, y$std.error)
 
 # input sanity check
-expect_error(marginaleffects(mod, slope = "bad"), pattern = "eyexavg")
+expect_error(slopes(mod, slope = "bad"), pattern = "eyexavg")
 
 # by is deprecated in `summary()` and `tidy()`
 expect_error(summary(comparisons(mod), by = "am"), pattern = "instead")
@@ -72,7 +72,7 @@ expect_error(comparisons(mod, by = "am"), pattern = "supported")
 # marginaleffects poisson vs. margins
 dat <- mtcars
 mod <- glm(gear ~ cyl + am, family = poisson, data = dat)
-mfx <- marginaleffects(
+mfx <- slopes(
     mod,
     by = c("cyl", "am"),
     newdata = datagrid(
@@ -110,7 +110,7 @@ expect_equivalent(mfx$std.error, mar$SE, tolerance = tol_se)
 # input checks
 mod <- lm(mpg ~ hp, mtcars)
 expect_error(comparisons(mod, by = "am"), pattern = "newdata")
-expect_error(marginaleffects(mod, by = "am"), pattern = "newdata")
+expect_error(slopes(mod, by = "am"), pattern = "newdata")
 
 
 # counterfactual margins at()
@@ -119,7 +119,7 @@ dat$cyl <- factor(dat$cyl)
 mod <- lm(mpg ~ factor(cyl) * hp + wt, data = dat)
 mar <- margins(mod, at = list(cyl = unique(dat$cyl)))
 mar <- data.frame(summary(mar))
-mfx <- marginaleffects(
+mfx <- slopes(
     mod,
     by = "cyl",
     newdata = datagridcf(cyl = c(4, 6, 8)))
