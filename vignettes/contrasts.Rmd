@@ -26,7 +26,7 @@ theme_set(theme_minimal())
 
 Note: Some of the code in this vignette requires `marginaleffects` version 0.7.2 or [the development version from github.](https://vincentarelbundock.github.io/marginaleffects/#installation)
 
-[In another vignette](https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html), we introduced the "marginal effect" as a partial derivative. Since derivatives are only properly defined for continuous variables, we cannot use them to interpret the effects of changes in categorical variables. For this, we turn to *contrasts* between [Adjusted predictions.](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html) In the context of this package, a "Contrast" is defined as:
+[In another vignette](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html), we introduced the "marginal effect" as a partial derivative. Since derivatives are only properly defined for continuous variables, we cannot use them to interpret the effects of changes in categorical variables. For this, we turn to *contrasts* between [Adjusted predictions.](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html) In the context of this package, a "Contrast" is defined as:
 
 > A difference, ratio, or function of adjusted predictions, calculated for meaningfully different predictor values (e.g., College graduates vs. Others).
 

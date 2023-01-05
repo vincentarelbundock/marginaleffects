@@ -47,16 +47,19 @@ External links:
 
 The `marginaleffects` package allows `R` users to compute and plot four principal quantities of interest for [`r n_support` different classes of models:](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html) 
 
-* [_Adjusted Prediction_](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html) 
+* [_Predictions_](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html) 
     - The outcome predicted by a fitted model on a specified scale for a given combination of values of the predictor variables, such as their observed values, their means, or factor levels (a.k.a. "reference grid").
+    - a.k.a. "Fitted values", "Adjusted predictions"
     - [`predictions(),`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html) [`plot_cap()`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html)
-* [*Contrast*](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)
-    - The difference between two adjusted predictions, calculated for meaningfully different predictor values (e.g., College graduates vs. Others). Rather than a difference, we can also build comparisons using other functions of two adjusted predictions, such as a ratio.
+* [_Comparisons_](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)
+    - The difference between two predictions, calculated for meaningfully different predictor values (e.g., College graduates vs. Others). Instead of a difference, comparisons can be constructed using other functions of two adjusted predictions, such as a ratio.
+    - e.g., "Contrasts", "Risk ratios", etc.
     - [`comparisons(),`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html) [`plot_cco()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cco.html)
-* [_Slope (aka Marginal Effects)_](https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html) 
-    - A partial derivative (slope) of the regression equation with respect to a regressor of interest.
-    - [`slopes(),`](https://vincentarelbundock.github.io/marginaleffects/reference/marginaleffects.html) [`plot(),`](https://vincentarelbundock.github.io/marginaleffects/reference/plot.slopes.html) [`plot_cme()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cme.html)
-* [_Marginal Mean_](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) 
+* [_Slopes_](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html) 
+    - Partial derivatives of the regression equation with respect to a regressor of interest.
+    - a.k.a. "Marginal effects", "Trends"
+    - [`slopes(),`](https://vincentarelbundock.github.io/marginaleffects/reference/slopes.html) [`plot(),`](https://vincentarelbundock.github.io/marginaleffects/reference/plot.slopes.html) [`plot_cme()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cme.html)
+* [_Marginal Means_](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) 
     - Adjusted predictions of a model, averaged across a "reference grid" of categorical predictors.
     - [`marginalmeans()`](https://vincentarelbundock.github.io/marginaleffects/reference/marginalmeans.html)
 
@@ -67,7 +70,7 @@ One confusing aspect of the definitions above is that they use the word "margina
 1. In "marginal effects," we refer to the effect of a tiny (marginal) change in the regressor on the outcome. This is a slope, or derivative. 
 2. In "marginal means," we refer to the process of marginalizing across rows of a prediction grid. This is an average, or integral. 
 
-Another potential confusion arises when some analysts use "marginal" to distinguish some estimates from "conditional" ones. As noted in [the marginal effects](https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html) and [the contrasts](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html) vignettes, slopes and contrasts often vary from individual to individual, based on the values of all the regressors in the model. When we estimate a slope or a contrast for a specific combination of predictors -- for one (possibly representative) individual -- some people will call this a "conditional" estimate. When we compute the average of several individual-level estimates, some people will call this a "marginal" estimate. 
+Another potential confusion arises when some analysts use "marginal" to distinguish some estimates from "conditional" ones. As noted in [the marginal effects](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html) and [the contrasts](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html) vignettes, slopes and contrasts often vary from individual to individual, based on the values of all the regressors in the model. When we estimate a slope or a contrast for a specific combination of predictors -- for one (possibly representative) individual -- some people will call this a "conditional" estimate. When we compute the average of several individual-level estimates, some people will call this a "marginal" estimate. 
 
 On this website and in this package, we will reserve the expression "marginal effect" to mean a "slope" or "derivative". When we take the average unit-level estimates, we will call this an "average marginal effect."
 
@@ -233,7 +236,7 @@ The `plot_cme` plots "Conditional Marginal Effects," that is, the marginal effec
 plot_cme(mod, effect = "hp", condition = c("wt", "am"))
 ```
 
-[The Marginal Effects vignette](https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html) shows how to use the `slopes()` function to compute a wide variety of quantities of interest:
+[The Marginal Effects vignette](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html) shows how to use the `slopes()` function to compute a wide variety of quantities of interest:
 
 * Unit-level Marginal Effects
 * Average Marginal Effects

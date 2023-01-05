@@ -151,7 +151,7 @@ Each of the 4 core functions of the package support a `hypothesis` argument whic
 
 ## Marginal effects
 
-For example, let's fit a model and compute some [marginal effects at the mean:](https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html#marginal-effect-at-the-mean-mem)
+For example, let's fit a model and compute some [marginal effects at the mean:](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html#marginal-effect-at-the-mean-mem)
 
 ```{r}
 library(marginaleffects)

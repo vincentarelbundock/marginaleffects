@@ -26,7 +26,7 @@ knitr::opts_chunk$set(
 
 Some options:
 
-1. Compute [marginal effects and contrasts at the mean (or other representative value)](https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html#marginal-effect-at-user-specified-values) instead of all observed rows of the original dataset: Use the `newdata` argument and the `datagrid()` function.
+1. Compute [marginal effects and contrasts at the mean (or other representative value)](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html#marginal-effect-at-user-specified-values) instead of all observed rows of the original dataset: Use the `newdata` argument and the `datagrid()` function.
 2. Compute marginal effects for a subset of variables, paying special attention to exclude factor variables which can be particularly costly to process: Use the `variables` argument.
 3. Do not compute standard errors: Use the `vcov = FALSE` argument.
 

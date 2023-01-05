@@ -1,33 +1,29 @@
-#' Slopes (aka "Marginal Effects")
+#' Slopes (aka "Partial derivatives", "Marginal Effects", or "Trends")
 #'
-#' Partial derivative (slope) of the regression equation with respect to a
-#' regressor of interest. The `tidy()` and `summary()` functions can be used to
-#' aggregate and summarize the output of `slopes()`. To learn more,
-#' read the marginal effects vignette, visit the package website, or scroll
-#' down this page for a full list of vignettes:
-#' * <https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html>
+#' @description
+#' Partial derivative of the regression equation with respect to a regressor of
+#' interest. Slopes are "conditional" (or "unit-level") estimates: they will
+#' typically vary based on the values of predictors in the model. By default,
+#' the `slopes()` function thus returns one estimate of the slope for each row of
+#' the dataset used to fit a model. 
+#' 
+#' The `newdata` argument controls where slopes are evaluated in the predictor
+#' space: "at observed values", "at the mean", "at representative values", etc. 
+#' 
+#' The `summary()` function or `by` argument can aggregate
+#' unit-level estimates into an "average slope".
+#' 
+#' See the slopes vignette and package website for worked examples and case studies:
+#' 
+#' * <https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html>
 #' * <https://vincentarelbundock.github.io/marginaleffects/>
-#'
-#' @section Vignettes and documentation:
-#'
-#' ```{r child = "vignettes/toc.Rmd"}
-#' ```
 #' 
 #' @details
-#' A "marginal effect" is the partial derivative of the regression equation
+#' A "slope" or "marginal effect" is the partial derivative of the regression equation
 #' with respect to a variable in the model. This function uses automatic
-#' differentiation to compute marginal effects for a vast array of models,
+#' differentiation to compute slopes for a vast array of models,
 #' including non-linear models with transformations (e.g., polynomials).
 #' Uncertainty estimates are computed using the delta method.
-#'
-#' The `newdata` argument can be used to control the kind of marginal effects to report:
-#' 
-#' * Average Marginal Effects (AME)
-#' * Group-Average Marginal Effects (G-AME)
-#' * Marginal Effects at the Mean (MEM) or
-#' * Marginal Effects at User-Specified values (aka Marginal Effects at Representative values, MER).
-#'
-#' See the [marginaleffects vignette for worked-out examples of each kind of marginal effect.](https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html)
 #'
 #' Numerical derivatives for the `slopes` function are calculated
 #' using a simple epsilon difference approach: \eqn{\partial Y / \partial X = (f(X + \varepsilon) - f(X)) / \varepsilon}{dY/dX = (f(X + e) - f(X)) / e},
@@ -37,26 +33,31 @@
 #' Warning: Some models are particularly sensitive to `eps`, so it is good
 #' practice to try different values of this argument.
 #'
-#' Standard errors for the marginal effects are obtained using the Delta
+#' Standard errors for the slopes are obtained using the Delta
 #' method. See the "Standard Errors" vignette on the package website for
 #' details (link above).
 #'
+#' @section Vignettes and documentation:
+#'
+#' ```{r child = "vignettes/toc.Rmd"}
+#' ```
+#' 
 #' @param model Model object
-#' @param variables `NULL` or character vector. The subset of variables for which to compute marginal effects.
+#' @param variables `NULL` or character vector. The subset of variables for which to compute slopes.
 #' * `NULL`: compute contrasts for all the variables in the model object (can be slow). 
 #' * Character vector: subset of variables (usually faster).
-#' @param newdata `NULL`, data frame, string, or `datagrid()` call. Determines the predictor values for which to compute marginal effects.
-#' + `NULL` (default): Unit-level marginal effects for each observed value in the original dataset.
-#' + data frame: Unit-level marginal effects for each row of the `newdata` data frame.
-#' + string:
-#'   - "mean": Marginal Effects at the Mean. Marginal effects when each predictor is held at its mean or mode.
-#'   - "median": Marginal Effects at the Median. Marginal effects when each predictor is held at its median or mode.
-#'   - "marginalmeans": Marginal Effects at Marginal Means. See Details section below.
-#'   - "tukey": Marginal Effects at Tukey's 5 numbers.
-#'   - "grid": Marginal Effects on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
+#' @param newdata `NULL`, data frame, string, or `datagrid()` call. Determines the predictor values for which to compute slopes.
+#' + `NULL` (default): Unit-level slopes each observed value in the original dataset.
+#' + data frame: Unit-level slopes for each row of the `newdata` data frame.
 #' + [datagrid()] call to specify a custom grid of regressors. For example:
 #'   - `newdata = datagrid(cyl = c(4, 6))`: `cyl` variable equal to 4 and 6 and other regressors fixed at their means or modes.
 #'   - See the Examples section and the [datagrid()] documentation.
+#' + string:
+#'   - "mean": Marginal Effects at the Mean. Slopes when each predictor is held at its mean or mode.
+#'   - "median": Marginal Effects at the Median. Slopes when each predictor is held at its median or mode.
+#'   - "marginalmeans": Marginal Effects at Marginal Means. See Details section below.
+#'   - "tukey": Marginal Effects at Tukey's 5 numbers.
+#'   - "grid": Marginal Effects on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
 #' @param vcov Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
 #'  * FALSE: Do not compute standard errors. This can speed up computation considerably.
 #'  * TRUE: Unit-level standard errors using the default `vcov(model)` variance-covariance matrix.
@@ -71,7 +72,7 @@
 #' @param conf_level numeric value between 0 and 1. Confidence level to use to build a confidence interval.
 #' @param by Character vector of variable names over which to compute group-wise estimates.
 #' @param type string indicates the type (scale) of the predictions used to
-#' compute marginal effects or contrasts. This can differ based on the model
+#' compute contrasts or slopes. This can differ based on the model
 #' type, but will typically be a string such as: "response", "link", "probs",
 #' or "zero". When an unsupported string is entered, the model-specific list of
 #' acceptable values is returned in an error message. When `type` is `NULL`, the
@@ -83,7 +84,7 @@
 #' - "eydx": dY/dX * Y
 #' - "dyex": dY/dX / X
 #' @param wts string or numeric: weights to use when computing average
-#' contrasts or marginaleffects. These weights only affect the averaging in
+#' contrasts or slopes. These weights only affect the averaging in
 #' `tidy()` or `summary()`, and not the unit-level estimates themselves.
 #' + string: column name of the weights variable in `newdata`. When supplying a column name to `wts`, it is recommended to supply the original data (including the weights variable) explicitly to `newdata`.
 #' + numeric: vector of length equal to the number of rows in the original data or in `newdata` (if supplied). 
@@ -125,11 +126,12 @@
 #' * `type`: prediction type, as defined by the `type` argument
 #' * `group`: (optional) value of the grouped outcome (e.g., categorical outcome models)
 #' * `term`: the variable whose marginal effect is computed
-#' * `dydx`: marginal effect of the term on the outcome for a given combination of regressor values
+#' * `dydx`: slope of the outcome with resepct to the term, for a given combination of predictor values
 #' * `std.error`: standard errors computed by via the delta method.
 #' @examplesIf interactive()
 #' @examples
 #'
+#' # Unit-level (conditional) Marginal Effects
 #' mod <- glm(am ~ hp * wt, data = mtcars, family = binomial)
 #' mfx <- slopes(mod)
 #' head(mfx)
@@ -145,8 +147,7 @@
 #'
 #' # Marginal Effect at User-Specified Values
 #' # Variables not explicitly included in `datagrid()` are held at their means
-#' slopes(mod,
-#'                 newdata = datagrid(hp = c(100, 110)))
+#' slopes(mod, newdata = datagrid(hp = c(100, 110)))
 #'
 #' # Group-Average Marginal Effects (G-AME)
 #' # Calculate marginal effects for each observation, and then take the average
@@ -161,12 +162,13 @@
 #' # original values, and the whole dataset is duplicated once for each
 #' # combination of the values in `datagrid()`
 #' mfx <- slopes(mod,
-#'                        newdata = datagrid(hp = c(100, 110),
-#'                                           grid_type = "counterfactual"))
+#'               newdata = datagrid(hp = c(100, 110),
+#'               grid_type = "counterfactual"))
 #' head(mfx)
 #'
 #' # Heteroskedasticity robust standard errors
-#' slopes(mod, vcov = sandwich::vcovHC(mod))
+#' mfx <- slopes(mod, vcov = sandwich::vcovHC(mod))
+#' head(mfx)
 #'
 #' # hypothesis test: is the `hp` marginal effect at the mean equal to the `drat` marginal effect
 #' mod <- lm(mpg ~ wt + drat, data = mtcars)

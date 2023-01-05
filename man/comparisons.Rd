@@ -2,7 +2,7 @@
 % Please edit documentation in R/comparisons.R
 \name{comparisons}
 \alias{comparisons}
-\title{Contrasts Between Adjusted Predictions}
+\title{Comparisons Between Predictions Made at Different Regressor Values}
 \usage{
 comparisons(
   model,
@@ -110,11 +110,24 @@ comparisons(
 }}
 }
 \description{
-Difference, ratio, or function of adjusted predictions, calculated for
-meaningfully different predictor values. The \code{tidy()} and \code{summary()}
-functions can be used to aggregate and summarize the output of
-\code{comparisons()}. To learn more, read the contrasts vignette, visit the
-package website, or scroll down this page for a full list of vignettes:
+Predict the outcome variable at different regressor values (e.g., college
+graduates vs. others), and compare those predictions by computing a difference,
+ratio, or some other function. \code{comparisons()} can return many quantities of
+interest, such as contrasts, differences, risk ratios, changes in log odds,
+slopes, elasticities, etc.
+
+Comparisons or contrasts are "conditional" (or "unit-level") estimates: they
+will typically vary based on the values of predictors in the model. By
+default, the \code{comparisons()} function thus returns one estimate of the
+comparison for each row of the dataset used to fit a model.
+
+The \code{newdata} argument controls where comparisons are evaluated in the predictor
+space: "at observed values", "at the mean", "at representative values", etc.
+
+The \code{summary()} function or \code{by} argument can aggregate
+unit-level estimates into an "average contrast", "average risk ratio", etc.
+
+See the comparisons vignette and package website for worked examples and case studies:
 \itemize{
 \item \url{https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html}
 \item \url{https://vincentarelbundock.github.io/marginaleffects/}
@@ -142,9 +155,9 @@ The \code{newdata} argument can be used to control the kind of contrasts to repo
 
 Vignettes:
 \itemize{
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html}{Adjusted Predictions}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html}{Contrasts}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html}{Marginal Effects}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html}{Predictions}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html}{Comparisons}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html}{Slopes}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html}{Marginal Means}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html}{Hypothesis Tests and Custom Contrasts using the Delta Method}
 }

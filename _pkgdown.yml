@@ -26,7 +26,7 @@ navbar:
   - text: "Adjusted predictions"
     href: https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html
   - text: "Marginal effects"
-    href: https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html
+    href: https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html
   - text: "Contrasts"
     href: https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html
   - text: "Marginal means"

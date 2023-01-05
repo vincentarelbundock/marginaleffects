@@ -27,11 +27,9 @@ Introduction:
 
 Vignettes:
 
-  - [Adjusted
-    Predictions](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html)
-  - [Contrasts](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)
-  - [Marginal
-    Effects](https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html)
+  - [Predictions](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html)
+  - [Comparisons](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)
+  - [Slopes](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html)
   - [Marginal
     Means](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html)
   - [Hypothesis Tests and Custom Contrasts using the Delta
@@ -80,22 +78,25 @@ Tips and technical notes:
 
 External links:
 
-  - [Matching](https://cran.r-project.org/web/packages/MatchIt/vignettes/estimating-effects.html)
-    by Noah Greifer
-  - [Bayesian model
-    averaging](https://www.ajordannafa.com/blog/2022/05/24/bma-ames/) by
-    A. Jordan Nafa
+  - [Marginal and conditional effects for GLMMs with
+    `marginaleffects`](https://www.andrewheiss.com/blog/2022/11/29/conditional-marginal-marginaleffects/)
+    by Andrew Heiss
   - [Marginalia: A guide to figuring out what the heck marginal effects,
     marginal slopes, average marginal effects, marginal effects at the
     mean, and all these other marginal things
     are](https://www.andrewheiss.com/blog/2022/05/20/marginalia/) by
     Andrew Heiss
+  - [Matching](https://cran.r-project.org/web/packages/MatchIt/vignettes/estimating-effects.html)
+    by Noah Greifer
   - [Double propensity score adjustment using
     g-computation](https://stats.stackexchange.com/questions/580118/adjusting-the-model-by-propensity-scores-after-propensity-score-matching/580174#580174)
     by Noah Greifer
   - [Subgroup Analysis After Propensity Score Matching Using
     R](https://ngreifer.github.io/blog/subgroup-analysis-psm/) by Noah
     Greifer
+  - [Bayesian model
+    averaging](https://www.ajordannafa.com/blog/2022/05/24/bma-ames/) by
+    A. Jordan Nafa
 
 ## Definitions
 
@@ -103,29 +104,32 @@ The `marginaleffects` package allows `R` users to compute and plot four
 principal quantities of interest for [71 different classes of
 models:](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
 
-  - [*Adjusted
-    Prediction*](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html)
+  - [*Predictions*](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html)
       - The outcome predicted by a fitted model on a specified scale for
         a given combination of values of the predictor variables, such
         as their observed values, their means, or factor levels (a.k.a.
         “reference grid”).
+      - a.k.a. “Fitted values”, “Adjusted predictions”
       - [`predictions(),`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html)
         [`plot_cap()`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html)
-  - [*Marginal
-    Effect*](https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html)
-      - A partial derivative (slope) of the regression equation with
-        respect to a regressor of interest.
-      - [`slopes(),`](https://vincentarelbundock.github.io/marginaleffects/reference/marginaleffects.html)
-        [`plot(),`](https://vincentarelbundock.github.io/marginaleffects/reference/plot.slopes.html)
-        [`plot_cme()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cme.html)
-  - [*Contrast*](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)
-      - A difference, ratio, or function of adjusted predictions,
-        calculated for meaningfully different predictor values (e.g.,
-        College graduates vs. Others).
+  - [*Comparisons*](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)
+      - The difference between two predictions, calculated for
+        meaningfully different predictor values (e.g., College graduates
+        vs. Others). Instead of a difference, comparisons can be
+        constructed using other functions of two adjusted predictions,
+        such as a ratio.
+      - e.g., “Contrasts”, “Risk ratios”, etc.
       - [`comparisons(),`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)
         [`plot_cco()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cco.html)
+  - [*Slopes*](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html)
+      - Partial derivatives of the regression equation with respect to a
+        regressor of interest.
+      - a.k.a. “Marginal effects”, “Trends”
+      - [`slopes(),`](https://vincentarelbundock.github.io/marginaleffects/reference/slopes.html)
+        [`plot(),`](https://vincentarelbundock.github.io/marginaleffects/reference/plot.slopes.html)
+        [`plot_cme()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cme.html)
   - [*Marginal
-    Mean*](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html)
+    Means*](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html)
       - Adjusted predictions of a model, averaged across a “reference
         grid” of categorical predictors.
       - [`marginalmeans()`](https://vincentarelbundock.github.io/marginaleffects/reference/marginalmeans.html)
@@ -144,7 +148,7 @@ One confusing aspect of the definitions above is that they use the word
 Another potential confusion arises when some analysts use “marginal” to
 distinguish some estimates from “conditional” ones. As noted in [the
 marginal
-effects](https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html)
+effects](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html)
 and [the
 contrasts](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)
 vignettes, slopes and contrasts often vary from individual to
@@ -181,10 +185,11 @@ the trailblazing and powerful [`margins` by Thomas J.
 Leeper](https://cran.r-project.org/package=margins), and [`emmeans` by
 Russell V. Lenth and
 contributors.](https://cran.r-project.org/package=emmeans) The
-`marginaleffects` package is essentially a clone of `margins`, with some
-additional features from `emmeans`.
+`marginaleffects` package started as a clone of `margins` with some
+additional features from `emmeans`. It has now become *much* more than
+that…
 
-So why did I write a clone?
+So why did I write this package?
 
   - *Powerful:* Marginal effects and contrasts can be computed for 71
     different classes of models. Adjusted predictions and marginal means
@@ -263,27 +268,13 @@ for every value in original dataset:
 
 ``` r
 predictions(mod) |> head()
-#>   rowid     type predicted std.error statistic
-#> 1     1 response  22.48857 0.8841487  25.43528
-#> 2     2 response  20.80186 1.1942050  17.41900
-#> 3     3 response  25.26465 0.7085307  35.65781
-#> 4     4 response  20.25549 0.7044641  28.75305
-#> 5     5 response  16.99782 0.7118658  23.87784
-#> 6     6 response  19.66353 0.8753226  22.46433
-#>         p.value conf.low conf.high  mpg  hp    wt
-#> 1 1.027254e-142 20.66378  24.31336 21.0 110 2.620
-#> 2  5.920119e-68 18.33714  23.26658 21.0 110 2.875
-#> 3 1.783452e-278 23.80232  26.72699 22.8  93 2.320
-#> 4 8.296026e-182 18.80155  21.70943 21.4 110 3.215
-#> 5 5.205109e-126 15.52860  18.46704 18.7 175 3.440
-#> 6 9.270636e-112 17.85696  21.47011 18.1 105 3.460
-#>   am
-#> 1  1
-#> 2  1
-#> 3  1
-#> 4  0
-#> 5  0
-#> 6  0
+#>   rowid     type predicted std.error statistic       p.value conf.low conf.high  mpg  hp    wt am
+#> 1     1 response  22.48857 0.8841487  25.43528 1.027254e-142 20.66378  24.31336 21.0 110 2.620  1
+#> 2     2 response  20.80186 1.1942050  17.41900  5.920119e-68 18.33714  23.26658 21.0 110 2.875  1
+#> 3     3 response  25.26465 0.7085307  35.65781 1.783452e-278 23.80232  26.72699 22.8  93 2.320  1
+#> 4     4 response  20.25549 0.7044641  28.75305 8.296026e-182 18.80155  21.70943 21.4 110 3.215  0
+#> 5     5 response  16.99782 0.7118658  23.87784 5.205109e-126 15.52860  18.46704 18.7 175 3.440  0
+#> 6     6 response  19.66353 0.8753226  22.46433 9.270636e-112 17.85696  21.47011 18.1 105 3.460  0
 ```
 
 The [`datagrid` function gives us a powerful way to define a grid of
@@ -293,27 +284,13 @@ their mean or mode:
 
 ``` r
 predictions(mod, newdata = datagrid(am = 0, wt = seq(2, 3, .2)))
-#>   rowid     type predicted std.error statistic
-#> 1     1 response  21.95621 2.0386301  10.77008
-#> 2     2 response  21.42097 1.7699036  12.10290
-#> 3     3 response  20.88574 1.5067373  13.86157
-#> 4     4 response  20.35051 1.2526403  16.24609
-#> 5     5 response  19.81527 1.0144509  19.53301
-#> 6     6 response  19.28004 0.8063905  23.90906
-#>         p.value conf.low conf.high      mpg
-#> 1  4.765935e-27 17.74868  26.16373 20.09062
-#> 2  1.019401e-33 17.76807  25.07388 20.09062
-#> 3  1.082834e-43 17.77599  23.99549 20.09062
-#> 4  2.380723e-59 17.76518  22.93583 20.09062
-#> 5  5.755097e-85 17.72155  21.90900 20.09062
-#> 6 2.465206e-126 17.61573  20.94435 20.09062
-#>         hp am  wt
-#> 1 146.6875  0 2.0
-#> 2 146.6875  0 2.2
-#> 3 146.6875  0 2.4
-#> 4 146.6875  0 2.6
-#> 5 146.6875  0 2.8
-#> 6 146.6875  0 3.0
+#>   rowid     type predicted std.error statistic       p.value conf.low conf.high      mpg       hp am  wt
+#> 1     1 response  21.95621 2.0386301  10.77008  4.765935e-27 17.74868  26.16373 20.09062 146.6875  0 2.0
+#> 2     2 response  21.42097 1.7699036  12.10290  1.019401e-33 17.76807  25.07388 20.09062 146.6875  0 2.2
+#> 3     3 response  20.88574 1.5067373  13.86157  1.082834e-43 17.77599  23.99549 20.09062 146.6875  0 2.4
+#> 4     4 response  20.35051 1.2526403  16.24609  2.380723e-59 17.76518  22.93583 20.09062 146.6875  0 2.6
+#> 5     5 response  19.81527 1.0144509  19.53301  5.755097e-85 17.72155  21.90900 20.09062 146.6875  0 2.8
+#> 6     6 response  19.28004 0.8063905  23.90906 2.465206e-126 17.61573  20.94435 20.09062 146.6875  0 3.0
 ```
 
 We can plot how predictions change for different values of one or more
@@ -362,16 +339,11 @@ mod3 <- glm(Survived ~ Woman + Age * PClass, data = titanic, family = binomial)
 
 cmp <- comparisons(mod3)
 summary(cmp)
-#>     Term     Contrast   Effect Std. Error z value
-#> 1  Woman TRUE - FALSE  0.50329   0.031654  15.899
-#> 2    Age           +1 -0.00558   0.001084  -5.147
-#> 3 PClass    2nd - 1st -0.22603   0.043546  -5.191
-#> 4 PClass    3rd - 1st -0.38397   0.041845  -9.176
-#>     Pr(>|z|)     2.5 %    97.5 %
-#> 1 < 2.22e-16  0.441244  0.565327
-#> 2 2.6471e-07 -0.007705 -0.003455
-#> 3 2.0950e-07 -0.311383 -0.140686
-#> 4 < 2.22e-16 -0.465985 -0.301957
+#>     Term     Contrast   Effect Std. Error z value   Pr(>|z|)     2.5 %    97.5 %
+#> 1  Woman TRUE - FALSE  0.50329   0.031654  15.899 < 2.22e-16  0.441244  0.565327
+#> 2    Age           +1 -0.00558   0.001084  -5.147 2.6471e-07 -0.007705 -0.003455
+#> 3 PClass    2nd - 1st -0.22603   0.043546  -5.191 2.0950e-07 -0.311383 -0.140686
+#> 4 PClass    3rd - 1st -0.38397   0.041845  -9.176 < 2.22e-16 -0.465985 -0.301957
 #> 
 #> Model type:  glm 
 #> Prediction type:  response
@@ -394,16 +366,11 @@ cmp <- comparisons(
     transform_pre = "ratio",
     variables = list(Age = "2sd", PClass = "pairwise"))
 summary(cmp)
-#>     Term            Contrast Effect Std. Error
-#> 1    Age (x - sd) / (x + sd) 0.6225    0.09166
-#> 2 PClass           2nd / 1st 0.5636    0.05497
-#> 3 PClass           3rd / 1st 0.3351    0.03932
-#> 4 PClass           3rd / 2nd 0.6155    0.14373
-#>   z value   Pr(>|z|)  2.5 % 97.5 %
-#> 1   6.791 1.1126e-11 0.4428 0.8021
-#> 2  10.253 < 2.22e-16 0.4559 0.6713
-#> 3   8.523 < 2.22e-16 0.2580 0.4122
-#> 4   4.282 1.8484e-05 0.3338 0.8972
+#>     Term            Contrast Effect Std. Error z value   Pr(>|z|)  2.5 % 97.5 %
+#> 1    Age (x - sd) / (x + sd) 0.6225    0.09166   6.791 1.1126e-11 0.4428 0.8021
+#> 2 PClass           2nd / 1st 0.5636    0.05497  10.253 < 2.22e-16 0.4559 0.6713
+#> 3 PClass           3rd / 1st 0.3351    0.03932   8.523 < 2.22e-16 0.2580 0.4122
+#> 4 PClass           3rd / 2nd 0.6155    0.14373   4.282 1.8484e-05 0.3338 0.8972
 #> 
 #> Model type:  glm 
 #> Prediction type:  response
@@ -436,38 +403,27 @@ of quantities of interest:
 A “marginal effect” is a partial derivative (slope) of the regression
 equation with respect to a regressor of interest. It is unit-specific
 measure of association between a change in a regressor and a change in
-the regressand. The `slopes()` function uses numerical
-derivatives to estimate the slope of the regression equation with
-respect to each of the variables in the model (or contrasts for
-categorical variables).
+the regressand. The `slopes()` function uses numerical derivatives to
+estimate the slope of the regression equation with respect to each of
+the variables in the model (or contrasts for categorical variables).
 
-By default, `slopes()` estimates the slope for each row of the
-original dataset that was used to fit the model:
+By default, `slopes()` estimates the slope for each row of the original
+dataset that was used to fit the model:
 
 ``` r
 mfx <- slopes(mod)
 
 head(mfx, 4)
-#>   rowid     type term        dydx  std.error
-#> 1     1 response   hp -0.03690556 0.01850172
-#> 2     2 response   hp -0.02868936 0.01562861
-#> 3     3 response   hp -0.04657166 0.02258715
-#> 4     4 response   hp -0.04227128 0.01328278
-#>   statistic     p.value    conf.low     conf.high
-#> 1 -1.994710 0.046074551 -0.07316825 -0.0006428553
-#> 2 -1.835695 0.066402771 -0.05932087  0.0019421508
-#> 3 -2.061866 0.039220507 -0.09084166 -0.0023016728
-#> 4 -3.182412 0.001460541 -0.06830506 -0.0162375066
-#>   predicted predicted_hi predicted_lo  mpg  hp
-#> 1  22.48857     22.48752     22.48857 21.0 110
-#> 2  20.80186     20.80105     20.80186 21.0 110
-#> 3  25.26465     25.26333     25.26465 22.8  93
-#> 4  20.25549     20.25430     20.25549 21.4 110
-#>      wt am    eps
-#> 1 2.620  1 0.0283
-#> 2 2.875  1 0.0283
-#> 3 2.320  1 0.0283
-#> 4 3.215  0 0.0283
+#>   rowid     type term        dydx  std.error statistic     p.value    conf.low     conf.high predicted
+#> 1     1 response   hp -0.03690556 0.01850172 -1.994710 0.046074551 -0.07316825 -0.0006428553  22.48857
+#> 2     2 response   hp -0.02868936 0.01562861 -1.835695 0.066402771 -0.05932087  0.0019421508  20.80186
+#> 3     3 response   hp -0.04657166 0.02258715 -2.061866 0.039220507 -0.09084166 -0.0023016728  25.26465
+#> 4     4 response   hp -0.04227128 0.01328278 -3.182412 0.001460541 -0.06830506 -0.0162375066  20.25549
+#>   predicted_hi predicted_lo  mpg  hp    wt am    eps
+#> 1     22.48752     22.48857 21.0 110 2.620  1 0.0283
+#> 2     20.80105     20.80186 21.0 110 2.875  1 0.0283
+#> 3     25.26333     25.26465 22.8  93 2.320  1 0.0283
+#> 4     20.25430     20.25549 21.4 110 3.215  0 0.0283
 ```
 
 The function `summary` calculates the “Average Marginal Effect,” that
@@ -475,14 +431,10 @@ is, the average of all unit-specific marginal effects:
 
 ``` r
 summary(mfx)
-#>   Term   Effect Std. Error  z value   Pr(>|z|)
-#> 1   hp -0.03807    0.01279 -2.97725 0.00290848
-#> 2   wt -3.93909    1.08596 -3.62728 0.00028642
-#> 3   am -0.04811    1.85260 -0.02597 0.97928234
-#>      2.5 %   97.5 %
-#> 1 -0.06314 -0.01301
-#> 2 -6.06754 -1.81065
-#> 3 -3.67913  3.58292
+#>   Term   Effect Std. Error  z value   Pr(>|z|)    2.5 %   97.5 %
+#> 1   hp -0.03807    0.01279 -2.97725 0.00290848 -0.06314 -0.01301
+#> 2   wt -3.93909    1.08596 -3.62728 0.00028642 -6.06754 -1.81065
+#> 3   am -0.04811    1.85260 -0.02597 0.97928234 -3.67913  3.58292
 #> 
 #> Model type:  lm 
 #> Prediction type:  response
@@ -499,9 +451,9 @@ plot_cme(mod, effect = "hp", condition = c("wt", "am"))
 <img src="man/figures/README-unnamed-chunk-15-1.png" width="100%" />
 
 [The Marginal Effects
-vignette](https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html)
-shows how to use the `slopes()` function to compute a wide
-variety of quantities of interest:
+vignette](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html)
+shows how to use the `slopes()` function to compute a wide variety of
+quantities of interest:
 
   - Unit-level Marginal Effects
   - Average Marginal Effects
@@ -530,18 +482,12 @@ Then, we estimate the model and call the `marginalmeans` function:
 mod <- lm(mpg ~ am + cyl + hp, data = dat)
 mm <- marginalmeans(mod)
 summary(mm)
-#>   Term Value  Mean Std. Error z value   Pr(>|z|)
-#> 1   am FALSE 18.32     0.7854   23.33 < 2.22e-16
-#> 2   am  TRUE 22.48     0.8343   26.94 < 2.22e-16
-#> 3  cyl     4 22.88     1.3566   16.87 < 2.22e-16
-#> 4  cyl     6 18.96     1.0729   17.67 < 2.22e-16
-#> 5  cyl     8 19.35     1.3771   14.05 < 2.22e-16
-#>   2.5 % 97.5 %
-#> 1 16.78  19.86
-#> 2 20.84  24.11
-#> 3 20.23  25.54
-#> 4 16.86  21.06
-#> 5 16.65  22.05
+#>   Term Value  Mean Std. Error z value   Pr(>|z|) 2.5 % 97.5 %
+#> 1  cyl     4 22.88     1.3566   16.87 < 2.22e-16 20.23  25.54
+#> 2  cyl     6 18.96     1.0729   17.67 < 2.22e-16 16.86  21.06
+#> 3  cyl     8 19.35     1.3771   14.05 < 2.22e-16 16.65  22.05
+#> 4   am FALSE 18.32     0.7854   23.33 < 2.22e-16 16.78  19.86
+#> 5   am  TRUE 22.48     0.8343   26.94 < 2.22e-16 20.84  24.11
 #> 
 #> Model type:  lm 
 #> Prediction type:  response 
