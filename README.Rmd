@@ -12,6 +12,7 @@ output: github_document
 <!-- badges: end -->
 
 ```{r, include = FALSE}
+options(width = 10000)
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",

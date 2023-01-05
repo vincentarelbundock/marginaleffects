@@ -4,10 +4,10 @@ template:
 reference:
   - title: Main functions
     contents:
-    - deltamethod
     - predictions
     - comparisons
     - marginaleffects
+    - hypotheses
     - marginalmeans
   - title: Data grids
     contents:

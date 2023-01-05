@@ -45,15 +45,15 @@ tidy.slopes <- function(x,
 }
 
 
-#' Tidy a `deltamethod` object
+#' Tidy a `hypotheses` object
 #' @inheritParams tidy.slopes
 #' @family summary
 #' @export
-tidy.deltamethod <- function(x, ...) {
-    if (any(!c("term", "estimate") %in% colnames(x)) || !inherits(x, c("deltamethod", "data.frame"))) {
+tidy.hypotheses <- function(x, ...) {
+    if (any(!c("term", "estimate") %in% colnames(x)) || !inherits(x, c("hypotheses", "deltamethod", "data.frame"))) {
         msg <- format_msg(
-        "The `tidy()` method only supports `deltamethod` objects produced by the
-        `marginaleffects::deltamethod()` function.")
+        "The `tidy()` method only supports `hypotheses` objects produced by the
+        `marginaleffects::hypotheses()` function.")
         stop(msg, call. = FALSE)
     }
     # the object is already in a tidy format. We need this method for

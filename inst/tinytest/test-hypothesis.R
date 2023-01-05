@@ -226,7 +226,7 @@ expect_equivalent(nrow(cmp), 2)
 mod <- lm(mpg ~ hp + drat, data = mtcars)
 H <- matrix(c(0, 1, -1, 1/3, 1/3, 1/3), ncol = 2)
 colnames(H) <- c("H1", "H2")
-dm <- deltamethod(mod, hypothesis = H)
+dm <- hypotheses(mod, hypothesis = H)
 expect_equivalent(dm$term, c("H1", "H2"))
 
 
@@ -251,7 +251,7 @@ expect_equivalent(dm$term, c("H1", "H2"))
 
 # marginaleffects
 
-# deltamethod(mod, hypothesis = -2)
+# hypotheses(mod, hypothesis = -2)
 
 # predictions(mod, newdata = "mean", hypothesis = .75)
 

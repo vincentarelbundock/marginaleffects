@@ -1,15 +1,15 @@
 #' Estimate and Standard Error of a Non-Linear Function of Estimated Model Parameters
 #'
-#' `deltamethod` is a function to get a first-order approximate standard error
+#' `hypotheses` is a function to get a first-order approximate standard error
 #' for a nonlinear function of a vector of random variables with known or
-#' estimated covariance matrix. [`deltamethod`] emulates the behavior of the
+#' estimated covariance matrix. [`hypotheses`] emulates the behavior of the
 #' excellent and well-established [car::deltaMethod] and [car::linearHypothesis]
 #' functions, but it supports more models, requires fewer dependencies, and
 #' offers some convenience features like shortcuts for robust standard errors.
 #'
 #' Warning: For hypothesis tests on objects produced by the `marginaleffects`
 #' package, it is safer to use the `hypothesis` argument of the original function.
-#' Using `deltamethod()` may not work in certain environments, or when called
+#' Using `hypotheses()` may not work in certain environments, or when called
 #' programmatically.
 #' 
 #' @inheritParams comparisons
@@ -21,52 +21,52 @@
 #' library(marginaleffects)
 #' mod <- lm(mpg ~ hp + wt + factor(cyl), data = mtcars)
 #' 
-#' # When `FUN` and `hypothesis` are `NULL`, `deltamethod()` returns a data.frame of parameters
-#' deltamethod(mod)
+#' # When `FUN` and `hypotheses` are `NULL`, `hypotheses()` returns a data.frame of parameters
+#' hypotheses(mod)
 #' 
 #' # Test of equality between coefficients
-#' deltamethod(mod, hypothesis = "hp = wt")
+#' hypotheses(mod, hypothesis = "hp = wt")
 #' 
 #' # Non-linear function
-#' deltamethod(mod, hypothesis = "exp(hp + wt) = 0.1")
+#' hypotheses(mod, hypothesis = "exp(hp + wt) = 0.1")
 #' 
 #' # Robust standard errors
-#' deltamethod(mod, hypothesis = "hp = wt", vcov = "HC3")
+#' hypotheses(mod, hypothesis = "hp = wt", vcov = "HC3")
 #' 
 #' # b1, b2, ... shortcuts can be used to identify the position of the
 #' # parameters of interest in the output of FUN
-#' deltamethod(mod, hypothesis = "b2 = b3")
+#' hypotheses(mod, hypothesis = "b2 = b3")
 #' 
 #' # term names with special characters have to be enclosed in backticks
-#' deltamethod(mod, hypothesis = "`factor(cyl)6` = `factor(cyl)8`")
+#' hypotheses(mod, hypothesis = "`factor(cyl)6` = `factor(cyl)8`")
 #' 
 #' mod2 <- lm(mpg ~ hp * drat, data = mtcars)
-#' deltamethod(mod2, hypothesis = "`hp:drat` = drat")
+#' hypotheses(mod2, hypothesis = "`hp:drat` = drat")
 #' 
 #' # predictions(), comparisons(), and slopes()
 #' mod <- glm(am ~ hp + mpg, data = mtcars, family = binomial)
 #' cmp <- comparisons(mod, newdata = "mean")
-#' deltamethod(cmp, hypothesis = "b1 = b2")
+#' hypotheses(cmp, hypothesis = "b1 = b2")
 #' 
 #' mfx <- slopes(mod, newdata = "mean")
-#' deltamethod(cmp, hypothesis = "b2 = 0.2")
+#' hypotheses(cmp, hypothesis = "b2 = 0.2")
 #' 
 #' pre <- predictions(mod, newdata = datagrid(hp = 110, mpg = c(30, 35)))
-#' deltamethod(pre, hypothesis = "b1 = b2")
+#' hypotheses(pre, hypothesis = "b1 = b2")
 #' 
 #' # The `FUN` argument can be used to compute standard errors for fitted values
 #' mod <- glm(am ~ hp + mpg, data = mtcars, family = binomial)
 #' 
 #' f <- function(x) predict(x, type = "link", newdata = mtcars)
-#' p <- deltamethod(mod, FUN = f)
+#' p <- hypotheses(mod, FUN = f)
 #' head(p)
 #' 
 #' f <- function(x) predict(x, type = "response", newdata = mtcars)
-#' p <- deltamethod(mod, FUN = f)
+#' p <- hypotheses(mod, FUN = f)
 #' head(p)
 #' 
 #' @export
-deltamethod <- function(
+hypotheses <- function(
     model,
     hypothesis = NULL,
     FUN = NULL,
@@ -75,7 +75,7 @@ deltamethod <- function(
     ...) {
 
 
-    # add `hypothesis` to the original call and re-evaluate
+    # add `hypotheses` to the original call and re-evaluate
     if (inherits(model, c("comparisons", "marginaleffects", "predictions", "marginalmeans"))) {
         if (is.null(hypothesis)) {
             msg <- "Please specify the `hypothesis` argument."
@@ -88,7 +88,7 @@ deltamethod <- function(
             insight::format_error(msg)
         }
         if ("hypothesis" %in% names(mc)) {
-            msg <- "The `deltamethod()` function cannot be applied if the `hypothesis` argument was already used in the original call."
+            msg <- "The `hypotheses()` function cannot be applied if the `hypothesis` argument was already used in the original call."
             insight::format_error(msg)
         }
         if (!isTRUE(checkmate::check_flag(vcov, null.ok = TRUE))) {
@@ -187,7 +187,7 @@ deltamethod <- function(
         null = hypothesis_null,
         ...)
 
-    class(out) <- c("deltamethod", class(out))
+    class(out) <- c("hypotheses", "deltamethod", class(out))
     attr(out, "model") <- model
     attr(out, "model_type") <- class(model)[1]
     attr(out, "vcov") <- vcov
@@ -195,3 +195,12 @@ deltamethod <- function(
 
     return(out)
 }
+
+
+
+#' `deltamethod()` is an alias to `hypotheses()`. It is kept for backward compatibility.
+#'
+#' @inherit marginaleffects
+#' @keywords internal
+#' @export
+deltamethod <- hypotheses

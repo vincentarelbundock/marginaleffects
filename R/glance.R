@@ -40,4 +40,4 @@ glance.comparisons <- glance.slopes
 
 #' @family summary
 #' @export
-glance.deltamethod <- glance.slopes
+glance.hypotheses <- glance.slopes

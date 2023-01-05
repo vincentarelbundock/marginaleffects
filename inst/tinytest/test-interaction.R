@@ -29,8 +29,8 @@ expect_equivalent(n_unique, 4)
 
 
 mod <- lm(mpg ~ hp * drat, mtcars)
-dm <- deltamethod(mod, "`hp:drat` = drat")
-expect_inherits(dm, "deltamethod")
+dm <- hypotheses(mod, "`hp:drat` = drat")
+expect_inherits(dm, "hypotheses")
 expect_equivalent(nrow(dm), 1)
 
 

@@ -24,7 +24,7 @@ knitr::opts_chunk$set(
 
 The code in this vignette requires `marginaleffects` version 0.6.0 or [the development version hosted on Github.](https://vincentarelbundock.github.io/marginaleffects/#installation)
 
-This vignette introduces the `deltamethod()` function, and the `hypothesis` argument of the `comparisons()`, `slopes()`, and `predictions()` function. These features allow users to conduct linear and non-linear hypothesis tests and to compute custom contrasts (linear combinations) between parameters.
+This vignette introduces the `hypotheses()` function, and the `hypothesis` argument of the `comparisons()`, `slopes()`, and `predictions()` function. These features allow users to conduct linear and non-linear hypothesis tests and to compute custom contrasts (linear combinations) between parameters.
 
 # Null hypothesis
 
@@ -64,9 +64,9 @@ Warning: Z statistics and p values are computed *before* applying functions in `
 
 # Delta method
 
-Version 0.6.0 of `marginaleffects` includes a very simple yet powerful function called `deltamethod()`. This function emulates the behavior of the well-established `car::deltaMethod` and `car::linearHypothesis` functions, but it supports more models, requires fewer dependencies, and offers some convenience features like shortcuts for robust standard errors.
+Version 0.6.0 of `marginaleffects` includes a very simple yet powerful function called `hypotheses()`. This function emulates the behavior of the well-established `car::deltaMethod` and `car::linearHypothesis` functions, but it supports more models, requires fewer dependencies, and offers some convenience features like shortcuts for robust standard errors.
 
-`deltamethod()` can be used to compute estimates and standard errors of arbitrary functions of model parameters. For example, it can be used to conduct tests of equality between coefficients, or to test the value of some linear or non-linear combination of quantities of interest. `deltamethod()` can also be used to conduct hypothesis tests on other functions of a model's parameter, such as adjusted predictions or marginal effects.
+`hypotheses()` can be used to compute estimates and standard errors of arbitrary functions of model parameters. For example, it can be used to conduct tests of equality between coefficients, or to test the value of some linear or non-linear combination of quantities of interest. `hypotheses()` can also be used to conduct hypothesis tests on other functions of a model's parameter, such as adjusted predictions or marginal effects.
 
 Let's start by estimating a simple model:
 
@@ -75,40 +75,40 @@ library(marginaleffects)
 mod <- lm(mpg ~ hp + wt + factor(cyl), data = mtcars)
 ```
 
-When the `FUN` and `hypothesis` arguments of `deltamethod()` equal `NULL` (the default), the function returns a data.frame of raw estimates:
+When the `FUN` and `hypothesis` arguments of `hypotheses()` equal `NULL` (the default), the function returns a data.frame of raw estimates:
 
 ```{r}
-deltamethod(mod)
+hypotheses(mod)
 ```
 
 Test of equality between coefficients:
 
 ```{r}
-deltamethod(mod, "hp = wt")
+hypotheses(mod, "hp = wt")
 ```
 
 Non-linear function of coefficients
 
 ```{r}
-deltamethod(mod, "exp(hp + wt) = 0.1")
+hypotheses(mod, "exp(hp + wt) = 0.1")
 ```
 
 The `vcov` argument behaves in the same was as in the `slopes()` function. It allows us to easily compute robust standard errors:
 
 ```{r}
-deltamethod(mod, "hp = wt", vcov = "HC3")
+hypotheses(mod, "hp = wt", vcov = "HC3")
 ```
 
-We can use shortcuts like `b1`, `b2`, `...` to identify the position of each parameter in the output of `FUN`. For example, `b2=b3` is equivalent to `hp=wt` because those term names appear in the 2nd and 3rd row when we call `deltamethod(mod)`. 
+We can use shortcuts like `b1`, `b2`, `...` to identify the position of each parameter in the output of `FUN`. For example, `b2=b3` is equivalent to `hp=wt` because those term names appear in the 2nd and 3rd row when we call `hypotheses(mod)`. 
 
 ```{r}
-deltamethod(mod, "b2 = b3")
+hypotheses(mod, "b2 = b3")
 ```
 
 Term names with special characters must be enclosed in backticks:
 
 ```{r}
-deltamethod(mod, "`factor(cyl)6` = `factor(cyl)8`")
+hypotheses(mod, "`factor(cyl)6` = `factor(cyl)8`")
 ```
 
 The `FUN` argument can be used to compute standard errors for arbitrary functions of model parameters. This user-supplied function must accept a single model object, and return a numeric vector or a data.frame with two columns named `term` and `estimate`.
@@ -117,7 +117,7 @@ The `FUN` argument can be used to compute standard errors for arbitrary function
 mod <- glm(am ~ hp + mpg, data = mtcars, family = binomial)
 
 f <- function(x) predict(x, type = "link", newdata = mtcars)
-p <- deltamethod(mod, FUN = f)
+p <- hypotheses(mod, FUN = f)
 head(p)
 ```
 
@@ -125,7 +125,7 @@ Test of equality between two predictions (row 2 vs row 3):
 
 ```{r}
 f <- function(x) predict(x, newdata = mtcars)
-deltamethod(mod, FUN = f, hypothesis = "b2 = b3")
+hypotheses(mod, FUN = f, hypothesis = "b2 = b3")
 ```
 
 Note that we specified the `newdata` argument in the `f` function. This is because the `predict()` method associated with `lm` objects will automatically the original fitted values when `newdata` is `NULL`, instead of returning the slightly altered fitted values which we need to compute numerical derivatives in the delta method.
@@ -133,14 +133,14 @@ Note that we specified the `newdata` argument in the `f` function. This is becau
 We can also use numeric vectors to specify linear combinations of parameters. For example, there are 3 coefficients in the last model we estimated. To test the null hypothesis that the sum of the 2nd and 3rd coefficients is equal to 0, we can do:
 
 ```{r}
-deltamethod(mod, hypothesis = c(0, 1, 1))
+hypotheses(mod, hypothesis = c(0, 1, 1))
 ```
 
 See below for more example of how to use string formulas, numeric vectors, or matrices to calculate custom contrasts, linear combinations, and linear or non-linear hypothesis tests.
 
-# `hypothesis` Formulas
+# `hypotheses` Formulas
 
-Each of the 4 core functions of the package support a `hypothesis` argument which behaves similarly to the `deltamethod()` function. This argument allows users to specify custom hypothesis tests and contrasts, in order to test null hypotheses such as:
+Each of the 4 core functions of the package support a `hypothesis` argument which behaves similarly to the `hypotheses()` function. This argument allows users to specify custom hypothesis tests and contrasts, in order to test null hypotheses such as:
 
 * The coefficients $\beta_1$ and $\beta_2$ are equal.
 * The marginal effects of $X_1$ and $X_2$ equal.
@@ -162,10 +162,10 @@ mfx <- slopes(mod, newdata = "mean")
 mfx
 ```
 
-Is the marginal effect of `am` different from the marginal effect of `vs`? To answer this question we can run a linear hypothesis test using the `deltamethod` function:
+Is the marginal effect of `am` different from the marginal effect of `vs`? To answer this question we can run a linear hypothesis test using the `hypotheses` function:
 
 ```{r}
-deltamethod(mfx, hypothesis = "am = vs")
+hypotheses(mfx, hypothesis = "am = vs")
 ```
 
 Alternatively, we can specify the hypothesis directly in the original call:
@@ -181,7 +181,7 @@ slopes(
     hypothesis = "am = vs")
 ```
 
-The `hypothesis` string can include any valid `R` expression, so we can run some silly non-linear tests:
+The `hypotheses` string can include any valid `R` expression, so we can run some silly non-linear tests:
 
 ```{r}
 slopes(
@@ -204,7 +204,7 @@ p
 Since there is no `term` column in the output of the `predictions` function, we must use parameter identifiers like `b1`, `b2`, etc. to determine which estimates we want to compare:
 
 ```{r}
-deltamethod(p, hypothesis = "b1 = b2")
+hypotheses(p, hypothesis = "b1 = b2")
 ```
 
 Or directly:
@@ -279,7 +279,7 @@ comparisons(
     transform_pre = "dydxavg")
 ```
 
-# `hypothesis` Vectors and Matrices
+# `hypotheses` Vectors and Matrices
 
 The `marginalmeans()` function computes [estimated marginal means.](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) The `hypothesis` argument of that function offers a powerful mechanism to estimate custom contrasts between marginal means, by way of linear combination.
 
@@ -355,7 +355,7 @@ contrast(em, method = lc)
 
 ## Multiple contrasts
 
-Users can also compute multiple linear combinations simultaneously by supplying a numeric matrix to `hypothesis`. This matrix must have the same number of rows as the output of `slopes()`, and each column represents a distinct set of weights for different linear combinations. The column names of the matrix become labels in the output. For example:
+Users can also compute multiple linear combinations simultaneously by supplying a numeric matrix to `hypotheses`. This matrix must have the same number of rows as the output of `slopes()`, and each column represents a distinct set of weights for different linear combinations. The column names of the matrix become labels in the output. For example:
 
 ```{r}
 lc <- matrix(c(

@@ -11,9 +11,9 @@ fixest::setFixest_notes(FALSE)
 mod <- feols(y ~ x1 + i(period, treat, 5) | id + period, base_did)
 hyp <- as.numeric(1:10 %in% 6:10)
 # not supported
-expect_warning(deltamethod(mod, hypothesis = hyp, vcov = "HC0"), pattern = "sandwich")
+expect_warning(hypotheses(mod, hypothesis = hyp, vcov = "HC0"), pattern = "sandwich")
 # supported
-d <- deltamethod(mod, hypothesis = hyp, vcov = "HC1")
+d <- hypotheses(mod, hypothesis = hyp, vcov = "HC1")
 expect_inherits(d, "data.frame")
 
 # bugs stay dead: logit with transformations
