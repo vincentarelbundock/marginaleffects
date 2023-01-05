@@ -6,7 +6,7 @@ library("tinyviztest")
 if (isTRUE(suppressMessages(require("tinytest"))) && packageVersion("tinytest") >= "1.4.0") {
     tinytest::register_tinytest_extension(
         "marginaleffects",
-        c("expect_marginaleffects", "expect_predictions", "expect_margins", "expect_marginalmeans"))
+        c("expect_slopes", "expect_predictions", "expect_margins", "expect_marginalmeans"))
 }
 
 # important because otherwise testing so many packages is terrible

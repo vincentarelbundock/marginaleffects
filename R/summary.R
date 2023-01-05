@@ -15,10 +15,10 @@
 #' @family summary
 #' @export
 summary.slopes <- function(object,
-                                    conf_level = NULL,
-                                    ...) {
+                           conf_level = NULL,
+                           ...) {
     out <- tidy(object, conf_level = conf_level, ...)
-    class(out) <- c("marginaleffects.summary", class(out))
+    class(out) <- c("slopes.summary", class(out))
     attr(out, "type") <- attr(object, "type")
     attr(out, "model_type") <- attr(object, "model_type")
     return(out)
@@ -35,88 +35,87 @@ summary.slopes <- function(object,
 #' @template bayesian
 #' @return Printed summary of a `marginaleffects` object
 print.slopes.summary <- function(x,
-                                          digits = max(3L, getOption("digits") - 3L),
-                                          ...) {
+                                 digits = max(3L, getOption("digits") - 3L),
+                                 ...) {
+    out <- x
 
-  out <- x
-
-  if ("group" %in% colnames(out) &&
-      all(out$group == "main_marginaleffects")) {
-      out$group <- NULL
-  }
-
-  # title
-  tit <- "Average marginal effects"
-
-  # round and replace NAs
-  for (col in c("estimate", "std.error", "statistic", "conf.low", "conf.high")) {
-    if (col %in% colnames(out)) {
-      out[[col]] <- format(out[[col]], digits = digits)
+    if ("group" %in% colnames(out) &&
+        all(out$group == "main_marginaleffects")) {
+        out$group <- NULL
     }
-  }
-  if ("p.value" %in% colnames(out)) {
-      out[["p.value"]] <- format.pval(out[["p.value"]])
-  }
+
+    # title
+    tit <- "Average marginal effects"
+
+    # round and replace NAs
+    for (col in c("estimate", "std.error", "statistic", "conf.low", "conf.high")) {
+        if (col %in% colnames(out)) {
+            out[[col]] <- format(out[[col]], digits = digits)
+        }
+    }
+    if ("p.value" %in% colnames(out)) {
+        out[["p.value"]] <- format.pval(out[["p.value"]])
+    }
 
 
-  if (is.null(attr(x, "conf_level"))) {
-      alpha <- NULL
-  } else {
-      alpha <- 100 * (1 - attr(x, "conf_level"))
-  }
+    if (is.null(attr(x, "conf_level"))) {
+        alpha <- NULL
+    } else {
+        alpha <- 100 * (1 - attr(x, "conf_level"))
+    }
 
-  # contrast is sometimes useless
-  if ("contrast" %in% colnames(out) && all(out$contrast == "")) {
-      out$contrast <- NULL
-  }
+    # contrast is sometimes useless
+    if ("contrast" %in% colnames(out) && all(out$contrast == "")) {
+        out$contrast <- NULL
+    }
 
-  if ("type" %in% colnames(out) && length(unique(out$type)) == 1) {
-      out$type <- NULL
-  }
+    if ("type" %in% colnames(out) && length(unique(out$type)) == 1) {
+        out$type <- NULL
+    }
 
-  # rename
-  dict <- c("group" = "Group",
-            "term" = "Term",
-            "contrast" = "Contrast",
-            "estimate" = "Effect",
-            "std.error" = "Std. Error",
-            "statistic" = "z value",
-            "p.value" = "Pr(>|z|)",
-            "conf.low" = ifelse(is.null(alpha),
-                                "CI low",
-                                sprintf("%.1f %%", alpha / 2)),
-            "conf.high" = ifelse(is.null(alpha),
-                                "CI high",
-                                sprintf("%.1f %%", 100 - alpha / 2)))
+    # rename
+    dict <- c(
+        "group" = "Group",
+        "term" = "Term",
+        "contrast" = "Contrast",
+        "estimate" = "Effect",
+        "std.error" = "Std. Error",
+        "statistic" = "z value",
+        "p.value" = "Pr(>|z|)",
+        "conf.low" = ifelse(is.null(alpha),
+            "CI low",
+            sprintf("%.1f %%", alpha / 2)),
+        "conf.high" = ifelse(is.null(alpha),
+            "CI high",
+            sprintf("%.1f %%", 100 - alpha / 2)))
 
-  for (i in seq_along(dict)) {
-    colnames(out)[colnames(out) == names(dict)[i]] <- dict[i]
-  }
-
-
-  # avoid infinite recursion by stripping marginaleffect.summary class
-  out <- as.data.frame(out)
-
-  # some commands do not generate average contrasts/mfx. E.g., `lnro` with `by`
-  # cat(tit)
-  print(out)
-  cat("\n")
-  cat("Model type: ", attr(x, "model_type"), "\n")
-  cat("Prediction type: ", attr(x, "type"), "\n")
-  if (!is.null(attr(x, "transform_pre_label"))) {
-      cat("Pre-transformation: ", paste(attr(x, "transform_pre_label"), collapse = ""), "\n")
-  }
-  if (!is.null(attr(x, "transform_post_label"))) {
-      cat("Post-transformation: ", paste(attr(x, "transform_post_label"), collapse = ""), "\n")
-  }
-  if (!is.null(attr(x, "transform_average_label"))) {
-      cat("Average-transformation: ", paste(attr(x, "transform_average_label"), collapse = ""), "\n")
-  }
+    for (i in seq_along(dict)) {
+        colnames(out)[colnames(out) == names(dict)[i]] <- dict[i]
+    }
 
 
-  return(invisible(x))
+    # avoid infinite recursion by stripping marginaleffect.summary class
+    out <- as.data.frame(out)
+
+    # some commands do not generate average contrasts/mfx. E.g., `lnro` with `by`
+    # cat(tit)
+    print(out)
+    cat("\n")
+    cat("Model type: ", attr(x, "model_type"), "\n")
+    cat("Prediction type: ", attr(x, "type"), "\n")
+    if (!is.null(attr(x, "transform_pre_label"))) {
+        cat("Pre-transformation: ", paste(attr(x, "transform_pre_label"), collapse = ""), "\n")
+    }
+    if (!is.null(attr(x, "transform_post_label"))) {
+        cat("Post-transformation: ", paste(attr(x, "transform_post_label"), collapse = ""), "\n")
+    }
+    if (!is.null(attr(x, "transform_average_label"))) {
+        cat("Average-transformation: ", paste(attr(x, "transform_average_label"), collapse = ""), "\n")
+    }
+
+
+    return(invisible(x))
 }
-
 
 
 #' Summarize a `marginalmeans` object
