@@ -36,7 +36,7 @@ expect_inherits(c1, "data.frame")
 set.seed(100)
 lalonde <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/MatchIt/lalonde.csv")
 lalonde$w <- rchisq(614, 2)
-k <<- lalonde
+k <- lalonde
 fit <- lm(re78 ~ treat * (age + educ + race + married + re74),
           data = k, weights = w)
 cmp1 <- comparisons(fit, variables = "treat", wts = "w")

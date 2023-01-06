@@ -7,7 +7,7 @@ requiet("emmeans")
 dat <- mtcars
 dat$gear <- factor(dat$gear)
 dat$cyl <- factor(dat$cyl)
-dat <<- dat
+dat <- dat
 mod1 <- lm(mpg ~ gear + cyl + wt + gear, data = dat)
 mod2 <- lm(mpg ~ gear * cyl + wt + gear, data = dat)
 cmp1 <- comparisons(mod1, newdata = datagrid())

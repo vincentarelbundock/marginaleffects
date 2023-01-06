@@ -36,7 +36,7 @@ expect_predictions(pred2, n_row = 6)
 data(package = "nlme", "Ovary")
 tmp <- Ovary
 tmp$categ <- factor(sample(letters[1:5], nrow(tmp), replace = TRUE))
-tmp <<- tmp
+tmp <- tmp
 mod <- gls(follicles ~ sin(2*pi*Time) + cos(2*pi*Time) + categ,
        data = tmp, correlation = corAR1(form = ~ 1 | Mare))
 em <- suppressMessages(emmeans(mod, specs = "categ"))

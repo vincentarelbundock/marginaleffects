@@ -9,7 +9,7 @@ requiet("broom")
 
 # brglm2::brglm_fit vs. margins vs. emtrends
 data("endometrial", package = "brglm2", envir = environment())
-dat <<- endometrial
+dat <- endometrial
 model <- glm(HG ~ NV + PI + EH, family = binomial("probit"), data = dat)
 model <- update(model, method = "brglm_fit") # probably breaks get_data from environemnt
 
@@ -32,7 +32,7 @@ expect_equivalent(mfx$std.error, em$std.error, tolerance = .00001)
 
 
 # brglm2::brglm_fit vs. margins
-sm <<- data.frame(
+sm <- data.frame(
     freq = c(15, 16, 16, 27, 33, 20, 21, 18, 26, 41, 38, 27, 29, 21, 33, 60, 41, 42),
     dose = rep(c(0, 10, 33, 100, 333, 1000), 3),
     observation = rep(1:3, each = 6))
@@ -50,7 +50,7 @@ expect_margins(mar, mfx)
 
 # predictions: brglm2::brglm_fit: no validity
 data("endometrial", package = "brglm2", envir = environment())
-dat <<- endometrial
+dat <- endometrial
 model <- glm(HG ~ NV + PI + EH, family = binomial("probit"), data = dat)
 model <- update(model, method = "brglm_fit")
 pred1 <- predictions(model)

@@ -40,7 +40,7 @@ expect_error(comparisons(mod, newdata = nd), pattern = "number of choices")
 
 # vs. nnet::multinom
 data("Fishing", package = "mlogit")
-dat <<- Fishing
+dat <- Fishing
 Fish <- dfidx(Fishing, varying = 2:9, shape = "wide", choice = "mode")
 m1 <- mlogit(mode ~ 0 | income, data = Fish)
 m2 <- nnet::multinom(mode ~ income, data = Fishing, trace = FALSE)

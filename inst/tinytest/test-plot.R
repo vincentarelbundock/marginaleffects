@@ -22,7 +22,7 @@ expect_snapshot_plot(p, "plot_marginaleffects_no_CI")
 # bugfix: contrasts overlap
 dat <- mtcars
 dat$cyl <- factor(dat$cyl)
-dat <<- dat
+dat <- dat
 mod <- lm(mpg ~ hp + cyl, data = dat)
 mfx <- slopes(mod)
 p <- plot(mfx)

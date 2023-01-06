@@ -51,7 +51,7 @@ expect_equivalent(nrow(nd), 1)
 # errors and warnings
 dat <- mtcars
 dat$cyl <- factor(dat$cyl)
-dat <<- dat
+dat <- dat
 mod <- lm(hp ~ mpg, dat)
 expect_error(datagrid(), pattern = "are both .NULL")
 

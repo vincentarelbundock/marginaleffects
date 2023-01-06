@@ -5,7 +5,7 @@ requiet("sampleSelection")
 
 data("Mroz87", package = "sampleSelection")
 Mroz87$kids  <- (Mroz87$kids5 + Mroz87$kids618 > 0)
-dat <<- Mroz87
+dat <- Mroz87
 
 # heckit: se not supported yet
 mod <- heckit(lfp ~ age + I( age^2 ) + faminc + kids + educ,

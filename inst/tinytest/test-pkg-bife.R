@@ -3,7 +3,7 @@ using("marginaleffects")
 
 requiet("bife")
 
-dat <<- bife::psid
+dat <- bife::psid
 mod <- bife(LFP ~ AGE + I(INCH / 1000) + KID1 + KID2 + KID3 | ID, data = dat)
 
 dat <- data.frame(dat)

@@ -13,7 +13,7 @@ requiet("broom")
 #skip_if_not_installed("insight", minimum_version = "0.17.1")
 dat <- mtcars
 dat$cyl <- factor(dat$cyl)
-dat <<- dat
+dat <- dat
 mod <- lmer(mpg ~ hp + (1 | cyl), data = dat)
 x <- predictions(mod)
 y <- predictions(mod, vcov = "satterthwaite")
@@ -99,7 +99,7 @@ expect_equivalent(w, y$predicted)
 
 
 # glmer vs. stata vs. emtrends
-tmp <<- read.csv(testing_path("stata/databases/lme4_02.csv"))
+tmp <- read.csv(testing_path("stata/databases/lme4_02.csv"))
 mod <- glmer(y ~ x1 * x2 + (1 | clus), data = tmp, family = binomial)
 stata <- readRDS(testing_path("stata/stata.rds"))$lme4_glmer
 mfx <- merge(tidy(slopes(mod)), stata)
@@ -127,7 +127,7 @@ expect_equivalent(w, y$predicted)
 expect_error(get_predict(mod, re.form = ~0, include_random = TRUE), pattern = "together")
 
 # lmer vs. stata
-tmp <<- read.csv(testing_path("stata/databases/lme4_01.csv"))
+tmp <- read.csv(testing_path("stata/databases/lme4_01.csv"))
 mod <- lme4::lmer(y ~ x1 * x2 + (1 | clus), data = tmp)
 stata <- readRDS(testing_path("stata/stata.rds"))$lme4_lmer
 mfx <- merge(tidy(slopes(mod)), stata)
@@ -146,13 +146,13 @@ expect_equivalent(mfx$std.error, em$std.error, tolerance = .001)
 
 
 # vs. margins (dydx only)
-tmp <<- read.csv(testing_path("stata/databases/lme4_02.csv"))
+tmp <- read.csv(testing_path("stata/databases/lme4_02.csv"))
 mod <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = tmp, family = binomial)
 res <- slopes(mod, vcov = FALSE)
 mar <- margins::margins(mod)
 expect_true(expect_margins(res, mar, tolerance = 1e-2))
 
-tmp <<- read.csv(testing_path("stata/databases/lme4_01.csv"))
+tmp <- read.csv(testing_path("stata/databases/lme4_01.csv"))
 mod <- lme4::lmer(y ~ x1 * x2 + (1 | clus), data = tmp)
 res <- slopes(mod, vcov = FALSE)
 mar <- margins::margins(mod)
@@ -160,14 +160,14 @@ expect_true(expect_margins(res, mar))
 
 
 # sanity check on dpoMatrix
-tmp <<- read.csv(testing_path("stata/databases/lme4_02.csv"))
+tmp <- read.csv(testing_path("stata/databases/lme4_02.csv"))
 mod <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = tmp, family = binomial)
 k <- slopes(mod, vcov = as.matrix(stats::vcov(mod)))
 expect_inherits(k, "data.frame")
 
 
 # bug stay dead: tidy without std.error
-tmp <<- read.csv(testing_path("stata/databases/lme4_02.csv"))
+tmp <- read.csv(testing_path("stata/databases/lme4_02.csv"))
 mod <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = tmp, family = binomial)
 res <- slopes(mod, vcov = FALSE)
 tid <- tidy(res)
@@ -178,7 +178,7 @@ expect_equivalent(nrow(tid), 2)
 # predictions: glmer: no validity
 tmp <- read.csv(testing_path("stata/databases/lme4_02.csv"))
 tmp$clus <- as.factor(tmp$clus)
-tmp <<- tmp
+tmp <- tmp
 model <- lme4::glmer(y ~ x1 * x2 + (1 | clus), data = tmp, family = binomial)
 pred1 <- predictions(model, newdata = datagrid())
 pred2 <- predictions(model, newdata = head(tmp))
@@ -195,7 +195,7 @@ dd <- expand.grid(
 dd$x <- rnorm(nrow(dd))
 mu <- 5 * (-4 + with(dd, as.integer(f1) + 4 * as.numeric(f2)))
 dd$y <- rnbinom(nrow(dd), mu = mu, size = 0.5)
-dd <<- dd
+dd <- dd
 model <- suppressMessages(glmer.nb(y ~ f1 * f2 + (1 | g), data = dd, verbose = FALSE))
 void <- capture.output(
     expect_slopes(model, n_unique = 2)
@@ -280,7 +280,7 @@ expect_true(all(pred1$predicted != pred3$predicted))
 tmp <- mtcars
 tmp$cyl <- factor(tmp$cyl)
 tmp$am <- as.logical(tmp$am)
-tmp <<- tmp
+tmp <- tmp
 mod <- lmer(mpg ~ hp + am + (1 | cyl), data = tmp)
 
 mfx <- slopes(mod, vcov = "kenward-roger")
@@ -310,7 +310,7 @@ expect_equivalent(attr(cmp, "vcov.type"), "Kenward-Roger")
 # Issue #436
 # e = number of events
 # n = total
-kdat <<- data.frame(
+kdat <- data.frame(
     e = c(
         1, 1, 134413, 92622, 110747,
         3625, 35, 64695, 19428, 221, 913, 13, 5710, 121,

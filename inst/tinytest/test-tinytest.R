@@ -1,7 +1,7 @@
 source("helpers.R")
 using("marginaleffects")
 
-dat <<- transform(mtcars, gear = factor(gear))
+dat <- transform(mtcars, gear = factor(gear))
 mod <- lm(mpg ~ hp + gear, data = dat)
 pre <- predictions(mod)
 mm <- marginalmeans(mod)

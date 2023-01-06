@@ -13,8 +13,8 @@ requiet("tsModel")
 set.seed(2)
 void <- capture.output(dat <- gamSim(1, n = 400, dist = "normal", scale = 2))
 void <- capture.output(dat2 <- gamSim(1, n = 2000, dist = "poisson", scale = .1))
-dat <<- dat
-dat2 <<- dat2
+dat <- dat
+dat2 <- dat2
 m1 <- mgcv::gam(y ~ s(x0) + s(x1) + s(x2) + s(x3), data = dat)
 m2 <- mgcv::gam(y ~ te(x0, x1, k = 7) + s(x2) + s(x3), data = dat, method = "REML")
 m3 <- mgcv::gam(y ~ s(x0) + s(x1) + s(x2) + s(x3) + ti(x1, x2, k = 6), data = dat, method = "REML")
@@ -55,7 +55,7 @@ mfx <- slopes(m1,
 # predictions: no validity
 set.seed(2)
 void <- capture.output(dat <- gamSim(1, n = 400, dist = "normal", scale = 2))
-dat <<- dat
+dat <- dat
 mod <- mgcv::gam(y ~ s(x0) + s(x1) + s(x2) + s(x3), data = dat)
 pred1 <- predictions(mod)
 pred2 <- predictions(mod, newdata = head(dat))

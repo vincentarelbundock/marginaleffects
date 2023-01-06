@@ -18,7 +18,7 @@ expect_equivalent(nrow(res), 4)
 # problem reported with suggested fix by E.Book in Issue 58
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv")
 dat$large_penguin <- ifelse(dat$body_mass_g > median(dat$body_mass_g, na.rm = TRUE), 1, 0)
-dat <<- dat
+dat <- dat
 mod <- glm(large_penguin ~ bill_length_mm + flipper_length_mm + species,
        data = dat, family = binomial)
 mfx <- slopes(mod)
@@ -31,7 +31,7 @@ expect_equivalent(reject_ci, reject_p)
 # bug be dead: all levels appear
 tmp <- mtcars
 tmp$am <- as.logical(tmp$am)
-tmp <<- tmp
+tmp <- tmp
 mod <- lm(mpg ~ am + factor(cyl), tmp)
 mfx = slopes(mod, newdata = datagrid(cyl = c(4, 6)))
 expect_equivalent(nrow(mfx), 6)
@@ -83,7 +83,7 @@ tol <- 1e-4
 
 dat <- mtcars
 dat$cyl <- as.factor(dat$cyl)
-dat <<- dat
+dat <- dat
 mod <- glm(am ~ cyl, data = dat, family = binomial)
 
 # link scale
@@ -114,7 +114,7 @@ dat <- mtcars
 dat$am <- as.logical(dat$am)
 dat$cyl <- as.factor(dat$cyl)
 dat$gear <- as.character(dat$gear)
-dat <<- dat
+dat <- dat
 mod <- lm(mpg ~ hp + am + cyl + gear, data = dat)
 
 cmp1 <- comparisons(

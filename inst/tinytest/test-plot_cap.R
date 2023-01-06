@@ -6,7 +6,7 @@ using("tinyviztest")
 requiet("nnet")
 
 # Issue #567: threenum and minmax are mixed up
-dat <<- transform(mtcars, am_fct = factor(am))
+dat <- transform(mtcars, am_fct = factor(am))
 mod <- lm(wt ~ am_fct * mpg, data = dat)
 
 # minmax

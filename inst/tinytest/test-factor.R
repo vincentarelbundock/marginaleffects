@@ -37,19 +37,20 @@ expect_equivalent(mfx1[, 1:5], mfx2[, 1:5])
 
 
 # bugs stay dead: get_data.coxph() with strata()
-#skip_if_not_installed("insight", minimum_version = "0.17.0") 
+# skip_if_not_installed("insight", minimum_version = "0.17.0")
 requiet("survival")
-test1 <<- data.frame(time = c(4,3,1,1,2,2,3),
-                 status = c(1,1,1,0,1,1,0),
-                 x = c(0,2,1,1,1,0,0),
-                 sex = c(0,0,0,0,1,1,1))
+test1 <- data.frame(
+    time = c(4, 3, 1, 1, 2, 2, 3),
+    status = c(1, 1, 1, 0, 1, 1, 0),
+    x = c(0, 2, 1, 1, 1, 0, 0),
+    sex = c(0, 0, 0, 0, 1, 1, 1))
 mod <- coxph(Surv(time, status) ~ x + strata(sex),
-         data = test1,
-         ties = "breslow")
+    data = test1,
+    ties = "breslow")
 mfx <- slopes(mod,
-                   variables = "x",
-                   newdata = datagrid(sex = 0),
-                   type = "lp")
+    variables = "x",
+    newdata = datagrid(sex = 0, newdata = test1),
+    type = "lp")
 expect_inherits(mfx, "marginaleffects")
 
 

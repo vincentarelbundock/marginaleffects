@@ -6,7 +6,7 @@ exit_if_not(!ON_OSX)
 
 requiet("dplyr")
 
-dat <<- mtcars
+dat <- mtcars
 mod <- glm(am ~ hp, data = dat, family = binomial)
 cmp <- comparisons(mod, transform_pre = "lnor")
 expect_error(summary(cmp), pattern = "collapsible")
@@ -33,14 +33,14 @@ dat <- mtcars
 dat$am <- as.logical(dat$am)
 dat$vs <- as.logical(dat$vs)
 dat$gear <- as.factor(dat$gear)
-dat <<- dat
+dat <- dat
 mod <- lm(mpg ~ gear + am + vs, dat)
 mm <- marginalmeans(mod)
 expect_snapshot_print(summary(mm), "summary-marginalmeans")
 
 
 # bugs stay dead: summary manipulation (destroys attributes, unfortunately)
-dat <<- mtcars
+dat <- mtcars
 mod <- glm(am ~ hp * wt, data = dat, family = binomial)
 mfx <- slopes(mod)
 expect_snapshot_print(
@@ -49,7 +49,7 @@ expect_snapshot_print(
 
 
 # bugs stay dead: label transformation_post
-dat <<- mtcars
+dat <- mtcars
 mod <- glm(am ~ hp, data = dat, family = binomial)
 cmp <- comparisons(mod, transform_pre = function(hi, lo) hi / lo, transform_post = exp)
 expect_snapshot_print(summary(cmp), "summary-comparisons_transform_post")

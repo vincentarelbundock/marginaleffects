@@ -13,7 +13,7 @@ tol_se <- 0.001
 
 ### marginaleffects
 # rlm: marginaleffects: vs. margins vs. emmeans
-dat <<- mtcars
+dat <- mtcars
 model <- MASS::rlm(mpg ~ hp + drat, dat)
 expect_slopes(model, n_unique = 1)
 
@@ -84,7 +84,7 @@ expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .001)
 # polr: marginaleffects: vs. Stata
 # Hess=TRUE otherwise breaks in the test environment via MASS:::vcov() -> update()
 stata <- readRDS(testing_path("stata/stata.rds"))[["MASS_polr_01"]]
-dat <<- read.csv(testing_path("stata/databases/MASS_polr_01.csv"))
+dat <- read.csv(testing_path("stata/databases/MASS_polr_01.csv"))
 mod <- MASS::polr(factor(y) ~ x1 + x2, data = dat, Hess = TRUE)
 mfx <- slopes(mod, type = "probs")
 mfx <- tidy(mfx)
@@ -96,7 +96,7 @@ expect_slopes(mod, type = "probs")
 
 # bugs stay dead: polr with 1 row newdata
 # Hess=TRUE otherwise breaks in the test environment via MASS:::vcov() -> update()
-dat <<- read.csv(testing_path("stata/databases/MASS_polr_01.csv"))
+dat <- read.csv(testing_path("stata/databases/MASS_polr_01.csv"))
 dat$y <- factor(dat$y)
 mod <- MASS::polr(y ~ x1, data = dat, Hess = TRUE)
 mfx <- slopes(mod, type = "probs", newdata = datagrid(x1 = 0))
@@ -146,7 +146,7 @@ expect_predictions(pred, n_row = 6)
 dat <- mtcars
 dat$cyl <- as.factor(dat$cyl)
 dat$am <- as.logical(dat$am)
-dat <<- dat
+dat <- dat
 model <- suppressWarnings(MASS::glm.nb(carb ~ am + cyl, data = dat))
 mm <- marginalmeans(model, type = "link", variables = "cyl")
 ti <- tidy(mm)
@@ -173,7 +173,7 @@ expect_equivalent(ti$std.error, em$std.error)
 tmp <- mtcars
 tmp$vs <- as.factor(tmp$vs)
 tmp$am <- as.logical(tmp$am)
-tmp <<- tmp
+tmp <- tmp
 mod <- suppressWarnings(MASS::polr(factor(gear) ~ vs + am, data = tmp))
 # TODO: emmeans seems broken at the moment
 # em <- emmeans(mod, specs = "am", type = "response")
@@ -209,7 +209,7 @@ expect_equivalent(mfx$std.error[3], em$std.error, tolerance = .01)
 # bugs stay dead: character regressor with categorical outcome
 dat <- mtcars
 dat$cyl <- as.character(dat$cyl)
-dat <<- dat
+dat <- dat
 mod <- polr(factor(gear) ~ cyl, data = dat)
 # not clear why this generates a warning only on CI
 mfx <- suppressMessages(slopes(mod, type = "probs"))

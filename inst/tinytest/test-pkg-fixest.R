@@ -19,7 +19,7 @@ expect_inherits(d, "data.frame")
 # bugs stay dead: logit with transformations
 dat <- mtcars
 dat$gear <- as.factor(dat$gear)
-dat <<- dat
+dat <- dat
 mod1 <- suppressMessages(feglm(am ~ mpg + mpg^2 | gear, family = binomial(link = "logit"), data = dat, warn = FALSE))
 mod2 <- suppressMessages(feglm(am ~ mpg | gear, family = binomial(link = "logit"), data = dat, warn = FALSE))
 mod3 <- suppressMessages(feglm(am ~ mpg + mpg^2 | gear, family = binomial(link = "logit"), data = mtcars, warn = FALSE))
@@ -80,10 +80,10 @@ dat <- merge(dat, fe, by = "unit")
 dat$x <- rnorm(nrow(dat)) + dat$fe
 dat$w <- rnorm(nrow(dat))
 dat$y <- dat$x + dat$w + dat$x * dat$w + dat$fe + rnorm(nrow(dat), sd = 10)
-dat <<- dat
+dat <- dat
 dat2 <- dat
 dat2$unit <- as.factor(dat2$unit)
-dat2 <<- dat2
+dat2 <- dat2
 mod1 <- feols(y ~ x * w | unit, data = dat)
 mod2 <- fixest::feols(y ~ x * w | unit, data = dat2)
 p <- plot_cme(mod2, effect = "x", condition = "w")
@@ -99,11 +99,11 @@ dat <- merge(dat, fe, by = "unit")
 dat$x <- rnorm(nrow(dat)) + dat$fe
 dat$w <- rnorm(nrow(dat))
 dat$y <- dat$x + dat$w + dat$x * dat$w + dat$fe + rnorm(nrow(dat), sd = 10)
-dat <<- dat
+dat <- dat
 mod1 <- fixest::feols(y ~ x * w | unit, data = dat)
 dat2 <- dat
 dat2$unit <- as.factor(dat2$unit)
-dat2 <<- dat2
+dat2 <- dat2
 mod2 <- fixest::feols(y ~ x * w | unit, data = dat2)
 k <- plot_cme(mod2, effect = "x", condition = "w", draw = FALSE)
 expect_inherits(k, "data.frame")
@@ -115,7 +115,7 @@ expect_false(any(k$dydx == 0))
 # predictions: bugs stay dead: Issue #203
 dat <- mtcars
 dat$factor_am = factor(dat$am)
-dat <<- dat
+dat <- dat
 m1 <- feols(mpg ~ hp * am, data = dat)
 m2 <- feols(mpg ~ hp * factor_am, data = dat)
 m3 <- feols(mpg ~ hp * wt, data = dat)
@@ -173,7 +173,7 @@ expect_inherits(m2, "comparisons")
 
 
 # Issue #458: fixest with data table
-tmp <<- data.table(y = rnorm(10), x = rnorm(10))
+tmp <- data.table(y = rnorm(10), x = rnorm(10))
 model <- feols(y ~ x, tmp)
 m <- slopes(model)
 expect_inherits(m, "marginaleffects")
@@ -223,7 +223,7 @@ expect_inherits(m, "marginaleffects")
 # Issue #509
 dat <- mtcars
 dat$mpg[1] <- NA
-dat <<- dat
+dat <- dat
 mod <- suppressMessages(feglm(am ~ mpg, family = binomial, data = dat))
 mfx <- slopes(mod)
 expect_inherits(mfx, "marginaleffects")
@@ -259,7 +259,7 @@ expect_false(anyNA(p$std.error))
 
 ## Issue #229: works interactively
 # data(trade)
-# dat <<- trade
+# dat <- trade
 # mod <- feNmlm(Euros ~ log(dist_km) | Product, data = dat)
 # expect_slopes(mod, newdata = dat) # environment issue
 

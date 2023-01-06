@@ -10,8 +10,8 @@ requiet("broom")
 data("GasolineYield", package = "betareg")
 tmp <- GasolineYield
 tmp$batch <- factor(tmp$batch)
-dat <<- tmp
-mod <<- betareg::betareg(yield ~ batch + temp, data = dat)
+dat <- tmp
+mod <- betareg::betareg(yield ~ batch + temp, data = dat)
 
 # marginaleffects: vs. margins vs. emmeans
 set.seed(1024)
@@ -30,7 +30,7 @@ expect_equivalent(mfx$std.error, em$std.error, tolerance = .001)
 
 # marginaleffects: vs. Stata
 # stata does not include contrasts
-stata <<- readRDS(testing_path("stata/stata.rds"))[["betareg_betareg_01"]]
+stata <- readRDS(testing_path("stata/stata.rds"))[["betareg_betareg_01"]]
 mfx <- merge(tidy(slopes(mod)), stata)
 expect_equivalent(mfx$estimate, mfx$dydxstata, tolerance = .0001)
 expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .0001)

@@ -7,7 +7,7 @@ tmp$gear <- as.factor(tmp$gear)
 for (i in seq_along(tmp)) {
     tmp[[i]][sample(1:nrow(tmp), 1)] <- NA
 }
-tmp <<- tmp
+tmp <- tmp
 
 # original data with NAs do not pose problems in glm and lm.
 mod1 <- lm(hp ~ mpg + drat + wt + gear, data = tmp)

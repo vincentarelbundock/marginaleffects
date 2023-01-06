@@ -10,17 +10,17 @@ tol_se <- .01 # BDR emergency email about tiny numerical differences
 
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/plm/Grunfeld.csv")
 dat$X <- NULL
-dat <<- pdata.frame(dat)
-pool <<- plm(inv ~ value * capital, data = dat, model = "pooling")
-swamy <<- plm(
+dat <- pdata.frame(dat)
+pool <- plm(inv ~ value * capital, data = dat, model = "pooling")
+swamy <- plm(
     inv ~ value * capital,
     data = dat,
     model = "random", effect = "individual")
-amemiya <<- plm(
+amemiya <- plm(
     inv ~ value * capital,
     data = dat, model = "random", random.method = "amemiya",
     effect = "twoways")
-walhus <<- plm(
+walhus <- plm(
     inv ~ value * capital,
     data = dat, model = "random", random.method = "walhus",
     effect = "twoways")
