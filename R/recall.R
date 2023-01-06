@@ -1,8 +1,12 @@
 recall <- function(x, ...) {
 
+    if (!inherits(x, c("comparisons", "slopes", "predictions", "marginalmeans"))) {
+        return(NULL)
+    }
+
     mc <- attr(x, "call")
     if (!is.call(mc)) {
-        msg <- sprintf("Call could not be retrieved from object of class %s.", class(model)[1])
+        msg <- sprintf("Call could not be retrieved from object of class %s.", class(x)[1])
         insight::format_error(msg)
     }
 

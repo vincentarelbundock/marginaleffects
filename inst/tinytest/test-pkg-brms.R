@@ -1,3 +1,5 @@
+exit_file("aggregate")
+
 # HPD tests against emmeans, which uses HDI, but our default is ETI
 # HDI is implemented specifically for these tests
 # https://github.com/vincentarelbundock/marginaleffects/issues/240

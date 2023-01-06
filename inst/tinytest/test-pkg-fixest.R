@@ -160,8 +160,8 @@ expect_inherits(mfx2, "marginaleffects")
 expect_inherits(mfx3, "marginaleffects")
 
 # Issue #443: `newdata` breaks when it is a `data.table`
-d <- data.table(mtcars)
-m <- feols(mpg ~ cyl * disp, d)
+dat <- data.table(mtcars)
+m <- feols(mpg ~ cyl * disp, dat)
 m1 <- slopes(m)
 m2 <- slopes(m, newdata = datagrid(disp = 0))  
 expect_inherits(m1, "marginaleffects")
@@ -173,8 +173,8 @@ expect_inherits(m2, "comparisons")
 
 
 # Issue #458: fixest with data table
-dat <- data.table(y = rnorm(10), x = rnorm(10))
-model <- feols(y ~ x, dat)
+tmp <<- data.table(y = rnorm(10), x = rnorm(10))
+model <- feols(y ~ x, tmp)
 m <- slopes(model)
 expect_inherits(m, "marginaleffects")
 
@@ -214,7 +214,7 @@ fun <- function(model) {
 expect_equivalent(fun(mod1), c("cyl", "gear"))
 expect_equivalent(fun(mod2), c("cyl"))
 expect_equivalent(fun(mod3), c("cyl"))
-expect_equivalent(fun(mod4), c("cyl", "gear", "am"))
+expect_equivalent(sort(fun(mod4)), c("am", "cyl", "gear"))
 if (utils::packageVersion("insight") < "0.18.4.4") exit_file("insight version")
 m <- slopes(mod4)
 expect_inherits(m, "marginaleffects")

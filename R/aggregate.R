@@ -29,8 +29,13 @@ aggregate.predictions <- aggregate.comparisons
 #' @export
 tidy.comparisons <- function(x, ...) {
     out <- aggregate(x, ...)
-    idx <- colnames(out) %in% c("dydx", "predicted", "comparison")
-    colnames(out)[idx] <- "estimate"
+    if (inherits(x, c("comparisons", "slopes", "marginalmeans"))) {
+        idx <- colnames(out) %in% c("dydx", "comparison", "marginalmeans")
+        colnames(out)[idx] <- "estimate"
+    } else if (inherits(x, "predictions")) {
+        idx <- colnames(out) %in% "predicted"
+        colnames(out)[idx] <- "estimate"
+    }
     return(out)
 }
 

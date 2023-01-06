@@ -44,6 +44,7 @@ get_contrasts <- function(model,
         pred_hi <- pred_both[idx_hi, , drop = FALSE]
         attr(pred_lo, "posterior_draws") <- attr(pred_both, "posterior_draws")[idx_lo, , drop = FALSE]
         attr(pred_hi, "posterior_draws") <- attr(pred_both, "posterior_draws")[idx_hi, , drop = FALSE]
+
     } else {
         pred_lo <- myTryCatch(get_predict(
             model,
@@ -248,8 +249,14 @@ get_contrasts <- function(model,
         return(con)
     }
 
+    # drop missing otherwise aggregate() fails when trying to take a simple mean
+    idx_na <- !is.na(out$predicted_lo)
+    out <- out[idx_na, , drop = FALSE]
+
     # bayesian
     if (!is.null(draws)) {
+        draws <- draws[idx_na, , drop = FALSE]
+
         term_names <- unique(out$term)
         # loop over columns (draws) and term names because different terms could use different functions 
         for (tn in term_names) {

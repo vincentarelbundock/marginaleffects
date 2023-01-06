@@ -12,7 +12,7 @@ requiet("titanic")
 data("GasolineYield", package = "betareg")
 tmp <- GasolineYield
 tmp$batch <- factor(tmp$batch)
-dat <- tmp
+dat <<- tmp
 mod <- gamlss::gamlss(yield ~ batch + temp,
     family = "BE",
     data = dat,
@@ -64,7 +64,7 @@ expect_equivalent(mm$std.error, em$std.error, tolerance = 0.01)
 # Logistic regression
 tmp <- titanic_train
 tmp$Pclass <- as.factor(tmp$Pclass)
-dat <- na.omit(tmp)
+dat <<- na.omit(tmp)
 
 mod <- gamlss::gamlss(Survived ~ Age + Pclass, 
                       family = "BI", data = dat, trace = FALSE)

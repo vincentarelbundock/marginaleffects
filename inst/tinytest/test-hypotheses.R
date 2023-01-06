@@ -3,7 +3,8 @@ using("marginaleffects")
 if(!isTRUE(requiet("car"))) exit_file("car not installed")
 
 # When `FUN` and `hypotheses` are `NULL`, `hypotheses()` returns a data.frame of parameters
-mod <- lm(mpg ~ hp + wt + factor(cyl), data = mtcars)
+dat <- mtcars
+mod <- lm(mpg ~ hp + wt + factor(cyl), data = dat)
 dmm <- hypotheses(mod)
 expect_inherits(dmm, "data.frame")
 
