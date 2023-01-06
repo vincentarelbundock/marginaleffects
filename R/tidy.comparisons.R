@@ -240,13 +240,8 @@ tidy.comparisons <- function(x,
 }
 
 
-#' @export
-#' @importFrom stats aggregate
-stats::aggregate
-
-
 #' This is a test
 #' 
-#' @method aggregate comparisons
+#' @rdname aggregate.marginaleffects
 #' @export
 aggregate.comparisons <- tidy.comparisons
