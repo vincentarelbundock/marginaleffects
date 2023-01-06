@@ -75,27 +75,8 @@ hypotheses <- function(
     ...) {
 
 
-    # add `hypotheses` to the original call and re-evaluate
-    if (inherits(model, c("comparisons", "marginaleffects", "predictions", "marginalmeans"))) {
-        if (is.null(hypothesis)) {
-            msg <- "Please specify the `hypothesis` argument."
-            insight::format_error(msg)
-        }
-        mc <- attr(model, "call")
-        if (!is.call(mc)) {
-            msg <- "Call could not be retrieved from object of class %s."
-            msg <- sprintf(msg, class(model)[1])
-            insight::format_error(msg)
-        }
-        if ("hypothesis" %in% names(mc)) {
-            msg <- "The `hypotheses()` function cannot be applied if the `hypothesis` argument was already used in the original call."
-            insight::format_error(msg)
-        }
-        if (!isTRUE(checkmate::check_flag(vcov, null.ok = TRUE))) {
-            mc[["vcov"]] <- vcov
-        }
-        mc[["hypothesis"]] <- hypothesis
-        out <- eval(mc)
+    out <- recall(model, hypothesis = hypothesis, vcov = vcov)
+    if (!is.null(out)) {
         return(out)
     }
 
