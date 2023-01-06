@@ -1,5 +1,5 @@
 get_modeldata <- function(model) {
-    out <- hush(insight::get_data(model, verbose = FALSE))
+    out <- hush(insight::get_data(model, verbose = FALSE, additional_variables = TRUE))
     out <- set_variable_class(modeldata = out, model = model)
     return(out)
 }
