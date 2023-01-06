@@ -4,7 +4,7 @@ sanity_by <- function(by, newdata) {
         checkmate::check_character(by, min.len = 1),
         checkmate::check_null(by))
 
-    known <- c("by", "group", "term", "rowid", "rowidcf", colnames(newdata))
+    known <- c("by", "group", "term", "rowid", "rowidcf", "type", colnames(newdata))
 
     if (inherits(by, "data.frame")) {
         flag <- !all(colnames(by) %in% known) || !"by" %in% colnames(by)
@@ -13,7 +13,7 @@ sanity_by <- function(by, newdata) {
     }
 
     if (flag) {
-        bycols <- paste(setdiff(colnames(newdata), c("rowid", "rowidcf", "term")), collapse = ", ")
+        bycols <- paste(setdiff(colnames(newdata), c("rowid", "rowidcf", "term", "group", "type")), collapse = ", ")
         msg <- c(
             "The `by` argument must be either:", "",
             sprintf("1. Character vector in which each element is part of: %s", bycols),

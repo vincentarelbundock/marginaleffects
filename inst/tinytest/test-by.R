@@ -49,9 +49,10 @@ expect_equivalent(x$std.error, y$std.error)
 # input sanity check
 expect_error(slopes(mod, slope = "bad"), pattern = "eyexavg")
 
+##### aggregate() refactor makes this possible again
 # by is deprecated in `summary()` and `tidy()`
-expect_error(summary(comparisons(mod), by = "am"), pattern = "instead")
-expect_error(tidy(comparisons(mod), by = "am"), pattern = "instead")
+# expect_error(summary(comparisons(mod), by = "am"), pattern = "instead")
+# expect_error(tidy(comparisons(mod), by = "am"), pattern = "instead")
 
 # by argument
 mod <- glm(am ~ hp + mpg, data = mtcars, family = binomial)
@@ -60,6 +61,7 @@ expect_equal(nrow(cmp), 4)
 
 cmp <- comparisons(mod, by = "am")
 tid <- tidy(cmp)
+
 expect_equivalent(nrow(tid), nrow(cmp))
 expect_equivalent(nrow(tid), 4)
 expect_true("am" %in% colnames(tid))
@@ -107,10 +109,10 @@ expect_equivalent(mfx$estimate, mar$AME, tolerance = tol)
 expect_equivalent(mfx$std.error, mar$SE, tolerance = tol_se)
 
 
-# input checks
-mod <- lm(mpg ~ hp, mtcars)
-expect_error(comparisons(mod, by = "am"), pattern = "newdata")
-expect_error(slopes(mod, by = "am"), pattern = "newdata")
+# # input checks
+# mod <- lm(mpg ~ hp, mtcars)
+# expect_error(comparisons(mod, by = "am"), pattern = "newdata")
+# expect_error(slopes(mod, by = "am"), pattern = "newdata")
 
 
 # counterfactual margins at()

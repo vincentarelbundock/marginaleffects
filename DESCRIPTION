@@ -129,6 +129,7 @@ Suggests:
     vdiffr,
     withr
 Collate: 
+    'aggregate.R'
     'align_J_V.R'
     'arg_name_change.R'
     'attributes.R'

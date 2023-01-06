@@ -6,9 +6,6 @@
 \usage{
 \method{tidy}{hypotheses}(x, ...)
 }
-\arguments{
-\item{x}{An object produced by the \code{slopes} function.}
-}
 \description{
 Tidy a \code{hypotheses} object
 }
@@ -20,9 +17,6 @@ Other summary:
 \code{\link{summary.marginalmeans}()},
 \code{\link{summary.predictions}()},
 \code{\link{summary.slopes}()},
-\code{\link{tidy.comparisons}()},
-\code{\link{tidy.marginalmeans}()},
-\code{\link{tidy.predictions}()},
-\code{\link{tidy.slopes}()}
+\code{\link{tidy.marginalmeans}()}
 }
 \concept{summary}

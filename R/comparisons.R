@@ -516,6 +516,11 @@ comparisons <- function(model,
     attr(out, "by") <- by
     attr(out, "call") <- match.call()
 
+    # save newdata=datagrid() for use in recall()
+    if (any(grepl("^datagrid\\(", as.character(match.call())))) {
+        attr(out, "newdata") <- newdata
+    }
+
     if (inherits(model, "brmsfit")) {
         insight::check_if_installed("brms")
         attr(out, "nchains") <- brms::nchains(model)

@@ -13,11 +13,8 @@ Other summary:
 \code{\link{summary.marginalmeans}()},
 \code{\link{summary.predictions}()},
 \code{\link{summary.slopes}()},
-\code{\link{tidy.comparisons}()},
 \code{\link{tidy.hypotheses}()},
-\code{\link{tidy.marginalmeans}()},
-\code{\link{tidy.predictions}()},
-\code{\link{tidy.slopes}()}
+\code{\link{tidy.marginalmeans}()}
 }
 \concept{summary}
 \keyword{internal}

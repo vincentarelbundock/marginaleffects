@@ -25,8 +25,6 @@ plot_cme(
 \item Shortcut strings for common reference values: "minmax", "quartile", "threenum"
 }}
 
-\item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval. The default \code{NULL} uses the \code{conf_level} value used in the original call to \code{slopes()}.}
-
 \item{draw}{\code{TRUE} returns a \code{ggplot2} plot. \code{FALSE} returns a \code{data.frame} of the underlying data.}
 }
 \value{

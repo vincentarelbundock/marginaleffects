@@ -6,9 +6,6 @@
 \usage{
 \method{glance}{slopes}(x, ...)
 }
-\arguments{
-\item{x}{An object produced by the \code{slopes} function.}
-}
 \description{
 Glance at key characteristics of an object
 }
@@ -19,10 +16,7 @@ Other summary:
 \code{\link{summary.marginalmeans}()},
 \code{\link{summary.predictions}()},
 \code{\link{summary.slopes}()},
-\code{\link{tidy.comparisons}()},
 \code{\link{tidy.hypotheses}()},
-\code{\link{tidy.marginalmeans}()},
-\code{\link{tidy.predictions}()},
-\code{\link{tidy.slopes}()}
+\code{\link{tidy.marginalmeans}()}
 }
 \concept{summary}

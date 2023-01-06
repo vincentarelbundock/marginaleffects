@@ -6,25 +6,11 @@
 \usage{
 \method{plot}{slopes}(x, conf_level = 0.95, ...)
 }
-\arguments{
-\item{x}{An object produced by the \code{slopes} function.}
-
-\item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval. The default \code{NULL} uses the \code{conf_level} value used in the original call to \code{slopes()}.}
-}
 \value{
 A \code{ggplot2} object
 }
 \description{
 Uses the \code{ggplot2} package to draw a point-range plot of the average marginal effects computed by \code{tidy}.
-}
-\details{
-The \code{tidy} function calculates average marginal effects by taking the mean
-of all the unit-level marginal effects computed by the \code{marginaleffects}
-function.
-
-The standard error of the average marginal effects is obtained by
-taking the mean of each column of the Jacobian. . Then, we use this
-"Jacobian at the mean" in the Delta method to obtained standard errors.
 }
 \examples{
 mod <- glm(am ~ hp + wt, data = mtcars)
