@@ -16,7 +16,7 @@ expect_equivalent(mfx1$std.error, mfx2$std.error)
 
 # factor on LHS and RHS at the same time.
 data(housing, package = "MASS")
-mod <- MASS::polr(Infl ~ Sat + Freq, data = housing)
+mod <- MASS::polr(Infl ~ Sat + Freq, data = housing, Hess = TRUE)
 mfx <- suppressMessages(slopes(mod, type = "probs"))
 expect_inherits(mfx, "marginaleffects")
 expect_true(all(c("Low", "Medium", "High") %in% mfx$group))

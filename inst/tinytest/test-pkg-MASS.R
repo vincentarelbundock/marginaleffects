@@ -120,7 +120,7 @@ expect_equivalent(mfx$std.error, em$std.error, tolerance = .01)
 ### predictions
 
 # polr: predictions: no validity
-mod <- MASS::polr(factor(gear) ~ mpg + factor(cyl), data = mtcars)
+mod <- MASS::polr(factor(gear) ~ mpg + factor(cyl), data = mtcars, Hess = TRUE)
 pred <- suppressMessages(predictions(mod, type = "probs"))
 expect_predictions(pred)
 # bugs stay dead
@@ -199,7 +199,7 @@ expect_equivalent(mfx$std.error[3], em$std.error, tolerance = .01)
 dat <- mtcars
 dat$cyl <- as.character(dat$cyl)
 dat <- dat
-mod <- polr(factor(gear) ~ cyl, data = dat)
+mod <- polr(factor(gear) ~ cyl, data = dat, Hess = TRUE)
 # not clear why this generates a warning only on CI
 mfx <- suppressMessages(slopes(mod, type = "probs"))
 tid <- tidy(mfx)
@@ -207,7 +207,7 @@ expect_equivalent(nrow(tid), 6)
 
 
 # polr: average predictions by group against Stata
-mod <- polr(factor(gear) ~ hp, data = mtcars)
+mod <- polr(factor(gear) ~ hp, data = mtcars, Hess = TRUE)
 p <- suppressMessages(tidy(predictions(mod, type = "probs")))
 expect_equivalent(
     p$estimate,
@@ -241,7 +241,7 @@ exit_file("works interactively")
 k <- mtcars
 k$vs <- as.factor(k$vs)
 k$am <- as.logical(k$am)
-mod <- MASS::polr(factor(gear) ~ vs + am, data = k)
+mod <- MASS::polr(factor(gear) ~ vs + am, data = k, Hess = TRUE)
 print(get_vcov(mod))
 # TODO: emmeans seems broken at the moment
 # em <- emmeans(mod, specs = "am", type = "response")

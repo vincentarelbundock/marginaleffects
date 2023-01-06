@@ -13,7 +13,7 @@ requiet("MASS")
 mod1 <- glm(vs ~ hp * mpg, data = mtcars, family = binomial)
 # there used to be an interaction in this polr model, but it produced
 # negative variances and NaN standard errors
-mod2 <- polr(factor(gear) ~ hp + mpg, data = mtcars)
+mod2 <- polr(factor(gear) ~ hp + mpg, data = mtcars, Hess = TRUE)
 pred1 <- predictions(mod1)
 pred2 <- suppressMessages(predictions(mod2, type = "probs"))
 ti1 <- tidy(pred1)
