@@ -4,10 +4,17 @@
 \alias{tidy.comparisons}
 \title{Tidy a \code{comparisons} object}
 \usage{
-\method{tidy}{comparisons}(x, conf_level = NULL, transform_avg = NULL, ...)
+\method{tidy}{comparisons}(x, by = NULL, conf_level = NULL, transform_avg = NULL, ...)
 }
 \arguments{
 \item{x}{An object produced by the \code{comparisons} function.}
+
+\item{by}{Compute group-wise average estimates. Valid inputs:
+\itemize{
+\item Character vector of column names in \code{newdata} or in the data frame produced by calling the function without the \code{by} argument.
+\item Data frame with a \code{by} column of group labels, and merging columns shared by \code{newdata} or the data frame produced by calling the same function without the \code{by} argument.
+\item See examples below.
+}}
 
 \item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval. The default \code{NULL} uses the \code{conf_level} value used in the original call to \code{comparisons()}.}
 

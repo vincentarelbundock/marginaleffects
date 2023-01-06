@@ -2,9 +2,9 @@
 % Please edit documentation in R/tidy.R
 \name{tidy.slopes}
 \alias{tidy.slopes}
-\title{Tidy a \code{marginaleffects} object}
+\title{Tidy a \code{slopes} object}
 \usage{
-\method{tidy}{slopes}(x, conf_level = NULL, ...)
+\method{tidy}{slopes}(x, by = NULL, conf_level = NULL, ...)
 }
 \arguments{
 \item{x}{An object produced by the \code{slopes} function.}
@@ -16,7 +16,7 @@ A "tidy" \code{data.frame} of summary statistics which conforms to the
 \code{broom} package specification.
 }
 \description{
-Tidy a \code{marginaleffects} object
+Tidy a \code{slopes} object
 }
 \details{
 The \code{tidy} function calculates average marginal effects by taking the mean

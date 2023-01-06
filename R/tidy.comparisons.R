@@ -30,14 +30,31 @@
 #' contr <- comparisons(mod, variables = list(gear = "sequential"))
 #' tidy(contr)
 tidy.comparisons <- function(x,
+                             by = NULL,
                              conf_level = NULL,
                              transform_avg = NULL,
                              ...) {
 
     # use original conf_level by default
+    # before recall()
     if (is.null(conf_level)) {
         conf_level <- attr(x, "conf_level")
     }
+
+    # `by` requires us to re-eval a modified call
+    if (!is.null(by)) {
+        out <- recall(x, by = by, conf_level = conf_level)
+        if (!is.null(out)) {
+            # back transformation
+            if (!is.null(transform_avg) && !is.null(attr(x, "transform_post"))) {
+                msg <- "Estimates were transformed twice: once during the initial computation, and once more when summarizing the results in `tidy()` or `summary()`."
+                insight::format_warning(msg)
+            }
+            out <- backtransform(out, transform_avg)
+            return(out)
+        }
+    }
+
 
     if (identical(attr(x, "transform_pre"), "lnor")) {
         msg <- 
@@ -221,3 +238,15 @@ tidy.comparisons <- function(x,
 
     return(out)
 }
+
+
+#' @export
+#' @importFrom stats aggregate
+stats::aggregate
+
+
+#' This is a test
+#' 
+#' @method aggregate comparisons
+#' @export
+aggregate.comparisons <- tidy.comparisons

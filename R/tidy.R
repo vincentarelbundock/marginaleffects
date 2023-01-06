@@ -4,7 +4,7 @@ generics::tidy
 
 
 
-#' Tidy a `marginaleffects` object
+#' Tidy a `slopes` object
 #'
 #' @param x An object produced by the `slopes` function.
 #' @inheritParams marginaleffects
@@ -22,8 +22,8 @@ generics::tidy
 #'
 #'
 #' @family summary
-#' @export
 #' @template bayesian 
+#' @export
 #' @examples
 #' mod <- lm(mpg ~ hp * wt + factor(gear), data = mtcars)
 #' mfx <- slopes(mod)
@@ -31,9 +31,9 @@ generics::tidy
 #' # average marginal effects
 #' tidy(mfx)
 tidy.slopes <- function(x,
-                                 conf_level = NULL,
-                                 ...) {
-
+                        by = NULL,
+                        conf_level = NULL,
+                        ...) {
 
 
     x_dt <- copy(x)
@@ -43,6 +43,9 @@ tidy.slopes <- function(x,
                             ...)
     return(out)
 }
+
+#' @export
+aggregate.slopes <- tidy.slopes
 
 
 #' Tidy a `hypotheses` object
