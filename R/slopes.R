@@ -296,11 +296,8 @@ slopes <- function(model,
 
     attr(out, "vcov.type") <- get_vcov_label(vcov)
     attr(out, "call") <- match.call()
-
     # save newdata=datagrid() for use in recall()
-    if (any(grepl("^datagrid\\(", as.character(match.call())))) {
-        attr(out, "newdata") <- newdata
-    }
+    attr(out, "newdata") <- newdata
 
     # class
     setDF(out)

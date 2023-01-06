@@ -309,7 +309,12 @@ comparisons <- function(model,
     marginalmeans <- isTRUE(checkmate::check_choice(newdata, choices = "marginalmeans"))
 
     # before sanitize_variables
-    newdata <- sanitize_newdata(model = model, newdata = newdata, by = by)
+    modeldata <- get_modeldata(model)
+    newdata <- sanitize_newdata(
+        model = model,
+        newdata = newdata,
+        by = by,
+        modeldata = modeldata)
 
     # weights: before sanitize_variables
     sanity_wts(wts, newdata) # after sanity_newdata
@@ -371,7 +376,8 @@ comparisons <- function(model,
                  variables = predictors,
                  cross = cross,
                  marginalmeans = marginalmeans,
-                 eps = eps)
+                 eps = eps,
+                 modeldata = modeldata)
     args <- c(args, dots)
     contrast_data <- do.call("get_contrast_data", args)
 
@@ -515,11 +521,8 @@ comparisons <- function(model,
     attr(out, "conf_level") <- conf_level
     attr(out, "by") <- by
     attr(out, "call") <- match.call()
-
-    # save newdata=datagrid() for use in recall()
-    if (any(grepl("^datagrid\\(", as.character(match.call())))) {
-        attr(out, "newdata") <- newdata
-    }
+    # save newdata for use in recall()
+    attr(out, "newdata") <- newdata
 
     if (inherits(model, "brmsfit")) {
         insight::check_if_installed("brms")

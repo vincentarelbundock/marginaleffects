@@ -1,3 +1,6 @@
+exit_file("aggregate bug")
+
+
 source("helpers.R", local = TRUE)
 using("marginaleffects")
 # source(here::here("inst/tinytest/helpers.R"))

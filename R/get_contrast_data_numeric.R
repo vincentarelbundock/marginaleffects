@@ -2,10 +2,13 @@ get_contrast_data_numeric <- function(model,
                                       newdata,
                                       variable,
                                       eps,
+                                      modeldata = NULL,
                                       ...) {
 
 
-    modeldata <- get_modeldata(model)
+    if (is.null(modeldata)) {
+        modeldata <- get_modeldata(model)
+    }
     if (is.null(modeldata)) {
         modeldata <- newdata
     }

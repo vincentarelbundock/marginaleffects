@@ -9,7 +9,7 @@ recall <- function(x, ...) {
     dots <- list(...)
 
     # save newdata=datagrid() for use in recall()
-    if (any(grepl("^datagrid\\(", as.character(mc))) && !is.null(attr(x, "newdata"))) {
+    if (!is.null(attr(x, "newdata"))) {
         mc[["newdata"]] <- attr(x, "newdata")
     }
 

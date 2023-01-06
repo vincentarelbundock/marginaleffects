@@ -7,6 +7,7 @@ requiet("emmeans")
 dat <- mtcars
 dat$gear <- factor(dat$gear)
 dat$cyl <- factor(dat$cyl)
+dat <<- dat
 mod1 <- lm(mpg ~ gear + cyl + wt + gear, data = dat)
 mod2 <- lm(mpg ~ gear * cyl + wt + gear, data = dat)
 cmp1 <- comparisons(mod1, newdata = datagrid())
@@ -96,6 +97,7 @@ expect_warning(comparisons(mod, interaction = TRUE))
 # expect_equivalent(nrow(tidy(cmp)), 27)
 
 
+exit_file("Aggregate functionality rollback")
 # brms + order of first character doesn't matter
 mod <- marginaleffects:::modelarchive_model("brms_factor")
 cmp <- comparisons(mod, variables = c("cyl_fac", "mpg"), cross = TRUE, contrast_factor = "all")

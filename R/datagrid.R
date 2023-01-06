@@ -274,7 +274,7 @@ typical <- function(
     # warn on very large prediction grid
     num <- as.numeric(sapply(out, length)) # avoid integer overflow
     num <- Reduce(f = "*", num)
-    if (num > 1e9) {
+    if (isTRUE(num > 1e9)) {
         stop("You are trying to create a prediction grid with more than 1 billion rows, which is likely to exceed the memory and computational power available on your local machine. Presumably this is because you are considering many variables with many levels. All of the functions in the `marginaleffects` package include arguments to specify a restricted list of variables over which to create a prediction grid.", call. = FALSE)
     }
 

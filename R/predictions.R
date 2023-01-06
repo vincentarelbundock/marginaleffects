@@ -455,11 +455,8 @@ predictions <- function(model,
     attr(out, "call") <- match.call()
     attr(out, "transform_post_label") <- names(transform_post)[1]
     attr(out, "transform_post") <- transform_post[[1]]
-
-    # save newdata=datagrid() for use in recall()
-    if (any(grepl("^datagrid\\(", as.character(match.call())))) {
-        attr(out, "newdata") <- newdata
-    }
+    # save newdata for use in recall()
+    attr(out, "newdata") <- newdata
 
     if (inherits(model, "brmsfit")) {
         insight::check_if_installed("brms")

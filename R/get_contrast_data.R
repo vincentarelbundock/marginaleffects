@@ -3,11 +3,14 @@ get_contrast_data <- function(model,
                               variables,
                               cross,
                               eps,
+                              modeldata = NULL,
                               ...) {
 
     lo <- hi <- ter <- lab <- original <- rowid <- list()
 
-    modeldata <- attr(newdata, "newdata_modeldata")
+    if (is.null(modeldata)) {
+        modeldata <- attr(newdata, "newdata_modeldata")
+    }
     variable_classes <- attr(newdata, "newdata_variable_class")
 
     if (any(c("factor", "character") %in% variable_classes)) {
@@ -26,7 +29,8 @@ get_contrast_data <- function(model,
             newdata = newdata,
             variable = v,
             cross = cross,
-            first_cross = identical(v$name, first_cross))
+            first_cross = identical(v$name, first_cross),
+            modeldata = modeldata)
         args <- append(args, list(...))
         if (is.null(eps) && variable_classes[[v$name]] == "numeric") {
             args[["eps"]] <- 1e-4 * diff(range(modeldata[[v$name]], na.rm = TRUE, finite = TRUE))
