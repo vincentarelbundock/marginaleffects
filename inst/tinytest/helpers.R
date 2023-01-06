@@ -1,5 +1,9 @@
-Sys.setenv(TZ="America/New_York") # avoids a `timedatectl`` warning
 
+# common names of datasets, often assigned to global environment
+suppressWarnings(rm(list=c("dat", "tmp"), envir = .GlobalEnv))
+
+# avoids a `timedatectl`` warning
+Sys.setenv(TZ="America/New_York") 
 library("tinytest")
 library("tinyviztest")
 

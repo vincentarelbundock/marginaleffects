@@ -1,6 +1,8 @@
 source("helpers.R", local = TRUE)
 using("marginaleffects")
 
+requiet("emmeans")
+
 
 # simple contrasts: no validity check
 dat <- mtcars
@@ -29,6 +31,7 @@ expect_equivalent(reject_ci, reject_p)
 # bug be dead: all levels appear
 tmp <- mtcars
 tmp$am <- as.logical(tmp$am)
+tmp <<- tmp
 mod <- lm(mpg ~ am + factor(cyl), tmp)
 mfx = slopes(mod, newdata = datagrid(cyl = c(4, 6)))
 expect_equivalent(nrow(mfx), 6)
@@ -76,11 +79,11 @@ expect_equivalent(contr$estimate[2], pred$predicted[pred$cyl == 8] - pred$predic
 
 
 # emmeans w/ back-transforms is similar to comparisons with direct delta method
-requiet("emmeans")
 tol <- 1e-4
 
 dat <- mtcars
 dat$cyl <- as.factor(dat$cyl)
+dat <<- dat
 mod <- glm(am ~ cyl, data = dat, family = binomial)
 
 # link scale
@@ -111,6 +114,7 @@ dat <- mtcars
 dat$am <- as.logical(dat$am)
 dat$cyl <- as.factor(dat$cyl)
 dat$gear <- as.character(dat$gear)
+dat <<- dat
 mod <- lm(mpg ~ hp + am + cyl + gear, data = dat)
 
 cmp1 <- comparisons(
