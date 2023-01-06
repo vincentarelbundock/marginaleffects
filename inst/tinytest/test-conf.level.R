@@ -1,4 +1,4 @@
-source("helpers.R", local = TRUE)
+source("helpers.R")
 using("marginaleffects")
 
 # conf.level argument changes conf.int size

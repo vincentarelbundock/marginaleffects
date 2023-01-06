@@ -1,5 +1,7 @@
-source("helpers.R", local = TRUE)
+source("helpers.R")
 using("marginaleffects")
+
+withr::with_environment(environment(), {
 
 requiet("sampleSelection")
 
@@ -31,3 +33,5 @@ expect_inherits(mfx, "marginaleffects")
 mfx <- slopes(mod, part = "outcome", type = "unconditional")
 expect_inherits(mfx, "marginaleffects")
 
+
+})

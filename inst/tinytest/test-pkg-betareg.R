@@ -1,5 +1,5 @@
 # bug fix submitted for this version of insight
-source("helpers.R", local = TRUE)
+source("helpers.R")
 using("marginaleffects")
 
 requiet("betareg")

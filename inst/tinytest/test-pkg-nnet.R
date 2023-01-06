@@ -1,4 +1,4 @@
-source("helpers.R", local = TRUE)
+source("helpers.R")
 exit_if_not(!ON_CI)
 using("marginaleffects")
 

@@ -1,4 +1,4 @@
-source("helpers.R", local = TRUE)
+source("helpers.R")
 using("marginaleffects")
 
 # old bug: counterfactual with a single regressor

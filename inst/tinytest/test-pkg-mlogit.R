@@ -9,7 +9,7 @@
 # modulo hacks, but that's bad practice. Example:
 # nd <- TravelMode[, 3:ncol(TravelMode)]
 # predict(mod, newdata = head(nd, 12))
-source("helpers.R", local = TRUE)
+source("helpers.R")
 using("marginaleffects")
 if (ON_CI) exit_file("on ci")
 requiet("nnet")

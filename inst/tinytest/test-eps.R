@@ -1,5 +1,5 @@
 # exit_file("works interactively")
-source("helpers.R", local = TRUE)
+source("helpers.R")
 using("marginaleffects")
 
 # eps argument affects results as expected

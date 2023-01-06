@@ -1,5 +1,5 @@
 # newdata must be explicit otherwise this only works interactively
-source("helpers.R", local = TRUE)
+source("helpers.R")
 using("marginaleffects")
 
 requiet("AER")

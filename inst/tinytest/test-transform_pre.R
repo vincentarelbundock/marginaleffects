@@ -1,5 +1,5 @@
 # TODO: CI: See comment in last test for how the intervals are back transformed
-source("helpers.R", local = TRUE)
+source("helpers.R")
 using("marginaleffects")
 
 requiet("modelsummary")

@@ -1,5 +1,5 @@
 exit_file("aggregate")
-source("helpers.R", local = TRUE)
+source("helpers.R")
 using("marginaleffects")
 
 requiet("brglm2")

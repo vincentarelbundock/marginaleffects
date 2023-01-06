@@ -1,6 +1,6 @@
 # TODO: emtrends not clear what it computes for polr
 using("marginaleffects")
-source("helpers.R", local = TRUE)
+source("helpers.R")
 
 if (packageVersion("emmeans") < "1.7.4") exit_file("emmeans 1.7.4")
 requiet("margins")
@@ -169,17 +169,6 @@ expect_equivalent(ti$std.error, em$std.error)
 
 
 
-# polr: marginalmeans vs. emmeans
-tmp <- mtcars
-tmp$vs <- as.factor(tmp$vs)
-tmp$am <- as.logical(tmp$am)
-tmp <- tmp
-mod <- suppressWarnings(MASS::polr(factor(gear) ~ vs + am, data = tmp))
-# TODO: emmeans seems broken at the moment
-# em <- emmeans(mod, specs = "am", type = "response")
-# em <- tidy(em)
-mm <- suppressMessages(marginalmeans(mod, variables = "am", type = "probs"))
-expect_equivalent(nrow(mm), 6)
 
 
 # glmmPQL
@@ -244,3 +233,18 @@ expect_equivalent(
 #           1  |   .4933237   .0867256     5.69   0.000     .3233448    .6633027
 #           2  |    .363384   .0838539     4.33   0.000     .1990335    .5277346
 #           3  |   .1432922   .0591208     2.42   0.015     .0274175    .2591669
+
+
+
+exit_file("works interactively")
+# polr: marginalmeans vs. emmeans
+k <- mtcars
+k$vs <- as.factor(k$vs)
+k$am <- as.logical(k$am)
+mod <- MASS::polr(factor(gear) ~ vs + am, data = k)
+print(get_vcov(mod))
+# TODO: emmeans seems broken at the moment
+# em <- emmeans(mod, specs = "am", type = "response")
+# em <- tidy(em)
+mm <- suppressMessages(marginalmeans(mod, variables = "am", type = "probs"))
+expect_equivalent(nrow(mm), 6)

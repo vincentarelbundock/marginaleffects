@@ -1,4 +1,4 @@
-source("helpers.R", local = TRUE)
+source("helpers.R")
 using("marginaleffects")
 
 # factor in formula
