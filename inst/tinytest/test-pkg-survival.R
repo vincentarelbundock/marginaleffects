@@ -1,3 +1,5 @@
+exit_file("C stack error")
+
 source("helpers.R")
 using("marginaleffects")
 

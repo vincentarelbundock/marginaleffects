@@ -1,6 +1,8 @@
 
 # common names of datasets, often assigned to global environment
-suppressWarnings(rm(list=c("dat", "tmp", "d", "k"), envir = .GlobalEnv))
+common <- c("dat", "tmp", "d", "k", "mod")
+suppressWarnings(rm(list = common, envir = .GlobalEnv))
+suppressWarnings(rm(list = common))
 
 # avoids a `timedatectl`` warning
 Sys.setenv(TZ="America/New_York") 

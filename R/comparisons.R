@@ -264,7 +264,8 @@ comparisons <- function(model,
 
     # bayesian models do not support `by` and "avg" in `transform_pre`
     if (!is.null(by)) {
-        if (isTRUE(insight::model_info(model)$is_bayesian)) {
+        mi <- hush(insight::model_info(model))
+        if (isTRUE(mi[["is_bayesian"]])) {
             msg <- format_msg(
             "The `by` argument of the `comparisons()` and `slopes()` functions is not supported for bayesian models. Users can call the `posteriordraws()` function and compute the quantities manually.")
             stop(msg, call. = FALSE)

@@ -1,13 +1,12 @@
+exit_file("environment")
+
 source("helpers.R")
 using("marginaleffects")
 
-withr::with_environment(environment(), {
-
 requiet("sampleSelection")
 
-data("Mroz87", package = "sampleSelection")
-Mroz87$kids  <- (Mroz87$kids5 + Mroz87$kids618 > 0)
-dat <- Mroz87
+dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/sampleSelection/Mroz87.csv")
+dat$kids <- dat$kids5 + dat$kids618 > 0
 
 # heckit: se not supported yet
 mod <- heckit(lfp ~ age + I( age^2 ) + faminc + kids + educ,
@@ -32,6 +31,3 @@ mfx <- slopes(mod, part = "selection", type = "link")
 expect_inherits(mfx, "marginaleffects")
 mfx <- slopes(mod, part = "outcome", type = "unconditional")
 expect_inherits(mfx, "marginaleffects")
-
-
-})

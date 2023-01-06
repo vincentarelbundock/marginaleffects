@@ -3,8 +3,10 @@ using("marginaleffects")
 
 requiet("sandwich")
 
+dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/datasets/mtcars.csv")
+
 # working but no validity check
-mod <- lm(mpg ~ hp + drat, mtcars)
+mod <<- lm(mpg ~ hp + drat, data = dat)
 a <- tidy(slopes(mod))
 b <- tidy(slopes(mod, vcov = sandwich::vcovHC(mod)))
 expect_true(all(a$estimate == b$estimate))
@@ -13,7 +15,7 @@ expect_true(all(a$std.error != b$std.error))
 
 
 # matrix produces different results (no validity)
-mod <- lm(mpg ~ hp * wt, data = mtcars)
+mod <- lm(mpg ~ hp * wt, data = dat)
 V <- vcovHC(mod)
 mfx1 <- slopes(mod)
 mfx2 <- slopes(mod, vcov = V)
@@ -28,7 +30,7 @@ expect_true(all(cmp1$std.error != cmp2$std.error))
 
 
 # marginaleffects strings (no validity)
-mod <- lm(mpg ~ hp * wt, data = mtcars)
+mod <- lm(mpg ~ hp * wt, data = dat)
 
 # aliases
 mfx1 <- slopes(mod, vcov = "HC2")
@@ -52,7 +54,7 @@ expect_true(all(mfx5$std.error != mfx6$std.error))
 
 
 # predictions strings (no validity)
-mod <- lm(mpg ~ hp * wt, data = mtcars)
+mod <- lm(mpg ~ hp * wt, data = dat)
 
 # aliases
 pre1 <- predictions(mod, vcov = "HC2")
@@ -76,7 +78,7 @@ expect_true(all(pre5$std.error != pre6$std.error))
 
 
 # marginalmeans strings (no validity)
-dat <- mtcars
+dat <- dat
 dat$cyl <- factor(dat$cyl)
 mod <- lm(mpg ~ cyl, data = dat)
 
@@ -102,7 +104,7 @@ expect_true(all(mm5$std.error != mm6$std.error))
 
 
 # Issue #554
-mod <- lm(mpg ~ cyl, data = mtcars)
+mod <- lm(mpg ~ cyl, data = dat)
 
 x <- get_vcov(mod, vcov = sandwich::vcovHC)
 y <- get_vcov(mod, vcov = "HC3")
