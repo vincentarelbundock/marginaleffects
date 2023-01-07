@@ -2,6 +2,8 @@
 #' @export
 generics::tidy
 
+#' An alias to `aggregate.comparisons()` for compatibility with the `broom` and `modelsummary` packages.
+#' 
 #' @noRd
 #' @export
 tidy.comparisons <- function(x, ...) {
@@ -20,7 +22,7 @@ tidy.comparisons <- function(x, ...) {
 #' @export
 tidy.slopes <- tidy.comparisons
 
-#' @rdname tidy.comparisons
+#' @noRd
 #' @export
 tidy.predictions <- tidy.comparisons
 
@@ -38,7 +40,7 @@ tidy.hypotheses <- function(x, ...) {
 #' Tidy a `marginalmeans` object
 #'
 #' @param x An object produced by the `marginalmeans` function.
-#' @inheritParams aggregate.slopes
+#' @inheritParams aggregate.comparisons
 #' @inheritParams aggregate.comparisons
 #' @return A "tidy" `data.frame` of summary statistics which conforms to the
 #' `broom` package specification.

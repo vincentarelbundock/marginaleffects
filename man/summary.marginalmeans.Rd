@@ -51,8 +51,6 @@ posterior using the function supplied to the
 \seealso{
 Other summary: 
 \code{\link{aggregate.comparisons}()},
-\code{\link{glance.slopes}()},
-\code{\link{reexports}},
 \code{\link{summary.comparisons}()},
 \code{\link{summary.predictions}()},
 \code{\link{summary.slopes}()},

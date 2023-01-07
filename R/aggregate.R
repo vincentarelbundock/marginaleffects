@@ -24,7 +24,7 @@
 #' obtain the Average Marginal Effect and its associated interval.
 #'
 #' @family summary
-#' @export
+#' @rdname aggregate
 #' @examples
 #' mod <- lm(mpg ~ factor(gear), data = mtcars)
 #' contr <- comparisons(mod, variables = list(gear = "sequential"))
@@ -71,11 +71,11 @@ aggregate.comparisons <- function(x, by = NULL, ...) {
     return(out)
 }
 
-#' @rdname aggregate.comparisons
+#' @rdname aggregate
 #' @export
 aggregate.slopes <- aggregate.comparisons
 
-#' @rdname aggregate.comparisons
+#' @rdname aggregate
 #' @export
 aggregate.predictions <- aggregate.comparisons
 

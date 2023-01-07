@@ -58,8 +58,6 @@ summary(con)
 \seealso{
 Other summary: 
 \code{\link{aggregate.comparisons}()},
-\code{\link{glance.slopes}()},
-\code{\link{reexports}},
 \code{\link{summary.marginalmeans}()},
 \code{\link{summary.predictions}()},
 \code{\link{summary.slopes}()},

@@ -56,8 +56,6 @@ summary(mfx)
 \seealso{
 Other summary: 
 \code{\link{aggregate.comparisons}()},
-\code{\link{glance.slopes}()},
-\code{\link{reexports}},
 \code{\link{summary.comparisons}()},
 \code{\link{summary.marginalmeans}()},
 \code{\link{summary.predictions}()},

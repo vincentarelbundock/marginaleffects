@@ -2,8 +2,8 @@
 #' 
 #' Uses the `ggplot2` package to draw a point-range plot of the average marginal effects computed by `tidy`.
 #' @inheritParams marginaleffects
-#' @inheritParams aggregate.slopes
-#' @inherit aggregate.slopes details
+#' @inheritParams aggregate.comparisons
+#' @inherit aggregate.comparisons details
 #' @return A `ggplot2` object
 #' @family plot
 #' @export

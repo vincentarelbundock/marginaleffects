@@ -1,5 +1,9 @@
 # marginaleffects 0.8.1.9001
 
+Breaking change:
+
+* The `transform_avg` argument in `tidy()` deprecated. Use `transform_post` instead.
+
 New features:
 
 * `hypothesis` can be used to set the null used in calculating Z and p. For example, is the conditional risk ratio different from 1?

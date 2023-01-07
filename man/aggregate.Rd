@@ -55,8 +55,6 @@ Marginalize Over Unit-Level Estimates
 }
 \seealso{
 Other summary: 
-\code{\link{glance.slopes}()},
-\code{\link{reexports}},
 \code{\link{summary.comparisons}()},
 \code{\link{summary.marginalmeans}()},
 \code{\link{summary.predictions}()},
