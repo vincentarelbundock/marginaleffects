@@ -45,26 +45,24 @@ expect_equivalent(tidy(cmp1)$estimate, weighted.mean(cmp1$comparison, k$w))
 expect_equivalent(cmp2$comparison, weighted.mean(cmp1$comparison, k$w))
 
 
-
 # sanity check
 expect_error(comparisons(mod, wts = "junk"), pattern = "explicitly")
 expect_error(slopes(mod, wts = "junk"), pattern = "explicitly")
 
 # vs. Stata (not clear what SE they use, so we give tolerance)
-mod <<- suppressWarnings(svyglm(
+mod <- suppressWarnings(svyglm(
     am ~ mpg,
     design = svydesign(ids = ~1, weights = ~weights, data = dat),
     family = binomial))
+tmp <- mod$prior.weights
 stata <- c(.0441066, .0061046)
-mfx <- slopes(mod, wts = mod$prior.weights)
-mfx <- tidy(mfx)
-expect_equivalent(mfx$estimate[1], stata[1], tol = .01)
+mfx <- slopes(mod, wts = tmp, by = "term")
+expect_equivalent(mfx$dydx[1], stata[1], tol = .01)
 expect_equivalent(mfx$std.error, stata[2], tolerance = 0.002)
 
 
 
 # brms
-exit_file("aggregate brms")
 set.seed(1024)
 mod <- marginaleffects:::modelarchive_model("brms_numeric2")
 w <- runif(32)
