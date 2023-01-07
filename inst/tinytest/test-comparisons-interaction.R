@@ -62,12 +62,13 @@ mod <- lm(mpg ~ factor(am) * factor(cyl) + wt + gear, data = mtcars)
 # one row only means tidy is same nrows
 cmp <- comparisons(
     mod,
-    variables = c("cyl", "am"),
+    variables = list("cyl" = "all", "am" = "all"),
     newdata = datagrid(),
-    contrast_factor = "all",
     cross = TRUE)
-expect_equivalent(nrow(cmp), 21)
-expect_equivalent(nrow(tidy(cmp)), 21)
+expect_equivalent(nrow(cmp), 18)
+expect_equivalent(nrow(tidy(cmp)), 18)
+
+cmp |> dplyr::arrange(contrast_cyl, contrast_am)
 
 cmp <- comparisons(
     mod,
