@@ -38,3 +38,13 @@ get_vcov.glimML <- function(model, vcov = NULL, ...) {
     }
     aod::vcov(model)
 }
+
+
+#' @rdname sanity_model_specific
+sanity_model_specific.glimML <- function(model, ...) {
+    mdat <- get_modeldata(model)
+    if (isTRUE("character" %in% attr(mdat, "marginaleffects_variable_class"))) {
+        insight::format_error("This function does not support character predictors. Please convert them to factors before fitting the model.")
+    }
+    return(invisible(NULL))
+}

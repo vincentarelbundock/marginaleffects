@@ -236,13 +236,11 @@ expect_equivalent(
 
 
 
-exit_file("works interactively")
 # polr: marginalmeans vs. emmeans
 k <- mtcars
 k$vs <- as.factor(k$vs)
 k$am <- as.logical(k$am)
-mod <- MASS::polr(factor(gear) ~ vs + am, data = k, Hess = TRUE)
-print(get_vcov(mod))
+mod <- suppressMessages(MASS::polr(factor(gear) ~ vs + am, data = k, Hess = TRUE))
 # TODO: emmeans seems broken at the moment
 # em <- emmeans(mod, specs = "am", type = "response")
 # em <- tidy(em)

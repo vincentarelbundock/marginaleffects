@@ -5,7 +5,7 @@ aggregate.comparisons <- function(x, by = NULL, ...) {
 
     if (is.null(by)) {
         if (is.null(attr(x, "by"))) {
-            by <- "type"
+            by <- c("type", "term", "group")
         } else {
             by <- attr(x, "by")
         }
