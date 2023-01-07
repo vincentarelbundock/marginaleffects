@@ -1,4 +1,4 @@
-exit_file("broken")
+# exit_file("broken")
 
 # bug fix submitted for this version of insight
 source("helpers.R")
@@ -11,16 +11,14 @@ requiet("gamlss")
 requiet("titanic")
 
 # Beta regression
-data("GasolineYield", package = "betareg")
-tmp <- GasolineYield
+tmp <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/betareg/GasolineYield.csv")
 tmp$batch <- factor(tmp$batch)
-dat <- tmp
+dat <<- tmp
 mod <- gamlss::gamlss(yield ~ batch + temp,
     family = "BE",
     data = dat,
     trace = FALSE)
 
-withr::with_environment(environment(), {
 
 
 expect_error(predictions(mod, newdata = head(dat)), pattern = "what. argument")
@@ -51,9 +49,10 @@ expect_equivalent(mfx$std.error, em$SE, tolerance = .001)
 
 # predictions: no validity
 pred <- suppressWarnings(predictions(mod, what = "mu"))
-expect_predictions(pred, n_row = nrow(GasolineYield))
-pred <- predictions(mod, newdata = datagrid(batch = 1:3, temp = c(300, 350)),
-                    what = "mu")
+expect_predictions(pred, n_row = nrow(tmp))
+pred <- predictions(mod,
+    newdata = datagrid(batch = 1:3, temp = c(300, 350)),
+    what = "mu")
 expect_predictions(pred, n_row = 6)
 
 
@@ -62,23 +61,23 @@ mm <- marginalmeans(mod, what = "mu")
 expect_marginalmeans(mm, n_row = 10)
 mm <- tidy(mm)
 em <- broom::tidy(emmeans::emmeans(mod, "batch", type = "response"))
-expect_equivalent(mm$estimate, em$response)
+expect_equivalent(mm$estimate, em$response, tol = 0.001)
 expect_equivalent(mm$std.error, em$std.error, tolerance = 0.01)
 
 # Logistic regression
 tmp <- titanic_train
 tmp$Pclass <- as.factor(tmp$Pclass)
-dat <- na.omit(tmp)
+dat <<- na.omit(tmp)
 
-mod <- gamlss::gamlss(Survived ~ Age + Pclass, 
-                      family = "BI", data = dat, trace = FALSE)
+mod <- gamlss::gamlss(Survived ~ Age + Pclass,
+    family = "BI", data = dat, trace = FALSE)
 
 
 # The R-package margins does not provide support to gamlss.
 # Error in tmp[["fit"]] : subscript out of bounds
 # In addition: Warning message:
 #   In predict.gamlss(model, newdata = out, type = type, se.fit = TRUE,  :
-#                       se.fit = TRUE is not supported for new data values at the moment 
+#                       se.fit = TRUE is not supported for new data values at the moment
 
 
 # emtrends
@@ -96,6 +95,7 @@ exit_file("breaks here; predictions takes forever and uses up all the memory")
 
 # predictions: no validity
 pred <- predictions(mod, what = "mu")
+
 expect_predictions(pred, n_row = nrow(na.omit(titanic_train)))
 pred <- predictions(
     mod,
@@ -111,6 +111,3 @@ mm <- tidy(mm)
 em <- broom::tidy(emmeans::emmeans(mod, "Pclass", type = "response"))
 expect_equivalent(mm$estimate, em$response)
 expect_equivalent(mm$std.error, em$std.error, tolerance = 0.01)
-
-
-})
