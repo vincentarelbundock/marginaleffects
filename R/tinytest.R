@@ -36,7 +36,7 @@ expect_slopes <- function(
     }
 
     # unique
-    fail_unique <- isTRUE(hush(length(unique(object$dydx)) < n_unique))
+    fail_unique <- isTRUE(hush(length(unique(object$dydx)) < n_unique + 1))
     if (fail_unique) {
         msg <- sprintf("Fewer than %s unique values.", n_unique)
         diff <- c(diff, msg)
