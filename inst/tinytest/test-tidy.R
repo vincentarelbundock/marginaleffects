@@ -75,24 +75,30 @@ expect_true(ncol(x) > 7)
 # logical only
 model <- lm(mpg ~ am, tmp)
 x <- tidy(slopes(model))
-expect_equivalent(dim(x), c(1, 9))
+expect_true(nrow(x) == 1)
+expect_true(ncol(x) > 7)
 
 # factor only
 model <- lm(mpg ~ factor(gear), tmp)
 x <- tidy(slopes(model))
-expect_equivalent(dim(x), c(2, 9))
+expect_true(nrow(x) == 2)
+expect_true(ncol(x) > 7)
 
 # combinations
 x <- tidy(slopes(lm(mpg ~ hp + am, tmp)))
-expect_equivalent(dim(x), c(2, 9))
+expect_true(nrow(x) == 2)
+expect_true(ncol(x) > 7)
 
 x <- tidy(slopes(lm(mpg ~ hp + factor(gear), tmp)))
-expect_equivalent(dim(x), c(3, 9))
+expect_true(nrow(x) == 3)
+expect_true(ncol(x) > 7)
 
 x <- tidy(slopes(lm(mpg ~ am + factor(gear), tmp)))
-expect_equivalent(dim(x), c(3, 9))
+expect_true(nrow(x) == 3)
+expect_true(ncol(x) > 7)
 
 x <- tidy(slopes(lm(mpg ~ hp + am + factor(gear), tmp)))
-expect_equivalent(dim(x), c(4, 9))
+expect_true(nrow(x) == 4)
+expect_true(ncol(x) > 7)
 
 

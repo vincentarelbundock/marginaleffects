@@ -11,8 +11,21 @@ aggregate.comparisons <- function(x, by = NULL, ...) {
         }
     }
 
-    # `by` requires us to re-eval a modified call
+    # `bynout` requires us to re-eval a modified call
     out <- recall(x, by = by, ...)
+
+    if (inherits(x, "predictions")) {
+        data.table::setnames(out, "predicted", "estimate")
+    }
+
+    # sort and subset columns
+    cols <- c("type", "group", "term", "contrast",
+              attr(x, "by"),
+              grep("^contrast_\\w+", colnames(out), value = TRUE),
+              "estimate", "std.error", "statistic", "p.value", "conf.low", "conf.high")
+    cols <- intersect(cols, colnames(out))
+    data.table::setDF(out)
+    out <- as.data.frame(out)[, cols, drop = FALSE]
 
     return(out)
 }
