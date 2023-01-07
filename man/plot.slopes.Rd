@@ -6,11 +6,28 @@
 \usage{
 \method{plot}{slopes}(x, conf_level = 0.95, ...)
 }
+\arguments{
+\item{x}{An object produced by the \code{comparisons} function.}
+
+\item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval. The default \code{NULL} uses the \code{conf_level} value used in the original call to \code{comparisons()}.}
+}
 \value{
 A \code{ggplot2} object
 }
 \description{
 Uses the \code{ggplot2} package to draw a point-range plot of the average marginal effects computed by \code{tidy}.
+}
+\details{
+To compute standard errors around the average marginaleffects, we begin by applying the
+mean function to each column of the Jacobian. Then, we use this matrix in the Delta
+method to obtained standard errors.
+
+In Bayesian models (e.g., \code{brms}), we compute Average Marginal
+Effects by applying the mean function twice. First, we apply it to all
+marginal effects for each posterior draw, thereby estimating one Average (or
+Median) Marginal Effect per iteration of the MCMC chain. Second, we
+calculate the mean and the \code{quantile} function to the results of Step 1 to
+obtain the Average Marginal Effect and its associated interval.
 }
 \examples{
 mod <- glm(am ~ hp + wt, data = mtcars)

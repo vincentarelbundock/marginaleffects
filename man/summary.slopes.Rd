@@ -8,6 +8,8 @@
 }
 \arguments{
 \item{object}{An object produced by the \code{slopes} function}
+
+\item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval. The default \code{NULL} uses the \code{conf_level} value used in the original call to \code{comparisons()}.}
 }
 \value{
 Data frame of summary statistics for an object produced by the
@@ -53,12 +55,12 @@ summary(mfx)
 }
 \seealso{
 Other summary: 
+\code{\link{aggregate.comparisons}()},
 \code{\link{glance.slopes}()},
 \code{\link{reexports}},
 \code{\link{summary.comparisons}()},
 \code{\link{summary.marginalmeans}()},
 \code{\link{summary.predictions}()},
-\code{\link{tidy.hypotheses}()},
 \code{\link{tidy.marginalmeans}()}
 }
 \concept{summary}

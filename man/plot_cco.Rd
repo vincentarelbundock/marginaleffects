@@ -29,6 +29,8 @@ plot_cco(
 \item Shortcut strings for common reference values: "minmax", "quartile", "threenum"
 }}
 
+\item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval. The default \code{NULL} uses the \code{conf_level} value used in the original call to \code{comparisons()}.}
+
 \item{transform_pre}{string or function. How should pairs of adjusted predictions be contrasted?
 \itemize{
 \item string: shortcuts to common contrast functions.

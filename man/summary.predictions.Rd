@@ -8,6 +8,10 @@
 }
 \arguments{
 \item{object}{An object produced by the \code{predictions} function}
+
+\item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval. The default \code{NULL} uses the \code{conf_level} value used in the original call to \code{comparisons()}.}
+
+\item{transform_avg}{A function applied to the estimates and confidence intervals \emph{after} the unit-level estimates have been averaged.}
 }
 \value{
 Data frame of summary statistics for an object produced by the
@@ -46,12 +50,12 @@ posterior using the function supplied to the
 
 \seealso{
 Other summary: 
+\code{\link{aggregate.comparisons}()},
 \code{\link{glance.slopes}()},
 \code{\link{reexports}},
 \code{\link{summary.comparisons}()},
 \code{\link{summary.marginalmeans}()},
 \code{\link{summary.slopes}()},
-\code{\link{tidy.hypotheses}()},
 \code{\link{tidy.marginalmeans}()}
 }
 \concept{summary}

@@ -4,7 +4,7 @@
 generics::glance
 
 #' Glance at key characteristics of an object
-#' @inheritParams tidy.slopes
+#' @inheritParams aggregate.slopes
 #' @family summary
 #' @export
 glance.slopes <- function(x, ...) {

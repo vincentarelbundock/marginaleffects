@@ -222,8 +222,6 @@ Collate:
     'slopes.R'
     'summary.R'
     'tidy.R'
-    'tidy.comparisons.R'
-    'tidy.predictions.R'
     'tinytest.R'
     'type_dictionary.R'
     'unpack_matrix_cols.R'

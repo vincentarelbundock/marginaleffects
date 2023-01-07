@@ -6,17 +6,20 @@
 \usage{
 \method{glance}{slopes}(x, ...)
 }
+\arguments{
+\item{x}{An object produced by the \code{comparisons} function.}
+}
 \description{
 Glance at key characteristics of an object
 }
 \seealso{
 Other summary: 
+\code{\link{aggregate.comparisons}()},
 \code{\link{reexports}},
 \code{\link{summary.comparisons}()},
 \code{\link{summary.marginalmeans}()},
 \code{\link{summary.predictions}()},
 \code{\link{summary.slopes}()},
-\code{\link{tidy.hypotheses}()},
 \code{\link{tidy.marginalmeans}()}
 }
 \concept{summary}

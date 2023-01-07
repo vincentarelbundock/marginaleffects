@@ -38,8 +38,8 @@ tidy.hypotheses <- function(x, ...) {
 #' Tidy a `marginalmeans` object
 #'
 #' @param x An object produced by the `marginalmeans` function.
-#' @inheritParams tidy.slopes
-#' @inheritParams tidy.comparisons
+#' @inheritParams aggregate.slopes
+#' @inheritParams aggregate.comparisons
 #' @return A "tidy" `data.frame` of summary statistics which conforms to the
 #' `broom` package specification.
 #' @template bayesian

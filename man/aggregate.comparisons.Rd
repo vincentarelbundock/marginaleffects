@@ -2,10 +2,65 @@
 % Please edit documentation in R/aggregate.R
 \name{aggregate.comparisons}
 \alias{aggregate.comparisons}
-\title{Marginalize Over Unit-Level Estimates}
+\alias{aggregate.slopes}
+\alias{aggregate.predictions}
+\title{Aggregate (marginalize, integrate, average over) a \code{comparisons} object}
 \usage{
 \method{aggregate}{comparisons}(x, by = NULL, ...)
+
+\method{aggregate}{slopes}(x, by = NULL, ...)
+
+\method{aggregate}{predictions}(x, by = NULL, ...)
+}
+\arguments{
+\item{x}{An object produced by the \code{comparisons} function.}
+
+\item{by}{Compute group-wise average estimates. Valid inputs:
+\itemize{
+\item Character vector of column names in \code{newdata} or in the data frame produced by calling the function without the \code{by} argument.
+\item Data frame with a \code{by} column of group labels, and merging columns shared by \code{newdata} or the data frame produced by calling the same function without the \code{by} argument.
+\item See examples below.
+}}
+
+\item{transform_avg}{A function applied to the estimates and confidence intervals \emph{after} the unit-level estimates have been averaged.}
+
+\item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval. The default \code{NULL} uses the \code{conf_level} value used in the original call to \code{comparisons()}.}
+}
+\value{
+A "tidy" \code{data.frame} of summary statistics which conforms to the
+\code{broom} package specification.
 }
 \description{
-Marginalize Over Unit-Level Estimates
+Calculate average contrasts by taking the mean of all the
+unit-level contrasts computed by the \code{predictions} function.
 }
+\details{
+To compute standard errors around the average marginaleffects, we begin by applying the
+mean function to each column of the Jacobian. Then, we use this matrix in the Delta
+method to obtained standard errors.
+
+In Bayesian models (e.g., \code{brms}), we compute Average Marginal
+Effects by applying the mean function twice. First, we apply it to all
+marginal effects for each posterior draw, thereby estimating one Average (or
+Median) Marginal Effect per iteration of the MCMC chain. Second, we
+calculate the mean and the \code{quantile} function to the results of Step 1 to
+obtain the Average Marginal Effect and its associated interval.
+}
+\examples{
+mod <- lm(mpg ~ factor(gear), data = mtcars)
+contr <- comparisons(mod, variables = list(gear = "sequential"))
+tidy(contr)
+Marginalize Over Unit-Level Estimates
+
+}
+\seealso{
+Other summary: 
+\code{\link{glance.slopes}()},
+\code{\link{reexports}},
+\code{\link{summary.comparisons}()},
+\code{\link{summary.marginalmeans}()},
+\code{\link{summary.predictions}()},
+\code{\link{summary.slopes}()},
+\code{\link{tidy.marginalmeans}()}
+}
+\concept{summary}

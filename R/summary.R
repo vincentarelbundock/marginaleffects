@@ -2,7 +2,7 @@
 #'
 #' @param object An object produced by the `slopes` function
 #' @inheritParams marginaleffects
-#' @inheritParams tidy.slopes
+#' @inheritParams aggregate.slopes
 #' @template bayesian
 #' @return Data frame of summary statistics for an object produced by the
 #' `slopes` function
@@ -233,7 +233,7 @@ print.marginalmeans.summary <- function(x,
 #'
 #' @param object An object produced by the `predictions` function
 #' @inheritParams predictions
-#' @inheritParams tidy.predictions
+#' @inheritParams aggregate.predictions
 #' @return Data frame of summary statistics for an object produced by the
 #' `predictions` function
 #' @template bayesian
@@ -351,7 +351,7 @@ print.predictions.summary <- function(x,
 #'
 #' @param object An object produced by the `comparisons` function
 #' @inheritParams comparisons
-#' @inheritParams tidy.comparisons
+#' @inheritParams aggregate.comparisons
 #' @return Data frame of summary statistics for an object produced by the
 #' `comparisons` function
 #' @examples
