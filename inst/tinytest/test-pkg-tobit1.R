@@ -1,4 +1,4 @@
-exit_file("tobit1 does not seem to be available")
+exit_file("tobit1 is not on CRAN")
 
 
 source("helpers.R")
