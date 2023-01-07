@@ -16,6 +16,10 @@ aggregate.comparisons <- function(x, by = NULL, ...) {
 
     if (inherits(x, "predictions")) {
         data.table::setnames(out, "predicted", "estimate")
+    } else if (inherits(x, "comparisons")) {
+        data.table::setnames(out, "comparison", "estimate")
+    } else if (inherits(x, "slopes")) {
+        data.table::setnames(out, "dydx", "estimate")
     }
 
     # sort and subset columns
