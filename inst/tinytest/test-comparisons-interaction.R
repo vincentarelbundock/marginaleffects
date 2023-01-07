@@ -98,7 +98,7 @@ expect_warning(comparisons(mod, interaction = TRUE))
 # expect_equivalent(nrow(tidy(cmp)), 27)
 
 
-exit_file("Aggregate functionality rollback")
+exit_file("aggregate: bayes")
 # brms + order of first character doesn't matter
 mod <- marginaleffects:::modelarchive_model("brms_factor")
 cmp <- comparisons(mod, variables = c("cyl_fac", "mpg"), cross = TRUE, contrast_factor = "all")
