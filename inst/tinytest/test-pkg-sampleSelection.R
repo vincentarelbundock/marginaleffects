@@ -1,5 +1,3 @@
-exit_file("environment")
-
 source("helpers.R")
 using("marginaleffects")
 
@@ -7,6 +5,7 @@ requiet("sampleSelection")
 
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/sampleSelection/Mroz87.csv")
 dat$kids <- dat$kids5 + dat$kids618 > 0
+dat <<- dat
 
 # heckit: se not supported yet
 mod <- heckit(lfp ~ age + I( age^2 ) + faminc + kids + educ,

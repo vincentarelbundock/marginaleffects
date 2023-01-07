@@ -502,9 +502,9 @@ get_predictions <- function(model,
     } else {
         msg <- "Unable to compute predicted values with this model. You can try to supply a different dataset to the `newdata` argument. If this does not work, you can file a report on the Github Issue Tracker: https://github.com/vincentarelbundock/marginaleffects/issues"
         if (!is.null(out$error)) {
-            msg <- c(msg, paste("This error was also raised:", out$error$message))
+            msg <- c(msg, "", paste("This error was also raised:", "", out$error$message))
         }
-        stop(insight::format_message(msg), call. = FALSE)
+        insight::format_error(msg)
     }
 
     if (!"rowid" %in% colnames(out) && "rowid" %in% colnames(newdata) && nrow(out) == nrow(newdata)) {

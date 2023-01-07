@@ -1,4 +1,3 @@
-exit_file("aggregate")
 source("helpers.R")
 using("marginaleffects")
 

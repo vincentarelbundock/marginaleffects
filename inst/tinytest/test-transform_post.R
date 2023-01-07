@@ -26,7 +26,7 @@ expect_equivalent(exp(cmp1$conf.high), cmp2$conf.high)
 
 # # aggregate refactor deprecates trasnsform_avg
 # tid1 <- tidy(cmp1)
-# tid2 <- tidy(cmp1, transform_avg = exp)
+# tid2 <- tidy(cmp1, transform_post = exp)
 # expect_equivalent(exp(tid1$estimate), tid2$estimate)
 # expect_equivalent(exp(tid1$conf.low), tid2$conf.low)
 # expect_equivalent(exp(tid1$conf.high), tid2$conf.high)
