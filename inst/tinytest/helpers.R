@@ -10,6 +10,11 @@ Sys.setenv(TZ="America/New_York")
 library("tinytest")
 library("tinyviztest")
 
+# snapshots
+options(width = 10000)
+
+
+
 if (isTRUE(suppressMessages(require("tinytest"))) && packageVersion("tinytest") >= "1.4.0") {
     tinytest::register_tinytest_extension(
         "marginaleffects",
