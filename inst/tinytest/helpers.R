@@ -1,3 +1,4 @@
+EXPENSIVE <- FALSE
 
 # common names of datasets, often assigned to global environment
 common <- c("dat", "tmp", "d", "k", "mod", "tmp1", "tmp2", "test1", "test2")

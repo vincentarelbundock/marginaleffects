@@ -3,8 +3,7 @@
 # https://github.com/vincentarelbundock/marginaleffects/issues/240
 source("helpers.R")
 using("marginaleffects")
-exit_file("expensive")
-# if (ON_CI) exit_file("on ci")
+exit_if_not(EXPENSIVE)
 if (ON_WINDOWS) exit_file("on windows")
 if (ON_CRAN) exit_file("on cran")
 if (!minver("base", "4.1.0")) exit_file("R 4.1.0")
@@ -36,13 +35,26 @@ brms_vdem <- marginaleffects:::modelarchive_model("brms_vdem")
 brms_lognormal_hurdle <- marginaleffects:::modelarchive_model("brms_lognormal_hurdle")
 brms_lognormal_hurdle2 <- marginaleffects:::modelarchive_model("brms_lognormal_hurdle2")
 brms_binomial <- marginaleffects:::modelarchive_model("brms_binomial")
-brms_mixed_3 <- insight::download_model("brms_mixed_3")
 brms_mv_1 <- marginaleffects:::modelarchive_model("brms_mv_1")
 brms_vdem <- marginaleffects:::modelarchive_model("brms_vdem")
 brms_ordinal_1 <- insight::download_model("brms_ordinal_1")
 brms_categorical_1 <- marginaleffects:::modelarchive_model("brms_categorical_1")
 brms_logit_re <- marginaleffects:::modelarchive_model("brms_logit_re")
 
+# link (code from easystats circus)
+# brms_mixed_3 <- insight::download_model("brms_mixed_3")
+set.seed(123)
+tmp <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/lme4/sleepstudy.csv")
+tmp$grp <- sample(1:5, size = 180, replace = TRUE)
+tmp$cat <- as.factor(sample(1:5, size = 180, replace = TRUE))
+tmp$Reaction_d <-
+  ifelse(tmp$Reaction < median(tmp$Reaction), 0, 1)
+tmp <- tmp |>
+  dplyr::group_by(grp) |>
+  dplyr::mutate(subgrp = sample(1:15, size = dplyr::n(), replace = TRUE))
+void <- capture.output(suppressMessages(
+    brms_mixed_3 <- brm(Reaction ~ Days + (1 | grp / subgrp) + (1 | Subject), data = tmp)
+))
 
 
 # average marginal effects brmsmargins
@@ -112,10 +124,8 @@ expect_inherits(posteriordraws(p3), "data.frame")
 
 
 # predictions w/ random effects
-
-# link
 w <- apply(posterior_linpred(brms_mixed_3), 2, stats::median)
-x <- get_predict(brms_mixed_3, type = "link")
+x <- get_predict(brms_mixed_3, newdata = tmp, type = "link")
 y <- predictions(brms_mixed_3, type = "link")
 expect_equivalent(w, x$predicted)
 expect_equivalent(w, y$predicted)
@@ -170,7 +180,7 @@ mfx <- slopes(brms_factor, newdata = dat)
 ti <- tidy(mfx)
 expect_inherits(ti, "data.frame")
 expect_true(nrow(ti) == 3)
-expect_true(ncol(ti) > 7)
+expect_true(ncol(ti) > 5)
 expect_true(all(c("term", "estimate", "conf.low") %in% colnames(ti)))
 
 

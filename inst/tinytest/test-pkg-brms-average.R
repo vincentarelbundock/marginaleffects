@@ -1,7 +1,8 @@
 # TODO: high tolerance
-exit_file("expensive")
+# exit_file("expensive")
 
 source("helpers.R")
+exit_if_not(EXPENSIVE)
 using("marginaleffects")
 requiet("brms")
 requiet("insight")
