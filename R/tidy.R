@@ -2,65 +2,38 @@
 #' @export
 generics::tidy
 
+#' @noRd
+#' @export
+tidy.comparisons <- function(x, ...) {
+    out <- aggregate(x, ...)
+    if (inherits(x, c("comparisons", "slopes", "marginalmeans"))) {
+        idx <- colnames(out) %in% c("dydx", "comparison", "marginalmeans")
+        colnames(out)[idx] <- "estimate"
+    } else if (inherits(x, "predictions")) {
+        idx <- colnames(out) %in% "predicted"
+        colnames(out)[idx] <- "estimate"
+    }
+    return(out)
+}
 
+#' @noRd
+#' @export
+tidy.slopes <- tidy.comparisons
 
-# #' Tidy a `slopes` object
-# #'
-# #' @param x An object produced by the `slopes` function.
-# #' @inheritParams marginaleffects
-# #' @param conf_level numeric value between 0 and 1. Confidence level to use to build a confidence interval. The default `NULL` uses the `conf_level` value used in the original call to `slopes()`.
-# #' @return A "tidy" `data.frame` of summary statistics which conforms to the
-# #' `broom` package specification.
-# #' @details
-# #' The `tidy` function calculates average marginal effects by taking the mean
-# #' of all the unit-level marginal effects computed by the `marginaleffects`
-# #' function.
-# #'
-# #' The standard error of the average marginal effects is obtained by 
-# #' taking the mean of each column of the Jacobian. . Then, we use this
-# #' "Jacobian at the mean" in the Delta method to obtained standard errors.
-# #'
-# #'
-# #' @family summary
-# #' @template bayesian 
-# #' @export
-# #' @examples
-# #' mod <- lm(mpg ~ hp * wt + factor(gear), data = mtcars)
-# #' mfx <- slopes(mod)
-# #'
-# #' # average marginal effects
-# #' tidy(mfx)
-# tidy.slopes <- function(x,
-#                         by = NULL,
-#                         conf_level = NULL,
-#                         ...) {
+#' @rdname tidy.comparisons
+#' @export
+tidy.predictions <- tidy.comparisons
 
-
-#     x_dt <- copy(x)
-#     setnames(x_dt, old = "dydx", new = "comparison")
-#     out <- tidy.comparisons(x_dt,
-#                             conf_level = conf_level,
-#                             ...)
-#     return(out)
-# }
-
-
-#' Tidy a `hypotheses` object
-#' @inheritParams tidy.slopes
-#' @family summary
+#' @noRd
 #' @export
 tidy.hypotheses <- function(x, ...) {
     if (any(!c("term", "estimate") %in% colnames(x)) || !inherits(x, c("hypotheses", "deltamethod", "data.frame"))) {
-        msg <- format_msg(
-        "The `tidy()` method only supports `hypotheses` objects produced by the
-        `marginaleffects::hypotheses()` function.")
-        stop(msg, call. = FALSE)
+        insight::format_error("The `tidy()` method only supports `hypotheses` objects produced by the `marginaleffects::hypotheses()` function.")
     }
     # the object is already in a tidy format. We need this method for
     # `modelsummary` and other functions that rely on `tidy()`.
     return(x)
 }
-
 
 #' Tidy a `marginalmeans` object
 #'
@@ -114,8 +87,3 @@ tidy.marginalmeans <- function(x,
 
     return(out)
 }
-
-
-
-
-

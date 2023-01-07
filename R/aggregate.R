@@ -47,25 +47,3 @@ aggregate.slopes <- aggregate.comparisons
 aggregate.predictions <- aggregate.comparisons
 
 
-#' Blah
-#' 
-#' @export
-tidy.comparisons <- function(x, ...) {
-    out <- aggregate(x, ...)
-    if (inherits(x, c("comparisons", "slopes", "marginalmeans"))) {
-        idx <- colnames(out) %in% c("dydx", "comparison", "marginalmeans")
-        colnames(out)[idx] <- "estimate"
-    } else if (inherits(x, "predictions")) {
-        idx <- colnames(out) %in% "predicted"
-        colnames(out)[idx] <- "estimate"
-    }
-    return(out)
-}
-
-#' @rdname tidy.comparisons
-#' @export
-tidy.slopes <- tidy.comparisons
-
-#' @rdname tidy.comparisons
-#' @export
-tidy.predictions <- tidy.comparisons
