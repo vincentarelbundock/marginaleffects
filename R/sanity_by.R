@@ -4,12 +4,12 @@ sanity_by <- function(by, newdata) {
         checkmate::check_character(by, min.len = 1),
         checkmate::check_null(by))
 
-    known <- c("by", "group", "term", "rowid", "rowidcf", "type", colnames(newdata))
+    known <- c("by", "group", "term", "rowid", "rowidcf", "type", "contrast", colnames(newdata))
 
     if (inherits(by, "data.frame")) {
         flag <- !all(colnames(by) %in% known) || !"by" %in% colnames(by)
     } else {
-        flag <- !all(by %in% known)
+        flag <- !all(by %in% known | grepl("^contrast_", by))
     }
 
     if (flag) {

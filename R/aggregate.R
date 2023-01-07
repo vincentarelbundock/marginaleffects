@@ -5,7 +5,7 @@ aggregate.comparisons <- function(x, by = NULL, ...) {
 
     if (is.null(by)) {
         if (is.null(attr(x, "by"))) {
-            by <- c("type", "term", "group")
+            by <- grep("^type$|^term$|^group$|^contrast_?", colnames(x), value = TRUE)
         } else {
             by <- attr(x, "by")
         }

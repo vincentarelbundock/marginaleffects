@@ -1,4 +1,4 @@
-exit_file("aggregate bug")
+# exit_file("aggregate bug")
 
 
 source("helpers.R")
@@ -104,7 +104,9 @@ mfx <- comparisons(
         cyl = dat$cyl,
         am = dat$am,
         grid.type = "counterfactual"))
+
 mfx <- tidy(mfx)
+
 mfx <- mfx[order(mfx$term, mfx$contrast, mfx$cyl, mfx$am),]
 mar <- margins(mod, at = list(cyl = unique(dat$cyl), am = unique(dat$am)))
 mar <- summary(mar)

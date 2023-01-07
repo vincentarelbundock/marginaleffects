@@ -129,6 +129,10 @@ get_contrasts <- function(model,
         }
         out[by, by := by, on = tmp]
         by <- "by"
+    } else if (isTRUE(checkmate::check_character(by))) {
+        regex <- "^term$|^contrast_?|^group$"
+        by <- c(by, grep(regex, colnames(out), value = TRUE))
+        by <- unique(by)
     }
 
     # transform_pre function could be different for different terms
@@ -318,9 +322,10 @@ get_contrasts <- function(model,
 
 
     # averaging by groups
-    # if `by` is a vector, we have done the work already above
+    # if `by` is a vector, we have done the work already above (NEW: but not when transform_pre is a function)
     # if `by` is a column name, then we have merged-in a data frame earlier
-    if (identical(by, "by") && "by" %in% colnames(out)) {
+    if (!is.null(by)) {
+    # if (identical(by, "by") && "by" %in% colnames(out)) {
         out <- get_by(
             out,
             draws = draws,

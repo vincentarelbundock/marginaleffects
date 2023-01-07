@@ -123,7 +123,7 @@ arr_r <- comparisons(
     mod,
     variables = "insurance",
     transform_pre = function(hi, lo) log(mean(hi) / mean(lo)))
-arr_r <- unlist(tidy(arr_r, transform_avg = exp)[, cols])
+arr_r <- unlist(tidy(arr_r, transform_post = exp)[, cols])
 expect_equivalent(arr_r, arr_s[c(1, 3, 4)], tolerance = tol)
 
 
