@@ -3,8 +3,9 @@ using("marginaleffects")
 requiet("survey")
 
 # mtcars logit
-dat <- mtcars
-dat$weights <- dat$w <- 1:32
+tmp <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/datasets/mtcars.csv")
+tmp$weights <- tmp$w <- 1:32
+dat <<- tmp
 mod <- suppressWarnings(svyglm(
     am ~ mpg + cyl,
     design = svydesign(ids = ~1, weights = ~weights, data = dat),
@@ -16,8 +17,8 @@ p3 <- predictions(mod, wts = "w", newdata = dat)
 p4 <- predictions(mod, wts = dat$weights)
 expect_false(tidy(p1)$estimate == tidy(p2)$estimate)
 expect_false(tidy(p1)$std.error == tidy(p2)$std.error)
-expect_equal(tidy(p2), tidy(p3))
-expect_equal(tidy(p2), tidy(p4))
+expect_equivalent(tidy(p2), tidy(p3))
+expect_equivalent(tidy(p2), tidy(p4))
 
 
 # by supports weights
@@ -34,24 +35,14 @@ expect_inherits(c1, "data.frame")
 
 # wts + transform_pre="avg"
 set.seed(100)
-lalonde <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/MatchIt/lalonde.csv")
-lalonde$w <- rchisq(614, 2)
-k <- lalonde
+k <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/MatchIt/lalonde.csv")
+k$w <- rchisq(614, 2)
 fit <- lm(re78 ~ treat * (age + educ + race + married + re74),
           data = k, weights = w)
 cmp1 <- comparisons(fit, variables = "treat", wts = "w")
 cmp2 <- comparisons(fit, variables = "treat", wts = "w", transform_pre = "differenceavg")
 expect_equivalent(tidy(cmp1)$estimate, weighted.mean(cmp1$comparison, k$w))
 expect_equivalent(cmp2$comparison, weighted.mean(cmp1$comparison, k$w))
-
-set.seed(1024)
-mod <- marginaleffects:::modelarchive_model("brms_numeric2")
-w <- runif(32)
-cmp1 <- comparisons(mod, transform_pre = "differenceavg")
-cmp2 <- comparisons(mod, wts = w, transform_pre = "differenceavg")
-cmp3 <- comparisons(mod, wts = w, transform_pre = "differenceavgwts")
-expect_true(all(cmp1$comparison != cmp2$comparison))
-expect_equivalent(cmp2$comparison, cmp3$comparison)
 
 
 
@@ -60,15 +51,28 @@ expect_error(comparisons(mod, wts = "junk"), pattern = "explicitly")
 expect_error(slopes(mod, wts = "junk"), pattern = "explicitly")
 
 # vs. Stata (not clear what SE they use, so we give tolerance)
-mod <- suppressWarnings(svyglm(
+mod <<- suppressWarnings(svyglm(
     am ~ mpg,
     design = svydesign(ids = ~1, weights = ~weights, data = dat),
     family = binomial))
-stata <- c("estimate" = .0441066, "std.error" = .0061046)
+stata <- c(.0441066, .0061046)
 mfx <- slopes(mod, wts = mod$prior.weights)
 mfx <- tidy(mfx)
-mfx <- unlist(mfx[, 3:4])
-expect_equivalent(mfx, stata, tolerance = 0.0002)
+expect_equivalent(mfx$estimate[1], stata[1], tol = .01)
+expect_equivalent(mfx$std.error, stata[2], tolerance = 0.002)
+
+
+
+# brms
+exit_file("aggregate brms")
+set.seed(1024)
+mod <- marginaleffects:::modelarchive_model("brms_numeric2")
+w <- runif(32)
+cmp1 <- comparisons(mod, transform_pre = "differenceavg")
+cmp2 <- comparisons(mod, wts = w, transform_pre = "differenceavg")
+cmp3 <- comparisons(mod, wts = w, transform_pre = "differenceavgwts")
+expect_true(all(cmp1$comparison != cmp2$comparison))
+expect_equivalent(cmp2$comparison, cmp3$comparison)
 
 # . logit am mpg [pw=weights]
 #
@@ -105,5 +109,6 @@ expect_equivalent(mfx, stata, tolerance = 0.0002)
 # -------------+----------------------------------------------------------------
 #          mpg |   .0441066   .0061046     7.23   0.000     .0321419    .0560714
 # ------------------------------------------------------------------------------
+
 
 

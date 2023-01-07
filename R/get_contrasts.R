@@ -293,6 +293,7 @@ get_contrasts <- function(model,
         # than group-merge; there were several bugs related to this in the past.
         # safefun() returns 1 value and NAs when the function retunrs a
         # singleton.
+        idx <- intersect(idx, colnames(out))
         out[, "comparison" := safefun(
             hi = predicted_hi,
             lo = predicted_lo,
