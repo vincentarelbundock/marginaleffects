@@ -4,6 +4,7 @@ New features:
 
 * `hypothesis` can be used to set the null used in calculating Z and p. For example, is the conditional risk ratio different from 1?
   - `comparisons(mod, transform_pre = "ratio", hypothesis = 1)`
+* `by` argument is now supported for bayesian models
 * Bayesian posterior distribution summaries can be customized using global options:
   - `options("marginaleffects_posterior_interval" = "eti")` 
   - `options("marginaleffects_posterior_interval" = "hdi")` 

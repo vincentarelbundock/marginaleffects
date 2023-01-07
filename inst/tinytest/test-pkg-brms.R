@@ -3,7 +3,7 @@
 # https://github.com/vincentarelbundock/marginaleffects/issues/240
 source("helpers.R")
 using("marginaleffects")
-# exit_file("expensive")
+exit_file("expensive")
 # if (ON_CI) exit_file("on ci")
 if (ON_WINDOWS) exit_file("on windows")
 if (ON_CRAN) exit_file("on cran")
@@ -169,7 +169,8 @@ dat$cyl_cha <- as.character(dat$cyl)
 mfx <- slopes(brms_factor, newdata = dat)
 ti <- tidy(mfx)
 expect_inherits(ti, "data.frame")
-expect_equivalent(dim(ti), c(3, 6))
+expect_true(nrow(ti) == 3)
+expect_true(ncol(ti) > 7)
 expect_true(all(c("term", "estimate", "conf.low") %in% colnames(ti)))
 
 
@@ -314,7 +315,8 @@ expect_inherits(mfx2, "marginaleffects")
 # comparisons
 expect_error(comparisons(brms_monotonic_factor), pattern = "cannot be used")
 contr1 <- tidy(comparisons(brms_monotonic))
-expect_true(all(paste(c(2, 3, 4, 6, 8), "-", 1) %in% contr1$contrast))
+known <- c("mean(+1)", sprintf("mean(%s) - mean(1)", c(2:4, 6, 8)))
+expect_equivalent(contr1$contrast, known)
 contr2 <- tidy(comparisons(brms_monotonic, contrast_factor = "pairwise", variables = "carb"))
 expect_equivalent(nrow(contr2), 15)
 
@@ -517,9 +519,10 @@ expect_equivalent(nrow(p), 1)
 
 
 
-# `by` not supported in comparisons() or slopes()
-expect_error(comparisons(brms_factor, by = "cyl_fac"), pattern = "supported")
-expect_error(slopes(brms_factor, by = "cyl_fac"), pattern = "supported")
+# # `by` not supported in comparisons() or slopes()
+# # this is not supported!!
+# expect_error(comparisons(brms_factor, by = "cyl_fac"), pattern = "supported")
+# expect_error(slopes(brms_factor, by = "cyl_fac"), pattern = "supported")
 
 
 

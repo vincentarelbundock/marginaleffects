@@ -115,6 +115,7 @@ get_contrasts <- function(model,
         out[, "term" := "cross"]
     }
 
+
     # by
     if (isTRUE(checkmate::check_data_frame(by))) {
         bycols <- "by"
@@ -209,7 +210,6 @@ get_contrasts <- function(model,
         }
     }
 
-
     # we feed these columns to safefun(), even if they are useless for categoricals
     if (!"marginaleffects_eps" %in% colnames(out)) out[, "marginaleffects_eps" := NA]
     if (!"marginaleffects_wts_internal" %in% colnames(out))  out[, "marginaleffects_wts_internal" := NA]
@@ -289,6 +289,7 @@ get_contrasts <- function(model,
                     eps = out$marginaleffects_eps[idx])
             }
         }
+
         # function returns unique value
         idx <- !is.na(draws[, 1])
         draws <- draws[idx, , drop = FALSE]
@@ -302,6 +303,9 @@ get_contrasts <- function(model,
             }
             out <- out[idx, , drop = FALSE]
         }
+
+        FUN_CENTER <- getOption("marginaleffects_posterior_center", default = stats::median)
+        out[, "comparison" := apply(draws, 1, FUN_CENTER)]
 
     # frequentist
     } else {
@@ -336,7 +340,7 @@ get_contrasts <- function(model,
     # averaging by groups
     # sometimes this work is already done
     # if `by` is a column name, then we have merged-in a data frame earlier
-    if (!is.null(by) && "contrast" %in% colnames(out) && !any(grepl("^mean\\(", out$contrast))) {
+    if (nrow(out) > 1 && !is.null(by) && "contrast" %in% colnames(out) && !any(grepl("^mean\\(", out$contrast))) {
     # if (identical(by, "by") && "by" %in% colnames(out)) {
         out <- get_by(
             out,

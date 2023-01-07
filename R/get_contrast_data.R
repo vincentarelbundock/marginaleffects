@@ -38,6 +38,11 @@ get_contrast_data <- function(model,
             args[["eps"]] <- eps
         }
 
+        # protec: when newdata is 1-row and the original is not available
+        if (isTRUE(args[["eps"]] <= 0)) {
+            args[["eps"]] <- NULL
+        }
+
         # logical and character before factor used to be important; but I don't think so anymore
         if (get_variable_class(modeldata, v$name, "logical")) {
             fun <- get_contrast_data_logical
