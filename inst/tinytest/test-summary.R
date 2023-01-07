@@ -9,11 +9,15 @@ requiet("dplyr")
 dat <- mtcars
 mod <- glm(am ~ hp, data = dat, family = binomial)
 cmp <- comparisons(mod, transform_pre = "lnor")
-expect_error(summary(cmp), pattern = "collapsible")
-expect_error(tidy(cmp), pattern = "collapsible")
+
 cmp <- comparisons(mod, transform_pre = "lnoravg")
 expect_equivalent(nrow(cmp), 1)
 
+# these two errors are no longer relevant, since we no longer aggregate in
+# tidy(), but instead run the same call through comparisons(), which does fancy
+# averaging by changing transform_pre when possible/known.
+# expect_error(summary(cmp), pattern = "collapsible")
+# expect_error(tidy(cmp), pattern = "collapsible")
 
 # simple summary output
 mod <- lm(mpg ~ hp + factor(cyl), dat)
