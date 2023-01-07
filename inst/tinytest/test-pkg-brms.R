@@ -1,5 +1,3 @@
-exit_file("aggregate")
-
 # HPD tests against emmeans, which uses HDI, but our default is ETI
 # HDI is implemented specifically for these tests
 # https://github.com/vincentarelbundock/marginaleffects/issues/240
@@ -644,7 +642,6 @@ hyp <- brms::hypothesis(pd, "b1 - b2 > 0")
 expect_inherits(hyp, "brmshypothesis")
 
 
-
 # posterior::rvar
 cmp <- comparisons(brms_numeric2)
 tid <- tidy(cmp)
@@ -656,3 +653,17 @@ expect_inherits(rv$rvar[[1]], "rvar")
 # Issue #546
 cmp <- comparisons(brms_numeric2, newdata = datagrid())
 expect_false(anyNA(cmp$am))
+
+
+# Issue #576
+void <- capture.output(suppressMessages(
+    mod <- brm(mpg ~ hp, data = mtcars, verbose = 0)
+))
+cmp <- comparisons(mod)
+expect_equal(nrow(cmp), 32)
+cmp <- comparisons(mod, by = "term")
+expect_equal(nrow(cmp), 1)
+cmp <- comparisons(mod, by = "cyl")
+expect_equal(nrow(cmp), 3)
+cmp <- comparisons(mod, by = "am")
+expect_equal(nrow(cmp), 2)

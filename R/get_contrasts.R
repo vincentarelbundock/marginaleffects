@@ -61,6 +61,7 @@ get_contrasts <- function(model,
             ...))[["value"]]
     }
 
+    # TODO: probable loss of performance with standard errors
     pred_or <- myTryCatch(get_predict(
         model,
         type = type,
@@ -72,8 +73,7 @@ get_contrasts <- function(model,
     setDT(original)
 
     if (!inherits(pred_hi, "data.frame") || !inherits(pred_lo, "data.frame") || !inherits(pred_or, "data.frame")) {
-        msg <- insight::format_message("Unable to compute predicted values with this model. You can try to supply a different dataset to the `newdata` argument. If this does not work, you can file a report on the Github Issue Tracker: https://github.com/vincentarelbundock/marginaleffects/issues")
-        stop(msg, call. = FALSE)
+        insight::format_error("Unable to compute predicted values with this model. You can try to supply a different dataset to the `newdata` argument. If this does not work, you can file a report on the Github Issue Tracker: https://github.com/vincentarelbundock/marginaleffects/issues")
     }
 
     # output data.frame
@@ -87,14 +87,15 @@ get_contrasts <- function(model,
     out[, "marginaleffects_eps" := NA_real_] # default (probably almost always overwritten)
     out[, "marginaleffects_wts_internal" := NA_real_] # default (probably almost always overwritten)
     mult <- nrow(out) / nrow(original)
+    regex <- "^term$|^group$|^contrast|^marginaleffects_eps$|^marginaleffects_wts_internal$"
     if (isTRUE(mult == 1)) {
-        for (v in grep("^term$|^contrast|^marginaleffects_eps$|^marginaleffects_wts_internal$", colnames(original), value = TRUE)) {
+        for (v in grep(regex, colnames(original), value = TRUE)) {
             out[, (v) := original[[v]]]
         }
 
     # group or multivariate outcomes
     } else if (isTRUE(mult > 1)) {
-        for (v in grep("^term$|^contrast|^marginaleffects_eps$|^marginaleffects_wts_internal$", colnames(original), value = TRUE)) {
+        for (v in grep(regex, colnames(original), value = TRUE)) {
             out[, (v) := rep(original[[v]], times = mult)]
         }
 
@@ -129,6 +130,7 @@ get_contrasts <- function(model,
         }
         out[by, by := by, on = tmp]
         by <- "by"
+
     } else if (isTRUE(checkmate::check_character(by))) {
         regex <- "^term$|^contrast_?|^group$"
         by <- c(by, grep(regex, colnames(out), value = TRUE))
@@ -203,7 +205,7 @@ get_contrasts <- function(model,
         if (length(tmp) > 1) {
             tmp <- subset(newdata, select = tmp)
             out <- merge(out, tmp, all.x = TRUE, sort = FALSE)
-            idx <- c(idx, by)
+            idx <- unique(c(idx, by))
         }
     }
 
@@ -259,13 +261,23 @@ get_contrasts <- function(model,
 
     # bayesian
     if (!is.null(draws)) {
+        # TODO: performance is probably terrrrrible here, but splitting is
+        # tricky because grouping rows are not always contiguous, and the order
+        # of rows is **extremely** important because draws don't have the
+        # indices that would allow us to align them back with `out`
         draws <- draws[idx_na, , drop = FALSE]
 
-        term_names <- unique(out$term)
+        if (isTRUE(checkmate::check_character(by, min.len = 1))) {
+            by_idx <- subset(out, select = intersect(by, colnames(out)))
+            by_idx <- apply(by_idx, 1, paste, collapse = "|")
+        } else {
+            by_idx <- out$term
+        }
+
         # loop over columns (draws) and term names because different terms could use different functions 
-        for (tn in term_names) {
+        for (tn in unique(by_idx)) {
             for (i in seq_len(ncol(draws))) {
-                idx <- out$term == tn
+                idx <- by_idx == tn
                 draws[idx, i] <- safefun(
                     hi = draws_hi[idx, i],
                     lo = draws_lo[idx, i],
@@ -322,9 +334,9 @@ get_contrasts <- function(model,
 
 
     # averaging by groups
-    # if `by` is a vector, we have done the work already above (NEW: but not when transform_pre is a function)
+    # sometimes this work is already done
     # if `by` is a column name, then we have merged-in a data frame earlier
-    if (!is.null(by)) {
+    if (!is.null(by) && "contrast" %in% colnames(out) && !any(grepl("^mean\\(", out$contrast))) {
     # if (identical(by, "by") && "by" %in% colnames(out)) {
         out <- get_by(
             out,

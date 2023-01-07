@@ -125,7 +125,7 @@ sanitize_newdata <- function(model, newdata, by = NULL, modeldata = NULL) {
     resp <- insight::find_response(model)
     if (isTRUE(checkmate::check_character(resp, len = 1)) &&
         !resp %in% colnames(newdata)) {
-        y <- insight::get_response(model)
+        y <- hush(insight::get_response(model))
         # protect df or matrix response
         if (isTRUE(checkmate::check_atomic_vector(y))) {
             newdata[[resp]] <- y[1]
