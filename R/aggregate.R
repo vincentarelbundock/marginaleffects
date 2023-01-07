@@ -28,8 +28,14 @@ aggregate.comparisons <- function(x, by = NULL, ...) {
               grep("^contrast_\\w+", colnames(out), value = TRUE),
               "estimate", "std.error", "statistic", "p.value", "conf.low", "conf.high")
     cols <- intersect(cols, colnames(out))
+
+    # hack to select columns while preserving attributes
+    for (v in colnames(out)) {
+        if (!v %in% cols) {
+            out[[v]] <- NULL
+        }
+    }
     data.table::setDF(out)
-    out <- as.data.frame(out)[, cols, drop = FALSE]
 
     return(out)
 }
