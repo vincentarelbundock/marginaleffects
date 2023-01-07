@@ -23,6 +23,7 @@ plot.slopes <- function(x,
 
     # combine term and contrast to avoid overlap
     if (all(c("term", "contrast") %in% colnames(dat))) {
+        dat$contrast <- gsub("mean\\(([\\w|\\/]*)\\)", "\\1", dat$contrast, perl = TRUE)
         dat$term <- ifelse(dat$contrast == "dY/dX",
                            dat$term,
                            sprintf("%s: %s", dat$term, dat$contrast))

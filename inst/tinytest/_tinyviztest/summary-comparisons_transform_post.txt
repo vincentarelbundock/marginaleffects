@@ -1,5 +1,5 @@
-  Term Contrast Effect Std. Error z value   Pr(>|z|) 2.5 % 97.5 %
-1   hp       +1  2.705   0.003638   743.7 < 2.22e-16 2.698  2.712
+  Term Contrast Effect   Pr(>|z|) 2.5 % 97.5 %
+1   hp       +1  2.705 < 2.22e-16 2.686  2.725
 
 Model type:  glm 
 Prediction type:  response 
