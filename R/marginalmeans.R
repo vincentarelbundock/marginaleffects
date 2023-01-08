@@ -467,6 +467,10 @@ get_marginalmeans <- function(model,
     if (isTRUE(checkmate::check_data_frame(by))) {
         # warnings for factor vs numeric vs character. merge.data.table usually still works.
         bycols <- intersect(colnames(out), colnames(by))
+        if (length(bycols) == 0) {
+            msg <- "There is no common columns in `by` and in the output of `marginalmeans()`. Make sure one of the entries in the `variables` argument corresponds to one of the columns in `by`."
+            insight::format_error(msg)
+        }
         for (b in bycols) {
             if (is.factor(out[[b]]) && is.numeric(by[[b]])) {
                 out[[b]] <- as.numeric(as.character(out[[b]]))

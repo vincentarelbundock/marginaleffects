@@ -134,6 +134,18 @@ expect_equivalent(mm$marginalmean, em$prob)
 expect_equivalent(mm$conf.low, em$asymp.LCL)
 expect_equivalent(mm$conf.high, em$asymp.UCL)
 
+# Issue #583
+dat <- mtcars
+dat$am <- factor(dat$am)
+dat$vs <- factor(dat$vs)
+dat$cyl <- factor(dat$cyl)
+mod <- glm(gear ~ cyl + vs + am, data = dat, family = poisson)
+
+by <- data.frame(
+    by = c("(4 & 6)", "(4 & 6)", "(8)"),
+    cyl = unique(dat$cyl))
+expect_inherits(marginalmeans(mod, variables = "cyl", by = by), "marginalmeans")
+expect_error(marginalmeans(mod, by = by), pattern = "common")
 
 # Issue #508
 df <- data.frame(id = rep(1:5, each = 2e2))
