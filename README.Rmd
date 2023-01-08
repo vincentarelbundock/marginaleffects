@@ -36,8 +36,8 @@ Introduction:
 * [Motivation](https://vincentarelbundock.github.io/marginaleffects/#motivation)
 * [Installation](https://vincentarelbundock.github.io/marginaleffects/#installation)
 * [Estimands: Predictions, Comparisons, and Slopes](https://vincentarelbundock.github.io/marginaleffects/#definitions)
-* [Prediction grid]
-* [Aggregation]
+* [Prediction Grid]
+* [Averaging]
 * [Hypothesis Tests]
 
 ```{r, child="vignettes/toc.Rmd"}
