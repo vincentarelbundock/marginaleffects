@@ -8,6 +8,7 @@ vignette: >
 ---
 
 ```{r, include = FALSE}
+options(width = 1000)
 knitr::opts_chunk$set(
   collapse = TRUE,
   fig.width = 6,
@@ -154,7 +155,7 @@ summary(mfx2)
 This is equivalent to manually taking the mean of the observation-level marginal effect for each species sub-group:
 
 ```{r}
-aggregate(dydx ~ species, data = mfx2, FUN = mean)
+aggregate(mfx$dydx, by = list(mfx$species, mfx$term), FUN = mean)
 ```
 
 Note that `marginaleffects` follows `Stata` and the `margins` package in computing standard errors using the group-wise averaged Jacobian.

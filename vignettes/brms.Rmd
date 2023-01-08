@@ -8,6 +8,7 @@ vignette: >
 ---
 
 ```{r, include = FALSE}
+options(width = 1000)
 knitr::opts_chunk$set(
   collapse = TRUE,
   fig.width = 9,
