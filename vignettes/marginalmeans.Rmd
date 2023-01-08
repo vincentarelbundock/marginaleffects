@@ -161,7 +161,7 @@ mod <- glm(gear ~ cyl + vs + am, data = dat, family = poisson)
 
 by <- data.frame(
     by = c("(4 & 6)", "(4 & 6)", "(8)"),
-    cyl = c(4, 6, 8))
+    cyl = c(4, 6, 8)
 
 marginalmeans(mod, by = by)
 ```

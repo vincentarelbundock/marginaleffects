@@ -24,11 +24,11 @@ navbar:
   title: marginaleffects
   type: default
   left:
-  - text: "Adjusted predictions"
+  - text: "Predictions"
     href: https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html
-  - text: "Marginal effects"
+  - text: "Slopes"
     href: https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html
-  - text: "Contrasts"
+  - text: "Comparisons"
     href: https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html
   - text: "Marginal means"
     href: https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html
