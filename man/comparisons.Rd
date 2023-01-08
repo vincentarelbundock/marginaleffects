@@ -404,11 +404,11 @@ comparisons(modlog, variables = list(new_hp = fdiff)) \%>\% summary()
 # Adjusted Risk Ratio: see the contrasts vignette
 mod <- glm(vs ~ mpg, data = mtcars, family = binomial)
 cmp <- comparisons(mod, transform_pre = "lnratioavg")
-summary(cmp, transform_avg = exp)
+summary(cmp, transform_post = exp)
 
 # Adjusted Risk Ratio: Manual specification of the `transform_pre`
 cmp <- comparisons(mod, transform_pre = function(hi, lo) log(mean(hi) / mean(lo)))
-summary(cmp, transform_avg = exp)
+summary(cmp, transform_post = exp)
 # cross contrasts
 mod <- lm(mpg ~ factor(cyl) * factor(gear) + hp, data = mtcars)
 cmp <- comparisons(mod, variables = c("cyl", "gear"), cross = TRUE)

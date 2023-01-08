@@ -31,11 +31,10 @@ summary.slopes <- function(object,
 #' @export
 summary.marginalmeans <- function(
     object,
-    transform_avg = NULL,
     conf_level = 0.95,
     ...) {
 
-    out <- tidy(object, conf_level = conf_level, transform_avg = transform_avg, ...)
+    out <- tidy(object, conf_level = conf_level, ...)
     out$type <- NULL
     class(out) <- c("marginalmeans.summary", class(out))
     attr(out, "type") <- attr(object, "type")
@@ -50,16 +49,12 @@ summary.marginalmeans <- function(
 summary.predictions <- function(
     object, 
     conf_level = NULL,
-    transform_avg = NULL,
     ...) {
 
-    out <- tidy(object, conf_level = conf_level, transform_avg = transform_avg, ...)
+    out <- tidy(object, conf_level = conf_level, ...)
     class(out) <- c("predictions.summary", class(out))
     attr(out, "type") <- attr(object, "type")
     attr(out, "model_type") <- attr(object, "model_type")
-    if (is.function(transform_avg)) {
-        attr(out, "transform_average_label") <- deparse(substitute(transform_avg))
-    }
 
     return(out)
 }
@@ -76,9 +71,6 @@ summary.comparisons <- function(object, ...) {
     attr(out, "transform_post") <- attr(object, "transform_post")
     attr(out, "transform_post_label") <- attr(object, "transform_post_label")
     attr(out, "transform_pre_label") <- attr(object, "transform_pre_label")
-    if (is.function(transform_avg)) {
-        attr(out, "transform_average_label") <- deparse(substitute(transform_avg))
-    }
 
     return(out)
 }

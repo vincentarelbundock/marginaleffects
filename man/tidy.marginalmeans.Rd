@@ -4,7 +4,7 @@
 \alias{tidy.marginalmeans}
 \title{Tidy a \code{marginalmeans} object}
 \usage{
-\method{tidy}{marginalmeans}(x, conf_level = 0.95, transform_avg = NULL, ...)
+\method{tidy}{marginalmeans}(x, conf_level = 0.95, ...)
 }
 \arguments{
 \item{x}{An object produced by the \code{marginalmeans} function.}

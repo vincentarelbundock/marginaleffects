@@ -38,7 +38,7 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
 
     white_list <- c(
         "conf.int", "modeldata", "contrast_factor", "contrast_numeric", "internal_call", "df",
-        "transform_avg", "transform_post", "transform_pre")
+        "transform_post", "transform_pre")
 
     model_class <- class(model)[1]
 

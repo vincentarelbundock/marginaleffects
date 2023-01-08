@@ -51,11 +51,9 @@ tidy.hypotheses <- function(x, ...) {
 #' @export
 tidy.marginalmeans <- function(x,
                                conf_level = 0.95,
-                               transform_avg = NULL,
                                ...) {
 
 
-    transform_avg <- sanitize_transform_post(transform_avg)
 
     conf_level <- sanitize_conf_level(conf_level, ...)
     out <- x
@@ -71,15 +69,6 @@ tidy.marginalmeans <- function(x,
         estimate = "estimate",
         ...)
 
-    # back transformation
-    if (!is.null(transform_avg)) {
-        if (!is.null(attr(x, "transform_post"))) {
-            msg <- "Estimates were transformed twice: once during the initial computation, and once more when summarizing the results in `tidy()` or `summary()`."
-            warning(insight::format_message(msg), call. = FALSE)
-        }
-        out <- backtransform(out, transform_avg)
-    }
-
     # sort and subset columns
     cols <- c("type", "term", "value", "estimate", "std.error", "statistic", "p.value", "conf.low", "conf.high")
     out <- out[, intersect(cols, colnames(out)), drop = FALSE]
@@ -87,7 +76,6 @@ tidy.marginalmeans <- function(x,
 
     attr(out, "conf_level") <- conf_level
     attr(out, "nchains") <- attr(x, "nchains")
-    attr(out, "transform_avg_label") <- names(transform_avg)[1]
 
     return(out)
 }
