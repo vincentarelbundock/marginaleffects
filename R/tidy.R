@@ -8,7 +8,7 @@ generics::tidy
 #' @noRd
 #' @export
 tidy.comparisons <- function(x, ...) {
-    out <- aggregate(x, ...)
+    out <- averages(x, ...)
     if (inherits(x, c("comparisons", "slopes", "marginalmeans"))) {
         idx <- colnames(out) %in% c("dydx", "comparison", "marginalmeans")
         colnames(out)[idx] <- "estimate"

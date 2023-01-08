@@ -1,9 +1,4 @@
-#' @importFrom stats aggregate
-#' @export
-stats::aggregate
-
-
-#' Aggregate Estimates (aka "Marginalize", "Average Over", "Integrate")
+#' Average Estimates (aka "Margins")
 #'
 #' Calculate average estimates by taking the mean of all the
 #' unit-level estimates computed by the `predictions`, `comparisons`, or `slopes` functions.
@@ -26,17 +21,18 @@ stats::aggregate
 #' calculate the mean and the `quantile` function to the results of Step 1 to
 #' obtain the Average Marginal Effect and its associated interval.
 #'
-#' @name aggregate.marginaleffects
 #' @examples
 #' mod <- lm(mpg ~ factor(gear), data = mtcars)
 #' contr <- comparisons(mod, variables = list(gear = "sequential"))
 #' tidy(contr)
-NULL
+averages <- function (model, ...) {
+    UseMethod("averages", model)
+}
 
 
-#' @rdname aggregate.marginaleffects
+#' @rdname averages
 #' @export
-aggregate.predictions <- function(x, by = NULL, byfun = NULL, ...) {
+averages.predictions <- function(x, by = NULL, byfun = NULL, ...) {
 
     if (!is.null(byfun) && !inherits(x, "predictions")) {
         insight::format_error("The `byfun` argument is only supported for objects produced by the `predictions()` function.")
@@ -64,8 +60,12 @@ aggregate.predictions <- function(x, by = NULL, byfun = NULL, ...) {
     # sort and subset columns
     cols <- c("type", "group", "term", "contrast",
               attr(x, "by"),
+              "by",
               grep("^contrast_\\w+", colnames(out), value = TRUE),
               "estimate", "std.error", "statistic", "p.value", "conf.low", "conf.high")
+    if (isTRUE(checkmate::check_character(by))) {
+        cols <- c(cols, by)
+    }
     cols <- intersect(cols, colnames(out))
 
     # hack to select columns while preserving attributes
@@ -80,9 +80,9 @@ aggregate.predictions <- function(x, by = NULL, byfun = NULL, ...) {
 }
 
 
-#' @rdname aggregate.marginaleffects
+#' @rdname averages
 #' @export
-aggregate.comparisons <- function(x, by = NULL, ...) {
+averages.comparisons <- function(x, by = NULL, ...) {
 
     if ("byfun" %in% names(list(...)) && !inherits(x, "predictions")) {
         insight::format_error("The `byfun` argument is only supported for objects produced by the `predictions()` function.")
@@ -109,9 +109,13 @@ aggregate.comparisons <- function(x, by = NULL, ...) {
 
     # sort and subset columns
     cols <- c("type", "group", "term", "contrast",
+              "by",
               attr(x, "by"),
               grep("^contrast_\\w+", colnames(out), value = TRUE),
               "estimate", "std.error", "statistic", "p.value", "conf.low", "conf.high")
+    if (isTRUE(checkmate::check_character(by))) {
+        cols <- c(cols, by)
+    }
     cols <- intersect(cols, colnames(out))
 
     # hack to select columns while preserving attributes
@@ -126,7 +130,6 @@ aggregate.comparisons <- function(x, by = NULL, ...) {
 }
 
 
-#' @rdname aggregate.marginaleffects
+#' @rdname averages
 #' @export
-aggregate.slopes <- aggregate.comparisons
-
+averages.slopes <- averages.comparisons

@@ -2,7 +2,7 @@
 # #'
 # #' @param object An object produced by the `slopes` function
 # #' @inheritParams slopes
-# #' @inheritParams aggregate.comparisons
+# #' @inheritParams averages.comparisons
 # #' @template bayesian
 # #' @return Data frame of summary statistics for an object produced by the
 # #' `slopes` function
@@ -62,7 +62,7 @@ summary.predictions <- function(
 
 #' @export
 summary.comparisons <- function(object, ...) {
-    out <- aggregate(object, ...)
+    out <- averages(object, ...)
 
     class(out) <- c("comparisons.summary", class(out))
     attr(out, "type") <- attr(object, "type")
