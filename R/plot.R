@@ -9,15 +9,15 @@
 #' @examples
 #' mod <- glm(am ~ hp + wt, data = mtcars)
 #' mfx <- slopes(mod)
-#' plot_agg(mfx)
+#' plot_avg(mfx)
 #' 
 #' 
 #' mod <- glm(am ~ hp + factor(gear), data = mtcars)
 #' cmp <- comparisons(mod)
-#' plot_agg(cmp)
+#' plot_avg(cmp)
 #
 #' @export
-plot_agg <- function(x,  ...) {
+plot_avg <- function(x,  ...) {
 
     assert_dependency("ggplot2")
 
@@ -75,8 +75,8 @@ plot_agg <- function(x,  ...) {
 ################### Backward compatibility for deprecated methods. Also nice to keep.
 #' @export
 #' @noRd
-plot.comparisons <- plot_agg
+plot.comparisons <- plot_avg
 
 #' @export
 #' @noRd
-plot.slopes <- plot_agg
+plot.slopes <- plot_avg

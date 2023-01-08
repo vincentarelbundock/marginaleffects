@@ -99,13 +99,29 @@ The `marginaleffects` package allows `R` users to compute and plot three princip
 
 WARNING: unit-level quantities
 
+| Estimand | References | Functions |
+| ----------- | :--------- | -------- |
+| Predictions | [Link](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html) | [`predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html) |
+| | | [`plot_cap()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cap.html) |
+| Comparisons | [Link](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html) | [`comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html) |
+| | | [`plot_cco()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cap.html) |
+| | | [`plot_avg()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_avg.html) |
+| Slopes | [Link](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html) | [`comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/slopes.html) |
+| | | [`plot_cme()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cme.html) |
+| | | [`plot_avg()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_avg.html) |
+| Marginal means | [Link](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html) | [`comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/slopes.html) |
+
 ### Predictions
 
-[_Predictions_](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html) 
+> The outcome predicted by a fitted model on a specified scale for a given combination of values of the predictor variables, such as their observed values, their means, or factor levels (a.k.a. "reference grid").
 
-- The outcome predicted by a fitted model on a specified scale for a given combination of values of the predictor variables, such as their observed values, their means, or factor levels (a.k.a. "reference grid").
-- a.k.a. "Fitted values", "Adjusted predictions"
-- [`predictions(),`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html) [`plot_cap()`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html)
+a.k.a. "Fitted values", "Adjusted predictions"
+
+References:
+
+-   
+- [`predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html) 
+- 
 
 ### Comparisons
 

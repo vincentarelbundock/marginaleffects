@@ -104,7 +104,7 @@ plot_cco(mod, effect = "am", condition = list("hp", "drat" = range))
 }
 \seealso{
 Other plot: 
-\code{\link{plot_agg}()},
+\code{\link{plot_avg}()},
 \code{\link{plot_cap}()},
 \code{\link{plot_cme}()}
 }
