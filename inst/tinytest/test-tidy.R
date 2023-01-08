@@ -102,3 +102,7 @@ expect_true(nrow(x) == 4)
 expect_true(ncol(x) > 7)
 
 
+# deprecated argument
+mod <- lm(mpg ~ hp, mtcars)
+cmp <- comparisons(mod)
+expect_error(tidy(cmp, transform_avg = exp), pattern = "deprecated")
