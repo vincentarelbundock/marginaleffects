@@ -54,7 +54,7 @@ plot_agg <- function(x,  ...) {
         } else {
             p <- ggplot2::ggplot(dat, ggplot2::aes(y = term, x = estimate))
         }
-        xlab <- sprintf("Estimates with %s%% confidence intervals", sprintf("%.0f", conf_level * 100))
+        xlab <- sprintf("Estimates with %s%% confidence intervals", sprintf("%.0f", attr(dat, "conf_level") * 100))
         p <- p +
              ggplot2::geom_point() +
              ggplot2::labs(x = xlab, y = "")
