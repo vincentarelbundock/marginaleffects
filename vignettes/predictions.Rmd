@@ -184,25 +184,25 @@ mean(pred$predicted)
 
 # Average Adjusted Predictions by Group
 
-The code in this section requires version 0.8.0 of `marginaleffects`, or [the development version from Github.](https://vincentarelbundock.github.io/marginaleffects/#installation)
-
 We can compute average adjusted predictions for different subsets of the data with the `by` argument.
 
 ```{r}
-predictions(mod, by = "am") |> summary()
+predictions(mod, by = "am")
 ```
 
 In the next example, we create a "counterfactual" data grid where each observation of the dataset is repeated twice, with different values of the `am` variable, and all other variables held at the observed values. We also show the equivalent results using `dplyr`:
 
 ```{r}
-p <- predictions(
+predictions(
     mod,
     by = "am",
     newdata = datagridcf(am = 0:1))
-summary(p)
 
-p %>% group_by(am) %>%
-      summarize(AAP = mean(predicted))
+predictions(
+    mod,
+    newdata = datagridcf(am = 0:1)) |>
+    group_by(am) %>%
+    summarize(AAP = mean(predicted))
 ```
 
 ## Multinomial models
