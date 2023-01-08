@@ -1,13 +1,16 @@
+#' @importFrom stats aggregate
+#' @export
+stats::aggregate
+
+
+
 #' Aggregate (marginalize, integrate, average over) a `comparisons` object
 #'
 #' Calculate average contrasts by taking the mean of all the
 #' unit-level contrasts computed by the `predictions` function.
 #'
 #' @param x An object produced by the `comparisons` function.
-#' @param transform_avg A function applied to the estimates and confidence intervals *after* the unit-level estimates have been averaged.
-#' @param conf_level numeric value between 0 and 1. Confidence level to use to build a confidence interval. The default `NULL` uses the `conf_level` value used in the original call to `comparisons()`.
 #' @inheritParams comparisons
-#' @inheritParams aggregate.slopes
 #' @return A "tidy" `data.frame` of summary statistics which conforms to the
 #' `broom` package specification.
 #' @details
@@ -23,8 +26,6 @@
 #' calculate the mean and the `quantile` function to the results of Step 1 to
 #' obtain the Average Marginal Effect and its associated interval.
 #'
-#' @family summary
-#' @rdname aggregate
 #' @examples
 #' mod <- lm(mpg ~ factor(gear), data = mtcars)
 #' contr <- comparisons(mod, variables = list(gear = "sequential"))
@@ -71,11 +72,11 @@ aggregate.comparisons <- function(x, by = NULL, ...) {
     return(out)
 }
 
-#' @rdname aggregate
+#' @rdname aggregate.comparisons
 #' @export
 aggregate.slopes <- aggregate.comparisons
 
-#' @rdname aggregate
+#' @rdname aggregate.comparisons
 #' @export
 aggregate.predictions <- aggregate.comparisons
 

@@ -8,8 +8,6 @@
 }
 \arguments{
 \item{x}{An object produced by the \code{comparisons} function.}
-
-\item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval. The default \code{NULL} uses the \code{conf_level} value used in the original call to \code{comparisons()}.}
 }
 \value{
 A \code{ggplot2} object

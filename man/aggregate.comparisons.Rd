@@ -21,10 +21,6 @@
 \item Data frame with a \code{by} column of group labels, and merging columns shared by \code{newdata} or the data frame produced by calling the same function without the \code{by} argument.
 \item See examples below.
 }}
-
-\item{transform_avg}{A function applied to the estimates and confidence intervals \emph{after} the unit-level estimates have been averaged.}
-
-\item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval. The default \code{NULL} uses the \code{conf_level} value used in the original call to \code{comparisons()}.}
 }
 \value{
 A "tidy" \code{data.frame} of summary statistics which conforms to the
@@ -53,12 +49,3 @@ tidy(contr)
 Marginalize Over Unit-Level Estimates
 
 }
-\seealso{
-Other summary: 
-\code{\link{summary.comparisons}()},
-\code{\link{summary.marginalmeans}()},
-\code{\link{summary.predictions}()},
-\code{\link{summary.slopes}()},
-\code{\link{tidy.marginalmeans}()}
-}
-\concept{summary}

@@ -1,6 +1,8 @@
 #' @importFrom generics tidy
+#' @noRd
 #' @export
 generics::tidy
+
 
 #' An alias to `aggregate.comparisons()` for compatibility with the `broom` and `modelsummary` packages.
 #' 
