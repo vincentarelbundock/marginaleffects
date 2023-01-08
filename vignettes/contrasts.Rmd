@@ -1,8 +1,8 @@
 ---
-title: "Contrasts" 
+title: "Comparisons" 
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Contrasts}
+  %\VignetteIndexEntry{Comparisons}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

@@ -18,7 +18,7 @@ Introduction:
 
   - [Motivation](https://vincentarelbundock.github.io/marginaleffects/#motivation)
   - [Installation](https://vincentarelbundock.github.io/marginaleffects/#installation)
-  - Interpreting model estimates:
+  - Interpreting model estimates: a 4-steps approach
     1.  [Estimands: Predictions, Comparisons, and
         Slopes](https://vincentarelbundock.github.io/marginaleffects/#estimands-predictions-comparisons-and-slopes)
     2.  [Prediction
