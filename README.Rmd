@@ -1,15 +1,17 @@
 ---
-output: github_document
+output: 
+    - html_document
+    - github_document
 ---
 
 # The `marginaleffects` package for `R` <img src="https://user-images.githubusercontent.com/987057/134899484-e3392510-2e94-4c39-9830-53356fa5feed.png" align="right" alt="" width="120" />
 
-<!-- badges: start -->
+<!--
 [![Codecov test coverage](https://codecov.io/gh/vincentarelbundock/marginaleffects/branch/main/graph/badge.svg)](https://app.codecov.io/gh/vincentarelbundock/marginaleffects?branch=main)
-[![R-CMD-check](https://github.com/vincentarelbundock/marginaleffects/workflows/R-CMD-check/badge.svg)](https://github.com/vincentarelbundock/marginaleffects/actions)
+[![R-CMD-check](https://github/To cl.com/vincentarelbundock/marginaleffects/workflows/R-CMD-check/badge.svg)](https://github.com/vincentarelbundock/marginaleffects/actions)
 [![CRAN status](https://www.r-pkg.org/badges/version/marginaleffects)](https://CRAN.R-project.org/package=marginaleffects)
 [![status](https://tinyverse.netlify.com/badge/marginaleffects)](https://CRAN.R-project.org/package=marginaleffects)
-<!-- badges: end -->
+-->
 
 ```{r, include = FALSE}
 options(width = 10000)
@@ -31,10 +33,12 @@ Compute and plot adjusted predictions, contrasts, marginal effects, and marginal
 
 Introduction:
 
-* [Definitions](https://vincentarelbundock.github.io/marginaleffects/#definitions)
 * [Motivation](https://vincentarelbundock.github.io/marginaleffects/#motivation)
 * [Installation](https://vincentarelbundock.github.io/marginaleffects/#installation)
-* [Getting started](https://vincentarelbundock.github.io/marginaleffects/#getting-started)
+* [Estimands: Predictions, Comparisons, and Slopes](https://vincentarelbundock.github.io/marginaleffects/#definitions)
+* [Prediction grid]
+* [Aggregation]
+* [Hypothesis Tests]
 
 ```{r, child="vignettes/toc.Rmd"}
 ```
@@ -44,67 +48,30 @@ External links:
 ```{r, child="vignettes/toc_external.Rmd"}
 ```
 
-## Definitions
-
-The `marginaleffects` package allows `R` users to compute and plot four principal quantities of interest for [`r n_support` different classes of models:](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html) 
-
-* [_Predictions_](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html) 
-    - The outcome predicted by a fitted model on a specified scale for a given combination of values of the predictor variables, such as their observed values, their means, or factor levels (a.k.a. "reference grid").
-    - a.k.a. "Fitted values", "Adjusted predictions"
-    - [`predictions(),`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html) [`plot_cap()`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html)
-* [_Comparisons_](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)
-    - The difference between two predictions, calculated for meaningfully different predictor values (e.g., College graduates vs. Others). Instead of a difference, comparisons can be constructed using other functions of two adjusted predictions, such as a ratio.
-    - e.g., "Contrasts", "Risk ratios", etc.
-    - [`comparisons(),`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html) [`plot_cco()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cco.html)
-* [_Slopes_](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html) 
-    - Partial derivatives of the regression equation with respect to a regressor of interest.
-    - a.k.a. "Marginal effects", "Trends"
-    - [`slopes(),`](https://vincentarelbundock.github.io/marginaleffects/reference/slopes.html) [`plot(),`](https://vincentarelbundock.github.io/marginaleffects/reference/plot.slopes.html) [`plot_cme()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cme.html)
-* [_Marginal Means_](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) 
-    - Adjusted predictions of a model, averaged across a "reference grid" of categorical predictors.
-    - [`marginalmeans()`](https://vincentarelbundock.github.io/marginaleffects/reference/marginalmeans.html)
-
-### What does "marginal" mean?
-
-One confusing aspect of the definitions above is that they use the word "marginal" in two different and *opposite* ways: 
-
-1. In "marginal effects," we refer to the effect of a tiny (marginal) change in the regressor on the outcome. This is a slope, or derivative. 
-2. In "marginal means," we refer to the process of marginalizing across rows of a prediction grid. This is an average, or integral. 
-
-Another potential confusion arises when some analysts use "marginal" to distinguish some estimates from "conditional" ones. As noted in [the marginal effects](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html) and [the contrasts](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html) vignettes, slopes and contrasts often vary from individual to individual, based on the values of all the regressors in the model. When we estimate a slope or a contrast for a specific combination of predictors -- for one (possibly representative) individual -- some people will call this a "conditional" estimate. When we compute the average of several individual-level estimates, some people will call this a "marginal" estimate. 
-
-On this website and in this package, we will reserve the expression "marginal effect" to mean a "slope" or "derivative". When we take the average unit-level estimates, we will call this an "average marginal effect."
-
-This is all very confusing, but the terminology is so widespread and inconsistent that we must press on...
-
 ## Motivation
 
-To calculate marginal effects (slopes) we need to take derivatives of the regression equation. To compute standard errors around slopes, predictions, contrasts, or marginal means, we need to apply the delta method. These operations can be challenging to do manually, especially when our models are non-linear, or when regressors are transformed or interacted. Computing the variance of a marginal effect is even more difficult. 
+Parameter estimates are often hard to interpret substantively, especially when they are generated by complex models with non-linear components or transformations. Many applied researchers would rather focus on simple quantities of interest, which have straightforward scientific interpretations. Unfortunately, these estimands (and their standard errors) are often tedious to calculate. Moreover, the different modeling packages in `R` often produce inconsistent objects that require special treatment.
 
-The `marginaleffects` package hopes to do most of this hard work for you.
+`marginaleffects` offers a single point of entry to easily interpret the results of over `r n_support` classes of models, using a simple and consistent user interface.
 
-The main packages in the `R` ecosystem to compute marginal effects are the trailblazing and powerful [`margins` by Thomas J. Leeper](https://cran.r-project.org/package=margins), and [`emmeans` by Russell V. Lenth and contributors.](https://cran.r-project.org/package=emmeans) The `marginaleffects` package started as a clone of `margins` with some additional features from `emmeans`. It has now become *much* more than that...
+Benefits of `marginaleffects` include:
 
-So why did I write this package?
-
-* _Powerful:_ Marginal effects and contrasts can be computed for `r n_support` different classes of models. Adjusted predictions and marginal means can be computed for about 100 model types.
-* _Customizable_: Extremely flexible functions to compute custom contrasts and transformations.
-* _Extensible:_ Adding support for new models is very easy, often requiring less than 10 lines of new code. Please submit [feature requests on Github.](https://github.com/vincentarelbundock/marginaleffects/issues)
-* _Fast:_ [Computing unit-level standard errors](https://vincentarelbundock.github.io/marginaleffects/articles/performance.html) can be orders of magnitude faster than `margins` in large datasets.
-* _Efficient:_ Much smaller memory footprint.
-* _Valid:_  When possible, numerical results are checked against alternative software like `Stata`, or other `R` packages.
-* _Beautiful:_ `ggplot2` support for plotting (conditional) marginal effects and adjusted predictions.
-* _Tidy:_ The results produced by `marginaleffects` follow "tidy" principles. They are easy to program with and feed to [other packages like `modelsummary`.](https://vincentarelbundock.github.io/marginaleffects/) 
+* _Powerful:_ It can compute predictions, comparisons (contrasts, risk ratios, etc.), slopes, and conduct hypothesis tests for `r n_support` different classes of models in `R`.
 * _Simple:_ All functions share a simple, unified, and well-documented interface.
-* _Thin:_ The package requires relatively few dependencies.
-* _Safe:_  User input is checked extensively before computation. When needed, functions fail gracefully with informative error messages.
-* _Active development_
+* _Efficient:_ [Some operations](https://vincentarelbundock.github.io/marginaleffects/articles/performance.html) are orders of magnitude faster than with the `margins` package, and the memory footprint is much smaller.
+* _Valid:_  When possible, [numerical results are checked](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html) against alternative software like `Stata` or other `R` packages.
+* _Thin:_ Few dependencies.
+* _Standards-compliant:_ `marginaleffects` follows "tidy" principles and returns objects that work with standard functions like `plot`, `summary()`, `tidy()`, and `glance()`. These objects are easy to program with and feed to [other packages like `modelsummary`.](https://vincentarelbundock.github.io/marginaleffects/) 
+* _Extensible:_ Adding support for new models is very easy, often requiring less than 10 lines of new code. Please submit [feature requests on Github.](https://github.com/vincentarelbundock/marginaleffects/issues)
+* _Active development_: Bugs are fixed promptly.
 
 Downsides of `marginaleffects` include:
 
 * No multiplicity adjustments. (Use `p.adjust()` instead.)
 * Marginal means are often slower to compute than with `emmeans`.
 * No omnibus test
+
+If `marginaleffects` does not meet your needs, I recommend you try [`emmeans`](https://github.com/rvlenth/emmeans) or one of the other [alternative `R` packages.](https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html)
 
 ## Installation
 
@@ -126,6 +93,56 @@ install.packages(
 
 **Restart `R` completely before moving on.** 
 
+## Estimands: Predictions, Comparisons, and Slopes
+
+The `marginaleffects` package allows `R` users to compute and plot three principal quantities of interest for [`r n_support` different classes of models:](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html) Predictions, Comparisons (contrasts, risk ratios, etc.), and Slopes. In addition, the package includes a convenience function to estimate "marginal means", whis is a special case of "aggregated" prediction.
+
+WARNING: unit-level quantities
+
+### Predictions
+
+[_Predictions_](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html) 
+
+- The outcome predicted by a fitted model on a specified scale for a given combination of values of the predictor variables, such as their observed values, their means, or factor levels (a.k.a. "reference grid").
+- a.k.a. "Fitted values", "Adjusted predictions"
+- [`predictions(),`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html) [`plot_cap()`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html)
+
+### Comparisons
+
+[_Comparisons_](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)
+
+- The difference between two predictions, calculated for meaningfully different predictor values (e.g., College graduates vs. Others). Instead of a difference, comparisons can be constructed using other functions of two adjusted predictions, such as a ratio.
+- e.g., "Contrasts", "Risk ratios", etc.
+- [`comparisons(),`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html) [`plot_cco()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cco.html)
+
+### Slopes
+
+[_Slopes_](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html) 
+
+- Partial derivatives of the regression equation with respect to a regressor of interest.
+- a.k.a. "Marginal effects", "Trends"
+- [`slopes(),`](https://vincentarelbundock.github.io/marginaleffects/reference/slopes.html) [`plot(),`](https://vincentarelbundock.github.io/marginaleffects/reference/plot.slopes.html) [`plot_cme()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cme.html)
+
+### Marginal means
+
+* [_Marginal Means_](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) 
+    - Adjusted predictions of a model, averaged across a "reference grid" of categorical predictors.
+    - [`marginalmeans()`](https://vincentarelbundock.github.io/marginaleffects/reference/marginalmeans.html)
+
+### What does "marginal" mean?
+
+One confusing aspect of the definitions above is that they use the word "marginal" in two different and *opposite* ways: 
+
+1. In "marginal effects," we refer to the effect of a tiny (marginal) change in the regressor on the outcome. This is a slope, or derivative. 
+2. In "marginal means," we refer to the process of marginalizing across rows of a prediction grid. This is an average, or integral. 
+
+Another potential confusion arises when some analysts use "marginal" to distinguish some estimates from "conditional" ones. As noted in [the marginal effects](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html) and [the contrasts](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html) vignettes, slopes and contrasts often vary from individual to individual, based on the values of all the regressors in the model. When we estimate a slope or a contrast for a specific combination of predictors -- for one (possibly representative) individual -- some people will call this a "conditional" estimate. When we compute the average of several individual-level estimates, some people will call this a "marginal" estimate. 
+
+On this website and in this package, we will reserve the expression "marginal effect" to mean a "slope" or "derivative". When we take the average unit-level estimates, we will call this an "average marginal effect."
+
+This is all very confusing, but the terminology is so widespread and inconsistent that we must press on...
+
+
 ## Getting started
 
 #### Adjusted predictions
@@ -138,7 +155,7 @@ library(marginaleffects)
 mod <- lm(mpg ~ hp * wt * am, data = mtcars)
 ```
 
-An "adjusted prediction" is the outcome predicted by a model for some combination of the regressors’ values, such as their observed values, their means, or factor levels (a.k.a. “reference grid”).
+An "adjusted prediction" is the outcome predicted by a model for some combination of the regressors' values, such as their observed values, their means, or factor levels (a.k.a. “reference grid”).
 
 By default, the `predictions()` function returns adjusted predictions for every value in original dataset:
 
