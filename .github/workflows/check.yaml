@@ -46,9 +46,6 @@ jobs:
       - name: tinytest dev
         run: Rscript -e "remotes::install_github('markvanderloo/tinytest/pkg')"
 
-      - name: tinyviztest dev
-        run: Rscript -e "remotes::install_github('vincentarelbundock/tinyviztest')"
-
       - name: TMB source
         run: Rscript -e "install.packages('TMB', type = 'source')"
 

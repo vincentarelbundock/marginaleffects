@@ -8,7 +8,8 @@ suppressWarnings(rm(list = common))
 # avoids a `timedatectl`` warning
 Sys.setenv(TZ="America/New_York") 
 library("tinytest")
-library("tinyviztest")
+
+require("tinyviztest")
 
 # snapshots
 options(width = 10000)

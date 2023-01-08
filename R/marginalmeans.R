@@ -373,6 +373,7 @@ marginalmeans <- function(model,
     attr(out, "model_type") <- class(model)[1]
     attr(out, "variables") <- variables
     attr(out, "call") <- match.call()
+    attr(out, "conf_level") <- conf_level
     attr(out, "transform_post_label") <- names(transform_post)[1]
 
     if (isTRUE(cross)) {

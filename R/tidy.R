@@ -53,5 +53,9 @@ tidy.hypotheses <- function(x, ...) {
 #' @export
 tidy.marginalmeans <- function(x, ...) {
     colnames(x)[colnames(x) == "marginalmean"] <- "estimate"
-    return(x)
+    first = c("type", "term", "value", "estimate", "std.error",
+    "statistic", "p.value", "conf.low", "conf.high")
+    out <- sort_columns(x, first)
+    attr(out, "conf_level") <- attr(x, "conf_level")
+    return(out)
 }

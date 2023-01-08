@@ -1,8 +1,9 @@
 source("helpers.R")
+exit_if_not(require("tinyviztest"))
+exit_if_not(!ON_OSX)
+
 using("tinyviztest")
 using("marginaleffects")
-
-exit_if_not(!ON_OSX)
 
 requiet("dplyr")
 
