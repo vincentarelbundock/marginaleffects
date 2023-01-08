@@ -10,7 +10,6 @@ stats::aggregate
 #' unit-level contrasts computed by the `predictions` function.
 #'
 #' @param x An object produced by the `comparisons` function.
-#' @inheritParams comparisons
 #' @return A "tidy" `data.frame` of summary statistics which conforms to the
 #' `broom` package specification.
 #' @details
@@ -26,12 +25,16 @@ stats::aggregate
 #' calculate the mean and the `quantile` function to the results of Step 1 to
 #' obtain the Average Marginal Effect and its associated interval.
 #'
+#' @name aggregate
 #' @examples
 #' mod <- lm(mpg ~ factor(gear), data = mtcars)
 #' contr <- comparisons(mod, variables = list(gear = "sequential"))
 #' tidy(contr)
 #' Marginalize Over Unit-Level Estimates
-#' 
+NULL
+
+
+#' @rdname aggregate
 #' @export
 aggregate.comparisons <- function(x, by = NULL, ...) {
 
@@ -72,11 +75,13 @@ aggregate.comparisons <- function(x, by = NULL, ...) {
     return(out)
 }
 
-#' @rdname aggregate.comparisons
+
+#' @rdname aggregate
 #' @export
 aggregate.slopes <- aggregate.comparisons
 
-#' @rdname aggregate.comparisons
+
+#' @rdname aggregate
 #' @export
 aggregate.predictions <- aggregate.comparisons
 
