@@ -1,8 +1,8 @@
 ---
-title: "Marginal Effects" 
+title: "Slopes" 
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Marginal Effects}
+  %\VignetteIndexEntry{Slopes}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -27,11 +27,13 @@ theme_set(theme_minimal())
 
 # Definition
 
-A "marginal effect" (MFX) is a measure of the association between a change in a regressor, and a change in the response variable. More formally, [the excellent `margins` vignette](https://cran.r-project.org/package=margins) defines the concept as follows:
+Slopes are defined as:
 
-> Marginal effects are partial derivatives of the regression equation with respect to each variable in the model for each unit in the data.
+> Partial derivatives of the regression equation with respect to a regressor of interest. a.k.a. Marginal effects, trends.
 
-Put differently, the marginal effect measures the association between a change in a regressor $x$, and a change in the response $y$. Put differently, differently, the marginal effect is the slope of the prediction function, measured at a specific value of the regressor $x$.
+This vignette follows the econometrics tradition by referring to "slopes" and "amrginal effects" interchangeably. In this context, the word "marginal" refers to the idea of a "small change," in the calculus sense.
+
+A marginal effect measures the association between a change in a regressor $x$, and a change in the response $y$. Put differently, differently, the marginal effect is the slope of the prediction function, measured at a specific value of the regressor $x$.
 
 Marginal effects are extremely useful, because they are intuitive and easy to interpret. They are often the main quantity of interest in an empirical analysis. 
 

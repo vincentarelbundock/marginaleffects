@@ -9,6 +9,7 @@
 #' @param ... All additional arguments are passed to the original fitting
 #' function to modify the original call options: `conf_level`, `transform_post`,
 #' etc. See `?predictions`, `?comparisons`, `?slopes`.
+#' @export
 #' @return A `data.frame` of estimates and uncertainty estimates
 #' @details
 #'

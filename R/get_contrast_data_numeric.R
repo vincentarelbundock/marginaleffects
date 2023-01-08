@@ -1,7 +1,7 @@
 get_contrast_data_numeric <- function(model,
                                       newdata,
                                       variable,
-                                      eps,
+                                      eps = 1e-4,
                                       modeldata = NULL,
                                       ...) {
 

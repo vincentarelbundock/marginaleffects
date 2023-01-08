@@ -32,14 +32,14 @@ get_contrast_data <- function(model,
             first_cross = identical(v$name, first_cross),
             modeldata = modeldata)
         args <- append(args, list(...))
-        if (is.null(eps) && variable_classes[[v$name]] == "numeric") {
+        if (is.null(eps) && isTRUE(variable_classes[[v$name]] == "numeric")) {
             args[["eps"]] <- 1e-4 * diff(range(modeldata[[v$name]], na.rm = TRUE, finite = TRUE))
         } else {
             args[["eps"]] <- eps
         }
 
         # protec: when newdata is 1-row and the original is not available
-        if (isTRUE(args[["eps"]] <= 0)) {
+        if (isTRUE(args[["eps"]] <= 0) || !"eps" %in% names(args)) {
             args[["eps"]] <- NULL
         }
 

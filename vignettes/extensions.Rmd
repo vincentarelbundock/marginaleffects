@@ -65,7 +65,7 @@ lm_manual <- function(f, data, ...) {
 }
 ```
 
-IMPORTANT: The custom fit function must assign a new class name to the object it returns. In the example above, the model is assigned to be of class `lm_manual` (see the penultimate line of code in the function).
+Important: The custom fit function must assign a new class name to the object it returns. In the example above, the model is assigned to be of class `lm_manual` (see the penultimate line of code in the function).
 
 Our new function replicates the results of `lm()`:
 

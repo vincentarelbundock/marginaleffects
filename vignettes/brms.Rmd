@@ -458,6 +458,9 @@ mod <- brm(y ~ x + (1 | firm), data = dat, backend = "cmdstanr", family = "berno
 ```
 
 ```{r, include = FALSE}
+dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/plm/EmplUK.csv")
+dat$x <- as.numeric(dat$output > median(dat$output))
+dat$y <- as.numeric(dat$emp > median(dat$emp))
 mod <- marginaleffects:::modelarchive_model("brms_logit_re")
 ```
 
@@ -468,15 +471,15 @@ p <- predictions(mod, newdata = datagrid(x = 0, firm = unique))
 head(p)
 ```
 
-We can average/marginalize/integrate across random effects with the `tidy` function or the `by` argument:
+We can average/marginalize/integrate across random effects with the `averages` function or the `by` argument:
 
 ```{r}
-predictions(mod, newdata = datagrid(x = 0, firm = unique)) |> tidy()
+predictions(mod, newdata = datagrid(x = 0, firm = unique)) |> averages()
 
 predictions(mod, newdata = datagrid(x = 0:1, firm = unique), by = "x")
 ```
 
-We can also draw from the (assumed gaussian) population distribution of random effects, by asking `predictions()` to make predictions for new "levels" of the random effects. If we then take an average of predictions using `tidy()` or `by`, we will have ["integrated out the random effects", as described in the `brmsmargins` package vignette.](https://joshuawiley.com/brmsmargins/articles/mixed-effects-slopes.html#integrating-out-random-effects) In the code below, we make predictions for 100 firm identifiers which were not in the original dataset. We also ask `predictions()` to push forward the `allow_new_levels` and `sample_new_levels` arguments to the `brms::posterior_epred` function:
+We can also draw from the (assumed gaussian) population distribution of random effects, by asking `predictions()` to make predictions for new "levels" of the random effects. If we then take an average of predictions using `averages()` or `by`, we will have ["integrated out the random effects", as described in the `brmsmargins` package vignette.](https://joshuawiley.com/brmsmargins/articles/mixed-effects-slopes.html#integrating-out-random-effects) In the code below, we make predictions for 100 firm identifiers which were not in the original dataset. We also ask `predictions()` to push forward the `allow_new_levels` and `sample_new_levels` arguments to the `brms::posterior_epred` function:
 
 ```{r}
 predictions(
@@ -528,6 +531,8 @@ mod <- brm(depvar ~ ic.gc + oc.gc,
 ```
 
 ```{r, include = FALSE}
+dat <- "https://vincentarelbundock.github.io/Rdatasets/csv/Ecdat/Heating.csv"
+dat <- read.csv(dat)
 mod <- marginaleffects:::modelarchive_model("brms_heating")
 ```
 
@@ -817,6 +822,7 @@ Note: The rest of this section requires version 0.8.1 of `marginaleffects`, or [
 
 ```{r, include=FALSE}
 mod <- marginaleffects:::modelarchive_model("brms_numeric2")
+dat <- mtcars
 ```
 
 We begin by estimating a model:
@@ -826,10 +832,10 @@ mod <- brm(am ~ mpg + hp, data = mtcars, family = bernoulli(),
            seed = 1024, silent = 2, chains = 4, iter = 1000)
 ```
 
-Notice that we can compute average contrasts in two different ways, using the `tidy()` function or the `transform_pre` argument:
+Notice that we can compute average contrasts in two different ways, using the `averages()` function or the `transform_pre` argument:
 
 ```{r}
-comparisons(mod) |> tidy()
+comparisons(mod) |> averages()
 
 comparisons(mod, transform_pre = "differenceavg")
 ```
@@ -840,14 +846,14 @@ Now, we use the `hypothesis` argument to compare the first to the second rows of
 comparisons(
     mod,
     transform_pre = "differenceavg",
-    hypothesis = "b1 - b2 = 0.2")
+    hypothesis = "b2 - b1 = 0.2")
 ```
 
 The `hypotheses` function of the `brms` package can also perform non-linear hypothesis testing, and it generates some convenient statistics and summaries. This function accepts a D-by-P matrix of draws from the posterior distribution, where D is the number of draws and N is the number of parameters. We can obtain such a matrix using the `posteriordraws(x, shape = "DxP")`, and we can simply add a couple calls to our chain of operations: 
 
 ```{r}
 comparisons(mod) |>
-    tidy() |>
+    averages() |>
     posteriordraws(shape = "DxP") |>
-    brms::hypotheses("b2 - b1 > .2")
+    brms::hypothesis("b2 - b1 > .2")
 ```

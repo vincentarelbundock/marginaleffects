@@ -471,9 +471,13 @@ mfx <- slopes(
 summary(mfx)
 ```
 
-This is equivalent to taking the group-wise mean of observation-level marginal effects:
+This is equivalent to taking the group-wise mean of observation-level marginal effects (without the `by` argument):
 
 ```{r}
+mfx <- slopes(
+    mod,
+    variables = "hp",
+    newdata = datagridcf(cyl = c(4, 6, 8)))
 aggregate(dydx ~ term + cyl, data = mfx, FUN = mean)
 ```
 
@@ -544,7 +548,9 @@ pred <- predictions(
     newdata = datagridcf(cyl = c(4, 6, 8)))
 summary(pred)
 
-pred %>%
+predictions(
+    mod,
+    newdata = datagridcf(cyl = c(4, 6, 8))) %>%
     group_by(cyl) %>%
     summarize(AAP = mean(predicted))
 ```

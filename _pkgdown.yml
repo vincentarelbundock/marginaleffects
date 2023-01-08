@@ -6,9 +6,10 @@ reference:
     contents:
     - predictions
     - comparisons
-    - marginaleffects
-    - hypotheses
+    - slopes
     - marginalmeans
+    - hypotheses
+    - averages
   - title: Data grids
     contents:
     - starts_with("datagrid")

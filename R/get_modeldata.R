@@ -6,6 +6,8 @@ get_modeldata <- function(model) {
 
 set_variable_class <- function(modeldata, model = NULL) {
 
+    if (is.null(modeldata)) return(modeldata)
+
     out <- modeldata
 
     cl <- NULL

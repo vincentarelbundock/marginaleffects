@@ -155,7 +155,7 @@ Vignettes:
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html}{Comparisons}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html}{Slopes}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html}{Marginal Means}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html}{Hypothesis Tests and Custom Contrasts using the Delta Method}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html}{Hypothesis Tests and Custom Contrasts}
 }
 
 Case studies:
