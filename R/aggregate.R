@@ -85,7 +85,7 @@ aggregate.predictions <- function(x, by = NULL, byfun = NULL, ...) {
 #' @export
 aggregate.comparisons <- function(x, by = NULL, ...) {
 
-    if (!is.null(byfun) && !inherits(x, "predictions")) {
+    if ("byfun" %in% names(list(...)) && !inherits(x, "predictions")) {
         insight::format_error("The `byfun` argument is only supported for objects produced by the `predictions()` function.")
     }
 
