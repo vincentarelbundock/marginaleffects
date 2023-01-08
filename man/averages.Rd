@@ -35,8 +35,15 @@ levels. See examples section.}
 A \code{data.frame} of estimates and uncertainty estimates
 }
 \description{
-Calculate average estimates by taking the mean of all the
-unit-level estimates computed by the \code{predictions}, \code{comparisons}, or \code{slopes} functions.
+Calculate average estimates by taking the (group-wise) mean of all the unit-level
+estimates computed by the \code{predictions()}, \code{comparisons()}, or \code{slopes()} functions.
+
+Warning: It is generally faster and safer to use the \code{by} argument of one of
+the three functions listed above. This is because \code{averages()} works by modifying the
+original call and re-evaluating the function, which duplicates computations and
+may not always work in functions or nested environments.
+
+Note that the \code{tidy()} and \code{summary()} methods are simple wrappers around \code{averages()}
 }
 \details{
 Standard errors are estimated using the delta method. See the \code{marginaleffects} website for details.

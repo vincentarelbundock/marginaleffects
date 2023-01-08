@@ -2,7 +2,7 @@
 % Please edit documentation in R/slopes.R
 \name{meffects}
 \alias{meffects}
-\title{\code{meffects()} is an alias to \code{slopes()}. It is kept for backward compatibility.}
+\title{\code{meffects()} is an alias to \code{slopes()}}
 \usage{
 meffects(
   model,
@@ -20,6 +20,6 @@ meffects(
 )
 }
 \description{
-\code{meffects()} is an alias to \code{slopes()}. It is kept for backward compatibility.
+This alias is kept for backward compatibility and because some users may prefer that name.
 }
 \keyword{internal}

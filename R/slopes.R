@@ -307,15 +307,18 @@ slopes <- function(model,
 }
 
 
-#' `meffects()` is an alias to `slopes()`. It is kept for backward compatibility.
+#' `meffects()` is an alias to `slopes()`
 #'
+#' This alias is kept for backward compatibility and because some users may prefer that name.
 #' @inherit marginaleffects
 #' @keywords internal
 #' @export
 meffects <- slopes
 
 
-#' `marginaleffects()` is an alias to `slopes()`. It is kept for backward compatibility.
+#' `marginaleffects()` is an alias to `slopes()`
+#' 
+#' This alias is kept for backward compatibility and because some users may prefer that name.
 #'
 #' @inherit marginaleffects
 #' @keywords internal

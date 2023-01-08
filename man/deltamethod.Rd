@@ -14,6 +14,6 @@ deltamethod(
 )
 }
 \description{
-\code{deltamethod()} is an alias to \code{hypotheses()}. It is kept for backward compatibility.
+This alias is kept for backward compatibility and because some users may prefer that name.
 }
 \keyword{internal}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/slopes.R
 \name{marginaleffects}
 \alias{marginaleffects}
-\title{\code{marginaleffects()} is an alias to \code{slopes()}. It is kept for backward compatibility.}
+\title{\code{marginaleffects()} is an alias to \code{slopes()}}
 \usage{
 marginaleffects(
   model,
@@ -20,6 +20,6 @@ marginaleffects(
 )
 }
 \description{
-\code{marginaleffects()} is an alias to \code{slopes()}. It is kept for backward compatibility.
+This alias is kept for backward compatibility and because some users may prefer that name.
 }
 \keyword{internal}
