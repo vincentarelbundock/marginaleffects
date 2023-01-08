@@ -53,7 +53,7 @@ plot_cme(mod, effect = "am", condition = list("hp", "drat" = "threenum"))
 }
 \seealso{
 Other plot: 
-\code{\link{plot.slopes}()},
+\code{\link{plot_agg}()},
 \code{\link{plot_cap}()},
 \code{\link{plot_cco}()}
 }

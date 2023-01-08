@@ -1,25 +1,27 @@
-#' Point-range plot of average marginal effects
+#' Plot aggregated (average) comparisons and slopes
 #' 
-#' Uses the `ggplot2` package to draw a point-range plot of the average marginal effects computed by `tidy`.
-#' @inheritParams marginaleffects
-#' @inheritParams aggregate.comparisons
-#' @inherit aggregate.comparisons details
+#' `x` is passed to `aggregate()` and the result is drawn as a point-range plot using `ggplot2`.
+#' @param x object produced by the `comparisons()` or `slopes()` object.
+#' @param ... additional arguments are passed to the `aggregate` function (e.g., `conf_level`).
 #' @return A `ggplot2` object
 #' @family plot
 #' @export
-#'
 #' @examples
 #' mod <- glm(am ~ hp + wt, data = mtcars)
 #' mfx <- slopes(mod)
-#' plot(mfx)
-#'
-plot.slopes <- function(x,
-                                 conf_level = 0.95,
-                                 ...) {
+#' plot_agg(mfx)
+#' 
+#' 
+#' mod <- glm(am ~ hp + factor(gear), data = mtcars)
+#' cmp <- comparisons(mod)
+#' plot_agg(cmp)
+#
+#' @export
+plot_agg <- function(x,  ...) {
 
     assert_dependency("ggplot2")
 
-    dat <- tidy(x, conf_level = conf_level)
+    dat <- aggregate(x, ...)
 
     # combine term and contrast to avoid overlap
     if (all(c("term", "contrast") %in% colnames(dat))) {
@@ -42,7 +44,7 @@ plot.slopes <- function(x,
                                                    xmin = conf.low,
                                                    xmax = conf.high))
         }
-        xlab <- sprintf("Estimates with %s%% confidence intervals", sprintf("%.0f", conf_level * 100))
+        xlab <- sprintf("Estimates with %s%% confidence intervals", sprintf("%.0f", attr(dat, "conf_level") * 100))
         p <- p +
              ggplot2::geom_pointrange() +
              ggplot2::labs(x = xlab, y = "")
@@ -66,3 +68,15 @@ plot.slopes <- function(x,
 
     return(p)
 }
+
+
+
+
+################### Backward compatibility for deprecated methods. Also nice to keep.
+#' @export
+#' @noRd
+plot.comparisons <- plot_agg
+
+#' @export
+#' @noRd
+plot.slopes <- plot_agg

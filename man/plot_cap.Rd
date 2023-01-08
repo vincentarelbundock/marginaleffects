@@ -50,7 +50,7 @@ plot_cap(mod, condition = list("hp", wt = range))
 }
 \seealso{
 Other plot: 
-\code{\link{plot.slopes}()},
+\code{\link{plot_agg}()},
 \code{\link{plot_cco}()},
 \code{\link{plot_cme}()}
 }
