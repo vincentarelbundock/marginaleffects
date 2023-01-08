@@ -7,7 +7,7 @@
 \alias{averages.slopes}
 \title{Average Estimates (aka "Margins")}
 \usage{
-averages(model, ...)
+averages(x, ...)
 
 \method{averages}{predictions}(x, by = NULL, byfun = NULL, ...)
 
@@ -16,13 +16,11 @@ averages(model, ...)
 \method{averages}{slopes}(x, by = NULL, ...)
 }
 \arguments{
-\item{model}{Model object}
+\item{x}{Object produced by the \code{predictions()}, \code{comparisons()}, or \code{slopes()} functions.}
 
 \item{...}{All additional arguments are passed to the original fitting
 function to modify the original call options: \code{conf_level}, \code{transform_post},
 etc. See \code{?predictions}, \code{?comparisons}, \code{?slopes}.}
-
-\item{x}{Object produced by the \code{predictions()}, \code{comparisons()}, or \code{slopes()} functions.}
 
 \item{by}{Character vector of variable names over which to compute group-wise average estimates. When \code{by=NULL}, the global average (per term) is reported.}
 

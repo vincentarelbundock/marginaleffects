@@ -26,7 +26,7 @@
 #' mod <- lm(mpg ~ factor(gear), data = mtcars)
 #' contr <- comparisons(mod, variables = list(gear = "sequential"))
 #' tidy(contr)
-averages <- function (model, ...) {
+averages <- function (x, ...) {
     UseMethod("averages", model)
 }
 
