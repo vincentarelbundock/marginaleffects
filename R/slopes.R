@@ -126,7 +126,7 @@
 #' * `type`: prediction type, as defined by the `type` argument
 #' * `group`: (optional) value of the grouped outcome (e.g., categorical outcome models)
 #' * `term`: the variable whose marginal effect is computed
-#' * `dydx`: slope of the outcome with resepct to the term, for a given combination of predictor values
+#' * `dydx`: slope of the outcome with respect to the term, for a given combination of predictor values
 #' * `std.error`: standard errors computed by via the delta method.
 #' @examplesIf interactive()
 #' @examples

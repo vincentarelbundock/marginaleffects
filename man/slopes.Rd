@@ -138,7 +138,7 @@ A \code{data.frame} with one row per observation (per term/group) and several co
 \item \code{type}: prediction type, as defined by the \code{type} argument
 \item \code{group}: (optional) value of the grouped outcome (e.g., categorical outcome models)
 \item \code{term}: the variable whose marginal effect is computed
-\item \code{dydx}: slope of the outcome with resepct to the term, for a given combination of predictor values
+\item \code{dydx}: slope of the outcome with respect to the term, for a given combination of predictor values
 \item \code{std.error}: standard errors computed by via the delta method.
 }
 }

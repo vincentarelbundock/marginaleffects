@@ -1,5 +1,5 @@
 #' @export
-#' @keywords internal
+#' @noRd
 expect_slopes <- function(
     object,
     n_unique = NULL,

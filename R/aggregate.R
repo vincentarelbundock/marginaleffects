@@ -26,16 +26,15 @@ stats::aggregate
 #' calculate the mean and the `quantile` function to the results of Step 1 to
 #' obtain the Average Marginal Effect and its associated interval.
 #'
-#' @name aggregate
+#' @name aggregate.marginaleffects
 #' @examples
 #' mod <- lm(mpg ~ factor(gear), data = mtcars)
 #' contr <- comparisons(mod, variables = list(gear = "sequential"))
 #' tidy(contr)
-#' Marginalize Over Unit-Level Estimates
 NULL
 
 
-#' @rdname aggregate
+#' @rdname aggregate.marginaleffects
 #' @export
 aggregate.predictions <- function(x, by = NULL, byfun = NULL, ...) {
 
@@ -81,7 +80,7 @@ aggregate.predictions <- function(x, by = NULL, byfun = NULL, ...) {
 }
 
 
-#' @rdname aggregate
+#' @rdname aggregate.marginaleffects
 #' @export
 aggregate.comparisons <- function(x, by = NULL, ...) {
 
@@ -127,7 +126,7 @@ aggregate.comparisons <- function(x, by = NULL, ...) {
 }
 
 
-#' @rdname aggregate
+#' @rdname aggregate.marginaleffects
 #' @export
 aggregate.slopes <- aggregate.comparisons
 
