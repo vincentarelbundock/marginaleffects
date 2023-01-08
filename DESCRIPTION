@@ -206,6 +206,7 @@ Collate:
     'plot_cme.R'
     'posteriordraws.R'
     'predictions.R'
+    'print.R'
     'recall.R'
     'sanitize_conf_level.R'
     'sanitize_hypothesis.R'

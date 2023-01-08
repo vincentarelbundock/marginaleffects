@@ -1,18 +1,21 @@
-#' Summarize a `marginaleffects` object
-#'
-#' @param object An object produced by the `slopes` function
-#' @inheritParams marginaleffects
-#' @inheritParams aggregate.comparisons
-#' @template bayesian
-#' @return Data frame of summary statistics for an object produced by the
-#' `slopes` function
-#' @examples
-#' mod <- lm(mpg ~ hp * wt + factor(gear), data = mtcars)
-#' mfx <- slopes(mod)
-#'
-#' # average marginal effects
-#' summary(mfx)
-#' @family summary
+# #' Summarize a `marginaleffects` object
+# #'
+# #' @param object An object produced by the `slopes` function
+# #' @inheritParams marginaleffects
+# #' @inheritParams aggregate.comparisons
+# #' @template bayesian
+# #' @return Data frame of summary statistics for an object produced by the
+# #' `slopes` function
+# #' @examples
+# #' mod <- lm(mpg ~ hp * wt + factor(gear), data = mtcars)
+# #' mfx <- slopes(mod)
+# #'
+# #' # average marginal effects
+# #' summary(mfx)
+# #' @name summary
+# NULL
+
+
 #' @export
 summary.slopes <- function(object,
                            conf_level = NULL,
@@ -25,108 +28,6 @@ summary.slopes <- function(object,
 }
 
 
-#' Print a `marginaleffects` summary
-#'
-#' @export
-#' @noRd
-#' @inheritParams summary.slopes
-#' @param x an object produced by the `slopes` function.
-#' @param digits the number of significant digits to use when printing.
-#' @template bayesian
-#' @return Printed summary of a `marginaleffects` object
-print.slopes.summary <- function(x,
-                                 digits = max(3L, getOption("digits") - 3L),
-                                 ...) {
-    out <- x
-
-    if ("group" %in% colnames(out) &&
-        all(out$group == "main_marginaleffects")) {
-        out$group <- NULL
-    }
-
-    # title
-    tit <- "Average marginal effects"
-
-    # round and replace NAs
-    for (col in c("estimate", "std.error", "statistic", "conf.low", "conf.high")) {
-        if (col %in% colnames(out)) {
-            out[[col]] <- format(out[[col]], digits = digits)
-        }
-    }
-    if ("p.value" %in% colnames(out)) {
-        out[["p.value"]] <- format.pval(out[["p.value"]])
-    }
-
-
-    if (is.null(attr(x, "conf_level"))) {
-        alpha <- NULL
-    } else {
-        alpha <- 100 * (1 - attr(x, "conf_level"))
-    }
-
-    # contrast is sometimes useless
-    if ("contrast" %in% colnames(out) && all(out$contrast == "")) {
-        out$contrast <- NULL
-    }
-
-    if ("type" %in% colnames(out) && length(unique(out$type)) == 1) {
-        out$type <- NULL
-    }
-
-    # rename
-    dict <- c(
-        "group" = "Group",
-        "term" = "Term",
-        "contrast" = "Contrast",
-        "estimate" = "Effect",
-        "std.error" = "Std. Error",
-        "statistic" = "z",
-        "p.value" = "Pr(>|z|)",
-        "conf.low" = ifelse(is.null(alpha),
-            "CI low",
-            sprintf("%.1f %%", alpha / 2)),
-        "conf.high" = ifelse(is.null(alpha),
-            "CI high",
-            sprintf("%.1f %%", 100 - alpha / 2)))
-
-    for (i in seq_along(dict)) {
-        colnames(out)[colnames(out) == names(dict)[i]] <- dict[i]
-    }
-
-
-    # avoid infinite recursion by stripping marginaleffect.summary class
-    out <- as.data.frame(out)
-
-    # some commands do not generate average contrasts/mfx. E.g., `lnro` with `by`
-    # cat(tit)
-    print(out)
-    cat("\n")
-    cat("Model type: ", attr(x, "model_type"), "\n")
-    cat("Prediction type: ", attr(x, "type"), "\n")
-    if (!is.null(attr(x, "transform_pre_label"))) {
-        cat("Pre-transformation: ", paste(attr(x, "transform_pre_label"), collapse = ""), "\n")
-    }
-    if (!is.null(attr(x, "transform_post_label"))) {
-        cat("Post-transformation: ", paste(attr(x, "transform_post_label"), collapse = ""), "\n")
-    }
-    if (!is.null(attr(x, "transform_average_label"))) {
-        cat("Average-transformation: ", paste(attr(x, "transform_average_label"), collapse = ""), "\n")
-    }
-
-
-    return(invisible(x))
-}
-
-
-#' Summarize a `marginalmeans` object
-#'
-#' @param object An object produced by the `marginalmeans` function
-#' @inheritParams marginalmeans
-#' @inheritParams tidy.marginalmeans
-#' @return Data frame of summary statistics for an object produced by the
-#' `marginalmeans` function
-#' @template bayesian
-#' @family summary
 #' @export
 summary.marginalmeans <- function(
     object,
@@ -145,99 +46,6 @@ summary.marginalmeans <- function(
 }
 
 
-#' Print a `marginalmeans` summary
-#'
-#' @export
-#' @noRd
-#' @inheritParams summary.marginalmeans
-#' @param x an object produced by the `slopes` function.
-#' @param digits the number of significant digits to use when printing.
-#' @return Printed summary of a `marginalmeans` object
-print.marginalmeans.summary <- function(x,
-                                        digits = max(3L, getOption("digits") - 3L),
-                                        ...) {
-
-  out <- x
-
-  # title
-  tit <- "Estimated marginal means"
-
-  # round and replace NAs
-  for (col in c("estimate", "std.error", "statistic", "conf.low", "conf.high")) {
-    if (col %in% colnames(out)) {
-      out[[col]] <- format(out[[col]], digits = digits)
-    }
-  }
-  if ("p.value" %in% colnames(out)) {
-      out[["p.value"]] <- format.pval(out[["p.value"]])
-  }
-
-
-  if (is.null(attr(x, "conf_level"))) {
-      alpha <- NULL
-  } else {
-      alpha <- 100 * (1 - attr(x, "conf_level"))
-  }
-
-
-  # rename
-  dict <- c("group" = "Group",
-            "term" = "Term",
-            "contrast" = "Contrast",
-            "value" = "Value",
-            "estimate" = "Mean",
-            "std.error" = "Std. Error",
-            "statistic" = "z",
-            "p.value" = "Pr(>|z|)",
-            "conf.low" = ifelse(is.null(alpha),
-                                "CI low",
-                                sprintf("%.1f %%", alpha / 2)),
-            "conf.high" = ifelse(is.null(alpha),
-                                "CI high",
-                                sprintf("%.1f %%", 100 - alpha / 2)))
-
-  for (i in seq_along(dict)) {
-    colnames(out)[colnames(out) == names(dict)[i]] <- dict[i]
-  }
-
-  # avoid infinite recursion by stripping marginaleffect.summary class
-  out <- as.data.frame(out)
-
-  print(out)
-  cat("\n")
-  cat("Model type: ", attr(x, "model_type"), "\n")
-  cat("Prediction type: ", attr(x, "type"), "\n")
-
-  vg <- attr(x, "variables_grid")
-  if (length(vg) > 0) {
-    cat(sprintf("Results averaged over levels of: %s",
-                paste(vg, collapse = ", ")), "\n")
-  }
-  if (!is.null(attr(x, "transform_pre_label"))) {
-      cat("Pre-transformation: ", paste(attr(x, "transform_pre_label"), collapse = ""), "\n")
-  }
-  if (!is.null(attr(x, "transform_post_label"))) {
-      cat("Post-transformation: ", paste(attr(x, "transform_post_label"), collapse = ""), "\n")
-  }
-  if (!is.null(attr(x, "transform_average_label"))) {
-      cat("Average-transformation: ", paste(attr(x, "transform_average_label"), collapse = ""), "\n")
-  }
-
-
-  return(invisible(x))
-}
-
-
-
-#' Summarize a `predictions` object
-#'
-#' @param object An object produced by the `predictions` function
-#' @inheritParams predictions
-#' @inheritParams aggregate.predictions
-#' @return Data frame of summary statistics for an object produced by the
-#' `predictions` function
-#' @template bayesian
-#' @family summary
 #' @export
 summary.predictions <- function(
     object, 
@@ -257,117 +65,9 @@ summary.predictions <- function(
 }
 
 
-#' Print a `predictions` summary
-#'
 #' @export
-#' @noRd
-#' @inheritParams summary.predictions
-#' @param x an object produced by the `predictions` function.
-#' @param digits the number of significant digits to use when printing.
-#' @return Printed summary of a `predictions` object
-print.predictions.summary <- function(x,
-                                      digits = max(3L, getOption("digits") - 3L),
-                                      ...) {
-
-  out <- x
-
-  # title
-  tit <- "Average Adjusted Predictions"
-
-  # round and replace NAs
-  for (col in c("estimate", "std.error", "statistic", "conf.low", "conf.high")) {
-    if (col %in% colnames(out)) {
-      out[[col]] <- format(out[[col]], digits = digits)
-    }
-  }
-  if ("p.value" %in% colnames(out)) {
-      out[["p.value"]] <- format.pval(out[["p.value"]])
-  }
-
-
-  if (is.null(attr(x, "conf_level"))) {
-      alpha <- NULL
-  } else {
-      alpha <- 100 * (1 - attr(x, "conf_level"))
-  }
-
-  # contrast is sometimes useless
-  if ("contrast" %in% colnames(out) && all(out$contrast == "")) {
-      out$contrast <- NULL
-  }
-
-  if ("type" %in% colnames(out) && length(unique(out$type)) == 1) {
-      out$type <- NULL
-  }
-
-  # rename
-  dict <- c("group" = "Group",
-            "term" = "Term",
-            "estimate" = "Predicted",
-            "std.error" = "Std. Error",
-            "statistic" = "z",
-            "p.value" = "Pr(>|z|)",
-            "conf.low" = ifelse(is.null(alpha),
-                                "CI low",
-                                sprintf("%.1f %%", alpha / 2)),
-            "conf.high" = ifelse(is.null(alpha),
-                                "CI high",
-                                sprintf("%.1f %%", 100 - alpha / 2)))
-
-  for (i in seq_along(dict)) {
-    colnames(out)[colnames(out) == names(dict)[i]] <- dict[i]
-  }
-
-
-  # avoid infinite recursion by stripping marginaleffect.summary class
-  out <- as.data.frame(out)
-
-  # some commands do not generate average contrasts/mfx. E.g., `lnro` with `by`
-  # cat(tit, "\n")
-  print(out)
-  cat("\n")
-  cat("Model type: ", attr(x, "model_type"), "\n")
-  cat("Prediction type: ", attr(x, "type"), "\n")
-  if (!is.null(attr(x, "transform_pre_label"))) {
-      cat("Pre-transformation: ", paste(attr(x, "transform_pre_label"), collapse = ""), "\n")
-  }
-  if (!is.null(attr(x, "transform_post_label"))) {
-      cat("Post-transformation: ", paste(attr(x, "transform_post_label"), collapse = ""), "\n")
-  }
-  if (!is.null(attr(x, "transform_average_label"))) {
-      cat("Average-transformation: ", paste(attr(x, "transform_average_label"), collapse = ""), "\n")
-  }
-
-
-  return(invisible(x))
-}
-
-
-
-
-
-
-#' Summarize a `comparisons` object
-#'
-#' @param object An object produced by the `comparisons` function
-#' @inheritParams comparisons
-#' @inheritParams aggregate.comparisons
-#' @return Data frame of summary statistics for an object produced by the
-#' `comparisons` function
-#' @examples
-#' mod <- lm(mpg ~ hp * wt + factor(gear), data = mtcars)
-#' con <- comparisons(mod)
-#'
-#' # average marginal effects
-#' summary(con)
-#' @template bayesian
-#' @family summary
-#' @export
-summary.comparisons <- function(object,
-                                conf_level = NULL,
-                                transform_avg = NULL,
-                                ...) {
-    out <- tidy(object, conf_level = conf_level, transform_avg = transform_avg, ...)
+summary.comparisons <- function(object, ...) {
+    out <- aggregate(object, ...)
 
     class(out) <- c("comparisons.summary", class(out))
     attr(out, "type") <- attr(object, "type")
@@ -382,114 +82,3 @@ summary.comparisons <- function(object,
 
     return(out)
 }
-
-
-#' Print a `comparisons` summary
-#'
-#' @export
-#' @noRd
-#' @inheritParams summary.comparisons
-#' @param x an object produced by the `comparisons` function.
-#' @param digits the number of significant digits to use when printing.
-#' @return Printed summary of a `comparisons` object
-print.comparisons.summary <- function(x,
-                                      digits = max(3L, getOption("digits") - 3L),
-                                      ...) {
-
-  out <- x
-
-
-  # title
-  tit <- "Average contrasts"
-
-  # round and replace NAs
-  for (col in c("estimate", "std.error", "statistic", "conf.low", "conf.high")) {
-    if (col %in% colnames(out)) {
-      out[[col]] <- format(out[[col]], digits = digits)
-    }
-  }
-  if ("p.value" %in% colnames(out)) {
-      out[["p.value"]] <- format.pval(out[["p.value"]])
-  }
-
-
-  if (is.null(attr(x, "conf_level"))) {
-      alpha <- NULL
-  } else {
-      alpha <- 100 * (1 - attr(x, "conf_level"))
-  }
-
-  # contrast is sometimes useless
-  if ("contrast" %in% colnames(out) && all(out$contrast == "")) {
-      out$contrast <- NULL
-  }
-
-  if ("type" %in% colnames(out) && length(unique(out$type)) == 1) {
-      out$type <- NULL
-  }
-
-  # rename
-  dict <- c("group" = "Group",
-            "term" = "Term",
-            "contrast" = "Contrast",
-            "estimate" = "Effect",
-            "std.error" = "Std. Error",
-            "statistic" = "z",
-            "p.value" = "Pr(>|z|)",
-            "conf.low" = ifelse(is.null(alpha),
-                                "CI low",
-                                sprintf("%.1f %%", alpha / 2)),
-            "conf.high" = ifelse(is.null(alpha),
-                                "CI high",
-                                sprintf("%.1f %%", 100 - alpha / 2)))
-
-  if (all(out$term == "interaction")) {
-    out[["term"]] <- NULL
-    colnames(out) <- gsub("^contrast_", "", colnames(out))
-  }
-
-  for (i in seq_along(dict)) {
-    colnames(out)[colnames(out) == names(dict)[i]] <- dict[i]
-  }
-
-
-  # avoid infinite recursion by stripping marginaleffect.summary class
-  out <- as.data.frame(out)
-
-  # some commands do not generate average contrasts/mfx. E.g., `lnro` with `by`
-  # cat(tit, "\n")
-  print(out)
-  cat("\n")
-  cat("Model type: ", attr(x, "model_type"), "\n")
-  cat("Prediction type: ", attr(x, "type"), "\n")
-  if (!is.null(attr(x, "transform_pre_label"))) {
-      cat("Pre-transformation: ", paste(attr(x, "transform_pre_label"), collapse = ""), "\n")
-  }
-  if (!is.null(attr(x, "transform_post_label"))) {
-      cat("Post-transformation: ", paste(attr(x, "transform_post_label"), collapse = ""), "\n")
-  }
-  if (!is.null(attr(x, "transform_average_label"))) {
-      cat("Average-transformation: ", paste(attr(x, "transform_average_label"), collapse = ""), "\n")
-  }
-
-
-  return(invisible(x))
-}
-
-
-
-
-
-
-# BAD IDEA
-# this forces me to do: head(data.frame(mfx))
-# also breaks when I process a marginaleffects data.frame with dplyr, because
-# the output retains the class even when it drops columns, and then tidy
-# breaks.
-#print.slopes <- function(
-#    x, digits = max(3L, getOption("digits") - 2L), ...) {
-#    print.slopes.summary(
-#        summary.slopes(x),
-#        digits = digits,
-#        ...)
-#}

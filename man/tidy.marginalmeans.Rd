@@ -44,11 +44,4 @@ posterior using the function supplied to the
 \code{"marginaleffects_posterior_center"} option (the median by default).
 }
 
-\seealso{
-Other summary: 
-\code{\link{summary.comparisons}()},
-\code{\link{summary.marginalmeans}()},
-\code{\link{summary.predictions}()},
-\code{\link{summary.slopes}()}
-}
 \concept{summary}

@@ -3,7 +3,6 @@
 stats::aggregate
 
 
-
 #' Aggregate (marginalize, integrate, average over) a `comparisons` object
 #'
 #' Calculate average contrasts by taking the mean of all the
