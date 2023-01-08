@@ -27,7 +27,7 @@
 #' contr <- comparisons(mod, variables = list(gear = "sequential"))
 #' tidy(contr)
 averages <- function (x, ...) {
-    UseMethod("averages", model)
+    UseMethod("averages", x)
 }
 
 
