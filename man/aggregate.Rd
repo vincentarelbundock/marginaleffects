@@ -2,35 +2,45 @@
 % Please edit documentation in R/aggregate.R
 \name{aggregate}
 \alias{aggregate}
+\alias{aggregate.predictions}
 \alias{aggregate.comparisons}
 \alias{aggregate.slopes}
-\alias{aggregate.predictions}
-\title{Aggregate (marginalize, integrate, average over) a \code{comparisons} object}
+\title{Aggregate Estimates (aka "Marginalize", "Average Over", "Integrate")}
 \usage{
+\method{aggregate}{predictions}(x, by = NULL, byfun = NULL, ...)
+
 \method{aggregate}{comparisons}(x, by = NULL, ...)
 
 \method{aggregate}{slopes}(x, by = NULL, ...)
-
-\method{aggregate}{predictions}(x, by = NULL, ...)
 }
 \arguments{
-\item{x}{An object produced by the \code{comparisons} function.}
+\item{x}{Object produced by the \code{predictions()}, \code{comparisons()}, or \code{slopes()} functions.}
+
+\item{by}{Character vector of variable names over which to compute group-wise average estimates. When \code{by=NULL}, the global average (per term) is reported.}
+
+\item{byfun}{A function such as \code{mean()} or \code{sum()} used to aggregate
+estimates within the subgroups defined by the \code{by} argument. \code{NULL} uses the
+\code{mean()} function. Must accept a numeric vector and return a single numeric
+value. This is sometimes used to take the sum or mean of predicted
+probabilities across outcome or predictor
+levels. See examples section.}
+
+\item{...}{All additional arguments are passed to the original fitting
+function to modify the original call options: \code{conf_level}, \code{transform_post},
+etc. See \code{?predictions}, \code{?comparisons}, \code{?slopes}.}
 }
 \value{
-A "tidy" \code{data.frame} of summary statistics which conforms to the
-\code{broom} package specification.
+A \code{data.frame} of estimates and uncertainty estimates
 }
 \description{
-Calculate average contrasts by taking the mean of all the
-unit-level contrasts computed by the \code{predictions} function.
+Calculate average estimates by taking the mean of all the
+unit-level estimates computed by the \code{predictions}, \code{comparisons}, or \code{slopes} functions.
 }
 \details{
-To compute standard errors around the average marginaleffects, we begin by applying the
-mean function to each column of the Jacobian. Then, we use this matrix in the Delta
-method to obtained standard errors.
+Standard errors are estimated using the delta method. See the \code{marginaleffects} website for details.
 
-In Bayesian models (e.g., \code{brms}), we compute Average Marginal
-Effects by applying the mean function twice. First, we apply it to all
+In Bayesian models (e.g., \code{brms}), estimates are aggregated applying the
+median (or mean) function twice. First, we apply it to all
 marginal effects for each posterior draw, thereby estimating one Average (or
 Median) Marginal Effect per iteration of the MCMC chain. Second, we
 calculate the mean and the \code{quantile} function to the results of Step 1 to

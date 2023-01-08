@@ -4,8 +4,6 @@
 generics::tidy
 
 
-#' An alias to `aggregate.comparisons()` for compatibility with the `broom` and `modelsummary` packages.
-#' 
 #' @noRd
 #' @export
 tidy.comparisons <- function(x, ...) {
@@ -20,13 +18,16 @@ tidy.comparisons <- function(x, ...) {
     return(out)
 }
 
+
 #' @noRd
 #' @export
 tidy.slopes <- tidy.comparisons
 
+
 #' @noRd
 #' @export
 tidy.predictions <- tidy.comparisons
+
 
 #' @noRd
 #' @export
@@ -39,43 +40,10 @@ tidy.hypotheses <- function(x, ...) {
     return(x)
 }
 
-#' Tidy a `marginalmeans` object
-#'
-#' @param x An object produced by the `marginalmeans` function.
-#' @inheritParams aggregate.comparisons
-#' @inheritParams aggregate.comparisons
-#' @return A "tidy" `data.frame` of summary statistics which conforms to the
-#' `broom` package specification.
-#' @template bayesian
-#' @family summary
+
+#' @noRd
 #' @export
-tidy.marginalmeans <- function(x,
-                               conf_level = 0.95,
-                               ...) {
-
-
-
-    conf_level <- sanitize_conf_level(conf_level, ...)
-    out <- x
-    colnames(out)[colnames(out) == "marginalmean"] <- "estimate"
-
-    draws <- attr(x, "posterior_draws")
-    
-    out <- get_ci(
-        out,
-        overwrite = FALSE,
-        conf_level = conf_level,
-        draws = draws,
-        estimate = "estimate",
-        ...)
-
-    # sort and subset columns
-    cols <- c("type", "term", "value", "estimate", "std.error", "statistic", "p.value", "conf.low", "conf.high")
-    out <- out[, intersect(cols, colnames(out)), drop = FALSE]
-    out <- as.data.frame(out)
-
-    attr(out, "conf_level") <- conf_level
-    attr(out, "nchains") <- attr(x, "nchains")
-
-    return(out)
+tidy.marginalmeans <- function(x, ...) {
+    colnames(x)[colnames(x) == "marginalmean"] <- "estimate"
+    return(x)
 }
