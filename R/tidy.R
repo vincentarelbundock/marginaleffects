@@ -1,9 +1,10 @@
 #' @importFrom generics tidy
-#' @noRd
 #' @export
 generics::tidy
 
 
+#' tidy helper
+#' 
 #' @noRd
 #' @export
 tidy.comparisons <- function(x, ...) {
@@ -19,16 +20,21 @@ tidy.comparisons <- function(x, ...) {
 }
 
 
+#' tidy helper
+#' 
 #' @noRd
 #' @export
 tidy.slopes <- tidy.comparisons
 
 
+#' tidy helper
+#' 
 #' @noRd
 #' @export
 tidy.predictions <- tidy.comparisons
 
-
+#' tidy helper
+#' 
 #' @noRd
 #' @export
 tidy.hypotheses <- function(x, ...) {
@@ -41,6 +47,8 @@ tidy.hypotheses <- function(x, ...) {
 }
 
 
+#' tidy helper
+#' 
 #' @noRd
 #' @export
 tidy.marginalmeans <- function(x, ...) {

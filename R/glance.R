@@ -1,13 +1,9 @@
 #' @importFrom generics glance
-#' @family summary
-#' @noRd
 #' @export
 generics::glance
 
-#' Glance at key characteristics of an object
-#' @inheritParams aggregate.comparisons
+
 #' @noRd
-#' @family summary
 #' @export
 glance.slopes <- function(x, ...) {
     assert_dependency("modelsummary")
@@ -28,22 +24,19 @@ glance.slopes <- function(x, ...) {
     return(out)
 }
 
-#' @family summary
+
 #' @noRd
 #' @export
 glance.marginalmeans <- glance.slopes
 
-#' @family summary
 #' @noRd
 #' @export
 glance.predictions <- glance.slopes
 
-#' @family summary
 #' @noRd
 #' @export
 glance.comparisons <- glance.slopes
 
-#' @family summary
 #' @noRd
 #' @export
 glance.hypotheses <- glance.slopes

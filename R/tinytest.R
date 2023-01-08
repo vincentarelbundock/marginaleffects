@@ -1,5 +1,7 @@
+#' `tinytest` helper
+#' 
 #' @export
-#' @noRd
+#' @keywords internal
 expect_slopes <- function(
     object,
     n_unique = NULL,
@@ -68,6 +70,8 @@ expect_slopes <- function(
 
 
 
+#' `tinytest` helper
+#' 
 #' @export
 #' @keywords internal
 expect_marginalmeans <- function(object,
@@ -119,6 +123,8 @@ expect_marginalmeans <- function(object,
 }
 
 
+#' `tinytest` helper
+#' 
 #' @export
 #' @keywords internal
 expect_predictions <- function(object,
@@ -179,6 +185,8 @@ expect_predictions <- function(object,
 }
 
 
+#' `tinytest` helper
+#' 
 #' @export
 #' @keywords internal
 expect_margins <- function(results,
