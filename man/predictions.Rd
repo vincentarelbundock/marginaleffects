@@ -22,6 +22,25 @@ predictions(
 \arguments{
 \item{model}{Model object}
 
+\item{newdata}{\code{NULL}, data frame, string, or \code{datagrid()} call. Determines the predictor values for which to compute slopes.
+\itemize{
+\item \code{NULL} (default): Unit-level slopes each observed value in the original dataset.
+\item data frame: Unit-level slopes for each row of the \code{newdata} data frame.
+\item \code{\link[=datagrid]{datagrid()}} call to specify a custom grid of regressors. For example:
+\itemize{
+\item \code{newdata = datagrid(cyl = c(4, 6))}: \code{cyl} variable equal to 4 and 6 and other regressors fixed at their means or modes.
+\item See the Examples section and the \code{\link[=datagrid]{datagrid()}} documentation.
+}
+\item string:
+\itemize{
+\item "mean": Marginal Effects at the Mean. Slopes when each predictor is held at its mean or mode.
+\item "median": Marginal Effects at the Median. Slopes when each predictor is held at its median or mode.
+\item "marginalmeans": Marginal Effects at Marginal Means. See Details section below.
+\item "tukey": Marginal Effects at Tukey's 5 numbers.
+\item "grid": Marginal Effects on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
+}
+}}
+
 \item{variables}{\code{NULL}, character vector, or named list. The subset of variables to use for creating a counterfactual grid of predictions. The entire dataset replicated for each unique combination of the variables in this list. See the Examples section below.
 \itemize{
 \item Warning: This can use a lot of memory if there are many variables and values, and when the dataset is large.
@@ -57,6 +76,34 @@ predictions(
 }
 }}
 
+\item{vcov}{Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
+\itemize{
+\item FALSE: Do not compute standard errors. This can speed up computation considerably.
+\item TRUE: Unit-level standard errors using the default \code{vcov(model)} variance-covariance matrix.
+\item String which indicates the kind of uncertainty estimates to return.
+\itemize{
+\item Heteroskedasticity-consistent: \code{"HC"}, \code{"HC0"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"}, \code{"HC4"}, \code{"HC4m"}, \code{"HC5"}. See \code{?sandwich::vcovHC}
+\item Heteroskedasticity and autocorrelation consistent: \code{"HAC"}
+\item Mixed-Models degrees of freedom: "satterthwaite", "kenward-roger"
+\item Other: \code{"NeweyWest"}, \code{"KernHAC"}, \code{"OPG"}. See the \code{sandwich} package documentation.
+}
+\item One-sided formula which indicates the name of cluster variables (e.g., \code{~unit_id}). This formula is passed to the \code{cluster} argument of the \code{sandwich::vcovCL} function.
+\item Square covariance matrix
+\item Function which returns a covariance matrix (e.g., \code{stats::vcov(model)})
+}}
+
+\item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
+
+\item{type}{string indicates the type (scale) of the predictions used to
+compute contrasts or slopes. This can differ based on the model
+type, but will typically be a string such as: "response", "link", "probs",
+or "zero". When an unsupported string is entered, the model-specific list of
+acceptable values is returned in an error message. When \code{type} is \code{NULL}, the
+default value is used. This default is the first model-related row in
+the \code{marginaleffects:::type_dictionary} dataframe.}
+
+\item{by}{Character vector of variable names over which to compute group-wise estimates.}
+
 \item{byfun}{A function such as \code{mean()} or \code{sum()} used to aggregate
 estimates within the subgroups defined by the \code{by} argument. \code{NULL} uses the
 \code{mean()} function. Must accept a numeric vector and return a single numeric
@@ -64,7 +111,48 @@ value. This is sometimes used to take the sum or mean of predicted
 probabilities across outcome or predictor
 levels. See examples section.}
 
+\item{wts}{string or numeric: weights to use when computing average
+contrasts or slopes. These weights only affect the averaging in
+\code{tidy()} or \code{summary()}, and not the unit-level estimates themselves.
+\itemize{
+\item string: column name of the weights variable in \code{newdata}. When supplying a column name to \code{wts}, it is recommended to supply the original data (including the weights variable) explicitly to \code{newdata}.
+\item numeric: vector of length equal to the number of rows in the original data or in \code{newdata} (if supplied).
+}}
+
 \item{transform_post}{(experimental) A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.}
+
+\item{hypothesis}{specify a hypothesis test or custom contrast using a numeric value, vector, or matrix, a string, or a string formula.
+\itemize{
+\item Numeric:
+\itemize{
+\item Single value: the null hypothesis used in the computation of Z and p (before applying \code{transform_post}).
+\item Vector: Weights to compute a linear combination of (custom contrast between) estimates. Length equal to the number of rows generated by the same function call, but without the \code{hypothesis} argument.
+\item Matrix: Each column is a vector of weights, as describe above, used to compute a distinct linear combination of (contrast between) estimates. The column names of the matrix are used as labels in the output.
+}
+\item String formula to specify linear or non-linear hypothesis tests. If the \code{term} column uniquely identifies rows, terms can be used in the formula. Otherwise, use \code{b1}, \code{b2}, etc. to identify the position of each parameter. Examples:
+\itemize{
+\item \code{hp = drat}
+\item \code{hp + drat = 12}
+\item \code{b1 + b2 + b3 = 0}
+}
+\item String:
+\itemize{
+\item "pairwise": pairwise differences between estimates in each row.
+\item "reference": differences between the estimates in each row and the estimate in the first row.
+\item "sequential": difference between an estimate and the estimate in the next row.
+\item "revpairwise", "revreference", "revsequential": inverse of the corresponding hypotheses, as described above.
+}
+\item See the Examples section below and the vignette: https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html
+}}
+
+\item{...}{Additional arguments are passed to the \code{predict()} method
+supplied by the modeling package.These arguments are particularly useful
+for mixed-effects or bayesian models (see the online vignettes on the
+\code{marginaleffects} website). Available arguments can vary from model to
+model, depending on the range of supported arguments by each modeling
+package. See the "Model-Specific Arguments" section of the
+\code{?marginaleffects} documentation for a non-exhaustive list of available
+arguments.}
 }
 \value{
 A \code{data.frame} with one row per observation and several columns:

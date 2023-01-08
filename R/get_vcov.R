@@ -1,6 +1,6 @@
 #' Get a named variance-covariance matrix from a model object (internal function)
 #'
-#' @inheritParams marginaleffects
+#' @inheritParams slopes
 #' @return A named square matrix of variance and covariances. The names must match the coefficient names.
 #' @rdname get_vcov
 #' @keywords internal

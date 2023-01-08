@@ -1,6 +1,6 @@
 #' Get levels of the outcome variable in grouped or multivariate models
 #' 
-#' @inheritParams marginaleffects
+#' @inheritParams slopes
 #' @return A character vector
 #' @rdname get_group_names
 #' @keywords internal

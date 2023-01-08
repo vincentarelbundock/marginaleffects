@@ -44,7 +44,7 @@
 #' * Contrasts at User-Specified values (aka Contrasts at Representative values, MER).
 #' * Custom contrasts using arbitrary functions
 #'
-#' @inheritParams marginaleffects
+#' @inheritParams slopes
 #' @inheritParams predictions
 #' @param variables `NULL`, character vector, or named list. The subset of variables for which to compute contrasts.
 #' * `NULL`: compute contrasts for all the variables in the model object (can be slow).

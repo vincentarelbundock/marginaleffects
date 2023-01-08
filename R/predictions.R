@@ -30,7 +30,7 @@
 #' intervals may not always be appropriate. For instance, they may stretch beyond
 #' the bounds of a binary response variables.
 #'
-#' @inheritParams marginaleffects
+#' @inheritParams slopes
 #' @param model Model object
 #' @param variables `NULL`, character vector, or named list. The subset of variables to use for creating a counterfactual grid of predictions. The entire dataset replicated for each unique combination of the variables in this list. See the Examples section below.
 #' * Warning: This can use a lot of memory if there are many variables and values, and when the dataset is large.

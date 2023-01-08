@@ -1,6 +1,6 @@
 #' Get a named vector of coefficients from a model object (internal function)
 #' 
-#' @inheritParams marginaleffects
+#' @inheritParams slopes
 #' @return A named vector of coefficients. The names must match those of the variance matrix.
 #' @rdname get_coef
 #' @keywords internal

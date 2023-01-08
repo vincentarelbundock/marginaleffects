@@ -11,7 +11,7 @@
 #' * Function which returns a numeric vector or a set of unique categorical values 
 #' * Shortcut strings for common reference values: "minmax", "quartile", "threenum"
 #' @param draw `TRUE` returns a `ggplot2` plot. `FALSE` returns a `data.frame` of the underlying data.
-#' @inheritParams marginaleffects
+#' @inheritParams slopes
 #' @return A `ggplot2` object
 #' @family plot
 #' @export

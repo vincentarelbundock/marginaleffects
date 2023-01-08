@@ -4,7 +4,7 @@
 #' number of rows in `newdata` and columns "rowid" and "predicted". A "group"
 #' column is added for multivariate models or models with categorical outcomes. 
 #' @rdname get_predict
-#' @inheritParams marginaleffects
+#' @inheritParams slopes
 #' @keywords internal
 #' @export
 get_predict <- function(model, newdata, vcov, conf_level, type, ...) {

@@ -1,7 +1,7 @@
 # #' Summarize a `marginaleffects` object
 # #'
 # #' @param object An object produced by the `slopes` function
-# #' @inheritParams marginaleffects
+# #' @inheritParams slopes
 # #' @inheritParams aggregate.comparisons
 # #' @template bayesian
 # #' @return Data frame of summary statistics for an object produced by the

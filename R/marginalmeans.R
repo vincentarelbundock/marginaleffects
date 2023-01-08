@@ -34,7 +34,7 @@
 #' * `FALSE` (default): Marginal means are computed for each predictor individually.
 #' * `TRUE`: Marginal means are computed for each combination of predictors specified in the `variables` argument.
 #' @param by Collapse marginal means into categories. Data frame with a `by` column of group labels, and merging columns shared by `newdata` or the data frame produced by calling the same function without the `by` argument.
-#' @inheritParams marginaleffects
+#' @inheritParams slopes
 #' @inheritParams predictions
 #' @inheritParams comparisons
 #' @section Vignettes and documentation:

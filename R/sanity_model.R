@@ -1,6 +1,6 @@
 #' Method to raise model-specific warnings and errors
 #'
-#' @inheritParams marginaleffects
+#' @inheritParams slopes
 #' @return A warning, an error, or nothing
 #' @rdname sanity_model_specific
 #' @keywords internal

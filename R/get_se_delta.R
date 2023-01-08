@@ -48,7 +48,7 @@ get_se_delta_contrasts <- function(model,
 
 #' Compute standard errors using the delta method
 #'
-#' @inheritParams marginaleffects
+#' @inheritParams slopes
 #' @param FUN a function which accepts a `model` and other inputs and returns a
 #'   vector of estimates (marginal effects, marginal means, etc.)
 #' @param index data.frame over which we aggregate J_mean (matches tidy() output)
