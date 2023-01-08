@@ -2,7 +2,7 @@
 % Please edit documentation in R/comparisons.R
 \name{comparisons}
 \alias{comparisons}
-\title{Comparisons Between Predictions Made at Different Regressor Values}
+\title{Comparisons Between Predictions Made for Different Regressor Values}
 \usage{
 comparisons(
   model,

@@ -1,7 +1,5 @@
 ’s
 AAP
-GLMMs
-rvar
 AAPs
 Adelies
 al
@@ -46,6 +44,10 @@ emmeans
 EMMs
 Epidemiologic
 eps
+estimand
+Estimand
+estimands
+Estimands
 et
 ETI
 expdydx
@@ -66,6 +68,7 @@ Gentoos
 geoms
 ggeffects
 github
+GLMMs
 Greifer
 grey
 HC
@@ -142,6 +145,7 @@ revreference
 revsequential
 Rohan
 rowid
+rvar
 satterthwaite
 sd
 semilog

@@ -31,7 +31,7 @@ Slopes are defined as:
 
 > Partial derivatives of the regression equation with respect to a regressor of interest. a.k.a. Marginal effects, trends.
 
-This vignette follows the econometrics tradition by referring to "slopes" and "amrginal effects" interchangeably. In this context, the word "marginal" refers to the idea of a "small change," in the calculus sense.
+This vignette follows the econometrics tradition by referring to "slopes" and "marginal effects" interchangeably. In this context, the word "marginal" refers to the idea of a "small change," in the calculus sense.
 
 A marginal effect measures the association between a change in a regressor $x$, and a change in the response $y$. Put differently, differently, the marginal effect is the slope of the prediction function, measured at a specific value of the regressor $x$.
 
