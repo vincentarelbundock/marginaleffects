@@ -1,7 +1,7 @@
 source("helpers.R")
 
 # recall captures calls to avoid evaluating twice
-mod <- lm(mpg ~ hp + factor(gear), data = mtcars)
+mod <<- lm(mpg ~ hp + factor(gear), data = mtcars)
 cmp1 <- comparisons(mod)
 cmp1 <- averages(cmp1)
 cmp2 <- averages(comparisons(mod))[, seq_along(cmp1)]
