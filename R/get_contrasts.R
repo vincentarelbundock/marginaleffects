@@ -11,6 +11,7 @@ get_contrasts <- function(model,
                           hypothesis = NULL,
                           cross = FALSE,
                           verbose = TRUE,
+                          delta = FALSE,
                           ...) {
 
     settings_init()
@@ -61,18 +62,24 @@ get_contrasts <- function(model,
             ...))[["value"]]
     }
 
-    # TODO: probable loss of performance with standard errors
-    pred_or <- myTryCatch(get_predict(
-        model,
-        type = type,
-        vcov = FALSE,
-        newdata = original,
-        ...))[["value"]]
+    # predict() takes up 2/3 of the wall time. This call is only useful for the
+    # main estimate, not for standard errors, so we probably save 1/3 of that
+    # 2/3.
+    if (!isTRUE(delta)) {
+        pred_or <- myTryCatch(get_predict(
+            model,
+            type = type,
+            vcov = FALSE,
+            newdata = original,
+            ...))[["value"]]
+    } else {
+        pred_or <- NULL
+    }
 
     # lots of indexing later requires a data.table
     setDT(original)
 
-    if (!inherits(pred_hi, "data.frame") || !inherits(pred_lo, "data.frame") || !inherits(pred_or, "data.frame")) {
+    if (!inherits(pred_hi, "data.frame") || !inherits(pred_lo, "data.frame") || !inherits(pred_or, c("data.frame", "NULL"))) {
         insight::format_error("Unable to compute predicted values with this model. You can try to supply a different dataset to the `newdata` argument. If this does not work, you can file a report on the Github Issue Tracker: https://github.com/vincentarelbundock/marginaleffects/issues")
     }
 
@@ -193,7 +200,10 @@ get_contrasts <- function(model,
 
     out[, predicted_lo := pred_lo[["predicted"]]]
     out[, predicted_hi := pred_hi[["predicted"]]]
-    out[, predicted := pred_or[["predicted"]]]
+
+    if (!is.null(pred_or)) {
+        out[, predicted := pred_or[["predicted"]]]
+    }
 
     idx <- grep("^contrast|^group$|^term$|^type$|^transform_pre_idx$", colnames(out), value = TRUE)
 
