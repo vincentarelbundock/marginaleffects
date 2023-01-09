@@ -12,6 +12,7 @@ utils::globalVariables(c(
 "..idx",
 "..idx1",
 "..idx2",
+"elast",
 "..tmp",
 "..variables_grid",
 "..w",
