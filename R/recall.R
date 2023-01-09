@@ -31,12 +31,12 @@ recall <- function(x, ...) {
     }
 
     # overwrite previous arguments
-    for (n in names(dots)) {
-        mc[[n]] <- dots[[n]]
-    }
-    # FUN <- rlang::call_modify
-    # args <- c(list(".call" = quote(mc)), dots)
-    # mc <- do.call("FUN", args)
+    # for (n in names(dots)) {
+    #     mc[[n]] <- dots[[n]]
+    # }
+    FUN <- rlang::call_modify
+    args <- c(list(".call" = quote(mc)), dots)
+    mc <- do.call("FUN", args)
 
     out <- eval(mc)
 

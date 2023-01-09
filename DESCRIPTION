@@ -34,7 +34,8 @@ Imports:
     data.table,
     generics,
     insight (>= 0.18.8.5),
-    methods
+    methods,
+    rlang
 Suggests: 
     tinyviztest,
     AER,
