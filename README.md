@@ -12,6 +12,11 @@ Compute and plot adjusted predictions, contrasts, marginal effects, and
 marginal means for 71 classes of statistical models in `R`. Conduct
 linear and non-linear hypothesis tests using the delta method.
 
+This code on this website was executed using `marginaleffects`
+0.8.1.9103. See the [installation
+section](https://vincentarelbundock.github.io/marginaleffects/#installation)
+to install the latest CRAN or development version.
+
 ## Table of contents
 
 Introduction:
@@ -480,8 +485,8 @@ outcome in the `mtcars` dataset:
 
 ``` r
 predictions(mod) |> averages()
-#>       type estimate std.error statistic p.value conf.low conf.high
-#> 1 response 20.09062 0.3904163   51.4595       0 19.32542  20.85583
+#>       type predicted std.error statistic p.value conf.low conf.high
+#> 1 response  20.09062 0.3904163   51.4595       0 19.32542  20.85583
 ```
 
 This is equivalent to manual computation by:
@@ -505,13 +510,13 @@ comparisons(mod, by = "am")
 #> 6 response   am mean(1) - mean(0) -1.38300908 2.52499366 -0.5477277 0.583878860 -6.33190570  3.565887552  20.25549     18.55291     20.25549  0
 
 slopes(mod) |> averages(by = "am")
-#>       type term    contrast    estimate  std.error  statistic     p.value    conf.low    conf.high am
-#> 1 response   hp mean(dY/dX) -0.04363961 0.02128997 -2.0497736 0.040386532 -0.08536718 -0.001912043  1
-#> 2 response   hp mean(dY/dX) -0.03426361 0.01586407 -2.1598241 0.030786287 -0.06535662 -0.003170596  0
-#> 3 response   wt mean(dY/dX) -6.07175987 1.97621071 -3.0724253 0.002123269 -9.94506169 -2.198458047  1
-#> 4 response   wt mean(dY/dX) -2.47990263 1.23162894 -2.0135144 0.044060539 -4.89385099 -0.065954270  0
-#> 5 response   am mean(dY/dX)  1.90289761 2.30863295  0.8242530 0.409795824 -2.62193983  6.427735051  1
-#> 6 response   am mean(dY/dX) -1.38300908 2.52499367 -0.5477277 0.583878862 -6.33190573  3.565887583  0
+#>       type term    contrast        dydx  std.error  statistic     p.value    conf.low    conf.high predicted predicted_hi predicted_lo am
+#> 1 response   hp mean(dY/dX) -0.04363961 0.02128997 -2.0497736 0.040386532 -0.08536718 -0.001912043  22.48857     22.48752     22.48857  1
+#> 2 response   hp mean(dY/dX) -0.03426361 0.01586407 -2.1598241 0.030786287 -0.06535662 -0.003170596  20.25549     20.25430     20.25549  0
+#> 3 response   wt mean(dY/dX) -6.07175987 1.97621071 -3.0724253 0.002123269 -9.94506169 -2.198458047  22.48857     22.48598     22.48857  1
+#> 4 response   wt mean(dY/dX) -2.47990263 1.23162894 -2.0135144 0.044060539 -4.89385099 -0.065954270  20.25549     20.25424     20.25549  0
+#> 5 response   am mean(dY/dX)  1.90289761 2.30863295  0.8242530 0.409795824 -2.62193983  6.427735051  22.48857     22.48860     22.48857  1
+#> 6 response   am mean(dY/dX) -1.38300908 2.52499367 -0.5477277 0.583878862 -6.33190573  3.565887583  20.25549     20.25532     20.25549  0
 ```
 
 For a nicer printed output, we can also use the `summary()` function:

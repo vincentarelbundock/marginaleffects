@@ -29,6 +29,8 @@ n_support <- nrow(dat)
 
 Compute and plot adjusted predictions, contrasts, marginal effects, and marginal means for `r n_support` classes of statistical models in `R`. Conduct linear and non-linear hypothesis tests using the delta method.
 
+This code on this website was executed using `marginaleffects` `r packageVersion("marginaleffects")`. See the [installation section](https://vincentarelbundock.github.io/marginaleffects/#installation) to install the latest CRAN or development version.
+
 ## Table of contents
 
 Introduction:
