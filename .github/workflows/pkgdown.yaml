@@ -41,7 +41,7 @@ jobs:
         run: Rscript -e "install.packages('TMB', type = 'source')"
 
       - name: marginal effects dev
-        run: Rscript -e "remotes::install_github('vincentarelbundock/marginaleffects/')"
+        run: Rscript -e "devtools::install()"
 
       - uses: r-lib/actions/setup-pandoc@v2
 
