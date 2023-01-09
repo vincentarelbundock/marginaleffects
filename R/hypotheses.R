@@ -95,15 +95,6 @@ hypotheses <- function(
             colnames(param)[1:2] <- c("term", "estimate")
             return(param)
         }
-        # if (is.null(hypothesis)) {
-        #     out <- FUNinner(model, ...)
-        #     class(out) <- c("deltamethod", class(out))
-        #     attr(out, "model") <- model
-        #     attr(out, "model_type") <- class(model)[1]
-        #     attr(out, "vcov") <- vcov
-        #     attr(out, "vcov.type") <- vcov.type
-        #     return(out)
-        # }
     } else {
         FUNinner <- FUN
     }

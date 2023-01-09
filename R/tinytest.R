@@ -16,7 +16,7 @@ expect_slopes <- function(
     diff <- ""
 
     # class
-    fail_class <- !isTRUE(checkmate::check_class(object, "marginaleffects"))
+    fail_class <- !isTRUE(checkmate::check_class(object, "slopes"))
     if (fail_class) {
         msg <- sprintf("Wrong class: `%s`.", class(object)[1])
         diff <- c(diff, msg)

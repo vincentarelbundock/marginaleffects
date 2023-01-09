@@ -47,3 +47,8 @@ mfx <- slopes(mod, variables = "vs")
 expect_equivalent(cmp1$comparison, cmp2$comparison)
 expect_true(all(cmp1$comparison != mfx$dydx))
 expect_true(all(cmp1$comparison != cmp3$comparison))
+
+
+# Issue #582: sanitize_variables should reject reponse as 
+mod <- lm(mpg ~ hp + qsec, data = mtcars)
+expect_error(slopes(mod, variables = "mpg"), pattern = "outcome variable")

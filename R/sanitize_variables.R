@@ -317,6 +317,13 @@ sanitize_variables <- function(variables,
             "transform_pre" = transform_pre)
     }
 
+    # can't take the slope of an outcome
+    dv <- hush(insight::find_response(model))
+    if (any(names(predictors) %in% dv)) {
+        insight::format_error("The outcome variable cannot be used in the `variables` argument.")
+    }
+
+
     # interaction: get_contrasts() assumes there is only one function when interaction=TRUE
     if (isTRUE(interaction)) {
         for (p in predictors) {
