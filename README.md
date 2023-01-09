@@ -518,10 +518,10 @@ For a nicer printed output, we can also use the `summary()` function:
 
 ``` r
 predictions(mod) |> summary(by = "cyl")
-#>   cyl Predicted Std. Error     z   Pr(>|z|) 2.5 % 97.5 %
-#> 1   6     20.10     0.5773 34.81 < 2.22e-16 18.96  21.23
-#> 2   4     26.41     0.6100 43.30 < 2.22e-16 25.22  27.61
-#> 3   8     15.12     0.5622 26.89 < 2.22e-16 14.02  16.22
+#>   cyl Effect Std. Error     z   Pr(>|z|) 2.5 % 97.5 %
+#> 1   6  20.10     0.5773 34.81 < 2.22e-16 18.96  21.23
+#> 2   4  26.41     0.6100 43.30 < 2.22e-16 25.22  27.61
+#> 3   8  15.12     0.5622 26.89 < 2.22e-16 14.02  16.22
 #> 
 #> Model type:  lm 
 #> Prediction type:  response
@@ -590,12 +590,15 @@ hypotheses(mod, "drat = 2 * qsec")
 ```
 
 We can ask the same question but refer to parameters by position, with
-indices `b1`, `b2`, `b3`, etc.:
+indices `b1`, `b2`, `b3`, etc. and get a nicer printout by using
+`summary()`:
 
 ``` r
-hypotheses(mod, "b3 = 2 * b2")
-#>          term  estimate std.error statistic   p.value  conf.low conf.high
-#> 1 b3 = 2 * b2 -1.388909  10.77593  -0.12889 0.8974447 -22.50934  19.73153
+hypotheses(mod, "b3 = 2 * b2") |> summary()
+#>          Term Effect Std. Error       z Pr(>|z|)  2.5 % 97.5 %
+#> 1 b3 = 2 * b2 -1.389      10.78 -0.1289  0.89744 -22.51  19.73
+#> 
+#> Model type:  lm
 ```
 
 The main functions in `marginaleffects` all have a `hypothesis`

@@ -2,7 +2,7 @@
 % Please edit documentation in R/hypotheses.R
 \name{deltamethod}
 \alias{deltamethod}
-\title{\code{deltamethod()} is an alias to \code{hypotheses()}. It is kept for backward compatibility.}
+\title{\code{deltamethod()} is an alias to \code{hypotheses()}}
 \usage{
 deltamethod(
   model,
@@ -14,6 +14,6 @@ deltamethod(
 )
 }
 \description{
-This alias is kept for backward compatibility and because some users may prefer that name.
+This alias is kept for backward compatibility.
 }
 \keyword{internal}

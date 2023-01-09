@@ -1,6 +1,6 @@
 recall <- function(x, ...) {
 
-    if (!inherits(x, c("comparisons", "slopes", "predictions", "marginalmeans"))) {
+    if (!inherits(x, c("comparisons", "slopes", "predictions", "marginalmeans", "hypotheses"))) {
         return(NULL)
     }
 

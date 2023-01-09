@@ -17,10 +17,8 @@
 
 
 #' @export
-summary.slopes <- function(object,
-                           conf_level = NULL,
-                           ...) {
-    out <- tidy(object, conf_level = conf_level, ...)
+summary.slopes <- function(object, ...) {
+    out <- tidy(object, ...)
     class(out) <- c("slopes.summary", class(out))
     attr(out, "type") <- attr(object, "type")
     attr(out, "model_type") <- attr(object, "model_type")
@@ -29,12 +27,8 @@ summary.slopes <- function(object,
 
 
 #' @export
-summary.marginalmeans <- function(
-    object,
-    conf_level = 0.95,
-    ...) {
-
-    out <- tidy(object, conf_level = conf_level, ...)
+summary.marginalmeans <- function(object, ...) {
+    out <- tidy(object, ...)
     out$type <- NULL
     class(out) <- c("marginalmeans.summary", class(out))
     attr(out, "type") <- attr(object, "type")
@@ -46,12 +40,16 @@ summary.marginalmeans <- function(
 
 
 #' @export
-summary.predictions <- function(
-    object, 
-    conf_level = NULL,
-    ...) {
+summary.hypotheses <- function(object, ...) {
+    out <- tidy(object, ...)
+    class(out) <- c("hypotheses.summary", class(out))
+    return(out)
+}
 
-    out <- tidy(object, conf_level = conf_level, ...)
+
+#' @export
+summary.predictions <- function(object, ...) {
+    out <- averages(object, ...)
     class(out) <- c("predictions.summary", class(out))
     attr(out, "type") <- attr(object, "type")
     attr(out, "model_type") <- attr(object, "model_type")
@@ -63,7 +61,6 @@ summary.predictions <- function(
 #' @export
 summary.comparisons <- function(object, ...) {
     out <- averages(object, ...)
-
     class(out) <- c("comparisons.summary", class(out))
     attr(out, "type") <- attr(object, "type")
     attr(out, "model_type") <- attr(object, "model_type")

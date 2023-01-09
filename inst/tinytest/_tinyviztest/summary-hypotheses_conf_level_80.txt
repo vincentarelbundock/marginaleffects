@@ -1,0 +1,4 @@
+     Term Effect Std. Error    z Pr(>|z|)  10.0 % 90.0 %
+1 b3 = b4  2.553      1.979 1.29  0.19693 0.01743  5.089
+
+Model type:  lm 

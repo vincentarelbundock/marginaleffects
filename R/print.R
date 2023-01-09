@@ -78,7 +78,9 @@ print.slopes.summary <- function(x,
     print(out)
     cat("\n")
     cat("Model type: ", attr(x, "model_type"), "\n")
-    cat("Prediction type: ", attr(x, "type"), "\n")
+    if (!inherits(x, "hypotheses.summary")) {
+        cat("Prediction type: ", attr(x, "type"), "\n")
+    }
     if (!is.null(attr(x, "transform_pre_label"))) {
         cat("Pre-transformation: ", paste(attr(x, "transform_pre_label"), collapse = ""), "\n")
     }
@@ -99,12 +101,14 @@ print.slopes.summary <- function(x,
 #' @export
 print.predictions.summary <- print.slopes.summary
 
-
 #' @noRd
 #' @export
 print.marginalmeans.summary <- print.slopes.summary
 
-
 #' @noRd
 #' @export
 print.comparisons.summary <- print.slopes.summary
+
+#' @noRd
+#' @export
+print.hypotheses.summary <- print.slopes.summary

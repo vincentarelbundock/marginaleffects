@@ -33,6 +33,13 @@ expect_snapshot_print(summary(mfx, conf_level = .9), "summary-marginaleffects_co
 expect_snapshot_print(summary(mfx, conf_level = .2), "summary-marginaleffects_conf_level_20")
 
 
+# summary.hypotheses
+mod <- lm(mpg ~ hp + factor(cyl), mtcars)
+hyp <- hypotheses(mod, "b3 = b4")
+expect_snapshot_print(summary(hyp), "summary-hypotheses")
+expect_snapshot_print(summary(hyp, conf_level = .8), "summary-hypotheses_conf_level_80")
+
+
 # summary: marginal means
 dat <- mtcars
 dat$am <- as.logical(dat$am)

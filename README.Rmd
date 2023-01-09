@@ -330,10 +330,10 @@ Can we reject the null hypothesis that the `drat` coefficient is 2 times the siz
 hypotheses(mod, "drat = 2 * qsec")
 ```
 
-We can ask the same question but refer to parameters by position, with indices `b1`, `b2`, `b3`, etc.:
+We can ask the same question but refer to parameters by position, with indices `b1`, `b2`, `b3`, etc. and get a nicer printout by using `summary()`:
 
 ```{r}
-hypotheses(mod, "b3 = 2 * b2")
+hypotheses(mod, "b3 = 2 * b2") |> summary()
 ```
 
 The main functions in `marginaleffects` all have a `hypothesis` argument, which means that we can do complex model testing. For example, consider two slope estimates:

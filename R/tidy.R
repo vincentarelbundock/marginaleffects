@@ -23,6 +23,8 @@ tidy.comparisons <- function(x, ...) {
 }
 
 
+
+
 #' tidy helper
 #' 
 #' @noRd
@@ -63,5 +65,15 @@ tidy.marginalmeans <- function(x, ...) {
     "statistic", "p.value", "conf.low", "conf.high")
     out <- sort_columns(x, first)
     attr(out, "conf_level") <- attr(x, "conf_level")
+    return(out)
+}
+
+
+#' tidy helper
+#' 
+#' @noRd
+#' @export
+tidy.hypotheses <- function(x, ...) {
+    out <- recall(x, ...)
     return(out)
 }
