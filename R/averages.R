@@ -33,7 +33,16 @@
 #' mod <- lm(mpg ~ factor(gear), data = mtcars)
 #' contr <- comparisons(mod, variables = list(gear = "sequential"))
 #' tidy(contr)
-averages <- function (x, ...) {
+averages <- function (x, by = NULL, ...) {
+    xcall <- substitute(x)
+    if (is.call(xcall)) {
+        if (is.null(by)) {
+            by <- c("term", "group", "contrast")
+        }
+        out <- recall(xcall, by = by, ...)
+        return(out)
+    }
+
     UseMethod("averages", x)
 }
 
@@ -84,6 +93,8 @@ averages.predictions <- function(x, by = NULL, byfun = NULL, ...) {
     }
     data.table::setDF(out)
 
+    attr(out, "averages") <- TRUE
+
     return(out)
 }
 
@@ -133,6 +144,8 @@ averages.comparisons <- function(x, by = NULL, ...) {
         }
     }
     data.table::setDF(out)
+
+    attr(out, "averages") <- TRUE
 
     return(out)
 }

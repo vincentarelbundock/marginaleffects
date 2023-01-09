@@ -18,7 +18,11 @@
 
 #' @export
 summary.slopes <- function(object, ...) {
-    out <- tidy(object, ...)
+    if (isTRUE(attr(object, "averages"))) {
+        out <- object
+    } else {
+        out <- averages(object, ...)
+    }
     class(out) <- c("slopes.summary", class(out))
     attr(out, "type") <- attr(object, "type")
     attr(out, "model_type") <- attr(object, "model_type")
@@ -49,7 +53,11 @@ summary.hypotheses <- function(object, ...) {
 
 #' @export
 summary.predictions <- function(object, ...) {
-    out <- averages(object, ...)
+    if (isTRUE(attr(object, "averages"))) {
+        out <- object
+    } else {
+        out <- averages(object, ...)
+    }
     class(out) <- c("predictions.summary", class(out))
     attr(out, "type") <- attr(object, "type")
     attr(out, "model_type") <- attr(object, "model_type")
@@ -60,7 +68,11 @@ summary.predictions <- function(object, ...) {
 
 #' @export
 summary.comparisons <- function(object, ...) {
-    out <- averages(object, ...)
+    if (isTRUE(attr(object, "averages"))) {
+        out <- object
+    } else {
+        out <- averages(object, ...)
+    }
     class(out) <- c("comparisons.summary", class(out))
     attr(out, "type") <- attr(object, "type")
     attr(out, "model_type") <- attr(object, "model_type")
