@@ -8,6 +8,16 @@ tmp$am <- as.logical(tmp$am)
 mod <- lm(mpg ~ hp + wt + factor(cyl) + am, data = tmp)
 
 
+# Issue #580: binary outcome should not be included in marginalmeans calculation
+dat <- mtcars |> transform(
+    vs = factor(vs),
+    gear = factor(gear),
+    am = factor(am))
+mod <- glm(vs ~ gear + am, data = dat, family = binomial)
+p <- predictions(mod, newdata = "marginalmeans")
+expect_equal(nrow(p), 6)
+
+
 # bugfix: counterfactual predictions keep rowid
 mod <- lm(mpg ~ hp + am, mtcars)
 pred <- predictions(mod, newdata = datagrid(am = 0:1, grid.type = "counterfactual"))
@@ -140,6 +150,9 @@ expect_equivalent(length(unique(mm$predicted)), nrow(mm))
 # `typical`: missing logical
 mm <- predictions(mod, newdata = datagrid(am = TRUE))
 expect_equivalent(nrow(mm), 1)
+
+
+
 
 
 

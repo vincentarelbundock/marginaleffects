@@ -46,6 +46,12 @@ sanitize_newdata <- function(model, newdata, by = NULL, modeldata = NULL) {
     } else if (identical(newdata, "marginalmeans")) {
         args[["FUN.factor"]] <- args[["FUN.character"]] <- args[["FUN.logical"]] <- unique
         newdata <- do.call("datagrid", args)
+        # Issue #580: outcome should not duplicate grid rows
+        dv <- hush(insight::find_response(model))
+        if (isTRUE(dv %in% colnames(newdata))) {
+            newdata[[dv]] <- mean_or_mode(newdata[[dv]])
+            newdata <- unique(newdata)
+        }
     }
 
     if (!inherits(newdata, "data.frame")) {
