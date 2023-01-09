@@ -103,7 +103,6 @@ Suggests:
     quantreg,
     remotes,
     RcppEigen,
-    rlang,
     rmarkdown,
     rms,
     robust,
