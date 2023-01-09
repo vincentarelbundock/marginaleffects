@@ -8,7 +8,7 @@ vignette: >
 ---
 
 ```{r, include = FALSE}
-options(width = 1000)
+****options****(width = 1000)
 # this vignette is in .Rbuildignore because lme4 is not available on old CRAN
 # test machines.
 
@@ -46,24 +46,6 @@ The main function used to compute standard errors in `marginaleffects` is here: 
 # Standard errors and intervals for `slopes()` and `comparisons()`
 
 All standard errors for the `slopes()` and `comparisons()` functions are computed using the delta method, as described above.
-
-## Standard Error of the Average Marginal Effect or Contrast
-
-The `summary()` and `tidy()` functions compute the average marginal effect (or contrast) when they are applied to an object produced by `slopes()` (or `comparisons()`). This is done in 3 steps:
-
-1. Extract the Jacobian used to compute unit-level standard errors.
-2. Take the average of that Jacobian.
-3. Estimate the standard error of the average marginal effect as the square root of the diagonal of J'VJ, where V is the variance-covariance matrix.
-
-As [explained succinctly on Stack Exchange:](https://stats.stackexchange.com/a/331311/4874)
-
-> we want the variance of the Average Marginal Effect (AME) and hence our transformed function is: $AME =  \frac{1}{N} \sum_{i=1}^N g_i(x_i,\hat{\beta})$ Then using the delta method we have $Var \left( g(\hat{\beta}) \right) = J_g' \Omega_{\hat{\beta}} J_g$ where $\Omega_{\hat{\beta}} = Var(\hat{\beta})$ and $J_g' = \frac{\partial\left[\frac{1}{N}\sum_{i=1}^N g (x_i,\hat{\beta})\right]}{\partial \hat\beta} = \frac{1}{N}{\left[\sum_{i=1}^N \frac{\partial \left (g (x_i,\hat{\beta})\right)}{\partial \hat\beta}\right]}$ Which justifies using the "average Jacobian" in the delta method to calculate variance of the AME.
-
-References:
-
-* Dowd, Bryan E, William H Greene, and Edward C Norton. “Computation of Standard Errors.” Health Services Research 49, no. 2 (April 2014): 731–50. https://doi.org/10.1111/1475-6773.12122.
-* https://stats.stackexchange.com/questions/283831/delta-method-for-marginal-effects-of-generalized-linear-model?rq=1
-
 
 # Standard errors and intervals for `marginalmeans()`
 
@@ -266,3 +248,29 @@ Relevant?
 https://en.wikipedia.org/wiki/Jensen%27s_inequality
 https://math.stackexchange.com/questions/34009/is-the-variance-of-a-convex-function-a-convex-function/34021#34021?newreg=698ab30a481945878307935ac5d6b629
 -->
+
+
+
+
+
+<!--
+NO LONGER RELEVANT WITH THE AVERAGE() + RECALL() REFACTOR SINCE WE COMPUTE SEs DIRECTLY ON THE MARGINS W
+
+## Standard Error of the Average Marginal Effect or Contrast
+
+The `summary()` and `tidy()` functions compute the average marginal effect (or contrast) when they are applied to an object produced by `slopes()` (or `comparisons()`). This is done in 3 steps:
+
+1. Extract the Jacobian used to compute unit-level standard errors.
+2. Take the average of that Jacobian.
+3. Estimate the standard error of the average marginal effect as the square root of the diagonal of J'VJ, where V is the variance-covariance matrix.
+
+As [explained succinctly on Stack Exchange:](https://stats.stackexchange.com/a/331311/4874)
+
+> we want the variance of the Average Marginal Effect (AME) and hence our transformed function is: $AME =  \frac{1}{N} \sum_{i=1}^N g_i(x_i,\hat{\beta})$ Then using the delta method we have $Var \left( g(\hat{\beta}) \right) = J_g' \Omega_{\hat{\beta}} J_g$ where $\Omega_{\hat{\beta}} = Var(\hat{\beta})$ and $J_g' = \frac{\partial\left[\frac{1}{N}\sum_{i=1}^N g (x_i,\hat{\beta})\right]}{\partial \hat\beta} = \frac{1}{N}{\left[\sum_{i=1}^N \frac{\partial \left (g (x_i,\hat{\beta})\right)}{\partial \hat\beta}\right]}$ Which justifies using the "average Jacobian" in the delta method to calculate variance of the AME.
+
+References:
+
+* Dowd, Bryan E, William H Greene, and Edward C Norton. “Computation of Standard Errors.” Health Services Research 49, no. 2 (April 2014): 731–50. https://doi.org/10.1111/1475-6773.12122.
+* https://stats.stackexchange.com/questions/283831/delta-method-for-marginal-effects-of-generalized-linear-model?rq=1
+-->
+
