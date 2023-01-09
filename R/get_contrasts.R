@@ -147,11 +147,11 @@ get_contrasts <- function(model,
     # this will discard factor variables which are duplicated, so in principle
     # it should be the "correct" size
     elasticities <- c(
-        "dydx",
+        # "dydx", # useless and expensive
         "eyex",
         "eydx",
         "dyex",
-        "dydxavg",
+        # "dydxavg", # useless and expensive
         "eyexavg",
         "eydxavg",
         "dyexavg")
@@ -170,9 +170,11 @@ get_contrasts <- function(model,
                 idx1 <- c(v, "rowid", "rowidcf", "term", "type", "group", grep("^contrast", colnames(original), value = TRUE))
                 idx1 <- intersect(idx1, colnames(original))
                 idx1 <- original[, ..idx1]
-                idx2 <- merge(idx1, idx2)
+                setnames(idx1, old = v, new = "elast")
+                on_cols <- intersect(colnames(idx1), colnames(idx2))
+                idx2[idx1, elast := elast, on = on_cols]
             }
-            elasticities[[v]] <- idx2[[v]]
+            elasticities[[v]] <- idx2$elast
         }
     }
 
