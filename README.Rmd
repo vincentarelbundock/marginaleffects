@@ -106,17 +106,17 @@ The `marginaleffects` package allows `R` users to compute and plot three princip
 
 [_Comparisons_:](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)
 
-> Predict the outcome variable at different regressor values (e.g., college graduates vs. others), and compare those predictions by computing a difference, ratio, or some other function0
+> Predict the outcome variable at different regressor values (e.g., college graduates vs. others), and compare those predictions by computing a difference, ratio, or some other function.
 
 [_Slopes_:](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html) 
 
-> Partial derivatives of the regression equation with respect to a regressor of interest. a.k.a. Marginal effects, trends.
+> Partial derivative of the regression equation with respect to a regressor of interest. a.k.a. Marginal effects, trends.
 
 [_Marginal Means_:](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) 
 
 > Predictions of a model, averaged across a "reference grid" of categorical predictors.
 
-Predictions, comparisons, and slopes are fundamentally unit-level (or "conditional") quantities. Except in the simplest linear case, estimates will typically vary based on the values of all the regressors in a model. Each of the observations in a dataset is thus associated with its own prediction, comparison, or slope estimate. Below, we will see that it can be useful to marginalize (or "average over") unit-level estimates to report an "average prediction", "average comparison", or "average slope".
+Predictions, comparisons, and slopes are fundamentally unit-level (or "conditional") quantities. Except in the simplest linear case, estimates will typically vary based on the values of all the regressors in a model. Each of the observations in a dataset is thus associated with its own prediction, comparison, and slope estimates. Below, we will see that it can be useful to marginalize (or "average over") unit-level estimates to report an "average prediction", "average comparison", or "average slope".
 
 One ambiguous aspect of the definitions above is that the word "marginal" comes up in two different and *opposite* ways: 
 
