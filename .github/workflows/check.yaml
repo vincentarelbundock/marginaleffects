@@ -6,11 +6,14 @@ on:
   push:
   pull_request:
 
+permissions: read-all
+
 env:
   _R_CHECK_FORCE_SUGGESTS_: "false"
   _R_CHECK_TESTS_NLINES_: 0
   R_NOT_CRAN: true
   R_GH: true
+  GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   ci:
@@ -26,9 +29,6 @@ jobs:
           - {os: ubuntu-latest,   r: 'oldrel-3'}
 
     runs-on: ${{ matrix.os }}
-
-    env:
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       - uses: actions/checkout@v3
