@@ -5,8 +5,8 @@ source("helpers.R")
 using("marginaleffects")
 # source(here::here("inst/tinytest/helpers.R"))
 
-requiet("margins")
-requiet("nnet")
+exit_if_not(requiet("margins"))
+exit_if_not(requiet("nnet"))
 tol <- 1e-4
 tol_se <- 1e-3
 
@@ -192,3 +192,8 @@ by <- data.frame(
     group = 4:5)
 expect_warning(comparisons(mod, variables = "mpg", newdata = "mean", by = by))
 expect_warning(predictions(mod, newdata = "mean", by = by))
+
+
+
+
+# clear

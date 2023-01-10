@@ -1,7 +1,7 @@
 source("helpers.R")
 using("marginaleffects")
 
-requiet("pscl")
+exit_if_not(requiet("pscl"))
 
 tmp <- mtcars
 tmp$am <- as.logical(tmp$am)
@@ -9,7 +9,8 @@ mod <- lm(mpg ~ hp + wt + factor(cyl) + am, data = tmp)
 
 
 # Issue #580: binary outcome should not be included in marginalmeans calculation
-dat <- mtcars |> transform(
+dat <- transform(
+    mtcars,
     vs = factor(vs),
     gear = factor(gear),
     am = factor(am))

@@ -1,17 +1,23 @@
 source("helpers.R")
 using("marginaleffects")
 
-requiet("sandwich")
+exit_if_not(requiet("sandwich"))
+
 
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/datasets/mtcars.csv")
 
 # working but no validity check
-mod <<- lm(mpg ~ hp + drat, data = dat)
+mod <- lm(mpg ~ hp + drat, data = dat)
 a <- tidy(slopes(mod))
-b <- tidy(slopes(mod, vcov = sandwich::vcovHC(mod)))
+
+assign("tmp", vcovHC(mod), envir = .GlobalEnv)
+
+mfx <- slopes(mod, vcov = tmp)
+b <- tidy(mfx)
 expect_true(all(a$estimate == b$estimate))
 expect_true(all(a$std.error != b$std.error))
 
+rm("tmp", envir = .GlobalEnv)
 
 
 # matrix produces different results (no validity)

@@ -1,9 +1,9 @@
 source("helpers.R")
 using("marginaleffects")
 
-requiet("robustlmm")
-requiet("emmeans")
-requiet("broom")
+exit_if_not(requiet("robustlmm"))
+exit_if_not(requiet("emmeans"))
+exit_if_not(requiet("broom"))
 
 # no validity
 mod <- rlmer(Reaction ~ Days + (Days | Subject), sleepstudy,

@@ -2,11 +2,11 @@ source("helpers.R")
 using("marginaleffects")
 
 
-requiet("mgcv")
-requiet("emmeans")
-requiet("broom")
-requiet("dplyr")
-requiet("tsModel")
+exit_if_not(requiet("mgcv"))
+exit_if_not(requiet("emmeans"))
+exit_if_not(requiet("broom"))
+exit_if_not(requiet("dplyr"))
+exit_if_not(requiet("tsModel"))
 
 
 # marginaleffects vs. emtrends
@@ -123,7 +123,7 @@ if (packageVersion("insight") > "0.17.1.6") {
 
 
     # exclude a smooth
-    requiet("itsadug")
+    exit_if_not(requiet("itsadug"))
     set.seed(1024)
     data(simdat)
     simdat$Subject <- as.factor(simdat$Subject)

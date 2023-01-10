@@ -1,10 +1,10 @@
 source("helpers.R")
 using("marginaleffects")
 
-requiet("margins")
-requiet("emmeans")
-requiet("broom")
-requiet("survey")
+exit_if_not(requiet("margins"))
+exit_if_not(requiet("emmeans"))
+exit_if_not(requiet("broom"))
+exit_if_not(requiet("survey"))
 
 # survey: marginaleffects vs. margins vs. emtrends
 data("fpc", package = "survey")

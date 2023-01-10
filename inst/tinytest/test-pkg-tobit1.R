@@ -5,8 +5,8 @@ source("helpers.R")
 using("marginaleffects")
 
 if (!require("tobit1")) exit_file("tobit1")
-requiet("tobit1")
-requiet("broom")
+exit_if_not(requiet("tobit1"))
+exit_if_not(requiet("broom"))
 tol <- 0.001
 tol_se <- 0.001
 

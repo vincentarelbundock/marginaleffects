@@ -4,11 +4,11 @@
 source("helpers.R")
 using("marginaleffects")
 
-requiet("margins")
-requiet("emmeans")
-requiet("broom")
-requiet("gamlss")
-requiet("titanic")
+exit_if_not(requiet("margins"))
+exit_if_not(requiet("emmeans"))
+exit_if_not(requiet("broom"))
+exit_if_not(requiet("gamlss"))
+exit_if_not(requiet("titanic"))
 
 # Beta regression
 tmp <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/betareg/GasolineYield.csv")

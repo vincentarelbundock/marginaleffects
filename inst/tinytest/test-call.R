@@ -1,14 +1,18 @@
 source("helpers.R")
+exit_if_not(requiet("magrittr"))
 
 # recall captures calls to avoid evaluating twice
-mod <<- lm(mpg ~ hp + factor(gear), data = mtcars)
-cmp1 <- comparisons(mod)
+modd <<- lm(mpg ~ hp + factor(gear), data = mtcars)
+cmp1 <- comparisons(modd)
 cmp1 <- averages(cmp1)
-cmp2 <- averages(comparisons(mod))[, seq_along(cmp1)]
-cmp3 <- comparisons(mod) |> averages()
+cmp2 <- averages(comparisons(modd))[, seq_along(cmp1)]
+cmp3 <- comparisons(modd) %>% averages()
 cmp3 <- cmp3[, seq_along(cmp1)]
 expect_equivalent(cmp1, cmp2)
 expect_equivalent(cmp1, cmp3)
+
+suppressWarnings(rm("modd", .GlobalEnv))
+suppressWarnings(rm("modd"))
 
 
 

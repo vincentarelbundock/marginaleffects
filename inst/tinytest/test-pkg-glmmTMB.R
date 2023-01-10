@@ -3,9 +3,9 @@ using("marginaleffects")
 # exit_file("glmmTMB always causes problems")
 
 if (ON_CI) exit_file("on ci") # install and test fails on Github
-requiet("glmmTMB")
-requiet("emmeans")
-requiet("broom")
+exit_if_not(requiet("glmmTMB"))
+exit_if_not(requiet("emmeans"))
+exit_if_not(requiet("broom"))
 
 data("Owls", package = "glmmTMB")
 

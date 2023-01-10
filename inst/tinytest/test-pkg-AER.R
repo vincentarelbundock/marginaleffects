@@ -2,9 +2,9 @@
 source("helpers.R")
 using("marginaleffects")
 
-requiet("AER")
-requiet("emmeans")
-requiet("broom")
+exit_if_not(requiet("AER"))
+exit_if_not(requiet("emmeans"))
+exit_if_not(requiet("broom"))
 tol_se <- 1e-4
 
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/AER/Affairs.csv")

@@ -1,6 +1,6 @@
 source("helpers.R")
 using("marginaleffects")
-if(!isTRUE(requiet("car"))) exit_file("car not installed")
+exit_if_not(requiet("car"))
 
 # When `FUN` and `hypotheses` are `NULL`, `hypotheses()` returns a data.frame of parameters
 dat <- mtcars

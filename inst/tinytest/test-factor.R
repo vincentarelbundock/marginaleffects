@@ -23,7 +23,7 @@ expect_true(all(c("Low", "Medium", "High") %in% mfx$group))
 
 
 # smart detect factor() in formula
-requiet("estimatr")
+exit_if_not(requiet("estimatr"))
 model <- lm_robust(carb ~ wt + factor(cyl), se_type = "stata", data = mtcars)
 k <- slopes(model)
 expect_true(all(c("dY/dX", "8 - 4") %in% k$contrast))
@@ -38,7 +38,7 @@ expect_equivalent(mfx1[, 1:5], mfx2[, 1:5])
 
 # bugs stay dead: get_data.coxph() with strata()
 # skip_if_not_installed("insight", minimum_version = "0.17.0")
-requiet("survival")
+exit_if_not(requiet("survival"))
 test1 <- data.frame(
     time = c(4, 3, 1, 1, 2, 2, 3),
     status = c(1, 1, 1, 0, 1, 1, 0),

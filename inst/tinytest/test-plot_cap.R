@@ -4,7 +4,7 @@ exit_if_not(!ON_OSX)
 exit_if_not(require("tinyviztest"))
 
 using("tinyviztest")
-requiet("nnet")
+exit_if_not(requiet("nnet"))
 
 # Issue #567: threenum and minmax are mixed up
 dat <- transform(mtcars, am_fct = factor(am))

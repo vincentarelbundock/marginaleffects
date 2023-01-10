@@ -2,7 +2,7 @@
 source("helpers.R")
 using("marginaleffects")
 
-requiet("modelsummary")
+exit_if_not(requiet("modelsummary"))
 tol <- .0001
 
 
@@ -23,7 +23,7 @@ expect_equivalent(cmp1$std.error, cmp2$std.error)
 
 
 # error when function breaks or returns a bad vector
-requiet("survey")
+exit_if_not(requiet("survey"))
 data(nhanes, package = "survey")
 dat <- setNames(nhanes, tolower(names(nhanes)))
 dat$female <- dat$riagendr == 2

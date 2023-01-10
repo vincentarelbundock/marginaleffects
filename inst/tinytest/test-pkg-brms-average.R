@@ -4,8 +4,8 @@
 source("helpers.R")
 exit_if_not(EXPENSIVE)
 using("marginaleffects")
-requiet("brms")
-requiet("insight")
+exit_if_not(requiet("brms"))
+exit_if_not(requiet("insight"))
 
 void <- capture.output({
     m1 <- brm(mpg ~ hp, data = mtcars, silent = 2)

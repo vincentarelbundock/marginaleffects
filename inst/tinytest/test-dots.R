@@ -1,7 +1,7 @@
 source("helpers.R")
 using("marginaleffects")
 
-requiet("lme4")
+exit_if_not(requiet("lme4"))
 
 # lme4::lmer
 mod <- lmer(mpg ~ hp + (1 | gear), data = mtcars)

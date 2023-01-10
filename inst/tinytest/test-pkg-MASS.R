@@ -2,11 +2,10 @@
 using("marginaleffects")
 source("helpers.R")
 
-if (packageVersion("emmeans") < "1.7.4") exit_file("emmeans 1.7.4")
-requiet("margins")
-requiet("MASS")
-requiet("broom")
-requiet("emmeans")
+exit_if_not(requiet("margins"))
+exit_if_not(requiet("MASS"))
+exit_if_not(requiet("broom"))
+exit_if_not(requiet("emmeans"))
 tol <- 0.0001
 tol_se <- 0.001
 
@@ -174,7 +173,7 @@ expect_equivalent(ti$std.error, em$std.error)
 # glmmPQL
 
 # glmmPQL: no validity
-requiet("lme4") # glmmPQL fails when lme4 is not installed
+exit_if_not(requiet("lme4")) # glmmPQL fails when lme4 is not installed
 tmp <- bacteria
 tmp$week_bin <- tmp$week > 2
 mod <- glmmPQL(y ~ trt + week_bin, random = ~ 1 | ID,

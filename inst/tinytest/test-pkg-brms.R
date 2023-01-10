@@ -8,11 +8,11 @@ if (ON_WINDOWS) exit_file("on windows")
 if (ON_CRAN) exit_file("on cran")
 if (!minver("base", "4.1.0")) exit_file("R 4.1.0")
 options("marginaleffects_credible_interval" = "hdi")
-requiet("brms")
-requiet("emmeans")
-requiet("broom")
-requiet("posterior")
-requiet("brmsmargins")
+exit_if_not(requiet("brms"))
+exit_if_not(requiet("emmeans"))
+exit_if_not(requiet("broom"))
+exit_if_not(requiet("posterior"))
+exit_if_not(requiet("brmsmargins"))
 tol <- 0.0001
 tol_se <- 0.001
 
@@ -49,8 +49,9 @@ tmp$grp <- sample(1:5, size = 180, replace = TRUE)
 tmp$cat <- as.factor(sample(1:5, size = 180, replace = TRUE))
 tmp$Reaction_d <-
   ifelse(tmp$Reaction < median(tmp$Reaction), 0, 1)
-tmp <- tmp |>
-  dplyr::group_by(grp) |>
+exit_if_not(requiet("magrittr"))
+tmp <- tmp %>%
+  dplyr::group_by(grp) %>%
   dplyr::mutate(subgrp = sample(1:15, size = dplyr::n(), replace = TRUE))
 void <- capture.output(suppressMessages(
     brms_mixed_3 <- brm(Reaction ~ Days + (1 | grp / subgrp) + (1 | Subject), data = tmp)
@@ -215,7 +216,7 @@ expect_false(p1$conf.high == p2$conf.high)
 
 
 # predictions vs. emmeans
-requiet("emmeans")
+exit_if_not(requiet("emmeans"))
 em <- emmeans::emmeans(brms_numeric, ~hp, "hp", at = list(hp = c(100, 120)))
 em <- data.frame(em)
 pred <- predictions(brms_numeric, newdata = datagrid(hp = c(100, 120)), type = "link")
@@ -226,8 +227,8 @@ expect_equivalent(pred$conf.high, em$upper.HPD)
 
 
 # marginalmeans vs. emmeans
-requiet("emmeans")
-requiet("broom")
+exit_if_not(requiet("emmeans"))
+exit_if_not(requiet("broom"))
 expect_error(marginalmeans(brms_factor, variables = "cyl_fac", type = "link"), pattern = "github.*issues")
 # emmeans::emmeans(brms_factor, specs = ~cyl_fac)
 
@@ -248,7 +249,7 @@ expect_equivalent(nrow(attr(tmp, "posterior_draws")), nrow(tmp))
 
 
 # marginaleffects vs. emmeans
-requiet("emmeans")
+exit_if_not(requiet("emmeans"))
 
 # # known frequentist example to compare syntax
 # brms_numeric_freq <- glm(am ~ hp, data = mtcars, family = binomial)
@@ -630,8 +631,8 @@ cmp <- comparisons(
     brms_logit_re,
     newdata = datagrid(firm = sample(1e5:2e6, K)),
     allow_new_levels = TRUE,
-    sample_new_levels = "gaussian") |>
-    tidy()
+    sample_new_levels = "gaussian")
+cmp <- tidy(cmp)
 
 bm <- brmsmargins(
   k = K,

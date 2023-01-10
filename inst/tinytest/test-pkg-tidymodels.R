@@ -1,6 +1,6 @@
 source("helpers.R")
 using("marginaleffects")
-requiet("tidymodels")
+exit_if_not(requiet("tidymodels"))
 
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv")
 dat$large_penguin <- ifelse(

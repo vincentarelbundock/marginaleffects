@@ -5,8 +5,8 @@ library(tinytest)
 exit_if_not(!ON_CI)
 exit_if_not(packageVersion("base") >= "4.2.0")
 
-requiet("MASS")
-requiet("ordinal")
+exit_if_not(requiet("MASS"))
+exit_if_not(requiet("ordinal"))
 
 dat <<- read.csv(
     "https://vincentarelbundock.github.io/Rdatasets/csv/MASS/housing.csv",

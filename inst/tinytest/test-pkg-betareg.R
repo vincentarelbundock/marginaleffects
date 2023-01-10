@@ -2,10 +2,10 @@
 source("helpers.R")
 using("marginaleffects")
 
-requiet("betareg")
-requiet("margins")
-requiet("emmeans")
-requiet("broom")
+exit_if_not(requiet("betareg"))
+exit_if_not(requiet("margins"))
+exit_if_not(requiet("emmeans"))
+exit_if_not(requiet("broom"))
 
 data("GasolineYield", package = "betareg")
 tmp <- GasolineYield

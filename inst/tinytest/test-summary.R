@@ -5,7 +5,7 @@ exit_if_not(!ON_OSX)
 using("tinyviztest")
 using("marginaleffects")
 
-requiet("dplyr")
+exit_if_not(requiet("dplyr"))
 
 dat <- mtcars
 mod <- glm(am ~ hp, data = dat, family = binomial)

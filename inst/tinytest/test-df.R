@@ -1,6 +1,6 @@
-requiet("marginaleffects")
+exit_if_not(requiet("marginaleffects"))
 using("marginaleffects")
-requiet("emmeans")
+exit_if_not(requiet("emmeans"))
 
 dat <- mtcars
 dat$cyl <- as.factor(dat$cyl)

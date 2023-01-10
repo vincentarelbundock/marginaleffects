@@ -1,9 +1,9 @@
 source("helpers.R")
 using("marginaleffects")
 
-requiet("nlme")
-requiet("emmeans")
-requiet("broom")
+exit_if_not(requiet("nlme"))
+exit_if_not(requiet("emmeans"))
+exit_if_not(requiet("broom"))
 
 dat <<- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/nlme/Ovary.csv")
 

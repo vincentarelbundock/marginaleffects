@@ -1,12 +1,12 @@
 source("helpers.R")
 using("marginaleffects")
 
-requiet("margins")
-requiet("haven")
-requiet("lme4")
-requiet("insight")
-requiet("emmeans")
-requiet("broom")
+exit_if_not(requiet("margins"))
+exit_if_not(requiet("haven"))
+exit_if_not(requiet("lme4"))
+exit_if_not(requiet("insight"))
+exit_if_not(requiet("emmeans"))
+exit_if_not(requiet("broom"))
 
 
 # satterthwaite (no validity)

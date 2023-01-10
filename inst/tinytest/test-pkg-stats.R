@@ -1,10 +1,10 @@
 source("helpers.R")
 using("marginaleffects")
 
-requiet("margins")
-requiet("broom")
-requiet("emmeans")
-requiet("dplyr")
+exit_if_not(requiet("margins"))
+exit_if_not(requiet("broom"))
+exit_if_not(requiet("emmeans"))
+exit_if_not(requiet("dplyr"))
 
 
 guerry <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/HistData/Guerry.csv")

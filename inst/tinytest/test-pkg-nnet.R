@@ -2,7 +2,7 @@ source("helpers.R")
 exit_if_not(!ON_CI)
 using("marginaleffects")
 
-requiet("nnet")
+exit_if_not(requiet("nnet"))
 
 # multinom group estimates
 TitanicSurvival <- "https://vincentarelbundock.github.io/Rdatasets/csv/carData/TitanicSurvival.csv"

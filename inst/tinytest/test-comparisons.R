@@ -12,7 +12,7 @@ dat <- mtcars
 dat$new_hp <- 49 * (dat$hp - min(dat$hp)) / (max(dat$hp) - min(dat$hp)) + 1
 dat <- dat
 mod <- lm(mpg ~ log(new_hp) + factor(cyl), data = dat)
-fdiff <- \(x) data.frame(x, x + 10)
+fdiff <- function(x) data.frame(x, x + 10)
 cmp1 <- comparisons(mod, variables = list(new_hp = fdiff))
 cmp2 <- comparisons(mod, variables = list(new_hp = 10))
 expect_equivalent(nrow(cmp1), 32)

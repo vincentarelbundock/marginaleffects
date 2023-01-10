@@ -1,5 +1,24 @@
 EXPENSIVE <- FALSE
 
+# libraries
+library("tinytest")
+library("tinyviztest")
+
+requiet <- function(package) {
+    void <- capture.output(
+    pkg_available <<- tryCatch(suppressPackageStartupMessages(suppressWarnings(suppressMessages(tryCatch(
+        isTRUE(require(package, warn.conflicts = FALSE, character.only = TRUE)),
+        error = function(e) FALSE
+    ))))))
+    return(pkg_available)
+}
+
+if (isTRUE(suppressMessages(require("tinytest"))) && packageVersion("tinytest") >= "1.4.0") {
+    tinytest::register_tinytest_extension(
+        "marginaleffects",
+        c("expect_slopes", "expect_predictions", "expect_margins", "expect_marginalmeans"))
+}
+
 # common names of datasets, often assigned to global environment
 common <- c("dat", "tmp", "d", "k", "mod", "tmp1", "tmp2", "test1", "test2")
 suppressWarnings(rm(list = common, envir = .GlobalEnv))
@@ -7,20 +26,9 @@ suppressWarnings(rm(list = common))
 
 # avoids a `timedatectl`` warning
 Sys.setenv(TZ="America/New_York") 
-library("tinytest")
-
-require("tinyviztest")
 
 # snapshots
 options(width = 10000)
-
-
-
-if (isTRUE(suppressMessages(require("tinytest"))) && packageVersion("tinytest") >= "1.4.0") {
-    tinytest::register_tinytest_extension(
-        "marginaleffects",
-        c("expect_slopes", "expect_predictions", "expect_margins", "expect_marginalmeans"))
-}
 
 # important because otherwise testing so many packages is terrible
 conflicted::conflict_prefer(name = "expect_error", winner = "tinytest", quiet = TRUE)
@@ -52,13 +60,6 @@ minver <- function(pkg, ver = NULL) {
     } else {
         isTRUE(as.character(ins) >= ver)
     }
-}
-
-# requiet adapted from testthat::skip_if_not_installed (MIT license)
-requiet <- function(package, minimum_version = NULL) {
-    suppressPackageStartupMessages(
-        require(package, warn.conflicts = FALSE, character.only = TRUE)
-    )
 }
 
 

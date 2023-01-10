@@ -1,9 +1,9 @@
 source("helpers.R")
 using("marginaleffects")
 
-requiet("margins")
-requiet("dplyr")
-requiet("ivreg")
+exit_if_not(requiet("margins"))
+exit_if_not(requiet("dplyr"))
+exit_if_not(requiet("ivreg"))
 
 # marginaleffects: vs. margins
 data(Kmenta, package = "ivreg")
@@ -25,10 +25,10 @@ dat <- read.csv(testing_path("stata/databases/ivreg_ivreg_01.csv"))
 stata <- readRDS(testing_path("stata/stata.rds"))[["ivreg_ivreg_01"]]
 mod <- ivreg::ivreg(Q ~ P + D | D + F + A, data = dat)
 ame <- slopes(mod) %>%
-   group_by(term) %>%
-   summarize(dydx = mean(dydx),
+   dplyr::group_by(term) %>%
+   dplyr::summarize(dydx = mean(dydx),
              std.error = mean(std.error)) %>%
-   inner_join(stata, by = "term")
+   dplyr::inner_join(stata, by = "term")
 expect_equivalent(ame$dydx, ame$dydxstata, tolerance = 0.0001)
 
 

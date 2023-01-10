@@ -1,7 +1,7 @@
 source("helpers.R")
 using("marginaleffects")
 
-requiet("emmeans")
+exit_if_not(requiet("emmeans"))
 
 # interaction automatic flip from NULL to useful
 dat <- mtcars
@@ -67,8 +67,6 @@ cmp <- comparisons(
     cross = TRUE)
 expect_equivalent(nrow(cmp), 18)
 expect_equivalent(nrow(tidy(cmp)), 18)
-
-cmp |> dplyr::arrange(contrast_cyl, contrast_am)
 
 cmp <- comparisons(
     mod,

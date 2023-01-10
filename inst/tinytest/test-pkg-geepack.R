@@ -1,9 +1,9 @@
 source("helpers.R")
 using("marginaleffects")
 
-requiet("geepack")
-requiet("emmeans")
-requiet("broom")
+exit_if_not(requiet("geepack"))
+exit_if_not(requiet("emmeans"))
+exit_if_not(requiet("broom"))
 
 # Stata does not replicate coefficients exactly:
 # xtset Pig Time

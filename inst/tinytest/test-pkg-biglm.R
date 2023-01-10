@@ -1,6 +1,6 @@
 source("helpers.R")
 using("marginaleffects")
-requiet("biglm")
+exit_if_not(requiet("biglm"))
 
 N <- 1e4
 x1 <- rnorm(N)

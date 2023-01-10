@@ -9,7 +9,7 @@ pred <- predictions(mod)
 
 
 # tidy.predictions
-requiet("MASS")
+exit_if_not(requiet("MASS"))
 mod1 <- glm(vs ~ hp * mpg, data = mtcars, family = binomial)
 # there used to be an interaction in this polr model, but it produced
 # negative variances and NaN standard errors
