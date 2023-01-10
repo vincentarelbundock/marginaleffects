@@ -49,7 +49,10 @@ jobs:
         run: ./run.sh install_github easystats/insight/pkg
 
       - name: TMB source
-        run: Rscript -e "install.packages('TMB', type = 'source')"
+        run: ./run.sh install_source TMB
+
+      - name: glmmTMB source
+        run: ./run.sh install_source glmmTMB
 
       - name: Test
         run: ./run.sh run_tests

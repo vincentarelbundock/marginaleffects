@@ -316,6 +316,11 @@ RBinaryInstall() {
     AptGetInstall ${r_debs}
 }
 
+InstallSource() {
+    #EnsureDevtools
+    sudo Rscript -e 'install.packages(commandArgs(TRUE), type = "source", repos = "https://cloud.r-project.org/")' "$@"
+}
+
 InstallGithub() {
     #EnsureDevtools
     sudo Rscript -e 'remotes::install_github(commandArgs(TRUE))' "$@"
@@ -470,6 +475,11 @@ case $COMMAND in
     ## Install a package from github sources
     "install_github"|"github_package")
         InstallGithub "$@"
+        ;;
+    ##
+    ## Install a package from CRAN sources
+    "install_source")
+        InstallSource "$@"
         ;;
     ##
     ## Install package dependencies from CRAN
