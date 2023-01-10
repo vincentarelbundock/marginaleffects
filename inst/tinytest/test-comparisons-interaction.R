@@ -65,8 +65,8 @@ cmp <- comparisons(
     variables = list("cyl" = "all", "am" = "all"),
     newdata = datagrid(),
     cross = TRUE)
-expect_equivalent(nrow(cmp), 18)
-expect_equivalent(nrow(tidy(cmp)), 18)
+expect_equivalent(nrow(cmp), 21)
+expect_equivalent(nrow(tidy(cmp)), 21)
 
 cmp <- comparisons(
     mod,
