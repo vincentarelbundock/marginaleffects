@@ -42,6 +42,7 @@ Suggests:
     afex,
     aod,
     bench,
+    blme,
     betareg,
     BH,
     bife,

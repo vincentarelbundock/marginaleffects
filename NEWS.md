@@ -4,6 +4,10 @@ Breaking change:
 
 * The `transform_avg` argument in `tidy()` deprecated. Use `transform_post` instead.
 
+New models supported:
+
+* `blme` package.
+
 New features:
 
 * `hypothesis` can be used to set the null used in calculating Z and p. For example, is the conditional risk ratio different from 1?

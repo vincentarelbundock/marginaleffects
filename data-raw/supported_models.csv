@@ -10,6 +10,8 @@ betareg,betareg,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE
 bife,bife,TRUE,TRUE,,,U,U,U,U
 biglm,biglm,TRUE,FALSE,,,U,U,U,U
 biglm,bigglm,TRUE,FALSE,,,U,U,U,U
+blme,blmer,TRUE,TRUE,,,,,,
+blme,bglmer,TRUE,TRUE,,,,,,
 brglm2,bracl,TRUE,TRUE,,,U,U,U,U
 brglm2,brglmFit,TRUE,TRUE,,,TRUE,TRUE,TRUE,TRUE
 brglm2,brnb,TRUE,TRUE,,,TRUE,TRUE,U,U

@@ -29,6 +29,8 @@ sanity_model_supported_class <- function(model) {
     supported <- append(custom_classes, list(
         "afex_aov",
         "betareg",
+        "bglmerMod",
+        "blmerMod",
         "bife",
         "biglm",
         c("bigglm", "biglm"),

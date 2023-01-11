@@ -13,7 +13,7 @@ marginal means for 71 classes of statistical models in `R`. Conduct
 linear and non-linear hypothesis tests using the delta method.
 
 This code on this website was executed using `marginaleffects`
-0.8.1.9103. See the [installation
+0.8.1.9105. See the [installation
 section](https://vincentarelbundock.github.io/marginaleffects/#installation)
 to install the latest CRAN or development version.
 
@@ -197,11 +197,11 @@ averaged predictions.
 
 > Predict the outcome variable at different regressor values (e.g.,
 > college graduates vs. others), and compare those predictions by
-> computing a difference, ratio, or some other function0
+> computing a difference, ratio, or some other function.
 
 [*Slopes*:](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html)
 
-> Partial derivatives of the regression equation with respect to a
+> Partial derivative of the regression equation with respect to a
 > regressor of interest. a.k.a. Marginal effects, trends.
 
 [*Marginal
@@ -214,7 +214,7 @@ Predictions, comparisons, and slopes are fundamentally unit-level (or
 “conditional”) quantities. Except in the simplest linear case,
 estimates will typically vary based on the values of all the regressors
 in a model. Each of the observations in a dataset is thus associated
-with its own prediction, comparison, or slope estimate. Below, we will
+with its own prediction, comparison, and slope estimates. Below, we will
 see that it can be useful to marginalize (or “average over”) unit-level
 estimates to report an “average prediction”, “average comparison”, or
 “average slope”.

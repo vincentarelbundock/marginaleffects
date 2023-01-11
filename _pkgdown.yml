@@ -32,7 +32,7 @@ navbar:
     href: https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html
   - text: "Marginal means"
     href: https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html
-  - text: "Hypothesis Tests"
+  - text: "Hypothesis tests"
     href: https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html
   right:
   - text: Functions
