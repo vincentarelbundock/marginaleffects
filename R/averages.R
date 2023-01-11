@@ -5,9 +5,14 @@
 #' estimates computed by the `predictions()`, `comparisons()`, or `slopes()` functions.
 #' 
 #' Warning: It is generally faster and safer to use the `by` argument of one of
-#' the three functions listed above. This is because `averages()` works by modifying the
-#' original call and re-evaluating the function, which duplicates computations and
-#' may not always work in functions or nested environments.
+#' the three functions listed above. Alternatively, one can call it in one step:
+#' 
+#' `average(slopes(model))`
+#' 
+#' `slopes(model) |> averages()` 
+#' 
+#' Proceeding in two steps by assigning the unit-level estimates is typically
+#' slower, because the whole estimate must be executed twice.
 #'
 #' Note that the `tidy()` and `summary()` methods are simple wrappers around `averages()`
 #' @param x Object produced by the `predictions()`, `comparisons()`, or `slopes()` functions.

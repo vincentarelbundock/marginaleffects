@@ -39,9 +39,14 @@ Calculate average estimates by taking the (group-wise) mean of all the unit-leve
 estimates computed by the \code{predictions()}, \code{comparisons()}, or \code{slopes()} functions.
 
 Warning: It is generally faster and safer to use the \code{by} argument of one of
-the three functions listed above. This is because \code{averages()} works by modifying the
-original call and re-evaluating the function, which duplicates computations and
-may not always work in functions or nested environments.
+the three functions listed above. Alternatively, one can call it in one step:
+
+\code{average(slopes(model))}
+
+\code{slopes(model) |> averages()}
+
+Proceeding in two steps by assigning the unit-level estimates is typically
+slower, because the whole estimate must be executed twice.
 
 Note that the \code{tidy()} and \code{summary()} methods are simple wrappers around \code{averages()}
 }
