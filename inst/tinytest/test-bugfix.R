@@ -42,6 +42,9 @@ expect_error(comparisons(mod), pattern = "forbidden")
 
 
 
+exit_if_not(packageVersion("insight") > "0.18.8")
+exit_file("works interactively")
+
 # Issue #556
 set.seed(12345)
 n = 500
@@ -66,8 +69,6 @@ z = ifelse(x + rlogis(n) > 1.5, 1, 0)
 dat = data.frame(x = factor(x), z = z)
 dat <- dat
 
-withr::with_environment(environment(), {
-
 m2 = glm(z ~ I(x==2) + I(x==3), family = binomial, data = dat)
 
 p1 <- predictions(m2, type = "link")
@@ -78,6 +79,3 @@ expect_equal(p1$predicted, p3$fit)
 expect_equal(p1$std.error, p3$se.fit)
 expect_equal(p2$predicted, p3$fit)
 expect_equal(p2$std.error, p3$se.fit)
-
-
-})
