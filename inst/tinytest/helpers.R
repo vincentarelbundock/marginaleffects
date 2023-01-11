@@ -31,21 +31,27 @@ Sys.setenv(TZ="America/New_York")
 options(width = 10000)
 
 # important because otherwise testing so many packages is terrible
-conflicted::conflict_prefer(name = "expect_error", winner = "tinytest", quiet = TRUE)
-conflicted::conflict_prefer(name = "expect_true", winner = "tinytest", quiet = TRUE)
-conflicted::conflict_prefer(name = "expect_equal", winner = "tinytest", quiet = TRUE)
-conflicted::conflict_prefer(name = "expect_warning", winner = "tinytest", quiet = TRUE)
-conflicted::conflict_prefer(name = "lmer", winner = "lme4", quiet = TRUE)
-conflicted::conflict_prefer(name = "s", winner = "gam", quiet = TRUE)
-conflicted::conflict_prefer(name = "ar", winner = "stats", quiet = TRUE)
-conflicted::conflict_prefer(name = "marginal_effects", winner = "margins", quiet = TRUE)
-conflicted::conflict_prefer(name = "kidney", winner = "brms", quiet = TRUE)
-conflicted::conflict_prefer(name = "ngrps", winner = "brms", quiet = TRUE)
-conflicted::conflict_prefer(name = "lizards", winner = "aod", quiet = TRUE)
-conflicted::conflict_prefer(name = "rats", winner = "aod", quiet = TRUE)
-conflicted::conflict_prefer(name = "mad", winner = "stats", quiet = TRUE)
-conflicted::conflict_prefer(name = "sd", winner = "stats", quiet = TRUE)
-conflicted::conflict_prefer(name = "var", winner = "stats", quiet = TRUE)
+dict <- c(
+    "expect_error" = "tinytest",
+    "expect_true" = "tinytest",
+    "expect_equal" = "tinytest",
+    "expect_warning" = "tinytest",
+    "lmer" = "lme4",
+    "s" = "gam",
+    "ar" = "stats",
+    "marginal_effects" = "margins",
+    "kidney" = "brms",
+    "ngrps" = "brms",
+    "lizards" = "aod",
+    "rats" = "aod",
+    "mad" = "stats",
+    "sd" = "stats",
+    "var" = "stats"
+)
+for (i in seq_along(dict)) {
+    conflicted::conflict_prefer(name = names(dict)[i], winner = dict[i], quiet = TRUE)
+}
+
 
 ON_CRAN <- !identical(Sys.getenv("R_NOT_CRAN"), "true")
 ON_GH <- identical(Sys.getenv("R_GH"), "true")
