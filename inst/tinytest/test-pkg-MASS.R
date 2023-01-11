@@ -239,9 +239,9 @@ expect_equivalent(
 k <- mtcars
 k$vs <- as.factor(k$vs)
 k$am <- as.logical(k$am)
-mod <- suppressMessages(MASS::polr(factor(gear) ~ vs + am, data = k, Hess = TRUE))
+mod <- suppressWarnings(MASS::polr(factor(gear) ~ vs + am, data = k, Hess = TRUE))
 # TODO: emmeans seems broken at the moment
 # em <- emmeans(mod, specs = "am", type = "response")
 # em <- tidy(em)
-mm <- suppressMessages(marginalmeans(mod, variables = "am", type = "probs"))
+mm <- marginalmeans(mod, variables = "am", type = "probs")
 expect_equivalent(nrow(mm), 6)
