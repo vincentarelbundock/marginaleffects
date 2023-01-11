@@ -1,9 +1,6 @@
 EXPENSIVE <- FALSE
 
 # libraries
-library("tinytest")
-library("tinyviztest")
-
 requiet <- function(package) {
     void <- capture.output(
     pkg_available <<- tryCatch(suppressPackageStartupMessages(suppressWarnings(suppressMessages(tryCatch(
@@ -12,6 +9,9 @@ requiet <- function(package) {
     ))))))
     return(pkg_available)
 }
+
+requiet("tinytest")
+requiet("tinyviztest")
 
 if (isTRUE(suppressMessages(require("tinytest"))) && packageVersion("tinytest") >= "1.4.0") {
     tinytest::register_tinytest_extension(
