@@ -33,7 +33,7 @@ Imports:
     checkmate,
     data.table,
     generics,
-    insight (>= 0.18.8.5),
+    insight (>= 0.18.8),
     methods,
     rlang
 Suggests: 
