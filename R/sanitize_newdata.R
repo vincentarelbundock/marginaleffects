@@ -30,21 +30,21 @@ sanitize_newdata <- function(model, newdata, by = NULL, modeldata = NULL) {
         newdata <- do.call("datagrid", args)
 
     } else if (identical(newdata, "median")) {
-        args[["FUN.numeric"]] <- function(x) stats::median(x, na.rm = TRUE)
+        args[["FUN_numeric"]] <- function(x) stats::median(x, na.rm = TRUE)
         newdata <- do.call("datagrid", args)
 
     } else if (identical(newdata, "tukey")) {
-        args[["FUN.numeric"]] <- function(x) stats::fivenum(x, na.rm = TRUE)
+        args[["FUN_numeric"]] <- function(x) stats::fivenum(x, na.rm = TRUE)
         newdata <- do.call("datagrid", args)
 
     } else if (identical(newdata, "grid")) {
-        args[["FUN.numeric"]] <- function(x) stats::fivenum(x, na.rm = TRUE)
-        args[["FUN.factor"]] <- args[["FUN.character"]] <- args[["FUN.logical"]] <- unique
+        args[["FUN_numeric"]] <- function(x) stats::fivenum(x, na.rm = TRUE)
+        args[["FUN_factor"]] <- args[["FUN_character"]] <- args[["FUN_logical"]] <- unique
         newdata <- do.call("datagrid", args)
 
     # grid with all unique values of categorical variables, and numerics at their means
     } else if (identical(newdata, "marginalmeans")) {
-        args[["FUN.factor"]] <- args[["FUN.character"]] <- args[["FUN.logical"]] <- unique
+        args[["FUN_factor"]] <- args[["FUN_character"]] <- args[["FUN_logical"]] <- unique
         newdata <- do.call("datagrid", args)
         # Issue #580: outcome should not duplicate grid rows
         dv <- hush(insight::find_response(model))
@@ -55,13 +55,9 @@ sanitize_newdata <- function(model, newdata, by = NULL, modeldata = NULL) {
     }
 
     if (!inherits(newdata, "data.frame")) {
-        msg <- format_msg(
-        "Unable to extract the data from model of class `%s`. This can happen in a
-        variety of cases, such as when a `marginaleffects` package function is called
-        from inside a user-defined function. Please supply a data frame explicitly via
-        the `newdata` argument.")
+        msg <- "Unable to extract the data from model of class `%s`. This can happen in a variety of cases, such as when a `marginaleffects` package function is called from inside a user-defined function. Please supply a data frame explicitly via the `newdata` argument."
         msg <- sprintf(msg, class(model)[1])
-        stop(msg, call. = FALSE)
+        insight::format_error(msg)
     }
 
     # column subsets later and predict

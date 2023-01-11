@@ -1,7 +1,5 @@
 sanitize_hypothesis <- function(hypothesis, ...) {
 
-    deprecation_arg(hypothesis, "hypothesis", "lincom", ...) 
-
     checkmate::assert(
         checkmate::check_string(hypothesis, pattern = "="),
         checkmate::check_choice(hypothesis, choices = c("pairwise", "reference", "sequential", "revpairwise", "revreference", "revsequential")),

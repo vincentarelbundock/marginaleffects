@@ -109,9 +109,8 @@ hypotheses <- function(
         }
 
         if (!inherits(out, "data.frame") || any(!c("term", "estimate") %in% colnames(out))) {
-            msg <- format_msg(
-            "`FUN` must return a numeric vector or a data.frame with two columns named `term` and `estimate`.")
-            stop(msg, call. = FALSE)
+            msg <- "`FUN` must return a numeric vector or a data.frame with two columns named `term` and `estimate`."
+            insight::format_error(msg)
         }
 
         out <- get_hypothesis(out, hypothesis = hypothesis, column = "estimate")$estimate

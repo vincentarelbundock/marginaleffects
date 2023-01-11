@@ -10,12 +10,8 @@ get_hypothesis <- function(x, hypothesis, column, by = NULL) {
     # must be checked here when we know how many rows the output has
     if (isTRUE(hypothesis %in% c("pairwise", "reference", "sequential"))) {
         if (nrow(x) > 25) {
-            msg <- format_msg(
-            'The "pairwise", "reference", and "sequential" options of the `hypotheses`
-            argument are not supported for `marginaleffects` commands which generate more
-            than 25 rows of results. Use the `newdata`, `by`, and/or `variables` arguments
-            to compute a smaller set of results on which to conduct hypothesis tests.')
-            stop(msg, call. = FALSE)
+            msg <- 'The "pairwise", "reference", and "sequential" options of the `hypotheses` argument are not supported for `marginaleffects` commands which generate more than 25 rows of results. Use the `newdata`, `by`, and/or `variables` arguments to compute a smaller set of results on which to conduct hypothesis tests.'
+            insight::format_error(msg)
         }
     }
 
@@ -162,19 +158,14 @@ get_hypothesis <- function(x, hypothesis, column, by = NULL) {
         # term names
         } else {
             if (!"term" %in% colnames(x) || anyDuplicated(x$term) > 0) {
-                msg <- format_msg(
-                'To use term names in a `hypotheses` string, the same function call without
-                `hypothesis` argument must produce a `term` column with unique row identifiers.
-                You can use `b1`, `b2`, etc. indices instead of term names in the `hypotheses`
-                string Ex: "b1 + b2 = 0" Alternatively, you can use the `newdata`, `variables`,
-                or `by` arguments:
-
-                mod <- lm(mpg ~ am * vs + cyl, data = mtcars)
-                comparisons(mod, newdata = "mean", hypothesis = "b1 = b2")
-                comparisons(mod, newdata = "mean", hypothesis = "am = vs")
-                comparisons(mod, variables = "am", by = "cyl", hypothesis = "pairwise")
-                ')
-                stop(msg, call. = FALSE)
+                msg <- c(
+                'To use term names in a `hypothesis` string, the same function call without `hypothesis` argument must produce a `term` column with unique row identifiers. You can use `b1`, `b2`, etc. indices instead of term names in the `hypotheses` string Ex: "b1 + b2 = 0" Alternatively, you can use the `newdata`, `variables`, or `by` arguments:',
+                "",
+                'mod <- lm(mpg ~ am * vs + cyl, data = mtcars)',
+                'comparisons(mod, newdata = "mean", hypothesis = "b1 = b2")',
+                'comparisons(mod, newdata = "mean", hypothesis = "am = vs")',
+                'comparisons(mod, variables = "am", by = "cyl", hypothesis = "pairwise")')
+                insight::format_error(msg)
             }
             rowlabels <- x$term
         }

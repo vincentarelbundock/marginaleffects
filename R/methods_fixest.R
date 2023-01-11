@@ -112,11 +112,8 @@ get_predict.fixest <- function(model,
         if (inherits(pred, "try-error")) {
             stop(as.character(pred), call. = FALSE)
         }
-        msg <- format_msg(
-        "Unable to extract predictions from a model of type `fixest`. Please
-        report this problem, along with replicable code, on the `marginaleffects` issue tracker:
-        https://github.com/vincentarelbundock/marginaleffects/issues")
-        stop(msg, call. = FALSE)
+        msg <- "Unable to extract predictions from a model of type `fixest`. Please report this problem, along with replicable code, on the `marginaleffects` issue tracker: https://github.com/vincentarelbundock/marginaleffects/issues"
+        insight::format_error(msg)
     }
 
     return(out)

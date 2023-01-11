@@ -89,7 +89,7 @@ mod <- glm(am ~ cyl, data = dat, family = binomial)
 # link scale
 cmp <- comparisons(mod, type = "link", newdata = datagrid(), contrast_factor = "pairwise")
 emm <- emmeans(mod, specs = "cyl")
-emm <- contrast(emm, method = "revpairwise", df = Inf, adjust = NULL)
+emm <- emmeans::contrast(emm, method = "revpairwise", df = Inf, adjust = NULL)
 emm <- data.frame(confint(emm))
 expect_equivalent(cmp$comparison, emm$estimate)
 expect_equivalent(cmp$std.error, emm$SE)
@@ -99,7 +99,7 @@ expect_equivalent(cmp$conf.high, emm$asymp.UCL)
 # response scale
 cmp <- comparisons(mod, type = "response", newdata = datagrid(), contrast_factor = "pairwise")
 emm <- emmeans(mod, specs = "cyl")
-emm <- contrast(regrid(emm), method = "revpairwise", df = Inf, adjust = NULL,
+emm <- emmeans::contrast(regrid(emm), method = "revpairwise", df = Inf, adjust = NULL,
 type = "response", ratios = FALSE)
 emm <- data.frame(confint(emm))
 expect_equivalent(cmp$comparison, emm$estimate, tolerance = tol)

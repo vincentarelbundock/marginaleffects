@@ -32,6 +32,7 @@ options(width = 10000)
 
 # important because otherwise testing so many packages is terrible
 dict <- c(
+    "contrast" = "emmeans",
     "expect_error" = "tinytest",
     "expect_true" = "tinytest",
     "expect_equal" = "tinytest",

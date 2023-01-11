@@ -109,13 +109,22 @@ get_se_delta <- function(model,
         colnames(J) <- names(get_coef(model, ...))
     }
 
+    # align J and V: This might be a problematic hack, but I have not found examples yet.
+    V <- vcov
+    if (!isTRUE(ncol(J) == ncol(V))) {
+        cols <- intersect(colnames(J), colnames(V))
+        if (length(cols) == 0) {
+           insight::format_error("The jacobian does not match the variance-covariance matrix.")
+        }
+        V <- V[cols, cols, drop = FALSE]
+        J <- J[, cols, drop = FALSE]
+    }
+
     # Var(dydx) = J Var(beta) J'
     # computing the full matrix is memory-expensive, and we only need the diagonal
     # algebra trick: https://stackoverflow.com/a/42569902/342331
-    JV <- align_J_V(J, vcov)
-    se <- sqrt(colSums(t(JV$J %*% JV$V) * t(JV$J)))
-
-    attr(se, "jacobian") <- JV$J
+    se <- sqrt(colSums(t(J %*% V) * t(J)))
+    attr(se, "jacobian") <- J
 
     return(se)
 }

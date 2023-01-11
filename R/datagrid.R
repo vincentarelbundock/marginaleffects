@@ -73,17 +73,7 @@ datagrid <- function(
     FUN_integer = function(x) round(mean(x, na.rm = TRUE)),
     FUN_other = function(x) mean(x, na.rm = TRUE)) {
 
-
-    # backward compatibility
     dots <- list(...)
-    FUN_character <- arg_name_change(FUN_character, "FUN.character", dots)
-    FUN_factor <- arg_name_change(FUN_factor, "FUN.factor", dots)
-    FUN_logical <- arg_name_change(FUN_logical, "FUN.logical", dots)
-    FUN_numeric <- arg_name_change(FUN_numeric, "FUN.numeric", dots)
-    FUN_other <- arg_name_change(FUN_other, "FUN.other", dots)
-    grid_type <- arg_name_change(grid_type, "grid.type", dots)
-    idx <- !grepl("^FUN\\.|grid\\.type", names(dots))
-    dots <- dots[idx]
 
     # sanity
     checkmate::assert_choice(grid_type, choices = c("typical", "counterfactual"))
@@ -304,13 +294,8 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
     # }
 
     if (is.null(model) & is.null(newdata)) {
-        msg <- format_msg(
-        "The `model` and `newdata` arguments are both `NULL`. When calling `datagrid()`
-        *inside* the `slopes()` or `comparisons()` functions, the `model` and
-        `newdata` arguments can both be omitted. However, when calling `datagrid()` on
-        its own, users must specify either the `model` or the `newdata` argument (but
-        not both).")
-        stop(msg, call. = FALSE)
+        msg <- "The `model` and `newdata` arguments are both `NULL`. When calling `datagrid()` *inside* the `slopes()` or `comparisons()` functions, the `model` and `newdata` arguments can both be omitted. However, when calling `datagrid()` on its own, users must specify either the `model` or the `newdata` argument (but not both)."
+        insight::format_error(msg)
     }
 
     if (!is.null(model)) {

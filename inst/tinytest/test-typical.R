@@ -26,16 +26,16 @@ mfx <- slopes(mod_int,
 expect_equivalent(nrow(mfx), 3)
 
 
-# typical FUN.*
+# typical FUN_*
 tmp <- mtcars
 tmp$am <- as.logical(tmp$am)
 tmp$cyl <- as.factor(tmp$cyl)
 tmp$gear <- as.character(tmp$gear)
 typ <- datagrid(
     newdata = tmp,
-    FUN.character = max,
-    FUN.factor = function(x) sort(x)[1],
-    FUN.numeric = stats::median)
+    FUN_character = max,
+    FUN_factor = function(x) sort(x)[1],
+    FUN_numeric = stats::median)
 expect_equivalent(typ$drat, stats::median(mtcars$drat))
 expect_equivalent(typ$cyl, factor("4", levels = c("4", "6", "8")))
 expect_equivalent(typ$gear, "5")
@@ -60,7 +60,7 @@ expect_inherits(datagrid(model = mod, cyl = "4"), "data.frame")
 expect_error(datagrid(model = mod, cyl = "2"), pattern = "must be one of the factor levels")
 
 
-# bugs stay dead: FUN.logical
+# bugs stay dead: FUN_logical
 tmp <- mtcars
 tmp$am <- as.logical(tmp$am)
 mod <- lm(mpg ~ am * factor(cyl), data = tmp)

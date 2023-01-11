@@ -1,5 +1,5 @@
 github_issue <- function() {
-    msg <- format_msg(
+    msg <- insight::format_string(
     "Please report this error along with a minimal reproducible example using
     publicly available data on Github:
 

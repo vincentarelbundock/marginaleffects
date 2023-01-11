@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Marginal Effects, Marginal Means, Predictions, and Contrasts
-Version: 0.8.1.9104
+Version: 0.8.1.9105
 Authors@R: 
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -128,18 +128,14 @@ Suggests:
     vdiffr,
     withr
 Collate: 
-    'align_J_V.R'
-    'arg_name_change.R'
-    'attributes.R'
     'averages.R'
     'backtransform.R'
+    'broom.R'
     'by.R'
+    'ci.R'
     'comparisons.R'
     'complete_levels.R'
     'datagrid.R'
-    'deprecate_arg.R'
-    'format_msg.R'
-    'get_ci.R'
     'get_coef.R'
     'get_contrast_data.R'
     'get_contrast_data_character.R'
@@ -147,9 +143,7 @@ Collate:
     'get_contrast_data_logical.R'
     'get_contrast_data_numeric.R'
     'get_contrasts.R'
-    'get_eti.R'
     'get_group_names.R'
-    'get_hdi.R'
     'get_hypothesis.R'
     'get_jacobian.R'
     'get_modeldata.R'
@@ -157,7 +151,6 @@ Collate:
     'get_se_delta.R'
     'get_vcov.R'
     'github_issue.R'
-    'glance.R'
     'hush.R'
     'hypotheses.R'
     'marginalmeans.R'
@@ -221,11 +214,8 @@ Collate:
     'settings.R'
     'slopes.R'
     'summary.R'
-    'tidy.R'
     'tinytest.R'
     'type_dictionary.R'
     'unpack_matrix_cols.R'
     'utils.R'
-    'utils_cjdt.R'
-    'warn_once.R'
 Language: en-US

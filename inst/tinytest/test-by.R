@@ -79,7 +79,7 @@ mfx <- slopes(
     newdata = datagrid(
         cyl = dat$cyl,
         am = dat$am,
-        grid.type = "counterfactual"))
+        grid_type = "counterfactual"))
 tid <- tidy(mfx)
 tid <- tid[order(tid$term, tid$cyl, tid$am),]
 mar <- margins(mod, at = list(cyl = unique(dat$cyl), am = unique(dat$am)))
@@ -99,7 +99,7 @@ mfx <- comparisons(
     newdata = datagrid(
         cyl = dat$cyl,
         am = dat$am,
-        grid.type = "counterfactual"))
+        grid_type = "counterfactual"))
 
 mfx <- tidy(mfx)
 
