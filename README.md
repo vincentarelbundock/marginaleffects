@@ -9,11 +9,11 @@
 -->
 
 Compute and plot adjusted predictions, contrasts, marginal effects, and
-marginal means for 71 classes of statistical models in `R`. Conduct
+marginal means for 73 classes of statistical models in `R`. Conduct
 linear and non-linear hypothesis tests using the delta method.
 
 This code on this website was executed using `marginaleffects`
-0.8.1.9105. See the [installation
+0.8.1.9106. See the [installation
 section](https://vincentarelbundock.github.io/marginaleffects/#installation)
 to install the latest CRAN or development version.
 
@@ -67,7 +67,7 @@ Case studies:
 
 Tips and technical notes:
 
-  - [71 Supported Classes of
+  - [73 Supported Classes of
     Models](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
   - [Index of Functions and
     Documentation](https://vincentarelbundock.github.io/marginaleffects/reference/index.html)
@@ -117,13 +117,13 @@ modeling packages in `R` often produce inconsistent objects that require
 special treatment.
 
 `marginaleffects` offers a single point of entry to easily interpret the
-results of over 71 classes of models, using a simple and consistent user
+results of over 73 classes of models, using a simple and consistent user
 interface.
 
 Benefits of `marginaleffects` include:
 
   - *Powerful:* It can compute predictions, comparisons (contrasts, risk
-    ratios, etc.), slopes, and conduct hypothesis tests for 71 different
+    ratios, etc.), slopes, and conduct hypothesis tests for 73 different
     classes of models in `R`.
   - *Simple:* All functions share a simple, unified, and well-documented
     interface.
