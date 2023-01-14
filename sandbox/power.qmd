@@ -253,12 +253,16 @@ measure = declare_measurement(Y = reveal_outcomes(Y ~ Z))
 inquiry = declare_inquiry(pi)
 
 # estimator: mixed-effects model + {marginaleffects}
+library(clubSandwich)
 fit = function(data) {
     mod = lmer(Y ~ Z * (age + gender) + (1 | school), data = data)
+    V = vcovCR(mod, cluster = data$school, type = "CR3")
     cmp = comparisons(
         mod,
         variables = "Z",
-        newdata = subset(dat, Z == 1))
+        vcov = V,
+        by = "term",
+        newdata = subset(data, Z == 1))
     tidy(cmp)
 }
 estimator = declare_estimator(handler = label_estimator(fit))
