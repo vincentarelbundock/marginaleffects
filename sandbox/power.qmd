@@ -272,6 +272,7 @@ design = model + assignment + measure + estimator + inquiry
 
 # diagnose
 dd = diagnose_design(design)
+dd
 ```
 
 
