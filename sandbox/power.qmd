@@ -1,0 +1,303 @@
+---
+title: Power analysis with `marginaleffects` and `DeclareDesign`
+author: Vincent Arel-Bundock
+date: 2023-01-14
+---
+
+This notebook shows how to conduct power analyses for quantities computed by the `marginaleffects` package `R`. We will use the simulation-based approach of the `DeclareDesign` suite.
+
+```{r}
+#| include: false
+options(width = 1000)
+library(ggplot2)
+theme_set(theme_minimal())
+library(future)
+plan("multicore", workers = 4)
+```
+
+```{r}
+#| message: false
+library(broom)
+library(ggplot2)
+library(DeclareDesign)
+library(marginaleffects)
+```
+
+# A simple question
+
+Consider an ultra simple data generating process:
+
+\begin{align*}
+e \sim N(0, 1) \\
+Z \sim Bernoulli(.5) \\
+Y = \pi \cdot Z + e
+\end{align*}
+
+We plan to estimate a linear regresson model with a single predictor $Z$:
+
+$$
+Y = \beta_0 + \beta_1 Z + \varepsilon
+$$
+
+Our substantive question is: will we be able to reject the null hypothesis that $\beta_1=3$ (at $\alpha=0.05$)? In other words, what is the power of such an equality test?
+
+# Single dataset
+
+To begin, we use the `fabricatr::fabricate()` function to generate a single dataset which conforms to the model above. The code is self explanatory:
+
+```{r}
+set.seed(1024)
+
+dat = fabricate(
+    N = 30,
+    e = rnorm(N),
+    Z = rbinom(N, size = 1, prob = .5),
+    Y = pi * Z + e)
+
+head(dat)
+```
+
+Now, we fit our model and use the `broom::tidy()` function to summarize the results:
+
+```{r}
+mod = lm(Y ~ Z, data = dat) 
+
+tidy(mod, conf.int = TRUE)
+```
+
+Is the coefficient associated with Z different from 3? To answer this question, we can use the `marginaleffects::hypotheses()` function:
+
+```{r}
+hypotheses(mod, "Z = 3")
+```
+
+Notice that the output above conforms to the `broom` "tidy" standard, with columns named `estimate`, `std.error`, `conf.low`, `conf.high`, etc.
+
+To facilitate simulations later on, we wrap the model fitting and hypothesis testing calls in a function:
+```{r}
+fit = function(data) {
+    mod = lm(Y ~ Z, data)
+    hypotheses(mod, "Z = 3")
+}
+
+fit(dat)
+```
+
+#  Dataset factory
+
+The simulation-based strategy for power analysis requires us to simulate many datasets. Instead of using `fabricate()` to simulate a single dataset, we will now use `declare_model()`. The syntax is exactly the same, but `declare_model()` is a "function factory". This means that instead of returning a single dataset, it returns a function which can be called over and over to generate new data:
+
+```{r}
+model = declare_model(
+    N = 30,
+    e = rnorm(N),
+    Z = rbinom(N, size = 1, prob = .5),
+    Y = pi * Z + e)
+
+dat1 <- model()
+
+dat2 <- model()
+
+head(dat1)
+
+head(dat2)
+
+fit(dat1)
+
+fit(dat2)
+```
+
+# Is $\beta_1$ different from 3?
+
+To obtain simulation-based diagnostics, we need two more functions. First, we pass our custom `fit()` function to `declare_estimator()`. Second, we pass the true value of the "inquiry" to `declare_inquiry()`. In our case, the true parameter in the data generating process is $\pi$, and the quantity that `fit()` estimates is $\beta_1 - 3$. Therefore, the true value of the inquiry $\approx 0.1416$:
+
+```{r}
+estimator = declare_estimator(handler = label_estimator(fit))
+
+inquiry = declare_inquiry(pi - 3)
+```
+
+The final step is to combine all the elements of our design and to conduct diagnostic tests:
+
+```{r}
+design = model + estimator + inquiry
+
+dd = diagnose_design(design)
+
+dd
+```
+
+This printout gives us a lot of useful information:
+
+* True estimand is `r sprintf("%.2f", pi - 3)`.
+* Mean of the estimates produced by `fit()` is `r sprintf("%.2f", dd$diagnosands_df$mean_estimate)`.
+* Power to reject the null that $\beta_1=3$ at $\alpha=0.05$ is `r sprintf("%.2f", dd$diagnosands_df$power)`.
+* 95% confidence intervals cover the true estimand/inquiry `r sprintf("%.0f%%", dd$diagnosands_df$coverage * 100)` of the time.
+
+# Power curve
+
+The power analysis above was conducted with a fixed number of observations: 30. We can conduct the same analysis by varying the sample size, and draw a "power curve." To do this, we create a function called `designer()` which returns a `DeclareDesign` with different values of `N`. Then, we feed our `designer()` function to `expand_designs()`:
+
+```{r}
+designer = function(N = 10) {
+    model = declare_model(
+        N = N,
+        e = rnorm(N),
+        Z = rbinom(N, size = 1, prob = .5),
+        Y = pi * Z + e)
+    inquiry = declare_inquiry(pi - 3)
+    estimator = declare_estimator(handler = label_estimator(fit))
+    design = model + inquiry + estimator
+    return(design)
+}
+
+designs = expand_design(designer, N = c(25, 50, 100, 200, 400, 800))
+```
+
+We can now run the same analysis as before:
+
+```{r}
+dd = diagnose_design(designs, sims = 1000)
+dd
+```
+
+We can also use `broom::tidy()` and `ggplot2::ggplot()` to summarize the results in a neat power curve:
+
+```{r}
+dd |>
+    tidy() |>
+    subset(diagnosand == "power") |>
+    ggplot(aes(x = N, y = estimate, ymin = conf.low, ymax = conf.high)) +
+    geom_pointrange()
+```
+
+# Factorial design
+
+```{r}
+model = declare_model(
+    N = 30,
+    U = rnorm(N),
+    potential_outcomes(
+        Y ~ Z1 + Z2 + Z1 + U,
+        conditions = list(Z1 = 0:1, Z2 = 0:1)))
+
+assignment = declare_assignment(
+    Z1 = simple_ra(N = 30),
+    Z2 = complete_ra(N = 30))
+
+inquiry = declare_inquiry(
+    `Z2=0` = mean(Y_Z1_1_Z2_0 - Y_Z1_0_Z2_0),
+    `Z2=1` = mean(Y_Z1_1_Z2_1 - Y_Z1_0_Z2_1))
+
+measure = declare_measurement(Y = reveal_outcomes(Y ~ Z1 + Z2))
+
+fit = function(data) {
+    # fit linear model with interactions
+    mod = lm(Y ~ Z1 * Z2, data)
+    cmp = comparisons(
+        # difference in outcomes predicted by `mod`
+        mod,
+        # for different values of `Z1`
+        variables = list(Z1 = 0:1),
+        # evaluated on a counter-factual grid where the full dataset is
+        # replicated once for each value of Z2 
+        newdata = datagridcf(Z2 = 0:1),
+        # marginalized by value of Z2
+        by = "Z2")
+    tidy(cmp)
+}
+estimator = declare_estimator(
+    handler = label_estimator(fit),
+    inquiry = c("Z2=0", "Z2=1"))
+
+design = model + assignment + inquiry + measure + estimator
+
+diagnose_design(design)
+```
+
+
+# Cluster sampling with mixed-effects modeling
+
+```{r}
+
+declare_model(
+    villages = add_level(
+        N = 660,
+        U_village = rnorm(N, sd = 0.1)),
+    citizens = add_level(
+      N = 100,
+      U_citizen = rnorm(N),
+      potential_outcomes(
+        Y ~ pnorm(
+          U_citizen + U_village +
+            0.10 * (Z == "personal") +
+            0.15 * (Z == "social")),
+        conditions = list(Z = c("neutral", "personal", "social"))
+      )
+    )
+)() |> head()
+
+
+
+
+M <- declare_model(
+  villages = add_level(
+    N = 10, 
+    U_v = rnorm(N)
+    ),
+  households = add_level(
+    N = 50,
+    U_h = rnorm(N)
+    ),
+  individuals = add_level(
+    N = 4, 
+    U_i = rnorm(N),
+    age = sample(18:70, size = N, replace = TRUE),
+    gender = rbinom(N, size = 1, prob = .5),
+    potential_outcomes(Y ~ Z + age + gender + U_h + U_v + U_i)
+    )
+)
+M() |> head()
+
+
+# Block and cluster random assignment
+A <- declare_assignment(
+    Z  = block_and_cluster_ra(
+        blocks = villages,
+        clusters = households,
+        block_m = rep(20, 30)))
+
+# 
+D <- M + A
+
+draw_data(D) |> head()
+
+
+A = declare_assignment(
+    Tcity = cluster_ra(clusters = city),
+    Tperson = simple_ra()
+)
+
+D = M + A
+
+draw_data(D) |> head()
+
+run_design(D)
+
+
+```
+
+
+
+
+
+````{comment}
+# Custom diagnosands
+
+```{r, eval = FALSE}
+my_diagnosand <- declare_diagnosands(
+    Power = mean(p.value < .1))
+
+diagnose_design(design, diagnosands = my_diagnosand)
+```
+````
