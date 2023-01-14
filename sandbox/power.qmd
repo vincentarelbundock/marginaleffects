@@ -219,72 +219,55 @@ diagnose_design(design)
 # Cluster sampling with mixed-effects modeling
 
 ```{r}
+library(lme4)
 
-declare_model(
-    villages = add_level(
-        N = 660,
-        U_village = rnorm(N, sd = 0.1)),
-    citizens = add_level(
-      N = 100,
-      U_citizen = rnorm(N),
-      potential_outcomes(
-        Y ~ pnorm(
-          U_citizen + U_village +
-            0.10 * (Z == "personal") +
-            0.15 * (Z == "social")),
-        conditions = list(Z = c("neutral", "personal", "social"))
-      )
-    )
-)() |> head()
-
-
-
-
-M <- declare_model(
-  villages = add_level(
-    N = 10, 
-    U_v = rnorm(N)
+model = declare_model(
+  school = add_level(
+    N = 50, 
+    U_s = rnorm(N)
     ),
-  households = add_level(
-    N = 50,
-    U_h = rnorm(N)
+  class = add_level(
+    N = 15,
+    U_c = rnorm(N)
     ),
-  individuals = add_level(
-    N = 4, 
-    U_i = rnorm(N),
-    age = sample(18:70, size = N, replace = TRUE),
+  student = add_level(
+    N = 30, 
+    U_t = rnorm(N),
+    age = sample(10:17, size = N, replace = TRUE),
     gender = rbinom(N, size = 1, prob = .5),
-    potential_outcomes(Y ~ Z + age + gender + U_h + U_v + U_i)
+    potential_outcomes(Y ~ pi * Z + age + gender + U_s + U_c + U_t)
     )
 )
-M() |> head()
-
 
 # Block and cluster random assignment
-A <- declare_assignment(
+assignment <- declare_assignment(
     Z  = block_and_cluster_ra(
-        blocks = villages,
-        clusters = households,
-        block_m = rep(20, 30)))
-
-# 
-D <- M + A
-
-draw_data(D) |> head()
-
-
-A = declare_assignment(
-    Tcity = cluster_ra(clusters = city),
-    Tperson = simple_ra()
+        blocks = school,
+        clusters = class)
 )
 
-D = M + A
+# switching equation: potential outcomes -> observed outcomes
+measure = declare_measurement(Y = reveal_outcomes(Y ~ Z))
 
-draw_data(D) |> head()
+# known truth
+inquiry = declare_inquiry(pi)
 
-run_design(D)
+# estimator: mixed-effects model + {marginaleffects}
+fit = function(data) {
+    mod = lmer(Y ~ Z * (age + gender) + (1 | school), data = data)
+    cmp = comparisons(
+        mod,
+        variables = "Z",
+        newdata = subset(dat, Z == 1))
+    tidy(cmp)
+}
+estimator = declare_estimator(handler = label_estimator(fit))
 
+# design
+design = model + assignment + measure + estimator + inquiry
 
+# diagnose
+dd = diagnose_design(design)
 ```
 
 
@@ -298,6 +281,6 @@ run_design(D)
 my_diagnosand <- declare_diagnosands(
     Power = mean(p.value < .1))
 
-diagnose_design(design, diagnosands = my_diagnosand)
+run_designdiagnose_design(design, diagnosands = my_diagnosand)
 ```
 ````
