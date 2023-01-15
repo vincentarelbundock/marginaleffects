@@ -216,7 +216,7 @@ predictions(
     hypothesis = "b1 = b2",
     newdata = datagrid(am = 0:1, vs = 0:1))
 
-p$predicted[1] - p$predicted[2]
+p$estimate[1] - p$estimate[2]
 ```
 
 In the next section, we will see that we can get equivalent results by using a vector of contrast weights, which will be used to compute a linear combination of estimates:
@@ -236,7 +236,7 @@ predictions(
     hypothesis = "b1 + b2 = 30",
     newdata = datagrid(am = 0:1, vs = 0:1))
 
-p$predicted[1] + p$predicted[2] - 30
+p$estimate[1] + p$estimate[2] - 30
 
 predictions(
     mod,

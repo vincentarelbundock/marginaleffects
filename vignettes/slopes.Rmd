@@ -157,7 +157,7 @@ summary(mfx2)
 This is equivalent to manually taking the mean of the observation-level marginal effect for each species sub-group:
 
 ```{r}
-aggregate(mfx$dydx, by = list(mfx$species, mfx$term), FUN = mean)
+aggregate(mfx$estimate, by = list(mfx$species, mfx$term), FUN = mean)
 ```
 
 Note that `marginaleffects` follows `Stata` and the `margins` package in computing standard errors using the group-wise averaged Jacobian.
@@ -213,7 +213,7 @@ library(dplyr)
 
 slopes(mod, newdata = nd) %>%
     group_by(term) %>%
-    summarize(dydx = median(dydx))
+    summarize(estimate = median(estimate))
 ```
 
 # Conditional Marginal Effects (Plot)
@@ -262,7 +262,7 @@ mod <- lm(y ~ x + I(x^2), quad)
 
 slopes(mod, newdata = datagrid(x = -2:2))  %>%
     mutate(truth = 1 + 4 * x) %>%
-    select(dydx, truth)
+    select(estimate, truth)
 ```
 
 We can plot conditional adjusted predictions with `plot_cap` function:

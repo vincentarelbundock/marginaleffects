@@ -309,7 +309,7 @@ predictions(mod, dpar = "mu", type = "response",
             newdata = datagrid(lifeExp = seq(40, 80, 20)))
 ```
 
-For **predictions**, we need to exponentiate the results to scale them back up to dollar amounts. We can do this by post-processing the results (e.g. with `dplyr::mutate(predicted = exp(predicted))`), or we can use the `transform_post` argument in `predictions()` to pass the results to `exp()` after getting calculated:
+For **predictions**, we need to exponentiate the results to scale them back up to dollar amounts. We can do this by post-processing the results (e.g. with `dplyr::mutate(estimate = exp(estimate))`), or we can use the `transform_post` argument in `predictions()` to pass the results to `exp()` after getting calculated:
 
 ```{r}
 predictions(mod, dpar = "mu", 
@@ -385,12 +385,12 @@ slopes_data <- comparisons(
   newdata = datagrid(lifeExp = seq(40, 80, 20)),
   transform_pre = function(hi, lo) ((exp(hi) - exp(lo)) / exp(eps)) / eps
 ) %>% 
-  select(lifeExp, comparison) %>%
+  select(lifeExp, comparison = estimate) %>%
   left_join(predictions_data, by = "lifeExp") %>%
   # Point-slope formula: (y - y1) = m(x - x1)
-  mutate(intercept = comparison * (-lifeExp) + predicted)
+  mutate(intercept = comparison * (-lifeExp) + estimate)
 
-ggplot(predictions_data, aes(x = lifeExp, y = predicted)) +
+ggplot(predictions_data, aes(x = lifeExp, y = estimate)) +
   geom_line(size = 1) + 
   geom_abline(data = slopes_data, aes(slope = comparison, intercept = intercept), 
               size = 0.5, color = "red") +

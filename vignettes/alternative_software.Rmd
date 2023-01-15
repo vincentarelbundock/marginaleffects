@@ -478,7 +478,7 @@ mfx <- slopes(
     mod,
     variables = "hp",
     newdata = datagridcf(cyl = c(4, 6, 8)))
-aggregate(dydx ~ term + cyl, data = mfx, FUN = mean)
+aggregate(estimate ~ term + cyl, data = mfx, FUN = mean)
 ```
 
 <!-- Taken from https://github.com/vincentarelbundock/marginaleffects/issues/226 -->
@@ -552,7 +552,7 @@ predictions(
     mod,
     newdata = datagridcf(cyl = c(4, 6, 8))) %>%
     group_by(cyl) %>%
-    summarize(AAP = mean(predicted))
+    summarize(AAP = mean(estimate))
 ```
 
 # `brmsmargins`

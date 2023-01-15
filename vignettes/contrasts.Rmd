@@ -250,7 +250,7 @@ summary(cmp)
 which is equivalent to:
 
 ```{r}
-mean(cmp$comparison)
+mean(cmp$estimate)
 ```
 
 We could also show the full distribution of contrasts across our dataset with a histogram:
@@ -261,7 +261,7 @@ library(ggplot2)
 
 cmp <- comparisons(mod, variables = "gear")
 
-ggplot(cmp, aes(comparison)) +
+ggplot(cmp, aes(estimate)) +
     geom_histogram(bins = 30) +
     facet_wrap(~contrast, scale = "free_x") +
     labs(x = "Distribution of unit-level contrasts")
@@ -783,7 +783,7 @@ predictions_data <- predictions(
   newdata = datagrid(lifeExp = seq(30, 80, 1)),
   dpar = "mu",
   transform_post = exp) |>
-  select(lifeExp, predicted)
+  select(lifeExp, prediction = estimate)
 
 slopes_data <- comparisons(
   mod,
@@ -791,17 +791,17 @@ slopes_data <- comparisons(
   variables = list(lifeExp = eps),
   newdata = datagrid(lifeExp = seq(40, 80, 20)),
   transform_pre = function(hi, lo) ((exp(hi) - exp(lo)) / exp(eps)) / eps) %>%
-  select(lifeExp, comparison) %>%
+  select(lifeExp, estimate) %>%
   left_join(predictions_data, by = "lifeExp") %>%
   # Point-slope formula: (y - y1) = m(x - x1)
-  mutate(intercept = comparison * (-lifeExp) + predicted)
+  mutate(intercept = estimate * (-lifeExp) + prediction)
 
-ggplot(predictions_data, aes(x = lifeExp, y = predicted)) +
+ggplot(predictions_data, aes(x = lifeExp, y = prediction)) +
   geom_line(size = 1) + 
-  geom_abline(data = slopes_data, aes(slope = comparison, intercept = intercept), 
+  geom_abline(data = slopes_data, aes(slope = estimate, intercept = intercept), 
               size = 0.5, color = "red") +
   geom_point(data = slopes_data) +
-  geom_label(data = slopes_data, aes(label = paste0("Slope: ", round(comparison, 1))),
+  geom_label(data = slopes_data, aes(label = paste0("Slope: ", round(estimate, 1))),
              nudge_x = -1, hjust = 1) +
   theme_minimal()
 ```

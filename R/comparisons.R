@@ -457,7 +457,6 @@ comparisons <- function(model,
         draws = draws,
         estimate = "estimate",
         null = hypothesis_null)
-        
 
 
     # group id: useful for merging, only if it's an internal call and not user-initiated

@@ -98,11 +98,11 @@ We can compute average predictions in the original data, and average predictions
 ```{r}
 # average predicted outcome in the original data
 p <- predictions(fit)
-mean(p$predicted)
+mean(p$estimate)
 
 # average predicted outcome in the two counterfactual datasets
 p <- predictions(fit, newdata = datagrid(qsmk = 0:1, grid_type = "counterfactual"))
-aggregate(predicted ~ qsmk, data = p, FUN = mean)
+aggregate(estimate ~ qsmk, data = p, FUN = mean)
 ```
 
 In the `R` code that accompanies their book, Hernán and Robins compute the same quantities manually, as follows:

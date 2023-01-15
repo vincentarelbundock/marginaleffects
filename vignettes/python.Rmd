@@ -134,7 +134,7 @@ class(mod) <- "custom"
 options("marginaleffects_model_classes" = "custom")
 ```
 
-Next, we define a `get_predict` method for our new custom class. This method must accept three arguments: `model`, `newdata`, and `...`. The `get_predict` method must return a data frame with one row for each of the rows in `newdata`, two columns (`rowid` and `predicted`), and an attribute called `posterior_draws` which hosts a matrix of posterior draws with the same number of rows as `newdata`.
+Next, we define a `get_predict` method for our new custom class. This method must accept three arguments: `model`, `newdata`, and `...`. The `get_predict` method must return a data frame with one row for each of the rows in `newdata`, two columns (`rowid` and `estimate`), and an attribute called `posterior_draws` which hosts a matrix of posterior draws with the same number of rows as `newdata`.
 
 The method below uses `reticulate` to call the `predict_mcmc()` function that we defined in the Python script above. The `predict_mcmc()` function accepts a data frame and returns a matrix with the same number of rows. 
 

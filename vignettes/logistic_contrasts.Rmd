@@ -133,12 +133,12 @@ abline(0, 1)
 Lastly, present the entire distribution of unit-level proportion differences and its mean and median.
 
 ```{r}
-hist(cmp$comparison,
+hist(cmp$estimate,
      breaks = 100,
      main = "Distribution of unit-level contrasts",
      xlab = "SK - tPA")
-abline(v = mean(cmp$comparison), col = "red")
-abline(v = median(cmp$comparison), col = "blue")
+abline(v = mean(cmp$estimate), col = "red")
+abline(v = median(cmp$estimate), col = "blue")
 ```
 
 ## Appendix

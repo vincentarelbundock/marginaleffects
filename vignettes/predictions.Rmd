@@ -107,8 +107,8 @@ library(tidyverse)
 predictions(
     mod,
     newdata = datagrid(cyl = mtcars$cyl, hp = c(100, 110))) %>%
-    select(hp, cyl, predicted) %>%
-    pivot_wider(values_from = predicted, names_from = cyl) %>%
+    select(hp, cyl, estimate) %>%
+    pivot_wider(values_from = estimate, names_from = cyl) %>%
     kbl(caption = "A table of Adjusted Predictions") %>%
     kable_styling() %>%
     add_header_above(header = c(" " = 1, "cyl" = 3))
@@ -133,10 +133,10 @@ Then, we can use this dataset and the `predictions` function to create interesti
 
 ```{r, fig.asp = 1}
 pred <- predictions(mod, newdata = datagrid(am = 0:1, grid_type = "counterfactual")) %>%
-    select(am, predicted, rowidcf) %>%
+    select(am, estimate, rowidcf) %>%
     pivot_wider(id_cols = rowidcf, 
                 names_from = am,
-                values_from = predicted)
+                values_from = estimate)
 
 ggplot(pred, aes(x = `0`, y = `1`)) +
     geom_point() +
@@ -179,7 +179,7 @@ summary(pred)
 This is equivalent to:
 
 ```{r}
-mean(pred$predicted)
+mean(pred$estimate)
 ```
 
 # Average Adjusted Predictions by Group
@@ -202,7 +202,7 @@ predictions(
     mod,
     newdata = datagridcf(am = 0:1)) |>
     group_by(am) %>%
-    summarize(AAP = mean(predicted))
+    summarize(AAP = mean(estimate))
 ```
 
 ## Multinomial models

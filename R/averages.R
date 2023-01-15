@@ -9,7 +9,7 @@
 #' 
 #' `slopes(model, by = TRUE)`
 #' 
-#' `average(slopes(model))`
+#' `averages(slopes(model))`
 #' 
 #' `slopes(model) |> averages()` 
 #' 

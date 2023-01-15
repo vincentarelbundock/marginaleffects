@@ -497,7 +497,7 @@ comparisons(
     mod,
     newdata = datagrid(firm = -1:-100),
     allow_new_levels = TRUE,
-    sample_new_levels = "gaussian") |>
+    sample_new_levels = "gaussian") |> 
     summary()
 ```
 

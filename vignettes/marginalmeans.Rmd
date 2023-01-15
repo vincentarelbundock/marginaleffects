@@ -50,8 +50,8 @@ For illustration purposes, it is useful to reshape the above results:
 
 ```{r, echo = FALSE}
 pred <- p %>%
-    select(cyl, am, predicted) %>%
-    pivot_wider(names_from = "am", values_from = "predicted") %>%
+    select(cyl, am, estimate) %>%
+    pivot_wider(names_from = "am", values_from = "estimate") %>%
     rowwise() %>%
     mutate(`Marginal means by cyl` = mean(c(`TRUE`, `FALSE`)))
 row <- data.frame(x = "Marginal means by am",
@@ -267,5 +267,5 @@ p <- predictions(mod,
 
 ggplot(p) +
     geom_ribbon(aes(hp, ymin = conf.low, ymax = conf.high), alpha = .2) +
-    geom_line(aes(hp, predicted))
+    geom_line(aes(hp, estimate))
 ```

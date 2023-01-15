@@ -71,9 +71,12 @@ posteriordraws <- function(x, shape = "long") {
 }
 
 
-average_draws <- function(data, index, draws, column, byfun = NULL) {
+average_draws <- function(data, index, draws, byfun = NULL) {
     insight::check_if_installed("collapse")
     w <- data[["marginaleffects_wts_internal"]]
+    if (all(is.na(w))) {
+        w <- NULL
+    }
 
     if (is.null(index)) {
         index <- intersect(colnames(data), "type")
@@ -115,7 +118,7 @@ average_draws <- function(data, index, draws, column, byfun = NULL) {
         out <- data.table(average = apply(draws, 1, stats::median))
     }
 
-    setnames(out, old = "average", new = column)
+    setnames(out, old = "average", new = "estimate")
     attr(out, "posterior_draws") <- draws
     return(out)
 }
