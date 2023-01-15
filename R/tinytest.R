@@ -31,14 +31,14 @@ expect_slopes <- function(
     }
 
     # na
-    fail_na <- isTRUE(hush(mean(is.na(object$dydx)) * 100 > pct_na))
+    fail_na <- isTRUE(hush(mean(is.na(object$estimate)) * 100 > pct_na))
     if (fail_na) {
         msg <- sprintf("More than %s of missing values.", pct_na)
         diff <- c(diff, msg)
     }
 
     # unique
-    fail_unique <- isTRUE(hush(length(unique(object$dydx)) < n_unique - 1))
+    fail_unique <- isTRUE(hush(length(unique(object$estimate)) < n_unique - 1))
     if (fail_unique) {
         msg <- sprintf("Fewer than %s unique values.", n_unique)
         diff <- c(diff, msg)
@@ -210,7 +210,7 @@ expect_margins <- function(results,
 
     # dydx
     for (tn in term_names) {
-        unknown <- results[results$term == tn, "dydx"]
+        unknown <- results[results$term == tn, "estimate"]
         lab <- paste0("dydx_", tn)
         if (lab %in% colnames(margins_object)) {
             known <- as.numeric(margins_object[, lab])

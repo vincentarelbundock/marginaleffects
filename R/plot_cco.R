@@ -88,8 +88,8 @@ plot_cco <- function(model,
     # CIs are automatically added to predictions but (maybe) not marginaleffects output
     if (!"conf.low" %in% colnames(datplot)) {
         alpha <- 1 - conf_level
-        datplot$conf.low <- datplot$comparison + stats::qnorm(alpha / 2) * datplot$std.error
-        datplot$conf.high <- datplot$comparison - stats::qnorm(alpha / 2) * datplot$std.error
+        datplot$conf.low <- datplot$estimate + stats::qnorm(alpha / 2) * datplot$std.error
+        datplot$conf.high <- datplot$estimate - stats::qnorm(alpha / 2) * datplot$std.error
     }
 
     # shortcut labels
@@ -127,7 +127,7 @@ plot_cco <- function(model,
                 alpha = .1,
                 ggplot2::aes(
                     x = condition1,
-                    y = comparison,
+                    y = estimate,
                     ymin = conf.low,
                     ymax = conf.high,
                     fill = condition2))
@@ -136,7 +136,7 @@ plot_cco <- function(model,
             data = datplot,
             ggplot2::aes(
                     x = condition1,
-                    y = comparison,
+                    y = estimate,
                     color = condition2))
 
     # categorical x-axis
@@ -147,7 +147,7 @@ plot_cco <- function(model,
                      data = datplot,
                      ggplot2::aes(
                         x = condition1,
-                        y = comparison,
+                        y = estimate,
                         ymin = conf.low,
                         ymax = conf.high,
                         color = condition2))
@@ -157,7 +157,7 @@ plot_cco <- function(model,
                     position = ggplot2::position_dodge(.15),
                     ggplot2::aes(
                         x = condition1,
-                        y = comparison,
+                        y = estimate,
                         ymin = conf.low,
                         ymax = conf.high,
                         color = condition2))
@@ -167,7 +167,7 @@ plot_cco <- function(model,
                 data = datplot,
                 ggplot2::aes(
                     x = condition1,
-                    y = comparison,
+                    y = estimate,
                     color = condition1))
         }
     }

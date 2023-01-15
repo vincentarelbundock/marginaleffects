@@ -93,7 +93,7 @@ plot_cap <- function(model,
                 data = datplot,
                 ggplot2::aes(
                     x = condition1,
-                    y = predicted,
+                    y = estimate,
                     ymin = conf.low,
                     ymax = conf.high,
                     fill = condition2),
@@ -103,7 +103,7 @@ plot_cap <- function(model,
             data = datplot,
             ggplot2::aes(
                 x = condition1,
-                y = predicted,
+                y = estimate,
                 color = condition2))
 
     # categorical x-axis
@@ -114,7 +114,7 @@ plot_cap <- function(model,
                      data = datplot,
                      ggplot2::aes(
                          x = condition1,
-                         y = predicted,
+                         y = estimate,
                          ymin = conf.low,
                          ymax = conf.high,
                          color = condition2))
@@ -125,7 +125,7 @@ plot_cap <- function(model,
                     position = ggplot2::position_dodge(.15),
                     ggplot2::aes(
                         x = condition1,
-                        y = predicted,
+                        y = estimate,
                         ymin = conf.low,
                         ymax = conf.high,
                         color = condition2))
@@ -136,7 +136,7 @@ plot_cap <- function(model,
                 data = datplot,
                 ggplot2::aes(
                     x = condition1,
-                    y = predicted,
+                    y = estimate,
                     color = condition2))
         }
     }
