@@ -7,13 +7,13 @@
 \alias{averages.slopes}
 \title{Average Estimates (aka "Margins")}
 \usage{
-averages(x, by = NULL, ...)
+averages(x, by = TRUE, ...)
 
-\method{averages}{predictions}(x, by = NULL, byfun = NULL, ...)
+\method{averages}{predictions}(x, by = TRUE, byfun = NULL, ...)
 
-\method{averages}{comparisons}(x, by = NULL, ...)
+\method{averages}{comparisons}(x, by = TRUE, ...)
 
-\method{averages}{slopes}(x, by = NULL, ...)
+\method{averages}{slopes}(x, by = TRUE, ...)
 }
 \arguments{
 \item{x}{Object produced by the \code{predictions()}, \code{comparisons()}, or \code{slopes()} functions.}
@@ -40,6 +40,8 @@ estimates computed by the \code{predictions()}, \code{comparisons()}, or \code{s
 
 Warning: It is generally faster and safer to use the \code{by} argument of one of
 the three functions listed above. Alternatively, one can call it in one step:
+
+\code{slopes(model, by = TRUE)}
 
 \code{average(slopes(model))}
 

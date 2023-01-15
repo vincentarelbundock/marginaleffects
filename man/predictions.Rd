@@ -158,7 +158,7 @@ A \code{data.frame} with one row per observation and several columns:
 \item \code{rowid}: row number of the \code{newdata} data frame
 \item \code{type}: prediction type, as defined by the \code{type} argument
 \item \code{group}: (optional) value of the grouped outcome (e.g., categorical outcome models)
-\item \code{predicted}: predicted outcome
+\item \code{estimate}: predicted outcome
 \item \code{std.error}: standard errors computed by the \code{insight::get_predicted} function or, if unavailable, via \code{marginaleffects} delta method functionality.
 \item \code{conf.low}: lower bound of the confidence interval (or equal-tailed interval for bayesian models)
 \item \code{conf.high}: upper bound of the confidence interval (or equal-tailed interval for bayesian models)

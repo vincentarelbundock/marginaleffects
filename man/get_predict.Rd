@@ -321,7 +321,7 @@ arguments.}
 }
 \value{
 A data.frame of predicted values with a number of rows equal to the
-number of rows in \code{newdata} and columns "rowid" and "predicted". A "group"
+number of rows in \code{newdata} and columns "rowid" and "estimate". A "group"
 column is added for multivariate models or models with categorical outcomes.
 }
 \description{

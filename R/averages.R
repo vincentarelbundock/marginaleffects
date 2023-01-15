@@ -7,6 +7,8 @@
 #' Warning: It is generally faster and safer to use the `by` argument of one of
 #' the three functions listed above. Alternatively, one can call it in one step:
 #' 
+#' `slopes(model, by = TRUE)`
+#' 
 #' `average(slopes(model))`
 #' 
 #' `slopes(model) |> averages()` 
