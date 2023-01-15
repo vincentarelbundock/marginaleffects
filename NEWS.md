@@ -1,7 +1,8 @@
 # marginaleffects 0.8.1.9001
 
-Breaking change:
+Breaking changes:
 
+* The output of all functions includes an `estimate` column instead of the function-specific `predicted`, `comparisons`, `dydx`.
 * The `transform_avg` argument in `tidy()` deprecated. Use `transform_post` instead.
 
 New models supported:
