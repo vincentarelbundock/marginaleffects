@@ -317,16 +317,16 @@ get_contrasts <- function(model,
         }
 
         FUN_CENTER <- getOption("marginaleffects_posterior_center", default = stats::median)
-        out[, "comparison" := apply(draws, 1, FUN_CENTER)]
+        out[, "estimate" := apply(draws, 1, FUN_CENTER)]
 
     # frequentist
     } else {
-        # We want to write the "comparison" column in-place because it safer
+        # We want to write the "estimate" column in-place because it safer
         # than group-merge; there were several bugs related to this in the past.
         # safefun() returns 1 value and NAs when the function retunrs a
         # singleton.
         idx <- intersect(idx, colnames(out))
-        out[, "comparison" := safefun(
+        out[, "estimate" := safefun(
             hi = predicted_hi,
             lo = predicted_lo,
             y = predicted,
@@ -340,26 +340,26 @@ get_contrasts <- function(model,
         # if transform_pre returns a single value, then we padded with NA. That
         # also means we don't want `rowid` otherwise we will merge and have
         # useless duplicates.
-        if (any(is.na(out$comparison))) {
+        if (any(is.na(out$estimate))) {
             if (settings_equal("marginaleffects_safefun_return1", TRUE)) {
                 out[, "rowid" := NULL]
             }
         }
-        out <- out[!is.na(comparison)]
+        out <- out[!is.na(estimate)]
     }
 
 
     # averaging by groups
     # sometimes this work is already done
     # if `by` is a column name, then we have merged-in a data frame earlier
-    if (nrow(out) > 1 && !is.null(by) && "contrast" %in% colnames(out) && !any(grepl("^mean\\(", out$contrast))) {
+    if (nrow(out) > 1 && !(is.null(by) || isFALSE(by)) && "contrast" %in% colnames(out) && !any(grepl("^mean\\(", out$contrast))) {
     # if (identical(by, "by") && "by" %in% colnames(out)) {
         out <- get_by(
             out,
             draws = draws,
             newdata = newdata,
             by = by,
-            column = "comparison",
+            column = "estimate",
             verbose = verbose)
 
         draws <- attr(out, "posterior_draws")
@@ -378,7 +378,7 @@ get_contrasts <- function(model,
     attr(out, "posterior_draws") <- draws
 
     # hypothesis tests using the delta method
-    out <- get_hypothesis(out, hypothesis, column = "comparison", by = by)
+    out <- get_hypothesis(out, hypothesis, column = "estimate", by = by)
 
     # reset settings
     settings_rm("marginaleffects_safefun_return1")

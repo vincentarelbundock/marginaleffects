@@ -48,7 +48,7 @@ co <- comparisons(m2,
                                  site = "VF-1"))
 em <- tidy(pairs(emmeans(m2, "mined", at = list(spp = "GP", site = "VF-1"))))
 expect_slopes(m2)
-expect_equivalent(co$comparison, -1 * em$estimate)
+expect_equivalent(co$estimate, -1 * em$estimate)
 expect_equivalent(co$std.error, em$std.error)
 
 
@@ -61,7 +61,7 @@ mfx <- slopes(bug)
 tid1 <- comparisons(bug, transform_pre = "dydxavg")
 tid2 <- tidy(slopes(bug))
 
-expect_equivalent(tid1$comparison, tid2$estimate)
+expect_equivalent(tid1$estimate, tid2$estimate)
 expect_equivalent(tid1$std.error, tid2$std.error)
 expect_equivalent(tid1$statistic, tid2$statistic)
 expect_equivalent(tid1$p.value, tid2$p.value)
@@ -98,7 +98,7 @@ co <- comparisons(m3,
                                  site = "VF-1"))
 em <- tidy(pairs(emmeans(m3, "mined", at = list(spp = "GP", site = "VF-1"))))
 expect_slopes(m3)
-expect_equivalent(co$comparison, -1 * em$estimate)
+expect_equivalent(co$estimate, -1 * em$estimate)
 expect_equivalent(co$std.error, em$std.error)
 
 
@@ -115,7 +115,7 @@ dat2$mined <- "no"
 cont1 <- predict(mod, type = "response", newdata = dat2) -
      predict(mod, type = "response", newdata = dat1)
 cont2 <- comparisons(mod, variables = "mined")
-expect_equivalent(cont2$comparison, cont1)
+expect_equivalent(cont2$estimate, cont1)
 
 
 

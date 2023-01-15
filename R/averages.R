@@ -38,10 +38,10 @@
 #' mod <- lm(mpg ~ factor(gear), data = mtcars)
 #' contr <- comparisons(mod, variables = list(gear = "sequential"))
 #' tidy(contr)
-averages <- function (x, by = NULL, ...) {
+averages <- function (x, by = TRUE, ...) {
     xcall <- substitute(x)
     if (is.call(xcall)) {
-        if (is.null(by)) {
+        if (is.null(by) || isFALSE(by)) {
             by <- c("term", "group", "contrast")
         }
         out <- recall(xcall, by = by, ...)
@@ -54,13 +54,13 @@ averages <- function (x, by = NULL, ...) {
 
 #' @rdname averages
 #' @export
-averages.predictions <- function(x, by = NULL, byfun = NULL, ...) {
+averages.predictions <- function(x, by = TRUE, byfun = NULL, ...) {
 
     if (!is.null(byfun) && !inherits(x, "predictions")) {
         insight::format_error("The `byfun` argument is only supported for objects produced by the `predictions()` function.")
     }
 
-    if (is.null(by)) {
+    if (is.null(by) || isFALSE(by)) {
         if (is.null(attr(x, "by"))) {
             by <- grep("^type$|^term$|^group$|^contrast_?", colnames(x), value = TRUE)
         } else {
@@ -74,7 +74,7 @@ averages.predictions <- function(x, by = NULL, byfun = NULL, ...) {
     if (inherits(x, "predictions")) {
         data.table::setnames(out, "predicted", "estimate")
     } else if (inherits(x, "comparisons")) {
-        data.table::setnames(out, "comparison", "estimate")
+        data.table::setnames(out, "comparison", "estimate", skip_absent = TRUE)
     } else if (inherits(x, "slopes")) {
         data.table::setnames(out, "dydx", "estimate")
     }
@@ -106,13 +106,13 @@ averages.predictions <- function(x, by = NULL, byfun = NULL, ...) {
 
 #' @rdname averages
 #' @export
-averages.comparisons <- function(x, by = NULL, ...) {
+averages.comparisons <- function(x, by = TRUE, ...) {
 
     if ("byfun" %in% names(list(...)) && !inherits(x, "predictions")) {
         insight::format_error("The `byfun` argument is only supported for objects produced by the `predictions()` function.")
     }
 
-    if (is.null(by)) {
+    if (is.null(by) || isFALSE(by)) {
         if (is.null(attr(x, "by"))) {
             by <- grep("^type$|^term$|^group$|^contrast_?", colnames(x), value = TRUE)
         } else {
@@ -126,9 +126,9 @@ averages.comparisons <- function(x, by = NULL, ...) {
     if (inherits(x, "predictions")) {
         data.table::setnames(out, "predicted", "estimate")
     } else if (inherits(x, "comparisons")) {
-        data.table::setnames(out, "comparison", "estimate")
+        data.table::setnames(out, "comparison", "estimate", skip_absent = TRUE)
     } else if (inherits(x, "slopes")) {
-        data.table::setnames(out, "dydx", "estimate")
+        data.table::setnames(out, "dydx", "estimate", skip_absent = TRUE)
     }
 
     # sort and subset columns

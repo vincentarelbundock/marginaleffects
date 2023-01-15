@@ -271,11 +271,8 @@ slopes <- function(model,
 
     setDT(out)
 
-    # report slope, not contrast
-    setnames(out, old = "comparison", new = "dydx")
-
     # clean columns
-    stubcols <- c("rowid", "type", "group", "term", "contrast", "hypothesis", "dydx", "std.error", "statistic", "p.value", "conf.low", "conf.high",
+    stubcols <- c("rowid", "type", "group", "term", "contrast", "hypothesis", "dydx", "estimate", "std.error", "statistic", "p.value", "conf.low", "conf.high",
                   sort(grep("^predicted", colnames(newdata), value = TRUE)))
     cols <- intersect(stubcols, colnames(out))
     cols <- unique(c(cols, colnames(out)))

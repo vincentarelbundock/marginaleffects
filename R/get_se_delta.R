@@ -42,7 +42,7 @@ get_se_delta_contrasts <- function(model,
         verbose = FALSE,
         delta = TRUE,
         ...
-    )$comparison
+    )$estimate
 }
 
 

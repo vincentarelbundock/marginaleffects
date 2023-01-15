@@ -24,7 +24,7 @@ mfx <- slopes(mod, newdata = datagrid(batch = 1), variables = "temp")
 em <- suppressWarnings(
 emtrends(mod, ~temp, "temp", at = list("batch" = tmp$batch[1])))
 em <- tidy(em)
-expect_equivalent(mfx$dydx, em$temp.trend, tolerance = .001)
+expect_equivalent(mfx$estimate, em$temp.trend, tolerance = .001)
 expect_equivalent(mfx$std.error, em$std.error, tolerance = .001)
 
 

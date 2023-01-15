@@ -29,7 +29,7 @@ ame <- slopes(mod) %>%
    dplyr::summarize(dydx = mean(dydx),
              std.error = mean(std.error)) %>%
    dplyr::inner_join(stata, by = "term")
-expect_equivalent(ame$dydx, ame$dydxstata, tolerance = 0.0001)
+expect_equivalent(ame$estimate, ame$dydxstata, tolerance = 0.0001)
 
 
 # predictions: no validity

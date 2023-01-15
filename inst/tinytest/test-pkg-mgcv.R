@@ -48,7 +48,7 @@ mfx <- slopes(m1,
 # TODO: emmeans no longer seems to work
 # em <- emtrends(m1, specs = ~x1, var = "x1", at = list(x1 = 0, x2 = 0, x3 = 0))
 # em <- tidy(em)
-# expect_equivalent(mfx$dydx, em$x1.trend)
+# expect_equivalent(mfx$estimate, em$x1.trend)
 # expect_equivalent(mfx$std.error, em$std.error, tolerance = .0001)
 
 
@@ -145,7 +145,7 @@ if (packageVersion("insight") > "0.17.1.6") {
     mfx <- slopes(model, newdata = "mean", variables = "Time", type = "link")
     emt <- suppressMessages(data.frame(
         emtrends(model, ~Time, "Time", at = list(Time = 1000, Subject = "a01", Group = "Adults"))))
-    expect_equivalent(mfx$dydx, emt$Time.trend, tolerance = 1e-2)
+    expect_equivalent(mfx$estimate, emt$Time.trend, tolerance = 1e-2)
     expect_equivalent(mfx$std.error, emt$SE, tolerance = 1e-3)
 
     # Issue #545

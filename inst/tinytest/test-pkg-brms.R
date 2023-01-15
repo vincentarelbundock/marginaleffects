@@ -87,7 +87,7 @@ mfx <- slopes(
 
 em <- emtrends(brms_numeric2, ~mpg, "mpg", at = list(mpg = 20, hp = 100))
 em <- tidy(em)
-expect_equivalent(mfx$dydx, em$mpg.trend)
+expect_equivalent(mfx$estimate, em$mpg.trend)
 expect_equivalent(mfx$conf.low, em$lower.HPD)
 expect_equivalent(mfx$conf.high, em$upper.HPD)
 # tolerance is less good for back-transformed response
@@ -95,7 +95,7 @@ mfx <- slopes(brms_numeric2, newdata = datagrid(mpg = 20, hp = 100),
                    variables = "mpg", type = "response")
 em <- emtrends(brms_numeric2, ~mpg, "mpg", at = list(mpg = 20, hp = 100), regrid = "response")
 em <- tidy(em)
-expect_equivalent(mfx$dydx, em$mpg.trend, tolerance = .1)
+expect_equivalent(mfx$estimate, em$mpg.trend, tolerance = .1)
 expect_equivalent(mfx$conf.low, em$lower.HPD, tolerance = .01)
 expect_equivalent(mfx$conf.high, em$upper.HPD, tolerance = .1)
 
@@ -168,7 +168,7 @@ set.seed(1024)
 mfx1 <- slopes(brms_epi, newdata = dat1)
 set.seed(1024)
 mfx2 <- slopes(brms_epi, newdata = dat2, allow_new_levels = TRUE)
-expect_false(any(mfx1$dydx == mfx2$dydx))
+expect_false(any(mfx1$estimate == mfx2$estimate))
 
 
 
@@ -241,8 +241,8 @@ expect_slopes(brms_factor, se = FALSE)
 # credible intervals and posterior draws
 tmp <- slopes(brms_factor)
 expect_true("conf.low" %in% colnames(tmp))
-expect_true(all(tmp$dydx > tmp$conf.low))
-expect_true(all(tmp$dydx < tmp$conf.high))
+expect_true(all(tmp$estimate > tmp$conf.low))
+expect_true(all(tmp$estimate < tmp$conf.high))
 expect_false(is.null(attr(tmp, "posterior_draws")))
 expect_equivalent(nrow(attr(tmp, "posterior_draws")), nrow(tmp))
 
@@ -259,14 +259,14 @@ exit_if_not(requiet("emmeans"))
 # one variable: link scale
 mfx1 <- slopes(brms_numeric, variables = "hp", newdata = datagrid(hp = 110), type = "link")
 mfx2 <- as.data.frame(emmeans::emtrends(brms_numeric, ~hp, var = "hp", at = list(hp = 110)))
-expect_equivalent(mfx1$dydx, mfx2$hp.trend)
+expect_equivalent(mfx1$estimate, mfx2$hp.trend)
 expect_equivalent(mfx1$conf.low, mfx2$lower.HPD)
 expect_equivalent(mfx1$conf.high, mfx2$upper.HPD)
 
 # one variable: response scale
 mfx1 <- slopes(brms_numeric, variables = "hp", newdata = datagrid(hp = 110))
 mfx2 <- as.data.frame(emtrends(brms_numeric, ~hp, var = "hp", at = list(hp = 110), regrid = "response"))
-expect_equivalent(mfx1$dydx, mfx2$hp.trend, tolerance = .001)
+expect_equivalent(mfx1$estimate, mfx2$hp.trend, tolerance = .001)
 expect_equivalent(mfx1$conf.low, mfx2$lower.HPD, tolerance = .001)
 expect_equivalent(mfx1$conf.high, mfx2$upper.HPD, tolerance = .001)
 
@@ -274,7 +274,7 @@ expect_equivalent(mfx1$conf.high, mfx2$upper.HPD, tolerance = .001)
 dat <- datagrid(model = brms_factor, mpg = 25, cyl_fac = 4)
 mfx1 <- slopes(brms_factor, variables = "mpg", newdata = dat, type = "link")
 mfx2 <- as.data.frame(emmeans::emtrends(brms_factor, ~mpg, var = "mpg", at = list(mpg = 25, cyl_fac = 4)))
-expect_equivalent(mfx1$dydx, mfx2$mpg.trend, tolerance = .001)
+expect_equivalent(mfx1$estimate, mfx2$mpg.trend, tolerance = .001)
 expect_equivalent(mfx1$conf.low, mfx2$lower.HPD, tolerance = .001)
 expect_equivalent(mfx1$conf.high, mfx2$upper.HPD, tolerance = .001)
 
@@ -284,7 +284,7 @@ mfx1 <- slopes(brms_factor, variables = "cyl_fac", newdata = dat, type = "link")
 mfx2 <- emmeans::emmeans(brms_factor, ~ cyl_fac, var = "cyl_fac", at = list(mpg = 25))
 mfx2 <- emmeans::contrast(mfx2, method = "revpairwise")
 mfx2 <- data.frame(mfx2)[1:2,]
-expect_equivalent(mfx1$dydx, mfx2$estimate, tolerance = .001)
+expect_equivalent(mfx1$estimate, mfx2$estimate, tolerance = .001)
 expect_equivalent(mfx1$conf.low, mfx2$lower.HPD, tolerance = .001)
 expect_equivalent(mfx1$conf.high, mfx2$upper.HPD, tolerance = .001)
 
@@ -426,7 +426,7 @@ cmp2 <- comparisons(
     newdata = datagrid(lifeExp = seq(30, 80, 10)),
     transform_pre = function(hi, lo) exp((hi - lo) / eps),
     dpar = "mu")
-expect_true(all(cmp1$comparison != cmp2$comparison))
+expect_true(all(cmp1$estimate != cmp2$estimate))
 
 cmp <- comparisons(
     brms_lognormal_hurdle2,
@@ -434,7 +434,7 @@ cmp <- comparisons(
     datagrid(disp = c(150, 300, 450)),
     transform_pre = "expdydx")
 
-expect_equivalent(cmp$comparison, 
+expect_equivalent(cmp$estimate, 
     c(-0.0464610297239711, -0.0338017059188856, -0.0245881481374242),
     # seed difference?
     # c(-0.0483582312992919, -0.035158983842012, -0.0255763979591749),
@@ -457,8 +457,8 @@ expect_equivalent(nrow(cmp4), 2)
 # Issue #432: comparisons = conf.low = conf.high because mean() returns a
 # single number when applied to the draws matrix
 cmp <- comparisons(brms_binomial, variables = "tx", transform_pre = "lnoravg")
-expect_true(all(cmp$comparison != cmp$conf.low))
-expect_true(all(cmp$comparison != cmp$conf.high))
+expect_true(all(cmp$estimate != cmp$conf.low))
+expect_true(all(cmp$estimate != cmp$conf.high))
 expect_true(all(cmp$conf.high != cmp$conf.low))
 
 # Issue #432: posteriordraws() and tidy() error with `transform_pre="avg"`
@@ -582,7 +582,7 @@ expect_equivalent(exp(attr(p1, "posterior_draws")), attr(p2, "posterior_draws"))
 
 p1 <- comparisons(mod, type = "link")
 p2 <- comparisons(mod, type = "link", transform_post = exp)
-expect_equivalent(exp(p1$comparison), p2$comparison)
+expect_equivalent(exp(p1$estimate), p2$estimate)
 expect_equivalent(exp(p1$conf.low), p2$conf.low)
 expect_equivalent(exp(p1$conf.high), p2$conf.high)
 expect_equivalent(exp(attr(p1, "posterior_draws")), attr(p2, "posterior_draws"))

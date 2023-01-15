@@ -71,7 +71,7 @@
 #' * `rowid`: row number of the `newdata` data frame
 #' * `type`: prediction type, as defined by the `type` argument
 #' * `group`: (optional) value of the grouped outcome (e.g., categorical outcome models)
-#' * `predicted`: predicted outcome
+#' * `estimate`: predicted outcome
 #' * `std.error`: standard errors computed by the `insight::get_predicted` function or, if unavailable, via `marginaleffects` delta method functionality.
 #' * `conf.low`: lower bound of the confidence interval (or equal-tailed interval for bayesian models)
 #' * `conf.high`: upper bound of the confidence interval (or equal-tailed interval for bayesian models)
@@ -297,7 +297,7 @@ predictions <- function(model,
         }
     }
 
-    if (is.null(by)) {
+    if (is.null(by) || isFALSE(by)) {
         vcov_tmp <- vcov
     } else {
         vcov_tmp <- FALSE
@@ -323,11 +323,11 @@ predictions <- function(model,
     if (inherits(tmp, "data.frame")) {
         setnames(tmp,
                  old = c("Predicted", "SE", "CI_low", "CI_high"),
-                 new = c("predicted", "std.error", "conf.low", "conf.high"),
+                 new = c("estimate", "std.error", "conf.low", "conf.high"),
                  skip_absent = TRUE)
     } else {
         tmp <- data.frame(newdata$rowid, type, tmp)
-        colnames(tmp) <- c("rowid", "type", "predicted")
+        colnames(tmp) <- c("rowid", "type", "estimate")
         if ("rowidcf" %in% colnames(newdata)) {
             tmp[["rowidcf"]] <- newdata[["rowidcf"]]
         }
@@ -375,7 +375,7 @@ predictions <- function(model,
             if (isTRUE(checkmate::check_matrix(V))) {
                 # vcov = FALSE to speed things up
                 fun <- function(...) {
-                    get_predictions(..., verbose = FALSE, vcov = FALSE)$predicted
+                    get_predictions(..., verbose = FALSE, vcov = FALSE)$estimate
                 }
                 se <- get_se_delta(
                     model,
@@ -403,7 +403,7 @@ predictions <- function(model,
             vcov = vcov,
             overwrite = FALSE,
             draws = draws,
-            estimate = "predicted",
+            estimate = "estimate",
             null = hypothesis_null,
             ...)
     }
@@ -426,7 +426,7 @@ predictions <- function(model,
     stubcols <- c( 
         "rowid", "rowidcf", "type", "term", "group", "hypothesis",
         bycols,
-        "predicted", "std.error", "statistic", "p.value", "conf.low",
+        "estimate", "std.error", "statistic", "p.value", "conf.low",
         "conf.high", "marginaleffects_wts",
         sort(grep("^predicted", colnames(newdata), value = TRUE)))
     cols <- intersect(stubcols, colnames(out))
@@ -497,6 +497,7 @@ get_predictions <- function(model,
         type = type,
         ...))
 
+
     if (inherits(out$value, "data.frame")) {
         out <- out$value
     } else {
@@ -543,6 +544,9 @@ get_predictions <- function(model,
             error = function(e) out)
     }
 
+    # get_predict() returns a `predicted` column
+    data.table::setnames(out, old = "predicted", new = "estimate", skip_absent = TRUE)
+
     # averaging by groups
     out <- get_by(
         out,
@@ -550,7 +554,7 @@ get_predictions <- function(model,
         newdata = newdata,
         by = by,
         byfun = byfun,
-        column = "predicted",
+        column = "estimate",
         verbose = verbose,
         ...)
 
@@ -558,7 +562,7 @@ get_predictions <- function(model,
     draws <- attr(out, "posterior_draws")
 
     # hypothesis tests using the delta method
-    out <- get_hypothesis(out, hypothesis, column = "predicted", by = by)
+    out <- get_hypothesis(out, hypothesis, column = "estimate", by = by)
 
     return(out)
 }

@@ -79,7 +79,7 @@ cmp2 <- comparisons(
     variables = "cyl",
     newdata = "mean",
     hypothesis = "revpairwise")
-expect_equivalent(diff(cmp1$comparison), cmp2$comparison)
+expect_equivalent(diff(cmp1$estimate), cmp2$estimate)
 
 
 # marginaleffects: hypothesis
@@ -170,7 +170,7 @@ mfx2 <- slopes(
     newdata = "mean",
     hypothesis = "exp(hp + drat) = 100")
 expect_inherits(mfx1, "marginaleffects")
-expect_equivalent(mfx1$dydx, mfx2$dydx)
+expect_equivalent(mfx1$estimate, mfx2$estimate)
 expect_equivalent(mfx1$std.error, mfx2$std.error)
 
 

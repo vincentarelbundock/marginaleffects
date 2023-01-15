@@ -27,9 +27,9 @@ em1 <- emmeans::emtrends(model, ~hp, "hp", at = list(hp = 110, drat = 3.9))
 em2 <- emmeans::emtrends(model, ~drat, "drat", at = list(hp = 110, drat = 3.9))
 em1 <- tidy(em1)
 em2 <- tidy(em2)
-expect_equivalent(mfx$dydx[1], em1$hp.trend)
+expect_equivalent(mfx$estimate[1], em1$hp.trend)
 expect_equivalent(mfx$std.error[1], em1$std.error, tolerance = .002)
-expect_equivalent(mfx$dydx[2], em2$drat.trend)
+expect_equivalent(mfx$estimate[2], em2$drat.trend)
 expect_equivalent(mfx$std.error[2], em2$std.error, tolerance = .002)
 
 # glm.nb: marginaleffects: vs. margins vs. emmeans
@@ -53,7 +53,7 @@ expect_equivalent(tmp$std.error, tmp$mar_std.error, tolerance = .001)
 mfx <- slopes(model, newdata = datagrid(wt = 2.6, cyl = 4), type = "link")
 em <- emtrends(model, ~wt, "wt", at = list(wt = 2.6, cyl = 4))
 em <- tidy(em)
-expect_equivalent(mfx$dydx[1], em$wt.trend)
+expect_equivalent(mfx$estimate[1], em$wt.trend)
 expect_equivalent(mfx$std.error[1], em$std.error, tolerance = 1e-3)
 
 # emmeans contrasts
@@ -61,9 +61,9 @@ mfx <- slopes(model, type = "link", newdata = datagrid(wt = 3, cyl = 4))
 em <- emmeans(model, specs = "cyl") 
 em <- contrast(em, method = "revpairwise", at = list(wt = 3, cyl = 4))
 em <- tidy(em)
-expect_equivalent(mfx$dydx[mfx$contrast == "6 - 4"], em$estimate[em$contrast == "cyl6 - cyl4"])
+expect_equivalent(mfx$estimate[mfx$contrast == "6 - 4"], em$estimate[em$contrast == "cyl6 - cyl4"])
 expect_equivalent(mfx$std.error[mfx$contrast == "6 - 4"], em$std.error[em$contrast == "cyl6 - cyl4"])
-expect_equivalent(mfx$dydx[mfx$contrast == "8 - 4"], em$estimate[em$contrast == "cyl8 - cyl4"])
+expect_equivalent(mfx$estimate[mfx$contrast == "8 - 4"], em$estimate[em$contrast == "cyl8 - cyl4"])
 expect_equivalent(mfx$std.error[mfx$contrast == "8 - 4"], em$std.error[em$contrast == "cyl8 - cyl4"])
 
 
@@ -112,7 +112,7 @@ em <- emmeans::emtrends(mod, ~y, var = "x1", mode = "prob", at = list(x1 = 0, x2
 em <- tidy(em)
 mfx <- slopes(mod, newdata = datagrid(x1 = 0, x2 = 0),
                    type = "probs", variables = "x1")
-expect_equivalent(mfx$dydx, em$x1.trend, tolerance = .01)
+expect_equivalent(mfx$estimate, em$x1.trend, tolerance = .01)
 expect_equivalent(mfx$std.error, em$std.error, tolerance = .01)
 
 
@@ -188,7 +188,7 @@ expect_predictions(predictions(mod))
 em <- emmeans::emtrends(mod, ~week_bin, "week_bin", at = list(week_bin = 0))
 em <- tidy(em)
 mfx <- slopes(mod, newdata = datagrid(week_bin = 0), type = "link")
-expect_equivalent(mfx$dydx[3], em$week_bin.trend)
+expect_equivalent(mfx$estimate[3], em$week_bin.trend)
 expect_equivalent(mfx$std.error[3], em$std.error, tolerance = .01)
 
 

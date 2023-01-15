@@ -44,9 +44,9 @@ cmp1 <- comparisons(mod, variables = "vs")
 cmp2 <- comparisons(mod, variables = list(vs = 0:1))
 cmp3 <- comparisons(mod, variables = list(vs = 1))
 mfx <- slopes(mod, variables = "vs")
-expect_equivalent(cmp1$comparison, cmp2$comparison)
-expect_true(all(cmp1$comparison != mfx$dydx))
-expect_true(all(cmp1$comparison != cmp3$comparison))
+expect_equivalent(cmp1$estimate, cmp2$estimate)
+expect_true(all(cmp1$estimate != mfx$estimate))
+expect_true(all(cmp1$estimate != cmp3$estimate))
 
 
 # Issue #582: sanitize_variables should reject reponse as 

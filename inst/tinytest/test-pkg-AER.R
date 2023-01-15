@@ -52,9 +52,9 @@ em1 <- emmeans::emtrends(mod, ~age, "age", at = list(age = 30, yearsmarried = 5)
 em2 <- emmeans::emtrends(mod, ~yearsmarried, "yearsmarried", at = list(age = 30, yearsmarried = 5))
 em1 <- tidy(em1)
 em2 <- tidy(em2)
-expect_equivalent(mfx$dydx[1], em1$age.trend)
+expect_equivalent(mfx$estimate[1], em1$age.trend)
 expect_equivalent(mfx$std.error[1], em1$std.error, tolerance = .00001)
-expect_equivalent(mfx$dydx[2], em2$yearsmarried.trend)
+expect_equivalent(mfx$estimate[2], em2$yearsmarried.trend)
 expect_equivalent(mfx$std.error[2], em2$std.error, tolerance = .00002)
 
 

@@ -14,7 +14,7 @@ mod <- glm(
 p <- plot_cme(mod, effect = "bill_length_mm", condition = "flipper_length_mm", draw = FALSE)
 expect_inherits(p, "data.frame")
 expect_equivalent(nrow(p), 25)
-expect_false(anyNA(p$dydx))
+expect_false(anyNA(p$estimate))
 
 
 # custom values

@@ -13,7 +13,7 @@ model <- gls(follicles ~ sin(2 * pi * Time) + cos(2 * pi * Time), dat,
     correlation = corAR1(form = ~ 1 | Mare))
 mfx <- slopes(model)
 expect_inherits(mfx, "data.frame")
-expect_false(any(mfx$dydx == 0 | is.na(mfx$dydx)))
+expect_false(any(mfx$estimate == 0 | is.na(mfx$estimate)))
 expect_false(any(mfx$std.error == 0 | is.na(mfx$std.error)))
 # emtrends
 mfx <- slopes(model,
@@ -23,7 +23,7 @@ mfx <- slopes(model,
 em <- suppressMessages(emtrends(model, ~Time, "Time", mode = "df.error", at = list(Time = 1)))
 em <- tidy(em)
 expect_equivalent(mfx$std.error, em$std.error, tolerance = .001)
-expect_equivalent(mfx$dydx, em$Time.trend, tolerance = .01)
+expect_equivalent(mfx$estimate, em$Time.trend, tolerance = .01)
 
 
 # predictions: nlme::gls: no validity

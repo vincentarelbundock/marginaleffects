@@ -428,7 +428,7 @@ comparisons <- function(model,
     }
 
     # merge original data back in
-    if (is.null(by) && "rowid" %in% colnames(mfx)) {
+    if ((is.null(by) || isFALSE(by)) && "rowid" %in% colnames(mfx)) {
         if ("rowid" %in% colnames(newdata)) {
             idx <- c("rowid", "rowidcf", "term", "contrast", "by", setdiff(colnames(contrast_data$original), colnames(mfx)))
             idx <- intersect(idx, colnames(contrast_data$original))
@@ -455,7 +455,7 @@ comparisons <- function(model,
         df = dof,
         overwrite = FALSE,
         draws = draws,
-        estimate = "comparison",
+        estimate = "estimate",
         null = hypothesis_null)
         
 
@@ -469,7 +469,7 @@ comparisons <- function(model,
     # clean columns
     stubcols <- c("rowid", "rowidcf", "type", "group", "term", "hypothesis",
                   grep("^contrast", colnames(mfx), value = TRUE),
-                  "comparison", "std.error", "statistic", "p.value", "conf.low", "conf.high", "df",
+                  "estimate", "comparison", "std.error", "statistic", "p.value", "conf.low", "conf.high", "df",
                   "predicted", "predicted_hi", "predicted_lo")
     cols <- intersect(stubcols, colnames(mfx))
     cols <- unique(c(cols, colnames(mfx)))

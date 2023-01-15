@@ -68,7 +68,7 @@ cmp2 <- suppressWarnings(comparisons(
     newdata = head(mtcars)
 ))
 
-expect_equivalent(cmp2$comparison, cmp1[, "50%"], tol = .2)
+expect_equivalent(cmp2$estimate, cmp1[, "50%"], tol = .2)
 expect_equivalent(cmp2$conf.low, cmp1[, "2.5%"], tol = .2)
 expect_equivalent(cmp2$conf.high, cmp1[, "97.5%"], tol = .2)
 
@@ -92,4 +92,4 @@ cmp2 <- suppressWarnings(comparisons(m1,
     contrast_numeric = 20,
     newdata = head(mtcars)
 ))
-expect_true(all(cmp1$comparison != cmp2$comparison))
+expect_true(all(cmp1$estimate != cmp2$estimate))

@@ -20,7 +20,7 @@ model <- quantreg::rq(mpg ~ hp * wt + factor(cyl), data = mtcars)
 mfx <- slopes(model, variables = "hp", newdata = datagrid(hp = 110, wt = 2, cyl = 4))
 em <- suppressMessages(emtrends(model, ~hp, "hp", at = list(hp = 110, wt = 2, cyl = 4)))
 em <- tidy(em)
-expect_equivalent(mfx$dydx, em$hp.trend, tolerance = .00001)
+expect_equivalent(mfx$estimate, em$hp.trend, tolerance = .00001)
 expect_equivalent(mfx$std.error, em$std.error, tolerance = .00001)
 
 

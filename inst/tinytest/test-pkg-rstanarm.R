@@ -27,7 +27,7 @@ void <- capture.output(
 mfx <- slopes(mod, newdata = datagrid(hp = 110, mpg = 20, vs = 0), variables = "hp", type = "link")
 em <- emtrends(mod, ~hp, "hp", at = list(hp = 110, mpg = 20, vs = 0))
 em <- tidy(em)
-expect_equivalent(mfx$dydx, em$hp.trend)
+expect_equivalent(mfx$estimate, em$hp.trend)
 expect_equivalent(mfx$conf.low, em$lower.HPD, tolerance = 1e-5)
 expect_equivalent(mfx$conf.high, em$upper.HPD)
 
@@ -36,6 +36,6 @@ options("marginaleffects_credible_interval" = "eti")
 # # margins: var is all zeroes and dydx don't match precisely
 # mar <- margins(mod, unit_ses = TRUE, at = list(hp = 110, mpg = 20, vs = 0))
 # mfx <- slopes(mod, variables = "hp", at = list(hp = 110, mpg = 20, vs = 0))
-# expect_equivalent(mfx$dydx, mar$dydx_hp)
-# expect_equivalent(mfx$std.error, mar$dydx_hp)
+# expect_equivalent(mfx$estimate, mar$estimate_hp)
+# expect_equivalent(mfx$std.error, mar$estimate_hp)
 

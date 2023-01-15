@@ -6,7 +6,7 @@ exit_if_not(!ON_OSX)
 mod <- lm(mpg ~ wt * hp, data = mtcars)
 
 p <- plot_cco(mod, effect = list(hp = "minmax"), condition = "wt", draw = FALSE)
-expect_equivalent(length(unique(p$comparison)), 25)
+expect_equivalent(length(unique(p$estimate)), 25)
 p <- plot_cco(mod, effect = list(hp = "minmax"), condition = "wt")
 expect_inherits(p, "gg")
 p <- plot_cco(mod, effect = list(hp = "iqr"), condition = "wt")

@@ -16,7 +16,7 @@ cmp2 <- comparisons(
     mod,
     variables = list(vs = 0:1))
 cmp2 <- tidy(cmp2)
-expect_equivalent(cmp1$comparison, cmp2$estimate)
+expect_equivalent(cmp1$estimate, cmp2$estimate)
 expect_equivalent(cmp1$std.error, cmp2$std.error)
 
 
@@ -143,12 +143,12 @@ expect_equivalent(length(unique(cmp$estimate)), nrow(cmp))
 # transform_pre slope vs slopes()
 mod <- glm(vs ~ mpg + hp, data = mtcars, family = binomial)
 mfx1 <- slopes(mod)
-mfx2 <- comparisons(mod, transform_pre = "dydx")
+mfx2 <- comparisons(mod, transform_pre = "estimate")
 mfx3 <- slopes(mod, eps = 1e-5)
-mfx4 <- comparisons(mod, transform_pre = "dydx", eps = 1e-5)
-expect_equivalent(mfx1$dydx, mfx2$comparison)
+mfx4 <- comparisons(mod, transform_pre = "estimate", eps = 1e-5)
+expect_equivalent(mfx1$estimate, mfx2$estimate)
 expect_equivalent(mfx1$std.error, mfx2$std.error)
-expect_equivalent(mfx3$dydx, mfx4$comparison)
+expect_equivalent(mfx3$estimate, mfx4$estimate)
 expect_equivalent(mfx3$std.error, mfx4$std.error)
 
 

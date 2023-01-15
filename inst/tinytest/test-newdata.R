@@ -27,7 +27,7 @@ cmp1 <- comparisons(mod, newdata = "mean")
 cmp2 <- comparisons(mod, newdata = "median")
 expect_true(all(cmp1$hp == mean(dat$hp)))
 expect_true(all(cmp2$hp == stats::median(dat$hp)))
-expect_true(all(cmp2$comparison != cmp1$comparison))
+expect_true(all(cmp2$estimate != cmp1$estimate))
 
 
 
@@ -65,7 +65,7 @@ expect_equivalent(cmp$std.error, emm$SE)
 # emm <- data.frame(contrast(emm, method = "trt.vs.ctrl1"))
 
 # # hack: not sure if they are well aligned
-# expect_equivalent(sort(cmp$comparison), sort(emm$estimate))
+# expect_equivalent(sort(cmp$estimate), sort(emm$estimate))
 # expect_equivalent(sort(cmp$std.error), sort(emm$SE))
 
 

@@ -32,8 +32,8 @@ expect_true(all(tid95$conf.high < tid99$conf.high))
 mod <- lm(mpg ~ hp, data = mtcars)
 cmp <- comparisons(mod)
 critical_z <- qnorm(.025)
-lb <- cmp$comparison - abs(critical_z) * cmp$std.error
-ub <- cmp$comparison + abs(critical_z) * cmp$std.error
+lb <- cmp$estimate - abs(critical_z) * cmp$std.error
+ub <- cmp$estimate + abs(critical_z) * cmp$std.error
 expect_equivalent(cmp$conf.low, lb)
 expect_equivalent(cmp$conf.high, ub)
 

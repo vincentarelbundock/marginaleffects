@@ -15,7 +15,7 @@ cmp2 <- comparisons(
     variables = "gender",
     transform_pre = "lnratioavg",
     transform_post = exp)
-expect_equivalent(exp(cmp1$comparison), cmp2$comparison)
+expect_equivalent(exp(cmp1$estimate), cmp2$estimate)
 expect_equivalent(exp(cmp1$conf.low), cmp2$conf.low)
 expect_equivalent(exp(cmp1$conf.high), cmp2$conf.high)
 

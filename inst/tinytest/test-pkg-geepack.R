@@ -21,7 +21,7 @@ expect_slopes(model)
 mfx <- slopes(model, variables = "Time", newdata = datagrid(Time = 10, Cu = "Cu000"), type = "link")
 em <- suppressMessages(emtrends(model, ~Time, var = "Time", at = list(Time = 10, Cu = "Cu000")))
 em <- tidy(em)
-expect_equivalent(mfx$dydx, em$Time.trend, tolerance = .001)
+expect_equivalent(mfx$estimate, em$Time.trend, tolerance = .001)
 expect_equivalent(mfx$std.error, em$std.error, tolerance = .01)
 
 

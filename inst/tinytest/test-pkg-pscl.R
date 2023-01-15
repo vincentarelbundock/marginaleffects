@@ -36,15 +36,15 @@ expect_inherits(mfx2, "data.frame")
 em <- emtrends(model, ~phd, "phd", at = list(fem = "Men", phd = 2), df = Inf)
 em <- tidy(em)
 mfx <- slopes(model, newdata = datagrid(fem = "Men", phd = 2), variables = "phd")
-expect_equivalent(mfx$dydx, em$phd.trend, tolerance = .01)
+expect_equivalent(mfx$estimate, em$phd.trend, tolerance = .01)
 # standard errors do not match
 # expect_equivalent(mfx$std.error, em$std.error)
 
 # margins: standard errors are not supported (all zeros)
 res <- slopes(model, newdata = head(bioChemists, 2))
 mar <- margins(model, data = head(bioChemists, 2), unit_ses = TRUE)
-expect_equivalent(res$dydx[1:2], as.numeric(mar$dydx_phd), tolerance = .0001)
-expect_equivalent(res$dydx[3:4], as.numeric(mar$dydx_femWomen), tolerance = .00001)
+expect_equivalent(res$estimate[1:2], as.numeric(mar$estimate_phd), tolerance = .0001)
+expect_equivalent(res$estimate[3:4], as.numeric(mar$estimate_femWomen), tolerance = .00001)
 
 
 
@@ -76,7 +76,7 @@ expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = tol_se)
 mfx <- slopes(model, variables = "phd", newdata = datagrid(kid5 = 2, ment = 7, phd = 2))
 em <- emtrends(model, ~phd, "phd", at = list(kid5 = 2, ment = 7, phd = 2))
 em <- tidy(em)
-expect_equivalent(mfx$dydx, em$phd.trend, tolerance = .0001)
+expect_equivalent(mfx$estimate, em$phd.trend, tolerance = .0001)
 expect_equivalent(mfx$std.error, em$std.error, tolerance = .01)
 
 # margins: does not support standard errors (all zeros)

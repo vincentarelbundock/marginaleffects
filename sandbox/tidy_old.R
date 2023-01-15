@@ -50,7 +50,7 @@ tidy.slopes <- function(x,
                         conf_level = NULL,
                         ...) {
     x_dt <- copy(x)
-    setnames(x_dt, old = "dydx", new = "comparison")
+    setnames(x_dt, old = "dydx", new = "comparison", skip_absent = TRUE)
     out <- tidy.comparisons(x_dt,
                             conf_level = conf_level,
                             ...)
@@ -238,7 +238,7 @@ tidy.comparisons <- function(x,
     } else {
         # avoids namespace conflict with `margins`
         ame <- x_dt
-        setnames(ame, old = "comparison", new = "estimate")
+        setnames(ame, old = "comparison", new = "estimate", skip_absent = TRUE)
     }
 
     out <- get_ci(

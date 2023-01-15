@@ -46,7 +46,7 @@ expect_equivalent(mfx$std.error, mfx$std.errorstata)
 em <- emtrends(mod, ~x, "x", at = list(time = 4, status = 1, x = 0, sex = factor(0, levels = 0:1)))
 em <- tidy(em)
 mfx <- slopes(mod, variables = "x", type = "lp")
-expect_equivalent(mfx$dydx[1], em$x.trend)
+expect_equivalent(mfx$estimate[1], em$x.trend)
 expect_equivalent(mfx$std.error[1], em$std.error)
 
 
@@ -94,6 +94,6 @@ mod2 <- coxph(Surv(time, status) ~ x + strata(sex),
               ties = "breslow")
 mfx1 <- merge(tidy(slopes(mod1, type = "lp")), stata)
 mfx2 <- merge(tidy(slopes(mod2, type = "lp")), stata)
-expect_equivalent(mfx1$dydx, mfx2$dydx)
+expect_equivalent(mfx1$estimate, mfx2$estimate)
 
 

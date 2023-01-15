@@ -35,7 +35,7 @@ expect_predictions(pre)
 em <- emmeans::emtrends(mod, ~x2, var = "x2", at = list(x1 = 0, x2 = 0, x3 = 0, x4 = 0))
 em <- tidy(em)
 mfx <- slopes(mod, newdata = datagrid(x1 = 0, x2 = 0, x3 = 0, x4 = 0), variable = "x2", type = "link")
-expect_equivalent(mfx$dydx, em$x2.trend)
+expect_equivalent(mfx$estimate, em$x2.trend)
 expect_equivalent(mfx$std.error, em$std.error)
 
 
@@ -45,7 +45,7 @@ stata <- readRDS(testing_path("stata/stata.rds"))[["stats_glm_01"]]
 dat <- read.csv(testing_path("stata/databases/stats_glm_01.csv"))
 mod <- glm(y ~ x1 * x2, family = binomial, data = dat)
 ame <- merge(tidy(slopes(mod)), stata)
-expect_equivalent(ame$dydx, ame$dydxstata)
+expect_equivalent(ame$estimate, ame$dydxstata)
 expect_equivalent(ame$std.error, ame$std.errorstata, tolerance = 0.0001)
 
 
@@ -55,7 +55,7 @@ stata <- readRDS(testing_path("stata/stata.rds"))[["stats_lm_01"]]
 dat <- read.csv(testing_path("stata/databases/stats_lm_01.csv"))
 mod <- lm(y ~ x1 * x2, data = dat)
 ame <- merge(tidy(slopes(mod)), stata)
-expect_equivalent(ame$dydx, ame$dydxstata)
+expect_equivalent(ame$estimate, ame$dydxstata)
 expect_equivalent(ame$std.error, ame$std.errorstata)
 
 
@@ -76,9 +76,9 @@ void <- capture.output({
 })
 
 res <- slopes(mod, variable = "hp", newdata = counterfactuals)
-expect_equivalent(res$dydx[1], em1$hp.trend)
+expect_equivalent(res$estimate[1], em1$hp.trend)
 expect_equivalent(res$std.error[1], em1$std.error, tolerance = .001)
-expect_equivalent(res$dydx[2], em2$hp.trend)
+expect_equivalent(res$estimate[2], em2$hp.trend)
 expect_equivalent(res$std.error[2], em2$std.error, tolerance = .0001)
 
 
@@ -144,8 +144,8 @@ expect_warning(slopes(mod), pattern = "Unable")
 
 # loess vs. margins
 mod <- loess(mpg ~ wt, data = mtcars)
-res <- slopes(mod, vcov = FALSE, newdata = head(mtcars))$dydx
-mar <- data.frame(margins(mod, data = head(mtcars)))$dydx_wt
+res <- slopes(mod, vcov = FALSE, newdata = head(mtcars))$estimate
+mar <- data.frame(margins(mod, data = head(mtcars)))$estimate_wt
 expect_equivalent(as.numeric(res), as.numeric(mar), tolerance = 1e-3)
 
 

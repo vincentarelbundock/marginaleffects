@@ -12,7 +12,7 @@ mod <- lm(f, dat)
 nd <- datagrid(newdata = dat, x = c(-2:2))
 res <- slopes(mod, newdata = nd)
 res$truth <- truth(res$x)
-expect_equivalent(res$dydx, res$truth, tolerance = .01)
+expect_equivalent(res$estimate, res$truth, tolerance = .01)
 
 
 k = mtcars
@@ -31,7 +31,7 @@ mod <- lm(f, dat)
 nd <- datagrid(newdata = dat, x = c(1:4))
 res <- slopes(mod, newdata = nd)
 res$truth <- truth(res$x)
-expect_equivalent(res$dydx, res$truth, tolerance = .01)
+expect_equivalent(res$estimate, res$truth, tolerance = .01)
 
 
 
@@ -48,7 +48,7 @@ mod <- glm(f, data = dat, family = binomial)
 nd <- datagrid(newdata = dat, x = c(-10:10))
 res <- slopes(mod, newdata = nd)
 res$truth <- truth(res$x)
-expect_equivalent(res$dydx, res$truth, tolerance = .01)
+expect_equivalent(res$estimate, res$truth, tolerance = .01)
 
 
 
@@ -82,12 +82,12 @@ marg <- slopes(m)
 # ME with respect to x
 dydx <- coef(m)["x"] + (d$z * coef(m)["x:z"])
 sedydx <- sqrt(vcov(m)["x","x"] + (d$z^2 * vcov(m)["x:z","x:z"]) + (2 * d$z * vcov(m)["x","x:z"]))
-expect_equivalent(as.numeric(marg$dydx[marg$term == "x"]), dydx, tolerance = tol, label = "dy/dx correct")
+expect_equivalent(as.numeric(marg$estimate[marg$term == "x"]), dydx, tolerance = tol, label = "dy/dx correct")
 expect_equivalent(sedydx, as.numeric(marg$std.error[marg$term == "x"]), tolerance = tol_se, label = "Var(dy/dx) correct")
 # ME with respect to z
 dydz <- coef(m)["z"] + (d$x * coef(m)["x:z"])
 sedydz <- sqrt(vcov(m)["z","z"] + (d$x^2 * vcov(m)["x:z","x:z"]) + (2 * d$x * vcov(m)["z","x:z"]))
-expect_equivalent(as.numeric(marg$dydx[marg$term == "z"]), dydz, tolerance = tol, label = "dy/dz correct")
+expect_equivalent(as.numeric(marg$estimate[marg$term == "z"]), dydz, tolerance = tol, label = "dy/dz correct")
 expect_equivalent(sedydz, as.numeric(marg$std.error[marg$term == "z"]), tolerance = tol_se, label = "Var(dy/dz) correct")
 
 
@@ -97,7 +97,7 @@ m <- lm(f1.2, data = d)
 marg <- slopes(m)
 dydx <- coef(m)["x"] + (d$z * coef(m)["x:z"])
 sedydx <- sqrt(vcov(m)["x","x"] + (d$z^2 * vcov(m)["x:z","x:z"]) + (2 * d$z * vcov(m)["x","x:z"]))
-expect_equivalent(as.numeric(marg$dydx[marg$term == "x"]), dydx, tolerance = tol, label = "dy/dx correct")
+expect_equivalent(as.numeric(marg$estimate[marg$term == "x"]), dydx, tolerance = tol, label = "dy/dx correct")
 expect_equivalent(sedydx, as.numeric(marg$std.error[marg$term == "x"]), tolerance = tol_se, label = "Var(dy/dx) correct")
 
 
@@ -108,7 +108,7 @@ marg <- slopes(m)
 dydx <- coef(m)["x"] + (d$z * coef(m)["x:z"]) + (d$w * coef(m)["x:w"])
 sedydx <- sqrt(vcov(m)["x","x"] + (d$z^2 * vcov(m)["x:z","x:z"]) + (d$w^2 * vcov(m)["x:w","x:w"]) + 
            (2 * d$z * vcov(m)["x","x:z"]) + (2 * d$w * vcov(m)["x","x:w"]) + (2 * d$z * d$w * vcov(m)["x:z","x:w"]) )
-expect_equivalent(as.numeric(marg$dydx[marg$term == "x"]), dydx, tolerance = tol, label = "dy/dx correct")
+expect_equivalent(as.numeric(marg$estimate[marg$term == "x"]), dydx, tolerance = tol, label = "dy/dx correct")
 expect_equivalent(sedydx, as.numeric(marg$std.error[marg$term == "x"]), tolerance = tol_se, label = "Var(dy/dx) correct")
 
 
@@ -122,7 +122,7 @@ sedydx <- sqrt(vcov(m)["x","x"] + (d$z^2 * vcov(m)["x:z","x:z"]) + (d$w^2 * vcov
            (2 * d$w * vcov(m)["x","x:w"]) + (2 * d$z * d$w * vcov(m)["x","x:z:w"]) + 
            (2 * d$z * d$w * vcov(m)["x:z","x:w"]) + (2 * d$w * d$z^2 * vcov(m)["x:z","x:z:w"]) +
            (2 * d$z * d$w^2 * vcov(m)["x:w","x:z:w"]) )
-expect_equivalent(as.numeric(marg$dydx[marg$term == "x"]), dydx, tolerance = tol, label = "dy/dx correct")
+expect_equivalent(as.numeric(marg$estimate[marg$term == "x"]), dydx, tolerance = tol, label = "dy/dx correct")
 expect_equivalent(sedydx, as.numeric(marg$std.error[marg$term == "x"]), tolerance = tol_se, label = "Var(dy/dx) correct")
 
 
@@ -132,7 +132,7 @@ m <- lm(f2.1, data = d)
 marg <- slopes(m)
 dydx <- coef(m)["x"] + (2 * coef(m)["I(x^2)"] * d$x)
 sedydx <- sqrt(vcov(m)["x","x"] + (4 * d$x^2 * vcov(m)["I(x^2)","I(x^2)"]) + (4 * d$x * vcov(m)["x","I(x^2)"]))
-expect_equivalent(as.numeric(marg$dydx[marg$term == "x"]), dydx, tolerance = tol, label = "dy/dx correct")
+expect_equivalent(as.numeric(marg$estimate[marg$term == "x"]), dydx, tolerance = tol, label = "dy/dx correct")
 expect_equivalent(sedydx, as.numeric(marg$std.error[marg$term == "x"]), tolerance = tol_se, label = "Var(dy/dx) correct")
 
 
@@ -142,7 +142,7 @@ m <- lm(f2.2, data = d)
 marg <- slopes(m)
 dydx <- coef(m)["x"] + (2 * coef(m)["I(x^2)"] * d$x)
 sedydx <- sqrt(vcov(m)["x","x"] + (4 * d$x^2 * vcov(m)["I(x^2)","I(x^2)"]) + (4 * d$x * vcov(m)["x","I(x^2)"]))
-expect_equivalent(as.numeric(marg$dydx[marg$term == "x"]), dydx, tolerance = tol, label = "dy/dx correct")
+expect_equivalent(as.numeric(marg$estimate[marg$term == "x"]), dydx, tolerance = tol, label = "dy/dx correct")
 expect_equivalent(sedydx, as.numeric(marg$std.error[marg$term == "x"]), tolerance = tol_se, label = "Var(dy/dx) correct")
 
 
@@ -154,12 +154,12 @@ marg <- slopes(m)
 dydx <- coef(m)["x"] + (2 * coef(m)["I(x^2)"] * d$x) + (d$z * coef(m)["x:z"])
 sedydx <- sqrt(vcov(m)["x","x"] + (4 * d$x^2 * vcov(m)["I(x^2)","I(x^2)"]) + (d$z^2 * vcov(m)["x:z","x:z"]) +
            (4 * d$x * vcov(m)["x","I(x^2)"]) + (2 * d$z * vcov(m)["x","x:z"]) + (4 * d$x * d$z * vcov(m)["I(x^2)", "x:z"]) )
-expect_equivalent(as.numeric(marg$dydx[marg$term == "x"]), dydx, tolerance = tol, label = "dy/dx correct")
+expect_equivalent(as.numeric(marg$estimate[marg$term == "x"]), dydx, tolerance = tol, label = "dy/dx correct")
 expect_equivalent(sedydx, as.numeric(marg$std.error[marg$term == "x"]), tolerance = tol_se, label = "Var(dy/dx) correct")
 # ME with respect to z
 dydz <- coef(m)["z"] + (d$x * coef(m)["x:z"])
 sedydz <- sqrt(vcov(m)["z","z"] + (d$x^2 * vcov(m)["x:z","x:z"]) + (2 * d$x * vcov(m)["z","x:z"]))
-expect_equivalent(as.numeric(marg$dydx[marg$term == "z"]), dydz, tolerance = tol, label = "dy/dz correct")
+expect_equivalent(as.numeric(marg$estimate[marg$term == "z"]), dydz, tolerance = tol, label = "dy/dz correct")
 expect_equivalent(sedydz, as.numeric(marg$std.error[marg$term == "z"]), tolerance = tol_se, label = "Var(dy/dz) correct")
 
 
@@ -176,13 +176,13 @@ sedydx <- sqrt( vcov(m)["x","x"] + (4 * d$x^2 * vcov(m)["I(x^2)","I(x^2)"]) + (d
            (4 * d$x * d$z * vcov(m)["x","I(x^2):z"]) + 
            (8 * (d$x^2) * d$z * vcov(m)["I(x^2)","I(x^2):z"]) + 
            (4 * d$x * (d$z^2) * vcov(m)["x:z","I(x^2):z"]) )
-expect_equivalent(as.numeric(marg$dydx[marg$term == "x"]), dydx, tolerance = tol, label = "dy/dx correct")
+expect_equivalent(as.numeric(marg$estimate[marg$term == "x"]), dydx, tolerance = tol, label = "dy/dx correct")
 expect_equivalent(sedydx, as.numeric(marg$std.error[marg$term == "x"]), tolerance = tol_se, label = "Var(dy/dx) correct")
 # ME with respect to z
 dydz <- coef(m)["z"] + (d$x * coef(m)["x:z"]) + (d$x^2 * coef(m)["I(x^2):z"])
 sedydz <- sqrt(vcov(m)["z","z"] + (d$x^2 * vcov(m)["x:z","x:z"]) + (d$x^4 * vcov(m)["I(x^2):z","I(x^2):z"]) + 
            (2 * d$x * vcov(m)["z","x:z"]) + (2 * (d$x^2) * vcov(m)["z","I(x^2):z"]) + 
            (2 * (d$x^3) * vcov(m)["x:z","I(x^2):z"]) )
-expect_equivalent(as.numeric(marg$dydx[marg$term == "z"]), dydz, tolerance = tol, label = "dy/dz correct")
+expect_equivalent(as.numeric(marg$estimate[marg$term == "z"]), dydz, tolerance = tol, label = "dy/dz correct")
 expect_equivalent(sedydz, as.numeric(marg$std.error[marg$term == "z"]), tolerance = tol_se, label = "Var(dy/dz) correct")
 

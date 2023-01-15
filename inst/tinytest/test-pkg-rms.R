@@ -14,7 +14,7 @@ void <- capture.output({
 mfx <- slopes(model, newdata = data.frame(mpg = 30), type = "lp")
 em <- emtrends(model, ~mpg, "mpg", at = list(mpg = 30))
 em <- tidy(em)
-expect_equivalent(mfx$dydx, em$mpg.trend)
+expect_equivalent(mfx$estimate, em$mpg.trend)
 expect_equivalent(mfx$std.error, em$std.error, tolerance = .0001)
 
 

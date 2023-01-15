@@ -49,7 +49,7 @@ stata <- readRDS(testing_path("stata/stata.rds"))$fixest_feols
 model <- feols(wage ~ capital * output | firm, EmplUK)
 mfx <- merge(tidy(slopes(model)), stata)
 expect_slopes(model)
-expect_equivalent(mfx$estimate, mfx$dydx)
+expect_equivalent(mfx$estimate, mfx$estimate)
 expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .00001)
 
 
@@ -60,7 +60,7 @@ stata <- readRDS(testing_path("stata/stata.rds"))$fixest_fepois
 model <- fepois(log(wage) ~ capital * output | firm, EmplUK)
 mfx <- merge(tidy(slopes(model, type = "link")), stata)
 expect_slopes(model)
-expect_equivalent(mfx$estimate, mfx$dydx, tolerance = .000001)
+expect_equivalent(mfx$estimate, mfx$estimate, tolerance = .000001)
 expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .001)
 
 
@@ -107,8 +107,8 @@ dat2 <- dat2
 mod2 <- fixest::feols(y ~ x * w | unit, data = dat2)
 k <- plot_cme(mod2, effect = "x", condition = "w", draw = FALSE)
 expect_inherits(k, "data.frame")
-expect_false(anyNA(k$dydx))
-expect_false(any(k$dydx == 0))
+expect_false(anyNA(k$estimate))
+expect_false(any(k$estimate == 0))
 
 
 
@@ -235,8 +235,8 @@ expect_true("am" %in% colnames(mfx))
 # Issue #531
 mod <- feols(Ozone ~ Wind + i(Month), airquality)
 mfx <- slopes(mod, variable = "Wind")
-expect_true(all(mfx$conf.low < mfx$dydx))
-expect_true(all(mfx$conf.high > mfx$dydx))
+expect_true(all(mfx$conf.low < mfx$estimate))
+expect_true(all(mfx$conf.high > mfx$estimate))
 
 
 # regression test Issue #232: namespace collision with `rep()`

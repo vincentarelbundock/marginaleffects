@@ -22,27 +22,27 @@ expect_equivalent(nrow(p1), 2)
 mod <- glm(gear ~ cyl + am, family = poisson, data = mtcars)
 x <- tidy(comparisons(mod, transform_pre = "dydx"))
 y <- comparisons(mod, transform_pre = "dydxavg")
-expect_equivalent(x$estimate, y$comparison)
+expect_equivalent(x$estimate, y$estimate)
 expect_equivalent(x$std.error, y$std.error)
 
 x <- tidy(comparisons(mod, transform_pre = "eyex"))
 y <- comparisons(mod, transform_pre = "eyexavg")
-expect_equivalent(x$estimate, y$comparison)
+expect_equivalent(x$estimate, y$estimate)
 expect_equivalent(x$std.error, y$std.error)
 
 x <- tidy(comparisons(mod, transform_pre = "eydx"))
 y <- comparisons(mod, transform_pre = "eydxavg")
-expect_equivalent(x$estimate, y$comparison)
+expect_equivalent(x$estimate, y$estimate)
 expect_equivalent(x$std.error, y$std.error)
 
 x <- tidy(comparisons(mod, transform_pre = "dyex"))
 y <- comparisons(mod, transform_pre = "dyexavg")
-expect_equivalent(x$estimate, y$comparison)
+expect_equivalent(x$estimate, y$estimate)
 expect_equivalent(x$std.error, y$std.error)
 
 x <- tidy(slopes(mod, slope = "dyex"))
 y <- slopes(mod, slope = "dyexavg")
-expect_equivalent(x$estimate, y$dydx)
+expect_equivalent(x$estimate, y$estimate)
 expect_equivalent(x$std.error, y$std.error)
 
 # input sanity check
@@ -122,7 +122,7 @@ mfx <- slopes(
     mod,
     by = "cyl",
     newdata = datagridcf(cyl = c(4, 6, 8)))
-expect_equivalent(mfx$dydx, mar$AME)
+expect_equivalent(mfx$estimate, mar$AME)
 expect_equivalent(mfx$std.error, mar$SE, tolerance = 1e6)
 
 

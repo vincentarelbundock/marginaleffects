@@ -41,8 +41,8 @@ fit <- lm(re78 ~ treat * (age + educ + race + married + re74),
           data = k, weights = w)
 cmp1 <- comparisons(fit, variables = "treat", wts = "w")
 cmp2 <- comparisons(fit, variables = "treat", wts = "w", transform_pre = "differenceavg")
-expect_equivalent(tidy(cmp1)$estimate, weighted.mean(cmp1$comparison, k$w))
-expect_equivalent(cmp2$comparison, weighted.mean(cmp1$comparison, k$w))
+expect_equivalent(tidy(cmp1)$estimate, weighted.mean(cmp1$estimate, k$w))
+expect_equivalent(cmp2$estimate, weighted.mean(cmp1$estimate, k$w))
 
 
 # sanity check
@@ -57,7 +57,7 @@ mod <- suppressWarnings(svyglm(
 tmp <- mod$prior.weights
 stata <- c(.0441066, .0061046)
 mfx <- slopes(mod, wts = tmp, by = "term")
-expect_equivalent(mfx$dydx[1], stata[1], tol = .01)
+expect_equivalent(mfx$estimate[1], stata[1], tol = .01)
 expect_equivalent(mfx$std.error, stata[2], tolerance = 0.002)
 
 
@@ -69,8 +69,8 @@ w <- runif(32)
 cmp1 <- comparisons(mod, transform_pre = "differenceavg")
 cmp2 <- comparisons(mod, wts = w, transform_pre = "differenceavg")
 cmp3 <- comparisons(mod, wts = w, transform_pre = "differenceavgwts")
-expect_true(all(cmp1$comparison != cmp2$comparison))
-expect_equivalent(cmp2$comparison, cmp3$comparison)
+expect_true(all(cmp1$estimate != cmp2$estimate))
+expect_equivalent(cmp2$estimate, cmp3$estimate)
 
 # . logit am mpg [pw=weights]
 #

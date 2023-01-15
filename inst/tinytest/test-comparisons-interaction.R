@@ -35,7 +35,7 @@ cmp <- suppressWarnings(comparisons(
 em <- emmeans(mod, c("cyl", "am"))
 em <- emmeans::contrast(em, method = "revpairwise")
 em <- data.frame(em)
-expect_true(all(round(abs(em$estimate), 5) %in% round(abs(cmp$comparison), 5)))
+expect_true(all(round(abs(em$estimate), 5) %in% round(abs(cmp$estimate), 5)))
 expect_true(all(round(abs(em$SE), 5) %in% round(abs(cmp$std.error), 5)))
 
 

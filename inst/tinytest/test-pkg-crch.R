@@ -23,16 +23,16 @@ model <- crch(sqrt(rain) ~ sqrtensmean | sqrtenssd, data = dat, dist = "logistic
 expect_slopes(model, type = "location", n_unique = 1)
 
 mfx <- slopes(model, type = "location", variables = "sqrtensmean")
-expect_true(!any(mfx$dydx == 0))
+expect_true(!any(mfx$estimate == 0))
 
 mfx <- slopes(model, type = "location", variables = "sqrtenssd")
-expect_true(all(mfx$dydx == 0))
+expect_true(all(mfx$estimate == 0))
 
 mfx <- slopes(model, type = "scale", variables = "sqrtensmean")
-expect_true(all(mfx$dydx == 0))
+expect_true(all(mfx$estimate == 0))
 
 mfx <- slopes(model, type = "scale", variables = "sqrtenssd")
-expect_true(!any(mfx$dydx == 0))
+expect_true(!any(mfx$estimate == 0))
 
 
 # hlxr: no validity

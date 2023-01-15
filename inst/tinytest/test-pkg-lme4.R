@@ -111,7 +111,7 @@ mod <- glmer(y ~ x1 + x2 + (1 | clus), data = tmp, family = binomial)
 mfx <- slopes(mod, variables = "x1", newdata = datagrid(x1 = 0, x2 = 0, clus = 1), type = "link")
 em <- emtrends(mod, ~x1, "x1", at = list(x1 = 0, x2 = 0, clus = 1))
 em <- tidy(em)
-expect_equivalent(mfx$dydx, em$x1.trend)
+expect_equivalent(mfx$estimate, em$x1.trend)
 expect_equivalent(mfx$std.error, em$std.error, tolerance = 1e-6)
 
 # grand mean with new data
@@ -141,7 +141,7 @@ mfx <- slopes(mod, variables = "x1",
                    newdata = datagrid(x1 = 0, x2 = 0, clus = 1))
 em <- emtrends(mod, ~x1, "x1", at = list(x1 = 0, x2 = 0, clus = 1))
 em <- tidy(em)
-expect_equivalent(mfx$dydx, em$x1.trend)
+expect_equivalent(mfx$estimate, em$x1.trend)
 expect_equivalent(mfx$std.error, em$std.error, tolerance = .001)
 
 
@@ -206,7 +206,7 @@ mod <- suppressMessages(glmer.nb(y ~ x + (1 | g), data = dd, verbose = FALSE))
 mfx <- slopes(mod, variables = "x", newdata = datagrid(g = 2), type = "link")
 em <- emtrends(mod, ~x, "x", at = list(g = 2))
 em <- tidy(em)
-expect_equivalent(mfx$dydx, em$x.trend)
+expect_equivalent(mfx$estimate, em$x.trend)
 expect_equivalent(mfx$std.error, em$std.error, tolerance = 1e-6)
 
 # margins
@@ -246,7 +246,7 @@ mfx3 <- slopes(
 expect_inherits(mfx1, "marginaleffects")
 expect_inherits(mfx2, "marginaleffects")
 expect_inherits(mfx3, "marginaleffects")
-expect_equivalent(mfx1$dydx, mfx2$dydx)
+expect_equivalent(mfx1$estimate, mfx2$estimate)
 expect_equivalent(mfx1$std.error, mfx2$std.error)
 
 pred1 <- predictions(
@@ -272,7 +272,7 @@ pred3 <- predictions(
 expect_inherits(pred1, "predictions")
 expect_inherits(pred2, "predictions")
 expect_inherits(pred3, "predictions")
-expect_equivalent(pred1$dydx, pred2$dydx)
+expect_equivalent(pred1$estimate, pred2$estimate)
 expect_equivalent(pred1$std.error, pred2$std.error)
 expect_true(all(pred1$predicted != pred3$predicted))
 
@@ -287,7 +287,7 @@ mfx <- slopes(mod, vcov = "kenward-roger")
 cmp <- comparisons(mod, vcov = "kenward-roger")
 cmp2 <- comparisons(mod)
 mfx2 <- slopes(mod)
-expect_equivalent(mfx$dydx, cmp$comparison)
+expect_equivalent(mfx$estimate, cmp$estimate)
 expect_equivalent(mfx$std.error, cmp$std.error, tolerance = .0001)
 expect_equivalent(attr(mfx, "vcov.type"), "Kenward-Roger")
 expect_equivalent(attr(cmp, "vcov.type"), "Kenward-Roger")

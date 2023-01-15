@@ -44,7 +44,7 @@ em <- emtrends(mod, ~temp, "temp", at = list("batch" = tmp$batch[1]))
 em <- data.frame(em)
 
 # We do expect that they will be equivalent
-expect_equivalent(mfx$dydx, em$temp.trend, tolerance = .001)
+expect_equivalent(mfx$estimate, em$temp.trend, tolerance = .001)
 expect_equivalent(mfx$std.error, em$SE, tolerance = .001)
 
 # predictions: no validity
@@ -88,7 +88,7 @@ mfx <- slopes(mod,
     what = "mu")
 em <- emtrends(mod, ~Age, "Age", at = list("Pclass" = "1"))
 em <- tidy(em)
-expect_equivalent(mfx$dydx, em$Age.trend, tolerance = .001)
+expect_equivalent(mfx$estimate, em$Age.trend, tolerance = .001)
 expect_equivalent(mfx$std.error, em$std.error, tolerance = .001)
 
 exit_file("breaks here; predictions takes forever and uses up all the memory")
