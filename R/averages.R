@@ -60,6 +60,10 @@ averages.predictions <- function(x, by = TRUE, byfun = NULL, ...) {
         insight::format_error("The `byfun` argument is only supported for objects produced by the `predictions()` function.")
     }
 
+    if (!isFALSE(attr(x, "by")) || !is.null(attr(x, "by"))) {
+        return(x)
+    }
+
     if (is.null(by) || isFALSE(by)) {
         if (is.null(attr(x, "by"))) {
             by <- grep("^type$|^term$|^group$|^contrast_?", colnames(x), value = TRUE)
@@ -112,12 +116,13 @@ averages.comparisons <- function(x, by = TRUE, ...) {
         insight::format_error("The `byfun` argument is only supported for objects produced by the `predictions()` function.")
     }
 
-    if (is.null(by) || isFALSE(by)) {
-        if (is.null(attr(x, "by"))) {
-            by <- grep("^type$|^term$|^group$|^contrast_?", colnames(x), value = TRUE)
-        } else {
-            by <- attr(x, "by")
-        }
+    # already used `by` in the main call, so we return the main output
+    if (!isFALSE(attr(x, "by")) && !is.null(attr(x, "by"))) {
+        return(x)
+    }
+
+    if (isTRUE(checkmate::check_flag(by, null.ok = TRUE))) {
+        by <- grep("^type$|^term$|^group$|^contrast_?", colnames(x), value = TRUE)
     }
 
     # `bynout` requires us to re-eval a modified call

@@ -356,7 +356,6 @@ marginalmeans <- function(model,
             conf_level = conf_level,
             vcov = vcov,
             overwrite = FALSE,
-            estimate = "marginalmean",
             null = hypothesis_null,
             ...)
     }
@@ -466,7 +465,6 @@ get_marginalmeans <- function(model,
     }
 
     data.table::setDT(out)
-    data.table::setnames(out, old = "predicted", new = "marginalmean")
     keys <- intersect(colnames(out), c("term", "value", variables))
     data.table::setorderv(out, keys)
 
@@ -489,11 +487,11 @@ get_marginalmeans <- function(model,
             }
         }
         out <- merge(out, by)
-        out <- out[, .(marginalmean = mean(marginalmean)), by = "by"]
+        out <- out[, .(estimate = mean(estimate)), by = "by"]
     }
 
     if (!is.null(hypothesis)) {
-        out <- get_hypothesis(out, hypothesis, column = "marginalmean", by = by)
+        out <- get_hypothesis(out, hypothesis, by = by)
     }
 
     return(out)

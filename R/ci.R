@@ -1,7 +1,6 @@
 get_ci <- function(
     x,
     conf_level,
-    estimate,
     df = NULL,
     draws = NULL,
     vcov = TRUE,
@@ -14,7 +13,6 @@ get_ci <- function(
         out <- get_ci_draws(
             x,
             conf_level = conf_level,
-            estimate = estimate,
             draws = draws,
             overwrite = overwrite)
         return(out)
@@ -22,7 +20,7 @@ get_ci <- function(
 
     checkmate::assert_numeric(null, len = 1)
 
-    required <- c(estimate, "std.error")
+    required <- c("estimate", "std.error")
     if (!inherits(x, "data.frame") || any(!required %in% colnames(x))) {
         return(x)
     }
@@ -39,7 +37,7 @@ get_ci <- function(
     }
 
     if (!"statistic" %in% colnames(x) || isTRUE(overwrite)) {
-        x[["statistic"]] <- (x[[estimate]] - null) / x[["std.error"]]
+        x[["statistic"]] <- (x[["estimate"]] - null) / x[["std.error"]]
     }
 
     if (!"p.value" %in% colnames(x) || null != 0 || isTRUE(overwrite)) {
@@ -59,8 +57,8 @@ get_ci <- function(
     }
 
     if (!"conf.low" %in% colnames(x) || isTRUE(overwrite)) {
-        x[["conf.low"]] <- x[[estimate]] - critical * x[["std.error"]]
-        x[["conf.high"]] <- x[[estimate]] + critical * x[["std.error"]]
+        x[["conf.low"]] <- x[["estimate"]] - critical * x[["std.error"]]
+        x[["conf.high"]] <- x[["estimate"]] + critical * x[["std.error"]]
     }
 
     return(x)
@@ -71,7 +69,6 @@ get_ci_draws <- function(
     x,
     conf_level,
     draws,
-    estimate,
     overwrite = FALSE) {
 
     # option name change
@@ -98,7 +95,7 @@ get_ci_draws <- function(
             CIs <- unique(CIs)
             Bs <- unique(Bs)
         }
-        x[[estimate]] <- Bs
+        x[["estimate"]] <- Bs
         x[["conf.low"]] <- CIs[, "lower"]
         x[["conf.high"]] <- CIs[, "upper"]
     }

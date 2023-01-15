@@ -15,11 +15,6 @@ res$truth <- truth(res$x)
 expect_equivalent(res$estimate, res$truth, tolerance = .01)
 
 
-k = mtcars
-k$cyl = as.character(k$cyl)
-mod = lm(mpg ~ cyl, k)
-
-
 # lm log
 set.seed(30)
 f <- y ~ log(x)

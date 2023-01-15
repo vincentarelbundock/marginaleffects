@@ -195,7 +195,7 @@ get_hypothesis <- function(x, hypothesis, column, by = NULL) {
 
         } else {
             out <- eval_string_function(
-                x[[column]],
+                x[["estimate"]],
                 hypothesis = hypothesis,
                 rowlabels = rowlabels)
             out <- data.table(
@@ -203,7 +203,7 @@ get_hypothesis <- function(x, hypothesis, column, by = NULL) {
                 tmp = out)
         }
 
-        setnames(out, old = "tmp", new = column)
+        setnames(out, old = "tmp", new = "estimate")
         attr(out, "posterior_draws") <- draws
         return(out)
 
@@ -216,15 +216,15 @@ get_hypothesis <- function(x, hypothesis, column, by = NULL) {
             out <- data.table(
                 term = colnames(lincom),
                 tmp = apply(draws, 1, stats::median))
-            setnames(out, old = "tmp", new = column)
+            setnames(out, old = "tmp", new = "estimate")
             attr(out, "posterior_draws") <- draws
 
         # frequentist
         } else {
             out <- data.table(
                 term = colnames(lincom),
-                tmp = as.vector(x[[column]] %*% lincom))
-            setnames(out, old = "tmp", new = column)
+                tmp = as.vector(x[["estimate"]] %*% lincom))
+            setnames(out, old = "tmp", new = "estimate")
         }
 
         out <- out[out$term != "1 - 1", , drop = FALSE]

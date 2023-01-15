@@ -3,7 +3,6 @@ get_by <- function(
     draws,
     newdata,
     by,
-    column,
     byfun = NULL,
     verbose = TRUE,
     ...) {
@@ -13,8 +12,6 @@ get_by <- function(
         attr(out, "posterior_draws") <- draws
         return(out)
     }
-
-    setnames(estimates, old = column, new = "estimate")
 
     missing <- setdiff(setdiff(colnames(by), "by"), colnames(estimates))
     if (length(missing) > 0) {
@@ -59,7 +56,6 @@ get_by <- function(
             data = estimates,
             index = bycols,
             draws = draws,
-            column = "estimate",
             byfun = byfun)
 
     # frequentist
@@ -84,6 +80,5 @@ get_by <- function(
         }
     }
 
-    setnames(estimates, old = "estimate", new = column)
     return(estimates)
 }

@@ -113,7 +113,7 @@ hypotheses <- function(
             insight::format_error(msg)
         }
 
-        out <- get_hypothesis(out, hypothesis = hypothesis, column = "estimate")$estimate
+        out <- get_hypothesis(out, hypothesis = hypothesis)$estimate
         return(out)
     }
 

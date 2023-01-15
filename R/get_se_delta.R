@@ -12,7 +12,7 @@ get_se_delta_marginalmeans <- function(model,
         type = type,
         cross = cross,
         ...
-    )$marginalmean
+    )$estimate
 }
 
 

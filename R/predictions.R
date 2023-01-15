@@ -554,7 +554,6 @@ get_predictions <- function(model,
         newdata = newdata,
         by = by,
         byfun = byfun,
-        column = "estimate",
         verbose = verbose,
         ...)
 
@@ -562,7 +561,7 @@ get_predictions <- function(model,
     draws <- attr(out, "posterior_draws")
 
     # hypothesis tests using the delta method
-    out <- get_hypothesis(out, hypothesis, column = "estimate", by = by)
+    out <- get_hypothesis(out, hypothesis = hypothesis, by = by)
 
     return(out)
 }
