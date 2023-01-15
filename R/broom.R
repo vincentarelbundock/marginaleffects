@@ -18,13 +18,6 @@ tidy.comparisons <- function(x, ...) {
         insight::format_error("The `transform_avg` argument is deprecated. Use `transform_post` instead.")
     }
     out <- averages(x, ...)
-    if (inherits(x, c("comparisons", "slopes", "marginalmeans"))) {
-        idx <- colnames(out) %in% c("dydx", "comparison", "marginalmeans")
-        colnames(out)[idx] <- "estimate"
-    } else if (inherits(x, "predictions")) {
-        idx <- colnames(out) %in% "predicted"
-        colnames(out)[idx] <- "estimate"
-    }
     return(out)
 }
 
@@ -64,7 +57,6 @@ tidy.marginalmeans <- function(x, ...) {
     if ("transform_avg" %in% names(list(...))) {
         insight::format_error("The `transform_avg` argument is deprecated. Use `transform_post` instead.")
     }
-    colnames(x)[colnames(x) == "marginalmean"] <- "estimate"
     first = c("type", "term", "value", "estimate", "std.error",
     "statistic", "p.value", "conf.low", "conf.high")
     out <- sort_columns(x, first)

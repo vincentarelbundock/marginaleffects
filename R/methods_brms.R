@@ -72,7 +72,7 @@ get_predict.brmsfit <- function(model,
         out <- data.frame(
             rowid = idx,
             group = "main_marginaleffect",
-            predicted = apply(draws, 2, stats::median))
+            estimate = apply(draws, 2, stats::median))
 
     # multi-dimensional outcome
     } else if (length(dim(draws)) == 3) {
@@ -81,7 +81,7 @@ get_predict.brmsfit <- function(model,
         out <- data.frame(
             rowid = rep(idx, times = ncol(out)),
             group = rep(colnames(out), each = nrow(out)),
-            predicted = c(out))
+            estimate = c(out))
     } else {
         stop("marginaleffects cannot extract posterior draws from this model. Please report this problem to the Bug tracker with a reporducible example: https://github.com/vincentarelbundock/marginaleffects/issues", call. = FALSE)
     }

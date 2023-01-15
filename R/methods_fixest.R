@@ -94,7 +94,7 @@ get_predict.fixest <- function(model,
                 out$rowid <- seq_len(nrow(newdata))
             }
         }
-        colnames(out)[colnames(out) == "fit"] <- "predicted"
+        colnames(out)[colnames(out) == "fit"] <- "estimate"
         colnames(out)[colnames(out) == "se.fit"] <- "std.error"
         colnames(out)[colnames(out) == "ci_low"] <- "conf.low"
         colnames(out)[colnames(out) == "ci_high"] <- "conf.high"
@@ -102,11 +102,11 @@ get_predict.fixest <- function(model,
         if ("rowid" %in% colnames(newdata)) {
             out <- data.frame(
                 rowid = newdata$rowid,
-                predicted = as.numeric(pred))
+                estimate = as.numeric(pred))
         } else {
             out <- data.frame(
                 rowid = 1:nrow(newdata),
-                predicted = as.numeric(pred))
+                estimate = as.numeric(pred))
         }
     } else {
         if (inherits(pred, "try-error")) {

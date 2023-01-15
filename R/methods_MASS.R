@@ -94,7 +94,7 @@ get_predict.glmmPQL <- function(model,
     out <- stats::predict(model, newdata = newdata, type = type, ...)
     out <- data.frame(
         rowid = seq_len(nrow(newdata)),
-        predicted = out)
+        estimate = out)
     return(out)
 }
 

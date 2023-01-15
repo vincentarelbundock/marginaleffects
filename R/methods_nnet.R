@@ -105,7 +105,7 @@ get_predict.multinom <- function(model,
     # matrix with outcome levels as columns
     out <- data.frame(
         group = rep(colnames(pred), each = nrow(pred)),
-        predicted = c(pred))
+        estimate = c(pred))
 
 
     # usually when `newdata` is supplied by `comparisons`

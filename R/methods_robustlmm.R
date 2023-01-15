@@ -24,6 +24,6 @@ get_predict.rlmerMod <- function(model,
     args[["object"]] <- model
     args[["newdata"]] <- newdata
     out <- data.frame(rowid = seq_len(nrow(newdata)),
-                      predicted = do.call("predict", args))
+                      estimate = do.call("predict", args))
     return(out)
 }

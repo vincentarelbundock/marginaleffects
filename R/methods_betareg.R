@@ -43,7 +43,7 @@ get_coef.betareg <- function(model, ...) {
 get_predict.betareg <- function(model, newdata, ...) {
     out <- stats::predict(model, newdata = newdata)
     out <- data.frame(rowid = seq_len(nrow(newdata)),
-                      predicted = out)
+                      estimate = out)
     return(out)
 }
 

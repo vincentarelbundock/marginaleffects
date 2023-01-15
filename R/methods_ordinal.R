@@ -28,7 +28,7 @@ get_predict.clm <- function(model,
 
     out <- data.frame(
         group = rep(colnames(pred), each = nrow(pred)),
-        predicted = c(pred))
+        estimate = c(pred))
 
     # often an internal call
     if ("rowid" %in% colnames(newdata)) {

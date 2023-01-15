@@ -90,7 +90,7 @@ mod <- lm(mpg ~ hp + am, dat)
 pre1 <- predictions(mod, by = "am")
 pre1 <- pre1[order(pre1$am),]
 pre2 <- predictions(mod)
-pre2 <- aggregate(predicted ~ am, FUN = mean, data = pre2)
+pre2 <- aggregate(estimate ~ am, FUN = mean, data = pre2)
 expect_equivalent(pre1$estimate, pre2$estimate)
 
 

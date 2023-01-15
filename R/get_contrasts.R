@@ -198,11 +198,13 @@ get_contrasts <- function(model,
         draws_or <- attr(pred_or, "posterior_draws")
     }
 
-    out[, predicted_lo := pred_lo[["predicted"]]]
-    out[, predicted_hi := pred_hi[["predicted"]]]
+    out[, predicted_lo := pred_lo[["estimate"]]]
+    out[, predicted_hi := pred_hi[["estimate"]]]
 
     if (!is.null(pred_or)) {
-        out[, predicted := pred_or[["predicted"]]]
+        out[, predicted := pred_or[["estimate"]]]
+    } else {
+        out[, predicted := NA_real_]
     }
 
     idx <- grep("^contrast|^group$|^term$|^type$|^transform_pre_idx$", colnames(out), value = TRUE)

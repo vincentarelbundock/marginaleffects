@@ -60,28 +60,16 @@ averages.predictions <- function(x, by = TRUE, byfun = NULL, ...) {
         insight::format_error("The `byfun` argument is only supported for objects produced by the `predictions()` function.")
     }
 
-    if (!isFALSE(attr(x, "by")) || !is.null(attr(x, "by"))) {
+    if (!isFALSE(attr(x, "by")) && !is.null(attr(x, "by"))) {
         return(x)
     }
 
     if (is.null(by) || isFALSE(by)) {
-        if (is.null(attr(x, "by"))) {
-            by <- grep("^type$|^term$|^group$|^contrast_?", colnames(x), value = TRUE)
-        } else {
-            by <- attr(x, "by")
-        }
+        by <- grep("^type$|^term$|^group$|^contrast_?", colnames(x), value = TRUE)
     }
 
     # `bynout` requires us to re-eval a modified call
     out <- recall(x, by = by, byfun = byfun, ...)
-
-    if (inherits(x, "predictions")) {
-        data.table::setnames(out, "predicted", "estimate")
-    } else if (inherits(x, "comparisons")) {
-        data.table::setnames(out, "comparison", "estimate", skip_absent = TRUE)
-    } else if (inherits(x, "slopes")) {
-        data.table::setnames(out, "dydx", "estimate")
-    }
 
     # sort and subset columns
     cols <- c("type", "group", "term", "contrast",
@@ -127,14 +115,6 @@ averages.comparisons <- function(x, by = TRUE, ...) {
 
     # `bynout` requires us to re-eval a modified call
     out <- recall(x, by = by, ...)
-
-    if (inherits(x, "predictions")) {
-        data.table::setnames(out, "predicted", "estimate")
-    } else if (inherits(x, "comparisons")) {
-        data.table::setnames(out, "comparison", "estimate", skip_absent = TRUE)
-    } else if (inherits(x, "slopes")) {
-        data.table::setnames(out, "dydx", "estimate", skip_absent = TRUE)
-    }
 
     # sort and subset columns
     cols <- c("type", "group", "term", "contrast",

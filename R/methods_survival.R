@@ -13,6 +13,6 @@ get_predict.coxph <- function(model,
                           ...)
 
     out <- data.frame(rowid = seq_len(nrow(newdata)),
-                      predicted = out)
+                      estimate = out)
     return(out)
 }

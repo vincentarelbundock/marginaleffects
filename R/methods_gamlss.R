@@ -50,9 +50,9 @@ get_predict.gamlss <- function(
   hush(out <- predict_gamlss(model, newdata = tmp, type = type, data = origindata, ...))
   
   if ("rowid" %in% colnames(newdata)) {
-    out <- data.frame(rowid = newdata$rowid, predicted = out)
+    out <- data.frame(rowid = newdata$rowid, estimate = out)
   } else {
-    out <- data.frame(rowid = seq_along(out), predicted = out)
+    out <- data.frame(rowid = seq_along(out), estimate = out)
   }
   
   return(out)

@@ -544,9 +544,6 @@ get_predictions <- function(model,
             error = function(e) out)
     }
 
-    # get_predict() returns a `predicted` column
-    data.table::setnames(out, old = "predicted", new = "estimate", skip_absent = TRUE)
-
     # averaging by groups
     out <- get_by(
         out,

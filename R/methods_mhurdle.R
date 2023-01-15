@@ -9,7 +9,7 @@ get_predict.mhurdle <- function(model,
                                 ...) {
 
     out <- stats::predict(model, what = type, newdata = newdata)
-    out <- data.frame(rowid = seq_len(length(out)), predicted = out)
+    out <- data.frame(rowid = seq_len(length(out)), estimate = out)
     return(out)
 }
 

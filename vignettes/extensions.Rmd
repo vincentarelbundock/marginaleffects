@@ -103,7 +103,7 @@ Then, we define 4 methods:
 1. `get_predict()`
     - Mandatory arguments: `model`, `newdata` (data frame), `...`
     - Option arguments: `type` and other model-specific arguments.
-    - Returns: A data frame with two columns: a unique `rowid` and a column of `predicted` values.
+    - Returns: A data frame with two columns: a unique `rowid` and a column of `estimate` values.
 
 Note that each of these methods will be named with the suffix `.lm_manual` to indicate that they should be used whenever `marginaleffects` needs to process an object of class `lm_manual`.
 
@@ -129,7 +129,7 @@ get_predict.lm_manual <- function(model, newdata, ...) {
     Yhat <- newX %*% model$b
     out <- data.frame(
         rowid = seq_len(nrow(Yhat)),
-        predicted = as.vector(Yhat))
+        estimate = as.vector(Yhat))
     return(out)
 }
 ```
@@ -186,7 +186,7 @@ class(model_custom) <- c("customclass", class(model))
 
 Define a new `get_predict.customclass` method. We use the default `predict()` function to obtain predictions. Since this is a multinomial model, `predict()` returns a matrix of predictions with one column per level of the response variable.
 
-Our new `get_predict.customclass` method takes this matrix of predictions, modifies it, and reshapes it to return a data frame with three columns: `rowid`, `group`, and `predicted`:
+Our new `get_predict.customclass` method takes this matrix of predictions, modifies it, and reshapes it to return a data frame with three columns: `rowid`, `group`, and `estimate`:
 
 ```{r}
 get_predict.customclass <- function(model, newdata, ...) {
@@ -200,7 +200,7 @@ get_predict.customclass <- function(model, newdata, ...) {
     out <- melt(
         out,
         id.vars = "rowid",
-        value.name = "predicted",
+        value.name = "estimate",
         variable.name = "group")
 }
 ```

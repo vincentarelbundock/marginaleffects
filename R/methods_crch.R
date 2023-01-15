@@ -35,7 +35,7 @@ get_predict.crch <- function(model,
     sanity_predict_numeric(pred = pred, model = model, newdata = newdata, type = type)
     out <- data.frame(
         rowid = 1:nrow(newdata),
-        predicted = pred)
+        estimate = pred)
     return(out)
 }
 

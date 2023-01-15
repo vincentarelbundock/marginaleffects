@@ -20,7 +20,7 @@ get_predict.bife <- function(model,
 
     out <- data.frame(
         rowid = 1:nrow(newdata),
-        predicted = pred)
+        estimate = pred)
 
     return(out)
 }

@@ -36,7 +36,7 @@ get_vcov.afex_aov <- function(model, vcov = NULL, ...) {
 #' @export
 get_predict.afex_aov <- function(model, newdata = NULL, ...) {
     out <- stats::predict(model, newdata = newdata)
-    out <- data.frame(predicted = out)
+    out <- data.frame(estimate = out)
     if (isTRUE("rowid" %in% colnames(newdata))) {
         out[["rowid"]] <- newdata[["rowid"]]
     } else {

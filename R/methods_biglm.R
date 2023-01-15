@@ -16,7 +16,7 @@ get_predict.biglm <- function(model,
     out <- as.vector(out)
     out <- data.frame(
         rowid = seq_along(out),
-        predicted = out)
+        estimate = out)
     return(out)
 }
 

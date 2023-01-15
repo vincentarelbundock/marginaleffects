@@ -1,7 +1,7 @@
 #' Get predicted values from a model object (internal function)
 #'
 #' @return A data.frame of predicted values with a number of rows equal to the
-#' number of rows in `newdata` and columns "rowid" and "predicted". A "group"
+#' number of rows in `newdata` and columns "rowid" and "estimate". A "group"
 #' column is added for multivariate models or models with categorical outcomes. 
 #' @rdname get_predict
 #' @inheritParams slopes
@@ -95,7 +95,7 @@ get_predict.default <- function(model,
             }
             colnames(out)[colnames(out) == "Response"] <- "group"
             colnames(out)[colnames(out) == "SE"] <- "std.error"
-            colnames(out)[colnames(out) == "Predicted"] <- "predicted"
+            colnames(out)[colnames(out) == "Predicted"] <- "estimate"
             colnames(out)[colnames(out) == "CI_low"] <- "conf.low"
             colnames(out)[colnames(out) == "CI_high"] <- "conf.high"
 
@@ -103,7 +103,7 @@ get_predict.default <- function(model,
                 out$rowid <- newdata$rowid
             }
 
-            out <- sort_columns(out, first = c("rowid", "group", "predicted"))
+            out <- sort_columns(out, first = c("rowid", "group", "estimate"))
             return(out)
         }
     }
@@ -136,10 +136,10 @@ get_predict.default <- function(model,
         # strip weird attributes added by some methods (e.g., predict.svyglm)
         if (length(pred) == nrow(newdata)) {
             if ("rowid" %in% colnames(newdata)) {
-                out <- data.table(predicted = as.numeric(pred),
+                out <- data.table(estimate = as.numeric(pred),
                                   rowid = newdata$rowid)
             } else {
-                out <- data.table(predicted = as.numeric(pred),
+                out <- data.table(estimate = as.numeric(pred),
                                   rowid = seq_len(length(pred)))
             }
         }
@@ -151,12 +151,12 @@ get_predict.default <- function(model,
             out <- data.table(
                 rowid = rep(newdata[["rowid"]], times = ncol(pred)),
                 group = rep(colnames(pred), each = nrow(pred)),
-                predicted = c(pred))
+                estimate = c(pred))
         } else {
             out <- data.table(
                 rowid = rep(seq_len(nrow(pred)), times = ncol(pred)),
                 group = rep(colnames(pred), each = nrow(pred)),
-                predicted = c(pred))
+                estimate = c(pred))
         }
     } else {
         stop(sprintf("Unable to extract predictions of type %s from a model of class %s. Please report this problem, along with reproducible code and data on Github: https://github.com/vincentarelbundock/marginaleffects/issues", type, class(model)[1]), call. = FALSE)
@@ -164,7 +164,7 @@ get_predict.default <- function(model,
 
     setDF(out)
 
-    out <- sort_columns(out, first = c("rowid", "group", "predicted"))
+    out <- sort_columns(out, first = c("rowid", "group", "estimate"))
 
     return(out)
 }

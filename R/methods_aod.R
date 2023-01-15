@@ -14,7 +14,7 @@ get_predict.glimML <- function(model,
                         ...)
     out <- data.frame(
         rowid = 1:nrow(newdata),
-        predicted = out)
+        estimate = out)
 
     return(out)
 }

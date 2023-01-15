@@ -14,7 +14,7 @@ get_predict.rq <- function(model,
                                 newdata = newdata,
                                 ...)
     out <- data.frame(rowid = seq_len(nrow(newdata)),
-                      predicted = out)
+                      estimate = out)
     return(out)
 }
 
