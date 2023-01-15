@@ -364,8 +364,7 @@ marginalmeans <- function(model,
     out <- backtransform(out, transform_post)
 
     # column order
-    cols <- c("rowid", "type", "group", colnames(by), "term", "hypothesis", "value", variables, "marginalmean",
-              "std.error", "conf.low", "conf.high", sort(colnames(out)))
+    cols <- c("rowid", "type", "group", colnames(by), "term", "hypothesis", "value", variables, "estimate", "std.error", "conf.low", "conf.high", sort(colnames(out)))
     cols <- unique(cols)
     cols <- intersect(cols, colnames(out))
     out <- out[, cols, drop = FALSE]

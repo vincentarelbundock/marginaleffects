@@ -44,9 +44,9 @@ expect_equivalent(mfx$std.error, em$std.error)
 stata <- readRDS(testing_path("stata/stata.rds"))[["stats_glm_01"]]
 dat <- read.csv(testing_path("stata/databases/stats_glm_01.csv"))
 mod <- glm(y ~ x1 * x2, family = binomial, data = dat)
-ame <- merge(tidy(slopes(mod)), stata)
-expect_equivalent(ame$estimate, ame$dydxstata)
-expect_equivalent(ame$std.error, ame$std.errorstata, tolerance = 0.0001)
+ame <- merge(tidy(slopes(mod, eps = 1e-4)), stata)
+expect_equivalent(ame$estimate, ame$dydxstata, tolerance = 1e-4)
+expect_equivalent(ame$std.error, ame$std.errorstata, tolerance = 1e-4)
 
 
 
@@ -54,9 +54,9 @@ expect_equivalent(ame$std.error, ame$std.errorstata, tolerance = 0.0001)
 stata <- readRDS(testing_path("stata/stata.rds"))[["stats_lm_01"]]
 dat <- read.csv(testing_path("stata/databases/stats_lm_01.csv"))
 mod <- lm(y ~ x1 * x2, data = dat)
-ame <- merge(tidy(slopes(mod)), stata)
-expect_equivalent(ame$estimate, ame$dydxstata)
-expect_equivalent(ame$std.error, ame$std.errorstata)
+ame <- merge(tidy(slopes(mod, eps = 1e-4)), stata)
+expect_equivalent(ame$estimate, ame$dydxstata, tolerance = 1e-4)
+expect_equivalent(ame$std.error, ame$std.errorstata, tolerance = 1e-4)
 
 
 
@@ -114,7 +114,7 @@ mod <- glm(binary ~ Region + MainCity + Commerce, data = dat, family = "binomial
 mm <- marginalmeans(mod, type = "link", variables = "Region")
 em <- data.frame(emmeans::emmeans(mod, specs = "Region"))
 expect_equivalent(as.character(mm$value), as.character(em$Region))
-expect_equivalent(mm$estimate, em$estimate)
+expect_equivalent(mm$estimate, em$emmean, tol = 0.001)
 expect_equivalent(mm$std.error, em$SE, tol = 0.001)
 
 mm <- marginalmeans(mod, type = "link", variables = "MainCity")

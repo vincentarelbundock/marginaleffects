@@ -36,6 +36,6 @@ options("marginaleffects_credible_interval" = "eti")
 # # margins: var is all zeroes and dydx don't match precisely
 # mar <- margins(mod, unit_ses = TRUE, at = list(hp = 110, mpg = 20, vs = 0))
 # mfx <- slopes(mod, variables = "hp", at = list(hp = 110, mpg = 20, vs = 0))
-# expect_equivalent(mfx$estimate, mar$estimate_hp)
-# expect_equivalent(mfx$std.error, mar$estimate_hp)
+# expect_equivalent(mfx$estimate, mar$dydx_hp)
+# expect_equivalent(mfx$std.error, mar$dydx_hp)
 

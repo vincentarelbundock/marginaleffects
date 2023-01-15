@@ -19,7 +19,7 @@ svyd <- survey::svydesign(
 mod <- survey::svyglm(x ~ nh, design = svyd)
 res <- slopes(mod)
 mar <- suppressMessages(data.frame(margins(mod, unit_ses = TRUE)))
-expect_equivalent(res$estimate, as.numeric(mar$estimate_nh))
+expect_equivalent(res$estimate, as.numeric(mar$dydx_nh))
 expect_equivalent(res$std.error, as.numeric(mar$SE_dydx_nh), tolerance = 0.0001)
 # emtrends
 em <- emtrends(mod, ~nh, "nh", at = list(nh = 4))
