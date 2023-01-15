@@ -8,7 +8,7 @@ get_by <- function(
     verbose = TRUE,
     ...) {
 
-    if (is.null(by)) {
+    if (is.null(by) || isFALSE(by)) {
         out <- estimates
         attr(out, "posterior_draws") <- draws
         return(out)
@@ -16,19 +16,20 @@ get_by <- function(
 
     setnames(estimates, old = column, new = "estimate")
 
-    bycols <- sort(setdiff(
-        unique(c(colnames(estimates), colnames(newdata))),
-        c("rowid", "rowidcf", "estimate", "predicted", "predicted_lo", "predicted_hi", "dydx", "comparison")))
-    bycols <- paste(bycols, collapse = ", ")
-
     missing <- setdiff(setdiff(colnames(by), "by"), colnames(estimates))
     if (length(missing) > 0) {
         idx <- intersect(c("rowid", "rowidcf", missing), colnames(newdata))
         estimates <- merge(estimates, newdata[, idx], sort = FALSE, all.x = TRUE)
     }
 
-    # `by` data.frame
-    if (isTRUE(checkmate::check_data_frame(by))) {
+    if (isTRUE(by)) {
+        regex <- "^term$|^group$|^contrast$|^contrast_"
+        bycols <- grep(regex, colnames(estimates), value = TRUE)
+
+    } else if (isTRUE(checkmate::check_character(by))) {
+        bycols <- by
+
+    } else if (isTRUE(checkmate::check_data_frame(by))) {
         idx <- setdiff(intersect(colnames(estimates), colnames(by)), "by")
         # harmonize column types
         for (v in colnames(by)) {
@@ -40,10 +41,6 @@ get_by <- function(
         }
         estimates[by, by := by, on = idx]
         bycols <- "by"
-
-    # `by` vector
-    } else {
-        bycols <- by
     }
 
     if ("by" %in% colnames(estimates) && anyNA(estimates[["by"]])) {

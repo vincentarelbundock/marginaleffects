@@ -1,8 +1,6 @@
 
 library(emmeans)
 
-pkgload::load_all()
-
 mod <- lm(log(conc) ~ source + factor(percent), data = pigs)
 rg <- ref_grid(mod)
 em <- emmeans(rg, "source")

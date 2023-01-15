@@ -1,9 +1,5 @@
-# exit_file("aggregate bug")
-
-
 source("helpers.R")
 using("marginaleffects")
-# source(here::here("inst/tinytest/helpers.R"))
 
 exit_if_not(requiet("margins"))
 exit_if_not(requiet("nnet"))
@@ -194,6 +190,26 @@ expect_warning(comparisons(mod, variables = "mpg", newdata = "mean", by = by))
 expect_warning(predictions(mod, newdata = "mean", by = by))
 
 
+# Issue #589: easy marginalization
+mod <- lm(mpg ~ factor(gear) + am, mtcars)
+cmp1 <- comparisons(mod, by = TRUE)
+cmp2 <- comparisons(mod, by = FALSE)
+expect_equivalent(nrow(cmp1), 3)
+expect_equivalent(nrow(cmp2), 96)
 
+pre1 <- predictions(mod, by = TRUE)
+pre2 <- predictions(mod, by = FALSE)
+expect_equivalent(nrow(pre1), 1)
+expect_equivalent(nrow(pre2), 32)
 
-# clear
+pre1 <- slopes(mod, by = TRUE)
+pre2 <- slopes(mod, by = FALSE)
+expect_equivalent(nrow(pre1), 3)
+expect_equivalent(nrow(pre2), 96)
+
+mm <- marginalmeans(
+    mod,
+    by = FALSE,
+    variables = "gear")
+expect_equivalent(nrow(mm), 3)
+expect_error(marginalmeans(mod, by = TRUE, variables = "gear"))

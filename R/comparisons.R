@@ -90,7 +90,9 @@
 #' * function: accept two equal-length numeric vectors of adjusted predictions (`hi` and `lo`) and returns a vector of contrasts of the same length, or a unique numeric value.
 #'   - See the Transformations section below for examples of valid functions.
 #' @param transform_post string or function. Transformation applied to unit-level estimates and confidence intervals just before the function returns results. Functions must accept a vector and return a vector of the same length. Support string shortcuts: "exp", "ln"
-#' @param by Compute group-wise average estimates. Valid inputs:
+#' @param by Aggregate unit-level estimates (aka, marginalize, average over). Valid inputs:
+#'   - `FALSE`: return the original unit-level estimates.
+#'   - `TRUE`: aggregate estimates for each term.
 #'   - Character vector of column names in `newdata` or in the data frame produced by calling the function without the `by` argument.
 #'   - Data frame with a `by` column of group labels, and merging columns shared by `newdata` or the data frame produced by calling the same function without the `by` argument.
 #'   - See examples below.
@@ -200,6 +202,9 @@
 #'
 #' # `by` argument
 #' mod <- lm(mpg ~ hp * am * vs, data = mtcars)
+#' comparisons(mod, by = TRUE)
+#'
+#' mod <- lm(mpg ~ hp * am * vs, data = mtcars)
 #' cmp <- comparisons(mod, variables = "hp", by = c("vs", "am"))
 #' summary(cmp)
 #'
@@ -216,11 +221,11 @@ comparisons <- function(model,
                         variables = NULL,
                         type = NULL,
                         vcov = TRUE,
+                        by = FALSE,
                         conf_level = 0.95,
                         transform_pre = "difference",
                         transform_post = NULL,
                         cross = FALSE,
-                        by = NULL,
                         wts = NULL,
                         hypothesis = NULL,
                         eps = NULL,

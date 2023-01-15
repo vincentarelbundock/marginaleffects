@@ -184,7 +184,11 @@ marginalmeans <- function(model,
     hypothesis_null <- tmp$hypothesis_null
 
     # by: usual tests + only data frames
-    checkmate::assert_data_frame(by, null.ok = TRUE)
+    checkmate::assert(
+        checkmate::check_data_frame(by),
+        checkmate::check_false(by),
+        checkmate::check_null(by)
+    )
     sanity_by(by, newdata)
 
     # fancy vcov processing to allow strings like "HC3"

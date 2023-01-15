@@ -32,19 +32,3 @@ mod <- lm(mpg ~ hp * drat, mtcars)
 dm <- hypotheses(mod, "`hp:drat` = drat")
 expect_inherits(dm, "hypotheses")
 expect_equivalent(nrow(dm), 1)
-
-
-
-# library(brms)
-# dat <- mtcars
-# dat$gear <- factor(dat$gear)
-# mod <- lm(mpg ~ hp + gear, data = dat)
-# modb <- brm(mpg ~ hp + gear, data = dat)
-
-
-
-# Q
-# pkgload::load_all()
-# slopes(modb, slope = "eyex") |> summary()
-# slopes(mod, slope = "eyex") |> summary()
-

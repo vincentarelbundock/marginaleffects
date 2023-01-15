@@ -175,7 +175,7 @@ Case studies:
 
 Tips and technical notes:
 \itemize{
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html}{71 Supported Classes of Models}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html}{73 Supported Classes of Models}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/reference/index.html}{Index of Functions and Documentation}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/extensions.html}{Extending \code{marginaleffects}: add new models or modify existing ones}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html}{Standard Errors and Confidence Intervals}

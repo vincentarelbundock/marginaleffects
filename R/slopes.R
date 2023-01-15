@@ -70,7 +70,6 @@
 #'  * Square covariance matrix
 #'  * Function which returns a covariance matrix (e.g., `stats::vcov(model)`)
 #' @param conf_level numeric value between 0 and 1. Confidence level to use to build a confidence interval.
-#' @param by Character vector of variable names over which to compute group-wise estimates.
 #' @param type string indicates the type (scale) of the predictions used to
 #' compute contrasts or slopes. This can differ based on the model
 #' type, but will typically be a string such as: "response", "link", "probs",
@@ -137,6 +136,7 @@
 #' head(mfx)
 #'
 #' # Average Marginal Effect (AME)
+#' slopes(mod, by = TRUE)
 #' summary(mfx)
 #' tidy(mfx)
 #' plot(mfx)
@@ -205,11 +205,11 @@
 slopes <- function(model,
                    newdata = NULL,
                    variables = NULL,
-                   vcov = TRUE,
-                   conf_level = 0.95,
                    type = NULL,
+                   vcov = TRUE,
+                   by = FALSE,
+                   conf_level = 0.95,
                    slope = "dydx",
-                   by = NULL,
                    wts = NULL,
                    hypothesis = NULL,
                    eps = NULL,

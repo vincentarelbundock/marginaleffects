@@ -10,11 +10,11 @@ comparisons(
   variables = NULL,
   type = NULL,
   vcov = TRUE,
+  by = FALSE,
   conf_level = 0.95,
   transform_pre = "difference",
   transform_post = NULL,
   cross = FALSE,
-  by = NULL,
   wts = NULL,
   hypothesis = NULL,
   eps = NULL,
@@ -105,6 +105,15 @@ the \code{marginaleffects:::type_dictionary} dataframe.}
 \item Function which returns a covariance matrix (e.g., \code{stats::vcov(model)})
 }}
 
+\item{by}{Aggregate unit-level estimates (aka, marginalize, average over). Valid inputs:
+\itemize{
+\item \code{FALSE}: return the original unit-level estimates.
+\item \code{TRUE}: aggregate estimates for each term.
+\item Character vector of column names in \code{newdata} or in the data frame produced by calling the function without the \code{by} argument.
+\item Data frame with a \code{by} column of group labels, and merging columns shared by \code{newdata} or the data frame produced by calling the same function without the \code{by} argument.
+\item See examples below.
+}}
+
 \item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
 
 \item{transform_pre}{string or function. How should pairs of adjusted predictions be contrasted?
@@ -126,13 +135,6 @@ the \code{marginaleffects:::type_dictionary} dataframe.}
 \itemize{
 \item \code{FALSE}: Contrasts represent the change in adjusted predictions when one predictor changes and all other variables are held constant.
 \item \code{TRUE}: Contrasts represent the changes in adjusted predictions when all the predictors specified in the \code{variables} argument are manipulated simultaneously (a "cross-contrast").
-}}
-
-\item{by}{Compute group-wise average estimates. Valid inputs:
-\itemize{
-\item Character vector of column names in \code{newdata} or in the data frame produced by calling the function without the \code{by} argument.
-\item Data frame with a \code{by} column of group labels, and merging columns shared by \code{newdata} or the data frame produced by calling the same function without the \code{by} argument.
-\item See examples below.
 }}
 
 \item{wts}{string or numeric: weights to use when computing average
@@ -253,7 +255,7 @@ Case studies:
 
 Tips and technical notes:
 \itemize{
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html}{71 Supported Classes of Models}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html}{73 Supported Classes of Models}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/reference/index.html}{Index of Functions and Documentation}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/extensions.html}{Extending \code{marginaleffects}: add new models or modify existing ones}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html}{Standard Errors and Confidence Intervals}
@@ -450,6 +452,9 @@ comparisons(
 
 
 # `by` argument
+mod <- lm(mpg ~ hp * am * vs, data = mtcars)
+comparisons(mod, by = TRUE)
+
 mod <- lm(mpg ~ hp * am * vs, data = mtcars)
 cmp <- comparisons(mod, variables = "hp", by = c("vs", "am"))
 summary(cmp)

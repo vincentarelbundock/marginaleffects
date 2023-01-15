@@ -102,8 +102,6 @@ acceptable values is returned in an error message. When \code{type} is \code{NUL
 default value is used. This default is the first model-related row in
 the \code{marginaleffects:::type_dictionary} dataframe.}
 
-\item{by}{Character vector of variable names over which to compute group-wise estimates.}
-
 \item{byfun}{A function such as \code{mean()} or \code{sum()} used to aggregate
 estimates within the subgroups defined by the \code{by} argument. \code{NULL} uses the
 \code{mean()} function. Must accept a numeric vector and return a single numeric
@@ -224,7 +222,7 @@ Case studies:
 
 Tips and technical notes:
 \itemize{
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html}{71 Supported Classes of Models}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html}{73 Supported Classes of Models}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/reference/index.html}{Index of Functions and Documentation}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/extensions.html}{Extending \code{marginaleffects}: add new models or modify existing ones}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html}{Standard Errors and Confidence Intervals}

@@ -8,11 +8,11 @@ slopes(
   model,
   newdata = NULL,
   variables = NULL,
-  vcov = TRUE,
-  conf_level = 0.95,
   type = NULL,
+  vcov = TRUE,
+  by = FALSE,
+  conf_level = 0.95,
   slope = "dydx",
-  by = NULL,
   wts = NULL,
   hypothesis = NULL,
   eps = NULL,
@@ -47,6 +47,14 @@ slopes(
 \item Character vector: subset of variables (usually faster).
 }}
 
+\item{type}{string indicates the type (scale) of the predictions used to
+compute contrasts or slopes. This can differ based on the model
+type, but will typically be a string such as: "response", "link", "probs",
+or "zero". When an unsupported string is entered, the model-specific list of
+acceptable values is returned in an error message. When \code{type} is \code{NULL}, the
+default value is used. This default is the first model-related row in
+the \code{marginaleffects:::type_dictionary} dataframe.}
+
 \item{vcov}{Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
 \itemize{
 \item FALSE: Do not compute standard errors. This can speed up computation considerably.
@@ -65,14 +73,6 @@ slopes(
 
 \item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
 
-\item{type}{string indicates the type (scale) of the predictions used to
-compute contrasts or slopes. This can differ based on the model
-type, but will typically be a string such as: "response", "link", "probs",
-or "zero". When an unsupported string is entered, the model-specific list of
-acceptable values is returned in an error message. When \code{type} is \code{NULL}, the
-default value is used. This default is the first model-related row in
-the \code{marginaleffects:::type_dictionary} dataframe.}
-
 \item{slope}{string indicates the type of slope or (semi-)elasticity to compute:
 \itemize{
 \item "dydx": dY/dX
@@ -80,8 +80,6 @@ the \code{marginaleffects:::type_dictionary} dataframe.}
 \item "eydx": dY/dX * Y
 \item "dyex": dY/dX / X
 }}
-
-\item{by}{Character vector of variable names over which to compute group-wise estimates.}
 
 \item{wts}{string or numeric: weights to use when computing average
 contrasts or slopes. These weights only affect the averaging in
@@ -209,7 +207,7 @@ Case studies:
 
 Tips and technical notes:
 \itemize{
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html}{71 Supported Classes of Models}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html}{73 Supported Classes of Models}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/reference/index.html}{Index of Functions and Documentation}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/extensions.html}{Extending \code{marginaleffects}: add new models or modify existing ones}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html}{Standard Errors and Confidence Intervals}
@@ -278,6 +276,7 @@ mfx <- slopes(mod)
 head(mfx)
 
 # Average Marginal Effect (AME)
+slopes(mod, by = TRUE)
 summary(mfx)
 tidy(mfx)
 plot(mfx)

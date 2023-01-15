@@ -8,6 +8,8 @@ sanitize_newdata <- function(model, newdata, by = NULL, modeldata = NULL) {
     # to respect the `by` argument, we need all values to be preserved
     if (isTRUE(checkmate::check_data_frame(by))) {
         by <- setdiff(colnames(by), "by")
+    } else if (isTRUE(checkmate::check_flag(by))) {
+        by <- NULL
     }
     args <- list(model = model)
     for (b in by) {

@@ -10,9 +10,13 @@ New models supported:
 
 New features:
 
-* `hypothesis` can be used to set the null used in calculating Z and p. For example, is the conditional risk ratio different from 1?
-  - `comparisons(mod, transform_pre = "ratio", hypothesis = 1)`
-* `by` argument is now supported for bayesian models
+* `by` argument
+  - `TRUE` returns average (marginal) predictions/comparisons/slopes
+  - Add supports for bayesian models.
+* `hypothesis` argument
+  - Numeric value sets the null used in calculating Z and p.
+  - Example: `comparisons(mod, transform_pre = "ratio", hypothesis = 1)`
+* New `averages()` function makes it more obvious to users that we are marginalizing over unit-level estimates.
 * All arguments from the main functions are now available through `averages()`, `tidy()`, or `summary()`: `conf_level`, `transform_post`, etc.
 * Bayesian posterior distribution summaries can be customized using global options:
   - `options("marginaleffects_posterior_interval" = "eti")` 
