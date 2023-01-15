@@ -100,7 +100,7 @@ p1 <- predictions(
 p2 <- predictions(
     mod,
     datagrid(cyl = c(4, 6)))
-expect_equivalent(p1$predicted, diff(p2$predicted))
+expect_equivalent(p1$estimate, diff(p2$estimate))
 
 lc <- matrix(c(
     -1, 1,
@@ -128,7 +128,7 @@ em <- emmeans(mod, "carb")
 em <- contrast(em, method = data.frame(custom_contrast = lc))
 em <- data.frame(em)
 mm <- marginalmeans(mod, variables = "carb", hypothesis = lc)
-expect_equivalent(mm$marginalmean, em$estimate)
+expect_equivalent(mm$estimate, em$estimate)
 expect_equivalent(mm$std.error, em$SE)
 
 # marginalmeans: hypothesis shortcut
@@ -155,8 +155,8 @@ mm1 <- marginalmeans(
     hypothesis = "b1 + b2 = 12")
 mm2 <- marginalmeans(mod)
 expect_equivalent(
-    mm2$marginalmean[1] + mm2$marginalmean[2] - 12,
-    mm1$marginalmean)
+    mm2$estimate[1] + mm2$estimate[2] - 12,
+    mm1$estimate)
 
 
 # marginaleffects: string function
@@ -186,8 +186,8 @@ p3 <- predictions(
     mod,
     hypothesis = "b1 = b2",
     newdata = datagrid(hp = c(100, 110, 120)))
-expect_equivalent(sum(p1$predicted) - 10, p2$predicted)
-expect_equivalent(p1$predicted[1] - p1$predicted[2], p3$predicted)
+expect_equivalent(sum(p1$estimate) - 10, p2$estimate)
+expect_equivalent(p1$estimate[1] - p1$estimate[2], p3$estimate)
 
 
 # pad missing character levels + hypothesis

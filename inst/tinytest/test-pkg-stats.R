@@ -126,7 +126,7 @@ expect_equivalent(mm$std.error, em$SE, tol = 0.001)
 mm <- marginalmeans(mod, variables = "MainCity")
 em <- data.frame(emmeans(mod, specs = "MainCity", type = "response"))
 expect_equivalent(as.character(mm$value), as.character(em$MainCity))
-expect_equivalent(mm$marginalmean, em$prob, tolerance = .01)
+expect_equivalent(mm$estimate, em$prob, tolerance = .01)
 expect_equivalent(mm$std.error, em$std.error, tolerance = .01)
 expect_equivalent(mm$conf.low, em$asymp.LCL, tolerance = .01)
 expect_equivalent(mm$conf.high, em$asymp.UCL, tolerance = .01)
@@ -166,7 +166,7 @@ expect_equivalent(nrow(tid), 4)
 
 # Issue #547: standardize column order
 mod <- lm(cbind(mpg, cyl) ~ disp + am, data = mtcars)
-expect_equivalent(colnames(get_predict(mod)), c("rowid", "group", "predicted"))
+expect_equivalent(colnames(get_predict(mod)), c("rowid", "group", "estimate"))
 
 mod <- lm(mpg ~ disp + am, data = mtcars)
-expect_equivalent(colnames(get_predict(mod)), c("rowid", "predicted"))
+expect_equivalent(colnames(get_predict(mod)), c("rowid", "estimate"))

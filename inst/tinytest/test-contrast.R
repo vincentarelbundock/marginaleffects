@@ -74,8 +74,8 @@ expect_equivalent(ti$estimate, se)
 mod <- glm(am ~ factor(cyl), data = mtcars, family = binomial)
 pred <- predictions(mod, newdata = datagrid(cyl = mtcars$cyl))
 contr <- tidy(comparisons(mod))
-expect_equivalent(contr$estimate[1], pred$predicted[pred$cyl == 6] - pred$predicted[pred$cyl == 4])
-expect_equivalent(contr$estimate[2], pred$predicted[pred$cyl == 8] - pred$predicted[pred$cyl == 4])
+expect_equivalent(contr$estimate[1], pred$estimate[pred$cyl == 6] - pred$estimate[pred$cyl == 4])
+expect_equivalent(contr$estimate[2], pred$estimate[pred$cyl == 8] - pred$estimate[pred$cyl == 4])
 
 
 # emmeans w/ back-transforms is similar to comparisons with direct delta method

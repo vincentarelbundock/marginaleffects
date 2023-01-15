@@ -67,13 +67,13 @@ void <- capture.output(suppressWarnings(
 # response
 p1 <- predict(mod, type = "response", se.fit = TRUE)
 p2 <- predictions(mod)
-expect_equivalent(p1$fit[160,], p2[p2$rowid == 160, "predicted"])
+expect_equivalent(p1$fit[160,], p2[p2$rowid == 160, "estimate"])
 expect_equivalent(p1$se.fit[160,], p2[p2$rowid == 160, "std.error"], tolerance = .001)
 
 # link
 p1 <- predict(mod, type = "link", se.fit = TRUE)
 p2 <- predictions(mod, type = "link")
-expect_equivalent(p1$fit[160,], p2[p2$rowid == 160, "predicted"])
+expect_equivalent(p1$fit[160,], p2[p2$rowid == 160, "estimate"])
 expect_equivalent(p1$se.fit[160,], p2[p2$rowid == 160, "std.error"], tolerance = .001)
 
 # latent
@@ -84,5 +84,5 @@ p3 <- data.frame(
     at = list(collection_date_num = dat[160, "collection_date_num"]),
     mode = "latent",
     level = 0.95))
-expect_equivalent(p3$emmean, p2[p2$rowid == 160, "predicted"])
+expect_equivalent(p3$emmean, p2[p2$rowid == 160, "estimate"])
 expect_equivalent(p3$SE, p2[p2$rowid == 160, "std.error"])

@@ -17,6 +17,6 @@ mm <- marginalmeans(
     df = insight::get_df(mod),
     conf_level = 0.95)
 
-expect_equivalent(em$estimate, mm$marginalmean)
+expect_equivalent(em$estimate, mm$estimate)
 expect_equivalent(em$lower.CL, mm$conf.low)
 expect_equivalent(em$upper.CL, mm$conf.high)

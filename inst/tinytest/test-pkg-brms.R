@@ -119,7 +119,7 @@ set.seed(1024)
 p2 <- predictions(brms_mixed_3, newdata = nd, allow_new_levels = TRUE, sample_new_levels = "gaussian")
 set.seed(1024)
 p3 <- predictions(brms_mixed_3, newdata = nd, allow_new_levels = TRUE, sample_new_levels = "uncertainty")
-expect_false(any(p1$predicted == p2$predicted))
+expect_false(any(p1$estimate == p2$estimate))
 expect_equivalent(p1, p3)
 expect_inherits(posteriordraws(p3), "data.frame")
 
@@ -128,15 +128,15 @@ expect_inherits(posteriordraws(p3), "data.frame")
 w <- apply(posterior_linpred(brms_mixed_3), 2, stats::median)
 x <- get_predict(brms_mixed_3, newdata = tmp, type = "link")
 y <- predictions(brms_mixed_3, type = "link")
-expect_equivalent(w, x$predicted)
-expect_equivalent(w, y$predicted)
+expect_equivalent(w, x$estimate)
+expect_equivalent(w, y$estimate)
 
 # response
 w <- apply(posterior_epred(brms_mixed_3), 2, stats::median)
 x <- get_predict(brms_mixed_3, type = "response")
 y <- predictions(brms_mixed_3, type = "response")
-expect_equivalent(w, x$predicted)
-expect_equivalent(w, y$predicted)
+expect_equivalent(w, x$estimate)
+expect_equivalent(w, y$estimate)
 
 # no random effects
 w1 <- apply(posterior_epred(brms_mixed_3), 2, stats::median)
@@ -144,8 +144,8 @@ w2 <- apply(posterior_epred(brms_mixed_3, re_formula = NA), 2, stats::median)
 x <- get_predict(brms_mixed_3, re_formula = NA, type = "response")
 y <- predictions(brms_mixed_3, re_formula = NA, type = "response")
 expect_true(all(w1 != w2))
-expect_equivalent(w2, x$predicted)
-expect_equivalent(w2, y$predicted)
+expect_equivalent(w2, x$estimate)
+expect_equivalent(w2, y$estimate)
 
 
 # brms: cumulative: predictions: no validity
@@ -209,7 +209,7 @@ expect_true(all(p1$conf.high > p2$conf.high))
 # re_formula
 p1 <- predictions(brms_epi, newdata = datagrid(patient = 1))
 p2 <- predictions(brms_epi, newdata = datagrid(patient = 1), re_formula = NA)
-expect_false(p1$predicted == p2$predicted)
+expect_false(p1$estimate == p2$estimate)
 expect_false(p1$conf.low == p2$conf.low)
 expect_false(p1$conf.high == p2$conf.high)
 
@@ -220,7 +220,7 @@ exit_if_not(requiet("emmeans"))
 em <- emmeans::emmeans(brms_numeric, ~hp, "hp", at = list(hp = c(100, 120)))
 em <- data.frame(em)
 pred <- predictions(brms_numeric, newdata = datagrid(hp = c(100, 120)), type = "link")
-expect_equivalent(pred$predicted, em$emmean)
+expect_equivalent(pred$estimate, em$emmean)
 expect_equivalent(pred$conf.low, em$lower.HPD)
 expect_equivalent(pred$conf.high, em$upper.HPD)
 
@@ -411,7 +411,7 @@ p2 <- predictions(
     brms_lognormal_hurdle,
     newdata = datagrid(lifeExp = seq(30, 80, 10)),
     dpar = "mu")
-expect_true(all(p1$predicted != p2$predicted))
+expect_true(all(p1$estimate != p2$estimate))
 
 eps <- 0.01
 cmp1 <- comparisons(
@@ -485,7 +485,7 @@ expect_inherits(p1, "predictions")
 expect_inherits(p2, "predictions")
 expect_equivalent(nrow(p1), 1)
 expect_equivalent(nrow(p2), 1)
-expect_equivalent(p1$predicted, p2$predicted)
+expect_equivalent(p1$estimate, p2$estimate)
 expect_true(all(c("conf.low", "conf.high") %in% colnames(p1)))
 expect_true(all(c("conf.low", "conf.high") %in% colnames(p2)))
 
@@ -498,7 +498,7 @@ p3 <- predictions(
 expect_inherits(p3, "predictions")
 expect_equivalent(nrow(p3), 2)
 expect_equivalent(p3$term, c("Contrast A", "Contrast B"))
-expect_equivalent(p3$predicted[1], -p3$predicted[2])
+expect_equivalent(p3$estimate[1], -p3$estimate[2])
 
 
 # `by` argument is supported for predictions() because it is a simple average.
@@ -575,7 +575,7 @@ void <- capture.output(suppressMessages(
 
 p1 <- predictions(mod, type = "link")
 p2 <- predictions(mod, type = "link", transform_post = exp)
-expect_equivalent(exp(p1$predicted), p2$predicted)
+expect_equivalent(exp(p1$estimate), p2$estimate)
 expect_equivalent(exp(p1$conf.low), p2$conf.low)
 expect_equivalent(exp(p1$conf.high), p2$conf.high)
 expect_equivalent(exp(attr(p1, "posterior_draws")), attr(p2, "posterior_draws"))
@@ -595,10 +595,10 @@ by <- data.frame(
 p1 <- predictions(brms_cumulative_random, newdata = "mean")
 p2 <- predictions(brms_cumulative_random, newdata = "mean", by = by)
 p3 <- predictions(brms_cumulative_random, newdata = "mean", by = by, byfun = sum)
-expect_equivalent(mean(p1$predicted[1:2]), p2$predicted[1], tolerance = 0.1)
-expect_equivalent(mean(p1$predicted[3:4]), p2$predicted[2], tolerance = 0.1)
-expect_equivalent(sum(p1$predicted[1:2]), p3$predicted[1], tolerance = 0.1)
-expect_equivalent(sum(p1$predicted[3:4]), p3$predicted[2], tolerance = 0.1)
+expect_equivalent(mean(p1$estimate[1:2]), p2$estimate[1], tolerance = 0.1)
+expect_equivalent(mean(p1$estimate[3:4]), p2$estimate[2], tolerance = 0.1)
+expect_equivalent(sum(p1$estimate[1:2]), p3$estimate[1], tolerance = 0.1)
+expect_equivalent(sum(p1$estimate[3:4]), p3$estimate[2], tolerance = 0.1)
 
 
 

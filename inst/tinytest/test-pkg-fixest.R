@@ -252,7 +252,7 @@ dat <- mtcars
 dat$mpg[1] <- NA
 mod <- fepois(hp ~ mpg + am, data = dat)
 p <- predictions(mod, by = "am")
-expect_false(anyNA(p$predicted))
+expect_false(anyNA(p$estimate))
 expect_false(anyNA(p$std.error))
 
 

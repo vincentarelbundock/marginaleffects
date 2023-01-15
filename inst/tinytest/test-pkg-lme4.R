@@ -71,8 +71,8 @@ w <- predict(mod, type = "link")
 x <- get_predict(mod, type = "link")
 y <- get_predict(mod, type = "link", conf.level = .9)
 z <- get_predicted(mod, predict = "link")
-expect_equivalent(w, x$predicted)
-expect_equivalent(w, y$predicted)
+expect_equivalent(w, x$estimate)
+expect_equivalent(w, y$estimate)
 expect_equivalent(w, as.numeric(z))
 
 # type = "response"
@@ -80,8 +80,8 @@ w <- predict(mod, type = "response")
 x <- get_predict(mod, type = "response")
 y <- get_predict(mod, type = "response", conf.level = .9)
 z <- get_predicted(mod, predict = "expectation")
-expect_equivalent(w, x$predicted)
-expect_equivalent(w, y$predicted)
+expect_equivalent(w, x$estimate)
+expect_equivalent(w, y$estimate)
 expect_equivalent(w, as.numeric(z))
 
 # confidence intervals (weak test)
@@ -94,8 +94,8 @@ expect_true(all(w$conf.high > x$conf.high))
 w <- predict(mod, re.form = NA, type = "response")
 x <- get_predict(mod, re.form = NA, type = "response")
 y <- get_predict(mod, include_random = FALSE, type = "response")
-expect_equivalent(w, x$predicted)
-expect_equivalent(w, y$predicted)
+expect_equivalent(w, x$estimate)
+expect_equivalent(w, y$estimate)
 
 
 # glmer vs. stata vs. emtrends
@@ -119,8 +119,8 @@ nd <- datagrid(model = mod, clus = NA, x1 = -1:1)
 w <- predict(mod, newdata = nd, re.form = NA, type = "response")
 x <- get_predict(mod, newdata = nd, re.form = NA)
 y <- predictions(mod, newdata = nd, re.form = NA, type = "response")
-expect_equivalent(w, x$predicted)
-expect_equivalent(w, y$predicted)
+expect_equivalent(w, x$estimate)
+expect_equivalent(w, y$estimate)
 
 
 # incompatible arguments
@@ -274,7 +274,7 @@ expect_inherits(pred2, "predictions")
 expect_inherits(pred3, "predictions")
 expect_equivalent(pred1$estimate, pred2$estimate)
 expect_equivalent(pred1$std.error, pred2$std.error)
-expect_true(all(pred1$predicted != pred3$predicted))
+expect_true(all(pred1$estimate != pred3$estimate))
 
 # sattertwhaite
 tmp <- mtcars

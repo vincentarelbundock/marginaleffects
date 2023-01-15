@@ -59,7 +59,7 @@ nd <- datagrid(model = m1, y = seq(-2.5, 2.5, by = 0.25))
 p1 <- predictions(m1, newdata = nd, type = "link")
 p2 <- as.data.frame(predict(m1, newdata = nd, se.fit = TRUE))
 
-expect_equal(p1$predicted, p2$fit)
+expect_equal(p1$estimate, p2$fit)
 expect_equal(p1$std.error, p2$se.fit)
 
 set.seed(12345)
@@ -75,7 +75,7 @@ p1 <- predictions(m2, type = "link")
 p2 <- predictions(m2, newdata = dat, type = "link")
 p3 <- as.data.frame(predict(m2, se.fit = TRUE, type = "link"))
 
-expect_equal(p1$predicted, p3$fit)
+expect_equal(p1$estimate, p3$fit)
 expect_equal(p1$std.error, p3$se.fit)
-expect_equal(p2$predicted, p3$fit)
+expect_equal(p2$estimate, p3$fit)
 expect_equal(p2$std.error, p3$se.fit)

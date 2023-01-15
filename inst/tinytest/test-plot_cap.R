@@ -20,13 +20,13 @@ p2 <- predictions(
     newdata = datagrid(mpg = range, am_fct = 0:1))
 p2$am_fct <- as.numeric(as.character(p2$am_fct))
 p2 <- p2[order(-p2$am_fct, p2$mpg),]
-expect_equivalent(p1$predicted, p2$predicted)
+expect_equivalent(p1$estimate, p2$estimate)
 
 p1$condition1 <- as.character(p1$condition1)
 p1$condition2 <- as.character(p1$condition2)
 
-x <- p1[p1$condition1 == "1" & p1$condition2 == "Min", "predicted"]
-y <- p2[p2$am_fct == 1 & p2$mpg == 10.4, "predicted"]
+x <- p1[p1$condition1 == "1" & p1$condition2 == "Min", "estimate"]
+y <- p2[p2$am_fct == 1 & p2$mpg == 10.4, "estimate"]
 expect_equivalent(x, y)
 
 # threenum
@@ -44,7 +44,7 @@ p2 <- predictions(
     newdata = datagrid(mpg = threenum, am_fct = 0:1))
 p2$am_fct <- as.numeric(as.character(p2$am_fct))
 p2 <- p2[order(-p2$am_fct, p2$mpg),]
-expect_equivalent(p1$predicted, p2$predicted)
+expect_equivalent(p1$estimate, p2$estimate)
 
 
 # Issue #550
@@ -55,7 +55,7 @@ dat[["log_x"]] <- log(x)
 dat[["log_y"]] <- log(y)
 model <- lm(log(y) ~ 1 + log(x), data = dat)
 p <- plot_cap(model, condition = "x", draw = FALSE)
-expect_false(any(is.na(p$predicted)))
+expect_false(any(is.na(p$estimate)))
 expect_equal(nrow(p), 25)
 
 

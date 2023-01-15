@@ -21,7 +21,7 @@ mm <- marginalmeans(
     cross = FALSE)
 em1 <- data.frame(emmeans(mod, ~angle))
 em2 <- data.frame(emmeans(mod, ~noise))
-expect_equal(mm$marginalmean, c(em1$emmean, em2$emmean))
+expect_equal(mm$estimate, c(em1$emmean, em2$emmean))
 expect_equal(mm$std.error, c(em1$SE, em2$SE))
 
 # contrasts vs emmeans
@@ -41,7 +41,7 @@ pre <- predictions(
                        noise = md_12.1$noise))
 emm <- emmeans(mod, c("noise", "angle"))
 emm <- data.frame(emm)
-expect_equivalent(pre$predicted, emm$emmean)
+expect_equivalent(pre$estimate, emm$emmean)
 expect_equivalent(pre$std.error, emm$SE)
 
 
@@ -53,5 +53,5 @@ mod <- suppressMessages(aov_car(
 
 em <- data.frame(emmeans(mod, ~ phase))
 mm <- marginalmeans(mod, "phase")
-expect_equivalent(mm$marginalmean, em$emmean)
+expect_equivalent(mm$estimate, em$emmean)
 expect_equivalent(mm$std.error, em$SE)

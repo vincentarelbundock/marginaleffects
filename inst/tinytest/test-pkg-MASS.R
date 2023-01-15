@@ -123,7 +123,7 @@ mod <- MASS::polr(factor(gear) ~ mpg + factor(cyl), data = mtcars, Hess = TRUE)
 pred <- suppressMessages(predictions(mod, type = "probs"))
 expect_predictions(pred)
 # bugs stay dead
-expect_true(all(c("rowid", "type", "predicted", "std.error", "group") %in% colnames(pred)))
+expect_true(all(c("rowid", "type", "estimate", "std.error", "group") %in% colnames(pred)))
 
 
 # glm.nb: predictions: no validity

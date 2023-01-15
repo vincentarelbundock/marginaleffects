@@ -71,7 +71,7 @@ mod <- coxph(Surv(time, status) ~ x + strata(sex),
              ties = "breslow")
 p1 <- predictions(mod, type = "lp")
 p2 <- predictions(mod, type = "risk")
-expect_true(all(p1$predicted != p2$predicted))
+expect_true(all(p1$estimate != p2$estimate))
 
 
 

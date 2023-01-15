@@ -10,14 +10,14 @@ exit_if_not(requiet("insight"))
 mod <- glm(vs ~ mpg + factor(cyl), data = mtcars, family = binomial)
 em <- emmeans(mod, ~cyl, type = "response")
 mm <- marginalmeans(mod)
-expect_equal(data.frame(em)$prob, mm$marginalmean)
+expect_equal(data.frame(em)$prob, mm$estimate)
 expect_equal(data.frame(em)$asymp.LCL, mm$conf.low)
 expect_equal(data.frame(em)$asymp.UCL, mm$conf.high)
 
 mod <- glm(breaks ~ wool * tension, family = Gamma, data = warpbreaks)
 em <- suppressMessages(emmeans(mod, ~wool, type = "response", df = Inf))
 mm <- marginalmeans(mod, variables = "wool")
-expect_equal(data.frame(em)$response, mm$marginalmean)
+expect_equal(data.frame(em)$response, mm$estimate)
 # TODO: 1/eta link function inverts order of CI. Should we clean this up?
 expect_equal(data.frame(em)$asymp.LCL, mm$conf.high)
 expect_equal(data.frame(em)$asymp.UCL, mm$conf.low)
@@ -41,9 +41,9 @@ mod <- lm(mpg ~ cyl + am + vs + hp, dat)
 mm1 <- marginalmeans(mod, variables = "cyl")
 mm2 <- marginalmeans(mod, variables = "cyl", variables_grid = "vs")
 mm3 <- marginalmeans(mod, variables = "cyl", variables_grid = "am")
-expect_false(all(mm1$marginalmean == mm2$marginalmean))
-expect_false(all(mm1$marginalmean == mm3$marginalmean))
-expect_false(all(mm2$marginalmean == mm3$marginalmean))
+expect_false(all(mm1$estimate == mm2$estimate))
+expect_false(all(mm1$estimate == mm3$estimate))
+expect_false(all(mm2$estimate == mm3$estimate))
 
 
 # tidy and glance
@@ -80,11 +80,11 @@ expect_equivalent(mm$p.value, em$p.value)
 mod <- lm(mpg ~ cyl + am + hp, dat)
 em <- broom::tidy(emmeans::emmeans(mod, "cyl"))
 me <- marginalmeans(mod, variables = "cyl")
-expect_equivalent(me$marginalmean, em$estimate)
+expect_equivalent(me$estimate, em$estimate)
 expect_equivalent(me$std.error, em$std.error)
 em <- broom::tidy(emmeans::emmeans(mod, "am"))
 me <- marginalmeans(mod, variables = "am")
-expect_equivalent(me$marginalmean, em$estimate)
+expect_equivalent(me$estimate, em$estimate)
 expect_equivalent(me$std.error, em$std.error)
 
 
@@ -94,11 +94,11 @@ mod <- lm(mpg ~ cyl * am, dat)
 em <- suppressMessages(broom::tidy(emmeans::emmeans(mod, "cyl")))
 me <- marginalmeans(mod, variables = "cyl")
 me <- me[order(me$value),]
-expect_equivalent(me$marginalmean, em$estimate)
+expect_equivalent(me$estimate, em$estimate)
 em <- suppressMessages(broom::tidy(emmeans::emmeans(mod, "am")))
 me <- suppressWarnings(marginalmeans(mod, variables = "am"))
 me <- me[order(me$value),]
-expect_equivalent(me$marginalmean, em$estimate)
+expect_equivalent(me$estimate, em$estimate)
 
 
 # error: no factor
@@ -113,24 +113,24 @@ mod2 <- glm(vs ~ factor(am) + factor(gear) + mpg, data = mtcars, family = binomi
 # wts = "cells"
 em <- data.frame(emmeans(mod1, ~am, weights = "cells"))
 mm <- marginalmeans(mod1, variables = "am", wts = "cells")
-expect_equivalent(mm$marginalmean, em$emmean)
+expect_equivalent(mm$estimate, em$emmean)
 expect_equivalent(mm$std.error, em$SE)
 
 em <- data.frame(emmeans(mod2, ~am, weights = "cells", type = "response"))
 mm <- marginalmeans(mod2, variables = "am", wts = "cells")
-expect_equivalent(mm$marginalmean, em$prob)
+expect_equivalent(mm$estimate, em$prob)
 expect_equivalent(mm$conf.low, em$asymp.LCL)
 expect_equivalent(mm$conf.high, em$asymp.UCL)
 
 # wts = "proportional"
 em <- data.frame(emmeans(mod1, ~am, weights = "proportional"))
 mm <- marginalmeans(mod1, variables = "am", wts = "proportional")
-expect_equivalent(mm$marginalmean, em$emmean)
+expect_equivalent(mm$estimate, em$emmean)
 expect_equivalent(mm$std.error, em$SE)
 
 em <- data.frame(emmeans(mod2, ~am, weights = "proportional", type = "response"))
 mm <- marginalmeans(mod2, variables = "am", wts = "proportional")
-expect_equivalent(mm$marginalmean, em$prob)
+expect_equivalent(mm$estimate, em$prob)
 expect_equivalent(mm$conf.low, em$asymp.LCL)
 expect_equivalent(mm$conf.high, em$asymp.UCL)
 
@@ -160,7 +160,7 @@ by <- data.frame(
   by = ifelse(1:5 <= 3, "Denver", "Paris"))
 
 mm <- marginalmeans(m, by = by, type = "response")
-expect_equivalent(mm$marginalmean, ma$y)
+expect_equivalent(mm$estimate, ma$y)
 
 
 # simple marginal means for each level of `cyl`

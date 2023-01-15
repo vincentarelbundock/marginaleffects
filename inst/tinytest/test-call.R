@@ -7,9 +7,10 @@ cmp1 <- comparisons(modd)
 cmp1 <- averages(cmp1)
 cmp2 <- averages(comparisons(modd))[, seq_along(cmp1)]
 cmp3 <- comparisons(modd) %>% averages()
-cmp3 <- cmp3[, seq_along(cmp1)]
-expect_equivalent(cmp1, cmp2)
-expect_equivalent(cmp1, cmp3)
+for (col in c("estimate", "std.error", "p.value", "conf.high")) {
+    expect_equivalent(cmp1[[col]], cmp2[[col]])
+    expect_equivalent(cmp1[[col]], cmp3[[col]])
+}
 
 suppressWarnings(rm("modd", .GlobalEnv))
 suppressWarnings(rm("modd"))

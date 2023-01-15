@@ -41,8 +41,8 @@ em1 <- data.frame(emmeans(model, specs = "categ", type = "response"))
 mm2 <- marginalmeans(model, type = "link")
 em2 <- data.frame(emmeans(model, specs = "categ"))
 
-expect_equivalent(mm1$marginalmean, em1$prob, tol = .03)
-expect_equivalent(mm2$marginalmean, em2$emmean, tol = .03)
+expect_equivalent(mm1$estimate, em1$prob, tol = .03)
+expect_equivalent(mm2$estimate, em2$emmean, tol = .03)
 
 exit_file("gam: marginal means `std.error` does not match `emmeans`")
 expect_equivalent(mm1$conf.low, em1$asymp.LCL)

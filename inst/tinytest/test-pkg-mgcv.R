@@ -119,7 +119,7 @@ if (packageVersion("insight") > "0.17.1.6") {
     b <- bam(y ~ s(x0) + s(x1) + s(x2) + s(x3), data = dat)
     p1 <- predictions(b)
     p2 <- predictions(b, exclude = "s(x3)")
-    expect_true(all(p1$predicted != p2$predicted))
+    expect_true(all(p1$estimate != p2$estimate))
 
 
     # exclude a smooth
@@ -134,11 +134,11 @@ if (packageVersion("insight") > "0.17.1.6") {
         Group = "Adults")
 
     expect_equivalent(
-        predictions(model, newdata = nd)$predicted,
+        predictions(model, newdata = nd)$estimate,
         predict(model, newdata = nd)[1])
 
     expect_equivalent(
-        predictions(model, newdata = nd, exclude = "s(Subject)")$predicted,
+        predictions(model, newdata = nd, exclude = "s(Subject)")$estimate,
         predict(model, newdata = nd, exclude = "s(Subject)")[1])
 
 

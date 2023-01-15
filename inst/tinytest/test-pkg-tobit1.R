@@ -33,5 +33,5 @@ expect_equivalent(mfx2$std.error, mar2$SE, tolerance = tol_se)
 # predictions vs. built-in
 mar <- prediction(mod, what = "expvalue")
 mfx <- predictions(mod, type = "expvalue")
-expect_equivalent(mar$fitted, mfx$predicted)
+expect_equivalent(mar$fitted, mfx$estimate)
 

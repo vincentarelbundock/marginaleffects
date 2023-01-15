@@ -31,7 +31,7 @@ p2 <- suppressWarnings(predictions(
     type = "average",
     newdata = head(mtcars)
 ))
-expect_equivalent(p2$predicted, p1[, "Estimate"])
+expect_equivalent(p2$estimate, p1[, "Estimate"])
 expect_equivalent(p2$conf.low, p1[, "Q2.5"])
 expect_equivalent(p2$conf.high, p1[, "Q97.5"])
 

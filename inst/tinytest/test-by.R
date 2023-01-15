@@ -135,7 +135,7 @@ mod <- glm(
     data = dat)
 p <- predictions(mod, by = "children")
 expect_equivalent(nrow(p), 2)
-expect_false(anyNA(p$predicted))
+expect_false(anyNA(p$estimate))
 
 
 # Issue #445: by data frame to collapse response levels
@@ -157,8 +157,8 @@ p2 <- predictions(mod, type = "probs", by = by)
 p3 <- predictions(mod, type = "probs", by = by, hypothesis = "sequential")
 p4 <- predictions(mod, type = "probs", by = by, hypothesis = "reference")
 p5 <- predictions(mod, type = "probs", by = c("am", "vs", "group"))
-expect_equivalent(mean(subset(p1, group == "5")$predicted), p2$predicted[2])
-expect_equivalent(p3$predicted, diff(p2$predicted))
+expect_equivalent(mean(subset(p1, group == "5")$estimate), p2$estimate[2])
+expect_equivalent(p3$estimate, diff(p2$estimate))
 expect_equivalent(nrow(p4), 1)
 expect_equivalent(nrow(p5), 12)
 

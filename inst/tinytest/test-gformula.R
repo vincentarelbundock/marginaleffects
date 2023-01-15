@@ -27,10 +27,10 @@ g1 <- mean(predict(model_additive, newdata = simdat_doB)) -
 g2 <- mean(predict(model_interaction, newdata = simdat_doB)) -
       mean(predict(model_interaction, newdata = simdat_doA))
 
-c1 <- comparisons(model_additive, variable = "group_id")
+c1 <- comparisons(model_additive, variable = "group_id", newdata = simdat)
 c1 <- tidy(c1)
 
-c2 <- comparisons(model_interaction, variable = "group_id")
+c2 <- comparisons(model_interaction, variable = "group_id", newdata = simdat)
 c2 <- tidy(c2)
 
 expect_equivalent(g1, c1$estimate)

@@ -91,7 +91,7 @@ pre1 <- predictions(mod, by = "am")
 pre1 <- pre1[order(pre1$am),]
 pre2 <- predictions(mod)
 pre2 <- aggregate(predicted ~ am, FUN = mean, data = pre2)
-expect_equivalent(pre1$predicted, pre2$predicted)
+expect_equivalent(pre1$estimate, pre2$estimate)
 
 
 #########################################
@@ -101,8 +101,8 @@ pre1 <- predictions(mod, wts = mtcars$w)
 pre2 <- predictions(mod)
 tid1 <- tidy(pre1)
 tid2 <- tidy(pre2)
-expect_equivalent(pre1$predicted, pre2$predicted)
-expect_true(all(tid1$predicted != tid2$predicted))
+expect_equivalent(pre1$estimate, pre2$estimate)
+expect_true(all(tid1$estimate != tid2$estimate))
 
 
 
@@ -112,7 +112,7 @@ expect_true(all(tid1$predicted != tid2$predicted))
 mod <- lm(mpg ~ hp + wt + factor(cyl) + am, data = tmp)
 nd <- datagrid(model = mod, cyl = c(4, 6, 8))
 mm <- predictions(mod, newdata = nd)
-expect_equivalent(mm$predicted, unname(predict(mod, newdata = nd)))
+expect_equivalent(mm$estimate, unname(predict(mod, newdata = nd)))
 
 
 
@@ -145,7 +145,7 @@ expect_equivalent(nrow(mm), 2)
 # `typical`: all logical
 mm <- predictions(mod, newdata = datagrid(am = c(TRUE, FALSE)))
 expect_equivalent(nrow(mm), 2)
-expect_equivalent(length(unique(mm$predicted)), nrow(mm))
+expect_equivalent(length(unique(mm$estimate)), nrow(mm))
 
 
 # `typical`: missing logical
@@ -222,4 +222,4 @@ dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/pscl/bioChem
 mod <- hurdle(art ~ phd + fem | ment, data = dat, dist = "negbin")
 pred <- predictions(mod, newdata = dat)
 expect_inherits(pred, "data.frame")
-expect_true("predicted" %in% colnames(pred))
+expect_true("estimate" %in% colnames(pred))
