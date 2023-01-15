@@ -62,10 +62,24 @@ get_contrasts <- function(model,
             ...))[["value"]]
     }
 
-    # predict() takes up 2/3 of the wall time. This call is only useful for the
-    # main estimate, not for standard errors, so we probably save 1/3 of that
-    # 2/3.
-    if (!isTRUE(delta)) {
+    # predict() takes up 2/3 of the wall time. This call is only useful when we
+    # compute elasticities, or for the main estimate, not for standard errors,
+    # so we probably save 1/3 of that 2/3.
+    elasticities <- c(
+        # "dydx", # useless and expensive
+        "eyex",
+        "eydx",
+        "dyex",
+        # "dydxavg", # useless and expensive
+        "eyexavg",
+        "eydxavg",
+        "dyexavg")
+    fun <- function(x) {
+        out <- checkmate::check_choice(x$transform_pre, choices = elasticities)
+        isTRUE(out)
+    }
+    tmp <- Filter(fun, variables)
+    if (!isTRUE(delta) || length(tmp) > 0) {
         pred_or <- myTryCatch(get_predict(
             model,
             type = type,
@@ -153,15 +167,6 @@ get_contrasts <- function(model,
     # elasticity requires the original (properly aligned) predictor values
     # this will discard factor variables which are duplicated, so in principle
     # it should be the "correct" size
-    elasticities <- c(
-        # "dydx", # useless and expensive
-        "eyex",
-        "eydx",
-        "dyex",
-        # "dydxavg", # useless and expensive
-        "eyexavg",
-        "eydxavg",
-        "dyexavg")
     elasticities <- Filter(
         function(x) is.character(x$transform_pre) && x$transform_pre %in% elasticities,
         variables)
