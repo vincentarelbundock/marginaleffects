@@ -43,7 +43,7 @@ the three functions listed above. Alternatively, one can call it in one step:
 
 \code{slopes(model, by = TRUE)}
 
-\code{average(slopes(model))}
+\code{averages(slopes(model))}
 
 \code{slopes(model) |> averages()}
 
