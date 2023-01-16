@@ -16,7 +16,7 @@
 #' Proceeding in two steps by assigning the unit-level estimates is typically
 #' slower, because the whole estimate must be executed twice.
 #'
-#' Note that the `tidy()` and `summary()` methods are simple wrappers around `averages()`
+#' Note that the `tidy()` and `averages()` methods are simple wrappers around `averages()`
 #' @param x Object produced by the `predictions()`, `comparisons()`, or `slopes()` functions.
 #' @param by Character vector of variable names over which to compute group-wise average estimates. When `by=NULL`, the global average (per term) is reported.
 #' @inheritParams predictions
@@ -43,10 +43,18 @@
 averages <- function (x, by = TRUE, ...) {
     xcall <- substitute(x)
     if (is.call(xcall)) {
-        if (is.null(by) || isFALSE(by)) {
+        if ("by" %in% names(xcall)) {
+            if (!isTRUE(checkmate::check_flag(by, null.ok = TRUE))) {
+                insight::format_error("The `by` argument cannot be used twice.")
+            }
+            out <- recall(xcall, ...)
+        } else if (isTRUE(checkmate::check_flag(by, null.ok = TRUE))) {
             by <- c("term", "group", "contrast")
+            out <- recall(xcall, by = by, ...)
+        } else {
+            out <- recall(xcall, by = by, ...)
         }
-        out <- recall(xcall, by = by, ...)
+        class(out) <- c("averages", class(out))
         return(out)
     }
 
@@ -63,6 +71,7 @@ averages.predictions <- function(x, by = TRUE, byfun = NULL, ...) {
     }
 
     if (!isFALSE(attr(x, "by")) && !is.null(attr(x, "by"))) {
+        class(x) <- c("averages", class(x))
         return(x)
     }
 
@@ -94,6 +103,8 @@ averages.predictions <- function(x, by = TRUE, byfun = NULL, ...) {
 
     attr(out, "averages") <- TRUE
 
+    class(out) <- c("averages", class(out))
+
     return(out)
 }
 
@@ -108,6 +119,7 @@ averages.comparisons <- function(x, by = TRUE, ...) {
 
     # already used `by` in the main call, so we return the main output
     if (!isFALSE(attr(x, "by")) && !is.null(attr(x, "by"))) {
+        class(x) <- c("averages", class(x))
         return(x)
     }
 
@@ -139,6 +151,8 @@ averages.comparisons <- function(x, by = TRUE, ...) {
 
     attr(out, "averages") <- TRUE
 
+    class(out) <- c("averages", class(out))
+
     return(out)
 }
 
@@ -146,3 +160,4 @@ averages.comparisons <- function(x, by = TRUE, ...) {
 #' @rdname averages
 #' @export
 averages.slopes <- averages.comparisons
+

@@ -11,7 +11,7 @@
 # #' mfx <- slopes(mod)
 # #'
 # #' # average marginal effects
-# #' summary(mfx)
+# #' averages(mfx)
 # #' @name summary
 # NULL
 

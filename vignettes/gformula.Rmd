@@ -86,7 +86,7 @@ These simple commands do everything we need to apply the parametric g-formula:
 
 ```{r}
 cmp <- comparisons(fit, variables = list(qsmk = 0:1))
-summary(cmp)
+averages(cmp)
 ```
 
 The rest of the vignette walks through the process in a bit more detail and compares to replication code from Hernán and Robins.
@@ -157,8 +157,8 @@ Now we want to compute the treatment effect with the parametric g-formula, which
 * `comparisons()` automatically produces estimates of uncertainty.
 
 ```{r}
-cmp <- comparisons(std, variables = list(qsmk = 0:1))
-summary(cmp)
+comparisons(std, variables = list(qsmk = 0:1)) |>
+  averages()
 ```
 
 Under the hood, `comparisons()` did exactly what we described in the g-formula steps above:
@@ -225,5 +225,5 @@ bootstrap
 The results are close to those that we obtained with `comparisons()`, but the confidence interval differs slightly because of the difference between bootstrapping and the delta method.
 
 ```{r}
-summary(cmp)
+averages(cmp)
 ```

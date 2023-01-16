@@ -63,7 +63,6 @@ library(marginaleffects)
 library(brms)
 library(ggplot2)
 library(ggdist)
-library(magrittr)
 
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/carData/TitanicSurvival.csv")
 dat$survived <- ifelse(dat$survived == "yes", 1, 0)
@@ -123,11 +122,11 @@ ggplot(pred, aes(x = draw, fill = factor(woman))) +
 
 ## Marginal effects
 
-Use `slopes()` to [compute marginal effects (slopes of the regression equation)](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html) for each row of the dataset, and use `summary()` to compute "Average Marginal Effects", that is, the average of all observation-level marginal effects: 
+Use `slopes()` to [compute marginal effects (slopes of the regression equation)](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html) for each row of the dataset, and use `)` to compute "Average Marginal Effects", that is, the average of all observation-level marginal effects: 
 
 ```{r}
 mfx <- slopes(mod)
-summary(mfx)
+mfx)
 ```
 
 Compute marginal effects with some regressors fixed at user-specified values, and other regressors held at their means:
@@ -210,9 +209,9 @@ nd = datagrid(model = mod,
               party_autonomy = c(TRUE, FALSE),
               civil_liberties = .5,
               region = "Middle East and North Africa")
-p1 <- predictions(mod, type = "response", newdata = nd) %>%
+p1 <- predictions(mod, type = "response", newdata = nd) |>
     posteriordraws()
-p2 <- predictions(mod, type = "prediction", newdata = nd) %>%
+p2 <- predictions(mod, type = "prediction", newdata = nd) |>
     posteriordraws()
 pred <- rbind(p1, p2)
 ```
@@ -498,7 +497,7 @@ comparisons(
     newdata = datagrid(firm = -1:-100),
     allow_new_levels = TRUE,
     sample_new_levels = "gaussian") |> 
-    summary()
+    )
 ```
 
 This is nearly equivalent the `brmsmargins` command output (with slight variations due to different random seeds):
@@ -570,7 +569,7 @@ plot_cap(mod, condition = "oc.gc") +
 
 ```{r}
 mfx <- slopes(mod)
-summary(mfx)
+mfx)
 ```
 
 # Hurdle models
@@ -632,19 +631,19 @@ gapminder <- mod$data
 Adjusted predictions for every observation in the original data:
 
 ```{r}
-predictions(mod) %>% head()
+predictions(mod) |> head()
 ```
 
 Adjusted predictions for the `hu` parameter:
 
 ```{r}
-predictions(mod, dpar = "hu") %>% head()
+predictions(mod, dpar = "hu") |> head()
 ```
 
 Predictions on a different scale:
 
 ```{r}
-predictions(mod, type = "link", dpar = "hu") %>% head()
+predictions(mod, type = "link", dpar = "hu") |> head()
 ```
 
 Plot adjusted predictions as a function of `lifeExp`:
@@ -681,8 +680,8 @@ predictions(
     newdata = datagrid(model = mod,
                        continent = gapminder$continent,
                        year = c(1952, 2007),
-                       lifeExp = seq(30, 80, 1))) %>%
-    posteriordraws() %>%
+                       lifeExp = seq(30, 80, 1))) |>
+    posteriordraws() |>
     ggplot(aes(lifeExp, draw, fill = continent, color = continent)) +
     stat_lineribbon(alpha = .25) +
     facet_grid(year ~ continent)
@@ -693,12 +692,12 @@ predictions(
 What happens to `gdpPercap` when `lifeExp` increases by one?
 
 ```{r}
-comparisons(mod) %>% summary()
+comparisons(mod) |> )
 ```
 What happens to `gdpPercap` when `lifeExp` increases by one standard deviation?
 
 ```{r}
-comparisons(mod, variables = list(lifeExp = "sd")) %>% summary()
+comparisons(mod, variables = list(lifeExp = "sd")) |> )
 ```
 
 What happens to `gdpPercap` when `lifeExp` increases from 50 to 60 and  `year` simultaneously increases its min to its max?
@@ -707,16 +706,16 @@ What happens to `gdpPercap` when `lifeExp` increases from 50 to 60 and  `year` s
 comparisons(
     mod,
     variables = list(lifeExp = c(50, 60), year = "minmax"),
-    cross = TRUE) %>%
-    summary()
+    cross = TRUE) |>
+    )
 ```
 
 Plot draws from the posterior distribution of average contrasts (*not* the same thing as draws from the posterior distribution of contrasts):
 
 ```{r}
-comparisons(mod) %>%
-    summary() %>%
-    posteriordraws() %>%
+comparisons(mod) |>
+    ) |>
+    posteriordraws() |>
     ggplot(aes(estimate, term)) +
     stat_dotsinterval() +
     labs(x = "Posterior distribution of average contrasts", y = "")
@@ -727,13 +726,13 @@ comparisons(mod) %>%
 Average Marginal Effect of `lifeExp` on different scales and for different parameters:
 
 ```{r}
-slopes(mod) |> summary()
+slopes(mod) |> )
 
-slopes(mod, type = "link") |> summary()
+slopes(mod, type = "link") |> )
 
-slopes(mod, dpar = "hu") |> summary()
+slopes(mod, dpar = "hu") |> )
 
-slopes(mod, dpar = "hu", type = "link") |> summary()
+slopes(mod, dpar = "hu", type = "link") |> )
 ```
 
 Plot Conditional Marginal Effects
@@ -760,8 +759,8 @@ comparisons(
     mod,
     type = "link",
     variables = "lifeExp",
-    newdata = datagrid(lifeExp = c(40, 70), continent = gapminder$continent)) %>%
-    posteriordraws() %>%
+    newdata = datagrid(lifeExp = c(40, 70), continent = gapminder$continent)) |>
+    posteriordraws() |>
     ggplot(aes(draw, continent, fill = continent)) +
     stat_dotsinterval() +
     facet_grid(lifeExp ~ .) +
@@ -782,11 +781,11 @@ mod <- insight::download_model("brms_1")
 
 options(marginaleffects_posterior_interval = "hdi")
 options(marginaleffects_posterior_center = mean)
-comparisons(mod) |> summary()
+comparisons(mod) |> )
 
 options(marginaleffects_posterior_interval = "eti")
 options(marginaleffects_posterior_center = stats::median)
-comparisons(mod) |> summary()
+comparisons(mod) |> )
 ```
 
 # Random variables: `posterior` and `ggdist`

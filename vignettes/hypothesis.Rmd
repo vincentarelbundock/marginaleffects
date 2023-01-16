@@ -246,20 +246,20 @@ predictions(
 
 ## Average contrasts or marginal effects
 
-The standard workflow with the `marginaleffects` package is to first call a function like `slopes()` or `comparisons()` to compute unit-level quantities, and then to call `summary()` to aggregate the unit-level quantities into "Average Marginal Effects" or "Average Contrasts." Unfortunately, the `summary()` and `tidy()` functions do not have a `hypothesis` argument, so we cannot use it to conduct hypothesis tests on aggregated quantities. Instead, we can use the `transform_pre` argument to emulate the behavior of `summary()`, computing average marginal effects in a single step.
+The standard workflow with the `marginaleffects` package is to first call a function like `slopes()` or `comparisons()` to compute unit-level quantities, and then to call `averages()` to aggregate the unit-level quantities into "Average Marginal Effects" or "Average Contrasts." We can use the `transform_pre` argument to emulate the behavior of `averages()`, computing average marginal effects in a single step.
 
 First, note that these three commands produce the same results:
 
 ```{r}
 comparisons(mod) |>
-    tidy()
+    averages()
 
 comparisons(
     mod,
     transform_pre = "differenceavg")
 ```
 
-Notice that in the last one we did not need to use `tidy()` or `summary()`, and yet we still obtained average contrasts. [See the transformations section of the Contrasts vignette for more details.](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)
+Notice that in the last one we did not need to use `averages()` or `averages()`, and yet we still obtained average contrasts. [See the transformations section of the Contrasts vignette for more details.](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)
 
 With these results in hand, we can finally conduct a linear hypothesis test between average marginal effects:
 

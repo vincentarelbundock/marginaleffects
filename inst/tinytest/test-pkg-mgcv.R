@@ -90,7 +90,7 @@ if (packageVersion("insight") > "0.17.1.6") {
     x <- runif(n)/20;z <- runif(n);
     f <- test1(x,z)
     y <- f + rnorm(n)*0.2
-    df <- tibble(y, x, z) %>% 
+    df <- tibble(y, x, z) |> 
       mutate(x_lags = tsModel::Lag(x, 0:10),
              L = matrix(0:10, nrow = 1))
     b <- mgcv::gam(y ~ s(z) + te(x_lags, L), data = df)

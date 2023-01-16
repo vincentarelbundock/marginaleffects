@@ -91,7 +91,7 @@ get_vcov.default <- function(model,
 
 
 
-#' Take a `modelsummary()` style `vcov` argument and convert it to
+#' Take a `modelaverages()` style `vcov` argument and convert it to
 #' `insight::get_varcov()`
 #'
 #' @keywords internal

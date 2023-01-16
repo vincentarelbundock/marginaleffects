@@ -132,7 +132,7 @@ knitr::include_graphics("https://user-images.githubusercontent.com/987057/169581
 A dataset with one marginal effect estimate per unit of observation is a bit unwieldy and difficult to interpret. Many analysts like to report the "Average Marginal Effect", that is, the average of all the observation-specific marginal effects. These are easy to compute based on the full `data.frame` shown above, but the `summary` function is convenient:
 
 ```{r}
-summary(mfx)
+averages(mfx)
 ```
 
 Note that since marginal effects are derivatives, they are only properly defined for continuous numeric variables. When the model also includes categorical regressors, the `summary` function will try to display relevant (regression-adjusted) contrasts between different categories, as shown above.
@@ -151,7 +151,7 @@ We can also use the `by` argument the average marginal effects *within different
 
 ```{r}
 mfx2 <- slopes(mod, by = "species", variables = "bill_length_mm")
-summary(mfx2)
+averages(mfx2)
 ```
 
 This is equivalent to manually taking the mean of the observation-level marginal effect for each species sub-group:
@@ -211,8 +211,8 @@ We can use the observation-level marginal effects to compute average (or median,
 ```{r, message=FALSE, warning=FALSE}
 library(dplyr)
 
-slopes(mod, newdata = nd) %>%
-    group_by(term) %>%
+slopes(mod, newdata = nd) |>
+    group_by(term) |>
     summarize(estimate = median(estimate))
 ```
 
@@ -260,8 +260,8 @@ quad <- data.frame(x = rnorm(N))
 quad$y <- 1 + 1 * quad$x + 2 * quad$x^2 + rnorm(N)
 mod <- lm(y ~ x + I(x^2), quad)
 
-slopes(mod, newdata = datagrid(x = -2:2))  %>%
-    mutate(truth = 1 + 4 * x) %>%
+slopes(mod, newdata = datagrid(x = -2:2))  |>
+    mutate(truth = 1 + 4 * x) |>
     select(estimate, truth)
 ```
 
@@ -288,10 +288,10 @@ Typical values include `"response"` and `"link"`, but users should refer to the 
 ```{r}
 mod <- glm(am ~ mpg, family = binomial, data = mtcars)
 mfx <- slopes(mod, type = "response")
-summary(mfx)
+averages(mfx)
 
 mfx <- slopes(mod, type = "link")
-summary(mfx)
+averages(mfx)
 ```
 
 # Regression tables and coefficient plots

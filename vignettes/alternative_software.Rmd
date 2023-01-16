@@ -224,7 +224,7 @@ library(marginaleffects)
 
 # use the mtcars data, set up am as a factor
 data(mtcars)
-mc <- mtcars %>% mutate(am = factor(am))
+mc <- mtcars |> mutate(am = factor(am))
 
 # fit a linear model to mpg with wt x am interaction
 m <- lm(mpg ~ wt*am, data = mc)
@@ -313,7 +313,7 @@ mar <- margins(mod)
 summary(mar)
 
 mfx <- slopes(mod)
-summary(mfx)
+ averages(mfx)
 ```
 
 ## Individual-Level Marginal Effects
@@ -352,7 +352,7 @@ mfx <- slopes(
     mod,
     by = "cyl",
     newdata = datagridcf(cyl = c(4, 6, 8)))
-summary(mfx)
+ averages(mfx)
 ```
 
 ## Adjusted Predictions
@@ -407,7 +407,7 @@ The same results can be obtained with `slopes()` and `summary()` like this:
 library("marginaleffects")
 mod <- lm(mpg ~ cyl + hp + wt, data = mtcars)
 mfx <- slopes(mod)
-summary(mfx)
+ averages(mfx)
 ```
 
 Note that `Stata` reports t statistics while `marginaleffects` reports Z. This produces slightly different p-values because this model has low degrees of freedom: `mtcars` only has 32 rows
@@ -468,7 +468,7 @@ mfx <- slopes(
     variables = "hp",
     by = "cyl",
     newdata = datagridcf(cyl = c(4, 6, 8)))
-summary(mfx)
+ averages(mfx)
 ```
 
 This is equivalent to taking the group-wise mean of observation-level marginal effects (without the `by` argument):
@@ -550,8 +550,8 @@ summary(pred)
 
 predictions(
     mod,
-    newdata = datagridcf(cyl = c(4, 6, 8))) %>%
-    group_by(cyl) %>%
+    newdata = datagridcf(cyl = c(4, 6, 8))) |>
+    group_by(cyl) |>
     summarize(AAP = mean(estimate))
 ```
 
@@ -622,7 +622,7 @@ Compute AMEs using `marginaleffects`:
 
 ```{r}
 mfx <- slopes(bayes.logistic) 
-summary(mfx)
+ averages(mfx)
 ```
 
 The `mpg` element of the `Effect` column from `marginaleffects` matches the the `M` column of the output from `brmsmargins`.
@@ -680,7 +680,7 @@ bm <- brmsmargins(
 data.frame(bm$ContrastSummary)
 
 mfx <- slopes(mlogit)
-summary(mfx)
+ averages(mfx)
 ```
 
 ### AME: Fixed Effects Only (Grand Mean)
@@ -696,7 +696,7 @@ bm <- brmsmargins(
 data.frame(bm$ContrastSummary)
 
 mfx <- slopes(mlogit, re_formula = NA)
-summary(mfx)
+ averages(mfx)
 ```
 
 ## Marginal Effects for Location Scale Models
@@ -741,7 +741,7 @@ bm <- brmsmargins(
 data.frame(bm$ContrastSummary)
 
 mfx <- slopes(ls.fe, re_formula = NA)
-summary(mfx)
+ averages(mfx)
 ```
 
 ### Discrete change and distributional parameter (`dpar`)
@@ -765,7 +765,7 @@ cmp <- comparisons(
   ls.fe,
   variables = list(grp = 0:1),
   dpar = "sigma")
-summary(cmp)
+ averages(cmp)
 ```
 
 ### Marginal effect (continuous) on sigma
@@ -780,7 +780,7 @@ bm <- brmsmargins(
 data.frame(bm$ContrastSummary)
 
 mfx <- slopes(ls.fe, dpar = "sigma", re_formula = NA)
-summary(mfx)
+ averages(mfx)
 ```
 
 # `effects`

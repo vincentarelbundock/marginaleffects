@@ -282,13 +282,7 @@ The main `marginaleffects` functions all include a `by` argument, which allows u
 ```{r}
 comparisons(mod, by = "am")
 
-slopes(mod) |> averages(by = "am")
-```
-
-For a nicer printed output, we can also use the `summary()` function:
-
-```{r}
-predictions(mod) |> summary(by = "cyl")
+slopes(mod) |> averages(by = "cyl")
 ```
 
 Marginal Means are a special case of predictions, which are marginalized (or averaged) across a balanced grid of categorical predictors. To illustrate, we estimate a new model with categorical predictors:

@@ -15,7 +15,7 @@
 #' The `newdata` argument controls where comparisons are evaluated in the predictor
 #' space: "at observed values", "at the mean", "at representative values", etc. 
 #' 
-#' The `summary()` function or `by` argument can aggregate
+#' The `averages()` function or `by` argument can aggregate
 #' unit-level estimates into an "average contrast", "average risk ratio", etc.
 #' 
 #' See the comparisons vignette and package website for worked examples and case studies:
@@ -106,20 +106,19 @@
 #' @examples
 #'
 #' library(marginaleffects)
-#' library(magrittr)
 #'
 #' # Linear model
 #' tmp <- mtcars
 #' tmp$am <- as.logical(tmp$am)
 #' mod <- lm(mpg ~ am + factor(cyl), tmp)
-#' comparisons(mod, variables = list(cyl = "reference")) %>% tidy()
-#' comparisons(mod, variables = list(cyl = "sequential")) %>% tidy()
-#' comparisons(mod, variables = list(cyl = "pairwise")) %>% tidy()
+#' comparisons(mod, variables = list(cyl = "reference")) |> tidy()
+#' comparisons(mod, variables = list(cyl = "sequential")) |> tidy()
+#' comparisons(mod, variables = list(cyl = "pairwise")) |> tidy()
 #'
 #' # GLM with different scale types
 #' mod <- glm(am ~ factor(gear), data = mtcars)
-#' comparisons(mod, type = "response") %>% tidy()
-#' comparisons(mod, type = "link") %>% tidy()
+#' comparisons(mod, type = "response") |> tidy()
+#' comparisons(mod, type = "link") |> tidy()
 #'
 #' # Contrasts at the mean
 #' comparisons(mod, newdata = "mean")
@@ -137,37 +136,37 @@
 #'
 #' # Numeric contrasts
 #' mod <- lm(mpg ~ hp, data = mtcars)
-#' comparisons(mod, variables = list(hp = 1)) %>% tidy()
-#' comparisons(mod, variables = list(hp = 5)) %>% tidy()
-#' comparisons(mod, variables = list(hp = c(90, 100))) %>% tidy()
-#' comparisons(mod, variables = list(hp = "iqr")) %>% tidy()
-#' comparisons(mod, variables = list(hp = "sd")) %>% tidy()
-#' comparisons(mod, variables = list(hp = "minmax")) %>% tidy()
+#' comparisons(mod, variables = list(hp = 1)) |> tidy()
+#' comparisons(mod, variables = list(hp = 5)) |> tidy()
+#' comparisons(mod, variables = list(hp = c(90, 100))) |> tidy()
+#' comparisons(mod, variables = list(hp = "iqr")) |> tidy()
+#' comparisons(mod, variables = list(hp = "sd")) |> tidy()
+#' comparisons(mod, variables = list(hp = "minmax")) |> tidy()
 #'
 #' # using a function to specify a custom difference in one regressor
 #' dat <- mtcars
 #' dat$new_hp <- 49 * (dat$hp - min(dat$hp)) / (max(dat$hp) - min(dat$hp)) + 1
 #' modlog <- lm(mpg ~ log(new_hp) + factor(cyl), data = dat)
 #' fdiff <- \(x) data.frame(x, x + 10)
-#' comparisons(modlog, variables = list(new_hp = fdiff)) %>% summary()
+#' comparisons(modlog, variables = list(new_hp = fdiff)) |> averages()
 #'
 #' # Adjusted Risk Ratio: see the contrasts vignette
 #' mod <- glm(vs ~ mpg, data = mtcars, family = binomial)
 #' cmp <- comparisons(mod, transform_pre = "lnratioavg")
-#' summary(cmp, transform_post = exp)
+#' averages(cmp, transform_post = exp)
 #'
 #' # Adjusted Risk Ratio: Manual specification of the `transform_pre`
 #' cmp <- comparisons(mod, transform_pre = function(hi, lo) log(mean(hi) / mean(lo)))
-#' summary(cmp, transform_post = exp)
+#' averages(cmp, transform_post = exp)
 #
 #' # cross contrasts
 #' mod <- lm(mpg ~ factor(cyl) * factor(gear) + hp, data = mtcars)
 #' cmp <- comparisons(mod, variables = c("cyl", "gear"), cross = TRUE)
-#' summary(cmp)
+#' averages(cmp)
 #'
 #' # variable-specific contrasts
 #' cmp <- comparisons(mod, variables = list(gear = "sequential", hp = 10))
-#' summary(cmp)
+#' averages(cmp)
 #'
 #' # hypothesis test: is the `hp` marginal effect at the mean equal to the `drat` marginal effect
 #' mod <- lm(mpg ~ wt + drat, data = mtcars)
@@ -206,7 +205,7 @@
 #'
 #' mod <- lm(mpg ~ hp * am * vs, data = mtcars)
 #' cmp <- comparisons(mod, variables = "hp", by = c("vs", "am"))
-#' summary(cmp)
+#' averages(cmp)
 #'
 #' library(nnet)
 #' mod <- multinom(factor(gear) ~ mpg + am * vs, data = mtcars, trace = FALSE)

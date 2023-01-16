@@ -50,7 +50,7 @@ Powerful transformations and custom contrasts are made possible by using three a
 
 * `transform_pre`
 * `transform_post`
-* `transform_avg`
+* `transform_post`
 
 Consider the case of a model with a single predictor $x$. To compute average contrasts, we proceed as follows:
 
@@ -59,15 +59,15 @@ Consider the case of a model with a single predictor $x$. To compute average con
 3. `transform_pre`: Compute unit-level contrasts by taking the difference between (or some other function of) adjusted predictions: $\hat{y}_{x+1} - \hat{y}_x$
 4. `transform_post`: Transform the unit-level contrasts or return them as-is.
 5. Compute the average contrast by taking the mean of unit-level contrasts: $1/N \sum_{i=1}^N \hat{y}_{x+1} - \hat{y}_x$
-6. `transform_avg`: Transform the average contrast or return them as-is.
+6. `transform_post`: Transform the average contrast or return them as-is.
 
 The `transform_pre` argument of the `comparisons()` function determines how adjusted predictions are combined to create a contrast. By default, we take a simple difference between predictions with `hi` value of $x$, and predictions with a `lo` value of $x$: `function(hi, lo) hi-lo`.
 
 The `transform_post` argument of the `comparisons()` function applies a custom transformation to the unit-level contrasts.
 
-The `transform_avg` argument is available in the `tidy()` and `summary()` functions. It applies a custom transformation to the average contrast.
+The `transform_post` argument is available in the `averages()` function. It applies a custom transformation to the average contrast.
 
-The difference between `transform_post` and `transform_avg` is that the former is applied *before* we take the average, and the latter is applied *to the average*. This seems like a subtle distinction, but it can be important practical implications, since a function of the average is rarely the same as the average of a function:
+The difference between `transform_post` and `transform_post` is that the former is applied *before* we take the average, and the latter is applied *to the average*. This seems like a subtle distinction, but it can be important practical implications, since a function of the average is rarely the same as the average of a function:
 
 ```{r}
 set.seed(1024)
@@ -84,7 +84,6 @@ The default contrast calculate by the `comparisons()` function is a (untransform
 
 ```{r}
 library(marginaleffects)
-library(magrittr)
 
 mod <- glm(vs ~ mpg, data = mtcars, family = binomial)
 
@@ -105,11 +104,11 @@ con <- yhat_plus - yhat_minus
 mean(con)
 ```
 
-We can use the `comparisons()` and `summary()` functions to obtain the same results:
+We can use the `comparisons()` and `averages()` functions to obtain the same results:
 
 ```{r}
 con <- comparisons(mod)
-summary(con)
+averages(con)
 ```
 
 # Ratios
@@ -117,7 +116,7 @@ summary(con)
 Instead of taking simple differences between adjusted predictions, it can sometimes be useful to compute other forms of contrasts. For example, [the `adjrr` function the `Stata` software package](https://journals.sagepub.com/doi/pdf/10.1177/1536867X1301300304) can compute "adjusted risk ratios", which are ratios of adjusted predictions. To do this in `R`, we use the `transform_pre` argument:
 
 ```{r}
-comparisons(mod, transform_pre = "ratio") %>% summary()
+comparisons(mod, transform_pre = "ratio") |> averages()
 ```
 
 This result is the average adjusted risk ratio, that is, the adjusted predictions when the `mpg` are incremented by 1, divided by the adjusted predictions when `mpg` is at its original value.
@@ -125,15 +124,15 @@ This result is the average adjusted risk ratio, that is, the adjusted prediction
 The `transform_pre` accepts different values for common types of contrasts: 'difference', 'ratio', 'lnratio', 'ratioavg', 'lnratioavg', 'lnoravg', 'differenceavg'. These strings are shortcuts for functions that accept two vectors of adjusted predictions and returns a single vector of contrasts. For example, these two commands yield identical results:
 
 ```{r}
-comparisons(mod, transform_pre = "ratio") %>% summary()
+comparisons(mod, transform_pre = "ratio") |> averages()
 
-comparisons(mod, transform_pre = function(hi, lo) hi / lo) %>% summary()
+comparisons(mod, transform_pre = function(hi, lo) hi / lo) |> averages()
 ```
 
 This mechanism is powerful, because it lets users create fully customized contrasts. Here is a non-sensical example:
 
 ```{r}
-comparisons(mod, transform_pre = function(hi, lo) sqrt(hi) / log(lo + 10)) %>% summary()
+comparisons(mod, transform_pre = function(hi, lo) sqrt(hi) / log(lo + 10)) |> averages()
 ```
 
 The same arguments work in the plotting function `plot_cco()` as well, which allows us to plot various custom contrasts. Here is a comparison of Adjusted Risk Ratio and Adjusted Risk Difference in a model of the probability of survival aboard the Titanic:
@@ -149,7 +148,7 @@ mod_titanic <- glm(
     data = titanic)
 
 cmp <- comparisons(mod_titanic)
-summary(cmp)
+averages(cmp)
 
 p1 <- plot_cco(
     mod_titanic,
@@ -180,8 +179,8 @@ Step 1 is easy to achieve with the `transform_pre` argument described above. Ste
 comparisons(
     mod,
     transform_pre = function(hi, lo) log(mean(hi) / mean(lo)),
-    transform_post = exp) %>%
-    summary()
+    transform_post = exp) |>
+    averages()
 ```
 
 Note that we can use the `lnratioavg` shortcut instead of defining the function ourselves.
@@ -190,18 +189,18 @@ The order of operations in previous command was:
 
 1. Compute the custom unit-level contrasts
 2. Exponentiate them
-3. Take the average using the `summary()` function
+3. Take the average using the `averages()` function
 
 There is a very subtle difference between the procedure above and this code:
 
 ```{r}
 comparisons(
     mod,
-    transform_pre = "lnratioavg") %>%
-    summary(transform_avg = exp)
+    transform_pre = "lnratioavg") |>
+    averages(transform_post = exp)
 ```
 
-Since the `exp` function is now passed to the `transform_avg` argument of `summary()` function, the exponentiation is now done only *after* unit-level contrasts have been averaged. This is what `Stata` appears to does under the hood, and the results are slightly different.
+Since the `exp` function is now passed to the `transform_post` argument of `averages()` function, the exponentiation is now done only *after* unit-level contrasts have been averaged. This is what `Stata` appears to does under the hood, and the results are slightly different.
 
 All the same arguments apply to the plotting functions of the `marginaleffects` package as well. For example we can plot the Adjusted Risk Ratio in a model with a quadratic term:
 
@@ -239,12 +238,12 @@ library(gapminder)
 
 # Build some 0s into the GDP column
 set.seed(1234)
-gapminder <- gapminder::gapminder %>% 
-  filter(continent != "Oceania") %>% 
+gapminder <- gapminder::gapminder |> 
+  filter(continent != "Oceania") |> 
   # Make a bunch of GDP values 0
   mutate(prob_zero = ifelse(lifeExp < 50, 0.3, 0.02),
          will_be_zero = rbinom(n(), 1, prob = prob_zero),
-         gdpPercap0 = ifelse(will_be_zero, 0, gdpPercap)) %>% 
+         gdpPercap0 = ifelse(will_be_zero, 0, gdpPercap)) |> 
   select(-prob_zero, -will_be_zero)
 
 mod <- brm(
@@ -384,9 +383,9 @@ slopes_data <- comparisons(
   variables = list(lifeExp = eps),
   newdata = datagrid(lifeExp = seq(40, 80, 20)),
   transform_pre = function(hi, lo) ((exp(hi) - exp(lo)) / exp(eps)) / eps
-) %>% 
-  select(lifeExp, comparison = estimate) %>%
-  left_join(predictions_data, by = "lifeExp") %>%
+) |> 
+  select(lifeExp, comparison = estimate) |>
+  left_join(predictions_data, by = "lifeExp") |>
   # Point-slope formula: (y - y1) = m(x - x1)
   mutate(intercept = comparison * (-lifeExp) + estimate)
 

@@ -13,7 +13,7 @@ marginal means for 73 classes of statistical models in `R`. Conduct
 linear and non-linear hypothesis tests using the delta method.
 
 The code on this website was executed using `marginaleffects`
-0.8.1.9106. See the [installation
+0.8.1.9108. See the [installation
 section](https://vincentarelbundock.github.io/marginaleffects/#installation)
 to install the latest CRAN or development version.
 
@@ -486,8 +486,11 @@ commands give us the same result: the average predicted outcome in the
 
 ``` r
 predictions(mod) |> averages()
-#>       type estimate std.error statistic p.value conf.low conf.high
-#> 1 response 20.09062 0.3904163   51.4595       0 19.32542  20.85583
+#>   Estimate Std. Error     z   Pr(>|z|) 2.5 % 97.5 %
+#> 1    20.09     0.3904 51.46 < 2.22e-16 19.33  20.86
+#> 
+#> Model type:  lm 
+#> Prediction type:  response
 
 predictions(mod, by = TRUE)
 #>       type estimate std.error statistic p.value conf.low conf.high
@@ -514,24 +517,17 @@ comparisons(mod, by = "am")
 #> 5 response   am mean(1) - mean(0)  1.90289761 2.30862946  0.8242542 0.409795116 -2.62193298  6.427728204  22.48857     22.48857     22.16340  1
 #> 6 response   am mean(1) - mean(0) -1.38300908 2.52499366 -0.5477277 0.583878860 -6.33190570  3.565887552  20.25549     18.55291     20.25549  0
 
-slopes(mod) |> averages(by = "am")
-#>       type term    contrast    estimate  std.error  statistic     p.value    conf.low    conf.high predicted predicted_hi predicted_lo am
-#> 1 response   hp mean(dY/dX) -0.04363961 0.02128997 -2.0497736 0.040386532 -0.08536718 -0.001912043  22.48857     22.48752     22.48857  1
-#> 2 response   hp mean(dY/dX) -0.03426361 0.01586407 -2.1598241 0.030786287 -0.06535662 -0.003170596  20.25549     20.25430     20.25549  0
-#> 3 response   wt mean(dY/dX) -6.07175987 1.97621071 -3.0724253 0.002123269 -9.94506169 -2.198458047  22.48857     22.48598     22.48857  1
-#> 4 response   wt mean(dY/dX) -2.47990263 1.23162894 -2.0135144 0.044060539 -4.89385099 -0.065954270  20.25549     20.25424     20.25549  0
-#> 5 response   am mean(dY/dX)  1.90289761 2.30863295  0.8242530 0.409795824 -2.62193983  6.427735051  22.48857     22.48860     22.48857  1
-#> 6 response   am mean(dY/dX) -1.38300908 2.52499367 -0.5477277 0.583878862 -6.33190573  3.565887583  20.25549     20.25532     20.25549  0
-```
-
-For a nicer printed output, we can also use the `summary()` function:
-
-``` r
-predictions(mod) |> summary(by = "cyl")
-#>   cyl Effect Std. Error     z   Pr(>|z|) 2.5 % 97.5 %
-#> 1   6  20.10     0.5773 34.81 < 2.22e-16 18.96  21.23
-#> 2   4  26.41     0.6100 43.30 < 2.22e-16 25.22  27.61
-#> 3   8  15.12     0.5622 26.89 < 2.22e-16 14.02  16.22
+slopes(mod) |> averages(by = "cyl")
+#>   Term    Contrast Estimate Std. Error       z   Pr(>|z|)    2.5 %    97.5 % cyl
+#> 1   hp mean(dY/dX) -0.03667    0.01048 -3.4996 0.00046588 -0.05721 -0.016134   6
+#> 2   hp mean(dY/dX) -0.05301    0.01989 -2.6657 0.00768339 -0.09199 -0.014034   4
+#> 3   hp mean(dY/dX) -0.02704    0.01738 -1.5553 0.11987297 -0.06110  0.007034   8
+#> 4   wt mean(dY/dX) -4.32457    1.39608 -3.0977 0.00195057 -7.06083 -1.588306   6
+#> 5   wt mean(dY/dX) -6.44404    1.45832 -4.4188 9.9252e-06 -9.30230 -3.585773   4
+#> 6   wt mean(dY/dX) -1.77819    1.00704 -1.7658 0.07743628 -3.75196  0.195572   8
+#> 7   am mean(dY/dX) -1.12930    1.60146 -0.7052 0.48070735 -4.26810  2.009513   6
+#> 8   am mean(dY/dX)  1.27543    2.63009  0.4849 0.62772027 -3.87945  6.430303   4
+#> 9   am mean(dY/dX) -0.54744    2.77930 -0.1970 0.84385090 -5.99477  4.899891   8
 #> 
 #> Model type:  lm 
 #> Prediction type:  response
@@ -605,8 +601,8 @@ indices `b1`, `b2`, `b3`, etc. and get a nicer printout by using
 
 ``` r
 hypotheses(mod, "b3 = 2 * b2") |> summary()
-#>          Term Effect Std. Error       z Pr(>|z|)  2.5 % 97.5 %
-#> 1 b3 = 2 * b2 -1.389      10.78 -0.1289  0.89744 -22.51  19.73
+#>          Term Estimate Std. Error       z Pr(>|z|)  2.5 % 97.5 %
+#> 1 b3 = 2 * b2   -1.389      10.78 -0.1289  0.89744 -22.51  19.73
 #> 
 #> Model type:  lm
 ```

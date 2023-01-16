@@ -285,7 +285,7 @@ mod <- lm(mpg ~ hp + am + carb, data = dat)
 
 # Compute and summarize marginal means
 mm <- marginalmeans(mod)
-summary(mm)
+averages(mm)
 
 # Contrast between marginal means (carb2 - carb1), or "is the 1st marginal means equal to the 2nd?"
 # see the vignette on "Hypothesis Tests and Custom Contrasts" on the `marginaleffects` website.

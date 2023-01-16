@@ -83,7 +83,7 @@ the \code{marginaleffects:::type_dictionary} dataframe.}
 
 \item{wts}{string or numeric: weights to use when computing average
 contrasts or slopes. These weights only affect the averaging in
-\code{tidy()} or \code{summary()}, and not the unit-level estimates themselves.
+\code{averages()}, and not the unit-level estimates themselves.
 \itemize{
 \item string: column name of the weights variable in \code{newdata}. When supplying a column name to \code{wts}, it is recommended to supply the original data (including the weights variable) explicitly to \code{newdata}.
 \item numeric: vector of length equal to the number of rows in the original data or in \code{newdata} (if supplied).
@@ -150,7 +150,7 @@ the dataset used to fit a model.
 The \code{newdata} argument controls where slopes are evaluated in the predictor
 space: "at observed values", "at the mean", "at representative values", etc.
 
-The \code{summary()} function or \code{by} argument can aggregate
+The \code{averages()} function or \code{by} argument can aggregate
 unit-level estimates into an "average slope".
 
 See the slopes vignette and package website for worked examples and case studies:
@@ -277,7 +277,7 @@ head(mfx)
 
 # Average Marginal Effect (AME)
 slopes(mod, by = TRUE)
-summary(mfx)
+averages(mfx)
 tidy(mfx)
 plot(mfx)
 
@@ -295,7 +295,7 @@ slopes(mod, newdata = datagrid(hp = c(100, 110)))
 # values for the `cyl` variable:
 mod2 <- lm(mpg ~ hp * cyl, data = mtcars)
 mfx2 <- slopes(mod2, variables = "hp", by = "cyl")
-summary(mfx2)
+averages(mfx2)
 
 # Marginal Effects at User-Specified Values (counterfactual)
 # Variables not explicitly included in `datagrid()` are held at their

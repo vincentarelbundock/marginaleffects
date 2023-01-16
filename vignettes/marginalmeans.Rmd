@@ -49,10 +49,10 @@ p <- predictions(
 For illustration purposes, it is useful to reshape the above results:
 
 ```{r, echo = FALSE}
-pred <- p %>%
-    select(cyl, am, estimate) %>%
-    pivot_wider(names_from = "am", values_from = "estimate") %>%
-    rowwise() %>%
+pred <- p |>
+    select(cyl, am, estimate) |>
+    pivot_wider(names_from = "am", values_from = "estimate") |>
+    rowwise() |>
     mutate(`Marginal means by cyl` = mean(c(`TRUE`, `FALSE`)))
 row <- data.frame(x = "Marginal means by am",
                   y = mean(pred[["TRUE"]]),
@@ -63,8 +63,8 @@ for (i in 2:ncol(pred)) {
     pred[[i]] <- sprintf("%.1f", pred[[i]])
 }
 pred[pred == "NA"] <- ""
-kbl(pred) %>% 
-    kable_styling() %>%
+kbl(pred) |> 
+    kable_styling() |>
     add_header_above(c(" " = 1, "am" = 2, " " = 1))
 ```
 

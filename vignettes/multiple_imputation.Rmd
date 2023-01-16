@@ -87,7 +87,7 @@ modelsummary(models)
 
 # Categories and Contrasts: Problem and Solution
 
-One particular problem arises in the cases of contrasts and categorical predictors. To see it, notice that when there are contrasts or categorical predictors, the `tidy()` method of `marginaleffects` identifies unique estimates using two columns called `term` and `contrast`:
+One particular problem arises in the cases of contrasts and categorical predictors. To see it, notice that when there are contrasts or categorical predictors, the `averages()` method of `marginaleffects` identifies unique estimates using two columns called `term` and `contrast`:
 
 ```{r, warning = FALSE}
 mod <- lm(mpg ~ factor(cyl), data = dat)

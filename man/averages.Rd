@@ -50,7 +50,7 @@ the three functions listed above. Alternatively, one can call it in one step:
 Proceeding in two steps by assigning the unit-level estimates is typically
 slower, because the whole estimate must be executed twice.
 
-Note that the \code{tidy()} and \code{summary()} methods are simple wrappers around \code{averages()}
+Note that the \code{tidy()} and \code{averages()} methods are simple wrappers around \code{averages()}
 }
 \details{
 Standard errors are estimated using the delta method. See the \code{marginaleffects} website for details.

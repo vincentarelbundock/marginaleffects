@@ -148,7 +148,7 @@ Now we can use the `slopes` function:
 
 ```{r}
 slopes(model, newdata = mtcars, variables = c("hp", "drat")) |>
-    summary()
+    averages()
 
 predictions(model, newdata = mtcars) |>
     head()
@@ -208,7 +208,7 @@ get_predict.customclass <- function(model, newdata, ...) {
 Finally, we can call any `slopes` function and obtain results. Notice that our object of class `customclass` now produces different results than the default `mblogit` object:
 
 ```{r}
-predictions(model) |> summary()
+predictions(model) |> averages()
 
-predictions(model_custom) |> summary()
+predictions(model_custom) |> averages()
 ```

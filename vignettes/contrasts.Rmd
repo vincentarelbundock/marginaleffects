@@ -87,20 +87,20 @@ nrow(cmp)
 nobs(mod)
 ```
 
-A big dataset of contrasts like this one can be unwieldy. A common strategy is to summarize the unit-level contrasts by taking their average. This can be achieved using the `tidy()` or `summary()` functions:
+A big dataset of contrasts like this one can be unwieldy. A common strategy is to summarize the unit-level contrasts by taking their average. This can be achieved using the `averages()` function or the `by` argument:
 
 ```{r}
 cmp <- comparisons(
   mod,
   variables = list(PClass = c("3rd", "1st")))
 
-summary(cmp)
+averages(cmp)
 ```
 
 We can also compute several average contrasts at the same time:
 
 ```{r}
-comparisons(mod) |> summary()
+comparisons(mod) |> averages()
 ```
 
 Note that average contrasts often have a nice interpretation in a causal inference context, as the outcome of parametric g-formula estimation. See this vignette: https://vincentarelbundock.github.io/marginaleffects/articles/gformula.html
@@ -115,7 +115,6 @@ Consider a simple model with a logical and a factor variable:
 
 ```{r}
 library(marginaleffects)
-library(magrittr)
 
 tmp <- mtcars
 tmp$am <- as.logical(tmp$am)
@@ -125,8 +124,8 @@ mod <- lm(mpg ~ am + factor(cyl), tmp)
 The `slopes` function automatically computes contrasts for each level of the categorical variables, relative to the baseline category (`FALSE` for logicals, and the reference level for factors), while holding all other values at their mode or mean:
 
 ```{r}
-mfx <- slopes(mod)
-summary(mfx)
+mfx <- slopes(mod) |> averages()
+mfx
 ```
 
 The summary printed above says that moving from the reference category `4` to the level `6` on the `cyl` factor variable is associated with a change of `r sprintf("%.3f", tidy(mfx)$estimate[2])` in the adjusted prediction. Similarly, the contrast from `FALSE` to `TRUE` on the `am` variable is equal to `r sprintf("%.3f", tidy(mfx)$estimate[1])`.
@@ -134,9 +133,9 @@ The summary printed above says that moving from the reference category `4` to th
 We can obtain different contrasts by using the `comparisons()` function. For example:
 
 ```{r}
-comparisons(mod, variables = list(cyl = "sequential")) %>% tidy()
-comparisons(mod, variables = list(cyl = "pairwise")) %>% tidy()
-comparisons(mod, variables = list(cyl = "reference")) %>% tidy()
+comparisons(mod, variables = list(cyl = "sequential")) |> averages()
+comparisons(mod, variables = list(cyl = "pairwise")) |> averages()
+comparisons(mod, variables = list(cyl = "reference")) |> averages()
 ```
 
 For comparison, this code produces the same results using the `emmeans` package:
@@ -155,9 +154,9 @@ Note that these commands also work on for other types of models, such as GLMs, o
 ```{r}
 mod_logit <- glm(am ~ factor(gear), data = mtcars, family = binomial)
 
-comparisons(mod_logit) %>% tidy()
+comparisons(mod_logit) |> averages()
 
-comparisons(mod_logit, type = "link") %>% tidy()
+comparisons(mod_logit, type = "link") |> averages()
 ```
 
 ## Character predictors
@@ -171,29 +170,29 @@ We can also compute contrasts for differences in numeric variables. For example,
 ```{r}
 mod <- lm(mpg ~ hp, data = mtcars)
 
-comparisons(mod) %>% tidy()
+comparisons(mod) |> averages()
 
 comparisons(
     mod,
-    variables = list(hp = 5)) %>% tidy()
+    variables = list(hp = 5)) |> averages()
 ```
 
 Compare adjusted predictions for a change in the regressor between two arbitrary values:
 
 ```{r}
-comparisons(mod, variables = list(hp = c(90, 110))) %>% tidy()
+comparisons(mod, variables = list(hp = c(90, 110))) |> averages()
 ```
 
 Compare adjusted predictions when the regressor changes across the interquartile range, across one or two standard deviations about its mean, or from across its full range:
 
 ```{r}
-comparisons(mod, variables = list(hp = "iqr")) %>% tidy()
+comparisons(mod, variables = list(hp = "iqr")) |> averages()
 
-comparisons(mod, variables = list(hp = "sd")) %>% tidy()
+comparisons(mod, variables = list(hp = "sd")) |> averages()
 
-comparisons(mod, variables = list(hp = "2sd")) %>% tidy()
+comparisons(mod, variables = list(hp = "2sd")) |> averages()
 
-comparisons(mod, variables = list(hp = "minmax")) %>% tidy()
+comparisons(mod, variables = list(hp = "minmax")) |> averages()
 ```
 
 # Interactions
@@ -209,8 +208,8 @@ mod <- lm(mpg ~ am * factor(cyl), data = mtcars)
 What happens if `am` increases by 1 unit and `cyl` changes from a baseline reference to another level? 
 
 ```{r}
-cmp <- comparisons(mod, variables = c("cyl", "am"))
-summary(cmp)
+comparisons(mod, variables = c("cyl", "am")) |>
+  averages()
 ```
 
 When the `variables` argument is used and the model formula includes interactions, the "cross-contrasts" will automatically be displayed. You can also force `comparisons()` to do it by setting `interactions=TRUE` and using the `variables` argument to specify which variables should be manipulated simultaneously.
@@ -241,10 +240,10 @@ nrow(cmp)
 
 ## Average contrasts
 
-By default, the `slopes()` and `comparisons()` functions compute marginal effects and contrasts for every row of the original dataset. These unit-level estimates can be of great interest, as discussed in [another vignette](https://vincentarelbundock.github.io/marginaleffects/articles/logistic_contrasts.html). Nevertheless, one may want to focus on one-number summaries: the `summary()` function computes the "Average Marginal Effect" or "Average Contrast," by taking the mean of all the unit-level estimates.
+By default, the `slopes()` and `comparisons()` functions compute marginal effects and contrasts for every row of the original dataset. These unit-level estimates can be of great interest, as discussed in [another vignette](https://vincentarelbundock.github.io/marginaleffects/articles/logistic_contrasts.html). Nevertheless, one may want to focus on one-number summaries: the `averages()` function computes the "Average Marginal Effect" or "Average Contrast," by taking the mean of all the unit-level estimates.
 
 ```{r}
-summary(cmp)
+averages(cmp)
 ```
 
 which is equivalent to:
@@ -313,7 +312,7 @@ cmp <- comparisons(
     mod,
     newdata = "marginalmeans",
     variables = c("species", "island"))
-summary(cmp)
+averages(cmp)
 ```
 
 Which is equivalent to this in `emmeans`:
@@ -354,7 +353,7 @@ So far we have focused on simple differences between adjusted predictions. Now, 
 
 * `transform_pre`
 * `transform_post`
-* `transform_avg`
+* `transform_post`
 
 Consider the case of a model with a single predictor $x$. To compute average contrasts, we proceed as follows:
 
@@ -363,15 +362,15 @@ Consider the case of a model with a single predictor $x$. To compute average con
 3. `transform_pre`: Compute unit-level contrasts by taking the difference between (or some other function of) adjusted predictions: $\hat{y}_{x+1} - \hat{y}_x$
 4. `transform_post`: Transform the unit-level contrasts or return them as-is.
 5. Compute the average contrast by taking the mean of unit-level contrasts: $1/N \sum_{i=1}^N \hat{y}_{x+1} - \hat{y}_x$
-6. `transform_avg`: Transform the average contrast or return them as-is.
+6. `transform_post`: Transform the average contrast or return them as-is.
 
 The `transform_pre` argument of the `comparisons()` function determines how adjusted predictions are combined to create a contrast. By default, we take a simple difference between predictions with `hi` value of $x$, and predictions with a `lo` value of $x$: `function(hi, lo) hi-lo`.
 
 The `transform_post` argument of the `comparisons()` function applies a custom transformation to the unit-level contrasts.
 
-The `transform_avg` argument is available in the `tidy()` and `summary()` functions. It applies a custom transformation to the average contrast.
+The `transform_post` argument is available in the `averages()` and `averages()` functions. It applies a custom transformation to the average contrast.
 
-The difference between `transform_post` and `transform_avg` is that the former is applied *before* we take the average, and the latter is applied *to the average*. This seems like a subtle distinction, but it can be important practical implications, since a function of the average is rarely the same as the average of a function:
+The difference between `transform_post` and `transform_post` is that the former is applied *before* we take the average, and the latter is applied *to the average*. This seems like a subtle distinction, but it can be important practical implications, since a function of the average is rarely the same as the average of a function:
 
 ```{r}
 set.seed(1024)
@@ -386,7 +385,6 @@ The default contrast calculate by the `comparisons()` function is a (untransform
 
 ```{r}
 library(marginaleffects)
-library(magrittr)
 
 mod <- glm(vs ~ mpg, data = mtcars, family = binomial)
 
@@ -407,11 +405,10 @@ con <- yhat_plus - yhat_minus
 mean(con)
 ```
 
-We can use the `comparisons()` and `summary()` functions to obtain the same results:
+We can use the `comparisons()` and `averages()` functions to obtain the same results:
 
 ```{r}
-con <- comparisons(mod)
-summary(con)
+comparisons(mod) |> averages()
 ```
 
 # Difference-in-Differences(-in-Differences)
@@ -469,7 +466,7 @@ comparisons(
 Instead of taking simple differences between adjusted predictions, it can sometimes be useful to compute ratios or other functions of predictions. For example, [the `adjrr` function the `Stata` software package](https://journals.sagepub.com/doi/pdf/10.1177/1536867X1301300304) can compute "adjusted risk ratios", which are ratios of adjusted predictions. To do this in `R`, we use the `transform_pre` argument:
 
 ```{r}
-comparisons(mod, transform_pre = "ratio") %>% summary()
+comparisons(mod, transform_pre = "ratio") |> averages()
 ```
 
 This result is the average adjusted risk ratio, that is, the adjusted predictions when the `mpg` are incremented by 1, divided by the adjusted predictions when `mpg` is at its original value.
@@ -477,15 +474,15 @@ This result is the average adjusted risk ratio, that is, the adjusted prediction
 The `transform_pre` accepts different values for common types of contrasts: 'difference', 'ratio', 'lnratio', 'ratioavg', 'lnratioavg', 'lnoravg', 'differenceavg'. These strings are shortcuts for functions that accept two vectors of adjusted predictions and returns a single vector of contrasts. For example, these two commands yield identical results:
 
 ```{r}
-comparisons(mod, transform_pre = "ratio") %>% summary()
+comparisons(mod, transform_pre = "ratio") |> averages()
 
-comparisons(mod, transform_pre = function(hi, lo) hi / lo) %>% summary()
+comparisons(mod, transform_pre = function(hi, lo) hi / lo) |> averages()
 ```
 
 This mechanism is powerful, because it lets users create fully customized contrasts. Here is a non-sensical example:
 
 ```{r}
-comparisons(mod, transform_pre = function(hi, lo) sqrt(hi) / log(lo + 10)) %>% summary()
+comparisons(mod, transform_pre = function(hi, lo) sqrt(hi) / log(lo + 10)) |> averages()
 ```
 
 The same arguments work in the plotting function `plot_cco()` as well, which allows us to plot various custom contrasts. Here is a comparison of Adjusted Risk Ratio and Adjusted Risk Difference in a model of the probability of survival aboard the Titanic:
@@ -501,7 +498,7 @@ mod_titanic <- glm(
     data = titanic)
 
 cmp <- comparisons(mod_titanic)
-summary(cmp)
+averages(cmp)
 
 p1 <- plot_cco(
     mod_titanic,
@@ -531,7 +528,7 @@ comparisons(
     mod,
     transform_pre = function(hi, lo) log(hi / lo),
     transform_post = exp) |>
-    summary()
+    averages()
 ```
 
 Note that we can use the `lnratioavg` shortcut instead of defining the function ourselves.
@@ -540,18 +537,18 @@ The order of operations in previous command was:
 
 1. Compute the custom unit-level log ratios
 2. Exponentiate them
-3. Take the average using the `summary()` function
+3. Take the average using the `averages()` function
 
 There is a very subtle difference between the procedure above and this code:
 
 ```{r}
 comparisons(
     mod,
-    transform_pre = function(hi, lo) log(hi / lo)) %>%
-    summary(transform_avg = exp)
+    transform_pre = function(hi, lo) log(hi / lo)) |>
+    averages(transform_post = exp)
 ```
 
-Since the `exp` function is now passed to the `transform_avg` argument of `summary()` function, the exponentiation is now done only *after* unit-level contrasts have been averaged. This is what `Stata` appears to do under the hood, and the results are slightly different.
+Since the `exp` function is now passed to the `transform_post` argument of `averages()` function, the exponentiation is now done only *after* unit-level contrasts have been averaged. This is what `Stata` appears to do under the hood, and the results are slightly different.
 
 ```{r}
 comparisons(
@@ -596,7 +593,7 @@ mod <- lm(mpg ~ log(new_hp), data = dat)
 comparisons(
   mod,
   variables = list(new_hp = 10)) |>
-  summary()
+  averages()
 ```
 
 Since version 0.7.2 of `marginaleffects`, we can supply arbitrary functions to create custom differences. These functions must accept a vector of values for the predictor of interest, and return a data frame with the same number of rows as the length, and two columns with the values to compare. For example, we can do:
@@ -609,17 +606,17 @@ center_diff <- \(x) data.frame(x - 5, x + 5)
 comparisons(
   mod,
   variables = list(new_hp = forward_diff)) |>
-  summary()
+  averages()
 
 comparisons(
   mod,
   variables = list(new_hp = backward_diff)) |>
-  summary()
+  averages()
 
 comparisons(
   mod,
   variables = list(new_hp = center_diff)) |>
-  summary()
+  averages()
 ```
 
 Notice that the last "centered" difference gives the same results as the default `comparisons()` call.
@@ -646,12 +643,12 @@ library(gapminder)
 
 # Build some 0s into the GDP column
 set.seed(1234)
-gapminder <- gapminder::gapminder %>% 
-  filter(continent != "Oceania") %>% 
+gapminder <- gapminder::gapminder |> 
+  filter(continent != "Oceania") |> 
   # Make a bunch of GDP values 0
   mutate(prob_zero = ifelse(lifeExp < 50, 0.3, 0.02),
          will_be_zero = rbinom(n(), 1, prob = prob_zero),
-         gdpPercap0 = ifelse(will_be_zero, 0, gdpPercap)) %>% 
+         gdpPercap0 = ifelse(will_be_zero, 0, gdpPercap)) |> 
   select(-prob_zero, -will_be_zero)
 
 mod <- brm(
@@ -790,9 +787,9 @@ slopes_data <- comparisons(
   dpar = "mu",
   variables = list(lifeExp = eps),
   newdata = datagrid(lifeExp = seq(40, 80, 20)),
-  transform_pre = function(hi, lo) ((exp(hi) - exp(lo)) / exp(eps)) / eps) %>%
-  select(lifeExp, estimate) %>%
-  left_join(predictions_data, by = "lifeExp") %>%
+  transform_pre = function(hi, lo) ((exp(hi) - exp(lo)) / exp(eps)) / eps) |>
+  select(lifeExp, estimate) |>
+  left_join(predictions_data, by = "lifeExp") |>
   # Point-slope formula: (y - y1) = m(x - x1)
   mutate(intercept = estimate * (-lifeExp) + prediction)
 

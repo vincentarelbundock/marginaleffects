@@ -47,7 +47,7 @@ print.slopes.summary <- function(x,
         "term" = "Term",
         "contrast" = "Contrast",
         "value" = "Value",
-        "estimate" = "Effect",
+        "estimate" = "Estimate",
         "std.error" = "Std. Error",
         "statistic" = "z",
         "p.value" = "Pr(>|z|)",
@@ -73,6 +73,10 @@ print.slopes.summary <- function(x,
 
     # avoid infinite recursion by stripping marginaleffect.summary class
     out <- as.data.frame(out)
+
+    # predicted_* columsn are no longer necessary in summary(), but we want to
+    # keep them in the raw data
+    out <- out[, !colnames(out) %in% c("predicted", "predicted_lo", "predicted_hi")]
 
     # some commands do not generate average contrasts/mfx. E.g., `lnro` with `by`
     print(out)
@@ -112,3 +116,7 @@ print.comparisons.summary <- print.slopes.summary
 #' @noRd
 #' @export
 print.hypotheses.summary <- print.slopes.summary
+
+#' @noRd
+#' @export
+print.averages <- print.slopes.summary

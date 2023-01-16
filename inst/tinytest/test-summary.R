@@ -56,7 +56,7 @@ dat <- mtcars
 mod <- glm(am ~ hp * wt, data = dat, family = binomial)
 mfx <- slopes(mod)
 expect_snapshot_print(
-    summary(mfx) %>% dplyr::select(term, estimate, conf.low, conf.high),
+    summary(mfx) |> dplyr::select(term, estimate, conf.low, conf.high),
     "summary-marginaleffects_dplyr")
 
 

@@ -53,7 +53,7 @@ comparisons(
     mod,
     variables = "treat",
     vcov = "HC3") |>
-    summary()
+    averages()
 ```
 
 Notice that the `treat` coefficient and associate standard error in the `lm_lin` regression are exactly the same as the estimates produced by the `comparisons()` function.

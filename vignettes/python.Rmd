@@ -166,12 +166,12 @@ predictions(mod, newdata = df, by = "Sex")
 
 # contrasts (average)
 comparisons(mod, variables = "Age", newdata = df)  |>
-    summary()
+    averages()
 
 comparisons(mod, variables = list("Age" = "sd"), newdata = df)  |>
-    summary()
+    averages()
 
 # slope (elasticity)
 slopes(mod, variables = "Age", slope = "eyex", newdata = df) |>
-    summary()
+    averages()
 ```

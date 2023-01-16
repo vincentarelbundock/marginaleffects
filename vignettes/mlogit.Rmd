@@ -55,7 +55,7 @@ head(mtcars)
 
 mod <- multinom(factor(gear) ~ hp + mpg, data = mtcars, trace = FALSE)
 
-slopes(mod, type = "probs") %>% summary()
+slopes(mod, type = "probs") |> averages()
 ```
 
 Notice that in such models, we get one marginal effect for each term, for each level of the response variable. For this reason, we should use `"group"` in the `condition` argument (or `facet_*()` function) when calling one of the plotting functions:
@@ -88,7 +88,7 @@ head(TravelMode)
 
 mod <- mlogit(choice ~ wait + gcost | income + size, TravelMode)
 
-slopes(mod, variables = c("income", "size")) %>% summary()
+slopes(mod, variables = c("income", "size")) |> averages()
 ```
 
 Note that the `slopes` function will always return estimates of zero for regressors before the vertical bar in the formula. This is because the `predict()` function supplied by the `mlogit` package does not produce different predictions for different values of these variables.
@@ -100,23 +100,23 @@ To compute different kinds of marginal effects, we can construct customized data
 If we want to compute the slope of the response function (marginal effects) when each of the predictors is fixed to its global mean, we can do:
 
 ```{r}
-nd <- TravelMode %>%
+nd <- TravelMode |>
     summarize(across(c("wait", "gcost", "income", "size"),
               function(x) rep(mean(x), 4)))
 nd
 
-slopes(mod, newdata = nd, variables = c("income", "size")) |> summary()
+slopes(mod, newdata = nd, variables = c("income", "size")) |> averages()
 ```
 
 If we want to compute marginal effects with the `gcost` and `wait` fixed at their mean value, *conditional* on the choice of transportation mode:
 
 ```{r}
-nd <- TravelMode %>%
-    group_by(mode) %>%
+nd <- TravelMode |>
+    group_by(mode) |>
     summarize(across(c("wait", "gcost", "income", "size"), mean))
 nd
 
-slopes(mod, newdata = nd, variables = c("income", "size")) |> summary()
+slopes(mod, newdata = nd, variables = c("income", "size")) |> averages()
 ```
 
 We can also explore more complex alternatives. Here, for example, only one alternative is affected by cost reduction:
@@ -127,5 +127,5 @@ nd <- lapply(1:4, function(i) mutate(nd, gcost = ifelse(1:4 == i, 30, gcost)))
 nd <- bind_rows(nd)
 nd
 
-slopes(mod, newdata = nd, variables = c("income", "size")) |> summary()
+slopes(mod, newdata = nd, variables = c("income", "size")) |> averages()
 ```

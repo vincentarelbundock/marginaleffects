@@ -111,7 +111,7 @@ levels. See examples section.}
 
 \item{wts}{string or numeric: weights to use when computing average
 contrasts or slopes. These weights only affect the averaging in
-\code{tidy()} or \code{summary()}, and not the unit-level estimates themselves.
+\code{averages()}, and not the unit-level estimates themselves.
 \itemize{
 \item string: column name of the weights variable in \code{newdata}. When supplying a column name to \code{wts}, it is recommended to supply the original data (including the weights variable) explicitly to \code{newdata}.
 \item numeric: vector of length equal to the number of rows in the original data or in \code{newdata} (if supplied).
@@ -168,7 +168,7 @@ A \code{data.frame} with one row per observation and several columns:
 Outcome predicted by a fitted model on a specified scale for a given
 combination of values of the predictor variables, such as their observed
 values, their means, or factor levels (a.k.a. "reference grid"). The
-\code{tidy()} and \code{summary()} functions can be used to aggregate the output of
+\code{tidy()} and \code{averages()} functions can be used to aggregate the output of
 \code{predictions()}. To learn more, read the predictions vignette, visit the
 package website, or scroll down this page for a full list of vignettes:
 \itemize{
@@ -298,7 +298,7 @@ library(dplyr)
 mod <- lm(mpg ~ hp * am * vs, mtcars)
 
 pred <- predictions(mod)
-summary(pred)
+averages(pred)
 
 predictions(mod, by = "am")
 
@@ -361,7 +361,7 @@ nom <- multinom(factor(gear) ~ mpg + am * vs, data = mtcars, trace = FALSE)
 predictions(nom, type = "probs") |> head()
 
 # average predictions
-predictions(nom, type = "probs", by = "group") |> summary()
+predictions(nom, type = "probs", by = "group") |> averages()
 
 by <- data.frame(
     group = c("3", "4", "5"),

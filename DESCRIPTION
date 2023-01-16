@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Marginal Effects, Marginal Means, Predictions, and Contrasts
-Version: 0.8.1.9107
+Version: 0.8.1.9108
 Authors@R: 
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -81,7 +81,6 @@ Suggests:
     knitr,
     lme4,
     lmerTest,
-    magrittr,
     margins,
     MASS,
     mclogit,

@@ -106,11 +106,11 @@ library(tidyverse)
 
 predictions(
     mod,
-    newdata = datagrid(cyl = mtcars$cyl, hp = c(100, 110))) %>%
-    select(hp, cyl, estimate) %>%
-    pivot_wider(values_from = estimate, names_from = cyl) %>%
-    kbl(caption = "A table of Adjusted Predictions") %>%
-    kable_styling() %>%
+    newdata = datagrid(cyl = mtcars$cyl, hp = c(100, 110))) |>
+    select(hp, cyl, estimate) |>
+    pivot_wider(values_from = estimate, names_from = cyl) |>
+    kbl(caption = "A table of Adjusted Predictions") |>
+    kable_styling() |>
     add_header_above(header = c(" " = 1, "cyl" = 3))
 ```
 
@@ -132,8 +132,8 @@ dim(nd)
 Then, we can use this dataset and the `predictions` function to create interesting visualizations:
 
 ```{r, fig.asp = 1}
-pred <- predictions(mod, newdata = datagrid(am = 0:1, grid_type = "counterfactual")) %>%
-    select(am, estimate, rowidcf) %>%
+pred <- predictions(mod, newdata = datagrid(am = 0:1, grid_type = "counterfactual")) |>
+    select(am, estimate, rowidcf) |>
     pivot_wider(id_cols = rowidcf, 
                 names_from = am,
                 values_from = estimate)
@@ -169,11 +169,11 @@ An "Average Adjusted Prediction" is the outcome of a two step process:
 1. Create a new dataset with each of the original regressor values, but fixing some regressors to values of interest.
 2. Take the average of the predicted values in this new dataset.
 
-We can obtain AAPs by applying the `tidy()` or `summary()` functions to an object produced by the `predictions()` function:
+We can obtain AAPs by applying the `averages()` functions to an object produced by the `predictions()` function:
 
 ```{r}
 pred <- predictions(mod)
-summary(pred)
+averages(pred)
 ```
 
 This is equivalent to:
@@ -201,7 +201,7 @@ predictions(
 predictions(
     mod,
     newdata = datagridcf(am = 0:1)) |>
-    group_by(am) %>%
+    group_by(am) |>
     summarize(AAP = mean(estimate))
 ```
 
@@ -217,7 +217,7 @@ nom <- multinom(factor(gear) ~ mpg + am * vs, data = mtcars, trace = FALSE)
 predictions(nom, type = "probs") |> head()
 
 # average predictions
-predictions(nom, type = "probs", by = "group") |> summary()
+predictions(nom, type = "probs", by = "group") |> averages()
 ```
 
 We can use custom aggregations by supplying a data frame to the `by` argument. All columns of this data frame must be present in the output of `predictions()`, and the data frame must also include a `by` column of labels. In this example, we "collapse" response groups:
@@ -234,7 +234,7 @@ This can be very useful in combination with the `hypothesis` argument. For examp
 
 ```{r}
 predictions(nom, type = "probs", by = by, hypothesis = "sequential") |>
-    summary()
+    averages()
 ```
 
 We can also use more complicated aggregations. Here, we compute the predicted probability of outcome levels for each value of `cyl`, by collapsing the "3" and "4" outcome levels:
@@ -295,13 +295,13 @@ First, we download the `ggplot2movies` dataset from the [RDatasets archive](http
 
 ```{r, message = FALSE}
 library(tidyverse)
-dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/ggplot2movies/movies.csv") %>%
+dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/ggplot2movies/movies.csv") |>
     mutate(style = case_when(Action == 1 ~ "Action",
                              Comedy == 1 ~ "Comedy",
                              Drama == 1 ~ "Drama",
                              TRUE ~ "Other"),
            style = factor(style),
-           certified_fresh = rating >= 8) %>%
+           certified_fresh = rating >= 8) |>
     dplyr::filter(length < 240)
 
 mod <- glm(certified_fresh ~ length * style, data = dat, family = binomial)

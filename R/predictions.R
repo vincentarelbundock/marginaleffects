@@ -3,7 +3,7 @@
 #' Outcome predicted by a fitted model on a specified scale for a given
 #' combination of values of the predictor variables, such as their observed
 #' values, their means, or factor levels (a.k.a. "reference grid"). The
-#' `tidy()` and `summary()` functions can be used to aggregate the output of
+#' `tidy()` and `averages()` functions can be used to aggregate the output of
 #' `predictions()`. To learn more, read the predictions vignette, visit the
 #' package website, or scroll down this page for a full list of vignettes:
 #' * <https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html>
@@ -92,7 +92,7 @@
 #' mod <- lm(mpg ~ hp * am * vs, mtcars)
 #'
 #' pred <- predictions(mod)
-#' summary(pred)
+#' averages(pred)
 #' 
 #' predictions(mod, by = "am")
 #'
@@ -155,7 +155,7 @@
 #' predictions(nom, type = "probs") |> head()
 #' 
 #' # average predictions
-#' predictions(nom, type = "probs", by = "group") |> summary()
+#' predictions(nom, type = "probs", by = "group") |> averages()
 #' 
 #' by <- data.frame(
 #'     group = c("3", "4", "5"),

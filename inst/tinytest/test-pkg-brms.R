@@ -49,9 +49,8 @@ tmp$grp <- sample(1:5, size = 180, replace = TRUE)
 tmp$cat <- as.factor(sample(1:5, size = 180, replace = TRUE))
 tmp$Reaction_d <-
   ifelse(tmp$Reaction < median(tmp$Reaction), 0, 1)
-exit_if_not(requiet("magrittr"))
-tmp <- tmp %>%
-  dplyr::group_by(grp) %>%
+tmp <- tmp |>
+  dplyr::group_by(grp) |>
   dplyr::mutate(subgrp = sample(1:15, size = dplyr::n(), replace = TRUE))
 void <- capture.output(suppressMessages(
     brms_mixed_3 <- brm(Reaction ~ Days + (1 | grp / subgrp) + (1 | Subject), data = tmp)

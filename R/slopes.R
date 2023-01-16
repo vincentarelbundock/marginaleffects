@@ -10,7 +10,7 @@
 #' The `newdata` argument controls where slopes are evaluated in the predictor
 #' space: "at observed values", "at the mean", "at representative values", etc. 
 #' 
-#' The `summary()` function or `by` argument can aggregate
+#' The `averages()` function or `by` argument can aggregate
 #' unit-level estimates into an "average slope".
 #' 
 #' See the slopes vignette and package website for worked examples and case studies:
@@ -84,7 +84,7 @@
 #' - "dyex": dY/dX / X
 #' @param wts string or numeric: weights to use when computing average
 #' contrasts or slopes. These weights only affect the averaging in
-#' `tidy()` or `summary()`, and not the unit-level estimates themselves.
+#' `averages()`, and not the unit-level estimates themselves.
 #' + string: column name of the weights variable in `newdata`. When supplying a column name to `wts`, it is recommended to supply the original data (including the weights variable) explicitly to `newdata`.
 #' + numeric: vector of length equal to the number of rows in the original data or in `newdata` (if supplied). 
 #' @param hypothesis specify a hypothesis test or custom contrast using a numeric value, vector, or matrix, a string, or a string formula.
@@ -137,7 +137,7 @@
 #'
 #' # Average Marginal Effect (AME)
 #' slopes(mod, by = TRUE)
-#' summary(mfx)
+#' averages(mfx)
 #' tidy(mfx)
 #' plot(mfx)
 #'
@@ -155,7 +155,7 @@
 #' # values for the `cyl` variable:
 #' mod2 <- lm(mpg ~ hp * cyl, data = mtcars)
 #' mfx2 <- slopes(mod2, variables = "hp", by = "cyl")
-#' summary(mfx2)
+#' averages(mfx2)
 #'
 #' # Marginal Effects at User-Specified Values (counterfactual)
 #' # Variables not explicitly included in `datagrid()` are held at their
