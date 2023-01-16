@@ -126,15 +126,17 @@ Use `slopes()` to [compute marginal effects (slopes of the regression equation)]
 
 ```{r}
 mfx <- slopes(mod)
-mfx)
+mfx
 ```
 
 Compute marginal effects with some regressors fixed at user-specified values, and other regressors held at their means:
 
 ```{r}
-slopes(mod,
-                newdata = datagrid(woman = 1,
-                                   passengerClass = "1st"))
+slopes(
+    mod,
+    newdata = datagrid(
+        woman = 1,
+        passengerClass = "1st"))
 ```
 
 Compute and plot conditional marginal effects:
@@ -157,9 +159,9 @@ We can use this dataset to plot our results. For example, to plot the posterior 
 
 ```{r}
 mfx <- slopes(mod,
-                       variables = "age",
-                       newdata = datagrid(woman = 0:1)) |>
-       posteriordraws()
+    variables = "age",
+    newdata = datagrid(woman = 0:1)) |>
+    posteriordraws()
 
 ggplot(mfx, aes(x = draw, fill = factor(woman))) +
     stat_halfeye(slab_alpha = .5) +
@@ -277,10 +279,11 @@ The slope of this line for different values of civil liberties can be obtained w
 
 ```{r}
 mfx <- slopes(mod,
-                       newdata = datagrid(civil_liberties = c(.2, .5, .8),
-                                          party_autonomy = FALSE,
-                                          region = "Middle East and North Africa"),
-                       variables = "civil_liberties")
+    newdata = datagrid(
+        civil_liberties = c(.2, .5, .8),
+        party_autonomy = FALSE,
+        region = "Middle East and North Africa"),
+    variables = "civil_liberties")
 mfx
 ```
 
@@ -299,13 +302,15 @@ ggplot(mfx, aes(x = draw, fill = factor(civil_liberties))) +
 The `slopes` function can use the ellipsis (`...`) to push any argument forward to the `posterior_predict` function. This can alter the types of predictions returned. For example, [the `re_formula=NA` argument of the `posterior_predict.brmsfit` method](https://cran.r-project.org/web/packages/brms/brms.pdf) will compute marginaleffects *without* including any group-level effects:
 
 ```{r}
-mfx <- slopes(mod,
-                       newdata = datagrid(civil_liberties = c(.2, .5, .8),
-                                          party_autonomy = FALSE,
-                                          region = "Middle East and North Africa"),
-                       variables = "civil_liberties",
-                       re_formula = NA) |>
-       posteriordraws()
+mfx <- slopes(
+    mod,
+    newdata = datagrid(
+        civil_liberties = c(.2, .5, .8),
+        party_autonomy = FALSE,
+        region = "Middle East and North Africa"),
+    variables = "civil_liberties",
+    re_formula = NA) |>
+    posteriordraws()
 
 ggplot(mfx, aes(x = draw, fill = factor(civil_liberties))) +
     stat_halfeye(slab_alpha = .5) +
@@ -328,15 +333,17 @@ emtrends(mod,
 ## Global grand mean
 
 ```{r, fig.width = 9}
-pred <- predictions(mod,
-                    re_formula = NA,
-                    newdata = datagrid(party_autonomy = c(TRUE, FALSE))) |>
-        posteriordraws()
+pred <- predictions(
+    mod,
+    re_formula = NA,
+    newdata = datagrid(party_autonomy = c(TRUE, FALSE))) |>
+    posteriordraws()
 
-mfx <- slopes(mod,
-                       re_formula = NA,
-                       variables = "party_autonomy") |>
-       posteriordraws()
+mfx <- slopes(
+    mod,
+    re_formula = NA,
+    variables = "party_autonomy") |>
+    posteriordraws()
 
 plot1 <- ggplot(pred, aes(x = draw, fill = party_autonomy)) +
          stat_halfeye(slab_alpha = .5) +
@@ -410,11 +417,13 @@ ggplot(pred, aes(x = draw, y = region , fill = party_autonomy)) +
 TRUE/FALSE contrasts (marginal effects) of party autonomy by region:
 
 ```{r, fig.asp = .9}
-mfx <- slopes(mod,
-                       variables = "party_autonomy",
-                       newdata = datagrid(region = vdem_2015$region,
-                                          civil_liberties = .5)) |>
-        posteriordraws()
+mfx <- slopes(
+    mod,
+    variables = "party_autonomy",
+    newdata = datagrid(
+        region = vdem_2015$region,
+        civil_liberties = .5)) |>
+    posteriordraws()
 
 ggplot(mfx, aes(x = draw, y = region , fill = party_autonomy)) +
     stat_halfeye(slab_alpha = .5) +
@@ -497,7 +506,7 @@ comparisons(
     newdata = datagrid(firm = -1:-100),
     allow_new_levels = TRUE,
     sample_new_levels = "gaussian") |> 
-    )
+    averages()
 ```
 
 This is nearly equivalent the `brmsmargins` command output (with slight variations due to different random seeds):
@@ -569,7 +578,7 @@ plot_cap(mod, condition = "oc.gc") +
 
 ```{r}
 mfx <- slopes(mod)
-mfx)
+averages(mfx)
 ```
 
 # Hurdle models
@@ -578,7 +587,7 @@ mfx)
 This section replicates some analyses from [yet another amazing blog post by Andrew Heiss.](https://www.andrewheiss.com/blog/2022/05/09/hurdle-lognormal-gaussian-brms/#emmeans-with-hurdle-models)
 
 To begin, we estimate a hurdle model in `brms` with random effects, using data from the `gapminder` package:
-
+704G
 ```{r, eval = FALSE}
 library(gapminder)
 library(brms)
@@ -692,12 +701,12 @@ predictions(
 What happens to `gdpPercap` when `lifeExp` increases by one?
 
 ```{r}
-comparisons(mod) |> )
+comparisons(mod) |> averages()
 ```
 What happens to `gdpPercap` when `lifeExp` increases by one standard deviation?
 
 ```{r}
-comparisons(mod, variables = list(lifeExp = "sd")) |> )
+comparisons(mod, variables = list(lifeExp = "sd")) |> averages()
 ```
 
 What happens to `gdpPercap` when `lifeExp` increases from 50 to 60 and  `year` simultaneously increases its min to its max?
@@ -707,14 +716,14 @@ comparisons(
     mod,
     variables = list(lifeExp = c(50, 60), year = "minmax"),
     cross = TRUE) |>
-    )
+    averages()
 ```
 
 Plot draws from the posterior distribution of average contrasts (*not* the same thing as draws from the posterior distribution of contrasts):
 
 ```{r}
 comparisons(mod) |>
-    ) |>
+    averages() |>
     posteriordraws() |>
     ggplot(aes(estimate, term)) +
     stat_dotsinterval() +
@@ -726,13 +735,13 @@ comparisons(mod) |>
 Average Marginal Effect of `lifeExp` on different scales and for different parameters:
 
 ```{r}
-slopes(mod) |> )
+slopes(mod) |> averages()
 
-slopes(mod, type = "link") |> )
+slopes(mod, type = "link") |> averages()
 
-slopes(mod, dpar = "hu") |> )
+slopes(mod, dpar = "hu") |> averages()
 
-slopes(mod, dpar = "hu", type = "link") |> )
+slopes(mod, dpar = "hu", type = "link") |> averages()
 ```
 
 Plot Conditional Marginal Effects
@@ -781,11 +790,11 @@ mod <- insight::download_model("brms_1")
 
 options(marginaleffects_posterior_interval = "hdi")
 options(marginaleffects_posterior_center = mean)
-comparisons(mod) |> )
+comparisons(mod) |> averages()
 
 options(marginaleffects_posterior_interval = "eti")
 options(marginaleffects_posterior_center = stats::median)
-comparisons(mod) |> )
+comparisons(mod) |> averages()
 ```
 
 # Random variables: `posterior` and `ggdist`
