@@ -14,8 +14,12 @@ dat$am <- as.logical(dat$am)
 dat$carb <- as.factor(dat$carb)
 mod <- lm(mpg ~ hp + am + carb, data = dat)
 
-# Compute and summarize marginal means
+# hypotheses() & marginalmeans(): averages() are passthrough to summary()
 mm <- marginalmeans(mod)
 a <- averages(mm)
 expect_inherits(a, "marginalmeans.summary")
 expect_equivalent(nrow(mm), nrow(a))
+hy <- hypotheses(mod, "b1 = b2")
+a  <- averages(hy)
+expect_inherits(a, "hypotheses.summary")
+expect_equivalent(nrow(hy), nrow(a))

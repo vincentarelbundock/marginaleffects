@@ -44,10 +44,6 @@ summary.marginalmeans <- function(object, ...) {
 }
 
 
-#' @noRd
-#' @export
-averages.marginalmeans <- summary.marginalmeans
-
 
 #' @export
 summary.hypotheses <- function(object, ...) {
@@ -57,9 +53,6 @@ summary.hypotheses <- function(object, ...) {
 }
 
 
-#' @noRd
-#' @export
-averages.hypotheses <- summary.hypotheses
 
 
 #' @export
