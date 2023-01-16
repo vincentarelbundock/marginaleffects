@@ -57,6 +57,11 @@ summary.hypotheses <- function(object, ...) {
 }
 
 
+#' @noRd
+#' @export
+averages.hypotheses <- summary.hypotheses
+
+
 #' @export
 summary.predictions <- function(object, ...) {
     if (isTRUE(attr(object, "averages"))) {
