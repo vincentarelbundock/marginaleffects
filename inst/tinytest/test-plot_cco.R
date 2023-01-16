@@ -22,3 +22,9 @@ expect_error(plot_cco(mod, effect = c("hp", "wt"), condition = "wt"), pattern = 
 mod <- lm(mpg ~ hp * drat * factor(am), data = mtcars)
 p <- plot_cco(mod, effect = "hp", condition = list("am", "drat" = 3:5), draw = FALSE)
 expect_inherits(p, "data.frame")
+
+
+# Issue #592
+mod <- lm(mpg ~ hp * drat * factor(am), data = mtcars)
+p <- plot_cco(mod, effect = "hp", condition = list("am", "drat" = 3:5))
+expect_inherits(p, "gg")
