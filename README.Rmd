@@ -29,7 +29,7 @@ n_support <- nrow(dat)
 
 Compute and plot adjusted predictions, contrasts, marginal effects, and marginal means for `r n_support` classes of statistical models in `R`. Conduct linear and non-linear hypothesis tests using the delta method.
 
-This code on this website was executed using `marginaleffects` `r packageVersion("marginaleffects")`. See the [installation section](https://vincentarelbundock.github.io/marginaleffects/#installation) to install the latest CRAN or development version.
+The code on this website was executed using `marginaleffects` `r packageVersion("marginaleffects")`. See the [installation section](https://vincentarelbundock.github.io/marginaleffects/#installation) to install the latest CRAN or development version.
 
 ## Table of contents
 
@@ -263,10 +263,12 @@ Since predictions, comparisons, and slopes are conditional quantities, they can 
 
 (This use of the word "marginal" as "averaging" should not be confused with the term "marginal effect" which, in the econometrics tradition, correspond to a partial derivative, or the effect of a "small/marginal" change.)
 
-To marginalize (average over) our unit-level estimates, we can use the `averages()` function. For example, this gives us this average predicted outcome in the `mtcars` dataset:
+To marginalize (average over) our unit-level estimates, we can use the `by` argument or the `averages()` function. For example, both of these commands give us the same result: the average predicted outcome in the `mtcars` dataset:
 
 ```{r}
 predictions(mod) |> averages()
+
+predictions(mod, by = TRUE)
 ```
 
 This is equivalent to manual computation by:
