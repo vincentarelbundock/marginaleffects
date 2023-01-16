@@ -70,7 +70,7 @@ dat$gear <- as.factor(dat$gear)
 mod <- glm(vs ~ gear + mpg, data = dat, family = binomial)
 
 cmp <- comparisons(mod)
-tidy(cmp)
+get_estimates(cmp)
 ```
 
 We can use the `group` argument of the `modelsummary` function to structure the table properly:
@@ -87,7 +87,7 @@ cmp <- comparisons(
   mod,
   variables = c("gear", "cyl"),
   cross = TRUE)
-tidy(cmp)
+get_estimates(cmp)
 ```
 
 As we can see above, there are two relevant grouping columns: `contrast_gear` and `contrast_cyl`. We can simply plug those names in the `shape` argument:
@@ -101,7 +101,7 @@ modelsummary(
 # Marginal means
 
 ```{r}
-library(marginaleffects)
+library("marginaleffects")
 library("modelsummary")
 
 dat <- mtcars
