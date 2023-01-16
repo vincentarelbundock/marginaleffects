@@ -27,7 +27,7 @@ dat <- read.csv(url)
 n_support <- nrow(dat)
 ```
 
-Compute and plot adjusted predictions, contrasts, marginal effects, and marginal means for `r n_support` classes of statistical models in `R`. Conduct linear and non-linear hypothesis tests using the delta method.
+Compute and plot predictions, slopes, marginal means, and comparisons (contrasts, risk ratios, etc.) for over 70 classes of statistical models in R. Conduct linear and non-linear hypothesis tests using the delta method.
 
 The code on this website was executed using `marginaleffects` `r packageVersion("marginaleffects")`. See the [installation section](https://vincentarelbundock.github.io/marginaleffects/#installation) to install the latest CRAN or development version.
 
@@ -106,7 +106,7 @@ The `marginaleffects` package allows `R` users to compute and plot three princip
 
 [_Comparisons_:](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)
 
-> Predict the outcome variable at different regressor values (e.g., college graduates vs. others), and compare those predictions by computing a difference, ratio, or some other function.
+> Compare the predictions made by a model for different regressor values (e.g., college graduates vs. others): contrasts, differences, risk ratios, odds, etc.
 
 [_Slopes_:](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html) 
 

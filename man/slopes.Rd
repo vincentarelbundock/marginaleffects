@@ -151,7 +151,7 @@ A \code{data.frame} with one row per observation (per term/group) and several co
 }
 \description{
 Partial derivative of the regression equation with respect to a regressor of
-interest. Slopes are "conditional" (or "unit-level") estimates: they will
+interest. Slopes are typically "conditional" (or "unit-level") estimates: they will
 typically vary based on the values of predictors in the model. By default,
 the \code{slopes()} function thus returns one estimate of the slope for each row of
 the dataset used to fit a model.

@@ -192,7 +192,7 @@ ratio, or some other function. \code{comparisons()} can return many quantities o
 interest, such as contrasts, differences, risk ratios, changes in log odds,
 slopes, elasticities, etc.
 
-Comparisons or contrasts are "conditional" (or "unit-level") estimates: they
+Comparisons or contrasts are typically "conditional" (or "unit-level") estimates: they
 will typically vary based on the values of predictors in the model. By
 default, the \code{comparisons()} function thus returns one estimate of the
 comparison for each row of the dataset used to fit a model.

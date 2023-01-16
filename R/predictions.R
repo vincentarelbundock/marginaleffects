@@ -1,11 +1,15 @@
 #' Adjusted Predictions
 #'
+#' @description
 #' Outcome predicted by a fitted model on a specified scale for a given
 #' combination of values of the predictor variables, such as their observed
 #' values, their means, or factor levels (a.k.a. "reference grid"). The
-#' `tidy()` and `averages()` functions can be used to aggregate the output of
-#' `predictions()`. To learn more, read the predictions vignette, visit the
+#' `averages()` function can be used to "marginalize" or "average over"
+#' unit-level predictions.
+#' 
+#' To learn more, read the predictions vignette, visit the
 #' package website, or scroll down this page for a full list of vignettes:
+#' 
 #' * <https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html>
 #' * <https://vincentarelbundock.github.io/marginaleffects/>
 #'
