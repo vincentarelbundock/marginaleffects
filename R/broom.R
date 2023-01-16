@@ -18,6 +18,7 @@ tidy.comparisons <- function(x, ...) {
         insight::format_error("The `transform_avg` argument is deprecated. Use `transform_post` instead.")
     }
     out <- averages(x, ...)
+    class(out) <- setdiff(class(out), "averages")
     return(out)
 }
 
@@ -45,6 +46,7 @@ tidy.hypotheses <- function(x, ...) {
     }
     # the object is already in a tidy format. We need this method for
     # `modelsummary` and other functions that rely on `tidy()`.
+    class(x) <- setdiff(class(x), "averages")
     return(x)
 }
 
@@ -60,6 +62,7 @@ tidy.marginalmeans <- function(x, ...) {
     first = c("type", "term", "value", "estimate", "std.error",
     "statistic", "p.value", "conf.low", "conf.high")
     out <- sort_columns(x, first)
+    class(out) <- setdiff(class(out), "averages")
     attr(out, "conf_level") <- attr(x, "conf_level")
     return(out)
 }
