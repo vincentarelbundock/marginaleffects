@@ -64,6 +64,7 @@
 #' levels. See examples section.
 #' @param transform_post (experimental) A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.
 #'
+#' @inheritParams comparisons
 #' @template model_specific_arguments
 #' @template bayesian
 #'

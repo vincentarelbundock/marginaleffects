@@ -102,6 +102,15 @@ acceptable values is returned in an error message. When \code{type} is \code{NUL
 default value is used. This default is the first model-related row in
 the \code{marginaleffects:::type_dictionary} dataframe.}
 
+\item{by}{Aggregate unit-level estimates (aka, marginalize, average over). Valid inputs:
+\itemize{
+\item \code{FALSE}: return the original unit-level estimates.
+\item \code{TRUE}: aggregate estimates for each term.
+\item Character vector of column names in \code{newdata} or in the data frame produced by calling the function without the \code{by} argument.
+\item Data frame with a \code{by} column of group labels, and merging columns shared by \code{newdata} or the data frame produced by calling the same function without the \code{by} argument.
+\item See examples below.
+}}
+
 \item{byfun}{A function such as \code{mean()} or \code{sum()} used to aggregate
 estimates within the subgroups defined by the \code{by} argument. \code{NULL} uses the
 \code{mean()} function. Must accept a numeric vector and return a single numeric

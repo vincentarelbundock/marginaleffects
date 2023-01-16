@@ -116,6 +116,7 @@
 #' package. See the "Model-Specific Arguments" section of the
 #' `?marginaleffects` documentation for a non-exhaustive list of available
 #' arguments.
+#' @inheritParams comparisons
 #'
 #' @template model_specific_arguments
 #' @template bayesian

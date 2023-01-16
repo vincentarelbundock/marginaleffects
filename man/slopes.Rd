@@ -71,6 +71,15 @@ the \code{marginaleffects:::type_dictionary} dataframe.}
 \item Function which returns a covariance matrix (e.g., \code{stats::vcov(model)})
 }}
 
+\item{by}{Aggregate unit-level estimates (aka, marginalize, average over). Valid inputs:
+\itemize{
+\item \code{FALSE}: return the original unit-level estimates.
+\item \code{TRUE}: aggregate estimates for each term.
+\item Character vector of column names in \code{newdata} or in the data frame produced by calling the function without the \code{by} argument.
+\item Data frame with a \code{by} column of group labels, and merging columns shared by \code{newdata} or the data frame produced by calling the same function without the \code{by} argument.
+\item See examples below.
+}}
+
 \item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
 
 \item{slope}{string indicates the type of slope or (semi-)elasticity to compute:
