@@ -497,8 +497,8 @@ predictions(mod, by = TRUE)
 This is equivalent to manual computation by:
 
 ``` r
-predictions(mod)$predicted |> mean()
-#> [1] NA
+predictions(mod)$estimate |> mean()
+#> [1] 20.09062
 ```
 
 The main `marginaleffects` functions all include a `by` argument, which

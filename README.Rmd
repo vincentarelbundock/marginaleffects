@@ -274,7 +274,7 @@ predictions(mod, by = TRUE)
 This is equivalent to manual computation by:
 
 ```{r}
-predictions(mod)$predicted |> mean()
+predictions(mod)$estimate |> mean()
 ```
 
 The main `marginaleffects` functions all include a `by` argument, which allows us to marginalize within sub-groups of the data. For example,
