@@ -12,6 +12,7 @@
 # #'
 # #' # average marginal effects
 # #' averages(mfx)
+# #' summary(mfx)
 # #' @name summary
 # NULL
 
@@ -41,6 +42,11 @@ summary.marginalmeans <- function(object, ...) {
     attr(out, "variables_grid") <- attr(object, "variables_grid")
     return(out)
 }
+
+
+#' @noRd
+#' @export
+averages.marginalmeans <- summary.marginalmeans
 
 
 #' @export
