@@ -1,5 +1,5 @@
-  Term Contrast Effect   Pr(>|z|) 2.5 % 97.5 %
-1   hp       +1  2.705 < 2.22e-16 2.686  2.725
+  Term Contrast Estimate   Pr(>|z|) 2.5 % 97.5 %
+1   hp       +1    2.705 < 2.22e-16 2.686  2.725
 
 Model type:  glm 
 Prediction type:  response 

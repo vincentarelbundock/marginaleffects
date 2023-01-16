@@ -1,4 +1,4 @@
-     Term Effect Std. Error    z Pr(>|z|)  2.5 % 97.5 %
-1 b3 = b4  2.553      1.979 1.29  0.19693 -1.325  6.431
+     Term Estimate Std. Error    z Pr(>|z|)  2.5 % 97.5 %
+1 b3 = b4    2.553      1.979 1.29  0.19693 -1.325  6.431
 
 Model type:  lm 
