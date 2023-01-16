@@ -233,8 +233,7 @@ predictions(nom, type = "probs", by = by)
 This can be very useful in combination with the `hypothesis` argument. For example, here we compute the difference between average adjusted predictions for the 3 and 4 response levels, compared to the 5 response level:
 
 ```{r}
-predictions(nom, type = "probs", by = by, hypothesis = "sequential") |>
-    averages()
+predictions(nom, type = "probs", by = by, hypothesis = "sequential")
 ```
 
 We can also use more complicated aggregations. Here, we compute the predicted probability of outcome levels for each value of `cyl`, by collapsing the "3" and "4" outcome levels:

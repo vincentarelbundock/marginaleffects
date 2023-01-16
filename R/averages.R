@@ -47,7 +47,11 @@ averages <- function (x, by = TRUE, ...) {
             if (!isTRUE(checkmate::check_flag(by, null.ok = TRUE))) {
                 insight::format_error("The `by` argument cannot be used twice.")
             }
-            out <- recall(xcall, ...)
+            if (length(list(...)) == 0) { # bug in predictions.Rmd 
+                out <- eval(xcall)
+            } else {
+                out <- recall(xcall, ...)
+            }
         } else if (isTRUE(checkmate::check_flag(by, null.ok = TRUE))) {
             by <- c("term", "group", "contrast")
             out <- recall(xcall, by = by, ...)
