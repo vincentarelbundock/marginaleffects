@@ -11,14 +11,14 @@ New models supported:
 
 New features:
 
+* The new `averages()` function is the recommended way to "average over" (marginalize) unit-level estimates for all functions. It is more efficient, flexible, and explicit that `summary()` or `tidy()`.
 * `by` argument
-  - `TRUE` returns average (marginal) predictions/comparisons/slopes
-  - Add supports for bayesian models.
+  - `TRUE` returns average (marginal) predictions, comparisons, or slopes.
+  - Now supports bayesian models.
 * `hypothesis` argument
   - Numeric value sets the null used in calculating Z and p.
   - Example: `comparisons(mod, transform_pre = "ratio", hypothesis = 1)`
-* New `averages()` function makes it more obvious to users that we are marginalizing over unit-level estimates.
-* All arguments from the main functions are now available through `averages()`, `tidy()`, or `summary()`: `conf_level`, `transform_post`, etc.
+* All arguments from the main functions are now available through `averages()`, `tidy()`, or `summary()`: `conf_level`, `transform_post`, etc. Feeding an argument to `averages()` will k
 * Bayesian posterior distribution summaries can be customized using global options:
   - `options("marginaleffects_posterior_interval" = "eti")` 
   - `options("marginaleffects_posterior_interval" = "hdi")` 
