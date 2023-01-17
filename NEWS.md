@@ -2,7 +2,7 @@
 
 Breaking changes:
 
-* The output of all functions includes an `estimate` column instead of the function-specific `predicted`, `comparisons`, `dydx`.
+* The output of all functions includes an `estimate` column instead of the function-specific `predicted`, `comparisons`, `dydx`. This is only relevant for unit-level estimates, and not to the output of `tidy()` or `summary()`, which already returned an `estimate` column.
 * The `transform_avg` argument in `tidy()` deprecated. Use `transform_post` instead.
 
 New models supported:
