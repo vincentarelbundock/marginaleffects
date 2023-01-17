@@ -8,9 +8,10 @@
 [![status](https://tinyverse.netlify.com/badge/marginaleffects)](https://CRAN.R-project.org/package=marginaleffects)
 -->
 
-Compute and plot adjusted predictions, contrasts, marginal effects, and
-marginal means for 73 classes of statistical models in `R`. Conduct
-linear and non-linear hypothesis tests using the delta method.
+Compute and plot predictions, slopes, marginal means, and comparisons
+(contrasts, risk ratios, etc.) for over 70 classes of statistical models
+in R. Conduct linear and non-linear hypothesis tests using the delta
+method.
 
 The code on this website was executed using `marginaleffects`
 0.8.1.9108. See the [installation
@@ -195,9 +196,9 @@ averaged predictions.
 
 [*Comparisons*:](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)
 
-> Predict the outcome variable at different regressor values (e.g.,
-> college graduates vs. others), and compare those predictions by
-> computing a difference, ratio, or some other function.
+> Compare the predictions made by a model for different regressor values
+> (e.g., college graduates vs. others): contrasts, differences, risk
+> ratios, odds, etc.
 
 [*Slopes*:](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html)
 
@@ -246,7 +247,7 @@ and `glance()`, as well with [external packages like
 | [Comparisons](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)        | [`comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)     |
 |                                                                                                    | [`plot_cco()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cap.html)           |
 |                                                                                                    | [`plot_avg()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_avg.html)           |
-| [Slopes](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html)                | [`comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/slopes.html)          |
+| [Slopes](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html)                | [`slopes()`](https://vincentarelbundock.github.io/marginaleffects/reference/slopes.html)               |
 |                                                                                                    | [`plot_cme()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cme.html)           |
 |                                                                                                    | [`plot_avg()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_avg.html)           |
 | [Marginal means](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) | [`marginalmeans()`](https://vincentarelbundock.github.io/marginaleffects/reference/marginalmeans.html) |

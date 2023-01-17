@@ -134,7 +134,7 @@ The `marginaleffects` package includes functions to estimate, average, plot, and
 | [Comparisons](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html) | [`comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html) |
 | | [`plot_cco()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cap.html) |
 | | [`plot_avg()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_avg.html) |
-| [Slopes](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html) | [`comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/slopes.html) |
+| [Slopes](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html) | [`slopes()`](https://vincentarelbundock.github.io/marginaleffects/reference/slopes.html) |
 | | [`plot_cme()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cme.html) |
 | | [`plot_avg()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_avg.html) |
 | [Marginal means](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) | [`marginalmeans()`](https://vincentarelbundock.github.io/marginaleffects/reference/marginalmeans.html) |
