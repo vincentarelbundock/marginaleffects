@@ -43,12 +43,14 @@ Using the `predictions` function, we set the `hp` variable at its mean and compu
 ```{r}
 p <- predictions(
     mod,
-    newdata = datagrid(am = dat$am, cyl = dat$cyl))
+    newdata = datagrid(am = unique, cyl = unique))
 ```
 
 For illustration purposes, it is useful to reshape the above results:
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+library(tidyverse)
+library(kableExtra)
 pred <- p |>
     select(cyl, am, estimate) |>
     pivot_wider(names_from = "am", values_from = "estimate") |>
@@ -74,7 +76,21 @@ The marginal means by `am` and `cyl` are obtained by taking the mean of the adju
 marginalmeans(mod)
 ```
 
-The same results can be obtained using the [very powerful `emmeans` package](https://cran.r-project.org/package=emmeans):
+We could obtain the same results with the `by` argument of the `predictions()` function, which allows us to marginalize across some predictors:
+
+```{r}
+predictions(
+    mod,
+    by = "am",
+    newdata = datagrid(am = unique, cyl = unique))
+
+predictions(
+    mod,
+    by = "cyl",
+    newdata = datagrid(am = unique, cyl = unique))
+```
+
+The same results can be achieved using the [powerful `emmeans` package](https://cran.r-project.org/package=emmeans):
 
 ```{r}
 library(emmeans)
