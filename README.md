@@ -14,7 +14,7 @@ in R. Conduct linear and non-linear hypothesis tests using the delta
 method.
 
 The code on this website was executed using `marginaleffects`
-0.8.1.9108. See the [installation
+0.8.1.9110. See the [installation
 section](https://vincentarelbundock.github.io/marginaleffects/#installation)
 to install the latest CRAN or development version.
 
@@ -282,12 +282,12 @@ nrow(pre)
 
 head(pre)
 #>   rowid     type estimate std.error statistic       p.value conf.low conf.high  mpg cyl disp  hp drat    wt  qsec vs am gear carb
-#> 1     1 response 22.48857 0.8841487  25.43528 1.027254e-142 20.66378  24.31336 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
-#> 2     2 response 20.80186 1.1942050  17.41900  5.920119e-68 18.33714  23.26658 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
-#> 3     3 response 25.26465 0.7085307  35.65781 1.783452e-278 23.80232  26.72699 22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
-#> 4     4 response 20.25549 0.7044641  28.75305 8.296026e-182 18.80155  21.70943 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
-#> 5     5 response 16.99782 0.7118658  23.87784 5.205109e-126 15.52860  18.46704 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
-#> 6     6 response 19.66353 0.8753226  22.46433 9.270636e-112 17.85696  21.47011 18.1   6  225 105 2.76 3.460 20.22  1  0    3    1
+#> 1     1 response 22.48857 0.8841487  25.43528 1.027254e-142 20.75567  24.22147 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+#> 2     2 response 20.80186 1.1942050  17.41900  5.920119e-68 18.46126  23.14246 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+#> 3     3 response 25.26465 0.7085307  35.65781 1.783452e-278 23.87596  26.65335 22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
+#> 4     4 response 20.25549 0.7044641  28.75305 8.296026e-182 18.87477  21.63622 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
+#> 5     5 response 16.99782 0.7118658  23.87784 5.205109e-126 15.60259  18.39305 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
+#> 6     6 response 19.66353 0.8753226  22.46433 9.270636e-112 17.94793  21.37913 18.1   6  225 105 2.76 3.460 20.22  1  0    3    1
 ```
 
 Now, we use the `comparisons()` function to compute the different in
@@ -397,11 +397,11 @@ median, we can do:
 ``` r
 predictions(mod, newdata = "mean")
 #>   rowid     type estimate std.error statistic       p.value conf.low conf.high      mpg       hp      wt      am
-#> 1     1 response 18.37015 0.6798781  27.01978 8.656522e-161 16.96696  19.77335 20.09062 146.6875 3.21725 0.40625
+#> 1     1 response 18.37015 0.6798781  27.01978 8.656522e-161 17.03762  19.70269 20.09062 146.6875 3.21725 0.40625
 
 predictions(mod, newdata = "median")
 #>   rowid     type estimate std.error statistic       p.value conf.low conf.high  mpg  hp    wt am
-#> 1     1 response 19.37392 0.6464425  29.97006 2.410906e-197 18.03973  20.70811 19.2 123 3.325  0
+#> 1     1 response 19.37392 0.6464425  29.97006 2.410906e-197 18.10691  20.64092 19.2 123 3.325  0
 ```
 
 The [`datagrid` function gives us a powerful way to define a grid of
@@ -416,10 +416,10 @@ predictions(
     am = c(0, 1),
     wt = range))
 #>   rowid     type  estimate std.error statistic      p.value  conf.low conf.high      mpg       hp am    wt
-#> 1     1 response 23.259500  2.705934  8.595737 8.273174e-18 17.674726  28.84427 20.09062 146.6875  0 1.513
-#> 2     2 response 12.793013  2.978494  4.295128 1.745928e-05  6.645703  18.94032 20.09062 146.6875  0 5.424
-#> 3     3 response 27.148334  2.851805  9.519702 1.736766e-21 21.262498  33.03417 20.09062 146.6875  1 1.513
-#> 4     4 response  5.901966  5.814985  1.014958 3.101259e-01 -6.099574  17.90351 20.09062 146.6875  1 5.424
+#> 1     1 response 23.259500  2.705934  8.595737 8.273174e-18 17.955966  28.56303 20.09062 146.6875  0 1.513
+#> 2     2 response 12.793013  2.978494  4.295128 1.745928e-05  6.955272  18.63075 20.09062 146.6875  0 5.424
+#> 3     3 response 27.148334  2.851805  9.519702 1.736766e-21 21.558899  32.73777 20.09062 146.6875  1 1.513
+#> 4     4 response  5.901966  5.814985  1.014958 3.101259e-01 -5.495196  17.29913 20.09062 146.6875  1 5.424
 ```
 
 The same mechanism is available in `comparisons()` and `slopes()`. To
