@@ -1,42 +1,68 @@
+# fancy way to catch the call so that averages(slopes()) does not evaluate twice
+# and is fast
 recall <- function(x, ...) {
 
-    # fancy way to catch the call so that averages(slopes()) does not evaluate twice and is fast
+
     funs <- c("comparisons", "slopes", "predictions", "marginalmeans", "hypotheses")
-    if (is.call(x)) {
-        fun <- as.character(x)[1]
-        if (!fun %in% funs) {
-            return(NULL)
-        }
-        mc <- x
-    } else {
+
+    # 2-step estimation with already evaluated & assigned call
+    if (!is.call(x)) {
+        # unsupported evaluated object: return `NULL`
         if (!inherits(x, funs)) {
             return(NULL)
         }
+
+        # retrieve call
         mc <- attr(x, "call")
         if (!is.call(mc)) {
             msg <- sprintf("Call could not be retrieved from object of class %s.", class(x)[1])
             insight::format_error(msg)
         }
+
+    # unsupported call: return `NULL`
+    } else {
+        if (!as.character(x)[1] %in% funs) {
+            return(NULL)
+        }
+        mc <- x
     }
 
     dots <- list(...)
 
-    # save newdata=datagrid() for use in recall()
-    if (!is.null(attr(x, "newdata"))) {
-        dots[["newdata"]] <- attr(x, "newdata")
-    }
-
-    if (!is.null(attr(x, "model"))) {
-        dots[["model"]] <- attr(x, "model")
+    # safe to work with original objects when available
+    objs <- c("newdata", "model")
+    for (obj in objs) {
+        if (!is.null(attr(x, obj))) {
+            dots[[obj]] <- attr(x, obj)
+        }
     }
 
     # overwrite previous arguments
-    # for (n in names(dots)) {
-    #     mc[[n]] <- dots[[n]]
-    # }
-    FUN <- rlang::call_modify
-    args <- c(list(".call" = quote(mc)), dots)
-    mc <- do.call("FUN", args)
+    for (n in names(dots)) {
+        # named NULL should not remove the corresponding argument from the call
+        if (is.null(dots[[n]])) {
+            mc[n] <- list(NULL)
+        } else {
+            mc[[n]] <- dots[[n]]
+        }
+    }
+
+    ## old `rlang` convenience. I don't think the current version is toooo unsafe.
+    # FUN <- rlang::call_modify
+    # args <- c(list(".call" = quote(mc)), dots)
+    # # evaluate call
+    # mc <- do.call("FUN", args)
+
+    # # expand user-supplied arguments (don't think this is necessary)
+    # funs <- list(
+    #     "predictions" = predictions,
+    #     "comparisons" = comparisons,
+    #     "slopes" = slopes,
+    #     "hypotheses" = hypotheses,
+    #     "marginalmeans" = marginalmeans)
+    # mc <- match.call(
+    #     definition = funs[[as.character(mc)[1]]],
+    #     call = mc)
 
     out <- eval(mc)
 

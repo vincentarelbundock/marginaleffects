@@ -14,14 +14,14 @@
 #' `slopes(model) |> averages()` 
 #' 
 #' Proceeding in two steps by assigning the unit-level estimates is typically
-#' slower, because the whole estimate must be executed twice.
+#' slower, because all estimates must be computed twice.
 #'
-#' Note that the `tidy()` and `averages()` methods are simple wrappers around `averages()`
+#' Note that the `tidy()` and `summary()` methods are slower wrappers around `averages()`
 #' @param x Object produced by the `predictions()`, `comparisons()`, or `slopes()` functions.
 #' @param by Character vector of variable names over which to compute group-wise average estimates. When `by=NULL`, the global average (per term) is reported.
 #' @inheritParams predictions
 #' @param ... All additional arguments are passed to the original fitting
-#' function to modify the original call options: `conf_level`, `transform_post`,
+#' function to override the original call options: `conf_level`, `transform_post`,
 #' etc. See `?predictions`, `?comparisons`, `?slopes`.
 #' @export
 #' @return A `data.frame` of estimates and uncertainty estimates

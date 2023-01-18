@@ -23,3 +23,14 @@ hy <- hypotheses(mod, "b1 = b2")
 a  <- averages(hy)
 expect_inherits(a, "hypotheses.summary")
 expect_equivalent(nrow(hy), nrow(a))
+
+
+
+# expand arguments
+mod <- lm(mpg ~ hp, mtcars)
+cmp1 <- comparisons(mod) |> averages()
+cmp2 <- comparisons(mod) |> averages(conf_level = .9)
+cmp3 <- comparisons(mod) |> averages(conf_l = .9)
+expect_true(all(cmp1$conf.low < cmp2$conf.low))
+expect_true(all(cmp1$conf.high > cmp2$conf.high))
+expect_equivalent(cmp2, cmp3)

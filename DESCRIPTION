@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Marginal Effects, Marginal Means, Predictions, and Contrasts
-Version: 0.8.1.9108
+Version: 0.8.1.9110
 Authors@R: 
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -34,8 +34,7 @@ Imports:
     data.table,
     generics,
     insight (>= 0.18.8),
-    methods,
-    rlang
+    methods
 Suggests: 
     tinyviztest,
     AER,

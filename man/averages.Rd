@@ -21,7 +21,7 @@ averages(x, by = TRUE, ...)
 \item{by}{Character vector of variable names over which to compute group-wise average estimates. When \code{by=NULL}, the global average (per term) is reported.}
 
 \item{...}{All additional arguments are passed to the original fitting
-function to modify the original call options: \code{conf_level}, \code{transform_post},
+function to override the original call options: \code{conf_level}, \code{transform_post},
 etc. See \code{?predictions}, \code{?comparisons}, \code{?slopes}.}
 
 \item{byfun}{A function such as \code{mean()} or \code{sum()} used to aggregate
@@ -48,9 +48,9 @@ the three functions listed above. Alternatively, one can call it in one step:
 \code{slopes(model) |> averages()}
 
 Proceeding in two steps by assigning the unit-level estimates is typically
-slower, because the whole estimate must be executed twice.
+slower, because all estimates must be computed twice.
 
-Note that the \code{tidy()} and \code{averages()} methods are simple wrappers around \code{averages()}
+Note that the \code{tidy()} and \code{summary()} methods are slower wrappers around \code{averages()}
 }
 \details{
 Standard errors are estimated using the delta method. See the \code{marginaleffects} website for details.
