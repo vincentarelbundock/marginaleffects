@@ -114,6 +114,11 @@ get_predict.default <- function(model,
     dots[["type"]] <- type_base
     args <- c(list(model), dots)
 
+    # breaks {rms} models, and it is only supported by `insight::get_predicted`
+    if ("ci_method" %in% names(args)) {
+        args[["ci_method"]] <- NULL
+    }
+
     fun <- stats::predict
     pred <- suppressWarnings(do.call("fun", args))
 

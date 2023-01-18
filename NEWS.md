@@ -12,6 +12,7 @@ New models supported:
 New features:
 
 * The new `averages()` function is the recommended way to "average over" (marginalize) unit-level estimates for all functions. It is more efficient, flexible, and explicit that `summary()` or `tidy()`.
+* New `df` argument to set degrees of freedom manually for p and CI.
 * `by` argument
   - `TRUE` returns average (marginal) predictions, comparisons, or slopes.
   - Now supports bayesian models.

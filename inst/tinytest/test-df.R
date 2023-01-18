@@ -3,6 +3,8 @@ exit_if_not(requiet("marginaleffects"))
 using("marginaleffects")
 exit_if_not(requiet("emmeans"))
 
+# TODO: rename dat to df to make sure there's no class with the internal keyword
+
 dat <- mtcars
 dat$cyl <- as.factor(dat$cyl)
 dat$am <- as.factor(dat$am)

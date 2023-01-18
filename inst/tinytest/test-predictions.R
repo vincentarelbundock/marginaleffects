@@ -74,7 +74,7 @@ expect_true(p2$conf.high < 1)
 mod <- lm(mpg ~ hp + am, mtcars)
 for (L in c(.4, .7, .9, .95, .99, .999)) {
     nd <- datagrid(model = mod)
-    unknown <- predictions(mod, newdata = nd, conf.level = L)
+    unknown <- predictions(mod, newdata = nd, conf.level = L, df = insight::get_df(mod)) # known values used Wald
     known <- predict(mod, newdata = nd, se.fit = TRUE, interval = "confidence", level = L)$fit
     expect_equivalent(unknown$conf.low, known[, "lwr"])
     expect_equivalent(unknown$conf.high, known[, "upr"])
