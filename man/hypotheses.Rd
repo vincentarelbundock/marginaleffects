@@ -10,6 +10,7 @@ hypotheses(
   FUN = NULL,
   vcov = NULL,
   conf_level = 0.95,
+  df = Inf,
   ...
 )
 }
@@ -63,6 +64,8 @@ hypotheses(
 }}
 
 \item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
+
+\item{df}{Degrees of freedom used to comptute p values and confidence intervals. A single numeric value between 1 and \code{Inf}. When \code{df} is \code{Inf}, the normal distribution is used. When \code{df} is finite, the \code{t} distribution is used. See \link[insight:get_df]{insight::get_df} for a convenient function to extract degrees of freedom. Ex: \code{slopes(model, df = insight::get_df(model))}}
 
 \item{...}{Additional arguments are passed to the \code{predict()} method
 supplied by the modeling package.These arguments are particularly useful

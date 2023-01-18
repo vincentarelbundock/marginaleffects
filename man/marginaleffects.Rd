@@ -15,6 +15,7 @@ marginaleffects(
   slope = "dydx",
   wts = NULL,
   hypothesis = NULL,
+  df = Inf,
   eps = NULL,
   ...
 )

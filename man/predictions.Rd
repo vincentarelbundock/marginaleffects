@@ -16,6 +16,7 @@ predictions(
   wts = NULL,
   transform_post = NULL,
   hypothesis = NULL,
+  df = Inf,
   ...
 )
 }
@@ -120,7 +121,7 @@ levels. See examples section.}
 
 \item{wts}{string or numeric: weights to use when computing average
 contrasts or slopes. These weights only affect the averaging in
-\code{averages()}, and not the unit-level estimates themselves.
+\code{averages()} or with the \code{by} argument, and not the unit-level estimates themselves.
 \itemize{
 \item string: column name of the weights variable in \code{newdata}. When supplying a column name to \code{wts}, it is recommended to supply the original data (including the weights variable) explicitly to \code{newdata}.
 \item numeric: vector of length equal to the number of rows in the original data or in \code{newdata} (if supplied).
@@ -151,6 +152,8 @@ contrasts or slopes. These weights only affect the averaging in
 }
 \item See the Examples section below and the vignette: https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html
 }}
+
+\item{df}{Degrees of freedom used to comptute p values and confidence intervals. A single numeric value between 1 and \code{Inf}. When \code{df} is \code{Inf}, the normal distribution is used. When \code{df} is finite, the \code{t} distribution is used. See \link[insight:get_df]{insight::get_df} for a convenient function to extract degrees of freedom. Ex: \code{slopes(model, df = insight::get_df(model))}}
 
 \item{...}{Additional arguments are passed to the \code{predict()} method
 supplied by the modeling package.These arguments are particularly useful

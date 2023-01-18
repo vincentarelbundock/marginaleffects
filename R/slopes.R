@@ -84,7 +84,7 @@
 #' - "dyex": dY/dX / X
 #' @param wts string or numeric: weights to use when computing average
 #' contrasts or slopes. These weights only affect the averaging in
-#' `averages()`, and not the unit-level estimates themselves.
+#' `averages()` or with the `by` argument, and not the unit-level estimates themselves.
 #' + string: column name of the weights variable in `newdata`. When supplying a column name to `wts`, it is recommended to supply the original data (including the weights variable) explicitly to `newdata`.
 #' + numeric: vector of length equal to the number of rows in the original data or in `newdata` (if supplied). 
 #' @param hypothesis specify a hypothesis test or custom contrast using a numeric value, vector, or matrix, a string, or a string formula.
@@ -102,6 +102,7 @@
 #'   - "sequential": difference between an estimate and the estimate in the next row.
 #'   - "revpairwise", "revreference", "revsequential": inverse of the corresponding hypotheses, as described above.
 #' + See the Examples section below and the vignette: https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html
+#' @param df Degrees of freedom used to comptute p values and confidence intervals. A single numeric value between 1 and `Inf`. When `df` is `Inf`, the normal distribution is used. When `df` is finite, the `t` distribution is used. See [insight::get_df] for a convenient function to extract degrees of freedom. Ex: `slopes(model, df = insight::get_df(model))`
 #' @param eps NULL or numeric value which determines the step size to use when
 #' calculating numerical derivatives: (f(x+eps)-f(x))/eps. When `eps` is
 #' `NULL`, the step size is 0.0001 multiplied by the difference between
@@ -213,6 +214,7 @@ slopes <- function(model,
                    slope = "dydx",
                    wts = NULL,
                    hypothesis = NULL,
+                   df = Inf,
                    eps = NULL,
                    ...) {
 
@@ -259,6 +261,7 @@ slopes <- function(model,
         type = type,
         wts = wts,
         hypothesis = hypothesis,
+        df = df,
         by = by,
         eps = eps,
         contrast_factor = "reference",

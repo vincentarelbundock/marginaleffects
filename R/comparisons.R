@@ -227,6 +227,7 @@ comparisons <- function(model,
                         cross = FALSE,
                         wts = NULL,
                         hypothesis = NULL,
+                        df = Inf,
                         eps = NULL,
                         ...) {
 
@@ -268,7 +269,8 @@ comparisons <- function(model,
 
     conf_level <- sanitize_conf_level(conf_level, ...)
     sanity_dots(model, ...)
-    checkmate::assert_numeric(eps, len = 1, lower = 1e-10, null.ok = TRUE)
+    checkmate::assert_number(eps, lower = 1e-10, null.ok = TRUE)
+    checkmate::assert_number(df, lower = 1)
 
     # transforms
     sanity_transform_pre(transform_pre)
@@ -339,24 +341,21 @@ comparisons <- function(model,
 
 
     # get dof before transforming the vcov arg
-    if (is.character(vcov) &&
-       # get_df() produces a weird warning on non lmerMod. We can skip them
-       # because get_vcov() will produce an informative error later.
-       inherits(model, "lmerMod") &&
-       (isTRUE(vcov == "satterthwaite") || isTRUE(vcov == "kenward-roger"))) {
-        df <- insight::find_response(model)
+    # get_df() produces a weird warning on non lmerMod. We can skip them
+    # because get_vcov() will produce an informative error later.
+    if (inherits(model, "lmerMod") && (isTRUE(hush(vcov %in% c("satterthwaite", "kenward-roger"))))) {
         # predict.lmerTest requires the DV
-        if (!df %in% colnames(newdata)) {
-            newdata[[df]] <- mean(insight::get_response(model))
+        dv <- insight::find_response(model)
+        if (!dv %in% colnames(newdata)) {
+            newdata[[dv]] <- mean(insight::get_response(model))
         }
+
+        if (!isTRUE(hush(is.infinite(df)))) {
+            insight::format_error('The `df` argument is not supported when `vcov` is "satterthwaite" or "kenward-roger".')
+        }
+
         # df_per_observation is an undocumented argument introduced in 0.18.4.7 to preserve backward incompatibility
-        dof <- insight::get_df(model, type = vcov, data = newdata, df_per_observation = TRUE)
-    } else {
-        if ("df" %in% names(dots)) {
-            dof <- dots[["df"]]
-        } else {
-            dof <- NULL
-        }
+        df <- insight::get_df(model, type = vcov, data = newdata, df_per_observation = TRUE)
     }
 
     vcov_false <- isFALSE(vcov)
@@ -450,9 +449,7 @@ comparisons <- function(model,
     mfx <- get_ci(
         mfx,
         conf_level = conf_level,
-        # sometimes get_predicted fails on SE but succeeds on CI (e.g., betareg)
-        df = dof,
-        overwrite = FALSE,
+        df = df,
         draws = draws,
         estimate = "estimate",
         null = hypothesis_null)

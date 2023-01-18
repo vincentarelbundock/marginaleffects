@@ -148,6 +148,7 @@ marginalmeans <- function(model,
                           transform_post = NULL,
                           cross = FALSE,
                           hypothesis = NULL,
+                          df = Inf,
                           wts = "equal",
                           by = NULL,
                           ...) {
@@ -355,8 +356,8 @@ marginalmeans <- function(model,
             out,
             conf_level = conf_level,
             vcov = vcov,
-            overwrite = FALSE,
             null = hypothesis_null,
+            df = df,
             ...)
     }
 

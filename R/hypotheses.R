@@ -72,6 +72,7 @@ hypotheses <- function(
     FUN = NULL,
     vcov = NULL,
     conf_level = 0.95,
+    df = Inf,
     ...) {
 
 
@@ -81,10 +82,10 @@ hypotheses <- function(
     }
 
     # after re-evaluation
+    checkmate::assert_number(df, lower = 1)
     tmp <- sanitize_hypothesis(hypothesis, ...)
     hypothesis <- tmp$hypothesis
     hypothesis_null <- tmp$hypothesis_null
-
 
     vcov <- get_vcov(model = model, vcov = vcov)
     vcov.type <- get_vcov_label(vcov = vcov)
@@ -146,16 +147,15 @@ hypotheses <- function(
             std.error = se)
     }
 
-
     out <- get_ci(
         out,
         conf_level = conf_level,
         # sometimes get_predicted fails on SE but succeeds on CI (e.g., betareg)
         vcov = vcov,
-        overwrite = FALSE,
         draws = NULL,
         estimate = "estimate",
         null = hypothesis_null,
+        df = df,
         ...)
 
     class(out) <- c("hypotheses", "deltamethod", class(out))

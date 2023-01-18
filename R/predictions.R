@@ -187,6 +187,7 @@ predictions <- function(model,
                         wts = NULL,
                         transform_post = NULL,
                         hypothesis = NULL,
+                        df = Inf,
                         ...) {
 
 
@@ -222,6 +223,19 @@ predictions <- function(model,
     # model <- sanitize_model(model)
 
     # input sanity checks
+    checkmate::assert_number(df, lower = 1)
+    if (is.infinite(df)) {
+        ci_method <- "normal"
+    } else {
+        ci_method <- "wald"
+        df_auto <- insight::get_df(model, type = "wald")
+        if (!all(df == df_auto)) {
+            msg <- 'The `df` argument does not match the output of `insight::get_df(model, type = "wald")`. The p values and confidence intervals may not use the same degrees of freedom.'
+            insight::format_warning(msg)
+        }
+    }
+
+
     transform_post <- sanitize_transform_post(transform_post)
     sanity_dots(model = model, ...)
     sanity_model_specific(
@@ -310,8 +324,8 @@ predictions <- function(model,
 
     J <- NULL
 
-    tmp <- get_predictions(
-        model,
+    args <- list(
+        model = model,
         newdata = newdata,
         vcov = vcov_tmp,
         conf_level = conf_level,
@@ -319,8 +333,10 @@ predictions <- function(model,
         hypothesis = hypothesis,
         by = by,
         byfun = byfun,
-        ...)
+        ci_method = ci_method)
 
+    args <- modifyList(args, dots)
+    tmp <- do.call(get_predictions, args)
 
     # two cases when tmp is a data.frame
     # insight::get_predicted gets us Predicted et al. but now rowid
@@ -382,7 +398,7 @@ predictions <- function(model,
                 fun <- function(...) {
                     get_predictions(..., verbose = FALSE, vcov = FALSE)$estimate
                 }
-                se <- get_se_delta(
+                args <- list(
                     model,
                     newdata = newdata,
                     vcov = V,
@@ -393,8 +409,9 @@ predictions <- function(model,
                     hypothesis = hypothesis,
                     by = by,
                     byfun = byfun,
-                    conf_level = conf_level,
-                    ...)
+                    conf_level = conf_level)
+                args <- modifyList(args, dots)
+                se <- do.call(get_se_delta, args)
                 if (is.numeric(se) && length(se) == nrow(tmp)) {
                     tmp[["std.error"]] <- se
                 }
@@ -404,12 +421,11 @@ predictions <- function(model,
         tmp <- get_ci(
             tmp,
             conf_level = conf_level,
-            # sometimes insight::get_predicted fails on SE but succeeds on CI (e.g., betareg)
             vcov = vcov,
-            overwrite = FALSE,
             draws = draws,
             estimate = "estimate",
             null = hypothesis_null,
+            df = df,
             ...)
     }
 
