@@ -4,8 +4,8 @@
 #' Outcome predicted by a fitted model on a specified scale for a given
 #' combination of values of the predictor variables, such as their observed
 #' values, their means, or factor levels (a.k.a. "reference grid"). The
-#' `averages()` function can be used to "marginalize" or "average over"
-#' unit-level predictions.
+#' `averages()` function or `by` argument can be used to marginalize ("average
+#' over") unit-level predictions.
 #' 
 #' To learn more, read the predictions vignette, visit the
 #' package website, or scroll down this page for a full list of vignettes:
