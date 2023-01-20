@@ -34,18 +34,18 @@ expect_predictions(pred2, n_row = 6, se = TRUE)
 data(kyphosis, package = "gam")
 tmp <- kyphosis
 tmp$categ <- as.factor(sample(letters[1:5], nrow(tmp), replace = TRUE))
-model <- gam::gam(Kyphosis ~ s(Age, 4) + Number + categ,
-            family = binomial, data = tmp)
+model <- gam::gam(Kyphosis ~ gam::s(Age, 4) + Number + categ, family = binomial, data = tmp)
+
+# `datagrid()` is smarter than `emmeans()` about integers
+atlist <- list(Age = round(mean(tmp$Age)), Number = round(mean(tmp$Number)))
 mm1 <- marginalmeans(model)
-em1 <- data.frame(emmeans(model, specs = "categ", type = "response"))
+em1 <- data.frame(emmeans(model, specs = "categ", type = "response", at = atlist))
 mm2 <- marginalmeans(model, type = "link")
-em2 <- data.frame(emmeans(model, specs = "categ"))
+em2 <- data.frame(emmeans(model, specs = "categ", at = atlist))
 
-expect_equivalent(mm1$estimate, em1$prob, tol = .03)
-expect_equivalent(mm2$estimate, em2$emmean, tol = .03)
-
-exit_file("gam: marginal means `std.error` does not match `emmeans`")
+expect_equivalent(mm1$estimate, em1$prob)
+expect_equivalent(mm2$estimate, em2$emmean)
 expect_equivalent(mm1$conf.low, em1$asymp.LCL)
 expect_equivalent(mm1$conf.high, em1$asymp.UCL)
-expect_equivalent(mm2$conf.low, em1$asymp.LCL)
-expect_equivalent(mm2$conf.high, em1$asymp.UCL)
+expect_equivalent(mm2$conf.low, em2$asymp.LCL)
+expect_equivalent(mm2$conf.high, em2$asymp.UCL)
