@@ -7,7 +7,7 @@ exit_if_not(EXPENSIVE)
 if (ON_WINDOWS) exit_file("on windows")
 if (ON_CRAN) exit_file("on cran")
 if (!minver("base", "4.1.0")) exit_file("R 4.1.0")
-options("marginaleffects_credible_interval" = "hdi")
+options("marginaleffects_posterior_interval" = "hdi")
 exit_if_not(requiet("brms"))
 exit_if_not(requiet("emmeans"))
 exit_if_not(requiet("broom"))
@@ -58,7 +58,7 @@ void <- capture.output(suppressMessages(
 
 
 # average marginal effects brmsmargins
-options("marginaleffects_credible_interval" = "eti")
+options("marginaleffects_posterior_interval" = "eti")
 h <- 5e-5
 bm <- brmsmargins(
   brms_numeric,
@@ -74,10 +74,10 @@ expect_equivalent(mean(posteriordraws(mfx)$draw), bm$M, tolerance = tol)
 expect_equivalent(mfx$conf.low, bm$LL, tolerance = tol)
 expect_equivalent(mfx$conf.high, bm$UL, tolerance = tol)
 
-options("marginaleffects_credible_interval" = "hdi")
-
+options("marginaleffects_posterior_interval" = "hdi")
 
 # marginaleffects vs. emmeans
+pkgload::load_all()
 mfx <- slopes(
     brms_numeric2,
     newdata = datagrid(mpg = 20, hp = 100),

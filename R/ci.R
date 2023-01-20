@@ -72,6 +72,32 @@ get_ci <- function(
 
 
 get_ci_draws <- function(x, conf_level, draws) {
+    
+    checkmate::check_number(conf_level, lower = 1e-10, upper = 1 - 1e-10)
+    critical <- (1 - conf_level) / 2
+
+    # faster known case
+    if (identical("eti", getOption("marginaleffects_posterior_interval", default = "eti")) &&
+        identical("median", getOption("marginaleffects_posterior_center", default = "median"))) {
+        insight::check_if_installed("collapse", minimum_version = "1.9.0")
+        CIs <- collapse::dapply(draws, MARGIN = 1, FUN = collapse::fquantile, probs = c(critical, .5, 1 - critical))
+        x$estimate <- CIs[, 2]
+        x$conf.low <- CIs[, 1]
+        x$conf.high <- CIs[, 3]
+        return(x)
+    }
+
+    # faster known case
+    if (identical("eti", getOption("marginaleffects_posterior_interval", default = "eti")) &&
+        identical("mean", getOption("marginaleffects_posterior_center", default = "median"))) {
+        insight::check_if_installed("collapse", minimum_version = "1.9.0")
+        Bs <- collapse::dapply(draws, MARGIN = 1, FUN = collapse::fmean)
+        CIs <- collapse::dapply(draws, MARGIN = 1, FUN = collapse::fquantile, probs = c(critical, 1 - critical))
+        x$estimate <- Bs
+        x$conf.low <- CIs[, 1]
+        x$conf.high <- CIs[, 2]
+        return(x)
+    }
 
     # option name change
     FUN_INTERVAL <- getOption("marginaleffects_posterior_interval")
@@ -86,22 +112,28 @@ get_ci_draws <- function(x, conf_level, draws) {
     }
 
     FUN_CENTER <- getOption("marginaleffects_posterior_center", default = stats::median)
-    checkmate::assert_function(FUN_CENTER)
 
-    # `get_predicted()` can be smarter than symmetric intervals
-    if (!"conf.low" %in% colnames(x)) {
-        x[["std.error"]] <- NULL
-        CIs <- t(apply(draws, 1, FUN_INTERVAL, credMass = conf_level))
-        Bs <- apply(draws, 1, FUN_CENTER)
-        # transform_pre returns a single value
-        if (nrow(x) < nrow(CIs)) {
-            CIs <- unique(CIs)
-            Bs <- unique(Bs)
-        }
-        x[["estimate"]] <- Bs
-        x[["conf.low"]] <- CIs[, "lower"]
-        x[["conf.high"]] <- CIs[, "upper"]
+    checkmate::assert(
+        checkmate::check_choice(FUN_CENTER, choices = c("mean", "median")),
+        checkmate::check_function(FUN_CENTER)
+    )
+
+    if (identical(FUN_CENTER, "mean")) {
+        FUN_CENTER <- mean
+    } else if (identical(FUN_CENTER, "median")) {
+        FUN_CENTER <- stats::median
     }
+
+    CIs <- t(apply(draws, 1, FUN_INTERVAL, credMass = conf_level))
+    Bs <- apply(draws, 1, FUN_CENTER)
+    # transform_pre returns a single value
+    if (nrow(x) < nrow(CIs)) {
+        CIs <- unique(CIs)
+        Bs <- unique(Bs)
+    }
+    x[["estimate"]] <- Bs
+    x[["conf.low"]] <- CIs[, "lower"]
+    x[["conf.high"]] <- CIs[, "upper"]
 
     return(x)
 }

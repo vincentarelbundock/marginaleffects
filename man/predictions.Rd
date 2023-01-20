@@ -282,9 +282,9 @@ By default, the center of the posterior distribution in bayesian models is
 identified by the median. Users can use a different summary function by setting a
 global option:
 
-\code{options("marginaleffects_posterior_center" = mean)}
+\code{options("marginaleffects_posterior_center" = "mean")}
 
-\code{options("marginaleffects_posterior_center" = median)}
+\code{options("marginaleffects_posterior_center" = "median")}
 
 When estimates are averaged using the \code{by} argument, the \code{tidy()} function, or
 the \code{summary()} function, the posterior distribution is marginalized twice over.

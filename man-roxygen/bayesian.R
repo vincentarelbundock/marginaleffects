@@ -12,9 +12,9 @@
 #' identified by the median. Users can use a different summary function by setting a
 #' global option:
 #' 
-#' `options("marginaleffects_posterior_center" = mean)`
+#' `options("marginaleffects_posterior_center" = "mean")`
 #' 
-#' `options("marginaleffects_posterior_center" = median)`
+#' `options("marginaleffects_posterior_center" = "median")`
 #' 
 #' When estimates are averaged using the `by` argument, the `tidy()` function, or
 #' the `summary()` function, the posterior distribution is marginalized twice over.
