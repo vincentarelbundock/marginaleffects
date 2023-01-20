@@ -181,6 +181,7 @@ get_hypothesis <- function(x, hypothesis, column, by = NULL) {
 
         draws <- attr(x, "posterior_draws")
         if (!is.null(draws)) {
+            insight::check_if_installed("collapse", minimum_version = "1.9.0")
             tmp <- apply(
                 draws,
                 MARGIN = 2,
@@ -190,7 +191,7 @@ get_hypothesis <- function(x, hypothesis, column, by = NULL) {
             draws <- matrix(tmp, ncol = ncol(draws))
             out <- data.table(
                 term = gsub("\\s+", "", attr(hypothesis, "label")),
-                tmp = apply(draws, 1, stats::median))
+                tmp = collapse::dapply(draws, MARGIN = 1, FUN = collapse::fmedian))
 
 
         } else {

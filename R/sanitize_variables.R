@@ -74,6 +74,10 @@ sanitize_variables <- function(variables,
         } else {
             predictors <- unlist(predictors, recursive = TRUE, use.names = FALSE)
         }
+
+        # response is not a predictor, but sometimes we catch it
+        dv <- hush(insight::find_response(model, combine = FALSE))
+        predictors <- unique(setdiff(predictors, dv))
     } else {
         predictors <- variables
     }

@@ -4,7 +4,7 @@
 source("helpers.R")
 using("marginaleffects")
 
-options("marginaleffects_credible_interval" = "hdi")
+options("marginaleffects_posterior_interval" = "hdi")
 exit_if_not(requiet("rstanarm"))
 exit_if_not(requiet("emmeans"))
 exit_if_not(requiet("margins"))
@@ -31,7 +31,7 @@ expect_equivalent(mfx$estimate, em$hp.trend)
 expect_equivalent(mfx$conf.low, em$lower.HPD, tolerance = 1e-5)
 expect_equivalent(mfx$conf.high, em$upper.HPD)
 
-options("marginaleffects_credible_interval" = "eti")
+options("marginaleffects_posterior_interval" = "eti")
 
 # # margins: var is all zeroes and dydx don't match precisely
 # mar <- margins(mod, unit_ses = TRUE, at = list(hp = 110, mpg = 20, vs = 0))

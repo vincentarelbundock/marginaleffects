@@ -72,7 +72,8 @@ posteriordraws <- function(x, shape = "long") {
 
 
 average_draws <- function(data, index, draws, byfun = NULL) {
-    insight::check_if_installed("collapse")
+    insight::check_if_installed("collapse", minimum_version = "1.9.0")
+
     w <- data[["marginaleffects_wts_internal"]]
     if (all(is.na(w))) {
         w <- NULL
@@ -100,7 +101,7 @@ average_draws <- function(data, index, draws, byfun = NULL) {
         }
         out <- data.table(
             g[["groups"]],
-            average = apply(draws, 1, stats::median))
+            average = collapse::dapply(draws, MARGIN = 1, FUN = collapse::fmedian))
 
     } else {
         if (is.null(byfun)) {
@@ -115,7 +116,7 @@ average_draws <- function(data, index, draws, byfun = NULL) {
                 FUN = byfun,
                 drop = FALSE)
         }
-        out <- data.table(average = apply(draws, 1, stats::median))
+        out <- data.table(average = dapply(draws, MARGIN = 1, FUN = collapse::fmedian))
     }
 
     setnames(out, old = "average", new = "estimate")

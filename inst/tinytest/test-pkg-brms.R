@@ -77,7 +77,6 @@ expect_equivalent(mfx$conf.high, bm$UL, tolerance = tol)
 options("marginaleffects_posterior_interval" = "hdi")
 
 # marginaleffects vs. emmeans
-pkgload::load_all()
 mfx <- slopes(
     brms_numeric2,
     newdata = datagrid(mpg = 20, hp = 100),

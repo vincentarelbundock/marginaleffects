@@ -2,6 +2,7 @@
 #' @rdname sanity_model_specific
 #' @export
 sanity_model_specific.brmsfit <- function(model, ...) {
+    insight::check_if_installed("collapse", minimum_version = "1.9.0")
     # terms: brmsfit objects do not have terms immediately available
     te <- tryCatch(attr(stats::terms(stats::formula(model)$formula), "term.labels"), error = function(e) NULL)
     if (any(grepl("^factor\\(", te))) {
@@ -15,7 +16,7 @@ sanity_model_specific.brmsfit <- function(model, ...) {
 #' @export
 get_coef.brmsfit <- function(model, ...) {
     out <- insight::get_parameters(model)
-    out <- apply(out, 2, stats::median)
+    out <- collapse::dapply(out, MARGIN = 2, FUN = collapse::fmedian)
     return(out)
 }
 
@@ -69,10 +70,11 @@ get_predict.brmsfit <- function(model,
 
     # 1d outcome
     if (length(dim(draws)) == 2) {
+        med <- collapse::dapply(draws, MARGIN = 2, FUN = collapse::fmedian)
         out <- data.frame(
             rowid = idx,
             group = "main_marginaleffect",
-            estimate = apply(draws, 2, stats::median))
+            estimate = med)
 
     # multi-dimensional outcome
     } else if (length(dim(draws)) == 3) {
