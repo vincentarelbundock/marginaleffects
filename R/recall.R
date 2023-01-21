@@ -29,6 +29,16 @@ recall <- function(x, ...) {
 
     dots <- list(...)
 
+    # don't overwrite certain arguments
+    if ("hypothesis" %in% names(mc) && "hypothesis" %in% names(dots)) {
+        if (is.null(dots[["hypothesis"]])) {
+            dots[["hypothesis"]] <- NULL
+        } else {
+            insight::format_error("The `hypothesis` argument cannot be used twice.")
+        }
+    }
+
+
     # safe to work with original objects when available
     objs <- c("newdata", "model")
     for (obj in objs) {

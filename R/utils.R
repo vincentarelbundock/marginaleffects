@@ -1,6 +1,10 @@
 sort_columns <- function(x, first = NULL, alpha = FALSE) {
     cols <- colnames(x)
 
+    forget <- c("names", "row.names", "class")
+    attr_save <- attributes(x)
+    attr_save <- attr_save[!names(attr_save) %in% forget]
+
     if (isTRUE(alpha)) {
         cols <- sort(cols)
     }
@@ -15,6 +19,10 @@ sort_columns <- function(x, first = NULL, alpha = FALSE) {
         out <- x[, ..cols, drop = FALSE]
     } else {
         out <- x[, cols, drop = FALSE]
+    }
+
+    for (n in names(attr_save)) {
+        attr(out, n) <- attr_save[[n]]
     }
 
     return(out)
