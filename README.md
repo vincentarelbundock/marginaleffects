@@ -14,7 +14,7 @@ in R. Conduct linear and non-linear hypothesis tests using the delta
 method.
 
 The code on this website was executed using `marginaleffects`
-0.8.1.9111. See the [installation
+0.8.1.9112. See the [installation
 section](https://vincentarelbundock.github.io/marginaleffects/#installation)
 to install the latest CRAN or development version.
 
@@ -642,14 +642,14 @@ slopes(
 ```
 
 Now, imagine that for theoretical (or substantive or clinical) reasons,
-we only care about slopes smaller than -0.1. We can use the
-`hypotheses()` function to conduct an equivalence test:
+we only care about slopes larger than 2. We can use the `hypotheses()`
+function to conduct an equivalence test:
 
 ``` r
-avg_slopes(mod, variables = "am") |>
-  hypotheses(equivalence = c(-.1, .1))
-#>   Term Estimate Std. Error   z Pr(>|z|) 2.5 % 97.5 %    p (Inf)    p (Sup)     p (Eq)
-#> 1   am        0          0 NaN       NA     0      0 < 2.22e-16 < 2.22e-16 < 2.22e-16
+avg_slopes(mod) |> hypotheses(equivalence = c(-2, 2))
+#>   Term Estimate Std. Error     z   Pr(>|z|)  2.5 % 97.5 %    p (Inf)  p (Sup)   p (Eq)
+#> 1 qsec    1.124     0.4331 2.595  0.0094487 0.2752  1.973 2.7403e-13 0.021585 0.021585
+#> 2 drat    7.224     1.3652 5.292 1.2122e-07 4.5484  9.900 7.0624e-12 0.999935 0.999935
 #> 
 #> Model type:  lm 
 #> Prediction type:  response

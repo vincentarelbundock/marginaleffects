@@ -351,11 +351,10 @@ slopes(
   newdata = datagrid(qsec = range))
 ```
 
-Now, imagine that for theoretical (or substantive or clinical) reasons, we only care about slopes smaller than -0.1. We can use the `hypotheses()` function to conduct an equivalence test:
+Now, imagine that for theoretical (or substantive or clinical) reasons, we only care about slopes larger than 2. We can use the `hypotheses()` function to conduct an equivalence test:
 
 ```{r}
-avg_slopes(mod, variables = "am") |>
-  hypotheses(equivalence = c(-.1, .1))
+avg_slopes(mod) |> hypotheses(equivalence = c(-2, 2))
 ```
 
 See the [Hypothesis Tests and Custom Contrasts vignette](https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html) for background, details, and for instructions on how to conduct hypothesis tests in more complex situations.
