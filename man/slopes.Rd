@@ -2,6 +2,7 @@
 % Please edit documentation in R/slopes.R
 \name{slopes}
 \alias{slopes}
+\alias{avg_slopes}
 \title{Slopes (aka "Partial derivatives", "Marginal Effects", or "Trends")}
 \usage{
 slopes(
@@ -9,8 +10,24 @@ slopes(
   newdata = NULL,
   variables = NULL,
   type = NULL,
-  vcov = TRUE,
   by = FALSE,
+  vcov = TRUE,
+  conf_level = 0.95,
+  slope = "dydx",
+  wts = NULL,
+  hypothesis = NULL,
+  df = Inf,
+  eps = NULL,
+  ...
+)
+
+avg_slopes(
+  model,
+  newdata = NULL,
+  variables = NULL,
+  type = NULL,
+  by = TRUE,
+  vcov = TRUE,
   conf_level = 0.95,
   slope = "dydx",
   wts = NULL,
@@ -56,6 +73,15 @@ acceptable values is returned in an error message. When \code{type} is \code{NUL
 default value is used. This default is the first model-related row in
 the \code{marginaleffects:::type_dictionary} dataframe.}
 
+\item{by}{Aggregate unit-level estimates (aka, marginalize, average over). Valid inputs:
+\itemize{
+\item \code{FALSE}: return the original unit-level estimates.
+\item \code{TRUE}: aggregate estimates for each term.
+\item Character vector of column names in \code{newdata} or in the data frame produced by calling the function without the \code{by} argument.
+\item Data frame with a \code{by} column of group labels, and merging columns shared by \code{newdata} or the data frame produced by calling the same function without the \code{by} argument.
+\item See examples below.
+}}
+
 \item{vcov}{Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
 \itemize{
 \item FALSE: Do not compute standard errors. This can speed up computation considerably.
@@ -70,15 +96,6 @@ the \code{marginaleffects:::type_dictionary} dataframe.}
 \item One-sided formula which indicates the name of cluster variables (e.g., \code{~unit_id}). This formula is passed to the \code{cluster} argument of the \code{sandwich::vcovCL} function.
 \item Square covariance matrix
 \item Function which returns a covariance matrix (e.g., \code{stats::vcov(model)})
-}}
-
-\item{by}{Aggregate unit-level estimates (aka, marginalize, average over). Valid inputs:
-\itemize{
-\item \code{FALSE}: return the original unit-level estimates.
-\item \code{TRUE}: aggregate estimates for each term.
-\item Character vector of column names in \code{newdata} or in the data frame produced by calling the function without the \code{by} argument.
-\item Data frame with a \code{by} column of group labels, and merging columns shared by \code{newdata} or the data frame produced by calling the same function without the \code{by} argument.
-\item See examples below.
 }}
 
 \item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
@@ -153,17 +170,13 @@ A \code{data.frame} with one row per observation (per term/group) and several co
 }
 }
 \description{
-Partial derivative of the regression equation with respect to a regressor of
-interest. Slopes are typically "conditional" (or "unit-level") estimates: they will
-typically vary based on the values of predictors in the model. By default,
-the \code{slopes()} function thus returns one estimate of the slope for each row of
-the dataset used to fit a model.
+Partial derivative of the regression equation with respect to a regressor of interest. Slopes are typically unit-level (or "conditional") estimates: they will typically vary based on the values of predictors in the model.
 
-The \code{newdata} argument controls where slopes are evaluated in the predictor
-space: "at observed values", "at the mean", "at representative values", etc.
+By default, the \code{slopes()} function thus returns one estimate of the slope for each row of the dataset used to fit a model.
 
-The \code{averages()} function or \code{by} argument can aggregate
-unit-level estimates into an "average slope".
+The \code{newdata} argument controls where slopes are evaluated in the predictor space: "at observed values", "at the mean", "at representative values", etc.
+
+The \code{by} argument or the \code{avg_slopes()} function can aggregate unit-level estimates into an "average" or "marginal" slope.
 
 See the slopes vignette and package website for worked examples and case studies:
 \itemize{
@@ -190,6 +203,11 @@ Standard errors for the slopes are obtained using the Delta
 method. See the "Standard Errors" vignette on the package website for
 details (link above).
 }
+\section{Functions}{
+\itemize{
+\item \code{avg_slopes()}: Average slopes
+
+}}
 \section{Vignettes and documentation}{
 
 

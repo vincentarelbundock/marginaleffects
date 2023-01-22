@@ -4,7 +4,7 @@
 #' Outcome predicted by a fitted model on a specified scale for a given
 #' combination of values of the predictor variables, such as their observed
 #' values, their means, or factor levels (a.k.a. "reference grid"). The
-#' `averages()` function or `by` argument can be used to marginalize ("average
+#' `avg_predictions()` function or `by` argument can be used to marginalize ("average
 #' over") unit-level predictions.
 #' 
 #' To learn more, read the predictions vignette, visit the
@@ -587,3 +587,38 @@ get_predictions <- function(model,
     return(out)
 }
 
+
+#' Average predictions
+#' @describeIn predictions Average predictions
+#' @export
+#'
+avg_predictions <- function(model,
+                            newdata = NULL,
+                            variables = NULL,
+                            vcov = TRUE,
+                            conf_level = 0.95,
+                            type = NULL,
+                            by = TRUE,
+                            byfun = NULL,
+                            wts = NULL,
+                            transform_post = NULL,
+                            hypothesis = NULL,
+                            df = Inf,
+                            ...) {
+    out <- predictions(
+        model = model,
+        newdata = newdata,
+        variables = variables,
+        vcov = vcov,
+        conf_level = conf_level,
+        type = type,
+        by = by,
+        byfun = byfun,
+        wts = wts,
+        transform_post = transform_post,
+        hypothesis = hypothesis,
+        df = df,
+        ...)
+    class(out) <- c("averages", class(out))
+    return(out)
+}

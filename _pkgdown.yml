@@ -9,7 +9,9 @@ reference:
     - slopes
     - marginalmeans
     - hypotheses
-    - averages
+    - avg_predictions
+    - avg_comparisons
+    - avg_slopes
   - title: Data grids
     contents:
     - starts_with("datagrid")
@@ -19,6 +21,7 @@ reference:
   - title: Object summaries
     contents:
     - posteriordraws
+    - averages
     - starts_with("summary|glance|tidy")
 navbar:
   title: marginaleffects

@@ -1,21 +1,21 @@
-equivalence <- function(x, region = NULL, df = Inf, ...) {
+equivalence <- function(x, equivalence = NULL, df = Inf, ...) {
 
-    if (is.null(region) || any(!c("estimate", "std.error") %in% colnames(x))) {
+    if (is.null(equivalence) || any(!c("estimate", "std.error") %in% colnames(x))) {
         return(x)
     }
 
-    checkmate::assert_numeric(region, min.len = 1, max.len = 2)
-    if (length(region) == 1) {
-        region <- c(region, region)
+    checkmate::assert_numeric(equivalence, min.len = 1, max.len = 2)
+    if (length(equivalence) == 1) {
+        equivalence <- c(equivalence, equivalence)
     }
 
-    delta <- abs(diff(region)) / 2
-    null <- min(region) + delta
-    # x$region.null <- null
-    # x$region.low <- max(region)
-    # x$region.high <- min(region)
+    delta <- abs(diff(equivalence)) / 2
+    null <- min(equivalence) + delta
+    # x$equivalence.null <- null
+    # x$equivalence.low <- max(equivalence)
+    # x$equivalence.high <- min(equivalence)
 
-    # definitions from `emmeans`, with a different user interface based on symmetric "region"
+    # definitions from `emmeans`, with a different user interface based on symmetric "equivalence"
     x$statistic.sup <- (x$estimate - null - delta) / x$std.error
     x$statistic.inf <- (x$estimate - null + delta) / x$std.error
 

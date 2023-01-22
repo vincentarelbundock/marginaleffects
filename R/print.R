@@ -22,8 +22,11 @@ print.slopes.summary <- function(x,
             out[[col]] <- format(out[[col]], digits = digits)
         }
     }
-    if ("p.value" %in% colnames(out)) {
-        out[["p.value"]] <- format.pval(out[["p.value"]])
+
+    for (p in c("p.value", "p.value.sup", "p.value.inf", "p.value.equ")) {
+        if (p %in% colnames(out)) {
+            out[[p]] <- format.pval(out[[p]])
+        }
     }
 
     if (is.null(attr(x, "conf_level"))) {
@@ -56,7 +59,11 @@ print.slopes.summary <- function(x,
             sprintf("%.1f %%", alpha / 2)),
         "conf.high" = ifelse(is.null(alpha),
             "CI high",
-            sprintf("%.1f %%", 100 - alpha / 2)))
+            sprintf("%.1f %%", 100 - alpha / 2)),
+        "p.value.sup" = "p (Sup)",
+        "p.value.inf" = "p (Inf)",
+        "p.value.equ" = "p (Eq)"
+        )
 
     if (inherits(x, "marginalmeans.summary")) {
         dict["estimate"] <- "Mean"
@@ -74,9 +81,10 @@ print.slopes.summary <- function(x,
     # avoid infinite recursion by stripping marginaleffect.summary class
     out <- as.data.frame(out)
 
-    # predicted_* columsn are no longer necessary in summary(), but we want to
+    # these columns are no longer necessary in summary(), but we want to
     # keep them in the raw data
-    out <- out[, !colnames(out) %in% c("predicted", "predicted_lo", "predicted_hi")]
+    idx <- grepl("^predicted|^statistic\\.", colnames(out))
+    out <- out[, !idx]
 
     # some commands do not generate average contrasts/mfx. E.g., `lnro` with `by`
     print(out)

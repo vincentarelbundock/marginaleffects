@@ -10,9 +10,7 @@ deltamethod(
   FUN = NULL,
   vcov = NULL,
   conf_level = 0.95,
-  null = 0,
-  delta = 0,
-  side = NULL,
+  equivalence = NULL,
   df = Inf,
   ...
 )

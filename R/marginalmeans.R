@@ -314,7 +314,7 @@ marginalmeans <- function(model,
         }
     }
 
-    # `region` should not be passed to predictions() at this stage
+    # `equivalence` should not be passed to predictions() at this stage
     args <- list(
         model = model,
         newdata = newgrid,
@@ -325,7 +325,7 @@ marginalmeans <- function(model,
         by = by,
         modeldata = modeldata)
     args <- c(args, list(...))
-    args[["region"]] <- NULL
+    args[["equivalence"]] <- NULL
     mm <- do.call(get_marginalmeans, args)
 
     # we want consistent output, regardless of whether `data.table` is installed/used or not
@@ -346,7 +346,7 @@ marginalmeans <- function(model,
             hypothesis = hypothesis,
             by = by)
         args <- c(args, list(...))
-        args[["region"]] <- NULL
+        args[["equivalence"]] <- NULL
         se <- do.call(get_se_delta, args)
 
         # get rid of attributes in column

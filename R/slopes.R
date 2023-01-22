@@ -1,17 +1,13 @@
 #' Slopes (aka "Partial derivatives", "Marginal Effects", or "Trends")
 #'
 #' @description
-#' Partial derivative of the regression equation with respect to a regressor of
-#' interest. Slopes are typically "conditional" (or "unit-level") estimates: they will
-#' typically vary based on the values of predictors in the model. By default,
-#' the `slopes()` function thus returns one estimate of the slope for each row of
-#' the dataset used to fit a model. 
+#' Partial derivative of the regression equation with respect to a regressor of interest. Slopes are typically unit-level (or "conditional") estimates: they will typically vary based on the values of predictors in the model. 
 #' 
-#' The `newdata` argument controls where slopes are evaluated in the predictor
-#' space: "at observed values", "at the mean", "at representative values", etc. 
+#' By default, the `slopes()` function thus returns one estimate of the slope for each row of the dataset used to fit a model. 
 #' 
-#' The `averages()` function or `by` argument can aggregate
-#' unit-level estimates into an "average slope".
+#' The `newdata` argument controls where slopes are evaluated in the predictor space: "at observed values", "at the mean", "at representative values", etc. 
+#' 
+#' The `by` argument or the `avg_slopes()` function can aggregate unit-level estimates into an "average" or "marginal" slope.
 #' 
 #' See the slopes vignette and package website for worked examples and case studies:
 #' 
@@ -208,8 +204,8 @@ slopes <- function(model,
                    newdata = NULL,
                    variables = NULL,
                    type = NULL,
-                   vcov = TRUE,
                    by = FALSE,
+                   vcov = TRUE,
                    conf_level = 0.95,
                    slope = "dydx",
                    wts = NULL,
@@ -325,3 +321,39 @@ meffects <- slopes
 #' @keywords internal
 #' @export
 marginaleffects <- slopes
+
+
+#' Average slopes (aka Average partial derivatives, marginal effects, or trends)
+#' @describeIn slopes Average slopes
+#' @export
+#'
+avg_slopes <- function(model,
+                       newdata = NULL,
+                       variables = NULL,
+                       type = NULL,
+                       by = TRUE,
+                       vcov = TRUE,
+                       conf_level = 0.95,
+                       slope = "dydx",
+                       wts = NULL,
+                       hypothesis = NULL,
+                       df = Inf,
+                       eps = NULL,
+                       ...) {
+    out <- slopes(
+        model = model,
+        newdata = newdata,
+        variables = variables,
+        type = type,
+        vcov = vcov,
+        conf_level = conf_level,
+        by = by,
+        slope = slope,
+        wts = wts,
+        hypothesis = hypothesis,
+        df = df,
+        eps = eps,
+        ...)
+    class(out) <- c("averages", class(out))
+    return(out)
+}

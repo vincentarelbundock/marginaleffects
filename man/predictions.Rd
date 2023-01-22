@@ -2,6 +2,7 @@
 % Please edit documentation in R/predictions.R
 \name{predictions}
 \alias{predictions}
+\alias{avg_predictions}
 \title{Adjusted Predictions}
 \usage{
 predictions(
@@ -12,6 +13,22 @@ predictions(
   conf_level = 0.95,
   type = NULL,
   by = NULL,
+  byfun = NULL,
+  wts = NULL,
+  transform_post = NULL,
+  hypothesis = NULL,
+  df = Inf,
+  ...
+)
+
+avg_predictions(
+  model,
+  newdata = NULL,
+  variables = NULL,
+  vcov = TRUE,
+  conf_level = 0.95,
+  type = NULL,
+  by = TRUE,
   byfun = NULL,
   wts = NULL,
   transform_post = NULL,
@@ -180,7 +197,7 @@ A \code{data.frame} with one row per observation and several columns:
 Outcome predicted by a fitted model on a specified scale for a given
 combination of values of the predictor variables, such as their observed
 values, their means, or factor levels (a.k.a. "reference grid"). The
-\code{averages()} function or \code{by} argument can be used to marginalize ("average
+\code{avg_predictions()} function or \code{by} argument can be used to marginalize ("average
 over") unit-level predictions.
 
 To learn more, read the predictions vignette, visit the
@@ -207,6 +224,11 @@ predictions, and builds symmetric confidence intervals. These naive symmetric
 intervals may not always be appropriate. For instance, they may stretch beyond
 the bounds of a binary response variables.
 }
+\section{Functions}{
+\itemize{
+\item \code{avg_predictions()}: Average predictions
+
+}}
 \section{Vignettes and documentation}{
 
 

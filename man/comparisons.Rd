@@ -2,6 +2,7 @@
 % Please edit documentation in R/comparisons.R
 \name{comparisons}
 \alias{comparisons}
+\alias{avg_comparisons}
 \title{Comparisons Between Predictions Made for Different Regressor Values}
 \usage{
 comparisons(
@@ -11,6 +12,24 @@ comparisons(
   type = NULL,
   vcov = TRUE,
   by = FALSE,
+  conf_level = 0.95,
+  transform_pre = "difference",
+  transform_post = NULL,
+  cross = FALSE,
+  wts = NULL,
+  hypothesis = NULL,
+  df = Inf,
+  eps = NULL,
+  ...
+)
+
+avg_comparisons(
+  model,
+  newdata = NULL,
+  variables = NULL,
+  type = NULL,
+  vcov = TRUE,
+  by = TRUE,
   conf_level = 0.95,
   transform_pre = "difference",
   transform_post = NULL,
@@ -203,7 +222,7 @@ comparison for each row of the dataset used to fit a model.
 The \code{newdata} argument controls where comparisons are evaluated in the predictor
 space: "at observed values", "at the mean", "at representative values", etc.
 
-The \code{averages()} function or \code{by} argument can aggregate
+The \code{avg_comparisons()} function or \code{by} argument can aggregate
 unit-level estimates into an "average contrast", "average risk ratio", etc.
 
 See the comparisons vignette and package website for worked examples and case studies:
@@ -229,6 +248,11 @@ The \code{newdata} argument can be used to control the kind of contrasts to repo
 \item Custom contrasts using arbitrary functions
 }
 }
+\section{Functions}{
+\itemize{
+\item \code{avg_comparisons()}: Average comparisons
+
+}}
 \section{Vignettes and documentation}{
 
 

@@ -72,19 +72,19 @@ hypotheses <- function(
     FUN = NULL,
     vcov = NULL,
     conf_level = 0.95,
-    region = NULL,
+    equivalence = NULL,
     df = Inf,
     ...) {
 
     # TODO: should conf_level be overwritten?
     out <- recall(model, hypothesis = hypothesis, vcov = vcov)
     if (!is.null(out)) {
-        if (!is.null(region)) {
+        if (!is.null(equivalence)) {
             null <- sanitize_hypothesis(hypothesis, ...)$hypothesis_null
             out <- equivalence(
                 out,
                 df = df,
-                region = region)
+                equivalence = equivalence)
         }
         first = c("type", "term", "value", "estimate", "std.error", "statistic", "p.value", "conf.low", "conf.high") 
         out <- sort_columns(out, first)
@@ -168,11 +168,11 @@ hypotheses <- function(
         df = df,
         ...)
 
-    if (!is.null(region)) {
+    if (!is.null(equivalence)) {
         out <- equivalence(
             out,
             df = df,
-            region = region)
+            equivalence = equivalence)
     }
 
     first = c("type", "term", "value", "estimate", "std.error", "statistic", "p.value", "conf.low", "conf.high")

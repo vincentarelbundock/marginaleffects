@@ -15,7 +15,7 @@
 #' The `newdata` argument controls where comparisons are evaluated in the predictor
 #' space: "at observed values", "at the mean", "at representative values", etc. 
 #' 
-#' The `averages()` function or `by` argument can aggregate
+#' The `avg_comparisons()` function or `by` argument can aggregate
 #' unit-level estimates into an "average contrast", "average risk ratio", etc.
 #' 
 #' See the comparisons vignette and package website for worked examples and case studies:
@@ -530,5 +530,45 @@ comparisons <- function(model,
     }
 
     class(out) <- c("comparisons", class(out))
+    return(out)
+}
+
+
+#' Average comparisons
+#' @describeIn comparisons Average comparisons
+#' @export
+#'
+avg_comparisons <- function(model,
+                            newdata = NULL,
+                            variables = NULL,
+                            type = NULL,
+                            vcov = TRUE,
+                            by = TRUE,
+                            conf_level = 0.95,
+                            transform_pre = "difference",
+                            transform_post = NULL,
+                            cross = FALSE,
+                            wts = NULL,
+                            hypothesis = NULL,
+                            df = Inf,
+                            eps = NULL,
+                            ...) {
+    out <- comparisons(
+        model = model,
+        newdata = newdata,
+        variables = variables,
+        type = type,
+        vcov = vcov,
+        by = by,
+        conf_level = conf_level,
+        transform_pre = transform_pre,
+        transform_post = transform_post,
+        cross = cross,
+        wts = wts,
+        hypothesis = hypothesis,
+        df = df,
+        eps = eps,
+        ...)
+    class(out) <- c("averages", class(out))
     return(out)
 }

@@ -14,7 +14,7 @@ e1 <- test(em, delta = delta, null = null, side = "noninferiority", df = Inf)
 e2 <- predictions(
     mod,
     newdata = datagrid(gear = unique),
-    region = c(19, 21),
+    equivalence = c(19, 21),
     side = "noninferiority") |>
     dplyr::arrange(gear)
 expect_equivalent(e1$z.ratio, e2$statistic.inf)
@@ -26,7 +26,7 @@ e1 <- test(em, delta = 1, null = 23, side = "nonsuperiority", df = Inf)
 e2 <- predictions(
     mod,
     newdata = datagrid(gear = unique),
-    region = c(22, 24)) |>
+    equivalence = c(22, 24)) |>
     dplyr::arrange(gear)
 expect_equivalent(e1$z.ratio, e2$statistic.sup)
 expect_equivalent(e1$p.value, e2$p.value.sup)
@@ -37,7 +37,7 @@ e1 <- test(em, delta = 1, null = 22, side = "equivalence", df = Inf)
 e2 <- predictions(
     mod,
     newdata = datagrid(gear = unique),
-    region = c(21, 23)) |>
+    equivalence = c(21, 23)) |>
     dplyr::arrange(gear)
 expect_equivalent(e1$p.value, e2$p.value.equ)
 
@@ -47,7 +47,7 @@ mfx <- slopes(
     mod,
     variables = "hp",
     newdata = "mean",
-    region = c(-.09, .01))
+    equivalence = c(-.09, .01))
 expect_inherits(mfx, "slopes")
 
 
@@ -63,17 +63,17 @@ mm <- marginalmeans(
     hypothesis = "pairwise") 
 
 e1 <- test(pa, delta = delta, adjust = "none", side = "nonsuperiority", df = Inf)
-e2 <- hypotheses(mm, region = c(-delta, delta))
+e2 <- hypotheses(mm, equivalence = c(-delta, delta))
 expect_equivalent(e1$z.ratio, e2$statistic.sup)
 expect_equivalent(e1$p.value, e2$p.value.sup)
 
 e1 <- test(pa, delta = delta, adjust = "none", side = "noninferiority", df = Inf)
-e2 <- hypotheses(mm, region = c(-delta, delta))
+e2 <- hypotheses(mm, equivalence = c(-delta, delta))
 expect_equivalent(e1$z.ratio, e2$statistic.inf)
 expect_equivalent(e1$p.value, e2$p.value.inf)
 
 e1 <- test(pa, delta = delta, adjust = "none", df = Inf)
-e2 <- hypotheses(mm, region = c(-delta, delta))
+e2 <- hypotheses(mm, equivalence = c(-delta, delta))
 expect_equivalent(e1$p.value, e2$p.value.equ)
 
 
@@ -91,7 +91,13 @@ e1 <- tost(dat$y[dat$x == 0], dat$y[dat$x == 1], epsilon = .05)
 e2 <- hypotheses(
     mod,
     FUN = FUN,
-    region = c(-.05, .05),
+    equivalence = c(-.05, .05),
     df = e1$parameter)
 expect_true(e1$tost.p.value > .5 && e1$tost.p.value < .9)
 expect_equivalent(e1$tost.p.value, e2$p.value.equ)
+
+
+
+# exit_if_not(require("tinyviztest"))
+cmp <- avg_comparisons(mod, equivalence = c(-.1, 0))
+expect_snapshot_print(cmp, "equivalence-avg_comparisons")

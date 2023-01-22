@@ -1,0 +1,5 @@
+  Term Contrast Estimate Std. Error    z Pr(>|z|)   2.5 % 97.5 % p (Sup) p (Inf) p (Eq)
+1    x    1 - 0    0.229      0.149 1.54    0.124 -0.0628   0.52   0.938  0.0136  0.938
+
+Model type:  lm 
+Prediction type:  response 
