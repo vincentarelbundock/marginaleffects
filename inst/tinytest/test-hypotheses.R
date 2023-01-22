@@ -80,7 +80,7 @@ expect_equivalent(del$term, c("H1", "H2"))
 # expect_equivalent(nrow(dm), 1)
 
 # mod <- glm(vs ~ hp + factor(am), data = mtcars, family = binomial)
-# mm <- marginalmeans(mod, "am")
+# mm <- marginal_means(mod, "am")
 # dm <- hypotheses(mm, hypothesis = "b1 = b2")
 # expect_true("b1=b2" %in% dm$term)
 # expect_equivalent(nrow(dm), 1)

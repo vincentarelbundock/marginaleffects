@@ -19,7 +19,7 @@ get_predict.glmmTMB <- function(model,
         vcov = vcov,
         conf_level = conf_level,
         type = type,
-        allow.new.levels = TRUE, # otherwise we get errors in marginalmeans()
+        allow.new.levels = TRUE, # otherwise we get errors in marginal_means()
         ...)
     return(out)
 }

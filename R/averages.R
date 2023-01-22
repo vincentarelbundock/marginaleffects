@@ -169,7 +169,7 @@ averages.slopes <- averages.comparisons
 #' @export
 averages.marginalmeans <- function(x, by = FALSE, ...) {
     if (!isFALSE(by)) {
-        insight::format_error("The `by` argument is not supported by the `averages()` function for `marginalmeans` models.")
+        insight::format_error("The `by` argument is not supported by the `averages()` function for `marginal_means` models.")
     }
     summary(x, ...)
 }

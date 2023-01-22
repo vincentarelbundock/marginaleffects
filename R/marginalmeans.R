@@ -53,10 +53,10 @@
 #'   In the prediction grid, numeric variables are held at their means.
 #'
 #'   After constructing the grid and filling the grid with adjusted predictions,
-#'   `marginalmeans` computes marginal means for the variables listed in the
+#'   `marginal_means` computes marginal means for the variables listed in the
 #'   `variables` argument, by average across all categories in the grid.
 #'
-#'   `marginalmeans` can only compute standard errors for linear models, or for
+#'   `marginal_means` can only compute standard errors for linear models, or for
 #'   predictions on the link scale, that is, with the `type` argument set to
 #'   "link".
 #'
@@ -80,7 +80,7 @@
 #' dat$am <- as.logical(dat$am)
 #' mod <- lm(mpg ~ carb + cyl + am, dat)
 #' 
-#' marginalmeans(
+#' marginal_means(
 #'   mod,
 #'   variables = "cyl")
 #' 
@@ -88,18 +88,18 @@
 #' by <- data.frame(
 #'   cyl = c(4, 6, 8),
 #'   by = c("4 & 6", "4 & 6", "8"))
-#' marginalmeans(mod,
+#' marginal_means(mod,
 #'   variables = "cyl",
 #'   by = by)
 #' 
 #' # pairwise differences between collapsed levels
-#' marginalmeans(mod,
+#' marginal_means(mod,
 #'   variables = "cyl",
 #'   by = by,
 #'   hypothesis = "pairwise")
 #' 
 #' # cross
-#' marginalmeans(mod,
+#' marginal_means(mod,
 #'   variables = c("cyl", "carb"),
 #'   cross = TRUE)
 #' 
@@ -120,14 +120,14 @@
 #' mod <- lm(mpg ~ hp + am + carb, data = dat)
 #'
 #' # Compute and summarize marginal means
-#' marginalmeans(mod)
+#' marginal_means(mod)
 #'
 #' # Contrast between marginal means (carb2 - carb1), or "is the 1st marginal means equal to the 2nd?"
 #' # see the vignette on "Hypothesis Tests and Custom Contrasts" on the `marginaleffects` website.
 #' lc <- c(-1, 1, 0, 0, 0, 0)
-#' marginalmeans(mod, variables = "carb", hypothesis = "b2 = b1")
+#' marginal_means(mod, variables = "carb", hypothesis = "b2 = b1")
 #'
-#' marginalmeans(mod, variables = "carb", hypothesis = lc)
+#' marginal_means(mod, variables = "carb", hypothesis = lc)
 #'
 #' # Multiple custom contrasts
 #' lc <- matrix(c(
@@ -136,21 +136,21 @@
 #'     ),
 #'   ncol = 2,
 #'   dimnames = list(NULL, c("A", "B")))
-#' marginalmeans(mod, variables = "carb", hypothesis = lc)
+#' marginal_means(mod, variables = "carb", hypothesis = lc)
 #' 
-marginalmeans <- function(model,
-                          variables = NULL,
-                          variables_grid = NULL,
-                          vcov = TRUE,
-                          conf_level = 0.95,
-                          type = NULL,
-                          transform_post = NULL,
-                          cross = FALSE,
-                          hypothesis = NULL,
-                          df = Inf,
-                          wts = "equal",
-                          by = NULL,
-                          ...) {
+marginal_means <- function(model,
+                           variables = NULL,
+                           variables_grid = NULL,
+                           vcov = TRUE,
+                           conf_level = 0.95,
+                           type = NULL,
+                           transform_post = NULL,
+                           cross = FALSE,
+                           hypothesis = NULL,
+                           df = Inf,
+                           wts = "equal",
+                           by = NULL,
+                           ...) {
 
 
     # if type is NULL, we backtransform if relevant
@@ -199,7 +199,7 @@ marginalmeans <- function(model,
     sanity_dots(model = model, ...)
     if (inherits(model, "brmsfit")) {
         insight::format_error(c(
-            "`brmsfit` objects are yet not supported by the `marginalmeans` function.  Follow this link to track progress:",
+            "`brmsfit` objects are yet not supported by the `marginal_means` function.  Follow this link to track progress:",
             "https://github.com/vincentarelbundock/marginaleffects/issues/137"))
     }
 
@@ -404,7 +404,7 @@ marginalmeans <- function(model,
 }
 
 
-#' Workhorse function for `marginalmeans`
+#' Workhorse function for `marginal_means`
 #'
 #' Needs to be separate because we also need it in `delta_method`
 #' @inheritParams marginalmeans
@@ -480,7 +480,7 @@ get_marginalmeans <- function(model,
         # warnings for factor vs numeric vs character. merge.data.table usually still works.
         bycols <- intersect(colnames(out), colnames(by))
         if (length(bycols) == 0) {
-            msg <- "There is no common columns in `by` and in the output of `marginalmeans()`. Make sure one of the entries in the `variables` argument corresponds to one of the columns in `by`."
+            msg <- "There is no common columns in `by` and in the output of `marginal_means()`. Make sure one of the entries in the `variables` argument corresponds to one of the columns in `by`."
             insight::format_error(msg)
         }
         for (b in bycols) {
@@ -504,3 +504,14 @@ get_marginalmeans <- function(model,
 
     return(out)
 }
+
+
+
+#' `marginal_means()` is an alias to `marginal_means()`
+#' 
+#' This alias is kept for backward compatibility and because some users may prefer that name.
+#'
+#' @inherit marginal_means
+#' @keywords internal
+#' @export
+marginalmeans <- marginal_means

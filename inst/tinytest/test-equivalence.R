@@ -51,13 +51,13 @@ mfx <- slopes(
 expect_inherits(mfx, "slopes")
 
 
-# marginalmeans() vs. {emmeans}
+# marginal_means() vs. {emmeans}
 delta <- log(1.25)
 mod <- lm(log(conc) ~ source + factor(percent), data = pigs)
 rg <- ref_grid(mod)
 em <- emmeans(rg, "source", at = list(), df = Inf)
 pa <- pairs(em, df = Inf)
-mm <- marginalmeans(
+mm <- marginal_means(
     mod,
     variables = "source",
     hypothesis = "pairwise") 

@@ -105,10 +105,10 @@ data("bioChemists", package = "pscl")
 model <- zeroinfl(art ~ kid5 + phd + mar | ment,
               dist = "negbin",
               data = bioChemists)
-mm <- marginalmeans(model)
-expect_marginalmeans(mm)
+mm <- marginal_means(model)
+expect_marginal_means(mm)
 # response
-mm <- tidy(marginalmeans(model))
+mm <- tidy(marginal_means(model))
 em <- tidy(emmeans(model, specs = "mar", df = Inf))
 expect_equivalent(mm$estimate, em$estimate, tol = 0.01)
 expect_equivalent(mm$std.error, em$std.error, tolerance = .01)

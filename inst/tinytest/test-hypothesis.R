@@ -127,16 +127,16 @@ lc <- c(-2, 1, 1, 0, -1, 1)
 em <- emmeans(mod, "carb") 
 em <- contrast(em, method = data.frame(custom_contrast = lc))
 em <- data.frame(em)
-mm <- marginalmeans(mod, variables = "carb", hypothesis = lc)
+mm <- marginal_means(mod, variables = "carb", hypothesis = lc)
 expect_equivalent(mm$estimate, em$estimate)
 expect_equivalent(mm$std.error, em$SE)
 
 # marginalmeans: hypothesis shortcut
-mm <- marginalmeans(mod, variables = "carb", hypothesis = "reference")
+mm <- marginal_means(mod, variables = "carb", hypothesis = "reference")
 expect_equivalent(nrow(mm), 5)
-mm <- marginalmeans(mod, variables = "carb", hypothesis = "sequential")
+mm <- marginal_means(mod, variables = "carb", hypothesis = "sequential")
 expect_equivalent(nrow(mm), 5)
-mm <- marginalmeans(mod, variables = "carb", hypothesis = "pairwise")
+mm <- marginal_means(mod, variables = "carb", hypothesis = "pairwise")
 expect_equivalent(nrow(mm), 15)
 
 # marginalmeans: hypothesis complex matrix
@@ -144,16 +144,16 @@ lc <- matrix(c(
     -2, 1, 1, 0, -1, 1,
     -1, 1, 0, 0, 0, 0
     ), ncol = 2)
-mm <- marginalmeans(mod, variables = "carb", hypothesis = lc)
+mm <- marginal_means(mod, variables = "carb", hypothesis = lc)
 expect_inherits(mm, "marginalmeans")
 expect_equal(nrow(mm), 2)
 
 
 # marginalmeans: string function
-mm1 <- marginalmeans(
+mm1 <- marginal_means(
     mod,
     hypothesis = "b1 + b2 = 12")
-mm2 <- marginalmeans(mod)
+mm2 <- marginal_means(mod)
 expect_equivalent(
     mm2$estimate[1] + mm2$estimate[2] - 12,
     mm1$estimate)

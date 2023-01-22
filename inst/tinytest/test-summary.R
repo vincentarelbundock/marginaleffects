@@ -47,7 +47,7 @@ dat$vs <- as.logical(dat$vs)
 dat$gear <- as.factor(dat$gear)
 dat <- dat
 mod <- lm(mpg ~ gear + am + vs, dat)
-mm <- marginalmeans(mod)
+mm <- marginal_means(mod)
 expect_snapshot_print(summary(mm), "summary-marginalmeans")
 
 

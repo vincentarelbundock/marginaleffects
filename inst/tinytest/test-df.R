@@ -13,7 +13,7 @@ mod <- lm(mpg ~ cyl, data = dat)
 em <- emmeans(mod, ~ cyl)
 em <- confint(pairs(em), adjust = "none")
 
-mm <- marginalmeans(
+mm <- marginal_means(
     mod,
     variables = "cyl",
     hypothesis = "pairwise",

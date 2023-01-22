@@ -15,7 +15,7 @@ cmp <- comparisons(mod)
 expect_inherits(cmp, "comparisons")
 
 # marginalmeans vs. emmeans
-mm <- marginalmeans(
+mm <- marginal_means(
     mod,
     variables = c("angle", "noise"),
     cross = FALSE)
@@ -52,6 +52,6 @@ mod <- suppressMessages(aov_car(
     data = obk.long, observed = "gender"))
 
 em <- data.frame(emmeans(mod, ~ phase))
-mm <- marginalmeans(mod, "phase")
+mm <- marginal_means(mod, "phase")
 expect_equivalent(mm$estimate, em$emmean)
 expect_equivalent(mm$std.error, em$SE)

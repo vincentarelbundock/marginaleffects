@@ -140,7 +140,7 @@ The `marginaleffects` package includes functions to estimate, average, plot, and
 | | [`avg_slopes()`](https://vincentarelbundock.github.io/marginaleffects/reference/slopes.html) |
 | | [`plot_cme()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cme.html) |
 | | [`plot_avg()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_avg.html) |
-| [Marginal means](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) | [`marginalmeans()`](https://vincentarelbundock.github.io/marginaleffects/reference/marginalmeans.html) |
+| [Marginal means](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) | [`marginal_means()`](https://vincentarelbundock.github.io/marginaleffects/reference/marginalmeans.html) |
 
 ### Examples
 
@@ -304,10 +304,10 @@ avg_predictions(
   by = "am")
 ```
 
-For convenience, the `marginaleffects` package also includes a `marginalmeans()` function:
+For convenience, the `marginaleffects` package also includes a `marginal_means()` function:
 
 ```{r}
-marginalmeans(mod_cat, variables = "am")
+marginal_means(mod_cat, variables = "am")
 ```
 
 [The Marginal Means vignette](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) offers more detail.

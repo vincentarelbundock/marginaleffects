@@ -198,7 +198,7 @@ Collate:
     'plot_cap.R'
     'plot_cco.R'
     'plot_cme.R'
-    'posteriordraws.R'
+    'posterior_draws.R'
     'predictions.R'
     'print.R'
     'recall.R'

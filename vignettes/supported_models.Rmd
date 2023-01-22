@@ -9,7 +9,7 @@ vignette: >
 
 # Adjusted predictions and marginal means
 
-Under the hood, `marginaleffects`'s `predictions` and `marginalmeans` functions use the `insight` package to retrieve adjusted predictions from a wide variety of models. Currently, `insight` [supports very many model types](https://easystats.github.io/insight/#list-of-supported-models-by-class), and most should work out-of-the-box with the `predictions` function. If you run into problems, do not hesitate to [report them on Github or via email.](https://github.com/vincentarelbundock/marginaleffects/issues)
+Under the hood, `marginaleffects`'s `predictions` and `marginal_means` functions use the `insight` package to retrieve adjusted predictions from a wide variety of models. Currently, `insight` [supports very many model types](https://easystats.github.io/insight/#list-of-supported-models-by-class), and most should work out-of-the-box with the `predictions` function. If you run into problems, do not hesitate to [report them on Github or via email.](https://github.com/vincentarelbundock/marginaleffects/issues)
 
 # Marginal effects and contrasts
 

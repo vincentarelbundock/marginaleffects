@@ -74,7 +74,7 @@ expect_slopes <- function(
 #' 
 #' @export
 #' @keywords internal
-expect_marginalmeans <- function(object,
+expect_marginal_means <- function(object,
                                  se = TRUE,
                                  n_row = NULL) {
 

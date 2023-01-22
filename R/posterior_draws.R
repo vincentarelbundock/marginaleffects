@@ -127,7 +127,7 @@ average_draws <- function(data, index, draws, byfun = NULL) {
 
 
 
-#' `posterior_draws()` is an alias to `posterior_draws()`
+#' `posteriordraws()` is an alias to `posterior_draws()`
 #' 
 #' This alias is kept for backward compatibility and because some users may prefer that name.
 #'

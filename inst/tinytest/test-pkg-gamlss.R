@@ -57,8 +57,8 @@ expect_predictions(pred, n_row = 6)
 
 
 # marginalmeans: vs. emmeans
-mm <- marginalmeans(mod, what = "mu")
-expect_marginalmeans(mm, n_row = 10)
+mm <- marginal_means(mod, what = "mu")
+expect_marginal_means(mm, n_row = 10)
 mm <- tidy(mm)
 em <- broom::tidy(emmeans::emmeans(mod, "batch", type = "response"))
 expect_equivalent(mm$estimate, em$response, tol = 0.001)
@@ -105,8 +105,8 @@ expect_predictions(pred, n_row = 6)
 
 
 # marginalmeans: vs. emmeans
-mm <- marginalmeans(mod, variables = "Pclass", what = "mu")
-expect_marginalmeans(mm, n_row = 3)
+mm <- marginal_means(mod, variables = "Pclass", what = "mu")
+expect_marginal_means(mm, n_row = 3)
 mm <- tidy(mm)
 em <- broom::tidy(emmeans::emmeans(mod, "Pclass", type = "response"))
 expect_equivalent(mm$estimate, em$response)

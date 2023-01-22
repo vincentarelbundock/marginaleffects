@@ -7,7 +7,7 @@ reference:
     - predictions
     - comparisons
     - slopes
-    - marginalmeans
+    - marginal_means
     - hypotheses
     - avg_predictions
     - avg_comparisons
@@ -20,7 +20,7 @@ reference:
     - starts_with("plot")
   - title: Object summaries
     contents:
-    - posteriordraws
+    - posterior_draws
     - averages
     - starts_with("summary|glance|tidy")
 navbar:

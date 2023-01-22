@@ -144,10 +144,10 @@ mod <- glmmTMB(
     Survived ~ Sex + z + (1 + Age | PClass),
     family = binomial,
     data = dat)
-mm1 <- marginalmeans(mod, variables = c("Sex", "PClass"))
-mm2 <- marginalmeans(mod, type = "link", variables = c("Sex", "PClass"))
-mm3 <- marginalmeans(mod, variables = c("Sex", "PClass"), cross = TRUE)
-mm4 <- marginalmeans(mod, type = "link", variables = c("Sex", "PClass"), cross = TRUE)
+mm1 <- marginal_means(mod, variables = c("Sex", "PClass"))
+mm2 <- marginal_means(mod, type = "link", variables = c("Sex", "PClass"))
+mm3 <- marginal_means(mod, variables = c("Sex", "PClass"), cross = TRUE)
+mm4 <- marginal_means(mod, type = "link", variables = c("Sex", "PClass"), cross = TRUE)
 expect_true(all(mm1$estimate != mm2$estimate))
 expect_true(all(mm1$std.error != mm2$std.error))
 expect_true(all(mm3$estimate != mm4$estimate))
@@ -157,7 +157,7 @@ expect_true(nrow(mm3) > nrow(mm1))
 
 # marginalmeans: some validity
 em <- data.frame(emmeans(mod, ~Sex))
-mm <- marginalmeans(mod, variables = "Sex", type = "link", re.form = NA)
+mm <- marginal_means(mod, variables = "Sex", type = "link", re.form = NA)
 expect_equivalent(em$emmean, mm$estimate)
 expect_equivalent(em$SE, mm$std.error)
 
@@ -169,7 +169,7 @@ m1 <- glmmTMB(
     count ~ mined + (1 | site),
     zi = ~mined,
     family = poisson, data = Salamanders)
-expect_inherits(marginalmeans(m1, variables = "mined"), "marginalmeans")
+expect_inherits(marginal_means(m1, variables = "mined"), "marginalmeans")
 
 
 
@@ -190,7 +190,7 @@ model <- glmmTMB(
   REML = FALSE,
   data = dat)
 em <- data.frame(emmeans(model, ~trial + groupid, df = Inf))
-mm <- marginalmeans(model, variables = c("trial", "groupid"), cross = TRUE, re.form = NA)
+mm <- marginal_means(model, variables = c("trial", "groupid"), cross = TRUE, re.form = NA)
 mm <- mm[order(mm$groupid, mm$trial),]
 expect_equivalent(mm$estimate, em$emmean)
 expect_equivalent(mm$conf.high, em$asymp.UCL)
@@ -203,7 +203,7 @@ model_REML <- glmmTMB(
 expect_error(slopes(model_REML), pattern = "REML")
 expect_error(comparisons(model_REML), pattern = "REML")
 expect_error(predictions(model_REML), pattern = "REML")
-expect_error(marginalmeans(model_REML), pattern = "REML")
+expect_error(marginal_means(model_REML), pattern = "REML")
 expect_inherits(slopes(model_REML, vcov = FALSE), "marginaleffects")
 expect_inherits(predictions(model_REML, re.form = NA, vcov = FALSE), "predictions")
 expect_inherits(predictions(model_REML, vcov = FALSE, re.form = NA), "predictions")

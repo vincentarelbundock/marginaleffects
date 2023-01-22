@@ -70,10 +70,10 @@ kbl(pred) |>
     add_header_above(c(" " = 1, "am" = 2, " " = 1))
 ```
 
-The marginal means by `am` and `cyl` are obtained by taking the mean of the adjusted predictions across cells. The `marginalmeans` function gives us the same results easily:
+The marginal means by `am` and `cyl` are obtained by taking the mean of the adjusted predictions across cells. The `marginal_means` function gives us the same results easily:
 
 ```{r}
-marginalmeans(mod)
+marginal_means(mod)
 ```
 
 We could obtain the same results with the `by` argument of the `predictions()` function, which allows us to marginalize across some predictors:
@@ -100,7 +100,7 @@ emmeans(mod, specs = "am")
 
 # Interactions
 
-By default, the `marginalmeans()` function calculates marginal means for each categorical predictor one after the other. We can also compute marginal means for *combinations* of categories by setting `cross=TRUE`:
+By default, the `marginal_means()` function calculates marginal means for each categorical predictor one after the other. We can also compute marginal means for *combinations* of categories by setting `cross=TRUE`:
 
 ```{r, message = FALSE, warning = FALSE}
 library(lme4)
@@ -113,10 +113,10 @@ titanic <- glmer(
     data = dat)
 ```
 
-Regardless of the scale of the predictions (`type` argument), `marginalmeans()` always computes standard errors using the Delta Method: 
+Regardless of the scale of the predictions (`type` argument), `marginal_means()` always computes standard errors using the Delta Method: 
 
 ```{r}
-marginalmeans(
+marginal_means(
     titanic,
     type = "response",
     variables = c("Sex", "PClass"))
@@ -125,7 +125,7 @@ marginalmeans(
 When the model is linear or on the link scale, it also produces confidence intervals: 
 
 ```{r}
-marginalmeans(
+marginal_means(
     titanic,
     type = "link",
     variables = c("Sex", "PClass"))
@@ -134,14 +134,14 @@ marginalmeans(
 It is easy to transform those link-scale marginal means with arbitrary functions using the `transform_post` argument:
 
 ```{r}
-marginalmeans(
+marginal_means(
     titanic,
     type = "link",
     transform_post = insight::link_inverse(titanic),
     variables = c("Sex", "PClass"))
 ```
 
-`marginalmeans()` defaults to reporting EMMs for each category individually, without cross-margins:
+`marginal_means()` defaults to reporting EMMs for each category individually, without cross-margins:
 
 ```{r, warning = FALSE, message = FALSE}
 titanic2 <- glmer(
@@ -149,7 +149,7 @@ titanic2 <- glmer(
     family = binomial,
     data = dat)
 
-marginalmeans(
+marginal_means(
     titanic2,
     variables = c("Sex", "PClass"))
 ```
@@ -157,7 +157,7 @@ marginalmeans(
 We can force the cross:
 
 ```{r}
-marginalmeans(
+marginal_means(
     titanic2,
     cross = TRUE,
     variables = c("Sex", "PClass"))
@@ -179,13 +179,13 @@ by <- data.frame(
     by = c("(4 & 6)", "(4 & 6)", "(8)"),
     cyl = c(4, 6, 8))
 
-marginalmeans(mod, by = by, variables = "cyl")
+marginal_means(mod, by = by, variables = "cyl")
 ```
 
 And we can use the `hypothesis` argument to compare those new collapsed subgroups:
 
 ```{r}
-marginalmeans(mod, by = by, variables = "cyl", hypothesis = "pairwise")
+marginal_means(mod, by = by, variables = "cyl", hypothesis = "pairwise")
 ```
 
 # Custom Contrasts and Linear Combinations
@@ -197,7 +197,7 @@ See the vignette on [Custom Contrasts and Combinations](https://vincentarelbundo
 The `summary`, `tidy`, and `glance` functions are also available to summarize and manipulate the results:
 
 ```{r}
-mm <- marginalmeans(mod)
+mm <- marginal_means(mod)
 
 tidy(mm)
 
@@ -238,13 +238,13 @@ void <- capture.output({
 Try to compute marginal means, but realize that your grid won’t fit in memory:
 
 ```{r, error = TRUE}
-marginalmeans(mod, type = "probs")
+marginal_means(mod, type = "probs")
 ```
 
 Use the `variables` and `variables_grid` arguments to compute marginal means over a more reasonably sized grid:
 
 ```{r, eval = FALSE}
-marginalmeans(mod,
+marginal_means(mod,
               type = "probs",
               variables = c("x", "V1"),
               variables_grid = paste0("V", 2:3))

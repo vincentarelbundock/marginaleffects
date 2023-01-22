@@ -40,7 +40,7 @@ expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .1)
 #     data = tmp)
 # em <- emmeans(mod, specs = "religiousness")
 # em <- tidy(em)
-# mm <- tidy(marginalmeans(mod))
+# mm <- tidy(marginal_means(mod))
 # expect_equivalent(mm$estimate, em$estimate)
 # expect_equivalent(mm$std.error, em$std.error, tolerance = tol_se)
 

@@ -47,6 +47,6 @@ data(Kmenta, package = "ivreg")
 tmp <- Kmenta
 tmp$categ <- factor(sample(letters[1:5], nrow(tmp), replace = TRUE))
 mod <- ivreg::ivreg(Q ~ P + D + categ | D + F + A + categ, data = tmp)
-mm <- marginalmeans(mod)
-expect_marginalmeans(mm)
+mm <- marginal_means(mod)
+expect_marginal_means(mm)
 

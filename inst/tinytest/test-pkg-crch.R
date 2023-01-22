@@ -53,6 +53,6 @@ tmp <- dat
 tmp$categ <- as.factor(sample(letters[1:5], nrow(tmp), replace = TRUE))
 model <- crch(sqrt(rain) ~ sqrtensmean + sqrtenssd + categ, 
           data = tmp, dist = "gaussian")
-mm <- marginalmeans(model)
-expect_marginalmeans(mm, n_row = 5)
+mm <- marginal_means(model)
+expect_marginal_means(mm, n_row = 5)
 

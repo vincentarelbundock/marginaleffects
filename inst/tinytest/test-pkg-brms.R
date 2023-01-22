@@ -227,7 +227,7 @@ expect_equivalent(pred$conf.high, em$upper.HPD)
 # marginalmeans vs. emmeans
 exit_if_not(requiet("emmeans"))
 exit_if_not(requiet("broom"))
-expect_error(marginalmeans(brms_factor, variables = "cyl_fac", type = "link"), pattern = "github.*issues")
+expect_error(marginal_means(brms_factor, variables = "cyl_fac", type = "link"), pattern = "github.*issues")
 # emmeans::emmeans(brms_factor, specs = ~cyl_fac)
 
 

@@ -38,9 +38,9 @@ model <- gam::gam(Kyphosis ~ gam::s(Age, 4) + Number + categ, family = binomial,
 
 # `datagrid()` is smarter than `emmeans()` about integers
 atlist <- list(Age = round(mean(tmp$Age)), Number = round(mean(tmp$Number)))
-mm1 <- marginalmeans(model)
+mm1 <- marginal_means(model)
 em1 <- data.frame(emmeans(model, specs = "categ", type = "response", at = atlist))
-mm2 <- marginalmeans(model, type = "link")
+mm2 <- marginal_means(model, type = "link")
 em2 <- data.frame(emmeans(model, specs = "categ", at = atlist))
 
 expect_equivalent(mm1$estimate, em1$prob)

@@ -108,7 +108,7 @@ dat <- mtcars
 dat$cyl <- as.factor(dat$cyl)
 dat$am <- as.logical(dat$am)
 mod <- lm(mpg ~ hp + cyl + am, data = dat)
-mm <- marginalmeans(mod)
+mm <- marginal_means(mod)
 
 modelsummary(mm,
              title = "Estimated Marginal Means",

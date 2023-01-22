@@ -253,7 +253,7 @@ and `glance()`, as well with [external packages like
 |                                                                                                    | [`avg_slopes()`](https://vincentarelbundock.github.io/marginaleffects/reference/slopes.html)           |
 |                                                                                                    | [`plot_cme()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cme.html)           |
 |                                                                                                    | [`plot_avg()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_avg.html)           |
-| [Marginal means](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) | [`marginalmeans()`](https://vincentarelbundock.github.io/marginaleffects/reference/marginalmeans.html) |
+| [Marginal means](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) | [`marginal_means()`](https://vincentarelbundock.github.io/marginaleffects/reference/marginalmeans.html) |
 
 ### Examples
 
@@ -565,10 +565,10 @@ avg_predictions(
 ```
 
 For convenience, the `marginaleffects` package also includes a
-`marginalmeans()` function:
+`marginal_means()` function:
 
 ``` r
-marginalmeans(mod_cat, variables = "am")
+marginal_means(mod_cat, variables = "am")
 #>       type term value    am estimate std.error statistic       p.value conf.low conf.high
 #> 1 response   am FALSE FALSE 18.31987 0.7853925  23.32575 2.429619e-120 16.78053  19.85921
 #> 2 response   am  TRUE  TRUE 22.47772 0.8343346  26.94090 7.291801e-160 20.84246  24.11299

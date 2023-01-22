@@ -44,7 +44,7 @@ expect_predictions(pred, n_row = 6)
 
 
 # marginalmeans: vs. emmeans
-mm <- marginalmeans(mod, type = "link")
+mm <- marginal_means(mod, type = "link")
 expect_inherits(mm, "marginalmeans")
 expect_equal(nrow(mm), 10)
 mm <- tidy(mm)
