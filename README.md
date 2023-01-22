@@ -24,7 +24,7 @@ Introduction:
 
   - [Motivation](https://vincentarelbundock.github.io/marginaleffects/#motivation)
   - [Installation](https://vincentarelbundock.github.io/marginaleffects/#installation)
-  - Interpreting model estimates: a 4-steps approach
+  - Interpreting model estimates:
     1.  [Estimands: Predictions, Comparisons, and
         Slopes](https://vincentarelbundock.github.io/marginaleffects/#estimands-predictions-comparisons-and-slopes)
     2.  [Prediction
@@ -243,11 +243,14 @@ and `glance()`, as well with [external packages like
 | Estimand                                                                                           | Functions                                                                                              |
 | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
 | [Predictions](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html)      | [`predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html)     |
+|                                                                                                    | [`avg_predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html) |
 |                                                                                                    | [`plot_cap()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cap.html)           |
 | [Comparisons](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)        | [`comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)     |
+|                                                                                                    | [`avg_comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html) |
 |                                                                                                    | [`plot_cco()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cap.html)           |
 |                                                                                                    | [`plot_avg()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_avg.html)           |
 | [Slopes](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html)                | [`slopes()`](https://vincentarelbundock.github.io/marginaleffects/reference/slopes.html)               |
+|                                                                                                    | [`avg_slopes()`](https://vincentarelbundock.github.io/marginaleffects/reference/slopes.html)           |
 |                                                                                                    | [`plot_cme()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cme.html)           |
 |                                                                                                    | [`plot_avg()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_avg.html)           |
 | [Marginal means](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) | [`marginalmeans()`](https://vincentarelbundock.github.io/marginaleffects/reference/marginalmeans.html) |
@@ -668,4 +671,4 @@ Contents](https://vincentarelbundock.github.io/marginaleffects/#table-of-content
 to read the vignettes, learn how to report marginal effects and means in
 [nice tables with the `modelsummary`
 package](https://vincentarelbundock.github.io/modelsummary/), how to
-define your own prediction “grid”, and much more.
+define your own prediction “grid”, and much more. \*\*\*\*
