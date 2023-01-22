@@ -129,10 +129,10 @@ knitr::include_graphics("https://user-images.githubusercontent.com/987057/169581
 
 # Average Marginal Effect (AME)
 
-A dataset with one marginal effect estimate per unit of observation is a bit unwieldy and difficult to interpret. Many analysts like to report the "Average Marginal Effect", that is, the average of all the observation-specific marginal effects. These are easy to compute based on the full `data.frame` shown above, but the `summary` function is convenient:
+A dataset with one marginal effect estimate per unit of observation is a bit unwieldy and difficult to interpret. Many analysts like to report the "Average Marginal Effect", that is, the average of all the observation-specific marginal effects. These are easy to compute based on the full `data.frame` shown above, but the `avg_slopes()` function is convenient:
 
 ```{r}
-averages(mfx)
+avg_slopes(mod)
 ```
 
 Note that since marginal effects are derivatives, they are only properly defined for continuous numeric variables. When the model also includes categorical regressors, the `summary` function will try to display relevant (regression-adjusted) contrasts between different categories, as shown above.
@@ -150,14 +150,19 @@ glance(mfx)
 We can also use the `by` argument the average marginal effects *within different subgroups* of the observed data, based on values of the regressors. For example, to compute the average marginal effects of Bill Length for each Species, we do:
 
 ```{r}
-mfx2 <- slopes(mod, by = "species", variables = "bill_length_mm")
-averages(mfx2)
+avg_slopes(
+  mod,
+  by = "species",
+  variables = "bill_length_mm")
 ```
 
 This is equivalent to manually taking the mean of the observation-level marginal effect for each species sub-group:
 
 ```{r}
-aggregate(mfx$estimate, by = list(mfx$species, mfx$term), FUN = mean)
+aggregate(
+  mfx$estimate,
+  by = list(mfx$species, mfx$term),
+  FUN = mean)
 ```
 
 Note that `marginaleffects` follows `Stata` and the `margins` package in computing standard errors using the group-wise averaged Jacobian.
@@ -175,9 +180,11 @@ datagrid(flipper_length_mm = 180,
 The same command can be used (omitting the `model` argument) to `marginaleffects`'s `newdata` argument to compute marginal effects for those (fictional) individuals:
 
 ```{r}
-slopes(mod,
-                newdata = datagrid(flipper_length_mm = 180,
-                                   species = c("Adelie", "Gentoo")))
+slopes(
+  mod,
+  newdata = datagrid(
+    flipper_length_mm = 180,
+    species = c("Adelie", "Gentoo")))
 ```
 
 When variables are omitted from the `datagrid` call, they will automatically be set at their mean or mode (depending on variable type).
@@ -287,60 +294,7 @@ Typical values include `"response"` and `"link"`, but users should refer to the 
 
 ```{r}
 mod <- glm(am ~ mpg, family = binomial, data = mtcars)
-mfx <- slopes(mod, type = "response")
-averages(mfx)
+avg_slopes(mod, type = "response")
 
-mfx <- slopes(mod, type = "link")
-averages(mfx)
+avg_slopes(mod, type = "link")
 ```
-
-# Regression tables and coefficient plots
-
-Average marginal effects are easy to display in a regression table using packages like `modelsummary`. See [the tables and plots vignette.](https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html)
-
-# Supporting new models
-
-In most cases, extending `marginaleffects` to support new models is easy. Imagine you want to add support for an object called `model` of class `EXAMPLE` with N observations. 
-
-#### *Step 1:* Check if `marginaleffects` default functions work:
-
-```r
-# returns a named vector of coefficients
-get_coef(model)
-
-# returns a named vector of predictions 
-# returns a named matrix of size NxK for models with K levels (e.g., multinomial logit)
-get_predict(model)
-
-# returns a named square matrix of size equal to the number of coefficients
-get_vcov(model)
-
-# returns a new model object with different stored coefficients 
-# calling get_predict(model) and get_predict(model_new) should produce different results
-model_new <- set_coef(model, rep(0, length(get_coef(model))))
-predict(model) != predict(model_new)
-```
-
-If all of these functions work out-of-the-box, there's a good chance your model will be supported automatically. If they do *not* work, move to...
-
-#### *Step 2:* Define the missing methods.
-
-Find the class name of your model by calling:
-
-```r
-class(model)
-```
-
-Then, create functions (methods) called `get_coef.EXAMPLE`, `get_predict.EXAMPLE`, `vcov.EXAMPLE`, and `set_coef.EXAMPLE`, with the "EXAMPLE" replaced by the name your model class.
-
-#### *Step 3:* Add tests
-
-Create a file called `tests/testthat/test-PKGNAME.R` and write a few tests. Ideally, we would like to compare the results obtained by `marginaleffects` to an external source, like the `margins` package for `R`, or the `margins` command for `Stata`.
-
-#### *Step 4:* Finalize
-
-Add your new model class to the lists of supported models in:
-
-* The `sanity_model` function of the `R/sanity.R` file.
-* The supported models CSV table in `data-raw/supported_models.csv`
-* The "Suggests" list in the `DESCRIPTION` file.
