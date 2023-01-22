@@ -86,8 +86,14 @@ estimated covariance matrix. \code{\link{hypotheses}} emulates the behavior of t
 excellent and well-established \link[car:deltaMethod]{car::deltaMethod} and \link[car:linearHypothesis]{car::linearHypothesis}
 functions, but it supports more models, requires fewer dependencies, and
 offers some convenience features like shortcuts for robust standard errors.
+
+To learn more, read the hypothesis tests vignette, visit the
+package website, or scroll down this page for a full list of vignettes:
+\itemize{
+\item \url{https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html}
+\item \url{https://vincentarelbundock.github.io/marginaleffects/}
 }
-\details{
+
 Warning: For hypothesis tests on objects produced by the \code{marginaleffects}
 package, it is safer to use the \code{hypothesis} argument of the original function.
 Using \code{hypotheses()} may not work in certain environments, or when called
@@ -163,5 +169,16 @@ head(p)
 f <- function(x) predict(x, type = "response", newdata = mtcars)
 p <- hypotheses(mod, FUN = f)
 head(p)
+
+# Equivalence, non-inferiority, and non-superiority tests
+mod <- lm(mpg ~ hp + factor(gear), data = mtcars)
+p <- predictions(mod, newdata = "median")
+hypotheses(p, equivalence = c(17, 18))
+
+mfx <- avg_slopes(mod, variables = "hp")
+hypotheses(mfx, equivalence = c(-.1, .0))
+
+cmp <- avg_comparisons(mod, variables = "gear", hypothesis = "pairwise")
+hypotheses(cmp, equivalence = c(0, 10))
 
 }
