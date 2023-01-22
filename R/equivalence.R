@@ -11,13 +11,12 @@ equivalence <- function(x, equivalence = NULL, df = Inf, ...) {
 
     delta <- abs(diff(equivalence)) / 2
     null <- min(equivalence) + delta
-    # x$equivalence.null <- null
-    # x$equivalence.low <- max(equivalence)
-    # x$equivalence.high <- min(equivalence)
 
     # definitions from `emmeans`, with a different user interface based on symmetric "equivalence"
-    x$statistic.inf <- (x$estimate - null + delta) / x$std.error
-    x$statistic.sup <- (x$estimate - null - delta) / x$std.error
+    x$statistic.inf <- (x$estimate - equivalence[1]) / x$std.error
+    x$statistic.sup <- (x$estimate - equivalence[2]) / x$std.error
+    # x$statistic.inf <- (x$estimate - null + delta) / x$std.error
+    # x$statistic.sup <- (x$estimate - null - delta) / x$std.error
 
     if (is.infinite(df)) {
         x$p.value.inf <- stats::pnorm(x$statistic.inf, lower.tail = FALSE)
