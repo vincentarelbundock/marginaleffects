@@ -122,7 +122,11 @@ hypotheses <- function(
                 equivalence = equivalence,
                 ...)
         }
-        class(out) <- c("hypotheses", class(out))
+
+        # no fancy print if these are unit-level (conditional) estimates
+        if (inherits(out, "averages") || !is.null(attr(out, "by"))) {
+            class(out) <- c("hypotheses", class(out))
+        }
         return(out)
     }
 
