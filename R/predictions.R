@@ -640,5 +640,9 @@ avg_predictions <- function(model,
         df = df,
         ...)
     class(out) <- c("averages", class(out))
+
+    # overwrite call because otherwise we get the symbosl sent to predictions()
+    attr(out, "call") <- match.call()
+
     return(out)
 }

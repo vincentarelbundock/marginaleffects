@@ -108,3 +108,10 @@ expect_inherits(pre, "hypotheses")
 exit_if_not(require("tinyviztest"))
 cmp <- avg_comparisons(tmp, equivalence = c(-.1, 0))
 expect_snapshot_print(cmp, "equivalence-avg_comparisons")
+
+
+# bug on with call and symbols
+mod <- lm(mpg ~ hp * vs, data = mtcars)
+x <- avg_slopes(mod, by = "vs", variables = "hp", hypothesis = "pairwise")
+x <- hypotheses(x, equivalence = c(-.2, .2))
+expect_inherits(x, "hypotheses")
