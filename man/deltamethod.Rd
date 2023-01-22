@@ -7,11 +7,11 @@
 deltamethod(
   model,
   hypothesis = NULL,
-  FUN = NULL,
   vcov = NULL,
   conf_level = 0.95,
-  equivalence = NULL,
   df = Inf,
+  equivalence = NULL,
+  FUN = NULL,
   ...
 )
 }

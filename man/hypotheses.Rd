@@ -7,11 +7,11 @@
 hypotheses(
   model,
   hypothesis = NULL,
-  FUN = NULL,
   vcov = NULL,
   conf_level = 0.95,
-  equivalence = NULL,
   df = Inf,
+  equivalence = NULL,
+  FUN = NULL,
   ...
 )
 }
@@ -42,12 +42,6 @@ hypotheses(
 \item See the Examples section below and the vignette: https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html
 }}
 
-\item{FUN}{\code{NULL} or function.
-\itemize{
-\item \code{NULL} (default): hypothesis test on a model's coefficients, or on the quantities estimated by one of the \code{marginaleffects} package functions.
-\item Function which accepts a model object and returns a numeric vector or a data.frame with two columns called \code{term} and \code{estimate}. This argument can be useful when users want to conduct a hypothesis test on an arbitrary function of quantities held in a model object.
-}}
-
 \item{vcov}{Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
 \itemize{
 \item FALSE: Do not compute standard errors. This can speed up computation considerably.
@@ -67,6 +61,14 @@ hypotheses(
 \item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
 
 \item{df}{Degrees of freedom used to comptute p values and confidence intervals. A single numeric value between 1 and \code{Inf}. When \code{df} is \code{Inf}, the normal distribution is used. When \code{df} is finite, the \code{t} distribution is used. See \link[insight:get_df]{insight::get_df} for a convenient function to extract degrees of freedom. Ex: \code{slopes(model, df = insight::get_df(model))}}
+
+\item{equivalence}{Numeric vector of length 2: bounds used for the two-one-sided test (TOST) of equivalence, and for the non-inferiority and non-superiority tests. See Details section below.}
+
+\item{FUN}{\code{NULL} or function.
+\itemize{
+\item \code{NULL} (default): hypothesis test on a model's coefficients, or on the quantities estimated by one of the \code{marginaleffects} package functions.
+\item Function which accepts a model object and returns a numeric vector or a data.frame with two columns called \code{term} and \code{estimate}. This argument can be useful when users want to conduct a hypothesis test on an arbitrary function of quantities held in a model object.
+}}
 
 \item{...}{Additional arguments are passed to the \code{predict()} method
 supplied by the modeling package.These arguments are particularly useful
@@ -91,6 +93,29 @@ package, it is safer to use the \code{hypothesis} argument of the original funct
 Using \code{hypotheses()} may not work in certain environments, or when called
 programmatically.
 }
+\section{Equivalence}{
+ Equivalence, non-inferiority, and non-superiority tests
+
+\eqn{\theta} is an estimate, \eqn{\sigma_\theta} its estimated standard error, and \eqn{[B_{min}, B_{max}]} are the bounds of the equivalence region supplied to the \code{equivalence} argument.
+
+The test statistics are:
+
+\itemize{
+\item Non-inferiority: \eqn{t=(\theta - B_{min})/\sigma_\theta}
+\item Non-superiority: \eqn{t=(\theta - B_{max})/\sigma_\theta}
+}
+
+The p values are:
+
+\itemize{
+\item Non-inferiority: Lower tail
+\item Non-superiority: Upper tail
+\item Equivalence (TOST): Maximum of the non-inferiority and non-superiority p values.
+}
+
+Thanks to Russell V. Lenth for the excellent \code{emmeans} package and documentation which inspired this feature.
+}
+
 \examples{
 library(marginaleffects)
 mod <- lm(mpg ~ hp + wt + factor(cyl), data = mtcars)
