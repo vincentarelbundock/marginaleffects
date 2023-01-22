@@ -517,10 +517,10 @@ The same syntax can be used to conduct tests for all the quantities produced by 
 
 ```{r}
 avg_slopes(mod, variables = "hp") |>
-    hypotheses(equivalence = c(-.1, .0))
+    hypotheses(equivalence = c(-.1, .1))
 ```
 ```{r, include = FALSE}
-hyp <- avg_slopes(mod, variables = "hp", equivalence = c(-.1, .0))$p.value.equ
+hyp <- avg_slopes(mod, variables = "hp", equivalence = c(-.1, .1))$p.value.equ
 ```
 
 The p value is `r sprintf("%.4f", hyp)`, which suggests that we can reject the hypothesis that the parameter falls outside the equivalence region (or "substantive irrelevance region"). 
