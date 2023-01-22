@@ -15,6 +15,8 @@ equivalence <- function(x, equivalence = NULL, df = Inf, ...) {
     # definitions from `emmeans`, with a different user interface based on symmetric "equivalence"
     x$statistic.inf <- (x$estimate - equivalence[1]) / x$std.error
     x$statistic.sup <- (x$estimate - equivalence[2]) / x$std.error
+
+    ## keep this in case we return to the emmeans-style user interface
     # x$statistic.inf <- (x$estimate - null + delta) / x$std.error
     # x$statistic.sup <- (x$estimate - null - delta) / x$std.error
 

@@ -96,13 +96,13 @@ programmatically.
 \section{Equivalence, Inferiority, Superiority}{
 
 
-\eqn{\theta} is an estimate, \eqn{\sigma_\theta} its estimated standard error, and \eqn{[B_l, B_u]} are the bounds of the equivalence region supplied to the \code{equivalence} argument.
+\eqn{\theta} is an estimate, \eqn{\sigma_\theta} its estimated standard error, and \eqn{[a, b]} are the bounds of the equivalence region supplied to the \code{equivalence} argument.
 
 The test statistics are:
 
 \itemize{
-\item Non-inferiority: \eqn{t=(\theta - B_l)/\sigma_\theta}
-\item Non-superiority: \eqn{t=(\theta - B_u)/\sigma_\theta}
+\item Non-inferiority: \eqn{t=(\theta - a)/\sigma_\theta}{t=(\theta - a)/\sigma_\theta}
+\item Non-superiority: \eqn{t=(\theta - b)/\sigma_\theta}{t=(\theta - b)/\sigma_\theta}
 }
 
 The p values are:

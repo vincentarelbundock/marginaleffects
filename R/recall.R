@@ -33,8 +33,6 @@ recall <- function(x, ...) {
     if ("hypothesis" %in% names(mc) && "hypothesis" %in% names(dots)) {
         if (is.null(dots[["hypothesis"]])) {
             dots[["hypothesis"]] <- NULL
-        } else {
-            insight::format_error("The `hypothesis` argument cannot be used twice.")
         }
     }
 

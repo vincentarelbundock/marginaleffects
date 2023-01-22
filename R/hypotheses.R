@@ -1,12 +1,19 @@
 #' Estimate and Standard Error of a Non-Linear Function of Estimated Model Parameters
 #'
+#' @description
 #' `hypotheses` is a function to get a first-order approximate standard error
 #' for a nonlinear function of a vector of random variables with known or
 #' estimated covariance matrix. [`hypotheses`] emulates the behavior of the
 #' excellent and well-established [car::deltaMethod] and [car::linearHypothesis]
 #' functions, but it supports more models, requires fewer dependencies, and
 #' offers some convenience features like shortcuts for robust standard errors.
-#'
+#' 
+#' To learn more, read the hypothesis tests vignette, visit the
+#' package website, or scroll down this page for a full list of vignettes:
+#' 
+#' * <https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html>
+#' * <https://vincentarelbundock.github.io/marginaleffects/>
+#' 
 #' Warning: For hypothesis tests on objects produced by the `marginaleffects`
 #' package, it is safer to use the `hypothesis` argument of the original function.
 #' Using `hypotheses()` may not work in certain environments, or when called
@@ -67,6 +74,17 @@
 #' p <- hypotheses(mod, FUN = f)
 #' head(p)
 #' 
+#' # Equivalence, non-inferiority, and non-superiority tests
+#' mod <- lm(mpg ~ hp + factor(gear), data = mtcars)
+#' p <- predictions(mod, newdata = "median")
+#' hypotheses(p, equivalence = c(17, 18))
+#' 
+#' mfx <- avg_slopes(mod, variables = "hp")
+#' hypotheses(mfx, equivalence = c(-.1, .0))
+#' 
+#' cmp <- avg_comparisons(mod, variables = "gear", hypothesis = "pairwise")
+#' hypotheses(cmp, equivalence = c(0, 10))
+#' 
 #' @export
 hypotheses <- function(
     model,
@@ -103,9 +121,6 @@ hypotheses <- function(
             return(out)
         }
     } else {
-        if ("hypothesis" %in% names(xcall)) {
-            insight::format_error("The `hypothesis` argument cannot be used twice.")
-        }
         if (length(list(...)) == 0) { # bug in predictions.Rmd
             out <- recall(
                 xcall,

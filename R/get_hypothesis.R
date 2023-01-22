@@ -251,5 +251,11 @@ get_hypothesis_row_labels <- function(x, by = NULL) {
     } else {
         lab <- apply(data.frame(x)[, lab, drop = FALSE], 1, paste, collapse = ",")
     }
+
+    # wrap in parentheses to avoid a-b-c-d != (a-b)-(c-d)
+    if (any(grepl("-", lab))) {
+        lab <- sprintf("(%s)", lab)
+    }
+
     return(lab)
 }
