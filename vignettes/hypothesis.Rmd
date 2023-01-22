@@ -547,60 +547,36 @@ hyp <- avg_slopes(mod, variables = "hp", equivalence = c(-.1, .1))$p.value.equ
 
 The p value is `r sprintf("%.4f", hyp)`, which suggests that we can reject the hypothesis that the parameter falls outside the equivalence region (or "substantive irrelevance region"). 
 
-#### Example 4: Difference between slopes
+#### Example 4: Difference between comparisons (contrasts)
 
-Consider a model with an interaction:
+Consider a model with a multiplicative interaction:
 
 ```{r}
 int <- lm(mpg ~ hp * factor(gear), data = mtcars)
 ```
 
-The average slope -- partial derivative of `mpg` with respect to `hp` -- differs based on the value of `gear`:
+The average contrast for a change of 1 unit in `hp` differs based on the value of `gear`:
 
 ```{r}
-avg_slopes(int, variables = "hp", by = "gear")
+avg_comparisons(int, variables = "hp", by = "gear")
 ```
 
-Are these slopes different from one another? Let's look at the pairwise comparisons between them:
+Are these contrasts different from one another? Let's look at the pairwise differences between them:
 
 ```{r}
-avg_slopes(int, variables = "hp", by = "gear", hypothesis = "pairwise")
+avg_comparisons(int, variables = "hp", by = "gear", hypothesis = "pairwise")
 ```
 
 We consider that these pairwise comparisons are "equivalent to zero" when they fall in the [-.1, .1] interval:
 
 ```{r}
-avg_slopes(int, variables = "hp", by = "gear", hypothesis = "pairwise") |>
+avg_comparisons(int, variables = "hp", by = "gear", hypothesis = "pairwise") |>
     hypotheses(equivalence = c(-.1, .1))
 ```
 
-The `p (Eq.)` column shows that the difference between the average slope when `gear` is 3 and `gear` is 5 can be said to be equivalent to the specified interval. However, there are good reasons to think that the other two pairwise comparisons may fall outside the interval.
+The `p (Eq.)` column shows that the difference between the average contrasts when `gear` is 3 and `gear` is 5 can be said to be equivalent to the specified interval. However, there are good reasons to think that the other two pairwise comparisons may fall outside the interval.
 
-
-#### Example 5: `comparisons()` with the `hypothesis` argument
-
-Now consider average contrast between levels of the `gear` variable:
-
-```{r}
-avg_comparisons(mod, variables = "gear")
-```
-
-We can compare those contrasts using the `hypothesis` argument, giving us a sort of "difference in differences":
-
-```{r}
-avg_comparisons(mod, variables = "gear", hypothesis = "pairwise")
-```
-
-Now, we test if this difference in differences falls in the a region of practical significance (or "equivalence region") between -8 and 8:
-
-```{r}
-avg_comparisons(mod, variables = "gear", hypothesis = "pairwise") |>
-    hypotheses(equivalence = c(-8, 8))
-```
-
-The p value gives us reason to believe that the quantity of interest does not fall outside the specified interval.
-
-#### Example 6: Marginal means and `emmeans`
+#### Example 5: Marginal means and `emmeans`
 
 This final example shows the equivalence between results produced by the `emmeans` package and the `marginalmeans()` function:
 
@@ -627,7 +603,7 @@ marginalmeans(
 ```
 
 
-#### Example 7: t-test
+#### Example 6: t-test
 
 Now we show that the results produced by `hypotheses()` are identical to the results produced by the `equivalence` package in the case of a simple t-test:
 
