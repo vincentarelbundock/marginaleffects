@@ -14,7 +14,7 @@ in R. Conduct linear and non-linear hypothesis tests using the delta
 method.
 
 The code on this website was executed using `marginaleffects`
-0.8.1.9112. See the [installation
+0.8.1.9113. See the [installation
 section](https://vincentarelbundock.github.io/marginaleffects/#installation)
 to install the latest CRAN or development version.
 
@@ -30,8 +30,8 @@ Introduction:
     2.  [Prediction
         Grid](https://vincentarelbundock.github.io/marginaleffects/#prediction-grid)
     3.  [Averaging](https://vincentarelbundock.github.io/marginaleffects/#averaging)
-    4.  [Hypothesis Tests and Custom
-        Contrasts](https://vincentarelbundock.github.io/marginaleffects/#hypothesis-tests)
+    4.  [Hypothesis Tests, Custom Contrasts, and Equivalence
+        Tests](https://vincentarelbundock.github.io/marginaleffects/#hypothesis-and-equivalence-tests)
 
 Vignettes:
 
@@ -240,19 +240,19 @@ seamlessly with standard functions like `summary()`, `plot()`, `tidy()`,
 and `glance()`, as well with [external packages like
 `modelsummary`.](https://vincentarelbundock.github.io/marginaleffects/)
 
-| Estimand                                                                                           | Functions                                                                                              |
-| -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| [Predictions](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html)      | [`predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html)     |
-|                                                                                                    | [`avg_predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html) |
-|                                                                                                    | [`plot_cap()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cap.html)           |
-| [Comparisons](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)        | [`comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)     |
-|                                                                                                    | [`avg_comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html) |
-|                                                                                                    | [`plot_cco()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cap.html)           |
-|                                                                                                    | [`plot_avg()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_avg.html)           |
-| [Slopes](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html)                | [`slopes()`](https://vincentarelbundock.github.io/marginaleffects/reference/slopes.html)               |
-|                                                                                                    | [`avg_slopes()`](https://vincentarelbundock.github.io/marginaleffects/reference/slopes.html)           |
-|                                                                                                    | [`plot_cme()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cme.html)           |
-|                                                                                                    | [`plot_avg()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_avg.html)           |
+| Estimand                                                                                           | Functions                                                                                               |
+| -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| [Predictions](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html)      | [`predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html)      |
+|                                                                                                    | [`avg_predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html)  |
+|                                                                                                    | [`plot_cap()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cap.html)            |
+| [Comparisons](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)        | [`comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)      |
+|                                                                                                    | [`avg_comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)  |
+|                                                                                                    | [`plot_cco()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cap.html)            |
+|                                                                                                    | [`plot_avg()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_avg.html)            |
+| [Slopes](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html)                | [`slopes()`](https://vincentarelbundock.github.io/marginaleffects/reference/slopes.html)                |
+|                                                                                                    | [`avg_slopes()`](https://vincentarelbundock.github.io/marginaleffects/reference/slopes.html)            |
+|                                                                                                    | [`plot_cme()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cme.html)            |
+|                                                                                                    | [`plot_avg()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_avg.html)            |
 | [Marginal means](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) | [`marginal_means()`](https://vincentarelbundock.github.io/marginaleffects/reference/marginalmeans.html) |
 
 ### Examples
@@ -307,12 +307,12 @@ nrow(cmp)
 
 head(cmp)
 #>   rowid     type term contrast    estimate  std.error statistic     p.value    conf.low     conf.high predicted predicted_hi predicted_lo  mpg cyl disp  hp drat    wt  qsec vs am gear carb    eps
-#> 1     1 response   hp       +1 -0.03690556 0.01850171 -1.994710 0.046074491 -0.07316824 -0.0006428654  22.48857     22.47012     22.50702 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4 0.0283
+#> 1     1 response   hp       +1 -0.03690556 0.01850171 -1.994710 0.046074489 -0.07316824 -0.0006428657  22.48857     22.47012     22.50702 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4 0.0283
 #> 2     2 response   hp       +1 -0.02868936 0.01562861 -1.835695 0.066402820 -0.05932088  0.0019421563  20.80186     20.78751     20.81620 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4 0.0283
-#> 3     3 response   hp       +1 -0.04657166 0.02258715 -2.061866 0.039220505 -0.09084166 -0.0023016732  25.26465     25.24137     25.28794 22.8   4  108  93 3.85 2.320 18.61  1  1    4    1 0.0283
+#> 3     3 response   hp       +1 -0.04657166 0.02258715 -2.061866 0.039220507 -0.09084166 -0.0023016728  25.26465     25.24137     25.28794 22.8   4  108  93 3.85 2.320 18.61  1  1    4    1 0.0283
 #> 4     4 response   hp       +1 -0.04227128 0.01328278 -3.182412 0.001460541 -0.06830506 -0.0162375067  20.25549     20.23436     20.27663 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1 0.0283
 #> 5     5 response   hp       +1 -0.03901845 0.01341076 -2.909487 0.003620221 -0.06530307 -0.0127338342  16.99782     16.97831     17.01733 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2 0.0283
-#> 6     6 response   hp       +1 -0.03872931 0.01348887 -2.871204 0.004089118 -0.06516702 -0.0122916003  19.66353     19.64417     19.68290 18.1   6  225 105 2.76 3.460 20.22  1  0    3    1 0.0283
+#> 6     6 response   hp       +1 -0.03872931 0.01348887 -2.871204 0.004089117 -0.06516702 -0.0122916004  19.66353     19.64417     19.68290 18.1   6  225 105 2.76 3.460 20.22  1  0    3    1 0.0283
 ```
 
 The `comparisons()` function allows customized queries. For example,
@@ -375,11 +375,11 @@ nrow(mfx)
 
 head(mfx)
 #>   rowid     type term    estimate  std.error statistic     p.value    conf.low     conf.high predicted predicted_hi predicted_lo  mpg cyl disp  hp drat    wt  qsec vs am gear carb    eps
-#> 1     1 response   hp -0.03690556 0.01850172 -1.994710 0.046074551 -0.07316825 -0.0006428553  22.48857     22.48752     22.48857 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4 0.0283
-#> 2     2 response   hp -0.02868936 0.01562861 -1.835695 0.066402771 -0.05932087  0.0019421508  20.80186     20.80105     20.80186 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4 0.0283
+#> 1     1 response   hp -0.03690556 0.01850171 -1.994710 0.046074489 -0.07316824 -0.0006428657  22.48857     22.48752     22.48857 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4 0.0283
+#> 2     2 response   hp -0.02868936 0.01562861 -1.835695 0.066402831 -0.05932088  0.0019421575  20.80186     20.80105     20.80186 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4 0.0283
 #> 3     3 response   hp -0.04657166 0.02258715 -2.061866 0.039220507 -0.09084166 -0.0023016728  25.26465     25.26333     25.26465 22.8   4  108  93 3.85 2.320 18.61  1  1    4    1 0.0283
-#> 4     4 response   hp -0.04227128 0.01328278 -3.182412 0.001460541 -0.06830506 -0.0162375066  20.25549     20.25430     20.25549 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1 0.0283
-#> 5     5 response   hp -0.03901845 0.01341076 -2.909487 0.003620221 -0.06530307 -0.0127338342  16.99782     16.99671     16.99782 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2 0.0283
+#> 4     4 response   hp -0.04227128 0.01328278 -3.182412 0.001460541 -0.06830506 -0.0162375067  20.25549     20.25430     20.25549 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1 0.0283
+#> 5     5 response   hp -0.03901845 0.01341076 -2.909487 0.003620221 -0.06530307 -0.0127338341  16.99782     16.99671     16.99782 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2 0.0283
 #> 6     6 response   hp -0.03872931 0.01348887 -2.871204 0.004089117 -0.06516702 -0.0122916004  19.66353     19.66244     19.66353 18.1   6  225 105 2.76 3.460 20.22  1  0    3    1 0.0283
 ```
 
@@ -435,8 +435,8 @@ slopes(
   variables = "wt",
   newdata = datagrid(am = 0:1))
 #>   rowid     type term  estimate std.error statistic    p.value  conf.low  conf.high predicted predicted_hi predicted_lo      mpg       hp      wt am       eps
-#> 1     1 response   wt -2.676166  1.419297 -1.885558 0.05935449 -5.457937  0.1056037  18.69864     18.69760     18.69864 20.09062 146.6875 3.21725  0 0.0003911
-#> 2     2 response   wt -5.432464  2.152370 -2.523946 0.01160458 -9.651031 -1.2138976  17.89006     17.88793     17.89006 20.09062 146.6875 3.21725  1 0.0003911
+#> 1     1 response   wt -2.676166  1.419297 -1.885558 0.05935455 -5.457937  0.1056043  18.69864     18.69760     18.69864 20.09062 146.6875 3.21725  0 0.0003911
+#> 2     2 response   wt -5.432464  2.152370 -2.523946 0.01160458 -9.651031 -1.2138974  17.89006     17.88793     17.89006 20.09062 146.6875 3.21725  1 0.0003911
 ```
 
 We can also plot how predictions, comparisons, or slopes change across
@@ -523,14 +523,14 @@ avg_comparisons(mod, by = "am")
 
 avg_slopes(mod, by = "cyl")
 #>   Term    Contrast Estimate Std. Error       z   Pr(>|z|)    2.5 %    97.5 % cyl
-#> 1   hp mean(dY/dX) -0.03667    0.01048 -3.4996 0.00046588 -0.05721 -0.016134   6
+#> 1   hp mean(dY/dX) -0.03667    0.01048 -3.4996 0.00046589 -0.05721 -0.016134   6
 #> 2   hp mean(dY/dX) -0.05301    0.01989 -2.6657 0.00768339 -0.09199 -0.014034   4
-#> 3   hp mean(dY/dX) -0.02704    0.01738 -1.5553 0.11987297 -0.06110  0.007034   8
-#> 4   wt mean(dY/dX) -4.32457    1.39608 -3.0977 0.00195057 -7.06083 -1.588306   6
+#> 3   hp mean(dY/dX) -0.02704    0.01738 -1.5553 0.11987298 -0.06110  0.007034   8
+#> 4   wt mean(dY/dX) -4.32457    1.39608 -3.0977 0.00195057 -7.06083 -1.588307   6
 #> 5   wt mean(dY/dX) -6.44404    1.45832 -4.4188 9.9252e-06 -9.30230 -3.585773   4
-#> 6   wt mean(dY/dX) -1.77819    1.00704 -1.7658 0.07743628 -3.75196  0.195572   8
-#> 7   am mean(dY/dX) -1.12930    1.60146 -0.7052 0.48070735 -4.26810  2.009513   6
-#> 8   am mean(dY/dX)  1.27543    2.63009  0.4849 0.62772027 -3.87945  6.430303   4
+#> 6   wt mean(dY/dX) -1.77819    1.00704 -1.7658 0.07743630 -3.75196  0.195572   8
+#> 7   am mean(dY/dX) -1.12930    1.60146 -0.7052 0.48070738 -4.26810  2.009513   6
+#> 8   am mean(dY/dX)  1.27543    2.63008  0.4849 0.62771979 -3.87944  6.430296   4
 #> 9   am mean(dY/dX) -0.54744    2.77930 -0.1970 0.84385090 -5.99477  4.899891   8
 #> 
 #> Model type:  lm 
@@ -627,8 +627,8 @@ slopes(
   variables = "drat",
   newdata = datagrid(qsec = range))
 #>   rowid     type term  estimate std.error statistic    p.value   conf.low conf.high predicted predicted_hi predicted_lo      mpg     drat qsec      eps
-#> 1     1 response drat  5.223926  3.791061  1.377959 0.16821604 -2.2064175  12.65427  16.27566     16.27679     16.27566 20.09062 3.596563 14.5 0.000217
-#> 2     2 response drat 10.241374  5.161440  1.984209 0.04723256  0.1251384  20.35761  25.71863     25.72085     25.71863 20.09062 3.596563 22.9 0.000217
+#> 1     1 response drat  5.223926  3.791080  1.377952 0.16821811 -2.2064538  12.65431  16.27566     16.27679     16.27566 20.09062 3.596563 14.5 0.000217
+#> 2     2 response drat 10.241374  5.161439  1.984209 0.04723254  0.1251396  20.35761  25.71863     25.72085     25.71863 20.09062 3.596563 22.9 0.000217
 ```
 
 Are these two slopes significantly different from one another? To test
@@ -640,8 +640,8 @@ slopes(
   hypothesis = "b1 = b2",
   variables = "drat",
   newdata = datagrid(qsec = range))
-#>       type  term  estimate std.error  statistic   p.value  conf.low conf.high
-#> 1 response b1=b2 -5.017448  8.519298 -0.5889509 0.5558942 -21.71497  11.68007
+#>       type  term  estimate std.error  statistic   p.value conf.low conf.high
+#> 1 response b1=b2 -5.017448  8.519316 -0.5889496 0.5558951  -21.715  11.68011
 ```
 
 Now, imagine that for theoretical (or substantive or clinical) reasons,
@@ -652,7 +652,7 @@ function to conduct an equivalence test:
 avg_slopes(mod) |> hypotheses(equivalence = c(-2, 2))
 #>   Term Estimate Std. Error     z   Pr(>|z|)  2.5 % 97.5 %    p (Inf)  p (Sup)   p (Eq)
 #> 1 qsec    1.124     0.4331 2.595  0.0094487 0.2752  1.973 2.7403e-13 0.021585 0.021585
-#> 2 drat    7.224     1.3652 5.292 1.2122e-07 4.5484  9.900 7.0624e-12 0.999935 0.999935
+#> 2 drat    7.224     1.3652 5.292 1.2122e-07 4.5484  9.900 7.0623e-12 0.999935 0.999935
 #> 
 #> Model type:  lm 
 #> Prediction type:  response
