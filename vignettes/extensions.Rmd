@@ -144,11 +144,10 @@ get_vcov(model)
 get_predict(model, newdata = head(mtcars))
 ```
 
-Now we can use the `slopes` function:
+Now we can use the `avg_slopes` function:
 
 ```{r}
-slopes(model, newdata = mtcars, variables = c("hp", "drat")) |>
-    averages()
+avg_slopes(model, newdata = mtcars, variables = c("hp", "drat"))
 
 predictions(model, newdata = mtcars) |>
     head()
@@ -208,7 +207,7 @@ get_predict.customclass <- function(model, newdata, ...) {
 Finally, we can call any `slopes` function and obtain results. Notice that our object of class `customclass` now produces different results than the default `mblogit` object:
 
 ```{r}
-predictions(model) |> averages()
+avg_predictions(model)
 
-predictions(model_custom) |> averages()
+avg_predictions(model_custom)
 ```

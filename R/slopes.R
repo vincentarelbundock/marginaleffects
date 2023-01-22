@@ -80,7 +80,7 @@
 #' - "dyex": dY/dX / X
 #' @param wts string or numeric: weights to use when computing average
 #' contrasts or slopes. These weights only affect the averaging in
-#' `averages()` or with the `by` argument, and not the unit-level estimates themselves.
+#' `avg_*()` or with the `by` argument, and not the unit-level estimates themselves.
 #' + string: column name of the weights variable in `newdata`. When supplying a column name to `wts`, it is recommended to supply the original data (including the weights variable) explicitly to `newdata`.
 #' + numeric: vector of length equal to the number of rows in the original data or in `newdata` (if supplied). 
 #' @param hypothesis specify a hypothesis test or custom contrast using a numeric value, vector, or matrix, a string, or a string formula.
@@ -134,10 +134,7 @@
 #' head(mfx)
 #'
 #' # Average Marginal Effect (AME)
-#' slopes(mod, by = TRUE)
-#' averages(mfx)
-#' tidy(mfx)
-#' plot(mfx)
+#' avg_slopes(mod, by = TRUE)
 #'
 #' 
 #' # Marginal Effect at the Mean (MEM)
@@ -152,8 +149,7 @@
 #' # marginal effect within each subset of observations with different observed
 #' # values for the `cyl` variable:
 #' mod2 <- lm(mpg ~ hp * cyl, data = mtcars)
-#' mfx2 <- slopes(mod2, variables = "hp", by = "cyl")
-#' averages(mfx2)
+#' avg_slopes(mod2, variables = "hp", by = "cyl")
 #'
 #' # Marginal Effects at User-Specified Values (counterfactual)
 #' # Variables not explicitly included in `datagrid()` are held at their

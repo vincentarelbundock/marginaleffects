@@ -2,7 +2,7 @@
 
 Breaking changes:
 
-* The output of all functions includes an `estimate` column instead of the function-specific `predicted`, `comparisons`, `dydx`. This is only relevant for unit-level estimates, and not to the output of `tidy()` or `summary()`, which already returned an `estimate` column.
+* All functions return an `estimate` column instead of the function-specific `predicted`, `comparisons`, `dydx`, etc. This change only affects unit-level estimates, and not average estimates, which already used the `estimate` column name.
 * The `transform_avg` argument in `tidy()` deprecated. Use `transform_post` instead.
 
 New models supported:
@@ -11,21 +11,21 @@ New models supported:
 
 New features:
 
-* New functions: `avg_predictions()`, `avg_comparisons()`, `avg_slopes()`
+* New convenience functions: `avg_predictions()`, `avg_comparisons()`, `avg_slopes()`
 * Equivalence, non-inferiority, and non-superiority tests with the `hypotheses()` function and `equivalence` argument.
 * New `df` argument to set degrees of freedom manually for p and CI.
 * `by` argument
   - `TRUE` returns average (marginal) predictions, comparisons, or slopes.
-  - Now supports bayesian models.
+  - Supports bayesian models.
 * `hypothesis` argument
   - Numeric value sets the null used in calculating Z and p.
   - Example: `comparisons(mod, transform_pre = "ratio", hypothesis = 1)`
-* All arguments from the main functions are now available through `averages()`, `tidy()`, or `summary()`: `conf_level`, `transform_post`, etc. Feeding an argument to `averages()` will k
+* All arguments from the main functions are now available through `tidy()`, and `summary()`: `conf_level`, `transform_post`, etc.
 * Bayesian posterior distribution summaries can be customized using global options:
-  - `options("marginaleffects_posterior_interval" = "eti")` 
-  - `options("marginaleffects_posterior_interval" = "hdi")` 
-  - `options("marginaleffects_posterior_center" = median)` 
-  - `options("marginaleffects_posterior_center" = mean)` 
+  - `options("marginaleffects_posterior_interval" = "eti")`
+  - `options("marginaleffects_posterior_interval" = "hdi")`
+  - `options("marginaleffects_posterior_center" = median)`
+  - `options("marginaleffects_posterior_center" = mean)`
 
 Bug fixes:
 

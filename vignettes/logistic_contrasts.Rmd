@@ -75,13 +75,10 @@ comparisons(
     head()
 ```
 
-Population-averaged (aka "marginal") adjusted risk difference ([see this vignette](https://vincentarelbundock.github.io/marginaleffects/articles/gformula.html)) can be obtained using the `averages()` function or using the `by` argument:
+Population-averaged (aka "marginal") adjusted risk difference ([see this vignette](https://vincentarelbundock.github.io/marginaleffects/articles/gformula.html)) can be obtained using the `avg_*()` functions or using the `by` argument:
 
 ```{r}
-comparisons(
-    mod,
-    variables = "tx") |>
-    averages()
+avg_comparisons(mod, variables = "tx")
 ```
 
 The `comparisons()` function above computed the predicted probability of mortality (`day30==1`) for each observed row of the data in two counterfactual cases: when `tx` is "SK", and when `tx` is "tPA". Then, it computed the differences between these two sets of predictions. Finally, it computed the population-average of risk differences.
@@ -89,23 +86,21 @@ The `comparisons()` function above computed the predicted probability of mortali
 Instead of risk *differences*, we could compute population-averaged (marginal) adjusted risk *ratios*:
 
 ```{r}
-comparisons(
+avg_comparisons(
     mod,
     variables = "tx",
     transform_pre = "lnratioavg",
-    transform_post = exp) |>
-    averages()
+    transform_post = exp)
 ```
 
 Population-averaged (marginal) odds ratios:
 
 ```{r}
-comparisons(
+avg_comparisons(
     mod,
     variables = "tx",
     transform_pre = "lnoravg",
-    transform_post = exp) |>
-    averages()
+    transform_post = exp)
 ```
 
 ## Unit-level Summaries

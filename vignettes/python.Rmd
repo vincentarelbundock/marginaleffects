@@ -165,13 +165,10 @@ predictions(mod, newdata = datagrid(newdata = df, Age = range))
 predictions(mod, newdata = df, by = "Sex")
 
 # contrasts (average)
-comparisons(mod, variables = "Age", newdata = df)  |>
-    averages()
+avg_comparisons(mod, variables = "Age", newdata = df)
 
-comparisons(mod, variables = list("Age" = "sd"), newdata = df)  |>
-    averages()
+avg_comparisons(mod, variables = list("Age" = "sd"), newdata = df)
 
 # slope (elasticity)
-slopes(mod, variables = "Age", slope = "eyex", newdata = df) |>
-    averages()
+avg_slopes(mod, variables = "Age", slope = "eyex", newdata = df)
 ```

@@ -8,6 +8,7 @@ vignette: >
 ---
 
 ```{r, include = FALSE}
+options(width = 10000)
 knitr::opts_chunk$set(
   collapse = TRUE,
   fig.width = 6,
@@ -174,15 +175,14 @@ nrow(cmp)
 
 There are 3 pairwise contrasts, corresponding to the 3 pairwise comparisons possible between the 3 levels of the focal variable `btype`: `scold-curse`, `shout-scold`, `shout-curse`. The `comparisons()` function estimates those 3 contrasts for each row of `newdata`, so we get $18 \times 3 = 54$ rows.
 
-Finally, if we wanted contrasts averaged over each subgroup of the `resp` variable, we can use the `by` argument:
+Finally, if we wanted contrasts averaged over each subgroup of the `resp` variable, we can use the `avg_comparisons()` function with the `by` argument:
 
 ```{r}
-comparisons(mod,
+avg_comparisons(mod,
     by = "resp",
     variables = list("btype" = "pairwise"),
     newdata = nd,
-    type = "link") |>
-    summary()
+    type = "link")
 ```
 
 These results are identical to those produced by `emmeans` (except for $t$ vs. $z$).
@@ -313,7 +313,6 @@ mar <- margins(mod)
 summary(mar)
 
 mfx <- slopes(mod)
- averages(mfx)
 ```
 
 ## Individual-Level Marginal Effects
@@ -330,7 +329,7 @@ nd <- data.frame(cyl = 4, hp = 110, wt = 3)
 ## Marginal Effects at the Mean
 
 ```{r}
-mar <- margins(mod, data = data.frame(mean_or_mode(mtcars)), unit_ses = TRUE)
+mar <- margins(mod, data = data.frame(prediction::mean_or_mode(mtcars)), unit_ses = TRUE)
 data.frame(mar)
 
 slopes(mod, newdata = "mean")
@@ -348,11 +347,10 @@ mod <- lm(mpg ~ cyl * hp + wt, data = mtcars)
 mar <- margins(mod, at = list(cyl = c(4, 6, 8)))
 summary(mar)
 
-mfx <- slopes(
+avg_slopes(
     mod,
     by = "cyl",
     newdata = datagridcf(cyl = c(4, 6, 8)))
- averages(mfx)
 ```
 
 ## Adjusted Predictions
@@ -406,8 +404,7 @@ The same results can be obtained with `slopes()` and `summary()` like this:
 ```{r}
 library("marginaleffects")
 mod <- lm(mpg ~ cyl + hp + wt, data = mtcars)
-mfx <- slopes(mod)
- averages(mfx)
+avg_slopes(mod)
 ```
 
 Note that `Stata` reports t statistics while `marginaleffects` reports Z. This produces slightly different p-values because this model has low degrees of freedom: `mtcars` only has 32 rows
@@ -463,12 +460,11 @@ You can estimate average counterfactual marginal effects with `slopes()` by usin
 ```{r}
 mod <- lm(mpg ~ as.factor(cyl) * hp + wt, data = mtcars)
 
-mfx <- slopes(
+avg_slopes(
     mod,
     variables = "hp",
     by = "cyl",
     newdata = datagridcf(cyl = c(4, 6, 8)))
- averages(mfx)
 ```
 
 This is equivalent to taking the group-wise mean of observation-level marginal effects (without the `by` argument):
@@ -621,8 +617,7 @@ data.frame(bm$ContrastSummary)
 Compute AMEs using `marginaleffects`:
 
 ```{r}
-mfx <- slopes(bayes.logistic) 
- averages(mfx)
+avg_slopes(bayes.logistic) 
 ```
 
 The `mpg` element of the `Effect` column from `marginaleffects` matches the the `M` column of the output from `brmsmargins`.
@@ -679,8 +674,7 @@ bm <- brmsmargins(
   CIType = "ETI")
 data.frame(bm$ContrastSummary)
 
-mfx <- slopes(mlogit)
- averages(mfx)
+avg_slopes(mlogit)
 ```
 
 ### AME: Fixed Effects Only (Grand Mean)
@@ -695,8 +689,7 @@ bm <- brmsmargins(
   CIType = "ETI")
 data.frame(bm$ContrastSummary)
 
-mfx <- slopes(mlogit, re_formula = NA)
- averages(mfx)
+avg_slopes(mlogit, re_formula = NA)
 ```
 
 ## Marginal Effects for Location Scale Models
@@ -740,8 +733,7 @@ bm <- brmsmargins(
   effects = "fixedonly")
 data.frame(bm$ContrastSummary)
 
-mfx <- slopes(ls.fe, re_formula = NA)
- averages(mfx)
+avg_slopes(ls.fe, re_formula = NA)
 ```
 
 ### Discrete change and distributional parameter (`dpar`)
@@ -761,11 +753,10 @@ data.frame(bm$ContrastSummary)
 In `marginaleffects` we use the `comparisons()` function and the `variables` argument:
 
 ```{r}
-cmp <- comparisons(
+avg_comparisons(
   ls.fe,
   variables = list(grp = 0:1),
   dpar = "sigma")
- averages(cmp)
 ```
 
 ### Marginal effect (continuous) on sigma
@@ -779,8 +770,7 @@ bm <- brmsmargins(
   effects = "fixedonly")
 data.frame(bm$ContrastSummary)
 
-mfx <- slopes(ls.fe, dpar = "sigma", re_formula = NA)
- averages(mfx)
+avg_slopes(ls.fe, dpar = "sigma", re_formula = NA)
 ```
 
 # `effects`

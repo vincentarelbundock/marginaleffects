@@ -41,16 +41,14 @@ estimates computed by the \code{predictions()}, \code{comparisons()}, or \code{s
 Warning: It is generally faster and safer to use the \code{by} argument of one of
 the three functions listed above. Alternatively, one can call it in one step:
 
+\code{avg_slopes(model)}
+
 \code{slopes(model, by = TRUE)}
-
-\code{averages(slopes(model))}
-
-\code{slopes(model) |> averages()}
 
 Proceeding in two steps by assigning the unit-level estimates is typically
 slower, because all estimates must be computed twice.
 
-Note that the \code{tidy()} and \code{summary()} methods are slower wrappers around \code{averages()}
+Note that the \code{tidy()} and \code{summary()} methods are slower wrappers around \verb{avg_*()} functions.
 }
 \details{
 Standard errors are estimated using the delta method. See the \code{marginaleffects} website for details.
@@ -67,3 +65,4 @@ mod <- lm(mpg ~ factor(gear), data = mtcars)
 contr <- comparisons(mod, variables = list(gear = "sequential"))
 tidy(contr)
 }
+\keyword{internal}

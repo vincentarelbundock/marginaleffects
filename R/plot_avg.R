@@ -1,6 +1,6 @@
 #' Plot aggregated (average) comparisons and slopes
 #' 
-#' `x` is passed to `averages()` and the result is drawn as a point-range plot using `ggplot2`.
+#' `x` is re-valuted by the corresponding `avg_*()` function the result is drawn as a point-range plot using `ggplot2`.
 #' @param x object produced by the `comparisons()` or `slopes()` object.
 #' @param ... additional arguments are passed to the `aggregate` function (e.g., `conf_level`).
 #' @return A `ggplot2` object

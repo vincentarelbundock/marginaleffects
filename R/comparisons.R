@@ -148,25 +148,24 @@
 #' dat$new_hp <- 49 * (dat$hp - min(dat$hp)) / (max(dat$hp) - min(dat$hp)) + 1
 #' modlog <- lm(mpg ~ log(new_hp) + factor(cyl), data = dat)
 #' fdiff <- \(x) data.frame(x, x + 10)
-#' comparisons(modlog, variables = list(new_hp = fdiff)) |> averages()
+#' avg_comparisons(modlog, variables = list(new_hp = fdiff))
 #'
 #' # Adjusted Risk Ratio: see the contrasts vignette
 #' mod <- glm(vs ~ mpg, data = mtcars, family = binomial)
-#' cmp <- comparisons(mod, transform_pre = "lnratioavg")
-#' averages(cmp, transform_post = exp)
+#' avg_comparisons(mod, transform_pre = "lnratioavg", transform_post = exp)
 #'
 #' # Adjusted Risk Ratio: Manual specification of the `transform_pre`
-#' cmp <- comparisons(mod, transform_pre = function(hi, lo) log(mean(hi) / mean(lo)))
-#' averages(cmp, transform_post = exp)
+#' avg_comparisons(
+#'      mod,
+#'      transform_pre = function(hi, lo) log(mean(hi) / mean(lo)),
+#'      transform_post = exp)
 #
 #' # cross contrasts
 #' mod <- lm(mpg ~ factor(cyl) * factor(gear) + hp, data = mtcars)
-#' cmp <- comparisons(mod, variables = c("cyl", "gear"), cross = TRUE)
-#' averages(cmp)
+#' avg_comparisons(mod, variables = c("cyl", "gear"), cross = TRUE)
 #'
 #' # variable-specific contrasts
-#' cmp <- comparisons(mod, variables = list(gear = "sequential", hp = 10))
-#' averages(cmp)
+#' avg_comparisons(mod, variables = list(gear = "sequential", hp = 10))
 #'
 #' # hypothesis test: is the `hp` marginal effect at the mean equal to the `drat` marginal effect
 #' mod <- lm(mpg ~ wt + drat, data = mtcars)
@@ -204,8 +203,7 @@
 #' comparisons(mod, by = TRUE)
 #'
 #' mod <- lm(mpg ~ hp * am * vs, data = mtcars)
-#' cmp <- comparisons(mod, variables = "hp", by = c("vs", "am"))
-#' averages(cmp)
+#' avg_comparisons(mod, variables = "hp", by = c("vs", "am"))
 #'
 #' library(nnet)
 #' mod <- multinom(factor(gear) ~ mpg + am * vs, data = mtcars, trace = FALSE)

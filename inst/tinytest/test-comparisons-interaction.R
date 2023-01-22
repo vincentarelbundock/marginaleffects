@@ -39,10 +39,10 @@ expect_true(all(round(abs(em$estimate), 5) %in% round(abs(cmp$estimate), 5)))
 expect_true(all(round(abs(em$SE), 5) %in% round(abs(cmp$std.error), 5)))
 
 
-# cross and averages()
+# cross and tidy()
 mod <- lm(mpg ~ factor(cyl) + factor(am), data = mtcars)
 cmp <- comparisons(mod, variables = c("am", "cyl"), cross = TRUE)
-avg <- averages(cmp)
+avg <- tidy(cmp)
 expect_equivalent(nrow(avg), 2)
 expect_true("contrast_am" %in% colnames(avg))
 expect_true("contrast_cyl" %in% colnames(avg))

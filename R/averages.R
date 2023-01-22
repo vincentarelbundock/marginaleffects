@@ -7,23 +7,21 @@
 #' Warning: It is generally faster and safer to use the `by` argument of one of
 #' the three functions listed above. Alternatively, one can call it in one step:
 #' 
+#' `avg_slopes(model)`
+#' 
 #' `slopes(model, by = TRUE)`
-#' 
-#' `averages(slopes(model))`
-#' 
-#' `slopes(model) |> averages()` 
 #' 
 #' Proceeding in two steps by assigning the unit-level estimates is typically
 #' slower, because all estimates must be computed twice.
 #'
-#' Note that the `tidy()` and `summary()` methods are slower wrappers around `averages()`
+#' Note that the `tidy()` and `summary()` methods are slower wrappers around `avg_*()` functions.
 #' @param x Object produced by the `predictions()`, `comparisons()`, or `slopes()` functions.
 #' @param by Character vector of variable names over which to compute group-wise average estimates. When `by=NULL`, the global average (per term) is reported.
 #' @inheritParams predictions
 #' @param ... All additional arguments are passed to the original fitting
 #' function to override the original call options: `conf_level`, `transform_post`,
 #' etc. See `?predictions`, `?comparisons`, `?slopes`.
-#' @export
+#' @keywords internal
 #' @return A `data.frame` of estimates and uncertainty estimates
 #' @details
 #'

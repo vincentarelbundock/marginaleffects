@@ -479,15 +479,15 @@ p <- predictions(mod, newdata = datagrid(x = 0, firm = unique))
 head(p)
 ```
 
-We can average/marginalize/integrate across random effects with the `averages` function or the `by` argument:
+We can average/marginalize/integrate across random effects with the `avg_predictions()` function or the `by` argument:
 
 ```{r}
-predictions(mod, newdata = datagrid(x = 0, firm = unique)) |> averages()
+avg_predictions(mod, newdata = datagrid(x = 0, firm = unique))
 
 predictions(mod, newdata = datagrid(x = 0:1, firm = unique), by = "x")
 ```
 
-We can also draw from the (assumed gaussian) population distribution of random effects, by asking `predictions()` to make predictions for new "levels" of the random effects. If we then take an average of predictions using `averages()` or `by`, we will have ["integrated out the random effects", as described in the `brmsmargins` package vignette.](https://joshuawiley.com/brmsmargins/articles/mixed-effects-slopes.html#integrating-out-random-effects) In the code below, we make predictions for 100 firm identifiers which were not in the original dataset. We also ask `predictions()` to push forward the `allow_new_levels` and `sample_new_levels` arguments to the `brms::posterior_epred` function:
+We can also draw from the (assumed gaussian) population distribution of random effects, by asking `predictions()` to make predictions for new "levels" of the random effects. If we then take an average of predictions using `avg_predictions()` or the `by` argument, we will have ["integrated out the random effects", as described in the `brmsmargins` package vignette.](https://joshuawiley.com/brmsmargins/articles/mixed-effects-slopes.html#integrating-out-random-effects) In the code below, we make predictions for 100 firm identifiers which were not in the original dataset. We also ask `predictions()` to push forward the `allow_new_levels` and `sample_new_levels` arguments to the `brms::posterior_epred` function:
 
 ```{r}
 predictions(
@@ -501,12 +501,11 @@ predictions(
 We can "integrate out" random effects in the other `slopes` functions too. For instance,
 
 ```{r}
-comparisons(
+avg_comparisons(
     mod,
     newdata = datagrid(firm = -1:-100),
     allow_new_levels = TRUE,
-    sample_new_levels = "gaussian") |> 
-    averages()
+    sample_new_levels = "gaussian")
 ```
 
 This is nearly equivalent the `brmsmargins` command output (with slight variations due to different random seeds):
@@ -577,8 +576,7 @@ plot_cap(mod, condition = "oc.gc") +
 ## Marginal effects
 
 ```{r}
-mfx <- slopes(mod)
-averages(mfx)
+avg_slopes(mod)
 ```
 
 # Hurdle models
@@ -701,29 +699,27 @@ predictions(
 What happens to `gdpPercap` when `lifeExp` increases by one?
 
 ```{r}
-comparisons(mod) |> averages()
+avg_comparisons(mod)
 ```
 What happens to `gdpPercap` when `lifeExp` increases by one standard deviation?
 
 ```{r}
-comparisons(mod, variables = list(lifeExp = "sd")) |> averages()
+avg_comparisons(mod, variables = list(lifeExp = "sd"))
 ```
 
 What happens to `gdpPercap` when `lifeExp` increases from 50 to 60 and  `year` simultaneously increases its min to its max?
 
 ```{r}
-comparisons(
+avg_comparisons(
     mod,
     variables = list(lifeExp = c(50, 60), year = "minmax"),
-    cross = TRUE) |>
-    averages()
+    cross = TRUE)
 ```
 
 Plot draws from the posterior distribution of average contrasts (*not* the same thing as draws from the posterior distribution of contrasts):
 
 ```{r}
-comparisons(mod) |>
-    averages() |>
+avg_comparisons(mod) |>
     posteriordraws() |>
     ggplot(aes(estimate, term)) +
     stat_dotsinterval() +
@@ -735,13 +731,13 @@ comparisons(mod) |>
 Average Marginal Effect of `lifeExp` on different scales and for different parameters:
 
 ```{r}
-slopes(mod) |> averages()
+avg_slopes(mod)
 
-slopes(mod, type = "link") |> averages()
+avg_slopes(mod, type = "link")
 
-slopes(mod, dpar = "hu") |> averages()
+avg_slopes(mod, dpar = "hu")
 
-slopes(mod, dpar = "hu", type = "link") |> averages()
+avg_slopes(mod, dpar = "hu", type = "link")
 ```
 
 Plot Conditional Marginal Effects
@@ -790,11 +786,11 @@ mod <- insight::download_model("brms_1")
 
 options(marginaleffects_posterior_interval = "hdi")
 options(marginaleffects_posterior_center = mean)
-comparisons(mod) |> averages()
+avg_comparisons(mod)
 
 options(marginaleffects_posterior_interval = "eti")
 options(marginaleffects_posterior_center = stats::median)
-comparisons(mod) |> averages()
+avg_comparisons(mod)
 ```
 
 # Random variables: `posterior` and `ggdist`
@@ -840,10 +836,10 @@ mod <- brm(am ~ mpg + hp, data = mtcars, family = bernoulli(),
            seed = 1024, silent = 2, chains = 4, iter = 1000)
 ```
 
-Notice that we can compute average contrasts in two different ways, using the `averages()` function or the `transform_pre` argument:
+Notice that we can compute average contrasts in two different ways, using the `avg_comparisons()` function or the `transform_pre` argument:
 
 ```{r}
-comparisons(mod) |> averages()
+avg_comparisons(mod)
 
 comparisons(mod, transform_pre = "differenceavg")
 ```
@@ -860,8 +856,7 @@ comparisons(
 The `hypotheses` function of the `brms` package can also perform non-linear hypothesis testing, and it generates some convenient statistics and summaries. This function accepts a D-by-P matrix of draws from the posterior distribution, where D is the number of draws and N is the number of parameters. We can obtain such a matrix using the `posteriordraws(x, shape = "DxP")`, and we can simply add a couple calls to our chain of operations: 
 
 ```{r}
-comparisons(mod) |>
-    averages() |>
+avg_comparisons(mod) |>
     posteriordraws(shape = "DxP") |>
     brms::hypothesis("b2 - b1 > .2")
 ```

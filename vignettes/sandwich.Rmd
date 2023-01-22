@@ -67,7 +67,7 @@ When possible, however, the calculation of standard errors and confidence interv
 
 When `insight` does not support a model, `marginaleffects` computes standard errors using the delta method, as described above. In those cases, confidence intervals are not created automatically, but users can easily compute them manually, as usual, by multiplying the standard error by a critical value. The standard errors thus estimated [have desirable properties under normal assumptions](https://en.wikipedia.org/wiki/Delta_method), but since there is no back-transformation, it is not always advisable to use them to construct symmetric confidence intervals around adjusted predictions.
 
-One special case is when we use the `averages()` function to compute average predictions, or the `by` argument to compute average predictions by group. In those cases, it may be a good idea to compute predicted values on the link scale, average the predictions, and only *then* back transform. This can be done using the `transform_post` and `transform_post` arguments. In this example, we use the `link_inverse` argument from the `insight` package to get the inverse link function:
+One special case is when we compute average predictions, or the `by` argument to compute average predictions by group. In those cases, it may be a good idea to compute predicted values on the link scale, average the predictions, and only *then* back transform. This can be done using the `transform_post` and `transform_post` arguments. In this example, we use the `link_inverse` argument from the `insight` package to get the inverse link function:
 
 ```{r}
 library(insight)
@@ -98,18 +98,16 @@ predictions(
     transform_post = link_inverse(mod))
 ```
 
-We can do something similar with average predictions using the `averages()` functions:
+Warning: the order in which we average and transform matters, because the mean of a transformation is not always equal to the transformation of the mean:
 
 ```{r}
 p <- predictions(
     mod,
-    type = "link")
-averages(p, transform_post = link_inverse(mod))
-```
+    type = "link",
+    transform_post = link_inverse(mod))
+aggregate(y ~ groupid, data = p, FUN = mean)
 
-Warning: users should be aware that these alternative approaches will not in general yield the same results, because the mean of a transformation is not always equal to the transformation of the mean:
-
-```{r}
+# simple example
 x <- rnorm(100)
 mean(link_inverse(mod)(x))
 link_inverse(mod)(mean(x))
@@ -142,7 +140,7 @@ Compare to the delta method standard errors:
 
 ```{r}
 mod <- lm(mpg ~ am + hp + factor(cyl), data = mtcars)
-comparisons(mod, variables = "am") |> averages()
+avg_comparisons(mod, variables = "am")
 ```
 
 # Robust standard errors 
@@ -166,8 +164,7 @@ head(p, 2)
 Marginal effects with cluster-robust standard errors:
 
 ```{r}
-mfx <- slopes(mod, vcov = ~cyl)
-averages(mfx)
+avg_slopes(mod, vcov = ~cyl)
 ```
 
 Comparing adjusted predictions with classical and robust standard errors:
@@ -258,7 +255,7 @@ NO LONGER RELEVANT WITH THE AVERAGE() + RECALL() REFACTOR SINCE WE COMPUTE SEs D
 
 ## Standard Error of the Average Marginal Effect or Contrast
 
-The `averages()` function computes the average marginal effect (or contrast) when they are applied to an object produced by `slopes()` (or `comparisons()`). This is done in 3 steps:
+The `avg_*()` functions computes the average marginal effect (or contrast) when they are applied to an object produced by `slopes()` (or `comparisons()`). This is done in 3 steps:
 
 1. Extract the Jacobian used to compute unit-level standard errors.
 2. Take the average of that Jacobian.

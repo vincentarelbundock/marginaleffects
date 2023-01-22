@@ -15,7 +15,7 @@ plot_avg(x, ...)
 A \code{ggplot2} object
 }
 \description{
-\code{x} is passed to \code{averages()} and the result is drawn as a point-range plot using \code{ggplot2}.
+\code{x} is re-valuted by the corresponding \verb{avg_*()} function the result is drawn as a point-range plot using \code{ggplot2}.
 }
 \examples{
 mod <- glm(am ~ hp + wt, data = mtcars)

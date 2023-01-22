@@ -14,40 +14,29 @@ Mode <- function(x) {
 
 #' Compute the mode or mean of `x`
 #' @param x extract the mean or the mode of vector or data.frame x depending on its type
-#' @rdname mean_or_mode
 #' @keywords internal
-#' @export
+#' @noRd
 #' @return numeric vector
 mean_or_mode <- function(x) {
     UseMethod("mean_or_mode")
 }
 
-#' @rdname mean_or_mode
-#' @export
 mean_or_mode.default <- function(x) {
     mean(x)
 }
 
-#' @rdname mean_or_mode
-#' @export
 mean_or_mode.character <- function(x) {
     Mode(x)
 }
 
-#' @rdname mean_or_mode
-#' @export
 mean_or_mode.factor <- function(x) {
     Mode(x)
 }
 
-#' @rdname mean_or_mode
-#' @export
 mean_or_mode.logical <- function(x) {
     Mode(x)
 }
 
-#' @rdname mean_or_mode
-#' @export
 mean_or_mode.data.frame <- function(x) {
     out <- list()
     for (n in names(x)) {

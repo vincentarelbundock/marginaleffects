@@ -96,7 +96,7 @@ on the link scale before backtransforming them using the inverse link function.}
 \item See the Examples section below and the vignette: https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html
 }}
 
-\item{df}{Degrees of freedom used to comptute p values and confidence intervals. A single numeric value between 1 and \code{Inf}. When \code{df} is \code{Inf}, the normal distribution is used. When \code{df} is finite, the \code{t} distribution is used. See \link[insight:get_df]{insight::get_df} for a convenient function to extract degrees of freedom. Ex: \code{slopes(model, df = insight::get_df(model))}}
+\item{df}{Degrees of freedom used to compute p values and confidence intervals. A single numeric value between 1 and \code{Inf}. When \code{df} is \code{Inf}, the normal distribution is used. When \code{df} is finite, the \code{t} distribution is used. See \link[insight:get_df]{insight::get_df} for a convenient function to extract degrees of freedom. Ex: \code{slopes(model, df = insight::get_df(model))}}
 
 \item{wts}{character value. Weights to use in the averaging.
 \itemize{
@@ -287,8 +287,7 @@ dat$carb <- as.factor(dat$carb)
 mod <- lm(mpg ~ hp + am + carb, data = dat)
 
 # Compute and summarize marginal means
-mm <- marginalmeans(mod)
-averages(mm)
+marginalmeans(mod)
 
 # Contrast between marginal means (carb2 - carb1), or "is the 1st marginal means equal to the 2nd?"
 # see the vignette on "Hypothesis Tests and Custom Contrasts" on the `marginaleffects` website.

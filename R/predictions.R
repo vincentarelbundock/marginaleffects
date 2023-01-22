@@ -96,8 +96,7 @@
 #' library(dplyr)
 #' mod <- lm(mpg ~ hp * am * vs, mtcars)
 #'
-#' pred <- predictions(mod)
-#' averages(pred)
+#' avg_predictions(mod)
 #' 
 #' predictions(mod, by = "am")
 #'
@@ -160,7 +159,7 @@
 #' predictions(nom, type = "probs") |> head()
 #' 
 #' # average predictions
-#' predictions(nom, type = "probs", by = "group") |> averages()
+#' avg_predictions(nom, type = "probs", by = "group")
 #' 
 #' by <- data.frame(
 #'     group = c("3", "4", "5"),

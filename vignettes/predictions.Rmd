@@ -169,16 +169,16 @@ An "Average Adjusted Prediction" is the outcome of a two step process:
 1. Create a new dataset with each of the original regressor values, but fixing some regressors to values of interest.
 2. Take the average of the predicted values in this new dataset.
 
-We can obtain AAPs by applying the `averages()` functions to an object produced by the `predictions()` function:
+We can obtain AAPs by applying the `avg_*()` functions or `by` argument:
 
 ```{r}
-pred <- predictions(mod)
-averages(pred)
+avg_predictions(mod)
 ```
 
 This is equivalent to:
 
 ```{r}
+pred <- predictions(mod)
 mean(pred$estimate)
 ```
 
@@ -217,7 +217,7 @@ nom <- multinom(factor(gear) ~ mpg + am * vs, data = mtcars, trace = FALSE)
 predictions(nom, type = "probs") |> head()
 
 # average predictions
-predictions(nom, type = "probs", by = "group") |> averages()
+avg_predictions(nom, type = "probs", by = "group")
 ```
 
 We can use custom aggregations by supplying a data frame to the `by` argument. All columns of this data frame must be present in the output of `predictions()`, and the data frame must also include a `by` column of labels. In this example, we "collapse" response groups:

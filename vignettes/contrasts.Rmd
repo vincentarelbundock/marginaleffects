@@ -231,12 +231,12 @@ nrow(cmp)
 
 ## Average contrasts
 
-By default, the `slopes()` and `comparisons()` functions compute marginal effects and contrasts for every row of the original dataset. These unit-level estimates can be of great interest, as discussed in [another vignette](https://vincentarelbundock.github.io/marginaleffects/articles/logistic_contrasts.html). Nevertheless, one may want to focus on one-number summaries: the `avg_*()` and `averages()` functions computes the "Average Marginal Effect" or "Average Contrast," by taking the mean of all the unit-level estimates.
+By default, the `slopes()` and `comparisons()` functions compute marginal effects and contrasts for every row of the original dataset. These unit-level estimates can be of great interest, as discussed in [another vignette](https://vincentarelbundock.github.io/marginaleffects/articles/logistic_contrasts.html). Nevertheless, one may want to focus on one-number summaries: the `avg_*()` functions or the `by` argument compute the "Average Marginal Effect" or "Average Contrast," by taking the mean of all the unit-level estimates.
 
 ```{r}
 avg_comparisons(mod, variables = "mpg")
 
-comparisons(mod, variables = "mpg") |> averages()
+comparisons(mod, variables = "mpg", by = TRUE)
 ```
 
 which are equivalent to:
@@ -345,31 +345,21 @@ So far we have focused on simple differences between adjusted predictions. Now, 
 
 * `transform_pre`
 * `transform_post`
-* `transform_post`
 
 Consider the case of a model with a single predictor $x$. To compute average contrasts, we proceed as follows:
 
 1. Compute adjusted predictions for each row of the dataset for the observed values $x$: $\hat{y}_x$
-2. Compute adjusted predictions for each row of the dataset for the observed values $x + 1$: $\hat{y}_{x+1}$
-3. `transform_pre`: Compute unit-level contrasts by taking the difference between (or some other function of) adjusted predictions: $\hat{y}_{x+1} - \hat{y}_x$
-4. `transform_post`: Transform the unit-level contrasts or return them as-is.
-5. Compute the average contrast by taking the mean of unit-level contrasts: $1/N \sum_{i=1}^N \hat{y}_{x+1} - \hat{y}_x$
-6. `transform_post`: Transform the average contrast or return them as-is.
+1. Compute adjusted predictions for each row of the dataset for the observed values $x + 1$: $\hat{y}_{x+1}$
+1. `transform_pre`: Compute unit-level contrasts by taking the difference between (or some other function of) adjusted predictions: $\hat{y}_{x+1} - \hat{y}_x$
+1. Compute the average contrast by taking the mean of unit-level contrasts: $1/N \sum_{i=1}^N \hat{y}_{x+1} - \hat{y}_x$
+1. `transform_post`: Transform the average contrast or return them as-is.
 
 The `transform_pre` argument of the `comparisons()` function determines how adjusted predictions are combined to create a contrast. By default, we take a simple difference between predictions with `hi` value of $x$, and predictions with a `lo` value of $x$: `function(hi, lo) hi-lo`.
 
 The `transform_post` argument of the `comparisons()` function applies a custom transformation to the unit-level contrasts.
 
-The `transform_post` argument applies a custom transformation to the average contrast.
+The `transform_post` argument applies a custom transformation to the final quantity, as would be returned if we evaluated the same call without `transform_post`.
 
-The difference between `transform_post` and `transform_post` is that the former is applied *before* we take the average, and the latter is applied *to the average*. This seems like a subtle distinction, but it can be important practical implications, since a function of the average is rarely the same as the average of a function:
-
-```{r}
-set.seed(1024)
-x <- rnorm(100)
-exp(mean(x))
-mean(exp(x))
-```
 
 # Differences
 
@@ -397,12 +387,12 @@ con <- yhat_plus - yhat_minus
 mean(con)
 ```
 
-We can use the `comparisons()`, `avg_comparisons()`, and `averages()` functions to obtain the same results:
+We can use the `avg_comparisons()` function , or the `by` argument to obtain the same results:
 
 ```{r}
 avg_comparisons(mod)
 
-comparisons(mod) |> averages()
+comparisons(mod, by = TRUE)
 ```
 
 # Difference-in-Differences(-in-Differences)
@@ -530,7 +520,7 @@ The order of operations in previous command was:
 
 1. Compute the custom unit-level log ratios
 2. Exponentiate them
-3. Take the average using the `avg_comparisons()` or `averages()` functions
+3. Take the average using the `avg_comparisons()`
 
 There is a very subtle difference between the procedure above and this code:
 
@@ -541,7 +531,7 @@ avg_comparisons(
     transform_post = exp)
 ```
 
-Since the `exp` function is now passed to the `transform_post` argument of `averages()` function, the exponentiation is now done only *after* unit-level contrasts have been averaged. This is what `Stata` appears to do under the hood, and the results are slightly different.
+Since the `exp` function is now passed to the `transform_post` argument of the `comparisons()` function, the exponentiation is now done only *after* unit-level contrasts have been averaged. This is what `Stata` appears to do under the hood, and the results are slightly different.
 
 ```{r}
 comparisons(
@@ -584,10 +574,9 @@ dat <- mtcars
 dat$new_hp <- 49 * (mtcars$hp - min(mtcars$hp)) / (max(mtcars$hp) - min(mtcars$hp)) + 1
 mod <- lm(mpg ~ log(new_hp), data = dat)
 
-comparisons(
+avg_comparisons(
   mod,
-  variables = list(new_hp = 10)) |>
-  averages()
+  variables = list(new_hp = 10))
 ```
 
 Since version 0.7.2 of `marginaleffects`, we can supply arbitrary functions to create custom differences. These functions must accept a vector of values for the predictor of interest, and return a data frame with the same number of rows as the length, and two columns with the values to compare. For example, we can do:
@@ -597,20 +586,17 @@ forward_diff <- \(x) data.frame(x, x + 10)
 backward_diff <- \(x) data.frame(x - 10, x)
 center_diff <- \(x) data.frame(x - 5, x + 5)
 
-comparisons(
+avg_comparisons(
   mod,
-  variables = list(new_hp = forward_diff)) |>
-  averages()
+  variables = list(new_hp = forward_diff))
 
-comparisons(
+avg_comparisons(
   mod,
-  variables = list(new_hp = backward_diff)) |>
-  averages()
+  variables = list(new_hp = backward_diff))
 
-comparisons(
+avg_comparisons(
   mod,
-  variables = list(new_hp = center_diff)) |>
-  averages()
+  variables = list(new_hp = center_diff))
 ```
 
 Notice that the last "centered" difference gives the same results as the default `comparisons()` call.
