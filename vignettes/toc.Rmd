@@ -33,7 +33,6 @@ Case studies:
 - [Multiple Imputation](https://vincentarelbundock.github.io/marginaleffects/articles/multiple_imputation.html)
 - [Plots: interactions, predictions, contrasts, and slopes](https://vincentarelbundock.github.io/marginaleffects/articles/plot.html)
 - [Python NumPyro models in `marginaleffects`](https://vincentarelbundock.github.io/marginaleffects/articles/python.html)
-- [Transformations](https://vincentarelbundock.github.io/marginaleffects/articles/transformations.html)
 - [Unit-level contrasts in logistic regressions](https://vincentarelbundock.github.io/marginaleffects/articles/logistic_contrasts.html)
 
 Tips and technical notes:
