@@ -98,7 +98,7 @@
 #'   - "sequential": difference between an estimate and the estimate in the next row.
 #'   - "revpairwise", "revreference", "revsequential": inverse of the corresponding hypotheses, as described above.
 #' + See the Examples section below and the vignette: https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html
-#' @param df Degrees of freedom used to comptute p values and confidence intervals. A single numeric value between 1 and `Inf`. When `df` is `Inf`, the normal distribution is used. When `df` is finite, the `t` distribution is used. See [insight::get_df] for a convenient function to extract degrees of freedom. Ex: `slopes(model, df = insight::get_df(model))`
+#' @param df Degrees of freedom used to compute p values and confidence intervals. A single numeric value between 1 and `Inf`. When `df` is `Inf`, the normal distribution is used. When `df` is finite, the `t` distribution is used. See [insight::get_df] for a convenient function to extract degrees of freedom. Ex: `slopes(model, df = insight::get_df(model))`
 #' @param eps NULL or numeric value which determines the step size to use when
 #' calculating numerical derivatives: (f(x+eps)-f(x))/eps. When `eps` is
 #' `NULL`, the step size is 0.0001 multiplied by the difference between
