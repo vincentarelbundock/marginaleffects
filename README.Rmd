@@ -41,7 +41,7 @@ Introduction:
   1. [Estimands: Predictions, Comparisons, and Slopes](https://vincentarelbundock.github.io/marginaleffects/#estimands-predictions-comparisons-and-slopes)
   2. [Prediction Grid](https://vincentarelbundock.github.io/marginaleffects/#prediction-grid)
   3. [Averaging](https://vincentarelbundock.github.io/marginaleffects/#averaging)
-  4. [Hypothesis Tests and Custom Contrasts](https://vincentarelbundock.github.io/marginaleffects/#hypothesis-tests)
+  4. [Hypothesis Tests, Custom Contrasts, and Equivalence Tests](https://vincentarelbundock.github.io/marginaleffects/#hypothesis-and-equivalence-tests)
 
 ```{r, child="vignettes/toc.Rmd"}
 ```
