@@ -14,7 +14,7 @@ in R. Conduct linear and non-linear hypothesis tests using the delta
 method.
 
 The code on this website was executed using `marginaleffects`
-0.8.1.9110. See the [installation
+0.8.1.9111. See the [installation
 section](https://vincentarelbundock.github.io/marginaleffects/#installation)
 to install the latest CRAN or development version.
 
@@ -471,7 +471,7 @@ slopes](https://vincentarelbundock.github.io/marginaleffects/articles/plot.html)
 Since predictions, comparisons, and slopes are conditional quantities,
 they can be a bit unwieldy. Often, it can be useful to report a
 one-number summary instead of one estimate per observation. Instead of
-presenting “conditional” estimates, some statisticians recommend
+presenting “conditional” estimates, some methodologists recommend
 reporting “marginal” estimates, that is, an average of unit-level
 estimates.
 
@@ -481,27 +481,24 @@ correspond to a partial derivative, or the effect of a “small/marginal”
 change.)
 
 To marginalize (average over) our unit-level estimates, we can use the
-`by` argument or the `averages()` function. For example, both of these
-commands give us the same result: the average predicted outcome in the
-`mtcars` dataset:
+`by` argument or the one of the convenience functions:
+`avg_predictions()`, `avg_comparisons()`, or `avg_slopes()`. For
+example, both of these commands give us the same result: the average
+predicted outcome in the `mtcars` dataset:
 
 ``` r
-predictions(mod) |> averages()
+avg_predictions(mod)
 #>   Estimate Std. Error     z   Pr(>|z|) 2.5 % 97.5 %
 #> 1    20.09     0.3904 51.46 < 2.22e-16 19.33  20.86
 #> 
 #> Model type:  lm 
 #> Prediction type:  response
-
-predictions(mod, by = TRUE)
-#>       type estimate std.error statistic p.value conf.low conf.high
-#> 1 response 20.09062 0.3904163   51.4595       0 19.32542  20.85583
 ```
 
 This is equivalent to manual computation by:
 
 ``` r
-predictions(mod)$estimate |> mean()
+mean(predict(mod))
 #> [1] 20.09062
 ```
 
@@ -509,16 +506,19 @@ The main `marginaleffects` functions all include a `by` argument, which
 allows us to marginalize within sub-groups of the data. For example,
 
 ``` r
-comparisons(mod, by = "am")
-#>       type term          contrast    estimate  std.error  statistic     p.value    conf.low    conf.high predicted predicted_hi predicted_lo am
-#> 1 response   hp          mean(+1) -0.04363961 0.02128997 -2.0497735 0.040386540 -0.08536718 -0.001912041  22.48857     22.47012     22.50702  1
-#> 2 response   hp          mean(+1) -0.03426361 0.01586407 -2.1598241 0.030786291 -0.06535662 -0.003170595  20.25549     20.23436     20.27663  0
-#> 3 response   wt          mean(+1) -6.07175987 1.97621069 -3.0724254 0.002123269 -9.94506165 -2.198458079  22.48857     19.18129     25.79584  1
-#> 4 response   wt          mean(+1) -2.47990263 1.23162896 -2.0135144 0.044060543 -4.89385103 -0.065954226  20.25549     18.65221     21.85877  0
-#> 5 response   am mean(1) - mean(0)  1.90289761 2.30862946  0.8242542 0.409795116 -2.62193298  6.427728204  22.48857     22.48857     22.16340  1
-#> 6 response   am mean(1) - mean(0) -1.38300908 2.52499366 -0.5477277 0.583878860 -6.33190570  3.565887552  20.25549     18.55291     20.25549  0
+avg_comparisons(mod, by = "am")
+#>   Term          Contrast Estimate Std. Error       z  Pr(>|z|)    2.5 %    97.5 % am
+#> 1   hp          mean(+1) -0.04364    0.02129 -2.0498 0.0403865 -0.08537 -0.001912  1
+#> 2   hp          mean(+1) -0.03426    0.01586 -2.1598 0.0307863 -0.06536 -0.003171  0
+#> 3   wt          mean(+1) -6.07176    1.97621 -3.0724 0.0021233 -9.94506 -2.198458  1
+#> 4   wt          mean(+1) -2.47990    1.23163 -2.0135 0.0440605 -4.89385 -0.065954  0
+#> 5   am mean(1) - mean(0)  1.90290    2.30863  0.8243 0.4097951 -2.62193  6.427728  1
+#> 6   am mean(1) - mean(0) -1.38301    2.52499 -0.5477 0.5838789 -6.33191  3.565888  0
+#> 
+#> Model type:  lm 
+#> Prediction type:  response
 
-slopes(mod) |> averages(by = "cyl")
+avg_slopes(mod, by = "cyl")
 #>   Term    Contrast Estimate Std. Error       z   Pr(>|z|)    2.5 %    97.5 % cyl
 #> 1   hp mean(dY/dX) -0.03667    0.01048 -3.4996 0.00046588 -0.05721 -0.016134   6
 #> 2   hp mean(dY/dX) -0.05301    0.01989 -2.6657 0.00768339 -0.09199 -0.014034   4
@@ -549,13 +549,16 @@ We can compute marginal means manually using the functions already
 described:
 
 ``` r
-predictions(
+avg_predictions(
   mod_cat,
   newdata = datagrid(cyl = unique, am = unique),
   by = "am")
-#>       type    am estimate std.error statistic       p.value conf.low conf.high
-#> 1 response  TRUE 22.47772 0.8343346  26.94090 7.291801e-160 20.84246  24.11299
-#> 2 response FALSE 18.31987 0.7853925  23.32575 2.429618e-120 16.78053  19.85921
+#>      am Estimate Std. Error     z   Pr(>|z|) 2.5 % 97.5 %
+#> 1  TRUE    22.48     0.8343 26.94 < 2.22e-16 20.84  24.11
+#> 2 FALSE    18.32     0.7854 23.33 < 2.22e-16 16.78  19.86
+#> 
+#> Model type:  lm 
+#> Prediction type:  response
 ```
 
 For convenience, the `marginaleffects` package also includes a
@@ -563,16 +566,16 @@ For convenience, the `marginaleffects` package also includes a
 
 ``` r
 marginalmeans(mod_cat, variables = "am")
-#>       type term value    am estimate std.error conf.low conf.high       p.value statistic
-#> 1 response   am FALSE FALSE 18.31987 0.7853925 16.78053  19.85921 2.429619e-120  23.32575
-#> 2 response   am  TRUE  TRUE 22.47772 0.8343346 20.84246  24.11299 7.291801e-160  26.94090
+#>       type term value    am estimate std.error statistic       p.value conf.low conf.high
+#> 1 response   am FALSE FALSE 18.31987 0.7853925  23.32575 2.429619e-120 16.78053  19.85921
+#> 2 response   am  TRUE  TRUE 22.47772 0.8343346  26.94090 7.291801e-160 20.84246  24.11299
 ```
 
 [The Marginal Means
 vignette](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html)
 offers more detail.
 
-## Hypothesis tests
+## Hypothesis and equivalence tests
 
 The `hypotheses()` function and the `hypothesis` argument can be used to
 conduct linear and non-linear hypothesis tests on model coefficients, or
@@ -592,8 +595,11 @@ the size of the `qsec` coefficient?
 
 ``` r
 hypotheses(mod, "drat = 2 * qsec")
-#>              term  estimate std.error statistic   p.value  conf.low conf.high
-#> 1 drat = 2 * qsec -1.388909  10.77593  -0.12889 0.8974447 -22.50934  19.73153
+#>              Term Estimate Std. Error       z Pr(>|z|)  2.5 % 97.5 %
+#> 1 drat = 2 * qsec   -1.389      10.78 -0.1289  0.89744 -22.51  19.73
+#> 
+#> Model type:  lm 
+#> Prediction type:
 ```
 
 We can ask the same question but refer to parameters by position, with
@@ -633,6 +639,20 @@ slopes(
   newdata = datagrid(qsec = range))
 #>       type  term  estimate std.error  statistic   p.value  conf.low conf.high
 #> 1 response b1=b2 -5.017448  8.519298 -0.5889509 0.5558942 -21.71497  11.68007
+```
+
+Now, imagine that for theoretical (or substantive or clinical) reasons,
+we only care about slopes smaller than -0.1. We can use the
+`hypotheses()` function to conduct an equivalence test:
+
+``` r
+avg_slopes(mod, variables = "am") |>
+  hypotheses(equivalence = c(-.1, .1))
+#>   Term Estimate Std. Error   z Pr(>|z|) 2.5 % 97.5 %    p (Inf)    p (Sup)     p (Eq)
+#> 1   am        0          0 NaN       NA     0      0 < 2.22e-16 < 2.22e-16 < 2.22e-16
+#> 
+#> Model type:  lm 
+#> Prediction type:  response
 ```
 
 See the [Hypothesis Tests and Custom Contrasts
