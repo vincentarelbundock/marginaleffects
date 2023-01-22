@@ -1,6 +1,6 @@
 equivalence <- function(x, region = NULL, df = Inf, ...) {
 
-    if (is.null(region)) {
+    if (is.null(region) || any(!c("estimate", "std.error") %in% colnames(x))) {
         return(x)
     }
 
