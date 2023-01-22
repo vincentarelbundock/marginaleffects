@@ -72,8 +72,7 @@ hypotheses <- function(
     FUN = NULL,
     vcov = NULL,
     conf_level = 0.95,
-    null = 0,
-    delta = 0,
+    region = NULL,
     side = NULL,
     df = Inf,
     ...) {
@@ -81,16 +80,15 @@ hypotheses <- function(
     # TODO: should conf_level be overwritten?
     out <- recall(model, hypothesis = hypothesis, vcov = vcov)
     if (!is.null(out)) {
-        if (!is.null(delta) && !is.null(side)) {
+        if (!is.null(region) && !is.null(side)) {
             null <- sanitize_hypothesis(hypothesis, ...)$hypothesis_null
             out <- equivalence(
                 out,
-                delta = delta,
                 df = df,
-                null = null,
+                region = region,
                 side = side)
-        } else if (!is.null(delta) || !is.null(side)) {
-            insight::format_error("The `side` and `delta` must both be specified.")
+        } else if (!is.null(region) || !is.null(side)) {
+            insight::format_error("The `side` and `region` must both be specified.")
         }
         first = c("type", "term", "value", "estimate", "std.error", "statistic", "p.value", "conf.low", "conf.high") 
         out <- sort_columns(out, first)
@@ -177,10 +175,9 @@ hypotheses <- function(
     if (!is.null(side)) {
         out <- equivalence(
             out,
-            delta = delta,
             df = df,
-            side = side,
-            null = hypothesis_null)
+            region = region,
+            side = side)
     }
 
     first = c("type", "term", "value", "estimate", "std.error", "statistic", "p.value", "conf.low", "conf.high")

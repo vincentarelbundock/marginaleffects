@@ -1,12 +1,20 @@
-equivalence <- function(x, delta = NULL, null = NULL, side = NULL, df = Inf, ...) {
-    checkmate::assert_choice(side, choices = c("equivalence", "noninferiority", "nonsuperiority"), null.ok = TRUE)
-    checkmate::assert_number(delta, lower = 1e-5, null.ok = TRUE)
+equivalence <- function(x, region = NULL, side = NULL, df = Inf, ...) {
 
-    if (is.null(delta) || is.null(null) || is.null(side)) {
+    if (is.null(region) || is.null(side)) {
         return(x)
     }
 
+    checkmate::assert_numeric(region, len = 2)
+    checkmate::assert_choice(
+        side,
+        choices = c("equivalence", "noninferiority", "nonsuperiority"),
+        null.ok = TRUE)
 
+
+    delta <- abs(diff(region)) / 2
+    null <- min(region) + delta
+
+    # definitions from `emmeans`, with a different user interface based on symmetric "region"
     if (side == "nonsuperiority") {
         x$statistic <- (x$estimate - null - delta) / x$std.error
     } else if (side == "noninferiority") {
