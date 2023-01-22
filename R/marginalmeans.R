@@ -314,22 +314,26 @@ marginalmeans <- function(model,
         }
     }
 
-    mm <- get_marginalmeans(model = model,
-                            newdata = newgrid,
-                            type = type,
-                            variables = variables,
-                            cross = cross,
-                            hypothesis = hypothesis,
-                            by = by,
-                            modeldata = modeldata,
-                            ...)
+    # `region` should not be passed to predictions() at this stage
+    args <- list(
+        model = model,
+        newdata = newgrid,
+        type = type,
+        variables = variables,
+        cross = cross,
+        hypothesis = hypothesis,
+        by = by,
+        modeldata = modeldata)
+    args <- c(args, list(...))
+    args[["region"]] <- NULL
+    mm <- do.call(get_marginalmeans, args)
 
     # we want consistent output, regardless of whether `data.table` is installed/used or not
     out <- as.data.frame(mm)
 
     # standard errors via delta method
     if (!vcov_false) {
-        se <- get_se_delta(
+        args <- list(
             model,
             vcov = vcov,
             type = type,
@@ -340,8 +344,10 @@ marginalmeans <- function(model,
             cross = cross,
             modeldata = modeldata,
             hypothesis = hypothesis,
-            by = by,
-            ...)
+            by = by)
+        args <- c(args, list(...))
+        args[["region"]] <- NULL
+        se <- do.call(get_se_delta, args)
 
         # get rid of attributes in column
         out[["std.error"]] <- as.numeric(se)
@@ -362,7 +368,7 @@ marginalmeans <- function(model,
     }
 
     # equivalence tests
-    mfx <- equivalence(out, df = df, ...)
+    out <- equivalence(out, df = df, ...)
 
     # after assign draws
     out <- backtransform(out, transform_post)

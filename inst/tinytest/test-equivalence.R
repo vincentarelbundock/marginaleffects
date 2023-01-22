@@ -17,8 +17,8 @@ e2 <- predictions(
     region = c(19, 21),
     side = "noninferiority") |>
     dplyr::arrange(gear)
-expect_equivalent(e1$z.ratio, e2$statistic)
-expect_equivalent(e1$p.value, e2$p.value)
+expect_equivalent(e1$z.ratio, e2$statistic.inf)
+expect_equivalent(e1$p.value, e2$p.value.inf)
 
 
 # predictions() vs. {emmeans}: sup
@@ -26,11 +26,10 @@ e1 <- test(em, delta = 1, null = 23, side = "nonsuperiority", df = Inf)
 e2 <- predictions(
     mod,
     newdata = datagrid(gear = unique),
-    region = c(22, 24),
-    side = "nonsuperiority") |>
+    region = c(22, 24)) |>
     dplyr::arrange(gear)
-expect_equivalent(e1$z.ratio, e2$statistic)
-expect_equivalent(e1$p.value, e2$p.value)
+expect_equivalent(e1$z.ratio, e2$statistic.sup)
+expect_equivalent(e1$p.value, e2$p.value.sup)
 
 
 # predictions() vs. {emmeans}: equiv
@@ -38,11 +37,9 @@ e1 <- test(em, delta = 1, null = 22, side = "equivalence", df = Inf)
 e2 <- predictions(
     mod,
     newdata = datagrid(gear = unique),
-    region = c(21, 23),
-    side = "equivalence") |>
+    region = c(21, 23)) |>
     dplyr::arrange(gear)
-expect_equivalent(e1$z.ratio, e2$statistic)
-expect_equivalent(e1$p.value, e2$p.value)
+expect_equivalent(e1$p.value, e2$p.value.equ)
 
 
 # slopes() works; no validity
@@ -50,8 +47,7 @@ mfx <- slopes(
     mod,
     variables = "hp",
     newdata = "mean",
-    region = c(-.09, .01),
-    side = "equivalence")
+    region = c(-.09, .01))
 expect_inherits(mfx, "slopes")
 
 
@@ -67,19 +63,18 @@ mm <- marginalmeans(
     hypothesis = "pairwise") 
 
 e1 <- test(pa, delta = delta, adjust = "none", side = "nonsuperiority", df = Inf)
-e2 <- hypotheses(mm, region = c(-delta, delta), side = "nonsuperiority")
-expect_equivalent(e1$z.ratio, e2$statistic)
-expect_equivalent(e1$p.value, e2$p.value)
+e2 <- hypotheses(mm, region = c(-delta, delta))
+expect_equivalent(e1$z.ratio, e2$statistic.sup)
+expect_equivalent(e1$p.value, e2$p.value.sup)
 
 e1 <- test(pa, delta = delta, adjust = "none", side = "noninferiority", df = Inf)
-e2 <- hypotheses(mm, region = c(-delta, delta), side = "noninferiority")
-expect_equivalent(e1$z.ratio, e2$statistic)
-expect_equivalent(e1$p.value, e2$p.value)
+e2 <- hypotheses(mm, region = c(-delta, delta))
+expect_equivalent(e1$z.ratio, e2$statistic.inf)
+expect_equivalent(e1$p.value, e2$p.value.inf)
 
 e1 <- test(pa, delta = delta, adjust = "none", df = Inf)
-e2 <- hypotheses(mm, region = c(-delta, delta), side = "equivalence")
-expect_equivalent(e1$z.ratio, e2$statistic)
-expect_equivalent(e1$p.value, e2$p.value)
+e2 <- hypotheses(mm, region = c(-delta, delta))
+expect_equivalent(e1$p.value, e2$p.value.equ)
 
 
 # two-sample t-test
@@ -97,7 +92,6 @@ e2 <- hypotheses(
     mod,
     FUN = FUN,
     region = c(-.05, .05),
-    side = "equivalence",
     df = e1$parameter)
 expect_true(e1$tost.p.value > .5 && e1$tost.p.value < .9)
-expect_equivalent(e1$tost.p.value, e2$p.value)
+expect_equivalent(e1$tost.p.value, e2$p.value.equ)

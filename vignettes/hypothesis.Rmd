@@ -473,112 +473,132 @@ comparisons(
 
 ```{r}
 mod <- lm(mpg ~ hp + factor(gear), data = mtcars)
+```
 
-# predictions() vs. {emmeans}: inf
-p <- predictions(mod, newdata = datagrid(gear = unique))
+#### Example 1: Predictions
+
+```{r}
+p <- predictions(mod, newdata = "median")
 p
+```
 
-hypotheses(p, region = c(1, 2), side = "equivalence")
+```{r, include = FALSE}
+options(width = 120)
+hyp <- hypotheses(p, region = c(17, 18))
+```
 
-predictions(
-    mod,
-    newdata = datagrid(gear = unique),
-    delta = delta,
-    side = "noninferiority")
-em <- emmeans(mod, "gear", df = Inf)
-test(em, delta = delta, null = null, side = "noninferiority", df = Inf)
- |>
-    dplyr::arrange(gear)
-expect_equivalent(e1$z.ratio, e2$statistic)
-expect_equivalent(e1$p.value, e2$p.value)
+Now we specify an equivalence "region" for predictions between 17 and 18:
 
+```{r}
+hypotheses(p, region = c(17, 18))
+```
 
-# predictions() vs. {emmeans}: sup
-delta <- 1
-null <- 23 
-e1 <- test(em, delta = delta, null = null, side = "nonsuperiority", df = Inf)
-e2 <- predictions(
-    mod,
-    newdata = datagrid(gear = unique),
-    null = null,
-    delta = delta,
-    side = "nonsuperiority") |>
-    dplyr::arrange(gear)
-expect_equivalent(e1$z.ratio, e2$statistic)
-expect_equivalent(e1$p.value, e2$p.value)
+The results above allow us to draw three conclusions:
 
+1. The p value for the non-superiority test is `r sprintf("%.4f", hyp$p.value.sup)`. This suggests that we *cannot* reject the hypothesis that the parameter (`r sprintf("%.4f", hyp$estimate)`) is above the [17,18] interval.
+2. The p value for the non-inferiority test is `r sprintf("%.4f", hyp$p.value.inf)`. This suggests that we *can* reject the hypothesis that the parameter is below the [17,18] interval.
+3. The p value for the equivalence test is `r sprintf("%.4f", hyp$p.value.equ)`. This suggests that we *cannot* reject the hypothesis that the parameter falls outside the equivalence region.
 
-# predictions() vs. {emmeans}: equiv
-delta <- 1
-null <- 22 
-e1 <- test(em, delta = delta, null = null, side = "equivalence", df = Inf)
-e2 <- predictions(
-    mod,
-    newdata = datagrid(gear = unique),
-    null = null,
-    delta = delta,
-    side = "equivalence") |>
-    dplyr::arrange(gear)
-expect_equivalent(e1$z.ratio, e2$statistic)
-expect_equivalent(e1$p.value, e2$p.value)
+#### Example 2: Slopes
 
+The same syntax can be used to conduct tests for all the quantities produced by the `marginaleffects` package. For example, imagine that, for substantive or theoretical reasons, an average slope between -0.1 and 0 is uninteresting. We can conduct an equivalence test to check if this is the case:
 
-# slopes() works; no validity
-mfx <- slopes(
+```{r}
+slopes(
     mod,
     variables = "hp",
-    newdata = "mean",
-    side = "equivalence",
-    delta = .05,
-    null = -.04)
-expect_inherits(mfx, "slopes")
+    by = TRUE,
+    region = c(-.1, .0))
+```
+```{r, include = FALSE}
+pval <- slopes(
+    mod,
+    variables = "hp",
+    by = TRUE,
+    region = c(-.1, .0))$p.value.equ
+```
 
+The p value is `r sprintf("%.4f", pval)`, which suggests that we can reject the hypothesis that the parameter falls outside the equivalence region (or "substantive irrelevance region"). 
 
-# marginalmeans() vs. {emmeans}
+The `hypotheses` function also allows users to conduct equivalence, non-inferiority, and non-superiority tests for model coefficients, and for arbitrary functions of model coefficients.
+
+Our estimate of the 4th coefficient in the model is:
+
+```{r}
+coef(mod)[4]
+```
+
+We can test if this parameter is likely to fall in the [5,7] interval by:
+
+```{r}
+hypotheses(mod, region = c(5, 7))[4, ]
+```
+
+```{r, include = FALSE}
+hyp <- hypotheses(mod, region = c(5, 7))[4, "p.value.equ"]
+```
+
+The p value is `r sprintf("%.4f", hyp)`, so we cannot reject the hypothesis that the `r names(coef(mod))[4]` parameter falls outside the [5,7] interval. 
+
+#### Example 3: `comparisons()` with the `hypothesis` argument
+
+Now consider contrasts at the median between levels of the `gear` variable:
+
+```{r}
+comparisons(
+    mod,
+    variables = "gear",
+    newdata = "median")
+```
+
+We can compare those contrasts using the `hypothesis` argument, giving us a sort of "difference in differences":
+
+```{r}
+comparisons(
+    mod,
+    hypothesis = "b2 = b1",
+    variables = "gear",
+    newdata = "median")
+```
+
+Now, we test if this difference in differences falls in the a region of practical significance (or "equivalence region") between 0 and 10:
+
+```{r}
+comparisons(
+    mod,
+    region = c(0, 10),
+    hypothesis = "b2 = b1",
+    variables = "gear",
+    newdata = "median")
+```
+
+The p value gives us reason to believe that the quantity of interest does not fall outside the specified region.
+
+#### Example 4: Marginal means and `emmeans`
+
+This final example shows the equivalence between results produced by the `emmeans` package and the `marginalmeans()` function:
+
+```{r}
+library(emmeans)
+
 mod <- lm(log(conc) ~ source + factor(percent), data = pigs)
-rg <- ref_grid(mod)
-em <- emmeans(rg, "source", at = list(), df = Inf)
-pa <- pairs(em, df = Inf)
-mm <- marginalmeans(
+
+# {emmeans}
+ref_grid(mod) |>
+    emmeans("source") |>
+    pairs(reverse = TRUE) |>
+    test(
+        df = Inf,
+        null = 0,
+        delta = log(1.25),
+        side = "equivalence",
+        adjust = "none") |>
+    data.frame()
+
+# {marginaleffects}
+marginalmeans(
     mod,
     variables = "source",
-    hypothesis = "pairwise") 
-
-e1 <- test(pa, delta = delta, adjust = "none", side = "nonsuperiority", df = Inf)
-e2 <- hypotheses(mm, delta = delta, side = "nonsuperiority")
-expect_equivalent(e1$z.ratio, e2$statistic)
-expect_equivalent(e1$p.value, e2$p.value)
-
-e1 <- test(pa, delta = delta, adjust = "none", side = "noninferiority", df = Inf)
-e2 <- hypotheses(mm, delta = delta, side = "noninferiority")
-expect_equivalent(e1$z.ratio, e2$statistic)
-expect_equivalent(e1$p.value, e2$p.value)
-
-e1 <- test(pa, delta = delta, adjust = "none", df = Inf)
-e2 <- hypotheses(mm, delta = delta, side = "equivalence")
-expect_equivalent(e1$z.ratio, e2$statistic)
-expect_equivalent(e1$p.value, e2$p.value)
-
-
-# two-sample t-test
-requiet("equivalence")
-set.seed(1024)
-N <- 100
-delta <- 0.05
-dat <- rbind(data.frame(y = rnorm(N), x = 0),
-             data.frame(y = rnorm(N, mean = 0.3), x = 1))
-mod <- lm(y ~ x, data = dat)
-FUN <- function(model, ...) {
-    data.frame(term = "t-test", estimate = coef(model)[2])
-}
-e1 <- tost(dat$y[dat$x == 0], dat$y[dat$x == 1], epsilon = delta)
-e2 <- hypotheses(
-    mod,
-    FUN = FUN,
-    side = "equivalence",
-    null = 0,
-    delta = delta,
-    df = e1$parameter)
-expect_true(e1$tost.p.value > .5 && e1$tost.p.value < .9)
-expect_equivalent(e1$tost.p.value, e2$p.value)
+    hypothesis = "revpairwise",
+    region = c(-log(1.25), log(1.25)))
 ```
