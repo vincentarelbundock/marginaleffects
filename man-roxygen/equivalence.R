@@ -1,4 +1,4 @@
-#' @section Equivalence: Equivalence, non-inferiority, and non-superiority tests
+#' @section Equivalencem, Inferiority, Superiority
 #'
 #' \eqn{\theta} is an estimate, \eqn{\sigma_\theta} its estimated standard error, and \eqn{[B_{min}, B_{max}]} are the bounds of the equivalence region supplied to the `equivalence` argument.
 #' 
