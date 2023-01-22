@@ -104,10 +104,10 @@ pred <- predictions(mod,
 pred
 ```
 
-The `posteriordraws` function samples from the posterior distribution of the model, and produces a data frame with `drawid` and `draw` columns.
+The `posterior_draws` function samples from the posterior distribution of the model, and produces a data frame with `drawid` and `draw` columns.
 
 ```{r}
-pred <- posteriordraws(pred)
+pred <- posterior_draws(pred)
 head(pred)
 ```
 
@@ -145,10 +145,10 @@ Compute and plot conditional marginal effects:
 plot_cme(mod, effect = "woman", condition = "age")
 ```
 
-The `posteriordraws` produces a dataset with `drawid` and `draw` columns:
+The `posterior_draws` produces a dataset with `drawid` and `draw` columns:
 
 ```{r}
-draws <- posteriordraws(mfx)
+draws <- posterior_draws(mfx)
 
 dim(draws)
 
@@ -161,7 +161,7 @@ We can use this dataset to plot our results. For example, to plot the posterior 
 mfx <- slopes(mod,
     variables = "age",
     newdata = datagrid(woman = 0:1)) |>
-    posteriordraws()
+    posterior_draws()
 
 ggplot(mfx, aes(x = draw, fill = factor(woman))) +
     stat_halfeye(slab_alpha = .5) +
@@ -212,9 +212,9 @@ nd = datagrid(model = mod,
               civil_liberties = .5,
               region = "Middle East and North Africa")
 p1 <- predictions(mod, type = "response", newdata = nd) |>
-    posteriordraws()
+    posterior_draws()
 p2 <- predictions(mod, type = "prediction", newdata = nd) |>
-    posteriordraws()
+    posterior_draws()
 pred <- rbind(p1, p2)
 ```
 
@@ -240,10 +240,10 @@ mfx <- slopes(mod,
 mfx
 ```
 
-Use the `posteriordraws()` to extract draws from the posterior distribution of marginal effects, and plot them:
+Use the `posterior_draws()` to extract draws from the posterior distribution of marginal effects, and plot them:
 
 ```{r}
-mfx <- posteriordraws(mfx)
+mfx <- posterior_draws(mfx)
 
 ggplot(mfx, aes(x = draw, y = term)) +
   stat_halfeye() +
@@ -265,7 +265,7 @@ pred <- predictions(mod,
                     newdata = datagrid(party_autonomy = FALSE,
                                        region = "Middle East and North Africa",
                                        civil_liberties = seq(0, 1, by = 0.05))) |>
-        posteriordraws()
+        posterior_draws()
 
 ggplot(pred, aes(x = civil_liberties, y = draw)) +
     stat_lineribbon() +
@@ -290,7 +290,7 @@ mfx
 And plotted:
 
 ```{r}
-mfx <- posteriordraws(mfx)
+mfx <- posterior_draws(mfx)
 
 ggplot(mfx, aes(x = draw, fill = factor(civil_liberties))) +
     stat_halfeye(slab_alpha = .5) +
@@ -310,7 +310,7 @@ mfx <- slopes(
         region = "Middle East and North Africa"),
     variables = "civil_liberties",
     re_formula = NA) |>
-    posteriordraws()
+    posterior_draws()
 
 ggplot(mfx, aes(x = draw, fill = factor(civil_liberties))) +
     stat_halfeye(slab_alpha = .5) +
@@ -337,13 +337,13 @@ pred <- predictions(
     mod,
     re_formula = NA,
     newdata = datagrid(party_autonomy = c(TRUE, FALSE))) |>
-    posteriordraws()
+    posterior_draws()
 
 mfx <- slopes(
     mod,
     re_formula = NA,
     variables = "party_autonomy") |>
-    posteriordraws()
+    posterior_draws()
 
 plot1 <- ggplot(pred, aes(x = draw, fill = party_autonomy)) +
          stat_halfeye(slab_alpha = .5) +
@@ -370,7 +370,7 @@ pred <- predictions(mod,
                     newdata = datagrid(region = vdem_2015$region,
                                        party_autonomy = FALSE, 
                                        civil_liberties = seq(0, 1, length.out = 100))) |> 
-        posteriordraws()
+        posterior_draws()
 
 ggplot(pred, aes(x = civil_liberties, y = draw)) +
     stat_lineribbon() +
@@ -388,7 +388,7 @@ pred <- predictions(mod,
                     newdata = datagrid(region = vdem_2015$region,
                                        civil_liberties = c(.2, .8),
                                       party_autonomy = FALSE)) |>
-        posteriordraws()
+        posterior_draws()
 
 ggplot(pred, aes(x = draw, fill = factor(civil_liberties))) +
     stat_halfeye(slab_alpha = .5) +
@@ -405,7 +405,7 @@ pred <- predictions(mod,
                     newdata = datagrid(region = vdem_2015$region,
                                        party_autonomy = c(TRUE, FALSE),
                                        civil_liberties = .5)) |>
-        posteriordraws()
+        posterior_draws()
 
 ggplot(pred, aes(x = draw, y = region , fill = party_autonomy)) +
     stat_halfeye(slab_alpha = .5) +
@@ -423,7 +423,7 @@ mfx <- slopes(
     newdata = datagrid(
         region = vdem_2015$region,
         civil_liberties = .5)) |>
-    posteriordraws()
+    posterior_draws()
 
 ggplot(mfx, aes(x = draw, y = region , fill = party_autonomy)) +
     stat_halfeye(slab_alpha = .5) +
@@ -447,7 +447,7 @@ mfx <- slopes(
     allow_new_levels = TRUE,
     newdata = dat)
 
-draws <- posteriordraws(mfx)
+draws <- posterior_draws(mfx)
 
 ggplot(draws, aes(x = draw)) +
      stat_halfeye() +
@@ -556,7 +556,7 @@ head(pred)
 Extract posterior draws and plot them:
 
 ```{r}
-draws <- posteriordraws(pred)
+draws <- posterior_draws(pred)
 
 ggplot(draws, aes(x = draw, fill = group)) +
     geom_density(alpha = .2, color = "white") +
@@ -676,9 +676,9 @@ plot_cap(
     condition = c("lifeExp", "continent"))
 ```
 
-## Extract draws with `posteriordraws()`
+## Extract draws with `posterior_draws()`
 
-The `posteriordraws()` function extract raw samples from the posterior from objects produced by `marginaleffects`. This allows us to use richer geoms and summaries, such as those in the `ggdist` package:
+The `posterior_draws()` function extract raw samples from the posterior from objects produced by `marginaleffects`. This allows us to use richer geoms and summaries, such as those in the `ggdist` package:
 
 ```{r}
 predictions(
@@ -688,7 +688,7 @@ predictions(
                        continent = gapminder$continent,
                        year = c(1952, 2007),
                        lifeExp = seq(30, 80, 1))) |>
-    posteriordraws() |>
+    posterior_draws() |>
     ggplot(aes(lifeExp, draw, fill = continent, color = continent)) +
     stat_lineribbon(alpha = .25) +
     facet_grid(year ~ continent)
@@ -720,7 +720,7 @@ Plot draws from the posterior distribution of average contrasts (*not* the same 
 
 ```{r}
 avg_comparisons(mod) |>
-    posteriordraws() |>
+    posterior_draws() |>
     ggplot(aes(estimate, term)) +
     stat_dotsinterval() +
     labs(x = "Posterior distribution of average contrasts", y = "")
@@ -757,7 +757,7 @@ plot_cme(
     labs(y = "hu")
 ```
 
-Or we can call `slopes()` or `comparisons()` with `posteriordraws()` function to have even more control:
+Or we can call `slopes()` or `comparisons()` with `posterior_draws()` function to have even more control:
 
 ```{r}
 comparisons(
@@ -765,7 +765,7 @@ comparisons(
     type = "link",
     variables = "lifeExp",
     newdata = datagrid(lifeExp = c(40, 70), continent = gapminder$continent)) |>
-    posteriordraws() |>
+    posterior_draws() |>
     ggplot(aes(draw, continent, fill = continent)) +
     stat_dotsinterval() +
     facet_grid(lifeExp ~ .) +
@@ -797,7 +797,7 @@ avg_comparisons(mod)
 
 Note: The rest of this section requires version 0.8.1 of `marginaleffects`, or [the development version.](https://vincentarelbundock.github.io/marginaleffects/#installation)
 
-Recent versions of the `posterior`, `brms`, and `ggdist` packages make it easy to draw, summarize and plot random variables. The `posteriordraws()` can produce objects of class `rvar` which make it easy to use those features by returning a data frame with a column of type `rvar`:
+Recent versions of the `posterior`, `brms`, and `ggdist` packages make it easy to draw, summarize and plot random variables. The `posterior_draws()` can produce objects of class `rvar` which make it easy to use those features by returning a data frame with a column of type `rvar`:
 
 
 ```{r}
@@ -813,7 +813,7 @@ mod <- brm(mpg ~ am, data = mtcars)
 
 ```{r}
 p <- predictions(mod, by = "am")
-rvar <- posteriordraws(p, shape = "rvar") 
+rvar <- posterior_draws(p, shape = "rvar") 
 rvar
 
 ggplot(rvar, aes(y = am, xdist = rvar)) + 
@@ -853,10 +853,10 @@ comparisons(
     hypothesis = "b2 - b1 = 0.2")
 ```
 
-The `hypotheses` function of the `brms` package can also perform non-linear hypothesis testing, and it generates some convenient statistics and summaries. This function accepts a D-by-P matrix of draws from the posterior distribution, where D is the number of draws and N is the number of parameters. We can obtain such a matrix using the `posteriordraws(x, shape = "DxP")`, and we can simply add a couple calls to our chain of operations: 
+The `hypotheses` function of the `brms` package can also perform non-linear hypothesis testing, and it generates some convenient statistics and summaries. This function accepts a D-by-P matrix of draws from the posterior distribution, where D is the number of draws and N is the number of parameters. We can obtain such a matrix using the `posterior_draws(x, shape = "DxP")`, and we can simply add a couple calls to our chain of operations: 
 
 ```{r}
 avg_comparisons(mod) |>
-    posteriordraws(shape = "DxP") |>
+    posterior_draws(shape = "DxP") |>
     brms::hypothesis("b2 - b1 > .2")
 ```

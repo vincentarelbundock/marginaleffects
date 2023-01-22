@@ -8,7 +8,7 @@
 #' * "rvar": Random variable datatype (see `posterior` package documentation).
 #' @return A data.frame with `drawid` and `draw` columns.
 #' @export
-posteriordraws <- function(x, shape = "long") {
+posterior_draws <- function(x, shape = "long") {
 
     checkmate::assert_choice(shape, choices = c("long", "DxP", "PxD", "rvar"))
 
@@ -17,7 +17,7 @@ posteriordraws <- function(x, shape = "long") {
     if (inherits(draws, "posterior_draws")) return(draws)
 
     if (is.null(attr(x, "posterior_draws"))) {
-        warning('This object does not include a "posterior_draws" attribute. The `posteriordraws` function only supports bayesian models produced by the `marginaleffects` or `predictions` functions of the `marginaleffects` package.',
+        warning('This object does not include a "posterior_draws" attribute. The `posterior_draws` function only supports bayesian models produced by the `marginaleffects` or `predictions` functions of the `marginaleffects` package.',
                 call. = FALSE)
         return(x)
     }
@@ -123,3 +123,15 @@ average_draws <- function(data, index, draws, byfun = NULL) {
     attr(out, "posterior_draws") <- draws
     return(out)
 }
+
+
+
+
+#' `posterior_draws()` is an alias to `posterior_draws()`
+#' 
+#' This alias is kept for backward compatibility and because some users may prefer that name.
+#'
+#' @inherit posterior_draws
+#' @keywords internal
+#' @export
+posteriordraws <- posterior_draws

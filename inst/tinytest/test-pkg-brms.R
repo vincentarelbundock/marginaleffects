@@ -70,7 +70,7 @@ bm <- data.frame(bm$ContrastSummary)
 mfx <- slopes(brms_numeric)
 mfx <- tidy(mfx)
 
-expect_equivalent(mean(posteriordraws(mfx)$draw), bm$M, tolerance = tol)
+expect_equivalent(mean(posterior_draws(mfx)$draw), bm$M, tolerance = tol)
 expect_equivalent(mfx$conf.low, bm$LL, tolerance = tol)
 expect_equivalent(mfx$conf.high, bm$UL, tolerance = tol)
 
@@ -119,7 +119,7 @@ set.seed(1024)
 p3 <- predictions(brms_mixed_3, newdata = nd, allow_new_levels = TRUE, sample_new_levels = "uncertainty")
 expect_false(any(p1$estimate == p2$estimate))
 expect_equivalent(p1, p3)
-expect_inherits(posteriordraws(p3), "data.frame")
+expect_inherits(posterior_draws(p3), "data.frame")
 
 
 # predictions w/ random effects
@@ -309,7 +309,7 @@ expect_error(predictions(brms_factor_formula),
 
 # bugs stay dead: factor indexing for posterior draws
 tmp <- predictions(brms_factor, newdata = datagrid(cyl_fac = 4, mpg = c(10, 20)))
-expect_inherits(posteriordraws(tmp), "data.frame")
+expect_inherits(posterior_draws(tmp), "data.frame")
 
 
 
@@ -344,7 +344,7 @@ expect_inherits(pred, "predictions")
 comp <- comparisons(brms_mv_1)
 expect_inherits(comp, "comparisons")
 
-draws <- posteriordraws(mfx)
+draws <- posterior_draws(mfx)
 expect_inherits(draws, "data.frame")
 expect_true(all(c("drawid", "draw", "rowid") %in% colnames(draws)))
 
@@ -358,7 +358,7 @@ expect_inherits(pred, "predictions")
 comp <- comparisons(brms_categorical_1)
 expect_inherits(comp, "comparisons")
 
-draws <- posteriordraws(mfx)
+draws <- posterior_draws(mfx)
 expect_inherits(draws, "data.frame")
 expect_true(all(c("drawid", "draw", "rowid") %in% colnames(draws)))
 
@@ -459,8 +459,8 @@ expect_true(all(cmp$estimate != cmp$conf.low))
 expect_true(all(cmp$estimate != cmp$conf.high))
 expect_true(all(cmp$conf.high != cmp$conf.low))
 
-# Issue #432: posteriordraws() and tidy() error with `transform_pre="avg"`
-pd <- posteriordraws(cmp)
+# Issue #432: posterior_draws() and tidy() error with `transform_pre="avg"`
+pd <- posterior_draws(cmp)
 expect_inherits(pd, "data.frame")
 expect_equivalent(nrow(pd), 4000)
 ti <- tidy(cmp)
@@ -646,10 +646,10 @@ expect_equivalent(cmp$conf.high, bm$UL, tolerance = .05)
 
 
 
-# posteriordraws(shape = )
+# posterior_draws(shape = )
 cmp <- comparisons(brms_numeric2)
 tid <- tidy(cmp)
-pd <- posteriordraws(tid, shape = "DxP")
+pd <- posterior_draws(tid, shape = "DxP")
 hyp <- brms::hypothesis(pd, "b1 - b2 > 0")
 expect_inherits(hyp, "brmshypothesis")
 
@@ -657,7 +657,7 @@ expect_inherits(hyp, "brmshypothesis")
 # posterior::rvar
 cmp <- comparisons(brms_numeric2)
 tid <- tidy(cmp)
-rv <- posteriordraws(tid, "rvar")
+rv <- posterior_draws(tid, "rvar")
 expect_equivalent(nrow(rv), 2)
 expect_inherits(rv$rvar[[1]], "rvar")
 
