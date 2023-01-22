@@ -574,7 +574,7 @@ avg_slopes(int, variables = "hp", by = "gear", hypothesis = "pairwise") |>
     hypotheses(equivalence = c(-.1, .1))
 ```
 
-The `p (Sup)` column shows that the difference between the average slope when `gear` is 3 and `gear` is 5 can be said to be equivalent to the specified interval. However, there are good reasons to think that the other two pairwise comparisons may fall outside the interval.
+The `p (Eq.)` column shows that the difference between the average slope when `gear` is 3 and `gear` is 5 can be said to be equivalent to the specified interval. However, there are good reasons to think that the other two pairwise comparisons may fall outside the interval.
 
 
 #### Example 5: `comparisons()` with the `hypothesis` argument
