@@ -170,7 +170,7 @@ hypotheses <- function(
         vcov = vcov,
         draws = NULL,
         estimate = "estimate",
-        null = hypothesis_null,
+        null_hypothesis = hypothesis_null,
         df = df,
         ...)
 

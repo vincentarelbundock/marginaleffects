@@ -452,7 +452,7 @@ comparisons <- function(model,
         df = df,
         draws = draws,
         estimate = "estimate",
-        null = hypothesis_null)
+        null_hypothesis = hypothesis_null)
 
 
     # group id: useful for merging, only if it's an internal call and not user-initiated
@@ -472,6 +472,9 @@ comparisons <- function(model,
 
     # bayesian draws
     attr(mfx, "posterior_draws") <- draws
+
+    # equivalence tests
+    mfx <- equivalence(mfx, df = df, ...)
 
     # after draws attribute
     mfx <- backtransform(mfx, transform_post)

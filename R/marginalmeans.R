@@ -356,16 +356,19 @@ marginalmeans <- function(model,
             out,
             conf_level = conf_level,
             vcov = vcov,
-            null = hypothesis_null,
+            null_hypothesis = hypothesis_null,
             df = df,
             ...)
     }
+
+    # equivalence tests
+    mfx <- equivalence(out, df = df, ...)
 
     # after assign draws
     out <- backtransform(out, transform_post)
 
     # column order
-    cols <- c("rowid", "type", "group", colnames(by), "term", "hypothesis", "value", variables, "estimate", "std.error", "conf.low", "conf.high", sort(colnames(out)))
+    cols <- c("rowid", "type", "group", colnames(by), "term", "hypothesis", "value", variables, "estimate", "std.error", "statistic", "p.value", "conf.low", "conf.high", sort(colnames(out)))
     cols <- unique(cols)
     cols <- intersect(cols, colnames(out))
     out <- out[, cols, drop = FALSE]

@@ -56,6 +56,7 @@ Suggests:
     crch,
     datawizard,
     dplyr,
+    equivalence,
     emmeans,
     estimatr,
     fixest (>= 0.10.1),
@@ -92,6 +93,7 @@ Suggests:
     nlme,
     nnet,
     ordinal,
+    parameters,
     patchwork,
     pkgdown,
     plm,
@@ -135,6 +137,7 @@ Collate:
     'comparisons.R'
     'complete_levels.R'
     'datagrid.R'
+    'equivalence.R'
     'get_coef.R'
     'get_contrast_data.R'
     'get_contrast_data_character.R'

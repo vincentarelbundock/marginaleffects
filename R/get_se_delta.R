@@ -40,7 +40,7 @@ get_se_delta_contrasts <- function(model,
         original = original,
         cross = cross,
         verbose = FALSE,
-        delta = TRUE,
+        deltamethod = TRUE,
         ...
     )$estimate
 }

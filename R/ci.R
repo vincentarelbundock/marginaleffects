@@ -4,10 +4,10 @@ get_ci <- function(
     df = NULL,
     draws = NULL,
     vcov = TRUE,
-    null = 0,
+    null_hypothesis = 0,
     ...) {
 
-    checkmate::assert_number(null)
+    checkmate::assert_number(null_hypothesis)
 
     if (!is.null(draws)) {
         out <- get_ci_draws(
@@ -32,12 +32,12 @@ get_ci <- function(
     }
 
     p_overwrite <-  !"p.value" %in% colnames(x) ||
-                    null != 0 ||
+                    null_hypothesis != 0 ||
                     identical(vcov, "satterthwaite") ||
                     identical(vcov, "kenward-roger")
 
     z_overwrite <- !"statistic" %in% colnames(x) ||
-                   null != 0 ||
+                   null_hypothesis != 0 ||
                    p_overwrite
 
     ci_overwrite <- !"conf.low" %in% colnames(x) &&
@@ -45,7 +45,7 @@ get_ci <- function(
 
     if (z_overwrite) {
         if (z_overwrite) {
-            x[["statistic"]] <- (x[["estimate"]] - null) / x[["std.error"]]
+            x[["statistic"]] <- (x[["estimate"]] - null_hypothesis) / x[["std.error"]]
         }
         if (normal) {
             x[["p.value"]] <- 2 * stats::pnorm(-abs(x$statistic))

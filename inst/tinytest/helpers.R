@@ -37,6 +37,7 @@ dict <- c(
     "expect_true" = "tinytest",
     "expect_equal" = "tinytest",
     "expect_warning" = "tinytest",
+    "summary" = "base",
     "lmer" = "lme4",
     "s" = "gam",
     "ar" = "stats",

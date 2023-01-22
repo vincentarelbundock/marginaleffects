@@ -10,6 +10,9 @@ hypotheses(
   FUN = NULL,
   vcov = NULL,
   conf_level = 0.95,
+  null = 0,
+  delta = 0,
+  side = NULL,
   df = Inf,
   ...
 )
@@ -43,7 +46,7 @@ hypotheses(
 
 \item{FUN}{\code{NULL} or function.
 \itemize{
-\item \code{NULL} (default): hypothesis test on the model's coefficients.
+\item \code{NULL} (default): hypothesis test on a model's coefficients, or on the quantities estimated by one of the \code{marginaleffects} package functions.
 \item Function which accepts a model object and returns a numeric vector or a data.frame with two columns called \code{term} and \code{estimate}. This argument can be useful when users want to conduct a hypothesis test on an arbitrary function of quantities held in a model object.
 }}
 

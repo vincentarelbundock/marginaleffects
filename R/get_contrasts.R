@@ -11,7 +11,7 @@ get_contrasts <- function(model,
                           hypothesis = NULL,
                           cross = FALSE,
                           verbose = TRUE,
-                          delta = FALSE,
+                          deltamethod = FALSE,
                           ...) {
 
     settings_init()
@@ -79,7 +79,7 @@ get_contrasts <- function(model,
         isTRUE(out)
     }
     tmp <- Filter(fun, variables)
-    if (!isTRUE(delta) || length(tmp) > 0) {
+    if (!isTRUE(deltamethod) || length(tmp) > 0) {
         pred_or <- myTryCatch(get_predict(
             model,
             type = type,

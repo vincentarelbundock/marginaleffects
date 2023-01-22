@@ -424,7 +424,7 @@ predictions <- function(model,
             vcov = vcov,
             draws = draws,
             estimate = "estimate",
-            null = hypothesis_null,
+            null_hypothesis = hypothesis_null,
             df = df,
             ...)
     }
@@ -455,6 +455,9 @@ predictions <- function(model,
     out <- out[, cols, drop = FALSE]
 
     attr(out, "posterior_draws") <- draws
+
+    # equivalence tests
+    out <- equivalence(out, df = df, ...)
 
     # after rename to estimate / after assign draws
     out <- backtransform(out, transform_post = transform_post)

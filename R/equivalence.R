@@ -1,6 +1,11 @@
-equivalence <- function(x, delta, null, side, df) {
-    checkmate::assert_choice(side, choices = c("equivalence", "noninferiority", "nonsuperiority"))
-    checkmate::assert_number(delta, lower = 1e-5)
+equivalence <- function(x, delta = NULL, null = NULL, side = NULL, df = Inf, ...) {
+    checkmate::assert_choice(side, choices = c("equivalence", "noninferiority", "nonsuperiority"), null.ok = TRUE)
+    checkmate::assert_number(delta, lower = 1e-5, null.ok = TRUE)
+
+    if (is.null(delta) || is.null(null) || is.null(side)) {
+        return(x)
+    }
+
 
     if (side == "nonsuperiority") {
         x$statistic <- (x$estimate - null - delta) / x$std.error
