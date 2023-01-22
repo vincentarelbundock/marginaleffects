@@ -96,7 +96,14 @@ e2 <- hypotheses(
 expect_true(e1$tost.p.value > .5 && e1$tost.p.value < .9)
 expect_equivalent(e1$tost.p.value, e2$p.value.equ)
 
-
+# avg_*() and hypotheses()
+mod <- lm(mpg ~ hp * qsec, data = mtcars)
+cmp <- avg_comparisons(mod) |> hypotheses(equivalence = c(-.2, 0))
+mfx <- avg_slopes(mod) |> hypotheses(equivalence = c(-.2, 0))
+pre <- avg_predictions(mod) |> hypotheses(equivalence = c(-.2, 0))
+expect_inherits(cmp, "hypotheses")
+expect_inherits(mfx, "hypotheses")
+expect_inherits(pre, "hypotheses")
 
 # exit_if_not(require("tinyviztest"))
 cmp <- avg_comparisons(mod, equivalence = c(-.1, 0))

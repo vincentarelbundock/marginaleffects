@@ -3,7 +3,7 @@
 recall <- function(x, ...) {
 
 
-    funs <- c("comparisons", "slopes", "predictions", "marginalmeans", "hypotheses")
+    funs <- c("comparisons", "slopes", "predictions", "marginalmeans", "hypotheses", "avg_predictions", "avg_comparisons", "avg_slopes")
 
     # 2-step estimation with already evaluated & assigned call
     if (!is.call(x)) {

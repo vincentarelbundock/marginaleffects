@@ -83,7 +83,7 @@ print.slopes.summary <- function(x,
 
     # these columns are no longer necessary in summary(), but we want to
     # keep them in the raw data
-    idx <- grepl("^predicted|^statistic\\.", colnames(out))
+    idx <- grepl("^predicted|^statistic\\.|^rowid", colnames(out))
     out <- out[, !idx]
 
     # some commands do not generate average contrasts/mfx. E.g., `lnro` with `by`
@@ -128,3 +128,7 @@ print.hypotheses.summary <- print.slopes.summary
 #' @noRd
 #' @export
 print.averages <- print.slopes.summary
+
+#' @noRd
+#' @export
+print.hypotheses <- print.slopes.summary

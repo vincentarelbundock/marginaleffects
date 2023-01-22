@@ -484,13 +484,13 @@ p
 
 ```{r, include = FALSE}
 options(width = 120)
-hyp <- hypotheses(p, region = c(17, 18))
+hyp <- hypotheses(p, equivalence = c(17, 18))
 ```
 
-Now we specify an equivalence "region" for predictions between 17 and 18:
+Now we specify an equivalence interval (or "region") for predictions between 17 and 18:
 
 ```{r}
-hypotheses(p, region = c(17, 18))
+hypotheses(p, equivalence = c(17, 18))
 ```
 
 The results above allow us to draw three conclusions:
@@ -508,14 +508,14 @@ slopes(
     mod,
     variables = "hp",
     by = TRUE,
-    region = c(-.1, .0))
+    equivalence = c(-.1, .0))
 ```
 ```{r, include = FALSE}
 pval <- slopes(
     mod,
     variables = "hp",
     by = TRUE,
-    region = c(-.1, .0))$p.value.equ
+    equivalence = c(-.1, .0))$p.value.equ
 ```
 
 The p value is `r sprintf("%.4f", pval)`, which suggests that we can reject the hypothesis that the parameter falls outside the equivalence region (or "substantive irrelevance region"). 
@@ -531,11 +531,11 @@ coef(mod)[4]
 We can test if this parameter is likely to fall in the [5,7] interval by:
 
 ```{r}
-hypotheses(mod, region = c(5, 7))[4, ]
+hypotheses(mod, equivalence = c(5, 7))[4, ]
 ```
 
 ```{r, include = FALSE}
-hyp <- hypotheses(mod, region = c(5, 7))[4, "p.value.equ"]
+hyp <- hypotheses(mod, equivalence = c(5, 7))[4, "p.value.equ"]
 ```
 
 The p value is `r sprintf("%.4f", hyp)`, so we cannot reject the hypothesis that the `r names(coef(mod))[4]` parameter falls outside the [5,7] interval. 
@@ -566,13 +566,13 @@ Now, we test if this difference in differences falls in the a region of practica
 ```{r}
 comparisons(
     mod,
-    region = c(0, 10),
+    equivalence = c(0, 10),
     hypothesis = "b2 = b1",
     variables = "gear",
     newdata = "median")
 ```
 
-The p value gives us reason to believe that the quantity of interest does not fall outside the specified region.
+The p value gives us reason to believe that the quantity of interest does not fall outside the specified interval.
 
 #### Example 4: Marginal means and `emmeans`
 
@@ -584,21 +584,18 @@ library(emmeans)
 mod <- lm(log(conc) ~ source + factor(percent), data = pigs)
 
 # {emmeans}
-ref_grid(mod) |>
-    emmeans("source") |>
-    pairs(reverse = TRUE) |>
-    test(
-        df = Inf,
-        null = 0,
-        delta = log(1.25),
-        side = "equivalence",
-        adjust = "none") |>
-    data.frame()
+emmeans(mod, specs = "source") |>
+    pairs() |>
+    test(df = Inf,
+         null = 0,
+         delta = log(1.25),
+         side = "equivalence",
+         adjust = "none")
 
 # {marginaleffects}
 marginalmeans(
     mod,
     variables = "source",
-    hypothesis = "revpairwise",
-    region = c(-log(1.25), log(1.25)))
+    hypothesis = "pairwise") |>
+    hypotheses(equivalence = c(-log(1.25), log(1.25)))
 ```

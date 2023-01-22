@@ -76,18 +76,53 @@ hypotheses <- function(
     df = Inf,
     ...) {
 
-    # TODO: should conf_level be overwritten?
-    out <- recall(model, hypothesis = hypothesis, vcov = vcov)
-    if (!is.null(out)) {
-        if (!is.null(equivalence)) {
-            null <- sanitize_hypothesis(hypothesis, ...)$hypothesis_null
-            out <- equivalence(
-                out,
+    xcall <- substitute(model)
+    if (!is.call(xcall)) {
+        if (length(list(...)) == 0) { # bug in predictions.Rmd
+            out <- recall(
+                model,
+                hypothesis = hypothesis,
+                conf_level = conf_level,
+                vcov = vcov,
                 df = df,
                 equivalence = equivalence)
+        } else {
+            out <- recall(
+                model,
+                hypothesis = hypothesis,
+                conf_level = conf_level,
+                vcov = vcov,
+                df = df,
+                equivalence = equivalence,
+                ...)
         }
-        first = c("type", "term", "value", "estimate", "std.error", "statistic", "p.value", "conf.low", "conf.high") 
-        out <- sort_columns(out, first)
+        if (!is.null(out)) {
+            class(out) <- c("hypotheses", class(out))
+            return(out)
+        }
+    } else {
+        if ("hypothesis" %in% names(xcall)) {
+            insight::format_error("The `hypothesis` argument cannot be used twice.")
+        }
+        if (length(list(...)) == 0) { # bug in predictions.Rmd
+            out <- recall(
+                xcall,
+                hypothesis = hypothesis,
+                conf_level = conf_level,
+                vcov = vcov,
+                df = df,
+                equivalence = equivalence)
+        } else {
+            out <- recall(
+                xcall,
+                hypothesis = hypothesis,
+                conf_level = conf_level,
+                vcov = vcov,
+                df = df,
+                equivalence = equivalence,
+                ...)
+        }
+        class(out) <- c("hypotheses", class(out))
         return(out)
     }
 

@@ -469,6 +469,7 @@ comparisons <- function(model,
     cols <- intersect(stubcols, colnames(mfx))
     cols <- unique(c(cols, colnames(mfx)))
     mfx <- mfx[, ..cols, drop = FALSE]
+    mfx <- sort_columns(mfx, stubcols)
 
     # bayesian draws
     attr(mfx, "posterior_draws") <- draws
