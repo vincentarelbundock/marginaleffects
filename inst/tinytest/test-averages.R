@@ -9,6 +9,7 @@ expect_error(averages(slopes(mod, by = "am"), by = "cyl"), pattern = "twice")
 
 
 
+
 dat <- mtcars
 dat$am <- as.logical(dat$am)
 dat$carb <- as.factor(dat$carb)
@@ -34,3 +35,13 @@ cmp3 <- comparisons(mod) |> averages(conf_l = .9)
 expect_true(all(cmp1$conf.low < cmp2$conf.low))
 expect_true(all(cmp1$conf.high > cmp2$conf.high))
 expect_equivalent(cmp2, cmp3)
+
+
+
+# datagrid() catch scall() 
+pre <- avg_predictions(mod, newdata = datagrid())
+cmp <- avg_comparisons(mod, newdata = datagrid())
+mfx <- avg_slopes(mod, newdata = datagrid())
+expect_inherits(pre, "predictions")
+expect_inherits(cmp, "comparisons")
+expect_inherits(mfx, "slopes")

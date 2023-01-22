@@ -1,7 +1,7 @@
 ---
 output: 
-    - github_document
     - html_document
+    - github_document
 ---
 
 # The `marginaleffects` package for `R` <img src="https://user-images.githubusercontent.com/987057/134899484-e3392510-2e94-4c39-9830-53356fa5feed.png" align="right" alt="" width="120" />
@@ -259,30 +259,28 @@ See this vignette for more information: [Plots, interactions, predictions, contr
 
 ## Averaging
 
-Since predictions, comparisons, and slopes are conditional quantities, they can be a bit unwieldy. Often, it can be useful to report a one-number summary instead of one estimate per observation. Instead of presenting "conditional" estimates, some statisticians recommend reporting "marginal" estimates, that is, an average of unit-level estimates. 
+Since predictions, comparisons, and slopes are conditional quantities, they can be a bit unwieldy. Often, it can be useful to report a one-number summary instead of one estimate per observation. Instead of presenting "conditional" estimates, some methodologists recommend reporting "marginal" estimates, that is, an average of unit-level estimates. 
 
 (This use of the word "marginal" as "averaging" should not be confused with the term "marginal effect" which, in the econometrics tradition, correspond to a partial derivative, or the effect of a "small/marginal" change.)
 
-To marginalize (average over) our unit-level estimates, we can use the `by` argument or the `averages()` function. For example, both of these commands give us the same result: the average predicted outcome in the `mtcars` dataset:
+To marginalize (average over) our unit-level estimates, we can use the `by` argument or the one of the convenience functions: `avg_predictions()`, `avg_comparisons()`, or `avg_slopes()`. For example, both of these commands give us the same result: the average predicted outcome in the `mtcars` dataset:
 
 ```{r}
-predictions(mod) |> averages()
-
-predictions(mod, by = TRUE)
+avg_predictions(mod)
 ```
 
 This is equivalent to manual computation by:
 
 ```{r}
-predictions(mod)$estimate |> mean()
+mean(predict(mod))
 ```
 
 The main `marginaleffects` functions all include a `by` argument, which allows us to marginalize within sub-groups of the data. For example,
 
 ```{r}
-comparisons(mod, by = "am")
+avg_comparisons(mod, by = "am")
 
-slopes(mod) |> averages(by = "cyl")
+avg_slopes(mod, by = "cyl")
 ```
 
 Marginal Means are a special case of predictions, which are marginalized (or averaged) across a balanced grid of categorical predictors. To illustrate, we estimate a new model with categorical predictors:
@@ -297,7 +295,7 @@ mod_cat <- lm(mpg ~ am + cyl + hp, data = dat)
 We can compute marginal means manually using the functions already described:
 
 ```{r}
-predictions(
+avg_predictions(
   mod_cat,
   newdata = datagrid(cyl = unique, am = unique),
   by = "am")

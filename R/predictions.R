@@ -605,6 +605,26 @@ avg_predictions <- function(model,
                             hypothesis = NULL,
                             df = Inf,
                             ...) {
+
+    # order of the first few paragraphs is important
+    # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
+    scall <- substitute(newdata)
+    if (is.call(scall)) {
+        lcall <- as.list(scall)
+        fun_name <- as.character(scall)[1]
+        if (fun_name %in% c("datagrid", "datagridcf", "typical", "counterfactual")) {
+            if (!any(c("model", "newdata") %in% names(lcall))) {
+                lcall <- c(lcall, list("model" = model))
+                newdata <- eval.parent(as.call(lcall))
+            }
+        } else if (fun_name == "visualisation_matrix") {
+            if (!"x" %in% names(lcall)) {
+                lcall <- c(lcall, list("x" = get_modeldata))
+                newdata <- eval.parent(as.call(lcall))
+            }
+        }
+    }
+
     out <- predictions(
         model = model,
         newdata = newdata,
