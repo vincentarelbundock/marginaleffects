@@ -2,7 +2,8 @@
 % Please edit documentation in R/datagrid.R
 \name{datagrid}
 \alias{datagrid}
-\title{Generate a data grid of "typical," "counterfactual," or user-specified values for use in the \code{newdata} argument of the \code{marginaleffects} or \code{predictions} functions.}
+\alias{datagridcf}
+\title{Data grids}
 \usage{
 datagrid(
   ...,
@@ -16,6 +17,8 @@ datagrid(
   FUN_integer = function(x) round(mean(x, na.rm = TRUE)),
   FUN_other = function(x) mean(x, na.rm = TRUE)
 )
+
+datagridcf(..., model = NULL, newdata = NULL)
 }
 \arguments{
 \item{...}{named arguments with vectors of values or functions for user-specified variables.
@@ -54,19 +57,24 @@ explicitly defined are held at their mean or mode.
 }
 \description{
 Generate a data grid of "typical," "counterfactual," or user-specified values for use in the \code{newdata} argument of the \code{marginaleffects} or \code{predictions} functions.
+\itemize{
+\item \code{datagrid()} generates data frames with combinations of "typical" or user-supplied predictor values.
+\item \code{datagridcf()} generates "counter-factual" data frames, by replicating the entire dataset once for every combination of predictor values supplied by the user.
+}
 }
 \details{
-If \code{datagrid} is used in a \code{marginaleffects} or \code{predictions} call as the
-\code{newdata} argument, the model is automatically inserted in the function
-call, and users do not need to specify either the \code{model} or \code{newdata}
-arguments. Note that only the variables used to fit the models will be
-attached to the results. If a user wants to attach other variables as well
-(e.g., weights or grouping variables), they can supply a data.frame
-explicitly to the \code{newdata} argument inside \code{datagrid()}.
+If \code{datagrid} is used in a \code{predictions()}, \code{comparisons()}, or \code{slopes()} call as the
+\code{newdata} argument, the model is automatically inserted in the \code{model} argument of \code{datagrid()}
+call, and users do not need to specify either the \code{model} or \code{newdata} arguments.
 
 If users supply a model, the data used to fit that model is retrieved using
 the \code{insight::get_data} function.
 }
+\section{Functions}{
+\itemize{
+\item \code{datagridcf()}: Counterfactual data grid
+
+}}
 \examples{
 # The output only has 2 rows, and all the variables except `hp` are at their
 # mean or mode.
@@ -96,8 +104,3 @@ mod <- lm(mpg ~ hp, mtcars)
 dg <- datagrid(model = mod, hp = c(100, 110), grid_type = "counterfactual")
 nrow(dg)
 }
-\seealso{
-Other grid: 
-\code{\link{datagridcf}()}
-}
-\concept{grid}

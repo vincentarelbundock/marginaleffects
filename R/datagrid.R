@@ -1,4 +1,10 @@
+#' Data grids
+#' 
+#' @description 
 #' Generate a data grid of "typical," "counterfactual," or user-specified values for use in the `newdata` argument of the `marginaleffects` or `predictions` functions.
+#'
+#' * `datagrid()` generates data frames with combinations of "typical" or user-supplied predictor values.
+#' * `datagridcf()` generates "counter-factual" data frames, by replicating the entire dataset once for every combination of predictor values supplied by the user.
 #'
 #' @param ... named arguments with vectors of values or functions for user-specified variables.
 #' + Functions are applied to the variable in the `model` dataset or `newdata`, and must return a vector of the appropriate type.
@@ -16,13 +22,9 @@
 #' @param FUN_numeric the function to be applied to numeric variables.
 #' @param FUN_other the function to be applied to other variable types.
 #' @details
-#' If `datagrid` is used in a `marginaleffects` or `predictions` call as the
-#' `newdata` argument, the model is automatically inserted in the function
-#' call, and users do not need to specify either the `model` or `newdata`
-#' arguments. Note that only the variables used to fit the models will be
-#' attached to the results. If a user wants to attach other variables as well
-#' (e.g., weights or grouping variables), they can supply a data.frame
-#' explicitly to the `newdata` argument inside `datagrid()`.
+#' If `datagrid` is used in a `predictions()`, `comparisons()`, or `slopes()` call as the
+#' `newdata` argument, the model is automatically inserted in the `model` argument of `datagrid()` 
+#' call, and users do not need to specify either the `model` or `newdata` arguments.
 #'
 #' If users supply a model, the data used to fit that model is retrieved using
 #' the `insight::get_data` function.
@@ -30,7 +32,6 @@
 #' A `data.frame` in which each row corresponds to one combination of the named
 #' predictors supplied by the user via the `...` dots. Variables which are not
 #' explicitly defined are held at their mean or mode.
-#' @family grid
 #' @export
 #' @examples
 #' # The output only has 2 rows, and all the variables except `hp` are at their
@@ -110,35 +111,10 @@ datagrid <- function(
 }
 
 
-#' A "counterfactual" version of the `datagrid()` function.
-#'
-#' For each combination of the variable values specified, this function
-#' duplicates the entire data frame supplied to `newdata`, or the entire
-#' dataset used to fit `model`. This is a convenience shortcut to call the
-#' `datagrid()` function with argument `grid_type="counterfactual"`.
-#'
-#' @inheritParams datagrid
-#' @examples
-#' # Fit a model with 32 observations from the `mtcars` dataset.
-#' nrow(mtcars)
-#'
-#' mod <- lm(mpg ~ hp + am, data = mtcars)
-#'
-#' # We specify two values for the `am` variable and obtain a counterfactual
-#' # dataset with 64 observations (32 x 2).
-#' dat <- datagridcf(model = mod, am = 0:1)
-#' head(dat)
-#' nrow(dat)
-#'
-#' # We specify 2 values for the `am` variable and 3 values for the `hp` variable
-#' # and obtained a dataset with 192 observations (2x3x32), corresponding to the
-#' # full original data, with each possible combination of `hp` and `am`.
-#' dat <- datagridcf(am = 0:1, hp = c(100, 110, 120), newdata = mtcars)
-#' head(dat)
-#' dim(dat)
-#'
-#' @family grid
+#' Counterfactual data grid
+#' @describeIn datagrid Counterfactual data grid
 #' @export
+#' 
 datagridcf <- function(
     ...,
     model = NULL,
