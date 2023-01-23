@@ -1,22 +1,17 @@
-#' Adjusted Predictions
+#' Predictions
 #'
 #' @description
-#' Outcome predicted by a fitted model on a specified scale for a given
-#' combination of values of the predictor variables, such as their observed
-#' values, their means, or factor levels (a.k.a. "reference grid"). The
-#' `avg_predictions()` function or `by` argument can be used to marginalize ("average
-#' over") unit-level predictions.
-#' 
-#' To learn more, read the predictions vignette, visit the
-#' package website, or scroll down this page for a full list of vignettes:
-#' 
+#' Outcome predicted by a fitted model on a specified scale for a given combination of values of the predictor variables, such as their observed values, their means, or factor levels (a.k.a. "reference grid").
+#'
+#' * `predictions()`: unit-level (conditional) estimates.
+#' * `avg_predictions()`: average (marginal) estimates.
+#'
+#' The `newdata` argument and the `datagrid()` function can be used to control where statistics are evaluated in the predictor space: "at observed values", "at the mean", "at representative values", etc.
+#'
+#' See the predictions vignette and package website for worked examples and case studies:
+
 #' * <https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html>
 #' * <https://vincentarelbundock.github.io/marginaleffects/>
-#'
-#' @section Vignettes and documentation:
-#'
-#' ```{r child = "vignettes/toc.Rmd"}
-#' ```
 #'
 #' @details
 #' The `newdata` argument, the `tidy()` function, and `datagrid()` function can be used to control the kind of predictions to report:
@@ -33,6 +28,11 @@
 #' predictions, and builds symmetric confidence intervals. These naive symmetric
 #' intervals may not always be appropriate. For instance, they may stretch beyond
 #' the bounds of a binary response variables.
+#'
+#' @section Vignettes and documentation:
+#'
+#' ```{r child = "vignettes/toc.Rmd"}
+#' ```
 #'
 #' @inheritParams slopes
 #' @param model Model object

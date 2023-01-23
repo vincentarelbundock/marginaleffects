@@ -3,7 +3,7 @@
 \name{slopes}
 \alias{slopes}
 \alias{avg_slopes}
-\title{Slopes (aka "Partial derivatives", "Marginal Effects", or "Trends")}
+\title{Slopes (aka Partial derivatives, Marginal Effects, or Trends)}
 \usage{
 slopes(
   model,
@@ -170,13 +170,13 @@ A \code{data.frame} with one row per observation (per term/group) and several co
 }
 }
 \description{
-Partial derivative of the regression equation with respect to a regressor of interest. Slopes are typically unit-level (or "conditional") estimates: they will typically vary based on the values of predictors in the model.
+Partial derivative of the regression equation with respect to a regressor of interest.
+\itemize{
+\item \code{slopes()}: unit-level (conditional) estimates.
+\item \code{avg_slopes()}: average (marginal) estimates.
+}
 
-By default, the \code{slopes()} function thus returns one estimate of the slope for each row of the dataset used to fit a model.
-
-The \code{newdata} argument controls where slopes are evaluated in the predictor space: "at observed values", "at the mean", "at representative values", etc.
-
-The \code{by} argument or the \code{avg_slopes()} function can aggregate unit-level estimates into an "average" or "marginal" slope.
+The \code{newdata} argument and the \code{datagrid()} function can be used to control where statistics are evaluated in the predictor space: "at observed values", "at the mean", "at representative values", etc.
 
 See the slopes vignette and package website for worked examples and case studies:
 \itemize{

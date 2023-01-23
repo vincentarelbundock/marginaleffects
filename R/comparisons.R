@@ -7,26 +7,15 @@
 #' interest, such as contrasts, differences, risk ratios, changes in log odds,
 #' slopes, elasticities, etc.
 #' 
-#' Comparisons or contrasts are typically "conditional" (or "unit-level") estimates: they
-#' will typically vary based on the values of predictors in the model. By
-#' default, the `comparisons()` function thus returns one estimate of the
-#' comparison for each row of the dataset used to fit a model. 
+#' * `comparisons()`: unit-level (conditional) estimates.
+#' * `avg_comparisons()`: average (marginal) estimates.
 #' 
-#' The `newdata` argument controls where comparisons are evaluated in the predictor
-#' space: "at observed values", "at the mean", "at representative values", etc. 
-#' 
-#' The `avg_comparisons()` function or `by` argument can aggregate
-#' unit-level estimates into an "average contrast", "average risk ratio", etc.
+#' The `newdata` argument and the `datagrid()` function can be used to control where statistics are evaluated in the predictor space: "at observed values", "at the mean", "at representative values", etc.
 #' 
 #' See the comparisons vignette and package website for worked examples and case studies:
 #' 
 #' * <https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html>
 #' * <https://vincentarelbundock.github.io/marginaleffects/>
-#'
-#' @section Vignettes and documentation:
-#'
-#' ```{r child = "vignettes/toc.Rmd"}
-#' ```
 #'
 #' @details
 #' A "contrast" is a difference, ratio of function of adjusted predictions,
@@ -43,6 +32,11 @@
 #' * Contrasts at the Mean
 #' * Contrasts at User-Specified values (aka Contrasts at Representative values, MER).
 #' * Custom contrasts using arbitrary functions
+#'
+#' @section Vignettes and documentation:
+#'
+#' ```{r child = "vignettes/toc.Rmd"}
+#' ```
 #'
 #' @inheritParams slopes
 #' @inheritParams predictions
