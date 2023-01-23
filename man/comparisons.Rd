@@ -3,7 +3,7 @@
 \name{comparisons}
 \alias{comparisons}
 \alias{avg_comparisons}
-\title{Comparisons Between Predictions Made for Different Regressor Values}
+\title{Comparisons Between Predictions Made With Different Regressor Values}
 \usage{
 comparisons(
   model,
@@ -224,23 +224,6 @@ See the comparisons vignette and package website for worked examples and case st
 \itemize{
 \item \url{https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html}
 \item \url{https://vincentarelbundock.github.io/marginaleffects/}
-}
-}
-\details{
-A "contrast" is a difference, ratio of function of adjusted predictions,
-calculated for meaningfully different predictor values (e.g., College
-graduates vs. Others). Uncertainty estimates are computed using the delta
-method.
-
-The \code{newdata} argument can be used to control the kind of contrasts to report:
-\itemize{
-\item Average Contrasts
-\item Adjusted Risk Ratios
-\item Adjusted Risk Differences
-\item Group-Average Contrasts
-\item Contrasts at the Mean
-\item Contrasts at User-Specified values (aka Contrasts at Representative values, MER).
-\item Custom contrasts using arbitrary functions
 }
 }
 \section{Functions}{
