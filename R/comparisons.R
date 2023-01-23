@@ -1,4 +1,4 @@
-#' Comparisons Between Predictions Made for Different Regressor Values
+#' Comparisons Between Predictions Made With Different Regressor Values
 #'
 #' @description
 #' Predict the outcome variable at different regressor values (e.g., college
