@@ -102,8 +102,8 @@ External links:
   - [Subgroup Analysis After Propensity Score Matching Using
     R](https://ngreifer.github.io/blog/subgroup-analysis-psm/) by Noah
     Greifer
-  - [Bayesian model
-    averaging](https://www.ajordannafa.com/blog/2022/05/24/bma-ames/) by
+  - [Bayesian Model
+    Averaged Marginal Effects](https://www.ajordannafa.com/blog/2022/being-less-wrong/) by
     A. Jordan Nafa
 
 ## Motivation
