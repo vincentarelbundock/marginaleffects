@@ -17,17 +17,6 @@
 #' * <https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html>
 #' * <https://vincentarelbundock.github.io/marginaleffects/>
 #'
-#' @details
-#' The `newdata` argument can be used to control the kind of contrasts to report:
-#'
-#' * Average Contrasts
-#' * Adjusted Risk Ratios
-#' * Adjusted Risk Differences
-#' * Group-Average Contrasts
-#' * Contrasts at the Mean
-#' * Contrasts at User-Specified values (aka Contrasts at Representative values, MER).
-#' * Custom contrasts using arbitrary functions
-#'
 #' @section Vignettes and documentation:
 #'
 #' ```{r child = "vignettes/toc.Rmd"}
