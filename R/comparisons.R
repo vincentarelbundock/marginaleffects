@@ -18,11 +18,6 @@
 #' * <https://vincentarelbundock.github.io/marginaleffects/>
 #'
 #' @details
-#' A "contrast" is a difference, ratio of function of adjusted predictions,
-#' calculated for meaningfully different predictor values (e.g., College
-#' graduates vs. Others). Uncertainty estimates are computed using the delta
-#' method.
-#'
 #' The `newdata` argument can be used to control the kind of contrasts to report:
 #'
 #' * Average Contrasts
