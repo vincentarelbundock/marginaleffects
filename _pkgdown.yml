@@ -2,7 +2,7 @@ url: https://vincentarelbundock.github.io/marginaleffects/
 template:
   bootstrap: 5
 reference:
-  - title: Main functions
+  - title: Estimands and Tests
     contents:
     - predictions
     - comparisons
@@ -12,16 +12,15 @@ reference:
     - avg_predictions
     - avg_comparisons
     - avg_slopes
-  - title: Data grids
+  - title: Prediction Grids
     contents:
     - starts_with("datagrid")
   - title: Plots
     contents:
     - starts_with("plot")
-  - title: Object summaries
+  - title: Utilities
     contents:
     - posterior_draws
-    - averages
     - starts_with("summary|glance|tidy")
 navbar:
   title: marginaleffects

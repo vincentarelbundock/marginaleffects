@@ -22,6 +22,7 @@
 #' function to override the original call options: `conf_level`, `transform_post`,
 #' etc. See `?predictions`, `?comparisons`, `?slopes`.
 #' @keywords internal
+#' @noRd
 #' @return A `data.frame` of estimates and uncertainty estimates
 #' @details
 #'
@@ -64,7 +65,7 @@ averages <- function (x, by = TRUE, ...) {
 }
 
 
-#' @rdname averages
+#' @noRd
 #' @export
 averages.predictions <- function(x, by = TRUE, byfun = NULL, ...) {
 
@@ -111,7 +112,7 @@ averages.predictions <- function(x, by = TRUE, byfun = NULL, ...) {
 }
 
 
-#' @rdname averages
+#' @noRd
 #' @export
 averages.comparisons <- function(x, by = TRUE, ...) {
 
@@ -159,7 +160,7 @@ averages.comparisons <- function(x, by = TRUE, ...) {
 }
 
 
-#' @rdname averages
+#' @noRd
 #' @export
 averages.slopes <- averages.comparisons
 
