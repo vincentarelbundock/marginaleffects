@@ -1,6 +1,6 @@
-#' Extract posterior draws from a `predictions`, `comparisons`, or `marginaleffects` object derived from Bayesian models.
+#' Extract Posterior Draws From `marginaleffects` Objects
 #'
-#' @param x An object produced by the `marginaleffects`, `comparisons`, or `predictions` functions
+#' @param x An object produced by a `marginaleffects` package function, such as `predictions()`, `avg_slopes()`, `hypotheses()`, etc.
 #' @param shape string indicating the shape of the output format:
 #' * "long": long format data frame
 #' * "DxP": Matrix with draws as rows and parameters as columns

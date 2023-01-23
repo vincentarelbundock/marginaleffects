@@ -7,7 +7,7 @@
 posteriordraws(x, shape = "long")
 }
 \arguments{
-\item{x}{An object produced by the \code{marginaleffects}, \code{comparisons}, or \code{predictions} functions}
+\item{x}{An object produced by a \code{marginaleffects} package function, such as \code{predictions()}, \code{avg_slopes()}, \code{hypotheses()}, etc.}
 
 \item{shape}{string indicating the shape of the output format:
 \itemize{

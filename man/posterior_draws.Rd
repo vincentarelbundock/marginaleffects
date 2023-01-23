@@ -2,12 +2,12 @@
 % Please edit documentation in R/posterior_draws.R
 \name{posterior_draws}
 \alias{posterior_draws}
-\title{Extract posterior draws from a \code{predictions}, \code{comparisons}, or \code{marginaleffects} object derived from Bayesian models.}
+\title{Extract Posterior Draws From \code{marginaleffects} Objects}
 \usage{
 posterior_draws(x, shape = "long")
 }
 \arguments{
-\item{x}{An object produced by the \code{marginaleffects}, \code{comparisons}, or \code{predictions} functions}
+\item{x}{An object produced by a \code{marginaleffects} package function, such as \code{predictions()}, \code{avg_slopes()}, \code{hypotheses()}, etc.}
 
 \item{shape}{string indicating the shape of the output format:
 \itemize{
@@ -21,5 +21,5 @@ posterior_draws(x, shape = "long")
 A data.frame with \code{drawid} and \code{draw} columns.
 }
 \description{
-Extract posterior draws from a \code{predictions}, \code{comparisons}, or \code{marginaleffects} object derived from Bayesian models.
+Extract Posterior Draws From \code{marginaleffects} Objects
 }
