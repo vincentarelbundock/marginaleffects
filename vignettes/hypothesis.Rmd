@@ -509,9 +509,9 @@ hypotheses(p, equivalence = c(17, 18))
 
 The results allow us to draw three conclusions:
 
-1. The p value for the non-superiority test is `r sprintf("%.4f", hyp$p.value.sup)`. This suggests that we *cannot* reject the hypothesis that the parameter (`r sprintf("%.4f", hyp$estimate)`) is above the [17,18] interval.
-2. The p value for the non-inferiority test is `r sprintf("%.4f", hyp$p.value.inf)`. This suggests that we *can* reject the hypothesis that the parameter is below the [17,18] interval.
-3. The p value for the equivalence test is `r sprintf("%.4f", hyp$p.value.equ)`. This suggests that we *cannot* reject the hypothesis that the parameter falls outside the equivalence region.
+1. The p value for the non-superiority test is `r sprintf("%.4f", hyp$p.value.nonsup)`. This suggests that we *cannot* reject the hypothesis that the parameter (`r sprintf("%.4f", hyp$estimate)`) is above the [17,18] interval.
+2. The p value for the non-inferiority test is `r sprintf("%.4f", hyp$p.value.noninf)`. This suggests that we *can* reject the hypothesis that the parameter is below the [17,18] interval.
+3. The p value for the equivalence test is `r sprintf("%.4f", hyp$p.value.equiv)`. This suggests that we *cannot* reject the hypothesis that the parameter falls outside the equivalence region.
 
 #### Example 2: Model coefficients
 
@@ -530,7 +530,7 @@ hypotheses(mod, equivalence = c(5, 7))[4, ]
 ```
 
 ```{r, include = FALSE}
-hyp <- hypotheses(mod, equivalence = c(5, 7))[4, "p.value.equ"]
+hyp <- hypotheses(mod, equivalence = c(5, 7))[4, "p.value.equiv"]
 ```
 
 The p value is `r sprintf("%.4f", hyp)`, so we cannot reject the hypothesis that the `r names(coef(mod))[4]` parameter falls outside the [5,7] interval. 
@@ -544,7 +544,7 @@ avg_slopes(mod, variables = "hp") |>
     hypotheses(equivalence = c(-.1, .1))
 ```
 ```{r, include = FALSE}
-hyp <- avg_slopes(mod, variables = "hp", equivalence = c(-.1, .1))$p.value.equ
+hyp <- avg_slopes(mod, variables = "hp", equivalence = c(-.1, .1))$p.value.equiv
 ```
 
 The p value is `r sprintf("%.4f", hyp)`, which suggests that we can reject the hypothesis that the parameter falls outside the equivalence region (or "substantive irrelevance region"). 
