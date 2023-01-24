@@ -60,9 +60,9 @@ print.slopes.summary <- function(x,
         "conf.high" = ifelse(is.null(alpha),
             "CI high",
             sprintf("%.1f %%", 100 - alpha / 2)),
-        "p.value.sup" = "p (Sup)",
-        "p.value.inf" = "p (Inf)",
-        "p.value.equ" = "p (Eq)"
+        "p.value.nonsup" = "p (Sup)",
+        "p.value.noninf" = "p (Inf)",
+        "p.value.equiv" = "p (Eq)"
         )
 
     if (inherits(x, "marginalmeans.summary")) {

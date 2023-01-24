@@ -14,11 +14,10 @@ e1 <- test(em, delta = delta, null = null, side = "noninferiority", df = Inf)
 e2 <- predictions(
     mod,
     newdata = datagrid(gear = unique),
-    equivalence = c(19, 21),
-    side = "noninferiority") |>
+    equivalence = c(19, 21)) |>
     dplyr::arrange(gear)
-expect_equivalent(e1$z.ratio, e2$statistic.inf)
-expect_equivalent(e1$p.value, e2$p.value.inf)
+expect_equivalent(e1$z.ratio, e2$statistic.noninf)
+expect_equivalent(e1$p.value, e2$p.value.noninf)
 
 
 # predictions() vs. {emmeans}: sup
@@ -28,8 +27,8 @@ e2 <- predictions(
     newdata = datagrid(gear = unique),
     equivalence = c(22, 24)) |>
     dplyr::arrange(gear)
-expect_equivalent(e1$z.ratio, e2$statistic.sup)
-expect_equivalent(e1$p.value, e2$p.value.sup)
+expect_equivalent(e1$z.ratio, e2$statistic.nonsup)
+expect_equivalent(e1$p.value, e2$p.value.nonsup)
 
 
 # predictions() vs. {emmeans}: equiv
@@ -39,7 +38,7 @@ e2 <- predictions(
     newdata = datagrid(gear = unique),
     equivalence = c(21, 23)) |>
     dplyr::arrange(gear)
-expect_equivalent(e1$p.value, e2$p.value.equ)
+expect_equivalent(e1$p.value, e2$p.value.equiv)
 
 
 # slopes() works; no validity
@@ -64,17 +63,17 @@ mm <- marginal_means(
 
 e1 <- test(pa, delta = delta, adjust = "none", side = "nonsuperiority", df = Inf)
 e2 <- hypotheses(mm, equivalence = c(-delta, delta))
-expect_equivalent(e1$z.ratio, e2$statistic.sup)
-expect_equivalent(e1$p.value, e2$p.value.sup)
+expect_equivalent(e1$z.ratio, e2$statistic.nonsup)
+expect_equivalent(e1$p.value, e2$p.value.nonsup)
 
 e1 <- test(pa, delta = delta, adjust = "none", side = "noninferiority", df = Inf)
 e2 <- hypotheses(mm, equivalence = c(-delta, delta))
-expect_equivalent(e1$z.ratio, e2$statistic.inf)
-expect_equivalent(e1$p.value, e2$p.value.inf)
+expect_equivalent(e1$z.ratio, e2$statistic.noninf)
+expect_equivalent(e1$p.value, e2$p.value.noninf)
 
 e1 <- test(pa, delta = delta, adjust = "none", df = Inf)
 e2 <- hypotheses(mm, equivalence = c(-delta, delta))
-expect_equivalent(e1$p.value, e2$p.value.equ)
+expect_equivalent(e1$p.value, e2$p.value.equiv)
 
 
 # two-sample t-test
@@ -94,7 +93,23 @@ e2 <- hypotheses(
     equivalence = c(-.05, .05),
     df = e1$parameter)
 expect_true(e1$tost.p.value > .5 && e1$tost.p.value < .9)
-expect_equivalent(e1$tost.p.value, e2$p.value.equ)
+expect_equivalent(e1$tost.p.value, e2$p.value.equiv)
+
+
+# GLM vs emmeans
+mod <- glm(vs ~ factor(gear), data = mtcars, family = binomial)
+em <- emmeans(mod, "gear", df = Inf)
+e1 <- test(em, delta = .5, null = 1, side = "noninferiority", df = Inf)
+e2 <- predictions(
+    mod,
+    type = "link",
+    newdata = datagrid(gear = unique),
+    equivalence = c(.5, 1.5)) |>
+    dplyr::arrange(gear)
+expect_equivalent(e1$emmean, e2$estimate)
+expect_equivalent(e1$z.ratio, e2$statistic.noninf)
+expect_equivalent(e1$p.value, e2$p.value.noninf)
+
 
 # avg_*() and hypotheses()
 tmp <<- lm(mpg ~ hp * qsec, data = mtcars)
@@ -115,3 +130,6 @@ mod <- lm(mpg ~ hp * vs, data = mtcars)
 x <- avg_slopes(mod, by = "vs", variables = "hp", hypothesis = "pairwise")
 x <- hypotheses(x, equivalence = c(-.2, .2))
 expect_inherits(x, "hypotheses")
+
+
+
