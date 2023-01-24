@@ -91,50 +91,31 @@ hypotheses <- function(
     FUN = NULL,
     ...) {
 
+    args <- list(
+        conf_level = conf_level,
+        vcov = vcov,
+        df = df,
+        equivalence = equivalence)
+
+    # keep this NULL in case `hypothesis` was used in the previous call
+    args[["hypothesis"]] <- hypothesis
+
+    dots <- list(...)
+    if (length(dots) > 0) {
+        args <- c(args, dots)
+    }
+
     xcall <- substitute(model)
     if (!is.call(xcall)) {
-        if (length(list(...)) == 0) { # bug in predictions.Rmd
-            out <- recall(
-                model,
-                hypothesis = hypothesis,
-                conf_level = conf_level,
-                vcov = vcov,
-                df = df,
-                equivalence = equivalence)
-        } else {
-            out <- recall(
-                model,
-                hypothesis = hypothesis,
-                conf_level = conf_level,
-                vcov = vcov,
-                df = df,
-                equivalence = equivalence,
-                ...)
-        }
+        args[["x"]] <- model
+        out <- do.call(recall, args)
         if (!is.null(out)) {
             class(out) <- c("hypotheses", class(out))
             return(out)
         }
     } else {
-        if (length(list(...)) == 0) { # bug in predictions.Rmd
-            out <- recall(
-                xcall,
-                hypothesis = hypothesis,
-                conf_level = conf_level,
-                vcov = vcov,
-                df = df,
-                equivalence = equivalence)
-        } else {
-            out <- recall(
-                xcall,
-                hypothesis = hypothesis,
-                conf_level = conf_level,
-                vcov = vcov,
-                df = df,
-                equivalence = equivalence,
-                ...)
-        }
-
+        args[["x"]] <- xcall
+        out <- do.call(recall, args)
         # no fancy print if these are unit-level (conditional) estimates
         if (inherits(out, "averages") || !is.null(attr(out, "by"))) {
             class(out) <- c("hypotheses", class(out))

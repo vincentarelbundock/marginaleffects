@@ -60,6 +60,15 @@ del <- hypotheses(mod, hypothesis = hyp)
 expect_equivalent(del$term, c("H1", "H2"))
 
 
+# two-step to check code where `hypotheses(model)` model is an object not a call
+mod <- lm(mpg ~ factor(cyl), data = mtcars)
+cmp <- avg_comparisons(mod)
+hyp <- hypotheses(cmp, equivalence = c(-10, -5))
+expect_inherits(hyp, "hypotheses")
+
+
+
+
 # hypotheses() applied to {marginaleffects} package objects
 # commented out because doesn't work in environments because of match.call()
 # mod <- glm(vs ~ hp + am, data = mtcars, family = binomial)
