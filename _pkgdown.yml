@@ -21,6 +21,7 @@ reference:
   - title: Utilities
     contents:
     - posterior_draws
+    - averages
     - starts_with("summary|glance|tidy")
 navbar:
   title: marginaleffects

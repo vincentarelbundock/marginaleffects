@@ -17,12 +17,9 @@
 #' Note that the `tidy()` and `summary()` methods are slower wrappers around `avg_*()` functions.
 #' @param x Object produced by the `predictions()`, `comparisons()`, or `slopes()` functions.
 #' @param by Character vector of variable names over which to compute group-wise average estimates. When `by=NULL`, the global average (per term) is reported.
-#' @inheritParams predictions
 #' @param ... All additional arguments are passed to the original fitting
 #' function to override the original call options: `conf_level`, `transform_post`,
 #' etc. See `?predictions`, `?comparisons`, `?slopes`.
-#' @keywords internal
-#' @noRd
 #' @return A `data.frame` of estimates and uncertainty estimates
 #' @details
 #'
