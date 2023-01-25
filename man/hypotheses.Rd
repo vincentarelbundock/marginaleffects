@@ -96,21 +96,28 @@ Warning #2: For hypothesis tests on objects produced by the \code{marginaleffect
 \section{Equivalence, Inferiority, Superiority}{
 
 
-\eqn{\theta} is an estimate, \eqn{\sigma_\theta} its estimated standard error, and \eqn{[a, b]} are the bounds of the equivalence region supplied to the \code{equivalence} argument.
+\eqn{\theta} is an estimate, \eqn{\sigma_\theta} its estimated standard error, and \eqn{[a, b]} are the bounds of the interval supplied to the \code{equivalence} argument.
 
-The test statistics are:
-
+Non-inferiority:
 \itemize{
-\item Non-inferiority: \eqn{t=(\theta - a)/\sigma_\theta}{t=(\theta - a)/\sigma_\theta}
-\item Non-superiority: \eqn{t=(\theta - b)/\sigma_\theta}{t=(\theta - b)/\sigma_\theta}
+\item \eqn{H_0}{H0}: \eqn{\theta \leq a}{\theta <= a}
+\item \eqn{H_1}{H1}: \eqn{\theta > a}
+\item \eqn{t=(\theta - a)/\sigma_\theta}{t=(\theta - a)/\sigma_\theta}
+\item p: Upper-tail probability
 }
 
-The p values are:
-
+Non-superiority:
 \itemize{
-\item Non-inferiority: Upper tail probability
-\item Non-superiority: Lower tail probability
-\item Equivalence (TOST): Maximum of the non-inferiority and non-superiority p values.
+\item \eqn{H_0}{H0}: \eqn{\theta \geq b}{\theta >= b}
+\item \eqn{H_1}{H1}: \eqn{\theta < b}
+\item \eqn{t=(\theta - b)/\sigma_\theta}{t=(\theta - b)/\sigma_\theta}
+\item p: Lower-tail probability
+}
+
+Equivalence (TOST):
+\itemize{
+\item \eqn{H_0}{H0}: \eqn{\theta > b} and \eqn{\theta < a}
+\item p: Maximum of the non-inferiority and non-superiority p values.
 }
 
 Thanks to Russell V. Lenth for the excellent \code{emmeans} package and documentation which inspired this feature.
