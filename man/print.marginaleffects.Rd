@@ -30,5 +30,22 @@
 \item{...}{Other arguments are currently ignored.}
 }
 \description{
-This function controls the text printed to the \code{R} console when executing one of the core \code{marginaleffects} functions.
+This function controls the text which is printed to the console when one of the core \code{marginalefffects} functions is called and the object is returned: \code{predictions()}, \code{comparisons()}, \code{slopes()}, \code{marginal_means()}, \code{hypotheses()}, \code{avg_predictions()}, \code{avg_comparisons()}, \code{avg_slopes()}.
+
+All of those functions return standard data frames. Columns can be extracted by name, \code{predictions(model)$estimate}, and all the usual data manipulation functions work out-of-the-box:  \code{colnames()}, \code{head()}, \code{subset()}, \code{dplyr::filter()}, \code{dplyr::arrange()}, etc.
+
+Some of the data columns are not printed by default. You can disable pretty printing and print the full results as a standard data frame using the \code{style} argument or by applying \code{as.data.frame()} on the object. See examples below.
+}
+\examples{
+library(marginaleffects)
+mod <- lm(mpg ~ hp + factor(gear), data = mtcars)
+p <- predictions(mod, by = c("am", "gear"))
+p
+
+subset(p, am == 1)
+
+print(p, style = "data.frame")
+
+data.frame(p)
+
 }

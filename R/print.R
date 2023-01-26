@@ -1,7 +1,11 @@
 #' Print `marginaleffects` objects
 #' 
 #' @description
-#' This function controls the text printed to the `R` console when executing one of the core `marginaleffects` functions.
+#' This function controls the text which is printed to the console when one of the core `marginalefffects` functions is called and the object is returned: `predictions()`, `comparisons()`, `slopes()`, `marginal_means()`, `hypotheses()`, `avg_predictions()`, `avg_comparisons()`, `avg_slopes()`.
+#' 
+#' All of those functions return standard data frames. Columns can be extracted by name, `predictions(model)$estimate`, and all the usual data manipulation functions work out-of-the-box:  `colnames()`, `head()`, `subset()`, `dplyr::filter()`, `dplyr::arrange()`, etc.
+#' 
+#' Some of the data columns are not printed by default. You can disable pretty printing and print the full results as a standard data frame using the `style` argument or by applying `as.data.frame()` on the object. See examples below.
 #' 
 #' @param x An object produced by one of the [`marginaleffects`] package functions.
 #' @param digits The number of digits to display.
@@ -11,6 +15,18 @@
 #' @param style "summary" or "data.frame"
 #' @param ... Other arguments are currently ignored.
 #' @export
+#' @examples
+#' library(marginaleffects)
+#' mod <- lm(mpg ~ hp + factor(gear), data = mtcars)
+#' p <- predictions(mod, by = c("am", "gear"))
+#' p
+#' 
+#' subset(p, am == 1)
+#' 
+#' print(p, style = "data.frame")
+#' 
+#' data.frame(p)
+#'
 print.marginaleffects <- function(x,
                                   digits = max(3L, getOption("digits") - 3L),
                                   topn = getOption("marginaleffects_print_topn", default = 5),
