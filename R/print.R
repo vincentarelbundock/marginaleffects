@@ -136,7 +136,7 @@ print.marginaleffects <- function(x,
         cat(tmp, "\n")
         omitted <- TRUE
     } else {
-        print(out)
+        print(out, row.names = FALSE)
         omitted <- FALSE
     }
     cat("\n")

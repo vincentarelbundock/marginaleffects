@@ -14,7 +14,7 @@ in R. Conduct linear and non-linear hypothesis tests using the delta
 method.
 
 The code on this website was executed using `marginaleffects`
-0.8.1.9115. See the [installation
+0.8.1.9116. See the [installation
 section](https://vincentarelbundock.github.io/marginaleffects/#installation)
 to install the latest CRAN or development version.
 
@@ -391,8 +391,8 @@ comparisons(
   variables = list(hp = 50),
   transform_pre = "ratioavg")
 #> 
-#>   Term  Contrast Estimate Std. Error     z   Pr(>|z|)  2.5 % 97.5 %
-#> 1   hp mean(+50)   0.9095    0.02895 31.42 < 2.22e-16 0.8528 0.9663
+#>  Term  Contrast Estimate Std. Error     z   Pr(>|z|)  2.5 % 97.5 %
+#>    hp mean(+50)   0.9095    0.02895 31.42 < 2.22e-16 0.8528 0.9663
 #> 
 #> Prediction type:  response 
 #> Columns: type, term, contrast, estimate, std.error, statistic, p.value, conf.low, conf.high, predicted, predicted_hi, predicted_lo
@@ -447,16 +447,16 @@ median, we can do:
 ``` r
 predictions(mod, newdata = "mean")
 #> 
-#>   Estimate Std. Error     z   Pr(>|z|) 2.5 % 97.5 %
-#> 1    18.37     0.6799 27.02 < 2.22e-16 17.04   19.7
+#>  Estimate Std. Error     z   Pr(>|z|) 2.5 % 97.5 %
+#>     18.37     0.6799 27.02 < 2.22e-16 17.04   19.7
 #> 
 #> Prediction type:  response 
 #> Columns: rowid, type, estimate, std.error, statistic, p.value, conf.low, conf.high, mpg, hp, wt, am
 
 predictions(mod, newdata = "median")
 #> 
-#>   Estimate Std. Error     z   Pr(>|z|) 2.5 % 97.5 %
-#> 1    19.37     0.6464 29.97 < 2.22e-16 18.11  20.64
+#>  Estimate Std. Error     z   Pr(>|z|) 2.5 % 97.5 %
+#>     19.37     0.6464 29.97 < 2.22e-16 18.11  20.64
 #> 
 #> Prediction type:  response 
 #> Columns: rowid, type, estimate, std.error, statistic, p.value, conf.low, conf.high, mpg, hp, wt, am
@@ -474,11 +474,11 @@ predictions(
     am = c(0, 1),
     wt = range))
 #> 
-#>   Estimate Std. Error     z   Pr(>|z|)  2.5 % 97.5 %
-#> 1   23.259      2.706 8.596 < 2.22e-16 17.956  28.56
-#> 2   12.793      2.978 4.295 1.7459e-05  6.955  18.63
-#> 3   27.148      2.852 9.520 < 2.22e-16 21.559  32.74
-#> 4    5.902      5.815 1.015    0.31013 -5.495  17.30
+#>  Estimate Std. Error     z   Pr(>|z|)  2.5 % 97.5 %
+#>    23.259      2.706 8.596 < 2.22e-16 17.956  28.56
+#>    12.793      2.978 4.295 1.7459e-05  6.955  18.63
+#>    27.148      2.852 9.520 < 2.22e-16 21.559  32.74
+#>     5.902      5.815 1.015    0.31013 -5.495  17.30
 #> 
 #> Prediction type:  response 
 #> Columns: rowid, type, estimate, std.error, statistic, p.value, conf.low, conf.high, mpg, hp, am, wt
@@ -494,9 +494,9 @@ slopes(
   variables = "wt",
   newdata = datagrid(am = 0:1))
 #> 
-#>   Term Estimate Std. Error      z Pr(>|z|)  2.5 %  97.5 %
-#> 1   wt   -2.676      1.419 -1.886 0.059355 -5.458  0.1056
-#> 2   wt   -5.432      2.152 -2.524 0.011605 -9.651 -1.2139
+#>  Term Estimate Std. Error      z Pr(>|z|)  2.5 %  97.5 %
+#>    wt   -2.676      1.419 -1.886 0.059355 -5.458  0.1056
+#>    wt   -5.432      2.152 -2.524 0.011605 -9.651 -1.2139
 #> 
 #> Prediction type:  response 
 #> Columns: rowid, type, term, estimate, std.error, statistic, p.value, conf.low, conf.high, predicted, predicted_hi, predicted_lo, mpg, hp, wt, am, eps
@@ -555,8 +555,8 @@ predicted outcome in the `mtcars` dataset:
 ``` r
 avg_predictions(mod)
 #> 
-#>   Estimate Std. Error     z   Pr(>|z|) 2.5 % 97.5 %
-#> 1    20.09     0.3904 51.46 < 2.22e-16 19.33  20.86
+#>  Estimate Std. Error     z   Pr(>|z|) 2.5 % 97.5 %
+#>     20.09     0.3904 51.46 < 2.22e-16 19.33  20.86
 #> 
 #> Prediction type:  response 
 #> Columns: type, estimate, std.error, statistic, p.value, conf.low, conf.high
@@ -575,29 +575,29 @@ allows us to marginalize within sub-groups of the data. For example,
 ``` r
 avg_comparisons(mod, by = "am")
 #> 
-#>   Term          Contrast am Estimate Std. Error       z  Pr(>|z|)    2.5 %    97.5 %
-#> 1   hp          mean(+1)  1 -0.04364    0.02129 -2.0498 0.0403865 -0.08537 -0.001912
-#> 2   hp          mean(+1)  0 -0.03426    0.01586 -2.1598 0.0307863 -0.06536 -0.003171
-#> 3   wt          mean(+1)  1 -6.07176    1.97621 -3.0724 0.0021233 -9.94506 -2.198458
-#> 4   wt          mean(+1)  0 -2.47990    1.23163 -2.0135 0.0440605 -4.89385 -0.065954
-#> 5   am mean(1) - mean(0)  1  1.90290    2.30863  0.8243 0.4097951 -2.62193  6.427728
-#> 6   am mean(1) - mean(0)  0 -1.38301    2.52499 -0.5477 0.5838789 -6.33191  3.565888
+#>  Term          Contrast am Estimate Std. Error       z  Pr(>|z|)    2.5 %    97.5 %
+#>    hp          mean(+1)  1 -0.04364    0.02129 -2.0498 0.0403865 -0.08537 -0.001912
+#>    hp          mean(+1)  0 -0.03426    0.01586 -2.1598 0.0307863 -0.06536 -0.003171
+#>    wt          mean(+1)  1 -6.07176    1.97621 -3.0724 0.0021233 -9.94506 -2.198458
+#>    wt          mean(+1)  0 -2.47990    1.23163 -2.0135 0.0440605 -4.89385 -0.065954
+#>    am mean(1) - mean(0)  1  1.90290    2.30863  0.8243 0.4097951 -2.62193  6.427728
+#>    am mean(1) - mean(0)  0 -1.38301    2.52499 -0.5477 0.5838789 -6.33191  3.565888
 #> 
 #> Prediction type:  response 
 #> Columns: type, term, contrast, am, estimate, std.error, statistic, p.value, conf.low, conf.high, predicted, predicted_hi, predicted_lo
 
 avg_slopes(mod, by = "cyl")
 #> 
-#>   Term    Contrast Estimate Std. Error       z   Pr(>|z|)    2.5 %    97.5 % cyl
-#> 1   hp mean(dY/dX) -0.03667    0.01048 -3.4996 0.00046589 -0.05721 -0.016134   6
-#> 2   hp mean(dY/dX) -0.05301    0.01989 -2.6657 0.00768339 -0.09199 -0.014034   4
-#> 3   hp mean(dY/dX) -0.02704    0.01738 -1.5553 0.11987298 -0.06110  0.007034   8
-#> 4   wt mean(dY/dX) -4.32457    1.39608 -3.0977 0.00195057 -7.06083 -1.588307   6
-#> 5   wt mean(dY/dX) -6.44404    1.45832 -4.4188 9.9252e-06 -9.30230 -3.585773   4
-#> 6   wt mean(dY/dX) -1.77819    1.00704 -1.7658 0.07743630 -3.75196  0.195572   8
-#> 7   am mean(dY/dX) -1.12930    1.60146 -0.7052 0.48070738 -4.26810  2.009513   6
-#> 8   am mean(dY/dX)  1.27543    2.63008  0.4849 0.62771979 -3.87944  6.430296   4
-#> 9   am mean(dY/dX) -0.54744    2.77930 -0.1970 0.84385090 -5.99477  4.899891   8
+#>  Term    Contrast Estimate Std. Error       z   Pr(>|z|)    2.5 %    97.5 % cyl
+#>    hp mean(dY/dX) -0.03667    0.01048 -3.4996 0.00046589 -0.05721 -0.016134   6
+#>    hp mean(dY/dX) -0.05301    0.01989 -2.6657 0.00768339 -0.09199 -0.014034   4
+#>    hp mean(dY/dX) -0.02704    0.01738 -1.5553 0.11987298 -0.06110  0.007034   8
+#>    wt mean(dY/dX) -4.32457    1.39608 -3.0977 0.00195057 -7.06083 -1.588307   6
+#>    wt mean(dY/dX) -6.44404    1.45832 -4.4188 9.9252e-06 -9.30230 -3.585773   4
+#>    wt mean(dY/dX) -1.77819    1.00704 -1.7658 0.07743630 -3.75196  0.195572   8
+#>    am mean(dY/dX) -1.12930    1.60146 -0.7052 0.48070738 -4.26810  2.009513   6
+#>    am mean(dY/dX)  1.27543    2.63008  0.4849 0.62771979 -3.87944  6.430296   4
+#>    am mean(dY/dX) -0.54744    2.77930 -0.1970 0.84385090 -5.99477  4.899891   8
 #> 
 #> Prediction type:  response 
 #> Columns: type, term, contrast, estimate, std.error, statistic, p.value, conf.low, conf.high, cyl, predicted, predicted_hi, predicted_lo
@@ -623,9 +623,9 @@ avg_predictions(
   newdata = datagrid(cyl = unique, am = unique),
   by = "am")
 #> 
-#>      am Estimate Std. Error     z   Pr(>|z|) 2.5 % 97.5 %
-#> 1  TRUE    22.48     0.8343 26.94 < 2.22e-16 20.84  24.11
-#> 2 FALSE    18.32     0.7854 23.33 < 2.22e-16 16.78  19.86
+#>     am Estimate Std. Error     z   Pr(>|z|) 2.5 % 97.5 %
+#>   TRUE    22.48     0.8343 26.94 < 2.22e-16 20.84  24.11
+#>  FALSE    18.32     0.7854 23.33 < 2.22e-16 16.78  19.86
 #> 
 #> Prediction type:  response 
 #> Columns: type, am, estimate, std.error, statistic, p.value, conf.low, conf.high
@@ -637,9 +637,9 @@ For convenience, the `marginaleffects` package also includes a
 ``` r
 marginal_means(mod_cat, variables = "am")
 #> 
-#>   Term Value  Mean Std. Error     z   Pr(>|z|) 2.5 % 97.5 %
-#> 1   am FALSE 18.32     0.7854 23.33 < 2.22e-16 16.78  19.86
-#> 2   am  TRUE 22.48     0.8343 26.94 < 2.22e-16 20.84  24.11
+#>  Term Value  Mean Std. Error     z   Pr(>|z|) 2.5 % 97.5 %
+#>    am FALSE 18.32     0.7854 23.33 < 2.22e-16 16.78  19.86
+#>    am  TRUE 22.48     0.8343 26.94 < 2.22e-16 20.84  24.11
 #> 
 #> Prediction type:  response 
 #> Results averaged over levels of: am, cyl 
@@ -671,8 +671,8 @@ the size of the `qsec` coefficient?
 ``` r
 hypotheses(mod, "drat = 2 * qsec")
 #> 
-#>              Term Estimate Std. Error       z Pr(>|z|)  2.5 % 97.5 %
-#> 1 drat = 2 * qsec   -1.389      10.78 -0.1289  0.89744 -22.51  19.73
+#>             Term Estimate Std. Error       z Pr(>|z|)  2.5 % 97.5 %
+#>  drat = 2 * qsec   -1.389      10.78 -0.1289  0.89744 -22.51  19.73
 #> 
 #> Prediction type:  
 #> Columns: term, estimate, std.error, statistic, p.value, conf.low, conf.high
@@ -685,8 +685,8 @@ indices `b1`, `b2`, `b3`, etc. and get a nicer printout by using
 ``` r
 hypotheses(mod, "b3 = 2 * b2") |> summary()
 #> 
-#>          Term Estimate Std. Error       z Pr(>|z|)  2.5 % 97.5 %
-#> 1 b3 = 2 * b2   -1.389      10.78 -0.1289  0.89744 -22.51  19.73
+#>         Term Estimate Std. Error       z Pr(>|z|)  2.5 % 97.5 %
+#>  b3 = 2 * b2   -1.389      10.78 -0.1289  0.89744 -22.51  19.73
 #> 
 #> Prediction type:  
 #> Columns: term, estimate, std.error, statistic, p.value, conf.low, conf.high
@@ -702,9 +702,9 @@ slopes(
   variables = "drat",
   newdata = datagrid(qsec = range))
 #> 
-#>   Term Estimate Std. Error     z Pr(>|z|)   2.5 % 97.5 %
-#> 1 drat    5.224      3.791 1.378 0.168218 -2.2065  12.65
-#> 2 drat   10.241      5.161 1.984 0.047233  0.1251  20.36
+#>  Term Estimate Std. Error     z Pr(>|z|)   2.5 % 97.5 %
+#>  drat    5.224      3.791 1.378 0.168218 -2.2065  12.65
+#>  drat   10.241      5.161 1.984 0.047233  0.1251  20.36
 #> 
 #> Prediction type:  response 
 #> Columns: rowid, type, term, estimate, std.error, statistic, p.value, conf.low, conf.high, predicted, predicted_hi, predicted_lo, mpg, drat, qsec, eps
@@ -720,8 +720,8 @@ slopes(
   variables = "drat",
   newdata = datagrid(qsec = range))
 #> 
-#>    Term Estimate Std. Error       z Pr(>|z|)  2.5 % 97.5 %
-#> 1 b1=b2   -5.017      8.519 -0.5889   0.5559 -21.72  11.68
+#>   Term Estimate Std. Error       z Pr(>|z|)  2.5 % 97.5 %
+#>  b1=b2   -5.017      8.519 -0.5889   0.5559 -21.72  11.68
 #> 
 #> Prediction type:  response 
 #> Columns: type, term, estimate, std.error, statistic, p.value, conf.low, conf.high
@@ -734,9 +734,9 @@ function to conduct an equivalence test:
 ``` r
 avg_slopes(mod) |> hypotheses(equivalence = c(-2, 2))
 #> 
-#>   Term Estimate Std. Error     z   Pr(>|z|)  2.5 % 97.5 %      p (Inf)    p (Sup)     p (Eq)
-#> 1 qsec    1.124     0.4331 2.595  0.0094487 0.2752  1.973 2.740286e-13 0.02158502 0.02158502
-#> 2 drat    7.224     1.3652 5.292 1.2122e-07 4.5484  9.900 7.062313e-12 0.99993505 0.99993505
+#>  Term Estimate Std. Error     z   Pr(>|z|)  2.5 % 97.5 %      p (Inf)    p (Sup)     p (Eq)
+#>  qsec    1.124     0.4331 2.595  0.0094487 0.2752  1.973 2.740286e-13 0.02158502 0.02158502
+#>  drat    7.224     1.3652 5.292 1.2122e-07 4.5484  9.900 7.062313e-12 0.99993505 0.99993505
 #> 
 #> Prediction type:  response 
 #> Columns: type, term, estimate, std.error, statistic, p.value, conf.low, conf.high, statistic.noninf, statistic.nonsup, p.value.noninf, p.value.nonsup, p.value.equiv
