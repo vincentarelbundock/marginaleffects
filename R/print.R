@@ -4,12 +4,23 @@
 # breaks.
 
 
-#' @noRd
+#' Print `marginaleffects` objects
+#' 
 #' @export
-print.slopes.summary <- function(x,
-                                 digits = max(3L, getOption("digits") - 3L),
-                                 ...) {
+print.marginaleffects <- function(x,
+                                  digits = max(3L, getOption("digits") - 3L),
+                                  topn = getOption("marginaleffects_print_topn", default = 5),
+                                  nrows = getOption("marginaleffects_print_nrows", default = 30),
+                                  ncols = getOption("marginaleffects_print_ncols", default = 30),
+                                  ...) {
+
     out <- x
+
+    checkmate::assert_numeric(digits)
+    checkmate::assert_numeric(topn)
+    checkmate::assert_numeric(nrows)
+    nrows <- max(nrows, 2 * topn)
+
 
     if ("group" %in% colnames(out) &&
         all(out$group == "main_marginaleffects")) {
@@ -48,6 +59,7 @@ print.slopes.summary <- function(x,
     dict <- c(
         "group" = "Group",
         "term" = "Term",
+        "by" = "By",
         "contrast" = "Contrast",
         "value" = "Value",
         "estimate" = "Estimate",
@@ -86,8 +98,20 @@ print.slopes.summary <- function(x,
     idx <- grepl("^predicted|^statistic\\.|^rowid", colnames(out))
     out <- out[, !idx]
 
+    # Subset columns
+    out <- out[, colnames(out) %in% dict]
+
     # some commands do not generate average contrasts/mfx. E.g., `lnro` with `by`
-    print(out)
+    cat("\n")
+    if (nrow(out) > nrows) {
+        print(head(out, n = topn), row.names = FALSE)
+        cat(sprintf("--- %s rows omitted from print() ---\n", nrow(out) - 2 * topn))
+        print(tail(out, n = topn), row.names = FALSE)
+        omitted <- TRUE
+    } else {
+        print(out)
+        omitted <- FALSE
+    }
     cat("\n")
     cat("Model type: ", attr(x, "model_type"), "\n")
     if (!inherits(x, "hypotheses.summary")) {
@@ -104,10 +128,21 @@ print.slopes.summary <- function(x,
         cat(sprintf("Results averaged over levels of: %s",
                     paste(vg, collapse = ", ")), "\n")
     }
+    if (ncol(x) <= ncols) {
+        cat(sprintf("Columns: %s\n", paste(colnames(x), collapse = ", ")))
+    }
+    if (isTRUE(omitted)) {
+        cat("See `?print.marginaleffects` for printing options.")
+    }
+    cat("\n")
+
 
     return(invisible(x))
 }
 
+#' @noRd
+#' @export
+print.slopes.summary <- print.marginaleffects
 
 #' @noRd
 #' @export
@@ -132,3 +167,7 @@ print.averages <- print.slopes.summary
 #' @noRd
 #' @export
 print.hypotheses <- print.slopes.summary
+
+#' @noRd
+#' @export
+print.predictions <- print.slopes.summary
