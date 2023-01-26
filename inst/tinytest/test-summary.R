@@ -65,26 +65,3 @@ dat <- mtcars
 mod <- glm(am ~ hp, data = dat, family = binomial)
 cmp <- comparisons(mod, transform_pre = function(hi, lo) hi / lo, transform_post = exp)
 expect_snapshot_print(summary(cmp), "summary-comparisons_transform_post")
-
-
-
-
-
-pkgload::load_all()
-
-library(marginaleffects)
-mod <- glm(vs ~ hp + factor(gear), data = mtcars, family = binomial)
-mfx <- slopes(mod)
-mfx
-mfx |> summary()
-mfx |> averages()
-
-mm <- marginal_means(mod)
-mm
-mm |> summary()
-mm |> averages()
-
-cmp  <- comparisons(mod)
-cmp
-avg_comparisons(mod)
-
