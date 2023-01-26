@@ -18,7 +18,7 @@ tidy.comparisons <- function(x, ...) {
     if ("transform_avg" %in% names(list(...))) {
         insight::format_error("The `transform_avg` argument is deprecated. Use `transform_post` instead.")
     }
-    out <- averages(x, ...)
+    out <- get_averages(x, ...)
     out <- tibble::as_tibble(out)
     return(out)
 }

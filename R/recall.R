@@ -1,4 +1,4 @@
-# fancy way to catch the call so that averages(slopes()) does not evaluate twice
+# fancy way to catch the call so that get_averages(slopes()) does not evaluate twice
 # and is fast
 recall <- function(x, ...) {
 

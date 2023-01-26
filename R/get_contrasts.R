@@ -274,7 +274,7 @@ get_contrasts <- function(model,
         return(con)
     }
 
-    # drop missing otherwise averages() fails when trying to take a simple mean
+    # drop missing otherwise get_averages() fails when trying to take a simple mean
     idx_na <- !is.na(out$predicted_lo)
     out <- out[idx_na, , drop = FALSE]
 

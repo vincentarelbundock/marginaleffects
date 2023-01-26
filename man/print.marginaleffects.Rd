@@ -30,5 +30,5 @@
 \item{...}{Other arguments are currently ignored.}
 }
 \description{
-Print \code{marginaleffects} objects
+This function controls the text printed to the \code{R} console when executing one of the core \code{marginaleffects} functions.
 }

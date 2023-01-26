@@ -116,9 +116,7 @@ hypotheses <- function(
         args[["x"]] <- xcall
         out <- do.call(recall, args)
         # no fancy print if these are unit-level (conditional) estimates
-        if (inherits(out, "averages") || !is.null(attr(out, "by"))) {
-            class(out) <- c("hypotheses", class(out))
-        }
+        class(out) <- c("hypotheses", class(out))
         return(out)
     }
 

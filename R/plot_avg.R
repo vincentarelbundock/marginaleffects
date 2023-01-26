@@ -21,7 +21,7 @@ plot_avg <- function(x,  ...) {
 
     assert_dependency("ggplot2")
 
-    dat <- averages(x, ...)
+    dat <- get_averages(x, ...)
 
     # combine term and contrast to avoid overlap
     if (all(c("term", "contrast") %in% colnames(dat))) {

@@ -2,7 +2,7 @@
 #' @export
 summary.slopes <- function(object, ...) {
     if (isFALSE(attr(object, "by"))) {
-        out <- averages(object, ...)
+        out <- get_averages(object, ...)
     } else {
         out <- object
     }

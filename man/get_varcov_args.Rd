@@ -2,13 +2,13 @@
 % Please edit documentation in R/get_vcov.R
 \name{get_varcov_args}
 \alias{get_varcov_args}
-\title{Take a \code{modelaverages()} style \code{vcov} argument and convert it to
+\title{Take a \code{summary()} style \code{vcov} argument and convert it to
 \code{insight::get_varcov()}}
 \usage{
 get_varcov_args(model, vcov)
 }
 \description{
-Take a \code{modelaverages()} style \code{vcov} argument and convert it to
+Take a \code{summary()} style \code{vcov} argument and convert it to
 \code{insight::get_varcov()}
 }
 \keyword{internal}

@@ -32,12 +32,11 @@
 #' calculate the mean and the `quantile` function to the results of Step 1 to
 #' obtain the Average Marginal Effect and its associated interval.
 #'
-#' @export
 #' @examples
 #' mod <- lm(mpg ~ factor(gear), data = mtcars)
 #' contr <- comparisons(mod, variables = list(gear = "sequential"))
 #' tidy(contr)
-averages <- function (x, by = TRUE, ...) {
+get_averages <- function (x, by = TRUE, ...) {
     xcall <- substitute(x)
     if (is.call(xcall)) {
         if ("by" %in% names(xcall)) {
@@ -58,13 +57,12 @@ averages <- function (x, by = TRUE, ...) {
         return(out)
     }
 
-    UseMethod("averages", x)
+    UseMethod("get_averages", x)
 }
 
 
 #' @noRd
-#' @export
-averages.predictions <- function(x, by = TRUE, byfun = NULL, ...) {
+get_averages.predictions <- function(x, by = TRUE, byfun = NULL, ...) {
 
     if (!is.null(byfun) && !inherits(x, "predictions")) {
         insight::format_error("The `byfun` argument is only supported for objects produced by the `predictions()` function.")
@@ -105,8 +103,7 @@ averages.predictions <- function(x, by = TRUE, byfun = NULL, ...) {
 
 
 #' @noRd
-#' @export
-averages.comparisons <- function(x, by = TRUE, ...) {
+get_averages.comparisons <- function(x, by = TRUE, ...) {
 
     if ("byfun" %in% names(list(...)) && !inherits(x, "predictions")) {
         insight::format_error("The `byfun` argument is only supported for objects produced by the `predictions()` function.")
@@ -148,14 +145,12 @@ averages.comparisons <- function(x, by = TRUE, ...) {
 
 
 #' @noRd
-#' @export
-averages.slopes <- averages.comparisons
+get_averages.slopes <- get_averages.comparisons
 
 
 
 #' @noRd
-#' @export
-averages.marginalmeans <- function(x, by = FALSE, ...) {
+get_averages.marginalmeans <- function(x, by = FALSE, ...) {
     if (!isFALSE(by)) {
         insight::format_error("The `by` argument is not supported by the `averages()` function for `marginal_means` models.")
     }
@@ -164,5 +159,4 @@ averages.marginalmeans <- function(x, by = FALSE, ...) {
 
 
 #' @noRd
-#' @export
-averages.hypotheses <- averages.marginalmeans
+get_averages.hypotheses <- get_averages.marginalmeans
