@@ -135,6 +135,8 @@ datagridcf <- function(
         grid_type = "counterfactual")
 
     attr(out, "variables_datagrid") <- names(out)
+
+    return(out)
         
 }
 
