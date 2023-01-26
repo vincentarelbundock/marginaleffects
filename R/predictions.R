@@ -334,7 +334,7 @@ predictions <- function(model,
         byfun = byfun,
         ci_method = ci_method)
 
-    args <- modifyList(args, dots)
+    args <- utils::modifyList(args, dots)
     tmp <- do.call(get_predictions, args)
 
     # two cases when tmp is a data.frame
@@ -409,7 +409,7 @@ predictions <- function(model,
                     by = by,
                     byfun = byfun,
                     conf_level = conf_level)
-                args <- modifyList(args, dots)
+                args <- utils::modifyList(args, dots)
                 se <- do.call(get_se_delta, args)
                 if (is.numeric(se) && length(se) == nrow(tmp)) {
                     tmp[["std.error"]] <- se

@@ -119,11 +119,11 @@ print.marginaleffects <- function(x,
     # some commands do not generate average contrasts/mfx. E.g., `lnro` with `by`
     cat("\n")
     if (nrow(out) > nrows) {
-        print(head(out, n = topn), row.names = FALSE)
+        print(utils::head(out, n = topn), row.names = FALSE)
         cat(sprintf("--- %s rows omitted. See ?print.marginaleffects ---\n", nrow(out) - 2 * topn))
         # remove colnames
-        tmp <- capture.output(print(tail(out, n = topn), row.names = FALSE))
-        tmp <- paste(tail(tmp, -1), collapse = "\n")
+        tmp <- utils::capture.output(print(utils::tail(out, n = topn), row.names = FALSE))
+        tmp <- paste(utils::tail(tmp, -1), collapse = "\n")
         cat(tmp, "\n")
         omitted <- TRUE
     } else {

@@ -31,7 +31,7 @@ void <- capture.output(
     mod <- mblogit(Sat ~ Infl + Type + Cont + x, weights = Freq, data = dat)
 )
 expect_predictions(predictions(mod))
-expect_error(slopes(mod, type = "link"), pattern = "character")
+expect_error(suppressWarnings(slopes(mod, type = "link")), pattern = "character")
 
 # mblogit: works on factor regressors
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/MASS/housing.csv")
@@ -40,11 +40,10 @@ dat$Sat <- factor(dat$Sat)
 dat$Infl <- factor(dat$Infl)
 dat$Cont <- factor(dat$Cont)
 dat$Type <- factor(dat$Type)
-dat <- dat
 void <- capture.output(
 mod <- mblogit(Sat ~ Infl + Type + Cont + x, weights = Freq, data = dat))
 expect_predictions(predictions(mod))
-mfx <- slopes(mod, type = "link")
+mfx <- suppressWarnings(slopes(mod, type = "link"))
 expect_inherits(mfx, "marginaleffects")
 
 

@@ -116,7 +116,7 @@ average_draws <- function(data, index, draws, byfun = NULL) {
                 FUN = byfun,
                 drop = FALSE)
         }
-        out <- data.table(average = dapply(draws, MARGIN = 1, FUN = collapse::fmedian))
+        out <- data.table(average = collapse::dapply(draws, MARGIN = 1, FUN = collapse::fmedian))
     }
 
     setnames(out, old = "average", new = "estimate")

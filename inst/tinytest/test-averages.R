@@ -15,11 +15,11 @@ mod <- lm(mpg ~ hp + am + carb, data = dat)
 # hypotheses() & marginal_means(): tidy() are passthrough to summary()
 mm <- marginal_means(mod)
 a <- tidy(mm)
-expect_inherits(a, "marginalmeans")
+expect_inherits(a, "tbl_df")
 expect_equivalent(nrow(mm), nrow(a))
 hy <- hypotheses(mod, "b1 = b2")
 a  <- tidy(hy)
-expect_inherits(a, "hypotheses")
+expect_inherits(a, "tbl_df")
 expect_equivalent(nrow(hy), nrow(a))
 
 
