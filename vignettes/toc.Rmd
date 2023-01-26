@@ -19,7 +19,7 @@ Vignettes:
 - [Comparisons](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html) 
 - [Slopes](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html) 
 - [Marginal Means](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) 
-- [Hypothesis Tests and Custom Contrasts](https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html) 
+- [Hypothesis Tests, Equivalence Tests, and Custom Contrasts](https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html) 
 
 Case studies:
 

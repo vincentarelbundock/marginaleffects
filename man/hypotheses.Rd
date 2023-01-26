@@ -114,9 +114,8 @@ Non-superiority:
 \item p: Lower-tail probability
 }
 
-Equivalence (TOST):
+Equivalence: Two One-Sided Tests (TOST)
 \itemize{
-\item \eqn{H_0}{H0}: \eqn{\theta > b} and \eqn{\theta < a}
 \item p: Maximum of the non-inferiority and non-superiority p values.
 }
 

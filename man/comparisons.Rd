@@ -240,7 +240,7 @@ Vignettes:
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html}{Comparisons}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html}{Slopes}
 \item \href{https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html}{Marginal Means}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html}{Hypothesis Tests and Custom Contrasts}
+\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html}{Hypothesis Tests, Equivalence Tests, and Custom Contrasts}
 }
 
 Case studies:

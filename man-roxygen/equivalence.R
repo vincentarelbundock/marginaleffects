@@ -16,9 +16,8 @@
 #' - \eqn{t=(\theta - b)/\sigma_\theta}{t=(\theta - b)/\sigma_\theta}
 #' - p: Lower-tail probability
 #' 
-#' Equivalence (TOST):
+#' Equivalence: Two One-Sided Tests (TOST)
 #' 
-#' - \eqn{H_0}{H0}: \eqn{\theta > b} and \eqn{\theta < a}
 #' - p: Maximum of the non-inferiority and non-superiority p values.
 #' 
 #' Thanks to Russell V. Lenth for the excellent `emmeans` package and documentation which inspired this feature.

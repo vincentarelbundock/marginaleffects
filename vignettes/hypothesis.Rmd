@@ -1,8 +1,8 @@
 ---
-title: "Hypothesis Tests and Custom Contrasts using the Delta Method"
+title: "Hypothesis Tests, Equivalence Tests, and Custom Contrasts"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Hypothesis Tests and Custom Contrasts using the Delta Method}
+  %\VignetteIndexEntry{Hypothesis Tests, Equivalence Tests, and Custom Contrasts}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -471,7 +471,6 @@ comparisons(
 ```
 
 
-````{comment}
 # Equivalence, non-inferiority, and non-superiority tests
 
 In many contexts, analysts are less interested in rejecting a null hypothesis, and more interested in testing whether an estimate is "inferior", "superior", or "equivalent" to a given threshold or interval. For example, medical researchers may wish to determine if the estimated effect of a new treatment is larger than the effect of prior treatments, or larger than some threshold of "clinical significance." Alternatively, researchers may wish to support a claim that an estimated parameter is "equivalent to" or "not meaningfully different from" a null hypothesis.
@@ -510,8 +509,8 @@ hypotheses(p, equivalence = c(17, 18))
 
 The results allow us to draw three conclusions:
 
-1. The p value for the non-inferiority test is `r sprintf("%.4f", hyp$p.value.noninf)`. This suggests that we *can* reject the hypothesis that the parameter is below 17.
-1. The p value for the non-superiority test is `r sprintf("%.4f", hyp$p.value.nonsup)`. This suggests that we *cannot* reject the hypothesis that the parameter (`r sprintf("%.4f", hyp$estimate)`) is below 18.
+1. The p value for the non-inferiority test is `r sprintf("%.4f", hyp$p.value.noninf)`. This suggests that we *can* reject the null hypothesis that the parameter is below 17.
+1. The p value for the non-superiority test is `r sprintf("%.4f", hyp$p.value.nonsup)`. This suggests that we *cannot* reject the null hypothesis that the parameter (`r sprintf("%.4f", hyp$estimate)`) is above 18.
 1. The p value for the equivalence test is `r sprintf("%.4f", hyp$p.value.equiv)`. This suggests that we *cannot* reject the hypothesis that the parameter falls outside the equivalence interval.
 
 #### Example 2: Model coefficients
@@ -548,7 +547,7 @@ avg_slopes(mod, variables = "hp") |>
 hyp <- avg_slopes(mod, variables = "hp", equivalence = c(-.1, .1))$p.value.equiv
 ```
 
-The p value is `r sprintf("%.4f", hyp)`, which suggests that we can reject the hypothesis that the parameter falls outside the equivalence region (or "substantive irrelevance region"). 
+The p value is `r sprintf("%.4f", hyp)`, which suggests that we can reject the hypothesis that the parameter falls outside the region of "substantive equivalence" that we have defined by the interval.
 
 #### Example 4: Difference between comparisons (contrasts)
 
@@ -581,7 +580,7 @@ The `p (Eq.)` column shows that the difference between the average contrasts whe
 
 #### Example 5: Marginal means and `emmeans`
 
-This final example shows the equivalence between results produced by the `emmeans` package and the `marginal_means()` function:
+This example shows the equivalence between results produced by the `emmeans` package and the `marginal_means()` function:
 
 ```{r}
 library(emmeans)
@@ -634,4 +633,3 @@ e
 # test with {marginaleffects} package
 hypotheses(mod, equivalence = c(-10, 10), df = e$parameter)[2,]
 ```
-````
