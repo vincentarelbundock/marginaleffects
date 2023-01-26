@@ -161,7 +161,7 @@ nrow(mtcars)
 
 nrow(pre)
 
-head(pre)
+pre
 ```
 
 Now, we use the `comparisons()` function to compute the different in predicted outcome when each of the predictors is incremented by 1 unit (one predictor at a time, holding all others constant). Once again, comparisons are unit-level quantities. And since there are 3 predictors in the model and our data has 32 rows, we obtain 96 comparisons:
@@ -171,21 +171,19 @@ cmp <- comparisons(mod)
 
 nrow(cmp)
 
-head(cmp)
+cmp
 ```
 
 The `comparisons()` function allows customized queries. For example, what happens to the predicted outcome when the `hp` variable increases from 100 to 120?
 
 ```{r}
-cmp <- comparisons(mod, variables = list(hp = c(120, 100)))
-head(cmp)
+comparisons(mod, variables = list(hp = c(120, 100)))
 ```
 
 What happens to the predicted outcome when the `wt` variable increases by 1 standard deviation about its mean?
 
 ```{r}
-cmp <- comparisons(mod, variables = list(hp = "sd"))
-head(cmp)
+comparisons(mod, variables = list(hp = "sd"))
 ```
 
 The `comparisons()` function also allows users to specify arbitrary functions of predictions, with the `transform_pre` argument. For example, what is the average ratio between predicted Miles per Gallon after an increase of 50 units in Horsepower?
@@ -206,7 +204,7 @@ mfx <- slopes(mod)
 
 nrow(mfx)
 
-head(mfx)
+mfx
 ```
 
 ## Prediction grid

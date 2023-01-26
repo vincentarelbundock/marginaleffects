@@ -14,7 +14,7 @@ in R. Conduct linear and non-linear hypothesis tests using the delta
 method.
 
 The code on this website was executed using `marginaleffects`
-0.8.1.9113. See the [installation
+0.8.1.9115. See the [installation
 section](https://vincentarelbundock.github.io/marginaleffects/#installation)
 to install the latest CRAN or development version.
 
@@ -40,7 +40,7 @@ Vignettes:
   - [Slopes](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html)
   - [Marginal
     Means](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html)
-  - [Hypothesis Tests and Custom
+  - [Hypothesis Tests, Equivalence Tests, and Custom
     Contrasts](https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html)
 
 Case studies:
@@ -102,8 +102,8 @@ External links:
   - [Subgroup Analysis After Propensity Score Matching Using
     R](https://ngreifer.github.io/blog/subgroup-analysis-psm/) by Noah
     Greifer
-  - [Bayesian Model
-    Averaged Marginal Effects](https://www.ajordannafa.com/blog/2022/being-less-wrong/) by
+  - [Bayesian Model Averaged Marginal
+    Effects](https://www.ajordannafa.com/blog/2022/being-less-wrong/) by
     A. Jordan Nafa
 
 ## Motivation
@@ -283,14 +283,23 @@ nrow(mtcars)
 nrow(pre)
 #> [1] 32
 
-head(pre)
-#>   rowid     type estimate std.error statistic       p.value conf.low conf.high  mpg cyl disp  hp drat    wt  qsec vs am gear carb
-#> 1     1 response 22.48857 0.8841487  25.43528 1.027254e-142 20.75567  24.22147 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
-#> 2     2 response 20.80186 1.1942050  17.41900  5.920119e-68 18.46126  23.14246 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
-#> 3     3 response 25.26465 0.7085307  35.65781 1.783452e-278 23.87596  26.65335 22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
-#> 4     4 response 20.25549 0.7044641  28.75305 8.296026e-182 18.87477  21.63622 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
-#> 5     5 response 16.99782 0.7118658  23.87784 5.205109e-126 15.60259  18.39305 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
-#> 6     6 response 19.66353 0.8753226  22.46433 9.270636e-112 17.94793  21.37913 18.1   6  225 105 2.76 3.460 20.22  1  0    3    1
+pre
+#> 
+#>  Estimate Std. Error      z   Pr(>|z|)  2.5 % 97.5 %
+#>     22.49     0.8841 25.435 < 2.22e-16 20.756  24.22
+#>     20.80     1.1942 17.419 < 2.22e-16 18.461  23.14
+#>     25.26     0.7085 35.658 < 2.22e-16 23.876  26.65
+#>     20.26     0.7045 28.753 < 2.22e-16 18.875  21.64
+#>     17.00     0.7119 23.878 < 2.22e-16 15.603  18.39
+#> --- 22 rows omitted. See ?avg_predictions and ?print.marginaleffects --- 
+#>     29.59     1.8735 15.795 < 2.22e-16 25.921  33.27
+#>     15.90     1.3107 12.128 < 2.22e-16 13.327  18.47
+#>     19.41     1.1454 16.947 < 2.22e-16 17.167  21.66
+#>     14.79     2.0174  7.330 2.2943e-13 10.834  18.74
+#>     21.46     1.0719 20.022 < 2.22e-16 19.361  23.56 
+#> 
+#> Prediction type:  response 
+#> Columns: rowid, type, estimate, std.error, statistic, p.value, conf.low, conf.high, mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb
 ```
 
 Now, we use the `comparisons()` function to compute the different in
@@ -305,14 +314,23 @@ cmp <- comparisons(mod)
 nrow(cmp)
 #> [1] 96
 
-head(cmp)
-#>   rowid     type term contrast    estimate  std.error statistic     p.value    conf.low     conf.high predicted predicted_hi predicted_lo  mpg cyl disp  hp drat    wt  qsec vs am gear carb    eps
-#> 1     1 response   hp       +1 -0.03690556 0.01850171 -1.994710 0.046074489 -0.07316824 -0.0006428657  22.48857     22.47012     22.50702 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4 0.0283
-#> 2     2 response   hp       +1 -0.02868936 0.01562861 -1.835695 0.066402820 -0.05932088  0.0019421563  20.80186     20.78751     20.81620 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4 0.0283
-#> 3     3 response   hp       +1 -0.04657166 0.02258715 -2.061866 0.039220507 -0.09084166 -0.0023016728  25.26465     25.24137     25.28794 22.8   4  108  93 3.85 2.320 18.61  1  1    4    1 0.0283
-#> 4     4 response   hp       +1 -0.04227128 0.01328278 -3.182412 0.001460541 -0.06830506 -0.0162375067  20.25549     20.23436     20.27663 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1 0.0283
-#> 5     5 response   hp       +1 -0.03901845 0.01341076 -2.909487 0.003620221 -0.06530307 -0.0127338342  16.99782     16.97831     17.01733 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2 0.0283
-#> 6     6 response   hp       +1 -0.03872931 0.01348887 -2.871204 0.004089117 -0.06516702 -0.0122916004  19.66353     19.64417     19.68290 18.1   6  225 105 2.76 3.460 20.22  1  0    3    1 0.0283
+cmp
+#> 
+#>  Term Contrast  Estimate Std. Error       z   Pr(>|z|)     2.5 %     97.5 %
+#>    hp       +1 -0.036906    0.01850 -1.9947 0.04607449  -0.07317 -0.0006429
+#>    hp       +1 -0.028689    0.01563 -1.8357 0.06640282  -0.05932  0.0019422
+#>    hp       +1 -0.046572    0.02259 -2.0619 0.03922051  -0.09084 -0.0023017
+#>    hp       +1 -0.042271    0.01328 -3.1824 0.00146054  -0.06831 -0.0162375
+#>    hp       +1 -0.039018    0.01341 -2.9095 0.00362022  -0.06530 -0.0127338
+#> --- 86 rows omitted. See ?avg_comparisons and ?print.marginaleffects --- 
+#>    am    1 - 0  4.080730    3.93510  1.0370 0.29973237  -3.63193 11.7933866
+#>    am    1 - 0  2.106353    2.28920  0.9201 0.35750670  -2.38040  6.5931031
+#>    am    1 - 0  0.895066    1.64419  0.5444 0.58617945  -2.32749  4.1176203
+#>    am    1 - 0  4.027219    3.24024  1.2429 0.21391295  -2.32353 10.3779686
+#>    am    1 - 0 -0.236915    1.58642 -0.1493 0.88128622  -3.34625  2.8724165 
+#> 
+#> Prediction type:  response 
+#> Columns: rowid, type, term, contrast, estimate, std.error, statistic, p.value, conf.low, conf.high, predicted, predicted_hi, predicted_lo, mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb, eps
 ```
 
 The `comparisons()` function allows customized queries. For example,
@@ -320,30 +338,46 @@ what happens to the predicted outcome when the `hp` variable increases
 from 100 to 120?
 
 ``` r
-cmp <- comparisons(mod, variables = list(hp = c(120, 100)))
-head(cmp)
-#>   rowid     type term  contrast   estimate std.error statistic     p.value  conf.low   conf.high predicted predicted_hi predicted_lo  mpg cyl disp  hp drat    wt  qsec vs am gear carb    eps
-#> 1     1 response   hp 120 - 100 -0.7381111 0.3700342 -1.994710 0.046074489 -1.463365 -0.01285731  22.48857     22.11951     22.85762 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4 0.0283
-#> 2     2 response   hp 120 - 100 -0.5737872 0.3125723 -1.835695 0.066402820 -1.186418  0.03884313  20.80186     20.51496     21.08875 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4 0.0283
-#> 3     3 response   hp 120 - 100 -0.9314333 0.4517429 -2.061866 0.039220507 -1.816833 -0.04603346  25.26465     24.00722     24.93865 22.8   4  108  93 3.85 2.320 18.61  1  1    4    1 0.0283
-#> 4     4 response   hp 120 - 100 -0.8454257 0.2656557 -3.182412 0.001460541 -1.366101 -0.32475013  20.25549     19.83278     20.67821 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1 0.0283
-#> 5     5 response   hp 120 - 100 -0.7803690 0.2682153 -2.909487 0.003620221 -1.306061 -0.25467668  16.99782     19.14383     19.92420 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2 0.0283
-#> 6     6 response   hp 120 - 100 -0.7745862 0.2697775 -2.871204 0.004089117 -1.303340 -0.24583201  19.66353     19.08259     19.85718 18.1   6  225 105 2.76 3.460 20.22  1  0    3    1 0.0283
+comparisons(mod, variables = list(hp = c(120, 100)))
+#> 
+#>  Term  Contrast Estimate Std. Error       z  Pr(>|z|)   2.5 %    97.5 %
+#>    hp 120 - 100  -0.7381     0.3700 -1.9947 0.0460745 -1.4634 -0.012857
+#>    hp 120 - 100  -0.5738     0.3126 -1.8357 0.0664028 -1.1864  0.038843
+#>    hp 120 - 100  -0.9314     0.4517 -2.0619 0.0392205 -1.8168 -0.046033
+#>    hp 120 - 100  -0.8454     0.2657 -3.1824 0.0014605 -1.3661 -0.324750
+#>    hp 120 - 100  -0.7804     0.2682 -2.9095 0.0036202 -1.3061 -0.254677
+#> --- 22 rows omitted. See ?avg_comparisons and ?print.marginaleffects --- 
+#>    hp 120 - 100  -1.4515     0.7052 -2.0581 0.0395803 -2.8337 -0.069212
+#>    hp 120 - 100  -0.3837     0.2698 -1.4221 0.1549843 -0.9125  0.145101
+#>    hp 120 - 100  -0.6415     0.3345 -1.9178 0.0551304 -1.2970  0.014087
+#>    hp 120 - 100  -0.1259     0.2722 -0.4627 0.6435969 -0.6594  0.407510
+#>    hp 120 - 100  -0.6350     0.3323 -1.9112 0.0559829 -1.2862  0.016213 
+#> 
+#> Prediction type:  response 
+#> Columns: rowid, type, term, contrast, estimate, std.error, statistic, p.value, conf.low, conf.high, predicted, predicted_hi, predicted_lo, mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb, eps
 ```
 
 What happens to the predicted outcome when the `wt` variable increases
 by 1 standard deviation about its mean?
 
 ``` r
-cmp <- comparisons(mod, variables = list(hp = "sd"))
-head(cmp)
-#>   rowid     type term                contrast  estimate std.error statistic     p.value  conf.low   conf.high predicted predicted_hi predicted_lo  mpg cyl disp  hp drat    wt  qsec vs am gear carb    eps
-#> 1     1 response   hp (x + sd/2) - (x - sd/2) -2.530351 1.2685305 -1.994710 0.046074489 -5.016625 -0.04407671  22.48857     19.86942     22.39977 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4 0.0283
-#> 2     2 response   hp (x + sd/2) - (x - sd/2) -1.967025 1.0715425 -1.835695 0.066402820 -4.067210  0.13315980  20.80186     18.76581     20.73283 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4 0.0283
-#> 3     3 response   hp (x + sd/2) - (x - sd/2) -3.193087 1.5486395 -2.061866 0.039220507 -6.228365 -0.15780929  25.26465     21.16779     24.36088 22.8   4  108  93 3.85 2.320 18.61  1  1    4    1 0.0283
-#> 4     4 response   hp (x + sd/2) - (x - sd/2) -2.898240 0.9107057 -3.182412 0.001460541 -4.683191 -1.11329004  20.25549     17.25554     20.15378 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1 0.0283
-#> 5     5 response   hp (x + sd/2) - (x - sd/2) -2.675217 0.9194805 -2.909487 0.003620221 -4.477366 -0.87306820  16.99782     16.76492     19.44014 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2 0.0283
-#> 6     6 response   hp (x + sd/2) - (x - sd/2) -2.655393 0.9248359 -2.871204 0.004089117 -4.468038 -0.84274738  19.66353     16.72131     19.37670 18.1   6  225 105 2.76 3.460 20.22  1  0    3    1 0.0283
+comparisons(mod, variables = list(hp = "sd"))
+#> 
+#>  Term                Contrast Estimate Std. Error       z  Pr(>|z|)  2.5 %   97.5 %
+#>    hp (x + sd/2) - (x - sd/2)  -2.5304     1.2685 -1.9947 0.0460745 -5.017 -0.04408
+#>    hp (x + sd/2) - (x - sd/2)  -1.9670     1.0715 -1.8357 0.0664028 -4.067  0.13316
+#>    hp (x + sd/2) - (x - sd/2)  -3.1931     1.5486 -2.0619 0.0392205 -6.228 -0.15781
+#>    hp (x + sd/2) - (x - sd/2)  -2.8982     0.9107 -3.1824 0.0014605 -4.683 -1.11329
+#>    hp (x + sd/2) - (x - sd/2)  -2.6752     0.9195 -2.9095 0.0036202 -4.477 -0.87307
+#> --- 22 rows omitted. See ?avg_comparisons and ?print.marginaleffects --- 
+#>    hp (x + sd/2) - (x - sd/2)  -4.9758     2.4177 -2.0581 0.0395803 -9.714 -0.23727
+#>    hp (x + sd/2) - (x - sd/2)  -1.3153     0.9249 -1.4221 0.1549843 -3.128  0.49743
+#>    hp (x + sd/2) - (x - sd/2)  -2.1990     1.1466 -1.9178 0.0551304 -4.446  0.04829
+#>    hp (x + sd/2) - (x - sd/2)  -0.4317     0.9330 -0.4627 0.6435969 -2.260  1.39700
+#>    hp (x + sd/2) - (x - sd/2)  -2.1769     1.1390 -1.9112 0.0559829 -4.409  0.05558 
+#> 
+#> Prediction type:  response 
+#> Columns: rowid, type, term, contrast, estimate, std.error, statistic, p.value, conf.low, conf.high, predicted, predicted_hi, predicted_lo, mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb, eps
 ```
 
 The `comparisons()` function also allows users to specify arbitrary
@@ -356,8 +390,12 @@ comparisons(
   mod,
   variables = list(hp = 50),
   transform_pre = "ratioavg")
-#>       type term  contrast  estimate  std.error statistic       p.value  conf.low conf.high predicted predicted_hi predicted_lo
-#> 1 response   hp mean(+50) 0.9095338 0.02895173  31.41553 1.241931e-216 0.8527894 0.9662781  22.48857     21.56593     23.41121
+#> 
+#>   Term  Contrast Estimate Std. Error     z   Pr(>|z|)  2.5 % 97.5 %
+#> 1   hp mean(+50)   0.9095    0.02895 31.42 < 2.22e-16 0.8528 0.9663
+#> 
+#> Prediction type:  response 
+#> Columns: type, term, contrast, estimate, std.error, statistic, p.value, conf.low, conf.high, predicted, predicted_hi, predicted_lo
 ```
 
 See the [Comparisons vignette for detailed explanations and more
@@ -373,14 +411,23 @@ mfx <- slopes(mod)
 nrow(mfx)
 #> [1] 96
 
-head(mfx)
-#>   rowid     type term    estimate  std.error statistic     p.value    conf.low     conf.high predicted predicted_hi predicted_lo  mpg cyl disp  hp drat    wt  qsec vs am gear carb    eps
-#> 1     1 response   hp -0.03690556 0.01850171 -1.994710 0.046074489 -0.07316824 -0.0006428657  22.48857     22.48752     22.48857 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4 0.0283
-#> 2     2 response   hp -0.02868936 0.01562861 -1.835695 0.066402831 -0.05932088  0.0019421575  20.80186     20.80105     20.80186 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4 0.0283
-#> 3     3 response   hp -0.04657166 0.02258715 -2.061866 0.039220507 -0.09084166 -0.0023016728  25.26465     25.26333     25.26465 22.8   4  108  93 3.85 2.320 18.61  1  1    4    1 0.0283
-#> 4     4 response   hp -0.04227128 0.01328278 -3.182412 0.001460541 -0.06830506 -0.0162375067  20.25549     20.25430     20.25549 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1 0.0283
-#> 5     5 response   hp -0.03901845 0.01341076 -2.909487 0.003620221 -0.06530307 -0.0127338341  16.99782     16.99671     16.99782 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2 0.0283
-#> 6     6 response   hp -0.03872931 0.01348887 -2.871204 0.004089117 -0.06516702 -0.0122916004  19.66353     19.66244     19.66353 18.1   6  225 105 2.76 3.460 20.22  1  0    3    1 0.0283
+mfx
+#> 
+#>  Term  Estimate Std. Error       z   Pr(>|z|)     2.5 %     97.5 %
+#>    hp -0.036906    0.01850 -1.9947 0.04607449  -0.07317 -0.0006429
+#>    hp -0.028689    0.01563 -1.8357 0.06640283  -0.05932  0.0019422
+#>    hp -0.046572    0.02259 -2.0619 0.03922051  -0.09084 -0.0023017
+#>    hp -0.042271    0.01328 -3.1824 0.00146054  -0.06831 -0.0162375
+#>    hp -0.039018    0.01341 -2.9095 0.00362022  -0.06530 -0.0127338
+#> --- 86 rows omitted. See ?avg_slopes and ?print.marginaleffects --- 
+#>    am  4.080730    3.93510  1.0370 0.29973254  -3.63193 11.7933892
+#>    am  2.106353    2.28920  0.9201 0.35750651  -2.38039  6.5931013
+#>    am  0.895066    1.64419  0.5444 0.58617934  -2.32749  4.1176193
+#>    am  4.027219    3.24024  1.2429 0.21391321  -2.32353 10.3779723
+#>    am -0.236915    1.58642 -0.1493 0.88128623  -3.34625  2.8724169 
+#> 
+#> Prediction type:  response 
+#> Columns: rowid, type, term, estimate, std.error, statistic, p.value, conf.low, conf.high, predicted, predicted_hi, predicted_lo, mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb, eps
 ```
 
 ## Prediction grid
@@ -399,12 +446,20 @@ median, we can do:
 
 ``` r
 predictions(mod, newdata = "mean")
-#>   rowid     type estimate std.error statistic       p.value conf.low conf.high      mpg       hp      wt      am
-#> 1     1 response 18.37015 0.6798781  27.01978 8.656522e-161 17.03762  19.70269 20.09062 146.6875 3.21725 0.40625
+#> 
+#>   Estimate Std. Error     z   Pr(>|z|) 2.5 % 97.5 %
+#> 1    18.37     0.6799 27.02 < 2.22e-16 17.04   19.7
+#> 
+#> Prediction type:  response 
+#> Columns: rowid, type, estimate, std.error, statistic, p.value, conf.low, conf.high, mpg, hp, wt, am
 
 predictions(mod, newdata = "median")
-#>   rowid     type estimate std.error statistic       p.value conf.low conf.high  mpg  hp    wt am
-#> 1     1 response 19.37392 0.6464425  29.97006 2.410906e-197 18.10691  20.64092 19.2 123 3.325  0
+#> 
+#>   Estimate Std. Error     z   Pr(>|z|) 2.5 % 97.5 %
+#> 1    19.37     0.6464 29.97 < 2.22e-16 18.11  20.64
+#> 
+#> Prediction type:  response 
+#> Columns: rowid, type, estimate, std.error, statistic, p.value, conf.low, conf.high, mpg, hp, wt, am
 ```
 
 The [`datagrid` function gives us a powerful way to define a grid of
@@ -418,11 +473,15 @@ predictions(
   newdata = datagrid(
     am = c(0, 1),
     wt = range))
-#>   rowid     type  estimate std.error statistic      p.value  conf.low conf.high      mpg       hp am    wt
-#> 1     1 response 23.259500  2.705934  8.595737 8.273174e-18 17.955966  28.56303 20.09062 146.6875  0 1.513
-#> 2     2 response 12.793013  2.978494  4.295128 1.745928e-05  6.955272  18.63075 20.09062 146.6875  0 5.424
-#> 3     3 response 27.148334  2.851805  9.519702 1.736766e-21 21.558899  32.73777 20.09062 146.6875  1 1.513
-#> 4     4 response  5.901966  5.814985  1.014958 3.101259e-01 -5.495196  17.29913 20.09062 146.6875  1 5.424
+#> 
+#>   Estimate Std. Error     z   Pr(>|z|)  2.5 % 97.5 %
+#> 1   23.259      2.706 8.596 < 2.22e-16 17.956  28.56
+#> 2   12.793      2.978 4.295 1.7459e-05  6.955  18.63
+#> 3   27.148      2.852 9.520 < 2.22e-16 21.559  32.74
+#> 4    5.902      5.815 1.015    0.31013 -5.495  17.30
+#> 
+#> Prediction type:  response 
+#> Columns: rowid, type, estimate, std.error, statistic, p.value, conf.low, conf.high, mpg, hp, am, wt
 ```
 
 The same mechanism is available in `comparisons()` and `slopes()`. To
@@ -434,9 +493,13 @@ slopes(
   mod,
   variables = "wt",
   newdata = datagrid(am = 0:1))
-#>   rowid     type term  estimate std.error statistic    p.value  conf.low  conf.high predicted predicted_hi predicted_lo      mpg       hp      wt am       eps
-#> 1     1 response   wt -2.676166  1.419297 -1.885558 0.05935455 -5.457937  0.1056043  18.69864     18.69760     18.69864 20.09062 146.6875 3.21725  0 0.0003911
-#> 2     2 response   wt -5.432464  2.152370 -2.523946 0.01160458 -9.651031 -1.2138974  17.89006     17.88793     17.89006 20.09062 146.6875 3.21725  1 0.0003911
+#> 
+#>   Term Estimate Std. Error      z Pr(>|z|)  2.5 %  97.5 %
+#> 1   wt   -2.676      1.419 -1.886 0.059355 -5.458  0.1056
+#> 2   wt   -5.432      2.152 -2.524 0.011605 -9.651 -1.2139
+#> 
+#> Prediction type:  response 
+#> Columns: rowid, type, term, estimate, std.error, statistic, p.value, conf.low, conf.high, predicted, predicted_hi, predicted_lo, mpg, hp, wt, am, eps
 ```
 
 We can also plot how predictions, comparisons, or slopes change across
@@ -491,11 +554,12 @@ predicted outcome in the `mtcars` dataset:
 
 ``` r
 avg_predictions(mod)
+#> 
 #>   Estimate Std. Error     z   Pr(>|z|) 2.5 % 97.5 %
 #> 1    20.09     0.3904 51.46 < 2.22e-16 19.33  20.86
 #> 
-#> Model type:  lm 
-#> Prediction type:  response
+#> Prediction type:  response 
+#> Columns: type, estimate, std.error, statistic, p.value, conf.low, conf.high
 ```
 
 This is equivalent to manual computation by:
@@ -510,18 +574,20 @@ allows us to marginalize within sub-groups of the data. For example,
 
 ``` r
 avg_comparisons(mod, by = "am")
-#>   Term          Contrast Estimate Std. Error       z  Pr(>|z|)    2.5 %    97.5 % am
-#> 1   hp          mean(+1) -0.04364    0.02129 -2.0498 0.0403865 -0.08537 -0.001912  1
-#> 2   hp          mean(+1) -0.03426    0.01586 -2.1598 0.0307863 -0.06536 -0.003171  0
-#> 3   wt          mean(+1) -6.07176    1.97621 -3.0724 0.0021233 -9.94506 -2.198458  1
-#> 4   wt          mean(+1) -2.47990    1.23163 -2.0135 0.0440605 -4.89385 -0.065954  0
-#> 5   am mean(1) - mean(0)  1.90290    2.30863  0.8243 0.4097951 -2.62193  6.427728  1
-#> 6   am mean(1) - mean(0) -1.38301    2.52499 -0.5477 0.5838789 -6.33191  3.565888  0
 #> 
-#> Model type:  lm 
-#> Prediction type:  response
+#>   Term          Contrast am Estimate Std. Error       z  Pr(>|z|)    2.5 %    97.5 %
+#> 1   hp          mean(+1)  1 -0.04364    0.02129 -2.0498 0.0403865 -0.08537 -0.001912
+#> 2   hp          mean(+1)  0 -0.03426    0.01586 -2.1598 0.0307863 -0.06536 -0.003171
+#> 3   wt          mean(+1)  1 -6.07176    1.97621 -3.0724 0.0021233 -9.94506 -2.198458
+#> 4   wt          mean(+1)  0 -2.47990    1.23163 -2.0135 0.0440605 -4.89385 -0.065954
+#> 5   am mean(1) - mean(0)  1  1.90290    2.30863  0.8243 0.4097951 -2.62193  6.427728
+#> 6   am mean(1) - mean(0)  0 -1.38301    2.52499 -0.5477 0.5838789 -6.33191  3.565888
+#> 
+#> Prediction type:  response 
+#> Columns: type, term, contrast, am, estimate, std.error, statistic, p.value, conf.low, conf.high, predicted, predicted_hi, predicted_lo
 
 avg_slopes(mod, by = "cyl")
+#> 
 #>   Term    Contrast Estimate Std. Error       z   Pr(>|z|)    2.5 %    97.5 % cyl
 #> 1   hp mean(dY/dX) -0.03667    0.01048 -3.4996 0.00046589 -0.05721 -0.016134   6
 #> 2   hp mean(dY/dX) -0.05301    0.01989 -2.6657 0.00768339 -0.09199 -0.014034   4
@@ -533,8 +599,8 @@ avg_slopes(mod, by = "cyl")
 #> 8   am mean(dY/dX)  1.27543    2.63008  0.4849 0.62771979 -3.87944  6.430296   4
 #> 9   am mean(dY/dX) -0.54744    2.77930 -0.1970 0.84385090 -5.99477  4.899891   8
 #> 
-#> Model type:  lm 
-#> Prediction type:  response
+#> Prediction type:  response 
+#> Columns: type, term, contrast, estimate, std.error, statistic, p.value, conf.low, conf.high, cyl, predicted, predicted_hi, predicted_lo
 ```
 
 Marginal Means are a special case of predictions, which are marginalized
@@ -556,12 +622,13 @@ avg_predictions(
   mod_cat,
   newdata = datagrid(cyl = unique, am = unique),
   by = "am")
+#> 
 #>      am Estimate Std. Error     z   Pr(>|z|) 2.5 % 97.5 %
 #> 1  TRUE    22.48     0.8343 26.94 < 2.22e-16 20.84  24.11
 #> 2 FALSE    18.32     0.7854 23.33 < 2.22e-16 16.78  19.86
 #> 
-#> Model type:  lm 
-#> Prediction type:  response
+#> Prediction type:  response 
+#> Columns: type, am, estimate, std.error, statistic, p.value, conf.low, conf.high
 ```
 
 For convenience, the `marginaleffects` package also includes a
@@ -569,9 +636,14 @@ For convenience, the `marginaleffects` package also includes a
 
 ``` r
 marginal_means(mod_cat, variables = "am")
-#>       type term value    am estimate std.error statistic       p.value conf.low conf.high
-#> 1 response   am FALSE FALSE 18.31987 0.7853925  23.32575 2.429619e-120 16.78053  19.85921
-#> 2 response   am  TRUE  TRUE 22.47772 0.8343346  26.94090 7.291801e-160 20.84246  24.11299
+#> 
+#>   Term Value  Mean Std. Error     z   Pr(>|z|) 2.5 % 97.5 %
+#> 1   am FALSE 18.32     0.7854 23.33 < 2.22e-16 16.78  19.86
+#> 2   am  TRUE 22.48     0.8343 26.94 < 2.22e-16 20.84  24.11
+#> 
+#> Prediction type:  response 
+#> Results averaged over levels of: am, cyl 
+#> Columns: type, term, value, am, estimate, std.error, statistic, p.value, conf.low, conf.high
 ```
 
 [The Marginal Means
@@ -598,11 +670,12 @@ the size of the `qsec` coefficient?
 
 ``` r
 hypotheses(mod, "drat = 2 * qsec")
+#> 
 #>              Term Estimate Std. Error       z Pr(>|z|)  2.5 % 97.5 %
 #> 1 drat = 2 * qsec   -1.389      10.78 -0.1289  0.89744 -22.51  19.73
 #> 
-#> Model type:  lm 
-#> Prediction type:
+#> Prediction type:  
+#> Columns: term, estimate, std.error, statistic, p.value, conf.low, conf.high
 ```
 
 We can ask the same question but refer to parameters by position, with
@@ -611,10 +684,12 @@ indices `b1`, `b2`, `b3`, etc. and get a nicer printout by using
 
 ``` r
 hypotheses(mod, "b3 = 2 * b2") |> summary()
+#> 
 #>          Term Estimate Std. Error       z Pr(>|z|)  2.5 % 97.5 %
 #> 1 b3 = 2 * b2   -1.389      10.78 -0.1289  0.89744 -22.51  19.73
 #> 
-#> Model type:  lm
+#> Prediction type:  
+#> Columns: term, estimate, std.error, statistic, p.value, conf.low, conf.high
 ```
 
 The main functions in `marginaleffects` all have a `hypothesis`
@@ -626,9 +701,13 @@ slopes(
   mod,
   variables = "drat",
   newdata = datagrid(qsec = range))
-#>   rowid     type term  estimate std.error statistic    p.value   conf.low conf.high predicted predicted_hi predicted_lo      mpg     drat qsec      eps
-#> 1     1 response drat  5.223926  3.791080  1.377952 0.16821811 -2.2064538  12.65431  16.27566     16.27679     16.27566 20.09062 3.596563 14.5 0.000217
-#> 2     2 response drat 10.241374  5.161439  1.984209 0.04723254  0.1251396  20.35761  25.71863     25.72085     25.71863 20.09062 3.596563 22.9 0.000217
+#> 
+#>   Term Estimate Std. Error     z Pr(>|z|)   2.5 % 97.5 %
+#> 1 drat    5.224      3.791 1.378 0.168218 -2.2065  12.65
+#> 2 drat   10.241      5.161 1.984 0.047233  0.1251  20.36
+#> 
+#> Prediction type:  response 
+#> Columns: rowid, type, term, estimate, std.error, statistic, p.value, conf.low, conf.high, predicted, predicted_hi, predicted_lo, mpg, drat, qsec, eps
 ```
 
 Are these two slopes significantly different from one another? To test
@@ -640,8 +719,12 @@ slopes(
   hypothesis = "b1 = b2",
   variables = "drat",
   newdata = datagrid(qsec = range))
-#>       type  term  estimate std.error  statistic   p.value conf.low conf.high
-#> 1 response b1=b2 -5.017448  8.519316 -0.5889496 0.5558951  -21.715  11.68011
+#> 
+#>    Term Estimate Std. Error       z Pr(>|z|)  2.5 % 97.5 %
+#> 1 b1=b2   -5.017      8.519 -0.5889   0.5559 -21.72  11.68
+#> 
+#> Prediction type:  response 
+#> Columns: type, term, estimate, std.error, statistic, p.value, conf.low, conf.high
 ```
 
 Now, imagine that for theoretical (or substantive or clinical) reasons,
@@ -650,12 +733,13 @@ function to conduct an equivalence test:
 
 ``` r
 avg_slopes(mod) |> hypotheses(equivalence = c(-2, 2))
-#>   Term Estimate Std. Error     z   Pr(>|z|)  2.5 % 97.5 %    p (Inf)  p (Sup)   p (Eq)
-#> 1 qsec    1.124     0.4331 2.595  0.0094487 0.2752  1.973 2.7403e-13 0.021585 0.021585
-#> 2 drat    7.224     1.3652 5.292 1.2122e-07 4.5484  9.900 7.0623e-12 0.999935 0.999935
 #> 
-#> Model type:  lm 
-#> Prediction type:  response
+#>   Term Estimate Std. Error     z   Pr(>|z|)  2.5 % 97.5 %      p (Inf)    p (Sup)     p (Eq)
+#> 1 qsec    1.124     0.4331 2.595  0.0094487 0.2752  1.973 2.740286e-13 0.02158502 0.02158502
+#> 2 drat    7.224     1.3652 5.292 1.2122e-07 4.5484  9.900 7.062313e-12 0.99993505 0.99993505
+#> 
+#> Prediction type:  response 
+#> Columns: type, term, estimate, std.error, statistic, p.value, conf.low, conf.high, statistic.noninf, statistic.nonsup, p.value.noninf, p.value.nonsup, p.value.equiv
 ```
 
 See the [Hypothesis Tests and Custom Contrasts
