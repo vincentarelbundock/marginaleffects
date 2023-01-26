@@ -1,4 +1,4 @@
-EXPENSIVE <- FALSE
+EXPENSIVE <- TRUE
 
 # libraries
 requiet <- function(package) {
@@ -41,11 +41,13 @@ dict <- c(
     "lmer" = "lme4",
     "s" = "gam",
     "ar" = "stats",
+    "dof" = "parameters",
     "marginal_effects" = "margins",
     "kidney" = "brms",
     "ngrps" = "brms",
     "lizards" = "aod",
     "rats" = "aod",
+    "aml" = "survival",
     "mad" = "stats",
     "sd" = "stats",
     "var" = "stats"
