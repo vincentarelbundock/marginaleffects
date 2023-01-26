@@ -17,7 +17,7 @@ summary.predictions <- summary.slopes
 
 #' @noRd
 #' @export
-summary.predictions <- summary.slopes
+summary.comparisons <- summary.slopes
 
 
 #' @noRd

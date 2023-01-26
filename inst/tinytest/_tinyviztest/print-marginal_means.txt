@@ -1,8 +1,8 @@
 
-  Term Value Estimate Std. Error      z   Pr(>|z|) 2.5 % 97.5 %
-1 gear     3    17.64     0.7961 22.164 < 2.22e-16 16.08  19.21
-2 gear     4    14.29     1.8857  7.576 3.5593e-14 10.59  17.98
-3 gear     5    24.23     1.3160 18.412 < 2.22e-16 21.65  26.81
+ Term Value  Mean Std. Error      z   Pr(>|z|) 2.5 % 97.5 %
+ gear     3 17.64     0.7961 22.164 < 2.22e-16 16.08  19.21
+ gear     4 14.29     1.8857  7.576 3.5593e-14 10.59  17.98
+ gear     5 24.23     1.3160 18.412 < 2.22e-16 21.65  26.81
 
 Prediction type:  response 
 Results averaged over levels of: gear 

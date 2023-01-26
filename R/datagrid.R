@@ -107,6 +107,8 @@ datagrid <- function(
     # better to assume "standard" class as output
     setDF(out)
 
+    attr(out, "variables_datagrid") <- names(dots)
+
     return(out)
 }
 
@@ -126,11 +128,14 @@ datagridcf <- function(
         insight::format_error("Users must specify variable values in the `datagridcf()` call.")
     }
 
-    datagrid(
+    out <- datagrid(
         ...,
         model = model,
         newdata = newdata,
         grid_type = "counterfactual")
+
+    attr(out, "variables_datagrid") <- names(out)
+        
 }
 
 

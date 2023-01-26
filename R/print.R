@@ -1,5 +1,8 @@
 #' Print `marginaleffects` objects
 #' 
+#' @description
+#' This function controls the text printed to the `R` console when executing one of the core `marginaleffects` functions.
+#' 
 #' @param x An object produced by one of the [`marginaleffects`] package functions.
 #' @param digits The number of digits to display.
 #' @param topn The number of rows to be printed from the beginning and end of tables with more than `nrows` rows.
@@ -93,7 +96,10 @@ print.marginaleffects <- function(x,
     }
 
     # Subset columns
-    idx <- c(names(dict), grep("^contrast_", colnames(x), value = TRUE))
+    idx <- c(
+        names(dict),
+        grep("^contrast_", colnames(x), value = TRUE),
+        attr(x, "newdata_variables_datagrid"))
     if (isTRUE(checkmate::check_character(attr(x, "by")))) {
         idx <- c(idx, attr(x, "by"))
     }

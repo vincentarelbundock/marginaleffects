@@ -8,6 +8,11 @@ mod <- lm(mpg ~ hp * factor(gear), mtcars)
 expect_snapshot_print(predictions(mod), "print-predictions")
 expect_snapshot_print(predictions(mod, by = "gear"), "print-predictions_by")
 
+# explicitly in datagrid means we care about it, so let's keep that
+expect_snapshot_print(
+    predictions(mod, newdata = datagrid(gear = unique)),
+    "print-predictions_datagrid")
+
 ## guides()-related error in diffObj. Does not seem marginaleffects-related
 # expect_snapshot_print(comparisons(mod), "print-comparisons")
 expect_snapshot_print(comparisons(mod, by = "gear"), "print-comparisons_by")

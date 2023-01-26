@@ -1,8 +1,8 @@
 
-  gear Estimate Std. Error     z   Pr(>|z|) 2.5 % 97.5 %
-1    4    24.53     0.7500 32.71 < 2.22e-16 23.06  26.00
-2    3    16.11     0.6708 24.01 < 2.22e-16 14.79  17.42
-3    5    21.38     1.1619 18.40 < 2.22e-16 19.10  23.66
+ gear Estimate Std. Error     z   Pr(>|z|) 2.5 % 97.5 %
+    4    24.53     0.7500 32.71 < 2.22e-16 23.06  26.00
+    3    16.11     0.6708 24.01 < 2.22e-16 14.79  17.42
+    5    21.38     1.1619 18.40 < 2.22e-16 19.10  23.66
 
 Prediction type:  response 
 Columns: type, gear, estimate, std.error, statistic, p.value, conf.low, conf.high 
