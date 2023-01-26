@@ -1,5 +1,5 @@
 Package: marginaleffects
-Title: Marginal Effects, Marginal Means, Predictions, and Contrasts
+Title: Predictions, Contrasts, Slopes, Marginal Means, and Hypothesis Tests
 Version: 0.8.1.9119
 Authors@R: 
     c(person(given = "Vincent",
