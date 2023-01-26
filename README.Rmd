@@ -262,7 +262,7 @@ See this vignette for more information: [Plots, interactions, predictions, contr
 
 Since predictions, comparisons, and slopes are conditional quantities, they can be a bit unwieldy. Often, it can be useful to report a one-number summary instead of one estimate per observation. Instead of presenting "conditional" estimates, some methodologists recommend reporting "marginal" estimates, that is, an average of unit-level estimates. 
 
-(This use of the word "marginal" as "averaging" should not be confused with the term "marginal effect" which, in the econometrics tradition, correspond to a partial derivative, or the effect of a "small/marginal" change.)
+(This use of the word "marginal" as "averaging" should not be confused with the term "marginal effect" which, in the econometrics tradition, corresponds to a partial derivative, or the effect of a "small/marginal" change.)
 
 To marginalize (average over) our unit-level estimates, we can use the `by` argument or the one of the convenience functions: `avg_predictions()`, `avg_comparisons()`, or `avg_slopes()`. For example, both of these commands give us the same result: the average predicted outcome in the `mtcars` dataset:
 
@@ -327,10 +327,10 @@ Can we reject the null hypothesis that the `drat` coefficient is 2 times the siz
 hypotheses(mod, "drat = 2 * qsec")
 ```
 
-We can ask the same question but refer to parameters by position, with indices `b1`, `b2`, `b3`, etc. and get a nicer printout by using `summary()`:
+We can ask the same question but refer to parameters by position, with indices `b1`, `b2`, `b3`, etc.:
 
 ```{r}
-hypotheses(mod, "b3 = 2 * b2") |> summary()
+hypotheses(mod, "b3 = 2 * b2")
 ```
 
 The main functions in `marginaleffects` all have a `hypothesis` argument, which means that we can do complex model testing. For example, consider two slope estimates:

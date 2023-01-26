@@ -538,11 +538,10 @@ You can estimate average counterfactual adjusted predictions with `predictions()
 ```{r}
 mod <- lm(mpg ~ as.factor(cyl) * hp + wt, data = mtcars)
 
-pred <- predictions(
+predictions(
     mod,
     by = "cyl",
     newdata = datagridcf(cyl = c(4, 6, 8)))
-summary(pred)
 
 predictions(
     mod,

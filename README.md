@@ -14,7 +14,7 @@ in R. Conduct linear and non-linear hypothesis tests using the delta
 method.
 
 The code on this website was executed using `marginaleffects`
-0.8.1.9118. See the [installation
+0.8.1.9119. See the [installation
 section](https://vincentarelbundock.github.io/marginaleffects/#installation)
 to install the latest CRAN or development version.
 
@@ -543,7 +543,7 @@ estimates.
 
 (This use of the word “marginal” as “averaging” should not be confused
 with the term “marginal effect” which, in the econometrics tradition,
-correspond to a partial derivative, or the effect of a “small/marginal”
+corresponds to a partial derivative, or the effect of a “small/marginal”
 change.)
 
 To marginalize (average over) our unit-level estimates, we can use the
@@ -679,11 +679,10 @@ hypotheses(mod, "drat = 2 * qsec")
 ```
 
 We can ask the same question but refer to parameters by position, with
-indices `b1`, `b2`, `b3`, etc. and get a nicer printout by using
-`summary()`:
+indices `b1`, `b2`, `b3`, etc.:
 
 ``` r
-hypotheses(mod, "b3 = 2 * b2") |> summary()
+hypotheses(mod, "b3 = 2 * b2")
 #> 
 #>         Term Estimate Std. Error       z Pr(>|z|)  2.5 % 97.5 %
 #>  b3 = 2 * b2   -1.389      10.78 -0.1289  0.89744 -22.51  19.73
