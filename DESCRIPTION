@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Marginal Effects, Marginal Means, Predictions, and Contrasts
-Version: 0.8.1.9118
+Version: 0.8.1.9119
 Authors@R: 
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -130,7 +130,6 @@ Suggests:
     vdiffr,
     withr
 Collate: 
-    'averages.R'
     'backtransform.R'
     'broom.R'
     'by.R'
@@ -139,6 +138,7 @@ Collate:
     'complete_levels.R'
     'datagrid.R'
     'equivalence.R'
+    'get_averages.R'
     'get_coef.R'
     'get_contrast_data.R'
     'get_contrast_data_character.R'

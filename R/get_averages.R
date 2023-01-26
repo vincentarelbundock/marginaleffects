@@ -32,6 +32,7 @@
 #' calculate the mean and the `quantile` function to the results of Step 1 to
 #' obtain the Average Marginal Effect and its associated interval.
 #'
+#' @keywords internal
 #' @examples
 #' mod <- lm(mpg ~ factor(gear), data = mtcars)
 #' contr <- comparisons(mod, variables = list(gear = "sequential"))

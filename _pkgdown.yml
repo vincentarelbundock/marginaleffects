@@ -22,7 +22,6 @@ reference:
     contents:
     - print.marginaleffects
     - posterior_draws
-    - averages
     - starts_with("summary|glance|tidy")
 navbar:
   title: marginaleffects
