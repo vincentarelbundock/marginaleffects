@@ -119,6 +119,7 @@ Suggests:
     survey,
     survival,
     systemfonts,
+    tibble,
     tidymodels,
     tidyr,
     tidyverse,

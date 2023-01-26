@@ -14,11 +14,12 @@ generics::glance
 #' @noRd
 #' @export
 tidy.comparisons <- function(x, ...) {
+    insight::check_if_installed("tibble")
     if ("transform_avg" %in% names(list(...))) {
         insight::format_error("The `transform_avg` argument is deprecated. Use `transform_post` instead.")
     }
     out <- averages(x, ...)
-    class(out) <- setdiff(class(out), "averages")
+    out <- tibble::as_tibble(out)
     return(out)
 }
 
@@ -41,12 +42,13 @@ tidy.predictions <- tidy.comparisons
 #' @noRd
 #' @export
 tidy.hypotheses <- function(x, ...) {
+    insight::check_if_installed("tibble")
     if (any(!c("term", "estimate") %in% colnames(x)) || !inherits(x, c("hypotheses", "deltamethod", "data.frame"))) {
         insight::format_error("The `tidy()` method only supports `hypotheses` objects produced by the `marginaleffects::hypotheses()` function.")
     }
     # the object is already in a tidy format. We need this method for
     # `modelsummary` and other functions that rely on `tidy()`.
-    class(x) <- setdiff(class(x), "averages")
+    x <- tibble::as_tibble(x)
     return(x)
 }
 
@@ -56,13 +58,14 @@ tidy.hypotheses <- function(x, ...) {
 #' @noRd
 #' @export
 tidy.marginalmeans <- function(x, ...) {
+    insight::check_if_installed("insight")
     if ("transform_avg" %in% names(list(...))) {
         insight::format_error("The `transform_avg` argument is deprecated. Use `transform_post` instead.")
     }
     first = c("type", "term", "value", "estimate", "std.error",
     "statistic", "p.value", "conf.low", "conf.high")
     out <- sort_columns(x, first)
-    class(out) <- setdiff(class(out), "averages")
+    out <- tibble::as_tibble(out)
     attr(out, "conf_level") <- attr(x, "conf_level")
     return(out)
 }
@@ -73,7 +76,9 @@ tidy.marginalmeans <- function(x, ...) {
 #' @noRd
 #' @export
 tidy.hypotheses <- function(x, ...) {
+    insight::check_if_installed("insight")
     out <- recall(x, ...)
+    out <- tibble::as_tibble(out)
     return(out)
 }
 
@@ -81,6 +86,7 @@ tidy.hypotheses <- function(x, ...) {
 #' @noRd
 #' @export
 glance.slopes <- function(x, ...) {
+    insight::check_if_installed("insight")
     assert_dependency("modelsummary")
     model <- attr(x, "model")
     gl <- suppressMessages(suppressWarnings(try(
@@ -96,6 +102,7 @@ glance.slopes <- function(x, ...) {
     } else if (!is.null(out)) {
         out[["vcov.type"]] <- vcov.type
     }
+    out <- tibble::as_tibble(out)
     return(out)
 }
 

@@ -1,7 +1,9 @@
+
   Term          Contrast Estimate Std. Error      z  Pr(>|z|)     2.5 %   97.5 %
 1   hp       mean(dY/dX) -0.02404    0.01541 -1.560 0.1187213  -0.05424  0.00616
 2  cyl mean(6) - mean(4) -5.96766    1.63928 -3.640 0.0002722  -9.18058 -2.75473
 3  cyl mean(8) - mean(4) -8.52085    2.32607 -3.663 0.0002491 -13.07987 -3.96183
 
-Model type:  lm 
 Prediction type:  response 
+Columns: type, term, contrast, estimate, std.error, statistic, p.value, conf.low, conf.high 
+

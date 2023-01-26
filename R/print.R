@@ -6,19 +6,35 @@
 
 #' Print `marginaleffects` objects
 #' 
+#' @param x An object produced by one of the [`marginaleffects`] package functions.
+#' @param digits The number of digits to display.
+#' @param topn The number of rows to be printed from the beginning and end of tables with more than `nrows` rows.
+#' @param nrows The number of rows which will be printed before truncation.
+#' @param ncols The maximum number of column names to display at the bottom of the printed output.
+#' @param style one of two strings: "summary" or "data.frame"
 #' @export
 print.marginaleffects <- function(x,
                                   digits = max(3L, getOption("digits") - 3L),
                                   topn = getOption("marginaleffects_print_topn", default = 5),
                                   nrows = getOption("marginaleffects_print_nrows", default = 30),
                                   ncols = getOption("marginaleffects_print_ncols", default = 30),
+                                  style = getOption("marginaleffects_print_style", default = "summary"),
                                   ...) {
 
-    out <- x
 
     checkmate::assert_numeric(digits)
     checkmate::assert_numeric(topn)
     checkmate::assert_numeric(nrows)
+    checkmate::assert_choice(style, choices = c("data.frame", "summary"))
+
+
+    if (isTRUE(style == "data.frame")) {
+        print(as.data.frame(x))
+        return(invisible(x))
+    }
+
+    out <- x
+
     nrows <- max(nrows, 2 * topn)
 
 
@@ -81,9 +97,16 @@ print.marginaleffects <- function(x,
         dict["estimate"] <- "Mean"
     }
 
+    # Subset columns
+    idx <- c(names(dict), grep("^contrast_", colnames(x), value = TRUE))
+    if (isTRUE(checkmate::check_character(attr(x, "by")))) {
+        idx <- c(idx, attr(x, "by"))
+    }
+    out <- out[, colnames(out) %in% idx, drop = FALSE]
+
     if (all(out$term == "cross")) {
         out[["term"]] <- NULL
-        colnames(out) <- gsub("^contrast_", "", colnames(out))
+        colnames(out) <- gsub("^contrast_", "C: ", colnames(out))
     }
 
     for (i in seq_along(dict)) {
@@ -93,27 +116,22 @@ print.marginaleffects <- function(x,
     # avoid infinite recursion by stripping marginaleffect.summary class
     out <- as.data.frame(out)
 
-    # these columns are no longer necessary in summary(), but we want to
-    # keep them in the raw data
-    idx <- grepl("^predicted|^statistic\\.|^rowid", colnames(out))
-    out <- out[, !idx]
-
-    # Subset columns
-    out <- out[, colnames(out) %in% dict]
-
     # some commands do not generate average contrasts/mfx. E.g., `lnro` with `by`
     cat("\n")
     if (nrow(out) > nrows) {
         print(head(out, n = topn), row.names = FALSE)
-        cat(sprintf("--- %s rows omitted from print() ---\n", nrow(out) - 2 * topn))
-        print(tail(out, n = topn), row.names = FALSE)
+        cat(sprintf("--- %s rows omitted. See ?print.marginaleffects ---\n", nrow(out) - 2 * topn))
+        # remove colnames
+        tmp <- capture.output(print(tail(out, n = topn), row.names = FALSE))
+        tmp <- paste(tail(tmp, -1), collapse = "\n")
+        cat(tmp, "\n")
         omitted <- TRUE
     } else {
         print(out)
         omitted <- FALSE
     }
     cat("\n")
-    cat("Model type: ", attr(x, "model_type"), "\n")
+    # cat("Model type: ", attr(x, "model_type"), "\n")
     if (!inherits(x, "hypotheses.summary")) {
         cat("Prediction type: ", attr(x, "type"), "\n")
     }
@@ -129,13 +147,9 @@ print.marginaleffects <- function(x,
                     paste(vg, collapse = ", ")), "\n")
     }
     if (ncol(x) <= ncols) {
-        cat(sprintf("Columns: %s\n", paste(colnames(x), collapse = ", ")))
-    }
-    if (isTRUE(omitted)) {
-        cat("See `?print.marginaleffects` for printing options.")
+        cat("Columns:", paste(colnames(x), collapse = ", "), "\n")
     }
     cat("\n")
-
 
     return(invisible(x))
 }
@@ -146,28 +160,40 @@ print.slopes.summary <- print.marginaleffects
 
 #' @noRd
 #' @export
-print.predictions.summary <- print.slopes.summary
+print.predictions.summary <- print.marginaleffects
 
 #' @noRd
 #' @export
-print.marginalmeans.summary <- print.slopes.summary
+print.marginalmeans.summary <- print.marginaleffects
 
 #' @noRd
 #' @export
-print.comparisons.summary <- print.slopes.summary
+print.comparisons.summary <- print.marginaleffects
 
 #' @noRd
 #' @export
-print.hypotheses.summary <- print.slopes.summary
+print.hypotheses.summary <- print.marginaleffects
 
 #' @noRd
 #' @export
-print.averages <- print.slopes.summary
+print.averages <- print.marginaleffects
 
 #' @noRd
 #' @export
-print.hypotheses <- print.slopes.summary
+print.hypotheses <- print.marginaleffects
 
 #' @noRd
 #' @export
-print.predictions <- print.slopes.summary
+print.predictions <- print.marginaleffects
+
+#' @noRd
+#' @export
+print.comparisons <- print.marginaleffects
+
+#' @noRd
+#' @export
+print.slopes <- print.marginaleffects
+
+#' @noRd
+#' @export
+print.marginalmeans <- print.marginaleffects

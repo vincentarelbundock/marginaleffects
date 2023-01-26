@@ -11,9 +11,10 @@ New models supported:
 
 New features:
 
-* New convenience functions: `avg_predictions()`, `avg_comparisons()`, `avg_slopes()`
+* New functions: `avg_predictions()`, `avg_comparisons()`, `avg_slopes()`
 * Equivalence, non-inferiority, and non-superiority tests with the `hypotheses()` function and `equivalence` argument.
 * New `df` argument to set degrees of freedom manually for p and CI.
+* Pretty `print()` for all objects.
 * `by` argument
   - `TRUE` returns average (marginal) predictions, comparisons, or slopes.
   - Supports bayesian models.

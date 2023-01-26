@@ -210,6 +210,8 @@ comparisons <- function(model,
 
     dots <- list(...)
 
+    # required by stubcols later, but might be overwritten
+    bycols <- NULL
 
     # slopes()` **must** run its own sanity checks and hardcode valid arguments
     internal_call <- dots[["internal_call"]]
@@ -438,10 +440,15 @@ comparisons <- function(model,
 
 
     # clean columns
-    stubcols <- c("rowid", "rowidcf", "type", "group", "term", "hypothesis",
-                  grep("^contrast", colnames(mfx), value = TRUE),
-                  "estimate", "comparison", "std.error", "statistic", "p.value", "conf.low", "conf.high", "df",
-                  "predicted", "predicted_hi", "predicted_lo")
+    if (is.null(bycols) && isTRUE(checkmate::check_character(by))) {
+        bycols <- by
+    }
+    stubcols <- c(
+        "rowid", "rowidcf", "type", "group", "term", "hypothesis", "by",
+        grep("^contrast", colnames(mfx), value = TRUE),
+        bycols,
+        "estimate", "std.error", "statistic", "p.value", "conf.low",
+        "conf.high", "df", "predicted", "predicted_hi", "predicted_lo")
     cols <- intersect(stubcols, colnames(mfx))
     cols <- unique(c(cols, colnames(mfx)))
     mfx <- mfx[, ..cols, drop = FALSE]

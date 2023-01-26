@@ -1,3 +1,4 @@
+
   Term Value  Mean Std. Error     z   Pr(>|z|) 2.5 % 97.5 %
 1 gear     3 21.64      1.603 13.50 < 2.22e-16 18.49  24.78
 2 gear     4 21.09      1.264 16.69 < 2.22e-16 18.61  23.57
@@ -7,6 +8,7 @@
 6   am  TRUE 24.37      1.253 19.45 < 2.22e-16 21.91  26.82
 7   vs  TRUE 24.33      1.194 20.37 < 2.22e-16 21.99  26.67
 
-Model type:  lm 
 Prediction type:  response 
 Results averaged over levels of: gear, am, vs 
+Columns: term, value, estimate, std.error, statistic, p.value, conf.low, conf.high 
+

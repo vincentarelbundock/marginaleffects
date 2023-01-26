@@ -20,6 +20,7 @@ reference:
     - starts_with("plot")
   - title: Utilities
     contents:
+    - print.marginaleffects
     - posterior_draws
     - averages
     - starts_with("summary|glance|tidy")

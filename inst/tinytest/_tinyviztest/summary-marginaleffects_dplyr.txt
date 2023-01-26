@@ -1,6 +1,8 @@
+
   Term  Estimate    CI low   CI high
 1   hp  0.002653 -0.001147  0.006452
 2   wt -0.435783 -0.635822 -0.235744
 
-Model type:  
 Prediction type:  
+Columns: term, estimate, conf.low, conf.high 
+

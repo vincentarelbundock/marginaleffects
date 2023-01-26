@@ -1,7 +1,9 @@
+
   Term Contrast Estimate   Pr(>|z|) 2.5 % 97.5 %
 1   hp       +1    2.705 < 2.22e-16 2.686  2.725
 
-Model type:  glm 
 Prediction type:  response 
 Pre-transformation:  function(hi, lo) hi/lo 
 Post-transformation:  exp 
+Columns: type, term, contrast, estimate, p.value, conf.low, conf.high 
+
