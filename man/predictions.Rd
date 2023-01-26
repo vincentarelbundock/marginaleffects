@@ -12,7 +12,7 @@ predictions(
   vcov = TRUE,
   conf_level = 0.95,
   type = NULL,
-  by = NULL,
+  by = FALSE,
   byfun = NULL,
   wts = NULL,
   transform_post = NULL,

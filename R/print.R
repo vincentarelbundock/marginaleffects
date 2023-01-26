@@ -1,9 +1,3 @@
-# BAD IDEA: do not export print.slopes() et al., which forces head(data.frame(slopes(model)))
-# also breaks when I process a marginaleffects data.frame with dplyr, because
-# the output retains the class even when it drops columns, and then tidy
-# breaks.
-
-
 #' Print `marginaleffects` objects
 #' 
 #' @param x An object produced by one of the [`marginaleffects`] package functions.
@@ -11,7 +5,8 @@
 #' @param topn The number of rows to be printed from the beginning and end of tables with more than `nrows` rows.
 #' @param nrows The number of rows which will be printed before truncation.
 #' @param ncols The maximum number of column names to display at the bottom of the printed output.
-#' @param style one of two strings: "summary" or "data.frame"
+#' @param style "summary" or "data.frame"
+#' @param ... Other arguments are currently ignored.
 #' @export
 print.marginaleffects <- function(x,
                                   digits = max(3L, getOption("digits") - 3L),
@@ -93,7 +88,7 @@ print.marginaleffects <- function(x,
         "p.value.equiv" = "p (Eq)"
         )
 
-    if (inherits(x, "marginalmeans.summary")) {
+    if (inherits(x, "marginalmeans")) {
         dict["estimate"] <- "Mean"
     }
 
@@ -116,11 +111,25 @@ print.marginaleffects <- function(x,
     # avoid infinite recursion by stripping marginaleffect.summary class
     out <- as.data.frame(out)
 
+    # recommend avg_*()
+    rec <- ""
+    if (isFALSE(attr(x, "by"))) {
+        if (inherits(x, "predictions")) {
+            rec <- "?avg_predictions and "
+        } else if (inherits(x, "comparisons")) {
+            rec <- "?avg_comparisons and "
+        } else if (inherits(x, "slopes")) {
+            rec <- "?avg_slopes and "
+        }
+    }
+
     # some commands do not generate average contrasts/mfx. E.g., `lnro` with `by`
     cat("\n")
     if (nrow(out) > nrows) {
         print(utils::head(out, n = topn), row.names = FALSE)
-        cat(sprintf("--- %s rows omitted. See ?print.marginaleffects ---\n", nrow(out) - 2 * topn))
+        msg <- "--- %s rows omitted. See %s?print.marginaleffects ---"
+        msg <- sprintf(msg, nrow(out) - 2 * topn, rec)
+        cat(msg, "\n")
         # remove colnames
         tmp <- utils::capture.output(print(utils::tail(out, n = topn), row.names = FALSE))
         tmp <- paste(utils::tail(tmp, -1), collapse = "\n")
@@ -153,30 +162,6 @@ print.marginaleffects <- function(x,
 
     return(invisible(x))
 }
-
-#' @noRd
-#' @export
-print.slopes.summary <- print.marginaleffects
-
-#' @noRd
-#' @export
-print.predictions.summary <- print.marginaleffects
-
-#' @noRd
-#' @export
-print.marginalmeans.summary <- print.marginaleffects
-
-#' @noRd
-#' @export
-print.comparisons.summary <- print.marginaleffects
-
-#' @noRd
-#' @export
-print.hypotheses.summary <- print.marginaleffects
-
-#' @noRd
-#' @export
-print.averages <- print.marginaleffects
 
 #' @noRd
 #' @export

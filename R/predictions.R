@@ -181,7 +181,7 @@ predictions <- function(model,
                         vcov = TRUE,
                         conf_level = 0.95,
                         type = NULL,
-                        by = NULL,
+                        by = FALSE,
                         byfun = NULL,
                         wts = NULL,
                         transform_post = NULL,
@@ -638,7 +638,6 @@ avg_predictions <- function(model,
         hypothesis = hypothesis,
         df = df,
         ...)
-    class(out) <- c("averages", class(out))
 
     # overwrite call because otherwise we get the symbosl sent to predictions()
     attr(out, "call") <- match.call()

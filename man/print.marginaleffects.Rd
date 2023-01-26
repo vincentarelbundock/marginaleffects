@@ -25,7 +25,9 @@
 
 \item{ncols}{The maximum number of column names to display at the bottom of the printed output.}
 
-\item{style}{one of two strings: "summary" or "data.frame"}
+\item{style}{"summary" or "data.frame"}
+
+\item{...}{Other arguments are currently ignored.}
 }
 \description{
 Print \code{marginaleffects} objects

@@ -369,8 +369,6 @@ avg_slopes <- function(model,
         eps = eps,
         ...)
 
-    class(out) <- c("averages", class(out))
-
     # overwrite call because otherwise we get the symbosl sent to slopes()
     attr(out, "call") <- match.call()
 

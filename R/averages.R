@@ -32,6 +32,7 @@
 #' calculate the mean and the `quantile` function to the results of Step 1 to
 #' obtain the Average Marginal Effect and its associated interval.
 #'
+#' @export
 #' @examples
 #' mod <- lm(mpg ~ factor(gear), data = mtcars)
 #' contr <- comparisons(mod, variables = list(gear = "sequential"))
@@ -54,7 +55,6 @@ averages <- function (x, by = TRUE, ...) {
         } else {
             out <- recall(xcall, by = by, ...)
         }
-        class(out) <- c("averages", class(out))
         return(out)
     }
 
@@ -71,7 +71,6 @@ averages.predictions <- function(x, by = TRUE, byfun = NULL, ...) {
     }
 
     if (!isFALSE(attr(x, "by")) && !is.null(attr(x, "by"))) {
-        class(x) <- c("averages", class(x))
         return(x)
     }
 
@@ -101,10 +100,6 @@ averages.predictions <- function(x, by = TRUE, byfun = NULL, ...) {
     }
     data.table::setDF(out)
 
-    attr(out, "averages") <- TRUE
-
-    class(out) <- c("averages", class(out))
-
     return(out)
 }
 
@@ -119,7 +114,6 @@ averages.comparisons <- function(x, by = TRUE, ...) {
 
     # already used `by` in the main call, so we return the main output
     if (!isFALSE(attr(x, "by")) && !is.null(attr(x, "by"))) {
-        class(x) <- c("averages", class(x))
         return(x)
     }
 
@@ -149,10 +143,6 @@ averages.comparisons <- function(x, by = TRUE, ...) {
     }
     data.table::setDF(out)
 
-    attr(out, "averages") <- TRUE
-
-    class(out) <- c("averages", class(out))
-
     return(out)
 }
 
@@ -169,7 +159,7 @@ averages.marginalmeans <- function(x, by = FALSE, ...) {
     if (!isFALSE(by)) {
         insight::format_error("The `by` argument is not supported by the `averages()` function for `marginal_means` models.")
     }
-    summary(x, ...)
+    x
 }
 
 
