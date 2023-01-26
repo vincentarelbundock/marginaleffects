@@ -17,7 +17,7 @@
 #' @export
 #' @examples
 #' library(marginaleffects)
-#' mod <- lm(mpg ~ hp + factor(gear), data = mtcars)
+#' mod <- lm(mpg ~ hp + am + factor(gear), data = mtcars)
 #' p <- predictions(mod, by = c("am", "gear"))
 #' p
 #' 
