@@ -1,18 +1,3 @@
-#' check if dependency is installed
-#'
-#' @noRd
-check_dependency <- function(library_name) {
-  flag <- requireNamespace(library_name, quietly = TRUE)
-  if (!isTRUE(flag)) {
-      msg <- sprintf("Please install the `%s` package.", library_name)
-      return(msg)
-  } else {
-      return(TRUE)
-  }
-}
-assert_dependency <- checkmate::makeAssertionFunction(check_dependency)
-
-
 sanity_wts <- function(wts, newdata) {
     # weights must be available in the `comparisons()` function, NOT in
     # `tidy()`, because comparisons will often duplicate newdata for
