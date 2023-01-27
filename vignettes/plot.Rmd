@@ -25,13 +25,13 @@ Note: This vignette requires version 0.7.2 of `marginaleffects`, or [the develop
 
 The `marginaleffects` package includes several flexible functions to plot estimates and to display interactions:
 
-* `plot()`: Plot the raw output of `slopes()` or `comparisons()`
+* Plot the raw output of `slopes()` or `comparisons()`
 * Interaction / conditional / heterogenous:
-   - `plot_predictions`: Conditional Adjusted Predictions (equivalent to `predictions()`)
+   - `plot_predictions`: Conditional Predictions (equivalent to `predictions()`)
    - `plot_comparisons`: Conditional Contrasts (equivalent to `comparisons()`)
-   - `plot_slopes`: Conditional Marginal Effects (equivalent to `slopes()`)
+   - `plot_slopes`: Conditional Slopes (aka "Marginal Effects"; equivalent to `slopes()`)
 
-The "interaction" or "conditional" plotting functions are designed to display how the outcome or how the effect of a predictor changes with respect to another variable.
+The "interaction" or "conditional" plotting functionality is designed to display how the outcome or how the effect of a predictor changes with respect to another variable.
 
 This vignette focuses on `plot_predictions()`, but the same ideas apply to `plot_slopes()` and `plot_comparisons()` as well.  In the examples below, we will use the `patchwork` package to combine plots and the `ggplot2` package to customize their content and appearance:
 
