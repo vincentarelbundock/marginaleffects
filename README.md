@@ -512,7 +512,7 @@ For example, this plot shows the outcomes predicted by our model for
 different values of the `wt` and `am` variables:
 
 ``` r
-plot_predictions(mod, condition = c("wt", "am"))
+plot_predictions(mod, condition = list("hp", "wt" = "threenum", "am"))
 ```
 
 <img src="man/figures/README-unnamed-chunk-16-1.png" width="100%" />
@@ -521,7 +521,7 @@ This plot shows how the derivative of `mpg` with respect to `am` varies
 as a function of `wt` and `hp`:
 
 ``` r
-plot_slopes(mod, effect = "am", condition = list("wt", "hp" = "threenum"))
+plot_slopes(mod, effect = "am", condition = list("hp", "wt" = "minmax"))
 ```
 
 <img src="man/figures/README-unnamed-chunk-17-1.png" width="100%" />
