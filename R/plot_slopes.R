@@ -1,4 +1,4 @@
-#' Plot Conditional Marginal Effects
+#' Plot Slopes
 #'
 #' This function plots marginal effects (y-axis) against values of predictor(s)
 #' variable(s) (x-axis and colors). This is especially useful in models with
