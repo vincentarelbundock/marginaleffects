@@ -7,7 +7,8 @@ get_predict.glimML <- function(model,
                                type = "response",
                                ...) {
 
-    assert_dependency("aod") # need access to the predict method
+    insight::check_if_installed("aod")
+
     out <- aod::predict(model,
                         newdata = newdata,
                         type = type,

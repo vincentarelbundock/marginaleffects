@@ -87,7 +87,7 @@ tidy.hypotheses <- function(x, ...) {
 #' @export
 glance.slopes <- function(x, ...) {
     insight::check_if_installed("insight")
-    assert_dependency("modelsummary")
+    insight::check_if_installed("modelsummary")
     model <- attr(x, "model")
     gl <- suppressMessages(suppressWarnings(try(
         modelsummary::get_gof(model, ...), silent = TRUE)))

@@ -80,7 +80,7 @@ plot_cap <- function(model,
     if (isFALSE(draw)) {
         return(datplot)
     } else {
-        assert_dependency("ggplot2")
+        insight::check_if_installed("ggplot2")
     }
 
     # ggplot2

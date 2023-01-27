@@ -18,7 +18,7 @@ get_jacobian <- function(func, x, eps) {
 
     # numDeriv package (more flexible)
     } else {
-        assert_dependency("numDeriv")
+        insight::check_if_installed("numDeriv")
         checkmate::assert_list(marginaleffects_numDeriv)
         f <- get("jacobian", asNamespace("numDeriv"))
         marginaleffects_numDeriv[["func"]] <- func

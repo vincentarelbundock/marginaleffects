@@ -113,7 +113,7 @@ plot_cco <- function(model,
         attr(datplot, "posterior_draws") <- draws
         return(datplot)
     } else {
-        assert_dependency("ggplot2")
+        insight::check_if_installed("ggplot2")
     }
 
     # ggplot2

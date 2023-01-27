@@ -19,7 +19,7 @@
 #' @export
 plot_avg <- function(x,  ...) {
 
-    assert_dependency("ggplot2")
+    insight::check_if_installed("ggplot2")
 
     dat <- get_averages(x, ...)
 

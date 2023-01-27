@@ -7,7 +7,7 @@ get_predict.fixest <- function(model,
                                type = "response",
                                ...) {
 
-    assert_dependency("fixest")
+    insight::check_if_installed("fixest")
 
     # names = base, value = insight
     type <- unname(sanitize_type(model, type))
