@@ -9,7 +9,7 @@
 #' * <https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html>
 #' * <https://vincentarelbundock.github.io/marginaleffects/>
 #' 
-#' Warning #1: Tests are conducted directly on the scale defined by the `type` argument. For some models, it can make sense to conduct hypothesis or equivalence tests on the `link`` scale instead of the `response` scale which is often the default.
+#' Warning #1: Tests are conducted directly on the scale defined by the `type` argument. For some models, it can make sense to conduct hypothesis or equivalence tests on the `"link"` scale instead of the `"response"` scale which is often the default.
 #' 
 #' Warning #2: For hypothesis tests on objects produced by the `marginaleffects` package, it is safer to use the `hypothesis` argument of the original function.  Using `hypotheses()` may not work in certain environments, or when called programmatically.
 #' 

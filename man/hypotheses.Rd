@@ -89,7 +89,7 @@ package website, or scroll down this page for a full list of vignettes:
 \item \url{https://vincentarelbundock.github.io/marginaleffects/}
 }
 
-Warning #1: Tests are conducted directly on the scale defined by the \code{type} argument. For some models, it can make sense to conduct hypothesis or equivalence tests on the \verb{link`` scale instead of the }response` scale which is often the default.
+Warning #1: Tests are conducted directly on the scale defined by the \code{type} argument. For some models, it can make sense to conduct hypothesis or equivalence tests on the \code{"link"} scale instead of the \code{"response"} scale which is often the default.
 
 Warning #2: For hypothesis tests on objects produced by the \code{marginaleffects} package, it is safer to use the \code{hypothesis} argument of the original function.  Using \code{hypotheses()} may not work in certain environments, or when called programmatically.
 }
