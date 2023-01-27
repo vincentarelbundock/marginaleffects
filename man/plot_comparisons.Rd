@@ -16,19 +16,6 @@ plot_comparisons(
   draw = TRUE,
   ...
 )
-
-plot_comparisons(
-  x,
-  effect = NULL,
-  condition = NULL,
-  type = "response",
-  vcov = NULL,
-  conf_level = 0.95,
-  transform_pre = "difference",
-  transform_post = NULL,
-  draw = TRUE,
-  ...
-)
 }
 \arguments{
 \item{x}{a model or object produced by the \code{slopes()} or \code{comparisons()} functions.}
@@ -99,8 +86,6 @@ A \code{ggplot2} object
 }
 \description{
 This function plots average comparisons, or conditional comparisons. Conditional comparisons present comparisons (y-axis) against values of predictor(s) variable(s) (x-axis and colors). This is especially useful in models with interactions, where the values of contrasts depend on the values of "condition" variables.
-
-This alias is kept for backward compatibility.
 }
 \examples{
 mod <- lm(mpg ~ hp * drat * factor(am), data = mtcars)
@@ -114,4 +99,3 @@ plot_comparisons(mod, effect = "hp", condition = list("am", "drat" = 3:5))
 plot_comparisons(mod, effect = "am", condition = list("hp", "drat" = range))
 
 }
-\keyword{internal}

@@ -245,7 +245,7 @@ plot_comparisons <- function(x,
 #' @inherit plot_predictions
 #' @keywords internal
 #' @export
-plot_comparisons <- plot_comparisons
+plot_cco <- plot_comparisons
 
 
 ################### Backward compatibility for deprecated methods. Also nice to keep.

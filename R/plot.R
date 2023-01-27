@@ -4,7 +4,6 @@
 #' @param x object produced by the `comparisons()` or `slopes()` object.
 #' @param ... additional arguments are passed to the `aggregate` function (e.g., `conf_level`).
 #' @return A `ggplot2` object
-#' @family plot
 #' @noRd
 #' @examples
 #' mod <- glm(am ~ hp + wt, data = mtcars)
@@ -71,7 +70,3 @@ plot_avg <- function(x,  draw = FALSE, ...) {
 
     return(p)
 }
-
-
-
-

@@ -76,7 +76,7 @@ plot_slopes <- function(x,
 #' @inherit plot_predictions
 #' @keywords internal
 #' @export
-plot_slopes <- plot_slopes
+plot_cme <- plot_slopes
 
 
 

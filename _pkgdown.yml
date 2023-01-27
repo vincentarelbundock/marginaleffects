@@ -17,7 +17,9 @@ reference:
     - starts_with("datagrid")
   - title: Plots
     contents:
-    - starts_with("plot")
+    - plot_predictions
+    - plot_comparisons
+    - plot_slopes
   - title: Utilities
     contents:
     - print.marginaleffects
