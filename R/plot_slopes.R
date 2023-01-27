@@ -38,6 +38,16 @@ plot_slopes <- function(model,
                         draw = TRUE,
                         ...) {
 
+    if (is.null(effect) && is.null(condition) && !inherits(model, "slopes")) {
+        model <- slopes(
+            model,
+            by = TRUE,
+            type = type,
+            vcov = vcov,
+            conf_level = conf_level,
+            ...)
+    }
+
     out <- plot_comparisons(
         model = model,
         effect = effect,

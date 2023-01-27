@@ -240,20 +240,18 @@ seamlessly with standard functions like `summary()`, `plot()`, `tidy()`,
 and `glance()`, as well with [external packages like
 `modelsummary`.](https://vincentarelbundock.github.io/marginaleffects/)
 
-| Estimand                                                                                           | Functions                                                                                               |
-| -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| [Predictions](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html)      | [`predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html)      |
-|                                                                                                    | [`avg_predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html)  |
-|                                                                                                    | [`plot_predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_predictions.html)            |
-| [Comparisons](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)        | [`comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)      |
-|                                                                                                    | [`avg_comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)  |
-|                                                                                                    | [`plot_comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_predictions.html)            |
-|                                                                                                    | [`plot_avg()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_avg.html)            |
-| [Slopes](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html)                | [`slopes()`](https://vincentarelbundock.github.io/marginaleffects/reference/slopes.html)                |
-|                                                                                                    | [`avg_slopes()`](https://vincentarelbundock.github.io/marginaleffects/reference/slopes.html)            |
-|                                                                                                    | [`plot_slopes()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_slopes.html)            |
-|                                                                                                    | [`plot_avg()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_avg.html)            |
-| [Marginal means](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) | [`marginal_means()`](https://vincentarelbundock.github.io/marginaleffects/reference/marginalmeans.html) |
+| Estimand                                                                                           | Functions                                                                                                    |
+| -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| [Predictions](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html)      | [`predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html)           |
+|                                                                                                    | [`avg_predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html)       |
+|                                                                                                    | [`plot_predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_predictions.html) |
+| [Comparisons](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)        | [`comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)           |
+|                                                                                                    | [`avg_comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)       |
+|                                                                                                    | [`plot_comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_predictions.html) |
+| [Slopes](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html)                | [`slopes()`](https://vincentarelbundock.github.io/marginaleffects/reference/slopes.html)                     |
+|                                                                                                    | [`avg_slopes()`](https://vincentarelbundock.github.io/marginaleffects/reference/slopes.html)                 |
+|                                                                                                    | [`plot_slopes()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_slopes.html)           |
+| [Marginal means](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) | [`marginal_means()`](https://vincentarelbundock.github.io/marginaleffects/reference/marginalmeans.html)      |
 
 ### Examples
 
@@ -414,17 +412,17 @@ nrow(mfx)
 mfx
 #> 
 #>  Term  Estimate Std. Error       z   Pr(>|z|)     2.5 %     97.5 %
-#>    hp -0.036906    0.01850 -1.9947 0.04607455  -0.07317 -0.0006429
-#>    hp -0.028689    0.01563 -1.8357 0.06640277  -0.05932  0.0019422
+#>    hp -0.036906    0.01850 -1.9947 0.04607449  -0.07317 -0.0006429
+#>    hp -0.028689    0.01563 -1.8357 0.06640283  -0.05932  0.0019422
 #>    hp -0.046572    0.02259 -2.0619 0.03922051  -0.09084 -0.0023017
 #>    hp -0.042271    0.01328 -3.1824 0.00146054  -0.06831 -0.0162375
 #>    hp -0.039018    0.01341 -2.9095 0.00362022  -0.06530 -0.0127338
 #> --- 86 rows omitted. See ?avg_slopes and ?print.marginaleffects --- 
-#>    am  4.080730    3.93511  1.0370 0.29973348  -3.63195 11.7934042
-#>    am  2.106353    2.28920  0.9201 0.35750681  -2.38040  6.5931041
-#>    am  0.895066    1.64419  0.5444 0.58617955  -2.32749  4.1176212
-#>    am  4.027219    3.24024  1.2429 0.21391272  -2.32353 10.3779654
-#>    am -0.236915    1.58643 -0.1493 0.88128651  -3.34625  2.8724244 
+#>    am  4.080730    3.93510  1.0370 0.29973254  -3.63193 11.7933892
+#>    am  2.106353    2.28920  0.9201 0.35750651  -2.38039  6.5931013
+#>    am  0.895066    1.64419  0.5444 0.58617934  -2.32749  4.1176193
+#>    am  4.027219    3.24024  1.2429 0.21391321  -2.32353 10.3779723
+#>    am -0.236915    1.58642 -0.1493 0.88128623  -3.34625  2.8724169 
 #> 
 #> Prediction type:  response 
 #> Columns: rowid, type, term, estimate, std.error, statistic, p.value, conf.low, conf.high, predicted, predicted_hi, predicted_lo, mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb, eps
@@ -495,7 +493,7 @@ slopes(
   newdata = datagrid(am = 0:1))
 #> 
 #>  Term Estimate Std. Error      z Pr(>|z|)  2.5 %  97.5 % am
-#>    wt   -2.676      1.419 -1.886 0.059354 -5.458  0.1056  0
+#>    wt   -2.676      1.419 -1.886 0.059355 -5.458  0.1056  0
 #>    wt   -5.432      2.152 -2.524 0.011605 -9.651 -1.2139  1
 #> 
 #> Prediction type:  response 
@@ -589,14 +587,14 @@ avg_comparisons(mod, by = "am")
 avg_slopes(mod, by = "cyl")
 #> 
 #>  Term    Contrast Estimate Std. Error       z   Pr(>|z|)    2.5 %    97.5 % cyl
-#>    hp mean(dY/dX) -0.03667    0.01048 -3.4996 0.00046588 -0.05721 -0.016134   6
+#>    hp mean(dY/dX) -0.03667    0.01048 -3.4996 0.00046589 -0.05721 -0.016134   6
 #>    hp mean(dY/dX) -0.05301    0.01989 -2.6657 0.00768339 -0.09199 -0.014034   4
-#>    hp mean(dY/dX) -0.02704    0.01738 -1.5553 0.11987297 -0.06110  0.007034   8
-#>    wt mean(dY/dX) -4.32457    1.39608 -3.0977 0.00195057 -7.06083 -1.588306   6
+#>    hp mean(dY/dX) -0.02704    0.01738 -1.5553 0.11987298 -0.06110  0.007034   8
+#>    wt mean(dY/dX) -4.32457    1.39608 -3.0977 0.00195057 -7.06083 -1.588307   6
 #>    wt mean(dY/dX) -6.44404    1.45832 -4.4188 9.9252e-06 -9.30230 -3.585773   4
-#>    wt mean(dY/dX) -1.77819    1.00704 -1.7658 0.07743628 -3.75196  0.195572   8
-#>    am mean(dY/dX) -1.12930    1.60146 -0.7052 0.48070735 -4.26810  2.009513   6
-#>    am mean(dY/dX)  1.27543    2.63009  0.4849 0.62772027 -3.87945  6.430303   4
+#>    wt mean(dY/dX) -1.77819    1.00704 -1.7658 0.07743630 -3.75196  0.195572   8
+#>    am mean(dY/dX) -1.12930    1.60146 -0.7052 0.48070738 -4.26810  2.009513   6
+#>    am mean(dY/dX)  1.27543    2.63008  0.4849 0.62771979 -3.87944  6.430296   4
 #>    am mean(dY/dX) -0.54744    2.77930 -0.1970 0.84385090 -5.99477  4.899891   8
 #> 
 #> Prediction type:  response 
@@ -702,7 +700,7 @@ slopes(
   newdata = datagrid(qsec = range))
 #> 
 #>  Term Estimate Std. Error     z Pr(>|z|)   2.5 % 97.5 % qsec
-#>  drat    5.224      3.791 1.378 0.168216 -2.2064  12.65 14.5
+#>  drat    5.224      3.791 1.378 0.168218 -2.2065  12.65 14.5
 #>  drat   10.241      5.161 1.984 0.047233  0.1251  20.36 22.9
 #> 
 #> Prediction type:  response 
@@ -719,8 +717,8 @@ slopes(
   variables = "drat",
   newdata = datagrid(qsec = range))
 #> 
-#>   Term Estimate Std. Error      z Pr(>|z|)  2.5 % 97.5 %
-#>  b1=b2   -5.017      8.519 -0.589  0.55589 -21.71  11.68
+#>   Term Estimate Std. Error       z Pr(>|z|)  2.5 % 97.5 %
+#>  b1=b2   -5.017      8.519 -0.5889   0.5559 -21.72  11.68
 #> 
 #> Prediction type:  response 
 #> Columns: type, term, estimate, std.error, statistic, p.value, conf.low, conf.high
@@ -734,8 +732,8 @@ function to conduct an equivalence test:
 avg_slopes(mod) |> hypotheses(equivalence = c(-2, 2))
 #> 
 #>  Term Estimate Std. Error     z   Pr(>|z|)  2.5 % 97.5 %      p (Inf)    p (Sup)     p (Eq)
-#>  qsec    1.124     0.4331 2.595  0.0094487 0.2752  1.973 2.740295e-13 0.02158503 0.02158503
-#>  drat    7.224     1.3652 5.292 1.2122e-07 4.5484  9.900 7.062377e-12 0.99993505 0.99993505
+#>  qsec    1.124     0.4331 2.595  0.0094487 0.2752  1.973 2.740286e-13 0.02158502 0.02158502
+#>  drat    7.224     1.3652 5.292 1.2122e-07 4.5484  9.900 7.062313e-12 0.99993505 0.99993505
 #> 
 #> Prediction type:  response 
 #> Columns: type, term, estimate, std.error, statistic, p.value, conf.low, conf.high, statistic.noninf, statistic.nonsup, p.value.noninf, p.value.nonsup, p.value.equiv

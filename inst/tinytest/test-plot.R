@@ -6,17 +6,28 @@ exit_if_not(require("tinyviztest"))
 library("tinyviztest")
 using("tinyviztest")
 
-# basic plot.slopes()
+# from marginaleffects objects
 mod <- glm(am ~ hp + wt, data = mtcars)
-mfx <- slopes(mod)
-p <- plot(mfx)
+
+p <- plot_comparisons(comparisons(mod))
+expect_inherits(p, "gg")
+p <- plot(comparisons(mod))
+expect_inherits(p, "gg")
+
+p <- plot_slopes(slopes(mod))
+expect_inherits(p, "gg")
+p <- plot(slopes(mod))
+expect_inherits(p, "gg")
+
+
+# from models
+p <- plot_slopes(mod)
 expect_snapshot_plot(p, "plot_marginaleffects")
 
 
 # plot(mfx): no CI
 mod <- glm(am ~ hp + wt, data = mtcars)
-mfx <- slopes(mod, vcov = FALSE)
-p <- plot(mfx)
+p <- plot_slopes(mod, vcov = FALSE)
 expect_snapshot_plot(p, "plot_marginaleffects_no_CI")
 
 
@@ -25,6 +36,5 @@ dat <- mtcars
 dat$cyl <- factor(dat$cyl)
 dat <- dat
 mod <- lm(mpg ~ hp + cyl, data = dat)
-mfx <- slopes(mod)
-p <- plot(mfx)
+p <- plot_slopes(mod)
 expect_snapshot_plot(p, "plot_contrast_overlap_bug_fix")

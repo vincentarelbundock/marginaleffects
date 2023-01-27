@@ -46,7 +46,12 @@ plot_comparisons <- function(model,
             dots[["by"]] <- TRUE
         }
         args <- c(args, dots)
-        args[[1]] <- do.call(comparisons, args)
+        if (inherits(model, "slopes")) {
+            args[["transform_post"]] <- args[["transform_pre"]] <- NULL
+            args[[1]] <- do.call(get_averages, args)
+        } else if (!inherits(model, "comparisons")) {
+            args[[1]] <- do.call(comparisons, args)
+        }
         p <- do.call(plot_avg, args)
         return(p)
     }

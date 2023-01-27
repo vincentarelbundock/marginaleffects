@@ -8,13 +8,13 @@
 #' @noRd
 #' @examples
 #' mod <- glm(am ~ hp + wt, data = mtcars)
-#' mfx <- slopes(mod)
-#' plot_avg(mfx)
+#' avg_slopes(mod)
+#' plot_slopes(mod)
 #' 
 #' 
 #' mod <- glm(am ~ hp + factor(gear), data = mtcars)
-#' cmp <- comparisons(mod)
-#' plot_avg(cmp)
+#' avg_comparisons(mod)
+#' plot_comparisons(cmp)
 #
 plot_avg <- function(x,  ...) {
 
