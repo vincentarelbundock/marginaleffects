@@ -21,7 +21,7 @@
 #' 
 #' plot_comparisons(mod, effect = "am", condition = list("hp", "drat" = range))
 #' 
-plot_comparisons <- function(model,
+plot_comparisons <- function(x,
                              effect = NULL,
                              condition = NULL,
                              type = "response",
@@ -35,7 +35,7 @@ plot_comparisons <- function(model,
     if (is.null(effect) && is.null(condition)) {
         dots <- list(...)
         args <- list(
-            model,
+            x,
             type = type,
             vcov = vcov,
             conf_level = conf_level,
@@ -46,10 +46,10 @@ plot_comparisons <- function(model,
             dots[["by"]] <- TRUE
         }
         args <- c(args, dots)
-        if (inherits(model, "slopes")) {
+        if (inherits(x, "slopes")) {
             args[["transform_post"]] <- args[["transform_pre"]] <- NULL
             args[[1]] <- do.call(get_averages, args)
-        } else if (!inherits(model, "comparisons")) {
+        } else if (!inherits(x, "comparisons")) {
             args[[1]] <- do.call(comparisons, args)
         }
         p <- do.call(plot_avg, args)
@@ -63,7 +63,7 @@ plot_comparisons <- function(model,
     }
 
     # shared code with plot_comparisons()
-    tmp <- get_plot_newdata(model, condition, effect)
+    tmp <- get_plot_newdata(x, condition, effect)
     dat <- tmp$modeldata
     nd <- tmp$newdata
     condition <- tmp$condition
@@ -85,7 +85,7 @@ plot_comparisons <- function(model,
     # }
 
     datplot <- comparisons(
-        model,
+        x,
         newdata = nd,
         type = type,
         vcov = vcov,

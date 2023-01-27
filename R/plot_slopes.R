@@ -5,6 +5,7 @@
 #' interactions, where the values of marginal effects depend on the values of
 #' "condition" variables.
 #'
+#' @param x a model or object produced by the `slopes()` or `comparisons()` functions.
 #' @param effect Name of the variable whose contrast we want to plot on the y-axis. If `NULL`, a plot of average slopes is returned.
 #' @param condition character vector or named list of length smaller than 3. Character vectors must be the names of the predictor variables to display. The names of the list must The first element is displayed on the x-axis. The second element determines the colors. The third element creates facets. Unspecified variables are held at their means or modes. Lists can include these types of values (see Examples section below):
 #' * Numeric vector
@@ -29,7 +30,7 @@
 #'
 #' plot_slopes(mod, effect = "am", condition = list("hp", "drat" = "threenum"))
 #' 
-plot_slopes <- function(model,
+plot_slopes <- function(x,
                         effect = NULL,
                         condition = NULL,
                         type = "response",
@@ -38,9 +39,9 @@ plot_slopes <- function(model,
                         draw = TRUE,
                         ...) {
 
-    if (is.null(effect) && is.null(condition) && !inherits(model, "slopes")) {
+    if (is.null(effect) && is.null(condition) && !inherits(x, "slopes")) {
         model <- slopes(
-            model,
+            x,
             by = TRUE,
             type = type,
             vcov = vcov,
@@ -49,7 +50,7 @@ plot_slopes <- function(model,
     }
 
     out <- plot_comparisons(
-        model = model,
+        x,
         effect = effect,
         condition = condition,
         type = type,
@@ -62,7 +63,7 @@ plot_slopes <- function(model,
     if (inherits(out, "ggplot")) {
         out <- out + ggplot2::labs(
             x = condition[1],
-            y = sprintf("Marginal effect of %s on %s", effect, insight::find_response(model)[[1]]))
+            y = sprintf("Marginal effect of %s on %s", effect, insight::find_response(x)[[1]]))
     }
 
     return(out)

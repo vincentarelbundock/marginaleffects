@@ -5,7 +5,7 @@
 \title{Plot Conditional Marginal Effects}
 \usage{
 plot_slopes(
-  model,
+  x,
   effect = NULL,
   condition = NULL,
   type = "response",
@@ -16,7 +16,7 @@ plot_slopes(
 )
 
 plot_slopes(
-  model,
+  x,
   effect = NULL,
   condition = NULL,
   type = "response",
@@ -27,7 +27,7 @@ plot_slopes(
 )
 }
 \arguments{
-\item{model}{Model object}
+\item{x}{a model or object produced by the \code{slopes()} or \code{comparisons()} functions.}
 
 \item{effect}{Name of the variable whose contrast we want to plot on the y-axis. If \code{NULL}, a plot of average slopes is returned.}
 

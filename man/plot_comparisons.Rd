@@ -5,7 +5,7 @@
 \title{Plot Comparisons}
 \usage{
 plot_comparisons(
-  model,
+  x,
   effect = NULL,
   condition = NULL,
   type = "response",
@@ -18,7 +18,7 @@ plot_comparisons(
 )
 
 plot_comparisons(
-  model,
+  x,
   effect = NULL,
   condition = NULL,
   type = "response",
@@ -31,7 +31,7 @@ plot_comparisons(
 )
 }
 \arguments{
-\item{model}{Model object}
+\item{x}{a model or object produced by the \code{slopes()} or \code{comparisons()} functions.}
 
 \item{effect}{Name of the variable whose contrast we want to plot on the y-axis. If \code{NULL}, a plot of average comparisons is returned.}
 
