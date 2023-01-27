@@ -65,7 +65,7 @@ package. See the "Model-Specific Arguments" section of the
 arguments.}
 }
 \value{
-A \code{ggplot2} object
+A \code{ggplot2} object or data frame (if \code{draw=FALSE})
 }
 \description{
 This alias is kept for backward compatibility.

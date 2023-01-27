@@ -10,7 +10,7 @@
 #' @param draw `TRUE` returns a `ggplot2` plot. `FALSE` returns a `data.frame` of the underlying data.
 #' @inheritParams plot_slopes
 #' @inheritParams predictions
-#' @return A `ggplot2` object
+#' @return A `ggplot2` object or data frame (if `draw=FALSE`)
 #' @family plot
 #' @export
 #' @examples
@@ -77,7 +77,10 @@ plot_predictions <- function(model,
 
     # return immediately if the user doesn't want a plot
     if (isFALSE(draw)) {
-        return(datplot)
+        for (i in seq_along(condition)) {
+            colnames(datplot)[colnames(datplot) == paste0("condition", i)] <- names(condition)[i]
+        }
+        return(as.data.frame(datplot))
     } else {
         insight::check_if_installed("ggplot2")
     }
@@ -193,9 +196,12 @@ get_plot_newdata <- function(model, condition, effect = NULL) {
         checkmate::check_list(condition, min.len = 1, max.len = 3)
     )
 
-    # vector -> list
-    if (isTRUE(checkmate::check_character(condition))) {
-        condition <- stats::setNames(rep(list(NULL), length(condition)), condition)
+    # c("a", "b") or list("a", "b") -> named list of NULLs
+    flag1 <- isTRUE(checkmate::check_character(condition))
+    flag2 <- isTRUE(checkmate::check_list(condition, names = "unnamed")) &&
+             all(sapply(condition, function(x) isTRUE(checkmate::check_string(x))))
+    if (flag1 || flag2) {
+        condition <- stats::setNames(rep(list(NULL), length(condition)), unlist(condition))
     }
 
     # validity of the list

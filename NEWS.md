@@ -4,6 +4,7 @@ Breaking changes:
 
 * All functions return an `estimate` column instead of the function-specific `predicted`, `comparisons`, `dydx`, etc. This change only affects unit-level estimates, and not average estimates, which already used the `estimate` column name.
 * The `transform_avg` argument in `tidy()` deprecated. Use `transform_post` instead.
+* `plot_*()` now return the actual variable names supplied to the `condition` argument, rather than the opaque "condition1", "condition2", etc.
 
 New models supported:
 

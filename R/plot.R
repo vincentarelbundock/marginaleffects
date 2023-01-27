@@ -16,7 +16,7 @@
 #' avg_comparisons(mod)
 #' plot_comparisons(cmp)
 #
-plot_avg <- function(x,  ...) {
+plot_avg <- function(x,  draw = FALSE, ...) {
 
     insight::check_if_installed("ggplot2")
 
@@ -28,6 +28,10 @@ plot_avg <- function(x,  ...) {
         dat$term <- ifelse(dat$contrast == "dY/dX",
                            dat$term,
                            sprintf("%s: %s", dat$term, dat$contrast))
+    }
+
+    if (isFALSE(draw)) {
+        return(as.data.frame(dat))
     }
 
     if ("conf.low" %in% colnames(dat)) {

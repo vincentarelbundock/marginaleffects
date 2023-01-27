@@ -23,8 +23,8 @@ p2$am_fct <- as.numeric(as.character(p2$am_fct))
 p2 <- p2[order(-p2$am_fct, p2$mpg),]
 expect_equivalent(p1$estimate, p2$estimate)
 
-p1$condition1 <- as.character(p1$condition1)
-p1$condition2 <- as.character(p1$condition2)
+p1$condition1 <- as.character(p1$am_fct)
+p1$condition2 <- as.character(p1$mpg)
 
 x <- p1[p1$condition1 == "1" & p1$condition2 == "Min", "estimate"]
 y <- p2[p2$am_fct == 1 & p2$mpg == 10.4, "estimate"]
@@ -159,3 +159,21 @@ p1 <- plot_cap(
     mod,
     condition = list("am_fct", mpg = "minmax")) 
 expect_inherits(p1, "gg")
+
+
+
+# Issue #609: `plot_*(draw=FALSE)` returns original column names instead of `condition1`
+mod <- lm(mpg ~ hp * qsec * factor(gear), data = mtcars)
+p <- plot_predictions(mod, condition = list("hp", "qsec", "gear"))
+expect_inherits(p, "gg")
+p <- plot_predictions(mod, condition = c("hp", "qsec", "gear"))
+expect_inherits(p, "gg")
+p <- plot_predictions(mod, condition = list("hp", "qsec" = "minmax"))
+expect_inherits(p, "gg")
+
+p <- plot_predictions(mod, condition = list("hp", "qsec" = "minmax", "gear"), draw = FALSE)
+expect_true("qsec" %in% colnames(p))
+p <- plot_comparisons(mod, effect = "hp", condition = list("qsec" = "minmax", "gear"), draw = FALSE)
+expect_true("qsec" %in% colnames(p))
+p <- plot_slopes(mod, effect = "hp", condition = list("qsec" = "minmax", "gear"), draw = FALSE)
+expect_true("qsec" %in% colnames(p))

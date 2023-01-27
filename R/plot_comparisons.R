@@ -130,8 +130,11 @@ plot_comparisons <- function(x,
 
     # return immediately if the user doesn't want a plot
     if (isFALSE(draw)) {
+        for (i in seq_along(condition)) {
+            colnames(datplot)[colnames(datplot) == paste0("condition", i)] <- names(condition)[i]
+        }
         attr(datplot, "posterior_draws") <- draws
-        return(datplot)
+        return(data.frame(datplot))
     } else {
         insight::check_if_installed("ggplot2")
     }

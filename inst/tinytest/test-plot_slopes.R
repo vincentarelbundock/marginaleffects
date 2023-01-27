@@ -19,7 +19,7 @@ expect_false(anyNA(p$estimate))
 
 # custom values
 p <- plot_slopes(mod, effect = "bill_length_mm", condition = list("flipper_length_mm" = 10), draw = FALSE)
-expect_true(p$condition1 == 10)
+expect_true(p$flipper_length_mm == 10)
 
 
 # vcov

@@ -280,7 +280,7 @@ p <- plot_comparisons(
   condition = list(wt = c(2.5, 3, 3.5)),
   draw = FALSE)
 
-ggplot(p, aes(y = condition1, x = comparison, xmin = conf.low, xmax = conf.high)) +
+ggplot(p, aes(y = wt, x = comparison, xmin = conf.low, xmax = conf.high)) +
   geom_pointrange()
 
 # 7. slope of wt for each level of am
