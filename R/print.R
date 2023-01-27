@@ -36,9 +36,9 @@ print.marginaleffects <- function(x,
                                   ...) {
 
 
-    checkmate::assert_numeric(digits)
-    checkmate::assert_numeric(topn)
-    checkmate::assert_numeric(nrows)
+    checkmate::assert_number(digits)
+    checkmate::assert_number(topn)
+    checkmate::assert_number(nrows)
     checkmate::assert_choice(style, choices = c("data.frame", "summary"))
 
 
