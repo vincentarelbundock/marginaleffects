@@ -1,4 +1,3 @@
-# TODO: test non-linear GLM to know if t is computed on the link scale
 source("helpers.R")
 requiet("dplyr")
 requiet("emmeans")

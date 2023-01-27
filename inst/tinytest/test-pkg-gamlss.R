@@ -1,6 +1,3 @@
-# exit_file("broken")
-
-# bug fix submitted for this version of insight
 source("helpers.R")
 using("marginaleffects")
 

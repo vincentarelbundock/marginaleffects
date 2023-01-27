@@ -1,4 +1,3 @@
-# exit_file("works interactively")
 source("helpers.R")
 using("marginaleffects")
 

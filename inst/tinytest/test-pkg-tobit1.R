@@ -1,6 +1,4 @@
 exit_file("tobit1 is not on CRAN")
-
-
 source("helpers.R")
 using("marginaleffects")
 

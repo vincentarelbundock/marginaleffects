@@ -38,7 +38,7 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
 
     white_list <- c(
         "conf.int", "modeldata", "contrast_factor", "contrast_numeric", "internal_call", "df",
-        "transform_post", "transform_pre", "ci_method", "side", "delta", "null", "equivalence",
+        "transform_post", "transform_pre", "ci_method", "side", "delta", "null", "equivalence", "draw",
         "at" # topmodels procast
         )
 

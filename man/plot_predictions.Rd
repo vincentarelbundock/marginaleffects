@@ -85,7 +85,6 @@ plot_predictions(mod, condition = list("hp", wt = range))
 }
 \seealso{
 Other plot: 
-\code{\link{plot_avg}()},
 \code{\link{plot_comparisons}()},
 \code{\link{plot_slopes}()}
 }

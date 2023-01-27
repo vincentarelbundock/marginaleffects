@@ -1,11 +1,8 @@
-#' Plot Conditional Contrasts
+#' Plot Comparisons
 #'
-#' This function plots contrasts (y-axis) against values of predictor(s)
-#' variable(s) (x-axis and colors). This is especially useful in models with
-#' interactions, where the values of contrasts depend on the values of
-#' "condition" variables.
+#' This function plots average comparisons, or conditional comparisons. Conditional comparisons present comparisons (y-axis) against values of predictor(s) variable(s) (x-axis and colors). This is especially useful in models with interactions, where the values of contrasts depend on the values of "condition" variables.
 #'
-#' @param effect Name of the variable whose contrast we want to plot on the y-axis
+#' @param effect Name of the variable whose contrast we want to plot on the y-axis. If `NULL`, a plot of average comparisons is returned.
 #' @param draw `TRUE` returns a `ggplot2` plot. `FALSE` returns a `data.frame` of the underlying data.
 #' @inheritParams comparisons
 #' @inheritParams plot_slopes
@@ -34,6 +31,26 @@ plot_comparisons <- function(model,
                              transform_post = NULL,
                              draw = TRUE,
                              ...) {
+
+    if (is.null(effect) && is.null(condition)) {
+        dots <- list(...)
+        args <- list(
+            model,
+            type = type,
+            vcov = vcov,
+            conf_level = conf_level,
+            transform_pre = transform_pre,
+            transform_post = transform_post,
+            draw = draw)
+        if (!"by" %in% names(dots)) {
+            dots[["by"]] <- TRUE
+        }
+        args <- c(args, dots)
+        args[[1]] <- do.call(comparisons, args)
+        p <- do.call(plot_avg, args)
+        return(p)
+    }
+
     # sanity check
     if (!isTRUE(length(effect) == 1)) {
         msg <- "The `effect` argument must be a vector or list of length 1."
@@ -222,3 +239,9 @@ plot_comparisons <- function(model,
 #' @keywords internal
 #' @export
 plot_comparisons <- plot_comparisons
+
+
+################### Backward compatibility for deprecated methods. Also nice to keep.
+#' @export
+#' @noRd
+plot.comparisons <- plot_comparisons

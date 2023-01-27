@@ -5,7 +5,7 @@
 #' interactions, where the values of marginal effects depend on the values of
 #' "condition" variables.
 #'
-#' @param effect Name of the variable whose marginal effect we want to plot on the y-axis
+#' @param effect Name of the variable whose contrast we want to plot on the y-axis. If `NULL`, a plot of average slopes is returned.
 #' @param condition character vector or named list of length smaller than 3. Character vectors must be the names of the predictor variables to display. The names of the list must The first element is displayed on the x-axis. The second element determines the colors. The third element creates facets. Unspecified variables are held at their means or modes. Lists can include these types of values (see Examples section below):
 #' * Numeric vector
 #' * Function which returns a numeric vector or a set of unique categorical values 
@@ -37,6 +37,7 @@ plot_slopes <- function(model,
                         conf_level = 0.95,
                         draw = TRUE,
                         ...) {
+
     out <- plot_comparisons(
         model = model,
         effect = effect,
@@ -66,3 +67,10 @@ plot_slopes <- function(model,
 #' @keywords internal
 #' @export
 plot_slopes <- plot_slopes
+
+
+
+################### Backward compatibility for deprecated methods. Also nice to keep.
+#' @export
+#' @noRd
+plot.slopes <- plot_slopes

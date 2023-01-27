@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_comparisons.R
 \name{plot_comparisons}
 \alias{plot_comparisons}
-\title{Plot Conditional Contrasts}
+\title{Plot Comparisons}
 \usage{
 plot_comparisons(
   model,
@@ -33,7 +33,7 @@ plot_comparisons(
 \arguments{
 \item{model}{Model object}
 
-\item{effect}{Name of the variable whose contrast we want to plot on the y-axis}
+\item{effect}{Name of the variable whose contrast we want to plot on the y-axis. If \code{NULL}, a plot of average comparisons is returned.}
 
 \item{condition}{character vector or named list of length smaller than 3. Character vectors must be the names of the predictor variables to display. The names of the list must The first element is displayed on the x-axis. The second element determines the colors. The third element creates facets. Unspecified variables are held at their means or modes. Lists can include these types of values (see Examples section below):
 \itemize{
@@ -98,10 +98,7 @@ arguments.}
 A \code{ggplot2} object
 }
 \description{
-This function plots contrasts (y-axis) against values of predictor(s)
-variable(s) (x-axis and colors). This is especially useful in models with
-interactions, where the values of contrasts depend on the values of
-"condition" variables.
+This function plots average comparisons, or conditional comparisons. Conditional comparisons present comparisons (y-axis) against values of predictor(s) variable(s) (x-axis and colors). This is especially useful in models with interactions, where the values of contrasts depend on the values of "condition" variables.
 
 This alias is kept for backward compatibility.
 }
@@ -119,7 +116,6 @@ plot_comparisons(mod, effect = "am", condition = list("hp", "drat" = range))
 }
 \seealso{
 Other plot: 
-\code{\link{plot_avg}()},
 \code{\link{plot_predictions}()},
 \code{\link{plot_slopes}()}
 }

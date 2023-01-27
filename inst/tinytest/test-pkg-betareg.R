@@ -1,4 +1,3 @@
-# bug fix submitted for this version of insight
 source("helpers.R")
 using("marginaleffects")
 

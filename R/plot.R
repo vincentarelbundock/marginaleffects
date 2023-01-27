@@ -1,11 +1,11 @@
-#' Plot aggregated (average) comparisons and slopes
+#' Plot average comparisons and slopes
 #' 
 #' `x` is re-evaluated by the corresponding `avg_*()` function the result is drawn as a point-range plot using `ggplot2`.
 #' @param x object produced by the `comparisons()` or `slopes()` object.
 #' @param ... additional arguments are passed to the `aggregate` function (e.g., `conf_level`).
 #' @return A `ggplot2` object
 #' @family plot
-#' @export
+#' @noRd
 #' @examples
 #' mod <- glm(am ~ hp + wt, data = mtcars)
 #' mfx <- slopes(mod)
@@ -16,7 +16,6 @@
 #' cmp <- comparisons(mod)
 #' plot_avg(cmp)
 #
-#' @export
 plot_avg <- function(x,  ...) {
 
     insight::check_if_installed("ggplot2")
@@ -72,11 +71,3 @@ plot_avg <- function(x,  ...) {
 
 
 
-################### Backward compatibility for deprecated methods. Also nice to keep.
-#' @export
-#' @noRd
-plot.comparisons <- plot_avg
-
-#' @export
-#' @noRd
-plot.slopes <- plot_avg

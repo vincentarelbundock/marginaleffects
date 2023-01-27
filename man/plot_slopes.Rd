@@ -29,7 +29,7 @@ plot_slopes(
 \arguments{
 \item{model}{Model object}
 
-\item{effect}{Name of the variable whose marginal effect we want to plot on the y-axis}
+\item{effect}{Name of the variable whose contrast we want to plot on the y-axis. If \code{NULL}, a plot of average slopes is returned.}
 
 \item{condition}{character vector or named list of length smaller than 3. Character vectors must be the names of the predictor variables to display. The names of the list must The first element is displayed on the x-axis. The second element determines the colors. The third element creates facets. Unspecified variables are held at their means or modes. Lists can include these types of values (see Examples section below):
 \itemize{
@@ -103,7 +103,6 @@ plot_slopes(mod, effect = "am", condition = list("hp", "drat" = "threenum"))
 }
 \seealso{
 Other plot: 
-\code{\link{plot_avg}()},
 \code{\link{plot_comparisons}()},
 \code{\link{plot_predictions}()}
 }
