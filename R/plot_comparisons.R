@@ -8,7 +8,6 @@
 #' @inheritParams plot_slopes
 #' @inheritParams slopes
 #' @return A `ggplot2` object
-#' @family plot
 #' @export
 #' @examples
 #' mod <- lm(mpg ~ hp * drat * factor(am), data = mtcars)

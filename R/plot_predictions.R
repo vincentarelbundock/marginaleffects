@@ -11,7 +11,6 @@
 #' @inheritParams plot_slopes
 #' @inheritParams predictions
 #' @return A `ggplot2` object or data frame (if `draw=FALSE`)
-#' @family plot
 #' @export
 #' @examples
 #' mod <- lm(mpg ~ hp + wt, data = mtcars)

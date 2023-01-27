@@ -114,10 +114,4 @@ plot_comparisons(mod, effect = "hp", condition = list("am", "drat" = 3:5))
 plot_comparisons(mod, effect = "am", condition = list("hp", "drat" = range))
 
 }
-\seealso{
-Other plot: 
-\code{\link{plot_predictions}()},
-\code{\link{plot_slopes}()}
-}
-\concept{plot}
 \keyword{internal}

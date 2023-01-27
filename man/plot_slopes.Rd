@@ -101,10 +101,4 @@ plot_slopes(mod, effect = "am", condition = list("hp", "drat" = range))
 plot_slopes(mod, effect = "am", condition = list("hp", "drat" = "threenum"))
 
 }
-\seealso{
-Other plot: 
-\code{\link{plot_comparisons}()},
-\code{\link{plot_predictions}()}
-}
-\concept{plot}
 \keyword{internal}

@@ -14,7 +14,6 @@
 #' @param draw `TRUE` returns a `ggplot2` plot. `FALSE` returns a `data.frame` of the underlying data.
 #' @inheritParams slopes
 #' @return A `ggplot2` object
-#' @family plot
 #' @export
 #' @examples
 #' library(marginaleffects)
