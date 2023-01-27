@@ -29,6 +29,7 @@ Sys.setenv(TZ="America/New_York")
 
 # snapshots
 options(width = 10000)
+options(digits = 5)
 
 # important because otherwise testing so many packages is terrible
 dict <- c(

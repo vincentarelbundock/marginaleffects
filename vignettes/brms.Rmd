@@ -89,10 +89,10 @@ pred <- predictions(mod)
 head(pred)
 ```
 
-To visualize the relationship between the outcome and one of the regressors, we can plot conditional adjusted predictions with the `plot_cap` function:
+To visualize the relationship between the outcome and one of the regressors, we can plot conditional adjusted predictions with the `plot_predictions` function:
 
 ```{r}
-plot_cap(mod, condition = "age")
+plot_predictions(mod, condition = "age")
 ```
 
 Compute adjusted predictions for some user-specified values of the regressors, using the `newdata` argument and the `datagrid` function:
@@ -142,7 +142,7 @@ slopes(
 Compute and plot conditional marginal effects:
 
 ```{r}
-plot_cme(mod, effect = "woman", condition = "age")
+plot_slopes(mod, effect = "woman", condition = "age")
 ```
 
 The `posterior_draws` produces a dataset with `drawid` and `draw` columns:
@@ -253,7 +253,7 @@ ggplot(mfx, aes(x = draw, y = term)) +
 Plot marginal effects, conditional on a regressor:
 
 ```{r, fig.asp = .8}
-plot_cme(mod,
+plot_slopes(mod,
          effect = "civil_liberties",
          condition = "party_autonomy")
 ```
@@ -565,10 +565,10 @@ ggplot(draws, aes(x = draw, fill = group)) +
          fill = "Heating system")
 ```
 
-Use the `plot_cap` function to plot conditional adjusted predictions for each level of the outcome variable `gear`, conditional on the value of the `mpg` regressor:
+Use the `plot_predictions` function to plot conditional adjusted predictions for each level of the outcome variable `gear`, conditional on the value of the `mpg` regressor:
 
 ```{r}
-plot_cap(mod, condition = "oc.gc") +
+plot_predictions(mod, condition = "oc.gc") +
     facet_wrap(~ group) +
     labs(y = "Predicted probability")
 ```
@@ -656,11 +656,11 @@ predictions(mod, type = "link", dpar = "hu") |> head()
 Plot adjusted predictions as a function of `lifeExp`:
 
 ```{r}
-plot_cap(
+plot_predictions(
     mod,
     condition = "lifeExp") +
     labs(y = "mu") +
-plot_cap(
+plot_predictions(
     mod,
     dpar = "hu",
     condition = "lifeExp") +
@@ -670,7 +670,7 @@ plot_cap(
 Predictions with more than one condition and the `re_formula` argument from `brms`:
 
 ```{r}
-plot_cap(
+plot_predictions(
     mod,
     re_formula = NULL,
     condition = c("lifeExp", "continent"))
@@ -743,13 +743,13 @@ avg_slopes(mod, dpar = "hu", type = "link")
 Plot Conditional Marginal Effects
 
 ```{r}
-plot_cme(
+plot_slopes(
     mod,
     effect = "lifeExp",
     condition = "lifeExp") +
     labs(y = "mu") +
 
-plot_cme(
+plot_slopes(
     mod,
     dpar = "hu",
     effect = "lifeExp",

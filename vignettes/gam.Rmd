@@ -57,7 +57,7 @@ model <- bam(Y ~ Group + s(Time, by = Group) + s(Subject, bs = "re"),
 summary(model)
 ```
 
-# Adjusted Predictions: `predictions()` and `plot_cap()`
+# Adjusted Predictions: `predictions()` and `plot_predictions()`
 
 Compute adjusted predictions for each observed combination of regressor in the dataset used to fit the model. This gives us a dataset with the same number of rows as the original data, but new columns with predicted values and uncertainty estimates:
 
@@ -67,13 +67,13 @@ dim(pred)
 head(pred)
 ```
 
-We can easily plot adjusted predictions for different values of a regressor using the `plot_cap()` function:
+We can easily plot adjusted predictions for different values of a regressor using the `plot_predictions()` function:
 
 ```{r}
-plot_cap(model, condition = "Time")
+plot_predictions(model, condition = "Time")
 ```
 
-# Marginal Effects: `slopes()` and `plot_cme()`
+# Marginal Effects: `slopes()` and `plot_slopes()`
 
 Marginal effects are slopes of the prediction equation. They are an observation-level quantity. The `slopes()` function produces a dataset with the same number of rows as the original data, but with new columns for the slop and uncertainty estimates:
 
@@ -82,11 +82,11 @@ mfx <- slopes(model, variables = "Time")
 head(mfx)
 ```
 
-We can plot marginal effects for different values of a regressor using the `plot_cme()` function.
+We can plot marginal effects for different values of a regressor using the `plot_slopes()` function.
 This next plot shows the slope of the prediction equation, that is, the slope of the previous plot, at every value of the `Time` variable.
 
 ```{r}
-plot_cme(model, effect = "Time", condition = "Time")
+plot_slopes(model, effect = "Time", condition = "Time")
 ```
 
 The marginal effects in this plot can be interpreted as measuring the change in `Y` that is associated with a small increase in `Time`, for different baseline values of `Time`.

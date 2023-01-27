@@ -1,4 +1,4 @@
-#' Plot Conditional Adjusted Predictions
+#' Plot Predictions
 #'
 #' This function plots adjusted predictions (y-axis) against values of one or
 #' more predictors (x-axis and colors).
@@ -8,32 +8,31 @@
 #' * Function which returns a numeric vector or a set of unique categorical values 
 #' * Shortcut strings for common reference values: "minmax", "quartile", "threenum"
 #' @param draw `TRUE` returns a `ggplot2` plot. `FALSE` returns a `data.frame` of the underlying data.
-#' @inheritParams plot_cme
+#' @inheritParams plot_slopes
 #' @inheritParams predictions
 #' @return A `ggplot2` object
 #' @family plot
 #' @export
 #' @examples
 #' mod <- lm(mpg ~ hp + wt, data = mtcars)
-#' plot_cap(mod, condition = "wt")
+#' plot_predictions(mod, condition = "wt")
 #'
 #' mod <- lm(mpg ~ hp * wt * am, data = mtcars)
-#' plot_cap(mod, condition = c("hp", "wt"))
+#' plot_predictions(mod, condition = c("hp", "wt"))
 #'
-#' plot_cap(mod, condition = list("hp", wt = "threenum"))
+#' plot_predictions(mod, condition = list("hp", wt = "threenum"))
 #' 
-#' plot_cap(mod, condition = list("hp", wt = range))
+#' plot_predictions(mod, condition = list("hp", wt = range))
 #'
-plot_cap <- function(model,
-                     condition = NULL,
-                     type = "response",
-                     vcov = NULL,
-                     conf_level = 0.95,
-                     transform_post = NULL,
-                     draw = TRUE,
-                     ...) {
-
-    # shared code with plot_cco()
+plot_predictions <- function(model,
+                             condition = NULL,
+                             type = "response",
+                             vcov = NULL,
+                             conf_level = 0.95,
+                             transform_post = NULL,
+                             draw = TRUE,
+                             ...) {
+    # shared code with plot_comparisons()
     tmp <- get_plot_newdata(model, condition)
     dat <- tmp$modeldata
     nd <- tmp$newdata
@@ -45,12 +44,12 @@ plot_cap <- function(model,
     respname <- tmp$respname
 
     datplot <- predictions(model,
-                           newdata = nd,
-                           type = type,
-                           vcov = vcov,
-                           conf_level = conf_level,
-                           transform_post = transform_post,
-                           ...)
+        newdata = nd,
+        type = type,
+        vcov = vcov,
+        conf_level = conf_level,
+        transform_post = transform_post,
+        ...)
 
     colnames(datplot)[colnames(datplot) == condition1] <- "condition1"
     colnames(datplot)[colnames(datplot) == condition2] <- "condition2"
@@ -89,7 +88,7 @@ plot_cap <- function(model,
     # condition 1: continuous x-axis
     if (is.numeric(datplot$condition1)) {
         if (!isTRUE(vcov) && "conf.low" %in% colnames(datplot)) {
-             p <- p + ggplot2::geom_ribbon(
+            p <- p + ggplot2::geom_ribbon(
                 data = datplot,
                 ggplot2::aes(
                     x = condition1,
@@ -106,21 +105,20 @@ plot_cap <- function(model,
                 y = estimate,
                 color = condition2))
 
-    # categorical x-axis
+        # categorical x-axis
     } else {
         if (!isTRUE(vcov) && "conf.low" %in% colnames(datplot)) {
-             if (is.null(condition2)) {
-                 p <- p + ggplot2::geom_pointrange(
-                     data = datplot,
-                     ggplot2::aes(
-                         x = condition1,
-                         y = estimate,
-                         ymin = conf.low,
-                         ymax = conf.high,
-                         color = condition2))
-
-             } else {
-                 p <- p + ggplot2::geom_pointrange(
+            if (is.null(condition2)) {
+                p <- p + ggplot2::geom_pointrange(
+                    data = datplot,
+                    ggplot2::aes(
+                        x = condition1,
+                        y = estimate,
+                        ymin = conf.low,
+                        ymax = conf.high,
+                        color = condition2))
+            } else {
+                p <- p + ggplot2::geom_pointrange(
                     data = datplot,
                     position = ggplot2::position_dodge(.15),
                     ggplot2::aes(
@@ -129,8 +127,7 @@ plot_cap <- function(model,
                         ymin = conf.low,
                         ymax = conf.high,
                         color = condition2))
-             }
-
+            }
         } else {
             p <- p + ggplot2::geom_point(
                 data = datplot,
@@ -143,14 +140,15 @@ plot_cap <- function(model,
 
     # condition 3: facets
     if (!is.null(condition3)) {
-        p <- p + ggplot2::facet_wrap(~ condition3)
+        p <- p + ggplot2::facet_wrap(~condition3)
     }
 
-    p <- p + ggplot2::labs(x = condition1, 
-                           y = respname,
-                           color = condition2,
-                           fill = condition2,
-                           linetype = condition3)
+    p <- p + ggplot2::labs(
+        x = condition1,
+        y = respname,
+        color = condition2,
+        fill = condition2,
+        linetype = condition3)
 
     # set a new theme only if the default is theme_grey. this prevents user's
     # theme_set() from being overwritten
@@ -163,7 +161,6 @@ plot_cap <- function(model,
 
     return(p)
 }
-
 
 
 condition_shortcuts <- function(x, tr, shortcuts) {
@@ -312,3 +309,13 @@ get_plot_newdata <- function(model, condition, effect = NULL) {
         "condition3" = condition3) 
     return(out)
 }
+
+
+
+#' `plot_predictions()` is an alias to `plot_predictions()`
+#'
+#' This alias is kept for backward compatibility.
+#' @inherit plot_predictions
+#' @keywords internal
+#' @export
+plot_cap <- plot_predictions

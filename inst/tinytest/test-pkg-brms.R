@@ -288,15 +288,15 @@ expect_equivalent(mfx1$conf.high, mfx2$upper.HPD, tolerance = .001)
 
 
 
-# # plot_cap: no validity
-# p <- plot_cap(brms_interaction, condition = c("mpg", "vs"))
-# vdiffr::expect_doppelganger("brms logit plot_cap", p)
+# # plot_predictions: no validity
+# p <- plot_predictions(brms_interaction, condition = c("mpg", "vs"))
+# vdiffr::expect_doppelganger("brms logit plot_predictions", p)
 #
 #
 #
-# # plot_cap: no validity
-# p <- plot_cap(brms_interaction, condition = c("mpg", "vs"))
-# vdiffr::expect_doppelganger("brms logit plot_cap", p)
+# # plot_predictions: no validity
+# p <- plot_predictions(brms_interaction, condition = c("mpg", "vs"))
+# vdiffr::expect_doppelganger("brms logit plot_predictions", p)
 
 
 # factor in formula
@@ -616,7 +616,7 @@ void <- capture.output(suppressMessages(
         chains = 1,
         verbose = FALSE)
 ))
-p <- plot_cap(fit, condition = "z")
+p <- plot_predictions(fit, condition = "z")
 expect_inherits(p, "gg")
 
 

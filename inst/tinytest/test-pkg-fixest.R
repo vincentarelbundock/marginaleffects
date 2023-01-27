@@ -86,13 +86,13 @@ dat2$unit <- as.factor(dat2$unit)
 dat2 <- dat2
 mod1 <- feols(y ~ x * w | unit, data = dat)
 mod2 <- fixest::feols(y ~ x * w | unit, data = dat2)
-p <- plot_cme(mod2, effect = "x", condition = "w")
+p <- plot_slopes(mod2, effect = "x", condition = "w")
 expect_inherits(p, "ggplot")
 
 
 
 
-# plot_cme: extracts all required data
+# plot_slopes: extracts all required data
 fe <- data.frame(unit = 1:25, fe = rnorm(25))
 dat <- expand.grid(unit = 1:25, time = 1:50)
 dat <- merge(dat, fe, by = "unit")
@@ -105,7 +105,7 @@ dat2 <- dat
 dat2$unit <- as.factor(dat2$unit)
 dat2 <- dat2
 mod2 <- fixest::feols(y ~ x * w | unit, data = dat2)
-k <- plot_cme(mod2, effect = "x", condition = "w", draw = FALSE)
+k <- plot_slopes(mod2, effect = "x", condition = "w", draw = FALSE)
 expect_inherits(k, "data.frame")
 expect_false(anyNA(k$estimate))
 expect_false(any(k$estimate == 0))
@@ -131,8 +131,8 @@ expect_predictions(pred2)
 expect_predictions(pred3)
 expect_predictions(pred4)
 expect_predictions(pred5)
-# vdiffr::expect_doppelganger("fixest plot_cap with i()",
-#                         plot_cap(m4, condition = c("hp", "am")))
+# vdiffr::expect_doppelganger("fixest plot_predictions with i()",
+#                         plot_predictions(m4, condition = c("hp", "am")))
 
 
 

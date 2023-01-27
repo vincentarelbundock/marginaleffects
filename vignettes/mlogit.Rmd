@@ -63,11 +63,11 @@ Notice that in such models, we get one marginal effect for each term, for each l
 ```{r}
 library(ggplot2)
 
-plot_cap(mod, condition = c("mpg", "group"), type = "probs")
+plot_predictions(mod, condition = c("mpg", "group"), type = "probs")
 
-plot_cap(mod, condition = "mpg", type = "probs") + facet_wrap(~group)
+plot_predictions(mod, condition = "mpg", type = "probs") + facet_wrap(~group)
 
-plot_cco(
+plot_comparisons(
     mod,
     effect = list(mpg = c(15, 30)),
     condition = "group",

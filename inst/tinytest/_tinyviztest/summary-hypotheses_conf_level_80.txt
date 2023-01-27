@@ -1,6 +1,6 @@
 
-    Term Estimate Std. Error    z Pr(>|z|)  2.5 % 97.5 %
- b3 = b4    2.553      1.979 1.29  0.19693 -1.325  6.431
+    Term Estimate Std. Error    z Pr(>|z|) 10.0 % 90.0 %
+ b3 = b4     2.55       1.98 1.29    0.197 0.0174   5.09
 
 Prediction type:  
 Columns: term, estimate, std.error, statistic, p.value, conf.low, conf.high 

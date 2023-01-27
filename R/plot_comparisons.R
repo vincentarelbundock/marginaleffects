@@ -8,7 +8,7 @@
 #' @param effect Name of the variable whose contrast we want to plot on the y-axis
 #' @param draw `TRUE` returns a `ggplot2` plot. `FALSE` returns a `data.frame` of the underlying data.
 #' @inheritParams comparisons
-#' @inheritParams plot_cme
+#' @inheritParams plot_slopes
 #' @inheritParams slopes
 #' @return A `ggplot2` object
 #' @family plot
@@ -16,33 +16,31 @@
 #' @examples
 #' mod <- lm(mpg ~ hp * drat * factor(am), data = mtcars)
 #' 
-#' plot_cco(mod, effect = "hp", condition = "drat")
+#' plot_comparisons(mod, effect = "hp", condition = "drat")
 #'
-#' plot_cco(mod, effect = "hp", condition = c("drat", "am"))
+#' plot_comparisons(mod, effect = "hp", condition = c("drat", "am"))
 #' 
-#' plot_cco(mod, effect = "hp", condition = list("am", "drat" = 3:5))
+#' plot_comparisons(mod, effect = "hp", condition = list("am", "drat" = 3:5))
 #' 
-#' plot_cco(mod, effect = "am", condition = list("hp", "drat" = range))
+#' plot_comparisons(mod, effect = "am", condition = list("hp", "drat" = range))
 #' 
-plot_cco <- function(model,
-                     effect = NULL,
-                     condition = NULL,
-                     type = "response",
-                     vcov = NULL,
-                     conf_level = 0.95,
-                     transform_pre = "difference",
-                     transform_post = NULL,
-                     draw = TRUE,
-                     ...) {
-
-
+plot_comparisons <- function(model,
+                             effect = NULL,
+                             condition = NULL,
+                             type = "response",
+                             vcov = NULL,
+                             conf_level = 0.95,
+                             transform_pre = "difference",
+                             transform_post = NULL,
+                             draw = TRUE,
+                             ...) {
     # sanity check
     if (!isTRUE(length(effect) == 1)) {
         msg <- "The `effect` argument must be a vector or list of length 1."
         insight::format_error(msg)
     }
 
-    # shared code with plot_cco()
+    # shared code with plot_comparisons()
     tmp <- get_plot_newdata(model, condition, effect)
     dat <- tmp$modeldata
     nd <- tmp$newdata
@@ -54,7 +52,7 @@ plot_cco <- function(model,
     respname <- tmp$respname
 
     # bad test!
-    # plot_cco should actually support a list here as well, since we want to
+    # plot_comparisons should actually support a list here as well, since we want to
     # that be passed to the comparisons() variable
 
     # flag <- checkmate::check_choice(effect, choices = colnames(dat))
@@ -122,7 +120,7 @@ plot_cco <- function(model,
     # continuous x-axis
     if (is.numeric(datplot$condition1)) {
         if ("conf.low" %in% colnames(datplot)) {
-             p <- p + ggplot2::geom_ribbon(
+            p <- p + ggplot2::geom_ribbon(
                 data = datplot,
                 alpha = .1,
                 ggplot2::aes(
@@ -135,24 +133,24 @@ plot_cco <- function(model,
         p <- p + ggplot2::geom_line(
             data = datplot,
             ggplot2::aes(
-                    x = condition1,
-                    y = estimate,
-                    color = condition2))
+                x = condition1,
+                y = estimate,
+                color = condition2))
 
-    # categorical x-axis
+        # categorical x-axis
     } else {
         if ("conf.low" %in% colnames(datplot)) {
-             if (is.null(condition1)) {
-                 p <- p + ggplot2::geom_pointrange(
-                     data = datplot,
-                     ggplot2::aes(
+            if (is.null(condition1)) {
+                p <- p + ggplot2::geom_pointrange(
+                    data = datplot,
+                    ggplot2::aes(
                         x = condition1,
                         y = estimate,
                         ymin = conf.low,
                         ymax = conf.high,
                         color = condition2))
-             } else {
-                 p <- p + ggplot2::geom_pointrange(
+            } else {
+                p <- p + ggplot2::geom_pointrange(
                     data = datplot,
                     position = ggplot2::position_dodge(.15),
                     ggplot2::aes(
@@ -161,7 +159,7 @@ plot_cco <- function(model,
                         ymin = conf.low,
                         ymax = conf.high,
                         color = condition2))
-             }
+            }
         } else {
             p <- p + ggplot2::geom_point(
                 data = datplot,
@@ -198,7 +196,7 @@ plot_cco <- function(model,
             p <- p + ggplot2::facet_grid(fo)
         }
     } else if (!is.null(condition3)) {
-        fo <- ~ condition3
+        fo <- ~condition3
         p <- p + ggplot2::facet_wrap(fo)
     }
 
@@ -206,8 +204,8 @@ plot_cco <- function(model,
     # theme_set() from being overwritten
     if (identical(ggplot2::theme_get(), ggplot2::theme_grey())) {
         p <- p +
-          ggplot2::theme_minimal() +
-          ggplot2::theme(legend.title = ggplot2::element_blank())
+            ggplot2::theme_minimal() +
+            ggplot2::theme(legend.title = ggplot2::element_blank())
     }
 
     # attach model data for each of use
@@ -215,3 +213,12 @@ plot_cco <- function(model,
 
     return(p)
 }
+
+
+#' `plot_comparisons()` is an alias to `plot_comparisons()`
+#'
+#' This alias is kept for backward compatibility.
+#' @inherit plot_predictions
+#' @keywords internal
+#' @export
+plot_comparisons <- plot_comparisons

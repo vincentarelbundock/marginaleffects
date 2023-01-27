@@ -1,7 +1,7 @@
 
- Term  Estimate    CI low   CI high
-   hp  0.002653 -0.001147  0.006452
-   wt -0.435783 -0.635822 -0.235744
+ Term Estimate   CI low  CI high
+   hp  0.00265 -0.00115  0.00645
+   wt -0.43578 -0.63582 -0.23574
 
 Prediction type:  
 Columns: term, estimate, conf.low, conf.high 

@@ -19,26 +19,25 @@
 #' library(marginaleffects)
 #' mod <- lm(mpg ~ hp * drat * factor(am), data = mtcars)
 #' 
-#' plot_cme(mod, effect = "hp", condition = "drat")
+#' plot_slopes(mod, effect = "hp", condition = "drat")
 #'
-#' plot_cme(mod, effect = "hp", condition = c("drat", "am"))
+#' plot_slopes(mod, effect = "hp", condition = c("drat", "am"))
 #' 
-#' plot_cme(mod, effect = "hp", condition = list("am", "drat" = 3:5))
+#' plot_slopes(mod, effect = "hp", condition = list("am", "drat" = 3:5))
 #' 
-#' plot_cme(mod, effect = "am", condition = list("hp", "drat" = range))
+#' plot_slopes(mod, effect = "am", condition = list("hp", "drat" = range))
 #'
-#' plot_cme(mod, effect = "am", condition = list("hp", "drat" = "threenum"))
+#' plot_slopes(mod, effect = "am", condition = list("hp", "drat" = "threenum"))
 #' 
-plot_cme <- function(model,
-                     effect = NULL,
-                     condition = NULL,
-                     type = "response",
-                     vcov = NULL,
-                     conf_level = 0.95,
-                     draw = TRUE,
-                     ...) {
-
-    out <- plot_cco(
+plot_slopes <- function(model,
+                        effect = NULL,
+                        condition = NULL,
+                        type = "response",
+                        vcov = NULL,
+                        conf_level = 0.95,
+                        draw = TRUE,
+                        ...) {
+    out <- plot_comparisons(
         model = model,
         effect = effect,
         condition = condition,
@@ -57,3 +56,13 @@ plot_cme <- function(model,
 
     return(out)
 }
+
+
+
+#' `plot_slopes()` is an alias to `plot_slopes()`
+#'
+#' This alias is kept for backward compatibility.
+#' @inherit plot_predictions
+#' @keywords internal
+#' @export
+plot_slopes <- plot_slopes

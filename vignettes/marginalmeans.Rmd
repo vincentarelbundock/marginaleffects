@@ -255,9 +255,9 @@ marginal_means(mod,
 
 The `marginaleffects` package offers several functions to plot how some quantities vary as a function of others:
 
-* `plot_cap`: Conditional adjusted predictions -- how does the predicted outcome change as a function of regressors?
-* `plot_cco`: Conditional comparisons -- how do contrasts change as a function of regressors?
-* `plot_cme`: Conditional marginal effects -- how does the slope change as a function of regressors?
+* `plot_predictions`: Conditional adjusted predictions -- how does the predicted outcome change as a function of regressors?
+* `plot_comparisons`: Conditional comparisons -- how do contrasts change as a function of regressors?
+* `plot_slopes`: Conditional marginal effects -- how does the slope change as a function of regressors?
 
 There is no analogous function for marginal means. However, it is very easy to achieve a similar effect using the `predictions()` function, its `by` argument, and standard plotting functions. In the example below, we take these steps:
 

@@ -306,12 +306,12 @@ dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/ggplot2movie
 mod <- glm(certified_fresh ~ length * style, data = dat, family = binomial)
 ```
 
-We can plot adjusted predictions, conditional on the `length` variable using the `plot_cap` function:
+We can plot adjusted predictions, conditional on the `length` variable using the `plot_predictions` function:
 
 ```{r}
 mod <- glm(certified_fresh ~ length, data = dat, family = binomial)
 
-plot_cap(mod, condition = "length")
+plot_predictions(mod, condition = "length")
 ```
 
 We can also introduce another condition which will display a categorical variable like `style` in different colors. This can be useful in models with interactions:
@@ -319,10 +319,10 @@ We can also introduce another condition which will display a categorical variabl
 ```{r}
 mod <- glm(certified_fresh ~ length * style, data = dat, family = binomial)
 
-plot_cap(mod, condition = c("length", "style"))
+plot_predictions(mod, condition = c("length", "style"))
 ```
 
-Since the output of `plot_cap()` is a `ggplot2` object, it is very easy to customize. For example, we can add points for the actual observations of our dataset like so:
+Since the output of `plot_predictions()` is a `ggplot2` object, it is very easy to customize. For example, we can add points for the actual observations of our dataset like so:
 
 ```{r}
 #| fig.asp = .7
@@ -334,7 +334,7 @@ mt$label <- row.names(mt)
 
 mod <- lm(mpg ~ hp, data = mt)
 
-plot_cap(mod, condition = "hp") +
+plot_predictions(mod, condition = "hp") +
     geom_point(aes(x = hp, y = mpg), data = mt) +
     geom_rug(aes(x = hp, y = mpg), data = mt) +
     geom_text_repel(aes(x = hp, y = mpg, label = label),
@@ -343,7 +343,7 @@ plot_cap(mod, condition = "hp") +
     theme_classic()
 ```
 
-We can also use `plot_cap()` in models with multinomial outcomes or grouped coefficients. For example, notice that when we call `draw=FALSE`, the result includes a `group` column:
+We can also use `plot_predictions()` in models with multinomial outcomes or grouped coefficients. For example, notice that when we call `draw=FALSE`, the result includes a `group` column:
 
 ```{r}
 library(MASS)
@@ -351,7 +351,7 @@ library(ggplot2)
 
 mod <- nnet::multinom(factor(gear) ~ mpg, data = mtcars, trace = FALSE)
 
-p <- plot_cap(
+p <- plot_predictions(
     mod,
     type = "probs",
     condition = "mpg",
@@ -363,7 +363,7 @@ head(p)
 Now we use the `group` column:
 
 ```{r}
-plot_cap(
+plot_predictions(
     mod,
     type = "probs",
     condition = "mpg") +
@@ -389,9 +389,9 @@ head(pred)
 We can also plot predictions on different outcome scales:
 
 ```{r}
-plot_cap(mod, condition = "mpg", type = "response")
+plot_predictions(mod, condition = "mpg", type = "response")
 ```
 
 ```{r}
-plot_cap(mod, condition = "mpg", type = "link")
+plot_predictions(mod, condition = "mpg", type = "link")
 ```

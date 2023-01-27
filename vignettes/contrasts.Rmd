@@ -333,7 +333,7 @@ library(marginaleffects)
 
 mod <- lm(mpg ~ hp * wt, data = mtcars)
 
-plot_cco(
+plot_comparisons(
     mod,
     effect = list(hp = 10),
     condition = "wt")
@@ -469,7 +469,7 @@ This mechanism is powerful, because it lets users create fully customized contra
 avg_comparisons(mod, transform_pre = function(hi, lo) sqrt(hi) / log(lo + 10))
 ```
 
-The same arguments work in the plotting function `plot_cco()` as well, which allows us to plot various custom contrasts. Here is a comparison of Adjusted Risk Ratio and Adjusted Risk Difference in a model of the probability of survival aboard the Titanic:
+The same arguments work in the plotting function `plot_comparisons()` as well, which allows us to plot various custom contrasts. Here is a comparison of Adjusted Risk Ratio and Adjusted Risk Difference in a model of the probability of survival aboard the Titanic:
 
 ```{r}
 library(ggplot2)
@@ -483,14 +483,14 @@ mod_titanic <- glm(
 
 avg_comparisons(mod_titanic)
 
-p1 <- plot_cco(
+p1 <- plot_comparisons(
     mod_titanic,
     effect = "Age",
     condition = "Age",
     transform_pre = "ratio") +
     ylab("Adjusted Risk Ratio\nP(Survival | Age + 1) / P(Survival | Age)")
 
-p2 <- plot_cco(
+p2 <- plot_comparisons(
     mod_titanic,
     effect = "Age",
     condition = "Age") +
@@ -557,7 +557,7 @@ library(ggplot2)
 
 mod2 <- glm(vs ~ mpg + mpg^2, data = mtcars, family = binomial)
 
-plot_cco(
+plot_comparisons(
     mod2,
     effect = list("mpg" = 10),
     condition = "mpg",
@@ -701,10 +701,10 @@ predictions(mod, dpar = "mu",
             transform_post = exp)
 ```
 
-We can pass `transform_post = exp` to `plot_cap()` too:
+We can pass `transform_post = exp` to `plot_predictions()` too:
 
 ```{r plot-hurdle-parts, fig.width=8, fig.asp=0.618}
-plot_cap(
+plot_predictions(
   mod,
   dpar = "hu",
   type = "link",
@@ -712,21 +712,21 @@ plot_cap(
   labs(y = "hu",
        title = "Hurdle part (hu)",
        subtitle = "Logit-scale predictions") +
-plot_cap(
+plot_predictions(
   mod,
   dpar = "hu",
   type = "response",
   condition = "lifeExp") +
   labs(y = "hu",
        subtitle = "Percentage point-scale predictions") +
-plot_cap(
+plot_predictions(
   mod,
   dpar = "mu",
   condition = "lifeExp") +
   labs(y = "mu",
        title = "Non-hurdle part (mu)",
        subtitle = "Log-scale predictions") +
-plot_cap(
+plot_predictions(
   mod,
   dpar = "mu",
   transform_post = exp,

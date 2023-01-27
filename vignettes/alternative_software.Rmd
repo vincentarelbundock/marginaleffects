@@ -67,7 +67,7 @@ Thus, in my (Vincent's) biased opinion, the main benefits of `marginaleffects` o
 * Easier to compute marginal effects (slopes) for custom grids and continuous regressors.
 * Easier to implement causal inference strategies like the parametric g-formula and regression adjustement in experiments (see vignettes). 
 * Allows the computation of arbitrary quantities of interest via user-supplied functions and automatic delta method inference.
-* Common plots are easy with the `plot_cap()`, `plot_cco()`, and `plot_cme()` functions.
+* Common plots are easy with the `plot_predictions()`, `plot_comparisons()`, and `plot_slopes()` functions.
 
 To be fair, many of the `marginaleffects` advantages listed above come down to subjective preferences over user interface. Readers are thus encouraged to try both packages to see which interface they prefer. 
 
@@ -250,7 +250,7 @@ predictions(
 
 # 4. graphical version of 2.
 emmip(m, am ~ wt, at = list(wt = c(2.5, 3, 3.5)), CIs = TRUE)
-plot_cap(m, condition = c("wt", "am"))
+plot_predictions(m, condition = c("wt", "am"))
 
 # 5. compare levels of am at specific values of wt.
 # this is a bit ugly because the emmeans defaults for pairs() are silly.
@@ -271,10 +271,10 @@ plot(pairs(emmeans(m, "am", by = "wt", at = list(wt = c(2.5, 3, 3.5))),
 
 # Since `wt` is numeric, the default is to plot it as a continuous variable on
 # the x-axis.  But not that this is the **exact same info** as in the emmeans plot.
-plot_cco(m, effect = "am", condition = "wt")
+plot_comparisons(m, effect = "am", condition = "wt")
 
 # You of course customize everything, set draw=FALSE, and feed the raw data to feed to ggplot2
-p <- plot_cco(
+p <- plot_comparisons(
   m,
   effect = "am",
   condition = list(wt = c(2.5, 3, 3.5)),
@@ -777,10 +777,10 @@ avg_slopes(ls.fe, dpar = "sigma", re_formula = NA)
 The [`effects` package](https://cran.r-project.org/eb/packages/effects/index.html) was created by John Fox and colleagues.
 
 + `marginaleffects` supports 30+ more model types than `effects`.
-+ `effects` focuses on the computation of ["adjusted predictions."](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html) The plots it produces are roughly equivalent to the ones produced by the `plot_cap` and `predictions` functions in `marginaleffects`.
++ `effects` focuses on the computation of ["adjusted predictions."](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html) The plots it produces are roughly equivalent to the ones produced by the `plot_predictions` and `predictions` functions in `marginaleffects`.
 + `effects` does not appear support marginal effects (slopes), marginal means, or contrasts 
 + `effects` uses Base graphics whereas `marginaleffects` uses `ggplot2`
-+ `effects` includes *a lot* of very powerful options to customize plots. In contrast, `marginaleffects` produces objects which can be customized by chaining `ggplot2` functions. Users can also call `plot_cap(model, draw=FALSE)` to create a prediction grid, and then work the raw data directly to create the plot they need
++ `effects` includes *a lot* of very powerful options to customize plots. In contrast, `marginaleffects` produces objects which can be customized by chaining `ggplot2` functions. Users can also call `plot_predictions(model, draw=FALSE)` to create a prediction grid, and then work the raw data directly to create the plot they need
 
 `effects` offers several options which are not currently available in `marginaleffects`, including:
 

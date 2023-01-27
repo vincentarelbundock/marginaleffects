@@ -119,7 +119,7 @@ A dataset with one marginal effect estimate per unit of observation is a bit unw
 * Counterfactual Marginal Effects
 * Conditional Marginal Effects
 
-The rest of this vignette defines each of those quantities and explains how to use the `slopes()` and `plot_cme()` functions to compute them. The main differences between these quantities pertain to (a) the regressor values at which we estimate marginal effects, and (b) the way in which unit-level marginal effects are aggregated.
+The rest of this vignette defines each of those quantities and explains how to use the `slopes()` and `plot_slopes()` functions to compute them. The main differences between these quantities pertain to (a) the regressor values at which we estimate marginal effects, and (b) the way in which unit-level marginal effects are aggregated.
 
 Heiss drew this exceedingly helpful graph which summarizes the information in the rest of this vignette:
 
@@ -225,20 +225,20 @@ slopes(mod, newdata = nd) |>
 
 # Conditional Marginal Effects (Plot)
 
-The `plot_cme` function can be used to draw "Conditional Marginal Effects." This is useful when a model includes interaction terms and we want to plot how the marginal effect of a variable changes as the value of a "condition" (or "moderator") variable changes:
+The `plot_slopes` function can be used to draw "Conditional Marginal Effects." This is useful when a model includes interaction terms and we want to plot how the marginal effect of a variable changes as the value of a "condition" (or "moderator") variable changes:
 
 ```{r, out.width = "60%"}
 mod <- lm(mpg ~ hp * wt + drat, data = mtcars)
 
-plot_cme(mod, effect = "hp", condition = "wt")
+plot_slopes(mod, effect = "hp", condition = "wt")
 ```
 
 The marginal effects in the plot above were computed with values of all regressors -- except the `effect` and the `condition` -- held at their means or modes, depending on variable type.
 
-Since `plot_cme()` produces a `ggplot2` object, it is easy to customize. For example:
+Since `plot_slopes()` produces a `ggplot2` object, it is easy to customize. For example:
 
 ```{r}
-plot_cme(mod, effect = "hp", condition = "wt") +
+plot_slopes(mod, effect = "hp", condition = "wt") +
     geom_rug(aes(x = wt), data = mtcars) +
     theme_classic()
 ```
@@ -272,16 +272,16 @@ slopes(mod, newdata = datagrid(x = -2:2))  |>
     select(estimate, truth)
 ```
 
-We can plot conditional adjusted predictions with `plot_cap` function:
+We can plot conditional adjusted predictions with `plot_predictions` function:
 
 ```{r}
-plot_cap(mod, condition = "x")
+plot_predictions(mod, condition = "x")
 ```
 
-We can plot conditional marginal effects with the `plot_cme` function (see section below):
+We can plot conditional marginal effects with the `plot_slopes` function (see section below):
 
 ```{r}
-plot_cme(mod, effect = "x", condition = "x")
+plot_slopes(mod, effect = "x", condition = "x")
 ```
 
 Again, the conclusion is the same. When $x<0$, an increase in $x$ is associated with an increase in $y$. When $x=0$, the marginal effect is equal to 0. When $x>0$, an increase in $x$ is associated with a decrease in $y$.

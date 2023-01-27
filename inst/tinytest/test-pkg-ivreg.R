@@ -13,11 +13,11 @@ mar <- data.frame(margins(mod, unit_ses = TRUE))
 expect_true(expect_margins(res, mar, tolerance = .1, verbose = TRUE))
 
 
-# plot_cap: bugs stay dead
+# plot_predictions: bugs stay dead
 # broke when no conf.low available
 data(Kmenta, package = "ivreg")
 mod <- ivreg::ivreg(Q ~ P + D + I(D^2) | D + I(D^2) + F + A, data = Kmenta)
-expect_inherits(plot_cap(mod, condition = "D"), "ggplot")
+expect_inherits(plot_predictions(mod, condition = "D"), "ggplot")
 
 
 # marginaleffects: vs. Stata

@@ -101,7 +101,7 @@
 #' predictions(mod, by = "am")
 #'
 #' # Conditional Adjusted Predictions
-#' plot_cap(mod, condition = "hp")
+#' plot_predictions(mod, condition = "hp")
 #'
 #' # Counterfactual predictions with the `variables` argument
 #' # the `mtcars` dataset has 32 rows

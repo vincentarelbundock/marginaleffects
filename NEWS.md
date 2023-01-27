@@ -33,6 +33,9 @@ Renamed functions (backward-compatibility is maintained):
 * `marginaleffects()` -> `slopes()` 
 * `posteriordraws()` -> `posterior_draws()` 
 * `marginalmeans()` -> `marginal_means()` 
+* `plot_cap()` -> `plot_predictions()`
+* `plot_cme()` -> `plot_slopes()`
+* `plot_cco()` -> `plot_comparisons()`
 
 Bug fixes:
 

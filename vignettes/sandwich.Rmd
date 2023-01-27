@@ -170,8 +170,8 @@ avg_slopes(mod, vcov = ~cyl)
 Comparing adjusted predictions with classical and robust standard errors:
 
 ```{r, fig.asp = .4}
-p1 <- plot_cap(mod, condition = "hp")
-p2 <- plot_cap(mod, condition = "hp", vcov = "HC3")
+p1 <- plot_predictions(mod, condition = "hp")
+p2 <- plot_predictions(mod, condition = "hp", vcov = "HC3")
 p1 + p2
 ```
 
@@ -207,7 +207,7 @@ slopes(mod,
 We can use the same option in any of the package's core functions, including:
 
 ```{r}
-plot_cap(mod, condition = "hp", vcov = "satterthwaite")
+plot_predictions(mod, condition = "hp", vcov = "satterthwaite")
 ```
 
 # Bayesian estimates and credible intervals

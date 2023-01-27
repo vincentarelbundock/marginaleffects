@@ -244,14 +244,14 @@ and `glance()`, as well with [external packages like
 | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
 | [Predictions](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html)      | [`predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html)      |
 |                                                                                                    | [`avg_predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html)  |
-|                                                                                                    | [`plot_cap()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cap.html)            |
+|                                                                                                    | [`plot_predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_predictions.html)            |
 | [Comparisons](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)        | [`comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)      |
 |                                                                                                    | [`avg_comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)  |
-|                                                                                                    | [`plot_cco()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cap.html)            |
+|                                                                                                    | [`plot_comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_predictions.html)            |
 |                                                                                                    | [`plot_avg()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_avg.html)            |
 | [Slopes](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html)                | [`slopes()`](https://vincentarelbundock.github.io/marginaleffects/reference/slopes.html)                |
 |                                                                                                    | [`avg_slopes()`](https://vincentarelbundock.github.io/marginaleffects/reference/slopes.html)            |
-|                                                                                                    | [`plot_cme()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_cme.html)            |
+|                                                                                                    | [`plot_slopes()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_slopes.html)            |
 |                                                                                                    | [`plot_avg()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_avg.html)            |
 | [Marginal means](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) | [`marginal_means()`](https://vincentarelbundock.github.io/marginaleffects/reference/marginalmeans.html) |
 
@@ -506,15 +506,15 @@ We can also plot how predictions, comparisons, or slopes change across
 different values of the predictors using [three powerful plotting
 functions:](https://vincentarelbundock.github.io/marginaleffects/articles/plot.html)
 
-  - `plot_cap`: Conditional Adjusted Predictions
-  - `plot_cco`: Conditional Comparisons
-  - `plot_cme`: Conditional Marginal Effects
+  - `plot_predictions`: Conditional Adjusted Predictions
+  - `plot_comparisons`: Conditional Comparisons
+  - `plot_slopes`: Conditional Marginal Effects
 
 For example, this plot shows the outcomes predicted by our model for
 different values of the `wt` and `am` variables:
 
 ``` r
-plot_cap(mod, condition = c("wt", "am"))
+plot_predictions(mod, condition = c("wt", "am"))
 ```
 
 <img src="man/figures/README-unnamed-chunk-16-1.png" width="100%" />
@@ -523,7 +523,7 @@ This plot shows how the derivative of `mpg` with respect to `am` varies
 as a function of `wt` and `hp`:
 
 ``` r
-plot_cme(mod, effect = "am", condition = list("wt", "hp" = "threenum"))
+plot_slopes(mod, effect = "am", condition = list("wt", "hp" = "threenum"))
 ```
 
 <img src="man/figures/README-unnamed-chunk-17-1.png" width="100%" />

@@ -106,8 +106,8 @@ if (packageVersion("insight") > "0.17.1.6") {
 
     expect_error(suppressWarnings(slopes(b, variables = "L")), pattern = "no valid")
     expect_error(suppressWarnings(comparisons(b, variables = "L")), pattern = "no valid")
-    expect_warning(plot_cap(b, condition = "z"), pattern = "Matrix columns")
-    expect_warning(plot_cme(b, effect = "L", condition = "z"), pattern = "Matrix columns")
+    expect_warning(plot_predictions(b, condition = "z"), pattern = "Matrix columns")
+    expect_warning(plot_slopes(b, effect = "L", condition = "z"), pattern = "Matrix columns")
 }
 
 
@@ -149,6 +149,6 @@ if (packageVersion("insight") > "0.17.1.6") {
     expect_equivalent(mfx$std.error, emt$SE, tolerance = 1e-3)
 
     # Issue #545
-    p <- plot_cme(model, effect = "Time", condition = "Time", draw = FALSE)
+    p <- plot_slopes(model, effect = "Time", condition = "Time", draw = FALSE)
     expect_true(nrow(p) > 1)
 }

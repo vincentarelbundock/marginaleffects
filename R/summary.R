@@ -1,11 +1,7 @@
 #' @noRd
 #' @export
 summary.slopes <- function(object, ...) {
-    if (isFALSE(attr(object, "by"))) {
-        out <- get_averages(object, ...)
-    } else {
-        out <- object
-    }
+    out <- get_averages(object, ...)
     return(out)
 }
 
@@ -23,7 +19,8 @@ summary.comparisons <- summary.slopes
 #' @noRd
 #' @export
 summary.marginalmeans <- function(object, ...) {
-    return(object)
+    out <- recall(object, ...)
+    return(out)
 }
 
 
