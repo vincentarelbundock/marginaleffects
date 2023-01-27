@@ -10,6 +10,7 @@ exit_if_not(requiet("nnet"))
 dat <- transform(mtcars, am_fct = factor(am))
 mod <- lm(wt ~ am_fct * mpg, data = dat)
 
+
 # minmax
 p1 <- plot_predictions(
     mod,
@@ -150,3 +151,11 @@ expect_error(
     pattern = "condition")
 
 
+# backward compatibility
+dat <- transform(mtcars, am_fct = factor(am))
+mod <- lm(wt ~ am_fct * mpg, data = dat)
+
+p1 <- plot_cap(
+    mod,
+    condition = list("am_fct", mpg = "minmax")) 
+expect_inherits(p1, "gg")
