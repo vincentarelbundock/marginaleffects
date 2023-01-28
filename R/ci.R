@@ -5,6 +5,7 @@ get_ci <- function(
     draws = NULL,
     vcov = TRUE,
     null_hypothesis = 0,
+    model = NULL,
     ...) {
 
     checkmate::assert_number(null_hypothesis)
@@ -13,7 +14,8 @@ get_ci <- function(
         out <- get_ci_draws(
             x,
             conf_level = conf_level,
-            draws = draws)
+            draws = draws,
+            model = model)
         return(out)
     }
 
@@ -71,13 +73,20 @@ get_ci <- function(
 }
 
 
-get_ci_draws <- function(x, conf_level, draws) {
+get_ci_draws <- function(x, conf_level, draws, model = NULL) {
     
     checkmate::check_number(conf_level, lower = 1e-10, upper = 1 - 1e-10)
     critical <- (1 - conf_level) / 2
 
     # faster known case
-    if (identical("eti", getOption("marginaleffects_posterior_interval", default = "eti")) &&
+    if (inherits(model, "simulation_inference")) {
+        insight::check_if_installed("collapse", minimum_version = "1.9.0")
+        CIs <- collapse::dapply(draws, MARGIN = 1, FUN = collapse::fquantile, probs = c(critical, 1 - critical))
+        x$conf.low <- CIs[, 1]
+        x$conf.high <- CIs[, 2]
+        return(x)
+
+    } else if (identical("eti", getOption("marginaleffects_posterior_interval", default = "eti")) &&
         identical("median", getOption("marginaleffects_posterior_center", default = "median"))) {
         insight::check_if_installed("collapse", minimum_version = "1.9.0")
         CIs <- collapse::dapply(draws, MARGIN = 1, FUN = collapse::fquantile, probs = c(critical, .5, 1 - critical))

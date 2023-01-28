@@ -28,7 +28,7 @@ sort_columns <- function(x, first = NULL, alpha = FALSE) {
     return(out)
 }
 
-get_attributes <- function(x, exclude = NULL, include = NULL, include_regex = NULL) {
+get_marginaleffects_attributes <- function(x, exclude = NULL, include = NULL, include_regex = NULL) {
     out <- list()
     attr_names <- names(attributes(x))
     attr_names <- setdiff(attr_names, exclude)
@@ -40,7 +40,7 @@ get_attributes <- function(x, exclude = NULL, include = NULL, include_regex = NU
     return(out)
 }
 
-set_attributes <- function(x, attr_cache, prefix = "") {
+set_marginaleffects_attributes <- function(x, attr_cache, prefix = "") {
     for (n in names(attr_cache)) {
         attr(x, paste0(prefix, n)) <- attr_cache[[n]]
     }

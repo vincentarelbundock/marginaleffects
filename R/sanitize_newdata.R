@@ -77,7 +77,7 @@ sanitize_newdata <- function(model, newdata, by = NULL, modeldata = NULL) {
 
     # {modelbased} sometimes attaches useful attributes
     exclude <- c("class", "row.names", "names", "data", "reference")
-    modelbased_attributes <- get_attributes(newdata, exclude = exclude)
+    modelbased_attributes <- get_marginaleffects_attributes(newdata, exclude = exclude)
 
     # required for the type of column indexing to follow
     data.table::setDF(newdata)
@@ -115,8 +115,8 @@ sanitize_newdata <- function(model, newdata, by = NULL, modeldata = NULL) {
     }
 
     # attributes
-    newdata <- set_attributes(newdata, modelbased_attributes, prefix = "newdata_")
-    newdata <- set_attributes(newdata, column_attributes, prefix = "newdata_")
+    newdata <- set_marginaleffects_attributes(newdata, modelbased_attributes, prefix = "newdata_")
+    newdata <- set_marginaleffects_attributes(newdata, column_attributes, prefix = "newdata_")
     attr(newdata, "newdata_modeldata") <- modeldata
 
     # we will need this to merge the original data back in, and it is better to

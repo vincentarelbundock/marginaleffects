@@ -6,7 +6,7 @@
 %   R/methods_glmmTMB.R, R/methods_lme4.R, R/methods_mclogit.R,
 %   R/methods_mhurdle.R, R/methods_mlogit.R, R/methods_ordinal.R,
 %   R/methods_quantreg.R, R/methods_robustlmm.R, R/methods_rstanarm.R,
-%   R/methods_simulation_inference.R, R/methods_survival.R, R/methods_tobit1.R
+%   R/methods_survival.R, R/methods_tobit1.R, R/simulation_inference.R
 \name{get_predict}
 \alias{get_predict}
 \alias{get_predict.default}
@@ -34,9 +34,9 @@
 \alias{get_predict.rq}
 \alias{get_predict.rlmerMod}
 \alias{get_predict.stanreg}
-\alias{get_predict.simulation_inference}
 \alias{get_predict.coxph}
 \alias{get_predict.tobit1}
+\alias{get_predict.simulation_inference}
 \title{Get predicted values from a model object (internal function)}
 \usage{
 get_predict(model, newdata, vcov, conf_level, type, ...)
@@ -245,8 +245,6 @@ get_predict(model, newdata, vcov, conf_level, type, ...)
   ...
 )
 
-\method{get_predict}{simulation_inference}(x, newdata, vcov = FALSE, ...)
-
 \method{get_predict}{coxph}(
   model,
   newdata = insight::get_data(model),
@@ -264,6 +262,8 @@ get_predict(model, newdata, vcov, conf_level, type, ...)
   type = "response",
   ...
 )
+
+\method{get_predict}{simulation_inference}(x, newdata, vcov = FALSE, ...)
 }
 \arguments{
 \item{model}{Model object}
