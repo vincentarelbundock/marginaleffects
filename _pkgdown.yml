@@ -24,6 +24,7 @@ reference:
     contents:
     - print.marginaleffects
     - posterior_draws
+    - inference
     - starts_with("summary|glance|tidy")
 navbar:
   title: marginaleffects
