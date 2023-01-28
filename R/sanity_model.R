@@ -2,21 +2,21 @@
 #'
 #' @inheritParams slopes
 #' @return A warning, an error, or nothing
-#' @rdname sanity_model_specific
+#' @rdname sanitize_model_specific
 #' @keywords internal
-sanity_model_specific <- function (model,
+sanitize_model_specific <- function (model,
                                    calling_function = "marginaleffects",
                                    ...) {
-    UseMethod("sanity_model_specific", model)
+    UseMethod("sanitize_model_specific", model)
 }
 
 
-#' @rdname sanity_model_specific
-sanity_model_specific.default <- function(model,
+#' @rdname sanitize_model_specific
+sanitize_model_specific.default <- function(model,
                                           vcov = NULL,
                                           calling_function = "marginaleffects",
                                           ...) {
-    return(invisible(NULL))
+    return(model)
 }
 
 
@@ -120,7 +120,7 @@ sanitize_model <- function(model,
         model <- model[["fit"]]
     }
 
-    sanity_model_specific(model, vcov = vcov, newdata = newdata, ...)
+    model <- sanitize_model_specific(model, vcov = vcov, newdata = newdata, ...)
     sanity_model_supported_class(model)
     return(model)
 }

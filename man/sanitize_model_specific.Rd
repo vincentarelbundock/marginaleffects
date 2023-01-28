@@ -2,54 +2,57 @@
 % Please edit documentation in R/methods_aod.R, R/methods_betareg.R,
 %   R/sanity_model.R, R/methods_brms.R, R/methods_glmmTMB.R,
 %   R/methods_mclogit.R, R/methods_mlogit.R, R/methods_ordinal.R,
-%   R/methods_plm.R, R/methods_quantreg.R
-\name{sanity_model_specific.glimML}
-\alias{sanity_model_specific.glimML}
-\alias{sanity_model_specific.betareg}
-\alias{sanity_model_specific}
-\alias{sanity_model_specific.default}
-\alias{sanity_model_specific.brmsfit}
-\alias{sanity_model_specific.glmmTMB}
-\alias{sanity_model_specific.mblogit}
-\alias{sanity_model_specific.mlogit}
-\alias{sanity_model_specific.clm}
-\alias{sanity_model_specific.plm}
-\alias{sanity_model_specific.rqs}
+%   R/methods_plm.R, R/methods_quantreg.R, R/methods_simulation_inference.R
+\name{sanitize_model_specific.glimML}
+\alias{sanitize_model_specific.glimML}
+\alias{sanitize_model_specific.betareg}
+\alias{sanitize_model_specific}
+\alias{sanitize_model_specific.default}
+\alias{sanitize_model_specific.brmsfit}
+\alias{sanitize_model_specific.glmmTMB}
+\alias{sanitize_model_specific.mblogit}
+\alias{sanitize_model_specific.mlogit}
+\alias{sanitize_model_specific.clm}
+\alias{sanitize_model_specific.plm}
+\alias{sanitize_model_specific.rqs}
+\alias{sanitize_model_specific.simulation_inference}
 \title{Method to raise model-specific warnings and errors}
 \usage{
-\method{sanity_model_specific}{glimML}(model, ...)
+\method{sanitize_model_specific}{glimML}(model, ...)
 
-\method{sanity_model_specific}{betareg}(model, ...)
+\method{sanitize_model_specific}{betareg}(model, ...)
 
-sanity_model_specific(model, calling_function = "marginaleffects", ...)
+sanitize_model_specific(model, calling_function = "marginaleffects", ...)
 
-\method{sanity_model_specific}{default}(
+\method{sanitize_model_specific}{default}(
   model,
   vcov = NULL,
   calling_function = "marginaleffects",
   ...
 )
 
-\method{sanity_model_specific}{brmsfit}(model, ...)
+\method{sanitize_model_specific}{brmsfit}(model, ...)
 
-\method{sanity_model_specific}{glmmTMB}(
+\method{sanitize_model_specific}{glmmTMB}(
   model,
   vcov = NULL,
   calling_function = "marginaleffects",
   ...
 )
 
-\method{sanity_model_specific}{mblogit}(model, calling_function = "marginaleffects", ...)
+\method{sanitize_model_specific}{mblogit}(model, calling_function = "marginaleffects", ...)
 
-\method{sanity_model_specific}{mlogit}(model, newdata, ...)
+\method{sanitize_model_specific}{mlogit}(model, newdata, ...)
 
-\method{sanity_model_specific}{clm}(model, ...)
+\method{sanitize_model_specific}{clm}(model, ...)
 
-\method{sanity_model_specific}{plm}(model, ...)
+\method{sanitize_model_specific}{plm}(model, ...)
 
-\method{sanity_model_specific}{plm}(model, ...)
+\method{sanitize_model_specific}{plm}(model, ...)
 
-\method{sanity_model_specific}{rqs}(model, ...)
+\method{sanitize_model_specific}{rqs}(model, ...)
+
+\method{sanitize_model_specific}{simulation_inference}(model, vcov = FALSE, ...)
 }
 \arguments{
 \item{model}{Model object}

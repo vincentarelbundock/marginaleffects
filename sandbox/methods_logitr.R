@@ -14,9 +14,10 @@ get_predict.logitr <- function(model,
 
 
 #' @export
-sanity_model_specific.logitr <- function(model, ...) {
+sanitize_model_specific.logitr <- function(model, ...) {
     if (utils::packageVersion("insight") < "0.18.5.1") {
         msg <- c('Support for `logitr` models requires a version of the `insight` package greater than 0.18.5. You can install the development version of `insight` with:', '', 'install.packages("insight", repos = "https://easystats.r-universe.dev")')
         insight::format_error(msg)
     }
+    return(invisible(NULL))
 }

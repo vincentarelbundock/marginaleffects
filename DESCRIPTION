@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Predictions, Contrasts, Slopes, Marginal Means, and Hypothesis Tests
-Version: 0.8.1.9120
+Version: 0.8.1.9121
 Authors@R: 
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -189,6 +189,7 @@ Collate:
     'methods_rstanarm.R'
     'methods_sampleSelection.R'
     'methods_scam.R'
+    'methods_simulation_inference.R'
     'methods_stats.R'
     'methods_survival.R'
     'methods_tobit1.R'

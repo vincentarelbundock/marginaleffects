@@ -231,7 +231,7 @@ predictions <- function(model,
 
     transform_post <- sanitize_transform_post(transform_post)
     sanity_dots(model = model, ...)
-    sanity_model_specific(
+    model <- sanitize_model_specific(
         model = model,
         newdata = newdata,
         vcov = vcov,
