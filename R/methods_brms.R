@@ -1,7 +1,7 @@
 #' @include sanity_model.R
-#' @rdname sanity_model_specific
+#' @rdname sanitize_model_specific
 #' @export
-sanity_model_specific.brmsfit <- function(model, ...) {
+sanitize_model_specific.brmsfit <- function(model, ...) {
     insight::check_if_installed("collapse", minimum_version = "1.9.0")
     # terms: brmsfit objects do not have terms immediately available
     te <- tryCatch(attr(stats::terms(stats::formula(model)$formula), "term.labels"), error = function(e) NULL)
@@ -9,6 +9,7 @@ sanity_model_specific.brmsfit <- function(model, ...) {
         stop("The `factor()` function cannot be used in the model formula of a `brmsfit` model. Please convert your variable to a factor before fitting the model, or use the `mo()` function to specify monotonic variables (see the `brms` vignette on monotonic variables).",
              call. = FALSE)
     }
+    return(model)
 }
 
 

@@ -11,9 +11,9 @@ get_group_names.mblogit <- function(model, type, ...) {
 }
 
 #' @include sanity_model.R
-#' @rdname sanity_model_specific
+#' @rdname sanitize_model_specific
 #' @export
-sanity_model_specific.mblogit <- function(model, calling_function = "marginaleffects", ...) {
+sanitize_model_specific.mblogit <- function(model, calling_function = "marginaleffects", ...) {
     if (calling_function == "marginaleffects") {
         variables <- insight::find_variables(model, flatten = TRUE)
         dat <- insight::get_data(model)
@@ -23,6 +23,7 @@ sanity_model_specific.mblogit <- function(model, calling_function = "marginaleff
             stop("Cannot compute marginal effects for models of class `mblogit` when the data includes character variables. Please convert character variables to factors in the dataset before fitting the model, and call `marginaleffects` again.", call. = FALSE)
         }
     }
+    return(model)
 }
 
 

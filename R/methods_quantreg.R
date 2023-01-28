@@ -20,8 +20,8 @@ get_predict.rq <- function(model,
 
 
 #' @include sanity_model.R
-#' @rdname sanity_model_specific
+#' @rdname sanitize_model_specific
 #' @keywords internal
-sanity_model_specific.rqs <- function(model, ...) {
+sanitize_model_specific.rqs <- function(model, ...) {
     stop("`marginaleffects` only supports `quantreg::rq` models with a single `tau` value.", call. = FALSE)
 }

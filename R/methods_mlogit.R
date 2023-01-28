@@ -23,9 +23,9 @@ get_predict.mlogit <- function(model,
 
 
 #' @include sanity_model.R
-#' @rdname sanity_model_specific
+#' @rdname sanitize_model_specific
 #' @keywords internal
-sanity_model_specific.mlogit <- function(model, newdata, ...) {
+sanitize_model_specific.mlogit <- function(model, newdata, ...) {
     if (!is.null(newdata)) {
         nchoices <- length(unique(model$model$idx[, 2]))
         if (!isTRUE(nrow(newdata) %% nchoices == 0)) {
@@ -33,4 +33,5 @@ sanity_model_specific.mlogit <- function(model, newdata, ...) {
             stop(msg, call. = FALSE)
         }
     }
+    return(model)
 }

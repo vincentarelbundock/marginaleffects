@@ -47,9 +47,9 @@ get_group_names.clm <- get_group_names.polr
 
 
 #' @include sanity_model.R
-#' @rdname sanity_model_specific
+#' @rdname sanitize_model_specific
 #' @keywords internal
-sanity_model_specific.clm <- function(model, ...) {
+sanitize_model_specific.clm <- function(model, ...) {
 
     # Corner case: The `predict.clm` method does not make predictions when the
     # response was transformed to a factor in the formula AND the response is
@@ -59,4 +59,5 @@ sanity_model_specific.clm <- function(model, ...) {
         stop("The response variable should not be transformed to a factor in the formula. Please convert the variable to factor before fitting your model.",
              call. = FALSE)
     }
+    return(model)
 }

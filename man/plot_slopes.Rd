@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_slopes.R
 \name{plot_slopes}
 \alias{plot_slopes}
-\title{Plot Conditional Marginal Effects}
+\title{Plot Slopes}
 \usage{
 plot_slopes(
   x,
