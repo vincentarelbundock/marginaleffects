@@ -147,7 +147,7 @@ p1 + p2
 
 # Simulation-based inference
 
-`marginaleffects` offers an *experimental* `inference` function to conduct simulation-based inference following the strategy proposed by Krinsky & Robb (1986):
+`marginaleffects` offers an *experimental* `inferences` function to conduct simulation-based inference following the strategy proposed by Krinsky & Robb (1986):
 
 1. Draw `iter` sets of simulated coefficients from a multivariate normal distribution with mean equal to the original model's estimated coefficients and variance equal to the model's variance-covariance matrix (classical, "HC3", or other).
 2. Use the `iter` sets of coefficients to compute `iter` sets of estimands: predictions, comparisons, or slopes.
@@ -162,16 +162,16 @@ library(ggdist)
 
 mod <- glm(vs ~ hp * wt + factor(gear), data = mtcars, family = binomial)
 
-mod |> inference() |> predictions()
+mod |> inferences() |> predictions()
 
-mod |> inference() |> avg_slopes(vcov = ~gear)
+mod |> inferences() |> avg_slopes(vcov = ~gear)
 ```
 
 Since simulation based inference generates `iter` estimates of the quantities of interest, we can treat them similarly to draws from the posterior distribution in bayesian models. For example, we can extract draws using the `posterior_draws()` function, and plot their distributions using packages like`ggplot2` and `ggdist`:
 
 ```{r}
 mod |>
-  inference() |>
+  inferences() |>
   avg_comparisons(variables = "gear") |>
   posterior_draws("rvar") |>
   ggplot(aes(y = contrast, xdist = rvar)) +

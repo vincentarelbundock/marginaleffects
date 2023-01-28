@@ -1,7 +1,9 @@
-#' Inference and uncertainy estimates for `marginaleffects` objects [EXPERIMENTAL]
+#' EXPERIMENTAL Uncertainty Estimates for `marginaleffects` Objects
 #' 
 #' @description
-#' This function is experimental. The user interface may change, or the functionality may migrate to arguments of individual `marginaleffects` functions.
+#' Warning: This function is experimental. It may be renamed, the user interface may change, or the functionality may migrate to arguments in other `marginaleffects` functions.
+#' 
+#' Apply this function to a model object to change the inferential strategy used to compute uncertainty estimates: delta method or simulation-based inference. 
 #' 
 #' @inheritParams slopes
 #' @param method String: "simulation" or "delta". See below for references and details.
@@ -15,30 +17,32 @@
 #' 
 #' @section References:
 #' 
-#' * Krinsky, I., and A. L. Robb. 1986. “On Approximating the Statistical Properties of Elasticities.” Review of Economics and Statistics 68 (4): 715–9. 
-#' * Dowd, Bryan E., William H. Greene, and Edward C. Norton. "Computation of standard errors." Health services research 49.2 (2014): 731-750.
-#' * King, Gary, Michael Tomz, and Jason Wittenberg. "Making the most of statistical analyses: Improving interpretation and presentation." American journal of political science (2000): 347-361
+#' Krinsky, I., and A. L. Robb. 1986. “On Approximating the Statistical Properties of Elasticities.” Review of Economics and Statistics 68 (4): 715–9. 
+#' 
+#' King, Gary, Michael Tomz, and Jason Wittenberg. "Making the most of statistical analyses: Improving interpretation and presentation." American journal of political science (2000): 347-361
+#' 
+#' Dowd, Bryan E., William H. Greene, and Edward C. Norton. "Computation of standard errors." Health services research 49.2 (2014): 731-750.
 #' 
 #' @return
-#' A "decorated" model with additional information on how to conduct inference and compute uncertainty estimates. This decorated model can be used in any of the `marginaleffects` functions, as all other supported models. 
+#' A "decorated" model with additional information on how to conduct inference and compute uncertainty estimates. This decorated model can then fed to any of the `marginaleffects` functions, as one would for any other supported models. 
 #' @examples
 #' library(marginaleffects)
 #' library(magrittr)
 #' mod <- glm(vs ~ hp * wt + factor(gear), data = mtcars, family = binomial)
 #' 
-#' mod %>% inference() %>%
+#' mod %>% inferences() %>%
 #'         avg_predictions(by = "gear")
 #' 
-#' mod %>% inference() %>%
+#' mod %>% inferences() %>%
 #'         slopes() %>%
 #'         head()
 #' 
-#' mod %>% inference() %>%
+#' mod %>% inferences() %>%
 #'         avg_slopes() %>%
 #'         posterior_draws("rvar")
 #' 
 #' @export
-inference <- function(model, method = "simulation", iter = 1000, ...) {
+inferences <- function(model, method = "simulation", iter = 1000, ...) {
     checkmate::assert_choice(method, choices = c("simulation", "delta"))
 
     # delta method requires no decoration, because it is default
@@ -57,12 +61,12 @@ inference <- function(model, method = "simulation", iter = 1000, ...) {
 
 #' @rdname get_predict
 #' @export
-get_predict.inference_simulation <- function(x, newdata, vcov = FALSE, ...) {
-    coefmat <- attr(x, "coefmat")
+get_predict.inference_simulation <- function(model, newdata, vcov = FALSE, ...) {
+    coefmat <- attr(model, "coefmat")
     # coefmat: BxM 
     checkmate::assert_matrix(coefmat)
     # remove the special class to avoid calling myself
-    mod <- x
+    mod <- model
     class(mod) <- setdiff(class(mod), "inference_simulation")
     FUN <- function(coefs) {
         mod_tmp <- set_coef(mod, coefs = coefs)
@@ -77,7 +81,7 @@ get_predict.inference_simulation <- function(x, newdata, vcov = FALSE, ...) {
 
 #' @rdname get_vcov
 #' @export
-get_vcov.inference_simulation <- function(x, ...) return(NULL)
+get_vcov.inference_simulation <- function(model, ...) return(NULL)
 
 
 #' @rdname sanitize_model_specific

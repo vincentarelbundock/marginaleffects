@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Predictions, Contrasts, Slopes, Marginal Means, and Hypothesis Tests
-Version: 0.8.1.9121
+Version: 0.8.1.9122
 Authors@R: 
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -81,6 +81,7 @@ Suggests:
     knitr,
     lme4,
     lmerTest,
+    magrittr,
     margins,
     MASS,
     mclogit,
@@ -156,7 +157,7 @@ Collate:
     'github_issue.R'
     'hush.R'
     'hypotheses.R'
-    'inference.R'
+    'inferences.R'
     'marginalmeans.R'
     'mean_or_mode.R'
     'set_coef.R'

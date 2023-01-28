@@ -73,18 +73,18 @@ Benefits of `marginaleffects` include:
 
 The `marginaleffects` package allows `R` users to compute and plot three principal quantities of interest: (1) predictions, (2) comparisons, and (3) slopes. In addition, the package includes a convenience function to compute a fourth estimand, "marginal means", which is a special case of averaged predictions. `marginaleffects` can also average (or "marginalize") unit-level (or "conditional") estimates of all those quantities, and conduct hypothesis tests on them.
 
-[_Predictions_:](articles/predictions.html)
+[Predictions:](https://vincentarelbundock.github.io/articles/predictions.html)
 
 > The outcome predicted by a fitted model on a specified scale for a given combination of values of the predictor variables, such as their observed values, their means, or factor levels. a.k.a. Fitted values, adjusted predictions. `predictions()`, `avg_predictions()`, `plot_predictions()`.
 
-[_Comparisons_:](articles/comparisons.html)
+[Comparisons:](https://vincentarelbundock.github.io/articles/comparisons.html)
 
 > Compare the predictions made by a model for different regressor values (e.g., college graduates vs. others): contrasts, differences, risk ratios, odds, etc. `comparisons()`, `avg_comparisons()`, `plot_comparisons()`.
 
-[_Slopes_:](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html) 
+[Slopes:](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html) 
 
 > Partial derivative of the regression equation with respect to a regressor of interest. a.k.a. Marginal effects, trends. `slopes()`, `avg_slopes()`, `plot_slopes()`.
 
-[_Marginal Means_:](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) 
+[Marginal Means:](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) 
 
 > Predictions of a model, averaged across a "reference grid" of categorical predictors. `marginalmeans()`.

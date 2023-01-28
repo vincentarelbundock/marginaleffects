@@ -1,9 +1,9 @@
 # mod <- glm(vs ~ hp * wt, data = mtcars, family = binomial)
 
-# mod |> inference() |> avg_predictions()
+# mod |> inferences() |> avg_predictions()
 
-# mod |> inference() |> slopes() |> head()
+# mod |> inferences() |> slopes() |> head()
 
-# mod |> inference() |> predictions(vcov = ~gear) |> head()
+# mod |> inferences() |> predictions(vcov = ~gear) |> head()
 
-# mod |> inference(iter = 17) |> comparisons() |> attr("posterior_draws") |> dim()
+# mod |> inferences(iter = 17) |> comparisons() |> attr("posterior_draws") |> dim()

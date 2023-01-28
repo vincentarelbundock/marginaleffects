@@ -59,5 +59,4 @@ reference:
     contents:
     - print.marginaleffects
     - posterior_draws
-    - inference
-    - starts_with("summary|glance|tidy")
+    - starts_with("summary|glance|tidy|inference")
