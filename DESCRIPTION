@@ -36,7 +36,6 @@ Imports:
     insight (>= 0.18.8),
     methods
 Suggests: 
-    tinyviztest,
     AER,
     afex,
     aod,
@@ -70,6 +69,7 @@ Suggests:
     ggdag,
     ggdist,
     ggplot2,
+    ggokabeito,
     ggrepel,
     glmmTMB,
     glmx,
