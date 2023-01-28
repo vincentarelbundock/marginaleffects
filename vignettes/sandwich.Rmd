@@ -113,35 +113,6 @@ mean(link_inverse(mod)(x))
 link_inverse(mod)(mean(x))
 ```
 
-# Bootstrap
-
-It is easy to use the bootstrap as an alternative strategy to compute standard errors and confidence intervals. Several `R` packages can help us achieve this, including the long-established `boot` package:
-
-```{r}
-library(boot)
-set.seed(123)
-
-bootfun <- function(data, indices, ...) {
-    d <- data[indices, ]
-    mod <- lm(mpg ~ am + hp + factor(cyl), data = d)
-    cmp <- comparisons(mod, newdata = d, vcov = FALSE, variables = "am")
-    tidy(cmp)$estimate
-}
-
-b <- boot(data = mtcars, statistic = bootfun, R = 1000)
-
-b
-boot.ci(b, type = "perc")
-```
-
-Note that, in the code above, we set `vcov=FALSE` to avoid computation of delta method standard errors and speed things up.
-
-Compare to the delta method standard errors:
-
-```{r}
-mod <- lm(mpg ~ am + hp + factor(cyl), data = mtcars)
-avg_comparisons(mod, variables = "am")
-```
 
 # Robust standard errors 
 
@@ -173,6 +144,71 @@ Comparing adjusted predictions with classical and robust standard errors:
 p1 <- plot_predictions(mod, condition = "hp")
 p2 <- plot_predictions(mod, condition = "hp", vcov = "HC3")
 p1 + p2
+```
+
+
+# Simulation-based inference
+
+`marginaleffects` offers an *experimental* `inference` function to conduct simulation-based inference following the strategy proposed by Krinsky & Robb (1986):
+
+1. Draw `iter` sets of simulated coefficients from a multivariate normal distribution with mean equal to the original model's estimated coefficients and variance equal to the model's variance-covariance matrix (classical, "HC3", or other).
+2. Use the `iter` sets of coefficients to compute `iter` sets of estimands: predictions, comparisons, or slopes.
+3. Take quantiles of the resulting distribution of estimands to obtain a confidence interval and the standard deviation of simulated estimates to estimate the standard error.
+
+Here are a few examples:
+
+```{r, warning = FALSE}
+library(marginaleffects)
+library(ggplot2)
+library(ggdist)
+
+mod <- glm(vs ~ hp * wt + factor(gear), data = mtcars, family = binomial)
+
+mod |> inference() |> predictions()
+
+mod |> inference() |> avg_slopes(vcov = ~gear)
+```
+
+Since simulation based inference generates `iter` estimates of the quantities of interest, we can treat them similarly to draws from the posterior distribution in bayesian models. For example, we can extract draws using the `posterior_draws()` function, and plot their distributions using packages like`ggplot2` and `ggdist`:
+
+```{r}
+mod |>
+  inference() |>
+  avg_comparisons(variables = "gear") |>
+  posterior_draws("rvar") |>
+  ggplot(aes(y = contrast, xdist = rvar)) +
+  stat_slabinterval()
+```
+
+
+# Bootstrap
+
+It is easy to use the bootstrap as an alternative strategy to compute standard errors and confidence intervals. Several `R` packages can help us achieve this, including the long-established `boot` package:
+
+```{r}
+library(boot)
+set.seed(123)
+
+bootfun <- function(data, indices, ...) {
+    d <- data[indices, ]
+    mod <- lm(mpg ~ am + hp + factor(cyl), data = d)
+    cmp <- comparisons(mod, newdata = d, vcov = FALSE, variables = "am")
+    tidy(cmp)$estimate
+}
+
+b <- boot(data = mtcars, statistic = bootfun, R = 1000)
+
+b
+boot.ci(b, type = "perc")
+```
+
+Note that, in the code above, we set `vcov=FALSE` to avoid computation of delta method standard errors and speed things up.
+
+Compare to the delta method standard errors:
+
+```{r}
+mod <- lm(mpg ~ am + hp + factor(cyl), data = mtcars)
+avg_comparisons(mod, variables = "am")
 ```
 
 # Mixed effects models: Satterthwaite and Kenward-Roger corrections
@@ -215,6 +251,7 @@ plot_predictions(mod, condition = "hp", vcov = "satterthwaite")
 [See the `brms` vignette](https://vincentarelbundock.github.io/marginaleffects/reference/brms.html) for a discussion of bayesian estimates and credible intervals.
 
 
+<!--
 # Uncertainty around unit-level or average estimates
 
 Note that it is normal to observe that confidence intervals around average estimates tend to be tighter than those around unit-level estimates:
@@ -240,17 +277,11 @@ cmp2 <- comparisons(mod, variables = "hp", transform_pre = "differenceavg")
 cmp2$conf.high - cmp2$conf.low
 ```
 
-<!--
 Relevant?
 https://en.wikipedia.org/wiki/Jensen%27s_inequality
 https://math.stackexchange.com/questions/34009/is-the-variance-of-a-convex-function-a-convex-function/34021#34021?newreg=698ab30a481945878307935ac5d6b629
--->
 
 
-
-
-
-<!--
 NO LONGER RELEVANT WITH THE AVERAGE() + RECALL() REFACTOR SINCE WE COMPUTE SEs DIRECTLY ON THE MARGINS W
 
 ## Standard Error of the Average Marginal Effect or Contrast
@@ -270,4 +301,3 @@ References:
 * Dowd, Bryan E, William H Greene, and Edward C Norton. “Computation of Standard Errors.” Health Services Research 49, no. 2 (April 2014): 731–50. https://doi.org/10.1111/1475-6773.12122.
 * https://stats.stackexchange.com/questions/283831/delta-method-for-marginal-effects-of-generalized-linear-model?rq=1
 -->
-
