@@ -28,12 +28,6 @@
 #' predictions, and builds symmetric confidence intervals. These naive symmetric
 #' intervals may not always be appropriate. For instance, they may stretch beyond
 #' the bounds of a binary response variables.
-#'
-#' @section Vignettes and documentation:
-#'
-#' ```{r child = "vignettes/toc.Rmd"}
-#' ```
-#'
 #' @inheritParams slopes
 #' @param model Model object
 #' @param variables `NULL`, character vector, or named list. The subset of variables to use for creating a counterfactual grid of predictions. The entire dataset replicated for each unique combination of the variables in this list. See the Examples section below.

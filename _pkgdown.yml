@@ -3,6 +3,39 @@ development:
   mode: auto
 template:
   bootstrap: 5
+
+articles:
+- title: Estimands
+  contents:
+    - predictions
+    - comparisons
+    - slopes
+    - marginalmeans
+    - hypothesis
+- title: Case studies
+  contents:
+    - brms
+    - gformula
+    - elasticity
+    - experiments
+    - gam
+    - logit
+    - lme4
+    - multiple_imputation
+    - mlogit
+    - plot
+    - python
+- title: Tips and technical notes
+  contents:
+    - alternative_software
+    - extensions
+    - links
+    - performance
+    - uncertainty
+    - supported_models
+    - tables
+    - faq
+
 reference:
   - title: Estimands and Tests
     contents:
@@ -14,7 +47,7 @@ reference:
     - avg_predictions
     - avg_comparisons
     - avg_slopes
-  - title: Prediction Grids
+  - title: Grids
     contents:
     - starts_with("datagrid")
   - title: Plots
@@ -27,24 +60,3 @@ reference:
     - print.marginaleffects
     - posterior_draws
     - starts_with("summary|glance|tidy")
-navbar:
-  title: marginaleffects
-  type: default
-  left:
-  - text: "Predictions"
-    href: https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html
-  - text: "Slopes"
-    href: https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html
-  - text: "Comparisons"
-    href: https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html
-  - text: "Marginal means"
-    href: https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html
-  - text: "Hypothesis tests"
-    href: https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html
-  right:
-  - text: Functions
-    href: reference/index.html
-  - text: Changelog
-    href: news/index.html
-  - icon: fab fa-github
-    href: https://github.com/vincentarelbundock/marginaleffects/

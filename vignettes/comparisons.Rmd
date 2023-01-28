@@ -25,8 +25,6 @@ library(ggplot2)
 theme_set(theme_minimal())
 ```
 
-Note: Some of the code in this vignette requires `marginaleffects` version 0.7.2 or [the development version from github.](https://vincentarelbundock.github.io/marginaleffects/#installation)
-
 [In another vignette](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html), we introduced the "marginal effect" as a partial derivative. Since derivatives are only properly defined for continuous variables, we cannot use them to interpret the effects of changes in categorical variables. For this, we turn to *contrasts* between [Adjusted predictions.](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html) In the context of this package, a "Contrast" is defined as:
 
 > A difference, ratio, or function of adjusted predictions, calculated for meaningfully different predictor values (e.g., College graduates vs. Others).
@@ -231,7 +229,7 @@ nrow(cmp)
 
 ## Average contrasts
 
-By default, the `slopes()` and `comparisons()` functions compute marginal effects and contrasts for every row of the original dataset. These unit-level estimates can be of great interest, as discussed in [another vignette](https://vincentarelbundock.github.io/marginaleffects/articles/logistic_contrasts.html). Nevertheless, one may want to focus on one-number summaries: the `avg_*()` functions or the `by` argument compute the "Average Marginal Effect" or "Average Contrast," by taking the mean of all the unit-level estimates.
+By default, the `slopes()` and `comparisons()` functions compute marginal effects and contrasts for every row of the original dataset. These unit-level estimates can be of great interest, as discussed in [another vignette](https://vincentarelbundock.github.io/marginaleffects/articles/logistic_comparisons.html). Nevertheless, one may want to focus on one-number summaries: the `avg_*()` functions or the `by` argument compute the "Average Marginal Effect" or "Average Contrast," by taking the mean of all the unit-level estimates.
 
 ```{r}
 avg_comparisons(mod, variables = "mpg")

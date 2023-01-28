@@ -14,13 +14,8 @@
 #' 
 #' See the comparisons vignette and package website for worked examples and case studies:
 #' 
-#' * <https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html>
+#' * <https://vincentarelbundock.github.io/marginaleffects/articles/comparisons.html>
 #' * <https://vincentarelbundock.github.io/marginaleffects/>
-#'
-#' @section Vignettes and documentation:
-#'
-#' ```{r child = "vignettes/toc.Rmd"}
-#' ```
 #'
 #' @inheritParams slopes
 #' @inheritParams predictions

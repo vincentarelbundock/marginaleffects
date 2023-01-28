@@ -39,11 +39,6 @@
 #' @inheritParams slopes
 #' @inheritParams predictions
 #' @inheritParams comparisons
-#' @section Vignettes and documentation:
-#'
-#' ```{r child = "vignettes/toc.Rmd"}
-#' ```
-#'
 #' @details
 #'   This function begins by calling the `predictions` function to obtain a
 #'   grid of predictors, and adjusted predictions for each cell. The grid

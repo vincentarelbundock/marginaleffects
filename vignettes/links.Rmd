@@ -1,3 +1,12 @@
+---
+title: "Links" 
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Links}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
 - [Marginal and conditional effects for GLMMs with `marginaleffects`](https://www.andrewheiss.com/blog/2022/11/29/conditional-marginal-marginaleffects/) by Andrew Heiss
 - [Marginalia: A guide to figuring out what the heck marginal effects, marginal slopes, average marginal effects, marginal effects at the mean, and all these other marginal things are](https://www.andrewheiss.com/blog/2022/05/20/marginalia/) by Andrew Heiss
 - [Matching](https://cran.r-project.org/web/packages/MatchIt/vignettes/estimating-effects.html) by Noah Greifer

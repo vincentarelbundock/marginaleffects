@@ -1,8 +1,8 @@
 ---
-title: "Adjusted Predictions" 
+title: "Predictions" 
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Adjusted Predictions}
+  %\VignetteIndexEntry{Predictions}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

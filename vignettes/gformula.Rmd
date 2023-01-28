@@ -10,7 +10,7 @@ vignette: >
 This vignette has 3 goals:
 
 1. Give a *concise* introduction to the idea of "Parametric g-Formula"
-2. Highlight the equivalence between one form of g-estimation and the ["Average Contrasts"](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html#average-contrasts) computed by `marginaleffects`
+2. Highlight the equivalence between one form of g-estimation and the ["Average Contrasts"](https://vincentarelbundock.github.io/marginaleffects/articles/comparisons.html#average-contrasts) computed by `marginaleffects`
 3. Show how to obtain estimates, standard errors, and confidence intervals via the Parametric g-Formula, using  a single line of `marginaleffects` code. This is convenient because, typically, analysts have to construct counterfactual datasets manually and must bootstrap their estimates.
 
 The "Parametric g-Formula" is often used for causal inference in observational data.
@@ -53,7 +53,7 @@ We want to estimate the effect of a binary treatment $X$ on outcome $Y$, but the
 4. Use the model from Step 1 to compute adjusted predictions in the two counterfactual datasets from Steps 2 and 3.
 5. The quantity of interest is the difference between the means of adjusted predictions in the two counterfactual datasets.
 
-This is equivalent to computing an ["Average Contrast"](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html#average-contrasts), in which the value of $X$ moves from 0 to 1. Thanks to this equivalence, we can apply the parametric g-formula method using a single line of code in `marginaleffects`, and obtain delta method standard errors automatically.
+This is equivalent to computing an ["Average Contrast"](https://vincentarelbundock.github.io/marginaleffects/articles/comparisons.html#average-contrasts), in which the value of $X$ moves from 0 to 1. Thanks to this equivalence, we can apply the parametric g-formula method using a single line of code in `marginaleffects`, and obtain delta method standard errors automatically.
 
 # Example with real-world data
 

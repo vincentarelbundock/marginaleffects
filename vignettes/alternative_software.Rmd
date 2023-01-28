@@ -1,8 +1,8 @@
 ---
-title: "Comparisons to alternative software" 
+title: "Alternative Software" 
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Comparisons to alternative software}
+  %\VignetteIndexEntry{Alternative Software}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

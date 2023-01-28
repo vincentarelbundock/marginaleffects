@@ -1,8 +1,8 @@
 ---
-title: "Tables and Plots"
+title: "Tables"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Tables and Plots}
+  %\VignetteIndexEntry{Tables}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -22,8 +22,6 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
-
-Note: This vignette requires a version of `modelsummary` greater than 1.2.0. If this version is not yet available on CRAN, you can install the development version by following the [instructions on the `modelsummary` website.](https://vincentarelbundock.github.io/modelsummary/)
 
 # Marginal effects
 
@@ -59,8 +57,6 @@ modelsummary(models)
 ````
 
 # Contrasts
-
-Note: The code in this section requires a version of the `modelsummary` package greater than 1.2.0. If it is not available from CRAN, you can install the development version by following the instructions on [the `modelsummary` website.](https://vincentarelbundock.github.io/modelsummary/)
 
 When using the `comparisons()` function (or the `slopes()` function with categorical variables), the output will include two columns to uniquely identify the quantities of interest: `term` and `contrast`.
 

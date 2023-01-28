@@ -1,8 +1,8 @@
 ---
-title: "Plots: interactions, predictions, contrasts, and slopes"
+title: "Plots: Interactions, Predictions, Comparisons, and Slopes"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Plots: interactions, predictions, contrasts, and slopes}
+  %\VignetteIndexEntry{Plots: Interactions, Predictions, Comparisons, and Slopes}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -20,8 +20,6 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
-
-Note: This vignette requires version 0.7.2 of `marginaleffects`, or [the development version.](https://vincentarelbundock.github.io/marginaleffects/#installation)
 
 The `marginaleffects` package includes several flexible functions to plot estimates and to display interactions:
 

@@ -222,7 +222,7 @@ The \code{newdata} argument and the \code{datagrid()} function can be used to co
 
 See the comparisons vignette and package website for worked examples and case studies:
 \itemize{
-\item \url{https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html}
+\item \url{https://vincentarelbundock.github.io/marginaleffects/articles/comparisons.html}
 \item \url{https://vincentarelbundock.github.io/marginaleffects/}
 }
 }
@@ -231,46 +231,6 @@ See the comparisons vignette and package website for worked examples and case st
 \item \code{avg_comparisons()}: Average comparisons
 
 }}
-\section{Vignettes and documentation}{
-
-
-Vignettes:
-\itemize{
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html}{Predictions}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html}{Comparisons}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html}{Slopes}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html}{Marginal Means}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html}{Hypothesis Tests, Equivalence Tests, and Custom Contrasts}
-}
-
-Case studies:
-\itemize{
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/brms.html}{Bayesian Analyses with \code{brms}}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/gformula.html}{Causal Inference with the g-Formula}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/elasticity.html}{Elasticity}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/experiments.html}{Experiments}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/gam.html}{Generalized Additive Models}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/lme4.html}{Mixed effects models}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/mlogit.html}{Multinomial Logit and Discrete Choice Models}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/multiple_imputation.html}{Multiple Imputation}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/plot.html}{Plots: interactions, predictions, contrasts, and slopes}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/python.html}{Python NumPyro models in \code{marginaleffects}}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/logistic_contrasts.html}{Unit-level contrasts in logistic regressions}
-}
-
-Tips and technical notes:
-\itemize{
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html}{73 Supported Classes of Models}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/reference/index.html}{Index of Functions and Documentation}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/extensions.html}{Extending \code{marginaleffects}: add new models or modify existing ones}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/sandwich.html}{Standard Errors and Confidence Intervals}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/modelsummary.html}{Tables and Plots}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/performance.html}{Performance}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html}{Alternative Software}
-\item \href{https://vincentarelbundock.github.io/marginaleffects/articles/faq.html}{Frequently Asked Questions}
-}
-}
-
 \section{Model-Specific Arguments}{
 
 

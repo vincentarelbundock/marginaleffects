@@ -795,8 +795,6 @@ avg_comparisons(mod)
 
 # Random variables: `posterior` and `ggdist`
 
-Note: The rest of this section requires version 0.8.1 of `marginaleffects`, or [the development version.](https://vincentarelbundock.github.io/marginaleffects/#installation)
-
 Recent versions of the `posterior`, `brms`, and `ggdist` packages make it easy to draw, summarize and plot random variables. The `posterior_draws()` can produce objects of class `rvar` which make it easy to use those features by returning a data frame with a column of type `rvar`:
 
 
@@ -821,8 +819,6 @@ ggplot(rvar, aes(y = am, xdist = rvar)) +
 ```
 
 # Non-linear hypothesis testing
-
-Note: The rest of this section requires version 0.8.1 of `marginaleffects`, or [the development version.](https://vincentarelbundock.github.io/marginaleffects/#installation)
 
 ```{r, include=FALSE}
 mod <- marginaleffects:::modelarchive_model("brms_numeric2")

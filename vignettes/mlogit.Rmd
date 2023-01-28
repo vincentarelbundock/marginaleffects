@@ -33,8 +33,6 @@ theme_clean <- function() {
 ggplot2::theme_set(theme_clean())
 ```
 
-Note: This vignette requires version 0.8.0 of `marginaleffects`, or [the development version from Github.](https://vincentarelbundock.github.io/marginaleffects/#installation)
-
 Several packages in the `R` ecosystem allow users to estimate multinomial logit model and discrete choice models. This case study illustrates the use of `marginaleffects` with the `nnet` and `mlogit` packages.
 
 We begin by loading two libraries:

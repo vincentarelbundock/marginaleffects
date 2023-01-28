@@ -1,8 +1,8 @@
 ---
-title: "Unit-level contrasts in logistic regression"
+title: "Logistic Regression"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Unit-level contrasts in logistic regression}
+  %\VignetteIndexEntry{Logistic Regression}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -20,8 +20,6 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
-
-Note: This vignette requires version 0.8.0 of `marginaleffects`, or [the development version from Github.](https://vincentarelbundock.github.io/marginaleffects/#installation)
 
 This vignette replicates some of the analyses in this excellent blog post by Frank Harrell: [Avoiding One-Number Summaries of Treatment Effects for RCTs with Binary Outcomes](https://www.fharrell.com/post/rdist/). Here, we show how one-number summaries and the entire distribution unit-level contrasts can be easily computed with `comparisons()`.
 

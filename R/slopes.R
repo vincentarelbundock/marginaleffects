@@ -31,12 +31,6 @@
 #' Standard errors for the slopes are obtained using the Delta
 #' method. See the "Standard Errors" vignette on the package website for
 #' details (link above).
-#'
-#' @section Vignettes and documentation:
-#'
-#' ```{r child = "vignettes/toc.Rmd"}
-#' ```
-#' 
 #' @param model Model object
 #' @param variables `NULL` or character vector. The subset of variables for which to compute slopes.
 #' * `NULL`: compute contrasts for all the variables in the model object (can be slow). 

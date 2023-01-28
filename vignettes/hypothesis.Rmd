@@ -261,7 +261,7 @@ comparisons(
     transform_pre = "differenceavg")
 ```
 
-[See the transformations section of the Contrasts vignette for more details.](https://vincentarelbundock.github.io/marginaleffects/articles/contrasts.html)
+[See the transformations section of the Contrasts vignette for more details.](https://vincentarelbundock.github.io/marginaleffects/articles/comparisons.html)
 
 With these results in hand, we can now conduct a linear hypothesis test between average marginal effects:
 
