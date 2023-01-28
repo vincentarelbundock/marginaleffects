@@ -1,8 +1,8 @@
 ---
-title: "Extending or modifying marginaleffects" 
+title: "Extending or Modifying marginaleffects" 
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Extending or modifying marginaleffects}
+  %\VignetteIndexEntry{Extending or Modifying marginaleffects}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
