@@ -240,7 +240,7 @@ marginal_means(mod_cat, variables = "am")
 
 [The Marginal Means vignette](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html) offers more detail.
 
-## Hypothesis and equivalence tests
+# Hypothesis and equivalence tests
 
 The `hypotheses()` function and the `hypothesis` argument can be used to conduct linear and non-linear hypothesis tests on model coefficients, or on any of the quantities computed by the functions introduced above.
 
