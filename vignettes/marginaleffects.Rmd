@@ -12,13 +12,6 @@ options(width = 10000)
 okabeito <- c('#E69F00', '#56B4E9', '#009E73', '#F0E442', '#0072B2', '#D55E00', '#CC79A7', '#999999', '#000000')
 options(ggplot2.discrete.colour = okabeito)
 options(ggplot2.discrete.fill = okabeito)
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.path = "man/figures/README-",
-  out.width = "100%"
-)
-#| echo = FALSE
 url <- "https://raw.githubusercontent.com/vincentarelbundock/marginaleffects/main/data-raw/supported_models.csv"
 dat <- read.csv(url)
 n_support <- nrow(dat)
