@@ -1,17 +1,9 @@
-simulation_inference <- function(model, iter = 1000, ...) {
-    insight::check_if_installed("MASS")
-    out <- model
-    class(out) <- c("simulation_inference", class(out))
-    # do this here so we can eventually expand to other functions
-    attr(out, "simulate") <- function(iter, B, V) MASS::mvrnorm(iter, mu = B, Sigma = V)
-    attr(out, "iter") <- iter
-    return(out)
-}
+# mod <- glm(vs ~ hp * wt, data = mtcars, family = binomial)
 
-pkgload::load_all()
+# mod |> inference() |> avg_predictions()
 
-mod <- lm(mpg ~ hp, data = mtcars)
+# mod |> inference() |> slopes() |> head()
 
-simulation_inference(mod) |> class()
+# mod |> inference() |> predictions(vcov = ~gear) |> head()
 
-mod |> simulation_inference() |> predictions()
+# mod |> inference(iter = 17) |> comparisons() |> attr("posterior_draws") |> dim()

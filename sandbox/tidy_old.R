@@ -247,6 +247,7 @@ tidy.comparisons <- function(x,
         conf_level = conf_level,
         draws = draws,
         estimate = "estimate",
+        model = model,
         ...)
 
     # remove terms with precise zero estimates. typically the case in
@@ -434,6 +435,7 @@ tidy.predictions <- function(x,
         estimate = "estimate",
         conf_level = conf_level,
         draws = attr(x_dt, "posterior_draws"),
+        model = model,
         ...)
 
     # back transformation

@@ -358,6 +358,7 @@ marginal_means <- function(model,
             vcov = vcov,
             null_hypothesis = hypothesis_null,
             df = df,
+            model = model,
             ...)
     }
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_vcov.R, R/methods_afex.R,
 %   R/methods_aod.R, R/methods_biglm.R, R/methods_brms.R, R/methods_gamlss.R,
 %   R/methods_mhurdle.R, R/methods_rms.R, R/methods_scam.R,
-%   R/methods_simulation_inference.R
+%   R/simulation_inference.R
 \name{get_vcov}
 \alias{get_vcov}
 \alias{get_vcov.default}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/methods_aod.R, R/methods_betareg.R,
 %   R/sanity_model.R, R/methods_brms.R, R/methods_glmmTMB.R,
 %   R/methods_mclogit.R, R/methods_mlogit.R, R/methods_ordinal.R,
-%   R/methods_plm.R, R/methods_quantreg.R, R/methods_simulation_inference.R
+%   R/methods_plm.R, R/methods_quantreg.R, R/simulation_inference.R
 \name{sanitize_model_specific.glimML}
 \alias{sanitize_model_specific.glimML}
 \alias{sanitize_model_specific.betareg}

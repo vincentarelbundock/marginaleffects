@@ -195,6 +195,7 @@ hypotheses <- function(
         estimate = "estimate",
         null_hypothesis = hypothesis_null,
         df = df,
+        model = model,
         ...)
 
     if (!is.null(equivalence)) {

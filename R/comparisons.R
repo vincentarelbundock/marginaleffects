@@ -425,7 +425,8 @@ comparisons <- function(model,
         df = df,
         draws = draws,
         estimate = "estimate",
-        null_hypothesis = hypothesis_null)
+        null_hypothesis = hypothesis_null,
+        model = model)
 
 
     # group id: useful for merging, only if it's an internal call and not user-initiated
@@ -476,9 +477,9 @@ comparisons <- function(model,
         setDF(out)
     }
 
-    out <- set_attributes(
+    out <- set_marginaleffects_attributes(
         out,
-        get_attributes(newdata, include_regex = "^newdata"))
+        get_marginaleffects_attributes(newdata, include_regex = "^newdata"))
     attr(out, "model") <- model
     attr(out, "type") <- type
     attr(out, "model_type") <- class(model)[1]
