@@ -1,10 +1,18 @@
-#' Simulation-based inference
+#' Inference and uncertainy estimates for `marginaleffects` objects [EXPERIMENTAL]
 #' 
 #' @description
-#' Simulation-based inference using the 
+#' This function is experimental. The user interface may change, or the functionality may migrate to arguments of individual `marginaleffects` functions.
+#' 
 #' @inheritParams slopes
-#' @param method "simulation" or "delta"
+#' @param method String: "simulation" or "delta". See below for references and details.
+#' @param iter Number of simulations.
 #' @param ... Other arguments are ignored.
+#' @details
+#' When `method="simulation"`, we conduct simulation-based inference following the method discussed in Krinsky & Robb (1986):
+#' 1. Draw `iter` sets of simulated coefficients from a multivariate normal distribution with mean equal to the original model's estimated coefficients and variance equal to the model's variance-covariance matrix (classical, "HC3", or other).
+#' 2. Use the `iter` sets of coefficients to compute `iter` sets of estimands: predictions, comparisons, or slopes.
+#' 3. Take quantiles of the resulting distribution of estimands to obtain a confidence interval and the standard deviation of simulated estimates to estimate the standard error.
+#' 
 #' @section References:
 #' 
 #' * Krinsky, I., and A. L. Robb. 1986. “On Approximating the Statistical Properties of Elasticities.” Review of Economics and Statistics 68 (4): 715–9. 
@@ -29,10 +37,11 @@
 #'         avg_slopes() %>%
 #'         posterior_draws("rvar")
 #' 
+#' @export
 inference <- function(model, method = "simulation", iter = 1000, ...) {
-    checkmate::assert_choices(method, choices = c("simulation", "delta"))
+    checkmate::assert_choice(method, choices = c("simulation", "delta"))
 
-    # delta method
+    # delta method requires no decoration, because it is default
     if (method == "delta") return(model) 
 
     # simulation-based inference
@@ -54,7 +63,7 @@ get_predict.inference_simulation <- function(x, newdata, vcov = FALSE, ...) {
     checkmate::assert_matrix(coefmat)
     # remove the special class to avoid calling myself
     mod <- x
-    class(mod) <- setdiff(class(mod), "simulation_inference")
+    class(mod) <- setdiff(class(mod), "inference_simulation")
     FUN <- function(coefs) {
         mod_tmp <- set_coef(mod, coefs = coefs)
         get_predict(mod_tmp, newdata = newdata)$estimate
@@ -75,7 +84,7 @@ get_vcov.inference_simulation <- function(x, ...) return(NULL)
 #' @export
 sanitize_model_specific.inference_simulation <- function(model, vcov = FALSE, ...) {
     tmp <- model
-    class(tmp) <- setdiff(class(tmp), "simulation_inference")
+    class(tmp) <- setdiff(class(tmp), "inference_simulation")
     B <- get_coef(tmp)
     V <- get_vcov(tmp, vcov = vcov)
     attr(model, "coefmat") <- attr(model, "simulate")(iter = attr(model, "iter"), B = B, V = V)
