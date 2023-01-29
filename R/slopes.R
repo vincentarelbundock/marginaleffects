@@ -237,6 +237,18 @@ slopes <- function(model,
     sanity_dots(model = model, calling_function = "marginaleffects", ...)
     type <- sanitize_type(model = model, type = type, calling_function = "marginaleffects")
 
+    ############### sanity checks are over
+
+    # Bootstrap
+    if (inherits(model, "inferences_boot")) {
+        out <- inferences_boot(
+            FUN = slopes,
+            model = model, newdata = newdata, vcov = vcov, variables = variables, type = type,
+            wts = wts, slope = slope, hypothesis = hypothesis, ...)
+        return(out)
+    }
+
+
     out <- comparisons(
         model,
         newdata = newdata,

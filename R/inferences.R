@@ -45,7 +45,7 @@
 #'     posterior_draws("rvar")
 #'
 #' @export
-inferences <- function(model, method = "simulation", R = 1000, ...) {
+inferences <- function(model, method = "simulation", R = 10, ...) {
     checkmate::assert_choice(method, choices = c("delta", "boot", "simulation"))
     # delta method requires no decoration, because it is default
     out <- model
@@ -65,6 +65,47 @@ inferences <- function(model, method = "simulation", R = 1000, ...) {
     }
     return(out)
 }
+
+
+inferences_boot <- function(model, FUN, ...) {
+    insight::check_if_installed("boot")
+    insight::check_if_installed("broom")
+    class(model) <- setdiff(class(model), "inferences_boot")
+    modeldata <- get_modeldata(model)
+    modcall <- insight::get_call(model)
+    data.table::setDF(modeldata)
+    dots <- list(...)
+    dots[["vcov"]] <- FALSE
+    bootfun <- function(data, indices) {
+        d <- data[indices, , drop = FALSE]
+        modcall[["data"]] <- d
+        modboot <- eval(modcall)
+        modboot <- eval(modboot)
+        args <- c(list(modboot), dots)
+        out <- do.call(FUN, args)$estimate
+        return(out)
+    }
+    # no-bootstrap object to return
+    out <- do.call(FUN, c(list(model), dots))
+    args <- list("data" = modeldata, "statistic" = bootfun)
+    args <- c(args, attr(model, "boot_args"))
+    args <- args[unique(names(args))]
+    B <- do.call(boot::boot, args)
+    B$call <- match.call()
+    if (is.null(args[["conf_level"]])) {
+        conf_level <- .95
+    } else {
+        conf_level <- args[["conf_level"]]
+    }
+    tmp <- broom::tidy(B, conf.int = TRUE, conf.level = conf_level)
+    colnames(tmp)[colnames(tmp) == "statistic"] <- "estimate"
+    for (col in colnames(tmp)) {
+        out[[col]] <- tmp[[col]]
+    }
+    attr(out, "boot") <- B
+    return(out)
+}
+
 
 
 #' @rdname get_predict

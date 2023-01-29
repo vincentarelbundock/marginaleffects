@@ -315,6 +315,20 @@ predictions <- function(model,
         vcov_tmp <- FALSE
     }
 
+
+    ############### sanity checks are over
+
+    # Bootstrap
+    if (inherits(model, "inferences_boot")) {
+        out <- inferences_boot(
+            FUN = predictions,
+            model = model, newdata = newdata, vcov = vcov, variables = variables, type = type, by = by,
+            byfun = byfun, wts = wts, transform_post = transform_post, hypothesis = hypothesis, ...)
+        return(out)
+    }
+
+
+    # main estimation
     J <- NULL
 
     args <- list(

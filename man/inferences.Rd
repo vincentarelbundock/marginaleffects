@@ -4,14 +4,14 @@
 \alias{inferences}
 \title{EXPERIMENTAL Uncertainty Estimates for \code{marginaleffects} Objects}
 \usage{
-inferences(model, method = "simulation", iter = 1000, ...)
+inferences(model, method = "simulation", R = 1000, ...)
 }
 \arguments{
 \item{model}{Model object}
 
-\item{method}{String: "simulation" or "delta". See below for references and details.}
+\item{method}{String: "simulation", "boot", or "delta". See below for references and details.}
 
-\item{iter}{Number of simulations.}
+\item{R}{Number of simulations.}
 
 \item{...}{Other arguments are ignored.}
 }
@@ -26,8 +26,8 @@ Apply this function to a model object to change the inferential strategy used to
 \details{
 When \code{method="simulation"}, we conduct simulation-based inference following the method discussed in Krinsky & Robb (1986):
 \enumerate{
-\item Draw \code{iter} sets of simulated coefficients from a multivariate normal distribution with mean equal to the original model's estimated coefficients and variance equal to the model's variance-covariance matrix (classical, "HC3", or other).
-\item Use the \code{iter} sets of coefficients to compute \code{iter} sets of estimands: predictions, comparisons, or slopes.
+\item Draw \code{R} sets of simulated coefficients from a multivariate normal distribution with mean equal to the original model's estimated coefficients and variance equal to the model's variance-covariance matrix (classical, "HC3", or other).
+\item Use the \code{R} sets of coefficients to compute \code{R} sets of estimands: predictions, comparisons, or slopes.
 \item Take quantiles of the resulting distribution of estimands to obtain a confidence interval and the standard deviation of simulated estimates to estimate the standard error.
 }
 }
@@ -46,15 +46,18 @@ library(marginaleffects)
 library(magrittr)
 mod <- glm(vs ~ hp * wt + factor(gear), data = mtcars, family = binomial)
 
-mod \%>\% inferences() \%>\%
-        avg_predictions(by = "gear")
+mod \%>\%
+    inferences() \%>\%
+    avg_predictions(by = "gear")
 
-mod \%>\% inferences() \%>\%
-        slopes() \%>\%
-        head()
+mod \%>\%
+    inferences() \%>\%
+    slopes() \%>\%
+    head()
 
-mod \%>\% inferences() \%>\%
-        avg_slopes() \%>\%
-        posterior_draws("rvar")
+mod \%>\%
+    inferences() \%>\%
+    avg_slopes() \%>\%
+    posterior_draws("rvar")
 
 }
