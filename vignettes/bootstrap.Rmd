@@ -1,5 +1,5 @@
 ---
-title: "Bootstrap and Simulation-Based Inference (EXPERIMENTAL)"
+title: "Bootstrap and Simulation-Based Inference (experimental)"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Bootstrap and Simulation-Based Inference}
