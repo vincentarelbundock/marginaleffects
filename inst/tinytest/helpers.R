@@ -47,6 +47,10 @@ dict <- c(
     "kidney" = "brms",
     "ngrps" = "brms",
     "filter" = "dplyr",
+    "lag" = "dplyr",
+    "recode" = "dplyr",
+    "logit" = "boot",
+    "melanoma" = "boot",
     "lizards" = "aod",
     "rats" = "aod",
     "aml" = "survival",
@@ -54,6 +58,7 @@ dict <- c(
     "sd" = "stats",
     "var" = "stats"
 )
+conflicted::conflict_prefer_all("dplyr", quiet = TRUE)
 for (i in seq_along(dict)) {
     conflicted::conflict_prefer(name = names(dict)[i], winner = dict[i], quiet = TRUE)
 }
