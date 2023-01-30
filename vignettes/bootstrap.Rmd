@@ -7,7 +7,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-`marginaleffects` offers an *experimental* `inferences()` function to computate uncertainty estimates using the bootstrap and simulation-based inference.  The primary function to do this is `inferences()`. 
+`marginaleffects` offers an *experimental* `inferences()` function to compute uncertainty estimates using the bootstrap and simulation-based inference.  The primary function to do this is `inferences()`. 
 
 WARNING: The `inferences()` function is experimental. It may be renamed, the user interface may change, or the functionality may migrate to arguments in other `marginaleffects` functions.
 
@@ -82,12 +82,20 @@ We can extract the original `boot` object from an attribute:
 attr(est, "boot")
 ```
 
+Or we can extract the individual draws with the `posterior_draws()` function:
+
+```{r}
+posterior_draws(est) |> head()
+
+posterior_draws(est, shape = "DxP") |> dim()
+```
+
 
 ## `rsample`
 
 As before, we can pass argument to `rsample::bootstraps()` through `inferences()`. For example, for stratified resampling:
 
-```{r}
+```{r, warning = FALSE}
 est <- mod |>
        inferences(method = "rsample", R = 100, strata = "Species") |>
        avg_comparisons(by = "Species", variables = "Petal.Width")
@@ -96,6 +104,13 @@ est
 attr(est, "rsample")
 ```
 
+Or we can extract the individual draws with the `posterior_draws()` function:
+
+```{r}
+posterior_draws(est) |> head()
+
+posterior_draws(est, shape = "PxD") |> dim()
+```
 
 # Simulation-based inference
 

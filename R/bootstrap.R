@@ -31,9 +31,8 @@ bootstrap_rsample <- function(model, FUN, ...) {
         args <- c(list(modboot), dots)
         out <- do.call(FUN, args)
         out <- tidy(out)
-        # `rsample` averages by `term` columns
-        idx <- sapply(out, is.character) | sapply(out, is.factor)
-        out$term <- apply(out[, idx, drop = FALSE], 1, paste, collapse = "|||")
+        # `rsample` averages by `term` columns; we don't use it anyway and assume things line up
+        out$term <- seq_len(nrow(out))
         return(out)
     }
     args <- attr(model, "boot_args")
@@ -57,6 +56,12 @@ bootstrap_rsample <- function(model, FUN, ...) {
 
     out$conf.low <- ci$.lower
     out$conf.high <- ci$.upper
+
+    draws <- lapply(splits$estimates, function(x) as.matrix(x[, "estimate", drop = FALSE]))
+    draws[[length(draws)]] <- NULL # apparent=TRUE appended the original estimates to the end
+    draws <- do.call("cbind", draws)
+    colnames(draws) <- NULL
+    attr(out, "posterior_draws") <- draws
     attr(out, "rsample") <- splits
     return(out)
 }
@@ -118,8 +123,14 @@ bootstrap_boot <- function(model, FUN, ...) {
     }
     ci <- lapply(ci_list, function(x) x[[pos]])
     ci <- do.call("rbind", ci)[, cols]
-    out$conf.low <- ci[, 1]
-    out$conf.high <- ci[, 2]
+    if (is.matrix(ci)) {
+        out$conf.low <- ci[, 1]
+        out$conf.high <- ci[, 2]
+    } else {
+        out$conf.low <- ci[1]
+        out$conf.high <- ci[2]
+    }
     attr(out, "boot") <- B
+    attr(out, "posterior_draws") <- t(B$t)
     return(out)
 }
