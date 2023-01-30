@@ -90,7 +90,7 @@ averaged predictions. `marginaleffects` can also average (or
 “marginalize”) unit-level (or “conditional”) estimates of all those
 quantities, and conduct hypothesis tests on them.
 
-[*Predictions*:](articles/predictions.html)
+[Predictions:](https://vincentarelbundock.github.io/articles/predictions.html)
 
 > The outcome predicted by a fitted model on a specified scale for a
 > given combination of values of the predictor variables, such as their
@@ -98,21 +98,39 @@ quantities, and conduct hypothesis tests on them.
 > adjusted predictions. `predictions()`, `avg_predictions()`,
 > `plot_predictions()`.
 
-[*Comparisons*:](articles/comparisons.html)
+[Comparisons:](https://vincentarelbundock.github.io/articles/comparisons.html)
 
 > Compare the predictions made by a model for different regressor values
 > (e.g., college graduates vs. others): contrasts, differences, risk
 > ratios, odds, etc. `comparisons()`, `avg_comparisons()`,
 > `plot_comparisons()`.
 
-[*Slopes*:](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html)
+[Slopes:](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html)
 
 > Partial derivative of the regression equation with respect to a
 > regressor of interest. a.k.a. Marginal effects, trends. `slopes()`,
 > `avg_slopes()`, `plot_slopes()`.
 
-[*Marginal
-Means*:](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html)
+[Marginal
+Means:](https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html)
 
 > Predictions of a model, averaged across a “reference grid” of
 > categorical predictors. `marginalmeans()`.
+
+| Goal                         | Function                                                                                                     |
+| :--------------------------- | :----------------------------------------------------------------------------------------------------------- |
+| Predictions                  | [`predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)           |
+|                              | [`avg_predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/avg_comparisons.html)   |
+|                              | [`plot_predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_comparisons.html) |
+| Comparisons                  | [`comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)           |
+|                              | [`avg_comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/avg_comparisons.html)   |
+|                              | [`plot_comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_comparisons.html) |
+| Slopes                       | [`slopes()`](https://vincentarelbundock.github.io/marginaleffects/reference/slopes.html)                     |
+|                              | [`avg_slopes()`](https://vincentarelbundock.github.io/marginaleffects/reference/avg_slopes.html)             |
+|                              | [`plot_slopes()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_slopes.html)           |
+| Marginal Means               | [`marginal_means()`](https://vincentarelbundock.github.io/marginaleffects/reference/marginal_means.html)     |
+| Grids                        | [`datagrid()`](https://vincentarelbundock.github.io/marginaleffects/reference/datagrid.html)                 |
+|                              | [`datagridcf()`](https://vincentarelbundock.github.io/marginaleffects/reference/datagridcf.html)             |
+| Hypothesis & Equivalence     | [`hypotheses()`](https://vincentarelbundock.github.io/marginaleffects/reference/hypotheses.html)             |
+| Bayes, Bootstrap, Simulation | [`posterior_draws()`](https://vincentarelbundock.github.io/marginaleffects/reference/inferences.html)        |
+|                              | [`inferences()`](https://vincentarelbundock.github.io/marginaleffects/reference/inferences.html)             |

@@ -107,8 +107,8 @@ tab <- tribble(
   "Grids"      , "[`datagrid()`](https://vincentarelbundock.github.io/marginaleffects/reference/datagrid.html)",
   ""           , "[`datagridcf()`](https://vincentarelbundock.github.io/marginaleffects/reference/datagridcf.html)",
   "Hypothesis & Equivalence", "[`hypotheses()`](https://vincentarelbundock.github.io/marginaleffects/reference/hypotheses.html)",
-  "Bayes, Bootstrap, Simulation", "[`posterior_draws()`](https://vincentarelbundock.github.io/marginaleffects/reference/inferences.html)"
-  "", "[`inferences()`](https://vincentarelbundock.github.io/marginaleffects/reference/inferences.html)",
+  "Bayes, Bootstrap, Simulation", "[`posterior_draws()`](https://vincentarelbundock.github.io/marginaleffects/reference/inferences.html)",
+  "", "[`inferences()`](https://vincentarelbundock.github.io/marginaleffects/reference/inferences.html)"
 )
 knitr::kable(tab)
 ```
