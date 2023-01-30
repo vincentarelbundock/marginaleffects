@@ -7,7 +7,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-`marginaleffects` offers an *experimental* `inferences()` function to compute uncertainty estimates using the bootstrap and simulation-based inference.  The primary function to do this is `inferences()`. 
+`marginaleffects` offers an *experimental* `inferences()` function to compute uncertainty estimates using the bootstrap and simulation-based inference.
 
 WARNING: The `inferences()` function is experimental. It may be renamed, the user interface may change, or the functionality may migrate to arguments in other `marginaleffects` functions.
 
