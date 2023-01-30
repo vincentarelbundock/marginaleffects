@@ -5,6 +5,6 @@
 .DS_Store
 README.html
 docs
-inst/tinytest/tinyviztest_review/
+inst/tinytest/_tinyviztest_review/
 inst/doc
 marginaleffects.Rproj
