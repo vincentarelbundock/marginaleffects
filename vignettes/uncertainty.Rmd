@@ -162,7 +162,7 @@ library(ggdist)
 
 mod <- glm(vs ~ hp * wt + factor(gear), data = mtcars, family = binomial)
 
-mon |> predictions() |> inferences()
+mod |> predictions() |> inferences()
 
 mod |> avg_slopes(vcov = ~gear) |> inferences()
 ```
