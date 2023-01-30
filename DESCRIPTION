@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Predictions, Contrasts, Slopes, Marginal Means, and Hypothesis Tests
-Version: 0.8.1.9122
+Version: 0.8.1.9123
 Authors@R: 
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -33,7 +33,7 @@ Imports:
     checkmate,
     data.table,
     generics,
-    insight (>= 0.18.8),
+    insight (>= 0.10.0),
     methods
 Suggests: 
     AER,
