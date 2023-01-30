@@ -1,8 +1,8 @@
 ---
-title: "Bootstrap and Simulation-Based Inference (experimental)"
+title: "Bootstrap and Simulation-Based Inference (Experimental)"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Bootstrap and Simulation-Based Inference}
+  %\VignetteIndexEntry{Bootstrap and Simulation-Based Inference (Experimental)}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -43,14 +43,14 @@ We will compute uncertainty estimates around the output of `comparisons()`, but 
 The default strategy to compute standard errors and confidence intervals is the delta method. This is what we obtain by calling:
 
 ```{r}
-mod |> avg_comparisons(by = "Species", variables = "Petal.Width")
+avg_comparisons(mod, by = "Species", variables = "Petal.Width")
 ```
 
 Since this is the default method, we obtain the same results if we add the `inferences()` call in the chain:
 
 ```{r}
-mod |> inferences(method = "delta") |>
-       avg_comparisons(by = "Species", variables = "Petal.Width")
+avg_comparisons(mod, by = "Species", variables = "Petal.Width") |>
+  inferences(method = "delta")
 ```
 
 
@@ -61,17 +61,16 @@ mod |> inferences(method = "delta") |>
 ## `boot`
 
 ```{r}
-mod |> inferences(method = "boot") |>
-       avg_comparisons(by = "Species", variables = "Petal.Width")
+avg_comparisons(mod, by = "Species", variables = "Petal.Width") |>
+  inferences(method = "boot")
 ```
 
 All unknown arguments that we feed to `inferences()` are pushed forward to `boot::boot()`:
 
 
 ```{r}
-est <- mod |>
-       inferences(method = "boot", sim = "balanced", R = 500, conf_type = "bca") |>
-       avg_comparisons(by = "Species", variables = "Petal.Width")
+est <- avg_comparisons(mod, by = "Species", variables = "Petal.Width") |>
+  inferences(method = "boot", sim = "balanced", R = 500, conf_type = "bca")
 est
 ```
     
@@ -96,9 +95,8 @@ posterior_draws(est, shape = "DxP") |> dim()
 As before, we can pass arguments to `rsample::bootstraps()` through `inferences()`. For example, for stratified resampling:
 
 ```{r, warning = FALSE}
-est <- mod |>
-       inferences(method = "rsample", R = 100, strata = "Species") |>
-       avg_comparisons(by = "Species", variables = "Petal.Width")
+est <- avg_comparisons(mod, by = "Species", variables = "Petal.Width") |>
+  inferences(method = "rsample", R = 100, strata = "Species")
 est
 
 attr(est, "rsample")
@@ -126,16 +124,15 @@ Here are a few examples:
 library(ggplot2)
 library(ggdist)
 
-mod |> inferences(method = "simulation") |>
-       avg_comparisons(by = "Species", variables = "Petal.Width")
+avg_comparisons(mod, by = "Species", variables = "Petal.Width") |>
+  inferences(method = "simulation")
 ```
 
 Since simulation based inference generates `R` estimates of the quantities of interest, we can treat them similarly to draws from the posterior distribution in bayesian models. For example, we can extract draws using the `posterior_draws()` function, and plot their distributions using packages like`ggplot2` and `ggdist`:
 
 ```{r}
-mod |>
+avg_comparisons(mod, by = "Species", variables = "Petal.Width") |>
   inferences(method = "simulation") |>
-  avg_comparisons(by = "Species", variables = "Petal.Width") |>
   posterior_draws("rvar") |>
   ggplot(aes(y = Species, xdist = rvar)) +
   stat_slabinterval()

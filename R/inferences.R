@@ -3,7 +3,7 @@
 #' @description
 #' Warning: This function is experimental. It may be renamed, the user interface may change, or the functionality may migrate to arguments in other `marginaleffects` functions.
 #'
-#' Apply this function to a model object to change the inferential strategy used to compute uncertainty estimates: delta method or simulation-based inference.
+#' Apply this function to a `marginaleffects` object to change the inferential method used to compute uncertainty estimates.
 #'
 #' @inheritParams slopes
 #' @param method String
@@ -11,11 +11,15 @@
 #' + "boot" package
 #' + "rsample" package
 #' + "simulation" from a multivariate normal distribution (Krinsky & Robb, 1986)
-#' @param R Number of simulations.
+#' @param R Number of resamples or simulations.
 #' @param conf_type String: type of bootstrap interval to construct. 
 #' + `boot`: "perc", "norm", "basic", or "bca"
 #' + `rsample`: "perc" or "bca"
-#' @param ... Other arguments are ignored.
+#' + `simulation`: argument ignored.
+#' @param ... 
+#' + If `method="boot"`, additional arguments are passed to `boot::boot()`.
+#' + If `method="rsample"`, additional arguments are passed to `rsample::bootstraps()`.
+#' + If `method="simulation"`, additional arguments are ignored.
 #' @details
 #' When `method="simulation"`, we conduct simulation-based inference following the method discussed in Krinsky & Robb (1986):
 #' 1. Draw `R` sets of simulated coefficients from a multivariate normal distribution with mean equal to the original model's estimated coefficients and variance equal to the model's variance-covariance matrix (classical, "HC3", or other).
@@ -31,53 +35,52 @@
 #' Dowd, Bryan E., William H. Greene, and Edward C. Norton. "Computation of standard errors." Health services research 49.2 (2014): 731-750.
 #'
 #' @return
-#' A "decorated" model with additional information on how to conduct inference and compute uncertainty estimates. This decorated model can then fed to any of the `marginaleffects` functions, as one would for any other supported models.
+#' A `marginaleffects` object with simulation or bootstrap resamples and objects attached.
 #' @examples
 #' library(marginaleffects)
 #' library(magrittr)
 #' mod <- glm(vs ~ hp * wt + factor(gear), data = mtcars, family = binomial)
 #'
-#' mod %>%
-#'     inferences() %>%
-#'     avg_predictions(by = "gear")
+#' avg_predictions(mod, by = "gear") %>%
+#'   inferences()
 #'
-#' mod %>%
-#'     inferences() %>%
-#'     slopes() %>%
-#'     head()
+#' slopes(mod) %>%
+#'   inferences() %>%
+#'   head()
 #'
-#' mod %>%
-#'     inferences() %>%
-#'     avg_slopes() %>%
-#'     posterior_draws("rvar")
+#' avg_slopes(mod) %>%
+#'   inferences() %>%
+#'   posterior_draws("rvar")
 #'
 #' @export
-inferences <- function(model, method = "simulation", R = 1000, conf_type = "perc", ...) {
+inferences <- function(x, method = "simulation", R = 1000, conf_type = "perc", ...) {
     checkmate::assert_choice(method, choices = c("delta", "boot", "rsample", "simulation"))
-    # delta method requires no decoration, because it is default
-    out <- model
+
+    mfx_call <- attr(x, "call")
+    model <- attr(x, "model")
+
     # {boot} package
     if (method == "boot") {
         insight::check_if_installed("boot")
-        class(out) <- c("inferences_boot", class(model))
-        attr(out, "boot_args") <- c(list(R = R), list(...))
-        attr(out, "conf_type") <- conf_type
+        class(model) <- c("inferences_boot", class(model))
+        attr(model, "boot_args") <- c(list(R = R), list(...))
+        attr(model, "conf_type") <- conf_type
 
     } else if (method == "rsample") {
         insight::check_if_installed("rsample")
-        class(out) <- c("inferences_rsample", class(model))
-        attr(out, "boot_args") <- c(list(times = R), list(...))
-        attr(out, "conf_type") <- conf_type
+        class(model) <- c("inferences_rsample", class(model))
+        attr(model, "boot_args") <- c(list(times = R), list(...))
+        attr(model, "conf_type") <- conf_type
 
     } else if (method == "simulation") {
         # simulation-based inference
         insight::check_if_installed("MASS")
-        out <- model
-        class(out) <- c("inferences_simulation", class(out))
-        # do this here so we can eventually expand to other functions
-        attr(out, "simulate") <- function(R, B, V) MASS::mvrnorm(R, mu = B, Sigma = V)
-        attr(out, "R") <- R
+        class(model) <- c("inferences_simulation", class(model))
+        attr(model, "R") <- R
+        attr(model, "simulate") <- function(R, B, V) MASS::mvrnorm(R, mu = B, Sigma = V)
     }
 
+    mfx_call[["model"]] <- model
+    out <- recall(mfx_call)
     return(out)
 }

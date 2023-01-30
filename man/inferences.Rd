@@ -4,11 +4,9 @@
 \alias{inferences}
 \title{EXPERIMENTAL Uncertainty Estimates for \code{marginaleffects} Objects}
 \usage{
-inferences(model, method = "simulation", R = 1000, conf_type = "perc", ...)
+inferences(x, method = "simulation", R = 1000, conf_type = "perc", ...)
 }
 \arguments{
-\item{model}{Model object}
-
 \item{method}{String
 \itemize{
 \item "delta": delta method standard errors
@@ -23,17 +21,22 @@ inferences(model, method = "simulation", R = 1000, conf_type = "perc", ...)
 \itemize{
 \item \code{boot}: "perc", "norm", "basic", or "bca"
 \item \code{rsample}: "perc" or "bca"
+\item \code{simulation}: argument ignored.
 }}
 
-\item{...}{Other arguments are ignored.}
+\item{...}{\itemize{
+\item If \code{method="boot"}, additional arguments are passed to \code{boot::boot()}.
+\item If \code{method="rsample"}, additional arguments are passed to \code{rsample::bootstraps()}.
+\item If \code{method="simulation"}, additional arguments are ignored.
+}}
 }
 \value{
-A "decorated" model with additional information on how to conduct inference and compute uncertainty estimates. This decorated model can then fed to any of the \code{marginaleffects} functions, as one would for any other supported models.
+A \code{marginaleffects} object with simulation or bootstrap resamples and objects attached.
 }
 \description{
 Warning: This function is experimental. It may be renamed, the user interface may change, or the functionality may migrate to arguments in other \code{marginaleffects} functions.
 
-Apply this function to a model object to change the inferential strategy used to compute uncertainty estimates: delta method or simulation-based inference.
+Apply this function to a \code{marginaleffects} object to change the inferential method used to compute uncertainty estimates.
 }
 \details{
 When \code{method="simulation"}, we conduct simulation-based inference following the method discussed in Krinsky & Robb (1986):
@@ -58,18 +61,15 @@ library(marginaleffects)
 library(magrittr)
 mod <- glm(vs ~ hp * wt + factor(gear), data = mtcars, family = binomial)
 
-mod \%>\%
-    inferences() \%>\%
-    avg_predictions(by = "gear")
+avg_predictions(mod, by = "gear") \%>\%
+  inferences()
 
-mod \%>\%
-    inferences() \%>\%
-    slopes() \%>\%
-    head()
+slopes(mod) \%>\%
+  inferences() \%>\%
+  head()
 
-mod \%>\%
-    inferences() \%>\%
-    avg_slopes() \%>\%
-    posterior_draws("rvar")
+avg_slopes(mod) \%>\%
+  inferences() \%>\%
+  posterior_draws("rvar")
 
 }
