@@ -4,7 +4,6 @@ exit_if_not(EXPENSIVE)
 
 set.seed(1024)
 R <- 1000
-
 mod <- lm(Petal.Length ~ Sepal.Length * Sepal.Width, data = iris)
 
 
@@ -31,6 +30,7 @@ expect_inherits(head(x), "slopes")
 expect_equivalent(nrow(x), 300)
 expect_equivalent(nrow(head(x)), 6)
 
+
 # avg_ works
 x <- mod |> avg_slopes() |> inferences(method = "boot", R = R)
 expect_inherits(x, "slopes")
@@ -39,7 +39,7 @@ expect_equivalent(nrow(x), 2)
 
 x <- mod |> predictions(vcov = "HC3") |> inferences(method = "boot", R = R) |> head()
 expect_inherits(x, "predictions")
-x <- mod |> comparisons() |> inferences(method = "boot", R = R) |> attr("boot")
+x <- mod |> comparisons() |> inferences(method = "boot", R = R) |> attr("inferences")
 expect_inherits(x, "boot")
 x <- mod |>
      comparisons(variables = "Sepal.Width", newdata = datagrid(Sepal.Length = range)) |> 
@@ -58,7 +58,7 @@ x <- mod |> slopes() |> inferences(method = "rsample", R = R) |> head()
 expect_inherits(x, "slopes")
 x <- mod |> predictions(vcov = "HC3") |> inferences(method = "rsample", R = R) |> head()
 expect_inherits(x, "predictions")
-x <- mod |> comparisons() |> inferences(method = "rsample", R = R) |> attr("rsample")
+x <- mod |> comparisons() |> inferences(method = "rsample", R = R) |> attr("inferences")
 expect_inherits(x, "bootstraps")
 x <- mod |>
      comparisons(variables = "Sepal.Width", newdata = datagrid(Sepal.Length = range)) |>

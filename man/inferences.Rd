@@ -7,6 +7,8 @@
 inferences(x, method = "simulation", R = 1000, conf_type = "perc", ...)
 }
 \arguments{
+\item{x}{Object produced by one of the core \code{marginaleffects} functions.}
+
 \item{method}{String
 \itemize{
 \item "delta": delta method standard errors
@@ -15,7 +17,7 @@ inferences(x, method = "simulation", R = 1000, conf_type = "perc", ...)
 \item "simulation" from a multivariate normal distribution (Krinsky & Robb, 1986)
 }}
 
-\item{R}{Number of simulations.}
+\item{R}{Number of resamples or simulations.}
 
 \item{conf_type}{String: type of bootstrap interval to construct.
 \itemize{

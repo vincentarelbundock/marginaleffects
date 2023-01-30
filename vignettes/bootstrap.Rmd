@@ -78,7 +78,7 @@ We can extract the original `boot` object from an attribute:
 
 
 ```{r}
-attr(est, "boot")
+attr(est, "inferences")
 ```
 
 Or we can extract the individual draws with the `posterior_draws()` function:
@@ -99,7 +99,7 @@ est <- avg_comparisons(mod, by = "Species", variables = "Petal.Width") |>
   inferences(method = "rsample", R = 100, strata = "Species")
 est
 
-attr(est, "rsample")
+attr(est, "inferences")
 ```
 
 Or we can extract the individual draws with the `posterior_draws()` function:

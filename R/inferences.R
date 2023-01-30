@@ -5,7 +5,7 @@
 #'
 #' Apply this function to a `marginaleffects` object to change the inferential method used to compute uncertainty estimates.
 #'
-#' @inheritParams slopes
+#' @param x Object produced by one of the core `marginaleffects` functions.
 #' @param method String
 #' + "delta": delta method standard errors
 #' + "boot" package
@@ -54,23 +54,25 @@
 #'
 #' @export
 inferences <- function(x, method = "simulation", R = 1000, conf_type = "perc", ...) {
-    checkmate::assert_choice(method, choices = c("delta", "boot", "rsample", "simulation"))
+
+    checkmate::assert_choice(
+        method,
+        choices = c("delta", "boot", "rsample", "simulation"))
 
     mfx_call <- attr(x, "call")
     model <- attr(x, "model")
 
-    # {boot} package
     if (method == "boot") {
         insight::check_if_installed("boot")
         attr(model, "inferences_method") <- "boot"
-        attr(model, "boot_args") <- c(list(R = R), list(...))
-        attr(model, "conf_type") <- conf_type
+        attr(model, "inferences_dots") <- c(list(R = R), list(...))
+        attr(model, "inferences_conf_type") <- conf_type
 
     } else if (method == "rsample") {
         insight::check_if_installed("rsample")
         attr(model, "inferences_method") <- "rsample"
-        attr(model, "boot_args") <- c(list(times = R), list(...))
-        attr(model, "conf_type") <- conf_type
+        attr(model, "inferences_dots") <- c(list(times = R), list(...))
+        attr(model, "inferences_conf_type") <- conf_type
 
     } else if (method == "simulation") {
         insight::check_if_installed("MASS")
@@ -78,6 +80,7 @@ inferences <- function(x, method = "simulation", R = 1000, conf_type = "perc", .
         attr(model, "inferences_simulate") <- function(R, B, V) {
             MASS::mvrnorm(R, mu = B, Sigma = V)
         }
+        class(model) <- c("inferences_simulation", class(model))
     }
 
     mfx_call[["model"]] <- model

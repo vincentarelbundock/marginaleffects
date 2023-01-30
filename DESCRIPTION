@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Predictions, Contrasts, Slopes, Marginal Means, and Hypothesis Tests
-Version: 0.8.1.9124
+Version: 0.8.1.9125
 Authors@R: 
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -134,7 +134,8 @@ Suggests:
     withr
 Collate: 
     'backtransform.R'
-    'bootstrap.R'
+    'bootstrap_boot.R'
+    'bootstrap_rsample.R'
     'broom.R'
     'by.R'
     'ci.R'
