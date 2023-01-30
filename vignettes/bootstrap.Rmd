@@ -56,7 +56,7 @@ mod |> inferences(method = "delta") |>
 
 # Bootstrap
 
-`marginaleffects` supports two bootstrap frameworks in `R`: the well-established `boot` package and the newere `rsample` package.
+`marginaleffects` supports two bootstrap frameworks in `R`: the well-established `boot` package and the newer `rsample` package.
 
 ## `boot`
 
@@ -65,7 +65,7 @@ mod |> inferences(method = "boot") |>
        avg_comparisons(by = "Species", variables = "Petal.Width")
 ```
 
-All unknown arguments that we feed to `inferences()` will be pushed forward to `boot::boot()`:
+All unknown arguments that we feed to `inferences()` are pushed forward to `boot::boot()`:
 
 
 ```{r}
@@ -93,7 +93,7 @@ posterior_draws(est, shape = "DxP") |> dim()
 
 ## `rsample`
 
-As before, we can pass argument to `rsample::bootstraps()` through `inferences()`. For example, for stratified resampling:
+As before, we can pass arguments to `rsample::bootstraps()` through `inferences()`. For example, for stratified resampling:
 
 ```{r, warning = FALSE}
 est <- mod |>
@@ -113,6 +113,8 @@ posterior_draws(est, shape = "PxD") |> dim()
 ```
 
 # Simulation-based inference
+
+This simulation-based strategy to compute confidence intervals was described in Krinsky & Robb (1986) and popularized by King, Tomz, Wittenberg (2000). We proceed in 3 steps:
 
 1. Draw `R` sets of simulated coefficients from a multivariate normal distribution with mean equal to the original model's estimated coefficients and variance equal to the model's variance-covariance matrix (classical, "HC3", or other).
 2. Use the `R` sets of coefficients to compute `R` sets of estimands: predictions, comparisons, or slopes.
