@@ -14,6 +14,7 @@
 ^README\.Rmd$
 ^sandbox$
 ^vignettes/alternative_software.Rmd
+^vignettes/bootstrap.Rmd
 ^vignettes/brms.Rmd
 ^vignettes/comparisons.Rmd
 ^vignettes/elasticity.Rmd

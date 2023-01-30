@@ -4,14 +4,26 @@
 \alias{inferences}
 \title{EXPERIMENTAL Uncertainty Estimates for \code{marginaleffects} Objects}
 \usage{
-inferences(model, method = "simulation", R = 1000, ...)
+inferences(model, method = "simulation", R = 1000, conf_type = "perc", ...)
 }
 \arguments{
 \item{model}{Model object}
 
-\item{method}{String: "simulation", "boot", or "delta". See below for references and details.}
+\item{method}{String
+\itemize{
+\item "delta": delta method standard errors
+\item "boot" package
+\item "rsample" package
+\item "simulation" from a multivariate normal distribution (Krinsky & Robb, 1986)
+}}
 
 \item{R}{Number of simulations.}
+
+\item{conf_type}{String: type of bootstrap interval to construct.
+\itemize{
+\item \code{boot}: "perc", "norm", "basic", or "bca"
+\item \code{rsample}: "perc" or "bca"
+}}
 
 \item{...}{Other arguments are ignored.}
 }

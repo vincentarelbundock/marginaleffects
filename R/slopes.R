@@ -240,10 +240,11 @@ slopes <- function(model,
     ############### sanity checks are over
 
     # Bootstrap
-    if (inherits(model, "inferences_boot")) {
-        out <- inferences_boot(
+    if (inherits(model, c("inferences_boot", "inferences_rsample"))) {
+        out <- bootstrap_dispatch(
             FUN = slopes,
             model = model, newdata = newdata, vcov = vcov, variables = variables, type = type,
+            conf_level = conf_level,
             wts = wts, slope = slope, hypothesis = hypothesis, ...)
         return(out)
     }

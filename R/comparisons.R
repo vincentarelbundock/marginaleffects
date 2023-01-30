@@ -340,10 +340,11 @@ comparisons <- function(model,
     ############### sanity checks are over
 
     # Bootstrap
-    if (inherits(model, "inferences_boot")) {
-        out <- inferences_boot(
+    if (inherits(model, c("inferences_boot", "inferences_rsample"))) {
+        out <- bootstrap_dispatch(
             FUN = comparisons,
             model = model, newdata = newdata, vcov = vcov, variables = variables, type = type, by = by,
+            conf_level = conf_level,
             transform_pre = transform_pre, transform_post = transform_post, wts = wts, hypothesis = hypothesis, eps = eps, ...)
         return(out)
     }

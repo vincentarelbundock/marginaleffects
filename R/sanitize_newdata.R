@@ -51,7 +51,7 @@ sanitize_newdata <- function(model, newdata, by = NULL, modeldata = NULL) {
         # Issue #580: outcome should not duplicate grid rows
         dv <- hush(insight::find_response(model))
         if (isTRUE(dv %in% colnames(newdata))) {
-            newdata[[dv]] <- mean_or_mode(newdata[[dv]])
+            newdata[[dv]] <- get_mean_or_mode(newdata[[dv]])
             newdata <- unique(newdata)
         }
     }

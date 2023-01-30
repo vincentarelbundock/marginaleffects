@@ -66,10 +66,10 @@ datagrid <- function(
     model = NULL,
     newdata = NULL,
     grid_type = "typical",
-    FUN_character = Mode,
+    FUN_character = get_mode,
     # need to be explicit for numeric variables transfered to factor in model formula
-    FUN_factor = Mode,
-    FUN_logical = Mode,
+    FUN_factor = get_mode,
+    FUN_logical = get_mode,
     FUN_numeric = function(x) mean(x, na.rm = TRUE),
     FUN_integer = function(x) round(mean(x, na.rm = TRUE)),
     FUN_other = function(x) mean(x, na.rm = TRUE)) {
@@ -176,10 +176,10 @@ typical <- function(
     ...,
     model = NULL,
     newdata = NULL,
-    FUN_character = Mode,
+    FUN_character = get_mode,
     # need to be explicit for numeric variables transfered to factor in model formula
-    FUN_factor = Mode,
-    FUN_logical = Mode,
+    FUN_factor = get_mode,
+    FUN_logical = get_mode,
     FUN_numeric = function(x) mean(x, na.rm = TRUE),
     FUN_integer = function(x) round(mean(x, na.rm = TRUE)),
     FUN_other = function(x) mean(x, na.rm = TRUE)) {

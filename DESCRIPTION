@@ -98,6 +98,8 @@ Suggests:
     patchwork,
     pkgdown,
     plm,
+    rsample,
+    boot,
     polspline,
     posterior,
     prediction,
@@ -132,6 +134,7 @@ Suggests:
     withr
 Collate: 
     'backtransform.R'
+    'bootstrap.R'
     'broom.R'
     'by.R'
     'ci.R'
@@ -176,6 +179,7 @@ Collate:
     'methods_gamlss.R'
     'methods_glmmTMB.R'
     'methods_glmx.R'
+    'methods_inferences_simulation.R'
     'methods_lme4.R'
     'methods_mclogit.R'
     'methods_mgcv.R'

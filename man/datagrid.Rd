@@ -10,9 +10,9 @@ datagrid(
   model = NULL,
   newdata = NULL,
   grid_type = "typical",
-  FUN_character = Mode,
-  FUN_factor = Mode,
-  FUN_logical = Mode,
+  FUN_character = get_mode,
+  FUN_factor = get_mode,
+  FUN_logical = get_mode,
   FUN_numeric = function(x) mean(x, na.rm = TRUE),
   FUN_integer = function(x) round(mean(x, na.rm = TRUE)),
   FUN_other = function(x) mean(x, na.rm = TRUE)

@@ -1,0 +1,125 @@
+---
+title: "Bootstrap and Simulation-Based Inference (EXPERIMENTAL)"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Bootstrap and Simulation-Based Inference}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+`marginaleffects` offers an *experimental* `inferences()` function to computate uncertainty estimates using the bootstrap and simulation-based inference.  The primary function to do this is `inferences()`. 
+
+WARNING: The `inferences()` function is experimental. It may be renamed, the user interface may change, or the functionality may migrate to arguments in other `marginaleffects` functions.
+
+```{r, include = FALSE}
+options(width = 1000)
+# this vignette is in .Rbuildignore because lme4 is not available on old CRAN
+# test machines.
+
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  fig.width = 9,
+  fig.asp = .4,
+  out.width = "100%",
+  warning = FALSE,
+  message = FALSE,
+  comment = "#>"
+)
+```
+
+Consider a simple model:
+
+```{r}
+library(marginaleffects)
+
+mod <- lm(Sepal.Length ~ Petal.Width * Petal.Length + factor(Species), data = iris)
+```
+
+We will compute uncertainty estimates around the output of `comparisons()`, but note that the same approach works with the `predictions()` and `slopes()` functions as well.
+
+
+# Delta method
+
+The default strategy to compute standard errors and confidence intervals is the delta method. This is what we obtain by calling:
+
+```{r}
+mod |> avg_comparisons(by = "Species", variables = "Petal.Width")
+```
+
+Since this is the default method, we obtain the same results if we add the `inferences()` call in the chain:
+
+```{r}
+mod |> inferences(method = "delta") |>
+       avg_comparisons(by = "Species", variables = "Petal.Width")
+```
+
+
+# Bootstrap
+
+`marginaleffects` supports two bootstrap frameworks in `R`: the well-established `boot` package and the newere `rsample` package.
+
+## `boot`
+
+```{r}
+mod |> inferences(method = "boot") |>
+       avg_comparisons(by = "Species", variables = "Petal.Width")
+```
+
+All unknown arguments that we feed to `inferences()` will be pushed forward to `boot::boot()`:
+
+
+```{r}
+est <- mod |>
+       inferences(method = "boot", sim = "balanced", R = 500, conf_type = "bca") |>
+       avg_comparisons(by = "Species", variables = "Petal.Width")
+est
+```
+    
+We can extract the original `boot` object from an attribute:
+
+
+```{r}
+attr(est, "boot")
+```
+
+
+## `rsample`
+
+As before, we can pass argument to `rsample::bootstraps()` through `inferences()`. For example, for stratified resampling:
+
+```{r}
+est <- mod |>
+       inferences(method = "rsample", R = 100, strata = "Species") |>
+       avg_comparisons(by = "Species", variables = "Petal.Width")
+est
+
+attr(est, "rsample")
+```
+
+
+# Simulation-based inference
+
+1. Draw `R` sets of simulated coefficients from a multivariate normal distribution with mean equal to the original model's estimated coefficients and variance equal to the model's variance-covariance matrix (classical, "HC3", or other).
+2. Use the `R` sets of coefficients to compute `R` sets of estimands: predictions, comparisons, or slopes.
+3. Take quantiles of the resulting distribution of estimands to obtain a confidence interval and the standard deviation of simulated estimates to estimate the standard error.
+
+Here are a few examples:
+
+```{r, warning = FALSE}
+library(ggplot2)
+library(ggdist)
+
+mod |> inferences(method = "simulation") |>
+       avg_comparisons(by = "Species", variables = "Petal.Width")
+```
+
+Since simulation based inference generates `R` estimates of the quantities of interest, we can treat them similarly to draws from the posterior distribution in bayesian models. For example, we can extract draws using the `posterior_draws()` function, and plot their distributions using packages like`ggplot2` and `ggdist`:
+
+```{r}
+mod |>
+  inferences(method = "simulation") |>
+  avg_comparisons(by = "Species", variables = "Petal.Width") |>
+  posterior_draws("rvar") |>
+  ggplot(aes(y = Species, xdist = rvar)) +
+  stat_slabinterval()
+```

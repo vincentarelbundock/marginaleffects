@@ -319,13 +319,15 @@ predictions <- function(model,
     ############### sanity checks are over
 
     # Bootstrap
-    if (inherits(model, "inferences_boot")) {
-        out <- inferences_boot(
+    if (inherits(model, c("inferences_boot", "inferences_rsample"))) {
+        out <- bootstrap_dispatch(
             FUN = predictions,
             model = model, newdata = newdata, vcov = vcov, variables = variables, type = type, by = by,
+            conf_level = conf_level,
             byfun = byfun, wts = wts, transform_post = transform_post, hypothesis = hypothesis, ...)
         return(out)
     }
+
 
 
     # main estimation

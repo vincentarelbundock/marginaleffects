@@ -79,7 +79,7 @@ get_ci_draws <- function(x, conf_level, draws, model = NULL) {
     critical <- (1 - conf_level) / 2
 
     # faster known case
-    if (inherits(model, "inference_simulation")) {
+    if (inherits(model, "inferences_simulation")) {
         insight::check_if_installed("collapse", minimum_version = "1.9.0")
         CIs <- collapse::dapply(draws, MARGIN = 1, FUN = collapse::fquantile, probs = c(critical, 1 - critical))
         x$std.error <- collapse::dapply(draws, MARGIN = 1, FUN = collapse::fsd)

@@ -14,6 +14,7 @@ articles:
     - hypothesis
 - title: Case studies
   contents:
+    - bootstrap
     - brms
     - gformula
     - elasticity

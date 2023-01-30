@@ -27,6 +27,7 @@ utils::globalVariables(c(
 "draw",
 "dydx",
 "eps",
+"estimates",
 "estimate",
 "formatBicLL",
 "gn",
