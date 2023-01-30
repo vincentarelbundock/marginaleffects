@@ -22,8 +22,21 @@ expect_inherits(x, "matrix")
 # {boot}
 x <- mod |> avg_predictions() |> inferences(method = "boot", R = R)
 expect_inherits(x, "predictions")
-x <- mod |> slopes() |> inferences(method = "boot", R = R) |> head()
+expect_equivalent(nrow(x), 1)
+
+
+# head works
+x <- mod |> slopes() |> inferences(method = "boot", R = R)
+expect_inherits(head(x), "slopes")
+expect_equivalent(nrow(x), 300)
+expect_equivalent(nrow(head(x)), 6)
+
+# avg_ works
+x <- mod |> avg_slopes() |> inferences(method = "boot", R = R)
 expect_inherits(x, "slopes")
+expect_equivalent(nrow(x), 2)
+
+
 x <- mod |> predictions(vcov = "HC3") |> inferences(method = "boot", R = R) |> head()
 expect_inherits(x, "predictions")
 x <- mod |> comparisons() |> inferences(method = "boot", R = R) |> attr("boot")
@@ -32,7 +45,9 @@ x <- mod |>
      comparisons(variables = "Sepal.Width", newdata = datagrid(Sepal.Length = range)) |> 
      inferences(method = "boot", R = R)
 expect_equivalent(nrow(x), 2)
-x <- mod|> avg_comparisons() |> inferences(R = R)  |> posterior_draws()
+x <- mod|> avg_comparisons() |> inferences(R = R)
+expect_equivalent(nrow(x), 2)
+x <- x |> posterior_draws()
 expect_equivalent(nrow(x), 2 * R)
 
 

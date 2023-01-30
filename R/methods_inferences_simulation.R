@@ -9,10 +9,11 @@ sanitize_model_specific.inferences_simulation <- function(model, vcov = FALSE, .
     tmp <- model
     class(tmp) <- setdiff(class(tmp), "inferences_simulation")
     B <- get_coef(tmp)
+    # at this stage, the `vcov` has been pre-processed, so we get all the "HC3" shortcuts
     V <- get_vcov(tmp, vcov = vcov)
-    attr(model, "coefmat") <- attr(model, "simulate")(R = attr(model, "R"), B = B, V = V)
-    attr(model, "V") <- V
-    attr(model, "B") <- B
+    simfun <- attr(model, "inferences_simulate")
+    R <- attr(model, "inferences_R")
+    attr(model, "inferences_coefmat") <- simfun(R = R, B = B, V = V)
     return(model)
 }
 
@@ -20,7 +21,7 @@ sanitize_model_specific.inferences_simulation <- function(model, vcov = FALSE, .
 #' @rdname get_predict
 #' @export
 get_predict.inferences_simulation <- function(model, newdata, vcov = FALSE, ...) {
-    coefmat <- attr(model, "coefmat")
+    coefmat <- attr(model, "inferences_coefmat")
     # coefmat: BxM 
     checkmate::assert_matrix(coefmat)
     # remove the special class to avoid calling myself

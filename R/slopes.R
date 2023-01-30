@@ -240,12 +240,12 @@ slopes <- function(model,
     ############### sanity checks are over
 
     # Bootstrap
-    if (inherits(model, c("inferences_boot", "inferences_rsample"))) {
-        out <- bootstrap_dispatch(
-            FUN = slopes,
-            model = model, newdata = newdata, vcov = vcov, variables = variables, type = type,
-            conf_level = conf_level,
-            wts = wts, slope = slope, hypothesis = hypothesis, ...)
+    out <- inferences_dispatch(
+        FUN = slopes,
+        model = model, newdata = newdata, vcov = vcov, variables = variables, type = type,
+        conf_level = conf_level,
+        wts = wts, slope = slope, hypothesis = hypothesis, ...)
+    if (!is.null(out)) {
         return(out)
     }
 
@@ -361,6 +361,19 @@ avg_slopes <- function(model,
             }
         }
     }
+
+
+    # Bootstrap
+    out <- inferences_dispatch(
+        FUN = avg_slopes,
+        model = model, newdata = newdata, vcov = vcov, variables = variables, type = type,
+        conf_level = conf_level,
+        wts = wts, slope = slope, hypothesis = hypothesis, ...)
+    if (!is.null(out)) {
+        return(out)
+    }
+
+
     out <- slopes(
         model = model,
         newdata = newdata,
@@ -376,7 +389,7 @@ avg_slopes <- function(model,
         eps = eps,
         ...)
 
-    # overwrite call because otherwise we get the symbosl sent to slopes()
+    # overwrite call because otherwise we get the symbols sent to slopes()
     attr(out, "call") <- match.call()
 
     return(out)

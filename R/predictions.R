@@ -319,12 +319,12 @@ predictions <- function(model,
     ############### sanity checks are over
 
     # Bootstrap
-    if (inherits(model, c("inferences_boot", "inferences_rsample"))) {
-        out <- bootstrap_dispatch(
-            FUN = predictions,
-            model = model, newdata = newdata, vcov = vcov, variables = variables, type = type, by = by,
-            conf_level = conf_level,
-            byfun = byfun, wts = wts, transform_post = transform_post, hypothesis = hypothesis, ...)
+    out <- inferences_dispatch(
+        FUN = predictions,
+        model = model, newdata = newdata, vcov = vcov, variables = variables, type = type, by = by,
+        conf_level = conf_level,
+        byfun = byfun, wts = wts, transform_post = transform_post, hypothesis = hypothesis, ...)
+    if (!is.null(out)) {
         return(out)
     }
 
@@ -633,6 +633,16 @@ avg_predictions <- function(model,
                 newdata <- eval.parent(as.call(lcall))
             }
         }
+    }
+
+    # Bootstrap
+    out <- inferences_dispatch(
+        FUN = avg_predictions,
+        model = model, newdata = newdata, vcov = vcov, variables = variables, type = type, by = by,
+        conf_level = conf_level,
+        byfun = byfun, wts = wts, transform_post = transform_post, hypothesis = hypothesis, ...)
+    if (!is.null(out)) {
+        return(out)
     }
 
     out <- predictions(

@@ -62,25 +62,36 @@ inferences <- function(x, method = "simulation", R = 1000, conf_type = "perc", .
     # {boot} package
     if (method == "boot") {
         insight::check_if_installed("boot")
-        class(model) <- c("inferences_boot", class(model))
+        attr(model, "inferences_method") <- "boot"
         attr(model, "boot_args") <- c(list(R = R), list(...))
         attr(model, "conf_type") <- conf_type
 
     } else if (method == "rsample") {
         insight::check_if_installed("rsample")
-        class(model) <- c("inferences_rsample", class(model))
+        attr(model, "inferences_method") <- "rsample"
         attr(model, "boot_args") <- c(list(times = R), list(...))
         attr(model, "conf_type") <- conf_type
 
     } else if (method == "simulation") {
-        # simulation-based inference
         insight::check_if_installed("MASS")
-        class(model) <- c("inferences_simulation", class(model))
-        attr(model, "R") <- R
-        attr(model, "simulate") <- function(R, B, V) MASS::mvrnorm(R, mu = B, Sigma = V)
+        attr(model, "inferences_R") <- R
+        attr(model, "inferences_simulate") <- function(R, B, V) {
+            MASS::mvrnorm(R, mu = B, Sigma = V)
+        }
     }
 
     mfx_call[["model"]] <- model
     out <- recall(mfx_call)
     return(out)
+}
+
+
+inferences_dispatch <- function(model, FUN, ...) {
+    if (isTRUE(attr(model, "inferences_method") == "rsample")) {
+        bootstrap_rsample(model = model, FUN = FUN, ...)
+    } else if (isTRUE(attr(model, "inferences_method") == "boot")) {
+        bootstrap_boot(model = model, FUN = FUN, ...)
+    } else {
+        return(NULL)
+    }
 }
