@@ -75,8 +75,12 @@ inferences <- function(x, method = "simulation", R = 1000, conf_type = "perc", .
 
     } else if (method == "fwb") {
         insight::check_if_installed("fwb")
+        dots <- list(...)
+        if (!"verbose" %in% names(dots)) {
+            dots[["verbose"]] <- FALSE
+        }
         attr(model, "inferences_method") <- "fwb"
-        attr(model, "inferences_dots") <- c(list(R = R), list(...))
+        attr(model, "inferences_dots") <- c(list(R = R), dots)
         attr(model, "inferences_conf_type") <- conf_type
 
     } else if (method == "rsample") {
