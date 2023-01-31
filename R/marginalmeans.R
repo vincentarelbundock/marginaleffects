@@ -168,10 +168,6 @@ marginal_means <- function(model,
 
     modeldata <- newdata <- get_modeldata(model)
 
-    if (inherits(model, c("inferences_boot", "inferences_rsample"))) {
-        insight::format_error("`inferences()` does not support `marginalmeans()`.")
-    }
-
     transform_post <- sanitize_transform_post(transform_post)
     cross <- sanitize_cross(cross, variables, model)
     conf_level <- sanitize_conf_level(conf_level, ...)

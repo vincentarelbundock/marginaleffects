@@ -36,7 +36,6 @@ bootstrap_boot <- function(model, FUN, ...) {
     args <- list("data" = modeldata, "statistic" = bootfun)
     args <- c(args, attr(model, "inferences_dots"))
     args <- args[unique(names(args))]
-    boot::boot(args$data, args$statistic, args$R)
     B <- do.call(boot::boot, args)
 
     # print.boot prints an ugly nested call

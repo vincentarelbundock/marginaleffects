@@ -59,6 +59,13 @@ inferences <- function(x, method = "simulation", R = 1000, conf_type = "perc", .
         method,
         choices = c("delta", "boot", "rsample", "simulation"))
 
+    if (!inherits(x, c("predictions", "comparisons", "slopes"))) {
+        msg <- sprintf(
+            "Objects of class `%s` are not supported by `inferences()`.",
+            class(x)[1])
+        insight::format_error(msg)
+    }
+
     mfx_call <- attr(x, "call")
     model <- attr(x, "model")
 

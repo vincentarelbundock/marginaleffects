@@ -6,7 +6,6 @@ set.seed(1024)
 R <- 1000
 mod <- lm(Petal.Length ~ Sepal.Length * Sepal.Width, data = iris)
 
-
 # simulation-based inference
 x <- mod |> avg_predictions() |> inferences(R = R)
 expect_inherits(x, "predictions")
@@ -69,3 +68,8 @@ x <- mod |>
      inferences(method = "rsample", R = R) |>
      posterior_draws()
 expect_equivalent(nrow(x), 2 * R)
+
+
+# marginal_means not supported
+mod <- lm(Petal.Length ~ Sepal.Length * Sepal.Width * Species, data = iris)
+expect_error(inferences(marginal_means(mod)), pattern = "not supported")
