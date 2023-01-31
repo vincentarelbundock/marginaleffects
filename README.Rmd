@@ -97,7 +97,7 @@ tab <- tribble(
   ""           , "[`avg_predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)",
   ""           , "[`plot_predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_comparisons.html)",
   "Comparisons", "[`comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)",
-  ""           , "[`avg_comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/avg_comparisons.html)",
+  ""           , "[`avg_comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)",
   ""           , "[`plot_comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_comparisons.html)",
   "Slopes"     , "[`slopes()`](https://vincentarelbundock.github.io/marginaleffects/reference/slopes.html)",
   ""           , "[`avg_slopes()`](https://vincentarelbundock.github.io/marginaleffects/reference/slopes.html)",

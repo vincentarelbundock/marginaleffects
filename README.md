@@ -208,7 +208,7 @@ Comparisons
 
 <td style="text-align:left;">
 
-[`avg_comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/avg_comparisons.html)
+[`avg_comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)
 
 </td>
 
