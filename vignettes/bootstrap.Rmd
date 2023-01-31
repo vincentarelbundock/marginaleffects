@@ -110,6 +110,20 @@ posterior_draws(est) |> head()
 posterior_draws(est, shape = "PxD") |> dim()
 ```
 
+
+## Fractional Weighted Bootstrap (aka Bayesian Boostrap)
+
+[The `fwb` package](https://ngreifer.github.io/fwb/) implements fractional weighted bootstrap (aka Bayesian bootstrap):
+
+> "fwb implements the fractional weighted bootstrap (FWB), also known as the Bayesian bootstrap, following the treatment by Xu et al. (2020). The FWB involves generating sets of weights from a uniform Dirichlet distribution to be used in estimating statistics of interest, which yields a posterior distribution that can be interpreted in the same way the traditional (resampling-based) bootstrap distribution can be." -Noah Greifer 
+
+The `inferences()` function makes it easy to apply this inference strategy to `marginaleffects` objects:
+
+```{r}
+avg_comparisons(mod) |> inferences(method = "fwb")
+```
+
+
 # Simulation-based inference
 
 This simulation-based strategy to compute confidence intervals was described in Krinsky & Robb (1986) and popularized by King, Tomz, Wittenberg (2000). We proceed in 3 steps:

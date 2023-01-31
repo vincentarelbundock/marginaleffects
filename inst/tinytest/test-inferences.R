@@ -69,6 +69,17 @@ x <- mod |>
      posterior_draws()
 expect_equivalent(nrow(x), 2 * R)
 
+# fwb no validity check
+x <- mod |> 
+     comparisons() |> 
+     inferences(method = "fwb", R = R)
+expect_equivalent(nrow(x), 300)
+x <- mod |> 
+     avg_comparisons() |> 
+     inferences(method = "fwb", R = R)
+expect_equivalent(nrow(x), 2)
+
+
 # {fwb} error when user supplied its own weightso
 dat <- transform(mtcars, w = runif(32))
 mod <- lm(mpg ~ hp, data = dat)
