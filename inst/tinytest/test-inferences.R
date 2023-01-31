@@ -69,13 +69,6 @@ x <- mod |>
      posterior_draws()
 expect_equivalent(nrow(x), 2 * R)
 
-
-# marginal_means not supported
-mod <- lm(Petal.Length ~ Sepal.Length * Sepal.Width * Species, data = iris)
-expect_error(inferences(marginal_means(mod)), pattern = "not supported")
-
-
-
 # {fwb} error when user supplied its own weightso
 dat <- transform(mtcars, w = runif(32))
 mod <- lm(mpg ~ hp, data = dat)
