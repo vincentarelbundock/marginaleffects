@@ -1,10 +1,10 @@
-# marginaleffects 0.8.1.9001
+# marginaleffects 0.9.0
 
 Breaking changes:
 
 * All functions return an `estimate` column instead of the function-specific `predicted`, `comparisons`, `dydx`, etc. This change only affects unit-level estimates, and not average estimates, which already used the `estimate` column name.
 * The `transform_avg` argument in `tidy()` deprecated. Use `transform_post` instead.
-* `plot_*()` now return the actual variable names supplied to the `condition` argument, rather than the opaque "condition1", "condition2", etc.
+* `plot_*(draw=FALSE)` now return the actual variable names supplied to the `condition` argument, rather than the opaque "condition1", "condition2", etc.
 
 New models supported:
 
@@ -24,13 +24,9 @@ New features:
   - Numeric value sets the null used in calculating Z and p.
   - Example: `comparisons(mod, transform_pre = "ratio", hypothesis = 1)`
 * All arguments from the main functions are now available through `tidy()`, and `summary()`: `conf_level`, `transform_post`, etc.
-* Bayesian posterior distribution summaries can be customized using global options:
-  - `options("marginaleffects_posterior_interval" = "eti")`
-  - `options("marginaleffects_posterior_interval" = "hdi")`
-  - `options("marginaleffects_posterior_center" = median)`
-  - `options("marginaleffects_posterior_center" = mean)`
+* Bayesian posterior distribution summaries (median, mean, HDI, quantiles) can be customized using global options. See `?comparisons`
 
-Renamed functions (backward-compatibility is maintained):
+Renamed functions (backward-compatibility is maintained by keeping the old function names as aliases):
 
 * `marginaleffects()` -> `slopes()` 
 * `posteriordraws()` -> `posterior_draws()` 
@@ -41,10 +37,10 @@ Renamed functions (backward-compatibility is maintained):
 
 Bug fixes:
 
-* Incorrect results: In 0.8.1, `plot_c*()` the `threenum` and `minmax` labels did not correspond to the correct numeric values.
+* Incorrect results: In 0.8.1, `plot_*()` the `threenum` and `minmax` labels did not correspond to the correct numeric values.
 * Fix corner case for slopes when the dataset includes infinite values.
 * `mlogit` error with factors.
-* The `vcov` argument accepts functions for most models.
+* The `vcov` argument now accepts functions for most models.
 
 Other:
 

@@ -40,6 +40,7 @@
 ^vignettes/tables.Rmd
 ^vignettes/uncertainty.Rmd
 inst/tinytest/stata/databases/.*\.dta
+vignettes/.*\.Rmd
 ^.*\.Rproj$
 ^\.Rproj\.user$
 man-roxygen

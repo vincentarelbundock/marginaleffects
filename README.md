@@ -13,13 +13,15 @@ Compute and plot predictions, slopes, marginal means, and comparisons
 statistical models in R. Conduct linear and non-linear hypothesis tests,
 as well as equivalence tests using the delta method.
 
-The website includes a “Get started” tutorial and *many* vignettes, case
-studies, and technical notes:
+The website includes a [“Get started”
+tutorial](https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html)
+and over 25 [vignettes, case studies, and technical
+notes.](https://vincentarelbundock.github.io/marginaleffects/articles/index.html)
 
-  - [CRAN
-    release](https://vincentarelbundock.github.io/marginaleffects/)
-  - [Development
-    version](https://vincentarelbundock.github.io/marginaleffects/dev)
+<!--
+* [CRAN release](https://vincentarelbundock.github.io/marginaleffects/)
+* [Development version](https://vincentarelbundock.github.io/marginaleffects/dev)
+-->
 
 # Installation
 
