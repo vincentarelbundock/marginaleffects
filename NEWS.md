@@ -14,7 +14,7 @@ New features:
 
 * New functions: `avg_predictions()`, `avg_comparisons()`, `avg_slopes()`
 * Equivalence, non-inferiority, and non-superiority tests with the `hypotheses()` function and `equivalence` argument.
-* New experimental `inferences()` function.
+* New experimental `inferences()` function: simulation-based inferences and bootstrap using the `boot`, `rsample`, and `fwb` package.
 * New `df` argument to set degrees of freedom manually for p and CI.
 * Pretty `print()` for all objects.
 * `by` argument
