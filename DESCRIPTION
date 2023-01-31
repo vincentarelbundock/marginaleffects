@@ -135,6 +135,7 @@ Suggests:
 Collate: 
     'backtransform.R'
     'bootstrap_boot.R'
+    'bootstrap_fwb.R'
     'bootstrap_rsample.R'
     'broom.R'
     'by.R'

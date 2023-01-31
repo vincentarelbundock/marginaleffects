@@ -36,13 +36,14 @@ bootstrap_boot <- function(model, FUN, ...) {
     args <- list("data" = modeldata, "statistic" = bootfun)
     args <- c(args, attr(model, "inferences_dots"))
     args <- args[unique(names(args))]
-    boot::boot(args$data, args$statistic, args$R)
+    # boot::boot(args$data, args$statistic, args$R)
     B <- do.call(boot::boot, args)
 
     # print.boot prints an ugly nested call
     B$call <- match.call()
 
     # HACK: boot::boot() output is non-standard. There must be a better way!
+    # NG: just compute them manually as the SD of the bootstrap distribution
     pr <- utils::capture.output(print(B))
     pr <- pr[(grep("^Bootstrap Statistics :", pr) + 1):length(pr)]
     pr <- gsub("std. error", "std.error", pr)
@@ -54,7 +55,7 @@ bootstrap_boot <- function(model, FUN, ...) {
     ci_list <- lapply(seq_along(B$t0),
                       boot::boot.ci,
                       boot.out = B,
-                      conf = conf_level, 
+                      conf = conf_level,
                       type = conf_type)
     pos <- pmatch(conf_type, names(ci_list[[1]]))
     if (conf_type == "norm") {
