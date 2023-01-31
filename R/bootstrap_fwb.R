@@ -28,7 +28,7 @@ bootstrap_fwb <- function(model, FUN, ...) {
     if (!is.null(w0 <- stats::weights(model))) w <- w * w0
 
     # Update the model's call and evaluate
-    modboot <- update(model, weights = w, evaluate = TRUE)
+    modboot <- stats::update(model, weights = w, evaluate = TRUE)
 
     # {marginaleffects} function needs to incorporate weights if
     # averaging. May be a problem if other weights supplied to
