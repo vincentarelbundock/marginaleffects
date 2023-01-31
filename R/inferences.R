@@ -9,15 +9,18 @@
 #' @param method String
 #' + "delta": delta method standard errors
 #' + "boot" package
+#' + "fwb": fractional weighted bootstrap
 #' + "rsample" package
 #' + "simulation" from a multivariate normal distribution (Krinsky & Robb, 1986)
 #' @param R Number of resamples or simulations.
-#' @param conf_type String: type of bootstrap interval to construct. 
+#' @param conf_type String: type of bootstrap interval to construct.
 #' + `boot`: "perc", "norm", "basic", or "bca"
+#' + `fwb`: "perc", "norm", "basic", "bc", or "bca"
 #' + `rsample`: "perc" or "bca"
 #' + `simulation`: argument ignored.
-#' @param ... 
+#' @param ...
 #' + If `method="boot"`, additional arguments are passed to `boot::boot()`.
+#' + If `method="fwb"`, additional arguments are passed to `fwb::fwb()`.
 #' + If `method="rsample"`, additional arguments are passed to `rsample::bootstraps()`.
 #' + If `method="simulation"`, additional arguments are ignored.
 #' @details
@@ -25,6 +28,8 @@
 #' 1. Draw `R` sets of simulated coefficients from a multivariate normal distribution with mean equal to the original model's estimated coefficients and variance equal to the model's variance-covariance matrix (classical, "HC3", or other).
 #' 2. Use the `R` sets of coefficients to compute `R` sets of estimands: predictions, comparisons, or slopes.
 #' 3. Take quantiles of the resulting distribution of estimands to obtain a confidence interval and the standard deviation of simulated estimates to estimate the standard error.
+#'
+#' When `method="fwb"`, drawn weights are supplied to the model fitting function's `weights` argument; if the model doesn't accept non-integer weights, this method should not be used. If weights were included in the original model fit, they are extracted by [weights()] and multiplied by the drawn weights. These weights are supplied to the `wts` argument of the estimation function (e.g., `comparisons()`).
 #'
 #' @section References:
 #'
@@ -57,7 +62,7 @@ inferences <- function(x, method = "simulation", R = 1000, conf_type = "perc", .
 
     checkmate::assert_choice(
         method,
-        choices = c("delta", "boot", "rsample", "simulation"))
+        choices = c("delta", "boot", "fwb", "rsample", "simulation"))
 
     if (!inherits(x, c("predictions", "comparisons", "slopes"))) {
         msg <- sprintf(
@@ -72,6 +77,12 @@ inferences <- function(x, method = "simulation", R = 1000, conf_type = "perc", .
     if (method == "boot") {
         insight::check_if_installed("boot")
         attr(model, "inferences_method") <- "boot"
+        attr(model, "inferences_dots") <- c(list(R = R), list(...))
+        attr(model, "inferences_conf_type") <- conf_type
+
+    } else if (method == "fwb") {
+        insight::check_if_installed("fwb")
+        attr(model, "inferences_method") <- "fwb"
         attr(model, "inferences_dots") <- c(list(R = R), list(...))
         attr(model, "inferences_conf_type") <- conf_type
 
@@ -101,6 +112,8 @@ inferences_dispatch <- function(model, FUN, ...) {
         bootstrap_rsample(model = model, FUN = FUN, ...)
     } else if (isTRUE(attr(model, "inferences_method") == "boot")) {
         bootstrap_boot(model = model, FUN = FUN, ...)
+    } else if (isTRUE(attr(model, "inferences_method") == "fwb")) {
+        bootstrap_fwb(model = model, FUN = FUN, ...)
     } else {
         return(NULL)
     }
