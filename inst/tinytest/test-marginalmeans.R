@@ -176,3 +176,14 @@ mm <- marginal_means(mod,
   variables = "cyl",
   by = by)
 expect_equivalent(nrow(mm), 2)
+
+
+# Issue #620
+requiet("nnet")
+nom <- nnet::multinom(factor(gear) ~ mpg + am * vs, data = mtcars, trace = FALSE)
+by <-
+  data.frame(
+    carb = c("1", "2", "3", "4", "6", "8"),
+    by = c("1", "2", "3,4,6,8" |> rep(4)))
+cmp <- comparisons(nom, by = by)
+expect_equivalent(nrow(cmp), 9)
