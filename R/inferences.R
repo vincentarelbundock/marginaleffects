@@ -42,21 +42,24 @@
 #' @return
 #' A `marginaleffects` object with simulation or bootstrap resamples and objects attached.
 #' @examples
+#' \dontrun{
 #' library(marginaleffects)
 #' library(magrittr)
-#' mod <- glm(vs ~ hp * wt + factor(gear), data = mtcars, family = binomial)
+#' set.seed(1024)
+#' mod <- lm(Sepal.Length ~ Sepal.Width * Species, data = iris)
 #'
-#' avg_predictions(mod, by = "gear") %>%
+#' avg_predictions(mod, by = "Species") %>%
 #'   inferences(method = "boot")
 #'
 #' slopes(mod) %>%
 #'   inferences(method = "simulation") %>%
 #'   head()
 #'
-#' avg_slopes(mod) %>%
+#' avg_slopes(mod, by = "Species") %>%
 #'   inferences(method = "fwb") %>%
-#'   posterior_draws("rvar")
-#'
+#'   posterior_draws("rvar") %>%
+#'   data.frame()
+#' }
 #' @export
 inferences <- function(x, method, R = 1000, conf_type = "perc", ...) {
 
