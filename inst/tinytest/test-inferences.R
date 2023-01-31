@@ -80,3 +80,7 @@ expect_error(inferences(marginal_means(mod)), pattern = "not supported")
 dat <- transform(mtcars, w = runif(32))
 mod <- lm(mpg ~ hp, data = dat)
 expect_error(inferences(comparisons(mod, wts = "w"), method = "fwb"), pattern = "wts")
+
+# marginal_means not supported
+mod <- lm(Petal.Length ~ Sepal.Length * Sepal.Width * Species, data = iris)
+expect_error(inferences(marginal_means(mod)), pattern = "not supported")
