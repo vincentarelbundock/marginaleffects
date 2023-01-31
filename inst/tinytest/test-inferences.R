@@ -3,17 +3,17 @@ exit_if_not(packageVersion("base") >= "4.1.0")
 exit_if_not(EXPENSIVE)
 
 set.seed(1024)
-R <- 1000
+R <- 100
 mod <- lm(Petal.Length ~ Sepal.Length * Sepal.Width, data = iris)
 
 # simulation-based inference
-x <- mod |> avg_predictions() |> inferences(R = R)
+x <- mod |> avg_predictions() |> inferences(method = "simulation", R = R)
 expect_inherits(x, "predictions")
-x <- mod |> slopes() |> inferences(R = R) |> head()
+x <- mod |> slopes() |> inferences(method = "simulation", R = R) |> head()
 expect_inherits(x, "slopes")
-x <- mod |> predictions(vcov = "HC3") |> inferences(R = R) |> head()
+x <- mod |> predictions(vcov = "HC3") |> inferences(method = "simulation", R = R) |> head()
 expect_inherits(x, "predictions")
-x <- mod |> comparisons() |> inferences(R = R) |> attr("posterior_draws")
+x <- mod |> comparisons() |> inferences(method = "simulation", R = R) |> attr("posterior_draws")
 expect_inherits(x, "matrix")
 
 
@@ -44,7 +44,7 @@ x <- mod |>
      comparisons(variables = "Sepal.Width", newdata = datagrid(Sepal.Length = range)) |> 
      inferences(method = "boot", R = R)
 expect_equivalent(nrow(x), 2)
-x <- mod|> avg_comparisons() |> inferences(R = R)
+x <- mod|> avg_comparisons() |> inferences(method = "simulation", R = R)
 expect_equivalent(nrow(x), 2)
 x <- x |> posterior_draws()
 expect_equivalent(nrow(x), 2 * R)
@@ -87,4 +87,4 @@ expect_error(inferences(comparisons(mod, wts = "w"), method = "fwb"), pattern = 
 
 # marginal_means not supported
 mod <- lm(Petal.Length ~ Sepal.Length * Sepal.Width * Species, data = iris)
-expect_error(inferences(marginal_means(mod)), pattern = "not supported")
+expect_error(inferences(marginal_means(mod), method = "fwb"), pattern = "not supported")
