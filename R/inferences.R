@@ -89,6 +89,10 @@ inferences <- function(x, method = "simulation", R = 1000, conf_type = "perc", .
         attr(model, "inferences_method") <- "fwb"
         attr(model, "inferences_dots") <- c(list(R = R), dots)
         attr(model, "inferences_conf_type") <- conf_type
+        if (isTRUE("wts" %in% names(attr(x, "call")))) {
+            insight::format_error('The `fwb` method is not supported with the `wts` argument.')
+        }
+
 
     } else if (method == "rsample") {
         insight::check_if_installed("rsample")

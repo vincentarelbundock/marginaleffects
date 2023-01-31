@@ -25,7 +25,7 @@ bootstrap_fwb <- function(model, FUN, ...) {
 
   bootfun <- function(data, w) {
     # If model has weights, multiply them by random weights
-    if (!is.null(w0 <- weights(model))) w <- w * w0
+    if (!is.null(w0 <- stats::weights(model))) w <- w * w0
 
     # Update the model's call and evaluate
     modboot <- update(model, weights = w, evaluate = TRUE)
