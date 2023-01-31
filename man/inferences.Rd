@@ -4,7 +4,7 @@
 \alias{inferences}
 \title{(EXPERIMENTAL) Bootstrap and Simulation-Based Inference}
 \usage{
-inferences(x, method = "simulation", R = 1000, conf_type = "perc", ...)
+inferences(x, method, R = 1000, conf_type = "perc", ...)
 }
 \arguments{
 \item{x}{Object produced by one of the core \code{marginaleffects} functions.}
@@ -13,6 +13,7 @@ inferences(x, method = "simulation", R = 1000, conf_type = "perc", ...)
 \itemize{
 \item "delta": delta method standard errors
 \item "boot" package
+\item "fwb": fractional weighted bootstrap
 \item "rsample" package
 \item "simulation" from a multivariate normal distribution (Krinsky & Robb, 1986)
 }}
@@ -22,12 +23,14 @@ inferences(x, method = "simulation", R = 1000, conf_type = "perc", ...)
 \item{conf_type}{String: type of bootstrap interval to construct.
 \itemize{
 \item \code{boot}: "perc", "norm", "basic", or "bca"
+\item \code{fwb}: "perc", "norm", "basic", "bc", or "bca"
 \item \code{rsample}: "perc" or "bca"
 \item \code{simulation}: argument ignored.
 }}
 
 \item{...}{\itemize{
 \item If \code{method="boot"}, additional arguments are passed to \code{boot::boot()}.
+\item If \code{method="fwb"}, additional arguments are passed to \code{fwb::fwb()}.
 \item If \code{method="rsample"}, additional arguments are passed to \code{rsample::bootstraps()}.
 \item If \code{method="simulation"}, additional arguments are ignored.
 }}
@@ -47,6 +50,8 @@ When \code{method="simulation"}, we conduct simulation-based inference following
 \item Use the \code{R} sets of coefficients to compute \code{R} sets of estimands: predictions, comparisons, or slopes.
 \item Take quantiles of the resulting distribution of estimands to obtain a confidence interval and the standard deviation of simulated estimates to estimate the standard error.
 }
+
+When \code{method="fwb"}, drawn weights are supplied to the model fitting function's \code{weights} argument; if the model doesn't accept non-integer weights, this method should not be used. If weights were included in the original model fit, they are extracted by \code{\link[=weights]{weights()}} and multiplied by the drawn weights. These weights are supplied to the \code{wts} argument of the estimation function (e.g., \code{comparisons()}).
 }
 \section{References}{
 
@@ -64,14 +69,14 @@ library(magrittr)
 mod <- glm(vs ~ hp * wt + factor(gear), data = mtcars, family = binomial)
 
 avg_predictions(mod, by = "gear") \%>\%
-  inferences()
+  inferences(method = "boot")
 
 slopes(mod) \%>\%
-  inferences() \%>\%
+  inferences(method = "simulation") \%>\%
   head()
 
 avg_slopes(mod) \%>\%
-  inferences() \%>\%
+  inferences(method = "fwb") \%>\%
   posterior_draws("rvar")
 
 }

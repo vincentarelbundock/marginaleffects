@@ -162,9 +162,9 @@ library(ggdist)
 
 mod <- glm(vs ~ hp * wt + factor(gear), data = mtcars, family = binomial)
 
-mod |> predictions() |> inferences()
+mod |> predictions() |> inferences(method = "simulation")
 
-mod |> avg_slopes(vcov = ~gear) |> inferences()
+mod |> avg_slopes(vcov = ~gear) |> inferences(method = "simulation")
 ```
 
 Since simulation based inference generates `iter` estimates of the quantities of interest, we can treat them similarly to draws from the posterior distribution in bayesian models. For example, we can extract draws using the `posterior_draws()` function, and plot their distributions using packages like`ggplot2` and `ggdist`:
@@ -172,7 +172,7 @@ Since simulation based inference generates `iter` estimates of the quantities of
 ```{r}
 mod |>
   avg_comparisons(variables = "gear") |>
-  inferences() |>
+  inferences(method = "simulation") |>
   posterior_draws("rvar") |>
   ggplot(aes(y = contrast, xdist = rvar)) +
   stat_slabinterval()

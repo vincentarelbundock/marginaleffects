@@ -47,27 +47,25 @@
 #' mod <- glm(vs ~ hp * wt + factor(gear), data = mtcars, family = binomial)
 #'
 #' avg_predictions(mod, by = "gear") %>%
-#'   inferences()
+#'   inferences(method = "boot")
 #'
 #' slopes(mod) %>%
-#'   inferences() %>%
+#'   inferences(method = "simulation") %>%
 #'   head()
 #'
 #' avg_slopes(mod) %>%
-#'   inferences() %>%
+#'   inferences(method = "fwb") %>%
 #'   posterior_draws("rvar")
 #'
 #' @export
-inferences <- function(x, method = "simulation", R = 1000, conf_type = "perc", ...) {
+inferences <- function(x, method, R = 1000, conf_type = "perc", ...) {
 
     checkmate::assert_choice(
         method,
         choices = c("delta", "boot", "fwb", "rsample", "simulation"))
 
     if (!inherits(x, c("predictions", "comparisons", "slopes"))) {
-        msg <- sprintf(
-            "Objects of class `%s` are not supported by `inferences()`.",
-            class(x)[1])
+        msg <- sprintf("Objects of class `%s` are not supported by `inferences()`.", class(x)[1])
         insight::format_error(msg)
     }
 
