@@ -72,11 +72,11 @@ Benefits of `marginaleffects` include:
 
 The `marginaleffects` package allows `R` users to compute and plot three principal quantities of interest: (1) predictions, (2) comparisons, and (3) slopes. In addition, the package includes a convenience function to compute a fourth estimand, "marginal means", which is a special case of averaged predictions. `marginaleffects` can also average (or "marginalize") unit-level (or "conditional") estimates of all those quantities, and conduct hypothesis tests on them.
 
-[Predictions:](https://vincentarelbundock.github.io/articles/predictions.html)
+[Predictions:](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html)
 
 > The outcome predicted by a fitted model on a specified scale for a given combination of values of the predictor variables, such as their observed values, their means, or factor levels. a.k.a. Fitted values, adjusted predictions. `predictions()`, `avg_predictions()`, `plot_predictions()`.
 
-[Comparisons:](https://vincentarelbundock.github.io/articles/comparisons.html)
+[Comparisons:](https://vincentarelbundock.github.io/marginaleffects/articles/comparisons.html)
 
 > Compare the predictions made by a model for different regressor values (e.g., college graduates vs. others): contrasts, differences, risk ratios, odds, etc. `comparisons()`, `avg_comparisons()`, `plot_comparisons()`.
 
@@ -94,17 +94,17 @@ library(tibble)
 tab <- tribble(
   ~Goal, ~Function,
   "Predictions", "[`predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)",
-  ""           , "[`avg_predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/avg_comparisons.html)",
+  ""           , "[`avg_predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)",
   ""           , "[`plot_predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_comparisons.html)",
   "Comparisons", "[`comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)",
   ""           , "[`avg_comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/avg_comparisons.html)",
   ""           , "[`plot_comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_comparisons.html)",
   "Slopes"     , "[`slopes()`](https://vincentarelbundock.github.io/marginaleffects/reference/slopes.html)",
-  ""           , "[`avg_slopes()`](https://vincentarelbundock.github.io/marginaleffects/reference/avg_slopes.html)",
+  ""           , "[`avg_slopes()`](https://vincentarelbundock.github.io/marginaleffects/reference/slopes.html)",
   ""           , "[`plot_slopes()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_slopes.html)",
   "Marginal Means", "[`marginal_means()`](https://vincentarelbundock.github.io/marginaleffects/reference/marginal_means.html)",
   "Grids"      , "[`datagrid()`](https://vincentarelbundock.github.io/marginaleffects/reference/datagrid.html)",
-  ""           , "[`datagridcf()`](https://vincentarelbundock.github.io/marginaleffects/reference/datagridcf.html)",
+  ""           , "[`datagridcf()`](https://vincentarelbundock.github.io/marginaleffects/reference/datagrid.html)",
   "Hypothesis & Equivalence", "[`hypotheses()`](https://vincentarelbundock.github.io/marginaleffects/reference/hypotheses.html)",
   "Bayes, Bootstrap, Simulation", "[`posterior_draws()`](https://vincentarelbundock.github.io/marginaleffects/reference/inferences.html)",
   "", "[`inferences()`](https://vincentarelbundock.github.io/marginaleffects/reference/inferences.html)"
