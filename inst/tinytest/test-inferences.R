@@ -69,3 +69,10 @@ x <- mod |>
      inferences(method = "rsample", R = R) |>
      posterior_draws()
 expect_equivalent(nrow(x), 2 * R)
+
+
+
+# {fwb} error when user supplied its own weightso
+dat <- transform(mtcars, w = runif(32))
+mod <- lm(mpg ~ hp, data = dat)
+expect_error(inferences(comparisons(mod, wts = "w"), method = "fwb"), pattern = "wts")
