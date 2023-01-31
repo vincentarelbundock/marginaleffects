@@ -1,6 +1,6 @@
 #' Plot Comparisons
 #'
-#' This function plots average comparisons, or conditional comparisons. Conditional comparisons present comparisons (y-axis) against values of predictor(s) variable(s) (x-axis and colors). This is especially useful in models with interactions, where the values of contrasts depend on the values of "condition" variables.
+#' Plot comparisons on the y-axis against values of one or more predictor variables (x-axis, colors, and facets). Plot average predictions.
 #'
 #' @param effect Name of the variable whose contrast we want to plot on the y-axis. If `NULL`, a plot of average comparisons is returned.
 #' @param draw `TRUE` returns a `ggplot2` plot. `FALSE` returns a `data.frame` of the underlying data.
@@ -20,6 +20,7 @@
 #' 
 #' plot_comparisons(mod, effect = "am", condition = list("hp", "drat" = range))
 #' 
+#' plot_comparisons(mod, effect = "am", condition = list("hp", "drat" = "threenum"))
 plot_comparisons <- function(x,
                              effect = NULL,
                              condition = NULL,

@@ -1,7 +1,6 @@
 #' Plot Predictions
 #'
-#' This function plots adjusted predictions (y-axis) against values of one or
-#' more predictors (x-axis and colors).
+#' Plot predictions on the y-axis against values of on or more predictors (x-axis, colors, and facets). Plot average predictions.
 #'
 #' @param condition character vector or named list of length smaller than 4. Character vectors must be the names of the predictor variables to display. The names of the list must The first element is displayed on the x-axis. The second element determines the colors. The third element creates facets. Other variables are held at their means or modes. Lists can include these types of values:
 #' * Numeric vector

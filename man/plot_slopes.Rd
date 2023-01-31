@@ -68,10 +68,7 @@ arguments.}
 A \code{ggplot2} object
 }
 \description{
-This function plots marginal effects (y-axis) against values of predictor(s)
-variable(s) (x-axis and colors). This is especially useful in models with
-interactions, where the values of marginal effects depend on the values of
-"condition" variables.
+Plot slopes (aka marginal effects or trends) on the y-axis against values of one or more predictors (x-axis, colors, and facets). Plot average slopes.
 }
 \examples{
 library(marginaleffects)

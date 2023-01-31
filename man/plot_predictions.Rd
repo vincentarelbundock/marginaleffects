@@ -68,8 +68,7 @@ arguments.}
 A \code{ggplot2} object or data frame (if \code{draw=FALSE})
 }
 \description{
-This function plots adjusted predictions (y-axis) against values of one or
-more predictors (x-axis and colors).
+Plot predictions on the y-axis against values of on or more predictors (x-axis, colors, and facets). Plot average predictions.
 }
 \examples{
 mod <- lm(mpg ~ hp + wt, data = mtcars)
