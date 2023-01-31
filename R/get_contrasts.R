@@ -371,8 +371,9 @@ get_contrasts <- function(model,
     # averaging by groups
     # sometimes this work is already done
     # if `by` is a column name, then we have merged-in a data frame earlier
-    if (nrow(out) > 1 && !(is.null(by) || isFALSE(by)) && "contrast" %in% colnames(out) && !any(grepl("^mean\\(", out$contrast))) {
-    # if (identical(by, "by") && "by" %in% colnames(out)) {
+    if (nrow(out) > 1 && !(is.null(by) || isFALSE(by)) &&
+        any(grepl("^contrast[_]?", colnames(out))) &&
+        !any(grepl("^mean\\(", out$contrast))) {
         out <- get_by(
             out,
             draws = draws,
@@ -383,7 +384,7 @@ get_contrasts <- function(model,
         draws <- attr(out, "posterior_draws")
     }
 
-    # issue #531: uncertainy estimates from get_predict() sometimes get retained, but they are not overwritten later by get_ci()
+    # issue #531: uncertainty estimates from get_predict() sometimes get retained, but they are not overwritten later by get_ci()
     # drop by reference for speed
     bad <- intersect(
         colnames(out),

@@ -56,7 +56,7 @@ predictors supplied by the user via the \code{...} dots. Variables which are not
 explicitly defined are held at their mean or mode.
 }
 \description{
-Generate a data grid of user-specified values for use in the \code{newdata} argument of the \code{predictions()}, \code{comparisons()}, and \code{slopes()} functions. This is userful to define where in the predictor space we want to evaluate the quantities of interest. Ex: the predicted outcome or slope for a 37 year old college graduate.
+Generate a data grid of user-specified values for use in the \code{newdata} argument of the \code{predictions()}, \code{comparisons()}, and \code{slopes()} functions. This is useful to define where in the predictor space we want to evaluate the quantities of interest. Ex: the predicted outcome or slope for a 37 year old college graduate.
 \itemize{
 \item \code{datagrid()} generates data frames with combinations of "typical" or user-supplied predictor values.
 \item \code{datagridcf()} generates "counter-factual" data frames, by replicating the entire dataset once for every combination of predictor values supplied by the user.

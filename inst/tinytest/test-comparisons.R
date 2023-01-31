@@ -17,3 +17,12 @@ cmp1 <- comparisons(mod, variables = list(new_hp = fdiff))
 cmp2 <- comparisons(mod, variables = list(new_hp = 10))
 expect_equivalent(nrow(cmp1), 32)
 expect_equivalent(nrow(cmp2), 27)
+
+
+
+# Issue #622 cross-contrasts
+mod <- lm(mpg ~ am * factor(cyl), data = mtcars)
+cmp <- comparisons(mod, variables = c("cyl", "am"), cross = TRUE)
+expect_equivalent(nrow(cmp), 64)
+cmp <- avg_comparisons(mod, variables = c("cyl", "am"), cross = TRUE)
+expect_equivalent(nrow(cmp), 2)
