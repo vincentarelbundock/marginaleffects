@@ -187,13 +187,13 @@ avg_comparisons(mod, variables = list(hp = "minmax"))
 
 # Interactions and Cross-Contrasts
 
-In some contexts we are interested in whether the "effect" of a variable changes, as a function of an other variable. A very simple strategy to tackle this question is to estimate a model with a multiplicative interaction like this one:
+In some contexts we are interested in whether the "effect" of a variable changes, as a function of another variable. A very simple strategy to tackle this question is to estimate a model with a multiplicative interaction like this one:
 
 ```{r}
 mod <- lm(mpg ~ am * factor(cyl), data = mtcars)
 ```
 
-Calling `comparisons()` with the `by` argument shows that the estimated comparisons differ based on `cyl`:
+Calling `avg_comparisons()` with the `by` argument shows that the estimated comparisons differ based on `cyl`:
 
 ```{r}
 avg_comparisons(mod, variables = "am", by = "cyl")
