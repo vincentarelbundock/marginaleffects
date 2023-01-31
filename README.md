@@ -18,11 +18,6 @@ tutorial](https://vincentarelbundock.github.io/marginaleffects/articles/marginal
 and over 25 [vignettes, case studies, and technical
 notes.](https://vincentarelbundock.github.io/marginaleffects/articles/index.html)
 
-<!--
-* [CRAN release](https://vincentarelbundock.github.io/marginaleffects/)
-* [Development version](https://vincentarelbundock.github.io/marginaleffects/dev)
--->
-
 # Installation
 
 Install the latest CRAN release:

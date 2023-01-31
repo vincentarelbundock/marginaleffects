@@ -32,11 +32,6 @@ Compute and plot predictions, slopes, marginal means, and comparisons (contrasts
 
 The website includes a ["Get started" tutorial](https://vincentarelbundock.github.io/marginaleffects/articles/marginaleffects.html) and over 25  [vignettes, case studies, and technical notes.](https://vincentarelbundock.github.io/marginaleffects/articles/index.html)
 
-<!--
-* [CRAN release](https://vincentarelbundock.github.io/marginaleffects/)
-* [Development version](https://vincentarelbundock.github.io/marginaleffects/dev)
--->
-
 # Installation
 
 Install the latest CRAN release:
