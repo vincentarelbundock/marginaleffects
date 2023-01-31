@@ -1,8 +1,8 @@
 ---
-title: "Bayesian analysis with brms"
+title: "Bayesian Analysis with brms"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Bayesian analysis with brms}
+  %\VignetteIndexEntry{Bayesian Analysis with brms}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
