@@ -85,7 +85,7 @@ arguments.}
 A \code{ggplot2} object
 }
 \description{
-This function plots average comparisons, or conditional comparisons. Conditional comparisons present comparisons (y-axis) against values of predictor(s) variable(s) (x-axis and colors). This is especially useful in models with interactions, where the values of contrasts depend on the values of "condition" variables.
+Plot comparisons on the y-axis against values of one or more predictor variables (x-axis, colors, and facets). Plot average predictions.
 }
 \examples{
 mod <- lm(mpg ~ hp * drat * factor(am), data = mtcars)
@@ -98,4 +98,5 @@ plot_comparisons(mod, effect = "hp", condition = list("am", "drat" = 3:5))
 
 plot_comparisons(mod, effect = "am", condition = list("hp", "drat" = range))
 
+plot_comparisons(mod, effect = "am", condition = list("hp", "drat" = "threenum"))
 }

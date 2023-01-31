@@ -1,4 +1,4 @@
-#' EXPERIMENTAL Uncertainty Estimates for `marginaleffects` Objects
+#' (EXPERIMENTAL) Bootstrap and Simulation-Based Inference
 #'
 #' @description
 #' Warning: This function is experimental. It may be renamed, the user interface may change, or the functionality may migrate to arguments in other `marginaleffects` functions.

@@ -2,7 +2,7 @@
 % Please edit documentation in R/inferences.R
 \name{inferences}
 \alias{inferences}
-\title{EXPERIMENTAL Uncertainty Estimates for \code{marginaleffects} Objects}
+\title{(EXPERIMENTAL) Bootstrap and Simulation-Based Inference}
 \usage{
 inferences(x, method = "simulation", R = 1000, conf_type = "perc", ...)
 }
