@@ -1,4 +1,4 @@
-#' Extract Posterior Draws or Boostrap Resamples from `marginaleffects` Objects
+#' Extract Posterior Draws or Bootstrap Resamples from `marginaleffects` Objects
 #'
 #' @param x An object produced by a `marginaleffects` package function, such as `predictions()`, `avg_slopes()`, `hypotheses()`, etc.
 #' @param shape string indicating the shape of the output format:

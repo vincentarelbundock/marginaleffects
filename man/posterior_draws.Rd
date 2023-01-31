@@ -2,7 +2,7 @@
 % Please edit documentation in R/posterior_draws.R
 \name{posterior_draws}
 \alias{posterior_draws}
-\title{Extract Posterior Draws or Boostrap Resamples from \code{marginaleffects} Objects}
+\title{Extract Posterior Draws or Bootstrap Resamples from \code{marginaleffects} Objects}
 \usage{
 posterior_draws(x, shape = "long")
 }
@@ -21,5 +21,5 @@ posterior_draws(x, shape = "long")
 A data.frame with \code{drawid} and \code{draw} columns.
 }
 \description{
-Extract Posterior Draws or Boostrap Resamples from \code{marginaleffects} Objects
+Extract Posterior Draws or Bootstrap Resamples from \code{marginaleffects} Objects
 }

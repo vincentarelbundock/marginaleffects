@@ -185,23 +185,31 @@ avg_comparisons(mod, variables = list(hp = "2sd"))
 avg_comparisons(mod, variables = list(hp = "minmax"))
 ```
 
-# Interactions
+# Interactions and Cross-Contrasts
 
-In some contexts we would like to know what happens when two (or more) predictors change at the same time. In the `marginaleffects` package terminology, this is an "interaction between contrasts."
-
-For example, consider a model with two factor variables: 
+In some contexts we are interested in whether the "effect" of a variable changes, as a function of an other variable. A very simple strategy to tackle this question is to estimate a model with a multiplicative interaction like this one:
 
 ```{r}
 mod <- lm(mpg ~ am * factor(cyl), data = mtcars)
 ```
 
-What happens if `am` increases by 1 unit and `cyl` changes from a baseline reference to another level? 
+Calling `comparisons()` with the `by` argument shows that the estimated comparisons differ based on `cyl`:
 
 ```{r}
-avg_comparisons(mod, variables = c("cyl", "am"))
+avg_comparisons(mod, variables = "am", by = "cyl")
 ```
 
-When the `variables` argument is used and the model formula includes interactions, the "cross-contrasts" will automatically be displayed. You can also force `comparisons()` to do it by setting `interactions=TRUE` and using the `variables` argument to specify which variables should be manipulated simultaneously.
+However, using the `hypothesis` argument for pairwise contrasts between the above comparisons reveals that the heterogeneity is not statistically significant:
+
+```{r}
+avg_comparisons(mod, variables = "am", by = "cyl", hypothesis = "pairwise")
+```
+
+In other contexts, we are interested in a "cross-contrast" or "cross-comparisons"; we would like to know what happens when two (or more) predictors change at the same time. To assess this, we can specify the regressors of interest in the `variables` argument, and set the `cross=TRUE`:
+
+```{r}
+avg_comparisons(mod, variables = c("cyl", "am"), cross = TRUE)
+```
 
 # Quantities of interest
 

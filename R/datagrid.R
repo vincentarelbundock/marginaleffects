@@ -1,7 +1,7 @@
 #' Data grids
 #' 
 #' @description 
-#' Generate a data grid of user-specified values for use in the `newdata` argument of the `predictions()`, `comparisons()`, and `slopes()` functions. This is userful to define where in the predictor space we want to evaluate the quantities of interest. Ex: the predicted outcome or slope for a 37 year old college graduate.
+#' Generate a data grid of user-specified values for use in the `newdata` argument of the `predictions()`, `comparisons()`, and `slopes()` functions. This is useful to define where in the predictor space we want to evaluate the quantities of interest. Ex: the predicted outcome or slope for a 37 year old college graduate.
 #'
 #' * `datagrid()` generates data frames with combinations of "typical" or user-supplied predictor values.
 #' * `datagridcf()` generates "counter-factual" data frames, by replicating the entire dataset once for every combination of predictor values supplied by the user.
