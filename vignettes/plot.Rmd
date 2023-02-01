@@ -135,3 +135,25 @@ Designing effective data visualizations requires a lot of customization to the s
 p <- plot_predictions(mod, condition = c("Age", "PClass"), draw = FALSE)
 head(p)
 ```
+
+
+# Groups and categorical outcomes 
+
+In some models, `marginaleffects` functions generate different estimates for different groups, such as categorical outcomes. For example,
+
+```{r}
+library(MASS)
+mod <- polr(factor(gear) ~ mpg + hp, data = mtcars)
+
+predictions(mod)
+```
+
+We can plot those estimates in the same way as before, by specifying `group` as one of the conditional variable, or by adding that column to a `facet_wrap()` call:
+
+
+```{r, message = FALSE}
+plot_predictions(mod, condition = c("mpg", "group"), type = "probs", vcov = FALSE)
+
+plot_predictions(mod, condition = "mpg", type = "probs", vcov = FALSE) +
+  facet_wrap(~ group)
+```

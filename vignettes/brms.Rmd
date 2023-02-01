@@ -85,8 +85,7 @@ mod <- marginaleffects:::modelarchive_model("brms_titanic_int")
 We can compute [adjusted predicted values](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html) of the outcome variable (i.e., probability of survival aboard the Titanic) using the `predictions` function. By default, this function calculates predictions for each row of the dataset:
 
 ```{r}
-pred <- predictions(mod)
-head(pred)
+predictions(mod)
 ```
 
 To visualize the relationship between the outcome and one of the regressors, we can plot conditional adjusted predictions with the `plot_predictions` function:
