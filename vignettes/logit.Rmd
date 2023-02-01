@@ -19,6 +19,8 @@ knitr::opts_chunk$set(
   message = FALSE,
   comment = "#>"
 )
+library(ggplot2)
+theme_set(theme_minimal())
 ```
 
 This vignette replicates some of the analyses in this excellent blog post by Frank Harrell: [Avoiding One-Number Summaries of Treatment Effects for RCTs with Binary Outcomes](https://www.fharrell.com/post/rdist/). Here, we show how one-number summaries and the entire distribution unit-level contrasts can be easily computed with `comparisons()`.
@@ -41,6 +43,7 @@ Load libraries, data and fit a covariate-adjusted logistic regression model.
 ```{r, message = FALSE, warning = FALSE}
 library(marginaleffects)
 library(modelsummary)
+library(ggplot2)
 library(rms)
 
 load(url(
@@ -69,8 +72,7 @@ Unlike ORs, adjusted risk differences vary from individual to individual based o
 ```{r}
 comparisons(
     mod,
-    variables = "tx") |>
-    head()
+    variables = "tx")
 ```
 
 Population-averaged (aka "marginal") adjusted risk difference ([see this vignette](https://vincentarelbundock.github.io/marginaleffects/articles/gformula.html)) can be obtained using the `avg_*()` functions or using the `by` argument:
@@ -98,7 +100,7 @@ avg_comparisons(
     mod,
     variables = "tx",
     transform_pre = "lnoravg",
-    transform_post = exp)
+    transform_post = "exp")
 ```
 
 ## Unit-level Summaries
@@ -107,31 +109,34 @@ Instead of estimating one-number summaries, we can focus on unit-level proportio
 
 ```{r}
 cmp <- comparisons(mod, variables = "tx")
-
-head(cmp)
+cmp
 ```
 
 Show the predicted probability for individual patients under both treatment alternatives.
 
 ```{r, fig.asp = 1}
-plot(x = cmp$predicted_hi,
-     y = cmp$predicted_lo,
-     main = "Risk of Mortality",
-     xlab = "SK",
-     ylab = "tPA")
-
-abline(0, 1)
+ggplot(cmp, aes(predicted_hi, predicted_lo)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0, linetype = 3) +
+  coord_fixed() +
+  labs(x = "SK", y = "tPA")
 ```
 
-Lastly, present the entire distribution of unit-level proportion differences and its mean and median.
+We can present the entire distribution of unit-level proportion differences an a cumulative distribution function:
+
 
 ```{r}
-hist(cmp$estimate,
-     breaks = 100,
-     main = "Distribution of unit-level contrasts",
-     xlab = "SK - tPA")
-abline(v = mean(cmp$estimate), col = "red")
-abline(v = median(cmp$estimate), col = "blue")
+ggplot(cmp, aes(estimate)) + stat_ecdf()
+```
+
+Or the same information as a histogram with the mean and median.
+
+```{r}
+ggplot(cmp, aes(estimate)) +
+  geom_histogram(bins = 100) +
+  geom_vline(xintercept = mean(cmp$estimate), color = "orange") +
+  geom_vline(xintercept = median(cmp$estimate), color = "darkgreen") +
+  labs(x = "SK - TPA", title = "Distribution of unit-level contrasts")
 ```
 
 ## Appendix
