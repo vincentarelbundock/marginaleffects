@@ -66,15 +66,17 @@ Benefits of `marginaleffects` include:
     operations](https://vincentarelbundock.github.io/marginaleffects/articles/performance.html)
     are orders of magnitude faster than with the `margins` package, and
     the memory footprint is much smaller.
-  - *Valid:* When possible, [numerical results are
-    checked](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
-    against alternative software like `Stata` or other `R` packages.
   - *Thin:* Few dependencies.
   - *Standards-compliant:* `marginaleffects` follows “tidy” principles
     and returns objects that work with standard functions like `plot()`,
     `summary()`, `tidy()`, and `glance()`. These objects are easy to
     program with and feed to [other packages like
     `modelsummary`.](https://vincentarelbundock.github.io/marginaleffects/)
+  - *Valid:* When possible, [numerical results are
+    checked](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
+    against alternative software like `Stata` or other `R` packages.
+    Unfortunately, it is not possible to test every model type, so users
+    are still strongly encouraged to cross-check their results.
   - *Extensible:* Adding support for new models is very easy, often
     requiring less than 10 lines of new code. Please submit [feature
     requests on
@@ -118,254 +120,20 @@ Means:](https://vincentarelbundock.github.io/marginaleffects/articles/marginalme
 > Predictions of a model, averaged across a “reference grid” of
 > categorical predictors. `marginalmeans()`.
 
-<table>
-
-<thead>
-
-<tr>
-
-<th style="text-align:left;">
-
-Goal
-
-</th>
-
-<th style="text-align:left;">
-
-Function
-
-</th>
-
-</tr>
-
-</thead>
-
-<tbody>
-
-<tr>
-
-<td style="text-align:left;">
-
-Predictions
-
-</td>
-
-<td style="text-align:left;">
-
-[`predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-</td>
-
-<td style="text-align:left;">
-
-[`avg_predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-</td>
-
-<td style="text-align:left;">
-
-[`plot_predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_comparisons.html)
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-Comparisons
-
-</td>
-
-<td style="text-align:left;">
-
-[`comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-</td>
-
-<td style="text-align:left;">
-
-[`avg_comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-</td>
-
-<td style="text-align:left;">
-
-[`plot_comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_comparisons.html)
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-Slopes
-
-</td>
-
-<td style="text-align:left;">
-
-[`slopes()`](https://vincentarelbundock.github.io/marginaleffects/reference/slopes.html)
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-</td>
-
-<td style="text-align:left;">
-
-[`avg_slopes()`](https://vincentarelbundock.github.io/marginaleffects/reference/slopes.html)
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-</td>
-
-<td style="text-align:left;">
-
-[`plot_slopes()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_slopes.html)
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-Marginal Means
-
-</td>
-
-<td style="text-align:left;">
-
-[`marginal_means()`](https://vincentarelbundock.github.io/marginaleffects/reference/marginal_means.html)
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-Grids
-
-</td>
-
-<td style="text-align:left;">
-
-[`datagrid()`](https://vincentarelbundock.github.io/marginaleffects/reference/datagrid.html)
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-</td>
-
-<td style="text-align:left;">
-
-[`datagridcf()`](https://vincentarelbundock.github.io/marginaleffects/reference/datagrid.html)
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-Hypothesis & Equivalence
-
-</td>
-
-<td style="text-align:left;">
-
-[`hypotheses()`](https://vincentarelbundock.github.io/marginaleffects/reference/hypotheses.html)
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-Bayes, Bootstrap, Simulation
-
-</td>
-
-<td style="text-align:left;">
-
-[`posterior_draws()`](https://vincentarelbundock.github.io/marginaleffects/reference/inferences.html)
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-</td>
-
-<td style="text-align:left;">
-
-[`inferences()`](https://vincentarelbundock.github.io/marginaleffects/reference/inferences.html)
-
-</td>
-
-</tr>
-
-</tbody>
-
-</table>
+| Goal                         | Function                                                                                                     |
+| :--------------------------- | :----------------------------------------------------------------------------------------------------------- |
+| Predictions                  | [`predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)           |
+|                              | [`avg_predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)       |
+|                              | [`plot_predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_comparisons.html) |
+| Comparisons                  | [`comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)           |
+|                              | [`avg_comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)       |
+|                              | [`plot_comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_comparisons.html) |
+| Slopes                       | [`slopes()`](https://vincentarelbundock.github.io/marginaleffects/reference/slopes.html)                     |
+|                              | [`avg_slopes()`](https://vincentarelbundock.github.io/marginaleffects/reference/slopes.html)                 |
+|                              | [`plot_slopes()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_slopes.html)           |
+| Marginal Means               | [`marginal_means()`](https://vincentarelbundock.github.io/marginaleffects/reference/marginal_means.html)     |
+| Grids                        | [`datagrid()`](https://vincentarelbundock.github.io/marginaleffects/reference/datagrid.html)                 |
+|                              | [`datagridcf()`](https://vincentarelbundock.github.io/marginaleffects/reference/datagrid.html)               |
+| Hypothesis & Equivalence     | [`hypotheses()`](https://vincentarelbundock.github.io/marginaleffects/reference/hypotheses.html)             |
+| Bayes, Bootstrap, Simulation | [`posterior_draws()`](https://vincentarelbundock.github.io/marginaleffects/reference/inferences.html)        |
+|                              | [`inferences()`](https://vincentarelbundock.github.io/marginaleffects/reference/inferences.html)             |
