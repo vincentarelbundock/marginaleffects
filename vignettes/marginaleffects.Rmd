@@ -65,7 +65,7 @@ One ambiguous aspect of the definitions above is that the word "marginal" comes 
 
 On this website and in this package, we reserve the expression "marginal effect" to mean a "slope" or "partial derivative".
 
-The `marginaleffects` package includes functions to estimate, average, plot, and summarize all of the estimands described above. The objects produced by `marginaleffects` are "tidy": they produce simple data frames in "long" format. They are also "standards-compliant" and work seamlessly with standard functions like `summary()`, `plot()`, `tidy()`, and `glance()`, as well with [external packages like `modelsummary`](https://vincentarelbundock.github.io/marginaleffects/) or `ggplot2`.
+The `marginaleffects` package includes functions to estimate, average, plot, and summarize all of the estimands described above. The objects produced by `marginaleffects` are "tidy": they produce simple data frames in "long" format. They are also "standards-compliant" and work seamlessly with standard functions like `summary()`, `plot()`, `tidy()`, and `glance()`, as well with [external packages like `modelsummary`](https://vincentarelbundock.github.io/modelsummary/) or `ggplot2`.
 
 We now apply `marginaleffects` functions to compute each of the estimands described above. First, we fit a linear regression model with multiplicative interactions:
 
