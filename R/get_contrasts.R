@@ -288,7 +288,7 @@ get_contrasts <- function(model,
 
     # drop missing otherwise get_averages() fails when trying to take a simple mean
     idx_na <- !is.na(out$predicted_lo)
-    out <- out[idx_na, , drop = FALSE]
+    out <- na.omit(out, cols = "predicted_lo")
 
     # bayesian
     if (!is.null(draws)) {
@@ -305,7 +305,7 @@ get_contrasts <- function(model,
             by_idx <- out$term
         }
 
-        # loop over columns (draws) and term names because different terms could use different functions 
+        # loop over columns (draws) and term names because different terms could use different functions
         for (tn in unique(by_idx)) {
             for (i in seq_len(ncol(draws))) {
                 idx <- by_idx == tn
@@ -359,12 +359,12 @@ get_contrasts <- function(model,
         # if transform_pre returns a single value, then we padded with NA. That
         # also means we don't want `rowid` otherwise we will merge and have
         # useless duplicates.
-        if (any(is.na(out$estimate))) {
+        if (anyNA(out$estimate)) {
             if (settings_equal("marginaleffects_safefun_return1", TRUE)) {
                 out[, "rowid" := NULL]
             }
         }
-        out <- out[!is.na(estimate)]
+        out <- na.omit(out, cols = "estimate")
     }
 
 
