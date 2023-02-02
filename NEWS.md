@@ -1,5 +1,9 @@
 # marginaleffects 0.9.0.9000
 
+New models supported:
+
+* `MCMCglmm`
+
 Other:
 
 * Improved the performance of `slopes()`, in particular when `vcov = TRUE`. Thanks

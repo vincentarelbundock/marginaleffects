@@ -91,6 +91,7 @@ Suggests:
     margins,
     MASS,
     mclogit,
+    MCMCglmm,
     mgcv,
     mhurdle,
     mice,
@@ -172,6 +173,7 @@ Collate:
     'mean_or_mode.R'
     'set_coef.R'
     'methods_MASS.R'
+    'methods_MCMCglmm.R'
     'methods_afex.R'
     'methods_aod.R'
     'methods_betareg.R'

@@ -71,6 +71,7 @@ sanity_model_supported_class <- function(model) {
         c("lrm", "rms", "glm"),
         c("mblogit", "mclogit"),
         c("mclogit", "lm"),
+        "MCMCglmm",
         "mhurdle",
         "mlogit",
         c("multinom", "nnet"),
