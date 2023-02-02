@@ -20,7 +20,7 @@ Authors@R:
       person("Etienne", "Bacher",
              email = "etienne.bacher@protonmail.com",
              role = "ctb",
-             comment = c(ORCID = "0000-0002-9271-5075"))))
+             comment = c(ORCID = "0000-0002-9271-5075")))
 Description: Compute and plot predictions, slopes, marginal means, and comparisons (contrasts, risk ratios, odds, etc.) for over 70 classes of statistical models in R. Conduct linear and non-linear hypothesis tests, or equivalence tests. Calculate uncertainty estimates using the delta method, bootstrapping, or simulation-based inference.
 License: GPL (>= 3)
 Copyright: inst/COPYRIGHTS
