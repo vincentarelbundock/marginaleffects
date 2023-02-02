@@ -2,7 +2,7 @@
 #'
 #' @return A data.frame of predicted values with a number of rows equal to the
 #' number of rows in `newdata` and columns "rowid" and "estimate". A "group"
-#' column is added for multivariate models or models with categorical outcomes. 
+#' column is added for multivariate models or models with categorical outcomes.
 #' @rdname get_predict
 #' @inheritParams slopes
 #' @keywords internal
@@ -140,11 +140,12 @@ get_predict.default <- function(model,
     if (isTRUE(checkmate::check_atomic_vector(pred))) {
         # strip weird attributes added by some methods (e.g., predict.svyglm)
         if (length(pred) == nrow(newdata)) {
+            if (!is.numeric(pred)) pred <- as.numeric(pred)
             if ("rowid" %in% colnames(newdata)) {
-                out <- data.table(estimate = as.numeric(pred),
+                out <- list(estimate = pred,
                                   rowid = newdata$rowid)
             } else {
-                out <- data.table(estimate = as.numeric(pred),
+                out <- list(estimate = pred,
                                   rowid = seq_len(length(pred)))
             }
         }
@@ -153,12 +154,12 @@ get_predict.default <- function(model,
     } else if (is.matrix(pred)) {
         # internal calls always includes "rowid" as a column in `newdata`
         if ("rowid" %in% colnames(newdata)) {
-            out <- data.table(
+            out <- list(
                 rowid = rep(newdata[["rowid"]], times = ncol(pred)),
                 group = rep(colnames(pred), each = nrow(pred)),
                 estimate = c(pred))
         } else {
-            out <- data.table(
+            out <- list(
                 rowid = rep(seq_len(nrow(pred)), times = ncol(pred)),
                 group = rep(colnames(pred), each = nrow(pred)),
                 estimate = c(pred))
