@@ -1,3 +1,10 @@
+# marginaleffects 0.9.0.9000
+
+Other:
+
+* Improved the performance of `slopes()`, in particular when `vcov = TRUE`. Thanks
+  to Etienne Bacher.
+
 # marginaleffects 0.9.0
 
 Breaking changes:
