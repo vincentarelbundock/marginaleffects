@@ -140,7 +140,10 @@ get_predict.default <- function(model,
     if (isTRUE(checkmate::check_atomic_vector(pred))) {
         # strip weird attributes added by some methods (e.g., predict.svyglm)
         if (length(pred) == nrow(newdata)) {
-            if (!is.numeric(pred)) pred <- as.numeric(pred)
+            # as.numeric is slow with large objects and we can't use is.numeric
+            # to run it conditionally because objects of class "svystat" are
+            # already numeric
+            class(pred) <- "numeric"
             if ("rowid" %in% colnames(newdata)) {
                 out <- list(estimate = pred,
                                   rowid = newdata$rowid)
