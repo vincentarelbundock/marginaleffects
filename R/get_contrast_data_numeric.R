@@ -31,7 +31,7 @@ get_contrast_data_numeric <- function(model,
     }
 
     if (!is.null(eps)) {
-        newdata[, "marginaleffects_eps" := eps]
+        newdata$marginaleffects_eps <- eps
     }
 
     # slope
@@ -50,7 +50,7 @@ get_contrast_data_numeric <- function(model,
         low <- x
         high <- x + eps
         lab <- variable$label
-        newdata[, "marginaleffects_eps" := eps]
+        newdata$marginaleffects_eps <- eps
 
     } else if (identical(variable$label, "exp(dY/dX)")) {
         low <- x
@@ -114,7 +114,7 @@ get_contrast_data_numeric <- function(model,
         lab <- "custom"
     }
 
-    newdata[["eps"]] <- eps
+    newdata$eps <- eps
 
     lo <- hi <- newdata
     lo[[variable$name]] <- low
