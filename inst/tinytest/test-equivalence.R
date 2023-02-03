@@ -5,6 +5,13 @@ requiet("parameters")
 
 mod <- lm(mpg ~ hp + factor(gear), data = mtcars)
 
+
+# No equivalence for bayesian models yet. See ROPE in `bayestestR`.
+mod <- marginaleffects:::modelarchive_model("brms_numeric")
+cmp <- avg_comparisons(mod)
+expect_error(hypotheses(cmp, equivalence = c(-.1, .1)), pattern = "supported")
+
+
 # predictions() vs. {emmeans}: inf
 delta <- 1
 null <- 20 
