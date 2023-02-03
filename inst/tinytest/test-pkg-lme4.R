@@ -14,7 +14,7 @@ exit_if_not(requiet("broom"))
 dat <- mtcars
 dat$cyl <- factor(dat$cyl)
 dat <- dat
-mod <- lmer(mpg ~ hp + (1 | cyl), data = dat)
+mod <-lme4::lmer(mpg ~ hp + (1 | cyl), data = dat)
 x <- predictions(mod)
 y <- predictions(mod, vcov = "satterthwaite")
 z <- predictions(mod, vcov = "kenward-roger")
@@ -126,7 +126,7 @@ expect_equivalent(w, y$estimate)
 # incompatible arguments
 expect_error(get_predict(mod, re.form = ~0, include_random = TRUE), pattern = "together")
 
-# lmer vs. stata
+#lme4::lmer vs. stata
 tmp <- read.csv(testing_path("stata/databases/lme4_01.csv"))
 mod <- lme4::lmer(y ~ x1 * x2 + (1 | clus), data = tmp)
 stata <- readRDS(testing_path("stata/stata.rds"))$lme4_lmer
@@ -136,7 +136,7 @@ expect_equivalent(mfx$estimate, mfx$dydxstata, tolerance = .001)
 expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .001)
 
 # emtrends
-mod <- lmer(y ~ x1 + x2 + (1 | clus), data = tmp)
+mod <-lme4::lmer(y ~ x1 + x2 + (1 | clus), data = tmp)
 mfx <- slopes(mod, variables = "x1",
                    newdata = datagrid(x1 = 0, x2 = 0, clus = 1))
 em <- emtrends(mod, ~x1, "x1", at = list(x1 = 0, x2 = 0, clus = 1))
@@ -281,7 +281,7 @@ tmp <- mtcars
 tmp$cyl <- factor(tmp$cyl)
 tmp$am <- as.logical(tmp$am)
 tmp <- tmp
-mod <- lmer(mpg ~ hp + am + (1 | cyl), data = tmp)
+mod <-lme4::lmer(mpg ~ hp + am + (1 | cyl), data = tmp)
 
 mfx <- slopes(mod, vcov = "kenward-roger")
 cmp <- comparisons(mod, vcov = "kenward-roger")
@@ -295,7 +295,7 @@ expect_equivalent(attr(cmp, "vcov.type"), "Kenward-Roger")
 
 
 # # Issue 437: allow `get_predicted()` arguments
-# mod <- lmer(mpg ~ hp + (1 | cyl), data = mtcars)
+# mod <-lme4::lmer(mpg ~ hp + (1 | cyl), data = mtcars)
 # p1 <- predictions(mod, type = "prediction")
 # p2 <- predictions(mod)
 # expect_inherits(p1, "predictions")

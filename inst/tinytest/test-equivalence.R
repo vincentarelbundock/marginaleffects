@@ -1,5 +1,5 @@
 source("helpers.R")
-requiet("dplyr")
+requiet("poorman")
 requiet("emmeans")
 requiet("parameters")
 
@@ -14,7 +14,7 @@ e2 <- predictions(
     mod,
     newdata = datagrid(gear = unique),
     equivalence = c(19, 21)) |>
-    dplyr::arrange(gear)
+    poorman::arrange(gear)
 expect_equivalent(e1$z.ratio, e2$statistic.noninf)
 expect_equivalent(e1$p.value, e2$p.value.noninf)
 
@@ -25,7 +25,7 @@ e2 <- predictions(
     mod,
     newdata = datagrid(gear = unique),
     equivalence = c(22, 24)) |>
-    dplyr::arrange(gear)
+    poorman::arrange(gear)
 expect_equivalent(e1$z.ratio, e2$statistic.nonsup)
 expect_equivalent(e1$p.value, e2$p.value.nonsup)
 
@@ -36,7 +36,7 @@ e2 <- predictions(
     mod,
     newdata = datagrid(gear = unique),
     equivalence = c(21, 23)) |>
-    dplyr::arrange(gear)
+    poorman::arrange(gear)
 expect_equivalent(e1$p.value, e2$p.value.equiv)
 
 
@@ -104,7 +104,7 @@ e2 <- predictions(
     type = "link",
     newdata = datagrid(gear = unique),
     equivalence = c(.5, 1.5)) |>
-    dplyr::arrange(gear)
+    poorman::arrange(gear)
 expect_equivalent(e1$emmean, e2$estimate)
 expect_equivalent(e1$z.ratio, e2$statistic.noninf)
 expect_equivalent(e1$p.value, e2$p.value.noninf)

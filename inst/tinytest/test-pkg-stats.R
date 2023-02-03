@@ -4,7 +4,7 @@ using("marginaleffects")
 exit_if_not(requiet("margins"))
 exit_if_not(requiet("broom"))
 exit_if_not(requiet("emmeans"))
-exit_if_not(requiet("dplyr"))
+exit_if_not(requiet("poorman"))
 
 
 guerry <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/HistData/Guerry.csv")

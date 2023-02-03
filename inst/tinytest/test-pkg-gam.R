@@ -7,7 +7,7 @@ exit_if_not(requiet("broom"))
 
 # gam: marginaleffects vs. emtrends
 data(kyphosis, package = "gam")
-model <- gam::gam(Kyphosis ~ s(Age,4) + Number, family = binomial, data = kyphosis)
+model <- gam::gam(Kyphosis ~ gam::s(Age,4) + Number, family = binomial, data = kyphosis)
 expect_slopes(model)
 
 # emmeans
@@ -21,7 +21,7 @@ expect_equivalent(mfx$std.error, em$std.error, tolerance = .001)
 
 # gam: predictions: no validity
 data(kyphosis, package = "gam")
-model <- gam::gam(Kyphosis ~ s(Age, 4) + Number,
+model <- gam::gam(Kyphosis ~ gam::s(Age, 4) + Number,
             family = binomial, data = kyphosis)
 pred1 <- predictions(model)
 pred2 <- predictions(model, newdata = head(kyphosis))

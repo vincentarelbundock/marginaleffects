@@ -8,7 +8,7 @@ exit_if_not(requiet("margins"))
 
 # vs. emmeans vs. margins
 dat <- read.csv(testing_path("stata/databases/lme4_02.csv"))
-mod <- lmer(y ~ x1 * x2 + (1 | clus), data = dat)
+mod <-lme4::lmer(y ~ x1 * x2 + (1 | clus), data = dat)
 
 # no validity
 expect_slopes(mod)

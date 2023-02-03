@@ -4,8 +4,7 @@ using("marginaleffects")
 
 exit_if_not(requiet("mgcv"))
 exit_if_not(requiet("emmeans"))
-exit_if_not(requiet("broom"))
-exit_if_not(requiet("dplyr"))
+exit_if_not(requiet("tibble"))
 exit_if_not(requiet("tsModel"))
 
 
@@ -62,93 +61,89 @@ pred2 <- predictions(mod, newdata = head(dat))
 expect_predictions(pred1, n_row = nrow(dat))
 expect_predictions(pred2, n_row = 6)
 
-
 # Issue #364: predictions confidence intervals for binomial models
-if (packageVersion("insight") > "0.17.1.6") {
-    void <- capture.output(
-        dat <- suppressMessages(gamSim(1, n = 400, dist = "binary", scale = .33)))
-    m <- bam(
-      y ~ s(x0) + s(x1) + s(x2) + s(x3),
-      family = binomial,
-      data = dat,
-      method = "REML"
-    )
-    p <- predictions(m)
-    expect_true("conf.low" %in% colnames(p))
-    expect_true("conf.high" %in% colnames(p))
-}
+void <- capture.output(
+    dat <- suppressMessages(gamSim(1, n = 400, dist = "binary", scale = .33)))
+m <- bam(
+    y ~ s(x0) + s(x1) + s(x2) + s(x3),
+    family = binomial,
+    data = dat,
+    method = "REML"
+)
+p <- predictions(m)
+expect_true("conf.low" %in% colnames(p))
+expect_true("conf.high" %in% colnames(p))
 
 
 # Issue #363: matrix column in predictors
-if (packageVersion("insight") > "0.17.1.6") {
-    test1 <- function(x,z,sx=0.3,sz=0.4) { 
-      x <- x*20
-      (pi**sx*sz)*(1.2*exp(-(x-0.2)^2/sx^2-(z-0.3)^2/sz^2)+
-                     0.8*exp(-(x-0.7)^2/sx^2-(z-0.8)^2/sz^2))
-    }
-    n <- 500
-    x <- runif(n)/20;z <- runif(n);
-    f <- test1(x,z)
-    y <- f + rnorm(n)*0.2
-    df <- tibble(y, x, z) |> 
-      mutate(x_lags = tsModel::Lag(x, 0:10),
-             L = matrix(0:10, nrow = 1))
-    b <- mgcv::gam(y ~ s(z) + te(x_lags, L), data = df)
-    mfx <- suppressWarnings(slopes(b))
-    cmp <- suppressWarnings(comparisons(b))
-    pre <- predictions(b)
-    expect_inherits(pre, "predictions")
-    expect_inherits(mfx, "marginaleffects")
-    expect_inherits(cmp, "comparisons")
-    # only one regressor since others are matrix columns
-    expect_true(all(mfx$term == "z"))
-    expect_true(all(cmp$term == "z"))
-
-    expect_error(suppressWarnings(slopes(b, variables = "L")), pattern = "no valid")
-    expect_error(suppressWarnings(comparisons(b, variables = "L")), pattern = "no valid")
-    expect_warning(plot_predictions(b, condition = "z"), pattern = "Matrix columns")
-    expect_warning(plot_slopes(b, effect = "L", condition = "z"), pattern = "Matrix columns")
+test1 <- function(x, z, sx = 0.3, sz = 0.4) {
+    x <- x * 20
+    (pi**sx * sz) * (1.2 * exp(-(x - 0.2)^2 / sx^2 - (z - 0.3)^2 / sz^2) +
+        0.8 * exp(-(x - 0.7)^2 / sx^2 - (z - 0.8)^2 / sz^2))
 }
+n <- 500
+x <- runif(n) / 20
+z <- runif(n)
+f <- test1(x, z)
+y <- f + rnorm(n) * 0.2
+df <- tibble::tibble(y, x, z)
+df <- poorman::mutate(
+    df,
+    x_lags = tsModel::Lag(x, 0:10),
+    L = matrix(0:10, nrow = 1))
+b <- mgcv::gam(y ~ s(z) + te(x_lags, L), data = df)
+mfx <- suppressWarnings(slopes(b))
+cmp <- suppressWarnings(comparisons(b))
+pre <- predictions(b)
+expect_inherits(pre, "predictions")
+expect_inherits(mfx, "marginaleffects")
+expect_inherits(cmp, "comparisons")
+# only one regressor since others are matrix columns
+expect_true(all(mfx$term == "z"))
+expect_true(all(cmp$term == "z"))
+
+expect_error(suppressWarnings(slopes(b, variables = "L")), pattern = "no valid")
+expect_error(suppressWarnings(comparisons(b, variables = "L")), pattern = "no valid")
+expect_warning(plot_predictions(b, condition = "z"), pattern = "Matrix columns")
+expect_warning(plot_slopes(b, effect = "L", condition = "z"), pattern = "Matrix columns")
 
 
 # Issue #365: exclude argument changes predictions
-if (packageVersion("insight") > "0.17.1.6") {
-    void <- capture.output(
-        dat <- gamSim(1,n=400,dist="normal",scale=2)
-    )
-    b <- bam(y ~ s(x0) + s(x1) + s(x2) + s(x3), data = dat)
-    p1 <- predictions(b)
-    p2 <- predictions(b, exclude = "s(x3)")
-    expect_true(all(p1$estimate != p2$estimate))
+void <- capture.output(
+    dat <- gamSim(1, n = 400, dist = "normal", scale = 2)
+)
+b <- bam(y ~ s(x0) + s(x1) + s(x2) + s(x3), data = dat)
+p1 <- predictions(b)
+p2 <- predictions(b, exclude = "s(x3)")
+expect_true(all(p1$estimate != p2$estimate))
 
 
-    # exclude a smooth
-    exit_if_not(requiet("itsadug"))
-    set.seed(1024)
-    data(simdat)
-    simdat$Subject <- as.factor(simdat$Subject)
-    model <- bam(Y ~ Group + s(Time, by = Group) + s(Subject, bs = "re"), data = simdat)
-    nd <- datagrid(
-        model = model,
-        Subject = "a01",
-        Group = "Adults")
+# exclude a smooth
+exit_if_not(requiet("itsadug"))
+set.seed(1024)
+data(simdat)
+simdat$Subject <- as.factor(simdat$Subject)
+model <- bam(Y ~ Group + s(Time, by = Group) + s(Subject, bs = "re"), data = simdat)
+nd <- datagrid(
+    model = model,
+    Subject = "a01",
+    Group = "Adults")
 
-    expect_equivalent(
-        predictions(model, newdata = nd)$estimate,
-        predict(model, newdata = nd)[1])
+expect_equivalent(
+    predictions(model, newdata = nd)$estimate,
+    predict(model, newdata = nd)[1])
 
-    expect_equivalent(
-        predictions(model, newdata = nd, exclude = "s(Subject)")$estimate,
-        predict(model, newdata = nd, exclude = "s(Subject)")[1])
+expect_equivalent(
+    predictions(model, newdata = nd, exclude = "s(Subject)")$estimate,
+    predict(model, newdata = nd, exclude = "s(Subject)")[1])
 
 
-    mfx <- slopes(model, newdata = "mean", variables = "Time", type = "link")
-    emt <- suppressMessages(data.frame(
-        emtrends(model, ~Time, "Time", at = list(Time = 1000, Subject = "a01", Group = "Adults"))))
-    expect_equivalent(mfx$estimate, emt$Time.trend, tolerance = 1e-2)
-    expect_equivalent(mfx$std.error, emt$SE, tolerance = 1e-3)
+mfx <- slopes(model, newdata = "mean", variables = "Time", type = "link")
+emt <- suppressMessages(data.frame(
+    emtrends(model, ~Time, "Time", at = list(Time = 1000, Subject = "a01", Group = "Adults"))))
+expect_equivalent(mfx$estimate, emt$Time.trend, tolerance = 1e-2)
+expect_equivalent(mfx$std.error, emt$SE, tolerance = 1e-3)
 
-    # Issue #545
-    p <- plot_slopes(model, effect = "Time", condition = "Time", draw = FALSE)
-    expect_true(nrow(p) > 1)
-}
+# Issue #545
+p <- plot_slopes(model, effect = "Time", condition = "Time", draw = FALSE)
+expect_true(nrow(p) > 1)

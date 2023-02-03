@@ -125,7 +125,7 @@ expect_equivalent(p3$term, c("Contrast A", "Contrast B"))
 # marginalmeans: hypothesis complex
 lc <- c(-2, 1, 1, 0, -1, 1)
 em <- emmeans(mod, "carb") 
-em <- contrast(em, method = data.frame(custom_contrast = lc))
+em <- emmeans::contrast(em, method = data.frame(custom_contrast = lc))
 em <- data.frame(em)
 mm <- marginal_means(mod, variables = "carb", hypothesis = lc)
 expect_equivalent(mm$estimate, em$estimate)
