@@ -114,7 +114,7 @@ get_contrast_data_numeric <- function(model,
         lab <- "custom"
     }
 
-    newdata$eps <- eps
+    newdata[["eps"]] <- eps
 
     lo <- hi <- newdata
     lo[[variable$name]] <- low
