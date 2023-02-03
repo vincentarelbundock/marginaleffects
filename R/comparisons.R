@@ -460,7 +460,9 @@ comparisons <- function(model,
         "conf.high", "df", "predicted", "predicted_hi", "predicted_lo")
     cols <- intersect(stubcols, colnames(mfx))
     cols <- unique(c(cols, colnames(mfx)))
-    mfx[, setdiff(names(mfx), cols) := NULL]
+    if (length(setdiff(names(mfx), cols)) > 0L) {
+      mfx[, setdiff(names(mfx), cols) := NULL]
+    }
     mfx <- sort_columns(mfx, stubcols)
 
     # bayesian draws

@@ -278,7 +278,9 @@ slopes <- function(model,
                   sort(grep("^predicted", colnames(newdata), value = TRUE)))
     cols <- intersect(stubcols, colnames(out))
     cols <- unique(c(cols, colnames(out)))
-    out[, setdiff(names(out), cols) := NULL]
+    if (length(setdiff(names(out), cols)) > 0L) {
+      out[, setdiff(names(out), cols) := NULL]
+    }
 
     if ("group" %in% colnames(out) && all(out$group == "main_marginaleffect")) {
         out[, "group" := NULL]
