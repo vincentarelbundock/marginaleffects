@@ -288,12 +288,13 @@ get_contrasts <- function(model,
         return(con)
     }
 
-    # drop missing otherwise get_averages() fails when trying to take a simple mean
-    idx_na <- !is.na(out$predicted_lo)
-    out <- na.omit(out, cols = "predicted_lo")
-
     # bayesian
     if (!is.null(draws)) {
+        # drop missing otherwise get_averages() fails when trying to take a
+        # simple mean
+        idx_na <- !is.na(out$predicted_lo)
+        out <- na.omit(out, cols = "predicted_lo")
+
         # TODO: performance is probably terrrrrible here, but splitting is
         # tricky because grouping rows are not always contiguous, and the order
         # of rows is **extremely** important because draws don't have the
@@ -342,6 +343,7 @@ get_contrasts <- function(model,
 
     # frequentist
     } else {
+        out <- na.omit(out, cols = "predicted_lo")
         # We want to write the "estimate" column in-place because it safer
         # than group-merge; there were several bugs related to this in the past.
         # safefun() returns 1 value and NAs when the function retunrs a
