@@ -151,7 +151,7 @@ print.marginaleffects <- function(x,
     }
 
     # some commands do not generate average contrasts/mfx. E.g., `lnro` with `by`
-    cat("\n")
+    # cat("\n")
     if (nrow(out) > nrows) {
         print(utils::head(out, n = topn), row.names = FALSE)
         msg <- "--- %s rows omitted. See %s?print.marginaleffects ---"
@@ -168,7 +168,7 @@ print.marginaleffects <- function(x,
     }
     cat("\n")
     # cat("Model type: ", attr(x, "model_type"), "\n")
-    if (!inherits(x, "hypotheses.summary")) {
+    if (!inherits(x, "hypotheses.summary") && isTRUE(getOption("marginaleffects_print_type", default = TRUE))) {
         cat("Prediction type: ", attr(x, "type"), "\n")
     }
     if (!is.null(attr(x, "transform_pre_label"))) {
