@@ -107,6 +107,11 @@ print.marginaleffects <- function(x,
         "p.value.equiv" = "p (Eq)"
         )
 
+    if (any(out[["df"]] < Inf)) {
+        dict["statistic"] <- "t"
+        dict["p.value"] <- "Pr(>|t|)"
+    }
+
     if (inherits(x, "marginalmeans")) {
         dict["estimate"] <- "Mean"
     }

@@ -1,0 +1,7 @@
+
+ Term Contrast Estimate Std. Error     z Pr(>|z|)   2.5 %  97.5 %
+   hp       +1  -0.0682     0.0101 -6.74 1.56e-11 -0.0881 -0.0484
+
+Prediction type:  response 
+Columns: type, term, contrast, estimate, std.error, statistic, p.value, conf.low, conf.high 
+
