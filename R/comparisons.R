@@ -6,14 +6,14 @@
 #' ratio, or some other function. `comparisons()` can return many quantities of
 #' interest, such as contrasts, differences, risk ratios, changes in log odds,
 #' slopes, elasticities, etc.
-#' 
+#'
 #' * `comparisons()`: unit-level (conditional) estimates.
 #' * `avg_comparisons()`: average (marginal) estimates.
-#' 
+#'
 #' The `newdata` argument and the `datagrid()` function can be used to control where statistics are evaluated in the predictor space: "at observed values", "at the mean", "at representative values", etc.
-#' 
+#'
 #' See the comparisons vignette and package website for worked examples and case studies:
-#' 
+#'
 #' * <https://vincentarelbundock.github.io/marginaleffects/articles/comparisons.html>
 #' * <https://vincentarelbundock.github.io/marginaleffects/>
 #'
@@ -460,7 +460,9 @@ comparisons <- function(model,
         "conf.high", "df", "predicted", "predicted_hi", "predicted_lo")
     cols <- intersect(stubcols, colnames(mfx))
     cols <- unique(c(cols, colnames(mfx)))
-    mfx <- mfx[, ..cols, drop = FALSE]
+    if (length(setdiff(names(mfx), cols)) > 0L) {
+      mfx[, setdiff(names(mfx), cols) := NULL]
+    }
     mfx <- sort_columns(mfx, stubcols)
 
     # bayesian draws

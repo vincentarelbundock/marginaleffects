@@ -215,6 +215,8 @@ get_contrasts <- function(model,
         draws_or <- attr(pred_or, "posterior_draws")
     }
 
+    setDT(pred_hi)
+
     out[, predicted_lo := pred_lo[["estimate"]]]
     out[, predicted_hi := pred_hi[["estimate"]]]
 
@@ -286,12 +288,13 @@ get_contrasts <- function(model,
         return(con)
     }
 
-    # drop missing otherwise get_averages() fails when trying to take a simple mean
-    idx_na <- !is.na(out$predicted_lo)
-    out <- out[idx_na, , drop = FALSE]
-
     # bayesian
     if (!is.null(draws)) {
+        # drop missing otherwise get_averages() fails when trying to take a
+        # simple mean
+        idx_na <- !is.na(out$predicted_lo)
+        out <- na.omit(out, cols = "predicted_lo")
+
         # TODO: performance is probably terrrrrible here, but splitting is
         # tricky because grouping rows are not always contiguous, and the order
         # of rows is **extremely** important because draws don't have the
@@ -305,7 +308,7 @@ get_contrasts <- function(model,
             by_idx <- out$term
         }
 
-        # loop over columns (draws) and term names because different terms could use different functions 
+        # loop over columns (draws) and term names because different terms could use different functions
         for (tn in unique(by_idx)) {
             for (i in seq_len(ncol(draws))) {
                 idx <- by_idx == tn
@@ -340,6 +343,7 @@ get_contrasts <- function(model,
 
     # frequentist
     } else {
+        out <- na.omit(out, cols = "predicted_lo")
         # We want to write the "estimate" column in-place because it safer
         # than group-merge; there were several bugs related to this in the past.
         # safefun() returns 1 value and NAs when the function retunrs a
@@ -359,12 +363,12 @@ get_contrasts <- function(model,
         # if transform_pre returns a single value, then we padded with NA. That
         # also means we don't want `rowid` otherwise we will merge and have
         # useless duplicates.
-        if (any(is.na(out$estimate))) {
+        if (anyNA(out$estimate)) {
             if (settings_equal("marginaleffects_safefun_return1", TRUE)) {
                 out[, "rowid" := NULL]
             }
         }
-        out <- out[!is.na(estimate)]
+        out <- na.omit(out, cols = "estimate")
     }
 
 
