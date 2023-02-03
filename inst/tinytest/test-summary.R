@@ -57,7 +57,7 @@ mod <- glm(am ~ hp * wt, data = dat, family = binomial)
 mfx <- slopes(mod)
 expect_snapshot_print(
     summary(mfx) |> poorman::select(term, estimate, conf.low, conf.high),
-    "summary-marginaleffects_poorman")
+    "summary-marginaleffects_dplyr")
 
 
 # bugs stay dead: label transformation_post
