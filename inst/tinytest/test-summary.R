@@ -5,7 +5,7 @@ exit_if_not(!ON_OSX)
 using("tinyviztest")
 using("marginaleffects")
 
-exit_if_not(requiet("dplyr"))
+exit_if_not(requiet("poorman"))
 
 dat <- mtcars
 mod <- glm(am ~ hp, data = dat, family = binomial)
@@ -56,8 +56,8 @@ dat <- mtcars
 mod <- glm(am ~ hp * wt, data = dat, family = binomial)
 mfx <- slopes(mod)
 expect_snapshot_print(
-    summary(mfx) |> dplyr::select(term, estimate, conf.low, conf.high),
-    "summary-marginaleffects_dplyr")
+    summary(mfx) |> poorman::select(term, estimate, conf.low, conf.high),
+    "summary-marginaleffects_poorman")
 
 
 # bugs stay dead: label transformation_post

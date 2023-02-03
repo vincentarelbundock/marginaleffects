@@ -59,7 +59,7 @@ expect_equivalent(mfx$std.error[1], em$std.error, tolerance = 1e-3)
 # emmeans contrasts
 mfx <- slopes(model, type = "link", newdata = datagrid(wt = 3, cyl = 4))
 em <- emmeans(model, specs = "cyl") 
-em <- contrast(em, method = "revpairwise", at = list(wt = 3, cyl = 4))
+em <- emmeans::contrast(em, method = "revpairwise", at = list(wt = 3, cyl = 4))
 em <- tidy(em)
 expect_equivalent(mfx$estimate[mfx$contrast == "6 - 4"], em$estimate[em$contrast == "cyl6 - cyl4"])
 expect_equivalent(mfx$std.error[mfx$contrast == "6 - 4"], em$std.error[em$contrast == "cyl6 - cyl4"])

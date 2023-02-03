@@ -32,36 +32,27 @@ options(width = 10000)
 options(digits = 5)
 
 # important because otherwise testing so many packages is terrible
-dict <- c(
-    "contrast" = "emmeans",
-    "expect_error" = "tinytest",
-    "expect_true" = "tinytest",
-    "expect_equal" = "tinytest",
-    "expect_warning" = "tinytest",
-    "summary" = "base",
-    "lmer" = "lme4",
-    "s" = "gam",
-    "ar" = "stats",
-    "dof" = "parameters",
-    "marginal_effects" = "margins",
-    "kidney" = "brms",
-    "ngrps" = "brms",
-    "filter" = "dplyr",
-    "lag" = "dplyr",
-    "recode" = "dplyr",
-    "logit" = "boot",
-    "melanoma" = "boot",
-    "lizards" = "aod",
-    "rats" = "aod",
-    "aml" = "survival",
-    "mad" = "stats",
-    "sd" = "stats",
-    "var" = "stats"
-)
-conflicted::conflict_prefer_all("dplyr", quiet = TRUE)
-for (i in seq_along(dict)) {
-    conflicted::conflict_prefer(name = names(dict)[i], winner = dict[i], quiet = TRUE)
-}
+# dict <- c(
+    # "summary" = "base",
+    # "ar" = "stats",
+    # "dof" = "parameters",
+    # "marginal_effects" = "margins",
+#     "kidney" = "brms",
+#     "ngrps" = "brms",
+#     "logit" = "boot",
+#     "melanoma" = "boot",
+#     "lizards" = "aod",
+#     "rats" = "aod",
+#     "aml" = "survival",
+#     "mad" = "stats",
+#     "sd" = "stats",
+#     "var" = "stats"
+# )
+# conflicted::conflict_prefer_all("tinytest", quiet = TRUE)
+# conflicted::conflict_prefer_all("poorman", quiet = TRUE)
+# for (i in seq_along(dict)) {
+#     conflicted::conflict_prefer(name = names(dict)[i], winner = dict[i], quiet = TRUE)
+# }
 
 
 ON_CRAN <- !identical(Sys.getenv("R_NOT_CRAN"), "true")

@@ -41,7 +41,7 @@ cmp <- comparisons(mod, newdata = "marginalmeans", variables = "gear")
 cmp <- tidy(cmp)
 
 emm <- emmeans(mod, specs = "gear")
-emm <- data.frame(contrast(emm, method = "trt.vs.ctrl1"))
+emm <- data.frame(emmeans::contrast(emm, method = "trt.vs.ctrl1"))
 
 expect_equivalent(cmp$estimate, emm$estimate)
 expect_equivalent(cmp$std.error, emm$SE)
@@ -62,7 +62,7 @@ expect_equivalent(cmp$std.error, emm$SE)
 #     variables = list(species = "pairwise", island = "pairwise"))
 
 # emm <- emmeans(mod, specs = c("species", "island"))
-# emm <- data.frame(contrast(emm, method = "trt.vs.ctrl1"))
+# emm <- data.frame(emmeans::contrast(emm, method = "trt.vs.ctrl1"))
 
 # # hack: not sure if they are well aligned
 # expect_equivalent(sort(cmp$estimate), sort(emm$estimate))
