@@ -106,6 +106,7 @@ Suggests:
     pkgdown,
     plm,
     polspline,
+    poorman,
     posterior,
     prediction,
     pscl,
