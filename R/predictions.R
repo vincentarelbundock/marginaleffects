@@ -535,10 +535,11 @@ get_predictions <- function(model,
     if (inherits(out$value, "data.frame")) {
         out <- out$value
     } else {
-        msg <- "Unable to compute predicted values with this model. You can try to supply a different dataset to the `newdata` argument. If this does not work, you can file a report on the Github Issue Tracker: https://github.com/vincentarelbundock/marginaleffects/issues"
+        msg <- "Unable to compute predicted values with this model. You can try to supply a different dataset to the `newdata` argument."
         if (!is.null(out$error)) {
-            msg <- c(msg, "", paste("This error was also raised:", "", out$error$message))
+            msg <- c(paste(msg, "This error was also raised:"), "", out$error$message)
         }
+        msg <- c(msg, "", "Bug Tracker: https://github.com/vincentarelbundock/marginaleffects/issues")
         insight::format_error(msg)
     }
 

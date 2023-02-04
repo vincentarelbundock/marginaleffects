@@ -69,6 +69,14 @@ get_predict.brmsfit <- function(model,
         idx <- 1:nrow(newdata)
     }
 
+    # resp_subset sometimes causes dimension mismatch 
+    if (length(dim(draws)) == 2 && nrow(newdata) != ncol(draws)) {
+        msg <- sprintf("Dimension mismatch: There are %s parameters in the posterior draws but %s observations in `newdata` (or the original dataset).",
+                       ncol(draws), nrow(newdata))
+        insight::format_error(msg)
+    }
+
+
     # 1d outcome
     if (length(dim(draws)) == 2) {
         med <- collapse::dapply(draws, MARGIN = 2, FUN = collapse::fmedian)

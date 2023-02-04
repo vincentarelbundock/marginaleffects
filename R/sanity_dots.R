@@ -29,7 +29,8 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
     # mixed effects
     valid[["merMod"]] <- valid[["lmerMod"]] <- valid[["glmerMod"]] <- valid[["lmerModLmerTest"]] <-
         c("include_random", "re.form", "allow.new.levels", "random.only")
-    valid[["brmsfit"]] <- c("ndraws", "re_formula", "allow_new_levels", "sample_new_levels", "dpar")
+    valid[["brmsfit"]] <- c("ndraws", "re_formula", "allow_new_levels",
+                            "sample_new_levels", "dpar", "resp")
     valid[["selection"]] <- c("part") # sampleSelection
     valid[["glmmTMB"]] <- c("re.form", "allow.new.levels", "zitype") # glmmTMB
     valid[["bam"]] <- c("exclude") # mgcv
