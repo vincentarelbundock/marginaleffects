@@ -798,22 +798,27 @@ Recent versions of the `posterior`, `brms`, and `ggdist` packages make it easy t
 
 
 ```{r}
-#| warning = FALSE,
-#| message = FALSE,
-#| results = "hide"
+#| include = FALSE
 library(brms)
 library(ggdist)
 library(ggplot2)
 library(marginaleffects)
-mod <- brm(mpg ~ am, data = mtcars)
+mod <- marginaleffects:::modelarchive_model("brms_numeric2")
 ```
 
 ```{r}
-p <- predictions(mod, by = "am")
-rvar <- posterior_draws(p, shape = "rvar") 
-rvar
+#| eval = FALSE
+library(brms)
+library(ggdist)
+library(ggplot2)
+library(marginaleffects)
+mod <- brm(am ~ mpg + hp, data = mtcars, family = bernoulli)
+```
 
-ggplot(rvar, aes(y = am, xdist = rvar)) + 
+```{r}
+avg_comparisons(mod) |>
+  posterior_draws(shape = "rvar") |>
+  ggplot(aes(y = term, xdist = rvar)) + 
   stat_slabinterval()
 ```
 
@@ -826,7 +831,8 @@ dat <- mtcars
 
 We begin by estimating a model:
 
-```{r, eval = FALSE}
+```{r}
+#| eval = FALSE
 mod <- brm(am ~ mpg + hp, data = mtcars, family = bernoulli(),
            seed = 1024, silent = 2, chains = 4, iter = 1000)
 ```
