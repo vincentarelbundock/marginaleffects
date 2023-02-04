@@ -38,8 +38,6 @@ install.packages(
 
 *Restart `R` completely before moving on.*
 
-# Citing `marginaleffects`
-
 Arel-Bundock V (2023). *marginaleffects: Predictions, Comparisons,
 Slopes, Marginal Means, and Hypothesis Tests*. R package version 0.9.0,
 <https://vincentarelbundock.github.io/marginaleffects/>.
