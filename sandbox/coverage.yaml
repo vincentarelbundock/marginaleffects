@@ -1,0 +1,49 @@
+# Problems with tinyviztest. Probably don't need to run this all the time anyway.
+
+# Run CI for R using https://eddelbuettel.github.io/r-ci/
+
+name: codecov
+
+on:
+  push:
+  pull_request:
+
+env:
+  _R_CHECK_FORCE_SUGGESTS_: "false"
+  test-coverage:
+
+jobs:
+  codecov:
+    runs-on: ubuntu-latest
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_NOT_CRAN: true
+      R_GH: true
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Get Script
+        run: curl -OLs https://raw.githubusercontent.com/vincentarelbundock/marginaleffects/main/sandbox/run.sh && chmod 0755 run.sh
+
+      - name: Bootstrap
+        run: ./run.sh bootstrap
+
+      - name: Dependencies
+        run: ./run.sh install_all
+
+      - name: insight dev
+        run: Rscript -e "remotes::install_github('easystats/insight')"
+
+      - name: tinytest dev
+        run: Rscript -e "remotes::install_github('markvanderloo/tinytest/pkg')"
+
+      - name: tinyviztest dev
+        run: Rscript -e "remotes::install_github('vincentarelbundock/tinyviztest')"
+
+      - name: TMB source
+        run: Rscript -e "install.packages('TMB', type = 'source')"
+
+      - name: Coverage
+        run: ./run.sh coverage
