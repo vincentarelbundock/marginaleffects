@@ -678,3 +678,25 @@ cmp <- comparisons(mod, by = "cyl")
 expect_equal(nrow(cmp), 3)
 cmp <- comparisons(mod, by = "am")
 expect_equal(nrow(cmp), 2)
+
+
+# Issue #639
+dat <- structure(list(y = structure(c(1L, 1L, 2L, 2L, 3L, 3L, 4L, 4L, 
+5L, 5L), levels = c("1", "2", "3", "4", "5"), class = c("ordered", 
+"factor")), x = structure(c(1L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 1L, 
+2L), levels = c("0", "1"), class = "factor"), n = c(102L, 50L, 
+97L, 84L, 9L, 11L, 89L, 130L, 38L, 59L)), class = "data.frame", row.names = c(NA, 
+-10L))
+dat <- transform(dat, x = factor(x), y = ordered(y))
+void <- capture.output(suppressMessages(
+    m <- brms::brm(
+        y | weights(n) ~ x,
+        data = dat,
+        family = "cumulative")
+))
+pre <- avg_predictions(m)
+cmp <- avg_comparisons(m)
+expect_inherits(pre, "predictions")
+expect_inherits(cmp, "comparisons")
+expect_equivalent(nrow(pre), 5)
+expect_equivalent(nrow(cmp), 5)

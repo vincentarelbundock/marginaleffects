@@ -39,12 +39,20 @@ get_contrasts <- function(model,
             newdata = both,
             ...))[["value"]]
 
-        idx_lo <- 1:(nrow(pred_both) / 2)
-        idx_hi <- (nrow(pred_both) / 2 + 1):nrow(pred_both)
-        pred_lo <- pred_both[idx_lo, , drop = FALSE]
-        pred_hi <- pred_both[idx_hi, , drop = FALSE]
-        attr(pred_lo, "posterior_draws") <- attr(pred_both, "posterior_draws")[idx_lo, , drop = FALSE]
-        attr(pred_hi, "posterior_draws") <- attr(pred_both, "posterior_draws")[idx_hi, , drop = FALSE]
+        data.table::setDT(pred_both)
+        pred_both[, "lo" := seq_len(.N) <= .N / 2, by = "group"]
+
+        pred_lo <- pred_both[pred_both$lo, .(rowid, group, estimate), drop = FALSE]
+        pred_hi <- pred_both[!pred_both$lo, .(rowid, group, estimate), drop = FALSE]
+        data.table::setDF(pred_lo)
+        data.table::setDF(pred_hi)
+
+        draws <- attr(pred_both, "posterior_draws")
+        draws_lo <- draws[pred_both$lo, , drop = FALSE]
+        draws_hi <- draws[!pred_both$lo, , drop = FALSE]
+
+        attr(pred_lo, "posterior_draws") <- draws_lo
+        attr(pred_hi, "posterior_draws") <- draws_hi
 
     } else {
         pred_lo <- myTryCatch(get_predict(
