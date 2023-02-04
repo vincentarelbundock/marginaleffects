@@ -6,8 +6,11 @@ New models supported:
 
 Other:
 
-* Improved the performance of `slopes()`, in particular when `vcov = TRUE`. Thanks
-  to Etienne Bacher.
+* Improved the performance of `slopes()`, in particular when `vcov = TRUE`. Thanks to Etienne Bacher.
+
+Bugfixes:
+
+* `brms` models with multivariate outcome collapsed categories in `comparisons()`. Issue #639
 
 # marginaleffects 0.9.0
 
