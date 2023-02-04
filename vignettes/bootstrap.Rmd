@@ -56,7 +56,7 @@ avg_comparisons(mod, by = "Species", variables = "Petal.Width") |>
 
 # Bootstrap
 
-`marginaleffects` supports two bootstrap frameworks in `R`: the well-established `boot` package and the newer `rsample` package.
+`marginaleffects` supports three bootstrap frameworks in `R`: the well-established `boot` package, the newer `rsample` package, and the so-called "bayesian bootstrap" in `fwb`.
 
 ## `boot`
 
