@@ -38,6 +38,23 @@ install.packages(
 
 *Restart `R` completely before moving on.*
 
+# Citing `marginaleffects`
+
+Arel-Bundock V (2023). *marginaleffects: Predictions, Comparisons,
+Slopes, Marginal Means, and Hypothesis Tests*. R package version 0.9.0,
+<https://vincentarelbundock.github.io/marginaleffects/>.
+
+``` bibtex
+@Manual{marginaleffects,
+  title = {marginaleffects: Predictions, Comparisons, Slopes, Marginal Means, and Hypothesis
+Tests},
+  author = {Vincent Arel-Bundock},
+  year = {2023},
+  note = {R package version 0.9.0},
+  url = {https://vincentarelbundock.github.io/marginaleffects/},
+}
+```
+
 # Why?
 
 Parameter estimates are often hard to interpret substantively,
@@ -50,13 +67,13 @@ modeling packages in `R` often produce inconsistent objects that require
 special treatment.
 
 `marginaleffects` offers a single point of entry to easily interpret the
-results of over 73 classes of models, using a simple and consistent user
+results of over 74 classes of models, using a simple and consistent user
 interface.
 
 Benefits of `marginaleffects` include:
 
   - *Powerful:* It can compute predictions, comparisons (contrasts, risk
-    ratios, etc.), slopes, and conduct hypothesis tests for 73 different
+    ratios, etc.), slopes, and conduct hypothesis tests for 74 different
     classes of models in `R`.
   - *Simple:* All functions share a simple and unified interface.
   - *Documented*: Each function is thoroughly documented with abundant
