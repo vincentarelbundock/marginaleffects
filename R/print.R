@@ -151,7 +151,7 @@ print.marginaleffects <- function(x,
     }
 
     # some commands do not generate average contrasts/mfx. E.g., `lnro` with `by`
-    # cat("\n")
+    cat("\n")
     if (nrow(out) > nrows) {
         print(utils::head(out, n = topn), row.names = FALSE)
         msg <- "--- %s rows omitted. See %s?print.marginaleffects ---"

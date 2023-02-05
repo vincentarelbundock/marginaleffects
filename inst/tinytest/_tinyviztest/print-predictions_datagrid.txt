@@ -1,9 +1,12 @@
 
- Estimate Std. Error     z Pr(>|z|) 2.5 % 97.5 % gear
-     14.3      1.886  7.58 3.56e-14  10.6   18.0    4
-     17.6      0.796 22.16  < 2e-16  16.1   19.2    3
-     24.2      1.316 18.41  < 2e-16  21.7   26.8    5
+ Estimate Std. Error     z Pr(>|z|)  2.5 % 97.5 % PClass SexCode
+   0.4641     0.0582  7.98 1.52e-15 0.3538  0.578    1st       0
+   0.9469     0.0243 38.89  < 2e-16 0.8735  0.979    1st       1
+   0.0663     0.0261  2.54   0.0111 0.0301  0.140    2nd       0
+   0.8784     0.0362 24.24  < 2e-16 0.7879  0.934    2nd       1
+   0.1146     0.0250  4.59 4.51e-06 0.0740  0.173    3rd       0
+   0.4497     0.0583  7.72 1.19e-14 0.3400  0.565    3rd       1
 
 Prediction type:  response 
-Columns: rowid, type, estimate, std.error, statistic, p.value, conf.low, conf.high, mpg, hp, gear 
+Columns: rowid, type, estimate, std.error, statistic, p.value, conf.low, conf.high, Survived, Age, PClass, SexCode 
 

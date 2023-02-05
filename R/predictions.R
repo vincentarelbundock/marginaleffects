@@ -294,11 +294,13 @@ predictions <- function(model,
         newdata[["idx"]] <- NULL
     }
 
+    # padding destroys `newdata` attributes, so we save them
+    newdata_attr_cache <- get_marginaleffects_attributes(newdata, include_regex = "^newdata")
+
     # mlogit uses an internal index that is very hard to track, so we don't
     # support `newdata` and assume no padding the `idx` column is necessary for
     # `get_predict` but it breaks binding, so we can't remove it in
     # sanity_newdata and we can't rbind it with padding
-
     # pad factors: `get_predicted/model.matrix` break when factor levels are missing
     if (inherits(model, "mlogit")) {
         padding <- data.frame()
@@ -439,9 +441,7 @@ predictions <- function(model,
             ...)
     }
 
-    out <- data.table(tmp)
-
-    setDF(out)
+    out <- data.frame(tmp)
 
     # save weights as attribute and not column
     marginaleffects_wts_internal <- out[["marginaleffects_wts_internal"]]
@@ -473,9 +473,7 @@ predictions <- function(model,
     out <- backtransform(out, transform_post = transform_post)
 
     class(out) <- c("predictions", class(out))
-    out <- set_marginaleffects_attributes(
-        out,
-        get_marginaleffects_attributes(newdata, include_regex = "^newdata"))
+    out <- set_marginaleffects_attributes(out, attr_cache = newdata_attr_cache)
     attr(out, "model") <- model
     attr(out, "type") <- type
     attr(out, "model_type") <- class(model)[1]
@@ -663,6 +661,7 @@ avg_predictions <- function(model,
 
     # overwrite call because otherwise we get the symbosl sent to predictions()
     attr(out, "call") <- match.call()
+
 
     return(out)
 }
