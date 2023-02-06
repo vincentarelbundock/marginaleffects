@@ -165,7 +165,6 @@ counterfactual <- function(..., model = NULL, newdata = NULL) {
         dat_automatic[, rowidcf := rowid$rowidcf]
         setcolorder(dat_automatic, c("rowidcf", setdiff(names(dat_automatic), "rowidcf")))
         # cross-join 2 data.tables, faster than merging two dataframes
-        # https://stackoverflow.com/questions/75361701/merging-two-data-tables-that-dont-have-common-columns
         out <- cjdt(list(dat_automatic, at))
     }  else {
         out <- merge(rowid, at, all = TRUE)
