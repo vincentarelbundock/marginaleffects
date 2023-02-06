@@ -1,6 +1,6 @@
 #' Data grids
-#' 
-#' @description 
+#'
+#' @description
 #' Generate a data grid of user-specified values for use in the `newdata` argument of the `predictions()`, `comparisons()`, and `slopes()` functions. This is useful to define where in the predictor space we want to evaluate the quantities of interest. Ex: the predicted outcome or slope for a 37 year old college graduate.
 #'
 #' * `datagrid()` generates data frames with combinations of "typical" or user-supplied predictor values.
@@ -23,7 +23,7 @@
 #' @param FUN_other the function to be applied to other variable types.
 #' @details
 #' If `datagrid` is used in a `predictions()`, `comparisons()`, or `slopes()` call as the
-#' `newdata` argument, the model is automatically inserted in the `model` argument of `datagrid()` 
+#' `newdata` argument, the model is automatically inserted in the `model` argument of `datagrid()`
 #' call, and users do not need to specify either the `model` or `newdata` arguments.
 #'
 #' If users supply a model, the data used to fit that model is retrieved using
@@ -116,7 +116,7 @@ datagrid <- function(
 #' Counterfactual data grid
 #' @describeIn datagrid Counterfactual data grid
 #' @export
-#' 
+#'
 datagridcf <- function(
     ...,
     model = NULL,
@@ -137,7 +137,7 @@ datagridcf <- function(
     attr(out, "variables_datagrid") <- names(out)
 
     return(out)
-        
+
 }
 
 
@@ -162,8 +162,11 @@ counterfactual <- function(..., model = NULL, newdata = NULL) {
     if (length(variables_automatic) > 0) {
         idx <- intersect(variables_automatic, colnames(dat))
         dat_automatic <- dat[, ..idx, drop = FALSE]
-        dat_automatic <- cbind(rowid, dat_automatic)
-        out <- merge(dat_automatic, at, all = TRUE)
+        dat_automatic[, rowidcf := rowid$rowidcf]
+        setcolorder(dat_automatic, c("rowidcf", setdiff(names(dat_automatic), "rowidcf")))
+        # cross-join 2 data.tables, faster than merging two dataframes
+        # https://stackoverflow.com/questions/75361701/merging-two-data-tables-that-dont-have-common-columns
+        out <- setkey(dat_automatic[, c(k=1, .SD)], k)[at[, c(k = 1, .SD)], allow.cartesian = TRUE][, k := NULL]
     }  else {
         out <- merge(rowid, at, all = TRUE)
     }
