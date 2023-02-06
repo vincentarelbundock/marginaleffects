@@ -150,7 +150,6 @@ marginal_means <- function(model,
         if (!is.null(newdata)) {
             insight::format_error("The `variables_grid` argument and has been replaced by `newdata`. These two arguments cannot be used simultaneously.")
         }
-    } else {
         newdata <- dots[["variables_grid"]]
     }
 
@@ -265,7 +264,7 @@ marginal_means <- function(model,
     }
 
     # weights
-    wtsgrid <- copy(data.table(newdata)[, ..nonfocal])
+    wtsgrid <- copy(data.table(newgrid)[, ..nonfocal])
     if (identical(wts, "equal")) {
         newgrid[["wts"]] <- 1
 
@@ -291,7 +290,7 @@ marginal_means <- function(model,
             newgrid[["wts"]] <- 1
             return(newgrid)
         } else {
-            wtsgrid <- data.table(newdata)[
+            wtsgrid <- data.table(newgrid)[
                 , .(wts = .N), by = idx][
                 , wts := wts / sum(wts)]
             # sometimes datagrid() converts to factors when there is a transformation
@@ -313,7 +312,7 @@ marginal_means <- function(model,
         model = model,
         newdata = newgrid,
         type = type,
-        variables = variables,
+        variables = focal,
         cross = cross,
         hypothesis = hypothesis,
         by = by,
@@ -333,7 +332,7 @@ marginal_means <- function(model,
             type = type,
             FUN = get_se_delta_marginalmeans,
             index = NULL,
-            variables = variables,
+            variables = focal,
             newdata = newgrid,
             cross = cross,
             modeldata = modeldata,
