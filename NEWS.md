@@ -6,7 +6,7 @@ New models supported:
 
 Other:
 
-* Improved the performance of `slopes()`, in particular when `vcov = TRUE` and 
+* Improved the performance of `slopes()`, in particular when `vcov = TRUE`, and 
   of `predictions()`. Thanks to Etienne Bacher.
 
 Bugfixes:
