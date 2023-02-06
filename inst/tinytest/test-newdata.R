@@ -51,8 +51,8 @@ expect_equivalent(cmp$std.error, emm$SE)
 # Issue #624: reserved "group" word in `by` and `newdata` but not in model.
 dat <- transform(mtcars, group = cyl)
 mod <- lm(mpg ~ hp, data = dat)
-expect_error(slopes(mod, by = "group"), pattern = "forbidden")
-expect_inherits(slopes(mod, by = "cyl"), "slopes")
+expect_error(slopes(mod, newdata = dat, by = "group"), pattern = "forbidden")
+expect_inherits(slopes(mod, newdata = dat, by = "cyl"), "slopes")
 
 
 
