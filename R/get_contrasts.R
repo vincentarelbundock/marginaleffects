@@ -229,7 +229,7 @@ get_contrasts <- function(model,
     out[, predicted_hi := pred_hi[["estimate"]]]
 
     if (!is.null(pred_or)) {
-        setDT(pred_or)
+        data.table::setDT(pred_or)
         out[, predicted := pred_or[["estimate"]]]
     } else {
         out[, predicted := NA_real_]
