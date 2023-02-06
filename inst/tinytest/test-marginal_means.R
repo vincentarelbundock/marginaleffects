@@ -31,7 +31,7 @@ dat$vs <- as.factor(dat$vs)
 
 # sanity check
 mod <- lm(mpg ~ cyl + am + vs + hp, dat)
-expect_error(marginal_means(mod, variables_grid = "junk"), pattern = "not found")
+expect_error(marginal_means(mod, variables_grid = "junk"), pattern = "missing")
 expect_error(marginal_means(mod, variables = "mpg"), pattern = "response")
 
 

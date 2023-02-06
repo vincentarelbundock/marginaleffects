@@ -187,13 +187,6 @@ marginal_means <- function(model,
     hypothesis <- tmp$hypothesis
     hypothesis_null <- tmp$hypothesis_null
 
-    # by: usual tests + only data frames in `marginal_means()`
-    checkmate::assert(
-        checkmate::check_data_frame(by),
-        checkmate::check_false(by),
-        checkmate::check_null(by)
-    )
-    sanity_by(by, newdata)
 
     sanity_dots(model = model, ...)
     if (inherits(model, "brmsfit")) {
@@ -262,6 +255,11 @@ marginal_means <- function(model,
         }
         newgrid <- do.call(datagrid, args)
     }
+
+    # by: usual tests + only data frames in `marginal_means()`
+    # after newgrid
+    checkmate::assert_data_frame(by, null.ok = TRUE)
+    sanity_by(by, newgrid)
 
     # weights
     wtsgrid <- copy(data.table(newgrid)[, ..nonfocal])
