@@ -48,6 +48,14 @@ expect_equivalent(cmp$std.error, emm$SE)
 
 
 
+# Issue #624: reserved "group" word in `by` and `newdata` but not in model.
+dat <- transform(mtcars, group = cyl)
+mod <- lm(mpg ~ hp, data = dat)
+expect_error(slopes(mod, by = "group"), pattern = "forbidden")
+expect_inherits(slopes(mod, by = "cyl"), "slopes")
+
+
+
 # the results are numerically correct, but it's a pain to get the exact same
 # rows as emmeans
 
@@ -67,5 +75,6 @@ expect_equivalent(cmp$std.error, emm$SE)
 # # hack: not sure if they are well aligned
 # expect_equivalent(sort(cmp$estimate), sort(emm$estimate))
 # expect_equivalent(sort(cmp$std.error), sort(emm$SE))
+
 
 
