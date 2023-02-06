@@ -59,7 +59,7 @@ avg_slopes(
 }
 }}
 
-\item{variables}{\code{NULL} or character vector. The subset of variables for which to compute slopes.
+\item{variables}{focal variables
 \itemize{
 \item \code{NULL}: compute contrasts for all the variables in the model object (can be slow).
 \item Character vector: subset of variables (usually faster).

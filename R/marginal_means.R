@@ -8,17 +8,13 @@
 #' * <https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html>
 #' * <https://vincentarelbundock.github.io/marginaleffects/>
 #'
-#' @param variables character vector Categorical predictors over which to
-#' compute marginal means. `NULL` calculates marginal means for all logical,
-#' character, or factor variables in the dataset used to fit `model`. Set
-#' `cross=TRUE` to compute marginal means at combinations of the
-#' predictors specified in the `variables` argument.
-#' @param variables_grid character vector Categorical predictors used to
-#' construct the prediction grid over which adjusted predictions are averaged
-#' (character vector). `NULL` creates a grid with all combinations of all
-#' categorical predictors. This grid can be very large when there are many
-#' variables and many response levels, so it is advisable to select a limited
-#' number of variables in the `variables` and `variables_grid` arguments.
+#' @param variables Focal variables
+#' + Character vector of variable names: compute marginal means for each category of the listed variables.
+#' + `NULL`: calculate marginal means for all logical, character, or factor variables in the dataset used to fit `model`. Hint:  Set `cross=TRUE` to compute marginal means for combinations of focal variables.
+#' @param newdata Grid of predictor values over which we marginalize.
+#' + `NULL` create a grid with all combinations of all categorical predictors in the model. Warning: can be expensive.
+#' + Character vector: subset of categorical variables to use when building the balanced grid of predictors. Other variables are held to their mean or mode.
+#' + Data frame: must include all the variables used to fit the model.
 #' @param type string indicates the type (scale) of the predictions used to
 #' compute marginal effects or contrasts. This can differ based on the model
 #' type, but will typically be a string such as: "response", "link", "probs",
@@ -29,9 +25,9 @@
 #' the default value is "response", the function tries to compute marginal means
 #' on the link scale before backtransforming them using the inverse link function.
 #' @param wts character value. Weights to use in the averaging.
-#' + "equal": each combination of variables in `variables_grid` gets an equal weight.
-#' + "cells": each combination of values for the variables in the `variables_grid` gets a weight proportional to its frequency in the original data.
-#' + "proportional": each combination of values for the variables in the `variables_grid` -- except for those in the `variables` argument -- gets a weight proportional to its frequency in the original data.
+#' + "equal": each combination of variables in `newdata` gets equal weight.
+#' + "cells": each combination of values for the variables in the `newdata` gets a weight proportional to its frequency in the original data.
+#' + "proportional": each combination of values for the variables in `newdata` -- except for those in the `variables` argument -- gets a weight proportional to its frequency in the original data.
 #' @param cross TRUE or FALSE
 #' * `FALSE` (default): Marginal means are computed for each predictor individually.
 #' * `TRUE`: Marginal means are computed for each combination of predictors specified in the `variables` argument.
@@ -43,8 +39,8 @@
 #'   This function begins by calling the `predictions` function to obtain a
 #'   grid of predictors, and adjusted predictions for each cell. The grid
 #'   includes all combinations of the categorical variables listed in the
-#'   `variables` and `variables_grid` arguments, or all combinations of the
-#'   categorical variables used to fit the model if `variables_grid` is `NULL`.
+#'   `variables` and `newdata` arguments, or all combinations of the
+#'   categorical variables used to fit the model if `newdata` is `NULL`.
 #'   In the prediction grid, numeric variables are held at their means.
 #'
 #'   After constructing the grid and filling the grid with adjusted predictions,
@@ -135,7 +131,7 @@
 #' 
 marginal_means <- function(model,
                            variables = NULL,
-                           variables_grid = NULL,
+                           newdata = NULL,
                            vcov = TRUE,
                            conf_level = 0.95,
                            type = NULL,
@@ -147,6 +143,16 @@ marginal_means <- function(model,
                            by = NULL,
                            ...) {
 
+
+    # deprecation and backward compatibility
+    dots <- list(...)
+    if ("variables_grid" %in% names(dots)) {
+        if (!is.null(newdata)) {
+            insight::format_error("The `variables_grid` argument and has been replaced by `newdata`. These two arguments cannot be used simultaneously.")
+        }
+    } else {
+        newdata <- dots[["variables_grid"]]
+    }
 
     # if type is NULL, we backtransform if relevant
     if (is.null(type)) {
@@ -166,19 +172,23 @@ marginal_means <- function(model,
         type <- sanitize_type(model = model, type = type, calling_function = "marginalmeans")
     }
 
-    modeldata <- newdata <- get_modeldata(model)
+    modeldata <- get_modeldata(model)
 
+    checkmate::assert_flag(cross)
     transform_post <- sanitize_transform_post(transform_post)
-    cross <- sanitize_cross(cross, variables, model)
     conf_level <- sanitize_conf_level(conf_level, ...)
     model <- sanitize_model(model, vcov = vcov, calling_function = "marginalmeans")
+
     checkmate::assert_choice(wts, choices = c("equal", "cells", "proportional"))
+    if (wts != "equal" && is.data.frame(newdata)) {
+        insight::format_error('The `wts` argument must be "equal" when `newdata` is a data frame.')
+    }
 
     tmp <- sanitize_hypothesis(hypothesis, ...)
     hypothesis <- tmp$hypothesis
     hypothesis_null <- tmp$hypothesis_null
 
-    # by: usual tests + only data frames
+    # by: usual tests + only data frames in `marginal_means()`
     checkmate::assert(
         checkmate::check_data_frame(by),
         checkmate::check_false(by),
@@ -186,11 +196,6 @@ marginal_means <- function(model,
     )
     sanity_by(by, newdata)
 
-    # fancy vcov processing to allow strings like "HC3"
-    vcov_false <- isTRUE(vcov == FALSE)
-    vcov <- get_vcov(model, vcov = vcov, ...)
-
-    # sanity
     sanity_dots(model = model, ...)
     if (inherits(model, "brmsfit")) {
         insight::format_error(c(
@@ -198,79 +203,74 @@ marginal_means <- function(model,
             "https://github.com/vincentarelbundock/marginaleffects/issues/137"))
     }
 
+    # fancy vcov processing to allow strings like "HC3"
+    vcov_false <- isTRUE(vcov == FALSE)
+    vcov <- get_vcov(model, vcov = vcov, ...)
+
+    # focal categorical variables
     checkmate::assert_character(variables, min.len = 1, null.ok = TRUE)
-    if (!is.null(variables)) {
-        bad <- setdiff(variables, colnames(newdata))
-        if (length(bad) > 0) {
-            msg <- sprintf(
-                "Elements of the `variables` argument were not found as column names in the data used to fit the model: %s",
-                paste(bad, collapse = ", "))
-            insight::format_error(msg)
-        }
-    }
     if (any(variables %in% insight::find_response(model))) {
         insight::format_error("The `variables` vector cannot include the response.")
     }
-
-    checkmate::assert_character(variables_grid, min.len = 1, null.ok = TRUE)
-    if (!is.null(variables_grid)) {
-        bad <- setdiff(variables_grid, colnames(newdata))
-        if (length(bad) > 0) {
-            msg <- sprintf(
-                "Elements of the `variables_grid` argument were not found as column names in the data used to fit the model: %s",
-                paste(bad, collapse = ", "))
-            insight::format_error(msg)
-        }
-    }
-
-    # categorical variables, excluding response
-    variables_categorical <- insight::find_variables(model, flatten = TRUE)
-    idx <- sapply(variables_categorical, function(x) get_variable_class(newdata, x, "categorical"))
-    variables_categorical <- setdiff(
-        unique(variables_categorical[idx]),
-        insight::find_response(model, flatten = TRUE))
-    if (length(variables_categorical) == 0) {
-        msg <- insight::format_error("No logical, factor, or character variable was found in the dataset used to fit the `model` object. This error is often raised when users convert variables to factor in the model formula (e.g., `lm(y ~ factor(x)`). If this is the case, you may consider converting variables in the dataset before fitting the model.")
-    }
-
-    # subset variables and grid
     if (is.null(variables)) {
-        variables <- variables_categorical
-    } else {
-        variables <- intersect(variables, variables_categorical)
+        variables <- insight::find_predictors(model, flatten = TRUE)
+    }
+    idx <- vapply(
+        variables,
+        FUN = get_variable_class,
+        newdata = modeldata,
+        FUN.VALUE = logical(1),
+        compare = c("logical", "character", "factor"))
+    focal <- variables[idx]
+    if (length(focal) == 0) {
+        insight::format_error("No categorical predictor was found in the model data or `variables` argument.")
     }
 
-    if (is.null(variables_grid)) {
-        variables_grid <- variables_categorical
-    } else {
-        variables_grid <- intersect(variables_grid, variables_categorical)
-    }
-
-    variables_grid <- unique(c(variables, variables_grid))
-
-    if (isTRUE(checkmate::check_character(by))) {
-        if (!all(by %in% variables_grid)) {
-            msg <- sprintf(
-                "All elements of `by` must be part of: %s",
-                paste(variables_grid, collapse = ", "))
-            insight::format_warning(msg)
+    # non-focal categorical variables
+    checkmate::assert(
+        checkmate::check_null(newdata),
+        checkmate::check_character(newdata),
+        checkmate::check_data_frame(newdata))
+    if (is.null(newdata)) {
+        nonfocal <- insight::find_predictors(model, flatten = TRUE)
+        nonfocal <- setdiff(nonfocal, focal)
+    } else if (is.character(newdata)) {
+        if (!all(newdata %in% colnames(modeldata))) {
+            insight::format_error("Some of the variables in `newdata` are missing from the data used to fit the model.")
         }
-        variables <- setdiff(variables, by)
+        nonfocal <- setdiff(newdata, focal)
+    } else if (is.data.frame(newdata)) {
+        nonfocal <- colnames(newdata)
     }
+    idx <- vapply(
+        nonfocal,
+        FUN = get_variable_class,
+        newdata = modeldata,
+        FUN.VALUE = logical(1),
+        compare = c("logical", "character", "factor"))
+    nonfocal <- nonfocal[idx]
 
-    # marginal means grid
-    args <- lapply(variables_grid, function(x) unique(newdata[[x]]))
-    args <- stats::setNames(args, variables_grid)
-    args[["newdata"]] <- newdata
-    newgrid <- do.call("datagrid", args)
+    # grid
+    args <- list(model = model)
+    if (is.data.frame(newdata)) {
+        for (v in focal) {
+            args[[v]] <- unique(modeldata[[v]])
+        }
+        newgrid <- do.call(datagridcf, args)
+    } else {
+        for (v in c(focal, nonfocal)) {
+            args[[v]] <- unique(modeldata[[v]])
+        }
+        newgrid <- do.call(datagrid, args)
+    }
 
     # weights
-    wtsgrid <- copy(data.table(newdata)[, ..variables_grid])
+    wtsgrid <- copy(data.table(newdata)[, ..nonfocal])
     if (identical(wts, "equal")) {
         newgrid[["wts"]] <- 1
 
     } else if (identical(wts, "cells")) {
-        idx <- variables_grid
+        idx <- nonfocal
         wtsgrid[, N := .N]
         wtsgrid[, "wts" := .N / N, by = idx]
         # sometimes datagrid() converts to factors when there is a transformation
@@ -286,7 +286,7 @@ marginal_means <- function(model,
 
     } else if (identical(wts, "proportional")) {
     # https://stackoverflow.com/questions/66748520/what-is-the-difference-between-weights-cell-and-weights-proportional-in-r-pa
-        idx <- setdiff(variables_grid, variables)
+        idx <- setdiff(nonfocal, variables)
         if (length(idx) == 0) {
             newgrid[["wts"]] <- 1
             return(newgrid)
@@ -386,9 +386,9 @@ marginal_means <- function(model,
     attr(out, "transform_post_label") <- names(transform_post)[1]
 
     if (isTRUE(cross)) {
-        attr(out, "variables_grid") <- setdiff(variables_grid, variables)
+        attr(out, "variables_grid") <- setdiff(nonfocal, variables)
     } else {
-        attr(out, "variables_grid") <- unique(c(variables_grid, variables))
+        attr(out, "variables_grid") <- unique(c(nonfocal, variables))
     }
 
     if (inherits(model, "brmsfit")) {
@@ -452,6 +452,7 @@ get_marginalmeans <- function(model,
                 wts = wts,
                 by = c("group", v),
                 ...)
+            tmp$rowid <- NULL
             draw_list[[v]] <- attr(tmp, "posterior_draws")
             tmp$term <- v
             data.table::setnames(tmp, old = v, new = "value")

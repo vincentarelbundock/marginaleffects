@@ -19,8 +19,8 @@
 #'
 #' @inheritParams slopes
 #' @inheritParams predictions
-#' @param variables `NULL`, character vector, or named list. The subset of variables for which to compute contrasts.
-#' * `NULL`: compute contrasts for all the variables in the model object (can be slow).
+#' @param variables Focal variables
+#' * `NULL`: compute comparisons for all the variables in the model object (can be slow).
 #' * Character vector: subset of variables (usually faster).
 #' * Named list: names identify the subset of variables of interest, and values define the type of contrast to compute. Acceptable values depend on the variable type:
 #'   - Factor or character variables:
@@ -43,8 +43,8 @@
 #'     + `variables = list(gear = "pairwise", hp = 10)`
 #'     + `variables = list(gear = "sequential", hp = c(100, 120))`
 #'     + See the Examples section below for more.
-#' @param newdata `NULL`, data frame, string, or `datagrid()` call. Determines the predictor values for which to compute contrasts.
-#' + `NULL` (default): Unit-level contrasts for each observed value in the original dataset.
+#' @param newdata Grid of predictor values at which we evaluate the comparisons.
+#' + `NULL` (default): Unit-level contrasts for each observed value in the original dataset (empirical distribution).
 #' + data frame: Unit-level contrasts for each row of the `newdata` data frame.
 #' + string:
 #'   - "mean": Contrasts at the Mean. Contrasts when each predictor is held at its mean or mode.

@@ -32,10 +32,10 @@
 #' method. See the "Standard Errors" vignette on the package website for
 #' details (link above).
 #' @param model Model object
-#' @param variables `NULL` or character vector. The subset of variables for which to compute slopes.
-#' * `NULL`: compute contrasts for all the variables in the model object (can be slow).
+#' @param variables Focal variables
+#' * `NULL`: compute slopes or comparisons for all the variables in the model object (can be slow).
 #' * Character vector: subset of variables (usually faster).
-#' @param newdata `NULL`, data frame, string, or `datagrid()` call. Determines the predictor values for which to compute slopes.
+#' @param newdata Grid of predictor values at which we evaluate the slopes.
 #' + `NULL` (default): Unit-level slopes each observed value in the original dataset.
 #' + data frame: Unit-level slopes for each row of the `newdata` data frame.
 #' + [datagrid()] call to specify a custom grid of regressors. For example:

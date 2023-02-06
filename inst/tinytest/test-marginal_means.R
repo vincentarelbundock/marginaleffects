@@ -187,3 +187,9 @@ by <-
     by = c("1", "2", "3,4,6,8" |> rep(4)))
 cmp <- comparisons(nom, by = by)
 expect_equivalent(nrow(cmp), 9)
+
+
+
+# # Issue #637: marginal_means() refactor
+# mod <- lm(mpg ~ factor(cyl) + as.logical(am), data = mtcars)
+# mm <- marginal_means(mod)
