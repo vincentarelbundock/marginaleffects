@@ -109,8 +109,8 @@ get_contrast_data <- function(model,
         lo <- rbindlist(lo, fill = TRUE)
         hi <- rbindlist(hi, fill = TRUE)
         original <- rbindlist(original, fill = TRUE)
-        ter <- unlist(ter)
-        lab <- unlist(lab)
+        ter <- unlist(ter, use.names = FALSE)
+        lab <- unlist(lab, use.names = FALSE)
         lo[, "term" := ter]
         hi[, "term" := ter]
         original[, "term" := ter]
