@@ -419,8 +419,8 @@ comparisons <- function(model,
             tmp <- contrast_data$original[, ..idx, drop = FALSE]
             # contrast_data is duplicated to compute contrasts for different terms or pairs
             bycols <- intersect(colnames(tmp), colnames(mfx))
-            idx <- do.call(paste, c(tmp[, ..bycols], sep = "|"))
-            tmp <- tmp[!duplicated(idx), , drop = FALSE]
+            idx <- duplicated(tmp, by = bycols)
+            tmp <- tmp[!idx]
             mfx <- merge(mfx, tmp, all.x = TRUE, by = bycols, sort = FALSE)
         # HACK: relies on NO sorting at ANY point
         } else {
@@ -457,7 +457,7 @@ comparisons <- function(model,
         idx <- c("term", grep("^term$|^contrast$|^contrast_", colnames(mfx), value = TRUE), bycols)
         idx <- intersect(idx, colnames(mfx))
         if (length(idx) > 0) data.table::setorderv(mfx, cols = idx)
-    } 
+    }
 
     stubcols <- c(
         "rowid", "rowidcf", "type", "group", "term", "hypothesis", "by",
