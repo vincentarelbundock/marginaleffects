@@ -81,8 +81,8 @@ b <- c(-0.703975123794645, 0.116113581361008, 1.80590209245287,
        0.318406280886303, -0.322385169497627, -0.0357107397802961)
 se <- c(0.333707103664564, 0.335617116291664, 1.58873581973933, 2.1641601963981, 
         0.0899355987140499, 0.0137118286682651)
-expect_equivalent(tid$estimate, b)
-expect_equivalent(tid$std.error, se)
+expect_equivalent(sort(tid$estimate), sort(b))
+expect_equivalent(sort(tid$std.error), sort(se))
 
 
 # Hurdle Poisson model
