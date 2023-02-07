@@ -350,10 +350,12 @@ cmp <- comparisons(mod,
 expect_inherits(cmp, "comparisons")
 
 
-# Issue #651
+# Issue #651: satterthwaite not supported for avg_*() because lmerTest needs a
+# `data` argument and model matrix, but here we compute the average over several
+# units of observations.
 d <- sleepstudy
 d$Cat <- sample(c("A", "B"), replace = TRUE, size = nrow(d))
-fit <- lmer(Reaction ~ Days+Cat + (1 | Subject), d)
+fit <- lmer(Reaction ~ Days + Cat + (1 | Subject), d)
 expect_error(
     avg_comparisons(fit, vcov = "satterthwaite"),
     pattern = "not supported")
@@ -361,3 +363,8 @@ expect_error(
 expect_error(
     avg_predictions(fit, vcov = "satterthwaite"),
     pattern = "not supported")
+
+cmp1 <- comparisons(fit, newdata = datagrid(Cat = unique), vcov = "satterthwaite")
+cmp2 <- comparisons(fit, newdata = datagrid(Cat = unique))
+expect_true(all(cmp1$conf.low != cmp2$conf.low))
+expect_true(all(cmp1$std.error == cmp2$std.error))
