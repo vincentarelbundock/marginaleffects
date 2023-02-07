@@ -11,7 +11,6 @@
   nrows = getOption("marginaleffects_print_nrows", default = 30),
   ncols = getOption("marginaleffects_print_ncols", default = 30),
   style = getOption("marginaleffects_print_style", default = "summary"),
-  variables = getOption("marginaleffects_print_variables", default = "auto"),
   ...
 )
 }
@@ -27,8 +26,6 @@
 \item{ncols}{The maximum number of column names to display at the bottom of the printed output.}
 
 \item{style}{"summary" or "data.frame"}
-
-\item{variables}{"auto" or "newdata"}
 
 \item{...}{Other arguments are currently ignored.}
 }

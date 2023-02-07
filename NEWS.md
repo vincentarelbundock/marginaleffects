@@ -10,7 +10,7 @@ Other:
 * The `variables_grid` argument in `marginal_means()` is renamed to `newdata`. Backward compatibility is maintained.
 * `avg_*()` returns an informative error when `vcov` is "satterthwaite" or "kenward-roger"
 * "satterthwaite" and "kenward-roger" are now supported when `newdata` is not `NULL`
-* `print.marginaleffects` has a `variables` argument to print variables from `newdata`
+* `print.marginaleffects` now prints all columns supplied to `newdata`
 
 Bugfixes:
 
