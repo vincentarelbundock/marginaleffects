@@ -29,6 +29,9 @@ get_ci <- function(
         if (identical(df, Inf)) {
             normal <- TRUE
         } else {
+            if (isTRUE(checkmate::check_numeric(df)) && length(df) != nrow(x)) {
+                insight::format_error("Satterthwaite and Kenward-Roger corrections are not supported in this command.")
+            }
             x[["df"]] <- df
         }
     }

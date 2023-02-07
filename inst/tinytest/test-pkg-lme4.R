@@ -348,3 +348,16 @@ cmp <- comparisons(mod,
         sid = NA),
     include_random = FALSE)
 expect_inherits(cmp, "comparisons")
+
+
+# Issue #651
+d <- sleepstudy
+d$Cat <- sample(c("A", "B"), replace = TRUE, size = nrow(d))
+fit <- lmer(Reaction ~ Days+Cat + (1 | Subject), d)
+expect_error(
+    avg_comparisons(fit, vcov = "satterthwaite"),
+    pattern = "not supported")
+
+expect_error(
+    avg_predictions(fit, vcov = "satterthwaite"),
+    pattern = "not supported")
