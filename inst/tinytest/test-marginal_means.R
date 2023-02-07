@@ -100,17 +100,13 @@ me <- suppressWarnings(marginal_means(mod, variables = "am"))
 me <- me[order(me$value),]
 expect_equivalent(me$estimate, em$estimate)
 
-
 # error: no factor
 mod <- lm(hp ~ mpg, mtcars)
 expect_error(marginal_means(mod), pattern = "was found")
 
-
 # wts
 mod1 <- lm(vs ~ factor(am) + factor(gear) + factor(cyl), data = mtcars)
 mod2 <- glm(vs ~ factor(am) + factor(gear) + mpg, data = mtcars, family = binomial)
-
-profvis::profvis(marginal_means(mod1, variables = "am", wts = "cells"))
 
 # wts = "cells"
 em <- data.frame(emmeans(mod1, ~am, weights = "cells"))
