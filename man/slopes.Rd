@@ -40,9 +40,9 @@ avg_slopes(
 \arguments{
 \item{model}{Model object}
 
-\item{newdata}{\code{NULL}, data frame, string, or \code{datagrid()} call. Determines the predictor values for which to compute slopes.
+\item{newdata}{Grid of predictor values at which we evaluate the slopes.
 \itemize{
-\item \code{NULL} (default): Unit-level slopes each observed value in the original dataset.
+\item \code{NULL} (default): Unit-level slopes for each observed value in the original dataset.
 \item data frame: Unit-level slopes for each row of the \code{newdata} data frame.
 \item \code{\link[=datagrid]{datagrid()}} call to specify a custom grid of regressors. For example:
 \itemize{
@@ -59,9 +59,9 @@ avg_slopes(
 }
 }}
 
-\item{variables}{focal variables
+\item{variables}{Focal variables
 \itemize{
-\item \code{NULL}: compute contrasts for all the variables in the model object (can be slow).
+\item \code{NULL}: compute slopes or comparisons for all the variables in the model object (can be slow).
 \item Character vector: subset of variables (usually faster).
 }}
 

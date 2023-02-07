@@ -44,9 +44,9 @@ avg_comparisons(
 \arguments{
 \item{model}{Model object}
 
-\item{newdata}{\code{NULL}, data frame, string, or \code{datagrid()} call. Determines the predictor values for which to compute contrasts.
+\item{newdata}{Grid of predictor values at which we evaluate the comparisons.
 \itemize{
-\item \code{NULL} (default): Unit-level contrasts for each observed value in the original dataset.
+\item \code{NULL} (default): Unit-level contrasts for each observed value in the original dataset (empirical distribution).
 \item data frame: Unit-level contrasts for each row of the \code{newdata} data frame.
 \item string:
 \itemize{
@@ -64,9 +64,9 @@ avg_comparisons(
 }
 }}
 
-\item{variables}{focal variables
+\item{variables}{Focal variables
 \itemize{
-\item \code{NULL}: compute contrasts for all the variables in the model object (can be slow).
+\item \code{NULL}: compute comparisons for all the variables in the model object (can be slow).
 \item Character vector: subset of variables (usually faster).
 \item Named list: names identify the subset of variables of interest, and values define the type of contrast to compute. Acceptable values depend on the variable type:
 \itemize{

@@ -14,7 +14,7 @@
 #' @param newdata Grid of predictor values over which we marginalize.
 #' + `NULL` create a grid with all combinations of all categorical predictors in the model. Warning: can be expensive.
 #' + Character vector: subset of categorical variables to use when building the balanced grid of predictors. Other variables are held to their mean or mode.
-#' + Data frame: must include all the variables used to fit the model.
+#' + Data frame: A data frame which includes all the predictors in the original model. The full dataset is replicated once for every combination of the focal variables in the `variables` argument, using the `datagridcf()` function.
 #' @param type string indicates the type (scale) of the predictions used to
 #' compute marginal effects or contrasts. This can differ based on the model
 #' type, but will typically be a string such as: "response", "link", "probs",
@@ -262,11 +262,11 @@ marginal_means <- function(model,
     sanity_by(by, newgrid)
 
     # weights
-    wtsgrid <- copy(data.table(newgrid)[, ..nonfocal])
     if (identical(wts, "equal")) {
         newgrid[["wts"]] <- 1
 
-    } else if (identical(wts, "cells")) {
+    } else if (identical(wts, "proportional")) {
+        wtsgrid <- copy(data.table(modeldata)[, ..nonfocal])
         idx <- nonfocal
         wtsgrid[, N := .N]
         wtsgrid[, "wts" := .N / N, by = idx]
@@ -281,14 +281,15 @@ marginal_means <- function(model,
         newgrid <- merge(newgrid, wtsgrid, all.x = TRUE)
         newgrid[["wts"]][is.na(newgrid[["wts"]])] <- 0
 
-    } else if (identical(wts, "proportional")) {
+    } else if (identical(wts, "cells")) {
     # https://stackoverflow.com/questions/66748520/what-is-the-difference-between-weights-cell-and-weights-proportional-in-r-pa
-        idx <- setdiff(nonfocal, variables)
+        idx <- c(focal, nonfocal)
+        wtsgrid <- copy(data.table(modeldata)[, ..idx])
         if (length(idx) == 0) {
             newgrid[["wts"]] <- 1
             return(newgrid)
         } else {
-            wtsgrid <- data.table(newgrid)[
+            wtsgrid <- data.table(modeldata)[
                 , .(wts = .N), by = idx][
                 , wts := wts / sum(wts)]
             # sometimes datagrid() converts to factors when there is a transformation
@@ -301,7 +302,6 @@ marginal_means <- function(model,
             wtsgrid <- unique(wtsgrid)
             newgrid <- merge(newgrid, wtsgrid, all.x = TRUE)
             newgrid[["wts"]][is.na(newgrid[["wts"]])] <- 0
-
         }
     }
 

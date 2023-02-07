@@ -110,6 +110,8 @@ expect_error(marginal_means(mod), pattern = "was found")
 mod1 <- lm(vs ~ factor(am) + factor(gear) + factor(cyl), data = mtcars)
 mod2 <- glm(vs ~ factor(am) + factor(gear) + mpg, data = mtcars, family = binomial)
 
+profvis::profvis(marginal_means(mod1, variables = "am", wts = "cells"))
+
 # wts = "cells"
 em <- data.frame(emmeans(mod1, ~am, weights = "cells"))
 mm <- marginal_means(mod1, variables = "am", wts = "cells")

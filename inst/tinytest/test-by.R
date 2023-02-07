@@ -209,7 +209,6 @@ expect_equivalent(nrow(pre2), 96)
 
 mm <- marginal_means(
     mod,
-    by = FALSE,
     variables = "gear")
 expect_equivalent(nrow(mm), 3)
 expect_error(marginal_means(mod, by = TRUE, variables = "gear"))

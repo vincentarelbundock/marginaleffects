@@ -7,7 +7,7 @@
 marginal_means(
   model,
   variables = NULL,
-  variables_grid = NULL,
+  newdata = NULL,
   vcov = TRUE,
   conf_level = 0.95,
   type = NULL,
@@ -23,18 +23,18 @@ marginal_means(
 \arguments{
 \item{model}{Model object}
 
-\item{variables}{focal variables
+\item{variables}{Focal variables
 \itemize{
-\item character vector of variable names: compute marginal means for each category of the listed variables.
-\item \code{NULL}: calculates marginal means for all logical, character, or factor variables in the dataset used to fit \code{model}. Hint:  Set \code{cross=TRUE} to compute marginal means at combinations of focal variables.
+\item Character vector of variable names: compute marginal means for each category of the listed variables.
+\item \code{NULL}: calculate marginal means for all logical, character, or factor variables in the dataset used to fit \code{model}. Hint:  Set \code{cross=TRUE} to compute marginal means for combinations of focal variables.
 }}
 
-\item{variables_grid}{character vector Categorical predictors used to
-construct the prediction grid over which adjusted predictions are averaged
-(character vector). \code{NULL} creates a grid with all combinations of all
-categorical predictors. This grid can be very large when there are many
-variables and many response levels, so it is advisable to select a limited
-number of variables in the \code{variables} and \code{variables_grid} arguments.}
+\item{newdata}{Grid of predictor values over which we marginalize.
+\itemize{
+\item \code{NULL} create a grid with all combinations of all categorical predictors in the model. Warning: can be expensive.
+\item Character vector: subset of categorical variables to use when building the balanced grid of predictors. Other variables are held to their mean or mode.
+\item Data frame: A data frame which includes all the predictors in the original model. The full dataset is replicated once for every combination of the focal variables in the \code{variables} argument, using the \code{datagridcf()} function.
+}}
 
 \item{vcov}{Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
 \itemize{
@@ -100,9 +100,9 @@ on the link scale before backtransforming them using the inverse link function.}
 
 \item{wts}{character value. Weights to use in the averaging.
 \itemize{
-\item "equal": each combination of variables in \code{variables_grid} gets an equal weight.
-\item "cells": each combination of values for the variables in the \code{variables_grid} gets a weight proportional to its frequency in the original data.
-\item "proportional": each combination of values for the variables in the \code{variables_grid} -- except for those in the \code{variables} argument -- gets a weight proportional to its frequency in the original data.
+\item "equal": each combination of variables in \code{newdata} gets equal weight.
+\item "cells": each combination of values for the variables in the \code{newdata} gets a weight proportional to its frequency in the original data.
+\item "proportional": each combination of values for the variables in \code{newdata} -- except for those in the \code{variables} argument -- gets a weight proportional to its frequency in the original data.
 }}
 
 \item{by}{Collapse marginal means into categories. Data frame with a \code{by} column of group labels, and merging columns shared by \code{newdata} or the data frame produced by calling the same function without the \code{by} argument.}
@@ -133,8 +133,8 @@ package website, or scroll down this page for a full list of vignettes:
 This function begins by calling the \code{predictions} function to obtain a
 grid of predictors, and adjusted predictions for each cell. The grid
 includes all combinations of the categorical variables listed in the
-\code{variables} and \code{variables_grid} arguments, or all combinations of the
-categorical variables used to fit the model if \code{variables_grid} is \code{NULL}.
+\code{variables} and \code{newdata} arguments, or all combinations of the
+categorical variables used to fit the model if \code{newdata} is \code{NULL}.
 In the prediction grid, numeric variables are held at their means.
 
 After constructing the grid and filling the grid with adjusted predictions,

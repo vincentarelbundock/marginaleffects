@@ -40,9 +40,9 @@ avg_predictions(
 \arguments{
 \item{model}{Model object}
 
-\item{newdata}{\code{NULL}, data frame, string, or \code{datagrid()} call. Determines the predictor values for which to compute slopes.
+\item{newdata}{Grid of predictor values at which we evaluate the slopes.
 \itemize{
-\item \code{NULL} (default): Unit-level slopes each observed value in the original dataset.
+\item \code{NULL} (default): Unit-level slopes for each observed value in the original dataset.
 \item data frame: Unit-level slopes for each row of the \code{newdata} data frame.
 \item \code{\link[=datagrid]{datagrid()}} call to specify a custom grid of regressors. For example:
 \itemize{

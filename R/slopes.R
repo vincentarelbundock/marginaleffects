@@ -36,7 +36,7 @@
 #' * `NULL`: compute slopes or comparisons for all the variables in the model object (can be slow).
 #' * Character vector: subset of variables (usually faster).
 #' @param newdata Grid of predictor values at which we evaluate the slopes.
-#' + `NULL` (default): Unit-level slopes each observed value in the original dataset.
+#' + `NULL` (default): Unit-level slopes for each observed value in the original dataset.
 #' + data frame: Unit-level slopes for each row of the `newdata` data frame.
 #' + [datagrid()] call to specify a custom grid of regressors. For example:
 #'   - `newdata = datagrid(cyl = c(4, 6))`: `cyl` variable equal to 4 and 6 and other regressors fixed at their means or modes.
