@@ -123,11 +123,13 @@ print.marginaleffects <- function(x,
         idx <- c(idx, attr(x, "by"))
     }
     if (isTRUE(attr(out, "newdata_explicit"))) {
-        idx_nd <- colnames(attr(x, "newdata"))
-        idx_nd <- setdiff(
-            idx_nd,
-            unlist(insight::find_response(attr(x, "model"), combine = TRUE), use.names = FALSE))
-        idx <- c(idx, idx_nd)
+        idx_nd <- tryCatch(
+            colnames(attr(x, "newdata")),
+            error = function(e) NULL)
+        dv <- tryCatch(
+            unlist(insight::find_response(attr(x, "model"), combine = TRUE), use.names = FALSE),
+            error = function(e) NULL)
+        idx <- c(idx, setdiff(idx_nd, dv))
     }
     idx <- setdiff(unique(idx), "rowid")
         
