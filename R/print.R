@@ -122,12 +122,14 @@ print.marginaleffects <- function(x,
     if (isTRUE(checkmate::check_character(attr(x, "by")))) {
         idx <- c(idx, attr(x, "by"))
     }
-    idx_nd <- colnames(attr(x, "newdata"))
-    idx_nd <- setdiff(idx_nd, unlist(insight::find_response(attr(x, "model"), combine = TRUE), use.name = FALSE))
-    idx_nd <- setdiff(idx_nd, "rowid")
-    idx <- c(idx, idx_nd)
-    idx <- unique(idx)
-
+    if (isTRUE(attr(out, "newdata_explicit"))) {
+        idx_nd <- colnames(attr(x, "newdata"))
+        idx_nd <- setdiff(
+            idx_nd,
+            unlist(insight::find_response(attr(x, "model"), combine = TRUE), use.names = FALSE))
+        idx <- c(idx, idx_nd)
+    }
+    idx <- setdiff(unique(idx), "rowid")
         
     out <- out[, colnames(out) %in% idx, drop = FALSE]
 

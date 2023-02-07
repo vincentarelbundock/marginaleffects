@@ -25,8 +25,11 @@ sanitize_newdata <- function(model, newdata, by = NULL, modeldata = NULL) {
         }
     }
 
+    newdata_explicit <- TRUE
+
     if (is.null(newdata)) {
         newdata <- modeldata
+        newdata_explicit <- FALSE
 
     } else if (identical(newdata, "mean")) {
         newdata <- do.call("datagrid", args)
@@ -139,6 +142,8 @@ sanitize_newdata <- function(model, newdata, by = NULL, modeldata = NULL) {
     if (is.null(attr(newdata, "marginaleffects_variable_class"))) {
         newdata <- set_variable_class(newdata, model = model)
     }
+
+    attr(newdata, "newdata_explicit") <- newdata_explicit
 
     return(newdata)
 }
