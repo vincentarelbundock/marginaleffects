@@ -78,6 +78,7 @@ get_by <- function(
                 .(estimate = mean(estimate, na.rm = TRUE)),
                 by = bycols]
         }
+        data.table::setorderv(estimates, cols = bycols)
     }
 
     return(estimates)

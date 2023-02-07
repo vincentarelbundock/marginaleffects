@@ -212,3 +212,11 @@ mm <- marginal_means(
     variables = "gear")
 expect_equivalent(nrow(mm), 3)
 expect_error(marginal_means(mod, by = TRUE, variables = "gear"))
+
+
+# Issue #649: sort group when `by` is used
+mod <- lm(mpg ~ hp + factor(cyl), data = mtcars)
+pre <- predictions(mod, by = "cyl")
+expect_equivalent(pre$cyl, c(4, 6, 8))
+cmp <- predictions(mod, by = "cyl")
+expect_equivalent(cmp$cyl, c(4, 6, 8))
