@@ -87,7 +87,7 @@ nrow(pre)
 pre
 ```
 
-Now, we use the `comparisons()` function to compute the different in predicted outcome when each of the predictors is incremented by 1 unit (one predictor at a time, holding all others constant). Once again, comparisons are unit-level quantities. And since there are 3 predictors in the model and our data has 32 rows, we obtain 96 comparisons:
+Now, we use the `comparisons()` function to compute the difference in predicted outcome when each of the predictors is incremented by 1 unit (one predictor at a time, holding all others constant). Once again, comparisons are unit-level quantities. And since there are 3 predictors in the model and our data has 32 rows, we obtain 96 comparisons:
 
 ```{r}
 cmp <- comparisons(mod)
