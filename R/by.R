@@ -79,7 +79,7 @@ get_by <- function(
                 by = bycols]
         }
         idx <- intersect(bycols, colnames(estimates))
-        if (length(idx) > 1) data.table::setorderv(estimates, cols = bycols)
+        if (length(idx) > 0) data.table::setorderv(estimates, cols = bycols)
     }
 
     return(estimates)

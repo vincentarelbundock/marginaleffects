@@ -453,9 +453,10 @@ comparisons <- function(model,
         bycols <- by
     }
 
-    if (is.null(draws) && !is.null(bycols)) {
-        idx <- intersect(bycols, colnames(mfx))
-        if (length(idx) > 1) data.table::setorderv(mfx, cols = bycols)
+    if (is.null(draws) && !"rowid" %in% colnames(mfx)) {
+        idx <- c("term", grep("^term$|^contrast$|^contrast_", colnames(mfx), value = TRUE), bycols)
+        idx <- intersect(idx, colnames(mfx))
+        if (length(idx) > 0) data.table::setorderv(mfx, cols = idx)
     } 
 
     stubcols <- c(
