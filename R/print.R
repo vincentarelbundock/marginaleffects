@@ -12,6 +12,7 @@
 #' @param topn The number of rows to be printed from the beginning and end of tables with more than `nrows` rows.
 #' @param nrows The number of rows which will be printed before truncation.
 #' @param ncols The maximum number of column names to display at the bottom of the printed output.
+#' @param variables "auto" or "newdata"
 #' @param style "summary" or "data.frame"
 #' @param ... Other arguments are currently ignored.
 #' @export
@@ -33,6 +34,7 @@ print.marginaleffects <- function(x,
                                   nrows = getOption("marginaleffects_print_nrows", default = 30),
                                   ncols = getOption("marginaleffects_print_ncols", default = 30),
                                   style = getOption("marginaleffects_print_style", default = "summary"),
+                                  variables = getOption("marginaleffects_print_variables", default = "auto"),
                                   ...) {
 
 
@@ -40,6 +42,7 @@ print.marginaleffects <- function(x,
     checkmate::assert_number(topn)
     checkmate::assert_number(nrows)
     checkmate::assert_choice(style, choices = c("data.frame", "summary"))
+    checkmate::assert_choice(variables, choices = c("auto", "newdata"))
 
 
     if (isTRUE(style == "data.frame")) {
@@ -119,11 +122,21 @@ print.marginaleffects <- function(x,
     # Subset columns
     idx <- c(
         names(dict),
-        grep("^contrast_", colnames(x), value = TRUE),
-        attr(x, "newdata_variables_datagrid"))
-    if (isTRUE(checkmate::check_character(attr(x, "by")))) {
-        idx <- c(idx, attr(x, "by"))
+        grep("^contrast_", colnames(x), value = TRUE))
+    if (variables == "auto") {
+        idx <- c(idx, attr(x, "newdata_variables_datagrid"))
+        if (isTRUE(checkmate::check_character(attr(x, "by")))) {
+            idx <- c(idx, attr(x, "by"))
+        }
+    } else if (variables == "newdata") {
+        idx_nd <- colnames(attr(x, "newdata"))
+        idx_nd <- setdiff(idx_nd, unlist(insight::find_response(attr(x, "model"), combine = TRUE), use.name = FALSE))
+        idx_nd <- setdiff(idx_nd, "rowid")
+        idx <- c(idx, idx_nd)
     }
+    idx <- unique(idx)
+
+        
     out <- out[, colnames(out) %in% idx, drop = FALSE]
 
     if (all(out$term == "cross")) {
