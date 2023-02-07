@@ -32,7 +32,7 @@ sanitize_type <- function(model, type, calling_function = NULL) {
     }
 
     # known models are scrutinized tightly
-    if (model_class %in% dict$class) {
+    if (model_class %in% unique(dict$class)) {
         valid <- dict[dict$class == model_class, , drop = FALSE]
         if (!all(type %in% c(valid$base, valid$insight))) {
             msg <- sprintf("The `type` argument for models of class `%s` must be an element of: %s",
