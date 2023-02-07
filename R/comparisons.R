@@ -454,7 +454,8 @@ comparisons <- function(model,
     }
 
     if (is.null(draws) && !is.null(bycols)) {
-        data.table::setorderv(mfx, cols = bycols)
+        idx <- intersect(bycols, colnames(mfx))
+        if (length(idx) > 1) data.table::setorderv(mfx, cols = bycols)
     } 
 
     stubcols <- c(
