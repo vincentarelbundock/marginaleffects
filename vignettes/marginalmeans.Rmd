@@ -98,6 +98,14 @@ emmeans(mod, specs = "cyl")
 emmeans(mod, specs = "am")
 ```
 
+# Marginal Means vs. Average Predictions
+
+What should scientists report? Marginal means or average predictions? 
+
+Many analysts ask this question, but unfortunately there isn't a single answer. As explained above, marginal means are a special case of predictions, made on a perfectly balanced grid of categorical predictors, with numeric predictors held at their means, and marginalized with respect to some focal variables. Whether the analyst prefers to report this specific type of marginal means or another kind of average prediction will depend on the characteristics of the sample and the population to which they want to generalize.
+
+After reading this vignette and the discussion of `emmeans` in the [Alternative Software vignette](https://vincentarelbundock.github.io/marginaleffects/articles/alternative_software.html), you may want to consult with a statistician to discuss your specific real-world problem and make an informed choice.
+
 # Interactions
 
 By default, the `marginal_means()` function calculates marginal means for each categorical predictor one after the other. We can also compute marginal means for *combinations* of categories by setting `cross=TRUE`:
