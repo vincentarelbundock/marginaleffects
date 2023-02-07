@@ -448,10 +448,15 @@ comparisons <- function(model,
     }
 
 
-    # clean columns
+    # clean rows and columns
     if (is.null(bycols) && isTRUE(checkmate::check_character(by))) {
         bycols <- by
     }
+
+    if (is.null(draws) && !is.null(bycols)) {
+        data.table::setorderv(mfx, cols = bycols)
+    } 
+
     stubcols <- c(
         "rowid", "rowidcf", "type", "group", "term", "hypothesis", "by",
         grep("^contrast", colnames(mfx), value = TRUE),
@@ -464,6 +469,7 @@ comparisons <- function(model,
       mfx[, setdiff(names(mfx), cols) := NULL]
     }
     mfx <- sort_columns(mfx, stubcols)
+
 
     # bayesian draws
     attr(mfx, "posterior_draws") <- draws
