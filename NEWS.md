@@ -6,8 +6,8 @@ New models supported:
 
 Other:
 
-* Improved the performance of `slopes()`, in particular when `vcov = TRUE`, and 
-  of `predictions()`. Thanks to Etienne Bacher.
+* Major performance improvements for many functions. Thanks to Etienne Bacher.
+* The `variables_grid` argument in `marginal_means()` is renamed to `newdata`. Backward compatibility is maintained.
 
 Bugfixes:
 
