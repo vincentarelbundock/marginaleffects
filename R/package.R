@@ -12,6 +12,8 @@ utils::globalVariables(c(
 "..idx",
 "..idx1",
 "..idx2",
+"..nonfocal",
+"rowidcf",
 "elast",
 "..tmp",
 "..variables_grid",

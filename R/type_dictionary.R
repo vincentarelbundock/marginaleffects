@@ -91,6 +91,7 @@ mblogit,link,link,TRUE,TRUE
 mclogit,response,expectation,FALSE,TRUE
 mclogit,latent,,TRUE,TRUE
 mclogit,link,link,TRUE,TRUE
+MCMCglmm,response,NA,TRUE,TRUE
 multinom,probs,expectation,TRUE,TRUE
 multinom,latent,NA,TRUE,TRUE
 mhurdle,E,NA,TRUE,TRUE

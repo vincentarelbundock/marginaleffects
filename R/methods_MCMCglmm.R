@@ -3,8 +3,12 @@
 get_predict.MCMCglmm <- function(
     model,
     newdata,
+    vcov = NULL,
+    conf_level = .95,
+    type = "response",
     ndraws = 1000,
     ...) {
+
     ndraws_mod <- nrow(model$VCV)
     if (ndraws < ndraws_mod) {
         idx <- sample(seq_len(ndraws_mod), ndraws)

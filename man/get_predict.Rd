@@ -70,7 +70,15 @@ get_predict(model, newdata, vcov, conf_level, type, ...)
   ...
 )
 
-\method{get_predict}{MCMCglmm}(model, newdata, ndraws = 1000, ...)
+\method{get_predict}{MCMCglmm}(
+  model,
+  newdata,
+  vcov = NULL,
+  conf_level = 0.95,
+  type = "response",
+  ndraws = 1000,
+  ...
+)
 
 \method{get_predict}{afex_aov}(model, newdata = NULL, ...)
 
