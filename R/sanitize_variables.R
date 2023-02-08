@@ -130,12 +130,29 @@ sanitize_variables <- function(variables,
         predictors <- predictors_new
     }
 
+    found <- colnames(newdata)
+
+    # when comparisons() only inludes one focal predictor, we don't need to specify it in `newdata`
+    # when `variables` is numeric, we still need to include it, because in
+    # non-linear model the contrast depend on the starting value of the focal
+    # variable.
+    if (calling_function == "comparisons") {
+        if (isTRUE(checkmate::check_string(variables))) {
+            v <- variables
+        } else if (isTRUE(checkmate::check_list(variables, len = 1, names = "named"))) {
+            v <- names(variables)[1]
+        }
+        if (isTRUE(get_variable_class(modeldata, variable = v, compare = "categorical"))) {
+            found <- c(found, v)
+        }
+    }
+
     # missing variables
-    miss <- setdiff(names(predictors), colnames(newdata))
+    miss <- setdiff(names(predictors), found)
     predictors <- predictors[!names(predictors) %in% miss]
     if (length(miss) > 0) {
         msg <- sprintf(
-            "These variables were not found: %s.  Try specifying the `newdata` argument explicitly.",
+            "These variables were not found: %s.  Try specifying the `newdata` argument explicitly and make sure the missing variable is included.",
             paste(miss, collapse = ", "))
         insight::format_warning(msg)
     }
