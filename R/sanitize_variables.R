@@ -137,12 +137,13 @@ sanitize_variables <- function(variables,
     # non-linear model the contrast depend on the starting value of the focal
     # variable.
     if (calling_function == "comparisons") {
+        v  <- NULL
         if (isTRUE(checkmate::check_string(variables))) {
             v <- variables
         } else if (isTRUE(checkmate::check_list(variables, len = 1, names = "named"))) {
             v <- names(variables)[1]
         }
-        if (isTRUE(get_variable_class(modeldata, variable = v, compare = "categorical"))) {
+        if (!is.null(v) && isTRUE(get_variable_class(modeldata, variable = v, compare = "categorical"))) {
             found <- c(found, v)
         }
     }
