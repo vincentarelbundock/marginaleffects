@@ -141,9 +141,11 @@ print.marginaleffects <- function(x,
     useless <- c(useless, dv)
 
     # drop useless columns: comparisons() with a single focal variable
-    v <- tryCatch(attr(x, "call")[["variables"]], error = function(e) NULL)
-    if (inherits(x, "comparisons") && isTRUE(checkmate::check_string(v))) {
-        useless <- c(useless, v)
+    if (inherits(x, "comparisons")) {
+        v <- attr(x, "variables")
+        if (isTRUE(checkmate::check_list(v, len = 1, names = "named"))) {
+            useless <- c(useless, names(v)[1])
+        }
     }
 
     # drop useless columns
