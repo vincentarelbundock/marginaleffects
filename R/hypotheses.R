@@ -105,19 +105,31 @@ hypotheses <- function(
     }
 
     xcall <- substitute(model)
-    if (!is.call(xcall)) {
+
+    if (is.call(xcall)) {
+        internal <- c(
+            "predictions", "avg_predictions", "comparisons",
+            "avg_comparisons", "slopes", "avg_slopes")
+        # non-marginaleffects call
+        if (as.character(xcall)[[1]] %in% internal) {
+            args[["x"]] <- model
+            out <- do.call(recall, args)
+            if (!is.null(out)) {
+                class(out) <- c("hypotheses", class(out))
+                return(out)
+            }
+        # non-marginaleffects call
+        } else {
+            model <- eval(xcall)
+        }
+
+    } else {
         args[["x"]] <- model
         out <- do.call(recall, args)
         if (!is.null(out)) {
             class(out) <- c("hypotheses", class(out))
             return(out)
         }
-    } else {
-        args[["x"]] <- xcall
-        out <- do.call(recall, args)
-        # no fancy print if these are unit-level (conditional) estimates
-        class(out) <- c("hypotheses", class(out))
-        return(out)
     }
 
     # after re-evaluation

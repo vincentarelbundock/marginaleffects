@@ -67,6 +67,12 @@ hyp <- hypotheses(cmp, equivalence = c(-10, -5))
 expect_inherits(hyp, "hypotheses")
 
 
+# Issue #656
+reg_list <- list()
+reg_list[[1]] <- lm(mpg ~ wt + hp, data = mtcars)
+reg_list[[2]] <- lm(mpg ~ wt + hp + factor(vs), data = mtcars)
+expect_inherits(hypotheses(reg_list[[1]]), "hypotheses")
+expect_inherits(hypotheses(reg_list[[2]]), "hypotheses")
 
 
 # hypotheses() applied to {marginaleffects} package objects
