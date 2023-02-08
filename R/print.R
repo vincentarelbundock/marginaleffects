@@ -118,6 +118,8 @@ print.marginaleffects <- function(x,
     idx <- c(
         names(dict),
         grep("^contrast_", colnames(x), value = TRUE))
+
+    # explicitly given by user in `datagrid()` or `by` or `newdata`
     idx <- c(idx, attr(x, "newdata_variables_datagrid"))
     if (isTRUE(checkmate::check_character(attr(x, "by")))) {
         idx <- c(idx, attr(x, "by"))
@@ -126,13 +128,26 @@ print.marginaleffects <- function(x,
         idx_nd <- tryCatch(
             colnames(attr(x, "newdata")),
             error = function(e) NULL)
-        dv <- tryCatch(
-            unlist(insight::find_response(attr(x, "model"), combine = TRUE), use.names = FALSE),
-            error = function(e) NULL)
-        idx <- c(idx, setdiff(idx_nd, dv))
+        idx <- c(idx, idx_nd)
     }
-    idx <- setdiff(unique(idx), "rowid")
-        
+
+    # drop useless columns: rowid
+    useless <- "rowid"
+
+    # drop useless columns: dv
+    dv <- tryCatch(
+        unlist(insight::find_response(attr(x, "model"), combine = TRUE), use.names = FALSE),
+        error = function(e) NULL)
+    useless <- c(useless, dv)
+
+    # drop useless columns: comparisons() with a single focal variable
+    v <- tryCatch(attr(x, "call")[["variables"]], error = function(e) NULL)
+    if (inherits(x, "comparisons") && isTRUE(checkmate::check_string(v))) {
+        useless <- c(useless, v)
+    }
+
+    # drop useless columns
+    idx <- setdiff(unique(idx), useless)
     out <- out[, colnames(out) %in% idx, drop = FALSE]
 
     if (all(out$term == "cross")) {
