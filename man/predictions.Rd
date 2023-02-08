@@ -64,7 +64,7 @@ avg_predictions(
 \item Output:
 \itemize{
 \item \code{predictions()}: The entire dataset is replicated once for each unique combination of \code{variables}, and predictions are made.
-\item \code{avg_predictions()}: The entire dataset is replicated, predictions are made, and they are marginalized by \code{variables}. categories.
+\item \code{avg_predictions()}: The entire dataset is replicated, predictions are made, and they are marginalized by \code{variables} categories.
 \item Warning: This can be expensive in large datasets.
 \item Warning: Users who need "conditional" predictions should use the \code{newdata} argument instead of \code{variables}.
 }

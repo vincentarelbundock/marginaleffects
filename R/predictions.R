@@ -33,7 +33,7 @@
 #' @param variables Counterfactual variables.
 #' * Output:
 #'   - `predictions()`: The entire dataset is replicated once for each unique combination of `variables`, and predictions are made.
-#'   - `avg_predictions()`: The entire dataset is replicated, predictions are made, and they are marginalized by `variables`. categories.
+#'   - `avg_predictions()`: The entire dataset is replicated, predictions are made, and they are marginalized by `variables` categories.
 #'   - Warning: This can be expensive in large datasets.
 #'   - Warning: Users who need "conditional" predictions should use the `newdata` argument instead of `variables`.
 #' * Input:
