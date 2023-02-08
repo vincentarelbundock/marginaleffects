@@ -13,6 +13,7 @@
 #' * <https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html>
 #' * <https://vincentarelbundock.github.io/marginaleffects/>
 #'
+#' @rdname predictions
 #' @details
 #' The `newdata` argument, the `tidy()` function, and `datagrid()` function can be used to control the kind of predictions to report:
 #' 
@@ -28,21 +29,26 @@
 #' predictions, and builds symmetric confidence intervals. These naive symmetric
 #' intervals may not always be appropriate. For instance, they may stretch beyond
 #' the bounds of a binary response variables.
-#' @inheritParams slopes
 #' @param model Model object
-#' @param variables `NULL`, character vector, or named list. The subset of variables to use for creating a counterfactual grid of predictions. The entire dataset replicated for each unique combination of the variables in this list. See the Examples section below.
-#' * Warning: This can use a lot of memory if there are many variables and values, and when the dataset is large.
-#' * `NULL`: computes one prediction per row of `newdata`
-#' * Named list: names identify the subset of variables of interest and their values. For numeric variables, the `variables` argument supports functions and string shortcuts:
-#'   - A function which returns a numeric value
-#'   - Numeric vector: Contrast between the 2nd element and the 1st element of the `x` vector.
-#'   - "iqr": Contrast across the interquartile range of the regressor.
-#'   - "sd": Contrast across one standard deviation around the regressor mean.
-#'   - "2sd": Contrast across two standard deviations around the regressor mean.
-#'   - "minmax": Contrast between the maximum and the minimum values of the regressor.
-#'   - "threenum": mean and 1 standard deviation on both sides
-#'   - "fivenum": Tukey's five numbers
-#' #' @param newdata `NULL`, data frame, string, or `datagrid()` call. Determines the grid of predictors on which we make predictions.
+#' @param variables Counterfactual variables.
+#' * Output:
+#'   - `predictions()`: The entire dataset is replicated once for each unique combination of `variables`, and predictions are made.
+#'   - `avg_predictions()`: The entire dataset is replicated, predictions are made, and they are marginalized by `variables`. categories.
+#'   - Warning: This can be expensive in large datasets.
+#'   - Warning: Users who need "conditional" predictions should use the `newdata` argument instead of `variables`.
+#' * Input:
+#'   - `NULL`: computes one prediction per row of `newdata`
+#'   - Character vector: the dataset is replicated once of every combination of unique values of the variables identified in `variables`.
+#'   - Named list: names identify the subset of variables of interest and their values. For numeric variables, the `variables` argument supports functions and string shortcuts:
+#'     + A function which returns a numeric value
+#'     + Numeric vector: Contrast between the 2nd element and the 1st element of the `x` vector.
+#'     + "iqr": Contrast across the interquartile range of the regressor.
+#'     + "sd": Contrast across one standard deviation around the regressor mean.
+#'     + "2sd": Contrast across two standard deviations around the regressor mean.
+#'     + "minmax": Contrast between the maximum and the minimum values of the regressor.
+#'     + "threenum": mean and 1 standard deviation on both sides
+#'     + "fivenum": Tukey's five numbers
+#' @param newdata Grid of predictor values at which we evaluate predictions.
 #' + `NULL` (default): Predictions for each observed value in the original dataset.
 #' + data frame: Predictions for each row of the `newdata` data frame.
 #' + string:
@@ -62,7 +68,6 @@
 #' levels. See examples section.
 #' @param transform_post (experimental) A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.
 #'
-#' @inheritParams comparisons
 #' @template model_specific_arguments
 #' @template bayesian
 #'
@@ -104,6 +109,9 @@
 #' p <- predictions(mod)
 #' head(p)
 #' nrow(p)
+#' 
+#' # average counterfactual predictions
+#' avg_predictions(mod, variables = "am")
 #' 
 #' # counterfactual predictions obtained by replicating the entire for different
 #' # values of the predictors
@@ -168,6 +176,8 @@
 #'     group = as.character(c(4, 6, 8)))
 #' predictions(mod, newdata = "mean", byfun = sum, by = by)
 #' 
+#' @inheritParams slopes
+#' @inheritParams comparisons
 #' @export
 predictions <- function(model,
                         newdata = NULL,
@@ -631,6 +641,15 @@ avg_predictions <- function(model,
                 lcall <- c(lcall, list("x" = get_modeldata))
                 newdata <- eval.parent(as.call(lcall))
             }
+        }
+    }
+
+    # group by focal variable automatically unless otherwise stated
+    if (isTRUE(by)) {
+        if (isTRUE(checkmate::check_character(variables))) {
+            by <- variables
+        } else if (isTRUE(checkmate::check_list(variables, names = "named"))) {
+            by <- names(variables)
         }
     }
 

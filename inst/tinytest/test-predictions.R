@@ -223,3 +223,16 @@ mod <- hurdle(art ~ phd + fem | ment, data = dat, dist = "negbin")
 pred <- predictions(mod, newdata = dat)
 expect_inherits(pred, "data.frame")
 expect_true("estimate" %in% colnames(pred))
+
+
+# Issue #655: Average counterfactual predictions
+mod <- lm(mpg ~ hp + factor(cyl), data = mtcars)
+pre <- avg_predictions(mod, variables = "cyl")
+expect_inherits(pre, "predictions")
+expect_equivalent(nrow(pre), 3)
+pre <- avg_predictions(mod, variables = list(cyl = c(4, 6)))
+expect_inherits(pre, "predictions")
+expect_equivalent(nrow(pre), 2)
+pre <- avg_predictions(mod, by = "cyl", newdata = datagridcf(cyl = c(4, 6)))
+expect_inherits(pre, "predictions")
+expect_equivalent(nrow(pre), 2)
