@@ -798,24 +798,12 @@ Recent versions of the `posterior`, `brms`, and `ggdist` packages make it easy t
 
 
 ```{r}
-#| include = FALSE
-library(brms)
-library(ggdist)
-library(ggplot2)
-library(marginaleffects)
-mod <- marginaleffects:::modelarchive_model("brms_numeric2")
-```
-
-```{r}
-#| eval = FALSE
 library(brms)
 library(ggdist)
 library(ggplot2)
 library(marginaleffects)
 mod <- brm(am ~ mpg + hp, data = mtcars, family = bernoulli)
-```
 
-```{r}
 avg_comparisons(mod) |>
   posterior_draws(shape = "rvar") |>
   ggplot(aes(y = term, xdist = rvar)) + 
@@ -857,7 +845,7 @@ comparisons(
 The `hypotheses` function of the `brms` package can also perform non-linear hypothesis testing, and it generates some convenient statistics and summaries. This function accepts a D-by-P matrix of draws from the posterior distribution, where D is the number of draws and N is the number of parameters. We can obtain such a matrix using the `posterior_draws(x, shape = "DxP")`, and we can simply add a couple calls to our chain of operations: 
 
 ```{r}
-avg_comparisons(mod) |>
+avg_comparisons(mod, transform_pre = "differenceavg") |>
     posterior_draws(shape = "DxP") |>
     brms::hypothesis("b2 - b1 > .2")
 ```
