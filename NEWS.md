@@ -11,6 +11,7 @@ Other:
 * `avg_*()` returns an informative error when `vcov` is "satterthwaite" or "kenward-roger"
 * "satterthwaite" and "kenward-roger" are now supported when `newdata` is not `NULL`
 * `print.marginaleffects` now prints all columns supplied to `newdata`
+* Informative error when `hypothesis` includes a `b#` larger than the available number of estimates.
 
 Bugfixes:
 

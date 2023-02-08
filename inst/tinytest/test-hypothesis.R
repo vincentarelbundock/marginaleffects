@@ -230,6 +230,12 @@ dm <- hypotheses(mod, hypothesis = H)
 expect_equivalent(dm$term, c("H1", "H2"))
 
 
+# Informative error on row mismatch
+mod <- lm(mpg ~ hp + drat, data = mtcars)
+expect_error(
+    predictions(mod, newdata = "mean", hypothesis = "b1=b2"),
+    pattern = "hypothesis testing")
+
 
 # # Issue #568
 # # TODO: p-value computed before transform_post; null on the pre-transform scale
