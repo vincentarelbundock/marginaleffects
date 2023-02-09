@@ -63,5 +63,5 @@ expect_snapshot_print(
 # bugs stay dead: label transformation_post
 dat <- mtcars
 mod <- glm(am ~ hp, data = dat, family = binomial)
-cmp <- comparisons(mod, transform_pre = function(hi, lo) hi / lo, transform_post = exp)
-expect_snapshot_print(summary(cmp), "summary-comparisons_transform_post")
+cmp <- avg_comparisons(mod, transform_pre = function(hi, lo) hi / lo, transform_post = exp)
+expect_snapshot_print(cmp, "summary-comparisons_transform_post")

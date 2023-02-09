@@ -197,12 +197,13 @@ print.marginaleffects <- function(x,
     if (!inherits(x, "hypotheses.summary") && isTRUE(getOption("marginaleffects_print_type", default = TRUE))) {
         cat("Prediction type: ", attr(x, "type"), "\n")
     }
-    if (!is.null(attr(x, "transform_pre_label"))) {
-        cat("Pre-transformation: ", paste(attr(x, "transform_pre_label"), collapse = ""), "\n")
-    }
-    if (!is.null(attr(x, "transform_post_label"))) {
-        cat("Post-transformation: ", paste(attr(x, "transform_post_label"), collapse = ""), "\n")
-    }
+    ## This is tricky to extract nicely when transform_* are passed from avg_comparisons to comparisons. I could certainly figure it out, but at the same time, I don't think the print method should return information that is immediately visible from the call. This is different from `type`, where users often rely on the default value, which can change from model to model, so printing it is often useful.
+    # if (!is.null(attr(x, "transform_pre_label"))) {
+    #     cat("Pre-transformation: ", paste(attr(x, "transform_pre_label"), collapse = ""), "\n")
+    # }
+    # if (!is.null(attr(x, "transform_post_label"))) {
+    #     cat("Post-transformation: ", paste(attr(x, "transform_post_label"), collapse = ""), "\n")
+    # }
     vg <- attr(x, "variables_grid")
     if (length(vg) > 0) {
         cat(sprintf("Results averaged over levels of: %s",
