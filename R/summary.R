@@ -19,8 +19,7 @@ summary.comparisons <- summary.slopes
 #' @noRd
 #' @export
 summary.marginalmeans <- function(object, ...) {
-    out <- recall(object, ...)
-    return(out)
+    return(object)
 }
 
 

@@ -2,6 +2,7 @@ source("helpers.R")
 using("marginaleffects")
 
 mod <<- lm(mpg ~ (qsec + drat) * am, data = mtcars)
+pkgload::load_all()
 mfx1 <- slopes(mod) |> tidy(by = "am")
 mfx2 <- tidy(slopes(mod, by = "am"))
 expect_equal(nrow(mfx1), nrow(mfx2))
