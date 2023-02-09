@@ -68,11 +68,27 @@ expect_inherits(hyp, "hypotheses")
 
 
 # Issue #656
+exit_if_not(requiet("purrr"))
 reg_list <- list()
 reg_list[[1]] <- lm(mpg ~ wt + hp, data = mtcars)
 reg_list[[2]] <- lm(mpg ~ wt + hp + factor(vs), data = mtcars)
 expect_inherits(hypotheses(reg_list[[1]]), "hypotheses")
 expect_inherits(hypotheses(reg_list[[2]]), "hypotheses")
+h <- lapply(reg_list, hypotheses)
+expect_inherits(h, "list")
+expect_equivalent(length(h), 2)
+h <- purrr::map(reg_list, hypotheses)
+expect_inherits(h, "list")
+expect_equivalent(length(h), 2)
+
+
+# # Theses don't work because match.call() in lapply returns
+# # FUN(model = X[[i]])
+# z = lapply(reg_list, comparisons)
+# lapply(z, function(x) hypotheses(x, "b1 = b2"))
+# hypotheses(cmp[[1]], hypothesis = "b1=b2")
+# purrr::map(z, hypotheses, hypothesis = "b1 = b2")
+
 
 
 # hypotheses() applied to {marginaleffects} package objects
@@ -99,3 +115,4 @@ expect_inherits(hypotheses(reg_list[[2]]), "hypotheses")
 # dm <- hypotheses(mm, hypothesis = "b1 = b2")
 # expect_true("b1=b2" %in% dm$term)
 # expect_equivalent(nrow(dm), 1)
+
