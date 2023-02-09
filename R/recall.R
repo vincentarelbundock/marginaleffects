@@ -41,7 +41,11 @@ recall <- function(x, ...) {
     objs <- c("newdata", "model")
     for (obj in objs) {
         if (!is.null(attr(x, obj))) {
-            dots[[obj]] <- attr(x, obj)
+            tmp <- attr(x, obj)
+            if (is.null(tmp)) {
+                tmp <- attr(x, "call")[[obj]]
+            }
+            dots[[obj]] <- tmp
         }
     }
 

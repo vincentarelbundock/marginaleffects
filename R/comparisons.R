@@ -522,8 +522,17 @@ comparisons <- function(model,
 
     out <- set_marginaleffects_attributes(
         out,
-        get_marginaleffects_attributes(newdata, include_regex = "^newdata"))
-    attr(out, "model") <- model
+        get_marginaleffects_attributes(newdata, include_regex = "^newdata.*class|explicit|matrix|levels"))
+
+
+    # save newdata and model for use in recall()
+    browser()
+    if (!"newdata" %in% names(call_attr) || is.null(call_attr[["newdata"]])) {
+        attr(out, "newdata") <- newdata
+    }
+
+    # other attributes
+    attr(out, "call") <- call_attr
     attr(out, "type") <- type
     attr(out, "model_type") <- class(model)[1]
     attr(out, "variables") <- predictors
@@ -537,9 +546,6 @@ comparisons <- function(model,
     attr(out, "transform_post_label") <- transform_post_label
     attr(out, "conf_level") <- conf_level
     attr(out, "by") <- by
-    attr(out, "call") <- call_attr
-    # save newdata for use in recall()
-    attr(out, "newdata") <- newdata
 
     if (inherits(model, "brmsfit")) {
         insight::check_if_installed("brms")
