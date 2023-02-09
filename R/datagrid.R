@@ -210,7 +210,7 @@ typical <- function(
         # na.omit destroys attributes, and we need the "factor" attribute
         # created by insight::get_data
         for (n in names(dat_automatic)) {
-            if (get_variable_class(dat, n, "factor") || n %in% tmp[["cluster"]]) {
+            if (get_variable_class(dat, n, c("factor", "strata", "cluster")) || n %in% tmp[["cluster"]]) {
                 out[[n]] <- FUN_factor(dat_automatic[[n]])
             } else if (get_variable_class(dat, n, "logical")) {
                 out[[n]] <- FUN_logical(dat_automatic[[n]])
