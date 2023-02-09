@@ -234,6 +234,7 @@ hypotheses <- function(
     class(out) <- c("hypotheses", "deltamethod", class(out))
     attr(out, "model") <- model
     attr(out, "model_type") <- class(model)[1]
+    attr(out, "call") <- match.call()
     attr(out, "vcov") <- vcov
     attr(out, "vcov.type") <- vcov.type
     attr(out, "conf_level") <- conf_level
