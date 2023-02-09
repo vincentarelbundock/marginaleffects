@@ -38,14 +38,10 @@ recall <- function(x, ...) {
 
 
     # safe to work with original objects when available
-    objs <- c("newdata", "model")
+    objs <- c("newdata")
     for (obj in objs) {
         if (!is.null(attr(x, obj))) {
-            tmp <- attr(x, obj)
-            if (is.null(tmp)) {
-                tmp <- attr(x, "call")[[obj]]
-            }
-            dots[[obj]] <- tmp
+            dots[[obj]] <- attr(x, obj)
         }
     }
 
