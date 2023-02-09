@@ -25,13 +25,18 @@ library(ggplot2)
 theme_set(theme_minimal())
 ```
 
-[In another vignette](https://vincentarelbundock.github.io/marginaleffects/articles/slopes.html), we introduced the "marginal effect" as a partial derivative. Since derivatives are only properly defined for continuous variables, we cannot use them to interpret the effects of changes in categorical variables. For this, we turn to *contrasts* between [Adjusted predictions.](https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html) In the context of this package, a "Contrast" is defined as:
+In this vignette, we introduce "comparisons", defined as:
 
-> A difference, ratio, or function of adjusted predictions, calculated for meaningfully different predictor values (e.g., College graduates vs. Others).
+> Compare the predictions made by a model for different regressor values (e.g., college graduates vs. others): contrasts, differences, risk ratios, odds, etc.
 
-The `slopes()` function automatically calculates contrasts instead of derivatives for factor, logical, or character variables. 
+The `comparisons()` function is *extremely* flexible, and it allows users to estimate a vast array of quantities of interest. To describe those quantities, we will break the problem up in 4 steps:
 
-The `comparisons()` function gives users more powerful features to compute different contrasts, such as differences, risk ratios, linear combinations, and transformations.
+1. Quantity
+2. Grid
+3. Average
+4. Hypothesis
+
+These steps can be combined and mixed and matched to define and compute many different estimands.
 
 # Simple example: Titanic
 
@@ -45,11 +50,84 @@ dat <- read.csv(dat)
 mod <- glm(Survived ~ PClass * SexCode * Age, data = dat, family = binomial)
 ```
 
+## Conceptual: Describing the estimands
+
+### Step 1: Quantity
+
 The question that interests us is:
 
 > How does the probability of survival (outcome) change if a passenger travels in 1st class vs. 3rd class?
 
-The answer to that question is not straightforward because, in non-linear models with interactions, the effect of a change in one variable depends on the values of all the other covariates in the model. Therefore, we need to refine the question:
+Since we are comparing two predicted outcomes, we will use the `comparisons()`. To indicate that our focal variable is `PClass` and that we are interested in the comparison between 1st and 3rd class, we will use the `variables` argument:
+
+```{r, eval = FALSE}
+comparisons(mod,
+  variables = list(PClass = c("1st", "3rd"))) # Step 1: Quantity
+```
+
+### Step 2: Grid 
+
+In GLM models, most quantities of interest are *conditional*, in the sense that they will typically depend on the values of all the predictors in the model. Therefore, we need to decide *where* in the predictor space we want to evaluate the quantity of interest described above.
+
+By default, `comparisons()` will compute estimates for every row of the original dataset that was used to fit a model. There are `r nrow(dat)` observations in the titanic dataset. Therefore, if we just execute the code in the previous section, we will obtain `r nrow(dat)` estimates of the difference between the probabiliyt of survival in 3rd and 1st class:
+
+```{r}
+comparisons(mod,
+  variables = list(PClass = c("1st", "3rd"))) # Step 1: Quantity
+```
+
+Notice that the contrast between 3rd and 1st is different from row to row. This reflect the fact that moving from 1st to 3rd would have a different effect on differnet 
+
+By default, the `slopes()` and `comparisons()` functions compute marginal effects and contrasts for every row of the original dataset. These unit-level estimates can be of great interest, as discussed in [another vignette](https://vincentarelbundock.github.io/marginaleffects/articles/logistic_comparisons.html). Nevertheless, one may want to focus on one-number summaries: the `avg_*()` functions or the `by` argument compute the "Average Marginal Effect" or "Average Contrast," by taking the mean of all the unit-level estimates.
+
+> Contrast estimated for a 50 year old man and a 50 year old woman.
+
+Note that our core scientific interest is in estimating the difference between 1st to 3rd class. We are just estimating this difference on a specific grid.
+
+```{r}
+cmp <- comparisons(mod,
+  variables = list(PClass = c("1st", "3rd")),  # Step 1: Quantity
+  newdata = datagrid(SexCode = 0:1, Age = 50)) # Step 2: Grid
+cmp
+```
+
+We now know that moving from 1st to 3rd changes by `r sprintf("%.3f", cmp$estimate[1])` the probability of survival for 50 year old men (`SexCode=0`), and by `r sprintf("%.3f", cmp$estimate[1])` the probability of survival for 50 year old women (`SexCode=1`).
+
+
+### Step 3: Averaging
+
+We are also interested in the average change in the probability of survival when a 50 year old man and a 50 year old woman move from 3rd to 1st class.
+
+### Hypothesis
+
+We are also interested in testing the hypothesis that moving from 1st to 3rd has a larger effect for a 50 year old man than a 50 year old woman. This is a pairwise difference in the contrasts.
+
+## Empirical: Estimating the estimands
+
+```{r}
+cmp <- avg_comparisons(mod,                    # Step 3: Averaging
+  variables = list(PClass = c("1st", "3rd")),  # Step 1: Quantity
+  newdata = datagrid(SexCode = 0:1, Age = 50)) # Step 2: Grid
+cmp
+```
+
+If we compute the change in probability of survival when moving from 1st to 3rd for a 50yo man and a 50yo woman, and then take the average of those changes, we obtain: `r sprintf("%.3f", cmp$estimate)`.
+
+
+Now, we 
+```{r}
+cmp <- comparisons(mod,                    
+  variables = list(PClass = c("1st", "3rd")),  # Step 1: Quantity
+  newdata = datagrid(SexCode = 0:1, Age = 50), # Step 2: Grid
+  hypothesis = "pairwise")                     # Step 4: Hypothesis
+cmp
+```
+
+## Manual computation
+
+Now we show how to obtain all the quantities described above using manual computation with the `predict()` function. Perhaps this will help some better understand what computations are done under the hood:
+
+# Empirical distribution
 
 > How does the probability of survival (outcome) change if a 25 year old man travels in 1st class vs. 3rd class?
 
