@@ -88,7 +88,10 @@ tidy.hypotheses <- function(x, ...) {
 glance.slopes <- function(x, ...) {
     insight::check_if_installed("insight")
     insight::check_if_installed("modelsummary")
-    model <- attr(x, "model")
+    model <- tryCatch(attr(x, "model"), error = function(e) NULL)
+    if (is.null(model) || isTRUE(checkmate::check_string(model))) {
+        model <- tryCatch(attr(x, "call")[["model"]], error = function(e) NULL)
+    }
     gl <- suppressMessages(suppressWarnings(try(
         modelsummary::get_gof(model, ...), silent = TRUE)))
     if (inherits(gl, "data.frame")) {

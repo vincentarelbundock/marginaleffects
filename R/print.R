@@ -125,9 +125,8 @@ print.marginaleffects <- function(x,
         idx <- c(idx, attr(x, "by"))
     }
     if (isTRUE(attr(out, "newdata_explicit"))) {
-        idx_nd <- tryCatch(
-            colnames(attr(x, "newdata")),
-            error = function(e) NULL)
+        idx_nd <- c(tryCatch(colnames(attr(x, "newdata")), error = function(e) NULL),
+                    tryCatch(colnames(attr(x, "call")[["newdata"]]), error = function(e) NULL))
         idx <- c(idx, idx_nd)
     }
 
@@ -197,7 +196,7 @@ print.marginaleffects <- function(x,
     if (!inherits(x, "hypotheses.summary") && isTRUE(getOption("marginaleffects_print_type", default = TRUE))) {
         cat("Prediction type: ", attr(x, "type"), "\n")
     }
-    ## This is tricky to extract nicely when transform_* are passed from avg_comparisons to comparisons. I could certainly figure it out, but at the same time, I don't think the print method should return information that is immediately visible from the call. This is different from `type`, where users often rely on the default value, which can change from model to model, so printing it is often useful.
+    ## This is tricky to extract nicely when transform_* are passed from avg_comparisons to comparisons. I could certainly figure it out, but at the same time, I don't think the print method should return information that is immediately visible from the call. This is different from `type`, where users often rely on the default value, which can change from model to model, so printing it is often
     # if (!is.null(attr(x, "transform_pre_label"))) {
     #     cat("Pre-transformation: ", paste(attr(x, "transform_pre_label"), collapse = ""), "\n")
     # }
