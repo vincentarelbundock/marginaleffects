@@ -892,3 +892,61 @@ ggplot(predictions_data, aes(x = lifeExp, y = prediction)) +
              nudge_x = -1, hjust = 1) +
   theme_minimal()
 ```
+
+# Visual examples
+
+```{r}
+okabeito <- c('#E69F00', '#56B4E9', '#009E73', '#F0E442', '#0072B2', '#D55E00', '#CC79A7', '#999999', '#000000')
+options(ggplot2.discrete.fill = okabeito)
+library(ggplot2)
+theme_set(theme_minimal())
+
+library(marginaleffects)
+library(ggplot2)
+
+set.seed(123)
+n <- 200
+d <- data.frame(
+  y = rnorm(n),
+  cond = as.factor(sample(0:1, n, TRUE)),
+  episode = as.factor(sample(0:4, n, TRUE)))
+
+model1 <- lm(y ~ cond * episode, data = d)
+
+p <- predictions(model1, newdata = datagrid(cond = 0:1, episode = 1:3))
+ggplot(p, aes(x = cond, y = estimate, shape = episode, color = episode)) +
+  geom_point()
+
+# do episodes 1 and 2 differ when `cond=0`
+ggplot(p, aes(x = cond, y = estimate, shape = episode, color = episode)) +
+  geom_point() +
+  geom_segment(aes(x = 1, xend = 1, y = p$estimate[1], yend = p$estimate[2]), color = "black") +
+  ggtitle("What is the vertical distance between the linked points?")
+
+comparisons(model1,
+  variables = list(episode = 1:2), # comparison of interest
+  newdata = datagrid(cond = 0))    # grid
+
+# do cond=0 and cond=1 differ when episode = 1
+ggplot(p, aes(x = cond, y = estimate, shape = episode, color = episode)) +
+  geom_point() +
+  geom_segment(aes(x = 1, xend = 2, y = p$estimate[1], yend = p$estimate[4]), color = okabeito[1]) +
+  ggtitle("What is the vertical distance between the linked points?")
+
+comparisons(model1,
+  variables = "cond",              # comparison of interest
+  newdata = datagrid(episode = 1)) # grid
+
+# Is the difference between episode 1 and 2 larger in cond=0 or cond=1? 
+# try this without the `hypothesis` argument to see what we are comparing more clearly
+ggplot(p, aes(x = cond, y = estimate, shape = episode, color = episode)) +
+  geom_point() +
+  annotate("rect", xmin = .9, xmax = 1.1, ymin = p$estimate[1], ymax = p$estimate[2], alpha = .2, fill = "green") +
+  annotate("rect", xmin = 1.9, xmax = 2.1, ymin = p$estimate[4], ymax = p$estimate[5], alpha = .2, fill = "orange")  +
+  ggtitle("Is the green box taller than the orange box?")
+
+comparisons(model1,
+  variables = list(episode = 1:2), # comparison of interest
+  newdata = datagrid(cond = 0:1),  # grid
+  hypothesis = "b1 = b2")          # hypothesis
+```
