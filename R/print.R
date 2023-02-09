@@ -100,9 +100,9 @@ print.marginaleffects <- function(x,
         "conf.high" = ifelse(is.null(alpha),
             "CI high",
             sprintf("%.1f %%", 100 - alpha / 2)),
-        "p.value.nonsup" = "p (Sup)",
-        "p.value.noninf" = "p (Inf)",
-        "p.value.equiv" = "p (Eq)"
+        "p.value.nonsup" = "p (NonSup)",
+        "p.value.noninf" = "p (NonInf)",
+        "p.value.equiv" = "p (Equiv)"
         )
 
     if (any(out[["df"]] < Inf)) {

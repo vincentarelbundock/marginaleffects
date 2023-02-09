@@ -2,12 +2,9 @@ source("helpers.R")
 requiet("poorman")
 requiet("emmeans")
 requiet("parameters")
-exit_file("TODO")
+# exit_file("TODO")
 
 mod <- lm(mpg ~ hp + factor(gear), data = mtcars)
-
-
-
 
 # predictions() vs. {emmeans}: inf
 delta <- 1
@@ -52,31 +49,6 @@ mfx <- slopes(
     equivalence = c(-.09, .01))
 expect_inherits(mfx, "slopes")
 
-
-# marginal_means() vs. {emmeans}
-delta <- log(1.25)
-mod <- lm(log(conc) ~ source + factor(percent), data = pigs)
-rg <- ref_grid(mod)
-em <- emmeans(rg, "source", at = list(), df = Inf)
-pa <- pairs(em, df = Inf)
-mm <- marginal_means(
-    mod,
-    variables = "source",
-    hypothesis = "pairwise") 
-
-e1 <- test(pa, delta = delta, adjust = "none", side = "nonsuperiority", df = Inf)
-e2 <- hypotheses(mm, equivalence = c(-delta, delta))
-expect_equivalent(e1$z.ratio, e2$statistic.nonsup)
-expect_equivalent(e1$p.value, e2$p.value.nonsup)
-
-e1 <- test(pa, delta = delta, adjust = "none", side = "noninferiority", df = Inf)
-e2 <- hypotheses(mm, equivalence = c(-delta, delta))
-expect_equivalent(e1$z.ratio, e2$statistic.noninf)
-expect_equivalent(e1$p.value, e2$p.value.noninf)
-
-e1 <- test(pa, delta = delta, adjust = "none", df = Inf)
-e2 <- hypotheses(mm, equivalence = c(-delta, delta))
-expect_equivalent(e1$p.value, e2$p.value.equiv)
 
 
 # two-sample t-test
@@ -136,8 +108,29 @@ expect_inherits(x, "hypotheses")
 
 
 
+# marginal_means() vs. {emmeans}
+exit_file("works interactively")
+delta <- log(1.25)
+mod <- lm(log(conc) ~ source + factor(percent), data = pigs)
+rg <- ref_grid(mod)
+em <- emmeans(rg, "source", at = list(), df = Inf)
+pa <- pairs(em, df = Inf)
+mm <- marginal_means(
+    mod,
+    variables = "source",
+    hypothesis = "pairwise") 
 
-# No equivalence for bayesian models yet. See ROPE in `bayestestR`.
-mod <- marginaleffects:::modelarchive_model("brms_numeric")
-cmp <- avg_comparisons(mod)
-expect_error(hypotheses(cmp, equivalence = c(-.1, .1)), pattern = "supported")
+e1 <- test(pa, delta = delta, adjust = "none", side = "nonsuperiority", df = Inf)
+e2 <- hypotheses(mm, equivalence = c(-delta, delta))
+expect_equivalent(e1$z.ratio, e2$statistic.nonsup)
+expect_equivalent(e1$p.value, e2$p.value.nonsup)
+
+e1 <- test(pa, delta = delta, adjust = "none", side = "noninferiority", df = Inf)
+e2 <- hypotheses(mm, equivalence = c(-delta, delta))
+expect_equivalent(e1$z.ratio, e2$statistic.noninf)
+expect_equivalent(e1$p.value, e2$p.value.noninf)
+
+e1 <- test(pa, delta = delta, adjust = "none", df = Inf)
+e2 <- hypotheses(mm, equivalence = c(-delta, delta))
+expect_equivalent(e1$p.value, e2$p.value.equiv)
+
