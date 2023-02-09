@@ -904,7 +904,7 @@ theme_set(theme_minimal())
 library(marginaleffects)
 library(ggplot2)
 
-set.seed(123)
+set.seed(1024)
 n <- 200
 d <- data.frame(
   y = rnorm(n),
