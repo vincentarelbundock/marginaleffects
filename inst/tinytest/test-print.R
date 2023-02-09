@@ -27,3 +27,7 @@ mod <- lm(mpg ~ hp + am, data = mtcars)
 expect_snapshot_print(
     comparisons(mod, variables = "am", newdata = data.frame(am = 0:1, hp = 120)),
     "print-comparisons_1focal")
+
+expect_snapshot_print(
+    predictions(mod, newdata = data.frame(am = 0:1, hp = 120)),
+    "print-predictions_newdata")

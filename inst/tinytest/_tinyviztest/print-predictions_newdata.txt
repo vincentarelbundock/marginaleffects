@@ -1,0 +1,8 @@
+
+ Estimate Std. Error    z Pr(>|z|) 2.5 % 97.5 % am  hp
+     19.5      0.739 26.4   <2e-16  18.1   21.0  0 120
+     24.8      0.809 30.7   <2e-16  23.2   26.4  1 120
+
+Prediction type:  response 
+Columns: rowid, type, estimate, std.error, statistic, p.value, conf.low, conf.high, am, hp, mpg 
+
