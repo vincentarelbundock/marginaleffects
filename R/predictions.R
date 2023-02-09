@@ -213,6 +213,24 @@ predictions <- function(model,
         }
     }
 
+    # build call: match.call() doesn't work well in *apply()
+    call_attr <- c(list(
+        name = "predictions",
+        model = model,
+        newdata = newdata,
+        variables = variables,
+        vcov = vcov,
+        conf_level = conf_level,
+        type = type,
+        by = by,
+        byfun = byfun,
+        wts = wts,
+        transform_post = transform_post,
+        hypothesis = hypothesis,
+        df = df),
+        list(...))
+    call_attr <- do.call("call", call_attr)
+
 
     # extracting modeldata repeatedly is slow. this allows marginalmeans to pass modeldata to predictions.
     dots <- list(...)
@@ -494,7 +512,7 @@ predictions <- function(model,
     attr(out, "weights") <- marginaleffects_wts_internal
     attr(out, "conf_level") <- conf_level
     attr(out, "by") <- by
-    attr(out, "call") <- match.call()
+    attr(out, "call") <- call_attr
     attr(out, "transform_post_label") <- names(transform_post)[1]
     attr(out, "transform_post") <- transform_post[[1]]
     # save newdata for use in recall()
@@ -677,10 +695,6 @@ avg_predictions <- function(model,
         hypothesis = hypothesis,
         df = df,
         ...)
-
-    # overwrite call because otherwise we get the symbosl sent to predictions()
-    attr(out, "call") <- match.call()
-
 
     return(out)
 }

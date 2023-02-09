@@ -237,7 +237,6 @@ hypotheses <- function(
     attr(out, "vcov") <- vcov
     attr(out, "vcov.type") <- vcov.type
     attr(out, "conf_level") <- conf_level
-    attr(out, "call") <- match.call()
 
     return(out)
 }

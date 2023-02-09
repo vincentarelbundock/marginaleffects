@@ -240,6 +240,26 @@ comparisons <- function(model,
         cross <- FALSE
     }
 
+    # build call: match.call() doesn't work well in *apply()
+    call_attr <- c(list(
+        name = "comparisons",
+        model = model,
+        newdata = newdata,
+        variables = variables,
+        type = type,
+        vcov = vcov,
+        by = by,
+        conf_level = conf_level,
+        transform_pre = transform_pre,
+        transform_post = transform_post,
+        cross = cross,
+        wts = wts,
+        hypothesis = hypothesis,
+        df = df,
+        eps = eps),
+        list(...))
+    call_attr <- do.call("call", call_attr)
+
     conf_level <- sanitize_conf_level(conf_level, ...)
     sanity_dots(model, ...)
     checkmate::assert_number(eps, lower = 1e-10, null.ok = TRUE)
@@ -517,7 +537,7 @@ comparisons <- function(model,
     attr(out, "transform_post_label") <- transform_post_label
     attr(out, "conf_level") <- conf_level
     attr(out, "by") <- by
-    attr(out, "call") <- match.call()
+    attr(out, "call") <- call_attr
     # save newdata for use in recall()
     attr(out, "newdata") <- newdata
 
@@ -602,9 +622,6 @@ avg_comparisons <- function(model,
         df = df,
         eps = eps,
         ...)
-
-    # overwrite call because otherwise we get the symbosl sent to comparisons()
-    attr(out, "call") <- match.call()
 
     return(out)
 }

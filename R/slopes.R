@@ -225,6 +225,24 @@ slopes <- function(model,
 
     }
 
+    # build call: match.call() doesn't work well in *apply()
+    call_attr <- c(list(
+        name = "slopes",
+        model = model,
+        newdata = newdata,
+        variables = variables,
+        type = type,
+        vcov = vcov,
+        by = by,
+        conf_level = conf_level,
+        slope = slope,
+        wts = wts,
+        hypothesis = hypothesis,
+        df = df,
+        eps = eps),
+        list(...))
+    call_attr <- do.call("call", call_attr)
+
     # slopes() does not support a named list of variables like comparisons()
     checkmate::assert_character(variables, null.ok = TRUE)
 
@@ -296,9 +314,9 @@ slopes <- function(model,
     }
 
     attr(out, "vcov.type") <- get_vcov_label(vcov)
-    attr(out, "call") <- match.call()
     # save newdata=datagrid() for use in recall()
     attr(out, "newdata") <- newdata
+    attr(out, "call") <- call_attr
 
     # class
     setDF(out)
@@ -365,6 +383,7 @@ avg_slopes <- function(model,
     }
 
 
+
     # Bootstrap
     out <- inferences_dispatch(
         FUN = avg_slopes,
@@ -390,9 +409,6 @@ avg_slopes <- function(model,
         df = df,
         eps = eps,
         ...)
-
-    # overwrite call because otherwise we get the symbols sent to slopes()
-    attr(out, "call") <- match.call()
 
     return(out)
 }
