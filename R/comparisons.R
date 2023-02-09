@@ -526,7 +526,6 @@ comparisons <- function(model,
 
 
     # save newdata and model for use in recall()
-    browser()
     if (!"newdata" %in% names(call_attr) || is.null(call_attr[["newdata"]])) {
         attr(out, "newdata") <- newdata
     }
