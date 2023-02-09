@@ -129,7 +129,7 @@ hypotheses <- function(
     }
 
     # marginaleffects objects: recall()
-    if (inherits(model, c("predictions", "comparisons", "slopes"))) {
+    if (inherits(model, c("predictions", "comparisons", "slopes", "marginalmeans"))) {
         args[["x"]] <- attr(model, "call")
         out <- do.call(recall, args)
         if (!is.null(out)) {
