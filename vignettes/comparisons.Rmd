@@ -47,12 +47,11 @@ library(marginaleffects)
 
 dat <- "https://vincentarelbundock.github.io/Rdatasets/csv/Stat2Data/Titanic.csv"
 dat <- read.csv(dat)
+dat$PClass[dat$PClass == "*"] <- NA
 mod <- glm(Survived ~ PClass * SexCode * Age, data = dat, family = binomial)
 ```
 
-## Conceptual: Describing the estimands
-
-### Step 1: Quantity
+## Step 1: Quantity
 
 The question that interests us is:
 
@@ -65,7 +64,7 @@ comparisons(mod,
   variables = list(PClass = c("1st", "3rd"))) # Step 1: Quantity
 ```
 
-### Step 2: Grid 
+## Step 2: Grid 
 
 In GLM models, most quantities of interest are *conditional*, in the sense that they will typically depend on the values of all the predictors in the model. Therefore, we need to decide *where* in the predictor space we want to evaluate the quantity of interest described above.
 
@@ -76,104 +75,131 @@ comparisons(mod,
   variables = list(PClass = c("1st", "3rd"))) # Step 1: Quantity
 ```
 
-Notice that the contrast between 3rd and 1st is different from row to row. This reflect the fact that moving from 1st to 3rd would have a different effect on differnet 
+Notice that the contrast between 3rd and 1st is different from row to row. This reflects the fact that, in our model, moving from 1st to 3rd would have a different effect on the predicted probability of survival for different individuals. 
 
-By default, the `slopes()` and `comparisons()` functions compute marginal effects and contrasts for every row of the original dataset. These unit-level estimates can be of great interest, as discussed in [another vignette](https://vincentarelbundock.github.io/marginaleffects/articles/logistic_comparisons.html). Nevertheless, one may want to focus on one-number summaries: the `avg_*()` functions or the `by` argument compute the "Average Marginal Effect" or "Average Contrast," by taking the mean of all the unit-level estimates.
+We can be more specific in our query. Instead of using the empirical distribution as our "grid", we can specify exactly where we want to evaluate the comparison in the predictor space, by using the `newdata` argument and the `datagrid()` function. For example, say I am interested in:
 
-> Contrast estimated for a 50 year old man and a 50 year old woman.
+> The effect of moving from 1st to 3rd class on the probability of survival for a 50 year old man and a 50 year old woman.
 
-Note that our core scientific interest is in estimating the difference between 1st to 3rd class. We are just estimating this difference on a specific grid.
+I can type:
 
 ```{r}
 cmp <- comparisons(mod,
   variables = list(PClass = c("1st", "3rd")),  # Step 1: Quantity
-  newdata = datagrid(SexCode = 0:1, Age = 50)) # Step 2: Grid
+  newdata = datagrid(Age = 50, SexCode = 0:1)) # Step 2: Grid
 cmp
 ```
 
 We now know that moving from 1st to 3rd changes by `r sprintf("%.3f", cmp$estimate[1])` the probability of survival for 50 year old men (`SexCode=0`), and by `r sprintf("%.3f", cmp$estimate[1])` the probability of survival for 50 year old women (`SexCode=1`).
 
+## Step 3: Averaging
 
-### Step 3: Averaging
-
-We are also interested in the average change in the probability of survival when a 50 year old man and a 50 year old woman move from 3rd to 1st class.
-
-### Hypothesis
-
-We are also interested in testing the hypothesis that moving from 1st to 3rd has a larger effect for a 50 year old man than a 50 year old woman. This is a pairwise difference in the contrasts.
-
-## Empirical: Estimating the estimands
+Again, by default `comparisons()` estimates quantities for all the actually observed units in our dataset. Sometimes, it is convenient to marginalize those conditional estimates, in order to obtain an "average contrast": 
 
 ```{r}
-cmp <- avg_comparisons(mod,                    # Step 3: Averaging
-  variables = list(PClass = c("1st", "3rd")),  # Step 1: Quantity
-  newdata = datagrid(SexCode = 0:1, Age = 50)) # Step 2: Grid
-cmp
+avg_comparisons(mod,                          # Step 3: Average
+  variables = list(PClass = c("1st", "3rd"))) # Step 1: Quantity
 ```
 
-If we compute the change in probability of survival when moving from 1st to 3rd for a 50yo man and a 50yo woman, and then take the average of those changes, we obtain: `r sprintf("%.3f", cmp$estimate)`.
+Alternatively, we could also take the average, but just of the two estimates that we computed above for the 50 year old man and 50 year old woman. 
 
-
-Now, we 
 ```{r}
-cmp <- comparisons(mod,                    
+avg_comparisons(mod,                           # Step 3: Average
   variables = list(PClass = c("1st", "3rd")),  # Step 1: Quantity
-  newdata = datagrid(SexCode = 0:1, Age = 50), # Step 2: Grid
-  hypothesis = "pairwise")                     # Step 4: Hypothesis
-cmp
+  newdata = datagrid(Age = 50, SexCode = 0:1)) # Step 2: Grid
+```
+
+Notice that this is exactly the same as the average in the estimates from the previous section, which we had stored as `cmp`:
+
+```{r}
+cmp$estimate
+
+mean(cmp$estimate)
+```
+
+## Hypothesis
+
+Finally, imagine we are interested in this question:
+
+> Does moving from 1st to 3rd class have a bigger effect on the probability of survival for 50 year old men, or for 50 year old women?
+
+To answer this, we use the `hypothesis` argument:
+
+```{r}
+comparisons(mod,
+  variables = list(PClass = c("1st", "3rd")),  # Step 1: Quantity
+  newdata = datagrid(Age = 50, SexCode = 0:1), # Step 2: Grid
+  hypothesis = "b1 = b2")                      # Step 4: Hypothesis
+```
+
+This result maps directly onto the estimates we had above. It is the difference in the contrast for 50-men and 50-women:
+
+```{r}
+diff(cmp$estimate)
+```
+
+This result can be interpreted as a "difference-in-differences": Moving from 1st to 3rd has a much larger negative effect on the probability of survival for a 50 year old woman than for a 50 year old man. This difference is statistically significant.
+
+We can do a similar comparison, but instead of fixing a conditional grid, we can average over subgruops of the empirical distribution, using the `by` argument:
+
+```{r}
+avg_comparisons(mod,
+  variables = list(PClass = c("1st", "3rd")),  # Step 1: Quantity
+  by = "SexCode",                              # Step 3: Average
+  hypothesis = "b1 = b2")                      # Step 4: Hypothesis
 ```
 
 ## Manual computation
 
-Now we show how to obtain all the quantities described above using manual computation with the `predict()` function. Perhaps this will help some better understand what computations are done under the hood:
-
-# Empirical distribution
-
-> How does the probability of survival (outcome) change if a 25 year old man travels in 1st class vs. 3rd class?
-
-Here, the *estimand* is the difference in probabilities for `PClass="1st"` and `PClass="3rd"`, and this estimand is conditional on the values of the covariates `Age=25` and `SexCode=1`. In the `comparisons()` function, the `variables` argument determines the scientific query (estimand or comparison), and the `newdata` argument determines *where* we estimate this query (conditional on what covariate values). For example:
+Now we show how to use the base `R` `predict()` function to compute some of the same quantities as above. This exercise may be clarifying for some users.
 
 ```{r}
-comparisons(
-  mod,
-  variables = list(PClass = c("3rd", "1st")),
-  newdata = datagrid(Age = 25, SexCode = 0))
+grid_50_1_3 <- data.frame(Age = 50, SexCode = 1, PClass = "3rd")
+grid_50_1_1 <- data.frame(Age = 50, SexCode = 1, PClass = "1st")
+grid_50_0_3 <- data.frame(Age = 50, SexCode = 0, PClass = "3rd")
+grid_50_0_1 <- data.frame(Age = 50, SexCode = 0, PClass = "1st")
+
+
+yhat_50_1_3 <- predict(mod, newdata = grid_50_1_3, type = "response")
+yhat_50_1_1 <- predict(mod, newdata = grid_50_1_1, type = "response")
+yhat_50_0_3 <- predict(mod, newdata = grid_50_0_3, type = "response")
+yhat_50_0_1 <- predict(mod, newdata = grid_50_0_1, type = "response")
+
+# prediction on a grid
+predictions(mod, newdata = datagrid(Age = 50, SexCode = 1, PClass = "3rd"))
+yhat_50_1_3
+
+# contrast on a grid
+comparisons(mod,
+  variables = list(PClass = c("1st", "3rd")),
+  newdata = datagrid(Age = 50, SexCode = 0:1))
+
+yhat_50_0_3 - yhat_50_0_1
+yhat_50_1_3 - yhat_50_1_1
+
+# difference-in-differences 
+comparisons(mod,
+  variables = list(PClass = c("1st", "3rd")),
+  newdata = datagrid(Age = 50, SexCode = 0:1),
+  hypothesis = "b1 = b2")
+
+(yhat_50_0_3 - yhat_50_0_1) - (yhat_50_1_3 - yhat_50_1_1)
+
+# average of the empirical distribution of contrasts
+avg_comparisons(mod, variables = list(PClass = c("1st", "3rd")), by = "SexCode")
+
+grid_empirical_1_3 <- dat |> subset(SexCode == 1) |> transform(PClass = "3rd")
+grid_empirical_1_1 <- dat |> subset(SexCode == 1) |> transform(PClass = "1st")
+grid_empirical_0_3 <- dat |> subset(SexCode == 0) |> transform(PClass = "3rd")
+grid_empirical_0_1 <- dat |> subset(SexCode == 0) |> transform(PClass = "1st")
+yhat_empirical_0_1 <- predict(mod, newdata = grid_empirical_0_1, type = "response")
+yhat_empirical_0_3 <- predict(mod, newdata = grid_empirical_0_3, type = "response")
+yhat_empirical_1_1 <- predict(mod, newdata = grid_empirical_1_1, type = "response")
+yhat_empirical_1_3 <- predict(mod, newdata = grid_empirical_1_3, type = "response")
+mean(yhat_empirical_0_3, na.rm = TRUE) - mean(yhat_empirical_0_1, na.rm = TRUE)
+mean(yhat_empirical_1_3, na.rm = TRUE) - mean(yhat_empirical_1_1, na.rm = TRUE)
 ```
 
-We can compute the same contrast for different "kinds" of individuals, by changing the `datagrid()` call. This function accepts functions or vectors. Here, we compute the contrast between the probabilities of survival in 1st and 3rd class for the oldest men and women passengers:
-
-```{r}
-comparisons(
-  mod,
-  variables = list(PClass = c("3rd", "1st")),
-  newdata = datagrid(Age = range, SexCode = 0:1))
-```
-
-If we do *not* specify the `newdata` argument, then `comparisons()` will calculate the contrast for every single combination of covariate values in the original data. This means that we will obtain a data frame of results with the same number of rows as the original data. This makes sense, because in non-linear models or in models with interactions, each individual can have a different contrast:
-
-```{r}
-cmp <- comparisons(
-  mod,
-  variables = list(PClass = c("3rd", "1st")))
-
-# number of contrast estimates
-nrow(cmp)
-
-# number of observations in the model
-nobs(mod)
-```
-
-A big dataset of contrasts like this one can be unwieldy. A common strategy is to summarize the unit-level contrasts by taking their average. This can be achieved using the `avg_comparisons()` function or the `by` argument:
-
-```{r}
-avg_comparisons(mod, by = "PClass")
-
-avg_comparisons(mod, variables = "SexCode", by = "PClass")
-```
-
-Note that average contrasts often have a nice interpretation in a causal inference context, as the outcome of parametric g-formula estimation. See this vignette: https://vincentarelbundock.github.io/marginaleffects/articles/gformula.html
-
-The rest of this vignette highlights some of the other features of the very flexible and powerful `comparisons()` function.
 
 # Predictor types
 
