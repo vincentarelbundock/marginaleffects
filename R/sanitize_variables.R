@@ -131,7 +131,7 @@ sanitize_variables <- function(variables,
     }
 
     found <- colnames(newdata)
-
+    
     # when comparisons() only inludes one focal predictor, we don't need to specify it in `newdata`
     # when `variables` is numeric, we still need to include it, because in
     # non-linear model the contrast depend on the starting value of the focal
@@ -143,11 +143,12 @@ sanitize_variables <- function(variables,
         } else if (isTRUE(checkmate::check_list(variables, len = 1, names = "named"))) {
             v <- names(variables)[1]
         }
-        if (!is.null(v) && isTRUE(get_variable_class(modeldata, variable = v, compare = "categorical"))) {
+        flag <- get_variable_class(modeldata, variable = v, compare = "categorical")
+        if (!is.null(v) && isTRUE(flag)) {
             found <- c(found, v)
         }
     }
-
+    
     # missing variables
     miss <- setdiff(names(predictors), found)
     predictors <- predictors[!names(predictors) %in% miss]
@@ -157,7 +158,7 @@ sanitize_variables <- function(variables,
             paste(miss, collapse = ", "))
         insight::format_warning(msg)
     }
-
+    
     # sometimes `insight` returns interaction component as if it were a constituent variable
     idx <- !grepl(":", names(predictors))
     predictors <- predictors[idx]
@@ -184,7 +185,7 @@ sanitize_variables <- function(variables,
         if (v %in% colnames(newdata)) {
 
             if (get_variable_class(newdata, v, "numeric")) {
-
+                
                 if (calling_function == "comparisons") {
 
                     # TODO
@@ -328,7 +329,7 @@ sanitize_variables <- function(variables,
     }
 
     for (v in names(predictors)) {
-        if (get_variable_class(newdata, v, "numeric") || get_variable_class(newdata, v, "binary")) {
+        if (get_variable_class(newdata, v, "numeric") && !get_variable_class(newdata, v, "binary")) {
             fun <- fun_numeric
             lab <- lab_numeric
         } else {
@@ -348,8 +349,7 @@ sanitize_variables <- function(variables,
     if (any(names(predictors) %in% dv)) {
         insight::format_error("The outcome variable cannot be used in the `variables` argument.")
     }
-
-
+    
     # interaction: get_contrasts() assumes there is only one function when interaction=TRUE
     if (isTRUE(interaction)) {
         for (p in predictors) {
@@ -363,6 +363,6 @@ sanitize_variables <- function(variables,
 
     # output
     out <- list(conditional = predictors, others = others)
-
+    
     return(out)
 }

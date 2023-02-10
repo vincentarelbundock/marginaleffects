@@ -83,7 +83,7 @@ datagrid <- function(
     checkmate::assert_function(FUN_logical)
     checkmate::assert_function(FUN_numeric)
     checkmate::assert_function(FUN_other)
-
+    
     if (grid_type == "typical") {
         args <- list( # cleaned for backward compatibility
             model = model,
@@ -295,6 +295,18 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
     if (is.null(newdata)) {
         newdata <- get_modeldata(model)
     }
+    
+    attr_variable_classes <- attr(newdata, "marginaleffects_variable_class")
+
+    # subset columns, otherwise it can be ultra expensive to compute summaries for every variable
+    if (!is.null(model)) {
+        variables_sub <- tryCatch(insight::find_variables(model, flatten = TRUE), error = function(e) NULL)
+        variables_sub <- c(variables_sub, variables_manual)
+        variables_sub <- intersect(colnames(newdata), variables_sub)
+        if (length(variables_sub) > 0) {
+            newdata <- subset(newdata, select = variables_sub)
+        }
+    }
 
     # check `at` names
     variables_missing <- setdiff(names(at), c(variables_all, "group"))
@@ -311,7 +323,6 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
         }
         newdata <- newdata[, !idx, drop = FALSE]
     }
-
 
     # check `at` elements and convert them to factor as needed
     for (n in names(at)) {
@@ -341,7 +352,7 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
             }
         }
     }
-
+    
     # cluster identifiers will eventually be treated as factors
     if (!is.null(model)) {
         v <- insight::find_variables(model)
@@ -352,6 +363,8 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
     }
 
     setDT(newdata)
+    
+    attr(newdata, "marginaleffects_variable_class") <- attr_variable_classes
 
     out <- list("newdata" = newdata,
                 "at" = at,

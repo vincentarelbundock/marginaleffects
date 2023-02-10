@@ -1,3 +1,4 @@
+source("helpers.R")
 exit_if_not(requiet("haven"))
 exit_if_not(requiet("Rchoice"))
 
@@ -5,8 +6,9 @@ exit_if_not(requiet("Rchoice"))
 dat <- transform(iris, y = Sepal.Length > median(Sepal.Length))
 mod <- hetprob(y ~ Petal.Width * Petal.Length | factor(Species), data = dat, link = "logit")
 known <- Rchoice::effect(mod)$margins
-expect_equivalent(sort(avg_slopes(mod)$estimate), sort(known[, "dydx"]), tol = .001)
-expect_equivalent(sort(avg_slopes(mod)$std.error), sort(known[, "Std. error"]), tol = .001)
+mfx <- avg_slopes(mod, newdata = dat)
+expect_equivalent(sort(mfx$estimate), sort(known[, "dydx"]), tol = .001)
+expect_equivalent(sort(mfx$std.error), sort(known[, "Std. error"]), tol = .001)
 
 # # IV probit model by MLE
 # # (nwincome is endogenous and heducation is the additional instrument)

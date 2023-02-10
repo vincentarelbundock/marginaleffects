@@ -218,7 +218,7 @@ comparisons <- function(model,
         scall <- substitute(newdata)
         if (is.call(scall) && as.character(scall)[1] %in% c("datagrid", "datagridcf", "typical", "counterfactual")) {
             lcall <- as.list(scall)
-            if (!any(c("model", "data") %in% names(lcall))) {
+            if (!"model" %in% names(lcall)) {
                 lcall <- c(lcall, list("model" = model))
                 newdata <- eval.parent(as.call(lcall))
             }

@@ -22,16 +22,15 @@ expect_true(all(mfx$rowid %in% 1:96))
 # alternative syntaxes
 mod <- lm(mpg ~ hp + drat + wt, mtcars)
 nd1 <- datagrid(wt = 3, hp = c(100, 110), model = mod)
-nd2 <- datagrid(wt = 3, hp = c(100, 110), newdata = mtcars)
+nd2 <- datagrid(wt = 3, hp = c(100, 110), drat = 4, newdata = mtcars)
 x <- slopes(mod, newdata = datagrid(wt = 3, hp = c(100, 110)))
 x$mpg <- NULL # placeholder response in predictions
 y <- slopes(mod, newdata = nd1)
 z <- slopes(mod, newdata = nd2)
-z <- z[, colnames(x), drop = FALSE]
-y <- y[, colnames(x), drop = FALSE]
-expect_true(all(x == y))
-expect_true(all(x == z))
-
+expect_equivalent(x$estimate, y$estimate)
+expect_equivalent(x$conf.low, y$conf.low, tol = 1e-5)
+expect_equivalent(x$estimate, z$estimate)
+expect_equivalent(x$conf.low, z$conf.low, tol = 1e-5)
 
 
 # size

@@ -72,7 +72,6 @@ p <- plot_predictions(mod, condition = c("hp", "wt"))
 expect_snapshot_plot(p, "plot_predictions")
 
 
-
 # continuous vs. categorical x-axis
 mod <- lm(mpg ~ hp * wt * factor(cyl), mtcars)
 p <- plot_predictions(mod, condition = c("cyl", "wt"))

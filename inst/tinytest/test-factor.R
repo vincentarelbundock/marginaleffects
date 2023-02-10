@@ -47,6 +47,7 @@ test1 <- data.frame(
 mod <- coxph(Surv(time, status) ~ x + strata(sex),
     data = test1,
     ties = "breslow")
+
 mfx <- slopes(mod,
     variables = "x",
     newdata = datagrid(sex = 0, newdata = test1),

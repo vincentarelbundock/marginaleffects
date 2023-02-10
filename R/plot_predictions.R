@@ -106,7 +106,7 @@ plot_predictions <- function(model,
                 y = estimate,
                 color = condition2))
 
-        # categorical x-axis
+    # categorical x-axis
     } else {
         if (!isTRUE(vcov) && "conf.low" %in% colnames(datplot)) {
             if (is.null(condition2)) {
@@ -235,13 +235,13 @@ get_plot_newdata <- function(model, condition, effect = NULL) {
 
     # condition 1: x-axis
     if (is.null(condition[[1]])) {
-        if (is.numeric(dat[[condition1]]) && !isTRUE(attributes(dat)$marginaleffects_variable_class[[condition1]] == "factor")) {
+        if (is.numeric(dat[[condition1]]) && !get_variable_class(dat, condition1, "categorical")) {
             at_list[[condition1]] <- seq(
                 min(dat[[condition1]], na.rm = TRUE),
                 max(dat[[condition1]], na.rm = TRUE),
                 length.out = 25)
         } else {
-            at_list[[condition1]] <- unique(dat[[condition1]])
+            at_list[[condition1]] <- factor(unique(dat[[condition1]]))
         }
     } else {
         if (isTRUE(checkmate::check_choice(condition[[1]], shortcuts))) {

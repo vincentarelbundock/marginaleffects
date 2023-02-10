@@ -222,7 +222,7 @@ get_contrasts <- function(model,
         draws_hi <- attr(pred_hi, "posterior_draws")
         draws_or <- attr(pred_or, "posterior_draws")
     }
-
+    
     setDT(pred_hi)
 
     out[, predicted_lo := pred_lo[["estimate"]]]

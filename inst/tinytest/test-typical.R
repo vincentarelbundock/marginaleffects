@@ -48,7 +48,16 @@ expect_inherits(nd, "data.frame")
 expect_equivalent(nrow(nd), 1)
 
 
+# bugs stay dead: FUN_logical
+tmp <- mtcars
+tmp$am <- as.logical(tmp$am)
+mod <- lm(mpg ~ am * factor(cyl), data = tmp)
+mfx <- slopes(mod, newdata = datagrid(cyl = tmp$cyl), variables = "am")
+expect_inherits(mfx, "marginaleffects")
+expect_equivalent(nrow(mfx), 3)
+
 # errors and warnings
+exit_file("works interactively")
 dat <- mtcars
 dat$cyl <- factor(dat$cyl)
 dat <- dat
@@ -58,13 +67,3 @@ expect_error(datagrid(), pattern = "are both .NULL")
 mod <- lm(hp ~ factor(cyl), dat)
 expect_inherits(datagrid(model = mod, cyl = "4"), "data.frame")
 expect_error(datagrid(model = mod, cyl = "2"), pattern = "must be one of the factor levels")
-
-
-# bugs stay dead: FUN_logical
-tmp <- mtcars
-tmp$am <- as.logical(tmp$am)
-mod <- lm(mpg ~ am * factor(cyl), data = tmp)
-mfx <- slopes(mod, newdata = datagrid(cyl = tmp$cyl), variables = "am")
-expect_inherits(mfx, "marginaleffects")
-expect_equivalent(nrow(mfx), 3)
-

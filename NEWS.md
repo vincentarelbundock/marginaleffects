@@ -16,6 +16,7 @@ Other:
 * Informative error when `hypothesis` includes a `b#` larger than the available number of estimates.
 * `avg_predictions(model, variables = "x")` computes average counterfactual predictions by subgroups of `x`
 * `hypotheses()` now works on lists and in calls to `lapply()`, `purrr::map()`, etc.
+* `datagrid()` and `plot_*()` functions are faster in datasets with many extraneous columns.
 
 Bugfixes:
 
