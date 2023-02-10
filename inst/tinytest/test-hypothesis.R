@@ -9,6 +9,8 @@ dat$cyl <- factor(dat$cyl)
 mod <- lm(mpg ~ carb + cyl, dat)
 
 
+
+
 # informative errors and warnings
 tmp <- lm(mpg ~ drat + wt, data = mtcars)
 expect_error(slopes(tmp, hypothesis = "drat = wt"), pattern = "newdata")
@@ -236,6 +238,13 @@ expect_error(
     predictions(mod, newdata = "mean", hypothesis = "b1=b2"),
     pattern = "hypothesis testing")
 
+# Issue #661: remove redundant labels in pairwise comparisons
+set.seed(123)
+dat <- transform(iris, dummy = as.factor(rbinom(nrow(iris), 1, prob = c(0.4, 0.6))))
+m <- lm(Sepal.Width ~ Sepal.Length * Species + dummy, data = dat)
+expect_snapshot_print(
+    slopes(m, variables = "Sepal.Length", by = c("Species", "dummy"), hypothesis = "pairwise"),
+    "hypothesis-slopes_pairwise_labels")
 
 # # Issue #568
 # # TODO: p-value computed before transform_post; null on the pre-transform scale
@@ -262,3 +271,4 @@ expect_error(
 # predictions(mod, newdata = "mean", hypothesis = .75)
 
 # slopes(mod, newdata = "mean", hypothesis = .75)
+
