@@ -242,7 +242,11 @@ sanitize_variables <- function(variables,
             } else if (get_variable_class(newdata, v, "categorical")) {
 
                 if (calling_function == "comparisons") {
-                    valid <- c("reference", "sequential", "pairwise", "all")
+                    if (get_variable_class(newdata, v, "factor")) {
+                        valid <- c("reference", "sequential", "pairwise", "all", "minmax")
+                    } else {
+                        valid <- c("reference", "sequential", "pairwise", "all")
+                    }
                     flag1 <- checkmate::check_choice(predictors[[v]], choices = valid)
                     flag2 <- checkmate::check_vector(predictors[[v]], len = 2)
                     if (!isTRUE(flag1) && !isTRUE(flag2)) {

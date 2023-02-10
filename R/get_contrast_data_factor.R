@@ -41,6 +41,9 @@ get_contrast_data_factor <- function(model,
             levs_idx <- data.table::data.table(lo = levs[1], hi = levs)
         }
 
+    } else if (isTRUE(variable$value == "minmax")) {
+        levs_idx <- data.table::data.table(lo = levs[1], hi = levs[length(levs)])
+
     } else if (isTRUE(variable$value == "pairwise")) {
         levs_idx <- CJ(lo = levs, hi = levs, sorted = FALSE)
         # null contrasts are interesting with interactions
@@ -119,4 +122,3 @@ get_contrast_data_factor <- function(model,
                 contrast_null = contrast_null)
     return(out)
 }
-

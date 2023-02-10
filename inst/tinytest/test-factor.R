@@ -66,3 +66,13 @@ cmp3 <- comparisons(mod, variables = list(cyl = dat$cyl[2:3]))
 expect_inherits(cmp1, "comparisons")
 expect_inherits(cmp2, "comparisons")
 expect_inherits(cmp3, "comparisons")
+
+
+# Issue #658
+mod <- lm(mpg ~ factor(cyl), mtcars)
+cmp <- comparisons(
+    fit,
+    variables = list(income = "minmax"),
+    newdata = datagrid(age = "old"),
+    transform_post = function(x) x / 3)
+expect_inherits(cmp, "comparisons")
