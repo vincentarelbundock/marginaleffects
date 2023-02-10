@@ -7,5 +7,8 @@ testone:
 check:
 	Rscript -e "devtools::check()"
 
+install:
+	Rscript -e "devtools::install()"
+
 deploy:
 	Rscript -e "pkgdown::deploy_to_branch()"
