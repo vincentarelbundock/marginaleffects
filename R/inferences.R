@@ -73,7 +73,7 @@ inferences <- function(x, method, R = 1000, conf_type = "perc", ...) {
     }
 
     mfx_call <- attr(x, "call")
-    model <- attr(x, "model")
+    model <- mfx_call[["model"]]
 
     if (method == "boot") {
         insight::check_if_installed("boot")
