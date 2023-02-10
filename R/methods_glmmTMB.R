@@ -48,15 +48,14 @@ set_coef.glmmTMB <- function(model, coefs, ...) {
     # random parameters are ignored: named "b"
     # the order matters; I think we can rely on it, but this still feels like a HACK
     out <- model
-
-    idx <- !names(out$fit$parfull) %in% c("theta", "b")
+    idx <- !names(out$fit$parfull) %in% c("theta", "b", "psi")
     if (length(coefs) == length(out$fit$parfull[idx])) {
         out$fit$parfull[idx] <- stats::setNames(coefs, names(out$fit$parfull)[idx])
     } else {
         insight::format_error("Unable to compute standard errors for this model.")
     }
 
-    idx <- !names(out$fit$par) %in% c("theta", "b")
+    idx <- !names(out$fit$par) %in% c("theta", "b", "psi")
     if (length(coefs) == length(out$fit$par[idx])) {
         out$fit$par[idx] <- stats::setNames(coefs, names(out$fit$par)[idx])
     } else {

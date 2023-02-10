@@ -207,3 +207,38 @@ expect_error(marginal_means(model_REML), pattern = "REML")
 expect_inherits(slopes(model_REML, vcov = FALSE), "marginaleffects")
 expect_inherits(predictions(model_REML, re.form = NA, vcov = FALSE), "predictions")
 expect_inherits(predictions(model_REML, vcov = FALSE, re.form = NA), "predictions")
+
+
+# Issue #663
+exit_if_not(requiet("ordbetareg"))
+exit_if_not(requiet("dplyr"))
+
+data(pew, package = "ordbetareg")
+model_data <- select(
+  pew,
+  therm,
+  age = "F_AGECAT_FINAL",
+  sex = "F_SEX_FINAL",
+  income = "F_INCOME_FINAL",
+  ideology = "F_IDEO_FINAL",
+  race = "F_RACETHN_RECRUITMENT",
+  education = "F_EDUCCAT2_FINAL",
+  region = "F_CREGION_FINAL",
+  approval = "POL1DT_W28",
+  born_again = "F_BORN_FINAL",
+  relig = "F_RELIG_FINAL",
+  news = "NEWS_PLATFORMA_W28") %>%
+  mutate_at(c("race", "ideology", "income", "approval", "sex", "education", "born_again", "relig"), function(c) {
+    factor(c, exclude = levels(c)[length(levels(c))]) }) |>
+  # need to make these ordered factors for BRMS
+  transform(
+    education = ordered(education),
+    income = ordered(income))
+model_data$therm_norm <- (model_data$therm - min(model_data$therm)) / (max(model_data$therm) - min(model_data$therm))
+mod <- glmmTMB(
+  therm_norm ~ approval + (1 | region),
+  data = model_data,
+  family = ordbeta(),
+  start = list(psi = c(-1, 1)))
+mfx <- avg_slopes(mod)
+expect_inherits(mfx, 'slopes')
