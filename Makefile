@@ -4,6 +4,9 @@ testall:
 testone:
 	Rscript -e "pkgload::load_all();tinytest::run_test_file('$(testfile)')"
 
+document:
+	Rscript -e "devtools::document()"
+
 check:
 	Rscript -e "devtools::check()"
 
