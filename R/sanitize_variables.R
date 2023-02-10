@@ -242,7 +242,7 @@ sanitize_variables <- function(variables,
             } else if (get_variable_class(newdata, v, "categorical")) {
 
                 if (calling_function == "comparisons") {
-                    if (get_variable_class(newdata, v, "factor")) {
+                    if (is.factor(newdata[[v]])) { # use this instead of get_variable_class
                         valid <- c("reference", "sequential", "pairwise", "all", "minmax")
                     } else {
                         valid <- c("reference", "sequential", "pairwise", "all")
