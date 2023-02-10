@@ -55,6 +55,8 @@ plm,plm,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,U,U
 pscl,hurdle,TRUE,TRUE,,,TRUE,U,TRUE,FALSE
 pscl,zeroinfl,TRUE,TRUE,TRUE,TRUE,TRUE,U,TRUE,TRUE
 quantreg,rq,TRUE,TRUE,TRUE,TRUE,U,U,TRUE,TRUE
+Rchoice,hetprob,TRUE,TRUE,,,,,,
+Rchoice,ivpml,TRUE,TRUE,,,,,,
 rms,ols,TRUE,TRUE,,,,,,
 rms,lrm,TRUE,TRUE,,,,,,
 rms,orm,TRUE,TRUE,,,,,,

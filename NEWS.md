@@ -2,7 +2,9 @@
 
 New models supported:
 
-* `MCMCglmm`
+* `MCMCglmm::MCMCglmm`
+* `Rchoice::hetprob`
+* `Rchoice::ivpml`
 
 Other:
 

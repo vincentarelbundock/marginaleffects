@@ -42,10 +42,14 @@ crch,response,expectation,FALSE,TRUE
 crch,location,NA,TRUE,TRUE
 crch,scale,NA,TRUE,TRUE
 crch,density,NA,TRUE,TRUE
+hetprob,pr,NA,TRUE,TRUE
+hetprob,xb,NA,TRUE,TRUE
 hxlr,location,expectation,TRUE,TRUE
 hxlr,cumprob,NA,TRUE,TRUE
 hxlr,scale,NA,TRUE,TRUE
 hxlr,density,NA,TRUE,TRUE
+ivpml,pr,NA,TRUE,TRUE
+ivpml,xb,NA,TRUE,TRUE
 fixest,response,expectation,TRUE,TRUE
 fixest,link,link,TRUE,TRUE
 hurdle,response,expectation,TRUE,TRUE
