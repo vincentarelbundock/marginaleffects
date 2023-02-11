@@ -25,8 +25,8 @@ model <- gam::gam(Kyphosis ~ gam::s(Age, 4) + Number,
             family = binomial, data = kyphosis)
 pred1 <- predictions(model)
 pred2 <- predictions(model, newdata = head(kyphosis))
-expect_predictions(pred1, se = TRUE)
-expect_predictions(pred2, n_row = 6, se = TRUE)
+expect_predictions(pred1, se = FALSE)
+expect_predictions(pred2, n_row = 6, se = FALSE)
 
 
 # gam: marginalmeans vs. emmeans
