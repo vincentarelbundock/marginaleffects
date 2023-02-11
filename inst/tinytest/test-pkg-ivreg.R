@@ -50,3 +50,7 @@ mod <- ivreg::ivreg(Q ~ P + D + categ | D + F + A + categ, data = tmp)
 mm <- marginal_means(mod)
 expect_marginal_means(mm)
 
+
+
+
+rm(list = ls())

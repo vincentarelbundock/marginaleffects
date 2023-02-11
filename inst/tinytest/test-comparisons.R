@@ -26,3 +26,7 @@ cmp <- comparisons(mod, variables = c("cyl", "am"), cross = TRUE)
 expect_equivalent(nrow(cmp), 64)
 cmp <- avg_comparisons(mod, variables = c("cyl", "am"), cross = TRUE)
 expect_equivalent(nrow(cmp), 2)
+
+
+
+rm(list = ls())

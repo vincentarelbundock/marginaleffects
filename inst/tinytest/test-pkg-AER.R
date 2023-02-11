@@ -65,3 +65,6 @@ mod <- AER::tobit(
 pred <- predictions(mod, newdata = dat)
 expect_predictions(pred, n_row = nrow(dat))
 
+
+
+rm(list = ls())

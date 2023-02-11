@@ -67,3 +67,6 @@ expect_error(datagrid(), pattern = "are both .NULL")
 mod <- lm(hp ~ factor(cyl), dat)
 expect_inherits(datagrid(model = mod, cyl = "4"), "data.frame")
 expect_error(datagrid(model = mod, cyl = "2"), pattern = "must be one of the factor levels")
+
+
+rm(list = ls())

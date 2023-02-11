@@ -107,3 +107,7 @@ cmp1 <- comparisons(
 expect_equivalent(
     cmp1$contrast,
     c("+1", "TRUE - FALSE", "6 - 4", "8 - 4", "4 - 3", "5 - 3"))
+
+
+
+rm(list = ls())

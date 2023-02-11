@@ -15,3 +15,5 @@ expect_inherits(slopes(mod), "marginaleffects")
 expect_warning(slopes(mod, blah = 2), pattern = "Github")
 
 
+
+rm(list = ls())

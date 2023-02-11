@@ -1,5 +1,5 @@
-exit_if_not(EXPENSIVE)
 source("helpers.R")
+exit_if_not(EXPENSIVE)
 using("marginaleffects")
 # exit_file("glmmTMB always causes problems")
 
@@ -241,3 +241,7 @@ mod <- glmmTMB(
   start = list(psi = c(-1, 1)))
 mfx <- avg_slopes(mod)
 expect_inherits(mfx, 'slopes')
+
+
+
+rm(list = ls())

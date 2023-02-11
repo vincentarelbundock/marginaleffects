@@ -83,3 +83,7 @@ TravelMode$dsize <- as.factor(TravelMode$dsize)
 mod3 <- mlogit(choice ~ wait + gcost | income + dsize, TravelMode) 
 mfx <- slopes(mod3, variables = c("income", "dsize"))
 expect_inherits(mfx, "marginaleffects")
+
+
+
+rm(list = ls())

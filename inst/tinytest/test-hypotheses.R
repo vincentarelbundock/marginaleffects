@@ -138,3 +138,5 @@ expect_inherits(tmp[[2]], "hypotheses")
 # expect_true("b1=b2" %in% dm$term)
 # expect_equivalent(nrow(dm), 1)
 
+
+rm(list = ls())

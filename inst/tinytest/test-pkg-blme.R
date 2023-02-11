@@ -24,3 +24,7 @@ pre <- predictions(fm6)
 expect_predictions(pre)
 pre <- predictions(mod)
 expect_predictions(pre)
+
+
+
+rm(list = ls())

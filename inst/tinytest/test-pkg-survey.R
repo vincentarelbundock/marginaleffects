@@ -27,3 +27,7 @@ em <- tidy(em)
 mfx <- slopes(mod, type = "link", newdata = data.frame(nh = 4))
 expect_equivalent(mfx$estimate, em$nh.trend, tolerance = .001) # CRAN tolerance
 expect_equivalent(mfx$std.error, em$std.error, tolerance = .001)
+
+
+
+rm(list = ls())

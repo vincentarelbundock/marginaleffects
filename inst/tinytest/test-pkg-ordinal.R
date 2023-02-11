@@ -1,8 +1,6 @@
 source("helpers.R")
 using("marginaleffects")
-library(tinytest)
 exit_if_not(EXPENSIVE)
-
 exit_if_not(!ON_CI)
 exit_if_not(packageVersion("base") >= "4.2.0")
 
@@ -87,3 +85,7 @@ p <- plot_slopes(mod, effect = "Infl", condition = "Type")
 expect_inherits(p, "gg")
 p <- plot_predictions(mod, condition = "Type")
 expect_inherits(p, "gg")
+
+
+
+rm(list = ls())

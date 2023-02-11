@@ -100,3 +100,6 @@ mod <- marginaleffects:::modelarchive_model("brms_factor")
 cmp <- comparisons(mod, variables = list("cyl_fac" = "all", "mpg" = 1), cross = TRUE)
 expect_equivalent(nrow(cmp), 192)
 expect_equivalent(nrow(tidy(cmp)), 6)
+
+
+rm(list = ls())

@@ -59,3 +59,5 @@ p <- plot_slopes(mod, effect = "hp", condition = c("wt", "am"))
 expect_snapshot_plot(p, "plot_slopes_two_conditions")
 
 
+
+rm(list = ls())

@@ -148,3 +148,8 @@ expect_equivalent(mfx$std.error, emt$SE, tolerance = 1e-3)
 # Issue #545
 p <- plot_slopes(model, effect = "Time", condition = "Time", draw = FALSE)
 expect_true(nrow(p) > 1)
+
+
+
+
+rm(list = ls())

@@ -49,3 +49,7 @@ expect_equivalent(pre$estimate, ins$Predicted)
 expect_equivalent(pre$std.error, ins$SE)
 expect_equivalent(pre$conf.low, ins$CI_low)
 expect_equivalent(pre$conf.high, ins$CI_high)
+
+
+
+rm(list = ls())

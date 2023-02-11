@@ -64,3 +64,7 @@ dat <- mtcars
 mod <- glm(am ~ hp, data = dat, family = binomial)
 cmp <- avg_comparisons(mod, transform_pre = function(hi, lo) hi / lo, transform_post = exp)
 expect_snapshot_print(cmp, "summary-comparisons_transform_post")
+
+
+
+rm(list = ls())

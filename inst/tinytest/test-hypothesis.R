@@ -274,3 +274,5 @@ expect_true("setosa, 0 - setosa, 1" %in% mfx$term)
 
 # slopes(mod, newdata = "mean", hypothesis = .75)
 
+
+rm(list = ls())

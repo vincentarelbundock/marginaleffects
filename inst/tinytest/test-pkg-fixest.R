@@ -290,3 +290,5 @@ expect_false(anyNA(p$std.error))
 
 
 
+
+rm(list = ls())

@@ -33,3 +33,7 @@ mar <- margins(m2)
 mar <- summary(mar)
 expect_equivalent(mfx$estimate, mar$AME, tolerance = tol)
 expect_equivalent(mfx$std.error, mar$SE, tolerance = tol_se)
+
+
+
+rm(list = ls())

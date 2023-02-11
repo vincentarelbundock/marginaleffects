@@ -47,3 +47,7 @@ mm <- marginal_means(mod, variables = "categ")
 expect_marginal_means(mm)
 expect_equivalent(mm$estimate, em$estimate)
 expect_equivalent(mm$std.error, em$std.error)
+
+
+
+rm(list = ls())

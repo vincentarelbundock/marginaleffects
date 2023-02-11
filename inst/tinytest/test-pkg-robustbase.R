@@ -21,3 +21,7 @@ expect_slopes(model)
 mar <- margins::margins(model, unit_ses = TRUE)
 mfx <- slopes(model)
 expect_true(expect_margins(mar, mfx))
+
+
+
+rm(list = ls())

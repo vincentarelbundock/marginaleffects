@@ -1,7 +1,7 @@
 source("helpers.R")
 
 # recall captures calls to avoid evaluating twice
-modd <<- lm(mpg ~ hp + factor(gear), data = mtcars)
+modd <- lm(mpg ~ hp + factor(gear), data = mtcars)
 cmp1 <- comparisons(modd)
 cmp1 <- tidy(cmp1)
 cmp2 <- tidy(comparisons(modd))[, seq_along(cmp1)]
@@ -43,3 +43,7 @@ suppressWarnings(rm("modd"))
 #     check = FALSE,
 #     iterations = 25
 # )
+
+
+
+rm(list = ls())

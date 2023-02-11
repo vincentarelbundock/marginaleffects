@@ -170,3 +170,7 @@ expect_equivalent(colnames(get_predict(mod)), c("rowid", "group", "estimate"))
 
 mod <- lm(mpg ~ disp + am, data = mtcars)
 expect_equivalent(colnames(get_predict(mod)), c("rowid", "estimate"))
+
+
+
+rm(list = ls())

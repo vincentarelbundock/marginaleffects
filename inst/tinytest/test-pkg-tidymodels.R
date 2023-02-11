@@ -16,3 +16,6 @@ mod <- fit(
 mfx <- slopes(mod)
 expect_inherits(mfx, "marginaleffects")
 expect_true(nrow(mfx) > 0)
+
+
+rm(list = ls())

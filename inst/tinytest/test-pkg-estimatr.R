@@ -87,3 +87,7 @@ expect_marginal_means(marginal_means(model))
 
 
 }) # withr
+
+
+
+rm(list = ls())

@@ -119,3 +119,6 @@ expect_equivalent(x, y)
 x <- slopes(mod, vcov = sandwich::vcovHC)
 y <- slopes(mod, vcov = "HC3")
 expect_equivalent(x, y)
+
+
+rm(list = ls())

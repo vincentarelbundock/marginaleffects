@@ -17,3 +17,7 @@ expect_slopes(mod, n_unique = 1)
 
 pre <- predictions(mod)
 expect_predictions(pre)
+
+
+
+rm(list = ls())

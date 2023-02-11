@@ -21,3 +21,5 @@ mod <- lm(hp ~ mpg + drat + wt + factor(gear), data = tmp)
 mfx <- slopes(mod, newdata = datagrid(drat = c(NA, 10)))
 expect_inherits(tidy(mfx), "data.frame")
 
+
+rm(list = ls())

@@ -30,3 +30,6 @@ mfx <- slopes(mod, part = "selection", type = "link")
 expect_inherits(mfx, "marginaleffects")
 mfx <- slopes(mod, part = "outcome", type = "unconditional")
 expect_inherits(mfx, "marginaleffects")
+
+
+rm(list = ls())

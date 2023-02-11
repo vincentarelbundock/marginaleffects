@@ -82,3 +82,7 @@ p3 <- data.frame(
     level = 0.95))
 expect_equivalent(p3$emmean, p2[p2$rowid == 160, "estimate"])
 expect_equivalent(p3$SE, p2[p2$rowid == 160, "std.error"])
+
+
+
+rm(list = ls())

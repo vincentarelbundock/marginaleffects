@@ -41,3 +41,7 @@ expect_equivalent(nrow(cmp), 4)
 # error
 mod <- lm(mpg ~ hp, mtcars)
 expect_error(predictions(mod, newdata = datagridcf()), pattern = "values")
+
+
+
+rm(list = ls())

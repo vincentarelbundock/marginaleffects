@@ -15,3 +15,7 @@ dat <- data.frame(x1 = x1, x2 = x2, y = y)
 mod <- scam(y ~ s(x1, bs = "cr") + s(x2, bs = "mpi"), data = dat)
 suppressWarnings(expect_slopes(mod))
 expect_predictions(predictions(mod))
+
+
+
+rm(list = ls())

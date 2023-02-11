@@ -110,3 +110,5 @@ expect_equivalent(cmp2$estimate, cmp3$estimate)
 
 
 
+
+rm(list = ls())

@@ -21,3 +21,5 @@ expect_equivalent(tid$estimate, c(-0.0994659820285903, -0.0213767880896665, -0.0
 expect_equivalent(tid$std.error, c(0.0348665154637227, 0.0388220444007849, 0.0125138337466129),
              tolerance = 1e-5)
 
+
+rm(list = ls())

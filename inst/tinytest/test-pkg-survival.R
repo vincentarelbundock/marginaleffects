@@ -95,3 +95,7 @@ mfx2 <- merge(tidy(slopes(mod2, type = "lp")), stata)
 expect_equivalent(mfx1$estimate, mfx2$estimate)
 
 
+
+
+
+rm(list = ls())

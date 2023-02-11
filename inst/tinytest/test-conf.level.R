@@ -37,3 +37,5 @@ ub <- cmp$estimate + abs(critical_z) * cmp$std.error
 expect_equivalent(cmp$conf.low, lb)
 expect_equivalent(cmp$conf.high, ub)
 
+
+rm(list = ls())

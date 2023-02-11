@@ -27,3 +27,8 @@ pred1 <- predictions(model)
 pred2 <- predictions(model, newdata = head(d))
 expect_predictions(pred1, n_row = nrow(d))
 expect_predictions(pred2, n_row = 6)
+
+
+
+
+rm(list = ls())

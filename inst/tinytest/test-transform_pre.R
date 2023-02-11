@@ -1,6 +1,6 @@
 # TODO: CI: See comment in last test for how the intervals are back transformed
-exit_if_not(EXPENSIVE)
 source("helpers.R")
+exit_if_not(EXPENSIVE)
 using("marginaleffects")
 
 exit_if_not(requiet("modelsummary"))
@@ -159,3 +159,6 @@ expect_equivalent(mfx3$std.error, mfx4$std.error)
 # mod <- lm(mpg ~ hp + factor(cyl), data = mtcars)
 # cmp <- comparisons(mod, transform_pre = "ratio")
 # expect_true(all(grepl("\\/", cmp$contrast)))
+
+
+rm(list = ls())

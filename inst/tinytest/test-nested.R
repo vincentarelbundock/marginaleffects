@@ -30,3 +30,5 @@ p <- test()
 expect_inherits(p, "predictions")
 expect_equivalent(nrow(p), 96)
 
+
+rm(list = ls())

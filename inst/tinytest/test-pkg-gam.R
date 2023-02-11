@@ -49,3 +49,7 @@ expect_equivalent(mm1$conf.low, em1$asymp.LCL)
 expect_equivalent(mm1$conf.high, em1$asymp.UCL)
 expect_equivalent(mm2$conf.low, em2$asymp.LCL)
 expect_equivalent(mm2$conf.high, em2$asymp.UCL)
+
+
+
+rm(list = ls())

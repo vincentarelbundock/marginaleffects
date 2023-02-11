@@ -51,3 +51,7 @@ expect_inherits(c1, "comparisons")
 expect_inherits(c2, "comparisons")
 
 expect_error(comparisons(mod, vcov = "HC3"), pattern = "supported") 
+
+
+
+rm(list = ls())

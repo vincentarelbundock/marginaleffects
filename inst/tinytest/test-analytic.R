@@ -181,3 +181,4 @@ sedydz <- sqrt(vcov(m)["z","z"] + (d$x^2 * vcov(m)["x:z","x:z"]) + (d$x^4 * vcov
 expect_equivalent(as.numeric(marg$estimate[marg$term == "z"]), dydz, tolerance = tol, label = "dy/dz correct")
 expect_equivalent(sedydz, as.numeric(marg$std.error[marg$term == "z"]), tolerance = tol_se, label = "Var(dy/dz) correct")
 
+rm(list = ls())

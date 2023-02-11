@@ -38,3 +38,7 @@ tmp$cyl <- factor(tmp$cyl)
 model <- quantreg::rq(mpg ~ hp + wt + cyl, data = tmp)
 mm <- marginal_means(model)
 expect_marginal_means(mm)
+
+
+
+rm(list = ls())

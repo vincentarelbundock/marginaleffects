@@ -698,3 +698,7 @@ expect_inherits(pre, "predictions")
 expect_inherits(cmp, "comparisons")
 expect_equivalent(nrow(pre), 5)
 expect_equivalent(nrow(cmp), 5)
+
+
+
+rm(list = ls())

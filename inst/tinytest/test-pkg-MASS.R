@@ -245,3 +245,7 @@ mod <- suppressWarnings(MASS::polr(factor(gear) ~ vs + am, data = k, Hess = TRUE
 # em <- tidy(em)
 mm <- marginal_means(mod, variables = "am", type = "probs")
 expect_equivalent(nrow(mm), 6)
+
+
+
+rm(list = ls())

@@ -80,3 +80,5 @@ expect_slopes(mod, type = "probs")
 
 
 
+
+rm(list = ls())

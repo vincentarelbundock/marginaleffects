@@ -30,3 +30,6 @@ expect_equivalent(exp(cmp1$conf.high), cmp2$conf.high)
 # expect_equivalent(exp(tid1$estimate), tid2$estimate)
 # expect_equivalent(exp(tid1$conf.low), tid2$conf.low)
 # expect_equivalent(exp(tid1$conf.high), tid2$conf.high)
+
+
+rm(list = ls())

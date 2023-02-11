@@ -20,3 +20,6 @@ dat2 <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/pscl/bioChe
 model <- hurdle(art ~ phd + fem | ment, data = dat2, dist = "negbin")
 mfx <- slopes(model, type = "prob")
 expect_true(all(as.character(0:19) %in% mfx$group))
+
+
+rm(list = ls())

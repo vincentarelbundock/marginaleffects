@@ -39,3 +39,6 @@ options("marginaleffects_posterior_interval" = "eti")
 # expect_equivalent(mfx$estimate, mar$dydx_hp)
 # expect_equivalent(mfx$std.error, mar$dydx_hp)
 
+
+
+rm(list = ls())

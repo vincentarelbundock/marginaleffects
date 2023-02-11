@@ -10,3 +10,5 @@ expect_slopes(mod)
 expect_marginal_means(mm)
 expect_predictions(pre)
 
+
+rm(list = ls())

@@ -82,3 +82,5 @@ mod <- lm(mpg ~ hp * wt, data = mtcars)
 nd <- datagrid(model = mod, hp = c(100, 110))
 expect_equivalent(nrow(slopes(mod, newdata = nd)), 4)
 
+
+rm(list = ls())

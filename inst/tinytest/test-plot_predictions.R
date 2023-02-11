@@ -176,3 +176,7 @@ p <- plot_comparisons(mod, effect = "hp", condition = list("qsec" = "minmax", "g
 expect_true("qsec" %in% colnames(p))
 p <- plot_slopes(mod, effect = "hp", condition = list("qsec" = "minmax", "gear"), draw = FALSE)
 expect_true("qsec" %in% colnames(p))
+
+
+
+rm(list = ls())

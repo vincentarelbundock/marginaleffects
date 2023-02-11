@@ -33,3 +33,7 @@ mar <- prediction(mod, what = "expvalue")
 mfx <- predictions(mod, type = "expvalue")
 expect_equivalent(mar$fitted, mfx$estimate)
 
+
+
+
+rm(list = ls())

@@ -61,3 +61,5 @@ expect_equivalent(em$std.error, pr$std.error)
 
 
 
+
+rm(list = ls())

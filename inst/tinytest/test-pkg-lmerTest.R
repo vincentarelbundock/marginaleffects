@@ -50,3 +50,7 @@ expect_inherits(
                            Time = 0:21),
         re.form = NA),
     "predictions")
+
+
+
+rm(list = ls())

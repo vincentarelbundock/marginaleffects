@@ -1,5 +1,5 @@
-exit_if_not(EXPENSIVE)
 source("helpers.R")
+exit_if_not(EXPENSIVE)
 using("marginaleffects")
 
 
@@ -80,3 +80,6 @@ expect_equal(p1$estimate, p3$fit)
 expect_equal(p1$std.error, p3$se.fit)
 expect_equal(p2$estimate, p3$fit)
 expect_equal(p2$std.error, p3$se.fit)
+
+
+rm(list = ls())

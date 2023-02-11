@@ -44,3 +44,7 @@ mfx <- tidy(slopes(mod, slope = "dyex", eps = 1e-6))
 sta <- results$stats_glm_elasticity_dyex
 expect_equivalent(mfx$estimate, sta$dydxstata, tolerance = tol)
 expect_equivalent(mfx$std.error, sta$std.errorstata, tolerance = tolse)
+
+
+
+rm(list = ls())

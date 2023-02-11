@@ -16,3 +16,7 @@ expect_slopes(mod)
 # only retrieve from model.frame, which is shorter than the full data.
 pred <- predictions(mod, newdata = dat)
 expect_predictions(pred, n_row = nrow(dat))
+
+
+
+rm(list = ls())

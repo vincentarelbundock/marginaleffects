@@ -91,3 +91,8 @@ cmp2 <- suppressWarnings(comparisons(m1,
     newdata = head(mtcars)
 ))
 expect_true(all(cmp1$estimate != cmp2$estimate))
+
+
+
+
+rm(list = ls())

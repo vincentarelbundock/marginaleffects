@@ -26,3 +26,8 @@ small_m <- slopes(small, type = "link", vcov = FALSE)
 t1 <- tidy(big_m)
 t2 <- tidy(small_m)
 expect_equivalent(t1$estimate, t2$estimate)
+
+
+
+
+rm(list = ls())

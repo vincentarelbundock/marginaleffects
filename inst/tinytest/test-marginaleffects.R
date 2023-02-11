@@ -16,3 +16,5 @@ expect_error(slopes(mod, transform_pre = mean), pattern = "supported")
 expect_error(slopes(mod, transform_post = exp), pattern = "supported")
 expect_error(slopes(mod, cross = TRUE), pattern = "supported")
 
+
+rm(list = ls())

@@ -11,3 +11,6 @@ mod <- rlmer(Reaction ~ Days + (Days | Subject), sleepstudy,
     rho.sigma.b = chgDefaults(smoothPsi, k = 5.11, s = 10))
 expect_predictions(predictions(mod))
 expect_slopes(mod, n_unique = 1)
+
+
+rm(list = ls())

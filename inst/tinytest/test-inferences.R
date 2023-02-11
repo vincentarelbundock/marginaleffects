@@ -88,3 +88,6 @@ expect_error(inferences(comparisons(mod, wts = "w"), method = "fwb"), pattern = 
 # marginal_means not supported
 mod <- lm(Petal.Length ~ Sepal.Length * Sepal.Width * Species, data = iris)
 expect_error(inferences(marginal_means(mod), method = "fwb"), pattern = "not supported")
+
+
+rm(list = ls())

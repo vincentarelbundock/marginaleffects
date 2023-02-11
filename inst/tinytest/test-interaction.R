@@ -1,5 +1,5 @@
-exit_if_not(EXPENSIVE)
 source("helpers.R")
+exit_if_not(EXPENSIVE)
 using("marginaleffects")
 exit_if_not(requiet("ggplot2"))
 
@@ -33,3 +33,7 @@ mod <- lm(mpg ~ hp * drat, mtcars)
 dm <- hypotheses(mod, "`hp:drat` = drat")
 expect_inherits(dm, "hypotheses")
 expect_equivalent(nrow(dm), 1)
+
+
+
+rm(list = ls())

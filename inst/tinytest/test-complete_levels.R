@@ -12,3 +12,7 @@ dat <- dat[dat$length < 240,]
 mod <- glm(certified_fresh ~ length * style, data = dat, family = binomial)
 res <- predictions(mod, type = "response")
 expect_predictions(res, n_row = nrow(dat), se = FALSE)
+
+
+
+rm(list = ls())

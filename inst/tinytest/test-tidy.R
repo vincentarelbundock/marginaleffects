@@ -106,3 +106,7 @@ expect_true(ncol(x) > 7)
 mod <- lm(mpg ~ hp, mtcars)
 cmp <- comparisons(mod)
 expect_error(tidy(cmp, transform_avg = exp), pattern = "deprecated")
+
+
+
+rm(list = ls())

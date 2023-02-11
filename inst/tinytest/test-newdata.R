@@ -78,3 +78,5 @@ expect_inherits(slopes(mod, newdata = dat, by = "cyl"), "slopes")
 
 
 
+
+rm(list = ls())

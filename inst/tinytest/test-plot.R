@@ -38,3 +38,7 @@ dat <- dat
 mod <- lm(mpg ~ hp + cyl, data = dat)
 p <- plot_slopes(mod)
 expect_snapshot_plot(p, "plot_contrast_overlap_bug_fix")
+
+
+
+rm(list = ls())

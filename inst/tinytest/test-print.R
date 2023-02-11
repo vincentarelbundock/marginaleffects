@@ -32,3 +32,6 @@ expect_snapshot_print(
 expect_snapshot_print(
     predictions(mod, newdata = data.frame(am = 0:1, hp = 120)),
     "print-predictions_newdata")
+
+
+rm(list = ls())

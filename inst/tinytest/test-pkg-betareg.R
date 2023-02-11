@@ -51,3 +51,5 @@ em <- broom::tidy(emmeans::emmeans(mod, "batch"))
 expect_equivalent(mm$estimate, em$estimate)
 expect_equivalent(mm$std.error, em$std.error, tolerance = 0.01)
 
+
+rm(list = ls())

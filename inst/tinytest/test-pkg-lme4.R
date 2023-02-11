@@ -345,3 +345,7 @@ cmp1 <- comparisons(fit, newdata = datagrid(Cat = unique), vcov = "satterthwaite
 cmp2 <- comparisons(fit, newdata = datagrid(Cat = unique))
 expect_true(all(cmp1$conf.low != cmp2$conf.low))
 expect_true(all(cmp1$std.error == cmp2$std.error))
+
+
+
+rm(list = ls())

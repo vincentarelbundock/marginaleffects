@@ -169,3 +169,7 @@ expect_equivalent(nrow(p2), 2)
 expect_equivalent(nrow(p3), 2)
 expect_equivalent(sum(p1$estimate[1:2]), p2$estimate[1])
 expect_equivalent(mean(p1$estimate[1:2]), p3$estimate[1])
+
+
+
+rm(list = ls())

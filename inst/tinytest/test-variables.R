@@ -59,3 +59,6 @@ cmp <- comparisons(mod, variables = "am", newdata = nd)
 expect_inherits(cmp, "comparisons")
 expect_warning(comparisons(mod, newdata = nd), pattern = "is included")
 expect_error(suppressWarnings(comparisons(mod, newdata = nd), pattern = "is included"))
+
+
+rm(list = ls())

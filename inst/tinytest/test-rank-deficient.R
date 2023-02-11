@@ -9,3 +9,7 @@ dat <- dat
 m <- glm(am ~ gear * cyl, data = dat, family = binomial())
 expect_warning(comparisons(m), pattern = "rank deficient")
 expect_inherits(suppressWarnings(comparisons(m)), "comparisons")
+
+
+
+rm(list = ls())

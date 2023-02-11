@@ -1,4 +1,5 @@
 source("helpers.R")
+exit_if_not(EXPENSIVE)
 using("marginaleffects")
 
 exit_if_not(requiet("crch"))
@@ -56,3 +57,7 @@ model <- crch(sqrt(rain) ~ sqrtensmean + sqrtenssd + categ,
 mm <- marginal_means(model)
 expect_marginal_means(mm, n_row = 5)
 
+
+
+
+rm(list = ls())

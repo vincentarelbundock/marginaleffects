@@ -36,3 +36,6 @@ expect_inherits(p, "gg")
 mod <- glm(am ~ vs + qsec, data = mtcars, family = binomial)
 expect_snapshot_plot(plot_comparisons(mod), "plot_comparisons-no_effect")
 expect_snapshot_plot(plot_slopes(mod), "plot_slopes-no_effect")
+
+
+rm(list = ls())

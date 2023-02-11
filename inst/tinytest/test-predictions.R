@@ -223,3 +223,6 @@ expect_equivalent(nrow(pre), 2)
 pre <- avg_predictions(mod, by = "cyl", newdata = datagridcf(cyl = c(4, 6)))
 expect_inherits(pre, "predictions")
 expect_equivalent(nrow(pre), 2)
+
+
+rm(list = ls())

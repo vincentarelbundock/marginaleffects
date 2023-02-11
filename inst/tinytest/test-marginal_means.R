@@ -191,3 +191,5 @@ expect_equivalent(nrow(cmp), 9)
 # # Issue #637: marginal_means() refactor
 # mod <- lm(mpg ~ factor(cyl) + as.logical(am), data = mtcars)
 # mm <- marginal_means(mod)
+
+rm(list = ls())
