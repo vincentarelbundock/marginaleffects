@@ -1,6 +1,6 @@
 
                           Term  Estimate Std. Error         z Pr(>|z|)     2.5 %   97.5 %
-         setosa, 0 - setosa, 1 -1.31e-13   1.55e-10 -8.46e-04 0.999325 -3.04e-10 3.04e-10
+         setosa, 0 - setosa, 1  5.38e-13   2.88e-10  1.87e-03 0.998510 -5.65e-10 5.66e-10
      setosa, 0 - versicolor, 0  4.91e-01   1.34e-01  3.66e+00 0.000253  2.28e-01 7.54e-01
      setosa, 0 - versicolor, 1  4.91e-01   1.34e-01  3.66e+00 0.000253  2.28e-01 7.54e-01
       setosa, 0 - virginica, 0  5.66e-01   1.26e-01  4.49e+00 7.12e-06  3.19e-01 8.14e-01
@@ -9,12 +9,12 @@
      setosa, 1 - versicolor, 1  4.91e-01   1.34e-01  3.66e+00 0.000253  2.28e-01 7.54e-01
       setosa, 1 - virginica, 0  5.66e-01   1.26e-01  4.49e+00 7.12e-06  3.19e-01 8.14e-01
       setosa, 1 - virginica, 1  5.66e-01   1.26e-01  4.49e+00 7.12e-06  3.19e-01 8.14e-01
- versicolor, 0 - versicolor, 1  2.76e-13   7.68e-09  3.60e-05 0.999971 -1.50e-08 1.50e-08
+ versicolor, 0 - versicolor, 1  2.84e-13   5.75e-09  4.94e-05 0.999961 -1.13e-08 1.13e-08
   versicolor, 0 - virginica, 0  7.57e-02   9.77e-02  7.74e-01 0.438843 -1.16e-01 2.67e-01
   versicolor, 0 - virginica, 1  7.57e-02   9.77e-02  7.74e-01 0.438843 -1.16e-01 2.67e-01
   versicolor, 1 - virginica, 0  7.57e-02   9.77e-02  7.74e-01 0.438843 -1.16e-01 2.67e-01
   versicolor, 1 - virginica, 1  7.57e-02   9.77e-02  7.74e-01 0.438843 -1.16e-01 2.67e-01
-   virginica, 0 - virginica, 1  2.44e-13   8.39e-09  2.91e-05 0.999977 -1.64e-08 1.64e-08
+   virginica, 0 - virginica, 1 -1.00e-13   5.35e-10 -1.87e-04 0.999851 -1.05e-09 1.05e-09
 
 Prediction type:  response 
 Columns: type, term, estimate, std.error, statistic, p.value, conf.low, conf.high 

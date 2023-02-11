@@ -1,12 +1,12 @@
 
- Estimate Std. Error     z Pr(>|z|)  2.5 % 97.5 %    Age PClass SexCode
-   0.4641     0.0582  7.98 1.52e-15 0.3538  0.578 30.398    1st       0
-   0.9469     0.0243 38.89  < 2e-16 0.8735  0.979 30.398    1st       1
-   0.0663     0.0261  2.54   0.0111 0.0301  0.140 30.398    2nd       0
-   0.8784     0.0362 24.24  < 2e-16 0.7879  0.934 30.398    2nd       1
-   0.1146     0.0250  4.59 4.51e-06 0.0740  0.173 30.398    3rd       0
-   0.4497     0.0583  7.72 1.19e-14 0.3400  0.565 30.398    3rd       1
+ Estimate Pr(>|z|)  2.5 % 97.5 %    Age PClass SexCode
+   0.4641    0.538 0.3538  0.578 30.398    1st       0
+   0.9469 2.63e-09 0.8735  0.979 30.398    1st       1
+   0.0663 3.55e-10 0.0301  0.140 30.398    2nd       0
+   0.8784 5.62e-09 0.7879  0.934 30.398    2nd       1
+   0.1146  < 2e-16 0.0740  0.173 30.398    3rd       0
+   0.4497    0.391 0.3400  0.565 30.398    3rd       1
 
-Prediction type:  response 
-Columns: rowid, type, estimate, std.error, statistic, p.value, conf.low, conf.high, Survived, Age, PClass, SexCode 
+Prediction type:  link 
+Columns: rowid, type, estimate, p.value, conf.low, conf.high, Survived, Age, PClass, SexCode 
 

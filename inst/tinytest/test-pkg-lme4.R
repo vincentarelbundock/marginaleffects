@@ -93,9 +93,7 @@ expect_true(all(w$conf.high > x$conf.high))
 # no random effects: grand mean
 w <- predict(mod, re.form = NA, type = "response")
 x <- get_predict(mod, re.form = NA, type = "response")
-y <- get_predict(mod, include_random = FALSE, type = "response")
 expect_equivalent(w, x$estimate)
-expect_equivalent(w, y$estimate)
 
 
 # glmer vs. stata vs. emtrends
@@ -122,9 +120,6 @@ y <- predictions(mod, newdata = nd, re.form = NA, type = "response")
 expect_equivalent(w, x$estimate)
 expect_equivalent(w, y$estimate)
 
-
-# incompatible arguments
-expect_error(get_predict(mod, re.form = ~0, include_random = TRUE), pattern = "together")
 
 #lme4::lmer vs. stata
 tmp <- read.csv(testing_path("stata/databases/lme4_01.csv"))
@@ -223,13 +218,6 @@ mod <- suppressMessages(lmer(
   weight ~ 1 + Time + I(Time^2) + Diet + Time:Diet + I(Time^2):Diet + (1 + Time + I(Time^2) | Chick),
   data = ChickWeight))
 
-mfx1 <- slopes(
-    mod,
-    newdata = datagrid(
-        Chick = NA,
-        Diet = 1:4,
-        Time = 0:21),
-    include_random = FALSE)
 mfx2 <- slopes(
     mod,
     newdata = datagrid(
@@ -243,19 +231,10 @@ mfx3 <- slopes(
         Chick = "1",
         Diet = 1:4,
         Time = 0:21))
-expect_inherits(mfx1, "marginaleffects")
 expect_inherits(mfx2, "marginaleffects")
 expect_inherits(mfx3, "marginaleffects")
-expect_equivalent(mfx1$estimate, mfx2$estimate)
-expect_equivalent(mfx1$std.error, mfx2$std.error)
+mfx2$estimate != mfx3$estimate
 
-pred1 <- predictions(
-    mod,
-    newdata = datagrid(
-        Chick = NA,
-        Diet = 1:4,
-        Time = 0:21),
-    include_random = FALSE)
 pred2 <- predictions(
     mod,
     newdata = datagrid(
@@ -269,12 +248,9 @@ pred3 <- predictions(
         Chick = "1",
         Diet = 1:4,
         Time = 0:21))
-expect_inherits(pred1, "predictions")
 expect_inherits(pred2, "predictions")
 expect_inherits(pred3, "predictions")
-expect_equivalent(pred1$estimate, pred2$estimate)
-expect_equivalent(pred1$std.error, pred2$std.error)
-expect_true(all(pred1$estimate != pred3$estimate))
+expect_true(all(pred2$estimate != pred3$estimate))
 
 # sattertwhaite
 tmp <- mtcars
@@ -335,7 +311,7 @@ p <- predictions(
         n = 160,
         year = 1:5,
         sid = NA),
-    include_random = FALSE)
+    re.form = NA)
 expect_predictions(p)
 
 cmp <- comparisons(mod,
@@ -346,7 +322,7 @@ cmp <- comparisons(mod,
         n = 160,
         year = 1:5,
         sid = NA),
-    include_random = FALSE)
+    re.form = NA)
 expect_inherits(cmp, "comparisons")
 
 

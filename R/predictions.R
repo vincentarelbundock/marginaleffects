@@ -240,6 +240,24 @@ predictions <- function(model,
         modeldata <- get_modeldata(model)
     }
 
+    # if type is NULL, we backtransform if relevant
+    if (isTRUE(class(model)[1] == "glm") && (is.null(type) || isTRUE(type == "response"))) {
+        type <- sanitize_type(model = model, type = type, calling_function = "marginalmeans")
+        linv <- tryCatch(
+            insight::link_inverse(model),
+            error = function(e) NULL)
+        if (type == "response" &&
+            is.null(transform_post) &&
+            class(model)[1] %in% type_dictionary$class &&
+            isTRUE("link" %in% subset(type_dictionary, class == class(model)[1])$base) &&
+            is.function(linv)) {
+            type <- "link"
+            transform_post <- linv
+        }
+    } else {
+        type <- sanitize_type(model = model, type = type, calling_function = "marginalmeans")
+    }
+
     # do not check the model because `insight` supports more models than `marginaleffects`
     # model <- sanitize_model(model)
 

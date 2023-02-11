@@ -41,13 +41,12 @@ expect_inherits(predictions(mod,
                        newdata = datagrid(Chick = NA,
                                           Diet = 1:4,
                                           Time = 0:21),
-                       include_random = FALSE),
+                       re.form = NA),
            "predictions")
 
 expect_inherits(
     predictions(mod,
         newdata = datagrid(Diet = 1:4,
                            Time = 0:21),
-        include_random = TRUE),
+        re.form = NA),
     "predictions")
-

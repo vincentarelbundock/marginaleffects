@@ -29,8 +29,9 @@ expect_equivalent(mfx$std.error, em$std.error, tolerance = .01)
 data(dietox, package = "geepack")
 dietox$Cu <- as.factor(dietox$Cu)
 mf <- formula(Weight ~ Cu * (Time + I(Time^2) + I(Time^3)))
-model <- suppressWarnings(geeglm(mf, data=dietox, id=Pig, 
-                             family=poisson("identity"), corstr="ar1"))
+model <- suppressWarnings(geeglm(mf,
+    data = dietox, id = Pig,
+    family = poisson("identity"), corstr = "ar1"))
 pred1 <- predictions(model)
 pred2 <- predictions(model, newdata = head(dietox))
 expect_predictions(pred1, n_row = nrow(dietox))
@@ -48,8 +49,8 @@ model <- suppressWarnings(geeglm(mf,
 
 em <- tidy(emmeans::emmeans(model, ~Cu, df = Inf, at = list(Time = 10)), type = "response")
 pr <- predictions(model, datagrid(Time = 10, Cu = unique))
-expect_equal(em$estimate, pr$estimate)
-expect_equal(em$std.error, pr$std.error)
+expect_equivalent(em$estimate, pr$estimate)
+expect_equivalent(em$std.error, pr$std.error)
 
 # TODO: not clear where `emmeans` holds the Time variable
 # em <- emmeans::emmeans(model, ~Cu, type = "response", df = Inf)

@@ -52,19 +52,6 @@ expect_equivalent(p1$estimate, p2$estimate, tolerance = .001)
 expect_equivalent(p1$conf.low, p2$conf.low, tolerance = .01)
 expect_equivalent(p1$conf.high, p2$conf.high, tolerance = .01)
 
-# average prediction with delta method can produce CI outside [0,1] interval
-set.seed(1022)
-N <- 10
-dat <- data.frame(
-    y = rbinom(N, 1, prob = .8),
-    x = rnorm(N))
-mod <- glm(y ~ x, family = binomial, data = dat)
-p1 <- tidy(predictions(mod)) # average prediction outside [0,1]
-p2 <- tidy(predictions(mod, type = "link"), transform_post = insight::link_inverse(mod)) # average prediction outside [0,1]
-expect_true(p1$conf.high > 1)
-expect_true(p2$conf.high < 1)
-
-
 
 ################
 #  conf.level  #

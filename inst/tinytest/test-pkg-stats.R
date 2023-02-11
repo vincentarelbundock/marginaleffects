@@ -27,7 +27,7 @@ expect_true(expect_margins(res, mar, tolerance = 0.1, verbose=TRUE))
 
 # predictions
 pre <- predictions(mod)
-expect_predictions(pre)
+expect_predictions(pre, se = FALSE)
 
 
 # emmeans comparison

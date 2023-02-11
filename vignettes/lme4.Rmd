@@ -91,7 +91,7 @@ ggplot(pred, aes(Time, estimate, level = Chick)) +
 
 ## Population-level predictions
 
-To make population-level predictions, we set the `Chick` variable to `NA`, and set `include_ranom=FALSE`. This last argument is offered by the `insight::get_predicted` function which is used behind the scenes to compute predictions:
+To make population-level predictions, we set the `Chick` variable to `NA`, and set `re.form=NA`. This last argument is offered by the `lme4::predict` function which is used behind the scenes to compute predictions:
 
 ```{r}
 pred <- predictions(
@@ -99,7 +99,7 @@ pred <- predictions(
     newdata = datagrid(Chick = NA,
                        Diet = 1:4,
                        Time = 0:21),
-    include_random = FALSE)
+    re.form = NA)
 
 ggplot(pred, aes(x = Time, y = estimate, ymin = conf.low, ymax = conf.high)) +
     geom_ribbon(alpha = .1, fill = "red") +

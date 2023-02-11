@@ -24,7 +24,7 @@
 #'
 plot_predictions <- function(model,
                              condition = NULL,
-                             type = "response",
+                             type = NULL,
                              vcov = NULL,
                              conf_level = 0.95,
                              transform_post = NULL,
