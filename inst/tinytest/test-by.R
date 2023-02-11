@@ -69,19 +69,18 @@ expect_true("am" %in% colnames(tid))
 # marginaleffects poisson vs. margins
 dat <- mtcars
 mod <- glm(gear ~ cyl + am, family = poisson, data = dat)
-mfx <- slopes(
+mfx <- avg_slopes(
     mod,
     by = c("cyl", "am"),
     newdata = datagrid(
         cyl = dat$cyl,
         am = dat$am,
         grid_type = "counterfactual"))
-tid <- tidy(mfx)
-tid <- tid[order(tid$term, tid$cyl, tid$am),]
 mar <- margins(mod, at = list(cyl = unique(dat$cyl), am = unique(dat$am)))
 mar <- summary(mar)
-expect_equivalent(tid$estimate, mar$AME, tolerance = tol)
-expect_equivalent(tid$std.error, mar$SE, tolerance = tol_se)
+# margins doesn't treat the binary am as binary automatically
+expect_equivalent(mfx$estimate[7:12], mar$AME[7:12], tolerance = tol)
+expect_equivalent(mfx$std.error[7:12], mar$SE[7:12], tolerance = tol_se)
 
 
 # comparisons poisson vs. margins

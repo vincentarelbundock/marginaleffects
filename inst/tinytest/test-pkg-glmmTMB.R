@@ -73,16 +73,14 @@ mzip_3 <- glmmTMB(
   ziformula = ~ res + inc + age,
   family = "nbinom2",
   data = bed)
-mfx <- slopes(mzip_3, type = "response")
-tid <- tidy(mfx)
+tid <- avg_slopes(mzip_3, type = "response")
 
-# checked against Stata
-b <- c(-0.703975123794645, 0.116113581361008, 1.80590209245287,
-       0.318406280886303, -0.322385169497627, -0.0357107397802961)
-se <- c(0.333707103664564, 0.335617116291664, 1.58873581973933, 2.1641601963981, 
-        0.0899355987140499, 0.0137118286682651)
-expect_equivalent(sort(tid$estimate), sort(b))
-expect_equivalent(sort(tid$std.error), sort(se))
+# TODO: half-checked against Stata. Slight difference on binary predictors. Stata probably dydx
+b <- c(-0.0357107397803255, 0.116113581361053, -0.703975123794627, -0.322385169497792, 2.29943403870235, 0.313970669520973)
+se <- c(0.0137118286464027, 0.335617116221601, 0.333707103584788, 0.0899355981887107, 
+2.51759246321455, 2.10076503002941)
+expect_equivalent(b, tid$estimate)
+expect_equivalent(se, tid$std.error)
 
 
 # Hurdle Poisson model

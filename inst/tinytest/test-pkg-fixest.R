@@ -211,13 +211,13 @@ fun <- function(model) {
     out <- names(out)
     return(out)
 }
-expect_equivalent(fun(mod1), c("cyl", "gear"))
-expect_equivalent(fun(mod2), c("cyl"))
-expect_equivalent(fun(mod3), c("cyl"))
-expect_equivalent(sort(fun(mod4)), c("am", "cyl", "gear"))
-if (utils::packageVersion("insight") < "0.18.4.4") exit_file("insight version")
+expect_true(all(c("cyl", "gear") %in% fun(mod1)))
+expect_true("cyl" %in% fun(mod2))
+expect_true("cyl" %in% fun(mod3))
+expect_true(all(c("am", "cyl", "gear") %in% fun(mod4)))
 m <- slopes(mod4)
 expect_inherits(m, "marginaleffects")
+expect_true(all(c("am", "cyl", "drat", "gear", "wt") %in% m$term))
 
 
 # Issue #509

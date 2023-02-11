@@ -78,6 +78,13 @@ sanitize_variables <- function(variables,
         }
     }
 
+    # matrix predictors
+    mc <- attr(newdata, "newdata_matrix_columns")
+    if (length(mc) > 0 && any(names(predictors) %in% mc)) {
+      predictors <- predictors[!names(predictors) %in% mc]
+      insight::format_warning("Matrix columns are not supported. Use the `variables` argument to specify valid predictors.")
+    }
+
     # missing variables
     miss <- setdiff(names(predictors), found)
     predictors <- predictors[!names(predictors) %in% miss]
@@ -301,12 +308,6 @@ sanitize_variables <- function(variables,
         }
     }
 
-    # TODO: matrix variables are not supported
-    mc <- attr(newdata, "newdata_matrix_columns")
-    if (length(mc) > 0 && any(names(predictors) %in% mc)) {
-      predictors <- predictors[!names(predictors) %in% mc]
-      insight::format_warning("Matrix columns are not supported.")
-    }
 
     # output
     out <- list(conditional = predictors, others = others)
