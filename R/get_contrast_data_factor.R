@@ -18,8 +18,11 @@ get_contrast_data_factor <- function(model,
         levs <- levels(newdata[[variable$name]])
         convert_to_factor <- TRUE
 
-    } else if (!get_variable_class(newdata, variable$name, "binary")) {
+    } else if (get_variable_class(newdata, variable$name, "binary")) {
+        levs <- 0:1
+        convert_to_factor <- FALSE
 
+    } else {
         msg <- "The `%s` variable is treated as a categorical (factor) variable, but the original data is of class %s. It is safer and faster to convert such variables to factor before fitting the model and calling `slopes` functions." 
         msg <- sprintf(msg, variable$name, class(newdata[[variable$name]])[1])
         warn_once(msg, "marginaleffects_warning_factor_on_the_fly_conversion")
@@ -40,24 +43,19 @@ get_contrast_data_factor <- function(model,
         } else {
             levs_idx <- data.table::data.table(lo = levs[1], hi = levs)
         }
-
     } else if (isTRUE(variable$value == "minmax")) {
         levs_idx <- data.table::data.table(lo = levs[1], hi = levs[length(levs)])
-
     } else if (isTRUE(variable$value == "pairwise")) {
         levs_idx <- CJ(lo = levs, hi = levs, sorted = FALSE)
         # null contrasts are interesting with interactions
         if (!isTRUE(interaction)) {
-            levs_idx <- levs_idx[levs_idx$hi != levs_idx$lo,]
-            levs_idx <- levs_idx[match(levs_idx$lo, levs) < match(levs_idx$hi, levs),]
+            levs_idx <- levs_idx[levs_idx$hi != levs_idx$lo, ]
+            levs_idx <- levs_idx[match(levs_idx$lo, levs) < match(levs_idx$hi, levs), ]
         }
-
     } else if (isTRUE(variable$value == "all")) {
         levs_idx <- CJ(lo = levs, hi = levs, sorted = FALSE)
-
     } else if (isTRUE(variable$value == "sequential")) {
         levs_idx <- data.table::data.table(lo = levs[1:(length(levs) - 1)], hi = levs[2:length(levs)])
-
     } else if (length(variable$value) == 2) {
         if (is.character(variable$value)) {
             tmp <- modeldata[[variable$name]]
@@ -69,9 +67,13 @@ get_contrast_data_factor <- function(model,
             levs_idx <- data.table::data.table(lo = tmp[idx[1]], hi = tmp[idx[[2]]])
         } else if (is.numeric(variable$value)) {
             tmp <- newdata[[variable$name]]
-            levs_idx <- data.table::data.table(
-                lo = factor(as.character(variable$value[1]), levels = levels(tmp)),
-                hi = factor(as.character(variable$value[2]), levels = levels(tmp)))
+            if (convert_to_factor) {
+                levs_idx <- data.table::data.table(
+                    lo = factor(as.character(variable$value[1]), levels = levels(tmp)),
+                    hi = factor(as.character(variable$value[2]), levels = levels(tmp)))
+            } else {
+                levs_idx <- data.table::data.table(lo = variable$value[1], hi = variable$value[2])
+            }
         } else {
             levs_idx <- data.table::data.table(lo = variable$value[1], hi = variable$value[2])
         }

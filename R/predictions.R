@@ -291,6 +291,7 @@ predictions <- function(model,
             variables = variables,
             model = model,
             newdata = newdata,
+            modeldata = modeldata,
             calling_function = "predictions"
             )$conditional
         for (v in tmp) {

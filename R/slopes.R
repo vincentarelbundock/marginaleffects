@@ -280,9 +280,6 @@ slopes <- function(model,
         df = df,
         by = by,
         eps = eps,
-        contrast_factor = "reference",
-        contrast_numeric = 1,
-        # hard-coded. Users should use comparisons() for more flexibility
         transform_pre = slope,
         cross = FALSE,
         # secret arguments

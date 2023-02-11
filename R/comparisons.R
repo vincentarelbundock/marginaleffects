@@ -281,22 +281,6 @@ comparisons <- function(model,
         transform_post_label <- names(transform_post)
     }
 
-
-    # used by `marginaleffects` to hard-code preference
-    # deprecated as user-level arguments
-    if ("contrast_factor" %in% names(dots)) {
-        contrast_factor <- dots[["contrast_factor"]]
-        dots[["contrast_factor"]] <- NULL
-    } else {
-        contrast_factor <- "reference"
-    }
-    if ("contrast_numeric" %in% names(dots)) {
-        contrast_numeric <- dots[["contrast_numeric"]]
-        dots[["contrast_numeric"]] <- NULL
-    } else {
-        contrast_numeric <- 1
-    }
-
     marginalmeans <- isTRUE(checkmate::check_choice(newdata, choices = "marginalmeans"))
 
     # before sanitize_variables
@@ -319,11 +303,10 @@ comparisons <- function(model,
     variables_list <- sanitize_variables(
         model = model,
         newdata = newdata,
+        modeldata = modeldata,
         variables = variables,
         cross = cross,
         by = by,
-        contrast_numeric = contrast_numeric,
-        contrast_factor = contrast_factor,
         transform_pre = transform_pre)
 
     tmp <- sanitize_hypothesis(hypothesis, ...)

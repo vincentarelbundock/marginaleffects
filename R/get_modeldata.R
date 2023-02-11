@@ -19,11 +19,11 @@ set_variable_class <- function(modeldata, model = NULL) {
         } else if (is.factor(out[[col]])) {
             cl[col] <- "factor"
         } else if (is.numeric(out[[col]])) {
-            # if (any(!out[[col]] %in% 0:1)) {
+            if (any(!out[[col]] %in% 0:1)) {
                 cl[col] <- "numeric"
-        #     } else {
-        #         cl[col] <- "binary"
-        #     }
+            } else {
+                cl[col] <- "binary"
+            }
         } else {
             cl[col] <- "other"
         }

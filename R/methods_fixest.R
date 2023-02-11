@@ -12,7 +12,7 @@ get_predict.fixest <- function(model,
     dots <- list(...)
 
     # some predict methods raise warnings on unused arguments
-    unused <- c("normalize_dydx", "step_size", "numDeriv_method", "conf.int", "internal_call", "contrast_numeric_slope")
+    unused <- c("normalize_dydx", "step_size", "numDeriv_method", "conf.int", "internal_call")
     dots <- dots[setdiff(names(dots), unused)]
 
     args <- list(

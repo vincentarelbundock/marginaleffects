@@ -5,10 +5,8 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
     if (isTRUE(calling_function == "marginaleffects")) {
         # transform_pre: this would break `dydx` normalization
         # interaction: cross countrast+slope do not make sense
-        # contrast_numeric: steer power users toward comparisons()
-        # contrast_factor: steer power users toward comparisons()
         # transform_post: should we really be back-transforming slopes?
-        unsupported <- c("transform_pre", "contrast_numeric", "contrast_factor", "transform_post", "cross")
+        unsupported <- c("transform_pre", "transform_post", "cross")
         unsupported <- intersect(names(dots), unsupported)
         if (length(unsupported) > 0) {
             msg <- sprintf(
@@ -38,7 +36,7 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
     valid[["gamlss"]] <- c("what", "safe") #gamlss
 
     white_list <- c(
-        "conf.int", "modeldata", "contrast_factor", "contrast_numeric", "internal_call", "df",
+        "conf.int", "modeldata", "internal_call", "df",
         "transform_post", "transform_pre", "side", "delta", "null", "equivalence", "draw",
         "variables_grid", # backward compatibility in marginal_means()
         "at" # topmodels procast
