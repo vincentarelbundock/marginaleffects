@@ -105,17 +105,19 @@ sanitize_variables <- function(variables,
         insight::format_error(msg)
     }
    
-    # functions to values 
+    # functions to values
     # only for predictions; get_contrast_data_numeric handles this for comparisons()
-    # before NULL so we can return NULL and fill it in with default later
-    for (v in names(predictors)) {
-        if (is.function(predictors[[v]]) && calling_function == "predictions") {
-            tmp <- hush(predictors[[v]](modeldata[[v]]))
-            if (is.null(tmp)) {
-                msg <- sprintf("The `%s` function produced invalid output when applied to the dataset used to fit the model.", v)
-                insight::format_warning(msg)
+    # do this before NULL-to-defaults so we can fill it in with default in case of failure
+    if (calling_function == "predictions") {
+        for (v in names(predictors)) {
+            if (is.function(predictors[[v]])) {
+                tmp <- hush(predictors[[v]](modeldata[[v]]))
+                if (is.null(tmp)) {
+                    msg <- sprintf("The `%s` function produced invalid output when applied to the dataset used to fit the model.", v)
+                    insight::format_warning(msg)
+                }
+                predictors[[v]] <- hush(predictors[[v]](modeldata[[v]]))
             }
-            predictors[[v]] <- hush(predictors[[v]](modeldata[[v]]))
         }
     }
 

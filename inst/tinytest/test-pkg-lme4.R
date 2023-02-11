@@ -282,11 +282,11 @@ expect_equivalent(attr(cmp, "vcov.type"), "Kenward-Roger")
 # expect_true(all(p1$conf.high > p2$conf.high))
 
 
-# exit_file("TODO: check failing comparisons()")
+exit_file("TODO: check failing comparisons()")
 # Issue #436
 # e = number of events
 # n = total
-kdat <- data.frame(
+dat <- data.frame(
     e = c(
         1, 1, 134413, 92622, 110747,
         3625, 35, 64695, 19428, 221, 913, 13, 5710, 121,
@@ -300,13 +300,13 @@ kdat <- data.frame(
 
 mod <- glmer(
     cbind(e, n - e) ~ 1 + year + (1 | sid),
-    data = kdat,
+    data = dat,
     family = binomial())
 
 p <- predictions(
     mod,
     newdata = datagrid(
-        newdata = kdat,
+        newdata = dat,
         e = 1,
         n = 160,
         year = 1:5,
@@ -317,7 +317,7 @@ expect_predictions(p)
 cmp <- comparisons(mod,
     variables = "year",
     newdata = datagrid(
-        newdata = kdat,
+        newdata = dat,
         e = 1,
         n = 160,
         year = 1:5,

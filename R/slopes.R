@@ -208,22 +208,7 @@ slopes <- function(model,
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
     # should probably not be nested too deeply in the call stack since we eval.parent() (not sure about this)
     scall <- substitute(newdata)
-    if (is.call(scall)) {
-        lcall <- as.list(scall)
-        fun_name <- as.character(scall)[1]
-        if (fun_name %in% c("datagrid", "datagridcf", "typical", "counterfactual")) {
-            if (!"model" %in% names(lcall)) {
-                lcall <- c(lcall, list("model" = model))
-                newdata <- eval.parent(as.call(lcall))
-            }
-        } else if (fun_name == "visualisation_matrix") {
-            if (!"x" %in% names(lcall)) {
-                lcall <- c(lcall, list("x" = get_modeldata(model)))
-                newdata <- eval.parent(as.call(lcall))
-            }
-        }
-
-    }
+    newdata <- sanitize_newdata_call(scall, newdata, model)
 
     # build call: match.call() doesn't work well in *apply()
     call_attr <- c(list(
@@ -362,23 +347,9 @@ avg_slopes <- function(model,
 
     # order of the first few paragraphs is important
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
+    # should probably not be nested too deeply in the call stack since we eval.parent() (not sure about this)
     scall <- substitute(newdata)
-    if (is.call(scall)) {
-        lcall <- as.list(scall)
-        fun_name <- as.character(scall)[1]
-        if (fun_name %in% c("datagrid", "datagridcf", "typical", "counterfactual")) {
-            if (!"model" %in% names(lcall)) {
-                lcall <- c(lcall, list("model" = model))
-                newdata <- eval.parent(as.call(lcall))
-            }
-        } else if (fun_name == "visualisation_matrix") {
-            if (!"x" %in% names(lcall)) {
-                lcall <- c(lcall, list("x" = get_modeldata))
-                newdata <- eval.parent(as.call(lcall))
-            }
-        }
-    }
-
+    newdata <- sanitize_newdata_call(scall, newdata, model)
 
 
     # Bootstrap

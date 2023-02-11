@@ -216,14 +216,7 @@ comparisons <- function(model,
         # insert `model` should probably not be nested too deeply in the call
         # stack since we eval.parent() (not sure about this)
         scall <- substitute(newdata)
-        if (is.call(scall) && as.character(scall)[1] %in% c("datagrid", "datagridcf", "typical", "counterfactual")) {
-            lcall <- as.list(scall)
-            if (!"model" %in% names(lcall)) {
-                lcall <- c(lcall, list("model" = model))
-                newdata <- eval.parent(as.call(lcall))
-            }
-
-        }
+        newdata <- sanitize_newdata_call(scall, newdata, model)
 
         model <- sanitize_model(
             model = model,
@@ -569,21 +562,7 @@ avg_comparisons <- function(model,
     # order of the first few paragraphs is important
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
     scall <- substitute(newdata)
-    if (is.call(scall)) {
-        lcall <- as.list(scall)
-        fun_name <- as.character(scall)[1]
-        if (fun_name %in% c("datagrid", "datagridcf", "typical", "counterfactual")) {
-            if (!any(c("model", "newdata") %in% names(lcall))) {
-                lcall <- c(lcall, list("model" = model))
-                newdata <- eval.parent(as.call(lcall))
-            }
-        } else if (fun_name == "visualisation_matrix") {
-            if (!"x" %in% names(lcall)) {
-                lcall <- c(lcall, list("x" = get_modeldata))
-                newdata <- eval.parent(as.call(lcall))
-            }
-        }
-    }
+    newdata <- sanitize_newdata_call(scall, newdata, model)
 
     # Bootstrap
     out <- inferences_dispatch(

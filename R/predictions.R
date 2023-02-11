@@ -190,21 +190,7 @@ predictions <- function(model,
     # order of the first few paragraphs is important
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
     scall <- substitute(newdata)
-    if (is.call(scall)) {
-        lcall <- as.list(scall)
-        fun_name <- as.character(scall)[1]
-        if (fun_name %in% c("datagrid", "datagridcf", "typical", "counterfactual")) {
-            if (!"model" %in% names(lcall)) {
-                lcall <- c(lcall, list("model" = model))
-                newdata <- eval.parent(as.call(lcall))
-            }
-        } else if (fun_name == "visualisation_matrix") {
-            if (!"x" %in% names(lcall)) {
-                lcall <- c(lcall, list("x" = get_modeldata))
-                newdata <- eval.parent(as.call(lcall))
-            }
-        }
-    }
+    newdata <- sanitize_newdata_call(scall, newdata, model)
 
     # build call: match.call() doesn't work well in *apply()
     call_attr <- c(list(
@@ -224,8 +210,8 @@ predictions <- function(model,
         list(...))
     call_attr <- do.call("call", call_attr)
 
-
-    # extracting modeldata repeatedly is slow. this allows marginalmeans to pass modeldata to predictions.
+    # extracting modeldata repeatedly is slow.
+    # checking dots allows marginalmeans to pass modeldata to predictions.
     dots <- list(...)
     if ("modeldata" %in% names(dots)) {
         modeldata <- dots[["modeldata"]]
@@ -645,21 +631,7 @@ avg_predictions <- function(model,
     # order of the first few paragraphs is important
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
     scall <- substitute(newdata)
-    if (is.call(scall)) {
-        lcall <- as.list(scall)
-        fun_name <- as.character(scall)[1]
-        if (fun_name %in% c("datagrid", "datagridcf", "typical", "counterfactual")) {
-            if (!"model" %in% names(lcall)) {
-                lcall <- c(lcall, list("model" = model))
-                newdata <- eval.parent(as.call(lcall))
-            }
-        } else if (fun_name == "visualisation_matrix") {
-            if (!"x" %in% names(lcall)) {
-                lcall <- c(lcall, list("x" = get_modeldata))
-                newdata <- eval.parent(as.call(lcall))
-            }
-        }
-    }
+    newdata <- sanitize_newdata_call(scall, newdata, model)
 
     # group by focal variable automatically unless otherwise stated
     if (isTRUE(by)) {

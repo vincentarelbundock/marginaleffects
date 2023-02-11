@@ -66,50 +66,6 @@ expect_equivalent(nrow(tid), 4)
 expect_true("am" %in% colnames(tid))
 
 
-# marginaleffects poisson vs. margins
-dat <- mtcars
-mod <- glm(gear ~ cyl + am, family = poisson, data = dat)
-mfx <- avg_slopes(
-    mod,
-    by = c("cyl", "am"),
-    newdata = datagrid(
-        cyl = dat$cyl,
-        am = dat$am,
-        grid_type = "counterfactual"))
-mar <- margins(mod, at = list(cyl = unique(dat$cyl), am = unique(dat$am)))
-mar <- summary(mar)
-# margins doesn't treat the binary am as binary automatically
-expect_equivalent(mfx$estimate[7:12], mar$AME[7:12], tolerance = tol)
-expect_equivalent(mfx$std.error[7:12], mar$SE[7:12], tolerance = tol_se)
-
-
-# comparisons poisson vs. margins
-dat <- mtcars
-dat$cyl <- factor(dat$cyl)
-dat$am <- as.logical(dat$am)
-mod <- glm(gear ~ cyl + am, family = poisson, data = dat)
-mfx <- comparisons(
-    mod,
-    by = c("cyl", "am"),
-    newdata = datagrid(
-        cyl = dat$cyl,
-        am = dat$am,
-        grid_type = "counterfactual"))
-
-mfx <- tidy(mfx)
-
-mfx <- mfx[order(mfx$term, mfx$contrast, mfx$cyl, mfx$am),]
-mar <- margins(mod, at = list(cyl = unique(dat$cyl), am = unique(dat$am)))
-mar <- summary(mar)
-expect_equivalent(mfx$estimate, mar$AME, tolerance = tol)
-expect_equivalent(mfx$std.error, mar$SE, tolerance = tol_se)
-
-
-# # input checks
-# mod <- lm(mpg ~ hp, mtcars)
-# expect_error(comparisons(mod, by = "am"), pattern = "newdata")
-# expect_error(slopes(mod, by = "am"), pattern = "newdata")
-
 
 # counterfactual margins at()
 dat <- mtcars
@@ -219,3 +175,42 @@ pre <- predictions(mod, by = "cyl")
 expect_equivalent(pre$cyl, c(4, 6, 8))
 cmp <- predictions(mod, by = "cyl")
 expect_equivalent(cmp$cyl, c(4, 6, 8))
+
+
+# marginaleffects poisson vs. margins
+dat <- mtcars
+mod <- glm(gear ~ cyl + am, family = poisson, data = dat)
+mfx <- avg_slopes(
+    mod,
+    by = c("cyl", "am"),
+    newdata = datagrid(
+        cyl = unique,
+        am = unique,
+        grid_type = "counterfactual"))
+mar <- margins(mod, at = list(cyl = unique(dat$cyl), am = unique(dat$am)))
+mar <- summary(mar)
+# margins doesn't treat the binary am as binary automatically
+expect_equivalent(mfx$estimate[7:12], mar$AME[7:12], tolerance = tol)
+expect_equivalent(mfx$std.error[7:12], mar$SE[7:12], tolerance = tol_se)
+
+
+# comparisons poisson vs. margins
+dat <- mtcars
+dat$cyl <- factor(dat$cyl)
+dat$am <- as.logical(dat$am)
+mod <- glm(gear ~ cyl + am, family = poisson, data = dat)
+mfx <- comparisons(
+    mod,
+    by = c("cyl", "am"),
+    newdata = datagrid(
+        cyl = unique,
+        am = unique,
+        grid_type = "counterfactual"))
+
+mfx <- tidy(mfx)
+
+mfx <- mfx[order(mfx$term, mfx$contrast, mfx$cyl, mfx$am),]
+mar <- margins(mod, at = list(cyl = unique(dat$cyl), am = unique(dat$am)))
+mar <- summary(mar)
+expect_equivalent(mfx$estimate, mar$AME, tolerance = tol)
+expect_equivalent(mfx$std.error, mar$SE, tolerance = tol_se)

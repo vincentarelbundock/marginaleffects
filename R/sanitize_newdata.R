@@ -1,4 +1,28 @@
-sanitize_newdata <- function(model, newdata, by = NULL, modeldata = NULL) {
+sanitize_newdata_call <- function(scall, newdata, model) {
+    if (is.call(scall)) {
+        lcall <- as.list(scall)
+        fun_name <- as.character(scall)[1]
+        if (fun_name %in% c("datagrid", "datagridcf", "typical", "counterfactual")) {
+            if (!"model" %in% names(lcall)) {
+                lcall <- c(lcall, list("model" = model))
+                out <- eval(as.call(lcall))
+            }
+        } else if (fun_name == "visualisation_matrix") {
+            if (!"x" %in% names(lcall)) {
+                lcall <- c(lcall, list("x" = get_modeldata))
+                out <- eval(as.call(lcall))
+            }
+        } else {
+            out <- newdata
+        }
+    } else {
+        out <- newdata
+    }
+    return(out)
+}
+
+
+sanitize_newdata <- function(model, newdata, by, modeldata) {
 
     checkmate::assert(
         checkmate::check_data_frame(newdata, null.ok = TRUE),
@@ -14,15 +38,6 @@ sanitize_newdata <- function(model, newdata, by = NULL, modeldata = NULL) {
     args <- list(model = model)
     for (b in by) {
         args[[b]] <- unique
-    }
-
-    # we always need this to extract attributes
-    if (is.null(modeldata)) {
-        modeldata <- get_modeldata(model)
-        # cannot extract data on unsupported custom models (e.g., numpyro)
-        if (is.null(modeldata)) {
-            modeldata <- newdata
-        }
     }
 
     newdata_explicit <- TRUE
@@ -60,13 +75,13 @@ sanitize_newdata <- function(model, newdata, by = NULL, modeldata = NULL) {
     }
 
     if (!inherits(newdata, "data.frame")) {
-        msg <- "Unable to extract the data from model of class `%s`. This can happen in a variety of cases, such as when a `marginaleffects` package function is called from inside a user-defined function. Please supply a data frame explicitly via the `newdata` argument."
+        msg <- "Unable to extract the data from model of class `%s`. This can happen in a variety of cases, such as when a `marginaleffects` package function is called from inside a user-defined function, or using an `*apply()`-style operation on a list. Please supply a data frame explicitly via the `newdata` argument."
         msg <- sprintf(msg, class(model)[1])
         insight::format_error(msg)
     }
 
     # column subsets later and predict
-    setDF(modeldata)
+    data.table::setDF(modeldata)
 
     # column attributes
     mc <- Filter(function(x) is.matrix(modeldata[[x]]), colnames(modeldata))
