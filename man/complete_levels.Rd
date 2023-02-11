@@ -7,7 +7,7 @@
 complete_levels(x, character_levels = NULL)
 }
 \description{
-\code{model.matrix} and \code{get_predicted} break when \code{newdata} includes a factor
+\code{model.matrix} breaks when \code{newdata} includes a factor
 variable, but not all levels are present in the data. This is bad for us
 because we often want to get predictions with one (or few) rows, where some
 factor levels are inevitably missing.

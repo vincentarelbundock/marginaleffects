@@ -45,72 +45,17 @@ The main function used to compute standard errors in `marginaleffects` is here: 
 
 All standard errors for the `slopes()` and `comparisons()` functions are computed using the delta method, as described above.
 
-# Standard errors and intervals for `marginal_means()`
+# Standard errors and intervals for `marginal_means()` and `predictions()`
 
-The `marginal_means()` function can compute the confidence intervals in two ways. If the following conditions hold:
+The `marginal_means()` and `predictions()` function can compute the confidence intervals in two ways. If the following conditions hold:
 
-* The user set: `type = "response"`
+* The user sets: `type = "response"`
 * The "link" type is supported for this model class
 * The `transform_post` argument is `NULL`
 
-then `marginal_means()` will first compute the marginal means on the link scale, and then back transform them using the inverse link function supplied by `insight::link_inverse(model)` function.
+then `marginal_means()` and `predictions()` will first compute estimates on the link scale, and then back transform them using the inverse link function supplied by `insight::link_inverse(model)` function.
 
 In all other cases, standard errors are computed using the delta method as described above.
-
-# Standard errors and intervals for `predictions()`
-
-The `marginaleffects` package handles all calculations to compute standard errors, t statistics, p values, and confidence intervals for contrasts (`comparisons()`), marginal effects (`slopes()`), and marginal means (`marginal_means()`) functions. 
-
-When possible, however, the calculation of standard errors and confidence intervals for the output of `predictions()` is outsourced to the [`insight` package.](https://easystats.github.io/insight/) The benefit of this is that, for many popular models, `insight` can compute confidence intervals via back-transformation, which gives them certain nice properties. For example, this ensures that confidence intervals around the predictions of a logistic regression model will remain in between 0 and 1.
-
-When `insight` does not support a model, `marginaleffects` computes standard errors using the delta method, as described above. In those cases, confidence intervals are not created automatically, but users can easily compute them manually, as usual, by multiplying the standard error by a critical value. The standard errors thus estimated [have desirable properties under normal assumptions](https://en.wikipedia.org/wiki/Delta_method), but since there is no back-transformation, it is not always advisable to use them to construct symmetric confidence intervals around adjusted predictions.
-
-One special case is when we compute average predictions, or the `by` argument to compute average predictions by group. In those cases, it may be a good idea to compute predicted values on the link scale, average the predictions, and only *then* back transform. This can be done using the `transform_post` and `transform_post` arguments. In this example, we use the `link_inverse` argument from the `insight` package to get the inverse link function:
-
-```{r}
-library(insight)
-library(marginaleffects)
-
-# simulate data
-set.seed(1024)
-N <- 25
-dat <- data.frame(
-    y = rbinom(N, 1, prob = .9),
-    x = rnorm(N),
-    groupid = rbinom(N, 1, prob = .5))
-
-# estimate model
-mod <- glm(y ~ x + groupid, family = binomial, data = dat)
-
-# average group-wise predictions
-predictions(mod, by = "groupid")
-```
-
-Note that if we simply add 1.96*SE to the predictions, the upper bound of the confidence interval will exceed the logical limit of 1. Instead, one possibility would be to estimate the predicted values on the link scale, and then transform the results:
-
-```{r}
-predictions(
-    mod,
-    by = "groupid",
-    type = "link",
-    transform_post = link_inverse(mod))
-```
-
-Warning: the order in which we average and transform matters, because the mean of a transformation is not always equal to the transformation of the mean:
-
-```{r}
-p <- predictions(
-    mod,
-    type = "link",
-    transform_post = link_inverse(mod))
-aggregate(y ~ groupid, data = p, FUN = mean)
-
-# simple example
-x <- rnorm(100)
-mean(link_inverse(mod)(x))
-link_inverse(mod)(mean(x))
-```
-
 
 # Robust standard errors 
 

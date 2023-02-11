@@ -73,8 +73,6 @@ get_ci <- function(
         }
     }
 
-    # `get_predicted()` can be smarter than symmetric intervals
-    # sometimes get_predicted fails on SE but succeeds on CI (e.g., betareg)
     if (ci_overwrite) {
         alpha <- 1 - conf_level
         if (normal) {

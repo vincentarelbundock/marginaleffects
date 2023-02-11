@@ -37,16 +37,10 @@ get_predict.default <- function(model,
         stop("The `include_random` and `include_smooth` arguments can be used together, but not with `re.form` or `re_formula`.", call. = FALSE)
     }
 
-    # `stats::predict` is faster than `insight::get_predicted`
     # first argument in the predict methods is not always named "x" or "model"
     dots[["newdata"]] <- newdata
     dots[["type"]] <- type_base
     args <- c(list(model), dots)
-
-    # breaks {rms} models, and it is only supported by `insight::get_predicted`
-    if ("ci_method" %in% names(args)) {
-        args[["ci_method"]] <- NULL
-    }
 
     fun <- stats::predict
     pred <- suppressWarnings(do.call("fun", args))

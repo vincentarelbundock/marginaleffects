@@ -2,8 +2,6 @@
 #'
 #' @param model model object
 #' @param type character vector
-#' @return Named vector where value is the Base R `type` and name is the
-#' insight::get_predicted `predict`
 #' @noRd
 sanitize_type <- function(model, type, calling_function = NULL) {
 

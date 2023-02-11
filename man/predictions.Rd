@@ -180,7 +180,7 @@ A \code{data.frame} with one row per observation and several columns:
 \item \code{type}: prediction type, as defined by the \code{type} argument
 \item \code{group}: (optional) value of the grouped outcome (e.g., categorical outcome models)
 \item \code{estimate}: predicted outcome
-\item \code{std.error}: standard errors computed by the \code{insight::get_predicted} function or, if unavailable, via \code{marginaleffects} delta method functionality.
+\item \code{std.error}: standard errors computed using the delta method.
 \item \code{conf.low}: lower bound of the confidence interval (or equal-tailed interval for bayesian models)
 \item \code{conf.high}: upper bound of the confidence interval (or equal-tailed interval for bayesian models)
 }
@@ -208,14 +208,7 @@ The \code{newdata} argument, the \code{tidy()} function, and \code{datagrid()} f
 \item Predictions at User-Specified values (aka Predictions at Representative values).
 }
 
-When possible, \code{predictions()} delegates the computation of confidence
-intervals to the \code{insight::get_predicted()} function, which uses back
-transformation to produce adequate confidence intervals on the scale
-specified by the \code{type} argument. When this is not possible, \code{predictions()}
-uses the Delta Method to compute standard errors around adjusted
-predictions, and builds symmetric confidence intervals. These naive symmetric
-intervals may not always be appropriate. For instance, they may stretch beyond
-the bounds of a binary response variables.
+For \code{glm()} models with \code{type="response"}, \code{predictions()} first predicts on the link scale, and then backtransforms the estimates and confidence intervals. Otherwise, \code{predictions()} uses the Delta Method to compute standard errors and builds symmetric confidence intervals. These naive symmetric intervals may not always be appropriate. For instance, they may stretch beyond the bounds of a binary response variables.
 }
 \section{Functions}{
 \itemize{

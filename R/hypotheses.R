@@ -212,7 +212,6 @@ hypotheses <- function(
     out <- get_ci(
         out,
         conf_level = conf_level,
-        # sometimes get_predicted fails on SE but succeeds on CI (e.g., betareg)
         vcov = vcov,
         draws = NULL,
         estimate = "estimate",

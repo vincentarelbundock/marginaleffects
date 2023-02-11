@@ -128,7 +128,7 @@ sanitize_newdata <- function(model, newdata, by = NULL, modeldata = NULL) {
         newdata$rowid <- seq_len(nrow(newdata))
     }
 
-    # placeholder response; sometimes insight::get_predicted breaks without this
+    # placeholder response
     resp <- insight::find_response(model)
     if (isTRUE(checkmate::check_character(resp, len = 1)) &&
         !resp %in% colnames(newdata)) {

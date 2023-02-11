@@ -21,14 +21,7 @@
 #' * Predictions at the Mean
 #' * Predictions at User-Specified values (aka Predictions at Representative values).
 #'
-#' When possible, `predictions()` delegates the computation of confidence
-#' intervals to the `insight::get_predicted()` function, which uses back
-#' transformation to produce adequate confidence intervals on the scale
-#' specified by the `type` argument. When this is not possible, `predictions()`
-#' uses the Delta Method to compute standard errors around adjusted
-#' predictions, and builds symmetric confidence intervals. These naive symmetric
-#' intervals may not always be appropriate. For instance, they may stretch beyond
-#' the bounds of a binary response variables.
+#' For `glm()` models with `type="response"`, `predictions()` first predicts on the link scale, and then backtransforms the estimates and confidence intervals. Otherwise, `predictions()` uses the Delta Method to compute standard errors and builds symmetric confidence intervals. These naive symmetric intervals may not always be appropriate. For instance, they may stretch beyond the bounds of a binary response variables.
 #' @param model Model object
 #' @param variables Counterfactual variables.
 #' * Output:
@@ -76,7 +69,7 @@
 #' * `type`: prediction type, as defined by the `type` argument
 #' * `group`: (optional) value of the grouped outcome (e.g., categorical outcome models)
 #' * `estimate`: predicted outcome
-#' * `std.error`: standard errors computed by the `insight::get_predicted` function or, if unavailable, via `marginaleffects` delta method functionality.
+#' * `std.error`: standard errors computed using the delta method.
 #' * `conf.low`: lower bound of the confidence interval (or equal-tailed interval for bayesian models)
 #' * `conf.high`: upper bound of the confidence interval (or equal-tailed interval for bayesian models)
 #' @examples
@@ -347,7 +340,7 @@ predictions <- function(model,
     # support `newdata` and assume no padding the `idx` column is necessary for
     # `get_predict` but it breaks binding, so we can't remove it in
     # sanity_newdata and we can't rbind it with padding
-    # pad factors: `get_predicted/model.matrix` break when factor levels are missing
+    # pad factors: `model.matrix` breaks when factor levels are missing
     if (inherits(model, "mlogit")) {
         padding <- data.frame()
     } else {
@@ -396,7 +389,6 @@ predictions <- function(model,
     tmp <- do.call(get_predictions, args)
 
     # two cases when tmp is a data.frame
-    # insight::get_predicted gets us Predicted et al. but now rowid
     # get_predict gets us rowid with the original rows
     if (inherits(tmp, "data.frame")) {
         setnames(tmp,
