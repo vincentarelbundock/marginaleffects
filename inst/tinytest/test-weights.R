@@ -5,7 +5,7 @@ exit_if_not(requiet("survey"))
 # mtcars logit
 tmp <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/datasets/mtcars.csv")
 tmp$weights <- tmp$w <- 1:32
-dat <<- tmp
+dat <- tmp
 mod <- suppressWarnings(svyglm(
     am ~ mpg + cyl,
     design = svydesign(ids = ~1, weights = ~weights, data = dat),

@@ -3,7 +3,7 @@ exit_if_not(requiet("haven"))
 exit_if_not(requiet("Rchoice"))
 
 # hetprob() dy/dx
-dat <<- transform(iris, y = Sepal.Length > median(Sepal.Length))
+dat <- transform(iris, y = Sepal.Length > median(Sepal.Length))
 mod <- hetprob(y ~ Petal.Width * Petal.Length | factor(Species), data = dat, link = "logit")
 known <- Rchoice::effect(mod)$margins
 mfx <- avg_slopes(mod)

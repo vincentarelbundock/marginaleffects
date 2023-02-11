@@ -87,7 +87,7 @@ expect_equivalent(e1$p.value, e2$p.value.noninf)
 
 
 # avg_*() and hypotheses()
-tmp <<- lm(mpg ~ hp * qsec, data = mtcars)
+tmp <- lm(mpg ~ hp * qsec, data = mtcars)
 cmp <- avg_comparisons(tmp) |> hypotheses(equivalence = c(-.2, 0))
 mfx <- avg_slopes(tmp) |> hypotheses(equivalence = c(-.2, 0))
 pre <- avg_predictions(tmp) |> hypotheses(equivalence = c(-.2, 0))

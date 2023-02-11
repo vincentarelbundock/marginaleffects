@@ -14,7 +14,7 @@ yB <- -1 + 3 * xB + rnorm(n / 2, 0, 0.1)
 
 simdat <- data.frame(group_id = group_id, x = c(xA, xB), y = c(yA, yB))
 simdat$group_id <- as.factor(simdat$group_id)
-tmp <<- simdat
+tmp <- simdat
 
 model_additive <- lm(y ~ x + group_id, data = tmp)
 model_interaction <- lm(y ~ x * group_id, data = tmp)

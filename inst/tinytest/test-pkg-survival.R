@@ -28,7 +28,7 @@ expect_inherits(pre, "predictions")
 
 # coxph vs. Stata
 stata <- readRDS(testing_path("stata/stata.rds"))$survival_coxph_01
-test1 <<- data.frame(time = c(4, 3, 1, 1, 2, 2, 3),
+test1 <- data.frame(time = c(4, 3, 1, 1, 2, 2, 3),
                      status = c(1, 1, 1, 0, 1, 1, 0),
                      x = c(0, 2, 1, 1, 1, 0, 0),
                      sex = factor(c(0, 0, 0, 0, 1, 1, 1)))
@@ -50,7 +50,7 @@ expect_equivalent(mfx$std.error[1], em$std.error)
 
 
 # coxph: no validity
-test2 <<- data.frame(start = c(1, 2, 5, 2, 1, 7, 3, 4, 8, 8),
+test2 <- data.frame(start = c(1, 2, 5, 2, 1, 7, 3, 4, 8, 8),
                      stop = c(2, 3, 6, 7, 8, 9, 9, 9, 14, 17),
                      event = c(1, 1, 1, 1, 1, 1, 1, 0, 0, 0),
                      x = c(1, 0, 0, 1, 0, 1, 1, 1, 0, 0))
@@ -60,7 +60,7 @@ expect_slopes(mod, type = "risk", n_unique = 2)
 
 
 # bugs stay dead: conf.level forces get_predicted which doesn't process 'type'
-test1 <<- data.frame(time = c(4, 3, 1, 1, 2, 2, 3),
+test1 <- data.frame(time = c(4, 3, 1, 1, 2, 2, 3),
                      status = c(1, 1, 1, 0, 1, 1, 0),
                      x = c(0, 2, 1, 1, 1, 0, 0),
                      sex = factor(c(0, 0, 0, 0, 1, 1, 1)))
@@ -76,11 +76,11 @@ expect_true(all(p1$estimate != p2$estimate))
 # bugs stay dead: numeric vs factor strata
 #skip_if_not_installed("insight", minimum_version = "0.17.0")
 stata <- readRDS(testing_path("stata/stata.rds"))$survival_coxph_01
-tmp1 <<- data.frame(time = c(4, 3, 1, 1, 2, 2, 3),
+tmp1 <- data.frame(time = c(4, 3, 1, 1, 2, 2, 3),
                      status = c(1, 1, 1, 0, 1, 1, 0),
                      x = c(0, 2, 1, 1, 1, 0, 0),
                      sex = factor(c(0, 0, 0, 0, 1, 1, 1)))
-tmp2 <<- data.frame(time = c(4, 3, 1, 1, 2, 2, 3),
+tmp2 <- data.frame(time = c(4, 3, 1, 1, 2, 2, 3),
                      status = c(1, 1, 1, 0, 1, 1, 0),
                      x = c(0, 2, 1, 1, 1, 0, 0),
                      sex = c(0, 0, 0, 0, 1, 1, 1))

@@ -12,7 +12,7 @@ dat$sqrtensmean <- apply(sqrt(dat[,grep('^rainfc',names(dat))]), 1, mean)
 dat$sqrtenssd <- apply(sqrt(dat[,grep('^rainfc',names(dat))]), 1, sd)
 dat$enssd <- apply(dat[,grep('^rainfc',names(dat))], 1, sd)
 dat$ensmean <- apply(dat[,grep('^rainfc',names(dat))], 1, mean)
-dat <<- subset(dat, enssd > 0)
+dat <- subset(dat, enssd > 0)
 
 # marginaleffects: crch gaussian: no validity
 model <- crch(sqrt(rain) ~ sqrtensmean + sqrtenssd, data = dat, dist = "gaussian")

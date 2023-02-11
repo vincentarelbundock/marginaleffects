@@ -112,4 +112,5 @@ expect_equivalent(mm$std.error, em$std.error, tolerance = 0.01)
 
 
 
+source("helpers.R")
 rm(list = ls())

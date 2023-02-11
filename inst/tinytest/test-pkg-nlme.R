@@ -16,6 +16,7 @@ expect_inherits(mfx, "data.frame")
 expect_false(any(mfx$estimate == 0 | is.na(mfx$estimate)))
 expect_false(any(mfx$std.error == 0 | is.na(mfx$std.error)))
 # emtrends
+nd <- datagrid(newdata = dat, Time = 1)
 mfx <- slopes(model,
     variables = "Time",
     type = "link",
@@ -38,7 +39,7 @@ expect_predictions(pred2, n_row = 6)
 # glm: marginalmeans vs emmeans
 tmp <- dat
 tmp$categ <- factor(sample(letters[1:5], nrow(tmp), replace = TRUE))
-tmp <<- tmp
+tmp <- tmp
 mod <- gls(follicles ~ sin(2 * pi * Time) + cos(2 * pi * Time) + categ,
     data = tmp, correlation = corAR1(form = ~ 1 | Mare))
 em <- suppressMessages(emmeans(mod, specs = "categ"))
@@ -50,4 +51,5 @@ expect_equivalent(mm$std.error, em$std.error)
 
 
 
+source("helpers.R")
 rm(list = ls())

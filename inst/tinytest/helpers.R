@@ -3,7 +3,7 @@ EXPENSIVE <- FALSE
 # libraries
 requiet <- function(package) {
     void <- capture.output(
-    pkg_available <<- tryCatch(suppressPackageStartupMessages(suppressWarnings(suppressMessages(tryCatch(
+    pkg_available <- tryCatch(suppressPackageStartupMessages(suppressWarnings(suppressMessages(tryCatch(
         isTRUE(require(package, warn.conflicts = FALSE, character.only = TRUE)),
         error = function(e) FALSE
     ))))))
@@ -31,30 +31,6 @@ Sys.setenv(TZ="America/New_York")
 options(width = 10000)
 options(digits = 5)
 
-# important because otherwise testing so many packages is terrible
-# dict <- c(
-    # "summary" = "base",
-    # "ar" = "stats",
-    # "dof" = "parameters",
-    # "marginal_effects" = "margins",
-#     "kidney" = "brms",
-#     "ngrps" = "brms",
-#     "logit" = "boot",
-#     "melanoma" = "boot",
-#     "lizards" = "aod",
-#     "rats" = "aod",
-#     "aml" = "survival",
-#     "mad" = "stats",
-#     "sd" = "stats",
-#     "var" = "stats"
-# )
-# conflicted::conflict_prefer_all("tinytest", quiet = TRUE)
-# conflicted::conflict_prefer_all("poorman", quiet = TRUE)
-# for (i in seq_along(dict)) {
-#     conflicted::conflict_prefer(name = names(dict)[i], winner = dict[i], quiet = TRUE)
-# }
-
-
 ON_CRAN <- !identical(Sys.getenv("R_NOT_CRAN"), "true")
 ON_GH <- identical(Sys.getenv("R_GH"), "true")
 ON_CI <- isTRUE(ON_CRAN) || isTRUE(ON_GH)
@@ -69,7 +45,6 @@ minver <- function(pkg, ver = NULL) {
         isTRUE(as.character(ins) >= ver)
     }
 }
-
 
 testing_path <- function(x) {
     wd <- tinytest::get_call_wd()

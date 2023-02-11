@@ -31,7 +31,7 @@ y <- p2[p2$am_fct == 1 & p2$mpg == 10.4, "estimate"]
 expect_equivalent(x, y)
 
 # threenum
-threenum <<- c(
+threenum <- c(
     mean(dat$mpg) - sd(dat$mpg),
     mean(dat$mpg),
     mean(dat$mpg) + sd(dat$mpg))
