@@ -28,9 +28,8 @@ expect_error(comparisons(
 mod <- lm(mpg ~ factor(am) + factor(cyl) + wt + gear, data = mtcars)
 cmp <- suppressWarnings(comparisons(
     mod,
-    variables = c("cyl", "am"),
+    variables = list("cyl" = "all", "am" = "all"),
     newdata = datagrid(),
-    contrast_factor = "all",
     cross = TRUE))
 em <- emmeans(mod, c("cyl", "am"))
 em <- emmeans::contrast(em, method = "revpairwise")
@@ -79,8 +78,7 @@ expect_true(nrow(tidy(cmp)) > 17)
 
 cmp <- comparisons(
     mod,
-    variables = c("cyl", "am"),
-    contrast_factor = "sequential",
+    variables = list("cyl" = "sequential", "am" = "sequential"),
     cross = TRUE)
 expect_equivalent(nrow(cmp), 64)
 expect_equivalent(nrow(tidy(cmp)), 2)
@@ -99,7 +97,6 @@ expect_warning(comparisons(mod, interaction = TRUE))
 
 # brms + order of first character doesn't matter
 mod <- marginaleffects:::modelarchive_model("brms_factor")
-cmp <- comparisons(mod, variables = c("cyl_fac", "mpg"), cross = TRUE, contrast_factor = "all")
+cmp <- comparisons(mod, variables = list("cyl_fac" = "all", "mpg" = 1), cross = TRUE)
 expect_equivalent(nrow(cmp), 192)
 expect_equivalent(nrow(tidy(cmp)), 6)
-

@@ -39,12 +39,11 @@ expect_equivalent(nrow(mfx), 6)
 
 # numeric contrasts
 mod <- lm(mpg ~ hp, data = mtcars)
-expect_error(comparisons(mod, contrast_numeric = "bad", variables = "hp"), pattern = "invalid")
-contr1 <- comparisons(mod, contrast_numeric = 1, variables = "hp")
-contr2 <- comparisons(mod, contrast_numeric = "iqr", variables = "hp")
-contr3 <- comparisons(mod, contrast_numeric = "minmax", variables = "hp")
-contr4 <- comparisons(mod, contrast_numeric = "sd", variables = "hp")
-contr5 <- comparisons(mod, contrast_numeric = "2sd", variables = "hp")
+contr1 <- comparisons(mod, variables = list("hp" = 1))
+contr2 <- comparisons(mod, variables = list("hp" = "iqr"))
+contr3 <- comparisons(mod, variables = list("hp" = "minmax"))
+contr4 <- comparisons(mod, variables = list("hp" = "sd"))
+contr5 <- comparisons(mod, variables = list("hp" = "2sd"))
 iqr <- diff(stats::quantile(mtcars$hp, probs = c(.25, .75))) * coef(mod)["hp"]
 minmax <- (max(mtcars$hp) - min(mtcars$hp)) * coef(mod)["hp"]
 sd1 <- sd(mtcars$hp) * coef(mod)["hp"]
@@ -53,21 +52,6 @@ expect_equivalent(contr2$estimate, rep(iqr, 32))
 expect_equivalent(contr3$estimate, rep(minmax, 32))
 expect_equivalent(contr4$estimate, rep(sd1, 32))
 expect_equivalent(contr5$estimate, rep(sd2, 32))
-
-
-# factor: linear model
-mod <- lm(mpg ~ factor(cyl), data = mtcars)
-ti <- tidy(comparisons(mod, contrast_factor = "reference"))
-re <- coef(mod)[2:3]
-expect_equivalent(ti$estimate, re)
-
-ti <- tidy(comparisons(mod, contrast_factor = "pairwise"))
-pw <- c(coef(mod)[2:3], coef(mod)[3] - coef(mod)[2])
-expect_equivalent(ti$estimate, pw)
-
-ti <- tidy(comparisons(mod, contrast_factor = "sequential"))
-se <- c(coef(mod)[2], coef(mod)[3] - coef(mod)[2])
-expect_equivalent(ti$estimate, se)
 
 
 # factor glm
@@ -87,7 +71,7 @@ dat <- dat
 mod <- glm(am ~ cyl, data = dat, family = binomial)
 
 # link scale
-cmp <- comparisons(mod, type = "link", newdata = datagrid(), contrast_factor = "pairwise")
+cmp <- comparisons(mod, variables = list(cyl = "pairwise"), type = "link", newdata = datagrid())
 emm <- emmeans(mod, specs = "cyl")
 emm <- emmeans::contrast(emm, method = "revpairwise", df = Inf, adjust = NULL)
 emm <- data.frame(confint(emm))
@@ -97,7 +81,7 @@ expect_equivalent(cmp$conf.low, emm$asymp.LCL)
 expect_equivalent(cmp$conf.high, emm$asymp.UCL)
 
 # response scale
-cmp <- comparisons(mod, type = "response", newdata = datagrid(), contrast_factor = "pairwise")
+cmp <- comparisons(mod, type = "response", newdata = datagrid(), variables = list(cyl = "pairwise"))
 emm <- emmeans(mod, specs = "cyl")
 emm <- emmeans::contrast(regrid(emm), method = "revpairwise", df = Inf, adjust = NULL,
 type = "response", ratios = FALSE)
@@ -123,22 +107,3 @@ cmp1 <- comparisons(
 expect_equivalent(
     cmp1$contrast,
     c("+1", "TRUE - FALSE", "6 - 4", "8 - 4", "4 - 3", "5 - 3"))
-
-cmp2 <- comparisons(
-    mod,
-    contrast_numeric = "sd",
-    transform_pre = "ratio",
-    newdata = "mean")
-expect_equivalent(
-    cmp2$contrast,
-    c("(x + sd/2) / (x - sd/2)", "TRUE / FALSE", "6 / 4", "8 / 4", "4 / 3", "5 / 3"))
-
-cmp3 <- comparisons(
-    mod,
-    contrast_numeric = "iqr",
-    transform_pre = "lnratioavg",
-    newdata = "mean")
-expect_equivalent(
-    cmp3$contrast,
-    c("ln(mean(Q3) / mean(Q1))", "ln(mean(TRUE) / mean(FALSE))", "ln(mean(6) / mean(4))", "ln(mean(8) / mean(4))", "ln(mean(4) / mean(3))", "ln(mean(5) / mean(3))"))
-

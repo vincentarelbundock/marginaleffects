@@ -1,8 +1,8 @@
 source("helpers.R")
 using("marginaleffects")
 
-
-
+#
+#
 # factor before fitting or in formula is the same
 tmp <- mtcars
 tmp$cyl <- factor(tmp$cyl)
@@ -53,7 +53,6 @@ mfx <- slopes(mod,
     newdata = datagrid(sex = 0, newdata = test1),
     type = "lp")
 expect_inherits(mfx, "marginaleffects")
-
 
 
 # Issue #497

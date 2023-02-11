@@ -62,7 +62,7 @@ cmp2 <- suppressWarnings(comparisons(
     m2 = m2,
     m3 = m3,
     type = "average",
-    contrast_numeric = 20,
+    variables = list(hp = 20),
     newdata = head(mtcars)
 ))
 
@@ -78,7 +78,7 @@ cmp1 <- suppressWarnings(comparisons(m1,
     m3 = m3,
     type = "average",
     method = "posterior_epred",
-    contrast_numeric = 20,
+    variables = list(hp = 20),
     newdata = head(mtcars)
 ))
 set.seed(1024)
@@ -87,7 +87,7 @@ cmp2 <- suppressWarnings(comparisons(m1,
     m2 = m2,
     m3 = m3,
     type = "average",
-    contrast_numeric = 20,
+    variables = list(hp = 20),
     newdata = head(mtcars)
 ))
 expect_true(all(cmp1$estimate != cmp2$estimate))

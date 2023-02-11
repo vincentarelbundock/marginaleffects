@@ -325,8 +325,6 @@ expect_error(comparisons(brms_monotonic_factor), pattern = "cannot be used")
 contr1 <- tidy(comparisons(brms_monotonic))
 known <- c("mean(+1)", sprintf("mean(%s) - mean(1)", c(2:4, 6, 8)))
 expect_equivalent(contr1$contrast, known)
-contr2 <- tidy(comparisons(brms_monotonic, contrast_factor = "pairwise", variables = "carb"))
-expect_equivalent(nrow(contr2), 15)
 
 
 

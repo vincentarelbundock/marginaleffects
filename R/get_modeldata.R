@@ -1,5 +1,6 @@
 get_modeldata <- function(model) {
     out <- hush(insight::get_data(model, verbose = FALSE, additional_variables = TRUE))
+    out <- as.data.frame(out)
     out <- set_variable_class(modeldata = out, model = model)
     return(out)
 }
@@ -18,11 +19,13 @@ set_variable_class <- function(modeldata, model = NULL) {
             cl[col] <- "character"
         } else if (is.factor(out[[col]])) {
             cl[col] <- "factor"
+        } else if (inherits(out[[col]], "Surv")) { # is numeric but breaks the %in% 0:1 check
+            cl[col] <- "other"
         } else if (is.numeric(out[[col]])) {
-            if (any(!out[[col]] %in% 0:1)) {
-                cl[col] <- "numeric"
-            } else {
+            if (isTRUE(all(out[[col]] %in% 0:1))) {
                 cl[col] <- "binary"
+            } else {
+                cl[col] <- "numeric"
             }
         } else {
             cl[col] <- "other"
@@ -34,7 +37,7 @@ set_variable_class <- function(modeldata, model = NULL) {
         return(out)
     }
 
-    te <- insight::find_terms(model, flatten = TRUE)
+    te <- hush(insight::find_terms(model, flatten = TRUE))
 
     # in-formula factor
     regex <- "^(^as\\.factor|^factor)\\((.*)\\)"
