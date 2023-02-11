@@ -24,6 +24,7 @@ expect_snapshot_print(p, "print-predictions_datagrid")
 
 # twitter Kurz request
 mod <- lm(mpg ~ hp + am, data = mtcars)
+    comparisons(mod, variables = "am", newdata = data.frame(am = 0:1, hp = 120))
 expect_snapshot_print(
     comparisons(mod, variables = "am", newdata = data.frame(am = 0:1, hp = 120)),
     "print-comparisons_1focal")

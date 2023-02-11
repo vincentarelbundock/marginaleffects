@@ -1,4 +1,5 @@
 # TODO: CI: See comment in last test for how the intervals are back transformed
+exit_if_not(EXPENSIVE)
 source("helpers.R")
 using("marginaleffects")
 

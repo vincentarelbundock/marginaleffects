@@ -1,3 +1,4 @@
+exit_if_not(EXPENSIVE)
 source("helpers.R")
 using("marginaleffects")
 # exit_file("glmmTMB always causes problems")

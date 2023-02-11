@@ -1,6 +1,7 @@
 source("helpers.R")
 using("marginaleffects")
 library(tinytest)
+exit_if_not(EXPENSIVE)
 
 exit_if_not(!ON_CI)
 exit_if_not(packageVersion("base") >= "4.2.0")

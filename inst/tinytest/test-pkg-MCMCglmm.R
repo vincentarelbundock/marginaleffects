@@ -1,3 +1,4 @@
+exit_if_not(EXPENSIVE)
 source("helpers.R")
 exit_if_not(requiet("MCMCglmm"))
 
