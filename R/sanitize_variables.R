@@ -153,9 +153,13 @@ sanitize_variables <- function(variables,
     for (v in names(predictors)) {
 
         if (get_variable_class(modeldata, v, "binary")) {
-            if (!all(predictors[[v]]) %in% 0:1) {
+            if (!isTRUE(checkmate::check_numeric(predictors[[v]])) || !all(predictors[[v]] %in% 0:1)) {
                 msg <- sprintf("The `%s` variable is binary. The corresponding entry in the `variables` argument must be 0 or 1.")
                 insight::format_error(msg)
+            }
+            # get_contrast_data requires both levels
+            if (calling_function == "comparisons") {
+                predictors[[v]] <- 0:1
             }
 
         } else if (get_variable_class(modeldata, v, "numeric")) {
