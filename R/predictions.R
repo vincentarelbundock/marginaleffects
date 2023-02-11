@@ -256,17 +256,6 @@ predictions <- function(model,
 
     # input sanity checks
     checkmate::assert_number(df, lower = 1)
-    if (is.infinite(df)) {
-        ci_method <- "normal"
-    } else {
-        ci_method <- "wald"
-        df_auto <- insight::get_df(model, type = "wald")
-        if (!all(df == df_auto)) {
-            msg <- 'The `df` argument does not match the output of `insight::get_df(model, type = "wald")`. The p values and confidence intervals may not use the same degrees of freedom.'
-            insight::format_warning(msg)
-        }
-    }
-
 
     transform_post <- sanitize_transform_post(transform_post)
     sanity_dots(model = model, ...)
@@ -382,8 +371,7 @@ predictions <- function(model,
         type = type,
         hypothesis = hypothesis,
         by = by,
-        byfun = byfun,
-        ci_method = ci_method)
+        byfun = byfun)
 
     args <- utils::modifyList(args, dots)
     tmp <- do.call(get_predictions, args)
