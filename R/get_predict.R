@@ -21,9 +21,6 @@ get_predict.default <- function(model,
                                 type = "response",
                                 ...) {
 
-    type <- sanitize_type(model, type)
-    type_base <- unname(type)
-    type_insight <- names(type)
 
     dots <- list(...)
 
@@ -39,7 +36,7 @@ get_predict.default <- function(model,
 
     # first argument in the predict methods is not always named "x" or "model"
     dots[["newdata"]] <- newdata
-    dots[["type"]] <- type_base
+    dots[["type"]] <- type
     args <- c(list(model), dots)
 
     fun <- stats::predict

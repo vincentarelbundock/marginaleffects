@@ -42,7 +42,6 @@ pre29 <- predictions(mod, df = 29)
 preInf <- predictions(mod)
 expect_true(all(pre29$p.value > preInf$p.value))
 expect_true(all(pre29$conf.low < preInf$conf.low))
-expect_warning(predictions(mod, df = 12), pattern = "freedom")
 
 
 

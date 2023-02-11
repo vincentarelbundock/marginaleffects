@@ -11,8 +11,9 @@ sanitize_variables <- function(variables,
                                calling_function = "comparisons") {
 
     checkmate::assert(
-        checkmate::check_character(variables, min.len = 1, null.ok = TRUE, names = "unnamed"),
-        checkmate::check_list(variables, names = "unique"),
+        checkmate::check_null(variables),
+        checkmate::check_character(variables, min.len = 1, names = "unnamed"),
+        checkmate::check_list(variables, min.len = 1, names = "unique"),
         combine = "or")
 
     # reserved keywords

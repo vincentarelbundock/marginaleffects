@@ -88,9 +88,6 @@ get_predict.glmmPQL <- function(model,
                                 conf_level = 0.95,
                                 type = "response",
                                 ...) {
-
-    type <- sanitize_type(model, type)
-
     out <- stats::predict(model, newdata = newdata, type = type, ...)
     out <- data.frame(
         rowid = seq_len(nrow(newdata)),

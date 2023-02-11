@@ -233,7 +233,7 @@ comparisons <- function(model,
             calling_function = "comparisons",
             ...)
         cross <- sanitize_cross(cross, variables, model)
-        type <- sanitize_type(model = model, type = type, calling_function = "marginaleffects")
+        type <- sanitize_type(model = model, type = type)
 
     # internal call from `slopes()`
     } else {

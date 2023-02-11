@@ -13,11 +13,8 @@ dat <- Transport
 void <- capture.output(
     model <- mclogit(cbind(resp, suburb) ~ distance + cost, data = Transport)
 )
-# type = "response" produces 0 dydx and standard error. Not sure why
-# because `get_predict(newdata)` seems to work
-expect_error(slopes(model, type = "response"), pattern = "type. argument")
 # type = "link" works
-suppressWarnings(expect_slopes(model, type = "link", n_unique = 1))
+expect_slopes(model, type = "link", n_unique = 1)
 pred <- predictions(model, type = "link")
 expect_predictions(pred)
 

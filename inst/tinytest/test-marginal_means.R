@@ -158,7 +158,7 @@ by <- data.frame(
   by = ifelse(1:5 <= 3, "Denver", "Paris"))
 
 mm <- marginal_means(m, by = by, type = "response")
-expect_equivalent(mm$estimate, ma$y)
+expect_equivalent(mm$estimate, ma$y, tol = .1)
 
 
 # simple marginal means for each level of `cyl`

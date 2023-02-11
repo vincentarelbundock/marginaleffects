@@ -154,21 +154,22 @@ marginal_means <- function(model,
     }
 
     # if type is NULL, we backtransform if relevant
-    if (is.null(type)) {
-        type <- sanitize_type(model = model, type = type, calling_function = "marginalmeans")
+    flag <- isTRUE(class(model)[1] %in% c("glm", "Gam"))
+    if (flag && (is.null(type) || isTRUE(type == "response"))) {
+        type <- sanitize_type(model = model, type = type)
         linv <- tryCatch(
             insight::link_inverse(model),
             error = function(e) NULL)
         if (type == "response" &&
             is.null(transform_post) &&
             class(model)[1] %in% type_dictionary$class &&
-            isTRUE("link" %in% subset(type_dictionary, class == class(model)[1])$base) &&
+            isTRUE("link" %in% subset(type_dictionary, class == class(model)[1])$type) &&
             is.function(linv)) {
             type <- "link"
             transform_post <- linv
         }
     } else {
-        type <- sanitize_type(model = model, type = type, calling_function = "marginalmeans")
+        type <- sanitize_type(model = model, type = type)
     }
 
     modeldata <- get_modeldata(model)
@@ -347,17 +348,14 @@ marginal_means <- function(model,
         J <- NULL
     }
 
-    lin <- tryCatch(insight::model_info(model)$is_linear, error = function(e) FALSE)
-    if (isTRUE(type == "link") || isTRUE(lin)) {
-        out <- get_ci(
-            out,
-            conf_level = conf_level,
-            vcov = vcov,
-            null_hypothesis = hypothesis_null,
-            df = df,
-            model = model,
-            ...)
-    }
+    out <- get_ci(
+        out,
+        conf_level = conf_level,
+        vcov = vcov,
+        null_hypothesis = hypothesis_null,
+        df = df,
+        model = model,
+        ...)
 
     # equivalence tests
     out <- equivalence(out, df = df, ...)

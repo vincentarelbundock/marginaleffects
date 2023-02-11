@@ -9,8 +9,6 @@ get_predict.bife <- function(model,
                              type = "response",
                              ...) {
 
-    type <- sanitize_type(model, type)
-
     pred <- stats::predict(model,
                            X_new = newdata,
                            type = type)
