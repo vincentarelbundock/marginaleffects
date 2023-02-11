@@ -48,9 +48,10 @@ mod <- coxph(Surv(time, status) ~ x + strata(sex),
     data = test1,
     ties = "breslow")
 
+nd <- datagrid(sex = 0, newdata = test1)
 mfx <- slopes(mod,
     variables = "x",
-    newdata = datagrid(sex = 0, newdata = test1),
+    newdata = nd,
     type = "lp")
 expect_inherits(mfx, "marginaleffects")
 

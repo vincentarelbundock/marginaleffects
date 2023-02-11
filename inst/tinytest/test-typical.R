@@ -21,7 +21,7 @@ tmp <- mtcars
 tmp$am <- as.logical(tmp$am)
 mod_int <- lm(mpg ~ am * factor(cyl), tmp)
 mfx <- slopes(mod_int,
-                       newdata = datagrid(cyl = tmp$cyl),
+                       newdata = datagrid(cyl = unique),
                        variables = "am")
 expect_equivalent(nrow(mfx), 3)
 
@@ -52,7 +52,7 @@ expect_equivalent(nrow(nd), 1)
 tmp <- mtcars
 tmp$am <- as.logical(tmp$am)
 mod <- lm(mpg ~ am * factor(cyl), data = tmp)
-mfx <- slopes(mod, newdata = datagrid(cyl = tmp$cyl), variables = "am")
+mfx <- slopes(mod, newdata = datagrid(cyl = unique), variables = "am")
 expect_inherits(mfx, "marginaleffects")
 expect_equivalent(nrow(mfx), 3)
 

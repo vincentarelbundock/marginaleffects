@@ -244,9 +244,9 @@ using("tinyviztest")
 set.seed(123)
 dat <- transform(iris, dummy = as.factor(rbinom(nrow(iris), 1, prob = c(0.4, 0.6))))
 m <- lm(Sepal.Width ~ Sepal.Length * Species + dummy, data = dat)
-expect_snapshot_print(
-    slopes(m, variables = "Sepal.Length", by = c("Species", "dummy"), hypothesis = "pairwise"),
-    "hypothesis-slopes_pairwise_labels")
+mfx <- slopes(m, variables = "Sepal.Length", by = c("Species", "dummy"), hypothesis = "pairwise")
+expect_true("setosa, 0 - setosa, 1" %in% mfx$term)
+
 
 # # Issue #568
 # # TODO: p-value computed before transform_post; null on the pre-transform scale

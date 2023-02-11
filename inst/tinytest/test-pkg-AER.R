@@ -47,7 +47,7 @@ expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .1)
 
 # marginaleffects vs. emtrends
 mod <- tobit(affairs ~ age + yearsmarried, data = dat)
-mfx <- slopes(mod, newdata = datagrid(age = 30, yearsmarried = 5, newdata = dat))
+mfx <- slopes(mod, newdata = datagrid(age = 30, yearsmarried = 5))
 em1 <- emmeans::emtrends(mod, ~age, "age", at = list(age = 30, yearsmarried = 5))
 em2 <- emmeans::emtrends(mod, ~yearsmarried, "yearsmarried", at = list(age = 30, yearsmarried = 5))
 em1 <- tidy(em1)
