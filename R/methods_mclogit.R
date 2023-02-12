@@ -33,12 +33,6 @@ get_predict.mblogit <- function(model,
                                 newdata = insight::get_data(model),
                                 type = "response",
                                 ...) {
-
-    if (!isTRUE(checkmate::check_flag(vcov, null.ok = TRUE)) &&
-        isTRUE(list(...)$calling_function == "predictions")) {
-        stop("The `vcov` argument is not supported for this model class.", call. = FALSE)
-    }
-
     out <- suppressMessages(
         get_predict.multinom(model = model,
                              newdata = newdata,

@@ -110,7 +110,18 @@ tmp <- purrr::map(pre, hypotheses, hypothesis = "b1 = b2")
 expect_inherits(tmp, "list")
 expect_inherits(tmp[[1]], "hypotheses")
 expect_inherits(tmp[[2]], "hypotheses")
-
+tmp <- purrr::map(reg_list , ~hypotheses(.) |> tidy()) # error in Github version; works in CRAN version
+expect_inherits(tmp, "list")
+expect_inherits(tmp[[1]], "tbl_df")
+expect_inherits(tmp[[2]], "tbl_df")
+tmp <- purrr::map(reg_list, function(reg) reg |>  hypotheses("wt = 0") |>  broom::tidy())
+expect_inherits(tmp, "list")
+expect_inherits(tmp[[1]], "tbl_df")
+expect_inherits(tmp[[2]], "tbl_df")
+tmp <- purrr::map(reg_list, function(reg) tidy(hypotheses(reg, "wt = 0")))
+expect_inherits(tmp, "list")
+expect_inherits(tmp[[1]], "tbl_df")
+expect_inherits(tmp[[2]], "tbl_df")
 
 
 # hypotheses() applied to {marginaleffects} package objects

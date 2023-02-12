@@ -76,9 +76,8 @@ tidy.marginalmeans <- function(x, ...) {
 #' @noRd
 #' @export
 tidy.hypotheses <- function(x, ...) {
-    insight::check_if_installed("insight")
-    out <- recall(x, ...)
-    out <- tibble::as_tibble(out)
+    insight::check_if_installed("tibble")
+    out <- tibble::as_tibble(x)
     return(out)
 }
 

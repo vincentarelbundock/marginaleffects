@@ -108,9 +108,8 @@ hypotheses <- function(
 
     if (is.symbol(xcall)) {
         model <- eval(xcall, envir = parent.frame())
-    }
 
-    if (is.call(xcall)) {
+    } else if (is.call(xcall)) {
         internal <- c(
             "predictions", "avg_predictions", "comparisons",
             "avg_comparisons", "slopes", "avg_slopes", "marginal_means")
@@ -137,7 +136,6 @@ hypotheses <- function(
             return(out)
         }
     }
-     
 
     # after re-evaluation
     checkmate::assert_number(df, lower = 1)
