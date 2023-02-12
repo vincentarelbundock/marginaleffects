@@ -1,5 +1,4 @@
 source("helpers.R")
-exit_if_not(EXPENSIVE)
 using("marginaleffects")
 
 exit_if_not(requiet("crch"))
@@ -12,7 +11,7 @@ dat$sqrtensmean <- apply(sqrt(dat[,grep('^rainfc',names(dat))]), 1, mean)
 dat$sqrtenssd <- apply(sqrt(dat[,grep('^rainfc',names(dat))]), 1, sd)
 dat$enssd <- apply(dat[,grep('^rainfc',names(dat))], 1, sd)
 dat$ensmean <- apply(dat[,grep('^rainfc',names(dat))], 1, mean)
-dat <- subset(dat, enssd > 0)
+dat <<- subset(dat, enssd > 0)
 
 # marginaleffects: crch gaussian: no validity
 model <- crch(sqrt(rain) ~ sqrtensmean + sqrtenssd, data = dat, dist = "gaussian")
@@ -60,4 +59,5 @@ expect_marginal_means(mm, n_row = 5)
 
 
 
+source("helpers.R")
 rm(list = ls())

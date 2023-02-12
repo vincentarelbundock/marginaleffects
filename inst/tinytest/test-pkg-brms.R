@@ -598,8 +598,9 @@ expect_equivalent(sum(p1$estimate[3:4]), p3$estimate[2], tolerance = 0.1)
 
 
 # Issue #500
+# TODO
 N <- 1250
-n <- sample(10:100, size = N, replace = T)
+n <- sample(10:100, size = N, replace = TRUE)
 x <- rbinom(N, 1, 0.5)
 w <- rbinom(N, 1, 0.5)
 z <- rbinom(N, 1, 0.5)
@@ -620,7 +621,7 @@ expect_inherits(p, "gg")
 # Issue #504: integrate out random effects
 set.seed(1024)
 
-K <- 100
+K <<- 100
 
 cmp <- comparisons(
     brms_logit_re,
@@ -701,4 +702,5 @@ expect_equivalent(nrow(cmp), 5)
 
 
 
+source("helpers.R")
 rm(list = ls())

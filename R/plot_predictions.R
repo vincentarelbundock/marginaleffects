@@ -218,7 +218,7 @@ get_plot_newdata <- function(model, condition, effect = NULL) {
     }
 
     # get data to know over what range of values we should plot
-    dat <- get_modeldata(model, additional_variables = FALSE)
+    dat <- get_modeldata(model, additional_variables = names(condition))
     resp <- insight::get_response(model)
     respname <- insight::find_response(model)
 
@@ -236,7 +236,9 @@ get_plot_newdata <- function(model, condition, effect = NULL) {
 
     # condition 1: x-axis
     if (is.null(condition[[1]])) {
-        if (is.numeric(dat[[condition1]]) && !get_variable_class(dat, condition1, "categorical")) {
+        if (get_variable_class(dat, condition1, "binary")) {
+            at_list[[condition1]] <- 0:1
+        } else if (is.numeric(dat[[condition1]]) && !get_variable_class(dat, condition1, "categorical")) {
             at_list[[condition1]] <- seq(
                 min(dat[[condition1]], na.rm = TRUE),
                 max(dat[[condition1]], na.rm = TRUE),

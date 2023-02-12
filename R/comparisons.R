@@ -277,7 +277,14 @@ comparisons <- function(model,
     marginalmeans <- isTRUE(checkmate::check_choice(newdata, choices = "marginalmeans"))
 
     # before sanitize_variables
-    modeldata <- get_modeldata(model)
+    if (isTRUE(checkmate::check_character(by))) {
+        addvar <- by
+    } else if (isTRUE(checkmate::check_data_frame(by))) {
+        addvar <- colnames(by)
+    } else {
+        addvar <- FALSE
+    }
+    modeldata <- get_modeldata(model, additional_variables = addvar)
     newdata <- sanitize_newdata(
         model = model,
         newdata = newdata,
