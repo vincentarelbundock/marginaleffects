@@ -12,12 +12,14 @@
 #' + "fwb": fractional weighted bootstrap
 #' + "rsample" package
 #' + "simulation" from a multivariate normal distribution (Krinsky & Robb, 1986)
+#' + "mi" multiple imputation for missing data
 #' @param R Number of resamples or simulations.
 #' @param conf_type String: type of bootstrap interval to construct.
 #' + `boot`: "perc", "norm", "basic", or "bca"
 #' + `fwb`: "perc", "norm", "basic", "bc", or "bca"
 #' + `rsample`: "perc" or "bca"
 #' + `simulation`: argument ignored.
+#' @param midata a list of data frames of identical dimensions or a `mids` object produced by the `mice::mice()` function. Only used when `method="mi"`.
 #' @param ...
 #' + If `method="boot"`, additional arguments are passed to `boot::boot()`.
 #' + If `method="fwb"`, additional arguments are passed to `fwb::fwb()`.
@@ -48,24 +50,41 @@
 #' set.seed(1024)
 #' mod <- lm(Sepal.Length ~ Sepal.Width * Species, data = iris)
 #'
+#' # bootstrap
 #' avg_predictions(mod, by = "Species") %>%
 #'   inferences(method = "boot")
 #'
-#' slopes(mod) %>%
-#'   inferences(method = "simulation") %>%
-#'   head()
+#' avg_predictions(mod, by = "Species") %>%
+#'   inferences(method = "rsample")
 #'
+#' # Fractional (bayesian) bootstrap
 #' avg_slopes(mod, by = "Species") %>%
 #'   inferences(method = "fwb") %>%
 #'   posterior_draws("rvar") %>%
 #'   data.frame()
+#'
+#' # Simulation-based inference
+#' slopes(mod) %>%
+#'   inferences(method = "simulation") %>%
+#'   head()
+#'
+#' # Multiple imputation
+#' library(mice)
+#' dat <- iris
+#' dat$Sepal.Length[sample(seq_len(nrow(iris)), 40)] <- NA
+#' dat$Sepal.Width[sample(seq_len(nrow(iris)), 40)] <- NA
+#' dat$Species[sample(seq_len(nrow(iris)), 40)] <- NA
+#' dat_mice <- mice(dat, m = 20, printFlag = FALSE, .Random.seed = 1024)
+#' 
+#' avg_slopes(mod, by = "Species") %>%
+#'     inferences(method = "mi", midata = dat_mice)
 #' }
 #' @export
-inferences <- function(x, method, R = 1000, conf_type = "perc", ...) {
+inferences <- function(x, method, R = 1000, conf_type = "perc", midata = NULL, ...) {
 
     checkmate::assert_choice(
         method,
-        choices = c("delta", "boot", "fwb", "rsample", "simulation"))
+        choices = c("delta", "boot", "fwb", "rsample", "simulation", "mi"))
 
     if (!inherits(x, c("predictions", "comparisons", "slopes"))) {
         msg <- sprintf("Objects of class `%s` are not supported by `inferences()`.", class(x)[1])
@@ -75,7 +94,23 @@ inferences <- function(x, method, R = 1000, conf_type = "perc", ...) {
     mfx_call <- attr(x, "call")
     model <- mfx_call[["model"]]
 
-    if (method == "boot") {
+    if (method == "mi") {
+        insight::check_if_installed("mice")
+        insight::check_if_installed("tibble") # for tidy.marginaleffects_mi
+        checkmate::assert(
+            checkmate::check_list(midata),
+            checkmate::check_class(midata, "mids"))
+        if (inherits(midata, "mids")) {
+            midata <- mice::complete(midata, action = "all")
+
+        }
+        for (i in seq_along(midata)) {
+            checkmate::assert_data_frame(midata[[i]])
+        }
+        attr(model, "inferences_method") <- "mi"
+        attr(model, "inferences_midata") <- midata
+
+    } else if (method == "boot") {
         insight::check_if_installed("boot")
         attr(model, "inferences_method") <- "boot"
         attr(model, "inferences_dots") <- c(list(R = R), list(...))
@@ -117,7 +152,9 @@ inferences <- function(x, method, R = 1000, conf_type = "perc", ...) {
 
 
 inferences_dispatch <- function(model, FUN, ...) {
-    if (isTRUE(attr(model, "inferences_method") == "rsample")) {
+    if (isTRUE(attr(model, "inferences_method") == "mi")) {
+        mi_fit_combine(model = model, FUN = FUN, ...)
+    } else if (isTRUE(attr(model, "inferences_method") == "rsample")) {
         bootstrap_rsample(model = model, FUN = FUN, ...)
     } else if (isTRUE(attr(model, "inferences_method") == "boot")) {
         bootstrap_boot(model = model, FUN = FUN, ...)

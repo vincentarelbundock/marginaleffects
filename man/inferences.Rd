@@ -4,7 +4,7 @@
 \alias{inferences}
 \title{(EXPERIMENTAL) Bootstrap and Simulation-Based Inference}
 \usage{
-inferences(x, method, R = 1000, conf_type = "perc", ...)
+inferences(x, method, R = 1000, conf_type = "perc", midata = NULL, ...)
 }
 \arguments{
 \item{x}{Object produced by one of the core \code{marginaleffects} functions.}
@@ -16,6 +16,7 @@ inferences(x, method, R = 1000, conf_type = "perc", ...)
 \item "fwb": fractional weighted bootstrap
 \item "rsample" package
 \item "simulation" from a multivariate normal distribution (Krinsky & Robb, 1986)
+\item "mi" multiple imputation for missing data
 }}
 
 \item{R}{Number of resamples or simulations.}
@@ -27,6 +28,8 @@ inferences(x, method, R = 1000, conf_type = "perc", ...)
 \item \code{rsample}: "perc" or "bca"
 \item \code{simulation}: argument ignored.
 }}
+
+\item{midata}{a list of data frames of identical dimensions or a \code{mids} object produced by the \code{mice::mice()} function. Only used when \code{method="mi"}.}
 
 \item{...}{\itemize{
 \item If \code{method="boot"}, additional arguments are passed to \code{boot::boot()}.
@@ -70,16 +73,33 @@ library(magrittr)
 set.seed(1024)
 mod <- lm(Sepal.Length ~ Sepal.Width * Species, data = iris)
 
+# bootstrap
 avg_predictions(mod, by = "Species") \%>\%
   inferences(method = "boot")
 
-slopes(mod) \%>\%
-  inferences(method = "simulation") \%>\%
-  head()
+avg_predictions(mod, by = "Species") \%>\%
+  inferences(method = "rsample")
 
+# Fractional (bayesian) bootstrap
 avg_slopes(mod, by = "Species") \%>\%
   inferences(method = "fwb") \%>\%
   posterior_draws("rvar") \%>\%
   data.frame()
+
+# Simulation-based inference
+slopes(mod) \%>\%
+  inferences(method = "simulation") \%>\%
+  head()
+
+# Multiple imputation
+library(mice)
+dat <- iris
+dat$Sepal.Length[sample(seq_len(nrow(iris)), 40)] <- NA
+dat$Sepal.Width[sample(seq_len(nrow(iris)), 40)] <- NA
+dat$Species[sample(seq_len(nrow(iris)), 40)] <- NA
+dat_mice <- mice(dat, m = 20, printFlag = FALSE, .Random.seed = 1024)
+
+avg_slopes(mod, by = "Species") \%>\%
+    inferences(method = "mi", midata = dat_mice)
 }
 }

@@ -1,8 +1,8 @@
 ---
-title: "Multiple Imputation"
+title: "Multiple Imputation and Missing Data"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Multiple Imputation}
+  %\VignetteIndexEntry{Multiple Imputation and Missing Data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -19,16 +19,90 @@ knitr::opts_chunk$set(
 )
 ```
 
-The `marginaleffects` package offers convenience functions to compute and display predictions, contrasts, and marginal effects from models with multiple imputation from the `mice` package. The workflow follows Rubin's rules (Rubin, 1987, p. 76) that uses the following steps:
+The `marginaleffects` package offers convenience functions to compute and display predictions, contrasts, and marginal effects from models with multiple imputation from the `mice` package. The workflow follows Rubin's rules (Rubin, 1987, p. 76), via the following steps:
 
 1. Impute n data sets
 2. Fit in each of the n imputed data sets
 3. Marginal effects in each of the n data sets
 4. Pool results
 
-To highlight the workflow, we can consider 3 situations: linear regression, logistic regression, and multilevel models with `lme4`. To show the linear and logistic models, we are going to use the classic `mtcars` data set but we will artificially add missing data. For the multilevel models, we will use the `sleepstudy` data set from `lme4`.
+To highlight the workflow, we consider a simple linear regression model, although the same workflow should work with any model type which supports the `stats::update()` function, which `marginaleffects` uses internally to re-fit models with the imputed datasets.
 
-# Linear Regression with `mice`
+The user interface is almost exactly the same as the one used for [bootstraping or simulation-based inference (see vignette).](bootstrap.html)
+
+
+# Imputation with `mice`
+
+First, we insert missing observations randomly in a dataset and we impute the dataset using the `mice` package:
+
+```{r}
+library(mice)
+library(marginaleffects)
+
+dat <- iris
+dat$Sepal.Length[sample(seq_len(nrow(iris)), 40)] <- NA
+dat$Sepal.Width[sample(seq_len(nrow(iris)), 40)] <- NA
+dat$Species[sample(seq_len(nrow(iris)), 40)] <- NA
+
+dat_mice <- mice(dat, m = 20, printFlag = FALSE, .Random.seed = 1024)
+```
+
+Then, we fit a simple model using those partially missing observations (with list-wise deletion):
+
+```{r}
+mod <- lm(Petal.Width ~ Sepal.Length * Sepal.Width + Species, data = dat)
+```
+
+Now we use a `marginaleffects` function to compute quantities of interest:
+
+```{r}
+avg_slopes(mod)
+```
+
+Finally, we use the `inferences()` function to feed the multiply imputed data to the inference engine:
+
+```{r}
+avg_slopes(mod) |> inferences(method = "mi", midata = dat_mice)
+```
+
+All the usual arguments of the `marginaleffects` functions should be available.
+
+```{r}
+avg_slopes(mod, by = "Species") |> inferences(method = "mi", midata = dat_mice)
+```
+
+Note that the original `mice` object can be retrieved from an attribute:
+
+```{r}
+avg_slopes(mod, by = "Species") |>
+    inferences(method = "mi", midata = dat_mice) |>
+    attr("inferences")
+```
+
+
+# Imputation with `Amelia`
+
+An alternative to `mice` is the `Amelia` package. The `amelia` function returns an object with an "`imputations`" list of imputed data frames. We can pass this list to the `inferences` function, just as we did above:
+
+```{r, warning = FALSE, message = FALSE}
+library(Amelia)
+
+dat_amelia <- amelia(dat, noms = "Species", p2s = 0)$imputations
+```
+
+```{r, warning = FALSE}
+avg_comparisons(mod)
+
+avg_comparisons(mod) |> inferences(method = "mi", midata = dat_amelia)
+```
+
+
+````{comment}
+With the new `inferences()` improvement, this whole section now feels obsolete.
+
+# Manual approach
+
+## Linear Regression with `mice`
 
 Let's first set up the data.
 
@@ -85,7 +159,7 @@ models <- list(
 modelsummary(models)
 ```
 
-# Categories and Contrasts: Problem and Solution
+## Categories and Contrasts: Problem and Solution
 
 One particular problem arises in the cases of contrasts and categorical predictors. To see it, notice that when there are contrasts or categorical predictors, the `tidy()` method of `marginaleffects` identifies unique estimates using two columns called `term` and `contrast`:
 
@@ -133,7 +207,7 @@ mod_imputation <- pool(mod_imputation)
 summary(mod_imputation)
 ```
 
-# Logistic Regression with `mice`
+## Logistic Regression with `mice`
 
 For the logistic regression, we'll work with the same `dat_mice` imputed data sets. We'll update our function to run the logistic regression that we want and call it `fit_logistic`.
 
@@ -226,3 +300,4 @@ models <- list(
 modelsummary(models)
 ```
 
+````

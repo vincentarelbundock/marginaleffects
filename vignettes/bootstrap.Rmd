@@ -151,3 +151,8 @@ avg_comparisons(mod, by = "Species", variables = "Petal.Width") |>
   ggplot(aes(y = Species, xdist = rvar)) +
   stat_slabinterval()
 ```
+
+
+# Multiple imputation and missing data
+
+The same workflow and the same `inferences` function can be used to estimate models with multiple imputation for missing data.

@@ -8,6 +8,7 @@ New models supported:
 
 Other:
 
+* `inferences()` supports multiple imputation.
 * Major performance improvements for many functions. Thanks to Etienne Bacher.
 * The `variables_grid` argument in `marginal_means()` is renamed to `newdata`. Backward compatibility is maintained.
 * `avg_*()` returns an informative error when `vcov` is "satterthwaite" or "kenward-roger"
