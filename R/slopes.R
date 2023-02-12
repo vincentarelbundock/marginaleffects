@@ -247,11 +247,11 @@ slopes <- function(model,
         FUN = slopes,
         model = model, newdata = newdata, vcov = vcov, variables = variables, type = type,
         conf_level = conf_level,
+        by = by,
         wts = wts, slope = slope, hypothesis = hypothesis, ...)
     if (!is.null(out)) {
         return(out)
     }
-
 
     out <- comparisons(
         model,
