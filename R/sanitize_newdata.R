@@ -1,4 +1,5 @@
 sanitize_newdata_call <- function(scall, newdata, model) {
+    out <- newdata
     if (is.call(scall)) {
         lcall <- as.list(scall)
         fun_name <- as.character(scall)[1]
@@ -12,11 +13,7 @@ sanitize_newdata_call <- function(scall, newdata, model) {
                 lcall <- c(lcall, list("x" = get_modeldata))
                 out <- eval(as.call(lcall))
             }
-        } else {
-            out <- newdata
         }
-    } else {
-        out <- newdata
     }
     return(out)
 }
