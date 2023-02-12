@@ -5,7 +5,7 @@ bootstrap_fwb <- function(model, FUN, ...) {
   checkmate::assert_choice(conf_type, choices = c("perc", "norm", "basic", "bc", "bca"))
 
   # bootstrap using the original data and call
-  modeldata <- get_modeldata(model)
+  modeldata <- get_modeldata(model, additional_variables = FALSE)
 
   # evaluate the {marginaleffects} call to get output without inferences()
   # use ... because arguments are not the same for different {marginaleffects} functions

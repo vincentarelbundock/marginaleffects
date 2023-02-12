@@ -47,6 +47,7 @@ plot_predictions <- function(model,
         vcov = vcov,
         conf_level = conf_level,
         transform_post = transform_post,
+        modeldata = dat,
         ...)
 
     colnames(datplot)[colnames(datplot) == condition1] <- "condition1"
@@ -217,7 +218,7 @@ get_plot_newdata <- function(model, condition, effect = NULL) {
     }
 
     # get data to know over what range of values we should plot
-    dat <- get_modeldata(model)
+    dat <- get_modeldata(model, additional_variables = FALSE)
     resp <- insight::get_response(model)
     respname <- insight::find_response(model)
 
@@ -286,6 +287,7 @@ get_plot_newdata <- function(model, condition, effect = NULL) {
     }
 
     at_list[["model"]] <- model
+    at_list[["newdata"]] <- dat
 
     if (!is.null(effect)) {
         # sometimes we use the same condition as effect (e.g., GAM vignette),

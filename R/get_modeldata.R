@@ -1,5 +1,5 @@
-get_modeldata <- function(model) {
-    out <- hush(insight::get_data(model, verbose = FALSE, additional_variables = TRUE))
+get_modeldata <- function(model, additional_variables = TRUE) {
+    out <- hush(insight::get_data(model, verbose = FALSE, additional_variables = additional_variables))
     out <- as.data.frame(out)
     out <- set_variable_class(modeldata = out, model = model)
     return(out)
@@ -8,11 +8,21 @@ get_modeldata <- function(model) {
 set_variable_class <- function(modeldata, model = NULL) {
 
     if (is.null(modeldata)) return(modeldata)
+    
+    # this can be costly on large datasets, when only a portion of
+    # variables are used in the model
+    variables <- NULL
+    if (is.null(model)) {
+        variables <- tryCatch(
+            unlist(insight::find_variables(model, flatten = TRUE), use.names = FALSE),
+            error = function(e) NULL)
+    }
+    if (is.null(variables)) variables <- colnames(modeldata)
 
     out <- modeldata
 
     cl <- NULL
-    for (col in colnames(out)) {
+    for (col in variables) {
         if (is.logical(out[[col]])) {
             cl[col] <- "logical"
         } else if (is.character(out[[col]])) {

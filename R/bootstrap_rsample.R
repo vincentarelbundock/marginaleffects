@@ -12,7 +12,7 @@ bootstrap_rsample <- function(model, FUN, ...) {
 
     # bootstrap using the original data and call
     modcall <- insight::get_call(model)
-    modeldata <- get_modeldata(model)
+    modeldata <- get_modeldata(model, additional_variables = FALSE)
     data.table::setDF(modeldata)
 
     # evaluate the {marginaleffects} call to get output without inferences()
