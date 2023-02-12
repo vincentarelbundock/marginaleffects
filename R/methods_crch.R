@@ -26,9 +26,8 @@ set_coef.crch <- function(model, coefs, ...) {
 #' @export
 get_predict.crch <- function(model,
                              newdata = NULL,
-                             vcov = FALSE,
-                             conf_level = 0.95,
-                             type = "location", ...) {
+                             type = "location",
+                             ...) {
 
     pred <- stats::predict(model, newdata = newdata, type = type)
     sanity_predict_vector(pred = pred, model = model, newdata = newdata, type = type)

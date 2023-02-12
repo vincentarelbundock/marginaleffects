@@ -7,7 +7,7 @@
 #' @inheritParams slopes
 #' @keywords internal
 #' @export
-get_predict <- function(model, newdata, vcov, conf_level, type, ...) {
+get_predict <- function(model, newdata, type, ...) {
     UseMethod("get_predict", model)
 }
 
@@ -16,8 +16,6 @@ get_predict <- function(model, newdata, vcov, conf_level, type, ...) {
 #' @export
 get_predict.default <- function(model,
                                 newdata = insight::get_data(model),
-                                vcov = FALSE,
-                                conf_level = 0.95,
                                 type = "response",
                                 ...) {
 
@@ -27,12 +25,6 @@ get_predict.default <- function(model,
     # some predict methods raise warnings on unused arguments
     unused <- c("normalize_dydx", "eps", "numDeriv_method", "internal_call", "draw")
     dots <- dots[setdiff(names(dots), unused)]
-
-    # incompatible arguments
-    if (any(c("include_smooth", "include_random") %in% names(dots)) &&
-        any(c("re.form", "re_formula") %in% names(dots))) {
-        stop("The `include_random` and `include_smooth` arguments can be used together, but not with `re.form` or `re_formula`.", call. = FALSE)
-    }
 
     # first argument in the predict methods is not always named "x" or "model"
     dots[["newdata"]] <- newdata

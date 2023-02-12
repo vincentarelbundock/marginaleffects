@@ -353,8 +353,6 @@ predictions <- function(model,
     args <- list(
         model = model,
         newdata = newdata,
-        vcov = vcov_tmp,
-        conf_level = conf_level,
         type = type,
         hypothesis = hypothesis,
         by = by,
@@ -420,7 +418,7 @@ predictions <- function(model,
             if (isTRUE(checkmate::check_matrix(V))) {
                 # vcov = FALSE to speed things up
                 fun <- function(...) {
-                    get_predictions(..., verbose = FALSE, vcov = FALSE)$estimate
+                    get_predictions(..., verbose = FALSE)$estimate
                 }
                 args <- list(
                     model,
@@ -432,8 +430,7 @@ predictions <- function(model,
                     eps = 1e-4, # avoid pushing through ...
                     hypothesis = hypothesis,
                     by = by,
-                    byfun = byfun,
-                    conf_level = conf_level)
+                    byfun = byfun)
                 args <- utils::modifyList(args, dots)
                 se <- do.call(get_se_delta, args)
                 if (is.numeric(se) && length(se) == nrow(tmp)) {
@@ -524,8 +521,6 @@ predictions <- function(model,
 # wrapper used only for standard_error_delta
 get_predictions <- function(model,
                             newdata,
-                            vcov,
-                            conf_level,
                             type,
                             by = NULL,
                             byfun = byfun,
@@ -537,8 +532,6 @@ get_predictions <- function(model,
     out <- myTryCatch(get_predict(
         model,
         newdata = newdata,
-        vcov = vcov,
-        conf_level = conf_level,
         type = type,
         ...))
 

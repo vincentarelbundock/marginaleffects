@@ -3,8 +3,6 @@
 get_predict.MCMCglmm <- function(
     model,
     newdata,
-    vcov = NULL,
-    conf_level = .95,
     type = "response",
     ndraws = 1000,
     ...) {

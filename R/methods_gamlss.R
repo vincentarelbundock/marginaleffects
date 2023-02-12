@@ -19,8 +19,6 @@ get_coef.gamlss <- function(model, ...){
 get_predict.gamlss <- function(
     model,
     newdata = insight::get_data(model),
-    vcov = FALSE,
-    conf_level = 0.95,
     type = "response",
     ...) {
 

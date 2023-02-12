@@ -20,7 +20,7 @@ sanitize_model_specific.inferences_simulation <- function(model, vcov = FALSE, .
 
 #' @rdname get_predict
 #' @export
-get_predict.inferences_simulation <- function(model, newdata, vcov = FALSE, ...) {
+get_predict.inferences_simulation <- function(model, newdata, ...) {
     coefmat <- attr(model, "inferences_coefmat")
     # coefmat: BxM 
     checkmate::assert_matrix(coefmat)
@@ -32,7 +32,7 @@ get_predict.inferences_simulation <- function(model, newdata, vcov = FALSE, ...)
         get_predict(mod_tmp, newdata = newdata)$estimate
     }
     # should never compute SE via delta method for these models
-    out <- get_predict(mod, newdata = newdata, vcov = FALSE, ...)
+    out <- get_predict(mod, newdata = newdata, ...)
     attr(out, "posterior_draws") <- apply(coefmat, MARGIN = 1, FUN = FUN)
     return(out)
 }

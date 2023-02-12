@@ -35,7 +35,6 @@ get_contrasts <- function(model,
         pred_both <- myTryCatch(get_predict(
             model,
             type = type,
-            vcov = FALSE,
             newdata = both,
             ...))[["value"]]
 
@@ -58,14 +57,12 @@ get_contrasts <- function(model,
         pred_lo <- myTryCatch(get_predict(
             model,
             type = type,
-            vcov = FALSE,
             newdata = lo,
             ...))[["value"]]
 
         pred_hi <- myTryCatch(get_predict(
             model,
             type = type,
-            vcov = FALSE,
             newdata = hi,
             ...))[["value"]]
     }
@@ -91,7 +88,6 @@ get_contrasts <- function(model,
         pred_or <- myTryCatch(get_predict(
             model,
             type = type,
-            vcov = FALSE,
             newdata = original,
             ...))[["value"]]
     } else {

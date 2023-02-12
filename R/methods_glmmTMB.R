@@ -4,8 +4,6 @@
 #' @export
 get_predict.glmmTMB <- function(model,
                                 newdata = insight::get_data(model),
-                                vcov = FALSE,
-                                conf_level = 0.95,
                                 type = "response",
                                 ...) {
 
@@ -16,8 +14,6 @@ get_predict.glmmTMB <- function(model,
     out <- get_predict.default(
         model = model,
         newdata = newdata,
-        vcov = vcov,
-        conf_level = conf_level,
         type = type,
         allow.new.levels = TRUE, # otherwise we get errors in marginal_means()
         ...)

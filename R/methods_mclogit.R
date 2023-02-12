@@ -31,8 +31,6 @@ sanitize_model_specific.mblogit <- function(model, calling_function = "marginale
 #' @export
 get_predict.mblogit <- function(model,
                                 newdata = insight::get_data(model),
-                                vcov = FALSE,
-                                conf_level = 0.95,
                                 type = "response",
                                 ...) {
 

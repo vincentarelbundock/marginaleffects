@@ -41,241 +41,65 @@
 \alias{get_predict.tobit1}
 \title{Get predicted values from a model object (internal function)}
 \usage{
-get_predict(model, newdata, vcov, conf_level, type, ...)
+get_predict(model, newdata, type, ...)
 
-\method{get_predict}{default}(
-  model,
-  newdata = insight::get_data(model),
-  vcov = FALSE,
-  conf_level = 0.95,
-  type = "response",
-  ...
-)
+\method{get_predict}{default}(model, newdata = insight::get_data(model), type = "response", ...)
 
-\method{get_predict}{polr}(
-  model,
-  newdata = insight::get_data(model),
-  vcov = FALSE,
-  conf_level = 0.95,
-  type = "probs",
-  ...
-)
+\method{get_predict}{polr}(model, newdata = insight::get_data(model), type = "probs", ...)
 
-\method{get_predict}{glmmPQL}(
-  model,
-  newdata = insight::get_data(model),
-  vcov = FALSE,
-  conf_level = 0.95,
-  type = "response",
-  ...
-)
+\method{get_predict}{glmmPQL}(model, newdata = insight::get_data(model), type = "response", ...)
 
-\method{get_predict}{MCMCglmm}(
-  model,
-  newdata,
-  vcov = NULL,
-  conf_level = 0.95,
-  type = "response",
-  ndraws = 1000,
-  ...
-)
+\method{get_predict}{MCMCglmm}(model, newdata, type = "response", ndraws = 1000, ...)
 
 \method{get_predict}{afex_aov}(model, newdata = NULL, ...)
 
-\method{get_predict}{glimML}(
-  model,
-  newdata = insight::get_data(model),
-  vcov = FALSE,
-  conf_level = 0.95,
-  type = "response",
-  ...
-)
+\method{get_predict}{glimML}(model, newdata = insight::get_data(model), type = "response", ...)
 
 \method{get_predict}{betareg}(model, newdata, ...)
 
-\method{get_predict}{bife}(
-  model,
-  newdata = insight::get_data(model),
-  vcov = FALSE,
-  conf_level = 0.95,
-  type = "response",
-  ...
-)
+\method{get_predict}{bife}(model, newdata = insight::get_data(model), type = "response", ...)
 
-\method{get_predict}{biglm}(
-  model,
-  newdata = insight::get_data(model),
-  vcov = FALSE,
-  conf_level = 0.95,
-  type = "response",
-  ...
-)
+\method{get_predict}{biglm}(model, newdata = insight::get_data(model), type = "response", ...)
 
-\method{get_predict}{multinom}(
-  model,
-  newdata = insight::get_data(model),
-  vcov = FALSE,
-  conf_level = 0.95,
-  type = "probs",
-  ...
-)
+\method{get_predict}{multinom}(model, newdata = insight::get_data(model), type = "probs", ...)
 
-\method{get_predict}{brmultinom}(
-  model,
-  newdata = insight::get_data(model),
-  vcov = FALSE,
-  conf_level = 0.95,
-  type = "probs",
-  ...
-)
+\method{get_predict}{brmultinom}(model, newdata = insight::get_data(model), type = "probs", ...)
 
-\method{get_predict}{brmsfit}(
-  model,
-  newdata = insight::get_data(model),
-  vcov = FALSE,
-  conf_level = 0.95,
-  type = "response",
-  ...
-)
+\method{get_predict}{brmsfit}(model, newdata = insight::get_data(model), type = "response", ...)
 
-\method{get_predict}{crch}(
-  model,
-  newdata = NULL,
-  vcov = FALSE,
-  conf_level = 0.95,
-  type = "location",
-  ...
-)
+\method{get_predict}{crch}(model, newdata = NULL, type = "location", ...)
 
-\method{get_predict}{fixest}(
-  model,
-  newdata = insight::get_data(model),
-  vcov = FALSE,
-  conf_level = 0.95,
-  type = "response",
-  ...
-)
+\method{get_predict}{fixest}(model, newdata = insight::get_data(model), type = "response", ...)
 
-\method{get_predict}{gamlss}(
-  model,
-  newdata = insight::get_data(model),
-  vcov = FALSE,
-  conf_level = 0.95,
-  type = "response",
-  ...
-)
+\method{get_predict}{gamlss}(model, newdata = insight::get_data(model), type = "response", ...)
 
-\method{get_predict}{glmmTMB}(
-  model,
-  newdata = insight::get_data(model),
-  vcov = FALSE,
-  conf_level = 0.95,
-  type = "response",
-  ...
-)
+\method{get_predict}{glmmTMB}(model, newdata = insight::get_data(model), type = "response", ...)
 
-\method{get_predict}{inferences_simulation}(model, newdata, vcov = FALSE, ...)
+\method{get_predict}{inferences_simulation}(model, newdata, ...)
 
-\method{get_predict}{merMod}(
-  model,
-  newdata = insight::get_data(model),
-  vcov = FALSE,
-  conf_level = 0.95,
-  type = "response",
-  ...
-)
+\method{get_predict}{merMod}(model, newdata = insight::get_data(model), type = "response", ...)
 
-\method{get_predict}{lmerModLmerTest}(
-  model,
-  newdata = insight::get_data(model),
-  vcov = FALSE,
-  conf_level = 0.95,
-  type = "response",
-  ...
-)
+\method{get_predict}{lmerModLmerTest}(model, newdata = insight::get_data(model), type = "response", ...)
 
-\method{get_predict}{lmerMod}(
-  model,
-  newdata = insight::get_data(model),
-  vcov = FALSE,
-  conf_level = 0.95,
-  type = "response",
-  ...
-)
+\method{get_predict}{lmerMod}(model, newdata = insight::get_data(model), type = "response", ...)
 
-\method{get_predict}{mblogit}(
-  model,
-  newdata = insight::get_data(model),
-  vcov = FALSE,
-  conf_level = 0.95,
-  type = "response",
-  ...
-)
+\method{get_predict}{mblogit}(model, newdata = insight::get_data(model), type = "response", ...)
 
-\method{get_predict}{mhurdle}(
-  model,
-  newdata = insight::get_data(model),
-  vcov = NULL,
-  conf_level = 0.95,
-  type = "response",
-  ...
-)
+\method{get_predict}{mhurdle}(model, newdata = insight::get_data(model), type = "response", ...)
 
 \method{get_predict}{mlogit}(model, newdata, ...)
 
-\method{get_predict}{clm}(
-  model,
-  newdata = insight::get_data(model),
-  vcov = FALSE,
-  conf_level = 0.95,
-  type = "response",
-  ...
-)
+\method{get_predict}{clm}(model, newdata = insight::get_data(model), type = "response", ...)
 
-\method{get_predict}{rq}(
-  model,
-  newdata = insight::get_data(model),
-  vcov = NULL,
-  conf_level = 0.95,
-  type = NULL,
-  ...
-)
+\method{get_predict}{rq}(model, newdata = insight::get_data(model), type = NULL, ...)
 
-\method{get_predict}{rlmerMod}(
-  model,
-  newdata = insight::get_data(model),
-  vcov = FALSE,
-  conf_level = 0.95,
-  type = "response",
-  ...
-)
+\method{get_predict}{rlmerMod}(model, newdata = insight::get_data(model), type = "response", ...)
 
-\method{get_predict}{stanreg}(
-  model,
-  newdata = insight::get_data(model),
-  vcov = FALSE,
-  conf_level = 0.95,
-  type = "response",
-  ...
-)
+\method{get_predict}{stanreg}(model, newdata = insight::get_data(model), type = "response", ...)
 
-\method{get_predict}{coxph}(
-  model,
-  newdata = insight::get_data(model),
-  vcov = FALSE,
-  conf_level = 0.95,
-  type = "lp",
-  ...
-)
+\method{get_predict}{coxph}(model, newdata = insight::get_data(model), type = "lp", ...)
 
-\method{get_predict}{tobit1}(
-  model,
-  newdata = insight::get_data(model),
-  vcov = NULL,
-  conf_level = 0.95,
-  type = "response",
-  ...
-)
+\method{get_predict}{tobit1}(model, newdata = insight::get_data(model), type = "response", ...)
 }
 \arguments{
 \item{model}{Model object}
@@ -298,24 +122,6 @@ get_predict(model, newdata, vcov, conf_level, type, ...)
 \item "grid": Marginal Effects on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
 }
 }}
-
-\item{vcov}{Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
-\itemize{
-\item FALSE: Do not compute standard errors. This can speed up computation considerably.
-\item TRUE: Unit-level standard errors using the default \code{vcov(model)} variance-covariance matrix.
-\item String which indicates the kind of uncertainty estimates to return.
-\itemize{
-\item Heteroskedasticity-consistent: \code{"HC"}, \code{"HC0"}, \code{"HC1"}, \code{"HC2"}, \code{"HC3"}, \code{"HC4"}, \code{"HC4m"}, \code{"HC5"}. See \code{?sandwich::vcovHC}
-\item Heteroskedasticity and autocorrelation consistent: \code{"HAC"}
-\item Mixed-Models degrees of freedom: "satterthwaite", "kenward-roger"
-\item Other: \code{"NeweyWest"}, \code{"KernHAC"}, \code{"OPG"}. See the \code{sandwich} package documentation.
-}
-\item One-sided formula which indicates the name of cluster variables (e.g., \code{~unit_id}). This formula is passed to the \code{cluster} argument of the \code{sandwich::vcovCL} function.
-\item Square covariance matrix
-\item Function which returns a covariance matrix (e.g., \code{stats::vcov(model)})
-}}
-
-\item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
 
 \item{type}{string indicates the type (scale) of the predictions used to
 compute contrasts or slopes. This can differ based on the model

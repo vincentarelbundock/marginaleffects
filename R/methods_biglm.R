@@ -2,8 +2,6 @@
 #' @export
 get_predict.biglm <- function(model,
                               newdata = insight::get_data(model),
-                              vcov = FALSE,
-                              conf_level = 0.95,
                               type = "response",
                               ...) {
 
