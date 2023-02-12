@@ -1,5 +1,5 @@
-exit_if_not(EXPENSIVE)
 source("helpers.R")
+exit_if_not(EXPENSIVE)
 using("marginaleffects")
 
 exit_if_not(requiet("margins"))
