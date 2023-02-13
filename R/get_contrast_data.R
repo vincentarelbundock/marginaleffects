@@ -8,10 +8,25 @@ get_contrast_data <- function(model,
 
     lo <- hi <- ter <- lab <- original <- rowid <- list()
 
+
+    # after variable class assignment
     if (is.null(modeldata)) {
         modeldata <- attr(newdata, "newdata_modeldata")
     }
+    # sometimes needed for extensions when get_data doesn't work
+    if (is.null(modeldata) || nrow(modeldata) == 0) {
+        modeldata <- newdata
+    }
+    
+    # safety need for extensions not supported by `insight`
     variable_classes <- attr(newdata, "newdata_variable_class")
+    if (length(variable_classes) == 0) {
+        newdata <- set_variable_class(newdata)
+        variable_classes <- attr(newdata, "marginaleffects_variable_class")
+    }
+    if (length(attr(modeldata, "marginaleffects_variable_class")) == 0) {
+        modeldata <- set_variable_class(modeldata)
+    }
 
     if (any(c("factor", "character") %in% variable_classes)) {
         first_cross <- names(variable_classes[variable_classes %in% c("factor", "character")])[1]
@@ -32,7 +47,10 @@ get_contrast_data <- function(model,
             first_cross = identical(v$name, first_cross),
             modeldata = modeldata)
         args <- append(args, list(...))
-        if (is.null(eps) && isTRUE(variable_classes[[v$name]] == "numeric")) {
+
+        if (is.null(eps) &&
+            isTRUE(variable_classes[[v$name]] == "numeric") &&
+            isTRUE(is.numeric(modeldata[[v$name]]))) {
             args[["eps"]] <- 1e-4 * diff(range(modeldata[[v$name]], na.rm = TRUE, finite = TRUE))
         } else {
             args[["eps"]] <- eps

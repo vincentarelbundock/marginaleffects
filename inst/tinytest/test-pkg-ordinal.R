@@ -88,4 +88,5 @@ expect_inherits(p, "gg")
 
 
 
+source("helpers.R")
 rm(list = ls())

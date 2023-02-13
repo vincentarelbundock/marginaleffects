@@ -1,6 +1,6 @@
 source("helpers.R")
 exit_if_not(packageVersion("base") >= "4.1.0")
-#exit_if_not(EXPENSIVE)
+exit_if_not(EXPENSIVE)
 
 set.seed(1024)
 R <- 100

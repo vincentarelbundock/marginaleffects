@@ -10,7 +10,7 @@ tol_se <- .01 # BDR emergency email about tiny numerical differences
 
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/plm/Grunfeld.csv")
 dat$X <- NULL
-dat <- pdata.frame(dat)
+dat <<- pdata.frame(dat)
 pool <- plm(inv ~ value * capital, data = dat, model = "pooling")
 swamy <- plm(
     inv ~ value * capital,
@@ -94,4 +94,5 @@ expect_predictions(pred2, n_row = 6)
 
 
 
+source("helpers.R")
 rm(list = ls())

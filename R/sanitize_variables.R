@@ -14,6 +14,11 @@ sanitize_variables <- function(variables,
         checkmate::check_character(variables, min.len = 1, names = "unnamed"),
         checkmate::check_list(variables, min.len = 1, names = "unique"),
         combine = "or")
+    
+    # extensions with no `get_data()`
+    if (is.null(modeldata) || nrow(modeldata) == 0) {
+        modeldata <- set_variable_class(newdata)
+    }
 
     # variables is NULL: get all variable names from the model
     if (is.null(variables)) {

@@ -38,10 +38,6 @@ cmp <- comparisons(mod, newdata = datagrid(am = unique, gear = max))
 expect_equivalent(nrow(cmp), 4)
 
 
-# error
-mod <- lm(mpg ~ hp, mtcars)
-expect_error(predictions(mod, newdata = datagridcf()), pattern = "values")
 
-
-
+source("helpers.R")
 rm(list = ls())

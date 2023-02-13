@@ -5,15 +5,10 @@ exit_if_not(requiet("emmeans"))
 exit_if_not(requiet("margins"))
 exit_if_not(requiet("broom"))
 
-Km <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/sem/Kmenta.csv")
+Km <<- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/sem/Kmenta.csv")
 dat <- mtcars
 dat$cyl <- factor(dat$cyl)
-dat <- dat
-
-
-withr::with_environment(environment(), {
-
-
+dat <<- dat
 
 # lm_lin: no validity
 mod <- lm_lin(mpg ~ am, ~ hp + cyl, data = dat)
@@ -85,9 +80,5 @@ expect_marginal_means(marginal_means(model))
 
 
 
-
-}) # withr
-
-
-
+source("helpers.R")
 rm(list = ls())

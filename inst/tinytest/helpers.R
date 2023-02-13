@@ -1,3 +1,6 @@
+rm(list=ls())
+rm(list=ls(.GlobalEnv), envir = .GlobalEnv)
+
 EXPENSIVE <- FALSE
 
 # libraries

@@ -149,8 +149,7 @@ Now we can use the `avg_slopes` function:
 ```{r}
 avg_slopes(model, newdata = mtcars, variables = c("hp", "drat"))
 
-predictions(model, newdata = mtcars) |>
-    head()
+predictions(model, newdata = mtcars) |> head()
 ```
 
 Note that, for custom model, we typically have to supply values for the `newdata` and `variables` arguments explicitly.

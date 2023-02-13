@@ -64,3 +64,17 @@ warn_once <- function(msg, id) {
 cjdt <- function(dtlist) {
     Reduce(function(DT1, DT2) cbind(DT1, DT2[rep(1:.N, each = nrow(DT1))]), dtlist)
 }
+
+
+
+# recurse up. mostly useful for `tinytest`
+# this is dumb, but it's late and i don't feel like thinking about this
+evalup <- function(xcall) {
+    out <- hush(eval(xcall))
+    for (i in 1:10) {
+        if (is.null(out)) {
+          out <- hush(eval(xcall, parent.frame(i)))
+        }
+    }
+    return(out)
+}

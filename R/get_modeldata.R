@@ -1,5 +1,12 @@
 get_modeldata <- function(model, additional_variables = TRUE) {
     out <- hush(insight::get_data(model, verbose = FALSE, additional_variables = additional_variables))
+    # iv_robust and some others
+    if (is.null(out)) {
+        out <- evalup(model[["call"]][["data"]])
+    }
+    if (is.null(out)) {
+        out <- evalup(attr(model, "call")$data)
+    }
     out <- as.data.frame(out)
     out <- set_variable_class(modeldata = out, model = model)
     return(out)
