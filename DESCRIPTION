@@ -41,6 +41,7 @@ Imports:
     methods
 Suggests: 
     AER,
+    Amelia,
     afex,
     aod,
     bench,
