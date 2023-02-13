@@ -265,6 +265,15 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
     checkmate::assert_data_frame(newdata, null.ok = TRUE)
 
     at <- list(...)
+    
+    # e.g., mlogit vignette we plot by group, but group is of length 0 because
+    # we don't know how many groups there are until we make the first
+    # prediction.
+    for (i in seq_along(at)) {
+        if (length(at[[i]]) == 0) {
+            at[[i]] <- NULL
+        }
+    }
 
     # if (!is.null(model) & !is.null(newdata)) {
     #     msg <- "One of the `model` or `newdata` arguments must be `NULL`."
