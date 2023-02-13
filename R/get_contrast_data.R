@@ -127,14 +127,15 @@ get_contrast_data <- function(model,
         lo <- rbindlist(lo, fill = TRUE)
         hi <- rbindlist(hi, fill = TRUE)
         original <- rbindlist(original, fill = TRUE)
-        ter <- unlist(ter, use.names = FALSE)
-        lab <- unlist(lab, use.names = FALSE)
-        lo[, "term" := ter]
-        hi[, "term" := ter]
-        original[, "term" := ter]
-        lo[, "contrast" := lab]
-        hi[, "contrast" := lab]
-        original[, "contrast" := lab]
+        # long names to avoid user-supplied colname conflict
+        marginaleffects_ter <- unlist(ter, use.names = FALSE)
+        marginaleffects_lab <- unlist(lab, use.names = FALSE)
+        lo[, "term" := marginaleffects_ter]
+        hi[, "term" := marginaleffects_ter]
+        original[, "term" := marginaleffects_ter]
+        lo[, "contrast" := marginaleffects_lab]
+        hi[, "contrast" := marginaleffects_lab]
+        original[, "contrast" := marginaleffects_lab]
 
     # cross contrast
     } else {

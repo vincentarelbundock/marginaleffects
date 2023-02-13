@@ -18,6 +18,8 @@ utils::globalVariables(c(
 "..tmp",
 "..variables_grid",
 "..w",
+"marginaleffects_lab",
+"marginaleffects_ter",
 ".",
 "comparison",
 "condition_variable",
