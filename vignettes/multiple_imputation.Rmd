@@ -86,10 +86,10 @@ library(missRanger)
 
 # impute data
 dat_amelia <- amelia(dat, noms = "Species", p2s = 0)$imputations
-dat_missRanger <- replicate(20, missRanger(dat, verbose = 0), simplify = FALSE)
+mids_amelia <- datlist2mids(dat_amelia)
 
 # convert lists of imputed datasets to `mids` objects
-mids_amelia <- datlist2mids(dat_amelia)
+dat_missRanger <- replicate(20, missRanger(dat, verbose = 0), simplify = FALSE)
 mids_missRanger <- datlist2mids(dat_missRanger)
 
 # fit models
@@ -102,7 +102,7 @@ mfx_amelia
 
 # `missRanger` slopes
 mfx_missRanger <- avg_slopes(mod_missRanger, by = "Species")
-mfx_amelia
+mfx_missRanger
 ```
 
 # Comparing results with different imputation software
