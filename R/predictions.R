@@ -211,7 +211,7 @@ predictions <- function(model,
     call_attr <- do.call("call", call_attr)
 
     # multiple imputation
-    if (inherits(model, c("mira", "marginaleffects_imputation"))) {
+    if (inherits(model, "mira")) {
         out <- process_imputation(model, call_attr)
         return(out)
     }
