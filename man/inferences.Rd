@@ -4,7 +4,7 @@
 \alias{inferences}
 \title{(EXPERIMENTAL) Bootstrap and Simulation-Based Inference}
 \usage{
-inferences(x, method, R = 1000, conf_type = "perc", midata = NULL, ...)
+inferences(x, method, R = 1000, conf_type = "perc", ...)
 }
 \arguments{
 \item{x}{Object produced by one of the core \code{marginaleffects} functions.}

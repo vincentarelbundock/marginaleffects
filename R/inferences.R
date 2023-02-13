@@ -68,7 +68,7 @@
 #'   head()
 #' }
 #' @export
-inferences <- function(x, method, R = 1000, conf_type = "perc", midata = NULL, ...) {
+inferences <- function(x, method, R = 1000, conf_type = "perc", ...) {
 
     checkmate::assert_choice(
         method,
