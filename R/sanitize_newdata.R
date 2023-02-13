@@ -1,5 +1,6 @@
-sanitize_newdata_call <- function(scall, newdata, model) {
+sanitize_newdata_call <- function(scall, newdata = NULL, model) {
     if (is.call(scall)) {
+        out <- NULL
         lcall <- as.list(scall)
         fun_name <- as.character(scall)[1]
         if (fun_name %in% c("datagrid", "datagridcf", "typical", "counterfactual")) {
@@ -12,8 +13,9 @@ sanitize_newdata_call <- function(scall, newdata, model) {
                 lcall <- c(lcall, list("x" = get_modeldata))
                 out <- eval(as.call(lcall))
             }
-        } else {
-            out <- newdata
+        }
+        if (is.null(out)) {
+            out <- eval(scall)
         }
     } else {
         out <- newdata
