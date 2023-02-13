@@ -1,3 +1,41 @@
+process_mira <- function(miraobj, call_attr) {
+    mfxobj <- list()
+    for (i in seq_along(miraobj$analyses)) {
+        calltmp <- call_attr
+        calltmp[["model"]] <- miraobj$analyses[[i]]
+        # make sure we get the right dataset
+        if (is.null(calltmp[["newdata"]])) { 
+            calltmp[["newdata"]] <- miraobj$analyses[[i]]
+        }
+        browser()
+        mfxobj[[i]] <- evalup(calltmp)
+        if (i == 1) {
+            out <- mfxobj[[1]]
+        }
+        mfxobj[[i]]$term <- seq_len(nrow(mfxobj[[i]]))
+        class(mfxobj[[i]]) <- c("marginaleffects_mi", class(mfxobj[[i]]))
+    }
+    mipool <- mice::pool(mfxobj)
+    for (col in c("estimate", "statistic", "p.value", "conf.low", "conf.high")) {
+        if (col %in% colnames(out) && col %in% colnames(mipool$pooled)) {
+            out[[col]] <- mipool$pooled[[col]]
+        } else {
+            out[[col]] <- NULL
+        }
+    }
+    if ("df" %in% colnames(mipool$pooled)) {
+        out$df <- mipool$pooled$df
+    }
+    out$std.error <- sqrt(mipool$pooled$t)
+    out <- get_ci(
+        out,
+        vcov = call_attr[["vcov"]],
+        conf_level = call_attr[["conf_level"]],
+        df = mipool$pooled$df)
+    attr(out, "inferences") <- mipool
+    return(out)
+}
+
 mi_fit_combine <- function(model, FUN, ...) {
     insight::check_if_installed("tibble")
     dots <- list(...)

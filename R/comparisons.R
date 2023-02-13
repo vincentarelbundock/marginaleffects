@@ -253,7 +253,15 @@ comparisons <- function(model,
         eps = eps),
         list(...))
     call_attr <- do.call("call", call_attr)
-
+    
+    # multiple imputation
+    if (inherits(model, "mira")) {
+        out <- process_mira(model, call_attr)
+        return(out)
+    }
+    
+    # more sanity chekcs
+    
     conf_level <- sanitize_conf_level(conf_level, ...)
     sanity_dots(model, ...)
     checkmate::assert_number(eps, lower = 1e-10, null.ok = TRUE)
