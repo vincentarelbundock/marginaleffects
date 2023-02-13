@@ -25,11 +25,11 @@ The `marginaleffects` package offers convenience functions to compute and displa
 1. Impute $M$ data sets.
 2. Fit in each of the $M$ imputed data sets.
 3. Compute marginal effects in each of the $M$ data sets.
-4. Pool results using Rubin's rules.
+4. Pool results.
 
 To highlight the workflow, we consider a simple linear regression model, although the same workflow should work with any model type which is fit using a formula interface and a `data` argument.
 
-`marginaleffects` support the `mice` impuation package, and any other package which can return a list of imputed data frames. 
+`marginaleffects` support the `mice` imputation package, and any other package which can return a list of imputed data frames. 
 
 # `mice`
 
@@ -63,11 +63,12 @@ mfx_mice
 
 # Other imputation packages: `Amelia`, `missRanger`, or lists of imputed data frames.
 
-Several `R` packages can impute missing data. Indeed, [the `Missing Data CRAN View`](https://cran.r-project.org/web/views/MissingData.html) lists at least a dozen alternative packages. Since user interface changes a lot from package to package, supports a single workflow which can be used, with some adaptation, with all imputation packages:
+Several `R` packages can impute missing data. Indeed, [the `Missing Data CRAN View`](https://cran.r-project.org/web/views/MissingData.html) lists at least a dozen alternatives. Since user interface changes a lot from package to package, `marginaleffects` supports a single workflow which can be used, with some adaptation, to with all imputation packages:
 
-1. Use an external package to create a list of imputed data frames
-2. Use the `datalist2mids()` function from the `miceadds` package to convert the list of data frames to a `mids` object.
+1. Use an external package to create a list of imputed data frames.
+2. Apply the `datalist2mids()` function from the `miceadds` package to convert the list of imputed data frames to a `mids` object.
 3. Use the `with()` function to fit models, as illustrated in the `mice` section above.
+4. Pass the `mids` object to a `marginaleffects` function.
    
 Consider two imputation packages, which can both generate lists of imputed datasets: `Amelia` and `missRanger`.
 
