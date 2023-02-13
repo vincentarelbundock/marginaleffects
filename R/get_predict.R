@@ -23,7 +23,7 @@ get_predict.default <- function(model,
     dots <- list(...)
 
     # some predict methods raise warnings on unused arguments
-    unused <- c("normalize_dydx", "eps", "numDeriv_method", "internal_call", "draw")
+    unused <- c("normalize_dydx", "eps", "numDeriv_method", "internal_call", "draw", "modeldata")
     dots <- dots[setdiff(names(dots), unused)]
 
     # first argument in the predict methods is not always named "x" or "model"

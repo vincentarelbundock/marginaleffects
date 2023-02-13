@@ -13,5 +13,5 @@
      21.0      0.954 22.05  < 2e-16 19.17   22.9 
 
 Prediction type:  response 
-Columns: rowid, type, estimate, std.error, statistic, p.value, conf.low, conf.high, mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb 
+Columns: rowid, type, estimate, std.error, statistic, p.value, conf.low, conf.high, mpg, hp, gear 
 

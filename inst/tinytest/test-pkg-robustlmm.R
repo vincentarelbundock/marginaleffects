@@ -13,4 +13,5 @@ expect_predictions(predictions(mod))
 expect_slopes(mod, n_unique = 1)
 
 
+source("helpers.R")
 rm(list = ls())
