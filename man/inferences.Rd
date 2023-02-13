@@ -29,8 +29,6 @@ inferences(x, method, R = 1000, conf_type = "perc", midata = NULL, ...)
 \item \code{simulation}: argument ignored.
 }}
 
-\item{midata}{a list of data frames of identical dimensions or a \code{mids} object produced by the \code{mice::mice()} function. Only used when \code{method="mi"}.}
-
 \item{...}{\itemize{
 \item If \code{method="boot"}, additional arguments are passed to \code{boot::boot()}.
 \item If \code{method="fwb"}, additional arguments are passed to \code{fwb::fwb()}.
@@ -90,16 +88,5 @@ avg_slopes(mod, by = "Species") \%>\%
 slopes(mod) \%>\%
   inferences(method = "simulation") \%>\%
   head()
-
-# Multiple imputation
-library(mice)
-dat <- iris
-dat$Sepal.Length[sample(seq_len(nrow(iris)), 40)] <- NA
-dat$Sepal.Width[sample(seq_len(nrow(iris)), 40)] <- NA
-dat$Species[sample(seq_len(nrow(iris)), 40)] <- NA
-dat_mice <- mice(dat, m = 20, printFlag = FALSE, .Random.seed = 1024)
-
-avg_slopes(mod, by = "Species") \%>\%
-    inferences(method = "mi", midata = dat_mice)
 }
 }

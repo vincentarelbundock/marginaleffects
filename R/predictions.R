@@ -210,6 +210,12 @@ predictions <- function(model,
         list(...))
     call_attr <- do.call("call", call_attr)
 
+    # multiple imputation
+    if (inherits(model, c("mira", "marginaleffects_imputation"))) {
+        out <- process_imputation(model, call_attr)
+        return(out)
+    }
+
     # extracting modeldata repeatedly is slow.
     # checking dots allows marginalmeans to pass modeldata to predictions.
     dots <- list(...)

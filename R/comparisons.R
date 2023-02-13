@@ -256,7 +256,7 @@ comparisons <- function(model,
     
     # multiple imputation
     if (inherits(model, "mira")) {
-        out <- process_mira(model, call_attr)
+        out <- process_imputation(model, call_attr)
         return(out)
     }
     
@@ -292,13 +292,29 @@ comparisons <- function(model,
     } else {
         addvar <- FALSE
     }
-    modeldata <- get_modeldata(model, additional_variables = addvar)
+    
+    # extracting modeldata repeatedly is slow.
+    # checking dots allows cheap multiple imputation
+    dots <- list(...)
+    if ("modeldata" %in% names(dots)) {
+        modeldata <- dots[["modeldata"]]
+    } else {
+        if (isTRUE(checkmate::check_character(by))) {
+            addvar <- by
+        } else if (isTRUE(checkmate::check_data_frame(by))) {
+            addvar <- colnames(by)
+        } else {
+            addvar <- FALSE
+        }
+        modeldata <- get_modeldata(model, additional_variables = addvar)
+    }
+    
     newdata <- sanitize_newdata(
         model = model,
         newdata = newdata,
         by = by,
         modeldata = modeldata)
-
+    
     # weights: before sanitize_variables
     sanity_wts(wts, newdata) # after sanity_newdata
     if (!is.null(wts) && isTRUE(checkmate::check_string(wts))) {
@@ -370,6 +386,7 @@ comparisons <- function(model,
                  marginalmeans = marginalmeans,
                  eps = eps,
                  modeldata = modeldata)
+    dots[["modeldata"]] <- NULL # dont' pass twice
     args <- c(args, dots)
     contrast_data <- do.call("get_contrast_data", args)
 
@@ -384,7 +401,8 @@ comparisons <- function(model,
                  by = by,
                  marginalmeans = marginalmeans,
                  cross = cross,
-                 hypothesis = hypothesis)
+                 hypothesis = hypothesis,
+                 modeldata = modeldata)
     args <- c(args, dots)
     mfx <- do.call("get_contrasts", args)
 

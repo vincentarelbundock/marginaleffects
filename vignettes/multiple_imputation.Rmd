@@ -8,6 +8,7 @@ vignette: >
 ---
 
 ```{r, include = FALSE}
+options(width = 1000)
 knitr::opts_chunk$set(
   collapse = TRUE,
   fig.width = 9,
@@ -21,23 +22,23 @@ knitr::opts_chunk$set(
 
 The `marginaleffects` package offers convenience functions to compute and display predictions, contrasts, and marginal effects from models with multiple imputation from the `mice` package. The workflow follows Rubin's rules (Rubin, 1987, p. 76), via the following steps:
 
-1. Impute n data sets
-2. Fit in each of the n imputed data sets
-3. Marginal effects in each of the n data sets
-4. Pool results
+1. Impute $M$ data sets.
+2. Fit in each of the $M$ imputed data sets.
+3. Compute marginal effects in each of the $M$ data sets.
+4. Pool results using Rubin's rules.
 
-To highlight the workflow, we consider a simple linear regression model, although the same workflow should work with any model type which supports the `stats::update()` function, which `marginaleffects` uses internally to re-fit models with the imputed datasets.
+To highlight the workflow, we consider a simple linear regression model, although the same workflow should work with any model type which is fit using a formula interface and a `data` argument.
 
-The user interface is almost exactly the same as the one used for [bootstraping or simulation-based inference (see vignette).](bootstrap.html)
+`marginaleffects` support the `mice` impuation package, and any other package which can return a list of imputed data frames. 
 
-
-# Imputation with `mice`
+# `mice`
 
 First, we insert missing observations randomly in a dataset and we impute the dataset using the `mice` package:
 
 ```{r}
 library(mice)
 library(marginaleffects)
+set.seed(1024)
 
 dat <- iris
 dat$Sepal.Length[sample(seq_len(nrow(iris)), 40)] <- NA
@@ -47,257 +48,78 @@ dat$Species[sample(seq_len(nrow(iris)), 40)] <- NA
 dat_mice <- mice(dat, m = 20, printFlag = FALSE, .Random.seed = 1024)
 ```
 
-Then, we fit a simple model using those partially missing observations (with list-wise deletion):
+Then, we use the standard `mice` syntax to produce an object of class `mira` with all the models:
 
 ```{r}
-mod <- lm(Petal.Width ~ Sepal.Length * Sepal.Width + Species, data = dat)
+mod_mice <- with(dat_mice, lm(Petal.Width ~ Sepal.Length * Sepal.Width + Species))
 ```
 
-Now we use a `marginaleffects` function to compute quantities of interest:
+Finally, we feed the `mira` object to a `marginaleffects` function:
 
 ```{r}
-avg_slopes(mod)
+mfx_mice <- avg_slopes(mod_mice, by = "Species")
+mfx_mice
 ```
 
-Finally, we use the `inferences()` function to feed the multiply imputed data to the inference engine:
+# Other imputation packages: `Amelia`, `missRanger`, or lists of imputed data frames.
 
-```{r}
-avg_slopes(mod) |> inferences(method = "mi", midata = dat_mice)
-```
+Several `R` packages can impute missing data. Indeed, [the `Missing Data CRAN View`](https://cran.r-project.org/web/views/MissingData.html) lists at least a dozen alternative packages. Since user interface changes a lot from package to package, supports a single workflow which can be used, with some adaptation, with all imputation packages:
 
-All the usual arguments of the `marginaleffects` functions should be available.
+1. Use an external package to create a list of imputed data frames
+2. Use the `datalist2mids()` function from the `miceadds` package to convert the list of data frames to a `mids` object.
+3. Use the `with()` function to fit models, as illustrated in the `mice` section above.
+   
+Consider two imputation packages, which can both generate lists of imputed datasets: `Amelia` and `missRanger`.
 
-```{r}
-avg_slopes(mod, by = "Species") |> inferences(method = "mi", midata = dat_mice)
-```
-
-Note that the original `mice` object can be retrieved from an attribute:
-
-```{r}
-avg_slopes(mod, by = "Species") |>
-    inferences(method = "mi", midata = dat_mice) |>
-    attr("inferences")
-```
-
-
-# Imputation with `Amelia`
-
-An alternative to `mice` is the `Amelia` package. The `amelia` function returns an object with an "`imputations`" list of imputed data frames. We can pass this list to the `inferences` function, just as we did above:
-
-```{r, warning = FALSE, message = FALSE}
+```{r, include = FALSE}
+# no startup messages
 library(Amelia)
+library(miceadds)
+library(missRanger)
+```
 
+```{r, message = FALSE, warning = FALSE}
+library(Amelia)
+library(miceadds)
+library(missRanger)
+
+# impute data
 dat_amelia <- amelia(dat, noms = "Species", p2s = 0)$imputations
+dat_missRanger <- replicate(20, missRanger(dat, verbose = 0), simplify = FALSE)
+
+# convert lists of imputed datasets to `mids` objects
+mids_amelia <- datlist2mids(dat_amelia)
+mids_missRanger <- datlist2mids(dat_missRanger)
+
+# fit models
+mod_amelia <- with(mids_amelia, lm(Petal.Width ~ Sepal.Length * Sepal.Width + Species))
+mod_missRanger <- with(mids_missRanger, lm(Petal.Width ~ Sepal.Length * Sepal.Width + Species))
+
+# `Amelia` slopes
+mfx_amelia <- avg_slopes(mod_amelia, by = "Species")
+mfx_amelia
+
+# `missRanger` slopes
+mfx_missRanger <- avg_slopes(mod_missRanger, by = "Species")
+mfx_amelia
 ```
 
-```{r, warning = FALSE}
-avg_comparisons(mod)
+# Comparing results with different imputation software
 
-avg_comparisons(mod) |> inferences(method = "mi", midata = dat_amelia)
-```
-
-
-````{comment}
-With the new `inferences()` improvement, this whole section now feels obsolete.
-
-# Manual approach
-
-## Linear Regression with `mice`
-
-Let's first set up the data.
+We can use the `modelsummary` package to compare the results with listwise delection to the results using different imputations software:
 
 ```{r}
-library(mice)
-library(marginaleffects)
 library(modelsummary)
 
-dat <- mtcars
-dat$am[c(2, 5, 9, 12)] <- NA
-dat$mpg[c(3, 1, 8, 16)] <- NA
-dat$hp[c(1, 10, 13, 18)] <- NA
-```
+# listwise deletion slopes
+mod_lwd <- lm(Petal.Width ~ Sepal.Length * Sepal.Width + Species, data = dat)
+mfx_lwd <- avg_slopes(mod_lwd, by = "Species")
 
-The next steps are to use `mice` to create the imputed data sets. Here, we are asking for `m = 20` imputations. Importantly, when mice creates the multiple imputation, it creates a list of data sets. So here, `dat_mice` has 20 nearly identical versions of the data in a list where any missing values were imputed.
-
-```{r}
-dat_mice <- mice(dat, m = 20, printFlag = FALSE, .Random.seed = 1024)
-dat_mice <- complete(dat_mice, "all")
-```
-
-To work with the list of data sets, we'll create a function (in this case called `fit_reg`) that fits the model and computes the marginal effects.
-
-```{r}
-fit_reg <- function(dat) {
-    mod <- lm(mpg ~ hp, data = dat)
-    out <- slopes(mod, newdata = dat)
-    return(out)
-}
-```
-
-Using this function, we can apply it to each data set in the `dat_mice` list using `lapply()`. From there, we can pool and get a summary.
-
-```{r, message = FALSE, warning = FALSE}
-mod_imputation <- lapply(dat_mice, fit_reg)
-mod_imputation <- pool(mod_imputation)
-
-summary(mod_imputation)
-```
-
-We can compare this with what the model would have looked like without any missing data. The estimates are very similar (within one standard error) and the p-value for the imputed models is slightly higher than the full model (as expected).
-
-```{r, warning = FALSE, message = FALSE}
-mod_missing <- lm(mpg ~ hp, data = dat)
-mod_missing <- slopes(mod_missing)
-mod_complete <- lm(mpg ~ hp, data = mtcars)
-mod_complete <- slopes(mod_complete)
-
+# regression table
 models <- list(
-    "Listwise Deletion" = mod_missing,
-    "Complete" = mod_complete,
-    "Multiple Imputation" = mod_imputation)
-
-modelsummary(models)
+    "LWD" = mfx_lwd,
+    "mice" = mfx_mice,
+    "Amelia" = mfx_amelia,
+    "missRanger" = mfx_missRanger)
+modelsummary(models, shape = term : contrast + Species ~ model)
 ```
-
-## Categories and Contrasts: Problem and Solution
-
-One particular problem arises in the cases of contrasts and categorical predictors. To see it, notice that when there are contrasts or categorical predictors, the `tidy()` method of `marginaleffects` identifies unique estimates using two columns called `term` and `contrast`:
-
-```{r, warning = FALSE}
-mod <- lm(mpg ~ factor(cyl), data = dat)
-mfx <- slopes(mod)
-tidy(mfx)
-```
-
-This poses problems because the `mice::pool` function merges estimates based *only* on the `term` column. This means that our original procedure will erroneously combine different contrast levels. For example:
-
-```{r}
-fit_reg <- function(dat) {
-    mod <- lm(mpg ~ factor(cyl), data = dat)
-    out <- slopes(mod, newdata = dat)
-    return(out)
-}
-mod_imputation <- lapply(dat_mice, fit_reg)
-mod_imputation <- pool(mod_imputation)
-
-summary(mod_imputation)
-```
-
-One hack to work around this limitation is to assign a custom class to the object and to create a custom `tidy` method that combines the `term` and `contrast` columns:
-
-```{r}
-fit_reg <- function(dat) {
-    mod <- lm(mpg ~ factor(cyl), data = dat)
-    out <- slopes(mod, newdata = dat)
-    # the next line assigns a custom class
-    class(out) <- c("custom", class(out))
-    return(out)
-}
-
-# this custom method will be called automatically for all objects produced by fit_reg()
-tidy.custom <- function(x, ...) {
-    out <- marginaleffects:::tidy.slopes(x, ...)
-    out$term <- paste(out$term, out$contrast)
-    return(out)
-}
-
-mod_imputation <- lapply(dat_mice, fit_reg)
-mod_imputation <- pool(mod_imputation)
-
-summary(mod_imputation)
-```
-
-## Logistic Regression with `mice`
-
-For the logistic regression, we'll work with the same `dat_mice` imputed data sets. We'll update our function to run the logistic regression that we want and call it `fit_logistic`.
-
-```{r}
-fit_logistic <- function(dat) {
-    mod <- glm(am ~ mpg, data = dat, family = binomial)
-    out <- slopes(mod, newdata = dat)
-    return(out)
-}
-```
-
-Using this function, we can apply it to each data set in the `dat_mice` list using `lapply()`. From there, we can pool and get a summary.
-
-```{r, message = FALSE, warning = FALSE}
-mod_imputation <- lapply(dat_mice, fit_logistic)
-mod_imputation <- pool(mod_imputation)
-
-summary(mod_imputation)
-```
-
-Again, we can compare this with what the model would have looked like without any missing data. The estimates, again, are very similar (within one standard error) and the p-value for the imputed models is slightly higher than the full model (as expected).
-
-```{r, warning = FALSE, message = FALSE}
-mod_missing <- glm(am ~ mpg, data = dat, family = binomial)
-mod_complete <- glm(am ~ mpg, data = mtcars, family = binomial)
-mod_missing <- slopes(mod_missing)
-mod_complete <- slopes(mod_complete)
-
-models <- list(
-    "Listwise Deletion" = mod_missing,
-    "Complete" = mod_complete,
-    "Multiple Imputation" = mod_imputation)
-
-modelsummary(models)
-```
-
-# Multilevel Modeling with `lme4`
-
-Our last example with use data from `lme4` known as `sleepstudy`. Let's first set up the data. We randomly create missing in the outcome variable known as `Reaction`.
-
-```{r, message = FALSE, warning = FALSE}
-library(lme4)
-data("sleepstudy")
-
-set.seed(1234)
-
-dat2 <- sleepstudy
-dat2$Reaction[sample(1:180, 10)] <- NA
-```
-
-As before, the next steps are to use `mice` to create the imputed data sets. 
-
-```{r, message = FALSE, warning = FALSE}
-dat_mice2 <- mice(dat2, m = 20, printFlag = FALSE, .Random.seed = 1024)
-dat_mice2 <- complete(dat_mice2, "all")
-```
-
-To work with the list of data sets, we'll create a function (in this case called `fit_reg`) that fits the model and computes the marginal effects.
-
-```{r, message = FALSE, warning = FALSE}
-fit_mlm <- function(dat) {
-    mod <- lmer(Reaction ~ Days + (1 + Days|Subject), data = dat)
-    out <- slopes(mod, newdata = dat)
-    return(out)
-}
-```
-
-Using this function, we can apply it to each data set in the `dat_mice` list using `lapply()`. From there, we can pool and get a summary.
-
-```{r, message = FALSE, warning = FALSE}
-mod_imputation <- lapply(dat_mice2, fit_mlm)
-mod_imputation <- pool(mod_imputation)
-
-summary(mod_imputation)
-```
-
-Like the previous models, we can compare this with what the model would have looked like without any missing data. The estimates are very similar (within one standard error) and the p-value for the imputed models is slightly higher than the full model (as expected).
-
-```{r, warning = FALSE, message = FALSE}
-mod_complete <- lmer(Reaction ~ Days + (1 + Days|Subject), data = sleepstudy)
-mod_missing <- lmer(Reaction ~ Days + (1 + Days|Subject), data = dat2)
-mod_complete <- slopes(mod_complete)
-mod_missing <- slopes(mod_missing)
-
-models <- list(
-    "Listwise Deletion" = mod_missing,
-    "Complete" = mod_complete,
-    "Multiple Imputation" = mod_imputation)
-
-modelsummary(models)
-```
-
-````
