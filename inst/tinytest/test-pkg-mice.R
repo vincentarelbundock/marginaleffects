@@ -9,6 +9,6 @@ dat_mice <- mice::mice(dat, m = 20, printFlag = FALSE, .Random.seed = 1024)
 mod <- lm(Petal.Width ~ Sepal.Length * Sepal.Width + Species, data = dat)
 
 mfx1 <- suppressWarnings(inferences(avg_slopes(mod, by = "Species"), method = "mi", midata = dat_mice))
-mfx2 <- suppressWarnings(inferences(avg_slopes(mod, by = "Species"), method = "mi", midata = dat_mice))
-expect_inherits(mfx1, "comparisons")
+mfx2 <- avg_slopes(mod, by = "Species")
+expect_inherits(mfx1, "slopes")
 expect_equivalent(nrow(mfx1), nrow(mfx2))
