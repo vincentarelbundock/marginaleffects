@@ -797,13 +797,15 @@ avg_comparisons(mod)
 Recent versions of the `posterior`, `brms`, and `ggdist` packages make it easy to draw, summarize and plot random variables. The `posterior_draws()` can produce objects of class `rvar` which make it easy to use those features by returning a data frame with a column of type `rvar`:
 
 
-```{r}
+```{r, results = "hide"}
 library(brms)
 library(ggdist)
 library(ggplot2)
 library(marginaleffects)
 mod <- brm(am ~ mpg + hp, data = mtcars, family = bernoulli)
+```
 
+```{r}
 avg_comparisons(mod) |>
   posterior_draws(shape = "rvar") |>
   ggplot(aes(y = term, xdist = rvar)) + 
