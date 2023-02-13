@@ -518,6 +518,7 @@ comparisons <- function(model,
     attr(out, "call") <- call_attr
     attr(out, "type") <- type
     attr(out, "model_type") <- class(model)[1]
+    attr(out, "model") <- model
     attr(out, "variables") <- predictors
     attr(out, "jacobian") <- J
     attr(out, "vcov") <- vcov
