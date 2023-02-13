@@ -8,7 +8,7 @@ get_contrast_data_factor <- function(model,
 
 
     if (is.null(modeldata)) {
-        modeldata <- get_modeldata(model)
+        modeldata <- get_modeldata(model, additional_variables = FALSE)
     }
     if (is.null(modeldata)) {
         modeldata <- newdata

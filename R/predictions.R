@@ -216,7 +216,14 @@ predictions <- function(model,
     if ("modeldata" %in% names(dots)) {
         modeldata <- dots[["modeldata"]]
     } else {
-        modeldata <- get_modeldata(model)
+        if (isTRUE(checkmate::check_character(by))) {
+            addvar <- by
+        } else if (isTRUE(checkmate::check_data_frame(by))) {
+            addvar <- colnames(by)
+        } else {
+            addvar <- FALSE
+        }
+        modeldata <- get_modeldata(model, additional_variables = addvar)
     }
 
     # if type is NULL, we backtransform if relevant

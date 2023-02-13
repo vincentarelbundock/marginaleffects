@@ -9,7 +9,7 @@ get_contrast_data_character <- function(model,
     # factors store all levels, but characters do not, so we need to extract the
     # original data from the model.
     if (is.null(modeldata)) {
-        tmp <- modeldata <- get_modeldata(model)
+        tmp <- modeldata <- get_modeldata(model, additional_variables = FALSE)
     } else {
         tmp <- modeldata
     }
