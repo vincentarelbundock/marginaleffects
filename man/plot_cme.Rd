@@ -5,7 +5,7 @@
 \title{\code{plot_slopes()} is an alias to \code{plot_slopes()}}
 \usage{
 plot_cme(
-  x,
+  model,
   variables = NULL,
   condition = NULL,
   by = NULL,
@@ -18,6 +18,8 @@ plot_cme(
 )
 }
 \arguments{
+\item{model}{Model object}
+
 \item{condition}{Conditional predictions
 \itemize{
 \item Character vector (max length 3): Names of the predictors to display.

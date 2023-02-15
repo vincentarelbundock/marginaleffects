@@ -4,19 +4,24 @@ using("marginaleffects")
 exit_if_not(!ON_OSX)
 
 
-# not supported because datplot is not representative, so we can't take minmax or iqr
 mod <- lm(mpg ~ wt * hp, data = mtcars)
+
 p <- plot_comparisons(mod, variables = list(hp = "minmax"), condition = "wt", draw = FALSE)
 expect_equivalent(length(unique(p$estimate)), 25)
 p <- plot_comparisons(mod, variables = list(hp = "minmax"), condition = "wt")
 expect_inherits(p, "gg")
 p <- plot_comparisons(mod, variables = list(hp = "iqr"), condition = "wt")
-
 p <- plot_comparisons(mod, variables = list("hp" = c(100, 130)), condition = "wt")
 expect_inherits(p, "gg")
 
-# one effect at a time
-expect_error(plot_comparisons(mod, variables = c("hp", "wt"), condition = "wt"), pattern = "length")
+
+# representative values
+p <- plot_comparisons(mod, variables = list(hp = "minmax"), condition = list("wt" = "threenum"))
+expect_snapshot_plot(p, "plot_comparisons-minmax_x")
+
+# two effects
+p <- plot_comparisons(mod, variables = c("hp", "wt"), condition = "wt")
+expect_snapshot_plot(p, "plot_comparisons-2effects")
 
 # bug from examples (revise_get_data() no longer returns a factor attribute)
 mod <- lm(mpg ~ hp * drat * factor(am), data = mtcars)

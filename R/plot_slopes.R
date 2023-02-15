@@ -36,7 +36,7 @@
 #'
 #' plot_slopes(mod, variables = "am", condition = list("hp", "drat" = "threenum"))
 #' 
-plot_slopes <- function(x,
+plot_slopes <- function(model,
                         variables = NULL,
                         condition = NULL,
                         by = NULL,
@@ -60,7 +60,7 @@ plot_slopes <- function(x,
     checkmate::assert_choice(slope, choices = valid)
 
     out <- plot_comparisons(
-        x,
+        model,
         variables = variables,
         condition = condition,
         by = by,

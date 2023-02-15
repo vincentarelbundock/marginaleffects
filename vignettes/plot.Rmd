@@ -227,7 +227,7 @@ plot_slopes(mod,
   ylim(c(-150, 200))
 ```
 
-# Customizing plots
+# Customization
 
 A very useful feature of the plotting functions in this package is that they produce normal `ggplot2` objects. So we can customize them to our heart's content, using `ggplot2` itself, or one of the many packages designed to augment its functionalities:
 
@@ -271,8 +271,6 @@ plot_predictions(mod, condition = c("Age", "PClass")) +
 
 Thanks to [Andrew Heiss](https://bayesf22-notebook.classes.andrewheiss.com/bayes-rules/13-chapter.html) who inspired this plot.
 
-# More customization: Raw data & `ggplot2`
-
 Designing effective data visualizations requires a lot of customization to the specific context and data. The plotting functions in `marginaleffects` offer a powerful way to iterate quickly between plots and models, but they obviously cannot support all the features that users may want. Thankfully, it is very easy to use the `slopes` functions to generate datasets that can then be used in `ggplot2` or any other data visualization tool. Just use the `draw` argument:
 
 ```{r}
@@ -314,3 +312,16 @@ plot_predictions(mod, condition = c("mpg", "group"), type = "probs", vcov = FALS
 plot_predictions(mod, condition = "mpg", type = "probs", vcov = FALSE) +
   facet_wrap(~ group)
 ```
+
+# FAQ
+
+## `plot()` and `marginaleffects` objects
+
+If you try to apply the `plot()` function directly to a `marginaleffects` object, you will get an error like this one:
+
+```{r, error = TRUE}
+p <- predictions(mod)
+plot(p)
+```
+
+The reason for this error is that the query is underspecified. `marginaleffects` allows users to draw many different kinds of plots, for many different quantities of interest. A simple `plot()` call does not give sufficient information to know exactly what plot the user needs: marginal or conditional, which subgroups, for what contrasts, etc. Allowing these options would require duplicating many of the arguments already implemented in the `plot_predictions()`, `plot_comparisons()`, and `plot_slopes()` functions. To be more explicit and to avoid the confusion that would arise from two parallel user interface, the `plot()` function raises an error and points to an appropriate function to use.

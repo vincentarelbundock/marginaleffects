@@ -5,7 +5,7 @@
 \title{Plot Conditional or Marginal Slopes}
 \usage{
 plot_slopes(
-  x,
+  model,
   variables = NULL,
   condition = NULL,
   by = NULL,
@@ -18,7 +18,7 @@ plot_slopes(
 )
 }
 \arguments{
-\item{x}{a model or object produced by the \code{slopes()} or \code{comparisons()} functions.}
+\item{model}{Model object}
 
 \item{variables}{Name of the variable whose marginal effect (slope) we want to plot on the y-axis.}
 
@@ -82,6 +82,8 @@ model, depending on the range of supported arguments by each modeling
 package. See the "Model-Specific Arguments" section of the
 \code{?marginaleffects} documentation for a non-exhaustive list of available
 arguments.}
+
+\item{x}{a model or object produced by the \code{slopes()} or \code{comparisons()} functions.}
 }
 \value{
 A \code{ggplot2} object
