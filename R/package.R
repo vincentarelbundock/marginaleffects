@@ -8,7 +8,7 @@ utils::globalVariables(c(
 "..idx_by",
 "..idx_hi",
 "..idx_lo",
-".data"j,
+".data",
 "..idx_or",
 "..idx",
 "..idx1",

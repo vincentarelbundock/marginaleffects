@@ -115,7 +115,7 @@ plot_predictions <- function(model,
 
     # condition 3: facets
     if (!is.null(v_facet)) {
-        fo <- istats::as.formula(paste("~", v_facet))
+        fo <- stats::as.formula(paste("~", v_facet))
         p <- p + ggplot2::facet_wrap(fo)
     }
 

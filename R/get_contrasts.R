@@ -278,8 +278,15 @@ get_contrasts <- function(model,
             "lo" = lo,
             "y" = y,
             "eps" = eps,
-            "w" = wts,
-            "x" = elasticities[[term[1]]][tmp_idx])
+            "w" = wts)
+        
+        # sometimes x is exactly the same length, but not always
+        if (length(elasticities[[term[1]]]) > nrow(out)) {
+            args[["x"]] <- elasticities[[term[1]]][tmp_idx]
+        } else {
+            args[["x"]] <- elasticities[[term[1]]]
+        }
+
         args <- args[names(args) %in% names(formals(fun))]
         con <- try(do.call("fun", args), silent = TRUE)
         if (!isTRUE(checkmate::check_numeric(con, len = n)) && !isTRUE(checkmate::check_numeric(con, len = 1))) {
