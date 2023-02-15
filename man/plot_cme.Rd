@@ -8,19 +8,32 @@ plot_cme(
   x,
   effect = NULL,
   condition = NULL,
+  by = NULL,
   type = "response",
   vcov = NULL,
   conf_level = 0.95,
+  slope = "dydx",
   draw = TRUE,
   ...
 )
 }
 \arguments{
-\item{condition}{character vector or named list of length smaller than 4. Character vectors must be the names of the predictor variables to display. The names of the list must The first element is displayed on the x-axis. The second element determines the colors. The third element creates facets. Other variables are held at their means or modes. Lists can include these types of values:
+\item{condition}{Conditional predictions
+\itemize{
+\item Character vector (max length 3): Names of the predictors to display.
+\item Named list (max length 3): List names correspond to predictors. List elements can be:
 \itemize{
 \item Numeric vector
 \item Function which returns a numeric vector or a set of unique categorical values
 \item Shortcut strings for common reference values: "minmax", "quartile", "threenum"
+}
+\item 1: x-axis. 2: color. 3: facets.
+}}
+
+\item{by}{Marginal predictions
+\itemize{
+\item Character vector (max length 3): Names of the categorical predictors to marginalize across.
+\item 1: x-axis. 2: color. 3: facets.
 }}
 
 \item{type}{string indicates the type (scale) of the predictions used to

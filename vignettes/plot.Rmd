@@ -21,50 +21,182 @@ knitr::opts_chunk$set(
 )
 ```
 
-The `marginaleffects` package includes several flexible functions to plot estimates and to display interactions:
+The `marginaleffects` package includes three flexible functions to plot estimates and display interactions.
 
-* Plot the raw output of `slopes()` or `comparisons()`
-* Interaction / conditional / heterogenous:
-   - `plot_predictions`: Conditional Predictions (equivalent to `predictions()`)
-   - `plot_comparisons`: Conditional Contrasts (equivalent to `comparisons()`)
-   - `plot_slopes`: Conditional Slopes (aka "Marginal Effects"; equivalent to `slopes()`)
+ - `plot_predictions()`
+ - `plot_comparisons()`
+ - `plot_slopes()`
+ 
+Those functions can be used to plot two kinds of quantities:
 
-The "interaction" or "conditional" plotting functionality is designed to display how the outcome or how the effect of a predictor changes with respect to another variable.
+* Conditional estimates:
+    - Estimates computed on a substantively meaningful grid of predictor values.
+    - This is analogous to using the `newdata` argument with the `datagrid()` function in a `predictions()`, `comparisons()`, or `slopes()` call.
+* Marginal estimates:
+    - Estimates computed on the original data, but averaged by subgroup.
+    - This is analogous to using the `newdata` argument with the `datagrid()` function in a `predictions()`, `comparisons()`, or `slopes()` call.
+    
 
-This vignette focuses on `plot_predictions()`, but the same ideas apply to `plot_slopes()` and `plot_comparisons()` as well.  In the examples below, we will use the `patchwork` package to combine plots and the `ggplot2` package to customize their content and appearance:
+To begin, let's download data and fit a model:
+
+
 
 ```{r}
-library(marginaleffects)
-library(patchwork)
+# libraries
 library(ggplot2)
+library(patchwork)
+library(marginaleffects)
+
+# visual theme
+theme_set(theme_minimal())
+okabeito <- c('#E69F00', '#56B4E9', '#009E73', '#F0E442', '#0072B2', '#D55E00', '#CC79A7', '#999999', '#000000')
+options(ggplot2.discrete.fill = okabeito)
+options(ggplot2.discrete.colour = okabeito)
+options(width = 1000)
+
+# download data
+dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv")
+
+mod <- lm(body_mass_g ~ flipper_length_mm * species * bill_length_mm + island, data = dat)
 ```
 
-# Interactions: Conditional Adjusted Predictions
+# Predictions
 
-Consider a linear model with interactions, where the relationship between `hp` and `mpg` is conditional on the values of `wt` and `cyl`:
+## Conditional predictions
+
+We call a prediction "conditional" when it is made on a grid of user-specified values. For example, we predict penguins' body mass for different values of flipper length and species:
 
 ```{r}
-mod <- lm(mpg ~ hp * wt * factor(cyl), data = mtcars)
-
-plot_predictions(mod, condition = "hp")
+pre <- predictions(mod, newdata = datagrid(flipper_length_mm = c(172, 231), species = unique))
+pre
 ```
 
-We can show the predicted values of `mpg` for different values of different predictors:
+The `condition` argument of the `plot_predictions()` function can be used to build meaningful grids of predictor values somewhat more easily:
 
 ```{r}
-plot_predictions(mod, condition = c("hp", "cyl"))
+plot_predictions(mod, condition = c("flipper_length_mm", "species"))
 ```
 
-We can include a 3rd conditioning variable, specify what values we want to consider, and use one of several string shortcuts for common reference values ("threenum", "minmax", "quartile", etc.):
+Note that the values at each end of the x-axis correspond to the numerical results produced above. For example, the predicted outcome for a Gentoo with 231mm flippers is `r round(pre$estimate[pre$species == "Gentoo" & pre$flipper_length_mm == 231])`.
 
-```{r, fig.asp = 1}
-plot_predictions(mod, condition = list(hp = 110:120, "wt" = "threenum")) /
+We can include a 3rd conditioning variable, specify what values we want to consider, supply `R` functions to compute summaries, and use one of several string shortcuts for common reference values ("threenum", "minmax", "quartile", etc.):
 
-plot_predictions(mod, condition = list("hp", "wt" = "minmax")) /
+```{r}
+plot_predictions(
+    mod,
+    condition = list(
+        "flipper_length_mm" = 180:220,
+        "bill_length_mm" = "threenum",
+        "species" = unique))
+```
 
-plot_predictions(mod, condition = list("hp", "wt" = fivenum)) /
+See `?plot_predictions` for more information.
 
-plot_predictions(mod, condition = c("hp", "wt", "cyl"))
+## Marginal predictions
+
+We call a prediction "marginal" when it is the result of a two step process: (1) make predictions for each observed unit in the original dataset, and (2) average predictions across one or more categorical predictors. For example:
+
+```{r}
+predictions(mod, by = "species")
+```
+
+We can plot those predictions by using the analogous command:
+
+```{r}
+plot_predictions(mod, by = "species")
+```
+
+We can also make predictions at the intersections of different variables:
+
+```{r}
+predictions(mod, by = c("species", "island"))
+```
+
+Note that certain species only live on certain islands. Visually:
+
+```{r}
+plot_predictions(mod, by = c("species", "island"))
+```
+
+# Comparisons
+
+## Conditional comparisons
+
+The syntax for conditional comparisons is the same as the syntax for conditional predictions, except that we now need to specify the variable(s) of interest using an additional argument:
+
+```{r}
+comparisons(mod,
+  variables = "flipper_length_mm",
+  newdata = datagrid(flipper_length_mm = c(172, 231), species = unique))
+
+plot_comparisons(mod,
+  effect = "flipper_length_mm",
+  condition = c("bill_length_mm", "species"))
+```
+
+We can specify custom comparisons, as we would using the `variables` argument of the `comparisons()` function. For example, see what happens to the predicted outcome when `flipper_length_mm` increases by 1 standard deviation or by 10mm:
+
+```{r}
+plot_comparisons(mod,
+  effect = list("flipper_length_mm" = "sd"),
+  condition = c("bill_length_mm", "species")) +
+
+plot_comparisons(mod,
+  effect = list("flipper_length_mm" = 10),
+  condition = c("bill_length_mm", "species"))
+```
+
+Notice that the vertical scale is different in the plots above, reflecting the fact that we are plotting the effect of a change of 1 standard deviation on the left vs 10 units on the right.
+
+Like the `comparisons()` function, `plot_comparisons()` is a very powerful tool because it allows us to compute and display custom comparisons such as differences, ratios, odds, and arbitrary functions of predicted outcomes. For example, if we want to plot the ratio of predicted body mass for different species of penguins, we could do:
+
+```{r}
+plot_comparisons(mod,
+  effect = "species",
+  condition = "bill_length_mm",
+  transform_pre = "ratio")
+```
+
+The left panel shows that the ratio of Chinstrap body mass to Adelie body mass is approximately constant, at slightly above 0.8. The right panel shows that the ratio of Gento to Adelie body mass is depends on their bill length. For birds with short bills, Gentoos seem to have smaller body mass than Adelies. For birds with long bills, Gentoos seem heavier than Adelies, although the null ratio (1) is not outside the confidence interval.
+
+## Marginal comparisons
+
+As above, we can also display marginal comparisons, by subgroups:
+
+```{r}
+plot_comparisons(mod,
+  effect = "flipper_length_mm",
+  by = "species") +
+
+plot_comparisons(mod,
+  effect = "flipper_length_mm",
+  by = c("species", "island"))
+```
+
+# Slopes
+
+If you have read the sections above, the behavior of the `plot_slopes()` function should not surprise. Here we give two examples in which we compute display the elasticity of body mass with respect to bill length: 
+
+```{r}
+# conditional
+plot_slopes(mod,
+  effect = "bill_length_mm",
+  slope = "eyex",
+  condition = c("species", "island"))
+
+# marginal
+plot_slopes(mod,
+  effect = "bill_length_mm",
+  slope = "eyex",
+  by = c("species", "island"))
+```
+
+And here is an example of a marginal effects (aka "slopes" or "partial derivatives") plot for a model with multiplicative interactions between continuous variables:
+
+```{r}
+mod2 <- lm(mpg ~ wt * qsec * factor(gear), data = mtcars)
+
+plot_slopes(mod2, effect = "qsec", condition = c("wt", "gear"))
 ```
 
 # Customizing plots
@@ -72,7 +204,6 @@ plot_predictions(mod, condition = c("hp", "wt", "cyl"))
 A very useful feature of the plotting functions in this package is that they produce normal `ggplot2` objects. So we can customize them to our heart's content, using `ggplot2` itself, or one of the many packages designed to augment its functionalities:
 
 ```{r, fig.asp = .7}
-library(ggokabeito)
 library(ggrepel)
 
 mt <- mtcars
@@ -86,8 +217,7 @@ plot_predictions(mod, condition = c("hp", "cyl"), vcov = FALSE) +
     geom_text_repel(aes(x = hp, y = mpg, label = label),
                     data = subset(mt, hp > 250),
                     nudge_y = 2) +
-    theme_classic() +
-    scale_color_okabe_ito()
+    theme_classic()
 ```
 
 All the plotting functions work with all the model supported by the `marginaleffects` package, so we can plot the output of a logistic regression model. This plot shows the probability of survival aboard the Titanic, for different ages and different ticket classes:
@@ -113,6 +243,15 @@ plot_predictions(mod, condition = c("Age", "PClass")) +
 
 Thanks to [Andrew Heiss](https://bayesf22-notebook.classes.andrewheiss.com/bayes-rules/13-chapter.html) who inspired this plot.
 
+# More customization: Raw data & `ggplot2`
+
+Designing effective data visualizations requires a lot of customization to the specific context and data. The plotting functions in `marginaleffects` offer a powerful way to iterate quickly between plots and models, but they obviously cannot support all the features that users may want. Thankfully, it is very easy to use the `slopes` functions to generate datasets that can then be used in `ggplot2` or any other data visualization tool. Just use the `draw` argument:
+
+```{r}
+p <- plot_predictions(mod, condition = c("Age", "PClass"), draw = FALSE)
+head(p)
+```
+
 # Fits and smooths
 
 We can compare the model predictors with fits and smoothers using the `geom_smooth()` function from the `ggplot2` package:
@@ -126,16 +265,6 @@ plot_predictions(mod, condition = c("Age", "PClass")) +
     geom_smooth(data = dat, aes(Age, Survived), method = "lm", se = FALSE, color = "black") +
     geom_smooth(data = dat, aes(Age, Survived), se = FALSE, color = "black")
 ```
-
-# Extreme customization
-
-Designing effective data visualizations requires a lot of customization to the specific context and data. The plotting functions in `marginaleffects` offer a powerful way to iterate quickly between plots and models, but they obviously cannot support all the features that users may want. Thankfully, it is very easy to use the `slopes` functions to generate datasets that can then be used in `ggplot2` or any other data visualization tool. Just use the `draw` argument:
-
-```{r}
-p <- plot_predictions(mod, condition = c("Age", "PClass"), draw = FALSE)
-head(p)
-```
-
 
 # Groups and categorical outcomes 
 

@@ -1,7 +1,17 @@
-#' Plot Slopes
+#' Plot Conditional or Marginal Slopes
 #'
-#' Plot slopes (aka marginal effects or trends) on the y-axis against values of one or more predictors (x-axis, colors, and facets). Plot average slopes.
+#' @description
+#' Plot slopes on the y-axis against values of one or more predictors (x-axis, colors, line types, and facets).
 #'
+#' The `by` argument is used to plot marginal slopes, that is, slopes made on the original data, but averaged by subgroups. This is analogous to using the `by` argument in the `slopes()` function.
+#'
+#' The `condition` argument is used to plot conditional slopes, that is, slopes made on a user-specified grid. This is analogous to using the `newdata` argument and `datagrid()` function in a `slopes()` call. Unspecified variables are held at their mean or mode.
+#' 
+#' See the "Plots" vignette and website for tutorials and information on how to customize plots:
+#'
+#' * https://vincentarelbundock.github.io/marginaleffects/articles/plot.html
+#' * https://vincentarelbundock.github.io/marginaleffects
+#' 
 #' @param x a model or object produced by the `slopes()` or `comparisons()` functions.
 #' @param effect Name of the variable whose contrast we want to plot on the y-axis. If `NULL`, a plot of average slopes is returned.
 #' @param condition character vector or named list of length smaller than 3. Character vectors must be the names of the predictor variables to display. The names of the list must The first element is displayed on the x-axis. The second element determines the colors. The third element creates facets. Unspecified variables are held at their means or modes. Lists can include these types of values (see Examples section below):
@@ -29,31 +39,24 @@
 plot_slopes <- function(x,
                         effect = NULL,
                         condition = NULL,
+                        by = NULL,
                         type = "response",
                         vcov = NULL,
                         conf_level = 0.95,
+                        slope = "dydx",
                         draw = TRUE,
                         ...) {
-
-    if (is.null(effect) && is.null(condition) && !inherits(x, "slopes")) {
-        model <- slopes(
-            x,
-            by = TRUE,
-            type = type,
-            vcov = vcov,
-            conf_level = conf_level,
-            ...)
-    }
 
     out <- plot_comparisons(
         x,
         effect = effect,
         condition = condition,
+        by = by,
         type = type,
         vcov = vcov,
         conf_level = conf_level,
         draw = draw,
-        transform_pre = "dydx",
+        transform_pre = slope,
         ...)
 
     if (inherits(out, "ggplot")) {
@@ -66,7 +69,6 @@ plot_slopes <- function(x,
 }
 
 
-
 #' `plot_slopes()` is an alias to `plot_slopes()`
 #'
 #' This alias is kept for backward compatibility.
@@ -74,10 +76,3 @@ plot_slopes <- function(x,
 #' @keywords internal
 #' @export
 plot_cme <- plot_slopes
-
-
-
-################### Backward compatibility for deprecated methods. Also nice to keep.
-#' @export
-#' @noRd
-plot.slopes <- plot_slopes

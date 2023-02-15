@@ -189,7 +189,7 @@ get_contrasts <- function(model,
     elasticities <- lapply(elasticities, function(x) x$name)
     if (length(elasticities) > 0) {
         for (v in names(elasticities)) {
-            idx2 <- c("rowid", "term", "type", "group", grep("^contrast", colnames(out), value = TRUE))
+            idx2 <- unique(c("rowid", "term", "type", "group", by, grep("^contrast", colnames(out), value = TRUE)))
             idx2 <- intersect(idx2, colnames(out))
             # discard other terms to get right length vector
             idx2 <- out[term == v, ..idx2]
@@ -200,7 +200,7 @@ get_contrasts <- function(model,
                 idx1 <- original[, ..idx1]
                 setnames(idx1, old = v, new = "elast")
                 on_cols <- intersect(colnames(idx1), colnames(idx2))
-                idx2[idx1, elast := elast, on = on_cols]
+                idx2[idx1, elast := elast, on = on_cols] |> unique()
             }
             elasticities[[v]] <- idx2$elast
         }
@@ -266,7 +266,7 @@ get_contrasts <- function(model,
     # unknown arguments
     # singleton vs vector
     # different terms use different functions
-    safefun <- function(hi, lo, y, n, term, cross, eps, wts) {
+    safefun <- function(hi, lo, y, n, term, cross, eps, wts, tmp_idx) {
         # when cross=TRUE, sanitize_transform_pre enforces a single function
         if (isTRUE(cross)) {
             fun <- fun_list[[1]]
@@ -279,7 +279,7 @@ get_contrasts <- function(model,
             "y" = y,
             "eps" = eps,
             "w" = wts,
-            "x" = elasticities[[term[1]]])
+            "x" = elasticities[[term[1]]][tmp_idx])
         args <- args[names(args) %in% names(formals(fun))]
         con <- try(do.call("fun", args), silent = TRUE)
         if (!isTRUE(checkmate::check_numeric(con, len = n)) && !isTRUE(checkmate::check_numeric(con, len = 1))) {
@@ -292,6 +292,9 @@ get_contrasts <- function(model,
         }
         return(con)
     }
+
+    # need a temp index for group-by operations when elasticities is a vector of length equal to full rows of `out`
+    out[, tmp_idx := 1:.N]
 
     # bayesian
     if (!is.null(draws)) {
@@ -325,7 +328,8 @@ get_contrasts <- function(model,
                     term = out$term[idx],
                     cross = cross,
                     wts = out$marginaleffects_wts_internal[idx],
-                    eps = out$marginaleffects_eps[idx])
+                    eps = out$marginaleffects_eps[idx],
+                    tmp_idx = out$tmp_idx)
             }
         }
 
@@ -362,8 +366,10 @@ get_contrasts <- function(model,
             term = term,
             cross = cross,
             wts = marginaleffects_wts_internal,
-            eps = marginaleffects_eps),
+            eps = marginaleffects_eps,
+            tmp_idx = tmp_idx),
         by = idx]
+        out[, tmp_idx := NULL]
 
         # if transform_pre returns a single value, then we padded with NA. That
         # also means we don't want `rowid` otherwise we will merge and have

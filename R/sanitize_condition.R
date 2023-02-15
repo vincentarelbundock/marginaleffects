@@ -46,15 +46,23 @@ sanitize_condition <- function(model, condition, effect = NULL, modeldata = NULL
     }
 
     # get data to know over what range of values we should plot
-    if (is.null(modeldata)) {
+    if (is.null(modeldata) && isTRUE(checkmate::check_character(condition))) {
+        dat <- get_modeldata(model, additional_variables = condition)
+    } else if (is.null(modeldata) && isTRUE(checkmate::check_list(condition))) {
         dat <- get_modeldata(model, additional_variables = names(condition))
     } else {
         dat <- modeldata
     }
     resp <- insight::get_response(model)
     respname <- insight::find_response(model)
+    
+    flag <-  checkmate::check_true(all(names(condition) %in% c(colnames(dat), "group")))
+    if (!isTRUE(flag)) {
+        msg <- sprintf("Entries in the `condition` argument must be element of: %s",
+                       paste(colnames(dat), collapse = ", "))
+        insight::format_error(msg)
+    }
 
-    checkmate::assert_true(isTRUE(all(names(condition) %in% c(colnames(dat), "group"))))
 
     # condition names
     condition1 <- names(condition)[[1]]

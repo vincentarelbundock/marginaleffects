@@ -76,7 +76,7 @@ Benefits of `marginaleffects` include:
 * _Documented_: Each function is thoroughly documented with abundant examples. The website includes 20,000+ words of vignettes and case studies.
 * _Efficient:_ [Some operations](https://vincentarelbundock.github.io/marginaleffects/articles/performance.html) are orders of magnitude faster than with the `margins` package, and the memory footprint is much smaller.
 * _Thin:_ Few dependencies.
-* _Standards-compliant:_ `marginaleffects` follows "tidy" principles and returns objects that work with standard functions like `plot()`, `summary()`, `tidy()`, and `glance()`. These objects are easy to program with and feed to [other packages like `modelsummary`.](https://vincentarelbundock.github.io/marginaleffects/) 
+* _Standards-compliant:_ `marginaleffects` follows "tidy" principles and returns objects that work with standard functions like `summary()`, `head()`, `tidy()`, and `glance()`. These objects are easy to program with and feed to [other packages like `modelsummary`.](https://vincentarelbundock.github.io/marginaleffects/) 
 * _Valid:_  When possible, [numerical results are checked](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html) against alternative software like `Stata` or other `R` packages. Unfortunately, it is not possible to test every model type, so users are still strongly encouraged to cross-check their results.
 * _Extensible:_ Adding support for new models is very easy, often requiring less than 10 lines of new code. Please submit [feature requests on Github.](https://github.com/vincentarelbundock/marginaleffects/issues)
 * _Active development_: Bugs are fixed promptly.

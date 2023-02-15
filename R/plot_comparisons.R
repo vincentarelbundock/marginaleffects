@@ -1,7 +1,17 @@
-#' Plot Comparisons
+#' Plot Conditional or Marginal Comparisons
 #'
-#' Plot comparisons on the y-axis against values of one or more predictor variables (x-axis, colors, and facets). Plot average predictions.
+#' @description
+#' Plot comparisons on the y-axis against values of one or more predictors (x-axis, colors, line types, and facets).
 #'
+#' The `by` argument is used to plot marginal comparisons, that is, comparisons made on the original data, but averaged by subgroups. This is analogous to using the `by` argument in the `comparisons()` function.
+#'
+#' The `condition` argument is used to plot conditional comparisons, that is, comparisons made on a user-specified grid. This is analogous to using the `newdata` argument and `datagrid()` function in a `comparisons()` call. Unspecified variables are held at their mean or mode.
+#' 
+#' See the "Plots" vignette and website for tutorials and information on how to customize plots:
+#'
+#' * https://vincentarelbundock.github.io/marginaleffects/articles/plot.html
+#' * https://vincentarelbundock.github.io/marginaleffects
+#' 
 #' @param effect Name of the variable whose contrast we want to plot on the y-axis. If `NULL`, a plot of average comparisons is returned.
 #' @param draw `TRUE` returns a `ggplot2` plot. `FALSE` returns a `data.frame` of the underlying data.
 #' @inheritParams comparisons
@@ -127,7 +137,7 @@ plot_comparisons <- function(model,
             p <- p + ggplot2::facet_grid(fo)
         }
     } else if (!is.null(v_facet)) {
-        fo <- as.formula(paste("~", v_facet))
+        fo <- stats::as.formula(paste("~", v_facet))
         p <- p + ggplot2::facet_wrap(fo)
     }
 
@@ -142,9 +152,3 @@ plot_comparisons <- function(model,
 #' @keywords internal
 #' @export
 plot_cco <- plot_comparisons
-
-
-################### Backward compatibility for deprecated methods. Also nice to keep.
-#' @export
-#' @noRd
-plot.comparisons <- plot_comparisons

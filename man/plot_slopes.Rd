@@ -2,15 +2,17 @@
 % Please edit documentation in R/plot_slopes.R
 \name{plot_slopes}
 \alias{plot_slopes}
-\title{Plot Slopes}
+\title{Plot Conditional or Marginal Slopes}
 \usage{
 plot_slopes(
   x,
   effect = NULL,
   condition = NULL,
+  by = NULL,
   type = "response",
   vcov = NULL,
   conf_level = 0.95,
+  slope = "dydx",
   draw = TRUE,
   ...
 )
@@ -25,6 +27,15 @@ plot_slopes(
 \item Numeric vector
 \item Function which returns a numeric vector or a set of unique categorical values
 \item Shortcut strings for common reference values: "minmax", "quartile", "threenum"
+}}
+
+\item{by}{Aggregate unit-level estimates (aka, marginalize, average over). Valid inputs:
+\itemize{
+\item \code{FALSE}: return the original unit-level estimates.
+\item \code{TRUE}: aggregate estimates for each term.
+\item Character vector of column names in \code{newdata} or in the data frame produced by calling the function without the \code{by} argument.
+\item Data frame with a \code{by} column of group labels, and merging columns shared by \code{newdata} or the data frame produced by calling the same function without the \code{by} argument.
+\item See examples below.
 }}
 
 \item{type}{string indicates the type (scale) of the predictions used to
@@ -53,6 +64,14 @@ the \code{marginaleffects:::type_dictionary} dataframe.}
 
 \item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
 
+\item{slope}{string indicates the type of slope or (semi-)elasticity to compute:
+\itemize{
+\item "dydx": dY/dX
+\item "eyex": dY/dX * Y / X
+\item "eydx": dY/dX * Y
+\item "dyex": dY/dX / X
+}}
+
 \item{draw}{\code{TRUE} returns a \code{ggplot2} plot. \code{FALSE} returns a \code{data.frame} of the underlying data.}
 
 \item{...}{Additional arguments are passed to the \code{predict()} method
@@ -68,7 +87,17 @@ arguments.}
 A \code{ggplot2} object
 }
 \description{
-Plot slopes (aka marginal effects or trends) on the y-axis against values of one or more predictors (x-axis, colors, and facets). Plot average slopes.
+Plot slopes on the y-axis against values of one or more predictors (x-axis, colors, line types, and facets).
+
+The \code{by} argument is used to plot marginal slopes, that is, slopes made on the original data, but averaged by subgroups. This is analogous to using the \code{by} argument in the \code{slopes()} function.
+
+The \code{condition} argument is used to plot conditional slopes, that is, slopes made on a user-specified grid. This is analogous to using the \code{newdata} argument and \code{datagrid()} function in a \code{slopes()} call. Unspecified variables are held at their mean or mode.
+
+See the "Plots" vignette and website for tutorials and information on how to customize plots:
+\itemize{
+\item https://vincentarelbundock.github.io/marginaleffects/articles/plot.html
+\item https://vincentarelbundock.github.io/marginaleffects
+}
 }
 \examples{
 library(marginaleffects)

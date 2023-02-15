@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_comparisons.R
 \name{plot_comparisons}
 \alias{plot_comparisons}
-\title{Plot Comparisons}
+\title{Plot Conditional or Marginal Comparisons}
 \usage{
 plot_comparisons(
   model,
@@ -95,7 +95,17 @@ arguments.}
 A \code{ggplot2} object
 }
 \description{
-Plot comparisons on the y-axis against values of one or more predictor variables (x-axis, colors, and facets). Plot average predictions.
+Plot comparisons on the y-axis against values of one or more predictors (x-axis, colors, line types, and facets).
+
+The \code{by} argument is used to plot marginal comparisons, that is, comparisons made on the original data, but averaged by subgroups. This is analogous to using the \code{by} argument in the \code{comparisons()} function.
+
+The \code{condition} argument is used to plot conditional comparisons, that is, comparisons made on a user-specified grid. This is analogous to using the \code{newdata} argument and \code{datagrid()} function in a \code{comparisons()} call. Unspecified variables are held at their mean or mode.
+
+See the "Plots" vignette and website for tutorials and information on how to customize plots:
+\itemize{
+\item https://vincentarelbundock.github.io/marginaleffects/articles/plot.html
+\item https://vincentarelbundock.github.io/marginaleffects
+}
 }
 \examples{
 mod <- lm(mpg ~ hp * drat * factor(am), data = mtcars)

@@ -1,11 +1,27 @@
-#' Plot Predictions
+#' Plot Conditional or Marginal Predictions
 #'
-#' Plot predictions on the y-axis against values of on or more predictors (x-axis, colors, and facets). Plot average predictions.
+#' @description
+#' Plot predictions on the y-axis against values of one or more predictors (x-axis, colors, line types, and facets).
 #'
-#' @param condition character vector or named list of length smaller than 4. Character vectors must be the names of the predictor variables to display. The names of the list must The first element is displayed on the x-axis. The second element determines the colors. The third element creates facets. Other variables are held at their means or modes. Lists can include these types of values:
-#' * Numeric vector
-#' * Function which returns a numeric vector or a set of unique categorical values 
-#' * Shortcut strings for common reference values: "minmax", "quartile", "threenum"
+#' The `by` argument is used to plot marginal predictions, that is, predictions made on the original data, but averaged by subgroups. This is analogous to using the `by` argument in the `predictions()` function.
+#'
+#' The `condition` argument is used to plot conditional predictions, that is, predictions made on a user-specified grid. This is analogous to using the `newdata` argument and `datagrid()` function in a `predictions()` call. Unspecified variables are held at their mean or mode.
+#' 
+#' See the "Plots" vignette and website for tutorials and information on how to customize plots:
+#'
+#' * https://vincentarelbundock.github.io/marginaleffects/articles/plot.html
+#' * https://vincentarelbundock.github.io/marginaleffects
+#' 
+#' @param condition Conditional predictions
+#' + Character vector (max length 3): Names of the predictors to display.
+#' + Named list (max length 3): List names correspond to predictors. List elements can be:
+#'   - Numeric vector
+#'   - Function which returns a numeric vector or a set of unique categorical values 
+#'   - Shortcut strings for common reference values: "minmax", "quartile", "threenum"
+#' + 1: x-axis. 2: color. 3: facets.
+#' @param by Marginal predictions
+#' + Character vector (max length 3): Names of the categorical predictors to marginalize across.
+#' + 1: x-axis. 2: color. 3: facets.
 #' @param draw `TRUE` returns a `ggplot2` plot. `FALSE` returns a `data.frame` of the underlying data.
 #' @inheritParams plot_slopes
 #' @inheritParams predictions
@@ -99,7 +115,7 @@ plot_predictions <- function(model,
 
     # condition 3: facets
     if (!is.null(v_facet)) {
-        fo <- as.formula(paste("~", v_facet))
+        fo <- istats::as.formula(paste("~", v_facet))
         p <- p + ggplot2::facet_wrap(fo)
     }
 

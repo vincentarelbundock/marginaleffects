@@ -84,7 +84,7 @@ Benefits of `marginaleffects` include:
     the memory footprint is much smaller.
   - *Thin:* Few dependencies.
   - *Standards-compliant:* `marginaleffects` follows “tidy” principles
-    and returns objects that work with standard functions like `plot()`,
+    and returns objects that work with standard functions like 
     `summary()`, `tidy()`, and `glance()`. These objects are easy to
     program with and feed to [other packages like
     `modelsummary`.](https://vincentarelbundock.github.io/marginaleffects/)
