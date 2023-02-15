@@ -22,6 +22,7 @@
 #' @param by Marginal predictions
 #' + Character vector (max length 3): Names of the categorical predictors to marginalize across.
 #' + 1: x-axis. 2: color. 3: facets.
+#' @param points Number between 0 and 1 which controls the transparency of raw data points. 0 (default) does not display any points.
 #' @param draw `TRUE` returns a `ggplot2` plot. `FALSE` returns a `data.frame` of the underlying data.
 #' @inheritParams plot_slopes
 #' @inheritParams predictions
@@ -45,8 +46,11 @@ plot_predictions <- function(model,
                              vcov = NULL,
                              conf_level = 0.95,
                              transform_post = NULL,
+                             points = 0,
                              draw = TRUE,
                              ...) {
+
+    checkmate::assert_number(points, lower = 0, upper = 1)
 
     # sanity check
     checkmate::assert_character(by, null.ok = TRUE, max.len = 3, min.len = 1, names = "unnamed")
@@ -93,6 +97,8 @@ plot_predictions <- function(model,
         v_facet <- hush(by[[3]])
     }
 
+    dv <- unlist(insight::find_response(model, combine = TRUE), use.names = FALSE)[1]
+
     datplot <- plot_preprocess(datplot, v_x = v_x, v_color = v_color, v_facet = v_facet, condition = condition, modeldata = modeldata)
 
     # return immediately if the user doesn't want a plot
@@ -104,11 +110,11 @@ plot_predictions <- function(model,
 
     # ggplot2
     insight::check_if_installed("ggplot2")
-    p <- plot_build(datplot, v_x = v_x, v_color = v_color, v_facet = v_facet)
+    p <- plot_build(datplot, v_x = v_x, v_color = v_color, v_facet = v_facet, points = points, modeldata = modeldata, dv = dv)
     
     p <- p + ggplot2::labs(
         x = v_x,
-        y = unlist(insight::find_response(model, combine = TRUE), use.names = FALSE)[1],
+        y = dv, 
         color = v_color,
         fill = v_color,
         linetype = v_color)

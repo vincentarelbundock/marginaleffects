@@ -60,6 +60,13 @@ expect_false(any(is.na(p$estimate)))
 expect_equal(nrow(p), 25)
 
 
+# points: alpha
+mod <- lm(mpg ~ hp * wt * am, data = mtcars)
+expect_true("DO SNAPSHOTS")
+#plot_predictions(mod, condition = c("hp", "wt"))
+#plot_predictions(mod, condition = list("hp", "wt" = "threenum"), points = .5)
+
+
 # two conditions
 mod <- lm(mpg ~ hp * wt * am, data = mtcars)
 p <- plot_predictions(mod, condition = c("hp", "wt"))

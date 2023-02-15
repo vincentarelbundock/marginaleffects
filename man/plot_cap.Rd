@@ -12,6 +12,7 @@ plot_cap(
   vcov = NULL,
   conf_level = 0.95,
   transform_post = NULL,
+  points = 0,
   draw = TRUE,
   ...
 )
@@ -64,6 +65,8 @@ the \code{marginaleffects:::type_dictionary} dataframe.}
 \item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
 
 \item{transform_post}{(experimental) A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.}
+
+\item{points}{Number between 0 and 1 which controls the transparency of raw data points. 0 (default) does not display any points.}
 
 \item{draw}{\code{TRUE} returns a \code{ggplot2} plot. \code{FALSE} returns a \code{data.frame} of the underlying data.}
 
