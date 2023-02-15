@@ -220,6 +220,7 @@ Collate:
     'predictions.R'
     'print.R'
     'recall.R'
+    'sanitize_condition.R'
     'sanitize_conf_level.R'
     'sanitize_hypothesis.R'
     'sanitize_interaction.R'

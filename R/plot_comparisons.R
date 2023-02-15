@@ -24,6 +24,7 @@
 plot_comparisons <- function(x,
                              effect = NULL,
                              condition = NULL,
+                             by = NULL,
                              type = "response",
                              vcov = NULL,
                              conf_level = 0.95,
@@ -32,87 +33,72 @@ plot_comparisons <- function(x,
                              draw = TRUE,
                              ...) {
 
-    if (is.null(effect) && is.null(condition)) {
-        dots <- list(...)
-        args <- list(
-            x,
-            type = type,
-            vcov = vcov,
-            conf_level = conf_level,
-            transform_pre = transform_pre,
-            transform_post = transform_post,
-            draw = draw)
-        if (!"by" %in% names(dots)) {
-            dots[["by"]] <- TRUE
-        }
-        args <- c(args, dots)
-        if (inherits(x, "slopes")) {
-            args[["transform_post"]] <- args[["transform_pre"]] <- NULL
-            args[[1]] <- do.call(get_averages, args)
-        } else if (!inherits(x, "comparisons")) {
-            args[[1]] <- do.call(comparisons, args)
-        }
-        p <- do.call(plot_avg, args)
-        return(p)
-    }
-
+    
     # sanity check
-    if (!isTRUE(length(effect) == 1)) {
-        msg <- "The `effect` argument must be a vector or list of length 1."
+    checkmate::assert_character(by, null.ok = TRUE, max.len = 3, min.len = 1, names = "unnamed")
+    checkmate::assert(
+        checkmate::check_string(effect),
+        checkmate::check_list(effect, names = "unique", len = 1))
+
+    if ((!is.null(condition) && !is.null(by)) || (is.null(condition) && is.null(by))) {
+        msg <- "One of the `condition` and `by` arguments must be supplied, but not both."
         insight::format_error(msg)
     }
 
-    # shared code with plot_comparisons()
-    tmp <- get_plot_newdata(x, condition, effect)
-    dat <- tmp$modeldata
-    nd <- tmp$newdata
-    condition <- tmp$condition
-    condition1 <- tmp$condition1
-    condition2 <- tmp$condition2
-    condition3 <- tmp$condition3
-    resp <- tmp$resp
-    respname <- tmp$respname
-
-    # bad test!
-    # plot_comparisons should actually support a list here as well, since we want to
-    # that be passed to the comparisons() variable
-
-    # flag <- checkmate::check_choice(effect, choices = colnames(dat))
-    # if (!isTRUE(flag)) {
-    #     msg <- "The `effect` argument must be a string representing one of the predictors in the model: %s"
-    #     msg <- sprintf(msg, paste(setdiff(colnames(dat), respname), collapse = ", "))
-    #     insight::format_error(msg)
-    # }
-
-    datplot <- comparisons(
-        x,
-        newdata = nd,
-        type = type,
-        vcov = vcov,
-        conf_level = conf_level,
-        variables = effect,
-        transform_pre = transform_pre,
-        transform_post = transform_post,
-        cross = FALSE,
-        ...)
-
-    draws <- attr(datplot, "posterior_draws")
-    colnames(datplot)[colnames(datplot) == condition1] <- "condition1"
-    colnames(datplot)[colnames(datplot) == condition2] <- "condition2"
-    colnames(datplot)[colnames(datplot) == condition3] <- "condition3"
-
-    # colors and linetypes are categorical attributes
-    if ("condition2" %in% colnames(datplot)) datplot$condition2 <- factor(datplot$condition2)
-    if ("condition3" %in% colnames(datplot)) datplot$condition3 <- factor(datplot$condition3)
-
-    # CIs are automatically added to predictions but (maybe) not marginaleffects output
-    if (!"conf.low" %in% colnames(datplot)) {
-        alpha <- 1 - conf_level
-        datplot$conf.low <- datplot$estimate + stats::qnorm(alpha / 2) * datplot$std.error
-        datplot$conf.high <- datplot$estimate - stats::qnorm(alpha / 2) * datplot$std.error
+    # conditional
+    if (!is.null(condition)) {
+        condition <- sanitize_condition(x, condition, effect)
+        modeldata <- get_modeldata(x, additional_variables = names(condition$condition))
+        respname <- condition$respname
+        var1 <- condition$condition1
+        var2 <- condition$condition2
+        var3 <- condition$condition3
+        datplot <- comparisons(
+            x,
+            newdata = condition$newdata,
+            type = type,
+            vcov = vcov,
+            conf_level = conf_level,
+            by = FALSE,
+            wts = NULL,
+            variables = effect,
+            transform_pre = transform_pre,
+            transform_post = transform_post,
+            cross = FALSE,
+            modeldata = modeldata,
+            ...)
     }
 
-    # shortcut labels
+    # marginal
+    if (!is.null(by)) {
+        modeldata <- get_modeldata(x, additional_variables = by)
+        datplot <- comparisons(
+            x,
+            by = by,
+            type = type,
+            vcov = vcov,
+            conf_level = conf_level,
+            variables = effect,
+            wts = NULL,
+            transform_pre = transform_pre,
+            transform_post = transform_post,
+            cross = FALSE,
+            modeldata = modeldata,
+            ...)
+        var1 <- by[[1]]
+        var2 <- hush(by[[2]])
+        var3 <- hush(by[[3]])
+    }
+
+    # colors and linetypes are categorical attributes
+    if (isTRUE(var2 %in% colnames(datplot))) {
+        datplot[[var2]] <- factor(datplot[[var2]])
+    }
+    if (isTRUE(var3 %in% colnames(datplot))) {
+        datplot[[var3]] <- factor(datplot[[var3]])
+    }
+
+    # shortcut labels: loop skips naturally when `condition=NULL`
     for (i in seq_along(condition)) {
         v <- paste0("condition", i)
         fun <- function(x, lab) {
@@ -127,13 +113,10 @@ plot_comparisons <- function(x,
             datplot[[v]] <- fun(datplot[[v]], c("Q1", "Q2", "Q3"))
         }
     }
-
+    
     # return immediately if the user doesn't want a plot
     if (isFALSE(draw)) {
-        for (i in seq_along(condition)) {
-            colnames(datplot)[colnames(datplot) == paste0("condition", i)] <- names(condition)[i]
-        }
-        attr(datplot, "posterior_draws") <- draws
+        attr(datplot, "posterior_draws") <- attr(datplot, "posterior_draws")
         return(data.frame(datplot))
     } else {
         insight::check_if_installed("ggplot2")
@@ -143,66 +126,66 @@ plot_comparisons <- function(x,
     p <- ggplot2::ggplot()
 
     # continuous x-axis
-    if (is.numeric(datplot$condition1)) {
+    if (is.numeric(datplot$var1)) {
         if ("conf.low" %in% colnames(datplot)) {
             p <- p + ggplot2::geom_ribbon(
                 data = datplot,
                 alpha = .1,
                 ggplot2::aes(
-                    x = condition1,
+                    x = {{var1}},
                     y = estimate,
                     ymin = conf.low,
                     ymax = conf.high,
-                    fill = condition2))
+                    fill = {{var2}}))
         }
         p <- p + ggplot2::geom_line(
             data = datplot,
             ggplot2::aes(
-                x = condition1,
+                x = var1,
                 y = estimate,
-                color = condition2))
+                color = {{var2}}))
 
         # categorical x-axis
     } else {
         if ("conf.low" %in% colnames(datplot)) {
-            if (is.null(condition1)) {
+            if (is.null(var1)) {
                 p <- p + ggplot2::geom_pointrange(
                     data = datplot,
                     ggplot2::aes(
-                        x = condition1,
+                        x = {{var1}},
                         y = estimate,
                         ymin = conf.low,
                         ymax = conf.high,
-                        color = condition2))
+                        color = {{var2}}))
             } else {
                 p <- p + ggplot2::geom_pointrange(
                     data = datplot,
                     position = ggplot2::position_dodge(.15),
                     ggplot2::aes(
-                        x = condition1,
+                        x = {{var1}},
                         y = estimate,
                         ymin = conf.low,
                         ymax = conf.high,
-                        color = condition2))
+                        color = {{var2}}))
             }
         } else {
             p <- p + ggplot2::geom_point(
                 data = datplot,
                 ggplot2::aes(
-                    x = condition1,
+                    x = var1,
                     y = estimate,
-                    color = condition1))
+                    color = var1))
         }
     }
 
     if (is.null(names(effect))) {
         p <- p + ggplot2::labs(
-            x = condition1,
-            y = sprintf("Contrast in %s on %s", effect, respname))
+            x = var1,
+            y = sprintf("Contrast in %s on %s", effect, {{condition$respname}}))
     } else {
         p <- p + ggplot2::labs(
-            x = condition1,
-            y = sprintf("Contrast in %s on %s", names(effect), respname))
+            x = var1,
+            y = sprintf("Contrast in %s on %s", names(effect), {{condition$respname}}))
     }
 
     # `effect` is a categorical variable. We plot them in different facets
@@ -213,15 +196,15 @@ plot_comparisons <- function(x,
         }
     }
     if (length(contrast_cols) > 0) {
-        if (is.null(condition3)) {
+        if (is.null(var3)) {
             fo <- sprintf("~ %s", paste(contrast_cols, collapse = "+"))
             p <- p + ggplot2::facet_wrap(fo)
         } else {
-            fo <- sprintf("condition3 ~ %s", paste(contrast_cols, collapse = "+"))
+            fo <- sprintf("var3 ~ %s", paste(contrast_cols, collapse = "+"))
             p <- p + ggplot2::facet_grid(fo)
         }
-    } else if (!is.null(condition3)) {
-        fo <- ~condition3
+    } else if (!is.null(var3)) {
+        fo <- ~var3
         p <- p + ggplot2::facet_wrap(fo)
     }
 
@@ -232,9 +215,6 @@ plot_comparisons <- function(x,
             ggplot2::theme_minimal() +
             ggplot2::theme(legend.title = ggplot2::element_blank())
     }
-
-    # attach model data for each of use
-    attr(p, "modeldata") <- dat
 
     return(p)
 }

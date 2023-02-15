@@ -8,6 +8,7 @@ plot_comparisons(
   x,
   effect = NULL,
   condition = NULL,
+  by = NULL,
   type = "response",
   vcov = NULL,
   conf_level = 0.95,
@@ -27,6 +28,15 @@ plot_comparisons(
 \item Numeric vector
 \item Function which returns a numeric vector or a set of unique categorical values
 \item Shortcut strings for common reference values: "minmax", "quartile", "threenum"
+}}
+
+\item{by}{Aggregate unit-level estimates (aka, marginalize, average over). Valid inputs:
+\itemize{
+\item \code{FALSE}: return the original unit-level estimates.
+\item \code{TRUE}: aggregate estimates for each term.
+\item Character vector of column names in \code{newdata} or in the data frame produced by calling the function without the \code{by} argument.
+\item Data frame with a \code{by} column of group labels, and merging columns shared by \code{newdata} or the data frame produced by calling the same function without the \code{by} argument.
+\item See examples below.
 }}
 
 \item{type}{string indicates the type (scale) of the predictions used to

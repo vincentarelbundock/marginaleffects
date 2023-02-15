@@ -1,0 +1,130 @@
+sanitize_condition <- function(model, condition, effect = NULL) {
+
+    # allow multiple conditions and/or effects
+    checkmate::assert(
+        checkmate::check_character(condition, min.len = 1, max.len = 3),
+        checkmate::check_list(condition, min.len = 1, max.len = 3)
+    )
+
+    # c("a", "b") or list("a", "b") -> named list of NULLs
+    flag1 <- isTRUE(checkmate::check_character(condition))
+    flag2 <- isTRUE(checkmate::check_list(condition, names = "unnamed")) &&
+             all(sapply(condition, function(x) isTRUE(checkmate::check_string(x))))
+    if (flag1 || flag2) {
+        condition <- stats::setNames(rep(list(NULL), length(condition)), unlist(condition))
+    }
+
+    # validity of the list
+    for (i in seq_along(condition)) {
+        if (identical(names(condition)[i], "")) {
+            if (!isTRUE(checkmate::check_character(condition[[i]], len = 1))) {
+                msg <- "The `condition` argument must be a character vector or a named list."
+                insight::format_error(msg)
+            } else {
+                names(condition)[i] <- condition[[i]]
+                tmp <- stats::setNames(list(NULL), names(condition)[i])
+                condition <- utils::modifyList(condition, tmp, keep.null = TRUE)
+            }
+        }
+    }
+
+    # get data to know over what range of values we should plot
+    dat <- get_modeldata(model, additional_variables = names(condition))
+    resp <- insight::get_response(model)
+    respname <- insight::find_response(model)
+
+    checkmate::assert_true(isTRUE(all(names(condition) %in% c(colnames(dat), "group"))))
+
+    # condition names
+    condition1 <- names(condition)[[1]]
+    condition2 <- hush(names(condition)[[2]])
+    condition3 <- hush(names(condition)[[3]])
+
+    # build typical dataset with a sequence of values over "condition" range
+    at_list <- list()
+
+    shortcuts <- c("threenum", "fivenum", "minmax", "quartile")
+
+    # condition 1: x-axis
+    if (is.null(condition[[1]])) {
+        if (get_variable_class(dat, condition1, "binary")) {
+            at_list[[condition1]] <- 0:1
+        } else if (is.numeric(dat[[condition1]]) && !get_variable_class(dat, condition1, "categorical")) {
+            at_list[[condition1]] <- seq(
+                min(dat[[condition1]], na.rm = TRUE),
+                max(dat[[condition1]], na.rm = TRUE),
+                length.out = 25)
+        } else {
+            at_list[[condition1]] <- factor(unique(dat[[condition1]]))
+        }
+    } else {
+        if (isTRUE(checkmate::check_choice(condition[[1]], shortcuts))) {
+            at_list[[condition1]] <- condition_shortcuts(dat[[condition1]], condition[[1]], shortcuts)
+        } else {
+            at_list[[condition1]] <- condition[[1]]
+        }
+    }
+
+    # condition 2: color
+    if (length(condition) > 1) {
+        if (is.null(condition[[2]])) {
+            if (is.numeric(dat[[condition2]])) {
+                at_list[[condition2]] <- stats::fivenum(dat[[condition2]])
+            } else {
+                at_list[[condition2]] <- unique(dat[[condition2]])
+            }
+        } else {
+            if (isTRUE(checkmate::check_choice(condition[[2]], shortcuts))) {
+                at_list[[condition2]] <- condition_shortcuts(dat[[condition2]], condition[[2]], shortcuts)
+            } else {
+                at_list[[condition2]] <- condition[[2]]
+            }
+        }
+    }
+
+    # condition 3: facet
+    if (length(condition) > 2) {
+        if (is.null(condition[[3]])) {
+            if (is.numeric(dat[[condition3]])) {
+                at_list[[condition3]] <- stats::fivenum(dat[[condition3]])
+            } else {
+                at_list[[condition3]] <- unique(dat[[condition3]])
+            }
+        } else {
+            if (isTRUE(checkmate::check_choice(condition[[3]], shortcuts))) {
+                at_list[[condition3]] <- condition_shortcuts(dat[[condition3]], condition[[3]], shortcuts)
+            } else {
+                at_list[[condition3]] <- condition[[3]]
+            }
+        }
+    }
+
+    at_list[["model"]] <- model
+    at_list[["newdata"]] <- dat
+
+    if (!is.null(effect)) {
+        # sometimes we use the same condition as effect (e.g., GAM vignette),
+        # but otherwise we don't want it at all
+        if (isTRUE(checkmate::check_character(effect))) {
+            if (!effect %in% names(condition)) {
+                at_list[[effect]] <- NULL
+            }
+        } else {
+            at_list[[names(effect)]] <- NULL
+        }
+    }
+
+    # create data
+    nd <- do.call("datagrid", at_list)
+
+    out <- list(
+        "modeldata" = dat,
+        "newdata" = nd, 
+        "resp" = resp,
+        "respname" = respname,
+        "condition" = condition, 
+        "condition1" = condition1, 
+        "condition2" = condition2, 
+        "condition3" = condition3) 
+    return(out)
+}
