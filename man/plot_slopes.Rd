@@ -82,8 +82,6 @@ model, depending on the range of supported arguments by each modeling
 package. See the "Model-Specific Arguments" section of the
 \code{?marginaleffects} documentation for a non-exhaustive list of available
 arguments.}
-
-\item{x}{a model or object produced by the \code{slopes()} or \code{comparisons()} functions.}
 }
 \value{
 A \code{ggplot2} object
