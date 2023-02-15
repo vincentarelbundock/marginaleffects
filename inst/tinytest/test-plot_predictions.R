@@ -122,8 +122,8 @@ expect_true(all(mfx2$conf.low != mfx3$conf.low))
 # multinomial
 mod <- nnet::multinom(factor(gear) ~ mpg * wt + am, data = mtcars, trace = FALSE)
 p1 <- plot_predictions(mod, condition = c("mpg", "group"), type = "probs")
-p2 <- plot_comparisons(mod, effect = "mpg", condition = c("wt", "group"), type = "probs")
-p3 <- plot_slopes(mod, effect = "mpg", condition = c("wt", "group"), type = "probs")
+p2 <- plot_comparisons(mod, variables = "mpg", condition = c("wt", "group"), type = "probs")
+p3 <- plot_slopes(mod, variables = "mpg", condition = c("wt", "group"), type = "probs")
 expect_inherits(p1, "gg")
 expect_inherits(p2, "gg")
 expect_inherits(p3, "gg")
@@ -166,9 +166,9 @@ expect_inherits(p, "gg")
 
 p <- plot_predictions(mod, condition = list("hp", "qsec" = "minmax", "gear"), draw = FALSE)
 expect_true("qsec" %in% colnames(p))
-p <- plot_comparisons(mod, effect = "hp", condition = list("qsec" = "minmax", "gear"), draw = FALSE)
+p <- plot_comparisons(mod, variables = "hp", condition = list("qsec" = "minmax", "gear"), draw = FALSE)
 expect_true("qsec" %in% colnames(p))
-p <- plot_slopes(mod, effect = "hp", condition = list("qsec" = "minmax", "gear"), draw = FALSE)
+p <- plot_slopes(mod, variables = "hp", condition = list("qsec" = "minmax", "gear"), draw = FALSE)
 expect_true("qsec" %in% colnames(p))
 
 

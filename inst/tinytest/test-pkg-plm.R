@@ -15,15 +15,15 @@ pool <- plm(inv ~ value * capital, data = dat, model = "pooling")
 swamy <- plm(
     inv ~ value * capital,
     data = dat,
-    model = "random", effect = "individual")
+    model = "random", variables = "individual")
 amemiya <- plm(
     inv ~ value * capital,
     data = dat, model = "random", random.method = "amemiya",
-    effect = "twoways")
+    variables = "twoways")
 walhus <- plm(
     inv ~ value * capital,
     data = dat, model = "random", random.method = "walhus",
-    effect = "twoways")
+    variables = "twoways")
 
 ### marginaleffects
 
@@ -78,7 +78,7 @@ expect_equivalent(mfx$std.error, mar$std.error, tolerance = tol_se)
 # # within error
 # # within model are not supported by `predict.plm`
 # stata <- readRDS(testing_path("stata/stata.rds"))$plm_within
-# mod <- plm(inv ~ value * capital, data = dat, model = "within", effect = "twoways")
+# mod <- plm(inv ~ value * capital, data = dat, model = "within", variables = "twoways")
 # expect_error(slopes(mod), pattern = "Unable")
 
 

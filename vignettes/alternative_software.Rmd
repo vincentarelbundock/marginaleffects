@@ -271,12 +271,12 @@ plot(pairs(emmeans(m, "am", by = "wt", at = list(wt = c(2.5, 3, 3.5))),
 
 # Since `wt` is numeric, the default is to plot it as a continuous variable on
 # the x-axis.  But not that this is the **exact same info** as in the emmeans plot.
-plot_comparisons(m, effect = "am", condition = "wt")
+plot_comparisons(m, variables = "am", condition = "wt")
 
 # You of course customize everything, set draw=FALSE, and feed the raw data to feed to ggplot2
 p <- plot_comparisons(
   m,
-  effect = "am",
+  variables = "am",
   condition = list(wt = c(2.5, 3, 3.5)),
   draw = FALSE)
 

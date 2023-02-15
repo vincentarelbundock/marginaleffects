@@ -59,7 +59,7 @@ plot_predictions <- function(model,
     # conditional
     if (!is.null(condition)) {
         modeldata <- get_modeldata(model, additional_variables = names(condition$condition))
-        condition <- sanitize_condition(model, condition, effect = NULL, modeldata = modeldata)
+        condition <- sanitize_condition(model, condition, variables = NULL, modeldata = modeldata)
         v_x <- condition$condition1
         v_color <- condition$condition2
         v_facet <- condition$condition3
@@ -112,13 +112,6 @@ plot_predictions <- function(model,
         color = v_color,
         fill = v_color,
         linetype = v_color)
-
-    # condition 3: facets
-    if (!is.null(v_facet)) {
-        fo <- stats::as.formula(paste("~", v_facet))
-        p <- p + ggplot2::facet_wrap(fo)
-    }
-
 
     # attach model data for each of use
     attr(p, "modeldata") <- modeldata

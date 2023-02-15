@@ -6,6 +6,12 @@ New models supported:
 * `Rchoice::hetprob`
 * `Rchoice::ivpml`
 
+Plotting functions improvements:
+
+* `effect` argument is renamed to `variables` in `plot_slopes()` and `plot_comparisons()`. This improves consistency with the analogous `slopes()` and `comparisons()` functions.
+* New `by` argument to display marginal estimates by subgroup.
+* The plotting vignette was completely re-written.
+
 Other:
 
 * `inferences()` supports multiple imputation.

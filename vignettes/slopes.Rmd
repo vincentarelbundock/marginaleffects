@@ -230,15 +230,15 @@ The `plot_slopes` function can be used to draw "Conditional Marginal Effects." T
 ```{r, out.width = "60%"}
 mod <- lm(mpg ~ hp * wt + drat, data = mtcars)
 
-plot_slopes(mod, effect = "hp", condition = "wt")
+plot_slopes(mod, variables = "hp", condition = "wt")
 ```
 
-The marginal effects in the plot above were computed with values of all regressors -- except the `effect` and the `condition` -- held at their means or modes, depending on variable type.
+The marginal effects in the plot above were computed with values of all regressors -- except the `variables` and the `condition` -- held at their means or modes, depending on variable type.
 
 Since `plot_slopes()` produces a `ggplot2` object, it is easy to customize. For example:
 
 ```{r}
-plot_slopes(mod, effect = "hp", condition = "wt") +
+plot_slopes(mod, variables = "hp", condition = "wt") +
     geom_rug(aes(x = wt), data = mtcars) +
     theme_classic()
 ```
@@ -281,7 +281,7 @@ plot_predictions(mod, condition = "x")
 We can plot conditional marginal effects with the `plot_slopes` function (see section below):
 
 ```{r}
-plot_slopes(mod, effect = "x", condition = "x")
+plot_slopes(mod, variables = "x", condition = "x")
 ```
 
 Again, the conclusion is the same. When $x<0$, an increase in $x$ is associated with an increase in $y$. When $x=0$, the marginal effect is equal to 0. When $x>0$, an increase in $x$ is associated with a decrease in $y$.
@@ -336,7 +336,7 @@ As we see in the graph, all three slopes are negative, but the Q3 slope is steep
 We could then push this one step further, and measure the slope of `mpg` with respect to `hp`, *for all observed values* of `qsec`. This is achieved with the `plot_slopes()` function:
 
 ```{r}
-plot_slopes(mod, effect = "hp", condition = "qsec") +
+plot_slopes(mod, variables = "hp", condition = "qsec") +
   geom_hline(yintercept = 0, linetype = 3)
 ```
 

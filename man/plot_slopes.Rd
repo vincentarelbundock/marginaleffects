@@ -6,7 +6,7 @@
 \usage{
 plot_slopes(
   x,
-  effect = NULL,
+  variables = NULL,
   condition = NULL,
   by = NULL,
   type = "response",
@@ -20,7 +20,7 @@ plot_slopes(
 \arguments{
 \item{x}{a model or object produced by the \code{slopes()} or \code{comparisons()} functions.}
 
-\item{effect}{Name of the variable whose contrast we want to plot on the y-axis. If \code{NULL}, a plot of average slopes is returned.}
+\item{variables}{Name of the variable whose marginal effect (slope) we want to plot on the y-axis.}
 
 \item{condition}{character vector or named list of length smaller than 3. Character vectors must be the names of the predictor variables to display. The names of the list must The first element is displayed on the x-axis. The second element determines the colors. The third element creates facets. Unspecified variables are held at their means or modes. Lists can include these types of values (see Examples section below):
 \itemize{
@@ -103,14 +103,14 @@ See the "Plots" vignette and website for tutorials and information on how to cus
 library(marginaleffects)
 mod <- lm(mpg ~ hp * drat * factor(am), data = mtcars)
 
-plot_slopes(mod, effect = "hp", condition = "drat")
+plot_slopes(mod, variables = "hp", condition = "drat")
 
-plot_slopes(mod, effect = "hp", condition = c("drat", "am"))
+plot_slopes(mod, variables = "hp", condition = c("drat", "am"))
 
-plot_slopes(mod, effect = "hp", condition = list("am", "drat" = 3:5))
+plot_slopes(mod, variables = "hp", condition = list("am", "drat" = 3:5))
 
-plot_slopes(mod, effect = "am", condition = list("hp", "drat" = range))
+plot_slopes(mod, variables = "am", condition = list("hp", "drat" = range))
 
-plot_slopes(mod, effect = "am", condition = list("hp", "drat" = "threenum"))
+plot_slopes(mod, variables = "am", condition = list("hp", "drat" = "threenum"))
 
 }

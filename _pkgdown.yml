@@ -5,12 +5,13 @@ template:
   bootstrap: 5
 
 articles:
-- title: Estimands
+- title: Core
   contents:
     - predictions
     - comparisons
     - slopes
     - marginalmeans
+    - plot
     - hypothesis
 - title: Case studies
   contents:
@@ -24,7 +25,6 @@ articles:
     - lme4
     - multiple_imputation
     - mlogit
-    - plot
     - python
 - title: Tips and technical notes
   contents:

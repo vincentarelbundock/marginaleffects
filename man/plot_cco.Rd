@@ -6,7 +6,7 @@
 \usage{
 plot_cco(
   model,
-  effect = NULL,
+  variables = NULL,
   condition = NULL,
   by = NULL,
   type = "response",

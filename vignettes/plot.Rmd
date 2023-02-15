@@ -1,8 +1,8 @@
 ---
-title: "Plots: Interactions, Predictions, Comparisons, and Slopes"
+title: "Plots"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Plots: Interactions, Predictions, Comparisons, and Slopes}
+  %\VignetteIndexEntry{Plots}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -39,12 +39,10 @@ Those functions can be used to plot two kinds of quantities:
 
 To begin, let's download data and fit a model:
 
-
-
 ```{r}
 # libraries
 library(ggplot2)
-library(patchwork)
+library(patchwork) # combine plots with the + and / signs
 library(marginaleffects)
 
 # visual theme
@@ -130,7 +128,7 @@ comparisons(mod,
   newdata = datagrid(flipper_length_mm = c(172, 231), species = unique))
 
 plot_comparisons(mod,
-  effect = "flipper_length_mm",
+  variables = "flipper_length_mm",
   condition = c("bill_length_mm", "species"))
 ```
 
@@ -138,11 +136,11 @@ We can specify custom comparisons, as we would using the `variables` argument of
 
 ```{r}
 plot_comparisons(mod,
-  effect = list("flipper_length_mm" = "sd"),
+  variables = list("flipper_length_mm" = "sd"),
   condition = c("bill_length_mm", "species")) +
 
 plot_comparisons(mod,
-  effect = list("flipper_length_mm" = 10),
+  variables = list("flipper_length_mm" = 10),
   condition = c("bill_length_mm", "species"))
 ```
 
@@ -152,7 +150,7 @@ Like the `comparisons()` function, `plot_comparisons()` is a very powerful tool 
 
 ```{r}
 plot_comparisons(mod,
-  effect = "species",
+  variables = "species",
   condition = "bill_length_mm",
   transform_pre = "ratio")
 ```
@@ -165,11 +163,19 @@ As above, we can also display marginal comparisons, by subgroups:
 
 ```{r}
 plot_comparisons(mod,
-  effect = "flipper_length_mm",
+  variables = "flipper_length_mm",
   by = "species") +
 
 plot_comparisons(mod,
-  effect = "flipper_length_mm",
+  variables = "flipper_length_mm",
+  by = c("species", "island"))
+```
+
+Multiple contrasts at once:
+
+```{r}
+plot_comparisons(mod,
+  variables = c("flipper_length_mm", "bill_length_mm"),
   by = c("species", "island"))
 ```
 
@@ -180,13 +186,13 @@ If you have read the sections above, the behavior of the `plot_slopes()` functio
 ```{r}
 # conditional
 plot_slopes(mod,
-  effect = "bill_length_mm",
+  variables = "bill_length_mm",
   slope = "eyex",
   condition = c("species", "island"))
 
 # marginal
 plot_slopes(mod,
-  effect = "bill_length_mm",
+  variables = "bill_length_mm",
   slope = "eyex",
   by = c("species", "island"))
 ```
@@ -196,7 +202,29 @@ And here is an example of a marginal effects (aka "slopes" or "partial derivativ
 ```{r}
 mod2 <- lm(mpg ~ wt * qsec * factor(gear), data = mtcars)
 
-plot_slopes(mod2, effect = "qsec", condition = c("wt", "gear"))
+plot_slopes(mod2, variables = "qsec", condition = c("wt", "gear"))
+```
+
+# Uncertainy estimates
+
+As with all the other functions in the package, the `plot_*()` functions have a `conf_level` argument and a `vcov` argument which can be used to control the size of confidence intervals and the types of standard errors used:
+
+```{r, fig.asp = .5, warning = FALSE}
+plot_slopes(mod,
+  variables = "bill_length_mm", condition = "flipper_length_mm") +
+  ylim(c(-150, 200)) +
+
+# clustered standard errors
+plot_slopes(mod,
+  vcov = ~island,
+  variables = "bill_length_mm", condition = "flipper_length_mm") +
+  ylim(c(-150, 200)) +
+
+# alpha level
+plot_slopes(mod,
+  conf_level = .8,
+  variables = "bill_length_mm", condition = "flipper_length_mm") +
+  ylim(c(-150, 200))
 ```
 
 # Customizing plots

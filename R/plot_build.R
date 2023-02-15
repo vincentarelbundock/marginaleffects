@@ -27,7 +27,13 @@ plot_preprocess <- function(dat, v_x, v_color = NULL, v_facet = NULL, condition 
 }
 
 plot_build <- function(dat, v_x, v_color = NULL, v_facet = NULL) {
+    
+    # create index before building ggplot to make sure it is available
+    dat$marginaleffects_term_index <- get_unique_index(dat, term_only = TRUE)
+    multi_variables <- isTRUE(length(unique(dat$marginaleffects_term_index)) > 1)
+
     p <- ggplot2::ggplot()
+
 
     # discrete x-axis
     if (is.factor(dat[[v_x]])) {
@@ -79,6 +85,21 @@ plot_build <- function(dat, v_x, v_color = NULL, v_facet = NULL) {
         } else {
             p <- p + gglinecol
         }
+    }
+
+    # facets: 3rd variable and/or multiple effects
+    
+    if (multi_variables && !is.null(v_facet)) {
+        fo <- stats::as.formula(paste("~ marginaleffects_term_index +", v_facet))
+        p <- p + ggplot2::facet_wrap(fo, scales = "free")
+        
+    } else if (multi_variables) {
+        fo <- stats::as.formula("~ marginaleffects_term_index")
+        p <- p + ggplot2::facet_wrap(fo, scales = "free")
+        
+    } else if (!is.null(v_facet)) {
+        fo <- stats::as.formula(paste("~", v_facet))
+        p <- p + ggplot2::facet_wrap(fo, scales = "free")
     }
 
     return(p)

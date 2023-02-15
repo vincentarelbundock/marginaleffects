@@ -106,7 +106,7 @@ expect_true(all(cmp$term == "z"))
 expect_error(suppressWarnings(slopes(b, variables = "L")), pattern = "no valid")
 expect_error(suppressWarnings(comparisons(b, variables = "L")), pattern = "no valid")
 expect_warning(plot_predictions(b, condition = "z"), pattern = "Matrix columns")
-expect_warning(plot_slopes(b, effect = "L", condition = "z"), pattern = "Matrix columns")
+expect_warning(plot_slopes(b, variables = "L", condition = "z"), pattern = "Matrix columns")
 
 
 # Issue #365: exclude argument changes predictions
@@ -146,7 +146,7 @@ expect_equivalent(mfx$estimate, emt$Time.trend, tolerance = 1e-2)
 expect_equivalent(mfx$std.error, emt$SE, tolerance = 1e-3)
 
 # Issue #545
-p <- plot_slopes(model, effect = "Time", condition = "Time", draw = FALSE)
+p <- plot_slopes(model, variables = "Time", condition = "Time", draw = FALSE)
 expect_true(nrow(p) > 1)
 
 

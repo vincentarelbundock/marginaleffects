@@ -176,7 +176,7 @@ plot_predictions(mod, condition = list("hp", "wt" = "threenum", "am"))
 This plot shows how the derivative of `mpg` with respect to `am` varies as a function of `wt` and `hp`:
 
 ```{r}
-plot_slopes(mod, effect = "am", condition = list("hp", "wt" = "minmax"))
+plot_slopes(mod, variables = "am", condition = list("hp", "wt" = "minmax"))
 ```
 
 See this vignette for more information: [Plots, interactions, predictions, contrasts, and slopes](https://vincentarelbundock.github.io/marginaleffects/articles/plot.html)

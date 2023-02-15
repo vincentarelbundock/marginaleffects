@@ -13,7 +13,7 @@
 #' * https://vincentarelbundock.github.io/marginaleffects
 #' 
 #' @param x a model or object produced by the `slopes()` or `comparisons()` functions.
-#' @param effect Name of the variable whose contrast we want to plot on the y-axis. If `NULL`, a plot of average slopes is returned.
+#' @param variables Name of the variable whose marginal effect (slope) we want to plot on the y-axis.
 #' @param condition character vector or named list of length smaller than 3. Character vectors must be the names of the predictor variables to display. The names of the list must The first element is displayed on the x-axis. The second element determines the colors. The third element creates facets. Unspecified variables are held at their means or modes. Lists can include these types of values (see Examples section below):
 #' * Numeric vector
 #' * Function which returns a numeric vector or a set of unique categorical values 
@@ -26,18 +26,18 @@
 #' library(marginaleffects)
 #' mod <- lm(mpg ~ hp * drat * factor(am), data = mtcars)
 #' 
-#' plot_slopes(mod, effect = "hp", condition = "drat")
+#' plot_slopes(mod, variables = "hp", condition = "drat")
 #'
-#' plot_slopes(mod, effect = "hp", condition = c("drat", "am"))
+#' plot_slopes(mod, variables = "hp", condition = c("drat", "am"))
 #' 
-#' plot_slopes(mod, effect = "hp", condition = list("am", "drat" = 3:5))
+#' plot_slopes(mod, variables = "hp", condition = list("am", "drat" = 3:5))
 #' 
-#' plot_slopes(mod, effect = "am", condition = list("hp", "drat" = range))
+#' plot_slopes(mod, variables = "am", condition = list("hp", "drat" = range))
 #'
-#' plot_slopes(mod, effect = "am", condition = list("hp", "drat" = "threenum"))
+#' plot_slopes(mod, variables = "am", condition = list("hp", "drat" = "threenum"))
 #' 
 plot_slopes <- function(x,
-                        effect = NULL,
+                        variables = NULL,
                         condition = NULL,
                         by = NULL,
                         type = "response",
@@ -47,9 +47,21 @@ plot_slopes <- function(x,
                         draw = TRUE,
                         ...) {
 
+    dots <- list(...)
+    if ("effect" %in% names(dots)) {
+        if (is.null(variables)) {
+            variables <- dots[["effect"]]
+        } else {
+            insight::format_error("The `effect` argument has been renamed to `variables`.")
+        }
+    }
+
+    valid <- c("dydx", "eyex", "eydx", "dyex")
+    checkmate::assert_choice(slope, choices = valid)
+
     out <- plot_comparisons(
         x,
-        effect = effect,
+        variables = variables,
         condition = condition,
         by = by,
         type = type,
@@ -60,9 +72,7 @@ plot_slopes <- function(x,
         ...)
 
     if (inherits(out, "ggplot")) {
-        out <- out + ggplot2::labs(
-            x = condition[1],
-            y = sprintf("Marginal effect of %s on %s", effect, insight::find_response(x)[[1]]))
+        out <- out + ggplot2::labs(x = condition[1], y = "Slope")
     }
 
     return(out)

@@ -86,7 +86,7 @@ We can plot marginal effects for different values of a regressor using the `plot
 This next plot shows the slope of the prediction equation, that is, the slope of the previous plot, at every value of the `Time` variable.
 
 ```{r}
-plot_slopes(model, effect = "Time", condition = "Time")
+plot_slopes(model, variables = "Time", condition = "Time")
 ```
 
 The marginal effects in this plot can be interpreted as measuring the change in `Y` that is associated with a small increase in `Time`, for different baseline values of `Time`.

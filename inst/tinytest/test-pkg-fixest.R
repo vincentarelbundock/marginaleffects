@@ -86,7 +86,7 @@ dat2$unit <- as.factor(dat2$unit)
 dat2 <- dat2
 mod1 <- feols(y ~ x * w | unit, data = dat)
 mod2 <- fixest::feols(y ~ x * w | unit, data = dat2)
-p <- plot_slopes(mod2, effect = "x", condition = "w")
+p <- plot_slopes(mod2, variables = "x", condition = "w")
 expect_inherits(p, "ggplot")
 
 
@@ -105,7 +105,7 @@ dat2 <- dat
 dat2$unit <- as.factor(dat2$unit)
 dat2 <- dat2
 mod2 <- fixest::feols(y ~ x * w | unit, data = dat2)
-k <- plot_slopes(mod2, effect = "x", condition = "w", draw = FALSE)
+k <- plot_slopes(mod2, variables = "x", condition = "w", draw = FALSE)
 expect_inherits(k, "data.frame")
 expect_false(anyNA(k$estimate))
 expect_false(any(k$estimate == 0))

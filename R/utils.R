@@ -29,19 +29,20 @@ sort_columns <- function(x, first = NULL, alpha = FALSE) {
 }
 
 
-get_unique_index <- function(x) {
+get_unique_index <- function(x, term_only = FALSE) {
     idx <- c("term", "contrast", grep("^contrast_", colnames(x), value = TRUE))
     
-    by <- attr(x, "by")
-    if (isTRUE(checkmate::check_data_frame(by))) {
-        idx <- c(idx, colnames(by))
-    } else {
-        idx <- c(idx, by)
-    }
-    
-    explicit <- attr(x, "newdata_explicit")
-    if (isTRUE(checkmate::check_character(explicit))) {
-        idx <- explicit
+    if (!term_only) {
+        by <- attr(x, "by")
+        if (isTRUE(checkmate::check_data_frame(by))) {
+            idx <- c(idx, colnames(by))
+        } else {
+            idx <- c(idx, by)
+        }
+        explicit <- attr(x, "newdata_explicit")
+        if (isTRUE(checkmate::check_character(explicit))) {
+            idx <- explicit
+        }
     }
     
     idx <- intersect(unique(idx), colnames(x))

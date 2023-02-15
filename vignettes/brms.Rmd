@@ -141,7 +141,7 @@ slopes(
 Compute and plot conditional marginal effects:
 
 ```{r}
-plot_slopes(mod, effect = "woman", condition = "age")
+plot_slopes(mod, variables = "woman", condition = "age")
 ```
 
 The `posterior_draws` produces a dataset with `drawid` and `draw` columns:
@@ -253,7 +253,7 @@ Plot marginal effects, conditional on a regressor:
 
 ```{r, fig.asp = .8}
 plot_slopes(mod,
-         effect = "civil_liberties",
+         variables = "civil_liberties",
          condition = "party_autonomy")
 ```
 
@@ -744,14 +744,14 @@ Plot Conditional Marginal Effects
 ```{r}
 plot_slopes(
     mod,
-    effect = "lifeExp",
+    variables = "lifeExp",
     condition = "lifeExp") +
     labs(y = "mu") +
 
 plot_slopes(
     mod,
     dpar = "hu",
-    effect = "lifeExp",
+    variables = "lifeExp",
     condition = "lifeExp") +
     labs(y = "hu")
 ```

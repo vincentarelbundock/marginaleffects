@@ -6,7 +6,7 @@
 \usage{
 plot_cme(
   x,
-  effect = NULL,
+  variables = NULL,
   condition = NULL,
   by = NULL,
   type = "response",

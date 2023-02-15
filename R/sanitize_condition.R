@@ -16,7 +16,7 @@ condition_shortcuts <- function(x, tr, shortcuts) {
 }
 
 
-sanitize_condition <- function(model, condition, effect = NULL, modeldata = NULL) {
+sanitize_condition <- function(model, condition, variables = NULL, modeldata = NULL) {
 
     # allow multiple conditions and/or effects
     checkmate::assert(
@@ -131,15 +131,16 @@ sanitize_condition <- function(model, condition, effect = NULL, modeldata = NULL
     at_list[["model"]] <- model
     at_list[["newdata"]] <- dat
 
-    if (!is.null(effect)) {
+    if (!all(variables %in% names(condition))) {
         # sometimes we use the same condition as effect (e.g., GAM vignette),
         # but otherwise we don't want it at all
-        if (isTRUE(checkmate::check_character(effect))) {
-            if (!effect %in% names(condition)) {
-                at_list[[effect]] <- NULL
+        if (isTRUE(checkmate::check_character(variables))) {
+            dups <- setdiff(variables, names(condition))
+            for (d in dups) {
+                at_list[[d]] <- NULL
             }
         } else {
-            at_list[[names(effect)]] <- NULL
+            at_list[[names(variables)]] <- NULL
         }
     }
 

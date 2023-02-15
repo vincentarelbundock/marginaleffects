@@ -67,7 +67,7 @@ plot_predictions(mod, condition = "mpg", type = "probs") + facet_wrap(~group)
 
 plot_comparisons(
     mod,
-    effect = list(mpg = c(15, 30)),
+    variables = list(mpg = c(15, 30)),
     condition = "group",
     type = "probs")
 ```

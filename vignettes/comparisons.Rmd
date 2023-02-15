@@ -445,7 +445,7 @@ mod <- lm(mpg ~ hp * wt, data = mtcars)
 
 plot_comparisons(
     mod,
-    effect = list(hp = 10),
+    variables = list(hp = 10),
     condition = "wt")
 ```
 
@@ -595,14 +595,14 @@ avg_comparisons(mod_titanic)
 
 p1 <- plot_comparisons(
     mod_titanic,
-    effect = "Age",
+    variables = "Age",
     condition = "Age",
     transform_pre = "ratio") +
     ylab("Adjusted Risk Ratio\nP(Survival | Age + 1) / P(Survival | Age)")
 
 p2 <- plot_comparisons(
     mod_titanic,
-    effect = "Age",
+    variables = "Age",
     condition = "Age") +
     ylab("Adjusted Risk Difference\nP(Survival | Age + 1) - P(Survival | Age)")
 
@@ -669,7 +669,7 @@ mod2 <- glm(vs ~ mpg + mpg^2, data = mtcars, family = binomial)
 
 plot_comparisons(
     mod2,
-    effect = list("mpg" = 10),
+    variables = list("mpg" = 10),
     condition = "mpg",
     transformation_pre = "ratio") +
     ylab("Adjusted Risk Ratio\nP(vs = 1 | mpg + 10) / P(vs = 1 | mpg)")
