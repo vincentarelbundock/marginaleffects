@@ -67,26 +67,5 @@ expect_slopes(m5, n_unique = 6)
 
 
 
-exit_file('works interactively')
-
-dat <- read.csv(
-    "https://vincentarelbundock.github.io/Rdatasets/csv/MASS/housing.csv",
-    stringsAsFactors = TRUE)
-mod <- clm(Sat ~ Infl + Type + Cont, weights = Freq, data = dat)
-
-p <- predictions(mod, newdata = dat) # test environment
-expect_inherits(p, "predictions")
-
-# plot
-mfx <- slopes(mod, newdata = dat) # test environment
-p <- plot(mfx)
-expect_inherits(p, "gg")
-p <- plot_slopes(mod, effect = "Infl", condition = "Type")
-expect_inherits(p, "gg")
-p <- plot_predictions(mod, condition = "Type")
-expect_inherits(p, "gg")
-
-
-
 source("helpers.R")
 rm(list = ls())
