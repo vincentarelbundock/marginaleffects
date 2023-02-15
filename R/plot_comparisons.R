@@ -49,10 +49,9 @@ plot_comparisons <- function(x,
     if (!is.null(condition)) {
         condition <- sanitize_condition(x, condition, effect)
         modeldata <- get_modeldata(x, additional_variables = names(condition$condition))
-        respname <- condition$respname
-        var1 <- condition$condition1
-        var2 <- condition$condition2
-        var3 <- condition$condition3
+        v_x <- condition$condition1
+        v_color <- condition$condition2
+        v_facet <- condition$condition3
         datplot <- comparisons(
             x,
             newdata = condition$newdata,
@@ -85,17 +84,17 @@ plot_comparisons <- function(x,
             cross = FALSE,
             modeldata = modeldata,
             ...)
-        var1 <- by[[1]]
-        var2 <- hush(by[[2]])
-        var3 <- hush(by[[3]])
+        v_x <- by[[1]]
+        v_color <- hush(by[[2]])
+        v_facet <- hush(by[[3]])
     }
 
-    # colors and linetypes are categorical attributes
-    if (isTRUE(var2 %in% colnames(datplot))) {
-        datplot[[var2]] <- factor(datplot[[var2]])
+    # colors, linetypes, and facets are categorical attributes
+    if (isTRUE(v_color %in% colnames(datplot))) {
+        datplot[[v_color]] <- factor(datplot[[v_color]])
     }
-    if (isTRUE(var3 %in% colnames(datplot))) {
-        datplot[[var3]] <- factor(datplot[[var3]])
+    if (isTRUE(v_facet %in% colnames(datplot))) {
+        datplot[[v_facet]] <- factor(datplot[[v_facet]])
     }
 
     # shortcut labels: loop skips naturally when `condition=NULL`
@@ -120,71 +119,16 @@ plot_comparisons <- function(x,
         return(data.frame(datplot))
     } else {
         insight::check_if_installed("ggplot2")
-    }
-
-    # ggplot2
-    p <- ggplot2::ggplot()
-
-    # continuous x-axis
-    if (is.numeric(datplot$var1)) {
-        if ("conf.low" %in% colnames(datplot)) {
-            p <- p + ggplot2::geom_ribbon(
-                data = datplot,
-                alpha = .1,
-                ggplot2::aes(
-                    x = {{var1}},
-                    y = estimate,
-                    ymin = conf.low,
-                    ymax = conf.high,
-                    fill = {{var2}}))
-        }
-        p <- p + ggplot2::geom_line(
-            data = datplot,
-            ggplot2::aes(
-                x = var1,
-                y = estimate,
-                color = {{var2}}))
-
-        # categorical x-axis
-    } else {
-        if ("conf.low" %in% colnames(datplot)) {
-            if (is.null(var1)) {
-                p <- p + ggplot2::geom_pointrange(
-                    data = datplot,
-                    ggplot2::aes(
-                        x = {{var1}},
-                        y = estimate,
-                        ymin = conf.low,
-                        ymax = conf.high,
-                        color = {{var2}}))
-            } else {
-                p <- p + ggplot2::geom_pointrange(
-                    data = datplot,
-                    position = ggplot2::position_dodge(.15),
-                    ggplot2::aes(
-                        x = {{var1}},
-                        y = estimate,
-                        ymin = conf.low,
-                        ymax = conf.high,
-                        color = {{var2}}))
-            }
-        } else {
-            p <- p + ggplot2::geom_point(
-                data = datplot,
-                ggplot2::aes(
-                    x = var1,
-                    y = estimate,
-                    color = var1))
-        }
+        p <- plot_build(datplot, v_x = v_x, v_color = v_color, v_facet = v_facet)
     }
 
     if (is.null(names(effect))) {
         p <- p + ggplot2::labs(
-            x = var1,
+            x = v_x,
             y = sprintf("Contrast in %s on %s", effect, {{condition$respname}}))
     } else {
         p <- p + ggplot2::labs(
-            x = var1,
+            x = v_x,
             y = sprintf("Contrast in %s on %s", names(effect), {{condition$respname}}))
     }
 
@@ -196,24 +140,16 @@ plot_comparisons <- function(x,
         }
     }
     if (length(contrast_cols) > 0) {
-        if (is.null(var3)) {
+        if (is.null(v_facet)) {
             fo <- sprintf("~ %s", paste(contrast_cols, collapse = "+"))
             p <- p + ggplot2::facet_wrap(fo)
         } else {
-            fo <- sprintf("var3 ~ %s", paste(contrast_cols, collapse = "+"))
+            fo <- sprintf("v_facet ~ %s", paste(contrast_cols, collapse = "+"))
             p <- p + ggplot2::facet_grid(fo)
         }
-    } else if (!is.null(var3)) {
-        fo <- ~var3
+    } else if (!is.null(v_facet)) {
+        fo <- ~v_facet
         p <- p + ggplot2::facet_wrap(fo)
-    }
-
-    # set a new theme only if the default is theme_grey. this prevents user's
-    # theme_set() from being overwritten
-    if (identical(ggplot2::theme_get(), ggplot2::theme_grey())) {
-        p <- p +
-            ggplot2::theme_minimal() +
-            ggplot2::theme(legend.title = ggplot2::element_blank())
     }
 
     return(p)

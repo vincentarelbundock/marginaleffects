@@ -213,6 +213,7 @@ Collate:
     'myTryCatch.R'
     'package.R'
     'plot.R'
+    'plot_build.R'
     'plot_comparisons.R'
     'plot_predictions.R'
     'plot_slopes.R'

@@ -1,3 +1,21 @@
+condition_shortcuts <- function(x, tr, shortcuts) {
+    if (identical(tr, "threenum")) {
+        m <- mean(x, na.rm = TRUE)
+        s <- stats::sd(x, na.rm = TRUE)
+        out <- c(m - s, m, m + s)
+    } else if (identical(tr, "fivenum")) {
+        out <- stats::fivenum(x, na.rm = TRUE)
+    } else if (identical(tr, "minmax")) {
+        out <- c(
+            min(x, na.rm = TRUE),
+            max(x, na.rm = TRUE))
+    } else if (identical(tr, "quartile")) {
+        out <- stats::quantile(x, probs = c(.25, .5, .75), na.rm = TRUE)
+    }
+    return(out)
+}
+
+
 sanitize_condition <- function(model, condition, effect = NULL) {
 
     # allow multiple conditions and/or effects

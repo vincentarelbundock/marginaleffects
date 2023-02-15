@@ -154,12 +154,6 @@ plot_predictions <- function(model,
         fill = condition2,
         linetype = condition3)
 
-    # set a new theme only if the default is theme_grey. this prevents user's
-    # theme_set() from being overwritten
-    if (identical(ggplot2::theme_get(), ggplot2::theme_grey())) {
-        p <- p + ggplot2::theme_minimal()
-    }
-
     # attach model data for each of use
     attr(p, "modeldata") <- dat
 
@@ -167,26 +161,6 @@ plot_predictions <- function(model,
 }
 
 
-condition_shortcuts <- function(x, tr, shortcuts) {
-    if (identical(tr, "threenum")) {
-        m <- mean(x, na.rm = TRUE)
-        s <- stats::sd(x, na.rm = TRUE)
-        out <- c(m - s, m, m + s)
-
-    } else if (identical(tr, "fivenum")) {
-        out <- stats::fivenum(x, na.rm = TRUE)
-
-    } else if (identical(tr, "minmax")) {
-        out <- c(
-            min(x, na.rm = TRUE),
-            max(x, na.rm = TRUE))
-
-    } else if (identical(tr, "quartile")) {
-        out <- stats::quantile(x, probs = c(.25, .5, .75), na.rm = TRUE)
-    }
-
-    return(out)
-}
 
 
 
