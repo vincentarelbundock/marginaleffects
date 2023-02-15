@@ -16,13 +16,12 @@ condition_shortcuts <- function(x, tr, shortcuts) {
 }
 
 
-sanitize_condition <- function(model, condition, effect = NULL) {
+sanitize_condition <- function(model, condition, effect = NULL, modeldata = NULL) {
 
     # allow multiple conditions and/or effects
     checkmate::assert(
         checkmate::check_character(condition, min.len = 1, max.len = 3),
-        checkmate::check_list(condition, min.len = 1, max.len = 3)
-    )
+        checkmate::check_list(condition, min.len = 1, max.len = 3))
 
     # c("a", "b") or list("a", "b") -> named list of NULLs
     flag1 <- isTRUE(checkmate::check_character(condition))
@@ -47,7 +46,11 @@ sanitize_condition <- function(model, condition, effect = NULL) {
     }
 
     # get data to know over what range of values we should plot
-    dat <- get_modeldata(model, additional_variables = names(condition))
+    if (is.null(modeldata)) {
+        dat <- get_modeldata(model, additional_variables = names(condition))
+    } else {
+        dat <- modeldata
+    }
     resp <- insight::get_response(model)
     respname <- insight::find_response(model)
 

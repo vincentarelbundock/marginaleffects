@@ -32,136 +32,83 @@ plot_predictions <- function(model,
                              draw = TRUE,
                              ...) {
 
-    # shared code with plot_comparisons()
-    tmp <- sanitize_condition(model, condition)
-    dat <- tmp$modeldata
-    nd <- tmp$newdata
-    condition <- tmp$condition
-    condition1 <- tmp$condition1
-    condition2 <- tmp$condition2
-    condition3 <- tmp$condition3
-    resp <- tmp$resp
-    respname <- tmp$respname
+    # sanity check
+    checkmate::assert_character(by, null.ok = TRUE, max.len = 3, min.len = 1, names = "unnamed")
+    if ((!is.null(condition) && !is.null(by)) || (is.null(condition) && is.null(by))) {
+        msg <- "One of the `condition` and `by` arguments must be supplied, but not both."
+        insight::format_error(msg)
+    }
+    if (is.null(by)) by <- FALSE
 
-    datplot <- predictions(model,
-        newdata = nd,
-        type = type,
-        vcov = vcov,
-        conf_level = conf_level,
-        transform_post = transform_post,
-        modeldata = dat,
-        ...)
-
-    colnames(datplot)[colnames(datplot) == condition1] <- "condition1"
-    colnames(datplot)[colnames(datplot) == condition2] <- "condition2"
-    colnames(datplot)[colnames(datplot) == condition3] <- "condition3"
-
-    # shortcut labels
-    for (i in seq_along(condition)) {
-        v <- paste0("condition", i)
-        fun <- function(x, lab) {
-            idx <- match(x, sort(unique(x)))
-            factor(lab[idx], levels = lab)
-        }
-        if (identical(condition[[i]], "threenum")) {
-            datplot[[v]] <- fun(datplot[[v]], c("-SD", "Mean", "+SD"))
-        } else if (identical(condition[[i]], "minmax")) {
-            datplot[[v]] <- fun(datplot[[v]], c("Min", "Max"))
-        } else if (identical(condition[[i]], "quartile")) {
-            datplot[[v]] <- fun(datplot[[v]], c("Q1", "Q2", "Q3"))
-        }
+    # conditional
+    if (!is.null(condition)) {
+        modeldata <- get_modeldata(model, additional_variables = names(condition$condition))
+        condition <- sanitize_condition(model, condition, effect = NULL, modeldata = modeldata)
+        v_x <- condition$condition1
+        v_color <- condition$condition2
+        v_facet <- condition$condition3
+        datplot <- predictions(
+            model,
+            newdata = condition$newdata,
+            type = type,
+            vcov = vcov,
+            conf_level = conf_level,
+            transform_post = transform_post,
+            modeldata = modeldata,
+            ...)
     }
 
-    # colors and facets are categorical attributes
-    if ("condition2" %in% colnames(datplot)) datplot$condition2 <- factor(datplot$condition2)
-    if ("condition3" %in% colnames(datplot)) datplot$condition3 <- factor(datplot$condition3)
+    # marginal
+    if (!isFALSE(by)) { # switched from NULL above
+        condition <- NULL
+        modeldata <- get_modeldata(model, additional_variables = by)
+        datplot <- predictions(
+            model,
+            by = by,
+            type = type,
+            vcov = vcov,
+            conf_level = conf_level,
+            wts = NULL,
+            transform_post = transform_post,
+            modeldata = modeldata,
+            ...)
+        v_x <- by[[1]]
+        v_color <- hush(by[[2]])
+        v_facet <- hush(by[[3]])
+    }
+
+    datplot <- plot_preprocess(datplot, v_x = v_x, v_color = v_color, v_facet = v_facet, condition = condition, modeldata = modeldata)
 
     # return immediately if the user doesn't want a plot
     if (isFALSE(draw)) {
-        for (i in seq_along(condition)) {
-            colnames(datplot)[colnames(datplot) == paste0("condition", i)] <- names(condition)[i]
-        }
-        return(as.data.frame(datplot))
-    } else {
-        insight::check_if_installed("ggplot2")
+        out <- as.data.frame(datplot)
+        attr(out, "posterior_draws") <- attr(datplot, "posterior_draws")
+        return(out)
     }
 
     # ggplot2
-    p <- ggplot2::ggplot()
-
-    # condition 1: continuous x-axis
-    if (is.numeric(datplot$condition1)) {
-        if (!isTRUE(vcov) && "conf.low" %in% colnames(datplot)) {
-            p <- p + ggplot2::geom_ribbon(
-                data = datplot,
-                ggplot2::aes(
-                    x = condition1,
-                    y = estimate,
-                    ymin = conf.low,
-                    ymax = conf.high,
-                    fill = condition2),
-                alpha = .1)
-        }
-        p <- p + ggplot2::geom_line(
-            data = datplot,
-            ggplot2::aes(
-                x = condition1,
-                y = estimate,
-                color = condition2))
-
-    # categorical x-axis
-    } else {
-        if (!isTRUE(vcov) && "conf.low" %in% colnames(datplot)) {
-            if (is.null(condition2)) {
-                p <- p + ggplot2::geom_pointrange(
-                    data = datplot,
-                    ggplot2::aes(
-                        x = condition1,
-                        y = estimate,
-                        ymin = conf.low,
-                        ymax = conf.high,
-                        color = condition2))
-            } else {
-                p <- p + ggplot2::geom_pointrange(
-                    data = datplot,
-                    position = ggplot2::position_dodge(.15),
-                    ggplot2::aes(
-                        x = condition1,
-                        y = estimate,
-                        ymin = conf.low,
-                        ymax = conf.high,
-                        color = condition2))
-            }
-        } else {
-            p <- p + ggplot2::geom_point(
-                data = datplot,
-                ggplot2::aes(
-                    x = condition1,
-                    y = estimate,
-                    color = condition2))
-        }
-    }
+    insight::check_if_installed("ggplot2")
+    p <- plot_build(datplot, v_x = v_x, v_color = v_color, v_facet = v_facet)
+    
+    p <- p + ggplot2::labs(
+        x = v_x,
+        y = unlist(insight::find_response(model, combine = TRUE), use.names = FALSE)[1],
+        color = v_color,
+        fill = v_color,
+        linetype = v_color)
 
     # condition 3: facets
-    if (!is.null(condition3)) {
-        p <- p + ggplot2::facet_wrap(~condition3)
+    if (!is.null(v_facet)) {
+        fo <- as.formula(paste("~", v_facet))
+        p <- p + ggplot2::facet_wrap(fo)
     }
 
-    p <- p + ggplot2::labs(
-        x = condition1,
-        y = respname,
-        color = condition2,
-        fill = condition2,
-        linetype = condition3)
 
     # attach model data for each of use
-    attr(p, "modeldata") <- dat
+    attr(p, "modeldata") <- modeldata
 
     return(p)
 }
-
-
-
 
 
 

@@ -21,7 +21,7 @@
 #' plot_comparisons(mod, effect = "am", condition = list("hp", "drat" = range))
 #' 
 #' plot_comparisons(mod, effect = "am", condition = list("hp", "drat" = "threenum"))
-plot_comparisons <- function(x,
+plot_comparisons <- function(model,
                              effect = NULL,
                              condition = NULL,
                              by = NULL,
@@ -35,11 +35,10 @@ plot_comparisons <- function(x,
 
     
     # sanity check
-    checkmate::assert_character(by, null.ok = TRUE, max.len = 3, min.len = 1, names = "unnamed")
     checkmate::assert(
         checkmate::check_string(effect),
         checkmate::check_list(effect, names = "unique", len = 1))
-
+    checkmate::assert_character(by, null.ok = TRUE, max.len = 3, min.len = 1, names = "unnamed")
     if ((!is.null(condition) && !is.null(by)) || (is.null(condition) && is.null(by))) {
         msg <- "One of the `condition` and `by` arguments must be supplied, but not both."
         insight::format_error(msg)
@@ -47,13 +46,13 @@ plot_comparisons <- function(x,
 
     # conditional
     if (!is.null(condition)) {
-        condition <- sanitize_condition(x, condition, effect)
-        modeldata <- get_modeldata(x, additional_variables = names(condition$condition))
+        modeldata <- get_modeldata(model, additional_variables = names(condition$condition))
+        condition <- sanitize_condition(model, condition, effect, modeldata = modeldata)
         v_x <- condition$condition1
         v_color <- condition$condition2
         v_facet <- condition$condition3
         datplot <- comparisons(
-            x,
+            model,
             newdata = condition$newdata,
             type = type,
             vcov = vcov,
@@ -70,9 +69,9 @@ plot_comparisons <- function(x,
 
     # marginal
     if (!is.null(by)) {
-        modeldata <- get_modeldata(x, additional_variables = by)
+        modeldata <- get_modeldata(model, additional_variables = by)
         datplot <- comparisons(
-            x,
+            model,
             by = by,
             type = type,
             vcov = vcov,
@@ -89,38 +88,18 @@ plot_comparisons <- function(x,
         v_facet <- hush(by[[3]])
     }
 
-    # colors, linetypes, and facets are categorical attributes
-    if (isTRUE(v_color %in% colnames(datplot))) {
-        datplot[[v_color]] <- factor(datplot[[v_color]])
-    }
-    if (isTRUE(v_facet %in% colnames(datplot))) {
-        datplot[[v_facet]] <- factor(datplot[[v_facet]])
-    }
+    datplot <- plot_preprocess(datplot, v_x = v_x, v_color = v_color, v_facet = v_facet, condition = condition, modeldata = modeldata)
 
-    # shortcut labels: loop skips naturally when `condition=NULL`
-    for (i in seq_along(condition)) {
-        v <- paste0("condition", i)
-        fun <- function(x, lab) {
-            idx <- match(x, sort(unique(x)))
-            factor(lab[idx], labels = lab)
-        }
-        if (identical(condition[[i]], "threenum")) {
-            datplot[[v]] <- fun(datplot[[v]], c("-SD", "Mean", "+SD"))
-        } else if (identical(condition[[i]], "minmax")) {
-            datplot[[v]] <- fun(datplot[[v]], c("Min", "Max"))
-        } else if (identical(condition[[i]], "quartile")) {
-            datplot[[v]] <- fun(datplot[[v]], c("Q1", "Q2", "Q3"))
-        }
-    }
-    
     # return immediately if the user doesn't want a plot
     if (isFALSE(draw)) {
-        attr(datplot, "posterior_draws") <- attr(datplot, "posterior_draws")
-        return(data.frame(datplot))
-    } else {
-        insight::check_if_installed("ggplot2")
-        p <- plot_build(datplot, v_x = v_x, v_color = v_color, v_facet = v_facet)
+        out <- as.data.frame(datplot)
+        attr(out, "posterior_draws") <- attr(datplot, "posterior_draws")
+        return(out)
     }
+    
+    # ggplot2
+    insight::check_if_installed("ggplot2")
+    p <- plot_build(datplot, v_x = v_x, v_color = v_color, v_facet = v_facet)
 
     if (is.null(names(effect))) {
         p <- p + ggplot2::labs(
@@ -148,7 +127,7 @@ plot_comparisons <- function(x,
             p <- p + ggplot2::facet_grid(fo)
         }
     } else if (!is.null(v_facet)) {
-        fo <- ~v_facet
+        fo <- as.formula(paste("~", v_facet))
         p <- p + ggplot2::facet_wrap(fo)
     }
 

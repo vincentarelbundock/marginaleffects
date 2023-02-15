@@ -5,7 +5,7 @@
 \title{\code{plot_comparisons()} is an alias to \code{plot_comparisons()}}
 \usage{
 plot_cco(
-  x,
+  model,
   effect = NULL,
   condition = NULL,
   by = NULL,
@@ -19,6 +19,8 @@ plot_cco(
 )
 }
 \arguments{
+\item{model}{Model object}
+
 \item{condition}{character vector or named list of length smaller than 4. Character vectors must be the names of the predictor variables to display. The names of the list must The first element is displayed on the x-axis. The second element determines the colors. The third element creates facets. Other variables are held at their means or modes. Lists can include these types of values:
 \itemize{
 \item Numeric vector

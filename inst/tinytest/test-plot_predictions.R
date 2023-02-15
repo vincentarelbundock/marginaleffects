@@ -60,12 +60,6 @@ expect_false(any(is.na(p$estimate)))
 expect_equal(nrow(p), 25)
 
 
-
-######################################
-######################################
-
-
-
 # two conditions
 mod <- lm(mpg ~ hp * wt * am, data = mtcars)
 p <- plot_predictions(mod, condition = c("hp", "wt"))
