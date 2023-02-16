@@ -35,12 +35,6 @@ p <- plot_comparisons(mod, variables = "hp", condition = list("am", "drat" = 3:5
 expect_inherits(p, "gg")
 
 
-exit_file("reinstate these tests once things are working")
-
-# Issue #607: plot_slopes(mod)
-mod <- glm(am ~ vs + qsec, data = mtcars, family = binomial)
-expect_snapshot_plot(plot_comparisons(mod), "plot_comparisons-no_effect")
-expect_snapshot_plot(plot_slopes(mod), "plot_slopes-no_effect")
 
 
 rm(list = ls())
