@@ -68,6 +68,8 @@ the \code{marginaleffects:::type_dictionary} dataframe.}
 
 \item{rug}{TRUE displays tick marks on the axes to mark the distribution of raw data.}
 
+\item{gray}{FALSE grayscale or color plot}
+
 \item{draw}{\code{TRUE} returns a \code{ggplot2} plot. \code{FALSE} returns a \code{data.frame} of the underlying data.}
 
 \item{...}{Additional arguments are passed to the \code{predict()} method

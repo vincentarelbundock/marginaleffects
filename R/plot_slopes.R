@@ -18,6 +18,7 @@
 #' * Function which returns a numeric vector or a set of unique categorical values 
 #' * Shortcut strings for common reference values: "minmax", "quartile", "threenum"
 #' @param rug TRUE displays tick marks on the axes to mark the distribution of raw data.
+#' @param gray FALSE grayscale or color plot
 #' @param draw `TRUE` returns a `ggplot2` plot. `FALSE` returns a `data.frame` of the underlying data.
 #' @inheritParams slopes
 #' @return A `ggplot2` object
