@@ -90,7 +90,7 @@ cmp <- comparisons(mod,
 cmp
 ```
 
-We now know that moving from 1st to 3rd changes by `r sprintf("%.3f", cmp$estimate[1])` the probability of survival for 50 year old men (`SexCode=0`), and by `r sprintf("%.3f", cmp$estimate[1])` the probability of survival for 50 year old women (`SexCode=1`).
+We now know that moving from 1st to 3rd changes by `r sprintf("%.3f", cmp$estimate[1])` the probability of survival for 50 year old men (`SexCode=0`), and by `r sprintf("%.3f", cmp$estimate[2])` the probability of survival for 50 year old women (`SexCode=1`).
 
 ## Step 3: Averaging
 
