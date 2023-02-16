@@ -179,6 +179,5 @@ p <- plot_slopes(mod, variables = "hp", condition = list("qsec" = "minmax", "gea
 expect_true("qsec" %in% colnames(p))
 
 
-
 suppressWarnings(rm("threenum", .GlobalEnv))
 rm(list = ls())

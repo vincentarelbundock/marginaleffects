@@ -359,10 +359,7 @@ predictions <- function(model,
     }
 
 
-
     # main estimation
-    J <- NULL
-
     args <- list(
         model = model,
         newdata = newdata,
@@ -422,8 +419,8 @@ predictions <- function(model,
     }
 
     V <- NULL
+    J <- NULL
     if (!isFALSE(vcov)) {
-
         V <- get_vcov(model, vcov = vcov, ...)
 
         # Delta method
@@ -447,6 +444,8 @@ predictions <- function(model,
                 args <- utils::modifyList(args, dots)
                 se <- do.call(get_se_delta, args)
                 if (is.numeric(se) && length(se) == nrow(tmp)) {
+                    J <- attr(se, "jacobian")
+                    attr(se, "jacobian") <- NULL
                     tmp[["std.error"]] <- se
                 }
             }

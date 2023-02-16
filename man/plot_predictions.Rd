@@ -13,6 +13,7 @@ plot_predictions(
   conf_level = 0.95,
   transform_post = NULL,
   points = 0,
+  rug = FALSE,
   draw = TRUE,
   ...
 )
@@ -67,6 +68,8 @@ the \code{marginaleffects:::type_dictionary} dataframe.}
 \item{transform_post}{(experimental) A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.}
 
 \item{points}{Number between 0 and 1 which controls the transparency of raw data points. 0 (default) does not display any points.}
+
+\item{rug}{TRUE displays tick marks on the axes to mark the distribution of raw data.}
 
 \item{draw}{\code{TRUE} returns a \code{ggplot2} plot. \code{FALSE} returns a \code{data.frame} of the underlying data.}
 

@@ -14,6 +14,7 @@ plot_comparisons(
   conf_level = 0.95,
   transform_pre = "difference",
   transform_post = NULL,
+  rug = FALSE,
   draw = TRUE,
   ...
 )
@@ -79,6 +80,8 @@ the \code{marginaleffects:::type_dictionary} dataframe.}
 }}
 
 \item{transform_post}{string or function. Transformation applied to unit-level estimates and confidence intervals just before the function returns results. Functions must accept a vector and return a vector of the same length. Support string shortcuts: "exp", "ln"}
+
+\item{rug}{TRUE displays tick marks on the axes to mark the distribution of raw data.}
 
 \item{draw}{\code{TRUE} returns a \code{ggplot2} plot. \code{FALSE} returns a \code{data.frame} of the underlying data.}
 

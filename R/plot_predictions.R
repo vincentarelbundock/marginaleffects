@@ -47,10 +47,22 @@ plot_predictions <- function(model,
                              conf_level = 0.95,
                              transform_post = NULL,
                              points = 0,
+                             rug = FALSE,
                              draw = TRUE,
                              ...) {
 
+    dots <- list(...)
+    
+    if ("variables" %in% names(dots)) {
+        insight::format_error("The `variables` argument is not supported by this function.")
+    }
+    if ("effect" %in% names(dots)) {
+        insight::format_error("The `effect` argument is not supported by this function.")
+    }
+
     checkmate::assert_number(points, lower = 0, upper = 1)
+    
+    
 
     # sanity check
     checkmate::assert_character(by, null.ok = TRUE, max.len = 3, min.len = 1, names = "unnamed")
@@ -110,7 +122,14 @@ plot_predictions <- function(model,
 
     # ggplot2
     insight::check_if_installed("ggplot2")
-    p <- plot_build(datplot, v_x = v_x, v_color = v_color, v_facet = v_facet, points = points, modeldata = modeldata, dv = dv)
+    p <- plot_build(datplot,
+        v_x = v_x,
+        v_color = v_color,
+        v_facet = v_facet,
+        points = points,
+        modeldata = modeldata,
+        dv = dv,
+        rug = rug)
     
     p <- p + ggplot2::labs(
         x = v_x,

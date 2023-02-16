@@ -432,8 +432,9 @@ comparisons <- function(model,
                      eps = 1e-4)
         args <- c(args, dots)
         se <- do.call("get_se_delta", args)
-        mfx$std.error <- as.numeric(se)
         J <- attr(se, "jacobian")
+        attr(se, "jacobian") <- NULL
+        mfx$std.error <- as.numeric(se)
         draws <- NULL
 
     # no standard error

@@ -26,8 +26,10 @@ plot_preprocess <- function(dat, v_x, v_color = NULL, v_facet = NULL, condition 
 }
 
 
-plot_build <- function(dat, v_x, v_color = NULL, v_facet = NULL, dv = NULL, modeldata = NULL, points = 0) {
+plot_build <- function(dat, v_x, v_color = NULL, v_facet = NULL, dv = NULL, modeldata = NULL, points = 0, rug = FALSE) {
     
+    checkmate::assert_flag(rug)
+
     # create index before building ggplot to make sure it is available
     dat$marginaleffects_term_index <- get_unique_index(dat, term_only = TRUE)
     multi_variables <- isTRUE(length(unique(dat$marginaleffects_term_index)) > 1)
@@ -45,6 +47,13 @@ plot_build <- function(dat, v_x, v_color = NULL, v_facet = NULL, dv = NULL, mode
             p <- p + ggplot2::geom_point(
                 data = modeldata, alpha = points,
                 ggplot2::aes(x = .data[[v_x]], y = .data[[dv]]))
+        }
+    }
+    
+    if (isTRUE(rug)) {
+        p <- p + ggplot2::geom_rug(data = modeldata, ggplot2::aes(x = .data[[v_x]]))
+        if (!is.null(dv)) {
+            p <- p + ggplot2::geom_rug(data = modeldata, ggplot2::aes(y = .data[[dv]]))
         }
     }
 

@@ -13,6 +13,7 @@ plot_slopes(
   vcov = NULL,
   conf_level = 0.95,
   slope = "dydx",
+  rug = FALSE,
   draw = TRUE,
   ...
 )
@@ -71,6 +72,8 @@ the \code{marginaleffects:::type_dictionary} dataframe.}
 \item "eydx": dY/dX * Y
 \item "dyex": dY/dX / X
 }}
+
+\item{rug}{TRUE displays tick marks on the axes to mark the distribution of raw data.}
 
 \item{draw}{\code{TRUE} returns a \code{ggplot2} plot. \code{FALSE} returns a \code{data.frame} of the underlying data.}
 

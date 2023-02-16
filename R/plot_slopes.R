@@ -17,6 +17,7 @@
 #' * Numeric vector
 #' * Function which returns a numeric vector or a set of unique categorical values 
 #' * Shortcut strings for common reference values: "minmax", "quartile", "threenum"
+#' @param rug TRUE displays tick marks on the axes to mark the distribution of raw data.
 #' @param draw `TRUE` returns a `ggplot2` plot. `FALSE` returns a `data.frame` of the underlying data.
 #' @inheritParams slopes
 #' @return A `ggplot2` object
@@ -43,6 +44,7 @@ plot_slopes <- function(model,
                         vcov = NULL,
                         conf_level = 0.95,
                         slope = "dydx",
+                        rug = FALSE,
                         draw = TRUE,
                         ...) {
 
@@ -67,6 +69,7 @@ plot_slopes <- function(model,
         vcov = vcov,
         conf_level = conf_level,
         draw = draw,
+        rug = rug,
         transform_pre = slope,
         ...)
 
