@@ -45,6 +45,7 @@ plot_slopes <- function(model,
                         conf_level = 0.95,
                         slope = "dydx",
                         rug = FALSE,
+                        gray = FALSE,
                         draw = TRUE,
                         ...) {
 
@@ -70,6 +71,7 @@ plot_slopes <- function(model,
         conf_level = conf_level,
         draw = draw,
         rug = rug,
+        gray = gray,
         transform_pre = slope,
         ...)
 

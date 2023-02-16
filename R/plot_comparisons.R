@@ -41,6 +41,7 @@ plot_comparisons <- function(model,
                              transform_pre = "difference",
                              transform_post = NULL,
                              rug = FALSE,
+                             gray = FALSE,
                              draw = TRUE,
                              ...) {
 
@@ -121,7 +122,7 @@ plot_comparisons <- function(model,
     
     # ggplot2
     insight::check_if_installed("ggplot2")
-    p <- plot_build(datplot, v_x = v_x, v_color = v_color, v_facet = v_facet, rug = rug, modeldata = modeldata)
+    p <- plot_build(datplot, v_x = v_x, v_color = v_color, v_facet = v_facet, gray = gray, rug = rug, modeldata = modeldata)
     p <- p + ggplot2::labs(x = v_x, y = sprintf("Comparison"))
 
     return(p)

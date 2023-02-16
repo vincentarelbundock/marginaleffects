@@ -14,6 +14,7 @@ plot_predictions(
   transform_post = NULL,
   points = 0,
   rug = FALSE,
+  gray = FALSE,
   draw = TRUE,
   ...
 )

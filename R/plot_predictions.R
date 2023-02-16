@@ -48,6 +48,7 @@ plot_predictions <- function(model,
                              transform_post = NULL,
                              points = 0,
                              rug = FALSE,
+                             gray = FALSE,
                              draw = TRUE,
                              ...) {
 
@@ -61,8 +62,6 @@ plot_predictions <- function(model,
     }
 
     checkmate::assert_number(points, lower = 0, upper = 1)
-    
-    
 
     # sanity check
     checkmate::assert_character(by, null.ok = TRUE, max.len = 3, min.len = 1, names = "unnamed")
@@ -129,7 +128,8 @@ plot_predictions <- function(model,
         points = points,
         modeldata = modeldata,
         dv = dv,
-        rug = rug)
+        rug = rug,
+        gray = gray)
     
     p <- p + ggplot2::labs(
         x = v_x,

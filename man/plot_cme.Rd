@@ -14,6 +14,7 @@ plot_cme(
   conf_level = 0.95,
   slope = "dydx",
   rug = FALSE,
+  gray = FALSE,
   draw = TRUE,
   ...
 )

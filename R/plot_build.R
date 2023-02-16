@@ -26,9 +26,19 @@ plot_preprocess <- function(dat, v_x, v_color = NULL, v_facet = NULL, condition 
 }
 
 
-plot_build <- function(dat, v_x, v_color = NULL, v_facet = NULL, dv = NULL, modeldata = NULL, points = 0, rug = FALSE) {
-    
+plot_build <- function(
+    dat,
+    v_x,
+    v_color = NULL,
+    v_facet = NULL,
+    dv = NULL,
+    modeldata = NULL,
+    points = 0,
+    rug = FALSE,
+    gray = FALSE) {
+        
     checkmate::assert_flag(rug)
+    checkmate::assert_flag(gray)
 
     # create index before building ggplot to make sure it is available
     dat$marginaleffects_term_index <- get_unique_index(dat, term_only = TRUE)
@@ -61,18 +71,24 @@ plot_build <- function(dat, v_x, v_color = NULL, v_facet = NULL, dv = NULL, mode
     if (is.factor(dat[[v_x]])) {
         ggpoint <- ggplot2::geom_point(data = dat,
             ggplot2::aes(x = .data[[v_x]], y = estimate))
-        ggpointcol <- ggplot2::geom_point(data = dat,
-            ggplot2::aes(x = .data[[v_x]], y = estimate, color = .data[[v_color]]))
-        ggpointshape <- ggplot2::geom_point(data = dat,
-            ggplot2::aes(x = .data[[v_x]], y = estimate, shape = .data[[v_color]]))
         ggpointrange <- ggplot2::geom_pointrange(data = dat,
             ggplot2::aes(x = .data[[v_x]], y = estimate, ymin = conf.low, ymax = conf.high))
-        ggpointrangecol <- ggplot2::geom_pointrange(data = dat,
-            ggplot2::aes(x = .data[[v_x]], y = estimate, ymin = conf.low, ymax = conf.high, color = .data[[v_color]]),
-            position = ggplot2::position_dodge(.15))
-        ggpointrangeshape <- ggplot2::geom_pointrange(data = dat,
-            ggplot2::aes(x = .data[[v_x]], y = estimate, ymin = conf.low, ymax = conf.high, shape = .data[[v_color]]),
-            position = ggplot2::position_dodge(.15))
+        if (gray) {
+            ggpointcol <- ggplot2::geom_point(
+                data = dat,
+                ggplot2::aes(x = .data[[v_x]], y = estimate, shape = .data[[v_color]]))
+            ggpointrangecol <- ggplot2::geom_pointrange(data = dat,
+                ggplot2::aes(x = .data[[v_x]], y = estimate, ymin = conf.low, ymax = conf.high, shape = .data[[v_color]]),
+                position = ggplot2::position_dodge(.15))
+        } else {
+            ggpointcol <- ggplot2::geom_point(
+                data = dat,
+                ggplot2::aes(x = .data[[v_x]], y = estimate, color = .data[[v_color]]))
+            ggpointrangecol <- ggplot2::geom_pointrange(data = dat,
+                ggplot2::aes(x = .data[[v_x]], y = estimate, ymin = conf.low, ymax = conf.high, color = .data[[v_color]]),
+                position = ggplot2::position_dodge(.15))
+        }
+
         if ("conf.low" %in% colnames(dat)) {
             if (is.null(v_color)) {
                 p <- p + ggpointrange
@@ -90,11 +106,18 @@ plot_build <- function(dat, v_x, v_color = NULL, v_facet = NULL, dv = NULL, mode
     # continuous x-axis
     } else {
         ggrib <- ggplot2::geom_ribbon(data = dat, ggplot2::aes(x = .data[[v_x]], y = estimate, ymin = conf.low, ymax = conf.high), alpha = .1)
-        ggribcol <- ggplot2::geom_ribbon(data = dat, ggplot2::aes(x = .data[[v_x]], y = estimate, ymin = conf.low, ymax = conf.high, fill = .data[[v_color]]), alpha = .1)
-        ggribtype <- ggplot2::geom_ribbon(data = dat, ggplot2::aes(x = .data[[v_x]], y = estimate, ymin = conf.low, ymax = conf.high, group = .data[[v_color]]), alpha = .1)
         ggline <- ggplot2::geom_line(data = dat, ggplot2::aes(x = .data[[v_x]], y = estimate))
-        gglinecol <- ggplot2::geom_line(data = dat, ggplot2::aes(x = .data[[v_x]], y = estimate, color = .data[[v_color]]))
-        gglinetype <- ggplot2::geom_line(data = dat, ggplot2::aes(x = .data[[v_x]], y = estimate, linetype = .data[[v_color]]))
+        if (gray) {
+            gglinecol <- ggplot2::geom_line(data = dat, ggplot2::aes(x = .data[[v_x]], y = estimate, linetype = .data[[v_color]]))
+            ggribcol <- ggplot2::geom_ribbon(data = dat,
+                ggplot2::aes(x = .data[[v_x]], y = estimate, ymin = conf.low, ymax = conf.high, group = .data[[v_color]]), alpha = .1)
+        } else {
+            gglinecol <- ggplot2::geom_line(data = dat,
+                ggplot2::aes(x = .data[[v_x]], y = estimate, color = .data[[v_color]]))
+            ggribcol <- ggplot2::geom_ribbon(data = dat,
+                ggplot2::aes(x = .data[[v_x]], y = estimate, ymin = conf.low, ymax = conf.high, fill = .data[[v_color]]), alpha = .1)
+        }
+
         if ("conf.low" %in% colnames(dat)) {
             if (is.null(v_color)) {
                 p <- p + ggrib

@@ -14,6 +14,7 @@ plot_cap(
   transform_post = NULL,
   points = 0,
   rug = FALSE,
+  gray = FALSE,
   draw = TRUE,
   ...
 )

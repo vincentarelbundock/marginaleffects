@@ -8,8 +8,11 @@ New models supported:
 
 Plotting functions improvements:
 
-* `effect` argument is renamed to `variables` in `plot_slopes()` and `plot_comparisons()`. This improves consistency with the analogous `slopes()` and `comparisons()` functions.
 * New `by` argument to display marginal estimates by subgroup.
+* New `rug` argument to display tick marks in the margins.
+* New `points` argument to display a scatter plot.
+* New `gray` argument to plot in grayscale.
+* `effect` argument is renamed to `variables` in `plot_slopes()` and `plot_comparisons()`. This improves consistency with the analogous `slopes()` and `comparisons()` functions.
 * The plotting vignette was completely re-written.
 
 Other:

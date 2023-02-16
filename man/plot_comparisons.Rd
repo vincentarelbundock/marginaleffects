@@ -15,6 +15,7 @@ plot_comparisons(
   transform_pre = "difference",
   transform_post = NULL,
   rug = FALSE,
+  gray = FALSE,
   draw = TRUE,
   ...
 )

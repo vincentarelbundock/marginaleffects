@@ -62,9 +62,8 @@ expect_equal(nrow(p), 25)
 
 # points: alpha
 mod <- lm(mpg ~ hp * wt * am, data = mtcars)
-expect_true("DO SNAPSHOTS")
-#plot_predictions(mod, condition = c("hp", "wt"))
-#plot_predictions(mod, condition = list("hp", "wt" = "threenum"), points = .5)
+p <- plot_predictions(mod, condition = list("hp", "wt" = "threenum"), points = .5)
+expect_snapshot_plot(p, "plot_predictions-alpha")
 
 
 # two conditions
@@ -72,6 +71,10 @@ mod <- lm(mpg ~ hp * wt * am, data = mtcars)
 p <- plot_predictions(mod, condition = c("hp", "wt"))
 expect_snapshot_plot(p, "plot_predictions")
 
+# gray scale
+mod <- lm(mpg ~ hp * wt * am, data = mtcars)
+p <- plot_predictions(mod, condition = c("hp", "wt"), gray = TRUE)
+expect_snapshot_plot(p, "plot_predictions-gray")
 
 # continuous vs. categorical x-axis
 mod <- lm(mpg ~ hp * wt * factor(cyl), mtcars)
