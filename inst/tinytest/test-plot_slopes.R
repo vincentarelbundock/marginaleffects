@@ -13,7 +13,7 @@ mod <- glm(
     family = binomial, data = dat)
 p <- plot_slopes(mod, variables = "bill_length_mm", condition = "flipper_length_mm", draw = FALSE)
 expect_inherits(p, "data.frame")
-expect_equivalent(nrow(p), 25)
+expect_equivalent(nrow(p), 50)
 expect_false(anyNA(p$estimate))
 
 

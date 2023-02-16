@@ -82,7 +82,7 @@ sanitize_condition <- function(model, condition, variables = NULL, modeldata = N
             at_list[[condition1]] <- seq(
                 min(dat[[condition1]], na.rm = TRUE),
                 max(dat[[condition1]], na.rm = TRUE),
-                length.out = 25)
+                length.out = 50)
         } else {
             at_list[[condition1]] <- factor(unique(dat[[condition1]]))
         }

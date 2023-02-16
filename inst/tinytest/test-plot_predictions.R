@@ -57,7 +57,7 @@ dat[["log_y"]] <- log(y)
 model <- lm(log(y) ~ 1 + log(x), data = dat)
 p <- plot_predictions(model, condition = "x", draw = FALSE)
 expect_false(any(is.na(p$estimate)))
-expect_equal(nrow(p), 25)
+expect_equal(nrow(p), 50)
 
 
 # points: alpha
