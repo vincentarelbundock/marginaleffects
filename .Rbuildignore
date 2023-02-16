@@ -14,6 +14,7 @@ Makefile
 ^README\.html$
 ^README\.Rmd$
 ^sandbox$
+\.code-workspace$
 ^vignettes/alternative_software.Rmd
 ^vignettes/bootstrap.Rmd
 ^vignettes/brms.Rmd

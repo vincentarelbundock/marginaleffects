@@ -8,3 +8,4 @@ docs
 inst/tinytest/_tinyviztest_review/
 inst/doc
 marginaleffects.Rproj
+*.code-workspace
