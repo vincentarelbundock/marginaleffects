@@ -239,8 +239,7 @@ mt$label <- row.names(mt)
 
 mod <- lm(mpg ~ hp * factor(cyl), data = mt)
 
-plot_predictions(mod, condition = c("hp", "cyl"), points = .5, vcov = FALSE) +
-    geom_rug(aes(x = hp, y = mpg), data = mt) +
+plot_predictions(mod, condition = c("hp", "cyl"), points = .5, rug = TRUE, vcov = FALSE) +
     geom_text_repel(aes(x = hp, y = mpg, label = label),
                     data = subset(mt, hp > 250),
                     nudge_y = 2) +
