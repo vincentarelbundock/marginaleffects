@@ -200,7 +200,7 @@ get_contrasts <- function(model,
                 idx1 <- original[, ..idx1]
                 setnames(idx1, old = v, new = "elast")
                 on_cols <- intersect(colnames(idx1), colnames(idx2))
-                idx2[idx1, elast := elast, on = on_cols] |> unique()
+                unique(idx2[idx1, elast := elast, on = on_cols])
             }
             elasticities[[v]] <- idx2$elast
         }
