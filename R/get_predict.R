@@ -83,7 +83,7 @@ get_predict.default <- function(model,
         stop(sprintf("Unable to extract predictions of type %s from a model of class %s. Please report this problem, along with reproducible code and data on Github: https://github.com/vincentarelbundock/marginaleffects/issues", type, class(model)[1]), call. = FALSE)
     }
 
-    setDF(out)
+    data.table::setDF(out)
 
     out <- sort_columns(out, first = c("rowid", "group", "estimate"))
 

@@ -31,7 +31,7 @@ complete_levels <- function(x, character_levels = NULL) {
     # create padding
     if (length(vault) > 0) {
         padding <- utils::head(x, 1)
-        setDT(padding)
+        data.table::setDT(padding)
         for (v in names(vault)) {
             padding[[v]] <- NULL
         }
@@ -41,7 +41,7 @@ complete_levels <- function(x, character_levels = NULL) {
         to_keep <- colnames(x)
         padding[, ..to_keep]
         setcolorder(padding, to_keep)
-        setDF(padding)
+        data.table::setDF(padding)
     } else {
         padding <- data.frame()
     }

@@ -528,7 +528,7 @@ comparisons <- function(model,
     }
 
     if (!isTRUE(internal_call)) {
-        setDF(out)
+        data.table::setDF(out)
     }
 
     out <- set_marginaleffects_attributes(

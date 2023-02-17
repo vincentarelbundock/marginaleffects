@@ -19,9 +19,9 @@ get_contrasts <- function(model,
     # some predict() methods need data frames and will convert data.tables
     # internally, which can be very expensive if done many times. we do it once
     # here.
-    setDF(lo)
-    setDF(hi)
-    setDF(original)
+    data.table::setDF(lo)
+    data.table::setDF(hi)
+    data.table::setDF(original)
 
     # brms models need to be combined to use a single seed when sample_new_levels="gaussian"
     if (inherits(model, "brmsfit")) {
@@ -95,7 +95,7 @@ get_contrasts <- function(model,
     }
 
     # lots of indexing later requires a data.table
-    setDT(original)
+    data.table::setDT(original)
 
     if (!inherits(pred_hi, "data.frame") || !inherits(pred_lo, "data.frame") || !inherits(pred_or, c("data.frame", "NULL"))) {
         insight::format_error("Unable to compute predicted values with this model. You can try to supply a different dataset to the `newdata` argument. If this does not work, you can file a report on the Github Issue Tracker: https://github.com/vincentarelbundock/marginaleffects/issues")
@@ -103,7 +103,7 @@ get_contrasts <- function(model,
 
     # output data.frame
     out <- pred_lo
-    setDT(out)
+    data.table::setDT(out)
 
     # univariate outcome:
     # original is the "composite" data that we constructed by binding terms and
@@ -144,7 +144,7 @@ get_contrasts <- function(model,
     # by
     if (isTRUE(checkmate::check_data_frame(by))) {
         bycols <- "by"
-        setDT(by)
+        data.table::setDT(by)
         tmp <- setdiff(intersect(colnames(out), colnames(by)), "by")
 
         if (length(tmp) == 0) {
@@ -219,7 +219,7 @@ get_contrasts <- function(model,
         draws_or <- attr(pred_or, "posterior_draws")
     }
     
-    setDT(pred_hi)
+    data.table::setDT(pred_hi)
 
     out[, predicted_lo := pred_lo[["estimate"]]]
     out[, predicted_hi := pred_hi[["estimate"]]]

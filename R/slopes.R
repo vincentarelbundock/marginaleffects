@@ -271,7 +271,7 @@ slopes <- function(model,
         internal_call = TRUE,
         ...)
 
-    setDT(out)
+    data.table::setDT(out)
 
     # clean columns
     stubcols <- c("rowid", "type", "group", "term", "contrast", "hypothesis", "dydx", "estimate", "std.error", "statistic", "p.value", "conf.low", "conf.high",
@@ -301,7 +301,7 @@ slopes <- function(model,
     attr(out, "call") <- call_attr
 
     # class
-    setDF(out)
+    data.table::setDF(out)
     class(out) <- setdiff(class(out), "comparisons")
     class(out) <- c("slopes", "marginaleffects", class(out))
     return(out)
