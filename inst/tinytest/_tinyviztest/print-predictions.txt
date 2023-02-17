@@ -6,13 +6,11 @@
        20       1.17 16.7   <0.001  17.3     22
        16       0.67 24.1   <0.001  14.9     17
 --- 22 rows omitted. See ?avg_predictions and ?print.marginaleffects --- 
- Estimate Std. Error    z Pr(>|z|) 2.5 % 97.5 %
        26       1.56 16.8   <0.001  23.1     29
        17       1.45 12.0   <0.001  14.6     20
        23       1.19 19.0   <0.001  20.2     25
        13       2.11  6.3   <0.001   9.1     17
        21       0.95 22.0   <0.001  19.2     23
-
 Prediction type:  response 
 Columns: rowid, type, estimate, std.error, statistic, p.value, conf.low, conf.high, mpg, hp, gear 
 

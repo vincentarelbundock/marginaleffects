@@ -1,6 +1,6 @@
 
  Term Contrast Estimate Std. Error    z Pr(>|z|) 2.5 % 97.5 % p (NonInf) p (NonSup) p (Equiv)
-   hp       +1    -0.11      0.013 -8.9   <0.001 -0.14 -0.087       0.83     <0.001      0.83
+ hp         +1    -0.11      0.013 -8.9   <0.001 -0.14 -0.087       0.83     <0.001      0.83
  qsec       +1    -1.38      0.433 -3.2   0.0014 -2.23 -0.534       1.00     <0.001      1.00
 
 Prediction type:  response 

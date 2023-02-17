@@ -56,17 +56,23 @@ print.marginaleffects <- function(x,
         all(out$group == "main_marginaleffects")) {
         out$group <- NULL
     }
-
-    # round and replace NAs
-    for (col in c("estimate", "std.error", "statistic", "conf.low", "conf.high")) {
-        if (col %in% colnames(out)) {
-            out[[col]] <- format(out[[col]], digits = digits)
-        }
+    
+    # subset before rounding so that digits match top and bottom rows
+    if (nrow(out) > nrows) {
+        out <- rbind(head(out, topn), tail(out, topn))
+        splitprint <- TRUE
+    } else {
+        splitprint <- FALSE
     }
 
-    for (p in c("p.value", "p.value.nonsup", "p.value.noninf", "p.value.equiv")) {
-        if (p %in% colnames(out)) {
-            out[[p]] <- format.pval(out[[p]], digits = digits, eps = p_eps)
+    # round and replace NAs
+    ps <- c("p.value", "p.value.nonsup", "p.value.noninf", "p.value.equiv")
+
+    for (i in seq_along(out)) {
+        if (colnames(out)[i] %in% ps) {
+            out[[i]] <- format.pval(out[[i]], digits = digits, eps = p_eps)
+        } else {
+            out[[i]] <- format(out[[i]], digits = digits)
         }
     }
 
@@ -179,17 +185,17 @@ print.marginaleffects <- function(x,
 
     # some commands do not generate average contrasts/mfx. E.g., `lnro` with `by`
     cat("\n")
-    if (nrow(out) > nrows) {
+    if (splitprint) {
         print(utils::head(out, n = topn), row.names = FALSE)
         msg <- "--- %s rows omitted. See %s?print.marginaleffects ---"
-        msg <- sprintf(msg, nrow(out) - 2 * topn, rec)
+        msg <- sprintf(msg, nrow(x) - 2 * topn, rec)
         cat(msg, "\n")
         # remove colnames
-        print(utils::tail(out, n = topn), row.names = FALSE)
-        omitted <- TRUE
+        tmp <- utils::capture.output(print(utils::tail(out, n = topn), row.names = FALSE))
+        tmp <- paste(tmp[-1], collapse = "\n")
+        cat(tmp)
     } else {
         print(out, row.names = FALSE)
-        omitted <- FALSE
     }
     cat("\n")
     # cat("Model type: ", attr(x, "model_type"), "\n")
