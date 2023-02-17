@@ -135,6 +135,7 @@ Suggests:
     tibble,
     tidymodels,
     tidyr,
+    tidyverse,
     tinytest,
     truncreg,
     tsModel,
