@@ -9,7 +9,7 @@
 -->
 
 Compute and plot predictions, slopes, marginal means, and comparisons
-(contrasts, risk ratios, odds ratios, etc.) for over [74
+(contrasts, risk ratios, odds ratios, etc.) for over [76
 classes](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
 of statistical models in R. Conduct linear and non-linear hypothesis
 tests, as well as equivalence tests using the delta method.
@@ -39,6 +39,8 @@ install.packages(
 
 *Restart `R` completely before moving on.*
 
+# Citing `marginaleffects`
+
 Arel-Bundock V (2023). *marginaleffects: Predictions, Comparisons,
 Slopes, Marginal Means, and Hypothesis Tests*. R package version 0.9.0,
 <https://vincentarelbundock.github.io/marginaleffects/>.
@@ -66,13 +68,13 @@ modeling packages in `R` often produce inconsistent objects that require
 special treatment.
 
 `marginaleffects` offers a single point of entry to easily interpret the
-results of over 74 classes of models, using a simple and consistent user
+results of over 76 classes of models, using a simple and consistent user
 interface.
 
 Benefits of `marginaleffects` include:
 
   - *Powerful:* It can compute predictions, comparisons (contrasts, risk
-    ratios, etc.), slopes, and conduct hypothesis tests for 74 different
+    ratios, etc.), slopes, and conduct hypothesis tests for 76 different
     classes of models in `R`.
   - *Simple:* All functions share a simple and unified interface.
   - *Documented*: Each function is thoroughly documented with abundant
@@ -84,9 +86,9 @@ Benefits of `marginaleffects` include:
     the memory footprint is much smaller.
   - *Thin:* Few dependencies.
   - *Standards-compliant:* `marginaleffects` follows “tidy” principles
-    and returns objects that work with standard functions like 
-    `summary()`, `tidy()`, and `glance()`. These objects are easy to
-    program with and feed to [other packages like
+    and returns objects that work with standard functions like
+    `summary()`, `head()`, `tidy()`, and `glance()`. These objects are
+    easy to program with and feed to [other packages like
     `modelsummary`.](https://vincentarelbundock.github.io/marginaleffects/)
   - *Valid:* When possible, [numerical results are
     checked](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
