@@ -1,12 +1,12 @@
 
- Term Value Mean Std. Error    z Pr(>|z|) 2.5 % 97.5 %
- gear     3 21.6       1.60 13.5   <2e-16  18.5   24.8
- gear     4 21.1       1.26 16.7   <2e-16  18.6   23.6
- gear     5 20.0       1.97 10.1   <2e-16  16.1   23.8
-   am FALSE 17.4       1.42 12.3   <2e-16  14.7   20.2
-   vs FALSE 17.5       1.01 17.3   <2e-16  15.5   19.4
-   am  TRUE 24.4       1.25 19.5   <2e-16  21.9   26.8
-   vs  TRUE 24.3       1.19 20.4   <2e-16  22.0   26.7
+ Term Value Mean Std. Error  z Pr(>|z|) 2.5 % 97.5 %
+ gear     3   22        1.6 14   <0.001    18     25
+ gear     4   21        1.3 17   <0.001    19     24
+ gear     5   20        2.0 10   <0.001    16     24
+   am FALSE   17        1.4 12   <0.001    15     20
+   vs FALSE   17        1.0 17   <0.001    15     19
+   am  TRUE   24        1.3 19   <0.001    22     27
+   vs  TRUE   24        1.2 20   <0.001    22     27
 
 Prediction type:  response 
 Results averaged over levels of: gear, am, vs 

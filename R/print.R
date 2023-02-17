@@ -9,6 +9,7 @@
 #' 
 #' @param x An object produced by one of the [`marginaleffects`] package functions.
 #' @param digits The number of digits to display.
+#' @param p_eps p values smaller than this number are printed in "<0.001" style.
 #' @param topn The number of rows to be printed from the beginning and end of tables with more than `nrows` rows.
 #' @param nrows The number of rows which will be printed before truncation.
 #' @param ncols The maximum number of column names to display at the bottom of the printed output.
@@ -28,7 +29,8 @@
 #' data.frame(p)
 #'
 print.marginaleffects <- function(x,
-                                  digits = max(3L, getOption("digits") - 3L),
+                                  digits = getOption("marginaleffects_print_digits", default = 2),
+                                  p_eps = getOption("marginaleffects_print_p_eps", default = 0.001),
                                   topn = getOption("marginaleffects_print_topn", default = 5),
                                   nrows = getOption("marginaleffects_print_nrows", default = 30),
                                   ncols = getOption("marginaleffects_print_ncols", default = 30),
@@ -62,9 +64,9 @@ print.marginaleffects <- function(x,
         }
     }
 
-    for (p in c("p.value", "p.value.sup", "p.value.inf", "p.value.equ")) {
+    for (p in c("p.value", "p.value.nonsup", "p.value.noninf", "p.value.equiv")) {
         if (p %in% colnames(out)) {
-            out[[p]] <- format.pval(out[[p]])
+            out[[p]] <- format.pval(out[[p]], digits = digits, eps = p_eps)
         }
     }
 
@@ -183,9 +185,7 @@ print.marginaleffects <- function(x,
         msg <- sprintf(msg, nrow(out) - 2 * topn, rec)
         cat(msg, "\n")
         # remove colnames
-        tmp <- utils::capture.output(print(utils::tail(out, n = topn), row.names = FALSE))
-        tmp <- paste(utils::tail(tmp, -1), collapse = "\n")
-        cat(tmp, "\n")
+        print(utils::tail(out, n = topn), row.names = FALSE)
         omitted <- TRUE
     } else {
         print(out, row.names = FALSE)

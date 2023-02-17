@@ -1,8 +1,8 @@
 
- Term Contrast Estimate Std. Error    z Pr(>|z|) 2.5 % 97.5 %  hp
-   am    1 - 0     5.28       1.08 4.89 1.02e-06  3.16   7.39 120
-   am    1 - 0     5.28       1.08 4.89 1.02e-06  3.16   7.39 120
+ Term Contrast Estimate Std. Error   z Pr(>|z|) 2.5 % 97.5 %  hp
+   am    1 - 0      5.3        1.1 4.9   <0.001   3.2    7.4 120
+   am    1 - 0      5.3        1.1 4.9   <0.001   3.2    7.4 120
 
 Prediction type:  response 
-Columns: rowid, type, term, contrast, estimate, std.error, statistic, p.value, conf.low, conf.high, predicted, predicted_hi, predicted_lo, am, hp, mpg
+Columns: rowid, type, term, contrast, estimate, std.error, statistic, p.value, conf.low, conf.high, predicted, predicted_hi, predicted_lo, am, hp, mpg 
 
