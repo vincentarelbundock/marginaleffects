@@ -59,6 +59,7 @@ Suggests:
     conflicted,
     covr,
     crch,
+    distributional,
     dplyr,
     emmeans,
     equivalence,

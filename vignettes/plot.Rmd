@@ -250,11 +250,12 @@ All the plotting functions work with all the model supported by the `marginaleff
 
 ```{r, warning = FALSE}
 library(ggdist)
+library(ggplot2)
 
 dat <- "https://vincentarelbundock.github.io/Rdatasets/csv/Stat2Data/Titanic.csv"
 dat <- read.csv(dat)
 
-mod <- glm(Survived ~ Age * PClass, data = dat, family = binomial)
+mod <- glm(Survived ~ Age * SexCode * PClass, data = dat, family = binomial)
 
 plot_predictions(mod, condition = c("Age", "PClass")) +
     geom_dots(
@@ -274,6 +275,21 @@ Designing effective data visualizations requires a lot of customization to the s
 ```{r}
 p <- plot_predictions(mod, condition = c("Age", "PClass"), draw = FALSE)
 head(p)
+```
+
+This allows us to feed the data easily to other functions, such as those in the useful `ggdist` and `distributional` packages:
+
+
+```{r}
+library(ggdist)
+library(distributional)
+plot_slopes(mod, variables = "SexCode", condition = c("Age", "PClass"), type = "link", draw = FALSE) |>
+  ggplot() +
+  stat_lineribbon(aes(
+    x = Age,
+    ydist = dist_normal(mu = estimate, sigma = std.error),
+    fill = PClass),
+    alpha = 1 / 4)
 ```
 
 # Fits and smooths
