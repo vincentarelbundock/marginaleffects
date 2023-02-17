@@ -566,7 +566,7 @@ get_predictions <- function(model,
     # extract attributes before setDT
     draws <- attr(out, "posterior_draws")
 
-    setDT(out)
+    data.table::setDT(out)
 
     # unpad factors before averaging
     # trust `newdata` rowid more than `out` because sometimes `get_predict()` will add a positive index even on padded data

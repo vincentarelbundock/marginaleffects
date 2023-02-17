@@ -105,7 +105,7 @@ datagrid <- function(
     }
 
     # better to assume "standard" class as output
-    setDF(out)
+    data.table::setDF(out)
 
     attr(out, "variables_datagrid") <- names(dots)
 
@@ -371,7 +371,7 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
         variables_cluster <- NULL
     }
 
-    setDT(newdata)
+    data.table::setDT(newdata)
     
     attr(newdata, "marginaleffects_variable_class") <- attr_variable_classes
 

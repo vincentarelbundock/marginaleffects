@@ -64,7 +64,7 @@ posterior_draws <- function(x, shape = "long") {
         cols <- unique(c("drawid", "draw", "rowid", colnames(out)))
         cols <- intersect(cols, colnames(out))
         setcolorder(out, cols)
-        setDF(out)
+        data.table::setDF(out)
         return(out)
     }
 

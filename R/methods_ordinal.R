@@ -16,7 +16,7 @@ get_predict.clm <- function(model,
     resp <- insight::find_response(model)
 
     # otherwise `predict.clm` does not see some columns (mystery)
-    setDF(newdata)
+    data.table::setDF(newdata)
 
     newdata <- newdata[, setdiff(colnames(newdata), resp), drop = FALSE]
 
