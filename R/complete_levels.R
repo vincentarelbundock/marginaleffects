@@ -31,14 +31,17 @@ complete_levels <- function(x, character_levels = NULL) {
     # create padding
     if (length(vault) > 0) {
         padding <- utils::head(x, 1)
-        setDF(padding) # not sure why, but this is needed
+        setDT(padding)
         for (v in names(vault)) {
             padding[[v]] <- NULL
         }
         fun <- data.table::CJ
         gr <- do.call("fun", vault)
-        padding <- merge(padding, gr, all = TRUE)
-        padding <- padding[, colnames(x)]
+        padding <- cjdt(list(padding, gr))
+        to_keep <- colnames(x)
+        padding[, ..to_keep]
+        setcolorder(padding, to_keep)
+        setDF(padding)
     } else {
         padding <- data.frame()
     }
