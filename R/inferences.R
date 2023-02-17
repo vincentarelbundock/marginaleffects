@@ -82,7 +82,11 @@ inferences <- function(x, method, R = 1000, conf_type = "perc", ...) {
     mfx_call <- attr(x, "call")
     model <- mfx_call[["model"]]
 
-    if (method == "boot") {
+    # default standard errors are Delta anyway
+    if (method == "delta") {
+        return(x)
+
+    } else if (method == "boot") {
         insight::check_if_installed("boot")
         attr(model, "inferences_method") <- "boot"
         attr(model, "inferences_dots") <- c(list(R = R), list(...))
