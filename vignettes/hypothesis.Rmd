@@ -58,7 +58,8 @@ comparisons(
     newdata = "mean",
     variables = "hp",
     transform_pre = "ratio",
-    hypothesis = 1)
+    hypothesis = 1) |>
+    print(digits = 3)
 ```
 
 Warning: Z statistics and p values are computed *before* applying functions in `transform_post`.
