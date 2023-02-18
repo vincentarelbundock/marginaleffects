@@ -1,32 +1,27 @@
 # adapted from the numDeriv package for R by Paul Gilbert published under GPL2 license
 
-get_jacobian <- function(func, x, eps) {
-    richardson <- getOption("marginaleffects_diff_richardson", default = NULL)
+get_jacobian <- function(func, x) {
+    numDeriv_args <- getOption("marginaleffects_numDeriv", default = NULL)
 
     # forward finite difference (faster)
-    if (is.null(richardson)) {
-        if (is.null(eps)) {
-            eps <- max(1e-10, 1e-4 * min(abs(x)))
+    if (is.null(numDeriv_args)) {
+        eps <- max(1e-8, 1e-4 * min(abs(x), na.rm = TRUE))
+        baseline <- func(x)
+        df <- matrix(NA_real_, length(baseline), length(x))
+        for (i in seq_along(x)) {
+            dx <- x
+            dx[i] <- dx[i] + eps
+            df[, i] <- (func(dx) - baseline) / eps
         }
-        df <- numDeriv::jacobian(func, x, method = "simple", method.args = list(eps = eps))
-#        baseline <- func(x)
-#        df <- matrix(NA_real_, length(baseline), length(x))
-#        for (i in seq_along(x)) {
-#            dx <- x
-#            dx[i] <- dx[i] + eps
-#            df[, i] <- (func(dx) - baseline) / eps
-#        }
-#        
         
-    # richardson (more accurate)
+        
+    # numDeriv (more accurate)
     } else {
-        if (is.null(eps)) {
-            eps <- 1e-4
-        }
-        richardson[["func"]] <- func
-        richardson[["x"]] <- x
-        richardson[["eps"]] <- eps
-        df <- do.call(get_jacobian_richardson, richardson)
+        insight::check_if_installed("numDeriv")
+        numDeriv_args[["func"]] <- func
+        numDeriv_args[["x"]] <- x
+        ndFUN <- get("jacobian", asNamespace("numDeriv"))
+        df <- do.call(ndFUN, numDeriv_args)
     }
 
     return(df)

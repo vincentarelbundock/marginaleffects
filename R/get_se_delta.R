@@ -95,8 +95,7 @@ get_se_delta <- function(model,
     if (is.null(J) || !is.null(hypothesis)) {
         args <- list(
             func = inner,
-            x = coefs,
-            eps = eps)
+            x = coefs)
         J <- do.call("get_jacobian", args)
         colnames(J) <- names(get_coef(model, ...))
     }

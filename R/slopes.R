@@ -20,17 +20,6 @@
 #' including non-linear models with transformations (e.g., polynomials).
 #' Uncertainty estimates are computed using the delta method.
 #'
-#' Numerical derivatives for the `slopes` function are calculated
-#' using a simple epsilon difference approach: \eqn{\partial Y / \partial X = (f(X + \varepsilon/2) - f(X+\varepsilon/2)) / \varepsilon}{dY/dX = (f(X + e/2) - f(X-e/2)) / e},
-#' where f is the `predict()` method associated with the model class, and
-#' \eqn{\varepsilon}{e} is determined by the `eps` argument.
-#'
-#' Warning: Some models are particularly sensitive to `eps`, so it is good
-#' practice to try different values of this argument.
-#'
-#' Standard errors for the slopes are obtained using the Delta
-#' method. See the "Standard Errors" vignette on the package website for
-#' details (link above).
 #' @param model Model object
 #' @param variables Focal variables
 #' * `NULL`: compute slopes or comparisons for all the variables in the model object (can be slow).
@@ -108,6 +97,12 @@
 #' arguments.
 #' @inheritParams comparisons
 #'
+#' @details
+#' Numerical derivatives for the `slopes` function are calculated
+#' using a simple epsilon difference approach: \eqn{\partial Y / \partial X = (f(X + \varepsilon/2) - f(X+\varepsilon/2)) / \varepsilon}{dY/dX = (f(X + e/2) - f(X-e/2)) / e},
+#' where f is the `predict()` method associated with the model class, and
+#' \eqn{\varepsilon}{e} is determined by the `eps` argument.
+#' @template deltamethod
 #' @template model_specific_arguments
 #' @template bayesian
 #'

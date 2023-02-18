@@ -192,9 +192,17 @@ including non-linear models with transformations (e.g., polynomials).
 Uncertainty estimates are computed using the delta method.
 
 Numerical derivatives for the \code{slopes} function are calculated
-using a simple epsilon difference approach: \eqn{\partial Y / \partial X = (f(X + \varepsilon) - f(X)) / \varepsilon}{dY/dX = (f(X + e) - f(X)) / e},
+using a simple epsilon difference approach: \eqn{\partial Y / \partial X = (f(X + \varepsilon/2) - f(X+\varepsilon/2)) / \varepsilon}{dY/dX = (f(X + e/2) - f(X-e/2)) / e},
 where f is the \code{predict()} method associated with the model class, and
 \eqn{\varepsilon}{e} is determined by the \code{eps} argument.
+}
+\section{Functions}{
+\itemize{
+\item \code{avg_slopes()}: Average slopes
+
+}}
+\section{Delta method standard errors}{
+
 
 Warning: Some models are particularly sensitive to \code{eps}, so it is good
 practice to try different values of this argument.
@@ -203,11 +211,7 @@ Standard errors for the slopes are obtained using the Delta
 method. See the "Standard Errors" vignette on the package website for
 details (link above).
 }
-\section{Functions}{
-\itemize{
-\item \code{avg_slopes()}: Average slopes
 
-}}
 \section{Model-Specific Arguments}{
 
 

@@ -64,7 +64,7 @@ void <- capture.output(suppressWarnings(
 p1 <- predict(mod, type = "response", se.fit = TRUE)
 p2 <- predictions(mod)
 expect_equivalent(p1$fit[160,], p2[p2$rowid == 160, "estimate"])
-expect_equivalent(p1$se.fit[160,], p2[p2$rowid == 160, "std.error"], tolerance = .001)
+expect_equivalent(p1$se.fit[160,], p2[p2$rowid == 160, "std.error"], tolerance = .01)
 
 # link
 p1 <- predict(mod, type = "link", se.fit = TRUE)

@@ -28,6 +28,4 @@ expect_equivalent(m2$estimate, m3$estimate)
 # errors and warnings
 expect_error(slopes(mod, eps = 0))
 
-
-
 rm(list = ls())

@@ -7,7 +7,7 @@ mfx <- slopes(mod)
 tid <- tidy(mfx)
 expect_equivalent(tid$estimate, c(-0.941616811900303, -0.0180381021785969, -3.16697311076308))
 expect_equivalent(tid$std.error, c(0.550916180593437, 0.0118762627948526, 0.740576187204658),
-             tolerance = 1e-6)
+             tolerance = 1e-5)
 
 mod <- lm(mpg ~ as.factor(cyl) * hp + wt, data = mtcars)
 mfx <- slopes(
