@@ -55,6 +55,7 @@
 #'   popular `emmeans` package, which provides similar but more advanced
 #'   functionality: https://vincentarelbundock.github.io/marginaleffects/
 #'
+#' @template deltamethod
 #' @template model_specific_arguments
 #' @template bayesian
 #'

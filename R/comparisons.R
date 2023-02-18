@@ -73,6 +73,7 @@
 #' @param cross TRUE or FALSE
 #' * `FALSE`: Contrasts represent the change in adjusted predictions when one predictor changes and all other variables are held constant.
 #' * `TRUE`: Contrasts represent the changes in adjusted predictions when all the predictors specified in the `variables` argument are manipulated simultaneously (a "cross-contrast").
+#' @template deltamethod
 #' @template model_specific_arguments
 #' @template transform_pre_functions
 #' @template bayesian

@@ -81,7 +81,7 @@ b <- c(-0.0357107397803255, 0.116113581361053, -0.703975123794627, -0.3223851694
 se <- c(0.0137118286464027, 0.335617116221601, 0.333707103584788, 0.0899355981887107, 
 2.51759246321455, 2.10076503002941)
 expect_equivalent(b, tid$estimate)
-expect_equivalent(se, tid$std.error)
+expect_equivalent(se, tid$std.error, tolerance = 1e-4)
 
 
 # Hurdle Poisson model

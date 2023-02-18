@@ -4,6 +4,7 @@
 #' @import data.table
 utils::globalVariables(c(
 "..bycols",
+"..to_keep",
 "..cols",
 "..idx_by",
 "..idx_hi",

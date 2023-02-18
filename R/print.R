@@ -59,7 +59,7 @@ print.marginaleffects <- function(x,
     
     # subset before rounding so that digits match top and bottom rows
     if (nrow(out) > nrows) {
-        out <- rbind(head(out, topn), tail(out, topn))
+        out <- rbind(utils::head(out, topn), utils::tail(out, topn))
         splitprint <- TRUE
     } else {
         splitprint <- FALSE
