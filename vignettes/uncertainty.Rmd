@@ -199,12 +199,12 @@ mod <- glm(large_penguin ~ bill_length_mm * flipper_length_mm + species, data = 
 
 `marginaleffects` uses numerical derivatives in two contexts:
 
-1. First derivative to estimate the partial derivatives reported by `slopes()` function. 
+1. Estimate the partial derivatives reported by `slopes()` function. 
    - Centered finite difference
-   - $\frac{f(x + \varepsilon_1 / 2) - f(x - \varepsilon_1 / 2)}{\varepsilon_1}$, where $f$ is the `predict()` function.
-2. Second derivative to estimate standard errors using the delta method.
+   - $\frac{f(x + \varepsilon_1 / 2) - f(x - \varepsilon_1 / 2)}{\varepsilon_1}$, where we take the derivative with respect to a predictor of interest, and $f$ is the `predict()` function.
+2. Estimate standard errors using the delta method.
    - Forward finite difference
-   - $\frac{g(\hat{\beta},x) - g(\hat{beta} + \varepsilon_2,x)}{\varepsilon_2}$, where $g$ is a function which returns the partial derivative with respect to $x$, evaluated at different values of the coefficient vector $\beta$.
+   - $\frac{g(\hat{\beta}) - g(\hat{beta} + \varepsilon_2)}{\varepsilon_2}$, where we take the derivative with respect to a model's coefficients, and $g$ is a `marginaleffects` function which returns some quantity of interest (e.g., slope, marginal means, predictions, etc.)
      
 Note that the step sizes used in those two contexts can differ. If the variables and coefficients have very different scales, it may make sense to use different values for $\varepsilon_1$ and $\varepsilon_2$.
 
@@ -233,8 +233,8 @@ Notice that the standard errors can vary considerably when using different step 
 Now, we illustrate the full process of standard error computation, using raw `R` code. First, we choose two step sizes:
 
 ```{r}
-eps1 <- 1e-5 # 1st derivative epsilon
-eps2 <- 1e-7 # 2nd derivative epsilon
+eps1 <- 1e-5 # slope
+eps2 <- 1e-7 # delta method
 
 s <- slopes(mod, newdata = head(dat, 3), variables = "bill_length_mm", eps = eps1)
 print(s[, 1:5], digits = 6)
@@ -260,7 +260,7 @@ p_hi <- linkinv(mm_hi %*% coef(mod))
 (p_hi - p_lo) / eps1
 ```
 
-To get standard errors, we build a jacobian matrix where each column holds derivatives of the slopes with respect to each of the coefficients. Using the same example:
+To get standard errors, we build a jacobian matrix where each column holds derivatives of the vector valued slope function, with respect to each of the coefficients. Using the same example:
 
 ```{r}
 b_lo <- b_hi <- coef(mod)
