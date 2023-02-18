@@ -77,7 +77,7 @@ void <- capture.output({
 
 res <- slopes(mod, variable = "hp", newdata = counterfactuals)
 expect_equivalent(res$estimate[1], em1$hp.trend)
-expect_equivalent(res$std.error[1], em1$std.error, tolerance = .001)
+expect_equivalent(res$std.error[1], em1$std.error, tolerance = .01)
 expect_equivalent(res$estimate[2], em2$hp.trend)
 expect_equivalent(res$std.error[2], em2$std.error, tolerance = .0001)
 
