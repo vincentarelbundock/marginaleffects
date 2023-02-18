@@ -204,7 +204,7 @@ mod <- glm(large_penguin ~ bill_length_mm * flipper_length_mm + species, data = 
    - $\frac{f(x + \varepsilon_1 / 2) - f(x - \varepsilon_1 / 2)}{\varepsilon_1}$, where we take the derivative with respect to a predictor of interest, and $f$ is the `predict()` function.
 2. Estimate standard errors using the delta method.
    - Forward finite difference
-   - $\frac{g(\hat{\beta}) - g(\hat{beta} + \varepsilon_2)}{\varepsilon_2}$, where we take the derivative with respect to a model's coefficients, and $g$ is a `marginaleffects` function which returns some quantity of interest (e.g., slope, marginal means, predictions, etc.)
+   - $\frac{g(\hat{\beta}) - g(\hat{\beta} + \varepsilon_2)}{\varepsilon_2}$, where we take the derivative with respect to a model's coefficients, and $g$ is a `marginaleffects` function which returns some quantity of interest (e.g., slope, marginal means, predictions, etc.)
      
 Note that the step sizes used in those two contexts can differ. If the variables and coefficients have very different scales, it may make sense to use different values for $\varepsilon_1$ and $\varepsilon_2$.
 
@@ -287,7 +287,7 @@ sqrt(diag(J %*% vcov(mod) %*% t(J)))
 Which corresponds to our original standard errors:
 
 ```{r}
-print(s, digits = 7)[, 1:5]
+print(s[, 1:5], digits = 7)
 ```
 
 Reverting to default settings:
