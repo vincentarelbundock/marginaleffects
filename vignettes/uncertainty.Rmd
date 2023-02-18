@@ -230,7 +230,7 @@ avg_slopes(mod, variables = "bill_length_mm")
 
 Notice that the standard errors can vary considerably when using different step sizes. It is good practice for analysts to consider the sensitivity of their results to this setting.
 
-Now, we illustrate the full process standard error computation, using "raw" `R` code. First, we choose two step sizes:
+Now, we illustrate the full process of standard error computation, using raw `R` code. First, we choose two step sizes:
 
 ```{r}
 eps1 <- 1e-5 # 1st derivative epsilon
@@ -243,7 +243,7 @@ print(s[, 1:5], digits = 6)
 We can get the same estimates manually with these steps:
 
 ```{r}
-linkinv <- insight::link_inverse(mod)
+linkinv <- mod$family$linkinv
 
 # increment the variable of interest by h
 dat_hi <- transform(dat, bill_length_mm = bill_length_mm + eps1)
@@ -260,7 +260,7 @@ p_hi <- linkinv(mm_hi %*% coef(mod))
 (p_hi - p_lo) / eps1
 ```
 
-To get standard errors, we must build a jacobian matrix where each column holds derivatives of the slopes with respect to each of the coefficients. Using the same example:
+To get standard errors, we build a jacobian matrix where each column holds derivatives of the slopes with respect to each of the coefficients. Using the same example:
 
 ```{r}
 b_lo <- b_hi <- coef(mod)
@@ -271,14 +271,14 @@ dydx_hi <- (linkinv(mm_hi %*% b_hi) - linkinv(mm_lo %*% b_hi)) / eps1
 (dydx_hi - dydx_lo) / eps2
 ```
 
-This gives us the first column of the jacobian, which we can recover in full from the `marginaleffects` object attribute:
+This gives us the first column of $J$, which we can recover in full from the `marginaleffects` object attribute:
 
 ```{r}
 J <- attr(s, "jacobian")
 J
 ```
 
-To build the full jacobian, we would simply iterate through the coefficients, incrementing them one after the other. Finally, using the jacobian, we can easily obtain standard errors:
+To build the full matrix, we would simply iterate through the coefficients, incrementing them one after the other. Finally, we get standard errors via:
 
 ```{r}
 sqrt(diag(J %*% vcov(mod) %*% t(J)))
