@@ -437,7 +437,6 @@ predictions <- function(model,
                     type = type,
                     FUN = fun,
                     J = J,
-                    eps = 1e-4, # avoid pushing through ...
                     hypothesis = hypothesis,
                     by = by,
                     byfun = byfun)

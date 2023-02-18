@@ -2,12 +2,10 @@ get_contrast_data <- function(model,
                               newdata,
                               variables,
                               cross,
-                              eps,
                               modeldata = NULL,
                               ...) {
 
     lo <- hi <- ter <- lab <- original <- rowid <- list()
-
 
     # after variable class assignment
     if (is.null(modeldata)) {
@@ -47,19 +45,6 @@ get_contrast_data <- function(model,
             first_cross = identical(v$name, first_cross),
             modeldata = modeldata)
         args <- append(args, list(...))
-
-        if (is.null(eps) &&
-            isTRUE(variable_classes[[v$name]] == "numeric") &&
-            isTRUE(is.numeric(modeldata[[v$name]]))) {
-            args[["eps"]] <- 1e-4 * diff(range(modeldata[[v$name]], na.rm = TRUE, finite = TRUE))
-        } else {
-            args[["eps"]] <- eps
-        }
-
-        # protec: when newdata is 1-row and the original is not available
-        if (isTRUE(args[["eps"]] <= 0) || !"eps" %in% names(args)) {
-            args[["eps"]] <- NULL
-        }
 
         # logical and character before factor used to be important; but I don't think so anymore
         if (get_variable_class(modeldata, v$name, "logical")) {

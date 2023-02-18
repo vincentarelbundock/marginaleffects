@@ -1,10 +1,10 @@
 get_contrast_data_numeric <- function(model,
                                       newdata,
                                       variable,
-                                      eps = 1e-4,
                                       modeldata = NULL,
                                       ...) {
-
+    
+    h <- variable[["eps"]]
 
     if (is.null(modeldata)) {
         modeldata <- get_modeldata(model, additional_variables = FALSE)
@@ -30,10 +30,6 @@ get_contrast_data_numeric <- function(model,
         return(out)
     }
 
-    if (!is.null(eps)) {
-        newdata$marginaleffects_eps <- eps
-    }
-
     # slope
     # by default variable$value, so we need to check this first
     slopes <- c(
@@ -47,14 +43,15 @@ get_contrast_data_numeric <- function(model,
         "mean(dY/eX)")
 
     if (isTRUE(variable$label %in% slopes)) {
+        # low <- x - h / 2
+        # high <- x + h / 2
         low <- x
-        high <- x + eps
+        high <- x + h
         lab <- variable$label
-        newdata$marginaleffects_eps <- eps
 
     } else if (identical(variable$label, "exp(dY/dX)")) {
-        low <- x
-        high <- x + eps
+        low <- x - h / 2
+        high <- x + h / 2
         lab <- "exp(dY/dX)"
 
     # contrast_label is designed for categorical predictors
@@ -113,8 +110,6 @@ get_contrast_data_numeric <- function(model,
         high <- tmp[, 2]
         lab <- "custom"
     }
-
-    newdata[["eps"]] <- eps
 
     lo <- hi <- newdata
     lo[[variable$name]] <- low

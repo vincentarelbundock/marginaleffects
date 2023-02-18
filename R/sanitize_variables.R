@@ -7,7 +7,8 @@ sanitize_variables <- function(variables,
                                transform_pre = NULL,
                                by = NULL,
                                cross = FALSE,
-                               calling_function = "comparisons") {
+                               calling_function = "comparisons",
+                               eps = NULL) {
 
     checkmate::assert(
         checkmate::check_null(variables),
@@ -300,6 +301,17 @@ sanitize_variables <- function(variables,
             "label" = lab,
             "value" = predictors[[v]],
             "transform_pre" = transform_pre)
+    }
+    
+    # epsilon for finite difference
+    for (v in names(predictors)) {
+        if (!is.null(eps)) {
+            predictors[[v]][["eps"]] <- eps
+        } else if (is.numeric(modeldata[[v]])) {
+            predictors[[v]][["eps"]] <- 1e-4 * diff(range(modeldata[[v]], na.rm = TRUE, finite = TRUE))
+        } else {
+            predictors[[v]]["eps"] <- list(NULL)
+        }
     }
 
     # can't take the slope of an outcome

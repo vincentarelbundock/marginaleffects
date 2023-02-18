@@ -2,7 +2,6 @@ get_se_delta_marginalmeans <- function(model,
                                        variables,
                                        newdata,
                                        type,
-                                       eps = 1e-4, # avoid pushing through ...
                                        cross = FALSE,
                                        ...) {
     get_marginalmeans(
@@ -20,7 +19,6 @@ get_se_delta_contrasts <- function(model,
                                    variables,
                                    newdata,
                                    type,
-                                   eps,
                                    hypothesis,
                                    lo,
                                    hi,
@@ -31,7 +29,6 @@ get_se_delta_contrasts <- function(model,
         newdata = newdata,
         variables = variables,
         type = type,
-        eps = eps,
         hypothesis = hypothesis,
         lo = lo,
         hi = hi,
@@ -90,6 +87,7 @@ get_se_delta <- function(model,
         if (!is.null(type)) args[["type"]] <- type
         if (!is.null(newdata)) args[["newdata"]] <- newdata
         if (!is.null(J)) args[["J"]] <- J
+        if (!is.null(eps)) args[["eps"]] <- eps
         g <- do.call("FUN", args)
         return(g)
     }
@@ -97,12 +95,8 @@ get_se_delta <- function(model,
     if (is.null(J) || !is.null(hypothesis)) {
         args <- list(
             func = inner,
-            x = coefs)
-        if (is.null(eps)) {
-            args[["eps"]] <- 1e-4
-        } else {
-            args[["eps"]] <- eps
-        }
+            x = coefs,
+            eps = eps)
         J <- do.call("get_jacobian", args)
         colnames(J) <- names(get_coef(model, ...))
     }

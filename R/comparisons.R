@@ -249,8 +249,7 @@ comparisons <- function(model,
         cross = cross,
         wts = wts,
         hypothesis = hypothesis,
-        df = df,
-        eps = eps),
+        df = df),
         list(...))
     call_attr <- do.call("call", call_attr)
     
@@ -331,7 +330,8 @@ comparisons <- function(model,
         variables = variables,
         cross = cross,
         by = by,
-        transform_pre = transform_pre)
+        transform_pre = transform_pre,
+        eps = eps)
 
     tmp <- sanitize_hypothesis(hypothesis, ...)
     hypothesis <- tmp$hypothesis
@@ -384,7 +384,6 @@ comparisons <- function(model,
                  variables = predictors,
                  cross = cross,
                  marginalmeans = marginalmeans,
-                 eps = eps,
                  modeldata = modeldata)
     dots[["modeldata"]] <- NULL # dont' pass twice
     args <- c(args, dots)
@@ -428,8 +427,8 @@ comparisons <- function(model,
                      lo = contrast_data$lo,
                      original = contrast_data$original,
                      by = by,
-                     cross = cross,
-                     eps = 1e-4)
+                     eps = eps,
+                     cross = cross)
         args <- c(args, dots)
         se <- do.call("get_se_delta", args)
         J <- attr(se, "jacobian")
@@ -522,10 +521,6 @@ comparisons <- function(model,
     mfx[["marginaleffects_wts_internal"]] <- NULL
 
     out <- mfx
-
-    if ("marginaleffects_eps" %in% colnames(out)) {
-        out[, "marginaleffects_eps" := NULL]
-    }
 
     if (!isTRUE(internal_call)) {
         data.table::setDF(out)

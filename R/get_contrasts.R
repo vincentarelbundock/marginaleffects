@@ -109,10 +109,9 @@ get_contrasts <- function(model,
     # original is the "composite" data that we constructed by binding terms and
     # compute predictions. It includes a term column, which we need to
     # replicate for each group.
-    out[, "marginaleffects_eps" := NA_real_] # default (probably almost always overwritten)
     out[, "marginaleffects_wts_internal" := NA_real_] # default (probably almost always overwritten)
     mult <- nrow(out) / nrow(original)
-    regex <- "^term$|^group$|^contrast|^marginaleffects_eps$|^marginaleffects_wts_internal$"
+    regex <- "^term$|^group$|^contrast|^marginaleffects_wts_internal$"
     if (isTRUE(mult == 1)) {
         for (v in grep(regex, colnames(original), value = TRUE)) {
             out[, (v) := original[[v]]]
@@ -128,7 +127,7 @@ get_contrasts <- function(model,
     } else {
         out <- merge(out, newdata, by = "rowid", all.x = TRUE)
         if (isTRUE(nrow(out) == nrow(lo))) {
-            tmp <- data.table(lo)[, .SD, .SDcols = patterns("^contrast|marginaleffects_eps|marginaleffects_wts_internal")]
+            tmp <- data.table(lo)[, .SD, .SDcols = patterns("^contrast|marginaleffects_wts_internal")]
             out <- cbind(out, tmp)
             idx <- c("rowid", grep("^contrast", colnames(out), value = TRUE), colnames(out))
             idx <- unique(idx)
@@ -249,7 +248,6 @@ get_contrasts <- function(model,
     }
 
     # we feed these columns to safefun(), even if they are useless for categoricals
-    if (!"marginaleffects_eps" %in% colnames(out)) out[, "marginaleffects_eps" := NA]
     if (!"marginaleffects_wts_internal" %in% colnames(out))  out[, "marginaleffects_wts_internal" := NA]
 
     if (isTRUE(marginalmeans)) {
@@ -257,7 +255,6 @@ get_contrasts <- function(model,
             predicted_lo = mean(predicted_lo),
             predicted_hi = mean(predicted_hi),
             predicted = mean(predicted),
-            marginaleffects_eps = mean(marginaleffects_eps),
             marginaleffects_wts_internal = mean(marginaleffects_wts_internal)),
         by = idx]
     }
@@ -266,12 +263,14 @@ get_contrasts <- function(model,
     # unknown arguments
     # singleton vs vector
     # different terms use different functions
-    safefun <- function(hi, lo, y, n, term, cross, eps, wts, tmp_idx) {
+    safefun <- function(hi, lo, y, n, term, cross, wts, tmp_idx) {
+        tn <- term[1]
+        eps <- variables[[tn]]$eps
         # when cross=TRUE, sanitize_transform_pre enforces a single function
         if (isTRUE(cross)) {
             fun <- fun_list[[1]]
         } else {
-            fun <- fun_list[[term[1]]]
+            fun <- fun_list[[tn]]
         }
         args <- list(
             "hi" = hi,
@@ -281,14 +280,15 @@ get_contrasts <- function(model,
             "w" = wts)
         
         # sometimes x is exactly the same length, but not always
-        if (length(elasticities[[term[1]]]) > nrow(out)) {
-            args[["x"]] <- elasticities[[term[1]]][tmp_idx]
+        if (length(elasticities[[tn]]) > nrow(out)) {
+            args[["x"]] <- elasticities[[tn]][tmp_idx]
         } else {
-            args[["x"]] <- elasticities[[term[1]]]
+            args[["x"]] <- elasticities[[tn]]
         }
 
         args <- args[names(args) %in% names(formals(fun))]
         con <- try(do.call("fun", args), silent = TRUE)
+
         if (!isTRUE(checkmate::check_numeric(con, len = n)) && !isTRUE(checkmate::check_numeric(con, len = 1))) {
             msg <- sprintf("The function supplied to the `transform_pre` argument must accept two numeric vectors of predicted probabilities of length %s, and return a single numeric value or a numeric vector of length %s, with no missing value.", n, n) #nolint
             insight::format_error(msg)
@@ -335,7 +335,6 @@ get_contrasts <- function(model,
                     term = out$term[idx],
                     cross = cross,
                     wts = out$marginaleffects_wts_internal[idx],
-                    eps = out$marginaleffects_eps[idx],
                     tmp_idx = out$tmp_idx)
             }
         }
@@ -373,7 +372,6 @@ get_contrasts <- function(model,
             term = term,
             cross = cross,
             wts = marginaleffects_wts_internal,
-            eps = marginaleffects_eps,
             tmp_idx = tmp_idx),
         by = idx]
         out[, tmp_idx := NULL]

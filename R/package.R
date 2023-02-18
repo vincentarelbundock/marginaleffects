@@ -40,7 +40,6 @@ utils::globalVariables(c(
 "group",
 "logLik",
 "m",
-"marginaleffects_eps",
 "marginaleffects_function",
 "marginaleffects_wts_internal",
 "marginalmean",
