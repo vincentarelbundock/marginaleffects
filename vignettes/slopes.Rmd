@@ -284,7 +284,7 @@ We can plot conditional marginal effects with the `plot_slopes` function (see se
 plot_slopes(mod, variables = "x", condition = "x")
 ```
 
-Again, the conclusion is the same. When $x<0$, an increase in $x$ is associated with an increase in $y$. When $x=0$, the marginal effect is equal to 0. When $x>0$, an increase in $x$ is associated with a decrease in $y$.
+Again, the conclusion is the same. When $x<0$, an increase in $x$ is associated with an decrease in $y$. When $x>1/4$, the marginal effect is positive, which suggests that an increase in $x$ is associated with an increase in $y$.
 
 # Slopes vs Predictions: A Visual Interpretation
 
