@@ -3,6 +3,8 @@ rm(list=ls(.GlobalEnv), envir = .GlobalEnv)
 
 EXPENSIVE <- FALSE
 
+options("tinyviztest_device" = "svglite")
+
 # libraries
 requiet <- function(package) {
     void <- capture.output(
