@@ -25,7 +25,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Get Script
-        run: curl -OLs https://raw.githubusercontent.com/vincentarelbundock/marginaleffects/main/sandbox/run.sh && chmod 0755 run.sh
+        run: curl -OLs https://eddelbuettel.github.io/r-ci/run.sh && chmod 0755 run.sh
 
       - name: Bootstrap
         run: ./run.sh bootstrap
@@ -33,17 +33,14 @@ jobs:
       - name: Dependencies
         run: ./run.sh install_all
 
-      - name: insight dev
-        run: Rscript -e "remotes::install_github('easystats/insight')"
-
-      - name: tinytest dev
+      - name: tinytest 1.4.0
         run: Rscript -e "remotes::install_github('markvanderloo/tinytest/pkg')"
 
-      - name: tinyviztest dev
-        run: Rscript -e "remotes::install_github('vincentarelbundock/tinyviztest')"
-
       - name: TMB source
-        run: Rscript -e "install.packages('TMB', type = 'source')"
+        run: ./run.sh install_source TMB
+
+      - name: glmmTMB source
+        run: ./run.sh install_source glmmTMB
 
       - name: Coverage
         run: ./run.sh coverage
