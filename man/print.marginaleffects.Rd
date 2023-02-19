@@ -6,7 +6,7 @@
 \usage{
 \method{print}{marginaleffects}(
   x,
-  digits = getOption("marginaleffects_print_digits", default = 2),
+  digits = getOption("marginaleffects_print_digits", default = 3),
   p_eps = getOption("marginaleffects_print_p_eps", default = 0.001),
   topn = getOption("marginaleffects_print_topn", default = 5),
   nrows = getOption("marginaleffects_print_nrows", default = 30),

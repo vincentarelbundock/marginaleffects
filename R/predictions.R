@@ -21,7 +21,9 @@
 #' * Predictions at the Mean
 #' * Predictions at User-Specified values (aka Predictions at Representative values).
 #'
-#' For `glm()` models with `type="response"`, `predictions()` first predicts on the link scale, and then backtransforms the estimates and confidence intervals. Otherwise, `predictions()` uses the Delta Method to compute standard errors and builds symmetric confidence intervals. These naive symmetric intervals may not always be appropriate. For instance, they may stretch beyond the bounds of a binary response variables.
+#' For `glm()` and `Gam()` models with `type=NULL` (the default), `predictions()` first predicts on the link scale, and then backtransforms the estimates and confidence intervals. This implies that the `estimate` produced by `avg_predictions()` will not be exactly equal to the average of the `estimate` column produced by `predictions()`. Users can circumvent this behavior and average predictions directly on the response scale by setting `type="response"` explicitly. 
+#' 
+#' For models other than `glm()` and `Gam()`, `predictions()` and `avg_predictions()` use the Delta Method to compute standard errors and builds symmetric confidence intervals. These naive symmetric intervals may not always be appropriate. For instance, they may stretch beyond the bounds of a binary response variables.
 #' @param model Model object
 #' @param variables Counterfactual variables.
 #' * Output:
@@ -59,6 +61,13 @@
 #' value. This is sometimes used to take the sum or mean of predicted
 #' probabilities across outcome or predictor
 #' levels. See examples section.
+#' @param type string indicates the type (scale) of the predictions used to
+#' compute contrasts or slopes. This can differ based on the model
+#' type, but will typically be a string such as: "response", "link", "probs",
+#' or "zero". When an unsupported string is entered, the model-specific list of
+#' acceptable values is returned in an error message. When `type` is `NULL`, the
+#' default value is used. This default is the first model-related row in
+#' the `marginaleffects:::type_dictionary` dataframe. See the details section for a note on backtransformation.
 #' @param transform_post (experimental) A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.
 #'
 #' @template deltamethod

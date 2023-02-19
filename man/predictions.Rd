@@ -110,7 +110,7 @@ type, but will typically be a string such as: "response", "link", "probs",
 or "zero". When an unsupported string is entered, the model-specific list of
 acceptable values is returned in an error message. When \code{type} is \code{NULL}, the
 default value is used. This default is the first model-related row in
-the \code{marginaleffects:::type_dictionary} dataframe.}
+the \code{marginaleffects:::type_dictionary} dataframe. See the details section for a note on backtransformation.}
 
 \item{by}{Aggregate unit-level estimates (aka, marginalize, average over). Valid inputs:
 \itemize{
@@ -208,7 +208,9 @@ The \code{newdata} argument, the \code{tidy()} function, and \code{datagrid()} f
 \item Predictions at User-Specified values (aka Predictions at Representative values).
 }
 
-For \code{glm()} models with \code{type="response"}, \code{predictions()} first predicts on the link scale, and then backtransforms the estimates and confidence intervals. Otherwise, \code{predictions()} uses the Delta Method to compute standard errors and builds symmetric confidence intervals. These naive symmetric intervals may not always be appropriate. For instance, they may stretch beyond the bounds of a binary response variables.
+For \code{glm()} and \code{Gam()} models with \code{type=NULL} (the default), \code{predictions()} first predicts on the link scale, and then backtransforms the estimates and confidence intervals. This implies that the \code{estimate} produced by \code{avg_predictions()} will not be exactly equal to the average of the \code{estimate} column produced by \code{predictions()}. Users can circumvent this behavior and average predictions directly on the response scale by setting \code{type="response"} explicitly.
+
+For models other than \code{glm()} and \code{Gam()}, \code{predictions()} and \code{avg_predictions()} use the Delta Method to compute standard errors and builds symmetric confidence intervals. These naive symmetric intervals may not always be appropriate. For instance, they may stretch beyond the bounds of a binary response variables.
 }
 \section{Functions}{
 \itemize{
