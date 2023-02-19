@@ -27,6 +27,7 @@ Other:
 * `avg_predictions(model, variables = "x")` computes average counterfactual predictions by subgroups of `x`
 * `hypotheses()` now works on lists and in calls to `lapply()`, `purrr::map()`, etc.
 * `datagrid()` and `plot_*()` functions are faster in datasets with many extraneous columns.
+* Do not backtransform GLM predictions if `type="response"` is specified explicitly.
 
 Bugfixes:
 

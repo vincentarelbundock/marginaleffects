@@ -172,14 +172,36 @@ An "Average Adjusted Prediction" is the outcome of a two step process:
 We can obtain AAPs by applying the `avg_*()` functions or `by` argument:
 
 ```{r}
-avg_predictions(mod)
+modlin <- lm(mpg ~ hp + factor(cyl), mtcars)
+avg_predictions(modlin)
 ```
 
 This is equivalent to:
 
 ```{r}
-pred <- predictions(mod)
+pred <- predictions(modlin)
 mean(pred$estimate)
+```
+
+Note that in GLM models with a non-linear link function, the predictions are first made on the link scale, averaged, and then back transformed. Thus, the average prediction may not be exactly identical to the average of predictions:
+
+```{r}
+mod <- glm(vs ~ hp + am, data = mtcars, family = binomial)
+
+avg_predictions(mod)$estimate
+
+# Step 1: predict on the link scale
+p <- predictions(mod, type = "link")$estimate
+# Step 2: average
+p <- mean(p)
+# Step 3: backtransform
+mod$family$linkinv(p)
+```
+
+Users who want the average of individual-level predictions on the response scale can specify the `type` argument explicitly:
+
+```{r}
+avg_predictions(mod, type = "response")
 ```
 
 # Average Adjusted Predictions by Group

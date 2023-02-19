@@ -234,19 +234,15 @@ predictions <- function(model,
     }
 
     # if type is NULL, we backtransform if relevant
-    flag <- isTRUE(class(model)[1] %in% c("glm", "Gam"))
-    if (flag && (is.null(type) || isTRUE(type == "response"))) {
+    if ((is.null(type)) && is.null(transform_post) && isTRUE(class(model)[1] %in% c("glm", "Gam"))) {
+        dict <- subset(type_dictionary, class == class(model)[1])$type
         type <- sanitize_type(model = model, type = type)
-        linv <- tryCatch(
-            insight::link_inverse(model),
-            error = function(e) NULL)
-        if (type == "response" &&
-            is.null(transform_post) &&
-            class(model)[1] %in% type_dictionary$class &&
-            isTRUE("link" %in% subset(type_dictionary, class == class(model)[1])$type) &&
-            is.function(linv)) {
+        linv <- tryCatch(insight::link_inverse(model), error = function(e) NULL)
+        if (isTRUE(type == "response") && isTRUE("link" %in% dict) && is.function(linv)) {
             type <- "link"
             transform_post <- linv
+        } else {
+            type <- sanitize_type(model = model, type = type)
         }
     } else {
         type <- sanitize_type(model = model, type = type)
