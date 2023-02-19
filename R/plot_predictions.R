@@ -19,6 +19,7 @@
 #'   - Function which returns a numeric vector or a set of unique categorical values 
 #'   - Shortcut strings for common reference values: "minmax", "quartile", "threenum"
 #' + 1: x-axis. 2: color. 3: facets.
+#' + Numeric variables in position 2 and 3 are summarized by Tukey's five numbers `?stats::fivenum`
 #' @param by Marginal predictions
 #' + Character vector (max length 3): Names of the categorical predictors to marginalize across.
 #' + 1: x-axis. 2: color. 3: facets.

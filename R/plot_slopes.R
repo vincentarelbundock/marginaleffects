@@ -13,10 +13,14 @@
 #' * https://vincentarelbundock.github.io/marginaleffects
 #' 
 #' @param variables Name of the variable whose marginal effect (slope) we want to plot on the y-axis.
-#' @param condition character vector or named list of length smaller than 3. Character vectors must be the names of the predictor variables to display. The names of the list must The first element is displayed on the x-axis. The second element determines the colors. The third element creates facets. Unspecified variables are held at their means or modes. Lists can include these types of values (see Examples section below):
-#' * Numeric vector
-#' * Function which returns a numeric vector or a set of unique categorical values 
-#' * Shortcut strings for common reference values: "minmax", "quartile", "threenum"
+#' @param condition Conditional slopes
+#' + Character vector (max length 3): Names of the predictors to display.
+#' + Named list (max length 3): List names correspond to predictors. List elements can be:
+#'   - Numeric vector
+#'   - Function which returns a numeric vector or a set of unique categorical values 
+#'   - Shortcut strings for common reference values: "minmax", "quartile", "threenum"
+#' + 1: x-axis. 2: color. 3: facets.
+#' + Numeric variables in position 2 and 3 are summarized by Tukey's five numbers `?stats::fivenum`.
 #' @param rug TRUE displays tick marks on the axes to mark the distribution of raw data.
 #' @param gray FALSE grayscale or color plot
 #' @param draw `TRUE` returns a `ggplot2` plot. `FALSE` returns a `data.frame` of the underlying data.
