@@ -1,4 +1,4 @@
-# marginaleffects 0.9.0.9000
+# marginaleffects 0.10.0
 
 New models supported:
 
@@ -10,14 +10,14 @@ Plot improvements:
 
 * New `by` argument to display marginal estimates by subgroup.
 * New `rug` argument to display tick marks in the margins.
-* New `points` argument to display a scatter plot.
-* New `gray` argument to plot in grayscale.
-* `effect` argument is renamed to `variables` in `plot_slopes()` and `plot_comparisons()`. This improves consistency with the analogous `slopes()` and `comparisons()` functions.
+* New `points` argument in `plot_predictions()` to display a scatter plot.
+* New `gray` argument to plot in grayscale using line types and shapes instead of color.
+* The `effect` argument is renamed to `variables` in `plot_slopes()` and `plot_comparisons()`. This improves consistency with the analogous `slopes()` and `comparisons()` functions.
 * The plotting vignette was re-written.
 
 Other:
 
-* Major performance improvements for many functions. Thanks to Etienne Bacher.
+* Performance improvements for many functions. Thanks to Etienne Bacher.
 * Support multiple imputation with `mice` `mira` objects. The multiple imputation vignette was rewritten.
 * The `variables_grid` argument in `marginal_means()` is renamed `newdata`. Backward compatibility is maintained.
 * `avg_*()` returns an informative error when `vcov` is "satterthwaite" or "kenward-roger"
