@@ -16,13 +16,13 @@
 #' @rdname predictions
 #' @details
 #' The `newdata` argument, the `tidy()` function, and `datagrid()` function can be used to control the kind of predictions to report:
-#' 
+#'
 #' * Average Predictions
 #' * Predictions at the Mean
 #' * Predictions at User-Specified values (aka Predictions at Representative values).
 #'
 #' For `glm()` and `Gam()` models with `type=NULL` (the default), `predictions()` first predicts on the link scale, and then backtransforms the estimates and confidence intervals. This implies that the `estimate` produced by `avg_predictions()` will not be exactly equal to the average of the `estimate` column produced by `predictions()`. Users can circumvent this behavior and average predictions directly on the response scale by setting `type="response"` explicitly. With `type="response"`, the intervals are symmetric and may have undesirable properties (e.g., stretching beyond the [0,1] bounds for a binary outcome regression).
-#' 
+#'
 #' @param model Model object
 #' @param variables Counterfactual variables.
 #' * Output:
@@ -54,7 +54,7 @@
 #' + [datagrid()] call to specify a custom grid of regressors. For example:
 #'   - `newdata = datagrid(cyl = c(4, 6))`: `cyl` variable equal to 4 and 6 and other regressors fixed at their means or modes.
 #'   - See the Examples section and the [datagrid()] documentation.
-#' @param byfun A function such as `mean()` or `sum()` used to aggregate 
+#' @param byfun A function such as `mean()` or `sum()` used to aggregate
 #' estimates within the subgroups defined by the `by` argument. `NULL` uses the
 #' `mean()` function. Must accept a numeric vector and return a single numeric
 #' value. This is sometimes used to take the sum or mean of predicted
@@ -83,7 +83,7 @@
 #' * `conf.high`: upper bound of the confidence interval (or equal-tailed interval for bayesian models)
 #'
 #' See `?print.marginaleffects` for printing options.
-#' 
+#'
 #' @examples
 #' # Adjusted Prediction for every row of the original dataset
 #' mod <- lm(mpg ~ hp + factor(cyl), data = mtcars)
@@ -95,13 +95,13 @@
 #'
 #' m <- lm(mpg ~ hp + drat + factor(cyl) + factor(am), data = mtcars)
 #' predictions(m, newdata = datagrid(FUN_factor = unique, FUN_numeric = median))
-#' 
+#'
 #' # Average Adjusted Predictions (AAP)
 #' library(dplyr)
 #' mod <- lm(mpg ~ hp * am * vs, mtcars)
 #'
 #' avg_predictions(mod)
-#' 
+#'
 #' predictions(mod, by = "am")
 #'
 #' # Conditional Adjusted Predictions
@@ -109,41 +109,41 @@
 #'
 #' # Counterfactual predictions with the `variables` argument
 #' # the `mtcars` dataset has 32 rows
-#' 
+#'
 #' mod <- lm(mpg ~ hp + am, data = mtcars)
 #' p <- predictions(mod)
 #' head(p)
 #' nrow(p)
-#' 
+#'
 #' # average counterfactual predictions
 #' avg_predictions(mod, variables = "am")
-#' 
+#'
 #' # counterfactual predictions obtained by replicating the entire for different
 #' # values of the predictors
 #' p <- predictions(mod, variables = list(hp = c(90, 110)))
 #' nrow(p)
-#' 
+#'
 #'
 #' # hypothesis test: is the prediction in the 1st row equal to the prediction in the 2nd row
 #' mod <- lm(mpg ~ wt + drat, data = mtcars)
-#' 
+#'
 #' predictions(
 #'     mod,
 #'     newdata = datagrid(wt = 2:3),
 #'     hypothesis = "b1 = b2")
-#' 
+#'
 #' # same hypothesis test using row indices
 #' predictions(
 #'     mod,
 #'     newdata = datagrid(wt = 2:3),
 #'     hypothesis = "b1 - b2 = 0")
-#' 
+#'
 #' # same hypothesis test using numeric vector of weights
 #' predictions(
 #'     mod,
 #'     newdata = datagrid(wt = 2:3),
 #'     hypothesis = c(1, -1))
-#' 
+#'
 #' # two custom contrasts using a matrix of weights
 #' lc <- matrix(c(
 #'     1, -1,
@@ -153,34 +153,34 @@
 #'     mod,
 #'     newdata = datagrid(wt = 2:3),
 #'     hypothesis = lc)
-#' 
-#' 
+#'
+#'
 #' # `by` argument
 #' mod <- lm(mpg ~ hp * am * vs, data = mtcars)
-#' predictions(mod, by = c("am", "vs")) 
-#' 
+#' predictions(mod, by = c("am", "vs"))
+#'
 #' library(nnet)
 #' nom <- multinom(factor(gear) ~ mpg + am * vs, data = mtcars, trace = FALSE)
-#' 
+#'
 #' # first 5 raw predictions
 #' predictions(nom, type = "probs") |> head()
-#' 
+#'
 #' # average predictions
 #' avg_predictions(nom, type = "probs", by = "group")
-#' 
+#'
 #' by <- data.frame(
 #'     group = c("3", "4", "5"),
 #'     by = c("3,4", "3,4", "5"))
-#' 
+#'
 #' predictions(nom, type = "probs", by = by)
-#' 
+#'
 #' # sum of predicted probabilities for combined response levels
 #' mod <- multinom(factor(cyl) ~ mpg + am, data = mtcars, trace = FALSE)
 #' by <- data.frame(
 #'     by = c("4,6", "4,6", "8"),
 #'     group = as.character(c(4, 6, 8)))
 #' predictions(mod, newdata = "mean", byfun = sum, by = by)
-#' 
+#'
 #' @inheritParams slopes
 #' @inheritParams comparisons
 #' @export
@@ -306,7 +306,7 @@ predictions <- function(model,
         }
         newdata <- do.call("datagrid", args)
         # the original rowids are no longer valid after averaging et al.
-        newdata[["rowid"]] <- NULL 
+        newdata[["rowid"]] <- NULL
     }
 
     character_levels <- attr(newdata, "newdata_character_levels")
@@ -483,7 +483,7 @@ predictions <- function(model,
         bycols <- by
     }
 
-    stubcols <- c( 
+    stubcols <- c(
         "rowid", "rowidcf", "type", "term", "group", "hypothesis",
         bycols,
         "estimate", "std.error", "statistic", "p.value", "conf.low",
@@ -593,7 +593,12 @@ get_predictions <- function(model,
     mergein <- setdiff(colnames(newdata), colnames(out))
     if ("rowid" %in% colnames(out) && "rowid" %in% colnames(newdata) && length(mergein) > 0) {
         idx <- c("rowid", mergein)
-        tmp <- data.table(newdata)[, ..idx]
+
+        if (!data.table::is.data.table(newdata)) {
+          tmp <- data.table::data.table(newdata)[, ..idx]
+        } else {
+          tmp <- newdata[, ..idx]
+        }
         # TODO: this breaks in mclogit. maybe there's a more robust merge
         # solution for weird grouped data. But it seems fine because
         # `predictions()` output does include the original predictors.
