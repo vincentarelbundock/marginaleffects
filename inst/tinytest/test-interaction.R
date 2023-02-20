@@ -1,5 +1,4 @@
 source("helpers.R")
-exit_if_not(EXPENSIVE)
 using("marginaleffects")
 exit_if_not(requiet("ggplot2"))
 
@@ -35,5 +34,37 @@ expect_inherits(dm, "hypotheses")
 expect_equivalent(nrow(dm), 1)
 
 
+
+## Issue #684
+# . use "~/penguins.dta", clear
+# . encode species, gen(speciesid)
+# . qui logit large_penguin c.bill_length_mm##c.flipper_length_mm i.speciesid
+# . margins, dydx(*)
+#
+# Average marginal effects                                   Number of obs = 342
+# Model VCE: OIM
+#
+# Expression: Pr(large_penguin), predict()
+# dy/dx wrt:  bill_length_mm flipper_length_mm 2.speciesid 3.speciesid
+#
+# -----------------------------------------------------------------------------------
+#                   |            Delta-method
+#                   |      dy/dx   std. err.      z    P>|z|     [95% conf. interval]
+# ------------------+----------------------------------------------------------------
+#    bill_length_mm |   .0278588   .0059463     4.69   0.000     .0162043    .0395134
+# flipper_length_mm |   .0104927   .0023708     4.43   0.000      .005846    .0151394
+#                   |
+#         speciesid |
+#        Chinstrap  |  -.4127852   .0560029    -7.37   0.000    -.5225488   -.3030216
+#           Gentoo  |   .0609265   .1073649     0.57   0.570    -.1495048    .2713578
+# -----------------------------------------------------------------------------------
+# Note: dy/dx for factor levels is the discrete change from the base level.
+dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv")
+dat$large_penguin <- ifelse(dat$body_mass_g > median(dat$body_mass_g, na.rm = TRUE), 1, 0)
+mod <- glm(large_penguin ~ bill_length_mm * flipper_length_mm + species,
+           data = dat, family = binomial)
+mfx <- avg_slopes(mod)
+expect_equivalent(mfx$estimate, c(.0278588, .0104927, -.4127852, .0609265), tol = 1e-4)
+expect_equivalent(mfx$std.error, c(.0059463, .0023708, .0560029, .1073649), tol = 1e-3)
 
 rm(list = ls())
