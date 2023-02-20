@@ -1,5 +1,9 @@
 # marginaleffects 0.10.0
 
+Performance:
+
+* 2-4x faster execution for many calls. Thanks to Etienne Bacher.
+
 New models supported:
 
 * `MCMCglmm::MCMCglmm`
@@ -17,7 +21,6 @@ Plot improvements:
 
 Other:
 
-* Performance improvements for many functions. Thanks to Etienne Bacher.
 * Support multiple imputation with `mice` `mira` objects. The multiple imputation vignette was rewritten.
 * The `variables_grid` argument in `marginal_means()` is renamed `newdata`. Backward compatibility is maintained.
 * `avg_*()` returns an informative error when `vcov` is "satterthwaite" or "kenward-roger"
