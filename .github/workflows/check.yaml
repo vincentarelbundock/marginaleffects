@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         include:
-          # - {os: macOS-latest,   r: 'release'}
+          #- {os: macOS-latest,   r: 'release'}
           # - {os: windows-latest, r: 'release'}
           - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release', depends_only: TRUE}
           - {os: ubuntu-latest,   r: 'release'}
@@ -57,3 +57,7 @@ jobs:
 
       - name: Test
         run: ./run.sh run_tests
+          
+      - name: Coverage
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: ./run.sh coverage
