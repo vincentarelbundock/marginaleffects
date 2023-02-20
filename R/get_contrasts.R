@@ -217,7 +217,7 @@ get_contrasts <- function(model,
         draws_hi <- attr(pred_hi, "posterior_draws")
         draws_or <- attr(pred_or, "posterior_draws")
     }
-    
+
     data.table::setDT(pred_hi)
 
     out[, predicted_lo := pred_lo[["estimate"]]]
@@ -278,7 +278,7 @@ get_contrasts <- function(model,
             "y" = y,
             "eps" = eps,
             "w" = wts)
-        
+
         # sometimes x is exactly the same length, but not always
         if (length(elasticities[[tn]]) > nrow(out)) {
             args[["x"]] <- elasticities[[tn]][tmp_idx]
@@ -393,7 +393,7 @@ get_contrasts <- function(model,
     # if `by` is a column name, then we have merged-in a data frame earlier
     if (nrow(out) > 1 && !(is.null(by) || isFALSE(by)) &&
         any(grepl("^contrast[_]?", colnames(out))) &&
-        !any(grepl("^mean\\(", out$contrast))) {
+        !any(grepl("^mean\\(", unique(out$contrast)))) {
         out <- get_by(
             out,
             draws = draws,

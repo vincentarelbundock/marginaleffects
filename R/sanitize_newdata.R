@@ -83,12 +83,12 @@ sanitize_newdata <- function(model, newdata, by, modeldata) {
     }
 
     # column subsets later and predict
-    data.table::setDF(modeldata)
+    data.table::setDT(modeldata)
 
     # column attributes
     mc <- Filter(function(x) is.matrix(modeldata[[x]]), colnames(modeldata))
     cl <- Filter(function(x) is.character(modeldata[[x]]), colnames(modeldata))
-    cl <- lapply(modeldata[, cl], unique)
+    cl <- lapply(modeldata[, ..cl], unique)
     vc <- attributes(modeldata)$marginaleffects_variable_class
     column_attributes <- list(
         "matrix_columns" = mc,
