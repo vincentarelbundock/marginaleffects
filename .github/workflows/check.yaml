@@ -37,14 +37,11 @@ jobs:
       - name: Bootstrap
         run: ./run.sh bootstrap
 
+      - name: remotes
+        run: Rscript -e "install.packages('remotes')"
+
       - name: Dependencies
         run: ./run.sh install_all
-
-      - name: tinytest 1.4.0
-        run: Rscript -e "remotes::install_github('markvanderloo/tinytest/pkg')"
-
-      - name: tinyviztest
-        run: Rscript -e "remotes::install_github('vincentarelbundock/tinyviztest')"
 
       - name: TMB
         run: ./run.sh install_source TMB
