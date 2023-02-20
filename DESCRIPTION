@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Predictions, Comparisons, Slopes, Marginal Means, and Hypothesis Tests
-Version: 0.9.0.9051
+Version: 0.10.0
 Authors@R: 
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -30,7 +30,6 @@ URL: https://vincentarelbundock.github.io/marginaleffects/
 BugReports: https://github.com/vincentarelbundock/marginaleffects/issues
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
-VignetteBuilder: knitr
 Depends: 
     R (>= 3.5.0)
 Imports: 

@@ -6,21 +6,12 @@ on:
   push:
   pull_request:
 
-permissions: read-all
-
-env:
-  _R_CHECK_FORCE_SUGGESTS_: "false"
-  _R_CHECK_TESTS_NLINES_: 0
-  R_NOT_CRAN: true
-  R_GH: true
-  GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-
 jobs:
   ci:
     strategy:
       matrix:
         include:
-          - {os: macOS-latest,   r: 'release'}
+          #- {os: macOS-latest,   r: 'release'}
           # - {os: windows-latest, r: 'release'}
           - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release', depends_only: TRUE}
           - {os: ubuntu-latest,   r: 'release'}
@@ -29,6 +20,13 @@ jobs:
           - {os: ubuntu-latest,   r: 'oldrel-3'}
 
     runs-on: ${{ matrix.os }}
+
+    env:
+      _R_CHECK_FORCE_SUGGESTS_: "false"
+      _R_CHECK_TESTS_NLINES_: 0
+      R_NOT_CRAN: true
+      R_GH: true
+      GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
 
     steps:
       - uses: actions/checkout@v3
@@ -39,13 +37,19 @@ jobs:
       - name: Bootstrap
         run: ./run.sh bootstrap
 
+      - name: remotes
+        run: ./run.sh install_r "remotes"
+
+      - name: bspm
+        run: sudo Rscript --vanilla -e 'install.packages("bspm", repos="https://cran.r-project.org")' 
+
       - name: Dependencies
         run: ./run.sh install_all
 
-      - name: tinytest 1.4.0
-        run: Rscript -e "remotes::install_github('markvanderloo/tinytest/pkg')"
+      - name: tinytest (exit_if_not)
+        run: sudo Rscript -e "remotes::install_github('markvanderloo/tinytest/pkg')"
 
-      - name: TMB source
+      - name: TMB
         run: ./run.sh install_source TMB
 
       - name: glmmTMB source
@@ -53,3 +57,7 @@ jobs:
 
       - name: Test
         run: ./run.sh run_tests
+          
+      - name: Coverage
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: ./run.sh coverage
