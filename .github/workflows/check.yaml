@@ -38,7 +38,7 @@ jobs:
         run: ./run.sh bootstrap
 
       - name: remotes
-        run: Rscript -e "install.packages('remotes')"
+        run: ./run.sh install_r "remotes"
 
       - name: Dependencies
         run: ./run.sh install_all
