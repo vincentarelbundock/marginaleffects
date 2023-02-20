@@ -10,3 +10,28 @@ get_vcov.orm <- function(model,
     out <- stats::vcov(model, intercepts = "all")
     return(out)
 }
+
+
+#' @rdname get_predict
+#' @export
+get_predict.rms <- function(model, newdata = insight::get_data(model), type = NULL, ...) {
+    if (is.null(type)) {
+        type <- sanitize_type(model, type)
+    }
+    # {rms} predict methods break on additional arguments
+    get_predict.default(model, newdata = newdata, type = type)
+}
+
+#' @rdname get_predict
+#' @export
+get_predict.orm <- get_predict.rms
+
+
+#' @rdname get_predict
+#' @export
+get_predict.lrm <- get_predict.rms
+
+
+#' @rdname get_predict
+#' @export
+get_predict.ols <- get_predict.rms

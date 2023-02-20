@@ -360,7 +360,7 @@ predictions(
 
 # `by` argument
 mod <- lm(mpg ~ hp * am * vs, data = mtcars)
-predictions(mod, by = c("am", "vs")) 
+predictions(mod, by = c("am", "vs"))
 
 library(nnet)
 nom <- multinom(factor(gear) ~ mpg + am * vs, data = mtcars, trace = FALSE)

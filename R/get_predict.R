@@ -22,6 +22,10 @@ get_predict.default <- function(model,
 
     dots <- list(...)
 
+    if (is.null(type)) {
+        type <- sanitize_type(model = model, type = type)
+    }
+
     # some predict methods raise warnings on unused arguments
     unused <- c("normalize_dydx", "eps", "numDeriv_method", "internal_call", "draw", "modeldata")
     dots <- dots[setdiff(names(dots), unused)]

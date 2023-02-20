@@ -7,6 +7,10 @@ get_predict.fixest <- function(model,
 
     insight::check_if_installed("fixest")
 
+    if (is.null(type)) {
+        type <- sanitize_type(model = model, type = type)
+    }
+
     dots <- list(...)
 
     # some predict methods raise warnings on unused arguments
@@ -20,8 +24,7 @@ get_predict.fixest <- function(model,
         stats::predict(
             object = model,
             newdata = newdata,
-            type = type,
-            ...),
+            type = type),
         silent = TRUE)
 
     if ("rowid" %in% colnames(newdata)) {
