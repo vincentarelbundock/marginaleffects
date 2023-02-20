@@ -17,6 +17,7 @@ Plotting functions improvements:
 
 Other:
 
+* Use the `numDeriv` package for numeric differentiation in the calculation of delta method standard error. This global option is passed to `numDeriv::jacobian`:  `options(marginaleffects_numDeriv=
 * `inferences()` supports multiple imputation.
 * Major performance improvements for many functions. Thanks to Etienne Bacher.
 * The `variables_grid` argument in `marginal_means()` is renamed to `newdata`. Backward compatibility is maintained.
@@ -31,7 +32,9 @@ Other:
 
 Bugfixes:
 
-* `brms` models with multivariate outcome collapsed categories in `comparisons()`. Issue #639
+* Standard errors could be inaccurate in models with non-linear components (and interactions) when some of the coefficients were very small. This was related to the step size used for numerical differentiation for the delta method. Issue 684.
+* `avg_predictions(by =)` did not work when the dataset included a column named `term`. Issue 683.
+* `brms` models with multivariate outcome collapsed categories in `comparisons()`. Issue 639.
 
 # marginaleffects 0.9.0
 
