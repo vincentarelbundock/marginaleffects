@@ -26,7 +26,7 @@ jobs:
       _R_CHECK_TESTS_NLINES_: 0
       R_NOT_CRAN: true
       R_GH: true
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
 
     steps:
       - uses: actions/checkout@v3
@@ -46,6 +46,7 @@ jobs:
       - name: tinyviztest
         run: Rscript -e "remotes::install_github('vincentarelbundock/tinyviztest')"
 
+      - name: TMB
         run: ./run.sh install_source TMB
 
       - name: glmmTMB source
