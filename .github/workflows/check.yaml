@@ -43,7 +43,9 @@ jobs:
       - name: tinytest 1.4.0
         run: Rscript -e "remotes::install_github('markvanderloo/tinytest/pkg')"
 
-      - name: TMB source
+      - name: tinyviztest
+        run: Rscript -e "remotes::install_github('vincentarelbundock/tinyviztest')"
+
         run: ./run.sh install_source TMB
 
       - name: glmmTMB source
