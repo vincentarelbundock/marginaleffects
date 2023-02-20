@@ -39,10 +39,10 @@ Other:
 
 Bugfixes:
 
-* Standard errors could be inaccurate in models with non-linear components (and interactions) when some of the coefficients were very small. This was related to the step size used for numerical differentiation for the delta method. Issue 684.
-* `avg_predictions(by =)` did not work when the dataset included a column named `term`. Issue 683.
-* `brms` models with multivariate outcome collapsed categories in `comparisons()`. Issue 639.
-* `hypotheses()` now works on lists and in calls to `lapply()`, `purrr::map()`, etc. Issue 660.
+* Standard errors could be inaccurate in models with non-linear components (and interactions) when some of the coefficients were very small. This was related to the step size used for numerical differentiation for the delta method. Issue #684.
+* `avg_predictions(by =)` did not work when the dataset included a column named `term`. Issue #683.
+* `brms` models with multivariate outcome collapsed categories in `comparisons()`. Issue #639.
+* `hypotheses()` now works on lists and in calls to `lapply()`, `purrr::map()`, etc. Issue #660.
 
 # marginaleffects 0.9.0
 
