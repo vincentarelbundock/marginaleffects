@@ -40,6 +40,9 @@ jobs:
       - name: remotes
         run: ./run.sh install_r "remotes"
 
+      - name: bspm
+        run: sudo Rscript --vanilla -e 'install.packages("bspm", repos="https://cran.r-project.org")' 
+
       - name: Dependencies
         run: ./run.sh install_all
 
