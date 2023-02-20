@@ -6,21 +6,12 @@ on:
   push:
   pull_request:
 
-permissions: read-all
-
-env:
-  _R_CHECK_FORCE_SUGGESTS_: "false"
-  _R_CHECK_TESTS_NLINES_: 0
-  R_NOT_CRAN: true
-  R_GH: true
-  GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-
 jobs:
   ci:
     strategy:
       matrix:
         include:
-          - {os: macOS-latest,   r: 'release'}
+          # - {os: macOS-latest,   r: 'release'}
           # - {os: windows-latest, r: 'release'}
           - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release', depends_only: TRUE}
           - {os: ubuntu-latest,   r: 'release'}
@@ -29,6 +20,13 @@ jobs:
           - {os: ubuntu-latest,   r: 'oldrel-3'}
 
     runs-on: ${{ matrix.os }}
+
+    env:
+      _R_CHECK_FORCE_SUGGESTS_: "false"
+      _R_CHECK_TESTS_NLINES_: 0
+      R_NOT_CRAN: true
+      R_GH: true
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       - uses: actions/checkout@v3

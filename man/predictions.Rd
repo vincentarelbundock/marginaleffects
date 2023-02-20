@@ -210,7 +210,7 @@ The \code{newdata} argument, the \code{tidy()} function, and \code{datagrid()} f
 \item Predictions at User-Specified values (aka Predictions at Representative values).
 }
 
-For \code{glm()} and \code{Gam()} models with \code{type=NULL} (the default), \code{predictions()} first predicts on the link scale, and then backtransforms the estimates and confidence intervals. This implies that the \code{estimate} produced by \code{avg_predictions()} will not be exactly equal to the average of the \code{estimate} column produced by \code{predictions()}. Users can circumvent this behavior and average predictions directly on the response scale by setting \code{type="response"} explicitly. With \code{type="response"}, the intervals are symmetric and may have undesirable properties (e.g., stretching beyond the \link{0,1} bounds for a binary outcome regression).
+For \code{glm()} or \code{gam::gam()} models with \code{type=NULL} (the default), \code{predictions()} first predicts on the link scale, and then backtransforms the estimates and confidence intervals. This implies that the \code{estimate} produced by \code{avg_predictions()} will not be exactly equal to the average of the \code{estimate} column produced by \code{predictions()}. Users can circumvent this behavior and average predictions directly on the response scale by setting \code{type="response"} explicitly. With \code{type="response"}, the intervals are symmetric and may have undesirable properties (e.g., stretching beyond the \verb{[0,1]} bounds for a binary outcome regression).
 }
 \section{Functions}{
 \itemize{
