@@ -6,35 +6,43 @@ New models supported:
 * `Rchoice::hetprob`
 * `Rchoice::ivpml`
 
-Plotting functions improvements:
+Plot improvements:
 
 * New `by` argument to display marginal estimates by subgroup.
 * New `rug` argument to display tick marks in the margins.
 * New `points` argument to display a scatter plot.
 * New `gray` argument to plot in grayscale.
 * `effect` argument is renamed to `variables` in `plot_slopes()` and `plot_comparisons()`. This improves consistency with the analogous `slopes()` and `comparisons()` functions.
-* The plotting vignette was completely re-written.
+* The plotting vignette was re-written.
 
 Other:
 
-* Use the `numDeriv` package for numeric differentiation in the calculation of delta method standard error. This global option is passed to `numDeriv::jacobian`:  `options(marginaleffects_numDeriv=
-* `inferences()` supports multiple imputation.
 * Major performance improvements for many functions. Thanks to Etienne Bacher.
-* The `variables_grid` argument in `marginal_means()` is renamed to `newdata`. Backward compatibility is maintained.
+* Support multiple imputation with `mice` `mira` objects. The multiple imputation vignette was rewritten.
+* The `variables_grid` argument in `marginal_means()` is renamed `newdata`. Backward compatibility is maintained.
 * `avg_*()` returns an informative error when `vcov` is "satterthwaite" or "kenward-roger"
 * "satterthwaite" and "kenward-roger" are now supported when `newdata` is not `NULL`
-* `print.marginaleffects` now prints all columns supplied to `newdata`
 * Informative error when `hypothesis` includes a `b#` larger than the available number of estimates.
 * `avg_predictions(model, variables = "x")` computes average counterfactual predictions by subgroups of `x`
-* `hypotheses()` now works on lists and in calls to `lapply()`, `purrr::map()`, etc.
 * `datagrid()` and `plot_*()` functions are faster in datasets with many extraneous columns.
-* Do not backtransform GLM predictions if `type="response"` is specified explicitly.
+* In `predictions(type = NULL)` with `glm()` and `Gam()` we first make predictions on the link scale and then backtransform them. Setting `type="response"` explicitly makes predictions directly on the response scale without backtransformation.
+* Standard errors now supported for more `glmmTMB` models.
+* Use the `numDeriv` package for numeric differentiation in the calculation of delta method standard error. A global option can now be passed to `numDeriv::jacobian`:
+  - `options(marginaleffects_numDeriv = list(method = "simple", method.args = list(eps = 1e-6)))`
+  - `options(marginaleffects_numDeriv = list(method = "Richardson", method.args = list(eps = 1e-6)))`
+  - `options(marginaleffects_numDeriv = NULL)`
+* Print:
+  - Print fewer significant digits.
+  - `print.marginaleffects` now prints all columns supplied to `newdata`
+  - Less redundant labels when using `hypothesis`
+* Many improvements to documentation.
 
 Bugfixes:
 
 * Standard errors could be inaccurate in models with non-linear components (and interactions) when some of the coefficients were very small. This was related to the step size used for numerical differentiation for the delta method. Issue 684.
 * `avg_predictions(by =)` did not work when the dataset included a column named `term`. Issue 683.
 * `brms` models with multivariate outcome collapsed categories in `comparisons()`. Issue 639.
+* `hypotheses()` now works on lists and in calls to `lapply()`, `purrr::map()`, etc. Issue 660.
 
 # marginaleffects 0.9.0
 
