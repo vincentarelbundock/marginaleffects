@@ -21,9 +21,8 @@
 #' * Predictions at the Mean
 #' * Predictions at User-Specified values (aka Predictions at Representative values).
 #'
-#' For `glm()` and `Gam()` models with `type=NULL` (the default), `predictions()` first predicts on the link scale, and then backtransforms the estimates and confidence intervals. This implies that the `estimate` produced by `avg_predictions()` will not be exactly equal to the average of the `estimate` column produced by `predictions()`. Users can circumvent this behavior and average predictions directly on the response scale by setting `type="response"` explicitly. 
+#' For `glm()` and `Gam()` models with `type=NULL` (the default), `predictions()` first predicts on the link scale, and then backtransforms the estimates and confidence intervals. This implies that the `estimate` produced by `avg_predictions()` will not be exactly equal to the average of the `estimate` column produced by `predictions()`. Users can circumvent this behavior and average predictions directly on the response scale by setting `type="response"` explicitly. With `type="response"`, the intervals are symmetric and may have undesirable properties (e.g., stretching beyond the [0,1] bounds for a binary outcome regression).
 #' 
-#' For models other than `glm()` and `Gam()`, `predictions()` and `avg_predictions()` use the Delta Method to compute standard errors and builds symmetric confidence intervals. These naive symmetric intervals may not always be appropriate. For instance, they may stretch beyond the bounds of a binary response variables.
 #' @param model Model object
 #' @param variables Counterfactual variables.
 #' * Output:
@@ -68,7 +67,7 @@
 #' acceptable values is returned in an error message. When `type` is `NULL`, the
 #' default value is used. This default is the first model-related row in
 #' the `marginaleffects:::type_dictionary` dataframe. See the details section for a note on backtransformation.
-#' @param transform_post (experimental) A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.
+#' @param transform_post A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.
 #'
 #' @template deltamethod
 #' @template model_specific_arguments
@@ -82,6 +81,9 @@
 #' * `std.error`: standard errors computed using the delta method.
 #' * `conf.low`: lower bound of the confidence interval (or equal-tailed interval for bayesian models)
 #' * `conf.high`: upper bound of the confidence interval (or equal-tailed interval for bayesian models)
+#'
+#' See `?print.marginaleffects` for printing options.
+#' 
 #' @examples
 #' # Adjusted Prediction for every row of the original dataset
 #' mod <- lm(mpg ~ hp + factor(cyl), data = mtcars)

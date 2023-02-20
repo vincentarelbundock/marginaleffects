@@ -31,8 +31,8 @@ plot_cme(
 \item Function which returns a numeric vector or a set of unique categorical values
 \item Shortcut strings for common reference values: "minmax", "quartile", "threenum"
 }
-\item 1: x-axis. 2: color. 3: facets.
-\item Numeric variables in position 2 and 3 are summarized by Tukey's five numbers \code{?stats::fivenum}
+\item 1: x-axis. 2: color/shape. 3: facets.
+\item Numeric variables in positions 2 and 3 are summarized by Tukey's five numbers \code{?stats::fivenum}
 }}
 
 \item{by}{Marginal predictions

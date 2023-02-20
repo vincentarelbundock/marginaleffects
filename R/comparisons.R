@@ -78,6 +78,16 @@
 #' @template transform_pre_functions
 #' @template bayesian
 #'
+#' @return A `data.frame` with one row per observation (per term/group) and several columns:
+#' * `rowid`: row number of the `newdata` data frame
+#' * `type`: prediction type, as defined by the `type` argument
+#' * `group`: (optional) value of the grouped outcome (e.g., categorical outcome models)
+#' * `term`: the variable whose marginal effect is computed
+#' * `dydx`: slope of the outcome with respect to the term, for a given combination of predictor values
+#' * `std.error`: standard errors computed by via the delta method.
+#'
+#' See `?print.marginaleffects` for printing options.
+#'
 #' @examples
 #'
 #' library(marginaleffects)

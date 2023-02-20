@@ -1,7 +1,7 @@
 #' Plot Conditional or Marginal Comparisons
 #'
 #' @description
-#' Plot comparisons on the y-axis against values of one or more predictors (x-axis, colors, line types, and facets).
+#' Plot comparisons on the y-axis against values of one or more predictors (x-axis, colors/shapes, and facets).
 #'
 #' The `by` argument is used to plot marginal comparisons, that is, comparisons made on the original data, but averaged by subgroups. This is analogous to using the `by` argument in the `comparisons()` function.
 #'

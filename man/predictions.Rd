@@ -136,7 +136,7 @@ contrasts or slopes. These weights only affect the averaging in
 \item numeric: vector of length equal to the number of rows in the original data or in \code{newdata} (if supplied).
 }}
 
-\item{transform_post}{(experimental) A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.}
+\item{transform_post}{A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.}
 
 \item{hypothesis}{specify a hypothesis test or custom contrast using a numeric value, vector, or matrix, a string, or a string formula.
 \itemize{
@@ -184,6 +184,8 @@ A \code{data.frame} with one row per observation and several columns:
 \item \code{conf.low}: lower bound of the confidence interval (or equal-tailed interval for bayesian models)
 \item \code{conf.high}: upper bound of the confidence interval (or equal-tailed interval for bayesian models)
 }
+
+See \code{?print.marginaleffects} for printing options.
 }
 \description{
 Outcome predicted by a fitted model on a specified scale for a given combination of values of the predictor variables, such as their observed values, their means, or factor levels (a.k.a. "reference grid").
@@ -208,23 +210,32 @@ The \code{newdata} argument, the \code{tidy()} function, and \code{datagrid()} f
 \item Predictions at User-Specified values (aka Predictions at Representative values).
 }
 
-For \code{glm()} and \code{Gam()} models with \code{type=NULL} (the default), \code{predictions()} first predicts on the link scale, and then backtransforms the estimates and confidence intervals. This implies that the \code{estimate} produced by \code{avg_predictions()} will not be exactly equal to the average of the \code{estimate} column produced by \code{predictions()}. Users can circumvent this behavior and average predictions directly on the response scale by setting \code{type="response"} explicitly.
-
-For models other than \code{glm()} and \code{Gam()}, \code{predictions()} and \code{avg_predictions()} use the Delta Method to compute standard errors and builds symmetric confidence intervals. These naive symmetric intervals may not always be appropriate. For instance, they may stretch beyond the bounds of a binary response variables.
+For \code{glm()} and \code{Gam()} models with \code{type=NULL} (the default), \code{predictions()} first predicts on the link scale, and then backtransforms the estimates and confidence intervals. This implies that the \code{estimate} produced by \code{avg_predictions()} will not be exactly equal to the average of the \code{estimate} column produced by \code{predictions()}. Users can circumvent this behavior and average predictions directly on the response scale by setting \code{type="response"} explicitly. With \code{type="response"}, the intervals are symmetric and may have undesirable properties (e.g., stretching beyond the \link{0,1} bounds for a binary outcome regression).
 }
 \section{Functions}{
 \itemize{
 \item \code{avg_predictions()}: Average predictions
 
 }}
-\section{Delta method standard errors}{
+\section{Standard errors using the delta method}{
 
 
-Standard errors are obtained using the Delta method and finite differences. In some models, the estimated standard errors can be can be quite sensitive to  the numeric differentiation strategy (e.g., step size).
+Standard errors for all quantities estimated by \code{marginaleffects} can be obtained via the delta method. This requires differentiating a function with respect to the coefficients in the model using a finite difference approach. In some models, the delta method standard errors can be sensitive to various aspects of the numeric differentiation strategy, including the step size. By default, the step size is set to \code{1e-8}, or to \code{1e-4} times the smallest absolute model coefficient, whichever is largest.
 
-See the "Standard Errors and Confidence Intervals" vignette on the \code{marginaleffects} website to learn how standard errors are computed, and how the \code{numDeriv} package can help you explore the effects of alternative differentiation strategies:
+\code{marginaleffects} can delegate numeric differentiation to the \code{numDeriv} package, which allows more flexibility. To do this, users can pass arguments to the \code{numDeriv::jacobian} function through a global option. For example:
+\itemize{
+\item \code{options(marginaleffects_numDeriv = list(method = "simple", method.args = list(eps = 1e-6)))}
+\item \code{options(marginaleffects_numDeriv = list(method = "Richardson", method.args = list(eps = 1e-5)))}
+\item \code{options(marginaleffects_numDeriv = NULL)}
+}
+
+See the "Standard Errors and Confidence Intervals" vignette on the \code{marginaleffects} website for more details on the computation of standard errors:
 
 https://vincentarelbundock.github.io/marginaleffects/articles/uncertainty.html
+
+Note that the \code{inferences()} function can be used to compute uncertainty estimates using a bootstrap or simulation-based inference. See the vignette:
+
+https://vincentarelbundock.github.io/marginaleffects/articles/bootstrap.html
 }
 
 \section{Model-Specific Arguments}{
@@ -244,7 +255,7 @@ marginal effects, predictions, marginal means, and contrasts.\tabular{llll}{
    \code{mgcv} \tab \code{bam} \tab \code{exclude} \tab \link[mgcv:predict.bam]{mgcv::predict.bam} \cr
    \code{robustlmm} \tab \code{rlmerMod} \tab \code{re.form} \tab \link[robustlmm:rlmerMod-class]{robustlmm::predict.rlmerMod} \cr
     \tab  \tab \code{allow.new.levels} \tab \link[robustlmm:rlmerMod-class]{robustlmm::predict.rlmerMod} \cr
-   \code{MCMCglmm} \tab \code{MCMCglmm} \tab \code{ndraws  } \tab  \cr
+   \code{MCMCglmm} \tab \code{MCMCglmm} \tab \code{ndraws} \tab  \cr
 }
 }
 

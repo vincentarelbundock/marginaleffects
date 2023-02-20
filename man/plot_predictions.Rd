@@ -31,8 +31,8 @@ plot_predictions(
 \item Function which returns a numeric vector or a set of unique categorical values
 \item Shortcut strings for common reference values: "minmax", "quartile", "threenum"
 }
-\item 1: x-axis. 2: color. 3: facets.
-\item Numeric variables in position 2 and 3 are summarized by Tukey's five numbers \code{?stats::fivenum}
+\item 1: x-axis. 2: color/shape. 3: facets.
+\item Numeric variables in positions 2 and 3 are summarized by Tukey's five numbers \code{?stats::fivenum}
 }}
 
 \item{by}{Marginal predictions
@@ -67,7 +67,7 @@ the \code{marginaleffects:::type_dictionary} dataframe.}
 
 \item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
 
-\item{transform_post}{(experimental) A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.}
+\item{transform_post}{A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.}
 
 \item{points}{Number between 0 and 1 which controls the transparency of raw data points. 0 (default) does not display any points.}
 
@@ -90,7 +90,7 @@ arguments.}
 A \code{ggplot2} object or data frame (if \code{draw=FALSE})
 }
 \description{
-Plot predictions on the y-axis against values of one or more predictors (x-axis, colors, line types, and facets).
+Plot predictions on the y-axis against values of one or more predictors (x-axis, colors/shapes, and facets).
 
 The \code{by} argument is used to plot marginal predictions, that is, predictions made on the original data, but averaged by subgroups. This is analogous to using the \code{by} argument in the \code{predictions()} function.
 

@@ -1,7 +1,7 @@
 #' Plot Conditional or Marginal Slopes
 #'
 #' @description
-#' Plot slopes on the y-axis against values of one or more predictors (x-axis, colors, line types, and facets).
+#' Plot slopes on the y-axis against values of one or more predictors (x-axis, colors/shapes, and facets).
 #'
 #' The `by` argument is used to plot marginal slopes, that is, slopes made on the original data, but averaged by subgroups. This is analogous to using the `by` argument in the `slopes()` function.
 #'
@@ -19,8 +19,8 @@
 #'   - Numeric vector
 #'   - Function which returns a numeric vector or a set of unique categorical values 
 #'   - Shortcut strings for common reference values: "minmax", "quartile", "threenum"
-#' + 1: x-axis. 2: color. 3: facets.
-#' + Numeric variables in position 2 and 3 are summarized by Tukey's five numbers `?stats::fivenum`.
+#' + 1: x-axis. 2: color/shape. 3: facets.
+#' + Numeric variables in positions 2 and 3 are summarized by Tukey's five numbers `?stats::fivenum`.
 #' @param rug TRUE displays tick marks on the axes to mark the distribution of raw data.
 #' @param gray FALSE grayscale or color plot
 #' @param draw `TRUE` returns a `ggplot2` plot. `FALSE` returns a `data.frame` of the underlying data.

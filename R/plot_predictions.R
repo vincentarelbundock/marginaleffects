@@ -1,7 +1,7 @@
 #' Plot Conditional or Marginal Predictions
 #'
 #' @description
-#' Plot predictions on the y-axis against values of one or more predictors (x-axis, colors, line types, and facets).
+#' Plot predictions on the y-axis against values of one or more predictors (x-axis, colors/shapes, and facets).
 #'
 #' The `by` argument is used to plot marginal predictions, that is, predictions made on the original data, but averaged by subgroups. This is analogous to using the `by` argument in the `predictions()` function.
 #'
@@ -18,8 +18,8 @@
 #'   - Numeric vector
 #'   - Function which returns a numeric vector or a set of unique categorical values 
 #'   - Shortcut strings for common reference values: "minmax", "quartile", "threenum"
-#' + 1: x-axis. 2: color. 3: facets.
-#' + Numeric variables in position 2 and 3 are summarized by Tukey's five numbers `?stats::fivenum`
+#' + 1: x-axis. 2: color/shape. 3: facets.
+#' + Numeric variables in positions 2 and 3 are summarized by Tukey's five numbers `?stats::fivenum`
 #' @param by Marginal predictions
 #' + Character vector (max length 3): Names of the categorical predictors to marginalize across.
 #' + 1: x-axis. 2: color. 3: facets.

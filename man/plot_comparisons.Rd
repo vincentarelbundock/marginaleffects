@@ -34,8 +34,8 @@ plot_comparisons(
 \item Function which returns a numeric vector or a set of unique categorical values
 \item Shortcut strings for common reference values: "minmax", "quartile", "threenum"
 }
-\item 1: x-axis. 2: color. 3: facets.
-\item Numeric variables in position 2 and 3 are summarized by Tukey's five numbers \code{?stats::fivenum}.
+\item 1: x-axis. 2: color/shape. 3: facets.
+\item Numeric variables in positions 2 and 3 are summarized by Tukey's five numbers \code{?stats::fivenum}.
 }}
 
 \item{by}{Aggregate unit-level estimates (aka, marginalize, average over). Valid inputs:
@@ -107,7 +107,7 @@ arguments.}
 A \code{ggplot2} object
 }
 \description{
-Plot comparisons on the y-axis against values of one or more predictors (x-axis, colors, line types, and facets).
+Plot comparisons on the y-axis against values of one or more predictors (x-axis, colors/shapes, and facets).
 
 The \code{by} argument is used to plot marginal comparisons, that is, comparisons made on the original data, but averaged by subgroups. This is analogous to using the \code{by} argument in the \code{comparisons()} function.
 

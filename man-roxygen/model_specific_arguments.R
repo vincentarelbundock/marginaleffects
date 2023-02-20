@@ -16,5 +16,5 @@
 #' | `mgcv`      | `bam`      | `exclude`          |[mgcv::predict.bam]|
 #' | `robustlmm` | `rlmerMod` | `re.form`          |[robustlmm::predict.rlmerMod]|
 #' |             |            | `allow.new.levels` |[robustlmm::predict.rlmerMod]|
-#' | `MCMCglmm`  | `MCMCglmm` | `ndraws  `         ||
+#' | `MCMCglmm`  | `MCMCglmm` | `ndraws`           ||
 #'

@@ -32,8 +32,8 @@ plot_cco(
 \item Function which returns a numeric vector or a set of unique categorical values
 \item Shortcut strings for common reference values: "minmax", "quartile", "threenum"
 }
-\item 1: x-axis. 2: color. 3: facets.
-\item Numeric variables in position 2 and 3 are summarized by Tukey's five numbers \code{?stats::fivenum}
+\item 1: x-axis. 2: color/shape. 3: facets.
+\item Numeric variables in positions 2 and 3 are summarized by Tukey's five numbers \code{?stats::fivenum}
 }}
 
 \item{by}{Marginal predictions
@@ -68,7 +68,7 @@ the \code{marginaleffects:::type_dictionary} dataframe.}
 
 \item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
 
-\item{transform_post}{(experimental) A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.}
+\item{transform_post}{A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.}
 
 \item{rug}{TRUE displays tick marks on the axes to mark the distribution of raw data.}
 
