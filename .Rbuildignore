@@ -31,7 +31,7 @@ Makefile
 ^vignettes/logit.Rmd
 ^vignettes/marginaleffects.Rmd
 ^vignettes/marginalmeans.Rmd
-^vignettes/mlogit.Rmd
+^vignettes/categorical.Rmd
 ^vignettes/multiple_imputation.Rmd
 ^vignettes/performance.Rmd
 ^vignettes/plot.Rmd

@@ -17,6 +17,7 @@ articles:
   contents:
     - brms
     - bootstrap
+    - categorical
     - gformula
     - elasticity
     - experiments
@@ -24,7 +25,6 @@ articles:
     - logit
     - lme4
     - multiple_imputation
-    - mlogit
     - python
 - title: Tips and technical notes
   contents:

@@ -1,8 +1,8 @@
 ---
-title: "Multinomial Logit and Discrete Choice Models"
+title: "Categorical outcomes"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Multinomial Logit and Discrete Choice Models}
+  %\VignetteIndexEntry{Categorical outcomes}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -33,13 +33,49 @@ theme_clean <- function() {
 ggplot2::theme_set(theme_clean())
 ```
 
-Several packages in the `R` ecosystem allow users to estimate multinomial logit model and discrete choice models. This case study illustrates the use of `marginaleffects` with the `nnet` and `mlogit` packages.
+Several packages in the `R` ecosystem allow users to estimate models for ordered or discrete choice, such as ordered probit or multinomial logit. This case study illustrates the use of `marginaleffects` with the `MASS`,  `nnet`, and `mlogit` packages.
 
 We begin by loading two libraries:
 
 ```{r, message = FALSE}
 library(marginaleffects)
 library(tidyverse)
+```
+
+# `MASS::polr` function
+
+Consider a simple ordered logit model in which we predict the number of gears of a car based its miles per gallon and horsepower:
+
+
+```{r}
+library(MASS)
+mod <- polr(factor(gear) ~ mpg + hp, data = mtcars, Hess = TRUE)
+```
+
+Now, consider a car with 25 miles per gallon and 110 horsepower. The expected predicted probability for each outcome level (gear) for this car is:
+
+```{r}
+predictions(mod, newdata = datagrid(mpg = 25, hp = 110))
+```
+
+Since the `gear` is categorical, we make one prediction for each level of the outcome.
+
+Now consider the marginal effects (aka slopes or partial derivatives) for the same car:
+
+```{r}
+slopes(mod, variables = "mpg", newdata = datagrid(mpg = 25, hp = 110))
+```
+
+Again, `marginaleffects` produces one estimate of the slope for each outcome level. For a small step size $\varepsilon$, the printed quantities are estimated as:
+
+$$\frac{P(gear=3|mpg=25+\varepsilon, hp=110)-P(gear=3|mpg=25-\varepsilon, hp=110)}{2 \cdot \varepsilon}$$
+$$\frac{P(gear=4|mpg=25+\varepsilon, hp=110)-P(gear=4|mpg=25-\varepsilon, hp=110)}{2 \cdot \varepsilon}$$
+$$\frac{P(gear=5|mpg=25+\varepsilon, hp=110)-P(gear=5|mpg=25-\varepsilon, hp=110)}{2 \cdot \varepsilon}$$
+
+When we call `avg_slopes()`, `marginaleffects` will repeat the same computation for every row of the original dataset, and then report the average slope for each level of the outcome:
+
+```{r}
+avg_slopes(mod)
 ```
 
 # `nnet` package
