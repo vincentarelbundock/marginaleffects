@@ -217,14 +217,32 @@ In the next example, we create a "counterfactual" data grid where each observati
 ```{r}
 predictions(
     mod,
+    type = "response",
     by = "am",
     newdata = datagridcf(am = 0:1))
 
 predictions(
     mod,
+    type = "response",
     newdata = datagridcf(am = 0:1)) |>
     group_by(am) |>
     summarize(AAP = mean(estimate))
+```
+
+Note that the two results are exactly identical when we specify `type="response"` explicitly. However, they will differ slightly when we leave `link` unspecified, because `marginaleffects` will then automaticaly make predictions and average on the link scale, before backtransforming:
+
+```{r}
+predictions(
+    mod,
+    by = "am",
+    newdata = datagridcf(am = 0:1))
+
+predictions(
+    mod,
+    type = "link",
+    newdata = datagridcf(am = 0:1)) |>
+    group_by(am) |>
+    summarize(AAP = mod$family$linkinv(mean(estimate)))
 ```
 
 ## Multinomial models
