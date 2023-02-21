@@ -9,6 +9,7 @@ New models supported:
 * `MCMCglmm::MCMCglmm`
 * `Rchoice::hetprob`
 * `Rchoice::ivpml`
+* Multiple imputation using `mice` and any package which can return a list of imputed data frames (e.g., `Amelia`, `missRanger`, etc.)
 
 Plot improvements:
 
