@@ -82,7 +82,11 @@ sanitize_newdata <- function(model, newdata, by, modeldata) {
         insight::format_error(msg)
     }
 
-    # column subsets later and predict
+    # otherwise we get a warning in setDT()
+    if (inherits(model, "mlogit") && isTRUE(inherits(modeldata[["idx"]], "idx"))) {
+        modeldata$idx <- NULL
+    }
+
     data.table::setDT(modeldata)
 
     # column attributes

@@ -97,13 +97,13 @@ get_predict(model, newdata, type, ...)
 
 \method{get_predict}{rq}(model, newdata = insight::get_data(model), type = NULL, ...)
 
-\method{get_predict}{rms}(model, newdata = NULL, type = "fitted", ...)
+\method{get_predict}{rms}(model, newdata = insight::get_data(model), type = NULL, ...)
 
-\method{get_predict}{orm}(model, newdata = NULL, type = "fitted", ...)
+\method{get_predict}{orm}(model, newdata = insight::get_data(model), type = NULL, ...)
 
-\method{get_predict}{lrm}(model, newdata = NULL, type = "fitted", ...)
+\method{get_predict}{lrm}(model, newdata = insight::get_data(model), type = NULL, ...)
 
-\method{get_predict}{ols}(model, newdata = NULL, type = "fitted", ...)
+\method{get_predict}{ols}(model, newdata = insight::get_data(model), type = NULL, ...)
 
 \method{get_predict}{rlmerMod}(model, newdata = insight::get_data(model), type = "response", ...)
 
