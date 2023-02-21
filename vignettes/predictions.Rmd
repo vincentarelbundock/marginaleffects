@@ -229,7 +229,7 @@ predictions(
     summarize(AAP = mean(estimate))
 ```
 
-Note that the two results are exactly identical when we specify `type="response"` explicitly. However, they will differ slightly when we leave `link` unspecified, because `marginaleffects` will then automaticaly make predictions and average on the link scale, before backtransforming:
+Note that the two results are exactly identical when we specify `type="response"` explicitly. However, they will differ slightly when we leave `type` unspecified, because `marginaleffects` will then automaticaly make predictions and average on the link scale, before backtransforming:
 
 ```{r}
 predictions(
