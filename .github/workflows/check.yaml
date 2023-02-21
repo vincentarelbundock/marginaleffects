@@ -6,6 +6,13 @@ on:
   push:
   pull_request:
 
+env:
+  _R_CHECK_FORCE_SUGGESTS_: "false"
+  _R_CHECK_TESTS_NLINES_: 0
+  R_NOT_CRAN: true
+  R_GH: true
+  GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
+
 jobs:
   ci:
     strategy:
