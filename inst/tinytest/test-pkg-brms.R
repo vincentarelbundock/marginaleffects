@@ -3,15 +3,15 @@
 # https://github.com/vincentarelbundock/marginaleffects/issues/240
 source("helpers.R")
 using("marginaleffects")
-exit_if_not(EXPENSIVE)
+if (!EXPENSIVE) exit_file("EXPENSIVE")
 if (ON_WINDOWS) exit_file("on windows")
 if (!minver("base", "4.1.0")) exit_file("R 4.1.0")
 options("marginaleffects_posterior_interval" = "hdi")
-exit_if_not(requiet("brms"))
-exit_if_not(requiet("emmeans"))
-exit_if_not(requiet("broom"))
-exit_if_not(requiet("posterior"))
-exit_if_not(requiet("brmsmargins"))
+requiet("brms")
+requiet("emmeans")
+requiet("broom")
+requiet("posterior")
+requiet("brmsmargins")
 tol <- 0.0001
 tol_se <- 0.001
 
@@ -213,7 +213,7 @@ expect_false(p1$conf.high == p2$conf.high)
 
 
 # predictions vs. emmeans
-exit_if_not(requiet("emmeans"))
+requiet("emmeans")
 em <- emmeans::emmeans(brms_numeric, ~hp, "hp", at = list(hp = c(100, 120)))
 em <- data.frame(em)
 pred <- predictions(brms_numeric, newdata = datagrid(hp = c(100, 120)), type = "link")
@@ -224,8 +224,8 @@ expect_equivalent(pred$conf.high, em$upper.HPD)
 
 
 # marginalmeans vs. emmeans
-exit_if_not(requiet("emmeans"))
-exit_if_not(requiet("broom"))
+requiet("emmeans")
+requiet("broom")
 expect_error(marginal_means(brms_factor, variables = "cyl_fac", type = "link"), pattern = "github.*issues")
 # emmeans::emmeans(brms_factor, specs = ~cyl_fac)
 
@@ -246,7 +246,7 @@ expect_equivalent(nrow(attr(tmp, "posterior_draws")), nrow(tmp))
 
 
 # marginaleffects vs. emmeans
-exit_if_not(requiet("emmeans"))
+requiet("emmeans")
 
 # # known frequentist example to compare syntax
 # brms_numeric_freq <- glm(am ~ hp, data = mtcars, family = binomial)

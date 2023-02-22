@@ -1,9 +1,9 @@
 # TODO: high tolerance
 source("helpers.R")
-exit_if_not(EXPENSIVE)
+if (!EXPENSIVE) exit_file("EXPENSIVE")
 using("marginaleffects")
-exit_if_not(requiet("brms"))
-exit_if_not(requiet("insight"))
+requiet("brms")
+requiet("insight")
 
 void <- capture.output({
     m1 <- brm(mpg ~ hp, data = mtcars, silent = 2)

@@ -1,7 +1,7 @@
 source("helpers.R")
 using("marginaleffects")
 
-exit_if_not(requiet("scam"))
+requiet("scam")
 
 # no validity
 set.seed(4)

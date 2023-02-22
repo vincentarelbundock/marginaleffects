@@ -1,5 +1,5 @@
 source("helpers.R")
-exit_if_not(requiet("mice"))
+requiet("mice")
 
 dat <- iris
 dat$Sepal.Length[sample(seq_len(nrow(iris)), 40)] <- NA

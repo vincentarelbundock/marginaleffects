@@ -1,9 +1,9 @@
 source("helpers.R")
 using("marginaleffects")
 
-exit_if_not(requiet("gam"))
-exit_if_not(requiet("emmeans"))
-exit_if_not(requiet("broom"))
+requiet("gam")
+requiet("emmeans")
+requiet("broom")
 
 # gam: marginaleffects vs. emtrends
 data(kyphosis, package = "gam")

@@ -1,9 +1,9 @@
 # TODO: CI: See comment in last test for how the intervals are back transformed
 source("helpers.R")
-exit_if_not(EXPENSIVE)
+if (!EXPENSIVE) exit_file("EXPENSIVE")
 using("marginaleffects")
 
-exit_if_not(requiet("modelsummary"))
+requiet("modelsummary")
 tol <- .0001
 
 
@@ -24,7 +24,7 @@ expect_equivalent(cmp1$std.error, cmp2$std.error)
 
 
 # error when function breaks or returns a bad vector
-exit_if_not(requiet("survey"))
+requiet("survey")
 data(nhanes, package = "survey")
 dat <- setNames(nhanes, tolower(names(nhanes)))
 dat$female <- dat$riagendr == 2

@@ -1,6 +1,6 @@
 source("helpers.R")
 using("marginaleffects")
-exit_if_not(requiet("blme"))
+requiet("blme")
 
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/lme4/sleepstudy.csv")
 penaltyFn <- function(sigma) dcauchy(sigma, 0, 10, log = TRUE)

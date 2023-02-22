@@ -1,11 +1,10 @@
 source("helpers.R")
-exit_if_not(require("tinyviztest"))
-exit_if_not(!ON_OSX)
+if (!requiet("tinyviztest")) exit_file("tinyviztest")
 
 using("tinyviztest")
 using("marginaleffects")
 
-exit_if_not(requiet("poorman"))
+requiet("poorman")
 
 dat <- mtcars
 mod <- glm(am ~ hp, data = dat, family = binomial)

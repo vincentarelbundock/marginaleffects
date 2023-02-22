@@ -1,6 +1,6 @@
 source("helpers.R")
 using("marginaleffects")
-exit_if_not(requiet("car"))
+requiet("car")
 
 # When `FUN` and `hypotheses` are `NULL`, `hypotheses()` returns a data.frame of parameters
 dat <- mtcars
@@ -68,7 +68,7 @@ expect_inherits(hyp, "hypotheses")
 
 
 # Issue #656
-exit_if_not(requiet("purrr"))
+requiet("purrr")
 reg_list <- list()
 reg_list[[1]] <- lm(mpg ~ wt + hp, data = mtcars)
 reg_list[[2]] <- lm(mpg ~ wt + hp + factor(vs), data = mtcars)

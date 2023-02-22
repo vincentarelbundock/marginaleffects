@@ -1,6 +1,6 @@
 source("helpers.R")
 using("marginaleffects")
-exit_if_not(requiet("survey"))
+requiet("survey")
 
 # mtcars logit
 tmp <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/datasets/mtcars.csv")

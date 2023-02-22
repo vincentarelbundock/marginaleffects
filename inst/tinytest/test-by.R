@@ -1,8 +1,8 @@
 source("helpers.R")
 using("marginaleffects")
 
-exit_if_not(requiet("margins"))
-exit_if_not(requiet("nnet"))
+requiet("margins")
+requiet("nnet")
 tol <- 1e-4
 tol_se <- 1e-3
 

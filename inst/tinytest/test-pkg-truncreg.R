@@ -1,8 +1,8 @@
 source("helpers.R")
 using("marginaleffects")
 
-exit_if_not(requiet("truncreg"))
-exit_if_not(requiet("margins"))
+requiet("truncreg")
+requiet("margins")
 
 
 # truncreg: no validity check

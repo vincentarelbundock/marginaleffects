@@ -1,8 +1,8 @@
 source("helpers.R")
 using("marginaleffects")
 
-exit_if_not(requiet("speedglm"))
-exit_if_not(requiet("margins"))
+requiet("speedglm")
+requiet("margins")
 
 # glm vs. Stata
 stata <- readRDS(testing_path("stata/stata.rds"))[["stats_glm_01"]]

@@ -1,7 +1,7 @@
 source("helpers.R")
 using("marginaleffects")
 
-exit_if_not(requiet("sandwich"))
+requiet("sandwich")
 
 
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/datasets/mtcars.csv")

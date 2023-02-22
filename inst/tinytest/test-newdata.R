@@ -1,8 +1,8 @@
 source("helpers.R")
 using("marginaleffects")
 
-exit_if_not(requiet("modelbased"))
-exit_if_not(requiet("emmeans"))
+requiet("modelbased")
+requiet("emmeans")
 
 
 # # this seems deprecated in modelbased in favor of get_datagrid(). Have not investidated yet

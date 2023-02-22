@@ -1,7 +1,7 @@
 source("helpers.R")
 using("marginaleffects")
 
-exit_if_not(requiet("bife"))
+requiet("bife")
 
 dat <- bife::psid
 mod <- bife(LFP ~ AGE + I(INCH / 1000) + KID1 + KID2 + KID3 | ID, data = dat)

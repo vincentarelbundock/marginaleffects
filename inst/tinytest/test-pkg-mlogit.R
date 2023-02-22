@@ -12,9 +12,9 @@
 source("helpers.R")
 using("marginaleffects")
 if (ON_CI) exit_file("on ci")
-exit_if_not(requiet("nnet"))
-exit_if_not(requiet("mlogit"))
-exit_if_not(requiet("data.table"))
+requiet("nnet")
+requiet("mlogit")
+requiet("data.table")
 
 TravelMode <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/AER/TravelMode.csv")
 TravelMode$X <- NULL # {mlogit} assumes first column is the index

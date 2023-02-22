@@ -1,10 +1,10 @@
 source("helpers.R")
 using("marginaleffects")
 
-exit_if_not(requiet("brglm2"))
-exit_if_not(requiet("margins"))
-exit_if_not(requiet("emmeans"))
-exit_if_not(requiet("broom"))
+requiet("brglm2")
+requiet("margins")
+requiet("emmeans")
+requiet("broom")
 
 # brglm2::brglm_fit vs. margins vs. emtrends
 data("endometrial", package = "brglm2", envir = environment())

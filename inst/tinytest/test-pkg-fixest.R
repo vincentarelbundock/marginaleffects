@@ -1,8 +1,8 @@
 source("helpers.R")
 using("marginaleffects")
 
-exit_if_not(requiet("fixest"))
-exit_if_not(requiet("data.table"))
+requiet("fixest")
+requiet("data.table")
 fixest::setFixest_nthreads(1)
 fixest::setFixest_notes(FALSE)
 
@@ -43,7 +43,7 @@ expect_equivalent(nrow(mfx), 12)
 
 
 # fixest::feols vs. Stata
-exit_if_not(requiet("plm"))
+requiet("plm")
 data(EmplUK, package = "plm")
 stata <- readRDS(testing_path("stata/stata.rds"))$fixest_feols
 model <- feols(wage ~ capital * output | firm, EmplUK)
@@ -54,7 +54,7 @@ expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .00001)
 
 
 # fixest::fepois vs. Stata
-exit_if_not(requiet("plm"))
+requiet("plm")
 data(EmplUK, package = "plm")
 stata <- readRDS(testing_path("stata/stata.rds"))$fixest_fepois
 model <- fepois(log(wage) ~ capital * output | firm, EmplUK)

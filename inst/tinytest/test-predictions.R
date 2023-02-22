@@ -1,7 +1,7 @@
 source("helpers.R")
 using("marginaleffects")
 
-exit_if_not(requiet("pscl"))
+requiet("pscl")
 
 tmp <- mtcars
 tmp$am <- as.logical(tmp$am)

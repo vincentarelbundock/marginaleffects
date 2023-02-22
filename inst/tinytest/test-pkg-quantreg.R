@@ -1,9 +1,9 @@
 source("helpers.R")
 using("marginaleffects")
 
-exit_if_not(requiet("quantreg"))
-exit_if_not(requiet("emmeans"))
-exit_if_not(requiet("broom"))
+requiet("quantreg")
+requiet("emmeans")
+requiet("broom")
 
 # marginaleffects: rq: Stata
 stata <- readRDS(testing_path("stata/stata.rds"))$quantreg_rq_01

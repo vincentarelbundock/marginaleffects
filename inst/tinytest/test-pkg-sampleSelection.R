@@ -1,7 +1,7 @@
 source("helpers.R")
 using("marginaleffects")
 
-exit_if_not(requiet("sampleSelection"))
+requiet("sampleSelection")
 
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/sampleSelection/Mroz87.csv")
 dat$kids <- dat$kids5 + dat$kids618 > 0

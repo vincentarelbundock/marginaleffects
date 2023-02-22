@@ -1,7 +1,7 @@
 source("helpers.R")
-exit_if_not(requiet("marginaleffects"))
+requiet("marginaleffects")
 using("marginaleffects")
-exit_if_not(requiet("emmeans"))
+requiet("emmeans")
 
 # TODO: rename dat to df to make sure there's no class with the internal keyword
 
@@ -46,7 +46,7 @@ expect_true(all(pre29$conf.low < preInf$conf.low))
 
 
 # Issue #627: print t instead of z in column names
-exit_if_not(requiet("tinyviztest"))
+requiet("tinyviztest")
 mod <- lm(mpg ~ hp, mtcars)
 expect_snapshot_print(avg_comparisons(mod), "df-z")
 expect_snapshot_print(avg_comparisons(mod, df = 30), "df-t")

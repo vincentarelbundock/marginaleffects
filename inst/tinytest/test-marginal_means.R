@@ -1,9 +1,9 @@
 source("helpers.R")
 using("marginaleffects")
 
-exit_if_not(requiet("emmeans"))
-exit_if_not(requiet("broom"))
-exit_if_not(requiet("insight"))
+requiet("emmeans")
+requiet("broom")
+requiet("insight")
 
 
 # Issue #438: backtransforms allows us to match `emmeans` exactly

@@ -1,7 +1,6 @@
 source("helpers.R")
-exit_if_not(require("tinyviztest"))
+if (!requiet("tinyviztest")) exit_file("tinyviztest")
 using("marginaleffects")
-exit_if_not(!ON_OSX)
 
 
 mod <- lm(mpg ~ wt * hp, data = mtcars)

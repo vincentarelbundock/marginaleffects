@@ -1,6 +1,6 @@
 source("helpers.R")
 using("marginaleffects")
-exit_if_not(requiet("ggplot2"))
+requiet("ggplot2")
 
 data("diamonds", package = "ggplot2")
 dat <- diamonds[1:1000, ]

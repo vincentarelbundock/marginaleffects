@@ -1,10 +1,10 @@
 source("helpers.R")
 using("marginaleffects")
 
-exit_if_not(requiet("polspline"))
-exit_if_not(requiet("rms"))
-exit_if_not(requiet("emmeans"))
-exit_if_not(requiet("broom"))
+requiet("polspline")
+requiet("rms")
+requiet("emmeans")
+requiet("broom")
 
 # lmr: marginaleffects vs emtrends
 model <- rms::lrm(am ~ mpg, mtcars)

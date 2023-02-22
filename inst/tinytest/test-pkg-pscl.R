@@ -1,10 +1,10 @@
 source("helpers.R")
 using("marginaleffects")
 
-exit_if_not(requiet("pscl"))
-exit_if_not(requiet("emmeans"))
-exit_if_not(requiet("broom"))
-exit_if_not(requiet("margins"))
+requiet("pscl")
+requiet("emmeans")
+requiet("broom")
+requiet("margins")
 tol <- 0.0001
 tol_se <- 0.001
 

@@ -1,9 +1,9 @@
 source("helpers.R")
 using("marginaleffects")
-exit_if_not(requiet("estimatr"))
-exit_if_not(requiet("emmeans"))
-exit_if_not(requiet("margins"))
-exit_if_not(requiet("broom"))
+requiet("estimatr")
+requiet("emmeans")
+requiet("margins")
+requiet("broom")
 
 Km <<- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/sem/Kmenta.csv")
 dat <- mtcars

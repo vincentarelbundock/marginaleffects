@@ -5,10 +5,10 @@ source("helpers.R")
 using("marginaleffects")
 
 options("marginaleffects_posterior_interval" = "hdi")
-exit_if_not(requiet("rstanarm"))
-exit_if_not(requiet("emmeans"))
-exit_if_not(requiet("margins"))
-exit_if_not(requiet("broom"))
+requiet("rstanarm")
+requiet("emmeans")
+requiet("margins")
+requiet("broom")
 if (!require("rstanarm")) exit_file("rstanarm") # after requiet to avoid messages
 
 # interactions

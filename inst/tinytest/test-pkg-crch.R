@@ -1,8 +1,8 @@
 source("helpers.R")
 using("marginaleffects")
 
-exit_if_not(requiet("crch"))
-exit_if_not(requiet("ordinal"))
+requiet("crch")
+requiet("ordinal")
 
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/crch/RainIbk.csv")
 q <- unique(stats::quantile(dat$rain, seq(0.1, 0.9, 0.1)))

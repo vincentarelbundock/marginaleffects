@@ -1,5 +1,5 @@
 source("helpers.R")
-exit_if_not(EXPENSIVE)
+if (!EXPENSIVE) exit_file("EXPENSIVE")
 using("marginaleffects")
 
 
@@ -42,8 +42,6 @@ mod <- lm(mpg ~ group + hp, data = dat)
 expect_error(comparisons(mod), pattern = "forbidden")
 
 
-
-exit_if_not(packageVersion("insight") > "0.18.8")
 exit_file("works interactively")
 
 # Issue #556

@@ -1,7 +1,7 @@
 source("helpers.R")
 using("marginaleffects")
 
-exit_if_not(requiet("fixest"))
+requiet("fixest")
 
 # predictions() call is nested in a function
 test <- function() {

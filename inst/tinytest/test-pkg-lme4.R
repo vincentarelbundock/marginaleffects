@@ -1,13 +1,13 @@
 source("helpers.R")
-exit_if_not(EXPENSIVE)
+if (!EXPENSIVE) exit_file("EXPENSIVE")
 using("marginaleffects")
 
-exit_if_not(requiet("margins"))
-exit_if_not(requiet("haven"))
-exit_if_not(requiet("lme4"))
-exit_if_not(requiet("insight"))
-exit_if_not(requiet("emmeans"))
-exit_if_not(requiet("broom"))
+requiet("margins")
+requiet("haven")
+requiet("lme4")
+requiet("insight")
+requiet("emmeans")
+requiet("broom")
 
 
 # satterthwaite (no validity)

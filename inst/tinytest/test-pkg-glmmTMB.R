@@ -1,12 +1,12 @@
 source("helpers.R")
-exit_if_not(EXPENSIVE)
+if (!EXPENSIVE) exit_file("EXPENSIVE")
 using("marginaleffects")
 # exit_file("glmmTMB always causes problems")
 
 if (ON_CI) exit_file("on ci") # install and test fails on Github
-exit_if_not(requiet("glmmTMB"))
-exit_if_not(requiet("emmeans"))
-exit_if_not(requiet("broom"))
+requiet("glmmTMB")
+requiet("emmeans")
+requiet("broom")
 
 data("Owls", package = "glmmTMB")
 
@@ -209,8 +209,8 @@ expect_inherits(predictions(model_REML, vcov = FALSE, re.form = NA), "prediction
 
 
 # Issue #663
-exit_if_not(requiet("ordbetareg"))
-exit_if_not(requiet("dplyr"))
+requiet("ordbetareg")
+requiet("dplyr")
 
 data(pew, package = "ordbetareg")
 model_data <- select(

@@ -1,9 +1,9 @@
 source("helpers.R")
 using("marginaleffects")
 
-exit_if_not(requiet("glmx"))
-exit_if_not(requiet("MASS"))
-exit_if_not(requiet("margins"))
+requiet("glmx")
+requiet("MASS")
+requiet("margins")
 
 # glmx: marginaleffects vs. margins
 tmp <- data.frame(x = runif(200, -1, 1))

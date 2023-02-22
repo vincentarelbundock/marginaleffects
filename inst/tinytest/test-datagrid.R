@@ -1,8 +1,8 @@
 source("helpers.R")
 using("marginaleffects")
 
-exit_if_not(requiet("lme4"))
-exit_if_not(requiet("fixest"))
+requiet("lme4")
+requiet("fixest")
 
 
 # informative errors

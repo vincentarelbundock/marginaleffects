@@ -1,7 +1,7 @@
 source("helpers.R")
 using("marginaleffects")
 
-exit_if_not(requiet("emmeans"))
+requiet("emmeans")
 
 # interaction automatic flip from NULL to useful
 dat <- mtcars

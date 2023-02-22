@@ -95,7 +95,9 @@ expect_inherits(cmp, "hypotheses")
 expect_inherits(mfx, "hypotheses")
 expect_inherits(pre, "hypotheses")
 
-exit_if_not(require("tinyviztest"))
+if (!requiet("tinyviztest")) {
+    exit_file("tinyviztest")
+}
 cmp <- avg_comparisons(tmp, equivalence = c(-.1, 0))
 expect_snapshot_print(cmp, "equivalence-avg_comparisons")
 

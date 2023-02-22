@@ -1,10 +1,9 @@
 source("helpers.R")
 using("marginaleffects")
-exit_if_not(!ON_OSX)
-exit_if_not(require("tinyviztest"))
+if (!requiet("tinyviztest")) exit_file("tinyviztest")
 
 using("tinyviztest")
-exit_if_not(requiet("nnet"))
+requiet("nnet")
 
 # Issue #567: threenum and minmax are mixed up
 dat <- transform(mtcars, am_fct = factor(am))

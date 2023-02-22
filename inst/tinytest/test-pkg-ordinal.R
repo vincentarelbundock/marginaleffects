@@ -1,11 +1,10 @@
 source("helpers.R")
 using("marginaleffects")
-exit_if_not(EXPENSIVE)
-exit_if_not(!ON_CI)
-exit_if_not(packageVersion("base") >= "4.2.0")
+if (!EXPENSIVE) exit_file("EXPENSIVE")
+if (packageVersion("base") >= "4.2.0") exit_file("dev breaks this")
 
-exit_if_not(requiet("MASS"))
-exit_if_not(requiet("ordinal"))
+requiet("MASS")
+requiet("ordinal")
 
 dat <- read.csv(
     "https://vincentarelbundock.github.io/Rdatasets/csv/MASS/housing.csv",

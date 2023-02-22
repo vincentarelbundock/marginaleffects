@@ -1,10 +1,10 @@
 source("helpers.R")
 using("marginaleffects")
 
-exit_if_not(requiet("lmerTest"))
-exit_if_not(requiet("emmeans"))
-exit_if_not(requiet("broom"))
-exit_if_not(requiet("margins"))
+requiet("lmerTest")
+requiet("emmeans")
+requiet("broom")
+requiet("margins")
 
 # vs. emmeans vs. margins
 dat <- read.csv(testing_path("stata/databases/lme4_02.csv"))
@@ -33,7 +33,7 @@ expect_equivalent(me$estimate, ma$estimate)
 
 
 # bug: population-level predictions() when {lmerTest} is loaded
-exit_if_not(requiet("lmerTest"))
+requiet("lmerTest")
 mod <- suppressMessages(lmer(
   weight ~ 1 + Time + I(Time^2) + Diet + Time:Diet + I(Time^2):Diet + (1 + Time + I(Time^2) | Chick),
   data = ChickWeight))

@@ -1,9 +1,9 @@
 source("helpers.R")
 using("marginaleffects")
 
-exit_if_not(requiet("margins"))
-exit_if_not(requiet("broom"))
-exit_if_not(requiet("plm"))
+requiet("margins")
+requiet("broom")
+requiet("plm")
 
 tol <- .001
 tol_se <- .01 # BDR emergency email about tiny numerical differences

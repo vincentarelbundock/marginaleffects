@@ -1,8 +1,8 @@
 source("helpers.R")
 using("marginaleffects")
 
-exit_if_not(requiet("afex"))
-exit_if_not(requiet("emmeans"))
+requiet("afex")
+requiet("emmeans")
 
 data(md_12.1, package = "afex")
 mod <- aov_ez("id", "rt", md_12.1, within = c("angle", "noise"))

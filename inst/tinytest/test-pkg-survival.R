@@ -1,10 +1,8 @@
 source("helpers.R")
 using("marginaleffects")
-
-exit_if_not(!ON_CI)
-exit_if_not(requiet("survival"))
-exit_if_not(requiet("emmeans"))
-exit_if_not(requiet("broom"))
+requiet("survival")
+requiet("emmeans")
+requiet("broom")
 
 # clogit 
 N  <- 10000

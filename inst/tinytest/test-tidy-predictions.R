@@ -1,7 +1,7 @@
 source("helpers.R")
 using("marginaleffects")
-exit_if_not(requiet("prediction"))
-exit_if_not(requiet("insight"))
+requiet("prediction")
+requiet("insight")
 
 
 # lm: Average prediction vs. {prediction}

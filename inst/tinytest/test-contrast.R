@@ -1,7 +1,7 @@
 source("helpers.R")
 using("marginaleffects")
 
-exit_if_not(requiet("emmeans"))
+requiet("emmeans")
 
 
 # simple contrasts: no validity check

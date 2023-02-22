@@ -1,7 +1,7 @@
 source("helpers.R")
 using("marginaleffects")
 
-exit_if_not(requiet("robust"))
+requiet("robust")
 
 # no validity
 dat <- mtcars

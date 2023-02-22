@@ -1,9 +1,9 @@
 source("helpers.R")
 using("marginaleffects")
 
-exit_if_not(requiet("margins"))
-exit_if_not(requiet("poorman"))
-exit_if_not(requiet("ivreg"))
+requiet("margins")
+requiet("poorman")
+requiet("ivreg")
 
 # marginaleffects: vs. margins
 data(Kmenta, package = "ivreg")

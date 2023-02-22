@@ -1,7 +1,7 @@
 source("helpers.R")
 using("marginaleffects")
 
-exit_if_not(requiet("aod"))
+requiet("aod")
 
 # betabin: no validity
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/aod/orob2.csv")

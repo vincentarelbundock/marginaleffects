@@ -15,7 +15,7 @@ expect_error(marginal_means(mod, type = "junk"), pattern = "Must be element")
 
 
 # error: multivariate
-exit_if_not(requiet("pscl"))
+requiet("pscl")
 dat2 <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/pscl/bioChemists.csv")
 model <- hurdle(art ~ phd + fem | ment, data = dat2, dist = "negbin")
 mfx <- slopes(model, type = "prob")

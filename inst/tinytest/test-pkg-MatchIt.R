@@ -1,5 +1,5 @@
 source("helpers.R")
-exit_if_not(requiet("MatchIt"))
+requiet("MatchIt")
 using("checkmate")
 
 gen_X <- function(n) {

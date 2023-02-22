@@ -1,6 +1,6 @@
 source("helpers.R")
-exit_if_not(EXPENSIVE)
-exit_if_not(requiet("MCMCglmm"))
+if (!EXPENSIVE) exit_file("EXPENSIVE")
+requiet("MCMCglmm")
 
 mod <- MCMCglmm(mpg ~ hp, random = ~carb, data = mtcars, verbose = FALSE)
 

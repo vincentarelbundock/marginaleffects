@@ -1,7 +1,6 @@
 source("helpers.R")
 using("marginaleffects")
-exit_if_not(!ON_OSX)
-exit_if_not(require("tinyviztest"))
+if (!requiet("tinyviztest")) exit_file("tinyviztest")
 
 library("tinyviztest")
 using("tinyviztest")

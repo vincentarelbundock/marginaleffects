@@ -1,7 +1,7 @@
 source("helpers.R")
 using("marginaleffects")
 
-exit_if_not(requiet("emmeans"))
+requiet("emmeans")
 
 dat <- mtcars
 dat$carb <- factor(dat$carb)
@@ -239,7 +239,7 @@ expect_error(
     pattern = "hypothesis testing")
 
 # Issue #661: remove redundant labels in pairwise comparisons
-exit_if_not(requiet("tinyviztest"))
+requiet("tinyviztest")
 using("tinyviztest")
 set.seed(123)
 dat <- transform(iris, dummy = as.factor(rbinom(nrow(iris), 1, prob = c(0.4, 0.6))))

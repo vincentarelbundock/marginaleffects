@@ -1,12 +1,12 @@
 source("helpers.R")
-exit_if_not(EXPENSIVE)
+if (!EXPENSIVE) exit_file("EXPENSIVE")
 using("marginaleffects")
 
 
-exit_if_not(requiet("mgcv"))
-exit_if_not(requiet("emmeans"))
-exit_if_not(requiet("tibble"))
-exit_if_not(requiet("tsModel"))
+requiet("mgcv")
+requiet("emmeans")
+requiet("tibble")
+requiet("tsModel")
 
 
 # marginaleffects vs. emtrends
@@ -120,7 +120,7 @@ expect_true(all(p1$estimate != p2$estimate))
 
 
 # exclude a smooth
-exit_if_not(requiet("itsadug"))
+requiet("itsadug")
 set.seed(1024)
 data(simdat)
 simdat$Subject <- as.factor(simdat$Subject)
