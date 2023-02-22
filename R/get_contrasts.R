@@ -318,7 +318,7 @@ get_contrasts <- function(model,
 
         if (isTRUE(checkmate::check_character(by, min.len = 1))) {
             by_idx <- subset(out, select = intersect(by, colnames(out)))
-            by_idx <- apply(by_idx, 1, paste, collapse = "|")
+            by_idx <- do.call(paste, c(by_idx, sep = "|"))
         } else {
             by_idx <- out$term
         }

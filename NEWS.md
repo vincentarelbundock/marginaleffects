@@ -1,3 +1,9 @@
+# marginaleffects 0.10.0.9000
+
+Performance:
+
+* Bayesian models with many rows. Thanks to Etienne Bacher. #694 
+
 # marginaleffects 0.10.0
 
 Performance:
