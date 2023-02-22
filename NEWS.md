@@ -4,6 +4,10 @@ Performance:
 
 * Bayesian models with many rows. Thanks to Etienne Bacher. #694 
 
+Bugs:
+
+* Error on `predictions()` with `by` and `wts`. #695
+
 # marginaleffects 0.10.0
 
 Performance:

@@ -288,6 +288,14 @@ predictions <- function(model,
     # after sanitize_newdata
     sanity_by(by, newdata)
 
+    # weights: after sanitize_newdata; before sanitize_variables
+    sanity_wts(wts, newdata) # after sanity_newdata
+    if (!is.null(wts) && isTRUE(checkmate::check_string(wts))) {
+        newdata[["marginaleffects_wts_internal"]] <- newdata[[wts]]
+    } else {
+        newdata[["marginaleffects_wts_internal"]] <- wts
+    }
+
     # analogous to comparisons(variables=list(...))
     if (!is.null(variables)) {
         args <- list(
@@ -310,14 +318,6 @@ predictions <- function(model,
     }
 
     character_levels <- attr(newdata, "newdata_character_levels")
-
-    # weights
-    sanity_wts(wts, newdata) # after sanity_newdata
-    if (!is.null(wts) && isTRUE(checkmate::check_string(wts))) {
-        newdata[["marginaleffects_wts_internal"]] <- newdata[[wts]]
-    } else {
-        newdata[["marginaleffects_wts_internal"]] <- wts
-    }
 
 
     # trust newdata$rowid
