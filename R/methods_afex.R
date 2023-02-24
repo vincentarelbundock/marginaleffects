@@ -3,9 +3,13 @@
 #' @rdname set_coef
 #' @export
 set_coef.afex_aov <- function(model, coefs, ...) {
-    mat <- matrix(coefs, ncol = ncol(model$lm$coefficients))
-    dimnames(mat) <- dimnames(model$lm$coefficients)
-    model$lm$coefficients <- mat
+    if (isTRUE(checkmate::check_matrix(model$lm$coefficients))) {
+        mat <- matrix(coefs, ncol = ncol(model$lm$coefficients))
+        dimnames(mat) <- dimnames(model$lm$coefficients)
+        model$lm$coefficients <- mat
+    } else {
+        model$lm$coefficients <- coefs
+    }
     return(model)
 }
 

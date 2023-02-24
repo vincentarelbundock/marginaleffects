@@ -6,7 +6,9 @@ Performance:
 
 Bugs:
 
-* Error on `predictions()` with `by` and `wts`. #695
+* Error on `predictions()` with `by` and `wts`. Thanks to Noah Greifer for report #695.
+* `afex`: some models generated errors. Thanks to  Daniel Lüdecke
+ for report #696.
 
 # marginaleffects 0.10.0
 
