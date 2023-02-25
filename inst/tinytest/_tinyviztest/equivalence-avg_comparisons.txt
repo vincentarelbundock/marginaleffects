@@ -4,5 +4,5 @@
  qsec       +1   -1.382     0.4331 -3.19  0.00141 -2.231 -0.5336      0.998     <0.001     0.998
 
 Prediction type:  response 
-Columns: type, term, contrast, estimate, std.error, statistic, p.value, conf.low, conf.high, statistic.noninf, statistic.nonsup, p.value.noninf, p.value.nonsup, p.value.equiv 
+Columns: term, contrast, estimate, std.error, statistic, p.value, conf.low, conf.high, statistic.noninf, statistic.nonsup, p.value.noninf, p.value.nonsup, p.value.equiv 
 

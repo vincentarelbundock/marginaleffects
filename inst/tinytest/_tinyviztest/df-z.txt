@@ -3,5 +3,5 @@
    hp       +1  -0.0682     0.0101 -6.74   <0.001 -0.0881 -0.0484
 
 Prediction type:  response 
-Columns: type, term, contrast, estimate, std.error, statistic, p.value, conf.low, conf.high 
+Columns: term, contrast, estimate, std.error, statistic, p.value, conf.low, conf.high 
 

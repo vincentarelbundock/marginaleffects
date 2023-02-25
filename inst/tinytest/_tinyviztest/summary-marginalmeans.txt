@@ -10,5 +10,5 @@
 
 Prediction type:  response 
 Results averaged over levels of: gear, am, vs 
-Columns: type, term, value, estimate, std.error, statistic, p.value, conf.low, conf.high 
+Columns: term, value, estimate, std.error, statistic, p.value, conf.low, conf.high 
 

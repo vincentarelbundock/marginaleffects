@@ -5,5 +5,5 @@
     5     21.4      1.162 18.4   <0.001  19.1   23.7
 
 Prediction type:  response 
-Columns: type, gear, estimate, std.error, statistic, p.value, conf.low, conf.high 
+Columns: gear, estimate, std.error, statistic, p.value, conf.low, conf.high 
 
