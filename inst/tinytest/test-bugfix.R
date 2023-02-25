@@ -1,5 +1,4 @@
 source("helpers.R")
-if (!EXPENSIVE) exit_file("EXPENSIVE")
 using("marginaleffects")
 
 
@@ -90,5 +89,25 @@ expect_equivalent(nrow(mfx), 1)
 expect_true("young - old" %in% mfx$contrast)
 
 
+# Issue #697
+dat <- data.frame(
+  outcome = rbinom(n = 100, size = 1, prob = 0.35),
+  var_binom = as.factor(rbinom(n = 100, size = 1, prob = 0.2)),
+  var_cont = rnorm(n = 100, mean = 10, sd = 7),
+  group = sample(letters[1:4], size = 100, replace = TRUE),
+  groups = sample(letters[1:4], size = 100, replace = TRUE))
+
+m1 <- glm(
+    outcome ~ var_binom + var_cont + group,
+    data = dat, family = binomial())
+expect_error(avg_slopes(m1), pattern = "forbidden")
+expect_error(avg_slopes(m1, variables = "var_cont"), pattern = "forbidden")
+
+m2 <- glm(
+    outcome ~ var_binom + var_cont + groups,
+    data = dat, family = binomial())
+expect_inherits(avg_slopes(m2), "slopes")
+expect_inherits(avg_slopes(m2, variables = "var_cont"), "slopes")
 
 rm(list = ls())
+

@@ -53,16 +53,20 @@ sanitize_variables <- function(variables,
     }
     
     # reserved keywords
+    # Issue #697: we used to allow "group", as long as it wasn't in
+    # `variables`, but this created problems with automatic `by=TRUE`. Perhaps
+    # I could loosen this, but there are many interactions, and the lazy way is
+    # just to forbid entirely.
     reserved <- c(
         "rowid", "group", "term", "contrast", "estimate",
         "std.error", "statistic", "conf.low", "conf.high", "p.value",
         "p.value.nonsup", "p.value.noninf")
-    bad <- intersect(names(predictors), reserved)
+    bad <- unique(intersect(c(names(predictors), colnames(modeldata)), reserved))
     if (length(bad) > 0) {
         msg <- c(
-            "The following variable name are forbidden to avoid conflicts with the column names of the outputs produced by the `marginaleffects` package:",
+            "These variable names are forbidden to avoid conflicts with the outputs of `marginaleffects`:",
             sprintf("%s", paste(sprintf('"%s"', bad), collapse = ", ")),
-            "Please rename your variables before fitting the model or change the value of the `variables` argument.")
+            "Please rename your variables before fitting the model.")
         insight::format_error(msg)
     }
 

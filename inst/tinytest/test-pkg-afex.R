@@ -60,11 +60,11 @@ expect_equivalent(mm$std.error, em$SE)
 
 # data from https://github.com/mattansb/Analysis-of-Factorial-Designs-foR-Psychologists/03 Main and simple effects analysis
 Phobia <- readRDS("stata/databases/Phobia.rds")
-mod <- aov_ez(
+mod <- suppressMessages(aov_ez(
   id = "ID", dv = "BehavioralAvoidance",
   between = c("Condition", "Gender"),
   data = Phobia,
-  anova_table = list(es = "pes"))
+  anova_table = list(es = "pes")))
 
 pre <- predictions(mod)
 mfx <- slopes(mod)
