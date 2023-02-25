@@ -44,14 +44,11 @@ jobs:
       - name: Bootstrap
         run: ./run.sh bootstrap
 
-      - name: remotes
-        run: ./run.sh install_r "remotes"
-
-      - name: bspm
-        run: sudo Rscript --vanilla -e 'install.packages("bspm", repos="https://cran.r-project.org")' 
-
+      # - name: remotes
+      #   run: ./run.sh install_r "remotes"
+      #
       - name: Dependencies
-        run: sudo ./run.sh install_all
+        run: ./run.sh install_all
 
       - name: TMB
         run: ./run.sh install_source TMB
