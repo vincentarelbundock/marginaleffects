@@ -140,6 +140,7 @@ Suggests:
     tidyr,
     tidyverse,
     tinytest,
+    titanic,
     truncreg,
     tsModel,
     withr

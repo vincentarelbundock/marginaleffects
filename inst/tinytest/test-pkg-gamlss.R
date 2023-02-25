@@ -62,6 +62,7 @@ expect_equivalent(mm$estimate, em$response, tol = 0.001)
 expect_equivalent(mm$std.error, em$std.error, tolerance = 0.01)
 
 # Logistic regression
+data("titanic_train", package = "titanic")
 tmp <- titanic_train
 tmp$Pclass <- as.factor(tmp$Pclass)
 dat <<- na.omit(tmp)
@@ -87,8 +88,6 @@ em <- emtrends(mod, ~Age, "Age", at = list("Pclass" = "1"))
 em <- tidy(em)
 expect_equivalent(mfx$estimate, em$Age.trend, tolerance = .001)
 expect_equivalent(mfx$std.error, em$std.error, tolerance = .001)
-
-exit_file("breaks here; predictions takes forever and uses up all the memory")
 
 # predictions: no validity
 pred <- predictions(mod, what = "mu")
