@@ -44,9 +44,6 @@ jobs:
       - name: Bootstrap
         run: ./run.sh bootstrap
 
-      # - name: remotes
-      #   run: ./run.sh install_r "remotes"
-      #
       - name: Dependencies
         run: ./run.sh install_all
 
@@ -55,6 +52,9 @@ jobs:
 
       - name: glmmTMB source
         run: ./run.sh install_source glmmTMB
+
+      - name: tinyviztest
+        run: ./run.sh install_github vincentarelbundock/tinyviztest
 
       - name: Test
         run: ./run.sh run_tests
