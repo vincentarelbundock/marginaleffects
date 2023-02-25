@@ -102,6 +102,7 @@ Suggests:
     nlme,
     nnet,
     numDeriv,
+    optmatch,
     ordinal,
     ordbetareg,
     parameters,
