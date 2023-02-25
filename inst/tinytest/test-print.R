@@ -1,7 +1,7 @@
 source("helpers.R")
+using("marginaleffects")
 if (!requiet("tinyviztest")) exit_file("tinyviztest")
 using("tinyviztest")
-using("marginaleffects")
 
 mod <- lm(mpg ~ hp * factor(gear), mtcars)
 expect_snapshot_print(predictions(mod), "print-predictions")

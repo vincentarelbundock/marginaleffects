@@ -1,7 +1,6 @@
 source("helpers.R")
 using("marginaleffects")
 if (!requiet("tinyviztest")) exit_file("tinyviztest")
-
 using("tinyviztest")
 
 # character predictors

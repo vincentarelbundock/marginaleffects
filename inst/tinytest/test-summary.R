@@ -1,8 +1,7 @@
 source("helpers.R")
-if (!requiet("tinyviztest")) exit_file("tinyviztest")
-
-using("tinyviztest")
 using("marginaleffects")
+if (!requiet("tinyviztest")) exit_file("tinyviztest")
+using("tinyviztest")
 
 requiet("poorman")
 

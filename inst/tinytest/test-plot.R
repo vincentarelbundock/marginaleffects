@@ -1,8 +1,6 @@
 source("helpers.R")
 using("marginaleffects")
 if (!requiet("tinyviztest")) exit_file("tinyviztest")
-
-library("tinyviztest")
 using("tinyviztest")
 
 # from marginaleffects objects
