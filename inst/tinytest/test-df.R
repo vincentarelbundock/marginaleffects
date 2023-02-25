@@ -1,8 +1,6 @@
 source("helpers.R")
 requiet("emmeans")
-requiet("tinyviztest")
 requiet("marginaleffects")
-using("tinyviztest")
 using("marginaleffects")
 
 # TODO: rename dat to df to make sure there's no clash with the internal keyword
@@ -47,6 +45,9 @@ expect_true(all(pre29$conf.low < preInf$conf.low))
 
 
 # Issue #627: print t instead of z in column names
+if (!requiet("tinyviztest")) exit_file("tinyviztest")
+using("tinyviztest")
+
 mod <- lm(mpg ~ hp, mtcars)
 expect_snapshot_print(avg_comparisons(mod), "df-z")
 expect_snapshot_print(avg_comparisons(mod, df = 30), "df-t")
