@@ -51,7 +51,7 @@ jobs:
         run: sudo Rscript --vanilla -e 'install.packages("bspm", repos="https://cran.r-project.org")' 
 
       - name: Dependencies
-        run: ./run.sh install_all
+        run: sudo ./run.sh install_all
 
       - name: TMB
         run: ./run.sh install_source TMB
