@@ -148,7 +148,7 @@ tidy.comparisons <- function(x,
 
     draws <- attr(x, "posterior_draws")
 
-    idx_by <- c("type", "group", "term", "contrast", 
+    idx_by <- c("group", "term", "contrast", 
                 grep("^contrast_\\w+", colnames(x_dt), value = TRUE))
     idx_by <- intersect(idx_by, colnames(x_dt))
     idx_na <- is.na(x_dt$comparison)

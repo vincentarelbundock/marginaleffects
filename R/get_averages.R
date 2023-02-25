@@ -81,7 +81,7 @@ get_averages.predictions <- function(x, by = TRUE, byfun = NULL, ...) {
     out <- recall(x, by = by, byfun = byfun, ...)
 
     # sort and subset columns
-    cols <- c("type", "group", "term", "contrast",
+    cols <- c("group", "term", "contrast",
               attr(x, "by"),
               "by",
               grep("^contrast_\\w+", colnames(out), value = TRUE),
@@ -123,7 +123,7 @@ get_averages.comparisons <- function(x, by = TRUE, ...) {
     out <- recall(x, by = by, ...)
 
     # sort and subset columns
-    cols <- c("type", "group", "term", "contrast",
+    cols <- c("group", "term", "contrast",
               "by",
               attr(x, "by"),
               grep("^contrast_\\w+", colnames(out), value = TRUE),

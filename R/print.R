@@ -87,10 +87,6 @@ print.marginaleffects <- function(x,
         out$contrast <- NULL
     }
 
-    if ("type" %in% colnames(out) && length(unique(out$type)) == 1) {
-        out$type <- NULL
-    }
-
     # rename
     dict <- c(
         "group" = "Group",

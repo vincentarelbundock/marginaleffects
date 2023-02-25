@@ -272,7 +272,7 @@ slopes <- function(model,
     data.table::setDT(out)
 
     # clean columns
-    stubcols <- c("rowid", "type", "group", "term", "contrast", "hypothesis", "dydx", "estimate", "std.error", "statistic", "p.value", "conf.low", "conf.high",
+    stubcols <- c("rowid", "group", "term", "contrast", "hypothesis", "dydx", "estimate", "std.error", "statistic", "p.value", "conf.low", "conf.high",
                   sort(grep("^predicted", colnames(newdata), value = TRUE)))
     cols <- intersect(stubcols, colnames(out))
     cols <- unique(c(cols, colnames(out)))

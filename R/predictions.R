@@ -388,18 +388,10 @@ predictions <- function(model,
                  skip_absent = TRUE)
     } else {
         tmp <- data.frame(newdata$rowid, type, tmp)
-        colnames(tmp) <- c("rowid", "type", "estimate")
+        colnames(tmp) <- c("rowid", "estimate")
         if ("rowidcf" %in% colnames(newdata)) {
             tmp[["rowidcf"]] <- newdata[["rowidcf"]]
         }
-    }
-
-    # default type column is the `predict()` method
-    if (!is.na(type)) {
-        tmp$type <- type
-    # alternative type is the `insight` name
-    } else {
-        tmp$type <- names(type)
     }
 
     if (!"rowid" %in% colnames(tmp) && nrow(tmp) == nrow(newdata)) {
@@ -484,7 +476,7 @@ predictions <- function(model,
     }
 
     stubcols <- c(
-        "rowid", "rowidcf", "type", "term", "group", "hypothesis",
+        "rowid", "rowidcf", "term", "group", "hypothesis",
         bycols,
         "estimate", "std.error", "statistic", "p.value", "conf.low",
         "conf.high", "marginaleffects_wts",

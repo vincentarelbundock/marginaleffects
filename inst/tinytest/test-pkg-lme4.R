@@ -271,18 +271,6 @@ expect_equivalent(attr(cmp, "vcov.type"), "Kenward-Roger")
 
 
 
-# # Issue 437: allow `get_predicted()` arguments
-# mod <-lme4::lmer(mpg ~ hp + (1 | cyl), data = mtcars)
-# p1 <- predictions(mod, type = "prediction")
-# p2 <- predictions(mod)
-# expect_inherits(p1, "predictions")
-# expect_inherits(p2, "predictions")
-# expect_true("prediction" %in% p1$type)
-# expect_true("response" %in% p2$type)
-# expect_true(all(p1$conf.low < p2$conf.low))
-# expect_true(all(p1$conf.high > p2$conf.high))
-
-
 exit_file("TODO: check failing comparisons()")
 # Issue #436
 # e = number of events

@@ -1,5 +1,9 @@
 # marginaleffects 0.10.0.9000
 
+Breaking changes:
+
+* `type` column is replaced by `type` attribute.
+
 Performance:
 
 * Bayesian models with many rows. Thanks to Etienne Bacher. #694 

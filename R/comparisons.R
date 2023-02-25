@@ -423,7 +423,7 @@ comparisons <- function(model,
 
     # standard errors via delta method
     } else if (!vcov_false && isTRUE(checkmate::check_matrix(vcov))) {
-        idx <- intersect(colnames(mfx), c("type", "group", "term", "contrast"))
+        idx <- intersect(colnames(mfx), c("group", "term", "contrast"))
         idx <- mfx[, (idx), drop = FALSE]
         args <- list(model,
                      vcov = vcov,
@@ -471,8 +471,6 @@ comparisons <- function(model,
     }
 
     # meta info
-    mfx[["type"]] <- type
-
     mfx <- get_ci(
         mfx,
         conf_level = conf_level,
@@ -501,7 +499,7 @@ comparisons <- function(model,
     }
 
     stubcols <- c(
-        "rowid", "rowidcf", "type", "group", "term", "hypothesis", "by",
+        "rowid", "rowidcf", "group", "term", "hypothesis", "by",
         grep("^contrast", colnames(mfx), value = TRUE),
         bycols,
         "estimate", "std.error", "statistic", "p.value", "conf.low",

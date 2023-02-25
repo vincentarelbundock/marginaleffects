@@ -5,7 +5,7 @@ sanity_by <- function(by, newdata) {
         checkmate::check_character(by, min.len = 1),
         checkmate::check_null(by))
 
-    known <- c("by", "group", "term", "rowid", "rowidcf", "type", "contrast", colnames(newdata))
+    known <- c("by", "group", "term", "rowid", "rowidcf", "contrast", colnames(newdata))
 
     if (isTRUE(by == "group") && "group" %in% colnames(newdata)) {
         msg <- 'The "group" variable name is forbidden to avoid conflicts with the column names of the outputs produced by the `marginaleffects` package. Please rename your variable of change the value of the `by` argument.'
@@ -21,7 +21,7 @@ sanity_by <- function(by, newdata) {
     }
 
     if (flag) {
-        bycols <- paste(setdiff(colnames(newdata), c("rowid", "rowidcf", "term", "group", "type")), collapse = ", ")
+        bycols <- paste(setdiff(colnames(newdata), c("rowid", "rowidcf", "term", "group")), collapse = ", ")
         msg <- c(
             "The `by` argument must be either:", "",
             sprintf("1. Character vector in which each element is part of: %s", bycols),
