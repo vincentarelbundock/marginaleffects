@@ -6,5 +6,5 @@
 
 Prediction type:  response 
 Results averaged over levels of: gear 
-Columns: rowid, term, value, gear, estimate, std.error, statistic, p.value, conf.low, conf.high 
+Columns: rowid, term, value, gear, estimate, std.error, statistic, p.value, conf.low, conf.high, hp, mpg, wts 
 

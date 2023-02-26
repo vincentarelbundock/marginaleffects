@@ -132,7 +132,7 @@ merge_by_rowid <- function(x, y) {
         }
         # TODO: this breaks in mclogit. maybe there's a more robust merge
         # solution for weird grouped data. But it seems fine because
-        # `predictions()` xput does include the original predictors.
+        # `predictions()` output does include the original predictors.
         out <- tryCatch(
             merge(x, tmp, by = "rowid", sort = FALSE),
             error = function(e) x)

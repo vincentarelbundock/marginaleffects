@@ -473,7 +473,7 @@ predictions <- function(model,
     out <- data.frame(tmp)
 
     # expensive: only do this inside jacobian if necessary
-    if (!is.null(wts) || !isTRUE(checkmate::check_flag(by, null.ok = TRUE))) {
+    if (!inherits(model, "mclogit")) { # weird case. probably a cleaner way but lazy now...
         out <- merge_by_rowid(out, newdata)
     }
 
@@ -594,7 +594,9 @@ get_predictions <- function(model,
     }
 
     # expensive: only do this inside the jacobian if necessary
-    if (!is.null(wts) || !isTRUE(checkmate::check_flag(by, null.ok = TRUE))) {
+    if (!is.null(wts) ||
+        !isTRUE(checkmate::check_flag(by, null.ok = TRUE)) ||
+        inherits(model, "mclogit")) { # not sure why sorting is so finicky here
         out <- merge_by_rowid(out, newdata)
     }
 
