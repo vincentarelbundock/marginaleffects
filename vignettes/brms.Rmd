@@ -211,9 +211,11 @@ nd = datagrid(model = mod,
               civil_liberties = .5,
               region = "Middle East and North Africa")
 p1 <- predictions(mod, type = "response", newdata = nd) |>
-    posterior_draws()
+    posterior_draws() |>
+    transform(type = "Response")
 p2 <- predictions(mod, type = "prediction", newdata = nd) |>
-    posterior_draws()
+    posterior_draws() |>
+    transform(type = "Prediction")
 pred <- rbind(p1, p2)
 ```
 
