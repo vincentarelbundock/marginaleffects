@@ -19,6 +19,7 @@ Bugs:
 * Error on `predictions()` with `by` and `wts`. Thanks to Noah Greifer for report #695.
 * `afex`: some models generated errors. Thanks to  Daniel Lüdecke for report #696.
 * `group` column name is always forbidden. Thanks to Daniel Lüdecke for report #697.
+* Blank graphs in `plot_comparisons()` with a list in `variables`.
 
 # marginaleffects 0.10.0
 
