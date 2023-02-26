@@ -116,3 +116,28 @@ evalup <- function(xcall) {
     }
     return(out)
 }
+
+
+merge_by_rowid <- function(x, y) {
+    # return data
+    # very import to avoid sorting, otherwise bayesian draws won't fit predictions
+    # merge only with rowid; not available for hypothesis
+    mergein <- setdiff(colnames(y), colnames(x))
+    if ("rowid" %in% colnames(x) && "rowid" %in% colnames(y) && length(mergein) > 0) {
+        idx <- c("rowid", mergein)
+        if (!data.table::is.data.table(y)) {
+            tmp <- data.table::data.table(y)[, ..idx]
+        } else {
+            tmp <- y[, ..idx]
+        }
+        # TODO: this breaks in mclogit. maybe there's a more robust merge
+        # solution for weird grouped data. But it seems fine because
+        # `predictions()` xput does include the original predictors.
+        out <- tryCatch(
+            merge(x, tmp, by = "rowid", sort = FALSE),
+            error = function(e) x)
+    } else {
+        out <- x
+    }
+    return(out)
+}

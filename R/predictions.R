@@ -380,6 +380,7 @@ predictions <- function(model,
         newdata = newdata,
         type = type,
         hypothesis = hypothesis,
+        wts = wts,
         by = by,
         byfun = byfun)
 
@@ -416,7 +417,6 @@ predictions <- function(model,
         }
     }
 
-
     # bayesian posterior draws
     draws <- attr(tmp, "posterior_draws")
 
@@ -435,7 +435,7 @@ predictions <- function(model,
             if (isTRUE(checkmate::check_matrix(V))) {
                 # vcov = FALSE to speed things up
                 fun <- function(...) {
-                    get_predictions(..., verbose = FALSE)$estimate
+                    get_predictions(..., wts = wts, verbose = FALSE)$estimate
                 }
                 args <- list(
                     model,
@@ -471,6 +471,11 @@ predictions <- function(model,
     }
 
     out <- data.frame(tmp)
+
+    # expensive: only do this inside jacobian if necessary
+    if (!is.null(wts) || !isTRUE(checkmate::check_flag(by, null.ok = TRUE))) {
+        out <- merge_by_rowid(out, newdata)
+    }
 
     # save weights as attribute and not column
     marginaleffects_wts_internal <- out[["marginaleffects_wts_internal"]]
@@ -545,6 +550,7 @@ get_predictions <- function(model,
                             byfun = byfun,
                             hypothesis = NULL,
                             verbose = TRUE,
+                            wts = NULL,
                             ...) {
 
 
@@ -587,24 +593,9 @@ get_predictions <- function(model,
         draws <- draws[idx, , drop = FALSE]
     }
 
-    # return data
-    # very import to avoid sorting, otherwise bayesian draws won't fit predictions
-    # merge only with rowid; not available for hypothesis
-    mergein <- setdiff(colnames(newdata), colnames(out))
-    if ("rowid" %in% colnames(out) && "rowid" %in% colnames(newdata) && length(mergein) > 0) {
-        idx <- c("rowid", mergein)
-
-        if (!data.table::is.data.table(newdata)) {
-          tmp <- data.table::data.table(newdata)[, ..idx]
-        } else {
-          tmp <- newdata[, ..idx]
-        }
-        # TODO: this breaks in mclogit. maybe there's a more robust merge
-        # solution for weird grouped data. But it seems fine because
-        # `predictions()` output does include the original predictors.
-        out <- tryCatch(
-            merge(out, tmp, by = "rowid", sort = FALSE),
-            error = function(e) out)
+    # expensive: only do this inside the jacobian if necessary
+    if (!is.null(wts) || !isTRUE(checkmate::check_flag(by, null.ok = TRUE))) {
+        out <- merge_by_rowid(out, newdata)
     }
 
     # averaging by groups
