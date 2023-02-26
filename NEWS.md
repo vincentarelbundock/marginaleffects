@@ -12,6 +12,7 @@ New:
 Performance:
 
 * Bayesian models with many rows. Thanks to Etienne Bacher. #694 
+* Faster predictions, especially with standard errors and large datasets.
 
 Bugs:
 

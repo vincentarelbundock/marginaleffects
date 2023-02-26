@@ -664,15 +664,14 @@ All the same arguments apply to the plotting functions of the `marginaleffects` 
 
 ```{r}
 library(ggplot2)
-
-mod2 <- glm(vs ~ mpg + mpg^2, data = mtcars, family = binomial)
-
+dat_titanic <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/Stat2Data/Titanic.csv")
+mod2 <- glm(Survived  ~ Age, data = dat_titanic, family = binomial)
 plot_comparisons(
     mod2,
-    variables = list("mpg" = 10),
-    condition = "mpg",
-    transformation_pre = "ratio") +
-    ylab("Adjusted Risk Ratio\nP(vs = 1 | mpg + 10) / P(vs = 1 | mpg)")
+    variables = list("Age" = 10),
+    condition = "Age",
+    transform_pre = "ratio") +
+    ylab("Adjusted Risk Ratio\nP(Survived = 1 | Age + 10) / P(Survived = 1 | Age)")
 ```
 
 # Forward, Backward, Centered, and Custom Differences

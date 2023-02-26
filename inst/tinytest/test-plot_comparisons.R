@@ -34,6 +34,18 @@ p <- plot_comparisons(mod, variables = "hp", condition = list("am", "drat" = 3:5
 expect_inherits(p, "gg")
 
 
+# Issue #545: blank graph
+library(ggplot2)
+dat_titanic <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/Stat2Data/Titanic.csv")
+mod2 <- glm(Survived  ~ Age, data = dat_titanic, family = binomial)
+p <- plot_comparisons(
+    mod2,
+    variables = list("Age" = 10),
+    condition = "Age",
+    transform_pre = "ratio") +
+    ylab("Adjusted Risk Ratio\nP(Survived = 1 | Age + 10) / P(Survived = 1 | Age)")
+expect_snapshot_plot(p, "plot_comparisons-rr_titanic")
+
 
 
 rm(list = ls())

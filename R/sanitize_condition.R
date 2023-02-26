@@ -130,8 +130,13 @@ sanitize_condition <- function(model, condition, variables = NULL, modeldata = N
 
     at_list[["model"]] <- model
     at_list[["newdata"]] <- dat
-
-    if (!all(variables %in% names(condition))) {
+    
+    if (isTRUE(checkmate::check_list(variables))) {
+        flag <- all(names(variables) %in% names(condition))
+    } else {
+        flag <- all(variables %in% names(condition))
+    }
+    if (!flag) {
         # sometimes we use the same condition as effect (e.g., GAM vignette),
         # but otherwise we don't want it at all
         if (isTRUE(checkmate::check_character(variables))) {
