@@ -7,6 +7,7 @@ Breaking changes:
 New:
 
 * `p_adjust` argument: Adjust p-values for multiple comparisons. 
+* `equivalence` argument available everywhere.
 
 Performance:
 

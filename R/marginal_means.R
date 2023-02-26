@@ -58,6 +58,7 @@
 #' @template deltamethod
 #' @template model_specific_arguments
 #' @template bayesian
+#' @template equivalence
 #'
 #' @return Data frame of marginal means with one row per variable-value
 #' combination.
@@ -139,6 +140,7 @@ marginal_means <- function(model,
                            transform_post = NULL,
                            cross = FALSE,
                            hypothesis = NULL,
+                           equivalence = NULL,
                            p_adjust = NULL,
                            df = Inf,
                            wts = "equal",
@@ -153,6 +155,10 @@ marginal_means <- function(model,
             insight::format_error("The `variables_grid` argument and has been replaced by `newdata`. These two arguments cannot be used simultaneously.")
         }
         newdata <- dots[["variables_grid"]]
+    }
+
+    if (!is.null(equivalence) && !is.null(p_adjust)) {
+        insight::format_error("The `equivalence` and `p_adjust` arguments cannot be used together.")
     }
 
     # if type is NULL, we backtransform if relevant
@@ -361,7 +367,7 @@ marginal_means <- function(model,
         ...)
 
     # equivalence tests
-    out <- equivalence(out, df = df, ...)
+    out <- equivalence(out, equivalence = equivalence, df = df, ...)
 
     # after assign draws
     out <- backtransform(out, transform_post)

@@ -72,6 +72,7 @@
 #' @template deltamethod
 #' @template model_specific_arguments
 #' @template bayesian
+#' @template equivalence
 #'
 #' @return A `data.frame` with one row per observation and several columns:
 #' * `rowid`: row number of the `newdata` data frame
@@ -195,6 +196,7 @@ predictions <- function(model,
                         wts = NULL,
                         transform_post = NULL,
                         hypothesis = NULL,
+                        equivalence = NULL,
                         p_adjust = NULL,
                         df = Inf,
                         ...) {
@@ -204,6 +206,10 @@ predictions <- function(model,
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
     scall <- substitute(newdata)
     newdata <- sanitize_newdata_call(scall, newdata, model)
+
+    if (!is.null(equivalence) && !is.null(p_adjust)) {
+        insight::format_error("The `equivalence` and `p_adjust` arguments cannot be used together.")
+    }
 
     # build call: match.call() doesn't work well in *apply()
     call_attr <- c(list(
@@ -490,7 +496,7 @@ predictions <- function(model,
     attr(out, "posterior_draws") <- draws
 
     # equivalence tests
-    out <- equivalence(out, df = df, ...)
+    out <- equivalence(out, equivalence = equivalence, df = df, ...)
 
     # after rename to estimate / after assign draws
     out <- backtransform(out, transform_post = transform_post)
@@ -636,6 +642,7 @@ avg_predictions <- function(model,
                             wts = NULL,
                             transform_post = NULL,
                             hypothesis = NULL,
+                            equivalence = NULL,
                             p_adjust = NULL,
                             df = Inf,
                             ...) {
@@ -676,6 +683,7 @@ avg_predictions <- function(model,
         wts = wts,
         transform_post = transform_post,
         hypothesis = hypothesis,
+        equivalence = equivalence,
         p_adjust = p_adjust,
         df = df,
         ...)

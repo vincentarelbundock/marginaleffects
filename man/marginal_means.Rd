@@ -14,6 +14,7 @@ marginal_means(
   transform_post = NULL,
   cross = FALSE,
   hypothesis = NULL,
+  equivalence = NULL,
   p_adjust = NULL,
   df = Inf,
   wts = "equal",
@@ -96,6 +97,8 @@ on the link scale before backtransforming them using the inverse link function.}
 }
 \item See the Examples section below and the vignette: https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html
 }}
+
+\item{equivalence}{Numeric vector of length 2: bounds used for the two-one-sided test (TOST) of equivalence, and for the non-inferiority and non-superiority tests. See Details section below.}
 
 \item{p_adjust}{Adjust p-values for multiple comparisons: "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", or "fdr". See \link[stats:p.adjust]{stats::p.adjust}}
 
@@ -223,6 +226,35 @@ MCMC chain, according to what the user requested in \code{by} argument or
 \code{tidy()/summary()} functions. Then, we identify the center of the resulting
 posterior using the function supplied to the
 \code{"marginaleffects_posterior_center"} option (the median by default).
+}
+
+\section{Equivalence, Inferiority, Superiority}{
+
+
+\eqn{\theta} is an estimate, \eqn{\sigma_\theta} its estimated standard error, and \eqn{[a, b]} are the bounds of the interval supplied to the \code{equivalence} argument.
+
+Non-inferiority:
+\itemize{
+\item \eqn{H_0}{H0}: \eqn{\theta \leq a}{\theta <= a}
+\item \eqn{H_1}{H1}: \eqn{\theta > a}
+\item \eqn{t=(\theta - a)/\sigma_\theta}{t=(\theta - a)/\sigma_\theta}
+\item p: Upper-tail probability
+}
+
+Non-superiority:
+\itemize{
+\item \eqn{H_0}{H0}: \eqn{\theta \geq b}{\theta >= b}
+\item \eqn{H_1}{H1}: \eqn{\theta < b}
+\item \eqn{t=(\theta - b)/\sigma_\theta}{t=(\theta - b)/\sigma_\theta}
+\item p: Lower-tail probability
+}
+
+Equivalence: Two One-Sided Tests (TOST)
+\itemize{
+\item p: Maximum of the non-inferiority and non-superiority p values.
+}
+
+Thanks to Russell V. Lenth for the excellent \code{emmeans} package and documentation which inspired this feature.
 }
 
 \examples{

@@ -106,6 +106,7 @@
 #' @template deltamethod
 #' @template model_specific_arguments
 #' @template bayesian
+#' @template equivalence
 #'
 #' @return A `data.frame` with one row per observation (per term/group) and several columns:
 #' * `rowid`: row number of the `newdata` data frame
@@ -198,6 +199,7 @@ slopes <- function(model,
                    slope = "dydx",
                    wts = NULL,
                    hypothesis = NULL,
+                   equivalence = NULL,
                    p_adjust = NULL,
                    df = Inf,
                    eps = NULL,
@@ -262,6 +264,7 @@ slopes <- function(model,
         type = type,
         wts = wts,
         hypothesis = hypothesis,
+        equivalence = equivalence,
         df = df,
         p_adjust = p_adjust,
         by = by,
@@ -342,6 +345,7 @@ avg_slopes <- function(model,
                        slope = "dydx",
                        wts = NULL,
                        hypothesis = NULL,
+                       equivalence = NULL,
                        p_adjust = NULL,
                        df = Inf,
                        eps = NULL,
@@ -376,6 +380,7 @@ avg_slopes <- function(model,
         slope = slope,
         wts = wts,
         hypothesis = hypothesis,
+        equivalence = equivalence,
         p_adjust = p_adjust,
         df = df,
         eps = eps,

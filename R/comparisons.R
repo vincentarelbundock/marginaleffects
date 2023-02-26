@@ -64,6 +64,7 @@
 #' * function: accept two equal-length numeric vectors of adjusted predictions (`hi` and `lo`) and returns a vector of contrasts of the same length, or a unique numeric value.
 #'   - See the Transformations section below for examples of valid functions.
 #' @param transform_post string or function. Transformation applied to unit-level estimates and confidence intervals just before the function returns results. Functions must accept a vector and return a vector of the same length. Support string shortcuts: "exp", "ln"
+#' @param equivalence Numeric vector of length 2: bounds used for the two-one-sided test (TOST) of equivalence, and for the non-inferiority and non-superiority tests. See Details section below.
 #' @param by Aggregate unit-level estimates (aka, marginalize, average over). Valid inputs:
 #'   - `FALSE`: return the original unit-level estimates.
 #'   - `TRUE`: aggregate estimates for each term.
@@ -77,6 +78,7 @@
 #' @template model_specific_arguments
 #' @template transform_pre_functions
 #' @template bayesian
+#' @template equivalence
 #'
 #' @return A `data.frame` with one row per observation (per term/group) and several columns:
 #' * `rowid`: row number of the `newdata` data frame
@@ -210,6 +212,7 @@ comparisons <- function(model,
                         cross = FALSE,
                         wts = NULL,
                         hypothesis = NULL,
+                        equivalence = NULL,
                         p_adjust = NULL,
                         df = Inf,
                         eps = NULL,
@@ -220,6 +223,10 @@ comparisons <- function(model,
 
     # required by stubcols later, but might be overwritten
     bycols <- NULL
+
+    if (!is.null(equivalence) && !is.null(p_adjust)) {
+        insight::format_error("The `equivalence` and `p_adjust` arguments cannot be used together.")
+    }
 
     # slopes()` **must** run its own sanity checks and hardcode valid arguments
     internal_call <- dots[["internal_call"]]
@@ -518,7 +525,7 @@ comparisons <- function(model,
     attr(mfx, "posterior_draws") <- draws
 
     # equivalence tests
-    mfx <- equivalence(mfx, df = df, ...)
+    mfx <- equivalence(mfx, equivalence = equivalence, df = df, ...)
 
     # after draws attribute
     mfx <- backtransform(mfx, transform_post)
@@ -596,6 +603,7 @@ avg_comparisons <- function(model,
                             cross = FALSE,
                             wts = NULL,
                             hypothesis = NULL,
+                            equivalence = NULL,
                             p_adjust = NULL,
                             df = Inf,
                             eps = NULL,
@@ -629,6 +637,7 @@ avg_comparisons <- function(model,
         cross = cross,
         wts = wts,
         hypothesis = hypothesis,
+        equivalence = equivalence,
         p_adjust = p_adjust,
         df = df,
         eps = eps,

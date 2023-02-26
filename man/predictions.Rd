@@ -17,6 +17,7 @@ predictions(
   wts = NULL,
   transform_post = NULL,
   hypothesis = NULL,
+  equivalence = NULL,
   p_adjust = NULL,
   df = Inf,
   ...
@@ -34,6 +35,7 @@ avg_predictions(
   wts = NULL,
   transform_post = NULL,
   hypothesis = NULL,
+  equivalence = NULL,
   p_adjust = NULL,
   df = Inf,
   ...
@@ -164,6 +166,8 @@ contrasts or slopes. These weights only affect the averaging in
 \item See the Examples section below and the vignette: https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html
 }}
 
+\item{equivalence}{Numeric vector of length 2: bounds used for the two-one-sided test (TOST) of equivalence, and for the non-inferiority and non-superiority tests. See Details section below.}
+
 \item{p_adjust}{Adjust p-values for multiple comparisons: "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", or "fdr". See \link[stats:p.adjust]{stats::p.adjust}}
 
 \item{df}{Degrees of freedom used to compute p values and confidence intervals. A single numeric value between 1 and \code{Inf}. When \code{df} is \code{Inf}, the normal distribution is used. When \code{df} is finite, the \code{t} distribution is used. See \link[insight:get_df]{insight::get_df} for a convenient function to extract degrees of freedom. Ex: \code{slopes(model, df = insight::get_df(model))}}
@@ -292,6 +296,35 @@ MCMC chain, according to what the user requested in \code{by} argument or
 \code{tidy()/summary()} functions. Then, we identify the center of the resulting
 posterior using the function supplied to the
 \code{"marginaleffects_posterior_center"} option (the median by default).
+}
+
+\section{Equivalence, Inferiority, Superiority}{
+
+
+\eqn{\theta} is an estimate, \eqn{\sigma_\theta} its estimated standard error, and \eqn{[a, b]} are the bounds of the interval supplied to the \code{equivalence} argument.
+
+Non-inferiority:
+\itemize{
+\item \eqn{H_0}{H0}: \eqn{\theta \leq a}{\theta <= a}
+\item \eqn{H_1}{H1}: \eqn{\theta > a}
+\item \eqn{t=(\theta - a)/\sigma_\theta}{t=(\theta - a)/\sigma_\theta}
+\item p: Upper-tail probability
+}
+
+Non-superiority:
+\itemize{
+\item \eqn{H_0}{H0}: \eqn{\theta \geq b}{\theta >= b}
+\item \eqn{H_1}{H1}: \eqn{\theta < b}
+\item \eqn{t=(\theta - b)/\sigma_\theta}{t=(\theta - b)/\sigma_\theta}
+\item p: Lower-tail probability
+}
+
+Equivalence: Two One-Sided Tests (TOST)
+\itemize{
+\item p: Maximum of the non-inferiority and non-superiority p values.
+}
+
+Thanks to Russell V. Lenth for the excellent \code{emmeans} package and documentation which inspired this feature.
 }
 
 \examples{
