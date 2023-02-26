@@ -80,6 +80,7 @@
 #'   - "sequential": difference between an estimate and the estimate in the next row.
 #'   - "revpairwise", "revreference", "revsequential": inverse of the corresponding hypotheses, as described above.
 #' + See the Examples section below and the vignette: https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html
+#' @param p_adjust Adjust p-values for multiple comparisons: "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", or "fdr". See [stats::p.adjust]
 #' @param df Degrees of freedom used to compute p values and confidence intervals. A single numeric value between 1 and `Inf`. When `df` is `Inf`, the normal distribution is used. When `df` is finite, the `t` distribution is used. See [insight::get_df] for a convenient function to extract degrees of freedom. Ex: `slopes(model, df = insight::get_df(model))`
 #' @param eps NULL or numeric value which determines the step size to use when
 #' calculating numerical derivatives: (f(x+eps)-f(x))/eps. When `eps` is
@@ -197,6 +198,7 @@ slopes <- function(model,
                    slope = "dydx",
                    wts = NULL,
                    hypothesis = NULL,
+                   p_adjust = NULL,
                    df = Inf,
                    eps = NULL,
                    ...) {
@@ -261,6 +263,7 @@ slopes <- function(model,
         wts = wts,
         hypothesis = hypothesis,
         df = df,
+        p_adjust = p_adjust,
         by = by,
         eps = eps,
         transform_pre = slope,
@@ -339,6 +342,7 @@ avg_slopes <- function(model,
                        slope = "dydx",
                        wts = NULL,
                        hypothesis = NULL,
+                       p_adjust = NULL,
                        df = Inf,
                        eps = NULL,
                        ...) {
@@ -372,6 +376,7 @@ avg_slopes <- function(model,
         slope = slope,
         wts = wts,
         hypothesis = hypothesis,
+        p_adjust = p_adjust,
         df = df,
         eps = eps,
         ...)

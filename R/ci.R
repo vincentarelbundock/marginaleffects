@@ -5,10 +5,12 @@ get_ci <- function(
     draws = NULL,
     vcov = TRUE,
     null_hypothesis = 0,
+    p_adjust = NULL,
     model = NULL,
     ...) {
 
     checkmate::assert_number(null_hypothesis)
+    checkmate::assert_choice(p_adjust, choices = p.adjust.methods, null.ok = TRUE)
 
     if (!is.null(draws)) {
         out <- get_ci_draws(
@@ -60,7 +62,8 @@ get_ci <- function(
                    p_overwrite
 
     ci_overwrite <- !"conf.low" %in% colnames(x) &&
-                    "std.error" %in% colnames(x)
+                    "std.error" %in% colnames(x) &&
+                    is.null(p_adjust)
 
     if (z_overwrite) {
         if (z_overwrite) {
@@ -82,6 +85,10 @@ get_ci <- function(
         }
         x[["conf.low"]] <- x[["estimate"]] - critical * x[["std.error"]]
         x[["conf.high"]] <- x[["estimate"]] + critical * x[["std.error"]]
+    }
+    
+    if (!is.null(p_adjust) && "p.value" %in% colnames(x)) {
+        x$p.value <- stats::p.adjust(x$p.value, method = p_adjust)
     }
 
     return(x)

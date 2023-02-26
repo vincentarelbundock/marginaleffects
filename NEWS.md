@@ -4,6 +4,10 @@ Breaking changes:
 
 * `type` column is replaced by `type` attribute.
 
+New:
+
+* `p_adjust` argument: Adjust p-values for multiple comparisons. 
+
 Performance:
 
 * Bayesian models with many rows. Thanks to Etienne Bacher. #694 

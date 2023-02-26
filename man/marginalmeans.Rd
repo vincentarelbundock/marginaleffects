@@ -14,6 +14,7 @@ marginalmeans(
   transform_post = NULL,
   cross = FALSE,
   hypothesis = NULL,
+  p_adjust = NULL,
   df = Inf,
   wts = "equal",
   by = NULL,
@@ -95,6 +96,8 @@ on the link scale before backtransforming them using the inverse link function.}
 }
 \item See the Examples section below and the vignette: https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html
 }}
+
+\item{p_adjust}{Adjust p-values for multiple comparisons: "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", or "fdr". See \link[stats:p.adjust]{stats::p.adjust}}
 
 \item{df}{Degrees of freedom used to compute p values and confidence intervals. A single numeric value between 1 and \code{Inf}. When \code{df} is \code{Inf}, the normal distribution is used. When \code{df} is finite, the \code{t} distribution is used. See \link[insight:get_df]{insight::get_df} for a convenient function to extract degrees of freedom. Ex: \code{slopes(model, df = insight::get_df(model))}}
 

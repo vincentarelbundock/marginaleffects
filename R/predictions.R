@@ -195,6 +195,7 @@ predictions <- function(model,
                         wts = NULL,
                         transform_post = NULL,
                         hypothesis = NULL,
+                        p_adjust = NULL,
                         df = Inf,
                         ...) {
 
@@ -459,6 +460,7 @@ predictions <- function(model,
             null_hypothesis = hypothesis_null,
             df = df,
             model = model,
+            p_adjust = p_adjust,
             ...)
     }
 
@@ -634,6 +636,7 @@ avg_predictions <- function(model,
                             wts = NULL,
                             transform_post = NULL,
                             hypothesis = NULL,
+                            p_adjust = NULL,
                             df = Inf,
                             ...) {
 
@@ -673,6 +676,7 @@ avg_predictions <- function(model,
         wts = wts,
         transform_post = transform_post,
         hypothesis = hypothesis,
+        p_adjust = p_adjust,
         df = df,
         ...)
 

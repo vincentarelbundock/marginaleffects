@@ -210,6 +210,7 @@ comparisons <- function(model,
                         cross = FALSE,
                         wts = NULL,
                         hypothesis = NULL,
+                        p_adjust = NULL,
                         df = Inf,
                         eps = NULL,
                         ...) {
@@ -478,6 +479,7 @@ comparisons <- function(model,
         draws = draws,
         estimate = "estimate",
         null_hypothesis = hypothesis_null,
+        p_adjust = p_adjust,
         model = model)
 
 
@@ -594,6 +596,7 @@ avg_comparisons <- function(model,
                             cross = FALSE,
                             wts = NULL,
                             hypothesis = NULL,
+                            p_adjust = NULL,
                             df = Inf,
                             eps = NULL,
                             ...) {
@@ -626,6 +629,7 @@ avg_comparisons <- function(model,
         cross = cross,
         wts = wts,
         hypothesis = hypothesis,
+        p_adjust = p_adjust,
         df = df,
         eps = eps,
         ...)
