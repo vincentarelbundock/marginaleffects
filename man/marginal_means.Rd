@@ -177,7 +177,11 @@ https://vincentarelbundock.github.io/marginaleffects/articles/bootstrap.html
 
 
 Some model types allow model-specific arguments to modify the nature of
-marginal effects, predictions, marginal means, and contrasts.\tabular{llll}{
+marginal effects, predictions, marginal means, and contrasts. Please report
+other package-specific \code{predict()} arguments on Github so we can add them to
+the table below.
+
+https://github.com/vincentarelbundock/marginaleffects/issues\tabular{llll}{
    Package \tab Class \tab Argument \tab Documentation \cr
    \code{brms} \tab \code{brmsfit} \tab \code{ndraws} \tab \link[brms:posterior_predict.brmsfit]{brms::posterior_predict} \cr
     \tab  \tab \code{re_formula} \tab \link[brms:posterior_predict.brmsfit]{brms::posterior_predict} \cr

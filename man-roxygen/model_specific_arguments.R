@@ -1,7 +1,11 @@
 #' @section Model-Specific Arguments:
 #'
 #' Some model types allow model-specific arguments to modify the nature of
-#' marginal effects, predictions, marginal means, and contrasts.
+#' marginal effects, predictions, marginal means, and contrasts. Please report
+#' other package-specific `predict()` arguments on Github so we can add them to
+#' the table below.
+#' 
+#' https://github.com/vincentarelbundock/marginaleffects/issues
 #'
 #' | Package     | Class      | Argument           | Documentation |
 #' |-------------|------------|--------------------|---------------|
