@@ -19,6 +19,9 @@ sanitize_variables <- function(variables,
     # extensions with no `get_data()`
     if (is.null(modeldata) || nrow(modeldata) == 0) {
         modeldata <- set_variable_class(newdata)
+        no_modeldata <- TRUE
+    } else {
+        no_modeldata <- FALSE
     }
 
     # variables is NULL: get all variable names from the model
@@ -61,6 +64,11 @@ sanitize_variables <- function(variables,
         "rowid", "group", "term", "contrast", "estimate",
         "std.error", "statistic", "conf.low", "conf.high", "p.value",
         "p.value.nonsup", "p.value.noninf")
+    # if no modeldata is available, we use `newdata`, but that often has a
+    # `rowid` column. This used to break the extensions.Rmd vignette.
+    if (no_modeldata) {
+        reserved <- setdiff(reserved, "rowid")
+    }
     bad <- unique(intersect(c(names(predictors), colnames(modeldata)), reserved))
     if (length(bad) > 0) {
         msg <- c(
