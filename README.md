@@ -9,10 +9,11 @@
 -->
 
 Compute and plot predictions, slopes, marginal means, and comparisons
-(contrasts, risk ratios, odds ratios, etc.) for over [76
+(contrasts, risk ratios, odds, etc.) for over [76
 classes](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
 of statistical models in R. Conduct linear and non-linear hypothesis
-tests, as well as equivalence tests using the delta method.
+tests, or equivalence tests. Calculate uncertainty estimates using the
+delta method, bootstrapping, or simulation-based inference.
 
 [The `marginaleffects`
 website](https://vincentarelbundock.github.io/marginaleffects/) includes
