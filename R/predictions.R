@@ -470,7 +470,8 @@ predictions <- function(model,
             ...)
     }
 
-    out <- data.frame(tmp)
+    out <- data.table(tmp)
+    setDT(newdata)
 
     # expensive: only do this inside jacobian if necessary
     if (!inherits(model, "mclogit")) { # weird case. probably a cleaner way but lazy now...
@@ -496,7 +497,7 @@ predictions <- function(model,
         sort(grep("^predicted", colnames(newdata), value = TRUE)))
     cols <- intersect(stubcols, colnames(out))
     cols <- unique(c(cols, colnames(out)))
-    out <- out[, cols, drop = FALSE]
+    out <- out[, ..cols]
 
     attr(out, "posterior_draws") <- draws
 
