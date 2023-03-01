@@ -470,8 +470,8 @@ predictions <- function(model,
             ...)
     }
 
-    out <- data.table(tmp)
-    setDT(newdata)
+    out <- data.table::data.table(tmp)
+    data.table::setDT(newdata)
 
     # expensive: only do this inside jacobian if necessary
     if (!inherits(model, "mclogit")) { # weird case. probably a cleaner way but lazy now...
