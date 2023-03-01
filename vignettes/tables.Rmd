@@ -69,10 +69,10 @@ cmp <- comparisons(mod)
 get_estimates(cmp)
 ```
 
-We can use the `group` argument of the `modelsummary` function to structure the table properly:
+We can use the `shape` argument of the `modelsummary` function to structure the table properly:
 
 ```{r}
-modelsummary(cmp, group = term + contrast ~ model)
+modelsummary(cmp, shape = term + contrast ~ model)
 ```
 
 Cross-contrasts can be a bit trickier, since there are multiple simultaneous groups. Consider this example:
