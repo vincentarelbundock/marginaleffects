@@ -1,5 +1,6 @@
 source("helpers.R")
 if (!requiet("tinysnapshot")) exit_file("tinysnapshot")
+if (ON_WINDOWS || ON_OSX) exit_file("linux only")
 using("marginaleffects")
 
 
