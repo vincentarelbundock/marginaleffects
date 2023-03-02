@@ -58,7 +58,7 @@ get_predict.brmsfit <- function(model,
             summary = FALSE,
             ...)
     }
-
+    
     if ("rowid_internal" %in% colnames(newdata)) {
         idx <- newdata[["rowid_internal"]]
     } else if ("rowid" %in% colnames(newdata)) {
@@ -86,7 +86,12 @@ get_predict.brmsfit <- function(model,
     # multi-dimensional outcome
     } else if (length(dim(draws)) == 3) {
         out <- apply(draws, c(2, 3), stats::median)
-        colnames(out) <- dimnames(draws)[[3]]
+        levnames <- dimnames(draws)[[3]]
+        if (is.null(levnames)) {
+            colnames(out) <- seq_len(ncol(out))
+        } else {
+            colnames(out) <- levnames
+        }
         out <- data.frame(
             rowid = rep(idx, times = ncol(out)),
             group = rep(colnames(out), each = nrow(out)),

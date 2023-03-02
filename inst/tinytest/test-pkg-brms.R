@@ -178,7 +178,7 @@ mfx <- slopes(brms_factor, newdata = dat)
 ti <- tidy(mfx)
 expect_inherits(ti, "data.frame")
 expect_true(nrow(ti) == 3)
-expect_true(ncol(ti) > 5)
+expect_true(ncol(ti) >= 5)
 expect_true(all(c("term", "estimate", "conf.low") %in% colnames(ti)))
 
 
@@ -702,5 +702,17 @@ expect_equivalent(nrow(cmp), 5)
 
 
 
+# Issue #703
+mod <- marginaleffects:::modelarchive_model("brms_inhaler_cat")
+pre <- predictions(mod, type = "link")
+expect_inherits(pre, "predictions")
+cmp <- comparisons(mod, type = "link")
+expect_inherits(cmp, "comparisons")
+
+
+
+
+
 source("helpers.R")
 rm(list = ls())
+

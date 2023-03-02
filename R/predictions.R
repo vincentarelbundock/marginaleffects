@@ -507,6 +507,7 @@ predictions <- function(model,
     # after rename to estimate / after assign draws
     out <- backtransform(out, transform_post = transform_post)
 
+    data.table::setDF(out)
     class(out) <- c("predictions", class(out))
     out <- set_marginaleffects_attributes(out, attr_cache = newdata_attr_cache)
     attr(out, "model") <- model
