@@ -45,8 +45,8 @@ expect_true(all(pre29$conf.low < preInf$conf.low))
 
 
 # Issue #627: print t instead of z in column names
-if (!requiet("tinyviztest")) exit_file("tinyviztest")
-using("tinyviztest")
+if (!requiet("tinysnapshot")) exit_file("tinysnapshot")
+using("tinysnapshot")
 
 mod <- lm(mpg ~ hp, mtcars)
 expect_snapshot_print(avg_comparisons(mod), "df-z")

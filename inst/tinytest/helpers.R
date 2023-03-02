@@ -3,8 +3,8 @@ rm(list=ls(.GlobalEnv), envir = .GlobalEnv)
 
 EXPENSIVE <- FALSE
 
-options("tinyviztest_device" = "svglite")
-options("tinyviztest_tol" = 100)
+options("tinysnapshot_device" = "svglite")
+options("tinysnapshot_tol" = 200)
 
 # libraries
 requiet <- function(package) {
@@ -17,7 +17,7 @@ requiet <- function(package) {
 }
 
 requiet("tinytest")
-requiet("tinyviztest")
+requiet("tinysnapshot")
 
 if (isTRUE(suppressMessages(require("tinytest"))) && packageVersion("tinytest") >= "1.4.0") {
     tinytest::register_tinytest_extension(

@@ -239,8 +239,8 @@ expect_error(
     pattern = "hypothesis testing")
 
 # Issue #661: remove redundant labels in pairwise comparisons
-if (!requiet("tinyviztest")) exit_file("tinyviztest")
-using("tinyviztest")
+if (!requiet("tinysnapshot")) exit_file("tinysnapshot")
+using("tinysnapshot")
 set.seed(123)
 dat <- transform(iris, dummy = as.factor(rbinom(nrow(iris), 1, prob = c(0.4, 0.6))))
 m <- lm(Sepal.Width ~ Sepal.Length * Species + dummy, data = dat)

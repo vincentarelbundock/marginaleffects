@@ -1,7 +1,7 @@
 source("helpers.R")
 using("marginaleffects")
-if (!requiet("tinyviztest")) exit_file("tinyviztest")
-using("tinyviztest")
+if (!requiet("tinysnapshot")) exit_file("tinysnapshot")
+using("tinysnapshot")
 
 # character predictors
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv")

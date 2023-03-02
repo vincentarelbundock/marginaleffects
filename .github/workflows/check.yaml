@@ -53,8 +53,8 @@ jobs:
       - name: glmmTMB source
         run: ./run.sh install_source glmmTMB
 
-      - name: tinyviztest
-        run: ./run.sh install_github vincentarelbundock/tinyviztest
+      - name: tinysnapshot
+        run: ./run.sh install_github vincentarelbundock/tinysnapshot
 
       - name: Test
         run: ./run.sh run_tests

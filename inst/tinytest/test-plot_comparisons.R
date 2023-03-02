@@ -1,5 +1,5 @@
 source("helpers.R")
-if (!requiet("tinyviztest")) exit_file("tinyviztest")
+if (!requiet("tinysnapshot")) exit_file("tinysnapshot")
 using("marginaleffects")
 
 
