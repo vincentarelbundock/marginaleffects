@@ -4,6 +4,7 @@ rm(list=ls(.GlobalEnv), envir = .GlobalEnv)
 EXPENSIVE <- FALSE
 
 options("tinyviztest_device" = "svglite")
+options("tinyviztest_tol" = 100)
 
 # libraries
 requiet <- function(package) {
