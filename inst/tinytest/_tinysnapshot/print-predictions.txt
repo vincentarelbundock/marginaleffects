@@ -11,6 +11,5 @@
      22.6      1.191 18.96   <0.001 20.25   24.9
      13.3      2.110  6.28   <0.001  9.12   17.4
      21.0      0.954 22.05   <0.001 19.17   22.9
-Prediction type:  response 
 Columns: rowid, estimate, std.error, statistic, p.value, conf.low, conf.high, mpg, hp, gear 
 

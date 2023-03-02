@@ -7,6 +7,5 @@
    0.1146   <0.001 0.0740  0.173 30.4    3rd       0
    0.4497    0.391 0.3400  0.565 30.4    3rd       1
 
-Prediction type:  link 
 Columns: rowid, estimate, p.value, conf.low, conf.high, Survived, Age, PClass, SexCode 
 

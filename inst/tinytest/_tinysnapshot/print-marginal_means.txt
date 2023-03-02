@@ -4,7 +4,6 @@
  gear     4 14.3      1.886  7.58   <0.001  10.6   18.0
  gear     5 24.2      1.316 18.41   <0.001  21.7   26.8
 
-Prediction type:  response 
 Results averaged over levels of: gear 
 Columns: rowid, term, value, gear, estimate, std.error, statistic, p.value, conf.low, conf.high, hp, mpg, wts 
 

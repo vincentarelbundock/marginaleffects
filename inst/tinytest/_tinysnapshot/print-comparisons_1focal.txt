@@ -3,6 +3,5 @@
    am    1 - 0     5.28       1.08 4.89   <0.001  3.16   7.39 120
    am    1 - 0     5.28       1.08 4.89   <0.001  3.16   7.39 120
 
-Prediction type:  response 
 Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, conf.low, conf.high, predicted, predicted_hi, predicted_lo, am, hp, mpg 
 

@@ -4,6 +4,5 @@
   cyl mean(8) - mean(4)   -8.521     2.3261 -3.66   <0.001 -12.3469 -4.6948
   hp  mean(dY/dX)         -0.024     0.0154 -1.56    0.119  -0.0494  0.0013
 
-Prediction type:  response 
 Columns: term, contrast, estimate, std.error, statistic, p.value, conf.low, conf.high 
 
