@@ -5,7 +5,7 @@ get_modeldata <- function(model, additional_variables = TRUE) {
         additional_variables <- c(additional_variables, hush(all.vars(off)))
     } else if (isTRUE(checkmate::check_character(off, max.len = 4))) {
         if (isTRUE(grepl("~", off))) {
-            additional_variables <- c(additional_variables, hush(all.vars(as.formula(off))))
+            additional_variables <- c(additional_variables, hush(all.vars(stats::as.formula(off))))
         } else {
             additional_variables <- c(additional_variables, off)
         }
