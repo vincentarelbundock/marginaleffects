@@ -14,6 +14,10 @@ Performance:
 * Bayesian models with many rows. Thanks to Etienne Bacher. #694 
 * Faster predictions, especially with standard errors and large datasets.
 
+Misc:
+
+* Support for more models with offsets. Thanks to @mariofiorini for report #705.
+
 Bugs:
 
 * Error on `predictions()` with `by` and `wts`. Thanks to Noah Greifer for report #695.
