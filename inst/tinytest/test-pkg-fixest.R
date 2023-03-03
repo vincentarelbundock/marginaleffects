@@ -256,6 +256,19 @@ expect_false(anyNA(p$estimate))
 expect_false(anyNA(p$std.error))
 
 
+# Issue #705
+library(fixest)
+
+data(trade, package = "fixest")
+data(mpdta, package = "etwfe")
+mod1 <- fepois(data = trade, Euros ~ 1 | Origin, offset = ~ log(dist_km))
+mod2 <- fepois(data = trade, Euros ~ 1 | Origin)
+
+mfx1 <- avg_slopes(mod1)
+mfx2 <- avg_slopes(mod2)
+xpect_inherits(mfx1, "slopes")
+expect_inherits(mfx2, "slopes")
+
 
 ## Issue #229: works interactively
 # data(trade)

@@ -1,4 +1,15 @@
 get_modeldata <- function(model, additional_variables = TRUE) {
+    # always extract offset variable if available
+    off <- hush(insight::find_offset(model))
+    if (isTRUE(checkmate::check_formula(off))) {
+        additional_variables <- c(additional_variables, hush(all.vars(off)))
+    } else if (isTRUE(checkmate::check_character(off, max.len = 4))) {
+        if (isTRUE(grepl("~", off))) {
+            additional_variables <- c(additional_variables, hush(all.vars(as.formula(off))))
+        } else {
+            additional_variables <- c(additional_variables, off)
+        }
+    }
     out <- hush(insight::get_data(model, verbose = FALSE, additional_variables = additional_variables))
     # iv_robust and some others
     if (is.null(out)) {
