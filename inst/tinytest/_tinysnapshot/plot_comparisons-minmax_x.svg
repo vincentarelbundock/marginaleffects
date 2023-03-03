@@ -29,22 +29,14 @@
   </clipPath>
 </defs>
 <g clip-path='url(#cpMzcuODN8NDk4LjUyfDUuNDh8NDcyLjI5)'>
-<rect x='37.83' y='5.48' width='460.70' height='466.82' style='stroke-width: 1.07; stroke: none; fill: #EBEBEB;' />
-<polyline points='37.83,340.99 498.52,340.99 ' style='stroke-width: 0.53; stroke: #FFFFFF; stroke-linecap: butt;' />
-<polyline points='37.83,183.82 498.52,183.82 ' style='stroke-width: 0.53; stroke: #FFFFFF; stroke-linecap: butt;' />
-<polyline points='37.83,26.65 498.52,26.65 ' style='stroke-width: 0.53; stroke: #FFFFFF; stroke-linecap: butt;' />
-<polyline points='37.83,419.57 498.52,419.57 ' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt;' />
-<polyline points='37.83,262.41 498.52,262.41 ' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt;' />
-<polyline points='37.83,105.24 498.52,105.24 ' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt;' />
-<polyline points='124.21,472.29 124.21,5.48 ' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt;' />
-<polyline points='268.17,472.29 268.17,5.48 ' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt;' />
-<polyline points='412.14,472.29 412.14,5.48 ' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt;' />
+<rect x='37.83' y='5.48' width='460.70' height='466.82' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 <line x1='124.21' y1='451.08' x2='124.21' y2='273.18' style='stroke-width: 1.07; stroke-linecap: butt;' />
 <line x1='268.17' y1='306.34' x2='268.17' y2='175.52' style='stroke-width: 1.07; stroke-linecap: butt;' />
 <line x1='412.14' y1='212.77' x2='412.14' y2='26.70' style='stroke-width: 1.07; stroke-linecap: butt;' />
 <circle cx='124.21' cy='362.13' r='2.84' style='stroke-width: 1.42; fill: #000000;' />
 <circle cx='268.17' cy='240.93' r='2.84' style='stroke-width: 1.42; fill: #000000;' />
 <circle cx='412.14' cy='119.73' r='2.84' style='stroke-width: 1.42; fill: #000000;' />
+<rect x='37.83' y='5.48' width='460.70' height='466.82' style='stroke-width: 1.07; stroke: #333333;' />
 </g>
 <g clip-path='url(#cpMC4wMHw1MDQuMDB8MC4wMHw1MDQuMDA=)'>
 <text x='32.89' y='422.78' text-anchor='end' style='font-size: 8.80px;fill: #4D4D4D; font-family: "Arimo";' textLength='14.36px' lengthAdjust='spacingAndGlyphs'>-20</text>
