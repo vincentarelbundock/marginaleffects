@@ -84,108 +84,15 @@ datagrid <- function(
     checkmate::assert_function(FUN_numeric)
     checkmate::assert_function(FUN_other)
     
-    if (grid_type == "typical") {
-        args <- list( # cleaned for backward compatibility
-            model = model,
-            newdata = newdata,
-            FUN_character = FUN_character,
-            FUN_factor = FUN_factor,
-            FUN_logical = FUN_logical,
-            FUN_numeric = FUN_numeric,
-            FUN_integer = FUN_integer,
-            FUN_other = FUN_other)
-        args <- c(dots, args)
-        out <- do.call("typical", args)
-    } else {
+    if (grid_type == "counterfactual") {
         args <- list(
             model = model,
             newdata = newdata)
         args <- c(dots, args)
-        out <- do.call("counterfactual", args)
+        out <- do.call("datagridcf", args)
+        return(out)
     }
-
-    # better to assume "standard" class as output
-    data.table::setDF(out)
-
-    attr(out, "variables_datagrid") <- names(dots)
-
-    return(out)
-}
-
-
-#' Counterfactual data grid
-#' @describeIn datagrid Counterfactual data grid
-#' @export
-#'
-datagridcf <- function(
-    ...,
-    model = NULL,
-    newdata = NULL) {
-
-    dots <- list(...)
-
-    if (length(dots) == 0) {
-        insight::format_error("Users must specify variable values in the `datagridcf()` call.")
-    }
-
-    out <- datagrid(
-        ...,
-        model = model,
-        newdata = newdata,
-        grid_type = "counterfactual")
-
-    attr(out, "variables_datagrid") <- names(out)
-
-    return(out)
-
-}
-
-
-#' @keywords internal
-counterfactual <- function(..., model = NULL, newdata = NULL) {
-
-    tmp <- prep_datagrid(..., model = model, newdata = newdata)
-    at <- tmp$at
-    dat <- tmp$newdata
-    variables_all <- tmp$all
-    variables_manual <- names(at)
-    variables_automatic <- tmp$automatic
-
-    # `at` -> `data.frame`
-    at <- lapply(at, unique)
-
-    fun <- data.table::CJ
-    args <- c(at, list(sorted = FALSE))
-    at <- do.call("fun", args)
-
-    rowid <- data.frame(rowidcf = seq_len(nrow(dat)))
-    if (length(variables_automatic) > 0) {
-        idx <- intersect(variables_automatic, colnames(dat))
-        dat_automatic <- dat[, ..idx, drop = FALSE]
-        dat_automatic[, rowidcf := rowid$rowidcf]
-        setcolorder(dat_automatic, c("rowidcf", setdiff(names(dat_automatic), "rowidcf")))
-        # cross-join 2 data.tables, faster than merging two dataframes
-        out <- cjdt(list(dat_automatic, at))
-    }  else {
-        out <- merge(rowid, at, all = TRUE)
-    }
-
-    return(out)
-}
-
-
-typical <- function(
-    ...,
-    model = NULL,
-    newdata = NULL,
-    FUN_character = get_mode,
-    # need to be explicit for numeric variables transfered to factor in model formula
-    FUN_factor = get_mode,
-    FUN_logical = get_mode,
-    FUN_numeric = function(x) mean(x, na.rm = TRUE),
-    FUN_integer = function(x) round(mean(x, na.rm = TRUE)),
-    FUN_other = function(x) mean(x, na.rm = TRUE)) {
-
+    
     tmp <- prep_datagrid(..., model = model, newdata = newdata)
 
     at <- tmp$at
@@ -256,7 +163,62 @@ typical <- function(
         attr(out, "marginaleffects_variable_class") <- attr(dat, "marginaleffects_variable_class")
     }
 
+    # better to assume "standard" class as output
+    data.table::setDF(out)
+
+    attr(out, "variables_datagrid") <- names(dots)
+
     return(out)
+}
+
+
+#' Counterfactual data grid
+#' @describeIn datagrid Counterfactual data grid
+#' @export
+#'
+datagridcf <- function(
+    ...,
+    model = NULL,
+    newdata = NULL) {
+
+    dots <- list(...)
+
+    if (length(dots) == 0) {
+        insight::format_error("Users must specify variable values in the `datagridcf()` call.")
+    }
+
+    tmp <- prep_datagrid(..., model = model, newdata = newdata)
+    at <- tmp$at
+    dat <- tmp$newdata
+    variables_all <- tmp$all
+    variables_manual <- names(at)
+    variables_automatic <- tmp$automatic
+
+    # `at` -> `data.frame`
+    at <- lapply(at, unique)
+
+    fun <- data.table::CJ
+    args <- c(at, list(sorted = FALSE))
+    at <- do.call("fun", args)
+
+    rowid <- data.frame(rowidcf = seq_len(nrow(dat)))
+    if (length(variables_automatic) > 0) {
+        idx <- intersect(variables_automatic, colnames(dat))
+        dat_automatic <- dat[, ..idx, drop = FALSE]
+        dat_automatic[, rowidcf := rowid$rowidcf]
+        setcolorder(dat_automatic, c("rowidcf", setdiff(names(dat_automatic), "rowidcf")))
+        # cross-join 2 data.tables, faster than merging two dataframes
+        out <- cjdt(list(dat_automatic, at))
+    }  else {
+        out <- merge(rowid, at, all = TRUE)
+    }
+
+    data.table::setDF(out)
+
+    attr(out, "variables_datagrid") <- names(out)
+
+    return(out)
+
 }
 
 
@@ -383,5 +345,3 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
                 "cluster" = variables_cluster)
     return(out)
 }
-
-
