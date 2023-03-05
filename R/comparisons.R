@@ -10,7 +10,7 @@
 #' * `comparisons()`: unit-level (conditional) estimates.
 #' * `avg_comparisons()`: average (marginal) estimates.
 #'
-#' The `newdata` argument and the `datagrid()` function can be used to control where statistics are evaluated in the predictor space: "at observed values", "at the mean", "at representative values", etc.
+#' `variables` identifies the focal regressors whose "effect" we are interested in. `transform_pre` determines how predictions with different regressor values are compared (difference, ratio, odds, etc.). The `newdata` argument and the `datagrid()` function control where statistics are evaluated in the predictor space: "at observed values", "at the mean", "at representative values", etc.
 #'
 #' See the comparisons vignette and package website for worked examples and case studies:
 #'
