@@ -63,7 +63,7 @@ sanitize_variables <- function(variables,
     reserved <- c(
         "rowid", "group", "term", "contrast", "estimate",
         "std.error", "statistic", "conf.low", "conf.high", "p.value",
-        "p.value.nonsup", "p.value.noninf")
+        "p.value.nonsup", "p.value.noninf", "by")
     # if no modeldata is available, we use `newdata`, but that often has a
     # `rowid` column. This used to break the extensions.Rmd vignette.
     if (no_modeldata) {
