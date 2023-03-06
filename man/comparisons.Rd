@@ -297,7 +297,7 @@ https://github.com/vincentarelbundock/marginaleffects/issues\tabular{llll}{
 }
 }
 
-\section{Transformations}{
+\section{comparison argument functions}{
 
 
 The following transformations can be applied by supplying one of the shortcut strings to the
