@@ -43,7 +43,7 @@ p <- plot_comparisons(
     mod2,
     variables = list("Age" = 10),
     condition = "Age",
-    transform_pre = "ratio") +
+    comparison = "ratio") +
     ylab("Adjusted Risk Ratio\nP(Survived = 1 | Age + 10) / P(Survived = 1 | Age)")
 expect_snapshot_plot(p, "plot_comparisons-rr_titanic")
 

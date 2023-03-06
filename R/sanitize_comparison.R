@@ -2,7 +2,7 @@ wmean <- function(x, w) {
     stats::weighted.mean(x, w)
 }
 
-transform_pre_function_dict <- list(
+comparison_function_dict <- list(
     # default = difference between predictions
     "difference" = function(hi, lo) hi - lo,
     "differenceavg" = function(hi, lo) mean(hi) - mean(lo),
@@ -43,7 +43,7 @@ transform_pre_function_dict <- list(
     "expdydxavgwts" = function(hi, lo, eps, w) wmean(((exp(hi) - exp(lo)) / exp(eps)) / eps, w)
 )
 
-transform_pre_label_dict <- list(
+comparison_label_dict <- list(
     "difference" = "%s - %s",
     "differenceavg" = "mean(%s) - mean(%s)",
     "differenceavgwts" = "mean(%s) - mean(%s)",
@@ -82,15 +82,15 @@ transform_pre_label_dict <- list(
     "expdydx" = "exp(dY/dX)"
 )
 
-sanity_transform_pre <- function(transform_pre) {
+sanity_comparison <- function(comparison) {
     checkmate::assert(
-        checkmate::check_choice(transform_pre,
-                                choices = names(transform_pre_function_dict)),
-        checkmate::check_function(transform_pre))
+        checkmate::check_choice(comparison,
+                                choices = names(comparison_function_dict)),
+        checkmate::check_function(comparison))
 }
 
 
-sanitize_transform_post <- function(x) {
+sanitize_transform <- function(x) {
     good <- c("exp", "ln")
     checkmate::assert(
         checkmate::check_choice(x, choices = good, null.ok = TRUE),

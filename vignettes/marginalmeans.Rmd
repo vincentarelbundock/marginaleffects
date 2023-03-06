@@ -139,13 +139,13 @@ marginal_means(
     variables = c("Sex", "PClass"))
 ```
 
-It is easy to transform those link-scale marginal means with arbitrary functions using the `transform_post` argument:
+It is easy to transform those link-scale marginal means with arbitrary functions using the `transform` argument:
 
 ```{r}
 marginal_means(
     titanic,
     type = "link",
-    transform_post = insight::link_inverse(titanic),
+    transform = insight::link_inverse(titanic),
     variables = c("Sex", "PClass"))
 ```
 

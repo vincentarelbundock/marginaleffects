@@ -33,14 +33,14 @@ c1 <- tidy(c1)
 expect_inherits(c1, "data.frame")
 
 
-# wts + transform_pre="avg"
+# wts + comparison="avg"
 set.seed(100)
 k <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/MatchIt/lalonde.csv")
 k$w <- rchisq(614, 2)
 fit <- lm(re78 ~ treat * (age + educ + race + married + re74),
           data = k, weights = w)
 cmp1 <- comparisons(fit, variables = "treat", wts = "w")
-cmp2 <- comparisons(fit, variables = "treat", wts = "w", transform_pre = "differenceavg")
+cmp2 <- comparisons(fit, variables = "treat", wts = "w", comparison = "differenceavg")
 expect_equivalent(tidy(cmp1)$estimate, weighted.mean(cmp1$estimate, k$w))
 expect_equivalent(cmp2$estimate, weighted.mean(cmp1$estimate, k$w))
 
@@ -66,9 +66,9 @@ expect_equivalent(mfx$std.error, stata[2], tolerance = 0.002)
 set.seed(1024)
 mod <- marginaleffects:::modelarchive_model("brms_numeric2")
 w <- runif(32)
-cmp1 <- comparisons(mod, transform_pre = "differenceavg")
-cmp2 <- comparisons(mod, wts = w, transform_pre = "differenceavg")
-cmp3 <- comparisons(mod, wts = w, transform_pre = "differenceavgwts")
+cmp1 <- comparisons(mod, comparison = "differenceavg")
+cmp2 <- comparisons(mod, wts = w, comparison = "differenceavg")
+cmp3 <- comparisons(mod, wts = w, comparison = "differenceavgwts")
 expect_true(all(cmp1$estimate != cmp2$estimate))
 expect_equivalent(cmp2$estimate, cmp3$estimate)
 

@@ -109,13 +109,13 @@ What happens to the predicted outcome when the `wt` variable increases by 1 stan
 comparisons(mod, variables = list(hp = "sd"))
 ```
 
-The `comparisons()` function also allows users to specify arbitrary functions of predictions, with the `transform_pre` argument. For example, what is the average ratio between predicted Miles per Gallon after an increase of 50 units in Horsepower?
+The `comparisons()` function also allows users to specify arbitrary functions of predictions, with the `comparison` argument. For example, what is the average ratio between predicted Miles per Gallon after an increase of 50 units in Horsepower?
 
 ```{r}
 comparisons(
   mod,
   variables = list(hp = 50),
-  transform_pre = "ratioavg")
+  comparison = "ratioavg")
 ```
 
 See the [Comparisons vignette for detailed explanations and more options.](https://vincentarelbundock.github.io/marginaleffects/articles/comparisons.html)

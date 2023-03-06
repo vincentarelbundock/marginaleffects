@@ -59,7 +59,7 @@ bug <- glmmTMB(count ~ spp + mined,
   family = "nbinom2",
   data = Salamanders)
 mfx <- slopes(bug)
-tid1 <- comparisons(bug, transform_pre = "dydxavg")
+tid1 <- comparisons(bug, comparison = "dydxavg")
 tid2 <- tidy(slopes(bug))
 
 expect_equivalent(tid1$estimate, tid2$estimate)

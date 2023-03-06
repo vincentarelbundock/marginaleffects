@@ -4,7 +4,7 @@ sanitize_variables <- function(variables,
                                model,
                                newdata,  # need for NumPyro where `find_variables()`` does not work
                                modeldata,
-                               transform_pre = NULL,
+                               comparison = NULL,
                                by = NULL,
                                cross = FALSE,
                                calling_function = "comparisons",
@@ -265,36 +265,36 @@ sanitize_variables <- function(variables,
  
     # goals:
     # allow multiple function types: slopes() uses both difference and dydx
-    # when transform_pre is defined, use that if it works or turn back to defaults
+    # when comparison is defined, use that if it works or turn back to defaults
     # predictors list elements: name, value, function, label
 
-    if (is.null(transform_pre)) {
-        fun_numeric <- fun_categorical <- transform_pre_function_dict[["difference"]]
-        lab_numeric <- lab_categorical <- transform_pre_label_dict[["difference"]]
+    if (is.null(comparison)) {
+        fun_numeric <- fun_categorical <- comparison_function_dict[["difference"]]
+        lab_numeric <- lab_categorical <- comparison_label_dict[["difference"]]
 
-    } else if (is.function(transform_pre)) {
-        fun_numeric <- fun_categorical <- transform_pre
+    } else if (is.function(comparison)) {
+        fun_numeric <- fun_categorical <- comparison
         lab_numeric <- lab_categorical <- "custom"
 
-    } else if (is.character(transform_pre)) {
+    } else if (is.character(comparison)) {
         # switch to the avg version when there is a `by` function
-        if (isTRUE(checkmate::check_character(by)) && !isTRUE(grepl("avg$", transform_pre))) {
-            transform_pre <- paste0(transform_pre, "avg")
+        if (isTRUE(checkmate::check_character(by)) && !isTRUE(grepl("avg$", comparison))) {
+            comparison <- paste0(comparison, "avg")
         }
 
         # weights if user requests `avg` or automatically switched
-        if (isTRUE(grepl("avg$", transform_pre)) && "marginaleffects_wts_internal" %in% colnames(newdata)) {
-            transform_pre <- paste0(transform_pre, "wts")
+        if (isTRUE(grepl("avg$", comparison)) && "marginaleffects_wts_internal" %in% colnames(newdata)) {
+            comparison <- paste0(comparison, "wts")
         }
 
-        fun_numeric <- fun_categorical <- transform_pre_function_dict[[transform_pre]]
-        lab_numeric <- lab_categorical <- transform_pre_label_dict[[transform_pre]]
-        if (isTRUE(grepl("dydxavg|eyexavg|dyexavg|eydxavg", transform_pre))) {
-            fun_categorical <- transform_pre_function_dict[["differenceavg"]]
-            lab_categorical <- transform_pre_label_dict[["differenceavg"]]
-        } else if (isTRUE(grepl("dydx$|eyex$|dyex$|eydx$", transform_pre))) {
-            fun_categorical <- transform_pre_function_dict[["difference"]]
-            lab_categorical <- transform_pre_label_dict[["difference"]]
+        fun_numeric <- fun_categorical <- comparison_function_dict[[comparison]]
+        lab_numeric <- lab_categorical <- comparison_label_dict[[comparison]]
+        if (isTRUE(grepl("dydxavg|eyexavg|dyexavg|eydxavg", comparison))) {
+            fun_categorical <- comparison_function_dict[["differenceavg"]]
+            lab_categorical <- comparison_label_dict[["differenceavg"]]
+        } else if (isTRUE(grepl("dydx$|eyex$|dyex$|eydx$", comparison))) {
+            fun_categorical <- comparison_function_dict[["difference"]]
+            lab_categorical <- comparison_label_dict[["difference"]]
         }
 
     }
@@ -312,7 +312,7 @@ sanitize_variables <- function(variables,
             "function" = fun,
             "label" = lab,
             "value" = predictors[[v]],
-            "transform_pre" = transform_pre)
+            "comparison" = comparison)
     }
     
     # epsilon for finite difference

@@ -51,7 +51,7 @@ The `marginal_means()` and `predictions()` function can compute the confidence i
 
 * The user sets: `type = "response"`
 * The model class is `glm`
-* The `transform_post` argument is `NULL`
+* The `transform` argument is `NULL`
 
 then `marginal_means()` and `predictions()` will first compute estimates on the link scale, and then back transform them using the inverse link function supplied by `insight::link_inverse(model)` function.
 
@@ -335,7 +335,7 @@ cmp1 <- comparisons(mod, variables = "hp")
 mean(cmp1$conf.high - cmp1$conf.low)
 
 # The CI of the average estimate is:
-cmp2 <- comparisons(mod, variables = "hp", transform_pre = "differenceavg")
+cmp2 <- comparisons(mod, variables = "hp", comparison = "differenceavg")
 cmp2$conf.high - cmp2$conf.low
 ```
 

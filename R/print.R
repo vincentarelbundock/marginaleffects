@@ -199,11 +199,11 @@ print.marginaleffects <- function(x,
     #     cat("Prediction type: ", attr(x, "type"), "\n")
     # }
     ## This is tricky to extract nicely when transform_* are passed from avg_comparisons to comparisons. I could certainly figure it out, but at the same time, I don't think the print method should return information that is immediately visible from the call. This is different from `type`, where users often rely on the default value, which can change from model to model, so printing it is often
-    # if (!is.null(attr(x, "transform_pre_label"))) {
-    #     cat("Pre-transformation: ", paste(attr(x, "transform_pre_label"), collapse = ""), "\n")
+    # if (!is.null(attr(x, "comparison_label"))) {
+    #     cat("Pre-transformation: ", paste(attr(x, "comparison_label"), collapse = ""), "\n")
     # }
-    # if (!is.null(attr(x, "transform_post_label"))) {
-    #     cat("Post-transformation: ", paste(attr(x, "transform_post_label"), collapse = ""), "\n")
+    # if (!is.null(attr(x, "transform_label"))) {
+    #     cat("Post-transformation: ", paste(attr(x, "transform_label"), collapse = ""), "\n")
     # }
     vg <- attr(x, "variables_grid")
     if (length(vg) > 0) {

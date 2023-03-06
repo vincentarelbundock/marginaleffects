@@ -12,8 +12,8 @@ expect_equivalent(mfx1, mfx2)
 
 # unsupported arguments
 mod <- glm(am ~ hp + mpg, data = mtcars, family = binomial)
-expect_error(slopes(mod, transform_pre = mean), pattern = "supported")
-expect_error(slopes(mod, transform_post = exp), pattern = "supported")
+expect_error(slopes(mod, comparison = mean), pattern = "supported")
+expect_error(slopes(mod, transform = exp), pattern = "supported")
 expect_error(slopes(mod, cross = TRUE), pattern = "supported")
 
 

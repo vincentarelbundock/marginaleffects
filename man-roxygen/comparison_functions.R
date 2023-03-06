@@ -1,7 +1,7 @@
 #' @section Transformations:
 #'
 #' The following transformations can be applied by supplying one of the shortcut strings to the
-#' `transform_pre` argument.
+#' `comparison` argument.
 
 #' `hi` is a vector of adjusted predictions for the "high" side of the
 #' contrast. `lo` is a vector of adjusted predictions for the "low" side of the
@@ -10,7 +10,7 @@
 #' compute derivatives and elasticities.
 #'
 #' ```{r, echo = FALSE, results = "asis"}
-#' k <- marginaleffects:::transform_pre_function_dict
+#' k <- marginaleffects:::comparison_function_dict
 #' k <- sapply(k, deparse1, collapse = "")
 #' k <- gsub("^function ", "\\\\", k)
 #' k <- data.frame(

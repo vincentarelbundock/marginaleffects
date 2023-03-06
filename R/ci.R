@@ -158,7 +158,7 @@ get_ci_draws <- function(x, conf_level, draws, model = NULL) {
 
     CIs <- t(apply(draws, 1, FUN_INTERVAL, credMass = conf_level))
     Bs <- apply(draws, 1, FUN_CENTER)
-    # transform_pre returns a single value
+    # comparison returns a single value
     if (nrow(x) < nrow(CIs)) {
         CIs <- unique(CIs)
         Bs <- unique(Bs)

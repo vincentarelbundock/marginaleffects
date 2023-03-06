@@ -18,7 +18,7 @@
 #' @param x Object produced by the `predictions()`, `comparisons()`, or `slopes()` functions.
 #' @param by Character vector of variable names over which to compute group-wise average estimates. When `by=NULL`, the global average (per term) is reported.
 #' @param ... All additional arguments are passed to the original fitting
-#' function to override the original call options: `conf_level`, `transform_post`,
+#' function to override the original call options: `conf_level`, `transform`,
 #' etc. See `?predictions`, `?comparisons`, `?slopes`.
 #' @return A `data.frame` of estimates and uncertainty estimates
 #' @details

@@ -89,8 +89,8 @@ Instead of risk *differences*, we could compute population-averaged (marginal) a
 avg_comparisons(
     mod,
     variables = "tx",
-    transform_pre = "lnratioavg",
-    transform_post = exp)
+    comparison = "lnratioavg",
+    transform = exp)
 ```
 
 Population-averaged (marginal) odds ratios:
@@ -99,8 +99,8 @@ Population-averaged (marginal) odds ratios:
 avg_comparisons(
     mod,
     variables = "tx",
-    transform_pre = "lnoravg",
-    transform_post = "exp")
+    comparison = "lnoravg",
+    transform = "exp")
 ```
 
 ## Unit-level Summaries

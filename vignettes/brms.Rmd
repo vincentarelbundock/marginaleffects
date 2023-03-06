@@ -829,12 +829,12 @@ mod <- brm(am ~ mpg + hp, data = mtcars, family = bernoulli(),
            seed = 1024, silent = 2, chains = 4, iter = 1000)
 ```
 
-Notice that we can compute average contrasts in two different ways, using the `avg_comparisons()` function or the `transform_pre` argument:
+Notice that we can compute average contrasts in two different ways, using the `avg_comparisons()` function or the `comparison` argument:
 
 ```{r}
 avg_comparisons(mod)
 
-comparisons(mod, transform_pre = "differenceavg")
+comparisons(mod, comparison = "differenceavg")
 ```
 
 Now, we use the `hypothesis` argument to compare the first to the second rows of the `comparisons()` output:
@@ -842,14 +842,14 @@ Now, we use the `hypothesis` argument to compare the first to the second rows of
 ```{r}
 comparisons(
     mod,
-    transform_pre = "differenceavg",
+    comparison = "differenceavg",
     hypothesis = "b2 - b1 = 0.2")
 ```
 
 The `hypotheses` function of the `brms` package can also perform non-linear hypothesis testing, and it generates some convenient statistics and summaries. This function accepts a D-by-P matrix of draws from the posterior distribution, where D is the number of draws and N is the number of parameters. We can obtain such a matrix using the `posterior_draws(x, shape = "DxP")`, and we can simply add a couple calls to our chain of operations: 
 
 ```{r}
-avg_comparisons(mod, transform_pre = "differenceavg") |>
+avg_comparisons(mod, comparison = "differenceavg") |>
     posterior_draws(shape = "DxP") |>
     brms::hypothesis("b2 - b1 > .2")
 ```

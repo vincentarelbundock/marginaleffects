@@ -57,12 +57,12 @@ comparisons(
     mod,
     newdata = "mean",
     variables = "hp",
-    transform_pre = "ratio",
+    comparison = "ratio",
     hypothesis = 1) |>
     print(digits = 3)
 ```
 
-Warning: Z statistics and p values are computed *before* applying functions in `transform_post`.
+Warning: Z statistics and p values are computed *before* applying functions in `transform`.
 
 # Hypothesis tests with the delta method
 
@@ -247,7 +247,7 @@ predictions(
 
 ## Average contrasts or marginal effects
 
-The standard workflow with the `marginaleffects` package is to call a function like `predictions()`, `slopes()` or `comparisons()` to compute unit-level quantities; or one of their cousins `avg_predictions()`, `avg_comparisons()`, or `avg_slopes()` to aggregate the unit-level quantities into "Average Marginal Effects" or "Average Contrasts." We can also use the `transform_pre` argument to emulate the behavior of the `avg_*()` functions.
+The standard workflow with the `marginaleffects` package is to call a function like `predictions()`, `slopes()` or `comparisons()` to compute unit-level quantities; or one of their cousins `avg_predictions()`, `avg_comparisons()`, or `avg_slopes()` to aggregate the unit-level quantities into "Average Marginal Effects" or "Average Contrasts." We can also use the `comparison` argument to emulate the behavior of the `avg_*()` functions.
 
 First, note that these three commands produce the same results:
 
@@ -259,7 +259,7 @@ avg_comparisons(mod, variables = "vs")
 comparisons(
     mod,
     variables = "vs",
-    transform_pre = "differenceavg")
+    comparison = "differenceavg")
 ```
 
 [See the transformations section of the Contrasts vignette for more details.](https://vincentarelbundock.github.io/marginaleffects/articles/comparisons.html)
@@ -270,17 +270,17 @@ With these results in hand, we can now conduct a linear hypothesis test between 
 comparisons(
     mod,
     hypothesis = "am = vs",
-    transform_pre = "differenceavg")
+    comparison = "differenceavg")
 ```
 
-Computing contrasts between average marginal effects requires a little care to obtain the right scale. In particular, we need to specify both the `variables` and the `transform_pre`:
+Computing contrasts between average marginal effects requires a little care to obtain the right scale. In particular, we need to specify both the `variables` and the `comparison`:
 
 ```{r, warning = FALSE}
 comparisons(
     mod,
     hypothesis = "am = vs",
     variables = c("am", "vs"),
-    transform_pre = "dydxavg")
+    comparison = "dydxavg")
 ```
 
 # `hypotheses` Vectors and Matrices

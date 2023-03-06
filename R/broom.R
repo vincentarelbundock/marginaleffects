@@ -16,7 +16,7 @@ generics::glance
 tidy.comparisons <- function(x, ...) {
     insight::check_if_installed("tibble")
     if ("transform_avg" %in% names(list(...))) {
-        insight::format_error("The `transform_avg` argument is deprecated. Use `transform_post` instead.")
+        insight::format_error("The `transform_avg` argument is deprecated. Use `transform` instead.")
     }
     out <- get_averages(x, ...)
     out <- tibble::as_tibble(out)
@@ -60,7 +60,7 @@ tidy.hypotheses <- function(x, ...) {
 tidy.marginalmeans <- function(x, ...) {
     insight::check_if_installed("insight")
     if ("transform_avg" %in% names(list(...))) {
-        insight::format_error("The `transform_avg` argument is deprecated. Use `transform_post` instead.")
+        insight::format_error("The `transform_avg` argument is deprecated. Use `transform` instead.")
     }
     first = c("term", "value", "estimate", "std.error",
     "statistic", "p.value", "conf.low", "conf.high")

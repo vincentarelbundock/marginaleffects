@@ -67,7 +67,7 @@
 #' acceptable values is returned in an error message. When `type` is `NULL`, the
 #' default value is used. This default is the first model-related row in
 #' the `marginaleffects:::type_dictionary` dataframe. See the details section for a note on backtransformation.
-#' @param transform_post A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.
+#' @param transform A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.
 #'
 #' @template deltamethod
 #' @template model_specific_arguments
@@ -194,13 +194,18 @@ predictions <- function(model,
                         by = FALSE,
                         byfun = NULL,
                         wts = NULL,
-                        transform_post = NULL,
+                        transform = NULL,
                         hypothesis = NULL,
                         equivalence = NULL,
                         p_adjust = NULL,
                         df = Inf,
                         ...) {
 
+
+    dots <- list(...)
+    
+    # backward compatibility
+    if ("transform_post" %in% names(dots)) transform <- dots[["transform_post"]]
 
     # order of the first few paragraphs is important
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
@@ -223,7 +228,7 @@ predictions <- function(model,
         by = by,
         byfun = byfun,
         wts = wts,
-        transform_post = transform_post,
+        transform = transform,
         hypothesis = hypothesis,
         df = df),
         list(...))
@@ -237,7 +242,6 @@ predictions <- function(model,
 
     # extracting modeldata repeatedly is slow.
     # checking dots allows marginalmeans to pass modeldata to predictions.
-    dots <- list(...)
     if ("modeldata" %in% names(dots)) {
         modeldata <- dots[["modeldata"]]
     } else {
@@ -252,13 +256,13 @@ predictions <- function(model,
     }
 
     # if type is NULL, we backtransform if relevant
-    if ((is.null(type)) && is.null(transform_post) && isTRUE(class(model)[1] %in% c("glm", "Gam"))) {
+    if ((is.null(type)) && is.null(transform) && isTRUE(class(model)[1] %in% c("glm", "Gam"))) {
         dict <- subset(type_dictionary, class == class(model)[1])$type
         type <- sanitize_type(model = model, type = type)
         linv <- tryCatch(insight::link_inverse(model), error = function(e) NULL)
         if (isTRUE(type == "response") && isTRUE("link" %in% dict) && is.function(linv)) {
             type <- "link"
-            transform_post <- linv
+            transform <- linv
         } else {
             type <- sanitize_type(model = model, type = type)
         }
@@ -272,7 +276,7 @@ predictions <- function(model,
     # input sanity checks
     checkmate::assert_number(df, lower = 1)
 
-    transform_post <- sanitize_transform_post(transform_post)
+    transform <- sanitize_transform(transform)
     sanity_dots(model = model, ...)
     model <- sanitize_model_specific(
         model = model,
@@ -368,7 +372,7 @@ predictions <- function(model,
         FUN = predictions,
         model = model, newdata = newdata, vcov = vcov, variables = variables, type = type, by = by,
         conf_level = conf_level,
-        byfun = byfun, wts = wts, transform_post = transform_post, hypothesis = hypothesis, ...)
+        byfun = byfun, wts = wts, transform = transform, hypothesis = hypothesis, ...)
     if (!is.null(out)) {
         return(out)
     }
@@ -505,7 +509,7 @@ predictions <- function(model,
     out <- equivalence(out, equivalence = equivalence, df = df, ...)
 
     # after rename to estimate / after assign draws
-    out <- backtransform(out, transform_post = transform_post)
+    out <- backtransform(out, transform = transform)
 
     data.table::setDF(out)
     class(out) <- c("predictions", class(out))
@@ -521,8 +525,8 @@ predictions <- function(model,
     attr(out, "conf_level") <- conf_level
     attr(out, "by") <- by
     attr(out, "call") <- call_attr
-    attr(out, "transform_post_label") <- names(transform_post)[1]
-    attr(out, "transform_post") <- transform_post[[1]]
+    attr(out, "transform_label") <- names(transform)[1]
+    attr(out, "transform") <- transform[[1]]
     # save newdata for use in recall()
     attr(out, "newdata") <- newdata
 
@@ -635,7 +639,7 @@ avg_predictions <- function(model,
                             by = TRUE,
                             byfun = NULL,
                             wts = NULL,
-                            transform_post = NULL,
+                            transform = NULL,
                             hypothesis = NULL,
                             equivalence = NULL,
                             p_adjust = NULL,
@@ -661,7 +665,7 @@ avg_predictions <- function(model,
         FUN = avg_predictions,
         model = model, newdata = newdata, vcov = vcov, variables = variables, type = type, by = by,
         conf_level = conf_level,
-        byfun = byfun, wts = wts, transform_post = transform_post, hypothesis = hypothesis, ...)
+        byfun = byfun, wts = wts, transform = transform, hypothesis = hypothesis, ...)
     if (!is.null(out)) {
         return(out)
     }
@@ -676,7 +680,7 @@ avg_predictions <- function(model,
         by = by,
         byfun = byfun,
         wts = wts,
-        transform_post = transform_post,
+        transform = transform,
         hypothesis = hypothesis,
         equivalence = equivalence,
         p_adjust = p_adjust,

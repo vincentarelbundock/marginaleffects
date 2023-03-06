@@ -152,7 +152,7 @@ Like the `comparisons()` function, `plot_comparisons()` is a very powerful tool 
 plot_comparisons(mod,
   variables = "species",
   condition = "bill_length_mm",
-  transform_pre = "ratio")
+  comparison = "ratio")
 ```
 
 The left panel shows that the ratio of Chinstrap body mass to Adelie body mass is approximately constant, at slightly above 0.8. The right panel shows that the ratio of Gento to Adelie body mass is depends on their bill length. For birds with short bills, Gentoos seem to have smaller body mass than Adelies. For birds with long bills, Gentoos seem heavier than Adelies, although the null ratio (1) is not outside the confidence interval.

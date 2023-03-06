@@ -18,25 +18,25 @@ expect_equivalent(nrow(p1), nrow(p2))
 expect_equivalent(nrow(p1), 2)
 
 
-# use transform_pre to collapse into averages
+# use comparison to collapse into averages
 mod <- glm(gear ~ cyl + am, family = poisson, data = mtcars)
-x <- tidy(comparisons(mod, transform_pre = "dydx"))
-y <- comparisons(mod, transform_pre = "dydxavg")
+x <- tidy(comparisons(mod, comparison = "dydx"))
+y <- comparisons(mod, comparison = "dydxavg")
 expect_equivalent(x$estimate, y$estimate)
 expect_equivalent(x$std.error, y$std.error)
 
-x <- tidy(comparisons(mod, transform_pre = "eyex"))
-y <- comparisons(mod, transform_pre = "eyexavg")
+x <- tidy(comparisons(mod, comparison = "eyex"))
+y <- comparisons(mod, comparison = "eyexavg")
 expect_equivalent(x$estimate, y$estimate)
 expect_equivalent(x$std.error, y$std.error)
 
-x <- tidy(comparisons(mod, transform_pre = "eydx"))
-y <- comparisons(mod, transform_pre = "eydxavg")
+x <- tidy(comparisons(mod, comparison = "eydx"))
+y <- comparisons(mod, comparison = "eydxavg")
 expect_equivalent(x$estimate, y$estimate)
 expect_equivalent(x$std.error, y$std.error)
 
-x <- tidy(comparisons(mod, transform_pre = "dyex"))
-y <- comparisons(mod, transform_pre = "dyexavg")
+x <- tidy(comparisons(mod, comparison = "dyex"))
+y <- comparisons(mod, comparison = "dyexavg")
 expect_equivalent(x$estimate, y$estimate)
 expect_equivalent(x$std.error, y$std.error)
 
@@ -55,7 +55,7 @@ expect_error(slopes(mod, slope = "bad"), pattern = "eyexavg")
 
 # by argument
 mod <- glm(am ~ hp + mpg, data = mtcars, family = binomial)
-cmp <- comparisons(mod, by = "am", transform_pre = "lnor")
+cmp <- comparisons(mod, by = "am", comparison = "lnor")
 expect_equal(nrow(cmp), 4)
 
 cmp <- comparisons(mod, by = "am")

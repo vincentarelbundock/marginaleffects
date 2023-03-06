@@ -12,8 +12,8 @@ plot_cco(
   type = "response",
   vcov = NULL,
   conf_level = 0.95,
-  transform_pre = "difference",
-  transform_post = NULL,
+  comparison = "difference",
+  transform = NULL,
   rug = FALSE,
   gray = FALSE,
   draw = TRUE,
@@ -68,7 +68,7 @@ the \code{marginaleffects:::type_dictionary} dataframe.}
 
 \item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
 
-\item{transform_post}{A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.}
+\item{transform}{A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.}
 
 \item{rug}{TRUE displays tick marks on the axes to mark the distribution of raw data.}
 

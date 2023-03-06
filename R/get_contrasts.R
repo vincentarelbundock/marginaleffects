@@ -80,7 +80,7 @@ get_contrasts <- function(model,
         "eydxavg",
         "dyexavg")
     fun <- function(x) {
-        out <- checkmate::check_choice(x$transform_pre, choices = elasticities)
+        out <- checkmate::check_choice(x$comparison, choices = elasticities)
         isTRUE(out)
     }
     tmp <- Filter(fun, variables)
@@ -174,7 +174,7 @@ get_contrasts <- function(model,
         by <- unique(by)
     }
 
-    # transform_pre function could be different for different terms
+    # comparison function could be different for different terms
     # sanitize_variables() ensures all functions are identical when there are cross
     fun_list <- sapply(names(variables), function(x) variables[[x]][["function"]])
     fun_list[["cross"]] <- fun_list[[1]]
@@ -183,7 +183,7 @@ get_contrasts <- function(model,
     # this will discard factor variables which are duplicated, so in principle
     # it should be the "correct" size
     elasticities <- Filter(
-        function(x) is.character(x$transform_pre) && x$transform_pre %in% elasticities,
+        function(x) is.character(x$comparison) && x$comparison %in% elasticities,
         variables)
     elasticities <- lapply(elasticities, function(x) x$name)
     if (length(elasticities) > 0) {
@@ -230,9 +230,9 @@ get_contrasts <- function(model,
         out[, predicted := NA_real_]
     }
 
-    idx <- grep("^contrast|^group$|^term$|^type$|^transform_pre_idx$", colnames(out), value = TRUE)
+    idx <- grep("^contrast|^group$|^term$|^type$|^comparison_idx$", colnames(out), value = TRUE)
 
-    # when `by` is a character vector, we sometimes modify the transform_pre
+    # when `by` is a character vector, we sometimes modify the comparison
     # function on the fly to use the `avg` version.  this is important and
     # convenient because some of the statistics are non-collapsible, so we can't
     # average them at the very end.  when `by` is a data frame, we do this only
@@ -259,14 +259,14 @@ get_contrasts <- function(model,
         by = idx]
     }
 
-    # safe version of transform_pre
+    # safe version of comparison
     # unknown arguments
     # singleton vs vector
     # different terms use different functions
     safefun <- function(hi, lo, y, n, term, cross, wts, tmp_idx) {
         tn <- term[1]
         eps <- variables[[tn]]$eps
-        # when cross=TRUE, sanitize_transform_pre enforces a single function
+        # when cross=TRUE, sanitize_comparison enforces a single function
         if (isTRUE(cross)) {
             fun <- fun_list[[1]]
         } else {
@@ -290,7 +290,7 @@ get_contrasts <- function(model,
         con <- try(do.call("fun", args), silent = TRUE)
 
         if (!isTRUE(checkmate::check_numeric(con, len = n)) && !isTRUE(checkmate::check_numeric(con, len = 1))) {
-            msg <- sprintf("The function supplied to the `transform_pre` argument must accept two numeric vectors of predicted probabilities of length %s, and return a single numeric value or a numeric vector of length %s, with no missing value.", n, n) #nolint
+            msg <- sprintf("The function supplied to the `comparison` argument must accept two numeric vectors of predicted probabilities of length %s, and return a single numeric value or a numeric vector of length %s, with no missing value.", n, n) #nolint
             insight::format_error(msg)
         }
         if (length(con) == 1) {
@@ -343,7 +343,7 @@ get_contrasts <- function(model,
         idx <- !is.na(draws[, 1])
         draws <- draws[idx, , drop = FALSE]
 
-        # if transform_pre returns a single value, then we padded with NA. That
+        # if comparison returns a single value, then we padded with NA. That
         # also means we don't want `rowid` otherwise we will merge and have
         # useless duplicates.
         if (any(!idx)) {
@@ -376,7 +376,7 @@ get_contrasts <- function(model,
         by = idx]
         out[, tmp_idx := NULL]
 
-        # if transform_pre returns a single value, then we padded with NA. That
+        # if comparison returns a single value, then we padded with NA. That
         # also means we don't want `rowid` otherwise we will merge and have
         # useless duplicates.
         if (anyNA(out$estimate)) {

@@ -453,22 +453,22 @@ plot_comparisons(
 
 So far we have focused on simple differences between adjusted predictions. Now, we show how to use ratios, back transformations, and arbitrary functions to estimate a slew of quantities of interest. Powerful transformations and custom contrasts are made possible by using three arguments which act at different stages of the computation process:
 
-* `transform_pre`
-* `transform_post`
+* `comparison`
+* `transform`
 
 Consider the case of a model with a single predictor $x$. To compute average contrasts, we proceed as follows:
 
 1. Compute adjusted predictions for each row of the dataset for the observed values $x$: $\hat{y}_x$
 1. Compute adjusted predictions for each row of the dataset for the observed values $x + 1$: $\hat{y}_{x+1}$
-1. `transform_pre`: Compute unit-level contrasts by taking the difference between (or some other function of) adjusted predictions: $\hat{y}_{x+1} - \hat{y}_x$
+1. `comparison`: Compute unit-level contrasts by taking the difference between (or some other function of) adjusted predictions: $\hat{y}_{x+1} - \hat{y}_x$
 1. Compute the average contrast by taking the mean of unit-level contrasts: $1/N \sum_{i=1}^N \hat{y}_{x+1} - \hat{y}_x$
-1. `transform_post`: Transform the average contrast or return them as-is.
+1. `transform`: Transform the average contrast or return them as-is.
 
-The `transform_pre` argument of the `comparisons()` function determines how adjusted predictions are combined to create a contrast. By default, we take a simple difference between predictions with `hi` value of $x$, and predictions with a `lo` value of $x$: `function(hi, lo) hi-lo`.
+The `comparison` argument of the `comparisons()` function determines how adjusted predictions are combined to create a contrast. By default, we take a simple difference between predictions with `hi` value of $x$, and predictions with a `lo` value of $x$: `function(hi, lo) hi-lo`.
 
-The `transform_post` argument of the `comparisons()` function applies a custom transformation to the unit-level contrasts.
+The `transform` argument of the `comparisons()` function applies a custom transformation to the unit-level contrasts.
 
-The `transform_post` argument applies a custom transformation to the final quantity, as would be returned if we evaluated the same call without `transform_post`.
+The `transform` argument applies a custom transformation to the final quantity, as would be returned if we evaluated the same call without `transform`.
 
 
 # Differences
@@ -557,26 +557,26 @@ comparisons(
 
 # Ratios
 
-Instead of taking simple differences between adjusted predictions, it can sometimes be useful to compute ratios or other functions of predictions. For example, [the `adjrr` function the `Stata` software package](https://journals.sagepub.com/doi/pdf/10.1177/1536867X1301300304) can compute "adjusted risk ratios", which are ratios of adjusted predictions. To do this in `R`, we use the `transform_pre` argument:
+Instead of taking simple differences between adjusted predictions, it can sometimes be useful to compute ratios or other functions of predictions. For example, [the `adjrr` function the `Stata` software package](https://journals.sagepub.com/doi/pdf/10.1177/1536867X1301300304) can compute "adjusted risk ratios", which are ratios of adjusted predictions. To do this in `R`, we use the `comparison` argument:
 
 ```{r}
-avg_comparisons(mod, transform_pre = "ratio")
+avg_comparisons(mod, comparison = "ratio")
 ```
 
 This result is the average adjusted risk ratio, that is, the adjusted predictions when the `mpg` are incremented by 1, divided by the adjusted predictions when `mpg` is at its original value.
 
-The `transform_pre` accepts different values for common types of contrasts: 'difference', 'ratio', 'lnratio', 'ratioavg', 'lnratioavg', 'lnoravg', 'differenceavg'. These strings are shortcuts for functions that accept two vectors of adjusted predictions and returns a single vector of contrasts. For example, these two commands yield identical results:
+The `comparison` accepts different values for common types of contrasts: 'difference', 'ratio', 'lnratio', 'ratioavg', 'lnratioavg', 'lnoravg', 'differenceavg'. These strings are shortcuts for functions that accept two vectors of adjusted predictions and returns a single vector of contrasts. For example, these two commands yield identical results:
 
 ```{r}
-avg_comparisons(mod, transform_pre = "ratio")
+avg_comparisons(mod, comparison = "ratio")
 
-avg_comparisons(mod, transform_pre = function(hi, lo) hi / lo)
+avg_comparisons(mod, comparison = function(hi, lo) hi / lo)
 ```
 
 This mechanism is powerful, because it lets users create fully customized contrasts. Here is a non-sensical example:
 
 ```{r}
-avg_comparisons(mod, transform_pre = function(hi, lo) sqrt(hi) / log(lo + 10))
+avg_comparisons(mod, comparison = function(hi, lo) sqrt(hi) / log(lo + 10))
 ```
 
 The same arguments work in the plotting function `plot_comparisons()` as well, which allows us to plot various custom contrasts. Here is a comparison of Adjusted Risk Ratio and Adjusted Risk Difference in a model of the probability of survival aboard the Titanic:
@@ -597,7 +597,7 @@ p1 <- plot_comparisons(
     mod_titanic,
     variables = "Age",
     condition = "Age",
-    transform_pre = "ratio") +
+    comparison = "ratio") +
     ylab("Adjusted Risk Ratio\nP(Survival | Age + 1) / P(Survival | Age)")
 
 p2 <- plot_comparisons(
@@ -614,13 +614,13 @@ By default, the standard errors around contrasts are computed using the delta me
 1. Compute the natural log of the ratio between the mean of adjusted predictions with $x+1$ and the mean of adjusted predictions with $x$.
 2. Exponentiate the estimate and confidence interval bounds.
 
-Step 1 is easy to achieve with the `transform_pre` argument described above. Step 2 can be achieved with the `transform_post` argument:
+Step 1 is easy to achieve with the `comparison` argument described above. Step 2 can be achieved with the `transform` argument:
 
 ```{r}
 avg_comparisons(
     mod,
-    transform_pre = function(hi, lo) log(hi / lo),
-    transform_post = exp)
+    comparison = function(hi, lo) log(hi / lo),
+    transform = exp)
 ```
 
 ````{comment}
@@ -637,27 +637,27 @@ There is a very subtle difference between the procedure above and this code:
 ```{r}
 avg_comparisons(
     mod,
-    transform_pre = function(hi, lo) log(hi / lo),
-    transform_post = exp)
+    comparison = function(hi, lo) log(hi / lo),
+    transform = exp)
 ```
 
-Since the `exp` function is now passed to the `transform_post` argument of the `comparisons()` function, the exponentiation is now done only *after* unit-level contrasts have been averaged. This is what `Stata` appears to do under the hood, and the results are slightly different.
+Since the `exp` function is now passed to the `transform` argument of the `comparisons()` function, the exponentiation is now done only *after* unit-level contrasts have been averaged. This is what `Stata` appears to do under the hood, and the results are slightly different.
 
 ```{r}
 comparisons(
     mod,
-    transform_pre = function(hi, lo) log(mean(hi) / mean(lo)),
-    transform_post = exp)
+    comparison = function(hi, lo) log(mean(hi) / mean(lo)),
+    transform = exp)
 ```
 ````
 
-Note that equivalent results can be obtained using shortcut strings in the `transform_pre` argument: "ratio", "lnratio", "lnratioavg".
+Note that equivalent results can be obtained using shortcut strings in the `comparison` argument: "ratio", "lnratio", "lnratioavg".
 
 ```{r}
 comparisons(
     mod,
-    transform_pre = "lnratioavg",
-    transform_post = exp)
+    comparison = "lnratioavg",
+    transform = exp)
 ```
 
 All the same arguments apply to the plotting functions of the `marginaleffects` package as well. For example we can plot the Adjusted Risk Ratio in a model with a quadratic term:
@@ -670,7 +670,7 @@ plot_comparisons(
     mod2,
     variables = list("Age" = 10),
     condition = "Age",
-    transform_pre = "ratio") +
+    comparison = "ratio") +
     ylab("Adjusted Risk Ratio\nP(Survived = 1 | Age + 10) / P(Survived = 1 | Age)")
 ```
 
@@ -802,15 +802,15 @@ predictions(mod, dpar = "mu", type = "response",
             newdata = datagrid(lifeExp = seq(40, 80, 20)))
 ```
 
-For **predictions**, we need to exponentiate the results to scale them back up to dollar amounts. We can do this by post-processing the results (e.g. with `dplyr::mutate(predicted = exp(predicted))`), or we can use the `transform_post` argument in `predictions()` to pass the results to `exp()` after getting calculated:
+For **predictions**, we need to exponentiate the results to scale them back up to dollar amounts. We can do this by post-processing the results (e.g. with `dplyr::mutate(predicted = exp(predicted))`), or we can use the `transform` argument in `predictions()` to pass the results to `exp()` after getting calculated:
 
 ```{r}
 predictions(mod, dpar = "mu", 
             newdata = datagrid(lifeExp = seq(40, 80, 20)),
-            transform_post = exp)
+            transform = exp)
 ```
 
-We can pass `transform_post = exp` to `plot_predictions()` too:
+We can pass `transform = exp` to `plot_predictions()` too:
 
 ```{r plot-hurdle-parts, fig.width=8, fig.asp=0.618}
 plot_predictions(
@@ -838,13 +838,13 @@ plot_predictions(
 plot_predictions(
   mod,
   dpar = "mu",
-  transform_post = exp,
+  transform = exp,
   condition = "lifeExp") +
   labs(y = "mu",
        subtitle = "Dollar-scale predictions")
 ```
 
-For **marginal effects**, we need to transform the predictions *before* calculating the instantaneous slopes. We also can't use the `slopes()` function directly—we need to use `comparisons()` and compute the numerical derivative ourselves (i.e. predict `gdpPercap` at `lifeExp` of 40 and 40.001 and calculate the slope between those predictions). We can use the `transform_pre` argument to pass the pair of predicted values to `exp()` before calculating the slopes:
+For **marginal effects**, we need to transform the predictions *before* calculating the instantaneous slopes. We also can't use the `slopes()` function directly—we need to use `comparisons()` and compute the numerical derivative ourselves (i.e. predict `gdpPercap` at `lifeExp` of 40 and 40.001 and calculate the slope between those predictions). We can use the `comparison` argument to pass the pair of predicted values to `exp()` before calculating the slopes:
 
 ```{r}
 # step size of the numerical derivative
@@ -857,7 +857,7 @@ comparisons(
   newdata = datagrid(lifeExp = seq(40, 80, 20)),
   # rescale the elements of the slope
   # (exp(40.001) - exp(40)) / exp(0.001)
-  transform_pre = function(hi, lo) ((exp(hi) - exp(lo)) / exp(eps)) / eps
+  comparison = function(hi, lo) ((exp(hi) - exp(lo)) / exp(eps)) / eps
 )
 ```
 
@@ -868,7 +868,7 @@ predictions_data <- predictions(
   mod,
   newdata = datagrid(lifeExp = seq(30, 80, 1)),
   dpar = "mu",
-  transform_post = exp) |>
+  transform = exp) |>
   select(lifeExp, prediction = estimate)
 
 slopes_data <- comparisons(
@@ -876,7 +876,7 @@ slopes_data <- comparisons(
   dpar = "mu",
   variables = list(lifeExp = eps),
   newdata = datagrid(lifeExp = seq(40, 80, 20)),
-  transform_pre = function(hi, lo) ((exp(hi) - exp(lo)) / exp(eps)) / eps) |>
+  comparison = function(hi, lo) ((exp(hi) - exp(lo)) / exp(eps)) / eps) |>
   select(lifeExp, estimate) |>
   left_join(predictions_data, by = "lifeExp") |>
   # Point-slope formula: (y - y1) = m(x - x1)

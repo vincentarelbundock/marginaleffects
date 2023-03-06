@@ -3,10 +3,10 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
     dots <- list(...)
 
     if (isTRUE(calling_function == "marginaleffects")) {
-        # transform_pre: this would break `dydx` normalization
+        # comparison: this would break `dydx` normalization
         # interaction: cross countrast+slope do not make sense
-        # transform_post: should we really be back-transforming slopes?
-        unsupported <- c("transform_pre", "transform_post", "cross")
+        # transform: should we really be back-transforming slopes?
+        unsupported <- c("comparison", "transform", "cross", "transform_pre", "transform_post")
         unsupported <- intersect(names(dots), unsupported)
         if (length(unsupported) > 0) {
             msg <- sprintf(
@@ -37,7 +37,8 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
 
     white_list <- c(
         "conf.int", "modeldata", "internal_call", "df",
-        "transform_post", "transform_pre", "side", "delta", "null", "equivalence", "draw",
+        "transform", "comparison", "side", "delta", "null", "equivalence", "draw",
+        "transform_pre", "transform_post", # backward compatibility everywhere
         "variables_grid", # backward compatibility in marginal_means()
         "at" # topmodels procast
         )

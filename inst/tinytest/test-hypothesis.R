@@ -249,21 +249,21 @@ expect_true("setosa, 0 - setosa, 1" %in% mfx$term)
 
 
 # # Issue #568
-# # TODO: p-value computed before transform_post; null on the pre-transform scale
+# # TODO: p-value computed before transform; null on the pre-transform scale
 # mod <- glm(vs ~ hp, data = mtcars, family = binomial)
 
 # comparisons(mod,
 #     newdata = "mean",
-#     transform_pre = "ratio")
+#     comparison = "ratio")
 
 # comparisons(mod,
 #     newdata = "mean",
-#     transform_pre = "ratio",
+#     comparison = "ratio",
 #     hypothesis = 0)
 
 # comparisons(mod,
 #     newdata = "mean",
-#     transform_pre = "ratio",
+#     comparison = "ratio",
 #     hypothesis = 1)
 
 # marginaleffects

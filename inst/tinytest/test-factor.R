@@ -75,7 +75,7 @@ mod <- lm(mpg ~ cyl, mtcars)
 cmp <- comparisons(
     mod,
     variables = list(cyl = "minmax"),
-    transform_post = function(x) x / 3)
+    transform = function(x) x / 3)
 expect_inherits(cmp, "comparisons")
 
 

@@ -4,6 +4,11 @@ Breaking changes:
 
 * `type` column is replaced by `type` attribute.
 
+Renamed arguments (backward compatibility is preserved):
+
+* `transform_pre` -> `comparison`
+* `transform_post` -> `transform`
+
 New:
 
 * `p_adjust` argument: Adjust p-values for multiple comparisons. 
@@ -14,12 +19,9 @@ Performance:
 * Bayesian models with many rows. Thanks to Etienne Bacher. #694 
 * Faster predictions, especially with standard errors and large datasets.
 
-Misc:
-
-* Support for more models with offsets. Thanks to @mariofiorini for report #705.
-
 Bugs:
 
+* Support for more models with offsets. Thanks to @mariofiorini for report #705.
 * Error on `predictions()` with `by` and `wts`. Thanks to Noah Greifer for report #695.
 * `afex`: some models generated errors. Thanks to  Daniel Lüdecke for report #696.
 * `group` column name is always forbidden. Thanks to Daniel Lüdecke for report #697.

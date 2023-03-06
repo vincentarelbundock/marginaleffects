@@ -12,7 +12,7 @@ get_averages(x, by = TRUE, ...)
 \item{by}{Character vector of variable names over which to compute group-wise average estimates. When \code{by=NULL}, the global average (per term) is reported.}
 
 \item{...}{All additional arguments are passed to the original fitting
-function to override the original call options: \code{conf_level}, \code{transform_post},
+function to override the original call options: \code{conf_level}, \code{transform},
 etc. See \code{?predictions}, \code{?comparisons}, \code{?slopes}.}
 }
 \value{

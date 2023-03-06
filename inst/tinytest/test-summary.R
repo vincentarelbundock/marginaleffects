@@ -7,14 +7,14 @@ requiet("poorman")
 
 dat <- mtcars
 mod <- glm(am ~ hp, data = dat, family = binomial)
-cmp <- comparisons(mod, transform_pre = "lnor")
+cmp <- comparisons(mod, comparison = "lnor")
 
-cmp <- comparisons(mod, transform_pre = "lnoravg")
+cmp <- comparisons(mod, comparison = "lnoravg")
 expect_equivalent(nrow(cmp), 1)
 
 # these two errors are no longer relevant, since we no longer aggregate in
 # tidy(), but instead run the same call through comparisons(), which does fancy
-# averaging by changing transform_pre when possible/known.
+# averaging by changing comparison when possible/known.
 # expect_error(summary(cmp), pattern = "collapsible")
 # expect_error(tidy(cmp), pattern = "collapsible")
 
@@ -60,8 +60,8 @@ expect_snapshot_print(
 # bugs stay dead: label transformation_post
 dat <- mtcars
 mod <- glm(am ~ hp, data = dat, family = binomial)
-cmp <- avg_comparisons(mod, transform_pre = function(hi, lo) hi / lo, transform_post = exp)
-expect_snapshot_print(cmp, "summary-comparisons_transform_post")
+cmp <- avg_comparisons(mod, comparison = function(hi, lo) hi / lo, transform = exp)
+expect_snapshot_print(cmp, "summary-comparisons_transform")
 
 
 

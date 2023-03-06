@@ -137,7 +137,7 @@ marginal_means <- function(model,
                            vcov = TRUE,
                            conf_level = 0.95,
                            type = NULL,
-                           transform_post = NULL,
+                           transform = NULL,
                            cross = FALSE,
                            hypothesis = NULL,
                            equivalence = NULL,
@@ -150,6 +150,7 @@ marginal_means <- function(model,
 
     # deprecation and backward compatibility
     dots <- list(...)
+    if ("transform_post" %in% names(dots)) transform <- dots[["transform_post"]]
     if ("variables_grid" %in% names(dots)) {
         if (!is.null(newdata)) {
             insight::format_error("The `variables_grid` argument and has been replaced by `newdata`. These two arguments cannot be used simultaneously.")
@@ -169,12 +170,12 @@ marginal_means <- function(model,
             insight::link_inverse(model),
             error = function(e) NULL)
         if (type == "response" &&
-            is.null(transform_post) &&
+            is.null(transform) &&
             class(model)[1] %in% type_dictionary$class &&
             isTRUE("link" %in% subset(type_dictionary, class == class(model)[1])$type) &&
             is.function(linv)) {
             type <- "link"
-            transform_post <- linv
+            transform <- linv
         }
     } else {
         type <- sanitize_type(model = model, type = type)
@@ -183,7 +184,7 @@ marginal_means <- function(model,
     modeldata <- get_modeldata(model, additional_variables = FALSE)
 
     checkmate::assert_flag(cross)
-    transform_post <- sanitize_transform_post(transform_post)
+    transform <- sanitize_transform(transform)
     conf_level <- sanitize_conf_level(conf_level, ...)
     model <- sanitize_model(model, vcov = vcov, calling_function = "marginalmeans")
 
@@ -370,7 +371,7 @@ marginal_means <- function(model,
     out <- equivalence(out, equivalence = equivalence, df = df, ...)
 
     # after assign draws
-    out <- backtransform(out, transform_post)
+    out <- backtransform(out, transform)
 
     # column order
     cols <- c("rowid", "group", colnames(by), "term", "hypothesis", "value", variables, "estimate", "std.error", "statistic", "p.value", "conf.low", "conf.high", sort(colnames(out)))
@@ -387,7 +388,7 @@ marginal_means <- function(model,
     attr(out, "variables") <- variables
     attr(out, "call") <- match.call()
     attr(out, "conf_level") <- conf_level
-    attr(out, "transform_post_label") <- names(transform_post)[1]
+    attr(out, "transform_label") <- names(transform)[1]
 
     if (isTRUE(cross)) {
         attr(out, "variables_grid") <- setdiff(nonfocal, variables)

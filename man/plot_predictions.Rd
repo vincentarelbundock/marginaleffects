@@ -11,7 +11,7 @@ plot_predictions(
   type = NULL,
   vcov = NULL,
   conf_level = 0.95,
-  transform_post = NULL,
+  transform = NULL,
   points = 0,
   rug = FALSE,
   gray = FALSE,
@@ -67,7 +67,7 @@ the \code{marginaleffects:::type_dictionary} dataframe.}
 
 \item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
 
-\item{transform_post}{A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.}
+\item{transform}{A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.}
 
 \item{points}{Number between 0 and 1 which controls the transparency of raw data points. 0 (default) does not display any points.}
 

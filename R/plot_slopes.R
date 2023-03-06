@@ -77,7 +77,7 @@ plot_slopes <- function(model,
         draw = draw,
         rug = rug,
         gray = gray,
-        transform_pre = slope,
+        comparison = slope,
         ...)
 
     if (inherits(out, "ggplot")) {

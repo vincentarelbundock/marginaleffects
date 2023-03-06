@@ -106,7 +106,7 @@ tidy.comparisons <- function(x,
         out <- recall(x, by = by, conf_level = conf_level)
         if (!is.null(out)) {
             # back transformation
-            if (!is.null(transform_avg) && !is.null(attr(x, "transform_post"))) {
+            if (!is.null(transform_avg) && !is.null(attr(x, "transform"))) {
                 msg <- "Estimates were transformed twice: once during the initial computation, and once more when summarizing the results in `tidy()` or `summary()`."
                 insight::format_warning(msg)
             }
@@ -116,11 +116,11 @@ tidy.comparisons <- function(x,
     }
 
 
-    if (identical(attr(x, "transform_pre"), "lnor")) {
+    if (identical(attr(x, "comparison"), "lnor")) {
         msg <- 
         'The `tidy()` and `summary()` functions take the average of estimates
         over the whole dataset. However, the unit-level estimates you requested 
-        are not collapsible. Please use `transform_pre="lnoravg"` instead.' 
+        are not collapsible. Please use `comparison="lnoravg"` instead.' 
         stop(msg, call. = FALSE)
     }
 
@@ -138,9 +138,9 @@ tidy.comparisons <- function(x,
     transform_avg <- deprecation_arg(
         transform_avg,
         newname = "transform_avg",
-        oldname = "transform_post",
+        oldname = "transform",
         ...)
-    transform_avg <- sanitize_transform_post(transform_avg)
+    transform_avg <- sanitize_transform(transform_avg)
 
     x_dt <- data.table(x)
 
@@ -262,7 +262,7 @@ tidy.comparisons <- function(x,
     }
 
     # back transformation
-    if (!is.null(transform_avg) && !is.null(attr(x, "transform_post"))) {
+    if (!is.null(transform_avg) && !is.null(attr(x, "transform"))) {
         msg <- "Estimates were transformed twice: once during the initial computation, and once more when summarizing the results in `tidy()` or `summary()`."
         insight::format_warning(msg)
     }
@@ -282,7 +282,7 @@ tidy.comparisons <- function(x,
     attr(out, "conf_level") <- conf_level
     attr(out, "FUN") <- "mean"
     attr(out, "nchains") <- attr(x, "nchains")
-    attr(out, "transform_post_label") <- attr(x, "transform_post_label")
+    attr(out, "transform_label") <- attr(x, "transform_label")
     attr(out, "transform_average_label") <- names(transform_avg)[1]
 
     if (exists("drawavg")) {
@@ -338,7 +338,7 @@ tidy.predictions <- function(x,
         out <- recall(x, by = by, conf_level = conf_level)
         if (!is.null(out)) {
             # back transformation
-            if (!is.null(transform_avg) && !is.null(attr(x, "transform_post"))) {
+            if (!is.null(transform_avg) && !is.null(attr(x, "transform"))) {
                 msg <- "Estimates were transformed twice: once during the initial computation, and once more when summarizing the results in `tidy()` or `summary()`."
                 insight::format_warning(msg)
             }
@@ -347,7 +347,7 @@ tidy.predictions <- function(x,
         }
     }
 
-    transform_avg <- sanitize_transform_post(transform_avg)
+    transform_avg <- sanitize_transform(transform_avg)
 
     # I left the `by` code below in case I eventually want to revert. Much
     # of it needs to stay anyway because we need the `delta` in `tidy` for
@@ -440,7 +440,7 @@ tidy.predictions <- function(x,
 
     # back transformation
     if (!is.null(transform_avg)) {
-        if (!is.null(attr(x, "transform_post"))) {
+        if (!is.null(attr(x, "transform"))) {
             msg <- "Estimates were transformed twice: once during the initial computation, and once more when summarizing the results in `tidy()` or `summary()`."
             warning(insight::format_message(msg), call. = FALSE)
         }
@@ -448,7 +448,7 @@ tidy.predictions <- function(x,
     }
 
     attr(out, "nchains") <- attr(x, "nchains")
-    attr(out, "transform_post_label") <- attr(x, "transform_post_label")
+    attr(out, "transform_label") <- attr(x, "transform_label")
     attr(out, "transform_average_label") <- names(transform_avg)[1]
 
     return(out)

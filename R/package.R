@@ -65,7 +65,7 @@ utils::globalVariables(c(
 "term",
 "ticks",
 "tmp_grp",
-"transform_pre_idx",
+"comparison_idx",
 "value",
 "where",
 "wts"))
