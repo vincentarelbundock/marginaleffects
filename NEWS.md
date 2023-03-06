@@ -25,6 +25,7 @@ Bugs:
 * `group` column name is always forbidden. Thanks to Daniel Lüdecke for report #697.
 * Blank graphs in `plot_comparisons()` with a list in `variables`.
 * `type="link"` produced an error with some categorical `brms` models. Thanks to @shirdekel for report #703.
+* Error on `predictions(variables = ...)` for `glmmTMB` models. Thanks to Daniel Lüdecke for report #707.
 
 # marginaleffects 0.10.0
 

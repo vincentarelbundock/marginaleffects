@@ -1,5 +1,5 @@
 source("helpers.R")
-if (!EXPENSIVE) exit_file("EXPENSIVE")
+# if (!EXPENSIVE) exit_file("EXPENSIVE")
 using("marginaleffects")
 # exit_file("glmmTMB always causes problems")
 
@@ -243,5 +243,22 @@ mfx <- avg_slopes(mod)
 expect_inherits(mfx, 'slopes')
 
 
+# Issue #707
+set.seed(123)
+n <- 200
+d <- data.frame(
+  outcome = rnorm(n),
+  groups = as.factor(sample(c("treatment", "control"), n, TRUE)),
+  episode = as.factor(sample(1:2, n, TRUE)),
+  ID = as.factor(rep(1:10, n / 10)),
+  wt = abs(rnorm(n, mean = 1, sd = 0.1)),
+  sex = as.factor(sample(c("female", "male"), n, TRUE, prob = c(.4, .6))))
+mod <- glmmTMB(outcome ~ groups * episode + (1 | ID), data = d, weights = wt)
+tmp <<- head(d)
+p <- avg_predictions(mod, variables = "groups", newdata = tmp)
+expect_inherits(p, "predictions")
 
+
+
+source("helpers.R")
 rm(list = ls())

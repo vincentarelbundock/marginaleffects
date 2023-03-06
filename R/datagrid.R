@@ -271,7 +271,9 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
 
     # subset columns, otherwise it can be ultra expensive to compute summaries for every variable
     if (!is.null(model)) {
-        variables_sub <- tryCatch(insight::find_variables(model, flatten = TRUE), error = function(e) NULL)
+        variables_sub <- c(
+            hush(insight::find_variables(model, flatten = TRUE)),
+            hush(unlist(insight::find_weights(model), use.names = FALSE))) # glmmTMB needs weights column for predictions
         variables_sub <- c(variables_sub, variables_manual)
         variables_sub <- intersect(colnames(newdata), variables_sub)
         if (length(variables_sub) > 0) {
