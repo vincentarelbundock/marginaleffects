@@ -271,15 +271,15 @@ comparisons <- function(model,
         df = df),
         list(...))
     call_attr <- do.call("call", call_attr)
-    
+
     # multiple imputation
     if (inherits(model, "mira")) {
         out <- process_imputation(model, call_attr)
         return(out)
     }
-    
+
     # more sanity chekcs
-    
+
     conf_level <- sanitize_conf_level(conf_level, ...)
     sanity_dots(model, ...)
     checkmate::assert_number(eps, lower = 1e-10, null.ok = TRUE)
@@ -310,7 +310,7 @@ comparisons <- function(model,
     } else {
         addvar <- FALSE
     }
-    
+
     # extracting modeldata repeatedly is slow.
     # checking dots allows cheap multiple imputation
     dots <- list(...)
@@ -326,13 +326,13 @@ comparisons <- function(model,
         }
         modeldata <- get_modeldata(model, additional_variables = addvar)
     }
-    
+
     newdata <- sanitize_newdata(
         model = model,
         newdata = newdata,
         by = by,
         modeldata = modeldata)
-    
+
     # weights: before sanitize_variables
     sanity_wts(wts, newdata) # after sanity_newdata
     if (!is.null(wts) && isTRUE(checkmate::check_string(wts))) {
@@ -465,7 +465,7 @@ comparisons <- function(model,
         if ("rowid" %in% colnames(newdata)) {
             idx <- c("rowid", "rowidcf", "term", "contrast", "by", setdiff(colnames(contrast_data$original), colnames(mfx)))
             idx <- intersect(idx, colnames(contrast_data$original))
-            tmp <- contrast_data$original[, ..idx, drop = FALSE]
+            tmp <- contrast_data$original[, ..idx]
             # contrast_data is duplicated to compute contrasts for different terms or pairs
             bycols <- intersect(colnames(tmp), colnames(mfx))
             idx <- duplicated(tmp, by = bycols)

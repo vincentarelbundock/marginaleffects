@@ -114,7 +114,7 @@ get_se_delta <- function(model,
     # Var(dydx) = J Var(beta) J'
     # computing the full matrix is memory-expensive, and we only need the diagonal
     # algebra trick: https://stackoverflow.com/a/42569902/342331
-    se <- sqrt(colSums(t(J %*% V) * t(J)))
+    se <- sqrt(colSums(t(crossprod(t(J), V)) * t(J)))
     se[se == 0] <- NA_real_
     attr(se, "jacobian") <- J
 
