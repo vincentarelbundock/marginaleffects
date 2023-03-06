@@ -403,14 +403,14 @@ library(marginaleffects)
 tmp <- mtcars
 tmp$am <- as.logical(tmp$am)
 mod <- lm(mpg ~ am + factor(cyl), tmp)
-comparisons(mod, variables = list(cyl = "reference")) |> tidy()
-comparisons(mod, variables = list(cyl = "sequential")) |> tidy()
-comparisons(mod, variables = list(cyl = "pairwise")) |> tidy()
+avg_comparisons(mod, variables = list(cyl = "reference"))
+avg_comparisons(mod, variables = list(cyl = "sequential"))
+avg_comparisons(mod, variables = list(cyl = "pairwise"))
 
 # GLM with different scale types
 mod <- glm(am ~ factor(gear), data = mtcars)
-comparisons(mod, type = "response") |> tidy()
-comparisons(mod, type = "link") |> tidy()
+avg_comparisons(mod, type = "response")
+avg_comparisons(mod, type = "link")
 
 # Contrasts at the mean
 comparisons(mod, newdata = "mean")
@@ -425,15 +425,14 @@ comparisons(mod, newdata = datagrid(am = unique, gear = max))
 m <- lm(mpg ~ hp + drat + factor(cyl) + factor(am), data = mtcars)
 comparisons(m, variables = "hp", newdata = datagrid(FUN_factor = unique, FUN_numeric = median))
 
-
 # Numeric contrasts
 mod <- lm(mpg ~ hp, data = mtcars)
-comparisons(mod, variables = list(hp = 1)) |> tidy()
-comparisons(mod, variables = list(hp = 5)) |> tidy()
-comparisons(mod, variables = list(hp = c(90, 100))) |> tidy()
-comparisons(mod, variables = list(hp = "iqr")) |> tidy()
-comparisons(mod, variables = list(hp = "sd")) |> tidy()
-comparisons(mod, variables = list(hp = "minmax")) |> tidy()
+avg_comparisons(mod, variables = list(hp = 1))
+avg_comparisons(mod, variables = list(hp = 5))
+avg_comparisons(mod, variables = list(hp = c(90, 100)))
+avg_comparisons(mod, variables = list(hp = "iqr"))
+avg_comparisons(mod, variables = list(hp = "sd"))
+avg_comparisons(mod, variables = list(hp = "minmax"))
 
 # using a function to specify a custom difference in one regressor
 dat <- mtcars
