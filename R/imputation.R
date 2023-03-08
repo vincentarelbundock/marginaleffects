@@ -12,7 +12,7 @@ process_imputation <- function(x, call_attr) {
         mfx_list[[i]]$term <- seq_len(nrow(mfx_list[[i]]))
         class(mfx_list[[i]]) <- c("marginaleffects_mids", class(mfx_list[[i]]))
     }
-    mipool <- mice::pool(mfx_list[1:4])
+    mipool <- mice::pool(mfx_list)
     for (col in c("estimate", "statistic", "p.value", "conf.low", "conf.high")) {
         if (col %in% colnames(out) && col %in% colnames(mipool$pooled)) {
             out[[col]] <- mipool$pooled[[col]]

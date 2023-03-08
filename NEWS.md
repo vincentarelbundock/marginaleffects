@@ -28,6 +28,7 @@ Bugs:
 * Blank graphs in `plot_comparisons()` with a list in `variables`.
 * `type="link"` produced an error with some categorical `brms` models. Thanks to @shirdekel for report #703.
 * Error on `predictions(variables = ...)` for `glmmTMB` models. Thanks to Daniel Lüdecke for report #707.
+* Multiple imputation with `mira` objects was not pooling all datasets. Thanks to  @Generalized for report #711.
 
 # marginaleffects 0.10.0
 
