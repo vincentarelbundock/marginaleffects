@@ -38,6 +38,7 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
     white_list <- c(
         "conf.int", "modeldata", "internal_call", "df",
         "transform", "comparison", "side", "delta", "null", "equivalence", "draw",
+        "flag", # internal dev
         "transform_pre", "transform_post", # backward compatibility everywhere
         "variables_grid", # backward compatibility in marginal_means()
         "at" # topmodels procast

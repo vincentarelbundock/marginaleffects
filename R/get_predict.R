@@ -19,7 +19,6 @@ get_predict.default <- function(model,
                                 type = "response",
                                 ...) {
 
-
     dots <- list(...)
 
     if (is.null(type)) {
@@ -27,7 +26,7 @@ get_predict.default <- function(model,
     }
 
     # some predict methods raise warnings on unused arguments
-    unused <- c("normalize_dydx", "eps", "numDeriv_method", "internal_call", "draw", "modeldata", "transform_pre", "transform_post")
+    unused <- c("normalize_dydx", "eps", "numDeriv_method", "internal_call", "draw", "modeldata", "transform_pre", "transform_post", "flag")
     dots <- dots[setdiff(names(dots), unused)]
 
     # first argument in the predict methods is not always named "x" or "model"
@@ -35,8 +34,13 @@ get_predict.default <- function(model,
     dots[["type"]] <- type
     args <- c(list(model), dots)
 
-    fun <- stats::predict
-    pred <- suppressWarnings(do.call("fun", args))
+    # `pred` is a secret argument called by `predict.lm` to turn a numeric vector into a data frame with correct `rowid`
+    if ("pred" %in% names(dots)) {
+        pred <- dots[["pred"]]
+    } else {
+        fun <- stats::predict
+        pred <- suppressWarnings(do.call(fun, args))
+    }
 
     # 1-d array to vector (e.g., {mgcv})
     if (is.array(pred) && length(dim(pred)) == 1) {
@@ -62,10 +66,9 @@ get_predict.default <- function(model,
             class(pred) <- "numeric"
             if ("rowid" %in% colnames(newdata)) {
                 out <- list(estimate = pred,
-                                  rowid = newdata$rowid)
+                            rowid = newdata$rowid)
             } else {
-                out <- list(estimate = pred,
-                                  rowid = seq_len(length(pred)))
+                out <- list(estimate = pred, rowid = seq_len(length(pred)))
             }
         }
 

@@ -370,6 +370,10 @@ predictions <- function(model,
     if (!is.null(out)) {
         return(out)
     }
+    
+
+    # pre-building the model matrix can speed up repeated predictions
+    newdata <- get_model_matrix_attribute(model, newdata)
 
 
     # main estimation

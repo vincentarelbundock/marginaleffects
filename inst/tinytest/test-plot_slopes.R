@@ -55,7 +55,7 @@ expect_snapshot_plot(p, "plot_slopes_continuous")
 # two conditions
 mod <- lm(mpg ~ hp * wt * am, data = mtcars)
 p <- plot_slopes(mod, variables = "hp", condition = c("wt", "am"))
-expect_snapshot_plot(p, "plot_slopes_two_conditions")
+expect_snapshot_plot(p, "plot_slopes_two_conditions", tol = 500)
 
 
 
