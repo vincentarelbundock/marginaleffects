@@ -172,6 +172,11 @@ get_contrast_data <- function(model,
             original <- original[idx]
         }
     }
+    
+    # get_predict() is much faster if we only build the model matrix once
+    lo <- get_model_matrix_attribute(model, lo)
+    hi <- get_model_matrix_attribute(model, hi)
+    original <- get_model_matrix_attribute(model, original)
 
     out <- list(lo = lo, hi = hi, original = original)
 

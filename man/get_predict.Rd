@@ -7,7 +7,7 @@
 %   R/methods_lme4.R, R/methods_mclogit.R, R/methods_mhurdle.R,
 %   R/methods_mlogit.R, R/methods_ordinal.R, R/methods_quantreg.R,
 %   R/methods_rms.R, R/methods_robustlmm.R, R/methods_rstanarm.R,
-%   R/methods_survival.R, R/methods_tobit1.R
+%   R/methods_stats.R, R/methods_survival.R, R/methods_tobit1.R
 \name{get_predict}
 \alias{get_predict}
 \alias{get_predict.default}
@@ -41,6 +41,8 @@
 \alias{get_predict.ols}
 \alias{get_predict.rlmerMod}
 \alias{get_predict.stanreg}
+\alias{get_predict.lm}
+\alias{get_predict.glm}
 \alias{get_predict.coxph}
 \alias{get_predict.tobit1}
 \title{Get predicted values from a model object (internal function)}
@@ -108,6 +110,10 @@ get_predict(model, newdata, type, ...)
 \method{get_predict}{rlmerMod}(model, newdata = insight::get_data(model), type = "response", ...)
 
 \method{get_predict}{stanreg}(model, newdata = insight::get_data(model), type = "response", ...)
+
+\method{get_predict}{lm}(model, newdata = insight::get_data(model), type = "response", ...)
+
+\method{get_predict}{glm}(model, newdata = insight::get_data(model), type = "response", ...)
 
 \method{get_predict}{coxph}(model, newdata = insight::get_data(model), type = "lp", ...)
 

@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Predictions, Comparisons, Slopes, Marginal Means, and Hypothesis Tests
-Version: 0.10.0.9016
+Version: 0.10.0.9017
 Authors@R: 
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -38,7 +38,10 @@ Imports:
     data.table,
     generics,
     insight (>= 0.19.0),
-    methods
+    methods,
+    Rcpp (>= 1.0.10),
+    RcppEigen
+LinkingTo: Rcpp, RcppEigen
 Suggests: 
     AER,
     Amelia,
@@ -147,6 +150,7 @@ Suggests:
     tsModel,
     withr
 Collate: 
+    'RcppExports.R'
     'backtransform.R'
     'bootstrap_boot.R'
     'bootstrap_fwb.R'
@@ -169,6 +173,7 @@ Collate:
     'get_group_names.R'
     'get_hypothesis.R'
     'get_jacobian.R'
+    'get_model_matrix_attribute.R'
     'get_modeldata.R'
     'get_predict.R'
     'get_se_delta.R'
