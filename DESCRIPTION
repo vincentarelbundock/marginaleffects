@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Predictions, Comparisons, Slopes, Marginal Means, and Hypothesis Tests
-Version: 0.10.0.9015
+Version: 0.10.0.9016
 Authors@R: 
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -105,7 +105,6 @@ Suggests:
     numDeriv,
     optmatch,
     ordinal,
-    ordbetareg,
     parameters,
     patchwork,
     pkgdown,

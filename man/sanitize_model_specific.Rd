@@ -22,7 +22,7 @@
 
 \method{sanitize_model_specific}{betareg}(model, ...)
 
-sanitize_model_specific(model, calling_function = "marginaleffects", ...)
+sanitize_model_specific(model, ...)
 
 \method{sanitize_model_specific}{default}(
   model,

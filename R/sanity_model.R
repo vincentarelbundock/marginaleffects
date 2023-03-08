@@ -4,9 +4,7 @@
 #' @return A warning, an error, or nothing
 #' @rdname sanitize_model_specific
 #' @keywords internal
-sanitize_model_specific <- function (model,
-                                   calling_function = "marginaleffects",
-                                   ...) {
+sanitize_model_specific <- function (model, ...) {
     UseMethod("sanitize_model_specific", model)
 }
 
