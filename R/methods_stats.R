@@ -37,8 +37,11 @@ get_predict.lm <- function(model, newdata = insight::get_data(model), type = "re
         MM <- MM[, piv, drop = FALSE]
         beta <- beta[piv]
     }
-    pred <- eigenMatMult(MM, beta)
-    # pred <- (MM %*% beta)[, 1]
+    if (getOption("marginaleffects_linalg", default = "RcppEigen") == "RcppEigen") {
+        pred <- eigenMatMult(MM, beta)
+    } else {
+        pred <- (MM %*% beta)[, 1]
+    }
     
     # `pred` is a secret argument which re-uses the default get_predict to format a vector a data frame using correct `rowid`
     out <- get_predict.default(model = model, newdata = newdata, type = type, pred = pred, ...)
