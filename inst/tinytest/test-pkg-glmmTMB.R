@@ -209,7 +209,7 @@ expect_inherits(predictions(model_REML, vcov = FALSE, re.form = NA), "prediction
 
 
 # Issue #663
-requiet("ordbetareg")
+if (!requiet("ordbetareg")) exit_file("ordbetareg")
 requiet("dplyr")
 
 data(pew, package = "ordbetareg")
