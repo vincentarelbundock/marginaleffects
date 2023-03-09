@@ -22,11 +22,11 @@ jobs:
           - {os: windows-latest, r: 'release'}
           - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release', depends_only: TRUE}
           - {os: ubuntu-latest,   r: 'release'}
-          - {os: ubuntu-latest,   r: 'oldrel-1'}
-          - {os: ubuntu-latest,   r: 'oldrel-2'}
-          - {os: ubuntu-latest,   r: 'oldrel-3'}
-          - {os: ubuntu-latest,   r: 'oldrel-4'}
-          - {os: ubuntu-latest,   r: 'oldrel-5'}
+          - {os: ubuntu-latest,   r: 'oldrel'}
+          - {os: ubuntu-latest,   r: '4.1.3'}
+          - {os: ubuntu-latest,   r: '4.0.5'}
+          - {os: ubuntu-latest,   r: '3.6.3'}
+          - {os: ubuntu-latest,   r: '3.5.0'}
 
     runs-on: ${{ matrix.os }}
 
