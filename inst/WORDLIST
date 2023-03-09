@@ -1,6 +1,5 @@
 ’s
 AAP
-deduplication
 AAPs
 Adelies
 al
@@ -10,13 +9,6 @@ ARD
 Arel
 args
 Augusto
-get_hdi
-bonferroni
-fdr
-BH
-hochberg
-holm
-hommel
 Avina
 backtransform
 backtransformation
@@ -25,7 +17,9 @@ backtransforms
 bayesian
 bc
 bca
+BH
 Boca
+bonferroni
 brms
 bugfix
 Bundock
@@ -38,6 +32,7 @@ cran
 CRC
 Customizable
 datagrid
+deduplication
 demeaned
 differenceavg
 differenceavgwts
@@ -76,12 +71,14 @@ eydxavgwts
 eyex
 eyexavg
 eyexavgwts
+fdr
 fivenum
 frac
 fwb
 Gam
 Gentoos
 geoms
+get_hdi
 ggeffects
 github
 GLMMs
@@ -95,6 +92,9 @@ Heiss
 Hernán
 heteroskedasticity
 Heteroskedasticity
+hochberg
+holm
+hommel
 https
 interpretable
 io
