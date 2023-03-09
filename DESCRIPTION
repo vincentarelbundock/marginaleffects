@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Predictions, Comparisons, Slopes, Marginal Means, and Hypothesis Tests
-Version: 0.10.0.9021
+Version: 0.11.0
 Authors@R: 
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -30,7 +30,6 @@ URL: https://vincentarelbundock.github.io/marginaleffects/
 BugReports: https://github.com/vincentarelbundock/marginaleffects/issues
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
-Remotes: vincentarelbundock/tinysnapshot
 Depends: 
     R (>= 3.6.0)
 Imports: 
@@ -39,8 +38,7 @@ Imports:
     generics,
     insight (>= 0.19.0),
     methods,
-    Rcpp (>= 1.0.10),
-    RcppEigen
+    Rcpp (>= 1.0.10)
 LinkingTo: Rcpp, RcppEigen
 Suggests: 
     AER,
@@ -143,7 +141,6 @@ Suggests:
     tidymodels,
     tidyr,
     tidyverse,
-    tinysnapshot,
     tinytest,
     titanic,
     truncreg,

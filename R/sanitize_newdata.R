@@ -197,7 +197,6 @@ dedup_newdata <- function(model, newdata, by, wts, comparison = "difference", cr
         out[, "rowid" := NULL]
     }
     
-    
     categ <- c("factor", "character", "logical", "strata", "cluster", "binary")
     if (!all(vclass %in% categ)) {
         return(newdata)
