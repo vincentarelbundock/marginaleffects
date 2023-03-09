@@ -173,7 +173,8 @@ sanitize_newdata <- function(model, newdata, by, modeldata) {
 dedup_newdata <- function(model, newdata, by, wts, comparison = "difference", cross = FALSE, byfun = NULL) {
 
     flag <- isTRUE(checkmate::check_string(comparison, pattern = "avg"))
-    if (!flag && (isFALSE(by) ||
+    if (!flag && (
+        isFALSE(by) || # weights only make sense when we are marginalizing
         !is.null(wts) ||
         !is.null(byfun) ||
         !isFALSE(cross) ||
@@ -195,6 +196,7 @@ dedup_newdata <- function(model, newdata, by, wts, comparison = "difference", cr
     if ("rowid" %in% colnames(out)) {
         out[, "rowid" := NULL]
     }
+    
     
     categ <- c("factor", "character", "logical", "strata", "cluster", "binary")
     if (!all(vclass %in% categ)) {

@@ -146,8 +146,8 @@ results[["categorical_predictors"]]
 ## Many factor variables
 
 ```{r}
-N <- 1e4
-dat <- data.frame(lapply(1:10, \(i) as.factor(sample(1:4, N, replace = TRUE))))
+N <- 1e6
+dat <- data.frame(lapply(1:20, \(i) as.factor(sample(1:4, N, replace = TRUE))))
 dat <- setNames(dat, paste0("X", seq_along(dat)))
 dat$y <- rnorm(nrow(dat))
 mod <- lm(y ~ ., dat)
@@ -166,4 +166,44 @@ results[["predictions_many_factors"]]
 ```{r}
 fn <- paste0("benchmarks_", packageVersion("marginaleffects"), ".rds")
 saveRDS(results, fn)
+```
+
+
+# Compare results
+
+```{r, eval = FALSE}
+library(patchwork)
+library(ggplot2)
+old <- readRDS("sandbox/benchmarks_0.9.0.rds")
+new <- readRDS("sandbox/benchmarks_0.11.0.rds")
+new[["tiny"]] <- old[["tiny"]] <- new[["many_variables_vcov"]] <- old[["many_variables_vcov"]] <- NULL
+
+tim <- list()
+mem <- list()
+for (i in names(old)) {
+    tim[[i]] <- old[[i]]$median / new[[i]]$median
+    mem[[i]] <- old[[i]]$mem_alloc / new[[i]]$mem_alloc
+}
+mem <- unlist(mem)
+tim <- unlist(tim)
+
+hist(mem)
+
+old[[1]]$median
+
+
+res <- data.frame(
+    old_time = unlist(sapply(old, \(x) x$median)),
+    new_time = unlist(sapply(new, \(x) x$median)),
+    old_memory = unlist(sapply(old, \(x) x$mem_alloc)),
+    new_memory = unlist(sapply(new, \(x) x$mem_alloc))
+)
+
+p1 <- ggplot(res, aes(new_time, old_time)) + geom_point()
+
+lapply(old, class)
+
+
+do.call("rbind", new)
+
 ```
