@@ -170,10 +170,14 @@ sanitize_newdata <- function(model, newdata, by, modeldata) {
 }
 
 
-dedup_newdata <- function(model, newdata, by, wts, comparison = "difference", cross = FALSE) {
+dedup_newdata <- function(model, newdata, by, wts, comparison = "difference", cross = FALSE, byfun = NULL) {
 
     flag <- isTRUE(checkmate::check_string(comparison, pattern = "avg"))
-    if (!flag && (isFALSE(by) || !is.null(wts) || !isFALSE(cross) || isFALSE(getOption("marginaleffects_dedup", default = TRUE)))) {
+    if (!flag && (isFALSE(by) ||
+        !is.null(wts) ||
+        !is.null(byfun) ||
+        !isFALSE(cross) ||
+        isFALSE(getOption("marginaleffects_dedup", default = TRUE)))) {
         return(newdata)
     }
     

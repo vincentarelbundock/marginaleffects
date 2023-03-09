@@ -294,7 +294,12 @@ predictions <- function(model,
     sanity_by(by, newdata)
 
     # after sanity_by
-    newdata <- dedup_newdata(model = model, newdata = newdata, wts = wts, by = by)
+    newdata <- dedup_newdata(
+        model = model,
+        newdata = newdata,
+        wts = wts,
+        by = by,
+        byfun = byfun)
     if (is.null(wts) && "marginaleffects_wts_internal" %in% colnames(newdata)) {
         wts <- "marginaleffects_wts_internal"
     }
