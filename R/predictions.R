@@ -293,6 +293,12 @@ predictions <- function(model,
     # after sanitize_newdata
     sanity_by(by, newdata)
 
+    # after sanity_by
+    newdata <- dedup_newdata(model = model, newdata = newdata, wts = wts, by = by)
+    if (is.null(wts) && "marginaleffects_wts_internal" %in% colnames(newdata)) {
+        wts <- "marginaleffects_wts_internal"
+    }
+
     # weights: after sanitize_newdata; before sanitize_variables
     sanity_wts(wts, newdata) # after sanity_newdata
     if (!is.null(wts) && isTRUE(checkmate::check_string(wts))) {

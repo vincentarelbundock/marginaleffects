@@ -16,6 +16,8 @@ New:
 
 Performance:
 
+* Much faster results in `avg_*()` functions for models with only categorical predictors and many rows of data, using deduplication and weights instead of unit-level estimates.
+* Faster predictions in `lm()` and `glm()` models using `RcppEigen`.
 * Bayesian models with many rows. Thanks to Etienne Bacher. #694 
 * Faster predictions, especially with standard errors and large datasets.
 

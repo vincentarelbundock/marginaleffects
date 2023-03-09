@@ -170,4 +170,37 @@ sanitize_newdata <- function(model, newdata, by, modeldata) {
 }
 
 
+dedup_newdata <- function(model, newdata, by, wts, comparison = "difference", cross = FALSE) {
 
+    flag <- isTRUE(checkmate::check_string(comparison, pattern = "avg"))
+    if (!flag && (isFALSE(by) || !is.null(wts) || !isFALSE(cross) || isFALSE(getOption("marginaleffects_dedup", default = TRUE)))) {
+        return(newdata)
+    }
+    
+    vclass <- attr(newdata, "marginaleffects_variable_class")
+
+    # copy to allow mod by reference later without overwriting newdata
+    out <- data.table(newdata)
+
+    dv <- hush(unlist(insight::find_response(model), use.names = FALSE))
+    if (isTRUE(checkmate::check_string(dv)) && dv %in% colnames(out)) {
+        out[, (dv) := NULL]
+        vclass <- vclass[names(vclass) != dv]
+    }
+
+    if ("rowid" %in% colnames(out)) {
+        out[, "rowid" := NULL]
+    }
+    
+    categ <- c("factor", "character", "logical", "strata", "cluster", "binary")
+    if (!all(vclass %in% categ)) {
+        return(newdata)
+    }
+    
+    cols <- colnames(out)
+    out <- out[, .("marginaleffects_wts_internal" = .N), by = cols]
+    data.table::setDF(out)
+    attr(out, "marginaleffects_variable_class") <- vclass
+    
+    return(out)
+}

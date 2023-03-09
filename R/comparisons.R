@@ -362,6 +362,11 @@ comparisons <- function(model,
     # after sanitize_newdata
     sanity_by(by, newdata)
 
+    # after sanity_by
+    newdata <- dedup_newdata(model = model, newdata = newdata, wts = wts, by = by, cross = cross, comparison = comparison)
+    if (is.null(wts) && "marginaleffects_wts_internal" %in% colnames(newdata)) {
+        wts <- "marginaleffects_wts_internal"
+    }
 
     # get dof before transforming the vcov arg
     # get_df() produces a weird warning on non lmerMod. We can skip them
