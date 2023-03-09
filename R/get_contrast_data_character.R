@@ -80,6 +80,9 @@ get_contrast_data_character <- function(model,
         sprintf(variable$label, levs_idx$hi, levs_idx$lo),
         error = function(e) variable$label))
     levs_idx <- stats::setNames(levs_idx, paste0("marginaleffects_contrast_", colnames(levs_idx)))
+    if (!"marginaleffects_contrast_label" %in% colnames(levs_idx) || all(levs_idx$marginaleffects_contrast_label == "custom")) {
+        levs_idx[, "marginaleffects_contrast_label" := paste0(marginaleffects_contrast_hi, ", ", marginaleffects_contrast_lo)]
+    }
 
     lo <- hi <- cjdt(list(newdata, levs_idx))
 
@@ -88,9 +91,9 @@ get_contrast_data_character <- function(model,
     contrast_label <- hi$marginaleffects_contrast_label
     contrast_null <- hi$marginaleffects_contrast_hi == hi$marginaleffects_contrast_lo
 
-    idx <- grepl("^marginaleffects_contrast", colnames(lo))
-    lo <- lo[, !idx, with = FALSE]
-    hi <- hi[, !idx, with = FALSE]
+    tmp <- !grepl("^marginaleffects_contrast", colnames(lo))
+    lo <- lo[, tmp, with = FALSE]
+    hi <- hi[, tmp, with = FALSE]
 
     original <- data.table::rbindlist(rep(list(newdata), nrow(levs_idx)))
 

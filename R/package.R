@@ -6,6 +6,8 @@
 #' @useDynLib marginaleffects
 #' @import data.table
 utils::globalVariables(c(
+"marginaleffects_contrast_hi",
+"marginaleffects_contrast_lo",
 "..bycols",
 "..to_keep",
 "..cols",

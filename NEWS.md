@@ -23,6 +23,7 @@ Performance:
 
 Bugs:
 
+* Multiple imputation with `mira` objects was not pooling all datasets. Thanks to  @Generalized for report #711.
 * Support for more models with offsets. Thanks to @mariofiorini for report #705.
 * Error on `predictions()` with `by` and `wts`. Thanks to Noah Greifer for report #695.
 * `afex`: some models generated errors. Thanks to  Daniel Lüdecke for report #696.
@@ -30,7 +31,7 @@ Bugs:
 * Blank graphs in `plot_comparisons()` with a list in `variables`.
 * `type="link"` produced an error with some categorical `brms` models. Thanks to @shirdekel for report #703.
 * Error on `predictions(variables = ...)` for `glmmTMB` models. Thanks to Daniel Lüdecke for report #707.
-* Multiple imputation with `mira` objects was not pooling all datasets. Thanks to  @Generalized for report #711.
+* `by` with user-specified function in `comparison` and factor predictor did not aggregate correctly. Thanks to @joaotedde for report #715.
 
 # marginaleffects 0.10.0
 

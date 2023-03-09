@@ -216,4 +216,18 @@ expect_equivalent(mfx$estimate, mar$AME, tolerance = tol)
 expect_equivalent(mfx$std.error, mar$SE, tolerance = tol_se)
 
 
+# Issue #715: incorrect grouping with custom `comparison` function
+dat <- transform(mtcars, vs = vs, am = as.factor(am), cyl = as.factor(cyl))
+mod <- lm(mpg ~ qsec + am + cyl, dat)
+fun <- \(hi, lo) mean(hi) / mean(lo)
+cmp1 <- comparisons(mod, variables = "cyl", comparison = fun, by = "am")
+cmp2 <- comparisons(mod, variables = "cyl", comparison = "ratioavg", by = "am")
+expect_equivalent(cmp1$estimate, cmp2$estimate)
+expect_equivalent(cmp1$std.error, cmp2$std.error)
+expect_equal(nrow(cmp1), 4)
+
+
+
+
+
 rm(list = ls())
