@@ -3,6 +3,7 @@
 Breaking changes:
 
 * `type` column is replaced by `type` attribute.
+* `predictions()` only works with officially supported model types (same list as `comparisons()` and `slopes()`).
 
 Renamed arguments (backward compatibility is preserved):
 
