@@ -209,6 +209,16 @@ predictions <- function(model,
     if (!is.null(equivalence) && !is.null(p_adjust)) {
         insight::format_error("The `equivalence` and `p_adjust` arguments cannot be used together.")
     }
+    
+    
+    # is the model supported?
+    model <- sanitize_model(
+        model = model,
+        newdata = newdata,
+        wts = wts,
+        vcov = vcov,
+        calling_function = "predictions",
+        ...)
 
     # build call: match.call() doesn't work well in *apply()
     call_attr <- c(list(
