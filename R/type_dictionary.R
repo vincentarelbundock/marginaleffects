@@ -28,8 +28,7 @@ brmultinom,probs
 brmultinom,class
 clm,prob
 clm,cum.prob
-clm,linear_predictor
-clm,class
+clm,linear.predictor
 clogit,expected
 clogit,lp
 clogit,risk

@@ -20,9 +20,16 @@ get_predict.clm <- function(model,
 
     newdata <- newdata[, setdiff(colnames(newdata), resp), drop = FALSE]
 
-    pred <- stats::predict(model,
-                           newdata = newdata,
-                           type = type)$fit
+    pred <- stats::predict(model, newdata = newdata, type = type)
+    
+    contenders <- c("fit", "eta1", "eta2", "cprob1", "cprob2")
+    tmp <- NULL
+    for (con in contenders) {
+        if (is.null(tmp) && con %in% names(pred)) {
+            tmp <- pred[[con]]
+        }
+    }
+    pred <- tmp
 
     out <- data.frame(
         group = rep(colnames(pred), each = nrow(pred)),

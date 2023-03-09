@@ -45,6 +45,17 @@ expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .001)
 expect_slopes(mod)
 
 
+# Issue 717: no validity
+data("wine", package = "ordinal")
+mod <- clm(rating ~ contact + temp, data = wine)
+p <- predictions(mod, type = "linear.predictor")
+expect_inherits(p, "predictions")
+p <- predictions(mod, type = "cum.prob")
+expect_inherits(p, "predictions")
+expect_error(predictions(mod, type = "junk"), pattern = "Assertion")
+p <- avg_slopes(mod, type = "cum.prob")
+expect_inherits(p, "slopes")
+
 
 # marginaleffects: clm: no validity
 tmp <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/ordinal/soup.csv")

@@ -32,6 +32,7 @@ Bugs:
 * `type="link"` produced an error with some categorical `brms` models. Thanks to @shirdekel for report #703.
 * Error on `predictions(variables = ...)` for `glmmTMB` models. Thanks to Daniel Lüdecke for report #707.
 * `by` with user-specified function in `comparison` and factor predictor did not aggregate correctly. Thanks to @joaotedde for report #715.
+* `ordinal::clm`: Support `cum.prob` and `linear.predictor` prediction types. Thanks to @MrJerryTAO for report #717.
 
 # marginaleffects 0.10.0
 
