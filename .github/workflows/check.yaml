@@ -48,6 +48,9 @@ jobs:
       - name: Dependencies
         run: ./run.sh install_all
 
+      - name: Dependencies
+        run: ./run.sh install_github vincentarelbundock/tinysnapshot
+
       - name: TMB
         run: ./run.sh install_source TMB
 

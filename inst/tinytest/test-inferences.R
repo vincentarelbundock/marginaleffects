@@ -1,5 +1,4 @@
 source("helpers.R")
-if (packageVersion("base") >= "4.1.0") exit_file("no dev")
 if (!EXPENSIVE) exit_file("EXPENSIVE")
 
 set.seed(1024)
