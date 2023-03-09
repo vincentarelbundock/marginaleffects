@@ -11,6 +11,8 @@ R CMD INSTALL .
 
 ```{r}
 library(marginaleffects)
+
+results <- list()
 ```
 
 # `slopes()`
@@ -26,12 +28,13 @@ dat$bin <- sample(0:1, N, replace = TRUE)
 mod_lm <- lm(X1 ~ ., dat)
 mod_glm <- glm(bin ~ ., dat, family = binomial)
 
-bench::mark(
+results[["many_factor_levels_glm"]] <- bench::mark(
     slopes(mod_lm),
     slopes(mod_glm),
     check = FALSE,
-    iterations = 3
+    iterations = 5
 )[, 1:5]
+results[["many_factor_levels_glm"]]
 ```
 
 ## Many variables and arguments
@@ -41,12 +44,7 @@ N <- 1e4
 dat <- data.frame(matrix(rnorm(N * 26), ncol = 26))
 mod <- lm(X1 ~ ., dat)
 
-bench::mark(
-    slopes(mod),
-    check = FALSE
-)[, 1:5]
-
-bench::mark(
+results[["many_variables_vcov"]] <- bench::mark(
     # marginal effects at the mean; no standard error
     comparisons(mod, vcov = FALSE, newdata = datagrid()),
     # marginal effects at the mean
@@ -61,6 +59,7 @@ bench::mark(
     # comparisons(mod),
     iterations = 1, check = FALSE
 )[, 1:5]
+results[["many_variables_vcov"]]
 ```
 
 ## Many factor variables
@@ -72,21 +71,23 @@ dat <- setNames(dat, paste0("X", seq_along(dat)))
 dat$y <- rnorm(nrow(dat))
 mod <- lm(y ~ ., dat)
 
-bench::mark(
+results[["many_factor_variables"]] <- bench::mark(
     slopes(mod),
     check = FALSE,
-    iterations = 1
+    iterations = 5
 )[, 1:5]
+results[["many_factor_variables"]]
 ```
 
-## Small
+## Tiny
 
 ```{r}
 mod <- lm(mpg ~ hp + factor(gear) + factor(cyl), mtcars)
-bench::mark(
+results[["tiny"]] <- bench::mark(
     slopes(mod),
     check = FALSE
 )[, 1:5]
+results[["tiny"]]
 ```
 
 ## Many observations
@@ -100,10 +101,12 @@ dat2 <- data.table::rbindlist(tmp)
 mod <- glm(large_penguin ~ bill_length_mm + flipper_length_mm + species,
            data = dat2, family = binomial)
 
-bench::mark(
+results[["many_observations"]] <- bench::mark(
     slopes(mod),
-    check = FALSE
+    check = FALSE,
+    iterations = 5
 )[, 1:5]
+results[["many_observations"]]
 ```
 
 ## GLM prediction type
@@ -111,11 +114,31 @@ bench::mark(
 ```{r}
 d <- data.frame(y = sample(0:1, 1e5, replace = TRUE), x1 = rnorm(1e5), x2 = rnorm(1e5))
 mod <- glm(y ~ x1 * x2, family = binomial, data = d)
-bench::mark(
+results[["glm_type"]] <- bench::mark(
     avg_slopes(mod, type = "link"),
     avg_slopes(mod, type = "response"),
-    check = FALSE
+    check = FALSE,
+    iterations = 5
 )[, 1:5]
+results[["glm_type"]]
+```
+
+## Categorical predictors
+
+```{r}
+N <- 1e5
+dat <- data.frame(
+    y = rnorm(N),
+    x1 = sample(0:1, N, replace = TRUE),
+    x2 = sample(letters[1:3], N, replace = TRUE),
+    x3 = sample(letters[1:10], N, replace = TRUE),
+    x4 = sample(letters[1:2], N, replace = TRUE))
+mod <- lm(y ~ x1 + x2 + x3 + x4, data = dat)
+results[["categorical_predictors"]] <- bench::mark(
+    avg_comparisons(mod),
+    avg_predictions(mod),
+    check = FALSE)
+results[["categorical_predictors"]]
 ```
 
 # `predictions()`
@@ -129,9 +152,18 @@ dat <- setNames(dat, paste0("X", seq_along(dat)))
 dat$y <- rnorm(nrow(dat))
 mod <- lm(y ~ ., dat)
 
-bench::mark(
+results[["predictions_many_factors"]] <- bench::mark(
     predictions(mod),
     check = FALSE,
     iterations = 5
 )[, 1:5]
+results[["predictions_many_factors"]]
+```
+
+
+# Save results
+
+```{r}
+fn <- paste0("benchmarks_", packageVersion("marginaleffects"), ".rds")
+saveRDS(results, fn)
 ```
