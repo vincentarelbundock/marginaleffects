@@ -321,6 +321,7 @@ Thanks to Russell V. Lenth for the excellent \code{emmeans} package and document
 }
 
 \examples{
+\dontrun{
 # Adjusted Prediction for every row of the original dataset
 mod <- lm(mpg ~ hp + factor(cyl), data = mtcars)
 pred <- predictions(mod)
@@ -416,5 +417,6 @@ by <- data.frame(
     by = c("4,6", "4,6", "8"),
     group = as.character(c(4, 6, 8)))
 predictions(mod, newdata = "mean", byfun = sum, by = by)
+}
 
 }

@@ -396,7 +396,7 @@ Thanks to Russell V. Lenth for the excellent \code{emmeans} package and document
 }
 
 \examples{
-
+\dontrun{
 library(marginaleffects)
 
 # Linear model
@@ -501,5 +501,6 @@ by <- data.frame(
     group = c("3", "4", "5"),
     by = c("3,4", "3,4", "5"))
 comparisons(mod, type = "probs", by = by)
+}
 
 }
