@@ -22,6 +22,11 @@ set_coef <- function(model, coefs, ...) {
 #' @export
 set_coef.default <- function(model, coefs, ...) {
     # in basic model classes coefficients are named vector
-    model[["coefficients"]][names(coefs)] <- coefs
+    # in ordinal::clm models, there are sometimes duplicates, so name matching doesn't work
+    if (all(names(model[["coefficients"]]) == names(coefs))) {
+        model[["coefficients"]] <- coefs
+    } else {
+        model[["coefficients"]][names(coefs)] <- coefs
+    }
     model
 }

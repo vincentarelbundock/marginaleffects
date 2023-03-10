@@ -2,12 +2,8 @@
 #' @export
 get_predict.clm <- function(model,
                             newdata = insight::get_data(model),
-                            type = "response",
+                            type = "prob",
                             ...) {
-
-    if (type == "response") {
-        type <- "prob"
-    }
 
     # `predict.clm()` only makes predictions for the observed response group of
     # each observation in `newdata`. When we remove the response from

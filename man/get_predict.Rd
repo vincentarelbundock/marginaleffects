@@ -95,7 +95,7 @@ get_predict(model, newdata, type, ...)
 
 \method{get_predict}{mlogit}(model, newdata, ...)
 
-\method{get_predict}{clm}(model, newdata = insight::get_data(model), type = "response", ...)
+\method{get_predict}{clm}(model, newdata = insight::get_data(model), type = "prob", ...)
 
 \method{get_predict}{rq}(model, newdata = insight::get_data(model), type = NULL, ...)
 

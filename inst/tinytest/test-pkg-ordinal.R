@@ -77,5 +77,26 @@ expect_slopes(m5, n_unique = 6)
 
 
 
+
+# Issue #718: incorrect standard errors when scale and location are the same
+dat <- transform(mtcars, cyl = factor(cyl), vs2 = vs)
+mod1 <- clm(cyl ~ hp + vs,  # vs has a location effect
+  scale = ~ vs,    # vs also has a scale effect
+  data = dat)
+mod2 <- clm(cyl ~ hp + vs,  # vs has a location effect
+  scale = ~ vs2,    # vs also has a scale effect
+  data = dat)
+nd <- subset(pre1, select = -cyl)
+pre1 <- predictions(mod1, newdata = nd)
+pre2 <- predictions(mod2, newdata = nd)
+pre3 <- predict(mod1, newdata = nd, type = "prob", se.fit = TRUE)
+expect_equivalent(pre1$estimate, pre2$estimate)
+expect_equivalent(pre1$std.error, pre2$std.error)
+expect_equivalent(subset(pre1, group == 4)$estimate, pre3$fit[, 1])
+expect_equivalent(subset(pre1, group == 4)$std.error, pre3$se.fit[, 1], tol = 1e-4)
+
+
+
+
 source("helpers.R")
 rm(list = ls())

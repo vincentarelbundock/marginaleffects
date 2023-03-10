@@ -1,3 +1,9 @@
+# marginaleffects 0.11.0.9000
+
+Bug:
+
+* `ordinal::clm()`: incorrect standard errors when location and scale parameters are the same. Thanks to MrJerryTAO for report #718.
+
 # marginaleffects 0.11.0
 
 Breaking changes:
