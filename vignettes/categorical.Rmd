@@ -125,7 +125,7 @@ mod <- mlogit(choice ~ wait + gcost | income + size, TravelMode)
 avg_slopes(mod, variables = c("income", "size"))
 ```
 
-Note that the `slopes` function will always return estimates of zero for regressors before the vertical bar in the formula. This is because the `predict()` function supplied by the `mlogit` package does not produce different predictions for different values of these variables.
+Note that the `slopes` function will always return estimates of zero for regressors before the vertical bar in the formula. This is because ˋmarginaleffects` increments all rows of the prediction dataset in the same way to compute slopes and contrast. Because ˋmlogit` data are in "long" format, this means that alternatives are incremenented in the same way, and that ˋmarginaleffects` does not support estimating the effect of alternative-specific changes in the predictors.
 
 To compute different kinds of marginal effects, we can construct customized data frames and feed them to the `newdata` argument of the `slopes` function. 
 
