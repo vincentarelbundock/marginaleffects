@@ -79,6 +79,8 @@ expect_slopes(m5, n_unique = 6)
 
 
 # Issue #718: incorrect standard errors when scale and location are the same
+if (!packageVersion("insight") <= "0.19.0.9") exit_file("insight version")
+
 dat <- transform(mtcars, cyl = factor(cyl), vs2 = vs)
 mod1 <- clm(cyl ~ hp + vs,  # vs has a location effect
   scale = ~ vs,    # vs also has a scale effect
@@ -86,9 +88,9 @@ mod1 <- clm(cyl ~ hp + vs,  # vs has a location effect
 mod2 <- clm(cyl ~ hp + vs,  # vs has a location effect
   scale = ~ vs2,    # vs also has a scale effect
   data = dat)
-nd <- subset(pre1, select = -cyl)
-pre1 <- predictions(mod1, newdata = nd)
-pre2 <- predictions(mod2, newdata = nd)
+nd <- subset(dat, select = -cyl)
+pre1 <- predictions(mod1)
+pre2 <- predictions(mod2)
 pre3 <- predict(mod1, newdata = nd, type = "prob", se.fit = TRUE)
 expect_equivalent(pre1$estimate, pre2$estimate)
 expect_equivalent(pre1$std.error, pre2$std.error)
@@ -99,10 +101,10 @@ expect_equivalent(subset(pre1, group == 4)$std.error, pre3$se.fit[, 1], tol = 1e
 
 # Issue #718: incorrect
 dat <- transform(mtcars, cyl = factor(cyl))
-mod <- clm(cyl ~ vs + carb, scale = ~ vs, nominal = ~ carb, data = dat)
+mod <- suppressWarnings(clm(cyl ~ vs + carb, scale = ~ vs, nominal = ~ carb, data = dat))
 dat$cyl <- NULL
 p1 <- predictions(mod)
-p2 <- predict(mod, newdata = dat, se.fit = TRUE)
+p2 <- suppressWarnings(predict(mod, newdata = dat, se.fit = TRUE))
 expect_equivalent(subset(p1, group == 4)$estimate, p2$fit[, 1])
 expect_equivalent(subset(p1, group == 4)$std.error, p2$se.fit[, 1], tol = 1e4)
 expect_equivalent(subset(p1, group == 6)$estimate, p2$fit[, 2])
