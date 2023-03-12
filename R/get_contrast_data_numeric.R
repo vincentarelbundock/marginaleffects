@@ -88,7 +88,7 @@ get_contrast_data_numeric <- function(model,
     } else if (identical(variable$value, "2sd")) {
         low <- m - s
         high <- m + s
-        lab <- c("x - sd", "x + sd")
+        lab <- c("x + sd", "x - sd")
         if (!isTRUE(grepl("mean", variable$label))) {
             lab <- sprintf("(%s)", lab)
         }

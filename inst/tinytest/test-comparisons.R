@@ -19,6 +19,12 @@ expect_equivalent(nrow(cmp1), 32)
 expect_equivalent(nrow(cmp2), 27)
 
 
+# Issue #720
+mod <- lm(mpg ~ hp * qsec, dat = mtcars)
+cmp <- avg_comparisons(mod, variables = list(hp = "2sd"))
+expect_equivalent(cmp$contrast, "(x + sd) - (x - sd)")
+
+
 
 # Issue #622 cross-contrasts
 mod <- lm(mpg ~ am * factor(cyl), data = mtcars)

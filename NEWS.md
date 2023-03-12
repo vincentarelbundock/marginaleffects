@@ -3,6 +3,7 @@
 Bug:
 
 * `ordinal::clm()`: incorrect standard errors when location and scale parameters are the same. Thanks to MrJerryTAO for report #718.
+* Incorrect label for "2sd" comparisons. Thanks to Andy Milne for report #720.
 
 # marginaleffects 0.11.0
 
