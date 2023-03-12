@@ -97,6 +97,21 @@ expect_equivalent(subset(pre1, group == 4)$std.error, pre3$se.fit[, 1], tol = 1e
 
 
 
+# Issue #718: incorrect
+dat <- transform(mtcars, cyl = factor(cyl))
+mod <- clm(cyl ~ vs + carb, scale = ~ vs, nominal = ~ carb, data = dat)
+dat$cyl <- NULL
+p1 <- predictions(mod)
+p2 <- predict(mod, newdata = dat, se.fit = TRUE)
+expect_equivalent(subset(p1, group == 4)$estimate, p2$fit[, 1])
+expect_equivalent(subset(p1, group == 4)$std.error, p2$se.fit[, 1], tol = 1e4)
+expect_equivalent(subset(p1, group == 6)$estimate, p2$fit[, 2])
+expect_equivalent(subset(p1, group == 6)$std.error, p2$se.fit[, 2], tol = 1e4)
+expect_equivalent(subset(p1, group == 8)$estimate, p2$fit[, 3])
+expect_equivalent(subset(p1, group == 8)$std.error, p2$se.fit[, 3], tol = 1e4)
+
+
+
 
 source("helpers.R")
 rm(list = ls())
