@@ -137,7 +137,6 @@ hypotheses <- function(
     }
 
     # after re-evaluation
-    checkmate::assert_number(df, lower = 1)
     tmp <- sanitize_hypothesis(hypothesis, ...)
     hypothesis <- tmp$hypothesis
     hypothesis_null <- tmp$hypothesis_null
@@ -206,6 +205,9 @@ hypotheses <- function(
             std.error = se)
     }
 
+    checkmate::assert(
+        checkmate::check_number(df, lower = 1),
+        checkmate::check_numeric(df, len = nrow(out)))
     out <- get_ci(
         out,
         conf_level = conf_level,
