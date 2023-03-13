@@ -4,6 +4,10 @@ Support new models:
 
 * `nlme::lme()`
 
+New features:
+
+* `comparisons()` accepts data frames with two numeric columns ("low" and "high") to specify fully customizable contrasts.
+
 Bug:
 
 * `ordinal::clm()`: incorrect standard errors when location and scale parameters are the same. Thanks to MrJerryTAO for report #718.
