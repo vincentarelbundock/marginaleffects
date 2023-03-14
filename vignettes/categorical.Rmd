@@ -131,7 +131,7 @@ One strategy to circumvent this problem is to supply a data frame of numeric val
 
 ```{r}
 altspec <- data.frame(
-  low = TravelMode$income,
+  low = TravelMode$wait,
   high = ifelse(TravelMode$mode == "air", TravelMode$wait + 15, TravelMode$wait)
 )
 
