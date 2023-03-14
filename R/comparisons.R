@@ -88,6 +88,7 @@
 #' * `term`: the variable whose marginal effect is computed
 #' * `dydx`: slope of the outcome with respect to the term, for a given combination of predictor values
 #' * `std.error`: standard errors computed by via the delta method.
+#' * `p.value`: p value associated to the `estimate` column. The null is determined by the `hypothesis` argument (0 by default), and p values are computed before applying the `transform` argument.
 #'
 #' See `?print.marginaleffects` for printing options.
 #'

@@ -225,6 +225,7 @@ A \code{data.frame} with one row per observation (per term/group) and several co
 \item \code{term}: the variable whose marginal effect is computed
 \item \code{dydx}: slope of the outcome with respect to the term, for a given combination of predictor values
 \item \code{std.error}: standard errors computed by via the delta method.
+\item \code{p.value}: p value associated to the \code{estimate} column. The null is determined by the \code{hypothesis} argument (0 by default), and p values are computed before applying the \code{transform} argument.
 }
 
 See \code{?print.marginaleffects} for printing options.

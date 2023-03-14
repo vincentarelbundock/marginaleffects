@@ -191,6 +191,7 @@ A \code{data.frame} with one row per observation and several columns:
 \item \code{std.error}: standard errors computed using the delta method.
 \item \code{conf.low}: lower bound of the confidence interval (or equal-tailed interval for bayesian models)
 \item \code{conf.high}: upper bound of the confidence interval (or equal-tailed interval for bayesian models)
+\item \code{p.value}: p value associated to the \code{estimate} column. The null is determined by the \code{hypothesis} argument (0 by default), and p values are computed before applying the \code{transform} argument. For \code{glm} and \code{Gam} models, p values are computed on the link scale by default unless the \code{type} argument is specified explicitly.
 }
 
 See \code{?print.marginaleffects} for printing options.
