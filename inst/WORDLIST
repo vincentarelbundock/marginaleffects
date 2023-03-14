@@ -30,6 +30,7 @@ Codecov
 confounders
 cran
 CRC
+customizable
 Customizable
 datagrid
 deduplication
@@ -54,6 +55,7 @@ emmeans
 EMMs
 Epidemiologic
 eps
+Errickson
 estimand
 Estimand
 estimands
@@ -131,6 +133,7 @@ methodologists
 MFX
 minmax
 modelbased
+MrJerryTAO
 Nafa
 nd
 newdata

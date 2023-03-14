@@ -6,12 +6,14 @@ sanitize_newdata_call <- function(scall, newdata = NULL, model) {
         if (fun_name %in% c("datagrid", "datagridcf", "typical", "counterfactual")) {
             if (!"model" %in% names(lcall)) {
                 lcall <- c(lcall, list("model" = model))
-                out <- evalup(as.call(lcall))
+                # don't evalup because we want the informative error
+                out <- eval(as.call(lcall))
             }
         } else if (fun_name == "visualisation_matrix") {
             if (!"x" %in% names(lcall)) {
                 lcall <- c(lcall, list("x" = get_modeldata))
-                out <- evalup(as.call(lcall))
+                # don't evalup because we want the informative error
+                out <- eval(as.call(lcall))
             }
         }
         if (is.null(out)) {

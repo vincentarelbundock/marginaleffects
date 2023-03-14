@@ -39,5 +39,23 @@ expect_equivalent(nrow(cmp), 4)
 
 
 
+# Issue #721
+requiet("haven")
+m <- marginaleffects:::hush(read_dta("http://www.stata-press.com/data/r15/margex.dta"))
+if (inherits(m, "data.frame")) {
+    m <- data.frame(m)
+    m$sex <- as.factor(m$sex)
+    mod <- lm(y ~ sex + age + distance, data = m)
+    expect_error(
+        predictions(mod, newdata = datagrid(sex = c("male", "female"))),
+        pattern = "must be one of the factor levels"
+    )
+    expect_error(
+        predictions(mod, newdata = datagrid(sex = c("male", "femael"))),
+        pattern = "must be one of the factor levels"
+    )
+}
+
+
 source("helpers.R")
 rm(list = ls())
