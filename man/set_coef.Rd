@@ -73,7 +73,7 @@ set_coef(model, coefs, ...)
 
 \method{set_coef}{mlm}(model, coefs, ...)
 
-\method{set_coef}{lme}(model, coefs)
+\method{set_coef}{lme}(model, coefs, ...)
 
 \method{set_coef}{hurdle}(model, coefs, ...)
 

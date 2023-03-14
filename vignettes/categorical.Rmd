@@ -115,7 +115,7 @@ The `mlogit` package uses `data` in a slightly different structure, with one row
 ```{r, message = FALSE}
 library("AER")
 library("mlogit")
-library(tidyverse)
+library("tidyverse")
 data("TravelMode", package = "AER")
 
 head(TravelMode)
@@ -125,11 +125,20 @@ mod <- mlogit(choice ~ wait + gcost | income + size, TravelMode)
 avg_slopes(mod, variables = c("income", "size"))
 ```
 
-Note that the `slopes` function will always return estimates of zero for regressors before the vertical bar in the formula. This is because ˋmarginaleffects` increments all rows of the prediction dataset in the same way to compute slopes and contrast. Because ˋmlogit` data are in "long" format, this means that alternatives are incremenented in the same way, and that ˋmarginaleffects` does not support estimating the effect of alternative-specific changes in the predictors.
+Note that the `slopes` function will always return estimates of zero for regressors before the vertical bar in the formula. This is because ˋmarginaleffects` increments all rows of the prediction dataset in the same way to compute slopes and contrast. Because ˋmlogit` data are in "long" format, this means that alternatives are incremenented in the same way, which does not produce alternative-specific changes in the predictors.
 
-To compute different kinds of marginal effects, we can construct customized data frames and feed them to the `newdata` argument of the `slopes` function. 
+One strategy to circumvent this problem is to supply a data frame of numeric values to compare, with alternative specific changes. In this example, we test what happens to the probability of selecting each mode of transportation if we only increase the wait time of air travel:
 
-**Important:** The `newdata` argument for `mlogit` models must be a "balanced" data frame, that is, it must have a number of rows that is a multiple of the number of choices.
+```{r}
+altspec <- data.frame(
+  low = TravelMode$income,
+  high = ifelse(TravelMode$mode == "air", TravelMode$wait + 15, TravelMode$wait)
+)
+
+avg_comparisons(mod, variables = list(wait = altspec))
+```
+
+We can compute yet more kinds of marginal effects, we can construct customized data frames and feed them to the `newdata` argument of the `slopes` function. 
 
 If we want to compute the slope of the response function (marginal effects) when each of the predictors is fixed to its global mean, we can do:
 
@@ -163,3 +172,5 @@ nd
 
 avg_slopes(mod, newdata = nd, variables = c("income", "size"))
 ```
+
+**Important:** The `newdata` argument for `mlogit` models must be a "balanced" data frame, that is, it must have a number of rows that is a multiple of the number of choices.

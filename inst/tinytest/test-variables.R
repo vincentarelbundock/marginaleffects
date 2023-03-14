@@ -61,4 +61,11 @@ expect_warning(comparisons(mod, newdata = nd), pattern = "is included")
 expect_error(suppressWarnings(comparisons(mod, newdata = nd), pattern = "is included"))
 
 
+
+# comparisons() variables = data.frame()
+mod <- lm(mpg ~ hp, mtcars)
+comparisons(mod, variables = list(hp = data.frame(mtcars$hp, mtcars$hp + 1:32)))
+
+
+
 rm(list = ls())

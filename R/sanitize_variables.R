@@ -172,7 +172,10 @@ sanitize_variables <- function(variables,
     # shortcuts and validity
     for (v in names(predictors)) {
 
-        if (get_variable_class(modeldata, v, "binary")) {
+        if (isTRUE(checkmate::check_data_frame(predictors[[v]], nrows = nrow(newdata)))) {
+            # do nothing, but don't take the other validity check branches
+        
+        } else if (get_variable_class(modeldata, v, "binary")) {
             if (!isTRUE(checkmate::check_numeric(predictors[[v]])) || !all(predictors[[v]] %in% 0:1)) {
                 msg <- sprintf("The `%s` variable is binary. The corresponding entry in the `variables` argument must be 0 or 1.")
                 insight::format_error(msg)
@@ -231,7 +234,8 @@ sanitize_variables <- function(variables,
                 }
                 flag1 <- checkmate::check_choice(predictors[[v]], choices = valid)
                 flag2 <- checkmate::check_vector(predictors[[v]], len = 2)
-                if (!isTRUE(flag1) && !isTRUE(flag2)) {
+                flag3 <- checkmate::check_data_frame(predictors[[v]], nrows = nrow(newdata), ncols = 2)
+                if (!isTRUE(flag1) && !isTRUE(flag2) && !isTRUE(flag3)) {
                     msg <- "The %s element of the `variables` argument must be a vector of length 2 or one of: %s"
                     msg <- sprintf(msg, v, paste(valid, collapse = ", "))
                     insight::format_error(msg)

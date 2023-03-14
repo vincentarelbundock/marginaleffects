@@ -42,7 +42,18 @@ get_contrast_data_numeric <- function(model,
         "mean(eY/dX)",
         "mean(dY/eX)")
 
-    if (isTRUE(variable$label %in% slopes)) {
+    # manual high
+    if (isTRUE(checkmate::check_data_frame(variable$value))) {
+        if (all(c("low", "high") %in% colnames(variable$value))) {
+            low <- variable$value$low
+            high <- variable$value$high
+        } else {
+            low <- variable$value[[1]]
+            high <- variable$value[[2]]
+        }
+        lab <- "manual"
+
+    } else if (isTRUE(variable$label %in% slopes)) {
         # low <- x - h / 2
         # high <- x + h / 2
         low <- x

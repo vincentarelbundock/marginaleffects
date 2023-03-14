@@ -91,6 +91,7 @@ avg_comparisons(
 \itemize{
 \item Numeric of length 1: Contrast for a gap of \code{x}, computed at the observed value plus and minus \code{x / 2}. For example, estimating a \code{+1} contrast compares adjusted predictions when the regressor is equal to its observed value minus 0.5 and its observed value plus 0.5.
 \item Numeric vector of length 2: Contrast between the 2nd element and the 1st element of the \code{x} vector.
+\item Data frame with the same number of rows as \code{newdata}, with two columns of "low" and "high" values to compare.
 \item Function which accepts a numeric vector and returns a data frame with two columns of "low" and "high" values to compare. See examples below.
 \item "iqr": Contrast across the interquartile range of the regressor.
 \item "sd": Contrast across one standard deviation around the regressor mean.
