@@ -100,7 +100,7 @@
 #'
 #' @details
 #' Numerical derivatives for the `slopes` function are calculated
-#' using a simple epsilon difference approach: \eqn{\partial Y / \partial X = (f(X + \varepsilon/2) - f(X+\varepsilon/2)) / \varepsilon}{dY/dX = (f(X + e/2) - f(X-e/2)) / e},
+#' using a simple epsilon difference approach: \eqn{\partial Y / \partial X = (f(X + \varepsilon/2) - f(X-\varepsilon/2)) / \varepsilon}{dY/dX = (f(X + e/2) - f(X-e/2)) / e},
 #' where f is the `predict()` method associated with the model class, and
 #' \eqn{\varepsilon}{e} is determined by the `eps` argument.
 #' @template deltamethod

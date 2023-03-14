@@ -202,7 +202,7 @@ including non-linear models with transformations (e.g., polynomials).
 Uncertainty estimates are computed using the delta method.
 
 Numerical derivatives for the \code{slopes} function are calculated
-using a simple epsilon difference approach: \eqn{\partial Y / \partial X = (f(X + \varepsilon/2) - f(X+\varepsilon/2)) / \varepsilon}{dY/dX = (f(X + e/2) - f(X-e/2)) / e},
+using a simple epsilon difference approach: \eqn{\partial Y / \partial X = (f(X + \varepsilon/2) - f(X-\varepsilon/2)) / \varepsilon}{dY/dX = (f(X + e/2) - f(X-e/2)) / e},
 where f is the \code{predict()} method associated with the model class, and
 \eqn{\varepsilon}{e} is determined by the \code{eps} argument.
 }
