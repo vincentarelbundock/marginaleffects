@@ -55,6 +55,17 @@ if (inherits(m, "data.frame")) {
         pattern = "must be one of the factor levels"
     )
 }
+mod <- lm(mpg ~ qsec + as.factor(gear), data = mtcars)
+expect_error(
+    predictions(mod, newdata = datagrid(gear = 6)),
+    pattern = "must be one of the factor levels"
+)
+expect_error(
+    comparisons(mod, newdata = datagrid(gear = 6)),
+    pattern = "must be one of the factor levels"
+)
+
+
 
 
 source("helpers.R")

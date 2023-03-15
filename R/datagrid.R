@@ -256,7 +256,7 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
     } else if (!is.null(newdata)) {
         variables_list <- NULL
         variables_all <- colnames(newdata)
-        newdata <- set_variable_class(modeldata = newdata)
+        newdata <- set_variable_class(modeldata = newdata, model = model)
     }
 
     variables_manual <- names(at)
@@ -296,6 +296,9 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
         }
         newdata <- newdata[, !idx, drop = FALSE]
     }
+
+    # restore attributes after subsetting
+    attr(newdata, "marginaleffects_variable_class") <- attr_variable_classes
 
     # check `at` elements and convert them to factor as needed
     for (n in names(at)) {
@@ -337,8 +340,6 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
 
     data.table::setDT(newdata)
     
-    attr(newdata, "marginaleffects_variable_class") <- attr_variable_classes
-
     out <- list("newdata" = newdata,
                 "at" = at,
                 "all" = variables_all,
