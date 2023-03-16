@@ -366,7 +366,13 @@ comparisons <- function(model,
     sanity_by(by, newdata)
 
     # after sanity_by
-    newdata <- dedup_newdata(model = model, newdata = newdata, wts = wts, by = by, cross = cross, comparison = comparison)
+    newdata <- dedup_newdata(
+        model = model,
+        newdata = newdata,
+        wts = wts,
+        by = by,
+        cross = cross,
+        comparison = comparison)
     if (is.null(wts) && "marginaleffects_wts_internal" %in% colnames(newdata)) {
         wts <- "marginaleffects_wts_internal"
     }

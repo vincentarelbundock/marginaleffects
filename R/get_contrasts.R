@@ -111,7 +111,7 @@ get_contrasts <- function(model,
     # replicate for each group.
     out[, "marginaleffects_wts_internal" := NA_real_] # default (probably almost always overwritten)
     mult <- nrow(out) / nrow(original)
-    regex <- "^term$|^group$|^contrast|^marginaleffects_wts_internal$"
+    regex <- "^term$|rowid_dedup|^group$|^contrast|^marginaleffects_wts_internal$"
     if (isTRUE(mult == 1)) {
         for (v in grep(regex, colnames(original), value = TRUE)) {
             out[, (v) := original[[v]]]
@@ -385,6 +385,11 @@ get_contrasts <- function(model,
             }
         }
         out <- stats::na.omit(out, cols = "estimate")
+    }
+    
+    # clean
+    if ("rowid_dedup" %in% colnames(out)) {
+        out[, "rowid_dedup" := NULL]
     }
 
 

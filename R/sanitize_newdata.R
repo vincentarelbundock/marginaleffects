@@ -207,6 +207,8 @@ dedup_newdata <- function(model, newdata, by, wts, comparison = "difference", cr
     cols <- colnames(out)
     out <- out[, .("marginaleffects_wts_internal" = .N), by = cols]
     data.table::setDF(out)
+    
+    out[["rowid_dedup"]] <- seq_len(nrow(out))
     attr(out, "marginaleffects_variable_class") <- vclass
     
     return(out)

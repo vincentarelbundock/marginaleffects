@@ -109,5 +109,39 @@ m2 <- glm(
 expect_inherits(avg_slopes(m2), "slopes")
 expect_inherits(avg_slopes(m2, variables = "var_cont"), "slopes")
 
+
+# Issue #723
+dat <- data.frame(
+  rbind(
+    c(10., 'A', 'AU'),
+    c(20., 'A', 'AU'),
+    c(30., 'A', 'AU'),
+    c(20., 'B', 'AU'),
+    c(30., 'B', 'AU'),
+    c(40., 'B', 'AU'),
+    c(10., 'B', 'NZ'),
+    c(20., 'B', 'NZ'),
+    c(30., 'B', 'NZ'),
+    c(20., 'A', 'NZ'),
+    c(30., 'A', 'NZ'),
+    c(40., 'A', 'NZ')
+  )
+)
+colnames(dat) <- c('y', 'treatment', 'country')
+mod <- lm(y ~ treatment * country, dat)
+cmp <- comparisons(mod, variables = 'treatment', by = 'country')
+expect_inherits(cmp, "comparisons")
+expect_equivalent(nrow(cmp), 2)
+expect_equivalent(
+  cmp$estimate[cmp$country == "AU"],
+  coef(mod)["treatmentB"])
+expect_equivalent(
+  cmp$estimate[cmp$country == "NZ"],
+  coef(mod)["treatmentB"] + coef(mod)["treatmentB:countryNZ"])
+
+
+
+
+source("helpers.R")
 rm(list = ls())
 
