@@ -103,14 +103,39 @@ Plot slopes on the y-axis against values of one or more predictors (x-axis, colo
 
 The \code{by} argument is used to plot marginal slopes, that is, slopes made on the original data, but averaged by subgroups. This is analogous to using the \code{by} argument in the \code{slopes()} function.
 
-The \code{condition} argument is used to plot conditional slopes, that is, slopes made on a user-specified grid. This is analogous to using the \code{newdata} argument and \code{datagrid()} function in a \code{slopes()} call. Unspecified variables are held at their mean or mode.
+The \code{condition} argument is used to plot conditional slopes, that is, slopes made on a user-specified grid. This is analogous to using the \code{newdata} argument and \code{datagrid()} function in a \code{slopes()} call.
 
+All unspecified variables are held at their mean or mode. This includes grouping variables in mixed-effects models, so analysts who fit such models may want to specify the groups of interest using the \code{variables} argument, or supply model-specific arguments to compute population-level estimates. See details below.
 See the "Plots" vignette and website for tutorials and information on how to customize plots:
 \itemize{
 \item https://vincentarelbundock.github.io/marginaleffects/articles/plot.html
 \item https://vincentarelbundock.github.io/marginaleffects
 }
 }
+\section{Model-Specific Arguments}{
+
+
+Some model types allow model-specific arguments to modify the nature of
+marginal effects, predictions, marginal means, and contrasts. Please report
+other package-specific \code{predict()} arguments on Github so we can add them to
+the table below.
+
+https://github.com/vincentarelbundock/marginaleffects/issues\tabular{llll}{
+   Package \tab Class \tab Argument \tab Documentation \cr
+   \code{brms} \tab \code{brmsfit} \tab \code{ndraws} \tab \link[brms:posterior_predict.brmsfit]{brms::posterior_predict} \cr
+    \tab  \tab \code{re_formula} \tab \link[brms:posterior_predict.brmsfit]{brms::posterior_predict} \cr
+   \code{lme4} \tab \code{merMod} \tab \code{re.form} \tab \link[lme4:predict.merMod]{lme4::predict.merMod} \cr
+    \tab  \tab \code{allow.new.levels} \tab \link[lme4:predict.merMod]{lme4::predict.merMod} \cr
+   \code{glmmTMB} \tab \code{glmmTMB} \tab \code{re.form} \tab \link[glmmTMB:predict.glmmTMB]{glmmTMB::predict.glmmTMB} \cr
+    \tab  \tab \code{allow.new.levels} \tab \link[glmmTMB:predict.glmmTMB]{glmmTMB::predict.glmmTMB} \cr
+    \tab  \tab \code{zitype} \tab \link[glmmTMB:predict.glmmTMB]{glmmTMB::predict.glmmTMB} \cr
+   \code{mgcv} \tab \code{bam} \tab \code{exclude} \tab \link[mgcv:predict.bam]{mgcv::predict.bam} \cr
+   \code{robustlmm} \tab \code{rlmerMod} \tab \code{re.form} \tab \link[robustlmm:rlmerMod-class]{robustlmm::predict.rlmerMod} \cr
+    \tab  \tab \code{allow.new.levels} \tab \link[robustlmm:rlmerMod-class]{robustlmm::predict.rlmerMod} \cr
+   \code{MCMCglmm} \tab \code{MCMCglmm} \tab \code{ndraws} \tab  \cr
+}
+}
+
 \examples{
 library(marginaleffects)
 mod <- lm(mpg ~ hp * drat * factor(am), data = mtcars)

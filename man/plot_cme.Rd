@@ -88,6 +88,30 @@ A \code{ggplot2} object or data frame (if \code{draw=FALSE})
 \description{
 This alias is kept for backward compatibility.
 }
+\section{Model-Specific Arguments}{
+
+
+Some model types allow model-specific arguments to modify the nature of
+marginal effects, predictions, marginal means, and contrasts. Please report
+other package-specific \code{predict()} arguments on Github so we can add them to
+the table below.
+
+https://github.com/vincentarelbundock/marginaleffects/issues\tabular{llll}{
+   Package \tab Class \tab Argument \tab Documentation \cr
+   \code{brms} \tab \code{brmsfit} \tab \code{ndraws} \tab \link[brms:posterior_predict.brmsfit]{brms::posterior_predict} \cr
+    \tab  \tab \code{re_formula} \tab \link[brms:posterior_predict.brmsfit]{brms::posterior_predict} \cr
+   \code{lme4} \tab \code{merMod} \tab \code{re.form} \tab \link[lme4:predict.merMod]{lme4::predict.merMod} \cr
+    \tab  \tab \code{allow.new.levels} \tab \link[lme4:predict.merMod]{lme4::predict.merMod} \cr
+   \code{glmmTMB} \tab \code{glmmTMB} \tab \code{re.form} \tab \link[glmmTMB:predict.glmmTMB]{glmmTMB::predict.glmmTMB} \cr
+    \tab  \tab \code{allow.new.levels} \tab \link[glmmTMB:predict.glmmTMB]{glmmTMB::predict.glmmTMB} \cr
+    \tab  \tab \code{zitype} \tab \link[glmmTMB:predict.glmmTMB]{glmmTMB::predict.glmmTMB} \cr
+   \code{mgcv} \tab \code{bam} \tab \code{exclude} \tab \link[mgcv:predict.bam]{mgcv::predict.bam} \cr
+   \code{robustlmm} \tab \code{rlmerMod} \tab \code{re.form} \tab \link[robustlmm:rlmerMod-class]{robustlmm::predict.rlmerMod} \cr
+    \tab  \tab \code{allow.new.levels} \tab \link[robustlmm:rlmerMod-class]{robustlmm::predict.rlmerMod} \cr
+   \code{MCMCglmm} \tab \code{MCMCglmm} \tab \code{ndraws} \tab  \cr
+}
+}
+
 \examples{
 mod <- lm(mpg ~ hp + wt, data = mtcars)
 plot_predictions(mod, condition = "wt")

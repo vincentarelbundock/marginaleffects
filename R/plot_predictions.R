@@ -5,7 +5,9 @@
 #'
 #' The `by` argument is used to plot marginal predictions, that is, predictions made on the original data, but averaged by subgroups. This is analogous to using the `by` argument in the `predictions()` function.
 #'
-#' The `condition` argument is used to plot conditional predictions, that is, predictions made on a user-specified grid. This is analogous to using the `newdata` argument and `datagrid()` function in a `predictions()` call. Unspecified variables are held at their mean or mode.
+#' The `condition` argument is used to plot conditional predictions, that is, predictions made on a user-specified grid. This is analogous to using the `newdata` argument and `datagrid()` function in a `predictions()` call. 
+#' 
+#' All unspecified variables are held at their mean or mode. This includes grouping variables in mixed-effects models, so analysts who fit such models may want to specify the groups of interest using the `variables` argument, or supply model-specific arguments to compute population-level estimates. See details below.
 #' 
 #' See the "Plots" vignette and website for tutorials and information on how to customize plots:
 #'
@@ -27,6 +29,7 @@
 #' @param draw `TRUE` returns a `ggplot2` plot. `FALSE` returns a `data.frame` of the underlying data.
 #' @inheritParams plot_slopes
 #' @inheritParams predictions
+#' @template model_specific_arguments
 #' @return A `ggplot2` object or data frame (if `draw=FALSE`)
 #' @export
 #' @examples
