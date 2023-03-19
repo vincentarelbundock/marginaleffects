@@ -113,7 +113,7 @@ expect_equivalent(subset(p1, group == 8)$estimate, p2$fit[, 3])
 expect_equivalent(subset(p1, group == 8)$std.error, p2$se.fit[, 3], tol = 1e4)
 
 
-# Issue #729: No validity
+# Issue #729
 dat <- transform(mtcars,
     cyl = factor(
         cyl,
@@ -124,6 +124,24 @@ mfx <- avg_slopes(mod, slope = "eyex")
 expect_inherits(mfx, "slopes")
 mfx <- avg_slopes(mod, slope = "dyex")
 expect_inherits(mfx, "slopes")
+
+mfx1 <- slopes(mod, variables = "carb", slope = "dydx")
+mfx2 <- slopes(mod, variables = "carb", slope = "eydx")
+mfx3 <- slopes(mod, variables = "carb", slope = "dyex")
+mfx4 <- slopes(mod, variables = "carb", slope = "eyex")
+expect_equivalent(mfx2$estimate, mfx1$estimate / mfx1$predicted)
+expect_equivalent(mfx3$estimate, mfx1$estimate * mfx1$carb)
+expect_equivalent(mfx4$estimate, mfx1$estimate / mfx1$predicted * mfx1$carb)
+
+mfx1 <- slopes(mod, slope = "dydx") |> subset(term == "hp")
+mfx2 <- slopes(mod, slope = "eydx") |> subset(term == "hp")
+mfx3 <- slopes(mod, slope = "dyex") |> subset(term == "hp")
+mfx4 <- slopes(mod, slope = "eyex") |> subset(term == "hp")
+expect_equivalent(mfx2$estimate, mfx1$estimate / mfx1$predicted)
+expect_equivalent(mfx3$estimate, mfx1$estimate * mfx1$hp)
+expect_equivalent(mfx4$estimate, mfx1$estimate / mfx1$predicted * mfx1$hp)
+
+
 
 
 source("helpers.R")
