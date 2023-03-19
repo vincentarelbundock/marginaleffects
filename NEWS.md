@@ -18,6 +18,7 @@ Bug:
 * Incorrect label for "2sd" comparisons. Thanks to Andy Milne for report #720.
 * Invalid factor levels in `datagrid()` means `newdata` argument gets ignored. Thanks to Josh Errickson for report #721.
 * Error in models with only categorical predictors and the `by` argument. Thanks to Sam Brilleman for report #723.
+* Elasticities are now supported for `ordinal::clm()` models. Thanks to MrJerryTAO for report #729.
 
 # marginaleffects 0.11.0
 

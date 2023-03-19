@@ -280,11 +280,7 @@ get_contrasts <- function(model,
             "w" = wts)
 
         # sometimes x is exactly the same length, but not always
-        if (length(elasticities[[tn]]) > nrow(out)) {
-            args[["x"]] <- elasticities[[tn]][tmp_idx]
-        } else {
-            args[["x"]] <- elasticities[[tn]]
-        }
+        args[["x"]] <- elasticities[[tn]][tmp_idx]
 
         args <- args[names(args) %in% names(formals(fun))]
         con <- try(do.call("fun", args), silent = TRUE)
@@ -301,7 +297,12 @@ get_contrasts <- function(model,
     }
 
     # need a temp index for group-by operations when elasticities is a vector of length equal to full rows of `out`
-    out[, tmp_idx := 1:.N]
+    tmp <- grep("^term$|^contrast|^group$", colnames(out), value = TRUE)
+    if (length(tmp) > 0) {
+        out[, tmp_idx := 1:.N, by = tmp]
+    } else {
+        out[, tmp_idx := 1:.N]
+    }
 
     # bayesian
     if (!is.null(draws)) {

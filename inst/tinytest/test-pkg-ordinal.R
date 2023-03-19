@@ -113,6 +113,17 @@ expect_equivalent(subset(p1, group == 8)$estimate, p2$fit[, 3])
 expect_equivalent(subset(p1, group == 8)$std.error, p2$se.fit[, 3], tol = 1e4)
 
 
+# Issue #729: No validity
+dat <- transform(mtcars,
+    cyl = factor(
+        cyl,
+        levels = c(4, 6, 8),
+        labels = c("small", "medium", "large")))
+mod <- clm(cyl ~ hp + carb, scale = ~vs, data = dat)
+mfx <- avg_slopes(mod, slope = "eyex")
+expect_inherits(mfx, "slopes")
+mfx <- avg_slopes(mod, slope = "dyex")
+expect_inherits(mfx, "slopes")
 
 
 source("helpers.R")
