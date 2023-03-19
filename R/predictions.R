@@ -640,6 +640,11 @@ get_predictions <- function(model,
         out <- merge_by_rowid(out, newdata)
     }
 
+    # by: auto group
+    if (isTRUE(checkmate::check_character(by))) {
+        by <- intersect(c("group", by), colnames(out))
+    }
+
     # averaging by groups
     out <- get_by(
         out,
