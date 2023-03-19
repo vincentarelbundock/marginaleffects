@@ -130,7 +130,7 @@ expect_predictions(pred1)
 expect_predictions(pred2)
 expect_predictions(pred3)
 expect_predictions(pred4)
-expect_predictions(pred5)
+expect_predictions(pred5, se = FALSE)
 # vdiffr::expect_doppelganger("fixest plot_predictions with i()",
 #                         plot_predictions(m4, condition = c("hp", "am")))
 
@@ -267,13 +267,12 @@ expect_inherits(mfx1, "slopes")
 expect_inherits(mfx2, "slopes")
 
 
-## Issue #229: works interactively
-# data(trade)
-# dat <- trade
-# mod <- feNmlm(Euros ~ log(dist_km) | Product, data = dat)
-# expect_slopes(mod, newdata = dat) # environment issue
-
-
+# Issue #727: backtransform predictions
+mod = fixest::feglm(am ~ hp, data = mtcars, family = binomial)
+p1 <- avg_predictions(mod)
+p2 <- avg_predictions(mod, type = "link", transform = mod$family$linkinv)
+expect_equivalent(p1$estimate, p2$estimate)
+expect_equivalent(p1$conf.low, p2$conf.low)
 
 
 
@@ -299,6 +298,14 @@ expect_inherits(mfx2, "slopes")
 # expect_error(slopes(model, newdata = "mean"), "combined")
 
 
+## Issue #229: works interactively
+# data(trade)
+# dat <- trade
+# mod <- feNmlm(Euros ~ log(dist_km) | Product, data = dat)
+# expect_slopes(mod, newdata = dat) # environment issue
 
 
 rm(list = ls())
+
+
+

@@ -76,7 +76,7 @@
 #' * `std.error`: standard errors computed using the delta method.
 #' * `conf.low`: lower bound of the confidence interval (or equal-tailed interval for bayesian models)
 #' * `conf.high`: upper bound of the confidence interval (or equal-tailed interval for bayesian models)
-#' * `p.value`: p value associated to the `estimate` column. The null is determined by the `hypothesis` argument (0 by default), and p values are computed before applying the `transform` argument. For `glm` and `Gam` models, p values are computed on the link scale by default unless the `type` argument is specified explicitly.
+#' * `p.value`: p value associated to the `estimate` column. The null is determined by the `hypothesis` argument (0 by default), and p values are computed before applying the `transform` argument. For models of class `feglm`, `Gam`, `glm` and `negbin`, p values are computed on the link scale by default unless the `type` argument is specified explicitly.
 #'
 #' See `?print.marginaleffects` for printing options.
 #'
@@ -263,7 +263,11 @@ predictions <- function(model,
     }
 
     # if type is NULL, we backtransform if relevant
-    if ((is.null(type)) && is.null(transform) && isTRUE(class(model)[1] %in% c("glm", "Gam"))) {
+    flag1 <- is.null(type)
+    flag2 <- is.null(transform)
+    flag3 <- isTRUE(class(model)[1] %in% c("glm", "Gam", "negbin"))
+    flag4 <- isTRUE(hush(model[["method_type"]]) %in% c("feglm"))
+    if (flag1 && flag2 && (flag3 || flag4)) {
         dict <- subset(type_dictionary, class == class(model)[1])$type
         type <- sanitize_type(model = model, type = type)
         linv <- tryCatch(insight::link_inverse(model), error = function(e) NULL)
