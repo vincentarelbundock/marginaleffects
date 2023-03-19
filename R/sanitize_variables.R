@@ -32,7 +32,7 @@ sanitize_variables <- function(variables,
         } else {
             predictors <- insight::find_variables(model)
         }
-        known <- c("fixed", "conditional", "zero_inflated")
+        known <- c("fixed", "conditional", "zero_inflated", "scale")
         if (any(known %in% names(predictors))) {
             predictors <- unlist(predictors[known], recursive = TRUE, use.names = FALSE)
             # sometimes triggered by multivariate brms models where we get nested

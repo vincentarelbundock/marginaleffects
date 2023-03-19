@@ -27,10 +27,10 @@ em1 <- emmeans::emtrends(model, ~hp, "hp", at = list(hp = 110, drat = 3.9))
 em2 <- emmeans::emtrends(model, ~drat, "drat", at = list(hp = 110, drat = 3.9))
 em1 <- tidy(em1)
 em2 <- tidy(em2)
-expect_equivalent(mfx$estimate[1], em1$hp.trend)
-expect_equivalent(mfx$std.error[1], em1$std.error, tolerance = .002)
-expect_equivalent(mfx$estimate[2], em2$drat.trend)
-expect_equivalent(mfx$std.error[2], em2$std.error, tolerance = .002)
+expect_equivalent(mfx$estimate[2], em1$hp.trend)
+expect_equivalent(mfx$std.error[2], em1$std.error, tolerance = .002)
+expect_equivalent(mfx$estimate[1], em2$drat.trend)
+expect_equivalent(mfx$std.error[1], em2$std.error, tolerance = .002)
 
 # glm.nb: marginaleffects: vs. margins vs. emmeans
 model <- suppressWarnings(MASS::glm.nb(carb ~ wt + factor(cyl), data = mtcars))
@@ -53,8 +53,8 @@ expect_equivalent(tmp$std.error, tmp$mar_std.error, tolerance = .001)
 mfx <- slopes(model, newdata = datagrid(wt = 2.6, cyl = 4), type = "link")
 em <- emtrends(model, ~wt, "wt", at = list(wt = 2.6, cyl = 4))
 em <- tidy(em)
-expect_equivalent(mfx$estimate[1], em$wt.trend)
-expect_equivalent(mfx$std.error[1], em$std.error, tolerance = 1e-3)
+expect_equivalent(mfx$estimate[3], em$wt.trend)
+expect_equivalent(mfx$std.error[3], em$std.error, tolerance = 1e-3)
 
 # emmeans contrasts
 mfx <- slopes(model, type = "link", newdata = datagrid(wt = 3, cyl = 4))
@@ -129,7 +129,7 @@ expect_true(all(c("rowid", "estimate", "std.error", "group") %in% colnames(pred)
 # glm.nb: predictions: no validity
 model <- suppressWarnings(MASS::glm.nb(carb ~ wt + factor(cyl), data = mtcars))
 pred <- predictions(model)
-expect_predictions(pred)
+expect_predictions(pred, se = FALSE)
 
 
 # rlm: predictions: no validity

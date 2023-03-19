@@ -512,13 +512,21 @@ predictions <- function(model,
     marginaleffects_wts_internal <- out[["marginaleffects_wts_internal"]]
     out[["marginaleffects_wts_internal"]] <- NULL
 
-    # clean columns
+    # bycols
     if (isTRUE(checkmate::check_data_frame(by))) {
         bycols <- setdiff(colnames(by), "by")
     } else {
         bycols <- by
     }
 
+    # sort rows
+    if (is.null(draws)) { # dangerous for bayes to align draws
+        idx <- c("term", grep("^rowid|^group$", colnames(out), value = TRUE), bycols)
+        idx <- intersect(idx, colnames(out))
+        if (length(idx) > 0) data.table::setorderv(out, cols = idx)
+    }
+
+    # clean columns
     stubcols <- c(
         "rowid", "rowidcf", "term", "group", "hypothesis",
         bycols,
@@ -642,7 +650,6 @@ get_predictions <- function(model,
         verbose = verbose,
         ...)
 
-    # after get_by
     draws <- attr(out, "posterior_draws")
 
     # hypothesis tests using the delta method

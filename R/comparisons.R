@@ -518,8 +518,8 @@ comparisons <- function(model,
         bycols <- by
     }
 
-    if (is.null(draws) && !"rowid" %in% colnames(mfx)) {
-        idx <- c("term", grep("^term$|^contrast$|^contrast_", colnames(mfx), value = TRUE), bycols)
+    if (is.null(draws)) {
+        idx <- c("term", grep("^term$|^contrast$|^contrast_|^rowid|^group$", colnames(mfx), value = TRUE), bycols)
         idx <- intersect(idx, colnames(mfx))
         if (length(idx) > 0) data.table::setorderv(mfx, cols = idx)
     }

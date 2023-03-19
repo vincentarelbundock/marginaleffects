@@ -1,5 +1,9 @@
 # marginaleffects 0.11.0.9000
 
+Breaking change:
+
+* Row orders are now more consistent, but may have changed from previous version. This could affect results from `hypothesis` with `b1`, `b2`, ... indexing.
+
 Support new models:
 
 * `nlme::lme()`
