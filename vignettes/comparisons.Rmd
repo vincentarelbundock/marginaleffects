@@ -892,6 +892,10 @@ ggplot(predictions_data, aes(x = lifeExp, y = prediction)) +
   theme_minimal()
 ```
 
+
+````{comment}
+We now have this in the experiments section
+
 # Visual examples
 
 ```{r}
@@ -949,3 +953,4 @@ comparisons(model1,
   newdata = datagrid(cond = 0:1),  # grid
   hypothesis = "b1 = b2")          # hypothesis
 ```
+````
