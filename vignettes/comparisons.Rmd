@@ -68,7 +68,7 @@ comparisons(mod,
 
 In GLM models, most quantities of interest are *conditional*, in the sense that they will typically depend on the values of all the predictors in the model. Therefore, we need to decide *where* in the predictor space we want to evaluate the quantity of interest described above.
 
-By default, `comparisons()` will compute estimates for every row of the original dataset that was used to fit a model. There are `r nrow(dat)` observations in the titanic dataset. Therefore, if we just execute the code in the previous section, we will obtain `r nrow(dat)` estimates of the difference between the probabiliyt of survival in 3rd and 1st class:
+By default, `comparisons()` will compute estimates for every row of the original dataset that was used to fit a model. There are `r nrow(dat)` observations in the titanic dataset. Therefore, if we just execute the code in the previous section, we will obtain `r nrow(dat)` estimates of the difference between the probability of survival in 3rd and 1st class:
 
 ```{r}
 comparisons(mod,
@@ -140,7 +140,7 @@ diff(cmp$estimate)
 
 This result can be interpreted as a "difference-in-differences": Moving from 1st to 3rd has a much larger negative effect on the probability of survival for a 50 year old woman than for a 50 year old man. This difference is statistically significant.
 
-We can do a similar comparison, but instead of fixing a conditional grid, we can average over subgruops of the empirical distribution, using the `by` argument:
+We can do a similar comparison, but instead of fixing a conditional grid, we can average over subgroups of the empirical distribution, using the `by` argument:
 
 ```{r}
 avg_comparisons(mod,
