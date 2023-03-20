@@ -12,15 +12,16 @@
 #' +The output will include all combinations of these variables (see Examples below.)
 #' @param model Model object
 #' @param newdata data.frame (one and only one of the `model` and `newdata` arguments
-#' @param grid_type character
-#'   * "typical": variables whose values are not explicitly specified by the user in `...` are set to their mean or mode, or to the output of the functions supplied to `FUN_type` arguments.
-#'   * "counterfactual": the entire dataset is duplicated for each combination of the variable values specified in `...`. Variables not explicitly supplied to `datagrid()` are set to their observed values in the original dataset.
+#' @param by character vector with grouping variables within which `FUN_*` functions are applied to create "sub-grids" with unspecified variables.
 #' @param FUN_character the function to be applied to character variables.
 #' @param FUN_factor the function to be applied to factor variables.
 #' @param FUN_logical the function to be applied to factor variables.
 #' @param FUN_integer the function to be applied to integer variables.
 #' @param FUN_numeric the function to be applied to numeric variables.
 #' @param FUN_other the function to be applied to other variable types.
+#' @param grid_type character
+#'   * "typical": variables whose values are not explicitly specified by the user in `...` are set to their mean or mode, or to the output of the functions supplied to `FUN_type` arguments.
+#'   * "counterfactual": the entire dataset is duplicated for each combination of the variable values specified in `...`. Variables not explicitly supplied to `datagrid()` are set to their observed values in the original dataset.
 #' @details
 #' If `datagrid` is used in a `predictions()`, `comparisons()`, or `slopes()` call as the
 #' `newdata` argument, the model is automatically inserted in the `model` argument of `datagrid()`
@@ -65,14 +66,15 @@ datagrid <- function(
     ...,
     model = NULL,
     newdata = NULL,
-    grid_type = "typical",
+    by = NULL,
     FUN_character = get_mode,
     # need to be explicit for numeric variables transfered to factor in model formula
     FUN_factor = get_mode,
     FUN_logical = get_mode,
     FUN_numeric = function(x) mean(x, na.rm = TRUE),
     FUN_integer = function(x) round(mean(x, na.rm = TRUE)),
-    FUN_other = function(x) mean(x, na.rm = TRUE)) {
+    FUN_other = function(x) mean(x, na.rm = TRUE),
+    grid_type = "typical") {
 
     dots <- list(...)
 
@@ -83,8 +85,13 @@ datagrid <- function(
     checkmate::assert_function(FUN_logical)
     checkmate::assert_function(FUN_numeric)
     checkmate::assert_function(FUN_other)
+    checkmate::assert_character(by, null.ok = TRUE)
+    checkmate::assert_data_frame(newdata, null.ok = TRUE)
     
     if (grid_type == "counterfactual") {
+        if (!is.null(by)) {
+            insight::format_error("The `by` argument is not supported for counterfactual grids.")
+        }
         args <- list(
             model = model,
             newdata = newdata)
@@ -93,14 +100,76 @@ datagrid <- function(
         return(out)
     }
     
-    tmp <- prep_datagrid(..., model = model, newdata = newdata)
+    if (!is.null(by)) {
+        if (is.null(newdata) && is.null(model)) {
+            insight::format_error("One of `newdata` and `model` must not be `NULL`.")
+        }
+        if (is.null(newdata)) {
+            newdata <- get_modeldata(model, additional_variables = by)
+        }
+        if (!all(by %in% colnames(newdata))) {
+            insight::format_error("All elements of `by` must match column names in `newdata`.")
+        }
+        data.table::setDT(newdata)
+        idx <- subset(newdata, select = by)
+        newdata_list <- split(newdata, idx, keep.by = TRUE)
+        for (i in seq_along(newdata_list)) {
+            args <- c(list(...), list(
+                model = model,
+                newdata = newdata_list[[i]],
+                FUN_character = FUN_character,
+                FUN_factor = FUN_factor,
+                FUN_logical = FUN_logical,
+                FUN_numeric = FUN_numeric,
+                FUN_integer = FUN_integer,
+                FUN_other = FUN_other,
+                by = by))
+            for (b in by) {
+                args[[b]] <- unique
+            }
+            newdata_list[[i]] <- do.call(datagrid_engine, args)
+        }
+        out <- data.table::rbindlist(newdata_list)
+        data.table::setDF(out)
+        return(out)
+    }
+    
+    out <- datagrid_engine(...,
+                model = model,
+                newdata = newdata,
+                FUN_character = FUN_character,
+                FUN_factor = FUN_factor,
+                FUN_logical = FUN_logical,
+                FUN_numeric = FUN_numeric,
+                FUN_integer = FUN_integer,
+                FUN_other = FUN_other)
+    return(out)
+}
+
+        
+datagrid_engine <- function(
+    ...,
+    model = NULL,
+    newdata = NULL,
+    FUN_character = get_mode,
+    # need to be explicit for numeric variables transfered to factor in model formula
+    FUN_factor = get_mode,
+    FUN_logical = get_mode,
+    FUN_numeric = function(x) mean(x, na.rm = TRUE),
+    FUN_integer = function(x) round(mean(x, na.rm = TRUE)),
+    FUN_other = function(x) mean(x, na.rm = TRUE),
+    by = NULL) {
+
+    dots <- list(...)
+   
+    tmp <- prep_datagrid(..., model = model, newdata = newdata, by = by)
 
     at <- tmp$at
     dat <- tmp$newdata
     variables_all <- tmp$all
     variables_manual <- names(at)
     variables_automatic <- tmp$automatic
-
+    
     # commented out because we want to keep the response in
     # sometimes there are two responses and we need one of them:
     # brms::brm(y | trials(n) ~ x + w + z)
@@ -222,7 +291,7 @@ datagridcf <- function(
 }
 
 
-prep_datagrid <- function(..., model = NULL, newdata = NULL) {
+prep_datagrid <- function(..., model = NULL, newdata = NULL, by = NULL) {
 
     checkmate::assert_data_frame(newdata, null.ok = TRUE)
 
@@ -282,7 +351,7 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL) {
     }
 
     # check `at` names
-    variables_missing <- setdiff(names(at), c(variables_all, "group"))
+    variables_missing <- setdiff(names(at), c(variables_all, "group", by))
     if (length(variables_missing) > 0) {
         warning(sprintf("Some of the variable names are missing from the model data: %s",
                         paste(variables_missing, collapse = ", ")),

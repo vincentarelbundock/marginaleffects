@@ -9,13 +9,14 @@ datagrid(
   ...,
   model = NULL,
   newdata = NULL,
-  grid_type = "typical",
+  by = NULL,
   FUN_character = get_mode,
   FUN_factor = get_mode,
   FUN_logical = get_mode,
   FUN_numeric = function(x) mean(x, na.rm = TRUE),
   FUN_integer = function(x) round(mean(x, na.rm = TRUE)),
-  FUN_other = function(x) mean(x, na.rm = TRUE)
+  FUN_other = function(x) mean(x, na.rm = TRUE),
+  grid_type = "typical"
 )
 
 datagridcf(..., model = NULL, newdata = NULL)
@@ -32,11 +33,7 @@ datagridcf(..., model = NULL, newdata = NULL)
 
 \item{newdata}{data.frame (one and only one of the \code{model} and \code{newdata} arguments}
 
-\item{grid_type}{character
-\itemize{
-\item "typical": variables whose values are not explicitly specified by the user in \code{...} are set to their mean or mode, or to the output of the functions supplied to \code{FUN_type} arguments.
-\item "counterfactual": the entire dataset is duplicated for each combination of the variable values specified in \code{...}. Variables not explicitly supplied to \code{datagrid()} are set to their observed values in the original dataset.
-}}
+\item{by}{character vector with grouping variables within which \verb{FUN_*} functions are applied to create "sub-grids" with unspecified variables.}
 
 \item{FUN_character}{the function to be applied to character variables.}
 
@@ -49,6 +46,12 @@ datagridcf(..., model = NULL, newdata = NULL)
 \item{FUN_integer}{the function to be applied to integer variables.}
 
 \item{FUN_other}{the function to be applied to other variable types.}
+
+\item{grid_type}{character
+\itemize{
+\item "typical": variables whose values are not explicitly specified by the user in \code{...} are set to their mean or mode, or to the output of the functions supplied to \code{FUN_type} arguments.
+\item "counterfactual": the entire dataset is duplicated for each combination of the variable values specified in \code{...}. Variables not explicitly supplied to \code{datagrid()} are set to their observed values in the original dataset.
+}}
 }
 \value{
 A \code{data.frame} in which each row corresponds to one combination of the named

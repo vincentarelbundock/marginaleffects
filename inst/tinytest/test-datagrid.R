@@ -67,6 +67,14 @@ expect_error(
 
 
 
+# Issue #688
+dat <<- transform(mtcars, cyl = factor(cyl))
+mod <- lm(mpg ~ hp, data = dat)
+d <- datagrid(model = mod, by = c("carb", "cyl"))
+expect_equivalent(nrow(d), 9)
+
+
+
 
 source("helpers.R")
 rm(list = ls())

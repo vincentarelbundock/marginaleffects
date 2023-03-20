@@ -11,6 +11,7 @@ Support new models:
 New features:
 
 * `comparisons()` accepts data frames with two numeric columns ("low" and "high") to specify fully customizable contrasts.
+* `datagrid()` gets a new `by` argument to create apply grid-making functions within groups.
 
 Bug:
 
