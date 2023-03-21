@@ -38,6 +38,7 @@ plot_comparisons <- function(model,
                              variables = NULL,
                              condition = NULL,
                              by = NULL,
+                             newdata = NULL,
                              type = "response",
                              vcov = NULL,
                              conf_level = 0.95,
@@ -58,17 +59,34 @@ plot_comparisons <- function(model,
         }
     }
     
-    # sanity check
-    checkmate::assert(
-        checkmate::check_character(variables, names = "unnamed"),
-        checkmate::check_list(variables, names = "unique"),
-        .var.name = "variables")
+    # order of the first few paragraphs is important
+    # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
+    scall <- substitute(newdata)
+    newdata_tmp <- sanitize_newdata_call(scall, newdata, model)
+
+    if ("transform_post" %in% names(dots)) { # backward compatibility
+        transform <- dots[["transform_post"]]
+    }
+    if (!is.null(condition) && !is.null(newdata)) {
+        insight::format_error("The `condition` and `newdata` arguments cannot be used simultaneously.")
+    }
+    newdata <- newdata_tmp
+
+    if (!is.null(newdata) && is.null(by)) {
+        insight::format_error("The `newdata` argument requires a `by` argument.")
+    }
 
     checkmate::assert_character(by, null.ok = TRUE, max.len = 3, min.len = 1, names = "unnamed")
     if ((!is.null(condition) && !is.null(by)) || (is.null(condition) && is.null(by))) {
         msg <- "One of the `condition` and `by` arguments must be supplied, but not both."
         insight::format_error(msg)
     }
+
+    # sanity check
+    checkmate::assert(
+        checkmate::check_character(variables, names = "unnamed"),
+        checkmate::check_list(variables, names = "unique"),
+        .var.name = "variables")
 
     # conditional
     if (!is.null(condition)) {
@@ -96,9 +114,15 @@ plot_comparisons <- function(model,
     # marginal
     if (!is.null(by)) {
         modeldata <- get_modeldata(model, additional_variables = by)
+        newdata <- sanitize_newdata(
+            model = model,
+            newdata = newdata,
+            modeldata = modeldata,
+            by = by)
         datplot <- comparisons(
             model,
             by = by,
+            newdata = newdata,
             type = type,
             vcov = vcov,
             conf_level = conf_level,

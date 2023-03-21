@@ -49,4 +49,26 @@ expect_snapshot_plot(p, "plot_comparisons-rr_titanic")
 
 
 
+# Issue #725: `newdata` argument in plotting functions
+mod <- glm(vs ~ hp + am, mtcars, family = binomial)
+p1 <- plot_comparisons(mod, variables = "hp", by = "am", newdata = datagridcf(am = 0:1), draw = FALSE)
+p2 <- avg_comparisons(mod, variables = "hp", by = "am", newdata = datagridcf(am = 0:1), draw = FALSE)
+expect_equivalent(p1$estimate, p2$estimate)
+expect_equivalent(p1$conf.low, p2$conf.low, tolerance = 1e-6)
+p3 <- plot_comparisons(mod, variables = "hp", by = "am", draw = FALSE)
+p4 <- avg_comparisons(mod, variables = "hp", by = "am", draw = FALSE)
+expect_equivalent(p3$estimate, p4$estimate)
+expect_equivalent(p3$conf.low, p4$conf.low)
+expect_true(all(p1$conf.low != p3$conf.low))
+p5 <- plot_comparisons(mod, variables = "hp", condition = "am", draw = FALSE)
+p6 <- comparisons(mod, variables = "hp", newdata = datagrid(am = 0:1))
+expect_equivalent(p5$estimate, p6$estimate)
+expect_equivalent(p5$conf.low, p6$conf.low)
+expect_true(all(p1$conf.low != p5$conf.low))
+expect_true(all(p3$conf.low != p5$conf.low))
+
+
+
+
+
 rm(list = ls())

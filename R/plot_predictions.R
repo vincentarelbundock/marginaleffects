@@ -70,7 +70,7 @@ plot_predictions <- function(model,
     if ("transform_post" %in% names(dots)) { # backward compatibility
         transform <- dots[["transform_post"]]
     }
-    if (!is.null(condition) && is.null(newdata)) {
+    if (!is.null(condition) && !is.null(newdata)) {
         insight::format_error("The `condition` and `newdata` arguments cannot be used simultaneously.")
     }
     if (!is.null(newdata) && is.null(by)) {
