@@ -58,20 +58,16 @@ plot_comparisons <- function(model,
             insight::format_error("The `effect` argument has been renamed to `variables`.")
         }
     }
-    
-    # order of the first few paragraphs is important
-    # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
-    scall <- substitute(newdata)
-    newdata_tmp <- sanitize_newdata_call(scall, newdata, model)
-
     if ("transform_post" %in% names(dots)) { # backward compatibility
         transform <- dots[["transform_post"]]
     }
+
+    # order of the first few paragraphs is important
+    scall <- substitute(newdata)
     if (!is.null(condition) && !is.null(newdata)) {
         insight::format_error("The `condition` and `newdata` arguments cannot be used simultaneously.")
     }
-    newdata <- newdata_tmp
-
+    newdata <- sanitize_newdata_call(scall, newdata, model)
     if (!is.null(newdata) && is.null(by)) {
         insight::format_error("The `newdata` argument requires a `by` argument.")
     }

@@ -9,6 +9,7 @@ plot_comparisons(
   variables = NULL,
   condition = NULL,
   by = NULL,
+  newdata = NULL,
   type = "response",
   vcov = NULL,
   conf_level = 0.95,
@@ -45,6 +46,26 @@ plot_comparisons(
 \item Character vector of column names in \code{newdata} or in the data frame produced by calling the function without the \code{by} argument.
 \item Data frame with a \code{by} column of group labels, and merging columns shared by \code{newdata} or the data frame produced by calling the same function without the \code{by} argument.
 \item See examples below.
+}}
+
+\item{newdata}{Grid of predictor values at which we evaluate the comparisons.
+\itemize{
+\item \code{NULL} (default): Unit-level contrasts for each observed value in the original dataset (empirical distribution).
+\item data frame: Unit-level contrasts for each row of the \code{newdata} data frame.
+\item string:
+\itemize{
+\item "mean": Contrasts at the Mean. Contrasts when each predictor is held at its mean or mode.
+\item "median": Contrasts at the Median. Contrasts when each predictor is held at its median or mode.
+\item "marginalmeans": Contrasts at Marginal Means.
+\item "tukey": Contrasts at Tukey's 5 numbers.
+\item "grid": Contrasts on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
+}
+\item \code{\link[=datagrid]{datagrid()}} call to specify a custom grid of regressors. For example:
+\itemize{
+\item \code{newdata = datagrid(cyl = c(4, 6))}: \code{cyl} variable equal to 4 and 6 and other regressors fixed at their means or modes.
+\item \code{newdata = datagrid(mpg = fivenum)}: \code{mpg} variable held at Tukey's five numbers (using the \code{fivenum} function), and other regressors fixed at their means or modes.
+\item See the Examples section and the \link{datagrid} documentation.
+}
 }}
 
 \item{type}{string indicates the type (scale) of the predictions used to

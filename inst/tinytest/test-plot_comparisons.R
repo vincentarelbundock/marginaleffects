@@ -66,7 +66,8 @@ expect_equivalent(p5$estimate, p6$estimate)
 expect_equivalent(p5$conf.low, p6$conf.low)
 expect_true(all(p1$conf.low != p5$conf.low))
 expect_true(all(p3$conf.low != p5$conf.low))
-
+expect_error(plot_comparisons(mod, variables = "hp", condition = "am", by = "am"))
+expect_error(plot_comparisons(mod, variables = "hp", newdata = mtcars))
 
 
 

@@ -13,6 +13,7 @@ New:
 * Vignette on 2x2 experimental designs. Thanks to Demetri Pananos.
 * `comparisons()` accepts data frames with two numeric columns ("low" and "high") to specify fully customizable contrasts.
 * `datagrid()` gets a new `by` argument to create apply grid-making functions within groups.
+* `plot_*()` gain a `newdata` argument for use with `by`.
 
 Bug:
 

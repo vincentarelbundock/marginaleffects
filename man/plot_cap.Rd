@@ -42,22 +42,22 @@ plot_cap(
 \item 1: x-axis. 2: color. 3: facets.
 }}
 
-\item{newdata}{Grid of predictor values at which we evaluate predictions.
+\item{newdata}{Grid of predictor values at which we evaluate the slopes.
 \itemize{
-\item \code{NULL} (default): Predictions for each observed value in the original dataset.
-\item data frame: Predictions for each row of the \code{newdata} data frame.
-\item string:
-\itemize{
-\item "mean": Predictions at the Mean. Predictions when each predictor is held at its mean or mode.
-\item "median": Predictions at the Median. Predictions when each predictor is held at its median or mode.
-\item "marginalmeans": Predictions at Marginal Means. See Details section below.
-\item "tukey": Predictions at Tukey's 5 numbers.
-\item "grid": Predictions on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
-}
+\item \code{NULL} (default): Unit-level slopes for each observed value in the original dataset.
+\item data frame: Unit-level slopes for each row of the \code{newdata} data frame.
 \item \code{\link[=datagrid]{datagrid()}} call to specify a custom grid of regressors. For example:
 \itemize{
 \item \code{newdata = datagrid(cyl = c(4, 6))}: \code{cyl} variable equal to 4 and 6 and other regressors fixed at their means or modes.
 \item See the Examples section and the \code{\link[=datagrid]{datagrid()}} documentation.
+}
+\item string:
+\itemize{
+\item "mean": Marginal Effects at the Mean. Slopes when each predictor is held at its mean or mode.
+\item "median": Marginal Effects at the Median. Slopes when each predictor is held at its median or mode.
+\item "marginalmeans": Marginal Effects at Marginal Means. See Details section below.
+\item "tukey": Marginal Effects at Tukey's 5 numbers.
+\item "grid": Marginal Effects on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
 }
 }}
 

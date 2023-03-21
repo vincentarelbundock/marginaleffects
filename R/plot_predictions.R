@@ -70,18 +70,17 @@ plot_predictions <- function(model,
     if ("transform_post" %in% names(dots)) { # backward compatibility
         transform <- dots[["transform_post"]]
     }
+
+    # order of the first few paragraphs is important
+    scall <- substitute(newdata)
     if (!is.null(condition) && !is.null(newdata)) {
         insight::format_error("The `condition` and `newdata` arguments cannot be used simultaneously.")
     }
+    newdata <- sanitize_newdata_call(scall, newdata, model)
     if (!is.null(newdata) && is.null(by)) {
         insight::format_error("The `newdata` argument requires a `by` argument.")
     }
     checkmate::assert_character(by, null.ok = TRUE)
-
-    # order of the first few paragraphs is important
-    # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
-    scall <- substitute(newdata)
-    newdata <- sanitize_newdata_call(scall, newdata, model)
 
     # sanity check
     checkmate::assert_character(by, null.ok = TRUE, max.len = 3, min.len = 1, names = "unnamed")
