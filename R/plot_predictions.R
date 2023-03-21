@@ -46,6 +46,7 @@
 plot_predictions <- function(model,
                              condition = NULL,
                              by = NULL,
+                             newdata = NULL,
                              type = NULL,
                              vcov = NULL,
                              conf_level = 0.95,
@@ -57,6 +58,8 @@ plot_predictions <- function(model,
                              ...) {
 
     dots <- list(...)
+
+    checkmate::assert_number(points, lower = 0, upper = 1)
     
     if ("variables" %in% names(dots)) {
         insight::format_error("The `variables` argument is not supported by this function.")
@@ -64,8 +67,21 @@ plot_predictions <- function(model,
     if ("effect" %in% names(dots)) {
         insight::format_error("The `effect` argument is not supported by this function.")
     }
+    if ("transform_post" %in% names(dots)) { # backward compatibility
+        transform <- dots[["transform_post"]]
+    }
+    if (!is.null(condition) && is.null(newdata)) {
+        insight::format_error("The `condition` and `newdata` arguments cannot be used simultaneously.")
+    }
+    if (!is.null(newdata) && is.null(by)) {
+        insight::format_error("The `newdata` argument requires a `by` argument.")
+    }
+    checkmate::assert_character(by, null.ok = TRUE)
 
-    checkmate::assert_number(points, lower = 0, upper = 1)
+    # order of the first few paragraphs is important
+    # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
+    scall <- substitute(newdata)
+    newdata <- sanitize_newdata_call(scall, newdata, model)
 
     # sanity check
     checkmate::assert_character(by, null.ok = TRUE, max.len = 3, min.len = 1, names = "unnamed")
@@ -73,11 +89,10 @@ plot_predictions <- function(model,
         msg <- "One of the `condition` and `by` arguments must be supplied, but not both."
         insight::format_error(msg)
     }
-    if (is.null(by)) by <- FALSE
 
     # conditional
     if (!is.null(condition)) {
-        modeldata <- get_modeldata(model, additional_variables = names(condition$condition))
+        modeldata <- get_modeldata(model, additional_variables = names(condition))
         condition <- sanitize_condition(model, condition, variables = NULL, modeldata = modeldata)
         v_x <- condition$condition1
         v_color <- condition$condition2
@@ -94,9 +109,14 @@ plot_predictions <- function(model,
     }
 
     # marginal
-    if (!isFALSE(by)) { # switched from NULL above
+    if (!isFALSE(by) && !is.null(by)) { # switched from NULL above
         condition <- NULL
         modeldata <- get_modeldata(model, additional_variables = by)
+        newdata <- sanitize_newdata(
+            model = model,
+            newdata = newdata,
+            modeldata = modeldata,
+            by = by)
         datplot <- predictions(
             model,
             by = by,
@@ -105,6 +125,7 @@ plot_predictions <- function(model,
             conf_level = conf_level,
             wts = NULL,
             transform = transform,
+            newdata = newdata,
             modeldata = modeldata,
             ...)
         v_x <- by[[1]]
