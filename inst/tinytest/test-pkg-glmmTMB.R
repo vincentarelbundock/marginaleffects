@@ -154,7 +154,10 @@ expect_true(all(mm3$std.error != mm4$std.error))
 expect_true(nrow(mm3) > nrow(mm1))
 
 
+
 # marginalmeans: some validity
+p <- predictions(mod, type = "link", re.form = NA)
+expect_inherits(p, "predictions")
 em <- data.frame(emmeans(mod, ~Sex))
 mm <- marginal_means(mod, variables = "Sex", type = "link", re.form = NA)
 expect_equivalent(em$emmean, mm$estimate)
@@ -162,8 +165,6 @@ expect_equivalent(em$SE, mm$std.error)
 
 
 mfx <- slopes(m1)
-
-
 m1 <- glmmTMB(
     count ~ mined + (1 | site),
     zi = ~mined,

@@ -71,10 +71,14 @@ get_se_delta <- function(model,
 
     # TODO: this is a terrible sanity check
     # some vcov methods return an unnamed matrix, some have duplicate names
-    if (!is.null(dimnames(vcov)) && anyDuplicated(colnames(vcov)) == 0 &&
-        all(names(coefs) %in% colnames(vcov))) {
-        vcov <- vcov[names(coefs), names(coefs), drop = FALSE]
+    flag <- anyDuplicated(colnames(vcov)) == 0 || anyDuplicated(names(coefs))  == 0
+    if (flag && !is.null(dimnames(vcov)) && all(names(coefs) %in% colnames(vcov))) {
+        bnames <- intersect(names(coefs), colnames(vcov))
+        vcov <- vcov[bnames, bnames, drop = FALSE]
+        colnames(vcov) <- row.names(vcov) <- names(coefs)
+        coefs <- coefs[bnames]
     }
+    
 
     # input: named vector of coefficients
     # output: gradient
