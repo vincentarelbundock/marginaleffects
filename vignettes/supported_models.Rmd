@@ -7,12 +7,6 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-# Adjusted predictions and marginal means
-
-Under the hood, `marginaleffects`'s `predictions` and `marginal_means` functions use the `insight` package to retrieve adjusted predictions from a wide variety of models. Currently, `insight` [supports very many model types](https://easystats.github.io/insight/#list-of-supported-models-by-class), and most should work out-of-the-box with the `predictions` function. If you run into problems, do not hesitate to [report them on Github or via email.](https://github.com/vincentarelbundock/marginaleffects/issues)
-
-# Marginal effects and contrasts
-
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
 library("data.table")
 library("kableExtra")
@@ -55,16 +49,14 @@ for (i in 3:ncol(tmp)) {
 }
 ```
 
-This table shows the list of `r nrow(tmp)` model types for which the `slopes()` function can compute slopes and contrasts. There are three main alternative software packages to compute such slopes (1) `Stata`'s `margins` command, (2) `R`'s `margins::margins`  function, and (3) `R`'s `emmeans::emtrends` function. The [test suite hosted on Github](https://github.com/vincentarelbundock/marginaleffects/tree/main/inst/tinytest) compares the numerical equivalence of results produced by `marginaleffects` to those produced by all 3 alternative software packages:
+This table shows the list of `r nrow(tmp)` supported model types. There are three main alternative software packages to compute such slopes (1) `Stata`'s `margins` command, (2) `R`'s `margins::margins()`  function, and (3) `R`'s `emmeans::emtrends()` function. The [test suite hosted on Github](https://github.com/vincentarelbundock/marginaleffects/tree/main/inst/tinytest) compares the numerical equivalence of results produced by `marginaleffects::slopes()` to those produced by all 3 alternative software packages:
 
 * ✓: a green check means that the results of at least one model are equal to a reasonable tolerance.
 * ✖: a red cross means that the results are *not* identical; extra caution is warranted.
 * U: a grey U means that computing slopes for a model type is *unsupported* by alternative packages, but supported by `marginaleffects`.
 * An empty cell means means that no comparison has been made yet.
 
-I am *very* eager to add support for new models. Feel free to file a request or submit code on Github.
-
-
+I am eager to add support for new models. Feel free to file a request or submit code on Github.
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
 # kableExtra
