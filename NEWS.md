@@ -7,6 +7,8 @@ Breaking change:
 Support new models:
 
 * `nlme::lme()`
+* `phylolm::phylolm()`
+* `phylolm::phyloglm()`
 
 New:
 

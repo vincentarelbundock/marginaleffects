@@ -56,6 +56,11 @@ get_predict.default <- function(model,
         pred <- as.vector(pred)
     }
 
+    # phylolm
+    if (isTRUE(checkmate::check_matrix(pred, ncols = 1))) {
+        pred <- drop(pred)
+    }
+
     # atomic vector
     if (isTRUE(checkmate::check_atomic_vector(pred))) {
         # strip weird attributes added by some methods (e.g., predict.svyglm)
@@ -71,6 +76,7 @@ get_predict.default <- function(model,
                 out <- list(estimate = pred, rowid = seq_len(length(pred)))
             }
         }
+        
 
     # matrix with outcome levels as columns
     } else if (is.matrix(pred)) {
