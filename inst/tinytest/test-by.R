@@ -227,6 +227,29 @@ expect_equivalent(cmp1$std.error, cmp2$std.error)
 expect_equal(nrow(cmp1), 4)
 
 
+# https://stackoverflow.com/questions/75858227/in-rs-marginaleffects-package-why-do-these-two-methods-shows-different-results
+requiet("dplyr")
+tmp <- mtcars %>% transform(am = factor(am), cyl = factor(cyl), mpg = mpg)
+mod <- lm(mpg ~ am * cyl, data = tmp)
+cmp1 <- avg_comparisons(mod, variables = "am", by = "cyl")
+cmp2 <- comparisons(mod, variables = "am") %>%
+  group_by(cyl) %>%
+  summarize(estimate = mean(estimate), .groups = "keep") |>
+  ungroup()
+cmp3 <- predictions(mod) |>
+  group_by(am, cyl) |>
+  summarize(estimate = mean(estimate), .groups = "keep") |>
+  ungroup() |>
+  group_by(cyl) |>
+  summarize(estimate = diff(estimate), .groups = "keep") |>
+  ungroup()
+cmp4 <- transform(tmp, estimate = predict(mod))
+cmp4 <- aggregate(estimate ~ cyl + am, FUN = mean, data = cmp4)
+cmp4 <- aggregate(estimate ~ cyl, FUN = diff, data = cmp4)
+expect_equivalent(cmp1$estimate, cmp2$estimate)
+expect_equivalent(cmp1$estimate, cmp3$estimate)
+expect_equivalent(cmp1$estimate, cmp4$estimate)
+
 
 
 
