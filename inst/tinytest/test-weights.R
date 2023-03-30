@@ -62,6 +62,7 @@ expect_equivalent(mfx$std.error, stata[2], tolerance = 0.002)
 
 
 # Issue #737
+requiet("tidyverse")
 md <- tibble::tribble(
   ~g,   ~device,    ~y,      ~N,                 ~p,
   "Control", "desktop", 12403, 103341L,  0.120020127538925,
@@ -77,10 +78,13 @@ md <- tibble::tribble(
   "W",  "mobile",  1007,  16589L,  0.060702875399361,
   "W",  "tablet",    30,    435L, 0.0689655172413793
 )
-fit <- glm(cbind(y, N - y) ~ g * device, data = md, family = binomial())
+tmp <<- as.data.frame(md)
+tmp <- as.data.frame(md)
+fit <- glm(cbind(y, N - y) ~ g * device, data = tmp, family = binomial())
 cmp1 <- avg_comparisons(fit,
     variables = list(g = c("Control", "Z")),
     wts = "N",
+    newdata = tmp,
     transform_pre = "lnratioavg",
     transform_post = exp)
 cmp2 <- predictions(fit, variables = list(g = c("Control", "Z"))) |> 
@@ -140,4 +144,5 @@ expect_equivalent(cmp2$estimate, cmp3$estimate)
 
 
 
+source("helpers.R")
 rm(list = ls())
