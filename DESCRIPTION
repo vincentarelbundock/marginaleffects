@@ -142,6 +142,7 @@ Suggests:
     tidymodels,
     tidyr,
     tidyverse,
+    tinysnapshot,
     tinytest,
     titanic,
     truncreg,
