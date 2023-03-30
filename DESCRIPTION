@@ -109,6 +109,7 @@ Suggests:
     parameters,
     patchwork,
     pkgdown,
+    phylolm,
     plm,
     polspline,
     poorman,
