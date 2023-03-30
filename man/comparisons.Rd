@@ -327,10 +327,10 @@ compute derivatives and elasticities.\tabular{ll}{
    dyexavgwts \tab \(hi, lo, eps, x, w) wmean(((hi - lo)/eps) * x, w) \cr
    ratio \tab \(hi, lo) hi/lo \cr
    ratioavg \tab \(hi, lo) mean(hi)/mean(lo) \cr
-   ratioavgwts \tab \(hi, lo) wmean(hi)/wmean(lo) \cr
+   ratioavgwts \tab \(hi, lo, w) wmean(hi, w)/wmean(lo, w) \cr
    lnratio \tab \(hi, lo) log(hi/lo) \cr
    lnratioavg \tab \(hi, lo) log(mean(hi)/mean(lo)) \cr
-   lnratioavgwts \tab \(hi, lo) log(wmean(hi)/wmean(lo)) \cr
+   lnratioavgwts \tab \(hi, lo, w) log(wmean(hi, w)/wmean(lo, w)) \cr
    lnor \tab \(hi, lo) log((hi/(1 - hi))/(lo/(1 - lo))) \cr
    lnoravg \tab \(hi, lo) log((mean(hi)/(1 - mean(hi)))/(mean(lo)/(1 - mean(lo)))) \cr
    lnoravgwts \tab \(hi, lo, w) log((wmean(hi, w)/(1 - wmean(hi, w)))/(wmean(lo, w)/(1 - wmean(lo, w)))) \cr
