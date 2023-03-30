@@ -19,6 +19,7 @@ New:
 
 Bug:
 
+* `comparisons(comparison = "lnratioavg")` ignored `wts` argument. Thanks to Demetri Pananos for report #737.
 * `ordinal::clm()`: incorrect standard errors when location and scale parameters are the same. Thanks to MrJerryTAO for report #718.
 * Incorrect label for "2sd" comparisons. Thanks to Andy Milne for report #720.
 * Invalid factor levels in `datagrid()` means `newdata` argument gets ignored. Thanks to Josh Errickson for report #721.
