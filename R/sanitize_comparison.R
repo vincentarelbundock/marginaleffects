@@ -83,6 +83,7 @@ comparison_label_dict <- list(
 )
 
 sanity_comparison <- function(comparison) {
+    # wts versions are used internally but not available directly to users
     valid <- names(comparison_function_dict)
     valid <- valid[!grepl("wts$", valid)]
     checkmate::assert(
