@@ -61,6 +61,7 @@ expect_equivalent(mfx$estimate[1], stata[1], tol = .01)
 expect_equivalent(mfx$std.error, stata[2], tolerance = 0.002)
 
 
+
 # Issue #737
 requiet("tidyverse")
 md <- tibble::tribble(
@@ -88,11 +89,49 @@ cmp1 <- avg_comparisons(fit,
     transform_pre = "lnratioavg",
     transform_post = exp)
 cmp2 <- predictions(fit, variables = list(g = c("Control", "Z"))) |> 
-    group_by(g) |>
-    summarize(estimate = weighted.mean(estimate, N))
+    dplyr::group_by(g) |>
+    dplyr::summarise(estimate = weighted.mean(estimate, N)) |>
+    as.data.frame()
 expect_equivalent(
     cmp1$estimate,
     cmp2$estimate[cmp2$g == "Z"] / cmp2$estimate[cmp2$g == "Control"])
+
+# wts shortcuts are internal-only
+expect_error(
+    avg_comparisons(fit, variables = "g", wts = "N", comparison = "lnratioavgwts", transform = exp),
+    pattern = "check_choice"
+)
+
+# lnratioavg = lnratio with `by`
+cmp1 <- avg_comparisons(fit,
+    variables = "g",
+    by = "device",
+    wts = "N",
+    comparison = "lnratioavg",
+    transform = exp)
+cmp2 <- avg_comparisons(fit,
+    variables = "g",
+    by = "device",
+    wts = "N",
+    comparison = "lnratio",
+    transform = exp)
+expect_equivalent(cmp1, cmp2)
+
+# lnratioavg + wts produces same results in this particular case, because there are only the g*device predictors
+cmp1 <- avg_comparisons(fit,
+    variables = "g",
+    by = "device",
+    wts = "N",
+    comparison = "lnratioavg",
+    transform = exp)
+cmp2 <- avg_comparisons(fit,
+    variables = "g",
+    by = "device",
+    wts = "N",
+    comparison = "lnratioavg",
+    transform = exp)
+expect_equivalent(cmp1, cmp2)
+
 
 
 # brms
@@ -101,9 +140,7 @@ mod <- marginaleffects:::modelarchive_model("brms_numeric2")
 w <- runif(32)
 cmp1 <- comparisons(mod, comparison = "differenceavg")
 cmp2 <- comparisons(mod, wts = w, comparison = "differenceavg")
-cmp3 <- comparisons(mod, wts = w, comparison = "differenceavgwts")
 expect_true(all(cmp1$estimate != cmp2$estimate))
-expect_equivalent(cmp2$estimate, cmp3$estimate)
 
 # . logit am mpg [pw=weights]
 #

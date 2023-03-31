@@ -16,5 +16,6 @@
 #' k <- data.frame(
 #'     Shortcut = names(k),
 #'     Function = k)
+#' k <- k[!grepl("wts$", k$Shortcut),]
 #' knitr::kable(k, format = "pipe", row.names = FALSE)
 #' ```

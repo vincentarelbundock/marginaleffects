@@ -83,9 +83,10 @@ comparison_label_dict <- list(
 )
 
 sanity_comparison <- function(comparison) {
+    valid <- names(comparison_function_dict)
+    valid <- valid[!grepl("wts$", valid)]
     checkmate::assert(
-        checkmate::check_choice(comparison,
-                                choices = names(comparison_function_dict)),
+        checkmate::check_choice(comparison, choices = valid),
         checkmate::check_function(comparison))
 }
 
