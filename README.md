@@ -9,7 +9,7 @@
 -->
 
 Compute and plot predictions, slopes, marginal means, and comparisons
-(contrasts, risk ratios, odds, etc.) for over [77
+(contrasts, risk ratios, odds, etc.) for over [80
 classes](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
 of statistical models in R. Conduct linear and non-linear hypothesis
 tests, or equivalence tests. Calculate uncertainty estimates using the
@@ -69,13 +69,13 @@ modeling packages in `R` often produce inconsistent objects that require
 special treatment.
 
 `marginaleffects` offers a single point of entry to easily interpret the
-results of over 77 classes of models, using a simple and consistent user
+results of over 80 classes of models, using a simple and consistent user
 interface.
 
 Benefits of `marginaleffects` include:
 
   - *Powerful:* It can compute predictions, comparisons (contrasts, risk
-    ratios, etc.), slopes, and conduct hypothesis tests for 77 different
+    ratios, etc.), slopes, and conduct hypothesis tests for 80 different
     classes of models in `R`.
   - *Simple:* All functions share a simple and unified interface.
   - *Documented*: Each function is thoroughly documented with abundant
