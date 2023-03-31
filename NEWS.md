@@ -1,4 +1,4 @@
-# marginaleffects 0.11.0.9000
+# marginaleffects 0.11.1
 
 Breaking change:
 

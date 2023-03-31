@@ -14,7 +14,9 @@ Makefile
 ^README\.html$
 ^README\.Rmd$
 ^sandbox$
+inst/tinytest/_tinysnapshot_review
 \.code-workspace$
+^vignettes$
 ^vignettes/alternative_software.Rmd
 ^vignettes/bootstrap.Rmd
 ^vignettes/brms.Rmd
