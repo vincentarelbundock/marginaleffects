@@ -111,7 +111,7 @@ posterior_draws(est, shape = "PxD") |> dim()
 ```
 
 
-## Fractional Weighted Bootstrap (aka Bayesian Boostrap)
+## Fractional Weighted Bootstrap (aka Bayesian Bootstrap)
 
 [The `fwb` package](https://ngreifer.github.io/fwb/) implements fractional weighted bootstrap (aka Bayesian bootstrap):
 

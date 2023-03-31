@@ -107,7 +107,7 @@ mfx_missRanger
 
 # Comparing results with different imputation software
 
-We can use the `modelsummary` package to compare the results with listwise delection to the results using different imputations software:
+We can use the `modelsummary` package to compare the results with listwise deletion to the results using different imputations software:
 
 ```{r}
 library(modelsummary)

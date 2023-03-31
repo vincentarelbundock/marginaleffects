@@ -155,7 +155,7 @@ plot_comparisons(mod,
   comparison = "ratio")
 ```
 
-The left panel shows that the ratio of Chinstrap body mass to Adelie body mass is approximately constant, at slightly above 0.8. The right panel shows that the ratio of Gento to Adelie body mass is depends on their bill length. For birds with short bills, Gentoos seem to have smaller body mass than Adelies. For birds with long bills, Gentoos seem heavier than Adelies, although the null ratio (1) is not outside the confidence interval.
+The left panel shows that the ratio of Chinstrap body mass to Adelie body mass is approximately constant, at slightly above 0.8. The right panel shows that the ratio of Gentoo to Adelie body mass is depends on their bill length. For birds with short bills, Gentoos seem to have smaller body mass than Adelies. For birds with long bills, Gentoos seem heavier than Adelies, although the null ratio (1) is not outside the confidence interval.
 
 ## Marginal comparisons
 
@@ -205,7 +205,7 @@ mod2 <- lm(mpg ~ wt * qsec * factor(gear), data = mtcars)
 plot_slopes(mod2, variables = "qsec", condition = c("wt", "gear"))
 ```
 
-# Uncertainy estimates
+# Uncertainty estimates
 
 As with all the other functions in the package, the `plot_*()` functions have a `conf_level` argument and a `vcov` argument which can be used to control the size of confidence intervals and the types of standard errors used:
 

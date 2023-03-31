@@ -125,7 +125,7 @@ mod <- mlogit(choice ~ wait + gcost | income + size, TravelMode)
 avg_slopes(mod, variables = c("income", "size"))
 ```
 
-Note that the `slopes` function will always return estimates of zero for regressors before the vertical bar in the formula. This is because ˋmarginaleffects` increments all rows of the prediction dataset in the same way to compute slopes and contrast. Because ˋmlogit` data are in "long" format, this means that alternatives are incremenented in the same way, which does not produce alternative-specific changes in the predictors.
+Note that the `slopes` function will always return estimates of zero for regressors before the vertical bar in the formula. This is because `marginaleffects` increments all rows of the prediction dataset in the same way to compute slopes and contrast. Because `mlogit` data are in "long" format, this means that alternatives are incremented in the same way, which does not produce alternative-specific changes in the predictors.
 
 One strategy to circumvent this problem is to supply a data frame of numeric values to compare, with alternative specific changes. In this example, we test what happens to the probability of selecting each mode of transportation if we only increase the wait time of air travel:
 

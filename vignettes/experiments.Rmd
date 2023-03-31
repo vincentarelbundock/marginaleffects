@@ -25,7 +25,7 @@ library(ggplot2)
 theme_set(theme_minimal())
 ```
 
-# Analying 2x2 Experiments with `marginaleffects`
+# Analyzing 2x2 Experiments with `marginaleffects`
 
 A 2×2 factorial design is a type of experimental design that allows researchers to understand the effects of two independent variables (each with two levels) on a single dependent variable.  The design is popular among academic researchers as well as in industry when running A/B tests.
 

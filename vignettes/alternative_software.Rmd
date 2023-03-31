@@ -65,7 +65,7 @@ Thus, in my (Vincent's) biased opinion, the main benefits of `marginaleffects` o
 * Simpler, more intuitive, and highly consistent user interface.
 * Easier to compute average slopes or unit-level contrasts for whole datasets.
 * Easier to compute slopes (aka marginal effects, trends, or partial derivatives) for custom grids and continuous regressors.
-* Easier to implement causal inference strategies like the parametric g-formula and regression adjustement in experiments (see vignettes). 
+* Easier to implement causal inference strategies like the parametric g-formula and regression adjustment in experiments (see vignettes). 
 * Allows the computation of arbitrary quantities of interest via user-supplied functions and automatic delta method inference.
 * Common plots are easy with the `plot_predictions()`, `plot_comparisons()`, and `plot_slopes()` functions.
 

@@ -158,7 +158,7 @@ Note that, for custom model, we typically have to supply values for the `newdata
 
 Let's say you want to estimate a model using the `mclogit::mblogit` function.  That package is already supported by `marginaleffects`, but you want to use a `type` (scale) of predictions that is not currently supported: a "centered link scale." 
 
-To achieve this, we would need to override the `get_predict.mblogit()` method. However, it can be unsafe to reassign methods supplied by a package that we loaded with `library`. To be safe, we assign a new model class to our object ("customclass") which will inherit from `mblogit`. Then, we define a `get_predict.customclass` method to make our new kinds of preditions.  
+To achieve this, we would need to override the `get_predict.mblogit()` method. However, it can be unsafe to reassign methods supplied by a package that we loaded with `library`. To be safe, we assign a new model class to our object ("customclass") which will inherit from `mblogit`. Then, we define a `get_predict.customclass` method to make our new kinds of predictions.  
 
 Load libraries, estimate a model:
 
