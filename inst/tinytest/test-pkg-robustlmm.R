@@ -1,3 +1,5 @@
+exit_file("Matrix version breakage")
+
 source("helpers.R")
 using("marginaleffects")
 
