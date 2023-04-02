@@ -30,6 +30,7 @@ If you add support for a class of models produced by a CRAN package, please cons
 If you add support for a class of models produced by a package hosted *elsewhere* than CRAN, you can submit it for inclusion in the *unsupported* user-submitted library of extensions: Currently 
 
 * [`countreg` package](https://github.com/vincentarelbundock/marginaleffects/blob/main/sandbox/methods_countreg.R). Thanks to Olivier Beaumais.
+* [`censreg` package](https://github.com/vincentarelbundock/marginaleffects/blob/main/sandbox/methods_censReg.R). Thanks to Oleg Komashko.
 
 The rest of this section illustrates how to add support for a very simple lm_manual model.
 
