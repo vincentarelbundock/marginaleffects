@@ -128,7 +128,7 @@ modelsummary(models, shape = term : contrast + Species ~ model)
 
 # Weights and `by`: Accessing variables from the original dataset
 
-Sometimes, we want to access variables from the original dataset to use as weights in the `wts` argument or as averaging category in the `by` argument. For some models, it can be challenging for to preserve the full original data including all its columns, throughout the pipeline, from `mice`, to `lapply`, to `marginaleffects`. For example, some modeling packages do not store the original data in the model object, so `marginaleffects` has to try to retrieve it by name from the global environment, which may be impossible when estimating models in a loop or using `lapply`-style functional programming.
+Sometimes, we want to access variables from the original dataset to use as weights in the `wts` argument or as averaging category in the `by` argument. For some models, it can be challenging to preserve the full original data including all its columns, throughout the pipeline, from `mice`, to `lapply`, to `marginaleffects`. For example, some modeling packages do not store the original data in the model object, so `marginaleffects` has to try to retrieve it by name from the global environment, which may be impossible when estimating models in a loop or using `lapply`-style functional programming.
 
 In those cases, it can be useful to revert to a more manual (but still very easy) approach. Here is an example using the `wts` argument and `fixest` models:
 
@@ -146,24 +146,23 @@ dat$mpg[sample(seq_len(nrow(mtcars)), 10)] <- NA
 dat$gear[sample(seq_len(nrow(mtcars)), 10)] <- NA
 
 # multiple imputation
-dat_mice <- mice(dat, m = 5, method = "sample", printFlag = FALSE)
-dat <- complete(dat_mice, action = "all")
+dat <- mice(dat, m = 5, method = "sample", printFlag = FALSE)
+dat <- complete(dat, action = "all")
 
 # fit models
-mod <- lapply(dat, function(x) {
+mod <- lapply(dat, \(x) 
     feglm(am ~ mpg * cyl + hp,
         weight = ~gear,
         family = binomial,
-        data = x)
-})
+        data = x))
 
 # slopes without weights
-lapply(seq_along(mods_feglm), \(i) 
-    avg_slopes(mod[[i]], newdata = dat_completed[[i]])) |>
+lapply(seq_along(mod), \(i) 
+    avg_slopes(mod[[i]], newdata = dat[[i]])) |>
     mice::pool()
 
 # slopes with weights
-lapply(seq_along(mods_feglm), \(i) 
-    avg_slopes(mod[[i]], newdata = dat_completed[[i]], wts = "gear")) |>
+lapply(seq_along(mod), \(i) 
+    avg_slopes(mod[[i]], newdata = dat[[i]], wts = "gear")) |>
     mice::pool()
 ```
