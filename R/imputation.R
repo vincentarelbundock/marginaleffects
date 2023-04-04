@@ -30,6 +30,7 @@ process_imputation <- function(x, call_attr) {
         conf_level = call_attr[["conf_level"]],
         df = mipool$pooled$df)
     attr(out, "inferences") <- mipool
+    attr(out, "model") <- lapply(mfx_list, attr, "model")
     return(out)
 }
 

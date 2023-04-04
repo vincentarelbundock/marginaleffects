@@ -1,5 +1,7 @@
 # marginaleffects 0.11.1.9000
 
+* When processing objects obtained using `mice` multiple imputation, a list of models is attached to the `model` attribute of the output. This means that we can extract all individual models using `attr(mfx, "model")`, and that functions like `modelsummary::modelsummary()` will not erroneously report goodness-of-fit statistics from just a single model.
+
 # marginaleffects 0.11.1
 
 Breaking change:
