@@ -1,7 +1,7 @@
 source("helpers.R")
 using("marginaleffects")
 
-requiet("speedglm")
+if (!requiet("speedglm")) exit_file("speedglm not on CRAN")
 requiet("margins")
 
 # glm vs. Stata
