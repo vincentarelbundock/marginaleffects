@@ -1,5 +1,6 @@
 # marginaleffects 0.11.1.9000
 
+* `vcov()` can be used to retrieve a full variance-covariance matrix from objects produced by `comparisons()`, `slopes()`, `predictions()`, or `marginal_means()` objects.
 * When processing objects obtained using `mice` multiple imputation, the pooled model using `mice::pool` is attached to the `model` attribute of the output. This means that functions like `modelsummary::modelsummary()` will not erroneously report goodness-of-fit statistics from just a single model and will instead appropriately report the statistics for the pooled model. Thanks to @Tristan-Siegfried for PR #740.
 
 # marginaleffects 0.11.1
