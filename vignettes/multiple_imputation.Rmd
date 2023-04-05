@@ -126,11 +126,11 @@ modelsummary(models, shape = term : contrast + Species ~ model)
 ```
 
 
-# Weights and `by`: Accessing variables from the original dataset
+# Passing new data arguments: `newdata`, `wts`, `by`, etc.
 
-Sometimes, we want to access variables from the original dataset to use as weights in the `wts` argument or as averaging category in the `by` argument. For some models, it can be challenging to preserve the full original data including all its columns, throughout the pipeline, from `mice`, to `lapply`, to `marginaleffects`. For example, some modeling packages do not store the original data in the model object, so `marginaleffects` has to try to retrieve it by name from the global environment, which may be impossible when estimating models in a loop or using `lapply`-style functional programming.
+Sometimes we want to pass arguments changing or specifying the data on which we will do our analysis using `marginaleffects`. This can be for reasons such as wanting to specify the values or weights at which we evaluate e.g. `avg_slopes`, or due to the underlying models not robustly preserving all the original data columns (such as `fixest` objects not saving their data in the fit object making it potentially challenging to retrieve, and even if retrievable it will not include the weights used during fitting as a column as `wts` expects when given a string).
 
-In those cases, it can be useful to revert to a more manual (but still very easy) approach. Here is an example using the `wts` argument and `fixest` models:
+If we are not using multiple imputation, or if we want to just pass a single dataset to the several fitted models after multiple imputation, we can pass a single dataset to the `newdata` argument. However, if we wish to supply each model in our list resulting after multiple imputation with a /different/ dataset on which to calculate results, we cannot use `newdata`. Instead, in this case it can be useful to revert to a more manual (but still very easy) approach. Here is an example calculating `avg_slopes` using a different set of weights for each of the `fixest` models which we fit after multiple imputation.
 
 ```{r}
 set.seed(1024)
