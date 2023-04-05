@@ -110,6 +110,7 @@ the \code{marginaleffects:::type_dictionary} dataframe.}
 \item "eyex": dY/dX * Y / X
 \item "eydx": dY/dX * Y
 \item "dyex": dY/dX / X
+\item Y is the predicted value of the outcome; X is the observed value of the predictor.
 }}
 
 \item{wts}{string or numeric: weights to use when computing average
