@@ -214,7 +214,7 @@ if (!requiet("ordbetareg")) exit_file("ordbetareg")
 requiet("dplyr")
 
 data(pew, package = "ordbetareg")
-model_data <- select(
+model_data <- dplyr::select(
   pew,
   therm,
   age = "F_AGECAT_FINAL",
