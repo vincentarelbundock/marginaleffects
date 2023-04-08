@@ -163,19 +163,20 @@ marginal_means <- function(model,
     }
 
     # if type is NULL, we backtransform if relevant
-    flag <- isTRUE(class(model)[1] %in% c("glm", "Gam"))
-    if (flag && (is.null(type) || isTRUE(type == "response"))) {
+    flag_class <- isTRUE(class(model)[1] %in% c("glm", "Gam", "negbin")) ||
+                  isTRUE(hush(model[["method_type"]]) %in% c("feglm"))
+    if (is.null(type) &&
+        is.null(transform) &&
+        isTRUE(checkmate::check_number(hypothesis, null.ok = TRUE)) &&
+        flag_class) {
+        dict <- subset(type_dictionary, class == class(model)[1])$type
         type <- sanitize_type(model = model, type = type)
-        linv <- tryCatch(
-            insight::link_inverse(model),
-            error = function(e) NULL)
-        if (type == "response" &&
-            is.null(transform) &&
-            class(model)[1] %in% type_dictionary$class &&
-            isTRUE("link" %in% subset(type_dictionary, class == class(model)[1])$type) &&
-            is.function(linv)) {
+        linv <- tryCatch(insight::link_inverse(model), error = function(e) NULL)
+        if (isTRUE(type == "response") && isTRUE("link" %in% dict) && is.function(linv)) {
             type <- "link"
             transform <- linv
+        } else {
+            type <- sanitize_type(model = model, type = type)
         }
     } else {
         type <- sanitize_type(model = model, type = type)
@@ -200,9 +201,7 @@ marginal_means <- function(model,
 
     sanity_dots(model = model, ...)
     if (inherits(model, "brmsfit")) {
-        insight::format_error(c(
-            "`brmsfit` objects are yet not supported by the `marginal_means` function.  Follow this link to track progress:",
-            "https://github.com/vincentarelbundock/marginaleffects/issues/137"))
+        insight::format_error("`brmsfit` objects are yet not supported by the `marginal_means` function.")
     }
 
     # fancy vcov processing to allow strings like "HC3"

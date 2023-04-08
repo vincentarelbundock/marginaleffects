@@ -15,7 +15,7 @@
 #'
 #' @rdname predictions
 #' @details
-#' For `glm()` or `gam::gam()` models with `type=NULL` (the default), `predictions()` first predicts on the link scale, and then backtransforms the estimates and confidence intervals. This implies that the `estimate` produced by `avg_predictions()` will not be exactly equal to the average of the `estimate` column produced by `predictions()`. Users can circumvent this behavior and average predictions directly on the response scale by setting `type="response"` explicitly. With `type="response"`, the intervals are symmetric and may have undesirable properties (e.g., stretching beyond the `[0,1]` bounds for a binary outcome regression).
+#' For `glm()`, `MASS::glm.nb`, `gam::gam()`, and `feols::feglm` models with `type`, `transform` and `hypothesis` all equal to `NULL` (the default), `predictions()` first predicts on the link scale, and then backtransforms the estimates and confidence intervals. This implies that the `estimate` produced by `avg_predictions()` will not be exactly equal to the average of the `estimate` column produced by `predictions()`. Users can circumvent this behavior and average predictions directly on the response scale by setting `type="response"` explicitly. With `type="response"`, the intervals are symmetric and may have undesirable properties (e.g., stretching beyond the `[0,1]` bounds for a binary outcome regression).
 #' 
 #' @param model Model object
 #' @param variables Counterfactual variables.
@@ -263,11 +263,12 @@ predictions <- function(model,
     }
 
     # if type is NULL, we backtransform if relevant
-    flag1 <- is.null(type)
-    flag2 <- is.null(transform)
-    flag3 <- isTRUE(class(model)[1] %in% c("glm", "Gam", "negbin"))
-    flag4 <- isTRUE(hush(model[["method_type"]]) %in% c("feglm"))
-    if (flag1 && flag2 && (flag3 || flag4)) {
+    flag_class <- isTRUE(class(model)[1] %in% c("glm", "Gam", "negbin")) ||
+                  isTRUE(hush(model[["method_type"]]) %in% c("feglm"))
+    if (is.null(type) &&
+        is.null(transform) &&
+        isTRUE(checkmate::check_number(hypothesis, null.ok = TRUE)) &&
+        flag_class) {
         dict <- subset(type_dictionary, class == class(model)[1])$type
         type <- sanitize_type(model = model, type = type)
         linv <- tryCatch(insight::link_inverse(model), error = function(e) NULL)
