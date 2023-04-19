@@ -36,8 +36,15 @@ get_contrasts <- function(model,
             model,
             type = type,
             newdata = both,
-            ...))[["value"]]
-
+            ...))
+        
+        # informative error in case of allow.new.levels level breakage
+        if (inherits(pred_both[["error"]], "simpleError")) {
+            insight::format_error(pred_both[["error"]][["message"]])
+        } else {
+            pred_both <- pred_both[["value"]]
+        }
+        
         data.table::setDT(pred_both)
         pred_both[, "lo" := seq_len(.N) <= .N / 2, by = "group"]
 

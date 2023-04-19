@@ -710,6 +710,11 @@ cmp <- comparisons(mod, type = "link")
 expect_inherits(cmp, "comparisons")
 
 
+# Issue #751: informative error on bad predition
+expect_error(comparisons(brms_logit_re, newdata = datagrid(firm = -10:8)),
+    pattern = "new.levels")
+cmp = comparisons(brms_logit_re, newdata = datagrid(firm = -10:8), allow_new_levels = TRUE)
+expect_inherits(cmp, "comparisons")
 
 
 

@@ -3,6 +3,7 @@
 * `predictions()` and `avg_predictions()` no longer use an automatic backtransformation for GLM models unless `hypothesis` is `NULL`.
 * `vcov()` can be used to retrieve a full variance-covariance matrix from objects produced by `comparisons()`, `slopes()`, `predictions()`, or `marginal_means()` objects.
 * When processing objects obtained using `mice` multiple imputation, the pooled model using `mice::pool` is attached to the `model` attribute of the output. This means that functions like `modelsummary::modelsummary()` will not erroneously report goodness-of-fit statistics from just a single model and will instead appropriately report the statistics for the pooled model. Thanks to @Tristan-Siegfried for PR #740.
+* More informative error messages on some prediction problems. Thanks to @andymilne for Report #751.
 
 # marginaleffects 0.11.1
 
