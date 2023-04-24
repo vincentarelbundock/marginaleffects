@@ -46,7 +46,7 @@ avg_predictions(
 
 \item{newdata}{Grid of predictor values at which we evaluate predictions.
 \itemize{
-\item \code{NULL} (default): Predictions for each observed value in the original dataset.
+\item \code{NULL} (default): Predictions for each observed value in the original dataset. See \code{\link[insight:get_data]{insight::get_data()}}
 \item data frame: Predictions for each row of the \code{newdata} data frame.
 \item string:
 \itemize{

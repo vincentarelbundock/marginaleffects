@@ -50,7 +50,7 @@ avg_comparisons(
 
 \item{newdata}{Grid of predictor values at which we evaluate the comparisons.
 \itemize{
-\item \code{NULL} (default): Unit-level contrasts for each observed value in the original dataset (empirical distribution).
+\item \code{NULL} (default): Unit-level contrasts for each observed value in the original dataset (empirical distribution). See \code{\link[insight:get_data]{insight::get_data()}}
 \item data frame: Unit-level contrasts for each row of the \code{newdata} data frame.
 \item string:
 \itemize{

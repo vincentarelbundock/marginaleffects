@@ -37,7 +37,7 @@
 #'     + "threenum": mean and 1 standard deviation on both sides
 #'     + "fivenum": Tukey's five numbers
 #' @param newdata Grid of predictor values at which we evaluate predictions.
-#' + `NULL` (default): Predictions for each observed value in the original dataset.
+#' + `NULL` (default): Predictions for each observed value in the original dataset. See [insight::get_data()]
 #' + data frame: Predictions for each row of the `newdata` data frame.
 #' + string:
 #'   - "mean": Predictions at the Mean. Predictions when each predictor is held at its mean or mode.

@@ -31,7 +31,7 @@ datagridcf(..., model = NULL, newdata = NULL)
 
 \item{model}{Model object}
 
-\item{newdata}{data.frame (one and only one of the \code{model} and \code{newdata} arguments}
+\item{newdata}{data.frame (one and only one of the \code{model} and \code{newdata} arguments can be used.)}
 
 \item{by}{character vector with grouping variables within which \verb{FUN_*} functions are applied to create "sub-grids" with unspecified variables.}
 
