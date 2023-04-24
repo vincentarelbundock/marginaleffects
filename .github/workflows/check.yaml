@@ -44,6 +44,12 @@ jobs:
 
       - name: Bootstrap
         run: ./run.sh bootstrap
+          
+      - name: png (for svglite)
+        run: sudo apt update -qq && sudo apt install --yes --no-install-recommends libpng-dev
+        
+      - name: svglite from source
+        run: Rscript -e "bspm::disable();install.packages('svglite', from = 'source');bspm::enable()"
 
       - name: TMB
         run: ./run.sh install_source TMB
