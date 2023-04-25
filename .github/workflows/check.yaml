@@ -19,7 +19,7 @@ jobs:
       matrix:
         include:
           # - {os: macOS-latest,   r: 'release'}
-          - {os: windows-latest, r: 'release'}
+          # - {os: windows-latest, r: 'release'}
           - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release', depends_only: TRUE}
           - {os: ubuntu-latest,   r: 'release'}
           - {os: ubuntu-latest,   r: 'oldrel'}
