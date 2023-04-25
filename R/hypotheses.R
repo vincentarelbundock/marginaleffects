@@ -205,8 +205,6 @@ hypotheses <- function(
             std.error = se)
     }
 
-    sanity_df(df, newdata)
-
     out <- get_ci(
         out,
         conf_level = conf_level,
