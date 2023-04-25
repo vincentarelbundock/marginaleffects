@@ -233,16 +233,16 @@ tmp <- mtcars %>% transform(am = factor(am), cyl = factor(cyl), mpg = mpg)
 mod <- lm(mpg ~ am * cyl, data = tmp)
 cmp1 <- avg_comparisons(mod, variables = "am", by = "cyl")
 cmp2 <- comparisons(mod, variables = "am") %>%
-  group_by(cyl) %>%
-  summarize(estimate = mean(estimate), .groups = "keep") |>
-  ungroup()
+  dplyr::group_by(cyl) %>%
+  dplyr::summarize(estimate = mean(estimate), .groups = "keep") |>
+  dplyr::ungroup()
 cmp3 <- predictions(mod) |>
-  group_by(am, cyl) |>
-  summarize(estimate = mean(estimate), .groups = "keep") |>
-  ungroup() |>
-  group_by(cyl) |>
-  summarize(estimate = diff(estimate), .groups = "keep") |>
-  ungroup()
+  dplyr::group_by(am, cyl) |>
+  dplyr::summarize(estimate = mean(estimate), .groups = "keep") |>
+  dplyr::ungroup() |>
+  dplyr::group_by(cyl) |>
+  dplyr::summarize(estimate = diff(estimate), .groups = "keep") |>
+  dplyr::ungroup()
 cmp4 <- transform(tmp, estimate = predict(mod))
 cmp4 <- aggregate(estimate ~ cyl + am, FUN = mean, data = cmp4)
 cmp4 <- aggregate(estimate ~ cyl, FUN = diff, data = cmp4)

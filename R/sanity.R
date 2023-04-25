@@ -1,3 +1,9 @@
+sanity_df <- function(df, x) {
+    checkmate::assert(
+        checkmate::check_number(df, lower = 1),
+        checkmate::check_numeric(df, len = nrow(x)))
+}
+
 sanity_wts <- function(wts, newdata) {
     # weights must be available in the `comparisons()` function, NOT in
     # `tidy()`, because comparisons will often duplicate newdata for

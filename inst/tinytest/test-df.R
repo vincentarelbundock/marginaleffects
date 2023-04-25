@@ -53,4 +53,12 @@ expect_snapshot_print(avg_comparisons(mod), "df-z")
 expect_snapshot_print(avg_comparisons(mod, df = 30), "df-t")
 
 
+# Issue #754: allow df vector
+mod <- lm(mpg ~ hp, mtcars)
+pkgload::load_all()
+a <- predictions(mod, df = 1:32)
+b <- predictions(mod, df = 1)
+expect_equal(sum(a$p.value == b$p.value), 1)
+
+
 rm(list = ls())

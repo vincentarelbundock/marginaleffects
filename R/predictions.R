@@ -286,7 +286,7 @@ predictions <- function(model,
     # model <- sanitize_model(model)
 
     # input sanity checks
-    checkmate::assert_number(df, lower = 1)
+    sanity_df(df, newdata)
 
     transform <- sanitize_transform(transform)
     sanity_dots(model = model, ...)

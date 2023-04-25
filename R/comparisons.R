@@ -285,11 +285,10 @@ comparisons <- function(model,
     }
     
     # more sanity chekcs
-    
-    conf_level <- sanitize_conf_level(conf_level, ...)
     sanity_dots(model, ...)
+    sanity_df(df, newdata)
+    conf_level <- sanitize_conf_level(conf_level, ...)
     checkmate::assert_number(eps, lower = 1e-10, null.ok = TRUE)
-    checkmate::assert_number(df, lower = 1)
 
     # transforms
     sanity_comparison(comparison)
