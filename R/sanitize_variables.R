@@ -32,7 +32,7 @@ sanitize_variables <- function(variables,
         } else {
             predictors <- insight::find_variables(model)
         }
-        known <- c("fixed", "conditional", "zero_inflated", "scale")
+        known <- c("fixed", "conditional", "zero_inflated", "scale", "nonlinear")
         if (any(known %in% names(predictors))) {
             predictors <- unlist(predictors[known], recursive = TRUE, use.names = FALSE)
             # sometimes triggered by multivariate brms models where we get nested
@@ -95,6 +95,7 @@ sanitize_variables <- function(variables,
             found <- c(found, v)
         }
     }
+    
 
     # matrix predictors
     mc <- attr(newdata, "newdata_matrix_columns")
