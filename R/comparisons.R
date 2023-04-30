@@ -322,11 +322,17 @@ comparisons <- function(model,
     if ("modeldata" %in% names(dots)) {
         modeldata <- dots[["modeldata"]]
     } else {
+        addvar <- NULL
         if (isTRUE(checkmate::check_character(by))) {
-            addvar <- by
-        } else if (isTRUE(checkmate::check_data_frame(by))) {
-            addvar <- colnames(by)
-        } else {
+            addvar <- c(addvar, by)
+        }
+        if (isTRUE(checkmate::check_data_frame(by))) {
+            addvar <- c(addvar, colnames(by))
+        }
+        if (isTRUE(checkmate::check_string(wts))) {
+            addvar <- c(addvar, wts)
+        }
+        if (is.null(addvar)) {
             addvar <- FALSE
         }
         modeldata <- get_modeldata(model, additional_variables = addvar)
