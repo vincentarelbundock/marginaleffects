@@ -9,6 +9,7 @@
 Bugs:
 
 * `brms` models with `nl=TRUE` and a single predictor generated an error. Thanks to @Tristan-Siegried for Report #759.
+* `avg_predictions()`: Incorrect group-wise averaging when all predictors are categorical, the `variables` variable is used, and  we are averaging with `avg_` or the `by` argument. Thanks to BorgeJorge for report #766.
 
 # marginaleffects 0.11.1
 

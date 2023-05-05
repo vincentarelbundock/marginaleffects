@@ -75,6 +75,45 @@ expect_equivalent(nrow(d), 9)
 
 
 
+# Issue 766: categorical predictors + variables arg + avg
+requiet("Matchit")
+data('lalonde', package='MatchIt')
+fit <- lm(re78 ~ race * treat, data = lalonde)
+
+a = predict(fit, branewdata = lalonde)
+b = predictions(fit, newdata = lalonde)
+expect_equivalent(a, b$estimate)
+
+nd = rbind( transform(lalonde, treat = 0), transform(lalonde, treat = 1)) 
+a = predict(fit, newdata = nd)
+b = predictions(fit, newdata = lalonde, variables = "treat")
+expect_equivalent(a, b$estimate)
+
+a = tapply(predict(fit, newdata = nd), nd$treat, mean)
+b = avg_predictions(fit, newdata = lalonde, variables = "treat")
+expect_equivalent(as.numeric(a), b$estimate)
+
+a = predict(fit, newdata = nd)
+b = predictions(fit, variables = "treat")
+expect_equivalent(a, b$estimate)
+
+a = tapply(predict(fit, newdata = nd), nd$treat, mean)
+b = avg_predictions(fit, variables = "treat")
+expect_equivalent(as.numeric(a), b$estimate)
+
+a = tapply(predict(fit, newdata = nd), nd$treat, mean)
+b = predictions(fit, variables = "treat")
+b = tapply(b$estimate, b$treat, mean)
+expect_equivalent(a, b)
+
+a = as.numeric(tapply(predict(fit, newdata = nd), nd$treat, mean))
+b = predictions(fit, variables = "treat", by = "treat")
+expect_equivalent(a, b$estimate)
+
+
+
+
+
 
 source("helpers.R")
 rm(list = ls())

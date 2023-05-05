@@ -261,7 +261,7 @@ datagridcf <- function(
     dat <- tmp$newdata
     variables_all <- tmp$all
     variables_manual <- names(at)
-    variables_automatic <- tmp$automatic
+    variables_automatic <- c(tmp$automatic, "marginaleffects_wts_internal", "rowid_dedup")
 
     # `at` -> `data.frame`
     at <- lapply(at, unique)
@@ -344,6 +344,7 @@ prep_datagrid <- function(..., model = NULL, newdata = NULL, by = NULL) {
             hush(insight::find_variables(model, flatten = TRUE)),
             hush(unlist(insight::find_weights(model), use.names = FALSE))) # glmmTMB needs weights column for predictions
         variables_sub <- c(variables_sub, variables_manual)
+        variables_sub <- c(variables_sub, c("marginaleffects_wts_internal", "rowid_dedup"))
         variables_sub <- intersect(colnames(newdata), variables_sub)
         if (length(variables_sub) > 0) {
             newdata <- subset(newdata, select = variables_sub)
