@@ -21,7 +21,7 @@ recall <- function(x, ...) {
 
     # unsupported call: return `NULL`
     } else {
-        if (!as.character(x)[1] %in% funs) {
+        if (!as.character(x[1]) %in% funs) {
             return(NULL)
         }
         mc <- x
