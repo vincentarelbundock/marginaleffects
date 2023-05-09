@@ -35,7 +35,7 @@ bootstrap_rsample <- function(model, FUN, ...) {
         modcall[["data"]] <- data
         modboot <- eval(modcall)
         modboot <- eval(modboot)
-        args <- c(list(modboot), dots)
+        args <- c(list(modboot, modeldata = data$data), dots)
         out <- do.call(FUN, args)
         out <- tidy(out)
         # `rsample` averages by `term` columns; we don't use it anyway and assume things line up
