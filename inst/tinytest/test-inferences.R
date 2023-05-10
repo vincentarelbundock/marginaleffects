@@ -17,22 +17,27 @@ expect_inherits(x, "matrix")
 
 
 # {boot}
+set.seed(1234)
 x <- mod |> avg_predictions() |> inferences(method = "boot", R = R)
 expect_inherits(x, "predictions")
 expect_equivalent(nrow(x), 1)
+expect_equal(x$std.error, 0.0491, tolerance = 1e-3)
 
 
 # head works
+set.seed(1234)
 x <- mod |> slopes() |> inferences(method = "boot", R = R)
 expect_inherits(head(x), "slopes")
 expect_equivalent(nrow(x), 300)
 expect_equivalent(nrow(head(x)), 6)
-
+expect_equal(x$std.error[1:3], c(0.2425, 0.2824, 0.2626), tolerance = 1e-3)
 
 # avg_ works
+set.seed(1234)
 x <- mod |> avg_slopes() |> inferences(method = "boot", R = R)
 expect_inherits(x, "slopes")
 expect_equivalent(nrow(x), 2)
+expect_equal(x$std.error, c(0.0657, 0.1536), tolerance = 1e-3)
 
 
 x <- mod |> predictions(vcov = "HC3") |> inferences(method = "boot", R = R) |> head()
@@ -50,7 +55,9 @@ expect_equivalent(nrow(x), 2 * R)
 
 
 # {rsample}
+set.seed(1234)
 x <- mod |> avg_predictions() |> inferences(method = "rsample", R = R)
+expect_equal(x$conf.low, 3.6692, tolerance = 1e-3)
 expect_inherits(x, "predictions")
 x <- mod |> slopes() |> inferences(method = "rsample", R = R) |> head()
 expect_inherits(x, "slopes")
@@ -69,10 +76,12 @@ x <- mod |>
 expect_equivalent(nrow(x), 2 * R)
 
 # fwb no validity check
+set.seed(1234)
 x <- mod |> 
      comparisons() |> 
      inferences(method = "fwb", R = R)
 expect_equivalent(nrow(x), 300)
+expect_equal(x$std.error[1:3], c(0.0739, 0.0568, 0.0508), tolerance = 1e-3)
 x <- mod |> 
      avg_comparisons() |> 
      inferences(method = "fwb", R = R)
