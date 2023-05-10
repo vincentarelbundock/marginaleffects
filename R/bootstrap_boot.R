@@ -29,7 +29,7 @@ bootstrap_boot <- function(model, FUN, ...) {
         modcall[["data"]] <- d
         modboot <- eval(modcall)
         modboot <- eval(modboot)
-        args <- c(list(modboot), dots)
+        args <- c(list(modboot, modeldata = d), dots)
         out <- do.call(FUN, args)$estimate
         return(out)
     }
