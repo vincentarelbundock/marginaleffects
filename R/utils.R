@@ -108,12 +108,20 @@ cjdt <- function(dtlist) {
 # recurse up. mostly useful for `tinytest`
 # this is dumb, but it's late and i don't feel like thinking about this
 evalup <- function(xcall) {
-    out <- hush(eval(xcall))
+    out <- myTryCatch(eval(xcall))
+    if (inherits(out$error, "simpleError")) {
+        msg <- out$error$message
+        out <- NULL
+    } else {
+        msg <- NULL
+        out <- out$value
+    }
     for (i in 1:10) {
         if (is.null(out)) {
           out <- hush(eval(xcall, parent.frame(i)))
         }
     }
+    if (is.null(out) && !is.null(msg)) stop(msg)
     return(out)
 }
 
