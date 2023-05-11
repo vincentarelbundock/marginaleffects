@@ -261,23 +261,15 @@ All functions of the `marginaleffects` package attempt to treat character predic
 
 ## Numeric predictors
 
-We can also compute contrasts for differences in numeric variables. For example, we can see what happens to the adjusted predictions when we increment the `hp` variable by 1 unit (default) or by 5 units:
+We can also compute contrasts for differences in numeric variables. For example, we can compare adjusted predictions for across a change in the regressor between two arbitrary values:
 
 ```{r}
 mod <- lm(mpg ~ hp, data = mtcars)
 
-avg_comparisons(mod)
-
-avg_comparisons(mod, variables = list(hp = 5))
-```
-
-Compare adjusted predictions for a change in the regressor between two arbitrary values:
-
-```{r}
 avg_comparisons(mod, variables = list(hp = c(90, 110)))
 ```
 
-Compare adjusted predictions when the regressor changes across the interquartile range, across one or two standard deviations about its mean, or from across its full range:
+We can also easily compare adjusted predictions when the regressor changes across its interquartile range, across one or two standard deviations about its mean, or from across its full range:
 
 ```{r}
 avg_comparisons(mod, variables = list(hp = "iqr"))
@@ -288,6 +280,17 @@ avg_comparisons(mod, variables = list(hp = "2sd"))
 
 avg_comparisons(mod, variables = list(hp = "minmax"))
 ```
+
+While we provided two values for the `hp` variable in each the previous numeric predictor examples, we can also specify a single value. While passing two values produces a comparison of adjusted predictions assuming all unit-level rows take on one of the two values, the function's default behavior when passed a single value is to compare the adjusted predictions for when the regressor changes by the specified, constant number of units. For example, we can compare adjusted predictions when we increment the `hp` variable by 1 unit (default) or by 5 units:
+
+```{r}
+avg_comparisons(mod)
+
+avg_comparisons(mod, variables = list(hp = 5))
+```
+
+Because the `comparisons()` function computes a "centered" difference by default, the above actually computes the effect of incrementation from `hp - 0.5` to `hp + 0.5` and `hp - 2.5` to `hp + 2.5` rather than `hp` to `hp + 1` and `hp` to `hp + 5`. For more discussion of default and alternative centering, see the section of this vignette on "Forward, Backward, Centered, and Custom Differences."
+
 
 # Interactions and Cross-Contrasts
 
@@ -473,7 +476,7 @@ The `transform` argument applies a custom transformation to the final quantity, 
 
 # Differences
 
-The default contrast calculate by the `comparisons()` function is a (untransformed) difference between two adjusted predictions. For instance, to estimate the effect of a change of 1 unit, we do:
+The default contrast calculated by the `comparisons()` function is a (untransformed) difference between two adjusted predictions. For instance, to estimate the effect of a change of 1 unit, we do:
 
 ```{r}
 library(marginaleffects)
