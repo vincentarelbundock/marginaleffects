@@ -62,4 +62,6 @@ set_coef.hxlr <- function(model, coefs, ...) {
 }
 
 
+#' @export
+#' @noRd
 get_predict.hxlr <- get_predict.crch

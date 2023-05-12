@@ -11,17 +11,18 @@ get_model_matrix <- function(model, newdata) {
 
 #' @rdname get_model_matrix
 #' @keywords internal
-get_model_matrix.default <- function(object, newdata) {
+#' @export
+get_model_matrix.default <- function(model, newdata) {
 
     # faster
-    if (class(object)[1] %in% c("lm", "glm")) { 
-        out <- hush(stats::model.matrix(object, data = newdata))
+    if (class(model)[1] %in% c("lm", "glm")) { 
+        out <- hush(stats::model.matrix(model, data = newdata))
     # more general
     } else { 
-        out <- hush(insight::get_modelmatrix(object, data = newdata))
+        out <- hush(insight::get_modelmatrix(model, data = newdata))
     }
     
-    beta <- get_coef(object)
+    beta <- get_coef(model)
     if (!isTRUE(nrow(out) == nrow(newdata)) || !isTRUE(ncol(out) == length(beta))) {
         return(NULL)
     } else {

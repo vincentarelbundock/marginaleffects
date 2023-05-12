@@ -1,7 +1,7 @@
 #' @noRd
 #' @export
-vcov.comparisons <- function(x) {
-    attr(x, "jacobian") %*% attr(x, "vcov") %*% t(attr(x, "jacobian"))
+vcov.comparisons <- function(object, ...) {
+    attr(object, "jacobian") %*% attr(object, "vcov") %*% t(attr(object, "jacobian"))
 }
 
 
@@ -22,9 +22,9 @@ vcov.marginalmeans <- vcov.comparisons
 
 #' @export
 #' @noRd
-coef.comparisons <- function(x) {
-  if (!is.null(x$estimate)) {
-    return(x$estimate)
+coef.comparisons <- function(object, ...) {
+  if (!is.null(object$estimate)) {
+    return(object$estimate)
   } else {
     stop("The input object does not contain an 'estimate' element.")
   }

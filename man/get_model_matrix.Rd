@@ -7,7 +7,7 @@
 \usage{
 get_model_matrix(model, newdata)
 
-\method{get_model_matrix}{default}(object, newdata)
+\method{get_model_matrix}{default}(model, newdata)
 }
 \arguments{
 \item{model}{Model object}

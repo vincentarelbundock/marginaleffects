@@ -1,5 +1,6 @@
 # marginaleffects 0.11.2
 
+* `vcov()` and `coef()` methods for `marginaleffects` objects.
 * Strings in `wts` are accepted with the `by` argument.
 * `predictions()` and `avg_predictions()` no longer use an automatic backtransformation for GLM models unless `hypothesis` is `NULL`.
 * `vcov()` can be used to retrieve a full variance-covariance matrix from objects produced by `comparisons()`, `slopes()`, `predictions()`, or `marginal_means()` objects.
