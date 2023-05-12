@@ -144,7 +144,7 @@ expect_equivalent(nrow(mm), 1)
 
 
 
-exit_file("works interactively")
+# exit_file("works interactively")
 
 
 # Issue #496

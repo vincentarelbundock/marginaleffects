@@ -1,7 +1,7 @@
 source("helpers.R")
 using("marginaleffects")
 if (!EXPENSIVE) exit_file("EXPENSIVE")
-if (packageVersion("base") >= "4.2.0") exit_file("dev breaks this")
+if (packageVersion("base") > "4.3.0") exit_file("dev breaks this")
 
 requiet("MASS")
 requiet("ordinal")

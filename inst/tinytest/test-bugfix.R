@@ -41,8 +41,6 @@ mod <- lm(mpg ~ group + hp, data = dat)
 expect_error(comparisons(mod), pattern = "forbidden")
 
 
-exit_file("works interactively")
-
 # Issue #556
 set.seed(12345)
 n = 500

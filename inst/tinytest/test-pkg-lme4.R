@@ -271,7 +271,6 @@ expect_equivalent(attr(cmp, "vcov.type"), "Kenward-Roger")
 
 
 
-exit_file("TODO: check failing comparisons()")
 # Issue #436
 # e = number of events
 # n = total

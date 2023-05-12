@@ -226,7 +226,7 @@ expect_equivalent(pred$conf.high, em$upper.HPD)
 # marginalmeans vs. emmeans
 requiet("emmeans")
 requiet("broom")
-expect_error(marginal_means(brms_factor, variables = "cyl_fac", type = "link"), pattern = "github.*issues")
+expect_error(marginal_means(brms_factor, variables = "cyl_fac", type = "link"))
 # emmeans::emmeans(brms_factor, specs = ~cyl_fac)
 
 

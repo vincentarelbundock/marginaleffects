@@ -57,7 +57,6 @@ expect_inherits(mfx, "marginaleffects")
 expect_equivalent(nrow(mfx), 3)
 
 # errors and warnings
-exit_file("works interactively")
 dat <- mtcars
 dat$cyl <- factor(dat$cyl)
 dat <- dat

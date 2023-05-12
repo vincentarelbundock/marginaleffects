@@ -111,9 +111,9 @@ expect_inherits(x, "hypotheses")
 
 
 # marginal_means() vs. {emmeans}
-exit_file("works interactively")
+rm("mod")
 delta <- log(1.25)
-mod <- lm(log(conc) ~ source + factor(percent), data = pigs)
+mod <<- lm(log(conc) ~ source + factor(percent), data = pigs)
 rg <- ref_grid(mod)
 em <- emmeans(rg, "source", at = list(), df = Inf)
 pa <- pairs(em, df = Inf)
@@ -137,4 +137,5 @@ e2 <- hypotheses(mm, equivalence = c(-delta, delta))
 expect_equivalent(e1$p.value, e2$p.value.equiv)
 
 
+source("helpers.R")
 rm(list = ls())
