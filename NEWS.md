@@ -1,4 +1,4 @@
-# marginaleffects 0.11.1.9003
+# marginaleffects 0.11.2
 
 * Strings in `wts` are accepted with the `by` argument.
 * `predictions()` and `avg_predictions()` no longer use an automatic backtransformation for GLM models unless `hypothesis` is `NULL`.
