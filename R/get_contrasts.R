@@ -404,17 +404,24 @@ get_contrasts <- function(model,
     # averaging by groups
     # sometimes this work is already done
     # if `by` is a column name, then we have merged-in a data frame earlier
-    if (nrow(out) > 1 && !(is.null(by) || isFALSE(by)) &&
-        any(grepl("^contrast[_]?", colnames(out))) &&
-        !any(grepl("^mean\\(", unique(out$contrast)))) {
-        out <- get_by(
-            out,
-            draws = draws,
-            newdata = newdata,
-            by = by,
-            verbose = verbose)
-
-        draws <- attr(out, "posterior_draws")
+    auto_mean_fun_sub <- any(grepl("^mean\\(", unique(out$contrast)))
+    if (nrow(out) > 1) {
+        if (!auto_mean_fun_sub && !(is.null(by) || isFALSE(by)) && any(grepl("^contrast[_]?", colnames(out)))) {
+            out <- get_by(
+                out,
+                draws = draws,
+                newdata = newdata,
+                by = by,
+                verbose = verbose)
+            draws <- attr(out, "posterior_draws")
+        } else { 
+            bycols <- c(by, "group", "term", "^contrast[_]?")
+            bycols <- paste(bycols, collapse = "|")
+            bycols <- grep(bycols, colnames(out), value = TRUE)
+            if (length(bycols) > 0) {
+                data.table::setorderv(out, cols = bycols)
+            }
+        }
     }
 
     # issue #531: uncertainty estimates from get_predict() sometimes get retained, but they are not overwritten later by get_ci()

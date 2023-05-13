@@ -64,7 +64,7 @@ void <- capture.output(suppressWarnings(
 p1 <- predict(mod, type = "response", se.fit = TRUE)
 p1$fit <- p1$fit[, sort(colnames(p1$fit))]
 p1$se.fit <- p1$se.fit[, sort(colnames(p1$se.fit))]
-p2 <- predictions(mod)
+p2 <- predictions(mod) |> dplyr::arrange(group, rowid)
 expect_equivalent(p1$fit[160,], p2[p2$rowid == 160, "estimate"])
 expect_equivalent(p1$se.fit[160,], p2[p2$rowid == 160, "std.error"], tolerance = .01)
 expect_equivalent(names(p1$fit[160,]), p2[p2$rowid == 160, "group"])
@@ -73,13 +73,13 @@ expect_equivalent(names(p1$fit[160,]), p2[p2$rowid == 160, "group"])
 p1 <- predict(mod, type = "link", se.fit = TRUE)
 p1$fit <- p1$fit[, sort(colnames(p1$fit))]
 p1$se.fit <- p1$se.fit[, sort(colnames(p1$se.fit))]
-p2 <- predictions(mod, type = "link")
+p2 <- predictions(mod, type = "link") |> dplyr::arrange(group, rowid)
 expect_equivalent(p1$fit[160,], p2[p2$rowid == 160, "estimate"])
 expect_equivalent(p1$se.fit[160,], p2[p2$rowid == 160, "std.error"], tolerance = .001)
 expect_equivalent(names(p1$fit[160,]), p2[p2$rowid == 160, "group"])
 
 # latent
-p2 <- predictions(mod, type = "latent")
+p2 <- predictions(mod, type = "latent") |> dplyr::arrange(group, rowid)
 p3 <- data.frame(
     emmeans(mod, ~collection_date_num,
     by = "variant",

@@ -22,7 +22,7 @@ mar <- margins(model, unit_ses = TRUE)
 expect_true(expect_margins(mfx, mar, verbose = TRUE, tolerance = tol_se))
 
 # emmeans
-mfx <- slopes(model, newdata = datagrid(drat = 3.9, hp = 110))
+mfx <- slopes(model, newdata = datagrid(drat = 3.9, hp = 110)) |> dplyr::arrange(term)
 em1 <- emmeans::emtrends(model, ~hp, "hp", at = list(hp = 110, drat = 3.9))
 em2 <- emmeans::emtrends(model, ~drat, "drat", at = list(hp = 110, drat = 3.9))
 em1 <- tidy(em1)

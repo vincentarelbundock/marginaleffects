@@ -94,7 +94,6 @@ expect_equivalent(cmp$conf.high, emm$asymp.UCL, tolerance = tol)
 
 
 # smart contrast labels
-dat <- mtcars
 dat$am <- as.logical(dat$am)
 dat$cyl <- as.factor(dat$cyl)
 dat$gear <- as.character(dat$gear)
