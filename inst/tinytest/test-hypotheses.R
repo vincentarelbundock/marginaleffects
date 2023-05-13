@@ -124,6 +124,35 @@ expect_inherits(tmp[[1]], "tbl_df")
 expect_inherits(tmp[[2]], "tbl_df")
 
 
+# Issue #776: sort before hypothesis
+load(url("https://github.com/vincentarelbundock/modelarchive/raw/main/data-raw/gusto.rda"))
+mod = glm(
+  day30 ~ tx * sex + age,
+  family = "binomial",
+  data = gusto)
+cmp = avg_comparisons(
+  mod,
+  type = "link",
+  variables = list("tx" = "pairwise"),
+  by = "sex"
+) 
+x <- hypotheses(cmp, hypothesis = "b4 - b3 = 0")
+y <- cmp$estimate[4] - cmp$estimate[3]
+z <- avg_comparisons(
+  mod,
+  type = "link",
+  variables = list("tx" = "pairwise"),
+  by = "sex",
+  hypothesis = "b4 - b3 = 0"
+) 
+expect_equal(x$estimate, y)
+expect_equal(z$estimate, y)
+
+
+
+
+
+
 # hypotheses() applied to {marginaleffects} package objects
 # commented out because doesn't work in environments because of match.call()
 # mod <- glm(vs ~ hp + am, data = mtcars, family = binomial)

@@ -526,12 +526,7 @@ predictions <- function(model,
         bycols <- by
     }
 
-    # sort rows
-    if (is.null(draws)) { # dangerous for bayes to align draws
-        idx <- c("term", grep("^rowid|^group$", colnames(out), value = TRUE), bycols)
-        idx <- intersect(idx, colnames(out))
-        if (length(idx) > 0) data.table::setorderv(out, cols = idx)
-    }
+    # sort rows: do NOT sort rows because it breaks hypothesis b1, b2, b3 indexing.
 
     # clean columns
     stubcols <- c(

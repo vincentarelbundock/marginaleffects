@@ -523,11 +523,7 @@ comparisons <- function(model,
         bycols <- by
     }
 
-    if (is.null(draws)) {
-        idx <- c("term", grep("^term$|^contrast$|^contrast_|^rowid|^group$", colnames(mfx), value = TRUE), bycols)
-        idx <- intersect(idx, colnames(mfx))
-        if (length(idx) > 0) data.table::setorderv(mfx, cols = idx)
-    }
+    # sort rows: do NOT sort rows because it breaks hypothesis b1, b2, b3 indexing.
 
     stubcols <- c(
         "rowid", "rowidcf", "group", "term", "hypothesis", "by",
@@ -569,7 +565,6 @@ comparisons <- function(model,
     out <- set_marginaleffects_attributes(
         out,
         get_marginaleffects_attributes(newdata, include_regex = "^newdata.*class|explicit|matrix|levels"))
-
 
     # save newdata and model for use in recall()
     if (!"newdata" %in% names(call_attr) || is.null(call_attr[["newdata"]])) {
