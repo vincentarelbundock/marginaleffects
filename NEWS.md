@@ -1,3 +1,9 @@
+# marginaleffects 0.11.2.9000
+
+Breaking change:
+
+* Row order of output has changed for a few calls such as `avg_comparisons(by=...)`. This may break hypothesis tests conducted by indexing `b1`, `b2`, etc. This was necessary to fix Issue #776. Thanks to @marcora for the report.
+
 # marginaleffects 0.11.2
 
 * `vcov()` and `coef()` methods for `marginaleffects` objects.
