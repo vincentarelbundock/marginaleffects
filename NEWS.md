@@ -1,8 +1,12 @@
-# marginaleffects 0.11.2.9000
+# marginaleffects DEVELOPMENT
 
 Breaking change:
 
 * Row order of output has changed for a few calls such as `avg_comparisons(by=...)`. This may break hypothesis tests conducted by indexing `b1`, `b2`, etc. This was necessary to fix Issue #776. Thanks to @marcora for the report.
+
+New:
+
+* `wts` is now available in `plot_predictions()`, `plot_comparisons()`, and `plot_slopes()`.
 
 # marginaleffects 0.11.2
 
