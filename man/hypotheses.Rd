@@ -2,7 +2,7 @@
 % Please edit documentation in R/hypotheses.R
 \name{hypotheses}
 \alias{hypotheses}
-\title{(Non-)Linear Tests for Null Hypotheses, Equivalence, Non Superiority, and Non Inferiority}
+\title{(Non-)Linear Tests for Null Hypotheses, Joint Hypotheses, Equivalence, Non Superiority, and Non Inferiority}
 \usage{
 hypotheses(
   model,
@@ -11,6 +11,8 @@ hypotheses(
   conf_level = 0.95,
   df = Inf,
   equivalence = NULL,
+  joint_test = NULL,
+  joint_index = NULL,
   FUN = NULL,
   ...
 )
@@ -64,6 +66,10 @@ hypotheses(
 
 \item{equivalence}{Numeric vector of length 2: bounds used for the two-one-sided test (TOST) of equivalence, and for the non-inferiority and non-superiority tests. See Details section below.}
 
+\item{joint_test}{A character string specifying the type of test, either "f" or "chisq". The null hypothesis is set by the \code{hypothesis} argument, with default null equal to 0 for all parameters.}
+
+\item{joint_index}{An integer vector of indices or a character vector of parameter names to be tested. Characters refer to the names of the vector returned by \code{coef(object)}. \code{NULL} conducts a joint test of all parameters.}
+
 \item{FUN}{\code{NULL} or function.
 \itemize{
 \item \code{NULL} (default): hypothesis test on a model's coefficients, or on the quantities estimated by one of the \code{marginaleffects} package functions.
@@ -93,6 +99,17 @@ Warning #1: Tests are conducted directly on the scale defined by the \code{type}
 
 Warning #2: For hypothesis tests on objects produced by the \code{marginaleffects} package, it is safer to use the \code{hypothesis} argument of the original function.  Using \code{hypotheses()} may not work in certain environments, in lists, or when working programmatically with *apply style functions.
 }
+\section{Joint hypothesis tests}{
+
+The test statistic for the joint Wald test is calculated as (R * theta_hat - r)' * inv(R * V_hat * R') * (R * theta_hat - r) / Q,
+where theta_hat is the vector of estimated parameters, V_hat is the estimated covariance matrix, R is a Q x P matrix for testing Q hypotheses on P parameters,
+r is a Q x 1 vector for the null hypothesis, and Q is the number of rows in R. If the test is a Chi-squared test, the test statistic is not normalized.
+
+The p-value is then calculated based on either the F-distribution (for F-test) or the Chi-squared distribution (for Chi-squared test).
+For the F-test, the degrees of freedom are Q and (n - P), where n is the sample size and P is the number of parameters.
+For the Chi-squared test, the degrees of freedom are Q.
+}
+
 \section{Equivalence, Inferiority, Superiority}{
 
 

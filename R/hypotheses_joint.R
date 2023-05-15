@@ -1,34 +1,40 @@
-joint_test <- function(object, idx, null_hypothesis = 0, test = "f") {
-  checkmate::assert_choice(test, c("f", "chisq"))
-  checkmate::assert(
-    checkmate::check_integerish(idx),
-    checkmate::check_character(idx)
-  )
-  checkmate::assert_number(null_hypothesis)
-  
+joint_test <- function(object, joint_index = NULL, hypothesis = 0, joint_test = "f") {
+  checkmate::assert_choice(joint_test, c("f", "chisq"))
+
   # theta_hat: P x 1 vector of estimated parameters
   theta_hat <- coef(object) 
+
+  # index
+  checkmate::assert(
+    checkmate::check_integerish(joint_index, lower = 1, upper = length(theta_hat)),
+    checkmate::check_character(joint_index),
+    checkmate::check_null(joint_index)
+  )
+  if (is.null(joint_index)) joint_index <- seq_along(theta_hat)
+
   # V_hat: estimated covariance matrix
   V_hat <- stats::vcov(object)
+
   # n: sample size
-  n <- tryCatch(stats::nobs(object), error = function(e) {
-    tryCatch(stats::nobs(attr(object, "model")), error = insight::format_error(
-        "Could not extract sample size from model object."
-    ))
-  })
+  n <- tryCatch(stats::nobs(object), error = function(e) NULL)
+  if (is.null(n)) n <- tryCatch(stats::nobs(attr(object, "model")), error = function(e) NULL)
+  if (is.null(n)) insight::format_error("Could not extract sample size from model object.")
   
   # R: Q x P matrix for testing Q hypotheses on P parameters
-  # build R matrix based on idx
-  R <- matrix(0, nrow = length(idx), ncol = length(theta_hat))
-  for (i in seq_along(idx)) {
-    if (is.numeric(idx)) {
-        R[i, idx[i]] <- 1
+  # build R matrix based on joint_index
+  R <- matrix(0, nrow = length(joint_index), ncol = length(theta_hat))
+  for (i in seq_along(joint_index)) {
+    if (is.numeric(joint_index)) {
+        R[i, joint_index[i]] <- 1
     } else {
-        R[i, which(names(theta_hat) == idx[i])] <- 1
+        R[i, which(names(theta_hat) == joint_index[i])] <- 1
     }
   }
 
-  r <- matrix(null_hypothesis, nrow = nrow(R), ncol = 1)
+  # null hypothesis
+  checkmate::assert_number(hypothesis, null.ok = TRUE)
+  if (is.null(hypothesis)) hypothesis <- 0
+  r <- matrix(hypothesis, nrow = nrow(R), ncol = 1)
 
   # Calculate the difference between R*theta_hat and r
   diff <- R %*% theta_hat - r
@@ -37,10 +43,10 @@ joint_test <- function(object, idx, null_hypothesis = 0, test = "f") {
   inv <- solve(R %*% V_hat %*% t(R))
   
   # Calculate the Wald test statistic
-  if (test == "f") {
+  if (joint_test == "f") {
     wald_statistic <- t(diff) %*% inv %*% diff / dim(R)[1]  # Q is the number of rows in R
-  } else if (test == "chisq") {
-    wald_statistic <- t(diff) %*% inv %*% diff  # Not normalized for chi-squared test
+  } else if (joint_test == "chisq") {
+    wald_statistic <- t(diff) %*% inv %*% diff  # Not normalized for chi-squared joint_test
   }
   
   # Degrees of freedom
@@ -48,12 +54,31 @@ joint_test <- function(object, idx, null_hypothesis = 0, test = "f") {
   df2 <- n - length(theta_hat)  # n - P
   
   # Calculate the p-value
-  if (test == "f") {
+  if (joint_test == "f") {
     p_value <- 1 - pf(wald_statistic, df1, df2)
-  } else if (test == "chisq") {
+  } else if (joint_test == "chisq") {
     p_value <- 1 - pchisq(wald_statistic, df1)
   }
-  
-  # Return the Wald test statistic and p-value
-  return(list(wald_statistic = drop(wald_statistic), p_value = drop(p_value)))
+
+  # Return the Wald joint_test statistic and p-value
+  out <- data.frame(statistic = drop(wald_statistic), p.value = drop(p_value))
+  class(out) <- c("hypotheses", "data.frame")
+  if (joint_test == "f") {
+    attr(out, "statistic_label") <- "F"
+  } else if (joint_test == "chisq") {
+    attr(out, "statistic_label") <- "ChiSq"
+  }
+
+  # Create the print_head string
+  print_head <- "\nJoint hypothesis test:\n"
+  if (is.character(joint_index)) {
+    for (i in joint_index) {
+      print_head <- paste0(print_head, i, sprintf(" = %s\n", hypothesis))
+    }
+  } else {
+    print_head <- c(print_head, paste0(get_term_labels(object, joint_index), sprintf(" = %s\n", hypothesis)))
+  }
+  attr(out, "print_head") <- print_head
+
+  return(out)
 }

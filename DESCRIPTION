@@ -177,6 +177,7 @@ Collate:
     'get_modeldata.R'
     'get_predict.R'
     'get_se_delta.R'
+    'get_term_labels.R'
     'get_vcov.R'
     'github_issue.R'
     'hush.R'

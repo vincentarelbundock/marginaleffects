@@ -11,6 +11,8 @@ deltamethod(
   conf_level = 0.95,
   df = Inf,
   equivalence = NULL,
+  joint_test = NULL,
+  joint_index = NULL,
   FUN = NULL,
   ...
 )
