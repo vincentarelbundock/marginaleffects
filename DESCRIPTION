@@ -56,6 +56,7 @@ Suggests:
     brms,
     brmsmargins,
     broom,
+    car,
     collapse,
     conflicted,
     covr,
@@ -180,6 +181,7 @@ Collate:
     'github_issue.R'
     'hush.R'
     'hypotheses.R'
+    'hypotheses_joint.R'
     'imputation.R'
     'inferences.R'
     'marginal_means.R'
