@@ -2,7 +2,7 @@ joint_test <- function(object, joint_index = NULL, hypothesis = 0, joint_test = 
   checkmate::assert_choice(joint_test, c("f", "chisq"))
 
   # theta_hat: P x 1 vector of estimated parameters
-  theta_hat <- coef(object) 
+  theta_hat <- stats::coef(object) 
 
   # index
   checkmate::assert(
@@ -55,9 +55,9 @@ joint_test <- function(object, joint_index = NULL, hypothesis = 0, joint_test = 
   
   # Calculate the p-value
   if (joint_test == "f") {
-    p_value <- 1 - pf(wald_statistic, df1, df2)
+    p_value <- 1 - stats::pf(wald_statistic, df1, df2)
   } else if (joint_test == "chisq") {
-    p_value <- 1 - pchisq(wald_statistic, df1)
+    p_value <- 1 - stats::pchisq(wald_statistic, df1)
   }
 
   # Return the Wald joint_test statistic and p-value
@@ -79,7 +79,7 @@ joint_test <- function(object, joint_index = NULL, hypothesis = 0, joint_test = 
     tmp <- paste0(get_term_labels(object, joint_index), sprintf(" = %s\n", hypothesis))
     print_head <- c(print_head, tmp)
   } else {
-    tmp <- paste0(get_term_labels(coef(object), joint_index), sprintf(" = %s\n", hypothesis))
+    tmp <- paste0(get_term_labels(stats::coef(object), joint_index), sprintf(" = %s\n", hypothesis))
     print_head <- c(print_head, tmp)
   }
   attr(out, "print_head") <- print_head
