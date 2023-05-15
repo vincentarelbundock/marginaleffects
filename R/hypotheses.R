@@ -18,8 +18,11 @@
 #' @param FUN `NULL` or function. 
 #' * `NULL` (default): hypothesis test on a model's coefficients, or on the quantities estimated by one of the `marginaleffects` package functions.
 #' * Function which accepts a model object and returns a numeric vector or a data.frame with two columns called `term` and `estimate`. This argument can be useful when users want to conduct a hypothesis test on an arbitrary function of quantities held in a model object.
+#' @param joint 
+#' - FALSE: Hypotheses are note tested jointly.
+#' - Integer vector of indices 
+#' - Character vector of parameter names to be tested. Characters refer to the names of the vector returned by `coef(object)`.
 #' @param joint_test A character string specifying the type of test, either "f" or "chisq". The null hypothesis is set by the `hypothesis` argument, with default null equal to 0 for all parameters.
-#' @param joint_index An integer vector of indices or a character vector of parameter names to be tested. Characters refer to the names of the vector returned by `coef(object)`. `NULL` conducts a joint test of all parameters.
 #'
 #' @section Joint hypothesis tests:
 #' The test statistic for the joint Wald test is calculated as (R * theta_hat - r)' * inv(R * V_hat * R') * (R * theta_hat - r) / Q,
@@ -98,13 +101,13 @@ hypotheses <- function(
     conf_level = 0.95,
     df = Inf,
     equivalence = NULL,
-    joint_test = NULL,
-    joint_index = NULL,
+    joint = FALSE,
+    joint_test = "f",
     FUN = NULL,
     ...) {
 
-    if (!is.null(joint_test)) {
-        out <- joint_test(model, joint_index = joint_index, joint_test = joint_test, hypothesis = hypothesis)
+    if (!isFALSE(joint)) {
+        out <- joint_test(model, joint_index = joint, joint_test = joint_test, hypothesis = hypothesis)
         return(out)
     }
 
