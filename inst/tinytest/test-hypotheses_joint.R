@@ -33,6 +33,12 @@ expect_equal(a$statistic, 6.11733602323976)
 a = hypotheses(model, joint = "cyl")
 expect_equal(a$statistic, 5.70257517421252)
 
+# regex: marginaleffects object
+mod <- glm(am ~ vs + factor(carb), family = binomial, data = mtcars)
+cmp <- avg_comparisons(mod)
+a <- hypotheses(cmp, joint = "carb")
+expect_inherits(a, "hypotheses")
+
 # marginaleffects objects
 mod <- glm(am ~ vs + factor(carb), family = binomial, data = mtcars)
 cmp <- avg_comparisons(mod)
