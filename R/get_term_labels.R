@@ -8,7 +8,7 @@ get_term_labels <- function(x, idx = NULL) {
       if (length(unique(out[["term"]])) == 1) {
         out[["term"]] <- NULL
       }
-      out <- apply(out, 1, paste, collapse = " ")
+      out <- do.call(paste, c(out, sep = " "))
     } else {
       out <- paste0("b", seq_len(nrow(x)))
     }
