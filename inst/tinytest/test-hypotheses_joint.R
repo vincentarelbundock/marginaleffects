@@ -46,3 +46,8 @@ mod <- glm(am ~ vs + factor(carb), family = binomial, data = mtcars)
 a <- hypotheses(mod, joint = 3:4, hypothesis = 1:2)
 expect_inherits(a, "hypotheses")
 expect_error(hypotheses(mod, joint = 3:4, hypothesis = 1:4))
+
+# Single parameter
+mod <- glm(am ~ vs, family = binomial, data = mtcars)
+a = hypotheses(mod, joint = TRUE)
+expect_inherits(a, "hypotheses")
