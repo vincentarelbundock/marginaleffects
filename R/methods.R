@@ -12,6 +12,11 @@ vcov.predictions <- vcov.comparisons
 
 #' @noRd
 #' @export
+vcov.hypotheses <- vcov.comparisons
+
+
+#' @noRd
+#' @export
 vcov.slopes <- vcov.comparisons
 
 
