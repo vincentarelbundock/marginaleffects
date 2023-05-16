@@ -87,6 +87,15 @@ print.marginaleffects <- function(x,
         out$contrast <- NULL
     }
 
+    statistic_label <- attr(x, "statistic_label")
+    if (is.null(statistic_label)) {
+        if (any(out[["df"]] < Inf)) {
+            statistic_label <- "t"
+        } else {
+            statistic_label <- "z"
+        }
+    }
+
     # rename
     dict <- c(
         "group" = "Group",
@@ -96,8 +105,8 @@ print.marginaleffects <- function(x,
         "value" = "Value",
         "estimate" = "Estimate",
         "std.error" = "Std. Error",
-        "statistic" = "z",
-        "p.value" = "Pr(>|z|)",
+        "statistic" = statistic_label,
+        "p.value" = sprintf("Pr(>|%s|)", statistic_label),
         "conf.low" = ifelse(is.null(alpha),
             "CI low",
             sprintf("%.1f %%", alpha / 2)),
@@ -106,13 +115,12 @@ print.marginaleffects <- function(x,
             sprintf("%.1f %%", 100 - alpha / 2)),
         "p.value.nonsup" = "p (NonSup)",
         "p.value.noninf" = "p (NonInf)",
-        "p.value.equiv" = "p (Equiv)"
+        "p.value.equiv" = "p (Equiv)",
+        "df" = "Df",
+        "df1" = "Df 1",
+        "df2" = "Df 2"
         )
 
-    if (any(out[["df"]] < Inf)) {
-        dict["statistic"] <- "t"
-        dict["p.value"] <- "Pr(>|t|)"
-    }
 
     if (inherits(x, "marginalmeans")) {
         dict["estimate"] <- "Mean"
@@ -179,8 +187,14 @@ print.marginaleffects <- function(x,
         }
     }
 
-    # some commands do not generate average contrasts/mfx. E.g., `lnro` with `by`
+    # head
     cat("\n")
+    print_head <- attr(x, "print_head")
+    if (!is.null(print_head)) {
+        cat(print_head, "\n")
+    }
+
+    # some commands do not generate average contrasts/mfx. E.g., `lnro` with `by`
     if (splitprint) {
         print(utils::head(out, n = topn), row.names = FALSE)
         msg <- "--- %s rows omitted. See %s?print.marginaleffects ---"
@@ -214,6 +228,11 @@ print.marginaleffects <- function(x,
         cat("Columns:", paste(colnames(x), collapse = ", "), "\n")
     }
     cat("\n")
+
+    print_tail <- attr(x, "print_tail")
+    if (!is.null(print_tail)) {
+        cat(print_tail, "\n")
+    }
 
     return(invisible(x))
 }

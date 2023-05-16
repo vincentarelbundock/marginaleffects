@@ -1,4 +1,4 @@
-#' (Non-)Linear Tests for Null Hypotheses, Equivalence, Non Superiority, and Non Inferiority
+#' (Non-)Linear Tests for Null Hypotheses, Joint Hypotheses, Equivalence, Non Superiority, and Non Inferiority
 #'
 #' @description
 #' Uncertainty estimates are calculated as first-order approximate standard errors for linear or non-linear functions of a vector of random variables with known or estimated covariance matrix. In that sense, [`hypotheses`] emulates the behavior of the excellent and well-established [car::deltaMethod] and [car::linearHypothesis] functions, but it supports more models; requires fewer dependencies; expands the range of tests to equivalence and superiority/inferiority; and offers convenience features like robust standard errors.
@@ -18,6 +18,23 @@
 #' @param FUN `NULL` or function. 
 #' * `NULL` (default): hypothesis test on a model's coefficients, or on the quantities estimated by one of the `marginaleffects` package functions.
 #' * Function which accepts a model object and returns a numeric vector or a data.frame with two columns called `term` and `estimate`. This argument can be useful when users want to conduct a hypothesis test on an arbitrary function of quantities held in a model object.
+#' @param joint Joint test of statistical significance. The null hypothesis value can be set using the `hypothesis` argument.
+#' - FALSE: Hypotheses are not tested jointly.
+#' - TRUE: All parameters are tested jointly.
+#' - String: A regular expression to match parameters to be tested jointly. `grep(joint, perl = TRUE)`
+#' - Character vector of parameter names to be tested. Characters refer to the names of the vector returned by `coef(object)`.
+#' - Integer vector of indices. Which parameters positions to test jointly.
+#' @param joint_test A character string specifying the type of test, either "f" or "chisq". The null hypothesis is set by the `hypothesis` argument, with default null equal to 0 for all parameters.
+#'
+#' @section Joint hypothesis tests:
+#' The test statistic for the joint Wald test is calculated as (R * theta_hat - r)' * inv(R * V_hat * R') * (R * theta_hat - r) / Q,
+#' where theta_hat is the vector of estimated parameters, V_hat is the estimated covariance matrix, R is a Q x P matrix for testing Q hypotheses on P parameters,
+#' r is a Q x 1 vector for the null hypothesis, and Q is the number of rows in R. If the test is a Chi-squared test, the test statistic is not normalized.
+#' 
+#' The p-value is then calculated based on either the F-distribution (for F-test) or the Chi-squared distribution (for Chi-squared test).
+#' For the F-test, the degrees of freedom are Q and (n - P), where n is the sample size and P is the number of parameters. 
+#' For the Chi-squared test, the degrees of freedom are Q.
+#'
 #' @template equivalence
 #' @examples
 #' library(marginaleffects)
@@ -78,6 +95,24 @@
 #' cmp <- avg_comparisons(mod, variables = "gear", hypothesis = "pairwise")
 #' hypotheses(cmp, equivalence = c(0, 10))
 #' 
+#' # joint hypotheses: character vector
+#' model <- lm(mpg ~ as.factor(cyl) * hp, data = mtcars)
+#' hypotheses(model, joint = c("as.factor(cyl)6:hp", "as.factor(cyl)8:hp"))
+#' 
+#' # joint hypotheses: regular expression
+#' hypotheses(model, joint = "cyl")
+#' 
+#' # joint hypotheses: integer indices
+#' hypotheses(model, joint = 2:3)
+#' 
+#' # joint hypotheses: different null hypotheses
+#' hypotheses(model, joint = 2:3, hypothesis = 1)
+#' hypotheses(model, joint = 2:3, hypothesis = 1:2)
+#' 
+#' # joint hypotheses: marginaleffects object
+#' cmp <- avg_comparisons(model)
+#' hypotheses(cmp, joint = "cyl")
+#'
 #' @export
 hypotheses <- function(
     model,
@@ -86,8 +121,15 @@ hypotheses <- function(
     conf_level = 0.95,
     df = Inf,
     equivalence = NULL,
+    joint = FALSE,
+    joint_test = "f",
     FUN = NULL,
     ...) {
+
+    if (!isFALSE(joint)) {
+        out <- joint_test(model, joint_index = joint, joint_test = joint_test, hypothesis = hypothesis)
+        return(out)
+    }
 
     args <- list(
         conf_level = conf_level,

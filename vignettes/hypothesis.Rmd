@@ -471,6 +471,41 @@ comparisons(
     hypothesis = "pairwise")
 ```
 
+# Joint hyotheses tests
+
+The `hypotheses()` function can also test multiple hypotheses jointly. For example, consider this model:
+
+```{r}
+model <- lm(mpg ~ as.factor(cyl) * hp, data = mtcars)
+coef(model)
+```
+
+We may want to test the null hypothesis that two of the coefficients are jointly (both) equal to zero.
+
+```{r}
+hypotheses(model, joint = c("as.factor(cyl)6:hp", "as.factor(cyl)8:hp"))
+```
+
+The `joint` argument allows users to flexibly specify the parameters to be tested, using character vectors, integer indices, or Perl-compatible regular expressions. We can also specificy the null hypothesis for each parameter individually using the `hypothesis` argument.
+
+Naturally, the `hypotheses` function also works with `marginaleffects` objects.
+
+```{r}
+# joint hypotheses: regular expression
+hypotheses(model, joint = "cyl")
+
+# joint hypotheses: integer indices
+hypotheses(model, joint = 2:3)
+
+# joint hypotheses: different null hypotheses
+hypotheses(model, joint = 2:3, hypothesis = 1)
+hypotheses(model, joint = 2:3, hypothesis = 1:2)
+
+# joint hypotheses: marginaleffects object
+cmp <- avg_comparisons(model)
+hypotheses(cmp, joint = "cyl")
+```
+
 
 # Equivalence, non-inferiority, and non-superiority tests
 
