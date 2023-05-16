@@ -58,6 +58,7 @@ joint_test <- function(object, joint_index = NULL, hypothesis = 0, joint_test = 
     p_value <- 1 - stats::pf(wald_statistic, df1, df2)
   } else if (joint_test == "chisq") {
     p_value <- 1 - stats::pchisq(wald_statistic, df1)
+    df2 <- NULL
   }
 
   # Return the Wald joint_test statistic and p-value
@@ -67,6 +68,14 @@ joint_test <- function(object, joint_index = NULL, hypothesis = 0, joint_test = 
     attr(out, "statistic_label") <- "F"
   } else if (joint_test == "chisq") {
     attr(out, "statistic_label") <- "ChiSq"
+  }
+
+  # degrees of freedom print
+  if (joint_test == "f") {
+    out$df1 <- df1
+    out$df2 <- df2
+  } else {
+    out$df <- df1
   }
 
   # Create the print_head string

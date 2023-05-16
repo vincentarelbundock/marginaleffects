@@ -109,7 +109,10 @@ print.marginaleffects <- function(x,
             sprintf("%.1f %%", 100 - alpha / 2)),
         "p.value.nonsup" = "p (NonSup)",
         "p.value.noninf" = "p (NonInf)",
-        "p.value.equiv" = "p (Equiv)"
+        "p.value.equiv" = "p (Equiv)",
+        "df" = "Df",
+        "df1" = "Df 1",
+        "df2" = "Df 2"
         )
 
     if (any(out[["df"]] < Inf)) {
