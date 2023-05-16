@@ -30,7 +30,7 @@ expect_equal(a$p.value, b[["Pr(>F)"]][2])
 # marginaleffects objects
 mod <- glm(am ~ vs + factor(carb), family = binomial, data = mtcars)
 cmp <- avg_comparisons(mod)
-a <- hypotheses(cmp, joint_test = "f")
+a <- hypotheses(cmp, joint_test = "f", joint = TRUE)
 b <- hypotheses(cmp, joint_test = "f", joint = 2:3)
 expect_true(a$p.value < b$p.value)
 expect_true(a$statistic > b$statistic)

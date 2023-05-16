@@ -66,9 +66,11 @@ hypotheses(
 
 \item{equivalence}{Numeric vector of length 2: bounds used for the two-one-sided test (TOST) of equivalence, and for the non-inferiority and non-superiority tests. See Details section below.}
 
-\item{joint}{\itemize{
-\item FALSE: Hypotheses are note tested jointly.
-\item Integer vector of indices
+\item{joint}{Joint test of statistical significance. The null value can be set using the \code{hypothesis} argument.
+\itemize{
+\item FALSE: Hypotheses are not tested jointly.
+\item TRUE: All coefficients are tested jointly.
+\item Integer vector of indices. Which parameters positions to test jointly.
 \item Character vector of parameter names to be tested. Characters refer to the names of the vector returned by \code{coef(object)}.
 }}
 

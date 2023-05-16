@@ -8,9 +8,9 @@ joint_test <- function(object, joint_index = NULL, hypothesis = 0, joint_test = 
   checkmate::assert(
     checkmate::check_integerish(joint_index, lower = 1, upper = length(theta_hat)),
     checkmate::check_character(joint_index),
-    checkmate::check_null(joint_index)
+    checkmate::check_true(joint_index)
   )
-  if (is.null(joint_index)) joint_index <- seq_along(theta_hat)
+  if (isTRUE(joint_index)) joint_index <- seq_along(theta_hat)
 
   # V_hat: estimated covariance matrix
   V_hat <- stats::vcov(object)
