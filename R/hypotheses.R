@@ -95,6 +95,24 @@
 #' cmp <- avg_comparisons(mod, variables = "gear", hypothesis = "pairwise")
 #' hypotheses(cmp, equivalence = c(0, 10))
 #' 
+#' # joint hypotheses: character vector
+#' model <- lm(mpg ~ as.factor(cyl) * hp, data = mtcars)
+#' hypotheses(model, joint = c("as.factor(cyl)6:hp", "as.factor(cyl)8:hp"))
+#' 
+#' # joint hypotheses: regular expression
+#' hypotheses(model, joint = "cyl")
+#' 
+#' # joint hypotheses: integer indices
+#' hypotheses(model, joint = 2:3)
+#' 
+#' # joint hypotheses: different null hypotheses
+#' hypotheses(model, joint = 2:3, hypothesis = 1)
+#' hypotheses(model, joint = 2:3, hypothesis = 1:2)
+#' 
+#' # joint hypotheses: marginaleffects object
+#' cmp <- avg_comparisons(model)
+#' hypotheses(cmp, joint = "cyl")
+#'
 #' @export
 hypotheses <- function(
     model,
