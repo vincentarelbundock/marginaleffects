@@ -40,3 +40,9 @@ a <- hypotheses(cmp, joint_test = "f", joint = TRUE)
 b <- hypotheses(cmp, joint_test = "f", joint = 2:3)
 expect_true(a$p.value < b$p.value)
 expect_true(a$statistic > b$statistic)
+
+# Null hypothesis vector
+mod <- glm(am ~ vs + factor(carb), family = binomial, data = mtcars)
+a <- hypotheses(mod, joint = 3:4, hypothesis = 1:2)
+expect_inherits(a, "hypotheses")
+expect_error(hypotheses(mod, joint = 3:4, hypothesis = 1:4))

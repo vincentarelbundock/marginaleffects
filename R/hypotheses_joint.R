@@ -37,7 +37,11 @@ joint_test <- function(object, joint_index = NULL, hypothesis = 0, joint_test = 
   }
 
   # null hypothesis
-  checkmate::assert_number(hypothesis, null.ok = TRUE)
+  checkmate::assert(
+    checkmate::check_number(hypothesis),
+    checkmate::check_numeric(hypothesis, len = nrow(R)),
+    checkmate::check_null(hypothesis)
+  )
   if (is.null(hypothesis)) hypothesis <- 0
   r <- matrix(hypothesis, nrow = nrow(R), ncol = 1)
 
