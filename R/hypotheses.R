@@ -252,6 +252,7 @@ hypotheses <- function(
     class(out) <- c("hypotheses", "deltamethod", class(out))
     attr(out, "model") <- model
     attr(out, "model_type") <- class(model)[1]
+    attr(out, "jacobian") <- attr(se, "jacobian")
     attr(out, "call") <- match.call()
     attr(out, "vcov") <- vcov
     attr(out, "vcov.type") <- vcov.type
