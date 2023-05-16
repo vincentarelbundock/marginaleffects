@@ -88,7 +88,13 @@ print.marginaleffects <- function(x,
     }
 
     statistic_label <- attr(x, "statistic_label")
-    if (is.null(statistic_label)) statistic_label <- "z"
+    if (is.null(statistic_label)) {
+        if (any(out[["df"]] < Inf)) {
+            statistic_label <- "t"
+        } else {
+            statistic_label <- "z"
+        }
+    }
 
     # rename
     dict <- c(
@@ -115,10 +121,6 @@ print.marginaleffects <- function(x,
         "df2" = "Df 2"
         )
 
-    if (any(out[["df"]] < Inf)) {
-        dict["statistic"] <- "t"
-        dict["p.value"] <- "Pr(>|t|)"
-    }
 
     if (inherits(x, "marginalmeans")) {
         dict["estimate"] <- "Mean"
