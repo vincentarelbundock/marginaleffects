@@ -6,7 +6,7 @@ Breaking change:
 
 New:
 
-* `hypotheses()`: Joint hypothesis tests (F and Chi-square) with the `joint_test` and `joint_index` arguments.
+* `hypotheses()`: Joint hypothesis tests (F and Chi-square) with the `joint` and `joint_test` arguments.
 * `vcov.hypotheses` method.
 * `wts` is now available in `plot_predictions()`, `plot_comparisons()`, and `plot_slopes()`.
 
