@@ -18,11 +18,12 @@
 #' @param FUN `NULL` or function. 
 #' * `NULL` (default): hypothesis test on a model's coefficients, or on the quantities estimated by one of the `marginaleffects` package functions.
 #' * Function which accepts a model object and returns a numeric vector or a data.frame with two columns called `term` and `estimate`. This argument can be useful when users want to conduct a hypothesis test on an arbitrary function of quantities held in a model object.
-#' @param joint Joint test of statistical significance. The null value can be set using the `hypothesis` argument.
+#' @param joint Joint test of statistical significance. The null hypothesis value can be set using the `hypothesis` argument.
 #' - FALSE: Hypotheses are not tested jointly.
-#' - TRUE: All coefficients are tested jointly.
-#' - Integer vector of indices. Which parameters positions to test jointly.
+#' - TRUE: All parameters are tested jointly.
+#' - String: A regular expression to match parameters to be tested jointly. `grep(joint, perl = TRUE)`
 #' - Character vector of parameter names to be tested. Characters refer to the names of the vector returned by `coef(object)`.
+#' - Integer vector of indices. Which parameters positions to test jointly.
 #' @param joint_test A character string specifying the type of test, either "f" or "chisq". The null hypothesis is set by the `hypothesis` argument, with default null equal to 0 for all parameters.
 #'
 #' @section Joint hypothesis tests:

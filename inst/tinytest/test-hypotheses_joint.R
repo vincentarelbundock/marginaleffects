@@ -27,6 +27,12 @@ b <- car::linearHypothesis(model, c("as.factor(cyl)6", "as.factor(cyl)8"), test 
 expect_equal(a$statistic, b[["F"]][2])
 expect_equal(a$p.value, b[["Pr(>F)"]][2])
 
+# regex indices
+a = hypotheses(model, joint = "cyl\\)\\d$")
+expect_equal(a$statistic, 6.11733602323976)
+a = hypotheses(model, joint = "cyl")
+expect_equal(a$statistic, 5.70257517421252)
+
 # marginaleffects objects
 mod <- glm(am ~ vs + factor(carb), family = binomial, data = mtcars)
 cmp <- avg_comparisons(mod)

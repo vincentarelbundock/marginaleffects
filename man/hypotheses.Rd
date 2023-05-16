@@ -66,12 +66,13 @@ hypotheses(
 
 \item{equivalence}{Numeric vector of length 2: bounds used for the two-one-sided test (TOST) of equivalence, and for the non-inferiority and non-superiority tests. See Details section below.}
 
-\item{joint}{Joint test of statistical significance. The null value can be set using the \code{hypothesis} argument.
+\item{joint}{Joint test of statistical significance. The null hypothesis value can be set using the \code{hypothesis} argument.
 \itemize{
 \item FALSE: Hypotheses are not tested jointly.
-\item TRUE: All coefficients are tested jointly.
-\item Integer vector of indices. Which parameters positions to test jointly.
+\item TRUE: All parameters are tested jointly.
+\item String: A regular expression to match parameters to be tested jointly. \code{grep(joint, perl = TRUE)}
 \item Character vector of parameter names to be tested. Characters refer to the names of the vector returned by \code{coef(object)}.
+\item Integer vector of indices. Which parameters positions to test jointly.
 }}
 
 \item{joint_test}{A character string specifying the type of test, either "f" or "chisq". The null hypothesis is set by the \code{hypothesis} argument, with default null equal to 0 for all parameters.}
