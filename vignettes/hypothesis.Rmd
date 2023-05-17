@@ -506,6 +506,23 @@ cmp <- avg_comparisons(model)
 hypotheses(cmp, joint = "cyl")
 ```
 
+We can also combine multiple calls to `hypotheses` to execute a joint test on linear combinations of coefficients:
+
+```{r}
+# fit model
+mod <- lm(mpg ~ factor(carb), mtcars)
+
+# hypothesis matrix for linear combinations
+H <- matrix(0, nrow = length(coef(mod)), ncol = 2)
+H[2:3, 1] <- H[4:6, 2] <- 1
+
+# test individual linear combinations
+hyp <- hypotheses(mod, hypothesis = H)
+hyp
+
+# test joint hypotheses
+hypotheses(hyp, joint = TRUE, hypothesis = c(-10, -20))
+```
 
 # Equivalence, non-inferiority, and non-superiority tests
 

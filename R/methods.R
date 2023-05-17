@@ -56,3 +56,8 @@ coef.marginalmeans <- coef.comparisons
 #' @export
 #' @noRd
 coef.predictions <- coef.comparisons
+
+
+#' @export
+#' @noRd
+coef.hypotheses <- coef.comparisons
