@@ -25,6 +25,7 @@
 #' @param by Marginal predictions
 #' + Character vector (max length 3): Names of the categorical predictors to marginalize across.
 #' + 1: x-axis. 2: color. 3: facets.
+#' @param newdata When `newdata` is `NULL`, the grid is determined by the `condition` argument. When `newdata` is not `NULL`, the argument behaves in the same way as in the `predictions()` function.
 #' @param points Number between 0 and 1 which controls the transparency of raw data points. 0 (default) does not display any points.
 #' @param draw `TRUE` returns a `ggplot2` plot. `FALSE` returns a `data.frame` of the underlying data.
 #' @inheritParams plot_slopes

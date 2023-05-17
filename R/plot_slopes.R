@@ -26,6 +26,7 @@
 #' @param rug TRUE displays tick marks on the axes to mark the distribution of raw data.
 #' @param gray FALSE grayscale or color plot
 #' @param draw `TRUE` returns a `ggplot2` plot. `FALSE` returns a `data.frame` of the underlying data.
+#' @param newdata When `newdata` is `NULL`, the grid is determined by the `condition` argument. When `newdata` is not `NULL`, the argument behaves in the same way as in the `slopes()` function.
 #' @inheritParams slopes
 #' @template model_specific_arguments
 #' @return A `ggplot2` object
