@@ -2,13 +2,17 @@
 
 Breaking change:
 
-* Row order of output has changed for a few calls such as `avg_comparisons(by=...)`. This may break hypothesis tests conducted by indexing `b1`, `b2`, etc. This was necessary to fix Issue #776. Thanks to @marcora for the report.
+* Row order of output has changed for many calls, especially those using the `by` argument. This may break hypothesis tests conducted by indexing `b1`, `b2`, etc. This was necessary to fix Issue #776. Thanks to @marcora for the report.
 
 New:
 
 * `hypotheses()`: Joint hypothesis tests (F and Chi-square) with the `joint` and `joint_test` arguments.
 * `vcov.hypotheses` method.
 * `wts` is now available in `plot_predictions()`, `plot_comparisons()`, and `plot_slopes()`.
+
+Bug:
+
+* Wrong order of rows in bayesian models with `by` argument. Thanks to @shirdekel for report #782.
 
 # marginaleffects 0.11.2
 

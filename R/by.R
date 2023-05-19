@@ -78,8 +78,6 @@ get_by <- function(
                 .(estimate = mean(estimate, na.rm = TRUE)),
                 by = bycols]
         }
-        idx <- intersect(bycols, colnames(estimates))
-        if (length(idx) > 0) data.table::setorderv(estimates, cols = bycols)
     }
 
     return(estimates)

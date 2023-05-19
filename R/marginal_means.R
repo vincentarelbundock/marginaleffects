@@ -470,12 +470,9 @@ get_marginalmeans <- function(model,
             }
         }
         out <- rbindlist(pred_list)
-        data.table::setorderv(out, c("term", "value"))
     }
 
     data.table::setDT(out)
-    keys <- intersect(colnames(out), c("term", "value", variables))
-    data.table::setorderv(out, keys)
 
     if (isTRUE(checkmate::check_data_frame(by))) {
         # warnings for factor vs numeric vs character. merge.data.table usually still works.

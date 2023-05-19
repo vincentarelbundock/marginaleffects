@@ -9,7 +9,7 @@ requiet("insight")
 # Issue #438: backtransforms allows us to match `emmeans` exactly
 mod <- glm(vs ~ mpg + factor(cyl), data = mtcars, family = binomial)
 em <- emmeans(mod, ~cyl, type = "response")
-mm <- marginal_means(mod)
+mm <- marginal_means(mod) |> dplyr::arrange(value)
 expect_equal(data.frame(em)$prob, mm$estimate)
 expect_equal(data.frame(em)$asymp.LCL, mm$conf.low)
 expect_equal(data.frame(em)$asymp.UCL, mm$conf.high)
@@ -64,12 +64,14 @@ dat$am <- factor(dat$am)
 dat$cyl <- factor(dat$cyl)
 mod <- glm(gear ~ cyl + am, data = dat, family = poisson)
 # link
-mm <- tidy(marginal_means(mod, variables = "cyl", type = "link"))
+mm <- tidy(marginal_means(mod, variables = "cyl", type = "link")) |>
+  dplyr::arrange(value)
 em <- tidy(emmeans(mod, specs = "cyl"))
 expect_equivalent(mm$estimate, em$estimate)
 expect_equivalent(mm$std.error, em$std.error)
 # response
-mm <- tidy(marginal_means(mod, variables = "cyl"))
+mm <- tidy(marginal_means(mod, variables = "cyl")) |>
+  dplyr::arrange(value)
 em <- tidy(emmeans(mod, specs = "cyl", type = "response"))
 expect_equivalent(mm$estimate, em$rate)
 expect_equivalent(mm$p.value, em$p.value)
@@ -79,11 +81,13 @@ expect_equivalent(mm$p.value, em$p.value)
 # simple marginal means
 mod <- lm(mpg ~ cyl + am + hp, dat)
 em <- broom::tidy(emmeans::emmeans(mod, "cyl"))
-me <- marginal_means(mod, variables = "cyl")
+me <- marginal_means(mod, variables = "cyl") |>
+  dplyr::arrange(value)
 expect_equivalent(me$estimate, em$estimate)
 expect_equivalent(me$std.error, em$std.error)
 em <- broom::tidy(emmeans::emmeans(mod, "am"))
-me <- marginal_means(mod, variables = "am")
+me <- marginal_means(mod, variables = "am") |>
+  dplyr::arrange(value)
 expect_equivalent(me$estimate, em$estimate)
 expect_equivalent(me$std.error, em$std.error)
 
@@ -92,8 +96,8 @@ expect_equivalent(me$std.error, em$std.error)
 # standard errors do not match emmeans
 mod <- lm(mpg ~ cyl * am, dat)
 em <- suppressMessages(broom::tidy(emmeans::emmeans(mod, "cyl")))
-me <- marginal_means(mod, variables = "cyl")
-me <- me[order(me$value),]
+me <- marginal_means(mod, variables = "cyl") |>
+  dplyr::arrange(value)
 expect_equivalent(me$estimate, em$estimate)
 em <- suppressMessages(broom::tidy(emmeans::emmeans(mod, "am")))
 me <- suppressWarnings(marginal_means(mod, variables = "am"))
@@ -122,12 +126,14 @@ expect_equivalent(mm$conf.high, em$asymp.UCL)
 
 # wts = "proportional"
 em <- data.frame(emmeans(mod1, ~am, weights = "proportional"))
-mm <- marginal_means(mod1, variables = "am", wts = "proportional")
+mm <- marginal_means(mod1, variables = "am", wts = "proportional") |>
+  dplyr::arrange(value)
 expect_equivalent(mm$estimate, em$emmean)
 expect_equivalent(mm$std.error, em$SE)
 
 em <- data.frame(emmeans(mod2, ~am, weights = "proportional", type = "response"))
-mm <- marginal_means(mod2, variables = "am", wts = "proportional")
+mm <- marginal_means(mod2, variables = "am", wts = "proportional") |>
+  dplyr::arrange(value)
 expect_equivalent(mm$estimate, em$prob)
 expect_equivalent(mm$conf.low, em$asymp.LCL)
 expect_equivalent(mm$conf.high, em$asymp.UCL)

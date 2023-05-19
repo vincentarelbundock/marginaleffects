@@ -169,14 +169,6 @@ expect_equivalent(nrow(mm), 3)
 expect_error(marginal_means(mod, by = TRUE, variables = "gear"))
 
 
-# Issue #649: sort group when `by` is used
-mod <- lm(mpg ~ hp + factor(cyl), data = mtcars)
-pre <- predictions(mod, by = "cyl")
-expect_equivalent(pre$cyl, c(4, 6, 8))
-cmp <- predictions(mod, by = "cyl")
-expect_equivalent(cmp$cyl, c(4, 6, 8))
-
-
 # marginaleffects poisson vs. margins
 dat <- mtcars
 mod <- glm(gear ~ cyl + am, family = poisson, data = dat)
@@ -186,7 +178,8 @@ mfx <- avg_slopes(
     newdata = datagrid(
         cyl = unique,
         am = unique,
-        grid_type = "counterfactual"))
+        grid_type = "counterfactual")) |>
+    dplyr::arrange(term, cyl, am)
 mar <- margins(mod, at = list(cyl = unique(dat$cyl), am = unique(dat$am)))
 mar <- summary(mar)
 # margins doesn't treat the binary am as binary automatically
@@ -220,7 +213,8 @@ expect_equivalent(mfx$std.error, mar$SE, tolerance = tol_se)
 dat <- transform(mtcars, vs = vs, am = as.factor(am), cyl = as.factor(cyl))
 mod <- lm(mpg ~ qsec + am + cyl, dat)
 fun <- \(hi, lo) mean(hi) / mean(lo)
-cmp1 <- comparisons(mod, variables = "cyl", comparison = fun, by = "am")
+cmp1 <- comparisons(mod, variables = "cyl", comparison = fun, by = "am") |>
+    dplyr::arrange(am, contrast)
 cmp2 <- comparisons(mod, variables = "cyl", comparison = "ratioavg", by = "am") |>
     dplyr::arrange(am, contrast)
 expect_equivalent(cmp1$estimate, cmp2$estimate)
@@ -232,7 +226,8 @@ expect_equal(nrow(cmp1), 4)
 requiet("dplyr")
 tmp <- mtcars %>% transform(am = factor(am), cyl = factor(cyl), mpg = mpg)
 mod <- lm(mpg ~ am * cyl, data = tmp)
-cmp1 <- avg_comparisons(mod, variables = "am", by = "cyl")
+cmp1 <- avg_comparisons(mod, variables = "am", by = "cyl") |>
+  dplyr::arrange(cyl)
 cmp2 <- comparisons(mod, variables = "am") %>%
   dplyr::group_by(cyl) %>%
   dplyr::summarize(estimate = mean(estimate), .groups = "keep") |>

@@ -16,11 +16,11 @@ expect_equivalent(cmp1, cmp2)
 cmp1 <- comparisons(
     mod,
     variables = list(gear = "sequential", hp = 10, cyl = "pairwise"))
-cmp1 <- tidy(cmp1)
+cmp1 <- tidy(cmp1) |> dplyr::arrange(term, contrast)
 cmp2 <- comparisons(
     mod,
     variables = list(gear = "sequential", hp = 1, cyl = "pairwise"))
-cmp2 <- tidy(cmp2)
+cmp2 <- tidy(cmp2) |> dplyr::arrange(term, contrast)
 # known <- c("4 - 3", "5 - 4", "+10", "6 - 4", "8 - 4", "8 - 6")
 # aggregate refactor gave us new labels
 known <- c("mean(+10)", "mean(4) - mean(3)", "mean(5) - mean(4)", "mean(6) - mean(4)", 

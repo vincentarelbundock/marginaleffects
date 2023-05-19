@@ -74,7 +74,8 @@ mzip_3 <- glmmTMB(
   ziformula = ~ res + inc + age,
   family = "nbinom2",
   data = bed)
-tid <- avg_slopes(mzip_3, type = "response")
+tid <- avg_slopes(mzip_3, type = "response") |>
+  dplyr::arrange(term)
 
 # TODO: half-checked against Stata. Slight difference on binary predictors. Stata probably dydx
 b <- c(-0.0357107397803255, 0.116113581361053, -0.703975123794627, -0.322385169497792, 2.29943403870235, 0.313970669520973)
@@ -143,10 +144,10 @@ mod <- glmmTMB(
     Survived ~ Sex + z + (1 + Age | PClass),
     family = binomial,
     data = dat)
-mm1 <- marginal_means(mod, variables = c("Sex", "PClass"))
-mm2 <- marginal_means(mod, type = "link", variables = c("Sex", "PClass"))
-mm3 <- marginal_means(mod, variables = c("Sex", "PClass"), cross = TRUE)
-mm4 <- marginal_means(mod, type = "link", variables = c("Sex", "PClass"), cross = TRUE)
+mm1 <- marginal_means(mod, variables = c("Sex", "PClass")) |> dplyr::arrange(value)
+mm2 <- marginal_means(mod, type = "link", variables = c("Sex", "PClass")) |> dplyr::arrange(value)
+mm3 <- marginal_means(mod, variables = c("Sex", "PClass"), cross = TRUE) |> dplyr::arrange(Sex, PClass)
+mm4 <- marginal_means(mod, type = "link", variables = c("Sex", "PClass"), cross = TRUE) |> dplyr::arrange(Sex, PClass)
 expect_true(all(mm1$estimate != mm2$estimate))
 expect_true(all(mm1$std.error != mm2$std.error))
 expect_true(all(mm3$estimate != mm4$estimate))

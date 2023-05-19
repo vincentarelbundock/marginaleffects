@@ -101,7 +101,8 @@ dat <- dat
 mod <- lm(mpg ~ hp + am + cyl + gear, data = dat)
 cmp1 <- comparisons(
     mod,
-    newdata = "mean")
+    newdata = "mean") |>
+    dplyr::arrange(term)
 expect_equivalent(
     cmp1$contrast,
     c("TRUE - FALSE", "6 - 4", "8 - 4", "4 - 3", "5 - 3", "+1"))

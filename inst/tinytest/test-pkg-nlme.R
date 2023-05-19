@@ -5,7 +5,7 @@ requiet("nlme")
 requiet("emmeans")
 requiet("broom")
 
-dat <<- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/nlme/Ovary.csv")
+dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/nlme/Ovary.csv")
 
 
 # nlme::gls: marginaleffects vs. emtrends
@@ -44,7 +44,7 @@ mod <- gls(follicles ~ sin(2 * pi * Time) + cos(2 * pi * Time) + categ,
     data = tmp, correlation = corAR1(form = ~ 1 | Mare))
 em <- suppressMessages(emmeans(mod, specs = "categ"))
 em <- tidy(em)
-mm <- marginal_means(mod, variables = "categ")
+mm <- marginal_means(mod, variables = "categ") |> dplyr::arrange(value)
 expect_marginal_means(mm)
 expect_equivalent(mm$estimate, em$estimate)
 expect_equivalent(mm$std.error, em$std.error)

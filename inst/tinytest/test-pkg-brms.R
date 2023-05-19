@@ -11,6 +11,7 @@ requiet("brms")
 requiet("emmeans")
 requiet("broom")
 requiet("posterior")
+requiet("data.table")
 requiet("brmsmargins")
 tol <- 0.0001
 tol_se <- 0.001
@@ -715,6 +716,33 @@ expect_error(comparisons(brms_logit_re, newdata = datagrid(firm = -10:8)),
     pattern = "new.levels")
 cmp = comparisons(brms_logit_re, newdata = datagrid(firm = -10:8), allow_new_levels = TRUE)
 expect_inherits(cmp, "comparisons")
+
+
+# Issue #782: by reorders factors incorrectly in brms models
+dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/carData/TitanicSurvival.csv")
+dat$survived <- ifelse(dat$survived == "yes", 1, 0)
+dat$woman <- ifelse(dat$sex == "female", 1, 0)
+dat$passengerClass <- factor(dat$passengerClass, levels = c("3rd", "2nd", "1st"))
+
+mod <- marginaleffects:::hush(brm(survived ~ woman * age + passengerClass,
+  family = bernoulli(link = "logit"),
+  data = dat))
+
+set.seed(1024)
+known <- slopes(
+  mod,
+  variables = "woman") |>
+  posterior_draws() |>
+  data.table()
+known <- known[, .(estimate = mean(estimate)), by = c("drawid", "passengerClass")][
+               , .(estimate = median(estimate)), by = "passengerClass"]
+set.seed(1024)
+unknown <- slopes(
+  mod,
+  variables = "woman",
+  by = "passengerClass")
+expect_equal(known$estimate, unknown$estimate, tolerance = 1e-3)
+expect_equal(known$passengerClass, unknown$passengerClass)
 
 
 

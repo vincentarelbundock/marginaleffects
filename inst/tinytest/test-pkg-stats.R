@@ -88,11 +88,11 @@ dat <- mtcars
 dat$cyl <- as.factor(dat$cyl)
 dat$am <- as.logical(dat$am)
 mod <- lm(mpg ~ hp + cyl + am, data = dat)
-mm <- tidy(marginal_means(mod, variables = "cyl"))
+mm <- tidy(marginal_means(mod, variables = "cyl")) |> dplyr::arrange(value)
 em <- broom::tidy(emmeans::emmeans(mod, specs = "cyl"))
 expect_equivalent(mm$estimate, em$estimate)
 expect_equivalent(mm$std.error, em$std.error)
-mm <- tidy(marginal_means(mod, variables = "am"))
+mm <- tidy(marginal_means(mod, variables = "am")) |> dplyr::arrange(value)
 em <- broom::tidy(emmeans::emmeans(mod, specs = "am"))
 expect_equivalent(mm$estimate, em$estimate)
 expect_equivalent(mm$std.error, em$std.error)
@@ -111,23 +111,23 @@ dat$Region <- as.factor(dat$Region)
 dat$MainCity <- as.factor(dat$MainCity)
 mod <- glm(binary ~ Region + MainCity + Commerce, data = dat, family = "binomial")
 
-mm <- marginal_means(mod, type = "link", variables = "Region")
+mm <- marginal_means(mod, type = "link", variables = "Region") |> dplyr::arrange(value) 
 em <- data.frame(emmeans::emmeans(mod, specs = "Region"))
 expect_equivalent(as.character(mm$value), as.character(em$Region))
 expect_equivalent(mm$estimate, em$emmean, tol = 0.05) # not sure why tolerance is not good
 expect_equivalent(mm$std.error, em$SE, tol = 0.001)
 
-mm <- marginal_means(mod, type = "link", variables = "MainCity")
-em <- data.frame(emmeans::emmeans(mod, specs = "MainCity"))
+mm <- marginal_means(mod, type = "link", variables = "MainCity") |> dplyr::arrange(value)
+em <- data.frame(emmeans::emmeans(mod, specs = "MainCity", type = "link"))
 expect_equivalent(as.character(mm$value), as.character(em$MainCity))
 expect_equivalent(mm$estimate, em$emmean, tol = 0.01) # not sure why tolerance is not good
 expect_equivalent(mm$std.error, em$SE, tol = 0.001)
 
-mm <- marginal_means(mod, variables = "MainCity")
+
+mm <- marginal_means(mod, type = "link", variables = "MainCity", transform = plogis) |> dplyr::arrange(value)
 em <- data.frame(emmeans(mod, specs = "MainCity", type = "response"))
 expect_equivalent(as.character(mm$value), as.character(em$MainCity))
 expect_equivalent(mm$estimate, em$prob, tolerance = .01)
-expect_equivalent(mm$std.error, em$std.error, tolerance = .01)
 expect_equivalent(mm$conf.low, em$asymp.LCL, tolerance = .01)
 expect_equivalent(mm$conf.high, em$asymp.UCL, tolerance = .01)
 

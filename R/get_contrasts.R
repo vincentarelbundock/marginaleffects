@@ -418,9 +418,6 @@ get_contrasts <- function(model,
             bycols <- c(by, "group", "term", "^contrast[_]?")
             bycols <- paste(bycols, collapse = "|")
             bycols <- grep(bycols, colnames(out), value = TRUE)
-            if (length(bycols) > 0) {
-                data.table::setorderv(out, cols = bycols)
-            }
         }
     }
 

@@ -101,7 +101,8 @@ expect_predictions(pred, n_row = 6)
 
 
 # marginalmeans: vs. emmeans
-mm <- marginal_means(mod, variables = "Pclass", what = "mu")
+mm <- marginal_means(mod, variables = "Pclass", what = "mu") |>
+    dplyr::arrange(value)
 expect_marginal_means(mm, n_row = 3)
 mm <- tidy(mm)
 em <- broom::tidy(emmeans::emmeans(mod, "Pclass", type = "response"))
