@@ -1,7 +1,7 @@
 
  gear Estimate Std. Error    z Pr(>|z|) 2.5 % 97.5 %
-    3     16.1      0.671 24.0   <0.001  14.8   17.4
     4     24.5      0.750 32.7   <0.001  23.1   26.0
+    3     16.1      0.671 24.0   <0.001  14.8   17.4
     5     21.4      1.162 18.4   <0.001  19.1   23.7
 
 Columns: gear, estimate, std.error, statistic, p.value, conf.low, conf.high 
