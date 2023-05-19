@@ -1,4 +1,3 @@
-exit_file("TODO")
 source("helpers.R")
 using("marginaleffects")
 
@@ -6,7 +5,7 @@ requiet("nlme")
 requiet("emmeans")
 requiet("broom")
 
-dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/nlme/Ovary.csv")
+dat <<- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/nlme/Ovary.csv")
 
 
 # nlme::gls: marginaleffects vs. emtrends
