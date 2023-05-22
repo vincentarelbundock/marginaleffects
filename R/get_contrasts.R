@@ -37,14 +37,14 @@ get_contrasts <- function(model,
             type = type,
             newdata = both,
             ...))
-        
+
         # informative error in case of allow.new.levels level breakage
         if (inherits(pred_both[["error"]], "simpleError")) {
             insight::format_error(pred_both[["error"]][["message"]])
         } else {
             pred_both <- pred_both[["value"]]
         }
-        
+
         data.table::setDT(pred_both)
         pred_both[, "lo" := seq_len(.N) <= .N / 2, by = "group"]
 
@@ -194,11 +194,12 @@ get_contrasts <- function(model,
         variables)
     elasticities <- lapply(elasticities, function(x) x$name)
     if (length(elasticities) > 0) {
+        split_out <- split(out, by = "term")
         for (v in names(elasticities)) {
             idx2 <- unique(c("rowid", "term", "group", by, grep("^contrast", colnames(out), value = TRUE)))
             idx2 <- intersect(idx2, colnames(out))
             # discard other terms to get right length vector
-            idx2 <- out[term == v, ..idx2]
+            idx2 <- split_out[[v]][, ..idx2]
             # original is NULL when cross=TRUE
             if (!is.null(original)) {
                 idx1 <- c(v, "rowid", "rowidcf", "term", "group", grep("^contrast", colnames(original), value = TRUE))
@@ -206,7 +207,7 @@ get_contrasts <- function(model,
                 idx1 <- original[, ..idx1]
                 setnames(idx1, old = v, new = "elast")
                 on_cols <- intersect(colnames(idx1), colnames(idx2))
-                unique(idx2[idx1, elast := elast, on = on_cols])
+                idx2[, elast := unique(idx1[["elast"]])]
             }
             elasticities[[v]] <- idx2$elast
         }
@@ -394,7 +395,7 @@ get_contrasts <- function(model,
         }
         out <- stats::na.omit(out, cols = "estimate")
     }
-    
+
     # clean
     if ("rowid_dedup" %in% colnames(out)) {
         out[, "rowid_dedup" := NULL]
@@ -414,7 +415,7 @@ get_contrasts <- function(model,
                 by = by,
                 verbose = verbose)
             draws <- attr(out, "posterior_draws")
-        } else { 
+        } else {
             bycols <- c(by, "group", "term", "^contrast[_]?")
             bycols <- paste(bycols, collapse = "|")
             bycols <- grep(bycols, colnames(out), value = TRUE)
