@@ -471,7 +471,7 @@ comparisons(
     hypothesis = "pairwise")
 ```
 
-# Joint hyotheses tests
+# Joint hypotheses tests
 
 The `hypotheses()` function can also test multiple hypotheses jointly. For example, consider this model:
 
