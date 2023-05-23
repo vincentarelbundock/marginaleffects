@@ -2,6 +2,8 @@ source("helpers.R")
 using("marginaleffects")
 
 requiet("nnet")
+requiet("carData")
+requiet("prediction")
 
 # multinom group estimates
 TitanicSurvival <- "https://vincentarelbundock.github.io/Rdatasets/csv/carData/TitanicSurvival.csv"
@@ -168,6 +170,20 @@ expect_equivalent(nrow(p2), 2)
 expect_equivalent(nrow(p3), 2)
 expect_equivalent(sum(p1$estimate[1:2]), p2$estimate[1])
 expect_equivalent(mean(p1$estimate[1:2]), p3$estimate[1])
+
+
+
+# Issue #788: match with {predictions::prediction}
+reg <- nnet::multinom(poverty ~ religion + degree + gender,
+    family = multinomial(refLevel = 1),
+    trace = FALSE,
+    data = carData::WVS)
+p1 <- predictions(reg, variables = list(religion = c("no"), gender = c("male")))
+p1 <- summary(p1)$estimate
+p2 <- prediction::prediction(reg , at = list(religion=c("no"), gender=c("male")))
+p2 <- colMeans(p2[, grep("^Pr", colnames(p2))])
+expect_equivalent(p1, p2, ignore_attr = TRUE)
+
 
 
 

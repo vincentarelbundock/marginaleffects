@@ -57,6 +57,7 @@ Suggests:
     brmsmargins,
     broom,
     car,
+    carData,
     collapse,
     conflicted,
     covr,
