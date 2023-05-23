@@ -37,14 +37,14 @@ get_contrasts <- function(model,
             type = type,
             newdata = both,
             ...))
-        
+
         # informative error in case of allow.new.levels level breakage
         if (inherits(pred_both[["error"]], "simpleError")) {
             insight::format_error(pred_both[["error"]][["message"]])
         } else {
             pred_both <- pred_both[["value"]]
         }
-        
+
         data.table::setDT(pred_both)
         pred_both[, "lo" := seq_len(.N) <= .N / 2, by = "group"]
 
@@ -194,6 +194,15 @@ get_contrasts <- function(model,
         variables)
     elasticities <- lapply(elasticities, function(x) x$name)
     if (length(elasticities) > 0) {
+        # assigning a subset of "original" to "idx1" takes time and memory
+        # better to do this here for most columns and add the "v" column only
+        # in the loop
+        if (!is.null(original)) {
+            idx1 <- c("rowid", "rowidcf", "term", "group", grep("^contrast", colnames(original), value = TRUE))
+            idx1 <- intersect(idx1, colnames(original))
+            idx1 <- original[, ..idx1]
+        }
+
         for (v in names(elasticities)) {
             idx2 <- unique(c("rowid", "term", "group", by, grep("^contrast", colnames(out), value = TRUE)))
             idx2 <- intersect(idx2, colnames(out))
@@ -201,12 +210,17 @@ get_contrasts <- function(model,
             idx2 <- out[term == v, ..idx2]
             # original is NULL when cross=TRUE
             if (!is.null(original)) {
-                idx1 <- c(v, "rowid", "rowidcf", "term", "group", grep("^contrast", colnames(original), value = TRUE))
-                idx1 <- intersect(idx1, colnames(original))
-                idx1 <- original[, ..idx1]
+                # if not first iteration, need to remove previous "v" and "elast"
+                if (v %in% colnames(idx1)) {
+                    idx1[, (v) := NULL]
+                }
+                if ("elast" %in% colnames(idx1)) {
+                    idx1[, elast := NULL]
+                }
+                idx1[, (v) := original[[v]]]
                 setnames(idx1, old = v, new = "elast")
                 on_cols <- intersect(colnames(idx1), colnames(idx2))
-                unique(idx2[idx1, elast := elast, on = on_cols])
+                idx2 <- unique(merge(idx2, idx1, by = on_cols)[, elast := elast])
             }
             elasticities[[v]] <- idx2$elast
         }
@@ -394,7 +408,7 @@ get_contrasts <- function(model,
         }
         out <- stats::na.omit(out, cols = "estimate")
     }
-    
+
     # clean
     if ("rowid_dedup" %in% colnames(out)) {
         out[, "rowid_dedup" := NULL]
@@ -414,7 +428,7 @@ get_contrasts <- function(model,
                 by = by,
                 verbose = verbose)
             draws <- attr(out, "posterior_draws")
-        } else { 
+        } else {
             bycols <- c(by, "group", "term", "^contrast[_]?")
             bycols <- paste(bycols, collapse = "|")
             bycols <- grep(bycols, colnames(out), value = TRUE)
