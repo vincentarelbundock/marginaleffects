@@ -1,3 +1,9 @@
+# marginaleffects (development version)
+
+Performance:
+
+* Computing elasticities for linear models is now up to 30% faster (#787, @etiennebacher).
+
 # marginaleffects 0.12.0
 
 Breaking change:
