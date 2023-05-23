@@ -195,19 +195,22 @@ get_contrasts <- function(model,
     elasticities <- lapply(elasticities, function(x) x$name)
     if (length(elasticities) > 0) {
         split_out <- split(out, by = "term")
+        if (!is.null(original)) {
+            idx1 <- c(v, "rowid", "rowidcf", "term", "group", grep("^contrast", colnames(original), value = TRUE))
+            idx1 <- intersect(idx1, colnames(original))
+            idx1 <- original[, ..idx1]
+            setnames(idx1, old = v, new = "elast")
+        }
+
         for (v in names(elasticities)) {
             idx2 <- unique(c("rowid", "term", "group", by, grep("^contrast", colnames(out), value = TRUE)))
             idx2 <- intersect(idx2, colnames(out))
             # discard other terms to get right length vector
             idx2 <- split_out[[v]][, ..idx2]
             # original is NULL when cross=TRUE
-            if (!is.null(original)) {
-                idx1 <- c(v, "rowid", "rowidcf", "term", "group", grep("^contrast", colnames(original), value = TRUE))
-                idx1 <- intersect(idx1, colnames(original))
-                idx1 <- original[, ..idx1]
-                setnames(idx1, old = v, new = "elast")
+            if (!is.null(idx1)) {
                 on_cols <- intersect(colnames(idx1), colnames(idx2))
-                idx2[, elast := unique(idx1[["elast"]])]
+                unique(idx2[idx1, elast := elast, on = on_cols])
             }
             elasticities[[v]] <- idx2$elast
         }
