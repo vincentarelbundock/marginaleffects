@@ -55,6 +55,10 @@ mod_mice <- with(dat_mice, lm(Petal.Width ~ Sepal.Length * Sepal.Width + Species
 marg_means_mice = marginal_means(mod_mice)
 expect_inherits(marg_means_mice, "marginalmeans")
 
+mod_mice <- with(dat_mice, glm(rbinom(n = length(Petal.Width), 1, 0.5) ~ Sepal.Length * Sepal.Width + Species, family = "binomial"))
+expect_error(marginal_means(mod_mice), pattern = "std.error")
+m <- marginal_means(mod_mice, type = "response")
+expect_inherits(m, "marginalmeans")
 
 
 
