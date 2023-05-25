@@ -41,3 +41,21 @@ fit <- with(imp,  glm(endp ~ trt, family = binomial(link = "logit")))
 auto <- suppressWarnings(avg_slopes(fit))
 expect_equivalent(auto$estimate, manu$estimate)
 expect_equivalent(auto$std.error, manu$std.error)
+
+
+
+# Issue #793
+set.seed(1024)
+dat <- iris
+dat$Sepal.Length[sample(seq_len(nrow(iris)), 40)] <- NA
+dat$Sepal.Width[sample(seq_len(nrow(iris)), 40)] <- NA
+dat$Species[sample(seq_len(nrow(iris)), 40)] <- NA
+dat_mice <- mice(dat, m = 20, printFlag = FALSE, .Random.seed = 1024)
+mod_mice <- with(dat_mice, lm(Petal.Width ~ Sepal.Length * Sepal.Width + Species))
+marg_means_mice = marginal_means(mod_mice)
+expect_inherits(marg_means_mice, "marginalmeans")
+
+
+
+
+source("helpers.R")

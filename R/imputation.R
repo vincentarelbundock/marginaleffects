@@ -1,10 +1,15 @@
-process_imputation <- function(x, call_attr) {
+process_imputation <- function(x, call_attr, marginal_means = FALSE) {
     insight::check_if_installed("mice")
     mfx_list <- list()
     for (i in seq_along(x$analyses)) {
         calltmp <- call_attr
         calltmp[["model"]] <- x$analyses[[i]]
-        calltmp[["modeldata"]] <- get_modeldata(x$analyses[[i]], additional_variables = FALSE)
+
+        # not sure why but this breaks marginal_means on "modeldata specified twice"
+        if (isFALSE(marginal_means)) {
+            calltmp[["modeldata"]] <- get_modeldata( x$analyses[[i]], additional_variables = FALSE)
+        }
+
         mfx_list[[i]] <- evalup(calltmp)
         if (i == 1) {
             out <- mfx_list[[1]]

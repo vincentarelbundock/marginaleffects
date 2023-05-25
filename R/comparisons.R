@@ -274,6 +274,8 @@ comparisons <- function(model,
         cross = cross,
         wts = wts,
         hypothesis = hypothesis,
+        equivalence = equivalence,
+        p_adjust = p_adjust,
         df = df),
         list(...))
     call_attr <- do.call("call", call_attr)

@@ -1,5 +1,9 @@
 # marginaleffects (development version)
 
+New:
+
+* `marginal_means` supports `mira` (`mice` objects).
+
 Performance:
 
 * Computing elasticities for linear models is now up to 30% faster (#787, @etiennebacher).

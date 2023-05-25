@@ -162,6 +162,31 @@ marginal_means <- function(model,
         insight::format_error("The `equivalence` and `p_adjust` arguments cannot be used together.")
     }
 
+    # build call: match.call() doesn't work well in *apply()
+    call_attr <- c(list(
+        name = "marginal_means",
+        model = model,
+        newdata = newdata,
+        variables = variables,
+        type = type,
+        vcov = vcov,
+        by = by,
+        conf_level = conf_level,
+        transform = transform,
+        wts = wts,
+        hypothesis = hypothesis,
+        equivalence = equivalence,
+        p_adjust = p_adjust,
+        df = df),
+        list(...))
+    call_attr <- do.call("call", call_attr)
+    
+    # multiple imputation
+    if (inherits(model, "mira")) {
+        out <- process_imputation(model, call_attr, marginal_means = TRUE)
+        return(out)
+    }
+
     # if type is NULL, we backtransform if relevant
     flag_class <- isTRUE(class(model)[1] %in% c("glm", "Gam", "negbin")) ||
                   isTRUE(hush(model[["method_type"]]) %in% c("feglm"))
@@ -385,7 +410,7 @@ marginal_means <- function(model,
     attr(out, "type") <- type
     attr(out, "model_type") <- class(model)[1]
     attr(out, "variables") <- variables
-    attr(out, "call") <- match.call()
+    attr(out, "call") <- call_attr
     attr(out, "conf_level") <- conf_level
     attr(out, "transform_label") <- names(transform)[1]
 
