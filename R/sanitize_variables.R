@@ -228,7 +228,7 @@ sanitize_variables <- function(variables,
 
         } else {
             if (calling_function == "comparisons") {
-                valid <- c("reference", "sequential", "pairwise", "all")
+                valid <- c("reference", "sequential", "pairwise", "all", "revpairwise", "revsequential", "revreference")
                 # minmax needs an actual factor in the original data to guarantee correct order of levels.
                 if (is.factor(modeldata[[v]])) { 
                     valid <- c(valid, "minmax")

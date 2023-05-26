@@ -67,5 +67,19 @@ mod <- lm(mpg ~ hp, mtcars)
 comparisons(mod, variables = list(hp = data.frame(mtcars$hp, mtcars$hp + 1:32)))
 
 
+# Issue #757: rev
+mod <- lm(mpg ~ factor(cyl), mtcars)
+a <- avg_comparisons(mod, variables = list(cyl = "pairwise"))
+b <- avg_comparisons(mod, variables = list(cyl = "revpairwise"))
+expect_equal(a$estimate, -1 * b$estimate)
+a <- avg_comparisons(mod, variables = list(cyl = "reference"))
+b <- avg_comparisons(mod, variables = list(cyl = "revreference"))
+expect_equal(a$estimate, -1 * b$estimate)
+a <- avg_comparisons(mod, variables = list(cyl = "sequential"))
+b <- avg_comparisons(mod, variables = list(cyl = "revsequential"))
+expect_equal(a$estimate, -1 * b$estimate)
+
+
+
 
 rm(list = ls())

@@ -81,6 +81,7 @@ avg_comparisons(
 \item "sequential": Each factor level is compared to the previous factor level
 \item "pairwise": Each factor level is compared to all other levels
 \item "minmax": The highest and lowest levels of a factor.
+\item "revpairwise", "revreference", "revsequential": inverse of the corresponding hypotheses.
 \item Vector of length 2 with the two values to compare.
 }
 \item Logical variables:

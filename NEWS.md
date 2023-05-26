@@ -3,6 +3,7 @@
 New:
 
 * `marginal_means` supports `mira` (`mice` objects).
+* `comparisons()`: the `variables` arguments now accepts "revpairwise", "revsequential", "revreference" for factor and character variables.
 
 Performance:
 

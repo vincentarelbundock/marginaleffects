@@ -36,26 +36,31 @@ get_contrast_data_factor <- function(model,
     }
 
     # index contrast orders based on variable$value
-    if (isTRUE(variable$value == "reference")) {
+    if (isTRUE(variable$value %in% c("reference", "revreference"))) {
         # null contrasts are interesting with interactions
         if (!isTRUE(interaction)) {
             levs_idx <- data.table::data.table(lo = levs[1], hi = levs[2:length(levs)])
         } else {
             levs_idx <- data.table::data.table(lo = levs[1], hi = levs)
         }
-    } else if (isTRUE(variable$value == "minmax")) {
-        levs_idx <- data.table::data.table(lo = levs[1], hi = levs[length(levs)])
-    } else if (isTRUE(variable$value == "pairwise")) {
+
+    } else if (isTRUE(variable$value %in% c("pairwise", "revpairwise"))) {
         levs_idx <- CJ(lo = levs, hi = levs, sorted = FALSE)
         # null contrasts are interesting with interactions
         if (!isTRUE(interaction)) {
             levs_idx <- levs_idx[levs_idx$hi != levs_idx$lo, ]
             levs_idx <- levs_idx[match(levs_idx$lo, levs) < match(levs_idx$hi, levs), ]
         }
+
+    } else if (isTRUE(variable$value %in% c("sequential", "revsequential"))) {
+        levs_idx <- data.table::data.table(lo = levs[1:(length(levs) - 1)], hi = levs[2:length(levs)])
+
     } else if (isTRUE(variable$value == "all")) {
         levs_idx <- CJ(lo = levs, hi = levs, sorted = FALSE)
-    } else if (isTRUE(variable$value == "sequential")) {
-        levs_idx <- data.table::data.table(lo = levs[1:(length(levs) - 1)], hi = levs[2:length(levs)])
+
+    } else if (isTRUE(variable$value == "minmax")) {
+        levs_idx <- data.table::data.table(lo = levs[1], hi = levs[length(levs)])
+
     } else if (length(variable$value) == 2) {
         if (is.character(variable$value)) {
             tmp <- modeldata[[variable$name]]
@@ -77,6 +82,10 @@ get_contrast_data_factor <- function(model,
         } else {
             levs_idx <- data.table::data.table(lo = variable$value[1], hi = variable$value[2])
         }
+    }
+
+    if (isTRUE(variable$value %in% c("revreference", "revpairwise", "revsequential"))) {
+        levs_idx <- levs_idx[, .(lo = hi, hi = lo)]
     }
 
     # internal option applied to the first of several contrasts when
