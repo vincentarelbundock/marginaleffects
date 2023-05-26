@@ -71,9 +71,7 @@ the \code{marginaleffects:::type_dictionary} dataframe.}
 
 \item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
 
-\item{wts}{string or numeric: weights to use when computing average
-contrasts or slopes. These weights only affect the averaging in
-\verb{avg_*()} or with the \code{by} argument, and not the unit-level estimates themselves.
+\item{wts}{string or numeric: weights to use when computing average contrasts or slopes. These weights only affect the averaging in \verb{avg_*()} or with the \code{by} argument, and not the unit-level estimates themselves. Internally, estimates and weights are passed to the \code{weighted.mean()} function.
 \itemize{
 \item string: column name of the weights variable in \code{newdata}. When supplying a column name to \code{wts}, it is recommended to supply the original data (including the weights variable) explicitly to \code{newdata}.
 \item numeric: vector of length equal to the number of rows in the original data or in \code{newdata} (if supplied).

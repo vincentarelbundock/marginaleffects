@@ -61,9 +61,7 @@
 #' - "eydx": dY/dX * Y
 #' - "dyex": dY/dX / X
 #' - Y is the predicted value of the outcome; X is the observed value of the predictor.
-#' @param wts string or numeric: weights to use when computing average
-#' contrasts or slopes. These weights only affect the averaging in
-#' `avg_*()` or with the `by` argument, and not the unit-level estimates themselves.
+#' @param wts string or numeric: weights to use when computing average contrasts or slopes. These weights only affect the averaging in `avg_*()` or with the `by` argument, and not the unit-level estimates themselves. Internally, estimates and weights are passed to the `weighted.mean()` function.
 #' + string: column name of the weights variable in `newdata`. When supplying a column name to `wts`, it is recommended to supply the original data (including the weights variable) explicitly to `newdata`.
 #' + numeric: vector of length equal to the number of rows in the original data or in `newdata` (if supplied).
 #' @param hypothesis specify a hypothesis test or custom contrast using a numeric value, vector, or matrix, a string, or a string formula.
