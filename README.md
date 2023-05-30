@@ -141,9 +141,9 @@ Means:](https://vincentarelbundock.github.io/marginaleffects/articles/marginalme
 
 | Goal                         | Function                                                                                                     |
 | :--------------------------- | :----------------------------------------------------------------------------------------------------------- |
-| Predictions                  | [`predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)           |
-|                              | [`avg_predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)       |
-|                              | [`plot_predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_comparisons.html) |
+| Predictions                  | [`predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html)           |
+|                              | [`avg_predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/predictions.html)       |
+|                              | [`plot_predictions()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_predictions.html) |
 | Comparisons                  | [`comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)           |
 |                              | [`avg_comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/comparisons.html)       |
 |                              | [`plot_comparisons()`](https://vincentarelbundock.github.io/marginaleffects/reference/plot_comparisons.html) |
