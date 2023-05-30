@@ -91,6 +91,11 @@ get_ci <- function(
         x$p.value <- stats::p.adjust(x$p.value, method = p_adjust)
     }
 
+    # s-value
+    if ("p.value" %in% colnames(x)) {
+        x$s.value <- -log2(x$p.value)
+    }
+
     return(x)
 }
 

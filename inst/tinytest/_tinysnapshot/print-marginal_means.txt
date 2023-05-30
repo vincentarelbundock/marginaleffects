@@ -1,9 +1,9 @@
 
- Term Value Mean Std. Error     z Pr(>|z|) 2.5 % 97.5 %
- gear     4 14.3      1.886  7.58   <0.001  10.6   18.0
- gear     3 17.6      0.796 22.16   <0.001  16.1   19.2
- gear     5 24.2      1.316 18.41   <0.001  21.7   26.8
+ Term Value Mean Std. Error     z Pr(>|z|)     S 2.5 % 97.5 %
+ gear     4 14.3      1.886  7.58   <0.001  44.7  10.6   18.0
+ gear     3 17.6      0.796 22.16   <0.001 359.1  16.1   19.2
+ gear     5 24.2      1.316 18.41   <0.001 249.1  21.7   26.8
 
 Results averaged over levels of: gear 
-Columns: rowid, term, value, gear, estimate, std.error, statistic, p.value, conf.low, conf.high, hp, mpg, wts 
+Columns: rowid, term, value, gear, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, hp, mpg, wts 
 

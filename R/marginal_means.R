@@ -59,9 +59,9 @@
 #' @template model_specific_arguments
 #' @template bayesian
 #' @template equivalence
+#' @template references
 #'
-#' @return Data frame of marginal means with one row per variable-value
-#' combination.
+#' @return Data frame of marginal means with one row per variable-value combination.
 #' @export
 #' @examples
 #' library(marginaleffects)
@@ -398,7 +398,7 @@ marginal_means <- function(model,
     out <- backtransform(out, transform)
 
     # column order
-    cols <- c("rowid", "group", colnames(by), "term", "hypothesis", "value", variables, "estimate", "std.error", "statistic", "p.value", "conf.low", "conf.high", sort(colnames(out)))
+    cols <- c("rowid", "group", colnames(by), "term", "hypothesis", "value", variables, "estimate", "std.error", "statistic", "p.value", "s.value", "conf.low", "conf.high", sort(colnames(out)))
     cols <- unique(cols)
     cols <- intersect(cols, colnames(out))
     out <- out[, cols, drop = FALSE]

@@ -123,8 +123,7 @@ package. See the "Model-Specific Arguments" section of the
 arguments.}
 }
 \value{
-Data frame of marginal means with one row per variable-value
-combination.
+Data frame of marginal means with one row per variable-value combination.
 }
 \description{
 This alias is kept for backward compatibility and because some users may prefer that name.
@@ -319,5 +318,11 @@ lc <- matrix(c(
   dimnames = list(NULL, c("A", "B")))
 marginal_means(mod, variables = "carb", hypothesis = lc)
 
+}
+\references{
+\itemize{
+\item Greenland S. 2019. "Valid P-Values Behave Exactly as They Should: Some Misleading Criticisms of P-Values and Their Resolution With S-Values." The American Statistician. 73(S1): 106–114.
+\item Cole, Stephen R, Jessie K Edwards, and Sander Greenland. 2020. "Surprise!" American Journal of Epidemiology 190 (2): 191–93. https://doi.org/10.1093/aje/kwaa136.
+}
 }
 \keyword{internal}

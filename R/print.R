@@ -71,6 +71,8 @@ print.marginaleffects <- function(x,
     for (i in seq_along(out)) {
         if (colnames(out)[i] %in% ps) {
             out[[i]] <- format.pval(out[[i]], digits = digits, eps = p_eps)
+        } else if (isTRUE("s.value" == colnames(out)[i])) {
+            out[[i]] <- sprintf("%.1f", out[[i]])
         } else {
             out[[i]] <- format(out[[i]], digits = digits)
         }
@@ -107,6 +109,7 @@ print.marginaleffects <- function(x,
         "std.error" = "Std. Error",
         "statistic" = statistic_label,
         "p.value" = sprintf("Pr(>|%s|)", statistic_label),
+        "s.value" = "S",
         "conf.low" = ifelse(is.null(alpha),
             "CI low",
             sprintf("%.1f %%", alpha / 2)),

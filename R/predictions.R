@@ -67,6 +67,7 @@
 #' @template model_specific_arguments
 #' @template bayesian
 #' @template equivalence
+#' @template references
 #'
 #' @return A `data.frame` with one row per observation and several columns:
 #' * `rowid`: row number of the `newdata` data frame
@@ -74,9 +75,10 @@
 #' * `group`: (optional) value of the grouped outcome (e.g., categorical outcome models)
 #' * `estimate`: predicted outcome
 #' * `std.error`: standard errors computed using the delta method.
+#' * `p.value`: p value associated to the `estimate` column. The null is determined by the `hypothesis` argument (0 by default), and p values are computed before applying the `transform` argument. For models of class `feglm`, `Gam`, `glm` and `negbin`, p values are computed on the link scale by default unless the `type` argument is specified explicitly.
+#' * `s.value`: Shannon information tranforms of p values. How many consecutive "heads" tosses would provide the same amount of evidence (or "suprise") against the null hypothesis that the coin is fair? See Greenland (2019) and Cole et al. (2020).
 #' * `conf.low`: lower bound of the confidence interval (or equal-tailed interval for bayesian models)
 #' * `conf.high`: upper bound of the confidence interval (or equal-tailed interval for bayesian models)
-#' * `p.value`: p value associated to the `estimate` column. The null is determined by the `hypothesis` argument (0 by default), and p values are computed before applying the `transform` argument. For models of class `feglm`, `Gam`, `glm` and `negbin`, p values are computed on the link scale by default unless the `type` argument is specified explicitly.
 #'
 #' See `?print.marginaleffects` for printing options.
 #'
@@ -532,7 +534,7 @@ predictions <- function(model,
     stubcols <- c(
         "rowid", "rowidcf", "term", "group", "hypothesis",
         bycols,
-        "estimate", "std.error", "statistic", "p.value", "conf.low",
+        "estimate", "std.error", "statistic", "p.value", "s.value", "conf.low",
         "conf.high", "marginaleffects_wts",
         sort(grep("^predicted", colnames(newdata), value = TRUE)))
     cols <- intersect(stubcols, colnames(out))

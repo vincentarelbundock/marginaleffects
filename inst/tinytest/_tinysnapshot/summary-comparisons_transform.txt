@@ -1,6 +1,6 @@
 
- Term Contrast Estimate Pr(>|z|) 2.5 % 97.5 %
-   hp       +1     2.71   <0.001  2.69   2.72
+ Term Contrast Estimate Pr(>|z|)   S 2.5 % 97.5 %
+   hp       +1     2.71   <0.001 Inf  2.69   2.72
 
-Columns: term, contrast, estimate, p.value, conf.low, conf.high 
+Columns: term, contrast, estimate, p.value, s.value, conf.low, conf.high 
 
