@@ -188,7 +188,7 @@ A \code{data.frame} with one row per observation and several columns:
 \item \code{estimate}: predicted outcome
 \item \code{std.error}: standard errors computed using the delta method.
 \item \code{p.value}: p value associated to the \code{estimate} column. The null is determined by the \code{hypothesis} argument (0 by default), and p values are computed before applying the \code{transform} argument. For models of class \code{feglm}, \code{Gam}, \code{glm} and \code{negbin}, p values are computed on the link scale by default unless the \code{type} argument is specified explicitly.
-\item \code{s.value}: Shannon information tranforms of p values. How many consecutive "heads" tosses would provide the same amount of evidence (or "surprise") against the null hypothesis that the coin is fair? See Greenland (2019) and Cole et al. (2020).
+\item \code{s.value}: Shannon information tranforms of p values. How many consecutive "heads" tosses would provide the same amount of evidence (or "surprise") against the null hypothesis that the coin is fair? The purpose of S is to calibrate the analyst's intuition about the strength of evidence encoded in p against a well-known physical phenomenon. See Greenland (2019) and Cole et al. (2020).
 \item \code{conf.low}: lower bound of the confidence interval (or equal-tailed interval for bayesian models)
 \item \code{conf.high}: upper bound of the confidence interval (or equal-tailed interval for bayesian models)
 }
