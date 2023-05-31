@@ -116,7 +116,7 @@
 #' * `dydx`: slope of the outcome with respect to the term, for a given combination of predictor values
 #' * `std.error`: standard errors computed by via the delta method.
 #' * `p.value`: p value associated to the `estimate` column. The null is determined by the `hypothesis` argument (0 by default), and p values are computed before applying the `transform` argument. For models of class `feglm`, `Gam`, `glm` and `negbin`, p values are computed on the link scale by default unless the `type` argument is specified explicitly.
-#' * `s.value`: Shannon information tranforms of p values. How many consecutive "heads" tosses would provide the same amount of evidence (or "suprise") against the null hypothesis that the coin is fair? See Greenland (2019) and Cole et al. (2020).
+#' * `s.value`: Shannon information tranforms of p values. How many consecutive "heads" tosses would provide the same amount of evidence (or "surprise") against the null hypothesis that the coin is fair? The purpose of S is to calibrate the analyst's intuition about the strength of evidence encoded in p against a well-known physical phenomenon. See Greenland (2019) and Cole et al. (2020).
 #' * `conf.low`: lower bound of the confidence interval (or equal-tailed interval for bayesian models)
 #' * `conf.high`: upper bound of the confidence interval (or equal-tailed interval for bayesian models)
 #'
