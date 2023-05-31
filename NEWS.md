@@ -1,4 +1,6 @@
-# marginaleffects (development version)
+# News
+
+## marginaleffects (development version)
 
 New:
 
@@ -10,7 +12,7 @@ Performance:
 
 * Computing elasticities for linear models is now up to 30% faster (#787, @etiennebacher).
 
-# marginaleffects 0.12.0
+## marginaleffects 0.12.0
 
 Breaking change:
 
@@ -26,7 +28,7 @@ Bug:
 
 * Wrong order of rows in bayesian models with `by` argument. Thanks to @shirdekel for report #782.
 
-# marginaleffects 0.11.2
+## marginaleffects 0.11.2
 
 * `vcov()` and `coef()` methods for `marginaleffects` objects.
 * Strings in `wts` are accepted with the `by` argument.
@@ -46,7 +48,7 @@ Bugs:
 * Bug when `datagrid()` when called inside a user-written function. Thanks to @NickCH-K for report #769 and to @capnrefsmmat for the diagnostics.
 
 
-# marginaleffects 0.11.1
+## marginaleffects 0.11.1
 
 Breaking change:
 
@@ -75,7 +77,7 @@ Bug:
 * Elasticities are now supported for `ordinal::clm()` models. Thanks to MrJerryTAO for report #729.
 * `glmmTMB` models with zero-inflated components are supported. Thanks to @Helsinki-Ronan and @strengejacke for report #734.
 
-# marginaleffects 0.11.0
+## marginaleffects 0.11.0
 
 Breaking changes:
 
@@ -112,7 +114,7 @@ Bugs:
 * `by` with user-specified function in `comparison` and factor predictor did not aggregate correctly. Thanks to @joaotedde for report #715.
 * `ordinal::clm`: Support `cum.prob` and `linear.predictor` prediction types. Thanks to @MrJerryTAO for report #717.
 
-# marginaleffects 0.10.0
+## marginaleffects 0.10.0
 
 Performance:
 
@@ -162,7 +164,7 @@ Bugfixes:
 * `brms` models with multivariate outcome collapsed categories in `comparisons()`. Issue #639.
 * `hypotheses()` now works on lists and in calls to `lapply()`, `purrr::map()`, etc. Issue #660.
 
-# marginaleffects 0.9.0
+## marginaleffects 0.9.0
 
 Breaking changes:
 
@@ -210,7 +212,7 @@ Other:
 
 * Removed major performance bottleneck for `slopes()`
 
-# marginaleffects 0.8.1
+## marginaleffects 0.8.1
 
 * `deltamethod()` can run hypothesis tests on objects produced by the `comparisons()`, `marginaleffects()`, `predictions()`, and `marginalmeans()` functions. This feature relies on `match.call()`, which means it may not always work when used programmatically, inside functions and nested environments. It is generally safer and more efficient to use the `hypothesis` argument.
 * `plot_cme()` and `plot_cco()` accept lists with user-specified values for the regressors, and can display nice labels for shortcut string-functions like "threenum" or "quartile".
@@ -224,7 +226,7 @@ Bug fixes:
 * `hypothesis` argument with bayesian models and `tidy()` used to raise an error.
 * Missing values for some regressors in the `comparisons()` output for `brms` models.
 
-# marginaleffects 0.8.0
+## marginaleffects 0.8.0
 
 Breaking change:
 
@@ -261,7 +263,7 @@ Bug fixes and minor improvements:
 * For objects from `crch` package, a number of bugs have been fixed; standard errors should now be correct for `deltamethod()`, `marginaleffects()`, etc.
 * Fixed a bug in the `tidy()` function for `glmmTMB` models without random effects, which caused all t statistics to be identical.
 
-# marginaleffects 0.7.1
+## marginaleffects 0.7.1
 
 * New supported model class: `gamlss`. Thanks to Marcio Augusto Diniz.
 * `marginalmeans()` accepts a `wts` argument with values: "equal", "proportional", "cells".
@@ -282,7 +284,7 @@ Bug fixes and minor improvements:
   - Python Numpy models in `marginaleffects`. Thanks to @timpipeseek.
   - Bootstrap example in standard errors vignette.
 
-# marginaleffects 0.7.0
+## marginaleffects 0.7.0
 
 Breaking changes:
 
@@ -316,7 +318,7 @@ New features:
 * The default contrast in `comparisons()` for binary predictors is now a difference between 1 and 0, rather than +1 relative to baseline.
 * documentation improvements
 
-# marginaleffects 0.6.0
+## marginaleffects 0.6.0
 
 New supported packages and models:
 
@@ -354,7 +356,7 @@ Misc:
 * New `transform_pre` shortcuts: dydx, expdydx
 * `tidy.predictions()` computes standard errors and confidence intervals for linear models or GLM on the link scale.
 
-# marginaleffects 0.5.0
+## marginaleffects 0.5.0
 
 Breaking changes:
 
@@ -408,7 +410,7 @@ Argument name changes (backward compatibility is preserved:
     - `FUN.factor` -> `FUN_factor` (same for related arguments)
     - `grid.type` -> `grid_type`
 
-# marginaleffects 0.4.1
+## marginaleffects 0.4.1
 
 New supported packages and models: 
 
@@ -423,7 +425,7 @@ Misc:
 * New tests
 * Bug fixes
 
-# marginaleffects 0.4.0
+## marginaleffects 0.4.0
 
 New function:
 
@@ -436,11 +438,11 @@ Misc:
 * More robust handling of in-formula functions: factor(), strata(), mo()
 * Do not overwrite user's `ggplot2::theme_set()` call
 
-# marginaleffects 0.3.4
+## marginaleffects 0.3.4
 
 * Bug fixes
 
-# marginaleffects 0.3.3
+## marginaleffects 0.3.3
 
 New supported models:
 
@@ -456,7 +458,7 @@ Misc:
 * Documentation improvements.
 * CRAN test fixes
 
-# marginaleffects 0.3.2
+## marginaleffects 0.3.2
 
 Support for new models and packages:
 
@@ -473,11 +475,11 @@ Misc:
 * Documentation improvements
 * CRAN tests
 
-# marginaleffects 0.3.1
+## marginaleffects 0.3.1
 
 documentation bugfix
 
-# marginaleffects 0.3.0
+## marginaleffects 0.3.0
 
 Breaking changes:
 
@@ -512,7 +514,7 @@ Misc:
 * Many bug fixes
 * Many new tests, including several against `emmeans`
 
-# marginaleffects 0.2.0
+## marginaleffects 0.2.0
 
 Breaking change:
 
@@ -541,7 +543,7 @@ Misc:
 
 * New validity checks and tests
 
-# marginaleffects 0.1.0
+## marginaleffects 0.1.0
 
 First release. Bravo!
 
