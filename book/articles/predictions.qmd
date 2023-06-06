@@ -299,7 +299,7 @@ predictions(nom, by = by, hypothesis = "pairwise")
 
 ### Bayesian models
 
-The same strategy works for bayesian models:
+The same strategy works for Bayesian models:
 ```{r, eval = FALSE}
 library(brms)
 mod <- brm(am ~ mpg * vs, data = mtcars, family = bernoulli)
