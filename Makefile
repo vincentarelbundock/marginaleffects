@@ -1,4 +1,6 @@
-.PHONY: help testall testone document check install deploy
+.PHONY: help testall testone document check install deploy html pdf news clean
+
+BOOK_DIR := book
 
 help:  ## Display this help screen
 	@echo -e "\033[1mAvailable commands:\033[0m\n"
@@ -19,5 +21,36 @@ check: ## devtools::check()
 install: ## devtools::install()
 	Rscript -e "devtools::install()"
 
-deploy: ## pkgdown::deploy_to_branch()
-	Rscript -e "pkgdown::deploy_to_branch()"
+news: ## Download the latest changelog
+	Rscript -e "source('book/utils/utils.R');get_news()"
+
+pdf: news ## Render the book to PDF
+	Rscript -e "source('book/utils/utils.R');get_quarto_yaml(pdf = TRUE)"
+	cd $(BOOK_DIR) && quarto render --to pdf && cd ..
+	rm -rf $(BOOK_DIR)/NEWS.qmd $(BOOK_DIR)/_quarto.qmd 
+	make clean
+
+html: news ## Render the book to HTML
+	Rscript -e "source('book/utils/utils.R');get_quarto_yaml(pdf = FALSE)"
+	cd $(BOOK_DIR) && quarto render --to html && cd ..
+	rm -rf $(BOOK_DIR)/NEWS.qmd $(BOOK_DIR)/_quarto.qmd 
+	make clean
+
+clean: ## Clean the book directory
+	rm -rf $(BOOK_DIR)/NEWS.qmd $(BOOK_DIR)/_quarto.qmd 
+	rm -rf ut 
+
+deploy: ## Deploy book to Github website
+	git checkout main
+	git pull
+	git checkout gh-pages
+	git checkout main -- book
+	git checkout main -- Makefile
+	Rscript -e "source('book/utils/utils.R');link_function_docs()"
+	make html
+	rsync -a book/_book/* ./
+	rm -rf book Makefile _quarto.yml utils.R
+	git add .
+	git commit -m "Update book"
+	git push
+	git checkout main

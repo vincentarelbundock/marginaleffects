@@ -1,0 +1,532 @@
+# marginal_means {.unnumbered}
+
+Marginal Means
+
+## Description
+
+<p>Marginal means are adjusted predictions, averaged across a grid of categorical predictors,
+holding other numeric predictors at their means. To learn more, read the marginal means vignette, visit the
+package website, or scroll down this page for a full list of vignettes:
+</p>
+
+<ul>
+<li> <p><a href="https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html">https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html</a>
+</p>
+</li>
+<li> <p><a href="https://vincentarelbundock.github.io/marginaleffects/">https://vincentarelbundock.github.io/marginaleffects/</a>
+</p>
+</li></ul>
+
+
+
+## Usage
+
+<pre><code class='language-R'>marginal_means(
+  model,
+  variables = NULL,
+  newdata = NULL,
+  vcov = TRUE,
+  conf_level = 0.95,
+  type = NULL,
+  transform = NULL,
+  cross = FALSE,
+  hypothesis = NULL,
+  equivalence = NULL,
+  p_adjust = NULL,
+  df = Inf,
+  wts = "equal",
+  by = NULL,
+  ...
+)
+</code></pre>
+
+
+## Arguments
+
+<table>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>model</code></td>
+<td>
+<p>Model object</p>
+</td></tr>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>variables</code></td>
+<td>
+<p>Focal variables
+</p>
+
+<ul>
+<li><p> Character vector of variable names: compute marginal means for each category of the listed variables.
+</p>
+</li>
+<li> <p><code>NULL</code>: calculate marginal means for all logical, character, or factor variables in the dataset used to fit <code>model</code>. Hint:  Set <code>cross=TRUE</code> to compute marginal means for combinations of focal variables.
+</p>
+</li></ul>
+</td></tr>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>newdata</code></td>
+<td>
+<p>Grid of predictor values over which we marginalize.
+</p>
+
+<ul>
+<li> <p><code>NULL</code> create a grid with all combinations of all categorical predictors in the model. Warning: can be expensive.
+</p>
+</li>
+<li><p> Character vector: subset of categorical variables to use when building the balanced grid of predictors. Other variables are held to their mean or mode.
+</p>
+</li>
+<li><p> Data frame: A data frame which includes all the predictors in the original model. The full dataset is replicated once for every combination of the focal variables in the <code>variables</code> argument, using the <code>datagridcf()</code> function.
+</p>
+</li></ul>
+</td></tr>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>vcov</code></td>
+<td>
+<p>Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
+</p>
+
+<ul>
+<li><p> FALSE: Do not compute standard errors. This can speed up computation considerably.
+</p>
+</li>
+<li><p> TRUE: Unit-level standard errors using the default <code>vcov(model)</code> variance-covariance matrix.
+</p>
+</li>
+<li><p> String which indicates the kind of uncertainty estimates to return.
+</p>
+
+<ul>
+<li><p> Heteroskedasticity-consistent: <code>"HC"</code>, <code>"HC0"</code>, <code>"HC1"</code>, <code>"HC2"</code>, <code>"HC3"</code>, <code>"HC4"</code>, <code>"HC4m"</code>, <code>"HC5"</code>. See <code>?sandwich::vcovHC</code>
+</p>
+</li>
+<li><p> Heteroskedasticity and autocorrelation consistent: <code>"HAC"</code>
+</p>
+</li>
+<li><p> Mixed-Models degrees of freedom: &quot;satterthwaite&quot;, &quot;kenward-roger&quot;
+</p>
+</li>
+<li><p> Other: <code>"NeweyWest"</code>, <code>"KernHAC"</code>, <code>"OPG"</code>. See the <code>sandwich</code> package documentation.
+</p>
+</li></ul>
+
+</li>
+<li><p> One-sided formula which indicates the name of cluster variables (e.g., <code>~unit_id</code>). This formula is passed to the <code>cluster</code> argument of the <code>sandwich::vcovCL</code> function.
+</p>
+</li>
+<li><p> Square covariance matrix
+</p>
+</li>
+<li><p> Function which returns a covariance matrix (e.g., <code>stats::vcov(model)</code>)
+</p>
+</li></ul>
+</td></tr>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>conf_level</code></td>
+<td>
+<p>numeric value between 0 and 1. Confidence level to use to build a confidence interval.</p>
+</td></tr>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>type</code></td>
+<td>
+<p>string indicates the type (scale) of the predictions used to
+compute marginal effects or contrasts. This can differ based on the model
+type, but will typically be a string such as: &quot;response&quot;, &quot;link&quot;, &quot;probs&quot;,
+or &quot;zero&quot;. When an unsupported string is entered, the model-specific list of
+acceptable values is returned in an error message. When <code>type</code> is <code>NULL</code>, the
+default value is used. This default is the first model-related row in
+the <code>marginaleffects:::type_dictionary</code> dataframe. If <code>type</code> is <code>NULL</code> and
+the default value is &quot;response&quot;, the function tries to compute marginal means
+on the link scale before backtransforming them using the inverse link function.</p>
+</td></tr>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>transform</code></td>
+<td>
+<p>A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.</p>
+</td></tr>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>cross</code></td>
+<td>
+<p>TRUE or FALSE
+</p>
+
+<ul>
+<li> <p><code>FALSE</code> (default): Marginal means are computed for each predictor individually.
+</p>
+</li>
+<li> <p><code>TRUE</code>: Marginal means are computed for each combination of predictors specified in the <code>variables</code> argument.
+</p>
+</li></ul>
+</td></tr>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>hypothesis</code></td>
+<td>
+<p>specify a hypothesis test or custom contrast using a numeric value, vector, or matrix, a string, or a string formula.
+</p>
+
+<ul>
+<li><p> Numeric:
+</p>
+
+<ul>
+<li><p> Single value: the null hypothesis used in the computation of Z and p (before applying <code>transform</code>).
+</p>
+</li>
+<li><p> Vector: Weights to compute a linear combination of (custom contrast between) estimates. Length equal to the number of rows generated by the same function call, but without the <code>hypothesis</code> argument.
+</p>
+</li>
+<li><p> Matrix: Each column is a vector of weights, as describe above, used to compute a distinct linear combination of (contrast between) estimates. The column names of the matrix are used as labels in the output.
+</p>
+</li></ul>
+
+</li>
+<li><p> String formula to specify linear or non-linear hypothesis tests. If the <code>term</code> column uniquely identifies rows, terms can be used in the formula. Otherwise, use <code>b1</code>, <code>b2</code>, etc. to identify the position of each parameter. Examples:
+</p>
+
+<ul>
+<li> <p><code>hp = drat</code>
+</p>
+</li>
+<li> <p><code>hp + drat = 12</code>
+</p>
+</li>
+<li> <p><code>b1 + b2 + b3 = 0</code>
+</p>
+</li></ul>
+
+</li>
+<li><p> String:
+</p>
+
+<ul>
+<li><p> &quot;pairwise&quot;: pairwise differences between estimates in each row.
+</p>
+</li>
+<li><p> &quot;reference&quot;: differences between the estimates in each row and the estimate in the first row.
+</p>
+</li>
+<li><p> &quot;sequential&quot;: difference between an estimate and the estimate in the next row.
+</p>
+</li>
+<li><p> &quot;revpairwise&quot;, &quot;revreference&quot;, &quot;revsequential&quot;: inverse of the corresponding hypotheses, as described above.
+</p>
+</li></ul>
+
+</li>
+<li><p> See the Examples section below and the vignette: https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html
+</p>
+</li></ul>
+</td></tr>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>equivalence</code></td>
+<td>
+<p>Numeric vector of length 2: bounds used for the two-one-sided test (TOST) of equivalence, and for the non-inferiority and non-superiority tests. See Details section below.</p>
+</td></tr>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>p_adjust</code></td>
+<td>
+<p>Adjust p-values for multiple comparisons: &quot;holm&quot;, &quot;hochberg&quot;, &quot;hommel&quot;, &quot;bonferroni&quot;, &quot;BH&quot;, &quot;BY&quot;, or &quot;fdr&quot;. See stats::p.adjust</p>
+</td></tr>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>df</code></td>
+<td>
+<p>Degrees of freedom used to compute p values and confidence intervals. A single numeric value between 1 and <code>Inf</code>. When <code>df</code> is <code>Inf</code>, the normal distribution is used. When <code>df</code> is finite, the <code>t</code> distribution is used. See insight::get_df for a convenient function to extract degrees of freedom. Ex: <code>slopes(model, df = insight::get_df(model))</code></p>
+</td></tr>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>wts</code></td>
+<td>
+<p>character value. Weights to use in the averaging.
+</p>
+
+<ul>
+<li><p> &quot;equal&quot;: each combination of variables in <code>newdata</code> gets equal weight.
+</p>
+</li>
+<li><p> &quot;cells&quot;: each combination of values for the variables in the <code>newdata</code> gets a weight proportional to its frequency in the original data.
+</p>
+</li>
+<li><p> &quot;proportional&quot;: each combination of values for the variables in <code>newdata</code> &ndash; except for those in the <code>variables</code> argument &ndash; gets a weight proportional to its frequency in the original data.
+</p>
+</li></ul>
+</td></tr>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>by</code></td>
+<td>
+<p>Collapse marginal means into categories. Data frame with a <code>by</code> column of group labels, and merging columns shared by <code>newdata</code> or the data frame produced by calling the same function without the <code>by</code> argument.</p>
+</td></tr>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>...</code></td>
+<td>
+<p>Additional arguments are passed to the <code>predict()</code> method
+supplied by the modeling package.These arguments are particularly useful
+for mixed-effects or bayesian models (see the online vignettes on the
+<code>marginaleffects</code> website). Available arguments can vary from model to
+model, depending on the range of supported arguments by each modeling
+package. See the &quot;Model-Specific Arguments&quot; section of the
+<code>?marginaleffects</code> documentation for a non-exhaustive list of available
+arguments.</p>
+</td></tr>
+</table>
+
+
+## Details
+
+<p>This function begins by calling the <code>predictions</code> function to obtain a
+grid of predictors, and adjusted predictions for each cell. The grid
+includes all combinations of the categorical variables listed in the
+<code>variables</code> and <code>newdata</code> arguments, or all combinations of the
+categorical variables used to fit the model if <code>newdata</code> is <code>NULL</code>.
+In the prediction grid, numeric variables are held at their means.
+</p>
+<p>After constructing the grid and filling the grid with adjusted predictions,
+<code>marginal_means</code> computes marginal means for the variables listed in the
+<code>variables</code> argument, by average across all categories in the grid.
+</p>
+<p><code>marginal_means</code> can only compute standard errors for linear models, or for
+predictions on the link scale, that is, with the <code>type</code> argument set to
+&quot;link&quot;.
+</p>
+<p>The <code>marginaleffects</code> website compares the output of this function to the
+popular <code>emmeans</code> package, which provides similar but more advanced
+functionality: https://vincentarelbundock.github.io/marginaleffects/
+</p>
+
+
+## Value
+
+<p>Data frame of marginal means with one row per variable-value
+combination.
+</p>
+
+
+## Standard errors using the delta method
+
+<p>Standard errors for all quantities estimated by <code>marginaleffects</code> can be obtained via the delta method. This requires differentiating a function with respect to the coefficients in the model using a finite difference approach. In some models, the delta method standard errors can be sensitive to various aspects of the numeric differentiation strategy, including the step size. By default, the step size is set to <code>1e-8</code>, or to <code>1e-4</code> times the smallest absolute model coefficient, whichever is largest.
+</p>
+<p><code>marginaleffects</code> can delegate numeric differentiation to the <code>numDeriv</code> package, which allows more flexibility. To do this, users can pass arguments to the <code>numDeriv::jacobian</code> function through a global option. For example:
+</p>
+
+<ul>
+<li> <p><code>options(marginaleffects_numDeriv = list(method = "simple", method.args = list(eps = 1e-6)))</code>
+</p>
+</li>
+<li> <p><code>options(marginaleffects_numDeriv = list(method = "Richardson", method.args = list(eps = 1e-5)))</code>
+</p>
+</li>
+<li> <p><code>options(marginaleffects_numDeriv = NULL)</code>
+</p>
+</li></ul>
+
+<p>See the &quot;Standard Errors and Confidence Intervals&quot; vignette on the <code>marginaleffects</code> website for more details on the computation of standard errors:
+</p>
+<p>https://vincentarelbundock.github.io/marginaleffects/articles/uncertainty.html
+</p>
+<p>Note that the <code>inferences()</code> function can be used to compute uncertainty estimates using a bootstrap or simulation-based inference. See the vignette:
+</p>
+<p>https://vincentarelbundock.github.io/marginaleffects/articles/bootstrap.html
+</p>
+
+
+## Model-Specific Arguments
+
+<p>Some model types allow model-specific arguments to modify the nature of
+marginal effects, predictions, marginal means, and contrasts. Please report
+other package-specific <code>predict()</code> arguments on Github so we can add them to
+the table below.
+</p>
+<p>https://github.com/vincentarelbundock/marginaleffects/issues</p>
+
+<table>
+<tr>
+ <td style="text-align: left;">
+   Package </td><td style="text-align: left;"> Class </td><td style="text-align: left;"> Argument </td><td style="text-align: left;"> Documentation </td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+   <code>brms</code> </td><td style="text-align: left;"> <code>brmsfit</code> </td><td style="text-align: left;"> <code>ndraws</code> </td><td style="text-align: left;"> brms::posterior_predict </td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+    </td><td style="text-align: left;">  </td><td style="text-align: left;"> <code>re_formula</code> </td><td style="text-align: left;"> brms::posterior_predict </td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+   <code>lme4</code> </td><td style="text-align: left;"> <code>merMod</code> </td><td style="text-align: left;"> <code>re.form</code> </td><td style="text-align: left;"> lme4::predict.merMod </td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+    </td><td style="text-align: left;">  </td><td style="text-align: left;"> <code>allow.new.levels</code> </td><td style="text-align: left;"> lme4::predict.merMod </td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+   <code>glmmTMB</code> </td><td style="text-align: left;"> <code>glmmTMB</code> </td><td style="text-align: left;"> <code>re.form</code> </td><td style="text-align: left;"> glmmTMB::predict.glmmTMB </td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+    </td><td style="text-align: left;">  </td><td style="text-align: left;"> <code>allow.new.levels</code> </td><td style="text-align: left;"> glmmTMB::predict.glmmTMB </td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+    </td><td style="text-align: left;">  </td><td style="text-align: left;"> <code>zitype</code> </td><td style="text-align: left;"> glmmTMB::predict.glmmTMB </td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+   <code>mgcv</code> </td><td style="text-align: left;"> <code>bam</code> </td><td style="text-align: left;"> <code>exclude</code> </td><td style="text-align: left;"> mgcv::predict.bam </td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+   <code>robustlmm</code> </td><td style="text-align: left;"> <code>rlmerMod</code> </td><td style="text-align: left;"> <code>re.form</code> </td><td style="text-align: left;"> robustlmm::predict.rlmerMod </td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+    </td><td style="text-align: left;">  </td><td style="text-align: left;"> <code>allow.new.levels</code> </td><td style="text-align: left;"> robustlmm::predict.rlmerMod </td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+   <code>MCMCglmm</code> </td><td style="text-align: left;"> <code>MCMCglmm</code> </td><td style="text-align: left;"> <code>ndraws</code> </td><td style="text-align: left;">  </td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+</td>
+</tr>
+
+</table>
+
+
+
+## Bayesian posterior summaries
+
+<p>By default, credible intervals in bayesian models are built as equal-tailed
+intervals. This can be changed to a highest density interval by setting a global
+option:
+</p>
+<p><code>options("marginaleffects_posterior_interval" = "eti")</code>
+</p>
+<p><code>options("marginaleffects_posterior_interval" = "hdi")</code>
+</p>
+<p>By default, the center of the posterior distribution in bayesian models is
+identified by the median. Users can use a different summary function by setting a
+global option:
+</p>
+<p><code>options("marginaleffects_posterior_center" = "mean")</code>
+</p>
+<p><code>options("marginaleffects_posterior_center" = "median")</code>
+</p>
+<p>When estimates are averaged using the <code>by</code> argument, the <code>tidy()</code> function, or
+the <code>summary()</code> function, the posterior distribution is marginalized twice over.
+First, we take the average <em>across</em> units but <em>within</em> each iteration of the
+MCMC chain, according to what the user requested in <code>by</code> argument or
+<code>tidy()/summary()</code> functions. Then, we identify the center of the resulting
+posterior using the function supplied to the
+<code>"marginaleffects_posterior_center"</code> option (the median by default).
+</p>
+
+
+## Equivalence, Inferiority, Superiority
+
+<p><code class="reqn">\theta</code> is an estimate, <code class="reqn">\sigma_\theta</code> its estimated standard error, and <code class="reqn">[a, b]</code> are the bounds of the interval supplied to the <code>equivalence</code> argument.
+</p>
+<p>Non-inferiority:
+</p>
+
+<ul>
+<li> <p><code class="reqn">H_0</code>: <code class="reqn">\theta \leq a</code>
+</p>
+</li>
+<li> <p><code class="reqn">H_1</code>: <code class="reqn">\theta &gt; a</code>
+</p>
+</li>
+<li> <p><code class="reqn">t=(\theta - a)/\sigma_\theta</code>
+</p>
+</li>
+<li><p> p: Upper-tail probability
+</p>
+</li></ul>
+
+<p>Non-superiority:
+</p>
+
+<ul>
+<li> <p><code class="reqn">H_0</code>: <code class="reqn">\theta \geq b</code>
+</p>
+</li>
+<li> <p><code class="reqn">H_1</code>: <code class="reqn">\theta &lt; b</code>
+</p>
+</li>
+<li> <p><code class="reqn">t=(\theta - b)/\sigma_\theta</code>
+</p>
+</li>
+<li><p> p: Lower-tail probability
+</p>
+</li></ul>
+
+<p>Equivalence: Two One-Sided Tests (TOST)
+</p>
+
+<ul>
+<li><p> p: Maximum of the non-inferiority and non-superiority p values.
+</p>
+</li></ul>
+
+<p>Thanks to Russell V. Lenth for the excellent <code>emmeans</code> package and documentation which inspired this feature.
+</p>
+
+
+## Examples
+```{r}
+library(marginaleffects)
+
+library(marginaleffects)
+
+# simple marginal means for each level of `cyl`
+dat <- mtcars
+dat$carb <- factor(dat$carb)
+dat$cyl <- factor(dat$cyl)
+dat$am <- as.logical(dat$am)
+mod <- lm(mpg ~ carb + cyl + am, dat)
+
+marginal_means(
+  mod,
+  variables = "cyl")
+
+# collapse levels of cyl by averaging
+by <- data.frame(
+  cyl = c(4, 6, 8),
+  by = c("4 &amp; 6", "4 &amp; 6", "8"))
+marginal_means(mod,
+  variables = "cyl",
+  by = by)
+
+# pairwise differences between collapsed levels
+marginal_means(mod,
+  variables = "cyl",
+  by = by,
+  hypothesis = "pairwise")
+
+# cross
+marginal_means(mod,
+  variables = c("cyl", "carb"),
+  cross = TRUE)
+
+# collapsed cross
+by <- expand.grid(
+  cyl = unique(mtcars$cyl),
+  carb = unique(mtcars$carb))
+by$by <- ifelse(
+  by$cyl == 4,
+  paste("Control:", by$carb),
+  paste("Treatment:", by$carb))
+
+
+# Convert numeric variables to categorical before fitting the model
+dat <- mtcars
+dat$am <- as.logical(dat$am)
+dat$carb <- as.factor(dat$carb)
+mod <- lm(mpg ~ hp + am + carb, data = dat)
+
+# Compute and summarize marginal means
+marginal_means(mod)
+
+# Contrast between marginal means (carb2 - carb1), or "is the 1st marginal means equal to the 2nd?"
+# see the vignette on "Hypothesis Tests and Custom Contrasts" on the `marginaleffects` website.
+lc <- c(-1, 1, 0, 0, 0, 0)
+marginal_means(mod, variables = "carb", hypothesis = "b2 = b1")
+
+marginal_means(mod, variables = "carb", hypothesis = lc)
+
+# Multiple custom contrasts
+lc <- matrix(c(
+    -2, 1, 1, 0, -1, 1,
+    -1, 1, 0, 0, 0, 0
+    ),
+  ncol = 2,
+  dimnames = list(NULL, c("A", "B")))
+marginal_means(mod, variables = "carb", hypothesis = lc)
+
+
+```

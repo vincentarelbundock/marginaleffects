@@ -9,3 +9,10 @@ inst/tinytest/_tinysnapshot_review/
 inst/doc
 marginaleffects.Rproj
 *.code-workspace
+book/_quarto.yml
+*_files
+_freeze
+_book
+site_libs
+cover.png
+book/articles/*.html

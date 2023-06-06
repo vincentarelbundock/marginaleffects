@@ -1,0 +1,158 @@
+# inferences {.unnumbered}
+
+(EXPERIMENTAL) Bootstrap and Simulation-Based Inference
+
+## Description
+
+<p>Warning: This function is experimental. It may be renamed, the user interface may change, or the functionality may migrate to arguments in other <code>marginaleffects</code> functions.
+</p>
+<p>Apply this function to a <code>marginaleffects</code> object to change the inferential method used to compute uncertainty estimates.
+</p>
+
+
+## Usage
+
+<pre><code class='language-R'>inferences(x, method, R = 1000, conf_type = "perc", ...)
+</code></pre>
+
+
+## Arguments
+
+<table>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>x</code></td>
+<td>
+<p>Object produced by one of the core <code>marginaleffects</code> functions.</p>
+</td></tr>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>method</code></td>
+<td>
+<p>String
+</p>
+
+<ul>
+<li><p> &quot;delta&quot;: delta method standard errors
+</p>
+</li>
+<li><p> &quot;boot&quot; package
+</p>
+</li>
+<li><p> &quot;fwb&quot;: fractional weighted bootstrap
+</p>
+</li>
+<li><p> &quot;rsample&quot; package
+</p>
+</li>
+<li><p> &quot;simulation&quot; from a multivariate normal distribution (Krinsky &amp; Robb, 1986)
+</p>
+</li>
+<li><p> &quot;mi&quot; multiple imputation for missing data
+</p>
+</li></ul>
+</td></tr>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>R</code></td>
+<td>
+<p>Number of resamples or simulations.</p>
+</td></tr>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>conf_type</code></td>
+<td>
+<p>String: type of bootstrap interval to construct.
+</p>
+
+<ul>
+<li> <p><code>boot</code>: &quot;perc&quot;, &quot;norm&quot;, &quot;basic&quot;, or &quot;bca&quot;
+</p>
+</li>
+<li> <p><code>fwb</code>: &quot;perc&quot;, &quot;norm&quot;, &quot;basic&quot;, &quot;bc&quot;, or &quot;bca&quot;
+</p>
+</li>
+<li> <p><code>rsample</code>: &quot;perc&quot; or &quot;bca&quot;
+</p>
+</li>
+<li> <p><code>simulation</code>: argument ignored.
+</p>
+</li></ul>
+</td></tr>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>...</code></td>
+<td>
+
+<ul>
+<li><p> If <code>method="boot"</code>, additional arguments are passed to <code>boot::boot()</code>.
+</p>
+</li>
+<li><p> If <code>method="fwb"</code>, additional arguments are passed to <code>fwb::fwb()</code>.
+</p>
+</li>
+<li><p> If <code>method="rsample"</code>, additional arguments are passed to <code>rsample::bootstraps()</code>.
+</p>
+</li>
+<li><p> If <code>method="simulation"</code>, additional arguments are ignored.
+</p>
+</li></ul>
+</td></tr>
+</table>
+
+
+## Details
+
+<p>When <code>method="simulation"</code>, we conduct simulation-based inference following the method discussed in Krinsky &amp; Robb (1986):
+</p>
+
+<ol>
+<li><p> Draw <code>R</code> sets of simulated coefficients from a multivariate normal distribution with mean equal to the original model's estimated coefficients and variance equal to the model's variance-covariance matrix (classical, &quot;HC3&quot;, or other).
+</p>
+</li>
+<li><p> Use the <code>R</code> sets of coefficients to compute <code>R</code> sets of estimands: predictions, comparisons, or slopes.
+</p>
+</li>
+<li><p> Take quantiles of the resulting distribution of estimands to obtain a confidence interval and the standard deviation of simulated estimates to estimate the standard error.
+</p>
+</li></ol>
+
+<p>When <code>method="fwb"</code>, drawn weights are supplied to the model fitting function's <code>weights</code> argument; if the model doesn't accept non-integer weights, this method should not be used. If weights were included in the original model fit, they are extracted by <code>weights()</code> and multiplied by the drawn weights. These weights are supplied to the <code>wts</code> argument of the estimation function (e.g., <code>comparisons()</code>).
+</p>
+
+
+## Value
+
+<p>A <code>marginaleffects</code> object with simulation or bootstrap resamples and objects attached.
+</p>
+
+
+## References
+
+<p>Krinsky, I., and A. L. Robb. 1986. “On Approximating the Statistical Properties of Elasticities.” Review of Economics and Statistics 68 (4): 715–9.
+</p>
+<p>King, Gary, Michael Tomz, and Jason Wittenberg. &quot;Making the most of statistical analyses: Improving interpretation and presentation.&quot; American journal of political science (2000): 347-361
+</p>
+<p>Dowd, Bryan E., William H. Greene, and Edward C. Norton. &quot;Computation of standard errors.&quot; Health services research 49.2 (2014): 731-750.
+</p>
+
+
+## Examples
+```{r}
+library(marginaleffects)
+
+library(marginaleffects)
+library(magrittr)
+set.seed(1024)
+mod <- lm(Sepal.Length ~ Sepal.Width * Species, data = iris)
+
+# bootstrap
+avg_predictions(mod, by = "Species") %>%
+  inferences(method = "boot")
+
+avg_predictions(mod, by = "Species") %>%
+  inferences(method = "rsample")
+
+# Fractional (bayesian) bootstrap
+avg_slopes(mod, by = "Species") %>%
+  inferences(method = "fwb") %>%
+  posterior_draws("rvar") %>%
+  data.frame()
+
+# Simulation-based inference
+slopes(mod) %>%
+  inferences(method = "simulation") %>%
+  head()
+
+
+```

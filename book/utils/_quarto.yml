@@ -1,0 +1,89 @@
+project:
+  type: book
+
+highlight-style: tango
+
+book:
+  title: "The Marginal Effects Zoo"
+  author: "Vincent Arel-Bundock"
+  reader-mode: true
+  navbar:
+    search: true
+    left:
+      - articles/marginaleffects.qmd
+      - functions.qmd
+      - articles/NEWS.qmd
+    right:
+      - icon: twitter
+        href: https://twitter.com/vincentab
+      - icon: github
+        href: https://github.com/vincentarelbundock/marginaleffects
+        aria-label: marginaleffects GitHub
+  chapters:
+    - part: index.qmd 
+      text: marginaleffects
+      collapse-level: 1
+      chapters:
+      - articles/marginaleffects.qmd
+      - articles/predictions.qmd
+      - articles/comparisons.qmd
+      - articles/slopes.qmd
+      - articles/marginalmeans.qmd
+      - articles/plot.qmd
+      - articles/hypothesis.qmd
+    - part: Case studies
+      collapse-level: 0
+      chapters:
+      - articles/brms.qmd
+      - articles/bootstrap.qmd
+      - articles/categorical.qmd
+      - articles/gformula.qmd
+      - articles/elasticity.qmd
+      - articles/experiments.qmd
+      - articles/gam.qmd
+      - articles/logit.qmd
+      - articles/lme4.qmd
+      - articles/multiple_imputation.qmd
+      - articles/python.qmd
+    - part: Misc
+      collapse-level: 1
+      chapters:
+      - articles/alternative_software.qmd
+      - articles/extensions.qmd
+      - articles/links.qmd
+      - articles/performance.qmd
+      - articles/uncertainty.qmd
+      - articles/supported_models.qmd
+      - articles/tables.qmd
+      - articles/faq.qmd
+      - articles/supported_models.qmd
+      - articles/NEWS.qmd
+    - part: functions.qmd
+      chapters:
+      - reference/predictions.qmd
+      - reference/comparisons.qmd
+      - reference/slopes.qmd
+      - reference/marginal_means.qmd
+      - reference/plot_predictions.qmd
+      - reference/plot_comparisons.qmd
+      - reference/plot_slopes.qmd
+      - reference/datagrid.qmd
+      - reference/hypotheses.qmd
+      - reference/inferences.qmd
+      - reference/posterior_draws.qmd
+
+bibliography: references.bib
+
+execute:
+  freeze: true
+
+format:
+  html:
+    theme: 
+      - simplex
+      - custom.scss
+    author-meta: "Vincent Arel-Bundock and contributors."
+    code-link: true
+    max-width: 1800px
+  pdf:
+    documentclass: scrreprt
