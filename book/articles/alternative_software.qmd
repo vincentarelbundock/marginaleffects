@@ -20,7 +20,7 @@ If you do not like `marginaleffects`, you may want to consider one of the altern
 * `prediction`: https://cran.r-project.org/web/packages/prediction/index.html
 * `emmeans`: https://cran.r-project.org/web/packages/emmeans/index.html
 * `brmsmargins`: https://joshuawiley.com/brmsmargins/
-* `effects`: https://cran.r-project.org/web/packages/effects/index.html
+* `effects`: https://cran.r-project.org/package=effects
 * `modelbased`: https://easystats.github.io/modelbased/
 * `ggeffects`: https://strengejacke.github.io/ggeffects/
 * `Stata` by StataCorp LLC

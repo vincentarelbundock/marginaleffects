@@ -19,7 +19,7 @@ link_function_docs = function() {
       "plot_comparisons", "plot_slopes", "posterior_draws")
     for (fn in fun_names) {
       ln = gsub("avg_", "", fn)
-      tar = sprintf(" [`%s()`](%s.html) ", fn, ln)
+      tar = sprintf(" [`%s()`](reference/%s.html) ", fn, ln)
       src = sprintf("\\s`%s`\\s", fn)
       qf = gsub(src, tar, qf)
       src = sprintf("\\s`%s\\(\\)`\\s", fn)

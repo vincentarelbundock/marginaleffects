@@ -25,7 +25,7 @@ dat <- read.csv(url)
 n_support <- nrow(dat)
 ```
 
-The `marginaleffects` package for `R` allows users to compute and plot predictions, slopes, marginal means, and comparisons (contrasts, risk ratios, odds, etc.) for over [`r n_support` classes](supported_models.html) of statistical models. It can conduct linear and non-linear hypothesis tests, or equivalence tests, and calculate uncertainty estimates using the delta method, bootstrapping, or simulation-based inference.
+The `marginaleffects` package for `R` allows users to compute and plot predictions, slopes, marginal means, and comparisons (contrasts, risk ratios, odds, etc.) for over [`r n_support` classes](articles/supported_models.html) of statistical models. It can conduct linear and non-linear hypothesis tests, or equivalence tests, and calculate uncertainty estimates using the delta method, bootstrapping, or simulation-based inference.
 
 # Why?
 
@@ -38,7 +38,7 @@ Benefits of `marginaleffects` include:
 * _Powerful:_ It can compute predictions, comparisons (contrasts, risk ratios, etc.), slopes, and conduct hypothesis tests for `r n_support` different classes of models in `R`.
 * _Simple:_ All functions share a simple and unified interface.
 * _Documented_: Each function is thoroughly documented with abundant examples. The website includes 20,000+ words of vignettes and case studies.
-* _Efficient:_ [Some operations](performance.html) are orders of magnitude faster than with the `margins` package, and the memory footprint is much smaller.
+* _Efficient:_ [Some operations](articles/performance.html) are orders of magnitude faster than with the `margins` package, and the memory footprint is much smaller.
 * _Thin:_ Few dependencies.
 * _Standards-compliant:_ `marginaleffects` follows "tidy" principles and returns objects that work with standard functions like `summary()`, `head()`, `tidy()`, and `glance()`. These objects are easy to program with and feed to [other packages like `modelsummary`.](https://vincentarelbundock.github.io/marginaleffects/) 
 * _Valid:_  When possible, [numerical results are checked](supported_models.html) against alternative software like `Stata` or other `R` packages. Unfortunately, it is not possible to test every model type, so users are still strongly encouraged to cross-check their results.

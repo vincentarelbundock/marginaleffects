@@ -483,7 +483,7 @@ avg_predictions(mod, newdata = datagrid(x = 0, firm = unique))
 predictions(mod, newdata = datagrid(x = 0:1, firm = unique), by = "x")
 ```
 
-We can also draw from the (assumed gaussian) population distribution of random effects, by asking `predictions()` to make predictions for new "levels" of the random effects. If we then take an average of predictions using `avg_predictions()` or the `by` argument, we will have ["integrated out the random effects", as described in the `brmsmargins` package vignette.](mixed-effects-slopes.html#integrating-out-random-effects) In the code below, we make predictions for 100 firm identifiers which were not in the original dataset. We also ask `predictions()` to push forward the `allow_new_levels` and `sample_new_levels` arguments to the `brms::posterior_epred` function:
+We can also draw from the (assumed gaussian) population distribution of random effects, by asking `predictions()` to make predictions for new "levels" of the random effects. If we then take an average of predictions using `avg_predictions()` or the `by` argument, we will have ["integrated out the random effects", as described in the `brmsmargins` package vignette.](https://cran.r-project.org/web/packages/brmsmargins/index.html) In the code below, we make predictions for 100 firm identifiers which were not in the original dataset. We also ask `predictions()` to push forward the `allow_new_levels` and `sample_new_levels` arguments to the `brms::posterior_epred` function:
 
 ```{r}
 predictions(
