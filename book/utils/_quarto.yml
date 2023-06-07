@@ -80,8 +80,8 @@ execute:
 format:
   html:
     theme:
-    light: flatly
-    dark: darkly
+      light: flatly
+      dark: darkly
     author-meta: "Vincent Arel-Bundock and contributors."
     code-link: true
     max-width: 1800px
