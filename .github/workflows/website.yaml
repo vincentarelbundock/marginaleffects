@@ -59,6 +59,9 @@ jobs:
       - name: cmdstanr
         run: Rscript -e 'install.packages("cmdstanr", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))'
 
+      - name: install marginalleffects
+        run: R CMD INSTALL .
+        
       - name: deploy website
         run: make deploy
           
