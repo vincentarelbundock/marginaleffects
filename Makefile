@@ -32,7 +32,7 @@ pdf: news ## Render the book to PDF
 
 html: news ## Render the book to HTML
 	Rscript -e "source('book/utils/utils.R');get_quarto_yaml(pdf = FALSE)"
-	cd $(BOOK_DIR) && /usr/local/bin/quarto render --to html && cd ..
+	cd $(BOOK_DIR) && quarto render --to html && cd ..
 	rm -rf $(BOOK_DIR)/NEWS.qmd $(BOOK_DIR)/_quarto.qmd 
 	make clean
 
