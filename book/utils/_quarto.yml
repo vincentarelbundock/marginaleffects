@@ -79,9 +79,9 @@ execute:
 
 format:
   html:
-    theme: 
-      - simplex
-      - custom.scss
+    theme:
+    light: flatly
+    dark: darkly
     author-meta: "Vincent Arel-Bundock and contributors."
     code-link: true
     max-width: 1800px
