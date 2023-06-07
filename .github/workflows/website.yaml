@@ -38,6 +38,9 @@ jobs:
       - name: Bootstrap
         run: ./run.sh bootstrap
           
+      - name: Quarto
+        run: sudo curl -LO https://quarto.org/download/latest/quarto-linux-amd64.deb;sudo apt-get install gdebi-core;sudo gdebi quarto-linux-amd64.deb
+
       - name: png (for svglite)
         run: sudo apt update -qq && sudo apt install --yes --no-install-recommends libpng-dev
         
@@ -61,7 +64,7 @@ jobs:
 
       - name: install marginalleffects
         run: R CMD INSTALL .
-        
+
       - name: deploy website
         run: make deploy
           
