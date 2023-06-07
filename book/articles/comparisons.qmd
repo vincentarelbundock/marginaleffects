@@ -52,7 +52,7 @@ The question that interests us is:
 
 > How does the probability of survival (outcome) change if a passenger travels in 1st class vs. 3rd class?
 
-Since we are comparing two predicted outcomes, we will use the `comparisons()`. To indicate that our focal variable is `PClass` and that we are interested in the comparison between 1st and 3rd class, we will use the `variables` argument:
+Since we are comparing two predicted outcomes, we will use `comparisons()`. To indicate that our focal variable is `PClass` and that we are interested in the comparison between 1st and 3rd class, we will use the `variables` argument:
 
 ```{r, eval = FALSE}
 comparisons(mod,
@@ -364,7 +364,7 @@ ggplot(cmp, aes(estimate)) +
     labs(x = "Distribution of unit-level contrasts")
 ```
 
-This graph display the effect of a change of 1 unit in the `mpg` variable, for each individual in the observed data.
+This graph displays the effect of a change of 1 unit in the `mpg` variable, for each individual in the observed data.
 
 ### Contrasts at the mean
 
