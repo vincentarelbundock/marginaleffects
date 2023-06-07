@@ -43,6 +43,7 @@ clean: ## Clean the book directory
 deploy: ## Deploy book to Github website
 	git checkout main
 	git pull
+	git stash
 	git checkout gh-pages
 	git checkout main -- book
 	git checkout main -- Makefile
@@ -54,3 +55,4 @@ deploy: ## Deploy book to Github website
 	git commit -m "Update book"
 	git push
 	git checkout main
+	git stash pop
