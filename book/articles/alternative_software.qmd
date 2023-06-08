@@ -773,7 +773,7 @@ avg_slopes(ls.fe, dpar = "sigma", re_formula = NA)
 
 ## `effects`
 
-The [`effects` package](https://cran.r-project.org/eb/packages/effects/index.html) was created by John Fox and colleagues.
+The [`effects` package](https://cran.r-project.org/package=effects) was created by John Fox and colleagues.
 
 + `marginaleffects` supports 30+ more model types than `effects`.
 + `effects` focuses on the computation of ["adjusted predictions."](predictions.html) The plots it produces are roughly equivalent to the ones produced by the `plot_predictions` and `predictions` functions in `marginaleffects`.
