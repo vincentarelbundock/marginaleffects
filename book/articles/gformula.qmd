@@ -25,11 +25,11 @@ The parametric g-formula is a method of standardization which can be used to add
 Imagine a causal model like this:
 
 ```{r, out.width = "40%"}
-##| echo = FALSE,
-##| message = FALSE,
-##| align = "center",
-##| fig.width = 4,
-##| fig.height = 3
+#| echo = FALSE,
+#| message = FALSE,
+#| align = "center",
+#| fig.width = 4,
+#| fig.height = 3
 library(ggdag)
 coords <- list(
   x = c(X = 0, Y = 2, W = 1),

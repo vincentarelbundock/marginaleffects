@@ -60,17 +60,17 @@ book:
       - articles/NEWS.qmd
     - part: functions.qmd
       chapters:
-      - reference/predictions.qmd
-      - reference/comparisons.qmd
-      - reference/slopes.qmd
-      - reference/marginal_means.qmd
-      - reference/plot_predictions.qmd
-      - reference/plot_comparisons.qmd
-      - reference/plot_slopes.qmd
-      - reference/datagrid.qmd
-      - reference/hypotheses.qmd
-      - reference/inferences.qmd
-      - reference/posterior_draws.qmd
+      - articles/reference/predictions.qmd
+      - articles/reference/comparisons.qmd
+      - articles/reference/slopes.qmd
+      - articles/reference/marginal_means.qmd
+      - articles/reference/plot_predictions.qmd
+      - articles/reference/plot_comparisons.qmd
+      - articles/reference/plot_slopes.qmd
+      - articles/reference/datagrid.qmd
+      - articles/reference/hypotheses.qmd
+      - articles/reference/inferences.qmd
+      - articles/reference/posterior_draws.qmd
 
 bibliography: references.bib
 
@@ -80,8 +80,11 @@ execute:
 format:
   html:
     theme:
-      light: flatly
-      dark: darkly
+      light: 
+        - simplex
+        - custom.scss
+      dark: 
+        - darkly
     author-meta: "Vincent Arel-Bundock and contributors."
     code-link: true
     max-width: 1800px

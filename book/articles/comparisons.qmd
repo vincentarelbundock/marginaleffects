@@ -353,7 +353,7 @@ mean(cmp$estimate)
 We could also show the full distribution of contrasts across our dataset with a histogram:
 
 ```{r}
-##| fig.asp = .4
+#| fig.asp = .4
 library(ggplot2)
 
 cmp <- comparisons(mod, variables = "gear")

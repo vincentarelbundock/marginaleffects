@@ -819,7 +819,7 @@ dat <- mtcars
 We begin by estimating a model:
 
 ```{r}
-##| eval = FALSE
+#| eval = FALSE
 mod <- brm(am ~ mpg + hp, data = mtcars, family = bernoulli(),
            seed = 1024, silent = 2, chains = 4, iter = 1000)
 ```

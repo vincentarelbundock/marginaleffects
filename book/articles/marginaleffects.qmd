@@ -51,6 +51,10 @@ The `marginaleffects` package allows `R` users to compute and plot three princip
 
 > Predictions of a model, averaged across a "reference grid" of categorical predictors. `marginalmeans()`.
 
+[Hypothesis and Equivalence Tests:](articles/hypothesis.html)
+
+> Hypothesis and equivalence tests can be conducted on linear or non-linear functions of model coefficients, or on any of the quantities computed by the `marginaleffects` packages (predictions, slopes, comparisons, marginal means, etc.). Uncertainy estimates can be obtained via the delta method (with or without robust standard errors), bootstrap, or simulation.
+
 Predictions, comparisons, and slopes are fundamentally unit-level (or "conditional") quantities. Except in the simplest linear case, estimates will typically vary based on the values of all the regressors in a model. Each of the observations in a dataset is thus associated with its own prediction, comparison, and slope estimates. Below, we will see that it can be useful to marginalize (or "average over") unit-level estimates to report an "average prediction", "average comparison", or "average slope".
 
 One ambiguous aspect of the definitions above is that the word "marginal" comes up in two different and *opposite* ways: 

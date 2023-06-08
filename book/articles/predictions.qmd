@@ -360,7 +360,7 @@ plot_predictions(mod, condition = c("length", "style"))
 Since the output of `plot_predictions()` is a `ggplot2` object, it is very easy to customize. For example, we can add points for the actual observations of our dataset like so:
 
 ```{r}
-##| fig.asp = .7
+#| fig.asp = .7
 library(ggplot2)
 library(ggrepel)
 
