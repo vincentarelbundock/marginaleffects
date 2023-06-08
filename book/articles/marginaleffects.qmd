@@ -51,7 +51,7 @@ The `marginaleffects` package allows `R` users to compute and plot three princip
 
 > Predictions of a model, averaged across a "reference grid" of categorical predictors. `marginalmeans()`.
 
-[Hypothesis and Equivalence Tests:](articles/hypothesis.html)
+[Hypothesis and Equivalence Tests:](hypothesis.html)
 
 > Hypothesis and equivalence tests can be conducted on linear or non-linear functions of model coefficients, or on any of the quantities computed by the `marginaleffects` packages (predictions, slopes, comparisons, marginal means, etc.). Uncertainy estimates can be obtained via the delta method (with or without robust standard errors), bootstrap, or simulation.
 
@@ -282,5 +282,5 @@ See the [Hypothesis Tests and Custom Contrasts vignette](hypothesis.html) for ba
 
 ## More!
 
-There is *much* more you can do with `marginaleffects`. Return to the [Table of Contents](index.html) to read the vignettes, learn how to report marginal effects in [nice tables with the `modelsummary` package](https://vincentarelbundock.github.io/modelsummary/), how to define your own prediction "grid", and much more.
+There is *much* more you can do with `marginaleffects`. Click through he Table of Contents to read the vignettes, learn how to report marginal effects in [nice tables with the `modelsummary` package](https://vincentarelbundock.github.io/modelsummary/), how to define your own prediction "grid", and much more.
 ****

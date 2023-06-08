@@ -305,7 +305,7 @@ margins(mod, variables = "bill_length_mm", data = head(dat, 3), eps = 1e-5, unit
 
 ## Bayesian estimates and credible intervals
 
-[See the `brms` vignette](articles/brms.html) for a discussion of bayesian estimates and credible intervals.
+[See the `brms` vignette](brms.html) for a discussion of bayesian estimates and credible intervals.
 
 
 <!--
