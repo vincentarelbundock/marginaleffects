@@ -11,7 +11,7 @@ book:
     search: true
     left:
       - articles/marginaleffects.qmd
-      - functions.qmd
+      - articles/functions.qmd
       - articles/NEWS.qmd
     right:
       - icon: twitter
@@ -58,7 +58,7 @@ book:
       - articles/faq.qmd
       - articles/supported_models.qmd
       - articles/NEWS.qmd
-    - part: functions.qmd
+    - part: articles/functions.qmd
       chapters:
       - articles/reference/predictions.qmd
       - articles/reference/comparisons.qmd
