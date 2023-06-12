@@ -262,5 +262,69 @@ expect_inherits(p, "predictions")
 
 
 
+# Issue #810
+if (packageVersion("datawizard") < "0.7.1.10") exit_file("datawizard version")
+requiet("datawizard")
+requiet("glmmTMB")
+requiet("ggeffects")
+data(efc, package = "ggeffects")
+efc <- efc |>
+  to_factor(select = c("c161sex", "c172code", "c175empl")) |>
+  recode_values(
+    select = "c160age",
+    recode = list(`1` = "min:40", `2` = 41:64, `3` = "65:max")
+  ) |>
+  data_rename(
+    pattern = c("c161sex", "c160age", "quol_5", "c175empl"),
+    replacement = c("gender", "age", "qol", "employed")
+  ) |>
+  data_modify(age = factor(age, labels = c("-40", "41-64", "65+")))
+mod <- glmmTMB(qol ~ 1 + (1 | gender:employed:age), data = efc)
+
+p1 <- predict(
+  mod,
+  newdata = data_grid(m_null, c("gender", "employed", "age")),
+  se.fit = TRUE)
+
+predict(
+  mod,
+  type = "conditional",
+  newdata = data_grid(m_null, c("gender", "employed", "age")),
+  se.fit = TRUE)
+
+data(sleepstudy, package = "lme4")
+g0 <- glmmTMB(Reaction ~ Days + (Days | Subject), sleepstudy)
+p1 = predict(g0, sleepstudy, se.fit = TRUE)
+p2 = predictions(g0, newdata = sleepstudy)
+all(p1$fit == p2$estimate)
+all(p1$se.fit == p2$std.error)
+
+     ## Predict new Subject
+     nd <- sleepstudy[1,]
+     nd$Subject <- "new"
+     predict(g0, newdata=nd, allow.new.levels=TRUE)
+     ## population-level prediction
+     nd_pop <- data.frame(Days = unique(sleepstudy$Days), Subject = NA)
+     predict(g0, newdata=nd_pop, se.fit = TRUE)
+
+  predictions(g0, newdata = nd_pop)
+     
+
+p2 <- predictions(
+  mod,
+  newdata = data_grid(m_null, c("gender", "employed", "age")))
+expect_equivalent(p1$fit, p2$estimate)
+expect_equivalent(p1$se.fit, p2$std.error)
+
+
+get_coef(mod, component = "all")
+get_vcov(mod, component = "all", full)
+
+vcov(mod, full = TRUE)
+
+
+
+
 source("helpers.R")
 rm(list = ls())
+

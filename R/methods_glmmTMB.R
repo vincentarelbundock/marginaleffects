@@ -22,15 +22,25 @@ get_predict.glmmTMB <- function(model,
 
 
 
+#' @include get_vcov.R
+#' @rdname get_vcov
+#' @export
+get_vcov.glmmTMB <- function(model, ...) {
+    beta <- get_coef(model)
+    out <- stats::vcov(model, full = TRUE)
+    if (isTRUE(nrow(out) == length(beta))) {
+        colnames(out) <- names(beta)
+        row.names(out) <- names(beta)
+    }
+    return(out)
+}
+
+
 #' @include get_coef.R
 #' @rdname get_coef
 #' @export
 get_coef.glmmTMB <- function(model, ...) {
-    out <- insight::get_parameters(model, component = "all")
-    out$Parameter <- ifelse(out$Component == "zero_inflated", paste0("zi~", out$Parameter), out$Parameter)
-    out$Parameter <- ifelse(out$Component == "dispersion", paste0("d~", out$Parameter), out$Parameter)
-    out <- stats::setNames(out$Estimate, out$Parameter)
-    return(out)
+    return(model$fit$parfull)
 }
 
 
@@ -45,19 +55,8 @@ set_coef.glmmTMB <- function(model, coefs, ...) {
     # the order matters; I think we can rely on it, but this still feels like a HACK
     # In particular, this assumes that the order of presentation in coef() is always: beta -> betazi -> betad
     out <- model
-    idx <- grepl("^beta", names(out$fit$parfull))
-    if (length(coefs) == length(out$fit$parfull[idx])) {
-        out$fit$parfull[idx] <- stats::setNames(coefs, names(out$fit$parfull)[idx])
-    } else {
-        insight::format_error("Unable to compute standard errors for this model.")
-    }
-    idx <- grepl("^beta", names(out$fit$par))
-    if (length(coefs) == length(out$fit$par[idx])) {
-        out$fit$par[idx] <- stats::setNames(coefs, names(out$fit$par)[idx])
-    } else {
-        insight::format_error("Unable to compute standard errors for this model.")
-    }
-
+    out$fit$parfull <- coefs
+    out$fit$par <- coefs[names(coefs) %in% names(out$fit$par)]
     return(out)
 }
 
