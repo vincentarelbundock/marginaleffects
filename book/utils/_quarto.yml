@@ -56,7 +56,6 @@ book:
       - articles/supported_models.qmd
       - articles/tables.qmd
       - articles/faq.qmd
-      - articles/supported_models.qmd
       - articles/NEWS.qmd
     - part: articles/functions.qmd
       chapters:
