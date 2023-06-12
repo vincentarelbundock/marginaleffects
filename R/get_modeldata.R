@@ -83,6 +83,14 @@ set_variable_class <- function(modeldata, model = NULL) {
         Filter(function(x) grepl(regex, x), te))
     cl[names(cl) %in% idx] <- "strata"
 
+    # in-formula numeric
+    regex <- "^numeric\\((.*)\\)$|^as.numeric\\((.*)\\)$"
+    idx <- gsub(
+        regex,
+        "\\1",
+        Filter(function(x) grepl(regex, x), te))
+    cl[names(cl) %in% idx] <- "numeric"
+
     # in-formula logical
     regex <- "^logical\\((.*)\\)$|^as.logical\\((.*)\\)$"
     idx <- gsub(
