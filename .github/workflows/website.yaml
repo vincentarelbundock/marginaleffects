@@ -66,8 +66,4 @@ jobs:
         run: R CMD INSTALL .
 
       - name: deploy website
-        run: make deploy
-          
-      # - name: Coverage
-      #   if: ${{ matrix.os == 'ubuntu-latest' }}
-      #   run: ./run.sh coverage
+        run: make deploydev
