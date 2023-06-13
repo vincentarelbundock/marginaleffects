@@ -9,13 +9,14 @@ get_predict.bife <- function(model,
 
     pred <- stats::predict(model,
                            X_new = newdata,
-                           type = type)
+                           type = type,
+                           ...)
 
     sanity_predict_vector(pred = pred, model = model, newdata = newdata, type = type)
     sanity_predict_numeric(pred = pred, model = model, newdata = newdata, type = type)
 
     out <- data.frame(
-        rowid = 1:nrow(newdata),
+        rowid = seq_len(nrow(newdata)),
         estimate = pred)
 
     return(out)
