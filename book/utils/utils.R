@@ -68,7 +68,12 @@ get_news = function() {
 
 rd2md = function(src) {
   # Rd -> html
+  k = readLines(here(src))
+  k = gsub("\\\\eqn\\{([^}]*)\\}\\{[^}]*\\}", "\\$\\1\\$", k)
+  k = gsub("\\\\eqn\\{([^}]*)\\}", "\\$\\1\\$", k)
+  writeLines(k, here(src))
   rd = tools::parse_Rd(here(src))
+  rd = gsub("\\eqn\\{.*\\}\\{.*\\}", "\\$\\1\\$", rd)
   tmp_html = paste0(tempfile(), ".html")
   tools::Rd2HTML(rd, out = tmp_html)
 
@@ -81,6 +86,10 @@ rd2md = function(src) {
   idx = grep("<td>", tmp)
   idx = idx[seq_along(idx) %% 2 == 1]
   tmp[idx] = sub("<td>", '<td style = "white-space: nowrap; font-family: monospace;>"', tmp[idx])
+
+  # math in Equivalence section
+  idx = grepl("<.code", tmp)
+  tmp[idx]
 
   # examples: evaluate code blocks (assume examples are always last)
   idx = which(tmp == "<h3>Examples</h3>")
