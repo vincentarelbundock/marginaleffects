@@ -40,6 +40,36 @@ clean: ## Clean the book directory
 	rm -rf $(BOOK_DIR)/NEWS.qmd $(BOOK_DIR)/_quarto.qmd 
 	rm -rf ut 
 
+
+# Variable for the book directory
+BOOK_DIR := book
+
+# Targets for rendering to HTML and PDF
+.PHONY: html pdf help news clean deploy
+
+help:  ## Display this help screen
+	@echo -e "\033[1mAvailable commands:\033[0m\n"
+	@grep -E '^[a-z.A-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-18s\033[0m %s\n", $$1, $$2}' | sort
+
+news: ## Download the latest changelog
+	Rscript -e "source('utils.R');get_news()"
+
+pdf: news ## Render the book to PDF
+	Rscript -e "source('utils.R');get_quarto_yaml(pdf = TRUE)"
+	cd $(BOOK_DIR) && quarto render --to pdf && cd ..
+	rm -rf $(BOOK_DIR)/NEWS.qmd $(BOOK_DIR)/_quarto.qmd 
+	make clean
+
+html: news ## Render the book to HTML
+	Rscript -e "source('utils.R');get_quarto_yaml(pdf = FALSE)"
+	cd $(BOOK_DIR) && quarto render --to html && cd ..
+	rm -rf $(BOOK_DIR)/NEWS.qmd $(BOOK_DIR)/_quarto.qmd 
+	make clean
+
+clean: ## Clean the book directory
+	rm -rf $(BOOK_DIR)/NEWS.qmd $(BOOK_DIR)/_quarto.qmd 
+	rm -rf ut 
+
 deploy: ## Deploy book to Github website
 	git checkout main
 	git pull
