@@ -68,10 +68,6 @@ get_news = function() {
 
 rd2md = function(src) {
   # Rd -> html
-  k = readLines(here(src))
-  k = gsub("\\\\eqn\\{([^}]*)\\}\\{[^}]*\\}", "\\$\\1\\$", k)
-  k = gsub("\\\\eqn\\{([^}]*)\\}", "\\$\\1\\$", k)
-  writeLines(k, here(src))
   rd = tools::parse_Rd(here(src))
   rd = gsub("\\eqn\\{.*\\}\\{.*\\}", "\\$\\1\\$", rd)
   tmp_html = paste0(tempfile(), ".html")
