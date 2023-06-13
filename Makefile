@@ -31,7 +31,13 @@ pdf: news ## Render the book to PDF
 	make clean
 
 html: news ## Render the book to HTML
-	Rscript -e "source('book/utils/utils.R');get_quarto_yaml(pdf = FALSE)"
+	Rscript -e "source('book/utils/utils.R');get_quarto_yaml(pdf = FALSE, dev = FALSE)"
+	cd $(BOOK_DIR) && quarto render --to html && cd ..
+	rm -rf $(BOOK_DIR)/NEWS.qmd $(BOOK_DIR)/_quarto.qmd 
+	make clean
+
+htmldev: news ## Render the book to HTML
+	Rscript -e "source('book/utils/utils.R');get_quarto_yaml(pdf = FALSE, dev = TRUE)"
 	cd $(BOOK_DIR) && quarto render --to html && cd ..
 	rm -rf $(BOOK_DIR)/NEWS.qmd $(BOOK_DIR)/_quarto.qmd 
 	make clean
@@ -64,7 +70,7 @@ deploydev: ## Deploy dev book to Github website
 	git checkout main -- book
 	git checkout main -- Makefile
 	Rscript -e "source('book/utils/utils.R');link_function_docs()"
-	make html
+	make htmldev
 	rsync -a book/_book/* ./dev/
 	rm -rf book Makefile _quarto.yml utils.R
 	git add .
