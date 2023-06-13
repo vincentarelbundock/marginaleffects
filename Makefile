@@ -66,7 +66,7 @@ deploy: ## Deploy book to Github website
 	git checkout main
 
 deploydev: ## Deploy dev book to Github website
-	git restore .
+	git stash
 	git fetch origin
 	git checkout -b gh-pages origin/gh-pages
 	git pull
