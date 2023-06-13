@@ -1,21 +1,23 @@
 sanitize_newdata_call <- function(scall, newdata = NULL, model) {
     if (is.call(scall)) {
         out <- NULL
-        lcall <- as.list(scall)
-        fun_name <- as.character(scall)[1]
+        lcall <- as.list(rlang::quo_get_expr(scall))
+        fun_name <- as.character(lcall)[1]
         if (fun_name %in% c("datagrid", "datagridcf", "typical", "counterfactual")) {
             if (!"model" %in% names(lcall)) {
                 lcall <- c(lcall, list("model" = model))
-                out <- evalup(as.call(lcall))
+                scall <- rlang::quo_set_expr(scall, as.call(lcall))
+                out <- rlang::eval_tidy(scall)
             }
-        } else if (fun_name == "visualisation_matrix") {
+        } else if (fun_name %in% "visualisation_matrix") {
             if (!"x" %in% names(lcall)) {
                 lcall <- c(lcall, list("x" = get_modeldata))
-                out <- evalup(as.call(lcall))
+                scall <- rlang::quo_set_expr(scall, as.call(lcall))
+                out <- rlang::eval_tidy(scall)
             }
         }
         if (is.null(out)) {
-            out <- evalup(scall)
+            out <- rlang::eval_tidy(scall)
         }
     } else {
         out <- newdata

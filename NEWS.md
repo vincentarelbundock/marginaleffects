@@ -12,6 +12,10 @@ Performance:
 
 * Computing elasticities for linear models is now up to 30% faster (#787, @etiennebacher).
 
+Bug fixes:
+
+* Better handling of environments when `newdata` is a function call. Thanks to @jcccf for report #814 and to @capnrefsmmat for the proposed fix using the `rlang` package.
+
 ## marginaleffects 0.12.0
 
 Breaking change:

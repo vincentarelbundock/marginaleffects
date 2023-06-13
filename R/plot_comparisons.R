@@ -65,7 +65,7 @@ plot_comparisons <- function(model,
     }
 
     # order of the first few paragraphs is important
-    scall <- substitute(newdata)
+    scall <- rlang::enquo(newdata)
     if (!is.null(condition) && !is.null(newdata)) {
         insight::format_error("The `condition` and `newdata` arguments cannot be used simultaneously.")
     }

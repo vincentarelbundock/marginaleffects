@@ -208,7 +208,7 @@ predictions <- function(model,
 
     # order of the first few paragraphs is important
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
-    scall <- substitute(newdata)
+    scall <- rlang::enquo(newdata)
     newdata <- sanitize_newdata_call(scall, newdata, model)
 
     if (!is.null(equivalence) && !is.null(p_adjust)) {
@@ -690,7 +690,7 @@ avg_predictions <- function(model,
 
     # order of the first few paragraphs is important
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
-    scall <- substitute(newdata)
+    scall <- rlang::enquo(newdata)
     newdata <- sanitize_newdata_call(scall, newdata, model)
 
     # group by focal variable automatically unless otherwise stated
