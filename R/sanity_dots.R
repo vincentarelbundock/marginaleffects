@@ -35,6 +35,7 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
     valid[["rlmerMod"]] <- c("re.form", "allow.new.levels")
     valid[["gamlss"]] <- c("what", "safe") # gamlss
     valid[["lme"]] <- c("level") # nlme::lme
+    valid[["bife"]] <- c("alpha_new", "corrected") # nlme::lme
 
     white_list <- c(
         "conf.int", "modeldata", "internal_call", "df",

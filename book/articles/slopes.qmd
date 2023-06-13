@@ -349,3 +349,37 @@ avg_slopes(mod, type = "response")
 
 avg_slopes(mod, type = "link")
 ```
+
+
+# Manual computation
+
+Now we illustrate how to reproduce the output of `slopes` manually:
+
+```{r}
+library(marginaleffects)
+
+mod <- glm(am ~ hp, family = binomial, data = mtcars)
+
+eps <- 1e-4
+d1 <- transform(mtcars, hp = hp - eps / 2)
+d2 <- transform(mtcars, hp = hp + eps / 2)
+p1 <- predict(mod, type = "response", newdata = d1)
+p2 <- predict(mod, type = "response", newdata = d2)
+s <- (p2 - p1) / eps
+tail(s)
+```
+
+Which is equivalent to:
+
+```{r}
+slopes(mod, eps = eps) |> tail()
+```
+
+And we can get average marginal effects by subgroup as follows:
+
+
+```{r}
+tapply(s, mtcars$cyl, mean)
+
+slopes(mod, eps = eps, by = "cyl")
+```
