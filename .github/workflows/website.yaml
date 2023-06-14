@@ -39,7 +39,7 @@ jobs:
         run: ./run.sh bootstrap
           
       - name: Quarto
-        run: curl -LO https://quarto.org/download/latest/quarto-linux-amd64.deb;sudo dpkg -i quarto-linux-amd64.deb
+        run: curl -LO https://quarto.org/download/latest/quarto-linux-amd64.deb;sudo dpkg -i quarto-linux-amd64.deb && rm -f quarto-linux-amd64.deb
 
       - name: Dependencies
         run: ./run.sh install_all
@@ -52,6 +52,9 @@ jobs:
 
       - name: install marginalleffects
         run: R CMD INSTALL .
+
+      - name: clean
+        run: rm -f run.sh
 
       - name: deploy website
         run: Rscript -e "source(here::here('book/utils/utils.R'));deploy_book()"
