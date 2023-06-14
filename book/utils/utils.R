@@ -9,6 +9,17 @@ library(pkgload)
 library(marginaleffects)
 
 
+deploy_book <- function() {
+  pkg_ver <- packageVersion("marginaleffects")
+  num_periods <- length(gregexpr("\\.", pkg_ver)[[1]])
+  if (num_periods == 2) {
+    system("make deploy")
+  } else {
+    system("make deploydev")
+  }
+}
+
+
 link_function_docs = function() {
   quarto_files = c(Sys.glob("book/*.qmd"), Sys.glob("book/articles/*.qmd"))
   for (i in seq_along(quarto_files)) {
