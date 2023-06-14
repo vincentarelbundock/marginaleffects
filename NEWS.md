@@ -16,6 +16,7 @@ Performance:
 Bug fixes:
 
 * Better handling of environments when `newdata` is a function call. Thanks to @jcccf for report #814 and to @capnrefsmmat for the proposed fix using the `rlang` package.
+* Degrees of freedom mismatch for joint hypothesis tests. Thanks to @snhansen for report #789.
 
 ## marginaleffects 0.12.0
 

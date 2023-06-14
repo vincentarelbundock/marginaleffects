@@ -60,7 +60,9 @@ joint_test <- function(object, joint_index = NULL, hypothesis = 0, joint_test = 
   
   # Degrees of freedom
   df1 <- dim(R)[1]  # Q
-  df2 <- n - length(theta_hat)  # n - P
+  df2 <- tryCatch(insight::get_df(attr(object, "model")), error = function(e) NULL)
+  if (is.null(df2)) tryCatch(insight::get_df(object), error = function(e) NULL)
+  if (is.null(df2)) df2 <- n - length(theta_hat)  # n - P
   
   # Calculate the p-value
   if (joint_test == "f") {
