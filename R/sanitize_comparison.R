@@ -38,6 +38,9 @@ comparison_function_dict <- list(
     "lnoravgwts" = function(hi, lo, w) log((wmean(hi, w) / (1 - wmean(hi, w))) / (wmean(lo, w) / (1 - wmean(lo, w)))),
 
     # others
+    "lift" = function(hi, lo) (hi - lo) / lo,
+    "liftavg" = function(hi, lo) (mean(hi) - mean(lo)) / mean(lo),
+
     "expdydx" = function(hi, lo, eps) ((exp(hi) - exp(lo)) / exp(eps)) / eps,
     "expdydxavg" = function(hi, lo, eps) mean(((exp(hi) - exp(lo)) / exp(eps)) / eps),
     "expdydxavgwts" = function(hi, lo, eps, w) wmean(((exp(hi) - exp(lo)) / exp(eps)) / eps, w)
@@ -78,6 +81,9 @@ comparison_label_dict <- list(
     "lnor" = "ln(odds(%s) / odds(%s))",
     "lnoravg" = "ln(odds(%s) / odds(%s))",
     "lnoravgwts" = "ln(odds(%s) / odds(%s))",
+
+    "lift" = "lift",
+    "liftavg" = "liftavg",
 
     "expdydx" = "exp(dY/dX)"
 )

@@ -35,4 +35,14 @@ expect_equivalent(nrow(cmp), 2)
 
 
 
+# Issue #794
+mod <- glm(am ~ hp, data = mtcars, family = binomial())
+cmp1 <- comparisons(mod, comparison = "lift")
+cmp2 <- comparisons(mod, comparison = "liftavg")
+expect_equal(nrow(cmp1), 32)
+expect_equal(nrow(cmp2), 1)
+expect_error(comparisons(mod, comparison = "liftr"))
+
+
+
 rm(list = ls())

@@ -112,7 +112,7 @@ avg_comparisons(
 \itemize{
 \item string: shortcuts to common contrast functions.
 \itemize{
-\item Supported shortcuts strings: difference, differenceavg, differenceavgwts, dydx, eyex, eydx, dyex, dydxavg, eyexavg, eydxavg, dyexavg, dydxavgwts, eyexavgwts, eydxavgwts, dyexavgwts, ratio, ratioavg, ratioavgwts, lnratio, lnratioavg, lnratioavgwts, lnor, lnoravg, lnoravgwts, expdydx, expdydxavg, expdydxavgwts
+\item Supported shortcuts strings: difference, differenceavg, differenceavgwts, dydx, eyex, eydx, dyex, dydxavg, eyexavg, eydxavg, dyexavg, dydxavgwts, eyexavgwts, eydxavgwts, dyexavgwts, ratio, ratioavg, ratioavgwts, lnratio, lnratioavg, lnratioavgwts, lnor, lnoravg, lnoravgwts, lift, liftavg, expdydx, expdydxavg, expdydxavgwts
 \item See the Comparisons section below for definitions of each transformation.
 }
 \item function: accept two equal-length numeric vectors of adjusted predictions (\code{hi} and \code{lo}) and returns a vector of contrasts of the same length, or a unique numeric value.
@@ -328,6 +328,8 @@ compute derivatives and elasticities.\tabular{ll}{
    lnratioavg \tab \(hi, lo) log(mean(hi)/mean(lo)) \cr
    lnor \tab \(hi, lo) log((hi/(1 - hi))/(lo/(1 - lo))) \cr
    lnoravg \tab \(hi, lo) log((mean(hi)/(1 - mean(hi)))/(mean(lo)/(1 - mean(lo)))) \cr
+   lift \tab \(hi, lo) (hi - lo)/lo \cr
+   liftavg \tab \(hi, lo) (mean(hi) - mean(lo))/mean(lo) \cr
    expdydx \tab \(hi, lo, eps) ((exp(hi) - exp(lo))/exp(eps))/eps \cr
    expdydxavg \tab \(hi, lo, eps) mean(((exp(hi) - exp(lo))/exp(eps))/eps) \cr
 }
