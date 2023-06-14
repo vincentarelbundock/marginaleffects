@@ -26,12 +26,7 @@ get_predict.glmmTMB <- function(model,
 #' @rdname get_vcov
 #' @export
 get_vcov.glmmTMB <- function(model, ...) {
-    beta <- get_coef(model)
     out <- stats::vcov(model, full = TRUE)
-    if (isTRUE(nrow(out) == length(beta))) {
-        colnames(out) <- names(beta)
-        row.names(out) <- names(beta)
-    }
     return(out)
 }
 
@@ -40,7 +35,9 @@ get_vcov.glmmTMB <- function(model, ...) {
 #' @rdname get_coef
 #' @export
 get_coef.glmmTMB <- function(model, ...) {
-    return(model$fit$parfull)
+    out <- model$fit$par
+    names(out) <- colnames(stats::vcov(model, full = TRUE))
+    return(out)
 }
 
 
@@ -55,8 +52,8 @@ set_coef.glmmTMB <- function(model, coefs, ...) {
     # the order matters; I think we can rely on it, but this still feels like a HACK
     # In particular, this assumes that the order of presentation in coef() is always: beta -> betazi -> betad
     out <- model
-    out$fit$parfull <- coefs
-    out$fit$par <- coefs[names(coefs) %in% names(out$fit$par)]
+    out$fit$parfull[names(out$fit$parfull) != "b"] <- coefs
+    out$fit$par <- stats::setNames(coefs, names(out$fit$par))
     return(out)
 }
 
