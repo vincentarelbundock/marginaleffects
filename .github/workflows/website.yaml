@@ -41,21 +41,6 @@ jobs:
       - name: Quarto
         run: curl -LO https://quarto.org/download/latest/quarto-linux-amd64.deb;sudo dpkg -i quarto-linux-amd64.deb
 
-      - name: png (for svglite)
-        run: sudo apt update -qq && sudo apt install --yes --no-install-recommends libpng-dev
-        
-      - name: svglite from source
-        run: Rscript -e "bspm::disable();install.packages('svglite', from = 'source');bspm::enable()"
-
-      - name: TMB
-        run: ./run.sh install_source TMB
-
-      - name: glmmTMB source
-        run: ./run.sh install_source glmmTMB
-
-      - name: Matrix source
-        run: ./run.sh install_source Matrix
-
       - name: Dependencies
         run: ./run.sh install_all
 
