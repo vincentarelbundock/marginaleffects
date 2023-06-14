@@ -141,7 +141,7 @@ plot_comparisons(mod,
 
 Notice that the vertical scale is different in the plots above, reflecting the fact that we are plotting the effect of a change of 1 standard deviation on the left vs 10 units on the right.
 
-Like the `comparisons()` function, `plot_comparisons()` is a very powerful tool because it allows us to compute and display custom comparisons such as differences, ratios, odds, and arbitrary functions of predicted outcomes. For example, if we want to plot the ratio of predicted body mass for different species of penguins, we could do:
+Like the `comparisons()` function, `plot_comparisons()` is a very powerful tool because it allows us to compute and display custom comparisons such as differences, ratios, odds, lift, and arbitrary functions of predicted outcomes. For example, if we want to plot the ratio of predicted body mass for different species of penguins, we could do:
 
 ```{r}
 plot_comparisons(mod,

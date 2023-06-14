@@ -60,7 +60,7 @@ The `marginaleffects` package allows `R` users to compute and plot three princip
 
 [Comparisons:](articles/comparisons.html)
 
-> Compare the predictions made by a model for different regressor values (e.g., college graduates vs. others): contrasts, differences, risk ratios, odds, etc. `comparisons()`, `avg_comparisons()`, `plot_comparisons()`.
+> Compare the predictions made by a model for different regressor values (e.g., college graduates vs. others): contrasts, differences, risk ratios, odds, lift, etc. `comparisons()`, `avg_comparisons()`, `plot_comparisons()`.
 
 [Slopes:](articles/slopes.html) 
 

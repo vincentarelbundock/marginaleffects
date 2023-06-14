@@ -236,7 +236,7 @@ See \code{?print.marginaleffects} for printing options.
 Predict the outcome variable at different regressor values (e.g., college
 graduates vs. others), and compare those predictions by computing a difference,
 ratio, or some other function. \code{comparisons()} can return many quantities of
-interest, such as contrasts, differences, risk ratios, changes in log odds,
+interest, such as contrasts, differences, risk ratios, changes in log odds, lift,
 slopes, elasticities, etc.
 \itemize{
 \item \code{comparisons()}: unit-level (conditional) estimates.

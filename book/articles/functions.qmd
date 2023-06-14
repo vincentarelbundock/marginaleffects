@@ -7,7 +7,7 @@ tab <- tribble(
   "Predictions", "[`predictions()`](reference/predictions.html)",
   ""           , "[`avg_predictions()`](reference/predictions.html)",
   ""           , "[`plot_predictions()`](reference/plot_predictions.html)",
-  "Comparisons: Difference, Ratio, Odds, etc.", "[`comparisons()`](reference/comparisons.html)",
+  "Comparisons: Difference, Ratio, Odds, Lift, etc.", "[`comparisons()`](reference/comparisons.html)",
   ""           , "[`avg_comparisons()`](reference/comparisons.html)",
   ""           , "[`plot_comparisons()`](reference/plot_comparisons.html)",
   "Slopes"     , "[`slopes()`](reference/slopes.html)",

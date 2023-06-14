@@ -4,7 +4,7 @@
 #' Predict the outcome variable at different regressor values (e.g., college
 #' graduates vs. others), and compare those predictions by computing a difference,
 #' ratio, or some other function. `comparisons()` can return many quantities of
-#' interest, such as contrasts, differences, risk ratios, changes in log odds,
+#' interest, such as contrasts, differences, risk ratios, changes in log odds, lift, 
 #' slopes, elasticities, etc.
 #'
 #' * `comparisons()`: unit-level (conditional) estimates.
