@@ -149,7 +149,8 @@ Suggests:
     titanic,
     truncreg,
     tsModel,
-    withr
+    withr,
+    yaml
 Collate: 
     'RcppExports.R'
     'backtransform.R'

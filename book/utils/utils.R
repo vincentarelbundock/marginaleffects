@@ -5,7 +5,6 @@
 ###### - run the examples in the "Reference" files
 library(yaml)
 library(here)
-library(pkgload)
 library(marginaleffects)
 
 
