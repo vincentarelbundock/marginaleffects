@@ -51,4 +51,4 @@ jobs:
         run: R CMD INSTALL .
 
       - name: deploy website
-        run: Rscript -e "source(here::here('book/utils.R'));deploy_book()"
+        run: Rscript -e "source(here::here('book/utils/utils.R'));deploy_book()"
