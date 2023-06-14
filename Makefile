@@ -48,7 +48,7 @@ clean: ## Clean the book directory
 
 deploy: ## Deploy book to Github website
 	git fetch origin
-	git checkout -b gh-pages origin/gh-pages
+	git checkout -B gh-pages origin/gh-pages
 	git pull
 	git checkout main
 	git pull
@@ -68,7 +68,7 @@ deploy: ## Deploy book to Github website
 deploydev: ## Deploy dev book to Github website
 	git stash
 	git fetch origin
-	git checkout -b gh-pages origin/gh-pages
+	git checkout -B gh-pages origin/gh-pages
 	git pull
 	git checkout main
 	git pull
