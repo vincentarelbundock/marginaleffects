@@ -25,7 +25,7 @@ dat <- read.csv(url)
 n_support <- nrow(dat)
 ```
 
-The `marginaleffects` package for `R` allows users to compute and plot predictions, slopes, marginal means, and comparisons (contrasts, risk ratios, odds, etc.) for over [`r n_support` classes](articles/supported_models.html) of statistical models. It can conduct linear and non-linear hypothesis tests, or equivalence tests, and calculate uncertainty estimates using the delta method, bootstrapping, or simulation-based inference.
+The `marginaleffects` package for `R` allows users to compute and plot predictions, slopes, marginal means, and comparisons (contrasts, risk ratios, odds, lift, etc.) for over [`r n_support` classes](articles/supported_models.html) of statistical models. It can conduct linear and non-linear hypothesis tests, or equivalence tests, and calculate uncertainty estimates using the delta method, bootstrapping, or simulation-based inference.
 
 Website: 
 
