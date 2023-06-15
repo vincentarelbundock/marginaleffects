@@ -29,8 +29,8 @@ The `marginaleffects` package for `R` allows users to compute and plot predictio
 
 Website: 
 
-* Current release: https://vincentarelbundock.github.io/marginaleffects
-* Development version: https://vincentarelbundock.github.io/marginaleffects/dev
+* Current release: [https://vincentarelbundock.github.io/marginaleffects](https://vincentarelbundock.github.io/marginaleffects)
+* Development version: [https://vincentarelbundock.github.io/marginaleffects/dev](https://vincentarelbundock.github.io/marginaleffects/dev)
 
 # Why?
 

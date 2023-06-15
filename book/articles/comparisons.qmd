@@ -256,7 +256,7 @@ All functions of the `marginaleffects` package attempt to treat character predic
 
 ### Numeric predictors
 
-We can also compute contrasts for differences in numeric variables. For example, we can see what happens to the adjusted predictions when we increment the `hp` variable by 1 unit (default) or by 5 units:
+We can also compute contrasts for differences in numeric variables. For example, we can see what happens to the adjusted predictions when we increment the `hp` variable by 1 unit (default) or by 5 units about the original value:
 
 ```{r}
 mod <- lm(mpg ~ hp, data = mtcars)
@@ -558,7 +558,7 @@ Instead of taking simple differences between adjusted predictions, it can someti
 avg_comparisons(mod, comparison = "ratio")
 ```
 
-This result is the average adjusted risk ratio, that is, the adjusted predictions when the `mpg` are incremented by 1, divided by the adjusted predictions when `mpg` is at its original value.
+This result is the average adjusted risk ratio for an increment of 1, that is, the adjusted predictions when the `mpg` are incremented by 0.5, divided by the adjusted predictions when `mpg` is decremented by 0.5.
 
 The `comparison` accepts different values for common types of contrasts: 'difference', 'ratio', 'lnratio', 'ratioavg', 'lnratioavg', 'lnoravg', 'differenceavg'. These strings are shortcuts for functions that accept two vectors of adjusted predictions and returns a single vector of contrasts. For example, these two commands yield identical results:
 
