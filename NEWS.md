@@ -2,6 +2,10 @@
 
 ## marginaleffects (development version)
 
+Breaking change:
+
+* `glmmTMB`: Standard errors are no longer supported because they may have been erroneous. Follow Issue #810 on Github for developments: https://github.com/vincentarelbundock/marginaleffects/issues/810
+
 New:
 
 * `s.value` column in all output: Shannon transforms for p values. See Greenland (2019).

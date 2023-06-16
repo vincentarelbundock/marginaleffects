@@ -61,6 +61,9 @@ set_coef.glmmTMB <- function(model, coefs, ...) {
 
 #' @rdname sanitize_model_specific
 sanitize_model_specific.glmmTMB <- function(model, vcov = NULL, calling_function = "marginaleffects", ...) {
+    if (!isFALSE(vcov)) {
+        insight::format_error("Standard errors are not supported for models of class `glmmTMB`. Please set `vcov = FALSE`.")
+    }
     REML <- as.list(insight::get_call(model))[["REML"]]
     if (isTRUE(REML) && !identical(vcov, FALSE)) {
         msg <- insight::format_message("Uncertainty estimates cannot be computed for `glmmTMB` models with the `REML=TRUE` option. Either set `REML=FALSE` when fitting the model, or set `vcov=FALSE` when calling a `slopes` function to avoid this error.")
