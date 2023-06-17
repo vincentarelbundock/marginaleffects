@@ -56,6 +56,7 @@ get_hypothesis <- function(x, hypothesis, column, by = NULL) {
         }
         out <- do.call(rbind, out_list)
         attr(out, "posterior_draws") <- do.call(rbind, draws_list)
+        attr(out, "label") <- labs
         return(out)
     }
 

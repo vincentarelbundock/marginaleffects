@@ -56,6 +56,9 @@
 #' # parameters of interest in the output of FUN
 #' hypotheses(mod, hypothesis = "b2 = b3")
 #' 
+#' # wildcard
+#' hypotheses(mod, hypothesis = "b* / b2 = 1")
+#' 
 #' # term names with special characters have to be enclosed in backticks
 #' hypotheses(mod, hypothesis = "`factor(cyl)6` = `factor(cyl)8`")
 #' 
@@ -214,7 +217,9 @@ hypotheses <- function(
             insight::format_error(msg)
         }
 
-        out <- get_hypothesis(out, hypothesis = hypothesis)$estimate
+        tmp <- get_hypothesis(out, hypothesis = hypothesis)
+        out <- tmp$estimate
+        attr(out, "label") <- attr(tmp, "label")
         return(out)
     }
 
@@ -227,8 +232,11 @@ hypotheses <- function(
         FUN = FUNouter,
         ...)
 
+    hyplab <- attr(b, "label")
     if (!is.null(hypothesis)) {
-        hyplab <- attr(hypothesis, "label")
+        if (is.null(hyplab)) {
+            hyplab <- attr(hypothesis, "label")
+        }
         if (!is.null(hyplab)) {
             out <- data.frame(
                 term = hyplab,

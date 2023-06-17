@@ -2,6 +2,9 @@ source("helpers.R")
 using("marginaleffects")
 requiet("car")
 
+
+
+
 # When `FUN` and `hypotheses` are `NULL`, `hypotheses()` returns a data.frame of parameters
 dat <- mtcars
 mod <- lm(mpg ~ hp + wt + factor(cyl), data = dat)
@@ -149,7 +152,12 @@ expect_equal(x$estimate, y)
 expect_equal(z$estimate, y)
 
 
-
+# labels
+dat <- mtcars
+mod <- lm(mpg ~ hp + wt + factor(cyl), data = dat)
+hyp <- hypotheses(mod, hypothesis = "b* = b2")
+known <- c("b1 = b2", "b2 = b2", "b3 = b2", "b4 = b2", "b5 = b2")
+expect_true(all(hyp$term %in% known))
 
 
 

@@ -102,6 +102,10 @@ We can use shortcuts like `b1`, `b2`, `...` to identify the position of each par
 hypotheses(mod, "b2 = b3")
 ```
 
+```{r}
+hypotheses(mod, hypothesis = "b* / b3 = 1")
+```
+
 Term names with special characters must be enclosed in backticks:
 
 ```{r}
