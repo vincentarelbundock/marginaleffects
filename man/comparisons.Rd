@@ -91,6 +91,7 @@ avg_comparisons(
 \item Numeric variables:
 \itemize{
 \item Numeric of length 1: Contrast for a gap of \code{x}, computed at the observed value plus and minus \code{x / 2}. For example, estimating a \code{+1} contrast compares adjusted predictions when the regressor is equal to its observed value minus 0.5 and its observed value plus 0.5.
+\item Numeric of length equal to the number of rows in \code{newdata}: Same as above, but the contrast can be customized for each row of \code{newdata}.
 \item Numeric vector of length 2: Contrast between the 2nd element and the 1st element of the \code{x} vector.
 \item Data frame with the same number of rows as \code{newdata}, with two columns of "low" and "high" values to compare.
 \item Function which accepts a numeric vector and returns a data frame with two columns of "low" and "high" values to compare. See examples below.
@@ -484,6 +485,15 @@ comparisons(
     newdata = "mean",
     hypothesis = lc)
 
+# Effect of a 1 group-wise standard deviation change
+# First we calculate the SD in each group of `cyl`
+# Second, we use that SD as the treatment size in the `variables` argument
+library(dplyr)
+mod <- lm(mpg ~ hp + factor(cyl), mtcars)
+tmp <- mtcars \%>\% 
+    group_by(cyl) \%>\%
+    mutate(hp_sd = sd(hp))
+avg_comparisons(mod, variables = list(hp = tmp$hp_sd), by = "cyl")
 
 # `by` argument
 mod <- lm(mpg ~ hp * am * vs, data = mtcars)

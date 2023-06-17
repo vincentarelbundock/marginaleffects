@@ -79,6 +79,12 @@ get_contrast_data_numeric <- function(model,
             lab <- sprintf("mean(+%s)", variable$value)
         }
 
+    # custom vector
+    } else if (isTRUE(checkmate::check_numeric(variable$value, len = nrow(newdata)))) {
+        low <- x - variable$value / 2
+        high <- x + variable$value / 2
+        lab <- "custom"
+
     } else if (isTRUE(checkmate::check_numeric(variable$value, len = 2))) {
         variable$value <- sort(variable$value)
         low <- variable$value[1]
