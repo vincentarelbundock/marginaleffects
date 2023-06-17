@@ -39,6 +39,7 @@ book:
       - articles/categorical.qmd
       - articles/gformula.qmd
       - articles/elasticity.qmd
+      - articles/equivalence.qmd
       - articles/experiments.qmd
       - articles/gam.qmd
       - articles/logit.qmd
