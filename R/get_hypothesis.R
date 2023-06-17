@@ -16,7 +16,8 @@ get_hypothesis <- function(x, hypothesis, column, by = NULL) {
     }
 
     # lincom: string shortcuts
-    if (isTRUE(hypothesis %in% c("pairwise", "reference", "sequential", "revpairwise", "revreference", "revsequential"))) {
+    valid <- c("pairwise", "reference", "sequential", "revpairwise", "revreference", "revsequential")
+    if (isTRUE(hypothesis %in% valid)) {
         if (nrow(x) > 25) {
             msg <- 'The "pairwise", "reference", and "sequential" options of the `hypotheses` argument are not supported for `marginaleffects` commands which generate more than 25 rows of results. Use the `newdata`, `by`, and/or `variables` arguments to compute a smaller set of results on which to conduct hypothesis tests.'
             insight::format_error(msg)
@@ -37,88 +38,25 @@ get_hypothesis <- function(x, hypothesis, column, by = NULL) {
     }
     lincom <- sanitize_lincom(lincom, x)
 
+    # matrix hypothesis
     if (isTRUE(checkmate::check_matrix(lincom))) {
         out <- lincom_multiply(x, lincom)
         return(out)
-    }
 
-    # we assume this is a string formula
-    if (is.character(hypothesis)) {
-
-        # row indices: `hypotheses` includes them, but `term` does not
-        if (isTRUE(grepl("\\bb\\d+\\b", hypothesis)) && !any(grepl("\\bb\\d+\\b", x[["term"]]))) {
-            lab <- hypothesis
-            bmax <- regmatches(lab, gregexpr("\\bb\\d+\\b", lab))[[1]]
-            bmax <- tryCatch(max(as.numeric(gsub("b", "", bmax))), error = function(e) 0)
-            if (bmax > nrow(x)) {
-                msg <- "%s cannot be used in `hypothesis` because the call produced just %s estimate(s). Try executing the exact same command without the `hypothesis` argument to see which estimates are available for hypothesis testing."
-                msg <- sprintf(msg, paste0("b", bmax), nrow(x))
-                insight::format_error(msg)
-            }
-            for (i in seq_len(nrow(x))) {
-                tmp <- paste0("marginaleffects__", i)
-                hypothesis <- gsub(paste0("b", i), tmp, hypothesis)
-            }
-            rowlabels <- paste0("marginaleffects__", seq_len(nrow(x)))
-
-        # term names
-        } else {
-            if (!"term" %in% colnames(x) || anyDuplicated(x$term) > 0) {
-                msg <- c(
-                'To use term names in a `hypothesis` string, the same function call without `hypothesis` argument must produce a `term` column with unique row identifiers. You can use `b1`, `b2`, etc. indices instead of term names in the `hypotheses` string Ex: "b1 + b2 = 0" Alternatively, you can use the `newdata`, `variables`, or `by` arguments:',
-                "",
-                'mod <- lm(mpg ~ am * vs + cyl, data = mtcars)',
-                'comparisons(mod, newdata = "mean", hypothesis = "b1 = b2")',
-                'comparisons(mod, newdata = "mean", hypothesis = "am = vs")',
-                'comparisons(mod, variables = "am", by = "cyl", hypothesis = "pairwise")')
-                insight::format_error(msg)
-            }
-            rowlabels <- x$term
+    # string hypothesis
+    } else if (is.character(hypothesis)) {
+        out_list <- draws_list <- list()
+        lab <- attr(hypothesis, "label")
+        for (i in seq_along(hypothesis)) {
+            out_list[[i]] <- eval_string_hypothesis(x, hypothesis[i], lab)
+            draws_list[[i]] <- attr(out_list[[i]], "posterior_draws")
         }
-
-        eval_string_function <- function(vec, hypothesis, rowlabels) {
-            envir <- parent.frame()
-            void <- sapply(
-                seq_along(vec), function(i)
-                assign(rowlabels[i], vec[i], envir = envir))
-            out <- eval(parse(text = hypothesis), envir = envir)
-            return(out)
-        }
-
-        draws <- attr(x, "posterior_draws")
-        if (!is.null(draws)) {
-            insight::check_if_installed("collapse", minimum_version = "1.9.0")
-            tmp <- apply(
-                draws,
-                MARGIN = 2,
-                FUN = eval_string_function,
-                hypothesis = hypothesis,
-                rowlabels = rowlabels)
-            draws <- matrix(tmp, ncol = ncol(draws))
-            out <- data.table(
-                term = gsub("\\s+", "", attr(hypothesis, "label")),
-                tmp = collapse::dapply(draws, MARGIN = 1, FUN = collapse::fmedian))
-
-
-        } else {
-            out <- eval_string_function(
-                x[["estimate"]],
-                hypothesis = hypothesis,
-                rowlabels = rowlabels)
-            out <- data.table(
-                term = gsub("\\s+", "", attr(hypothesis, "label")),
-                tmp = out)
-        }
-
-        setnames(out, old = "tmp", new = "estimate")
-        attr(out, "posterior_draws") <- draws
+        out <- do.call(rbind, out_list)
+        attr(out, "posterior_draws") <- do.call(rbind, draws_list)
         return(out)
     }
 
-    msg <- 
-    "`hypotheses` is broken. Please report this bug:
-    https://github.com/vincentarelbundock/marginaleffects/issues."
-    stop(msg, call. = FALSE)
+    insight::format_error("`hypotheses` is broken. Please report this bug: https://github.com/vincentarelbundock/marginaleffects/issues.")
 }
 
 
@@ -294,5 +232,75 @@ lincom_multiply <- function(x, lincom) {
     }
 
     out <- out[out$term != "1 - 1", , drop = FALSE]
+    return(out)
+}
+
+
+eval_string_hypothesis <- function(x, hypothesis, lab) {
+    # row indices: `hypotheses` includes them, but `term` does not
+    if (isTRUE(grepl("\\bb\\d+\\b", hypothesis)) && !any(grepl("\\bb\\d+\\b", x[["term"]]))) {
+        bmax <- regmatches(lab, gregexpr("\\bb\\d+\\b", lab))[[1]]
+        bmax <- tryCatch(max(as.numeric(gsub("b", "", bmax))), error = function(e) 0)
+        if (bmax > nrow(x)) {
+            msg <- "%s cannot be used in `hypothesis` because the call produced just %s estimate(s). Try executing the exact same command without the `hypothesis` argument to see which estimates are available for hypothesis testing."
+            msg <- sprintf(msg, paste0("b", bmax), nrow(x))
+            insight::format_error(msg)
+        }
+        for (i in seq_len(nrow(x))) {
+            tmp <- paste0("marginaleffects__", i)
+            hypothesis <- gsub(paste0("b", i), tmp, hypothesis)
+        }
+        rowlabels <- paste0("marginaleffects__", seq_len(nrow(x)))
+
+    # term names
+    } else {
+        if (!"term" %in% colnames(x) || anyDuplicated(x$term) > 0) {
+            msg <- c(
+                'To use term names in a `hypothesis` string, the same function call without `hypothesis` argument must produce a `term` column with unique row identifiers. You can use `b1`, `b2`, etc. indices instead of term names in the `hypotheses` string Ex: "b1 + b2 = 0" Alternatively, you can use the `newdata`, `variables`, or `by` arguments:',
+                "",
+                "mod <- lm(mpg ~ am * vs + cyl, data = mtcars)",
+                'comparisons(mod, newdata = "mean", hypothesis = "b1 = b2")',
+                'comparisons(mod, newdata = "mean", hypothesis = "am = vs")',
+                'comparisons(mod, variables = "am", by = "cyl", hypothesis = "pairwise")')
+            insight::format_error(msg)
+        }
+        rowlabels <- x$term
+    }
+
+    eval_string_function <- function(vec, hypothesis, rowlabels) {
+        envir <- parent.frame()
+        void <- sapply(
+            seq_along(vec), function(i) {
+                assign(rowlabels[i], vec[i], envir = envir)
+            })
+        out <- eval(parse(text = hypothesis), envir = envir)
+        return(out)
+    }
+
+    draws <- attr(x, "posterior_draws")
+    if (!is.null(draws)) {
+        insight::check_if_installed("collapse", minimum_version = "1.9.0")
+        tmp <- apply(
+            draws,
+            MARGIN = 2,
+            FUN = eval_string_function,
+            hypothesis = hypothesis,
+            rowlabels = rowlabels)
+        draws <- matrix(tmp, ncol = ncol(draws))
+        out <- data.table(
+            term = gsub("\\s+", "", lab),
+            tmp = collapse::dapply(draws, MARGIN = 1, FUN = collapse::fmedian))
+    } else {
+        out <- eval_string_function(
+            x[["estimate"]],
+            hypothesis = hypothesis,
+            rowlabels = rowlabels)
+        out <- data.table(
+            term = gsub("\\s+", "", lab),
+            tmp = out)
+    }
+
+    setnames(out, old = "tmp", new = "estimate")
+    attr(out, "posterior_draws") <- draws
     return(out)
 }
