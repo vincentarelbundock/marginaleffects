@@ -69,7 +69,7 @@ get_news = function() {
   new = readLines(tmp)
   new = gsub("\\@([\\w|-]+)", "[\\\\@\\1](https://github.com/\\1)", new, perl = TRUE)
   new = gsub("#(\\d+)", "[#\\1](https://github.com/vincentarelbundock/marginaleffects/issues/\\1)", new, perl = TRUE)
-  new = gsub("(^#+ .*)", "\\1 {.unnumbered}", new)
+  new = gsub("(^## .*)", "\\1 {.unnumbered}", new)
   new = gsub("^## marginaleffects", "## ", new)
   writeLines(new, here::here("book/articles/NEWS.qmd"))
   unlink(tmp)
