@@ -312,7 +312,7 @@ eval_string_hypothesis <- function(x, hypothesis, lab) {
 expand_wildcard <- function(hyp, bmax, lab) {
   # Find all occurrences of b*
   bstar_indices <- gregexpr("b\\*", hyp)[[1]]
-  if (bstar_indices[1] == -1) return(hyp)
+  if (bstar_indices[1] == -1) return(list(hyp, lab))
   bstar_count <- length(bstar_indices)
   if (bstar_count > 1) {
     insight::format_error("Error: More than one 'b*' substring found.")
