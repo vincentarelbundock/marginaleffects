@@ -8,6 +8,7 @@ Breaking change:
 
 New:
 
+* `hypothesis` argument accepts wildcards: `hypothesis = "b*=b1"`
 * `s.value` column in all output: Shannon transforms for p values. See Greenland (2019).
 * `marginal_means` supports `mira` (`mice` objects).
 * `comparisons()`: The `variables` arguments now accepts arbitrary numeric vectors of length equal to the number of rows in `newdata`. This allows users to specify fully custom treatment sizes. In the documentation examples, we show how to estimate the difference for a 1 standard deviation shift in a regressor, where the standard deviation is calculated on a group-wise basis.

@@ -153,6 +153,12 @@ expect_inherits(mm, "marginalmeans")
 expect_equal(nrow(mm), 2)
 
 
+# wildcard
+mm1 <- marginal_means(mod, hypothesis = "b* = b1")
+expect_equal(mm1$term, paste0("b", 1:9, "=b1"))
+expect_equal(mm1$estimate[1], 0)
+
+
 # marginalmeans: string function
 mm1 <- marginal_means(
     mod,
@@ -248,7 +254,6 @@ dat <- transform(iris, dummy = as.factor(rbinom(nrow(iris), 1, prob = c(0.4, 0.6
 m <- lm(Sepal.Width ~ Sepal.Length * Species + dummy, data = dat)
 mfx <- slopes(m, variables = "Sepal.Length", by = c("Species", "dummy"), hypothesis = "pairwise")
 expect_true("setosa, 0 - setosa, 1" %in% mfx$term)
-
 
 
 rm(list = ls())

@@ -1,4 +1,4 @@
-# This function takes any input from the `hypothesis` argument, builds a lincom matrix and then multiplies it by the estimates
+
 get_hypothesis <- function(x, hypothesis, column, by = NULL) {
 
     if (is.null(hypothesis)) return(x)
@@ -47,8 +47,11 @@ get_hypothesis <- function(x, hypothesis, column, by = NULL) {
     } else if (is.character(hypothesis)) {
         out_list <- draws_list <- list()
         lab <- attr(hypothesis, "label")
+        tmp <- expand_wildcard(hypothesis, nrow(x), lab)
+        hypothesis <- tmp[[1]]
+        labs <- tmp[[2]]
         for (i in seq_along(hypothesis)) {
-            out_list[[i]] <- eval_string_hypothesis(x, hypothesis[i], lab)
+            out_list[[i]] <- eval_string_hypothesis(x, hypothesis[i], labs[i])
             draws_list[[i]] <- attr(out_list[[i]], "posterior_draws")
         }
         out <- do.call(rbind, out_list)
@@ -303,4 +306,25 @@ eval_string_hypothesis <- function(x, hypothesis, lab) {
     setnames(out, old = "tmp", new = "estimate")
     attr(out, "posterior_draws") <- draws
     return(out)
+}
+
+
+expand_wildcard <- function(hyp, bmax, lab) {
+  # Find all occurrences of b*
+  bstar_indices <- gregexpr("b\\*", hyp)[[1]]
+  if (bstar_indices[1] == -1) return(hyp)
+  bstar_count <- length(bstar_indices)
+  if (bstar_count > 1) {
+    insight::format_error("Error: More than one 'b*' substring found.")
+  }
+  
+  # Replace b* with b1, b2, b3, ..., bmax
+  labs <- character(bmax)
+  result <- character(bmax)
+  for (i in 1:bmax) {
+    result[i] <- sub("b\\*", paste0("b", i), hyp)
+    labs[i] <- sub("b\\*", paste0("b", i), lab)
+  }
+  
+  return(list(result, labs))
 }
