@@ -48,4 +48,19 @@ Indeed, the probability of throwing 9 straight *Heads* with a fair coin is $\lef
 
 > If the `cyl6` and `cyl8` coefficients were truly equal, finding an absolute difference greater than `r sprintf("%.2f", hyp$estimate)` purely by chance would be as surprising as tossing 9 straight *Heads* with a fair coin.
 
+```{r, echo=FALSE, fig.asp=1, fig.width = 5}
+# Create a sequence of p values from 0 to 1
+p_values <- seq(0, 1, length.out = 100)
 
+# Compute the S values using -log2(p)
+S_values <- -log2(p_values)
+
+# Create the plot
+plot(p_values, S_values, type = "l",
+     main = "Relationship between p and S values",
+     xlab = "p",
+     ylab = "S")
+
+text(x = 0.15, y = 6, labels = "Surprising")
+text(x = 0.85, y = .75, labels = "Unsurprising")
+```
