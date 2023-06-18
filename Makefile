@@ -78,7 +78,7 @@ deploydev: ## Deploy dev book to Github website
 	git checkout main -- book
 	git checkout main -- Makefile
 	Rscript -e "source('book/utils/utils.R');link_function_docs()"
-	Rscript -e "source('book/utils/utils.R');get_quarto_yaml(dev = FALSE)"
+	Rscript -e "source('book/utils/utils.R');get_quarto_yaml(dev = TRUE)"
 	make htmldev
 	rsync -a book/_book/* ./dev/
 	rm -rf book Makefile _quarto.yml utils.R
