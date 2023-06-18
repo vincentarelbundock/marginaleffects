@@ -47,6 +47,6 @@ attr(hyp$p.value, "label") <- attr(hyp$p.value, "jacobian") <- NULL
 
 Indeed, the probability of throwing 9 straight *Heads* with a fair coin is $\left (\frac{1}{2} \right )^9=`r .5^9`$, which is very close to the p value we observed in the test of coefficient equality. Comparing our p value to the outcome of such a familiar game of chance gives us a nice intuitive interpretation:
 
-> If the `factor(cyl)6` and `factor(cyl)8` were truly equal, finding a difference equal to or greater than $|`r sprintf("%.2f", hyp$estimate)`|$ would be as surprising as tossing 9 straight *Heads* with a fair coin.
+> If the `factor(cyl)6` and `factor(cyl)8` coefficients were truly equal, finding a difference equal to or greater than $|`r sprintf("%.2f", hyp$estimate)`|$ would be as surprising as tossing 9 straight *Heads* with a fair coin.
 
 

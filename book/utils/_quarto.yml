@@ -45,6 +45,7 @@ book:
       - articles/logit.qmd
       - articles/lme4.qmd
       - articles/multiple_imputation.qmd
+      - articles/svalues.qmd
     - part: Misc
       collapse-level: 1
       chapters:
@@ -55,7 +56,6 @@ book:
       - articles/python.qmd
       - articles/uncertainty.qmd
       - articles/supported_models.qmd
-      - articles/svalues.qmd
       - articles/tables.qmd
       - articles/faq.qmd
       - articles/NEWS.qmd
