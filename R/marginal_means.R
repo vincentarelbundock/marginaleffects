@@ -59,6 +59,7 @@
 #' @template model_specific_arguments
 #' @template bayesian
 #' @template equivalence
+#' @template type
 #' @template references
 #'
 #' @return Data frame of marginal means with one row per variable-value combination.

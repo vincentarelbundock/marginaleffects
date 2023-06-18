@@ -67,6 +67,7 @@
 #' @template model_specific_arguments
 #' @template bayesian
 #' @template equivalence
+#' @template type
 #' @template references
 #'
 #' @return A `data.frame` with one row per observation and several columns:

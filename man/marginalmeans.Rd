@@ -251,6 +251,16 @@ Equivalence: Two One-Sided Tests (TOST)
 Thanks to Russell V. Lenth for the excellent \code{emmeans} package and documentation which inspired this feature.
 }
 
+\section{Prediction types}{
+
+
+The \code{type} argument determines the scale of the predictions used to compute quantities of interest with functions from the \code{marginaleffects} package. Admissible values for \code{type} depend on the model object. When users specify an incorrect value for \code{type}, \code{marginaleffects} will raise an informative error with a list of valid \code{type} values for the specific model object.
+
+Some of the most common \code{type} values are:
+
+response, link, E, Ep, average, class, conditional, count, cum.prob, cumprob, density, disp, expected, expvalue, fitted, latent, linear.predictor, linpred, location, lp, mean, p, pr, precision, prediction, prob, probs, quantile, risk, scale, survival, unconditional, variance, xb, zero, zlink, zprob
+}
+
 \examples{
 library(marginaleffects)
 

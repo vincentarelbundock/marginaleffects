@@ -82,6 +82,7 @@
 #' @template comparison_functions
 #' @template bayesian
 #' @template equivalence
+#' @template type
 #' @template references
 #'
 #' @return A `data.frame` with one row per observation (per term/group) and several columns:
