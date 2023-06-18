@@ -1,6 +1,6 @@
 # News
 
-## marginaleffects (development version)
+## marginaleffects 0.13.0
 
 Breaking change:
 
