@@ -64,7 +64,7 @@ S_values <- -log2(p_values)
 
 # Create the plot
 plot(p_values, S_values, type = "l",
-     main = "Relationship between p and S values",
+     main = "Deterministic relationship between p and S",
      xlab = "p",
      ylab = "S")
 
