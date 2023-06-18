@@ -48,6 +48,13 @@ Indeed, the probability of throwing 9 straight *Heads* with a fair coin is $\lef
 
 > If the `cyl6` and `cyl8` coefficients were truly equal, finding an absolute difference greater than `r sprintf("%.2f", hyp$estimate)` purely by chance would be as surprising as tossing 9 straight *Heads* with a fair coin.
 
+The benefits of _S_ values include [@ColEdwGre2021]:
+
+1. Calibrates the analyst's intuitions by reference to a well-known physical process (coin flips).
+1. Avoids the problematic dichotomization of findings as "significant" and "not significant" [@Rot2021].
+1. Reduces the reliance on arbitrary thresholds of significance like $\alpha=0.05$.
+1. Guards against the common *mis*interpretation of p values as the "probability that the null hypothesis is true."
+
 ```{r, echo=FALSE, fig.asp=1, fig.width = 5}
 # Create a sequence of p values from 0 to 1
 p_values <- seq(0, 1, length.out = 100)
