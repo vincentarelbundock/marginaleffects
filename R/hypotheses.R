@@ -273,7 +273,7 @@ hypotheses <- function(
             equivalence = equivalence)
     }
 
-    first = c("term", "value", "estimate", "std.error", "statistic", "p.value", "conf.low", "conf.high")
+    first = c("term", "value", "estimate", "std.error", "statistic", "p.value", "s.value", "conf.low", "conf.high")
     out <- sort_columns(out, first)
 
     class(out) <- c("hypotheses", "deltamethod", class(out))
