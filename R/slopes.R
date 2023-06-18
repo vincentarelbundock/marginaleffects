@@ -126,6 +126,7 @@
 #'
 #' @examplesIf interactive()
 #' @examples
+#' \dontrun{
 #'
 #' # Unit-level (conditional) Marginal Effects
 #' mod <- glm(am ~ hp * wt, data = mtcars, family = binomial)
@@ -193,7 +194,8 @@
 #'     mod,
 #'     newdata = "mean",
 #'     hypothesis = lc)
-#'
+#' 
+#' }
 #' @export
 slopes <- function(model,
                    newdata = NULL,

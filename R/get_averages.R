@@ -34,9 +34,11 @@
 #'
 #' @keywords internal
 #' @examples
+#' \dontrun{
 #' mod <- lm(mpg ~ factor(gear), data = mtcars)
 #' contr <- comparisons(mod, variables = list(gear = "sequential"))
 #' tidy(contr)
+#' }
 get_averages <- function (x, by = TRUE, ...) {
     xcall <- substitute(x)
     if (is.call(xcall)) {

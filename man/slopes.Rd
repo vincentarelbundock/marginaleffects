@@ -330,6 +330,7 @@ response, link, E, Ep, average, class, conditional, count, cum.prob, cumprob, de
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 \dontshow{\}) # examplesIf}
+\dontrun{
 
 # Unit-level (conditional) Marginal Effects
 mod <- glm(am ~ hp * wt, data = mtcars, family = binomial)
@@ -398,6 +399,7 @@ slopes(
     newdata = "mean",
     hypothesis = lc)
 
+}
 }
 \references{
 \itemize{
