@@ -209,7 +209,7 @@ glance(mm)
 summary(mm)
 ```
 
-Thanks to those tidiers, we can also present the results in the style of a regression table [using the `modelsummary` package.](modelsummary.html)
+Thanks to those tidiers, we can also present the results in the style of a regression table [using the `modelsummary` package.](https://vincentarelbundock.github.io/modelsummary/)
 
 
 ## Case study: Multinomial Logit
