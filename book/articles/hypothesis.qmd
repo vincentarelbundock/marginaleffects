@@ -470,7 +470,7 @@ comparisons(
     hypothesis = "pairwise")
 ```
 
-## Joint hyotheses tests
+## Joint hypotheses tests
 
 The `hypotheses()` function can also test multiple hypotheses jointly. For example, consider this model:
 
@@ -487,7 +487,7 @@ hypotheses(model, joint = c("as.factor(cyl)6:hp", "as.factor(cyl)8:hp"))
 
 ```
 
-The `joint` argument allows users to flexibly specify the parameters to be tested, using character vectors, integer indices, or Perl-compatible regular expressions. We can also specificy the null hypothesis for each parameter individually using the `hypothesis` argument.
+The `joint` argument allows users to flexibly specify the parameters to be tested, using character vectors, integer indices, or Perl-compatible regular expressions. We can also specify the null hypothesis for each parameter individually using the `hypothesis` argument.
 
 Naturally, the `hypotheses` function also works with `marginaleffects` objects.
 
