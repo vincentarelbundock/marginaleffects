@@ -343,7 +343,7 @@ marginal_means(mod, variables = "carb", hypothesis = lc)
 Of course, we can also estimate more complex contrasts:
 
 ```{r}
-lc <- c(-2, 1, 1, 0, -1, 1)
+lc <- c(0, -2, 1, 1, -1, 1)
 marginal_means(mod, variables = "carb", hypothesis = lc)
 ```
 
