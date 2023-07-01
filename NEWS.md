@@ -1,5 +1,9 @@
 # News
 
+## Development version
+
+* `quantreg` problem with `rowid` merge did not affect estimates but did not return the full original data. Issue #829.
+
 ## marginaleffects 0.13.0
 
 Breaking change:

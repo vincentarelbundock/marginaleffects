@@ -43,4 +43,12 @@ expect_marginal_means(mm)
 
 
 
+# Issue #829
+mod = rq(Sepal.Length ~ Sepal.Width * Petal.Length + Species, tau = .25, data = iris)
+cmp = comparisons(mod)
+expect_false(any(is.na(cmp$Species)))
+expect_false(any(is.na(iris$Species)))
+
+
+
 rm(list = ls())

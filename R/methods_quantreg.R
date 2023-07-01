@@ -12,13 +12,19 @@ get_predict.rq <- function(model,
             beta <- get_coef(model)
             out <- hush(eigenMatMult(MM, beta))
             if (isTRUE(checkmate::check_numeric(out, len = nrow(newdata)))) {
-                out <- data.frame(rowid = seq_len(nrow(newdata)), estimate = out)
+                out <- data.frame(rowid = newdata$rowid, estimate = out)
                 return(out)
+            } else {
+                out = data.frame(rowid = seq_len(length(out)), estimate = out)
             }
         }
     }
     out <- quantreg::predict.rq(model, newdata = newdata, ...)
-    out <- data.frame(rowid = seq_len(nrow(newdata)), estimate = out)
+    if (isTRUE(checkmate::check_numeric(out, len = nrow(newdata)))) {
+        out <- data.frame(rowid = newdata$rowid, estimate = out)
+    } else {
+        out = data.frame(rowid = seq_len(length(out)), estimate = out)
+    }
     return(out)
 }
 
