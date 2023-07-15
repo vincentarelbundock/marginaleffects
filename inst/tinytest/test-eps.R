@@ -28,4 +28,15 @@ expect_equivalent(m2$estimate, m3$estimate)
 # errors and warnings
 expect_error(slopes(mod, eps = 0))
 
+
+# Issue #840
+df <- causaldata::restaurant_inspections
+m1 <- glm(Weekend ~ Year, data = df, family = binomial)
+z <- avg_slopes(m1, variables = "Year")$statistic
+expect_equivalent(z, -2.073447, tol = 1e-6)
+
+
+
+
+
 rm(list = ls())

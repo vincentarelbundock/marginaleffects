@@ -5,13 +5,15 @@ get_jacobian <- function(func, x) {
 
     # forward finite difference (faster)
     if (is.null(numDeriv_args)) {
-        eps <- max(1e-8, 1e-4 * min(abs(x), na.rm = TRUE))
+        # old version. probably not optimal.
+        # h <- max(1e-8, 1e-4 * min(abs(x), na.rm = TRUE))
         baseline <- func(x)
         df <- matrix(NA_real_, length(baseline), length(x))
         for (i in seq_along(x)) {
+            h <- abs(x[i]) * sqrt(.Machine$double.eps)
             dx <- x
-            dx[i] <- dx[i] + eps
-            df[, i] <- (func(dx) - baseline) / eps
+            dx[i] <- dx[i] + h
+            df[, i] <- (func(dx) - baseline) / h
         }
         
         

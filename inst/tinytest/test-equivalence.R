@@ -27,7 +27,7 @@ e2 <- predictions(
     newdata = datagrid(gear = unique),
     equivalence = c(22, 24)) |>
     poorman::arrange(gear)
-expect_equivalent(e1$z.ratio, e2$statistic.nonsup)
+expect_equivalent(e1$z.ratio, e2$statistic.nonsup, tol = 1e-6)
 expect_equivalent(e1$p.value, e2$p.value.nonsup)
 
 

@@ -2,6 +2,12 @@
 
 ## Development version
 
+Breaking change:
+
+* New procedure to select the step size used to compute standard errors: abs(x) * sqrt(.Machine$double.eps). The numerical results may not be exactly identical to previous versions of `marginaleffects`, but the step size should be adequate in a broader variety of cases. Note that users can still use `numDeriv` for more control on numeric differentiation, as documented.
+
+Bug fixes:
+
 * `quantreg` problem with `rowid` merge did not affect estimates but did not return the full original data. Issue #829.
 
 ## marginaleffects 0.13.0
