@@ -14,7 +14,7 @@ hypotheses(
   joint = FALSE,
   joint_test = "f",
   FUN = NULL,
-  numderiv = "richardson",
+  numderiv = "fdforward",
   ...
 )
 }
@@ -83,6 +83,14 @@ hypotheses(
 \itemize{
 \item \code{NULL} (default): hypothesis test on a model's coefficients, or on the quantities estimated by one of the \code{marginaleffects} package functions.
 \item Function which accepts a model object and returns a numeric vector or a data.frame with two columns called \code{term} and \code{estimate}. This argument can be useful when users want to conduct a hypothesis test on an arbitrary function of quantities held in a model object.
+}}
+
+\item{numderiv}{string or list of strings indicating the method to use to for the numeric differentiation used in to compute delta method standard errors.
+\itemize{
+\item "fdforward": finite difference method with forward differences
+\item "fdcenter": finite difference method with central differences (default)
+\item "richardson": Richardson extrapolation method
+\item Extra arguments can be specified by passing a list to the \code{numDeriv} argument, with the name of the method first and named arguments following, ex: \code{numderiv=list("fdcenter", eps = 1e-5)}. When an unknown argument is used, \code{marginaleffects} prints the list of valid arguments for each method.
 }}
 
 \item{...}{Additional arguments are passed to the \code{predict()} method

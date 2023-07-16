@@ -127,7 +127,7 @@ hypotheses <- function(
     joint = FALSE,
     joint_test = "f",
     FUN = NULL,
-    numderiv = "richardson",
+    numderiv = "fdforward",
     ...) {
 
     if (!isFALSE(joint)) {

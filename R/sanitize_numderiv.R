@@ -16,7 +16,7 @@ sanitize_numderiv <- function(numderiv) {
         } else if (numderiv[[1]] == "richardson") {
             valid <- c("eps", "d", "zero_tol", "size", "r", "v")
             if (any(!names(numderiv)[2:length(numderiv)] %in% valid)) {
-                stop(sprintf("The only valid arguments for this numeric differentiation method are: %s", paste(valid, collapse = ", ")), call. = FALSE)
+                stop(sprintf("The only valid arguments for this numeric differentiation method are: %s. See `?numDeriv::grad` for details.", paste(valid, collapse = ", ")), call. = FALSE)
             }
         }
     }

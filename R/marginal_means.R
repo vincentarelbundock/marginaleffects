@@ -146,7 +146,7 @@ marginal_means <- function(model,
                            df = Inf,
                            wts = "equal",
                            by = NULL,
-                           numderiv = "richardson",
+                           numderiv = "fdforward",
                            ...) {
 
 

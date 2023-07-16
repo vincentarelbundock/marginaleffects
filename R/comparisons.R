@@ -234,7 +234,7 @@ comparisons <- function(model,
                         p_adjust = NULL,
                         df = Inf,
                         eps = NULL,
-                        numderiv = "richardson",
+                        numderiv = "fdforward",
                         ...) {
 
 
@@ -646,7 +646,7 @@ avg_comparisons <- function(model,
                             p_adjust = NULL,
                             df = Inf,
                             eps = NULL,
-                            numderiv = "richardson",
+                            numderiv = "fdforward",
                             ...) {
 
     # order of the first few paragraphs is important

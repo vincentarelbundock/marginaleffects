@@ -32,7 +32,7 @@ expect_error(slopes(mod, eps = 0))
 # Issue #840
 df <- causaldata::restaurant_inspections
 m1 <- glm(Weekend ~ Year, data = df, family = binomial)
-z <- avg_slopes(m1, variables = "Year")$statistic
+z <- avg_slopes(m1, variables = "Year", numderiv = "richardson")$statistic
 expect_equivalent(z, -2.06834167185815, tol = 1e-5)
 
 

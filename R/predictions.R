@@ -199,7 +199,7 @@ predictions <- function(model,
                         equivalence = NULL,
                         p_adjust = NULL,
                         df = Inf,
-                        numderiv = "richardson",
+                        numderiv = "fdforward",
                         ...) {
 
 
@@ -690,7 +690,7 @@ avg_predictions <- function(model,
                             equivalence = NULL,
                             p_adjust = NULL,
                             df = Inf,
-                            numderiv = "richardson",
+                            numderiv = "fdforward",
                             ...) {
 
     # order of the first few paragraphs is important
