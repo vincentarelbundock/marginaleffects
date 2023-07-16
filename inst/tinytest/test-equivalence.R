@@ -79,7 +79,8 @@ e2 <- predictions(
     mod,
     type = "link",
     newdata = datagrid(gear = unique),
-    equivalence = c(.5, 1.5)) |>
+    equivalence = c(.5, 1.5),
+    numderiv = "richardson") |>
     poorman::arrange(gear)
 expect_equivalent(e1$emmean, e2$estimate)
 expect_equivalent(e1$z.ratio, e2$statistic.noninf)
