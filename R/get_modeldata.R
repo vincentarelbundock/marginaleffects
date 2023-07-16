@@ -1,4 +1,5 @@
 get_modeldata <- function(model, additional_variables = TRUE) {
+
     # always extract offset variable if available
     off <- hush(insight::find_offset(model))
     if (isTRUE(checkmate::check_formula(off))) {
@@ -10,6 +11,19 @@ get_modeldata <- function(model, additional_variables = TRUE) {
             additional_variables <- c(additional_variables, off)
         }
     }
+
+    # always extract weights variable if available
+    wts <- hush(insight::find_weights(model))
+    if (isTRUE(checkmate::check_formula(wts))) {
+        additional_variables <- c(additional_variables, hush(all.vars(wts)))
+    } else if (isTRUE(checkmate::check_character(wts, max.len = 4))) {
+        if (isTRUE(grepl("~", wts))) {
+            additional_variables <- c(additional_variables, hush(all.vars(stats::as.formula(wts))))
+        } else {
+            additional_variables <- c(additional_variables, wts)
+        }
+    }
+
     out <- hush(insight::get_data(model, verbose = FALSE, additional_variables = additional_variables))
     # iv_robust and some others
     if (is.null(out)) {

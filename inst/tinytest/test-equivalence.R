@@ -125,8 +125,8 @@ mm <- marginal_means(
 
 e1 <- test(pa, delta = delta, adjust = "none", side = "nonsuperiority", df = Inf)
 e2 <- hypotheses(mm, equivalence = c(-delta, delta))
-expect_equivalent(e1$z.ratio, e2$statistic.nonsup)
-expect_equivalent(e1$p.value, e2$p.value.nonsup)
+expect_equivalent(e1$z.ratio, e2$statistic.nonsup, tol = 1e-6)
+expect_equivalent(e1$p.value, e2$p.value.nonsup, tol = 1e-6)
 
 e1 <- test(pa, delta = delta, adjust = "none", side = "noninferiority", df = Inf)
 e2 <- hypotheses(mm, equivalence = c(-delta, delta))

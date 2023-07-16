@@ -13,6 +13,7 @@ New:
 Bug fixes:
 
 * `quantreg` problem with `rowid` merge did not affect estimates but did not return the full original data. Issue #829.
+* `get_modeldata()` extracts weights variable when available.
 
 ## marginaleffects 0.13.0
 
