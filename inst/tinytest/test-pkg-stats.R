@@ -20,8 +20,8 @@ dat <- data.frame(x1 = rnorm(N),
 dat$y <- as.numeric(plogis(
     dat$x1 + dat$x2 + dat$x3 + dat$x4 + dat$x3 * dat$x4 + dat$e) > 0.5)
 mod <- glm(y ~ x1 + x2 + x3 * x4, data = dat, family = binomial)
-res <- slopes(mod)
-mar <- margins(mod, unit_ses = TRUE)
+res <- slopes(mod, eps = 1e-7)
+mar <- margins(mod, unit_ses = TRUE, eps = 1e-7)
 expect_true(expect_margins(res, mar, tolerance = 0.1, verbose=TRUE))
 
 
