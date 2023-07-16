@@ -1,10 +1,16 @@
 rm(list=ls())
 rm(list=ls(.GlobalEnv), envir = .GlobalEnv)
 
-EXPENSIVE <- FALSE
+# EXPENSIVE <- FALSE
+EXPENSIVE <- TRUE
 
 options("tinysnapshot_device" = "svglite")
 options("tinysnapshot_tol" = 200)
+options(marginaleffects_numDeriv = NULL)
+
+if (isTRUE(insight::check_if_installed("cmdstanr", quietly = TRUE))) {
+    options("brms.backend" = "cmdstanr")
+}
 
 # libraries
 requiet <- function(package) {

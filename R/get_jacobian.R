@@ -10,7 +10,7 @@ get_jacobian <- function(func, x) {
         baseline <- func(x)
         df <- matrix(NA_real_, length(baseline), length(x))
         for (i in seq_along(x)) {
-            h <- abs(x[i]) * sqrt(.Machine$double.eps)
+            h <- max(abs(x[i]) * sqrt(.Machine$double.eps), 1e-10)
             dx <- x
             dx[i] <- dx[i] + h
             df[, i] <- (func(dx) - baseline) / h

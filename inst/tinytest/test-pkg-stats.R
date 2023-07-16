@@ -7,6 +7,8 @@ requiet("emmeans")
 requiet("poorman")
 
 
+options(marginaleffects_numDeriv = list(method = "simple", method.args = list(eps = 1e-7)))
+
 guerry <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/HistData/Guerry.csv")
 
 # glm: marginaleffects
@@ -16,13 +18,16 @@ dat <- data.frame(x1 = rnorm(N),
                   x2 = rnorm(N),
                   x3 = rnorm(N),
                   x4 = rnorm(N),
-                  e = rnorm(N))
-dat$y <- as.numeric(plogis(
-    dat$x1 + dat$x2 + dat$x3 + dat$x4 + dat$x3 * dat$x4 + dat$e) > 0.5)
+                  e = rnorm(N)) |>
+        transform(y = plogis(x1 + x2 + x3 + x4 + x4 * x4)) |>
+        transform(y = rbinom(N, 1, y))
 mod <- glm(y ~ x1 + x2 + x3 * x4, data = dat, family = binomial)
 res <- slopes(mod, eps = 1e-7)
 mar <- margins(mod, unit_ses = TRUE, eps = 1e-7)
-expect_true(expect_margins(res, mar, tolerance = 0.1, verbose=TRUE))
+for (x in c("x1", "x2", "x3", "x4")) {
+    expect_equivalent(as.numeric(res[res$term == x, "estimate"]), as.numeric(mar[[paste0("dydx_", x)]]), tolerance = 1e-5)
+    expect_equivalent(as.numeric(res[res$term == x, "std.error"]), as.numeric(mar[[paste0("SE_dydx_", x)]]), tolerance = 1e-5)
+}
 
 
 # predictions
@@ -36,7 +41,7 @@ em <- emmeans::emtrends(mod, ~x2, var = "x2", at = list(x1 = 0, x2 = 0, x3 = 0, 
 em <- tidy(em)
 mfx <- slopes(mod, newdata = datagrid(x1 = 0, x2 = 0, x3 = 0, x4 = 0), variable = "x2", type = "link")
 expect_equivalent(mfx$estimate, em$x2.trend)
-expect_equivalent(mfx$std.error, em$std.error)
+expect_equivalent(mfx$std.error, em$std.error, tolerance = 1e-5)
 
 
 
@@ -95,7 +100,7 @@ expect_equivalent(mm$std.error, em$std.error)
 mm <- tidy(marginal_means(mod, variables = "am")) |> dplyr::arrange(value)
 em <- broom::tidy(emmeans::emmeans(mod, specs = "am"))
 expect_equivalent(mm$estimate, em$estimate)
-expect_equivalent(mm$std.error, em$std.error)
+expect_equivalent(mm$std.error, em$std.error, tolerance = 1e-5)
 
 
 
@@ -173,4 +178,6 @@ expect_equivalent(colnames(get_predict(mod)), c("rowid", "estimate"))
 
 
 
+
+source("helpers.R")
 rm(list = ls())
