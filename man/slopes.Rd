@@ -20,6 +20,7 @@ slopes(
   p_adjust = NULL,
   df = Inf,
   eps = NULL,
+  numderiv = "richardson",
   ...
 )
 
@@ -38,6 +39,7 @@ avg_slopes(
   p_adjust = NULL,
   df = Inf,
   eps = NULL,
+  numderiv = "richardson",
   ...
 )
 }

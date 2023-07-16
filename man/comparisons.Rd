@@ -22,6 +22,7 @@ comparisons(
   p_adjust = NULL,
   df = Inf,
   eps = NULL,
+  numderiv = "richardson",
   ...
 )
 
@@ -42,6 +43,7 @@ avg_comparisons(
   p_adjust = NULL,
   df = Inf,
   eps = NULL,
+  numderiv = "richardson",
   ...
 )
 }

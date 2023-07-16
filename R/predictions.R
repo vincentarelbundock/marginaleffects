@@ -199,6 +199,7 @@ predictions <- function(model,
                         equivalence = NULL,
                         p_adjust = NULL,
                         df = Inf,
+                        numderiv = "richardson",
                         ...) {
 
 
@@ -215,8 +216,9 @@ predictions <- function(model,
     if (!is.null(equivalence) && !is.null(p_adjust)) {
         insight::format_error("The `equivalence` and `p_adjust` arguments cannot be used together.")
     }
-    
-    
+
+    numderiv <- sanitize_numderiv(numderiv)
+
     # is the model supported?
     model <- sanitize_model(
         model = model,
@@ -486,7 +488,8 @@ predictions <- function(model,
                     J = J,
                     hypothesis = hypothesis,
                     by = by,
-                    byfun = byfun)
+                    byfun = byfun,
+                    numderiv = numderiv)
                 args <- utils::modifyList(args, dots)
                 se <- do.call(get_se_delta, args)
                 if (is.numeric(se) && length(se) == nrow(tmp)) {
@@ -687,6 +690,7 @@ avg_predictions <- function(model,
                             equivalence = NULL,
                             p_adjust = NULL,
                             df = Inf,
+                            numderiv = "richardson",
                             ...) {
 
     # order of the first few paragraphs is important

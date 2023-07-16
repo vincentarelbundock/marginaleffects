@@ -146,6 +146,7 @@ marginal_means <- function(model,
                            df = Inf,
                            wts = "equal",
                            by = NULL,
+                           numderiv = "richardson",
                            ...) {
 
 
@@ -162,6 +163,8 @@ marginal_means <- function(model,
     if (!is.null(equivalence) && !is.null(p_adjust)) {
         insight::format_error("The `equivalence` and `p_adjust` arguments cannot be used together.")
     }
+
+    numderiv = sanitize_numderiv(numderiv)
 
     # build call: match.call() doesn't work well in *apply()
     call_attr <- c(list(
@@ -370,7 +373,8 @@ marginal_means <- function(model,
             cross = cross,
             modeldata = modeldata,
             hypothesis = hypothesis,
-            by = by)
+            by = by,
+            numderiv = numderiv)
         args <- c(args, list(...))
         args[["equivalence"]] <- NULL
         se <- do.call(get_se_delta, args)

@@ -19,6 +19,7 @@ marginal_means(
   df = Inf,
   wts = "equal",
   by = NULL,
+  numderiv = "richardons",
   ...
 )
 }

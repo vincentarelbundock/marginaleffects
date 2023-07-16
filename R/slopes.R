@@ -211,6 +211,7 @@ slopes <- function(model,
                    p_adjust = NULL,
                    df = Inf,
                    eps = NULL,
+                   numderiv = "richardson",
                    ...) {
 
 
@@ -277,6 +278,7 @@ slopes <- function(model,
         p_adjust = p_adjust,
         by = by,
         eps = eps,
+        numderiv = numderiv,
         comparison = slope,
         cross = FALSE,
         # secret arguments
@@ -357,6 +359,7 @@ avg_slopes <- function(model,
                        p_adjust = NULL,
                        df = Inf,
                        eps = NULL,
+                       numderiv = "richardson",
                        ...) {
 
     # order of the first few paragraphs is important

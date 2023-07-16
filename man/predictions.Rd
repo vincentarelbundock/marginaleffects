@@ -20,6 +20,7 @@ predictions(
   equivalence = NULL,
   p_adjust = NULL,
   df = Inf,
+  numderiv = "richardson",
   ...
 )
 
@@ -38,6 +39,7 @@ avg_predictions(
   equivalence = NULL,
   p_adjust = NULL,
   df = Inf,
+  numderiv = "richardson",
   ...
 )
 }

@@ -14,6 +14,7 @@ hypotheses(
   joint = FALSE,
   joint_test = "f",
   FUN = NULL,
+  numderiv = "richardson",
   ...
 )
 }
