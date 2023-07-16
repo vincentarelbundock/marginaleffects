@@ -2,8 +2,6 @@ source("helpers.R")
 using("marginaleffects")
 set.seed(1024)
 
-options(marginaleffects_numDeriv = "richardson")
-
 tol <- tolse <- 1e-4
 
 results <- readRDS(testing_path("stata/stata.rds"))

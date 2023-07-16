@@ -395,6 +395,7 @@ avg_slopes <- function(model,
         p_adjust = p_adjust,
         df = df,
         eps = eps,
+        numderiv = numderiv,
         ...)
 
     return(out)

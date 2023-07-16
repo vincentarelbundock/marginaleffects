@@ -10,7 +10,7 @@ sanitize_numderiv <- function(numderiv) {
 
     if (length(numderiv) > 1) {
         if (numderiv[[1]] %in% c("fdforward", "fdcenter")) {
-            if (any(names(numderiv)[2:length(numderiv)] %in% "eps")) {
+            if (any(!names(numderiv)[2:length(numderiv)] %in% "eps")) {
                 stop("The only valid argument for this numeric differentiation method is `eps`.")
             }
         } else if (numderiv[[1]] == "richardson") {

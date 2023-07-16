@@ -23,7 +23,7 @@ get_jacobian <- function(func, x, numderiv) {
 }
 
 
-get_jacobian_fdforward <- function(func, x, eps) {
+get_jacobian_fdforward <- function(func, x, eps = NULL) {
     # old version. probably not optimal. Keep for posterity.
     # h <- max(1e-8, 1e-4 * min(abs(x), na.rm = TRUE))
     baseline <- func(x)
@@ -42,7 +42,7 @@ get_jacobian_fdforward <- function(func, x, eps) {
 }
     
 
-get_jacobian_fdcenter <- function(func, x, eps) {
+get_jacobian_fdcenter <- function(func, x, eps = NULL) {
     baseline <- func(x)
     df <- matrix(NA_real_, length(baseline), length(x))
     for (i in seq_along(x)) {
