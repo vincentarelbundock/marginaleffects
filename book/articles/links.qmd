@@ -1,7 +1,8 @@
 ---
 title: "Links" 
 ---
-- [Causal inference with potential outcomes bootcamp](https://solomonkurz.netlify.app/blog/2023-04-16-causal-inference-with-potential-outcomes-bootcamp/) by Solomon Kurz
+
+- [You are what you ATE: Choosing an effect size measure for binary outcomes](https://cameronpatrick.com/post/2023/07/logit-rd-rr/?twt) by Cameron Patrick
 - [Causal inference with potential outcomes bootcamp](https://solomonkurz.netlify.app/blog/2023-04-16-causal-inference-with-potential-outcomes-bootcamp/) by Solomon Kurz
 - [Marginal and conditional effects for GLMMs with `marginaleffects`](https://www.andrewheiss.com/blog/2022/11/29/conditional-marginal-marginaleffects/) by Andrew Heiss
 - [Marginalia: A guide to figuring out what the heck marginal effects, marginal slopes, average marginal effects, marginal effects at the mean, and all these other marginal things are](https://www.andrewheiss.com/blog/2022/05/20/marginalia/) by Andrew Heiss
