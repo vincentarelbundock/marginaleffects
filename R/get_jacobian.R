@@ -1,7 +1,7 @@
 # adapted from the numDeriv package for R by Paul Gilbert published under GPL2 license
 
 get_jacobian <- function(func, x) {
-    numDeriv_args <- getOption("marginaleffects_numDeriv", default = NULL)
+    numDeriv_args <- getOption("marginaleffects_numDeriv", default = "richardson")
 
     # forward finite difference (faster)
     if (is.null(numDeriv_args)) {
@@ -19,11 +19,15 @@ get_jacobian <- function(func, x) {
         
     # numDeriv (more accurate)
     } else {
-        insight::check_if_installed("numDeriv")
-        numDeriv_args[["func"]] <- func
-        numDeriv_args[["x"]] <- x
-        ndFUN <- get("jacobian", asNamespace("numDeriv"))
-        df <- do.call(ndFUN, numDeriv_args)
+        if (identical(numDeriv_args, "richardson")) {
+            df <- get_jacobian_richardson(func, x)
+        } else {
+            insight::check_if_installed("numDeriv")
+            numDeriv_args[["func"]] <- func
+            numDeriv_args[["x"]] <- x
+            ndFUN <- get("jacobian", asNamespace("numDeriv"))
+            df <- do.call(ndFUN, numDeriv_args)
+        }
     }
 
     return(df)

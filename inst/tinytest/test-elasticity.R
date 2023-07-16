@@ -2,8 +2,9 @@ source("helpers.R")
 using("marginaleffects")
 set.seed(1024)
 
-tol <- 1e-4
-tolse <- 1e-2
+options(marginaleffects_numDeriv = "richardson")
+
+tol <- tolse <- 1e-4
 
 results <- readRDS(testing_path("stata/stata.rds"))
 
@@ -16,6 +17,7 @@ expect_inherits(mfx, "slopes")
 mfx <- avg_slopes(mod, slope = "eyex")
 sta <- results$stats_lm_elasticity_eyex
 expect_equivalent(mfx$estimate, sta$dydxstata)
+
 
 expect_equivalent(mfx$std.error, sta$std.errorstata, tolerance = tolse)
 mfx <- tidy(slopes(mod, slope = "eydx", eps = 1e-6))
@@ -49,4 +51,5 @@ expect_equivalent(mfx$std.error, sta$std.errorstata, tolerance = tolse)
 
 
 
+source("helpers.R")
 rm(list = ls())

@@ -1,8 +1,7 @@
 rm(list=ls())
 rm(list=ls(.GlobalEnv), envir = .GlobalEnv)
 
-# EXPENSIVE <- FALSE
-EXPENSIVE <- TRUE
+EXPENSIVE <- FALSE
 
 options("tinysnapshot_device" = "svglite")
 options("tinysnapshot_tol" = 200)
