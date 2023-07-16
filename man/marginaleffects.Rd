@@ -19,6 +19,7 @@ marginaleffects(
   p_adjust = NULL,
   df = Inf,
   eps = NULL,
+  numderiv = "fdforward",
   ...
 )
 }

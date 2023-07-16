@@ -234,6 +234,7 @@ comparisons <- function(model,
                         p_adjust = NULL,
                         df = Inf,
                         eps = NULL,
+                        numderiv = "fdforward",
                         ...) {
 
 
@@ -242,6 +243,8 @@ comparisons <- function(model,
     # backward compatibility
     if ("transform_post" %in% names(dots)) transform <- dots[["transform_post"]]
     if ("transform_pre" %in% names(dots)) comparison <- dots[["transform_pre"]]
+
+    numderiv <- sanitize_numderiv(numderiv)
 
     # required by stubcols later, but might be overwritten
     bycols <- NULL
@@ -487,7 +490,8 @@ comparisons <- function(model,
                      original = contrast_data$original,
                      by = by,
                      eps = eps,
-                     cross = cross)
+                     cross = cross,
+                     numderiv = numderiv)
         args <- c(args, dots)
         se <- do.call("get_se_delta", args)
         J <- attr(se, "jacobian")
@@ -642,6 +646,7 @@ avg_comparisons <- function(model,
                             p_adjust = NULL,
                             df = Inf,
                             eps = NULL,
+                            numderiv = "fdforward",
                             ...) {
 
     # order of the first few paragraphs is important

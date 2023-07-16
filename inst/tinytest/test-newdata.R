@@ -44,7 +44,7 @@ emm <- emmeans(mod, specs = "gear")
 emm <- data.frame(emmeans::contrast(emm, method = "trt.vs.ctrl1"))
 
 expect_equivalent(cmp$estimate, emm$estimate)
-expect_equivalent(cmp$std.error, emm$SE)
+expect_equivalent(cmp$std.error, emm$SE, tolerance = 1e-6)
 
 
 

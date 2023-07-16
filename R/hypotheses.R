@@ -127,6 +127,7 @@ hypotheses <- function(
     joint = FALSE,
     joint_test = "f",
     FUN = NULL,
+    numderiv = "fdforward",
     ...) {
 
     if (!isFALSE(joint)) {
@@ -181,6 +182,8 @@ hypotheses <- function(
         }
     }
 
+    numderiv = sanitize_numderiv(numderiv)
+
     # after re-evaluation
     tmp <- sanitize_hypothesis(hypothesis, ...)
     hypothesis <- tmp$hypothesis
@@ -230,6 +233,7 @@ hypotheses <- function(
         vcov = vcov,
         hypothesis = hypothesis,
         FUN = FUNouter,
+        numderiv = numderiv,
         ...)
 
     hyplab <- attr(b, "label")

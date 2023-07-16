@@ -1,35 +1,67 @@
-# adapted from the numDeriv package for R by Paul Gilbert published under GPL2 license
-
-get_jacobian <- function(func, x) {
-    numDeriv_args <- getOption("marginaleffects_numDeriv", default = NULL)
-
-    # forward finite difference (faster)
-    if (is.null(numDeriv_args)) {
-        eps <- max(1e-8, 1e-4 * min(abs(x), na.rm = TRUE))
-        baseline <- func(x)
-        df <- matrix(NA_real_, length(baseline), length(x))
-        for (i in seq_along(x)) {
-            dx <- x
-            dx[i] <- dx[i] + eps
-            df[, i] <- (func(dx) - baseline) / eps
+get_jacobian <- function(func, x, numderiv) {
+    numDeriv_options <- getOption("marginaleffects_numDeriv", default = NULL)
+    if (is.null(numDeriv_options)) {
+        method <- numderiv[[1]]
+        numderiv[[1]] <- NULL
+        numderiv[["func"]] <- func
+        numderiv[["x"]] <- x
+        if (identical(method, "richardson")) {
+            df <- do.call(get_jacobian_richardson, numderiv)
+        } else if (identical(method, "fdforward")) {
+            df <- do.call(get_jacobian_fdforward, numderiv)
+        } else if (identical(method, "fdcenter")) {
+            df <- do.call(get_jacobian_fdcenter, numderiv)
         }
-        
-        
-    # numDeriv (more accurate)
     } else {
         insight::check_if_installed("numDeriv")
-        numDeriv_args[["func"]] <- func
-        numDeriv_args[["x"]] <- x
+        numDeriv_options[["func"]] <- func
+        numDeriv_options[["x"]] <- x
         ndFUN <- get("jacobian", asNamespace("numDeriv"))
-        df <- do.call(ndFUN, numDeriv_args)
+        df <- do.call(ndFUN, numDeriv_options)
     }
+    return(df)
+}
 
+
+get_jacobian_fdforward <- function(func, x, eps = NULL) {
+    # old version. probably not optimal. Keep for posterity.
+    # h <- max(1e-8, 1e-4 * min(abs(x), na.rm = TRUE))
+    baseline <- func(x)
+    df <- matrix(NA_real_, length(baseline), length(x))
+    for (i in seq_along(x)) {
+        if (is.null(eps)) {
+            h <- max(abs(x[i]) * sqrt(.Machine$double.eps), 1e-10)
+        } else {
+            h <- eps
+        }
+        dx <- x
+        dx[i] <- dx[i] + h
+        df[, i] <- (func(dx) - baseline) / h
+    }
+    return(df)
+}
+    
+
+get_jacobian_fdcenter <- function(func, x, eps = NULL) {
+    baseline <- func(x)
+    df <- matrix(NA_real_, length(baseline), length(x))
+    for (i in seq_along(x)) {
+        if (is.null(eps)) {
+            h <- max(abs(x[i]) * sqrt(.Machine$double.eps), 1e-10)
+        } else {
+            h <- eps
+        }
+        dx_hi <- dx_lo <- x
+        dx_hi[i] <- dx_hi[i] + h / 2
+        dx_lo[i] <- dx_lo[i] - h / 2
+        df[, i] <- (func(dx_hi) - func(dx_lo)) / h
+    }
     return(df)
 }
 
 
 # Code adapted from the `numDeriv` package by Paul Gilbert and Ravi Varadhan
-# GPL-2: https://cran.r-project.org/package=numDeriv
+# GPL-3: https://cran.r-project.org/package=numDeriv
 get_jacobian_richardson <- function(
     func,
     x,

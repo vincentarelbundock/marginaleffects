@@ -18,7 +18,7 @@ cmp2 <- comparisons(
     variables = list(vs = 0:1))
 cmp2 <- tidy(cmp2)
 expect_equivalent(cmp1$estimate, cmp2$estimate)
-expect_equivalent(cmp1$std.error, cmp2$std.error)
+expect_equivalent(cmp1$std.error, cmp2$std.error, tolerance = tol)
 
 
 

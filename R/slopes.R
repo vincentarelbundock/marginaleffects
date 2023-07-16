@@ -88,6 +88,11 @@
 #' the maximum and minimum values of the variable with respect to which we
 #' are taking the derivative. Changing `eps` may be necessary to avoid
 #' numerical problems in certain models.
+#' @param numderiv string or list of strings indicating the method to use to for the numeric differentiation used in to compute delta method standard errors.
+#' + "fdforward": finite difference method with forward differences
+#' + "fdcenter": finite difference method with central differences (default)
+#' + "richardson": Richardson extrapolation method
+#' + Extra arguments can be specified by passing a list to the `numDeriv` argument, with the name of the method first and named arguments following, ex: `numderiv=list("fdcenter", eps = 1e-5)`. When an unknown argument is used, `marginaleffects` prints the list of valid arguments for each method.
 #' @param ... Additional arguments are passed to the `predict()` method
 #' supplied by the modeling package.These arguments are particularly useful
 #' for mixed-effects or bayesian models (see the online vignettes on the
@@ -211,6 +216,7 @@ slopes <- function(model,
                    p_adjust = NULL,
                    df = Inf,
                    eps = NULL,
+                   numderiv = "fdforward",
                    ...) {
 
 
@@ -277,6 +283,7 @@ slopes <- function(model,
         p_adjust = p_adjust,
         by = by,
         eps = eps,
+        numderiv = numderiv,
         comparison = slope,
         cross = FALSE,
         # secret arguments
@@ -357,6 +364,7 @@ avg_slopes <- function(model,
                        p_adjust = NULL,
                        df = Inf,
                        eps = NULL,
+                       numderiv = "fdforward",
                        ...) {
 
     # order of the first few paragraphs is important
@@ -392,6 +400,7 @@ avg_slopes <- function(model,
         p_adjust = p_adjust,
         df = df,
         eps = eps,
+        numderiv = numderiv,
         ...)
 
     return(out)

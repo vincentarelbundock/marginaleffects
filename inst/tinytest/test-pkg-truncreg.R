@@ -32,7 +32,7 @@ expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .001)
 # margins
 mar <- margins(model, unit_ses = TRUE)
 mfx <- slopes(model)
-expect_true(expect_margins(mfx, mar, tolerance = .0001))
+expect_true(expect_margins(mfx, mar, tolerance = .001))
 
 
 

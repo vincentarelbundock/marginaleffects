@@ -59,6 +59,7 @@ Suggests:
     broom,
     car,
     carData,
+    causaldata,
     collapse,
     conflicted,
     covr,
@@ -150,7 +151,8 @@ Suggests:
     truncreg,
     tsModel,
     withr,
-    yaml
+    yaml,
+    testthat (>= 3.0.0)
 Collate: 
     'RcppExports.R'
     'backtransform.R'
@@ -247,6 +249,7 @@ Collate:
     'sanitize_hypothesis.R'
     'sanitize_interaction.R'
     'sanitize_newdata.R'
+    'sanitize_numderiv.R'
     'sanitize_type.R'
     'sanitize_variables.R'
     'sanitize_vcov.R'
@@ -261,3 +264,4 @@ Collate:
     'unpack_matrix_cols.R'
     'utils.R'
 Language: en-US
+Config/testthat/edition: 3

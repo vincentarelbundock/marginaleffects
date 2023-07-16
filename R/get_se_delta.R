@@ -59,6 +59,7 @@ get_se_delta <- function(model,
                          eps = NULL,
                          J = NULL,
                          hypothesis = NULL,
+                         numderiv = NULL,
                          ...) {
 
     # delta method does not work for these models
@@ -99,7 +100,8 @@ get_se_delta <- function(model,
     if (is.null(J) || !is.null(hypothesis)) {
         args <- list(
             func = inner,
-            x = coefs)
+            x = coefs,
+            numderiv = numderiv)
         J <- do.call("get_jacobian", args)
         colnames(J) <- names(get_coef(model, ...))
     }
