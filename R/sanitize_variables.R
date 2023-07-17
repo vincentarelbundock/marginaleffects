@@ -44,7 +44,7 @@ sanitize_variables <- function(variables,
         dv <- hush(unlist(insight::find_response(model, combine = FALSE), use.names = FALSE))
         predictors <- unique(setdiff(predictors, dv))
         if (length(predictors) == 0) { # unsupported by insight (e.g., numpyro)
-            predictors <- hush(colnames(newdata))
+            predictors <- setdiff(hush(colnames(newdata)), c(dv, "rowid"))
         }
     } else {
         predictors <- variables
@@ -334,8 +334,8 @@ sanitize_variables <- function(variables,
 
     # can't take the slope of an outcome
     dv <- hush(insight::find_response(model))
-    if (any(names(predictors) %in% dv)) {
-        insight::format_error("The outcome variable cannot be used in the `variables` argument.")
+    if (all(names(predictors) %in% dv)) {
+        insight::format_error("There are no valid predictor variables. Please make sure your model includes predictors and use the `variables` argument.")
     }
     
     # interaction: get_contrasts() assumes there is only one function when interaction=TRUE
