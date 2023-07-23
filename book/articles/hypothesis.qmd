@@ -282,6 +282,20 @@ comparisons(
     comparison = "dydxavg")
 ```
 
+### Generic Hypothesis for Unsupported S3 Objects
+
+`marginaleffects` provides a generic interface for hypothesis tests for linear models by providing (1) a data.frame containing point estimates (consiting of columns `term` containing the names and `estimate` containing the point estiamtes) and (2) a variance-covariance matrix of estimates.
+
+```{r}
+coeftable <- data.frame(term = names(mod$coefficients), estimate = as.numeric(mod$coefficients))
+vcov <- vcov(mod)
+
+hypotheses(
+  coeftable, vcov = vcov, 
+  hypothesis = "am = vs"
+)
+```
+
 ## `hypotheses` Vectors and Matrices
 
 The `marginal_means()` function computes [estimated marginal means.](marginalmeans.html) The `hypothesis` argument of that function offers a powerful mechanism to estimate custom contrasts between marginal means, by way of linear combination.
