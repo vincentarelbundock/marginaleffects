@@ -50,7 +50,7 @@ model <- suppressWarnings(geeglm(mf,
 em <- tidy(emmeans::emmeans(model, ~Cu, df = Inf, at = list(Time = 10)), type = "response")
 pr <- predictions(model, datagrid(Time = 10, Cu = unique))
 expect_equivalent(em$estimate, pr$estimate)
-expect_equivalent(em$std.error, pr$std.error)
+expect_equivalent(em$std.error, pr$std.error, tolerance = 1e-5)
 
 # TODO: not clear where `emmeans` holds the Time variable
 # em <- emmeans::emmeans(model, ~Cu, type = "response", df = Inf)

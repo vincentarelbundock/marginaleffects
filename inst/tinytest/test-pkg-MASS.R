@@ -62,9 +62,9 @@ em <- emmeans(model, specs = "cyl")
 em <- emmeans::contrast(em, method = "revpairwise", at = list(wt = 3, cyl = 4))
 em <- tidy(em)
 expect_equivalent(mfx$estimate[mfx$contrast == "6 - 4"], em$estimate[em$contrast == "cyl6 - cyl4"])
-expect_equivalent(mfx$std.error[mfx$contrast == "6 - 4"], em$std.error[em$contrast == "cyl6 - cyl4"])
+expect_equivalent(mfx$std.error[mfx$contrast == "6 - 4"], em$std.error[em$contrast == "cyl6 - cyl4"], tolerance = 1e-4)
 expect_equivalent(mfx$estimate[mfx$contrast == "8 - 4"], em$estimate[em$contrast == "cyl8 - cyl4"])
-expect_equivalent(mfx$std.error[mfx$contrast == "8 - 4"], em$std.error[em$contrast == "cyl8 - cyl4"])
+expect_equivalent(mfx$std.error[mfx$contrast == "8 - 4"], em$std.error[em$contrast == "cyl8 - cyl4"], tolerance = 1e-4)
 
 
 
@@ -152,7 +152,7 @@ ti <- tidy(mm) |> dplyr::arrange(value)
 em <- tidy(emmeans::emmeans(model, "cyl"))
 expect_marginal_means(mm)
 expect_equivalent(ti$estimate, em$estimate)
-expect_equivalent(ti$std.error, em$std.error)
+expect_equivalent(ti$std.error, em$std.error, tolerance = 1e-4)
 
 # rlm: marginalmeans: vs. emmeans
 dat <- mtcars
@@ -164,7 +164,7 @@ expect_marginal_means(mm)
 ti <- tidy(marginal_means(model, variables = "cyl")) |> dplyr::arrange(value)
 em <- tidy(emmeans::emmeans(model, "cyl"))
 expect_equivalent(ti$estimate, em$estimate)
-expect_equivalent(ti$std.error, em$std.error)
+expect_equivalent(ti$std.error, em$std.error, tolerance = 1e-4)
 
 
 

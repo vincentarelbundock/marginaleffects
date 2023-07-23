@@ -35,7 +35,7 @@ em <- emmeans(mod, c("cyl", "am"))
 em <- emmeans::contrast(em, method = "revpairwise")
 em <- data.frame(em)
 expect_true(all(round(abs(em$estimate), 5) %in% round(abs(cmp$estimate), 5)))
-expect_true(all(round(abs(em$SE), 5) %in% round(abs(cmp$std.error), 5)))
+expect_true(all(round(abs(em$SE), 4) %in% round(abs(cmp$std.error), 4)))
 
 
 # cross and tidy()

@@ -14,6 +14,7 @@ deltamethod(
   joint = FALSE,
   joint_test = "f",
   FUN = NULL,
+  numderiv = "fdforward",
   ...
 )
 }

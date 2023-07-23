@@ -111,7 +111,7 @@ mfx <- slopes(mod, variables = "x1", newdata = datagrid(x1 = 0, x2 = 0, clus = 1
 em <- emtrends(mod, ~x1, "x1", at = list(x1 = 0, x2 = 0, clus = 1))
 em <- tidy(em)
 expect_equivalent(mfx$estimate, em$x1.trend)
-expect_equivalent(mfx$std.error, em$std.error, tolerance = 1e-6)
+expect_equivalent(mfx$std.error, em$std.error, tolerance = 1e-5)
 
 # grand mean with new data
 nd <- datagrid(model = mod, clus = NA, x1 = -1:1)
@@ -203,7 +203,7 @@ mfx <- slopes(mod, variables = "x", newdata = datagrid(g = 2), type = "link")
 em <- emtrends(mod, ~x, "x", at = list(g = 2))
 em <- tidy(em)
 expect_equivalent(mfx$estimate, em$x.trend)
-expect_equivalent(mfx$std.error, em$std.error, tolerance = 1e-6)
+expect_equivalent(mfx$std.error, em$std.error, tolerance = 1e-3)
 
 # margins
 mar <- tidy(margins(mod))

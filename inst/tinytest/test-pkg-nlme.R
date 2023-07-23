@@ -47,7 +47,7 @@ em <- tidy(em)
 mm <- marginal_means(mod, variables = "categ") |> dplyr::arrange(value)
 expect_marginal_means(mm)
 expect_equivalent(mm$estimate, em$estimate)
-expect_equivalent(mm$std.error, em$std.error)
+expect_equivalent(mm$std.error, em$std.error, tolerance = 1e-5)
 
 
 

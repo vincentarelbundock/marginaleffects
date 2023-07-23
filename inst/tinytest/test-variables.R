@@ -46,7 +46,7 @@ expect_inherits(cmp3, "comparisons")
 
 # Issue #582: sanitize_variables should reject reponse as 
 mod <- lm(mpg ~ hp + qsec, data = mtcars)
-expect_error(slopes(mod, variables = "mpg"), pattern = "outcome variable")
+expect_error(slopes(mod, variables = "mpg"), pattern = "predictor variables")
 
 
 # no need to include categorical focal variable when there is only one of them
@@ -84,7 +84,7 @@ expect_equal(a$estimate, -1 * b$estimate)
 mod <- lm(mpg ~ hp, mtcars)
 cmp <- avg_comparisons(mod, variables = list(hp = mtcars$cyl), by = "cyl")
 expect_equal(length(unique(cmp$estimate)), 3)
-expect_equal(length(unique(round(cmp$statistic, 8))), 1)
+expect_equal(length(unique(round(cmp$statistic, 5))), 1)
 
 
 

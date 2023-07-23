@@ -19,6 +19,7 @@ marginal_means(
   df = Inf,
   wts = "equal",
   by = NULL,
+  numderiv = "fdforward",
   ...
 )
 }
@@ -113,6 +114,14 @@ on the link scale before backtransforming them using the inverse link function.}
 }}
 
 \item{by}{Collapse marginal means into categories. Data frame with a \code{by} column of group labels, and merging columns shared by \code{newdata} or the data frame produced by calling the same function without the \code{by} argument.}
+
+\item{numderiv}{string or list of strings indicating the method to use to for the numeric differentiation used in to compute delta method standard errors.
+\itemize{
+\item "fdforward": finite difference method with forward differences
+\item "fdcenter": finite difference method with central differences (default)
+\item "richardson": Richardson extrapolation method
+\item Extra arguments can be specified by passing a list to the \code{numDeriv} argument, with the name of the method first and named arguments following, ex: \code{numderiv=list("fdcenter", eps = 1e-5)}. When an unknown argument is used, \code{marginaleffects} prints the list of valid arguments for each method.
+}}
 
 \item{...}{Additional arguments are passed to the \code{predict()} method
 supplied by the modeling package.These arguments are particularly useful

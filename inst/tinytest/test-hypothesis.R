@@ -133,7 +133,7 @@ em <- emmeans::contrast(em, method = data.frame(custom_contrast = lc))
 em <- data.frame(em)
 mm <- marginal_means(mod, variables = "carb", hypothesis = lcmfx)
 expect_equivalent(mm$estimate, em$estimate)
-expect_equivalent(mm$std.error, em$SE)
+expect_equivalent(mm$std.error, em$SE, tol = 1e-6)
 
 # marginalmeans: hypothesis shortcut
 mm <- marginal_means(mod, variables = "carb", hypothesis = "reference")

@@ -4,7 +4,7 @@ using("marginaleffects")
 requiet("margins")
 requiet("nnet")
 tol <- 1e-4
-tol_se <- 1e-3
+tol_se <- 1e-2
 
 
 mod1 <- glm(gear ~ cyl + am, family = poisson, data = mtcars)
