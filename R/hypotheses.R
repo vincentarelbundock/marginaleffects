@@ -196,6 +196,11 @@ hypotheses <- function(
         FUNinner <- function(model, ...) {
             if (inherits(model, c("predictions", "slopes", "comparisons"))) {
                 return(model)
+            } else if (inherits(model, "data.frame")) { 
+                if (!all(c("term", "estimate") %in% colnames(model))) {
+                    insight::format_error("The model object is a data.frame but doesn't contain the columns 'term' or 'estimate'. Make sure these columns are present")
+                }
+                return(model[, c("term", "estimate")])
             } else {
                 param <- insight::get_parameters(model, ...)
                 colnames(param)[1:2] <- c("term", "estimate")
