@@ -112,6 +112,8 @@ Term names with special characters must be enclosed in backticks:
 hypotheses(mod, "`factor(cyl)6` = `factor(cyl)8`")
 ```
 
+### Arbitrary functions: `FUN`
+
 The `FUN` argument can be used to compute standard errors for arbitrary functions of model parameters. This user-supplied function must accept a single model object, and return a numeric vector or a data.frame with two columns named `term` and `estimate`.
 
 ```{r}
@@ -138,6 +140,39 @@ hypotheses(mod, hypothesis = c(0, 1, 1))
 ```
 
 See below for more example of how to use string formulas, numeric vectors, or matrices to calculate custom contrasts, linear combinations, and linear or non-linear hypothesis tests.
+
+### Arbitrary quantities with data frames
+
+`marginaleffects` can also compute uncertainty estimates for arbitrary quantities hosted in a data frame, as long as the user can supply a variance-covariance matrix. (Thanks to Kyle F Butts for this cool feature and example!)
+
+Say you run a monte-carlo simulation and you want to perform hypothesis of various quantities returned from each simulation. The quantities are correlated within each draw:
+
+```{r} 
+# simulated means and medians
+draw <- function(i) { 
+  x <- rnorm(n = 10000, mean = 0, sd = 1)
+  out <- data.frame(median = median(x), mean =  mean(x))
+  return(out)
+}
+sims <- do.call("rbind", lapply(1:25, draw))
+
+# average mean and average median 
+coeftable <- data.frame(
+  term = c("median", "mean"),
+  estimate = c(mean(sims$median), mean(sims$mean))
+)
+
+# variance-covariance
+vcov <- cov(sims)
+
+# is the median equal to the mean?
+hypotheses(
+  coeftable,
+  vcov = vcov,
+  hypothesis = "median = mean"
+)
+```
+
 
 ## `hypotheses` Formulas
 
@@ -538,3 +573,4 @@ hyp
 ## test joint hypotheses
 #hypotheses(hyp, joint = TRUE, hypothesis = c(-10, -20))
 ```
+
