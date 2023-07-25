@@ -1,4 +1,5 @@
 source("helpers.R")
+exit_file("quantreg breaks on Matrix error on CI")
 using("marginaleffects")
 
 requiet("quantreg")
