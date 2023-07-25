@@ -1,10 +1,10 @@
 # News
 
-## Development version
+## marginaleffects 0.14.0
 
 Breaking change:
 
-* New procedure `numderiv` argument use a different procedure to select the step size used in the finite difference numeric derivative used to compute standard errors: abs(x) * sqrt(.Machine$double.eps). The numerical results may not be exactly identical to previous versions of `marginaleffects`, but the step size should be adequate in a broader variety of cases. Note that users can still use `numDeriv` for more control on numeric differentiation, as documented.
+* New procedure `numderiv` argument use a different procedure to select the step size used in the finite difference numeric derivative used to compute standard errors: abs(x) * sqrt(.Machine$double.eps). The numerical results may not be exactly identical to previous versions of `marginaleffects`, but the step size should be adequate in a broader variety of cases. Note that users can use the `numderiv` argument for more control on numeric differentiation, as documented.
 
 New:
 
