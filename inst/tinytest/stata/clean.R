@@ -3,7 +3,6 @@ library(ivreg)
 library(betareg)
 library(MASS)
 library(data.table)
-library(testthat)
 library(readxl)
 
 results <- list()
