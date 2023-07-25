@@ -38,7 +38,7 @@
 \usage{
 set_coef(model, coefs, ...)
 
-\method{set_coef}{default}(model, coefs)
+\method{set_coef}{default}(model, coefs, ...)
 
 \method{set_coef}{polr}(model, coefs, ...)
 
@@ -60,7 +60,7 @@ set_coef(model, coefs, ...)
 
 \method{set_coef}{hxlr}(model, coefs, ...)
 
-\method{set_coef}{data.frame}(model, coefs)
+\method{set_coef}{data.frame}(model, coefs, ...)
 
 \method{set_coef}{gamlss}(model, coefs, ...)
 

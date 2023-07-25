@@ -20,7 +20,7 @@ set_coef <- function(model, coefs, ...) {
 
 #' @rdname set_coef
 #' @export
-set_coef.default <- function(model, coefs) {
+set_coef.default <- function(model, coefs, ...) {
     # in basic model classes coefficients are named vector
     # in ordinal::clm models, there are sometimes duplicates, so name matching doesn't work
     if (all(names(model[["coefficients"]]) == names(coefs))) {
