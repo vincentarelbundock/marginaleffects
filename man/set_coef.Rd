@@ -38,7 +38,7 @@
 \usage{
 set_coef(model, coefs, ...)
 
-\method{set_coef}{default}(model, coefs, ...)
+\method{set_coef}{default}(model, coefs)
 
 \method{set_coef}{polr}(model, coefs, ...)
 
