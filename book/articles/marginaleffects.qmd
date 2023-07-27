@@ -14,21 +14,36 @@ n_support <- nrow(dat)
 
 ## Installation
 
+::: {.panel-tabset}
+### R
+
 Install the latest CRAN release:
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
 install.packages("marginaleffects")
 ```
 
 Install the development version:
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
 install.packages(
     c("marginaleffects", "insight"),
     repos = c("https://vincentarelbundock.r-universe.dev", "https://easystats.r-universe.dev"))
 ```
 
 *Restart `R` completely before moving on.*
+
+### Python
+
+Install from PyPI:
+
+```{python}
+#| eval: false
+pip install marginaleffects
+```
+:::
 
 
 ## Estimands: Predictions, Comparisons, and Slopes
@@ -68,14 +83,30 @@ The `marginaleffects` package includes functions to estimate, average, plot, and
 
 We now apply `marginaleffects` functions to compute each of the estimands described above. First, we fit a linear regression model with multiplicative interactions:
 
+::: {.panel-tabset}
+### R
 ```{r}
 library(marginaleffects)
 
 mod <- lm(mpg ~ hp * wt * am, data = mtcars)
 ```
+### Python
+```{python}
+import polars as pl
+import numpy as np
+import statsmodels.formula.api as smf
+from marginaleffects import *
+
+mtcars = pl.read_csv("https://vincentarelbundock.github.io/Rdatasets/csv/datasets/mtcars.csv")
+
+mod = smf.ols("mpg ~ hp * wt * am", data = mtcars).fit()
+```
+:::
 
 Then, we call the `predictions()` function. As noted above, predictions are unit-level estimates, so there is one specific prediction per observation. By default, the `predictions()` function makes one prediction per observation in the dataset that was used to fit the original model. Since `mtcars` has 32 rows, the `predictions()` outcome also has 32 rows:
 
+::: {.panel-tabset}
+### R
 ```{r}
 pre <- predictions(mod)
 
@@ -85,9 +116,23 @@ nrow(pre)
 
 pre
 ```
+### Python
+
+```{python}
+pre = predictions(mod)
+
+mtcars.shape
+
+pre.shape
+
+print(pre)
+```
+:::
 
 Now, we use the `comparisons()` function to compute the difference in predicted outcome when each of the predictors is incremented by 1 unit (one predictor at a time, holding all others constant). Once again, comparisons are unit-level quantities. And since there are 3 predictors in the model and our data has 32 rows, we obtain 96 comparisons:
 
+::: {.panel-tabset}
+### R
 ```{r}
 cmp <- comparisons(mod)
 
@@ -95,32 +140,72 @@ nrow(cmp)
 
 cmp
 ```
+### Python
+```{python}
+cmp = comparisons(mod)
+
+cmp.shape
+
+print(cmp)
+```
+:::
 
 The `comparisons()` function allows customized queries. For example, what happens to the predicted outcome when the `hp` variable increases from 100 to 120?
 
+
+::: {.panel-tabset}
+### R
 ```{r}
 comparisons(mod, variables = list(hp = c(120, 100)))
 ```
+### Python
+```{python}
+cmp = comparisons(mod, variables = {"hp": [120, 100]})
+print(cmp)
+```
+:::
 
 What happens to the predicted outcome when the `wt` variable increases by 1 standard deviation about its mean?
 
+::: {.panel-tabset}
+### R
 ```{r}
 comparisons(mod, variables = list(hp = "sd"))
 ```
+### Python
+```{python}
+cmp = comparisons(mod, variables = {"hp": "sd"})
+print(cmp)
+```
+:::
 
 The `comparisons()` function also allows users to specify arbitrary functions of predictions, with the `comparison` argument. For example, what is the average ratio between predicted Miles per Gallon after an increase of 50 units in Horsepower?
 
+
+::: {.panel-tabset}
+### R
 ```{r}
 comparisons(
   mod,
   variables = list(hp = 50),
   comparison = "ratioavg")
 ```
+### Python
+```{python}
+cmp = comparisons(
+  mod,
+  variables = {"hp": 50},
+  comparison = "ratioavg")
+print(cmp)
+```
+:::
 
 See the [Comparisons vignette for detailed explanations and more options.](comparisons.html)
 
 The `slopes()` function allows us to compute the partial derivative of the outcome equation with respect to each of the predictors. Once again, we obtain a data frame with 96 rows:
 
+::: {.panel-tabset}
+### R
 ```{r}
 mfx <- slopes(mod)
 
@@ -128,6 +213,15 @@ nrow(mfx)
 
 mfx
 ```
+### Python
+```{python}
+mfx = slopes(mod)
+
+mfx.shape
+
+print(mfx)
+```
+:::
 
 ## Grid
 
@@ -135,14 +229,28 @@ Predictions, comparisons, and slopes are typically "conditional" quantities whic
 
 `newdata` accepts data frames, shortcut strings, or a call to the `datagrid()` function. For example, to compute the predicted outcome for a hypothetical car with all predictors equal to the sample mean or median, we can do:
 
+::: {.panel-tabset}
+### R
 ```{r}
 predictions(mod, newdata = "mean")
 
 predictions(mod, newdata = "median")
 ```
 
+### Python
+```{python}
+p = predictions(mod, newdata = "mean")
+print(p)
+
+p = predictions(mod, newdata = "median")
+print(p)
+```
+:::
+
 The [`datagrid` function gives us a powerful way to define a grid of predictors.](https://vincentarelbundock.github.io/marginaleffects/reference/datagrid.html) All the variables not mentioned explicitly in `datagrid()` are fixed to their mean or mode:
 
+::: {.panel-tabset}
+### R
 ```{r}
 predictions(
   mod,
@@ -150,15 +258,37 @@ predictions(
     am = c(0, 1),
     wt = range))
 ```
+### Python
+```{python}
+p = predictions(
+  mod,
+  newdata = datagrid(
+    mod,
+    am = [0, 1],
+    wt = [mtcars["wt"].min(), mtcars["wt"].max()]))
+print(p)
+```
+:::
 
 The same mechanism is available in `comparisons()` and `slopes()`. To estimate the partial derivative of `mpg` with respect to `wt`, when `am` is equal to 0 and 1, while other predictors are held at their means:
 
+::: {.panel-tabset}
+### R
 ```{r}
 slopes(
   mod,
   variables = "wt",
   newdata = datagrid(am = 0:1))
 ```
+### Python
+```{python}
+s = slopes(
+  mod,
+  variables = "wt",
+  newdata = datagrid(mod, am = [0, 1]))
+print(s)
+```
+:::
 
 We can also plot how predictions, comparisons, or slopes change across different values of the predictors using [three powerful plotting functions:](plot.html)
 
@@ -188,21 +318,44 @@ Since predictions, comparisons, and slopes are conditional quantities, they can 
 
 To marginalize (average over) our unit-level estimates, we can use the `by` argument or the one of the convenience functions: `avg_predictions()`, `avg_comparisons()`, or `avg_slopes()`. For example, both of these commands give us the same result: the average predicted outcome in the `mtcars` dataset:
 
+::: {.panel-tabset}
+### R
 ```{r}
 avg_predictions(mod)
 ```
+### Python
+```{python}
+p = avg_predictions(mod)
+print(p)
+```
+:::
 
 This is equivalent to manual computation by:
 
+::: {.panel-tabset}
+### R
 ```{r}
 mean(predict(mod))
 ```
+### Python
+```{python}
+np.mean(mod.predict())
+```
+:::
 
 The main `marginaleffects` functions all include a `by` argument, which allows us to marginalize within sub-groups of the data. For example,
 
+::: {.panel-tabset}
+### R
 ```{r}
 avg_comparisons(mod, by = "am")
 ```
+### Python
+```{python}
+cmp = avg_comparisons(mod, by = "am")
+print(cmp)
+```
+:::
 
 Marginal Means are a special case of predictions, which are marginalized (or averaged) across a balanced grid of categorical predictors. To illustrate, we estimate a new model with categorical predictors:
 
