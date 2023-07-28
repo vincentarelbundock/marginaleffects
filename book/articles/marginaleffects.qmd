@@ -1,5 +1,6 @@
 ---
 title: "Get Started"
+include-after-body: toggle-tabs.html
 ---
 
 ```{r, include = FALSE}
