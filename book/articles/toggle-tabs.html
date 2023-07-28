@@ -1,0 +1,37 @@
+<style type="text/css">
+  div.quarto-title {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+  }
+  
+  button#toggleTabsButton {
+    border-radius: 10px;
+    font-size: smaller;
+    font-family: monospace;
+  }
+</style>
+
+<script type="text/javascript">
+  function toggle_tabset() {
+    const tab_links = document.querySelectorAll('div.panel-tabset a.nav-link');
+    tab_links.forEach(tab => {
+        tab.classList.toggle('active');
+        let aria_val = tab.getAttribute('aria-selected');
+        let toggle_val = aria_val === 'true' ? 'false' : 'true';
+        tab.setAttribute('aria-selected', toggle_val);
+    });
+    const tab_panes = document.querySelectorAll('div.tab-content div.tab-pane')
+    tab_panes.forEach(pane => { 
+      pane.classList.toggle('active');
+    });
+  };
+  
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    let title = document.querySelector('div.quarto-title h1.title');
+    const button = document.createElement('button');
+    button.id = 'toggleTabsButton';
+    button.textContent = 'Toggle R/Python Code';
+    title.insertAdjacentElement('afterend', button);
+    button.addEventListener('click', toggle_tabset);
+  });
+</script>

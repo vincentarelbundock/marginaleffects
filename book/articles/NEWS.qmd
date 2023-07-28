@@ -1,16 +1,44 @@
-# News {.unnumbered}
+# News
 
-##  (development version) {.unnumbered}
+##  0.14.0 {.unnumbered}
+
+Breaking change:
+
+* New procedure `numderiv` argument use a different procedure to select the step size used in the finite difference numeric derivative used to compute standard errors: abs(x) * sqrt(.Machine$double.eps). The numerical results may not be exactly identical to previous versions of `marginaleffects`, but the step size should be adequate in a broader variety of cases. Note that users can use the `numderiv` argument for more control on numeric differentiation, as documented.
 
 New:
 
+* `hypotheses()` can now accept raw data frame, which gives a lot of flexibility for custom contrasts and functions. See the Hypothesis vignette for an example.
+* `numderiv` argument allows users to use finite difference (center or forward) or Richardson's method to compute the numerical derivatives used in the calculation of standard errors.
+
+Bug fixes:
+
+* `quantreg` problem with `rowid` merge did not affect estimates but did not return the full original data. Issue [#829](https://github.com/vincentarelbundock/marginaleffects/issues/829).
+* `get_modeldata()` extracts weights variable when available.
+
+##  0.13.0 {.unnumbered}
+
+Breaking change:
+
+* `glmmTMB`: Standard errors are no longer supported because they may have been erroneous. Follow Issue [#810](https://github.com/vincentarelbundock/marginaleffects/issues/810) on Github for developments: https://github.com/vincentarelbundock/marginaleffects/issues/810
+
+New:
+
+* `hypothesis` argument accepts wildcards: `hypothesis = "b*=b1"`
 * `s.value` column in all output: Shannon transforms for p values. See Greenland (2019).
 * `marginal_means` supports `mira` (`mice` objects).
-* `comparisons()`: the `variables` arguments now accepts "revpairwise", "revsequential", "revreference" for factor and character variables.
+* `comparisons()`: The `variables` arguments now accepts arbitrary numeric vectors of length equal to the number of rows in `newdata`. This allows users to specify fully custom treatment sizes. In the documentation examples, we show how to estimate the difference for a 1 standard deviation shift in a regressor, where the standard deviation is calculated on a group-wise basis.
+* `comparisons()`: the `variables` argument now accepts "revpairwise", "revsequential", "revreference" for factor and character variables.
+* `comparisons()`: the `comparison` argument now accept "lift" and "liftavg".
 
 Performance:
 
 * Computing elasticities for linear models is now up to 30% faster ([#787](https://github.com/vincentarelbundock/marginaleffects/issues/787), [\@etiennebacher](https://github.com/etiennebacher)).
+
+Bug fixes:
+
+* Better handling of environments when `newdata` is a function call. Thanks to [\@jcccf](https://github.com/jcccf) for report [#814](https://github.com/vincentarelbundock/marginaleffects/issues/814) and to [\@capnrefsmmat](https://github.com/capnrefsmmat) for the proposed fix using the `rlang` package.
+* Degrees of freedom mismatch for joint hypothesis tests. Thanks to [\@snhansen](https://github.com/snhansen) for report [#789](https://github.com/vincentarelbundock/marginaleffects/issues/789).
 
 ##  0.12.0 {.unnumbered}
 

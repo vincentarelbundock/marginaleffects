@@ -360,23 +360,44 @@ print(cmp)
 
 Marginal Means are a special case of predictions, which are marginalized (or averaged) across a balanced grid of categorical predictors. To illustrate, we estimate a new model with categorical predictors:
 
+::: {.panel-tabset}
+### R
 ```{r}
 dat <- mtcars
 dat$am <- as.logical(dat$am)
 dat$cyl <- as.factor(dat$cyl)
 mod_cat <- lm(mpg ~ am + cyl + hp, data = dat)
 ```
+### Python
+```{python}
+dat = mtcars \
+  .with_columns(pl.col("am").cast(pl.Boolean),
+                pl.col("cyl").cast(pl.Utf8))
+mod_cat = smf.ols('mpg ~ am + cyl + hp', data=dat).fit()
+```
+:::
 
 We can compute marginal means manually using the functions already described:
 
+::: {.panel-tabset}
+### R
 ```{r}
 avg_predictions(
   mod_cat,
   newdata = datagrid(cyl = unique, am = unique),
   by = "am")
 ```
+### Python
+```{python}
+p = avg_predictions(
+  mod_cat,
+  newdata = datagrid(mod_cat, cyl = dat["cyl"].unique(), am = dat["am"].unique()),
+  by = "am")
+print(p)
+```
+:::
 
-For convenience, the `marginaleffects` package also includes a `marginal_means()` function:
+For convenience, the `marginaleffects` package for `R` also includes a `marginal_means()` function:
 
 ```{r}
 marginal_means(mod_cat, variables = "am")
@@ -390,10 +411,18 @@ The `hypotheses()` function and the `hypothesis` argument can be used to conduct
 
 Consider this model:
 
+::: {.panel-tabset}
+### R
 ```{r}
 mod <- lm(mpg ~ qsec * drat, data = mtcars)
 coef(mod)
 ```
+### Python
+```{python}
+mod = smf.ols('mpg ~ qsec * drat', data=mtcars).fit()
+print(mod.params)
+```
+:::
 
 Can we reject the null hypothesis that the `drat` coefficient is 2 times the size of the `qsec` coefficient?
 
@@ -403,21 +432,42 @@ hypotheses(mod, "drat = 2 * qsec")
 
 We can ask the same question but refer to parameters by position, with indices `b1`, `b2`, `b3`, etc.:
 
+::: {.panel-tabset}
+### R
 ```{r}
 hypotheses(mod, "b3 = 2 * b2")
 ```
+### Python
+```{python}
+h = hypotheses(mod, "b3 = 2 * b2")
+print(h)
+```
+:::
 
 The main functions in `marginaleffects` all have a `hypothesis` argument, which means that we can do complex model testing. For example, consider two slope estimates:
 
+::: {.panel-tabset}
+### R
 ```{r}
 slopes(
   mod,
   variables = "drat",
   newdata = datagrid(qsec = range))
 ```
+### Python
+```{python}
+s = slopes(
+  mod,
+  variables = "drat",
+  newdata = datagrid(mod, qsec = [mtcars["qsec"].min(), mtcars["qsec"].max()]))
+print(s)
+```
+:::
 
 Are these two slopes significantly different from one another? To test this, we can use the `hypothesis` argument:
 
+::: {.panel-tabset}
+### R
 ```{r}
 slopes(
   mod,
@@ -425,12 +475,30 @@ slopes(
   variables = "drat",
   newdata = datagrid(qsec = range))
 ```
-
-Now, imagine that for theoretical (or substantive or clinical) reasons, we only care about slopes larger than 2. We can use the `hypotheses()` function to conduct an equivalence test:
-
-```{r}
-avg_slopes(mod) |> hypotheses(equivalence = c(-2, 2))
+### Python
+```{python}
+s = slopes(
+  mod,
+  hypothesis = "b1 = b2",
+  variables = "drat",
+  newdata = datagrid(mod, qsec = [mtcars["qsec"].min(), mtcars["qsec"].max()]))
+print(s)
 ```
+:::
+
+Now, imagine that for theoretical (or substantive or clinical) reasons, we only care about slopes larger than 2. We can use the `equivalence` argument to conduct an equivalence test:
+
+::: {.panel-tabset}
+### R
+```{r}
+avg_slopes(mod, equivalence = c(-2, 2))
+```
+### Python
+```{python}
+s = avg_slopes(mod, equivalence = [-2., 2.])
+print(s)
+```
+:::
 
 See the [Hypothesis Tests and Custom Contrasts vignette](hypothesis.html) for background, details, and for instructions on how to conduct hypothesis tests in more complex situations.
 
