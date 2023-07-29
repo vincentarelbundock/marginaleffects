@@ -503,6 +503,7 @@ print(s)
 s = avg_slopes(mod, hypothesis = "drat = qsec")
 print(s)
 ```
+:::
 
 Now, imagine that for theoretical (or substantive or clinical) reasons, we only care about slopes larger than 2. We can use the `equivalence` argument to conduct an equivalence test:
 
