@@ -486,6 +486,24 @@ print(s)
 ```
 :::
 
+Alternatively, we can also refer to values with term names (when they are unique):
+
+::: {.panel-tabset}
+### R
+```{r}
+avg_slopes(mod)
+
+avg_slopes(mod, hypothesis = "drat = qsec")
+```
+### Python
+```{python}
+s = avg_slopes(mod)
+print(s)
+
+s = avg_slopes(mod, hypothesis = "drat = qsec")
+print(s)
+```
+
 Now, imagine that for theoretical (or substantive or clinical) reasons, we only care about slopes larger than 2. We can use the `equivalence` argument to conduct an equivalence test:
 
 ::: {.panel-tabset}
