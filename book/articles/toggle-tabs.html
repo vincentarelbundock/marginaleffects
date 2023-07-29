@@ -42,8 +42,10 @@
     });
     const r_button = document.querySelector('#toggleRCodeButton');
     const python_button = document.querySelector('#togglePythonCodeButton');
-    r_button.style.backgroundColor = 'lightgray';
+    r_button.style.backgroundColor = '#ECECEC';
     python_button.style.backgroundColor = 'white';
+    r_button.style.color = 'black';
+    python_button.style.color = '#428CAF';
   };
 
   function toggle_python() {
@@ -76,29 +78,35 @@
     const r_button = document.querySelector('#toggleRCodeButton');
     const python_button = document.querySelector('#togglePythonCodeButton');
     r_button.style.backgroundColor = 'white';
-    python_button.style.backgroundColor = 'lightgray';
+    python_button.style.backgroundColor = '#E5E4E2';
+    r_button.style.color = '#428CAF';
+    python_button.style.color = 'black';
   };
 
   window.document.addEventListener("DOMContentLoaded", function (event) {
     let title = document.querySelector('div.quarto-title h1.title');
 
     const label = document.createElement('span');
-    label.textContent = 'Language: ';
+    label.textContent = '';
     label.style.display = 'inline-block';
     label.style.marginRight = '10px';
     label.style.whiteSpace = 'nowrap';
 
     const r_button = document.createElement('button');
     r_button.id = 'toggleRCodeButton';
-    r_button.style.backgroundColor = 'lightgray';
+    r_button.style.backgroundColor = '#E5E4E2';
     r_button.textContent = 'R';
     r_button.style.width = '80px';
+    r_button.style.borderWidth = '1px';
+    r_button.style.borderRight = 'none';
     r_button.addEventListener('click', toggle_r);
 
     const python_button = document.createElement('button');
     python_button.id = 'togglePythonCodeButton';
     python_button.textContent = 'Python';
+    python_button.style.color = '#428CAF';
     python_button.style.width = '80px';
+    python_button.style.borderWidth = '1px';
     python_button.addEventListener('click', toggle_python);
 
     // Append buttons as children of the label
