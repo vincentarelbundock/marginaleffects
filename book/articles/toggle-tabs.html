@@ -40,6 +40,10 @@
         }
       }
     });
+    const r_button = document.querySelector('#toggleRCodeButton');
+    const python_button = document.querySelector('#togglePythonCodeButton');
+    r_button.style.backgroundColor = 'lightgray';
+    python_button.style.backgroundColor = 'white';
   };
 
   function toggle_python() {
@@ -69,6 +73,10 @@
         }
       }
     });
+    const r_button = document.querySelector('#toggleRCodeButton');
+    const python_button = document.querySelector('#togglePythonCodeButton');
+    r_button.style.backgroundColor = 'white';
+    python_button.style.backgroundColor = 'lightgray';
   };
 
   window.document.addEventListener("DOMContentLoaded", function (event) {
@@ -82,6 +90,7 @@
 
     const r_button = document.createElement('button');
     r_button.id = 'toggleRCodeButton';
+    r_button.style.backgroundColor = 'lightgray';
     r_button.textContent = 'R';
     r_button.style.width = '80px';
     r_button.addEventListener('click', toggle_r);
