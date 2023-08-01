@@ -80,6 +80,7 @@ sanity_model_supported_class <- function(model) {
         c("negbin", "glm", "lm"),
         c("ols", "rms", "lm"),
         c("orm", "rms"),
+        c("oohbchoice", "dbchoice"),
         "phylolm",
         "phyloglm",
         c("plm", "panelmodel"),

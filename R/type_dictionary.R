@@ -104,6 +104,8 @@ mlogit,response
 negbin,response
 negbin,link
 ols,lp
+"oohbchoice", "probability",
+"oohbchoice", "utility",
 orm,fitted
 orm,mean
 orm,lp

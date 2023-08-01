@@ -19,6 +19,7 @@ brglm2,brmultinom,TRUE,TRUE,,,U,U,U,U
 brms,brm,TRUE,TRUE,,,U,U,TRUE,TRUE
 crch,crch,TRUE,TRUE,,,U,U,U,U
 crch,hxlr,TRUE,TRUE,,,U,U,U,U
+DCchoice,oohbchoice,TRUE,TRUE,,,,,,
 estimatr,lm_lin,TRUE,TRUE,,,,,,
 estimatr,lm_robust,TRUE,TRUE,TRUE,TRUE,TRUE,U,TRUE,TRUE
 estimatr,iv_robust,TRUE,TRUE,TRUE,TRUE,U,U,U,U
