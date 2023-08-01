@@ -80,6 +80,9 @@ get_predict.default <- function(model,
 
     # matrix with outcome levels as columns
     } else if (is.matrix(pred)) {
+        if (is.null(colnames(pred))) {
+            colnames(pred) <- seq_len(ncol(pred))
+        }
         # internal calls always includes "rowid" as a column in `newdata`
         if ("rowid" %in% colnames(newdata)) {
             out <- list(
@@ -87,7 +90,7 @@ get_predict.default <- function(model,
                 group = rep(colnames(pred), each = nrow(pred)),
                 estimate = c(pred))
         } else {
-            out <- list(
+                        out <- list(
                 rowid = rep(seq_len(nrow(pred)), times = ncol(pred)),
                 group = rep(colnames(pred), each = nrow(pred)),
                 estimate = c(pred))

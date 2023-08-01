@@ -1,5 +1,5 @@
 source("helpers.R")
-if (!EXPENSIVE) exit_file("EXPENSIVE")
+# if (!EXPENSIVE) exit_file("EXPENSIVE")
 using("marginaleffects")
 
 
@@ -150,6 +150,22 @@ p <- plot_slopes(model, variables = "Time", condition = "Time", draw = FALSE)
 expect_true(nrow(p) > 1)
 
 
+
+# Issue #844
+df <- transform(mtcars, gear = as.integer(gear))
+
+mod <- gam(
+    gear ~ s(hp) + cyl,
+    data = df,
+    family = ocat(R = 5)
+)
+
+pre <- avg_predictions(model = mod)
+slo <- avg_slopes(mod)
+cmp <- comparisons(mod)
+expect_inherits(pre, "predictions")
+expect_inherits(slo, "slopes")
+expect_inherits(cmp, "comparisons")
 
 
 rm(list = ls())

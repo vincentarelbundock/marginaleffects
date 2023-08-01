@@ -1,6 +1,6 @@
 # News
 
-## marginaleffects 0.14.0
+## dev
 
 Breaking change:
 
@@ -8,11 +8,13 @@ Breaking change:
 
 New:
 
+* Support: `DCchoice` package.
 * `hypotheses()` can now accept raw data frame, which gives a lot of flexibility for custom contrasts and functions. See the Hypothesis vignette for an example.
 * `numderiv` argument allows users to use finite difference (center or forward) or Richardson's method to compute the numerical derivatives used in the calculation of standard errors.
 
 Bug fixes:
 
+* `mgcv` with `ocat` are now supported. Thanks to Lorenzo Fabbri for Issue #844.
 * `quantreg` problem with `rowid` merge did not affect estimates but did not return the full original data. Issue #829.
 * `get_modeldata()` extracts weights variable when available.
 
