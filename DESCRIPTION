@@ -64,6 +64,7 @@ Suggests:
     conflicted,
     covr,
     crch,
+    DCchoice,
     distributional,
     dplyr,
     emmeans,
