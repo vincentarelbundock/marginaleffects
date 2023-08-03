@@ -49,6 +49,16 @@ hxlr,scale
 hxlr,density
 ivpml,pr
 ivpml,xb
+flexsurvreg,response,
+flexsurvreg,mean,
+flexsurvreg,link,
+flexsurvreg,lp,
+flexsurvreg,linear,
+flexsurvreg,quantile,
+flexsurvreg,rmst,
+flexsurvreg,survival,
+flexsurvreg,hazard,
+flexsurvreg,cumhaz,
 fixest,response
 fixest,link
 hurdle,response

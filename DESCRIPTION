@@ -71,6 +71,7 @@ Suggests:
     equivalence,
     estimatr,
     fixest,
+    flexsurv,
     future,
     fwb,
     gam,
@@ -210,6 +211,7 @@ Collate:
     'methods_crch.R'
     'methods_dataframe.R'
     'methods_fixest.R'
+    'methods_flexsurv.R'
     'methods_gamlss.R'
     'methods_glmmTMB.R'
     'methods_glmx.R'

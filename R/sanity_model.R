@@ -40,6 +40,7 @@ sanity_model_supported_class <- function(model) {
         "clm",
         "coxph",
         "crch",
+        "flexsurvreg", # package: flexsurv
         "fixest",
         c("Gam", "glm", "lm"), # package: gam
         c("gam", "glm", "lm"), # package: mgcv

@@ -38,6 +38,9 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
     valid[["lme"]] <- c("level") # nlme::lme
     valid[["bife"]] <- c("alpha_new", "corrected") # nlme::lme
 
+    # flexsurv
+    valid[["flexsurvreg"]] <- c("times", "p", "start")
+
     white_list <- c(
         "conf.int", "modeldata", "internal_call", "df",
         "transform", "comparison", "side", "delta", "null", "equivalence", "draw",
