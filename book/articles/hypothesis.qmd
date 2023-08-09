@@ -226,6 +226,20 @@ slopes(
     hypothesis = "exp(am) - 2 * vs = -400")
 ```
 
+But note that the p values and confidence intervals are calculated using the delta method and are thus based on the assumption that the `hypotheses` expression is approximately normally distributed. For (very) non-linear functions of the parameters, this is not realistic, and we get p values with incorrect error rates and confidence intervals with incorrect coverage probabilities. For such hypotheses, it’s better to calculate the confidence intervals using the bootstrap (see [`inferences`](reference/inferences.html) for details):
+
+```{r}
+set.seed(1234)
+slopes(
+    mod,
+    newdata = "mean",
+    hypothesis = "exp(am) - 2 * vs = -400") |>
+  inferences(method = "boot")
+```
+
+While the confidence interval from the delta method is symmetric (equal to the estimate ± 1.96 times the standard error), the more reliable confidence interval from the bootstrap is (here) highly skewed.
+
+
 ### Adjusted Predictions
 
 Now consider the case of adjusted predictions:

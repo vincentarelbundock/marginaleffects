@@ -38,7 +38,7 @@ Scroll down this page to the Numerical Derivatives section to see a detailed exp
 
 ## Standard errors and intervals for `slopes()` and `comparisons()`
 
-All standard errors for the `slopes()` and `comparisons()` functions are computed using the delta method, as described above.
+All standard errors for the `slopes()` and `comparisons()` functions are computed using the delta method, as described above. The confidence intervals are calculated as estimate ± `qnorm((1 - conf_level) / 2)` standard errors (e.g., for 95% confidence intervals, estimate ± 1.96 standard errors) and assume that the (transformed) estimates are normally distributed.
 
 ## Standard errors and intervals for `marginal_means()` and `predictions()`
 
