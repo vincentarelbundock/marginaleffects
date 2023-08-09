@@ -39,7 +39,7 @@ lme4,glmer.nb,TRUE,TRUE,,,TRUE,TRUE,TRUE,TRUE
 lmerTest,lmer,TRUE,TRUE,,,TRUE,TRUE,TRUE,TRUE 
 logistf,logistf,TRUE,TRUE,,,,,,
 logistf,flic,TRUE,TRUE,,,,,,
-logistf,flic,TRUE,TRUE,,,,,,
+logistf,flac,TRUE,TRUE,,,,,,
 MASS,glmmPQL,TRUE,TRUE,,,U,U,TRUE,TRUE
 MASS,glm.nb,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE
 MASS,polr,TRUE,TRUE,TRUE,TRUE,FALSE,FALSE,TRUE,TRUE
