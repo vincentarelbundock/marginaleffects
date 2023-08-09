@@ -115,6 +115,8 @@ package website, or scroll down this page for a full list of vignettes:
 Warning #1: Tests are conducted directly on the scale defined by the \code{type} argument. For some models, it can make sense to conduct hypothesis or equivalence tests on the \code{"link"} scale instead of the \code{"response"} scale which is often the default.
 
 Warning #2: For hypothesis tests on objects produced by the \code{marginaleffects} package, it is safer to use the \code{hypothesis} argument of the original function.  Using \code{hypotheses()} may not work in certain environments, in lists, or when working programmatically with *apply style functions.
+
+Warning #3: The tests assume that the \code{hypothesis} expression is (approximately) normally distributed, which for non-linear functions of the parameters may not be realistic. More reliable confidence intervals can be obtained using the \code{inferences()} function with \code{method = "boot"}.
 }
 \section{Joint hypothesis tests}{
 
