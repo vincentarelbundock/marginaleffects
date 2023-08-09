@@ -4,6 +4,13 @@ get_model_matrix_attribute <- function(model, newdata = NULL) {
         return(newdata)
     }
     
+    # stats::model.matrix creates all-0 columns with splines::bs() and other functions
+    # this may be too aggressive, but it avoids all functions
+    flag <- any(grepl("\\(", setdiff(names(get_coef(model)), "(Intercept)")))
+    if (isTRUE(flag)) {
+        return(newdata)
+    }
+
     # we don't support offsets, so revert to stats::predict()
     if (!is.null(model[["offset"]])) {
         return(newdata)
