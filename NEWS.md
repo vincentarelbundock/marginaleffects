@@ -15,6 +15,7 @@ New:
 
 Bug fixes:
 
+* `inferences()` supports the `cross` argument for `comparisons()` objects. Thanks to Kirill Solovev for report #856.
 * `splines::bs()` in formulas could produce incorrect results due to weirdness in `stats::model.matrix()`. Thanks to @chiungming for report #831.
 * `mgcv` with `ocat` are now supported. Thanks to Lorenzo Fabbri for Issue #844.
 * `quantreg` problem with `rowid` merge did not affect estimates but did not return the full original data. Issue #829.

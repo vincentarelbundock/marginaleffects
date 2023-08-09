@@ -434,6 +434,7 @@ comparisons <- function(model,
         FUN = comparisons,
         model = model, newdata = newdata, vcov = vcov, variables = variables, type = type, by = by,
         conf_level = conf_level,
+        cross = cross,
         comparison = comparison, transform = transform, wts = wts, hypothesis = hypothesis, eps = eps, ...)
     if (!is.null(out)) {
         return(out)
@@ -658,6 +659,7 @@ avg_comparisons <- function(model,
     out <- inferences_dispatch(
         FUN = avg_comparisons,
         model = model, newdata = newdata, vcov = vcov, variables = variables, type = type, by = by,
+        cross = cross,
         conf_level = conf_level,
         comparison = comparison, transform = transform, wts = wts, hypothesis = hypothesis, eps = eps, ...)
     if (!is.null(out)) {

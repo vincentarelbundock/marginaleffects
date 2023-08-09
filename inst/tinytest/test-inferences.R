@@ -98,4 +98,15 @@ mod <- lm(Petal.Length ~ Sepal.Length * Sepal.Width * Species, data = iris)
 expect_error(inferences(marginal_means(mod), method = "fwb"), pattern = "not supported")
 
 
+# Issue #856
+tmp <- lm(Petal.Length ~ Sepal.Length * Species, data = iris)
+cmp <- avg_comparisons(tmp,
+    variables = list(Sepal.Length = 1, Species = "reference"),
+    cross = TRUE) |>
+    inferences(method = "boot", R = 5) |>
+    suppressWarnings()
+expect_inherits(cmp, "comparisons")
+expect_equal(nrow(cmp), 2)
+
+
 rm(list = ls())
