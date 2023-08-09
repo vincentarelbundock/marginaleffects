@@ -299,7 +299,11 @@ predictions <- function(model,
     # input sanity checks
     sanity_df(df, newdata)
 
+    # save the original because it gets converted to a named list, which breaks
+    # user-input sanity checks
+    transform_original <- transform
     transform <- sanitize_transform(transform)
+
     sanity_dots(model = model, ...)
     model <- sanitize_model_specific(
         model = model,
@@ -406,7 +410,7 @@ predictions <- function(model,
         FUN = predictions,
         model = model, newdata = newdata, vcov = vcov, variables = variables, type = type, by = by,
         conf_level = conf_level,
-        byfun = byfun, wts = wts, transform = transform, hypothesis = hypothesis, ...)
+        byfun = byfun, wts = wts, transform = transform_original, hypothesis = hypothesis, ...)
     if (!is.null(out)) {
         return(out)
     }

@@ -109,4 +109,16 @@ expect_inherits(cmp, "comparisons")
 expect_equal(nrow(cmp), 2)
 
 
+# Issue #853
+m <- glm(am ~ mpg + hp + cyl, data = mtcars, family = binomial)
+p <- avg_predictions(m, by = "cyl") |>
+  inferences(method = "boot", R = 5) |>
+  suppressWarnings()
+expect_inherits(p, "predictions")
+p <- predictions(m, by = "cyl") |>
+  inferences(method = "boot", R = 5) |>
+  suppressWarnings()
+expect_inherits(p, "predictions")
+
+
 rm(list = ls())

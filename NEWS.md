@@ -20,6 +20,7 @@ Bug fixes:
 * `mgcv` with `ocat` are now supported. Thanks to Lorenzo Fabbri for Issue #844.
 * `quantreg` problem with `rowid` merge did not affect estimates but did not return the full original data. Issue #829.
 * `get_modeldata()` extracts weights variable when available.
+* `predictions()` is no longer broken in some `inferences()` calls. Issue #853
 
 ## marginaleffects 0.13.0
 
