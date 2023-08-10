@@ -90,11 +90,13 @@ get_predict.default <- function(model,
                 group = rep(colnames(pred), each = nrow(pred)),
                 estimate = c(pred))
         } else {
-                        out <- list(
+            out <- list(
                 rowid = rep(seq_len(nrow(pred)), times = ncol(pred)),
                 group = rep(colnames(pred), each = nrow(pred)),
                 estimate = c(pred))
         }
+        # assumes that the order of columns in predict() tells you order of factors
+        out[["group"]] <- factor(out[["group"]], levels = colnames(pred))
     } else {
         stop(sprintf("Unable to extract predictions of type %s from a model of class %s. Please report this problem, along with reproducible code and data on Github: https://github.com/vincentarelbundock/marginaleffects/issues", type, class(model)[1]), call. = FALSE)
     }

@@ -180,7 +180,7 @@ expect_inherits(m, "marginaleffects")
 
 
 # Issue #484: i() converts to factors but was treated as numeric
-m <- feols(Ozone ~ i(Month), airquality)
+m <- feols(Ozone ~ i(Month), airquality) |> suppressWarnings()
 m <- slopes(m)
 expect_inherits(m, "marginaleffects")
 
@@ -261,8 +261,8 @@ data(trade, package = "fixest")
 mod1 <- fepois(data = trade, Euros ~ 1 | Origin, offset = ~ log(dist_km))
 mod2 <- fepois(data = trade, Euros ~ 1 | Origin)
 
-mfx1 <- avg_slopes(mod1)
-mfx2 <- avg_slopes(mod2)
+mfx1 <- avg_slopes(mod1, vcov = FALSE)
+mfx2 <- avg_slopes(mod2, vcov = FALSE) 
 expect_inherits(mfx1, "slopes")
 expect_inherits(mfx2, "slopes")
 

@@ -104,6 +104,8 @@ get_predict.multinom <- function(model,
     out <- data.frame(
         group = rep(colnames(pred), each = nrow(pred)),
         estimate = c(pred))
+    # assumes that the order of columns in predict() tells you order of factors
+    out <- transform(out, group = factor(group, levels = colnames(pred)))
 
 
     # usually when `newdata` is supplied by `comparisons`
