@@ -203,31 +203,6 @@ predictions <- function(model,
                         ...) {
 
 
-    dots <- list(...)
-    
-    # backward compatibility
-    if ("transform_post" %in% names(dots)) transform <- dots[["transform_post"]]
-
-    # order of the first few paragraphs is important
-    # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
-    scall <- rlang::enquo(newdata)
-    newdata <- sanitize_newdata_call(scall, newdata, model)
-
-    if (!is.null(equivalence) && !is.null(p_adjust)) {
-        insight::format_error("The `equivalence` and `p_adjust` arguments cannot be used together.")
-    }
-
-    numderiv <- sanitize_numderiv(numderiv)
-
-    # is the model supported?
-    model <- sanitize_model(
-        model = model,
-        newdata = newdata,
-        wts = wts,
-        vcov = vcov,
-        calling_function = "predictions",
-        ...)
-
     # build call: match.call() doesn't work well in *apply()
     call_attr <- c(list(
         name = "predictions",
@@ -246,32 +221,33 @@ predictions <- function(model,
         list(...))
     call_attr <- do.call("call", call_attr)
 
+    dots <- list(...)
+
+    # extracting modeldata repeatedly is slow.
+    # checking dots allows marginalmeans to pass modeldata to predictions.
+    modeldata <- get_modeldata(model, additional_variables = by, modeldata = dots[["modeldata"]])
+
+    # order of the first few paragraphs is important
+    # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
+    scall <- rlang::enquo(newdata)
+    newdata <- sanitize_newdata_call(scall, newdata, model)
+
+    numderiv <- sanitize_numderiv(numderiv)
+    sanity_equivalence_p_adjust(equivalence, p_adjust)
+    model <- sanitize_model(
+        model = model,
+        newdata = newdata,
+        wts = wts,
+        vcov = vcov,
+        calling_function = "predictions",
+        ...)
+
     # multiple imputation
     if (inherits(model, "mira")) {
         out <- process_imputation(model, call_attr)
         return(out)
     }
 
-    # extracting modeldata repeatedly is slow.
-    # checking dots allows marginalmeans to pass modeldata to predictions.
-    if ("modeldata" %in% names(dots)) {
-        modeldata <- dots[["modeldata"]]
-    } else {
-        addvar <- NULL
-        if (isTRUE(checkmate::check_character(by))) {
-            addvar <- c(addvar, by)
-        }
-        if (isTRUE(checkmate::check_data_frame(by))) {
-            addvar <- c(addvar, colnames(by))
-        }
-        if (isTRUE(checkmate::check_string(wts))) {
-            addvar <- c(addvar, wts)
-        }
-        if (is.null(addvar)) {
-            addvar <- FALSE
-        }
-        modeldata <- get_modeldata(model, additional_variables = addvar)
-    }
 
     # if type is NULL, we backtransform if relevant
     flag_class <- isTRUE(class(model)[1] %in% c("glm", "Gam", "negbin")) ||

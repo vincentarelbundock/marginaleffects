@@ -1,3 +1,11 @@
+sanity_equivalence_p_adjust <- function(equivalence, p_adjust) {
+    if (!is.null(equivalence) && !is.null(p_adjust)) {
+        insight::format_error("The `equivalence` and `p_adjust` arguments cannot be used together.")
+    }
+    checkmate::assert_choice(p_adjust, choices = stats::p.adjust.methods, null.ok = TRUE)
+}
+
+
 sanity_df <- function(df, x) {
     checkmate::assert(
         checkmate::check_number(df, lower = 1),

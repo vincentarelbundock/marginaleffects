@@ -238,46 +238,6 @@ comparisons <- function(model,
                         ...) {
 
 
-    dots <- list(...)
-    
-    # backward compatibility
-    if ("transform_post" %in% names(dots)) transform <- dots[["transform_post"]]
-    if ("transform_pre" %in% names(dots)) comparison <- dots[["transform_pre"]]
-
-    numderiv <- sanitize_numderiv(numderiv)
-
-    # required by stubcols later, but might be overwritten
-    bycols <- NULL
-
-    if (!is.null(equivalence) && !is.null(p_adjust)) {
-        insight::format_error("The `equivalence` and `p_adjust` arguments cannot be used together.")
-    }
-
-    # slopes()` **must** run its own sanity checks and hardcode valid arguments
-    internal_call <- dots[["internal_call"]]
-    if (!isTRUE(internal_call)) {
-        # if `newdata` is a call to `datagrid`, `typical`, or `counterfactual`,
-        # insert `model` should probably not be nested too deeply in the call
-        # stack since we eval.parent() (not sure about this)
-        scall <- rlang::enquo(newdata)
-        newdata <- sanitize_newdata_call(scall, newdata, model)
-
-        model <- sanitize_model(
-            model = model,
-            newdata = newdata,
-            wts = wts,
-            vcov = vcov,
-            calling_function = "comparisons",
-            ...)
-        cross <- sanitize_cross(cross, variables, model)
-        type <- sanitize_type(model = model, type = type)
-
-    # internal call from `slopes()`
-    } else {
-        # not allowed in `slopes()`
-        cross <- FALSE
-    }
-
     # build call: match.call() doesn't work well in *apply()
     call_attr <- c(list(
         name = "comparisons",
@@ -298,6 +258,40 @@ comparisons <- function(model,
         df = df),
         list(...))
     call_attr <- do.call("call", call_attr)
+
+    dots <- list(...)
+
+
+    # required by stubcols later, but might be overwritten
+    bycols <- NULL
+
+    numderiv <- sanitize_numderiv(numderiv)
+
+    # slopes()` **must** run its own sanity checks and hardcode valid arguments
+    internal_call <- dots[["internal_call"]]
+    if (!isTRUE(internal_call)) {
+        # if `newdata` is a call to `datagrid`, `typical`, or `counterfactual`,
+        # insert `model` should probably not be nested too deeply in the call
+        # stack since we eval.parent() (not sure about this)
+        scall <- rlang::enquo(newdata)
+        newdata <- sanitize_newdata_call(scall, newdata, model)
+        sanity_equivalence_p_adjust(equivalence, p_adjust)
+        model <- sanitize_model(
+            model = model,
+            newdata = newdata,
+            wts = wts,
+            vcov = vcov,
+            calling_function = "comparisons",
+            ...)
+        cross <- sanitize_cross(cross, variables, model)
+        type <- sanitize_type(model = model, type = type)
+
+    # internal call from `slopes()`
+    } else {
+        # not allowed in `slopes()`
+        cross <- FALSE
+    }
+
     
     # multiple imputation
     if (inherits(model, "mira")) {
@@ -305,7 +299,7 @@ comparisons <- function(model,
         return(out)
     }
     
-    # more sanity chekcs
+    # more sanity checks
     sanity_dots(model, ...)
     sanity_df(df, newdata)
     conf_level <- sanitize_conf_level(conf_level, ...)
@@ -340,30 +334,16 @@ comparisons <- function(model,
     # extracting modeldata repeatedly is slow.
     # checking dots allows cheap multiple imputation
     dots <- list(...)
-    if ("modeldata" %in% names(dots)) {
-        modeldata <- dots[["modeldata"]]
-    } else {
-        addvar <- NULL
-        if (isTRUE(checkmate::check_character(by))) {
-            addvar <- c(addvar, by)
-        }
-        if (isTRUE(checkmate::check_data_frame(by))) {
-            addvar <- c(addvar, colnames(by))
-        }
-        if (isTRUE(checkmate::check_string(wts))) {
-            addvar <- c(addvar, wts)
-        }
-        if (is.null(addvar)) {
-            addvar <- FALSE
-        }
-        modeldata <- get_modeldata(model, additional_variables = addvar)
-    }
-    
+
+    # extracting modeldata repeatedly is slow.
+    # checking dots allows marginalmeans to pass modeldata to predictions.
+    modeldata <- get_modeldata(model, additional_variables = by, modeldata = dots[["modeldata"]])
+
     newdata <- sanitize_newdata(
         model = model,
         newdata = newdata,
-        by = by,
         modeldata = modeldata,
+        by = by,
         wts = wts)
 
     # after sanitize_newdata
