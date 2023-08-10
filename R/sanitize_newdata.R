@@ -19,6 +19,8 @@ sanitize_newdata_call <- function(scall, newdata = NULL, model) {
 
 sanitize_newdata <- function(model, newdata, by, modeldata) {
 
+    by_input <- by
+
     checkmate::assert(
         checkmate::check_data_frame(newdata, null.ok = TRUE),
         checkmate::check_choice(newdata, choices = c("mean", "median", "tukey", "grid", "marginalmeans")),
@@ -158,6 +160,18 @@ sanitize_newdata <- function(model, newdata, by, modeldata) {
     }
 
     attr(newdata, "newdata_explicit") <- newdata_explicit
+
+
+    # This helps sort the output. Must be done before everything else
+    if (!isFALSE(by_input)) {
+        setcolorder(newdata, sort(colnames(newdata)))
+    }
+    if (isTRUE(checkmate::check_character(by))) {
+        cols <- intersect(by_input, colnames(newdata))
+        if (length(cols) > 0) {
+            setorderv(newdata, cols = by_input)
+        }
+    }
 
     return(newdata)
 }

@@ -551,7 +551,7 @@ comparisons <- function(model,
     stubcols <- c(
         "rowid", "rowidcf", "group", "term", "hypothesis", "by",
         grep("^contrast", colnames(mfx), value = TRUE),
-        bycols,
+        sort(bycols),
         "estimate", "std.error", "statistic", "p.value", "s.value", "conf.low",
         "conf.high", "df", "predicted", "predicted_hi", "predicted_lo")
     cols <- intersect(stubcols, colnames(mfx))

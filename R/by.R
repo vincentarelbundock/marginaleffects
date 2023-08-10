@@ -48,7 +48,7 @@ get_by <- function(
         estimates <- estimates[tmp, drop = FALSE] 
     }
 
-    bycols <- intersect(unique(c("term", bycols)), colnames(estimates))
+    bycols <- intersect(unique(c("term", sort(bycols))), colnames(estimates))
 
     # bayesian
     if (!is.null(draws)) {
@@ -63,7 +63,7 @@ get_by <- function(
         if (!is.null(byfun)) {
             estimates <- estimates[,
                 .(estimate = byfun(estimate)),
-                by = bycols]
+                keyby = bycols]
 
         } else if ("marginaleffects_wts_internal" %in% colnames(newdata)) {
             estimates <- estimates[,
@@ -71,12 +71,12 @@ get_by <- function(
                     estimate,
                     marginaleffects_wts_internal,
                     na.rm = TRUE)),
-                by = bycols]
+                keyby = bycols]
 
         } else {
             estimates <- estimates[,
                 .(estimate = mean(estimate, na.rm = TRUE)),
-                by = bycols]
+                keyby = bycols]
         }
     }
 

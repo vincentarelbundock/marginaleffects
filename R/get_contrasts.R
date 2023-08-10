@@ -136,7 +136,7 @@ get_contrasts <- function(model,
         if (isTRUE(nrow(out) == nrow(lo))) {
             tmp <- data.table(lo)[, .SD, .SDcols = patterns("^contrast|marginaleffects_wts_internal")]
             out <- cbind(out, tmp)
-            idx <- c("rowid", grep("^contrast", colnames(out), value = TRUE), colnames(out))
+            idx <- c("rowid", grep("^contrast", colnames(out), value = TRUE), sort(colnames(out)))
             idx <- unique(idx)
             out <- out[, ..idx]
         }
@@ -260,6 +260,7 @@ get_contrasts <- function(model,
     # at the very end.
     # TODO: What is the UI for this? Doesn't make sense to have different functions.
     if (isTRUE(checkmate::check_character(by))) {
+        by <- sort(by)
         tmp <- intersect(colnames(newdata), c(by, colnames(out)))
         if (length(tmp) > 1) {
             tmp <- subset(newdata, select = tmp)
@@ -277,7 +278,7 @@ get_contrasts <- function(model,
             predicted_hi = mean(predicted_hi),
             predicted = mean(predicted),
             marginaleffects_wts_internal = mean(marginaleffects_wts_internal)),
-        by = idx]
+        keyby = idx]
     }
 
     # safe version of comparison
@@ -395,7 +396,7 @@ get_contrasts <- function(model,
             cross = cross,
             wts = marginaleffects_wts_internal,
             tmp_idx = tmp_idx),
-        by = idx]
+        keyby = idx]
         out[, tmp_idx := NULL]
 
         # if comparison returns a single value, then we padded with NA. That

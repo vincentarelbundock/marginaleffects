@@ -541,7 +541,7 @@ predictions <- function(model,
     # clean columns
     stubcols <- c(
         "rowid", "rowidcf", "term", "group", "hypothesis",
-        bycols,
+        sort(bycols),
         "estimate", "std.error", "statistic", "p.value", "s.value", "conf.low",
         "conf.high", "marginaleffects_wts",
         sort(grep("^predicted", colnames(newdata), value = TRUE)))
