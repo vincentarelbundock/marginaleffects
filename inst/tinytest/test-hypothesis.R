@@ -1,4 +1,5 @@
 source("helpers.R")
+using("tinysnapshot")
 using("marginaleffects")
 
 requiet("emmeans")
@@ -247,13 +248,11 @@ expect_error(
     pattern = "hypothesis testing")
 
 # Issue #661: remove redundant labels in pairwise comparisons
-if (!requiet("tinysnapshot")) exit_file("tinysnapshot")
-using("tinysnapshot")
 set.seed(123)
 dat <- transform(iris, dummy = as.factor(rbinom(nrow(iris), 1, prob = c(0.4, 0.6))))
 m <- lm(Sepal.Width ~ Sepal.Length * Species + dummy, data = dat)
 mfx <- slopes(m, variables = "Sepal.Length", by = c("Species", "dummy"), hypothesis = "pairwise")
-expect_true("setosa, 0 - setosa, 1" %in% mfx$term)
+expect_true("0, setosa - 1, setosa" %in% mfx$term)
 
 
 rm(list = ls())

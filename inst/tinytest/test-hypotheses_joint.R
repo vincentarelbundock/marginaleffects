@@ -29,18 +29,20 @@ expect_equal(a$p.value, b[["Pr(>F)"]][2])
 
 # regex indices
 a = hypotheses(model, joint = "cyl\\)\\d$")
-expect_equal(a$statistic, 6.11733602323976)
+b = hypotheses(model, joint = 2:3)
+expect_equal(a$statistic, b$statistic)
 a = hypotheses(model, joint = "cyl")
-expect_equal(a$statistic, 5.70257517421252)
+b = hypotheses(model, joint = c(2:3, 5:6))
+expect_equal(a$statistic, b$statistic)
 
 # regex: marginaleffects object
-mod <- glm(am ~ vs + factor(carb), family = binomial, data = mtcars)
+mod <- glm(am ~ vs + factor(carb), family = binomial, data = mtcars) |> suppressWarnings()
 cmp <- avg_comparisons(mod)
 a <- hypotheses(cmp, joint = "carb")
 expect_inherits(a, "hypotheses")
 
 # marginaleffects objects
-mod <- glm(am ~ vs + factor(carb), family = binomial, data = mtcars)
+mod <- glm(am ~ vs + factor(carb), family = binomial, data = mtcars) |> suppressWarnings()
 cmp <- avg_comparisons(mod)
 a <- hypotheses(cmp, joint_test = "f", joint = TRUE)
 b <- hypotheses(cmp, joint_test = "f", joint = 2:3)
@@ -48,7 +50,7 @@ expect_true(a$p.value < b$p.value)
 expect_true(a$statistic > b$statistic)
 
 # Null hypothesis vector
-mod <- glm(am ~ vs + factor(carb), family = binomial, data = mtcars)
+mod <- glm(am ~ vs + factor(carb), family = binomial, data = mtcars) |> suppressWarnings()
 a <- hypotheses(mod, joint = 3:4, hypothesis = 1:2)
 expect_inherits(a, "hypotheses")
 expect_error(hypotheses(mod, joint = 3:4, hypothesis = 1:4))

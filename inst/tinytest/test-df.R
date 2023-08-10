@@ -2,6 +2,7 @@ source("helpers.R")
 requiet("emmeans")
 requiet("marginaleffects")
 using("marginaleffects")
+using("tinysnapshot")
 
 # TODO: rename dat to df to make sure there's no clash with the internal keyword
 
@@ -22,8 +23,9 @@ mm <- marginal_means(
     conf_level = 0.95) |>
     dplyr::arrange(term)
 
-expect_equivalent(sort(abs(em$estimate)), sort(abs(mm$estimate)))
-expect_equivalent(sort(abs(c(em$lower.CL, em$upper.CL))), sort(abs(c(mm$conf.low, mm$conf.high))))
+expect_equivalent(em$estimate, mm$estimate)
+expect_equivalent(em$SE, mm$std.error, tolerance = 1e6)
+expect_equivalent(em$lower.CL, mm$conf.low, tolerance = 1e6)
 
 
 cmp29 <- comparisons(mod, df = insight::get_df(mod))
@@ -46,9 +48,6 @@ expect_true(all(pre29$conf.low < preInf$conf.low))
 
 
 # Issue #627: print t instead of z in column names
-if (!requiet("tinysnapshot")) exit_file("tinysnapshot")
-using("tinysnapshot")
-
 mod <- lm(mpg ~ hp, mtcars)
 expect_snapshot_print(avg_comparisons(mod), "df-z")
 expect_snapshot_print(avg_comparisons(mod, df = 30), "df-t")

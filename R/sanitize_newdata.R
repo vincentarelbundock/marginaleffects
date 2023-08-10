@@ -166,7 +166,7 @@ sanitize_newdata <- function(model, newdata, by, modeldata) {
     if (!isFALSE(by_input)) {
         setcolorder(newdata, sort(colnames(newdata)))
     }
-    if (isTRUE(checkmate::check_character(by))) {
+    if (isTRUE(checkmate::check_character(by_input))) {
         cols <- intersect(by_input, colnames(newdata))
         if (length(cols) > 0) {
             setorderv(newdata, cols = intersect(by_input, colnames(newdata)))

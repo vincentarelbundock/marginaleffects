@@ -71,7 +71,10 @@ expect_error(
 dat <<- transform(mtcars, cyl = factor(cyl))
 mod <- lm(mpg ~ hp, data = dat)
 d <- datagrid(model = mod, by = c("carb", "cyl"))
-expect_equivalent(nrow(d), 9)
+known <- aggregate(mpg ~ cyl + carb, data = mtcars, FUN = mean)
+known <- known[order(known$cyl, known$carb), ]
+d <- d[order(d$cyl, d$carb), ]
+expect_equal(d$mpg, known$mpg)
 
 
 
@@ -84,7 +87,7 @@ a = predict(fit, branewdata = lalonde)
 b = predictions(fit, newdata = lalonde)
 expect_equivalent(a, b$estimate)
 
-nd = rbind( transform(lalonde, treat = 0), transform(lalonde, treat = 1)) 
+nd = rbind(transform(lalonde, treat = 0), transform(lalonde, treat = 1))
 a = predict(fit, newdata = nd)
 b = predictions(fit, newdata = lalonde, variables = "treat")
 expect_equivalent(a, b$estimate)
@@ -93,6 +96,7 @@ a = tapply(predict(fit, newdata = nd), nd$treat, mean)
 b = avg_predictions(fit, newdata = lalonde, variables = "treat")
 expect_equivalent(as.numeric(a), b$estimate)
 
+nd = rbind(transform(lalonde, treat = 0), transform(lalonde, treat = 1))
 a = predict(fit, newdata = nd)
 b = predictions(fit, variables = "treat")
 expect_equivalent(a, b$estimate)

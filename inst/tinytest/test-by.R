@@ -113,7 +113,7 @@ p5 <- predictions(mod, type = "probs", by = c("am", "vs", "group"))
 expect_equivalent(mean(subset(p1, group == "5")$estimate), p2$estimate[2])
 expect_equivalent(p3$estimate, diff(p2$estimate))
 expect_equivalent(nrow(p4), 1)
-expect_equivalent(nrow(p5), 9)
+expect_equivalent(nrow(p5), 12)
 
 cmp <- comparisons(mod, type = "probs", by = "am")
 expect_equivalent(nrow(cmp), 18)

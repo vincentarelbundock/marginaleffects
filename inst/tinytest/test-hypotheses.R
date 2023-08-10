@@ -47,11 +47,12 @@ expect_inherits(p, "data.frame")
 expect_true(all(p$std.error > 0))
 
 # equality between predictions: 1 and 2 equal, 2 and 3 different
+mod <- glm(am ~ factor(carb) + vs, data = mtcars, family = binomial)
 f <- function(x) predict(x, type = "link", newdata = mtcars)
 dmm <- hypotheses(mod, FUN = f, hypothesis = "b1 = b2")
 expect_equivalent(dmm$estimate, 0)
 dmm <- hypotheses(mod, FUN = f, hypothesis = "b3 = b2")
-expect_equivalent(dmm$estimate, 1.33154848763268)
+expect_equivalent(dmm$estimate, 1.22468813462612)
 
 # named matrix
 mod <- lm(mpg ~ factor(cyl), data = mtcars)

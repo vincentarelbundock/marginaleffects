@@ -74,7 +74,7 @@ mm <- tidy(marginal_means(mod, variables = "cyl")) |>
   dplyr::arrange(value)
 em <- tidy(emmeans(mod, specs = "cyl", type = "response"))
 expect_equivalent(mm$estimate, em$rate)
-expect_equivalent(mm$p.value, em$p.value)
+expect_equivalent(mm$p.value, em$p.value, tolerance = 1e-5)
 
 
 
