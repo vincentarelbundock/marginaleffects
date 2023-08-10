@@ -4,21 +4,6 @@ sanity_df <- function(df, x) {
         checkmate::check_numeric(df, len = nrow(x)))
 }
 
-sanity_wts <- function(wts, newdata) {
-    # weights must be available in the `comparisons()` function, NOT in
-    # `tidy()`, because comparisons will often duplicate newdata for
-    # multivariate outcomes and the like. We need to track which row matches
-    # which.
-    if (!is.null(wts)) {
-        flag1 <- isTRUE(checkmate::check_string(wts)) && isTRUE(wts %in% colnames(newdata))
-        flag2 <- isTRUE(checkmate::check_numeric(wts, len = nrow(newdata)))
-        if (!flag1 && !flag2) {
-            msg <- sprintf("The `wts` argument must be a numeric vector of length %s, or a string which matches a column name in `newdata`. If you did not supply a `newdata` explicitly, `marginaleffects` extracted it automatically from the model object, and the `wts` variable may not have been available. The easiest strategy is often to supply a data frame such as the original data to `newdata` explicitly, and to make sure that it includes an appropriate column of weights, identified by the `wts` argument.",
-                           nrow(newdata))
-            stop(msg, call. = FALSE)
-        }
-    }
-}
 
 sanity_predict_vector <- function(pred, model, newdata, type) {
     if (!isTRUE(checkmate::check_atomic_vector(pred)) &&

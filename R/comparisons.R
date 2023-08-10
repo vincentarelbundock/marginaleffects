@@ -363,15 +363,8 @@ comparisons <- function(model,
         model = model,
         newdata = newdata,
         by = by,
-        modeldata = modeldata)
-    
-    # weights: before sanitize_variables
-    sanity_wts(wts, newdata) # after sanity_newdata
-    if (!is.null(wts) && isTRUE(checkmate::check_string(wts))) {
-        newdata[["marginaleffects_wts_internal"]] <- newdata[[wts]]
-    } else {
-        newdata[["marginaleffects_wts_internal"]] <- wts
-    }
+        modeldata = modeldata,
+        wts = wts)
 
     # after sanitize_newdata
     variables_list <- sanitize_variables(

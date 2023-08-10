@@ -90,6 +90,31 @@ build_newdata <- function(model, newdata, by, modeldata) {
 }
 
 
+add_wts_column <- function(wts, newdata) {
+    # weights must be available in the `comparisons()` function, NOT in
+    # `tidy()`, because comparisons will often duplicate newdata for
+    # multivariate outcomes and the like. We need to track which row matches
+    # which.
+    if (!is.null(wts)) {
+        flag1 <- isTRUE(checkmate::check_string(wts)) && isTRUE(wts %in% colnames(newdata))
+        flag2 <- isTRUE(checkmate::check_numeric(wts, len = nrow(newdata)))
+        if (!flag1 && !flag2) {
+            msg <- sprintf("The `wts` argument must be a numeric vector of length %s, or a string which matches a column name in `newdata`. If you did not supply a `newdata` explicitly, `marginaleffects` extracted it automatically from the model object, and the `wts` variable may not have been available. The easiest strategy is often to supply a data frame such as the original data to `newdata` explicitly, and to make sure that it includes an appropriate column of weights, identified by the `wts` argument.", nrow(newdata))
+            stop(msg, call. = FALSE)
+        }
+    }
+    
+    # weights: before sanitize_variables
+    if (!is.null(wts) && isTRUE(checkmate::check_string(wts))) {
+        newdata[["marginaleffects_wts_internal"]] <- newdata[[wts]]
+    } else {
+        newdata[["marginaleffects_wts_internal"]] <- wts
+    }
+
+    return(newdata)
+}
+
+
 set_newdata_attributes <- function(modeldata, newdata, newdata_explicit) {
     attr(newdata, "newdata_explicit") <- newdata_explicit
 
@@ -114,6 +139,7 @@ set_newdata_attributes <- function(modeldata, newdata, newdata_explicit) {
 
     return(newdata)
 }
+
 
 clean_newdata <- function(model, newdata) {
     # rbindlist breaks on matrix columns
@@ -155,7 +181,8 @@ clean_newdata <- function(model, newdata) {
     return(newdata)
 }
 
-sanitize_newdata <- function(model, newdata, by, modeldata) {
+
+sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
     checkmate::assert(
         checkmate::check_data_frame(newdata, null.ok = TRUE),
         checkmate::check_choice(newdata, choices = c("mean", "median", "tukey", "grid", "marginalmeans")),
@@ -165,6 +192,7 @@ sanitize_newdata <- function(model, newdata, by, modeldata) {
     modeldata <- tmp[["modeldata"]]
     newdata_explicit <- tmp[["newdata_explicit"]]
     newdata <- clean_newdata(model, newdata)
+    newdata <- add_wts_column(newdata = newdata, wts = wts)
     newdata <- set_newdata_attributes(modeldata = modeldata, newdata = newdata, newdata_explicit = newdata_explicit)
     return(newdata)
 }

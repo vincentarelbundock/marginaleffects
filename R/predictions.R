@@ -321,7 +321,8 @@ predictions <- function(model,
         model = model,
         newdata = newdata,
         modeldata = modeldata,
-        by = by)
+        by = by,
+        wts = wts)
 
     # after sanitize_newdata
     sanity_by(by, newdata)
@@ -333,16 +334,9 @@ predictions <- function(model,
         wts = wts,
         by = by,
         byfun = byfun)
+
     if (is.null(wts) && "marginaleffects_wts_internal" %in% colnames(newdata)) {
         wts <- "marginaleffects_wts_internal"
-    }
-
-    # weights: after sanitize_newdata; before sanitize_variables
-    sanity_wts(wts, newdata) # after sanity_newdata
-    if (!is.null(wts) && isTRUE(checkmate::check_string(wts))) {
-        newdata[["marginaleffects_wts_internal"]] <- newdata[[wts]]
-    } else {
-        newdata[["marginaleffects_wts_internal"]] <- wts
     }
 
     # analogous to comparisons(variables=list(...))
