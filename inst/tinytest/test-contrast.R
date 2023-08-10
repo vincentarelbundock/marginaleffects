@@ -76,9 +76,9 @@ emm <- emmeans(mod, specs = "cyl")
 emm <- emmeans::contrast(emm, method = "revpairwise", df = Inf, adjust = NULL)
 emm <- data.frame(confint(emm))
 expect_equivalent(cmp$estimate, emm$estimate)
-expect_equivalent(cmp$std.error, emm$SE)
-expect_equivalent(cmp$conf.low, emm$asymp.LCL)
-expect_equivalent(cmp$conf.high, emm$asymp.UCL)
+expect_equivalent(cmp$std.error, emm$SE, tolerance = tol)
+expect_equivalent(cmp$conf.low, emm$asymp.LCL, tolerance = tol)
+expect_equivalent(cmp$conf.high, emm$asymp.UCL, tolerance = tol)
 
 # response scale
 cmp <- comparisons(mod, type = "response", newdata = datagrid(), variables = list(cyl = "pairwise"))

@@ -169,7 +169,7 @@ sanitize_newdata <- function(model, newdata, by, modeldata) {
     if (isTRUE(checkmate::check_character(by))) {
         cols <- intersect(by_input, colnames(newdata))
         if (length(cols) > 0) {
-            setorderv(newdata, cols = by_input)
+            setorderv(newdata, cols = intersect(by_input, colnames(newdata)))
         }
     }
 

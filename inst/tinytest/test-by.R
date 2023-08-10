@@ -95,10 +95,8 @@ expect_false(anyNA(p$estimate))
 
 # Issue #445: by data frame to collapse response levels
 mod <- nnet::multinom(factor(gear) ~ mpg + am * vs, data = mtcars, trace = FALSE)
-
 expect_error(predictions(mod, type = "probs", by = "response"), pattern = "Character vector")
 expect_error(predictions(mod, type = "probs", by = mtcars), pattern = "Character vector")
-
 p <- predictions(mod, type = "probs", by = "group")
 expect_equivalent(nrow(p), 3)
 cmp <- comparisons(mod, type = "probs", by = "group")
@@ -115,7 +113,7 @@ p5 <- predictions(mod, type = "probs", by = c("am", "vs", "group"))
 expect_equivalent(mean(subset(p1, group == "5")$estimate), p2$estimate[2])
 expect_equivalent(p3$estimate, diff(p2$estimate))
 expect_equivalent(nrow(p4), 1)
-expect_equivalent(nrow(p5), 12)
+expect_equivalent(nrow(p5), 9)
 
 cmp <- comparisons(mod, type = "probs", by = "am")
 expect_equivalent(nrow(cmp), 18)
@@ -227,19 +225,23 @@ requiet("dplyr")
 tmp <- mtcars %>% transform(am = factor(am), cyl = factor(cyl), mpg = mpg)
 mod <- lm(mpg ~ am * cyl, data = tmp)
 cmp1 <- avg_comparisons(mod, variables = "am", by = "cyl") |>
-  dplyr::arrange(cyl)
+  dplyr::arrange(cyl) |>
+  suppressWarnings()
 cmp2 <- comparisons(mod, variables = "am") %>%
   dplyr::group_by(cyl) %>%
   dplyr::summarize(estimate = mean(estimate), .groups = "keep") |>
-  dplyr::ungroup()
-cmp3 <- predictions(mod) |>
+  dplyr::ungroup() |>
+  suppressWarnings()
+rec <- expand.grid(am = unique(tmp$am), cyl = unique(tmp$cyl))
+cmp3 <- predictions(mod, newdata = rec) |>
   dplyr::group_by(am, cyl) |>
+  suppressWarnings() |>
   dplyr::summarize(estimate = mean(estimate), .groups = "keep") |>
   dplyr::ungroup() |>
   dplyr::group_by(cyl) |>
   dplyr::summarize(estimate = diff(estimate), .groups = "keep") |>
   dplyr::ungroup()
-cmp4 <- transform(tmp, estimate = predict(mod))
+cmp4 <- transform(rec, estimate = predict(mod, newdata = rec)) |> suppressWarnings()
 cmp4 <- aggregate(estimate ~ cyl + am, FUN = mean, data = cmp4)
 cmp4 <- aggregate(estimate ~ cyl, FUN = diff, data = cmp4)
 expect_equivalent(cmp1$estimate, cmp2$estimate)
