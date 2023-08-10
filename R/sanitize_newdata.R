@@ -17,14 +17,7 @@ sanitize_newdata_call <- function(scall, newdata = NULL, model) {
 }
 
 
-sanitize_newdata <- function(model, newdata, by, modeldata) {
-
-    checkmate::assert(
-        checkmate::check_data_frame(newdata, null.ok = TRUE),
-        checkmate::check_choice(newdata, choices = c("mean", "median", "tukey", "grid", "marginalmeans")),
-        combine = "or")
-
-    # to respect the `by` argument, we need all values to be preserved
+build_newdata <- function(model, newdata, by, modeldata) {
     if (isTRUE(checkmate::check_data_frame(by))) {
         by <- setdiff(colnames(by), "by")
     } else if (isTRUE(checkmate::check_flag(by))) {
@@ -37,10 +30,12 @@ sanitize_newdata <- function(model, newdata, by, modeldata) {
 
     newdata_explicit <- TRUE
 
+    # NULL -> modeldata
     if (is.null(newdata)) {
         newdata <- modeldata
         newdata_explicit <- FALSE
 
+    # string -> datagrid()
     } else if (identical(newdata, "mean")) {
         newdata <- do.call("datagrid", args)
 
@@ -80,9 +75,25 @@ sanitize_newdata <- function(model, newdata, by, modeldata) {
         modeldata$idx <- NULL
     }
 
+    # required by some model-fitting functions
     data.table::setDT(modeldata)
 
-    # column attributes
+    # required for the type of column indexing to follow
+    data.table::setDF(newdata)
+
+    out <- list(
+        "newdata" = newdata,
+        "newdata_explicit" = newdata_explicit,
+        "modeldata" = modeldata
+    )
+    return(out)
+}
+
+
+set_newdata_attributes <- function(modeldata, newdata, newdata_explicit) {
+    attr(newdata, "newdata_explicit") <- newdata_explicit
+
+    # column classes
     mc <- Filter(function(x) is.matrix(modeldata[[x]]), colnames(modeldata))
     cl <- Filter(function(x) is.character(modeldata[[x]]), colnames(modeldata))
     cl <- lapply(modeldata[, ..cl], unique)
@@ -91,22 +102,20 @@ sanitize_newdata <- function(model, newdata, by, modeldata) {
         "matrix_columns" = mc,
         "character_levels" = cl,
         "variable_class" = vc)
+    newdata <- set_marginaleffects_attributes(newdata, column_attributes, prefix = "newdata_")
 
     # {modelbased} sometimes attaches useful attributes
     exclude <- c("class", "row.names", "names", "data", "reference")
     modelbased_attributes <- get_marginaleffects_attributes(newdata, exclude = exclude)
+    newdata <- set_marginaleffects_attributes(newdata, modelbased_attributes, prefix = "newdata_")
 
-    # required for the type of column indexing to follow
-    data.table::setDF(newdata)
+    # original data
+    attr(newdata, "newdata_modeldata") <- modeldata
 
-    # mlogit: each row is an individual-choice, but the index is not easily
-    # trackable, so we pre-sort it here, and the sort in `get_predict()`. We
-    # need to cross our fingers, but this probably works.
-    if (inherits(model, "mlogit") && isTRUE(inherits(newdata[["idx"]], "idx"))) {
-        idx <- list(newdata[["idx"]][, 1], newdata[["idx"]][, 2])
-        newdata <- newdata[order(newdata[["idx"]][, 1], newdata[["idx"]][, 2]),]
-    }
+    return(newdata)
+}
 
+clean_newdata <- function(model, newdata) {
     # rbindlist breaks on matrix columns
     idx <- sapply(newdata, function(x) class(x)[1] == "matrix")
     if (any(idx)) {
@@ -119,27 +128,18 @@ sanitize_newdata <- function(model, newdata, by, modeldata) {
         }
     }
 
-    # if there are no categorical variables in `newdata`, check the model terms
-    # to find transformation and warn accordingly.
-    categorical_variables <- get_variable_class(newdata, compare = "categorical")
-    flag <- FALSE
-    if (length(categorical_variables) == 0) {
-        termlabs <- try(attr(stats::terms(model), "term.labels"), silent = TRUE)
-        termlabs <- try(any(grepl("^factor\\(|^as.factor\\(|^as.logical\\(", termlabs)), silent = TRUE)
-        if (isTRUE(termlabs)) {
-            flag <- TRUE
-        }
-    }
-
-    # attributes
-    newdata <- set_marginaleffects_attributes(newdata, modelbased_attributes, prefix = "newdata_")
-    newdata <- set_marginaleffects_attributes(newdata, column_attributes, prefix = "newdata_")
-    attr(newdata, "newdata_modeldata") <- modeldata
-
     # we will need this to merge the original data back in, and it is better to
     # do it in a centralized upfront way.
     if (!"rowid" %in% colnames(newdata)) {
         newdata$rowid <- seq_len(nrow(newdata))
+    }
+
+    # mlogit: each row is an individual-choice, but the index is not easily
+    # trackable, so we pre-sort it here, and the sort in `get_predict()`. We
+    # need to cross our fingers, but this probably works.
+    if (inherits(model, "mlogit") && isTRUE(inherits(newdata[["idx"]], "idx"))) {
+        idx <- list(newdata[["idx"]][, 1], newdata[["idx"]][, 2])
+        newdata <- newdata[order(newdata[["idx"]][, 1], newdata[["idx"]][, 2]),]
     }
 
     # placeholder response
@@ -152,13 +152,20 @@ sanitize_newdata <- function(model, newdata, by, modeldata) {
             newdata[[resp]] <- y[1]
         }
     }
+    return(newdata)
+}
 
-    if (is.null(attr(newdata, "marginaleffects_variable_class"))) {
-        newdata <- set_variable_class(newdata, model = model)
-    }
-
-    attr(newdata, "newdata_explicit") <- newdata_explicit
-
+sanitize_newdata <- function(model, newdata, by, modeldata) {
+    checkmate::assert(
+        checkmate::check_data_frame(newdata, null.ok = TRUE),
+        checkmate::check_choice(newdata, choices = c("mean", "median", "tukey", "grid", "marginalmeans")),
+        combine = "or")
+    tmp <- build_newdata(model = model, newdata = newdata, by = by, modeldata = modeldata)
+    newdata <- tmp[["newdata"]]
+    modeldata <- tmp[["modeldata"]]
+    newdata_explicit <- tmp[["newdata_explicit"]]
+    newdata <- clean_newdata(model, newdata)
+    newdata <- set_newdata_attributes(modeldata = modeldata, newdata = newdata, newdata_explicit = newdata_explicit)
     return(newdata)
 }
 
