@@ -31,19 +31,27 @@ dat$vs <- as.factor(dat$vs)
 
 # sanity check
 mod <- lm(mpg ~ cyl + am + vs + hp, dat)
-expect_error(marginal_means(mod, variables_grid = "junk"), pattern = "missing")
-expect_error(marginal_means(mod, variables = "mpg"), pattern = "response")
+expect_error(suppressWarnings(marginal_means(mod, variables_grid = "junk")), pattern = "missing")
+expect_error(suppressWarnings(marginal_means(mod, variables = "mpg")), pattern = "response")
 
 
 # changing the prediction grid changes marginal means
 # remember that the grid is variables + variables_grid
 mod <- lm(mpg ~ cyl + am + vs + hp, dat)
-mm1 <- marginal_means(mod, variables = "cyl")
-mm2 <- marginal_means(mod, variables = "cyl", variables_grid = "vs")
-mm3 <- marginal_means(mod, variables = "cyl", variables_grid = "am")
-expect_false(all(mm1$estimate == mm2$estimate))
-expect_false(all(mm1$estimate == mm3$estimate))
-expect_false(all(mm2$estimate == mm3$estimate))
+mm1 <- marginal_means(mod, variables = "cyl") |> suppressWarnings()
+mm2 <- marginal_means(mod, variables = "cyl", variables_grid = "vs") |> suppressWarnings()
+mm3 <- marginal_means(mod, variables = "cyl", variables_grid = "am") |> suppressWarnings()
+p1 <- predictions(mod, by = "cyl", datagrid(vs = unique, cyl = unique, am = unique)) |>
+  suppressWarnings()
+p2 <- predictions(mod, by = "cyl", datagrid(vs = unique, cyl = unique)) |>
+  suppressWarnings()
+p3 <- predictions(mod, by = "cyl", datagrid(am = unique, cyl = unique)) |>
+  suppressWarnings()
+expect_equivalent(mm1$estimate, p1$estimate)
+expect_equivalent(mm2$estimate, p2$estimate)
+expect_equivalent(mm3$estimate, p3$estimate)
+expect_true(all(mm1$estimate != mm2$estimate))
+expect_true(all(mm2$estimate != mm3$estimate))
 
 
 # tidy and glance
@@ -65,7 +73,8 @@ dat$cyl <- factor(dat$cyl)
 mod <- glm(gear ~ cyl + am, data = dat, family = poisson)
 # link
 mm <- tidy(marginal_means(mod, variables = "cyl", type = "link")) |>
-  dplyr::arrange(value)
+  dplyr::arrange(value) |>
+  suppressWarnings()
 em <- tidy(emmeans(mod, specs = "cyl"))
 expect_equivalent(mm$estimate, em$estimate, tolerance = 1e-5)
 expect_equivalent(mm$estimate, em$estimate, tolerance = 1e-5)

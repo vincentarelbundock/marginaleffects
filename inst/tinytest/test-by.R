@@ -142,7 +142,6 @@ by <- data.frame(
 expect_warning(comparisons(mod, variables = "mpg", newdata = "mean", by = by))
 expect_warning(predictions(mod, newdata = "mean", by = by))
 
-
 # Issue #589: easy marginalization
 mod <- lm(mpg ~ factor(gear) + am, mtcars)
 cmp1 <- comparisons(mod, by = TRUE)

@@ -22,7 +22,7 @@ requiet("emmeans")
 
 # shortcut labels
 dat <- mtcars
-mod <- glm(vs ~ hp + factor(cyl), family = binomial, data = dat)
+mod <- glm(am ~ hp + factor(cyl), family = binomial, data = dat)
 cmp1 <- comparisons(mod, newdata = "mean")
 cmp2 <- comparisons(mod, newdata = "median")
 expect_true(all(cmp1$hp == mean(dat$hp)))
@@ -38,7 +38,7 @@ dat$cyl <- factor(dat$cyl)
 dat$am <- factor(dat$am)
 mod <- lm(mpg ~ gear + cyl + am, data = dat)
 cmp <- comparisons(mod, newdata = "marginalmeans", variables = "gear")
-cmp <- tidy(cmp)
+cmp <- tidy(cmp) |> suppressWarnings()
 
 emm <- emmeans(mod, specs = "gear")
 emm <- data.frame(emmeans::contrast(emm, method = "trt.vs.ctrl1"))

@@ -1,6 +1,6 @@
 
- Term Contrast Estimate Std. Error    t Pr(>|t|)   S   2.5 % 97.5 % Df
-   hp       +1   0.0197     0.0156 1.26    0.218 2.2 -0.0123 0.0516 30
+ Term Contrast Estimate Std. Error      t Pr(>|t|)   S  2.5 % 97.5 % Df
+   hp       +1  -0.0115     0.0159 -0.723    0.475 1.1 -0.044  0.021 30
 
 Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, df 
 

@@ -1,6 +1,6 @@
 
- Term Contrast Estimate Std. Error    z Pr(>|z|)   S  2.5 % 97.5 %
-   hp       +1   0.0197     0.0156 1.26    0.209 2.3 -0.011 0.0503
+ Term Contrast Estimate Std. Error      z Pr(>|z|)   S   2.5 % 97.5 %
+   hp       +1  -0.0115     0.0159 -0.723     0.47 1.1 -0.0427 0.0197
 
 Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
 

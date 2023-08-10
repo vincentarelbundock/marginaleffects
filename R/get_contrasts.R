@@ -172,6 +172,11 @@ get_contrasts <- function(model,
                 by[[v]] <- as.numeric(by[[v]])
             }
         }
+
+        # user did not specify factor, which breaks merging
+        if ("group" %in% tmp && is.factor(out$group) && !is.factor(by$group)) {
+            by <- transform(by, group = factor(group, levels = levels(out$group)))
+        }
         out[by, by := by, on = tmp]
         by <- "by"
 

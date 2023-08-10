@@ -1,9 +1,4 @@
 ’s
-Fabbri
-dev
-fdcenter
-fdforward
-richardson
 AAP
 AAPs
 Adelie
@@ -50,6 +45,7 @@ datagrid
 deduplication
 demeaned
 Demetri
+dev
 differenceavg
 differenceavgwts
 differencing
@@ -92,6 +88,9 @@ eydxavgwts
 eyex
 eyexavg
 eyexavgwts
+Fabbri
+fdcenter
+fdforward
 fdr
 fivenum
 frac
@@ -133,6 +132,7 @@ JM
 JVJ
 Kapre
 kenward
+Kirill
 Krinsky
 Kurz
 kwaa
@@ -199,6 +199,7 @@ Resul
 revpairwise
 revreference
 revsequential
+richardson
 Robb
 Rohan
 rowid
@@ -210,6 +211,7 @@ sd
 semilog
 sensical
 sequential
+Solovev
 Stata
 Stata's
 Stata’s

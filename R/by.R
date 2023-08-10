@@ -36,6 +36,12 @@ get_by <- function(
                 by[[v]] <- as.numeric(by[[v]])
             }
         }
+
+        # user did not specify factor, which breaks merging
+        if ("group" %in% colnames(estimates) && is.factor(estimates$group) && !is.factor(by$group)) {
+            by <- transform(by, group = factor(group, levels = levels(estimates$group)))
+        }
+
         estimates[by, by := by, on = idx]
         bycols <- "by"
     }
