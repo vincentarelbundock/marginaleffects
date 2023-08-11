@@ -1,5 +1,6 @@
 get_modeldata <- function(model, additional_variables = FALSE, modeldata = NULL, ...) {
     if (!is.null(modeldata)) {
+        modeldata <- set_variable_class(modeldata, model = model)
         return(modeldata)
     }
 
@@ -13,6 +14,7 @@ get_modeldata <- function(model, additional_variables = FALSE, modeldata = NULL,
         out <- hush(insight::get_data(
             model, additional_variables = additional_variables, verbose = FALSE)
         )
+        out <- set_variable_class(out, model = model)
         return(out)
     }
 
@@ -52,7 +54,7 @@ get_modeldata <- function(model, additional_variables = FALSE, modeldata = NULL,
     }
 
     out <- as.data.frame(out)
-    out <- set_variable_class(modeldata = out, model = model)
+    out <- set_variable_class(out, model = model)
     return(out)
 }
 

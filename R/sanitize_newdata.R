@@ -115,7 +115,7 @@ add_wts_column <- function(wts, newdata) {
 }
 
 
-set_newdata_attributes <- function(modeldata, newdata, newdata_explicit) {
+set_newdata_attributes <- function(model, modeldata, newdata, newdata_explicit) {
     attr(newdata, "newdata_explicit") <- newdata_explicit
 
     # column classes
@@ -136,6 +136,10 @@ set_newdata_attributes <- function(modeldata, newdata, newdata_explicit) {
 
     # original data
     attr(newdata, "newdata_modeldata") <- modeldata
+
+    if (is.null(attr(newdata, "marginaleffects_variable_class"))) {
+        newdata <- set_variable_class(newdata, model = model)
+    }
 
     return(newdata)
 }
@@ -193,7 +197,11 @@ sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
     newdata_explicit <- tmp[["newdata_explicit"]]
     newdata <- clean_newdata(model, newdata)
     newdata <- add_wts_column(newdata = newdata, wts = wts)
-    newdata <- set_newdata_attributes(modeldata = modeldata, newdata = newdata, newdata_explicit = newdata_explicit)
+    newdata <- set_newdata_attributes(
+        model = model,
+        modeldata = modeldata,
+        newdata = newdata,
+        newdata_explicit = newdata_explicit)
     return(newdata)
 }
 

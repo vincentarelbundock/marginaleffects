@@ -19,11 +19,11 @@ get_contrast_data <- function(model,
     # safety need for extensions not supported by `insight`
     variable_classes <- attr(newdata, "newdata_variable_class")
     if (length(variable_classes) == 0) {
-        newdata <- set_variable_class(newdata)
+        newdata <- set_variable_class(newdata, model)
         variable_classes <- attr(newdata, "marginaleffects_variable_class")
     }
     if (length(attr(modeldata, "marginaleffects_variable_class")) == 0) {
-        modeldata <- set_variable_class(modeldata)
+        modeldata <- set_variable_class(modeldata, model)
     }
 
     if (any(c("factor", "character") %in% variable_classes)) {
