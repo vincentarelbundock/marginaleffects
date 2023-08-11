@@ -76,7 +76,7 @@ get_news = function() {
 }
 
 
-rd2md = function(src) {
+rd2qmd = function(src) {
   # Rd -> html
   rd = tools::parse_Rd(here(src))
   rd = gsub("\\eqn\\{.*\\}\\{.*\\}", "\\$\\1\\$", rd)
@@ -150,5 +150,5 @@ rd2md = function(src) {
 #           "inferences", "plot_predictions", "plot_comparisons", "plot_slopes", "posterior_draws")
 # for (f in funs) {
 #   r <- paste0("~/repos/marginaleffects/man/", f, ".Rd")
-#   try(rd2md(r), silent = TRUE)
+#   try(rd2qmd(r), silent = TRUE)
 # }
