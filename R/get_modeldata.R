@@ -1,4 +1,6 @@
 get_modeldata <- function(model, additional_variables = FALSE, modeldata = NULL, ...) {
+
+
     if (!is.null(modeldata)) {
         modeldata <- set_variable_class(modeldata, model = model)
         return(modeldata)
@@ -7,6 +9,12 @@ get_modeldata <- function(model, additional_variables = FALSE, modeldata = NULL,
     # often used to extract `by`
     if (isTRUE(checkmate::check_data_frame(additional_variables))) {
         additional_variables <- colnames(additional_variables)
+    }
+
+    # feols weights can be a formula
+    if (inherits(model, "fixest")) {
+        fwts <- tryCatch(all.vars(model$call$weights), error = function(e) NULL)
+        additional_variables <- c(additional_variables, fwts)
     }
 
     # after by
@@ -41,6 +49,7 @@ get_modeldata <- function(model, additional_variables = FALSE, modeldata = NULL,
             additional_variables <- c(additional_variables, wts)
         }
     }
+
 
     out <- hush(insight::get_data(model, verbose = FALSE, additional_variables = additional_variables))
 
