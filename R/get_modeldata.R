@@ -1,5 +1,8 @@
 get_modeldata <- function(model, additional_variables = FALSE, modeldata = NULL, ...) {
 
+    if (inherits(model, "mira")) {
+        return(modeldata)
+    }
 
     if (!is.null(modeldata)) {
         modeldata <- set_variable_class(modeldata, model = model)
