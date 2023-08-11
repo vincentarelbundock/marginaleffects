@@ -152,6 +152,7 @@ marginal_means <- function(model,
 
     # deprecation and backward compatibility
     dots <- list(...)
+    sanity_equivalence_p_adjust(equivalence, p_adjust)
     if ("transform_post" %in% names(dots)) transform <- dots[["transform_post"]]
     if ("variables_grid" %in% names(dots)) {
         if (!is.null(newdata)) {
