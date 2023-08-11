@@ -135,7 +135,7 @@ print.marginaleffects <- function(x,
         grep("^contrast_", colnames(x), value = TRUE))
 
     # explicitly given by user in `datagrid()` or `by` or `newdata`
-    idx <- c(idx, attr(x, "newdata_variables_datagrid"))
+    idx <- c(idx, attr(attr(x, "newdata"), "variables_datagrid"))
     if (isTRUE(checkmate::check_character(attr(x, "by")))) {
         idx <- c(idx, attr(x, "by"))
     }
