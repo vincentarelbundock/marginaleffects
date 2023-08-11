@@ -70,10 +70,11 @@ get_predict.default <- function(model,
             # already numeric
             class(pred) <- "numeric"
             if ("rowid" %in% colnames(newdata)) {
-                out <- list(estimate = pred,
-                            rowid = newdata$rowid)
+                out <- list(
+                    rowid = newdata$rowid,
+                    estimate = pred)
             } else {
-                out <- list(estimate = pred, rowid = seq_len(length(pred)))
+                out <- list(rowid = seq_len(length(pred)), estimate = pred)
             }
         }
         
