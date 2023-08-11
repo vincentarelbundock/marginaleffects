@@ -491,22 +491,7 @@ comparisons <- function(model,
         model = model)
 
     # clean rows and columns
-    if (is.null(bycols) && isTRUE(checkmate::check_character(by))) {
-        bycols <- by
-    }
-
-    stubcols <- c(
-        "rowid", "rowidcf", "group", "term", "hypothesis", "by",
-        grep("^contrast", colnames(mfx), value = TRUE),
-        bycols,
-        "estimate", "std.error", "statistic", "p.value", "s.value", "conf.low",
-        "conf.high", "df", "predicted", "predicted_hi", "predicted_lo")
-    cols <- intersect(stubcols, colnames(mfx))
-    cols <- unique(c(cols, colnames(mfx)))
-    if (length(setdiff(names(mfx), cols)) > 0L) {
-      mfx[, setdiff(names(mfx), cols) := NULL]
-    }
-    mfx <- sort_columns(mfx, stubcols)
+    mfx <- sort_columns(mfx, newdata, by)
 
     # bayesian draws
     attr(mfx, "posterior_draws") <- draws

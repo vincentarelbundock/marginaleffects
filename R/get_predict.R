@@ -101,7 +101,5 @@ get_predict.default <- function(model,
 
     data.table::setDF(out)
 
-    out <- sort_columns(out, first = c("rowid", "group", "estimate"))
-
     return(out)
 }

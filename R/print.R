@@ -164,9 +164,10 @@ print.marginaleffects <- function(x,
 
     # drop useless columns
     idx <- setdiff(unique(idx), useless)
-    out <- out[, colnames(out) %in% idx, drop = FALSE]
+    idx <- intersect(idx, colnames(out))
+    out <- out[, ..idx, drop = FALSE]
 
-    if (all(out$term == "cross")) {
+    if ("term" %in% colnames(out) && all(out$term == "cross")) {
         out[["term"]] <- NULL
         colnames(out) <- gsub("^contrast_", "C: ", colnames(out))
     }

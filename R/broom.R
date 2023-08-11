@@ -62,9 +62,7 @@ tidy.marginalmeans <- function(x, ...) {
     if ("transform_avg" %in% names(list(...))) {
         insight::format_error("The `transform_avg` argument is deprecated. Use `transform` instead.")
     }
-    first = c("term", "value", "estimate", "std.error",
-    "statistic", "p.value", "conf.low", "conf.high")
-    out <- sort_columns(x, first)
+    out <- sort_columns(x)
     out <- tibble::as_tibble(out)
     attr(out, "conf_level") <- attr(x, "conf_level")
     return(out)

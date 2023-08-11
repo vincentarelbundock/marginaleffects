@@ -292,31 +292,8 @@ slopes <- function(model,
 
     data.table::setDT(out)
 
-    # clean columns
-    stubcols <- c("rowid", "group", "term", "contrast", "hypothesis", "dydx", "estimate", "std.error", "statistic", "p.value", "s.value", "conf.low", "conf.high",
-                  sort(grep("^predicted", colnames(newdata), value = TRUE)))
-    cols <- intersect(stubcols, colnames(out))
-    cols <- unique(c(cols, colnames(out)))
-    if (length(setdiff(names(out), cols)) > 0L) {
-      out[, setdiff(names(out), cols) := NULL]
-    }
-
-    if ("group" %in% colnames(out) && all(out$group == "main_marginaleffect")) {
-        out[, "group" := NULL]
-    }
-
-    # return contrast column only when relevant
-    if ("contrast" %in% colnames(out)) {
-        out[is.na(contrast), "contrast" := ""]
-        out[contrast == "dydx", "contrast" := "dY/dX"]
-        if (all(out$contrast == "dY/dX")) {
-            out[, "contrast" := NULL]
-        }
-    }
-
     attr(out, "vcov.type") <- get_vcov_label(vcov)
-    # save newdata=datagrid() for use in recall()
-    attr(out, "newdata") <- newdata
+    attr(out, "newdata") <- newdata # recall
     attr(out, "call") <- call_attr
 
     # class

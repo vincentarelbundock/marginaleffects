@@ -22,6 +22,10 @@ Bug fixes:
 * `get_modeldata()` extracts weights variable when available.
 * `predictions()` is no longer broken in some `inferences()` calls. Issue #853
 
+Misc:
+
+* Major refactor to simplify the code base and make maintenance easier.
+
 ## marginaleffects 0.13.0
 
 Breaking change:

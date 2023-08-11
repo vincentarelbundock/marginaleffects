@@ -654,6 +654,8 @@ get_predictions <- function(model,
     # hypothesis tests using the delta method
     out <- get_hypothesis(out, hypothesis = hypothesis, by = by)
 
+    out <- sort_columns(out, newdata, by)
+
     return(out)
 }
 
