@@ -102,9 +102,9 @@ print.marginaleffects <- function(x,
     dict <- c(
         "group" = "Group",
         "term" = "Term",
-        "by" = "By",
         "contrast" = "Contrast",
         "value" = "Value",
+        "by" = "By",
         "estimate" = "Estimate",
         "std.error" = "Std. Error",
         "statistic" = statistic_label,
@@ -135,32 +135,31 @@ print.marginaleffects <- function(x,
         grep("^contrast_", colnames(x), value = TRUE))
 
     # explicitly given by user in `datagrid()` or `by` or `newdata`
-    idx <- c(idx, attr(attr(x, "newdata"), "variables_datagrid"))
-    if (isTRUE(checkmate::check_character(attr(x, "by")))) {
-        idx <- c(idx, attr(x, "by"))
+    nd <- attr(x, "newdata")
+    if (is.null(nd)) {
+        nd <- attr(x, "newdata_newdata")
     }
-    if (isTRUE(attr(out, "newdata_explicit"))) {
-        idx_nd <- c(tryCatch(colnames(attr(x, "newdata")), error = function(e) NULL),
-                    tryCatch(colnames(attr(x, "call")[["newdata"]]), error = function(e) NULL))
-        idx <- c(idx, idx_nd)
+    tmp <- c("by",
+        attr(nd, "variables_datagrid"),
+        attr(nd, "newdata_variables_datagrid"),
+        attr(x, "newdata_variables_datagrid")
+    )
+    if (isTRUE(checkmate::check_character(attr(x, "by")))) {
+        tmp <- c(tmp, attr(x, "by"))
+    }
+    idx <- c(idx[1:grep("by", idx)], tmp, idx[(grep("by", idx) + 1):length(idx)])
+    if (isTRUE(attr(nd, "newdata_newdata_explicit")) || isTRUE(attr(nd, "newdata_explicit"))) {
+        idx <- c(idx, colnames(nd))
     }
 
     # drop useless columns: rowid
-    useless <- "rowid"
+    useless <- c("rowid", "rowidcf")
 
     # drop useless columns: dv
     dv <- tryCatch(
         unlist(insight::find_response(attr(x, "model"), combine = TRUE), use.names = FALSE),
         error = function(e) NULL)
     useless <- c(useless, dv)
-
-    # drop useless columns: comparisons() with a single focal variable
-    if (inherits(x, "comparisons")) {
-        v <- attr(x, "variables")
-        if (isTRUE(checkmate::check_list(v, len = 1, names = "named"))) {
-            useless <- c(useless, names(v)[1])
-        }
-    }
 
     # selection style
     data.table::setDT(out)

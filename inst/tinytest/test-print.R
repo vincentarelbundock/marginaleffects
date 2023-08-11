@@ -19,15 +19,18 @@ dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/Stat2Data/Ti
 m <- glm(Survived ~ Age * PClass * SexCode, data = dat, family = binomial)
 p <- predictions(m, newdata = datagrid(PClass = unique, SexCode = 0:1))
 expect_snapshot_print(p, "print-predictions_datagrid")
-    browser()
 
 
 # twitter Kurz request
 mod <- lm(mpg ~ hp + am, data = mtcars)
-    comparisons(mod, variables = "am", newdata = data.frame(am = 0:1, hp = 120))
+
 expect_snapshot_print(
     comparisons(mod, variables = "am", newdata = data.frame(am = 0:1, hp = 120)),
-    "print-comparisons_1focal")
+    "print-comparisons_1focal_dataframe")
+
+expect_snapshot_print(
+    comparisons(mod, variables = "am", newdata = datagrid(am = 0:1, hp = 120)),
+    "print-comparisons_1focal_datagrid")
 
 expect_snapshot_print(
     predictions(mod, newdata = data.frame(am = 0:1, hp = 120)),

@@ -518,12 +518,8 @@ comparisons <- function(model,
         out,
         get_marginaleffects_attributes(newdata, include_regex = "^newdata.*class|explicit|matrix|levels"))
 
-    # save newdata and model for use in recall()
-    if (!"newdata" %in% names(call_attr) || is.null(call_attr[["newdata"]])) {
-        attr(out, "newdata") <- newdata
-    }
-
     # other attributes
+    attr(out, "newdata") <- newdata
     attr(out, "call") <- call_attr
     attr(out, "type") <- type
     attr(out, "model_type") <- class(model)[1]
