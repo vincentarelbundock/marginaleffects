@@ -237,40 +237,12 @@ comparisons <- function(model,
                         numderiv = "fdforward",
                         ...) {
 
-
-
     dots <- list(...)
 
-
-    # required by stubcols later, but might be overwritten
-    bycols <- NULL
-
-    numderiv <- sanitize_numderiv(numderiv)
-
-    # slopes()` **must** run its own sanity checks and hardcode valid arguments
-    internal_call <- dots[["internal_call"]]
-    if (!isTRUE(internal_call)) {
-        # if `newdata` is a call to `datagrid`, `typical`, or `counterfactual`,
-        # insert `model` should probably not be nested too deeply in the call
-        # stack since we eval.parent() (not sure about this)
-        scall <- rlang::enquo(newdata)
-        newdata <- sanitize_newdata_call(scall, newdata, model)
-        sanity_equivalence_p_adjust(equivalence, p_adjust)
-        model <- sanitize_model(
-            model = model,
-            newdata = newdata,
-            wts = wts,
-            vcov = vcov,
-            calling_function = "comparisons",
-            ...)
-        cross <- sanitize_cross(cross, variables, model)
-        type <- sanitize_type(model = model, type = type)
-
-    # internal call from `slopes()`
-    } else {
-        # not allowed in `slopes()`
-        cross <- FALSE
-    }
+    # very early, before any use of newdata
+    # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
+    scall <- rlang::enquo(newdata)
+    newdata <- sanitize_newdata_call(scall, newdata, model)
 
     # build call: match.call() doesn't work well in *apply()
     # after sanitize_newdata_call
@@ -293,21 +265,47 @@ comparisons <- function(model,
         df = df),
         list(...))
     call_attr <- do.call("call", call_attr)
+
+    # extracting modeldata repeatedly is slow.
+    # checking dots allows marginalmeans to pass modeldata to predictions.
+    if (isTRUE(by)) {
+        modeldata <- get_modeldata(model,
+            additional_variables = FALSE,
+            modeldata = dots[["modeldata"]])
+    } else {
+        modeldata <- get_modeldata(model,
+            additional_variables = by,
+            modeldata = dots[["modeldata"]])
+    }
+
+    # required by stubcols later, but might be overwritten
+    bycols <- NULL
+
+    # sanity checks
+    sanity_dots(model, ...)
+    sanity_comparison(comparison)
+    sanity_df(df, newdata)
+    conf_level <- sanitize_conf_level(conf_level, ...)
+    checkmate::assert_number(eps, lower = 1e-10, null.ok = TRUE)
+    numderiv <- sanitize_numderiv(numderiv)
+    sanity_equivalence_p_adjust(equivalence, p_adjust)
+    model <- sanitize_model(
+        model = model,
+        newdata = newdata,
+        wts = wts,
+        vcov = vcov,
+        calling_function = "comparisons",
+        ...)
+    cross <- sanitize_cross(cross, variables, model)
+    type <- sanitize_type(model = model, type = type)
     
     # multiple imputation
     if (inherits(model, "mira")) {
         out <- process_imputation(model, call_attr)
         return(out)
     }
-    
-    # more sanity checks
-    sanity_dots(model, ...)
-    sanity_df(df, newdata)
-    conf_level <- sanitize_conf_level(conf_level, ...)
-    checkmate::assert_number(eps, lower = 1e-10, null.ok = TRUE)
 
     # transforms
-    sanity_comparison(comparison)
     comparison_label <- transform_label <- NULL
     if (is.function(comparison)) {
         comparison_label <- deparse(substitute(comparison))
@@ -323,22 +321,6 @@ comparisons <- function(model,
 
     marginalmeans <- isTRUE(checkmate::check_choice(newdata, choices = "marginalmeans"))
 
-    # before sanitize_variables
-    if (isTRUE(checkmate::check_character(by))) {
-        addvar <- by
-    } else if (isTRUE(checkmate::check_data_frame(by))) {
-        addvar <- colnames(by)
-    } else {
-        addvar <- FALSE
-    }
-    
-    # extracting modeldata repeatedly is slow.
-    # checking dots allows cheap multiple imputation
-    dots <- list(...)
-
-    # extracting modeldata repeatedly is slow.
-    # checking dots allows marginalmeans to pass modeldata to predictions.
-    modeldata <- get_modeldata(model, additional_variables = by, modeldata = dots[["modeldata"]])
 
     newdata <- sanitize_newdata(
         model = model,
@@ -508,19 +490,10 @@ comparisons <- function(model,
         p_adjust = p_adjust,
         model = model)
 
-
-    # group id: useful for merging, only if it's an internal call and not user-initiated
-    if (isTRUE(internal_call) && !"group" %in% colnames(mfx)) {
-         mfx$group <- "main_marginaleffect"
-    }
-
-
     # clean rows and columns
     if (is.null(bycols) && isTRUE(checkmate::check_character(by))) {
         bycols <- by
     }
-
-    # sort rows: do NOT sort rows because it breaks hypothesis b1, b2, b3 indexing.
 
     stubcols <- c(
         "rowid", "rowidcf", "group", "term", "hypothesis", "by",
@@ -534,7 +507,6 @@ comparisons <- function(model,
       mfx[, setdiff(names(mfx), cols) := NULL]
     }
     mfx <- sort_columns(mfx, stubcols)
-
 
     # bayesian draws
     attr(mfx, "posterior_draws") <- draws
@@ -555,9 +527,7 @@ comparisons <- function(model,
 
     out <- mfx
 
-    if (!isTRUE(internal_call)) {
-        data.table::setDF(out)
-    }
+    data.table::setDF(out)
 
     out <- set_marginaleffects_attributes(
         out,
@@ -588,12 +558,6 @@ comparisons <- function(model,
     if (inherits(model, "brmsfit")) {
         insight::check_if_installed("brms")
         attr(out, "nchains") <- brms::nchains(model)
-    }
-
-    if (!isTRUE(internal_call)) {
-        if ("group" %in% names(out) && all(out$group == "main_marginaleffect")) {
-            out$group <- NULL
-        }
     }
 
     class(out) <- c("comparisons", class(out))

@@ -202,18 +202,28 @@ predictions <- function(model,
                         numderiv = "fdforward",
                         ...) {
 
-
-
     dots <- list(...)
 
-    # extracting modeldata repeatedly is slow.
-    # checking dots allows marginalmeans to pass modeldata to predictions.
-    modeldata <- get_modeldata(model, additional_variables = by, modeldata = dots[["modeldata"]])
-
-    # order of the first few paragraphs is important
+    # very early, before any use of newdata
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
     scall <- rlang::enquo(newdata)
     newdata <- sanitize_newdata_call(scall, newdata, model)
+
+    if ("cross" %in% names(dots)) {
+        insight::format_error("The `cross` argument is not available in this function.")
+    }
+
+    # extracting modeldata repeatedly is slow.
+    # checking dots allows marginalmeans to pass modeldata to predictions.
+    if (isTRUE(by)) {
+        modeldata <- get_modeldata(model,
+            additional_variables = FALSE,
+            modeldata = dots[["modeldata"]])
+    } else {
+        modeldata <- get_modeldata(model,
+            additional_variables = by,
+            modeldata = dots[["modeldata"]])
+    }
 
     # build call: match.call() doesn't work well in *apply()
     # after sanitize_newdata_call

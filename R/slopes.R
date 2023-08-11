@@ -219,10 +219,10 @@ slopes <- function(model,
                    numderiv = "fdforward",
                    ...) {
 
+    dots <- list(...)
 
-    # order of the first few paragraphs is important
+    # very early, before any use of newdata
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
-    # should probably not be nested too deeply in the call stack since we eval.parent() (not sure about this)
     scall <- rlang::enquo(newdata)
     newdata <- sanitize_newdata_call(scall, newdata, model)
 
