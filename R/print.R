@@ -162,6 +162,9 @@ print.marginaleffects <- function(x,
         }
     }
 
+    # selection style
+    data.table::setDT(out)
+
     # drop useless columns
     idx <- setdiff(unique(idx), useless)
     idx <- intersect(idx, colnames(out))
@@ -177,7 +180,7 @@ print.marginaleffects <- function(x,
     }
 
     # avoid infinite recursion by stripping marginaleffect.summary class
-    out <- as.data.frame(out)
+    data.table::setDF(out)
 
     # recommend avg_*()
     rec <- ""
