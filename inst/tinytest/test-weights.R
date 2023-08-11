@@ -86,8 +86,8 @@ cmp1 <- avg_comparisons(fit,
     variables = list(g = c("Control", "Z")),
     wts = "N",
     newdata = tmp,
-    transform_pre = "lnratioavg",
-    transform_post = exp)
+    comparison = "lnratioavg",
+    transform = exp)
 cmp2 <- predictions(fit, variables = list(g = c("Control", "Z"))) |> 
     dplyr::group_by(g) |>
     dplyr::summarise(estimate = weighted.mean(estimate, N)) |>
