@@ -203,7 +203,20 @@ predictions <- function(model,
                         ...) {
 
 
+
+    dots <- list(...)
+
+    # extracting modeldata repeatedly is slow.
+    # checking dots allows marginalmeans to pass modeldata to predictions.
+    modeldata <- get_modeldata(model, additional_variables = by, modeldata = dots[["modeldata"]])
+
+    # order of the first few paragraphs is important
+    # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
+    scall <- rlang::enquo(newdata)
+    newdata <- sanitize_newdata_call(scall, newdata, model)
+
     # build call: match.call() doesn't work well in *apply()
+    # after sanitize_newdata_call
     call_attr <- c(list(
         name = "predictions",
         model = model,
@@ -219,19 +232,8 @@ predictions <- function(model,
         hypothesis = hypothesis,
         df = df),
         list(...))
+
     call_attr <- do.call("call", call_attr)
-
-    dots <- list(...)
-
-    # extracting modeldata repeatedly is slow.
-    # checking dots allows marginalmeans to pass modeldata to predictions.
-    modeldata <- get_modeldata(model, additional_variables = by, modeldata = dots[["modeldata"]])
-
-    # order of the first few paragraphs is important
-    # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
-    scall <- rlang::enquo(newdata)
-    newdata <- sanitize_newdata_call(scall, newdata, model)
-
     numderiv <- sanitize_numderiv(numderiv)
     sanity_equivalence_p_adjust(equivalence, p_adjust)
     model <- sanitize_model(

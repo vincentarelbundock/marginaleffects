@@ -238,26 +238,6 @@ comparisons <- function(model,
                         ...) {
 
 
-    # build call: match.call() doesn't work well in *apply()
-    call_attr <- c(list(
-        name = "comparisons",
-        model = model,
-        newdata = newdata,
-        variables = variables,
-        type = type,
-        vcov = vcov,
-        by = by,
-        conf_level = conf_level,
-        comparison = comparison,
-        transform = transform,
-        cross = cross,
-        wts = wts,
-        hypothesis = hypothesis,
-        equivalence = equivalence,
-        p_adjust = p_adjust,
-        df = df),
-        list(...))
-    call_attr <- do.call("call", call_attr)
 
     dots <- list(...)
 
@@ -292,6 +272,27 @@ comparisons <- function(model,
         cross <- FALSE
     }
 
+    # build call: match.call() doesn't work well in *apply()
+    # after sanitize_newdata_call
+    call_attr <- c(list(
+        name = "comparisons",
+        model = model,
+        newdata = newdata,
+        variables = variables,
+        type = type,
+        vcov = vcov,
+        by = by,
+        conf_level = conf_level,
+        comparison = comparison,
+        transform = transform,
+        cross = cross,
+        wts = wts,
+        hypothesis = hypothesis,
+        equivalence = equivalence,
+        p_adjust = p_adjust,
+        df = df),
+        list(...))
+    call_attr <- do.call("call", call_attr)
     
     # multiple imputation
     if (inherits(model, "mira")) {
