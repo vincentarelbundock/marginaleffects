@@ -244,6 +244,18 @@ comparisons <- function(model,
     scall <- rlang::enquo(newdata)
     newdata <- sanitize_newdata_call(scall, newdata, model)
 
+    # extracting modeldata repeatedly is slow.
+    # checking dots allows marginalmeans to pass modeldata to predictions.
+    if (isTRUE(by)) {
+        modeldata <- get_modeldata(model,
+            additional_variables = FALSE,
+            modeldata = dots[["modeldata"]])
+    } else {
+        modeldata <- get_modeldata(model,
+            additional_variables = by,
+            modeldata = dots[["modeldata"]])
+    }
+
     # build call: match.call() doesn't work well in *apply()
     # after sanitize_newdata_call
     call_attr <- c(list(
@@ -263,27 +275,18 @@ comparisons <- function(model,
         equivalence = equivalence,
         p_adjust = p_adjust,
         df = df),
-        list(...))
+        dots)
+    if ("modeldata" %in% names(dots)) {
+        call_attr[["modeldata"]] <- modeldata
+    }
     call_attr <- do.call("call", call_attr)
 
-    # extracting modeldata repeatedly is slow.
-    # checking dots allows marginalmeans to pass modeldata to predictions.
-    if (isTRUE(by)) {
-        modeldata <- get_modeldata(model,
-            additional_variables = FALSE,
-            modeldata = dots[["modeldata"]])
-    } else {
-        modeldata <- get_modeldata(model,
-            additional_variables = by,
-            modeldata = dots[["modeldata"]])
-    }
 
     # required by stubcols later, but might be overwritten
     bycols <- NULL
 
     # sanity checks
     sanity_dots(model, ...)
-    sanity_comparison(comparison)
     sanity_df(df, newdata)
     conf_level <- sanitize_conf_level(conf_level, ...)
     checkmate::assert_number(eps, lower = 1e-10, null.ok = TRUE)
@@ -298,6 +301,10 @@ comparisons <- function(model,
         ...)
     cross <- sanitize_cross(cross, variables, model)
     type <- sanitize_type(model = model, type = type)
+    sanity_comparison(comparison)
+    tmp <- sanitize_hypothesis(hypothesis, ...)
+    hypothesis <- tmp$hypothesis
+    hypothesis_null <- tmp$hypothesis_null
     
     # multiple imputation
     if (inherits(model, "mira")) {
@@ -340,9 +347,6 @@ comparisons <- function(model,
         comparison = comparison,
         eps = eps)
 
-    tmp <- sanitize_hypothesis(hypothesis, ...)
-    hypothesis <- tmp$hypothesis
-    hypothesis_null <- tmp$hypothesis_null
 
     # after sanitize_newdata
     sanity_by(by, newdata)

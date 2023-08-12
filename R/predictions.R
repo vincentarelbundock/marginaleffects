@@ -241,10 +241,16 @@ predictions <- function(model,
         transform = transform,
         hypothesis = hypothesis,
         df = df),
-        list(...))
-
+        dots)
+    if ("modeldata" %in% names(dots)) {
+        call_attr[["modeldata"]] <- modeldata
+    }
     call_attr <- do.call("call", call_attr)
+
+    # sanity checks
+    sanity_dots(model = model, ...)
     numderiv <- sanitize_numderiv(numderiv)
+    sanity_df(df, newdata)
     sanity_equivalence_p_adjust(equivalence, p_adjust)
     model <- sanitize_model(
         model = model,
@@ -253,6 +259,9 @@ predictions <- function(model,
         vcov = vcov,
         calling_function = "predictions",
         ...)
+    tmp <- sanitize_hypothesis(hypothesis, ...)
+    hypothesis <- tmp$hypothesis
+    hypothesis_null <- tmp$hypothesis_null
 
     # multiple imputation
     if (inherits(model, "mira")) {
@@ -281,18 +290,12 @@ predictions <- function(model,
         type <- sanitize_type(model = model, type = type)
     }
 
-    # do not check the model because `insight` supports more models than `marginaleffects`
-    # model <- sanitize_model(model)
-
-    # input sanity checks
-    sanity_df(df, newdata)
 
     # save the original because it gets converted to a named list, which breaks
     # user-input sanity checks
     transform_original <- transform
     transform <- sanitize_transform(transform)
 
-    sanity_dots(model = model, ...)
     model <- sanitize_model_specific(
         model = model,
         newdata = newdata,
@@ -300,9 +303,6 @@ predictions <- function(model,
         calling_function = "predictions",
         ...)
 
-    tmp <- sanitize_hypothesis(hypothesis, ...)
-    hypothesis <- tmp$hypothesis
-    hypothesis_null <- tmp$hypothesis_null
 
     conf_level <- sanitize_conf_level(conf_level, ...)
     newdata <- sanitize_newdata(
