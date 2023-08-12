@@ -95,7 +95,6 @@ rd2qmd = function(src) {
 
   # math in Equivalence section
   idx = grepl("<.code", tmp)
-  tmp[idx]
 
   # examples: evaluate code blocks (assume examples are always last)
   idx = which(tmp == "<h3>Examples</h3>")
