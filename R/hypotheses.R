@@ -229,7 +229,11 @@ hypotheses <- function(
 
         tmp <- get_hypothesis(out, hypothesis = hypothesis)
         out <- tmp$estimate
-        attr(out, "label") <- attr(tmp, "label")
+        if (!is.null(attr(tmp, "label"))) {
+            attr(out, "label") <- attr(tmp, "label")
+        } else {
+            attr(out, "label") <- tmp$term
+        }
         return(out)
     }
 
@@ -253,17 +257,24 @@ hypotheses <- function(
                 term = hyplab,
                 estimate = b,
                 std.error = se)
-        }  else {
+        } else {
             out <- data.frame(
                 term = "custom",
                 estimate = b,
                 std.error = se)
         }
     } else {
-        out <- data.frame(
-            term = paste0("b", seq_along(b)),
-            estimate = b,
-            std.error = se)
+        if (!is.null(hyplab) && length(hyplab) == length(b)) {
+            out <- data.frame(
+                term = hyplab,
+                estimate = b,
+                std.error = se)
+        } else {
+            out <- data.frame(
+                term = paste0("b", seq_along(b)),
+                estimate = b,
+                std.error = se)
+        }
     }
 
     out <- get_ci(
