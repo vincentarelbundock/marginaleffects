@@ -119,9 +119,25 @@ The `FUN` argument can be used to compute standard errors for arbitrary function
 ```{r}
 mod <- glm(am ~ hp + mpg, data = mtcars, family = binomial)
 
-f <- function(x) predict(x, type = "link", newdata = mtcars)
-p <- hypotheses(mod, FUN = f)
+f <- function(x) {
+    out <- x$coefficients["hp"] + x$coefficients["mpg"]
+    return(out)
+}
+hypotheses(mod, FUN = f)
 head(p)
+```
+
+With labels:
+
+```{r}
+f <- function(x) {
+    out <- data.frame(
+        term = "Horsepower + Miles per Gallon",
+        estimate = x$coefficients["hp"] + x$coefficients["mpg"]
+    )
+    return(out)
+}
+hypotheses(mod, FUN = f)
 ```
 
 Test of equality between two predictions (row 2 vs row 3):
