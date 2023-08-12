@@ -121,7 +121,8 @@ plot_predictions <- function(model,
             model = model,
             newdata = newdata,
             modeldata = modeldata,
-            by = by)
+            by = by,
+            wts = wts)
         datplot <- predictions(
             model,
             by = by,

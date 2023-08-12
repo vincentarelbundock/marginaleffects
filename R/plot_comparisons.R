@@ -119,7 +119,8 @@ plot_comparisons <- function(model,
             model = model,
             newdata = newdata,
             modeldata = modeldata,
-            by = by)
+            by = by,
+            wts = wts)
         datplot <- comparisons(
             model,
             by = by,

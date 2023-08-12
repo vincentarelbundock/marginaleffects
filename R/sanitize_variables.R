@@ -18,7 +18,7 @@ sanitize_variables <- function(variables,
     
     # extensions with no `get_data()`
     if (is.null(modeldata) || nrow(modeldata) == 0) {
-        modeldata <- set_variable_class(newdata)
+        modeldata <- set_variable_class(newdata, model)
         no_modeldata <- TRUE
     } else {
         no_modeldata <- FALSE
@@ -54,7 +54,7 @@ sanitize_variables <- function(variables,
     if (isTRUE(checkmate::check_character(predictors))) {
         predictors <- stats::setNames(rep(list(NULL), length(predictors)), predictors)
     }
-    
+
     # reserved keywords
     # Issue #697: we used to allow "group", as long as it wasn't in
     # `variables`, but this created problems with automatic `by=TRUE`. Perhaps
@@ -143,7 +143,6 @@ sanitize_variables <- function(variables,
     # NULL to defaults
     for (v in names(predictors)) {
         if (is.null(predictors[[v]])) {
-
             if (get_variable_class(modeldata, v, "binary")) {
                 predictors[[v]] <- 0:1
 

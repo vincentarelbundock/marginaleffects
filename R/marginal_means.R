@@ -152,6 +152,7 @@ marginal_means <- function(model,
 
     # deprecation and backward compatibility
     dots <- list(...)
+    sanity_equivalence_p_adjust(equivalence, p_adjust)
     if ("transform_post" %in% names(dots)) transform <- dots[["transform_post"]]
     if ("variables_grid" %in% names(dots)) {
         if (!is.null(newdata)) {
@@ -409,7 +410,6 @@ marginal_means <- function(model,
     out <- out[, cols, drop = FALSE]
 
     # attributes
-    class(out) <- c("marginalmeans", class(out))
     attr(out, "model") <- model
     attr(out, "jacobian") <- J
     attr(out, "type") <- type
@@ -429,6 +429,8 @@ marginal_means <- function(model,
         insight::check_if_installed("brms")
         attr(out, "nchains") <- brms::nchains(model)
     }
+
+    class(out) <- c("marginalmeans", class(out))
 
     return(out)
 }

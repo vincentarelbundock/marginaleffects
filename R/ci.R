@@ -10,7 +10,6 @@ get_ci <- function(
     ...) {
 
     checkmate::assert_number(null_hypothesis)
-    checkmate::assert_choice(p_adjust, choices = stats::p.adjust.methods, null.ok = TRUE)
 
     if (!is.null(draws)) {
         out <- get_ci_draws(

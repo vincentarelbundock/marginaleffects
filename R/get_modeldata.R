@@ -1,4 +1,33 @@
-get_modeldata <- function(model, additional_variables = TRUE) {
+get_modeldata <- function(model, additional_variables = FALSE, modeldata = NULL, ...) {
+
+    if (inherits(model, "mira")) {
+        return(modeldata)
+    }
+
+    if (!is.null(modeldata)) {
+        modeldata <- set_variable_class(modeldata, model = model)
+        return(modeldata)
+    }
+
+    # often used to extract `by`
+    if (isTRUE(checkmate::check_data_frame(additional_variables))) {
+        additional_variables <- colnames(additional_variables)
+    }
+
+    # feols weights can be a formula
+    if (inherits(model, "fixest")) {
+        fwts <- tryCatch(all.vars(model$call$weights), error = function(e) NULL)
+        additional_variables <- c(additional_variables, fwts)
+    }
+
+    # after by
+    if (isTRUE(checkmate::check_flag(additional_variables))) {
+        out <- hush(insight::get_data(
+            model, additional_variables = additional_variables, verbose = FALSE)
+        )
+        out <- set_variable_class(out, model = model)
+        return(out)
+    }
 
     # always extract offset variable if available
     off <- hush(insight::find_offset(model))
@@ -24,18 +53,23 @@ get_modeldata <- function(model, additional_variables = TRUE) {
         }
     }
 
+
     out <- hush(insight::get_data(model, verbose = FALSE, additional_variables = additional_variables))
+
     # iv_robust and some others
     if (is.null(out)) {
         out <- evalup(model[["call"]][["data"]])
     }
+
     if (is.null(out)) {
         out <- evalup(attr(model, "call")$data)
     }
+
     out <- as.data.frame(out)
-    out <- set_variable_class(modeldata = out, model = model)
+    out <- set_variable_class(out, model = model)
     return(out)
 }
+
 
 set_variable_class <- function(modeldata, model = NULL) {
 

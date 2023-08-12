@@ -59,13 +59,11 @@ tidy.hypotheses <- function(x, ...) {
 #' @export
 tidy.marginalmeans <- function(x, ...) {
     insight::check_if_installed("insight")
+    insight::check_if_installed("tibble")
     if ("transform_avg" %in% names(list(...))) {
         insight::format_error("The `transform_avg` argument is deprecated. Use `transform` instead.")
     }
-    first = c("term", "value", "estimate", "std.error",
-    "statistic", "p.value", "conf.low", "conf.high")
-    out <- sort_columns(x, first)
-    out <- tibble::as_tibble(out)
+    out <- tibble::as_tibble(x)
     attr(out, "conf_level") <- attr(x, "conf_level")
     return(out)
 }

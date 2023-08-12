@@ -1,4 +1,5 @@
 source("helpers.R")
+exit_file("MCMCglmm() fit broken")
 if (!EXPENSIVE) exit_file("EXPENSIVE")
 requiet("MCMCglmm")
 

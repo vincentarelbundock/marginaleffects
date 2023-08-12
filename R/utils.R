@@ -1,34 +1,3 @@
-sort_columns <- function(x, first = NULL, alpha = FALSE) {
-    cols <- colnames(x)
-
-    forget <- c("names", "row.names", "class")
-    attr_save <- attributes(x)
-    attr_save <- attr_save[!names(attr_save) %in% forget]
-
-    if (isTRUE(alpha)) {
-        cols <- sort(cols)
-    }
-
-    if (!is.null(first)) {
-        cols <- unique(c(first, cols))
-    }
-
-    cols <- intersect(cols, colnames(x))
-
-    if (inherits(x, "data.table")) {
-        out <- x[, ..cols, drop = FALSE]
-    } else {
-        out <- x[, cols, drop = FALSE]
-    }
-
-    for (n in names(attr_save)) {
-        attr(out, n) <- attr_save[[n]]
-    }
-
-    return(out)
-}
-
-
 get_unique_index <- function(x, term_only = FALSE) {
     idx <- c("term", "contrast", grep("^contrast_", colnames(x), value = TRUE))
     
