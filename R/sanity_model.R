@@ -29,7 +29,7 @@ sanity_model_supported_class <- function(model) {
         "betareg",
         "bglmerMod",
         "blmerMod",
-        "bife",
+        # "bife",
         "biglm",
         c("bigglm", "biglm"),
         "brglmFit",

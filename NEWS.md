@@ -5,6 +5,7 @@
 Breaking change:
 
 * New procedure `numderiv` argument use a different procedure to select the step size used in the finite difference numeric derivative used to compute standard errors: abs(x) * sqrt(.Machine$double.eps). The numerical results may not be exactly identical to previous versions of `marginaleffects`, but the step size should be adequate in a broader variety of cases. Note that users can use the `numderiv` argument for more control on numeric differentiation, as documented.
+* `bife` models are no longer supported pending investigation in weird results in the tests. Looking for volunteers write more thorough tests.
 
 New:
 
