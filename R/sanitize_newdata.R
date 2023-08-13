@@ -202,7 +202,10 @@ sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
         modeldata = modeldata,
         newdata = newdata,
         newdata_explicit = newdata_explicit)
-    # sort rows: `by` and `datagrid()`
+
+    # sort rows of output when the user explicitly calls `by` or `datagrid()`
+    # otherwise, we return the same data frame in the same order, but 
+    # here it makes sense to sort for a clean output.
     sortcols <- attr(newdata, "newdata_variables_datagrid")
     if (isTRUE(checkmate::check_character(by))) {
         sortcols <- c(by, sortcols)
@@ -212,6 +215,7 @@ sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
         newdata <- data.table::copy(newdata)
         data.table::setorderv(newdata, cols = sortcols)
     }
+
     return(newdata)
 }
 

@@ -19,7 +19,7 @@ p2 <- predictions(
     mod,
     newdata = datagrid(mpg = range, am_fct = 0:1))
 p2$am_fct <- as.numeric(as.character(p2$am_fct))
-p2 <- p2[order(-p2$am_fct, p2$mpg),]
+setorder(p2, am_fct, mpg)
 expect_equivalent(p1$estimate, p2$estimate)
 
 p1$condition1 <- as.character(p1$am_fct)
@@ -43,7 +43,7 @@ p2 <- predictions(
     mod,
     newdata = datagrid(mpg = threenum, am_fct = 0:1))
 p2$am_fct <- as.numeric(as.character(p2$am_fct))
-p2 <- p2[order(-p2$am_fct, p2$mpg),]
+setorder(p2, am_fct, mpg)
 expect_equivalent(p1$estimate, p2$estimate)
 
 

@@ -20,15 +20,16 @@ expect_predictions(pred, n_row = nrow(dat))
 
 # Issue 809
 data(psid, package = "bife")
-
 psid <- transform(psid, KID = ifelse(KID1 > 0, 1, 0))
 mod <- bife(LFP ~ KID + AGE + KID * AGE + log(INCH) | ID, data = psid, model = "probit")
 
-s1 <- avg_slopes(mod, variables = "AGE", by = "KID", newdata = psid)
+s1 <- slopes(mod, variables = "AGE", newdata = psid)
 xb <- predict(mod, type = "link", X_new = psid)
 psid$s <- dnorm(xb) * (coef(mod)["AGE"] + coef(mod)["KID:AGE"] * psid$KID)
+expect_equivalent(s1$estimate, psid$s, tolerance = 1e-4)
+s1 <- avg_slopes(mod, variables = "AGE", by = "KID")
 s2 <- aggregate(s ~ KID, FUN = mean, data = psid)
-s2 <- s2[order(s2$KID),]
+2 <- s2[order(s2$KID),]
 s1 <- s1[order(s1$KID),]
 expect_equivalent(s1$estimate, s2$s, tolerance = 1e-4)
 
