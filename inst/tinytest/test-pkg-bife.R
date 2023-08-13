@@ -24,13 +24,12 @@ psid <- transform(psid, KID = ifelse(KID1 > 0, 1, 0))
 mod <- bife(LFP ~ KID + AGE + KID * AGE + log(INCH) | ID, data = psid, model = "probit")
 
 s1 <- slopes(mod, variables = "AGE", newdata = psid)
+setorder(s1, rowid)
 xb <- predict(mod, type = "link", X_new = psid)
-psid$s <- dnorm(xb) * (coef(mod)["AGE"] + coef(mod)["KID:AGE"] * psid$KID)
-expect_equivalent(s1$estimate, psid$s, tolerance = 1e-4)
-s1 <- avg_slopes(mod, variables = "AGE", by = "KID")
-s2 <- aggregate(s ~ KID, FUN = mean, data = psid)
-2 <- s2[order(s2$KID),]
-s1 <- s1[order(s1$KID),]
+s2 <- dnorm(xb) * (coef(mod)["AGE"] + coef(mod)["KID:AGE"] * psid$KID)
+expect_equivalent(s1$estimate, s2, tolerance = 1e-4)
+s3 <- slopes(mod, variables = "AGE", by = "KID", newdata = psid)
+s2 <- aggregate(estimate ~ KID, FUN = mean, data = s1)
 expect_equivalent(s1$estimate, s2$s, tolerance = 1e-4)
 
 mod <- bife::bias_corr(mod)

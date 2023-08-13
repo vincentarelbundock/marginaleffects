@@ -211,12 +211,12 @@ sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
         sortcols <- c(by, sortcols)
     }
     sortcols <- intersect(sortcols, colnames(newdata))
+    out <- data.table::copy(newdata)
     if (length(sortcols) > 0) {
-        newdata <- data.table::copy(newdata)
-        data.table::setorderv(newdata, cols = sortcols)
+        data.table::setorderv(out, cols = sortcols)
     }
 
-    return(newdata)
+    return(out)
 }
 
 

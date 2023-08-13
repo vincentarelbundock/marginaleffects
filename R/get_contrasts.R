@@ -277,7 +277,7 @@ get_contrasts <- function(model,
             predicted_hi = mean(predicted_hi),
             predicted = mean(predicted),
             marginaleffects_wts_internal = mean(marginaleffects_wts_internal)),
-        by = idx]
+        keyby = idx]
     }
 
     # safe version of comparison
@@ -395,7 +395,7 @@ get_contrasts <- function(model,
             cross = cross,
             wts = marginaleffects_wts_internal,
             tmp_idx = tmp_idx),
-        by = idx]
+        keyby = idx]
         out[, tmp_idx := NULL]
 
         # if comparison returns a single value, then we padded with NA. That
