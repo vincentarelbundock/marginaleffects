@@ -3,12 +3,17 @@
 #' @export
 get_coef.data.frame <- function(model, ...) {
     checkmate::assert_data_frame(model)
-    if (!all(c("term", "estimate") %in% colnames(model))) {
-        insight::format_error("The model object is a data.frame but doesn't contain the columns 'term' or 'estimate'. Make sure these columns are present")
+    if (!"estimate" %in% colnames(model)) {
+        insight::format_error("The model object is a data.frame but doesn't contain the column 'estimate'. Make sure these columns are present")
     }
 
-    out = model$estimate
-    names(out) = model$term
+    out <- model$estimate
+    if ("term" %in% colnames(model)) {
+        names(out) <- model$term
+    } else {
+        names(out) <- seq_along(out)
+    }
+
     return(out)
 }
 

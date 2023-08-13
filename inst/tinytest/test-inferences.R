@@ -128,4 +128,11 @@ cmp2 <- cmp1 |> inferences(method = "simulation", R = 500)
 expect_equivalent(cmp1$estimate, cmp2$estimate)
 
 
+# mfxplainer bug
+mod <- lm(mpg ~ hp + cyl, data = mtcars)
+p <- avg_predictions(mod, by = "cyl") |> inferences(method = "simulation", R = 25)
+expect_inherits(p, "predictions")
+
+
+
 rm(list = ls())
