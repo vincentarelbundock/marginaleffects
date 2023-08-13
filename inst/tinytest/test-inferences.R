@@ -121,4 +121,11 @@ p <- predictions(m, by = "cyl") |>
 expect_inherits(p, "predictions")
 
 
+# Issue #851: simulation-based inference use the original estimates, not the mean/median of simulations
+mod <- glm(vs ~ hp + mpg + am, data = mtcars, family = binomial)
+cmp1 <- avg_comparisons(mod)
+cmp2 <- cmp1 |> inferences(method = "simulation", R = 500)
+expect_equivalent(cmp1$estimate, cmp2$estimate)
+
+
 rm(list = ls())

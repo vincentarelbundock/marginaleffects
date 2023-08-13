@@ -119,10 +119,20 @@ inferences <- function(x, method, R = 1000, conf_type = "perc", ...) {
             MASS::mvrnorm(R, mu = B, Sigma = V)
         }
         class(model) <- c("inferences_simulation", class(model))
+        # do not use simulation mean as point estimate
+        # https://doi.org/10.1017/psrm.2023.8
+        b <- get_coef(x)
     }
 
     mfx_call[["model"]] <- model
     out <- recall(mfx_call)
+
+    # do not use simulation mean as point estimate
+    # https://doi.org/10.1017/psrm.2023.8
+    if (method == "simulation") {
+        out$estimate <- x$estimate
+    }
+
     return(out)
 }
 
