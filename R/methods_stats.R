@@ -69,3 +69,22 @@ get_predict.glm <- function(model, newdata = insight::get_data(model), type = "r
     
     return(out)
 }
+
+
+
+#' @include set_coef.R
+#' @rdname set_coef
+#' @export
+set_coef.nls <- function(model, coefs, ...) {
+    out <- model
+    out$m$setPars(coefs)
+    return(out)
+}
+
+
+#' @include get_coef.R
+#' @rdname get_coef
+#' @export
+get_coef.nls <- function(model, ...) {
+    model$m$getPars()
+}

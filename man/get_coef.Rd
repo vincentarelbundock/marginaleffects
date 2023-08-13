@@ -3,7 +3,7 @@
 %   R/methods_betareg.R, R/methods_nnet.R, R/methods_brglm2.R, R/methods_brms.R,
 %   R/methods_dataframe.R, R/methods_gamlss.R, R/methods_glmmTMB.R,
 %   R/methods_lme4.R, R/methods_mclogit.R, R/methods_mgcv.R, R/methods_mlm.R,
-%   R/methods_sampleSelection.R, R/methods_scam.R
+%   R/methods_sampleSelection.R, R/methods_scam.R, R/methods_stats.R
 \name{get_coef}
 \alias{get_coef}
 \alias{get_coef.default}
@@ -25,6 +25,7 @@
 \alias{get_coef.mlm}
 \alias{get_coef.selection}
 \alias{get_coef.scam}
+\alias{get_coef.nls}
 \title{Get a named vector of coefficients from a model object (internal function)}
 \usage{
 get_coef(model, ...)
@@ -66,6 +67,8 @@ get_coef(model, ...)
 \method{get_coef}{selection}(model, ...)
 
 \method{get_coef}{scam}(model, ...)
+
+\method{get_coef}{nls}(model, ...)
 }
 \arguments{
 \item{model}{Model object}

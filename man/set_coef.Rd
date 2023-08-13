@@ -34,6 +34,7 @@
 \alias{set_coef.scam}
 \alias{set_coef.glm}
 \alias{set_coef.lm}
+\alias{set_coef.nls}
 \title{Internal function to set coefficients}
 \usage{
 set_coef(model, coefs, ...)
@@ -91,6 +92,8 @@ set_coef(model, coefs, ...)
 \method{set_coef}{glm}(model, coefs, ...)
 
 \method{set_coef}{lm}(model, coefs, ...)
+
+\method{set_coef}{nls}(model, coefs, ...)
 }
 \arguments{
 \item{model}{object to modify}

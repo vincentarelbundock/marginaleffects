@@ -12,6 +12,7 @@ New:
 
 * Support: `logistf` package.
 * Support: `DCchoice` package.
+* Support: `stats::nls`
 * `hypotheses()` can now accept raw data frame, which gives a lot of flexibility for custom contrasts and functions. See the Hypothesis vignette for an example.
 * `numderiv` argument allows users to use finite difference (center or forward) or Richardson's method to compute the numerical derivatives used in the calculation of standard errors.
 

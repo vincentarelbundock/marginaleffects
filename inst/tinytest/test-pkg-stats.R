@@ -178,6 +178,13 @@ mod <- lm(mpg ~ disp + am, data = mtcars)
 expect_equivalent(colnames(get_predict(mod)), c("rowid", "estimate"))
 
 
+# Issue #833: Support nls() no validity
+DNase1 <- subset(datasets::DNase, Run == 1)
+mod <- nls(density ~ SSlogis(log(conc), Asym, xmid, scal), DNase1)
+cmp <- avg_comparisons(mod, variables = "conc")
+expect_inherits(cmp, "comparisons")
+expect_false(any(is.na(cmp$estimate)))
+expect_false(any(is.na(cmp$std.error)))
 
 
 source("helpers.R")

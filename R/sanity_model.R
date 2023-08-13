@@ -81,6 +81,7 @@ sanity_model_supported_class <- function(model) {
         "mlogit",
         c("multinom", "nnet"),
         c("negbin", "glm", "lm"),
+        "nls",
         c("ols", "rms", "lm"),
         c("orm", "rms"),
         c("oohbchoice", "dbchoice"),
