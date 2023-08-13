@@ -348,6 +348,9 @@ sanitize_variables <- function(variables,
         }
     }
 
+    # sort variables alphabetically
+    predictors <- predictors[sort(names(predictors))]
+    others <- others[sort(names(others))]
 
     # output
     out <- list(conditional = predictors, others = others)

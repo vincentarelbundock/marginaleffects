@@ -232,19 +232,11 @@ cmp2 <- comparisons(mod, variables = "am") %>%
   dplyr::group_by(cyl) %>%
   dplyr::summarize(estimate = mean(estimate), .groups = "keep") |>
   dplyr::ungroup()
-cmp3 <- predictions(mod) |>
-  dplyr::group_by(am, cyl) |>
-  dplyr::summarize(estimate = mean(estimate), .groups = "keep") |>
-  dplyr::ungroup() |>
-  dplyr::group_by(cyl) |>
-  dplyr::summarize(estimate = diff(estimate), .groups = "keep") |>
-  dplyr::ungroup()
-cmp4 <- transform(tmp, estimate = predict(mod))
-cmp4 <- aggregate(estimate ~ cyl + am, FUN = mean, data = cmp4)
-cmp4 <- aggregate(estimate ~ cyl, FUN = diff, data = cmp4)
+cmp3 <- predictions(mod)  |>
+    aggregate(estimate ~ am + cyl, FUN = mean) |>
+    aggregate(estimate ~ cyl, FUN = diff)
 expect_equivalent(cmp1$estimate, cmp2$estimate)
 expect_equivalent(cmp1$estimate, cmp3$estimate)
-expect_equivalent(cmp1$estimate, cmp4$estimate)
 
 
 

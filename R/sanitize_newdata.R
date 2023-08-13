@@ -202,6 +202,16 @@ sanitize_newdata <- function(model, newdata, by, modeldata, wts) {
         modeldata = modeldata,
         newdata = newdata,
         newdata_explicit = newdata_explicit)
+    # sort rows: `by` and `datagrid()`
+    sortcols <- attr(newdata, "newdata_variables_datagrid")
+    if (isTRUE(checkmate::check_character(by))) {
+        sortcols <- c(by, sortcols)
+    }
+    sortcols <- intersect(sortcols, colnames(newdata))
+    if (length(sortcols) > 0) {
+        newdata <- data.table::copy(newdata)
+        data.table::setorderv(newdata, cols = sortcols)
+    }
     return(newdata)
 }
 
