@@ -337,18 +337,6 @@ comparisons <- function(model,
         wts = wts)
 
     # after sanitize_newdata
-    variables_list <- sanitize_variables(
-        model = model,
-        newdata = newdata,
-        modeldata = modeldata,
-        variables = variables,
-        cross = cross,
-        by = by,
-        comparison = comparison,
-        eps = eps)
-
-
-    # after sanitize_newdata
     sanity_by(by, newdata)
 
     # after sanity_by
@@ -362,6 +350,18 @@ comparisons <- function(model,
     if (is.null(wts) && "marginaleffects_wts_internal" %in% colnames(newdata)) {
         wts <- "marginaleffects_wts_internal"
     }
+
+    # after sanitize_newdata
+    # after dedup_newdata
+    variables_list <- sanitize_variables(
+        model = model,
+        newdata = newdata,
+        modeldata = modeldata,
+        variables = variables,
+        cross = cross,
+        by = by,
+        comparison = comparison,
+        eps = eps)
 
     # get dof before transforming the vcov arg
     # get_df() produces a weird warning on non lmerMod. We can skip them
@@ -419,7 +419,7 @@ comparisons <- function(model,
                  original = contrast_data[["original"]],
                  hi = contrast_data[["hi"]],
                  lo = contrast_data[["lo"]],
-                 wts = contrast_data[["marginaleffects_wts_internal"]],
+                 wts = contrast_data[["original"]][["marginaleffects_wts_internal"]],
                  by = by,
                  marginalmeans = marginalmeans,
                  cross = cross,

@@ -23,6 +23,7 @@ Bug fixes:
 * `quantreg` problem with `rowid` merge did not affect estimates but did not return the full original data. Issue #829.
 * `get_modeldata()` extracts weights variable when available.
 * `predictions()` is no longer broken in some `inferences()` calls. Issue #853
+* Inaccurate averaging with `comparison=differenceavg` some models where all predictors are categorical. Thanks to Karl Ove Hufthammer for report #865.
 
 Misc:
 
