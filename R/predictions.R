@@ -218,11 +218,13 @@ predictions <- function(model,
     if (isTRUE(by)) {
         modeldata <- get_modeldata(model,
             additional_variables = FALSE,
-            modeldata = dots[["modeldata"]])
+            modeldata = dots[["modeldata"]],
+            wts = wts)
     } else {
         modeldata <- get_modeldata(model,
             additional_variables = by,
-            modeldata = dots[["modeldata"]])
+            modeldata = dots[["modeldata"]],
+            wts = wts)
     }
 
     # build call: match.call() doesn't work well in *apply()

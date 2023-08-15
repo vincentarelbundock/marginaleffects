@@ -91,7 +91,7 @@ plot_comparisons <- function(model,
 
     # conditional
     if (!is.null(condition)) {
-        modeldata <- get_modeldata(model, additional_variables = names(condition))
+        modeldata <- get_modeldata(model, additional_variables = names(condition), wts = wts)
         condition <- sanitize_condition(model, condition, variables, modeldata = modeldata)
         v_x <- condition$condition1
         v_color <- condition$condition2
@@ -114,7 +114,7 @@ plot_comparisons <- function(model,
 
     # marginal
     if (!is.null(by)) {
-        modeldata <- get_modeldata(model, additional_variables = by)
+        modeldata <- get_modeldata(model, additional_variables = by, wts = wts)
         newdata <- sanitize_newdata(
             model = model,
             newdata = newdata,

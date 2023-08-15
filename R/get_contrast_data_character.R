@@ -3,16 +3,12 @@ get_contrast_data_character <- function(model,
                                         variable,
                                         cross,
                                         first_cross,
-                                        modeldata = NULL,
+                                        modeldata,
                                         ...) {
 
     # factors store all levels, but characters do not, so we need to extract the
     # original data from the model.
-    if (is.null(modeldata)) {
-        tmp <- modeldata <- get_modeldata(model, additional_variables = FALSE)
-    } else {
-        tmp <- modeldata
-    }
+    tmp <- modeldata
 
     # unsupported by insight (e.g., numpyro)
     if (is.null(tmp)) {

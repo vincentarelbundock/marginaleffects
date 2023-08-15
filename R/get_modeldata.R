@@ -1,4 +1,4 @@
-get_modeldata <- function(model, additional_variables = FALSE, modeldata = NULL, ...) {
+get_modeldata <- function(model, additional_variables = FALSE, modeldata = NULL, wts = NULL, ...) {
 
     if (inherits(model, "mira")) {
         return(modeldata)
@@ -12,6 +12,11 @@ get_modeldata <- function(model, additional_variables = FALSE, modeldata = NULL,
     # often used to extract `by`
     if (isTRUE(checkmate::check_data_frame(additional_variables))) {
         additional_variables <- colnames(additional_variables)
+    }
+
+    # always get weights
+    if (isTRUE(checkmate::check_string(wts))) {
+        additional_variables <- c(additional_variables, wts)
     }
 
     # feols weights can be a formula

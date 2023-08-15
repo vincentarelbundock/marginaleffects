@@ -163,6 +163,16 @@ cmp2 <- comparisons(mod, variables = list(foo = 0:1),
 expect_equivalent(cmp1$estimate, cmp2$estimate)
 
 
+# Issue #870
+Guerry <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/HistData/Guerry.csv")
+Guerry <- na.omit(Guerry)
+mod <- lm(Literacy ~ Pop1831 * Desertion, data = Guerry)
+p1 <- predictions(mod, by = "Region", wts = "Donations")
+p2 <- predictions(mod, by = "Region")
+expect_inherits(p1, "predictions")
+expect_false(any(p1$estimate == p2$estimate))
+
+
 # brms
 set.seed(1024)
 mod <- marginaleffects:::modelarchive_model("brms_numeric2")

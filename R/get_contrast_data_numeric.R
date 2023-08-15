@@ -1,17 +1,10 @@
 get_contrast_data_numeric <- function(model,
                                       newdata,
                                       variable,
-                                      modeldata = NULL,
+                                      modeldata,
                                       ...) {
     
     h <- variable[["eps"]]
-
-    if (is.null(modeldata)) {
-        modeldata <- get_modeldata(model, additional_variables = FALSE)
-    }
-    if (is.null(modeldata)) {
-        modeldata <- newdata
-    }
 
     s <- m <- NA
     if (is.numeric(modeldata[[variable$name]])) {

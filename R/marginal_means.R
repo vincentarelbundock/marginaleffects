@@ -212,7 +212,7 @@ marginal_means <- function(model,
         type <- sanitize_type(model = model, type = type)
     }
 
-    modeldata <- get_modeldata(model, additional_variables = FALSE)
+    modeldata <- get_modeldata(model, additional_variables = FALSE, wts = wts)
 
     checkmate::assert_flag(cross)
     transform <- sanitize_transform(transform)

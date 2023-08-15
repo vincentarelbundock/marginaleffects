@@ -3,16 +3,8 @@ get_contrast_data_factor <- function(model,
                                      variable,
                                      cross,
                                      first_cross,
-                                     modeldata = NULL,
+                                     modeldata,
                                      ...) {
-
-
-    if (is.null(modeldata)) {
-        modeldata <- get_modeldata(model, additional_variables = FALSE)
-    }
-    if (is.null(modeldata)) {
-        modeldata <- newdata
-    }
 
     if (is.factor(newdata[[variable$name]])) {
         levs <- levels(newdata[[variable$name]])
