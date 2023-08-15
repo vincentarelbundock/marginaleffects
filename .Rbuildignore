@@ -22,3 +22,4 @@ inst/tinytest/stata/databases/.*\.dta
 ^.*\.Rproj$
 ^\.Rproj\.user$
 man-roxygen
+.*_files
