@@ -2,7 +2,7 @@
 
 ## 0.14.0
 
-Breaking change:
+Breaking changes:
 
 * Row order of the output changes for some objects. Rows are not sorted alphabetically by `term`, `by`, and variables explicitly supplied to `datagrid`. This can affect hypothesis tests computed using the b1, b2, b3, and other indices.
 * New procedure `numderiv` argument use a different procedure to select the step size used in the finite difference numeric derivative used to compute standard errors: abs(x) * sqrt(.Machine$double.eps). The numerical results may not be exactly identical to previous versions of `marginaleffects`, but the step size should be adequate in a broader variety of cases. Note that users can use the `numderiv` argument for more control on numeric differentiation, as documented.
