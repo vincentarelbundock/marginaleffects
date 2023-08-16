@@ -6,6 +6,9 @@ highlight-style: tango
 book:
   title: "The Marginal Effects Zoo"
   author: "Vincent Arel-Bundock"
+  google-analytics: "G-V6MC2RPFXR"
+  twitter-card:
+    image: fig/marginaleffects_card.png
   reader-mode: true
   navbar:
     search: true
