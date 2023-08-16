@@ -43,11 +43,12 @@ link_function_docs = function() {
 get_quarto_yaml = function(pdf = FALSE, dev = FALSE) {
   yml = read_yaml(here::here("book/utils/_quarto.yml"))
   if (isTRUE(dev)) {
-    yml$book[["title"]] = paste("marginaleffects", packageVersion("marginaleffects"))
+    yml$book[["title"]] = paste0("The Marginal Effects Zoo (", packageVersion("marginaleffects"), ")")
   } else {
-    yml$book[["title"]] = paste(
-      "marginaleffects",
-      gsub("^(\\d+\\.\\d+\\.\\d+).*", "\\1", packageVersion("marginaleffects")))
+    yml$book[["title"]] = paste0(
+      "The Marginal Effects Zoo (",
+      gsub("^(\\d+\\.\\d+\\.\\d+).*", "\\1", packageVersion("marginaleffects")),
+      ")")
   }
   if (isTRUE(pdf)) {
     idx = sapply(yml$book$chapters, function(x) x$part)
