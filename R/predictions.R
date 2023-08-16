@@ -204,6 +204,11 @@ predictions <- function(model,
 
     dots <- list(...)
 
+    if ("transform_post" %in% names(dots)) {
+        transform <- dots[["transform_post"]]
+        insight::format_warning("The `transform_post` argument is deprecated. Use `transform` instead.")
+    }
+
     # very early, before any use of newdata
     # if `newdata` is a call to `typical` or `counterfactual`, insert `model`
     scall <- rlang::enquo(newdata)
