@@ -124,7 +124,6 @@ f <- function(x) {
     return(out)
 }
 hypotheses(mod, FUN = f)
-head(p)
 ```
 
 With labels:
