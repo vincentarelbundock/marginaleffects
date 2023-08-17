@@ -10,8 +10,8 @@
 #'
 #' See the predictions vignette and package website for worked examples and case studies:
 
-#' * <https://vincentarelbundock.github.io/marginaleffects/articles/predictions.html>
-#' * <https://vincentarelbundock.github.io/marginaleffects/>
+#' * <https://marginaleffects.com/articles/predictions.html>
+#' * <https://marginaleffects.com/>
 #'
 #' @rdname predictions
 #' @details

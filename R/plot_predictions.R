@@ -11,8 +11,8 @@
 #' 
 #' See the "Plots" vignette and website for tutorials and information on how to customize plots:
 #'
-#' * https://vincentarelbundock.github.io/marginaleffects/articles/plot.html
-#' * https://vincentarelbundock.github.io/marginaleffects
+#' * https://marginaleffects.com/articles/plot.html
+#' * https://marginaleffects.com
 #' 
 #' @param condition Conditional predictions
 #' + Character vector (max length 3): Names of the predictors to display.

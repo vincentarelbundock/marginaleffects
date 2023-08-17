@@ -5,8 +5,8 @@
 #' holding other numeric predictors at their means. To learn more, read the marginal means vignette, visit the
 #' package website, or scroll down this page for a full list of vignettes:
 #' 
-#' * <https://vincentarelbundock.github.io/marginaleffects/articles/marginalmeans.html>
-#' * <https://vincentarelbundock.github.io/marginaleffects/>
+#' * <https://marginaleffects.com/articles/marginalmeans.html>
+#' * <https://marginaleffects.com/>
 #'
 #' @param variables Focal variables
 #' + Character vector of variable names: compute marginal means for each category of the listed variables.
@@ -53,7 +53,7 @@
 #'
 #'   The `marginaleffects` website compares the output of this function to the
 #'   popular `emmeans` package, which provides similar but more advanced
-#'   functionality: https://vincentarelbundock.github.io/marginaleffects/
+#'   functionality: https://marginaleffects.com/
 #'
 #' @template deltamethod
 #' @template model_specific_arguments

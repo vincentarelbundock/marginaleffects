@@ -11,8 +11,8 @@
 
 #' See the "Plots" vignette and website for tutorials and information on how to customize plots:
 #'
-#' * https://vincentarelbundock.github.io/marginaleffects/articles/plot.html
-#' * https://vincentarelbundock.github.io/marginaleffects
+#' * https://marginaleffects.com/articles/plot.html
+#' * https://marginaleffects.com
 #' 
 #' @param variables Name of the variable whose contrast we want to plot on the y-axis.
 #' @param draw `TRUE` returns a `ggplot2` plot. `FALSE` returns a `data.frame` of the underlying data.

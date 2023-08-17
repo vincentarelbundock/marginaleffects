@@ -25,10 +25,10 @@ slopes, elasticities, etc.
 </p>
 
 <ul>
-<li> <p><a href="https://vincentarelbundock.github.io/marginaleffects/articles/comparisons.html">https://vincentarelbundock.github.io/marginaleffects/articles/comparisons.html</a>
+<li> <p><a href="https://marginaleffects.com/articles/comparisons.html">https://marginaleffects.com/articles/comparisons.html</a>
 </p>
 </li>
-<li> <p><a href="https://vincentarelbundock.github.io/marginaleffects/">https://vincentarelbundock.github.io/marginaleffects/</a>
+<li> <p><a href="https://marginaleffects.com/">https://marginaleffects.com/</a>
 </p>
 </li></ul>
 
@@ -420,7 +420,7 @@ the <code>marginaleffects:::type_dictionary</code> dataframe.</p>
 </li></ul>
 
 </li>
-<li><p> See the Examples section below and the vignette: https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html
+<li><p> See the Examples section below and the vignette: https://marginaleffects.com/articles/hypothesis.html
 </p>
 </li></ul>
 </td></tr>
@@ -520,11 +520,11 @@ arguments.</p>
 
 <p>See the &quot;Standard Errors and Confidence Intervals&quot; vignette on the <code>marginaleffects</code> website for more details on the computation of standard errors:
 </p>
-<p>https://vincentarelbundock.github.io/marginaleffects/articles/uncertainty.html
+<p>https://marginaleffects.com/articles/uncertainty.html
 </p>
 <p>Note that the <code>inferences()</code> function can be used to compute uncertainty estimates using a bootstrap or simulation-based inference. See the vignette:
 </p>
-<p>https://vincentarelbundock.github.io/marginaleffects/articles/bootstrap.html
+<p>https://marginaleffects.com/articles/bootstrap.html
 </p>
 
 

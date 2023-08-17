@@ -379,9 +379,9 @@ New arguments:
 
 New or improved vignettes:
 
-* Hypothesis Tests and Custom Contrasts using the Delta Method: https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html
-* Multiple Imputation: https://vincentarelbundock.github.io/marginaleffects/articles/multiple_imputation.html
-* Causal Inference with the g-Formula: https://vincentarelbundock.github.io/marginaleffects/articles/gformula.html
+* Hypothesis Tests and Custom Contrasts using the Delta Method: https://marginaleffects.com/articles/hypothesis.html
+* Multiple Imputation: https://marginaleffects.com/articles/multiple_imputation.html
+* Causal Inference with the g-Formula: https://marginaleffects.com/articles/gformula.html
  (Thanks to Rohan Kapre for the idea)
 
 Deprecated or renamed arguments:
@@ -433,7 +433,7 @@ New features:
 * More informative error messages and warnings
 * Bug fixes and performance improvements
 
-New pages on the `marginaleffects` website: https://vincentarelbundock.github.io/marginaleffects/
+New pages on the `marginaleffects` website: https://marginaleffects.com/
 
 * Alternative software packages
 * Robust standard errors (and more)

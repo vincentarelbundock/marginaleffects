@@ -26,7 +26,7 @@ License: GPL (>= 3)
 Copyright: inst/COPYRIGHTS
 LazyData: true
 Encoding: UTF-8
-URL: https://vincentarelbundock.github.io/marginaleffects/
+URL: https://marginaleffects.com/
 BugReports: https://github.com/vincentarelbundock/marginaleffects/issues
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3.9000

@@ -119,8 +119,8 @@ The \code{condition} argument is used to plot conditional slopes, that is, slope
 All unspecified variables are held at their mean or mode. This includes grouping variables in mixed-effects models, so analysts who fit such models may want to specify the groups of interest using the \code{variables} argument, or supply model-specific arguments to compute population-level estimates. See details below.
 See the "Plots" vignette and website for tutorials and information on how to customize plots:
 \itemize{
-\item https://vincentarelbundock.github.io/marginaleffects/articles/plot.html
-\item https://vincentarelbundock.github.io/marginaleffects
+\item https://marginaleffects.com/articles/plot.html
+\item https://marginaleffects.com
 }
 }
 \section{Model-Specific Arguments}{

@@ -110,8 +110,8 @@ All unspecified variables are held at their mean or mode. This includes grouping
 
 See the "Plots" vignette and website for tutorials and information on how to customize plots:
 \itemize{
-\item https://vincentarelbundock.github.io/marginaleffects/articles/plot.html
-\item https://vincentarelbundock.github.io/marginaleffects
+\item https://marginaleffects.com/articles/plot.html
+\item https://marginaleffects.com
 }
 }
 \section{Model-Specific Arguments}{

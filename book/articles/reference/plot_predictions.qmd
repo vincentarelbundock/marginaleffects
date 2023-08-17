@@ -16,10 +16,10 @@ Plot Conditional or Marginal Predictions
 </p>
 
 <ul>
-<li><p> https://vincentarelbundock.github.io/marginaleffects/articles/plot.html
+<li><p> https://marginaleffects.com/articles/plot.html
 </p>
 </li>
-<li><p> https://vincentarelbundock.github.io/marginaleffects
+<li><p> https://marginaleffects.com
 </p>
 </li></ul>
 

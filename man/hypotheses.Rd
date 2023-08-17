@@ -43,7 +43,7 @@ hypotheses(
 \item "sequential": difference between an estimate and the estimate in the next row.
 \item "revpairwise", "revreference", "revsequential": inverse of the corresponding hypotheses, as described above.
 }
-\item See the Examples section below and the vignette: https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html
+\item See the Examples section below and the vignette: https://marginaleffects.com/articles/hypothesis.html
 }}
 
 \item{vcov}{Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
@@ -108,8 +108,8 @@ Uncertainty estimates are calculated as first-order approximate standard errors 
 To learn more, read the hypothesis tests vignette, visit the
 package website, or scroll down this page for a full list of vignettes:
 \itemize{
-\item \url{https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html}
-\item \url{https://vincentarelbundock.github.io/marginaleffects/}
+\item \url{https://marginaleffects.com/articles/hypothesis.html}
+\item \url{https://marginaleffects.com/}
 }
 
 Warning #1: Tests are conducted directly on the scale defined by the \code{type} argument. For some models, it can make sense to conduct hypothesis or equivalence tests on the \code{"link"} scale instead of the \code{"response"} scale which is often the default.

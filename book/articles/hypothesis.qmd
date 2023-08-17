@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-The code in this vignette requires `marginaleffects` version 0.6.0 or [the development version hosted on Github.](https://vincentarelbundock.github.io/marginaleffects/#installation)
+The code in this vignette requires `marginaleffects` version 0.6.0 or [the development version hosted on Github.](https://marginaleffects.com/#installation)
 
 This vignette introduces the `hypotheses()` function, and the `hypothesis` argument of the `comparisons()`, `slopes()`, and `predictions()` function. These features allow users to conduct linear and non-linear hypothesis tests and to compute custom contrasts (linear combinations) between parameters.
 

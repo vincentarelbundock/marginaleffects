@@ -97,7 +97,7 @@ on the link scale before backtransforming them using the inverse link function.}
 \item "sequential": difference between an estimate and the estimate in the next row.
 \item "revpairwise", "revreference", "revsequential": inverse of the corresponding hypotheses, as described above.
 }
-\item See the Examples section below and the vignette: https://vincentarelbundock.github.io/marginaleffects/articles/hypothesis.html
+\item See the Examples section below and the vignette: https://marginaleffects.com/articles/hypothesis.html
 }}
 
 \item{equivalence}{Numeric vector of length 2: bounds used for the two-one-sided test (TOST) of equivalence, and for the non-inferiority and non-superiority tests. See Details section below.}
@@ -156,7 +156,7 @@ predictions on the link scale, that is, with the \code{type} argument set to
 
 The \code{marginaleffects} website compares the output of this function to the
 popular \code{emmeans} package, which provides similar but more advanced
-functionality: https://vincentarelbundock.github.io/marginaleffects/
+functionality: https://marginaleffects.com/
 }
 \section{Standard errors using the delta method}{
 
@@ -172,11 +172,11 @@ Standard errors for all quantities estimated by \code{marginaleffects} can be ob
 
 See the "Standard Errors and Confidence Intervals" vignette on the \code{marginaleffects} website for more details on the computation of standard errors:
 
-https://vincentarelbundock.github.io/marginaleffects/articles/uncertainty.html
+https://marginaleffects.com/articles/uncertainty.html
 
 Note that the \code{inferences()} function can be used to compute uncertainty estimates using a bootstrap or simulation-based inference. See the vignette:
 
-https://vincentarelbundock.github.io/marginaleffects/articles/bootstrap.html
+https://marginaleffects.com/articles/bootstrap.html
 }
 
 \section{Model-Specific Arguments}{

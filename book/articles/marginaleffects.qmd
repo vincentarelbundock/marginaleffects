@@ -248,7 +248,7 @@ print(p)
 ```
 :::
 
-The [`datagrid` function gives us a powerful way to define a grid of predictors.](https://vincentarelbundock.github.io/marginaleffects/reference/datagrid.html) All the variables not mentioned explicitly in `datagrid()` are fixed to their mean or mode:
+The [`datagrid` function gives us a powerful way to define a grid of predictors.](https://marginaleffects.com/reference/datagrid.html) All the variables not mentioned explicitly in `datagrid()` are fixed to their mean or mode:
 
 ::: {.panel-tabset}
 ### R

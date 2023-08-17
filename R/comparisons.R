@@ -14,8 +14,8 @@
 #'
 #' See the comparisons vignette and package website for worked examples and case studies:
 #'
-#' * <https://vincentarelbundock.github.io/marginaleffects/articles/comparisons.html>
-#' * <https://vincentarelbundock.github.io/marginaleffects/>
+#' * <https://marginaleffects.com/articles/comparisons.html>
+#' * <https://marginaleffects.com/>
 #'
 #' @inheritParams slopes
 #' @inheritParams predictions
