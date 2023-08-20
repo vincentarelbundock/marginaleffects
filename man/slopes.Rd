@@ -48,8 +48,7 @@ avg_slopes(
 
 \item{newdata}{Grid of predictor values at which we evaluate the slopes.
 \itemize{
-\item \code{NULL} (default): Unit-level slopes for each observed value in the original dataset. See \code{\link[insight:get_data]{insight::get_data()}}
-\item data frame: Unit-level slopes for each row of the \code{newdata} data frame.
+\item \code{NULL} (default): Unit-level slopes for each observed value in the dataset (empirical distribution). The dataset is retrieved using \code{\link[insight:get_data]{insight::get_data()}}, which tries to extract data from the environment. This may produce unexpected results if the original data frame has been altered since fitting the model.
 \item \code{\link[=datagrid]{datagrid()}} call to specify a custom grid of regressors. For example:
 \itemize{
 \item \code{newdata = datagrid(cyl = c(4, 6))}: \code{cyl} variable equal to 4 and 6 and other regressors fixed at their means or modes.

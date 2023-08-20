@@ -25,8 +25,7 @@
 #' * `NULL`: compute slopes or comparisons for all the variables in the model object (can be slow).
 #' * Character vector: subset of variables (usually faster).
 #' @param newdata Grid of predictor values at which we evaluate the slopes.
-#' + `NULL` (default): Unit-level slopes for each observed value in the original dataset. See [insight::get_data()]
-#' + data frame: Unit-level slopes for each row of the `newdata` data frame.
+#' + `NULL` (default): Unit-level slopes for each observed value in the dataset (empirical distribution). The dataset is retrieved using [insight::get_data()], which tries to extract data from the environment. This may produce unexpected results if the original data frame has been altered since fitting the model.
 #' + [datagrid()] call to specify a custom grid of regressors. For example:
 #'   - `newdata = datagrid(cyl = c(4, 6))`: `cyl` variable equal to 4 and 6 and other regressors fixed at their means or modes.
 #'   - See the Examples section and the [datagrid()] documentation.
