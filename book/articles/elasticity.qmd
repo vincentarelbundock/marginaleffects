@@ -17,8 +17,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-The content of this vignette requires version 0.7.0 of the `marginaleffects` package.
-
 In some contexts, it is useful to interpret the results of a regression model in terms of elasticity or semi-elasticity. One strategy to achieve that is to estimate a log-log or a semilog model, where the left and/or right-hand side variables are logged. Another approach is to note that $\frac{\partial ln(x)}{\partial x}=\frac{1}{x}$, and to post-process the marginal effects to transform them into elasticities or semi-elasticities.
 
 For example, say we estimate a linear model of this form:

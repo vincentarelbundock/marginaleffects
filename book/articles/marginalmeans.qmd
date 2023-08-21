@@ -214,8 +214,6 @@ Thanks to those tidiers, we can also present the results in the style of a regre
 
 ## Case study: Multinomial Logit
 
-This example requires version 0.2.0 of the `marginaleffects` package.
-
 To begin, we generate data and estimate a large model:
 
 ```{r}
