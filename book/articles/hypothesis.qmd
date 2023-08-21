@@ -18,8 +18,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-The code in this vignette requires `marginaleffects` version 0.6.0 or [the development version hosted on Github.](https://marginaleffects.com/#installation)
-
 This vignette introduces the `hypotheses()` function, and the `hypothesis` argument of the `comparisons()`, `slopes()`, and `predictions()` function. These features allow users to conduct linear and non-linear hypothesis tests and to compute custom contrasts (linear combinations) between parameters.
 
 ## Null hypothesis
@@ -61,7 +59,7 @@ Warning: Z statistics and p values are computed *before* applying functions in `
 
 ## Hypothesis tests with the delta method
 
-Version 0.6.0 of `marginaleffects` includes powerful function called `hypotheses()`. This function emulates the behavior of the well-established `car::deltaMethod` and `car::linearHypothesis` functions, but it supports more models, requires fewer dependencies, and offers some convenience features like shortcuts for robust standard errors.
+The `marginaleffects` package includes a powerful function called `hypotheses()`. This function emulates the behavior of the well-established `car::deltaMethod` and `car::linearHypothesis` functions, but it supports more models, requires fewer dependencies, and offers some convenience features like shortcuts for robust standard errors.
 
 `hypotheses()` can be used to compute estimates and standard errors of arbitrary functions of model parameters. For example, it can be used to conduct tests of equality between coefficients, or to test the value of some linear or non-linear combination of quantities of interest. `hypotheses()` can also be used to conduct hypothesis tests on other functions of a model's parameter, such as adjusted predictions or marginal effects.
 
