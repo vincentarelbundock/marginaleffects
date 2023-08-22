@@ -2,9 +2,18 @@
 % Please edit documentation in R/inferences.R
 \name{inferences}
 \alias{inferences}
-\title{(EXPERIMENTAL) Bootstrap and Simulation-Based Inference}
+\title{(EXPERIMENTAL) Bootstrap, Conformal, and Simulation-Based Inference}
 \usage{
-inferences(x, method, R = 1000, conf_type = "perc", ...)
+inferences(
+  x,
+  method,
+  R = 1000,
+  conf_type = "perc",
+  conf_level = 0.95,
+  conformal_test = NULL,
+  conformal_calibration = NULL,
+  conformal_score = "residual_abs"
+)
 }
 \arguments{
 \item{x}{Object produced by one of the core \code{marginaleffects} functions.}
@@ -17,9 +26,11 @@ inferences(x, method, R = 1000, conf_type = "perc", ...)
 \item "rsample" package
 \item "simulation" from a multivariate normal distribution (Krinsky & Robb, 1986)
 \item "mi" multiple imputation for missing data
+\item "conformal_split": prediction intervals using split conformal inference
+\item "conformal_cv+": prediction intervals using cross-validation+ conformal inference
 }}
 
-\item{R}{Number of resamples or simulations.}
+\item{R}{Number of resamples, simulations, or cross-validation folds.}
 
 \item{conf_type}{String: type of bootstrap interval to construct.
 \itemize{
@@ -29,11 +40,23 @@ inferences(x, method, R = 1000, conf_type = "perc", ...)
 \item \code{simulation}: argument ignored.
 }}
 
+\item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
+
+\item{conformal_test}{Data frame of test data for conformal inference.}
+
+\item{conformal_calibration}{Data frame of calibration data for split conformal inference (\verb{method="conformal_split}).}
+
+\item{conformal_score}{String
+\itemize{
+\item "residual_abs" or "residual_sq" for regression tasks (numeric outcome)
+\item "softmax" for classification tasks (when \code{predictions()} returns a \code{group} columns, such as multinomial or ordinal logit models.
+}}
+
 \item{...}{\itemize{
 \item If \code{method="boot"}, additional arguments are passed to \code{boot::boot()}.
 \item If \code{method="fwb"}, additional arguments are passed to \code{fwb::fwb()}.
 \item If \code{method="rsample"}, additional arguments are passed to \code{rsample::bootstraps()}.
-\item If \code{method="simulation"}, additional arguments are ignored.
+\item Additional arguments are ignored for all other methods.
 }}
 }
 \value{

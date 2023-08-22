@@ -39,7 +39,7 @@ datagridcf(..., model = NULL, newdata = NULL)
 
 \item{FUN_factor}{the function to be applied to factor variables.}
 
-\item{FUN_logical}{the function to be applied to factor variables.}
+\item{FUN_logical}{the function to be applied to logical variables.}
 
 \item{FUN_numeric}{the function to be applied to numeric variables.}
 
