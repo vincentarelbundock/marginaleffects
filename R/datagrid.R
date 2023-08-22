@@ -15,7 +15,7 @@
 #' @param by character vector with grouping variables within which `FUN_*` functions are applied to create "sub-grids" with unspecified variables.
 #' @param FUN_character the function to be applied to character variables.
 #' @param FUN_factor the function to be applied to factor variables.
-#' @param FUN_logical the function to be applied to factor variables.
+#' @param FUN_logical the function to be applied to logical variables.
 #' @param FUN_integer the function to be applied to integer variables.
 #' @param FUN_numeric the function to be applied to numeric variables.
 #' @param FUN_other the function to be applied to other variable types.
