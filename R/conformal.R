@@ -1,9 +1,13 @@
 get_conformal_score <- function(x, score) {
     response_name <- insight::find_response(attr(x, "model"))
+    response <- x[[response_name]]
+    if (!is.numeric(response) && score != "softmax") {
+      insight::format_error('The response must be numeric. Did you want to use `conformal_score="softmax"`?')
+    }
     if (score == "residual_abs") {
-      out <- abs(x[[response_name]] - x$estimate)
+      out <- abs(response - x$estimate)
     } else if (score == "residual_sq") {
-      out <- (x[[response_name]] - x$estimate)^2
+      out <- (response - x$estimate)^2
     } else if(score == "softmax") {
       model <- attr(x, "model")
       response <- x[[insight::find_response(model)]]
@@ -72,8 +76,8 @@ conformal_split <- function(x, test, calibration, score, conf_level, ...) {
 
 conformal_cv_plus <- function(x, test, R, score, conf_level, ...) {
     # cross-validation
-    train <- attr(x, "newdata")
-    idx <- sample(seq_len(nrow(x)), nrow(x))
+    train <- insight::get_data(attr(x, "model"))
+    idx <- sample(seq_len(nrow(train)), nrow(train))
     idx <- split(idx, ceiling(seq_along(idx) / (length(idx) / R)))
     scores <- NULL
     for (i in idx) {
