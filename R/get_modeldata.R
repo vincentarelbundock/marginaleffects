@@ -106,7 +106,7 @@ set_variable_class <- function(modeldata, model = NULL) {
             # more performant in time and memory than all(out[[col]] %in% 0:1)
             if (isTRUE(min(out[[col]]) == 0 &&
                        max(out[[col]]) == 1 &&
-                       length(unique(out[[col]])) == 2)) {
+                       data.table::uniqueN(out[[col]]) == 2)) {
                 cl[col] <- "binary"
             } else {
                 cl[col] <- "numeric"
