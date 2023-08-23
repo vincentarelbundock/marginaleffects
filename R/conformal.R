@@ -36,7 +36,7 @@ get_conformal_bounds <- function(x, score, conf_level) {
     response <- x[[response_name]]
     d <- min(score[score > quantile(score, probs = conf_level)])
     if ("group" %in% colnames(x)) {
-      q <- (length(score) + 1) * conf_level / length(score)
+      q <- quantile(score, probs = (length(score) + 1) * conf_level / length(score))
       out <- x[x$estimate > (1 - q),]
       data.table::setDT(out)
       out <- out[, .(pred.set = list(unique(group))), by = c("rowid", response_name)]
