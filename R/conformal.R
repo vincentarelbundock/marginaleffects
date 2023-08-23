@@ -41,6 +41,9 @@ get_conformal_bounds <- function(x, score, conf_level) {
       data.table::setDT(out)
       out <- out[, .(pred.set = list(unique(group))), by = c("rowid", response_name)]
       setorder(out, rowid)
+      data.table::setDF(out)
+      class(out) <- c("predictions", class(out))
+      attr(out, "variables_datagrid") <- response_name
       return(out)
     } else {
       # continuous outcome: conformity half-width
