@@ -79,7 +79,7 @@ get_modeldata <- function(model, additional_variables = FALSE, modeldata = NULL,
 set_variable_class <- function(modeldata, model = NULL) {
 
     if (is.null(modeldata)) return(modeldata)
-    
+
     # this can be costly on large datasets, when only a portion of
     # variables are used in the model
     variables <- NULL
@@ -103,7 +103,8 @@ set_variable_class <- function(modeldata, model = NULL) {
         } else if (inherits(out[[col]], "Surv")) { # is numeric but breaks the %in% 0:1 check
             cl[col] <- "other"
         } else if (is.numeric(out[[col]])) {
-            if (isTRUE(all(out[[col]] %in% 0:1))) {
+            # faster than all(out[[col]] %in% 0:1)
+            if (isTRUE(!any(foo != 0 | foo != 1))) {
                 cl[col] <- "binary"
             } else {
                 cl[col] <- "numeric"
@@ -112,7 +113,7 @@ set_variable_class <- function(modeldata, model = NULL) {
             cl[col] <- "other"
         }
     }
-    
+
     if (is.null(model)) {
         attr(out, "marginaleffects_variable_class") <- cl
         return(out)
