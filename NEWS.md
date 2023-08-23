@@ -1,5 +1,11 @@
 # News
 
+## Dev
+
+Misc:
+
+* Better documentation and error messages for `newdata=NULL`
+
 ## 0.14.0
 
 Breaking changes:

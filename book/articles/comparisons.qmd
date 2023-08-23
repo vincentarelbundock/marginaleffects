@@ -681,7 +681,7 @@ avg_comparisons(
   variables = list(new_hp = 10))
 ```
 
-Since version 0.7.2 of `marginaleffects`, we can supply arbitrary functions to create custom differences. These functions must accept a vector of values for the predictor of interest, and return a data frame with the same number of rows as the length, and two columns with the values to compare. For example, we can do:
+We can supply arbitrary functions to create custom differences. These functions must accept a vector of values for the predictor of interest, and return a data frame with the same number of rows as the length, and two columns with the values to compare. For example, we can do:
 
 ```{r}
 forward_diff <- \(x) data.frame(x, x + 10)

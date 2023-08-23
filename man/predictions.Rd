@@ -48,8 +48,7 @@ avg_predictions(
 
 \item{newdata}{Grid of predictor values at which we evaluate predictions.
 \itemize{
-\item \code{NULL} (default): Predictions for each observed value in the original dataset. See \code{\link[insight:get_data]{insight::get_data()}}
-\item data frame: Predictions for each row of the \code{newdata} data frame.
+\item \code{NULL} (default): Unit-level predictions for each observed value in the dataset (empirical distribution). The dataset is retrieved using \code{\link[insight:get_data]{insight::get_data()}}, which tries to extract data from the environment. This may produce unexpected results if the original data frame has been altered since fitting the model.
 \item string:
 \itemize{
 \item "mean": Predictions at the Mean. Predictions when each predictor is held at its mean or mode.

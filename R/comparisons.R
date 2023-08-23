@@ -48,7 +48,7 @@
 #'     + `variables = list(gear = "sequential", hp = c(100, 120))`
 #'     + See the Examples section below for more.
 #' @param newdata Grid of predictor values at which we evaluate the comparisons.
-#' + `NULL` (default): Unit-level contrasts for each observed value in the original dataset (empirical distribution). See [insight::get_data()]
+#' + `NULL` (default): Unit-level contrasts for each observed value in the dataset (empirical distribution). The dataset is retrieved using [insight::get_data()], which tries to extract data from the environment. This may produce unexpected results if the original data frame has been altered since fitting the model.
 #' + data frame: Unit-level contrasts for each row of the `newdata` data frame.
 #' + string:
 #'   - "mean": Contrasts at the Mean. Contrasts when each predictor is held at its mean or mode.
