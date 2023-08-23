@@ -41,6 +41,7 @@ cumprob
 customclass
 customizable
 Customizable
+cv
 datagrid
 deduplication
 demeaned
@@ -213,6 +214,7 @@ sd
 semilog
 sensical
 sequential
+softmax
 Solovev
 Stata
 Stata's

@@ -34,9 +34,9 @@ get_conformal_bounds <- function(x, score, conf_level) {
     model <- attr(x, "model")
     response_name <- insight::find_response(model)
     response <- x[[response_name]]
-    d <- min(score[score > quantile(score, probs = conf_level)])
+    d <- min(score[score > stats::quantile(score, probs = conf_level)])
     if ("group" %in% colnames(x)) {
-      q <- quantile(score, probs = (length(score) + 1) * conf_level / length(score))
+      q <- stats::quantile(score, probs = (length(score) + 1) * conf_level / length(score))
       out <- x[x$estimate > (1 - q),]
       data.table::setDT(out)
       out <- out[, .(pred.set = list(unique(group))), by = c("rowid", response_name)]
@@ -86,7 +86,7 @@ conformal_cv_plus <- function(x, test, R, score, conf_level, ...) {
     for (i in idx) {
         data_cv <- train[-i,]
         # re-fit the original model on training sets withholding the CV fold
-        model_cv <- update(attr(x, "model"), data = data_cv)
+        model_cv <- stats::update(attr(x, "model"), data = data_cv)
         # use the updated model to make out-of-fold predictions
         # call_cv is the `predictions()` call, which we re-evaluate in-fold: newdata=train[i,]
         call_cv <- attr(x, "call")

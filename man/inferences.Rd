@@ -12,7 +12,8 @@ inferences(
   conf_level = 0.95,
   conformal_test = NULL,
   conformal_calibration = NULL,
-  conformal_score = "residual_abs"
+  conformal_score = "residual_abs",
+  ...
 )
 }
 \arguments{

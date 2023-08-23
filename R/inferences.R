@@ -83,7 +83,8 @@ inferences <- function(x,
     conf_level = .95,
     conformal_test = NULL,
     conformal_calibration = NULL,
-    conformal_score = "residual_abs") {
+    conformal_score = "residual_abs",
+    ...) {
 
     checkmate::assert(
         checkmate::check_class(x, "predictions"),
