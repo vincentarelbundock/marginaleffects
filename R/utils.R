@@ -1,6 +1,6 @@
 get_unique_index <- function(x, term_only = FALSE) {
     idx <- c("term", "contrast", grep("^contrast_", colnames(x), value = TRUE))
-    
+
     if (!term_only) {
         by <- attr(x, "by")
         if (isTRUE(checkmate::check_data_frame(by))) {
@@ -13,9 +13,9 @@ get_unique_index <- function(x, term_only = FALSE) {
             idx <- explicit
         }
     }
-    
+
     idx <- intersect(unique(idx), colnames(x))
-    
+
     if (length(idx) == 0) {
         return(NULL)
     } else if (length(idx) == 1) {
@@ -29,7 +29,7 @@ get_unique_index <- function(x, term_only = FALSE) {
             out[[i]] <- NULL
         }
     }
-    
+
     out <- apply(out, 1, paste, collapse = ", ")
     return(out)
 }
@@ -103,7 +103,7 @@ merge_by_rowid <- function(x, y) {
     if ("rowid" %in% colnames(x) && "rowid" %in% colnames(y) && length(mergein) > 0) {
         idx <- c("rowid", mergein)
         if (!data.table::is.data.table(y)) {
-            tmp <- data.table::data.table(y)[, ..idx]
+            tmp <- data.table::setDT(y)[, ..idx]
         } else {
             tmp <- y[, ..idx]
         }
