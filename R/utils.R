@@ -103,7 +103,8 @@ merge_by_rowid <- function(x, y) {
     if ("rowid" %in% colnames(x) && "rowid" %in% colnames(y) && length(mergein) > 0) {
         idx <- c("rowid", mergein)
         if (!data.table::is.data.table(y)) {
-            tmp <- data.table::setDT(y)[, ..idx]
+            data.table::setDT(y)
+            tmp <- y[, ..idx]
         } else {
             tmp <- y[, ..idx]
         }
