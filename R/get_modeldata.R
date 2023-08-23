@@ -104,7 +104,7 @@ set_variable_class <- function(modeldata, model = NULL) {
             cl[col] <- "other"
         } else if (is.numeric(out[[col]])) {
             # faster than all(out[[col]] %in% 0:1)
-            if (isTRUE(!any(foo != 0 | foo != 1))) {
+            if (isTRUE(!any(out[[col]] != 0 | out[[col]] != 1))) {
                 cl[col] <- "binary"
             } else {
                 cl[col] <- "numeric"
