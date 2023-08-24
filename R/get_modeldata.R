@@ -103,10 +103,7 @@ set_variable_class <- function(modeldata, model = NULL) {
         } else if (inherits(out[[col]], "Surv")) { # is numeric but breaks the %in% 0:1 check
             cl[col] <- "other"
         } else if (is.numeric(out[[col]])) {
-            # more performant in time and memory than all(out[[col]] %in% 0:1)
-            if (isTRUE(min(out[[col]]) == 0 &&
-                       max(out[[col]]) == 1 &&
-                       data.table::uniqueN(out[[col]]) == 2)) {
+            if (is_binary(out[[col]])) {
                 cl[col] <- "binary"
             } else {
                 cl[col] <- "numeric"

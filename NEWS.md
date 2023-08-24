@@ -5,6 +5,7 @@
 Misc:
 
 * Better documentation and error messages for `newdata=NULL`
+* Some performance improvements for `predictions()` and `marginalmeans()` (#880, #882, @etiennebacher).
 
 ## 0.14.0
 
