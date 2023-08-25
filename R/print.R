@@ -151,6 +151,7 @@ print.marginaleffects <- function(x,
     tmp <- c("by",
         attr(nd, "variables_datagrid"),
         attr(nd, "newdata_variables_datagrid"),
+        attr(x, "variables_datagrid"),
         attr(x, "newdata_variables_datagrid")
     )
     if (isTRUE(checkmate::check_character(attr(x, "by")))) {

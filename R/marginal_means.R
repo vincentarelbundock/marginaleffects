@@ -12,6 +12,7 @@
 #' + Character vector of variable names: compute marginal means for each category of the listed variables.
 #' + `NULL`: calculate marginal means for all logical, character, or factor variables in the dataset used to fit `model`. Hint:  Set `cross=TRUE` to compute marginal means for combinations of focal variables.
 #' @param newdata Grid of predictor values over which we marginalize.
+#' + Warning: Please avoid modifying your dataset between fitting the model and calling a `marginaleffects` function. This can sometimes lead to unexpected results.
 #' + `NULL` create a grid with all combinations of all categorical predictors in the model. Warning: can be expensive.
 #' + Character vector: subset of categorical variables to use when building the balanced grid of predictors. Other variables are held to their mean or mode.
 #' + Data frame: A data frame which includes all the predictors in the original model. The full dataset is replicated once for every combination of the focal variables in the `variables` argument, using the `datagridcf()` function.

@@ -2,6 +2,10 @@
 
 ## Dev
 
+New:
+
+* Conformal prediction via `inferences()`
+
 Misc:
 
 * Better documentation and error messages for `newdata=NULL`

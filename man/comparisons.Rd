@@ -52,6 +52,7 @@ avg_comparisons(
 
 \item{newdata}{Grid of predictor values at which we evaluate the comparisons.
 \itemize{
+\item Warning: Please avoid modifying your dataset between fitting the model and calling a \code{marginaleffects} function. This can sometimes lead to unexpected results.
 \item \code{NULL} (default): Unit-level contrasts for each observed value in the dataset (empirical distribution). The dataset is retrieved using \code{\link[insight:get_data]{insight::get_data()}}, which tries to extract data from the environment. This may produce unexpected results if the original data frame has been altered since fitting the model.
 \item data frame: Unit-level contrasts for each row of the \code{newdata} data frame.
 \item string:

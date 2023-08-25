@@ -2,9 +2,18 @@
 % Please edit documentation in R/inferences.R
 \name{inferences}
 \alias{inferences}
-\title{(EXPERIMENTAL) Bootstrap and Simulation-Based Inference}
+\title{(EXPERIMENTAL) Bootstrap, Conformal, and Simulation-Based Inference}
 \usage{
-inferences(x, method, R = 1000, conf_type = "perc", ...)
+inferences(
+  x,
+  method,
+  R = 1000,
+  conf_type = "perc",
+  conformal_test = NULL,
+  conformal_calibration = NULL,
+  conformal_score = "residual_abs",
+  ...
+)
 }
 \arguments{
 \item{x}{Object produced by one of the core \code{marginaleffects} functions.}
@@ -17,9 +26,11 @@ inferences(x, method, R = 1000, conf_type = "perc", ...)
 \item "rsample" package
 \item "simulation" from a multivariate normal distribution (Krinsky & Robb, 1986)
 \item "mi" multiple imputation for missing data
+\item "conformal_split": prediction intervals using split conformal prediction (see Angelopoulos & Bates, 2022)
+\item "conformal_cv+": prediction intervals using cross-validation+ conformal prediction (see Barber et al., 2020)
 }}
 
-\item{R}{Number of resamples or simulations.}
+\item{R}{Number of resamples, simulations, or cross-validation folds.}
 
 \item{conf_type}{String: type of bootstrap interval to construct.
 \itemize{
@@ -29,11 +40,21 @@ inferences(x, method, R = 1000, conf_type = "perc", ...)
 \item \code{simulation}: argument ignored.
 }}
 
+\item{conformal_test}{Data frame of test data for conformal prediction.}
+
+\item{conformal_calibration}{Data frame of calibration data for split conformal prediction (\verb{method="conformal_split}).}
+
+\item{conformal_score}{String. Warning: The \code{type} argument in \code{predictions()} must generate predictions which are on the same scale as the outcome variable. Typically, this means that \code{type} must be "response" or "probs".
+\itemize{
+\item "residual_abs" or "residual_sq" for regression tasks (numeric outcome)
+\item "softmax" for classification tasks (when \code{predictions()} returns a \code{group} columns, such as multinomial or ordinal logit models.
+}}
+
 \item{...}{\itemize{
 \item If \code{method="boot"}, additional arguments are passed to \code{boot::boot()}.
 \item If \code{method="fwb"}, additional arguments are passed to \code{fwb::fwb()}.
 \item If \code{method="rsample"}, additional arguments are passed to \code{rsample::bootstraps()}.
-\item If \code{method="simulation"}, additional arguments are ignored.
+\item Additional arguments are ignored for all other methods.
 }}
 }
 \value{
@@ -62,6 +83,10 @@ Krinsky, I., and A. L. Robb. 1986. “On Approximating the Statistical Propertie
 King, Gary, Michael Tomz, and Jason Wittenberg. "Making the most of statistical analyses: Improving interpretation and presentation." American journal of political science (2000): 347-361
 
 Dowd, Bryan E., William H. Greene, and Edward C. Norton. "Computation of standard errors." Health services research 49.2 (2014): 731-750.
+
+Angelopoulos, Anastasios N., and Stephen Bates. 2022. "A Gentle Introduction to Conformal Prediction and Distribution-Free Uncertainty Quantification." arXiv. https://doi.org/10.48550/arXiv.2107.07511.
+
+Barber, Rina Foygel, Emmanuel J. Candes, Aaditya Ramdas, and Ryan J. Tibshirani. 2020. “Predictive Inference with the Jackknife+.” arXiv. http://arxiv.org/abs/1905.02928.
 }
 
 \examples{
