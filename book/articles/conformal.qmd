@@ -6,7 +6,7 @@ execute:
 
 This notebook shows how to estimate conformal prediction intervals with the `marginaleffects` package for `R`.
 
-# Confidence vs. prediction intervals
+## Confidence vs. prediction intervals
 
 The `predictions()` function from the `marginaleffects()` package can compute confidence intervals for fitted values in over 80 model classes in `R`. These intervals quantify the uncertainty about the expected value of the response. A common misunderstanding is that these confidence intervals should be calibrated to cover a certain percentage of unseen data points. This is not the case. In fact, a 95% confidence interval reported by `predictions()` will typically cover a much smaller share of out-of-sample outcomes.
 
@@ -41,7 +41,7 @@ We see that the confidence interval around predictions covers the true mean of $
 
 If we care about out of sample predictions, that is, if we want our interval to cover a specific share of the actual outcome for unobserved individuals, we must compute "prediction intervals" instead of "confidence intervals." How do we do this? Conformal prediction is very flexible and powerful approach.
 
-# Conformal prediction
+## Conformal prediction
 
 In their excellent tutorial, @AngBat2022 write that conformal prediction is
 
@@ -56,7 +56,7 @@ The main caveats are:
 1. The width of the conformal prediction interval will typically depend on the quality of the prediction model and of the score function.
 1. The score functions implemented in `marginaleffects` simply take the residual---or difference between the observed outcome and predicted value. This means that the `type` argument must ensure that observations and predictions are on commensurable scales (usually `type="response"` or `type="prob"`). 
 
-# Data and models: Linear, Logit, Multinomial Logit
+## Data and models: Linear, Logit, Multinomial Logit
 
 Download data, split it into training and testing sets, and estimate a few different models:
 
@@ -97,7 +97,7 @@ For multinomial models, `predictions()` returns a data frame with one prediction
 p_mult |> subset(rowid == 1)
 ```
 
-# Conformal predictions with `inferences()`
+## Conformal predictions with `inferences()`
 
 In the "Bootstrap and Simultation" vignette, we saw that the `inferences()` function can be used to compute confidence intervals for any `marginaleffects` package estimates. The workflow is simple:
 
@@ -106,7 +106,7 @@ In the "Bootstrap and Simultation" vignette, we saw that the `inferences()` func
 
 `inferences()` supports two strategies for conformal prediction: split or CV+ [@AngBat2022,@Din2023]. The former is faster but less efficient. In the rest of this vignette, we illustrate how to use this same workflow to compute conformal prediction intervals.
 
-## Cross-validation +
+### Cross-validation +
 
 The `p_lm`, `p_glm`, and `p_mult` objects are `predictions` objects. They contain the point predictions and confidence intervals for each observation in the training set. Now, we use the `inferences()` function to compute predictions and *prediction* intervals for every observation in the test set:
 
@@ -157,7 +157,7 @@ For example, for the first observation in the dataset, the conformal prediction 
 mean(sapply(seq_len(nrow(p)), \(i) p$branch[i] %in% p$pred.set[[i]]))
 ```
 
-## Split conformal prediction
+### Split conformal prediction
 
 For split conformal prediction, we must first split the training set into a training and a calibration set (see @AngBat2022). Then, we pass the calibration set to the `inferences()` function:
 
@@ -172,9 +172,9 @@ p <- predictions(m_lm, conf_level = .9) |>
 mean(p$rank <= p$pred.high & p$rank >= p$pred.low)
 ```
 
-# Misspecification
+## Misspecification
 
-## Polynomials
+### Polynomials
 
 As noted above, the conformal prediction interval should be valid even if the model is misspecified. To illustrate this, we generate data from a linear model with polynomials, but estimate a linear model without polynomials. Then, we plot the results and compute the coverage of the prediction interval:
 
@@ -211,7 +211,7 @@ ggplot(p, aes(X, Y)) +
 
 This example is interesting, because it shows that the prediction interval has adquate marginal coverage. However, the intervals are not necessarily well calibrated "locally", in different strata of $X$. In the figure above, our model is misspecified, so we make more mistakes in the tails, where predictions are bad. In contrast, the interval catches more observations in the middle of the distribution, which ensures that the overall error rate is adequate.
 
-## Poisson vs Negative Binomial
+### Poisson vs Negative Binomial
 
 Here is a second example of model misspecification. We generate data from a negative binomial model, but estimate a Poisson model. Nevertheless, the conformal prediction interval has good coverage:
 
