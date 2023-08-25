@@ -17,7 +17,7 @@ get_conformal_score <- function(x, score) {
         # Uncertainty Quantification.” arXiv.
         # https://doi.org/10.48550/arXiv.2107.07511.
         # 1 minus the softmax output of the true class
-        out <- 1 - ifelse(response == 1, x$estimate, 1 - x$estimate)
+        out <- ifelse(response == 1, 1 - x$estimate, x$estimate)
       } else if ("group" %in% colnames(x)) {
         # HACK: is this fragile? I think `group` should always be character.
         idx <- as.character(response) == as.character(x$group)
