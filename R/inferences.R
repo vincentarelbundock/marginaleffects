@@ -13,16 +13,16 @@
 #' + "rsample" package
 #' + "simulation" from a multivariate normal distribution (Krinsky & Robb, 1986)
 #' + "mi" multiple imputation for missing data
-#' + "conformal_split": prediction intervals using split conformal inference
-#' + "conformal_cv+": prediction intervals using cross-validation+ conformal inference
+#' + "conformal_split": prediction intervals using split conformal prediction (see Angelopoulos & Bates, 2022)
+#' + "conformal_cv+": prediction intervals using cross-validation+ conformal prediction (see Barber et al., 2020)
 #' @param R Number of resamples, simulations, or cross-validation folds.
 #' @param conf_type String: type of bootstrap interval to construct.
 #' + `boot`: "perc", "norm", "basic", or "bca"
 #' + `fwb`: "perc", "norm", "basic", "bc", or "bca"
 #' + `rsample`: "perc" or "bca"
 #' + `simulation`: argument ignored.
-#' @param conformal_test Data frame of test data for conformal inference.
-#' @param conformal_calibration Data frame of calibration data for split conformal inference (`method="conformal_split`).
+#' @param conformal_test Data frame of test data for conformal prediction.
+#' @param conformal_calibration Data frame of calibration data for split conformal prediction (`method="conformal_split`).
 #' @param conformal_score String
 #'   + "residual_abs" or "residual_sq" for regression tasks (numeric outcome)
 #'   + "softmax" for classification tasks (when `predictions()` returns a `group` columns, such as multinomial or ordinal logit models.
@@ -31,7 +31,6 @@
 #' + If `method="fwb"`, additional arguments are passed to `fwb::fwb()`.
 #' + If `method="rsample"`, additional arguments are passed to `rsample::bootstraps()`.
 #' + Additional arguments are ignored for all other methods.
-#' @inheritParams slopes
 #' @details
 #' When `method="simulation"`, we conduct simulation-based inference following the method discussed in Krinsky & Robb (1986):
 #' 1. Draw `R` sets of simulated coefficients from a multivariate normal distribution with mean equal to the original model's estimated coefficients and variance equal to the model's variance-covariance matrix (classical, "HC3", or other).
@@ -47,6 +46,11 @@
 #' King, Gary, Michael Tomz, and Jason Wittenberg. "Making the most of statistical analyses: Improving interpretation and presentation." American journal of political science (2000): 347-361
 #'
 #' Dowd, Bryan E., William H. Greene, and Edward C. Norton. "Computation of standard errors." Health services research 49.2 (2014): 731-750.
+#' 
+#' Angelopoulos, Anastasios N., and Stephen Bates. 2022. "A Gentle Introduction to Conformal Prediction and Distribution-Free Uncertainty Quantification." arXiv. https://doi.org/10.48550/arXiv.2107.07511.
+#' 
+#' Barber, Rina Foygel, Emmanuel J. Candes, Aaditya Ramdas, and Ryan J. Tibshirani. 2020. “Predictive Inference with the Jackknife+.” arXiv. http://arxiv.org/abs/1905.02928.
+#' 
 #'
 #' @return
 #' A `marginaleffects` object with simulation or bootstrap resamples and objects attached.
@@ -80,11 +84,14 @@ inferences <- function(x,
     method,
     R = 1000,
     conf_type = "perc",
-    conf_level = .95,
     conformal_test = NULL,
     conformal_calibration = NULL,
     conformal_score = "residual_abs",
     ...) {
+
+    # inherit conf_level from the original object
+    conf_level <- attr(x, "conf_level")
+    if (is.null(conf_level)) conf_level <- 0.95
 
     checkmate::assert(
         checkmate::check_class(x, "predictions"),

@@ -1,0 +1,216 @@
+---
+title: "Conformal prediction"
+execute:
+    cache: true
+---
+
+# Confidence vs. prediction intervals
+
+The `predictions()` function from the `marginaleffects()` package can compute confidence intervals for fitted values in over 80 model classes in `R`. These intervals quantify the uncertainty about the expected value of the response. A common misunderstanding is that these confidence intervals should be calibrated to cover a certain percentage of unseen data points. This is not the case. In fact, a 95% confidence interval reported by `predictions()` will typically cover a much smaller share of out-of-sample outcomes.
+
+How do we compute "prediction intervals" instead of "confidence intervals"? One very flexible and powerful approach is conformal prediction.
+
+# Conformal prediction
+
+In their excellent tutorial, @AngBat2022 write that conformal prediction is
+
+> "a user-friendly paradigm for creating statistically rigorous uncertainty sets/intervals for the predictions of such models. Critically, the sets are valid in a distribution-free sense: they possess explicit, non-asymptotic guarantees even without distributional assumptions or model assumptions.
+
+As I show below, we can get prediction sets with good coverage *even if our model is misspecified!* The main caveats are that we need exchangeable data,^[The usual "independent and identically distributed" assumption is a special case of exchangeability. Exchangeability is often violated in time series or data with spatial dependence.] and that the tightness of the prediction set is determined by the quality of a "conformity score" function and of the initial estimator.
+
+This notebook shows how to estimate conformal prediction intervals using a development branch of the `marginaleffects` package.
+
+The code is super simple. If you want to take a look, see here: [conformal.R](https://github.com/vincentarelbundock/marginaleffects/blob/ac6d9e3db3fe06343bf85e51cf95ec833aada846/R/conformal.R)
+
+# Installation
+
+Install the `conformal` development branch of the `marginaleffects` package from Github:
+
+```{r}
+#| eval: false
+remotes::install_github("vincentarelbundock/marginaleffects@conformal")
+```
+
+Restart `R` completely. 
+
+# Data and models: Linear, Logit, Multinomial Logit
+
+Download data, split it into training and testing sets, and estimate a few different models:
+
+```{r}
+library(marginaleffects)
+library(ggplot2)
+library(nnet)
+set.seed(1024)
+
+# download data
+dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/openintro/military.csv")
+
+# create a binary outcome variable
+dat <- transform(dat, officer = as.numeric(grepl("officer", grade)))
+
+# train/test split
+idx <- sample(seq_len(nrow(dat)), 60000)
+test <- dat[idx[1:10000], ]
+train <- dat[idx[10001:length(idx)], ]
+
+# linear regression
+m_lm <- lm(rank ~ gender * race, data = train)
+p_lm <- predictions(m_lm, newdata = train)
+
+# logit regression
+m_glm <- glm(officer ~ gender * race, data = train, family = binomial)
+p_glm <- predictions(m_glm, newdata = train)
+
+# multinomial logit regression
+m_mult <- multinom(branch ~ gender * race, data = train, trace = FALSE)
+p_mult <- predictions(m_mult, newdata = train)
+```
+
+For LM and GLM models, `predictions()` returns a data frame with one prediction for each row of the original data. This data frame includes confidence intervals:
+
+```{r}
+p_glm
+```
+
+For multinomial models, `predictions()` returns a data frame with one prediction for each row and for each outcome level. We can see the predicted probabilities of each outcome level for the first observation in the original data:
+
+```{r}
+p_mult |> subset(rowid == 1)
+```
+
+# Cross-validation +
+
+`inferences()` supports two strategies for conformal prediction: split or CV+. The former is faster but less efficient.
+
+The `p_lm`, `p_glm`, and `p_mult` objects are `predictions` objects. They contain the point predictions and confidence intervals for each observation in the training set. Now, we use the `inferences()` function to compute predictions and *prediction* intervals for every observation in the test set:
+
+```{r}
+#| warnings: false
+p <- predictions(m_lm, conf_level = .9) |> 
+    inferences(
+        R = 5,
+        method = "conformal_cv+",
+        conformal_test = test)
+p
+```
+
+The prediction interval is expected to cover the (known) true value about 90% of the time:
+
+```{r}
+mean(p$rank <= p$pred.high & p$rank >= p$pred.low)
+```
+
+The coverage also seems adequate (about 80%) for the logit model:
+
+```{r}
+#| warnings: false
+p <- predictions(m_glm, conf_level = .8) |>
+    inferences(
+        R = 5,
+        method = "conformal_cv+",
+        conformal_test = test)
+mean(p$officer <= p$pred.high & p$officer >= p$pred.low)
+```
+
+When the outcome is categorical, we use `conformal_score="softmax"`. With this argument, `inferences()` generates "conformal prediction sets," that is, sets of possible outcome classes with coverage guarantees. `inferences()` returns a list column of sets for each observation. On average, those sets should cover the true value about 70% of the time:
+
+```{r}
+#| warnings: false
+p <- predictions(m_mult, conf_level = .7) |>
+    inferences(
+        R = 5,
+        method = "conformal_cv+",
+        conformal_score = "softmax",
+        conformal_test = test)
+head(p)
+```
+
+For example, for the first observation in the dataset, the conformal prediction is `r sprintf("{%s}", paste(p$pred.set[[1]], collapse = ", "))` and the true value is `r p$branch[1]`. The conformal prediction set thus covers the true value. The coverage rate is:
+
+```{r}
+mean(sapply(seq_len(nrow(p)), \(i) p$branch[i] %in% p$pred.set[[i]]))
+```
+
+# Split conformal prediction
+
+For split conformal prediction, we must first split the training set into a training and a calibration set (see @AngBat2022). Then, we pass the calibration set to the `inferences()` function:
+
+```{r}
+calibration <- train[1:1000,]
+train <- train[1001:nrow(train),]
+p <- predictions(m_lm, conf_level = .9) |>
+    inferences(
+        method = "conformal_split",
+        conformal_calibration = calibration,
+        conformal_test = test)
+mean(p$rank <= p$pred.high & p$rank >= p$pred.low)
+```
+
+# Misspecification
+
+## Polynomials
+
+As noted above, the conformal prediction interval should be valid even if the model is misspecified. To illustrate this, we generate data from a linear model with polynomials, but estimate a linear model without polynomials. Then, we plot the results and compute the coverage of the prediction interval:
+
+```{r}
+N <- 1000
+X <- rnorm(N * 2)
+dat <- data.frame(
+    X = X,
+    Y = X + X^2 + X^3 + rnorm(N * 2))
+train <- dat[1:N,]
+test <- dat[(N + 1):nrow(dat),]
+
+m <- lm(Y ~ X, data = train)
+p <- predictions(m) |>
+    inferences(
+        R = 5,
+        method = "conformal_cv+",
+        conformal_test = test)
+
+mean(p$Y <= p$pred.high & p$Y >= p$pred.low)
+
+ggplot(p, aes(X, Y)) +
+    geom_point(alpha = .1) +
+    geom_ribbon(aes(X, ymin = pred.low, ymax = pred.high), alpha = .2, fill = "#F0E442") +
+    geom_ribbon(aes(X, ymin = conf.low, ymax = conf.high), alpha = .4, fill = "#D55E00") +
+    theme_bw() +
+    labs(
+        title = "Confidence and prediction intervals for a misspecified linear model",
+        subtitle = sprintf(
+            "Confidence coverage (orange): %.2f%%; Prediction coverage (yellow): %.2f%%.",
+            mean(p$Y <= p$conf.high & p$Y >= p$conf.low),
+            mean(p$Y <= p$pred.high & p$Y >= p$pred.low)))
+```
+
+This example is interesting, because it shows that the prediction interval has adquate coverage when we consider the data across the whole distribution of $X$. However, the intervals are not necessarily well calibrated "locally", in different strata of $X$. In the figure above, our model is misspecified, so we make more mistakes where predictions are bad (in the tails). To compensate, the interval catches more observations in the middle of the distribution, which makes it so that the error rate is correct on average. 
+
+## Poisson vs Negative Binomial
+
+Here is a second example of model misspecification. We generate data from a negative binomial model, but estimate a Poisson model. Nevertheless, the conformal prediction interval has good coverage:
+
+```{r}
+library(MASS)
+library(ggplot2)
+library(marginaleffects)
+set.seed(123)
+n <- 10000
+X <- rnorm(n)
+eta <- -1 + 2*X
+mu <- exp(eta)
+Y <- rnegbin(n, mu = mu, theta = 1)
+dat <- data.frame(X = X, Y = Y)
+train <- dat[1:5000,]
+test <- dat[5001:nrow(dat),]
+
+mod <- glm(Y ~ X, data = train, family = poisson)
+
+p <- predictions(mod, conf_level = .9) |>
+    inferences(
+        method = "conformal_cv+",
+        R = 10,
+        conformal_test = test)
+
+mean(p$Y >= p$pred.low & p$Y <= p$pred.high)
+```

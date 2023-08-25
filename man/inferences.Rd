@@ -9,7 +9,6 @@ inferences(
   method,
   R = 1000,
   conf_type = "perc",
-  conf_level = 0.95,
   conformal_test = NULL,
   conformal_calibration = NULL,
   conformal_score = "residual_abs",
@@ -27,8 +26,8 @@ inferences(
 \item "rsample" package
 \item "simulation" from a multivariate normal distribution (Krinsky & Robb, 1986)
 \item "mi" multiple imputation for missing data
-\item "conformal_split": prediction intervals using split conformal inference
-\item "conformal_cv+": prediction intervals using cross-validation+ conformal inference
+\item "conformal_split": prediction intervals using split conformal prediction (see Angelopoulos & Bates, 2022)
+\item "conformal_cv+": prediction intervals using cross-validation+ conformal prediction (see Barber et al., 2020)
 }}
 
 \item{R}{Number of resamples, simulations, or cross-validation folds.}
@@ -41,11 +40,9 @@ inferences(
 \item \code{simulation}: argument ignored.
 }}
 
-\item{conf_level}{numeric value between 0 and 1. Confidence level to use to build a confidence interval.}
+\item{conformal_test}{Data frame of test data for conformal prediction.}
 
-\item{conformal_test}{Data frame of test data for conformal inference.}
-
-\item{conformal_calibration}{Data frame of calibration data for split conformal inference (\verb{method="conformal_split}).}
+\item{conformal_calibration}{Data frame of calibration data for split conformal prediction (\verb{method="conformal_split}).}
 
 \item{conformal_score}{String
 \itemize{
@@ -86,6 +83,10 @@ Krinsky, I., and A. L. Robb. 1986. “On Approximating the Statistical Propertie
 King, Gary, Michael Tomz, and Jason Wittenberg. "Making the most of statistical analyses: Improving interpretation and presentation." American journal of political science (2000): 347-361
 
 Dowd, Bryan E., William H. Greene, and Edward C. Norton. "Computation of standard errors." Health services research 49.2 (2014): 731-750.
+
+Angelopoulos, Anastasios N., and Stephen Bates. 2022. "A Gentle Introduction to Conformal Prediction and Distribution-Free Uncertainty Quantification." arXiv. https://doi.org/10.48550/arXiv.2107.07511.
+
+Barber, Rina Foygel, Emmanuel J. Candes, Aaditya Ramdas, and Ryan J. Tibshirani. 2020. “Predictive Inference with the Jackknife+.” arXiv. http://arxiv.org/abs/1905.02928.
 }
 
 \examples{

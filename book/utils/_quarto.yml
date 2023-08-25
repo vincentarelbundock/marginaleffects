@@ -40,6 +40,7 @@ book:
       - articles/brms.qmd
       - articles/bootstrap.qmd
       - articles/categorical.qmd
+      - articles/conformal.qmd
       - articles/gformula.qmd
       - articles/elasticity.qmd
       - articles/equivalence.qmd
