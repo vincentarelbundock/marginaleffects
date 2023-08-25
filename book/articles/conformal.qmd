@@ -101,7 +101,7 @@ p_mult |> subset(rowid == 1)
 
 In the "Bootstrap and Simultation" vignette, we saw that the `inferences()` function can be used to compute confidence intervals for any `marginaleffects` package estimates. The workflow is simple:
 
-1. Generate estimates with `predictions()`, `comparisons()`, or `slopes()`. 
+1. Generate estimates with `predictions()`.
 2. Pass the resulting object to `inferences()`, along with arguments to specify how to perform inference to obtain uncertainty estimates.
 
 `inferences()` supports two strategies for conformal prediction: split or CV+ [@AngBat2022,@Din2023]. The former is faster but less efficient. In the rest of this vignette, we illustrate how to use this same workflow to compute conformal prediction intervals.
