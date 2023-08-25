@@ -37,6 +37,7 @@
 #'     + "threenum": mean and 1 standard deviation on both sides
 #'     + "fivenum": Tukey's five numbers
 #' @param newdata Grid of predictor values at which we evaluate predictions.
+#' + Warning: Please avoid modifying your dataset between fitting the model and calling a `marginaleffects` function. This can sometimes lead to unexpected results.
 #' + `NULL` (default): Unit-level predictions for each observed value in the dataset (empirical distribution). The dataset is retrieved using [insight::get_data()], which tries to extract data from the environment. This may produce unexpected results if the original data frame has been altered since fitting the model.
 #' + string:
 #'   - "mean": Predictions at the Mean. Predictions when each predictor is held at its mean or mode.

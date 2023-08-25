@@ -97,9 +97,16 @@ For multinomial models, `predictions()` returns a data frame with one prediction
 p_mult |> subset(rowid == 1)
 ```
 
-# Cross-validation +
+# Conformal predictions with `inferences()`
 
-`inferences()` supports two strategies for conformal prediction: split or CV+ [@AngBat2022,@Din2023]. The former is faster but less efficient.
+In the "Bootstrap and Simultation" vignette, we saw that the `inferences()` function can be used to compute confidence intervals for any `marginaleffects` package estimates. The workflow is simple:
+
+1. Generate estimates with `predictions()`, `comparisons()`, or `slopes()`. 
+2. Pass the resulting object to `inferences()`, along with arguments to specify how to perform inference to obtain uncertainty estimates.
+
+`inferences()` supports two strategies for conformal prediction: split or CV+ [@AngBat2022,@Din2023]. The former is faster but less efficient. In the rest of this vignette, we illustrate how to use this same workflow to compute conformal prediction intervals.
+
+## Cross-validation +
 
 The `p_lm`, `p_glm`, and `p_mult` objects are `predictions` objects. They contain the point predictions and confidence intervals for each observation in the training set. Now, we use the `inferences()` function to compute predictions and *prediction* intervals for every observation in the test set:
 
@@ -150,7 +157,7 @@ For example, for the first observation in the dataset, the conformal prediction 
 mean(sapply(seq_len(nrow(p)), \(i) p$branch[i] %in% p$pred.set[[i]]))
 ```
 
-# Split conformal prediction
+## Split conformal prediction
 
 For split conformal prediction, we must first split the training set into a training and a calibration set (see @AngBat2022). Then, we pass the calibration set to the `inferences()` function:
 
@@ -202,7 +209,7 @@ ggplot(p, aes(X, Y)) +
             mean(p$Y <= p$pred.high & p$Y >= p$pred.low)))
 ```
 
-This example is interesting, because it shows that the prediction interval has adquate coverage when we consider the data across the whole distribution of $X$. However, the intervals are not necessarily well calibrated "locally", in different strata of $X$. In the figure above, our model is misspecified, so we make more mistakes where predictions are bad (in the tails). To compensate, the interval catches more observations in the middle of the distribution, which makes it so that the error rate is correct on average. 
+This example is interesting, because it shows that the prediction interval has adquate marginal coverage. However, the intervals are not necessarily well calibrated "locally", in different strata of $X$. In the figure above, our model is misspecified, so we make more mistakes in the tails, where predictions are bad. In contrast, the interval catches more observations in the middle of the distribution, which ensures that the overall error rate is adequate.
 
 ## Poisson vs Negative Binomial
 

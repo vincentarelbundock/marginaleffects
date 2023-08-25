@@ -44,7 +44,7 @@ inferences(
 
 \item{conformal_calibration}{Data frame of calibration data for split conformal prediction (\verb{method="conformal_split}).}
 
-\item{conformal_score}{String
+\item{conformal_score}{String. Warning: The \code{type} argument in \code{predictions()} must generate predictions which are on the same scale as the outcome variable. Typically, this means that \code{type} must be "response" or "probs".
 \itemize{
 \item "residual_abs" or "residual_sq" for regression tasks (numeric outcome)
 \item "softmax" for classification tasks (when \code{predictions()} returns a \code{group} columns, such as multinomial or ordinal logit models.

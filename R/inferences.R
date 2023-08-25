@@ -23,7 +23,7 @@
 #' + `simulation`: argument ignored.
 #' @param conformal_test Data frame of test data for conformal prediction.
 #' @param conformal_calibration Data frame of calibration data for split conformal prediction (`method="conformal_split`).
-#' @param conformal_score String
+#' @param conformal_score String. Warning: The `type` argument in `predictions()` must generate predictions which are on the same scale as the outcome variable. Typically, this means that `type` must be "response" or "probs".
 #'   + "residual_abs" or "residual_sq" for regression tasks (numeric outcome)
 #'   + "softmax" for classification tasks (when `predictions()` returns a `group` columns, such as multinomial or ordinal logit models.
 #' @param ...

@@ -79,7 +79,7 @@ conformal_split <- function(x, test, calibration, score, conf_level, ...) {
 
 conformal_cv_plus <- function(x, test, R, score, conf_level, ...) {
     # cross-validation
-    train <- insight::get_data(attr(x, "model"))
+    train <- get_modeldata(attr(x, "model"))
     idx <- sample(seq_len(nrow(train)), nrow(train))
     idx <- split(idx, ceiling(seq_along(idx) / (length(idx) / R)))
     scores <- NULL
