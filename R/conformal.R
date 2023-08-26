@@ -11,7 +11,7 @@ get_conformal_score <- function(x, score) {
     } else if(score == "softmax") {
       model <- attr(x, "model")
       response <- x[[insight::find_response(model)]]
-      if (is.numeric(response) && all(response %in% 0:1)) {
+      if (is.numeric(response) && is_binary(response)) {
         # See p.4 of Angelopoulos, Anastasios N., and Stephen Bates. 2022. “A
         # Gentle Introduction to Conformal Prediction and Distribution-Free
         # Uncertainty Quantification.” arXiv.
