@@ -1,7 +1,7 @@
 sanitize_hypothesis <- function(hypothesis, ...) {
 
     checkmate::assert(
-        checkmate::check_string(hypothesis, pattern = "="),
+        checkmate::check_character(hypothesis, pattern = "="),
         checkmate::check_choice(hypothesis, choices = c("pairwise", "reference", "sequential", "revpairwise", "revreference", "revsequential")),
         checkmate::check_numeric(hypothesis),
         checkmate::check_matrix(hypothesis),
@@ -9,7 +9,7 @@ sanitize_hypothesis <- function(hypothesis, ...) {
 
     hnull <- 0
 
-    if (isTRUE(checkmate::check_string(hypothesis, pattern = "="))) {
+    if (isTRUE(checkmate::check_character(hypothesis, pattern = "="))) {
         out <- paste(gsub("=", "-(", hypothesis), ")")
         attr(out, "label") <- hypothesis
         hypothesis <- out
