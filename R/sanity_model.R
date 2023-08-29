@@ -97,6 +97,7 @@ sanity_model_supported_class <- function(model) {
         "speedglm",
         "speedlm",
         "stanreg",
+        "svyolr",
         c("tobit", "survreg"),
         "tobit1",
         "truncreg",

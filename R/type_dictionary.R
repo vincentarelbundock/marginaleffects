@@ -121,6 +121,7 @@ stanreg,response
 stanreg,link
 svyglm,response
 svyglm,link
+svyolr,probs
 tobit,response
 tobit1,expvalue
 tobit1,linpred
