@@ -234,6 +234,7 @@ Collate:
     'methods_scam.R'
     'methods_stats.R'
     'methods_survival.R'
+    'methods_svyolr.R'
     'methods_tobit1.R'
     'modelarchive.R'
     'myTryCatch.R'
