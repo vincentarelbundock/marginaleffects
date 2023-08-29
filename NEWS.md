@@ -5,6 +5,11 @@
 New:
 
 * Conformal prediction via `inferences()`
+* `hypothesis` argument now accepts multiple string formulas.
+
+Support new models:
+
+* `survey::svyolr()`
 
 Misc:
 
