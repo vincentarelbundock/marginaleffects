@@ -745,6 +745,16 @@ expect_equal(known$estimate, unknown$estimate, tolerance = 1e-3)
 expect_equal(known$passengerClass, unknown$passengerClass)
 
 
+# Issue #888: posterior_draws() fails for quantile transformation
+expect_error(predictions(
+    brms_factor,
+    by = "cyl_fac",
+    transform = \(x) ecdf(mtcars$mpg)(x)) |>
+    posterior_draws(),
+    pattern = "PxD matrix")
+
+
+
 
 source("helpers.R")
 rm(list = ls())

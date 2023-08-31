@@ -16,7 +16,12 @@ backtransform <- function(x, transform) {
     draws <- attr(x, "posterior_draws")
 
     if (!is.null(draws)) {
+        dim_pre <- dim(draws)
         draws <- transform(draws)
+        dim_post <- dim(draws)
+        if (!identical(dim_pre, dim_post)) {
+            insight::format_error("For bayesian, bootstrap, and simulation-based inference, the `transform` function must accept a PxD matrix and return a matrix of the same size.")
+        }
     }
 
     for (col in cols) {
