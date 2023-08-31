@@ -25,7 +25,7 @@ dat <- read.csv(url)
 n_support <- nrow(dat)
 ```
 
-🚨🚨🚨 This November, the `marginaleffects` author (Vincent) will be giving an online seminar called: "Interpreting and Communicating Statistical Results with R." If you want to become a `marginaleffects` expert, sign up at [Code Horizons!](https://codehorizons.com/Seminars/interpreting-and-communicating-statistical-results-with-r/)  🚨🚨🚨
+🚨🚨🚨 This November, the `marginaleffects` author (Vincent) will be giving an online seminar called: "Interpreting and Communicating Statistical Results with R." If you want to become a `marginaleffects` expert and support the development of the package, sign up at [Code Horizons!](https://codehorizons.com/Seminars/interpreting-and-communicating-statistical-results-with-r/)  🚨🚨🚨
 
 # Why?
 
