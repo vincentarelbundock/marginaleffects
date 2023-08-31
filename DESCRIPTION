@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Predictions, Comparisons, Slopes, Marginal Means, and Hypothesis Tests
-Version: 0.14.0.9006
+Version: 0.14.0.9007
 Authors@R: 
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -233,8 +233,8 @@ Collate:
     'methods_sampleSelection.R'
     'methods_scam.R'
     'methods_stats.R'
+    'methods_survey.R'
     'methods_survival.R'
-    'methods_svyolr.R'
     'methods_tobit1.R'
     'modelarchive.R'
     'myTryCatch.R'

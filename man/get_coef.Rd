@@ -4,7 +4,7 @@
 %   R/methods_dataframe.R, R/methods_gamlss.R, R/methods_glmmTMB.R,
 %   R/methods_lme4.R, R/methods_mclogit.R, R/methods_mgcv.R, R/methods_mlm.R,
 %   R/methods_sampleSelection.R, R/methods_scam.R, R/methods_stats.R,
-%   R/methods_svyolr.R
+%   R/methods_survey.R
 \name{get_coef}
 \alias{get_coef}
 \alias{get_coef.default}

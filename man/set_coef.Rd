@@ -5,7 +5,7 @@
 %   R/methods_gamlss.R, R/methods_glmmTMB.R, R/methods_glmx.R, R/methods_lme4.R,
 %   R/methods_mlm.R, R/methods_nlme.R, R/methods_pscl.R, R/methods_robustlmm.R,
 %   R/methods_sampleSelection.R, R/methods_scam.R, R/methods_stats.R,
-%   R/methods_svyolr.R
+%   R/methods_survey.R
 \name{set_coef}
 \alias{set_coef}
 \alias{set_coef.default}
