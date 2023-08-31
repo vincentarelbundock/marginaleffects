@@ -25,6 +25,8 @@ dat <- read.csv(url)
 n_support <- nrow(dat)
 ```
 
+🚨🚨🚨 This November, the `marginaleffects` author (Vincent) will be giving an online seminar called: "Interpreting and Communicating Statistical Results with R." If you want to become a `marginaleffects` expert, sign up at [Code Horizons!](https://codehorizons.com/Seminars/interpreting-and-communicating-statistical-results-with-r/)  🚨🚨🚨
+
 # Why?
 
 Interpreting the parameters estimated by complex statistical models is often challenging. Many applied researchers are keen to report simple quantities that carry clear scientific meaning but, in doing so, they face three primary obstacles:
