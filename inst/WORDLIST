@@ -14,6 +14,7 @@ APM
 ARD
 Arel
 args
+arxiv
 arXiv
 arXivhttp
 Augusto
@@ -70,7 +71,6 @@ dyexavg
 dyexavglnratioavgwts
 dyexavgwts
 elasticities
-elasticities
 emmeans
 EMMs
 Ep
@@ -123,6 +123,7 @@ Heteroskedasticity
 hochberg
 holm
 hommel
+http
 https
 Hufthammer
 incrementing
@@ -210,8 +211,7 @@ Resul
 revpairwise
 revreference
 revsequential
-richardson
-richardsonTibshirani
+Rina
 Robb
 Rohan
 rowid
@@ -232,6 +232,7 @@ StataCorp
 streptokinase
 th
 threenum
+Tibshirani
 tidiers
 TLDR
 Tomz
