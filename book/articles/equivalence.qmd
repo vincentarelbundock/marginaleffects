@@ -34,7 +34,7 @@ mod <- lm(mpg ~ hp + factor(gear), data = mtcars)
 
 The rest of this section considers several quantities estimated by `marginaleffects`.
 
-# Example 1: Predictions
+## Predictions
 
 Consider a single prediction, where all predictors are held at their median or mode:
 
@@ -60,7 +60,7 @@ The results allow us to draw three conclusions:
 1. The p value for the non-superiority test is `r sprintf("%.4f", hyp$p.value.nonsup)`. This suggests that we *cannot* reject the null hypothesis that the parameter (`r sprintf("%.4f", hyp$estimate)`) is above 18.
 1. The p value for the equivalence test is `r sprintf("%.4f", hyp$p.value.equiv)`. This suggests that we *cannot* reject the hypothesis that the parameter falls outside the equivalence interval.
 
-# Example 2: Model coefficients
+## Model coefficients
 
 The `hypotheses` function also allows users to conduct equivalence, non-inferiority, and non-superiority tests for model coefficients, and for arbitrary functions of model coefficients.
 
@@ -82,7 +82,7 @@ hyp <- hypotheses(mod, equivalence = c(5, 7))[4, "p.value.equiv"]
 
 The p value is `r sprintf("%.4f", hyp)`, so we cannot reject the hypothesis that the `r names(coef(mod))[4]` parameter falls outside the [5,7] interval. 
 
-# Example 3: Slopes
+## Slopes
 
 The same syntax can be used to conduct tests for all the quantities produced by the `marginaleffects` package. For example, imagine that, for substantive or theoretical reasons, an average slope between -0.1 and 0.1 is uninteresting. We can conduct an equivalence test to check if this is the case:
 
@@ -95,7 +95,7 @@ hyp <- avg_slopes(mod, variables = "hp", equivalence = c(-.1, .1))$p.value.equiv
 
 The p value is `r sprintf("%.4f", hyp)`, which suggests that we can reject the hypothesis that the parameter falls outside the region of "substantive equivalence" that we have defined by the interval.
 
-# Example 4: Difference between comparisons (contrasts)
+## Difference between comparisons (contrasts)
 
 Consider a model with a multiplicative interaction:
 
@@ -126,7 +126,7 @@ avg_comparisons(int, variables = "hp", by = "gear",
 
 The `p (Equiv)` column shows that the difference between the average contrasts when `gear` is 3 and `gear` is 5 can be said to be equivalent to the specified interval. However, there are good reasons to think that the other two pairwise comparisons may fall outside the interval.
 
-# Example 5: Marginal means and `emmeans`
+## Marginal means and `emmeans`
 
 This example shows the equivalence between results produced by the `emmeans` package and the `marginal_means()` function:
 
@@ -153,7 +153,7 @@ marginal_means(
 ```
 
 
-# Example 6: t-test
+## t-test
 
 Now we show that the results produced by `hypotheses()` are identical to the results produced by the `equivalence` package in the case of a simple t-test:
 
