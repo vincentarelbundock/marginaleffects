@@ -82,7 +82,7 @@ As we will see below, MrP is super easy to implement using the `marginaleffects`
 
 ![MrP, not Mister T.](fig/mrt.jpg)
 
-# MrP for surveys and market research
+## MrP for surveys and market research
 
 Imagine that a national supermarket chain plans to introduce a line of meat substitutes in some of its stores. To guide marketing and distribution efforts, the company would like to know the share of the population in each city that is interested in tasting meat substitutes.
 
@@ -109,7 +109,7 @@ This dataset includes 1000 observations: one per survey respondent. Unfortunatel
 
 In the rest of this notebook, we show that the `marginaleffects` package makes it very easy to apply these steps.
 
-# "Mr" for "Multilevel regression"
+## "Mr" for "Multilevel regression"
 
 The first step of MrP is to use individual-level data to estimate a model that predicts the value of the variable of interest. One of the great benefits of using `marginaleffects` for MrP, is that this package is agnostic to the type of model used to make predictions. Analysts can use almost any model they like, and the workflow described below would remain the same.
 
@@ -131,7 +131,7 @@ modelplot(mod)
 
 We are now ready for the second MrP step: poststratification.
 
-# "P" for "Poststratification"
+## "P" for "Poststratification"
 
 In the second MrP step, we use data from the US Census (or a similar source) to create a "poststratification table." This table includes one row for each combination of the predictor values in our model. In our model, the `age` variable has 2 categories ("18-54" and "54+"); the `education` variables has 2 categories ("High school or less" and "Post-secondary"); and the `city` variable has 40 unique entries. Therefore, the poststratification table must have $2 \times 2 \times 40 = 160$ entries.
 
@@ -205,7 +205,7 @@ p |>
         caption = "Source: Simulated data")
 ```
 
-# Data simulation
+## Data simulation
 
 All the data used on this page were simulated using this code:
 
