@@ -60,6 +60,7 @@ deploy: ## Deploy book to Github website
 	Rscript -e "source('book/utils/utils.R');get_quarto_yaml(dev = FALSE)"
 	make html
 	rsync -a book/_book/* ./
+	rsync -a book/data ./
 	rm -rf book Makefile _quarto.yml utils.R
 	git add .
 	git commit -m "Update book"
@@ -81,6 +82,7 @@ deploydev: ## Deploy dev book to Github website
 	Rscript -e "source('book/utils/utils.R');get_quarto_yaml(dev = TRUE)"
 	make htmldev
 	rsync -a book/_book/* ./dev/
+	rsync -a book/data ./
 	rm -rf book Makefile _quarto.yml utils.R
 	git add .
 	git commit -m "Update book"
