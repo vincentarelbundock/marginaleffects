@@ -179,5 +179,11 @@ e <- tost(
 e
 
 ## test with {marginaleffects} package
-hypotheses(mod, equivalence = c(-10, 10), df = e$parameter)[2, ]
+h <- hypotheses(mod, equivalence = c(-10, 10), df = e$parameter)[2, ]
+h
+
+# identical p values
+h$p.value.equiv |> as.vector()
+
+e$tost.p.value |> as.vector()
 ```
