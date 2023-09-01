@@ -65,9 +65,7 @@ get_ci <- function(
                     is.null(p_adjust)
 
     if (z_overwrite) {
-        if (z_overwrite) {
-            x[["statistic"]] <- (x[["estimate"]] - null_hypothesis) / x[["std.error"]]
-        }
+        x[["statistic"]] <- (x[["estimate"]] - null_hypothesis) / x[["std.error"]]
         if (normal) {
             x[["p.value"]] <- 2 * stats::pnorm(-abs(x$statistic))
         } else {
