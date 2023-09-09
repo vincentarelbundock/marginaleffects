@@ -192,6 +192,8 @@ datagrid_engine <- function(
                 out[[n]] <- FUN_logical(dat_automatic[[n]])
             } else if (get_variable_class(dat, n, "character")) {
                 out[[n]] <- FUN_character(dat_automatic[[n]])
+            } else if (get_variable_class(dat, n, "binary")) {
+                out[[n]] <- FUN_integer(dat_automatic[[n]])
             } else if (get_variable_class(dat, n, "numeric")) {
                 if (is.integer(dat_automatic[[n]])) {
                     out[[n]] <- FUN_integer(dat_automatic[[n]])

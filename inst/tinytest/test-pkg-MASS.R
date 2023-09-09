@@ -247,5 +247,16 @@ mm <- marginal_means(mod, variables = "am", type = "probs")
 expect_equivalent(nrow(mm), 6)
 
 
+# Issue #896: polr returns mean of binary instead of median
+mtcars$gear <- as.factor(mtcars$gear)
+mod <- polr(
+    gear ~ mpg + cyl + vs,
+    data = mtcars,
+    method = "probit",
+    Hess = TRUE)
+p <- predictions(mod, newdata = "median", type = "probs")
+expect_true(all(p$vs == 0))
+
+
 
 rm(list = ls())

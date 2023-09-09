@@ -40,7 +40,7 @@ build_newdata <- function(model, newdata, by, modeldata) {
         newdata <- do.call("datagrid", args)
 
     } else if (identical(newdata, "median")) {
-        args[["FUN_numeric"]] <- function(x) stats::median(x, na.rm = TRUE)
+        args[["FUN_numeric"]] <- args[["FUN_integer"]] <- args[["FUN_logical"]] <- function(x) stats::median(x, na.rm = TRUE)
         newdata <- do.call("datagrid", args)
 
     } else if (identical(newdata, "tukey")) {
