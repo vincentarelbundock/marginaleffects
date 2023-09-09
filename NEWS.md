@@ -16,6 +16,10 @@ Misc:
 * Better documentation and error messages for `newdata=NULL`
 * Some performance improvements for `predictions()` and `marginalmeans()` (#880, #882, @etiennebacher).
 
+Bug fix:
+
+* `newdata="median"` returned mean of binary variables. Thanks to @jkhanson1970 for report #896.
+
 ## 0.14.0
 
 Breaking changes:
