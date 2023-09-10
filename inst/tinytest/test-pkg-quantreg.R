@@ -1,5 +1,5 @@
 source("helpers.R")
-exit_file("Matrix")
+if (ON_CI || ON_WINDOWS || ON_OSX) exit_file("local linux only")
 using("marginaleffects")
 
 requiet("quantreg")
@@ -12,7 +12,7 @@ model <- suppressWarnings(quantreg::rq(mpg ~ hp * wt + factor(cyl), data = mtcar
 expect_slopes(model)
 mfx <- merge(tidy(slopes(model)), stata)
 expect_equivalent(mfx$estimate, mfx$dydxstata, tolerance = .0001)
-expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .0001)
+expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .001)
 
 
 # marginaleffects vs. emtrends

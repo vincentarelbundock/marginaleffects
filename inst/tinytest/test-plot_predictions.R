@@ -1,5 +1,4 @@
 source("helpers.R")
-exit_file("CHECK")
 using("marginaleffects")
 if (!requiet("tinysnapshot")) exit_file("tinysnapshot")
 if (ON_CI || ON_WINDOWS || ON_OSX) exit_file("local linux only")

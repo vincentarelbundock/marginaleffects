@@ -1,5 +1,5 @@
 source("helpers.R")
-exit_file("Matrix")
+if (ON_CI || ON_WINDOWS || ON_OSX) exit_file("local linux only")
 using("marginaleffects")
 
 requiet("polspline")
