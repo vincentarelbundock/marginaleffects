@@ -164,7 +164,7 @@ expect_equivalent(cmp1$estimate, cmp2$estimate)
 
 
 # Issue #870
-Guerry <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/HistData/Guerry.csv")
+Guerry <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/HistData/Guerry.csv", na.strings = "")
 Guerry <- na.omit(Guerry)
 mod <- lm(Literacy ~ Pop1831 * Desertion, data = Guerry)
 p1 <- predictions(mod, by = "Region", wts = "Donations")
