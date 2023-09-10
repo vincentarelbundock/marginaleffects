@@ -49,6 +49,7 @@ book:
       - articles/logit.qmd
       - articles/lme4.qmd
       - articles/multiple_imputation.qmd
+      - articles/mrp.qmd
       - articles/svalues.qmd
     - part: Misc
       collapse-level: 1

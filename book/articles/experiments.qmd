@@ -24,17 +24,20 @@ theme_set(theme_minimal())
 
 A 2×2 factorial design is a type of experimental design that allows researchers to understand the effects of two independent variables (each with two levels) on a single dependent variable.  The design is popular among academic researchers as well as in industry when running A/B tests.
 
-To illustrate how to analyze these designs with `marginaleffects`, we will use the `mtcars` dataset.  We'll analyze fuel efficiency, `mpg` (miles per gallon), as a function of `am` (transmission type) and `vs` (engine shape).
-
-`vs` is an indicator variable for if the car has a straight engine (1 = straight engine, 0 = V-shaped).  `am` is an indicator variable for if the car has manual transmission (1 = manual transmission, 0=automatic transmission).  There are then four types of cars (1 type for each of the four combinations of binary indicators).
+In this notebook, we illustrate how to analyze these designs with [the `marginaleffects` package for `R`.](https://marginaleffects.com) As we will see, `marginaleffects` includes many convenient functions for analyzing both experimental and observational data, and for plotting our results.
 
 ### Fitting a Model
+
+We will use the `mtcars` dataset.  We'll analyze fuel efficiency, `mpg` (miles per gallon), as a function of `am` (transmission type) and `vs` (engine shape).
+
+`vs` is an indicator variable for if the car has a straight engine (1 = straight engine, 0 = V-shaped).  `am` is an indicator variable for if the car has manual transmission (1 = manual transmission, 0=automatic transmission).  There are then four types of cars (1 type for each of the four combinations of binary indicators).
 
 Let's start by creating a model for fuel efficiency.  For simplicity, we'll use linear regression and model the interaction between `vs` and `am`.
 
 ```{r}
 library(tidyverse)
 library(marginaleffects)
+library(modelsummary)
 
 ## See ?mtcars for variable definitions
 fit <- lm(mpg ~ vs + am + vs:am, data=mtcars) # equivalent to ~ vs*am
@@ -52,22 +55,29 @@ plot_predictions(fit, by = c("vs", "am"))
 
 ### Evaluating Effects From The Model Summary
 
-Since this model is fairly simple the estimated differences between any of the four possible combinations of `vs` and `am` can be read from `summary(fit)` with a little arithmetic.  The estimated model is
+Since this model is fairly simple the estimated differences between any of the four possible combinations of `vs` and `am` can be read from the regression table, which we create using the `modelsummary` package:
 
-$$ \mbox{mpg} = 20.743 + 5.693 \cdot \mbox{vs} + 4.700 \cdot \mbox{am} + 2.929 \cdot \mbox{vs} \cdot \mbox{am} \>. $$
+```{r}
+modelsummary(fit, gof_map = c("r.squared", "nobs"))
+```
 
-The estimated differences in fuel efficiency are:
+We can express the same results in the form of a linear equation:
 
-* 5.693 mpg between straight engines and V-shaped engines when the car has automatic transmission.
-* 4.700 mpg between manual transmissions and automatic transmissions when the car has a V-shaped engine.
-* 7.629 mpg between manual transmissions and automatic transmissions when the car has a straight engine.
-* 13.322 mpg between manual transmissions with straight engines and automatic transmissions with V-shaped engines.
+$$ \mbox{mpg} = 15.050 + 5.693 \cdot \mbox{vs} + 4.700 \cdot \mbox{am} + 2.929 \cdot \mbox{vs} \cdot \mbox{am}.$$
 
-Reading off these differences from the model summary becomes more difficult as more variables are added (not to mention obtaining their estimated standard errors becomes nightmarish).  To make the process easier on ourselves, we can leverage the `avg_comparisons` function to get the same estimates and their uncertainty.
+With a little arithmetic, we can compute estimated differences in fuel efficiency between different groups:
+
+* 4.700 mpg between `am=1` and `am=0`, when `vs=0`.
+* 5.693 mpg between `vs=1` and `vs=0`, when `am=0`.
+* 7.629 mpg between `am=1` and `am=0`, when `vs=1`.
+* 8.621 mpg between `vs=1` and `vs=0`, when `am=1`.
+* 13.322 mpg between a car with `am=1` and `vs=1`, and a car with `am=0` and `vs=0`.
+
+Reading off these differences from the model summary is relatively straightforward in very simple cases like this one. However, it becomes more difficult as more variables are added to the model, not to mention obtaining estimated standard errors becomes nightmarish.  To make the process easier, we can leverage the `avg_comparisons()` function from the `marginaleffects` package to compute the appropriate quantities and standard errors.
 
 ### Using `avg_comparisons` To Estimate All Differences
 
-Note that the dot in the grey rectangle is the estimated fuel efficiency when `vs=0` and `am=0` (that is, for an automatic transmission car with V-shaped engine).
+The grey rectangle in the graph below is the estimated fuel efficiency when `vs=0` and `am=0`, that is, for an automatic transmission car with V-shaped engine.
 
 ```{r, echo = FALSE}
 plot_predictions(fit, by = c("vs", "am")) +
@@ -78,13 +88,16 @@ plot_predictions(fit, by = c("vs", "am")) +
     fill = "black")
 ```
 
-Let's use `avg_comparisons` to get the difference between straight engines and V-shaped engines when the car has automatic transmission.  The call to `avg_comparisons` is shown below and results in the same estimate we made directly from the model.  The contrast corresponding to this estimate is shown in the plot below.
+Let's use `avg_comparisons` to get the difference between straight engines and V-shaped engines when the car has automatic transmission. In this call, the `variables` argument indicates that we want to estimate the effect of a change of 1 unit in the `vs` variable. The `newdata=datagrid(am=0)` determines the values of the covariates at which we want to evaluate the contrast.
+
 
 ```{r}
 avg_comparisons(fit,
-  newdata = datagrid(am = 0),
-  variables = "vs")
+  variables = "vs",
+  newdata = datagrid(am = 0))
 ```
+
+As expected, the results produced by `avg_comparisons()` are exactly the same as those which we read from the model summary table. The contrast that we just computed corresponds to the change illustrasted by the arrow in this plot:
 
 ```{r, echo = FALSE}
 plot_predictions(fit, by = c("vs", "am")) +
@@ -94,12 +107,12 @@ plot_predictions(fit, by = c("vs", "am")) +
     arrow = arrow(type = "closed", length = unit(0.02, "npc")))
 ```
 
-The next difference is between manual transmissions and automatic transmissions when the car has a V-shaped engine.  Again, the call to `avg_comparisons` is shown below, and the corresponding contrast is indicated in the plot below using an arrow.
+The next difference that we compute is between manual transmissions and automatic transmissions when the car has a V-shaped engine.  Again, the call to `avg_comparisons` is shown below, and the corresponding contrast is indicated in the plot below using an arrow.
 
 ```{r}
 avg_comparisons(fit,
-  newdata = datagrid(vs = 0),
-  variables = "am")
+  variables = "am",
+  newdata = datagrid(vs = 0))
 ```
 
 ```{r, echo = FALSE}
@@ -110,12 +123,12 @@ plot_predictions(fit, by = c("vs", "am")) +
     arrow = arrow(type = "closed", length = unit(0.02, "npc")))
 ```
 
-The third difference we estimated was between manual transmissions and automatic transmissions when the car has a straight engine.  The model call and contrast are
+The third difference we estimated was between manual transmissions and automatic transmissions when the car has a straight engine.  The model call and contrast are:
 
 ```{r}
 avg_comparisons(fit,
-  newdata = datagrid(vs = 1),
-  variables = "am")
+  variables = "am",
+  newdata = datagrid(vs = 1))
 ```
 
 ```{r, echo = FALSE}
@@ -126,11 +139,10 @@ plot_predictions(fit, by = c("vs", "am")) +
     arrow = arrow(type = "closed", length = unit(0.02, "npc")))
 ```
 
-And the last difference and contrast between manual transmissions with straight engines and automatic transmissions with V-shaped engines is
+The last difference and contrast between manual transmissions with straight engines and automatic transmissions with V-shaped engines. We call this a "cross-contrast" because we are measuring the difference between two groups that differ on two explanatory variables at the same time. To compute this contrast, we use the `cross` argument of `avg_comparisons`:
 
 ```{r}
 avg_comparisons(fit,
-  newdata = datagrid("vs", "am"),
   variables = c("am", "vs"),
   cross = TRUE)
 ```
@@ -147,7 +159,9 @@ plot_predictions(fit, by = c("vs", "am")) +
 
 The 2x2 design is a very popular design, and when using a linear model, the estimated differences between groups can be directly read off from the model summary, if not with a little arithmetic.  However, when using models with a non-identity link function, or when seeking to obtain the standard errors for estimated differences, things become considerably more difficult.  This vignette showed how to use `avg_comparisons` to specify contrasts of interests and obtain standard errors for those differences.  The approach used applies to all generalized linear models and effects can be further stratified using the `by` argument (although this is not shown in this vignette.)
 
+
 ## Regression adjustment
+
 
 Many analysts who conduct and analyze experiments wish to use regression adjustment with a linear regression model to improve the precision of their estimate of the treatment effect. Unfortunately, regression adjustment can introduce small-sample bias and other undesirable properties (Freedman 2008). Lin (2013) proposes a simple strategy to fix these problems in sufficiently large samples:
 

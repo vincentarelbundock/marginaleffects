@@ -13,6 +13,7 @@ Support new models:
 
 Misc:
 
+* `inferences(method="simulation")` uses the original point estimate rather than the mean of the simulation distribution. Issue #851.
 * Better documentation and error messages for `newdata=NULL`
 * Some performance improvements for `predictions()` and `marginalmeans()` (#880, #882, @etiennebacher).
 
