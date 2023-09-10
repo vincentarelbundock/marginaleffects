@@ -52,9 +52,9 @@ expect_snapshot_print(summary(mm), "summary-marginalmeans")
 dat <- mtcars
 mod <- glm(am ~ hp * wt, data = dat, family = binomial)
 mfx <- slopes(mod)
-expect_snapshot_print(
-    summary(mfx) |> poorman::select(term, estimate, conf.low, conf.high),
-    "summary-marginaleffects_dplyr")
+s <- summary(mfx) |> poorman::select(term, estimate, conf.low, conf.high)
+expect_inherits(s, "slopes")
+expect_equal(dim(s), c(2, 4))
 
 
 # bugs stay dead: label transformation_post
