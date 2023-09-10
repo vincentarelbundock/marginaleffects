@@ -72,13 +72,6 @@ plot_build <- function(
         y = substitute(estimate)
     )
 
-    if (!is.null(v_color)) {
-        if (gray) {
-            aes_args$shape <- substitute(factor(.data[[v_color]]))
-        } else {
-            aes_args$color <- substitute(factor(.data[[v_color]]))
-        }
-    }
     if ("conf.low" %in% colnames(dat)) {
         aes_args$ymin <- substitute(conf.low)
         aes_args$ymax <- substitute(conf.high)
@@ -90,15 +83,37 @@ plot_build <- function(
 
     # discrete x-axis
     if (is.factor(dat[[v_x]])) {
+        if (!is.null(v_color)) {
+            if (gray) {
+                aes_args$shape <- substitute(factor(.data[[v_color]]))
+            } else {
+                aes_args$color <- substitute(factor(.data[[v_color]]))
+            }
+        }
         aes_obj <- do.call(ggplot2::aes, aes_args)
         if ("conf.low" %in% colnames(dat)) {
-            p <- p + ggplot2::geom_pointrange(data = dat, aes_obj, position = ggplot2::position_dodge(.15))
+            p <- p + ggplot2::geom_pointrange(
+                data = dat,
+                mapping = aes_obj,
+                position = ggplot2::position_dodge(.15))
         } else {
-            p <- p + ggplot2::geom_point(data = dat, aes_obj, position = ggplot2::position_dodge(.15))
+            p <- p + ggplot2::geom_point(
+                data = dat,
+                mapping = aes_obj,
+                position = ggplot2::position_dodge(.15))
         }
 
     # continuous x-axis
     } else {
+        if (!is.null(v_color)) {
+            if (gray) {
+                aes_args$linetype <- substitute(factor(.data[[v_color]]))
+                aes_args_ribbon$linetype <- substitute(factor(.data[[v_color]]))
+            } else {
+                aes_args$color <- substitute(factor(.data[[v_color]]))
+                aes_args_ribbon$fill <- substitute(factor(.data[[v_color]]))
+            }
+        }
         aes_obj_ribbon <- do.call(ggplot2::aes, aes_args_ribbon)
         aes_args$ymin <- aes_args$ymax <- NULL
         aes_obj <- do.call(ggplot2::aes, aes_args)
