@@ -71,6 +71,7 @@ Suggests:
     equivalence,
     estimatr,
     fixest,
+    fontquiver,
     future,
     fwb,
     gam,
