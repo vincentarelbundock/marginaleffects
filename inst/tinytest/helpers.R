@@ -5,7 +5,6 @@ EXPENSIVE <- FALSE
 
 options("tinysnapshot_device" = "svglite")
 options("tinysnapshot_tol" = 200)
-options("tinysnapshot_device_args" = list(user_fonts = fontquiver::font_families("Liberation")))
 options(marginaleffects_numDeriv = NULL)
 
 if (isTRUE(insight::check_if_installed("cmdstanr", quietly = TRUE))) {
