@@ -43,7 +43,7 @@ p2 <- predictions(
     mod,
     newdata = datagrid(mpg = threenum, am_fct = 0:1))
 p2$am_fct <- as.numeric(as.character(p2$am_fct))
-setorder(p2, am_fct, mpg)
+data.table::setorder(p2, am_fct, mpg)
 expect_equivalent(p1$estimate, p2$estimate)
 
 
