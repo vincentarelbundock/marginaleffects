@@ -1,5 +1,5 @@
 source("helpers.R")
-exit_file("CHECK THIS")
+# exit_file("CHECK THIS")
 using("marginaleffects")
 
 requiet("margins")
@@ -10,7 +10,7 @@ tol <- .001
 tol_se <- .01 # BDR emergency email about tiny numerical differences
 
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/plm/Grunfeld.csv")
-dat$X <- NULL
+dat$rownames <- NULL
 dat <<- pdata.frame(dat)
 pool <- plm(inv ~ value * capital, data = dat, model = "pooling")
 swamy <- plm(
