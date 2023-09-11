@@ -194,23 +194,11 @@ marginal_means <- function(model,
     }
 
     # if type is NULL, we backtransform if relevant
-    flag_class <- isTRUE(class(model)[1] %in% c("glm", "Gam", "negbin")) ||
-                  isTRUE(hush(model[["method_type"]]) %in% c("feglm"))
-    if (is.null(type) &&
-        is.null(transform) &&
-        isTRUE(checkmate::check_number(hypothesis, null.ok = TRUE)) &&
-        flag_class) {
-        dict <- subset(type_dictionary, class == class(model)[1])$type
-        type <- sanitize_type(model = model, type = type, calling_function = "predictions")
-        linv <- tryCatch(insight::link_inverse(model), error = function(e) NULL)
-        if (isTRUE(type == "response") && isTRUE("link" %in% dict) && is.function(linv)) {
-            type <- "link"
-            transform <- linv
-        } else {
-            type <- sanitize_type(model = model, type = type, calling_function = "predictions")
-        }
+    type_string <- sanitize_type(model = model, type = type, calling_function = "predictions")
+    if (type_string == "linkinv(link)") {
+        type_call <- "link"
     } else {
-        type <- sanitize_type(model = model, type = type, calling_function = "predictions")
+        type_call <- type_string
     }
 
     modeldata <- get_modeldata(model, additional_variables = FALSE, wts = wts)
@@ -349,7 +337,7 @@ marginal_means <- function(model,
     args <- list(
         model = model,
         newdata = newgrid,
-        type = type,
+        type = type_call,
         variables = focal,
         cross = cross,
         hypothesis = hypothesis,
@@ -367,7 +355,7 @@ marginal_means <- function(model,
         args <- list(
             model,
             vcov = vcov,
-            type = type,
+            type = type_call,
             FUN = get_se_delta_marginalmeans,
             index = NULL,
             variables = focal,
@@ -402,6 +390,10 @@ marginal_means <- function(model,
     out <- equivalence(out, equivalence = equivalence, df = df, ...)
 
     # after assign draws
+    if (identical(type_string, "linkinv(link)")) {
+        linv <- tryCatch(insight::link_inverse(model), error = function(e) identity)
+        out <- backtransform(out, transform = linv)
+    }
     out <- backtransform(out, transform)
 
     # column order
@@ -413,7 +405,7 @@ marginal_means <- function(model,
     # attributes
     attr(out, "model") <- model
     attr(out, "jacobian") <- J
-    attr(out, "type") <- type
+    attr(out, "type") <- type_string
     attr(out, "model_type") <- class(model)[1]
     attr(out, "variables") <- variables
     attr(out, "call") <- call_attr
