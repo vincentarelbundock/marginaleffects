@@ -3,14 +3,16 @@
 #' @param model model object
 #' @param type character vector
 #' @noRd
-sanitize_type <- function(model, type, calling_function = NULL) {
+sanitize_type <- function(model, type, calling_function = "raw") {
     checkmate::assert_character(type, len = 1, null.ok = TRUE)
     cl <- class(model)[1]
     if (!cl %in% type_dictionary$class) {
         cl <- "other"
     }
     dict <- type_dictionary
-    if (calling_function %in% c("slopes", "comparisons")) {
+    # raw is often invoked by `get_predict()`, which is required for {clarify} and others.
+    # we only allow invlink(link) in predictions() and marginal_means(), which are handled by {marginaleffects}
+    if (!calling_function %in% c("predictions", "marginal_means")) {
         dict <- dict[dict$type != "invlink(link)", , drop = FALSE]
     }
 
