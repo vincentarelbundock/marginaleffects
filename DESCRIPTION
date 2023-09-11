@@ -39,7 +39,7 @@ Imports:
     insight (>= 0.19.1),
     methods,
     rlang,
-    Rcpp (>= 1.0.10)
+    Rcpp (>= 1.0.0)
 LinkingTo: Rcpp, RcppEigen
 Suggests: 
     AER,
