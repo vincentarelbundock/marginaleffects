@@ -36,6 +36,7 @@ package website, or scroll down this page for a full list of vignettes:
   df = Inf,
   wts = "equal",
   by = NULL,
+  numderiv = "fdforward",
   ...
 )
 </code></pre>
@@ -44,11 +45,11 @@ package website, or scroll down this page for a full list of vignettes:
 ## Arguments
 
 <table>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>model</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="marginal_means_:_model">model</code></td>
 <td>
 <p>Model object</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>variables</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="marginal_means_:_variables">variables</code></td>
 <td>
 <p>Focal variables
 </p>
@@ -61,12 +62,15 @@ package website, or scroll down this page for a full list of vignettes:
 </p>
 </li></ul>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>newdata</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="marginal_means_:_newdata">newdata</code></td>
 <td>
 <p>Grid of predictor values over which we marginalize.
 </p>
 
 <ul>
+<li><p> Warning: Please avoid modifying your dataset between fitting the model and calling a <code>marginaleffects</code> function. This can sometimes lead to unexpected results.
+</p>
+</li>
 <li> <p><code>NULL</code> create a grid with all combinations of all categorical predictors in the model. Warning: can be expensive.
 </p>
 </li>
@@ -77,7 +81,7 @@ package website, or scroll down this page for a full list of vignettes:
 </p>
 </li></ul>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>vcov</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="marginal_means_:_vcov">vcov</code></td>
 <td>
 <p>Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
 </p>
@@ -117,27 +121,24 @@ package website, or scroll down this page for a full list of vignettes:
 </p>
 </li></ul>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>conf_level</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="marginal_means_:_conf_level">conf_level</code></td>
 <td>
 <p>numeric value between 0 and 1. Confidence level to use to build a confidence interval.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>type</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="marginal_means_:_type">type</code></td>
 <td>
 <p>string indicates the type (scale) of the predictions used to
 compute marginal effects or contrasts. This can differ based on the model
 type, but will typically be a string such as: &quot;response&quot;, &quot;link&quot;, &quot;probs&quot;,
 or &quot;zero&quot;. When an unsupported string is entered, the model-specific list of
 acceptable values is returned in an error message. When <code>type</code> is <code>NULL</code>, the
-default value is used. This default is the first model-related row in
-the <code>marginaleffects:::type_dictionary</code> dataframe. If <code>type</code> is <code>NULL</code> and
-the default value is &quot;response&quot;, the function tries to compute marginal means
-on the link scale before backtransforming them using the inverse link function.</p>
+first entry in the error message is used by default.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>transform</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="marginal_means_:_transform">transform</code></td>
 <td>
 <p>A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>cross</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="marginal_means_:_cross">cross</code></td>
 <td>
 <p>TRUE or FALSE
 </p>
@@ -150,7 +151,7 @@ on the link scale before backtransforming them using the inverse link function.<
 </p>
 </li></ul>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>hypothesis</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="marginal_means_:_hypothesis">hypothesis</code></td>
 <td>
 <p>specify a hypothesis test or custom contrast using a numeric value, vector, or matrix, a string, or a string formula.
 </p>
@@ -171,7 +172,7 @@ on the link scale before backtransforming them using the inverse link function.<
 </li></ul>
 
 </li>
-<li><p> String formula to specify linear or non-linear hypothesis tests. If the <code>term</code> column uniquely identifies rows, terms can be used in the formula. Otherwise, use <code>b1</code>, <code>b2</code>, etc. to identify the position of each parameter. Examples:
+<li><p> String formula to specify linear or non-linear hypothesis tests. If the <code>term</code> column uniquely identifies rows, terms can be used in the formula. Otherwise, use <code>b1</code>, <code>b2</code>, etc. to identify the position of each parameter. The <code style="white-space: pre;">&#8288;b*&#8288;</code> wildcard can be used to test hypotheses on all estimates. Examples:
 </p>
 
 <ul>
@@ -182,6 +183,9 @@ on the link scale before backtransforming them using the inverse link function.<
 </p>
 </li>
 <li> <p><code>b1 + b2 + b3 = 0</code>
+</p>
+</li>
+<li> <p><code style="white-space: pre;">&#8288;b* / b1 = 1&#8288;</code>
 </p>
 </li></ul>
 
@@ -208,19 +212,19 @@ on the link scale before backtransforming them using the inverse link function.<
 </p>
 </li></ul>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>equivalence</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="marginal_means_:_equivalence">equivalence</code></td>
 <td>
 <p>Numeric vector of length 2: bounds used for the two-one-sided test (TOST) of equivalence, and for the non-inferiority and non-superiority tests. See Details section below.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>p_adjust</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="marginal_means_:_p_adjust">p_adjust</code></td>
 <td>
 <p>Adjust p-values for multiple comparisons: &quot;holm&quot;, &quot;hochberg&quot;, &quot;hommel&quot;, &quot;bonferroni&quot;, &quot;BH&quot;, &quot;BY&quot;, or &quot;fdr&quot;. See stats::p.adjust</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>df</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="marginal_means_:_df">df</code></td>
 <td>
 <p>Degrees of freedom used to compute p values and confidence intervals. A single numeric value between 1 and <code>Inf</code>. When <code>df</code> is <code>Inf</code>, the normal distribution is used. When <code>df</code> is finite, the <code>t</code> distribution is used. See insight::get_df for a convenient function to extract degrees of freedom. Ex: <code>slopes(model, df = insight::get_df(model))</code></p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>wts</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="marginal_means_:_wts">wts</code></td>
 <td>
 <p>character value. Weights to use in the averaging.
 </p>
@@ -236,11 +240,30 @@ on the link scale before backtransforming them using the inverse link function.<
 </p>
 </li></ul>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>by</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="marginal_means_:_by">by</code></td>
 <td>
 <p>Collapse marginal means into categories. Data frame with a <code>by</code> column of group labels, and merging columns shared by <code>newdata</code> or the data frame produced by calling the same function without the <code>by</code> argument.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>...</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="marginal_means_:_numderiv">numderiv</code></td>
+<td>
+<p>string or list of strings indicating the method to use to for the numeric differentiation used in to compute delta method standard errors.
+</p>
+
+<ul>
+<li><p> &quot;fdforward&quot;: finite difference method with forward differences
+</p>
+</li>
+<li><p> &quot;fdcenter&quot;: finite difference method with central differences (default)
+</p>
+</li>
+<li><p> &quot;richardson&quot;: Richardson extrapolation method
+</p>
+</li>
+<li><p> Extra arguments can be specified by passing a list to the <code>numDeriv</code> argument, with the name of the method first and named arguments following, ex: <code>numderiv=list("fdcenter", eps = 1e-5)</code>. When an unknown argument is used, <code>marginaleffects</code> prints the list of valid arguments for each method.
+</p>
+</li></ul>
+</td></tr>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="marginal_means_:_...">...</code></td>
 <td>
 <p>Additional arguments are passed to the <code>predict()</code> method
 supplied by the modeling package.These arguments are particularly useful
@@ -279,8 +302,7 @@ functionality: https://marginaleffects.com/
 
 ## Value
 
-<p>Data frame of marginal means with one row per variable-value
-combination.
+<p>Data frame of marginal means with one row per variable-value combination.
 </p>
 
 
@@ -455,6 +477,31 @@ posterior using the function supplied to the
 
 <p>Thanks to Russell V. Lenth for the excellent <code>emmeans</code> package and documentation which inspired this feature.
 </p>
+
+
+## Prediction types
+
+<p>The <code>type</code> argument determines the scale of the predictions used to compute quantities of interest with functions from the <code>marginaleffects</code> package. Admissible values for <code>type</code> depend on the model object. When users specify an incorrect value for <code>type</code>, <code>marginaleffects</code> will raise an informative error with a list of valid <code>type</code> values for the specific model object. The first entry in the list in that error message is the default type.
+</p>
+<p>The <code>invlink(link)</code> is a special type defined by <code>marginaleffects</code>. It is available for some (but not all) models and functions. With this link type, we first compute predictions on the link scale, then we use the inverse link function to backtransform the predictions to the response scale. This is useful for models with non-linear link functions as it can ensure that confidence intervals stay within desirable bounds, ex: 0 to 1 for a logit model. Note that an average of estimates with <code>type="invlink(link)"</code> will not always be equivalent to the average of estimates with <code>type="response"</code>.
+</p>
+<p>Some of the most common <code>type</code> values are:
+</p>
+<p>response, link, E, Ep, average, class, conditional, count, cum.prob, cumprob, density, disp, expected, expvalue, fitted, invlink(link), latent, linear.predictor, linpred, location, lp, mean, p, pr, precision, prediction, prob, probability, probs, quantile, risk, scale, survival, unconditional, utility, variance, xb, zero, zlink, zprob
+</p>
+
+
+## References
+
+
+<ul>
+<li><p> Greenland S. 2019. &quot;Valid P-Values Behave Exactly as They Should: Some Misleading Criticisms of P-Values and Their Resolution With S-Values.&quot; The American Statistician. 73(S1): 106–114.
+</p>
+</li>
+<li><p> Cole, Stephen R, Jessie K Edwards, and Sander Greenland. 2020. &quot;Surprise!&quot; American Journal of Epidemiology 190 (2): 191–93. https://doi.org/10.1093/aje/kwaa136
+</p>
+</li></ul>
+
 
 
 ## Examples

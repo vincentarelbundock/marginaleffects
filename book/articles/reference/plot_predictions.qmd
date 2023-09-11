@@ -49,11 +49,11 @@ Plot Conditional or Marginal Predictions
 ## Arguments
 
 <table>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>model</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="plot_predictions_:_model">model</code></td>
 <td>
 <p>Model object</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>condition</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="plot_predictions_:_condition">condition</code></td>
 <td>
 <p>Conditional predictions
 </p>
@@ -84,7 +84,7 @@ Plot Conditional or Marginal Predictions
 </p>
 </li></ul>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>by</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="plot_predictions_:_by">by</code></td>
 <td>
 <p>Marginal predictions
 </p>
@@ -97,21 +97,20 @@ Plot Conditional or Marginal Predictions
 </p>
 </li></ul>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>newdata</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="plot_predictions_:_newdata">newdata</code></td>
 <td>
 <p>When <code>newdata</code> is <code>NULL</code>, the grid is determined by the <code>condition</code> argument. When <code>newdata</code> is not <code>NULL</code>, the argument behaves in the same way as in the <code>predictions()</code> function.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>type</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="plot_predictions_:_type">type</code></td>
 <td>
 <p>string indicates the type (scale) of the predictions used to
 compute contrasts or slopes. This can differ based on the model
 type, but will typically be a string such as: &quot;response&quot;, &quot;link&quot;, &quot;probs&quot;,
 or &quot;zero&quot;. When an unsupported string is entered, the model-specific list of
 acceptable values is returned in an error message. When <code>type</code> is <code>NULL</code>, the
-default value is used. This default is the first model-related row in
-the <code>marginaleffects:::type_dictionary</code> dataframe.</p>
+first entry in the error message is used by default.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>vcov</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="plot_predictions_:_vcov">vcov</code></td>
 <td>
 <p>Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
 </p>
@@ -151,11 +150,11 @@ the <code>marginaleffects:::type_dictionary</code> dataframe.</p>
 </p>
 </li></ul>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>conf_level</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="plot_predictions_:_conf_level">conf_level</code></td>
 <td>
 <p>numeric value between 0 and 1. Confidence level to use to build a confidence interval.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>wts</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="plot_predictions_:_wts">wts</code></td>
 <td>
 <p>string or numeric: weights to use when computing average contrasts or slopes. These weights only affect the averaging in <code style="white-space: pre;">&#8288;avg_*()&#8288;</code> or with the <code>by</code> argument, and not the unit-level estimates themselves. Internally, estimates and weights are passed to the <code>weighted.mean()</code> function.
 </p>
@@ -168,27 +167,27 @@ the <code>marginaleffects:::type_dictionary</code> dataframe.</p>
 </p>
 </li></ul>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>transform</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="plot_predictions_:_transform">transform</code></td>
 <td>
 <p>A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>points</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="plot_predictions_:_points">points</code></td>
 <td>
 <p>Number between 0 and 1 which controls the transparency of raw data points. 0 (default) does not display any points.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>rug</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="plot_predictions_:_rug">rug</code></td>
 <td>
 <p>TRUE displays tick marks on the axes to mark the distribution of raw data.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>gray</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="plot_predictions_:_gray">gray</code></td>
 <td>
 <p>FALSE grayscale or color plot</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>draw</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="plot_predictions_:_draw">draw</code></td>
 <td>
 <p><code>TRUE</code> returns a <code>ggplot2</code> plot. <code>FALSE</code> returns a <code>data.frame</code> of the underlying data.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>...</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="plot_predictions_:_...">...</code></td>
 <td>
 <p>Additional arguments are passed to the <code>predict()</code> method
 supplied by the modeling package.These arguments are particularly useful

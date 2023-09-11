@@ -7,7 +7,7 @@ Comparisons Between Predictions Made With Different Regressor Values
 <p>Predict the outcome variable at different regressor values (e.g., college
 graduates vs. others), and compare those predictions by computing a difference,
 ratio, or some other function. <code>comparisons()</code> can return many quantities of
-interest, such as contrasts, differences, risk ratios, changes in log odds,
+interest, such as contrasts, differences, risk ratios, changes in log odds, lift,
 slopes, elasticities, etc.
 </p>
 
@@ -53,6 +53,7 @@ slopes, elasticities, etc.
   p_adjust = NULL,
   df = Inf,
   eps = NULL,
+  numderiv = "fdforward",
   ...
 )
 
@@ -73,6 +74,7 @@ avg_comparisons(
   p_adjust = NULL,
   df = Inf,
   eps = NULL,
+  numderiv = "fdforward",
   ...
 )
 </code></pre>
@@ -81,17 +83,20 @@ avg_comparisons(
 ## Arguments
 
 <table>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>model</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="comparisons_:_model">model</code></td>
 <td>
 <p>Model object</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>newdata</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="comparisons_:_newdata">newdata</code></td>
 <td>
 <p>Grid of predictor values at which we evaluate the comparisons.
 </p>
 
 <ul>
-<li> <p><code>NULL</code> (default): Unit-level contrasts for each observed value in the original dataset (empirical distribution). See <code>insight::get_data()</code>
+<li><p> Warning: Please avoid modifying your dataset between fitting the model and calling a <code>marginaleffects</code> function. This can sometimes lead to unexpected results.
+</p>
+</li>
+<li> <p><code>NULL</code> (default): Unit-level contrasts for each observed value in the dataset (empirical distribution). The dataset is retrieved using <code>insight::get_data()</code>, which tries to extract data from the environment. This may produce unexpected results if the original data frame has been altered since fitting the model.
 </p>
 </li>
 <li><p> data frame: Unit-level contrasts for each row of the <code>newdata</code> data frame.
@@ -134,7 +139,7 @@ avg_comparisons(
 
 </li></ul>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>variables</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="comparisons_:_variables">variables</code></td>
 <td>
 <p>Focal variables
 </p>
@@ -193,6 +198,9 @@ avg_comparisons(
 <li><p> Numeric of length 1: Contrast for a gap of <code>x</code>, computed at the observed value plus and minus <code>x / 2</code>. For example, estimating a <code>+1</code> contrast compares adjusted predictions when the regressor is equal to its observed value minus 0.5 and its observed value plus 0.5.
 </p>
 </li>
+<li><p> Numeric of length equal to the number of rows in <code>newdata</code>: Same as above, but the contrast can be customized for each row of <code>newdata</code>.
+</p>
+</li>
 <li><p> Numeric vector of length 2: Contrast between the 2nd element and the 1st element of the <code>x</code> vector.
 </p>
 </li>
@@ -234,7 +242,7 @@ avg_comparisons(
 
 </li></ul>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>comparison</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="comparisons_:_comparison">comparison</code></td>
 <td>
 <p>How should pairs of predictions be compared? Difference, ratio, odds ratio, or user-defined functions.
 </p>
@@ -244,7 +252,7 @@ avg_comparisons(
 </p>
 
 <ul>
-<li><p> Supported shortcuts strings: difference, differenceavg, differenceavgwts, dydx, eyex, eydx, dyex, dydxavg, eyexavg, eydxavg, dyexavg, dydxavgwts, eyexavgwts, eydxavgwts, dyexavgwts, ratio, ratioavg, ratioavgwts, lnratio, lnratioavg, lnratioavgwts, lnor, lnoravg, lnoravgwts, expdydx, expdydxavg, expdydxavgwts
+<li><p> Supported shortcuts strings: difference, differenceavg, differenceavgwts, dydx, eyex, eydx, dyex, dydxavg, eyexavg, eydxavg, dyexavg, dydxavgwts, eyexavgwts, eydxavgwts, dyexavgwts, ratio, ratioavg, ratioavgwts, lnratio, lnratioavg, lnratioavgwts, lnor, lnoravg, lnoravgwts, lift, liftavg, expdydx, expdydxavg, expdydxavgwts
 </p>
 </li>
 <li><p> See the Comparisons section below for definitions of each transformation.
@@ -262,17 +270,16 @@ avg_comparisons(
 
 </li></ul>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>type</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="comparisons_:_type">type</code></td>
 <td>
 <p>string indicates the type (scale) of the predictions used to
 compute contrasts or slopes. This can differ based on the model
 type, but will typically be a string such as: &quot;response&quot;, &quot;link&quot;, &quot;probs&quot;,
 or &quot;zero&quot;. When an unsupported string is entered, the model-specific list of
 acceptable values is returned in an error message. When <code>type</code> is <code>NULL</code>, the
-default value is used. This default is the first model-related row in
-the <code>marginaleffects:::type_dictionary</code> dataframe.</p>
+first entry in the error message is used by default.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>vcov</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="comparisons_:_vcov">vcov</code></td>
 <td>
 <p>Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
 </p>
@@ -312,7 +319,7 @@ the <code>marginaleffects:::type_dictionary</code> dataframe.</p>
 </p>
 </li></ul>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>by</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="comparisons_:_by">by</code></td>
 <td>
 <p>Aggregate unit-level estimates (aka, marginalize, average over). Valid inputs:
 </p>
@@ -334,15 +341,15 @@ the <code>marginaleffects:::type_dictionary</code> dataframe.</p>
 </p>
 </li></ul>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>conf_level</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="comparisons_:_conf_level">conf_level</code></td>
 <td>
 <p>numeric value between 0 and 1. Confidence level to use to build a confidence interval.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>transform</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="comparisons_:_transform">transform</code></td>
 <td>
 <p>string or function. Transformation applied to unit-level estimates and confidence intervals just before the function returns results. Functions must accept a vector and return a vector of the same length. Support string shortcuts: &quot;exp&quot;, &quot;ln&quot;</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>cross</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="comparisons_:_cross">cross</code></td>
 <td>
 
 <ul>
@@ -353,7 +360,7 @@ the <code>marginaleffects:::type_dictionary</code> dataframe.</p>
 </p>
 </li></ul>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>wts</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="comparisons_:_wts">wts</code></td>
 <td>
 <p>string or numeric: weights to use when computing average contrasts or slopes. These weights only affect the averaging in <code style="white-space: pre;">&#8288;avg_*()&#8288;</code> or with the <code>by</code> argument, and not the unit-level estimates themselves. Internally, estimates and weights are passed to the <code>weighted.mean()</code> function.
 </p>
@@ -366,7 +373,7 @@ the <code>marginaleffects:::type_dictionary</code> dataframe.</p>
 </p>
 </li></ul>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>hypothesis</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="comparisons_:_hypothesis">hypothesis</code></td>
 <td>
 <p>specify a hypothesis test or custom contrast using a numeric value, vector, or matrix, a string, or a string formula.
 </p>
@@ -387,7 +394,7 @@ the <code>marginaleffects:::type_dictionary</code> dataframe.</p>
 </li></ul>
 
 </li>
-<li><p> String formula to specify linear or non-linear hypothesis tests. If the <code>term</code> column uniquely identifies rows, terms can be used in the formula. Otherwise, use <code>b1</code>, <code>b2</code>, etc. to identify the position of each parameter. Examples:
+<li><p> String formula to specify linear or non-linear hypothesis tests. If the <code>term</code> column uniquely identifies rows, terms can be used in the formula. Otherwise, use <code>b1</code>, <code>b2</code>, etc. to identify the position of each parameter. The <code style="white-space: pre;">&#8288;b*&#8288;</code> wildcard can be used to test hypotheses on all estimates. Examples:
 </p>
 
 <ul>
@@ -398,6 +405,9 @@ the <code>marginaleffects:::type_dictionary</code> dataframe.</p>
 </p>
 </li>
 <li> <p><code>b1 + b2 + b3 = 0</code>
+</p>
+</li>
+<li> <p><code style="white-space: pre;">&#8288;b* / b1 = 1&#8288;</code>
 </p>
 </li></ul>
 
@@ -424,19 +434,19 @@ the <code>marginaleffects:::type_dictionary</code> dataframe.</p>
 </p>
 </li></ul>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>equivalence</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="comparisons_:_equivalence">equivalence</code></td>
 <td>
 <p>Numeric vector of length 2: bounds used for the two-one-sided test (TOST) of equivalence, and for the non-inferiority and non-superiority tests. See Details section below.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>p_adjust</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="comparisons_:_p_adjust">p_adjust</code></td>
 <td>
 <p>Adjust p-values for multiple comparisons: &quot;holm&quot;, &quot;hochberg&quot;, &quot;hommel&quot;, &quot;bonferroni&quot;, &quot;BH&quot;, &quot;BY&quot;, or &quot;fdr&quot;. See stats::p.adjust</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>df</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="comparisons_:_df">df</code></td>
 <td>
 <p>Degrees of freedom used to compute p values and confidence intervals. A single numeric value between 1 and <code>Inf</code>. When <code>df</code> is <code>Inf</code>, the normal distribution is used. When <code>df</code> is finite, the <code>t</code> distribution is used. See insight::get_df for a convenient function to extract degrees of freedom. Ex: <code>slopes(model, df = insight::get_df(model))</code></p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>eps</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="comparisons_:_eps">eps</code></td>
 <td>
 <p>NULL or numeric value which determines the step size to use when
 calculating numerical derivatives: (f(x+eps)-f(x))/eps. When <code>eps</code> is
@@ -445,7 +455,26 @@ the maximum and minimum values of the variable with respect to which we
 are taking the derivative. Changing <code>eps</code> may be necessary to avoid
 numerical problems in certain models.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>...</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="comparisons_:_numderiv">numderiv</code></td>
+<td>
+<p>string or list of strings indicating the method to use to for the numeric differentiation used in to compute delta method standard errors.
+</p>
+
+<ul>
+<li><p> &quot;fdforward&quot;: finite difference method with forward differences
+</p>
+</li>
+<li><p> &quot;fdcenter&quot;: finite difference method with central differences (default)
+</p>
+</li>
+<li><p> &quot;richardson&quot;: Richardson extrapolation method
+</p>
+</li>
+<li><p> Extra arguments can be specified by passing a list to the <code>numDeriv</code> argument, with the name of the method first and named arguments following, ex: <code>numderiv=list("fdcenter", eps = 1e-5)</code>. When an unknown argument is used, <code>marginaleffects</code> prints the list of valid arguments for each method.
+</p>
+</li></ul>
+</td></tr>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="comparisons_:_...">...</code></td>
 <td>
 <p>Additional arguments are passed to the <code>predict()</code> method
 supplied by the modeling package.These arguments are particularly useful
@@ -484,6 +513,15 @@ arguments.</p>
 </p>
 </li>
 <li> <p><code>p.value</code>: p value associated to the <code>estimate</code> column. The null is determined by the <code>hypothesis</code> argument (0 by default), and p values are computed before applying the <code>transform</code> argument.
+</p>
+</li>
+<li> <p><code>s.value</code>: Shannon information transforms of p values. How many consecutive &quot;heads&quot; tosses would provide the same amount of evidence (or &quot;surprise&quot;) against the null hypothesis that the coin is fair? The purpose of S is to calibrate the analyst's intuition about the strength of evidence encoded in p against a well-known physical phenomenon. See Greenland (2019) and Cole et al. (2020).
+</p>
+</li>
+<li> <p><code>conf.low</code>: lower bound of the confidence interval (or equal-tailed interval for bayesian models)
+</p>
+</li>
+<li> <p><code>conf.high</code>: upper bound of the confidence interval (or equal-tailed interval for bayesian models)
 </p>
 </li></ul>
 
@@ -676,6 +714,14 @@ compute derivatives and elasticities.</p>
 </tr>
 <tr>
  <td style="text-align: left;">
+   lift </td><td style="text-align: left;"> \(hi, lo) (hi - lo)/lo </td>
+</tr>
+<tr>
+ <td style="text-align: left;">
+   liftavg </td><td style="text-align: left;"> \(hi, lo) (mean(hi) - mean(lo))/mean(lo) </td>
+</tr>
+<tr>
+ <td style="text-align: left;">
    expdydx </td><td style="text-align: left;"> \(hi, lo, eps) ((exp(hi) - exp(lo))/exp(eps))/eps </td>
 </tr>
 <tr>
@@ -767,6 +813,31 @@ posterior using the function supplied to the
 
 <p>Thanks to Russell V. Lenth for the excellent <code>emmeans</code> package and documentation which inspired this feature.
 </p>
+
+
+## Prediction types
+
+<p>The <code>type</code> argument determines the scale of the predictions used to compute quantities of interest with functions from the <code>marginaleffects</code> package. Admissible values for <code>type</code> depend on the model object. When users specify an incorrect value for <code>type</code>, <code>marginaleffects</code> will raise an informative error with a list of valid <code>type</code> values for the specific model object. The first entry in the list in that error message is the default type.
+</p>
+<p>The <code>invlink(link)</code> is a special type defined by <code>marginaleffects</code>. It is available for some (but not all) models and functions. With this link type, we first compute predictions on the link scale, then we use the inverse link function to backtransform the predictions to the response scale. This is useful for models with non-linear link functions as it can ensure that confidence intervals stay within desirable bounds, ex: 0 to 1 for a logit model. Note that an average of estimates with <code>type="invlink(link)"</code> will not always be equivalent to the average of estimates with <code>type="response"</code>.
+</p>
+<p>Some of the most common <code>type</code> values are:
+</p>
+<p>response, link, E, Ep, average, class, conditional, count, cum.prob, cumprob, density, disp, expected, expvalue, fitted, invlink(link), latent, linear.predictor, linpred, location, lp, mean, p, pr, precision, prediction, prob, probability, probs, quantile, risk, scale, survival, unconditional, utility, variance, xb, zero, zlink, zprob
+</p>
+
+
+## References
+
+
+<ul>
+<li><p> Greenland S. 2019. &quot;Valid P-Values Behave Exactly as They Should: Some Misleading Criticisms of P-Values and Their Resolution With S-Values.&quot; The American Statistician. 73(S1): 106–114.
+</p>
+</li>
+<li><p> Cole, Stephen R, Jessie K Edwards, and Sander Greenland. 2020. &quot;Surprise!&quot; American Journal of Epidemiology 190 (2): 191–93. https://doi.org/10.1093/aje/kwaa136
+</p>
+</li></ul>
+
 
 
 ## Examples
@@ -863,6 +934,15 @@ comparisons(
     newdata = "mean",
     hypothesis = lc)
 
+# Effect of a 1 group-wise standard deviation change
+# First we calculate the SD in each group of `cyl`
+# Second, we use that SD as the treatment size in the `variables` argument
+library(dplyr)
+mod <- lm(mpg ~ hp + factor(cyl), mtcars)
+tmp <- mtcars %>% 
+    group_by(cyl) %>%
+    mutate(hp_sd = sd(hp))
+avg_comparisons(mod, variables = list(hp = tmp$hp_sd), by = "cyl")
 
 # `by` argument
 mod <- lm(mpg ~ hp * am * vs, data = mtcars)

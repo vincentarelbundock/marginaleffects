@@ -47,6 +47,7 @@ Predictions
   equivalence = NULL,
   p_adjust = NULL,
   df = Inf,
+  numderiv = "fdforward",
   ...
 )
 
@@ -65,6 +66,7 @@ avg_predictions(
   equivalence = NULL,
   p_adjust = NULL,
   df = Inf,
+  numderiv = "fdforward",
   ...
 )
 </code></pre>
@@ -73,20 +75,20 @@ avg_predictions(
 ## Arguments
 
 <table>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>model</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="predictions_:_model">model</code></td>
 <td>
 <p>Model object</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>newdata</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="predictions_:_newdata">newdata</code></td>
 <td>
 <p>Grid of predictor values at which we evaluate predictions.
 </p>
 
 <ul>
-<li> <p><code>NULL</code> (default): Predictions for each observed value in the original dataset. See <code>insight::get_data()</code>
+<li><p> Warning: Please avoid modifying your dataset between fitting the model and calling a <code>marginaleffects</code> function. This can sometimes lead to unexpected results.
 </p>
 </li>
-<li><p> data frame: Predictions for each row of the <code>newdata</code> data frame.
+<li> <p><code>NULL</code> (default): Unit-level predictions for each observed value in the dataset (empirical distribution). The dataset is retrieved using <code>insight::get_data()</code>, which tries to extract data from the environment. This may produce unexpected results if the original data frame has been altered since fitting the model.
 </p>
 </li>
 <li><p> string:
@@ -123,7 +125,7 @@ avg_predictions(
 
 </li></ul>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>variables</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="predictions_:_variables">variables</code></td>
 <td>
 <p>Counterfactual variables.
 </p>
@@ -190,7 +192,7 @@ avg_predictions(
 
 </li></ul>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>vcov</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="predictions_:_vcov">vcov</code></td>
 <td>
 <p>Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
 </p>
@@ -230,21 +232,20 @@ avg_predictions(
 </p>
 </li></ul>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>conf_level</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="predictions_:_conf_level">conf_level</code></td>
 <td>
 <p>numeric value between 0 and 1. Confidence level to use to build a confidence interval.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>type</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="predictions_:_type">type</code></td>
 <td>
 <p>string indicates the type (scale) of the predictions used to
 compute contrasts or slopes. This can differ based on the model
 type, but will typically be a string such as: &quot;response&quot;, &quot;link&quot;, &quot;probs&quot;,
 or &quot;zero&quot;. When an unsupported string is entered, the model-specific list of
 acceptable values is returned in an error message. When <code>type</code> is <code>NULL</code>, the
-default value is used. This default is the first model-related row in
-the <code>marginaleffects:::type_dictionary</code> dataframe. See the details section for a note on backtransformation.</p>
+first entry in the error message is used by default.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>by</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="predictions_:_by">by</code></td>
 <td>
 <p>Aggregate unit-level estimates (aka, marginalize, average over). Valid inputs:
 </p>
@@ -266,7 +267,7 @@ the <code>marginaleffects:::type_dictionary</code> dataframe. See the details se
 </p>
 </li></ul>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>byfun</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="predictions_:_byfun">byfun</code></td>
 <td>
 <p>A function such as <code>mean()</code> or <code>sum()</code> used to aggregate
 estimates within the subgroups defined by the <code>by</code> argument. <code>NULL</code> uses the
@@ -275,7 +276,7 @@ value. This is sometimes used to take the sum or mean of predicted
 probabilities across outcome or predictor
 levels. See examples section.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>wts</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="predictions_:_wts">wts</code></td>
 <td>
 <p>string or numeric: weights to use when computing average contrasts or slopes. These weights only affect the averaging in <code style="white-space: pre;">&#8288;avg_*()&#8288;</code> or with the <code>by</code> argument, and not the unit-level estimates themselves. Internally, estimates and weights are passed to the <code>weighted.mean()</code> function.
 </p>
@@ -288,11 +289,11 @@ levels. See examples section.</p>
 </p>
 </li></ul>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>transform</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="predictions_:_transform">transform</code></td>
 <td>
 <p>A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>hypothesis</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="predictions_:_hypothesis">hypothesis</code></td>
 <td>
 <p>specify a hypothesis test or custom contrast using a numeric value, vector, or matrix, a string, or a string formula.
 </p>
@@ -313,7 +314,7 @@ levels. See examples section.</p>
 </li></ul>
 
 </li>
-<li><p> String formula to specify linear or non-linear hypothesis tests. If the <code>term</code> column uniquely identifies rows, terms can be used in the formula. Otherwise, use <code>b1</code>, <code>b2</code>, etc. to identify the position of each parameter. Examples:
+<li><p> String formula to specify linear or non-linear hypothesis tests. If the <code>term</code> column uniquely identifies rows, terms can be used in the formula. Otherwise, use <code>b1</code>, <code>b2</code>, etc. to identify the position of each parameter. The <code style="white-space: pre;">&#8288;b*&#8288;</code> wildcard can be used to test hypotheses on all estimates. Examples:
 </p>
 
 <ul>
@@ -324,6 +325,9 @@ levels. See examples section.</p>
 </p>
 </li>
 <li> <p><code>b1 + b2 + b3 = 0</code>
+</p>
+</li>
+<li> <p><code style="white-space: pre;">&#8288;b* / b1 = 1&#8288;</code>
 </p>
 </li></ul>
 
@@ -350,19 +354,38 @@ levels. See examples section.</p>
 </p>
 </li></ul>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>equivalence</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="predictions_:_equivalence">equivalence</code></td>
 <td>
 <p>Numeric vector of length 2: bounds used for the two-one-sided test (TOST) of equivalence, and for the non-inferiority and non-superiority tests. See Details section below.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>p_adjust</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="predictions_:_p_adjust">p_adjust</code></td>
 <td>
 <p>Adjust p-values for multiple comparisons: &quot;holm&quot;, &quot;hochberg&quot;, &quot;hommel&quot;, &quot;bonferroni&quot;, &quot;BH&quot;, &quot;BY&quot;, or &quot;fdr&quot;. See stats::p.adjust</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>df</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="predictions_:_df">df</code></td>
 <td>
 <p>Degrees of freedom used to compute p values and confidence intervals. A single numeric value between 1 and <code>Inf</code>. When <code>df</code> is <code>Inf</code>, the normal distribution is used. When <code>df</code> is finite, the <code>t</code> distribution is used. See insight::get_df for a convenient function to extract degrees of freedom. Ex: <code>slopes(model, df = insight::get_df(model))</code></p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>...</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="predictions_:_numderiv">numderiv</code></td>
+<td>
+<p>string or list of strings indicating the method to use to for the numeric differentiation used in to compute delta method standard errors.
+</p>
+
+<ul>
+<li><p> &quot;fdforward&quot;: finite difference method with forward differences
+</p>
+</li>
+<li><p> &quot;fdcenter&quot;: finite difference method with central differences (default)
+</p>
+</li>
+<li><p> &quot;richardson&quot;: Richardson extrapolation method
+</p>
+</li>
+<li><p> Extra arguments can be specified by passing a list to the <code>numDeriv</code> argument, with the name of the method first and named arguments following, ex: <code>numderiv=list("fdcenter", eps = 1e-5)</code>. When an unknown argument is used, <code>marginaleffects</code> prints the list of valid arguments for each method.
+</p>
+</li></ul>
+</td></tr>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="predictions_:_...">...</code></td>
 <td>
 <p>Additional arguments are passed to the <code>predict()</code> method
 supplied by the modeling package.These arguments are particularly useful
@@ -374,12 +397,6 @@ package. See the &quot;Model-Specific Arguments&quot; section of the
 arguments.</p>
 </td></tr>
 </table>
-
-
-## Details
-
-<p>For <code>glm()</code>, <code>MASS::glm.nb</code>, <code>gam::gam()</code>, and <code>feols::feglm</code> models with <code>type</code>, <code>transform</code> and <code>hypothesis</code> all equal to <code>NULL</code> (the default), <code>predictions()</code> first predicts on the link scale, and then backtransforms the estimates and confidence intervals. This implies that the <code>estimate</code> produced by <code>avg_predictions()</code> will not be exactly equal to the average of the <code>estimate</code> column produced by <code>predictions()</code>. Users can circumvent this behavior and average predictions directly on the response scale by setting <code>type="response"</code> explicitly. With <code>type="response"</code>, the intervals are symmetric and may have undesirable properties (e.g., stretching beyond the <code style="white-space: pre;">&#8288;[0,1]&#8288;</code> bounds for a binary outcome regression).
-</p>
 
 
 ## Value
@@ -403,13 +420,16 @@ arguments.</p>
 <li> <p><code>std.error</code>: standard errors computed using the delta method.
 </p>
 </li>
+<li> <p><code>p.value</code>: p value associated to the <code>estimate</code> column. The null is determined by the <code>hypothesis</code> argument (0 by default), and p values are computed before applying the <code>transform</code> argument. For models of class <code>feglm</code>, <code>Gam</code>, <code>glm</code> and <code>negbin</code>, p values are computed on the link scale by default unless the <code>type</code> argument is specified explicitly.
+</p>
+</li>
+<li> <p><code>s.value</code>: Shannon information transforms of p values. How many consecutive &quot;heads&quot; tosses would provide the same amount of evidence (or &quot;surprise&quot;) against the null hypothesis that the coin is fair? The purpose of S is to calibrate the analyst's intuition about the strength of evidence encoded in p against a well-known physical phenomenon. See Greenland (2019) and Cole et al. (2020).
+</p>
+</li>
 <li> <p><code>conf.low</code>: lower bound of the confidence interval (or equal-tailed interval for bayesian models)
 </p>
 </li>
 <li> <p><code>conf.high</code>: upper bound of the confidence interval (or equal-tailed interval for bayesian models)
-</p>
-</li>
-<li> <p><code>p.value</code>: p value associated to the <code>estimate</code> column. The null is determined by the <code>hypothesis</code> argument (0 by default), and p values are computed before applying the <code>transform</code> argument. For models of class <code>feglm</code>, <code>Gam</code>, <code>glm</code> and <code>negbin</code>, p values are computed on the link scale by default unless the <code>type</code> argument is specified explicitly.
 </p>
 </li></ul>
 
@@ -597,6 +617,31 @@ posterior using the function supplied to the
 
 <p>Thanks to Russell V. Lenth for the excellent <code>emmeans</code> package and documentation which inspired this feature.
 </p>
+
+
+## Prediction types
+
+<p>The <code>type</code> argument determines the scale of the predictions used to compute quantities of interest with functions from the <code>marginaleffects</code> package. Admissible values for <code>type</code> depend on the model object. When users specify an incorrect value for <code>type</code>, <code>marginaleffects</code> will raise an informative error with a list of valid <code>type</code> values for the specific model object. The first entry in the list in that error message is the default type.
+</p>
+<p>The <code>invlink(link)</code> is a special type defined by <code>marginaleffects</code>. It is available for some (but not all) models and functions. With this link type, we first compute predictions on the link scale, then we use the inverse link function to backtransform the predictions to the response scale. This is useful for models with non-linear link functions as it can ensure that confidence intervals stay within desirable bounds, ex: 0 to 1 for a logit model. Note that an average of estimates with <code>type="invlink(link)"</code> will not always be equivalent to the average of estimates with <code>type="response"</code>.
+</p>
+<p>Some of the most common <code>type</code> values are:
+</p>
+<p>response, link, E, Ep, average, class, conditional, count, cum.prob, cumprob, density, disp, expected, expvalue, fitted, invlink(link), latent, linear.predictor, linpred, location, lp, mean, p, pr, precision, prediction, prob, probability, probs, quantile, risk, scale, survival, unconditional, utility, variance, xb, zero, zlink, zprob
+</p>
+
+
+## References
+
+
+<ul>
+<li><p> Greenland S. 2019. &quot;Valid P-Values Behave Exactly as They Should: Some Misleading Criticisms of P-Values and Their Resolution With S-Values.&quot; The American Statistician. 73(S1): 106–114.
+</p>
+</li>
+<li><p> Cole, Stephen R, Jessie K Edwards, and Sander Greenland. 2020. &quot;Surprise!&quot; American Journal of Epidemiology 190 (2): 191–93. https://doi.org/10.1093/aje/kwaa136
+</p>
+</li></ul>
+
 
 
 ## Examples

@@ -1,6 +1,6 @@
 # inferences {.unnumbered}
 
-(EXPERIMENTAL) Bootstrap and Simulation-Based Inference
+(EXPERIMENTAL) Bootstrap, Conformal, and Simulation-Based Inference
 
 ## Description
 
@@ -12,18 +12,27 @@
 
 ## Usage
 
-<pre><code class='language-R'>inferences(x, method, R = 1000, conf_type = "perc", ...)
+<pre><code class='language-R'>inferences(
+  x,
+  method,
+  R = 1000,
+  conf_type = "perc",
+  conformal_test = NULL,
+  conformal_calibration = NULL,
+  conformal_score = "residual_abs",
+  ...
+)
 </code></pre>
 
 
 ## Arguments
 
 <table>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>x</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="inferences_:_x">x</code></td>
 <td>
 <p>Object produced by one of the core <code>marginaleffects</code> functions.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>method</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="inferences_:_method">method</code></td>
 <td>
 <p>String
 </p>
@@ -46,13 +55,19 @@
 </li>
 <li><p> &quot;mi&quot; multiple imputation for missing data
 </p>
+</li>
+<li><p> &quot;conformal_split&quot;: prediction intervals using split conformal prediction (see Angelopoulos &amp; Bates, 2022)
+</p>
+</li>
+<li><p> &quot;conformal_cv+&quot;: prediction intervals using cross-validation+ conformal prediction (see Barber et al., 2020)
+</p>
 </li></ul>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>R</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="inferences_:_R">R</code></td>
 <td>
-<p>Number of resamples or simulations.</p>
+<p>Number of resamples, simulations, or cross-validation folds.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>conf_type</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="inferences_:_conf_type">conf_type</code></td>
 <td>
 <p>String: type of bootstrap interval to construct.
 </p>
@@ -71,7 +86,28 @@
 </p>
 </li></ul>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>...</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="inferences_:_conformal_test">conformal_test</code></td>
+<td>
+<p>Data frame of test data for conformal prediction.</p>
+</td></tr>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="inferences_:_conformal_calibration">conformal_calibration</code></td>
+<td>
+<p>Data frame of calibration data for split conformal prediction (<code style="white-space: pre;">&#8288;method="conformal_split&#8288;</code>).</p>
+</td></tr>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="inferences_:_conformal_score">conformal_score</code></td>
+<td>
+<p>String. Warning: The <code>type</code> argument in <code>predictions()</code> must generate predictions which are on the same scale as the outcome variable. Typically, this means that <code>type</code> must be &quot;response&quot; or &quot;probs&quot;.
+</p>
+
+<ul>
+<li><p> &quot;residual_abs&quot; or &quot;residual_sq&quot; for regression tasks (numeric outcome)
+</p>
+</li>
+<li><p> &quot;softmax&quot; for classification tasks (when <code>predictions()</code> returns a <code>group</code> columns, such as multinomial or ordinal logit models.
+</p>
+</li></ul>
+</td></tr>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="inferences_:_...">...</code></td>
 <td>
 
 <ul>
@@ -84,7 +120,7 @@
 <li><p> If <code>method="rsample"</code>, additional arguments are passed to <code>rsample::bootstraps()</code>.
 </p>
 </li>
-<li><p> If <code>method="simulation"</code>, additional arguments are ignored.
+<li><p> Additional arguments are ignored for all other methods.
 </p>
 </li></ul>
 </td></tr>
@@ -124,6 +160,10 @@
 <p>King, Gary, Michael Tomz, and Jason Wittenberg. &quot;Making the most of statistical analyses: Improving interpretation and presentation.&quot; American journal of political science (2000): 347-361
 </p>
 <p>Dowd, Bryan E., William H. Greene, and Edward C. Norton. &quot;Computation of standard errors.&quot; Health services research 49.2 (2014): 731-750.
+</p>
+<p>Angelopoulos, Anastasios N., and Stephen Bates. 2022. &quot;A Gentle Introduction to Conformal Prediction and Distribution-Free Uncertainty Quantification.&quot; arXiv. https://doi.org/10.48550/arXiv.2107.07511.
+</p>
+<p>Barber, Rina Foygel, Emmanuel J. Candes, Aaditya Ramdas, and Ryan J. Tibshirani. 2020. “Predictive Inference with the Jackknife+.” arXiv. http://arxiv.org/abs/1905.02928.
 </p>
 
 

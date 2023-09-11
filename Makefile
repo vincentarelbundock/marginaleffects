@@ -56,6 +56,7 @@ deploy: ## Deploy book to Github website
 	git checkout gh-pages
 	git checkout main -- book
 	git checkout main -- Makefile
+	Rscript -e "source('book/utils/utils.R');get_reference()"
 	Rscript -e "source('book/utils/utils.R');link_function_docs()"
 	Rscript -e "source('book/utils/utils.R');get_quarto_yaml(dev = FALSE)"
 	make html
@@ -78,6 +79,7 @@ deploydev: ## Deploy dev book to Github website
 	git checkout gh-pages
 	git checkout main -- book
 	git checkout main -- Makefile
+	Rscript -e "source('book/utils/utils.R');get_reference()"
 	Rscript -e "source('book/utils/utils.R');link_function_docs()"
 	Rscript -e "source('book/utils/utils.R');get_quarto_yaml(dev = TRUE)"
 	make htmldev

@@ -49,15 +49,15 @@ See the &quot;Plots&quot; vignette and website for tutorials and information on 
 ## Arguments
 
 <table>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>model</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="plot_comparisons_:_model">model</code></td>
 <td>
 <p>Model object</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>variables</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="plot_comparisons_:_variables">variables</code></td>
 <td>
 <p>Name of the variable whose contrast we want to plot on the y-axis.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>condition</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="plot_comparisons_:_condition">condition</code></td>
 <td>
 <p>Conditional slopes
 </p>
@@ -88,7 +88,7 @@ See the &quot;Plots&quot; vignette and website for tutorials and information on 
 </p>
 </li></ul>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>by</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="plot_comparisons_:_by">by</code></td>
 <td>
 <p>Aggregate unit-level estimates (aka, marginalize, average over). Valid inputs:
 </p>
@@ -110,21 +110,20 @@ See the &quot;Plots&quot; vignette and website for tutorials and information on 
 </p>
 </li></ul>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>newdata</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="plot_comparisons_:_newdata">newdata</code></td>
 <td>
 <p>When <code>newdata</code> is <code>NULL</code>, the grid is determined by the <code>condition</code> argument. When <code>newdata</code> is not <code>NULL</code>, the argument behaves in the same way as in the <code>comparisons()</code> function.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>type</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="plot_comparisons_:_type">type</code></td>
 <td>
 <p>string indicates the type (scale) of the predictions used to
 compute contrasts or slopes. This can differ based on the model
 type, but will typically be a string such as: &quot;response&quot;, &quot;link&quot;, &quot;probs&quot;,
 or &quot;zero&quot;. When an unsupported string is entered, the model-specific list of
 acceptable values is returned in an error message. When <code>type</code> is <code>NULL</code>, the
-default value is used. This default is the first model-related row in
-the <code>marginaleffects:::type_dictionary</code> dataframe.</p>
+first entry in the error message is used by default.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>vcov</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="plot_comparisons_:_vcov">vcov</code></td>
 <td>
 <p>Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
 </p>
@@ -164,11 +163,11 @@ the <code>marginaleffects:::type_dictionary</code> dataframe.</p>
 </p>
 </li></ul>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>conf_level</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="plot_comparisons_:_conf_level">conf_level</code></td>
 <td>
 <p>numeric value between 0 and 1. Confidence level to use to build a confidence interval.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>wts</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="plot_comparisons_:_wts">wts</code></td>
 <td>
 <p>string or numeric: weights to use when computing average contrasts or slopes. These weights only affect the averaging in <code style="white-space: pre;">&#8288;avg_*()&#8288;</code> or with the <code>by</code> argument, and not the unit-level estimates themselves. Internally, estimates and weights are passed to the <code>weighted.mean()</code> function.
 </p>
@@ -181,7 +180,7 @@ the <code>marginaleffects:::type_dictionary</code> dataframe.</p>
 </p>
 </li></ul>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>comparison</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="plot_comparisons_:_comparison">comparison</code></td>
 <td>
 <p>How should pairs of predictions be compared? Difference, ratio, odds ratio, or user-defined functions.
 </p>
@@ -191,7 +190,7 @@ the <code>marginaleffects:::type_dictionary</code> dataframe.</p>
 </p>
 
 <ul>
-<li><p> Supported shortcuts strings: difference, differenceavg, differenceavgwts, dydx, eyex, eydx, dyex, dydxavg, eyexavg, eydxavg, dyexavg, dydxavgwts, eyexavgwts, eydxavgwts, dyexavgwts, ratio, ratioavg, ratioavgwts, lnratio, lnratioavg, lnratioavgwts, lnor, lnoravg, lnoravgwts, expdydx, expdydxavg, expdydxavgwts
+<li><p> Supported shortcuts strings: difference, differenceavg, differenceavgwts, dydx, eyex, eydx, dyex, dydxavg, eyexavg, eydxavg, dyexavg, dydxavgwts, eyexavgwts, eydxavgwts, dyexavgwts, ratio, ratioavg, ratioavgwts, lnratio, lnratioavg, lnratioavgwts, lnor, lnoravg, lnoravgwts, lift, liftavg, expdydx, expdydxavg, expdydxavgwts
 </p>
 </li>
 <li><p> See the Comparisons section below for definitions of each transformation.
@@ -209,23 +208,23 @@ the <code>marginaleffects:::type_dictionary</code> dataframe.</p>
 
 </li></ul>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>transform</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="plot_comparisons_:_transform">transform</code></td>
 <td>
 <p>string or function. Transformation applied to unit-level estimates and confidence intervals just before the function returns results. Functions must accept a vector and return a vector of the same length. Support string shortcuts: &quot;exp&quot;, &quot;ln&quot;</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>rug</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="plot_comparisons_:_rug">rug</code></td>
 <td>
 <p>TRUE displays tick marks on the axes to mark the distribution of raw data.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>gray</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="plot_comparisons_:_gray">gray</code></td>
 <td>
 <p>FALSE grayscale or color plot</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>draw</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="plot_comparisons_:_draw">draw</code></td>
 <td>
 <p><code>TRUE</code> returns a <code>ggplot2</code> plot. <code>FALSE</code> returns a <code>data.frame</code> of the underlying data.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>...</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="plot_comparisons_:_...">...</code></td>
 <td>
 <p>Additional arguments are passed to the <code>predict()</code> method
 supplied by the modeling package.These arguments are particularly useful

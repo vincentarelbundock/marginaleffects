@@ -40,7 +40,7 @@ datagridcf(..., model = NULL, newdata = NULL)
 ## Arguments
 
 <table>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>...</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="datagrid_:_...">...</code></td>
 <td>
 <p>named arguments with vectors of values or functions for user-specified variables.
 </p>
@@ -54,43 +54,43 @@ datagridcf(..., model = NULL, newdata = NULL)
 </p>
 </li></ul>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>model</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="datagrid_:_model">model</code></td>
 <td>
 <p>Model object</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>newdata</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="datagrid_:_newdata">newdata</code></td>
 <td>
 <p>data.frame (one and only one of the <code>model</code> and <code>newdata</code> arguments can be used.)</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>by</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="datagrid_:_by">by</code></td>
 <td>
 <p>character vector with grouping variables within which <code style="white-space: pre;">&#8288;FUN_*&#8288;</code> functions are applied to create &quot;sub-grids&quot; with unspecified variables.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>FUN_character</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="datagrid_:_FUN_character">FUN_character</code></td>
 <td>
 <p>the function to be applied to character variables.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>FUN_factor</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="datagrid_:_FUN_factor">FUN_factor</code></td>
 <td>
 <p>the function to be applied to factor variables.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>FUN_logical</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="datagrid_:_FUN_logical">FUN_logical</code></td>
 <td>
-<p>the function to be applied to factor variables.</p>
+<p>the function to be applied to logical variables.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>FUN_numeric</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="datagrid_:_FUN_numeric">FUN_numeric</code></td>
 <td>
 <p>the function to be applied to numeric variables.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>FUN_integer</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="datagrid_:_FUN_integer">FUN_integer</code></td>
 <td>
 <p>the function to be applied to integer variables.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>FUN_other</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="datagrid_:_FUN_other">FUN_other</code></td>
 <td>
 <p>the function to be applied to other variable types.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>grid_type</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="datagrid_:_grid_type">grid_type</code></td>
 <td>
 <p>character
 </p>

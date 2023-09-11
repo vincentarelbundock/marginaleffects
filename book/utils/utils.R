@@ -79,13 +79,13 @@ get_news = function() {
 
 rd2qmd = function(src) {
   # Rd -> html
-  rd = tools::parse_Rd(here(src))
-  rd = gsub("\\eqn\\{.*\\}\\{.*\\}", "\\$\\1\\$", rd)
+  rd = tools::parse_Rd(here::here(src))
   tmp_html = paste0(tempfile(), ".html")
   tools::Rd2HTML(rd, out = tmp_html)
 
   # superfluous header and footer
   tmp = readLines(tmp_html)
+  tmp = gsub("\\eqn\\{.*\\}\\{.*\\}", "\\$\\1\\$", tmp)
   tmp = tmp[(grep("</table>$", tmp)[1] + 1):length(tmp)]
   tmp = tmp[seq_len(which("</div>" == tmp) - 3)]
 
@@ -125,10 +125,22 @@ rd2qmd = function(src) {
   tmp = gsub("</h3>", "", tmp)
 
   # write to file
-  fn = file.path(here("book/reference"), sub("Rd$", "qmd", basename(src)))
+  fn = file.path(here::here("book/articles/reference"), sub("Rd$", "qmd", basename(src)))
   writeLines(tmp, con = fn)
 }
 
+
+get_reference <- function() {
+  message("Converting Rd files to markdown...\n")
+  funs <- c(
+    "predictions", "comparisons", "slopes", "marginal_means", "hypotheses",
+    "datagrid", "datagridcf",
+    "inferences", "plot_predictions", "plot_comparisons", "plot_slopes", "posterior_draws")
+  for (f in funs) {
+    r <- paste0("~/repos/marginaleffects/man/", f, ".Rd")
+    try(rd2qmd(r), silent = TRUE)
+  }
+}
 
 
 
@@ -143,12 +155,3 @@ rd2qmd = function(src) {
 # }
 
 
-# # Run all
-# message("Converting Rd files to markdown...\n")
-# funs <- c("predictions", "comparisons", "slopes", "marginal_means", "hypotheses",
-#           "datagrid", "datagridcf",
-#           "inferences", "plot_predictions", "plot_comparisons", "plot_slopes", "posterior_draws")
-# for (f in funs) {
-#   r <- paste0("~/repos/marginaleffects/man/", f, ".Rd")
-#   try(rd2qmd(r), silent = TRUE)
-# }

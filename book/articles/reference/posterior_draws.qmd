@@ -18,11 +18,11 @@ Extract Posterior Draws or Bootstrap Resamples from <code>marginaleffects</code>
 ## Arguments
 
 <table>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>x</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="posterior_draws_:_x">x</code></td>
 <td>
 <p>An object produced by a <code>marginaleffects</code> package function, such as <code>predictions()</code>, <code>avg_slopes()</code>, <code>hypotheses()</code>, etc.</p>
 </td></tr>
-<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace;>"<code>shape</code></td>
+<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="posterior_draws_:_shape">shape</code></td>
 <td>
 <p>string indicating the shape of the output format:
 </p>
