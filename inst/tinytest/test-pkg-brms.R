@@ -1,9 +1,11 @@
+# TODO: 744, 745, 749
+
 # HPD tests against emmeans, which uses HDI, but our default is ETI
 # HDI is implemented specifically for these tests
 # https://github.com/vincentarelbundock/marginaleffects/issues/240
 source("helpers.R")
 using("marginaleffects")
-exit_file("not sure why broken")
+# exit_file("not sure why broken")
 if (!EXPENSIVE) exit_file("EXPENSIVE")
 if (ON_WINDOWS) exit_file("on windows")
 if (!minver("base", "4.1.0")) exit_file("R 4.1.0")
@@ -325,7 +327,7 @@ expect_inherits(mfx2, "marginaleffects")
 # comparisons
 expect_error(comparisons(brms_monotonic_factor), pattern = "cannot be used")
 contr1 <- tidy(comparisons(brms_monotonic))
-known <- c("mean(+1)", sprintf("mean(%s) - mean(1)", c(2:4, 6, 8)))
+known <- c(sprintf("mean(%s) - mean(1)", c(2:4, 6, 8)), "mean(+1)")
 expect_equivalent(contr1$contrast, known)
 
 
@@ -735,12 +737,14 @@ known <- slopes(
   posterior_draws() |>
   data.table()
 known <- known[, .(estimate = mean(estimate)), by = c("drawid", "passengerClass")][
-               , .(estimate = median(estimate)), by = "passengerClass"]
+               , .(estimate = median(estimate)), by = "passengerClass"] |>
+  dplyr::arrange(passengerClass)
 set.seed(1024)
 unknown <- slopes(
   mod,
   variables = "woman",
-  by = "passengerClass")
+  by = "passengerClass") |>
+  dplyr::arrange(passengerClass)
 expect_equal(known$estimate, unknown$estimate, tolerance = 1e-3)
 expect_equal(known$passengerClass, unknown$passengerClass)
 
@@ -751,7 +755,7 @@ expect_error(predictions(
     by = "cyl_fac",
     transform = \(x) ecdf(mtcars$mpg)(x)) |>
     posterior_draws(),
-    pattern = "PxD matrix")
+    pattern = "matrix input must return")
 
 
 
