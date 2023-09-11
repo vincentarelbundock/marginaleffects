@@ -6,6 +6,7 @@ New:
 
 * Conformal prediction via `inferences()`
 * `hypothesis` argument now accepts multiple string formulas.
+* The `type` argument now accepts an explicit `invlink(link)` value instead of silently back-transforming. Users are no longer pointed to `type_dictionary`. Instead, they should call their function with a bad `type` value, and they will obtain a list of valid types. The `type` value is printed in the output. This is useful because the default `type` value is `NULL`, so the user often does not explicitly decide.
 
 Support new models:
 
