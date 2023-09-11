@@ -35,6 +35,7 @@ print.marginaleffects <- function(x,
                                   nrows = getOption("marginaleffects_print_nrows", default = 30),
                                   ncols = getOption("marginaleffects_print_ncols", default = 30),
                                   style = getOption("marginaleffects_print_style", default = "summary"),
+                                  type = getOption("marginaleffects_print_type", default = TRUE),
                                   ...) {
 
 
@@ -242,6 +243,9 @@ print.marginaleffects <- function(x,
     }
     if (ncol(x) <= ncols) {
         cat("Columns:", paste(colnames(x), collapse = ", "), "\n")
+    }
+    if (isTRUE(type) && !is.null(attr(x, "type"))) {
+        cat("Type: ", attr(x, "type"), "\n")
     }
     cat("\n")
 

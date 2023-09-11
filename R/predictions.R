@@ -274,7 +274,7 @@ predictions <- function(model,
 
     # if type is NULL, we backtransform if relevant
     type_string <- sanitize_type(model = model, type = type, calling_function = "predictions")
-    if (type_string == "linkinv(link)") {
+    if (type_string == "invlink(link)") {
         type_call <- "link"
     } else {
         type_call <- type_string
@@ -526,7 +526,7 @@ predictions <- function(model,
     out <- equivalence(out, equivalence = equivalence, df = df, ...)
 
     # after rename to estimate / after assign draws
-    if (identical(type_string, "linkinv(link)")) {
+    if (identical(type_string, "invlink(link)")) {
         linv <- tryCatch(insight::link_inverse(model), error = function(e) identity)
         out <- backtransform(out, transform = linv)
     }

@@ -11,13 +11,13 @@ sanitize_type <- function(model, type, calling_function = NULL) {
     }
     dict <- type_dictionary
     if (calling_function %in% c("slopes", "comparisons")) {
-        dict <- dict[dict$type != "linkinv(link)", , drop = FALSE]
+        dict <- dict[dict$type != "invlink(link)", , drop = FALSE]
     }
 
-    # fixest: linkinv(link) only supported for glm model
+    # fixest: invlink(link) only supported for glm model
     if (inherits(model, "fixest")) {
         if (!isTRUE(hush(model[["method_type"]]) %in% c("feglm"))) {
-            dict <- dict[dict$type != "linkinv(link)", , drop = FALSE]
+            dict <- dict[dict$type != "invlink(link)", , drop = FALSE]
         }
     }
 
