@@ -12,4 +12,5 @@
      13.3      2.110  6.28   <0.001  31.5  9.12   17.4
      21.0      0.954 22.05   <0.001 355.5 19.17   22.9
 Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, hp, gear 
+Type:  response 
 

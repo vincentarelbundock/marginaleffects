@@ -8,4 +8,5 @@
     3rd       1   0.4497    0.391  1.4 0.3400  0.565
 
 Columns: rowid, estimate, p.value, s.value, conf.low, conf.high, Survived, Age, PClass, SexCode 
+Type:  invlink(link) 
 

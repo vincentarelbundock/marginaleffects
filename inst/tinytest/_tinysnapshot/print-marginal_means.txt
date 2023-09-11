@@ -6,4 +6,5 @@
 
 Results averaged over levels of: gear 
 Columns: rowid, term, value, gear, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, hp, mpg, wts 
+Type:  response 
 

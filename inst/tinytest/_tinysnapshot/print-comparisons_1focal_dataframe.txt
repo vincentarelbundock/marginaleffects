@@ -4,4 +4,5 @@
    am    1 - 0     5.28       1.08 4.89   <0.001 19.9  3.16   7.39  1 120
 
 Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, am, hp, mpg 
+Type:  response 
 

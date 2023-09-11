@@ -10,4 +10,5 @@
 
 Results averaged over levels of: gear, am, vs 
 Columns: term, value, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response 
 

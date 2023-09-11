@@ -11,4 +11,5 @@
  hp   mean(+1)             5  -0.0583     0.0126 -4.61  < 0.001 17.9  -0.0830 -0.0335
 
 Columns: term, contrast, gear, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted 
+Type:  response 
 
