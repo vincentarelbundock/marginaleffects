@@ -178,7 +178,7 @@ pred <- predictions(modlin)
 mean(pred$estimate)
 ```
 
-Note that in GLM models with a non-linear link function, the predictions are first made on the link scale, averaged, and then back transformed. Thus, the average prediction may not be exactly identical to the average of predictions:
+Note that in GLM models with a non-linear link function, the default `type` is `linkinv(link)`. This means that predictions are first made on the link scale, averaged, and then back transformed. Thus, the average prediction may not be exactly identical to the average of predictions:
 
 ```{r}
 mod <- glm(vs ~ hp + am, data = mtcars, family = binomial)
@@ -224,7 +224,7 @@ predictions(
     summarize(AAP = mean(estimate))
 ```
 
-Note that the two results are exactly identical when we specify `type="response"` explicitly. However, they will differ slightly when we leave `type` unspecified, because `marginaleffects` will then automatically make predictions and average on the link scale, before backtransforming:
+Note that the two results are exactly identical when we specify `type="response"` explicitly. However, they will differ slightly when we leave `type` unspecified, because `marginaleffects` will then automatically make predictions and average on the link scale, before backtransforming (`"linkinv(link)"`):
 
 ```{r}
 predictions(

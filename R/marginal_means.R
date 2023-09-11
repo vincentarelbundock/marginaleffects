@@ -21,10 +21,7 @@
 #' type, but will typically be a string such as: "response", "link", "probs",
 #' or "zero". When an unsupported string is entered, the model-specific list of
 #' acceptable values is returned in an error message. When `type` is `NULL`, the
-#' default value is used. This default is the first model-related row in
-#' the `marginaleffects:::type_dictionary` dataframe. If `type` is `NULL` and
-#' the default value is "response", the function tries to compute marginal means
-#' on the link scale before backtransforming them using the inverse link function.
+#' first entry in the error message is used by default. 
 #' @param wts character value. Weights to use in the averaging.
 #' + "equal": each combination of variables in `newdata` gets equal weight.
 #' + "cells": each combination of values for the variables in the `newdata` gets a weight proportional to its frequency in the original data.

@@ -130,8 +130,7 @@ compute contrasts or slopes. This can differ based on the model
 type, but will typically be a string such as: "response", "link", "probs",
 or "zero". When an unsupported string is entered, the model-specific list of
 acceptable values is returned in an error message. When \code{type} is \code{NULL}, the
-default value is used. This default is the first model-related row in
-the \code{marginaleffects:::type_dictionary} dataframe.}
+first entry in the error message is used by default.}
 
 \item{vcov}{Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
 \itemize{
@@ -408,11 +407,13 @@ Thanks to Russell V. Lenth for the excellent \code{emmeans} package and document
 \section{Prediction types}{
 
 
-The \code{type} argument determines the scale of the predictions used to compute quantities of interest with functions from the \code{marginaleffects} package. Admissible values for \code{type} depend on the model object. When users specify an incorrect value for \code{type}, \code{marginaleffects} will raise an informative error with a list of valid \code{type} values for the specific model object.
+The \code{type} argument determines the scale of the predictions used to compute quantities of interest with functions from the \code{marginaleffects} package. Admissible values for \code{type} depend on the model object. When users specify an incorrect value for \code{type}, \code{marginaleffects} will raise an informative error with a list of valid \code{type} values for the specific model object. The first entry in the list in that error message is the default type.
+
+The \code{linkinv(link)} is a special type defined by \code{marginaleffects}. It is available for some (but not all) models and functions. With this link type, we first compute predictions on the link scale, then we use the inverse link function to backtransform the predictions to the response scale. This is useful for models with non-linear link functions as it can ensure that confidence intervals stay within desirable bounds, ex: \link{0,1} for a logit model. Note that an average of estimates with \code{type="linkinv(link)"} will not always be equivalent to the average of estimates with \code{type="response"}.
 
 Some of the most common \code{type} values are:
 
-response, link, E, Ep, average, class, conditional, count, cum.prob, cumprob, density, disp, expected, expvalue, fitted, latent, linear.predictor, linpred, location, lp, mean, p, pr, precision, prediction, prob, probability, probs, quantile, risk, scale, survival, unconditional, utility, variance, xb, zero, zlink, zprob
+response, link, E, Ep, average, class, conditional, count, cum.prob, cumprob, density, disp, expected, expvalue, fitted, latent, linear.predictor, linkinv(link), linpred, location, lp, mean, p, pr, precision, prediction, prob, probability, probs, quantile, risk, scale, survival, unconditional, utility, variance, xb, zero, zlink, zprob
 }
 
 \examples{

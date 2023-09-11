@@ -14,9 +14,6 @@
 #' * <https://marginaleffects.com/>
 #'
 #' @rdname predictions
-#' @details
-#' For `glm()`, `MASS::glm.nb`, `gam::gam()`, and `feols::feglm` models with `type`, `transform` and `hypothesis` all equal to `NULL` (the default), `predictions()` first predicts on the link scale, and then backtransforms the estimates and confidence intervals. This implies that the `estimate` produced by `avg_predictions()` will not be exactly equal to the average of the `estimate` column produced by `predictions()`. Users can circumvent this behavior and average predictions directly on the response scale by setting `type="response"` explicitly. With `type="response"`, the intervals are symmetric and may have undesirable properties (e.g., stretching beyond the `[0,1]` bounds for a binary outcome regression).
-#' 
 #' @param model Model object
 #' @param variables Counterfactual variables.
 #' * Output:
@@ -59,8 +56,7 @@
 #' type, but will typically be a string such as: "response", "link", "probs",
 #' or "zero". When an unsupported string is entered, the model-specific list of
 #' acceptable values is returned in an error message. When `type` is `NULL`, the
-#' default value is used. This default is the first model-related row in
-#' the `marginaleffects:::type_dictionary` dataframe. See the details section for a note on backtransformation.
+#' first entry in the error message is used by default.
 #' @param transform A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.
 #'
 #' @template deltamethod
