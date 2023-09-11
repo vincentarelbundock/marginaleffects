@@ -14,6 +14,7 @@
 #' @param nrows The number of rows which will be printed before truncation.
 #' @param ncols The maximum number of column names to display at the bottom of the printed output.
 #' @param style "summary" or "data.frame"
+#' @param type boolean: should the type be printed?
 #' @param ... Other arguments are currently ignored.
 #' @export
 #' @examples

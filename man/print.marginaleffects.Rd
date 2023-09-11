@@ -31,6 +31,8 @@
 
 \item{style}{"summary" or "data.frame"}
 
+\item{type}{boolean: should the type be printed?}
+
 \item{...}{Other arguments are currently ignored.}
 }
 \description{
