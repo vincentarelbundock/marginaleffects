@@ -65,6 +65,7 @@ geeglm,response
 geeglm,link
 glimML,response
 glimML,link
+glm,linkinv(link)
 glm,response
 glm,link
 glmerMod,response

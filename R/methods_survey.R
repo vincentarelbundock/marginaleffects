@@ -42,7 +42,7 @@ get_predict.svyolr <- function(model,
                                type = "probs",
                                ...) {
 
-  type <- sanitize_type(model, type)
+  type <- sanitize_type(model, type, calling_function = "predictions")
 
   # hack: 1-row newdata returns a vector, so get_predict.default does not learn about groups
   if (nrow(newdata) == 1) {

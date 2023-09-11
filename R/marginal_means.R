@@ -201,16 +201,16 @@ marginal_means <- function(model,
         isTRUE(checkmate::check_number(hypothesis, null.ok = TRUE)) &&
         flag_class) {
         dict <- subset(type_dictionary, class == class(model)[1])$type
-        type <- sanitize_type(model = model, type = type)
+        type <- sanitize_type(model = model, type = type, calling_function = "predictions")
         linv <- tryCatch(insight::link_inverse(model), error = function(e) NULL)
         if (isTRUE(type == "response") && isTRUE("link" %in% dict) && is.function(linv)) {
             type <- "link"
             transform <- linv
         } else {
-            type <- sanitize_type(model = model, type = type)
+            type <- sanitize_type(model = model, type = type, calling_function = "predictions")
         }
     } else {
-        type <- sanitize_type(model = model, type = type)
+        type <- sanitize_type(model = model, type = type, calling_function = "predictions")
     }
 
     modeldata <- get_modeldata(model, additional_variables = FALSE, wts = wts)

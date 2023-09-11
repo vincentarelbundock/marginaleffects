@@ -8,7 +8,7 @@ get_predict.fixest <- function(model,
     insight::check_if_installed("fixest")
 
     if (is.null(type)) {
-        type <- sanitize_type(model = model, type = type)
+        type <- sanitize_type(model = model, type = type, calling_function = "predictions")
     }
 
     dots <- list(...)

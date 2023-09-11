@@ -313,7 +313,7 @@ comparisons <- function(model,
         calling_function = "comparisons",
         ...)
     cross <- sanitize_cross(cross, variables, model)
-    type <- sanitize_type(model = model, type = type)
+    type <- sanitize_type(model = model, type = type, calling_function = "comparisons")
     sanity_comparison(comparison)
     tmp <- sanitize_hypothesis(hypothesis, ...)
     hypothesis <- tmp$hypothesis

@@ -276,27 +276,13 @@ predictions <- function(model,
         return(out)
     }
 
-
     # if type is NULL, we backtransform if relevant
-    flag_class <- isTRUE(class(model)[1] %in% c("glm", "Gam", "negbin")) ||
-                  isTRUE(hush(model[["method_type"]]) %in% c("feglm"))
-    if (is.null(type) &&
-        is.null(transform) &&
-        isTRUE(checkmate::check_number(hypothesis, null.ok = TRUE)) &&
-        flag_class) {
-        dict <- subset(type_dictionary, class == class(model)[1])$type
-        type <- sanitize_type(model = model, type = type)
-        linv <- tryCatch(insight::link_inverse(model), error = function(e) NULL)
-        if (isTRUE(type == "response") && isTRUE("link" %in% dict) && is.function(linv)) {
-            type <- "link"
-            transform <- linv
-        } else {
-            type <- sanitize_type(model = model, type = type)
-        }
+    type_string <- sanitize_type(model = model, type = type, calling_function = "predictions")
+    if (type_string == "linkinv(link)") {
+        type_call <- "link"
     } else {
-        type <- sanitize_type(model = model, type = type)
+        type_call <- type_string
     }
-
 
     # save the original because it gets converted to a named list, which breaks
     # user-input sanity checks
@@ -397,7 +383,7 @@ predictions <- function(model,
     # Bootstrap
     out <- inferences_dispatch(
         FUN = predictions,
-        model = model, newdata = newdata, vcov = vcov, variables = variables, type = type, by = by,
+        model = model, newdata = newdata, vcov = vcov, variables = variables, type = type_call, by = by,
         conf_level = conf_level,
         byfun = byfun, wts = wts, transform = transform_original, hypothesis = hypothesis, ...)
     if (!is.null(out)) {
@@ -413,7 +399,7 @@ predictions <- function(model,
     args <- list(
         model = model,
         newdata = newdata,
-        type = type,
+        type = type_call,
         hypothesis = hypothesis,
         wts = wts,
         by = by,
@@ -476,7 +462,7 @@ predictions <- function(model,
                     model,
                     newdata = newdata,
                     vcov = V,
-                    type = type,
+                    type = type_call,
                     FUN = fun,
                     J = J,
                     hypothesis = hypothesis,
@@ -544,13 +530,17 @@ predictions <- function(model,
     out <- equivalence(out, equivalence = equivalence, df = df, ...)
 
     # after rename to estimate / after assign draws
+    if (identical(type_string, "linkinv(link)")) {
+        linv <- tryCatch(insight::link_inverse(model), error = function(e) identity)
+        out <- backtransform(out, transform = linv)
+    }
     out <- backtransform(out, transform = transform)
 
     data.table::setDF(out)
     class(out) <- c("predictions", class(out))
     out <- set_marginaleffects_attributes(out, attr_cache = newdata_attr_cache)
     attr(out, "model") <- model
-    attr(out, "type") <- type
+    attr(out, "type") <- type_string
     attr(out, "model_type") <- class(model)[1]
     attr(out, "vcov.type") <- get_vcov_label(vcov)
     attr(out, "jacobian") <- J

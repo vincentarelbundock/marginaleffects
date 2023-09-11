@@ -46,7 +46,7 @@ get_predict.multinom <- function(model,
                                  type = "probs",
                                  ...) {
 
-    type <- sanitize_type(model, type)
+    type <- sanitize_type(model, type, calling_function = "predictions")
 
     is_latent <- is_mclogit <- is_nnet <- FALSE
     if (isTRUE(type == "latent") && inherits(model, c("mblogit", "mclogit"))) {

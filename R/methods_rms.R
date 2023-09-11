@@ -16,7 +16,7 @@ get_vcov.orm <- function(model,
 #' @export
 get_predict.rms <- function(model, newdata = insight::get_data(model), type = NULL, ...) {
     if (is.null(type)) {
-        type <- sanitize_type(model, type)
+        type <- sanitize_type(model, type, calling_function = "predictions")
     }
     # {rms} predict methods break on additional arguments
     get_predict.default(model, newdata = newdata, type = type)
