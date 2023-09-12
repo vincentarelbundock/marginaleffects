@@ -1,6 +1,6 @@
 get_modeldata <- function(model, additional_variables = FALSE, modeldata = NULL, wts = NULL, ...) {
 
-    if (inherits(model, "mira")) {
+    if (inherits(model, c("mira", "amest"))) {
         return(modeldata)
     }
 

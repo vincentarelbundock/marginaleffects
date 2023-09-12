@@ -4,7 +4,7 @@
 #' Predict the outcome variable at different regressor values (e.g., college
 #' graduates vs. others), and compare those predictions by computing a difference,
 #' ratio, or some other function. `comparisons()` can return many quantities of
-#' interest, such as contrasts, differences, risk ratios, changes in log odds, lift, 
+#' interest, such as contrasts, differences, risk ratios, changes in log odds, lift,
 #' slopes, elasticities, etc.
 #'
 #' * `comparisons()`: unit-level (conditional) estimates.
@@ -198,7 +198,7 @@
 #' # Second, we use that SD as the treatment size in the `variables` argument
 #' library(dplyr)
 #' mod <- lm(mpg ~ hp + factor(cyl), mtcars)
-#' tmp <- mtcars %>% 
+#' tmp <- mtcars %>%
 #'     group_by(cyl) %>%
 #'     mutate(hp_sd = sd(hp))
 #' avg_comparisons(mod, variables = list(hp = tmp$hp_sd), by = "cyl")
@@ -318,9 +318,9 @@ comparisons <- function(model,
     tmp <- sanitize_hypothesis(hypothesis, ...)
     hypothesis <- tmp$hypothesis
     hypothesis_null <- tmp$hypothesis_null
-    
+
     # multiple imputation
-    if (inherits(model, "mira")) {
+    if (inherits(model, c("mira", "amest"))) {
         out <- process_imputation(model, call_attr)
         return(out)
     }

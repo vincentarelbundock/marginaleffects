@@ -267,7 +267,7 @@ predictions <- function(model,
     hypothesis_null <- tmp$hypothesis_null
 
     # multiple imputation
-    if (inherits(model, "mira")) {
+    if (inherits(model, c("mira", "amest"))) {
         out <- process_imputation(model, call_attr)
         return(out)
     }
@@ -385,7 +385,7 @@ predictions <- function(model,
     if (!is.null(out)) {
         return(out)
     }
-    
+
 
     # pre-building the model matrix can speed up repeated predictions
     newdata <- get_model_matrix_attribute(model, newdata)
