@@ -202,9 +202,11 @@ hypotheses <- function(
                 if (!all(c("term", "estimate") %in% colnames(model))) {
                     insight::format_error("The model object is a data.frame but doesn't contain the columns 'term' or 'estimate'. Make sure these columns are present")
                 }
-                return(model[, c("term", "estimate")])
+                idx <- intersect(colnames(model), c("term", "group", "estimate"))
+                return(model[, idx])
             } else {
                 param <- insight::get_parameters(model, ...)
+                idx <- intersect(colnames(model), c("term", "group", "estimate"))
                 colnames(param)[1:2] <- c("term", "estimate")
                 return(param)
             }
@@ -233,6 +235,9 @@ hypotheses <- function(
             attr(out, "label") <- attr(tmp, "label")
         } else {
             attr(out, "label") <- tmp$term
+        }
+        if ("group" %in% colnames(tmp)) {
+            attr(out, "grouplab") <- tmp[["group"]]
         }
         return(out)
     }
@@ -276,6 +281,7 @@ hypotheses <- function(
                 std.error = se)
         }
     }
+    out[["group"]] <- attr(b, "grouplab")
 
     out <- get_ci(
         out,

@@ -1,5 +1,9 @@
 # News
 
+## dev
+
+* `hypotheses()`: The `FUN` argument handles `group` columns gracefully.
+
 ## 0.15.0
 
 New:
