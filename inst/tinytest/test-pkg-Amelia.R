@@ -36,7 +36,7 @@ fit_logistic <- function(dat) {
     return(out)
 }
 mod_imputation <- suppressWarnings(lapply(dat_amelia, fit_logistic))
-manu <- suppressWarnings(summary(pool(mod_imputation), conf.int = TRUE))
+manu <- suppressWarnings(summary(mice::pool(mod_imputation), conf.int = TRUE))
 fit <- with(imp,  glm(endp ~ trt, family = binomial(link = "logit")))
 auto <- suppressWarnings(avg_slopes(fit))
 expect_equivalent(auto$estimate, manu$estimate)
