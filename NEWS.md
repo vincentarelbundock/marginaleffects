@@ -3,6 +3,7 @@
 ## dev
 
 * `hypotheses()`: The `FUN` argument handles `group` columns gracefully.
+* Native support for `Amelia` for multiple imputation.
 
 ## 0.15.0
 

@@ -1,0 +1,65 @@
+source("helpers.R")
+requiet("Amelia")
+
+dat <- iris
+dat$Sepal.Length[sample(seq_len(nrow(iris)), 40)] <- NA
+dat$Sepal.Width[sample(seq_len(nrow(iris)), 40)] <- NA
+dat$Species[sample(seq_len(nrow(iris)), 40)] <- NA
+dat_amelia <- Amelia::amelia(dat, m = 20, noms = "Species", p2s = 0)
+amest <- with(dat_amelia, lm(Petal.Width ~ Sepal.Length * Sepal.Width + Species))
+mod <- lm(Petal.Width ~ Sepal.Length * Sepal.Width + Species, data = dat)
+
+mfx1 <- suppressWarnings(avg_slopes(amest, by = "Species"))
+mfx2 <- avg_slopes(mod, by = "Species")
+expect_inherits(mfx1, "slopes")
+expect_equivalent(nrow(mfx1), nrow(mfx2))
+
+
+# Issue #711
+data <- structure(list(id = 1:37, trt = c("soc", "soc", "soc", "soc",
+                                          "soc", "soc", "soc", "soc", "soc", "soc", "soc", "soc", "soc",
+                                          "soc", "soc", "soc", "soc", "soc", "soc", "soc", "soc", "arm",
+                                          "arm", "arm", "arm", "arm", "arm", "arm", "arm", "arm", "arm",
+                                          "arm", "arm", "arm", "arm", "arm", "arm"), endp = structure(c(1L,
+                                                                                                        1L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 2L, 2L,
+                                                                                                        2L, 2L, 2L, 2L, 1L, 1L, 1L, 1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 2L,
+                                                                                                        1L, 1L, 1L, 1L), levels = c("TRUE", "FALSE"), class = "factor")), row.names = c(NA,
+                                                                                                                                                                                        -37L), class = "data.frame")
+data$endp <- factor(data$endp, levels = c("TRUE", "FALSE"))
+data_miss <- data
+data_miss[c(1, 5, 7, 30), c("endp")] <- NA
+imp <- suppressWarnings(Amelia::amelia(data_miss, m = 20, noms = c("trt", "endp"), p2s = 0))
+dat_amelia <- imp$imputations
+fit_logistic <- function(dat) {
+    mod <- glm(endp ~ trt, family = binomial(link = "logit"), data = dat)
+    out <- avg_slopes(mod, newdata = dat)
+    return(out)
+}
+mod_imputation <- suppressWarnings(lapply(dat_amelia, fit_logistic))
+manu <- suppressWarnings(summary(pool(mod_imputation), conf.int = TRUE))
+fit <- with(imp,  glm(endp ~ trt, family = binomial(link = "logit")))
+auto <- suppressWarnings(avg_slopes(fit))
+expect_equivalent(auto$estimate, manu$estimate)
+expect_equivalent(auto$std.error, manu$std.error)
+
+
+
+# Issue #793
+set.seed(1024)
+dat <- iris
+dat$Sepal.Length[sample(seq_len(nrow(iris)), 40)] <- NA
+dat$Sepal.Width[sample(seq_len(nrow(iris)), 40)] <- NA
+dat$Species[sample(seq_len(nrow(iris)), 40)] <- NA
+dat_amelia <- Amelia::amelia(dat, m = 20, noms = "Species", p2s = 0)
+mod_amelia <- with(dat_amelia, lm(Petal.Width ~ Sepal.Length * Sepal.Width + Species))
+marg_means_amelia = marginal_means(mod_amelia)
+expect_inherits(marg_means_amelia, "marginalmeans")
+
+mod_amelia <- with(dat_amelia, glm(rbinom(n = length(Petal.Width), 1, 0.5) ~ Sepal.Length * Sepal.Width + Species, family = "binomial"))
+expect_error(marginal_means(mod_amelia), pattern = "std.error")
+m <- marginal_means(mod_amelia, type = "response")
+expect_inherits(m, "marginalmeans")
+
+
+
+source("helpers.R")

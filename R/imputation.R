@@ -1,13 +1,20 @@
 process_imputation <- function(x, call_attr, marginal_means = FALSE) {
     insight::check_if_installed("mice")
-    mfx_list <- list()
-    for (i in seq_along(x$analyses)) {
+
+    if (inherits(x, "mira")) {
+      x <- x$analyses
+    } else if (inherits(x, "amest")) {
+      x <- x
+    }
+
+    mfx_list <- vector("list", length(x))
+    for (i in seq_along(x)) {
         calltmp <- call_attr
-        calltmp[["model"]] <- x$analyses[[i]]
+        calltmp[["model"]] <- x[[i]]
 
         # not sure why but this breaks marginal_means on "modeldata specified twice"
         if (isFALSE(marginal_means)) {
-            calltmp[["modeldata"]] <- get_modeldata( x$analyses[[i]], additional_variables = FALSE)
+            calltmp[["modeldata"]] <- get_modeldata( x[[i]], additional_variables = FALSE)
         }
 
         mfx_list[[i]] <- evalup(calltmp)
@@ -41,7 +48,7 @@ process_imputation <- function(x, call_attr, marginal_means = FALSE) {
 
 
 #' tidy helper
-#' 
+#'
 #' @noRd
 #' @export
 tidy.marginaleffects_mids <- function(x, ...) {
@@ -55,7 +62,7 @@ tidy.marginaleffects_mids <- function(x, ...) {
 
 
 #' glance helper
-#' 
+#'
 #' @noRd
 #' @export
 glance.marginaleffects_mids <- function(x, ...) {

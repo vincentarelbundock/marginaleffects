@@ -4,7 +4,7 @@
 #' Marginal means are adjusted predictions, averaged across a grid of categorical predictors,
 #' holding other numeric predictors at their means. To learn more, read the marginal means vignette, visit the
 #' package website, or scroll down this page for a full list of vignettes:
-#' 
+#'
 #' * <https://marginaleffects.com/articles/marginalmeans.html>
 #' * <https://marginaleffects.com/>
 #'
@@ -21,7 +21,7 @@
 #' type, but will typically be a string such as: "response", "link", "probs",
 #' or "zero". When an unsupported string is entered, the model-specific list of
 #' acceptable values is returned in an error message. When `type` is `NULL`, the
-#' first entry in the error message is used by default. 
+#' first entry in the error message is used by default.
 #' @param wts character value. Weights to use in the averaging.
 #' + "equal": each combination of variables in `newdata` gets equal weight.
 #' + "cells": each combination of values for the variables in the `newdata` gets a weight proportional to its frequency in the original data.
@@ -71,11 +71,11 @@
 #' dat$cyl <- factor(dat$cyl)
 #' dat$am <- as.logical(dat$am)
 #' mod <- lm(mpg ~ carb + cyl + am, dat)
-#' 
+#'
 #' marginal_means(
 #'   mod,
 #'   variables = "cyl")
-#' 
+#'
 #' # collapse levels of cyl by averaging
 #' by <- data.frame(
 #'   cyl = c(4, 6, 8),
@@ -83,18 +83,18 @@
 #' marginal_means(mod,
 #'   variables = "cyl",
 #'   by = by)
-#' 
+#'
 #' # pairwise differences between collapsed levels
 #' marginal_means(mod,
 #'   variables = "cyl",
 #'   by = by,
 #'   hypothesis = "pairwise")
-#' 
+#'
 #' # cross
 #' marginal_means(mod,
 #'   variables = c("cyl", "carb"),
 #'   cross = TRUE)
-#' 
+#'
 #' # collapsed cross
 #' by <- expand.grid(
 #'   cyl = unique(mtcars$cyl),
@@ -103,8 +103,8 @@
 #'   by$cyl == 4,
 #'   paste("Control:", by$carb),
 #'   paste("Treatment:", by$carb))
-#' 
-#' 
+#'
+#'
 #' # Convert numeric variables to categorical before fitting the model
 #' dat <- mtcars
 #' dat$am <- as.logical(dat$am)
@@ -129,7 +129,7 @@
 #'   ncol = 2,
 #'   dimnames = list(NULL, c("A", "B")))
 #' marginal_means(mod, variables = "carb", hypothesis = lc)
-#' 
+#'
 marginal_means <- function(model,
                            variables = NULL,
                            newdata = NULL,
@@ -183,9 +183,9 @@ marginal_means <- function(model,
         df = df),
         list(...))
     call_attr <- do.call("call", call_attr)
-    
+
     # multiple imputation
-    if (inherits(model, "mira")) {
+    if (inherits(model, c("mira", "amest"))) {
         out <- process_imputation(model, call_attr, marginal_means = TRUE)
         return(out)
     }
@@ -528,7 +528,7 @@ get_marginalmeans <- function(model,
 
 
 #' `marginal_means()` is an alias to `marginal_means()`
-#' 
+#'
 #' This alias is kept for backward compatibility and because some users may prefer that name.
 #'
 #' @inherit marginal_means
