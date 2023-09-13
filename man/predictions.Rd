@@ -124,6 +124,7 @@ first entry in the error message is used by default.}
 \item Character vector of column names in \code{newdata} or in the data frame produced by calling the function without the \code{by} argument.
 \item Data frame with a \code{by} column of group labels, and merging columns shared by \code{newdata} or the data frame produced by calling the same function without the \code{by} argument.
 \item See examples below.
+\item For more complex aggregations, you can use the \code{FUN} argument of the \code{hypotheses()} function. See that function's documentation and the Hypothesis Test vignettes on the \code{marginaleffects} website.
 }}
 
 \item{byfun}{A function such as \code{mean()} or \code{sum()} used to aggregate

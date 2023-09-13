@@ -601,3 +601,45 @@ hyp
 #hypotheses(hyp, joint = TRUE, hypothesis = c(-10, -20))
 ```
 
+
+
+# Complex aggregations
+
+The `FUN` argument of the `hypotheses()` function can be used to conduct complex aggregations of other estimates. For example, consider this ordered logit model fitted on a dataset of cars:
+
+
+```{r}
+#| messages: false
+library(MASS)
+library(dplyr)
+
+dat <- transform(mtcars, gear = factor(gear))
+mod <- polr(gear ~ factor(cyl) + hp, dat)
+summary(mod)
+```
+
+If we compute fitted values with the `predictions()` function, we obtain one predicted probability for each individual car and for each level of the response variable:
+
+```{r}
+predictions(mod)
+```
+
+There are three levels to the outcome: 3, 4, and 5. Imagine that, for each car in the dataset, we want to collapse categories of the output variable into two categories ("3 & 4" and "5") by taking sums of predicted probabilities. Then, we want to take the average of those predicted probabilities for each level of `cyl`. To do so, we define a custom function, and pass it to the `FUN` argument of the `hypotheses()` function:
+
+```{r}
+aggregation_fun <- function(model) {
+    predictions(model, vcov = FALSE) |>
+        # label the new categories of outcome levels
+        mutate(group = ifelse(group %in% c("3", "4"), "3 & 4", "5")) |>
+        # sum of probabilities at the individual level
+        summarize(estimate = sum(estimate), .by = c("rowid", "cyl", "group")) |>
+        # average probabilities for each value of `cyl`
+        summarize(estimate = mean(estimate), .by = c("cyl", "group")) |>
+        # the `FUN` argument requires a `term` column
+        rename(term = cyl)
+}
+
+hypotheses(mod, FUN = aggregation_fun)
+```
+
+Note that this workflow will not work for bayesian models or with bootstrap. However, with those models it is trivial to do the same kind of aggregation by calling `posterior_draws()` and operating directly on draws from the posterior distribution. See the vignette on bayesian analysis for examples with the `posterior_draws()` function.

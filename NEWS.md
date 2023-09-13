@@ -5,6 +5,10 @@
 * `hypotheses()`: The `FUN` argument handles `group` columns gracefully.
 * Native support for `Amelia` for multiple imputation.
 
+Documentation:
+
+* New section on "Complex aggregations" in the Hypothesis testing vignette.
+
 ## 0.15.0
 
 New:

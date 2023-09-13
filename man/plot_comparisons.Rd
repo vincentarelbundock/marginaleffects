@@ -47,6 +47,7 @@ plot_comparisons(
 \item Character vector of column names in \code{newdata} or in the data frame produced by calling the function without the \code{by} argument.
 \item Data frame with a \code{by} column of group labels, and merging columns shared by \code{newdata} or the data frame produced by calling the same function without the \code{by} argument.
 \item See examples below.
+\item For more complex aggregations, you can use the \code{FUN} argument of the \code{hypotheses()} function. See that function's documentation and the Hypothesis Test vignettes on the \code{marginaleffects} website.
 }}
 
 \item{newdata}{When \code{newdata} is \code{NULL}, the grid is determined by the \code{condition} argument. When \code{newdata} is not \code{NULL}, the argument behaves in the same way as in the \code{comparisons()} function.}

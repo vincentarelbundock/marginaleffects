@@ -82,7 +82,7 @@ hypotheses(
 \item{FUN}{\code{NULL} or function.
 \itemize{
 \item \code{NULL} (default): hypothesis test on a model's coefficients, or on the quantities estimated by one of the \code{marginaleffects} package functions.
-\item Function which accepts a model object and returns a numeric vector or a data.frame with two columns called \code{term} and \code{estimate}. This argument can be useful when users want to conduct a hypothesis test on an arbitrary function of quantities held in a model object.
+\item Function which accepts a model object and returns a numeric vector or a data.frame with two columns called \code{term} and \code{estimate}. This argument can be useful when users want to conduct a hypothesis test on an arbitrary function of quantities held in a model object. See examples below.
 }}
 
 \item{numderiv}{string or list of strings indicating the method to use to for the numeric differentiation used in to compute delta method standard errors.
@@ -208,6 +208,26 @@ head(p)
 f <- function(x) predict(x, type = "response", newdata = mtcars)
 p <- hypotheses(mod, FUN = f)
 head(p)
+
+# Complex aggregation
+# Step 1: Collapse predicted probabilities by outcome level, for each individual
+# Step 2: Take the mean of the collapsed probabilities by group and `cyl`
+library(dplyr)
+library(MASS)
+library(dplyr)
+
+dat <- transform(mtcars, gear = factor(gear))
+mod <- polr(gear ~ factor(cyl) + hp, dat)
+
+aggregation_fun <- function(model) {
+    predictions(model, vcov = FALSE) |>
+        mutate(group = ifelse(group \%in\% c("3", "4"), "3 & 4", "5")) |>
+        summarize(estimate = sum(estimate), .by = c("rowid", "cyl", "group")) |>
+        summarize(estimate = mean(estimate), .by = c("cyl", "group")) |>
+        rename(term = cyl)
+}
+
+hypotheses(mod, FUN = aggregation_fun)
 
 # Equivalence, non-inferiority, and non-superiority tests
 mod <- lm(mpg ~ hp + factor(gear), data = mtcars)
