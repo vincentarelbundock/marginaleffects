@@ -193,7 +193,13 @@ marginal_means <- function(model,
     # if type is NULL, we backtransform if relevant
     type_string <- sanitize_type(model = model, type = type, calling_function = "marginal_means")
     if (type_string == "invlink(link)") {
-        type_call <- "link"
+        if (is.null(hypothesis)) {
+            type_call <- "link"
+        } else {
+            type_call <- "response"
+            type_string <- "response"
+            insight::format_warning('The `type="invlink"` argument is not available unless `hypothesis` is `NULL` or a single number. The value of the `type` argument was changed to "response" automatically. To suppress this warning, use `type="response"` explicitly in your function call.')
+        }
     } else {
         type_call <- type_string
     }

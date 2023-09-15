@@ -18,11 +18,25 @@ d <- structure(list(var_binom = structure(1:2, levels = c("0", "1"
 ), groups = structure(c(1L, 1L), levels = "b", class = "factor")), class = "data.frame", row.names = c(NA, 
 -2L))
 
-p <- predictions(
-  m, newdata = d, by = "var_binom", hypothesis = "pairwise", transform = "exp", type = "response"
+p1 <- predictions(
+  m, newdata = d, by = "var_binom", hypothesis = "pairwise", type = "response", transform = exp
 )
-expect_equal(p$estimate, 0.9867827, tolerance = 0.0001)
-p <- predictions(
-  m, newdata = d, by = "var_binom", hypothesis = "pairwise", transform = "exp"
-)
-expect_equal(p$estimate, 1.61968, tolerance = 0.0001)
+p2 <- predictions(
+  m, newdata = d, by = "var_binom", hypothesis = "pairwise", type = "invlink(link)", transform = exp
+) |> suppressWarnings()
+p3 <- predictions(
+  m, newdata = d, by = "var_binom", hypothesis = "pairwise", type = NULL, transform = exp
+) |> suppressWarnings()
+
+# values
+expect_equal(p1$estimate, 0.9867827, tolerance = 1e-5)
+expect_equal(p2$estimate, 0.9867827, tolerance = 1e-5)
+expect_equal(p3$estimate, 0.9867827, tolerance = 1e-5)
+
+# warnings
+expect_warning(predictions(
+  m, newdata = d, by = "var_binom", hypothesis = "pairwise", type = "invlink(link)", transform = exp
+))
+expect_warning(predictions(
+  m, newdata = d, by = "var_binom", hypothesis = "pairwise", transform = exp
+))
