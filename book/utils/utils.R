@@ -85,7 +85,6 @@ rd2qmd = function(src) {
 
   # superfluous header and footer
   tmp = readLines(tmp_html)
-  tmp = gsub("\\eqn\\{.*\\}\\{.*\\}", "\\$\\1\\$", tmp)
   tmp = tmp[(grep("</table>$", tmp)[1] + 1):length(tmp)]
   tmp = tmp[seq_len(which("</div>" == tmp) - 3)]
 
@@ -107,8 +106,19 @@ rd2qmd = function(src) {
     ex = gsub("&gt;", ">", ex)
     ex = ex[!grepl("## Not run:", ex)]
     ex = ex[!grepl("## End", ex)]
-    tmp = c(tmp[2:idx], "```{r}", "library(marginaleffects)", ex, "```")
+    tmp = c(tmp[2:idx], "```{r, warning=FALSE, message=FALSE}", "library(marginaleffects)", ex, "```")
   }
+
+  # cleanup equations
+  tmp <- gsub(
+    '<code class="reqn">(.*?)&gt;(.*?)</code>',
+    '<code class="reqn">\\1>\\2</code>',
+     tmp)
+  tmp <- gsub(
+    '<code class="reqn">(.*?)&lt;(.*?)</code>',
+    '<code class="reqn">\\1<\\2</code>',
+     tmp)
+  tmp <- gsub('<code class="reqn">(.*?)</code>', '\\$\\1\\$', tmp)
 
   # title
   funname = tools::file_path_sans_ext(basename(src))

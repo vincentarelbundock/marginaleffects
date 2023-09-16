@@ -135,7 +135,7 @@ explicitly defined are held at their mean or mode.
 
 
 ## Examples
-```{r}
+```{r, warning=FALSE, message=FALSE}
 library(marginaleffects)
 
 # The output only has 2 rows, and all the variables except `hp` are at their

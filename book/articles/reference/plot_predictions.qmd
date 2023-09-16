@@ -275,7 +275,7 @@ the table below.
 
 
 ## Examples
-```{r}
+```{r, warning=FALSE, message=FALSE}
 library(marginaleffects)
 
 mod <- lm(mpg ~ hp + wt, data = mtcars)

@@ -250,19 +250,19 @@ For the Chi-squared test, the degrees of freedom are Q.
 
 ## Equivalence, Inferiority, Superiority
 
-<p><code class="reqn">\theta</code> is an estimate, <code class="reqn">\sigma_\theta</code> its estimated standard error, and <code class="reqn">[a, b]</code> are the bounds of the interval supplied to the <code>equivalence</code> argument.
+<p>$\theta$ is an estimate, $\sigma_\theta$ its estimated standard error, and $[a, b]$ are the bounds of the interval supplied to the <code>equivalence</code> argument.
 </p>
 <p>Non-inferiority:
 </p>
 
 <ul>
-<li> <p><code class="reqn">H_0</code>: <code class="reqn">\theta \leq a</code>
+<li> <p>$H_0$: $\theta \leq a$
 </p>
 </li>
-<li> <p><code class="reqn">H_1</code>: <code class="reqn">\theta &gt; a</code>
+<li> <p>$H_1$: $\theta > a$
 </p>
 </li>
-<li> <p><code class="reqn">t=(\theta - a)/\sigma_\theta</code>
+<li> <p>$t=(\theta - a)/\sigma_\theta$
 </p>
 </li>
 <li><p> p: Upper-tail probability
@@ -273,13 +273,13 @@ For the Chi-squared test, the degrees of freedom are Q.
 </p>
 
 <ul>
-<li> <p><code class="reqn">H_0</code>: <code class="reqn">\theta \geq b</code>
+<li> <p>$H_0$: $\theta \geq b$
 </p>
 </li>
-<li> <p><code class="reqn">H_1</code>: <code class="reqn">\theta &lt; b</code>
+<li> <p>$H_1$: $\theta < b$
 </p>
 </li>
-<li> <p><code class="reqn">t=(\theta - b)/\sigma_\theta</code>
+<li> <p>$t=(\theta - b)/\sigma_\theta$
 </p>
 </li>
 <li><p> p: Lower-tail probability
@@ -299,7 +299,7 @@ For the Chi-squared test, the degrees of freedom are Q.
 
 
 ## Examples
-```{r}
+```{r, warning=FALSE, message=FALSE}
 library(marginaleffects)
 
 library(marginaleffects)
