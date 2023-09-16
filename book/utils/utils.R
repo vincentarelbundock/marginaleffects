@@ -92,7 +92,7 @@ rd2qmd = function(src) {
   # first column (odd entries) of table in Arguments should not be wrapped
   idx = grep("<td>", tmp)
   idx = idx[seq_along(idx) %% 2 == 1]
-  tmp[idx] = sub("<td>", '<td style = "white-space: nowrap; font-family: monospace;>"', tmp[idx])
+  tmp[idx] = sub("<td>", '<td style = "white-space: nowrap; font-family: monospace; vertical-align: top">', tmp[idx])
 
   # math in Equivalence section
   idx = grepl("<.code", tmp)
