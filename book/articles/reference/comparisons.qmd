@@ -83,11 +83,11 @@ avg_comparisons(
 ## Arguments
 
 <table>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="comparisons_:_model">model</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>model</code></td>
 <td>
 <p>Model object</p>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="comparisons_:_newdata">newdata</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>newdata</code></td>
 <td>
 <p>Grid of predictor values at which we evaluate the comparisons.
 </p>
@@ -139,7 +139,7 @@ avg_comparisons(
 
 </li></ul>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="comparisons_:_variables">variables</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>variables</code></td>
 <td>
 <p>Focal variables
 </p>
@@ -242,7 +242,7 @@ avg_comparisons(
 
 </li></ul>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="comparisons_:_comparison">comparison</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>comparison</code></td>
 <td>
 <p>How should pairs of predictions be compared? Difference, ratio, odds ratio, or user-defined functions.
 </p>
@@ -270,7 +270,7 @@ avg_comparisons(
 
 </li></ul>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="comparisons_:_type">type</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>type</code></td>
 <td>
 <p>string indicates the type (scale) of the predictions used to
 compute contrasts or slopes. This can differ based on the model
@@ -279,7 +279,7 @@ or &quot;zero&quot;. When an unsupported string is entered, the model-specific l
 acceptable values is returned in an error message. When <code>type</code> is <code>NULL</code>, the
 first entry in the error message is used by default.</p>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="comparisons_:_vcov">vcov</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>vcov</code></td>
 <td>
 <p>Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
 </p>
@@ -319,7 +319,7 @@ first entry in the error message is used by default.</p>
 </p>
 </li></ul>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="comparisons_:_by">by</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>by</code></td>
 <td>
 <p>Aggregate unit-level estimates (aka, marginalize, average over). Valid inputs:
 </p>
@@ -339,17 +339,20 @@ first entry in the error message is used by default.</p>
 </li>
 <li><p> See examples below.
 </p>
+</li>
+<li><p> For more complex aggregations, you can use the <code>FUN</code> argument of the <code>hypotheses()</code> function. See that function's documentation and the Hypothesis Test vignettes on the <code>marginaleffects</code> website.
+</p>
 </li></ul>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="comparisons_:_conf_level">conf_level</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>conf_level</code></td>
 <td>
 <p>numeric value between 0 and 1. Confidence level to use to build a confidence interval.</p>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="comparisons_:_transform">transform</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>transform</code></td>
 <td>
 <p>string or function. Transformation applied to unit-level estimates and confidence intervals just before the function returns results. Functions must accept a vector and return a vector of the same length. Support string shortcuts: &quot;exp&quot;, &quot;ln&quot;</p>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="comparisons_:_cross">cross</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>cross</code></td>
 <td>
 
 <ul>
@@ -360,7 +363,7 @@ first entry in the error message is used by default.</p>
 </p>
 </li></ul>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="comparisons_:_wts">wts</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>wts</code></td>
 <td>
 <p>string or numeric: weights to use when computing average contrasts or slopes. These weights only affect the averaging in <code style="white-space: pre;">&#8288;avg_*()&#8288;</code> or with the <code>by</code> argument, and not the unit-level estimates themselves. Internally, estimates and weights are passed to the <code>weighted.mean()</code> function.
 </p>
@@ -373,7 +376,7 @@ first entry in the error message is used by default.</p>
 </p>
 </li></ul>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="comparisons_:_hypothesis">hypothesis</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>hypothesis</code></td>
 <td>
 <p>specify a hypothesis test or custom contrast using a numeric value, vector, or matrix, a string, or a string formula.
 </p>
@@ -434,19 +437,19 @@ first entry in the error message is used by default.</p>
 </p>
 </li></ul>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="comparisons_:_equivalence">equivalence</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>equivalence</code></td>
 <td>
 <p>Numeric vector of length 2: bounds used for the two-one-sided test (TOST) of equivalence, and for the non-inferiority and non-superiority tests. See Details section below.</p>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="comparisons_:_p_adjust">p_adjust</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>p_adjust</code></td>
 <td>
 <p>Adjust p-values for multiple comparisons: &quot;holm&quot;, &quot;hochberg&quot;, &quot;hommel&quot;, &quot;bonferroni&quot;, &quot;BH&quot;, &quot;BY&quot;, or &quot;fdr&quot;. See stats::p.adjust</p>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="comparisons_:_df">df</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>df</code></td>
 <td>
 <p>Degrees of freedom used to compute p values and confidence intervals. A single numeric value between 1 and <code>Inf</code>. When <code>df</code> is <code>Inf</code>, the normal distribution is used. When <code>df</code> is finite, the <code>t</code> distribution is used. See insight::get_df for a convenient function to extract degrees of freedom. Ex: <code>slopes(model, df = insight::get_df(model))</code></p>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="comparisons_:_eps">eps</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>eps</code></td>
 <td>
 <p>NULL or numeric value which determines the step size to use when
 calculating numerical derivatives: (f(x+eps)-f(x))/eps. When <code>eps</code> is
@@ -455,7 +458,7 @@ the maximum and minimum values of the variable with respect to which we
 are taking the derivative. Changing <code>eps</code> may be necessary to avoid
 numerical problems in certain models.</p>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="comparisons_:_numderiv">numderiv</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>numderiv</code></td>
 <td>
 <p>string or list of strings indicating the method to use to for the numeric differentiation used in to compute delta method standard errors.
 </p>
@@ -474,7 +477,7 @@ numerical problems in certain models.</p>
 </p>
 </li></ul>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="comparisons_:_...">...</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>...</code></td>
 <td>
 <p>Additional arguments are passed to the <code>predict()</code> method
 supplied by the modeling package.These arguments are particularly useful
@@ -939,7 +942,7 @@ comparisons(
 # Second, we use that SD as the treatment size in the `variables` argument
 library(dplyr)
 mod <- lm(mpg ~ hp + factor(cyl), mtcars)
-tmp <- mtcars %>% 
+tmp <- mtcars %>%
     group_by(cyl) %>%
     mutate(hp_sd = sd(hp))
 avg_comparisons(mod, variables = list(hp = tmp$hp_sd), by = "cyl")

@@ -45,11 +45,11 @@ package website, or scroll down this page for a full list of vignettes:
 ## Arguments
 
 <table>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="marginal_means_:_model">model</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>model</code></td>
 <td>
 <p>Model object</p>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="marginal_means_:_variables">variables</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>variables</code></td>
 <td>
 <p>Focal variables
 </p>
@@ -62,7 +62,7 @@ package website, or scroll down this page for a full list of vignettes:
 </p>
 </li></ul>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="marginal_means_:_newdata">newdata</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>newdata</code></td>
 <td>
 <p>Grid of predictor values over which we marginalize.
 </p>
@@ -81,7 +81,7 @@ package website, or scroll down this page for a full list of vignettes:
 </p>
 </li></ul>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="marginal_means_:_vcov">vcov</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>vcov</code></td>
 <td>
 <p>Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
 </p>
@@ -121,11 +121,11 @@ package website, or scroll down this page for a full list of vignettes:
 </p>
 </li></ul>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="marginal_means_:_conf_level">conf_level</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>conf_level</code></td>
 <td>
 <p>numeric value between 0 and 1. Confidence level to use to build a confidence interval.</p>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="marginal_means_:_type">type</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>type</code></td>
 <td>
 <p>string indicates the type (scale) of the predictions used to
 compute marginal effects or contrasts. This can differ based on the model
@@ -134,11 +134,11 @@ or &quot;zero&quot;. When an unsupported string is entered, the model-specific l
 acceptable values is returned in an error message. When <code>type</code> is <code>NULL</code>, the
 first entry in the error message is used by default.</p>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="marginal_means_:_transform">transform</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>transform</code></td>
 <td>
 <p>A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.</p>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="marginal_means_:_cross">cross</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>cross</code></td>
 <td>
 <p>TRUE or FALSE
 </p>
@@ -151,7 +151,7 @@ first entry in the error message is used by default.</p>
 </p>
 </li></ul>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="marginal_means_:_hypothesis">hypothesis</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>hypothesis</code></td>
 <td>
 <p>specify a hypothesis test or custom contrast using a numeric value, vector, or matrix, a string, or a string formula.
 </p>
@@ -212,19 +212,19 @@ first entry in the error message is used by default.</p>
 </p>
 </li></ul>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="marginal_means_:_equivalence">equivalence</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>equivalence</code></td>
 <td>
 <p>Numeric vector of length 2: bounds used for the two-one-sided test (TOST) of equivalence, and for the non-inferiority and non-superiority tests. See Details section below.</p>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="marginal_means_:_p_adjust">p_adjust</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>p_adjust</code></td>
 <td>
 <p>Adjust p-values for multiple comparisons: &quot;holm&quot;, &quot;hochberg&quot;, &quot;hommel&quot;, &quot;bonferroni&quot;, &quot;BH&quot;, &quot;BY&quot;, or &quot;fdr&quot;. See stats::p.adjust</p>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="marginal_means_:_df">df</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>df</code></td>
 <td>
 <p>Degrees of freedom used to compute p values and confidence intervals. A single numeric value between 1 and <code>Inf</code>. When <code>df</code> is <code>Inf</code>, the normal distribution is used. When <code>df</code> is finite, the <code>t</code> distribution is used. See insight::get_df for a convenient function to extract degrees of freedom. Ex: <code>slopes(model, df = insight::get_df(model))</code></p>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="marginal_means_:_wts">wts</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>wts</code></td>
 <td>
 <p>character value. Weights to use in the averaging.
 </p>
@@ -240,11 +240,11 @@ first entry in the error message is used by default.</p>
 </p>
 </li></ul>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="marginal_means_:_by">by</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>by</code></td>
 <td>
 <p>Collapse marginal means into categories. Data frame with a <code>by</code> column of group labels, and merging columns shared by <code>newdata</code> or the data frame produced by calling the same function without the <code>by</code> argument.</p>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="marginal_means_:_numderiv">numderiv</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>numderiv</code></td>
 <td>
 <p>string or list of strings indicating the method to use to for the numeric differentiation used in to compute delta method standard errors.
 </p>
@@ -263,7 +263,7 @@ first entry in the error message is used by default.</p>
 </p>
 </li></ul>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="marginal_means_:_...">...</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>...</code></td>
 <td>
 <p>Additional arguments are passed to the <code>predict()</code> method
 supplied by the modeling package.These arguments are particularly useful

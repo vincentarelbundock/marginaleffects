@@ -75,11 +75,11 @@ avg_predictions(
 ## Arguments
 
 <table>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="predictions_:_model">model</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>model</code></td>
 <td>
 <p>Model object</p>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="predictions_:_newdata">newdata</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>newdata</code></td>
 <td>
 <p>Grid of predictor values at which we evaluate predictions.
 </p>
@@ -125,7 +125,7 @@ avg_predictions(
 
 </li></ul>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="predictions_:_variables">variables</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>variables</code></td>
 <td>
 <p>Counterfactual variables.
 </p>
@@ -192,7 +192,7 @@ avg_predictions(
 
 </li></ul>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="predictions_:_vcov">vcov</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>vcov</code></td>
 <td>
 <p>Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
 </p>
@@ -232,11 +232,11 @@ avg_predictions(
 </p>
 </li></ul>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="predictions_:_conf_level">conf_level</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>conf_level</code></td>
 <td>
 <p>numeric value between 0 and 1. Confidence level to use to build a confidence interval.</p>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="predictions_:_type">type</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>type</code></td>
 <td>
 <p>string indicates the type (scale) of the predictions used to
 compute contrasts or slopes. This can differ based on the model
@@ -245,7 +245,7 @@ or &quot;zero&quot;. When an unsupported string is entered, the model-specific l
 acceptable values is returned in an error message. When <code>type</code> is <code>NULL</code>, the
 first entry in the error message is used by default.</p>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="predictions_:_by">by</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>by</code></td>
 <td>
 <p>Aggregate unit-level estimates (aka, marginalize, average over). Valid inputs:
 </p>
@@ -265,9 +265,12 @@ first entry in the error message is used by default.</p>
 </li>
 <li><p> See examples below.
 </p>
+</li>
+<li><p> For more complex aggregations, you can use the <code>FUN</code> argument of the <code>hypotheses()</code> function. See that function's documentation and the Hypothesis Test vignettes on the <code>marginaleffects</code> website.
+</p>
 </li></ul>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="predictions_:_byfun">byfun</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>byfun</code></td>
 <td>
 <p>A function such as <code>mean()</code> or <code>sum()</code> used to aggregate
 estimates within the subgroups defined by the <code>by</code> argument. <code>NULL</code> uses the
@@ -276,7 +279,7 @@ value. This is sometimes used to take the sum or mean of predicted
 probabilities across outcome or predictor
 levels. See examples section.</p>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="predictions_:_wts">wts</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>wts</code></td>
 <td>
 <p>string or numeric: weights to use when computing average contrasts or slopes. These weights only affect the averaging in <code style="white-space: pre;">&#8288;avg_*()&#8288;</code> or with the <code>by</code> argument, and not the unit-level estimates themselves. Internally, estimates and weights are passed to the <code>weighted.mean()</code> function.
 </p>
@@ -289,11 +292,11 @@ levels. See examples section.</p>
 </p>
 </li></ul>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="predictions_:_transform">transform</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>transform</code></td>
 <td>
 <p>A function applied to unit-level adjusted predictions and confidence intervals just before the function returns results. For bayesian models, this function is applied to individual draws from the posterior distribution, before computing summaries.</p>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="predictions_:_hypothesis">hypothesis</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>hypothesis</code></td>
 <td>
 <p>specify a hypothesis test or custom contrast using a numeric value, vector, or matrix, a string, or a string formula.
 </p>
@@ -354,19 +357,19 @@ levels. See examples section.</p>
 </p>
 </li></ul>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="predictions_:_equivalence">equivalence</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>equivalence</code></td>
 <td>
 <p>Numeric vector of length 2: bounds used for the two-one-sided test (TOST) of equivalence, and for the non-inferiority and non-superiority tests. See Details section below.</p>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="predictions_:_p_adjust">p_adjust</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>p_adjust</code></td>
 <td>
 <p>Adjust p-values for multiple comparisons: &quot;holm&quot;, &quot;hochberg&quot;, &quot;hommel&quot;, &quot;bonferroni&quot;, &quot;BH&quot;, &quot;BY&quot;, or &quot;fdr&quot;. See stats::p.adjust</p>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="predictions_:_df">df</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>df</code></td>
 <td>
 <p>Degrees of freedom used to compute p values and confidence intervals. A single numeric value between 1 and <code>Inf</code>. When <code>df</code> is <code>Inf</code>, the normal distribution is used. When <code>df</code> is finite, the <code>t</code> distribution is used. See insight::get_df for a convenient function to extract degrees of freedom. Ex: <code>slopes(model, df = insight::get_df(model))</code></p>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="predictions_:_numderiv">numderiv</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>numderiv</code></td>
 <td>
 <p>string or list of strings indicating the method to use to for the numeric differentiation used in to compute delta method standard errors.
 </p>
@@ -385,7 +388,7 @@ levels. See examples section.</p>
 </p>
 </li></ul>
 </td></tr>
-<tr><td style = "white-space: nowrap; font-family: monospace;>"<code id="predictions_:_...">...</code></td>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>...</code></td>
 <td>
 <p>Additional arguments are passed to the <code>predict()</code> method
 supplied by the modeling package.These arguments are particularly useful
