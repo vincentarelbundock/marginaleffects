@@ -1,6 +1,6 @@
 # News
 
-## dev
+## 0.15.1
 
 * `hypotheses()`: The `FUN` argument handles `group` columns gracefully.
 * Native support for `Amelia` for multiple imputation.
@@ -11,7 +11,7 @@ Documentation:
 
 Bug fix:
 
-* Results of the `predictions()` function can be undesirable in version 0.15.0 when (a) `type=NULL`, (b) model is `glm()`, and (c) the `hypothesis` argument is non-numeric. This is because the default `type` was then set to `invlink(link)`, but the backtransformation using link function was applied to the quantity *after* applying the (non-linear) `hypothesis` test (ex: pairwise comparison or contrast). The `hypothesis` funtion should be applied to predictions on the response scale instead. A warning is now issued and the value of `type` is automatically switched to "response" when appropriate. Thanks to @strengejacke for report [#903](https://github.com/vincentarelbundock/marginaleffects/issues/903)
+* Results of the `predictions()` function could be inaccurate when (a) running version 0.15.0, (b) `type` is `NULL` or `invlink(link)`, (c) model is `glm()`, and (d) the `hypothesis` argument is non-numeric. Thanks to @strengejacke for report [#903](https://github.com/vincentarelbundock/marginaleffects/issues/903)
 
 ## 0.15.0
 
