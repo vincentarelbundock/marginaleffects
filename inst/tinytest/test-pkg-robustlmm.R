@@ -1,4 +1,5 @@
 source("helpers.R")
+exit_file("Conflict with logistf")
 if (ON_CI || ON_WINDOWS || ON_OSX) exit_file("local linux only")
 using("marginaleffects")
 
