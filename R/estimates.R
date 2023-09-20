@@ -15,10 +15,10 @@ oprobit,Ordered Probit,MASS,polr
 ologlog,Ordered Log-Log,MASS,polr
 ocloglog,Ordered Complementary Log-Log,MASS,polr
 ocauchit,Ordered Cauchit,MASS,polr
-robust_lm,Robust Linear,robustbase,lmrob
-robust_glm,Robust Generalized Linear,robustbase,glmrob
+robustlm,Robust Linear,robustbase,lmrob
+robustglm,Robust Generalized Linear,robustbase,glmrob
 multinom,Multinomial Log-Linear,nnet,multinom
-neg_bin,Negative Binomial,MASS,glm.nb
+negbin,Negative Binomial,MASS,glm.nb
 felm,Fixed Effects Linear Model,fixest,feols
 fepoisson,Fixed Effects Poisson,fixest,fepois
 feglm,Fixed Effects GLM,fixest,feglm
@@ -40,7 +40,7 @@ quantile,Quantile Regression,quantreg,rq
 heckman,Heckman-Style Selection and Treatment Effect,sampleSelection,selection
 heckit,Heckman-Style Selection and Treatment Effect,sampleSelection,heckit
 gam,Generalized Additive Model,mgcv,gam
-2sls_robust,Two-Stage Least Squares with Robust SEs,estimatr,iv_robust
+2slsrobust,Two-Stage Least Squares with Robust SEs,estimatr,iv_robust
 '
 out <- utils::read.csv(
     text = text,
@@ -212,7 +212,7 @@ Arguments: %s
     }
 
     # convenience: ordinal responses must be factor
-    if (model %in% c("ologit", "oprobit", "ologlog", "ocloglog", "ocauchit")) {
+    if (model %in% c("ologit", "oprobit", "ologlog", "ocloglog", "ocauchit", "multinom")) {
         dv <- as.character(as.list(formula)[[2]])
         if (!dv %in% colnames(data)) {
             insight::format_error(sprintf("The dependent variable `%s` is not in the data.", dv))
