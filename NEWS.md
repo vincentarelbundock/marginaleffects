@@ -1,5 +1,11 @@
 # News
 
+## dev
+
+New:
+
+* `estimates()` function provides a unified interface to fit a large number of models. All models are compatible with `marginaleffects` functions, so users can easily switch between modeling strategies by changing a single argument.
+
 ## 0.15.1
 
 * `hypotheses()`: The `FUN` argument handles `group` columns gracefully.

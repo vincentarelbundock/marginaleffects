@@ -61,7 +61,6 @@ plm,plm,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,U,U
 phylolm,phylolm,TRUE,TRUE,,,,,,
 phylolm,phyloglm,TRUE,TRUE,,,,,,
 pscl,hurdle,TRUE,TRUE,,,TRUE,U,TRUE,FALSE
-pscl,hurdle,TRUE,TRUE,,,TRUE,U,TRUE,FALSE
 pscl,zeroinfl,TRUE,TRUE,TRUE,TRUE,TRUE,U,TRUE,TRUE
 quantreg,rq,TRUE,TRUE,TRUE,TRUE,U,U,TRUE,TRUE
 Rchoice,hetprob,TRUE,TRUE,,,,,,

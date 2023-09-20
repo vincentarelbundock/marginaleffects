@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Predictions, Comparisons, Slopes, Marginal Means, and Hypothesis Tests
-Version: 0.15.1
+Version: 0.15.1.9000
 Authors@R: 
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -171,6 +171,7 @@ Collate:
     'conformal.R'
     'datagrid.R'
     'equivalence.R'
+    'estimates.R'
     'get_averages.R'
     'get_coef.R'
     'get_contrast_data.R'
