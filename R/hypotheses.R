@@ -152,6 +152,33 @@ hypotheses <- function(
     numderiv = "fdforward",
     ...) {
 
+  
+  dots <- list(...)
+  
+  call_attr <- c(list(
+    name = "hypotheses",
+    model = model,
+    hypothesis = hypothesis,
+    vcov = vcov,
+    conf_level = conf_level,
+    df = df,
+    equivalence = equivalence,
+    joint = joint,
+    joint_test = joint_test,
+    hypoth_fun = hypoth_fun,
+    numderiv = numderiv),
+    dots)
+  if ("modeldata" %in% names(dots)) {
+    call_attr[["modeldata"]] <- dots[["modeldata"]]
+  }
+  call_attr <- do.call("call", call_attr)
+  
+  model <- sanitize_model(
+    model = model,
+    vcov = vcov,
+    calling_function = "hypotheses",
+    ...)
+  
   ## Bootstrap
   # restore an already sanitized hypothesis if necessary
   hypothesis <- 
@@ -193,7 +220,6 @@ hypotheses <- function(
     # keep this NULL in case `hypothesis` was used in the previous call
     args[["hypothesis"]] <- hypothesis
 
-    dots <- list(...)
     if (length(dots) > 0) {
         args <- c(args, dots)
     }
@@ -291,18 +317,28 @@ hypotheses <- function(
     }
 
     b <- FUNouter(model = model, hypothesis = hypothesis)
-
-    if(!vcov_false){
-      se <- get_se_delta(
-        model = model,
-        vcov = vcov,
-        hypothesis = hypothesis,
-        FUN = FUNouter,
-        numderiv = numderiv,
-        ...)
-      J <- attr(se, "jacobian")
-    } else{
+    
+    # bayesian posterior
+    if (!is.null(attr(b, "posterior_draws"))) {
+      draws <- attr(b, "posterior_draws")
       J <- NULL
+      
+      # standard errors via delta method
+    } else if (!vcov_false && isTRUE(checkmate::check_matrix(vcov))) {
+      args <- list(model = model,
+                   vcov = vcov,
+                   hypothesis = hypothesis,
+                   FUN = FUNouter,
+                   numderiv = numderiv)
+      args <- c(args, dots)
+      se <- do.call("get_se_delta", args)
+      J <- attr(se, "jacobian")
+      attr(se, "jacobian") <- NULL
+      draws <- NULL
+      
+      # no standard error
+    } else {
+      J <- draws <- NULL
       se <- rep(NA, length(b))
     }
 
@@ -362,24 +398,6 @@ hypotheses <- function(
     }
 
     out <- sort_columns(out)
-
-  call_attr <- c(list(
-    name = "hypotheses",
-    model = model,
-    hypothesis = hypothesis,
-    vcov = vcov,
-    conf_level = conf_level,
-    df = df,
-    equivalence = equivalence,
-    joint = joint,
-    joint_test = joint_test,
-    hypoth_fun = hypoth_fun,
-    numderiv = numderiv,
-    dots))
-    if ("modeldata" %in% names(dots)) {
-        call_attr[["modeldata"]] <- dots[["modeldata"]]
-    }
-    call_attr <- do.call("call", call_attr)
 
 
     class(out) <- c("hypotheses", "deltamethod", class(out))
