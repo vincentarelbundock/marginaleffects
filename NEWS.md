@@ -1,5 +1,9 @@
 # News
 
+## dev
+
+* Add support for `hypotheses()` to `inferences()`. This changes `FUN` argument name in `hypotheses` to `hypoth_fun` to not conflict with `inferences`
+
 ## 0.15.1
 
 * `hypotheses()`: The `FUN` argument handles `group` columns gracefully.
