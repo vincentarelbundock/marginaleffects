@@ -318,10 +318,24 @@ hypotheses <- function(
 
     b <- FUNouter(model = model, hypothesis = hypothesis)
     
+    # For simulation generate posterior draws from inferences_coefmat
+    if ("inferences_simulation" %in% class(model)){
+      posterior_draws <- matrix(nrow=length(attr(b, "label")), ncol = nrow(attr(model, "inferences_coefmat")))
+      rownames(posterior_draws) <- attr(b, "label")
+      
+      for (sim_n in 1:ncol(posterior_draws)) {
+        model_tmp <- set_coef(model, attr(model, "inferences_coefmat")[sim_n,])
+        b_tmp <- FUNouter(model = model_tmp, hypothesis = hypothesis)
+        posterior_draws[,sim_n]<- b_tmp
+      }
+      attr(b, "posterior_draws") <- posterior_draws
+    }
+    
     # bayesian posterior
     if (!is.null(attr(b, "posterior_draws"))) {
       draws <- attr(b, "posterior_draws")
       J <- NULL
+      se <- rep(NA, length(b))
       
       # standard errors via delta method
     } else if (!vcov_false && isTRUE(checkmate::check_matrix(vcov))) {
@@ -383,7 +397,7 @@ hypotheses <- function(
         out,
         conf_level = conf_level,
         vcov = vcov,
-        draws = NULL,
+        draws = draws,
         estimate = "estimate",
         null_hypothesis = hypothesis_null,
         df = df,
@@ -401,6 +415,7 @@ hypotheses <- function(
 
 
     class(out) <- c("hypotheses", "deltamethod", class(out))
+    attr(out, "posterior_draws") <- draws
     attr(out, "model") <- model
     attr(out, "model_type") <- class(model)[1]
     attr(out, "jacobian") <- J
