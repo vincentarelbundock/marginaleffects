@@ -313,17 +313,19 @@ hypotheses <- function(
     b <- FUNouter(model = model, hypothesis = hypothesis)
     
     # For simulation based inference generate posterior draws from inferences_coefmat
-    # Doesn't support data.frames or mfx objects yet
+    # Doesn't support data.frames which aren't mfx objects
     if (inherits(model, "inferences_simulation")){
       if (inherits(model, "data.frame")){
-        msg <- "Simulation based inference not yet supported for this model type."
+        msg <- "Simulation based inference not yet supported for data.frame type."
         insight::format_error(msg)
       }
+      
       model_sim <- sanitize_model(
         model = model,
         vcov = vcov,
         calling_function = "hypotheses",
         ...)
+      
       posterior_draws <- matrix(nrow=length(attr(b, "label")), ncol = nrow(attr(model_sim, "inferences_coefmat")))
       rownames(posterior_draws) <- attr(b, "label")
       
