@@ -134,5 +134,11 @@ p <- avg_predictions(mod, by = "cyl") |> inferences(method = "simulation", R = 2
 expect_inherits(p, "predictions")
 
 
+# inferences with hypotheses
+mod <- lm(mpg ~ hp + cyl, data = mtcars)
+p <- hypotheses(mod, hypothesis = "hp/cyl=1") |> inferences(method = "boot", R = 25)
+# THIS BREAKS. Gets upset about passing an empty list through dots.
+p <- hypotheses(mod, hypothesis = "hp/cyl=1") |> inferences(method = "simulation", R = 25)
+
 
 rm(list = ls())
