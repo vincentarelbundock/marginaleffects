@@ -148,10 +148,37 @@ hypotheses <- function(
     equivalence = NULL,
     joint = FALSE,
     joint_test = "f",
-    FUN = NULL,
+    hypoth_fun = NULL,
     numderiv = "fdforward",
     ...) {
 
+  ## Bootstrap
+  # restore an already sanitized hypothesis if necessary
+  hypothesis <- 
+    if(is.null(attr(hypothesis, "label"))){
+      hypothesis
+    } else{ 
+      attr(hypothesis, "label")
+    }
+  # Apply inferences method
+    out <- inferences_dispatch(
+      FUN = hypotheses,
+      model=model,
+      hypothesis = hypothesis,
+      vcov = vcov,
+      conf_level = conf_level,
+      df = df,
+      equivalence = equivalence,
+      joint = joint,
+      joint_test = joint_test,
+      numderiv = "fdforward",
+      hypoth_fun = hypoth_fun,
+      ...)
+    if (!is.null(out)) {
+        return(out)
+    }
+    ## Done with Bootstrap
+    
     if (!isFALSE(joint)) {
         out <- joint_test(model, joint_index = joint, joint_test = joint_test, hypothesis = hypothesis)
         return(out)
@@ -211,10 +238,11 @@ hypotheses <- function(
     hypothesis <- tmp$hypothesis
     hypothesis_null <- tmp$hypothesis_null
 
+    vcov_false <- isFALSE(vcov)
     vcov <- get_vcov(model = model, vcov = vcov)
     vcov.type <- get_vcov_label(vcov = vcov)
 
-    if (is.null(FUN)) {
+    if (is.null(hypoth_fun)) {
         FUNinner <- function(model, ...) {
             if (inherits(model, c("predictions", "slopes", "comparisons"))) {
                 return(model)
@@ -232,7 +260,7 @@ hypotheses <- function(
             }
         }
     } else {
-        FUNinner <- FUN
+        FUNinner <- hypoth_fun
     }
 
     FUNouter <- function(model, hypothesis) {
@@ -245,7 +273,7 @@ hypotheses <- function(
         }
 
         if (!inherits(out, "data.frame") || any(!c("term", "estimate") %in% colnames(out))) {
-            msg <- "`FUN` must return a numeric vector or a data.frame with two columns named `term` and `estimate`."
+            msg <- "`hypoth_fun` must return a numeric vector or a data.frame with two columns named `term` and `estimate`."
             insight::format_error(msg)
         }
 
@@ -264,13 +292,19 @@ hypotheses <- function(
 
     b <- FUNouter(model = model, hypothesis = hypothesis)
 
-    se <- get_se_delta(
+    if(!vcov_false){
+      se <- get_se_delta(
         model = model,
         vcov = vcov,
         hypothesis = hypothesis,
         FUN = FUNouter,
         numderiv = numderiv,
         ...)
+      J <- attr(se, "jacobian")
+    } else{
+      J <- NULL
+      se <- rep(NA, length(b))
+    }
 
     hyplab <- attr(b, "label")
     if (!is.null(hypothesis)) {
@@ -301,6 +335,12 @@ hypotheses <- function(
                 std.error = se)
         }
     }
+    
+    # Remove std.error column when not computing st.errors and in bootstrap
+    if(vcov_false) {
+      out$std.error <- NULL
+    }
+    
     out[["group"]] <- attr(b, "grouplab")
 
     out <- get_ci(
@@ -313,7 +353,7 @@ hypotheses <- function(
         df = df,
         model = model,
         ...)
-
+    
     if (!is.null(equivalence)) {
         out <- equivalence(
             out,
@@ -323,11 +363,30 @@ hypotheses <- function(
 
     out <- sort_columns(out)
 
+  call_attr <- c(list(
+    name = "hypotheses",
+    model = model,
+    hypothesis = hypothesis,
+    vcov = vcov,
+    conf_level = conf_level,
+    df = df,
+    equivalence = equivalence,
+    joint = joint,
+    joint_test = joint_test,
+    hypoth_fun = hypoth_fun,
+    numderiv = numderiv,
+    dots))
+    if ("modeldata" %in% names(dots)) {
+        call_attr[["modeldata"]] <- dots[["modeldata"]]
+    }
+    call_attr <- do.call("call", call_attr)
+
+
     class(out) <- c("hypotheses", "deltamethod", class(out))
     attr(out, "model") <- model
     attr(out, "model_type") <- class(model)[1]
-    attr(out, "jacobian") <- attr(se, "jacobian")
-    attr(out, "call") <- match.call()
+    attr(out, "jacobian") <- J
+    attr(out, "call") <- call_attr
     attr(out, "vcov") <- vcov
     attr(out, "vcov.type") <- vcov.type
     attr(out, "conf_level") <- conf_level

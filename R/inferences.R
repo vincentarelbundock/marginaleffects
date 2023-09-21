@@ -96,7 +96,8 @@ inferences <- function(x,
     checkmate::assert(
         checkmate::check_class(x, "predictions"),
         checkmate::check_class(x, "comparisons"),
-        checkmate::check_class(x, "slopes")
+        checkmate::check_class(x, "slopes"),
+        checkmate::check_class(x, "hypotheses")
     )
     checkmate::assert_number(conf_level, lower = 1e-10, upper = 1 - 1e-10)
     checkmate::assert_integerish(R, lower = 2)
