@@ -173,12 +173,6 @@ hypotheses <- function(
   }
   call_attr <- do.call("call", call_attr)
   
-  model <- sanitize_model(
-    model = model,
-    vcov = vcov,
-    calling_function = "hypotheses",
-    ...)
-  
   ## Bootstrap
   # restore an already sanitized hypothesis if necessary
   hypothesis <- 
@@ -318,13 +312,23 @@ hypotheses <- function(
 
     b <- FUNouter(model = model, hypothesis = hypothesis)
     
-    # For simulation generate posterior draws from inferences_coefmat
-    if ("inferences_simulation" %in% class(model)){
-      posterior_draws <- matrix(nrow=length(attr(b, "label")), ncol = nrow(attr(model, "inferences_coefmat")))
+    # For simulation based inference generate posterior draws from inferences_coefmat
+    # Doesn't support data.frames or mfx objects yet
+    if (inherits(model, "inferences_simulation")){
+      if (inherits(model, "data.frame")){
+        msg <- "Simulation based inference not yet supported for this model type."
+        insight::format_error(msg)
+      }
+      model_sim <- sanitize_model(
+        model = model,
+        vcov = vcov,
+        calling_function = "hypotheses",
+        ...)
+      posterior_draws <- matrix(nrow=length(attr(b, "label")), ncol = nrow(attr(model_sim, "inferences_coefmat")))
       rownames(posterior_draws) <- attr(b, "label")
       
       for (sim_n in 1:ncol(posterior_draws)) {
-        model_tmp <- set_coef(model, attr(model, "inferences_coefmat")[sim_n,])
+        model_tmp <- set_coef(model_sim, attr(model_sim, "inferences_coefmat")[sim_n,])
         b_tmp <- FUNouter(model = model_tmp, hypothesis = hypothesis)
         posterior_draws[,sim_n]<- b_tmp
       }
