@@ -69,7 +69,7 @@ Apply this function to a \code{marginaleffects} object to change the inferential
 When \code{method="simulation"}, we conduct simulation-based inference following the method discussed in Krinsky & Robb (1986):
 \enumerate{
 \item Draw \code{R} sets of simulated coefficients from a multivariate normal distribution with mean equal to the original model's estimated coefficients and variance equal to the model's variance-covariance matrix (classical, "HC3", or other).
-\item Use the \code{R} sets of coefficients to compute \code{R} sets of estimands: predictions, comparisons, or slopes.
+\item Use the \code{R} sets of coefficients to compute \code{R} sets of estimands: predictions, comparisons, slopes, or hypotheses.
 \item Take quantiles of the resulting distribution of estimands to obtain a confidence interval and the standard deviation of simulated estimates to estimate the standard error.
 }
 

@@ -13,7 +13,7 @@ deltamethod(
   equivalence = NULL,
   joint = FALSE,
   joint_test = "f",
-  FUN = NULL,
+  hypoth_fun = NULL,
   numderiv = "fdforward",
   ...
 )

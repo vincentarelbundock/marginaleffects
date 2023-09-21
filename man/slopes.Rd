@@ -85,7 +85,7 @@ first entry in the error message is used by default.}
 \item Character vector of column names in \code{newdata} or in the data frame produced by calling the function without the \code{by} argument.
 \item Data frame with a \code{by} column of group labels, and merging columns shared by \code{newdata} or the data frame produced by calling the same function without the \code{by} argument.
 \item See examples below.
-\item For more complex aggregations, you can use the \code{FUN} argument of the \code{hypotheses()} function. See that function's documentation and the Hypothesis Test vignettes on the \code{marginaleffects} website.
+\item For more complex aggregations, you can use the \code{hypoth_fun} argument of the \code{hypotheses()} function. See that function's documentation and the Hypothesis Test vignettes on the \code{marginaleffects} website.
 }}
 
 \item{vcov}{Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
@@ -264,8 +264,8 @@ https://github.com/vincentarelbundock/marginaleffects/issues\tabular{llll}{
     \tab  \tab \code{allow.new.levels} \tab \link[glmmTMB:predict.glmmTMB]{glmmTMB::predict.glmmTMB} \cr
     \tab  \tab \code{zitype} \tab \link[glmmTMB:predict.glmmTMB]{glmmTMB::predict.glmmTMB} \cr
    \code{mgcv} \tab \code{bam} \tab \code{exclude} \tab \link[mgcv:predict.bam]{mgcv::predict.bam} \cr
-   \code{robustlmm} \tab \code{rlmerMod} \tab \code{re.form} \tab \link[robustlmm:rlmerMod-class]{robustlmm::predict.rlmerMod} \cr
-    \tab  \tab \code{allow.new.levels} \tab \link[robustlmm:rlmerMod-class]{robustlmm::predict.rlmerMod} \cr
+   \code{robustlmm} \tab \code{rlmerMod} \tab \code{re.form} \tab \link[robustlmm:predict.rlmerMod]{robustlmm::predict.rlmerMod} \cr
+    \tab  \tab \code{allow.new.levels} \tab \link[robustlmm:predict.rlmerMod]{robustlmm::predict.rlmerMod} \cr
    \code{MCMCglmm} \tab \code{MCMCglmm} \tab \code{ndraws} \tab  \cr
 }
 }
