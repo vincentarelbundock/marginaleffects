@@ -192,7 +192,7 @@ hypotheses <- function(
       equivalence = equivalence,
       joint = joint,
       joint_test = joint_test,
-      numderiv = "fdforward",
+      numderiv = numderiv,
       hypoth_fun = hypoth_fun,
       ...)
     if (!is.null(out)) {
