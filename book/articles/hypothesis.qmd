@@ -70,7 +70,7 @@ library(marginaleffects)
 mod <- lm(mpg ~ hp + wt + factor(cyl), data = mtcars)
 ```
 
-When the `hypoth_fun` and `hypothesis` arguments of `hypotheses()` equal `NULL` (the default), the function returns a data.frame of raw estimates:
+When the `FUN` and `hypothesis` arguments of `hypotheses()` equal `NULL` (the default), the function returns a data.frame of raw estimates:
 
 ```{r}
 hypotheses(mod)
@@ -94,7 +94,7 @@ The `vcov` argument behaves in the same was as in the `slopes()` function. It al
 hypotheses(mod, "hp = wt", vcov = "HC3")
 ```
 
-We can use shortcuts like `b1`, `b2`, `...` to identify the position of each parameter in the output of `hypoth_fun`. For example, `b2=b3` is equivalent to `hp=wt` because those term names appear in the 2nd and 3rd row when we call `hypotheses(mod)`. 
+We can use shortcuts like `b1`, `b2`, `...` to identify the position of each parameter in the output of `FUN`. For example, `b2=b3` is equivalent to `hp=wt` because those term names appear in the 2nd and 3rd row when we call `hypotheses(mod)`.
 
 ```{r}
 hypotheses(mod, "b2 = b3")
@@ -110,9 +110,9 @@ Term names with special characters must be enclosed in backticks:
 hypotheses(mod, "`factor(cyl)6` = `factor(cyl)8`")
 ```
 
-### Arbitrary functions: `hypoth_fun`
+### Arbitrary functions: `FUN`
 
-The `hypoth_fun` argument can be used to compute standard errors for arbitrary functions of model parameters. This user-supplied function must accept a single model object, and return a numeric vector or a data.frame with two columns named `term` and `estimate`.
+The `FUN` argument can be used to compute standard errors for arbitrary functions of model parameters. This user-supplied function must accept a single model object, and return a numeric vector or a data.frame with two columns named `term` and `estimate`.
 
 ```{r}
 mod <- glm(am ~ hp + mpg, data = mtcars, family = binomial)
@@ -121,7 +121,7 @@ f <- function(x) {
     out <- x$coefficients["hp"] + x$coefficients["mpg"]
     return(out)
 }
-hypotheses(mod, hypoth_fun = f)
+hypotheses(mod, FUN = f)
 ```
 
 With labels:
@@ -134,14 +134,14 @@ f <- function(x) {
     )
     return(out)
 }
-hypotheses(mod, hypoth_fun = f)
+hypotheses(mod, FUN = f)
 ```
 
 Test of equality between two predictions (row 2 vs row 3):
 
 ```{r}
 f <- function(x) predict(x, newdata = mtcars)
-hypotheses(mod, hypoth_fun = f, hypothesis = "b2 = b3")
+hypotheses(mod, FUN = f, hypothesis = "b2 = b3")
 ```
 
 Note that we specified the `newdata` argument in the `f` function. This is because the `predict()` method associated with `lm` objects will automatically the original fitted values when `newdata` is `NULL`, instead of returning the slightly altered fitted values which we need to compute numerical derivatives in the delta method.
@@ -605,7 +605,7 @@ hyp
 
 ## Complex aggregations
 
-The `hypoth_fun` argument of the `hypotheses()` function can be used to conduct complex aggregations of other estimates. For example, consider this ordered logit model fitted on a dataset of cars:
+The `FUN` argument of the `hypotheses()` function can be used to conduct complex aggregations of other estimates. For example, consider this ordered logit model fitted on a dataset of cars:
 
 
 ```{r}
@@ -624,7 +624,7 @@ If we compute fitted values with the `predictions()` function, we obtain one pre
 predictions(mod)
 ```
 
-There are three levels to the outcome: 3, 4, and 5. Imagine that, for each car in the dataset, we want to collapse categories of the output variable into two categories ("3 & 4" and "5") by taking sums of predicted probabilities. Then, we want to take the average of those predicted probabilities for each level of `cyl`. To do so, we define a custom function, and pass it to the `hypoth_fun` argument of the `hypotheses()` function:
+There are three levels to the outcome: 3, 4, and 5. Imagine that, for each car in the dataset, we want to collapse categories of the output variable into two categories ("3 & 4" and "5") by taking sums of predicted probabilities. Then, we want to take the average of those predicted probabilities for each level of `cyl`. To do so, we define a custom function, and pass it to the `FUN` argument of the `hypotheses()` function:
 
 ```{r}
 aggregation_fun <- function(model) {
@@ -635,11 +635,11 @@ aggregation_fun <- function(model) {
         summarize(estimate = sum(estimate), .by = c("rowid", "cyl", "group")) |>
         # average probabilities for each value of `cyl`
         summarize(estimate = mean(estimate), .by = c("cyl", "group")) |>
-        # the `hypoth_fun` argument requires a `term` column
+        # the `FUN` argument requires a `term` column
         rename(term = cyl)
 }
 
-hypotheses(mod, hypoth_fun = aggregation_fun)
+hypotheses(mod, FUN = aggregation_fun)
 ```
 
 Note that this workflow will not work for bayesian models or with bootstrap. However, with those models it is trivial to do the same kind of aggregation by calling `posterior_draws()` and operating directly on draws from the posterior distribution. See the vignette on bayesian analysis for examples with the `posterior_draws()` function.

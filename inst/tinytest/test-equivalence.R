@@ -64,7 +64,7 @@ FUN <- function(model, ...) {
 e1 <- tost(dat$y[dat$x == 0], dat$y[dat$x == 1], epsilon = .05)
 e2 <- hypotheses(
     mod,
-    hypoth_fun = FUN,
+    FUN = FUN,
     equivalence = c(-.05, .05),
     df = e1$parameter)
 expect_true(e1$tost.p.value > .5 && e1$tost.p.value < .9)
