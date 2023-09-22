@@ -13,7 +13,7 @@ hypotheses(
   equivalence = NULL,
   joint = FALSE,
   joint_test = "f",
-  hypoth_fun = NULL,
+  FUN = NULL,
   numderiv = "fdforward",
   ...
 )
@@ -79,7 +79,7 @@ hypotheses(
 
 \item{joint_test}{A character string specifying the type of test, either "f" or "chisq". The null hypothesis is set by the \code{hypothesis} argument, with default null equal to 0 for all parameters.}
 
-\item{hypoth_fun}{\code{NULL} or function.
+\item{FUN}{\code{NULL} or function.
 \itemize{
 \item \code{NULL} (default): hypothesis test on a model's coefficients, or on the quantities estimated by one of the \code{marginaleffects} package functions.
 \item Function which accepts a model object and returns a numeric vector or a data.frame with two columns called \code{term} and \code{estimate}. This argument can be useful when users want to conduct a hypothesis test on an arbitrary function of quantities held in a model object. See examples below.
@@ -162,7 +162,7 @@ Thanks to Russell V. Lenth for the excellent \code{emmeans} package and document
 library(marginaleffects)
 mod <- lm(mpg ~ hp + wt + factor(cyl), data = mtcars)
 
-# When `hypoth_fun` and `hypotheses` are `NULL`, `hypotheses()` returns a data.frame of parameters
+# When `FUN` and `hypotheses` are `NULL`, `hypotheses()` returns a data.frame of parameters
 hypotheses(mod)
 
 # Test of equality between coefficients
@@ -175,7 +175,7 @@ hypotheses(mod, hypothesis = "exp(hp + wt) = 0.1")
 hypotheses(mod, hypothesis = "hp = wt", vcov = "HC3")
 
 # b1, b2, ... shortcuts can be used to identify the position of the
-# parameters of interest in the output of hypoth_fun
+# parameters of interest in the output of FUN
 hypotheses(mod, hypothesis = "b2 = b3")
 
 # wildcard
@@ -198,15 +198,15 @@ hypotheses(cmp, hypothesis = "b2 = 0.2")
 pre <- predictions(mod, newdata = datagrid(hp = 110, mpg = c(30, 35)))
 hypotheses(pre, hypothesis = "b1 = b2")
 
-# The `hypoth_fun` argument can be used to compute standard errors for fitted values
+# The `FUN` argument can be used to compute standard errors for fitted values
 mod <- glm(am ~ hp + mpg, data = mtcars, family = binomial)
 
 f <- function(x) predict(x, type = "link", newdata = mtcars)
-p <- hypotheses(mod, hypoth_fun = f)
+p <- hypotheses(mod, FUN = f)
 head(p)
 
 f <- function(x) predict(x, type = "response", newdata = mtcars)
-p <- hypotheses(mod, hypoth_fun = f)
+p <- hypotheses(mod, FUN = f)
 head(p)
 
 # Complex aggregation
@@ -227,7 +227,7 @@ aggregation_fun <- function(model) {
         rename(term = cyl)
 }
 
-hypotheses(mod, hypoth_fun = aggregation_fun)
+hypotheses(mod, FUN = aggregation_fun)
 
 # Equivalence, non-inferiority, and non-superiority tests
 mod <- lm(mpg ~ hp + factor(gear), data = mtcars)
