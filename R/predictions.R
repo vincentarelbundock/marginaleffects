@@ -384,7 +384,7 @@ predictions <- function(model,
 
     # Bootstrap
     out <- inferences_dispatch(
-        FUN = predictions,
+        INF_FUN = predictions,
         model = model, newdata = newdata, vcov = vcov, variables = variables, type = type_call, by = by,
         conf_level = conf_level,
         byfun = byfun, wts = wts, transform = transform_original, hypothesis = hypothesis, ...)
@@ -696,7 +696,7 @@ avg_predictions <- function(model,
 
     # Bootstrap
     out <- inferences_dispatch(
-        FUN = avg_predictions,
+        INF_FUN = avg_predictions,
         model = model, newdata = newdata, vcov = vcov, variables = variables, type = type, by = by,
         conf_level = conf_level,
         byfun = byfun, wts = wts, transform = transform, hypothesis = hypothesis, ...)

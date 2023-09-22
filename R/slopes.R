@@ -259,7 +259,7 @@ slopes <- function(model,
 
     # Bootstrap
     out <- inferences_dispatch(
-        FUN = slopes,
+        INF_FUN = slopes,
         model = model, newdata = newdata, vcov = vcov, variables = variables, type = type,
         conf_level = conf_level,
         by = by,
@@ -352,7 +352,7 @@ avg_slopes <- function(model,
 
     # Bootstrap
     out <- inferences_dispatch(
-        FUN = avg_slopes,
+        INF_FUN = avg_slopes,
         model = model, newdata = newdata, vcov = vcov, variables = variables, type = type,
         conf_level = conf_level, by = by,
         wts = wts, slope = slope, hypothesis = hypothesis, ...)

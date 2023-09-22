@@ -183,7 +183,7 @@ hypotheses <- function(
     }
   # Apply inferences method
     out <- inferences_dispatch(
-      FUN = hypotheses,
+      INF_FUN = hypotheses,
       model=model,
       hypothesis = hypothesis,
       vcov = vcov,

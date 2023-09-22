@@ -187,13 +187,13 @@ inferences <- function(x,
 }
 
 
-inferences_dispatch <- function(model, FUN, ...) {
+inferences_dispatch <- function(model, INF_FUN, ...) {
     if (isTRUE(attr(model, "inferences_method") == "rsample")) {
-        bootstrap_rsample(model = model, FUN = FUN, ...)
+        bootstrap_rsample(model = model, INF_FUN = INF_FUN, ...)
     } else if (isTRUE(attr(model, "inferences_method") == "boot")) {
-        bootstrap_boot(model = model, FUN = FUN, ...)
+        bootstrap_boot(model = model, INF_FUN = INF_FUN, ...)
     } else if (isTRUE(attr(model, "inferences_method") == "fwb")) {
-        bootstrap_fwb(model = model, FUN = FUN, ...)
+        bootstrap_fwb(model = model, INF_FUN = INF_FUN, ...)
     } else {
         return(NULL)
     }

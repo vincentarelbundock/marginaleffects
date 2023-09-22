@@ -405,7 +405,7 @@ comparisons <- function(model,
 
     # Bootstrap
     out <- inferences_dispatch(
-        FUN = comparisons,
+        INF_FUN = comparisons,
         model = model, newdata = newdata, vcov = vcov, variables = variables, type = type, by = by,
         conf_level = conf_level,
         cross = cross,
@@ -594,7 +594,7 @@ avg_comparisons <- function(model,
 
     # Bootstrap
     out <- inferences_dispatch(
-        FUN = avg_comparisons,
+        INF_FUN = avg_comparisons,
         model = model, newdata = newdata, vcov = vcov, variables = variables, type = type, by = by,
         cross = cross,
         conf_level = conf_level,

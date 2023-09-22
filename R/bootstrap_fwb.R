@@ -1,4 +1,4 @@
-bootstrap_fwb <- function(model, FUN, ...) {
+bootstrap_fwb <- function(model, INF_FUN, ...) {
 
   # attached by `inferences()`
   conf_type <- attr(model, "inferences_conf_type")
@@ -14,7 +14,7 @@ bootstrap_fwb <- function(model, FUN, ...) {
 
   # avoid recursion
   attr(model, "inferences_method") <- NULL
-  out <- do.call(FUN, c(list(model), dots))
+  out <- do.call(INF_FUN, c(list(model), dots))
 
   # default confidence level may be implicit in original call, but we need numeric
   if (is.null(dots[["conf_level"]])) {
@@ -35,7 +35,7 @@ bootstrap_fwb <- function(model, FUN, ...) {
     # `wts` argument.
     dots[["wts"]] <- w
     args <- c(list(modboot), dots)
-    out <- do.call(FUN, args)$estimate
+    out <- do.call(INF_FUN, args)$estimate
     return(out)
   }
   args <- list("data" = modeldata, "statistic" = bootfun)
