@@ -46,6 +46,16 @@ clean: ## Clean the book directory
 	rm -rf $(BOOK_DIR)/NEWS.qmd $(BOOK_DIR)/_quarto.qmd 
 	rm -rf ut 
 
+deploydocs: ## Deploy to docs/
+	Rscript -e "source('book/utils/utils.R');get_reference()"
+	Rscript -e "source('book/utils/utils.R');link_function_docs()"
+	Rscript -e "source('book/utils/utils.R');get_quarto_yaml(dev = FALSE)"
+	make html
+	rsync -a book/_book/* docs/
+	rsync -a book/data docs/
+	rm -rf book/_book
+	git restore book
+
 deploy: ## Deploy book to Github website
 	git fetch origin
 	git checkout -B gh-pages origin/gh-pages
