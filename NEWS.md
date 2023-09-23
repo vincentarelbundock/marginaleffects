@@ -2,7 +2,7 @@
 
 ## dev
 
-* Add support for `hypotheses()` to `inferences()`. This changes `FUN` argument name in `hypotheses` to `FUN` to not conflict with `inferences`
+* Add support for `hypotheses()` to `inferences()`. This changes `FUN` argument name in `hypotheses` to `FUN` to not conflict with `inferences`. Thanks to @Tristan-Siegfried for code contribution #908.
 
 ## 0.15.1
 
