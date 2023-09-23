@@ -136,8 +136,10 @@ expect_inherits(p, "predictions")
 
 # inferences with hypotheses
 mod <- lm(mpg ~ hp + cyl, data = mtcars)
-p <- hypotheses(mod, hypothesis = "hp/cyl=1") |> inferences(method = "boot", R = 25)
+p <- hypotheses(mod, hypothesis = "hp/cyl=1") |> inferences(method = "boot", R = 25) |> suppressWarnings()
+expect_inherits(p, "hypotheses")
 p <- hypotheses(mod, hypothesis = "hp/cyl=1") |> inferences(method = "simulation", R = 25)
+expect_inherits(p, "hypotheses")
 
 
 rm(list = ls())
