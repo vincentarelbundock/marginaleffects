@@ -4,6 +4,13 @@ requiet("survival")
 requiet("emmeans")
 requiet("broom")
 
+
+# Issue #911: survreg support
+fit <- survreg(Surv(futime, fustat) ~ ecog.ps + rx, ovarian, dist='weibull', scale=1)
+s <- avg_slopes(fit)
+expect_inherits(s, "slopes")
+
+
 # clogit 
 N  <- 10000
 ng <- 5000

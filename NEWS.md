@@ -3,6 +3,7 @@
 ## dev
 
 * Add support for `hypotheses()` to `inferences()`. This changes `FUN` argument name in `hypotheses` to `FUN` to not conflict with `inferences`. Thanks to @Tristan-Siegfried for code contribution #908.
+* Support `survival::survreg()`. Thanks to Carlisle Rainey for Report #911.
 
 ## 0.15.1
 
