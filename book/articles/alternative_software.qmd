@@ -66,7 +66,7 @@ Thus, in my (Vincent's) biased opinion, the main benefits of `marginaleffects` o
 
 To be fair, many of the `marginaleffects` advantages listed above come down to subjective preferences over user interface. Readers are thus encouraged to try both packages to see which interface they prefer. 
 
-The main advantages of `emmeans` over `marginaleffects` arise when users are specifically interested in marginal means, where `emmeans` tends to be much faster and to have a lot of functionality to handle backtransformations.
+The main advantages of `emmeans` over `marginaleffects` arise when users are specifically interested in marginal means, where `emmeans` tends to be much faster and to have a lot of functionality to handle backtransformations. `emmeans` also has better functionality for effect sizes; notably, the `eff_size()` function can return effect size estimates that account for uncertainty in both estimated effects and the population SD.
 
 Please let me know if you find other features in `emmeans` so I can add them to this list.
 
