@@ -316,7 +316,7 @@ se2 <- predict(m, se.fit = TRUE)$se.fit
 V <- vcov(m)$cond
 J <- model.matrix(m)
 se3 <- sqrt(diag(J %*% (V %*% t(J))))
-se4 <- get_se_manual(m, random = FALSE)
+se4 <- get_se_manual(m, full = FALSE)
 
 all.equal(unname(se1), unname(se2))
 all.equal(unname(se3), unname(se4))
@@ -324,10 +324,17 @@ all.equal(unname(se3), unname(se4))
 # mismatch
 Q
 pkgload::load_all()
-predictions(m, full=FALSE)$std.error |> head()
+predictions(m, full=TRUE)$std.error |> head()
+
+predictions(m, full=TRUE) |> attr("jacobian") |> head()
+
+predict(m, se.fit=TRUE)$se.fit |> head()
 
 se3 |> head()
 se2 |> head()
+
+get_coef(m, full = TRUE)
+get_vcov(m, full = TRUE)
 
 
 m <- glmmTMB(got ~ age * hiv2004 + (1 | villnum), data = dat)

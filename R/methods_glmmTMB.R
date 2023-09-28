@@ -65,6 +65,8 @@ set_coef.glmmTMB <- function(model, coefs, ...) {
     out <- model
     bbeta <- coefs[names(coefs) %in% c("beta", "b")]
     out$fit$parfull[names(out$fit$parfull) %in% names(bbeta)] <- bbeta
+    out$obj$env$last.par[names(out$obj$env$last.par) %in% names(bbeta)] <- bbeta
+    out$obj$env$last.par.best[names(out$obj$env$last.par.best) %in% names(bbeta)] <- bbeta
     beta <- coefs[names(coefs) %in% c("beta")]
     out$fit$par[names(out$fit$par) %in% names(beta)] <- beta
     out$sdr$par.fixed[names(out$sdr$par.fixed) %in% names(beta)] <- beta

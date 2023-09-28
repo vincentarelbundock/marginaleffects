@@ -109,7 +109,8 @@ get_se_delta <- function(model,
     # align J and V: This might be a problematic hack, but I have not found examples yet.
     V <- vcov
     if (!isTRUE(ncol(J) == ncol(V))) {
-        beta <- get_coef(model)
+        # dots important for full=TRUE in glmmTMB
+        beta <- get_coef(model, ...)
         # Issue #718: ordinal::clm in test-pkg-ordinal.R
         if (anyNA(beta) && anyDuplicated(names(beta)) && ncol(J) > ncol(V) && ncol(J) == length(beta) && length(stats::na.omit(beta)) == ncol(V)) {
             J <- J[, !is.na(beta), drop = FALSE]
@@ -118,8 +119,9 @@ get_se_delta <- function(model,
             if (length(cols) == 0) {
                 insight::format_error("The jacobian does not match the variance-covariance matrix.")
             }
-            V <- V[cols, cols, drop = FALSE]
-            J <- J[, cols, drop = FALSE]
+            # do not re-order, because it breaks glmmTMB where all fixed are called beta and random are b
+            V <- V[colnames(V) %in% cols, colnames(V) %in% cols, drop = FALSE]
+            J <- J[, colnames(J) %in% cols, drop = FALSE]
         }
     }
 
