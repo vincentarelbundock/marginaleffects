@@ -294,6 +294,65 @@ expect_equivalent(p1$std.error, p2$se.fit, tol = 1e-6)
 
 
 
+# Issue #810
+library(glmmTMB)
+dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/causaldata/thornton_hiv.csv")
+m <- glmmTMB(got ~ age * hiv2004 + (1 | villnum), data = dat)
+m <- glmmTMB(got ~ age * hiv2004, data = dat)
+
+
+get_se_manual <- function(m, full = FALSE) {
+    Sigma <- get_vcov(m, full = TRUE)
+    XZ <- as.matrix(cbind(getME(m, "X"), getME(m, "Z")))
+    keepvars <- rownames(Sigma) %in% c("beta", "b")
+    Sigma <- Sigma[keepvars, keepvars]
+    se <- sqrt(diag(XZ %*% (Sigma %*% t(XZ))))
+    return(se)
+}
+
+se1 <- get_se_manual(m, full = TRUE)
+se2 <- predict(m, se.fit = TRUE)$se.fit
+
+V <- vcov(m)$cond
+J <- model.matrix(m)
+se3 <- sqrt(diag(J %*% (V %*% t(J))))
+se4 <- get_se_manual(m, random = FALSE)
+
+all.equal(unname(se1), unname(se2))
+all.equal(unname(se3), unname(se4))
+
+# mismatch
+Q
+pkgload::load_all()
+predictions(m, full=FALSE)$std.error |> head()
+
+se3 |> head()
+se2 |> head()
+
+
+m <- glmmTMB(got ~ age * hiv2004 + (1 | villnum), data = dat)
+m <- glmmTMB(got ~ age * hiv2004, data = dat)
+b <- get_coef(m, full = TRUE)
+b[2] = 100
+
+k = set_coef(m, b)
+
+predict(k, fast = FALSE) |> head()
+predict(k, fast = TRUE) |> head()
+predict(m) |> head()
+
+
+predictions(m, full=TRUE)$std.error |> head()
+predictions(m, full=FALSE)$std.error |> head()
+se3 |> head()
+
+se1 |> head()
+se2 |> head()
+
+
+
+
+
 
 source("helpers.R")
 rm(list = ls())
