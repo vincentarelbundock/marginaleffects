@@ -48,6 +48,7 @@ book:
       - articles/gam.qmd
       - articles/logit.qmd
       - articles/lme4.qmd
+      - articles/matching.qmd
       - articles/multiple_imputation.qmd
       - articles/mrp.qmd
       - articles/svalues.qmd
