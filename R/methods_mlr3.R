@@ -3,8 +3,8 @@
 #' @keywords internal
 #' @export
 get_predict.Learner <- function(model, newdata, type = NULL, ...) {
-    if (!is.null(type) && !type %in% x$predict_types) {
-        msg <- sprintf("Valid `type` values: %s", paste(x$predict_types, collapse = ", "))
+    if (!is.null(type) && !type %in% model$predict_types) {
+        msg <- sprintf("Valid `type` values: %s", paste(model$predict_types, collapse = ", "))
         insight::format_error(msg)
     }
     out <- drop(stats::predict(model, newdata = newdata, predict_type = type))
