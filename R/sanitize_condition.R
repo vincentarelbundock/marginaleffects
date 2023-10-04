@@ -57,6 +57,7 @@ sanitize_condition <- function(model, condition, variables = NULL, modeldata = N
     respname <- insight::find_response(model)
     
     flag <-  checkmate::check_true(all(names(condition) %in% c(colnames(dat), "group")))
+    browser()
     if (!isTRUE(flag)) {
         msg <- sprintf("Entries in the `condition` argument must be element of: %s",
                        paste(colnames(dat), collapse = ", "))

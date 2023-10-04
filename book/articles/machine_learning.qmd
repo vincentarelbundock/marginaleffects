@@ -88,6 +88,12 @@ mod <- linear_reg(mode = "regression") |>
 avg_comparisons(mod, newdata = bikes, type = "response")
 ```
 
+We can also plot the results as usual:
+
+```{r, warning = FALSE}
+plot_predictions(mod, condition = "temp", points = .2)
+```
+
 When the engine is not supported by `marginaleffects`, we can also obtain correct results, but no uncertainy estimates. Here is a random forest model:
 
 ```{r}
@@ -95,4 +101,6 @@ forest_tidy <- rand_forest(mode = "regression") |>
     set_engine("ranger") |>
     fit(count ~ ., data = bikes)
 avg_comparisons(forest_tidy, newdata = bikes, type = "numeric")
+
+plot_predictions(forest_tidy, newdata = bikes, by = "temp", type = "numeric")
 ```
