@@ -1,5 +1,3 @@
-invlink
-Rcpp
 ’s
 Aaditya
 AAP
@@ -38,6 +36,7 @@ brms
 bugfix
 Bundock
 Candes
+Carlisle
 cdot
 chisq
 CMD
@@ -131,6 +130,7 @@ Hufthammer
 incrementing
 interpretable
 inv
+invlink
 io
 IPW
 iqr
@@ -198,11 +198,13 @@ probs
 programmatically
 PxD
 quartile
+Rainey
 Ramdas
 Randas
 ratioavg
 ratioavgwts
 Raton
+Rcpp
 RCTs
 Rdatasets
 RDatasets

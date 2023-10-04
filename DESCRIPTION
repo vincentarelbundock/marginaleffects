@@ -71,6 +71,7 @@ Suggests:
     equivalence,
     estimatr,
     fixest,
+    fmeffects,
     fontquiver,
     future,
     fwb,
@@ -106,6 +107,7 @@ Suggests:
     mice,
     miceadds,
     mlogit,
+    mlr3verse,
     modelbased,
     modelsummary,
     nlme,
@@ -224,6 +226,7 @@ Collate:
     'methods_mhurdle.R'
     'methods_mlm.R'
     'methods_mlogit.R'
+    'methods_mlr3.R'
     'methods_nlme.R'
     'methods_ordinal.R'
     'methods_plm.R'
@@ -237,6 +240,7 @@ Collate:
     'methods_stats.R'
     'methods_survey.R'
     'methods_survival.R'
+    'methods_tidymodels.R'
     'methods_tobit1.R'
     'modelarchive.R'
     'myTryCatch.R'

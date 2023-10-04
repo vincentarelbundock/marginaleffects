@@ -2,7 +2,8 @@
 % Please edit documentation in R/get_vcov.R, R/methods_MCMCglmm.R,
 %   R/methods_afex.R, R/methods_aod.R, R/methods_biglm.R, R/methods_brms.R,
 %   R/methods_gamlss.R, R/methods_glmmTMB.R, R/methods_inferences_simulation.R,
-%   R/methods_mhurdle.R, R/methods_rms.R, R/methods_scam.R
+%   R/methods_mhurdle.R, R/methods_mlr3.R, R/methods_rms.R, R/methods_scam.R,
+%   R/methods_tidymodels.R
 \name{get_vcov}
 \alias{get_vcov}
 \alias{get_vcov.default}
@@ -15,8 +16,10 @@
 \alias{get_vcov.glmmTMB}
 \alias{get_vcov.inferences_simulation}
 \alias{get_vcov.mhurdle}
+\alias{get_vcov.Learner}
 \alias{get_vcov.orm}
 \alias{get_vcov.scam}
+\alias{get_vcov.model_fit}
 \title{Get a named variance-covariance matrix from a model object (internal function)}
 \usage{
 get_vcov(model, ...)
@@ -41,9 +44,13 @@ get_vcov(model, ...)
 
 \method{get_vcov}{mhurdle}(model, vcov = NULL, ...)
 
+\method{get_vcov}{Learner}(model, ...)
+
 \method{get_vcov}{orm}(model, vcov = NULL, ...)
 
 \method{get_vcov}{scam}(model, vcov = NULL, ...)
+
+\method{get_vcov}{model_fit}(model, ...)
 }
 \arguments{
 \item{model}{Model object}

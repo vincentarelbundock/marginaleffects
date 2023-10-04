@@ -5,10 +5,10 @@
 %   R/methods_brglm2.R, R/methods_brms.R, R/methods_crch.R, R/methods_fixest.R,
 %   R/methods_gamlss.R, R/methods_glmmTMB.R, R/methods_inferences_simulation.R,
 %   R/methods_lme4.R, R/methods_mclogit.R, R/methods_mhurdle.R,
-%   R/methods_mlogit.R, R/methods_ordinal.R, R/methods_quantreg.R,
-%   R/methods_rms.R, R/methods_robustlmm.R, R/methods_rstanarm.R,
-%   R/methods_stats.R, R/methods_survey.R, R/methods_survival.R,
-%   R/methods_tobit1.R
+%   R/methods_mlogit.R, R/methods_mlr3.R, R/methods_ordinal.R,
+%   R/methods_quantreg.R, R/methods_rms.R, R/methods_robustlmm.R,
+%   R/methods_rstanarm.R, R/methods_stats.R, R/methods_survey.R,
+%   R/methods_survival.R, R/methods_tidymodels.R, R/methods_tobit1.R
 \name{get_predict}
 \alias{get_predict}
 \alias{get_predict.default}
@@ -34,6 +34,7 @@
 \alias{get_predict.mblogit}
 \alias{get_predict.mhurdle}
 \alias{get_predict.mlogit}
+\alias{get_predict.Learner}
 \alias{get_predict.clm}
 \alias{get_predict.rq}
 \alias{get_predict.rms}
@@ -46,6 +47,7 @@
 \alias{get_predict.glm}
 \alias{get_predict.svyolr}
 \alias{get_predict.coxph}
+\alias{get_predict.model_fit}
 \alias{get_predict.tobit1}
 \title{Get predicted values from a model object (internal function)}
 \usage{
@@ -97,6 +99,8 @@ get_predict(model, newdata, type, ...)
 
 \method{get_predict}{mlogit}(model, newdata, ...)
 
+\method{get_predict}{Learner}(model, newdata, type = NULL, ...)
+
 \method{get_predict}{clm}(model, newdata = insight::get_data(model), type = "prob", ...)
 
 \method{get_predict}{rq}(model, newdata = insight::get_data(model), type = NULL, ...)
@@ -120,6 +124,8 @@ get_predict(model, newdata, type, ...)
 \method{get_predict}{svyolr}(model, newdata = insight::get_data(model), type = "probs", ...)
 
 \method{get_predict}{coxph}(model, newdata = insight::get_data(model), type = "lp", ...)
+
+\method{get_predict}{model_fit}(model, newdata, type = NULL, ...)
 
 \method{get_predict}{tobit1}(model, newdata = insight::get_data(model), type = "response", ...)
 }

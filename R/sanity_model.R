@@ -62,6 +62,7 @@ sanity_model_supported_class <- function(model) {
         "ivreg",
         "iv_robust",
         "ivpml",
+        "Learner",
         "lm",
         "lme",
         "lmerMod",
@@ -80,6 +81,7 @@ sanity_model_supported_class <- function(model) {
         "mhurdle",
         "mira",
         "mlogit",
+        "model_fit",
         c("multinom", "nnet"),
         c("negbin", "glm", "lm"),
         "nls",
@@ -131,7 +133,13 @@ sanitize_model <- function(model,
 
     # tidymodels appear to store the model fit in `model[["fit"]]`
     if (inherits(model, "model_fit") && "fit" %in% names(model)) {
-        model <- model[["fit"]]
+        tmp <- model[["fit"]]
+        # if the underlying model is supported, we want to use all the standard
+        # errors and enhanced functionality.
+        flag <- try(sanity_model_supported_class(tmp), silent = TRUE)
+        if (!inherits(flag, "try-error")) {
+            model <- tmp
+        }
     }
 
     model <- sanitize_model_specific(model, vcov = vcov, newdata = newdata, ...)

@@ -4,6 +4,15 @@
 #' @param type character vector
 #' @noRd
 sanitize_type <- function(model, type, calling_function = "raw") {
+
+    # tidymodels
+    if (inherits(model, "model_fit")) {
+        insight::check_if_installed("parsnip")
+        fun <- utils::getFromNamespace("check_pred_type", "parsnip")
+        fun(model, type)
+        return(type)
+    }
+
     checkmate::assert_character(type, len = 1, null.ok = TRUE)
     cl <- class(model)[1]
     if (!cl %in% type_dictionary$class) {
