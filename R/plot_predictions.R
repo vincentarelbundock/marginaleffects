@@ -75,13 +75,7 @@ plot_predictions <- function(model,
 
     # order of the first few paragraphs is important
     scall <- rlang::enquo(newdata)
-    if (!is.null(condition) && !is.null(newdata)) {
-        insight::format_error("The `condition` and `newdata` arguments cannot be used simultaneously.")
-    }
     newdata <- sanitize_newdata_call(scall, newdata, model)
-    if (!is.null(newdata) && is.null(by)) {
-        insight::format_error("The `newdata` argument requires a `by` argument.")
-    }
     if (!is.null(wts) && is.null(by)) {
         insight::format_error("The `wts` argument requires a `by` argument.")
     }
@@ -94,9 +88,18 @@ plot_predictions <- function(model,
         insight::format_error(msg)
     }
 
+    modeldata <- get_modeldata(
+        model,
+        additional_variables = c(names(condition), by),
+        wts = wts)
+
+    # mlr3 and tidymodels
+    if (is.null(modeldata) || nrow(modeldata) == 0) {
+        modeldata <- newdata
+    }
+
     # conditional
     if (!is.null(condition)) {
-        modeldata <- get_modeldata(model, additional_variables = names(condition), wts = wts)
         condition <- sanitize_condition(model, condition, variables = NULL, modeldata = modeldata)
         v_x <- condition$condition1
         v_color <- condition$condition2
@@ -116,13 +119,19 @@ plot_predictions <- function(model,
     # marginal
     if (!isFALSE(by) && !is.null(by)) { # switched from NULL above
         condition <- NULL
-        modeldata <- get_modeldata(model, additional_variables = by, wts = wts)
+
         newdata <- sanitize_newdata(
             model = model,
             newdata = newdata,
             modeldata = modeldata,
             by = by,
             wts = wts)
+
+        # tidymodels & mlr3
+        if (is.null(modeldata)) {
+            modeldata <- newdata
+        }
+
         datplot <- predictions(
             model,
             by = by,

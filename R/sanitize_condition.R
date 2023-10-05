@@ -149,6 +149,11 @@ sanitize_condition <- function(model, condition, variables = NULL, modeldata = N
         }
     }
 
+    # mlr3 and tidymodels are not supported by `insight::find_variables()`, so we need to create a grid based on all the variables supplied in `newdata`
+    if (inherits(at_list$model, "Learner") || inherits(at_list$model, "model_fit")) {
+        at_list$model <- NULL
+    }
+
     # create data
     nd <- do.call("datagrid", at_list)
 
