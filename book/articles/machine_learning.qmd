@@ -2,7 +2,8 @@
 title: "Machine Learning"
 ---
 
-`marginaleffects` offers a series of "model-agnostic" to interpret statistical and machine learning models. This vignette highlights how the package can be used to interpret the results of models trained using the `mlr3` and `tidymodels` framework.
+
+`marginaleffects` offers several "model-agnostic" functions to interpret statistical and machine learning models. This vignette highlights how the package can be used to extract meaningful insights from the results of models trained using the `mlr3` and `tidymodels` framework.
 
 The features in this vignette require version 0.16.0 or `marginaleffects`, or the development version which can be installed from Github:
 
@@ -10,8 +11,21 @@ The features in this vignette require version 0.16.0 or `marginaleffects`, or th
 remotes::install_github("vincentarelbundock/marginaleffects")
 ```
 
-Make sure to restart `R` after installation.
+Make sure to restart `R` after installation. Then, load a few libraries:
 
+```{r}
+#| message: false
+#| warning: false
+options(width = 10000)
+library("marginaleffects")
+library("fmeffects")
+library("ggplot2")
+library("mlr3verse")
+library("tidymodels") |> suppressPackageStartupMessages()
+```
+```{r}
+pkgload::load_all()
+```
 
 ## `mlr3`
 
@@ -20,14 +34,10 @@ Make sure to restart `R` after installation.
 In this example, we use the `bikes` dataset supplied by the `fmeffects` package to train a random forest model predicting the number of bikes rented per hour. We then use `marginaleffects` to interpret the results of the model.
 
 ```{r}
-library("mlr3verse")
-library("marginaleffects")
 data("bikes", package = "fmeffects")
 
 task <- as_task_regr(x = bikes, id = "bikes", target = "count")
 forest <- lrn("regr.ranger")$train(task)
-
-forest
 ```
 
 As described in other vignettes, we can use the `avg_comparisons()` function to compute the average change in predicted outcome that is associated with a change in each feature:
@@ -47,7 +57,7 @@ hi <- transform(bikes, temp = temp + 0.5)
 mean(predict(forest, newdata = hi) - predict(forest, newdata = lo))
 ```
 
-As the code above makes clear, the `avg_comparisons()` computes the effect of a "centered" change on the outcome. If we want to compute a "Forward Marginal Effects" instead, we can call:
+As the code above makes clear, the `avg_comparisons()` computes the effect of a "centered" change on the outcome. If we want to compute a "Forward Marginal Effect" instead, we can call:
 
 ```{r}
 avg_comparisons(
@@ -59,11 +69,12 @@ avg_comparisons(
 This is equivalent to using the `fmeffects` package:
 
 ```{r}
-fme(model = forest,
+fmeffects::fme(
+    model = forest,
     data = bikes,
     target = "count",
     feature = "temp",
-    step.size = 1) |> summary()
+    step.size = 1)$ame 
 ```
 
 With `marginaleffects::avg_comparisons()`, we can also compute the average effect of a simultaneous change in multiple predictors, using the `variables` and `cross` arguments. In this example, we see what happens (on average) to the predicted outcome when the `temp`, `season`, and `weather` predictors all change together: 
@@ -81,6 +92,7 @@ avg_comparisons(
 `marginaleffects` also supports the `tidymodels` machine learning framework. When the underlying engine used by `tidymodels` to train the model is itself supported as a standalone package by `marginaleffects`, we can obtain estimates of uncertainty estimates:
 
 ```{r, message = FALSE}
+#| warning: false
 suppressPackageStartupMessages(library(tidymodels))
 mod <- linear_reg(mode = "regression") |>
     set_engine("lm") |>
@@ -94,7 +106,7 @@ We can also plot the results as usual:
 plot_predictions(mod, condition = "temp", points = .2)
 ```
 
-When the engine is not supported by `marginaleffects`, we can also obtain correct results, but no uncertainy estimates. Here is a random forest model:
+When the underlying engine that `tidymodels` uses to fit the model is not supported by `marginaleffects` as a standalone model, we can also obtain correct results, but no uncertainy estimates. Here is a random forest model:
 
 ```{r}
 forest_tidy <- rand_forest(mode = "regression") |>
