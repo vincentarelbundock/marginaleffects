@@ -105,6 +105,7 @@ sanity_model_supported_class <- function(model) {
         c("tobit", "survreg"),
         "tobit1",
         "truncreg",
+        "workflow",
         "zeroinfl"))
     flag <- FALSE
     for (sup in supported) {
@@ -131,9 +132,8 @@ sanitize_model <- function(model,
                            vcov = NULL,
                            ...) {
 
-    # tidymodels appear to store the model fit in `model[["fit"]]`
-    if (inherits(model, "model_fit") && "fit" %in% names(model)) {
-        tmp <- model[["fit"]]
+    if (inherits(model, "model_fit") || inherits(model, "workflow")) {
+        tmp <- parsnip::extract_fit_engine(model)
         # if the underlying model is supported, we want to use all the standard
         # errors and enhanced functionality.
         flag <- try(sanity_model_supported_class(tmp), silent = TRUE)

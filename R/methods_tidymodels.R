@@ -8,6 +8,11 @@ get_predict.model_fit <- function(model, newdata, type = NULL, ...) {
     return(out)
 }
 
+#' @include get_predict.R
+#' @rdname get_predict
+#' @keywords internal
+#' @export
+get_predict.workflow <- get_predict.model_fit
 
 #' @include get_vcov.R
 #' @rdname get_vcov
@@ -15,3 +20,9 @@ get_predict.model_fit <- function(model, newdata, type = NULL, ...) {
 get_vcov.model_fit <- function(model, ...) {
     return(FALSE)
 }
+
+#' @include get_predict.R
+#' @rdname get_predict
+#' @keywords internal
+#' @export
+get_vcov.model_fit <- get_vcov.model_fit

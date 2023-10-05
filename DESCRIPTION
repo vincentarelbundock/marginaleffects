@@ -116,6 +116,7 @@ Suggests:
     optmatch,
     ordinal,
     parameters,
+    parsnip,
     patchwork,
     pkgdown,
     phylolm,
@@ -157,6 +158,7 @@ Suggests:
     truncreg,
     tsModel,
     withr,
+    workflows,
     yaml,
     testthat (>= 3.0.0)
 Collate: 

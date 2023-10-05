@@ -6,6 +6,12 @@
 sanitize_type <- function(model, type, calling_function = "raw") {
 
     # tidymodels
+    if (inherits(model, "workflow")) {
+      insight::check_if_installed("workflows")
+      # workflows contain parsnip `model_fit`s, which determine the `type`
+      model <- workflows::extract_fit_parsnip(model)
+    }
+  
     if (inherits(model, "model_fit")) {
         if (is.null(type)) type <- "response"
         insight::check_if_installed("parsnip")
