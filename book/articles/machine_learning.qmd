@@ -91,7 +91,7 @@ avg_comparisons(
     newdata = bikes)
 ```
 
-# tidymodels
+# `tidymodels`
 
 `marginaleffects` also supports the `tidymodels` machine learning framework. When the underlying engine used by `tidymodels` to train the model is itself supported as a standalone package by `marginaleffects`, we can obtain estimates of uncertainty estimates:
 
