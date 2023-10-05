@@ -13,6 +13,17 @@ sanitize_type <- function(model, type, calling_function = "raw") {
         return(type)
     }
 
+    # mlr3
+    if (inherits(model, "Learner")) {
+        valid <- setdiff(model$predict_types, "se")
+        checkmate::assert_choice(type, choices = valid, null.ok = TRUE)
+        return(type)
+    }
+
+    if (is.null(type)) {
+        return(type)
+    }
+
     checkmate::assert_character(type, len = 1, null.ok = TRUE)
     cl <- class(model)[1]
     if (!cl %in% type_dictionary$class) {

@@ -91,11 +91,6 @@ avg_comparisons(
     newdata = bikes)
 ```
 
-
-```{r}
-plot_predictions(forest, condition = "temp")
-```
-
 # tidymodels
 
 `marginaleffects` also supports the `tidymodels` machine learning framework. When the underlying engine used by `tidymodels` to train the model is itself supported as a standalone package by `marginaleffects`, we can obtain estimates of uncertainty estimates:
@@ -109,12 +104,6 @@ mod <- linear_reg(mode = "regression") |>
 avg_comparisons(mod, newdata = bikes, type = "response")
 ```
 
-We can also plot the results as usual:
-
-```{r, warning = FALSE}
-plot_predictions(mod, condition = "temp", points = .2)
-```
-
 When the underlying engine that `tidymodels` uses to fit the model is not supported by `marginaleffects` as a standalone model, we can also obtain correct results, but no uncertainy estimates. Here is a random forest model:
 
 ```{r}
@@ -122,6 +111,40 @@ forest_tidy <- rand_forest(mode = "regression") |>
     set_engine("ranger") |>
     fit(count ~ ., data = bikes)
 avg_comparisons(forest_tidy, newdata = bikes, type = "numeric")
+```
 
-plot_predictions(forest_tidy, newdata = bikes, by = "temp", type = "numeric")
+# Plot
+
+We can plot the results using the standard `marginaleffects` helpers. For example, to plot predictions, we can do:
+
+```{r}
+plot_predictions(forest, condition = "temp", newdata = bikes)
+```
+
+As documented in `?plot_predictions`, using `condition="temp"` is equivalent to creating an equally-spaced grid of `temp` values, and holding all other predictors at their means or modes. In other words, it is equivalent to:
+
+```{r}
+#| eval: false
+d <- datagrid(temp = seq(min(bikes$temp), max(bikes$temp), length.out = 100), newdata = bikes)
+p <- predict(forest, newdata = d)
+plot(d$temp, p, type = "l")
+```
+
+Alternatively, we could plot "marginal" predictions, where replicate the full dataset once for every value of `temp`, and then average the predicted values over each value of the x-axis:
+
+
+```{r}
+d <- datagridcf(newdata = bikes, temp = unique)
+plot_predictions(forest, by = "temp", newdata = d)
+```
+
+Of course, we can customize the plot using all the standard `ggplot2` functions:
+
+```{r}
+plot_predictions(forest, by = "temp", newdata = d) +
+    geom_point(data = bikes, aes(x = temp, y = count), alpha = 0.1) +
+    geom_smooth(data = bikes, aes(x = temp, y = count), se = FALSE, color = "orange") +
+    labs(x = "Temperature (Celcius)", y = "Predicted number of bikes rented per hour",
+         title = "Black: random forest predictions. Green: LOESS smoother.") +
+    theme_bw()
 ```
