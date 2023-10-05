@@ -7,6 +7,7 @@ sanitize_type <- function(model, type, calling_function = "raw") {
 
     # tidymodels
     if (inherits(model, "model_fit")) {
+        if (is.null(type)) type <- "response"
         insight::check_if_installed("parsnip")
         fun <- utils::getFromNamespace("check_pred_type", "parsnip")
         fun(model, type)
@@ -15,14 +16,15 @@ sanitize_type <- function(model, type, calling_function = "raw") {
 
     # mlr3
     if (inherits(model, "Learner")) {
+        if (is.null(type)) type <- "response"
         valid <- setdiff(model$predict_types, "se")
         checkmate::assert_choice(type, choices = valid, null.ok = TRUE)
         return(type)
     }
 
-    if (is.null(type)) {
-        return(type)
-    }
+    # if (is.null(type)) {
+    #     return(type)
+    # }
 
     checkmate::assert_character(type, len = 1, null.ok = TRUE)
     cl <- class(model)[1]
