@@ -5,7 +5,7 @@
 <meta name="generator" content="quarto-1.4.151">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="author" content="Vincent Arel-Bundock and contributors.">
-<title>The Marginal Effects Zoo (0.15.1) - 11&nbsp; Conformal prediction</title>
+<title>The Marginal Effects Zoo (0.15.1) - 12&nbsp; Conformal prediction</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -80,8 +80,8 @@ div.csl-indent {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../articles/gformula.html" rel="next">
-<link href="../articles/categorical.html" rel="prev">
+<link href="../articles/elasticity.html" rel="next">
+<link href="../articles/gformula.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -123,7 +123,7 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-<meta name="twitter:title" content="The Marginal Effects Zoo (0.15.1) - 11&nbsp; Conformal prediction">
+<meta name="twitter:title" content="The Marginal Effects Zoo (0.15.1) - 12&nbsp; Conformal prediction">
 <meta name="twitter:description" content="">
 <meta name="twitter:image" content="fig/marginaleffects_card.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -182,7 +182,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../articles/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../articles/conformal.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Conformal prediction</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../articles/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../articles/conformal.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Conformal prediction</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
     </div>
@@ -272,14 +272,14 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../articles/conformal.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Conformal prediction</span></span></a>
+  <a href="../articles/gformula.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Causal Inference (G-Computation)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../articles/gformula.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Causal Inference (G-Computation)</span></span></a>
+  <a href="../articles/conformal.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Conformal prediction</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -320,26 +320,32 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../articles/machine_learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Machine Learning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../articles/matching.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Matching</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Matching</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/multiple_imputation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Missing Data</span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Missing Data</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/mrp.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">MrP</span></span></a>
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">MrP</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/svalues.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">S Values</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">S Values</span></span></a>
   </div>
 </li>
       </ul>
@@ -356,61 +362,61 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/alternative_software.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Alternative Software</span></span></a>
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Alternative Software</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/extensions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Extensions</span></span></a>
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Extensions</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/links.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Links</span></span></a>
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Links</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/performance.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Performance</span></span></a>
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Performance</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/python.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Python</span></span></a>
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Python</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/uncertainty.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Standard Errors</span></span></a>
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Standard Errors</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/supported_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Supported Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Supported Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/tables.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Tables</span></span></a>
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Tables</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/faq.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">FAQ</span></span></a>
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">FAQ</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/NEWS.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">News</span></span></a>
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">News</span></span></a>
   </div>
 </li>
       </ul>
@@ -500,21 +506,21 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
    
   <ul>
-<li><a href="#confidence-vs.-prediction-intervals" id="toc-confidence-vs.-prediction-intervals" class="nav-link active" data-scroll-target="#confidence-vs.-prediction-intervals"><span class="header-section-number">11.1</span> Confidence vs.&nbsp;prediction intervals</a></li>
-  <li><a href="#conformal-prediction" id="toc-conformal-prediction" class="nav-link" data-scroll-target="#conformal-prediction"><span class="header-section-number">11.2</span> Conformal prediction</a></li>
-  <li><a href="#data-and-models-linear-logit-multinomial-logit" id="toc-data-and-models-linear-logit-multinomial-logit" class="nav-link" data-scroll-target="#data-and-models-linear-logit-multinomial-logit"><span class="header-section-number">11.3</span> Data and models: Linear, Logit, Multinomial Logit</a></li>
+<li><a href="#confidence-vs.-prediction-intervals" id="toc-confidence-vs.-prediction-intervals" class="nav-link active" data-scroll-target="#confidence-vs.-prediction-intervals"><span class="header-section-number">12.1</span> Confidence vs.&nbsp;prediction intervals</a></li>
+  <li><a href="#conformal-prediction" id="toc-conformal-prediction" class="nav-link" data-scroll-target="#conformal-prediction"><span class="header-section-number">12.2</span> Conformal prediction</a></li>
+  <li><a href="#data-and-models-linear-logit-multinomial-logit" id="toc-data-and-models-linear-logit-multinomial-logit" class="nav-link" data-scroll-target="#data-and-models-linear-logit-multinomial-logit"><span class="header-section-number">12.3</span> Data and models: Linear, Logit, Multinomial Logit</a></li>
   <li>
-<a href="#conformal-predictions-with-inferences" id="toc-conformal-predictions-with-inferences" class="nav-link" data-scroll-target="#conformal-predictions-with-inferences"><span class="header-section-number">11.4</span> Conformal predictions with <code>inferences()</code></a>
+<a href="#conformal-predictions-with-inferences" id="toc-conformal-predictions-with-inferences" class="nav-link" data-scroll-target="#conformal-predictions-with-inferences"><span class="header-section-number">12.4</span> Conformal predictions with <code>inferences()</code></a>
   <ul class="collapse">
-<li><a href="#cross-validation" id="toc-cross-validation" class="nav-link" data-scroll-target="#cross-validation"><span class="header-section-number">11.4.1</span> Cross-validation +</a></li>
-  <li><a href="#split-conformal-prediction" id="toc-split-conformal-prediction" class="nav-link" data-scroll-target="#split-conformal-prediction"><span class="header-section-number">11.4.2</span> Split conformal prediction</a></li>
+<li><a href="#cross-validation" id="toc-cross-validation" class="nav-link" data-scroll-target="#cross-validation"><span class="header-section-number">12.4.1</span> Cross-validation +</a></li>
+  <li><a href="#split-conformal-prediction" id="toc-split-conformal-prediction" class="nav-link" data-scroll-target="#split-conformal-prediction"><span class="header-section-number">12.4.2</span> Split conformal prediction</a></li>
   </ul>
 </li>
   <li>
-<a href="#misspecification" id="toc-misspecification" class="nav-link" data-scroll-target="#misspecification"><span class="header-section-number">11.5</span> Misspecification</a>
+<a href="#misspecification" id="toc-misspecification" class="nav-link" data-scroll-target="#misspecification"><span class="header-section-number">12.5</span> Misspecification</a>
   <ul class="collapse">
-<li><a href="#polynomials" id="toc-polynomials" class="nav-link" data-scroll-target="#polynomials"><span class="header-section-number">11.5.1</span> Polynomials</a></li>
-  <li><a href="#poisson-vs-negative-binomial" id="toc-poisson-vs-negative-binomial" class="nav-link" data-scroll-target="#poisson-vs-negative-binomial"><span class="header-section-number">11.5.2</span> Poisson vs Negative Binomial</a></li>
+<li><a href="#polynomials" id="toc-polynomials" class="nav-link" data-scroll-target="#polynomials"><span class="header-section-number">12.5.1</span> Polynomials</a></li>
+  <li><a href="#poisson-vs-negative-binomial" id="toc-poisson-vs-negative-binomial" class="nav-link" data-scroll-target="#poisson-vs-negative-binomial"><span class="header-section-number">12.5.2</span> Poisson vs Negative Binomial</a></li>
   </ul>
 </li>
   </ul></nav>
@@ -522,7 +528,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
 <h1 class="title">
-<span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Conformal prediction</span>
+<span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Conformal prediction</span>
 </h1>
 </div>
 
@@ -537,8 +543,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
   
 
 </header><p>This notebook shows how to estimate conformal prediction intervals with the <code>marginaleffects</code> package for <code>R</code>.</p>
-<section id="confidence-vs.-prediction-intervals" class="level2" data-number="11.1"><h2 data-number="11.1" class="anchored" data-anchor-id="confidence-vs.-prediction-intervals">
-<span class="header-section-number">11.1</span> Confidence vs.&nbsp;prediction intervals</h2>
+<section id="confidence-vs.-prediction-intervals" class="level2" data-number="12.1"><h2 data-number="12.1" class="anchored" data-anchor-id="confidence-vs.-prediction-intervals">
+<span class="header-section-number">12.1</span> Confidence vs.&nbsp;prediction intervals</h2>
 <p>The <a href="reference/predictions.html"><code>predictions()</code></a> function from the <code><a href="https://rdrr.io/pkg/marginaleffects/man/marginaleffects.html">marginaleffects()</a></code> package can compute confidence intervals for fitted values in over 80 model classes in <code>R</code>. These intervals quantify the uncertainty about the expected value of the response. A common misunderstanding is that these confidence intervals should be calibrated to cover a certain percentage of unseen data points. This is not the case. In fact, a 95% confidence interval reported by <a href="reference/predictions.html"><code>predictions()</code></a> will typically cover a much smaller share of out-of-sample outcomes.</p>
 <p>Consider this simulation where <span class="math inline">\(Y_{train}\)</span> and <span class="math inline">\(Y_{test}\)</span> are drawn from a normal distribution with mean <span class="math inline">\(\pi\)</span> and standard deviation 1. We estimate a linear model with an intercept only, and compute a 90% confidence interval for the expected value of the response:</p>
 <div class="cell" data-hash="conformal_cache/html/unnamed-chunk-1_cf0a25b01a03d667db7a2a6ffabc3aeb">
@@ -571,8 +577,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </div>
 <p>We see that the confidence interval around predictions covers the true mean of <span class="math inline">\(\pi\)</span> about 90% of the time, whereas coverage of individual observations in the test set is much lower.</p>
 <p>If we care about out of sample predictions, that is, if we want our interval to cover a specific share of the actual outcome for unobserved individuals, we must compute “prediction intervals” instead of “confidence intervals.” How do we do this? Conformal prediction is very flexible and powerful approach.</p>
-</section><section id="conformal-prediction" class="level2" data-number="11.2"><h2 data-number="11.2" class="anchored" data-anchor-id="conformal-prediction">
-<span class="header-section-number">11.2</span> Conformal prediction</h2>
+</section><section id="conformal-prediction" class="level2" data-number="12.2"><h2 data-number="12.2" class="anchored" data-anchor-id="conformal-prediction">
+<span class="header-section-number">12.2</span> Conformal prediction</h2>
 <p>In their excellent tutorial, <span class="citation" data-cites="AngBat2022">Angelopoulos and Bates (<a href="functions.html#ref-AngBat2022" role="doc-biblioref">2022</a>)</span> write that conformal prediction is</p>
 <blockquote class="blockquote">
 <p>“a user-friendly paradigm for creating statistically rigorous uncertainty sets/intervals for the predictions of such models. Critically, the sets are valid in a distribution-free sense: they possess explicit, non-asymptotic guarantees even without distributional assumptions or model assumptions.</p>
@@ -584,8 +590,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <li>The conformal prediction algorithms implemented in <code>marginaleffects</code> offer marginal coverage guarantees, that is, they guarantee that a random test point will fall within the interval with a given probability. Below, we show an example where the prediction interval covers the right number of test points overall, but is not well calibrated locally, in different strata of the predictors. Different algorithms have recently been proposed to offer class-conditional coverage guarantees (see <span class="citation" data-cites="Din2023">Ding et al. (<a href="functions.html#ref-Din2023" role="doc-biblioref">2023</a>)</span> for an example).</li>
 <li>The width of the conformal prediction interval will typically depend on the quality of the prediction model and of the score function.</li>
 <li>The score functions implemented in <code>marginaleffects</code> simply take the residual—or difference between the observed outcome and predicted value. This means that the <code>type</code> argument must ensure that observations and predictions are on commensurable scales (usually <code>type="response"</code> or <code>type="prob"</code>).</li>
-</ol></section><section id="data-and-models-linear-logit-multinomial-logit" class="level2" data-number="11.3"><h2 data-number="11.3" class="anchored" data-anchor-id="data-and-models-linear-logit-multinomial-logit">
-<span class="header-section-number">11.3</span> Data and models: Linear, Logit, Multinomial Logit</h2>
+</ol></section><section id="data-and-models-linear-logit-multinomial-logit" class="level2" data-number="12.3"><h2 data-number="12.3" class="anchored" data-anchor-id="data-and-models-linear-logit-multinomial-logit">
+<span class="header-section-number">12.3</span> Data and models: Linear, Logit, Multinomial Logit</h2>
 <p>Download data, split it into training and testing sets, and estimate a few different models:</p>
 <div class="cell" data-hash="conformal_cache/html/unnamed-chunk-2_41a324b58eb14c92674a915c9e3fd1e9">
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># download data</span></span>
@@ -646,8 +652,8 @@ Type:  invlink(link) </code></pre>
 Columns: rowid, group, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, rownames, grade, branch, gender, race, hisp, rank, officer </code></pre>
 </div>
 </div>
-</section><section id="conformal-predictions-with-inferences" class="level2" data-number="11.4"><h2 data-number="11.4" class="anchored" data-anchor-id="conformal-predictions-with-inferences">
-<span class="header-section-number">11.4</span> Conformal predictions with <code>inferences()</code>
+</section><section id="conformal-predictions-with-inferences" class="level2" data-number="12.4"><h2 data-number="12.4" class="anchored" data-anchor-id="conformal-predictions-with-inferences">
+<span class="header-section-number">12.4</span> Conformal predictions with <code>inferences()</code>
 </h2>
 <p>In the “Bootstrap and Simultation” vignette, we saw that the <a href="reference/inferences.html"><code>inferences()</code></a> function can be used to compute confidence intervals for any <code>marginaleffects</code> package estimates. The workflow is simple:</p>
 <ol type="1">
@@ -655,8 +661,8 @@ Columns: rowid, group, estimate, std.error, statistic, p.value, s.value, conf.lo
 <li>Pass the resulting object to <code><a href="https://rdrr.io/pkg/marginaleffects/man/inferences.html">inferences()</a></code>, along with arguments to specify how to perform inference to obtain uncertainty estimates.</li>
 </ol>
 <p><code><a href="https://rdrr.io/pkg/marginaleffects/man/inferences.html">inferences()</a></code> supports two strategies for conformal prediction: split or CV+ <span class="citation" data-cites="AngBat2022">Ding et al. (<a href="functions.html#ref-Din2023" role="doc-biblioref">2023</a>)</span>. The former is faster but less efficient. In the rest of this vignette, we illustrate how to use this same workflow to compute conformal prediction intervals.</p>
-<section id="cross-validation" class="level3" data-number="11.4.1"><h3 data-number="11.4.1" class="anchored" data-anchor-id="cross-validation">
-<span class="header-section-number">11.4.1</span> Cross-validation +</h3>
+<section id="cross-validation" class="level3" data-number="12.4.1"><h3 data-number="12.4.1" class="anchored" data-anchor-id="cross-validation">
+<span class="header-section-number">12.4.1</span> Cross-validation +</h3>
 <p>The <code>p_lm</code>, <code>p_glm</code>, and <code>p_mult</code> objects are <a href="reference/predictions.html"><code>predictions()</code></a> objects. They contain the point predictions and confidence intervals for each observation in the training set. Now, we use the <a href="reference/inferences.html"><code>inferences()</code></a> function to compute predictions and <em>prediction</em> intervals for every observation in the test set:</p>
 <div class="cell" data-warnings="false" data-hash="conformal_cache/html/unnamed-chunk-5_899be0e2d69f460be3ee7945ac894025">
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">m_lm</span>, conf_level <span class="op">=</span> <span class="fl">.9</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
@@ -731,8 +737,8 @@ Columns: rowid, branch, pred.set </code></pre>
 <pre><code>[1] 0.6928</code></pre>
 </div>
 </div>
-</section><section id="split-conformal-prediction" class="level3" data-number="11.4.2"><h3 data-number="11.4.2" class="anchored" data-anchor-id="split-conformal-prediction">
-<span class="header-section-number">11.4.2</span> Split conformal prediction</h3>
+</section><section id="split-conformal-prediction" class="level3" data-number="12.4.2"><h3 data-number="12.4.2" class="anchored" data-anchor-id="split-conformal-prediction">
+<span class="header-section-number">12.4.2</span> Split conformal prediction</h3>
 <p>For split conformal prediction, we must first split the training set into a training and a calibration set (see <span class="citation" data-cites="AngBat2022">Angelopoulos and Bates (<a href="functions.html#ref-AngBat2022" role="doc-biblioref">2022</a>)</span>). Then, we pass the calibration set to the <a href="reference/inferences.html"><code>inferences()</code></a> function:</p>
 <div class="cell" data-hash="conformal_cache/html/unnamed-chunk-10_af644e6db07f90586dbca3b612a61f6f">
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">calibration</span> <span class="op">&lt;-</span> <span class="va">train</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span>,<span class="op">]</span></span>
@@ -747,10 +753,10 @@ Columns: rowid, branch, pred.set </code></pre>
 <pre><code>[1] 0.9112</code></pre>
 </div>
 </div>
-</section></section><section id="misspecification" class="level2" data-number="11.5"><h2 data-number="11.5" class="anchored" data-anchor-id="misspecification">
-<span class="header-section-number">11.5</span> Misspecification</h2>
-<section id="polynomials" class="level3" data-number="11.5.1"><h3 data-number="11.5.1" class="anchored" data-anchor-id="polynomials">
-<span class="header-section-number">11.5.1</span> Polynomials</h3>
+</section></section><section id="misspecification" class="level2" data-number="12.5"><h2 data-number="12.5" class="anchored" data-anchor-id="misspecification">
+<span class="header-section-number">12.5</span> Misspecification</h2>
+<section id="polynomials" class="level3" data-number="12.5.1"><h3 data-number="12.5.1" class="anchored" data-anchor-id="polynomials">
+<span class="header-section-number">12.5.1</span> Polynomials</h3>
 <p>As noted above, the conformal prediction interval should be valid even if the model is misspecified. To illustrate this, we generate data from a linear model with polynomials, but estimate a linear model without polynomials. Then, we plot the results and compute the coverage of the prediction interval:</p>
 <div class="cell" data-hash="conformal_cache/html/unnamed-chunk-11_4bf9cc9cf153cea62c3dd1abb8042218">
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">N</span> <span class="op">&lt;-</span> <span class="fl">1000</span></span>
@@ -788,8 +794,8 @@ Columns: rowid, branch, pred.set </code></pre>
 </div>
 </div>
 <p>This example is interesting, because it shows that the prediction interval has adquate marginal coverage. However, the intervals are not necessarily well calibrated “locally”, in different strata of <span class="math inline">\(X\)</span>. In the figure above, our model is misspecified, so we make more mistakes in the tails, where predictions are bad. In contrast, the interval catches more observations in the middle of the distribution, which ensures that the overall error rate is adequate.</p>
-</section><section id="poisson-vs-negative-binomial" class="level3" data-number="11.5.2"><h3 data-number="11.5.2" class="anchored" data-anchor-id="poisson-vs-negative-binomial">
-<span class="header-section-number">11.5.2</span> Poisson vs Negative Binomial</h3>
+</section><section id="poisson-vs-negative-binomial" class="level3" data-number="12.5.2"><h3 data-number="12.5.2" class="anchored" data-anchor-id="poisson-vs-negative-binomial">
+<span class="header-section-number">12.5.2</span> Poisson vs Negative Binomial</h3>
 <p>Here is a second example of model misspecification. We generate data from a negative binomial model, but estimate a Poisson model. Nevertheless, the conformal prediction interval has good coverage:</p>
 <div class="cell" data-hash="conformal_cache/html/unnamed-chunk-12_a17a148da886176c9a0cf909663ddf31">
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">10000</span></span>
@@ -1267,13 +1273,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="../articles/categorical.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Categorical outcomes</span></span>
+      <a href="../articles/gformula.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Causal Inference (G-Computation)</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../articles/gformula.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Causal Inference (G-Computation)</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../articles/elasticity.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Elasticity</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

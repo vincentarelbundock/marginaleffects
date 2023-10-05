@@ -5,7 +5,7 @@
 <meta name="generator" content="quarto-1.4.151">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="author" content="Vincent Arel-Bundock and contributors.">
-<title>The Marginal Effects Zoo (0.15.1) - inferences</title>
+<title>The Marginal Effects Zoo (0.15.1) - 19&nbsp; Machine Learning</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -54,26 +54,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }
 </style>
 
-<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../../">
-<link href="../../articles/reference/posterior_draws.html" rel="next">
-<link href="../../articles/reference/hypotheses.html" rel="prev">
-<script src="../../site_libs/quarto-html/quarto.js"></script>
-<script src="../../site_libs/quarto-html/popper.min.js"></script>
-<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark"><script id="quarto-search-options" type="application/json">{
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../articles/matching.html" rel="next">
+<link href="../articles/lme4.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark"><script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
   "collapse-after": 3,
@@ -104,7 +104,7 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </script>
-<meta name="twitter:title" content="The Marginal Effects Zoo (0.15.1) - inferences">
+<meta name="twitter:title" content="The Marginal Effects Zoo (0.15.1) - 19&nbsp; Machine Learning">
 <meta name="twitter:description" content="">
 <meta name="twitter:image" content="fig/marginaleffects_card.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -114,7 +114,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg navbar-dark "><div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../../index.html">
+    <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">The Marginal Effects Zoo (0.15.1)</span>
     </a>
   </div>
@@ -125,15 +125,15 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
 <li class="nav-item">
-    <a class="nav-link active" href="../../articles/marginaleffects.html" rel="" target="" aria-current="page">
+    <a class="nav-link active" href="../articles/marginaleffects.html" rel="" target="" aria-current="page">
  <span class="menu-text">Get Started</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../articles/functions.html" rel="" target="">
+    <a class="nav-link" href="../articles/functions.html" rel="" target="">
  <span class="menu-text">Functions</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../articles/NEWS.html" rel="" target="">
+    <a class="nav-link" href="../articles/NEWS.html" rel="" target="">
  <span class="menu-text">News</span></a>
   </li>  
 </ul>
@@ -163,7 +163,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../articles/functions.html">Functions</a></li><li class="breadcrumb-item"><a href="../../articles/reference/inferences.html">inferences</a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../articles/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../articles/machine_learning.html"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Machine Learning</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
     </div>
@@ -173,7 +173,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
     <ul class="list-unstyled mt-1">
 <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../index.html" class="sidebar-item-text sidebar-link">
+            <a href="../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">marginaleffects</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -182,43 +182,43 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/marginaleffects.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/marginaleffects.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Get Started</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/predictions.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/predictions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Predictions</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/comparisons.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/comparisons.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Comparisons</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/slopes.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/slopes.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Slopes</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/marginalmeans.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/marginalmeans.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Marginal Means</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/plot.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/plot.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Plots</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/hypothesis.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/hypothesis.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Hypothesis Tests</span></span></a>
   </div>
 </li>
@@ -235,97 +235,97 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/brms.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/brms.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Bayes</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/bootstrap.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/bootstrap.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Bootstrap &amp; Simulation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/categorical.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/categorical.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Categorical outcomes</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/gformula.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/gformula.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Causal Inference (G-Computation)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/conformal.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/conformal.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Conformal prediction</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/elasticity.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/elasticity.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Elasticity</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/equivalence.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/equivalence.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Equivalence Tests</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/experiments.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/experiments.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Experiments</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/gam.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/gam.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">GAM</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/logit.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/logit.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Logit</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/lme4.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/lme4.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Mixed Effects</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/machine_learning.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/machine_learning.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Machine Learning</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/matching.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/matching.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Matching</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/multiple_imputation.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/multiple_imputation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Missing Data</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/mrp.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/mrp.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">MrP</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/svalues.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/svalues.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">S Values</span></span></a>
   </div>
 </li>
@@ -342,61 +342,61 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/alternative_software.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/alternative_software.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Alternative Software</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/extensions.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/extensions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Extensions</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/links.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/links.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Links</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/performance.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/performance.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Performance</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/python.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/python.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Python</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/uncertainty.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/uncertainty.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Standard Errors</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/supported_models.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/supported_models.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Supported Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/tables.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/tables.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Tables</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/faq.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/faq.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">FAQ</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/NEWS.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/NEWS.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">News</span></span></a>
   </div>
 </li>
@@ -404,7 +404,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../articles/functions.html" class="sidebar-item-text sidebar-link">
+            <a href="../articles/functions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Functions</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -413,67 +413,67 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/reference/predictions.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/reference/predictions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">predictions</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/reference/comparisons.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/reference/comparisons.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">comparisons</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/reference/slopes.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/reference/slopes.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">slopes</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/reference/marginal_means.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/reference/marginal_means.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">marginal_means</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/reference/plot_predictions.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/reference/plot_predictions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">plot_predictions</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/reference/plot_comparisons.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/reference/plot_comparisons.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">plot_comparisons</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/reference/plot_slopes.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/reference/plot_slopes.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">plot_slopes</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/reference/datagrid.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/reference/datagrid.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">datagrid</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/reference/hypotheses.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/reference/hypotheses.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">hypotheses</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/reference/inferences.html" class="sidebar-item-text sidebar-link active">
+  <a href="../articles/reference/inferences.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">inferences</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/reference/posterior_draws.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/reference/posterior_draws.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">posterior_draws</span></a>
   </div>
 </li>
@@ -487,18 +487,16 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
    
   <ul>
-<li><a href="#description" id="toc-description" class="nav-link active" data-scroll-target="#description">Description</a></li>
-  <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
-  <li><a href="#arguments" id="toc-arguments" class="nav-link" data-scroll-target="#arguments">Arguments</a></li>
-  <li><a href="#details" id="toc-details" class="nav-link" data-scroll-target="#details">Details</a></li>
-  <li><a href="#value" id="toc-value" class="nav-link" data-scroll-target="#value">Value</a></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
-  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
+<li><a href="#mlr3" id="toc-mlr3" class="nav-link active" data-scroll-target="#mlr3"><span class="header-section-number">19.1</span> <code>mlr3</code></a></li>
+  <li><a href="#tidymodels" id="toc-tidymodels" class="nav-link" data-scroll-target="#tidymodels"><span class="header-section-number">20</span> tidymodels</a></li>
+  <li><a href="#plot" id="toc-plot" class="nav-link" data-scroll-target="#plot"><span class="header-section-number">21</span> Plot</a></li>
   </ul></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
-<h1 class="title">inferences</h1>
+<h1 class="title">
+<span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Machine Learning</span>
+</h1>
 </div>
 
 
@@ -511,324 +509,223 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
   </div>
   
 
-</header><p>(EXPERIMENTAL) Bootstrap, Conformal, and Simulation-Based Inference</p>
-<section id="description" class="level2"><h2 class="anchored" data-anchor-id="description">Description</h2>
-<p>
-Warning: This function is experimental. It may be renamed, the user interface may change, or the functionality may migrate to arguments in other <code>marginaleffects</code> functions.
-</p>
-<p>
-Apply this function to a <code>marginaleffects</code> object to change the inferential method used to compute uncertainty estimates.
-</p>
-</section><section id="usage" class="level2"><h2 class="anchored" data-anchor-id="usage">Usage</h2>
-<pre><code class="language-R">inferences(
-  x,
-  method,
-  R = 1000,
-  conf_type = "perc",
-  conformal_test = NULL,
-  conformal_calibration = NULL,
-  conformal_score = "residual_abs",
-  ...
-)
-</code></pre>
-</section><section id="arguments" class="level2"><h2 class="anchored" data-anchor-id="arguments">Arguments</h2>
-<table>
-<tbody><tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="inferences_:_x">x</code>
-</td>
-<td>
-<p>
-Object produced by one of the core <code>marginaleffects</code> functions.
-</p>
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="inferences_:_method">method</code>
-</td>
-<td>
-<p>
-String
-</p>
-<ul>
-<li>
-<p>
-"delta": delta method standard errors
-</p>
-</li>
-<li>
-<p>
-"boot" package
-</p>
-</li>
-<li>
-<p>
-"fwb": fractional weighted bootstrap
-</p>
-</li>
-<li>
-<p>
-"rsample" package
-</p>
-</li>
-<li>
-<p>
-"simulation" from a multivariate normal distribution (Krinsky &amp; Robb, 1986)
-</p>
-</li>
-<li>
-<p>
-"mi" multiple imputation for missing data
-</p>
-</li>
-<li>
-<p>
-"conformal_split": prediction intervals using split conformal prediction (see Angelopoulos &amp; Bates, 2022)
-</p>
-</li>
-<li>
-<p>
-"conformal_cv+": prediction intervals using cross-validation+ conformal prediction (see Barber et al., 2020)
-</p>
-</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="inferences_:_R">R</code>
-</td>
-<td>
-<p>
-Number of resamples, simulations, or cross-validation folds.
-</p>
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="inferences_:_conf_type">conf_type</code>
-</td>
-<td>
-<p>
-String: type of bootstrap interval to construct.
-</p>
-<ul>
-<li>
-<p>
-<code>boot</code>: "perc", "norm", "basic", or "bca"
-</p>
-</li>
-<li>
-<p>
-<code>fwb</code>: "perc", "norm", "basic", "bc", or "bca"
-</p>
-</li>
-<li>
-<p>
-<code>rsample</code>: "perc" or "bca"
-</p>
-</li>
-<li>
-<p>
-<code>simulation</code>: argument ignored.
-</p>
-</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="inferences_:_conformal_test">conformal_test</code>
-</td>
-<td>
-<p>
-Data frame of test data for conformal prediction.
-</p>
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="inferences_:_conformal_calibration">conformal_calibration</code>
-</td>
-<td>
-<p>
-Data frame of calibration data for split conformal prediction (<code style="white-space: pre;">⁠method=“conformal_split⁠</code>).
-</p>
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="inferences_:_conformal_score">conformal_score</code>
-</td>
-<td>
-<p>
-String. Warning: The <code>type</code> argument in <code><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions()</a></code> must generate predictions which are on the same scale as the outcome variable. Typically, this means that <code>type</code> must be "response" or "probs".
-</p>
-<ul>
-<li>
-<p>
-"residual_abs" or "residual_sq" for regression tasks (numeric outcome)
-</p>
-</li>
-<li>
-<p>
-"softmax" for classification tasks (when <code><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions()</a></code> returns a <code>group</code> columns, such as multinomial or ordinal logit models.
-</p>
-</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="inferences_:_...">…</code>
-</td>
-<td>
-<ul>
-<li>
-<p>
-If <code>method=“boot”</code>, additional arguments are passed to <code><a href="https://rdrr.io/pkg/boot/man/boot.html">boot::boot()</a></code>.
-</p>
-</li>
-<li>
-<p>
-If <code>method=“fwb”</code>, additional arguments are passed to <code><a href="https://ngreifer.github.io/fwb/reference/fwb.html">fwb::fwb()</a></code>.
-</p>
-</li>
-<li>
-<p>
-If <code>method=“rsample”</code>, additional arguments are passed to <code><a href="https://rsample.tidymodels.org/reference/bootstraps.html">rsample::bootstraps()</a></code>.
-</p>
-</li>
-<li>
-<p>
-Additional arguments are ignored for all other methods.
-</p>
-</li>
-</ul>
-</td>
-</tr>
-</tbody></table></section><section id="details" class="level2"><h2 class="anchored" data-anchor-id="details">Details</h2>
-<p>
-When <code>method=“simulation”</code>, we conduct simulation-based inference following the method discussed in Krinsky &amp; Robb (1986):
-</p>
-<ol>
-<li>
-<p>
-Draw <code>R</code> sets of simulated coefficients from a multivariate normal distribution with mean equal to the original model’s estimated coefficients and variance equal to the model’s variance-covariance matrix (classical, "HC3", or other).
-</p>
-</li>
-<li>
-<p>
-Use the <code>R</code> sets of coefficients to compute <code>R</code> sets of estimands: predictions, comparisons, slopes, or hypotheses.
-</p>
-</li>
-<li>
-<p>
-Take quantiles of the resulting distribution of estimands to obtain a confidence interval and the standard deviation of simulated estimates to estimate the standard error.
-</p>
-</li>
-</ol>
-<p>
-When <code>method=“fwb”</code>, drawn weights are supplied to the model fitting function’s <code>weights</code> argument; if the model doesn’t accept non-integer weights, this method should not be used. If weights were included in the original model fit, they are extracted by <code><a href="https://rdrr.io/r/stats/weights.html">weights()</a></code> and multiplied by the drawn weights. These weights are supplied to the <code>wts</code> argument of the estimation function (e.g., <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code>).
-</p>
-</section><section id="value" class="level2"><h2 class="anchored" data-anchor-id="value">Value</h2>
-<p>
-A <code>marginaleffects</code> object with simulation or bootstrap resamples and objects attached.
-</p>
-</section><section id="references" class="level2"><h2 class="anchored" data-anchor-id="references">References</h2>
-<p>
-Krinsky, I., and A. L. Robb. 1986. “On Approximating the Statistical Properties of Elasticities.” Review of Economics and Statistics 68 (4): 715–9.
-</p>
-<p>
-King, Gary, Michael Tomz, and Jason Wittenberg. "Making the most of statistical analyses: Improving interpretation and presentation." American journal of political science (2000): 347-361
-</p>
-<p>
-Dowd, Bryan E., William H. Greene, and Edward C. Norton. "Computation of standard errors." Health services research 49.2 (2014): 731-750.
-</p>
-<p>
-Angelopoulos, Anastasios N., and Stephen Bates. 2022. "A Gentle Introduction to Conformal Prediction and Distribution-Free Uncertainty Quantification." arXiv. https://doi.org/10.48550/arXiv.2107.07511.
-</p>
-<p>
-Barber, Rina Foygel, Emmanuel J. Candes, Aaditya Ramdas, and Ryan J. Tibshirani. 2020. “Predictive Inference with the Jackknife+.” arXiv. http://arxiv.org/abs/1905.02928.
-</p>
-</section><section id="examples" class="level2"><h2 class="anchored" data-anchor-id="examples">Examples</h2>
+</header><p><code>marginaleffects</code> offers several “model-agnostic” functions to interpret statistical and machine learning models. This vignette highlights how the package can be used to extract meaningful insights from models trained using the <code>mlr3</code> and <code>tidymodels</code> frameworks.</p>
+<p>The features in this vignette require version 0.16.0 or <code>marginaleffects</code>, or the development version which can be installed from Github:</p>
 <div class="cell">
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"vincentarelbundock/marginaleffects"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Make sure to restart <code>R</code> after installation. Then, load a few libraries:</p>
+<div class="cell">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://marginaleffects.com/">"marginaleffects"</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/holgstr/fmeffects">"fmeffects"</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://ggplot2.tidyverse.org">"ggplot2"</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://mlr3verse.mlr-org.com">"mlr3verse"</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://tidymodels.tidymodels.org">"tidymodels"</a></span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/message.html">suppressPackageStartupMessages</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">10000</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="mlr3" class="level2" data-number="19.1"><h2 data-number="19.1" class="anchored" data-anchor-id="mlr3">
+<span class="header-section-number">19.1</span> <code>mlr3</code>
+</h2>
+<p><code>mlr3</code> is a machine learning framework for <code>R</code>. It makes it possible for users to train a wide range of models, including linear models, random forests, gradient boosting machines, and neural networks.</p>
+<p>In this example, we use the <code>bikes</code> dataset supplied by the <code>fmeffects</code> package to train a random forest model predicting the number of bikes rented per hour. We then use <code>marginaleffects</code> to interpret the results of the model.</p>
+<div class="cell">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"bikes"</span>, package <span class="op">=</span> <span class="st">"fmeffects"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org">magrittr</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1024</span><span class="op">)</span></span>
-<span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">Sepal.Width</span> <span class="op">*</span> <span class="va">Species</span>, data <span class="op">=</span> <span class="va">iris</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># bootstrap</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/inferences.html">inferences</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"boot"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="va">task</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/as_task_regr.html">as_task_regr</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">bikes</span>, id <span class="op">=</span> <span class="st">"bikes"</span>, target <span class="op">=</span> <span class="st">"count"</span><span class="op">)</span></span>
+<span><span class="va">forest</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html">lrn</a></span><span class="op">(</span><span class="st">"regr.ranger"</span><span class="op">)</span><span class="op">$</span><span class="fu">train</span><span class="op">(</span><span class="va">task</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>As described in other vignettes, we can use the <a href="reference/comparisons.html"><code>avg_comparisons()</code></a> function to compute the average change in predicted outcome that is associated with a change in each feature:</p>
+<div class="cell">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">forest</span>, newdata <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-    Species Estimate Std. Error 2.5 % 97.5 %
- setosa         5.01     0.0344  4.93   5.07
- versicolor     5.94     0.0619  5.82   6.07
- virginica      6.59     0.0788  6.44   6.75
+       Term      Contrast Estimate
+ count      +1               0.000
+ holiday    False - True    13.835
+ humidity   +1             -23.142
+ month      +1               3.874
+ season     spring - fall  -30.230
+ season     summer - fall   -7.471
+ season     winter - fall    4.135
+ temp       +1               3.558
+ weather    misty - clear   -7.759
+ weather    rain - clear   -60.609
+ weekday    Fri - Sun       68.991
+ weekday    Mon - Sun       77.713
+ weekday    Sat - Sun       22.763
+ weekday    Thu - Sun       84.597
+ weekday    Tue - Sun       83.098
+ weekday    Wed - Sun       85.500
+ windspeed  +1               0.254
+ workingday False - True  -192.565
+ year       1 - 0           98.296
 
-Columns: Species, estimate, std.error, conf.low, conf.high 
+Columns: term, contrast, estimate 
 Type:  response </code></pre>
 </div>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/inferences.html">inferences</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"rsample"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>These results are easy to interpret: An increase of 1 degree Celsius in the temperature is associated with an increase of 3.558 bikes rented per hour.</p>
+<p>We could obtain the same result manually as follows:</p>
+<div class="cell">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html">transform</a></span><span class="op">(</span><span class="va">bikes</span>, temp <span class="op">=</span> <span class="va">temp</span> <span class="op">-</span> <span class="fl">0.5</span><span class="op">)</span></span>
+<span><span class="va">hi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html">transform</a></span><span class="op">(</span><span class="va">bikes</span>, temp <span class="op">=</span> <span class="va">temp</span> <span class="op">+</span> <span class="fl">0.5</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">forest</span>, newdata <span class="op">=</span> <span class="va">hi</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">forest</span>, newdata <span class="op">=</span> <span class="va">lo</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.558093</code></pre>
+</div>
+</div>
+<p>As the code above makes clear, the <a href="reference/comparisons.html"><code>avg_comparisons()</code></a> computes the effect of a “centered” change on the outcome. If we want to compute a “Forward Marginal Effect” instead, we can call:</p>
+<div class="cell">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
+<span>    <span class="va">forest</span>,</span>
+<span>    variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"temp"</span> <span class="op">=</span> \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">x</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    newdata <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-    Species Estimate 2.5 % 97.5 %
- setosa         5.01  4.94   5.07
- versicolor     5.94  5.82   6.06
- virginica      6.59  6.44   6.75
+ Term Contrast Estimate
+ temp   custom     2.41
 
-Columns: Species, estimate, conf.low, conf.high 
+Columns: term, contrast, estimate 
 Type:  response </code></pre>
 </div>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Fractional (bayesian) bootstrap</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/inferences.html">inferences</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"fwb"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/posterior_draws.html">posterior_draws</a></span><span class="op">(</span><span class="st">"rvar"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>         term                        contrast    Species  estimate predicted_lo
-1 Sepal.Width                     mean(dY/dX)     setosa 0.6904897     5.055715
-2 Sepal.Width                     mean(dY/dX) versicolor 0.8650777     6.307983
-3 Sepal.Width                     mean(dY/dX)  virginica 0.9015345     6.881900
-4     Species mean(versicolor) - mean(setosa)     setosa 1.4992211     5.055715
-5     Species mean(versicolor) - mean(setosa) versicolor 1.3843422     4.848568
-6     Species mean(versicolor) - mean(setosa)  virginica 1.4199582     4.917617
-7     Species  mean(virginica) - mean(setosa)     setosa 1.9912967     5.055715
-8     Species  mean(virginica) - mean(setosa) versicolor 1.8524292     4.848568
-9     Species  mean(virginica) - mean(setosa)  virginica 1.8954823     4.917617
-  predicted_hi predicted  std.error  conf.low conf.high         rvar
-1     5.055881  5.055715 0.08102709 0.5487008 0.8583514 0.69 ± 0.081
-2     6.308191  6.307983 0.20712193 0.4808519 1.2809997 0.88 ± 0.207
-3     6.882117  6.881900 0.23704875 0.3867165 1.3338278 0.89 ± 0.237
-4     6.567507  5.055715 0.15422309 1.2037516 1.7935150 1.50 ± 0.154
-5     6.307983  6.307983 0.08693716 1.2216215 1.5524924 1.38 ± 0.087
-6     6.394491  6.881900 0.08908202 1.2437332 1.5875035 1.42 ± 0.089
-7     7.062207  5.055715 0.12038738 1.7300974 2.2013722 1.99 ± 0.120
-8     6.791747  6.307983 0.12456281 1.6287253 2.1275295 1.86 ± 0.125
-9     6.881900  6.881900 0.09656870 1.7196001 2.0992510 1.90 ± 0.097</code></pre>
 </div>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Simulation-based inference</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/inferences.html">inferences</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"simulation"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This is equivalent to using the <code>fmeffects</code> package:</p>
+<div class="cell">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">fmeffects</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/fmeffects/man/fme.html">fme</a></span><span class="op">(</span></span>
+<span>    model <span class="op">=</span> <span class="va">forest</span>,</span>
+<span>    data <span class="op">=</span> <span class="va">bikes</span>,</span>
+<span>    target <span class="op">=</span> <span class="st">"count"</span>,</span>
+<span>    feature <span class="op">=</span> <span class="st">"temp"</span>,</span>
+<span>    step.size <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">$</span><span class="va">ame</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.412783</code></pre>
+</div>
+</div>
+<p>With <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">marginaleffects::avg_comparisons()</a></code>, we can also compute the average effect of a simultaneous change in multiple predictors, using the <code>variables</code> and <code>cross</code> arguments. In this example, we see what happens (on average) to the predicted outcome when the <code>temp</code>, <code>season</code>, and <code>weather</code> predictors all change together:</p>
+<div class="cell">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
+<span>    <span class="va">forest</span>,</span>
+<span>    variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"temp"</span>, <span class="st">"season"</span>, <span class="st">"weather"</span><span class="op">)</span>,</span>
+<span>    cross <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    newdata <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-        Term Contrast Estimate Std. Error 2.5 % 97.5 %
- Sepal.Width    dY/dX     0.69      0.166 0.392   1.02
- Sepal.Width    dY/dX     0.69      0.166 0.392   1.02
- Sepal.Width    dY/dX     0.69      0.166 0.392   1.02
- Sepal.Width    dY/dX     0.69      0.166 0.392   1.02
- Sepal.Width    dY/dX     0.69      0.166 0.392   1.02
- Sepal.Width    dY/dX     0.69      0.166 0.392   1.02
+ Estimate     C: season C: temp    C: weather
+  -33.443 spring - fall      +1 misty - clear
+  -76.611 spring - fall      +1 rain - clear 
+  -11.686 summer - fall      +1 misty - clear
+  -62.018 summer - fall      +1 rain - clear 
+   -0.179 winter - fall      +1 misty - clear
+  -55.485 winter - fall      +1 rain - clear 
 
-Columns: rowid, term, contrast, estimate, std.error, conf.low, conf.high, predicted_lo, predicted_hi, predicted, tmp_idx, Sepal.Length, Sepal.Width, Species 
+Columns: term, contrast_season, contrast_temp, contrast_weather, estimate 
 Type:  response </code></pre>
+</div>
+</div>
+</section><section id="tidymodels" class="level1" data-number="20"><h1 data-number="20">
+<span class="header-section-number">20</span> tidymodels</h1>
+<p><code>marginaleffects</code> also supports the <code>tidymodels</code> machine learning framework. When the underlying engine used by <code>tidymodels</code> to train the model is itself supported as a standalone package by <code>marginaleffects</code>, we can obtain estimates of uncertainty estimates:</p>
+<div class="cell">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/message.html">suppressPackageStartupMessages</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidymodels.tidymodels.org">tidymodels</a></span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu">linear_reg</span><span class="op">(</span>mode <span class="op">=</span> <span class="st">"regression"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">set_engine</span><span class="op">(</span><span class="st">"lm"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">fit</span><span class="op">(</span><span class="va">count</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">bikes</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+       Term      Contrast Estimate Std. Error       z Pr(&gt;|z|)     S   2.5 %  97.5 %
+ holiday    False - True   202.251     16.322  12.391  &lt; 0.001 114.7  170.26 234.242
+ humidity   +1             -13.488     19.974  -0.675  0.49948   1.0  -52.64  25.659
+ month      +1              -1.363      1.398  -0.974  0.32987   1.6   -4.10   1.378
+ season     spring - fall  -67.924     14.119  -4.811  &lt; 0.001  19.3  -95.60 -40.251
+ season     summer - fall   -9.242      9.583  -0.964  0.33485   1.6  -28.02   9.540
+ season     winter - fall   31.704     11.471   2.764  0.00571   7.5    9.22  54.187
+ temp       +1               5.010      0.630   7.954  &lt; 0.001  49.0    3.78   6.244
+ weather    misty - clear  -20.147      6.215  -3.241  0.00119   9.7  -32.33  -7.965
+ weather    rain - clear  -112.211      9.881 -11.356  &lt; 0.001  96.9 -131.58 -92.844
+ weekday    Fri - Sun      224.628      9.744  23.054  &lt; 0.001 388.2  205.53 243.725
+ weekday    Mon - Sun      244.680     10.012  24.438  &lt; 0.001 435.7  225.06 264.304
+ weekday    Sat - Sun       15.072      9.714   1.552  0.12075   3.0   -3.97  34.111
+ weekday    Thu - Sun      273.735      9.789  27.963  &lt; 0.001 569.2  254.55 292.921
+ weekday    Tue - Sun      267.743      9.822  27.258  &lt; 0.001 541.1  248.49 286.995
+ weekday    Wed - Sun      275.465      9.755  28.237  &lt; 0.001 580.3  256.35 294.585
+ windspeed  +1              -0.542      0.398  -1.362  0.17310   2.5   -1.32   0.238
+ workingday False - True     0.000         NA      NA       NA    NA      NA      NA
+ year       1 - 0          108.398      5.226  20.741  &lt; 0.001 315.0   98.16 118.641
+
+Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response </code></pre>
+</div>
+</div>
+<p>When the underlying engine that <code>tidymodels</code> uses to fit the model is not supported by <code>marginaleffects</code> as a standalone model, we can also obtain correct results, but no uncertainy estimates. Here is a random forest model:</p>
+<div class="cell">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">forest_tidy</span> <span class="op">&lt;-</span> <span class="fu">rand_forest</span><span class="op">(</span>mode <span class="op">=</span> <span class="st">"regression"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">set_engine</span><span class="op">(</span><span class="st">"ranger"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">fit</span><span class="op">(</span><span class="va">count</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">forest_tidy</span>, newdata <span class="op">=</span> <span class="va">bikes</span>, type <span class="op">=</span> <span class="st">"numeric"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+       Term      Contrast Estimate
+ count      +1               0.000
+ holiday    False - True    13.487
+ humidity   +1             -24.291
+ month      +1               4.076
+ season     spring - fall  -29.015
+ season     summer - fall   -6.781
+ season     winter - fall    4.958
+ temp       +1               3.399
+ weather    misty - clear   -7.555
+ weather    rain - clear   -59.817
+ weekday    Fri - Sun       70.596
+ weekday    Mon - Sun       78.772
+ weekday    Sat - Sun       22.198
+ weekday    Thu - Sun       86.375
+ weekday    Tue - Sun       84.493
+ weekday    Wed - Sun       86.895
+ windspeed  +1               0.141
+ workingday False - True  -192.057
+ year       1 - 0           99.677
+
+Columns: term, contrast, estimate 
+Type:  numeric </code></pre>
+</div>
+</div>
+</section><section id="plot" class="level1" data-number="21"><h1 data-number="21">
+<span class="header-section-number">21</span> Plot</h1>
+<p>We can plot the results using the standard <code>marginaleffects</code> helpers. For example, to plot predictions, we can do:</p>
+<div class="cell">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">forest</span>, condition <span class="op">=</span> <span class="st">"temp"</span>, newdata <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="machine_learning_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>As documented in <code><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">?plot_predictions</a></code>, using <code>condition="temp"</code> is equivalent to creating an equally-spaced grid of <code>temp</code> values, and holding all other predictors at their means or modes. In other words, it is equivalent to:</p>
+<div class="cell">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>temp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">bikes</span><span class="op">$</span><span class="va">temp</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">bikes</span><span class="op">$</span><span class="va">temp</span><span class="op">)</span>, length.out <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, newdata <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span>
+<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">forest</span>, newdata <span class="op">=</span> <span class="va">d</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">temp</span>, <span class="va">p</span>, type <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Alternatively, we could plot “marginal” predictions, where replicate the full dataset once for every value of <code>temp</code>, and then average the predicted values over each value of the x-axis:</p>
+<div class="cell">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagridcf</a></span><span class="op">(</span>newdata <span class="op">=</span> <span class="va">bikes</span>, temp <span class="op">=</span> <span class="va">unique</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">forest</span>, by <span class="op">=</span> <span class="st">"temp"</span>, newdata <span class="op">=</span> <span class="va">d</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="machine_learning_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Of course, we can customize the plot using all the standard <code>ggplot2</code> functions:</p>
+<div class="cell">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">forest</span>, by <span class="op">=</span> <span class="st">"temp"</span>, newdata <span class="op">=</span> <span class="va">d</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">bikes</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">temp</span>, y <span class="op">=</span> <span class="va">count</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html">geom_smooth</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">bikes</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">temp</span>, y <span class="op">=</span> <span class="va">count</span><span class="op">)</span>, se <span class="op">=</span> <span class="cn">FALSE</span>, color <span class="op">=</span> <span class="st">"orange"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Temperature (Celcius)"</span>, y <span class="op">=</span> <span class="st">"Predicted number of bikes rented per hour"</span>,</span>
+<span>         title <span class="op">=</span> <span class="st">"Black: random forest predictions. Green: LOESS smoother."</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using method = 'loess' and formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="machine_learning_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 
@@ -1273,13 +1170,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="../../articles/reference/hypotheses.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">hypotheses</span>
+      <a href="../articles/lme4.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Mixed Effects</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../articles/reference/posterior_draws.html" class="pagination-link">
-        <span class="nav-page-text">posterior_draws</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../articles/matching.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Matching</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

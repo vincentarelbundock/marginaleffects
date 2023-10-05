@@ -5,7 +5,7 @@
 <meta name="generator" content="quarto-1.4.151">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="author" content="Vincent Arel-Bundock and contributors.">
-<title>The Marginal Effects Zoo (0.15.1) - 19&nbsp; Matching</title>
+<title>The Marginal Effects Zoo (0.15.1) - 20&nbsp; Matching</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -62,7 +62,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
 <link href="../articles/multiple_imputation.html" rel="next">
-<link href="../articles/lme4.html" rel="prev">
+<link href="../articles/machine_learning.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -104,7 +104,7 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </script>
-<meta name="twitter:title" content="The Marginal Effects Zoo (0.15.1) - 19&nbsp; Matching">
+<meta name="twitter:title" content="The Marginal Effects Zoo (0.15.1) - 20&nbsp; Matching">
 <meta name="twitter:description" content="">
 <meta name="twitter:image" content="fig/marginaleffects_card.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -163,7 +163,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../articles/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../articles/matching.html"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Matching</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../articles/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../articles/matching.html"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Matching</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
     </div>
@@ -253,14 +253,14 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../articles/conformal.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Conformal prediction</span></span></a>
+  <a href="../articles/gformula.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Causal Inference (G-Computation)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../articles/gformula.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Causal Inference (G-Computation)</span></span></a>
+  <a href="../articles/conformal.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Conformal prediction</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -301,26 +301,32 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../articles/machine_learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Machine Learning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../articles/matching.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Matching</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Matching</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/multiple_imputation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Missing Data</span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Missing Data</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/mrp.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">MrP</span></span></a>
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">MrP</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/svalues.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">S Values</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">S Values</span></span></a>
   </div>
 </li>
       </ul>
@@ -337,61 +343,61 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/alternative_software.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Alternative Software</span></span></a>
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Alternative Software</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/extensions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Extensions</span></span></a>
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Extensions</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/links.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Links</span></span></a>
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Links</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/performance.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Performance</span></span></a>
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Performance</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/python.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Python</span></span></a>
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Python</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/uncertainty.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Standard Errors</span></span></a>
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Standard Errors</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/supported_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Supported Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Supported Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/tables.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Tables</span></span></a>
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Tables</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/faq.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">FAQ</span></span></a>
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">FAQ</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/NEWS.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">News</span></span></a>
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">News</span></span></a>
   </div>
 </li>
       </ul>
@@ -481,16 +487,16 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
    
   <ul>
-<li><a href="#matching" id="toc-matching" class="nav-link active" data-scroll-target="#matching"><span class="header-section-number">19.1</span> Matching</a></li>
-  <li><a href="#fitting" id="toc-fitting" class="nav-link" data-scroll-target="#fitting"><span class="header-section-number">19.2</span> Fitting</a></li>
-  <li><a href="#quantity-of-interest" id="toc-quantity-of-interest" class="nav-link" data-scroll-target="#quantity-of-interest"><span class="header-section-number">19.3</span> Quantity of interest</a></li>
-  <li><a href="#learn-more" id="toc-learn-more" class="nav-link" data-scroll-target="#learn-more"><span class="header-section-number">19.4</span> Learn more</a></li>
+<li><a href="#matching" id="toc-matching" class="nav-link active" data-scroll-target="#matching"><span class="header-section-number">20.1</span> Matching</a></li>
+  <li><a href="#fitting" id="toc-fitting" class="nav-link" data-scroll-target="#fitting"><span class="header-section-number">20.2</span> Fitting</a></li>
+  <li><a href="#quantity-of-interest" id="toc-quantity-of-interest" class="nav-link" data-scroll-target="#quantity-of-interest"><span class="header-section-number">20.3</span> Quantity of interest</a></li>
+  <li><a href="#learn-more" id="toc-learn-more" class="nav-link" data-scroll-target="#learn-more"><span class="header-section-number">20.4</span> Learn more</a></li>
   </ul></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
 <h1 class="title">
-<span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Matching</span>
+<span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Matching</span>
 </h1>
 </div>
 
@@ -535,8 +541,8 @@ NSW6     1  22    9  black       0        1    0    0  4056.4940</code></pre>
 </div>
 </div>
 <p>We are interested in the treatment effect of the <code>treat</code> variable on the <code>re78</code> outcome. The <code>treat</code> variable is a binary variable indicating whether the individual received job training. The <code>re78</code> variable is the individual’s earnings in 1978.</p>
-<section id="matching" class="level2" data-number="19.1"><h2 data-number="19.1" class="anchored" data-anchor-id="matching">
-<span class="header-section-number">19.1</span> Matching</h2>
+<section id="matching" class="level2" data-number="20.1"><h2 data-number="20.1" class="anchored" data-anchor-id="matching">
+<span class="header-section-number">20.1</span> Matching</h2>
 <p>The first step is to pre-process the dataset to achieve better covariate balance. To do this, we use the <code><a href="https://kosukeimai.github.io/MatchIt/reference/matchit.html">MatchIt::matchit()</a></code> function and a 1-to-1 nearest neighbor matching with replacement on the Mahaloanobis distance. This function supports many other matching methods, see <code><a href="https://kosukeimai.github.io/MatchIt/reference/matchit.html">?matchit</a></code>.</p>
 <div class="cell">
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://kosukeimai.github.io/MatchIt/reference/matchit.html">matchit</a></span><span class="op">(</span></span>
@@ -545,8 +551,8 @@ NSW6     1  22    9  black       0        1    0    0  4056.4940</code></pre>
 <span>    replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://kosukeimai.github.io/MatchIt/reference/match.data.html">match.data</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="fitting" class="level2" data-number="19.2"><h2 data-number="19.2" class="anchored" data-anchor-id="fitting">
-<span class="header-section-number">19.2</span> Fitting</h2>
+</section><section id="fitting" class="level2" data-number="20.2"><h2 data-number="20.2" class="anchored" data-anchor-id="fitting">
+<span class="header-section-number">20.2</span> Fitting</h2>
 <p>Now, we estimate a linear regression model with interactions between the treatment and covariates. Note that we use the <code>weights</code> argument to use the weights supplied by our matching method:</p>
 <div class="cell">
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span></span>
@@ -554,8 +560,8 @@ NSW6     1  22    9  black       0        1    0    0  4056.4940</code></pre>
 <span>    data <span class="op">=</span> <span class="va">dat</span>,</span>
 <span>    weights <span class="op">=</span> <span class="va">weights</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="quantity-of-interest" class="level2" data-number="19.3"><h2 data-number="19.3" class="anchored" data-anchor-id="quantity-of-interest">
-<span class="header-section-number">19.3</span> Quantity of interest</h2>
+</section><section id="quantity-of-interest" class="level2" data-number="20.3"><h2 data-number="20.3" class="anchored" data-anchor-id="quantity-of-interest">
+<span class="header-section-number">20.3</span> Quantity of interest</h2>
 <p>Finally, we use the <a href="reference/comparisons.html"><code>avg_comparisons()</code></a> function of the <code>marginaleffects</code> package to estimate the ATT and its standard error. In effect, this function applies <a href="https://marginaleffects.com/articles/gformula.html">G-Computation</a> to estimate the quantity of interest. We use the following arguments:</p>
 <ul>
 <li>
@@ -580,8 +586,8 @@ Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.
 Type:  response </code></pre>
 </div>
 </div>
-</section><section id="learn-more" class="level2" data-number="19.4"><h2 data-number="19.4" class="anchored" data-anchor-id="learn-more">
-<span class="header-section-number">19.4</span> Learn more</h2>
+</section><section id="learn-more" class="level2" data-number="20.4"><h2 data-number="20.4" class="anchored" data-anchor-id="learn-more">
+<span class="header-section-number">20.4</span> Learn more</h2>
 <p><a href="https://kosukeimai.github.io/MatchIt/articles/estimating-effects.html">The <code>MatchIt</code> vignette titled “Estimating Effects After Matching”</a> describes many more options, including different measures of uncertainty (bootstrap, clustering, etc.), different estimands (ATE, etc.), and different strategies for adjustment.</p>
 
 
@@ -1025,13 +1031,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="../articles/lme4.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Mixed Effects</span></span>
+      <a href="../articles/machine_learning.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Machine Learning</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="../articles/multiple_imputation.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Missing Data</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Missing Data</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
