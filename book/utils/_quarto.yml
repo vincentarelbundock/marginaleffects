@@ -40,14 +40,15 @@ book:
       - articles/brms.qmd
       - articles/bootstrap.qmd
       - articles/categorical.qmd
-      - articles/conformal.qmd
       - articles/gformula.qmd
+      - articles/conformal.qmd
       - articles/elasticity.qmd
       - articles/equivalence.qmd
       - articles/experiments.qmd
       - articles/gam.qmd
       - articles/logit.qmd
       - articles/lme4.qmd
+      - articles/machine_learning.qmd
       - articles/matching.qmd
       - articles/multiple_imputation.qmd
       - articles/mrp.qmd

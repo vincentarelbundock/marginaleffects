@@ -3,7 +3,7 @@ title: "Machine Learning"
 ---
 
 
-`marginaleffects` offers several "model-agnostic" functions to interpret statistical and machine learning models. This vignette highlights how the package can be used to extract meaningful insights from the results of models trained using the `mlr3` and `tidymodels` frameworks.
+`marginaleffects` offers several "model-agnostic" functions to interpret statistical and machine learning models. This vignette highlights how the package can be used to extract meaningful insights from models trained using the `mlr3` and `tidymodels` frameworks.
 
 The features in this vignette require version 0.16.0 or `marginaleffects`, or the development version which can be installed from Github:
 
