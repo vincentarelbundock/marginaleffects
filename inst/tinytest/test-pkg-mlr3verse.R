@@ -9,6 +9,11 @@ data("bikes", package = "fmeffects")
 task <- as_task_regr(x = bikes, id = "bikes", target = "count")
 forest <- lrn("regr.ranger")$train(task)
 
+
+# Plot predictions
+p <- plot_predictions(forest, condition = "temp", type = "response", newdata = bikes)
+expect_inherits(p, "gg")
+
 # Centered difference
 cmp <- avg_comparisons(forest, newdata = bikes)
 expect_inherits(cmp, "comparisons")

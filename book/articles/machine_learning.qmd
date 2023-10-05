@@ -3,7 +3,7 @@ title: "Machine Learning"
 ---
 
 
-`marginaleffects` offers several "model-agnostic" functions to interpret statistical and machine learning models. This vignette highlights how the package can be used to extract meaningful insights from the results of models trained using the `mlr3` and `tidymodels` framework.
+`marginaleffects` offers several "model-agnostic" functions to interpret statistical and machine learning models. This vignette highlights how the package can be used to extract meaningful insights from the results of models trained using the `mlr3` and `tidymodels` frameworks.
 
 The features in this vignette require version 0.16.0 or `marginaleffects`, or the development version which can be installed from Github:
 
@@ -16,14 +16,15 @@ Make sure to restart `R` after installation. Then, load a few libraries:
 ```{r}
 #| message: false
 #| warning: false
-options(width = 10000)
 library("marginaleffects")
 library("fmeffects")
 library("ggplot2")
 library("mlr3verse")
 library("tidymodels") |> suppressPackageStartupMessages()
+options(width = 10000)
 ```
 ```{r}
+#| include: false
 pkgload::load_all()
 ```
 
@@ -43,8 +44,11 @@ forest <- lrn("regr.ranger")$train(task)
 As described in other vignettes, we can use the `avg_comparisons()` function to compute the average change in predicted outcome that is associated with a change in each feature:
 
 ```{r}
+avg_comparisons(forest, newdata = bikes)
+```
+```{r}
+#| include: false
 cmp <- avg_comparisons(forest, newdata = bikes)
-cmp
 ```
 
 These results are easy to interpret: An increase of 1 degree Celsius in the temperature is associated with an increase of `r sprintf("%.3f", cmp$estimate[cmp$term == "temp"])` bikes rented per hour.
@@ -85,6 +89,11 @@ avg_comparisons(
     variables = c("temp", "season", "weather"),
     cross = TRUE,
     newdata = bikes)
+```
+
+
+```{r}
+plot_predictions(forest, condition = "temp")
 ```
 
 # tidymodels
