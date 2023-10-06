@@ -451,7 +451,7 @@ predictions <- function(model,
     V <- NULL
     J <- NULL
     if (!isFALSE(vcov)) {
-        V <- get_vcov(model, vcov = vcov, ...)
+        V <- get_vcov(model, vcov = vcov, type = type, ...)
 
         # Delta method
         if (!"std.error" %in% colnames(tmp) && is.null(draws)) {

@@ -23,10 +23,6 @@ library("mlr3verse")
 library("tidymodels") |> suppressPackageStartupMessages()
 options(width = 10000)
 ```
-```{r}
-#| include: false
-pkgload::load_all()
-```
 
 ## `mlr3`
 
@@ -93,15 +89,22 @@ avg_comparisons(
 
 # `tidymodels`
 
-`marginaleffects` also supports the `tidymodels` machine learning framework. When the underlying engine used by `tidymodels` to train the model is itself supported as a standalone package by `marginaleffects`, we can obtain estimates of uncertainty estimates:
+`marginaleffects` also supports the `tidymodels` machine learning framework. When the underlying engine used by `tidymodels` to train the model is itself supported as a standalone package by `marginaleffects`, we can obtain both estimates and their standard errors:
+
+```{r}
+#| include: false
+library(tidymodels)
+```
 
 ```{r, message = FALSE}
 #| warning: false
-suppressPackageStartupMessages(library(tidymodels))
+library(tidymodels)
+
 mod <- linear_reg(mode = "regression") |>
     set_engine("lm") |>
     fit(count ~ ., data = bikes)
-avg_comparisons(mod, newdata = bikes, type = "response")
+
+avg_comparisons(mod, newdata = bikes, type = "numeric")
 ```
 
 When the underlying engine that `tidymodels` uses to fit the model is not supported by `marginaleffects` as a standalone model, we can also obtain correct results, but no uncertainy estimates. Here is a random forest model:
@@ -110,6 +113,7 @@ When the underlying engine that `tidymodels` uses to fit the model is not suppor
 forest_tidy <- rand_forest(mode = "regression") |>
     set_engine("ranger") |>
     fit(count ~ ., data = bikes)
+
 avg_comparisons(forest_tidy, newdata = bikes, type = "numeric")
 ```
 

@@ -228,7 +228,7 @@ marginal_means <- function(model,
 
     # fancy vcov processing to allow strings like "HC3"
     vcov_false <- isTRUE(vcov == FALSE)
-    vcov <- get_vcov(model, vcov = vcov, ...)
+    vcov <- get_vcov(model, vcov = vcov, type = type, ...)
 
     # focal categorical variables
     checkmate::assert_character(variables, min.len = 1, null.ok = TRUE)

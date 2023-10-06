@@ -98,6 +98,9 @@ mclogit,response
 mclogit,latent
 mclogit,link
 MCMCglmm,response
+model_fit,numeric
+model_fit,prob
+model_fit,class
 multinom,probs
 multinom,latent
 mhurdle,E

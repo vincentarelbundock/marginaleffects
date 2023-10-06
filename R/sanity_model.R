@@ -132,16 +132,6 @@ sanitize_model <- function(model,
                            vcov = NULL,
                            ...) {
 
-    if (inherits(model, "model_fit") || inherits(model, "workflow")) {
-        tmp <- parsnip::extract_fit_engine(model)
-        # if the underlying model is supported, we want to use all the standard
-        # errors and enhanced functionality.
-        flag <- try(sanity_model_supported_class(tmp), silent = TRUE)
-        if (!inherits(flag, "try-error")) {
-            model <- tmp
-        }
-    }
-
     model <- sanitize_model_specific(model, vcov = vcov, newdata = newdata, ...)
     sanity_model_supported_class(model)
     return(model)
