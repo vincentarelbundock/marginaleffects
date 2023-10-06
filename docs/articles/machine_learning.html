@@ -585,11 +585,11 @@ Type:  numeric </code></pre>
 <pre><code>
            Term           Contrast Estimate
  bill_length_mm +1                    0.000
- island         Dream - Biscoe        0.154
- island         Torgersen - Biscoe   -1.900
- sex            male - female         2.724
- species        Chinstrap - Adelie    6.035
- species        Gentoo - Adelie       5.933
+ island         Dream - Biscoe        0.227
+ island         Torgersen - Biscoe   -2.209
+ sex            male - female         2.605
+ species        Chinstrap - Adelie    6.088
+ species        Gentoo - Adelie       6.112
 
 Columns: term, contrast, estimate 
 Type:  numeric </code></pre>
@@ -645,35 +645,44 @@ Type:  numeric </code></pre>
 <div class="cell">
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://modelsummary.com">modelsummary</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">recipe</span> <span class="op">&lt;-</span> <span class="va">penguins</span> <span class="op">|&gt;</span></span>
+<span><span class="co"># pre-processing</span></span>
+<span><span class="va">pre</span> <span class="op">&lt;-</span> <span class="va">penguins</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu">recipe</span><span class="op">(</span><span class="va">sex</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">_</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu">step_ns</span><span class="op">(</span><span class="va">bill_length_mm</span>, deg_free <span class="op">=</span> <span class="fl">4</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu">step_dummy</span><span class="op">(</span><span class="fu">all_nominal_predictors</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
+<span><span class="co"># modelling strategies</span></span>
 <span><span class="va">models</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
-<span>  logit <span class="op">=</span> <span class="fu">logistic_reg</span><span class="op">(</span>mode <span class="op">=</span> <span class="st">"classification"</span>, engine <span class="op">=</span> <span class="st">"glm"</span><span class="op">)</span>,</span>
-<span>  forest <span class="op">=</span> <span class="fu">rand_forest</span><span class="op">(</span>mode <span class="op">=</span> <span class="st">"classification"</span>, engine <span class="op">=</span> <span class="st">"ranger"</span><span class="op">)</span>,</span>
-<span>  xgb <span class="op">=</span> <span class="fu">boost_tree</span><span class="op">(</span>mode <span class="op">=</span> <span class="st">"classification"</span>, engine <span class="op">=</span> <span class="st">"xgboost"</span><span class="op">)</span></span>
+<span>  <span class="st">"Logit"</span> <span class="op">=</span> <span class="fu">logistic_reg</span><span class="op">(</span>mode <span class="op">=</span> <span class="st">"classification"</span>, engine <span class="op">=</span> <span class="st">"glm"</span><span class="op">)</span>,</span>
+<span>  <span class="st">"Random Forest"</span> <span class="op">=</span> <span class="fu">rand_forest</span><span class="op">(</span>mode <span class="op">=</span> <span class="st">"classification"</span>, engine <span class="op">=</span> <span class="st">"ranger"</span><span class="op">)</span>,</span>
+<span>  <span class="st">"XGBooost"</span> <span class="op">=</span> <span class="fu">boost_tree</span><span class="op">(</span>mode <span class="op">=</span> <span class="st">"classification"</span>, engine <span class="op">=</span> <span class="st">"xgboost"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">models</span>, \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">recipe</span> <span class="op">|&gt;</span></span>
+<span><span class="co"># fit to data</span></span>
+<span><span class="va">fits</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">models</span>, \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">pre</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">workflow</span><span class="op">(</span>spec <span class="op">=</span> <span class="va">x</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">fit</span><span class="op">(</span><span class="va">penguins</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span>newdata <span class="op">=</span> <span class="va">penguins</span>, type <span class="op">=</span> <span class="st">"prob"</span><span class="op">)</span> <span class="op">}</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://modelsummary.com/reference/modelsummary.html">modelsummary</a></span><span class="op">(</span></span>
-<span>    shape <span class="op">=</span> <span class="va">term</span> <span class="op">+</span> <span class="va">contrast</span> <span class="op">+</span> <span class="va">group</span> <span class="op">~</span> <span class="va">model</span>,</span>
-<span>    coef_omit <span class="op">=</span> <span class="st">"sex"</span>,</span>
-<span>    coef_rename <span class="op">=</span> <span class="va">coef_rename</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>  <span class="fu">fit</span><span class="op">(</span><span class="va">penguins</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># marginaleffects</span></span>
+<span><span class="va">cmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">fits</span>, <span class="va">avg_comparisons</span>, newdata <span class="op">=</span> <span class="va">penguins</span>, type <span class="op">=</span> <span class="st">"prob"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># summary table</span></span>
+<span><span class="fu"><a href="https://modelsummary.com/reference/modelsummary.html">modelsummary</a></span><span class="op">(</span></span>
+<span>  <span class="va">cmp</span>,</span>
+<span>  shape <span class="op">=</span> <span class="va">term</span> <span class="op">+</span> <span class="va">contrast</span> <span class="op">+</span> <span class="va">group</span> <span class="op">~</span> <span class="va">model</span>,</span>
+<span>  coef_omit <span class="op">=</span> <span class="st">"sex"</span>,</span>
+<span>  coef_rename <span class="op">=</span> <span class="va">coef_rename</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table table-sm table-striped small" data-quarto-postprocess="true">
 <thead><tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th"></th>
 <th style="text-align: left;" data-quarto-table-cell-role="th"></th>
 <th style="text-align: left;" data-quarto-table-cell-role="th"></th>
-<th style="text-align: center;" data-quarto-table-cell-role="th">logit</th>
-<th style="text-align: center;" data-quarto-table-cell-role="th">forest</th>
-<th style="text-align: center;" data-quarto-table-cell-role="th">xgb</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">Logit</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">Random Forest</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">&nbsp;XGBooost</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
@@ -681,7 +690,7 @@ Type:  numeric </code></pre>
 <td style="text-align: left;">+1</td>
 <td style="text-align: left;">female</td>
 <td style="text-align: center;">−0.101</td>
-<td style="text-align: center;">−0.059</td>
+<td style="text-align: center;">−0.062</td>
 <td style="text-align: center;">−0.075</td>
 </tr>
 <tr class="even">
@@ -697,7 +706,7 @@ Type:  numeric </code></pre>
 <td style="text-align: left;"></td>
 <td style="text-align: left;">male</td>
 <td style="text-align: center;">0.101</td>
-<td style="text-align: center;">0.059</td>
+<td style="text-align: center;">0.062</td>
 <td style="text-align: center;">0.075</td>
 </tr>
 <tr class="even">
@@ -713,7 +722,7 @@ Type:  numeric </code></pre>
 <td style="text-align: left;">Dream - Biscoe</td>
 <td style="text-align: left;">female</td>
 <td style="text-align: center;">−0.044</td>
-<td style="text-align: center;">0.011</td>
+<td style="text-align: center;">0.007</td>
 <td style="text-align: center;">−0.004</td>
 </tr>
 <tr class="even">
@@ -729,7 +738,7 @@ Type:  numeric </code></pre>
 <td style="text-align: left;"></td>
 <td style="text-align: left;">male</td>
 <td style="text-align: center;">0.044</td>
-<td style="text-align: center;">−0.011</td>
+<td style="text-align: center;">−0.007</td>
 <td style="text-align: center;">0.004</td>
 </tr>
 <tr class="even">
@@ -745,7 +754,7 @@ Type:  numeric </code></pre>
 <td style="text-align: left;">Torgersen - Biscoe</td>
 <td style="text-align: left;">female</td>
 <td style="text-align: center;">0.015</td>
-<td style="text-align: center;">−0.056</td>
+<td style="text-align: center;">−0.063</td>
 <td style="text-align: center;">0.008</td>
 </tr>
 <tr class="even">
@@ -761,7 +770,7 @@ Type:  numeric </code></pre>
 <td style="text-align: left;"></td>
 <td style="text-align: left;">male</td>
 <td style="text-align: center;">−0.015</td>
-<td style="text-align: center;">0.056</td>
+<td style="text-align: center;">0.063</td>
 <td style="text-align: center;">−0.008</td>
 </tr>
 <tr class="even">
@@ -777,7 +786,7 @@ Type:  numeric </code></pre>
 <td style="text-align: left;">Chinstrap - Adelie</td>
 <td style="text-align: left;">female</td>
 <td style="text-align: center;">0.562</td>
-<td style="text-align: center;">0.162</td>
+<td style="text-align: center;">0.166</td>
 <td style="text-align: center;">0.441</td>
 </tr>
 <tr class="even">
@@ -793,7 +802,7 @@ Type:  numeric </code></pre>
 <td style="text-align: left;"></td>
 <td style="text-align: left;">male</td>
 <td style="text-align: center;">−0.562</td>
-<td style="text-align: center;">−0.162</td>
+<td style="text-align: center;">−0.166</td>
 <td style="text-align: center;">−0.441</td>
 </tr>
 <tr class="even">
@@ -809,7 +818,7 @@ Type:  numeric </code></pre>
 <td style="text-align: left;">Gentoo - Adelie</td>
 <td style="text-align: left;">female</td>
 <td style="text-align: center;">0.453</td>
-<td style="text-align: center;">0.119</td>
+<td style="text-align: center;">0.110</td>
 <td style="text-align: center;">0.361</td>
 </tr>
 <tr class="even">
@@ -825,7 +834,7 @@ Type:  numeric </code></pre>
 <td style="text-align: left;"></td>
 <td style="text-align: left;">male</td>
 <td style="text-align: center;">−0.453</td>
-<td style="text-align: center;">−0.119</td>
+<td style="text-align: center;">−0.110</td>
 <td style="text-align: center;">−0.361</td>
 </tr>
 <tr class="even">
@@ -890,37 +899,37 @@ Type:  numeric </code></pre>
 <pre><code>
        Term      Contrast Estimate
  count      +1               0.000
- holiday    False - True    12.556
- humidity   +1             -23.124
- month      +1               3.892
- season     spring - fall  -31.058
- season     summer - fall   -8.917
- season     winter - fall    2.506
- temp       +1               3.409
- weather    misty - clear   -7.332
- weather    rain - clear   -58.989
- weekday    Fri - Sun       74.481
- weekday    Mon - Sun       82.925
- weekday    Sat - Sun       23.244
- weekday    Thu - Sun       90.207
- weekday    Tue - Sun       88.818
- weekday    Wed - Sun       91.096
- windspeed  +1               0.221
- workingday False - True  -187.642
- year       1 - 0           99.448
+ holiday    False - True    13.101
+ humidity   +1             -23.369
+ month      +1               3.902
+ season     spring - fall  -29.587
+ season     summer - fall   -8.385
+ season     winter - fall    3.458
+ temp       +1               3.701
+ weather    misty - clear   -7.973
+ weather    rain - clear   -59.693
+ weekday    Fri - Sun       69.059
+ weekday    Mon - Sun       77.247
+ weekday    Sat - Sun       20.396
+ weekday    Thu - Sun       84.326
+ weekday    Tue - Sun       83.109
+ weekday    Wed - Sun       85.338
+ windspeed  +1               0.136
+ workingday False - True  -190.696
+ year       1 - 0           97.664
 
 Columns: term, contrast, estimate 
 Type:  response </code></pre>
 </div>
 </div>
-<p>These results are easy to interpret: An increase of 1 degree Celsius in the temperature is associated with an increase of 3.409 bikes rented per hour.</p>
+<p>These results are easy to interpret: An increase of 1 degree Celsius in the temperature is associated with an increase of 3.701 bikes rented per hour.</p>
 <p>We could obtain the same result manually as follows:</p>
 <div class="cell">
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html">transform</a></span><span class="op">(</span><span class="va">bikes</span>, temp <span class="op">=</span> <span class="va">temp</span> <span class="op">-</span> <span class="fl">0.5</span><span class="op">)</span></span>
 <span><span class="va">hi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html">transform</a></span><span class="op">(</span><span class="va">bikes</span>, temp <span class="op">=</span> <span class="va">temp</span> <span class="op">+</span> <span class="fl">0.5</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">forest</span>, newdata <span class="op">=</span> <span class="va">hi</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">forest</span>, newdata <span class="op">=</span> <span class="va">lo</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 3.40943</code></pre>
+<pre><code>[1] 3.70069</code></pre>
 </div>
 </div>
 <section id="fmeffects-forward-or-centered-effects" class="level3" data-number="19.2.1"><h3 data-number="19.2.1" class="anchored" data-anchor-id="fmeffects-forward-or-centered-effects">
@@ -934,7 +943,7 @@ Type:  response </code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Term Contrast Estimate
- temp   custom      2.3
+ temp   custom     2.43
 
 Columns: term, contrast, estimate 
 Type:  response </code></pre>
@@ -949,7 +958,7 @@ Type:  response </code></pre>
 <span>    feature <span class="op">=</span> <span class="st">"temp"</span>,</span>
 <span>    step.size <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">$</span><span class="va">ame</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 2.30096</code></pre>
+<pre><code>[1] 2.434684</code></pre>
 </div>
 </div>
 <p>With <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">marginaleffects::avg_comparisons()</a></code>, we can also compute the average effect of a simultaneous change in multiple predictors, using the <code>variables</code> and <code>cross</code> arguments. In this example, we see what happens (on average) to the predicted outcome when the <code>temp</code>, <code>season</code>, and <code>weather</code> predictors all change together:</p>
@@ -962,12 +971,12 @@ Type:  response </code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Estimate     C: season C: temp    C: weather
-   -34.75 spring - fall      +1 misty - clear
-   -77.35 spring - fall      +1 rain - clear 
-   -12.91 summer - fall      +1 misty - clear
-   -61.90 summer - fall      +1 rain - clear 
-    -1.75 winter - fall      +1 misty - clear
-   -55.39 winter - fall      +1 rain - clear 
+  -33.256 spring - fall      +1 misty - clear
+  -76.451 spring - fall      +1 rain - clear 
+  -12.461 summer - fall      +1 misty - clear
+  -62.248 summer - fall      +1 rain - clear 
+   -0.937 winter - fall      +1 misty - clear
+  -54.656 winter - fall      +1 rain - clear 
 
 Columns: term, contrast_season, contrast_temp, contrast_weather, estimate 
 Type:  response </code></pre>
