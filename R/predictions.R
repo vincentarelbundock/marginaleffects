@@ -596,7 +596,15 @@ get_predictions <- function(model,
 
     if (inherits(out$value, "data.frame")) {
         out <- out$value
+
     } else {
+
+        # tidymodels
+        if (inherits(out$error, "rlang_error") &&
+            isTRUE(grepl("the object should be", out$error$message))) {
+                insight::format_error(out$error$message)
+        }
+
         msg <- "Unable to compute predicted values with this model. You can try to supply a different dataset to the `newdata` argument."
         if (!is.null(out$error)) {
             msg <- c(paste(msg, "This error was also raised:"), "", out$error$message)

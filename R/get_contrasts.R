@@ -65,7 +65,15 @@ get_contrasts <- function(model,
             model,
             type = type,
             newdata = lo,
-            ...))[["value"]]
+            ...))
+
+        # tidymodels
+        if (inherits(pred_lo$error, "rlang_error") &&
+            isTRUE(grepl("the object should be", pred_lo$error$message))) {
+                insight::format_error(pred_lo$error$message)
+        } else {
+            pred_lo <- pred_lo[["value"]]
+        }
 
         pred_hi <- myTryCatch(get_predict(
             model,
