@@ -103,7 +103,7 @@ window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
-</script>
+</script><script src="../site_libs/kePrint-0.0.1/kePrint.js"></script><link href="../site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
 <meta name="twitter:title" content="The Marginal Effects Zoo (0.15.1) - 19&nbsp; Machine Learning">
 <meta name="twitter:description" content="">
 <meta name="twitter:image" content="fig/marginaleffects_card.png">
@@ -487,9 +487,19 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
    
   <ul>
-<li><a href="#mlr3" id="toc-mlr3" class="nav-link active" data-scroll-target="#mlr3"><span class="header-section-number">19.1</span> <code>mlr3</code></a></li>
-  <li><a href="#tidymodels" id="toc-tidymodels" class="nav-link" data-scroll-target="#tidymodels"><span class="header-section-number">20</span> tidymodels</a></li>
-  <li><a href="#plot" id="toc-plot" class="nav-link" data-scroll-target="#plot"><span class="header-section-number">21</span> Plot</a></li>
+<li>
+<a href="#tidymodels" id="toc-tidymodels" class="nav-link active" data-scroll-target="#tidymodels"><span class="header-section-number">19.1</span> <code>tidymodels</code></a>
+  <ul class="collapse">
+<li><a href="#workflows" id="toc-workflows" class="nav-link" data-scroll-target="#workflows"><span class="header-section-number">19.1.1</span> Workflows</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#mlr3" id="toc-mlr3" class="nav-link" data-scroll-target="#mlr3"><span class="header-section-number">19.2</span> <code>mlr3</code></a>
+  <ul class="collapse">
+<li><a href="#fmeffects-forward-or-centered-effects" id="toc-fmeffects-forward-or-centered-effects" class="nav-link" data-scroll-target="#fmeffects-forward-or-centered-effects"><span class="header-section-number">19.2.1</span> <code>fmeffects</code>: Forward or centered effects</a></li>
+  </ul>
+</li>
+  <li><a href="#plots" id="toc-plots" class="nav-link" data-scroll-target="#plots"><span class="header-section-number">19.3</span> Plots</a></li>
   </ul></nav>
     </div>
 <!-- main -->
@@ -520,70 +530,424 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/holgstr/fmeffects">"fmeffects"</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://ggplot2.tidyverse.org">"ggplot2"</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://mlr3verse.mlr-org.com">"mlr3verse"</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://modelsummary.com">"modelsummary"</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://tidymodels.tidymodels.org">"tidymodels"</a></span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/message.html">suppressPackageStartupMessages</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">10000</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="mlr3" class="level2" data-number="19.1"><h2 data-number="19.1" class="anchored" data-anchor-id="mlr3">
-<span class="header-section-number">19.1</span> <code>mlr3</code>
+<section id="tidymodels" class="level2" data-number="19.1"><h2 data-number="19.1" class="anchored" data-anchor-id="tidymodels">
+<span class="header-section-number">19.1</span> <code>tidymodels</code>
+</h2>
+<p><code>marginaleffects</code> also supports the <code>tidymodels</code> machine learning framework. When the underlying engine used by <code>tidymodels</code> to train the model is itself supported as a standalone package by <code>marginaleffects</code>, we can obtain both estimates and their standard errors:</p>
+<div class="cell">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidymodels.tidymodels.org">tidymodels</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">penguins</span> <span class="op">&lt;-</span> <span class="fu">modeldata</span><span class="fu">::</span><span class="va"><a href="https://modeldata.tidymodels.org/reference/penguins.html">penguins</a></span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html">na.omit</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">select</span><span class="op">(</span><span class="va">sex</span>, <span class="va">island</span>, <span class="va">species</span>, <span class="va">bill_length_mm</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu">linear_reg</span><span class="op">(</span>mode <span class="op">=</span> <span class="st">"regression"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">set_engine</span><span class="op">(</span><span class="st">"lm"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">fit</span><span class="op">(</span><span class="va">bill_length_mm</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, type <span class="op">=</span> <span class="st">"numeric"</span>, newdata <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Term           Contrast Estimate Std. Error     z Pr(&gt;|z|)     S  2.5 % 97.5 %
+ island  Dream - Biscoe       -0.489      0.470 -1.04    0.299   1.7 -1.410  0.433
+ island  Torgersen - Biscoe    0.103      0.488  0.21    0.833   0.3 -0.853  1.059
+ sex     male - female         3.697      0.255 14.51   &lt;0.001 156.0  3.198  4.197
+ species Chinstrap - Adelie   10.347      0.422 24.54   &lt;0.001 439.4  9.521 11.174
+ species Gentoo - Adelie       8.546      0.410 20.83   &lt;0.001 317.8  7.742  9.350
+
+Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  numeric </code></pre>
+</div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, type <span class="op">=</span> <span class="st">"numeric"</span>, newdata <span class="op">=</span> <span class="va">penguins</span>, by <span class="op">=</span> <span class="st">"island"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    island Estimate Std. Error   z Pr(&gt;|z|)   S 2.5 % 97.5 %
+ Biscoe        45.2      0.182 248   &lt;0.001 Inf  44.9   45.6
+ Dream         44.2      0.210 211   &lt;0.001 Inf  43.8   44.6
+ Torgersen     39.0      0.339 115   &lt;0.001 Inf  38.4   39.7
+
+Columns: island, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  numeric </code></pre>
+</div>
+</div>
+<p>When the underlying engine that <code>tidymodels</code> uses to fit the model is not supported by <code>marginaleffects</code> as a standalone model, we can also obtain correct results, but no uncertainy estimates. Here is a random forest model:</p>
+<div class="cell">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu">rand_forest</span><span class="op">(</span>mode <span class="op">=</span> <span class="st">"regression"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">set_engine</span><span class="op">(</span><span class="st">"ranger"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">fit</span><span class="op">(</span><span class="va">bill_length_mm</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">penguins</span>, type <span class="op">=</span> <span class="st">"numeric"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+           Term           Contrast Estimate
+ bill_length_mm +1                    0.000
+ island         Dream - Biscoe        0.244
+ island         Torgersen - Biscoe   -2.059
+ sex            male - female         2.711
+ species        Chinstrap - Adelie    5.915
+ species        Gentoo - Adelie       5.975
+
+Columns: term, contrast, estimate 
+Type:  numeric </code></pre>
+</div>
+</div>
+<section id="workflows" class="level3" data-number="19.1.1"><h3 data-number="19.1.1" class="anchored" data-anchor-id="workflows">
+<span class="header-section-number">19.1.1</span> Workflows</h3>
+<p><code>tidymodels</code> “workflows” are a convenient way to train a model while applying a series of pre-processing steps to the data. <code>marginaleffects</code> supports workflows out of the box. First, let’s consider a simple regression task:</p>
+<div class="cell">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">penguins</span> <span class="op">&lt;-</span> <span class="fu">modeldata</span><span class="fu">::</span><span class="va"><a href="https://modeldata.tidymodels.org/reference/penguins.html">penguins</a></span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html">na.omit</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">select</span><span class="op">(</span><span class="va">sex</span>, <span class="va">island</span>, <span class="va">species</span>, <span class="va">bill_length_mm</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="va">penguins</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">recipe</span><span class="op">(</span><span class="va">bill_length_mm</span> <span class="op">~</span> <span class="va">island</span> <span class="op">+</span> <span class="va">species</span> <span class="op">+</span> <span class="va">sex</span>, data <span class="op">=</span> <span class="va">_</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">step_dummy</span><span class="op">(</span><span class="fu">all_nominal_predictors</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">workflow</span><span class="op">(</span>spec <span class="op">=</span> <span class="fu">linear_reg</span><span class="op">(</span>mode <span class="op">=</span> <span class="st">"regression"</span>, engine <span class="op">=</span> <span class="st">"glm"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">fit</span><span class="op">(</span><span class="va">penguins</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">penguins</span>, type <span class="op">=</span> <span class="st">"numeric"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+           Term           Contrast Estimate Std. Error     z Pr(&gt;|z|)     S  2.5 % 97.5 %
+ bill_length_mm +1                    0.000         NA    NA       NA    NA     NA     NA
+ island         Dream - Biscoe       -0.489      0.470 -1.04    0.299   1.7 -1.410  0.433
+ island         Torgersen - Biscoe    0.103      0.488  0.21    0.833   0.3 -0.853  1.059
+ sex            male - female         3.697      0.255 14.51   &lt;0.001 156.0  3.198  4.197
+ species        Chinstrap - Adelie   10.347      0.422 24.54   &lt;0.001 439.4  9.521 11.174
+ species        Gentoo - Adelie       8.546      0.410 20.83   &lt;0.001 317.8  7.742  9.350
+
+Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  numeric </code></pre>
+</div>
+</div>
+<p>Now, we run a classification task instead, and plot the predicted probabilities:</p>
+<div class="cell">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="va">penguins</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">recipe</span><span class="op">(</span><span class="va">sex</span> <span class="op">~</span> <span class="va">island</span> <span class="op">+</span> <span class="va">species</span> <span class="op">+</span> <span class="va">bill_length_mm</span>, data <span class="op">=</span> <span class="va">_</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">step_dummy</span><span class="op">(</span><span class="fu">all_nominal_predictors</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">workflow</span><span class="op">(</span>spec <span class="op">=</span> <span class="fu">logistic_reg</span><span class="op">(</span>mode <span class="op">=</span> <span class="st">"classification"</span>, engine <span class="op">=</span> <span class="st">"glm"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">fit</span><span class="op">(</span><span class="va">penguins</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span></span>
+<span>  <span class="va">mod</span>,</span>
+<span>  condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"bill_length_mm"</span>, <span class="st">"group"</span><span class="op">)</span>,</span>
+<span>  newdata <span class="op">=</span> <span class="va">penguins</span>,</span>
+<span>  type <span class="op">=</span> <span class="st">"prob"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="machine_learning_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Finally, let’s consider a more complex task, where we train several models and summarize them in a table using <code>modelsummary</code>:</p>
+<div class="cell">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://modelsummary.com">modelsummary</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">recipe</span> <span class="op">&lt;-</span> <span class="va">penguins</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">recipe</span><span class="op">(</span><span class="va">sex</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">_</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">step_ns</span><span class="op">(</span><span class="va">bill_length_mm</span>, deg_free <span class="op">=</span> <span class="fl">4</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu">step_dummy</span><span class="op">(</span><span class="fu">all_nominal_predictors</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">models</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>  logit <span class="op">=</span> <span class="fu">logistic_reg</span><span class="op">(</span>mode <span class="op">=</span> <span class="st">"classification"</span>, engine <span class="op">=</span> <span class="st">"glm"</span><span class="op">)</span>,</span>
+<span>  forest <span class="op">=</span> <span class="fu">rand_forest</span><span class="op">(</span>mode <span class="op">=</span> <span class="st">"classification"</span>, engine <span class="op">=</span> <span class="st">"ranger"</span><span class="op">)</span>,</span>
+<span>  xgb <span class="op">=</span> <span class="fu">boost_tree</span><span class="op">(</span>mode <span class="op">=</span> <span class="st">"classification"</span>, engine <span class="op">=</span> <span class="st">"xgboost"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">models</span>, \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">recipe</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">workflow</span><span class="op">(</span>spec <span class="op">=</span> <span class="va">x</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">fit</span><span class="op">(</span><span class="va">penguins</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span>newdata <span class="op">=</span> <span class="va">penguins</span>, type <span class="op">=</span> <span class="st">"prob"</span><span class="op">)</span> <span class="op">}</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://modelsummary.com/reference/modelsummary.html">modelsummary</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">term</span> <span class="op">+</span> <span class="va">contrast</span> <span class="op">+</span> <span class="va">group</span> <span class="op">~</span> <span class="va">model</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<thead><tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">logit</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">forest</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">xgb</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">bill_length_mm</td>
+<td style="text-align: left;">+1</td>
+<td style="text-align: left;">female</td>
+<td style="text-align: center;">−0.101</td>
+<td style="text-align: center;">−0.060</td>
+<td style="text-align: center;">−0.075</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">+1</td>
+<td style="text-align: left;"></td>
+<td style="text-align: center;">(0.004)</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">+1</td>
+<td style="text-align: left;">male</td>
+<td style="text-align: center;">0.101</td>
+<td style="text-align: center;">0.060</td>
+<td style="text-align: center;">0.075</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">+1</td>
+<td style="text-align: left;"></td>
+<td style="text-align: center;">(0.004)</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">island</td>
+<td style="text-align: left;">Dream - Biscoe</td>
+<td style="text-align: left;">female</td>
+<td style="text-align: center;">−0.044</td>
+<td style="text-align: center;">0.000</td>
+<td style="text-align: center;">−0.004</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Dream - Biscoe</td>
+<td style="text-align: left;"></td>
+<td style="text-align: center;">(0.069)</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Dream - Biscoe</td>
+<td style="text-align: left;">male</td>
+<td style="text-align: center;">0.044</td>
+<td style="text-align: center;">0.000</td>
+<td style="text-align: center;">0.004</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Dream - Biscoe</td>
+<td style="text-align: left;"></td>
+<td style="text-align: center;">(0.069)</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Torgersen - Biscoe</td>
+<td style="text-align: left;">female</td>
+<td style="text-align: center;">0.015</td>
+<td style="text-align: center;">−0.058</td>
+<td style="text-align: center;">0.008</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Torgersen - Biscoe</td>
+<td style="text-align: left;"></td>
+<td style="text-align: center;">(0.074)</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Torgersen - Biscoe</td>
+<td style="text-align: left;">male</td>
+<td style="text-align: center;">−0.015</td>
+<td style="text-align: center;">0.058</td>
+<td style="text-align: center;">−0.008</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Torgersen - Biscoe</td>
+<td style="text-align: left;"></td>
+<td style="text-align: center;">(0.074)</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">sex</td>
+<td style="text-align: left;">male - female</td>
+<td style="text-align: left;">female</td>
+<td style="text-align: center;">0.000</td>
+<td style="text-align: center;">0.000</td>
+<td style="text-align: center;">0.000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">male - female</td>
+<td style="text-align: left;">male</td>
+<td style="text-align: center;">0.000</td>
+<td style="text-align: center;">0.000</td>
+<td style="text-align: center;">0.000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">species</td>
+<td style="text-align: left;">Chinstrap - Adelie</td>
+<td style="text-align: left;">female</td>
+<td style="text-align: center;">0.562</td>
+<td style="text-align: center;">0.169</td>
+<td style="text-align: center;">0.441</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Chinstrap - Adelie</td>
+<td style="text-align: left;"></td>
+<td style="text-align: center;">(0.036)</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Chinstrap - Adelie</td>
+<td style="text-align: left;">male</td>
+<td style="text-align: center;">−0.562</td>
+<td style="text-align: center;">−0.169</td>
+<td style="text-align: center;">−0.441</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Chinstrap - Adelie</td>
+<td style="text-align: left;"></td>
+<td style="text-align: center;">(0.036)</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Gentoo - Adelie</td>
+<td style="text-align: left;">female</td>
+<td style="text-align: center;">0.453</td>
+<td style="text-align: center;">0.121</td>
+<td style="text-align: center;">0.361</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Gentoo - Adelie</td>
+<td style="text-align: left;"></td>
+<td style="text-align: center;">(0.025)</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Gentoo - Adelie</td>
+<td style="text-align: left;">male</td>
+<td style="text-align: center;">−0.453</td>
+<td style="text-align: center;">−0.121</td>
+<td style="text-align: center;">−0.361</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; box-shadow: 0px 1.5px;"></td>
+<td style="text-align: left; box-shadow: 0px 1.5px;">Gentoo - Adelie</td>
+<td style="text-align: left; box-shadow: 0px 1.5px;"></td>
+<td style="text-align: center; box-shadow: 0px 1.5px;">(0.025)</td>
+<td style="text-align: center; box-shadow: 0px 1.5px;"></td>
+<td style="text-align: center; box-shadow: 0px 1.5px;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Num.Obs.</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: center;">333</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">AIC</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: center;">302.2</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BIC</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: center;">336.4</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Log.Lik.</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: center;">−142.082</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section></section><section id="mlr3" class="level2" data-number="19.2"><h2 data-number="19.2" class="anchored" data-anchor-id="mlr3">
+<span class="header-section-number">19.2</span> <code>mlr3</code>
 </h2>
 <p><code>mlr3</code> is a machine learning framework for <code>R</code>. It makes it possible for users to train a wide range of models, including linear models, random forests, gradient boosting machines, and neural networks.</p>
 <p>In this example, we use the <code>bikes</code> dataset supplied by the <code>fmeffects</code> package to train a random forest model predicting the number of bikes rented per hour. We then use <code>marginaleffects</code> to interpret the results of the model.</p>
 <div class="cell">
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"bikes"</span>, package <span class="op">=</span> <span class="st">"fmeffects"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"bikes"</span>, package <span class="op">=</span> <span class="st">"fmeffects"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">task</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/as_task_regr.html">as_task_regr</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">bikes</span>, id <span class="op">=</span> <span class="st">"bikes"</span>, target <span class="op">=</span> <span class="st">"count"</span><span class="op">)</span></span>
 <span><span class="va">forest</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html">lrn</a></span><span class="op">(</span><span class="st">"regr.ranger"</span><span class="op">)</span><span class="op">$</span><span class="fu">train</span><span class="op">(</span><span class="va">task</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>As described in other vignettes, we can use the <a href="reference/comparisons.html"><code>avg_comparisons()</code></a> function to compute the average change in predicted outcome that is associated with a change in each feature:</p>
 <div class="cell">
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">forest</span>, newdata <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">forest</span>, newdata <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
        Term      Contrast Estimate
  count      +1               0.000
- holiday    False - True    13.835
- humidity   +1             -23.142
- month      +1               3.874
- season     spring - fall  -30.230
- season     summer - fall   -7.471
- season     winter - fall    4.135
- temp       +1               3.558
- weather    misty - clear   -7.759
- weather    rain - clear   -60.609
- weekday    Fri - Sun       68.991
- weekday    Mon - Sun       77.713
- weekday    Sat - Sun       22.763
- weekday    Thu - Sun       84.597
- weekday    Tue - Sun       83.098
- weekday    Wed - Sun       85.500
- windspeed  +1               0.254
- workingday False - True  -192.565
- year       1 - 0           98.296
+ holiday    False - True     8.697
+ humidity   +1             -24.723
+ month      +1               4.364
+ season     spring - fall  -34.671
+ season     summer - fall  -10.571
+ season     winter - fall    0.165
+ temp       +1               3.301
+ weather    misty - clear   -7.633
+ weather    rain - clear   -59.395
+ weekday    Fri - Sun       65.917
+ weekday    Mon - Sun       74.898
+ weekday    Sat - Sun       20.971
+ weekday    Thu - Sun       81.958
+ weekday    Tue - Sun       80.634
+ weekday    Wed - Sun       82.814
+ windspeed  +1               0.185
+ workingday False - True  -194.817
+ year       1 - 0           99.321
 
 Columns: term, contrast, estimate 
 Type:  response </code></pre>
 </div>
 </div>
-<p>These results are easy to interpret: An increase of 1 degree Celsius in the temperature is associated with an increase of 3.558 bikes rented per hour.</p>
+<p>These results are easy to interpret: An increase of 1 degree Celsius in the temperature is associated with an increase of 3.301 bikes rented per hour.</p>
 <p>We could obtain the same result manually as follows:</p>
 <div class="cell">
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html">transform</a></span><span class="op">(</span><span class="va">bikes</span>, temp <span class="op">=</span> <span class="va">temp</span> <span class="op">-</span> <span class="fl">0.5</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html">transform</a></span><span class="op">(</span><span class="va">bikes</span>, temp <span class="op">=</span> <span class="va">temp</span> <span class="op">-</span> <span class="fl">0.5</span><span class="op">)</span></span>
 <span><span class="va">hi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html">transform</a></span><span class="op">(</span><span class="va">bikes</span>, temp <span class="op">=</span> <span class="va">temp</span> <span class="op">+</span> <span class="fl">0.5</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">forest</span>, newdata <span class="op">=</span> <span class="va">hi</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">forest</span>, newdata <span class="op">=</span> <span class="va">lo</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 3.558093</code></pre>
+<pre><code>[1] 3.301041</code></pre>
 </div>
 </div>
+<section id="fmeffects-forward-or-centered-effects" class="level3" data-number="19.2.1"><h3 data-number="19.2.1" class="anchored" data-anchor-id="fmeffects-forward-or-centered-effects">
+<span class="header-section-number">19.2.1</span> <code>fmeffects</code>: Forward or centered effects</h3>
 <p>As the code above makes clear, the <a href="reference/comparisons.html"><code>avg_comparisons()</code></a> computes the effect of a “centered” change on the outcome. If we want to compute a “Forward Marginal Effect” instead, we can call:</p>
 <div class="cell">
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
 <span>    <span class="va">forest</span>,</span>
 <span>    variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"temp"</span> <span class="op">=</span> \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">x</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>    newdata <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Term Contrast Estimate
- temp   custom     2.41
+ temp   custom     2.25
 
 Columns: term, contrast, estimate 
 Type:  response </code></pre>
@@ -591,19 +955,19 @@ Type:  response </code></pre>
 </div>
 <p>This is equivalent to using the <code>fmeffects</code> package:</p>
 <div class="cell">
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">fmeffects</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/fmeffects/man/fme.html">fme</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">fmeffects</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/fmeffects/man/fme.html">fme</a></span><span class="op">(</span></span>
 <span>    model <span class="op">=</span> <span class="va">forest</span>,</span>
 <span>    data <span class="op">=</span> <span class="va">bikes</span>,</span>
 <span>    target <span class="op">=</span> <span class="st">"count"</span>,</span>
 <span>    feature <span class="op">=</span> <span class="st">"temp"</span>,</span>
 <span>    step.size <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">$</span><span class="va">ame</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 2.412783</code></pre>
+<pre><code>[1] 2.245841</code></pre>
 </div>
 </div>
 <p>With <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">marginaleffects::avg_comparisons()</a></code>, we can also compute the average effect of a simultaneous change in multiple predictors, using the <code>variables</code> and <code>cross</code> arguments. In this example, we see what happens (on average) to the predicted outcome when the <code>temp</code>, <code>season</code>, and <code>weather</code> predictors all change together:</p>
 <div class="cell">
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
 <span>    <span class="va">forest</span>,</span>
 <span>    variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"temp"</span>, <span class="st">"season"</span>, <span class="st">"weather"</span><span class="op">)</span>,</span>
 <span>    cross <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -611,111 +975,47 @@ Type:  response </code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Estimate     C: season C: temp    C: weather
-  -33.443 spring - fall      +1 misty - clear
-  -76.611 spring - fall      +1 rain - clear 
-  -11.686 summer - fall      +1 misty - clear
-  -62.018 summer - fall      +1 rain - clear 
-   -0.179 winter - fall      +1 misty - clear
-  -55.485 winter - fall      +1 rain - clear 
+   -38.49 spring - fall      +1 misty - clear
+   -81.69 spring - fall      +1 rain - clear 
+   -14.95 summer - fall      +1 misty - clear
+   -64.69 summer - fall      +1 rain - clear 
+    -4.33 winter - fall      +1 misty - clear
+   -58.45 winter - fall      +1 rain - clear 
 
 Columns: term, contrast_season, contrast_temp, contrast_weather, estimate 
 Type:  response </code></pre>
 </div>
 </div>
-</section><section id="tidymodels" class="level1" data-number="20"><h1 data-number="20">
-<span class="header-section-number">20</span> tidymodels</h1>
-<p><code>marginaleffects</code> also supports the <code>tidymodels</code> machine learning framework. When the underlying engine used by <code>tidymodels</code> to train the model is itself supported as a standalone package by <code>marginaleffects</code>, we can obtain estimates of uncertainty estimates:</p>
-<div class="cell">
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/message.html">suppressPackageStartupMessages</a></span><span class="op">(</span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidymodels.tidymodels.org">tidymodels</a></span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu">linear_reg</span><span class="op">(</span>mode <span class="op">=</span> <span class="st">"regression"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu">set_engine</span><span class="op">(</span><span class="st">"lm"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu">fit</span><span class="op">(</span><span class="va">count</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">bikes</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-       Term      Contrast Estimate Std. Error       z Pr(&gt;|z|)     S   2.5 %  97.5 %
- holiday    False - True   202.251     16.322  12.391  &lt; 0.001 114.7  170.26 234.242
- humidity   +1             -13.488     19.974  -0.675  0.49948   1.0  -52.64  25.659
- month      +1              -1.363      1.398  -0.974  0.32987   1.6   -4.10   1.378
- season     spring - fall  -67.924     14.119  -4.811  &lt; 0.001  19.3  -95.60 -40.251
- season     summer - fall   -9.242      9.583  -0.964  0.33485   1.6  -28.02   9.540
- season     winter - fall   31.704     11.471   2.764  0.00571   7.5    9.22  54.187
- temp       +1               5.010      0.630   7.954  &lt; 0.001  49.0    3.78   6.244
- weather    misty - clear  -20.147      6.215  -3.241  0.00119   9.7  -32.33  -7.965
- weather    rain - clear  -112.211      9.881 -11.356  &lt; 0.001  96.9 -131.58 -92.844
- weekday    Fri - Sun      224.628      9.744  23.054  &lt; 0.001 388.2  205.53 243.725
- weekday    Mon - Sun      244.680     10.012  24.438  &lt; 0.001 435.7  225.06 264.304
- weekday    Sat - Sun       15.072      9.714   1.552  0.12075   3.0   -3.97  34.111
- weekday    Thu - Sun      273.735      9.789  27.963  &lt; 0.001 569.2  254.55 292.921
- weekday    Tue - Sun      267.743      9.822  27.258  &lt; 0.001 541.1  248.49 286.995
- weekday    Wed - Sun      275.465      9.755  28.237  &lt; 0.001 580.3  256.35 294.585
- windspeed  +1              -0.542      0.398  -1.362  0.17310   2.5   -1.32   0.238
- workingday False - True     0.000         NA      NA       NA    NA      NA      NA
- year       1 - 0          108.398      5.226  20.741  &lt; 0.001 315.0   98.16 118.641
-
-Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
-Type:  response </code></pre>
-</div>
-</div>
-<p>When the underlying engine that <code>tidymodels</code> uses to fit the model is not supported by <code>marginaleffects</code> as a standalone model, we can also obtain correct results, but no uncertainy estimates. Here is a random forest model:</p>
-<div class="cell">
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">forest_tidy</span> <span class="op">&lt;-</span> <span class="fu">rand_forest</span><span class="op">(</span>mode <span class="op">=</span> <span class="st">"regression"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu">set_engine</span><span class="op">(</span><span class="st">"ranger"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu">fit</span><span class="op">(</span><span class="va">count</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">forest_tidy</span>, newdata <span class="op">=</span> <span class="va">bikes</span>, type <span class="op">=</span> <span class="st">"numeric"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-       Term      Contrast Estimate
- count      +1               0.000
- holiday    False - True    13.487
- humidity   +1             -24.291
- month      +1               4.076
- season     spring - fall  -29.015
- season     summer - fall   -6.781
- season     winter - fall    4.958
- temp       +1               3.399
- weather    misty - clear   -7.555
- weather    rain - clear   -59.817
- weekday    Fri - Sun       70.596
- weekday    Mon - Sun       78.772
- weekday    Sat - Sun       22.198
- weekday    Thu - Sun       86.375
- weekday    Tue - Sun       84.493
- weekday    Wed - Sun       86.895
- windspeed  +1               0.141
- workingday False - True  -192.057
- year       1 - 0           99.677
-
-Columns: term, contrast, estimate 
-Type:  numeric </code></pre>
-</div>
-</div>
-</section><section id="plot" class="level1" data-number="21"><h1 data-number="21">
-<span class="header-section-number">21</span> Plot</h1>
+</section></section><section id="plots" class="level2" data-number="19.3"><h2 data-number="19.3" class="anchored" data-anchor-id="plots">
+<span class="header-section-number">19.3</span> Plots</h2>
 <p>We can plot the results using the standard <code>marginaleffects</code> helpers. For example, to plot predictions, we can do:</p>
 <div class="cell">
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">forest</span>, condition <span class="op">=</span> <span class="st">"temp"</span>, newdata <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://mlr3verse.mlr-org.com">mlr3verse</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"bikes"</span>, package <span class="op">=</span> <span class="st">"fmeffects"</span><span class="op">)</span></span>
+<span><span class="va">task</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/as_task_regr.html">as_task_regr</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">bikes</span>, id <span class="op">=</span> <span class="st">"bikes"</span>, target <span class="op">=</span> <span class="st">"count"</span><span class="op">)</span></span>
+<span><span class="va">forest</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html">lrn</a></span><span class="op">(</span><span class="st">"regr.ranger"</span><span class="op">)</span><span class="op">$</span><span class="fu">train</span><span class="op">(</span><span class="va">task</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">forest</span>, condition <span class="op">=</span> <span class="st">"temp"</span>, newdata <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="machine_learning_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+<p><img src="machine_learning_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>As documented in <code><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">?plot_predictions</a></code>, using <code>condition="temp"</code> is equivalent to creating an equally-spaced grid of <code>temp</code> values, and holding all other predictors at their means or modes. In other words, it is equivalent to:</p>
 <div class="cell">
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>temp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">bikes</span><span class="op">$</span><span class="va">temp</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">bikes</span><span class="op">$</span><span class="va">temp</span><span class="op">)</span>, length.out <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, newdata <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>temp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">bikes</span><span class="op">$</span><span class="va">temp</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">bikes</span><span class="op">$</span><span class="va">temp</span><span class="op">)</span>, length.out <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, newdata <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span>
 <span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">forest</span>, newdata <span class="op">=</span> <span class="va">d</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">temp</span>, <span class="va">p</span>, type <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Alternatively, we could plot “marginal” predictions, where replicate the full dataset once for every value of <code>temp</code>, and then average the predicted values over each value of the x-axis:</p>
 <div class="cell">
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagridcf</a></span><span class="op">(</span>newdata <span class="op">=</span> <span class="va">bikes</span>, temp <span class="op">=</span> <span class="va">unique</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">forest</span>, by <span class="op">=</span> <span class="st">"temp"</span>, newdata <span class="op">=</span> <span class="va">d</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">forest</span>, by <span class="op">=</span> <span class="st">"temp"</span>, newdata <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="machine_learning_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+<p><img src="machine_learning_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Of course, we can customize the plot using all the standard <code>ggplot2</code> functions:</p>
 <div class="cell">
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">forest</span>, by <span class="op">=</span> <span class="st">"temp"</span>, newdata <span class="op">=</span> <span class="va">d</span><span class="op">)</span> <span class="op">+</span></span>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">forest</span>, by <span class="op">=</span> <span class="st">"temp"</span>, newdata <span class="op">=</span> <span class="va">d</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">bikes</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">temp</span>, y <span class="op">=</span> <span class="va">count</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html">geom_smooth</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">bikes</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">temp</span>, y <span class="op">=</span> <span class="va">count</span><span class="op">)</span>, se <span class="op">=</span> <span class="cn">FALSE</span>, color <span class="op">=</span> <span class="st">"orange"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Temperature (Celcius)"</span>, y <span class="op">=</span> <span class="st">"Predicted number of bikes rented per hour"</span>,</span>
@@ -725,7 +1025,7 @@ Type:  numeric </code></pre>
 <pre><code>`geom_smooth()` using method = 'loess' and formula = 'y ~ x'</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="machine_learning_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+<p><img src="machine_learning_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 
