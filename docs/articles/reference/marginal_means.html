@@ -554,9 +554,9 @@ Marginal means are adjusted predictions, averaged across a grid of categorical p
 </code></pre>
 </section><section id="arguments" class="level2"><h2 class="anchored" data-anchor-id="arguments">Arguments</h2>
 <table>
-<tbody><tr style="vertical-align: top;">
+<tbody><tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code>model</code>
+<code id="marginal_means_:_model">model</code>
 </td>
 <td>
 <p>
@@ -564,9 +564,9 @@ Model object
 </p>
 </td>
 </tr>
-<tr style="vertical-align: top;">
+<tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code>variables</code>
+<code id="marginal_means_:_variables">variables</code>
 </td>
 <td>
 <p>
@@ -586,9 +586,9 @@ Character vector of variable names: compute marginal means for each category of 
 </ul>
 </td>
 </tr>
-<tr style="vertical-align: top;">
+<tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code>newdata</code>
+<code id="marginal_means_:_newdata">newdata</code>
 </td>
 <td>
 <p>
@@ -618,9 +618,9 @@ Data frame: A data frame which includes all the predictors in the original model
 </ul>
 </td>
 </tr>
-<tr style="vertical-align: top;">
+<tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code>vcov</code>
+<code id="marginal_means_:_vcov">vcov</code>
 </td>
 <td>
 <p>
@@ -682,9 +682,9 @@ Function which returns a covariance matrix (e.g., <code>stats::vcov(model)</code
 </ul>
 </td>
 </tr>
-<tr style="vertical-align: top;">
+<tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code>conf_level</code>
+<code id="marginal_means_:_conf_level">conf_level</code>
 </td>
 <td>
 <p>
@@ -692,9 +692,9 @@ numeric value between 0 and 1. Confidence level to use to build a confidence int
 </p>
 </td>
 </tr>
-<tr style="vertical-align: top;">
+<tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code>type</code>
+<code id="marginal_means_:_type">type</code>
 </td>
 <td>
 <p>
@@ -702,9 +702,9 @@ string indicates the type (scale) of the predictions used to compute marginal ef
 </p>
 </td>
 </tr>
-<tr style="vertical-align: top;">
+<tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code>transform</code>
+<code id="marginal_means_:_transform">transform</code>
 </td>
 <td>
 <p>
@@ -712,9 +712,9 @@ A function applied to unit-level adjusted predictions and confidence intervals j
 </p>
 </td>
 </tr>
-<tr style="vertical-align: top;">
+<tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code>cross</code>
+<code id="marginal_means_:_cross">cross</code>
 </td>
 <td>
 <p>
@@ -734,9 +734,9 @@ TRUE or FALSE
 </ul>
 </td>
 </tr>
-<tr style="vertical-align: top;">
+<tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code>hypothesis</code>
+<code id="marginal_means_:_hypothesis">hypothesis</code>
 </td>
 <td>
 <p>
@@ -827,9 +827,9 @@ See the Examples section below and the vignette: https://marginaleffects.com/art
 </ul>
 </td>
 </tr>
-<tr style="vertical-align: top;">
+<tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code>equivalence</code>
+<code id="marginal_means_:_equivalence">equivalence</code>
 </td>
 <td>
 <p>
@@ -837,9 +837,9 @@ Numeric vector of length 2: bounds used for the two-one-sided test (TOST) of equ
 </p>
 </td>
 </tr>
-<tr style="vertical-align: top;">
+<tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code>p_adjust</code>
+<code id="marginal_means_:_p_adjust">p_adjust</code>
 </td>
 <td>
 <p>
@@ -847,9 +847,9 @@ Adjust p-values for multiple comparisons: "holm", "hochberg", "hommel", "bonferr
 </p>
 </td>
 </tr>
-<tr style="vertical-align: top;">
+<tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code>df</code>
+<code id="marginal_means_:_df">df</code>
 </td>
 <td>
 <p>
@@ -857,9 +857,9 @@ Degrees of freedom used to compute p values and confidence intervals. A single n
 </p>
 </td>
 </tr>
-<tr style="vertical-align: top;">
+<tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code>wts</code>
+<code id="marginal_means_:_wts">wts</code>
 </td>
 <td>
 <p>
@@ -884,9 +884,9 @@ character value. Weights to use in the averaging.
 </ul>
 </td>
 </tr>
-<tr style="vertical-align: top;">
+<tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code>by</code>
+<code id="marginal_means_:_by">by</code>
 </td>
 <td>
 <p>
@@ -894,9 +894,9 @@ Collapse marginal means into categories. Data frame with a <code>by</code> colum
 </p>
 </td>
 </tr>
-<tr style="vertical-align: top;">
+<tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code>numderiv</code>
+<code id="marginal_means_:_numderiv">numderiv</code>
 </td>
 <td>
 <p>
@@ -926,9 +926,9 @@ Extra arguments can be specified by passing a list to the <code>numDeriv</code> 
 </ul>
 </td>
 </tr>
-<tr style="vertical-align: top;">
+<tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code>…</code>
+<code id="marginal_means_:_...">…</code>
 </td>
 <td>
 <p>
@@ -1258,7 +1258,7 @@ The <code>invlink(link)</code> is a special type defined by <code>marginaleffect
 Some of the most common <code>type</code> values are:
 </p>
 <p>
-response, link, E, Ep, average, class, conditional, count, cum.prob, cumprob, density, disp, expected, expvalue, fitted, invlink(link), latent, linear.predictor, linpred, location, lp, mean, numeric, p, pr, precision, prediction, prob, probability, probs, quantile, risk, scale, survival, unconditional, utility, variance, xb, zero, zlink, zprob
+response, link, E, Ep, average, class, conditional, count, cum.prob, cumprob, density, disp, expected, expvalue, fitted, invlink(link), latent, linear.predictor, linpred, location, lp, mean, p, pr, precision, prediction, prob, probability, probs, quantile, risk, scale, survival, unconditional, utility, variance, xb, zero, zlink, zprob
 </p>
 </section><section id="references" class="level2"><h2 class="anchored" data-anchor-id="references">References</h2>
 <ul>
