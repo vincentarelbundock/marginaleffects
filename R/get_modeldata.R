@@ -1,7 +1,15 @@
 get_modeldata <- function(model, additional_variables = FALSE, modeldata = NULL, wts = NULL, ...) {
 
+    # mice
     if (inherits(model, c("mira", "amest"))) {
         return(modeldata)
+    }
+
+    # tidymodels: always require `newdata`, because sometimes there needs to be
+    # some pre-processing, and we want to rely on the workflow to do that.
+    # workflows are triggered on `stats::predict()`
+    if (inherits(model, c("model_fit", "workflow"))) {
+        return(NULL)
     }
 
     if (!is.null(modeldata)) {

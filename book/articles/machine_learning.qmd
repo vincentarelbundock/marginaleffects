@@ -104,7 +104,7 @@ mod <- linear_reg(mode = "regression") |>
     set_engine("lm") |>
     fit(count ~ ., data = bikes)
 
-avg_comparisons(mod, newdata = bikes, type = "numeric")
+avg_comparisons(mod, type = "numeric", newdata = bikes)
 ```
 
 When the underlying engine that `tidymodels` uses to fit the model is not supported by `marginaleffects` as a standalone model, we can also obtain correct results, but no uncertainy estimates. Here is a random forest model:
@@ -138,8 +138,7 @@ Alternatively, we could plot "marginal" predictions, where replicate the full da
 
 
 ```{r}
-d <- datagridcf(newdata = bikes, temp = unique)
-plot_predictions(forest, by = "temp", newdata = d)
+plot_predictions(forest, by = "temp", newdata = bikes)
 ```
 
 Of course, we can customize the plot using all the standard `ggplot2` functions:

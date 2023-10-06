@@ -414,7 +414,7 @@ The \code{invlink(link)} is a special type defined by \code{marginaleffects}. It
 
 Some of the most common \code{type} values are:
 
-response, link, E, Ep, average, class, conditional, count, cum.prob, cumprob, density, disp, expected, expvalue, fitted, invlink(link), latent, linear.predictor, linpred, location, lp, mean, p, pr, precision, prediction, prob, probability, probs, quantile, risk, scale, survival, unconditional, utility, variance, xb, zero, zlink, zprob
+response, link, E, Ep, average, class, conditional, count, cum.prob, cumprob, density, disp, expected, expvalue, fitted, invlink(link), latent, linear.predictor, linpred, location, lp, mean, numeric, p, pr, precision, prediction, prob, probability, probs, quantile, risk, scale, survival, unconditional, utility, variance, xb, zero, zlink, zprob
 }
 
 \examples{

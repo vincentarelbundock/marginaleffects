@@ -101,6 +101,9 @@ MCMCglmm,response
 model_fit,numeric
 model_fit,prob
 model_fit,class
+workflow,numeric
+workflow,prob
+workflow,class
 multinom,probs
 multinom,latent
 mhurdle,E

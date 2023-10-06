@@ -48,6 +48,7 @@
 \alias{get_predict.svyolr}
 \alias{get_predict.coxph}
 \alias{get_predict.model_fit}
+\alias{get_predict.workflow}
 \alias{get_predict.tobit1}
 \title{Get predicted values from a model object (internal function)}
 \usage{
@@ -126,6 +127,8 @@ get_predict(model, newdata, type, ...)
 \method{get_predict}{coxph}(model, newdata = insight::get_data(model), type = "lp", ...)
 
 \method{get_predict}{model_fit}(model, newdata, type = NULL, ...)
+
+\method{get_predict}{workflow}(model, newdata, type = NULL, ...)
 
 \method{get_predict}{tobit1}(model, newdata = insight::get_data(model), type = "response", ...)
 }

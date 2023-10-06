@@ -4,7 +4,7 @@
 %   R/methods_dataframe.R, R/methods_gamlss.R, R/methods_glmmTMB.R,
 %   R/methods_lme4.R, R/methods_mclogit.R, R/methods_mgcv.R, R/methods_mlm.R,
 %   R/methods_sampleSelection.R, R/methods_scam.R, R/methods_stats.R,
-%   R/methods_survey.R
+%   R/methods_survey.R, R/methods_tidymodels.R
 \name{get_coef}
 \alias{get_coef}
 \alias{get_coef.default}
@@ -28,6 +28,7 @@
 \alias{get_coef.scam}
 \alias{get_coef.nls}
 \alias{get_coef.svyolr}
+\alias{get_coef.workflow}
 \title{Get a named vector of coefficients from a model object (internal function)}
 \usage{
 get_coef(model, ...)
@@ -73,6 +74,8 @@ get_coef(model, ...)
 \method{get_coef}{nls}(model, ...)
 
 \method{get_coef}{svyolr}(model, ...)
+
+\method{get_coef}{workflow}(model, ...)
 }
 \arguments{
 \item{model}{Model object}

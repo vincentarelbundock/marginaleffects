@@ -20,6 +20,7 @@
 \alias{get_vcov.orm}
 \alias{get_vcov.scam}
 \alias{get_vcov.model_fit}
+\alias{get_vcov.workflow}
 \title{Get a named variance-covariance matrix from a model object (internal function)}
 \usage{
 get_vcov(model, ...)
@@ -50,7 +51,9 @@ get_vcov(model, ...)
 
 \method{get_vcov}{scam}(model, vcov = NULL, ...)
 
-\method{get_vcov}{model_fit}(model, ...)
+\method{get_vcov}{model_fit}(model, type = NULL, ...)
+
+\method{get_vcov}{workflow}(model, type = NULL, ...)
 }
 \arguments{
 \item{model}{Model object}
@@ -79,6 +82,13 @@ arguments.}
 \item Square covariance matrix
 \item Function which returns a covariance matrix (e.g., \code{stats::vcov(model)})
 }}
+
+\item{type}{string indicates the type (scale) of the predictions used to
+compute contrasts or slopes. This can differ based on the model
+type, but will typically be a string such as: "response", "link", "probs",
+or "zero". When an unsupported string is entered, the model-specific list of
+acceptable values is returned in an error message. When \code{type} is \code{NULL}, the
+first entry in the error message is used by default.}
 }
 \value{
 A named square matrix of variance and covariances. The names must match the coefficient names.

@@ -21,6 +21,16 @@ set_coef.model_fit <- function(model, coefs, ...) {
 }
 
 
+#' @include set_coef.R
+#' @rdname set_coef
+#' @export
+set_coef.workflow <- function(model, coefs, ...) {
+    if ("fit" %in% names(model) && "fit" %in% names(model$fit)) {
+        model$fit$fit <- set_coef(model$fit$fit, coefs, ...)
+    }
+    return(model)
+}
+
 
 #' @include get_predict.R
 #' @rdname get_predict
@@ -38,7 +48,11 @@ get_predict.model_fit <- function(model, newdata, type = NULL, ...) {
     } else if (type == "prob") {
         colnames(out) <- substr(colnames(out), 7, nchar(colnames(out)))
         out$rowid <- seq_len(nrow(out))
-        out <- melt(out, id.vars = "rowid", variable.name = "group", value.name = "estimate")
+        out <- data.table::melt(
+            out,
+            id.vars = "rowid",
+            variable.name = "group",
+            value.name = "estimate")
     }
 
     return(out)
@@ -54,13 +68,12 @@ get_predict.workflow <- get_predict.model_fit
 
 #' @include get_vcov.R
 #' @rdname get_vcov
+#' @keywords internal
 #' @export
 get_vcov.model_fit <- function(model, type = NULL, ...) {
-
     if (isTRUE(type == "class")) {
         return(FALSE)
     }
-
     if (isTRUE(supported_engine(model))) {
         tmp <- parsnip::extract_fit_engine(model)
         out <- get_vcov(tmp)
@@ -71,8 +84,23 @@ get_vcov.model_fit <- function(model, type = NULL, ...) {
 }
 
 
-#' @include get_predict.R
-#' @rdname get_predict
+#' @include get_vcov.R
+#' @rdname get_vcov
 #' @keywords internal
 #' @export
 get_vcov.workflow <- get_vcov.model_fit
+
+
+#' @include get_coef.R
+#' @rdname get_coef
+#' @keywords internal
+#' @export
+get_coef.workflow <- function(model, ...) {
+    if (isTRUE(supported_engine(model))) {
+        tmp <- parsnip::extract_fit_engine(model)
+        out <- get_coef(tmp)
+    } else {
+        out <- NULL
+    }
+    return(out)
+}
