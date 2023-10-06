@@ -95,23 +95,35 @@ Finally, let's consider a more complex task, where we train several models and s
 ```{r, error=T}
 library(modelsummary)
 
-recipe <- penguins |>
+# pre-processing
+pre <- penguins |>
     recipe(sex ~ ., data = _) |>
     step_ns(bill_length_mm, deg_free = 4) |>
     step_dummy(all_nominal_predictors())
 
+# modelling strategies
 models <- list(
-  logit = logistic_reg(mode = "classification", engine = "glm"),
-  forest = rand_forest(mode = "classification", engine = "ranger"),
-  xgb = boost_tree(mode = "classification", engine = "xgboost")
+  "Logit" = logistic_reg(mode = "classification", engine = "glm"),
+  "Random Forest" = rand_forest(mode = "classification", engine = "ranger"),
+  "XGBooost" = boost_tree(mode = "classification", engine = "xgboost")
 )
 
-lapply(models, \(x) {
-  recipe |>
+# fit to data
+fits <- lapply(models, \(x) {
+  pre |>
   workflow(spec = x) |>
-  fit(penguins) |>
-  avg_comparisons(newdata = penguins, type = "prob") }) |>
-  modelsummary(shape = term + contrast + group ~ model)
+  fit(penguins)
+})
+
+# marginaleffects
+cmp <- lapply(fits, avg_comparisons, newdata = penguins, type = "prob")
+
+# summary table
+modelsummary(
+  cmp,
+  shape = term + contrast + group ~ model,
+  coef_omit = "sex",
+  coef_rename = coef_rename)
 ```
 
 
