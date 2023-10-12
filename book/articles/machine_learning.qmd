@@ -20,7 +20,10 @@ library("fmeffects")
 library("ggplot2")
 library("mlr3verse")
 library("modelsummary")
+library("ggokabeito")
 library("tidymodels") |> suppressPackageStartupMessages()
+theme_set(theme_bw())
+options(ggplot2.discrete.colour = palette_okabe_ito())
 options(width = 10000)
 ```
 
@@ -49,7 +52,19 @@ avg_predictions(mod, type = "numeric", newdata = penguins, by = "island")
 When the underlying engine that `tidymodels` uses to fit the model is not supported by `marginaleffects` as a standalone model, we can also obtain correct results, but no uncertainy estimates. Here is a random forest model:
 
 ```{r}
-mod <- rand_forest(mode = "regression") |oost" = boost_tree(mode = "classification", engine = "xgboost")
+library(modelsummary)
+
+# pre-processing
+pre <- penguins |>
+    recipe(sex ~ ., data = _) |>
+    step_ns(bill_length_mm, deg_free = 4) |>
+    step_dummy(all_nominal_predictors())
+
+# modelling strategies
+models <- list(
+  "Logit" = logistic_reg(mode = "classification", engine = "glm"),
+  "Random Forest" = rand_forest(mode = "classification", engine = "ranger"),
+  "XGBoost" = boost_tree(mode = "classification", engine = "xgboost")
 )
 
 # fit to data
@@ -104,10 +119,21 @@ hi <- transform(bikes, temp = temp + 0.5)
 mean(predict(forest, newdata = hi) - predict(forest, newdata = lo))
 ```
 
+## Simultaneous changes
 
-### `fmeffects`: Forward or centered effects
+With `marginaleffects::avg_comparisons()`, we can also compute the average effect of a simultaneous change in multiple predictors, using the `variables` and `cross` arguments. In this example, we see what happens (on average) to the predicted outcome when the `temp`, `season`, and `weather` predictors all change together: 
 
-As the code above makes clear, the [`avg_comparisons()`](reference/comparisons.html) computes the effect of a "centered" change on the outcome. If we want to compute a "Forward Marginal Effect" instead, we can call:
+```{r}
+avg_comparisons(
+    forest,
+    variables = c("temp", "season", "weather"),
+    cross = TRUE,
+    newdata = bikes)
+```
+
+## `fmeffects`: Forward vs. centered effects
+
+As the code in the `mlr3` section makes clear, the [`avg_comparisons()`](reference/comparisons.html) computes the effect of a "centered" change on the outcome. If we want to compute a "Forward Marginal Effect" instead, we can call:
 
 ```{r}
 avg_comparisons(
@@ -127,18 +153,55 @@ fmeffects::fme(
     step.size = 1)$ame 
 ```
 
-With `marginaleffects::avg_comparisons()`, we can also compute the average effect of a simultaneous change in multiple predictors, using the `variables` and `cross` arguments. In this example, we see what happens (on average) to the predicted outcome when the `temp`, `season`, and `weather` predictors all change together: 
+
+## Partial Dependence Plots
 
 ```{r}
-avg_comparisons(
-    forest,
-    variables = c("temp", "season", "weather"),
-    cross = TRUE,
-    newdata = bikes)
+# https://stackoverflow.com/questions/67634344/r-partial-dependence-plots-from-workflow
+library("tidymodels")
+library("marginaleffects")
+data(ames, package = "modeldata")
+
+ames_train <- transform(ames,
+    Sale_Price = log10(Sale_Price),
+    Gr_Liv_Area = as.numeric(Gr_Liv_Area), 
+    Year_Built, Bldg_Type)
+
+m <- ames_train |> 
+    recipe(Sale_Price ~ Gr_Liv_Area + Year_Built + Bldg_Type, data = _) |>
+    workflow(spec = rand_forest(mode = "regression", trees = 1000, engine = "ranger")) |>
+    fit(data = ames_train)
+
+gla <- quantile(ames_train$Gr_Liv_Area, probs = seq(0, 1, length.out = 101))
+nd <- datagridcf(Gr_Liv_Area = gla, newdata = ames_train)
+
+# build plot
+plot_predictions(m,
+  newdata = nd,
+  by = c("Gr_Liv_Area", "Bldg_Type")) +
+  labs(x = "Living Area", y = "Predicted log10(Sale Price)", color = "Building Type")
+```
+
+We can replicate this plot using the `DALEX` package:
+
+```{r}
+#| message: false
+#| warning: false
+library("DALEXtra")
+pdp_rf <- explain_tidymodels(
+    m,
+    data = dplyr::select(ames_train, -Sale_Price),
+    y = ames_train$Sale_Price,
+    label = "random forest")
+pdp_rf <- model_profile(pdp_rf,
+    N = nrow(ames_train),
+    variables = "Gr_Liv_Area",
+    groups = "Bldg_Type")
+plot(pdp_rf)
 ```
 
 
-## Plots
+## Other Plots
 
 We can plot the results using the standard `marginaleffects` helpers. For example, to plot predictions, we can do:
 
