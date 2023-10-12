@@ -162,27 +162,34 @@ library("tidymodels")
 library("marginaleffects")
 data(ames, package = "modeldata")
 
-ames_train <- transform(ames,
+dat <- transform(ames,
     Sale_Price = log10(Sale_Price),
-    Gr_Liv_Area = as.numeric(Gr_Liv_Area), 
-    Year_Built, Bldg_Type)
+    Gr_Liv_Area = as.numeric(Gr_Liv_Area))
 
-m <- ames_train |> 
+m <- dat |> 
     recipe(Sale_Price ~ Gr_Liv_Area + Year_Built + Bldg_Type, data = _) |>
     workflow(spec = rand_forest(mode = "regression", trees = 1000, engine = "ranger")) |>
-    fit(data = ames_train)
+    fit(data = dat)
 
-gla <- quantile(ames_train$Gr_Liv_Area, probs = seq(0, 1, length.out = 101))
-nd <- datagridcf(Gr_Liv_Area = gla, newdata = ames_train)
+# Percentiles of the x-axis variable
+pctiles <- quantile(dat$Gr_Liv_Area, probs = seq(0, 1, length.out = 101))
 
-# build plot
+# Select 1000 profiles at random, otherwise this is very memory-intensive
+profiles <- dat[sample(nrow(dat), 1000), ]
+
+# Use datagridcf() to replicate the full dataset 101 times. Each time, we
+# replace the value of `Gr_Liv_Area` by one of the percentiles, but keep the
+# other profile features as observed.
+nd <- datagridcf(Gr_Liv_Area = pctiles, newdata = profiles)
+
+# Partial dependence plot
 plot_predictions(m,
   newdata = nd,
   by = c("Gr_Liv_Area", "Bldg_Type")) +
   labs(x = "Living Area", y = "Predicted log10(Sale Price)", color = "Building Type")
 ```
 
-We can replicate this plot using the `DALEX` package:
+We can replicate this plot using the `DALEXtra` package:
 
 ```{r}
 #| message: false
@@ -190,15 +197,18 @@ We can replicate this plot using the `DALEX` package:
 library("DALEXtra")
 pdp_rf <- explain_tidymodels(
     m,
-    data = dplyr::select(ames_train, -Sale_Price),
-    y = ames_train$Sale_Price,
-    label = "random forest")
+    data = dplyr::select(dat, -Sale_Price),
+    y = dat$Sale_Price,
+    label = "random forest",
+    verbose = FALSE)
 pdp_rf <- model_profile(pdp_rf,
-    N = nrow(ames_train),
+    N = 1000,
     variables = "Gr_Liv_Area",
     groups = "Bldg_Type")
 plot(pdp_rf)
 ```
+
+Note that `marginaleffects` and `DALEXtra` plots are not exactly identical because the randomly sampled profiles are not the same. You can try the same procedure without sampling --- or equivalently with `N=2930` --- to see a perfect equivalence.
 
 
 ## Other Plots
