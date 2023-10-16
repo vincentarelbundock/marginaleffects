@@ -109,7 +109,7 @@ get_se_delta <- function(model,
     # align J and V: This might be a problematic hack, but I have not found examples yet.
     V <- vcov
     if (!isTRUE(ncol(J) == ncol(V))) {
-        beta <- get_coef(model)
+        beta <- get_coef(model, ...)
         # Issue #718: ordinal::clm in test-pkg-ordinal.R
         if (anyNA(beta) && anyDuplicated(names(beta)) && ncol(J) > ncol(V) && ncol(J) == length(beta) && length(stats::na.omit(beta)) == ncol(V)) {
             J <- J[, !is.na(beta), drop = FALSE]
