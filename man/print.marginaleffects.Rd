@@ -13,6 +13,7 @@
   ncols = getOption("marginaleffects_print_ncols", default = 30),
   style = getOption("marginaleffects_print_style", default = "summary"),
   type = getOption("marginaleffects_print_type", default = TRUE),
+  column_names = getOption("marginaleffects_print_column_names", default = TRUE),
   ...
 )
 }
