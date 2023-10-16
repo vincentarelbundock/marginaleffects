@@ -13,6 +13,10 @@ Misc:
 * Support `survival::survreg()`. Thanks to Carlisle Rainey for Report #911.
 * `column_names` argument in `print.marginaleffects()` to suppress the printed column names at the bottom of the printout.
 
+Bugs:
+
+* Some `gamlss` models generated an error related to the `what` argument. Thanks to @DHLocke for Issue #933
+
 ## 0.15.1
 
 * `hypotheses()`: The `FUN` argument handles `group` columns gracefully.
