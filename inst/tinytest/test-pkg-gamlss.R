@@ -110,13 +110,11 @@ expect_equivalent(mm$estimate, em$response)
 expect_equivalent(mm$std.error, em$std.error, tolerance = 0.01)
 
 
-#  
+# Issue #933
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv", na.strings = "")
 dat <- dat |>
     transform(prop = rBE(nrow(dat), mu = 0.5, sigma = 0.2)) |> 
     na.omit()
-
-# fit model
 mod <- gamlss::gamlss(
         prop ~ sex * body_mass_g + year + re(random = list(~ 1 | species, ~ 1 | island)),
         family = BE(),
@@ -124,6 +122,8 @@ mod <- gamlss::gamlss(
         trace = FALSE)
 cmp <- avg_comparisons(mod, what = "mu") |> suppressWarnings()
 expect_inherits(cmp, "comparisons")
+
+
 
 # end.  
 
