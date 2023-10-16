@@ -39,7 +39,6 @@ p <- predictions(mod, newdata = bikes, type = "numeric") |>
 expect_inherits(p, "predictions")
 expect_true("std.error" %in% colnames(p))
 
-exit_file("test this")
 mfx <- avg_slopes(mod, newdata = bikes, type = "numeric") |>
   suppressWarnings()
 expect_inherits(mfx, "marginaleffects")

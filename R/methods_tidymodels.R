@@ -40,7 +40,8 @@ get_predict.model_fit <- function(model, newdata, type = NULL, ...) {
     out <- stats::predict(model, new_data = newdata, type = type)
 
     if (type == "numeric") {
-        out <- data.frame(rowid = seq_along(out), estimate = out[[".pred"]])
+        v <- intersect(c(".pred", ".pred_res"), colnames(out))[1]
+        out <- data.frame(rowid = seq_along(out), estimate = out[[v]])
 
     } else if (type == "class") {
         out <- data.frame(rowid = seq_along(out), estimate = out[[".pred_class"]])
