@@ -292,7 +292,7 @@ get_contrasts <- function(model,
     # unknown arguments
     # singleton vs vector
     # different terms use different functions
-    safefun <- function(hi, lo, y, n, term, cross, wts, tmp_idx) {
+    safefun <- function(hi, lo, y, n, term, cross, wts, tmp_idx, newdata) {
         tn <- term[1]
         eps <- variables[[tn]]$eps
         # when cross=TRUE, sanitize_comparison enforces a single function
@@ -306,7 +306,8 @@ get_contrasts <- function(model,
             "lo" = lo,
             "y" = y,
             "eps" = eps,
-            "w" = wts)
+            "w" = wts,
+            "newdata" = newdata)
 
         # sometimes x is exactly the same length, but not always
         args[["x"]] <- elasticities[[tn]][tmp_idx]
@@ -365,7 +366,8 @@ get_contrasts <- function(model,
                     term = out$term[idx],
                     cross = cross,
                     wts = out$marginaleffects_wts_internal[idx],
-                    tmp_idx = out$tmp_idx)
+                    tmp_idx = out$tmp_idx,
+                    newdata = newdata)
             }
         }
 
@@ -402,7 +404,8 @@ get_contrasts <- function(model,
             term = term,
             cross = cross,
             wts = marginaleffects_wts_internal,
-            tmp_idx = tmp_idx),
+            tmp_idx = tmp_idx,
+            newdata = newdata),
         keyby = idx]
         out[, tmp_idx := NULL]
 
