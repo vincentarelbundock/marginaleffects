@@ -37,12 +37,6 @@ comparison_function_dict <- list(
     "lnoravg" = function(hi, lo) log((mean(hi) / (1 - mean(hi))) / (mean(lo) / (1 - mean(lo)))),
     "lnoravgwts" = function(hi, lo, w) log((wmean(hi, w) / (1 - wmean(hi, w))) / (wmean(lo, w) / (1 - wmean(lo, w)))),
 
-    "oravght" = function(hi, lo, w, newdata) {
-        mu_lo <- sum(lo * w) / nrow(newdata)
-        mu_hi <- sum(hi * w) / nrow(newdata)
-        (mu_hi / (1 - mu_hi)) / (mu_lo / (1 - mu_lo))
-    },
-
     # others
     "lift" = function(hi, lo) (hi - lo) / lo,
     "liftavg" = function(hi, lo) (mean(hi) - mean(lo)) / mean(lo),
@@ -88,19 +82,13 @@ comparison_label_dict <- list(
     "lnoravg" = "ln(odds(%s) / odds(%s))",
     "lnoravgwts" = "ln(odds(%s) / odds(%s))",
 
-    "oravght" = "odds(%s) / odds(%s)",
-
     "lift" = "lift",
     "liftavg" = "liftavg",
 
     "expdydx" = "exp(dY/dX)"
 )
 
-sanity_comparison <- function(comparison, wts = NULL, newdata = NULL) {
-    if (isTRUE(checkmate::check_choice(comparison, "oravght"))) {
-        checkmate::assert_false(is.null(wts))
-        checkmate::assert_false(is.null(newdata))
-    }
+sanity_comparison <- function(comparison) {
     # wts versions are used internally but not available directly to users
     valid <- names(comparison_function_dict)
     valid <- valid[!grepl("wts$", valid)]
