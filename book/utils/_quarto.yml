@@ -46,6 +46,7 @@ book:
       - articles/equivalence.qmd
       - articles/experiments.qmd
       - articles/gam.qmd
+      - articles/ipw.qmd
       - articles/logit.qmd
       - articles/lme4.qmd
       - articles/machine_learning.qmd
