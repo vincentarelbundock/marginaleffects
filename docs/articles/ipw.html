@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
-
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.4.151">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-
 <meta name="author" content="Vincent Arel-Bundock and contributors.">
-
-<title>The Marginal Effects Zoo (0.15.1) - 27&nbsp; Links</title>
+<title>The Marginal Effects Zoo (0.15.1) - 17&nbsp; Inverse Probability Weighting</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,8 +18,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
-
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
@@ -31,8 +61,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../articles/performance.html" rel="next">
-<link href="../articles/extensions.html" rel="prev">
+<link href="../articles/logit.html" rel="next">
+<link href="../articles/gam.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -43,8 +73,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<script id="quarto-search-options" type="application/json">{
+<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark"><script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
   "collapse-after": 3,
@@ -68,29 +97,22 @@ ul.task-list li input[type="checkbox"] {
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
-}</script>
-<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-V6MC2RPFXR"></script>
-
-<script type="text/javascript">
+}</script><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-V6MC2RPFXR"></script><script type="text/javascript">
 
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </script>
-
-
-<meta name="twitter:title" content="The Marginal Effects Zoo (0.15.1) - 27&nbsp; Links">
+<meta name="twitter:title" content="The Marginal Effects Zoo (0.15.1) - 17&nbsp; Inverse Probability Weighting">
+<meta name="twitter:description" content="">
 <meta name="twitter:image" content="fig/marginaleffects_card.png">
 <meta name="twitter:card" content="summary_large_image">
 </head>
-
 <body class="nav-sidebar floating nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
-      <div class="navbar-container container-fluid">
+  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg navbar-dark "><div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">The Marginal Effects Zoo (0.15.1)</span>
@@ -102,7 +124,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
-  <li class="nav-item">
+<li class="nav-item">
     <a class="nav-link active" href="../articles/marginaleffects.html" rel="" target="" aria-current="page">
  <span class="menu-text">Get Started</span></a>
   </li>  
@@ -115,8 +137,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
  <span class="menu-text">News</span></a>
   </li>  
 </ul>
-            <ul class="navbar-nav navbar-nav-scroll ms-auto">
-  <li class="nav-item compact">
+<ul class="navbar-nav navbar-nav-scroll ms-auto">
+<li class="nav-item compact">
     <a class="nav-link" href="https://twitter.com/vincentab" rel="" target=""><i class="bi bi-twitter" role="img">
 </i> 
  <span class="menu-text"></span></a>
@@ -127,7 +149,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
  <span class="menu-text"></span></a>
   </li>  
 </ul>
-          </div> <!-- /navcollapse -->
+</div> <!-- /navcollapse -->
           <div class="quarto-navbar-tools">
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
@@ -137,25 +159,19 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </a>
 </div>
       </div> <!-- /container-fluid -->
-    </nav>
-  <nav class="quarto-secondary-nav">
-    <div class="container-fluid d-flex">
+    </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../articles/alternative_software.html">Misc</a></li><li class="breadcrumb-item"><a href="../articles/links.html"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Links</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../articles/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../articles/ipw.html"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Inverse Probability Weighting</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
     </div>
-  </nav>
-</header>
-<!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
-    <div class="sidebar-menu-container"> 
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto"><div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
-        <li class="sidebar-item sidebar-item-section">
+<li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">marginaleffects</span></a>
@@ -163,8 +179,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/marginaleffects.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Get Started</span></span></a>
@@ -207,7 +223,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
@@ -216,8 +232,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/brms.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Bayes</span></span></a>
@@ -273,7 +289,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../articles/ipw.html" class="sidebar-item-text sidebar-link">
+  <a href="../articles/ipw.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Inverse Probability Weighting</span></span></a>
   </div>
 </li>
@@ -320,7 +336,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
@@ -329,8 +345,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/alternative_software.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Alternative Software</span></span></a>
@@ -344,7 +360,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../articles/links.html" class="sidebar-item-text sidebar-link active">
+  <a href="../articles/links.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Links</span></span></a>
   </div>
 </li>
@@ -391,7 +407,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
   </div>
 </li>
       </ul>
-  </li>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../articles/functions.html" class="sidebar-item-text sidebar-link">
@@ -400,8 +416,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/reference/predictions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">predictions</span></a>
@@ -468,21 +484,19 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
   </div>
 </li>
       </ul>
-  </li>
+</li>
     </ul>
-    </div>
-</nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+</div>
+</nav><div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Links</span></h1>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<h1 class="title">
+<span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Inverse Probability Weighting</span>
+</h1>
 </div>
 
 
@@ -495,24 +509,77 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
   </div>
   
 
-</header>
+</header><p>Inverse Probability Weighting (IPW) is a popular technique to remove confounding in statistical modeling. It essentially involves re-weighting your sample so that it represents the population you’re interested in. Typically, we begin by estimating the predicted probability that each unit is treated. Then, we use these probabilities as weights in model fitting and in the computation of marginal effects, contrasts, risk differences, ratios, etc.</p>
+<p>To illustrate, we use the Lalonde data.</p>
+<div class="cell">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"lalonde"</span>, package <span class="op">=</span> <span class="st">"MatchIt"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">lalonde</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     treat age educ   race married nodegree re74 re75       re78
+NSW1     1  37   11  black       1        1    0    0  9930.0460
+NSW2     1  22    9 hispan       0        1    0    0  3595.8940
+NSW3     1  30   12  black       0        0    0    0 24909.4500
+NSW4     1  27   11  black       0        1    0    0  7506.1460
+NSW5     1  33    8  black       0        1    0    0   289.7899
+NSW6     1  22    9  black       0        1    0    0  4056.4940</code></pre>
+</div>
+</div>
+<p>To begin, we use a logistic regression model and the <a href="reference/predictions.html"><code>predictions()</code></a> function to estimate the probability that each unit will treated:</p>
+<div class="cell">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">treat</span> <span class="op">~</span> <span class="va">age</span> <span class="op">+</span> <span class="va">educ</span> <span class="op">+</span> <span class="va">race</span> <span class="op">+</span> <span class="va">re74</span>, data <span class="op">=</span> <span class="va">lalonde</span>, family <span class="op">=</span> <span class="va">binomial</span><span class="op">)</span></span>
+<span><span class="va">w</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span><span class="op">$</span><span class="va">estimate</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Then, we use a linear regression to model the outcome variable of interest <code>re78</code>. Note that we use the predictions as weights in the model fitting process.</p>
+<div class="cell">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html">transform</a></span><span class="op">(</span><span class="va">lalonde</span>, wts <span class="op">=</span> <span class="va">w</span><span class="op">)</span></span>
+<span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">re78</span> <span class="op">~</span> <span class="va">treat</span> <span class="op">*</span> <span class="op">(</span><span class="va">age</span> <span class="op">+</span> <span class="va">educ</span> <span class="op">+</span> <span class="va">race</span> <span class="op">+</span> <span class="va">re74</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">dat</span>, weights <span class="op">=</span> <span class="va">wts</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Finally, we use the <a href="reference/comparisons.html"><code>avg_comparisons()</code></a> function to compute the average treatment effect on the treated. Note that we use the <code>weights</code> argument to specify the weights to be used in the computation.</p>
+<div class="cell">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
+<span>    variables <span class="op">=</span> <span class="st">"treat"</span>,</span>
+<span>    wts <span class="op">=</span> <span class="st">"wts"</span>,</span>
+<span>    newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">treat</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: The `treat` variable is treated as a categorical (factor) variable, but the original data is of class integer. It is safer and faster to convert such variables to factor before fitting the model and calling `slopes` functions.
+  
+  This warning appears once per session.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+  Term Contrast Estimate Std. Error    z Pr(&gt;|z|)   S 2.5 % 97.5 %
+ treat    1 - 0     1576        654 2.41    0.016 6.0   294   2859
 
-<ul>
-<li><a href="https://www.carlislerainey.com/blog/2023-08-18-equivalence-tests/">Equivalence Tests Using <code>marginaleffects</code>: Reproducing the Clark and Golder (2006) Example from Rainey (2014)</a> by Carlisle Rainey</li>
-<li><a href="https://cameronpatrick.com/post/2023/07/logit-rd-rr/?twt">You are what you ATE: Choosing an effect size measure for binary outcomes</a> by Cameron Patrick</li>
-<li><a href="https://solomonkurz.netlify.app/blog/2023-04-16-causal-inference-with-potential-outcomes-bootcamp/">Causal inference with potential outcomes bootcamp</a> by Solomon Kurz</li>
-<li><a href="https://www.andrewheiss.com/blog/2022/11/29/conditional-marginal-marginaleffects/">Marginal and conditional effects for GLMMs with <code>marginaleffects</code></a> by Andrew Heiss</li>
-<li><a href="https://www.andrewheiss.com/blog/2022/05/20/marginalia/">Marginalia: A guide to figuring out what the heck marginal effects, marginal slopes, average marginal effects, marginal effects at the mean, and all these other marginal things are</a> by Andrew Heiss</li>
-<li><a href="https://cran.r-project.org/web/packages/MatchIt/vignettes/estimating-effects.html">Matching</a> by Noah Greifer</li>
-<li><a href="https://stats.stackexchange.com/questions/580118/adjusting-the-model-by-propensity-scores-after-propensity-score-matching/580174#580174">Double propensity score adjustment using g-computation</a> by Noah Greifer</li>
-<li><a href="https://ngreifer.github.io/blog/subgroup-analysis-psm/">Subgroup Analysis After Propensity Score Matching Using R</a> by Noah Greifer</li>
-<li><a href="https://www.ajordannafa.com/blog/2022/being-less-wrong/">Bayesian Model Averaged Marginal Effects</a> by A. Jordan Nafa</li>
-</ul>
+Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response </code></pre>
+</div>
+</div>
+<p>By default, <a href="reference/comparisons.html"><code>avg_comparisons()</code></a> uses the Hajek estimator, that is, the weights are normalized to sum to 1 before computation. If a user wants to use the Horvitz-Thompson estimator—where normalization accounts for sample size—they can easily define a custom <code>comparison</code> function like this one:</p>
+<div class="cell">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">ht</span> <span class="op">&lt;-</span> \<span class="op">(</span><span class="va">hi</span>, <span class="va">lo</span>, <span class="va">w</span>, <span class="va">newdata</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">hi</span> <span class="op">*</span> <span class="va">w</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">newdata</span><span class="op">)</span><span class="op">)</span> <span class="op">-</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">lo</span> <span class="op">*</span> <span class="va">w</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">newdata</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
+<span>    comparison <span class="op">=</span> <span class="va">ht</span>,</span>
+<span>    variables <span class="op">=</span> <span class="st">"treat"</span>,</span>
+<span>    wts <span class="op">=</span> <span class="st">"wts"</span>,</span>
+<span>    newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">treat</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+  Term Contrast Estimate Std. Error    z Pr(&gt;|z|)   S 2.5 % 97.5 %
+ treat     1, 0      891        370 2.41    0.016 6.0   166   1616
+
+Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted 
+Type:  response </code></pre>
+</div>
+</div>
 
 
 
-</main> <!-- /main -->
-<script id="quarto-html-after-body" type="application/javascript">
+</main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -951,21 +1018,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script>
-<nav class="page-navigation">
-  <div class="nav-page nav-page-previous">
-      <a href="../articles/extensions.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Extensions</span></span>
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="../articles/gam.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">GAM</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../articles/performance.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Performance</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../articles/logit.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Logit</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
-
 
 
 
