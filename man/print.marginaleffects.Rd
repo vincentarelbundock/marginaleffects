@@ -34,6 +34,8 @@
 
 \item{type}{boolean: should the type be printed?}
 
+\item{column_names}{boolean: should the column names be printed?}
+
 \item{...}{Other arguments are currently ignored.}
 }
 \description{

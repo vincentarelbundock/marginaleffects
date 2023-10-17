@@ -15,6 +15,7 @@
 #' @param ncols The maximum number of column names to display at the bottom of the printed output.
 #' @param style "summary" or "data.frame"
 #' @param type boolean: should the type be printed?
+#' @param column_names boolean: should the column names be printed?
 #' @param ... Other arguments are currently ignored.
 #' @export
 #' @examples
