@@ -13,7 +13,7 @@ Misc:
 * Add support for `hypotheses()` to `inferences()`. This changes `FUN` argument name in `hypotheses` to `FUN` to not conflict with `inferences`. Thanks to @Tristan-Siegfried for code contribution #908.
 * Support `survival::survreg()`. Thanks to Carlisle Rainey for Report #911.
 * `column_names` argument in `print.marginaleffects()` to suppress the printed column names at the bottom of the printout.
-* The function supplied to the `comparison` argument of the `comparisons()` function can now operate on `newdata` directly (e.g., to check the number of observations).
+* The function supplied to the `comparison` argument of the `comparisons()` function can now operate on `x` and on `newdata` directly (e.g., to check the number of observations).
 
 Bugs:
 

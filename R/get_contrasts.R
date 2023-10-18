@@ -197,10 +197,15 @@ get_contrasts <- function(model,
     # elasticity requires the original (properly aligned) predictor values
     # this will discard factor variables which are duplicated, so in principle
     # it should be the "correct" size
-    elasticities <- Filter(
-        function(x) is.character(x$comparison) && x$comparison %in% elasticities,
-        variables)
+    # also need `x` when `x` is in the signature of the `comparison` custom function
+
+    FUN <- function(z) {
+        (is.character(z$comparison) && z$comparison %in% elasticities) ||
+        "x" %in% names(formals(z$comparison))
+    }
+    elasticities <- Filter(FUN, variables)
     elasticities <- lapply(elasticities, function(x) x$name)
+
     if (length(elasticities) > 0) {
         # assigning a subset of "original" to "idx1" takes time and memory
         # better to do this here for most columns and add the "v" column only
