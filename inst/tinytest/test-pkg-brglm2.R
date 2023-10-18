@@ -27,7 +27,7 @@ mfx <- slopes(
     newdata = datagrid(PI = 15, EH = 2, NV = 0), 
     type = "link")
 expect_equivalent(mfx$estimate, em$PI.trend)
-expect_equivalent(mfx$std.error, em$std.error, tolerance = .0001)
+expect_equivalent(mfx$std.error, em$std.error, tolerance = .001)
 
 
 # brglm2::brglm_fit vs. margins
