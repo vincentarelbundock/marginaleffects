@@ -495,17 +495,22 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
   <ul>
 <li><a href="#definition" id="toc-definition" class="nav-link active" data-scroll-target="#definition"><span class="header-section-number">4.1</span> Definition</a></li>
   <li><a href="#slopes-function" id="toc-slopes-function" class="nav-link" data-scroll-target="#slopes-function"><span class="header-section-number">4.2</span> <code>slopes()</code> function</a></li>
-  <li><a href="#the-marginal-effects-zoo" id="toc-the-marginal-effects-zoo" class="nav-link" data-scroll-target="#the-marginal-effects-zoo"><span class="header-section-number">4.3</span> The Marginal Effects Zoo</a></li>
-  <li><a href="#average-marginal-effect-ame" id="toc-average-marginal-effect-ame" class="nav-link" data-scroll-target="#average-marginal-effect-ame"><span class="header-section-number">4.4</span> Average Marginal Effect (AME)</a></li>
-  <li><a href="#group-average-marginal-effect-g-ame" id="toc-group-average-marginal-effect-g-ame" class="nav-link" data-scroll-target="#group-average-marginal-effect-g-ame"><span class="header-section-number">4.5</span> Group-Average Marginal Effect (G-AME)</a></li>
-  <li><a href="#marginal-effect-at-user-specified-values" id="toc-marginal-effect-at-user-specified-values" class="nav-link" data-scroll-target="#marginal-effect-at-user-specified-values"><span class="header-section-number">4.6</span> Marginal Effect at User-Specified Values</a></li>
-  <li><a href="#marginal-effect-at-the-mean-mem" id="toc-marginal-effect-at-the-mean-mem" class="nav-link" data-scroll-target="#marginal-effect-at-the-mean-mem"><span class="header-section-number">4.7</span> Marginal Effect at the Mean (MEM)</a></li>
-  <li><a href="#counterfactual-marginal-effects" id="toc-counterfactual-marginal-effects" class="nav-link" data-scroll-target="#counterfactual-marginal-effects"><span class="header-section-number">4.8</span> Counterfactual Marginal Effects</a></li>
-  <li><a href="#conditional-marginal-effects-plot" id="toc-conditional-marginal-effects-plot" class="nav-link" data-scroll-target="#conditional-marginal-effects-plot"><span class="header-section-number">4.9</span> Conditional Marginal Effects (Plot)</a></li>
-  <li><a href="#example-quadratic" id="toc-example-quadratic" class="nav-link" data-scroll-target="#example-quadratic"><span class="header-section-number">4.10</span> Example: Quadratic</a></li>
-  <li><a href="#slopes-vs-predictions-a-visual-interpretation" id="toc-slopes-vs-predictions-a-visual-interpretation" class="nav-link" data-scroll-target="#slopes-vs-predictions-a-visual-interpretation"><span class="header-section-number">4.11</span> Slopes vs Predictions: A Visual Interpretation</a></li>
-  <li><a href="#prediction-types" id="toc-prediction-types" class="nav-link" data-scroll-target="#prediction-types"><span class="header-section-number">4.12</span> Prediction types</a></li>
-  <li><a href="#manual-computation" id="toc-manual-computation" class="nav-link" data-scroll-target="#manual-computation"><span class="header-section-number">4.13</span> Manual computation</a></li>
+  <li>
+<a href="#the-marginal-effects-zoo" id="toc-the-marginal-effects-zoo" class="nav-link" data-scroll-target="#the-marginal-effects-zoo"><span class="header-section-number">4.3</span> The Marginal Effects Zoo</a>
+  <ul class="collapse">
+<li><a href="#average-marginal-effect-ame" id="toc-average-marginal-effect-ame" class="nav-link" data-scroll-target="#average-marginal-effect-ame"><span class="header-section-number">4.3.1</span> Average Marginal Effect (AME)</a></li>
+  <li><a href="#group-average-marginal-effect-g-ame" id="toc-group-average-marginal-effect-g-ame" class="nav-link" data-scroll-target="#group-average-marginal-effect-g-ame"><span class="header-section-number">4.3.2</span> Group-Average Marginal Effect (G-AME)</a></li>
+  <li><a href="#marginal-effect-at-user-specified-values" id="toc-marginal-effect-at-user-specified-values" class="nav-link" data-scroll-target="#marginal-effect-at-user-specified-values"><span class="header-section-number">4.3.3</span> Marginal Effect at User-Specified Values</a></li>
+  <li><a href="#marginal-effect-at-the-mean-mem" id="toc-marginal-effect-at-the-mean-mem" class="nav-link" data-scroll-target="#marginal-effect-at-the-mean-mem"><span class="header-section-number">4.3.4</span> Marginal Effect at the Mean (MEM)</a></li>
+  <li><a href="#counterfactual-marginal-effects" id="toc-counterfactual-marginal-effects" class="nav-link" data-scroll-target="#counterfactual-marginal-effects"><span class="header-section-number">4.3.5</span> Counterfactual Marginal Effects</a></li>
+  <li><a href="#conditional-marginal-effects-plot" id="toc-conditional-marginal-effects-plot" class="nav-link" data-scroll-target="#conditional-marginal-effects-plot"><span class="header-section-number">4.3.6</span> Conditional Marginal Effects (Plot)</a></li>
+  </ul>
+</li>
+  <li><a href="#example-quadratic" id="toc-example-quadratic" class="nav-link" data-scroll-target="#example-quadratic"><span class="header-section-number">4.4</span> Example: Quadratic</a></li>
+  <li><a href="#slopes-vs-predictions-a-visual-interpretation" id="toc-slopes-vs-predictions-a-visual-interpretation" class="nav-link" data-scroll-target="#slopes-vs-predictions-a-visual-interpretation"><span class="header-section-number">4.5</span> Slopes vs Predictions: A Visual Interpretation</a></li>
+  <li><a href="#prediction-types" id="toc-prediction-types" class="nav-link" data-scroll-target="#prediction-types"><span class="header-section-number">4.6</span> Prediction types</a></li>
+  <li><a href="#minimum-or-maximum-slope-velocity" id="toc-minimum-or-maximum-slope-velocity" class="nav-link" data-scroll-target="#minimum-or-maximum-slope-velocity"><span class="header-section-number">4.7</span> Minimum or maximum slope (velocity)</a></li>
+  <li><a href="#manual-computation" id="toc-manual-computation" class="nav-link" data-scroll-target="#manual-computation"><span class="header-section-number">4.8</span> Manual computation</a></li>
   </ul></nav>
     </div>
 <!-- main -->
@@ -601,8 +606,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <p>The rest of this vignette defines each of those quantities and explains how to use the <a href="reference/slopes.html"><code>slopes()</code></a> and <a href="reference/plot_slopes.html"><code>plot_slopes()</code></a> functions to compute them. The main differences between these quantities pertain to (a) the regressor values at which we estimate marginal effects, and (b) the way in which unit-level marginal effects are aggregated.</p>
 <p>Heiss drew this exceedingly helpful graph which summarizes the information in the rest of this vignette:</p>
 <p><img src="fig/heiss_mfx.png" class="img-fluid"></p>
-</section><section id="average-marginal-effect-ame" class="level2" data-number="4.4"><h2 data-number="4.4" class="anchored" data-anchor-id="average-marginal-effect-ame">
-<span class="header-section-number">4.4</span> Average Marginal Effect (AME)</h2>
+<section id="average-marginal-effect-ame" class="level3" data-number="4.3.1"><h3 data-number="4.3.1" class="anchored" data-anchor-id="average-marginal-effect-ame">
+<span class="header-section-number">4.3.1</span> Average Marginal Effect (AME)</h3>
 <p>A dataset with one marginal effect estimate per unit of observation is a bit unwieldy and difficult to interpret. Many analysts like to report the “Average Marginal Effect”, that is, the average of all the observation-specific marginal effects. These are easy to compute based on the full <code>data.frame</code> shown above, but the <a href="reference/slopes.html"><code>avg_slopes()</code></a> function is convenient:</p>
 <div class="cell">
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
@@ -634,8 +639,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <span><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;logLik&gt; </span></span>
 <span><span class="co">#&gt; 1  180.  199.   0.695 0.276   342  15.7 -84.92257</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="group-average-marginal-effect-g-ame" class="level2" data-number="4.5"><h2 data-number="4.5" class="anchored" data-anchor-id="group-average-marginal-effect-g-ame">
-<span class="header-section-number">4.5</span> Group-Average Marginal Effect (G-AME)</h2>
+</section><section id="group-average-marginal-effect-g-ame" class="level3" data-number="4.3.2"><h3 data-number="4.3.2" class="anchored" data-anchor-id="group-average-marginal-effect-g-ame">
+<span class="header-section-number">4.3.2</span> Group-Average Marginal Effect (G-AME)</h3>
 <p>We can also use the <code>by</code> argument the average marginal effects <em>within different subgroups</em> of the observed data, based on values of the regressors. For example, to compute the average marginal effects of Bill Length for each Species, we do:</p>
 <div class="cell">
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">avg_slopes</a></span><span class="op">(</span></span>
@@ -669,8 +674,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <span><span class="co">#&gt; 9    Gentoo           species -0.250726004</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Note that <code>marginaleffects</code> follows <code>Stata</code> and the <code>margins</code> package in computing standard errors using the group-wise averaged Jacobian.</p>
-</section><section id="marginal-effect-at-user-specified-values" class="level2" data-number="4.6"><h2 data-number="4.6" class="anchored" data-anchor-id="marginal-effect-at-user-specified-values">
-<span class="header-section-number">4.6</span> Marginal Effect at User-Specified Values</h2>
+</section><section id="marginal-effect-at-user-specified-values" class="level3" data-number="4.3.3"><h3 data-number="4.3.3" class="anchored" data-anchor-id="marginal-effect-at-user-specified-values">
+<span class="header-section-number">4.3.3</span> Marginal Effect at User-Specified Values</h3>
 <p>Sometimes, we are not interested in <em>all</em> the unit-specific marginal effects, but would rather look at the estimated marginal effects for certain “typical” individuals, or for user-specified values of the regressors. The <a href="reference/datagrid.html"><code>datagrid()</code></a> function helps us build a data grid full of “typical” rows. For example, to generate artificial Adelies and Gentoos with 180mm flippers:</p>
 <div class="cell">
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>flipper_length_mm <span class="op">=</span> <span class="fl">180</span>,</span>
@@ -702,8 +707,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>When variables are omitted from the <a href="reference/datagrid.html"><code>datagrid()</code></a> call, they will automatically be set at their mean or mode (depending on variable type).</p>
-</section><section id="marginal-effect-at-the-mean-mem" class="level2" data-number="4.7"><h2 data-number="4.7" class="anchored" data-anchor-id="marginal-effect-at-the-mean-mem">
-<span class="header-section-number">4.7</span> Marginal Effect at the Mean (MEM)</h2>
+</section><section id="marginal-effect-at-the-mean-mem" class="level3" data-number="4.3.4"><h3 data-number="4.3.4" class="anchored" data-anchor-id="marginal-effect-at-the-mean-mem">
+<span class="header-section-number">4.3.4</span> Marginal Effect at the Mean (MEM)</h3>
 <p>The “Marginal Effect at the Mean” is a marginal effect calculated for a hypothetical observation where each regressor is set at its mean or mode. By default, the <a href="reference/datagrid.html"><code>datagrid()</code></a> function that we used in the previous section sets all regressors to their means or modes. To calculate the MEM, we can set the <code>newdata</code> argument, which determines the values of predictors at which we want to compute marginal effects:</p>
 <div class="cell">
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span></span>
@@ -717,8 +722,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, large_penguin, bill_length_mm, flipper_length_mm, species </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="counterfactual-marginal-effects" class="level2" data-number="4.8"><h2 data-number="4.8" class="anchored" data-anchor-id="counterfactual-marginal-effects">
-<span class="header-section-number">4.8</span> Counterfactual Marginal Effects</h2>
+</section><section id="counterfactual-marginal-effects" class="level3" data-number="4.3.5"><h3 data-number="4.3.5" class="anchored" data-anchor-id="counterfactual-marginal-effects">
+<span class="header-section-number">4.3.5</span> Counterfactual Marginal Effects</h3>
 <p>The <a href="reference/datagrid.html"><code>datagrid()</code></a> function allowed us look at completely fictional individuals. Setting the <code>grid_type</code> argument of this function to <code>"counterfactual"</code> lets us compute the marginal effects for the actual observations in our dataset, but with a few manipulated values. For example, this code will create a <code>data.frame</code> twice as long as the original <code>dat</code>, where each observation is repeated with different values of the <code>flipper_length_mm</code> variable:</p>
 <div class="cell">
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>flipper_length_mm <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">160</span>, <span class="fl">180</span><span class="op">)</span>,</span>
@@ -750,8 +755,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <span><span class="co">#&gt; 2 flipper_length_mm 0.00378  </span></span>
 <span><span class="co">#&gt; 3 species           0.0000226</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="conditional-marginal-effects-plot" class="level2" data-number="4.9"><h2 data-number="4.9" class="anchored" data-anchor-id="conditional-marginal-effects-plot">
-<span class="header-section-number">4.9</span> Conditional Marginal Effects (Plot)</h2>
+</section><section id="conditional-marginal-effects-plot" class="level3" data-number="4.3.6"><h3 data-number="4.3.6" class="anchored" data-anchor-id="conditional-marginal-effects-plot">
+<span class="header-section-number">4.3.6</span> Conditional Marginal Effects (Plot)</h3>
 <p>The <a href="reference/plot_slopes.html"><code>plot_slopes()</code></a> function can be used to draw “Conditional Marginal Effects.” This is useful when a model includes interaction terms and we want to plot how the marginal effect of a variable changes as the value of a “condition” (or “moderator”) variable changes:</p>
 <div class="cell">
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">*</span> <span class="va">wt</span> <span class="op">+</span> <span class="va">drat</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
@@ -771,8 +776,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <p><img src="slopes_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="576"></p>
 </div>
 </div>
-</section><section id="example-quadratic" class="level2" data-number="4.10"><h2 data-number="4.10" class="anchored" data-anchor-id="example-quadratic">
-<span class="header-section-number">4.10</span> Example: Quadratic</h2>
+</section></section><section id="example-quadratic" class="level2" data-number="4.4"><h2 data-number="4.4" class="anchored" data-anchor-id="example-quadratic">
+<span class="header-section-number">4.4</span> Example: Quadratic</h2>
 <p>In the “Definition” section of this vignette, we considered how marginal effects can be computed analytically in a simple quadratic equation context. We can now use the <a href="reference/slopes.html"><code>slopes()</code></a> function to replicate our analysis of the quadratic function in a regression application.</p>
 <p>Say you estimate a linear regression model with a quadratic term:</p>
 <p><span class="math display">\[Y = \beta_0 + \beta_1 X^2 + \varepsilon\]</span></p>
@@ -792,11 +797,11 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">estimate</span>, <span class="va">truth</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate</span></span>
-<span><span class="co">#&gt;    -7.012</span></span>
-<span><span class="co">#&gt;    -3.008</span></span>
-<span><span class="co">#&gt;     0.996</span></span>
-<span><span class="co">#&gt;     4.999</span></span>
-<span><span class="co">#&gt;     9.003</span></span>
+<span><span class="co">#&gt;     -6.98</span></span>
+<span><span class="co">#&gt;     -2.99</span></span>
+<span><span class="co">#&gt;      1.00</span></span>
+<span><span class="co">#&gt;      5.00</span></span>
+<span><span class="co">#&gt;      8.99</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: estimate, truth</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -815,8 +820,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </div>
 </div>
 <p>Again, the conclusion is the same. When <span class="math inline">\(x&lt;0\)</span>, an increase in <span class="math inline">\(x\)</span> is associated with an decrease in <span class="math inline">\(y\)</span>. When <span class="math inline">\(x&gt;1/4\)</span>, the marginal effect is positive, which suggests that an increase in <span class="math inline">\(x\)</span> is associated with an increase in <span class="math inline">\(y\)</span>.</p>
-</section><section id="slopes-vs-predictions-a-visual-interpretation" class="level2" data-number="4.11"><h2 data-number="4.11" class="anchored" data-anchor-id="slopes-vs-predictions-a-visual-interpretation">
-<span class="header-section-number">4.11</span> Slopes vs Predictions: A Visual Interpretation</h2>
+</section><section id="slopes-vs-predictions-a-visual-interpretation" class="level2" data-number="4.5"><h2 data-number="4.5" class="anchored" data-anchor-id="slopes-vs-predictions-a-visual-interpretation">
+<span class="header-section-number">4.5</span> Slopes vs Predictions: A Visual Interpretation</h2>
 <p>Often, analysts will plot predicted values of the outcome with a best fit line:</p>
 <div class="cell">
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
@@ -883,8 +888,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </div>
 </div>
 <p>This plot shows that the marginal effect of <code>hp</code> on <code>mpg</code> is always negative (the slope is always below zero), and that this effect becomes even more negative as <code>qsec</code> increases.</p>
-</section><section id="prediction-types" class="level2" data-number="4.12"><h2 data-number="4.12" class="anchored" data-anchor-id="prediction-types">
-<span class="header-section-number">4.12</span> Prediction types</h2>
+</section><section id="prediction-types" class="level2" data-number="4.6"><h2 data-number="4.6" class="anchored" data-anchor-id="prediction-types">
+<span class="header-section-number">4.6</span> Prediction types</h2>
 <p>The <code>marginaleffect</code> function takes the derivative of the fitted (or predicted) values of the model, as is typically generated by the <code>predict(model)</code> function. By default, <code>predict</code> produces predictions on the <code>"response"</code> scale, so the marginal effects should be interpreted on that scale. However, users can pass a string or a vector of strings to the <code>type</code> argument, and <code>marginaleffects</code> will consider different outcomes.</p>
 <p>Typical values include <code>"response"</code> and <code>"link"</code>, but users should refer to the documentation of the <code>predict</code> of the package they used to fit the model to know what values are allowable. documentation.</p>
 <div class="cell">
@@ -905,11 +910,93 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <span><span class="co">#&gt; Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
 <span><span class="co">#&gt; Type:  link</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="manual-computation" class="level2" data-number="4.13"><h2 data-number="4.13" class="anchored" data-anchor-id="manual-computation">
-<span class="header-section-number">4.13</span> Manual computation</h2>
-<p>Now we illustrate how to reproduce the output of <a href="reference/slopes.html"><code>slopes()</code></a> manually:</p>
+</section><section id="minimum-or-maximum-slope-velocity" class="level2" data-number="4.7"><h2 data-number="4.7" class="anchored" data-anchor-id="minimum-or-maximum-slope-velocity">
+<span class="header-section-number">4.7</span> Minimum or maximum slope (velocity)</h2>
+<p>In some fields such as epidemiology, it is common to compute the minimum or maximum slope, as a measure of the “velocity” of the response function. To achieve this, we can use the <a href="reference/comparisons.html"><code>comparisons()</code></a> function and define custom functions. Here, we present a quick example without much detail, but you can refer to <a href="comparisons.html">the comparisons vignette</a> for more explanations on custom functions in the <code>comparison</code> argument.</p>
+<p>Consider this simple GAM model:</p>
 <div class="cell">
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">itsadug</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">mgcv</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">simdat</span><span class="op">$</span><span class="va">Subject</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">simdat</span><span class="op">$</span><span class="va">Subject</span><span class="op">)</span></span>
+<span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/bam.html">bam</a></span><span class="op">(</span><span class="va">Y</span> <span class="op">~</span> <span class="va">Group</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html">s</a></span><span class="op">(</span><span class="va">Time</span>, by <span class="op">=</span> <span class="va">Group</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/mgcv/man/s.html">s</a></span><span class="op">(</span><span class="va">Subject</span>, bs <span class="op">=</span> <span class="st">"re"</span><span class="op">)</span>,</span>
+<span>             data <span class="op">=</span> <span class="va">simdat</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_slopes.html">plot_slopes</a></span><span class="op">(</span><span class="va">model</span>, variables <span class="op">=</span> <span class="st">"Time"</span>, condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Time"</span>, <span class="st">"Group"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="slopes_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="576"></p>
+</div>
+</div>
+<p>Minimum velocity, overall:</p>
+<div class="cell">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">model</span>,</span>
+<span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"Time"</span> <span class="op">=</span> <span class="fl">1e-6</span><span class="op">)</span>,</span>
+<span>  vcov <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  comparison <span class="op">=</span> \<span class="op">(</span><span class="va">hi</span>, <span class="va">lo</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="op">(</span><span class="va">hi</span> <span class="op">-</span> <span class="va">lo</span><span class="op">)</span> <span class="op">/</span> <span class="fl">1e-6</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  Term Contrast Estimate</span></span>
+<span><span class="co">#&gt;  Time   +1e-06  -0.0267</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate, predicted_lo, predicted_hi, predicted </span></span>
+<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Minimum velocity by group:</p>
+<div class="cell">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">model</span>,</span>
+<span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"Time"</span> <span class="op">=</span> <span class="fl">1e-6</span><span class="op">)</span>,</span>
+<span>  by <span class="op">=</span> <span class="st">"Group"</span>,</span>
+<span>  vcov <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  comparison <span class="op">=</span> \<span class="op">(</span><span class="va">hi</span>, <span class="va">lo</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="op">(</span><span class="va">hi</span> <span class="op">-</span> <span class="va">lo</span><span class="op">)</span> <span class="op">/</span> <span class="fl">1e-6</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  Term Contrast    Group Estimate</span></span>
+<span><span class="co">#&gt;  Time   +1e-06 Children  -0.0153</span></span>
+<span><span class="co">#&gt;  Time   +1e-06 Adults    -0.0267</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Columns: term, contrast, Group, estimate </span></span>
+<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Difference between the minimum velocity of each group:</p>
+<div class="cell">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">model</span>,</span>
+<span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"Time"</span> <span class="op">=</span> <span class="fl">1e-6</span><span class="op">)</span>,</span>
+<span>  vcov <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  by <span class="op">=</span> <span class="st">"Group"</span>,</span>
+<span>  hypothesis <span class="op">=</span> <span class="st">"pairwise"</span>,</span>
+<span>  comparison <span class="op">=</span> \<span class="op">(</span><span class="va">hi</span>, <span class="va">lo</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="op">(</span><span class="va">hi</span> <span class="op">-</span> <span class="va">lo</span><span class="op">)</span> <span class="op">/</span> <span class="fl">1e-6</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;               Term Estimate</span></span>
+<span><span class="co">#&gt;  Children - Adults   0.0114</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Columns: term, estimate </span></span>
+<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>What <code>Time</code> value corresponds to the minimum velocity?</p>
+<div class="cell">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">low</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">hi</span>, <span class="va">lo</span>, <span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">dydx</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">hi</span> <span class="op">-</span> <span class="va">lo</span><span class="op">)</span> <span class="op">/</span> <span class="fl">1e-6</span></span>
+<span>    <span class="va">dydx_min</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">dydx</span><span class="op">)</span></span>
+<span>    <span class="va">x</span><span class="op">[</span><span class="va">dydx</span> <span class="op">==</span> <span class="va">dydx_min</span><span class="op">]</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">model</span>,</span>
+<span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"Time"</span> <span class="op">=</span> <span class="fl">1e-6</span><span class="op">)</span>,</span>
+<span>  vcov <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  by <span class="op">=</span> <span class="st">"Group"</span>,</span>
+<span>  comparison <span class="op">=</span> <span class="va">low</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  Term Contrast    Group Estimate</span></span>
+<span><span class="co">#&gt;  Time   +1e-06 Children     1313</span></span>
+<span><span class="co">#&gt;  Time   +1e-06 Adults       1556</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Columns: term, contrast, Group, estimate </span></span>
+<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="manual-computation" class="level2" data-number="4.8"><h2 data-number="4.8" class="anchored" data-anchor-id="manual-computation">
+<span class="header-section-number">4.8</span> Manual computation</h2>
+<p>Now we illustrate how to reproduce the output of <a href="reference/slopes.html"><code>slopes()</code></a> manually:</p>
+<div class="cell">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">am</span> <span class="op">~</span> <span class="va">hp</span>, family <span class="op">=</span> <span class="va">binomial</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
 <span></span>
@@ -925,7 +1012,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </div>
 <p>Which is equivalent to:</p>
 <div class="cell">
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">mod</span>, eps <span class="op">=</span> <span class="va">eps</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span><span class="op">(</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">mod</span>, eps <span class="op">=</span> <span class="va">eps</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">tail</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Term Estimate Std. Error     z Pr(&gt;|z|)   S    2.5 %    97.5 %</span></span>
 <span><span class="co">#&gt;    hp -0.00203   0.001481 -1.37  0.17086 2.5 -0.00493  0.000875</span></span>
@@ -940,7 +1027,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </div>
 <p>And we can get average marginal effects by subgroup as follows:</p>
 <div class="cell">
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/tapply.html">tapply</a></span><span class="op">(</span><span class="va">s</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span>, <span class="va">mean</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/tapply.html">tapply</a></span><span class="op">(</span><span class="va">s</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span>, <span class="va">mean</span><span class="op">)</span></span>
 <span><span class="co">#&gt;            4            6            8 </span></span>
 <span><span class="co">#&gt; -0.002010526 -0.001990774 -0.001632681</span></span>
 <span></span>
