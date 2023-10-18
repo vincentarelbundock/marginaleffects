@@ -1,5 +1,5 @@
 source("helpers.R")
-if (!EXPENSIVE) exit_file("EXPENSIVE")
+# if (!EXPENSIVE) exit_file("EXPENSIVE")
 using("marginaleffects")
 
 
@@ -186,7 +186,7 @@ cmp <- comparisons(model,
   by = "Group",
   comparison = low
 )
-expect_s3_class(cmp, "comparisons")
+expect_inherits(cmp, "comparisons")
 expect_equal(nrow(cmp), 2)
 
 rm(list = ls())
