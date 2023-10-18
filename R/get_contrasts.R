@@ -201,7 +201,7 @@ get_contrasts <- function(model,
 
     FUN <- function(z) {
         (is.character(z$comparison) && z$comparison %in% elasticities) ||
-        "x" %in% names(formals(z$comparison))
+        (is.function(z$comparison) && "x" %in% names(formals(z$comparison)))
     }
     elasticities <- Filter(FUN, variables)
     elasticities <- lapply(elasticities, function(x) x$name)
