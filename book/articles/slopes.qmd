@@ -351,7 +351,7 @@ avg_slopes(mod, type = "link")
 ```
 
 
-## Minimum/Maximum slope (velocity)
+## Minimum or maximum slope (velocity)
 
 In some fields such as epidemiology, it is common to compute the minimum or maximum slope, as a measure of the "velocity" of the response function. To achieve this, we can use the `comparisons()` function and define custom functions. Here, we present a quick example without much detail, but you can refer to [the comparisons vignette](comparisons.html) for more explanations on custom functions in the `comparison` argument.
 
@@ -397,6 +397,22 @@ comparisons(model,
   by = "Group",
   hypothesis = "pairwise",
   comparison = \(hi, lo) min((hi - lo) / 1e-6))
+```
+
+What `Time` value corresponds to the minimum velocity?
+
+```{r}
+low = function(hi, lo, x) {
+    dydx <- (hi - lo) / 1e-6
+    dydx_min <- min(dydx)
+    x[dydx == dydx_min][1]
+}
+
+comparisons(model,
+  variables = list("Time" = 1e-6),
+  vcov = FALSE,
+  by = "Group",
+  comparison = low)
 ```
 
 ## Manual computation
