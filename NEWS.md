@@ -1,6 +1,6 @@
 # News
 
-## dev
+## 0.16.0
 
 Machine learning support:
 
