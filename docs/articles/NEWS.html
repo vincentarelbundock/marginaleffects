@@ -238,38 +238,38 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../articles/gformula.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Causal Inference (G-Computation)</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../articles/conformal.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Conformal prediction</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Conformal prediction</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/elasticity.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Elasticity</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Elasticity</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/equivalence.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Equivalence Tests</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Equivalence Tests</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/experiments.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Experiments</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Experiments</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/gcomputation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">G-Computation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/gam.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">GAM</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Generalized Additive Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -538,8 +538,13 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </ul>
 <p>Misc:</p>
 <ul>
-<li>Inverse Probability Weighting vignette.</li>
-<li>Add support for <code>hypotheses()</code> to <code>inferences()</code>. This changes <code>FUN</code> argument name in <code>hypotheses</code> to <code>FUN</code> to not conflict with <code>inferences</code>. Thanks to <a href="https://github.com/Tristan-Siegfried">@Tristan-Siegfried</a> for code contribution <a href="https://github.com/vincentarelbundock/marginaleffects/issues/908">#908</a>.</li>
+<li>New vignettes:
+<ul>
+<li>Inverse Probability Weighting</li>
+<li>Machine Learning</li>
+<li>Matching</li>
+</ul></li>
+<li>Add support for <code>hypotheses()</code> to <code>inferences()</code>. Thanks to <a href="https://github.com/Tristan-Siegfried">@Tristan-Siegfried</a> for code contribution <a href="https://github.com/vincentarelbundock/marginaleffects/issues/908">#908</a>.</li>
 <li>Support <code>survival::survreg()</code>. Thanks to Carlisle Rainey for Report <a href="https://github.com/vincentarelbundock/marginaleffects/issues/911">#911</a>.</li>
 <li><code>column_names</code> argument in <code>print.marginaleffects()</code> to suppress the printed column names at the bottom of the printout.</li>
 <li>The function supplied to the <code>comparison</code> argument of the <code>comparisons()</code> function can now operate on <code>x</code> and on <code>newdata</code> directly (e.g., to check the number of observations).</li>

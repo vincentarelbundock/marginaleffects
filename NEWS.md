@@ -439,7 +439,7 @@ New or improved vignettes:
 
 * Hypothesis Tests and Custom Contrasts using the Delta Method: https://marginaleffects.com/articles/hypothesis.html
 * Multiple Imputation: https://marginaleffects.com/articles/multiple_imputation.html
-* Causal Inference with the g-Formula: https://marginaleffects.com/articles/gformula.html
+* Causal Inference with the g-Formula: https://marginaleffects.com/articles/gcomputation.html
  (Thanks to Rohan Kapre for the idea)
 
 Deprecated or renamed arguments:
