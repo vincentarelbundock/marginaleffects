@@ -16,23 +16,29 @@ data("lalonde", package = "MatchIt")
 head(lalonde)
 ```
 
-To begin, we use a logistic regression model and the `predictions()` function to estimate the probability that each unit will treated:
+To begin, we use a logistic regression model to estimate the probability that each unit will treated:
 
 ```{r}
 m <- glm(treat ~ age + educ + race + re74, data = lalonde, family = binomial)
-w <- predictions(m)$estimate
 ```
 
-Then, we use a linear regression to model the outcome variable of interest `re78`. Note that we use the predictions as weights in the model fitting process.
+Then, we call `predictions()` to extract predicted probabilities. Note that we supply the original `lalonde` data explicity to the `newdata` argument. This ensures that all the original columns are carried over to the new dataset: `dat`. We also create a new column called `wts` that contains the inverse of the predicted probabilities:
 
 ```{r}
-dat <- transform(lalonde, wts = w)
+dat <- predictions(m, newdata = lalonde)
+dat$wts <- 1 / dat$estimate
+```
+
+Now, we use linear regression to model the outcome of interest: personal income in 1978 (`re78`). Note that we use the predictions as weights in the model fitting process.
+
+```{r}
 mod <- lm(re78 ~ treat * (age + educ + race + re74), data = dat, weights = wts)
 ```
 
-Finally, we use the `avg_comparisons()` function to compute the average treatment effect on the treated. Note that we use the `weights` argument to specify the weights to be used in the computation.
+Finally, we call `avg_comparisons()` to compute the average treatment effect on the treated. Note that we use the `wts` argument to specify the weights to be used in the computation, and the `newdata` argument to specify the subset of observations of interest: treated individuals.
 
 ```{r}
+#| warning: false
 avg_comparisons(mod,
     variables = "treat",
     wts = "wts",

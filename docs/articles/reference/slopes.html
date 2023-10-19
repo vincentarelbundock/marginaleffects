@@ -598,9 +598,9 @@ avg_slopes(
 </code></pre>
 </section><section id="arguments" class="level2"><h2 class="anchored" data-anchor-id="arguments">Arguments</h2>
 <table>
-<tbody><tr>
+<tbody><tr style="vertical-align: top;">
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="slopes_:_model">model</code>
+<code>model</code>
 </td>
 <td>
 <p>
@@ -608,9 +608,9 @@ Model object
 </p>
 </td>
 </tr>
-<tr>
+<tr style="vertical-align: top;">
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="slopes_:_newdata">newdata</code>
+<code>newdata</code>
 </td>
 <td>
 <p>
@@ -679,9 +679,9 @@ string:
 </ul>
 </td>
 </tr>
-<tr>
+<tr style="vertical-align: top;">
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="slopes_:_variables">variables</code>
+<code>variables</code>
 </td>
 <td>
 <p>
@@ -701,9 +701,9 @@ Character vector: subset of variables (usually faster).
 </ul>
 </td>
 </tr>
-<tr>
+<tr style="vertical-align: top;">
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="slopes_:_type">type</code>
+<code>type</code>
 </td>
 <td>
 <p>
@@ -711,9 +711,9 @@ string indicates the type (scale) of the predictions used to compute contrasts o
 </p>
 </td>
 </tr>
-<tr>
+<tr style="vertical-align: top;">
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="slopes_:_by">by</code>
+<code>by</code>
 </td>
 <td>
 <p>
@@ -753,9 +753,9 @@ For more complex aggregations, you can use the <code>FUN</code> argument of the 
 </ul>
 </td>
 </tr>
-<tr>
+<tr style="vertical-align: top;">
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="slopes_:_vcov">vcov</code>
+<code>vcov</code>
 </td>
 <td>
 <p>
@@ -817,9 +817,9 @@ Function which returns a covariance matrix (e.g., <code>stats::vcov(model)</code
 </ul>
 </td>
 </tr>
-<tr>
+<tr style="vertical-align: top;">
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="slopes_:_conf_level">conf_level</code>
+<code>conf_level</code>
 </td>
 <td>
 <p>
@@ -827,9 +827,9 @@ numeric value between 0 and 1. Confidence level to use to build a confidence int
 </p>
 </td>
 </tr>
-<tr>
+<tr style="vertical-align: top;">
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="slopes_:_slope">slope</code>
+<code>slope</code>
 </td>
 <td>
 <p>
@@ -864,9 +864,9 @@ Y is the predicted value of the outcome; X is the observed value of the predicto
 </ul>
 </td>
 </tr>
-<tr>
+<tr style="vertical-align: top;">
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="slopes_:_wts">wts</code>
+<code>wts</code>
 </td>
 <td>
 <p>
@@ -886,9 +886,9 @@ numeric: vector of length equal to the number of rows in the original data or in
 </ul>
 </td>
 </tr>
-<tr>
+<tr style="vertical-align: top;">
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="slopes_:_hypothesis">hypothesis</code>
+<code>hypothesis</code>
 </td>
 <td>
 <p>
@@ -979,9 +979,9 @@ See the Examples section below and the vignette: https://marginaleffects.com/art
 </ul>
 </td>
 </tr>
-<tr>
+<tr style="vertical-align: top;">
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="slopes_:_equivalence">equivalence</code>
+<code>equivalence</code>
 </td>
 <td>
 <p>
@@ -989,9 +989,9 @@ Numeric vector of length 2: bounds used for the two-one-sided test (TOST) of equ
 </p>
 </td>
 </tr>
-<tr>
+<tr style="vertical-align: top;">
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="slopes_:_p_adjust">p_adjust</code>
+<code>p_adjust</code>
 </td>
 <td>
 <p>
@@ -999,9 +999,9 @@ Adjust p-values for multiple comparisons: "holm", "hochberg", "hommel", "bonferr
 </p>
 </td>
 </tr>
-<tr>
+<tr style="vertical-align: top;">
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="slopes_:_df">df</code>
+<code>df</code>
 </td>
 <td>
 <p>
@@ -1009,9 +1009,9 @@ Degrees of freedom used to compute p values and confidence intervals. A single n
 </p>
 </td>
 </tr>
-<tr>
+<tr style="vertical-align: top;">
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="slopes_:_eps">eps</code>
+<code>eps</code>
 </td>
 <td>
 <p>
@@ -1019,9 +1019,9 @@ NULL or numeric value which determines the step size to use when calculating num
 </p>
 </td>
 </tr>
-<tr>
+<tr style="vertical-align: top;">
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="slopes_:_numderiv">numderiv</code>
+<code>numderiv</code>
 </td>
 <td>
 <p>
@@ -1051,9 +1051,9 @@ Extra arguments can be specified by passing a list to the <code>numDeriv</code> 
 </ul>
 </td>
 </tr>
-<tr>
+<tr style="vertical-align: top;">
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="slopes_:_...">…</code>
+<code>…</code>
 </td>
 <td>
 <p>
@@ -1439,7 +1439,7 @@ The <code>invlink(link)</code> is a special type defined by <code>marginaleffect
 Some of the most common <code>type</code> values are:
 </p>
 <p>
-response, link, E, Ep, average, class, conditional, count, cum.prob, cumprob, density, disp, expected, expvalue, fitted, invlink(link), latent, linear.predictor, linpred, location, lp, mean, p, pr, precision, prediction, prob, probability, probs, quantile, risk, scale, survival, unconditional, utility, variance, xb, zero, zlink, zprob
+response, link, E, Ep, average, class, conditional, count, cum.prob, cumprob, density, disp, expected, expvalue, fitted, invlink(link), latent, linear.predictor, linpred, location, lp, mean, numeric, p, pr, precision, prediction, prob, probability, probs, quantile, risk, scale, survival, unconditional, utility, variance, xb, zero, zlink, zprob
 </p>
 </section><section id="references" class="level2"><h2 class="anchored" data-anchor-id="references">References</h2>
 <ul>
@@ -1467,9 +1467,9 @@ Cole, Stephen R, Jessie K Edwards, and Sander Greenland. 2020. "Surprise!" Ameri
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Term Estimate Std. Error     z Pr(&gt;|z|)   S     2.5 %   97.5 %
-   hp 0.006983   0.005846 1.194    0.232 2.1 -0.004475 0.018442
-   hp 0.016404   0.012293 1.334    0.182 2.5 -0.007689 0.040497
-   hp 0.002828   0.003764 0.751    0.452 1.1 -0.004549 0.010206
+   hp 0.006983   0.005847 1.194    0.232 2.1 -0.004476 0.018442
+   hp 0.016404   0.012295 1.334    0.182 2.5 -0.007693 0.040501
+   hp 0.002828   0.003764 0.751    0.452 1.1 -0.004550 0.010206
    hp 0.001935   0.002442 0.792    0.428 1.2 -0.002851 0.006721
    hp 0.002993   0.003213 0.931    0.352 1.5 -0.003305 0.009291
    hp 0.000148   0.000321 0.459    0.646 0.6 -0.000482 0.000778
@@ -1483,7 +1483,7 @@ Type:  response </code></pre>
 <pre><code>
  Term Estimate Std. Error     z Pr(&gt;|z|)   S    2.5 %   97.5 %
    hp  0.00265     0.0021  1.26   0.2069 2.3 -0.00147  0.00677
-   wt -0.43578     0.1436 -3.04   0.0024 8.7 -0.71716 -0.15440
+   wt -0.43578     0.1435 -3.04   0.0024 8.7 -0.71712 -0.15445
 
 Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
 Type:  response </code></pre>
@@ -1494,7 +1494,7 @@ Type:  response </code></pre>
 <pre><code>
  Term Estimate Std. Error     z Pr(&gt;|z|)   S    2.5 % 97.5 %
    hp  0.00853    0.00824  1.03    0.301 1.7 -0.00763 0.0247
-   wt -1.74453    1.55637 -1.12    0.262 1.9 -4.79496 1.3059
+   wt -1.74453    1.55594 -1.12    0.262 1.9 -4.79411 1.3051
 
 Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, am, hp, wt 
 Type:  response </code></pre>
@@ -1506,9 +1506,9 @@ Type:  response </code></pre>
 <pre><code>
  Term  hp Estimate Std. Error      z Pr(&gt;|z|)   S    2.5 %  97.5 %
    hp 100  0.00117    0.00171  0.684    0.494 1.0 -0.00218 0.00451
-   hp 110  0.00190    0.00240  0.788    0.430 1.2 -0.00282 0.00661
-   wt 100 -0.19468    0.29895 -0.651    0.515 1.0 -0.78060 0.39125
-   wt 110 -0.33154    0.42909 -0.773    0.440 1.2 -1.17253 0.50946
+   hp 110  0.00190    0.00240  0.788    0.431 1.2 -0.00282 0.00661
+   wt 100 -0.19468    0.29895 -0.651    0.515 1.0 -0.78061 0.39126
+   wt 110 -0.33154    0.42907 -0.773    0.440 1.2 -1.17250 0.50942
 
 Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, hp, predicted_lo, predicted_hi, predicted, am, wt 
 Type:  response </code></pre>
@@ -1522,7 +1522,7 @@ Type:  response </code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Term    Contrast cyl Estimate Std. Error      z Pr(&gt;|z|)   S   2.5 %  97.5 %
-   hp mean(dY/dX)   4  -0.0917     0.0353 -2.596  0.00942 6.7 -0.1610 -0.0225
+   hp mean(dY/dX)   4  -0.0917     0.0353 -2.596  0.00943 6.7 -0.1610 -0.0225
    hp mean(dY/dX)   6  -0.0523     0.0204 -2.561  0.01045 6.6 -0.0923 -0.0123
    hp mean(dY/dX)   8  -0.0128     0.0143 -0.891  0.37280 1.4 -0.0409  0.0153
 
@@ -1542,7 +1542,7 @@ Type:  response </code></pre>
  Term   wt  hp Estimate Std. Error     z Pr(&gt;|z|)   S    2.5 %  97.5 %
    hp 2.62 100 0.012035    0.00994 1.211    0.226 2.1 -0.00744 0.03151
    hp 2.62 110 0.006983    0.00585 1.194    0.232 2.1 -0.00448 0.01844
-   hp 2.88 100 0.014161    0.01052 1.346    0.178 2.5 -0.00645 0.03477
+   hp 2.88 100 0.014161    0.01051 1.347    0.178 2.5 -0.00644 0.03476
    hp 2.88 110 0.016404    0.01229 1.334    0.182 2.5 -0.00769 0.04050
    hp 2.32 100 0.001564    0.00220 0.712    0.476 1.1 -0.00274 0.00587
    hp 2.32 110 0.000656    0.00118 0.557    0.577 0.8 -0.00165 0.00296
@@ -1556,10 +1556,10 @@ Type:  response </code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Term Estimate Std. Error     z Pr(&gt;|z|)   S     2.5 %   97.5 %
-   hp 0.006983   0.009046 0.772    0.440 1.2 -0.010746 0.024712
-   hp 0.016404   0.012418 1.321    0.186 2.4 -0.007934 0.040742
-   hp 0.002828   0.004876 0.580    0.562 0.8 -0.006729 0.012386
-   hp 0.001935   0.002035 0.951    0.342 1.5 -0.002055 0.005924
+   hp 0.006983   0.009047 0.772    0.440 1.2 -0.010748 0.024715
+   hp 0.016404   0.012419 1.321    0.187 2.4 -0.007936 0.040744
+   hp 0.002828   0.004876 0.580    0.562 0.8 -0.006728 0.012385
+   hp 0.001935   0.002035 0.951    0.342 1.5 -0.002054 0.005924
    hp 0.002993   0.002928 1.022    0.307 1.7 -0.002747 0.008732
    hp 0.000148   0.000235 0.629    0.529 0.9 -0.000312 0.000607
 
@@ -1576,7 +1576,7 @@ Type:  response </code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Term Estimate Std. Error     z Pr(&gt;|z|)    S 2.5 % 97.5 %
- wt=drat    -6.23       1.05 -5.91   &lt;0.001 28.2 -8.29  -4.16
+ wt=drat    -6.23       1.05 -5.92   &lt;0.001 28.2 -8.29  -4.16
 
 Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
 Type:  response </code></pre>
@@ -1589,7 +1589,7 @@ Type:  response </code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Term Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %
- b1-b2=0     6.23       1.05 5.91   &lt;0.001 28.2  4.16   8.29
+ b1-b2=0     6.23       1.05 5.92   &lt;0.001 28.2  4.16   8.29
 
 Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
 Type:  response </code></pre>
@@ -1602,7 +1602,7 @@ Type:  response </code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
    Term Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %
- custom     6.23       1.05 5.91   &lt;0.001 28.2  4.16   8.29
+ custom     6.23       1.05 5.92   &lt;0.001 28.2  4.16   8.29
 
 Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
 Type:  response </code></pre>
@@ -1620,8 +1620,8 @@ Type:  response </code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
        Term Estimate Std. Error     z Pr(&gt;|z|)    S  2.5 % 97.5 %
- Contrast A     6.23       1.05  5.91   &lt;0.001 28.2   4.16   8.29
- Contrast B   -11.46       4.92 -2.33   0.0198  5.7 -21.10  -1.82
+ Contrast A     6.23       1.05  5.92   &lt;0.001 28.2   4.16   8.29
+ Contrast B   -11.46       4.92 -2.33   0.0197  5.7 -21.10  -1.83
 
 Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
 Type:  response </code></pre>

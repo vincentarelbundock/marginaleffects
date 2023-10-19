@@ -797,7 +797,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <span><span class="co">#&gt;  Term Contrast cyl Estimate Std. Error        z Pr(&gt;|z|)   S     2.5 %   97.5 %</span></span>
 <span><span class="co">#&gt;   cyl    6 - 4   4  -0.9049   1.63e+00 -0.55506    0.579 0.8    -4.100 2.29e+00</span></span>
 <span><span class="co">#&gt;   cyl    8 - 4   4 -19.5418   4.37e+03 -0.00447    0.996 0.0 -8579.030 8.54e+03</span></span>
-<span><span class="co">#&gt;   hp     dY/dX   4  -0.0326   3.39e-02 -0.96140    0.336 1.6    -0.099 3.38e-02</span></span>
+<span><span class="co">#&gt;   hp     dY/dX   4  -0.0326   3.39e-02 -0.96147    0.336 1.6    -0.099 3.38e-02</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, cyl, predicted_lo, predicted_hi, predicted, vs, hp </span></span>
 <span><span class="co">#&gt; Type:  link</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -914,21 +914,21 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <div class="cell">
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">mar</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    mpg cyl disp  hp drat    wt  qsec vs am gear carb   fitted se.fitted   dydx_cyl    dydx_hp   dydx_wt Var_dydx_cyl  Var_dydx_hp Var_dydx_wt X_weights X_at_number</span></span>
-<span><span class="co">#&gt; 1 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4 22.82043 0.6876212 -0.9416168 -0.0180381 -3.166973    0.3035074 0.0001410453   0.5484524        NA           1</span></span>
-<span><span class="co">#&gt; 2 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4 22.01285 0.6056817 -0.9416168 -0.0180381 -3.166973    0.3035074 0.0001410453   0.5484524        NA           1</span></span>
-<span><span class="co">#&gt; 3 22.8   4  108  93 3.85 2.320 18.61  1  1    4    1 25.96040 0.7349593 -0.9416168 -0.0180381 -3.166973    0.3035074 0.0001410453   0.5484524        NA           1</span></span>
-<span><span class="co">#&gt; 4 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1 20.93608 0.5800910 -0.9416168 -0.0180381 -3.166973    0.3035074 0.0001410453   0.5484524        NA           1</span></span>
-<span><span class="co">#&gt; 5 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2 17.16780 0.8322986 -0.9416168 -0.0180381 -3.166973    0.3035074 0.0001410453   0.5484524        NA           1</span></span>
-<span><span class="co">#&gt; 6 18.1   6  225 105 2.76 3.460 20.22  1  0    3    1 20.25036 0.6638322 -0.9416168 -0.0180381 -3.166973    0.3035074 0.0001410453   0.5484524        NA           1</span></span>
+<span><span class="co">#&gt; 1 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4 22.82043 0.6876212 -0.9416168 -0.0180381 -3.166973    0.3035104 0.0001410451   0.5484521        NA           1</span></span>
+<span><span class="co">#&gt; 2 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4 22.01285 0.6056817 -0.9416168 -0.0180381 -3.166973    0.3035104 0.0001410451   0.5484521        NA           1</span></span>
+<span><span class="co">#&gt; 3 22.8   4  108  93 3.85 2.320 18.61  1  1    4    1 25.96040 0.7349593 -0.9416168 -0.0180381 -3.166973    0.3035104 0.0001410451   0.5484521        NA           1</span></span>
+<span><span class="co">#&gt; 4 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1 20.93608 0.5800910 -0.9416168 -0.0180381 -3.166973    0.3035104 0.0001410451   0.5484521        NA           1</span></span>
+<span><span class="co">#&gt; 5 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2 17.16780 0.8322986 -0.9416168 -0.0180381 -3.166973    0.3035104 0.0001410451   0.5484521        NA           1</span></span>
+<span><span class="co">#&gt; 6 18.1   6  225 105 2.76 3.460 20.22  1  0    3    1 20.25036 0.6638322 -0.9416168 -0.0180381 -3.166973    0.3035104 0.0001410451   0.5484521        NA           1</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">mfx</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Term Estimate Std. Error     z Pr(&gt;|z|)   S 2.5 % 97.5 %</span></span>
 <span><span class="co">#&gt;   cyl   -0.942      0.550 -1.71   0.0871 3.5 -2.02  0.137</span></span>
 <span><span class="co">#&gt;   cyl   -0.942      0.550 -1.71   0.0871 3.5 -2.02  0.137</span></span>
-<span><span class="co">#&gt;   cyl   -0.942      0.551 -1.71   0.0875 3.5 -2.02  0.138</span></span>
 <span><span class="co">#&gt;   cyl   -0.942      0.550 -1.71   0.0871 3.5 -2.02  0.137</span></span>
-<span><span class="co">#&gt;   cyl   -0.942      0.551 -1.71   0.0873 3.5 -2.02  0.138</span></span>
+<span><span class="co">#&gt;   cyl   -0.942      0.550 -1.71   0.0871 3.5 -2.02  0.137</span></span>
+<span><span class="co">#&gt;   cyl   -0.942      0.551 -1.71   0.0875 3.5 -2.02  0.138</span></span>
 <span><span class="co">#&gt;   cyl   -0.942      0.550 -1.71   0.0871 3.5 -2.02  0.137</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, mpg, cyl, hp, wt </span></span>
@@ -941,14 +941,14 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/margins/man/margins.html">margins</a></span><span class="op">(</span><span class="va">mod</span>, data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="fu">prediction</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/prediction/man/mean_or_mode.html">mean_or_mode</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span>, unit_ses <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">mar</span><span class="op">)</span></span>
 <span><span class="co">#&gt;        mpg    cyl     disp       hp     drat      wt     qsec     vs      am   gear   carb   fitted se.fitted   dydx_cyl    dydx_hp   dydx_wt Var_dydx_cyl  Var_dydx_hp Var_dydx_wt SE_dydx_cyl SE_dydx_hp SE_dydx_wt X_weights X_at_number</span></span>
-<span><span class="co">#&gt; 1 20.09062 6.1875 230.7219 146.6875 3.596563 3.21725 17.84875 0.4375 0.40625 3.6875 2.8125 20.09062 0.4439832 -0.9416168 -0.0180381 -3.166973    0.3034971 0.0001410454     0.54846   0.5509057 0.01187626  0.7405808        NA           1</span></span>
+<span><span class="co">#&gt; 1 20.09062 6.1875 230.7219 146.6875 3.596563 3.21725 17.84875 0.4375 0.40625 3.6875 2.8125 20.09062 0.4439832 -0.9416168 -0.0180381 -3.166973    0.3035013 0.0001410453     0.54846   0.5509096 0.01187625  0.7405808        NA           1</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Term Estimate Std. Error     z Pr(&gt;|z|)    S   2.5 %   97.5 %</span></span>
-<span><span class="co">#&gt;   cyl   -0.942     0.5506 -1.71   0.0873  3.5 -2.0209  0.13763</span></span>
+<span><span class="co">#&gt;   cyl   -0.942     0.5510 -1.71   0.0875  3.5 -2.0216  0.13833</span></span>
 <span><span class="co">#&gt;   hp    -0.018     0.0119 -1.52   0.1290  3.0 -0.0413  0.00525</span></span>
-<span><span class="co">#&gt;   wt    -3.167     0.7406 -4.28   &lt;0.001 15.7 -4.6186 -1.71536</span></span>
+<span><span class="co">#&gt;   wt    -3.167     0.7406 -4.28   &lt;0.001 15.7 -4.6185 -1.71549</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, mpg, cyl, hp, wt </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -964,13 +964,13 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <span><span class="va">mar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/margins/man/margins.html">margins</a></span><span class="op">(</span><span class="va">mod</span>, at <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>cyl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">6</span>, <span class="fl">8</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">mar</span><span class="op">)</span></span>
 <span><span class="co">#&gt;  factor    cyl     AME     SE       z      p   lower   upper</span></span>
-<span><span class="co">#&gt;     cyl 4.0000  0.0381 0.5999  0.0636 0.9493 -1.1376  1.2139</span></span>
-<span><span class="co">#&gt;     cyl 6.0000  0.0381 0.5999  0.0636 0.9493 -1.1376  1.2138</span></span>
+<span><span class="co">#&gt;     cyl 4.0000  0.0381 0.6000  0.0636 0.9493 -1.1378  1.2141</span></span>
+<span><span class="co">#&gt;     cyl 6.0000  0.0381 0.5999  0.0636 0.9493 -1.1376  1.2139</span></span>
 <span><span class="co">#&gt;     cyl 8.0000  0.0381 0.5999  0.0636 0.9493 -1.1376  1.2139</span></span>
 <span><span class="co">#&gt;      hp 4.0000 -0.0878 0.0267 -3.2937 0.0010 -0.1400 -0.0355</span></span>
 <span><span class="co">#&gt;      hp 6.0000 -0.0499 0.0154 -3.2397 0.0012 -0.0800 -0.0197</span></span>
 <span><span class="co">#&gt;      hp 8.0000 -0.0120 0.0108 -1.1065 0.2685 -0.0332  0.0092</span></span>
-<span><span class="co">#&gt;      wt 4.0000 -3.1198 0.6613 -4.7176 0.0000 -4.4160 -1.8236</span></span>
+<span><span class="co">#&gt;      wt 4.0000 -3.1198 0.6613 -4.7175 0.0000 -4.4160 -1.8236</span></span>
 <span><span class="co">#&gt;      wt 6.0000 -3.1198 0.6613 -4.7175 0.0000 -4.4160 -1.8236</span></span>
 <span><span class="co">#&gt;      wt 8.0000 -3.1198 0.6613 -4.7175 0.0000 -4.4160 -1.8236</span></span>
 <span></span>
@@ -980,15 +980,15 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <span>    newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagridcf</a></span><span class="op">(</span>cyl <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">6</span>, <span class="fl">8</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Term    Contrast cyl Estimate Std. Error       z Pr(&gt;|z|)    S   2.5 %   97.5 %</span></span>
-<span><span class="co">#&gt;   cyl mean(dY/dX)   4   0.0381     0.6000  0.0636   0.9493  0.1 -1.1377  1.21402</span></span>
-<span><span class="co">#&gt;   cyl mean(dY/dX)   6   0.0381     0.5998  0.0636   0.9493  0.1 -1.1375  1.21378</span></span>
-<span><span class="co">#&gt;   cyl mean(dY/dX)   8   0.0381     0.5999  0.0636   0.9493  0.1 -1.1377  1.21396</span></span>
-<span><span class="co">#&gt;   hp  mean(dY/dX)   4  -0.0878     0.0267 -3.2937   &lt;0.001 10.0 -0.1400 -0.03555</span></span>
-<span><span class="co">#&gt;   hp  mean(dY/dX)   6  -0.0499     0.0154 -3.2398   0.0012  9.7 -0.0800 -0.01970</span></span>
+<span><span class="co">#&gt;   cyl mean(dY/dX)   4   0.0381     0.5999  0.0636   0.9493  0.1 -1.1377  1.21401</span></span>
+<span><span class="co">#&gt;   cyl mean(dY/dX)   6   0.0381     0.5998  0.0636   0.9493  0.1 -1.1375  1.21381</span></span>
+<span><span class="co">#&gt;   cyl mean(dY/dX)   8   0.0381     0.5999  0.0636   0.9493  0.1 -1.1376  1.21389</span></span>
+<span><span class="co">#&gt;   hp  mean(dY/dX)   4  -0.0878     0.0267 -3.2936   &lt;0.001 10.0 -0.1400 -0.03554</span></span>
+<span><span class="co">#&gt;   hp  mean(dY/dX)   6  -0.0499     0.0154 -3.2397   0.0012  9.7 -0.0800 -0.01970</span></span>
 <span><span class="co">#&gt;   hp  mean(dY/dX)   8  -0.0120     0.0108 -1.1065   0.2685  1.9 -0.0332  0.00923</span></span>
-<span><span class="co">#&gt;   wt  mean(dY/dX)   4  -3.1198     0.6613 -4.7176   &lt;0.001 18.7 -4.4160 -1.82366</span></span>
-<span><span class="co">#&gt;   wt  mean(dY/dX)   6  -3.1198     0.6613 -4.7176   &lt;0.001 18.7 -4.4160 -1.82366</span></span>
-<span><span class="co">#&gt;   wt  mean(dY/dX)   8  -3.1198     0.6613 -4.7176   &lt;0.001 18.7 -4.4160 -1.82366</span></span>
+<span><span class="co">#&gt;   wt  mean(dY/dX)   4  -3.1198     0.6613 -4.7175   &lt;0.001 18.7 -4.4160 -1.82362</span></span>
+<span><span class="co">#&gt;   wt  mean(dY/dX)   6  -3.1198     0.6613 -4.7174   &lt;0.001 18.7 -4.4160 -1.82362</span></span>
+<span><span class="co">#&gt;   wt  mean(dY/dX)   8  -3.1198     0.6613 -4.7174   &lt;0.001 18.7 -4.4160 -1.82362</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, cyl, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1056,9 +1056,9 @@ cyl |  -.9416168   .5509164    -1.71   0.098    -2.070118    .1868842
 <span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Term Estimate Std. Error     z Pr(&gt;|z|)    S   2.5 %   97.5 %</span></span>
-<span><span class="co">#&gt;   cyl   -0.942     0.5507 -1.71   0.0873  3.5 -2.0209  0.13770</span></span>
+<span><span class="co">#&gt;   cyl   -0.942     0.5506 -1.71   0.0872  3.5 -2.0208  0.13753</span></span>
 <span><span class="co">#&gt;   hp    -0.018     0.0119 -1.52   0.1288  3.0 -0.0413  0.00524</span></span>
-<span><span class="co">#&gt;   wt    -3.167     0.7406 -4.28   &lt;0.001 15.7 -4.6185 -1.71549</span></span>
+<span><span class="co">#&gt;   wt    -3.167     0.7406 -4.28   &lt;0.001 15.7 -4.6185 -1.71546</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1116,7 +1116,7 @@ hp           |
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Term    Contrast cyl Estimate Std. Error      z Pr(&gt;|z|)   S   2.5 %  97.5 %</span></span>
 <span><span class="co">#&gt;    hp mean(dY/dX)   4  -0.0995     0.0349 -2.853  0.00433 7.9 -0.1678 -0.0311</span></span>
-<span><span class="co">#&gt;    hp mean(dY/dX)   6  -0.0214     0.0388 -0.551  0.58188 0.8 -0.0975  0.0547</span></span>
+<span><span class="co">#&gt;    hp mean(dY/dX)   6  -0.0214     0.0388 -0.551  0.58187 0.8 -0.0975  0.0547</span></span>
 <span><span class="co">#&gt;    hp mean(dY/dX)   8  -0.0134     0.0125 -1.074  0.28278 1.8 -0.0380  0.0111</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, cyl, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
@@ -1141,7 +1141,7 @@ hp           |
 <span><span class="va">J_mean</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html">aggregate</a></span><span class="op">(</span><span class="va">J</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">mfx</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span>, FUN <span class="op">=</span> <span class="va">mean</span><span class="op">)</span></span>
 <span><span class="va">J_mean</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">J_mean</span><span class="op">[</span>, <span class="fl">2</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">J_mean</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">J_mean</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/stats/vcov.html">vcov</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">J_mean</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.03486633 0.03882199 0.01251382</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; [1] 0.03486654 0.03882093 0.01251377</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section></section><section id="average-counterfactual-adjusted-predictions" class="level3" data-number="25.3.3"><h3 data-number="25.3.3" class="anchored" data-anchor-id="average-counterfactual-adjusted-predictions">
 <span class="header-section-number">25.3.3</span> Average Counterfactual Adjusted Predictions</h3>
