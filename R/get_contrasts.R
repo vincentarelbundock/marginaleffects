@@ -113,7 +113,12 @@ get_contrasts <- function(model,
     data.table::setDT(original)
 
     if (!inherits(pred_hi, "data.frame") || !inherits(pred_lo, "data.frame") || !inherits(pred_or, c("data.frame", "NULL"))) {
-        insight::format_error("Unable to compute predicted values with this model. This error can arise when `insight::get_data()` is unable to extract the dataset from the model object, or when the data frame was modified since fitting the model. You can try to supply a different dataset to the `newdata` argument. If this does not work, you can file a report on the Github Issue Tracker: https://github.com/vincentarelbundock/marginaleffects/issues")
+        msg <- "Unable to compute predicted values with this model. This error can arise when `insight::get_data()` is unable to extract the dataset from the model object, or when the data frame was modified since fitting the model. You can try to supply a different dataset to the `newdata` argument."
+        if (inherits(pred_hi, "try-error")) {
+            msg <-c(msg, "", "In addition, this error message was raised:", "", as.character(pred_hi)) 
+        }
+        msg <- c(msg, "", "Bug Tracker: https://github.com/vincentarelbundock/marginaleffects/issues")
+        insight::format_error(msg)
     }
 
     # output data.frame

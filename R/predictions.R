@@ -609,6 +609,9 @@ get_predictions <- function(model,
         if (!is.null(out$error)) {
             msg <- c(paste(msg, "This error was also raised:"), "", out$error$message)
         }
+        if (inherits(out$value, "try-error")) {
+            msg <- c(paste(msg, "", "This error was also raised:"), "", as.character(out$value))
+        }
         msg <- c(msg, "", "Bug Tracker: https://github.com/vincentarelbundock/marginaleffects/issues")
         insight::format_error(msg)
     }

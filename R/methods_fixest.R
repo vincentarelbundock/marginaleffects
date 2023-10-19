@@ -27,6 +27,10 @@ get_predict.fixest <- function(model,
             type = type),
         silent = TRUE)
 
+    if (inherits(pred, "try-error")) {
+        return(pred)
+    }
+
     if ("rowid" %in% colnames(newdata)) {
         out <- data.frame(
             rowid = newdata$rowid,
