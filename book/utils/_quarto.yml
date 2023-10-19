@@ -40,12 +40,12 @@ book:
       - articles/brms.qmd
       - articles/bootstrap.qmd
       - articles/categorical.qmd
-      - articles/gformula.qmd
       - articles/conformal.qmd
       - articles/elasticity.qmd
       - articles/equivalence.qmd
       - articles/experiments.qmd
       - articles/gam.qmd
+      - articles/gformula.qmd
       - articles/ipw.qmd
       - articles/logit.qmd
       - articles/lme4.qmd
