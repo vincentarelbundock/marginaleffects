@@ -78,7 +78,7 @@ Data analysts often want to learn about a population using samples that are not 
 
 This notebook introduces [Multilevel Regression with Poststratification (MrP)](https://en.wikipedia.org/wiki/Multilevel_regression_with_poststratification), a popular strategy which can be used to limit the distortions in unrepresentative data, or to estimate subgroup characteristics on the basis of data gathered at a different level of aggregation. MrP can be deployed in a wide range of contexts (see this [paper](https://www.monicaalexander.com/pdf/mrp_chapter.pdf) and this [blog post](https://www.monicaalexander.com/posts/2019-08-07-mrp/) by the always excellent [Monica Alexander](https://www.monicaalexander.com/)).
 
-As we will see below, MrP is super easy to implement using the `marginaleffects` package for `R`. `marginaleffects` also offers tremendous benefits to analysts, including a consistent user interface to over 80 classes of statistical models, as well as many post-estimation and hypothesis testing tools. To illustrate these benefits, we will consider a hypothetical example with simulated data.^[See the bottom of this page for the simulation code.]
+As we will see below, MrP is super easy to implement using the `marginaleffects` package for `R`. `marginaleffects` also offers tremendous benefits to analysts, including a consistent user interface to over 100 classes of statistical models, as well as many post-estimation and hypothesis testing tools. To illustrate these benefits, we will consider a hypothetical example with simulated data.^[See the bottom of this page for the simulation code.]
 
 ![MrP, not Mister T.](fig/mrt.jpg)
 
