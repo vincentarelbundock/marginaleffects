@@ -1,5 +1,5 @@
 ---
-title: "Causal Inference (G-Computation)"
+title: "G-Computation"
 ---
 
 This vignette has 3 goals:
