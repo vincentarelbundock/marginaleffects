@@ -203,6 +203,11 @@ expect_error(plot_predictions(mod, condition = "am", by = "am"))
 expect_error(plot_predictions(mod, newdata = mtcars))
 
 
+# Plot 4 variables in condition using facet_grid
+mod <- lm(hp~mpg*am*gear*carb, data=mtcars)
+p <- plot_predictions(mod, condition = list("mpg"=1:5, "am"=0:1, "gear"=1:3, "carb"=1:2))
+expect_inherits(p, "gg")
+
 
 
 
