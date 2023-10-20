@@ -10,6 +10,8 @@ other,class
 other,link
 bam,response
 bam,link
+bart,ev
+bart,ppd
 betareg,response
 betareg,link
 betareg,precision
