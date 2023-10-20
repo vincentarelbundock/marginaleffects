@@ -286,8 +286,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../articles/lme4.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Mixed Effects</span></span></a>
+  <a href="../articles/machine_learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Machine Learning</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -298,14 +298,14 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../articles/machine_learning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Machine Learning</span></span></a>
+  <a href="../articles/multiple_imputation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Missing Data</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../articles/multiple_imputation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Missing Data</span></span></a>
+  <a href="../articles/lme4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Mixed Effects</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -480,7 +480,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#section" id="toc-section" class="nav-link active" data-scroll-target="#section">0.16.0</a></li>
+  <li><a href="#dev" id="toc-dev" class="nav-link active" data-scroll-target="#dev">dev</a></li>
+  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section">0.16.0</a></li>
   <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1">0.15.1</a></li>
   <li><a href="#section-2" id="toc-section-2" class="nav-link" data-scroll-target="#section-2">0.15.0</a></li>
   <li><a href="#section-3" id="toc-section-3" class="nav-link" data-scroll-target="#section-3">0.14.0</a></li>
@@ -529,6 +530,13 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 
 </header>
 
+<section id="dev" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="dev">dev</h2>
+<p>Bugs:</p>
+<ul>
+<li>Custom functions in the <code>comparison</code> argument of <code>comparisons()</code> did not supply the correct <code>x</code> vector length for bayesian models when the <code>by</code> argument is used. Thanks to <a href="https://github.com/Sandhu-SS">@Sandhu-SS</a> for report <a href="https://github.com/vincentarelbundock/marginaleffects/issues/931">#931</a>.</li>
+</ul>
+</section>
 <section id="section" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="section">0.16.0</h2>
 <p>Machine learning support:</p>

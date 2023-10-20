@@ -5,7 +5,7 @@
 <meta name="generator" content="quarto-1.4.151">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="author" content="Vincent Arel-Bundock and contributors.">
-<title>The Marginal Effects Zoo (0.16.0) - 21&nbsp; Machine Learning</title>
+<title>The Marginal Effects Zoo (0.16.0) - 19&nbsp; Machine Learning</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -61,8 +61,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../articles/multiple_imputation.html" rel="next">
-<link href="../articles/matching.html" rel="prev">
+<link href="../articles/matching.html" rel="next">
+<link href="../articles/logit.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -104,7 +104,7 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </script>
-<meta name="twitter:title" content="The Marginal Effects Zoo (0.16.0) - 21&nbsp; Machine Learning">
+<meta name="twitter:title" content="The Marginal Effects Zoo (0.16.0) - 19&nbsp; Machine Learning">
 <meta name="twitter:description" content="">
 <meta name="twitter:image" content="fig/marginaleffects_card.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -163,7 +163,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../articles/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../articles/machine_learning.html"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Machine Learning</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../articles/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../articles/machine_learning.html"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Machine Learning</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
     </div>
@@ -301,8 +301,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../articles/lme4.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Mixed Effects</span></span></a>
+  <a href="../articles/machine_learning.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Machine Learning</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -313,14 +313,14 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../articles/machine_learning.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Machine Learning</span></span></a>
+  <a href="../articles/multiple_imputation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Missing Data</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../articles/multiple_imputation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Missing Data</span></span></a>
+  <a href="../articles/lme4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Mixed Effects</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -493,17 +493,17 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
    
   <ul>
-<li><a href="#tidymodels" id="toc-tidymodels" class="nav-link active" data-scroll-target="#tidymodels"><span class="header-section-number">21.1</span> <code>tidymodels</code></a></li>
-  <li><a href="#mlr3" id="toc-mlr3" class="nav-link" data-scroll-target="#mlr3"><span class="header-section-number">21.2</span> <code>mlr3</code></a></li>
-  <li><a href="#simultaneous-changes" id="toc-simultaneous-changes" class="nav-link" data-scroll-target="#simultaneous-changes"><span class="header-section-number">21.3</span> Simultaneous changes</a></li>
-  <li><a href="#partial-dependence-plots" id="toc-partial-dependence-plots" class="nav-link" data-scroll-target="#partial-dependence-plots"><span class="header-section-number">21.4</span> Partial Dependence Plots</a></li>
-  <li><a href="#other-plots" id="toc-other-plots" class="nav-link" data-scroll-target="#other-plots"><span class="header-section-number">21.5</span> Other Plots</a></li>
+<li><a href="#tidymodels" id="toc-tidymodels" class="nav-link active" data-scroll-target="#tidymodels"><span class="header-section-number">19.1</span> <code>tidymodels</code></a></li>
+  <li><a href="#mlr3" id="toc-mlr3" class="nav-link" data-scroll-target="#mlr3"><span class="header-section-number">19.2</span> <code>mlr3</code></a></li>
+  <li><a href="#simultaneous-changes" id="toc-simultaneous-changes" class="nav-link" data-scroll-target="#simultaneous-changes"><span class="header-section-number">19.3</span> Simultaneous changes</a></li>
+  <li><a href="#partial-dependence-plots" id="toc-partial-dependence-plots" class="nav-link" data-scroll-target="#partial-dependence-plots"><span class="header-section-number">19.4</span> Partial Dependence Plots</a></li>
+  <li><a href="#other-plots" id="toc-other-plots" class="nav-link" data-scroll-target="#other-plots"><span class="header-section-number">19.5</span> Other Plots</a></li>
   </ul></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
 <h1 class="title">
-<span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Machine Learning</span>
+<span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Machine Learning</span>
 </h1>
 </div>
 
@@ -535,8 +535,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>ggplot2.discrete.colour <span class="op">=</span> <span class="fu"><a href="https://malcolmbarrett.github.io/ggokabeito/reference/palette_okabe_ito.html">palette_okabe_ito</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">10000</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="tidymodels" class="level2" data-number="21.1"><h2 data-number="21.1" class="anchored" data-anchor-id="tidymodels">
-<span class="header-section-number">21.1</span> <code>tidymodels</code>
+<section id="tidymodels" class="level2" data-number="19.1"><h2 data-number="19.1" class="anchored" data-anchor-id="tidymodels">
+<span class="header-section-number">19.1</span> <code>tidymodels</code>
 </h2>
 <p><code>marginaleffects</code> also supports the <code>tidymodels</code> machine learning framework. When the underlying engine used by <code>tidymodels</code> to train the model is itself supported as a standalone package by <code>marginaleffects</code>, we can obtain both estimates and their standard errors:</p>
 <div class="cell">
@@ -1256,8 +1256,8 @@ Type:  numeric </code></pre>
 </div>
 </div>
 </div>
-</section><section id="mlr3" class="level2" data-number="21.2"><h2 data-number="21.2" class="anchored" data-anchor-id="mlr3">
-<span class="header-section-number">21.2</span> <code>mlr3</code>
+</section><section id="mlr3" class="level2" data-number="19.2"><h2 data-number="19.2" class="anchored" data-anchor-id="mlr3">
+<span class="header-section-number">19.2</span> <code>mlr3</code>
 </h2>
 <p><code>mlr3</code> is a machine learning framework for <code>R</code>. It makes it possible for users to train a wide range of models, including linear models, random forests, gradient boosting machines, and neural networks.</p>
 <p>In this example, we use the <code>bikes</code> dataset supplied by the <code>fmeffects</code> package to train a random forest model predicting the number of bikes rented per hour. We then use <code>marginaleffects</code> to interpret the results of the model.</p>
@@ -1307,8 +1307,8 @@ Type:  response </code></pre>
 <pre><code>[1] 3.64244</code></pre>
 </div>
 </div>
-</section><section id="simultaneous-changes" class="level2" data-number="21.3"><h2 data-number="21.3" class="anchored" data-anchor-id="simultaneous-changes">
-<span class="header-section-number">21.3</span> Simultaneous changes</h2>
+</section><section id="simultaneous-changes" class="level2" data-number="19.3"><h2 data-number="19.3" class="anchored" data-anchor-id="simultaneous-changes">
+<span class="header-section-number">19.3</span> Simultaneous changes</h2>
 <p>With <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">marginaleffects::avg_comparisons()</a></code>, we can also compute the average effect of a simultaneous change in multiple predictors, using the <code>variables</code> and <code>cross</code> arguments. In this example, we see what happens (on average) to the predicted outcome when the <code>temp</code>, <code>season</code>, and <code>weather</code> predictors all change together:</p>
 <div class="cell">
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
@@ -1330,8 +1330,8 @@ Columns: term, contrast_season, contrast_temp, contrast_weather, estimate
 Type:  response </code></pre>
 </div>
 </div>
-</section><section id="partial-dependence-plots" class="level2" data-number="21.4"><h2 data-number="21.4" class="anchored" data-anchor-id="partial-dependence-plots">
-<span class="header-section-number">21.4</span> Partial Dependence Plots</h2>
+</section><section id="partial-dependence-plots" class="level2" data-number="19.4"><h2 data-number="19.4" class="anchored" data-anchor-id="partial-dependence-plots">
+<span class="header-section-number">19.4</span> Partial Dependence Plots</h2>
 <div class="cell">
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># https://stackoverflow.com/questions/67634344/r-partial-dependence-plots-from-workflow</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://tidymodels.tidymodels.org">"tidymodels"</a></span><span class="op">)</span></span>
@@ -1386,8 +1386,8 @@ Type:  response </code></pre>
 </div>
 </div>
 <p>Note that <code>marginaleffects</code> and <code>DALEXtra</code> plots are not exactly identical because the randomly sampled profiles are not the same. You can try the same procedure without sampling — or equivalently with <code>N=2930</code> — to see a perfect equivalence.</p>
-</section><section id="other-plots" class="level2" data-number="21.5"><h2 data-number="21.5" class="anchored" data-anchor-id="other-plots">
-<span class="header-section-number">21.5</span> Other Plots</h2>
+</section><section id="other-plots" class="level2" data-number="19.5"><h2 data-number="19.5" class="anchored" data-anchor-id="other-plots">
+<span class="header-section-number">19.5</span> Other Plots</h2>
 <p>We can plot the results using the standard <code>marginaleffects</code> helpers. For example, to plot predictions, we can do:</p>
 <div class="cell">
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://mlr3verse.mlr-org.com">mlr3verse</a></span><span class="op">)</span></span>
@@ -1870,13 +1870,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="../articles/matching.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Matching</span></span>
+      <a href="../articles/logit.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Logit</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../articles/multiple_imputation.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Missing Data</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../articles/matching.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Matching</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
