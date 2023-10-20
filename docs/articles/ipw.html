@@ -301,8 +301,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../articles/machine_learning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Machine Learning</span></span></a>
+  <a href="../articles/lme4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Mixed Effects</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -313,14 +313,14 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../articles/multiple_imputation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Missing Data</span></span></a>
+  <a href="../articles/machine_learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Machine Learning</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../articles/lme4.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Mixed Effects</span></span></a>
+  <a href="../articles/multiple_imputation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Missing Data</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -510,6 +510,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
   
 
 </header><p>Inverse Probability Weighting (IPW) is a popular technique to remove confounding in statistical modeling. It essentially involves re-weighting your sample so that it represents the population you’re interested in. Typically, we begin by estimating the predicted probability that each unit is treated. Then, we use these probabilities as weights in model fitting and in the computation of marginal effects, contrasts, risk differences, ratios, etc.</p>
+<p>This chapter introduces how to use <code>marginaleffects</code> for IPW. The presentation is very short. Readers who seek a more comprehensive understanding and application of these methods should refer to <a href="https://ngreifer.github.io/">Noah Greifer’s excellent and detailed work on the topic</a> and to the <a href="https://ngreifer.github.io/WeightIt/"><code>WeightIt</code> package vignettes and website.</a></p>
 <p>To illustrate, we use the Lalonde data.</p>
 <div class="cell">
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
@@ -532,23 +533,22 @@ NSW6     1  22    9  black       0        1    0    0  4056.4940</code></pre>
 <p>Then, we call <a href="reference/predictions.html"><code>predictions()</code></a> to extract predicted probabilities. Note that we supply the original <code>lalonde</code> data explicity to the <code>newdata</code> argument. This ensures that all the original columns are carried over to the new dataset: <code>dat</code>. We also create a new column called <code>wts</code> that contains the inverse of the predicted probabilities:</p>
 <div class="cell">
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">m</span>, newdata <span class="op">=</span> <span class="va">lalonde</span><span class="op">)</span></span>
-<span><span class="va">dat</span><span class="op">$</span><span class="va">wts</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">/</span> <span class="va">dat</span><span class="op">$</span><span class="va">estimate</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="va">dat</span><span class="op">$</span><span class="va">wts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">dat</span><span class="op">$</span><span class="va">treat</span> <span class="op">==</span> <span class="fl">1</span>, <span class="fl">1</span> <span class="op">/</span> <span class="va">dat</span><span class="op">$</span><span class="va">estimate</span>, <span class="fl">1</span> <span class="op">/</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">dat</span><span class="op">$</span><span class="va">estimate</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now, we use linear regression to model the outcome of interest: personal income in 1978 (<code>re78</code>). Note that we use the predictions as weights in the model fitting process.</p>
 <div class="cell">
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">re78</span> <span class="op">~</span> <span class="va">treat</span> <span class="op">*</span> <span class="op">(</span><span class="va">age</span> <span class="op">+</span> <span class="va">educ</span> <span class="op">+</span> <span class="va">race</span> <span class="op">+</span> <span class="va">re74</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">dat</span>, weights <span class="op">=</span> <span class="va">wts</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Finally, we call <a href="reference/comparisons.html"><code>avg_comparisons()</code></a> to compute the average treatment effect on the treated. Note that we use the <code>wts</code> argument to specify the weights to be used in the computation, and the <code>newdata</code> argument to specify the subset of observations of interest: treated individuals.</p>
+<p>Finally, we call <a href="reference/comparisons.html"><code>avg_comparisons()</code></a> to compute the average treatment effect. Note that we use the <code>wts</code> argument to specify the weights to be used in the computation.</p>
 <div class="cell">
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>,</span>
 <span>    variables <span class="op">=</span> <span class="st">"treat"</span>,</span>
 <span>    wts <span class="op">=</span> <span class="st">"wts"</span>,</span>
-<span>    newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">treat</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>    vcov <span class="op">=</span> <span class="st">"HC3"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
   Term Contrast Estimate Std. Error    z Pr(&gt;|z|)   S 2.5 % 97.5 %
- treat    1 - 0     1763       1397 1.26    0.207 2.3  -976   4501
+ treat    1 - 0      973       1173 0.83    0.407 1.3 -1326   3272
 
 Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
 Type:  response </code></pre>
@@ -564,11 +564,11 @@ Type:  response </code></pre>
 <span>    comparison <span class="op">=</span> <span class="va">ht</span>,</span>
 <span>    variables <span class="op">=</span> <span class="st">"treat"</span>,</span>
 <span>    wts <span class="op">=</span> <span class="st">"wts"</span>,</span>
-<span>    newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">treat</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>    vcov <span class="op">=</span> <span class="st">"HC3"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
   Term Contrast Estimate Std. Error    z Pr(&gt;|z|)   S 2.5 % 97.5 %
- treat     1, 0     5245       4158 1.26    0.207 2.3 -2905  13396
+ treat     1, 0     1851       2231 0.83    0.407 1.3 -2521   6222
 
 Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted 
 Type:  response </code></pre>

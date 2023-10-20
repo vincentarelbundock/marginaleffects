@@ -5,7 +5,7 @@
 <meta name="generator" content="quarto-1.4.151">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="author" content="Vincent Arel-Bundock and contributors.">
-<title>The Marginal Effects Zoo (0.16.0) - 22&nbsp; Mixed Effects</title>
+<title>The Marginal Effects Zoo (0.16.0) - 19&nbsp; Mixed Effects</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -61,8 +61,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../articles/mrp.html" rel="next">
-<link href="../articles/multiple_imputation.html" rel="prev">
+<link href="../articles/matching.html" rel="next">
+<link href="../articles/logit.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -104,7 +104,7 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </script>
-<meta name="twitter:title" content="The Marginal Effects Zoo (0.16.0) - 22&nbsp; Mixed Effects">
+<meta name="twitter:title" content="The Marginal Effects Zoo (0.16.0) - 19&nbsp; Mixed Effects">
 <meta name="twitter:description" content="">
 <meta name="twitter:image" content="fig/marginaleffects_card.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -163,7 +163,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../articles/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../articles/lme4.html"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Mixed Effects</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../articles/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../articles/lme4.html"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Mixed Effects</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
     </div>
@@ -301,8 +301,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../articles/machine_learning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Machine Learning</span></span></a>
+  <a href="../articles/lme4.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Mixed Effects</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -313,14 +313,14 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../articles/multiple_imputation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Missing Data</span></span></a>
+  <a href="../articles/machine_learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Machine Learning</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../articles/lme4.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Mixed Effects</span></span></a>
+  <a href="../articles/multiple_imputation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Missing Data</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -493,14 +493,14 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
    
   <ul>
-<li><a href="#unit-level-predictions" id="toc-unit-level-predictions" class="nav-link active" data-scroll-target="#unit-level-predictions"><span class="header-section-number">22.0.1</span> Unit-level predictions</a></li>
-  <li><a href="#population-level-predictions" id="toc-population-level-predictions" class="nav-link" data-scroll-target="#population-level-predictions"><span class="header-section-number">22.0.2</span> Population-level predictions</a></li>
+<li><a href="#unit-level-predictions" id="toc-unit-level-predictions" class="nav-link active" data-scroll-target="#unit-level-predictions"><span class="header-section-number">19.0.1</span> Unit-level predictions</a></li>
+  <li><a href="#population-level-predictions" id="toc-population-level-predictions" class="nav-link" data-scroll-target="#population-level-predictions"><span class="header-section-number">19.0.2</span> Population-level predictions</a></li>
   </ul></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
 <h1 class="title">
-<span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Mixed Effects</span>
+<span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Mixed Effects</span>
 </h1>
 </div>
 
@@ -532,8 +532,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <span>  <span class="va">weight</span> <span class="op">~</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">Time</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span><span class="op">(</span><span class="va">Time</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">+</span> <span class="va">Diet</span> <span class="op">+</span> <span class="va">Time</span><span class="op">:</span><span class="va">Diet</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span><span class="op">(</span><span class="va">Time</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">:</span><span class="va">Diet</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">+</span> <span class="va">Time</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span><span class="op">(</span><span class="va">Time</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">|</span> <span class="va">Chick</span><span class="op">)</span>,</span>
 <span>  data <span class="op">=</span> <span class="va">ChickWeight</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="unit-level-predictions" class="level3" data-number="22.0.1"><h3 data-number="22.0.1" class="anchored" data-anchor-id="unit-level-predictions">
-<span class="header-section-number">22.0.1</span> Unit-level predictions</h3>
+<section id="unit-level-predictions" class="level3" data-number="19.0.1"><h3 data-number="19.0.1" class="anchored" data-anchor-id="unit-level-predictions">
+<span class="header-section-number">19.0.1</span> Unit-level predictions</h3>
 <p>Predict weight of each chick over time:</p>
 <div class="cell">
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">pred1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">fit1</span>,</span>
@@ -569,8 +569,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <p><img src="lme4_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" style="width:100.0%"></p>
 </div>
 </div>
-</section><section id="population-level-predictions" class="level3" data-number="22.0.2"><h3 data-number="22.0.2" class="anchored" data-anchor-id="population-level-predictions">
-<span class="header-section-number">22.0.2</span> Population-level predictions</h3>
+</section><section id="population-level-predictions" class="level3" data-number="19.0.2"><h3 data-number="19.0.2" class="anchored" data-anchor-id="population-level-predictions">
+<span class="header-section-number">19.0.2</span> Population-level predictions</h3>
 <p>To make population-level predictions, we set the <code>Chick</code> variable to <code>NA</code>, and set <code>re.form=NA</code>. This last argument is offered by the <code>lme4::predict</code> function which is used behind the scenes to compute predictions:</p>
 <div class="cell">
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions</a></span><span class="op">(</span></span>
@@ -1031,13 +1031,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="../articles/multiple_imputation.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Missing Data</span></span>
+      <a href="../articles/logit.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Logit</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../articles/mrp.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">MrP</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../articles/matching.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Matching</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
