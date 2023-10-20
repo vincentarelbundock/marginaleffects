@@ -70,7 +70,7 @@ comparisons(
     variables = "tx")
 ```
 
-Population-averaged (aka "marginal") adjusted risk difference ([see this vignette](gformula.html)) can be obtained using the `avg_*()` functions or using the `by` argument:
+Population-averaged (aka "marginal") adjusted risk difference ([see this vignette](gcomputation.html)) can be obtained using the `avg_*()` functions or using the `by` argument:
 
 ```{r}
 avg_comparisons(mod, variables = "tx")

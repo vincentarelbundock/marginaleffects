@@ -9,7 +9,7 @@ The procedure we highlight can be broken down into three steps:
 
 1. Use `MatchIt` to pre-process the data and achieve better covariate balance
 2. Fit a regression model to the outcome of interest
-3. Use `marginaleffects` and [G-Computation](https://marginaleffects.com/articles/gformula.html) to estimate a quantity of interest, such as the Average treatment effect on the treated (ATT)
+3. Use `marginaleffects` and [G-Computation](https://marginaleffects.com/articles/gcomputation.html) to estimate a quantity of interest, such as the Average treatment effect on the treated (ATT)
 
 To begin, we load libraries and the data from the classic Lalonde experiment:
 
@@ -49,7 +49,7 @@ fit <- lm(
 
 ## Quantity of interest
 
-Finally, we use the `avg_comparisons()` function of the `marginaleffects` package to estimate the ATT and its standard error. In effect, this function applies [G-Computation](https://marginaleffects.com/articles/gformula.html) to estimate the quantity of interest. We use the following arguments:
+Finally, we use the `avg_comparisons()` function of the `marginaleffects` package to estimate the ATT and its standard error. In effect, this function applies [G-Computation](https://marginaleffects.com/articles/gcomputation.html) to estimate the quantity of interest. We use the following arguments:
  
 * `variables="treat"` indicates that we are interested in the effect of the `treat` variable.
 * `newdata=subset(dat, treat == 1)` indicates that we want to estimate the effect for the treated individuals only (i.e., the ATT).

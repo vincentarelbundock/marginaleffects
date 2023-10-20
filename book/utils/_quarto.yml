@@ -45,7 +45,7 @@ book:
       - articles/equivalence.qmd
       - articles/experiments.qmd
       - articles/gam.qmd
-      - articles/gformula.qmd
+      - articles/gcomputation.qmd
       - articles/ipw.qmd
       - articles/logit.qmd
       - articles/lme4.qmd
