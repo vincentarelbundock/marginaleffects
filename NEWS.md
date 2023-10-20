@@ -1,5 +1,11 @@
 # News
 
+## dev
+
+Bugs:
+
+* Custom functions in the `comparison` argument of `comparisons()` did not supply the correct `x` vector length for bayesian models when the `by` argument is used. Thanks to @Sandhu-SS for report #931.
+
 ## 0.16.0
 
 Machine learning support:

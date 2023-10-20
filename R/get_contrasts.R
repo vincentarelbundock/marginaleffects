@@ -376,7 +376,7 @@ get_contrasts <- function(model,
                     term = out$term[idx],
                     cross = cross,
                     wts = out$marginaleffects_wts_internal[idx],
-                    tmp_idx = out$tmp_idx,
+                    tmp_idx = out$tmp_idx[idx],
                     newdata = newdata)
             }
         }
