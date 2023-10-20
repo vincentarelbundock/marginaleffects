@@ -12,6 +12,12 @@ get_modeldata <- function(model, additional_variables = FALSE, modeldata = NULL,
         return(NULL)
     }
 
+    # otherwise, insight::get_data can sometimes return only the the outcome variable
+    if (inherits(model, "bart")) {
+        modeldata <- insight::get_data(model, additional_variables = TRUE)
+        return(modeldata)
+    }
+
     if (!is.null(modeldata)) {
         modeldata <- set_variable_class(modeldata, model = model)
         return(modeldata)

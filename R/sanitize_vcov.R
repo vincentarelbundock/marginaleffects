@@ -5,7 +5,7 @@ sanitize_vcov <- function(model, vcov) {
     }
 
     # no vcov matrix for bayesian models
-    if (inherits(model, c("brmsfit", "stanreg"))) {
+    if (inherits(model, c("brmsfit", "stanreg", "bart"))) {
         return(NULL)
     }
 
