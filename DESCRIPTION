@@ -1,6 +1,6 @@
 Package: marginaleffects
 Title: Predictions, Comparisons, Slopes, Marginal Means, and Hypothesis Tests
-Version: 0.16.0.9000
+Version: 0.16.0.9001
 Authors@R: 
     c(person(given = "Vincent",
              family = "Arel-Bundock",
@@ -66,6 +66,7 @@ Suggests:
     crch,
     DALEXtra,
     DCchoice,
+    dbarts,
     distributional,
     dplyr,
     emmeans,
@@ -219,6 +220,7 @@ Collate:
     'methods_brms.R'
     'methods_crch.R'
     'methods_dataframe.R'
+    'methods_dbarts.R'
     'methods_fixest.R'
     'methods_gamlss.R'
     'methods_glmmTMB.R'

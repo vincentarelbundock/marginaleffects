@@ -222,8 +222,8 @@ marginal_means <- function(model,
 
 
     sanity_dots(model = model, ...)
-    if (inherits(model, "brmsfit")) {
-        insight::format_error("`brmsfit` objects are yet not supported by the `marginal_means` function.")
+    if (inherits(model, c("brmsfit", "bart"))) {
+        insight::format_error("This model object type is not yet supported by the `marginal_means` function.")
     }
 
     # fancy vcov processing to allow strings like "HC3"

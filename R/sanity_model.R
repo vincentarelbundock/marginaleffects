@@ -27,6 +27,7 @@ sanity_model_supported_class <- function(model) {
     supported <- append(custom_classes, list(
         "afex_aov",
         "amest", #package: Amelia
+        "bart", # package: dbarts
         "betareg",
         "bglmerMod",
         "blmerMod",

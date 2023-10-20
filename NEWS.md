@@ -2,6 +2,10 @@
 
 ## dev
 
+New supported packages:
+
+* `dbarts`: https://cran.r-project.org/package=dbarts
+
 Bugs:
 
 * Custom functions in the `comparison` argument of `comparisons()` did not supply the correct `x` vector length for bayesian models when the `by` argument is used. Thanks to @Sandhu-SS for report #931.

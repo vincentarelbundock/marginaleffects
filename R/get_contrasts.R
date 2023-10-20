@@ -24,7 +24,7 @@ get_contrasts <- function(model,
     data.table::setDF(original)
 
     # brms models need to be combined to use a single seed when sample_new_levels="gaussian"
-    if (inherits(model, "brmsfit")) {
+    if (inherits(model, c("brmsfit", "bart"))) {
 
         if (!"rowid" %in% colnames(lo)) {
             lo$rowid <- hi$rowid <- seq_len(nrow(lo))

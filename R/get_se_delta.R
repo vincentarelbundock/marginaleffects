@@ -63,7 +63,7 @@ get_se_delta <- function(model,
                          ...) {
 
     # delta method does not work for these models
-    bad <- c("brmsfit", "stanreg")
+    bad <- c("brmsfit", "stanreg", "bart")
     if (any(bad %in% class(model))) {
         return(NULL)
     }
