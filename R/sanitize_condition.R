@@ -20,8 +20,8 @@ sanitize_condition <- function(model, condition, variables = NULL, modeldata = N
 
     # allow multiple conditions and/or effects
     checkmate::assert(
-        checkmate::check_character(condition, min.len = 1, max.len = 3),
-        checkmate::check_list(condition, min.len = 1, max.len = 3))
+        checkmate::check_character(condition, min.len = 1, max.len = 4),
+        checkmate::check_list(condition, min.len = 1, max.len = 4))
 
     # c("a", "b") or list("a", "b") -> named list of NULLs
     flag1 <- isTRUE(checkmate::check_character(condition))
@@ -68,6 +68,7 @@ sanitize_condition <- function(model, condition, variables = NULL, modeldata = N
     condition1 <- names(condition)[[1]]
     condition2 <- hush(names(condition)[[2]])
     condition3 <- hush(names(condition)[[3]])
+    condition4 <- hush(names(condition)[[4]])
 
     # build typical dataset with a sequence of values over "condition" range
     at_list <- list()
@@ -111,7 +112,7 @@ sanitize_condition <- function(model, condition, variables = NULL, modeldata = N
         }
     }
 
-    # condition 3: facet
+    # condition 3: facet_1
     if (length(condition) > 2) {
         if (is.null(condition[[3]])) {
             if (is.numeric(dat[[condition3]])) {
@@ -126,6 +127,23 @@ sanitize_condition <- function(model, condition, variables = NULL, modeldata = N
                 at_list[[condition3]] <- condition[[3]]
             }
         }
+    }
+    
+    # condition 4: facet_2
+    if (length(condition) > 3) {
+      if (is.null(condition[[4]])) {
+        if (is.numeric(dat[[condition4]])) {
+          at_list[[condition4]] <- stats::fivenum(dat[[condition4]])
+        } else {
+          at_list[[condition4]] <- unique(dat[[condition4]])
+        }
+      } else {
+        if (isTRUE(checkmate::check_choice(condition[[4]], shortcuts))) {
+          at_list[[condition4]] <- condition_shortcuts(dat[[condition4]], condition[[4]], shortcuts)
+        } else {
+          at_list[[condition4]] <- condition[[4]]
+        }
+      }
     }
 
     at_list[["model"]] <- model
@@ -167,6 +185,7 @@ sanitize_condition <- function(model, condition, variables = NULL, modeldata = N
         "condition" = condition, 
         "condition1" = condition1, 
         "condition2" = condition2, 
-        "condition3" = condition3) 
+        "condition3" = condition3,
+        "condition4" = condition4) 
     return(out)
 }

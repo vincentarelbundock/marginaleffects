@@ -16,12 +16,12 @@
 #' 
 #' @param variables Name of the variable whose marginal effect (slope) we want to plot on the y-axis.
 #' @param condition Conditional slopes
-#' + Character vector (max length 3): Names of the predictors to display.
-#' + Named list (max length 3): List names correspond to predictors. List elements can be:
+#' + Character vector (max length 4): Names of the predictors to display.
+#' + Named list (max length 4): List names correspond to predictors. List elements can be:
 #'   - Numeric vector
 #'   - Function which returns a numeric vector or a set of unique categorical values 
 #'   - Shortcut strings for common reference values: "minmax", "quartile", "threenum"
-#' + 1: x-axis. 2: color/shape. 3: facets.
+#' + 1: x-axis. 2: color/shape. 3: facet (wrap if no fourth variable, otherwise cols of grid). 4: facet (rows of grid).
 #' + Numeric variables in positions 2 and 3 are summarized by Tukey's five numbers `?stats::fivenum`.
 #' @param rug TRUE displays tick marks on the axes to mark the distribution of raw data.
 #' @param gray FALSE grayscale or color plot
