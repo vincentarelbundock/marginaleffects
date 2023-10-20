@@ -1,6 +1,7 @@
 source("helpers.R")
 requiet("dbarts")
 requiet("modeldata")
+requiet("marginaleffects")
 
 dat <- na.omit(modeldata::penguins)
 
@@ -20,7 +21,7 @@ mod <- bart2(
     keepTrees = TRUE,
     verbose = FALSE)
 
-p <- predictions(mod, by = "species")
+p <- predictions(mod, by = "species", newdata = dat)
 expect_inherits(p, "predictions")
-p <- avg_comparisons(mod)
+p <- avg_comparisons(mod, newdata = dat)
 expect_inherits(p, "comparisons")
