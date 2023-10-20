@@ -5,7 +5,7 @@
 <meta name="generator" content="quarto-1.4.151">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="author" content="Vincent Arel-Bundock and contributors.">
-<title>The Marginal Effects Zoo (0.16.0) - 20&nbsp; Machine Learning</title>
+<title>The Marginal Effects Zoo (0.16.0) - 21&nbsp; Machine Learning</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -61,8 +61,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../articles/matching.html" rel="next">
-<link href="../articles/lme4.html" rel="prev">
+<link href="../articles/multiple_imputation.html" rel="next">
+<link href="../articles/matching.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -103,8 +103,8 @@ window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
-</script><script src="../site_libs/kePrint-0.0.1/kePrint.js"></script><link href="../site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
-<meta name="twitter:title" content="The Marginal Effects Zoo (0.16.0) - 20&nbsp; Machine Learning">
+</script>
+<meta name="twitter:title" content="The Marginal Effects Zoo (0.16.0) - 21&nbsp; Machine Learning">
 <meta name="twitter:description" content="">
 <meta name="twitter:image" content="fig/marginaleffects_card.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -163,7 +163,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../articles/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../articles/machine_learning.html"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Machine Learning</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../articles/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../articles/machine_learning.html"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Machine Learning</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
     </div>
@@ -307,14 +307,14 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../articles/machine_learning.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Machine Learning</span></span></a>
+  <a href="../articles/matching.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Matching</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../articles/matching.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Matching</span></span></a>
+  <a href="../articles/machine_learning.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Machine Learning</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -493,18 +493,17 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
    
   <ul>
-<li><a href="#tidymodels" id="toc-tidymodels" class="nav-link active" data-scroll-target="#tidymodels"><span class="header-section-number">20.1</span> <code>tidymodels</code></a></li>
-  <li><a href="#mlr3" id="toc-mlr3" class="nav-link" data-scroll-target="#mlr3"><span class="header-section-number">20.2</span> <code>mlr3</code></a></li>
-  <li><a href="#simultaneous-changes" id="toc-simultaneous-changes" class="nav-link" data-scroll-target="#simultaneous-changes"><span class="header-section-number">20.3</span> Simultaneous changes</a></li>
-  <li><a href="#fmeffects-forward-vs.-centered-effects" id="toc-fmeffects-forward-vs.-centered-effects" class="nav-link" data-scroll-target="#fmeffects-forward-vs.-centered-effects"><span class="header-section-number">20.4</span> <code>fmeffects</code>: Forward vs.&nbsp;centered effects</a></li>
-  <li><a href="#partial-dependence-plots" id="toc-partial-dependence-plots" class="nav-link" data-scroll-target="#partial-dependence-plots"><span class="header-section-number">20.5</span> Partial Dependence Plots</a></li>
-  <li><a href="#other-plots" id="toc-other-plots" class="nav-link" data-scroll-target="#other-plots"><span class="header-section-number">20.6</span> Other Plots</a></li>
+<li><a href="#tidymodels" id="toc-tidymodels" class="nav-link active" data-scroll-target="#tidymodels"><span class="header-section-number">21.1</span> <code>tidymodels</code></a></li>
+  <li><a href="#mlr3" id="toc-mlr3" class="nav-link" data-scroll-target="#mlr3"><span class="header-section-number">21.2</span> <code>mlr3</code></a></li>
+  <li><a href="#simultaneous-changes" id="toc-simultaneous-changes" class="nav-link" data-scroll-target="#simultaneous-changes"><span class="header-section-number">21.3</span> Simultaneous changes</a></li>
+  <li><a href="#partial-dependence-plots" id="toc-partial-dependence-plots" class="nav-link" data-scroll-target="#partial-dependence-plots"><span class="header-section-number">21.4</span> Partial Dependence Plots</a></li>
+  <li><a href="#other-plots" id="toc-other-plots" class="nav-link" data-scroll-target="#other-plots"><span class="header-section-number">21.5</span> Other Plots</a></li>
   </ul></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
 <h1 class="title">
-<span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Machine Learning</span>
+<span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Machine Learning</span>
 </h1>
 </div>
 
@@ -519,9 +518,13 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
   
 
 </header><p><code>marginaleffects</code> offers several “model-agnostic” functions to interpret statistical and machine learning models. This vignette highlights how the package can be used to extract meaningful insights from models trained using the <code>mlr3</code> and <code>tidymodels</code> frameworks.</p>
+<p>The features in this vignette require version 0.16.0 or <code>marginaleffects</code>, or the development version which can be installed from Github:</p>
+<div class="cell">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"vincentarelbundock/marginaleffects"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>Make sure to restart <code>R</code> after installation. Then, load a few libraries:</p>
 <div class="cell">
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://marginaleffects.com/">"marginaleffects"</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://marginaleffects.com/">"marginaleffects"</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/holgstr/fmeffects">"fmeffects"</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://ggplot2.tidyverse.org">"ggplot2"</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://mlr3verse.mlr-org.com">"mlr3verse"</a></span><span class="op">)</span></span>
@@ -532,12 +535,12 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>ggplot2.discrete.colour <span class="op">=</span> <span class="fu"><a href="https://malcolmbarrett.github.io/ggokabeito/reference/palette_okabe_ito.html">palette_okabe_ito</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">10000</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="tidymodels" class="level2" data-number="20.1"><h2 data-number="20.1" class="anchored" data-anchor-id="tidymodels">
-<span class="header-section-number">20.1</span> <code>tidymodels</code>
+<section id="tidymodels" class="level2" data-number="21.1"><h2 data-number="21.1" class="anchored" data-anchor-id="tidymodels">
+<span class="header-section-number">21.1</span> <code>tidymodels</code>
 </h2>
 <p><code>marginaleffects</code> also supports the <code>tidymodels</code> machine learning framework. When the underlying engine used by <code>tidymodels</code> to train the model is itself supported as a standalone package by <code>marginaleffects</code>, we can obtain both estimates and their standard errors:</p>
 <div class="cell">
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidymodels.tidymodels.org">tidymodels</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidymodels.tidymodels.org">tidymodels</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">penguins</span> <span class="op">&lt;-</span> <span class="fu">modeldata</span><span class="fu">::</span><span class="va"><a href="https://modeldata.tidymodels.org/reference/penguins.html">penguins</a></span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html">na.omit</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -560,7 +563,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
 Type:  numeric </code></pre>
 </div>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, type <span class="op">=</span> <span class="st">"numeric"</span>, newdata <span class="op">=</span> <span class="va">penguins</span>, by <span class="op">=</span> <span class="st">"island"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">avg_predictions</a></span><span class="op">(</span><span class="va">mod</span>, type <span class="op">=</span> <span class="st">"numeric"</span>, newdata <span class="op">=</span> <span class="va">penguins</span>, by <span class="op">=</span> <span class="st">"island"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     island Estimate Std. Error   z Pr(&gt;|z|)   S 2.5 % 97.5 %
@@ -574,7 +577,7 @@ Type:  numeric </code></pre>
 </div>
 <p>When the underlying engine that <code>tidymodels</code> uses to fit the model is not supported by <code>marginaleffects</code> as a standalone model, we can also obtain correct results, but no uncertainy estimates. Here is a random forest model:</p>
 <div class="cell">
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://modelsummary.com">modelsummary</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://modelsummary.com">modelsummary</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># pre-processing</span></span>
 <span><span class="va">pre</span> <span class="op">&lt;-</span> <span class="va">penguins</span> <span class="op">|&gt;</span></span>
@@ -606,268 +609,709 @@ Type:  numeric </code></pre>
 <span>  coef_omit <span class="op">=</span> <span class="st">"sex"</span>,</span>
 <span>  coef_rename <span class="op">=</span> <span class="va">coef_rename</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<table class="table table-sm table-striped small" data-quarto-postprocess="true">
-<thead><tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
-<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
-<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
-<th style="text-align: center;" data-quarto-table-cell-role="th">Logit</th>
-<th style="text-align: center;" data-quarto-table-cell-role="th">Random Forest</th>
-<th style="text-align: center;" data-quarto-table-cell-role="th">&nbsp;XGBoost</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Bill Length Mm</td>
-<td style="text-align: left;">+1</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: center;">−0.101</td>
-<td style="text-align: center;">−0.059</td>
-<td style="text-align: center;">−0.075</td>
+<div id="jjcohzjkrh" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#jjcohzjkrh table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#jjcohzjkrh thead, #jjcohzjkrh tbody, #jjcohzjkrh tfoot, #jjcohzjkrh tr, #jjcohzjkrh td, #jjcohzjkrh th {
+  border-style: none;
+}
+
+#jjcohzjkrh p {
+  margin: 0;
+  padding: 0;
+}
+
+#jjcohzjkrh .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#jjcohzjkrh .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#jjcohzjkrh .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#jjcohzjkrh .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#jjcohzjkrh .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#jjcohzjkrh .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#jjcohzjkrh .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#jjcohzjkrh .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#jjcohzjkrh .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#jjcohzjkrh .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#jjcohzjkrh .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#jjcohzjkrh .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#jjcohzjkrh .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#jjcohzjkrh .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#jjcohzjkrh .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#jjcohzjkrh .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#jjcohzjkrh .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#jjcohzjkrh .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#jjcohzjkrh .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#jjcohzjkrh .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#jjcohzjkrh .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#jjcohzjkrh .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#jjcohzjkrh .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#jjcohzjkrh .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#jjcohzjkrh .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#jjcohzjkrh .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#jjcohzjkrh .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#jjcohzjkrh .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#jjcohzjkrh .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#jjcohzjkrh .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#jjcohzjkrh .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#jjcohzjkrh .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#jjcohzjkrh .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#jjcohzjkrh .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#jjcohzjkrh .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#jjcohzjkrh .gt_left {
+  text-align: left;
+}
+
+#jjcohzjkrh .gt_center {
+  text-align: center;
+}
+
+#jjcohzjkrh .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#jjcohzjkrh .gt_font_normal {
+  font-weight: normal;
+}
+
+#jjcohzjkrh .gt_font_bold {
+  font-weight: bold;
+}
+
+#jjcohzjkrh .gt_font_italic {
+  font-style: italic;
+}
+
+#jjcohzjkrh .gt_super {
+  font-size: 65%;
+}
+
+#jjcohzjkrh .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#jjcohzjkrh .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#jjcohzjkrh .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#jjcohzjkrh .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#jjcohzjkrh .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#jjcohzjkrh .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#jjcohzjkrh .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead><tr class="gt_col_headings">
+<th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id=" "> </th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="  ">  </th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="   ">   </th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="Logit">Logit</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="Random Forest">Random Forest</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="XGBoost">XGBoost</th>
+    </tr></thead>
+<tbody class="gt_table_body">
+<tr>
+<td headers="" class="gt_row gt_left">Bill Length Mm</td>
+<td headers="" class="gt_row gt_left">+1</td>
+<td headers="" class="gt_row gt_left">female</td>
+<td headers="Logit" class="gt_row gt_center">-0.101</td>
+<td headers="Random Forest" class="gt_row gt_center">-0.060</td>
+<td headers="XGBoost" class="gt_row gt_center">-0.075</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: center;">(0.004)</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
+<tr>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="Logit" class="gt_row gt_center">(0.004)</td>
+<td headers="Random Forest" class="gt_row gt_center"></td>
+<td headers="XGBoost" class="gt_row gt_center"></td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">male</td>
-<td style="text-align: center;">0.101</td>
-<td style="text-align: center;">0.059</td>
-<td style="text-align: center;">0.075</td>
+<tr>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="" class="gt_row gt_left">male</td>
+<td headers="Logit" class="gt_row gt_center">0.101</td>
+<td headers="Random Forest" class="gt_row gt_center">0.060</td>
+<td headers="XGBoost" class="gt_row gt_center">0.075</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: center;">(0.004)</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
+<tr>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="Logit" class="gt_row gt_center">(0.004)</td>
+<td headers="Random Forest" class="gt_row gt_center"></td>
+<td headers="XGBoost" class="gt_row gt_center"></td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">Island</td>
-<td style="text-align: left;">Dream - Biscoe</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: center;">−0.044</td>
-<td style="text-align: center;">0.014</td>
-<td style="text-align: center;">−0.004</td>
+<tr>
+<td headers="" class="gt_row gt_left">Island</td>
+<td headers="" class="gt_row gt_left">Dream - Biscoe</td>
+<td headers="" class="gt_row gt_left">female</td>
+<td headers="Logit" class="gt_row gt_center">-0.044</td>
+<td headers="Random Forest" class="gt_row gt_center">0.006</td>
+<td headers="XGBoost" class="gt_row gt_center">-0.004</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: center;">(0.069)</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
+<tr>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="Logit" class="gt_row gt_center">(0.069)</td>
+<td headers="Random Forest" class="gt_row gt_center"></td>
+<td headers="XGBoost" class="gt_row gt_center"></td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">male</td>
-<td style="text-align: center;">0.044</td>
-<td style="text-align: center;">−0.014</td>
-<td style="text-align: center;">0.004</td>
+<tr>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="" class="gt_row gt_left">male</td>
+<td headers="Logit" class="gt_row gt_center">0.044</td>
+<td headers="Random Forest" class="gt_row gt_center">-0.006</td>
+<td headers="XGBoost" class="gt_row gt_center">0.004</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: center;">(0.069)</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
+<tr>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="Logit" class="gt_row gt_center">(0.069)</td>
+<td headers="Random Forest" class="gt_row gt_center"></td>
+<td headers="XGBoost" class="gt_row gt_center"></td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td style="text-align: left;">Torgersen - Biscoe</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: center;">0.015</td>
-<td style="text-align: center;">−0.054</td>
-<td style="text-align: center;">0.008</td>
+<tr>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="" class="gt_row gt_left">Torgersen - Biscoe</td>
+<td headers="" class="gt_row gt_left">female</td>
+<td headers="Logit" class="gt_row gt_center">0.015</td>
+<td headers="Random Forest" class="gt_row gt_center">-0.062</td>
+<td headers="XGBoost" class="gt_row gt_center">0.008</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: center;">(0.074)</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
+<tr>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="Logit" class="gt_row gt_center">(0.074)</td>
+<td headers="Random Forest" class="gt_row gt_center"></td>
+<td headers="XGBoost" class="gt_row gt_center"></td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">male</td>
-<td style="text-align: center;">−0.015</td>
-<td style="text-align: center;">0.054</td>
-<td style="text-align: center;">−0.008</td>
+<tr>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="" class="gt_row gt_left">male</td>
+<td headers="Logit" class="gt_row gt_center">-0.015</td>
+<td headers="Random Forest" class="gt_row gt_center">0.062</td>
+<td headers="XGBoost" class="gt_row gt_center">-0.008</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: center;">(0.074)</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
+<tr>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="Logit" class="gt_row gt_center">(0.074)</td>
+<td headers="Random Forest" class="gt_row gt_center"></td>
+<td headers="XGBoost" class="gt_row gt_center"></td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">Species</td>
-<td style="text-align: left;">Chinstrap - Adelie</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: center;">0.562</td>
-<td style="text-align: center;">0.153</td>
-<td style="text-align: center;">0.441</td>
+<tr>
+<td headers="" class="gt_row gt_left">Species</td>
+<td headers="" class="gt_row gt_left">Chinstrap - Adelie</td>
+<td headers="" class="gt_row gt_left">female</td>
+<td headers="Logit" class="gt_row gt_center">0.562</td>
+<td headers="Random Forest" class="gt_row gt_center">0.164</td>
+<td headers="XGBoost" class="gt_row gt_center">0.441</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: center;">(0.036)</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
+<tr>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="Logit" class="gt_row gt_center">(0.036)</td>
+<td headers="Random Forest" class="gt_row gt_center"></td>
+<td headers="XGBoost" class="gt_row gt_center"></td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">male</td>
-<td style="text-align: center;">−0.562</td>
-<td style="text-align: center;">−0.153</td>
-<td style="text-align: center;">−0.441</td>
+<tr>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="" class="gt_row gt_left">male</td>
+<td headers="Logit" class="gt_row gt_center">-0.562</td>
+<td headers="Random Forest" class="gt_row gt_center">-0.164</td>
+<td headers="XGBoost" class="gt_row gt_center">-0.441</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: center;">(0.036)</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
+<tr>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="Logit" class="gt_row gt_center">(0.036)</td>
+<td headers="Random Forest" class="gt_row gt_center"></td>
+<td headers="XGBoost" class="gt_row gt_center"></td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td style="text-align: left;">Gentoo - Adelie</td>
-<td style="text-align: left;">female</td>
-<td style="text-align: center;">0.453</td>
-<td style="text-align: center;">0.112</td>
-<td style="text-align: center;">0.361</td>
+<tr>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="" class="gt_row gt_left">Gentoo - Adelie</td>
+<td headers="" class="gt_row gt_left">female</td>
+<td headers="Logit" class="gt_row gt_center">0.453</td>
+<td headers="Random Forest" class="gt_row gt_center">0.116</td>
+<td headers="XGBoost" class="gt_row gt_center">0.361</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: center;">(0.025)</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
+<tr>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="Logit" class="gt_row gt_center">(0.025)</td>
+<td headers="Random Forest" class="gt_row gt_center"></td>
+<td headers="XGBoost" class="gt_row gt_center"></td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">male</td>
-<td style="text-align: center;">−0.453</td>
-<td style="text-align: center;">−0.112</td>
-<td style="text-align: center;">−0.361</td>
+<tr>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="" class="gt_row gt_left">male</td>
+<td headers="Logit" class="gt_row gt_center">-0.453</td>
+<td headers="Random Forest" class="gt_row gt_center">-0.116</td>
+<td headers="XGBoost" class="gt_row gt_center">-0.361</td>
 </tr>
-<tr class="even">
-<td style="text-align: left; box-shadow: 0px 1.5px;"></td>
-<td style="text-align: left; box-shadow: 0px 1.5px;"></td>
-<td style="text-align: left; box-shadow: 0px 1.5px;"></td>
-<td style="text-align: center; box-shadow: 0px 1.5px;">(0.025)</td>
-<td style="text-align: center; box-shadow: 0px 1.5px;"></td>
-<td style="text-align: center; box-shadow: 0px 1.5px;"></td>
+<tr>
+<td headers="" class="gt_row gt_left" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000;"></td>
+<td headers="" class="gt_row gt_left" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000;"></td>
+<td headers="" class="gt_row gt_left" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000;"></td>
+<td headers="Logit" class="gt_row gt_center" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000;">(0.025)</td>
+<td headers="Random Forest" class="gt_row gt_center" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000;"></td>
+<td headers="XGBoost" class="gt_row gt_center" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000;"></td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">Num.Obs.</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: center;">333</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
+<tr>
+<td headers="" class="gt_row gt_left">Num.Obs.</td>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="Logit" class="gt_row gt_center">333</td>
+<td headers="Random Forest" class="gt_row gt_center"></td>
+<td headers="XGBoost" class="gt_row gt_center"></td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">AIC</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: center;">302.2</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
+<tr>
+<td headers="" class="gt_row gt_left">AIC</td>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="Logit" class="gt_row gt_center">302.2</td>
+<td headers="Random Forest" class="gt_row gt_center"></td>
+<td headers="XGBoost" class="gt_row gt_center"></td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">BIC</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: center;">336.4</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
+<tr>
+<td headers="" class="gt_row gt_left">BIC</td>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="Logit" class="gt_row gt_center">336.4</td>
+<td headers="Random Forest" class="gt_row gt_center"></td>
+<td headers="XGBoost" class="gt_row gt_center"></td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">Log.Lik.</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-<td style="text-align: center;">−142.082</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;"></td>
+<tr>
+<td headers="" class="gt_row gt_left">Log.Lik.</td>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="" class="gt_row gt_left"></td>
+<td headers="Logit" class="gt_row gt_center">-142.082</td>
+<td headers="Random Forest" class="gt_row gt_center"></td>
+<td headers="XGBoost" class="gt_row gt_center"></td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
-</section><section id="mlr3" class="level2" data-number="20.2"><h2 data-number="20.2" class="anchored" data-anchor-id="mlr3">
-<span class="header-section-number">20.2</span> <code>mlr3</code>
+</div>
+</section><section id="mlr3" class="level2" data-number="21.2"><h2 data-number="21.2" class="anchored" data-anchor-id="mlr3">
+<span class="header-section-number">21.2</span> <code>mlr3</code>
 </h2>
 <p><code>mlr3</code> is a machine learning framework for <code>R</code>. It makes it possible for users to train a wide range of models, including linear models, random forests, gradient boosting machines, and neural networks.</p>
 <p>In this example, we use the <code>bikes</code> dataset supplied by the <code>fmeffects</code> package to train a random forest model predicting the number of bikes rented per hour. We then use <code>marginaleffects</code> to interpret the results of the model.</p>
 <div class="cell">
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"bikes"</span>, package <span class="op">=</span> <span class="st">"fmeffects"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"bikes"</span>, package <span class="op">=</span> <span class="st">"fmeffects"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">task</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/as_task_regr.html">as_task_regr</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">bikes</span>, id <span class="op">=</span> <span class="st">"bikes"</span>, target <span class="op">=</span> <span class="st">"count"</span><span class="op">)</span></span>
 <span><span class="va">forest</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html">lrn</a></span><span class="op">(</span><span class="st">"regr.ranger"</span><span class="op">)</span><span class="op">$</span><span class="fu">train</span><span class="op">(</span><span class="va">task</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>As described in other vignettes, we can use the <a href="reference/comparisons.html"><code>avg_comparisons()</code></a> function to compute the average change in predicted outcome that is associated with a change in each feature:</p>
 <div class="cell">
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">forest</span>, newdata <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">forest</span>, newdata <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
        Term      Contrast Estimate
  count      +1               0.000
- holiday    False - True    14.001
- humidity   +1             -23.438
- month      +1               3.895
- season     spring - fall  -29.351
- season     summer - fall   -7.390
- season     winter - fall    4.739
- temp       +1               3.603
- weather    misty - clear   -7.934
- weather    rain - clear   -59.467
- weekday    Fri - Sun       69.384
- weekday    Mon - Sun       77.766
- weekday    Sat - Sun       18.296
- weekday    Thu - Sun       85.197
- weekday    Tue - Sun       83.673
- weekday    Wed - Sun       85.878
- windspeed  +1               0.294
- workingday False - True  -188.588
- year       1 - 0           98.440
+ holiday    False - True    15.015
+ humidity   +1             -22.587
+ month      +1               4.071
+ season     spring - fall  -34.097
+ season     summer - fall   -9.406
+ season     winter - fall    2.032
+ temp       +1               3.642
+ weather    misty - clear   -7.974
+ weather    rain - clear   -58.013
+ weekday    Fri - Sun       75.829
+ weekday    Mon - Sun       84.463
+ weekday    Sat - Sun       27.949
+ weekday    Thu - Sun       91.796
+ weekday    Tue - Sun       90.371
+ weekday    Wed - Sun       92.699
+ windspeed  +1               0.203
+ workingday False - True  -187.681
+ year       1 - 0           97.913
 
 Columns: term, contrast, estimate 
 Type:  response </code></pre>
 </div>
 </div>
-<p>These results are easy to interpret: An increase of 1 degree Celsius in the temperature is associated with an increase of 3.603 bikes rented per hour.</p>
+<p>These results are easy to interpret: An increase of 1 degree Celsius in the temperature is associated with an increase of 3.642 bikes rented per hour.</p>
 <p>We could obtain the same result manually as follows:</p>
 <div class="cell">
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html">transform</a></span><span class="op">(</span><span class="va">bikes</span>, temp <span class="op">=</span> <span class="va">temp</span> <span class="op">-</span> <span class="fl">0.5</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html">transform</a></span><span class="op">(</span><span class="va">bikes</span>, temp <span class="op">=</span> <span class="va">temp</span> <span class="op">-</span> <span class="fl">0.5</span><span class="op">)</span></span>
 <span><span class="va">hi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html">transform</a></span><span class="op">(</span><span class="va">bikes</span>, temp <span class="op">=</span> <span class="va">temp</span> <span class="op">+</span> <span class="fl">0.5</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">forest</span>, newdata <span class="op">=</span> <span class="va">hi</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">forest</span>, newdata <span class="op">=</span> <span class="va">lo</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 3.603054</code></pre>
+<pre><code>[1] 3.64244</code></pre>
 </div>
 </div>
-</section><section id="simultaneous-changes" class="level2" data-number="20.3"><h2 data-number="20.3" class="anchored" data-anchor-id="simultaneous-changes">
-<span class="header-section-number">20.3</span> Simultaneous changes</h2>
+</section><section id="simultaneous-changes" class="level2" data-number="21.3"><h2 data-number="21.3" class="anchored" data-anchor-id="simultaneous-changes">
+<span class="header-section-number">21.3</span> Simultaneous changes</h2>
 <p>With <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">marginaleffects::avg_comparisons()</a></code>, we can also compute the average effect of a simultaneous change in multiple predictors, using the <code>variables</code> and <code>cross</code> arguments. In this example, we see what happens (on average) to the predicted outcome when the <code>temp</code>, <code>season</code>, and <code>weather</code> predictors all change together:</p>
 <div class="cell">
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
 <span>    <span class="va">forest</span>,</span>
 <span>    variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"temp"</span>, <span class="st">"season"</span>, <span class="st">"weather"</span><span class="op">)</span>,</span>
 <span>    cross <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -875,50 +1319,21 @@ Type:  response </code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Estimate     C: season C: temp    C: weather
-  -32.469 spring - fall      +1 misty - clear
-  -76.390 spring - fall      +1 rain - clear 
-  -11.574 summer - fall      +1 misty - clear
-  -60.974 summer - fall      +1 rain - clear 
-    0.334 winter - fall      +1 misty - clear
-  -53.340 winter - fall      +1 rain - clear 
+   -37.51 spring - fall      +1 misty - clear
+   -79.93 spring - fall      +1 rain - clear 
+   -13.97 summer - fall      +1 misty - clear
+   -61.82 summer - fall      +1 rain - clear 
+    -2.65 winter - fall      +1 misty - clear
+   -54.58 winter - fall      +1 rain - clear 
 
 Columns: term, contrast_season, contrast_temp, contrast_weather, estimate 
 Type:  response </code></pre>
 </div>
 </div>
-</section><section id="fmeffects-forward-vs.-centered-effects" class="level2" data-number="20.4"><h2 data-number="20.4" class="anchored" data-anchor-id="fmeffects-forward-vs.-centered-effects">
-<span class="header-section-number">20.4</span> <code>fmeffects</code>: Forward vs.&nbsp;centered effects</h2>
-<p>As the code in the <code>mlr3</code> section makes clear, the <a href="reference/comparisons.html"><code>avg_comparisons()</code></a> computes the effect of a “centered” change on the outcome. If we want to compute a “Forward Marginal Effect” instead, we can call:</p>
+</section><section id="partial-dependence-plots" class="level2" data-number="21.4"><h2 data-number="21.4" class="anchored" data-anchor-id="partial-dependence-plots">
+<span class="header-section-number">21.4</span> Partial Dependence Plots</h2>
 <div class="cell">
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
-<span>    <span class="va">forest</span>,</span>
-<span>    variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"temp"</span> <span class="op">=</span> \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">x</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    newdata <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
- Term Contrast Estimate
- temp   custom     2.39
-
-Columns: term, contrast, estimate 
-Type:  response </code></pre>
-</div>
-</div>
-<p>This is equivalent to using the <code>fmeffects</code> package:</p>
-<div class="cell">
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">fmeffects</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/fmeffects/man/fme.html">fme</a></span><span class="op">(</span></span>
-<span>    model <span class="op">=</span> <span class="va">forest</span>,</span>
-<span>    data <span class="op">=</span> <span class="va">bikes</span>,</span>
-<span>    target <span class="op">=</span> <span class="st">"count"</span>,</span>
-<span>    feature <span class="op">=</span> <span class="st">"temp"</span>,</span>
-<span>    step.size <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">$</span><span class="va">ame</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 2.386648</code></pre>
-</div>
-</div>
-</section><section id="partial-dependence-plots" class="level2" data-number="20.5"><h2 data-number="20.5" class="anchored" data-anchor-id="partial-dependence-plots">
-<span class="header-section-number">20.5</span> Partial Dependence Plots</h2>
-<div class="cell">
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># https://stackoverflow.com/questions/67634344/r-partial-dependence-plots-from-workflow</span></span>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># https://stackoverflow.com/questions/67634344/r-partial-dependence-plots-from-workflow</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://tidymodels.tidymodels.org">"tidymodels"</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://marginaleffects.com/">"marginaleffects"</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">ames</span>, package <span class="op">=</span> <span class="st">"modeldata"</span><span class="op">)</span></span>
@@ -949,12 +1364,12 @@ Type:  response </code></pre>
 <span>  by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Gr_Liv_Area"</span>, <span class="st">"Bldg_Type"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Living Area"</span>, y <span class="op">=</span> <span class="st">"Predicted log10(Sale Price)"</span>, color <span class="op">=</span> <span class="st">"Building Type"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="machine_learning_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+<p><img src="machine_learning_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>We can replicate this plot using the <code>DALEXtra</code> package:</p>
 <div class="cell">
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://ModelOriented.github.io/DALEXtra/">"DALEXtra"</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://ModelOriented.github.io/DALEXtra/">"DALEXtra"</a></span><span class="op">)</span></span>
 <span><span class="va">pdp_rf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ModelOriented.github.io/DALEXtra/reference/explain_tidymodels.html">explain_tidymodels</a></span><span class="op">(</span></span>
 <span>    <span class="va">m</span>,</span>
 <span>    data <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">dat</span>, <span class="op">-</span><span class="va">Sale_Price</span><span class="op">)</span>,</span>
@@ -967,40 +1382,40 @@ Type:  response </code></pre>
 <span>    groups <span class="op">=</span> <span class="st">"Bldg_Type"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">pdp_rf</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="machine_learning_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+<p><img src="machine_learning_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Note that <code>marginaleffects</code> and <code>DALEXtra</code> plots are not exactly identical because the randomly sampled profiles are not the same. You can try the same procedure without sampling — or equivalently with <code>N=2930</code> — to see a perfect equivalence.</p>
-</section><section id="other-plots" class="level2" data-number="20.6"><h2 data-number="20.6" class="anchored" data-anchor-id="other-plots">
-<span class="header-section-number">20.6</span> Other Plots</h2>
+</section><section id="other-plots" class="level2" data-number="21.5"><h2 data-number="21.5" class="anchored" data-anchor-id="other-plots">
+<span class="header-section-number">21.5</span> Other Plots</h2>
 <p>We can plot the results using the standard <code>marginaleffects</code> helpers. For example, to plot predictions, we can do:</p>
 <div class="cell">
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://mlr3verse.mlr-org.com">mlr3verse</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://mlr3verse.mlr-org.com">mlr3verse</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"bikes"</span>, package <span class="op">=</span> <span class="st">"fmeffects"</span><span class="op">)</span></span>
 <span><span class="va">task</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/as_task_regr.html">as_task_regr</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">bikes</span>, id <span class="op">=</span> <span class="st">"bikes"</span>, target <span class="op">=</span> <span class="st">"count"</span><span class="op">)</span></span>
 <span><span class="va">forest</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html">lrn</a></span><span class="op">(</span><span class="st">"regr.ranger"</span><span class="op">)</span><span class="op">$</span><span class="fu">train</span><span class="op">(</span><span class="va">task</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">forest</span>, condition <span class="op">=</span> <span class="st">"temp"</span>, newdata <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="machine_learning_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+<p><img src="machine_learning_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>As documented in <code><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">?plot_predictions</a></code>, using <code>condition="temp"</code> is equivalent to creating an equally-spaced grid of <code>temp</code> values, and holding all other predictors at their means or modes. In other words, it is equivalent to:</p>
 <div class="cell">
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>temp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">bikes</span><span class="op">$</span><span class="va">temp</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">bikes</span><span class="op">$</span><span class="va">temp</span><span class="op">)</span>, length.out <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, newdata <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>temp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">bikes</span><span class="op">$</span><span class="va">temp</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">bikes</span><span class="op">$</span><span class="va">temp</span><span class="op">)</span>, length.out <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, newdata <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span>
 <span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">forest</span>, newdata <span class="op">=</span> <span class="va">d</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">temp</span>, <span class="va">p</span>, type <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Alternatively, we could plot “marginal” predictions, where replicate the full dataset once for every value of <code>temp</code>, and then average the predicted values over each value of the x-axis:</p>
 <div class="cell">
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">forest</span>, by <span class="op">=</span> <span class="st">"temp"</span>, newdata <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">forest</span>, by <span class="op">=</span> <span class="st">"temp"</span>, newdata <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="machine_learning_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+<p><img src="machine_learning_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Of course, we can customize the plot using all the standard <code>ggplot2</code> functions:</p>
 <div class="cell">
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">forest</span>, by <span class="op">=</span> <span class="st">"temp"</span>, newdata <span class="op">=</span> <span class="va">d</span><span class="op">)</span> <span class="op">+</span></span>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/plot_predictions.html">plot_predictions</a></span><span class="op">(</span><span class="va">forest</span>, by <span class="op">=</span> <span class="st">"temp"</span>, newdata <span class="op">=</span> <span class="va">d</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">bikes</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">temp</span>, y <span class="op">=</span> <span class="va">count</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html">geom_smooth</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">bikes</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">temp</span>, y <span class="op">=</span> <span class="va">count</span><span class="op">)</span>, se <span class="op">=</span> <span class="cn">FALSE</span>, color <span class="op">=</span> <span class="st">"orange"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Temperature (Celsius)"</span>, y <span class="op">=</span> <span class="st">"Predicted number of bikes rented per hour"</span>,</span>
@@ -1010,7 +1425,7 @@ Type:  response </code></pre>
 <pre><code>`geom_smooth()` using method = 'loess' and formula = 'y ~ x'</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="machine_learning_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+<p><img src="machine_learning_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 
@@ -1455,13 +1870,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="../articles/lme4.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Mixed Effects</span></span>
+      <a href="../articles/matching.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Matching</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../articles/matching.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Matching</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../articles/multiple_imputation.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Missing Data</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

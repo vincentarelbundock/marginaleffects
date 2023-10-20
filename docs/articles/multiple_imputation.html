@@ -62,7 +62,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
 <link href="../articles/mrp.html" rel="next">
-<link href="../articles/matching.html" rel="prev">
+<link href="../articles/machine_learning.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -308,14 +308,14 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../articles/machine_learning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Machine Learning</span></span></a>
+  <a href="../articles/matching.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Matching</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../articles/matching.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Matching</span></span></a>
+  <a href="../articles/machine_learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Machine Learning</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -555,12 +555,12 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <span><span class="va">mfx_mice</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;          Term                        Contrast    Species Estimate Std. Error      t Pr(&gt;|t|)     S   2.5 % 97.5 %    Df</span></span>
-<span><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     setosa       0.0684     0.0560  1.222  0.22414   2.2 -0.0424  0.179 120.0</span></span>
-<span><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     versicolor   0.0540     0.0558  0.968  0.33550   1.6 -0.0567  0.165  93.6</span></span>
-<span><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     virginica    0.0582     0.0512  1.137  0.25818   2.0 -0.0434  0.160 101.2</span></span>
-<span><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     setosa       0.1890     0.0836  2.260  0.02436   5.4  0.0246  0.353 400.5</span></span>
+<span><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     setosa       0.0684     0.0560  1.222  0.22413   2.2 -0.0424  0.179 120.0</span></span>
+<span><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     versicolor   0.0540     0.0558  0.968  0.33557   1.6 -0.0568  0.165  93.6</span></span>
+<span><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     virginica    0.0582     0.0512  1.137  0.25822   2.0 -0.0434  0.160 101.3</span></span>
+<span><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     setosa       0.1890     0.0836  2.261  0.02432   5.4  0.0246  0.353 400.1</span></span>
 <span><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     versicolor   0.2092     0.0772  2.710  0.00807   7.0  0.0558  0.363  89.0</span></span>
-<span><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     virginica    0.2242     0.1041  2.155  0.03506   4.8  0.0162  0.432  61.8</span></span>
+<span><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     virginica    0.2242     0.1041  2.154  0.03511   4.8  0.0162  0.432  61.9</span></span>
 <span><span class="co">#&gt;  Species      mean(versicolor) - mean(setosa) setosa       1.1399     0.0977 11.668  &lt; 0.001  68.1  0.9464  1.333 114.8</span></span>
 <span><span class="co">#&gt;  Species      mean(versicolor) - mean(setosa) versicolor   1.1399     0.0977 11.668  &lt; 0.001  68.1  0.9464  1.333 114.8</span></span>
 <span><span class="co">#&gt;  Species      mean(versicolor) - mean(setosa) virginica    1.1399     0.0977 11.668  &lt; 0.001  68.1  0.9464  1.333 114.8</span></span>
@@ -591,11 +591,11 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;          Term                        Contrast    Species Estimate Std. Error      t Pr(&gt;|t|)    S  2.5 % 97.5 %   Df</span></span>
 <span><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     setosa       0.3878     0.0907  4.278  &lt; 0.001 13.3  0.205 0.5705 43.9</span></span>
-<span><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     versicolor   0.3231     0.0802  4.029  &lt; 0.001 12.5  0.162 0.4838 56.0</span></span>
+<span><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     versicolor   0.3231     0.0802  4.030  &lt; 0.001 12.5  0.162 0.4838 55.9</span></span>
 <span><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     virginica    0.3467     0.0799  4.340  &lt; 0.001 13.6  0.186 0.5077 44.7</span></span>
-<span><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     setosa      -0.2079     0.1491 -1.394  0.16878  2.6 -0.507 0.0909 55.0</span></span>
-<span><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     versicolor  -0.1157     0.1168 -0.991  0.32647  1.6 -0.350 0.1187 51.8</span></span>
-<span><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     virginica   -0.0452     0.1272 -0.355  0.72323  0.5 -0.298 0.2079 82.1</span></span>
+<span><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     setosa      -0.2079     0.1491 -1.394  0.16879  2.6 -0.507 0.0909 55.0</span></span>
+<span><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     versicolor  -0.1157     0.1168 -0.991  0.32648  1.6 -0.350 0.1187 51.8</span></span>
+<span><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     virginica   -0.0452     0.1272 -0.355  0.72319  0.5 -0.298 0.2078 82.1</span></span>
 <span><span class="co">#&gt;  Species      mean(versicolor) - mean(setosa) setosa       0.6127     0.1731  3.541  0.00111  9.8  0.262 0.9635 36.7</span></span>
 <span><span class="co">#&gt;  Species      mean(versicolor) - mean(setosa) versicolor   0.6127     0.1731  3.541  0.00111  9.8  0.262 0.9635 36.7</span></span>
 <span><span class="co">#&gt;  Species      mean(versicolor) - mean(setosa) virginica    0.6127     0.1731  3.541  0.00111  9.8  0.262 0.9635 36.7</span></span>
@@ -632,12 +632,12 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <span><span class="va">mfx_missRanger</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;          Term                        Contrast    Species Estimate Std. Error     t Pr(&gt;|t|)     S    2.5 % 97.5 %      Df</span></span>
-<span><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     setosa       0.0586     0.0414  1.42  0.15672   2.7 -0.02249  0.140 2780689</span></span>
-<span><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     versicolor   0.0675     0.0392  1.72  0.08514   3.6 -0.00934  0.144  721339</span></span>
-<span><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     virginica    0.0643     0.0367  1.75  0.07986   3.6 -0.00766  0.136 1020604</span></span>
-<span><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     setosa       0.2314     0.0690  3.35  &lt; 0.001  10.3  0.09612  0.367 1911621</span></span>
-<span><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     versicolor   0.2186     0.0551  3.97  &lt; 0.001  13.8  0.11066  0.327  246676</span></span>
-<span><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     virginica    0.2089     0.0687  3.04  0.00237   8.7  0.07420  0.344  194885</span></span>
+<span><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     setosa       0.0586     0.0414  1.42  0.15671   2.7 -0.02248  0.140 2780500</span></span>
+<span><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     versicolor   0.0675     0.0392  1.72  0.08514   3.6 -0.00934  0.144  721295</span></span>
+<span><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     virginica    0.0643     0.0367  1.75  0.07987   3.6 -0.00766  0.136 1020654</span></span>
+<span><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     setosa       0.2314     0.0690  3.35  &lt; 0.001  10.3  0.09612  0.367 1911457</span></span>
+<span><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     versicolor   0.2186     0.0551  3.97  &lt; 0.001  13.8  0.11066  0.327  246693</span></span>
+<span><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     virginica    0.2089     0.0687  3.04  0.00237   8.7  0.07422  0.344  194780</span></span>
 <span><span class="co">#&gt;  Species      mean(versicolor) - mean(setosa) setosa       1.1589     0.0704 16.46  &lt; 0.001 199.8  1.02091  1.297 1115135</span></span>
 <span><span class="co">#&gt;  Species      mean(versicolor) - mean(setosa) versicolor   1.1589     0.0704 16.46  &lt; 0.001 199.8  1.02091  1.297 1115135</span></span>
 <span><span class="co">#&gt;  Species      mean(versicolor) - mean(setosa) virginica    1.1589     0.0704 16.46  &lt; 0.001 199.8  1.02091  1.297 1115135</span></span>
@@ -686,7 +686,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
-<td style="text-align: left;">setosa</td>
+<td style="text-align: left;"></td>
 <td style="text-align: center;">(0.061)</td>
 <td style="text-align: center;">(0.056)</td>
 <td style="text-align: center;">(0.091)</td>
@@ -702,7 +702,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
-<td style="text-align: left;">versicolor</td>
+<td style="text-align: left;"></td>
 <td style="text-align: center;">(0.061)</td>
 <td style="text-align: center;">(0.056)</td>
 <td style="text-align: center;">(0.080)</td>
@@ -718,7 +718,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
-<td style="text-align: left;">virginica</td>
+<td style="text-align: left;"></td>
 <td style="text-align: center;">(0.058)</td>
 <td style="text-align: center;">(0.051)</td>
 <td style="text-align: center;">(0.080)</td>
@@ -734,7 +734,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
-<td style="text-align: left;">setosa</td>
+<td style="text-align: left;"></td>
 <td style="text-align: center;">(0.091)</td>
 <td style="text-align: center;">(0.084)</td>
 <td style="text-align: center;">(0.149)</td>
@@ -750,7 +750,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
-<td style="text-align: left;">versicolor</td>
+<td style="text-align: left;"></td>
 <td style="text-align: center;">(0.074)</td>
 <td style="text-align: center;">(0.077)</td>
 <td style="text-align: center;">(0.117)</td>
@@ -766,7 +766,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
-<td style="text-align: left;">virginica</td>
+<td style="text-align: left;"></td>
 <td style="text-align: center;">(0.083)</td>
 <td style="text-align: center;">(0.104)</td>
 <td style="text-align: center;">(0.127)</td>
@@ -782,7 +782,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
-<td style="text-align: left;">setosa</td>
+<td style="text-align: left;"></td>
 <td style="text-align: center;">(0.097)</td>
 <td style="text-align: center;">(0.098)</td>
 <td style="text-align: center;">(0.173)</td>
@@ -798,7 +798,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
-<td style="text-align: left;">versicolor</td>
+<td style="text-align: left;"></td>
 <td style="text-align: center;">(0.097)</td>
 <td style="text-align: center;">(0.098)</td>
 <td style="text-align: center;">(0.173)</td>
@@ -814,7 +814,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
-<td style="text-align: left;">virginica</td>
+<td style="text-align: left;"></td>
 <td style="text-align: center;">(0.097)</td>
 <td style="text-align: center;">(0.098)</td>
 <td style="text-align: center;">(0.173)</td>
@@ -830,7 +830,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
-<td style="text-align: left;">setosa</td>
+<td style="text-align: left;"></td>
 <td style="text-align: center;">(0.123)</td>
 <td style="text-align: center;">(0.111)</td>
 <td style="text-align: center;">(0.200)</td>
@@ -846,7 +846,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
-<td style="text-align: left;">versicolor</td>
+<td style="text-align: left;"></td>
 <td style="text-align: center;">(0.123)</td>
 <td style="text-align: center;">(0.111)</td>
 <td style="text-align: center;">(0.200)</td>
@@ -862,7 +862,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </tr>
 <tr class="even">
 <td style="text-align: left; box-shadow: 0px 1.5px;"></td>
-<td style="text-align: left; box-shadow: 0px 1.5px;">virginica</td>
+<td style="text-align: left; box-shadow: 0px 1.5px;"></td>
 <td style="text-align: center; box-shadow: 0px 1.5px;">(0.123)</td>
 <td style="text-align: center; box-shadow: 0px 1.5px;">(0.111)</td>
 <td style="text-align: center; box-shadow: 0px 1.5px;">(0.200)</td>
@@ -1434,8 +1434,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="../articles/matching.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Matching</span></span>
+      <a href="../articles/machine_learning.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Machine Learning</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

@@ -307,14 +307,14 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/machine_learning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Machine Learning</span></span></a>
+  <a href="../../articles/matching.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Matching</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../articles/matching.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Matching</span></span></a>
+  <a href="../../articles/machine_learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Machine Learning</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -597,9 +597,9 @@ avg_predictions(
 </code></pre>
 </section><section id="arguments" class="level2"><h2 class="anchored" data-anchor-id="arguments">Arguments</h2>
 <table>
-<tbody><tr style="vertical-align: top;">
+<tbody><tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code>model</code>
+<code id="predictions_:_model">model</code>
 </td>
 <td>
 <p>
@@ -607,9 +607,9 @@ Model object
 </p>
 </td>
 </tr>
-<tr style="vertical-align: top;">
+<tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code>newdata</code>
+<code id="predictions_:_newdata">newdata</code>
 </td>
 <td>
 <p>
@@ -678,9 +678,9 @@ See the Examples section and the <code><a href="https://rdrr.io/pkg/marginaleffe
 </ul>
 </td>
 </tr>
-<tr style="vertical-align: top;">
+<tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code>variables</code>
+<code id="predictions_:_variables">variables</code>
 </td>
 <td>
 <p>
@@ -781,9 +781,9 @@ Numeric vector: Contrast between the 2nd element and the 1st element of the <cod
 </ul>
 </td>
 </tr>
-<tr style="vertical-align: top;">
+<tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code>vcov</code>
+<code id="predictions_:_vcov">vcov</code>
 </td>
 <td>
 <p>
@@ -845,9 +845,9 @@ Function which returns a covariance matrix (e.g., <code>stats::vcov(model)</code
 </ul>
 </td>
 </tr>
-<tr style="vertical-align: top;">
+<tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code>conf_level</code>
+<code id="predictions_:_conf_level">conf_level</code>
 </td>
 <td>
 <p>
@@ -855,9 +855,9 @@ numeric value between 0 and 1. Confidence level to use to build a confidence int
 </p>
 </td>
 </tr>
-<tr style="vertical-align: top;">
+<tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code>type</code>
+<code id="predictions_:_type">type</code>
 </td>
 <td>
 <p>
@@ -865,9 +865,9 @@ string indicates the type (scale) of the predictions used to compute contrasts o
 </p>
 </td>
 </tr>
-<tr style="vertical-align: top;">
+<tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code>by</code>
+<code id="predictions_:_by">by</code>
 </td>
 <td>
 <p>
@@ -907,9 +907,9 @@ For more complex aggregations, you can use the <code>FUN</code> argument of the 
 </ul>
 </td>
 </tr>
-<tr style="vertical-align: top;">
+<tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code>byfun</code>
+<code id="predictions_:_byfun">byfun</code>
 </td>
 <td>
 <p>
@@ -917,9 +917,9 @@ A function such as <code><a href="https://rdrr.io/r/base/mean.html">mean()</a></
 </p>
 </td>
 </tr>
-<tr style="vertical-align: top;">
+<tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code>wts</code>
+<code id="predictions_:_wts">wts</code>
 </td>
 <td>
 <p>
@@ -939,9 +939,9 @@ numeric: vector of length equal to the number of rows in the original data or in
 </ul>
 </td>
 </tr>
-<tr style="vertical-align: top;">
+<tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code>transform</code>
+<code id="predictions_:_transform">transform</code>
 </td>
 <td>
 <p>
@@ -949,9 +949,9 @@ A function applied to unit-level adjusted predictions and confidence intervals j
 </p>
 </td>
 </tr>
-<tr style="vertical-align: top;">
+<tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code>hypothesis</code>
+<code id="predictions_:_hypothesis">hypothesis</code>
 </td>
 <td>
 <p>
@@ -1042,9 +1042,9 @@ See the Examples section below and the vignette: https://marginaleffects.com/art
 </ul>
 </td>
 </tr>
-<tr style="vertical-align: top;">
+<tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code>equivalence</code>
+<code id="predictions_:_equivalence">equivalence</code>
 </td>
 <td>
 <p>
@@ -1052,9 +1052,9 @@ Numeric vector of length 2: bounds used for the two-one-sided test (TOST) of equ
 </p>
 </td>
 </tr>
-<tr style="vertical-align: top;">
+<tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code>p_adjust</code>
+<code id="predictions_:_p_adjust">p_adjust</code>
 </td>
 <td>
 <p>
@@ -1062,9 +1062,9 @@ Adjust p-values for multiple comparisons: "holm", "hochberg", "hommel", "bonferr
 </p>
 </td>
 </tr>
-<tr style="vertical-align: top;">
+<tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code>df</code>
+<code id="predictions_:_df">df</code>
 </td>
 <td>
 <p>
@@ -1072,9 +1072,9 @@ Degrees of freedom used to compute p values and confidence intervals. A single n
 </p>
 </td>
 </tr>
-<tr style="vertical-align: top;">
+<tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code>numderiv</code>
+<code id="predictions_:_numderiv">numderiv</code>
 </td>
 <td>
 <p>
@@ -1104,9 +1104,9 @@ Extra arguments can be specified by passing a list to the <code>numDeriv</code> 
 </ul>
 </td>
 </tr>
-<tr style="vertical-align: top;">
+<tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code>…</code>
+<code id="predictions_:_...">…</code>
 </td>
 <td>
 <p>

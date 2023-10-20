@@ -767,6 +767,57 @@ data.frame(bm$ContrastSummary)
 avg_slopes(ls.fe, dpar = "sigma", re_formula = NA)
 ```
 
+## `fmeffects`
+
+The [`fmeffects` package](https://cran.r-project.org/package=fmeffects) is described as follows:
+
+> fmeffects: Model-Agnostic Interpretations with Forward Marginal Effects. Create local, regional, and global explanations for any machine learning model with forward marginal effects. You provide a model and data, and 'fmeffects' computes feature effects. The package is based on the theory in: C. A. Scholbeck, G. Casalicchio, C. Molnar, B. Bischl, and C. Heumann (2022)
+
+As the name says, this package is focused on "forward marginal effects" in the context of machine learning models estimated using the `mlr3` or `tidymodels` frameworks. Since version 0.16.0, `marginaleffects` also supports these machine learning frameworks, and it covers a superset of the `fmeffects` functionality. Consider a random forest model trained on the `bikes` data:
+
+```{r, message = FALSE, warning = FALSE}
+library("mlr3verse")
+library("fmeffects")
+data("bikes", package = "fmeffects")
+task <- as_task_regr(x = bikes, id = "bikes", target = "count")
+forest <- lrn("regr.ranger")$train(task)
+```
+
+Now, we use the `avg_comparisons()` function to compute *centered* marginal effects:
+
+```{r}
+avg_comparisons(forest, variables = "temp", newdata = bikes)
+```
+
+We call this quantity "centered" because it represents the average effect of a change of 1 unit in `temp` about the observed value, that is, a change from 0.5 below to 0.5 above:
+
+```{r}
+lo <- transform(bikes, temp = temp - 0.5)
+hi <- transform(bikes, temp = temp + 0.5)
+mean(predict(forest, newdata = hi) - predict(forest, newdata = lo))
+```
+
+As described in the [`comparisons()` vignette](comparisons.html), it is easy to estimate "backward", "centered" or "forward" differences by supplying an appropriate function to the `variables` argument. For example, here is how to compute "forward" marginal effects:
+
+```{r}
+avg_comparisons(
+    forest,
+    variables = list("temp" = \(x) data.frame(x, x + 1)),
+    newdata = bikes)
+```
+
+This is equivalent to the key quantity reported by the `fmeffects` package:
+
+```{r}
+fmeffects::fme(
+    model = forest,
+    data = bikes,
+    target = "count",
+    feature = "temp",
+    step.size = 1)$ame
+```
+
+
 ## `effects`
 
 The [`effects` package](https://cran.r-project.org/package=effects) was created by John Fox and colleagues.

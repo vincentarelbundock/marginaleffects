@@ -273,14 +273,14 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../articles/machine_learning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Machine Learning</span></span></a>
+  <a href="../articles/matching.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Matching</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../articles/matching.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Matching</span></span></a>
+  <a href="../articles/machine_learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Machine Learning</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -475,7 +475,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
   </div>
   
 
-</header><p>This table shows the list of 88 supported model types. There are three main alternative software packages to compute such slopes (1) <code>Stata</code>’s <code>margins</code> command, (2) <code>R</code>’s <code><a href="https://rdrr.io/pkg/margins/man/margins.html">margins::margins()</a></code> function, and (3) <code>R</code>’s <code><a href="https://rdrr.io/pkg/emmeans/man/emtrends.html">emmeans::emtrends()</a></code> function. The <a href="https://github.com/vincentarelbundock/marginaleffects/tree/main/inst/tinytest">test suite hosted on Github</a> compares the numerical equivalence of results produced by <code><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">marginaleffects::slopes()</a></code> to those produced by all 3 alternative software packages:</p>
+</header><p><code>marginaleffects</code> effects supports 88 model types directly, and dozens more via the <code>tidymodels</code> and <code>mlr3</code> frameworks. This table shows the list of directly supported model types. There are three main alternative software packages to compute such slopes (1) <code>Stata</code>’s <code>margins</code> command, (2) <code>R</code>’s <code><a href="https://rdrr.io/pkg/margins/man/margins.html">margins::margins()</a></code> function, and (3) <code>R</code>’s <code><a href="https://rdrr.io/pkg/emmeans/man/emtrends.html">emmeans::emtrends()</a></code> function. The <a href="https://github.com/vincentarelbundock/marginaleffects/tree/main/inst/tinytest">test suite hosted on Github</a> compares the numerical equivalence of results produced by <code><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">marginaleffects::slopes()</a></code> to those produced by all 3 alternative software packages:</p>
 <ul>
 <li>✓: a green check means that the results of at least one model are equal to a reasonable tolerance.</li>
 <li>✖: a red cross means that the results are <em>not</em> identical; extra caution is warranted.</li>

@@ -307,14 +307,14 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../articles/machine_learning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Machine Learning</span></span></a>
+  <a href="../articles/matching.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Matching</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../articles/matching.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Matching</span></span></a>
+  <a href="../articles/machine_learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Machine Learning</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -546,9 +546,9 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">slopes</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"mpg"</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>mpg <span class="op">=</span> <span class="fl">25</span>, hp <span class="op">=</span> <span class="fl">110</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Group Term mpg  hp Estimate Std. Error       z Pr(&gt;|z|)    S    2.5 %  97.5 %</span></span>
-<span><span class="co">#&gt;      3  mpg  25 110 -0.06041     0.0169 -3.5813   &lt;0.001 11.5 -0.09347 -0.0273</span></span>
+<span><span class="co">#&gt;      3  mpg  25 110 -0.06041     0.0169 -3.5802   &lt;0.001 11.5 -0.09348 -0.0273</span></span>
 <span><span class="co">#&gt;      4  mpg  25 110 -0.00321     0.0335 -0.0958   0.9237  0.1 -0.06896  0.0625</span></span>
-<span><span class="co">#&gt;      5  mpg  25 110  0.06362     0.0301  2.1132   0.0346  4.9  0.00461  0.1226</span></span>
+<span><span class="co">#&gt;      5  mpg  25 110  0.06362     0.0301  2.1129   0.0346  4.9  0.00461  0.1226</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: rowid, term, group, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, hp, predicted_lo, predicted_hi, predicted, gear </span></span>
 <span><span class="co">#&gt; Type:  probs</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -560,12 +560,12 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Group Term Estimate Std. Error     z Pr(&gt;|z|)    S     2.5 %   97.5 %</span></span>
-<span><span class="co">#&gt;      3  hp  -0.00377   0.001514 -2.49  0.01284  6.3 -0.006735 -0.00080</span></span>
-<span><span class="co">#&gt;      3  mpg -0.07014   0.015485 -4.53  &lt; 0.001 17.4 -0.100490 -0.03979</span></span>
-<span><span class="co">#&gt;      4  hp   0.00201   0.000957  2.10  0.03553  4.8  0.000136  0.00389</span></span>
+<span><span class="co">#&gt;      3  hp  -0.00377   0.001514 -2.49  0.01285  6.3 -0.006735 -0.00080</span></span>
+<span><span class="co">#&gt;      3  mpg -0.07014   0.015484 -4.53  &lt; 0.001 17.4 -0.100488 -0.03979</span></span>
+<span><span class="co">#&gt;      4  hp   0.00201   0.000958  2.10  0.03555  4.8  0.000136  0.00389</span></span>
 <span><span class="co">#&gt;      4  mpg  0.03747   0.013861  2.70  0.00687  7.2  0.010303  0.06464</span></span>
 <span><span class="co">#&gt;      5  hp   0.00175   0.000833  2.11  0.03519  4.8  0.000122  0.00339</span></span>
-<span><span class="co">#&gt;      5  mpg  0.03267   0.009572  3.41  &lt; 0.001 10.6  0.013907  0.05143</span></span>
+<span><span class="co">#&gt;      5  mpg  0.03267   0.009571  3.41  &lt; 0.001 10.6  0.013909  0.05143</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, group, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
 <span><span class="co">#&gt; Type:  probs</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>

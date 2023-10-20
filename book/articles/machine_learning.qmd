@@ -131,28 +131,6 @@ avg_comparisons(
     newdata = bikes)
 ```
 
-## `fmeffects`: Forward vs. centered effects
-
-As the code in the `mlr3` section makes clear, the [`avg_comparisons()`](reference/comparisons.html) computes the effect of a "centered" change on the outcome. If we want to compute a "Forward Marginal Effect" instead, we can call:
-
-```{r}
-avg_comparisons(
-    forest,
-    variables = list("temp" = \(x) data.frame(x, x + 1)),
-    newdata = bikes)
-```
-
-This is equivalent to using the `fmeffects` package:
-
-```{r}
-fmeffects::fme(
-    model = forest,
-    data = bikes,
-    target = "count",
-    feature = "temp",
-    step.size = 1)$ame 
-```
-
 
 ## Partial Dependence Plots
 
