@@ -562,11 +562,6 @@ predictions <- function(model,
         attr(out, "nchains") <- brms::nchains(model)
     }
 
-    if (inherits(model, "brmsfit")) {
-        insight::check_if_installed("brms")
-        attr(out, "nchains") <- brms::nchains(model)
-    }
-
     if ("group" %in% names(out) && all(out$group == "main_marginaleffect")) {
         out$group <- NULL
     }
