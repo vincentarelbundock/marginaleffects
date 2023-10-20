@@ -49,8 +49,8 @@ book:
       - articles/ipw.qmd
       - articles/logit.qmd
       - articles/lme4.qmd
-      - articles/machine_learning.qmd
       - articles/matching.qmd
+      - articles/machine_learning.qmd
       - articles/multiple_imputation.qmd
       - articles/mrp.qmd
       - articles/svalues.qmd
