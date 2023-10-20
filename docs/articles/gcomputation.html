@@ -5,7 +5,7 @@
 <meta name="generator" content="quarto-1.4.151">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="author" content="Vincent Arel-Bundock and contributors.">
-<title>The Marginal Effects Zoo (0.15.1) - 11&nbsp; G-Computation</title>
+<title>The Marginal Effects Zoo (0.16.0) - 16&nbsp; Causal Inference (G-Computation)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -61,8 +61,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../articles/conformal.html" rel="next">
-<link href="../articles/categorical.html" rel="prev">
+<link href="../articles/ipw.html" rel="next">
+<link href="../articles/gam.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -104,7 +104,7 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-<meta name="twitter:title" content="The Marginal Effects Zoo (0.15.1) - 11&nbsp; G-Computation">
+<meta name="twitter:title" content="The Marginal Effects Zoo (0.16.0) - 16&nbsp; Causal Inference (G-Computation)">
 <meta name="twitter:description" content="">
 <meta name="twitter:image" content="fig/marginaleffects_card.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -115,7 +115,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
   <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg navbar-dark "><div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">The Marginal Effects Zoo (0.15.1)</span>
+    <span class="navbar-title">The Marginal Effects Zoo (0.16.0)</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -163,7 +163,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../articles/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../articles/gcomputation.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">G-Computation</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../articles/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../articles/gcomputation.html"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Causal Inference (G-Computation)</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
     </div>
@@ -253,38 +253,38 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../articles/gcomputation.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">G-Computation</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../articles/conformal.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Conformal prediction</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Conformal prediction</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/elasticity.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Elasticity</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Elasticity</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/equivalence.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Equivalence Tests</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Equivalence Tests</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/experiments.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Experiments</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Experiments</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/gam.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">GAM</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">GAM</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/gcomputation.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Causal Inference (G-Computation)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -301,26 +301,26 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../articles/lme4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Mixed Effects</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../articles/machine_learning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Machine Learning</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Machine Learning</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/matching.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Matching</span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Matching</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/multiple_imputation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Missing Data</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../articles/lme4.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Mixed Effects</span></span></a>
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Missing Data</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -493,14 +493,14 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
    
   <ul>
-<li><a href="#what-is-the-parametric-g-formula" id="toc-what-is-the-parametric-g-formula" class="nav-link active" data-scroll-target="#what-is-the-parametric-g-formula"><span class="header-section-number">11.1</span> What is the parametric g-formula?</a></li>
-  <li><a href="#how-does-it-work" id="toc-how-does-it-work" class="nav-link" data-scroll-target="#how-does-it-work"><span class="header-section-number">11.2</span> How does it work?</a></li>
+<li><a href="#what-is-the-parametric-g-formula" id="toc-what-is-the-parametric-g-formula" class="nav-link active" data-scroll-target="#what-is-the-parametric-g-formula"><span class="header-section-number">16.1</span> What is the parametric g-formula?</a></li>
+  <li><a href="#how-does-it-work" id="toc-how-does-it-work" class="nav-link" data-scroll-target="#how-does-it-work"><span class="header-section-number">16.2</span> How does it work?</a></li>
   <li>
-<a href="#example-with-real-world-data" id="toc-example-with-real-world-data" class="nav-link" data-scroll-target="#example-with-real-world-data"><span class="header-section-number">11.3</span> Example with real-world data</a>
+<a href="#example-with-real-world-data" id="toc-example-with-real-world-data" class="nav-link" data-scroll-target="#example-with-real-world-data"><span class="header-section-number">16.3</span> Example with real-world data</a>
   <ul class="collapse">
-<li><a href="#tldr" id="toc-tldr" class="nav-link" data-scroll-target="#tldr"><span class="header-section-number">11.3.1</span> TLDR</a></li>
-  <li><a href="#adjusted-predictions" id="toc-adjusted-predictions" class="nav-link" data-scroll-target="#adjusted-predictions"><span class="header-section-number">11.3.2</span> Adjusted Predictions</a></li>
-  <li><a href="#contrast" id="toc-contrast" class="nav-link" data-scroll-target="#contrast"><span class="header-section-number">11.3.3</span> Contrast</a></li>
+<li><a href="#tldr" id="toc-tldr" class="nav-link" data-scroll-target="#tldr"><span class="header-section-number">16.3.1</span> TLDR</a></li>
+  <li><a href="#adjusted-predictions" id="toc-adjusted-predictions" class="nav-link" data-scroll-target="#adjusted-predictions"><span class="header-section-number">16.3.2</span> Adjusted Predictions</a></li>
+  <li><a href="#contrast" id="toc-contrast" class="nav-link" data-scroll-target="#contrast"><span class="header-section-number">16.3.3</span> Contrast</a></li>
   </ul>
 </li>
   </ul></nav>
@@ -508,7 +508,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
 <h1 class="title">
-<span class="chapter-number">11</span>&nbsp; <span class="chapter-title">G-Computation</span>
+<span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Causal Inference (G-Computation)</span>
 </h1>
 </div>
 
@@ -534,14 +534,14 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <blockquote class="blockquote">
 <p>Hernán MA, Robins JM (2020). Causal Inference: What If. Boca Raton: Chapman &amp; Hall/CRC.</p>
 </blockquote>
-<section id="what-is-the-parametric-g-formula" class="level2" data-number="11.1"><h2 data-number="11.1" class="anchored" data-anchor-id="what-is-the-parametric-g-formula">
-<span class="header-section-number">11.1</span> What is the parametric g-formula?</h2>
+<section id="what-is-the-parametric-g-formula" class="level2" data-number="16.1"><h2 data-number="16.1" class="anchored" data-anchor-id="what-is-the-parametric-g-formula">
+<span class="header-section-number">16.1</span> What is the parametric g-formula?</h2>
 <p>The parametric g-formula is a method of standardization which can be used to address confounding problems in causal inference with observational data. It relies on the same identification assumptions as Inverse Probability Weighting (IPW), but uses different modeling assumptions. Whereas IPW models the treatment equation, standardization models the mean outcome equation. As Hernán and Robins note:</p>
 <blockquote class="blockquote">
 <p>“Both IP weighting and standardization are estimators of the g-formula, a general method for causal inference first described in 1986. … We say that standardization is a”plug-in g-formula estimator” because it simply replaces the conditional mean outcome in the g-formula by its estimates. When, like in Chapter 13, those estimates come from parametric models, we refer to the method as the parametric g-formula.”</p>
 </blockquote>
-</section><section id="how-does-it-work" class="level2" data-number="11.2"><h2 data-number="11.2" class="anchored" data-anchor-id="how-does-it-work">
-<span class="header-section-number">11.2</span> How does it work?</h2>
+</section><section id="how-does-it-work" class="level2" data-number="16.2"><h2 data-number="16.2" class="anchored" data-anchor-id="how-does-it-work">
+<span class="header-section-number">16.2</span> How does it work?</h2>
 <p>Imagine a causal model like this:</p>
 <div class="cell" data-align="center">
 <div class="cell-output-display">
@@ -557,8 +557,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <li>The quantity of interest is the difference between the means of adjusted predictions in the two counterfactual datasets.</li>
 </ol>
 <p>This is equivalent to computing an <a href="comparisons.html#average-contrasts">“Average Contrast”</a>, in which the value of <span class="math inline">\(X\)</span> moves from 0 to 1. Thanks to this equivalence, we can apply the parametric g-formula method using a single line of code in <code>marginaleffects</code>, and obtain delta method standard errors automatically.</p>
-</section><section id="example-with-real-world-data" class="level2" data-number="11.3"><h2 data-number="11.3" class="anchored" data-anchor-id="example-with-real-world-data">
-<span class="header-section-number">11.3</span> Example with real-world data</h2>
+</section><section id="example-with-real-world-data" class="level2" data-number="16.3"><h2 data-number="16.3" class="anchored" data-anchor-id="example-with-real-world-data">
+<span class="header-section-number">16.3</span> Example with real-world data</h2>
 <p>Let’s illustrate this method by replicating an example from Chapter 13 of Hernán and Robins. The data come from the National Health and Nutrition Examination Survey Data I Epidemiologic Follow-up Study (NHEFS). The outcome is <code>wt82_71</code>, a measure of weight gain. The treatment is <code>qsmk</code>, a binary measure of smoking cessation. There are many confounders.</p>
 <p>Step 1 is to fit a regression model of the outcome on the treatment and control variables:</p>
 <div class="cell">
@@ -577,8 +577,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">f</span>, data <span class="op">=</span> <span class="va">nhefs</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Steps 2 and 3 require us to replicate the full dataset by setting the <code>qsmk</code> treatment to counterfactual values. We can do this automatically by calling <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code>.</p>
-<section id="tldr" class="level3" data-number="11.3.1"><h3 data-number="11.3.1" class="anchored" data-anchor-id="tldr">
-<span class="header-section-number">11.3.1</span> TLDR</h3>
+<section id="tldr" class="level3" data-number="16.3.1"><h3 data-number="16.3.1" class="anchored" data-anchor-id="tldr">
+<span class="header-section-number">16.3.1</span> TLDR</h3>
 <p>These simple commands do everything we need to apply the parametric g-formula:</p>
 <div class="cell">
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">fit</span>, variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>qsmk <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -592,8 +592,8 @@ Type:  response </code></pre>
 </div>
 </div>
 <p>The rest of the vignette walks through the process in a bit more detail and compares to replication code from Hernán and Robins.</p>
-</section><section id="adjusted-predictions" class="level3" data-number="11.3.2"><h3 data-number="11.3.2" class="anchored" data-anchor-id="adjusted-predictions">
-<span class="header-section-number">11.3.2</span> Adjusted Predictions</h3>
+</section><section id="adjusted-predictions" class="level3" data-number="16.3.2"><h3 data-number="16.3.2" class="anchored" data-anchor-id="adjusted-predictions">
+<span class="header-section-number">16.3.2</span> Adjusted Predictions</h3>
 <p>We can compute average predictions in the original data, and average predictions in the two counterfactual datasets like this:</p>
 <div class="cell">
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## average predicted outcome in the original data</span></span>
@@ -659,8 +659,8 @@ Type:  response </code></pre>
 <span>    qsmk <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>    grid_type <span class="op">=</span> <span class="st">"counterfactual"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="contrast" class="level3" data-number="11.3.3"><h3 data-number="11.3.3" class="anchored" data-anchor-id="contrast">
-<span class="header-section-number">11.3.3</span> Contrast</h3>
+</section><section id="contrast" class="level3" data-number="16.3.3"><h3 data-number="16.3.3" class="anchored" data-anchor-id="contrast">
+<span class="header-section-number">16.3.3</span> Contrast</h3>
 <p>Now we want to compute the treatment effect with the parametric g-formula, which is the difference in average predicted outcomes in the two counterfactual datasets. This is equivalent to taking the average contrast with the <a href="reference/comparisons.html"><code>comparisons()</code></a> function. There are three important things to note in the command that follows:</p>
 <ul>
 <li>The <code>variables</code> argument is used to indicate that we want to estimate a “contrast” between adjusted predictions when <code>qsmk</code> is equal to 1 or 0.</li>
@@ -737,7 +737,7 @@ Type:  response </code></pre>
 <span><span class="va">bootstrap</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                           estimate std.error conf.low conf.high
-1 Treatment - No Treatment 3.517374 0.4889971 2.558957  4.475791</code></pre>
+1 Treatment - No Treatment 3.517374 0.4786041 2.579327  4.455421</code></pre>
 </div>
 </div>
 <p>The results are close to those that we obtained with <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code>, but the confidence interval differs slightly because of the difference between bootstrapping and the delta method.</p>
@@ -1194,13 +1194,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="../articles/categorical.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Categorical outcomes</span></span>
+      <a href="../articles/gam.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">GAM</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../articles/conformal.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Conformal prediction</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../articles/ipw.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Inverse Probability Weighting</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

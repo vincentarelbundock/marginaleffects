@@ -5,7 +5,7 @@
 <meta name="generator" content="quarto-1.4.151">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="author" content="Vincent Arel-Bundock and contributors.">
-<title>The Marginal Effects Zoo (0.15.1) - 16&nbsp; GAM</title>
+<title>The Marginal Effects Zoo (0.16.0) - 15&nbsp; GAM</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -61,7 +61,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../articles/ipw.html" rel="next">
+<link href="../articles/gcomputation.html" rel="next">
 <link href="../articles/experiments.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -104,7 +104,7 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </script>
-<meta name="twitter:title" content="The Marginal Effects Zoo (0.15.1) - 16&nbsp; GAM">
+<meta name="twitter:title" content="The Marginal Effects Zoo (0.16.0) - 15&nbsp; GAM">
 <meta name="twitter:description" content="">
 <meta name="twitter:image" content="fig/marginaleffects_card.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -115,7 +115,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
   <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg navbar-dark "><div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">The Marginal Effects Zoo (0.15.1)</span>
+    <span class="navbar-title">The Marginal Effects Zoo (0.16.0)</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -163,7 +163,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../articles/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../articles/gam.html"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">GAM</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../articles/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../articles/gam.html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">GAM</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
     </div>
@@ -253,38 +253,38 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../articles/gcomputation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">G-Computation</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../articles/conformal.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Conformal prediction</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Conformal prediction</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/elasticity.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Elasticity</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Elasticity</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/equivalence.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Equivalence Tests</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Equivalence Tests</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/experiments.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Experiments</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Experiments</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/gam.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">GAM</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">GAM</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/gcomputation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Causal Inference (G-Computation)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -301,26 +301,26 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../articles/lme4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Mixed Effects</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../articles/machine_learning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Machine Learning</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Machine Learning</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/matching.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Matching</span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Matching</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/multiple_imputation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Missing Data</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../articles/lme4.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Mixed Effects</span></span></a>
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Missing Data</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -493,16 +493,16 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
    
   <ul>
-<li><a href="#estimate-a-generalized-additive-model" id="toc-estimate-a-generalized-additive-model" class="nav-link active" data-scroll-target="#estimate-a-generalized-additive-model"><span class="header-section-number">16.1</span> Estimate a Generalized Additive Model</a></li>
-  <li><a href="#adjusted-predictions-predictions-and-plot_predictions" id="toc-adjusted-predictions-predictions-and-plot_predictions" class="nav-link" data-scroll-target="#adjusted-predictions-predictions-and-plot_predictions"><span class="header-section-number">16.2</span> Adjusted Predictions: <code>predictions()</code> and <code>plot_predictions()</code></a></li>
-  <li><a href="#marginal-effects-slopes-and-plot_slopes" id="toc-marginal-effects-slopes-and-plot_slopes" class="nav-link" data-scroll-target="#marginal-effects-slopes-and-plot_slopes"><span class="header-section-number">16.3</span> Marginal Effects: <code>slopes()</code> and <code>plot_slopes()</code></a></li>
-  <li><a href="#excluding-terms" id="toc-excluding-terms" class="nav-link" data-scroll-target="#excluding-terms"><span class="header-section-number">16.4</span> Excluding terms</a></li>
+<li><a href="#estimate-a-generalized-additive-model" id="toc-estimate-a-generalized-additive-model" class="nav-link active" data-scroll-target="#estimate-a-generalized-additive-model"><span class="header-section-number">15.1</span> Estimate a Generalized Additive Model</a></li>
+  <li><a href="#adjusted-predictions-predictions-and-plot_predictions" id="toc-adjusted-predictions-predictions-and-plot_predictions" class="nav-link" data-scroll-target="#adjusted-predictions-predictions-and-plot_predictions"><span class="header-section-number">15.2</span> Adjusted Predictions: <code>predictions()</code> and <code>plot_predictions()</code></a></li>
+  <li><a href="#marginal-effects-slopes-and-plot_slopes" id="toc-marginal-effects-slopes-and-plot_slopes" class="nav-link" data-scroll-target="#marginal-effects-slopes-and-plot_slopes"><span class="header-section-number">15.3</span> Marginal Effects: <code>slopes()</code> and <code>plot_slopes()</code></a></li>
+  <li><a href="#excluding-terms" id="toc-excluding-terms" class="nav-link" data-scroll-target="#excluding-terms"><span class="header-section-number">15.4</span> Excluding terms</a></li>
   </ul></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
 <h1 class="title">
-<span class="chapter-number">16</span>&nbsp; <span class="chapter-title">GAM</span>
+<span class="chapter-number">15</span>&nbsp; <span class="chapter-title">GAM</span>
 </h1>
 </div>
 
@@ -516,8 +516,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
   </div>
   
 
-</header><section id="estimate-a-generalized-additive-model" class="level2" data-number="16.1"><h2 data-number="16.1" class="anchored" data-anchor-id="estimate-a-generalized-additive-model">
-<span class="header-section-number">16.1</span> Estimate a Generalized Additive Model</h2>
+</header><section id="estimate-a-generalized-additive-model" class="level2" data-number="15.1"><h2 data-number="15.1" class="anchored" data-anchor-id="estimate-a-generalized-additive-model">
+<span class="header-section-number">15.1</span> Estimate a Generalized Additive Model</h2>
 <p>We will estimate a GAM model using the <code>mgcv</code> package and the <code>simdat</code> dataset distributed with the <code>itsadug</code> package:</p>
 <div class="cell">
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
@@ -568,8 +568,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <span><span class="co">#&gt; R-sq.(adj) =  0.609   Deviance explained =   61%</span></span>
 <span><span class="co">#&gt; fREML = 2.3795e+05  Scale est. = 31.601    n = 75600</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="adjusted-predictions-predictions-and-plot_predictions" class="level2" data-number="16.2"><h2 data-number="16.2" class="anchored" data-anchor-id="adjusted-predictions-predictions-and-plot_predictions">
-<span class="header-section-number">16.2</span> Adjusted Predictions: <a href="reference/predictions.html"><code>predictions()</code></a> and <code>plot_predictions()</code>
+</section><section id="adjusted-predictions-predictions-and-plot_predictions" class="level2" data-number="15.2"><h2 data-number="15.2" class="anchored" data-anchor-id="adjusted-predictions-predictions-and-plot_predictions">
+<span class="header-section-number">15.2</span> Adjusted Predictions: <a href="reference/predictions.html"><code>predictions()</code></a> and <code>plot_predictions()</code>
 </h2>
 <p>Compute adjusted predictions for each observed combination of regressor in the dataset used to fit the model. This gives us a dataset with the same number of rows as the original data, but new columns with predicted values and uncertainty estimates:</p>
 <div class="cell">
@@ -596,8 +596,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <p><img src="gam_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" style="width:100.0%"></p>
 </div>
 </div>
-</section><section id="marginal-effects-slopes-and-plot_slopes" class="level2" data-number="16.3"><h2 data-number="16.3" class="anchored" data-anchor-id="marginal-effects-slopes-and-plot_slopes">
-<span class="header-section-number">16.3</span> Marginal Effects: <a href="reference/slopes.html"><code>slopes()</code></a> and <code>plot_slopes()</code>
+</section><section id="marginal-effects-slopes-and-plot_slopes" class="level2" data-number="15.3"><h2 data-number="15.3" class="anchored" data-anchor-id="marginal-effects-slopes-and-plot_slopes">
+<span class="header-section-number">15.3</span> Marginal Effects: <a href="reference/slopes.html"><code>slopes()</code></a> and <code>plot_slopes()</code>
 </h2>
 <p>Marginal effects are slopes of the prediction equation. They are an observation-level quantity. The <a href="reference/slopes.html"><code>slopes()</code></a> function produces a dataset with the same number of rows as the original data, but with new columns for the slop and uncertainty estimates:</p>
 <div class="cell">
@@ -606,11 +606,11 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Term Estimate Std. Error    z Pr(&gt;|z|)     S  2.5 % 97.5 %</span></span>
 <span><span class="co">#&gt;  Time   0.0261    0.00137 19.1   &lt;0.001 267.8 0.0234 0.0288</span></span>
-<span><span class="co">#&gt;  Time   0.0261    0.00136 19.2   &lt;0.001 270.3 0.0234 0.0288</span></span>
-<span><span class="co">#&gt;  Time   0.0261    0.00133 19.5   &lt;0.001 280.1 0.0235 0.0287</span></span>
-<span><span class="co">#&gt;  Time   0.0260    0.00128 20.3   &lt;0.001 301.1 0.0235 0.0285</span></span>
-<span><span class="co">#&gt;  Time   0.0259    0.00120 21.6   &lt;0.001 339.8 0.0235 0.0282</span></span>
-<span><span class="co">#&gt;  Time   0.0257    0.00109 23.5   &lt;0.001 404.6 0.0236 0.0279</span></span>
+<span><span class="co">#&gt;  Time   0.0261    0.00136 19.2   &lt;0.001 270.4 0.0234 0.0288</span></span>
+<span><span class="co">#&gt;  Time   0.0261    0.00133 19.5   &lt;0.001 280.0 0.0235 0.0287</span></span>
+<span><span class="co">#&gt;  Time   0.0260    0.00128 20.3   &lt;0.001 301.4 0.0235 0.0285</span></span>
+<span><span class="co">#&gt;  Time   0.0259    0.00120 21.6   &lt;0.001 340.0 0.0235 0.0282</span></span>
+<span><span class="co">#&gt;  Time   0.0257    0.00109 23.5   &lt;0.001 404.4 0.0236 0.0279</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, Y, Group, Time, Subject </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -623,8 +623,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </div>
 </div>
 <p>The marginal effects in this plot can be interpreted as measuring the change in <code>Y</code> that is associated with a small increase in <code>Time</code>, for different baseline values of <code>Time</code>.</p>
-</section><section id="excluding-terms" class="level2" data-number="16.4"><h2 data-number="16.4" class="anchored" data-anchor-id="excluding-terms">
-<span class="header-section-number">16.4</span> Excluding terms</h2>
+</section><section id="excluding-terms" class="level2" data-number="15.4"><h2 data-number="15.4" class="anchored" data-anchor-id="excluding-terms">
+<span class="header-section-number">15.4</span> Excluding terms</h2>
 <p>The <code><a href="https://rdrr.io/r/stats/predict.html">predict()</a></code> method of the <code>mgcv</code> package allows users to “exclude” some smoothing terms, using the <code>exclude</code> argument. You can pass the same argument to any function in the <code>marginaleffects</code> package:</p>
 <div class="cell">
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions</a></span><span class="op">(</span><span class="va">model</span>, newdata <span class="op">=</span> <span class="st">"mean"</span>, exclude <span class="op">=</span> <span class="st">"s(Subject)"</span><span class="op">)</span></span>
@@ -1079,12 +1079,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
       <a href="../articles/experiments.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Experiments</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Experiments</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../articles/ipw.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Inverse Probability Weighting</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../articles/gcomputation.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Causal Inference (G-Computation)</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

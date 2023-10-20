@@ -5,7 +5,7 @@
 <meta name="generator" content="quarto-1.4.151">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="author" content="Vincent Arel-Bundock and contributors.">
-<title>The Marginal Effects Zoo (0.15.1) - 19&nbsp; Machine Learning</title>
+<title>The Marginal Effects Zoo (0.16.0) - 20&nbsp; Machine Learning</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -62,7 +62,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
 <link href="../articles/matching.html" rel="next">
-<link href="../articles/logit.html" rel="prev">
+<link href="../articles/lme4.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -104,7 +104,7 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </script><script src="../site_libs/kePrint-0.0.1/kePrint.js"></script><link href="../site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
-<meta name="twitter:title" content="The Marginal Effects Zoo (0.15.1) - 19&nbsp; Machine Learning">
+<meta name="twitter:title" content="The Marginal Effects Zoo (0.16.0) - 20&nbsp; Machine Learning">
 <meta name="twitter:description" content="">
 <meta name="twitter:image" content="fig/marginaleffects_card.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -115,7 +115,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
   <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg navbar-dark "><div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">The Marginal Effects Zoo (0.15.1)</span>
+    <span class="navbar-title">The Marginal Effects Zoo (0.16.0)</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -163,7 +163,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../articles/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../articles/machine_learning.html"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Machine Learning</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../articles/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../articles/machine_learning.html"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Machine Learning</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
     </div>
@@ -253,38 +253,38 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../articles/gcomputation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">G-Computation</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../articles/conformal.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Conformal prediction</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Conformal prediction</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/elasticity.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Elasticity</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Elasticity</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/equivalence.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Equivalence Tests</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Equivalence Tests</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/experiments.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Experiments</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Experiments</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/gam.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">GAM</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">GAM</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../articles/gcomputation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Causal Inference (G-Computation)</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -301,26 +301,26 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../articles/lme4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Mixed Effects</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../articles/machine_learning.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Machine Learning</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Machine Learning</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/matching.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Matching</span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Matching</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/multiple_imputation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Missing Data</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../articles/lme4.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Mixed Effects</span></span></a>
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Missing Data</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -493,18 +493,18 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
    
   <ul>
-<li><a href="#tidymodels" id="toc-tidymodels" class="nav-link active" data-scroll-target="#tidymodels"><span class="header-section-number">19.1</span> <code>tidymodels</code></a></li>
-  <li><a href="#mlr3" id="toc-mlr3" class="nav-link" data-scroll-target="#mlr3"><span class="header-section-number">19.2</span> <code>mlr3</code></a></li>
-  <li><a href="#simultaneous-changes" id="toc-simultaneous-changes" class="nav-link" data-scroll-target="#simultaneous-changes"><span class="header-section-number">19.3</span> Simultaneous changes</a></li>
-  <li><a href="#fmeffects-forward-vs.-centered-effects" id="toc-fmeffects-forward-vs.-centered-effects" class="nav-link" data-scroll-target="#fmeffects-forward-vs.-centered-effects"><span class="header-section-number">19.4</span> <code>fmeffects</code>: Forward vs.&nbsp;centered effects</a></li>
-  <li><a href="#partial-dependence-plots" id="toc-partial-dependence-plots" class="nav-link" data-scroll-target="#partial-dependence-plots"><span class="header-section-number">19.5</span> Partial Dependence Plots</a></li>
-  <li><a href="#other-plots" id="toc-other-plots" class="nav-link" data-scroll-target="#other-plots"><span class="header-section-number">19.6</span> Other Plots</a></li>
+<li><a href="#tidymodels" id="toc-tidymodels" class="nav-link active" data-scroll-target="#tidymodels"><span class="header-section-number">20.1</span> <code>tidymodels</code></a></li>
+  <li><a href="#mlr3" id="toc-mlr3" class="nav-link" data-scroll-target="#mlr3"><span class="header-section-number">20.2</span> <code>mlr3</code></a></li>
+  <li><a href="#simultaneous-changes" id="toc-simultaneous-changes" class="nav-link" data-scroll-target="#simultaneous-changes"><span class="header-section-number">20.3</span> Simultaneous changes</a></li>
+  <li><a href="#fmeffects-forward-vs.-centered-effects" id="toc-fmeffects-forward-vs.-centered-effects" class="nav-link" data-scroll-target="#fmeffects-forward-vs.-centered-effects"><span class="header-section-number">20.4</span> <code>fmeffects</code>: Forward vs.&nbsp;centered effects</a></li>
+  <li><a href="#partial-dependence-plots" id="toc-partial-dependence-plots" class="nav-link" data-scroll-target="#partial-dependence-plots"><span class="header-section-number">20.5</span> Partial Dependence Plots</a></li>
+  <li><a href="#other-plots" id="toc-other-plots" class="nav-link" data-scroll-target="#other-plots"><span class="header-section-number">20.6</span> Other Plots</a></li>
   </ul></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
 <h1 class="title">
-<span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Machine Learning</span>
+<span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Machine Learning</span>
 </h1>
 </div>
 
@@ -536,8 +536,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>ggplot2.discrete.colour <span class="op">=</span> <span class="fu"><a href="https://malcolmbarrett.github.io/ggokabeito/reference/palette_okabe_ito.html">palette_okabe_ito</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">10000</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="tidymodels" class="level2" data-number="19.1"><h2 data-number="19.1" class="anchored" data-anchor-id="tidymodels">
-<span class="header-section-number">19.1</span> <code>tidymodels</code>
+<section id="tidymodels" class="level2" data-number="20.1"><h2 data-number="20.1" class="anchored" data-anchor-id="tidymodels">
+<span class="header-section-number">20.1</span> <code>tidymodels</code>
 </h2>
 <p><code>marginaleffects</code> also supports the <code>tidymodels</code> machine learning framework. When the underlying engine used by <code>tidymodels</code> to train the model is itself supported as a standalone package by <code>marginaleffects</code>, we can obtain both estimates and their standard errors:</p>
 <div class="cell">
@@ -625,12 +625,12 @@ Type:  numeric </code></pre>
 <td style="text-align: left;">+1</td>
 <td style="text-align: left;">female</td>
 <td style="text-align: center;">−0.101</td>
-<td style="text-align: center;">−0.059</td>
+<td style="text-align: center;">−0.061</td>
 <td style="text-align: center;">−0.075</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
+<td style="text-align: left;">+1</td>
 <td style="text-align: left;"></td>
 <td style="text-align: center;">(0.004)</td>
 <td style="text-align: center;"></td>
@@ -638,15 +638,15 @@ Type:  numeric </code></pre>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
+<td style="text-align: left;">+1</td>
 <td style="text-align: left;">male</td>
 <td style="text-align: center;">0.101</td>
-<td style="text-align: center;">0.059</td>
+<td style="text-align: center;">0.061</td>
 <td style="text-align: center;">0.075</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
+<td style="text-align: left;">+1</td>
 <td style="text-align: left;"></td>
 <td style="text-align: center;">(0.004)</td>
 <td style="text-align: center;"></td>
@@ -657,12 +657,12 @@ Type:  numeric </code></pre>
 <td style="text-align: left;">Dream - Biscoe</td>
 <td style="text-align: left;">female</td>
 <td style="text-align: center;">−0.044</td>
-<td style="text-align: center;">0.001</td>
+<td style="text-align: center;">0.003</td>
 <td style="text-align: center;">−0.004</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
+<td style="text-align: left;">Dream - Biscoe</td>
 <td style="text-align: left;"></td>
 <td style="text-align: center;">(0.069)</td>
 <td style="text-align: center;"></td>
@@ -670,15 +670,15 @@ Type:  numeric </code></pre>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
+<td style="text-align: left;">Dream - Biscoe</td>
 <td style="text-align: left;">male</td>
 <td style="text-align: center;">0.044</td>
-<td style="text-align: center;">−0.001</td>
+<td style="text-align: center;">−0.003</td>
 <td style="text-align: center;">0.004</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
+<td style="text-align: left;">Dream - Biscoe</td>
 <td style="text-align: left;"></td>
 <td style="text-align: center;">(0.069)</td>
 <td style="text-align: center;"></td>
@@ -689,12 +689,12 @@ Type:  numeric </code></pre>
 <td style="text-align: left;">Torgersen - Biscoe</td>
 <td style="text-align: left;">female</td>
 <td style="text-align: center;">0.015</td>
-<td style="text-align: center;">−0.052</td>
+<td style="text-align: center;">−0.053</td>
 <td style="text-align: center;">0.008</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
+<td style="text-align: left;">Torgersen - Biscoe</td>
 <td style="text-align: left;"></td>
 <td style="text-align: center;">(0.074)</td>
 <td style="text-align: center;"></td>
@@ -702,15 +702,15 @@ Type:  numeric </code></pre>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
+<td style="text-align: left;">Torgersen - Biscoe</td>
 <td style="text-align: left;">male</td>
 <td style="text-align: center;">−0.015</td>
-<td style="text-align: center;">0.052</td>
+<td style="text-align: center;">0.053</td>
 <td style="text-align: center;">−0.008</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
+<td style="text-align: left;">Torgersen - Biscoe</td>
 <td style="text-align: left;"></td>
 <td style="text-align: center;">(0.074)</td>
 <td style="text-align: center;"></td>
@@ -721,12 +721,12 @@ Type:  numeric </code></pre>
 <td style="text-align: left;">Chinstrap - Adelie</td>
 <td style="text-align: left;">female</td>
 <td style="text-align: center;">0.562</td>
-<td style="text-align: center;">0.159</td>
+<td style="text-align: center;">0.178</td>
 <td style="text-align: center;">0.441</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
+<td style="text-align: left;">Chinstrap - Adelie</td>
 <td style="text-align: left;"></td>
 <td style="text-align: center;">(0.036)</td>
 <td style="text-align: center;"></td>
@@ -734,15 +734,15 @@ Type:  numeric </code></pre>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
+<td style="text-align: left;">Chinstrap - Adelie</td>
 <td style="text-align: left;">male</td>
 <td style="text-align: center;">−0.562</td>
-<td style="text-align: center;">−0.159</td>
+<td style="text-align: center;">−0.178</td>
 <td style="text-align: center;">−0.441</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
+<td style="text-align: left;">Chinstrap - Adelie</td>
 <td style="text-align: left;"></td>
 <td style="text-align: center;">(0.036)</td>
 <td style="text-align: center;"></td>
@@ -753,12 +753,12 @@ Type:  numeric </code></pre>
 <td style="text-align: left;">Gentoo - Adelie</td>
 <td style="text-align: left;">female</td>
 <td style="text-align: center;">0.453</td>
-<td style="text-align: center;">0.117</td>
+<td style="text-align: center;">0.128</td>
 <td style="text-align: center;">0.361</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
+<td style="text-align: left;">Gentoo - Adelie</td>
 <td style="text-align: left;"></td>
 <td style="text-align: center;">(0.025)</td>
 <td style="text-align: center;"></td>
@@ -766,15 +766,15 @@ Type:  numeric </code></pre>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
+<td style="text-align: left;">Gentoo - Adelie</td>
 <td style="text-align: left;">male</td>
 <td style="text-align: center;">−0.453</td>
-<td style="text-align: center;">−0.117</td>
+<td style="text-align: center;">−0.128</td>
 <td style="text-align: center;">−0.361</td>
 </tr>
 <tr class="even">
 <td style="text-align: left; box-shadow: 0px 1.5px;"></td>
-<td style="text-align: left; box-shadow: 0px 1.5px;"></td>
+<td style="text-align: left; box-shadow: 0px 1.5px;">Gentoo - Adelie</td>
 <td style="text-align: left; box-shadow: 0px 1.5px;"></td>
 <td style="text-align: center; box-shadow: 0px 1.5px;">(0.025)</td>
 <td style="text-align: center; box-shadow: 0px 1.5px;"></td>
@@ -816,8 +816,8 @@ Type:  numeric </code></pre>
 </table>
 </div>
 </div>
-</section><section id="mlr3" class="level2" data-number="19.2"><h2 data-number="19.2" class="anchored" data-anchor-id="mlr3">
-<span class="header-section-number">19.2</span> <code>mlr3</code>
+</section><section id="mlr3" class="level2" data-number="20.2"><h2 data-number="20.2" class="anchored" data-anchor-id="mlr3">
+<span class="header-section-number">20.2</span> <code>mlr3</code>
 </h2>
 <p><code>mlr3</code> is a machine learning framework for <code>R</code>. It makes it possible for users to train a wide range of models, including linear models, random forests, gradient boosting machines, and neural networks.</p>
 <p>In this example, we use the <code>bikes</code> dataset supplied by the <code>fmeffects</code> package to train a random forest model predicting the number of bikes rented per hour. We then use <code>marginaleffects</code> to interpret the results of the model.</p>
@@ -834,41 +834,41 @@ Type:  numeric </code></pre>
 <pre><code>
        Term      Contrast Estimate
  count      +1               0.000
- holiday    False - True    10.785
- humidity   +1             -24.088
- month      +1               4.018
- season     spring - fall  -28.084
- season     summer - fall   -7.425
- season     winter - fall    3.761
- temp       +1               3.501
- weather    misty - clear   -7.687
- weather    rain - clear   -58.862
- weekday    Fri - Sun       67.350
- weekday    Mon - Sun       76.092
- weekday    Sat - Sun       21.788
- weekday    Thu - Sun       83.200
- weekday    Tue - Sun       81.731
- weekday    Wed - Sun       84.095
- windspeed  +1               0.193
- workingday False - True  -192.334
- year       1 - 0           98.766
+ holiday    False - True    11.640
+ humidity   +1             -22.736
+ month      +1               4.092
+ season     spring - fall  -29.001
+ season     summer - fall   -7.740
+ season     winter - fall    3.785
+ temp       +1               3.495
+ weather    misty - clear   -7.553
+ weather    rain - clear   -59.572
+ weekday    Fri - Sun       73.266
+ weekday    Mon - Sun       80.838
+ weekday    Sat - Sun       24.953
+ weekday    Thu - Sun       88.503
+ weekday    Tue - Sun       87.242
+ weekday    Wed - Sun       89.471
+ windspeed  +1               0.143
+ workingday False - True  -191.897
+ year       1 - 0           98.926
 
 Columns: term, contrast, estimate 
 Type:  response </code></pre>
 </div>
 </div>
-<p>These results are easy to interpret: An increase of 1 degree Celsius in the temperature is associated with an increase of 3.501 bikes rented per hour.</p>
+<p>These results are easy to interpret: An increase of 1 degree Celsius in the temperature is associated with an increase of 3.495 bikes rented per hour.</p>
 <p>We could obtain the same result manually as follows:</p>
 <div class="cell">
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html">transform</a></span><span class="op">(</span><span class="va">bikes</span>, temp <span class="op">=</span> <span class="va">temp</span> <span class="op">-</span> <span class="fl">0.5</span><span class="op">)</span></span>
 <span><span class="va">hi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html">transform</a></span><span class="op">(</span><span class="va">bikes</span>, temp <span class="op">=</span> <span class="va">temp</span> <span class="op">+</span> <span class="fl">0.5</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">forest</span>, newdata <span class="op">=</span> <span class="va">hi</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">forest</span>, newdata <span class="op">=</span> <span class="va">lo</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 3.500891</code></pre>
+<pre><code>[1] 3.494501</code></pre>
 </div>
 </div>
-</section><section id="simultaneous-changes" class="level2" data-number="19.3"><h2 data-number="19.3" class="anchored" data-anchor-id="simultaneous-changes">
-<span class="header-section-number">19.3</span> Simultaneous changes</h2>
+</section><section id="simultaneous-changes" class="level2" data-number="20.3"><h2 data-number="20.3" class="anchored" data-anchor-id="simultaneous-changes">
+<span class="header-section-number">20.3</span> Simultaneous changes</h2>
 <p>With <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">marginaleffects::avg_comparisons()</a></code>, we can also compute the average effect of a simultaneous change in multiple predictors, using the <code>variables</code> and <code>cross</code> arguments. In this example, we see what happens (on average) to the predicted outcome when the <code>temp</code>, <code>season</code>, and <code>weather</code> predictors all change together:</p>
 <div class="cell">
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
@@ -879,19 +879,19 @@ Type:  response </code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Estimate     C: season C: temp    C: weather
-  -31.471 spring - fall      +1 misty - clear
-  -75.249 spring - fall      +1 rain - clear 
-  -11.491 summer - fall      +1 misty - clear
-  -59.883 summer - fall      +1 rain - clear 
-   -0.605 winter - fall      +1 misty - clear
-  -52.495 winter - fall      +1 rain - clear 
+  -32.260 spring - fall      +1 misty - clear
+  -76.903 spring - fall      +1 rain - clear 
+  -11.819 summer - fall      +1 misty - clear
+  -61.384 summer - fall      +1 rain - clear 
+   -0.465 winter - fall      +1 misty - clear
+  -53.879 winter - fall      +1 rain - clear 
 
 Columns: term, contrast_season, contrast_temp, contrast_weather, estimate 
 Type:  response </code></pre>
 </div>
 </div>
-</section><section id="fmeffects-forward-vs.-centered-effects" class="level2" data-number="19.4"><h2 data-number="19.4" class="anchored" data-anchor-id="fmeffects-forward-vs.-centered-effects">
-<span class="header-section-number">19.4</span> <code>fmeffects</code>: Forward vs.&nbsp;centered effects</h2>
+</section><section id="fmeffects-forward-vs.-centered-effects" class="level2" data-number="20.4"><h2 data-number="20.4" class="anchored" data-anchor-id="fmeffects-forward-vs.-centered-effects">
+<span class="header-section-number">20.4</span> <code>fmeffects</code>: Forward vs.&nbsp;centered effects</h2>
 <p>As the code in the <code>mlr3</code> section makes clear, the <a href="reference/comparisons.html"><code>avg_comparisons()</code></a> computes the effect of a “centered” change on the outcome. If we want to compute a “Forward Marginal Effect” instead, we can call:</p>
 <div class="cell">
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
@@ -901,7 +901,7 @@ Type:  response </code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Term Contrast Estimate
- temp   custom     2.41
+ temp   custom      2.4
 
 Columns: term, contrast, estimate 
 Type:  response </code></pre>
@@ -916,11 +916,11 @@ Type:  response </code></pre>
 <span>    feature <span class="op">=</span> <span class="st">"temp"</span>,</span>
 <span>    step.size <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">$</span><span class="va">ame</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 2.405615</code></pre>
+<pre><code>[1] 2.400813</code></pre>
 </div>
 </div>
-</section><section id="partial-dependence-plots" class="level2" data-number="19.5"><h2 data-number="19.5" class="anchored" data-anchor-id="partial-dependence-plots">
-<span class="header-section-number">19.5</span> Partial Dependence Plots</h2>
+</section><section id="partial-dependence-plots" class="level2" data-number="20.5"><h2 data-number="20.5" class="anchored" data-anchor-id="partial-dependence-plots">
+<span class="header-section-number">20.5</span> Partial Dependence Plots</h2>
 <div class="cell">
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># https://stackoverflow.com/questions/67634344/r-partial-dependence-plots-from-workflow</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://tidymodels.tidymodels.org">"tidymodels"</a></span><span class="op">)</span></span>
@@ -956,7 +956,7 @@ Type:  response </code></pre>
 <p><img src="machine_learning_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>We can replicate this plot using the <code>DALEXtra</code> package:</p>
+<p>We can replicate this plot using the <code>DALEX</code> package:</p>
 <div class="cell">
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://ModelOriented.github.io/DALEXtra/">"DALEXtra"</a></span><span class="op">)</span></span>
 <span><span class="va">pdp_rf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ModelOriented.github.io/DALEXtra/reference/explain_tidymodels.html">explain_tidymodels</a></span><span class="op">(</span></span>
@@ -975,8 +975,8 @@ Type:  response </code></pre>
 </div>
 </div>
 <p>Note that <code>marginaleffects</code> and <code>DALEXtra</code> plots are not exactly identical because the randomly sampled profiles are not the same. You can try the same procedure without sampling — or equivalently with <code>N=2930</code> — to see a perfect equivalence.</p>
-</section><section id="other-plots" class="level2" data-number="19.6"><h2 data-number="19.6" class="anchored" data-anchor-id="other-plots">
-<span class="header-section-number">19.6</span> Other Plots</h2>
+</section><section id="other-plots" class="level2" data-number="20.6"><h2 data-number="20.6" class="anchored" data-anchor-id="other-plots">
+<span class="header-section-number">20.6</span> Other Plots</h2>
 <p>We can plot the results using the standard <code>marginaleffects</code> helpers. For example, to plot predictions, we can do:</p>
 <div class="cell">
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://mlr3verse.mlr-org.com">mlr3verse</a></span><span class="op">)</span></span>
@@ -1459,13 +1459,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="../articles/logit.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Logit</span></span>
+      <a href="../articles/lme4.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Mixed Effects</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="../articles/matching.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Matching</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Matching</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
