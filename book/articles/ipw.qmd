@@ -4,6 +4,8 @@ title: Inverse Probability Weighting
 
 Inverse Probability Weighting (IPW) is a popular technique to remove confounding in statistical modeling. It essentially involves re-weighting your sample so that it represents the population you're interested in. Typically, we begin by estimating the predicted probability that each unit is treated. Then, we use these probabilities as weights in model fitting and in the computation of marginal effects, contrasts, risk differences, ratios, etc.
 
+This chapter introduces how to use `marginaleffects` for IPW. The presentation is very short. Readers who seek a more comprehensive understanding and application of these methods should refer to [Noah Greifer's excellent and detailed work on the topic](https://ngreifer.github.io/) and to the [`WeightIt` package vignettes and website.](https://ngreifer.github.io/WeightIt/)
+
 To illustrate, we use the Lalonde data.
 
 ```{r, include = FALSE}
@@ -26,7 +28,7 @@ Then, we call `predictions()` to extract predicted probabilities. Note that we s
 
 ```{r}
 dat <- predictions(m, newdata = lalonde)
-dat$wts <- 1 / dat$estimate
+dat$wts <- ifelse(dat$treat == 1, 1 / dat$estimate, 1 / (1 - dat$estimate))
 ```
 
 Now, we use linear regression to model the outcome of interest: personal income in 1978 (`re78`). Note that we use the predictions as weights in the model fitting process.
@@ -35,15 +37,14 @@ Now, we use linear regression to model the outcome of interest: personal income 
 mod <- lm(re78 ~ treat * (age + educ + race + re74), data = dat, weights = wts)
 ```
 
-Finally, we call `avg_comparisons()` to compute the average treatment effect on the treated. Note that we use the `wts` argument to specify the weights to be used in the computation, and the `newdata` argument to specify the subset of observations of interest: treated individuals.
+Finally, we call `avg_comparisons()` to compute the average treatment effect. Note that we use the `wts` argument to specify the weights to be used in the computation.
 
 ```{r}
 #| warning: false
 avg_comparisons(mod,
     variables = "treat",
     wts = "wts",
-    newdata = subset(dat, treat == 1)
-)
+    vcov = "HC3")
 ```
 
 By default, `avg_comparisons()` uses the Hajek estimator, that is, the weights are normalized to sum to 1 before computation. If a user wants to use the Horvitz-Thompson estimator---where normalization accounts for sample size---they can easily define a custom `comparison` function like this one:
@@ -57,5 +58,5 @@ comparisons(mod,
     comparison = ht,
     variables = "treat",
     wts = "wts",
-    newdata = subset(dat, treat == 1)) 
+    vcov = "HC3")
 ```

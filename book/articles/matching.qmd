@@ -32,7 +32,7 @@ The first step is to pre-process the dataset to achieve better covariate balance
 dat <- matchit(
     treat ~ age + educ + race + married + nodegree + re74 + re75, 
     data = lalonde, distance = "mahalanobis",
-    replace = TRUE)
+    replace = FALSE)
 dat <- match.data(dat)
 ```
 
@@ -60,6 +60,7 @@ avg_comparisons(
     fit,
     variables = "treat",
     newdata = subset(dat, treat == 1),
+    vcov = ~subclass,
     wts = "weights")
 ```
 
