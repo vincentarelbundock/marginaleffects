@@ -2,17 +2,26 @@
 #' @rdname get_predict
 #' @export
 get_predict.bart <- function(model, newdata = NULL, ...) {
-    args <- c(list(
-        object = model,
-        newdata = newdata),
+    args <- c(
+        list(
+            object = model,
+            newdata = newdata),
         list(...))
     p <- do.call(stats::predict, args)
     p_med <- collapse::fmedian(p)
-    out <- data.frame(
-        rowid = seq_along(p_med),
-        group = "main_marginaleffect",
-        estimate = p_med
-    )
+    if ("rowid" %in% colnames(newdata) && nrow(newdata) == length(p_med)) {
+        out <- data.frame(
+            rowid = newdata$rowid,
+            group = "main_marginaleffect",
+            estimate = p_med
+        )
+    } else {
+        out <- data.frame(
+            rowid = seq_along(length(p_med)),
+            group = "main_marginaleffect",
+            estimate = p_med
+        )
+    }
     attr(out, "posterior_draws") <- t(p)
     return(out)
 }
