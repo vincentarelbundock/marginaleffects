@@ -48,5 +48,11 @@ p0 <- avg_comparisons(fit, variables = "treat", newdata = subset(lalonde, treat 
 p1 <- avg_comparisons(fit, variables = "treat", newdata = subset(lalonde, treat == 1))
 p <- avg_comparisons(fit, variables = "treat", by = "treat")
 expect_equal(sort(c(p0$estimate, p1$estimate)), sort(p$estimate))
+
+p0 <- avg_predictions(fit, newdata = subset(lalonde, treat == 0))
+p1 <- avg_predictions(fit, newdata = subset(lalonde, treat == 1))
+p <- avg_predictions(fit, by = "treat")
+expect_equal(sort(c(p0$estimate, p1$estimate)), sort(p$estimate))
+
 options(marginaleffects_posterior_center = NULL)
 

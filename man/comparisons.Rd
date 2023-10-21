@@ -326,7 +326,7 @@ is the predictor in the original data. \code{eps} is the step size to use to
 compute derivatives and elasticities.\tabular{ll}{
    Shortcut \tab Function \cr
    difference \tab \(hi, lo) hi - lo \cr
-   differenceavg \tab \(hi, lo) mean(hi) - mean(lo) \cr
+   differenceavg \tab \(hi, lo) mean(hi - lo) \cr
    dydx \tab \(hi, lo, eps) (hi - lo)/eps \cr
    eyex \tab \(hi, lo, eps, y, x) (hi - lo)/eps * (x/y) \cr
    eydx \tab \(hi, lo, eps, y, x) ((hi - lo)/eps)/y \cr
@@ -342,7 +342,7 @@ compute derivatives and elasticities.\tabular{ll}{
    lnor \tab \(hi, lo) log((hi/(1 - hi))/(lo/(1 - lo))) \cr
    lnoravg \tab \(hi, lo) log((mean(hi)/(1 - mean(hi)))/(mean(lo)/(1 - mean(lo)))) \cr
    lift \tab \(hi, lo) (hi - lo)/lo \cr
-   liftavg \tab \(hi, lo) (mean(hi) - mean(lo))/mean(lo) \cr
+   liftavg \tab \(hi, lo) (mean(hi - lo))/mean(lo) \cr
    expdydx \tab \(hi, lo, eps) ((exp(hi) - exp(lo))/exp(eps))/eps \cr
    expdydxavg \tab \(hi, lo, eps) mean(((exp(hi) - exp(lo))/exp(eps))/eps) \cr
 }
@@ -414,7 +414,7 @@ The \code{invlink(link)} is a special type defined by \code{marginaleffects}. It
 
 Some of the most common \code{type} values are:
 
-response, link, E, Ep, average, class, conditional, count, cum.prob, cumprob, density, disp, expected, expvalue, fitted, invlink(link), latent, linear.predictor, linpred, location, lp, mean, numeric, p, pr, precision, prediction, prob, probability, probs, quantile, risk, scale, survival, unconditional, utility, variance, xb, zero, zlink, zprob
+response, link, E, Ep, average, class, conditional, count, cum.prob, cumprob, density, disp, ev, expected, expvalue, fitted, invlink(link), latent, linear.predictor, linpred, location, lp, mean, numeric, p, ppd, pr, precision, prediction, prob, probability, probs, quantile, risk, scale, survival, unconditional, utility, variance, xb, zero, zlink, zprob
 }
 
 \examples{
