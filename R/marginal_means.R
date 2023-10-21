@@ -520,7 +520,7 @@ get_marginalmeans <- function(model,
                 by[[b]] <- as.character(by[[b]])
             }
         }
-        out <- merge(out, by)
+        out <- merge(out, by, sort = FALSE)
         out <- out[, .(estimate = mean(estimate)), by = "by"]
     }
 
