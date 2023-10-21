@@ -145,7 +145,7 @@ get_contrasts <- function(model,
 
     # cross-contrasts or weird cases
     } else {
-        out <- merge(out, newdata, by = "rowid", all.x = TRUE)
+        out <- merge(out, newdata, by = "rowid", all.x = TRUE, sort = FALSE)
         if (isTRUE(nrow(out) == nrow(lo))) {
             tmp <- data.table(lo)[, .SD, .SDcols = patterns("^contrast|marginaleffects_wts_internal")]
             out <- cbind(out, tmp)
@@ -170,7 +170,7 @@ get_contrasts <- function(model,
             if (all(colnames(by) %in% c("by", colnames(newdata)))) {
                 nd <- c("rowid", setdiff(colnames(by), "by"))
                 nd <- newdata[, nd, drop = FALSE]
-                out <- merge(out, nd, by = "rowid")
+                out <- merge(out, nd, by = "rowid", sort = FALSE)
                 tmp <- setdiff(intersect(colnames(out), colnames(by)), "by")
             } else {
                 insight::format_error("The column in `by` must be present in `newdata`.")
@@ -238,7 +238,7 @@ get_contrasts <- function(model,
                 idx1[, (v) := original[[v]]]
                 setnames(idx1, old = v, new = "elast")
                 on_cols <- intersect(colnames(idx1), colnames(idx2))
-                idx2 <- unique(merge(idx2, idx1, by = on_cols)[, elast := elast])
+                idx2 <- unique(merge(idx2, idx1, by = on_cols, sort = FALSE)[, elast := elast])
             }
             elasticities[[v]] <- idx2$elast
         }

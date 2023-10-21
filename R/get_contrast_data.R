@@ -151,7 +151,7 @@ get_contrast_data <- function(model,
             original[[i]][[paste0("contrast_", names(original)[i])]] <- lab[[i]]
         }
 
-        fun <- function(x, y) merge(x, y, all = TRUE, allow.cartesian = TRUE)
+        fun <- function(x, y) merge(x, y, all = TRUE, allow.cartesian = TRUE, sort = FALSE)
         lo <- Reduce("fun", lo)
         hi <- Reduce("fun", hi)
         original <- Reduce("fun", original)
