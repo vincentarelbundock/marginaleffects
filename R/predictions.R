@@ -659,6 +659,10 @@ get_predictions <- function(model,
     # hypothesis tests using the delta method
     out <- get_hypothesis(out, hypothesis = hypothesis, by = by)
 
+    # WARNING: we cannot sort rows at the end because `get_hypothesis()` is
+    # applied in the middle, and it must already be sorted in the final order,
+    # otherwise, users cannot know for sure what is going to be the first and
+    # second rows, etc.
     out <- sort_columns(out, newdata, by)
 
     return(out)

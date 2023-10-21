@@ -509,6 +509,10 @@ comparisons <- function(model,
         model = model)
 
     # clean rows and columns
+    # WARNING: we cannot sort rows at the end because `get_hypothesis()` is
+    # applied in the middle, and it must already be sorted in the final order,
+    # otherwise, users cannot know for sure what is going to be the first and
+    # second rows, etc.
     mfx <- sort_columns(mfx, newdata, by)
 
     # bayesian draws
