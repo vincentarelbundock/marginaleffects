@@ -135,7 +135,7 @@ plot_build <- function(
       p <- p + ggplot2::facet_grid(fo,
                                    scales = "free",
                                    labeller = function(x){
-                                     lapply(label_both(x), gsub, pattern = "marginaleffects_term_index: ", replacement="")
+                                     lapply(ggplot2::label_both(x), gsub, pattern = "marginaleffects_term_index: ", replacement="")
                                    })
     ## if pass only 1 facet then facet_wrap
     } else if (!is.null(v_facet_1) && is.null(v_facet_2)) {
