@@ -122,5 +122,5 @@ merge_by_rowid <- function(x, y) {
 
 # faster than all(x %in% 0:1)
 is_binary <- function(x) {
-    is.null(x) || all(x %in% c(0, 1, NA))
+    is.null(x) || all(x %in% 0:1)
 }
