@@ -15,7 +15,7 @@ get_contrast_data_factor <- function(model,
         convert_to_factor <- FALSE
 
     } else {
-        msg <- "The `%s` variable is treated as a categorical (factor) variable, but the original data is of class %s. It is safer and faster to convert such variables to factor before fitting the model and calling `slopes` functions." 
+        msg <- "The `%s` variable is treated as a categorical (factor) variable, but the original data is of class %s. It is safer and faster to convert such variables to factor before fitting the model and calling a `marginaleffects` function." 
         msg <- sprintf(msg, variable$name, class(newdata[[variable$name]])[1])
         warn_once(msg, "marginaleffects_warning_factor_on_the_fly_conversion")
         if (is.factor(modeldata[[variable$name]])) {
