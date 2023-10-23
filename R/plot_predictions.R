@@ -146,11 +146,11 @@ plot_predictions <- function(model,
             ...)
         v_x <- by[[1]]
         v_color <- hush(by[[2]])
-        v_facet <- hush(by[[3]])
+        v_facet_1 <- hush(by[[3]])
+        v_facet_2 <- hush(by[[4]])
     }
 
     dv <- unlist(insight::find_response(model, combine = TRUE), use.names = FALSE)[1]
-
     datplot <- plot_preprocess(datplot, v_x = v_x, v_color = v_color, v_facet_1 = v_facet_1, v_facet_2 = v_facet_2, condition = condition, modeldata = modeldata)
 
     # return immediately if the user doesn't want a plot
