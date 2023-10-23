@@ -1,4 +1,4 @@
-plot_preprocess <- function(dat, v_x, v_color = NULL, v_facet = NULL, condition = NULL, modeldata = NULL) {
+plot_preprocess <- function(dat, v_x, v_color = NULL, v_facet_1 = NULL, v_facet_2 = NULL, condition = NULL, modeldata = NULL) {
     for (v in names(condition$condition)) {
         fun <- function(x, lab) {
             idx <- match(x, sort(unique(x)))
@@ -19,8 +19,11 @@ plot_preprocess <- function(dat, v_x, v_color = NULL, v_facet = NULL, condition 
     if (isTRUE(v_color %in% colnames(dat))) {
         dat[[v_color]] <- factor(dat[[v_color]])
     }
-    if (isTRUE(v_facet %in% colnames(dat))) {
-        dat[[v_facet]] <- factor(dat[[v_facet]])
+    if (isTRUE(v_facet_1 %in% colnames(dat))) {
+        dat[[v_facet_1]] <- factor(dat[[v_facet_1]])
+    }
+    if (isTRUE(v_facet_2 %in% colnames(dat))) {
+      dat[[v_facet_2]] <- factor(dat[[v_facet_2]])
     }
     return(dat)
 }
@@ -30,7 +33,8 @@ plot_build <- function(
     dat,
     v_x,
     v_color = NULL,
-    v_facet = NULL,
+    v_facet_1 = NULL,
+    v_facet_2 = NULL,
     dv = NULL,
     modeldata = NULL,
     points = 0,
@@ -124,17 +128,21 @@ plot_build <- function(
         p <- p + ggplot2::geom_line(data = dat, aes_obj)
     }
 
-    # facets: 3rd variable and/or multiple effects
-    if (multi_variables && !is.null(v_facet)) {
-        fo <- stats::as.formula(paste("~ marginaleffects_term_index +", v_facet))
+    # facets: 3rd and 4th variable and/or multiple effects
+    ## If pass two facets then make facet grid
+    if (!is.null(v_facet_1) && !is.null(v_facet_2)) {
+      fo <- stats::as.formula(paste(v_facet_2, "~", ifelse(multi_variables, "marginaleffects_term_index +", ""), v_facet_1))
+      p <- p + ggplot2::facet_grid(fo,
+                                   scales = "free",
+                                   labeller = function(x){
+                                     lapply(ggplot2::label_both(x), gsub, pattern = "marginaleffects_term_index: ", replacement="")
+                                   })
+    ## if pass only 1 facet then facet_wrap
+    } else if (!is.null(v_facet_1) && is.null(v_facet_2)) {
+        fo <- stats::as.formula(paste("~", ifelse(multi_variables, "marginaleffects_term_index +", ""), v_facet_1))
         p <- p + ggplot2::facet_wrap(fo, scales = "free")
-        
     } else if (multi_variables) {
         fo <- stats::as.formula("~ marginaleffects_term_index")
-        p <- p + ggplot2::facet_wrap(fo, scales = "free")
-        
-    } else if (!is.null(v_facet)) {
-        fo <- stats::as.formula(paste("~", v_facet))
         p <- p + ggplot2::facet_wrap(fo, scales = "free")
     }
 

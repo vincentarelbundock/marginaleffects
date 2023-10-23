@@ -98,7 +98,8 @@ plot_comparisons <- function(model,
         condition <- sanitize_condition(model, condition, variables, modeldata = modeldata)
         v_x <- condition$condition1
         v_color <- condition$condition2
-        v_facet <- condition$condition3
+        v_facet_1 <- condition$condition3
+        v_facet_2 <- condition$condition4
         datplot <- comparisons(
             model,
             newdata = condition$newdata,
@@ -139,10 +140,11 @@ plot_comparisons <- function(model,
             ...)
         v_x <- by[[1]]
         v_color <- hush(by[[2]])
-        v_facet <- hush(by[[3]])
+        v_facet_1 <- hush(by[[3]])
+        v_facet_2 <- hush(by[[4]])
     }
 
-    datplot <- plot_preprocess(datplot, v_x = v_x, v_color = v_color, v_facet = v_facet, condition = condition, modeldata = modeldata)
+    datplot <- plot_preprocess(datplot, v_x = v_x, v_color = v_color, v_facet_1 = v_facet_1, v_facet_2 = v_facet_2, condition = condition, modeldata = modeldata)
 
     # return immediately if the user doesn't want a plot
     if (isFALSE(draw)) {
@@ -153,7 +155,7 @@ plot_comparisons <- function(model,
     
     # ggplot2
     insight::check_if_installed("ggplot2")
-    p <- plot_build(datplot, v_x = v_x, v_color = v_color, v_facet = v_facet, gray = gray, rug = rug, modeldata = modeldata)
+    p <- plot_build(datplot, v_x = v_x, v_color = v_color, v_facet_1 = v_facet_1, v_facet_2 = v_facet_2, gray = gray, rug = rug, modeldata = modeldata)
     p <- p + ggplot2::labs(x = v_x, y = sprintf("Comparison"))
 
     return(p)

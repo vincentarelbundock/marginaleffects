@@ -78,7 +78,10 @@ expect_true(all(p3$conf.low != p5$conf.low))
 expect_error(plot_slopes(mod, variables = "hp", condition = "am", by = "am"))
 expect_error(plot_slopes(mod, variables = "hp", newdata = mtcars))
 
-
+# Plot 4 variables in condition using facet_grid
+mod <- lm(mpg ~ hp * drat * factor(am)*carb, data = mtcars)
+p <- plot_slopes(mod, variables = c("hp", "drat"), condition = list("am", "drat" = 3:5, "hp"=c(10,15), "carb"=c(2,3)))
+expect_inherits(p, "gg")
 
 
 rm(list = ls())

@@ -10,6 +10,7 @@ New supported packages:
 Bugs:
 
 * Custom functions in the `comparison` argument of `comparisons()` did not supply the correct `x` vector length for bayesian models when the `by` argument is used. Thanks to @Sandhu-SS for report #931.
+* Add suport for two facet variables (through `facet_grid`) when plotting using `condition`
 
 ## 0.16.0
 
