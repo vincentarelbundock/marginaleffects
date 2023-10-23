@@ -33,7 +33,7 @@ get_predict.bart <- function(model, newdata = NULL, ...) {
 #' @export
 sanitize_model_specific.bart <- function(model, ...) {
     insight::check_if_installed("collapse", minimum_version = "1.9.0")
-    if (!identical(as.character(insight::get_call(model))[1], "bart2")) {
+    if (!isTRUE(as.character(insight::get_call(model))[1] %in% c("bart2", "dbarts::bart2"))) {
         msg <- "`marginaleffects` only supports models estimated using the formula interface in `bart2()` function, not the matrix input in `bart()`."
         insight::format_error(msg)
     }

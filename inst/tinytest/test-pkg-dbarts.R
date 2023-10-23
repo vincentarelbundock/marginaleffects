@@ -8,14 +8,14 @@ dat <- na.omit(modeldata::penguins)
 # matrix interface not supported
 y <- as.vector(dat$bill_length_mm)
 X <- model.matrix(~ ., dat[, -1])
-mod <- bart(
+mod <- dbarts::bart(
     X, y,
     verbose = FALSE) |> suppressWarnings()
 expect_error(comparisons(mod, newdata = dat), "bart2") |> suppressWarnings()
 
 
 # formula interface supported
-mod <- bart2(
+mod <- dbarts::bart2(
     bill_length_mm ~ .,
     data = dat,
     keepTrees = TRUE,
@@ -31,7 +31,7 @@ expect_inherits(p, "comparisons")
 options(marginaleffects_posterior_center = mean)
 data("lalonde", package = "MatchIt")
 
-fit <- bart2(re78 ~ treat + age + educ + race + married + nodegree + re74 + re75,
+fit <- dbarts::bart2(re78 ~ treat + age + educ + race + married + nodegree + re74 + re75,
              data = lalonde, keepTrees = T, verbose = F)
 
 p0 <- predict(fit, newdata = transform(subset(lalonde, treat == 1), treat = 0))
