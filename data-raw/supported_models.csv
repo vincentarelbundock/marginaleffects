@@ -53,6 +53,7 @@ mgcv,gam,TRUE,TRUE,,,U,U,TRUE,TRUE
 mgcv,bam,TRUE,TRUE,,,U,U,TRUE,FALSE
 mhurdle,mhurdle,TRUE,TRUE,,,TRUE,TRUE,U,U
 mlogit,mlogit,TRUE,TRUE,,,U,U,U,U
+mvgam,mvgam,,,,,,,,
 nlme,gls,TRUE,TRUE,,,U,U,TRUE,TRUE
 nlme,lme,TRUE,TRUE,,,,,,
 nnet,multinom,TRUE,TRUE,TRUE,TRUE,U,U,U,U

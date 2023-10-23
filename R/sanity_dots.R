@@ -37,6 +37,7 @@ sanity_dots <- function(model, calling_function = NULL, ...) {
     valid[["gamlss"]] <- c("what", "safe") # gamlss
     valid[["lme"]] <- c("level") # nlme::lme
     valid[["bife"]] <- c("alpha_new", "corrected") # nlme::lme
+    valid[["process_error"]] <-  # mvgam::mvgam
 
     white_list <- c(
         "conf.int", "modeldata", "internal_call", "df",
