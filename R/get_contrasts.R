@@ -79,7 +79,14 @@ get_contrasts <- function(model,
             model,
             type = type,
             newdata = hi,
-            ...))[["value"]]
+            ...))
+
+        # otherwise we keep the full error object instead of extracting the value
+        if (inherits(pred_hi$value, "data.frame")) {
+            pred_hi <- pred_hi$value
+        } else {
+            pred_hi <- pred_hi$error
+        }
     }
 
     # predict() takes up 2/3 of the wall time. This call is only useful when we
@@ -114,7 +121,7 @@ get_contrasts <- function(model,
 
     if (!inherits(pred_hi, "data.frame") || !inherits(pred_lo, "data.frame") || !inherits(pred_or, c("data.frame", "NULL"))) {
         msg <- "Unable to compute predicted values with this model. This error can arise when `insight::get_data()` is unable to extract the dataset from the model object, or when the data frame was modified since fitting the model. You can try to supply a different dataset to the `newdata` argument."
-        if (inherits(pred_hi, "try-error")) {
+        if (inherits(pred_hi, c("try-error", "error"))) {
             msg <-c(msg, "", "In addition, this error message was raised:", "", as.character(pred_hi)) 
         }
         msg <- c(msg, "", "Bug Tracker: https://github.com/vincentarelbundock/marginaleffects/issues")
