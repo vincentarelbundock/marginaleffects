@@ -46,6 +46,7 @@ book:
       - articles/experiments.qmd
       - articles/gam.qmd
       - articles/gcomputation.qmd
+      - articles/heterogeneity.qmd
       - articles/ipw.qmd
       - articles/logit.qmd
       - articles/lme4.qmd

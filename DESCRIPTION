@@ -119,6 +119,7 @@ Suggests:
     ordinal,
     parameters,
     parsnip,
+    partykit,
     patchwork,
     pkgdown,
     phylolm,
