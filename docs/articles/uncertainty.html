@@ -2,10 +2,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.151">
+<meta name="generator" content="quarto-1.4.451">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="author" content="Vincent Arel-Bundock and contributors.">
-<title>The Marginal Effects Zoo (0.16.0) - 30&nbsp; Standard Errors</title>
+<title>The Marginal Effects Zoo (0.16.0) - 31&nbsp; Standard Errors</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,7 +20,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -79,12 +79,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
   "keyboard-shortcut": [
     "f",
     "/",
     "s"
   ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -104,7 +105,7 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-<meta name="twitter:title" content="The Marginal Effects Zoo (0.16.0) - 30&nbsp; Standard Errors">
+<meta name="twitter:title" content="The Marginal Effects Zoo (0.16.0) - 31&nbsp; Standard Errors">
 <meta name="twitter:description" content="">
 <meta name="twitter:image" content="fig/marginaleffects_card.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -112,7 +113,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <body class="nav-sidebar floating nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg navbar-dark "><div class="navbar-container container-fluid">
+  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">The Marginal Effects Zoo (0.16.0)</span>
@@ -125,28 +126,28 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
 <li class="nav-item">
-    <a class="nav-link active" href="../articles/marginaleffects.html" rel="" target="" aria-current="page">
- <span class="menu-text">Get Started</span></a>
+    <a class="nav-link active" href="../articles/marginaleffects.html" aria-current="page"> 
+<span class="menu-text">Get Started</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../articles/functions.html" rel="" target="">
- <span class="menu-text">Functions</span></a>
+    <a class="nav-link" href="../articles/functions.html"> 
+<span class="menu-text">Functions</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../articles/NEWS.html" rel="" target="">
- <span class="menu-text">News</span></a>
+    <a class="nav-link" href="../articles/NEWS.html"> 
+<span class="menu-text">News</span></a>
   </li>  
 </ul>
 <ul class="navbar-nav navbar-nav-scroll ms-auto">
 <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/vincentab" rel="" target=""><i class="bi bi-twitter" role="img">
+    <a class="nav-link" href="https://twitter.com/vincentab"> <i class="bi bi-twitter" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/vincentarelbundock/marginaleffects" rel="" target=""><i class="bi bi-github" role="img" aria-label="marginaleffects GitHub">
+    <a class="nav-link" href="https://github.com/vincentarelbundock/marginaleffects"> <i class="bi bi-github" role="img" aria-label="marginaleffects GitHub">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
 </ul>
 </div> <!-- /navcollapse -->
@@ -163,9 +164,9 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../articles/alternative_software.html">Misc</a></li><li class="breadcrumb-item"><a href="../articles/uncertainty.html"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Standard Errors</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../articles/alternative_software.html">Misc</a></li><li class="breadcrumb-item"><a href="../articles/uncertainty.html"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Standard Errors</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
@@ -289,50 +290,56 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../articles/heterogeneity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Heterogeneity</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../articles/ipw.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Inverse Probability Weighting</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Inverse Probability Weighting</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/logit.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Logit</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Logit</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/lme4.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Mixed Effects</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Mixed Effects</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/matching.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Matching</span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Matching</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/machine_learning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Machine Learning</span></span></a>
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Machine Learning</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/multiple_imputation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Missing Data</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Missing Data</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/mrp.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">MrP</span></span></a>
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">MrP</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/svalues.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">S Values</span></span></a>
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">S Values</span></span></a>
   </div>
 </li>
       </ul>
@@ -349,61 +356,61 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/alternative_software.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Alternative Software</span></span></a>
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Alternative Software</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/extensions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Extensions</span></span></a>
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Extensions</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/links.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Links</span></span></a>
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Links</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/performance.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Performance</span></span></a>
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Performance</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/python.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Python</span></span></a>
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Python</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/uncertainty.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Standard Errors</span></span></a>
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Standard Errors</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/supported_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Supported Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Supported Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/tables.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Tables</span></span></a>
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Tables</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/faq.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">FAQ</span></span></a>
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">FAQ</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/NEWS.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">News</span></span></a>
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">News</span></span></a>
   </div>
 </li>
       </ul>
@@ -493,21 +500,21 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
    
   <ul>
-<li><a href="#delta-method" id="toc-delta-method" class="nav-link active" data-scroll-target="#delta-method"><span class="header-section-number">30.1</span> Delta Method</a></li>
-  <li><a href="#standard-errors-and-intervals-for-slopes-and-comparisons" id="toc-standard-errors-and-intervals-for-slopes-and-comparisons" class="nav-link" data-scroll-target="#standard-errors-and-intervals-for-slopes-and-comparisons"><span class="header-section-number">30.2</span> Standard errors and intervals for <code>slopes()</code> and <code>comparisons()</code></a></li>
-  <li><a href="#standard-errors-and-intervals-for-marginal_means-and-predictions" id="toc-standard-errors-and-intervals-for-marginal_means-and-predictions" class="nav-link" data-scroll-target="#standard-errors-and-intervals-for-marginal_means-and-predictions"><span class="header-section-number">30.3</span> Standard errors and intervals for <code>marginal_means()</code> and <code>predictions()</code></a></li>
-  <li><a href="#robust-standard-errors" id="toc-robust-standard-errors" class="nav-link" data-scroll-target="#robust-standard-errors"><span class="header-section-number">30.4</span> Robust standard errors</a></li>
-  <li><a href="#simulation-based-inference" id="toc-simulation-based-inference" class="nav-link" data-scroll-target="#simulation-based-inference"><span class="header-section-number">30.5</span> Simulation-based inference</a></li>
-  <li><a href="#bootstrap" id="toc-bootstrap" class="nav-link" data-scroll-target="#bootstrap"><span class="header-section-number">30.6</span> Bootstrap</a></li>
-  <li><a href="#mixed-effects-models-satterthwaite-and-kenward-roger-corrections" id="toc-mixed-effects-models-satterthwaite-and-kenward-roger-corrections" class="nav-link" data-scroll-target="#mixed-effects-models-satterthwaite-and-kenward-roger-corrections"><span class="header-section-number">30.7</span> Mixed effects models: Satterthwaite and Kenward-Roger corrections</a></li>
-  <li><a href="#numerical-derivatives-sensitivity-to-step-size" id="toc-numerical-derivatives-sensitivity-to-step-size" class="nav-link" data-scroll-target="#numerical-derivatives-sensitivity-to-step-size"><span class="header-section-number">30.8</span> Numerical derivatives: Sensitivity to step size</a></li>
-  <li><a href="#bayesian-estimates-and-credible-intervals" id="toc-bayesian-estimates-and-credible-intervals" class="nav-link" data-scroll-target="#bayesian-estimates-and-credible-intervals"><span class="header-section-number">30.9</span> Bayesian estimates and credible intervals</a></li>
+<li><a href="#delta-method" id="toc-delta-method" class="nav-link active" data-scroll-target="#delta-method"><span class="header-section-number">31.1</span> Delta Method</a></li>
+  <li><a href="#standard-errors-and-intervals-for-slopes-and-comparisons" id="toc-standard-errors-and-intervals-for-slopes-and-comparisons" class="nav-link" data-scroll-target="#standard-errors-and-intervals-for-slopes-and-comparisons"><span class="header-section-number">31.2</span> Standard errors and intervals for <code>slopes()</code> and <code>comparisons()</code></a></li>
+  <li><a href="#standard-errors-and-intervals-for-marginal_means-and-predictions" id="toc-standard-errors-and-intervals-for-marginal_means-and-predictions" class="nav-link" data-scroll-target="#standard-errors-and-intervals-for-marginal_means-and-predictions"><span class="header-section-number">31.3</span> Standard errors and intervals for <code>marginal_means()</code> and <code>predictions()</code></a></li>
+  <li><a href="#robust-standard-errors" id="toc-robust-standard-errors" class="nav-link" data-scroll-target="#robust-standard-errors"><span class="header-section-number">31.4</span> Robust standard errors</a></li>
+  <li><a href="#simulation-based-inference" id="toc-simulation-based-inference" class="nav-link" data-scroll-target="#simulation-based-inference"><span class="header-section-number">31.5</span> Simulation-based inference</a></li>
+  <li><a href="#bootstrap" id="toc-bootstrap" class="nav-link" data-scroll-target="#bootstrap"><span class="header-section-number">31.6</span> Bootstrap</a></li>
+  <li><a href="#mixed-effects-models-satterthwaite-and-kenward-roger-corrections" id="toc-mixed-effects-models-satterthwaite-and-kenward-roger-corrections" class="nav-link" data-scroll-target="#mixed-effects-models-satterthwaite-and-kenward-roger-corrections"><span class="header-section-number">31.7</span> Mixed effects models: Satterthwaite and Kenward-Roger corrections</a></li>
+  <li><a href="#numerical-derivatives-sensitivity-to-step-size" id="toc-numerical-derivatives-sensitivity-to-step-size" class="nav-link" data-scroll-target="#numerical-derivatives-sensitivity-to-step-size"><span class="header-section-number">31.8</span> Numerical derivatives: Sensitivity to step size</a></li>
+  <li><a href="#bayesian-estimates-and-credible-intervals" id="toc-bayesian-estimates-and-credible-intervals" class="nav-link" data-scroll-target="#bayesian-estimates-and-credible-intervals"><span class="header-section-number">31.9</span> Bayesian estimates and credible intervals</a></li>
   </ul></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../articles/alternative_software.html">Misc</a></li><li class="breadcrumb-item"><a href="../articles/uncertainty.html"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Standard Errors</span></a></li></ol></nav><div class="quarto-title">
 <h1 class="title">
-<span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Standard Errors</span>
+<span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Standard Errors</span>
 </h1>
 </div>
 
@@ -521,8 +528,9 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
   </div>
   
 
-</header><section id="delta-method" class="level2" data-number="30.1"><h2 data-number="30.1" class="anchored" data-anchor-id="delta-method">
-<span class="header-section-number">30.1</span> Delta Method</h2>
+
+</header><section id="delta-method" class="level2" data-number="31.1"><h2 data-number="31.1" class="anchored" data-anchor-id="delta-method">
+<span class="header-section-number">31.1</span> Delta Method</h2>
 <p>All the standard errors generated by the <code><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">slopes()</a></code>, <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code>, and <a href="reference/hypotheses.html"><code>hypotheses()</code></a> functions of this package package are estimated using the delta method. Mathematical treatments of this method can be found in most statistics textbooks <a href="https://en.wikipedia.org/wiki/Delta_method">and on Wikipedia.</a> Roughly speaking, the delta method allows us to approximate the distribution of a smooth function of an asymptotically normal estimator.</p>
 <p>Concretely, this allows us to generate standard errors around functions of a model’s coefficient estimates. Predictions, contrasts, marginal effects, and marginal means are functions of the coefficients, so we can use the delta method to estimate standard errors around all of those quantities. Since there are a lot of mathematical treatments available elsewhere, this vignette focuses on the “implementation” in <code>marginaleffects</code>.</p>
 <p>Consider the case of the <a href="reference/marginal_means.html"><code>marginal_means()</code></a> function. When a user calls this function, they obtain a vector of marginal means. To estimate standard errors around this vector:</p>
@@ -544,12 +552,12 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </li>
 </ol>
 <p>Scroll down this page to the Numerical Derivatives section to see a detailed explanation, along with code for manual computation.</p>
-</section><section id="standard-errors-and-intervals-for-slopes-and-comparisons" class="level2" data-number="30.2"><h2 data-number="30.2" class="anchored" data-anchor-id="standard-errors-and-intervals-for-slopes-and-comparisons">
-<span class="header-section-number">30.2</span> Standard errors and intervals for <a href="reference/slopes.html"><code>slopes()</code></a> and <code>comparisons()</code>
+</section><section id="standard-errors-and-intervals-for-slopes-and-comparisons" class="level2" data-number="31.2"><h2 data-number="31.2" class="anchored" data-anchor-id="standard-errors-and-intervals-for-slopes-and-comparisons">
+<span class="header-section-number">31.2</span> Standard errors and intervals for <a href="reference/slopes.html"><code>slopes()</code></a> and <code>comparisons()</code>
 </h2>
 <p>All standard errors for the <a href="reference/slopes.html"><code>slopes()</code></a> and <a href="reference/comparisons.html"><code>comparisons()</code></a> functions are computed using the delta method, as described above. The confidence intervals are calculated as estimate ± <code>qnorm((1 - conf_level) / 2)</code> standard errors (e.g., for 95% confidence intervals, estimate ± 1.96 standard errors) and assume that the (transformed) estimates are normally distributed.</p>
-</section><section id="standard-errors-and-intervals-for-marginal_means-and-predictions" class="level2" data-number="30.3"><h2 data-number="30.3" class="anchored" data-anchor-id="standard-errors-and-intervals-for-marginal_means-and-predictions">
-<span class="header-section-number">30.3</span> Standard errors and intervals for <a href="reference/marginal_means.html"><code>marginal_means()</code></a> and <code>predictions()</code>
+</section><section id="standard-errors-and-intervals-for-marginal_means-and-predictions" class="level2" data-number="31.3"><h2 data-number="31.3" class="anchored" data-anchor-id="standard-errors-and-intervals-for-marginal_means-and-predictions">
+<span class="header-section-number">31.3</span> Standard errors and intervals for <a href="reference/marginal_means.html"><code>marginal_means()</code></a> and <code>predictions()</code>
 </h2>
 <p>The <a href="reference/marginal_means.html"><code>marginal_means()</code></a> and <a href="reference/predictions.html"><code>predictions()</code></a> function can compute the confidence intervals in two ways. If the following conditions hold:</p>
 <ul>
@@ -562,8 +570,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </ul>
 <p>then <a href="reference/marginal_means.html"><code>marginal_means()</code></a> and <a href="reference/predictions.html"><code>predictions()</code></a> will first compute estimates on the link scale, and then back transform them using the inverse link function supplied by <code>insight::link_inverse(model)</code> function.</p>
 <p>In all other cases, standard errors are computed using the delta method as described above.</p>
-</section><section id="robust-standard-errors" class="level2" data-number="30.4"><h2 data-number="30.4" class="anchored" data-anchor-id="robust-standard-errors">
-<span class="header-section-number">30.4</span> Robust standard errors</h2>
+</section><section id="robust-standard-errors" class="level2" data-number="31.4"><h2 data-number="31.4" class="anchored" data-anchor-id="robust-standard-errors">
+<span class="header-section-number">31.4</span> Robust standard errors</h2>
 <p>All the functions in the <code>marginaleffects</code> package can compute robust standard errors on the fly for any model type supported by <a href="https://sandwich.r-forge.r-project.org/">the <code>sandwich</code> package.</a> The <code>vcov</code> argument supports string shortcuts like <code>"HC3"</code>, a one-sided formula to request clustered standard errors, variance-covariance matrices, or functions which return such matrices. Here are a few examples.</p>
 <p>Adjusted predictions with classical or heteroskedasticity-robust standard errors:</p>
 <div class="cell">
@@ -610,8 +618,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <p><img src="uncertainty_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" style="width:100.0%"></p>
 </div>
 </div>
-</section><section id="simulation-based-inference" class="level2" data-number="30.5"><h2 data-number="30.5" class="anchored" data-anchor-id="simulation-based-inference">
-<span class="header-section-number">30.5</span> Simulation-based inference</h2>
+</section><section id="simulation-based-inference" class="level2" data-number="31.5"><h2 data-number="31.5" class="anchored" data-anchor-id="simulation-based-inference">
+<span class="header-section-number">31.5</span> Simulation-based inference</h2>
 <p><code>marginaleffects</code> offers an <em>experimental</em> <a href="reference/inferences.html"><code>inferences()</code></a> function to conduct simulation-based inference following the strategy proposed by Krinsky &amp; Robb (1986):</p>
 <ol type="1">
 <li>Draw <code>iter</code> sets of simulated coefficients from a multivariate normal distribution with mean equal to the original model’s estimated coefficients and variance equal to the model’s variance-covariance matrix (classical, “HC3”, or other).</li>
@@ -629,27 +637,27 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <span><span class="va">mod</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/predictions.html">predictions</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/inferences.html">inferences</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"simulation"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Estimate Std. Error    2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;  7.84e-01      0.195 2.68e-01  0.974</span></span>
-<span><span class="co">#&gt;  7.84e-01      0.166 3.50e-01  0.964</span></span>
-<span><span class="co">#&gt;  8.98e-01      0.142 4.42e-01  0.990</span></span>
-<span><span class="co">#&gt;  8.74e-01      0.234 1.78e-01  0.996</span></span>
-<span><span class="co">#&gt;  1.31e-02      0.179 5.46e-05  0.699</span></span>
+<span><span class="co">#&gt;  7.84e-01      0.190 2.95e-01  0.976</span></span>
+<span><span class="co">#&gt;  7.84e-01      0.162 3.50e-01  0.965</span></span>
+<span><span class="co">#&gt;  8.98e-01      0.144 4.22e-01  0.990</span></span>
+<span><span class="co">#&gt;  8.74e-01      0.234 1.67e-01  0.995</span></span>
+<span><span class="co">#&gt;  1.31e-02      0.195 7.76e-05  0.768</span></span>
 <span><span class="co">#&gt; --- 22 rows omitted. See ?avg_predictions and ?print.marginaleffects --- </span></span>
-<span><span class="co">#&gt;  3.83e-01      0.294 1.62e-02  0.950</span></span>
-<span><span class="co">#&gt;  1.21e-06      0.127 2.31e-12  0.396</span></span>
-<span><span class="co">#&gt;  6.89e-03      0.144 3.46e-05  0.552</span></span>
-<span><span class="co">#&gt;  8.07e-11      0.159 2.22e-16  0.661</span></span>
-<span><span class="co">#&gt;  7.95e-01      0.168 3.55e-01  0.969</span></span>
+<span><span class="co">#&gt;  3.83e-01      0.300 1.43e-02  0.955</span></span>
+<span><span class="co">#&gt;  1.21e-06      0.125 6.44e-12  0.430</span></span>
+<span><span class="co">#&gt;  6.89e-03      0.159 2.69e-05  0.627</span></span>
+<span><span class="co">#&gt;  8.07e-11      0.160 2.22e-16  0.778</span></span>
+<span><span class="co">#&gt;  7.95e-01      0.164 3.52e-01  0.968</span></span>
 <span><span class="co">#&gt; Columns: rowid, estimate, std.error, conf.low, conf.high, vs, hp, wt, gear </span></span>
 <span><span class="co">#&gt; Type:  response</span></span>
 <span></span>
 <span><span class="va">mod</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">avg_slopes</a></span><span class="op">(</span>vcov <span class="op">=</span> <span class="op">~</span><span class="va">gear</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/inferences.html">inferences</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"simulation"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Term Contrast  Estimate Std. Error   2.5 %  97.5 %</span></span>
-<span><span class="co">#&gt;  gear    4 - 3 -3.92e-02    0.05325 -0.0907 0.12227</span></span>
-<span><span class="co">#&gt;  gear    5 - 3 -1.93e-01    0.27214 -0.4884 0.33264</span></span>
-<span><span class="co">#&gt;  hp      dY/dX -5.02e-03    0.00454 -0.0114 0.00525</span></span>
-<span><span class="co">#&gt;  wt      dY/dX -4.06e-05    0.31835 -0.6200 0.67390</span></span>
+<span><span class="co">#&gt;  gear    4 - 3 -3.92e-02    0.05744 -0.0910 0.12941</span></span>
+<span><span class="co">#&gt;  gear    5 - 3 -1.93e-01    0.27384 -0.4888 0.33715</span></span>
+<span><span class="co">#&gt;  hp      dY/dX -5.02e-03    0.00439 -0.0113 0.00472</span></span>
+<span><span class="co">#&gt;  wt      dY/dX -4.06e-05    0.31283 -0.5676 0.72261</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, conf.low, conf.high </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -666,8 +674,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <p><img src="uncertainty_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" style="width:100.0%"></p>
 </div>
 </div>
-</section><section id="bootstrap" class="level2" data-number="30.6"><h2 data-number="30.6" class="anchored" data-anchor-id="bootstrap">
-<span class="header-section-number">30.6</span> Bootstrap</h2>
+</section><section id="bootstrap" class="level2" data-number="31.6"><h2 data-number="31.6" class="anchored" data-anchor-id="bootstrap">
+<span class="header-section-number">31.6</span> Bootstrap</h2>
 <p>It is easy to use the bootstrap as an alternative strategy to compute standard errors and confidence intervals. Several <code>R</code> packages can help us achieve this, including the long-established <code>boot</code> package:</p>
 <div class="cell">
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">boot</span><span class="op">)</span></span>
@@ -718,8 +726,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="mixed-effects-models-satterthwaite-and-kenward-roger-corrections" class="level2" data-number="30.7"><h2 data-number="30.7" class="anchored" data-anchor-id="mixed-effects-models-satterthwaite-and-kenward-roger-corrections">
-<span class="header-section-number">30.7</span> Mixed effects models: Satterthwaite and Kenward-Roger corrections</h2>
+</section><section id="mixed-effects-models-satterthwaite-and-kenward-roger-corrections" class="level2" data-number="31.7"><h2 data-number="31.7" class="anchored" data-anchor-id="mixed-effects-models-satterthwaite-and-kenward-roger-corrections">
+<span class="header-section-number">31.7</span> Mixed effects models: Satterthwaite and Kenward-Roger corrections</h2>
 <p>For linear mixed effects models we can apply the Satterthwaite and Kenward-Roger corrections in the same way as above:</p>
 <div class="cell">
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://marginaleffects.com/">marginaleffects</a></span><span class="op">)</span></span>
@@ -762,8 +770,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <p><img src="uncertainty_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" style="width:100.0%"></p>
 </div>
 </div>
-</section><section id="numerical-derivatives-sensitivity-to-step-size" class="level2" data-number="30.8"><h2 data-number="30.8" class="anchored" data-anchor-id="numerical-derivatives-sensitivity-to-step-size">
-<span class="header-section-number">30.8</span> Numerical derivatives: Sensitivity to step size</h2>
+</section><section id="numerical-derivatives-sensitivity-to-step-size" class="level2" data-number="31.8"><h2 data-number="31.8" class="anchored" data-anchor-id="numerical-derivatives-sensitivity-to-step-size">
+<span class="header-section-number">31.8</span> Numerical derivatives: Sensitivity to step size</h2>
 <div class="cell">
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv"</span><span class="op">)</span></span>
 <span><span class="va">dat</span><span class="op">$</span><span class="va">large_penguin</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">dat</span><span class="op">$</span><span class="va">body_mass_g</span> <span class="op">&gt;</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">dat</span><span class="op">$</span><span class="va">body_mass_g</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span></span>
@@ -793,7 +801,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">avg_slopes</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"bill_length_mm"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;            Term Estimate Std. Error    z Pr(&gt;|z|)    S  2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;  bill_length_mm   0.0279    0.00595 4.69   &lt;0.001 18.4 0.0162 0.0395</span></span>
+<span><span class="co">#&gt;  bill_length_mm   0.0279    0.00595 4.68   &lt;0.001 18.4 0.0162 0.0395</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
 <span><span class="co">#&gt; Type:  response</span></span>
@@ -844,9 +852,9 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">s</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>, digits <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;            Term  Estimate Std. Error       z</span></span>
-<span><span class="co">#&gt;  bill_length_mm 0.0179765 0.00851142 2.11205</span></span>
-<span><span class="co">#&gt;  bill_length_mm 0.0359630 0.01284280 2.80025</span></span>
-<span><span class="co">#&gt;  bill_length_mm 0.0849071 0.02137283 3.97267</span></span>
+<span><span class="co">#&gt;  bill_length_mm 0.0179765  0.0086771 2.07172</span></span>
+<span><span class="co">#&gt;  bill_length_mm 0.0359630  0.0126120 2.85150</span></span>
+<span><span class="co">#&gt;  bill_length_mm 0.0849071  0.0213175 3.98298</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: rowid, term, estimate, std.error, statistic</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -881,32 +889,32 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <span><span class="va">dydx_hi</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="fu">linkinv</span><span class="op">(</span><span class="va">mm_hi</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="va">b_hi</span><span class="op">)</span> <span class="op">-</span> <span class="fu">linkinv</span><span class="op">(</span><span class="va">mm_lo</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="va">b_hi</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span> <span class="va">eps1</span></span>
 <span><span class="op">(</span><span class="va">dydx_hi</span> <span class="op">-</span> <span class="va">dydx_lo</span><span class="op">)</span> <span class="op">/</span> <span class="va">eps2</span></span>
 <span><span class="co">#&gt;         [,1]</span></span>
-<span><span class="co">#&gt; 1 0.01598027</span></span>
-<span><span class="co">#&gt; 2 0.02774170</span></span>
-<span><span class="co">#&gt; 3 0.02281508</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; 1 0.01600109</span></span>
+<span><span class="co">#&gt; 2 0.02771394</span></span>
+<span><span class="co">#&gt; 3 0.02275957</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>This gives us the first column of <span class="math inline">\(J\)</span>, which we can recover in full from the <code>marginaleffects</code> object attribute:</p>
 <div class="cell">
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">J</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">s</span>, <span class="st">"jacobian"</span><span class="op">)</span></span>
 <span><span class="va">J</span></span>
 <span><span class="co">#&gt;      (Intercept) bill_length_mm flipper_length_mm speciesChinstrap speciesGentoo bill_length_mm:flipper_length_mm</span></span>
-<span><span class="co">#&gt; [1,]  0.01598027      0.6775344          2.897231                0             0                         122.6916</span></span>
-<span><span class="co">#&gt; [2,]  0.02774170      1.1958073          5.153128                0             0                         222.4993</span></span>
-<span><span class="co">#&gt; [3,]  0.02281508      1.1500800          4.440059                0             0                         224.0829</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; [1,]  0.01600109      0.6775622          2.897231                0             0                         122.6916</span></span>
+<span><span class="co">#&gt; [2,]  0.02771394      1.1957935          5.153128                0             0                         222.4993</span></span>
+<span><span class="co">#&gt; [3,]  0.02275957      1.1500800          4.440004                0             0                         224.0828</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>To build the full matrix, we would simply iterate through the coefficients, incrementing them one after the other. Finally, we get standard errors via:</p>
 <div class="cell">
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">J</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/stats/vcov.html">vcov</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/matmult.html">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">J</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.008511418 0.012842804 0.021372833</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; [1] 0.008677096 0.012611983 0.021317511</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Which corresponds to our original standard errors:</p>
 <div class="cell">
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">s</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>, digits <span class="op">=</span> <span class="fl">7</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;            Term   Estimate  Std. Error        z</span></span>
-<span><span class="co">#&gt;  bill_length_mm 0.01797653 0.008511418 2.112049</span></span>
-<span><span class="co">#&gt;  bill_length_mm 0.03596304 0.012842804 2.800248</span></span>
-<span><span class="co">#&gt;  bill_length_mm 0.08490712 0.021372833 3.972666</span></span>
+<span><span class="co">#&gt;  bill_length_mm 0.01797653 0.008677096 2.071722</span></span>
+<span><span class="co">#&gt;  bill_length_mm 0.03596304 0.012611983 2.851498</span></span>
+<span><span class="co">#&gt;  bill_length_mm 0.08490712 0.021317511 3.982975</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: rowid, term, estimate, std.error, statistic</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -918,16 +926,16 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <div class="cell">
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/leeper/margins">margins</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/margins/man/margins.html">margins</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"bill_length_mm"</span>, data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">3</span><span class="op">)</span>, unit_ses <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">SE_dydx_bill_length_mm</span></span>
-<span><span class="co">#&gt; [1] 0.008727955 0.012567120 0.021293270</span></span>
+<span><span class="co">#&gt; [1] 0.008727977 0.012567079 0.021293275</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/margins/man/margins.html">margins</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"bill_length_mm"</span>, data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">3</span><span class="op">)</span>, eps <span class="op">=</span> <span class="fl">1e-4</span>, unit_ses <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">SE_dydx_bill_length_mm</span></span>
 <span><span class="co">#&gt; [1] 0.2269512 0.2255849 0.6636208</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/margins/man/margins.html">margins</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"bill_length_mm"</span>, data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fl">3</span><span class="op">)</span>, eps <span class="op">=</span> <span class="fl">1e-5</span>, unit_ses <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">$</span><span class="va">SE_dydx_bill_length_mm</span></span>
-<span><span class="co">#&gt; [1] 0.02317077 0.02928266 0.05480281</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; [1] 0.02317078 0.02928267 0.05480282</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="bayesian-estimates-and-credible-intervals" class="level2" data-number="30.9"><h2 data-number="30.9" class="anchored" data-anchor-id="bayesian-estimates-and-credible-intervals">
-<span class="header-section-number">30.9</span> Bayesian estimates and credible intervals</h2>
+</section><section id="bayesian-estimates-and-credible-intervals" class="level2" data-number="31.9"><h2 data-number="31.9" class="anchored" data-anchor-id="bayesian-estimates-and-credible-intervals">
+<span class="header-section-number">31.9</span> Bayesian estimates and credible intervals</h2>
 <p><a href="brms.html">See the <code>brms</code> vignette</a> for a discussion of bayesian estimates and credible intervals.</p>
 <!--
 ## Uncertainty around unit-level or average estimates
@@ -954,12 +962,12 @@ as.numeric(pre2$conf.high - pre2$conf.low)
 ## On average CIs around unit-level estimates are:
 cmp1 <- comparisons(mod, variables = "hp")
 mean(cmp1$conf.high - cmp1$conf.low)
-#> [1] 0.05572727
+#> [1] 0.05572725
 
 ## The CI of the average estimate is:
 cmp2 <- comparisons(mod, variables = "hp", comparison = "differenceavg")
 cmp2$conf.high - cmp2$conf.low
-#> [1] 0.04920522
+#> [1] 0.04920523
 ```
 :::
 
@@ -1252,18 +1260,57 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
   const processXRef = (id, note) => {
-    if (id.startsWith('sec-')) {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    const typesetMath = (el) => {
+      if (window.MathJax) {
+        // MathJax Typeset
+        window.MathJax.typeset([el]);
+      } else if (window.katex) {
+        // KaTeX Render
+        var mathElements = el.getElementsByClassName("math");
+        var macros = [];
+        for (var i = 0; i < mathElements.length; i++) {
+          var texText = mathElements[i].firstChild;
+          if (mathElements[i].tagName == "SPAN") {
+            window.katex.render(texText.data, mathElements[i], {
+              displayMode: mathElements[i].classList.contains('display'),
+              throwOnError: false,
+              macros: macros,
+              fleqn: false
+            });
+          }
+        }
+      }
+    }
+    if (id === null || id.startsWith('sec-')) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
       if (note.children && note.children.length > 2) {
         for (let i = 0; i < 2; i++) {
           container.appendChild(note.children[i].cloneNode(true));
         }
+        typesetMath(container);
         return container.innerHTML
       } else {
+        typesetMath(note);
         return note.innerHTML;
       }
     } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      typesetMath(note);
       return note.innerHTML;
     }
   }
@@ -1273,27 +1320,56 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       instance.disable();
       let url = xref.getAttribute('href');
       let hash = undefined; 
-      try { hash = new URL(url).hash; } catch {}
-      const id = hash.replace(/^#\/?/, "");
-      const note = window.document.getElementById(id);
-      if (note !== null) {
-        try {
-          const html = processXRef(id, note);
-          instance.setContent(html);
-        } finally {
-          instance.enable();
-          instance.show();
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
         }
       } else {
-        // See if we can fetch this
-        fetch(url.split('#')[0])
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
         .then(res => res.text())
         .then(html => {
           const parser = new DOMParser();
           const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.getElementById(id);
+          const note = htmlDoc.querySelector('main.content');
           if (note !== null) {
-            const html = processXRef(id, note);
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
             instance.setContent(html);
           } 
         }).finally(() => {
@@ -1371,6 +1447,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1430,13 +1532,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="../articles/python.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Python</span></span>
+      <a href="../articles/python.html" class="pagination-link  aria-label=">30&nbsp; <span class="chapter-title">Python</span>"&gt;
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Python</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../articles/supported_models.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Supported Models</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../articles/supported_models.html" class="pagination-link" aria-label="<span class='chapter-number'>32</span>&nbsp; <span class='chapter-title'>Supported Models</span>">
+        <span class="nav-page-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Supported Models</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

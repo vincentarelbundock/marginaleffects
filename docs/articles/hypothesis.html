@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.151">
+<meta name="generator" content="quarto-1.4.451">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="author" content="Vincent Arel-Bundock and contributors.">
 <title>The Marginal Effects Zoo (0.16.0) - 7&nbsp; Hypothesis Tests</title>
@@ -20,7 +20,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -79,12 +79,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
   "keyboard-shortcut": [
     "f",
     "/",
     "s"
   ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -112,7 +113,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <body class="nav-sidebar floating nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg navbar-dark "><div class="navbar-container container-fluid">
+  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">The Marginal Effects Zoo (0.16.0)</span>
@@ -125,28 +126,28 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
 <li class="nav-item">
-    <a class="nav-link active" href="../articles/marginaleffects.html" rel="" target="" aria-current="page">
- <span class="menu-text">Get Started</span></a>
+    <a class="nav-link active" href="../articles/marginaleffects.html" aria-current="page"> 
+<span class="menu-text">Get Started</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../articles/functions.html" rel="" target="">
- <span class="menu-text">Functions</span></a>
+    <a class="nav-link" href="../articles/functions.html"> 
+<span class="menu-text">Functions</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../articles/NEWS.html" rel="" target="">
- <span class="menu-text">News</span></a>
+    <a class="nav-link" href="../articles/NEWS.html"> 
+<span class="menu-text">News</span></a>
   </li>  
 </ul>
 <ul class="navbar-nav navbar-nav-scroll ms-auto">
 <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/vincentab" rel="" target=""><i class="bi bi-twitter" role="img">
+    <a class="nav-link" href="https://twitter.com/vincentab"> <i class="bi bi-twitter" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/vincentarelbundock/marginaleffects" rel="" target=""><i class="bi bi-github" role="img" aria-label="marginaleffects GitHub">
+    <a class="nav-link" href="https://github.com/vincentarelbundock/marginaleffects"> <i class="bi bi-github" role="img" aria-label="marginaleffects GitHub">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
 </ul>
 </div> <!-- /navcollapse -->
@@ -163,9 +164,9 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../index.html">marginaleffects</a></li><li class="breadcrumb-item"><a href="../articles/hypothesis.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Hypothesis Tests</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../index.html">marginaleffects</a></li><li class="breadcrumb-item"><a href="../articles/hypothesis.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Hypothesis Tests</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
@@ -289,50 +290,56 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../articles/heterogeneity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Heterogeneity</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../articles/ipw.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Inverse Probability Weighting</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Inverse Probability Weighting</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/logit.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Logit</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Logit</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/lme4.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Mixed Effects</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Mixed Effects</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/matching.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Matching</span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Matching</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/machine_learning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Machine Learning</span></span></a>
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Machine Learning</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/multiple_imputation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Missing Data</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Missing Data</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/mrp.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">MrP</span></span></a>
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">MrP</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/svalues.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">S Values</span></span></a>
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">S Values</span></span></a>
   </div>
 </li>
       </ul>
@@ -349,61 +356,61 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/alternative_software.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Alternative Software</span></span></a>
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Alternative Software</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/extensions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Extensions</span></span></a>
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Extensions</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/links.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Links</span></span></a>
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Links</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/performance.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Performance</span></span></a>
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Performance</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/python.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Python</span></span></a>
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Python</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/uncertainty.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Standard Errors</span></span></a>
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Standard Errors</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/supported_models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Supported Models</span></span></a>
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Supported Models</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/tables.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Tables</span></span></a>
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Tables</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/faq.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">FAQ</span></span></a>
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">FAQ</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../articles/NEWS.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">News</span></span></a>
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">News</span></span></a>
   </div>
 </li>
       </ul>
@@ -525,7 +532,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
   </ul></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../index.html">marginaleffects</a></li><li class="breadcrumb-item"><a href="../articles/hypothesis.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Hypothesis Tests</span></a></li></ol></nav><div class="quarto-title">
 <h1 class="title">
 <span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Hypothesis Tests</span>
 </h1>
@@ -540,6 +547,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
     
   </div>
   
+
 
 </header><p>This vignette introduces the <a href="reference/hypotheses.html"><code>hypotheses()</code></a> function, and the <code>hypothesis</code> argument of the <code><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons()</a></code>, <code><a href="https://rdrr.io/pkg/marginaleffects/man/slopes.html">slopes()</a></code>, and <a href="reference/predictions.html"><code>predictions()</code></a> function. These features allow users to conduct linear and non-linear hypothesis tests and to compute custom contrasts (linear combinations) between parameters.</p>
 <section id="null-hypothesis" class="level2" data-number="7.1"><h2 data-number="7.1" class="anchored" data-anchor-id="null-hypothesis">
@@ -750,8 +758,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <span>  hypothesis <span class="op">=</span> <span class="st">"median = mean"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;           Term  Estimate Std. Error       z Pr(&gt;|z|)   S   2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;  median = mean -0.000124    0.00615 -0.0201    0.984 0.0 -0.0122 0.0119</span></span>
+<span><span class="co">#&gt;           Term Estimate Std. Error      z Pr(&gt;|z|)   S   2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;  median = mean  -0.0012    0.00594 -0.201    0.841 0.3 -0.0128 0.0104</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -1726,18 +1734,57 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
   const processXRef = (id, note) => {
-    if (id.startsWith('sec-')) {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    const typesetMath = (el) => {
+      if (window.MathJax) {
+        // MathJax Typeset
+        window.MathJax.typeset([el]);
+      } else if (window.katex) {
+        // KaTeX Render
+        var mathElements = el.getElementsByClassName("math");
+        var macros = [];
+        for (var i = 0; i < mathElements.length; i++) {
+          var texText = mathElements[i].firstChild;
+          if (mathElements[i].tagName == "SPAN") {
+            window.katex.render(texText.data, mathElements[i], {
+              displayMode: mathElements[i].classList.contains('display'),
+              throwOnError: false,
+              macros: macros,
+              fleqn: false
+            });
+          }
+        }
+      }
+    }
+    if (id === null || id.startsWith('sec-')) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
       if (note.children && note.children.length > 2) {
         for (let i = 0; i < 2; i++) {
           container.appendChild(note.children[i].cloneNode(true));
         }
+        typesetMath(container);
         return container.innerHTML
       } else {
+        typesetMath(note);
         return note.innerHTML;
       }
     } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      typesetMath(note);
       return note.innerHTML;
     }
   }
@@ -1747,27 +1794,56 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       instance.disable();
       let url = xref.getAttribute('href');
       let hash = undefined; 
-      try { hash = new URL(url).hash; } catch {}
-      const id = hash.replace(/^#\/?/, "");
-      const note = window.document.getElementById(id);
-      if (note !== null) {
-        try {
-          const html = processXRef(id, note);
-          instance.setContent(html);
-        } finally {
-          instance.enable();
-          instance.show();
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
         }
       } else {
-        // See if we can fetch this
-        fetch(url.split('#')[0])
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
         .then(res => res.text())
         .then(html => {
           const parser = new DOMParser();
           const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.getElementById(id);
+          const note = htmlDoc.querySelector('main.content');
           if (note !== null) {
-            const html = processXRef(id, note);
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
             instance.setContent(html);
           } 
         }).finally(() => {
@@ -1845,6 +1921,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1904,12 +2006,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="../articles/plot.html" class="pagination-link">
+      <a href="../articles/plot.html" class="pagination-link  aria-label=">6&nbsp; <span class="chapter-title">Plots</span>"&gt;
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Plots</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../articles/brms.html" class="pagination-link">
+      <a href="../articles/brms.html" class="pagination-link" aria-label="<span class='chapter-number'>8</span>&nbsp; <span class='chapter-title'>Bayes</span>">
         <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Bayes</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
