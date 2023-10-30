@@ -569,7 +569,7 @@ Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.
 Type:  response </code></pre>
 </div>
 </div>
-<p>Alternatively, one may be interested in exploring heterogeneity in effect sizes in different subsets of the data. A convenient way to achieve this is to use the <code>ctree</code> function of the <code>partykit</code> package. This function allows us to find with reasonably homogenous estimates, and to report useful graphical and textual summaries.</p>
+<p>Alternatively, one may be interested in exploring heterogeneity in effect sizes in different subsets of the data. A convenient way to achieve this is to use the <code>ctree</code> function of the <code>partykit</code> package. This function allows us to use recursive partitioning (conditional inference trees) to find subspaces with reasonably homogenous estimates, and to report useful graphical and textual summaries.</p>
 <p>Imagine that we are particularly interested in how the effect of temperature on bike rentals varies based on day of the week and season:</p>
 <div class="cell">
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">tree</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/partykit/man/ctree.html">ctree</a></span><span class="op">(</span></span>
