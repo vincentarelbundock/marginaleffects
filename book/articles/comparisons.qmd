@@ -250,6 +250,28 @@ avg_comparisons(mod_logit)
 avg_comparisons(mod_logit, type = "link")
 ```
 
+#### Observation-Wise Categorical Marginal Effect
+
+For categorical predictors, [Scholbeck et al. 2023](https://arxiv.org/pdf/2201.08837.pdf) recommend that analysts report what they call the "observation-wise categorical marginal effects." They describe the procedure as follows:
+
+> Recall that the common definition of categorical MEs is based on first changing all observations' value of $x_j$ to each category and then computing the difference in predictions when changing it to the reference category. However, one is often interested in prediction changes if aspects of an actual observation change. We therefore propose an observation-wise categorical ME. We first select a single reference category $c_h$. For each observation whose feature value $x_j \neq c_h$, we predict once with the observed value $x_j$ and once where $x_j$ has been replaced by $c_h$.
+
+To achieve this with `marginaleffects`, we proceed in three simple steps:
+
+1. Use the `factor()` function to set the reference level of the categorical variable.
+2. Use the `newdata` argument to take the subset of data where the observed $x_j$ is different from the reference level we picked in 1.
+3. Apply the `avg_comparisons()` with the `"revreference"` option.
+
+```{r}
+dat <- transform(mtcars, cyl = factor(cyl, levels = c(6, 4, 8)))
+
+mod <- glm(vs ~ mpg * factor(cyl), data = dat, family = binomial)
+
+avg_comparisons(mod,
+  variables = list(cyl = "revreference"),
+  newdata = subset(dat, cyl != 6))
+```
+
 ### Character predictors
 
 All functions of the `marginaleffects` package attempt to treat character predictors as factor predictors. However, using factors instead of characters when modeling is *strongly* encouraged, because they are much safer and faster. This is because factors hold useful information about the full list of levels, which makes them easier to track and handle internally by `marginaleffects`. Users are strongly encouraged to convert their character variables to factor before fitting their models and using `slopes` functions.
@@ -666,6 +688,7 @@ plot_comparisons(
     comparison = "ratio") +
     ylab("Adjusted Risk Ratio\nP(Survived = 1 | Age + 10) / P(Survived = 1 | Age)")
 ```
+
 
 ## Forward, Backward, Centered, and Custom Differences
 
