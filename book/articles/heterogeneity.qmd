@@ -41,7 +41,7 @@ In such cases, a common strategy is to compute an average difference, as describ
 avg_comparisons(mod, variables = list(temp = 5))
 ```
 
-Alternatively, one may be interested in exploring heterogeneity in effect sizes in different subsets of the data. A convenient way to achieve this is to use the `ctree` function of the `partykit` package. This function allows us to find with reasonably homogenous estimates, and to report useful graphical and textual summaries.
+Alternatively, one may be interested in exploring heterogeneity in effect sizes in different subsets of the data. A convenient way to achieve this is to use the `ctree` function of the `partykit` package. This function allows us to use recursive partitioning (conditional inference trees) to find subspaces with reasonably homogenous estimates, and to report useful graphical and textual summaries.
 
 Imagine that we are particularly interested in how the effect of temperature on bike rentals varies based on day of the week and season:
 
