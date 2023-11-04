@@ -32,16 +32,10 @@ get_contrast_data_factor <- function(model,
     if (isTRUE(flag)) {
         levs_idx <- contrast_categories_shortcuts(levs, variable, interaction)
 
-    # manual data frame
-    } else if (isTRUE(checkmate::check_data_frame(variable$value))) {
-        levs_idx <- contrast_categories_df(variable)
-        lab <- "manual"
-
-    # custom function
-    } else if (isTRUE(checkmate::check_function(variable$value))) {
-        tmp <- variable$value(newdata[[variable$name]])
-        levs_idx <- data.table::data.table(lo = tmp[, 1], hi = tmp[, 2])
-        lab <- "custom"
+    # custom data frame or function
+    } else if (isTRUE(checkmate::check_function(variable$value)) || isTRUE(checkmate::check_data_frame(variable$value))) {
+        out <- contrast_categories_custom(variable, newdata, contrast_null)
+        return(out)
 
     # vector of two values
     } else if (isTRUE(checkmate::check_atomic_vector(variable$value, len = 2))) {
@@ -180,3 +174,37 @@ contrast_categories_processing <- function(first_cross, levs_idx, levs, variable
     return(list(lo, hi, original))
 }
 
+
+
+
+
+contrast_categories_custom <- function(variable, newdata, contrast_null) {
+    original <- newdata
+    if (!"rowid" %in% colnames(original)) {
+        original$rowid <- seq_len(nrow(original))
+    }
+    hi <- lo <- original
+    if (isTRUE(checkmate::check_function(variable$value))) {
+        variables_df <- variable$value(newdata[[variable$name]])
+    } else if (isTRUE(checkmate::check_data_frame(variable$value))) {
+        variables_df <- variable$value
+    }
+    checkmate::assert_data_frame(variables_df, nrows = nrow(original))
+    if (all(c("low", "high") %in% colnames(variables_df))) {
+        lo[[variable$name]] <- variables_df[["low"]]
+        hi[[variable$name]] <- variables_df[["high"]]
+    } else {
+        lo[[variable$name]] <- variables_df[[1]]
+        hi[[variable$name]] <- variables_df[[1]]
+    }
+    out <- list(
+        rowid = original$rowid,
+        lo = lo,
+        hi = hi,
+        original = original,
+        ter = rep(variable$name, nrow(lo)), # lo can be different dimension than newdata
+        lab = "custom",
+        contrast_null = rep(FALSE, nrow(lo))
+    )
+    return(out)
+}

@@ -22,16 +22,10 @@ get_contrast_data_character <- function(model,
     if (isTRUE(flag)) {
         levs_idx <- contrast_categories_shortcuts(levs, variable, interaction)
 
-    # manual data frame
-    } else if (isTRUE(checkmate::check_data_frame(variable$value))) {
-        levs_idx <- contrast_categories_df(variable)
-        lab <- "manual"
-
-    # custom function
-    } else if (isTRUE(checkmate::check_function(variable$value))) {
-        tmp <- variable$value(newdata[[variable$name]])
-        levs_idx <- data.table::data.table(lo = tmp[, 1], hi = tmp[, 2])
-        lab <- "custom"
+    # custom data frame or function
+    } else if (isTRUE(checkmate::check_function(variable$value)) || isTRUE(checkmate::check_data_frame(variable$value))) {
+        out <- contrast_categories_custom(variable, newdata, contrast_null)
+        return(out)
 
     # vector of two values
     } else if (isTRUE(checkmate::check_atomic_vector(variable$value, len = 2))) {
