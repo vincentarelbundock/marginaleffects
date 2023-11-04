@@ -7,6 +7,11 @@ New supported packages:
 * `dbarts`: https://cran.r-project.org/package=dbarts
 * `mvgam`: https://nicholasjclark.github.io/mvgam/ Not available on CRAN yet, but this package maintains its own `marginaleffects` support function.
 
+Misc:
+
+* `comparisons()`: The `variables` argument now accepts functions and data frames for factor and character variables.
+* Deprecation warning for: `plot_cap()`, `plot_cme()`, and `plot_cco()`. These function names will be removed in version 1.0.0.
+
 Bugs:
 
 * Custom functions in the `comparison` argument of `comparisons()` did not supply the correct `x` vector length for bayesian models when the `by` argument is used. Thanks to @Sandhu-SS for report #931.

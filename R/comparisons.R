@@ -31,6 +31,8 @@
 #'     * "minmax": The highest and lowest levels of a factor.
 #'     * "revpairwise", "revreference", "revsequential": inverse of the corresponding hypotheses.
 #'     * Vector of length 2 with the two values to compare.
+#'     * Data frame with the same number of rows as `newdata`, with two columns of "low" and "high" values to compare.
+#'     * Function which accepts a numeric vector and returns a data frame with two columns of "low" and "high" values to compare. See examples below.
 #'   - Logical variables:
 #'     * NULL: contrast between TRUE and FALSE
 #'   - Numeric variables:
@@ -46,6 +48,7 @@
 #'   - Examples:
 #'     + `variables = list(gear = "pairwise", hp = 10)`
 #'     + `variables = list(gear = "sequential", hp = c(100, 120))`
+#'     + `variables = list(hp = \(x) data.frame(low = x - 5, high = x + 10))`
 #'     + See the Examples section below for more.
 #' @param newdata Grid of predictor values at which we evaluate the comparisons.
 #' + Warning: Please avoid modifying your dataset between fitting the model and calling a `marginaleffects` function. This can sometimes lead to unexpected results.

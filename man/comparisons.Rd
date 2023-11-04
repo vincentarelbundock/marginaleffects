@@ -86,6 +86,8 @@ avg_comparisons(
 \item "minmax": The highest and lowest levels of a factor.
 \item "revpairwise", "revreference", "revsequential": inverse of the corresponding hypotheses.
 \item Vector of length 2 with the two values to compare.
+\item Data frame with the same number of rows as \code{newdata}, with two columns of "low" and "high" values to compare.
+\item Function which accepts a numeric vector and returns a data frame with two columns of "low" and "high" values to compare. See examples below.
 }
 \item Logical variables:
 \itemize{
@@ -107,6 +109,7 @@ avg_comparisons(
 \itemize{
 \item \code{variables = list(gear = "pairwise", hp = 10)}
 \item \code{variables = list(gear = "sequential", hp = c(100, 120))}
+\item \verb{variables = list(hp = \\(x) data.frame(low = x - 5, high = x + 10))}
 \item See the Examples section below for more.
 }
 }

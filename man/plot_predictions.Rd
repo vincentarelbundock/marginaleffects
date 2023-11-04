@@ -26,14 +26,14 @@ plot_predictions(
 
 \item{condition}{Conditional predictions
 \itemize{
-\item Character vector (max length 3): Names of the predictors to display.
-\item Named list (max length 3): List names correspond to predictors. List elements can be:
+\item Character vector (max length 4): Names of the predictors to display.
+\item Named list (max length 4): List names correspond to predictors. List elements can be:
 \itemize{
 \item Numeric vector
 \item Function which returns a numeric vector or a set of unique categorical values
 \item Shortcut strings for common reference values: "minmax", "quartile", "threenum"
 }
-\item 1: x-axis. 2: color/shape. 3: facets.
+\item 1: x-axis. 2: color/shape. 3: facet (wrap if no fourth variable, otherwise cols of grid). 4: facet (rows of grid).
 \item Numeric variables in positions 2 and 3 are summarized by Tukey's five numbers \code{?stats::fivenum}
 }}
 

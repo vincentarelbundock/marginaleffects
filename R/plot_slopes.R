@@ -108,4 +108,7 @@ plot_slopes <- function(model,
 #' @inherit plot_predictions
 #' @keywords internal
 #' @export
-plot_cme <- plot_slopes
+plot_cme <- function(...) {
+    insight::format_warning("This function has been renamed to `plot_slopes()`. The `plot_cme()` alias will be removed in a future release.")
+    plot_slopes(...)
+}

@@ -32,8 +32,19 @@ get_contrast_data_factor <- function(model,
     if (isTRUE(flag)) {
         levs_idx <- contrast_categories_shortcuts(levs, variable, interaction)
 
+    # manual data frame
+    } else if (isTRUE(checkmate::check_data_frame(variable$value))) {
+        levs_idx <- contrast_categories_df(variable)
+        lab <- "manual"
+
+    # custom function
+    } else if (isTRUE(checkmate::check_function(variable$value))) {
+        tmp <- variable$value(x)
+        levs_idx <- data.table::data.table(lo = tmp[, 1], hi = tmp[, 2])
+        lab <- "custom"
+
     # vector of two values
-    } else if (length(variable$value) == 2) {
+    } else if (isTRUE(checkmate::check_atomic_vector(variable$value, len = 2))) {
         if (is.character(variable$value)) {
             tmp <- modeldata[[variable$name]]
             if (any(!variable$value %in% as.character(tmp))) {
@@ -55,6 +66,7 @@ get_contrast_data_factor <- function(model,
             levs_idx <- data.table::data.table(lo = variable$value[1], hi = variable$value[2])
         }
     }
+
 
     tmp <- contrast_categories_processing(first_cross, levs_idx, levs, variable, newdata)
     lo <- tmp[[1]]
@@ -120,6 +132,24 @@ contrast_categories_shortcuts <- function(levs, variable, interaction) {
         levs_idx <- levs_idx[, .(lo = hi, hi = lo)]
     }
 
+    return(levs_idx)
+}
+
+
+
+contrast_categories_df <- function(variable) {
+    # manual data frame
+    if (all(c("low", "high") %in% colnames(variable$value))) {
+        low <- variable$value$low
+        high <- variable$value$high
+    } else {
+        low <- variable$value[[1]]
+        high <- variable$value[[2]]
+    }
+    levs_idx <- data.table::data.table(
+        lo = low,
+        hi = high
+    )
     return(levs_idx)
 }
 
