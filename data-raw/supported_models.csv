@@ -71,6 +71,7 @@ Rchoice,ivpml,TRUE,TRUE,,,,,,
 rms,ols,TRUE,TRUE,,,,,,
 rms,lrm,TRUE,TRUE,,,,,,
 rms,orm,TRUE,TRUE,,,,,,
+rms,Gls,TRUE,TRUE,,,,,,
 robust,lmRob,TRUE,TRUE,,,U,U,U,U
 robustbase,glmrob,TRUE,TRUE,,,TRUE,TRUE,U,U
 robustbase,lmrob,TRUE,TRUE,,,TRUE,TRUE,U,U

@@ -6,6 +6,7 @@ New supported packages:
 
 * `dbarts`: https://cran.r-project.org/package=dbarts
 * `mvgam`: https://nicholasjclark.github.io/mvgam/ Not available on CRAN yet, but this package maintains its own `marginaleffects` support function.
+* `rms::Gls`: https://cran.r-project.org/package=rms
 
 Misc:
 

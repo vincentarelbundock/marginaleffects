@@ -49,6 +49,7 @@ sanity_model_supported_class <- function(model) {
         c("gam", "glm", "lm"), # package: mgcv
         c("gamlss", "gam", "glm", "lm"), # package: gamlss
         c("geeglm", "gee", "glm"),
+        c("Gls", "rms", "gls"),
         "glm",
         "gls",
         "glmerMod",

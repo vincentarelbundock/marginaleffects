@@ -67,6 +67,7 @@ Gam,response
 Gam,link
 geeglm,response
 geeglm,link
+Gls,lp
 glimML,response
 glimML,link
 glm,invlink(link)
