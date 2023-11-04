@@ -4,7 +4,7 @@ using("marginaleffects")
 
 requiet("bife")
 
-mod <- bife(LFP ~ AGE + I(INCH / 1000) + KID1 + KID2 + KID3 | ID, data = dat)
+mod <- bife(LFP ~ AGE + I(INCH / 1000) + KID1 + KID2 + KID3 | ID, data = psid)
 dat <- get_modeldata(mod, additional_variables = "KID")
 dat <- psid <- transform(dat, KID = ifelse(KID1 > 0, 1, 0))
 
