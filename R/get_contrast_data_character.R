@@ -29,7 +29,7 @@ get_contrast_data_character <- function(model,
 
     # custom function
     } else if (isTRUE(checkmate::check_function(variable$value))) {
-        tmp <- variable$value(x)
+        tmp <- variable$value(newdata[[variable$name]])
         levs_idx <- data.table::data.table(lo = tmp[, 1], hi = tmp[, 2])
         lab <- "custom"
 
