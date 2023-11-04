@@ -236,7 +236,9 @@ sanitize_variables <- function(variables,
                 flag1 <- checkmate::check_choice(predictors[[v]], choices = valid)
                 flag2 <- checkmate::check_vector(predictors[[v]], len = 2)
                 flag3 <- checkmate::check_data_frame(predictors[[v]], nrows = nrow(newdata), ncols = 2)
-                if (!isTRUE(flag1) && !isTRUE(flag2) && !isTRUE(flag3)) {
+                flag4 <- checkmate::check_function(predictors[[v]])
+                flag5 <- checkmate::check_data_frame(predictors[[v]])
+                if (!isTRUE(flag1) && !isTRUE(flag2) && !isTRUE(flag3) && !isTRUE(flag4) && !isTRUE(flag5)) {
                     msg <- "The %s element of the `variables` argument must be a vector of length 2 or one of: %s"
                     msg <- sprintf(msg, v, paste(valid, collapse = ", "))
                     insight::format_error(msg)
