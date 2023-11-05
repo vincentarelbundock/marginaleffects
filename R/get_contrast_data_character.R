@@ -24,7 +24,7 @@ get_contrast_data_character <- function(model,
 
     # custom data frame or function
     } else if (isTRUE(checkmate::check_function(variable$value)) || isTRUE(checkmate::check_data_frame(variable$value))) {
-        out <- contrast_categories_custom(variable, newdata, contrast_null)
+        out <- contrast_categories_custom(variable, newdata)
         return(out)
 
     # vector of two values

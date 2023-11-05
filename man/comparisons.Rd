@@ -87,11 +87,13 @@ avg_comparisons(
 \item "revpairwise", "revreference", "revsequential": inverse of the corresponding hypotheses.
 \item Vector of length 2 with the two values to compare.
 \item Data frame with the same number of rows as \code{newdata}, with two columns of "low" and "high" values to compare.
-\item Function which accepts a numeric vector and returns a data frame with two columns of "low" and "high" values to compare. See examples below.
+\item Function that accepts a vector and returns a data frame with two columns of "low" and "high" values to compare. See examples below.
 }
 \item Logical variables:
 \itemize{
 \item NULL: contrast between TRUE and FALSE
+\item Data frame with the same number of rows as \code{newdata}, with two columns of "low" and "high" values to compare.
+\item Function that accepts a vector and returns a data frame with two columns of "low" and "high" values to compare. See examples below.
 }
 \item Numeric variables:
 \itemize{
@@ -99,7 +101,7 @@ avg_comparisons(
 \item Numeric of length equal to the number of rows in \code{newdata}: Same as above, but the contrast can be customized for each row of \code{newdata}.
 \item Numeric vector of length 2: Contrast between the 2nd element and the 1st element of the \code{x} vector.
 \item Data frame with the same number of rows as \code{newdata}, with two columns of "low" and "high" values to compare.
-\item Function which accepts a numeric vector and returns a data frame with two columns of "low" and "high" values to compare. See examples below.
+\item Function that accepts a vector and returns a data frame with two columns of "low" and "high" values to compare. See examples below.
 \item "iqr": Contrast across the interquartile range of the regressor.
 \item "sd": Contrast across one standard deviation around the regressor mean.
 \item "2sd": Contrast across two standard deviations around the regressor mean.

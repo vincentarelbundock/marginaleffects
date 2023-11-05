@@ -88,6 +88,54 @@ expect_equal(length(unique(round(cmp$statistic, 5))), 1)
 
 
 
+# Issue 953: Custom functions or data frames for factors/logical columns
+requiet("ordinal")
+
+dat <- wine |> transform(
+    rating = ordered(ifelse(rating == 5, 1, rating)),
+    temp = as.character(temp)
+)
+mod <- clm(rating ~ response * temp, data = dat)
+
+DF = data.frame(
+    lo = dat$temp,
+    hi = ifelse(dat$temp == "cold", "warm", "cold")
+)
+
+cmp <- comparisons(mod, variables = list(temp = DF))
+expect_inherits(cmp, "comparisons")
+p1 <- predictions(mod)
+p2 <- predictions(mod, newdata = transform(dat, temp = ifelse(temp == "cold", "warm", "cold")))
+expect_equal(p2$estimate - p1$estimate, cmp$estimate)
+
+cmp <- avg_comparisons(mod, variables = list(temp = DF))
+expect_inherits(cmp, "comparisons")
+expect_equal(nrow(cmp), 4)
+
+dat$temp <- dat$temp == "cold"
+mod <- clm(rating ~ response * temp, data = dat)
+
+DF = data.frame(
+    lo = dat$temp,
+    hi = ifelse(dat$temp == FALSE, TRUE, FALSE)
+)
+cmp <- comparisons(mod, variables = list(temp = DF))
+expect_inherits(cmp, "comparisons")
+p1 <- predictions(mod)
+p2 <- predictions(mod, newdata = transform(dat, temp = ifelse(temp == FALSE, TRUE, FALSE)))
+expect_equal(p2$estimate - p1$estimate, cmp$estimate)
+
+cmp <- avg_comparisons(mod, variables = list(temp = DF))
+expect_inherits(cmp, "comparisons")
+expect_equal(nrow(cmp), 4)
+
+DF = \(x) data.frame(
+    lo = x,
+    hi = ifelse(x == FALSE, TRUE, FALSE)
+)
+cmp <- comparisons(mod, variables = list(temp = DF))
+expect_inherits(cmp, "comparisons")
+expect_equal(nrow(cmp), 288)
 
 
 rm(list = ls())

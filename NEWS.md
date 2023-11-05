@@ -10,7 +10,7 @@ New supported packages:
 
 Misc:
 
-* `comparisons()`: The `variables` argument now accepts functions and data frames for factor and character variables.
+* `comparisons()`: The `variables` argument now accepts functions and data frames for factor, character, and logical variables.
 * Deprecation warning for: `plot_cap()`, `plot_cme()`, and `plot_cco()`. These function names will be removed in version 1.0.0.
 
 Bugs:

@@ -34,7 +34,7 @@ get_contrast_data_factor <- function(model,
 
     # custom data frame or function
     } else if (isTRUE(checkmate::check_function(variable$value)) || isTRUE(checkmate::check_data_frame(variable$value))) {
-        out <- contrast_categories_custom(variable, newdata, contrast_null)
+        out <- contrast_categories_custom(variable, newdata)
         return(out)
 
     # vector of two values
@@ -136,6 +136,9 @@ contrast_categories_df <- function(variable) {
     if (all(c("low", "high") %in% colnames(variable$value))) {
         low <- variable$value$low
         high <- variable$value$high
+    } else if (all(c("lo", "hi") %in% colnames(variable$value))) {
+        low <- variable$value$low
+        high <- variable$value$high
     } else {
         low <- variable$value[[1]]
         high <- variable$value[[2]]
@@ -178,7 +181,7 @@ contrast_categories_processing <- function(first_cross, levs_idx, levs, variable
 
 
 
-contrast_categories_custom <- function(variable, newdata, contrast_null) {
+contrast_categories_custom <- function(variable, newdata) {
     original <- newdata
     if (!"rowid" %in% colnames(original)) {
         original$rowid <- seq_len(nrow(original))
@@ -193,6 +196,9 @@ contrast_categories_custom <- function(variable, newdata, contrast_null) {
     if (all(c("low", "high") %in% colnames(variables_df))) {
         lo[[variable$name]] <- variables_df[["low"]]
         hi[[variable$name]] <- variables_df[["high"]]
+    } else if (all(c("lo", "hi") %in% colnames(variables_df))) {
+        lo[[variable$name]] <- variables_df[["lo"]]
+        hi[[variable$name]] <- variables_df[["hi"]]
     } else {
         lo[[variable$name]] <- variables_df[[1]]
         hi[[variable$name]] <- variables_df[[1]]
