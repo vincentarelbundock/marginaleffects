@@ -177,7 +177,7 @@ sanitize_variables <- function(variables,
 
         } else if (get_variable_class(modeldata, v, "binary")) {
             if (!isTRUE(checkmate::check_numeric(predictors[[v]])) || !is_binary(predictors[[v]])) {
-                msg <- sprintf("The `%s` variable is binary. The corresponding entry in the `variables` argument must be 0 or 1.")
+                msg <- sprintf("The `%s` variable is binary. The corresponding entry in the `variables` argument must be 0 or 1.", v)
                 insight::format_error(msg)
             }
             # get_contrast_data requires both levels
