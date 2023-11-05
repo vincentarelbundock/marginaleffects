@@ -535,9 +535,10 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
   <li><a href="#marginal-effects-for-location-scale-models" id="toc-marginal-effects-for-location-scale-models" class="nav-link" data-scroll-target="#marginal-effects-for-location-scale-models"><span class="header-section-number">26.4.3</span> Marginal Effects for Location Scale Models</a></li>
   </ul>
 </li>
-  <li><a href="#effects" id="toc-effects" class="nav-link" data-scroll-target="#effects"><span class="header-section-number">26.5</span> <code>effects</code></a></li>
-  <li><a href="#modelbased" id="toc-modelbased" class="nav-link" data-scroll-target="#modelbased"><span class="header-section-number">26.6</span> <code>modelbased</code></a></li>
-  <li><a href="#ggeffects" id="toc-ggeffects" class="nav-link" data-scroll-target="#ggeffects"><span class="header-section-number">26.7</span> <code>ggeffects</code></a></li>
+  <li><a href="#fmeffects" id="toc-fmeffects" class="nav-link" data-scroll-target="#fmeffects"><span class="header-section-number">26.5</span> <code>fmeffects</code></a></li>
+  <li><a href="#effects" id="toc-effects" class="nav-link" data-scroll-target="#effects"><span class="header-section-number">26.6</span> <code>effects</code></a></li>
+  <li><a href="#modelbased" id="toc-modelbased" class="nav-link" data-scroll-target="#modelbased"><span class="header-section-number">26.7</span> <code>modelbased</code></a></li>
+  <li><a href="#ggeffects" id="toc-ggeffects" class="nav-link" data-scroll-target="#ggeffects"><span class="header-section-number">26.8</span> <code>ggeffects</code></a></li>
   </ul></nav>
     </div>
 <!-- main -->
@@ -1474,8 +1475,63 @@ Expression   : Linear prediction, predict()
 <span><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section></section></section><section id="effects" class="level2" data-number="26.5"><h2 data-number="26.5" class="anchored" data-anchor-id="effects">
-<span class="header-section-number">26.5</span> <code>effects</code>
+</section></section></section><section id="fmeffects" class="level2" data-number="26.5"><h2 data-number="26.5" class="anchored" data-anchor-id="fmeffects">
+<span class="header-section-number">26.5</span> <code>fmeffects</code>
+</h2>
+<p>The <a href="https://cran.r-project.org/package=fmeffects"><code>fmeffects</code> package</a> is described as follows:</p>
+<blockquote class="blockquote">
+<p>fmeffects: Model-Agnostic Interpretations with Forward Marginal Effects. Create local, regional, and global explanations for any machine learning model with forward marginal effects. You provide a model and data, and ‘fmeffects’ computes feature effects. The package is based on the theory in: C. A. Scholbeck, G. Casalicchio, C. Molnar, B. Bischl, and C. Heumann (2022)</p>
+</blockquote>
+<p>As the name says, this package is focused on “forward marginal effects” in the context of machine learning models estimated using the <code>mlr3</code> or <code>tidymodels</code> frameworks. Since version 0.16.0, <code>marginaleffects</code> also supports these machine learning frameworks, and it covers a superset of the <code>fmeffects</code> functionality. Consider a random forest model trained on the <code>bikes</code> data:</p>
+<div class="cell">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://mlr3verse.mlr-org.com">"mlr3verse"</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/holgstr/fmeffects">"fmeffects"</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"bikes"</span>, package <span class="op">=</span> <span class="st">"fmeffects"</span><span class="op">)</span></span>
+<span><span class="va">task</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/as_task_regr.html">as_task_regr</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">bikes</span>, id <span class="op">=</span> <span class="st">"bikes"</span>, target <span class="op">=</span> <span class="st">"count"</span><span class="op">)</span></span>
+<span><span class="va">forest</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mlr3.mlr-org.com/reference/mlr_sugar.html">lrn</a></span><span class="op">(</span><span class="st">"regr.ranger"</span><span class="op">)</span><span class="op">$</span><span class="fu">train</span><span class="op">(</span><span class="va">task</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now, we use the <a href="reference/comparisons.html"><code>avg_comparisons()</code></a> function to compute <em>centered</em> marginal effects:</p>
+<div class="cell">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">forest</span>, variables <span class="op">=</span> <span class="st">"temp"</span>, newdata <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  Term Contrast Estimate</span></span>
+<span><span class="co">#&gt;  temp       +1     3.55</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate </span></span>
+<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We call this quantity “centered” because it represents the average effect of a change of 1 unit in <code>temp</code> about the observed value, that is, a change from 0.5 below to 0.5 above:</p>
+<div class="cell">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html">transform</a></span><span class="op">(</span><span class="va">bikes</span>, temp <span class="op">=</span> <span class="va">temp</span> <span class="op">-</span> <span class="fl">0.5</span><span class="op">)</span></span>
+<span><span class="va">hi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html">transform</a></span><span class="op">(</span><span class="va">bikes</span>, temp <span class="op">=</span> <span class="va">temp</span> <span class="op">+</span> <span class="fl">0.5</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">forest</span>, newdata <span class="op">=</span> <span class="va">hi</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">forest</span>, newdata <span class="op">=</span> <span class="va">lo</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 3.549405</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>As described in the <a href="comparisons.html"><code>comparisons()</code> vignette</a>, it is easy to estimate “backward”, “centered” or “forward” differences by supplying an appropriate function to the <code>variables</code> argument. For example, here is how to compute “forward” marginal effects:</p>
+<div class="cell">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span></span>
+<span>    <span class="va">forest</span>,</span>
+<span>    variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"temp"</span> <span class="op">=</span> \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">x</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    newdata <span class="op">=</span> <span class="va">bikes</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  Term Contrast Estimate</span></span>
+<span><span class="co">#&gt;  temp   custom     2.38</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Columns: term, contrast, estimate </span></span>
+<span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This is equivalent to the key quantity reported by the <code>fmeffects</code> package:</p>
+<div class="cell">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">fmeffects</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/fmeffects/man/fme.html">fme</a></span><span class="op">(</span></span>
+<span>    model <span class="op">=</span> <span class="va">forest</span>,</span>
+<span>    data <span class="op">=</span> <span class="va">bikes</span>,</span>
+<span>    target <span class="op">=</span> <span class="st">"count"</span>,</span>
+<span>    feature <span class="op">=</span> <span class="st">"temp"</span>,</span>
+<span>    step.size <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">$</span><span class="va">ame</span></span>
+<span><span class="co">#&gt; [1] 2.382072</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="effects" class="level2" data-number="26.6"><h2 data-number="26.6" class="anchored" data-anchor-id="effects">
+<span class="header-section-number">26.6</span> <code>effects</code>
 </h2>
 <p>The <a href="https://cran.r-project.org/package=effects"><code>effects</code> package</a> was created by John Fox and colleagues.</p>
 <ul>
@@ -1496,16 +1552,16 @@ Expression   : Linear prediction, predict()
 <li>Partial residuals plots</li>
 <li>Many types of ways to plot adjusted predictions: <a href="https://cran.r-project.org/web/packages/effects/vignettes/predictor-effects-gallery.pdf">package vignette</a>
 </li>
-</ul></section><section id="modelbased" class="level2" data-number="26.6"><h2 data-number="26.6" class="anchored" data-anchor-id="modelbased">
-<span class="header-section-number">26.6</span> <code>modelbased</code>
+</ul></section><section id="modelbased" class="level2" data-number="26.7"><h2 data-number="26.7" class="anchored" data-anchor-id="modelbased">
+<span class="header-section-number">26.7</span> <code>modelbased</code>
 </h2>
 <p>The <a href="https://easystats.github.io/modelbased/"><code>modelbased</code> package</a> is developed by the <code>easystats</code> team.</p>
 <p>This section is incomplete; contributions are welcome.</p>
 <ul>
 <li>Wrapper around <code>emmeans</code> to compute marginal means and marginal effects.</li>
 <li>Powerful functions to create beautiful plots.</li>
-</ul></section><section id="ggeffects" class="level2" data-number="26.7"><h2 data-number="26.7" class="anchored" data-anchor-id="ggeffects">
-<span class="header-section-number">26.7</span> <code>ggeffects</code>
+</ul></section><section id="ggeffects" class="level2" data-number="26.8"><h2 data-number="26.8" class="anchored" data-anchor-id="ggeffects">
+<span class="header-section-number">26.8</span> <code>ggeffects</code>
 </h2>
 <p>The <a href="https://strengejacke.github.io/ggeffects/"><code>ggeffects</code></a> package is developed by Daniel Lüdecke.</p>
 <p>This section is incomplete; contributions are welcome.</p>
