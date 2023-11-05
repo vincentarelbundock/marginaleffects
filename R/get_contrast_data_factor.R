@@ -201,7 +201,7 @@ contrast_categories_custom <- function(variable, newdata) {
         hi[[variable$name]] <- variables_df[["hi"]]
     } else {
         lo[[variable$name]] <- variables_df[[1]]
-        hi[[variable$name]] <- variables_df[[1]]
+        hi[[variable$name]] <- variables_df[[2]]
     }
     out <- list(
         rowid = original$rowid,
