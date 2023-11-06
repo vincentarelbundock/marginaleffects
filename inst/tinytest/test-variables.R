@@ -82,7 +82,7 @@ expect_equal(a$estimate, -1 * b$estimate)
 
 # Custom vector
 mod <- lm(mpg ~ hp, mtcars)
-cmp <- avg_comparisons(mod, variables = list(hp = mtcars$cyl), by = "cyl")
+cmp <- avg_comparisons(mod, variables = list(hp = \(x) data.frame(mtcars$hp, mtcars$cyl)), by = "cyl")
 expect_equal(length(unique(cmp$estimate)), 3)
 expect_equal(length(unique(round(cmp$statistic, 5))), 1)
 

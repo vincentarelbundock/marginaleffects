@@ -98,7 +98,6 @@ avg_comparisons(
 \item Numeric variables:
 \itemize{
 \item Numeric of length 1: Forward contrast for a gap of \code{x}, computed between the observed value and the observed value plus \code{x}. Users can set a global option to get a "center" or "backward" contrast instead: \code{options(marginaleffects_contrast_direction="center")}
-\item Numeric of length equal to the number of rows in \code{newdata}: Same as above, but the contrast can be customized for each row of \code{newdata}.
 \item Numeric vector of length 2: Contrast between the 2nd element and the 1st element of the \code{x} vector.
 \item Data frame with the same number of rows as \code{newdata}, with two columns of "lo" and "hi" values to compare.
 \item Function that accepts a vector and returns a data frame with two columns of "lo" and "hi" values to compare. See examples below.

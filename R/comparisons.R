@@ -39,7 +39,6 @@
 #'     * Function that accepts a vector and returns a data frame with two columns of "lo" and "hi" values to compare. See examples below.
 #'   - Numeric variables:
 #'     * Numeric of length 1: Forward contrast for a gap of `x`, computed between the observed value and the observed value plus `x`. Users can set a global option to get a "center" or "backward" contrast instead: `options(marginaleffects_contrast_direction="center")`
-#'     * Numeric of length equal to the number of rows in `newdata`: Same as above, but the contrast can be customized for each row of `newdata`.
 #'     * Numeric vector of length 2: Contrast between the 2nd element and the 1st element of the `x` vector.
 #'     * Data frame with the same number of rows as `newdata`, with two columns of "lo" and "hi" values to compare.
 #'     * Function that accepts a vector and returns a data frame with two columns of "lo" and "hi" values to compare. See examples below.
