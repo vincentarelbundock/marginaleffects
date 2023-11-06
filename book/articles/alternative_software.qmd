@@ -783,27 +783,10 @@ task <- as_task_regr(x = bikes, id = "bikes", target = "count")
 forest <- lrn("regr.ranger")$train(task)
 ```
 
-Now, we use the `avg_comparisons()` function to compute *centered* marginal effects:
+Now, we use the `avg_comparisons()` function to compute *forward* marginal effects:
 
 ```{r}
-avg_comparisons(forest, variables = "temp", newdata = bikes)
-```
-
-We call this quantity "centered" because it represents the average effect of a change of 1 unit in `temp` about the observed value, that is, a change from 0.5 below to 0.5 above:
-
-```{r}
-lo <- transform(bikes, temp = temp - 0.5)
-hi <- transform(bikes, temp = temp + 0.5)
-mean(predict(forest, newdata = hi) - predict(forest, newdata = lo))
-```
-
-As described in the [`comparisons()` vignette](comparisons.html), it is easy to estimate "backward", "centered" or "forward" differences by supplying an appropriate function to the `variables` argument. For example, here is how to compute "forward" marginal effects:
-
-```{r}
-avg_comparisons(
-    forest,
-    variables = list("temp" = \(x) data.frame(x, x + 1)),
-    newdata = bikes)
+avg_comparisons(forest, variables = list(temp = 1), newdata = bikes)
 ```
 
 This is equivalent to the key quantity reported by the `fmeffects` package:
@@ -816,6 +799,24 @@ fmeffects::fme(
     feature = "temp",
     step.size = 1)$ame
 ```
+
+Another interesting feature of `fmeffects` is the ability treat categorical predictors in an unconventional way: pick a reference level, then compute the average difference between the predicted values for that level, and the predicted values for the observed levels (which may be the same as the reference level). 
+
+In the `bikes` example, we can answer the question: how does the expected number of bike rentals increases, on average, if all days were misty? With `marginaleffects`, we can use a function in the `variables` argument to specify a custom contrast:
+
+```{r}
+FUN <- function(x) data.frame(lo = x, hi = "misty")
+
+avg_comparisons(
+  forest,
+  newdata = bikes,
+  variables = list(weather = FUN)
+)
+```
+
+Two more functionalities deserve to be highlight. First, `fmeffects` includes functions to explore heterogeneity in marginal effects using recursive partitioning trees. The [heterogeneity vignette](articles/heterogeneity.html) illustrates how to achieve something similar with `marginaleffects`.
+
+Second, `fmeffects` also implements a non-linearity measure. At the moment, there is no analogue to this in `marginaleffects`.
 
 
 ## `effects`

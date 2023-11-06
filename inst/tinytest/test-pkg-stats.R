@@ -27,7 +27,7 @@ mar <- margins(mod, unit_ses = TRUE, eps = 1e-7)
 # TODO: bad tolerance?
 for (x in c("x1", "x2", "x3", "x4")) {
     expect_equivalent(as.numeric(res[res$term == x, "estimate"]), as.numeric(mar[[paste0("dydx_", x)]]), tolerance = 3e-2)
-    expect_equivalent(as.numeric(res[res$term == x, "std.error"]), as.numeric(mar[[paste0("SE_dydx_", x)]]), tolerance = 3e-2)
+    expect_equivalent(as.numeric(res[res$term == x, "std.error"]), as.numeric(mar[[paste0("SE_dydx_", x)]]), tolerance = 4e-2)
 }
 
 

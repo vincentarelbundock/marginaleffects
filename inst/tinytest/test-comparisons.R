@@ -16,7 +16,7 @@ fdiff <- function(x) data.frame(x, x + 10)
 cmp1 <- comparisons(mod, variables = list(new_hp = fdiff))
 cmp2 <- comparisons(mod, variables = list(new_hp = 10))
 expect_equivalent(nrow(cmp1), 32)
-expect_equivalent(nrow(cmp2), 27)
+expect_equivalent(nrow(cmp2), 32)
 
 
 # Issue #720

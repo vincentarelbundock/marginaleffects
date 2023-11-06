@@ -692,7 +692,7 @@ plot_comparisons(
 
 ## Forward, Backward, Centered, and Custom Differences
 
-By default, the `comparisons()` function computes a "centered" difference. For example, if we ask `comparisons()` to estimate the effect of a 10-unit change in predictor `x` on outcome `y`, `comparisons()` will compare the predicted values with `x-5` and `x+5`. 
+By default, the `comparisons()` function computes a "forward" difference. For example, if we ask `comparisons()` to estimate the effect of a 10-unit change in predictor `x` on outcome `y`, `comparisons()` will compare the predicted values with `x` and `x+10`. 
 
 ```{r}
 dat <- mtcars
