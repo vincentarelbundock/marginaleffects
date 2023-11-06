@@ -1053,7 +1053,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"mpg"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Term Contrast Estimate Std. Error    z Pr(&gt;|z|)    S  2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;   mpg       +1   0.0608     0.0128 4.74   &lt;0.001 18.8 0.0356  0.086</span></span>
+<span><span class="co">#&gt;   mpg       +1   0.0609     0.0128 4.78   &lt;0.001 19.1 0.0359 0.0859</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
 <span><span class="co">#&gt; Type:  response</span></span>
@@ -1061,7 +1061,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"mpg"</span>, by <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Term Contrast Estimate Std. Error    z Pr(&gt;|z|)    S  2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;   mpg       +1   0.0608     0.0128 4.74   &lt;0.001 18.8 0.0356  0.086</span></span>
+<span><span class="co">#&gt;   mpg       +1   0.0609     0.0128 4.78   &lt;0.001 19.1 0.0359 0.0859</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1069,7 +1069,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <p>which are equivalent to:</p>
 <div class="cell">
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">cmp</span><span class="op">$</span><span class="va">estimate</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.06080995</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co">#&gt; [1] 0.06091377</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We could also show the full distribution of contrasts across our dataset with a histogram:</p>
 <div class="cell">
@@ -1094,7 +1094,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, variables <span class="op">=</span> <span class="st">"mpg"</span>, newdata <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Term Contrast Estimate Std. Error    z Pr(&gt;|z|)   S  2.5 % 97.5 % gear  mpg</span></span>
-<span><span class="co">#&gt;   mpg       +1    0.166     0.0629 2.65  0.00811 6.9 0.0432   0.29    3 20.1</span></span>
+<span><span class="co">#&gt;   mpg       +1    0.155     0.0539 2.88  0.00399 8.0 0.0495  0.261    3 20.1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, vs, gear, mpg </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1233,16 +1233,16 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <div class="cell">
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Term Contrast Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;   mpg       +1   0.0554    0.00835 6.64   &lt;0.001 34.9 0.039 0.0718</span></span>
+<span><span class="co">#&gt;  Term Contrast Estimate Std. Error    z Pr(&gt;|z|)    S  2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;   mpg       +1   0.0568    0.00835 6.81   &lt;0.001 36.5 0.0404 0.0732</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
 <span><span class="co">#&gt; Type:  response</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">comparisons</a></span><span class="op">(</span><span class="va">mod</span>, by <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Term Contrast Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;   mpg       +1   0.0554    0.00835 6.64   &lt;0.001 34.9 0.039 0.0718</span></span>
+<span><span class="co">#&gt;  Term Contrast Estimate Std. Error    z Pr(&gt;|z|)    S  2.5 % 97.5 %</span></span>
+<span><span class="co">#&gt;   mpg       +1   0.0568    0.00835 6.81   &lt;0.001 36.5 0.0404 0.0732</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1321,7 +1321,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, comparison <span class="op">=</span> <span class="st">"ratio"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Term Contrast Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;   mpg       +1     1.29      0.133 9.69   &lt;0.001 71.4  1.03   1.55</span></span>
+<span><span class="co">#&gt;   mpg       +1     1.27      0.124 10.2   &lt;0.001 79.3  1.03   1.52</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1332,7 +1332,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <div class="sourceCode" id="cb41"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, comparison <span class="op">=</span> <span class="st">"ratio"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Term Contrast Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;   mpg       +1     1.29      0.133 9.69   &lt;0.001 71.4  1.03   1.55</span></span>
+<span><span class="co">#&gt;   mpg       +1     1.27      0.124 10.2   &lt;0.001 79.3  1.03   1.52</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
 <span><span class="co">#&gt; Type:  response</span></span>
@@ -1340,7 +1340,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, comparison <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">hi</span>, <span class="va">lo</span><span class="op">)</span> <span class="va">hi</span> <span class="op">/</span> <span class="va">lo</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Term Contrast Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;   mpg       +1     1.29      0.133 9.69   &lt;0.001 71.4  1.03   1.55</span></span>
+<span><span class="co">#&gt;   mpg       +1     1.27      0.124 10.2   &lt;0.001 79.3  1.03   1.52</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1350,7 +1350,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <div class="sourceCode" id="cb42"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod</span>, comparison <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">hi</span>, <span class="va">lo</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="va">hi</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">lo</span> <span class="op">+</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Term Contrast Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;   mpg       +1    0.264     0.0261 10.1   &lt;0.001 77.4 0.213  0.315</span></span>
+<span><span class="co">#&gt;   mpg       +1    0.275     0.0252 10.9   &lt;0.001 89.4 0.225  0.324</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1368,11 +1368,11 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/comparisons.html">avg_comparisons</a></span><span class="op">(</span><span class="va">mod_titanic</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;    Term      Contrast Estimate Std. Error      z Pr(&gt;|z|)     S    2.5 %   97.5 %</span></span>
-<span><span class="co">#&gt;  Age    +1             -0.0065    0.00108  -6.03   &lt;0.001  29.2 -0.00862 -0.00439</span></span>
-<span><span class="co">#&gt;  PClass 2nd - 1st      -0.2058    0.03954  -5.20   &lt;0.001  22.3 -0.28328 -0.12828</span></span>
-<span><span class="co">#&gt;  PClass 3rd - 1st      -0.4043    0.03958 -10.21   &lt;0.001  78.9 -0.48187 -0.32670</span></span>
-<span><span class="co">#&gt;  Sex    male - female  -0.4847    0.03004 -16.14   &lt;0.001 192.2 -0.54355 -0.42580</span></span>
+<span><span class="co">#&gt;    Term      Contrast Estimate Std. Error     z Pr(&gt;|z|)     S    2.5 %  97.5 %</span></span>
+<span><span class="co">#&gt;  Age    +1            -0.00639    0.00107  -6.0   &lt;0.001  28.9 -0.00848 -0.0043</span></span>
+<span><span class="co">#&gt;  PClass 2nd - 1st     -0.20578    0.03954  -5.2   &lt;0.001  22.3 -0.28328 -0.1283</span></span>
+<span><span class="co">#&gt;  PClass 3rd - 1st     -0.40428    0.03958 -10.2   &lt;0.001  78.9 -0.48187 -0.3267</span></span>
+<span><span class="co">#&gt;  Sex    male - female -0.48468    0.03004 -16.1   &lt;0.001 192.2 -0.54355 -0.4258</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
 <span><span class="co">#&gt; Type:  response</span></span>
@@ -1408,7 +1408,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <span>    transform <span class="op">=</span> <span class="va">exp</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Term Contrast Estimate Pr(&gt;|z|)   S 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;   mpg       +1     1.27  0.00937 6.7  1.06   1.53</span></span>
+<span><span class="co">#&gt;   mpg       +1     1.26  0.00863 6.9  1.06   1.49</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, p.value, s.value, conf.low, conf.high </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1429,7 +1429,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <span>    transform <span class="op">=</span> <span class="va">exp</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Term Contrast Estimate Pr(&gt;|z|)   S 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;   mpg       +1     1.27  0.00937 6.7  1.06   1.53</span></span>
+<span><span class="co">#&gt;   mpg       +1     1.26  0.00863 6.9  1.06   1.49</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, p.value, s.value, conf.low, conf.high </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1442,7 +1442,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <span>    transform <span class="op">=</span> <span class="va">exp</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Term Contrast Estimate Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;   mpg       +1     1.14   &lt;0.001 31.9  1.09   1.18</span></span>
+<span><span class="co">#&gt;   mpg       +1     1.13   &lt;0.001 31.9  1.09   1.17</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1455,7 +1455,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <span>    transform <span class="op">=</span> <span class="va">exp</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Term Contrast Estimate Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;   mpg mean(+1)     1.14   &lt;0.001 31.9  1.09   1.18</span></span>
+<span><span class="co">#&gt;   mpg mean(+1)     1.13   &lt;0.001 31.9  1.09   1.17</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1477,7 +1477,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 </div>
 </section><section id="forward-backward-centered-and-custom-differences" class="level2" data-number="3.10"><h2 data-number="3.10" class="anchored" data-anchor-id="forward-backward-centered-and-custom-differences">
 <span class="header-section-number">3.10</span> Forward, Backward, Centered, and Custom Differences</h2>
-<p>By default, the <a href="reference/comparisons.html"><code>comparisons()</code></a> function computes a “centered” difference. For example, if we ask <a href="reference/comparisons.html"><code>comparisons()</code></a> to estimate the effect of a 10-unit change in predictor <code>x</code> on outcome <code>y</code>, <a href="reference/comparisons.html"><code>comparisons()</code></a> will compare the predicted values with <code>x-5</code> and <code>x+5</code>.</p>
+<p>By default, the <a href="reference/comparisons.html"><code>comparisons()</code></a> function computes a “forward” difference. For example, if we ask <a href="reference/comparisons.html"><code>comparisons()</code></a> to estimate the effect of a 10-unit change in predictor <code>x</code> on outcome <code>y</code>, <a href="reference/comparisons.html"><code>comparisons()</code></a> will compare the predicted values with <code>x</code> and <code>x+10</code>.</p>
 <div class="cell">
 <div class="sourceCode" id="cb49"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">mtcars</span></span>
 <span><span class="va">dat</span><span class="op">$</span><span class="va">new_hp</span> <span class="op">&lt;-</span> <span class="fl">49</span> <span class="op">*</span> <span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">hp</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">hp</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">hp</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">hp</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fl">1</span></span>
@@ -1488,7 +1488,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <span>  variables <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>new_hp <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;    Term Contrast Estimate Std. Error     z Pr(&gt;|z|)    S 2.5 % 97.5 %</span></span>
-<span><span class="co">#&gt;  new_hp      +10    -4.06      0.464 -8.74   &lt;0.001 58.6 -4.97  -3.15</span></span>
+<span><span class="co">#&gt;  new_hp      +10     -3.8      0.435 -8.74   &lt;0.001 58.6 -4.65  -2.95</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1628,8 +1628,8 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <span>                newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/marginaleffects/man/datagrid.html">datagrid</a></span><span class="op">(</span>lifeExp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">40</span>, <span class="fl">80</span>, <span class="fl">20</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     Term lifeExp  Estimate    2.5 %    97.5 %</span></span>
-<span><span class="co">#&gt;  lifeExp      40 -0.021078 -0.02591 -0.016588</span></span>
-<span><span class="co">#&gt;  lifeExp      60 -0.005321 -0.00615 -0.004561</span></span>
+<span><span class="co">#&gt;  lifeExp      40 -0.021080 -0.02592 -0.016590</span></span>
+<span><span class="co">#&gt;  lifeExp      60 -0.005322 -0.00615 -0.004562</span></span>
 <span><span class="co">#&gt;  lifeExp      80 -0.000812 -0.00115 -0.000543</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: rowid, term, estimate, conf.low, conf.high, lifeExp, predicted_lo, predicted_hi, predicted, tmp_idx, gdpPercap0 </span></span>
@@ -1725,7 +1725,7 @@ gtag('config', 'G-V6MC2RPFXR', { 'anonymize_ip': true});
 <span><span class="co">#&gt;     Term Contrast lifeExp Estimate  2.5 % 97.5 %</span></span>
 <span><span class="co">#&gt;  lifeExp   +0.001      40     58.4   55.8     61</span></span>
 <span><span class="co">#&gt;  lifeExp   +0.001      60    280.9  266.6    296</span></span>
-<span><span class="co">#&gt;  lifeExp   +0.001      80   1349.4 1222.6   1490</span></span>
+<span><span class="co">#&gt;  lifeExp   +0.001      80   1349.5 1222.6   1490</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Columns: rowid, term, contrast, estimate, conf.low, conf.high, lifeExp, predicted_lo, predicted_hi, predicted, tmp_idx, gdpPercap0 </span></span>
 <span><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
