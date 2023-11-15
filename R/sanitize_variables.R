@@ -295,7 +295,10 @@ sanitize_variables <- function(variables,
 
         fun_numeric <- fun_categorical <- comparison_function_dict[[comparison]]
         lab_numeric <- lab_categorical <- comparison_label_dict[[comparison]]
-        if (isTRUE(grepl("dydxavg|eyexavg|dyexavg|eydxavg", comparison))) {
+        if (isTRUE(grepl("dydxavgwts|eyexavgwts|dyexavgwts|eydxavgwts", comparison))) {
+            fun_categorical <- comparison_function_dict[["differenceavgwts"]]
+            lab_categorical <- comparison_label_dict[["differenceavgwts"]]
+        } else if (isTRUE(grepl("dydxavg|eyexavg|dyexavg|eydxavg", comparison))) {
             fun_categorical <- comparison_function_dict[["differenceavg"]]
             lab_categorical <- comparison_label_dict[["differenceavg"]]
         } else if (isTRUE(grepl("dydx$|eyex$|dyex$|eydx$", comparison))) {

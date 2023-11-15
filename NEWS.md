@@ -20,6 +20,7 @@ Misc:
 
 Bugs:
 
+* `wts` argument now respected in `avg_slopes()` for binary variables. Thanks to @trose64 for report #961
 * Custom functions in the `comparison` argument of `comparisons()` did not supply the correct `x` vector length for bayesian models when the `by` argument is used. Thanks to @Sandhu-SS for report #931.
 * Add support for two facet variables (through `facet_grid`) when plotting using `condition`
 * `comparisons()`: When `variables` is a vector of length two and `newdata` has exactly two columns, there was ambiguity between custom vectors and length two vector of contrasts. But reported by C. Rainey on Twitter.
