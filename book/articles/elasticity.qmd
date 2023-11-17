@@ -29,11 +29,9 @@ $$\frac{\partial \hat{y}}{\partial x_1}$$
 
 We can estimate the "eyex", "eydx", and "dyex" (semi-)elasticities with respect to $x_1$ as follows:
 
-$$
-\eta_1=\frac{\partial \hat{y}}{\partial x_1}\cdot \frac{x_1}{\hat{y}}\\
-\eta_2=\frac{\partial \hat{y}}{\partial x_1}\cdot \frac{1}{\hat{y}} \\
-\eta_3=\frac{\partial \hat{y}}{\partial x_1}\cdot x_1,
-$$
+$$\eta_1=\frac{\partial \hat{y}}{\partial x_1}\cdot \frac{x_1}{\hat{y}}$$
+$$\eta_2=\frac{\partial \hat{y}}{\partial x_1}\cdot \frac{1}{\hat{y}}$$ 
+$$\eta_3=\frac{\partial \hat{y}}{\partial x_1}\cdot x_1$$
 
 with interpretations roughly as follows:
 
