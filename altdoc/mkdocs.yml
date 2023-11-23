@@ -1,0 +1,44 @@
+### Basic information
+site_name: $ALTDOC_PACKAGE_NAME
+
+### Theme
+theme:
+  name: material
+
+### Repo information
+repo_url: $ALTDOC_PACKAGE_URL
+repo_name: $ALTDOC_PACKAGE_NAME
+
+### Plugins
+plugins:
+  - search
+
+### Navigation tree
+nav:
+  - Home: README.md
+  - Articles: $ALTDOC_VIGNETTE_BLOCK
+  - Reference: $ALTDOC_MAN_BLOCK
+  - News: $ALTDOC_NEWS
+  - Changelog: $ALTDOC_CHANGELOG
+  - Code of Conduct: $ALTDOC_CODE_OF_CONDUCT
+  - License: $ALTDOC_LICENSE
+  - Licence: $ALTDOC_LICENCE
+  - Citation: $ALTDOC_CITATION
+
+
+### MathJax
+markdown_extensions:
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
