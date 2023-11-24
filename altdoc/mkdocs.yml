@@ -11,9 +11,60 @@ plugins:
 
 ### Navigation tree
 nav:
-  - Home: README.md
-  - Articles: $ALTDOC_VIGNETTE_BLOCK
-  - Reference: $ALTDOC_MAN_BLOCK
+  - Functions:
+      predictions: man/predictions
+      avg_predictions: man/predictions
+      plot_predictions: man/plot_predictions
+      comparisons: man/comparisons
+      avg_comparisons: man/comparisons
+      plot_comparisons: man/plot_comparisons
+      slopes: man/slopes
+      avg_slopes: man/slopes
+      plot_slopes: man/plot_slopes
+      datagrid: man/datagrid
+      datagridcf: man/datagrid
+      hypotheses: man/hypotheses
+      inferences: man/inferences
+      marginal_means: man/marginal_means
+      posterior_draws: man/posterior_draws
+      print: man/print.marginaleffects
+  - Tutorials:
+      Get Started: vignettes/marginaleffects
+      Predictions: vignettes/predictions
+      Comparisons: vignettes/comparisons
+      Slopes: vignettes/slopes
+      Hypothesis Tests: vignettes/hypothesis
+      Plots: vignettes/plot
+  - Case Studies:
+      Bayes: vignettes/brms
+      Bootstrap and Simulation: vignettes/bootstrap
+      Categorical outcomes: vignettes/categorical
+      Conformal prediction: vignettes/conformal
+      Elasticity: vignettes/elasticity
+      Equivalence Tests: vignettes/equivalence
+      Experiments: vignettes/experiments
+      GAM: vignettes/gam
+      G-Computation: vignettes/gcomputation
+      Heterogeneity: vignettes/heterogeneity
+      IPW: vignettes/ipw
+      Mixed Effects: vignettes/lme4
+      Logit: vignettes/logit
+      Machine Learning: vignettes/machine_learning
+      Marginal Means: vignettes/marginalmeans
+      Matching: vignettes/matching
+      MrP: vignettes/mrp
+      Missing Data: vignettes/multiple_imputation
+  - Technical Notes:
+      Alternative Software: vignettes/alternative_software
+      Extensions: vignettes/extensions
+      Links: vignettes/links
+      Performance: vignettes/performance
+      Python: vignettes/python
+      Supported Models: vignettes/supported_models
+      S Values: vignettes/svalues
+      Tables: vignettes/tables
+      Standard Errors: vignettes/uncertainty
+      FAQ: vignettes/faq
   - News: $ALTDOC_NEWS
   - Changelog: $ALTDOC_CHANGELOG
   - Code of Conduct: $ALTDOC_CODE_OF_CONDUCT
