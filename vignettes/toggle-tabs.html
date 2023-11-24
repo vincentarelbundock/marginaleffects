@@ -1,0 +1,120 @@
+<style type="text/css">
+  div.quarto-title {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+  }
+
+  button#toggleTabsButton {
+    border-radius: 10px;
+    font-size: smaller;
+    font-family: monospace;
+  }
+</style>
+
+<script type="text/javascript">
+
+  function toggle_r() {
+    const tab_links = document.querySelectorAll('div.panel-tabset a.nav-link');
+    tab_links.forEach((tab, index) => {
+      if (index % 2 === 0) {
+        tab.setAttribute('aria-selected', "true");
+        if (!tab.classList.contains('active')) {
+          tab.classList.toggle('active');
+        }
+      } else {
+        tab.setAttribute('aria-selected', "false");
+        if (tab.classList.contains('active')) {
+          tab.classList.toggle('active');
+        }
+      }
+    });
+    const tab_panes = document.querySelectorAll('div.tab-content div.tab-pane')
+    tab_panes.forEach((pane, index) => {
+      if (index % 2 === 0) {
+        if (!pane.classList.contains('active')) {
+          pane.classList.toggle('active');
+        }
+      } else {
+        if (pane.classList.contains('active')) {
+          pane.classList.toggle('active');
+        }
+      }
+    });
+    const r_button = document.querySelector('#toggleRCodeButton');
+    const python_button = document.querySelector('#togglePythonCodeButton');
+    r_button.style.backgroundColor = '#ECECEC';
+    python_button.style.backgroundColor = 'white';
+    r_button.style.color = 'black';
+    python_button.style.color = '#428CAF';
+  };
+
+  function toggle_python() {
+    const tab_links = document.querySelectorAll('div.panel-tabset a.nav-link');
+    tab_links.forEach((tab, index) => {
+      if (index % 2 === 0) {
+        tab.setAttribute('aria-selected', "false");
+        if (tab.classList.contains('active')) {
+          tab.classList.toggle('active');
+        }
+      } else {
+        tab.setAttribute('aria-selected', "true");
+        if (!tab.classList.contains('active')) {
+          tab.classList.toggle('active');
+        }
+      }
+    });
+    const tab_panes = document.querySelectorAll('div.tab-content div.tab-pane')
+    tab_panes.forEach((pane, index) => {
+      if (index % 2 === 0) {
+        if (pane.classList.contains('active')) {
+          pane.classList.toggle('active');
+        }
+      } else {
+        if (!pane.classList.contains('active')) {
+          pane.classList.toggle('active');
+        }
+      }
+    });
+    const r_button = document.querySelector('#toggleRCodeButton');
+    const python_button = document.querySelector('#togglePythonCodeButton');
+    r_button.style.backgroundColor = 'white';
+    python_button.style.backgroundColor = '#E5E4E2';
+    r_button.style.color = '#428CAF';
+    python_button.style.color = 'black';
+  };
+
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    let title = document.querySelector('div.quarto-title h1.title');
+
+    const label = document.createElement('span');
+    label.textContent = '';
+    label.style.display = 'inline-block';
+    label.style.marginRight = '10px';
+    label.style.whiteSpace = 'nowrap';
+
+    const r_button = document.createElement('button');
+    r_button.id = 'toggleRCodeButton';
+    r_button.style.backgroundColor = '#E5E4E2';
+    r_button.textContent = 'R';
+    r_button.style.width = '80px';
+    r_button.style.borderWidth = '1px';
+    r_button.style.borderRight = 'none';
+    r_button.addEventListener('click', toggle_r);
+
+    const python_button = document.createElement('button');
+    python_button.id = 'togglePythonCodeButton';
+    python_button.textContent = 'Python';
+    python_button.style.color = '#428CAF';
+    python_button.style.width = '80px';
+    python_button.style.borderWidth = '1px';
+    python_button.addEventListener('click', toggle_python);
+
+    // Append buttons as children of the label
+    label.appendChild(r_button);
+    label.appendChild(python_button);
+
+    // Insert the label (with the buttons) after the title
+    title.insertAdjacentElement('afterend', label);
+  });
+
+</script>

@@ -1,0 +1,198 @@
+# inferences {.unnumbered}
+
+(EXPERIMENTAL) Bootstrap, Conformal, and Simulation-Based Inference
+
+## Description
+
+<p>Warning: This function is experimental. It may be renamed, the user interface may change, or the functionality may migrate to arguments in other <code>marginaleffects</code> functions.
+</p>
+<p>Apply this function to a <code>marginaleffects</code> object to change the inferential method used to compute uncertainty estimates.
+</p>
+
+
+## Usage
+
+<pre><code class='language-R'>inferences(
+  x,
+  method,
+  R = 1000,
+  conf_type = "perc",
+  conformal_test = NULL,
+  conformal_calibration = NULL,
+  conformal_score = "residual_abs",
+  ...
+)
+</code></pre>
+
+
+## Arguments
+
+<table>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>x</code></td>
+<td>
+<p>Object produced by one of the core <code>marginaleffects</code> functions.</p>
+</td></tr>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>method</code></td>
+<td>
+<p>String
+</p>
+
+<ul>
+<li><p> &quot;delta&quot;: delta method standard errors
+</p>
+</li>
+<li><p> &quot;boot&quot; package
+</p>
+</li>
+<li><p> &quot;fwb&quot;: fractional weighted bootstrap
+</p>
+</li>
+<li><p> &quot;rsample&quot; package
+</p>
+</li>
+<li><p> &quot;simulation&quot; from a multivariate normal distribution (Krinsky &amp; Robb, 1986)
+</p>
+</li>
+<li><p> &quot;mi&quot; multiple imputation for missing data
+</p>
+</li>
+<li><p> &quot;conformal_split&quot;: prediction intervals using split conformal prediction (see Angelopoulos &amp; Bates, 2022)
+</p>
+</li>
+<li><p> &quot;conformal_cv+&quot;: prediction intervals using cross-validation+ conformal prediction (see Barber et al., 2020)
+</p>
+</li></ul>
+</td></tr>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>R</code></td>
+<td>
+<p>Number of resamples, simulations, or cross-validation folds.</p>
+</td></tr>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>conf_type</code></td>
+<td>
+<p>String: type of bootstrap interval to construct.
+</p>
+
+<ul>
+<li> <p><code>boot</code>: &quot;perc&quot;, &quot;norm&quot;, &quot;basic&quot;, or &quot;bca&quot;
+</p>
+</li>
+<li> <p><code>fwb</code>: &quot;perc&quot;, &quot;norm&quot;, &quot;basic&quot;, &quot;bc&quot;, or &quot;bca&quot;
+</p>
+</li>
+<li> <p><code>rsample</code>: &quot;perc&quot; or &quot;bca&quot;
+</p>
+</li>
+<li> <p><code>simulation</code>: argument ignored.
+</p>
+</li></ul>
+</td></tr>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>conformal_test</code></td>
+<td>
+<p>Data frame of test data for conformal prediction.</p>
+</td></tr>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>conformal_calibration</code></td>
+<td>
+<p>Data frame of calibration data for split conformal prediction (<code style="white-space: pre;">&#8288;method="conformal_split&#8288;</code>).</p>
+</td></tr>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>conformal_score</code></td>
+<td>
+<p>String. Warning: The <code>type</code> argument in <code>predictions()</code> must generate predictions which are on the same scale as the outcome variable. Typically, this means that <code>type</code> must be &quot;response&quot; or &quot;probs&quot;.
+</p>
+
+<ul>
+<li><p> &quot;residual_abs&quot; or &quot;residual_sq&quot; for regression tasks (numeric outcome)
+</p>
+</li>
+<li><p> &quot;softmax&quot; for classification tasks (when <code>predictions()</code> returns a <code>group</code> columns, such as multinomial or ordinal logit models.
+</p>
+</li></ul>
+</td></tr>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>...</code></td>
+<td>
+
+<ul>
+<li><p> If <code>method="boot"</code>, additional arguments are passed to <code>boot::boot()</code>.
+</p>
+</li>
+<li><p> If <code>method="fwb"</code>, additional arguments are passed to <code>fwb::fwb()</code>.
+</p>
+</li>
+<li><p> If <code>method="rsample"</code>, additional arguments are passed to <code>rsample::bootstraps()</code>.
+</p>
+</li>
+<li><p> Additional arguments are ignored for all other methods.
+</p>
+</li></ul>
+</td></tr>
+</table>
+
+
+## Details
+
+<p>When <code>method="simulation"</code>, we conduct simulation-based inference following the method discussed in Krinsky &amp; Robb (1986):
+</p>
+
+<ol>
+<li><p> Draw <code>R</code> sets of simulated coefficients from a multivariate normal distribution with mean equal to the original model's estimated coefficients and variance equal to the model's variance-covariance matrix (classical, &quot;HC3&quot;, or other).
+</p>
+</li>
+<li><p> Use the <code>R</code> sets of coefficients to compute <code>R</code> sets of estimands: predictions, comparisons, or slopes.
+</p>
+</li>
+<li><p> Take quantiles of the resulting distribution of estimands to obtain a confidence interval and the standard deviation of simulated estimates to estimate the standard error.
+</p>
+</li></ol>
+
+<p>When <code>method="fwb"</code>, drawn weights are supplied to the model fitting function's <code>weights</code> argument; if the model doesn't accept non-integer weights, this method should not be used. If weights were included in the original model fit, they are extracted by <code>weights()</code> and multiplied by the drawn weights. These weights are supplied to the <code>wts</code> argument of the estimation function (e.g., <code>comparisons()</code>).
+</p>
+
+
+## Value
+
+<p>A <code>marginaleffects</code> object with simulation or bootstrap resamples and objects attached.
+</p>
+
+
+## References
+
+<p>Krinsky, I., and A. L. Robb. 1986. “On Approximating the Statistical Properties of Elasticities.” Review of Economics and Statistics 68 (4): 715–9.
+</p>
+<p>King, Gary, Michael Tomz, and Jason Wittenberg. &quot;Making the most of statistical analyses: Improving interpretation and presentation.&quot; American journal of political science (2000): 347-361
+</p>
+<p>Dowd, Bryan E., William H. Greene, and Edward C. Norton. &quot;Computation of standard errors.&quot; Health services research 49.2 (2014): 731-750.
+</p>
+<p>Angelopoulos, Anastasios N., and Stephen Bates. 2022. &quot;A Gentle Introduction to Conformal Prediction and Distribution-Free Uncertainty Quantification.&quot; arXiv. https://doi.org/10.48550/arXiv.2107.07511.
+</p>
+<p>Barber, Rina Foygel, Emmanuel J. Candes, Aaditya Ramdas, and Ryan J. Tibshirani. 2020. “Predictive Inference with the Jackknife+.” arXiv. http://arxiv.org/abs/1905.02928.
+</p>
+
+
+## Examples
+```{r, warning=FALSE, message=FALSE}
+library(marginaleffects)
+
+library(marginaleffects)
+library(magrittr)
+set.seed(1024)
+mod <- lm(Sepal.Length ~ Sepal.Width * Species, data = iris)
+
+# bootstrap
+avg_predictions(mod, by = "Species") %>%
+  inferences(method = "boot")
+
+avg_predictions(mod, by = "Species") %>%
+  inferences(method = "rsample")
+
+# Fractional (bayesian) bootstrap
+avg_slopes(mod, by = "Species") %>%
+  inferences(method = "fwb") %>%
+  posterior_draws("rvar") %>%
+  data.frame()
+
+# Simulation-based inference
+slopes(mod) %>%
+  inferences(method = "simulation") %>%
+  head()
+
+
+```
