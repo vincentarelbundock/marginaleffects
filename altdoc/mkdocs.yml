@@ -9,32 +9,55 @@ repo_name: $ALTDOC_PACKAGE_NAME
 plugins:
   - search
 
+### Theme
+theme:
+  name: 'material'
+  logo: images/marginaleffects_icon.png
+  features:
+    - navigation.footer
+  palette: 
+
+  # Palette toggle for light mode
+  - scheme: default
+    primary: white
+    toggle:
+      icon: material/brightness-7 
+      name: Switch to dark mode
+
+  # Palette toggle for dark mode
+  - scheme: slate
+    primary: grey
+    toggle:
+      icon: material/brightness-4
+      name: Switch to light mode
+
+  icon:
+    repo: fontawesome/brands/github 
+    text: ""
+
+### Remove MkDocs footer
+extra:
+  generator: false
+
+extra_css:
+  - stylesheets/extra.css
+
+
+### Code highlighting
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+
+
 ### Navigation tree
 nav:
-  - Functions:
-      Predictions:
-        predictions: man/predictions
-        avg_predictions: man/predictions
-        plot_predictions: man/plot_predictions
-      Comparisons:
-        comparisons: man/comparisons
-        avg_comparisons: man/comparisons
-        plot_comparisons: man/plot_comparisons
-      Slopes:
-        slopes: man/slopes
-        avg_slopes: man/slopes
-        plot_slopes: man/plot_slopes
-      Grids:
-        datagrid: man/datagrid
-        datagridcf: man/datagrid
-      More:
-        hypotheses: man/hypotheses
-        inferences: man/inferences
-        marginal_means: man/marginal_means
-        posterior_draws: man/posterior_draws
-        print: man/print.marginaleffects
+  - Get Started: vignettes/get_started
   - Tutorials:
-      Get Started: vignettes/marginaleffects
       Predictions: vignettes/predictions
       Comparisons: vignettes/comparisons
       Slopes: vignettes/slopes
@@ -70,54 +93,31 @@ nav:
       Tables: vignettes/tables
       Standard Errors: vignettes/uncertainty
       FAQ: vignettes/faq
+  - Functions:
+      Predictions:
+        predictions: man/predictions
+        avg_predictions: man/predictions
+        plot_predictions: man/plot_predictions
+      Comparisons:
+        comparisons: man/comparisons
+        avg_comparisons: man/comparisons
+        plot_comparisons: man/plot_comparisons
+      Slopes:
+        slopes: man/slopes
+        avg_slopes: man/slopes
+        plot_slopes: man/plot_slopes
+      Grids:
+        datagrid: man/datagrid
+        datagridcf: man/datagrid
+      More:
+        hypotheses: man/hypotheses
+        inferences: man/inferences
+        marginal_means: man/marginal_means
+        posterior_draws: man/posterior_draws
+        print: man/print.marginaleffects
   - News: $ALTDOC_NEWS
   - Changelog: $ALTDOC_CHANGELOG
   - Code of Conduct: $ALTDOC_CODE_OF_CONDUCT
   - License: $ALTDOC_LICENSE
   - Licence: $ALTDOC_LICENCE
   - Citation: $ALTDOC_CITATION
-
-
-### Theme
-theme:
-  name: 'material'
-  logo: images/marginaleffects_icon.png
-  palette: 
-
-  # Palette toggle for light mode
-  - scheme: default
-    primary: white
-    toggle:
-      icon: material/brightness-7 
-      name: Switch to dark mode
-
-  # Palette toggle for dark mode
-  - scheme: slate
-    primary: grey
-    toggle:
-      icon: material/brightness-4
-      name: Switch to light mode
-
-  icon:
-    repo: fontawesome/brands/github 
-    text: ""
-
-
-### Remove MkDocs footer
-extra:
-  generator: false
-
-extra_css:
-  - stylesheets/extra.css
-  - stylesheets/extra.css
-
-
-### Code highlighting
-markdown_extensions:
-  - pymdownx.highlight:
-      anchor_linenums: true
-      line_spans: __span
-      pygments_lang_class: true
-  - pymdownx.inlinehilite
-  - pymdownx.snippets
-  - pymdownx.superfences
