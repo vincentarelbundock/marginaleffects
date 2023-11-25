@@ -1,8 +1,6 @@
 
 # Get Started
 
-include-after-body: toggle-tabs.html
-
 ## Installation
 
 Install the latest CRAN release:

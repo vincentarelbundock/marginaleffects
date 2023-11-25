@@ -1,7 +1,11 @@
+---
+format:
+  md:
+    prefer-html: true
+---
+
 
 # Get Started
-include-after-body: toggle-tabs.html
-
 
 ```{r, include = FALSE}
 options(width = 10000)
