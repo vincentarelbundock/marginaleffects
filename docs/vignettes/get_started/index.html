@@ -11,7 +11,7 @@
       
       
       <link rel="icon" href="../../images/favicon.ico">
-      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.1.17">
+      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.1.21">
     
     
       
@@ -19,7 +19,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.26e3688c.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.eebd395e.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ecc896b0.min.css">
@@ -1348,8 +1348,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#more" class="md-nav__link">
-    More!
+  <a href="#next-steps" class="md-nav__link">
+    Next steps
   </a>
   
 </li>
@@ -1597,8 +1597,8 @@ we obtain a data frame with 96 rows:</p>
 --- 86 rows omitted. See ?avg_slopes and ?print.marginaleffects --- 
    wt    dY/dX   -6.518       1.88 -3.462   &lt;0.001 10.9 -10.21 -2.828
    wt    dY/dX   -1.653       3.74 -0.442   0.6588  0.6  -8.99  5.682
-   wt    dY/dX   -4.520       2.47 -1.830   0.0673  3.9  -9.36  0.322
-   wt    dY/dX    0.635       4.89  0.130   0.8966  0.2  -8.95 10.215
+   wt    dY/dX   -4.520       2.47 -1.829   0.0673  3.9  -9.36  0.322
+   wt    dY/dX    0.635       4.89  0.130   0.8966  0.2  -8.95 10.216
    wt    dY/dX   -6.647       1.86 -3.572   &lt;0.001 11.5 -10.29 -3.000
 Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, mpg, hp, wt, am 
 Type:  response
@@ -1658,7 +1658,7 @@ is equal to 0 and 1, while other predictors are held at their means:</p>
 </span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">  </span><span class="n">newdata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">datagrid</span><span class="p">(</span><span class="n">am</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="o">:</span><span class="m">1</span><span class="p">))</span>
 </span></code></pre></div>
 <div class="language-text highlight"><pre><span></span><code> Term am Estimate Std. Error     z Pr(&gt;|z|)   S 2.5 % 97.5 %
-   wt  0    -2.68       1.42 -1.89   0.0593 4.1 -5.46  0.106
+   wt  0    -2.68       1.42 -1.89   0.0593 4.1 -5.46  0.105
    wt  1    -5.43       2.15 -2.52   0.0116 6.4 -9.65 -1.214
 
 Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, am, predicted_lo, predicted_hi, predicted, mpg, hp, wt 
@@ -1801,8 +1801,8 @@ consider two slope estimates:</p>
 </span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="w">  </span><span class="n">newdata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">datagrid</span><span class="p">(</span><span class="n">qsec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">range</span><span class="p">))</span>
 </span></code></pre></div>
 <div class="language-text highlight"><pre><span></span><code> Term qsec Estimate Std. Error    z Pr(&gt;|z|)   S  2.5 % 97.5 %
- drat 14.5     5.22       3.79 1.38   0.1682 2.6 -2.206   12.7
- drat 22.9    10.24       5.16 1.98   0.0472 4.4  0.127   20.4
+ drat 14.5     5.22       3.79 1.38   0.1678 2.6 -2.199   12.6
+ drat 22.9    10.24       5.17 1.98   0.0477 4.4  0.106   20.4
 
 Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, qsec, predicted_lo, predicted_hi, predicted, mpg, drat 
 Type:  response
@@ -1816,7 +1816,7 @@ this, we can use the <code>hypothesis</code> argument:</p>
 </span><span id="__span-29-5"><a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a><span class="w">  </span><span class="n">newdata</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">datagrid</span><span class="p">(</span><span class="n">qsec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">range</span><span class="p">))</span>
 </span></code></pre></div>
 <div class="language-text highlight"><pre><span></span><code>  Term Estimate Std. Error      z Pr(&gt;|z|)   S 2.5 % 97.5 %
- b1=b2    -5.02       8.52 -0.589    0.556 0.8 -21.7   11.7
+ b1=b2    -5.02       8.53 -0.588    0.556 0.8 -21.7   11.7
 
 Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
 Type:  response
@@ -1827,7 +1827,7 @@ are unique):</p>
 </span></code></pre></div>
 <div class="language-text highlight"><pre><span></span><code> Term Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %
  drat     7.22      1.365 5.29  &lt; 0.001 23.0 4.549   9.90
- qsec     1.12      0.433 2.60  0.00944  6.7 0.275   1.97
+ qsec     1.12      0.433 2.59  0.00946  6.7 0.275   1.97
 
 Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
 Type:  response
@@ -1847,7 +1847,7 @@ argument to conduct an equivalence test:</p>
 </span></code></pre></div>
 <div class="language-text highlight"><pre><span></span><code> Term Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 % p (NonSup) p (NonInf) p (Equiv)
  drat     7.22      1.365 5.29  &lt; 0.001 23.0 4.549   9.90     0.9999     &lt;0.001    0.9999
- qsec     1.12      0.433 2.60  0.00944  6.7 0.275   1.97     0.0216     &lt;0.001    0.0216
+ qsec     1.12      0.433 2.59  0.00946  6.7 0.275   1.97     0.0216     &lt;0.001    0.0216
 
 Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, statistic.noninf, statistic.nonsup, p.value.noninf, p.value.nonsup, p.value.equiv 
 Type:  response
@@ -1855,12 +1855,18 @@ Type:  response
 <p>See the <a href="hypothesis.html">Hypothesis Tests and Custom Contrasts
 vignette</a> for background, details, and for instructions
 on how to conduct hypothesis tests in more complex situations.</p>
-<h2 id="more">More!</h2>
+<h2 id="next-steps">Next steps</h2>
 <p>There is <em>much</em> more you can do with <code>marginaleffects</code>. Click through he
-Table of Contents to read the vignettes, learn how to report marginal
-effects in <a href="https://vincentarelbundock.github.io/modelsummary/">nice tables with the <code>modelsummary</code>
-package</a>, how to
-define your own prediction “grid”, and much more.</p>
+table of contents to read the many vignettes, starting with:</p>
+<ul>
+<li><a href="vignettes/predictions/">Predictions</a></li>
+<li><a href="vignettes/comparisons/">Comparisons</a></li>
+<li><a href="vignettes/slopes/">Slopes</a></li>
+<li><a href="vignettes/hypothesis/">Hypothesis and equivalence tests</a></li>
+<li><a href="vignettes/plots/">Plots</a></li>
+</ul>
+<p>Then, move on to read the case studies and technical notes (see
+sidebar).</p>
 
 
 
@@ -1895,10 +1901,10 @@ define your own prediction “grid”, and much more.</p>
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "../..", "features": "navigation.footer", "search": "../../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": "navigation.footer", "search": "../../assets/javascripts/workers/search.74e28a9f.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.b425cdc4.min.js"></script>
+      <script src="../../assets/javascripts/bundle.220ee61c.min.js"></script>
       
     
   </body>

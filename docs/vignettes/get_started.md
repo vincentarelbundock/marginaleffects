@@ -274,8 +274,8 @@ mfx
     --- 86 rows omitted. See ?avg_slopes and ?print.marginaleffects --- 
        wt    dY/dX   -6.518       1.88 -3.462   <0.001 10.9 -10.21 -2.828
        wt    dY/dX   -1.653       3.74 -0.442   0.6588  0.6  -8.99  5.682
-       wt    dY/dX   -4.520       2.47 -1.830   0.0673  3.9  -9.36  0.322
-       wt    dY/dX    0.635       4.89  0.130   0.8966  0.2  -8.95 10.215
+       wt    dY/dX   -4.520       2.47 -1.829   0.0673  3.9  -9.36  0.322
+       wt    dY/dX    0.635       4.89  0.130   0.8966  0.2  -8.95 10.216
        wt    dY/dX   -6.647       1.86 -3.572   <0.001 11.5 -10.29 -3.000
     Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, mpg, hp, wt, am 
     Type:  response 
@@ -352,7 +352,7 @@ slopes(
 
 
      Term am Estimate Std. Error     z Pr(>|z|)   S 2.5 % 97.5 %
-       wt  0    -2.68       1.42 -1.89   0.0593 4.1 -5.46  0.106
+       wt  0    -2.68       1.42 -1.89   0.0593 4.1 -5.46  0.105
        wt  1    -5.43       2.15 -2.52   0.0116 6.4 -9.65 -1.214
 
     Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, am, predicted_lo, predicted_hi, predicted, mpg, hp, wt 
@@ -547,8 +547,8 @@ slopes(
 
 
      Term qsec Estimate Std. Error    z Pr(>|z|)   S  2.5 % 97.5 %
-     drat 14.5     5.22       3.79 1.38   0.1682 2.6 -2.206   12.7
-     drat 22.9    10.24       5.16 1.98   0.0472 4.4  0.127   20.4
+     drat 14.5     5.22       3.79 1.38   0.1678 2.6 -2.199   12.6
+     drat 22.9    10.24       5.17 1.98   0.0477 4.4  0.106   20.4
 
     Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, qsec, predicted_lo, predicted_hi, predicted, mpg, drat 
     Type:  response 
@@ -566,7 +566,7 @@ slopes(
 
 
       Term Estimate Std. Error      z Pr(>|z|)   S 2.5 % 97.5 %
-     b1=b2    -5.02       8.52 -0.589    0.556 0.8 -21.7   11.7
+     b1=b2    -5.02       8.53 -0.588    0.556 0.8 -21.7   11.7
 
     Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
     Type:  response 
@@ -581,7 +581,7 @@ avg_slopes(mod)
 
      Term Estimate Std. Error    z Pr(>|z|)    S 2.5 % 97.5 %
      drat     7.22      1.365 5.29  < 0.001 23.0 4.549   9.90
-     qsec     1.12      0.433 2.60  0.00944  6.7 0.275   1.97
+     qsec     1.12      0.433 2.59  0.00946  6.7 0.275   1.97
 
     Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
     Type:  response 
@@ -608,7 +608,7 @@ avg_slopes(mod, equivalence = c(-2, 2))
 
      Term Estimate Std. Error    z Pr(>|z|)    S 2.5 % 97.5 % p (NonSup) p (NonInf) p (Equiv)
      drat     7.22      1.365 5.29  < 0.001 23.0 4.549   9.90     0.9999     <0.001    0.9999
-     qsec     1.12      0.433 2.60  0.00944  6.7 0.275   1.97     0.0216     <0.001    0.0216
+     qsec     1.12      0.433 2.59  0.00946  6.7 0.275   1.97     0.0216     <0.001    0.0216
 
     Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, statistic.noninf, statistic.nonsup, p.value.noninf, p.value.nonsup, p.value.equiv 
     Type:  response 
@@ -617,10 +617,16 @@ See the [Hypothesis Tests and Custom Contrasts
 vignette](hypothesis.html) for background, details, and for instructions
 on how to conduct hypothesis tests in more complex situations.
 
-## More!
+## Next steps
 
 There is *much* more you can do with `marginaleffects`. Click through he
-Table of Contents to read the vignettes, learn how to report marginal
-effects in [nice tables with the `modelsummary`
-package](https://vincentarelbundock.github.io/modelsummary/), how to
-define your own prediction “grid”, and much more.
+table of contents to read the many vignettes, starting with:
+
+-   [Predictions](vignettes/predictions/)
+-   [Comparisons](vignettes/comparisons/)
+-   [Slopes](vignettes/slopes/)
+-   [Hypothesis and equivalence tests](vignettes/hypothesis/)
+-   [Plots](vignettes/plots/)
+
+Then, move on to read the case studies and technical notes (see
+sidebar).

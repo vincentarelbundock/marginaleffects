@@ -292,6 +292,14 @@ avg_slopes(mod, equivalence = c(-2, 2))
 
 See the [Hypothesis Tests and Custom Contrasts vignette](hypothesis.html) for background, details, and for instructions on how to conduct hypothesis tests in more complex situations.
 
-## More!
+## Next steps
 
-There is *much* more you can do with `marginaleffects`. Click through he Table of Contents to read the vignettes, learn how to report marginal effects in [nice tables with the `modelsummary` package](https://vincentarelbundock.github.io/modelsummary/), how to define your own prediction "grid", and much more.
+There is *much* more you can do with `marginaleffects`. Click through he table of contents to read the many vignettes, starting with:
+
+* [Predictions](vignettes/predictions/)
+* [Comparisons](vignettes/comparisons/)
+* [Slopes](vignettes/slopes/)
+* [Hypothesis and equivalence tests](vignettes/hypothesis/)
+* [Plots](vignettes/plots/)
+
+Then, move on to read the case studies and technical notes (see sidebar).
