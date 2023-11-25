@@ -12,22 +12,27 @@ plugins:
 ### Navigation tree
 nav:
   - Functions:
-      predictions: man/predictions
-      avg_predictions: man/predictions
-      plot_predictions: man/plot_predictions
-      comparisons: man/comparisons
-      avg_comparisons: man/comparisons
-      plot_comparisons: man/plot_comparisons
-      slopes: man/slopes
-      avg_slopes: man/slopes
-      plot_slopes: man/plot_slopes
-      datagrid: man/datagrid
-      datagridcf: man/datagrid
-      hypotheses: man/hypotheses
-      inferences: man/inferences
-      marginal_means: man/marginal_means
-      posterior_draws: man/posterior_draws
-      print: man/print.marginaleffects
+      Predictions:
+        predictions: man/predictions
+        avg_predictions: man/predictions
+        plot_predictions: man/plot_predictions
+      Comparisons:
+        comparisons: man/comparisons
+        avg_comparisons: man/comparisons
+        plot_comparisons: man/plot_comparisons
+      Slopes:
+        slopes: man/slopes
+        avg_slopes: man/slopes
+        plot_slopes: man/plot_slopes
+      Grids:
+        datagrid: man/datagrid
+        datagridcf: man/datagrid
+      More:
+        hypotheses: man/hypotheses
+        inferences: man/inferences
+        marginal_means: man/marginal_means
+        posterior_draws: man/posterior_draws
+        print: man/print.marginaleffects
   - Tutorials:
       Get Started: vignettes/marginaleffects
       Predictions: vignettes/predictions
@@ -54,6 +59,7 @@ nav:
       Matching: vignettes/matching
       MrP: vignettes/mrp
       Missing Data: vignettes/multiple_imputation
+      S Values: vignettes/svalues
   - Technical Notes:
       Alternative Software: vignettes/alternative_software
       Extensions: vignettes/extensions
@@ -61,7 +67,6 @@ nav:
       Performance: vignettes/performance
       Python: vignettes/python
       Supported Models: vignettes/supported_models
-      S Values: vignettes/svalues
       Tables: vignettes/tables
       Standard Errors: vignettes/uncertainty
       FAQ: vignettes/faq
@@ -72,10 +77,26 @@ nav:
   - Licence: $ALTDOC_LICENCE
   - Citation: $ALTDOC_CITATION
 
-### Customization
-theme:
-  material
 
+### Theme
+theme:
+  name: 'material'
+  palette:
+    primary: 'grey'
+  icon:
+    repo: fontawesome/brands/github 
+    text: ""
+
+
+### Remove MkDocs footer
+extra:
+  generator: false
+
+extra_css:
+  - stylesheets/extra.css
+
+
+### Code highlighting
 markdown_extensions:
   - pymdownx.highlight:
       anchor_linenums: true

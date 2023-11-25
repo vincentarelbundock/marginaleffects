@@ -1,9 +1,9 @@
 
 # Missing Data
 
-
 ```{r, include = FALSE}
 options(width = 1000)
+options(modelsummary_factory_default = "gt")
 knitr::opts_chunk$set(
   collapse = TRUE,
   fig.width = 9,
