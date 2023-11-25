@@ -21,5 +21,3 @@ book (website)](https://marginaleffects.com/) includes
 a [“Get
 started”](https://marginaleffects.com/vignettes/get_started/)
 page, and over 25 chapters full of  tutorials, case studies, and technical notes.
-
-[https://marginaleffects.com](https://marginaleffects.com)

@@ -22,7 +22,7 @@ env:
   GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
 
-jobs altdoc:
+altdoc:
     runs-on: ubuntu-latest
     # Only restrict concurrency for non-PR jobs
     concurrency:
