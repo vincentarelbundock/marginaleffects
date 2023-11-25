@@ -1,4 +1,6 @@
-Copyright (C) 2021 Vincent Arel-Bundock
+# License
+
+Copyright (C) 2023 Vincent Arel-Bundock
 vincent.arel-bundock@umontreal.ca
 
 This program is free software: you can redistribute it and/or modify
@@ -15,8 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-GNU General Public License
-==========================
+## GNU General Public License
 
 _Version 3, 29 June 2007_  
 _Copyright © 2007 Free Software Foundation, Inc. &lt;<http://fsf.org/>&gt;_
