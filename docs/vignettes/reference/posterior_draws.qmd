@@ -1,0 +1,50 @@
+# posterior_draws {.unnumbered}
+
+
+Extract Posterior Draws or Bootstrap Resamples from <code>marginaleffects</code> Objects
+
+## Description
+
+<p>Extract Posterior Draws or Bootstrap Resamples from <code>marginaleffects</code> Objects
+</p>
+
+
+## Usage
+
+<pre><code class='language-R'>posterior_draws(x, shape = "long")
+</code></pre>
+
+
+## Arguments
+
+<table>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>x</code></td>
+<td>
+<p>An object produced by a <code>marginaleffects</code> package function, such as <code>predictions()</code>, <code>avg_slopes()</code>, <code>hypotheses()</code>, etc.</p>
+</td></tr>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>shape</code></td>
+<td>
+<p>string indicating the shape of the output format:
+</p>
+
+<ul>
+<li><p> &quot;long&quot;: long format data frame
+</p>
+</li>
+<li><p> &quot;DxP&quot;: Matrix with draws as rows and parameters as columns
+</p>
+</li>
+<li><p> &quot;PxD&quot;: Matrix with draws as rows and parameters as columns
+</p>
+</li>
+<li><p> &quot;rvar&quot;: Random variable datatype (see <code>posterior</code> package documentation).
+</p>
+</li></ul>
+</td></tr>
+</table>
+
+
+## Value
+
+<p>A data.frame with <code>drawid</code> and <code>draw</code> columns.
+</p>

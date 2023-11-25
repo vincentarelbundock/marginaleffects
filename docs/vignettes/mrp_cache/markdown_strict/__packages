@@ -1,0 +1,17 @@
+marginaleffects
+modelsummary
+Rcpp
+brms
+ggplot2
+ggridges
+gt
+tidyverse
+tibble
+tidyr
+readr
+purrr
+dplyr
+stringr
+forcats
+lubridate
+countrycode

@@ -1,0 +1,169 @@
+# datagrid {.unnumbered}
+
+Data grids
+
+## Description
+
+<p>Generate a data grid of user-specified values for use in the <code>newdata</code> argument of the <code>predictions()</code>, <code>comparisons()</code>, and <code>slopes()</code> functions. This is useful to define where in the predictor space we want to evaluate the quantities of interest. Ex: the predicted outcome or slope for a 37 year old college graduate.
+</p>
+
+<ul>
+<li> <p><code>datagrid()</code> generates data frames with combinations of &quot;typical&quot; or user-supplied predictor values.
+</p>
+</li>
+<li> <p><code>datagridcf()</code> generates &quot;counter-factual&quot; data frames, by replicating the entire dataset once for every combination of predictor values supplied by the user.
+</p>
+</li></ul>
+
+
+
+## Usage
+
+<pre><code class='language-R'>datagrid(
+  ...,
+  model = NULL,
+  newdata = NULL,
+  by = NULL,
+  FUN_character = get_mode,
+  FUN_factor = get_mode,
+  FUN_logical = get_mode,
+  FUN_numeric = function(x) mean(x, na.rm = TRUE),
+  FUN_integer = function(x) round(mean(x, na.rm = TRUE)),
+  FUN_other = function(x) mean(x, na.rm = TRUE),
+  grid_type = "typical"
+)
+
+datagridcf(..., model = NULL, newdata = NULL)
+</code></pre>
+
+
+## Arguments
+
+<table>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>...</code></td>
+<td>
+<p>named arguments with vectors of values or functions for user-specified variables.
+</p>
+
+<ul>
+<li><p> Functions are applied to the variable in the <code>model</code> dataset or <code>newdata</code>, and must return a vector of the appropriate type.
+</p>
+</li>
+<li><p> Character vectors are automatically transformed to factors if necessary.
++The output will include all combinations of these variables (see Examples below.)
+</p>
+</li></ul>
+</td></tr>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>model</code></td>
+<td>
+<p>Model object</p>
+</td></tr>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>newdata</code></td>
+<td>
+<p>data.frame (one and only one of the <code>model</code> and <code>newdata</code> arguments can be used.)</p>
+</td></tr>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>by</code></td>
+<td>
+<p>character vector with grouping variables within which <code style="white-space: pre;">&#8288;FUN_*&#8288;</code> functions are applied to create &quot;sub-grids&quot; with unspecified variables.</p>
+</td></tr>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>FUN_character</code></td>
+<td>
+<p>the function to be applied to character variables.</p>
+</td></tr>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>FUN_factor</code></td>
+<td>
+<p>the function to be applied to factor variables.</p>
+</td></tr>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>FUN_logical</code></td>
+<td>
+<p>the function to be applied to logical variables.</p>
+</td></tr>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>FUN_numeric</code></td>
+<td>
+<p>the function to be applied to numeric variables.</p>
+</td></tr>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>FUN_integer</code></td>
+<td>
+<p>the function to be applied to integer variables.</p>
+</td></tr>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>FUN_other</code></td>
+<td>
+<p>the function to be applied to other variable types.</p>
+</td></tr>
+<tr style="vertical-align: top;"><td style = "white-space: nowrap; font-family: monospace; vertical-align: top"><code>grid_type</code></td>
+<td>
+<p>character
+</p>
+
+<ul>
+<li><p> &quot;typical&quot;: variables whose values are not explicitly specified by the user in <code>...</code> are set to their mean or mode, or to the output of the functions supplied to <code>FUN_type</code> arguments.
+</p>
+</li>
+<li><p> &quot;counterfactual&quot;: the entire dataset is duplicated for each combination of the variable values specified in <code>...</code>. Variables not explicitly supplied to <code>datagrid()</code> are set to their observed values in the original dataset.
+</p>
+</li></ul>
+</td></tr>
+</table>
+
+
+## Details
+
+<p>If <code>datagrid</code> is used in a <code>predictions()</code>, <code>comparisons()</code>, or <code>slopes()</code> call as the
+<code>newdata</code> argument, the model is automatically inserted in the <code>model</code> argument of <code>datagrid()</code>
+call, and users do not need to specify either the <code>model</code> or <code>newdata</code> arguments.
+</p>
+<p>If users supply a model, the data used to fit that model is retrieved using
+the <code>insight::get_data</code> function.
+</p>
+
+
+## Value
+
+<p>A <code>data.frame</code> in which each row corresponds to one combination of the named
+predictors supplied by the user via the <code>...</code> dots. Variables which are not
+explicitly defined are held at their mean or mode.
+</p>
+
+
+## Functions
+
+
+<ul>
+<li> <p><code>datagridcf()</code>: Counterfactual data grid
+</p>
+</li></ul>
+
+
+## Examples
+```{r, warning=FALSE, message=FALSE}
+library(marginaleffects)
+
+# The output only has 2 rows, and all the variables except `hp` are at their
+# mean or mode.
+datagrid(newdata = mtcars, hp = c(100, 110))
+
+# We get the same result by feeding a model instead of a data.frame
+mod <- lm(mpg ~ hp, mtcars)
+datagrid(model = mod, hp = c(100, 110))
+
+# Use in `marginaleffects` to compute "Typical Marginal Effects". When used
+# in `slopes()` or `predictions()` we do not need to specify the
+#`model` or `newdata` arguments.
+slopes(mod, newdata = datagrid(hp = c(100, 110)))
+
+# datagrid accepts functions
+datagrid(hp = range, cyl = unique, newdata = mtcars)
+comparisons(mod, newdata = datagrid(hp = fivenum))
+
+# The full dataset is duplicated with each observation given counterfactual
+# values of 100 and 110 for the `hp` variable. The original `mtcars` includes
+# 32 rows, so the resulting dataset includes 64 rows.
+dg <- datagrid(newdata = mtcars, hp = c(100, 110), grid_type = "counterfactual")
+nrow(dg)
+
+# We get the same result by feeding a model instead of a data.frame
+mod <- lm(mpg ~ hp, mtcars)
+dg <- datagrid(model = mod, hp = c(100, 110), grid_type = "counterfactual")
+nrow(dg)
+
+```

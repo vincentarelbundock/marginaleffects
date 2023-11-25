@@ -1,0 +1,2460 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.1.17">
+    
+    
+      
+        <title>marginal_means - marginaleffects</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.26e3688c.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ecc896b0.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="indigo">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#marginal_means" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="marginaleffects" class="md-header__button md-logo" aria-label="marginaleffects" data-md-component="logo">
+      
+  <img src="../../images/marginaleffects_icon.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            marginaleffects
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              marginal_means
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+          
+            
+            
+            
+            <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+            
+              <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+              </label>
+            
+          
+            
+            
+            
+            <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="grey" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+            
+              <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+              </label>
+            
+          
+        </form>
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/vincentarelbundock/marginaleffects/issues" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    marginaleffects
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="marginaleffects" class="md-nav__button md-logo" aria-label="marginaleffects" data-md-component="logo">
+      
+  <img src="../../images/marginaleffects_icon.png" alt="logo">
+
+    </a>
+    marginaleffects
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/vincentarelbundock/marginaleffects/issues" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    marginaleffects
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/get_started" class="md-nav__link">
+        Get Started
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          Tutorials
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Tutorials
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/predictions" class="md-nav__link">
+        Predictions
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/comparisons" class="md-nav__link">
+        Comparisons
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/slopes" class="md-nav__link">
+        Slopes
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/hypothesis" class="md-nav__link">
+        Hypothesis Tests
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/plot" class="md-nav__link">
+        Plots
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          Case Studies
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Case Studies
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/brms" class="md-nav__link">
+        Bayes
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/bootstrap" class="md-nav__link">
+        Bootstrap and Simulation
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/categorical" class="md-nav__link">
+        Categorical outcomes
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/conformal" class="md-nav__link">
+        Conformal prediction
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/elasticity" class="md-nav__link">
+        Elasticity
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/equivalence" class="md-nav__link">
+        Equivalence Tests
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/experiments" class="md-nav__link">
+        Experiments
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/gam" class="md-nav__link">
+        GAM
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/gcomputation" class="md-nav__link">
+        G-Computation
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/heterogeneity" class="md-nav__link">
+        Heterogeneity
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/ipw" class="md-nav__link">
+        IPW
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/lme4" class="md-nav__link">
+        Mixed Effects
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/logit" class="md-nav__link">
+        Logit
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/machine_learning" class="md-nav__link">
+        Machine Learning
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/marginalmeans" class="md-nav__link">
+        Marginal Means
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/matching" class="md-nav__link">
+        Matching
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/mrp" class="md-nav__link">
+        MrP
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/multiple_imputation" class="md-nav__link">
+        Missing Data
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/svalues" class="md-nav__link">
+        S Values
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          Technical Notes
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Technical Notes
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/alternative_software" class="md-nav__link">
+        Alternative Software
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/extensions" class="md-nav__link">
+        Extensions
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/links" class="md-nav__link">
+        Links
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/performance" class="md-nav__link">
+        Performance
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/python" class="md-nav__link">
+        Python
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/supported_models" class="md-nav__link">
+        Supported Models
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/tables" class="md-nav__link">
+        Tables
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/uncertainty" class="md-nav__link">
+        Standard Errors
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/faq" class="md-nav__link">
+        FAQ
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          Functions
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Functions
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5_1" id="__nav_5_1_label" tabindex="0">
+          Predictions
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_1_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_5_1">
+          <span class="md-nav__icon md-icon"></span>
+          Predictions
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../predictions" class="md-nav__link">
+        predictions
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../predictions" class="md-nav__link">
+        avg_predictions
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plot_predictions" class="md-nav__link">
+        plot_predictions
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+          Comparisons
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_5_2">
+          <span class="md-nav__icon md-icon"></span>
+          Comparisons
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../comparisons" class="md-nav__link">
+        comparisons
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../comparisons" class="md-nav__link">
+        avg_comparisons
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plot_comparisons" class="md-nav__link">
+        plot_comparisons
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+          Slopes
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_5_3">
+          <span class="md-nav__icon md-icon"></span>
+          Slopes
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../slopes" class="md-nav__link">
+        slopes
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../slopes" class="md-nav__link">
+        avg_slopes
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plot_slopes" class="md-nav__link">
+        plot_slopes
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_4" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+          Grids
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_5_4">
+          <span class="md-nav__icon md-icon"></span>
+          Grids
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../datagrid" class="md-nav__link">
+        datagrid
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../datagrid" class="md-nav__link">
+        datagridcf
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_5" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+          More
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_5_5">
+          <span class="md-nav__icon md-icon"></span>
+          More
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hypotheses" class="md-nav__link">
+        hypotheses
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../inferences" class="md-nav__link">
+        inferences
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="." class="md-nav__link">
+        marginal_means
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../posterior_draws" class="md-nav__link">
+        posterior_draws
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../print.marginaleffects" class="md-nav__link">
+        print
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../NEWS" class="md-nav__link">
+        News
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../LICENSE" class="md-nav__link">
+        License
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CITATION" class="md-nav__link">
+        Citation
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#description" class="md-nav__link">
+    Description
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    Usage
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#arguments" class="md-nav__link">
+    Arguments
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#details" class="md-nav__link">
+    Details
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#value" class="md-nav__link">
+    Value
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#standard-errors-using-the-delta-method" class="md-nav__link">
+    Standard errors using the delta method
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-specific-arguments" class="md-nav__link">
+    Model-Specific Arguments
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bayesian-posterior-summaries" class="md-nav__link">
+    Bayesian posterior summaries
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#equivalence-inferiority-superiority" class="md-nav__link">
+    Equivalence, Inferiority, Superiority
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prediction-types" class="md-nav__link">
+    Prediction types
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    References
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    Examples
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="marginal_means">marginal_means</h1>
+<p>Marginal Means</p>
+<h2 id="description">Description</h2>
+<p>Marginal means are adjusted predictions, averaged across a grid of
+categorical predictors, holding other numeric predictors at their means.
+To learn more, read the marginal means vignette, visit the package
+website, or scroll down this page for a full list of vignettes:</p>
+<ul>
+<li>
+
+<a href="https://marginaleffects.com/articles/marginalmeans.html">https://marginaleffects.com/articles/marginalmeans.html</a>
+
+</li>
+<li>
+
+<a href="https://marginaleffects.com/">https://marginaleffects.com/</a>
+
+</li>
+</ul>
+
+<h2 id="usage">Usage</h2>
+<pre><code class='language-R'>marginal_means(
+  model,
+  variables = NULL,
+  newdata = NULL,
+  vcov = TRUE,
+  conf_level = 0.95,
+  type = NULL,
+  transform = NULL,
+  cross = FALSE,
+  hypothesis = NULL,
+  equivalence = NULL,
+  p_adjust = NULL,
+  df = Inf,
+  wts = "equal",
+  by = NULL,
+  numderiv = "fdforward",
+  ...
+)
+</code></pre>
+
+<h2 id="arguments">Arguments</h2>
+<table>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="marginal_means_:_model">model</code>
+</td>
+<td>
+Model object
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="marginal_means_:_variables">variables</code>
+</td>
+<td>
+
+Focal variables
+
+<ul>
+<li>
+
+Character vector of variable names: compute marginal means for each
+category of the listed variables.
+
+</li>
+<li>
+
+<code>NULL</code>: calculate marginal means for all logical, character,
+or factor variables in the dataset used to fit <code>model</code>. Hint:
+Set <code>cross=TRUE</code> to compute marginal means for combinations
+of focal variables.
+
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="marginal_means_:_newdata">newdata</code>
+</td>
+<td>
+
+Grid of predictor values over which we marginalize.
+
+<ul>
+<li>
+
+Warning: Please avoid modifying your dataset between fitting the model
+and calling a <code>marginaleffects</code> function. This can sometimes
+lead to unexpected results.
+
+</li>
+<li>
+
+<code>NULL</code> create a grid with all combinations of all categorical
+predictors in the model. Warning: can be expensive.
+
+</li>
+<li>
+
+Character vector: subset of categorical variables to use when building
+the balanced grid of predictors. Other variables are held to their mean
+or mode.
+
+</li>
+<li>
+
+Data frame: A data frame which includes all the predictors in the
+original model. The full dataset is replicated once for every
+combination of the focal variables in the <code>variables</code>
+argument, using the <code>datagridcf()</code> function.
+
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="marginal_means_:_vcov">vcov</code>
+</td>
+<td>
+
+Type of uncertainty estimates to report (e.g., for robust standard
+errors). Acceptable values:
+
+<ul>
+<li>
+
+FALSE: Do not compute standard errors. This can speed up computation
+considerably.
+
+</li>
+<li>
+
+TRUE: Unit-level standard errors using the default
+<code>vcov(model)</code> variance-covariance matrix.
+
+</li>
+<li>
+
+String which indicates the kind of uncertainty estimates to return.
+
+<ul>
+<li>
+
+Heteroskedasticity-consistent: <code>“HC”</code>, <code>“HC0”</code>,
+<code>“HC1”</code>, <code>“HC2”</code>, <code>“HC3”</code>,
+<code>“HC4”</code>, <code>“HC4m”</code>, <code>“HC5”</code>. See
+<code>?sandwich::vcovHC</code>
+
+</li>
+<li>
+
+Heteroskedasticity and autocorrelation consistent: <code>“HAC”</code>
+
+</li>
+<li>
+
+Mixed-Models degrees of freedom: "satterthwaite", "kenward-roger"
+
+</li>
+<li>
+
+Other: <code>“NeweyWest”</code>, <code>“KernHAC”</code>,
+<code>“OPG”</code>. See the <code>sandwich</code> package documentation.
+
+</li>
+</ul>
+</li>
+<li>
+
+One-sided formula which indicates the name of cluster variables (e.g.,
+<code>~unit_id</code>). This formula is passed to the
+<code>cluster</code> argument of the <code>sandwich::vcovCL</code>
+function.
+
+</li>
+<li>
+
+Square covariance matrix
+
+</li>
+<li>
+
+Function which returns a covariance matrix (e.g.,
+<code>stats::vcov(model)</code>)
+
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="marginal_means_:_conf_level">conf_level</code>
+</td>
+<td>
+numeric value between 0 and 1. Confidence level to use to build a
+confidence interval.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="marginal_means_:_type">type</code>
+</td>
+<td>
+string indicates the type (scale) of the predictions used to compute
+marginal effects or contrasts. This can differ based on the model type,
+but will typically be a string such as: "response", "link", "probs", or
+"zero". When an unsupported string is entered, the model-specific list
+of acceptable values is returned in an error message. When
+<code>type</code> is <code>NULL</code>, the first entry in the error
+message is used by default.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="marginal_means_:_transform">transform</code>
+</td>
+<td>
+A function applied to unit-level adjusted predictions and confidence
+intervals just before the function returns results. For bayesian models,
+this function is applied to individual draws from the posterior
+distribution, before computing summaries.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="marginal_means_:_cross">cross</code>
+</td>
+<td>
+
+TRUE or FALSE
+
+<ul>
+<li>
+
+<code>FALSE</code> (default): Marginal means are computed for each
+predictor individually.
+
+</li>
+<li>
+
+<code>TRUE</code>: Marginal means are computed for each combination of
+predictors specified in the <code>variables</code> argument.
+
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="marginal_means_:_hypothesis">hypothesis</code>
+</td>
+<td>
+
+specify a hypothesis test or custom contrast using a numeric value,
+vector, or matrix, a string, or a string formula.
+
+<ul>
+<li>
+
+Numeric:
+
+<ul>
+<li>
+
+Single value: the null hypothesis used in the computation of Z and p
+(before applying <code>transform</code>).
+
+</li>
+<li>
+
+Vector: Weights to compute a linear combination of (custom contrast
+between) estimates. Length equal to the number of rows generated by the
+same function call, but without the <code>hypothesis</code> argument.
+
+</li>
+<li>
+
+Matrix: Each column is a vector of weights, as describe above, used to
+compute a distinct linear combination of (contrast between) estimates.
+The column names of the matrix are used as labels in the output.
+
+</li>
+</ul>
+</li>
+<li>
+
+String formula to specify linear or non-linear hypothesis tests. If the
+<code>term</code> column uniquely identifies rows, terms can be used in
+the formula. Otherwise, use <code>b1</code>, <code>b2</code>, etc. to
+identify the position of each parameter. The
+<code style="white-space: pre;">⁠b\*⁠</code> wildcard can be used to test
+hypotheses on all estimates. Examples:
+
+<ul>
+<li>
+
+<code>hp = drat</code>
+
+</li>
+<li>
+
+<code>hp + drat = 12</code>
+
+</li>
+<li>
+
+<code>b1 + b2 + b3 = 0</code>
+
+</li>
+<li>
+
+<code style="white-space: pre;">⁠b\* / b1 = 1⁠</code>
+
+</li>
+</ul>
+</li>
+<li>
+
+String:
+
+<ul>
+<li>
+
+"pairwise": pairwise differences between estimates in each row.
+
+</li>
+<li>
+
+"reference": differences between the estimates in each row and the
+estimate in the first row.
+
+</li>
+<li>
+
+"sequential": difference between an estimate and the estimate in the
+next row.
+
+</li>
+<li>
+
+"revpairwise", "revreference", "revsequential": inverse of the
+corresponding hypotheses, as described above.
+
+</li>
+</ul>
+</li>
+<li>
+
+See the Examples section below and the vignette:
+https://marginaleffects.com/articles/hypothesis.html
+
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="marginal_means_:_equivalence">equivalence</code>
+</td>
+<td>
+Numeric vector of length 2: bounds used for the two-one-sided test
+(TOST) of equivalence, and for the non-inferiority and non-superiority
+tests. See Details section below.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="marginal_means_:_p_adjust">p_adjust</code>
+</td>
+<td>
+Adjust p-values for multiple comparisons: "holm", "hochberg", "hommel",
+"bonferroni", "BH", "BY", or "fdr". See stats::p.adjust
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="marginal_means_:_df">df</code>
+</td>
+<td>
+Degrees of freedom used to compute p values and confidence intervals. A
+single numeric value between 1 and <code>Inf</code>. When
+<code>df</code> is <code>Inf</code>, the normal distribution is used.
+When <code>df</code> is finite, the <code>t</code> distribution is used.
+See insight::get_df for a convenient function to extract degrees of
+freedom. Ex: <code>slopes(model, df = insight::get_df(model))</code>
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="marginal_means_:_wts">wts</code>
+</td>
+<td>
+
+character value. Weights to use in the averaging.
+
+<ul>
+<li>
+
+"equal": each combination of variables in <code>newdata</code> gets
+equal weight.
+
+</li>
+<li>
+
+"cells": each combination of values for the variables in the
+<code>newdata</code> gets a weight proportional to its frequency in the
+original data.
+
+</li>
+<li>
+
+"proportional": each combination of values for the variables in
+<code>newdata</code> – except for those in the <code>variables</code>
+argument – gets a weight proportional to its frequency in the original
+data.
+
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="marginal_means_:_by">by</code>
+</td>
+<td>
+Collapse marginal means into categories. Data frame with a
+<code>by</code> column of group labels, and merging columns shared by
+<code>newdata</code> or the data frame produced by calling the same
+function without the <code>by</code> argument.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="marginal_means_:_numderiv">numderiv</code>
+</td>
+<td>
+
+string or list of strings indicating the method to use to for the
+numeric differentiation used in to compute delta method standard errors.
+
+<ul>
+<li>
+
+"fdforward": finite difference method with forward differences
+
+</li>
+<li>
+
+"fdcenter": finite difference method with central differences (default)
+
+</li>
+<li>
+
+"richardson": Richardson extrapolation method
+
+</li>
+<li>
+
+Extra arguments can be specified by passing a list to the
+<code>numDeriv</code> argument, with the name of the method first and
+named arguments following, ex: <code>numderiv=list(“fdcenter”, eps =
+1e-5)</code>. When an unknown argument is used,
+<code>marginaleffects</code> prints the list of valid arguments for each
+method.
+
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="marginal_means_:_...">…</code>
+</td>
+<td>
+Additional arguments are passed to the <code>predict()</code> method
+supplied by the modeling package.These arguments are particularly useful
+for mixed-effects or bayesian models (see the online vignettes on the
+<code>marginaleffects</code> website). Available arguments can vary from
+model to model, depending on the range of supported arguments by each
+modeling package. See the "Model-Specific Arguments" section of the
+<code>?marginaleffects</code> documentation for a non-exhaustive list of
+available arguments.
+</td>
+</tr>
+</table>
+
+<h2 id="details">Details</h2>
+<p>This function begins by calling the <code>predictions</code> function to
+obtain a grid of predictors, and adjusted predictions for each cell. The
+grid includes all combinations of the categorical variables listed in
+the <code>variables</code> and <code>newdata</code> arguments, or all
+combinations of the categorical variables used to fit the model if
+<code>newdata</code> is <code>NULL</code>. In the prediction grid,
+numeric variables are held at their means.</p>
+<p>After constructing the grid and filling the grid with adjusted
+predictions, <code>marginal_means</code> computes marginal means for the
+variables listed in the <code>variables</code> argument, by average
+across all categories in the grid.</p>
+<p><code>marginal_means</code> can only compute standard errors for linear
+models, or for predictions on the link scale, that is, with the
+<code>type</code> argument set to "link".</p>
+<p>The <code>marginaleffects</code> website compares the output of this
+function to the popular <code>emmeans</code> package, which provides
+similar but more advanced functionality: https://marginaleffects.com/</p>
+<h2 id="value">Value</h2>
+<p>Data frame of marginal means with one row per variable-value
+combination.</p>
+<h2 id="standard-errors-using-the-delta-method">Standard errors using the delta method</h2>
+<p>Standard errors for all quantities estimated by
+<code>marginaleffects</code> can be obtained via the delta method. This
+requires differentiating a function with respect to the coefficients in
+the model using a finite difference approach. In some models, the delta
+method standard errors can be sensitive to various aspects of the
+numeric differentiation strategy, including the step size. By default,
+the step size is set to <code>1e-8</code>, or to <code>1e-4</code> times
+the smallest absolute model coefficient, whichever is largest.</p>
+<p><code>marginaleffects</code> can delegate numeric differentiation to the
+<code>numDeriv</code> package, which allows more flexibility. To do
+this, users can pass arguments to the <code>numDeriv::jacobian</code>
+function through a global option. For example:</p>
+<ul>
+<li>
+
+<code>options(marginaleffects_numDeriv = list(method = “simple”,
+method.args = list(eps = 1e-6)))</code>
+
+</li>
+<li>
+
+<code>options(marginaleffects_numDeriv = list(method = “Richardson”,
+method.args = list(eps = 1e-5)))</code>
+
+</li>
+<li>
+
+<code>options(marginaleffects_numDeriv = NULL)</code>
+
+</li>
+</ul>
+
+<p>See the "Standard Errors and Confidence Intervals" vignette on the
+<code>marginaleffects</code> website for more details on the computation
+of standard errors:</p>
+<p>https://marginaleffects.com/articles/uncertainty.html</p>
+<p>Note that the <code>inferences()</code> function can be used to compute
+uncertainty estimates using a bootstrap or simulation-based inference.
+See the vignette:</p>
+<p>https://marginaleffects.com/articles/bootstrap.html</p>
+<h2 id="model-specific-arguments">Model-Specific Arguments</h2>
+<p>Some model types allow model-specific arguments to modify the nature of
+marginal effects, predictions, marginal means, and contrasts. Please
+report other package-specific <code>predict()</code> arguments on Github
+so we can add them to the table below.</p>
+<p>https://github.com/vincentarelbundock/marginaleffects/issues</p>
+<table>
+<tr>
+<td style="text-align: left;">
+Package
+</td>
+<td style="text-align: left;">
+Class
+</td>
+<td style="text-align: left;">
+Argument
+</td>
+<td style="text-align: left;">
+Documentation
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>brms</code>
+</td>
+<td style="text-align: left;">
+<code>brmsfit</code>
+</td>
+<td style="text-align: left;">
+<code>ndraws</code>
+</td>
+<td style="text-align: left;">
+brms::posterior_predict
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+<code>re_formula</code>
+</td>
+<td style="text-align: left;">
+brms::posterior_predict
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>lme4</code>
+</td>
+<td style="text-align: left;">
+<code>merMod</code>
+</td>
+<td style="text-align: left;">
+<code>re.form</code>
+</td>
+<td style="text-align: left;">
+lme4::predict.merMod
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+<code>allow.new.levels</code>
+</td>
+<td style="text-align: left;">
+lme4::predict.merMod
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>glmmTMB</code>
+</td>
+<td style="text-align: left;">
+<code>glmmTMB</code>
+</td>
+<td style="text-align: left;">
+<code>re.form</code>
+</td>
+<td style="text-align: left;">
+glmmTMB::predict.glmmTMB
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+<code>allow.new.levels</code>
+</td>
+<td style="text-align: left;">
+glmmTMB::predict.glmmTMB
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+<code>zitype</code>
+</td>
+<td style="text-align: left;">
+glmmTMB::predict.glmmTMB
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>mgcv</code>
+</td>
+<td style="text-align: left;">
+<code>bam</code>
+</td>
+<td style="text-align: left;">
+<code>exclude</code>
+</td>
+<td style="text-align: left;">
+mgcv::predict.bam
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>robustlmm</code>
+</td>
+<td style="text-align: left;">
+<code>rlmerMod</code>
+</td>
+<td style="text-align: left;">
+<code>re.form</code>
+</td>
+<td style="text-align: left;">
+robustlmm::predict.rlmerMod
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+</td>
+<td style="text-align: left;">
+<code>allow.new.levels</code>
+</td>
+<td style="text-align: left;">
+robustlmm::predict.rlmerMod
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+<code>MCMCglmm</code>
+</td>
+<td style="text-align: left;">
+<code>MCMCglmm</code>
+</td>
+<td style="text-align: left;">
+<code>ndraws</code>
+</td>
+<td style="text-align: left;">
+</td>
+</tr>
+<tr>
+<td style="text-align: left;">
+</td>
+</tr>
+</table>
+
+<h2 id="bayesian-posterior-summaries">Bayesian posterior summaries</h2>
+<p>By default, credible intervals in bayesian models are built as
+equal-tailed intervals. This can be changed to a highest density
+interval by setting a global option:</p>
+<p><code>options(“marginaleffects_posterior_interval” = “eti”)</code></p>
+<p><code>options(“marginaleffects_posterior_interval” = “hdi”)</code></p>
+<p>By default, the center of the posterior distribution in bayesian models
+is identified by the median. Users can use a different summary function
+by setting a global option:</p>
+<p><code>options(“marginaleffects_posterior_center” = “mean”)</code></p>
+<p><code>options(“marginaleffects_posterior_center” = “median”)</code></p>
+<p>When estimates are averaged using the <code>by</code> argument, the
+<code>tidy()</code> function, or the <code>summary()</code> function,
+the posterior distribution is marginalized twice over. First, we take
+the average <em>across</em> units but <em>within</em> each iteration of
+the MCMC chain, according to what the user requested in <code>by</code>
+argument or <code>tidy()/summary()</code> functions. Then, we identify
+the center of the resulting posterior using the function supplied to the
+<code>“marginaleffects_posterior_center”</code> option (the median by
+default).</p>
+<h2 id="equivalence-inferiority-superiority">Equivalence, Inferiority, Superiority</h2>
+<p><em>θ</em> is an estimate, <em>σ</em><sub><em>θ</em></sub> its estimated standard error, and
+[<em>a</em>,<em>b</em>] are the bounds of the interval supplied to the
+<code>equivalence</code> argument.</p>
+<p>Non-inferiority:</p>
+<ul>
+<li>
+
+*H*<sub>0</sub>: *θ* ≤ *a*
+
+</li>
+<li>
+
+*H*<sub>1</sub>: *θ* \> *a*
+
+</li>
+<li>
+
+*t* = (*θ*−*a*)/*σ*<sub>*θ*</sub>
+
+</li>
+<li>
+
+p: Upper-tail probability
+
+</li>
+</ul>
+
+<p>Non-superiority:</p>
+<ul>
+<li>
+
+*H*<sub>0</sub>: *θ* ≥ *b*
+
+</li>
+<li>
+
+*H*<sub>1</sub>: *θ* \< *b*
+
+</li>
+<li>
+
+*t* = (*θ*−*b*)/*σ*<sub>*θ*</sub>
+
+</li>
+<li>
+
+p: Lower-tail probability
+
+</li>
+</ul>
+
+<p>Equivalence: Two One-Sided Tests (TOST)</p>
+<ul>
+<li>
+
+p: Maximum of the non-inferiority and non-superiority p values.
+
+</li>
+</ul>
+
+<p>Thanks to Russell V. Lenth for the excellent <code>emmeans</code>
+package and documentation which inspired this feature.</p>
+<h2 id="prediction-types">Prediction types</h2>
+<p>The <code>type</code> argument determines the scale of the predictions
+used to compute quantities of interest with functions from the
+<code>marginaleffects</code> package. Admissible values for
+<code>type</code> depend on the model object. When users specify an
+incorrect value for <code>type</code>, <code>marginaleffects</code> will
+raise an informative error with a list of valid <code>type</code> values
+for the specific model object. The first entry in the list in that error
+message is the default type.</p>
+<p>The <code>invlink(link)</code> is a special type defined by
+<code>marginaleffects</code>. It is available for some (but not all)
+models and functions. With this link type, we first compute predictions
+on the link scale, then we use the inverse link function to
+backtransform the predictions to the response scale. This is useful for
+models with non-linear link functions as it can ensure that confidence
+intervals stay within desirable bounds, ex: 0 to 1 for a logit model.
+Note that an average of estimates with <code>type=“invlink(link)”</code>
+will not always be equivalent to the average of estimates with
+<code>type=“response”</code>.</p>
+<p>Some of the most common <code>type</code> values are:</p>
+<p>response, link, E, Ep, average, class, conditional, count, cum.prob,
+cumprob, density, disp, ev, expected, expvalue, fitted, invlink(link),
+latent, linear.predictor, linpred, location, lp, mean, numeric, p, ppd,
+pr, precision, prediction, prob, probability, probs, quantile, risk,
+scale, survival, unconditional, utility, variance, xb, zero, zlink,
+zprob</p>
+<h2 id="references">References</h2>
+<ul>
+<li>
+
+Greenland S. 2019. "Valid P-Values Behave Exactly as They Should: Some
+Misleading Criticisms of P-Values and Their Resolution With S-Values."
+The American Statistician. 73(S1): 106–114.
+
+</li>
+<li>
+
+Cole, Stephen R, Jessie K Edwards, and Sander Greenland. 2020.
+"Surprise!" American Journal of Epidemiology 190 (2): 191–93.
+https://doi.org/10.1093/aje/kwaa136
+
+</li>
+</ul>
+
+<h2 id="examples">Examples</h2>
+<div class="language-r highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">library</span><span class="p">(</span><span class="n">marginaleffects</span><span class="p">)</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nf">library</span><span class="p">(</span><span class="n">marginaleffects</span><span class="p">)</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># simple marginal means for each level of `cyl`</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">dat</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">mtcars</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">dat</span><span class="o">$</span><span class="n">carb</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">factor</span><span class="p">(</span><span class="n">dat</span><span class="o">$</span><span class="n">carb</span><span class="p">)</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">dat</span><span class="o">$</span><span class="n">cyl</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">factor</span><span class="p">(</span><span class="n">dat</span><span class="o">$</span><span class="n">cyl</span><span class="p">)</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">dat</span><span class="o">$</span><span class="n">am</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">as.logical</span><span class="p">(</span><span class="n">dat</span><span class="o">$</span><span class="n">am</span><span class="p">)</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">mod</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">lm</span><span class="p">(</span><span class="n">mpg</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">carb</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">cyl</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">am</span><span class="p">,</span><span class="w"> </span><span class="n">dat</span><span class="p">)</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nf">marginal_means</span><span class="p">(</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span><span class="n">mod</span><span class="p">,</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span><span class="n">variables</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;cyl&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code> Term Value Mean Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %
+  cyl     4 23.1       1.66 13.9   &lt;0.001 144.3  19.9   26.4
+  cyl     6 20.4       1.34 15.2   &lt;0.001 171.9  17.8   23.0
+  cyl     8 16.2       1.07 15.1   &lt;0.001 169.0  14.1   18.3
+
+Results averaged over levels of: carb, am, cyl 
+Columns: term, value, cyl, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response
+</code></pre></div>
+<div class="language-r highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># collapse levels of cyl by averaging</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">by</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">data.frame</span><span class="p">(</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="n">cyl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="m">6</span><span class="p">,</span><span class="w"> </span><span class="m">8</span><span class="p">),</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="n">by</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;4 &amp;amp; 6&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;4 &amp;amp; 6&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;8&quot;</span><span class="p">))</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nf">marginal_means</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="n">variables</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;cyl&quot;</span><span class="p">,</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="n">by</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">by</span><span class="p">)</span>
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code>        By Mean Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %
+ 4 &amp;amp; 6 21.7       1.13 19.2   &lt;0.001 270.8  19.5   24.0
+ 8         16.2       1.07 15.1   &lt;0.001 169.0  14.1   18.3
+
+Results averaged over levels of: carb, am, cyl 
+Columns: by, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response
+</code></pre></div>
+<div class="language-r highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># pairwise differences between collapsed levels</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nf">marginal_means</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="n">variables</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;cyl&quot;</span><span class="p">,</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="n">by</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">by</span><span class="p">,</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="n">hypothesis</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;pairwise&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code>          Term Mean Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %
+ 4 &amp;amp; 6 - 8 5.54       1.51 3.66   &lt;0.001 12.0  2.57    8.5
+
+Results averaged over levels of: carb, am, cyl 
+Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response
+</code></pre></div>
+<div class="language-r highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># cross</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nf">marginal_means</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="n">variables</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;cyl&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;carb&quot;</span><span class="p">),</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="n">cross</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span>
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code> Mean Std. Error     z Pr(&gt;|z|)     S 2.5 % 97.5 %
+ 25.8       1.26 20.43   &lt;0.001 305.7 23.34   28.3
+ 25.6       1.17 21.93   &lt;0.001 351.8 23.30   27.9
+ 25.3       2.37 10.71   &lt;0.001  86.6 20.70   30.0
+ 21.9       1.90 11.51   &lt;0.001  99.4 18.15   25.6
+ 20.3       3.77  5.39   &lt;0.001  23.7 12.91   27.7
+ 19.8       3.81  5.18   &lt;0.001  22.1 12.29   27.2
+ 23.1       1.77 13.08   &lt;0.001 127.4 19.63   26.5
+ 22.9       1.87 12.24   &lt;0.001 112.0 19.20   26.5
+ 22.6       2.37  9.56   &lt;0.001  69.5 17.98   27.2
+ 19.1       1.34 14.31   &lt;0.001 151.8 16.53   21.8
+ 17.6       3.00  5.85   &lt;0.001  27.6 11.68   23.5
+ 17.0       3.48  4.89   &lt;0.001  19.9 10.21   23.9
+ 18.9       1.94  9.74   &lt;0.001  72.1 15.11   22.7
+ 18.7       1.57 11.90   &lt;0.001 106.0 15.61   21.8
+ 18.4       1.83 10.07   &lt;0.001  76.8 14.85   22.0
+ 15.0       1.20 12.53   &lt;0.001 117.2 12.63   17.3
+ 13.4       3.36  3.99   &lt;0.001  13.9  6.81   20.0
+ 12.9       3.00  4.28   &lt;0.001  15.7  6.98   18.8
+
+Results averaged over levels of: am 
+Columns: cyl, carb, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response
+</code></pre></div>
+<div class="language-r highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># collapsed cross</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">by</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">expand.grid</span><span class="p">(</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="n">cyl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">unique</span><span class="p">(</span><span class="n">mtcars</span><span class="o">$</span><span class="n">cyl</span><span class="p">),</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="n">carb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">unique</span><span class="p">(</span><span class="n">mtcars</span><span class="o">$</span><span class="n">carb</span><span class="p">))</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">by</span><span class="o">$</span><span class="n">by</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">ifelse</span><span class="p">(</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="n">by</span><span class="o">$</span><span class="n">cyl</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">4</span><span class="p">,</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="nf">paste</span><span class="p">(</span><span class="s">&quot;Control:&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">by</span><span class="o">$</span><span class="n">carb</span><span class="p">),</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="nf">paste</span><span class="p">(</span><span class="s">&quot;Treatment:&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">by</span><span class="o">$</span><span class="n">carb</span><span class="p">))</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Convert numeric variables to categorical before fitting the model</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="n">dat</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">mtcars</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="n">dat</span><span class="o">$</span><span class="n">am</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">as.logical</span><span class="p">(</span><span class="n">dat</span><span class="o">$</span><span class="n">am</span><span class="p">)</span>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="n">dat</span><span class="o">$</span><span class="n">carb</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">as.factor</span><span class="p">(</span><span class="n">dat</span><span class="o">$</span><span class="n">carb</span><span class="p">)</span>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="n">mod</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">lm</span><span class="p">(</span><span class="n">mpg</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">hp</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">am</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">carb</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dat</span><span class="p">)</span>
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># Compute and summarize marginal means</span>
+</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="nf">marginal_means</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span>
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code> Term Value Mean Std. Error     z Pr(&gt;|z|)     S 2.5 % 97.5 %
+ am   FALSE 17.9      1.244 14.37   &lt;0.001 153.0  15.4   20.3
+ am   TRUE  23.1      0.974 23.72   &lt;0.001 410.9  21.2   25.0
+ carb 1     22.0      1.345 16.35   &lt;0.001 197.2  19.4   24.6
+ carb 2     21.5      1.025 20.95   &lt;0.001 321.5  19.5   23.5
+ carb 3     20.6      1.780 11.55   &lt;0.001 100.1  17.1   24.0
+ carb 4     18.8      1.042 18.06   &lt;0.001 239.9  16.8   20.9
+ carb 6     18.5      3.019  6.12   &lt;0.001  30.0  12.6   24.4
+ carb 8     21.6      4.055  5.33   &lt;0.001  23.3  13.7   29.6
+
+Results averaged over levels of: hp, am, carb 
+Columns: term, value, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response
+</code></pre></div>
+<div class="language-r highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Contrast between marginal means (carb2 - carb1), or &quot;is the 1st marginal means equal to the 2nd?&quot;</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># see the vignette on &quot;Hypothesis Tests and Custom Contrasts&quot; on the `marginaleffects` website.</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">lc</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">-1</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">)</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nf">marginal_means</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span><span class="w"> </span><span class="n">variables</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;carb&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">hypothesis</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;b2 = b1&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code>  Term   Mean Std. Error      z Pr(&gt;|z|)   S 2.5 % 97.5 %
+ b2=b1 -0.514       1.48 -0.348    0.728 0.5 -3.41   2.38
+
+Results averaged over levels of: am, carb 
+Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response
+</code></pre></div>
+<div class="language-r highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nf">marginal_means</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span><span class="w"> </span><span class="n">variables</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;carb&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">hypothesis</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lc</span><span class="p">)</span>
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code>   Term   Mean Std. Error      z Pr(&gt;|z|)   S 2.5 % 97.5 %
+ custom -0.514       1.48 -0.348    0.728 0.5 -3.41   2.38
+
+Results averaged over levels of: am, carb 
+Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response
+</code></pre></div>
+<div class="language-r highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Multiple custom contrasts</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">lc</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">matrix</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span><span class="m">-2</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="m">-1</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">,</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="m">-1</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="m">0</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span><span class="p">),</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span><span class="n">ncol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">,</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span><span class="n">dimnames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="kc">NULL</span><span class="p">,</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;A&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;B&quot;</span><span class="p">)))</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="nf">marginal_means</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span><span class="w"> </span><span class="n">variables</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;carb&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">hypothesis</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lc</span><span class="p">)</span>
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code> Term   Mean Std. Error      z Pr(&gt;|z|)   S  2.5 % 97.5 %
+    A  1.199       6.15  0.195    0.845 0.2 -10.85  13.25
+    B -0.514       1.48 -0.348    0.728 0.5  -3.41   2.38
+
+Results averaged over levels of: am, carb 
+Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response
+</code></pre></div>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": "navigation.footer", "search": "../../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.b425cdc4.min.js"></script>
+      
+    
+  </body>
+</html>
