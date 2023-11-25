@@ -56,9 +56,9 @@ altdoc:
           python3 -m pip install mkdocs            # install mkdocs
 
       # Uncomment this if you use "theme: material" in `altdoc/mkdocs.yml`
-      # - name: Install Material for Mkdocs
-      #   run: |
-      #     python3 -m pip install mkdocs-material   # install material theme
+      - name: Install Material for Mkdocs
+        run: |
+          python3 -m pip install mkdocs-material   # install material theme
 
       - name: Build site
         run: |
