@@ -1180,7 +1180,7 @@ marginal effects:
 avg_comparisons(forest, variables = list(temp = 1), newdata = bikes)
 #> 
 #>  Term Contrast Estimate
-#>  temp       +1     2.38
+#>  temp       +1     2.44
 #> 
 #> Columns: term, contrast, estimate 
 #> Type:  response
@@ -1196,7 +1196,7 @@ fmeffects::fme(
     target = "count",
     feature = "temp",
     step.size = 1)$ame
-#> [1] 2.378654
+#> [1] 2.435644
 ```
 
 Another interesting feature of `fmeffects` is the ability treat
@@ -1220,7 +1220,7 @@ avg_comparisons(
 )
 #> 
 #>     Term Contrast Estimate
-#>  weather   custom     2.06
+#>  weather   custom     2.19
 #> 
 #> Columns: term, contrast, estimate 
 #> Type:  response
@@ -1229,8 +1229,8 @@ avg_comparisons(
 Two more functionalities deserve to be highlight. First, `fmeffects`
 includes functions to explore heterogeneity in marginal effects using
 recursive partitioning trees. The [heterogeneity
-vignette](articles/heterogeneity.html) illustrates how to achieve
-something similar with `marginaleffects`.
+vignette](vignettes/heterogeneity/) illustrates how to achieve something
+similar with `marginaleffects`.
 
 Second, `fmeffects` also implements a non-linearity measure. At the
 moment, there is no analogue to this in `marginaleffects`.

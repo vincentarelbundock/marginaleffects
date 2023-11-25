@@ -54,7 +54,7 @@ increase depends on the values of covariates, different unit of
 observation will typically be associated with different contrasts.
 
 In such cases, a common strategy is to compute an average difference, as
-described in the [G-Computation vignette:](articles/gcomputation.html)
+described in the [G-Computation vignette:](vignettes/gcomputation/)
 
 ``` r
 avg_comparisons(mod, variables = list(temp = 5))
