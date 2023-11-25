@@ -11,7 +11,7 @@ package website, or scroll down this page for a full list of vignettes:
 </p>
 
 <ul>
-<li> <p><a href="https://marginaleffects.com/articles/hypothesis.html">https://marginaleffects.com/articles/hypothesis.html</a>
+<li> <p><a href="https://marginaleffects.com/vignettes/hypothesis.html">https://marginaleffects.com/vignettes/hypothesis.html</a>
 </p>
 </li>
 <li> <p><a href="https://marginaleffects.com/">https://marginaleffects.com/</a>
@@ -108,7 +108,7 @@ package website, or scroll down this page for a full list of vignettes:
 </li></ul>
 
 </li>
-<li><p> See the Examples section below and the vignette: https://marginaleffects.com/articles/hypothesis.html
+<li><p> See the Examples section below and the vignette: https://marginaleffects.com/vignettes/hypothesis.html
 </p>
 </li></ul>
 </td></tr>

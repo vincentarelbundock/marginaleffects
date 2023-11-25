@@ -17,7 +17,7 @@ The procedure we highlight can be broken down into three steps:
     balance
 2.  Fit a regression model to the outcome of interest
 3.  Use `marginaleffects` and
-    [G-Computation](https://marginaleffects.com/articles/gcomputation.html)
+    [G-Computation](https://marginaleffects.com/vignettes/gcomputation.html)
     to estimate a quantity of interest, such as the Average treatment
     effect on the treated (ATT)
 
@@ -79,7 +79,7 @@ fit <- lm(
 Finally, we use the `avg_comparisons()` function of the
 `marginaleffects` package to estimate the ATT and its standard error. In
 effect, this function applies
-[G-Computation](https://marginaleffects.com/articles/gcomputation.html)
+[G-Computation](https://marginaleffects.com/vignettes/gcomputation.html)
 to estimate the quantity of interest. We use the following arguments:
 
 -   `variables="treat"` indicates that we are interested in the effect
@@ -108,7 +108,7 @@ avg_comparisons(
 ## Learn more
 
 [The `MatchIt` vignette titled “Estimating Effects After
-Matching”](https://kosukeimai.github.io/MatchIt/articles/estimating-effects.html)
+Matching”](https://kosukeimai.github.io/MatchIt/vignettes/estimating-effects.html)
 describes many more options, including different measures of uncertainty
 (bootstrap, clustering, etc.), different estimands (ATE, etc.), and
 different strategies for adjustment.

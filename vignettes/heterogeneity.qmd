@@ -34,7 +34,7 @@ cmp
 
 The output printed above includes 727 rows: 1 for each of the rows in the original `bikes` dataset. Indeed, since the "effect" of a 5 unit increase depends on the values of covariates, different unit of observation will typically be associated with different contrasts.
 
-In such cases, a common strategy is to compute an average difference, as described in the [G-Computation vignette:](articles/gcomputation.html)
+In such cases, a common strategy is to compute an average difference, as described in the [G-Computation vignette:](vignettes/gcomputation/)
 
 
 ```{r}

@@ -16,7 +16,7 @@ Plot Conditional or Marginal Predictions
 </p>
 
 <ul>
-<li><p> https://marginaleffects.com/articles/plot.html
+<li><p> https://marginaleffects.com/vignettes/plot.html
 </p>
 </li>
 <li><p> https://marginaleffects.com

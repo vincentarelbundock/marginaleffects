@@ -814,7 +814,7 @@ avg_comparisons(
 )
 ```
 
-Two more functionalities deserve to be highlight. First, `fmeffects` includes functions to explore heterogeneity in marginal effects using recursive partitioning trees. The [heterogeneity vignette](articles/heterogeneity.html) illustrates how to achieve something similar with `marginaleffects`.
+Two more functionalities deserve to be highlight. First, `fmeffects` includes functions to explore heterogeneity in marginal effects using recursive partitioning trees. The [heterogeneity vignette](vignettes/heterogeneity/) illustrates how to achieve something similar with `marginaleffects`.
 
 Second, `fmeffects` also implements a non-linearity measure. At the moment, there is no analogue to this in `marginaleffects`.
 

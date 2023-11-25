@@ -21,7 +21,7 @@ Slopes (aka Partial derivatives, Marginal Effects, or Trends)
 </p>
 
 <ul>
-<li> <p><a href="https://marginaleffects.com/articles/slopes.html">https://marginaleffects.com/articles/slopes.html</a>
+<li> <p><a href="https://marginaleffects.com/vignettes/slopes.html">https://marginaleffects.com/vignettes/slopes.html</a>
 </p>
 </li>
 <li> <p><a href="https://marginaleffects.com/">https://marginaleffects.com/</a>
@@ -308,7 +308,7 @@ first entry in the error message is used by default.</p>
 </li></ul>
 
 </li>
-<li><p> See the Examples section below and the vignette: https://marginaleffects.com/articles/hypothesis.html
+<li><p> See the Examples section below and the vignette: https://marginaleffects.com/vignettes/hypothesis.html
 </p>
 </li></ul>
 </td></tr>
@@ -451,11 +451,11 @@ $\varepsilon$ is determined by the <code>eps</code> argument.
 
 <p>See the &quot;Standard Errors and Confidence Intervals&quot; vignette on the <code>marginaleffects</code> website for more details on the computation of standard errors:
 </p>
-<p>https://marginaleffects.com/articles/uncertainty.html
+<p>https://marginaleffects.com/vignettes/uncertainty.html
 </p>
 <p>Note that the <code>inferences()</code> function can be used to compute uncertainty estimates using a bootstrap or simulation-based inference. See the vignette:
 </p>
-<p>https://marginaleffects.com/articles/bootstrap.html
+<p>https://marginaleffects.com/vignettes/bootstrap.html
 </p>
 
 
