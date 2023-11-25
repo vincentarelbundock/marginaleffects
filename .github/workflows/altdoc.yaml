@@ -11,17 +11,6 @@ on:
 
 name: altdoc
 
-# concurrency:
-#   group: altdoc-${{ github.event_name != 'pull_request' || github.run_id }}
-#   cancel-in-progress: true
-
-env:
-  USE_BSPM: "true"
-  _R_CHECK_FORCE_SUGGESTS_: "false"
-  R_GH: true
-  GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-
-
 jobs:
   altdoc:
     runs-on: ubuntu-latest
