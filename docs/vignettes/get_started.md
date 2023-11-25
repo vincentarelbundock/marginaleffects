@@ -622,11 +622,11 @@ on how to conduct hypothesis tests in more complex situations.
 There is *much* more you can do with `marginaleffects`. Click through he
 table of contents to read the many vignettes, starting with:
 
--   [Predictions](vignettes/predictions/)
--   [Comparisons](vignettes/comparisons/)
--   [Slopes](vignettes/slopes/)
--   [Hypothesis and equivalence tests](vignettes/hypothesis/)
--   [Plots](vignettes/plots/)
+-   [Predictions](/vignettes/predictions/)
+-   [Comparisons](/vignettes/comparisons/)
+-   [Slopes](/vignettes/slopes/)
+-   [Hypothesis and equivalence tests](/vignettes/hypothesis/)
+-   [Plots](/vignettes/plots/)
 
 Then, move on to read the case studies and technical notes (see
 sidebar).
