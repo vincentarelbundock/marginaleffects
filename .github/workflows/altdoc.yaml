@@ -11,9 +11,9 @@ on:
 
 name: altdoc
 
-concurrency:
-  group: altdoc-${{ github.event_name != 'pull_request' || github.run_id }}
-  cancel-in-progress: true
+# concurrency:
+#   group: altdoc-${{ github.event_name != 'pull_request' || github.run_id }}
+#   cancel-in-progress: true
 
 env:
   USE_BSPM: "true"
