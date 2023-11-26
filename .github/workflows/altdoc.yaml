@@ -52,7 +52,7 @@ jobs:
 
       - name: Build site
         run: |
-          altdoc::render_docs(parallel = TRUE, freeze = FALSE)
+          altdoc::render_docs(parallel = TRUE)
         shell: Rscript {0}
 
       - name: Deploy to GitHub pages 🚀
