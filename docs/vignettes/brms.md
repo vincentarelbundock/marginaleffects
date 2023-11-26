@@ -686,8 +686,8 @@ predictions(
     by = "x")
 #> 
 #>  x Estimate 2.5 % 97.5 %
-#>  0    0.451 0.339  0.567
-#>  1    0.551 0.435  0.661
+#>  0    0.453 0.342  0.568
+#>  1    0.552 0.437  0.661
 #> 
 #> Columns: x, estimate, conf.low, conf.high 
 #> Type:  response
@@ -704,7 +704,7 @@ avg_comparisons(
     sample_new_levels = "gaussian")
 #> 
 #>  Term Contrast Estimate  2.5 % 97.5 %
-#>     x    1 - 0   0.0964 0.0477  0.164
+#>     x    1 - 0   0.0962 0.0462  0.161
 #> 
 #> Columns: term, contrast, estimate, conf.low, conf.high 
 #> Type:  response
@@ -725,7 +725,7 @@ bm <- brmsmargins(
   effects = "integrateoutRE")
 bm$ContrastSummary |> data.frame()
 #>            M        Mdn         LL        UL PercentROPE PercentMID   CI CIType ROPE  MID Label
-#> 1 0.09878179 0.09703761 0.04804325 0.1629987          NA         NA 0.95    ETI <NA> <NA> AME x
+#> 1 0.09929363 0.09740837 0.04832328 0.1613965          NA         NA 0.95    ETI <NA> <NA> AME x
 ```
 
 See the [alternative software vignette](alternative_software.html) for

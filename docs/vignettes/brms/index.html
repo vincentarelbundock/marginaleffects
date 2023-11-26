@@ -2064,8 +2064,8 @@ forward the <code>allow_new_levels</code> and <code>sample_new_levels</code> arg
 </span><span id="__span-34-6"><a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a><span class="w">    </span><span class="n">by</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;x&quot;</span><span class="p">)</span>
 </span><span id="__span-34-7"><a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a><span class="c1">#&gt; </span>
 </span><span id="__span-34-8"><a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a><span class="c1">#&gt;  x Estimate 2.5 % 97.5 %</span>
-</span><span id="__span-34-9"><a id="__codelineno-34-9" name="__codelineno-34-9" href="#__codelineno-34-9"></a><span class="c1">#&gt;  0    0.451 0.339  0.567</span>
-</span><span id="__span-34-10"><a id="__codelineno-34-10" name="__codelineno-34-10" href="#__codelineno-34-10"></a><span class="c1">#&gt;  1    0.551 0.435  0.661</span>
+</span><span id="__span-34-9"><a id="__codelineno-34-9" name="__codelineno-34-9" href="#__codelineno-34-9"></a><span class="c1">#&gt;  0    0.453 0.342  0.568</span>
+</span><span id="__span-34-10"><a id="__codelineno-34-10" name="__codelineno-34-10" href="#__codelineno-34-10"></a><span class="c1">#&gt;  1    0.552 0.437  0.661</span>
 </span><span id="__span-34-11"><a id="__codelineno-34-11" name="__codelineno-34-11" href="#__codelineno-34-11"></a><span class="c1">#&gt; </span>
 </span><span id="__span-34-12"><a id="__codelineno-34-12" name="__codelineno-34-12" href="#__codelineno-34-12"></a><span class="c1">#&gt; Columns: x, estimate, conf.low, conf.high </span>
 </span><span id="__span-34-13"><a id="__codelineno-34-13" name="__codelineno-34-13" href="#__codelineno-34-13"></a><span class="c1">#&gt; Type:  response</span>
@@ -2079,7 +2079,7 @@ too. For instance,</p>
 </span><span id="__span-35-5"><a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a><span class="w">    </span><span class="n">sample_new_levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;gaussian&quot;</span><span class="p">)</span>
 </span><span id="__span-35-6"><a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a><span class="c1">#&gt; </span>
 </span><span id="__span-35-7"><a id="__codelineno-35-7" name="__codelineno-35-7" href="#__codelineno-35-7"></a><span class="c1">#&gt;  Term Contrast Estimate  2.5 % 97.5 %</span>
-</span><span id="__span-35-8"><a id="__codelineno-35-8" name="__codelineno-35-8" href="#__codelineno-35-8"></a><span class="c1">#&gt;     x    1 - 0   0.0964 0.0477  0.164</span>
+</span><span id="__span-35-8"><a id="__codelineno-35-8" name="__codelineno-35-8" href="#__codelineno-35-8"></a><span class="c1">#&gt;     x    1 - 0   0.0962 0.0462  0.161</span>
 </span><span id="__span-35-9"><a id="__codelineno-35-9" name="__codelineno-35-9" href="#__codelineno-35-9"></a><span class="c1">#&gt; </span>
 </span><span id="__span-35-10"><a id="__codelineno-35-10" name="__codelineno-35-10" href="#__codelineno-35-10"></a><span class="c1">#&gt; Columns: term, contrast, estimate, conf.low, conf.high </span>
 </span><span id="__span-35-11"><a id="__codelineno-35-11" name="__codelineno-35-11" href="#__codelineno-35-11"></a><span class="c1">#&gt; Type:  response</span>
@@ -2097,7 +2097,7 @@ variations due to different random seeds):</p>
 </span><span id="__span-36-9"><a id="__codelineno-36-9" name="__codelineno-36-9" href="#__codelineno-36-9"></a><span class="w">  </span><span class="n">effects</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;integrateoutRE&quot;</span><span class="p">)</span>
 </span><span id="__span-36-10"><a id="__codelineno-36-10" name="__codelineno-36-10" href="#__codelineno-36-10"></a><span class="n">bm</span><span class="o">$</span><span class="n">ContrastSummary</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="nf">data.frame</span><span class="p">()</span>
 </span><span id="__span-36-11"><a id="__codelineno-36-11" name="__codelineno-36-11" href="#__codelineno-36-11"></a><span class="c1">#&gt;            M        Mdn         LL        UL PercentROPE PercentMID   CI CIType ROPE  MID Label</span>
-</span><span id="__span-36-12"><a id="__codelineno-36-12" name="__codelineno-36-12" href="#__codelineno-36-12"></a><span class="c1">#&gt; 1 0.09878179 0.09703761 0.04804325 0.1629987          NA         NA 0.95    ETI &lt;NA&gt; &lt;NA&gt; AME x</span>
+</span><span id="__span-36-12"><a id="__codelineno-36-12" name="__codelineno-36-12" href="#__codelineno-36-12"></a><span class="c1">#&gt; 1 0.09929363 0.09740837 0.04832328 0.1613965          NA         NA 0.95    ETI &lt;NA&gt; &lt;NA&gt; AME x</span>
 </span></code></pre></div>
 <p>See the <a href="alternative_software.html">alternative software vignette</a> for
 more information on <code>brmsmargins</code>.</p>

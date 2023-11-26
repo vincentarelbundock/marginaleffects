@@ -298,7 +298,7 @@ bootstrap
 ```
 
                                estimate std.error conf.low conf.high
-    1 Treatment - No Treatment 3.517374 0.4797079 2.577164  4.457584
+    1 Treatment - No Treatment 3.517374 0.4988764 2.539594  4.495154
 
 The results are close to those that we obtained with `comparisons()`,
 but the confidence interval differs slightly because of the difference

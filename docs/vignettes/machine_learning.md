@@ -113,23 +113,23 @@ modelsummary(
   coef_rename = coef_rename)
 ```
 
-<div id="nvyrwhuusv" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#nvyrwhuusv table {
+<div id="fhihiqobdj" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#fhihiqobdj table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#nvyrwhuusv thead, #nvyrwhuusv tbody, #nvyrwhuusv tfoot, #nvyrwhuusv tr, #nvyrwhuusv td, #nvyrwhuusv th {
+#fhihiqobdj thead, #fhihiqobdj tbody, #fhihiqobdj tfoot, #fhihiqobdj tr, #fhihiqobdj td, #fhihiqobdj th {
   border-style: none;
 }
 
-#nvyrwhuusv p {
+#fhihiqobdj p {
   margin: 0;
   padding: 0;
 }
 
-#nvyrwhuusv .gt_table {
+#fhihiqobdj .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -155,12 +155,12 @@ modelsummary(
   border-left-color: #D3D3D3;
 }
 
-#nvyrwhuusv .gt_caption {
+#fhihiqobdj .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#nvyrwhuusv .gt_title {
+#fhihiqobdj .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -172,7 +172,7 @@ modelsummary(
   border-bottom-width: 0;
 }
 
-#nvyrwhuusv .gt_subtitle {
+#fhihiqobdj .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -184,7 +184,7 @@ modelsummary(
   border-top-width: 0;
 }
 
-#nvyrwhuusv .gt_heading {
+#fhihiqobdj .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -196,13 +196,13 @@ modelsummary(
   border-right-color: #D3D3D3;
 }
 
-#nvyrwhuusv .gt_bottom_border {
+#fhihiqobdj .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#nvyrwhuusv .gt_col_headings {
+#fhihiqobdj .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -217,7 +217,7 @@ modelsummary(
   border-right-color: #D3D3D3;
 }
 
-#nvyrwhuusv .gt_col_heading {
+#fhihiqobdj .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -237,7 +237,7 @@ modelsummary(
   overflow-x: hidden;
 }
 
-#nvyrwhuusv .gt_column_spanner_outer {
+#fhihiqobdj .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -249,15 +249,15 @@ modelsummary(
   padding-right: 4px;
 }
 
-#nvyrwhuusv .gt_column_spanner_outer:first-child {
+#fhihiqobdj .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#nvyrwhuusv .gt_column_spanner_outer:last-child {
+#fhihiqobdj .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#nvyrwhuusv .gt_column_spanner {
+#fhihiqobdj .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -269,11 +269,11 @@ modelsummary(
   width: 100%;
 }
 
-#nvyrwhuusv .gt_spanner_row {
+#fhihiqobdj .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#nvyrwhuusv .gt_group_heading {
+#fhihiqobdj .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -299,7 +299,7 @@ modelsummary(
   text-align: left;
 }
 
-#nvyrwhuusv .gt_empty_group_heading {
+#fhihiqobdj .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -314,15 +314,15 @@ modelsummary(
   vertical-align: middle;
 }
 
-#nvyrwhuusv .gt_from_md > :first-child {
+#fhihiqobdj .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#nvyrwhuusv .gt_from_md > :last-child {
+#fhihiqobdj .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#nvyrwhuusv .gt_row {
+#fhihiqobdj .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -341,7 +341,7 @@ modelsummary(
   overflow-x: hidden;
 }
 
-#nvyrwhuusv .gt_stub {
+#fhihiqobdj .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -354,7 +354,7 @@ modelsummary(
   padding-right: 5px;
 }
 
-#nvyrwhuusv .gt_stub_row_group {
+#fhihiqobdj .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -368,15 +368,15 @@ modelsummary(
   vertical-align: top;
 }
 
-#nvyrwhuusv .gt_row_group_first td {
+#fhihiqobdj .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#nvyrwhuusv .gt_row_group_first th {
+#fhihiqobdj .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#nvyrwhuusv .gt_summary_row {
+#fhihiqobdj .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -386,16 +386,16 @@ modelsummary(
   padding-right: 5px;
 }
 
-#nvyrwhuusv .gt_first_summary_row {
+#fhihiqobdj .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#nvyrwhuusv .gt_first_summary_row.thick {
+#fhihiqobdj .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#nvyrwhuusv .gt_last_summary_row {
+#fhihiqobdj .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -405,7 +405,7 @@ modelsummary(
   border-bottom-color: #D3D3D3;
 }
 
-#nvyrwhuusv .gt_grand_summary_row {
+#fhihiqobdj .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -415,7 +415,7 @@ modelsummary(
   padding-right: 5px;
 }
 
-#nvyrwhuusv .gt_first_grand_summary_row {
+#fhihiqobdj .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -425,7 +425,7 @@ modelsummary(
   border-top-color: #D3D3D3;
 }
 
-#nvyrwhuusv .gt_last_grand_summary_row_top {
+#fhihiqobdj .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -435,11 +435,11 @@ modelsummary(
   border-bottom-color: #D3D3D3;
 }
 
-#nvyrwhuusv .gt_striped {
+#fhihiqobdj .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#nvyrwhuusv .gt_table_body {
+#fhihiqobdj .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -448,7 +448,7 @@ modelsummary(
   border-bottom-color: #D3D3D3;
 }
 
-#nvyrwhuusv .gt_footnotes {
+#fhihiqobdj .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -462,7 +462,7 @@ modelsummary(
   border-right-color: #D3D3D3;
 }
 
-#nvyrwhuusv .gt_footnote {
+#fhihiqobdj .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -471,7 +471,7 @@ modelsummary(
   padding-right: 5px;
 }
 
-#nvyrwhuusv .gt_sourcenotes {
+#fhihiqobdj .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -485,7 +485,7 @@ modelsummary(
   border-right-color: #D3D3D3;
 }
 
-#nvyrwhuusv .gt_sourcenote {
+#fhihiqobdj .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -493,63 +493,63 @@ modelsummary(
   padding-right: 5px;
 }
 
-#nvyrwhuusv .gt_left {
+#fhihiqobdj .gt_left {
   text-align: left;
 }
 
-#nvyrwhuusv .gt_center {
+#fhihiqobdj .gt_center {
   text-align: center;
 }
 
-#nvyrwhuusv .gt_right {
+#fhihiqobdj .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#nvyrwhuusv .gt_font_normal {
+#fhihiqobdj .gt_font_normal {
   font-weight: normal;
 }
 
-#nvyrwhuusv .gt_font_bold {
+#fhihiqobdj .gt_font_bold {
   font-weight: bold;
 }
 
-#nvyrwhuusv .gt_font_italic {
+#fhihiqobdj .gt_font_italic {
   font-style: italic;
 }
 
-#nvyrwhuusv .gt_super {
+#fhihiqobdj .gt_super {
   font-size: 65%;
 }
 
-#nvyrwhuusv .gt_footnote_marks {
+#fhihiqobdj .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#nvyrwhuusv .gt_asterisk {
+#fhihiqobdj .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#nvyrwhuusv .gt_indent_1 {
+#fhihiqobdj .gt_indent_1 {
   text-indent: 5px;
 }
 
-#nvyrwhuusv .gt_indent_2 {
+#fhihiqobdj .gt_indent_2 {
   text-indent: 10px;
 }
 
-#nvyrwhuusv .gt_indent_3 {
+#fhihiqobdj .gt_indent_3 {
   text-indent: 15px;
 }
 
-#nvyrwhuusv .gt_indent_4 {
+#fhihiqobdj .gt_indent_4 {
   text-indent: 20px;
 }
 
-#nvyrwhuusv .gt_indent_5 {
+#fhihiqobdj .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -580,7 +580,7 @@ data-quarto-table-cell-role="th" scope="col">XGBoost</th>
 <td class="gt_row gt_left" headers="">+1</td>
 <td class="gt_row gt_left" headers="">female</td>
 <td class="gt_row gt_center" headers="Logit">-0.101</td>
-<td class="gt_row gt_center" headers="Random Forest">-0.079</td>
+<td class="gt_row gt_center" headers="Random Forest">-0.078</td>
 <td class="gt_row gt_center" headers="XGBoost">-0.098</td>
 </tr>
 <tr class="even">
@@ -596,7 +596,7 @@ data-quarto-table-cell-role="th" scope="col">XGBoost</th>
 <td class="gt_row gt_left" headers=""></td>
 <td class="gt_row gt_left" headers="">male</td>
 <td class="gt_row gt_center" headers="Logit">0.101</td>
-<td class="gt_row gt_center" headers="Random Forest">0.079</td>
+<td class="gt_row gt_center" headers="Random Forest">0.078</td>
 <td class="gt_row gt_center" headers="XGBoost">0.098</td>
 </tr>
 <tr class="even">
@@ -612,7 +612,7 @@ data-quarto-table-cell-role="th" scope="col">XGBoost</th>
 <td class="gt_row gt_left" headers="">Dream - Biscoe</td>
 <td class="gt_row gt_left" headers="">female</td>
 <td class="gt_row gt_center" headers="Logit">-0.044</td>
-<td class="gt_row gt_center" headers="Random Forest">0.010</td>
+<td class="gt_row gt_center" headers="Random Forest">0.005</td>
 <td class="gt_row gt_center" headers="XGBoost">-0.004</td>
 </tr>
 <tr class="even">
@@ -628,7 +628,7 @@ data-quarto-table-cell-role="th" scope="col">XGBoost</th>
 <td class="gt_row gt_left" headers=""></td>
 <td class="gt_row gt_left" headers="">male</td>
 <td class="gt_row gt_center" headers="Logit">0.044</td>
-<td class="gt_row gt_center" headers="Random Forest">-0.010</td>
+<td class="gt_row gt_center" headers="Random Forest">-0.005</td>
 <td class="gt_row gt_center" headers="XGBoost">0.004</td>
 </tr>
 <tr class="even">
@@ -644,7 +644,7 @@ data-quarto-table-cell-role="th" scope="col">XGBoost</th>
 <td class="gt_row gt_left" headers="">Torgersen - Biscoe</td>
 <td class="gt_row gt_left" headers="">female</td>
 <td class="gt_row gt_center" headers="Logit">0.015</td>
-<td class="gt_row gt_center" headers="Random Forest">-0.058</td>
+<td class="gt_row gt_center" headers="Random Forest">-0.061</td>
 <td class="gt_row gt_center" headers="XGBoost">0.008</td>
 </tr>
 <tr class="even">
@@ -660,7 +660,7 @@ data-quarto-table-cell-role="th" scope="col">XGBoost</th>
 <td class="gt_row gt_left" headers=""></td>
 <td class="gt_row gt_left" headers="">male</td>
 <td class="gt_row gt_center" headers="Logit">-0.015</td>
-<td class="gt_row gt_center" headers="Random Forest">0.058</td>
+<td class="gt_row gt_center" headers="Random Forest">0.061</td>
 <td class="gt_row gt_center" headers="XGBoost">-0.008</td>
 </tr>
 <tr class="even">
@@ -676,7 +676,7 @@ data-quarto-table-cell-role="th" scope="col">XGBoost</th>
 <td class="gt_row gt_left" headers="">Chinstrap - Adelie</td>
 <td class="gt_row gt_left" headers="">female</td>
 <td class="gt_row gt_center" headers="Logit">0.562</td>
-<td class="gt_row gt_center" headers="Random Forest">0.155</td>
+<td class="gt_row gt_center" headers="Random Forest">0.166</td>
 <td class="gt_row gt_center" headers="XGBoost">0.441</td>
 </tr>
 <tr class="even">
@@ -692,7 +692,7 @@ data-quarto-table-cell-role="th" scope="col">XGBoost</th>
 <td class="gt_row gt_left" headers=""></td>
 <td class="gt_row gt_left" headers="">male</td>
 <td class="gt_row gt_center" headers="Logit">-0.562</td>
-<td class="gt_row gt_center" headers="Random Forest">-0.155</td>
+<td class="gt_row gt_center" headers="Random Forest">-0.166</td>
 <td class="gt_row gt_center" headers="XGBoost">-0.441</td>
 </tr>
 <tr class="even">
@@ -708,7 +708,7 @@ data-quarto-table-cell-role="th" scope="col">XGBoost</th>
 <td class="gt_row gt_left" headers="">Gentoo - Adelie</td>
 <td class="gt_row gt_left" headers="">female</td>
 <td class="gt_row gt_center" headers="Logit">0.453</td>
-<td class="gt_row gt_center" headers="Random Forest">0.124</td>
+<td class="gt_row gt_center" headers="Random Forest">0.117</td>
 <td class="gt_row gt_center" headers="XGBoost">0.361</td>
 </tr>
 <tr class="even">
@@ -724,7 +724,7 @@ data-quarto-table-cell-role="th" scope="col">XGBoost</th>
 <td class="gt_row gt_left" headers=""></td>
 <td class="gt_row gt_left" headers="">male</td>
 <td class="gt_row gt_center" headers="Logit">-0.453</td>
-<td class="gt_row gt_center" headers="Random Forest">-0.124</td>
+<td class="gt_row gt_center" headers="Random Forest">-0.117</td>
 <td class="gt_row gt_center" headers="XGBoost">-0.361</td>
 </tr>
 <tr class="even">
@@ -807,31 +807,31 @@ avg_comparisons(forest, newdata = bikes)
 
 
            Term      Contrast  Estimate
-     count      +1             0.00e+00
-     holiday    False - True   1.22e+01
-     humidity   +1            -2.21e+01
-     month      +1             4.13e+00
-     season     spring - fall -3.21e+01
-     season     summer - fall -9.52e+00
-     season     winter - fall  2.06e+00
-     temp       +1             2.41e+00
-     weather    misty - clear -8.27e+00
-     weather    rain - clear  -5.88e+01
-     weekday    Fri - Sun      6.64e+01
-     weekday    Mon - Sun      7.44e+01
-     weekday    Sat - Sun      2.02e+01
-     weekday    Thu - Sun      8.25e+01
-     weekday    Tue - Sun      8.05e+01
-     weekday    Wed - Sun      8.31e+01
-     windspeed  +1             8.08e-04
-     workingday False - True  -1.95e+02
-     year       1 - 0          9.86e+01
+     count      +1               0.0000
+     holiday    False - True    13.5072
+     humidity   +1             -20.3032
+     month      +1               4.1016
+     season     spring - fall  -32.9716
+     season     summer - fall   -9.1242
+     season     winter - fall    1.3956
+     temp       +1               2.4021
+     weather    misty - clear   -7.7640
+     weather    rain - clear   -59.6064
+     weekday    Fri - Sun       65.3371
+     weekday    Mon - Sun       73.8316
+     weekday    Sat - Sun       16.6437
+     weekday    Thu - Sun       81.4687
+     weekday    Tue - Sun       79.9295
+     weekday    Wed - Sun       81.8243
+     windspeed  +1              -0.0167
+     workingday False - True  -191.7872
+     year       1 - 0           98.4039
 
     Columns: term, contrast, estimate 
     Type:  response 
 
 These results are easy to interpret: An increase of 1 degree Celsius in
-the temperature is associated with an increase of 2.415 bikes rented per
+the temperature is associated with an increase of 2.402 bikes rented per
 hour.
 
 We could obtain the same result manually as follows:
@@ -842,7 +842,7 @@ hi <- transform(bikes, temp = temp + 0.5)
 mean(predict(forest, newdata = hi) - predict(forest, newdata = lo))
 ```
 
-    [1] 3.560233
+    [1] 3.405727
 
 ## Simultaneous changes
 
@@ -862,12 +862,12 @@ avg_comparisons(
 
 
      Estimate     C: season C: temp    C: weather
-       -38.16 spring - fall      +1 misty - clear
-       -79.21 spring - fall      +1 rain - clear 
-       -16.12 summer - fall      +1 misty - clear
-       -64.65 summer - fall      +1 rain - clear 
-        -4.63 winter - fall      +1 misty - clear
-       -57.48 winter - fall      +1 rain - clear 
+        -37.5 spring - fall      +1 misty - clear
+        -80.6 spring - fall      +1 rain - clear 
+        -15.1 summer - fall      +1 misty - clear
+        -64.9 summer - fall      +1 rain - clear 
+         -4.5 winter - fall      +1 misty - clear
+        -58.7 winter - fall      +1 rain - clear 
 
     Columns: term, contrast_season, contrast_temp, contrast_weather, estimate 
     Type:  response 

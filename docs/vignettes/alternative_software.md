@@ -1180,7 +1180,7 @@ marginal effects:
 avg_comparisons(forest, variables = list(temp = 1), newdata = bikes)
 #> 
 #>  Term Contrast Estimate
-#>  temp       +1     2.44
+#>  temp       +1     2.33
 #> 
 #> Columns: term, contrast, estimate 
 #> Type:  response
@@ -1196,7 +1196,7 @@ fmeffects::fme(
     target = "count",
     feature = "temp",
     step.size = 1)$ame
-#> [1] 2.435644
+#> [1] 2.331442
 ```
 
 Another interesting feature of `fmeffects` is the ability treat
@@ -1220,7 +1220,7 @@ avg_comparisons(
 )
 #> 
 #>     Term Contrast Estimate
-#>  weather   custom     2.19
+#>  weather   custom     1.77
 #> 
 #> Columns: term, contrast, estimate 
 #> Type:  response
