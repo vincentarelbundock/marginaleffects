@@ -32,11 +32,14 @@ jobs:
       - name: Bootstrap
         run: ./run.sh bootstrap
 
+      - name: Build site
+        run: |
+          install.packages(".", repos = NULL, type = "source")
+          altdoc::render_docs(parallel = TRUE, freeze = FALSE)
+        shell: Rscript {0}
+
       - name: Dependencies
         run: ./run.sh install_all
-
-      - name: altdoc dev
-        run: ./run.sh install_github etiennebacher/altdoc
 
       - name: Install Mkdocs and its dependencies
         run: |
@@ -47,12 +50,6 @@ jobs:
       - name: Install Material for Mkdocs
         run: |
           python3 -m pip install mkdocs-material   # install material theme
-
-      - name: Build site
-        run: |
-          install.packages(".", repos = NULL, type = "source")
-          altdoc::render_docs(parallel = TRUE, freeze = FALSE)
-        shell: Rscript {0}
 
       - name: Deploy to GitHub pages 🚀
         if: github.event_name != 'pull_request'
