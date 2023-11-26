@@ -26,19 +26,14 @@ jobs:
 
       - uses: quarto-dev/quarto-actions/setup@v2
 
-      - uses: r-lib/actions/setup-r@v2
-        with:
-          use-public-rspm: true
+      - name: Get Script
+        run: curl -OLs https://eddelbuettel.github.io/r-ci/run.sh && chmod 0755 run.sh
 
-      - uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          extra-packages: any::altdoc, local::.
+      - name: Bootstrap
+        run: ./run.sh bootstrap
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.11
-          architecture: x64
+      - name: Dependencies
+        run: ./run.sh install_all
 
       - name: Install Mkdocs and its dependencies
         run: |
@@ -52,7 +47,8 @@ jobs:
 
       - name: Build site
         run: |
-          altdoc::render_docs(parallel = TRUE)
+          install.packages(".", repos = NULL, type = "source")
+          altdoc::render_docs(parallel = TRUE, freeze = FALSE)
         shell: Rscript {0}
 
       - name: Deploy to GitHub pages 🚀
