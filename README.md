@@ -16,7 +16,7 @@
 [The Marginal Effects Zoo](https://marginaleffects.com/) is a free online book with over 30 chapters full of tutorials, case studies, and technical notes.
 
 <div align="center">
-<a href="vignettes/get_started/">
+<a href="https://marginaleffects.com/vignettes/get_started/">
     <img src="altdoc/images/get_started_button.svg" alt="get started button" width="150" />
 </a>
 </div>
