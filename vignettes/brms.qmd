@@ -841,7 +841,7 @@ comparisons(
     hypothesis = "b2 - b1 = 0.2")
 ```
 
-The `hypotheses` function of the `brms` package can also perform non-linear hypothesis testing, and it generates some convenient statistics and summaries. This function accepts a D-by-P matrix of draws from the posterior distribution, where D is the number of draws and N is the number of parameters. We can obtain such a matrix using the `posterior_draws(x, shape = "DxP")`, and we can simply add a couple calls to our chain of operations: 
+The `hypothesis()` function of the `brms` package can also perform non-linear hypothesis testing, and it generates some convenient statistics and summaries. This function accepts a D-by-P matrix of draws from the posterior distribution, where D is the number of draws and N is the number of parameters. We can obtain such a matrix using the `posterior_draws(x, shape = "DxP")`, and we can simply add a couple calls to our chain of operations: 
 
 ```{r}
 avg_comparisons(mod, comparison = "differenceavg") |>
