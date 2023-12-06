@@ -24,3 +24,4 @@ inst/tinytest/stata/databases/.*\.dta
 man-roxygen
 .*_files
 ^altdoc$
+^_quarto$

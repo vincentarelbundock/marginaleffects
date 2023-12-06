@@ -1,6 +1,11 @@
----
-title: "Machine Learning"
----
+
+# Machine Learning
+
+```{r}
+#| include: false
+options(modelsummary_factory_default = "gt")
+```
+
 
 `marginaleffects` offers several "model-agnostic" functions to interpret statistical and machine learning models. This vignette highlights how the package can be used to extract meaningful insights from models trained using the `mlr3` and `tidymodels` frameworks.
 
@@ -93,6 +98,7 @@ modelsummary(
 In this example, we use the `bikes` dataset supplied by the `fmeffects` package to train a random forest model predicting the number of bikes rented per hour. We then use `marginaleffects` to interpret the results of the model.
 
 ```{r}
+library(mlr3verse)
 data("bikes", package = "fmeffects")
 
 task <- as_task_regr(x = bikes, id = "bikes", target = "count")

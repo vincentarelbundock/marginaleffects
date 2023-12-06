@@ -19,3 +19,5 @@ book/articles/*.html
 book/articles/*_files/
 book/articles/*_cache/
 altdoc/freeze.rds
+^_quarto$
+_quarto

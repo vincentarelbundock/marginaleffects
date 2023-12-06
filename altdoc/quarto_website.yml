@@ -1,0 +1,84 @@
+project:
+  type: book
+
+book:
+  title: "The Marginal Effects Zoo"
+  reader-mode: true
+  sidebar:
+    collapse-level: 1
+  navbar:
+    search: true
+    right:
+      - icon: github
+        href: $ALTDOC_PACKAGE_URL_GITHUB
+        aria-label: $ALTDOC_PACKAGE_NAME GitHub
+  chapters:
+    - text: Home
+      file: index.qmd
+    - text: Get started
+      file: vignettes/get_started.qmd
+    - part: Tutorials
+      chapters:
+        - vignettes/get_started.qmd
+        - vignettes/predictions.qmd
+        - vignettes/comparisons.qmd
+        - vignettes/slopes.qmd
+        - vignettes/hypothesis.qmd
+        - vignettes/plot.qmd
+    - part: Case studies
+      chapters:
+        - vignettes/logit.qmd
+        - vignettes/get_started.qmd
+        - vignettes/bootstrap.qmd
+        - vignettes/categorical.qmd
+        - vignettes/conformal.qmd
+        - vignettes/elasticity.qmd
+        - vignettes/equivalence.qmd
+        - vignettes/experiments.qmd
+        - vignettes/gam.qmd
+        - vignettes/gcomputation.qmd
+        - vignettes/heterogeneity.qmd
+        - vignettes/ipw.qmd
+        - vignettes/lme4.qmd
+        - vignettes/logit.qmd
+        - vignettes/marginalmeans.qmd
+        - vignettes/matching.qmd
+        - vignettes/mrp.qmd
+        - vignettes/multiple_imputation.qmd
+        - vignettes/svalues.qmd
+    - part: Technical notes
+      chapters:
+        - vignettes/alternative_software.qmd
+        - vignettes/extensions.qmd
+        - vignettes/links.qmd
+        - vignettes/performance.qmd
+        - vignettes/python.qmd
+        - vignettes/supported_models.qmd
+        - vignettes/tables.qmd
+        - vignettes/uncertainty.qmd
+        - vignettes/faq.qmd
+    - part: Functions
+      chapters:
+        - man/predictions.qmd
+        - man/comparisons.qmd
+        - man/slopes.qmd
+        - man/plot_comparisons.qmd
+        - man/plot_predictions.qmd
+        - man/plot_slopes.qmd
+        - man/hypotheses.qmd
+        - man/inferences.qmd
+        - man/marginal_means.qmd
+        - man/posterior_draws.qmd
+        - man/datagrid.qmd
+        - man/print.marginaleffects.qmd
+    - $ALTDOC_NEWS
+    - $ALTDOC_CHANGELOG
+    - $ALTDOC_LICENSE
+    - $ALTDOC_LICENCE
+    - $ALTDOC_CODE_OF_CONDUCT
+    - $ALTDOC_CITATION
+
+format:
+  html:
+    theme: cosmo
+    number-sections: false
