@@ -19,63 +19,60 @@ website:
     style: "docked"
     search: true
     contents:
-      # - vignettes/get_started.qmd
+      - vignettes/get_started.qmd
       - section: Tutorials
         contents:
           - vignettes/predictions.qmd
           - vignettes/comparisons.qmd
-          # - vignettes/slopes.qmd
-      #     - vignettes/hypothesis.qmd
-      #     - vignettes/plot.qmd
-      # - section: Case studies
-      #   collapse-level: 1
-      #   contents:
-      #     - vignettes/brms.qmd
-      #     - vignettes/bootstrap.qmd
-      #     - vignettes/categorical.qmd
-      #     - vignettes/conformal.qmd
-      #     - vignettes/elasticity.qmd
-      #     - vignettes/equivalence.qmd
-      #     - vignettes/experiments.qmd
-      #     - vignettes/gam.qmd
-      #     - vignettes/gcomputation.qmd
-      #     - vignettes/heterogeneity.qmd
-      #     - vignettes/ipw.qmd
-      #     - vignettes/logit.qmd
-      #     - vignettes/lme4.qmd
-      #     - vignettes/machine_learning.qmd
-      #     - vignettes/marginalmeans.qmd
-      #     - vignettes/matching.qmd
-      #     - vignettes/mrp.qmd
-      #     - vignettes/multiple_imputation.qmd
-      #     - vignettes/svalues.qmd
-      # - section: Technical notes
-      #   collapse-level: 1
-      #   contents:
-      #     - vignettes/alternative_software.qmd
-      #     - vignettes/extensions.qmd
-      #     - vignettes/links.qmd
-      #     - vignettes/performance.qmd
-      #     - vignettes/python.qmd
-      #     - vignettes/supported_models.qmd
-      #     - vignettes/tables.qmd
-      #     - vignettes/uncertainty.qmd
-      #     - vignettes/faq.qmd
-      # - section: Functions
-      #   collapse-level: 1
-      #   contents:
-      #     - man/predictions.qmd
-      #     - man/comparisons.qmd
-      #     - man/slopes.qmd
-      #     - man/plot_predictions.qmd
-      #     - man/plot_comparisons.qmd
-      #     - man/plot_slopes.qmd
-      #     - man/hypotheses.qmd
-      #     - man/inferences.qmd
-      #     - man/marginal_means.qmd
-      #     - man/posterior_draws.qmd
-      #     - man/datagrid.qmd
-      #     - man/print.marginaleffects.qmd
+          - vignettes/slopes.qmd
+          - vignettes/hypothesis.qmd
+          - vignettes/plot.qmd
+      - section: Case studies
+        contents:
+          - vignettes/brms.qmd
+          - vignettes/bootstrap.qmd
+          - vignettes/categorical.qmd
+          - vignettes/conformal.qmd
+          - vignettes/elasticity.qmd
+          - vignettes/equivalence.qmd
+          - vignettes/experiments.qmd
+          - vignettes/gam.qmd
+          - vignettes/gcomputation.qmd
+          - vignettes/heterogeneity.qmd
+          - vignettes/ipw.qmd
+          - vignettes/logit.qmd
+          - vignettes/lme4.qmd
+          - vignettes/machine_learning.qmd
+          - vignettes/marginalmeans.qmd
+          - vignettes/matching.qmd
+          - vignettes/mrp.qmd
+          - vignettes/multiple_imputation.qmd
+          - vignettes/svalues.qmd
+      - section: Technical notes
+        contents:
+          - vignettes/alternative_software.qmd
+          - vignettes/extensions.qmd
+          - vignettes/links.qmd
+          - vignettes/performance.qmd
+          - vignettes/python.qmd
+          - vignettes/supported_models.qmd
+          - vignettes/tables.qmd
+          - vignettes/uncertainty.qmd
+          - vignettes/faq.qmd
+      - section: Functions
+        contents:
+          - man/predictions.qmd
+          - man/comparisons.qmd
+          - man/slopes.qmd
+          - man/plot_predictions.qmd
+          - man/plot_comparisons.qmd
+          - man/plot_slopes.qmd
+          - man/hypotheses.qmd
+          - man/inferences.qmd
+          - man/marginal_means.qmd
+          - man/posterior_draws.qmd
+          - man/datagrid.qmd
+          - man/print.marginaleffects.qmd
       - $ALTDOC_NEWS
       - $ALTDOC_LICENSE
       - $ALTDOC_CITATION
