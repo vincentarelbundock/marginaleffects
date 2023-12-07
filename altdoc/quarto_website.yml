@@ -1,83 +1,93 @@
 project:
-  type: book
+  type: website
 
-book:
+website:
   title: "The Marginal Effects Zoo"
+  favicon: "images/favicon.png"
   reader-mode: true
-  sidebar:
-    collapse-level: 1
+  page-navigation: true
   navbar:
     search: true
+    logo: images/marginaleffects_icon.png
+    logo-alt: "marginaleffects logo"
     right:
       - icon: github
         href: $ALTDOC_PACKAGE_URL_GITHUB
         aria-label: $ALTDOC_PACKAGE_NAME GitHub
-  chapters:
-    - text: Home
-      file: index.qmd
-    - text: Get started
-      file: vignettes/get_started.qmd
-    - part: Tutorials
-      chapters:
-        - vignettes/predictions.qmd
-        - vignettes/comparisons.qmd
-        - vignettes/slopes.qmd
-        - vignettes/hypothesis.qmd
-        - vignettes/plot.qmd
-    - part: Case studies
-      chapters:
-        - vignettes/brms.qmd
-        - vignettes/bootstrap.qmd
-        - vignettes/categorical.qmd
-        - vignettes/conformal.qmd
-        - vignettes/elasticity.qmd
-        - vignettes/equivalence.qmd
-        - vignettes/experiments.qmd
-        - vignettes/gam.qmd
-        - vignettes/gcomputation.qmd
-        - vignettes/heterogeneity.qmd
-        - vignettes/ipw.qmd
-        - vignettes/logit.qmd
-        - vignettes/lme4.qmd
-        - vignettes/machine_learning.qmd
-        - vignettes/marginalmeans.qmd
-        - vignettes/matching.qmd
-        - vignettes/mrp.qmd
-        - vignettes/multiple_imputation.qmd
-        - vignettes/svalues.qmd
-    - part: Technical notes
-      chapters:
-        - vignettes/alternative_software.qmd
-        - vignettes/extensions.qmd
-        - vignettes/links.qmd
-        - vignettes/performance.qmd
-        - vignettes/python.qmd
-        - vignettes/supported_models.qmd
-        - vignettes/tables.qmd
-        - vignettes/uncertainty.qmd
-        - vignettes/faq.qmd
-    - part: Functions
-      chapters:
-        - man/predictions.qmd
-        - man/comparisons.qmd
-        - man/slopes.qmd
-        - man/plot_predictions.qmd
-        - man/plot_comparisons.qmd
-        - man/plot_slopes.qmd
-        - man/hypotheses.qmd
-        - man/inferences.qmd
-        - man/marginal_means.qmd
-        - man/posterior_draws.qmd
-        - man/datagrid.qmd
-        - man/print.marginaleffects.qmd
-    - $ALTDOC_NEWS
-    - $ALTDOC_CHANGELOG
-    - $ALTDOC_LICENSE
-    - $ALTDOC_LICENCE
-    - $ALTDOC_CODE_OF_CONDUCT
-    - $ALTDOC_CITATION
+  sidebar:
+    collapse-level: 1
+    style: "docked"
+    search: true
+    contents:
+      # - vignettes/get_started.qmd
+      - section: Tutorials
+        contents:
+          - vignettes/predictions.qmd
+          - vignettes/comparisons.qmd
+          # - vignettes/slopes.qmd
+      #     - vignettes/hypothesis.qmd
+      #     - vignettes/plot.qmd
+      # - section: Case studies
+      #   collapse-level: 1
+      #   contents:
+      #     - vignettes/brms.qmd
+      #     - vignettes/bootstrap.qmd
+      #     - vignettes/categorical.qmd
+      #     - vignettes/conformal.qmd
+      #     - vignettes/elasticity.qmd
+      #     - vignettes/equivalence.qmd
+      #     - vignettes/experiments.qmd
+      #     - vignettes/gam.qmd
+      #     - vignettes/gcomputation.qmd
+      #     - vignettes/heterogeneity.qmd
+      #     - vignettes/ipw.qmd
+      #     - vignettes/logit.qmd
+      #     - vignettes/lme4.qmd
+      #     - vignettes/machine_learning.qmd
+      #     - vignettes/marginalmeans.qmd
+      #     - vignettes/matching.qmd
+      #     - vignettes/mrp.qmd
+      #     - vignettes/multiple_imputation.qmd
+      #     - vignettes/svalues.qmd
+      # - section: Technical notes
+      #   collapse-level: 1
+      #   contents:
+      #     - vignettes/alternative_software.qmd
+      #     - vignettes/extensions.qmd
+      #     - vignettes/links.qmd
+      #     - vignettes/performance.qmd
+      #     - vignettes/python.qmd
+      #     - vignettes/supported_models.qmd
+      #     - vignettes/tables.qmd
+      #     - vignettes/uncertainty.qmd
+      #     - vignettes/faq.qmd
+      # - section: Functions
+      #   collapse-level: 1
+      #   contents:
+      #     - man/predictions.qmd
+      #     - man/comparisons.qmd
+      #     - man/slopes.qmd
+      #     - man/plot_predictions.qmd
+      #     - man/plot_comparisons.qmd
+      #     - man/plot_slopes.qmd
+      #     - man/hypotheses.qmd
+      #     - man/inferences.qmd
+      #     - man/marginal_means.qmd
+      #     - man/posterior_draws.qmd
+      #     - man/datagrid.qmd
+      #     - man/print.marginaleffects.qmd
+      - $ALTDOC_NEWS
+      - $ALTDOC_LICENSE
+      - $ALTDOC_CITATION
 
 format:
   html:
-    theme: cosmo
-    number-sections: false
+    toc: true
+    theme:
+      light: cosmo
+    code-copy: true
+    code-overflow: wrap
+    grid:
+      sidebar-width: 250px
+      body-width: 900px
+      margin-width: 300px
