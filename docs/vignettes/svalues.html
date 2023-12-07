@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>The Marginal Effects Zoo</title>
+<title>The Marginal Effects Zoo – svalues</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,26 +20,62 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./images/favicon.png" rel="icon" type="image/png">
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../vignettes/alternative_software.html" rel="next">
+<link href="../vignettes/multiple_imputation.html" rel="prev">
+<link href="../images/favicon.png" rel="icon" type="image/png">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -67,6 +103,8 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -77,10 +115,10 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./images/marginaleffects_icon.png" alt="marginaleffects logo" class="navbar-logo">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../images/marginaleffects_icon.png" alt="marginaleffects logo" class="navbar-logo">
     </a>
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">The Marginal Effects Zoo</span>
     </a>
   </div>
@@ -111,7 +149,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../vignettes/svalues.html">S Values</a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -133,7 +171,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/get_started.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/get_started.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Get Started</span></a>
   </div>
 </li>
@@ -148,31 +186,31 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/predictions.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/predictions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Predictions</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/comparisons.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/comparisons.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Comparisons</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/slopes.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/slopes.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Slopes</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/hypothesis.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/hypothesis.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Hypothesis Tests</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/plot.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/plot.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Plots</span></a>
   </div>
 </li>
@@ -180,124 +218,124 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
  <span class="menu-text">Case studies</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/brms.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/brms.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Bayes</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/bootstrap.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/bootstrap.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Bootstrap &amp; Simulation</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/categorical.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/categorical.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Categorical outcomes</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/conformal.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/conformal.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Conformal prediction</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/elasticity.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/elasticity.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Elasticity</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/equivalence.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/equivalence.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Equivalence Tests</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/experiments.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/experiments.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Experiments</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/gam.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/gam.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">GAM</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/gcomputation.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/gcomputation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">G-Computation</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/heterogeneity.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/heterogeneity.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Heterogeneity</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/ipw.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/ipw.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Inverse Probability Weighting</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/logit.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/logit.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Logit</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/lme4.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/lme4.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Mixed Effects</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/machine_learning.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/machine_learning.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Machine Learning</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/marginalmeans.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/marginalmeans.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Marginal Means</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/matching.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/matching.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Matching</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/mrp.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/mrp.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">MrP</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/multiple_imputation.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/multiple_imputation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Missing Data</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/svalues.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/svalues.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">S Values</span></a>
   </div>
 </li>
@@ -314,55 +352,55 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/alternative_software.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/alternative_software.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Alternative Software</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/extensions.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/extensions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Extensions</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/links.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/links.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Links</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/performance.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/performance.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Performance</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/python.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/python.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Python</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/supported_models.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/supported_models.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Supported Models</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/tables.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/tables.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Tables</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/uncertainty.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/uncertainty.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Standard Errors</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/faq.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/faq.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">FAQ</span></a>
   </div>
 </li>
@@ -379,73 +417,73 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./man/predictions.html" class="sidebar-item-text sidebar-link">
+  <a href="../man/predictions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">predictions</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./man/comparisons.html" class="sidebar-item-text sidebar-link">
+  <a href="../man/comparisons.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">comparisons</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./man/slopes.html" class="sidebar-item-text sidebar-link">
+  <a href="../man/slopes.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">slopes</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./man/plot_predictions.html" class="sidebar-item-text sidebar-link">
+  <a href="../man/plot_predictions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">plot_predictions</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./man/plot_comparisons.html" class="sidebar-item-text sidebar-link">
+  <a href="../man/plot_comparisons.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">plot_comparisons</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./man/plot_slopes.html" class="sidebar-item-text sidebar-link">
+  <a href="../man/plot_slopes.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">plot_slopes</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./man/hypotheses.html" class="sidebar-item-text sidebar-link">
+  <a href="../man/hypotheses.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">hypotheses</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./man/inferences.html" class="sidebar-item-text sidebar-link">
+  <a href="../man/inferences.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">inferences</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./man/marginal_means.html" class="sidebar-item-text sidebar-link">
+  <a href="../man/marginal_means.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">marginal_means</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./man/posterior_draws.html" class="sidebar-item-text sidebar-link">
+  <a href="../man/posterior_draws.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">posterior_draws</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./man/datagrid.html" class="sidebar-item-text sidebar-link">
+  <a href="../man/datagrid.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">datagrid</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./man/print.marginaleffects.html" class="sidebar-item-text sidebar-link">
+  <a href="../man/print.marginaleffects.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">print.marginaleffects</span></a>
   </div>
 </li>
@@ -453,19 +491,19 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./NEWS.html" class="sidebar-item-text sidebar-link">
+  <a href="../NEWS.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">News</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./LICENSE.html" class="sidebar-item-text sidebar-link">
+  <a href="../LICENSE.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">License</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./CITATION.html" class="sidebar-item-text sidebar-link">
+  <a href="../CITATION.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Citation</span></a>
   </div>
 </li>
@@ -479,9 +517,7 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#why" id="toc-why" class="nav-link active" data-scroll-target="#why">Why?</a></li>
-  <li><a href="#what" id="toc-what" class="nav-link" data-scroll-target="#what">What?</a></li>
-  <li><a href="#how-to-help" id="toc-how-to-help" class="nav-link" data-scroll-target="#how-to-help">How to help</a></li>
+  <li><a href="#s-values" id="toc-s-values" class="nav-link active" data-scroll-target="#s-values">S Values</a></li>
   </ul>
 </nav>
     </div>
@@ -490,60 +526,58 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<p><img src="images/zoo_banner.png" class="img-fluid"></p>
-<section id="why" class="level2">
-<h2 class="anchored" data-anchor-id="why">Why?</h2>
-<p>Parameter estimates are often hard to interpret substantively, especially when they are generated by complex models with non-linear components, interactions, or transformations. Instead of reporting unintuitive parameters, data analysts would rather focus on simple quantities of interest, which have straightforward scientific interpretations. Unfortunately, meaningful estimands—and their standard errors—are often tedious to compute, and the terminology used to describe them varies tremendously across fields.</p>
-<p>These problems are compounded by the fact that modeling packages produce objects with very different structures and which hold different information. This means that end-users often have to write customized code to interpret the output of different models. This can lead to wasted effort, confusion, and mistakes, and it can hinder the implementation of best practices.</p>
-</section>
-<section id="what" class="level2">
-<h2 class="anchored" data-anchor-id="what">What?</h2>
-<p>This online book introduces a conceptual framework and software tools to facilitate the interpretation of a vast range of statistical models in <code>R</code> and <code>Python</code>.</p>
-<p>The tutorials presented here leverage the <code>marginaleffects</code> package for <code>R</code> and <code>Python</code>. This package supports over <a href="https://marginaleffects.com/vignettes/supported_models.html">100 classes</a> of statistical models, including linear, GLM, GAM, mixed-effects, bayesian, categorical outcomes, and more.</p>
-<p>With a single unified interface, users can compute and plot many quantities of interest, including:</p>
-<ul>
-<li>Predictions (aka fitted values or adjusted predictions)</li>
-<li>Comparisons such as risk differences, risk ratios, odds, etc.</li>
-<li>Slopes (aka marginal effects)</li>
-<li>Marginal means</li>
-<li>Linear and non-linear hypothesis tests</li>
-<li>Equivalence tests</li>
-<li>Uncertainty estimates using the delta method, bootstrapping, simulation, or conformal inference.</li>
-</ul>
-<p><a href="https://marginaleffects.com/">The Marginal Effects Zoo</a> is a free online book with over 30 chapters full of tutorials, case studies, and technical notes. It covers a wide range of topics, including how the <code>marginaleffects</code> package can facilitate the interpreation of analysis of:</p>
-<ul>
-<li>Experiments</li>
-<li>Machine learning models</li>
-<li>Causal inference with G-Computation</li>
-<li>Bayesian modeling</li>
-<li>Multilevel regression with post-stratification (MRP)</li>
-<li>Missing data imputation</li>
-<li>Matching</li>
-<li>Inverse probability weighting</li>
-<li>Conformal prediction</li>
-</ul>
-<p><a href="https://marginaleffects.com/vignettes/get_started.html">Get started by clicking here!</a></p>
-</section>
-<section id="how-to-help" class="level2">
-<h2 class="anchored" data-anchor-id="how-to-help">How to help</h2>
-<p>If you like this project, you can contribute in three main ways:</p>
+<section id="s-values" class="level1">
+<h1>S Values</h1>
+<p>The <em>S</em> value — “Shannon transform” or “binary surprisal value” — is a cognitive tool to help analysts make intuitive sense of p values <span class="citation" data-cites="RafGre2020">[@RafGre2020]</span>. It allows us to compare a p value to the outcome of a familiar game of chance.</p>
+<p>Consider this: We toss a coin 4 times to see if we can reject the null hypothesis that the coin toss is fair. If the null is true, the probability of drawing <em>Heads</em> on any single toss is <span class="math inline">\(\frac{1}{2}\)</span>. The probability of observing 4 <em>Heads</em> in a row is <span class="math inline">\(\left (\frac{1}{2} \right )^4=\frac{1}{16}=0.0625\)</span>. This probability characterizes the “surprise” caused by observing 4 straight heads in a world where the null holds, that is, where the coin toss is fair.</p>
+<p>Now consider a different exercise: We estimate a model and use <code>marginaleffects::hypotheses()</code> to test if two of the estimated coefficients are equal:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">transform</span>(mtcars, <span class="at">cyl =</span> <span class="fu">factor</span>(cyl))</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> cyl, dat)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>hyp <span class="ot">&lt;-</span> <span class="fu">hypotheses</span>(mod, <span class="st">"cyl6 = cyl8"</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>hyp</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         Term Estimate Std. Error    z Pr(&gt;|z|)   S 2.5 % 97.5 %</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  cyl6 = cyl8     4.64       1.49 3.11  0.00186 9.1  1.72   7.57</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The difference between <code>cyl6</code> and <code>cyl8</code> is 4.64, and the associated p value is 0.0018593. Again, the p value can be interpreted as a measure of the surprise caused by the data if the null were true (i.e., if the two coefficients were in fact equal).</p>
+<p>How many consecutive <em>Heads</em> tosses would be as surprising as this test of equality? To answer this question, we solve for <span class="math inline">\(s\)</span> in <span class="math inline">\(p=\left (\frac{1}{2} \right )^s\)</span>. The solution is the negative <span class="math inline">\(log_2\)</span> of p:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="sc">-</span><span class="fu">log2</span>(hyp<span class="sc">$</span>p.value)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 9.070986</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Indeed, the probability of obtaining 9 straight <em>Heads</em> with fair coin tosses is <span class="math inline">\(\left (\frac{1}{2} \right )^9=0.0019531\)</span>, which is very close to the p value we observed in the test of coefficient equality (see the <em>S</em> column in the <code>marginaleffects</code> printout above). Comparing our p value to the outcome of such a familiar game of chance gives us a nice intuitive interpretation:</p>
+<blockquote class="blockquote">
+<p>If the <code>cyl6</code> and <code>cyl8</code> coefficients were truly equal, finding an absolute difference greater than 4.64 purely by chance would be as surprising as tossing 9 straight <em>Heads</em> with a fair coin toss.</p>
+</blockquote>
+<p>The benefits of <em>S</em> values include <span class="citation" data-cites="ColEdwGre2021">[@ColEdwGre2021]</span>:</p>
 <ol type="1">
-<li><a href="CITATION.html">Cite the <code>marginaleffects</code> package</a> in your work and tell your friends about it.</li>
-<li>Submit bug reports, documentation improvements, or code contributions to the Github repositories of the <code>R</code> or <code>Python</code> versions of the package:
-<ul>
-<li><a href="https://github.com/vincentarelbundock/marginaleffects" class="uri">https://github.com/vincentarelbundock/marginaleffects</a></li>
-<li><a href="https://github.com/vincentarelbundock/pymarginaleffects" class="uri">https://github.com/vincentarelbundock/pymarginaleffects</a></li>
-</ul></li>
-<li>Make a donation to <a href="https://www.nwsm.info/">The Native Women’s Shelter of Montreal</a> or to <a href="https://www.givedirectly.org/">Give Directly</a>, and send me (Vincent) a quick note. You’ll make my day.</li>
+<li>Calibrates the analyst’s intuitions by reference to a well-known physical process (coin flips).</li>
+<li>Avoids the problematic dichotomization of findings as “significant” and “not significant” <span class="citation" data-cites="Rot2021">[@Rot2021]</span>.</li>
+<li>Reduces the reliance on arbitrary thresholds of significance like <span class="math inline">\(\alpha=0.05\)</span>.</li>
+<li>Guards against the common <em>mis</em>interpretation of p values as the “probability that the null hypothesis is true” or as the probability of the alternative hypothesis. This is in part because S is above 1 whenever p&lt;0.5.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></li>
+<li>Refers to a more natural scale: “The difference between a p value of 0.99 and 0.90 in terms of how surprising the observed test statistic is, is not the same as the difference between 0.10 and 0.01.”<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></li>
 </ol>
-<div data-align="center">
-<p><a href="http://marginaleffects.com"> <img src="https://user-images.githubusercontent.com/987057/134899484-e3392510-2e94-4c39-9830-53356fa5feed.png" align="center" alt="marginaleffects logo" width="200"> </a> <br><br> <img src="https://github.com/vincentarelbundock/marginaleffects/workflows/R-CMD-check/badge.svg"> <img src="https://img.shields.io/badge/license-GPLv3-blue"> <a href="https://marginaleffects.com" target="_blank"><img src="https://img.shields.io/static/v1?label=Website&amp;message=Visit&amp;color=blue"></a> <br><br></p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="svalues_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" style="width:100.0%"></p>
+</div>
 </div>
 
 
 </section>
 
-</main> <!-- /main -->
+
+<div id="quarto-appendix" class="default"><aside id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>Thanks to Sander Greenland for this note.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Thanks to Zad Rafi for noting this and for linking to <span class="citation" data-cites="RafGre2020">[@RafGre2020]</span>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</aside></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -888,6 +922,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../vignettes/multiple_imputation.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Missing Data</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../vignettes/alternative_software.html" class="pagination-link">
+        <span class="nav-page-text">Alternative Software</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
 </div> <!-- /content -->
 
 

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>The Marginal Effects Zoo</title>
+<title>The Marginal Effects Zoo – elasticity</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,26 +20,62 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./images/favicon.png" rel="icon" type="image/png">
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../vignettes/equivalence.html" rel="next">
+<link href="../vignettes/conformal.html" rel="prev">
+<link href="../images/favicon.png" rel="icon" type="image/png">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -67,6 +103,8 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -77,10 +115,10 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./images/marginaleffects_icon.png" alt="marginaleffects logo" class="navbar-logo">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../images/marginaleffects_icon.png" alt="marginaleffects logo" class="navbar-logo">
     </a>
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">The Marginal Effects Zoo</span>
     </a>
   </div>
@@ -111,7 +149,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../vignettes/elasticity.html">Elasticity</a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -133,7 +171,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/get_started.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/get_started.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Get Started</span></a>
   </div>
 </li>
@@ -148,31 +186,31 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/predictions.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/predictions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Predictions</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/comparisons.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/comparisons.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Comparisons</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/slopes.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/slopes.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Slopes</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/hypothesis.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/hypothesis.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Hypothesis Tests</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/plot.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/plot.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Plots</span></a>
   </div>
 </li>
@@ -180,124 +218,124 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
  <span class="menu-text">Case studies</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/brms.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/brms.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Bayes</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/bootstrap.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/bootstrap.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Bootstrap &amp; Simulation</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/categorical.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/categorical.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Categorical outcomes</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/conformal.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/conformal.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Conformal prediction</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/elasticity.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/elasticity.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Elasticity</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/equivalence.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/equivalence.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Equivalence Tests</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/experiments.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/experiments.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Experiments</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/gam.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/gam.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">GAM</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/gcomputation.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/gcomputation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">G-Computation</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/heterogeneity.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/heterogeneity.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Heterogeneity</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/ipw.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/ipw.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Inverse Probability Weighting</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/logit.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/logit.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Logit</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/lme4.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/lme4.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Mixed Effects</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/machine_learning.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/machine_learning.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Machine Learning</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/marginalmeans.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/marginalmeans.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Marginal Means</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/matching.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/matching.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Matching</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/mrp.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/mrp.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">MrP</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/multiple_imputation.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/multiple_imputation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Missing Data</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/svalues.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/svalues.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">S Values</span></a>
   </div>
 </li>
@@ -314,55 +352,55 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/alternative_software.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/alternative_software.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Alternative Software</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/extensions.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/extensions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Extensions</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/links.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/links.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Links</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/performance.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/performance.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Performance</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/python.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/python.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Python</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/supported_models.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/supported_models.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Supported Models</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/tables.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/tables.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Tables</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/uncertainty.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/uncertainty.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Standard Errors</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/faq.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/faq.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">FAQ</span></a>
   </div>
 </li>
@@ -379,73 +417,73 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./man/predictions.html" class="sidebar-item-text sidebar-link">
+  <a href="../man/predictions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">predictions</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./man/comparisons.html" class="sidebar-item-text sidebar-link">
+  <a href="../man/comparisons.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">comparisons</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./man/slopes.html" class="sidebar-item-text sidebar-link">
+  <a href="../man/slopes.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">slopes</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./man/plot_predictions.html" class="sidebar-item-text sidebar-link">
+  <a href="../man/plot_predictions.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">plot_predictions</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./man/plot_comparisons.html" class="sidebar-item-text sidebar-link">
+  <a href="../man/plot_comparisons.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">plot_comparisons</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./man/plot_slopes.html" class="sidebar-item-text sidebar-link">
+  <a href="../man/plot_slopes.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">plot_slopes</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./man/hypotheses.html" class="sidebar-item-text sidebar-link">
+  <a href="../man/hypotheses.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">hypotheses</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./man/inferences.html" class="sidebar-item-text sidebar-link">
+  <a href="../man/inferences.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">inferences</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./man/marginal_means.html" class="sidebar-item-text sidebar-link">
+  <a href="../man/marginal_means.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">marginal_means</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./man/posterior_draws.html" class="sidebar-item-text sidebar-link">
+  <a href="../man/posterior_draws.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">posterior_draws</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./man/datagrid.html" class="sidebar-item-text sidebar-link">
+  <a href="../man/datagrid.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">datagrid</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./man/print.marginaleffects.html" class="sidebar-item-text sidebar-link">
+  <a href="../man/print.marginaleffects.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">print.marginaleffects</span></a>
   </div>
 </li>
@@ -453,19 +491,19 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./NEWS.html" class="sidebar-item-text sidebar-link">
+  <a href="../NEWS.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">News</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./LICENSE.html" class="sidebar-item-text sidebar-link">
+  <a href="../LICENSE.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">License</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./CITATION.html" class="sidebar-item-text sidebar-link">
+  <a href="../CITATION.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Citation</span></a>
   </div>
 </li>
@@ -479,9 +517,7 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#why" id="toc-why" class="nav-link active" data-scroll-target="#why">Why?</a></li>
-  <li><a href="#what" id="toc-what" class="nav-link" data-scroll-target="#what">What?</a></li>
-  <li><a href="#how-to-help" id="toc-how-to-help" class="nav-link" data-scroll-target="#how-to-help">How to help</a></li>
+  <li><a href="#elasticity" id="toc-elasticity" class="nav-link active" data-scroll-target="#elasticity">Elasticity</a></li>
   </ul>
 </nav>
     </div>
@@ -490,54 +526,62 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<p><img src="images/zoo_banner.png" class="img-fluid"></p>
-<section id="why" class="level2">
-<h2 class="anchored" data-anchor-id="why">Why?</h2>
-<p>Parameter estimates are often hard to interpret substantively, especially when they are generated by complex models with non-linear components, interactions, or transformations. Instead of reporting unintuitive parameters, data analysts would rather focus on simple quantities of interest, which have straightforward scientific interpretations. Unfortunately, meaningful estimands—and their standard errors—are often tedious to compute, and the terminology used to describe them varies tremendously across fields.</p>
-<p>These problems are compounded by the fact that modeling packages produce objects with very different structures and which hold different information. This means that end-users often have to write customized code to interpret the output of different models. This can lead to wasted effort, confusion, and mistakes, and it can hinder the implementation of best practices.</p>
-</section>
-<section id="what" class="level2">
-<h2 class="anchored" data-anchor-id="what">What?</h2>
-<p>This online book introduces a conceptual framework and software tools to facilitate the interpretation of a vast range of statistical models in <code>R</code> and <code>Python</code>.</p>
-<p>The tutorials presented here leverage the <code>marginaleffects</code> package for <code>R</code> and <code>Python</code>. This package supports over <a href="https://marginaleffects.com/vignettes/supported_models.html">100 classes</a> of statistical models, including linear, GLM, GAM, mixed-effects, bayesian, categorical outcomes, and more.</p>
-<p>With a single unified interface, users can compute and plot many quantities of interest, including:</p>
-<ul>
-<li>Predictions (aka fitted values or adjusted predictions)</li>
-<li>Comparisons such as risk differences, risk ratios, odds, etc.</li>
-<li>Slopes (aka marginal effects)</li>
-<li>Marginal means</li>
-<li>Linear and non-linear hypothesis tests</li>
-<li>Equivalence tests</li>
-<li>Uncertainty estimates using the delta method, bootstrapping, simulation, or conformal inference.</li>
-</ul>
-<p><a href="https://marginaleffects.com/">The Marginal Effects Zoo</a> is a free online book with over 30 chapters full of tutorials, case studies, and technical notes. It covers a wide range of topics, including how the <code>marginaleffects</code> package can facilitate the interpreation of analysis of:</p>
-<ul>
-<li>Experiments</li>
-<li>Machine learning models</li>
-<li>Causal inference with G-Computation</li>
-<li>Bayesian modeling</li>
-<li>Multilevel regression with post-stratification (MRP)</li>
-<li>Missing data imputation</li>
-<li>Matching</li>
-<li>Inverse probability weighting</li>
-<li>Conformal prediction</li>
-</ul>
-<p><a href="https://marginaleffects.com/vignettes/get_started.html">Get started by clicking here!</a></p>
-</section>
-<section id="how-to-help" class="level2">
-<h2 class="anchored" data-anchor-id="how-to-help">How to help</h2>
-<p>If you like this project, you can contribute in three main ways:</p>
+<section id="elasticity" class="level1">
+<h1>Elasticity</h1>
+<p>In some contexts, it is useful to interpret the results of a regression model in terms of elasticity or semi-elasticity. One strategy to achieve that is to estimate a log-log or a semilog model, where the left and/or right-hand side variables are logged. Another approach is to note that <span class="math inline">\(\frac{\partial ln(x)}{\partial x}=\frac{1}{x}\)</span>, and to post-process the marginal effects to transform them into elasticities or semi-elasticities.</p>
+<p>For example, say we estimate a linear model of this form:</p>
+<p><span class="math display">\[y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \varepsilon\]</span></p>
+<p>Let <span class="math inline">\(\hat{y}\)</span> be the adjusted prediction made by the model for some combination of covariates <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span>. The slope with respect to <span class="math inline">\(x_1\)</span> (or “marginal effect”) is:</p>
+<p><span class="math display">\[\frac{\partial \hat{y}}{\partial x_1}\]</span></p>
+<p>We can estimate the “eyex”, “eydx”, and “dyex” (semi-)elasticities with respect to <span class="math inline">\(x_1\)</span> as follows:</p>
+<p><span class="math display">\[\eta_1=\frac{\partial \hat{y}}{\partial x_1}\cdot \frac{x_1}{\hat{y}}\]</span> <span class="math display">\[\eta_2=\frac{\partial \hat{y}}{\partial x_1}\cdot \frac{1}{\hat{y}}\]</span> <span class="math display">\[\eta_3=\frac{\partial \hat{y}}{\partial x_1}\cdot x_1\]</span></p>
+<p>with interpretations roughly as follows:</p>
 <ol type="1">
-<li><a href="CITATION.html">Cite the <code>marginaleffects</code> package</a> in your work and tell your friends about it.</li>
-<li>Submit bug reports, documentation improvements, or code contributions to the Github repositories of the <code>R</code> or <code>Python</code> versions of the package:
-<ul>
-<li><a href="https://github.com/vincentarelbundock/marginaleffects" class="uri">https://github.com/vincentarelbundock/marginaleffects</a></li>
-<li><a href="https://github.com/vincentarelbundock/pymarginaleffects" class="uri">https://github.com/vincentarelbundock/pymarginaleffects</a></li>
-</ul></li>
-<li>Make a donation to <a href="https://www.nwsm.info/">The Native Women’s Shelter of Montreal</a> or to <a href="https://www.givedirectly.org/">Give Directly</a>, and send me (Vincent) a quick note. You’ll make my day.</li>
+<li>A percentage point increase in <span class="math inline">\(x_1\)</span> is associated to a <span class="math inline">\(\eta_1\)</span> percentage points increase in <span class="math inline">\(y\)</span>.</li>
+<li>A unit increase in <span class="math inline">\(x_1\)</span> is associated to a <span class="math inline">\(\eta_2\)</span> percentage points increase in <span class="math inline">\(y\)</span>.</li>
+<li>A percentage point increase in <span class="math inline">\(x_1\)</span> is associated to a <span class="math inline">\(\eta_3\)</span> units increase in <span class="math inline">\(y\)</span>.</li>
 </ol>
-<div data-align="center">
-<p><a href="http://marginaleffects.com"> <img src="https://user-images.githubusercontent.com/987057/134899484-e3392510-2e94-4c39-9830-53356fa5feed.png" align="center" alt="marginaleffects logo" width="200"> </a> <br><br> <img src="https://github.com/vincentarelbundock/marginaleffects/workflows/R-CMD-check/badge.svg"> <img src="https://img.shields.io/badge/license-GPLv3-blue"> <a href="https://marginaleffects.com" target="_blank"><img src="https://img.shields.io/static/v1?label=Website&amp;message=Visit&amp;color=blue"></a> <br><br></p>
+<p>For further intuition, consider the ratio of change in <span class="math inline">\(y\)</span> to change in <span class="math inline">\(x\)</span>: <span class="math inline">\(\frac{\Delta y}{\Delta x}\)</span>. We can turn this ratio into a ratio between <em>relative</em> changes by dividing both the numerator and the denominator: <span class="math inline">\(\frac{\frac{\Delta y}{y}}{\frac{\Delta x}{x}}\)</span>. This is of course linked to the expression for the <span class="math inline">\(\eta_1\)</span> elasticity above.</p>
+<p>With the <code>marginaleffects</code> package, these quantities are easy to compute:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp <span class="sc">+</span> wt, <span class="at">data =</span> mtcars)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_slopes</span>(mod)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Estimate Std. Error     z Pr(&gt;|z|)    S   2.5 %  97.5 %</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    hp  -0.0318    0.00903 -3.52   &lt;0.001 11.2 -0.0495 -0.0141</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    wt  -3.8778    0.63276 -6.13   &lt;0.001 30.1 -5.1180 -2.6377</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_slopes</span>(mod, <span class="at">slope =</span> <span class="st">"eyex"</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Contrast Estimate Std. Error     z Pr(&gt;|z|)    S  2.5 % 97.5 %</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    hp    eY/eX   -0.285     0.0855 -3.34   &lt;0.001 10.2 -0.453 -0.118</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    wt    eY/eX   -0.746     0.1418 -5.26   &lt;0.001 22.7 -1.024 -0.468</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_slopes</span>(mod, <span class="at">slope =</span> <span class="st">"eydx"</span>)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Contrast Estimate Std. Error     z Pr(&gt;|z|)    S    2.5 %    97.5 %</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    hp    eY/dX -0.00173   0.000502 -3.46   &lt;0.001 10.8 -0.00272 -0.000751</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    wt    eY/dX -0.21165   0.037850 -5.59   &lt;0.001 25.4 -0.28583 -0.137462</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_slopes</span>(mod, <span class="at">slope =</span> <span class="st">"dyex"</span>)</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Contrast Estimate Std. Error     z Pr(&gt;|z|)    S  2.5 % 97.5 %</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    hp    dY/eX    -4.66       1.32 -3.52   &lt;0.001 11.2  -7.26  -2.06</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    wt    dY/eX   -12.48       2.04 -6.13   &lt;0.001 30.1 -16.47  -8.49</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
@@ -888,6 +932,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../vignettes/conformal.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Conformal prediction</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../vignettes/equivalence.html" class="pagination-link">
+        <span class="nav-page-text">Equivalence Tests</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
 </div> <!-- /content -->
 
 

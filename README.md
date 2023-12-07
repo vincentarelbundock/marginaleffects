@@ -59,6 +59,9 @@ of:
 -   Inverse probability weighting
 -   Conformal prediction
 
+[Get started by clicking
+here!](https://marginaleffects.com/vignettes/get_started.html)
+
 ## How to help
 
 If you like this project, you can contribute in three main ways:
