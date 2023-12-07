@@ -164,7 +164,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/get_started.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Get Started</span></a>
+  <a href="../vignettes/get_started.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Get started</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -176,11 +176,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           </a> 
       </div>
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/get_started.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Get Started</span></a>
-  </div>
-</li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/predictions.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Predictions</span></a>
@@ -219,12 +214,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/logit.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Logit</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/get_started.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Get Started</span></a>
+  <a href="../vignettes/brms.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Bayes</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -274,17 +264,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/ipw.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">ipw.html</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/lme4.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Mixed Effects</span></a>
+  <a href="../vignettes/ipw.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Inverse Probability Weighting</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/logit.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Logit</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/lme4.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Mixed Effects</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -618,27 +608,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>mod <span class="sc">|&gt;</span> <span class="fu">predictions</span>() <span class="sc">|&gt;</span> <span class="fu">inferences</span>(<span class="at">method =</span> <span class="st">"simulation"</span>)</span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Estimate Std. Error    2.5 % 97.5 %</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7.84e-01      0.187 3.06e-01  0.974</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7.84e-01      0.159 3.66e-01  0.960</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8.98e-01      0.136 4.80e-01  0.990</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8.74e-01      0.225 2.00e-01  0.995</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1.31e-02      0.173 4.94e-05  0.650</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7.84e-01      0.199 2.55e-01  0.974</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7.84e-01      0.170 3.34e-01  0.965</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8.98e-01      0.150 4.18e-01  0.989</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8.74e-01      0.226 2.01e-01  0.995</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1.31e-02      0.197 8.04e-05  0.788</span></span>
 <span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; --- 22 rows omitted. See ?avg_predictions and ?print.marginaleffects --- </span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3.83e-01      0.292 1.75e-02  0.939</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1.21e-06      0.133 1.29e-12  0.427</span></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6.89e-03      0.141 2.54e-05  0.563</span></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8.07e-11      0.165 2.22e-16  0.850</span></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7.95e-01      0.161 3.77e-01  0.965</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3.83e-01      0.290 1.97e-02  0.949</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1.21e-06      0.148 2.11e-12  0.646</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6.89e-03      0.159 4.18e-05  0.633</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8.07e-11      0.173 2.22e-16  0.839</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7.95e-01      0.173 3.26e-01  0.968</span></span>
 <span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, estimate, std.error, conf.low, conf.high, vs, hp, wt, gear </span></span>
 <span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span>
 <span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>mod <span class="sc">|&gt;</span> <span class="fu">avg_slopes</span>(<span class="at">vcov =</span> <span class="sc">~</span>gear) <span class="sc">|&gt;</span> <span class="fu">inferences</span>(<span class="at">method =</span> <span class="st">"simulation"</span>)</span>
 <span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Contrast  Estimate Std. Error   2.5 %  97.5 %</span></span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  gear    4 - 3 -3.92e-02    0.05792 -0.0923 0.13992</span></span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  gear    5 - 3 -1.93e-01    0.27135 -0.4887 0.33296</span></span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  hp      dY/dX -5.02e-03    0.00443 -0.0115 0.00467</span></span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  wt      dY/dX -3.98e-05    0.31001 -0.6206 0.65914</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Contrast  Estimate Std. Error   2.5 % 97.5 %</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  gear    4 - 3 -3.92e-02    0.05382 -0.0918 0.1357</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  gear    5 - 3 -1.93e-01    0.26747 -0.4877 0.3371</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  hp      dY/dX -5.02e-03    0.00448 -0.0116 0.0046</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  wt      dY/dX -3.98e-05    0.31922 -0.6311 0.7310</span></span>
 <span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, estimate, std.error, conf.low, conf.high </span></span>
 <span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1374,12 +1364,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../vignettes/tables.html" class="pagination-link  aria-label=" <span="">35&nbsp; <span class="chapter-title">Tables</span>"&gt;
+      <a href="../vignettes/tables.html" class="pagination-link  aria-label=" <span="">33&nbsp; <span class="chapter-title">Tables</span>"&gt;
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Tables</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../vignettes/faq.html" class="pagination-link" aria-label="<span class='chapter-number'>37</span>&nbsp; <span class='chapter-title'>FAQ</span>">
+      <a href="../vignettes/faq.html" class="pagination-link" aria-label="<span class='chapter-number'>35</span>&nbsp; <span class='chapter-title'>FAQ</span>">
         <span class="nav-page-text"><span class="chapter-title">FAQ</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>

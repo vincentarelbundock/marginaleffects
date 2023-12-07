@@ -19,7 +19,6 @@ book:
       file: vignettes/get_started.qmd
     - part: Tutorials
       chapters:
-        - vignettes/get_started.qmd
         - vignettes/predictions.qmd
         - vignettes/comparisons.qmd
         - vignettes/slopes.qmd
@@ -27,8 +26,7 @@ book:
         - vignettes/plot.qmd
     - part: Case studies
       chapters:
-        - vignettes/logit.qmd
-        - vignettes/get_started.qmd
+        - vignettes/brms.qmd
         - vignettes/bootstrap.qmd
         - vignettes/categorical.qmd
         - vignettes/conformal.qmd
@@ -39,8 +37,8 @@ book:
         - vignettes/gcomputation.qmd
         - vignettes/heterogeneity.qmd
         - vignettes/ipw.qmd
-        - vignettes/lme4.qmd
         - vignettes/logit.qmd
+        - vignettes/lme4.qmd
         - vignettes/machine_learning.qmd
         - vignettes/marginalmeans.qmd
         - vignettes/matching.qmd
@@ -63,8 +61,8 @@ book:
         - man/predictions.qmd
         - man/comparisons.qmd
         - man/slopes.qmd
-        - man/plot_comparisons.qmd
         - man/plot_predictions.qmd
+        - man/plot_comparisons.qmd
         - man/plot_slopes.qmd
         - man/hypotheses.qmd
         - man/inferences.qmd

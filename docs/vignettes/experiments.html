@@ -145,7 +145,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/logit.html">Case studies</a></li><li class="breadcrumb-item"><a href="../vignettes/experiments.html"><span class="chapter-title">Experiments</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../vignettes/experiments.html"><span class="chapter-title">Experiments</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -164,7 +164,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/get_started.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Get Started</span></a>
+  <a href="../vignettes/get_started.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Get started</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -176,11 +176,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           </a> 
       </div>
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/get_started.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Get Started</span></a>
-  </div>
-</li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/predictions.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Predictions</span></a>
@@ -219,12 +214,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/logit.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Logit</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/get_started.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Get Started</span></a>
+  <a href="../vignettes/brms.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Bayes</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -274,17 +264,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/ipw.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">ipw.html</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/lme4.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Mixed Effects</span></a>
+  <a href="../vignettes/ipw.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Inverse Probability Weighting</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/logit.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Logit</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/lme4.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Mixed Effects</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -500,7 +490,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/logit.html">Case studies</a></li><li class="breadcrumb-item"><a href="../vignettes/experiments.html"><span class="chapter-title">Experiments</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../vignettes/experiments.html"><span class="chapter-title">Experiments</span></a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title"><span class="chapter-title">Experiments</span></h1>
 </div>
@@ -555,23 +545,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(fit, <span class="at">gof_map =</span> <span class="fu">c</span>(<span class="st">"r.squared"</span>, <span class="st">"nobs"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="cipekorhvj" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#cipekorhvj table {
+<div id="afjesvgqhb" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#afjesvgqhb table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#cipekorhvj thead, #cipekorhvj tbody, #cipekorhvj tfoot, #cipekorhvj tr, #cipekorhvj td, #cipekorhvj th {
+#afjesvgqhb thead, #afjesvgqhb tbody, #afjesvgqhb tfoot, #afjesvgqhb tr, #afjesvgqhb td, #afjesvgqhb th {
   border-style: none;
 }
 
-#cipekorhvj p {
+#afjesvgqhb p {
   margin: 0;
   padding: 0;
 }
 
-#cipekorhvj .gt_table {
+#afjesvgqhb .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -597,12 +587,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-left-color: #D3D3D3;
 }
 
-#cipekorhvj .gt_caption {
+#afjesvgqhb .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#cipekorhvj .gt_title {
+#afjesvgqhb .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -614,7 +604,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-width: 0;
 }
 
-#cipekorhvj .gt_subtitle {
+#afjesvgqhb .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -626,7 +616,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-width: 0;
 }
 
-#cipekorhvj .gt_heading {
+#afjesvgqhb .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -638,13 +628,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#cipekorhvj .gt_bottom_border {
+#afjesvgqhb .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#cipekorhvj .gt_col_headings {
+#afjesvgqhb .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -659,7 +649,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#cipekorhvj .gt_col_heading {
+#afjesvgqhb .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -679,7 +669,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#cipekorhvj .gt_column_spanner_outer {
+#afjesvgqhb .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -691,15 +681,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 4px;
 }
 
-#cipekorhvj .gt_column_spanner_outer:first-child {
+#afjesvgqhb .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#cipekorhvj .gt_column_spanner_outer:last-child {
+#afjesvgqhb .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#cipekorhvj .gt_column_spanner {
+#afjesvgqhb .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -711,11 +701,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   width: 100%;
 }
 
-#cipekorhvj .gt_spanner_row {
+#afjesvgqhb .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#cipekorhvj .gt_group_heading {
+#afjesvgqhb .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -741,7 +731,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   text-align: left;
 }
 
-#cipekorhvj .gt_empty_group_heading {
+#afjesvgqhb .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -756,15 +746,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: middle;
 }
 
-#cipekorhvj .gt_from_md > :first-child {
+#afjesvgqhb .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#cipekorhvj .gt_from_md > :last-child {
+#afjesvgqhb .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#cipekorhvj .gt_row {
+#afjesvgqhb .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -783,7 +773,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#cipekorhvj .gt_stub {
+#afjesvgqhb .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -796,7 +786,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#cipekorhvj .gt_stub_row_group {
+#afjesvgqhb .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -810,15 +800,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: top;
 }
 
-#cipekorhvj .gt_row_group_first td {
+#afjesvgqhb .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#cipekorhvj .gt_row_group_first th {
+#afjesvgqhb .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#cipekorhvj .gt_summary_row {
+#afjesvgqhb .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -828,16 +818,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#cipekorhvj .gt_first_summary_row {
+#afjesvgqhb .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#cipekorhvj .gt_first_summary_row.thick {
+#afjesvgqhb .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#cipekorhvj .gt_last_summary_row {
+#afjesvgqhb .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -847,7 +837,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#cipekorhvj .gt_grand_summary_row {
+#afjesvgqhb .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -857,7 +847,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#cipekorhvj .gt_first_grand_summary_row {
+#afjesvgqhb .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -867,7 +857,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-color: #D3D3D3;
 }
 
-#cipekorhvj .gt_last_grand_summary_row_top {
+#afjesvgqhb .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -877,11 +867,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#cipekorhvj .gt_striped {
+#afjesvgqhb .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#cipekorhvj .gt_table_body {
+#afjesvgqhb .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -890,7 +880,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#cipekorhvj .gt_footnotes {
+#afjesvgqhb .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -904,7 +894,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#cipekorhvj .gt_footnote {
+#afjesvgqhb .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -913,7 +903,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#cipekorhvj .gt_sourcenotes {
+#afjesvgqhb .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -927,7 +917,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#cipekorhvj .gt_sourcenote {
+#afjesvgqhb .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -935,63 +925,63 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#cipekorhvj .gt_left {
+#afjesvgqhb .gt_left {
   text-align: left;
 }
 
-#cipekorhvj .gt_center {
+#afjesvgqhb .gt_center {
   text-align: center;
 }
 
-#cipekorhvj .gt_right {
+#afjesvgqhb .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#cipekorhvj .gt_font_normal {
+#afjesvgqhb .gt_font_normal {
   font-weight: normal;
 }
 
-#cipekorhvj .gt_font_bold {
+#afjesvgqhb .gt_font_bold {
   font-weight: bold;
 }
 
-#cipekorhvj .gt_font_italic {
+#afjesvgqhb .gt_font_italic {
   font-style: italic;
 }
 
-#cipekorhvj .gt_super {
+#afjesvgqhb .gt_super {
   font-size: 65%;
 }
 
-#cipekorhvj .gt_footnote_marks {
+#afjesvgqhb .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#cipekorhvj .gt_asterisk {
+#afjesvgqhb .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#cipekorhvj .gt_indent_1 {
+#afjesvgqhb .gt_indent_1 {
   text-indent: 5px;
 }
 
-#cipekorhvj .gt_indent_2 {
+#afjesvgqhb .gt_indent_2 {
   text-indent: 10px;
 }
 
-#cipekorhvj .gt_indent_3 {
+#afjesvgqhb .gt_indent_3 {
   text-indent: 15px;
 }
 
-#cipekorhvj .gt_indent_4 {
+#afjesvgqhb .gt_indent_4 {
   text-indent: 20px;
 }
 
-#cipekorhvj .gt_indent_5 {
+#afjesvgqhb .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -1606,12 +1596,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../vignettes/equivalence.html" class="pagination-link  aria-label=" <span="">15&nbsp; <span class="chapter-title">Equivalence Tests</span>"&gt;
+      <a href="../vignettes/equivalence.html" class="pagination-link  aria-label=" <span="">13&nbsp; <span class="chapter-title">Equivalence Tests</span>"&gt;
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Equivalence Tests</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../vignettes/gam.html" class="pagination-link" aria-label="<span class='chapter-number'>17</span>&nbsp; <span class='chapter-title'>GAM</span>">
+      <a href="../vignettes/gam.html" class="pagination-link" aria-label="<span class='chapter-number'>15</span>&nbsp; <span class='chapter-title'>GAM</span>">
         <span class="nav-page-text"><span class="chapter-title">GAM</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>

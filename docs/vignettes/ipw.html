@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>The Marginal Effects Zoo – ipw</title>
+<title>The Marginal Effects Zoo - Inverse Probability Weighting</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -64,7 +64,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../vignettes/lme4.html" rel="next">
+<link href="../vignettes/logit.html" rel="next">
 <link href="../vignettes/heterogeneity.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -105,7 +105,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </head>
 
-<body class="nav-sidebar floating nav-fixed fullcontent">
+<body class="nav-sidebar floating nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -143,7 +143,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/logit.html">Case studies</a></li><li class="breadcrumb-item"><a href="../vignettes/ipw.html"><span class="chapter-title">ipw.html</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../vignettes/ipw.html"><span class="chapter-title">Inverse Probability Weighting</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -162,7 +162,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/get_started.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Get Started</span></a>
+  <a href="../vignettes/get_started.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Get started</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -174,11 +174,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           </a> 
       </div>
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/get_started.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Get Started</span></a>
-  </div>
-</li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/predictions.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Predictions</span></a>
@@ -217,12 +212,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/logit.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Logit</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/get_started.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Get Started</span></a>
+  <a href="../vignettes/brms.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Bayes</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -272,17 +262,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/ipw.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">ipw.html</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../vignettes/lme4.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Mixed Effects</span></a>
+  <a href="../vignettes/ipw.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Inverse Probability Weighting</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/logit.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Logit</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/lme4.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Mixed Effects</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -476,14 +466,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        
+    </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../vignettes/ipw.html"><span class="chapter-title">Inverse Probability Weighting</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-title">Inverse Probability Weighting</span></h1>
+</div>
 
 
 
-<p>title: Inverse Probability Weighting</p>
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
 <p>Inverse Probability Weighting (IPW) is a popular technique to remove confounding in statistical modeling. It essentially involves re-weighting your sample so that it represents the population you’re interested in. Typically, we begin by estimating the predicted probability that each unit is treated. Then, we use these probabilities as weights in model fitting and in the computation of marginal effects, contrasts, risk differences, ratios, etc.</p>
 <p>This chapter introduces how to use <code>marginaleffects</code> for IPW. The presentation is very short. Readers who seek a more comprehensive understanding and application of these methods should refer to <a href="https://ngreifer.github.io/">Noah Greifer’s excellent and detailed work on the topic</a> and to the <a href="https://ngreifer.github.io/WeightIt/"><code>WeightIt</code> package vignettes and website.</a></p>
 <p>To illustrate, we use the Lalonde data.</p>
@@ -945,13 +952,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../vignettes/heterogeneity.html" class="pagination-link  aria-label=" <span="">19&nbsp; <span class="chapter-title">Heterogeneity</span>"&gt;
+      <a href="../vignettes/heterogeneity.html" class="pagination-link  aria-label=" <span="">17&nbsp; <span class="chapter-title">Heterogeneity</span>"&gt;
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Heterogeneity</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../vignettes/lme4.html" class="pagination-link" aria-label="<span class='chapter-number'>21</span>&nbsp; <span class='chapter-title'>Mixed Effects</span>">
-        <span class="nav-page-text"><span class="chapter-title">Mixed Effects</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../vignettes/logit.html" class="pagination-link" aria-label="<span class='chapter-number'>19</span>&nbsp; <span class='chapter-title'>Logit</span>">
+        <span class="nav-page-text"><span class="chapter-title">Logit</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
