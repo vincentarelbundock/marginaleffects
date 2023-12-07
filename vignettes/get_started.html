@@ -1,0 +1,1552 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.451">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>get_started</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="get_started_files/libs/clipboard/clipboard.min.js"></script>
+<script src="get_started_files/libs/quarto-html/quarto.js"></script>
+<script src="get_started_files/libs/quarto-html/popper.min.js"></script>
+<script src="get_started_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="get_started_files/libs/quarto-html/anchor.min.js"></script>
+<link href="get_started_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="get_started_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="get_started_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="get_started_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="get_started_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+
+
+
+<section id="get-started" class="level1">
+<h1>Get Started</h1>
+<section id="installation" class="level2">
+<h2 class="anchored" data-anchor-id="installation">Installation</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Python</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p>Install the latest CRAN release:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"marginaleffects"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Install the development version:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="st">"marginaleffects"</span>, <span class="st">"insight"</span>),</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">repos =</span> <span class="fu">c</span>(<span class="st">"https://vincentarelbundock.r-universe.dev"</span>, <span class="st">"https://easystats.r-universe.dev"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><em>Restart <code>R</code> completely before moving on.</em></p>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p>Install from PyPI:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install marginaleffects</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="estimands-predictions-comparisons-and-slopes" class="level2">
+<h2 class="anchored" data-anchor-id="estimands-predictions-comparisons-and-slopes">Estimands: Predictions, Comparisons, and Slopes</h2>
+<p>The <code>marginaleffects</code> package allows <code>R</code> users to compute and plot three principal quantities of interest: (1) predictions, (2) comparisons, and (3) slopes. In addition, the package includes a convenience function to compute a fourth estimand, “marginal means”, which is a special case of averaged predictions. <code>marginaleffects</code> can also average (or “marginalize”) unit-level (or “conditional”) estimates of all those quantities, and conduct hypothesis tests on them.</p>
+<p><a href="predictions.html"><em>Predictions</em>:</a></p>
+<blockquote class="blockquote">
+<p>The outcome predicted by a fitted model on a specified scale for a given combination of values of the predictor variables, such as their observed values, their means, or factor levels. a.k.a. Fitted values, adjusted predictions. <code>predictions()</code>, <code>avg_predictions()</code>, <code>plot_predictions()</code>.</p>
+</blockquote>
+<p><a href="comparisons.html"><em>Comparisons</em>:</a></p>
+<blockquote class="blockquote">
+<p>Compare the predictions made by a model for different regressor values (e.g., college graduates vs.&nbsp;others): contrasts, differences, risk ratios, odds, etc. <code>comparisons()</code>, <code>avg_comparisons()</code>, <code>plot_comparisons()</code>.</p>
+</blockquote>
+<p><a href="slopes.html"><em>Slopes</em>:</a></p>
+<blockquote class="blockquote">
+<p>Partial derivative of the regression equation with respect to a regressor of interest. a.k.a. Marginal effects, trends. <code>slopes()</code>, <code>avg_slopes()</code>, <code>plot_slopes()</code>.</p>
+</blockquote>
+<p><a href="marginalmeans.html"><em>Marginal Means</em>:</a></p>
+<blockquote class="blockquote">
+<p>Predictions of a model, averaged across a “reference grid” of categorical predictors. <code>marginalmeans()</code>.</p>
+</blockquote>
+<p><a href="hypothesis.html">Hypothesis and Equivalence Tests:</a></p>
+<blockquote class="blockquote">
+<p>Hypothesis and equivalence tests can be conducted on linear or non-linear functions of model coefficients, or on any of the quantities computed by the <code>marginaleffects</code> packages (predictions, slopes, comparisons, marginal means, etc.). Uncertainy estimates can be obtained via the delta method (with or without robust standard errors), bootstrap, or simulation.</p>
+</blockquote>
+<p>Predictions, comparisons, and slopes are fundamentally unit-level (or “conditional”) quantities. Except in the simplest linear case, estimates will typically vary based on the values of all the regressors in a model. Each of the observations in a dataset is thus associated with its own prediction, comparison, and slope estimates. Below, we will see that it can be useful to marginalize (or “average over”) unit-level estimates to report an “average prediction”, “average comparison”, or “average slope”.</p>
+<p>One ambiguous aspect of the definitions above is that the word “marginal” comes up in two different and <em>opposite</em> ways:</p>
+<ol type="1">
+<li>In “marginal effects,” we refer to the effect of a tiny (marginal) change in the regressor on the outcome. This is a slope, or derivative.</li>
+<li>In “marginal means,” we refer to the process of marginalizing across rows of a prediction grid. This is an average, or integral.</li>
+</ol>
+<p>On this website and in this package, we reserve the expression “marginal effect” to mean a “slope” or “partial derivative”.</p>
+<p>The <code>marginaleffects</code> package includes functions to estimate, average, plot, and summarize all of the estimands described above. The objects produced by <code>marginaleffects</code> are “tidy”: they produce simple data frames in “long” format. They are also “standards-compliant” and work seamlessly with standard functions like <code>summary()</code>, <code>head()</code>, <code>tidy()</code>, and <code>glance()</code>, as well with <a href="https://vincentarelbundock.github.io/modelsummary/">external packages like <code>modelsummary</code></a> or <code>ggplot2</code>.</p>
+<p>We now apply <code>marginaleffects</code> functions to compute each of the estimands described above. First, we fit a linear regression model with multiplicative interactions:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Python</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp <span class="sc">*</span> wt <span class="sc">*</span> am, <span class="at">data =</span> mtcars)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.formula.api <span class="im">as</span> smf</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> marginaleffects <span class="im">import</span> <span class="op">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>/home/vincent/.local/lib/python3.10/site-packages/matplotlib/projections/__init__.py:63: UserWarning: Unable to import Axes3D. This may be due to multiple versions of Matplotlib being installed (e.g. as a system package and as a pip package). As a result, the 3D projection is not available.
+  warnings.warn("Unable to import Axes3D. This may be due to multiple versions of "</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>mtcars <span class="op">=</span> pl.read_csv(<span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/datasets/mtcars.csv"</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>mod <span class="op">=</span> smf.ols(<span class="st">"mpg ~ hp * wt * am"</span>, data <span class="op">=</span> mtcars).fit()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+<p>Then, we call the <code>predictions()</code> function. As noted above, predictions are unit-level estimates, so there is one specific prediction per observation. By default, the <code>predictions()</code> function makes one prediction per observation in the dataset that was used to fit the original model. Since <code>mtcars</code> has 32 rows, the <code>predictions()</code> outcome also has 32 rows:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href="">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href="">Python</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>pre <span class="ot">&lt;-</span> <span class="fu">predictions</span>(mod)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(mtcars)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 32</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(pre)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 32</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>pre</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Estimate Std. Error     z Pr(&gt;|z|)     S 2.5 % 97.5 %
+     22.5      0.884 25.44   &lt;0.001 471.7  20.8   24.2
+     20.8      1.194 17.42   &lt;0.001 223.3  18.5   23.1
+     25.3      0.709 35.66   &lt;0.001 922.7  23.9   26.7
+     20.3      0.704 28.75   &lt;0.001 601.5  18.9   21.6
+     17.0      0.712 23.88   &lt;0.001 416.2  15.6   18.4
+--- 22 rows omitted. See ?avg_predictions and ?print.marginaleffects --- 
+     29.6      1.874 15.80   &lt;0.001 184.3  25.9   33.3
+     15.9      1.311 12.13   &lt;0.001 110.0  13.3   18.5
+     19.4      1.145 16.95   &lt;0.001 211.6  17.2   21.7
+     14.8      2.017  7.33   &lt;0.001  42.0  10.8   18.7
+     21.5      1.072 20.02   &lt;0.001 293.8  19.4   23.6
+Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, hp, wt, am 
+Type:  response </code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>pre <span class="op">=</span> predictions(mod)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>mtcars.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(32, 12)</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>pre.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(32, 20)</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pre)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>shape: (32, 7)
+┌──────────┬───────────┬──────┬──────────┬──────┬──────┬───────┐
+│ Estimate ┆ Std.Error ┆ z    ┆ P(&gt;|z|)  ┆ S    ┆ 2.5% ┆ 97.5% │
+│ ---      ┆ ---       ┆ ---  ┆ ---      ┆ ---  ┆ ---  ┆ ---   │
+│ str      ┆ str       ┆ str  ┆ str      ┆ str  ┆ str  ┆ str   │
+╞══════════╪═══════════╪══════╪══════════╪══════╪══════╪═══════╡
+│ 22.5     ┆ 0.884     ┆ 25.4 ┆ 0        ┆ inf  ┆ 20.7 ┆ 24.3  │
+│ 20.8     ┆ 1.19      ┆ 17.4 ┆ 4e-15    ┆ 47.8 ┆ 18.3 ┆ 23.3  │
+│ 25.3     ┆ 0.709     ┆ 35.7 ┆ 0        ┆ inf  ┆ 23.8 ┆ 26.7  │
+│ 20.3     ┆ 0.704     ┆ 28.8 ┆ 0        ┆ inf  ┆ 18.8 ┆ 21.7  │
+│ …        ┆ …         ┆ …    ┆ …        ┆ …    ┆ …    ┆ …     │
+│ 15.9     ┆ 1.31      ┆ 12.1 ┆ 1e-11    ┆ 36.5 ┆ 13.2 ┆ 18.6  │
+│ 19.4     ┆ 1.15      ┆ 16.9 ┆ 7.33e-15 ┆ 47   ┆ 17   ┆ 21.8  │
+│ 14.8     ┆ 2.02      ┆ 7.33 ┆ 1.43e-07 ┆ 22.7 ┆ 10.6 ┆ 19    │
+│ 21.5     ┆ 1.07      ┆ 20   ┆ 2.22e-16 ┆ 52   ┆ 19.2 ┆ 23.7  │
+└──────────┴───────────┴──────┴──────────┴──────┴──────┴───────┘
+
+Columns: rowid, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high, rownames, mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>Now, we use the <code>comparisons()</code> function to compute the difference in predicted outcome when each of the predictors is incremented by 1 unit (one predictor at a time, holding all others constant). Once again, comparisons are unit-level quantities. And since there are 3 predictors in the model and our data has 32 rows, we obtain 96 comparisons:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true" href="">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false" href="">Python</a></li></ul>
+<div class="tab-content">
+<div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>cmp <span class="ot">&lt;-</span> <span class="fu">comparisons</span>(mod)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(cmp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 96</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>cmp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Term Contrast Estimate Std. Error      z Pr(&gt;|z|)   S  2.5 % 97.5 %
+   am    1 - 0    0.325       1.68  0.193   0.8467 0.2  -2.97  3.622
+   am    1 - 0   -0.544       1.57 -0.347   0.7287 0.5  -3.62  2.530
+   am    1 - 0    1.201       2.35  0.511   0.6090 0.7  -3.40  5.802
+   am    1 - 0   -1.703       1.87 -0.912   0.3618 1.5  -5.36  1.957
+   am    1 - 0   -0.615       1.68 -0.366   0.7146 0.5  -3.91  2.680
+--- 86 rows omitted. See ?avg_comparisons and ?print.marginaleffects --- 
+   wt    +1      -6.518       1.88 -3.462   &lt;0.001 10.9 -10.21 -2.828
+   wt    +1      -1.653       3.74 -0.442   0.6588  0.6  -8.99  5.683
+   wt    +1      -4.520       2.47 -1.830   0.0672  3.9  -9.36  0.321
+   wt    +1       0.635       4.89  0.130   0.8966  0.2  -8.95 10.216
+   wt    +1      -6.647       1.86 -3.572   &lt;0.001 11.5 -10.29 -2.999
+Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, mpg, hp, wt, am 
+Type:  response </code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cmp</span> <span class="op">=</span> comparisons(mod)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cmp</span>.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(96, 25)</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">cmp</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>shape: (96, 9)
+┌──────┬──────────┬──────────┬───────────┬───┬─────────┬───────┬───────┬───────┐
+│ Term ┆ Contrast ┆ Estimate ┆ Std.Error ┆ … ┆ P(&gt;|z|) ┆ S     ┆ 2.5%  ┆ 97.5% │
+│ ---  ┆ ---      ┆ ---      ┆ ---       ┆   ┆ ---     ┆ ---   ┆ ---   ┆ ---   │
+│ str  ┆ str      ┆ str      ┆ str       ┆   ┆ str     ┆ str   ┆ str   ┆ str   │
+╞══════╪══════════╪══════════╪═══════════╪═══╪═════════╪═══════╪═══════╪═══════╡
+│ am   ┆ 1 - 0    ┆ 0.325    ┆ 1.68      ┆ … ┆ 0.848   ┆ 0.237 ┆ -3.15 ┆ 3.8   │
+│ am   ┆ 1 - 0    ┆ -0.544   ┆ 1.57      ┆ … ┆ 0.732   ┆ 0.451 ┆ -3.78 ┆ 2.69  │
+│ am   ┆ 1 - 0    ┆ 1.2      ┆ 2.35      ┆ … ┆ 0.614   ┆ 0.704 ┆ -3.64 ┆ 6.05  │
+│ am   ┆ 1 - 0    ┆ -1.7     ┆ 1.87      ┆ … ┆ 0.371   ┆ 1.43  ┆ -5.56 ┆ 2.15  │
+│ …    ┆ …        ┆ …        ┆ …         ┆ … ┆ …       ┆ …     ┆ …     ┆ …     │
+│ wt   ┆ +1       ┆ -1.65    ┆ 3.74      ┆ … ┆ 0.663   ┆ 0.593 ┆ -9.38 ┆ 6.07  │
+│ wt   ┆ +1       ┆ -4.52    ┆ 2.47      ┆ … ┆ 0.0797  ┆ 3.65  ┆ -9.62 ┆ 0.577 │
+│ wt   ┆ +1       ┆ 0.635    ┆ 4.89      ┆ … ┆ 0.898   ┆ 0.156 ┆ -9.45 ┆ 10.7  │
+│ wt   ┆ +1       ┆ -6.65    ┆ 1.86      ┆ … ┆ 0.00154 ┆ 9.34  ┆ -10.5 ┆ -2.81 │
+└──────┴──────────┴──────────┴───────────┴───┴─────────┴───────┴───────┴───────┘
+
+Columns: rowid, term, contrast, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high, predicted, predicted_lo, predicted_hi, rownames, mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>The <code>comparisons()</code> function allows customized queries. For example, what happens to the predicted outcome when the <code>hp</code> variable increases from 100 to 120?</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true" href="">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false" href="">Python</a></li></ul>
+<div class="tab-content">
+<div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(mod, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">hp =</span> <span class="fu">c</span>(<span class="dv">120</span>, <span class="dv">100</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Term  Contrast Estimate Std. Error      z Pr(&gt;|z|)   S  2.5 %  97.5 %
+   hp 120 - 100   -0.738      0.370 -1.995  0.04607 4.4 -1.463 -0.0129
+   hp 120 - 100   -0.574      0.313 -1.836  0.06640 3.9 -1.186  0.0388
+   hp 120 - 100   -0.931      0.452 -2.062  0.03922 4.7 -1.817 -0.0460
+   hp 120 - 100   -0.845      0.266 -3.182  0.00146 9.4 -1.366 -0.3248
+   hp 120 - 100   -0.780      0.268 -2.909  0.00362 8.1 -1.306 -0.2547
+--- 22 rows omitted. See ?avg_comparisons and ?print.marginaleffects --- 
+   hp 120 - 100   -1.451      0.705 -2.058  0.03958 4.7 -2.834 -0.0692
+   hp 120 - 100   -0.384      0.270 -1.422  0.15498 2.7 -0.912  0.1451
+   hp 120 - 100   -0.641      0.334 -1.918  0.05513 4.2 -1.297  0.0141
+   hp 120 - 100   -0.126      0.272 -0.463  0.64360 0.6 -0.659  0.4075
+   hp 120 - 100   -0.635      0.332 -1.911  0.05598 4.2 -1.286  0.0162
+Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, mpg, hp, wt, am 
+Type:  response </code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cmp</span> <span class="op">=</span> comparisons(mod, variables <span class="op">=</span> {<span class="st">"hp"</span>: [<span class="dv">120</span>, <span class="dv">100</span>]})</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">cmp</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>shape: (32, 9)
+┌──────┬───────────┬──────────┬───────────┬───┬─────────┬───────┬───────────┬───────┐
+│ Term ┆ Contrast  ┆ Estimate ┆ Std.Error ┆ … ┆ P(&gt;|z|) ┆ S     ┆ 2.5%      ┆ 97.5% │
+│ ---  ┆ ---       ┆ ---      ┆ ---       ┆   ┆ ---     ┆ ---   ┆ ---       ┆ ---   │
+│ str  ┆ str       ┆ str      ┆ str       ┆   ┆ str     ┆ str   ┆ str       ┆ str   │
+╞══════╪═══════════╪══════════╪═══════════╪═══╪═════════╪═══════╪═══════════╪═══════╡
+│ hp   ┆ 100 - 120 ┆ 0.738    ┆ 0.37      ┆ … ┆ 0.0576  ┆ 4.12  ┆ -0.0256   ┆ 1.5   │
+│ hp   ┆ 100 - 120 ┆ 0.574    ┆ 0.313     ┆ … ┆ 0.0788  ┆ 3.67  ┆ -0.0713   ┆ 1.22  │
+│ hp   ┆ 100 - 120 ┆ 0.931    ┆ 0.452     ┆ … ┆ 0.0502  ┆ 4.32  ┆ -0.000918 ┆ 1.86  │
+│ hp   ┆ 100 - 120 ┆ 0.845    ┆ 0.266     ┆ … ┆ 0.00401 ┆ 7.96  ┆ 0.297     ┆ 1.39  │
+│ …    ┆ …         ┆ …        ┆ …         ┆ … ┆ …       ┆ …     ┆ …         ┆ …     │
+│ hp   ┆ 100 - 120 ┆ 0.384    ┆ 0.27      ┆ … ┆ 0.168   ┆ 2.57  ┆ -0.173    ┆ 0.941 │
+│ hp   ┆ 100 - 120 ┆ 0.641    ┆ 0.334     ┆ … ┆ 0.0671  ┆ 3.9   ┆ -0.0488   ┆ 1.33  │
+│ hp   ┆ 100 - 120 ┆ 0.126    ┆ 0.272     ┆ … ┆ 0.648   ┆ 0.626 ┆ -0.436    ┆ 0.688 │
+│ hp   ┆ 100 - 120 ┆ 0.635    ┆ 0.332     ┆ … ┆ 0.068   ┆ 3.88  ┆ -0.0507   ┆ 1.32  │
+└──────┴───────────┴──────────┴───────────┴───┴─────────┴───────┴───────────┴───────┘
+
+Columns: rowid, term, contrast, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high, predicted, predicted_lo, predicted_hi, rownames, mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>What happens to the predicted outcome when the <code>wt</code> variable increases by 1 standard deviation about its mean?</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-6-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-1" role="tab" aria-controls="tabset-6-1" aria-selected="true" href="">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-2" role="tab" aria-controls="tabset-6-2" aria-selected="false" href="">Python</a></li></ul>
+<div class="tab-content">
+<div id="tabset-6-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-6-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(mod, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">hp =</span> <span class="st">"sd"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Term                Contrast Estimate Std. Error      z Pr(&gt;|z|)   S 2.5 %  97.5 %
+   hp (x + sd/2) - (x - sd/2)   -2.530      1.269 -1.995  0.04607 4.4 -5.02 -0.0441
+   hp (x + sd/2) - (x - sd/2)   -1.967      1.072 -1.836  0.06640 3.9 -4.07  0.1332
+   hp (x + sd/2) - (x - sd/2)   -3.193      1.549 -2.062  0.03922 4.7 -6.23 -0.1578
+   hp (x + sd/2) - (x - sd/2)   -2.898      0.911 -3.182  0.00146 9.4 -4.68 -1.1133
+   hp (x + sd/2) - (x - sd/2)   -2.675      0.919 -2.909  0.00362 8.1 -4.48 -0.8731
+--- 22 rows omitted. See ?avg_comparisons and ?print.marginaleffects --- 
+   hp (x + sd/2) - (x - sd/2)   -4.976      2.418 -2.058  0.03958 4.7 -9.71 -0.2373
+   hp (x + sd/2) - (x - sd/2)   -1.315      0.925 -1.422  0.15498 2.7 -3.13  0.4974
+   hp (x + sd/2) - (x - sd/2)   -2.199      1.147 -1.918  0.05513 4.2 -4.45  0.0483
+   hp (x + sd/2) - (x - sd/2)   -0.432      0.933 -0.463  0.64360 0.6 -2.26  1.3970
+   hp (x + sd/2) - (x - sd/2)   -2.177      1.139 -1.911  0.05598 4.2 -4.41  0.0556
+Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, mpg, hp, wt, am 
+Type:  response </code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-6-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cmp</span> <span class="op">=</span> comparisons(mod, variables <span class="op">=</span> {<span class="st">"hp"</span>: <span class="st">"sd"</span>})</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">cmp</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>shape: (32, 9)
+┌──────┬────────────────────┬──────────┬───────────┬───┬─────────┬───────┬───────┬─────────┐
+│ Term ┆ Contrast           ┆ Estimate ┆ Std.Error ┆ … ┆ P(&gt;|z|) ┆ S     ┆ 2.5%  ┆ 97.5%   │
+│ ---  ┆ ---                ┆ ---      ┆ ---       ┆   ┆ ---     ┆ ---   ┆ ---   ┆ ---     │
+│ str  ┆ str                ┆ str      ┆ str       ┆   ┆ str     ┆ str   ┆ str   ┆ str     │
+╞══════╪════════════════════╪══════════╪═══════════╪═══╪═════════╪═══════╪═══════╪═════════╡
+│ hp   ┆ +68.56286848932059 ┆ -2.53    ┆ 1.27      ┆ … ┆ 0.0576  ┆ 4.12  ┆ -5.15 ┆ 0.0878  │
+│ hp   ┆ +68.56286848932059 ┆ -1.97    ┆ 1.07      ┆ … ┆ 0.0788  ┆ 3.67  ┆ -4.18 ┆ 0.245   │
+│ hp   ┆ +68.56286848932059 ┆ -3.19    ┆ 1.55      ┆ … ┆ 0.0502  ┆ 4.32  ┆ -6.39 ┆ 0.00315 │
+│ hp   ┆ +68.56286848932059 ┆ -2.9     ┆ 0.911     ┆ … ┆ 0.00401 ┆ 7.96  ┆ -4.78 ┆ -1.02   │
+│ …    ┆ …                  ┆ …        ┆ …         ┆ … ┆ …       ┆ …     ┆ …     ┆ …       │
+│ hp   ┆ +68.56286848932059 ┆ -1.32    ┆ 0.925     ┆ … ┆ 0.168   ┆ 2.57  ┆ -3.22 ┆ 0.594   │
+│ hp   ┆ +68.56286848932059 ┆ -2.2     ┆ 1.15      ┆ … ┆ 0.0671  ┆ 3.9   ┆ -4.57 ┆ 0.167   │
+│ hp   ┆ +68.56286848932059 ┆ -0.432   ┆ 0.933     ┆ … ┆ 0.648   ┆ 0.626 ┆ -2.36 ┆ 1.49    │
+│ hp   ┆ +68.56286848932059 ┆ -2.18    ┆ 1.14      ┆ … ┆ 0.068   ┆ 3.88  ┆ -4.53 ┆ 0.174   │
+└──────┴────────────────────┴──────────┴───────────┴───┴─────────┴───────┴───────┴─────────┘
+
+Columns: rowid, term, contrast, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high, predicted, predicted_lo, predicted_hi, rownames, mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>The <code>comparisons()</code> function also allows users to specify arbitrary functions of predictions, with the <code>comparison</code> argument. For example, what is the average ratio between predicted Miles per Gallon after an increase of 50 units in Horsepower?</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-7-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-1" role="tab" aria-controls="tabset-7-1" aria-selected="true" href="">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-2" role="tab" aria-controls="tabset-7-2" aria-selected="false" href="">Python</a></li></ul>
+<div class="tab-content">
+<div id="tabset-7-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-7-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  mod,</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">hp =</span> <span class="dv">50</span>),</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">comparison =</span> <span class="st">"ratioavg"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Term  Contrast Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %
+   hp mean(+50)    0.905     0.0319 28.4   &lt;0.001 586.8 0.843  0.968
+
+Columns: term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted 
+Type:  response </code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-7-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cmp</span> <span class="op">=</span> comparisons(</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  mod,</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  variables <span class="op">=</span> {<span class="st">"hp"</span>: <span class="dv">50</span>},</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  comparison <span class="op">=</span> <span class="st">"ratioavg"</span>)</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">cmp</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>shape: (1, 9)
+┌──────┬──────────┬──────────┬───────────┬───┬─────────┬─────┬──────┬───────┐
+│ Term ┆ Contrast ┆ Estimate ┆ Std.Error ┆ … ┆ P(&gt;|z|) ┆ S   ┆ 2.5% ┆ 97.5% │
+│ ---  ┆ ---      ┆ ---      ┆ ---       ┆   ┆ ---     ┆ --- ┆ ---  ┆ ---   │
+│ str  ┆ str      ┆ str      ┆ str       ┆   ┆ str     ┆ str ┆ str  ┆ str   │
+╞══════╪══════════╪══════════╪═══════════╪═══╪═════════╪═════╪══════╪═══════╡
+│ hp   ┆ +50      ┆ 0.91     ┆ 0.0291    ┆ … ┆ 0       ┆ inf ┆ 0.85 ┆ 0.97  │
+└──────┴──────────┴──────────┴───────────┴───┴─────────┴─────┴──────┴───────┘
+
+Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>See the <a href="comparisons.html">Comparisons vignette for detailed explanations and more options.</a></p>
+<p>The <code>slopes()</code> function allows us to compute the partial derivative of the outcome equation with respect to each of the predictors. Once again, we obtain a data frame with 96 rows:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-8-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-1" role="tab" aria-controls="tabset-8-1" aria-selected="true" href="">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-8-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-8-2" role="tab" aria-controls="tabset-8-2" aria-selected="false" href="">Python</a></li></ul>
+<div class="tab-content">
+<div id="tabset-8-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-8-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>mfx <span class="ot">&lt;-</span> <span class="fu">slopes</span>(mod)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(mfx)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 96</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>mfx</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Term Contrast Estimate Std. Error      z Pr(&gt;|z|)   S  2.5 % 97.5 %
+   am    1 - 0    0.325       1.68  0.193   0.8467 0.2  -2.97  3.622
+   am    1 - 0   -0.544       1.57 -0.347   0.7287 0.5  -3.62  2.530
+   am    1 - 0    1.201       2.35  0.511   0.6090 0.7  -3.40  5.802
+   am    1 - 0   -1.703       1.87 -0.912   0.3618 1.5  -5.36  1.957
+   am    1 - 0   -0.615       1.68 -0.366   0.7146 0.5  -3.91  2.680
+--- 86 rows omitted. See ?avg_slopes and ?print.marginaleffects --- 
+   wt    dY/dX   -6.518       1.88 -3.462   &lt;0.001 10.9 -10.21 -2.828
+   wt    dY/dX   -1.653       3.74 -0.442   0.6588  0.6  -8.99  5.682
+   wt    dY/dX   -4.520       2.47 -1.830   0.0673  3.9  -9.36  0.322
+   wt    dY/dX    0.635       4.89  0.130   0.8966  0.2  -8.95 10.215
+   wt    dY/dX   -6.647       1.86 -3.572   &lt;0.001 11.5 -10.29 -3.000
+Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, mpg, hp, wt, am 
+Type:  response </code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-8-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-8-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>mfx <span class="op">=</span> slopes(mod)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>mfx.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(96, 25)</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(mfx)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>shape: (96, 9)
+┌──────┬──────────┬───────────┬───────────┬───┬─────────┬───────┬───────────┬──────────┐
+│ Term ┆ Contrast ┆ Estimate  ┆ Std.Error ┆ … ┆ P(&gt;|z|) ┆ S     ┆ 2.5%      ┆ 97.5%    │
+│ ---  ┆ ---      ┆ ---       ┆ ---       ┆   ┆ ---     ┆ ---   ┆ ---       ┆ ---      │
+│ str  ┆ str      ┆ str       ┆ str       ┆   ┆ str     ┆ str   ┆ str       ┆ str      │
+╞══════╪══════════╪═══════════╪═══════════╪═══╪═════════╪═══════╪═══════════╪══════════╡
+│ am   ┆ dY/dX    ┆ 3.25e+03  ┆ 1.68e+04  ┆ … ┆ 0.848   ┆ 0.237 ┆ -3.15e+04 ┆ 3.8e+04  │
+│ am   ┆ dY/dX    ┆ -5.44e+03 ┆ 1.57e+04  ┆ … ┆ 0.732   ┆ 0.451 ┆ -3.78e+04 ┆ 2.69e+04 │
+│ am   ┆ dY/dX    ┆ 1.2e+04   ┆ 2.35e+04  ┆ … ┆ 0.614   ┆ 0.704 ┆ -3.64e+04 ┆ 6.05e+04 │
+│ am   ┆ dY/dX    ┆ -1.7e+04  ┆ 1.87e+04  ┆ … ┆ 0.371   ┆ 1.43  ┆ -5.56e+04 ┆ 2.15e+04 │
+│ …    ┆ …        ┆ …         ┆ …         ┆ … ┆ …       ┆ …     ┆ …         ┆ …        │
+│ wt   ┆ dY/dX    ┆ -1.65     ┆ 3.74      ┆ … ┆ 0.663   ┆ 0.593 ┆ -9.38     ┆ 6.07     │
+│ wt   ┆ dY/dX    ┆ -4.52     ┆ 2.47      ┆ … ┆ 0.0801  ┆ 3.64  ┆ -9.63     ┆ 0.586    │
+│ wt   ┆ dY/dX    ┆ 0.635     ┆ 4.88      ┆ … ┆ 0.898   ┆ 0.156 ┆ -9.45     ┆ 10.7     │
+│ wt   ┆ dY/dX    ┆ -6.65     ┆ 1.86      ┆ … ┆ 0.00154 ┆ 9.34  ┆ -10.5     ┆ -2.81    │
+└──────┴──────────┴───────────┴───────────┴───┴─────────┴───────┴───────────┴──────────┘
+
+Columns: rowid, term, contrast, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high, predicted, predicted_lo, predicted_hi, rownames, mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="grid" class="level2">
+<h2 class="anchored" data-anchor-id="grid">Grid</h2>
+<p>Predictions, comparisons, and slopes are typically “conditional” quantities which depend on the values of all the predictors in the model. By default, <code>marginaleffects</code> functions estimate quantities of interest for the empirical distribution of the data (i.e., for each row of the original dataset). However, users can specify the exact values of the predictors they want to investigate by using the <code>newdata</code> argument.</p>
+<p><code>newdata</code> accepts data frames, shortcut strings, or a call to the <code>datagrid()</code> function. For example, to compute the predicted outcome for a hypothetical car with all predictors equal to the sample mean or median, we can do:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-9-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-1" role="tab" aria-controls="tabset-9-1" aria-selected="true" href="">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-9-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-9-2" role="tab" aria-controls="tabset-9-2" aria-selected="false" href="">Python</a></li></ul>
+<div class="tab-content">
+<div id="tabset-9-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-9-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(mod, <span class="at">newdata =</span> <span class="st">"mean"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Estimate Std. Error  z Pr(&gt;|z|)     S 2.5 % 97.5 %  hp   wt    am
+     18.4       0.68 27   &lt;0.001 531.7    17   19.7 147 3.22 0.406
+
+Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, hp, wt, am 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(mod, <span class="at">newdata =</span> <span class="st">"median"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Estimate Std. Error  z Pr(&gt;|z|)     S 2.5 % 97.5 %  hp   wt am
+     19.4      0.646 30   &lt;0.001 653.2  18.1   20.6 123 3.33  0
+
+Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, hp, wt, am 
+Type:  response </code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-9-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-9-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> predictions(mod, newdata <span class="op">=</span> <span class="st">"mean"</span>)</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>shape: (1, 7)
+┌──────────┬───────────┬─────┬─────────┬─────┬──────┬───────┐
+│ Estimate ┆ Std.Error ┆ z   ┆ P(&gt;|z|) ┆ S   ┆ 2.5% ┆ 97.5% │
+│ ---      ┆ ---       ┆ --- ┆ ---     ┆ --- ┆ ---  ┆ ---   │
+│ str      ┆ str       ┆ str ┆ str     ┆ str ┆ str  ┆ str   │
+╞══════════╪═══════════╪═════╪═════════╪═════╪══════╪═══════╡
+│ 18.4     ┆ 0.68      ┆ 27  ┆ 0       ┆ inf ┆ 17   ┆ 19.8  │
+└──────────┴───────────┴─────┴─────────┴─────┴──────┴───────┘
+
+Columns: rowid, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high, rownames, mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> predictions(mod, newdata <span class="op">=</span> <span class="st">"median"</span>)</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>shape: (1, 7)
+┌──────────┬───────────┬─────┬─────────┬─────┬──────┬───────┐
+│ Estimate ┆ Std.Error ┆ z   ┆ P(&gt;|z|) ┆ S   ┆ 2.5% ┆ 97.5% │
+│ ---      ┆ ---       ┆ --- ┆ ---     ┆ --- ┆ ---  ┆ ---   │
+│ str      ┆ str       ┆ str ┆ str     ┆ str ┆ str  ┆ str   │
+╞══════════╪═══════════╪═════╪═════════╪═════╪══════╪═══════╡
+│ 19.4     ┆ 0.646     ┆ 30  ┆ 0       ┆ inf ┆ 18   ┆ 20.7  │
+└──────────┴───────────┴─────┴─────────┴─────┴──────┴───────┘
+
+Columns: rowid, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high, rownames, mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>The <a href="https://marginaleffects.com/reference/datagrid.html"><code>datagrid</code> function gives us a powerful way to define a grid of predictors.</a> All the variables not mentioned explicitly in <code>datagrid()</code> are fixed to their mean or mode:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-10-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-10-1" role="tab" aria-controls="tabset-10-1" aria-selected="true" href="">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-10-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-10-2" role="tab" aria-controls="tabset-10-2" aria-selected="false" href="">Python</a></li></ul>
+<div class="tab-content">
+<div id="tabset-10-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-10-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  mod,</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">datagrid</span>(</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">am =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">wt =</span> range))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ am   wt Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %  hp
+  0 1.51     23.3       2.71 8.60   &lt;0.001 56.7 17.96   28.6 147
+  0 5.42     12.8       2.98 4.30   &lt;0.001 15.8  6.96   18.6 147
+  1 1.51     27.1       2.85 9.52   &lt;0.001 69.0 21.56   32.7 147
+  1 5.42      5.9       5.81 1.01     0.31  1.7 -5.50   17.3 147
+
+Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, hp, am, wt 
+Type:  response </code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-10-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-10-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> predictions(</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  mod,</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  newdata <span class="op">=</span> datagrid(</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>    mod,</span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>    am <span class="op">=</span> [<span class="dv">0</span>, <span class="dv">1</span>],</span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>    wt <span class="op">=</span> [mtcars[<span class="st">"wt"</span>].<span class="bu">min</span>(), mtcars[<span class="st">"wt"</span>].<span class="bu">max</span>()]))</span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>shape: (4, 9)
+┌─────┬──────┬──────────┬───────────┬───┬──────────┬──────┬──────┬───────┐
+│ am  ┆ wt   ┆ Estimate ┆ Std.Error ┆ … ┆ P(&gt;|z|)  ┆ S    ┆ 2.5% ┆ 97.5% │
+│ --- ┆ ---  ┆ ---      ┆ ---       ┆   ┆ ---      ┆ ---  ┆ ---  ┆ ---   │
+│ str ┆ str  ┆ str      ┆ str       ┆   ┆ str      ┆ str  ┆ str  ┆ str   │
+╞═════╪══════╪══════════╪═══════════╪═══╪══════════╪══════╪══════╪═══════╡
+│ 0   ┆ 1.51 ┆ 23.3     ┆ 2.71      ┆ … ┆ 8.65e-09 ┆ 26.8 ┆ 17.7 ┆ 28.8  │
+│ 0   ┆ 5.42 ┆ 12.8     ┆ 2.98      ┆ … ┆ 0.000249 ┆ 12   ┆ 6.65 ┆ 18.9  │
+│ 1   ┆ 1.51 ┆ 27.1     ┆ 2.85      ┆ … ┆ 1.27e-09 ┆ 29.5 ┆ 21.3 ┆ 33    │
+│ 1   ┆ 5.42 ┆ 5.9      ┆ 5.81      ┆ … ┆ 0.32     ┆ 1.64 ┆ -6.1 ┆ 17.9  │
+└─────┴──────┴──────────┴───────────┴───┴──────────┴──────┴──────┴───────┘
+
+Columns: am, wt, rowid, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high, rownames, mpg, cyl, disp, hp, drat, qsec, vs, gear, carb</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>The same mechanism is available in <code>comparisons()</code> and <code>slopes()</code>. To estimate the partial derivative of <code>mpg</code> with respect to <code>wt</code>, when <code>am</code> is equal to 0 and 1, while other predictors are held at their means:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-11-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-11-1" role="tab" aria-controls="tabset-11-1" aria-selected="true" href="">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-11-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-11-2" role="tab" aria-controls="tabset-11-2" aria-selected="false" href="">Python</a></li></ul>
+<div class="tab-content">
+<div id="tabset-11-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-11-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">slopes</span>(</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>  mod,</span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="st">"wt"</span>,</span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">am =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Term am Estimate Std. Error     z Pr(&gt;|z|)   S 2.5 % 97.5 %
+   wt  0    -2.68       1.42 -1.89   0.0593 4.1 -5.46  0.106
+   wt  1    -5.43       2.15 -2.52   0.0116 6.4 -9.65 -1.214
+
+Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, am, predicted_lo, predicted_hi, predicted, mpg, hp, wt 
+Type:  response </code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-11-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-11-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> slopes(</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>  mod,</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>  variables <span class="op">=</span> <span class="st">"wt"</span>,</span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>  newdata <span class="op">=</span> datagrid(mod, am <span class="op">=</span> [<span class="dv">0</span>, <span class="dv">1</span>]))</span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(s)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>shape: (2, 10)
+┌─────┬──────┬──────────┬──────────┬───┬─────────┬──────┬───────┬────────┐
+│ am  ┆ Term ┆ Contrast ┆ Estimate ┆ … ┆ P(&gt;|z|) ┆ S    ┆ 2.5%  ┆ 97.5%  │
+│ --- ┆ ---  ┆ ---      ┆ ---      ┆   ┆ ---     ┆ ---  ┆ ---   ┆ ---    │
+│ str ┆ str  ┆ str      ┆ str      ┆   ┆ str     ┆ str  ┆ str   ┆ str    │
+╞═════╪══════╪══════════╪══════════╪═══╪═════════╪══════╪═══════╪════════╡
+│ 0   ┆ wt   ┆ dY/dX    ┆ -2.68    ┆ … ┆ 0.0713  ┆ 3.81 ┆ -5.6  ┆ 0.251  │
+│ 1   ┆ wt   ┆ dY/dX    ┆ -5.43    ┆ … ┆ 0.0186  ┆ 5.75 ┆ -9.87 ┆ -0.993 │
+└─────┴──────┴──────────┴──────────┴───┴─────────┴──────┴───────┴────────┘
+
+Columns: am, rowid, term, contrast, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high, predicted, predicted_lo, predicted_hi, rownames, mpg, cyl, disp, hp, drat, wt, qsec, vs, gear, carb</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>We can also plot how predictions, comparisons, or slopes change across different values of the predictors using <a href="plot.html">three powerful plotting functions:</a></p>
+<ul>
+<li><code>plot_predictions</code>: Conditional Adjusted Predictions</li>
+<li><code>plot_comparisons</code>: Conditional Comparisons</li>
+<li><code>plot_slopes</code>: Conditional Marginal Effects</li>
+</ul>
+<p>For example, this plot shows the outcomes predicted by our model for different values of the <code>wt</code> and <code>am</code> variables:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_predictions</span>(mod, <span class="at">condition =</span> <span class="fu">list</span>(<span class="st">"hp"</span>, <span class="st">"wt"</span> <span class="ot">=</span> <span class="st">"threenum"</span>, <span class="st">"am"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="get_started_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>This plot shows how the derivative of <code>mpg</code> with respect to <code>am</code> varies as a function of <code>wt</code> and <code>hp</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_slopes</span>(mod, <span class="at">variables =</span> <span class="st">"am"</span>, <span class="at">condition =</span> <span class="fu">list</span>(<span class="st">"hp"</span>, <span class="st">"wt"</span> <span class="ot">=</span> <span class="st">"minmax"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="get_started_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>See this vignette for more information: <a href="plot.html">Plots, interactions, predictions, contrasts, and slopes</a></p>
+</section>
+<section id="averaging" class="level2">
+<h2 class="anchored" data-anchor-id="averaging">Averaging</h2>
+<p>Since predictions, comparisons, and slopes are conditional quantities, they can be a bit unwieldy. Often, it can be useful to report a one-number summary instead of one estimate per observation. Instead of presenting “conditional” estimates, some methodologists recommend reporting “marginal” estimates, that is, an average of unit-level estimates.</p>
+<p>(This use of the word “marginal” as “averaging” should not be confused with the term “marginal effect” which, in the econometrics tradition, corresponds to a partial derivative, or the effect of a “small/marginal” change.)</p>
+<p>To marginalize (average over) our unit-level estimates, we can use the <code>by</code> argument or the one of the convenience functions: <code>avg_predictions()</code>, <code>avg_comparisons()</code>, or <code>avg_slopes()</code>. For example, both of these commands give us the same result: the average predicted outcome in the <code>mtcars</code> dataset:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-12-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-12-1" role="tab" aria-controls="tabset-12-1" aria-selected="true" href="">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-12-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-12-2" role="tab" aria-controls="tabset-12-2" aria-selected="false" href="">Python</a></li></ul>
+<div class="tab-content">
+<div id="tabset-12-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-12-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_predictions</span>(mod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Estimate Std. Error    z Pr(&gt;|z|)   S 2.5 % 97.5 %
+     20.1       0.39 51.5   &lt;0.001 Inf  19.3   20.9
+
+Columns: estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response </code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-12-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-12-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> avg_predictions(mod)</span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>shape: (1, 7)
+┌──────────┬───────────┬──────┬─────────┬─────┬──────┬───────┐
+│ Estimate ┆ Std.Error ┆ z    ┆ P(&gt;|z|) ┆ S   ┆ 2.5% ┆ 97.5% │
+│ ---      ┆ ---       ┆ ---  ┆ ---     ┆ --- ┆ ---  ┆ ---   │
+│ str      ┆ str       ┆ str  ┆ str     ┆ str ┆ str  ┆ str   │
+╞══════════╪═══════════╪══════╪═════════╪═════╪══════╪═══════╡
+│ 20.1     ┆ 0.39      ┆ 51.5 ┆ 0       ┆ inf ┆ 19.3 ┆ 20.9  │
+└──────────┴───────────┴──────┴─────────┴─────┴──────┴───────┘
+
+Columns: estimate, std_error, statistic, p_value, s_value, conf_low, conf_high</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>This is equivalent to manual computation by:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-13-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-13-1" role="tab" aria-controls="tabset-13-1" aria-selected="true" href="">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-13-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-13-2" role="tab" aria-controls="tabset-13-2" aria-selected="false" href="">Python</a></li></ul>
+<div class="tab-content">
+<div id="tabset-13-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-13-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">predict</span>(mod))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 20.09062</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-13-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-13-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>np.mean(mod.predict())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>20.090624999999992</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>The main <code>marginaleffects</code> functions all include a <code>by</code> argument, which allows us to marginalize within sub-groups of the data. For example,</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-14-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-14-1" role="tab" aria-controls="tabset-14-1" aria-selected="true" href="">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-14-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-14-2" role="tab" aria-controls="tabset-14-2" aria-selected="false" href="">Python</a></li></ul>
+<div class="tab-content">
+<div id="tabset-14-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-14-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">by =</span> <span class="st">"am"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Term          Contrast am Estimate Std. Error      z Pr(&gt;|z|)   S   2.5 %   97.5 %
+   am mean(1) - mean(0)  0  -1.3830     2.5250 -0.548  0.58388 0.8 -6.3319  3.56589
+   am mean(1) - mean(0)  1   1.9029     2.3086  0.824  0.40980 1.3 -2.6219  6.42773
+   hp mean(+1)           0  -0.0343     0.0159 -2.160  0.03079 5.0 -0.0654 -0.00317
+   hp mean(+1)           1  -0.0436     0.0213 -2.050  0.04039 4.6 -0.0854 -0.00191
+   wt mean(+1)           0  -2.4799     1.2316 -2.014  0.04406 4.5 -4.8939 -0.06595
+   wt mean(+1)           1  -6.0718     1.9762 -3.072  0.00212 8.9 -9.9451 -2.19846
+
+Columns: term, contrast, am, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted 
+Type:  response </code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-14-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-14-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cmp</span> <span class="op">=</span> avg_comparisons(mod, by <span class="op">=</span> <span class="st">"am"</span>)</span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">cmp</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>shape: (6, 10)
+┌─────┬──────┬───────────────────┬──────────┬───┬─────────┬───────┬─────────┬──────────┐
+│ am  ┆ Term ┆ Contrast          ┆ Estimate ┆ … ┆ P(&gt;|z|) ┆ S     ┆ 2.5%    ┆ 97.5%    │
+│ --- ┆ ---  ┆ ---               ┆ ---      ┆   ┆ ---     ┆ ---   ┆ ---     ┆ ---      │
+│ str ┆ str  ┆ str               ┆ str      ┆   ┆ str     ┆ str   ┆ str     ┆ str      │
+╞═════╪══════╪═══════════════════╪══════════╪═══╪═════════╪═══════╪═════════╪══════════╡
+│ 0   ┆ am   ┆ mean(1) - mean(0) ┆ -1.38    ┆ … ┆ 0.589   ┆ 0.764 ┆ -6.59   ┆ 3.83     │
+│ 1   ┆ am   ┆ mean(1) - mean(0) ┆ 1.9      ┆ … ┆ 0.418   ┆ 1.26  ┆ -2.86   ┆ 6.67     │
+│ 0   ┆ hp   ┆ +1                ┆ -0.0343  ┆ … ┆ 0.041   ┆ 4.61  ┆ -0.067  ┆ -0.00152 │
+│ 1   ┆ hp   ┆ +1                ┆ -0.0436  ┆ … ┆ 0.0515  ┆ 4.28  ┆ -0.0876 ┆ 0.0003   │
+│ 0   ┆ wt   ┆ +1                ┆ -2.48    ┆ … ┆ 0.0554  ┆ 4.17  ┆ -5.02   ┆ 0.0621   │
+│ 1   ┆ wt   ┆ +1                ┆ -6.07    ┆ … ┆ 0.00522 ┆ 7.58  ┆ -10.2   ┆ -1.99    │
+└─────┴──────┴───────────────────┴──────────┴───┴─────────┴───────┴─────────┴──────────┘
+
+Columns: am, term, contrast, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>Marginal Means are a special case of predictions, which are marginalized (or averaged) across a balanced grid of categorical predictors. To illustrate, we estimate a new model with categorical predictors:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-15-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-15-1" role="tab" aria-controls="tabset-15-1" aria-selected="true" href="">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-15-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-15-2" role="tab" aria-controls="tabset-15-2" aria-selected="false" href="">Python</a></li></ul>
+<div class="tab-content">
+<div id="tabset-15-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-15-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> mtcars</span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>am <span class="ot">&lt;-</span> <span class="fu">as.logical</span>(dat<span class="sc">$</span>am)</span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>cyl <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(dat<span class="sc">$</span>cyl)</span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a>mod_cat <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> am <span class="sc">+</span> cyl <span class="sc">+</span> hp, <span class="at">data =</span> dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-15-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-15-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>dat <span class="op">=</span> mtcars <span class="op">\</span></span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>  .with_columns(pl.col(<span class="st">"am"</span>).cast(pl.Boolean),</span>
+<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>                pl.col(<span class="st">"cyl"</span>).cast(pl.Utf8))</span>
+<span id="cb79-4"><a href="#cb79-4" aria-hidden="true" tabindex="-1"></a>mod_cat <span class="op">=</span> smf.ols(<span class="st">'mpg ~ am + cyl + hp'</span>, data<span class="op">=</span>dat).fit()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+<p>We can compute marginal means manually using the functions already described:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-16-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-16-1" role="tab" aria-controls="tabset-16-1" aria-selected="true" href="">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-16-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-16-2" role="tab" aria-controls="tabset-16-2" aria-selected="false" href="">Python</a></li></ul>
+<div class="tab-content">
+<div id="tabset-16-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-16-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_predictions</span>(</span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>  mod_cat,</span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">cyl =</span> unique, <span class="at">am =</span> unique),</span>
+<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">by =</span> <span class="st">"am"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    am Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %
+ FALSE     18.3      0.785 23.3   &lt;0.001 397.4  16.8   19.9
+  TRUE     22.5      0.834 26.9   &lt;0.001 528.6  20.8   24.1
+
+Columns: am, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response </code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-16-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-16-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>avg_predictions(</span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>  mod_cat,</span>
+<span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a>  newdata <span class="op">=</span> datagrid(mod_cat, cyl <span class="op">=</span> dat[<span class="st">"cyl"</span>].unique(), am <span class="op">=</span> dat[<span class="st">"am"</span>].unique()),</span>
+<span id="cb82-4"><a href="#cb82-4" aria-hidden="true" tabindex="-1"></a>  by <span class="op">=</span> <span class="st">"am"</span>)</span>
+<span id="cb82-5"><a href="#cb82-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+<p>For convenience, the <code>marginaleffects</code> package for <code>R</code> also includes a <code>marginal_means()</code> function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="fu">marginal_means</span>(mod_cat, <span class="at">variables =</span> <span class="st">"am"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Term Value Mean Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %
+   am FALSE 18.3      0.785 23.3   &lt;0.001 397.4  16.8   19.9
+   am  TRUE 22.5      0.834 26.9   &lt;0.001 528.6  20.8   24.1
+
+Results averaged over levels of: cyl, am 
+Columns: term, value, am, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response </code></pre>
+</div>
+</div>
+<p><a href="marginalmeans.html">The Marginal Means vignette</a> offers more detail.</p>
+</section>
+<section id="hypothesis-and-equivalence-tests" class="level2">
+<h2 class="anchored" data-anchor-id="hypothesis-and-equivalence-tests">Hypothesis and equivalence tests</h2>
+<p>The <code>hypotheses()</code> function and the <code>hypothesis</code> argument can be used to conduct linear and non-linear hypothesis tests on model coefficients, or on any of the quantities computed by the functions introduced above.</p>
+<p>Consider this model:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-17-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-17-1" role="tab" aria-controls="tabset-17-1" aria-selected="true" href="">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-17-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-17-2" role="tab" aria-controls="tabset-17-2" aria-selected="false" href="">Python</a></li></ul>
+<div class="tab-content">
+<div id="tabset-17-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-17-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> qsec <span class="sc">*</span> drat, <span class="at">data =</span> mtcars)</span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(mod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Intercept)        qsec        drat   qsec:drat 
+ 12.3371987  -1.0241183  -3.4371461   0.5973153 </code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-17-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-17-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a>mod <span class="op">=</span> smf.ols(<span class="st">'mpg ~ qsec * drat'</span>, data<span class="op">=</span>mtcars).fit()</span>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(mod.params)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Intercept    12.337199
+qsec         -1.024118
+drat         -3.437146
+qsec:drat     0.597315
+dtype: float64</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>Can we reject the null hypothesis that the <code>drat</code> coefficient is 2 times the size of the <code>qsec</code> coefficient?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hypotheses</span>(mod, <span class="st">"drat = 2 * qsec"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+            Term Estimate Std. Error      z Pr(&gt;|z|)   S 2.5 % 97.5 %
+ drat = 2 * qsec    -1.39       10.8 -0.129    0.897 0.2 -22.5   19.7
+
+Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </code></pre>
+</div>
+</div>
+<p>We can ask the same question but refer to parameters by position, with indices <code>b1</code>, <code>b2</code>, <code>b3</code>, etc.:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-18-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-18-1" role="tab" aria-controls="tabset-18-1" aria-selected="true" href="">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-18-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-18-2" role="tab" aria-controls="tabset-18-2" aria-selected="false" href="">Python</a></li></ul>
+<div class="tab-content">
+<div id="tabset-18-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-18-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hypotheses</span>(mod, <span class="st">"b3 = 2 * b2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+        Term Estimate Std. Error      z Pr(&gt;|z|)   S 2.5 % 97.5 %
+ b3 = 2 * b2    -1.39       10.8 -0.129    0.897 0.2 -22.5   19.7
+
+Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-18-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-18-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a>h <span class="op">=</span> hypotheses(mod, <span class="st">"b3 = 2 * b2"</span>)</span>
+<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(h)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>shape: (1, 8)
+┌─────────┬──────────┬───────────┬────────┬─────────┬───────┬───────┬───────┐
+│ Term    ┆ Estimate ┆ Std.Error ┆ z      ┆ P(&gt;|z|) ┆ S     ┆ 2.5%  ┆ 97.5% │
+│ ---     ┆ ---      ┆ ---       ┆ ---    ┆ ---     ┆ ---   ┆ ---   ┆ ---   │
+│ str     ┆ str      ┆ str       ┆ str    ┆ str     ┆ str   ┆ str   ┆ str   │
+╞═════════╪══════════╪═══════════╪════════╪═════════╪═══════╪═══════╪═══════╡
+│ b3=2*b2 ┆ -1.39    ┆ 10.8      ┆ -0.129 ┆ 0.898   ┆ 0.155 ┆ -23.5 ┆ 20.7  │
+└─────────┴──────────┴───────────┴────────┴─────────┴───────┴───────┴───────┘
+
+Columns: term, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>The main functions in <code>marginaleffects</code> all have a <code>hypothesis</code> argument, which means that we can do complex model testing. For example, consider two slope estimates:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-19-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-19-1" role="tab" aria-controls="tabset-19-1" aria-selected="true" href="">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-19-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-19-2" role="tab" aria-controls="tabset-19-2" aria-selected="false" href="">Python</a></li></ul>
+<div class="tab-content">
+<div id="tabset-19-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-19-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="fu">slopes</span>(</span>
+<span id="cb95-2"><a href="#cb95-2" aria-hidden="true" tabindex="-1"></a>  mod,</span>
+<span id="cb95-3"><a href="#cb95-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="st">"drat"</span>,</span>
+<span id="cb95-4"><a href="#cb95-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">qsec =</span> range))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Term qsec Estimate Std. Error    z Pr(&gt;|z|)   S  2.5 % 97.5 %
+ drat 14.5     5.22       3.79 1.38   0.1682 2.6 -2.206   12.7
+ drat 22.9    10.24       5.16 1.98   0.0472 4.4  0.127   20.4
+
+Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, qsec, predicted_lo, predicted_hi, predicted, mpg, drat 
+Type:  response </code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-19-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-19-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> slopes(</span>
+<span id="cb97-2"><a href="#cb97-2" aria-hidden="true" tabindex="-1"></a>  mod,</span>
+<span id="cb97-3"><a href="#cb97-3" aria-hidden="true" tabindex="-1"></a>  variables <span class="op">=</span> <span class="st">"drat"</span>,</span>
+<span id="cb97-4"><a href="#cb97-4" aria-hidden="true" tabindex="-1"></a>  newdata <span class="op">=</span> datagrid(mod, qsec <span class="op">=</span> [mtcars[<span class="st">"qsec"</span>].<span class="bu">min</span>(), mtcars[<span class="st">"qsec"</span>].<span class="bu">max</span>()]))</span>
+<span id="cb97-5"><a href="#cb97-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(s)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>shape: (2, 10)
+┌──────┬──────┬──────────┬──────────┬───┬─────────┬──────┬────────┬───────┐
+│ qsec ┆ Term ┆ Contrast ┆ Estimate ┆ … ┆ P(&gt;|z|) ┆ S    ┆ 2.5%   ┆ 97.5% │
+│ ---  ┆ ---  ┆ ---      ┆ ---      ┆   ┆ ---     ┆ ---  ┆ ---    ┆ ---   │
+│ str  ┆ str  ┆ str      ┆ str      ┆   ┆ str     ┆ str  ┆ str    ┆ str   │
+╞══════╪══════╪══════════╪══════════╪═══╪═════════╪══════╪════════╪═══════╡
+│ 14.5 ┆ drat ┆ dY/dX    ┆ 5.22     ┆ … ┆ 0.178   ┆ 2.49 ┆ -2.52  ┆ 13    │
+│ 22.9 ┆ drat ┆ dY/dX    ┆ 10.2     ┆ … ┆ 0.0571  ┆ 4.13 ┆ -0.329 ┆ 20.8  │
+└──────┴──────┴──────────┴──────────┴───┴─────────┴──────┴────────┴───────┘
+
+Columns: qsec, rowid, term, contrast, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high, predicted, predicted_lo, predicted_hi, rownames, mpg, cyl, disp, hp, drat, wt, vs, am, gear, carb</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>Are these two slopes significantly different from one another? To test this, we can use the <code>hypothesis</code> argument:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-20-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-20-1" role="tab" aria-controls="tabset-20-1" aria-selected="true" href="">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-20-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-20-2" role="tab" aria-controls="tabset-20-2" aria-selected="false" href="">Python</a></li></ul>
+<div class="tab-content">
+<div id="tabset-20-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-20-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb99"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a><span class="fu">slopes</span>(</span>
+<span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a>  mod,</span>
+<span id="cb99-3"><a href="#cb99-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">hypothesis =</span> <span class="st">"b1 = b2"</span>,</span>
+<span id="cb99-4"><a href="#cb99-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="st">"drat"</span>,</span>
+<span id="cb99-5"><a href="#cb99-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">qsec =</span> range))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+  Term Estimate Std. Error      z Pr(&gt;|z|)   S 2.5 % 97.5 %
+ b1=b2    -5.02       8.52 -0.589    0.556 0.8 -21.7   11.7
+
+Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response </code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-20-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-20-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb101"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> slopes(</span>
+<span id="cb101-2"><a href="#cb101-2" aria-hidden="true" tabindex="-1"></a>  mod,</span>
+<span id="cb101-3"><a href="#cb101-3" aria-hidden="true" tabindex="-1"></a>  hypothesis <span class="op">=</span> <span class="st">"b1 = b2"</span>,</span>
+<span id="cb101-4"><a href="#cb101-4" aria-hidden="true" tabindex="-1"></a>  variables <span class="op">=</span> <span class="st">"drat"</span>,</span>
+<span id="cb101-5"><a href="#cb101-5" aria-hidden="true" tabindex="-1"></a>  newdata <span class="op">=</span> datagrid(mod, qsec <span class="op">=</span> [mtcars[<span class="st">"qsec"</span>].<span class="bu">min</span>(), mtcars[<span class="st">"qsec"</span>].<span class="bu">max</span>()]))</span>
+<span id="cb101-6"><a href="#cb101-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(s)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>shape: (1, 8)
+┌───────┬──────────┬───────────┬───────┬─────────┬───────┬───────┬───────┐
+│ Term  ┆ Estimate ┆ Std.Error ┆ z     ┆ P(&gt;|z|) ┆ S     ┆ 2.5%  ┆ 97.5% │
+│ ---   ┆ ---      ┆ ---       ┆ ---   ┆ ---     ┆ ---   ┆ ---   ┆ ---   │
+│ str   ┆ str      ┆ str       ┆ str   ┆ str     ┆ str   ┆ str   ┆ str   │
+╞═══════╪══════════╪═══════════╪═══════╪═════════╪═══════╪═══════╪═══════╡
+│ b1=b2 ┆ -5.02    ┆ 8.5       ┆ -0.59 ┆ 0.56    ┆ 0.837 ┆ -22.4 ┆ 12.4  │
+└───────┴──────────┴───────────┴───────┴─────────┴───────┴───────┴───────┘
+
+Columns: term, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>Alternatively, we can also refer to values with term names (when they are unique):</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-21-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-21-1" role="tab" aria-controls="tabset-21-1" aria-selected="true" href="">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-21-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-21-2" role="tab" aria-controls="tabset-21-2" aria-selected="false" href="">Python</a></li></ul>
+<div class="tab-content">
+<div id="tabset-21-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-21-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb103"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_slopes</span>(mod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Term Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %
+ drat     7.22      1.365 5.29  &lt; 0.001 23.0 4.549   9.90
+ qsec     1.12      0.433 2.60  0.00944  6.7 0.275   1.97
+
+Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb105"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a href="#cb105-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_slopes</span>(mod, <span class="at">hypothesis =</span> <span class="st">"drat = qsec"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+      Term Estimate Std. Error   z Pr(&gt;|z|)    S 2.5 % 97.5 %
+ drat=qsec      6.1       1.45 4.2   &lt;0.001 15.2  3.25   8.95
+
+Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
+Type:  response </code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-21-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-21-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb107"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> avg_slopes(mod)</span>
+<span id="cb107-2"><a href="#cb107-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(s)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>shape: (2, 9)
+┌──────┬─────────────┬──────────┬───────────┬───┬──────────┬──────┬───────┬───────┐
+│ Term ┆ Contrast    ┆ Estimate ┆ Std.Error ┆ … ┆ P(&gt;|z|)  ┆ S    ┆ 2.5%  ┆ 97.5% │
+│ ---  ┆ ---         ┆ ---      ┆ ---       ┆   ┆ ---      ┆ ---  ┆ ---   ┆ ---   │
+│ str  ┆ str         ┆ str      ┆ str       ┆   ┆ str      ┆ str  ┆ str   ┆ str   │
+╞══════╪═════════════╪══════════╪═══════════╪═══╪══════════╪══════╪═══════╪═══════╡
+│ drat ┆ mean(dY/dX) ┆ 7.22     ┆ 1.37      ┆ … ┆ 1.25e-05 ┆ 16.3 ┆ 4.43  ┆ 10    │
+│ qsec ┆ mean(dY/dX) ┆ 1.12     ┆ 0.432     ┆ … ┆ 0.0147   ┆ 6.09 ┆ 0.239 ┆ 2.01  │
+└──────┴─────────────┴──────────┴───────────┴───┴──────────┴──────┴───────┴───────┘
+
+Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb109"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> avg_slopes(mod, hypothesis <span class="op">=</span> <span class="st">"drat = qsec"</span>)</span>
+<span id="cb109-2"><a href="#cb109-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(s)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>shape: (1, 8)
+┌───────────┬──────────┬───────────┬─────┬──────────┬─────┬──────┬───────┐
+│ Term      ┆ Estimate ┆ Std.Error ┆ z   ┆ P(&gt;|z|)  ┆ S   ┆ 2.5% ┆ 97.5% │
+│ ---       ┆ ---      ┆ ---       ┆ --- ┆ ---      ┆ --- ┆ ---  ┆ ---   │
+│ str       ┆ str      ┆ str       ┆ str ┆ str      ┆ str ┆ str  ┆ str   │
+╞═══════════╪══════════╪═══════════╪═════╪══════════╪═════╪══════╪═══════╡
+│ drat=qsec ┆ 6.1      ┆ 1.45      ┆ 4.2 ┆ 0.000245 ┆ 12  ┆ 3.13 ┆ 9.07  │
+└───────────┴──────────┴───────────┴─────┴──────────┴─────┴──────┴───────┘
+
+Columns: term, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>Now, imagine that for theoretical (or substantive or clinical) reasons, we only care about slopes larger than 2. We can use the <code>equivalence</code> argument to conduct an equivalence test:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-22-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-22-1" role="tab" aria-controls="tabset-22-1" aria-selected="true" href="">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-22-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-22-2" role="tab" aria-controls="tabset-22-2" aria-selected="false" href="">Python</a></li></ul>
+<div class="tab-content">
+<div id="tabset-22-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-22-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb111"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_slopes</span>(mod, <span class="at">equivalence =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ Term Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 % p (NonSup) p (NonInf) p (Equiv)
+ drat     7.22      1.365 5.29  &lt; 0.001 23.0 4.549   9.90     0.9999     &lt;0.001    0.9999
+ qsec     1.12      0.433 2.60  0.00944  6.7 0.275   1.97     0.0216     &lt;0.001    0.0216
+
+Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, statistic.noninf, statistic.nonsup, p.value.noninf, p.value.nonsup, p.value.equiv 
+Type:  response </code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-22-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-22-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb113"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> avg_slopes(mod, equivalence <span class="op">=</span> [<span class="op">-</span><span class="fl">2.</span>, <span class="fl">2.</span>])</span>
+<span id="cb113-2"><a href="#cb113-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(s)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+<p>See the <a href="hypothesis.html">Hypothesis Tests and Custom Contrasts vignette</a> for background, details, and for instructions on how to conduct hypothesis tests in more complex situations.</p>
+</section>
+<section id="more" class="level2">
+<h2 class="anchored" data-anchor-id="more">More!</h2>
+<p>There is <em>much</em> more you can do with <code>marginaleffects</code>. Click through he Table of Contents to read the vignettes, learn how to report marginal effects in <a href="https://vincentarelbundock.github.io/modelsummary/">nice tables with the <code>modelsummary</code> package</a>, how to define your own prediction “grid”, and much more. ****</p>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    const typesetMath = (el) => {
+      if (window.MathJax) {
+        // MathJax Typeset
+        window.MathJax.typeset([el]);
+      } else if (window.katex) {
+        // KaTeX Render
+        var mathElements = el.getElementsByClassName("math");
+        var macros = [];
+        for (var i = 0; i < mathElements.length; i++) {
+          var texText = mathElements[i].firstChild;
+          if (mathElements[i].tagName == "SPAN") {
+            window.katex.render(texText.data, mathElements[i], {
+              displayMode: mathElements[i].classList.contains('display'),
+              throwOnError: false,
+              macros: macros,
+              fleqn: false
+            });
+          }
+        }
+      }
+    }
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        for (let i = 0; i < 2; i++) {
+          container.appendChild(note.children[i].cloneNode(true));
+        }
+        typesetMath(container);
+        return container.innerHTML
+      } else {
+        typesetMath(note);
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      typesetMath(note);
+      return note.innerHTML;
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -41,6 +41,7 @@ book:
         - vignettes/ipw.qmd
         - vignettes/lme4.qmd
         - vignettes/logit.qmd
+        - vignettes/machine_learning.qmd
         - vignettes/marginalmeans.qmd
         - vignettes/matching.qmd
         - vignettes/mrp.qmd

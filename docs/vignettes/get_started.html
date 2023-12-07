@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.151">
+<meta name="generator" content="quarto-1.4.451">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -81,12 +81,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
   "keyboard-shortcut": [
     "f",
     "/",
     "s"
   ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -108,7 +109,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
@@ -122,9 +123,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/vincentarelbundock/marginaleffects" rel="" target=""><i class="bi bi-github" role="img" aria-label="marginaleffects GitHub">
+    <a class="nav-link" href="https://github.com/vincentarelbundock/marginaleffects"> <i class="bi bi-github" role="img" aria-label="marginaleffects GitHub">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -142,9 +143,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/get_started.html"><span class="chapter-title">Get started</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/get_started.html"><span class="chapter-title">Get started</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
     </div>
   </nav>
 </header>
@@ -282,6 +283,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/logit.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Logit</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/machine_learning.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Machine Learning</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -502,9 +508,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
+
 </header>
 
-<p>include-after-body: toggle-tabs.html</p>
+
 <section id="installation" class="level2">
 <h2 class="anchored" data-anchor-id="installation">Installation</h2>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
@@ -526,7 +533,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <p>Install from PyPI:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pip install marginaleffects</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install marginaleffects</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
@@ -579,11 +586,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.formula.api <span class="im">as</span> smf</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> marginaleffects <span class="im">import</span> <span class="op">*</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>mtcars <span class="op">=</span> pl.read_csv(<span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/datasets/mtcars.csv"</span>)</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>mod <span class="op">=</span> smf.ols(<span class="st">"mpg ~ hp * wt * am"</span>, data <span class="op">=</span> mtcars).fit()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> marginaleffects <span class="im">import</span> <span class="op">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>/home/vincent/.local/lib/python3.10/site-packages/matplotlib/projections/__init__.py:63: UserWarning: Unable to import Axes3D. This may be due to multiple versions of Matplotlib being installed (e.g. as a system package and as a pip package). As a result, the 3D projection is not available.
+  warnings.warn("Unable to import Axes3D. This may be due to multiple versions of "</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>mtcars <span class="op">=</span> pl.read_csv(<span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/datasets/mtcars.csv"</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>mod <span class="op">=</span> smf.ols(<span class="st">"mpg ~ hp * wt * am"</span>, data <span class="op">=</span> mtcars).fit()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
@@ -594,17 +605,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="tab-content">
 <div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>pre <span class="ot">&lt;-</span> <span class="fu">predictions</span>(mod)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(mtcars)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>pre <span class="ot">&lt;-</span> <span class="fu">predictions</span>(mod)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(mtcars)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 32</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(pre)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(pre)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 32</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>pre</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>pre</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Estimate Std. Error     z Pr(&gt;|z|)     S 2.5 % 97.5 %
@@ -626,17 +637,17 @@ Type:  response </code></pre>
 </div>
 <div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>pre <span class="op">=</span> predictions(mod)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>mtcars.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>pre <span class="op">=</span> predictions(mod)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>mtcars.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>(32, 12)</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>pre.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>pre.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>(32, 20)</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pre)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pre)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>shape: (32, 7)
 ┌──────────┬───────────┬──────┬──────────┬──────┬──────┬───────┐
@@ -667,13 +678,13 @@ Columns: rowid, estimate, std_error, statistic, p_value, s_value, conf_low, conf
 <div class="tab-content">
 <div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>cmp <span class="ot">&lt;-</span> <span class="fu">comparisons</span>(mod)</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(cmp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>cmp <span class="ot">&lt;-</span> <span class="fu">comparisons</span>(mod)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(cmp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 96</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>cmp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>cmp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Term Contrast Estimate Std. Error      z Pr(&gt;|z|)   S  2.5 % 97.5 %
@@ -695,13 +706,13 @@ Type:  response </code></pre>
 </div>
 <div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cmp</span> <span class="op">=</span> comparisons(mod)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cmp</span>.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cmp</span> <span class="op">=</span> comparisons(mod)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cmp</span>.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>(96, 25)</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">cmp</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">cmp</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>shape: (96, 9)
 ┌──────┬──────────┬──────────┬───────────┬───┬─────────┬───────┬───────┬───────┐
@@ -732,7 +743,7 @@ Columns: rowid, term, contrast, estimate, std_error, statistic, p_value, s_value
 <div class="tab-content">
 <div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(mod, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">hp =</span> <span class="fu">c</span>(<span class="dv">120</span>, <span class="dv">100</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(mod, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">hp =</span> <span class="fu">c</span>(<span class="dv">120</span>, <span class="dv">100</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Term  Contrast Estimate Std. Error      z Pr(&gt;|z|)   S  2.5 %  97.5 %
@@ -754,8 +765,8 @@ Type:  response </code></pre>
 </div>
 <div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cmp</span> <span class="op">=</span> comparisons(mod, variables <span class="op">=</span> {<span class="st">"hp"</span>: [<span class="dv">120</span>, <span class="dv">100</span>]})</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">cmp</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cmp</span> <span class="op">=</span> comparisons(mod, variables <span class="op">=</span> {<span class="st">"hp"</span>: [<span class="dv">120</span>, <span class="dv">100</span>]})</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">cmp</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>shape: (32, 9)
 ┌──────┬───────────┬──────────┬───────────┬───┬─────────┬───────┬───────────┬───────┐
@@ -765,7 +776,7 @@ Type:  response </code></pre>
 ╞══════╪═══════════╪══════════╪═══════════╪═══╪═════════╪═══════╪═══════════╪═══════╡
 │ hp   ┆ 100 - 120 ┆ 0.738    ┆ 0.37      ┆ … ┆ 0.0576  ┆ 4.12  ┆ -0.0256   ┆ 1.5   │
 │ hp   ┆ 100 - 120 ┆ 0.574    ┆ 0.313     ┆ … ┆ 0.0788  ┆ 3.67  ┆ -0.0713   ┆ 1.22  │
-│ hp   ┆ 100 - 120 ┆ 0.931    ┆ 0.452     ┆ … ┆ 0.0502  ┆ 4.32  ┆ -0.000919 ┆ 1.86  │
+│ hp   ┆ 100 - 120 ┆ 0.931    ┆ 0.452     ┆ … ┆ 0.0502  ┆ 4.32  ┆ -0.000918 ┆ 1.86  │
 │ hp   ┆ 100 - 120 ┆ 0.845    ┆ 0.266     ┆ … ┆ 0.00401 ┆ 7.96  ┆ 0.297     ┆ 1.39  │
 │ …    ┆ …         ┆ …        ┆ …         ┆ … ┆ …       ┆ …     ┆ …         ┆ …     │
 │ hp   ┆ 100 - 120 ┆ 0.384    ┆ 0.27      ┆ … ┆ 0.168   ┆ 2.57  ┆ -0.173    ┆ 0.941 │
@@ -786,7 +797,7 @@ Columns: rowid, term, contrast, estimate, std_error, statistic, p_value, s_value
 <div class="tab-content">
 <div id="tabset-6-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-6-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(mod, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">hp =</span> <span class="st">"sd"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(mod, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">hp =</span> <span class="st">"sd"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Term                Contrast Estimate Std. Error      z Pr(&gt;|z|)   S 2.5 %  97.5 %
@@ -808,8 +819,8 @@ Type:  response </code></pre>
 </div>
 <div id="tabset-6-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-6-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cmp</span> <span class="op">=</span> comparisons(mod, variables <span class="op">=</span> {<span class="st">"hp"</span>: <span class="st">"sd"</span>})</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">cmp</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cmp</span> <span class="op">=</span> comparisons(mod, variables <span class="op">=</span> {<span class="st">"hp"</span>: <span class="st">"sd"</span>})</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">cmp</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>shape: (32, 9)
 ┌──────┬────────────────────┬──────────┬───────────┬───┬─────────┬───────┬───────┬─────────┐
@@ -840,10 +851,10 @@ Columns: rowid, term, contrast, estimate, std_error, statistic, p_value, s_value
 <div class="tab-content">
 <div id="tabset-7-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-7-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  mod,</span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">hp =</span> <span class="dv">50</span>),</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">comparison =</span> <span class="st">"ratioavg"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  mod,</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">hp =</span> <span class="dv">50</span>),</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">comparison =</span> <span class="st">"ratioavg"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Term  Contrast Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %
@@ -856,11 +867,11 @@ Type:  response </code></pre>
 </div>
 <div id="tabset-7-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-7-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cmp</span> <span class="op">=</span> comparisons(</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  mod,</span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  variables <span class="op">=</span> {<span class="st">"hp"</span>: <span class="dv">50</span>},</span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  comparison <span class="op">=</span> <span class="st">"ratioavg"</span>)</span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">cmp</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cmp</span> <span class="op">=</span> comparisons(</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  mod,</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  variables <span class="op">=</span> {<span class="st">"hp"</span>: <span class="dv">50</span>},</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  comparison <span class="op">=</span> <span class="st">"ratioavg"</span>)</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">cmp</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>shape: (1, 9)
 ┌──────┬──────────┬──────────┬───────────┬───┬─────────┬─────┬──────┬───────┐
@@ -884,13 +895,13 @@ Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_
 <div class="tab-content">
 <div id="tabset-8-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-8-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>mfx <span class="ot">&lt;-</span> <span class="fu">slopes</span>(mod)</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(mfx)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>mfx <span class="ot">&lt;-</span> <span class="fu">slopes</span>(mod)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(mfx)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 96</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>mfx</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>mfx</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Term Contrast Estimate Std. Error      z Pr(&gt;|z|)   S  2.5 % 97.5 %
@@ -902,8 +913,8 @@ Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_
 --- 86 rows omitted. See ?avg_slopes and ?print.marginaleffects --- 
    wt    dY/dX   -6.518       1.88 -3.462   &lt;0.001 10.9 -10.21 -2.828
    wt    dY/dX   -1.653       3.74 -0.442   0.6588  0.6  -8.99  5.682
-   wt    dY/dX   -4.520       2.47 -1.829   0.0673  3.9  -9.36  0.322
-   wt    dY/dX    0.635       4.89  0.130   0.8966  0.2  -8.95 10.216
+   wt    dY/dX   -4.520       2.47 -1.830   0.0673  3.9  -9.36  0.322
+   wt    dY/dX    0.635       4.89  0.130   0.8966  0.2  -8.95 10.215
    wt    dY/dX   -6.647       1.86 -3.572   &lt;0.001 11.5 -10.29 -3.000
 Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, mpg, hp, wt, am 
 Type:  response </code></pre>
@@ -912,13 +923,13 @@ Type:  response </code></pre>
 </div>
 <div id="tabset-8-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-8-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>mfx <span class="op">=</span> slopes(mod)</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>mfx.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>mfx <span class="op">=</span> slopes(mod)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>mfx.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>(96, 25)</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(mfx)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(mfx)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>shape: (96, 9)
 ┌──────┬──────────┬───────────┬───────────┬───┬─────────┬───────┬───────────┬──────────┐
@@ -926,15 +937,15 @@ Type:  response </code></pre>
 │ ---  ┆ ---      ┆ ---       ┆ ---       ┆   ┆ ---     ┆ ---   ┆ ---       ┆ ---      │
 │ str  ┆ str      ┆ str       ┆ str       ┆   ┆ str     ┆ str   ┆ str       ┆ str      │
 ╞══════╪══════════╪═══════════╪═══════════╪═══╪═════════╪═══════╪═══════════╪══════════╡
-│ hp   ┆ dY/dX    ┆ -0.0369   ┆ 0.019     ┆ … ┆ 0.0639  ┆ 3.97  ┆ -0.0761   ┆ 0.00231  │
-│ hp   ┆ dY/dX    ┆ -0.0287   ┆ 0.018     ┆ … ┆ 0.124   ┆ 3.01  ┆ -0.0659   ┆ 0.00851  │
-│ hp   ┆ dY/dX    ┆ -0.0466   ┆ 0.0208    ┆ … ┆ 0.0343  ┆ 4.86  ┆ -0.0894   ┆ -0.00374 │
-│ hp   ┆ dY/dX    ┆ -0.0423   ┆ 0.0134    ┆ … ┆ 0.00432 ┆ 7.86  ┆ -0.07     ┆ -0.0146  │
+│ am   ┆ dY/dX    ┆ 3.25e+03  ┆ 1.68e+04  ┆ … ┆ 0.848   ┆ 0.237 ┆ -3.15e+04 ┆ 3.8e+04  │
+│ am   ┆ dY/dX    ┆ -5.44e+03 ┆ 1.57e+04  ┆ … ┆ 0.732   ┆ 0.451 ┆ -3.78e+04 ┆ 2.69e+04 │
+│ am   ┆ dY/dX    ┆ 1.2e+04   ┆ 2.35e+04  ┆ … ┆ 0.614   ┆ 0.704 ┆ -3.64e+04 ┆ 6.05e+04 │
+│ am   ┆ dY/dX    ┆ -1.7e+04  ┆ 1.87e+04  ┆ … ┆ 0.371   ┆ 1.43  ┆ -5.56e+04 ┆ 2.15e+04 │
 │ …    ┆ …        ┆ …         ┆ …         ┆ … ┆ …       ┆ …     ┆ …         ┆ …        │
-│ am   ┆ dY/dX    ┆ 2.11e+04  ┆ 2.29e+04  ┆ … ┆ 0.367   ┆ 1.45  ┆ -2.62e+04 ┆ 6.83e+04 │
-│ am   ┆ dY/dX    ┆ 8.95e+03  ┆ 1.64e+04  ┆ … ┆ 0.591   ┆ 0.758 ┆ -2.5e+04  ┆ 4.29e+04 │
-│ am   ┆ dY/dX    ┆ 4.03e+04  ┆ 3.24e+04  ┆ … ┆ 0.226   ┆ 2.15  ┆ -2.66e+04 ┆ 1.07e+05 │
-│ am   ┆ dY/dX    ┆ -2.37e+03 ┆ 1.59e+04  ┆ … ┆ 0.883   ┆ 0.18  ┆ -3.51e+04 ┆ 3.04e+04 │
+│ wt   ┆ dY/dX    ┆ -1.65     ┆ 3.74      ┆ … ┆ 0.663   ┆ 0.593 ┆ -9.38     ┆ 6.07     │
+│ wt   ┆ dY/dX    ┆ -4.52     ┆ 2.47      ┆ … ┆ 0.0801  ┆ 3.64  ┆ -9.63     ┆ 0.586    │
+│ wt   ┆ dY/dX    ┆ 0.635     ┆ 4.88      ┆ … ┆ 0.898   ┆ 0.156 ┆ -9.45     ┆ 10.7     │
+│ wt   ┆ dY/dX    ┆ -6.65     ┆ 1.86      ┆ … ┆ 0.00154 ┆ 9.34  ┆ -10.5     ┆ -2.81    │
 └──────┴──────────┴───────────┴───────────┴───┴─────────┴───────┴───────────┴──────────┘
 
 Columns: rowid, term, contrast, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high, predicted, predicted_lo, predicted_hi, rownames, mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb</code></pre>
@@ -953,7 +964,7 @@ Columns: rowid, term, contrast, estimate, std_error, statistic, p_value, s_value
 <div class="tab-content">
 <div id="tabset-9-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-9-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(mod, <span class="at">newdata =</span> <span class="st">"mean"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(mod, <span class="at">newdata =</span> <span class="st">"mean"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Estimate Std. Error  z Pr(&gt;|z|)     S 2.5 % 97.5 %  hp   wt    am
@@ -962,7 +973,7 @@ Columns: rowid, term, contrast, estimate, std_error, statistic, p_value, s_value
 Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, hp, wt, am 
 Type:  response </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(mod, <span class="at">newdata =</span> <span class="st">"median"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(mod, <span class="at">newdata =</span> <span class="st">"median"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Estimate Std. Error  z Pr(&gt;|z|)     S 2.5 % 97.5 %  hp   wt am
@@ -975,8 +986,8 @@ Type:  response </code></pre>
 </div>
 <div id="tabset-9-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-9-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> predictions(mod, newdata <span class="op">=</span> <span class="st">"mean"</span>)</span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> predictions(mod, newdata <span class="op">=</span> <span class="st">"mean"</span>)</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>shape: (1, 7)
 ┌──────────┬───────────┬─────┬─────────┬─────┬──────┬───────┐
@@ -989,8 +1000,8 @@ Type:  response </code></pre>
 
 Columns: rowid, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high, rownames, mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> predictions(mod, newdata <span class="op">=</span> <span class="st">"median"</span>)</span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> predictions(mod, newdata <span class="op">=</span> <span class="st">"median"</span>)</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>shape: (1, 7)
 ┌──────────┬───────────┬─────┬─────────┬─────┬──────┬───────┐
@@ -1013,11 +1024,11 @@ Columns: rowid, estimate, std_error, statistic, p_value, s_value, conf_low, conf
 <div class="tab-content">
 <div id="tabset-10-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-10-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(</span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  mod,</span>
-<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">datagrid</span>(</span>
-<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">am =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
-<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">wt =</span> range))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  mod,</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">datagrid</span>(</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">am =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">wt =</span> range))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  am   wt Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %  hp
@@ -1033,27 +1044,27 @@ Type:  response </code></pre>
 </div>
 <div id="tabset-10-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-10-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> predictions(</span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  mod,</span>
-<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>  newdata <span class="op">=</span> datagrid(</span>
-<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>    mod,</span>
-<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>    am <span class="op">=</span> [<span class="dv">0</span>, <span class="dv">1</span>],</span>
-<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>    wt <span class="op">=</span> [mtcars[<span class="st">"wt"</span>].<span class="bu">min</span>(), mtcars[<span class="st">"wt"</span>].<span class="bu">max</span>()]))</span>
-<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> predictions(</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  mod,</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  newdata <span class="op">=</span> datagrid(</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>    mod,</span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>    am <span class="op">=</span> [<span class="dv">0</span>, <span class="dv">1</span>],</span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>    wt <span class="op">=</span> [mtcars[<span class="st">"wt"</span>].<span class="bu">min</span>(), mtcars[<span class="st">"wt"</span>].<span class="bu">max</span>()]))</span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>shape: (4, 7)
-┌──────────┬───────────┬──────┬──────────┬──────┬──────┬───────┐
-│ Estimate ┆ Std.Error ┆ z    ┆ P(&gt;|z|)  ┆ S    ┆ 2.5% ┆ 97.5% │
-│ ---      ┆ ---       ┆ ---  ┆ ---      ┆ ---  ┆ ---  ┆ ---   │
-│ str      ┆ str       ┆ str  ┆ str      ┆ str  ┆ str  ┆ str   │
-╞══════════╪═══════════╪══════╪══════════╪══════╪══════╪═══════╡
-│ 23.3     ┆ 2.71      ┆ 8.6  ┆ 8.65e-09 ┆ 26.8 ┆ 17.7 ┆ 28.8  │
-│ 12.8     ┆ 2.98      ┆ 4.3  ┆ 0.000249 ┆ 12   ┆ 6.65 ┆ 18.9  │
-│ 27.1     ┆ 2.85      ┆ 9.52 ┆ 1.27e-09 ┆ 29.5 ┆ 21.3 ┆ 33    │
-│ 5.9      ┆ 5.81      ┆ 1.01 ┆ 0.32     ┆ 1.64 ┆ -6.1 ┆ 17.9  │
-└──────────┴───────────┴──────┴──────────┴──────┴──────┴───────┘
+<pre><code>shape: (4, 9)
+┌─────┬──────┬──────────┬───────────┬───┬──────────┬──────┬──────┬───────┐
+│ am  ┆ wt   ┆ Estimate ┆ Std.Error ┆ … ┆ P(&gt;|z|)  ┆ S    ┆ 2.5% ┆ 97.5% │
+│ --- ┆ ---  ┆ ---      ┆ ---       ┆   ┆ ---      ┆ ---  ┆ ---  ┆ ---   │
+│ str ┆ str  ┆ str      ┆ str       ┆   ┆ str      ┆ str  ┆ str  ┆ str   │
+╞═════╪══════╪══════════╪═══════════╪═══╪══════════╪══════╪══════╪═══════╡
+│ 0   ┆ 1.51 ┆ 23.3     ┆ 2.71      ┆ … ┆ 8.65e-09 ┆ 26.8 ┆ 17.7 ┆ 28.8  │
+│ 0   ┆ 5.42 ┆ 12.8     ┆ 2.98      ┆ … ┆ 0.000249 ┆ 12   ┆ 6.65 ┆ 18.9  │
+│ 1   ┆ 1.51 ┆ 27.1     ┆ 2.85      ┆ … ┆ 1.27e-09 ┆ 29.5 ┆ 21.3 ┆ 33    │
+│ 1   ┆ 5.42 ┆ 5.9      ┆ 5.81      ┆ … ┆ 0.32     ┆ 1.64 ┆ -6.1 ┆ 17.9  │
+└─────┴──────┴──────────┴───────────┴───┴──────────┴──────┴──────┴───────┘
 
-Columns: rowid, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high, am, wt, rownames, mpg, cyl, disp, hp, drat, qsec, vs, gear, carb</code></pre>
+Columns: am, wt, rowid, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high, rownames, mpg, cyl, disp, hp, drat, qsec, vs, gear, carb</code></pre>
 </div>
 </div>
 </div>
@@ -1065,14 +1076,14 @@ Columns: rowid, estimate, std_error, statistic, p_value, s_value, conf_low, conf
 <div class="tab-content">
 <div id="tabset-11-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-11-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">slopes</span>(</span>
-<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  mod,</span>
-<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="st">"wt"</span>,</span>
-<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">am =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">slopes</span>(</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>  mod,</span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="st">"wt"</span>,</span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">am =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Term am Estimate Std. Error     z Pr(&gt;|z|)   S 2.5 % 97.5 %
-   wt  0    -2.68       1.42 -1.89   0.0593 4.1 -5.46  0.105
+   wt  0    -2.68       1.42 -1.89   0.0593 4.1 -5.46  0.106
    wt  1    -5.43       2.15 -2.52   0.0116 6.4 -9.65 -1.214
 
 Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, am, predicted_lo, predicted_hi, predicted, mpg, hp, wt 
@@ -1082,23 +1093,23 @@ Type:  response </code></pre>
 </div>
 <div id="tabset-11-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-11-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> slopes(</span>
-<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>  mod,</span>
-<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>  variables <span class="op">=</span> <span class="st">"wt"</span>,</span>
-<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>  newdata <span class="op">=</span> datagrid(mod, am <span class="op">=</span> [<span class="dv">0</span>, <span class="dv">1</span>]))</span>
-<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(s)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> slopes(</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>  mod,</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>  variables <span class="op">=</span> <span class="st">"wt"</span>,</span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>  newdata <span class="op">=</span> datagrid(mod, am <span class="op">=</span> [<span class="dv">0</span>, <span class="dv">1</span>]))</span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(s)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>shape: (2, 9)
-┌──────┬──────────┬──────────┬───────────┬───┬─────────┬──────┬───────┬────────┐
-│ Term ┆ Contrast ┆ Estimate ┆ Std.Error ┆ … ┆ P(&gt;|z|) ┆ S    ┆ 2.5%  ┆ 97.5%  │
-│ ---  ┆ ---      ┆ ---      ┆ ---       ┆   ┆ ---     ┆ ---  ┆ ---   ┆ ---    │
-│ str  ┆ str      ┆ str      ┆ str       ┆   ┆ str     ┆ str  ┆ str   ┆ str    │
-╞══════╪══════════╪══════════╪═══════════╪═══╪═════════╪══════╪═══════╪════════╡
-│ wt   ┆ dY/dX    ┆ -2.68    ┆ 1.42      ┆ … ┆ 0.072   ┆ 3.8  ┆ -5.61 ┆ 0.258  │
-│ wt   ┆ dY/dX    ┆ -5.43    ┆ 2.15      ┆ … ┆ 0.0187  ┆ 5.74 ┆ -9.88 ┆ -0.986 │
-└──────┴──────────┴──────────┴───────────┴───┴─────────┴──────┴───────┴────────┘
+<pre><code>shape: (2, 10)
+┌─────┬──────┬──────────┬──────────┬───┬─────────┬──────┬───────┬────────┐
+│ am  ┆ Term ┆ Contrast ┆ Estimate ┆ … ┆ P(&gt;|z|) ┆ S    ┆ 2.5%  ┆ 97.5%  │
+│ --- ┆ ---  ┆ ---      ┆ ---      ┆   ┆ ---     ┆ ---  ┆ ---   ┆ ---    │
+│ str ┆ str  ┆ str      ┆ str      ┆   ┆ str     ┆ str  ┆ str   ┆ str    │
+╞═════╪══════╪══════════╪══════════╪═══╪═════════╪══════╪═══════╪════════╡
+│ 0   ┆ wt   ┆ dY/dX    ┆ -2.68    ┆ … ┆ 0.0713  ┆ 3.81 ┆ -5.6  ┆ 0.251  │
+│ 1   ┆ wt   ┆ dY/dX    ┆ -5.43    ┆ … ┆ 0.0186  ┆ 5.75 ┆ -9.87 ┆ -0.993 │
+└─────┴──────┴──────────┴──────────┴───┴─────────┴──────┴───────┴────────┘
 
-Columns: rowid, term, contrast, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high, predicted, predicted_lo, predicted_hi, am, rownames, mpg, cyl, disp, hp, drat, wt, qsec, vs, gear, carb</code></pre>
+Columns: am, rowid, term, contrast, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high, predicted, predicted_lo, predicted_hi, rownames, mpg, cyl, disp, hp, drat, wt, qsec, vs, gear, carb</code></pre>
 </div>
 </div>
 </div>
@@ -1112,14 +1123,14 @@ Columns: rowid, term, contrast, estimate, std_error, statistic, p_value, s_value
 </ul>
 <p>For example, this plot shows the outcomes predicted by our model for different values of the <code>wt</code> and <code>am</code> variables:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_predictions</span>(mod, <span class="at">condition =</span> <span class="fu">list</span>(<span class="st">"hp"</span>, <span class="st">"wt"</span> <span class="ot">=</span> <span class="st">"threenum"</span>, <span class="st">"am"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_predictions</span>(mod, <span class="at">condition =</span> <span class="fu">list</span>(<span class="st">"hp"</span>, <span class="st">"wt"</span> <span class="ot">=</span> <span class="st">"threenum"</span>, <span class="st">"am"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="get_started_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>This plot shows how the derivative of <code>mpg</code> with respect to <code>am</code> varies as a function of <code>wt</code> and <code>hp</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_slopes</span>(mod, <span class="at">variables =</span> <span class="st">"am"</span>, <span class="at">condition =</span> <span class="fu">list</span>(<span class="st">"hp"</span>, <span class="st">"wt"</span> <span class="ot">=</span> <span class="st">"minmax"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_slopes</span>(mod, <span class="at">variables =</span> <span class="st">"am"</span>, <span class="at">condition =</span> <span class="fu">list</span>(<span class="st">"hp"</span>, <span class="st">"wt"</span> <span class="ot">=</span> <span class="st">"minmax"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="get_started_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -1136,7 +1147,7 @@ Columns: rowid, term, contrast, estimate, std_error, statistic, p_value, s_value
 <div class="tab-content">
 <div id="tabset-12-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-12-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_predictions</span>(mod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_predictions</span>(mod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Estimate Std. Error    z Pr(&gt;|z|)   S 2.5 % 97.5 %
@@ -1149,8 +1160,8 @@ Type:  response </code></pre>
 </div>
 <div id="tabset-12-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-12-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> avg_predictions(mod)</span>
-<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> avg_predictions(mod)</span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>shape: (1, 7)
 ┌──────────┬───────────┬──────┬─────────┬─────┬──────┬───────┐
@@ -1173,7 +1184,7 @@ Columns: estimate, std_error, statistic, p_value, s_value, conf_low, conf_high</
 <div class="tab-content">
 <div id="tabset-13-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-13-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">predict</span>(mod))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">predict</span>(mod))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 20.09062</code></pre>
 </div>
@@ -1181,9 +1192,9 @@ Columns: estimate, std_error, statistic, p_value, s_value, conf_low, conf_high</
 </div>
 <div id="tabset-13-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-13-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>np.mean(mod.predict())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>np.mean(mod.predict())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>20.090625000000014</code></pre>
+<pre><code>20.090624999999992</code></pre>
 </div>
 </div>
 </div>
@@ -1195,7 +1206,7 @@ Columns: estimate, std_error, statistic, p_value, s_value, conf_low, conf_high</
 <div class="tab-content">
 <div id="tabset-14-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-14-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">by =</span> <span class="st">"am"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod, <span class="at">by =</span> <span class="st">"am"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Term          Contrast am Estimate Std. Error      z Pr(&gt;|z|)   S   2.5 %   97.5 %
@@ -1213,8 +1224,8 @@ Type:  response </code></pre>
 </div>
 <div id="tabset-14-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-14-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cmp</span> <span class="op">=</span> avg_comparisons(mod, by <span class="op">=</span> <span class="st">"am"</span>)</span>
-<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">cmp</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cmp</span> <span class="op">=</span> avg_comparisons(mod, by <span class="op">=</span> <span class="st">"am"</span>)</span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">cmp</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>shape: (6, 10)
 ┌─────┬──────┬───────────────────┬──────────┬───┬─────────┬───────┬─────────┬──────────┐
@@ -1222,12 +1233,12 @@ Type:  response </code></pre>
 │ --- ┆ ---  ┆ ---               ┆ ---      ┆   ┆ ---     ┆ ---   ┆ ---     ┆ ---      │
 │ str ┆ str  ┆ str               ┆ str      ┆   ┆ str     ┆ str   ┆ str     ┆ str      │
 ╞═════╪══════╪═══════════════════╪══════════╪═══╪═════════╪═══════╪═════════╪══════════╡
-│ 1   ┆ hp   ┆ +1                ┆ -0.0436  ┆ … ┆ 0.0515  ┆ 4.28  ┆ -0.0876 ┆ 0.000301 │
-│ 0   ┆ hp   ┆ +1                ┆ -0.0343  ┆ … ┆ 0.041   ┆ 4.61  ┆ -0.067  ┆ -0.00152 │
-│ 1   ┆ wt   ┆ +1                ┆ -6.07    ┆ … ┆ 0.00522 ┆ 7.58  ┆ -10.2   ┆ -1.99    │
-│ 0   ┆ wt   ┆ +1                ┆ -2.48    ┆ … ┆ 0.0554  ┆ 4.17  ┆ -5.02   ┆ 0.0621   │
-│ 1   ┆ am   ┆ mean(1) - mean(0) ┆ 1.9      ┆ … ┆ 0.418   ┆ 1.26  ┆ -2.86   ┆ 6.67     │
 │ 0   ┆ am   ┆ mean(1) - mean(0) ┆ -1.38    ┆ … ┆ 0.589   ┆ 0.764 ┆ -6.59   ┆ 3.83     │
+│ 1   ┆ am   ┆ mean(1) - mean(0) ┆ 1.9      ┆ … ┆ 0.418   ┆ 1.26  ┆ -2.86   ┆ 6.67     │
+│ 0   ┆ hp   ┆ +1                ┆ -0.0343  ┆ … ┆ 0.041   ┆ 4.61  ┆ -0.067  ┆ -0.00152 │
+│ 1   ┆ hp   ┆ +1                ┆ -0.0436  ┆ … ┆ 0.0515  ┆ 4.28  ┆ -0.0876 ┆ 0.0003   │
+│ 0   ┆ wt   ┆ +1                ┆ -2.48    ┆ … ┆ 0.0554  ┆ 4.17  ┆ -5.02   ┆ 0.0621   │
+│ 1   ┆ wt   ┆ +1                ┆ -6.07    ┆ … ┆ 0.00522 ┆ 7.58  ┆ -10.2   ┆ -1.99    │
 └─────┴──────┴───────────────────┴──────────┴───┴─────────┴───────┴─────────┴──────────┘
 
 Columns: am, term, contrast, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high</code></pre>
@@ -1242,18 +1253,18 @@ Columns: am, term, contrast, estimate, std_error, statistic, p_value, s_value, c
 <div class="tab-content">
 <div id="tabset-15-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-15-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> mtcars</span>
-<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>am <span class="ot">&lt;-</span> <span class="fu">as.logical</span>(dat<span class="sc">$</span>am)</span>
-<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>cyl <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(dat<span class="sc">$</span>cyl)</span>
-<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a>mod_cat <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> am <span class="sc">+</span> cyl <span class="sc">+</span> hp, <span class="at">data =</span> dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> mtcars</span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>am <span class="ot">&lt;-</span> <span class="fu">as.logical</span>(dat<span class="sc">$</span>am)</span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>cyl <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(dat<span class="sc">$</span>cyl)</span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a>mod_cat <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> am <span class="sc">+</span> cyl <span class="sc">+</span> hp, <span class="at">data =</span> dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 <div id="tabset-15-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-15-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>dat <span class="op">=</span> mtcars <span class="op">\</span></span>
-<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>  .with_columns(pl.col(<span class="st">"am"</span>).cast(pl.Boolean),</span>
-<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>                pl.col(<span class="st">"cyl"</span>).cast(pl.Utf8))</span>
-<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a>mod_cat <span class="op">=</span> smf.ols(<span class="st">'mpg ~ am + cyl + hp'</span>, data<span class="op">=</span>dat).fit()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>dat <span class="op">=</span> mtcars <span class="op">\</span></span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>  .with_columns(pl.col(<span class="st">"am"</span>).cast(pl.Boolean),</span>
+<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>                pl.col(<span class="st">"cyl"</span>).cast(pl.Utf8))</span>
+<span id="cb79-4"><a href="#cb79-4" aria-hidden="true" tabindex="-1"></a>mod_cat <span class="op">=</span> smf.ols(<span class="st">'mpg ~ am + cyl + hp'</span>, data<span class="op">=</span>dat).fit()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
@@ -1264,10 +1275,10 @@ Columns: am, term, contrast, estimate, std_error, statistic, p_value, s_value, c
 <div class="tab-content">
 <div id="tabset-16-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-16-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_predictions</span>(</span>
-<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>  mod_cat,</span>
-<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">cyl =</span> unique, <span class="at">am =</span> unique),</span>
-<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">by =</span> <span class="st">"am"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_predictions</span>(</span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>  mod_cat,</span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">cyl =</span> unique, <span class="at">am =</span> unique),</span>
+<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">by =</span> <span class="st">"am"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     am Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %
@@ -1281,31 +1292,18 @@ Type:  response </code></pre>
 </div>
 <div id="tabset-16-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-16-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> avg_predictions(</span>
-<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>  mod_cat,</span>
-<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>  newdata <span class="op">=</span> datagrid(mod_cat, cyl <span class="op">=</span> dat[<span class="st">"cyl"</span>].unique(), am <span class="op">=</span> dat[<span class="st">"am"</span>].unique()),</span>
-<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>  by <span class="op">=</span> <span class="st">"am"</span>)</span>
-<span id="cb80-5"><a href="#cb80-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>shape: (2, 8)
-┌───────┬──────────┬───────────┬──────┬─────────┬─────┬──────┬───────┐
-│ am    ┆ Estimate ┆ Std.Error ┆ z    ┆ P(&gt;|z|) ┆ S   ┆ 2.5% ┆ 97.5% │
-│ ---   ┆ ---      ┆ ---       ┆ ---  ┆ ---     ┆ --- ┆ ---  ┆ ---   │
-│ bool  ┆ str      ┆ str       ┆ str  ┆ str     ┆ str ┆ str  ┆ str   │
-╞═══════╪══════════╪═══════════╪══════╪═════════╪═════╪══════╪═══════╡
-│ true  ┆ 22.5     ┆ 0.834     ┆ 26.9 ┆ 0       ┆ inf ┆ 20.8 ┆ 24.2  │
-│ false ┆ 18.3     ┆ 0.785     ┆ 23.3 ┆ 0       ┆ inf ┆ 16.7 ┆ 19.9  │
-└───────┴──────────┴───────────┴──────┴─────────┴─────┴──────┴───────┘
-
-Columns: am, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>avg_predictions(</span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>  mod_cat,</span>
+<span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a>  newdata <span class="op">=</span> datagrid(mod_cat, cyl <span class="op">=</span> dat[<span class="st">"cyl"</span>].unique(), am <span class="op">=</span> dat[<span class="st">"am"</span>].unique()),</span>
+<span id="cb82-4"><a href="#cb82-4" aria-hidden="true" tabindex="-1"></a>  by <span class="op">=</span> <span class="st">"am"</span>)</span>
+<span id="cb82-5"><a href="#cb82-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
 </div>
 <p>For convenience, the <code>marginaleffects</code> package for <code>R</code> also includes a <code>marginal_means()</code> function:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="fu">marginal_means</span>(mod_cat, <span class="at">variables =</span> <span class="st">"am"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="fu">marginal_means</span>(mod_cat, <span class="at">variables =</span> <span class="st">"am"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Term Value Mean Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %
@@ -1328,8 +1326,8 @@ Type:  response </code></pre>
 <div class="tab-content">
 <div id="tabset-17-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-17-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> qsec <span class="sc">*</span> drat, <span class="at">data =</span> mtcars)</span>
-<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(mod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> qsec <span class="sc">*</span> drat, <span class="at">data =</span> mtcars)</span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(mod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>(Intercept)        qsec        drat   qsec:drat 
  12.3371987  -1.0241183  -3.4371461   0.5973153 </code></pre>
@@ -1338,8 +1336,8 @@ Type:  response </code></pre>
 </div>
 <div id="tabset-17-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-17-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a>mod <span class="op">=</span> smf.ols(<span class="st">'mpg ~ qsec * drat'</span>, data<span class="op">=</span>mtcars).fit()</span>
-<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(mod.params)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a>mod <span class="op">=</span> smf.ols(<span class="st">'mpg ~ qsec * drat'</span>, data<span class="op">=</span>mtcars).fit()</span>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(mod.params)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Intercept    12.337199
 qsec         -1.024118
@@ -1353,7 +1351,7 @@ dtype: float64</code></pre>
 </div>
 <p>Can we reject the null hypothesis that the <code>drat</code> coefficient is 2 times the size of the <code>qsec</code> coefficient?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hypotheses</span>(mod, <span class="st">"drat = 2 * qsec"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hypotheses</span>(mod, <span class="st">"drat = 2 * qsec"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
             Term Estimate Std. Error      z Pr(&gt;|z|)   S 2.5 % 97.5 %
@@ -1368,7 +1366,7 @@ Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.
 <div class="tab-content">
 <div id="tabset-18-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-18-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hypotheses</span>(mod, <span class="st">"b3 = 2 * b2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hypotheses</span>(mod, <span class="st">"b3 = 2 * b2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
         Term Estimate Std. Error      z Pr(&gt;|z|)   S 2.5 % 97.5 %
@@ -1380,8 +1378,8 @@ Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.
 </div>
 <div id="tabset-18-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-18-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a>h <span class="op">=</span> hypotheses(mod, <span class="st">"b3 = 2 * b2"</span>)</span>
-<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(h)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a>h <span class="op">=</span> hypotheses(mod, <span class="st">"b3 = 2 * b2"</span>)</span>
+<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(h)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>shape: (1, 8)
 ┌─────────┬──────────┬───────────┬────────┬─────────┬───────┬───────┬───────┐
@@ -1404,15 +1402,15 @@ Columns: term, estimate, std_error, statistic, p_value, s_value, conf_low, conf_
 <div class="tab-content">
 <div id="tabset-19-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-19-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="fu">slopes</span>(</span>
-<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a>  mod,</span>
-<span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="st">"drat"</span>,</span>
-<span id="cb94-4"><a href="#cb94-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">qsec =</span> range))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="fu">slopes</span>(</span>
+<span id="cb95-2"><a href="#cb95-2" aria-hidden="true" tabindex="-1"></a>  mod,</span>
+<span id="cb95-3"><a href="#cb95-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="st">"drat"</span>,</span>
+<span id="cb95-4"><a href="#cb95-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">qsec =</span> range))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Term qsec Estimate Std. Error    z Pr(&gt;|z|)   S  2.5 % 97.5 %
- drat 14.5     5.22       3.79 1.38   0.1678 2.6 -2.199   12.6
- drat 22.9    10.24       5.17 1.98   0.0477 4.4  0.106   20.4
+ drat 14.5     5.22       3.79 1.38   0.1682 2.6 -2.206   12.7
+ drat 22.9    10.24       5.16 1.98   0.0472 4.4  0.127   20.4
 
 Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, qsec, predicted_lo, predicted_hi, predicted, mpg, drat 
 Type:  response </code></pre>
@@ -1421,23 +1419,23 @@ Type:  response </code></pre>
 </div>
 <div id="tabset-19-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-19-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> slopes(</span>
-<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a>  mod,</span>
-<span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a>  variables <span class="op">=</span> <span class="st">"drat"</span>,</span>
-<span id="cb96-4"><a href="#cb96-4" aria-hidden="true" tabindex="-1"></a>  newdata <span class="op">=</span> datagrid(mod, qsec <span class="op">=</span> [mtcars[<span class="st">"qsec"</span>].<span class="bu">min</span>(), mtcars[<span class="st">"qsec"</span>].<span class="bu">max</span>()]))</span>
-<span id="cb96-5"><a href="#cb96-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(s)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> slopes(</span>
+<span id="cb97-2"><a href="#cb97-2" aria-hidden="true" tabindex="-1"></a>  mod,</span>
+<span id="cb97-3"><a href="#cb97-3" aria-hidden="true" tabindex="-1"></a>  variables <span class="op">=</span> <span class="st">"drat"</span>,</span>
+<span id="cb97-4"><a href="#cb97-4" aria-hidden="true" tabindex="-1"></a>  newdata <span class="op">=</span> datagrid(mod, qsec <span class="op">=</span> [mtcars[<span class="st">"qsec"</span>].<span class="bu">min</span>(), mtcars[<span class="st">"qsec"</span>].<span class="bu">max</span>()]))</span>
+<span id="cb97-5"><a href="#cb97-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(s)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>shape: (2, 9)
-┌──────┬──────────┬──────────┬───────────┬───┬─────────┬──────┬────────┬───────┐
-│ Term ┆ Contrast ┆ Estimate ┆ Std.Error ┆ … ┆ P(&gt;|z|) ┆ S    ┆ 2.5%   ┆ 97.5% │
-│ ---  ┆ ---      ┆ ---      ┆ ---       ┆   ┆ ---     ┆ ---  ┆ ---    ┆ ---   │
-│ str  ┆ str      ┆ str      ┆ str       ┆   ┆ str     ┆ str  ┆ str    ┆ str   │
-╞══════╪══════════╪══════════╪═══════════╪═══╪═════════╪══════╪════════╪═══════╡
-│ drat ┆ dY/dX    ┆ 5.22     ┆ 3.81      ┆ … ┆ 0.181   ┆ 2.47 ┆ -2.57  ┆ 13    │
-│ drat ┆ dY/dX    ┆ 10.2     ┆ 5.16      ┆ … ┆ 0.057   ┆ 4.13 ┆ -0.328 ┆ 20.8  │
-└──────┴──────────┴──────────┴───────────┴───┴─────────┴──────┴────────┴───────┘
+<pre><code>shape: (2, 10)
+┌──────┬──────┬──────────┬──────────┬───┬─────────┬──────┬────────┬───────┐
+│ qsec ┆ Term ┆ Contrast ┆ Estimate ┆ … ┆ P(&gt;|z|) ┆ S    ┆ 2.5%   ┆ 97.5% │
+│ ---  ┆ ---  ┆ ---      ┆ ---      ┆   ┆ ---     ┆ ---  ┆ ---    ┆ ---   │
+│ str  ┆ str  ┆ str      ┆ str      ┆   ┆ str     ┆ str  ┆ str    ┆ str   │
+╞══════╪══════╪══════════╪══════════╪═══╪═════════╪══════╪════════╪═══════╡
+│ 14.5 ┆ drat ┆ dY/dX    ┆ 5.22     ┆ … ┆ 0.178   ┆ 2.49 ┆ -2.52  ┆ 13    │
+│ 22.9 ┆ drat ┆ dY/dX    ┆ 10.2     ┆ … ┆ 0.0571  ┆ 4.13 ┆ -0.329 ┆ 20.8  │
+└──────┴──────┴──────────┴──────────┴───┴─────────┴──────┴────────┴───────┘
 
-Columns: rowid, term, contrast, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high, predicted, predicted_lo, predicted_hi, qsec, rownames, mpg, cyl, disp, hp, drat, wt, vs, am, gear, carb</code></pre>
+Columns: qsec, rowid, term, contrast, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high, predicted, predicted_lo, predicted_hi, rownames, mpg, cyl, disp, hp, drat, wt, vs, am, gear, carb</code></pre>
 </div>
 </div>
 </div>
@@ -1449,15 +1447,15 @@ Columns: rowid, term, contrast, estimate, std_error, statistic, p_value, s_value
 <div class="tab-content">
 <div id="tabset-20-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-20-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="fu">slopes</span>(</span>
-<span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a>  mod,</span>
-<span id="cb98-3"><a href="#cb98-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">hypothesis =</span> <span class="st">"b1 = b2"</span>,</span>
-<span id="cb98-4"><a href="#cb98-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="st">"drat"</span>,</span>
-<span id="cb98-5"><a href="#cb98-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">qsec =</span> range))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb99"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a><span class="fu">slopes</span>(</span>
+<span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a>  mod,</span>
+<span id="cb99-3"><a href="#cb99-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">hypothesis =</span> <span class="st">"b1 = b2"</span>,</span>
+<span id="cb99-4"><a href="#cb99-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="st">"drat"</span>,</span>
+<span id="cb99-5"><a href="#cb99-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">qsec =</span> range))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
   Term Estimate Std. Error      z Pr(&gt;|z|)   S 2.5 % 97.5 %
- b1=b2    -5.02       8.53 -0.588    0.556 0.8 -21.7   11.7
+ b1=b2    -5.02       8.52 -0.589    0.556 0.8 -21.7   11.7
 
 Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
 Type:  response </code></pre>
@@ -1466,21 +1464,21 @@ Type:  response </code></pre>
 </div>
 <div id="tabset-20-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-20-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> slopes(</span>
-<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a>  mod,</span>
-<span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a>  hypothesis <span class="op">=</span> <span class="st">"b1 = b2"</span>,</span>
-<span id="cb100-4"><a href="#cb100-4" aria-hidden="true" tabindex="-1"></a>  variables <span class="op">=</span> <span class="st">"drat"</span>,</span>
-<span id="cb100-5"><a href="#cb100-5" aria-hidden="true" tabindex="-1"></a>  newdata <span class="op">=</span> datagrid(mod, qsec <span class="op">=</span> [mtcars[<span class="st">"qsec"</span>].<span class="bu">min</span>(), mtcars[<span class="st">"qsec"</span>].<span class="bu">max</span>()]))</span>
-<span id="cb100-6"><a href="#cb100-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(s)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb101"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> slopes(</span>
+<span id="cb101-2"><a href="#cb101-2" aria-hidden="true" tabindex="-1"></a>  mod,</span>
+<span id="cb101-3"><a href="#cb101-3" aria-hidden="true" tabindex="-1"></a>  hypothesis <span class="op">=</span> <span class="st">"b1 = b2"</span>,</span>
+<span id="cb101-4"><a href="#cb101-4" aria-hidden="true" tabindex="-1"></a>  variables <span class="op">=</span> <span class="st">"drat"</span>,</span>
+<span id="cb101-5"><a href="#cb101-5" aria-hidden="true" tabindex="-1"></a>  newdata <span class="op">=</span> datagrid(mod, qsec <span class="op">=</span> [mtcars[<span class="st">"qsec"</span>].<span class="bu">min</span>(), mtcars[<span class="st">"qsec"</span>].<span class="bu">max</span>()]))</span>
+<span id="cb101-6"><a href="#cb101-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(s)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>shape: (1, 8)
-┌───────┬──────────┬───────────┬────────┬─────────┬───────┬───────┬───────┐
-│ Term  ┆ Estimate ┆ Std.Error ┆ z      ┆ P(&gt;|z|) ┆ S     ┆ 2.5%  ┆ 97.5% │
-│ ---   ┆ ---      ┆ ---       ┆ ---    ┆ ---     ┆ ---   ┆ ---   ┆ ---   │
-│ str   ┆ str      ┆ str       ┆ str    ┆ str     ┆ str   ┆ str   ┆ str   │
-╞═══════╪══════════╪═══════════╪════════╪═════════╪═══════╪═══════╪═══════╡
-│ b1=b2 ┆ -5.02    ┆ 8.53      ┆ -0.588 ┆ 0.561   ┆ 0.833 ┆ -22.5 ┆ 12.5  │
-└───────┴──────────┴───────────┴────────┴─────────┴───────┴───────┴───────┘
+┌───────┬──────────┬───────────┬───────┬─────────┬───────┬───────┬───────┐
+│ Term  ┆ Estimate ┆ Std.Error ┆ z     ┆ P(&gt;|z|) ┆ S     ┆ 2.5%  ┆ 97.5% │
+│ ---   ┆ ---      ┆ ---       ┆ ---   ┆ ---     ┆ ---   ┆ ---   ┆ ---   │
+│ str   ┆ str      ┆ str       ┆ str   ┆ str     ┆ str   ┆ str   ┆ str   │
+╞═══════╪══════════╪═══════════╪═══════╪═════════╪═══════╪═══════╪═══════╡
+│ b1=b2 ┆ -5.02    ┆ 8.5       ┆ -0.59 ┆ 0.56    ┆ 0.837 ┆ -22.4 ┆ 12.4  │
+└───────┴──────────┴───────────┴───────┴─────────┴───────┴───────┴───────┘
 
 Columns: term, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high</code></pre>
 </div>
@@ -1494,17 +1492,17 @@ Columns: term, estimate, std_error, statistic, p_value, s_value, conf_low, conf_
 <div class="tab-content">
 <div id="tabset-21-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-21-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_slopes</span>(mod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb103"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_slopes</span>(mod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Term Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 %
  drat     7.22      1.365 5.29  &lt; 0.001 23.0 4.549   9.90
- qsec     1.12      0.433 2.59  0.00946  6.7 0.275   1.97
+ qsec     1.12      0.433 2.60  0.00944  6.7 0.275   1.97
 
 Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high 
 Type:  response </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb104"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_slopes</span>(mod, <span class="at">hypothesis =</span> <span class="st">"drat = qsec"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb105"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a href="#cb105-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_slopes</span>(mod, <span class="at">hypothesis =</span> <span class="st">"drat = qsec"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
       Term Estimate Std. Error   z Pr(&gt;|z|)    S 2.5 % 97.5 %
@@ -1517,8 +1515,8 @@ Type:  response </code></pre>
 </div>
 <div id="tabset-21-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-21-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb106"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> avg_slopes(mod)</span>
-<span id="cb106-2"><a href="#cb106-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(s)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb107"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> avg_slopes(mod)</span>
+<span id="cb107-2"><a href="#cb107-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(s)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>shape: (2, 9)
 ┌──────┬─────────────┬──────────┬───────────┬───┬──────────┬──────┬───────┬───────┐
@@ -1527,13 +1525,13 @@ Type:  response </code></pre>
 │ str  ┆ str         ┆ str      ┆ str       ┆   ┆ str      ┆ str  ┆ str   ┆ str   │
 ╞══════╪═════════════╪══════════╪═══════════╪═══╪══════════╪══════╪═══════╪═══════╡
 │ drat ┆ mean(dY/dX) ┆ 7.22     ┆ 1.37      ┆ … ┆ 1.25e-05 ┆ 16.3 ┆ 4.43  ┆ 10    │
-│ qsec ┆ mean(dY/dX) ┆ 1.12     ┆ 0.435     ┆ … ┆ 0.0152   ┆ 6.04 ┆ 0.234 ┆ 2.01  │
+│ qsec ┆ mean(dY/dX) ┆ 1.12     ┆ 0.432     ┆ … ┆ 0.0147   ┆ 6.09 ┆ 0.239 ┆ 2.01  │
 └──────┴─────────────┴──────────┴───────────┴───┴──────────┴──────┴───────┴───────┘
 
 Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb108"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> avg_slopes(mod, hypothesis <span class="op">=</span> <span class="st">"drat = qsec"</span>)</span>
-<span id="cb108-2"><a href="#cb108-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(s)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb109"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> avg_slopes(mod, hypothesis <span class="op">=</span> <span class="st">"drat = qsec"</span>)</span>
+<span id="cb109-2"><a href="#cb109-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(s)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>shape: (1, 8)
 ┌───────────┬──────────┬───────────┬─────┬──────────┬─────┬──────┬───────┐
@@ -1556,12 +1554,12 @@ Columns: term, estimate, std_error, statistic, p_value, s_value, conf_low, conf_
 <div class="tab-content">
 <div id="tabset-22-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-22-1-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_slopes</span>(mod, <span class="at">equivalence =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb111"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_slopes</span>(mod, <span class="at">equivalence =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Term Estimate Std. Error    z Pr(&gt;|z|)    S 2.5 % 97.5 % p (NonSup) p (NonInf) p (Equiv)
  drat     7.22      1.365 5.29  &lt; 0.001 23.0 4.549   9.90     0.9999     &lt;0.001    0.9999
- qsec     1.12      0.433 2.59  0.00946  6.7 0.275   1.97     0.0216     &lt;0.001    0.0216
+ qsec     1.12      0.433 2.60  0.00944  6.7 0.275   1.97     0.0216     &lt;0.001    0.0216
 
 Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, statistic.noninf, statistic.nonsup, p.value.noninf, p.value.nonsup, p.value.equiv 
 Type:  response </code></pre>
@@ -1570,21 +1568,8 @@ Type:  response </code></pre>
 </div>
 <div id="tabset-22-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-22-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb112"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> avg_slopes(mod, equivalence <span class="op">=</span> [<span class="op">-</span><span class="fl">2.</span>, <span class="fl">2.</span>])</span>
-<span id="cb112-2"><a href="#cb112-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(s)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>shape: (2, 9)
-┌──────┬─────────────┬──────────┬───────────┬───┬──────────┬──────┬───────┬───────┐
-│ Term ┆ Contrast    ┆ Estimate ┆ Std.Error ┆ … ┆ P(&gt;|z|)  ┆ S    ┆ 2.5%  ┆ 97.5% │
-│ ---  ┆ ---         ┆ ---      ┆ ---       ┆   ┆ ---      ┆ ---  ┆ ---   ┆ ---   │
-│ str  ┆ str         ┆ str      ┆ str       ┆   ┆ str      ┆ str  ┆ str   ┆ str   │
-╞══════╪═════════════╪══════════╪═══════════╪═══╪══════════╪══════╪═══════╪═══════╡
-│ qsec ┆ mean(dY/dX) ┆ 1.12     ┆ 0.435     ┆ … ┆ 0.0152   ┆ 6.04 ┆ 0.234 ┆ 2.01  │
-│ drat ┆ mean(dY/dX) ┆ 7.22     ┆ 1.37      ┆ … ┆ 1.25e-05 ┆ 16.3 ┆ 4.43  ┆ 10    │
-└──────┴─────────────┴──────────┴───────────┴───┴──────────┴──────┴───────┴───────┘
-
-Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high, statistic_noninf, statistic_nonsup, p_value_noninf, p_value_nonsup, p_value_equiv</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb113"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> avg_slopes(mod, equivalence <span class="op">=</span> [<span class="op">-</span><span class="fl">2.</span>, <span class="fl">2.</span>])</span>
+<span id="cb113-2"><a href="#cb113-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(s)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
@@ -1717,18 +1702,57 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
   const processXRef = (id, note) => {
-    if (id.startsWith('sec-')) {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    const typesetMath = (el) => {
+      if (window.MathJax) {
+        // MathJax Typeset
+        window.MathJax.typeset([el]);
+      } else if (window.katex) {
+        // KaTeX Render
+        var mathElements = el.getElementsByClassName("math");
+        var macros = [];
+        for (var i = 0; i < mathElements.length; i++) {
+          var texText = mathElements[i].firstChild;
+          if (mathElements[i].tagName == "SPAN") {
+            window.katex.render(texText.data, mathElements[i], {
+              displayMode: mathElements[i].classList.contains('display'),
+              throwOnError: false,
+              macros: macros,
+              fleqn: false
+            });
+          }
+        }
+      }
+    }
+    if (id === null || id.startsWith('sec-')) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
       if (note.children && note.children.length > 2) {
         for (let i = 0; i < 2; i++) {
           container.appendChild(note.children[i].cloneNode(true));
         }
+        typesetMath(container);
         return container.innerHTML
       } else {
+        typesetMath(note);
         return note.innerHTML;
       }
     } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      typesetMath(note);
       return note.innerHTML;
     }
   }
@@ -1738,27 +1762,56 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       instance.disable();
       let url = xref.getAttribute('href');
       let hash = undefined; 
-      try { hash = new URL(url).hash; } catch {}
-      const id = hash.replace(/^#\/?/, "");
-      const note = window.document.getElementById(id);
-      if (note !== null) {
-        try {
-          const html = processXRef(id, note);
-          instance.setContent(html);
-        } finally {
-          instance.enable();
-          instance.show();
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
         }
       } else {
-        // See if we can fetch this
-        fetch(url.split('#')[0])
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
         .then(res => res.text())
         .then(html => {
           const parser = new DOMParser();
           const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.getElementById(id);
+          const note = htmlDoc.querySelector('main.content');
           if (note !== null) {
-            const html = processXRef(id, note);
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
             instance.setContent(html);
           } 
         }).finally(() => {
@@ -1836,6 +1889,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1897,12 +1976,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../index.html" class="pagination-link">
+      <a href="../index.html" class="pagination-link  aria-label=" <span="">1&nbsp; <span class="chapter-title">Home</span>"&gt;
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Home</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../vignettes/predictions.html" class="pagination-link">
+      <a href="../vignettes/predictions.html" class="pagination-link" aria-label="<span class='chapter-number'>4</span>&nbsp; <span class='chapter-title'>Predictions</span>">
         <span class="nav-page-text"><span class="chapter-title">Predictions</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>

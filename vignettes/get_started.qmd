@@ -1,6 +1,5 @@
 
 # Get Started
-include-after-body: toggle-tabs.html
 
 
 ```{r, include = FALSE}
@@ -40,7 +39,7 @@ install.packages(
 
 Install from PyPI:
 
-```{python}
+```{bash}
 #| eval: false
 pip install marginaleffects
 ```
@@ -388,8 +387,8 @@ avg_predictions(
   by = "am")
 ```
 ### Python
-```{python}
-p = avg_predictions(
+```{python, eval = FALSE}
+avg_predictions(
   mod_cat,
   newdata = datagrid(mod_cat, cyl = dat["cyl"].unique(), am = dat["am"].unique()),
   by = "am")
@@ -513,7 +512,7 @@ Now, imagine that for theoretical (or substantive or clinical) reasons, we only 
 avg_slopes(mod, equivalence = c(-2, 2))
 ```
 ### Python
-```{python}
+```{python, eval = FALSE}
 s = avg_slopes(mod, equivalence = [-2., 2.])
 print(s)
 ```

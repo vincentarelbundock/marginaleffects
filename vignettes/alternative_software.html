@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.451">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>alternative_software</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="alternative_software_files/libs/clipboard/clipboard.min.js"></script>
+<script src="alternative_software_files/libs/quarto-html/quarto.js"></script>
+<script src="alternative_software_files/libs/quarto-html/popper.min.js"></script>
+<script src="alternative_software_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="alternative_software_files/libs/quarto-html/anchor.min.js"></script>
+<link href="alternative_software_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="alternative_software_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="alternative_software_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="alternative_software_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="alternative_software_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+
+
+
+<section id="alternative-software" class="level1">
+<h1>Alternative Software</h1>
+<p>If you do not like <code>marginaleffects</code>, you may want to consider one of the alternatives described below:</p>
+<ul>
+<li><code>margins</code>: https://cran.r-project.org/web/packages/margins/index.html</li>
+<li><code>prediction</code>: https://cran.r-project.org/web/packages/prediction/index.html</li>
+<li><code>emmeans</code>: https://cran.r-project.org/web/packages/emmeans/index.html</li>
+<li><code>brmsmargins</code>: https://joshuawiley.com/brmsmargins/</li>
+<li><code>effects</code>: https://cran.r-project.org/package=effects</li>
+<li><code>modelbased</code>: https://easystats.github.io/modelbased/</li>
+<li><code>ggeffects</code>: https://strengejacke.github.io/ggeffects/</li>
+<li><code>Stata</code> by StataCorp LLC</li>
+</ul>
+<section id="emmeans" class="level2">
+<h2 class="anchored" data-anchor-id="emmeans"><code>emmeans</code></h2>
+<p>The <a href="https://cran.r-project.org/web/packages/emmeans/index.html"><code>emmeans</code> package</a> is developed by Russell V. Lenth and colleagues. <code>emmeans</code> is a truly incredible piece of software, and a trailblazer in the <code>R</code> ecosystem. It is an <em>extremely</em> powerful package whose functionality overlaps <code>marginaleffects</code> to a significant degree: marginal means, contrasts, and slopes. Even if the two packages can compute many of the same quantities, <code>emmeans</code> and <code>marginaleffects</code> have pretty different philosophies with respect to user interface and computation.</p>
+<p>An <code>emmeans</code> analysis typically starts by computing <a href="marginalmeans.html">“marginal means”</a> by holding all numeric covariates at their means, and by averaging across a balanced grid of categorical predictors. Then, users can use the <code>contrast()</code> function to estimate the difference between marginal means.</p>
+<p>The <code>marginaleffects</code> package supplies a <code>marginal_means</code> function which can replicate most <code>emmeans</code> analyses by computing marginal means. However, the typical analysis is more squarely centered on predicted/fitted values. This is a useful starting point because, in many cases, analysts will find it easy and intuitive to express their scientific queries in terms of changes in predicted values. For example,</p>
+<ul>
+<li>How does the average predicted probability of survival differ between treatment and control group?</li>
+<li>What is the difference between the predicted wage of college and high school graduates?</li>
+</ul>
+<p>Let’s say we estimate a linear regression model with two continuous regressors and a multiplicative interaction:</p>
+<p><span class="math display">\[y = \beta_0 + \beta_1 x + \beta_2 z + \beta_3 x \cdot z + \varepsilon\]</span></p>
+<p>In this model, the effect of <span class="math inline">\(x\)</span> on <span class="math inline">\(y\)</span> will depend on the value of covariate <span class="math inline">\(z\)</span>. Let’s say the user wants to estimate what happens to the predicted value of <span class="math inline">\(y\)</span> when <span class="math inline">\(x\)</span> increases by 1 unit, when <span class="math inline">\(z \in \{-1, 0, 1\}\)</span>. To do this, we use the <code>comparisons()</code> function. The <code>variables</code> argument determines the scientific query of interest, and the <code>newdata</code> argument determines the grid of covariate values on which we want to evaluate the query:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x <span class="sc">*</span> z, data)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  model,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">x =</span> <span class="dv">1</span>), <span class="co"># what is the effect of 1-unit change in x?</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">z =</span> <span class="sc">-</span><span class="dv">1</span><span class="sc">:</span><span class="dv">1</span>) <span class="co"># when z is held at values -1, 0, or 1</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>As <a href="https://marginaleffects.com/index.html#table-of-contents">the vignettes show,</a> <code>marginaleffects</code> can also compute contrasts on marginal means. It can also compute various quantities of interest like raw fitted values, slopes (partial derivatives), and contrasts between marginal means. It also offers a flexible mechanism to run (non-)linear hypothesis tests using the delta method, and it offers fully customizable strategy to compute quantities like odds ratios (or completely arbitrary functions of predicted outcome).</p>
+<p>Thus, in my (Vincent’s) biased opinion, the main benefits of <code>marginaleffects</code> over <code>emmeans</code> are:</p>
+<ul>
+<li>Support more model types.</li>
+<li>Simpler, more intuitive, and highly consistent user interface.</li>
+<li>Easier to compute average slopes or unit-level contrasts for whole datasets.</li>
+<li>Easier to compute slopes (aka marginal effects, trends, or partial derivatives) for custom grids and continuous regressors.</li>
+<li>Easier to implement causal inference strategies like the parametric g-formula and regression adjustment in experiments (see vignettes).</li>
+<li>Allows the computation of arbitrary quantities of interest via user-supplied functions and automatic delta method inference.</li>
+<li>Common plots are easy with the <code>plot_predictions()</code>, <code>plot_comparisons()</code>, and <code>plot_slopes()</code> functions.</li>
+</ul>
+<p>To be fair, many of the <code>marginaleffects</code> advantages listed above come down to subjective preferences over user interface. Readers are thus encouraged to try both packages to see which interface they prefer.</p>
+<p>The main advantages of <code>emmeans</code> over <code>marginaleffects</code> arise when users are specifically interested in marginal means, where <code>emmeans</code> tends to be much faster and to have a lot of functionality to handle backtransformations. <code>emmeans</code> also has better functionality for effect sizes; notably, the <code>eff_size()</code> function can return effect size estimates that account for uncertainty in both estimated effects and the population SD.</p>
+<p>Please let me know if you find other features in <code>emmeans</code> so I can add them to this list.</p>
+<p>The <a href="marginalmeans.html">Marginal Means Vignette</a> includes side-by-side comparisons of <code>emmeans</code> and <code>marginaleffects</code> to compute marginal means. The rest of this section compares the syntax for contrasts and marginaleffects.</p>
+<section id="contrasts" class="level3">
+<h3 class="anchored" data-anchor-id="contrasts">Contrasts</h3>
+<p>As far as I can tell, <code>emmeans</code> does not provide an easy way to compute unit-level contrasts for every row of the dataset used to fit our model. Therefore, the side-by-side syntax shown below will always include <code>newdata=datagrid()</code> to specify that we want to compute only one contrast: at the mean values of the regressors. In day-to-day practice with <code>slopes()</code>, however, this extra argument would not be necessary.</p>
+<p>Fit a model:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emmeans)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">glm</span>(vs <span class="sc">~</span> hp <span class="sc">+</span> <span class="fu">factor</span>(cyl), <span class="at">data =</span> mtcars, <span class="at">family =</span> binomial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Link scale, pairwise contrasts:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>emm <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(mod, <span class="at">specs =</span> <span class="st">"cyl"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">contrast</span>(emm, <span class="at">method =</span> <span class="st">"revpairwise"</span>, <span class="at">adjust =</span> <span class="st">"none"</span>, <span class="at">df =</span> <span class="cn">Inf</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  contrast    estimate      SE  df z.ratio p.value</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  cyl6 - cyl4   -0.905    1.63 Inf  -0.555  0.5789</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  cyl8 - cyl4  -19.542 4367.17 Inf  -0.004  0.9964</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  cyl8 - cyl6  -18.637 4367.16 Inf  -0.004  0.9966</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Degrees-of-freedom method: user-specified </span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Results are given on the log odds ratio (not the response) scale.</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(mod,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>            <span class="at">type =</span> <span class="st">"link"</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>            <span class="at">newdata =</span> <span class="st">"mean"</span>,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>            <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">cyl =</span> <span class="st">"pairwise"</span>))</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Contrast Estimate Std. Error        z Pr(&gt;|z|)   S   2.5 %  97.5 %  hp cyl</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   cyl    6 - 4   -0.905       1.63 -0.55506    0.579 0.8    -4.1    2.29 147   8</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   cyl    8 - 4  -19.542    4367.17 -0.00447    0.996 0.0 -8579.0 8539.95 147   8</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   cyl    8 - 6  -18.637    4367.17 -0.00427    0.997 0.0 -8578.1 8540.85 147   8</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, vs, hp, cyl </span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  link</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Response scale, reference groups:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>emm <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(mod, <span class="at">specs =</span> <span class="st">"cyl"</span>, <span class="at">regrid =</span> <span class="st">"response"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">contrast</span>(emm, <span class="at">method =</span> <span class="st">"trt.vs.ctrl1"</span>, <span class="at">adjust =</span> <span class="st">"none"</span>, <span class="at">df =</span> <span class="cn">Inf</span>, <span class="at">ratios =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  contrast    estimate    SE  df z.ratio p.value</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  cyl6 - cyl4   -0.222 0.394 Inf  -0.564  0.5727</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  cyl8 - cyl4   -0.595 0.511 Inf  -1.163  0.2447</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Degrees-of-freedom method: user-specified</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(mod, <span class="at">newdata =</span> <span class="st">"mean"</span>)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Contrast  Estimate Std. Error         z Pr(&gt;|z|)   S     2.5 %   97.5 %  hp cyl</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   cyl    6 - 4 -2.22e-01   3.94e-01 -0.564103    0.573 0.8 -9.94e-01 5.50e-01 147   8</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   cyl    8 - 4 -5.95e-01   5.11e-01 -1.163332    0.245 2.0 -1.60e+00 4.07e-01 147   8</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   hp     +1    -1.53e-10   6.69e-07 -0.000229    1.000 0.0 -1.31e-06 1.31e-06 147   8</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, vs, hp, cyl </span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="contrasts-by-group" class="level3">
+<h3 class="anchored" data-anchor-id="contrasts-by-group">Contrasts by group</h3>
+<p>Here is a slightly more complicated example with contrasts estimated by subgroup in a <code>lme4</code> mixed effects model. First we estimate a model and compute pairwise contrasts by subgroup using <code>emmeans</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emmeans)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"https://vincentarelbundock.github.io/Rdatasets/csv/lme4/VerbAgg.csv"</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>woman <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(dat<span class="sc">$</span>Gender <span class="sc">==</span> <span class="st">"F"</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">glmer</span>(</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    woman <span class="sc">~</span> btype <span class="sc">*</span> resp <span class="sc">+</span> situ <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">+</span> Anger <span class="sc">|</span> item),</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> binomial,</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> dat)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(mod, <span class="at">specs =</span> <span class="st">"btype"</span>, <span class="at">by =</span> <span class="st">"resp"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">contrast</span>(<span class="at">method =</span> <span class="st">"revpairwise"</span>, <span class="at">adjust =</span> <span class="st">"none"</span>)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; resp = no:</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  contrast      estimate     SE  df z.ratio p.value</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  scold - curse  -0.0152 0.1097 Inf  -0.139  0.8898</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  shout - curse  -0.2533 0.1022 Inf  -2.479  0.0132</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  shout - scold  -0.2381 0.0886 Inf  -2.686  0.0072</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; resp = perhaps:</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  contrast      estimate     SE  df z.ratio p.value</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  scold - curse  -0.2393 0.1178 Inf  -2.031  0.0422</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  shout - curse  -0.0834 0.1330 Inf  -0.627  0.5309</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  shout - scold   0.1559 0.1358 Inf   1.148  0.2510</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; resp = yes:</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  contrast      estimate     SE  df z.ratio p.value</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  scold - curse   0.0391 0.1292 Inf   0.302  0.7624</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  shout - curse   0.5802 0.1784 Inf   3.252  0.0011</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  shout - scold   0.5411 0.1888 Inf   2.866  0.0042</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Results are averaged over the levels of: situ </span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Results are given on the log odds ratio (not the response) scale.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>What did <code>emmeans</code> do to obtain these results? Roughly speaking:</p>
+<ol type="1">
+<li>Create a prediction grid with one cell for each combination of categorical predictors in the model, and all numeric variables held at their means.</li>
+<li>Make adjusted predictions in each cell of the prediction grid.</li>
+<li>Take the average of those predictions (marginal means) for each combination of <code>btype</code> (focal variable) and <code>resp</code> (group <code>by</code> variable).</li>
+<li>Compute pairwise differences (contrasts) in marginal means across different levels of the focal variable <code>btype</code>.</li>
+</ol>
+<p>In short, <code>emmeans</code> computes pairwise contrasts between <em>marginal means</em>, which are themselves averages of adjusted predictions. This is different from the default types of contrasts produced by <code>comparisons()</code>, which reports contrasts between adjusted predictions, <em>without</em> averaging across a pre-specified grid of predictors. What does <code>comparisons()</code> do instead?</p>
+<p>Let <code>newdata</code> be a data frame supplied by the user (or the original data frame used to fit the model), then:</p>
+<ol type="1">
+<li>Create a new data frame called <code>newdata2</code>, which is identical to <code>newdata</code> except that the focal variable is incremented by one level.</li>
+<li>Compute contrasts as the difference between adjusted predictions made on the two datasets:
+<ul>
+<li><code>predict(model, newdata = newdata2) - predict(model, newdata = newdata)</code></li>
+</ul></li>
+</ol>
+<p>Although it is not idiomatic, we can use still use <code>comparisons()</code> to emulate the <code>emmeans</code> results. First, we create a prediction grid with one cell for each combination of categorical predictor in the model:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>nd <span class="ot">&lt;-</span> <span class="fu">datagrid</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">model =</span> mod,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">resp =</span> dat<span class="sc">$</span>resp,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">situ =</span> dat<span class="sc">$</span>situ,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">btype =</span> dat<span class="sc">$</span>btype)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(nd)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 18</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This grid has 18 rows, one for each combination of levels for the <code>resp</code> (3), <code>situ</code> (2), and <code>btype</code> (3) variables (3 * 2 * 3 = 18).</p>
+<p>Then we compute pairwise contrasts over this grid:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>cmp <span class="ot">&lt;-</span> <span class="fu">comparisons</span>(mod,</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">variables =</span> <span class="fu">list</span>(<span class="st">"btype"</span> <span class="ot">=</span> <span class="st">"pairwise"</span>),</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> nd,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">"link"</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(cmp)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 54</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>There are 3 pairwise contrasts, corresponding to the 3 pairwise comparisons possible between the 3 levels of the focal variable <code>btype</code>: <code>scold-curse</code>, <code>shout-scold</code>, <code>shout-curse</code>. The <code>comparisons()</code> function estimates those 3 contrasts for each row of <code>newdata</code>, so we get <span class="math inline">\(18 \times 3 = 54\)</span> rows.</p>
+<p>Finally, if we wanted contrasts averaged over each subgroup of the <code>resp</code> variable, we can use the <code>avg_comparisons()</code> function with the <code>by</code> argument:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(mod,</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="st">"resp"</span>,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">variables =</span> <span class="fu">list</span>(<span class="st">"btype"</span> <span class="ot">=</span> <span class="st">"pairwise"</span>),</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> nd,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">"link"</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   Term                  Contrast    resp Estimate Std. Error      z Pr(&gt;|z|)   S  2.5 %   97.5 %</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  btype mean(scold) - mean(curse) no       -0.0152     0.1097 -0.139  0.88976 0.2 -0.230  0.19972</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  btype mean(scold) - mean(curse) perhaps  -0.2393     0.1178 -2.031  0.04221 4.6 -0.470 -0.00842</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  btype mean(scold) - mean(curse) yes       0.0391     0.1292  0.302  0.76239 0.4 -0.214  0.29234</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  btype mean(shout) - mean(curse) no       -0.2533     0.1022 -2.479  0.01319 6.2 -0.454 -0.05300</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  btype mean(shout) - mean(curse) perhaps  -0.0834     0.1330 -0.627  0.53090 0.9 -0.344  0.17737</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  btype mean(shout) - mean(curse) yes       0.5802     0.1784  3.252  0.00115 9.8  0.230  0.92987</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  btype mean(shout) - mean(scold) no       -0.2381     0.0886 -2.686  0.00723 7.1 -0.412 -0.06436</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  btype mean(shout) - mean(scold) perhaps   0.1559     0.1358  1.148  0.25103 2.0 -0.110  0.42215</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  btype mean(shout) - mean(scold) yes       0.5411     0.1888  2.866  0.00416 7.9  0.171  0.91116</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, resp, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  link</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>These results are identical to those produced by <code>emmeans</code> (except for <span class="math inline">\(t\)</span> vs.&nbsp;<span class="math inline">\(z\)</span>).</p>
+</section>
+<section id="marginal-effects" class="level3">
+<h3 class="anchored" data-anchor-id="marginal-effects">Marginal Effects</h3>
+<p>As far as I can tell, <code>emmeans::emtrends</code> makes it easier to compute marginal effects for a few user-specified values than for large grids or for the full original dataset.</p>
+<p>Response scale, user-specified values:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">glm</span>(vs <span class="sc">~</span> hp <span class="sc">+</span> <span class="fu">factor</span>(cyl), <span class="at">data =</span> mtcars, <span class="at">family =</span> binomial)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">emtrends</span>(mod, <span class="sc">~</span>hp, <span class="st">"hp"</span>, <span class="at">regrid =</span> <span class="st">"response"</span>, <span class="at">at =</span> <span class="fu">list</span>(<span class="at">cyl =</span> <span class="dv">4</span>))</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   hp hp.trend    SE  df asymp.LCL asymp.UCL</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  147 -0.00786 0.011 Inf   -0.0294    0.0137</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Confidence level used: 0.95</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="fu">slopes</span>(mod, <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">cyl =</span> <span class="dv">4</span>))</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Contrast cyl Estimate Std. Error      z Pr(&gt;|z|)   S   2.5 % 97.5 %</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   cyl    6 - 4   4 -0.22219      0.394 -0.564    0.573 0.8 -0.9942 0.5498</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   cyl    8 - 4   4 -0.59469      0.511 -1.163    0.245 2.0 -1.5966 0.4072</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   hp     dY/dX   4 -0.00785      0.011 -0.713    0.476 1.1 -0.0294 0.0137</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, cyl, predicted_lo, predicted_hi, predicted, vs, hp </span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Link scale, user-specified values:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emtrends</span>(mod, <span class="sc">~</span>hp, <span class="st">"hp"</span>, <span class="at">at =</span> <span class="fu">list</span>(<span class="at">cyl =</span> <span class="dv">4</span>))</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   hp hp.trend     SE  df asymp.LCL asymp.UCL</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  147  -0.0326 0.0339 Inf    -0.099    0.0338</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Confidence level used: 0.95</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">slopes</span>(mod, <span class="at">type =</span> <span class="st">"link"</span>, <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">cyl =</span> <span class="dv">4</span>))</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Contrast cyl Estimate Std. Error        z Pr(&gt;|z|)   S     2.5 %   97.5 %</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   cyl    6 - 4   4  -0.9049   1.63e+00 -0.55506    0.579 0.8    -4.100 2.29e+00</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   cyl    8 - 4   4 -19.5418   4.37e+03 -0.00447    0.996 0.0 -8579.030 8.54e+03</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   hp     dY/dX   4  -0.0326   3.39e-02 -0.96147    0.336 1.6    -0.099 3.38e-02</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, term, contrast, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, cyl, predicted_lo, predicted_hi, predicted, vs, hp </span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  link</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="more-examples" class="level3">
+<h3 class="anchored" data-anchor-id="more-examples">More examples</h3>
+<p>Here are a few more <code>emmeans</code> vs.&nbsp;<code>marginaleffects</code> comparisons:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Example of examining a continuous x categorical interaction using emmeans and marginaleffects</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Authors: Cameron Patrick and Vincent Arel-Bundock</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emmeans)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="do">## use the mtcars data, set up am as a factor</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(mtcars)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>mc <span class="ot">&lt;-</span> mtcars <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">am =</span> <span class="fu">factor</span>(am))</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="do">## fit a linear model to mpg with wt x am interaction</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> wt<span class="sc">*</span>am, <span class="at">data =</span> mc)</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m)</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="do">## 1. means for each level of am at mean wt.</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(m, <span class="st">"am"</span>)</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="fu">marginal_means</span>(m, <span class="at">variables =</span> <span class="st">"am"</span>)</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(m, <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">am =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>))</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a><span class="do">## 2. means for each level of am at wt = 2.5, 3, 3.5.</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(m, <span class="fu">c</span>(<span class="st">"am"</span>, <span class="st">"wt"</span>), <span class="at">at =</span> <span class="fu">list</span>(<span class="at">wt =</span> <span class="fu">c</span>(<span class="fl">2.5</span>, <span class="dv">3</span>, <span class="fl">3.5</span>)))</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(m, <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">am =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="at">wt =</span> <span class="fu">c</span>(<span class="fl">2.5</span>, <span class="dv">3</span>, <span class="fl">3.5</span>))</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a><span class="do">## 3. means for wt = 2.5, 3, 3.5, averaged over levels of am (implicitly!).</span></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(m, <span class="st">"wt"</span>, <span class="at">at =</span> <span class="fu">list</span>(<span class="at">wt =</span> <span class="fu">c</span>(<span class="fl">2.5</span>, <span class="dv">3</span>, <span class="fl">3.5</span>)))</span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a><span class="do">## same thing, but the averaging is more explicit, using the `by` argument</span></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(</span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>  m,</span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">am =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="at">wt =</span> <span class="fu">c</span>(<span class="fl">2.5</span>, <span class="dv">3</span>, <span class="fl">3.5</span>)),</span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">by =</span> <span class="st">"wt"</span>)</span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a><span class="do">## 4. graphical version of 2.</span></span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a><span class="fu">emmip</span>(m, am <span class="sc">~</span> wt, <span class="at">at =</span> <span class="fu">list</span>(<span class="at">wt =</span> <span class="fu">c</span>(<span class="fl">2.5</span>, <span class="dv">3</span>, <span class="fl">3.5</span>)), <span class="at">CIs =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_predictions</span>(m, <span class="at">condition =</span> <span class="fu">c</span>(<span class="st">"wt"</span>, <span class="st">"am"</span>))</span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a><span class="do">## 5. compare levels of am at specific values of wt.</span></span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a><span class="do">## this is a bit ugly because the emmeans defaults for pairs() are silly.</span></span>
+<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a><span class="do">## infer = TRUE: enable confidence intervals.</span></span>
+<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a><span class="do">## adjust = "none": begone, Tukey.</span></span>
+<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a><span class="do">## reverse = TRUE: contrasts as (later level) - (earlier level)</span></span>
+<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(<span class="fu">emmeans</span>(m, <span class="st">"am"</span>, <span class="at">by =</span> <span class="st">"wt"</span>, <span class="at">at =</span> <span class="fu">list</span>(<span class="at">wt =</span> <span class="fu">c</span>(<span class="fl">2.5</span>, <span class="dv">3</span>, <span class="fl">3.5</span>))),</span>
+<span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a>      <span class="at">infer =</span> <span class="cn">TRUE</span>, <span class="at">adjust =</span> <span class="st">"none"</span>, <span class="at">reverse =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb11-45"><a href="#cb11-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-46"><a href="#cb11-46" aria-hidden="true" tabindex="-1"></a><span class="fu">comparisons</span>(</span>
+<span id="cb11-47"><a href="#cb11-47" aria-hidden="true" tabindex="-1"></a>  m,</span>
+<span id="cb11-48"><a href="#cb11-48" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="st">"am"</span>,</span>
+<span id="cb11-49"><a href="#cb11-49" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">wt =</span> <span class="fu">c</span>(<span class="fl">2.5</span>, <span class="dv">3</span>, <span class="fl">3.5</span>)))</span>
+<span id="cb11-50"><a href="#cb11-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-51"><a href="#cb11-51" aria-hidden="true" tabindex="-1"></a><span class="do">## 6. plot of pairswise comparisons</span></span>
+<span id="cb11-52"><a href="#cb11-52" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">pairs</span>(<span class="fu">emmeans</span>(m, <span class="st">"am"</span>, <span class="at">by =</span> <span class="st">"wt"</span>, <span class="at">at =</span> <span class="fu">list</span>(<span class="at">wt =</span> <span class="fu">c</span>(<span class="fl">2.5</span>, <span class="dv">3</span>, <span class="fl">3.5</span>))),</span>
+<span id="cb11-53"><a href="#cb11-53" aria-hidden="true" tabindex="-1"></a>      <span class="at">infer =</span> <span class="cn">TRUE</span>, <span class="at">adjust =</span> <span class="st">"none"</span>, <span class="at">reverse =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb11-54"><a href="#cb11-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-55"><a href="#cb11-55" aria-hidden="true" tabindex="-1"></a><span class="do">## Since `wt` is numeric, the default is to plot it as a continuous variable on</span></span>
+<span id="cb11-56"><a href="#cb11-56" aria-hidden="true" tabindex="-1"></a><span class="do">## the x-axis.  But not that this is the **exact same info** as in the emmeans plot.</span></span>
+<span id="cb11-57"><a href="#cb11-57" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_comparisons</span>(m, <span class="at">variables =</span> <span class="st">"am"</span>, <span class="at">condition =</span> <span class="st">"wt"</span>)</span>
+<span id="cb11-58"><a href="#cb11-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-59"><a href="#cb11-59" aria-hidden="true" tabindex="-1"></a><span class="do">## You of course customize everything, set draw=FALSE, and feed the raw data to feed to ggplot2</span></span>
+<span id="cb11-60"><a href="#cb11-60" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">plot_comparisons</span>(</span>
+<span id="cb11-61"><a href="#cb11-61" aria-hidden="true" tabindex="-1"></a>  m,</span>
+<span id="cb11-62"><a href="#cb11-62" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="st">"am"</span>,</span>
+<span id="cb11-63"><a href="#cb11-63" aria-hidden="true" tabindex="-1"></a>  <span class="at">condition =</span> <span class="fu">list</span>(<span class="at">wt =</span> <span class="fu">c</span>(<span class="fl">2.5</span>, <span class="dv">3</span>, <span class="fl">3.5</span>)),</span>
+<span id="cb11-64"><a href="#cb11-64" aria-hidden="true" tabindex="-1"></a>  <span class="at">draw =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb11-65"><a href="#cb11-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-66"><a href="#cb11-66" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(p, <span class="fu">aes</span>(<span class="at">y =</span> wt, <span class="at">x =</span> comparison, <span class="at">xmin =</span> conf.low, <span class="at">xmax =</span> conf.high)) <span class="sc">+</span></span>
+<span id="cb11-67"><a href="#cb11-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointrange</span>()</span>
+<span id="cb11-68"><a href="#cb11-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-69"><a href="#cb11-69" aria-hidden="true" tabindex="-1"></a><span class="do">## 7. slope of wt for each level of am</span></span>
+<span id="cb11-70"><a href="#cb11-70" aria-hidden="true" tabindex="-1"></a><span class="fu">emtrends</span>(m, <span class="st">"am"</span>, <span class="st">"wt"</span>)</span>
+<span id="cb11-71"><a href="#cb11-71" aria-hidden="true" tabindex="-1"></a><span class="fu">slopes</span>(m, <span class="at">newdata =</span> <span class="fu">datagrid</span>(<span class="at">am =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="margins-and-prediction" class="level2">
+<h2 class="anchored" data-anchor-id="margins-and-prediction"><code>margins</code> and <code>prediction</code></h2>
+<p>The <a href="https://cran.r-project.org/web/packages/margins/index.html"><code>margins</code></a> and <a href="https://cran.r-project.org/web/packages/prediction/index.html"><code>prediction</code></a> packages for <code>R</code> were designed by Thomas Leeper to emulate the behavior of the <code>margins</code> command from <code>Stata</code>. These packages are trailblazers and strongly influenced the development of <code>marginaleffects</code>. The main benefits of <code>marginaleffects</code> over these packages are:</p>
+<ul>
+<li>Support more model types</li>
+<li>Faster</li>
+<li>Memory efficient</li>
+<li>Plots using <code>ggplot2</code> instead of Base R</li>
+<li>More extensive test suite</li>
+<li>Active development</li>
+</ul>
+<p>The syntax of the two packages is very similar.</p>
+<section id="average-marginal-effects" class="level3">
+<h3 class="anchored" data-anchor-id="average-marginal-effects">Average Marginal Effects</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(margins)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> cyl <span class="sc">+</span> hp <span class="sc">+</span> wt, <span class="at">data =</span> mtcars)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>mar <span class="ot">&lt;-</span> <span class="fu">margins</span>(mod)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mar)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  factor     AME     SE       z      p   lower   upper</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     cyl -0.9416 0.5509 -1.7092 0.0874 -2.0214  0.1382</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      hp -0.0180 0.0119 -1.5188 0.1288 -0.0413  0.0052</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      wt -3.1670 0.7406 -4.2764 0.0000 -4.6185 -1.7155</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>mfx <span class="ot">&lt;-</span> <span class="fu">slopes</span>(mod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="individual-level-marginal-effects" class="level3">
+<h3 class="anchored" data-anchor-id="individual-level-marginal-effects">Individual-Level Marginal Effects</h3>
+<p>Marginal effects in a user-specified data frame:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">data.frame</span>(mar))</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    mpg cyl disp  hp drat    wt  qsec vs am gear carb   fitted se.fitted   dydx_cyl    dydx_hp   dydx_wt Var_dydx_cyl  Var_dydx_hp Var_dydx_wt X_weights X_at_number</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4 22.82043 0.6876212 -0.9416168 -0.0180381 -3.166973    0.3035104 0.0001410451   0.5484521        NA           1</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4 22.01285 0.6056817 -0.9416168 -0.0180381 -3.166973    0.3035104 0.0001410451   0.5484521        NA           1</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 22.8   4  108  93 3.85 2.320 18.61  1  1    4    1 25.96040 0.7349593 -0.9416168 -0.0180381 -3.166973    0.3035104 0.0001410451   0.5484521        NA           1</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1 20.93608 0.5800910 -0.9416168 -0.0180381 -3.166973    0.3035104 0.0001410451   0.5484521        NA           1</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2 17.16780 0.8322986 -0.9416168 -0.0180381 -3.166973    0.3035104 0.0001410451   0.5484521        NA           1</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 18.1   6  225 105 2.76 3.460 20.22  1  0    3    1 20.25036 0.6638322 -0.9416168 -0.0180381 -3.166973    0.3035104 0.0001410451   0.5484521        NA           1</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(mfx)</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Estimate Std. Error     z Pr(&gt;|z|)   S 2.5 % 97.5 %</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   cyl   -0.942      0.551 -1.71   0.0875 3.5 -2.02  0.138</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   cyl   -0.942      0.551 -1.71   0.0875 3.5 -2.02  0.138</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   cyl   -0.942      0.551 -1.71   0.0875 3.5 -2.02  0.138</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   cyl   -0.942      0.551 -1.71   0.0875 3.5 -2.02  0.138</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   cyl   -0.942      0.551 -1.71   0.0875 3.5 -2.02  0.138</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   cyl   -0.942      0.551 -1.71   0.0875 3.5 -2.02  0.138</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, mpg, cyl, hp, wt </span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>nd <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">cyl =</span> <span class="dv">4</span>, <span class="at">hp =</span> <span class="dv">110</span>, <span class="at">wt =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="marginal-effects-at-the-mean" class="level3">
+<h3 class="anchored" data-anchor-id="marginal-effects-at-the-mean">Marginal Effects at the Mean</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>mar <span class="ot">&lt;-</span> <span class="fu">margins</span>(mod, <span class="at">data =</span> <span class="fu">data.frame</span>(prediction<span class="sc">::</span><span class="fu">mean_or_mode</span>(mtcars)), <span class="at">unit_ses =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(mar)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        mpg    cyl     disp       hp     drat      wt     qsec     vs      am   gear   carb   fitted se.fitted   dydx_cyl    dydx_hp   dydx_wt Var_dydx_cyl  Var_dydx_hp Var_dydx_wt SE_dydx_cyl SE_dydx_hp SE_dydx_wt X_weights X_at_number</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 20.09062 6.1875 230.7219 146.6875 3.596563 3.21725 17.84875 0.4375 0.40625 3.6875 2.8125 20.09062 0.4439832 -0.9416168 -0.0180381 -3.166973    0.3035013 0.0001410453     0.54846   0.5509096 0.01187625  0.7405808        NA           1</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="fu">slopes</span>(mod, <span class="at">newdata =</span> <span class="st">"mean"</span>)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Estimate Std. Error     z Pr(&gt;|z|)    S   2.5 %   97.5 %</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   cyl   -0.942     0.5511 -1.71   0.0875  3.5 -2.0217  0.13847</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   hp    -0.018     0.0119 -1.52   0.1288  3.0 -0.0413  0.00524</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   wt    -3.167     0.7407 -4.28   &lt;0.001 15.7 -4.6187 -1.71523</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted, mpg, cyl, hp, wt </span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="counterfactual-average-marginal-effects" class="level3">
+<h3 class="anchored" data-anchor-id="counterfactual-average-marginal-effects">Counterfactual Average Marginal Effects</h3>
+<p>The <code>at</code> argument of the <code>margins</code> package emulates <code>Stata</code> by fixing the values of some variables at user-specified values, and by replicating the full dataset several times for each combination of the supplied values (see the <code>Stata</code> section below). For example, if the dataset includes 32 rows and the user calls <code>at=list(cyl=c(4, 6))</code>, <code>margins</code> will compute 64 unit-level marginal effects estimates:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> mtcars</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>dat<span class="sc">$</span>cyl <span class="ot">&lt;-</span> <span class="fu">factor</span>(dat<span class="sc">$</span>cyl)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> cyl <span class="sc">*</span> hp <span class="sc">+</span> wt, <span class="at">data =</span> mtcars)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>mar <span class="ot">&lt;-</span> <span class="fu">margins</span>(mod, <span class="at">at =</span> <span class="fu">list</span>(<span class="at">cyl =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">8</span>)))</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mar)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  factor    cyl     AME     SE       z      p   lower   upper</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     cyl 4.0000  0.0381 0.6000  0.0636 0.9493 -1.1378  1.2141</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     cyl 6.0000  0.0381 0.5999  0.0636 0.9493 -1.1376  1.2139</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     cyl 8.0000  0.0381 0.5999  0.0636 0.9493 -1.1376  1.2139</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      hp 4.0000 -0.0878 0.0267 -3.2937 0.0010 -0.1400 -0.0355</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      hp 6.0000 -0.0499 0.0154 -3.2397 0.0012 -0.0800 -0.0197</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      hp 8.0000 -0.0120 0.0108 -1.1065 0.2685 -0.0332  0.0092</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      wt 4.0000 -3.1198 0.6613 -4.7175 0.0000 -4.4160 -1.8236</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      wt 6.0000 -3.1198 0.6613 -4.7175 0.0000 -4.4160 -1.8236</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      wt 8.0000 -3.1198 0.6613 -4.7175 0.0000 -4.4160 -1.8236</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_slopes</span>(</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>    mod,</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="st">"cyl"</span>,</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> <span class="fu">datagridcf</span>(<span class="at">cyl =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">8</span>)))</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term    Contrast cyl Estimate Std. Error       z Pr(&gt;|z|)    S   2.5 %   97.5 %</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   cyl mean(dY/dX)   4   0.0381     0.5999  0.0636   0.9493  0.1 -1.1376  1.21390</span></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   cyl mean(dY/dX)   6   0.0381     0.5999  0.0636   0.9493  0.1 -1.1377  1.21396</span></span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   cyl mean(dY/dX)   8   0.0381     0.5999  0.0636   0.9493  0.1 -1.1376  1.21385</span></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   hp  mean(dY/dX)   4  -0.0878     0.0267 -3.2935   &lt;0.001 10.0 -0.1400 -0.03554</span></span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   hp  mean(dY/dX)   6  -0.0499     0.0154 -3.2395   0.0012  9.7 -0.0800 -0.01970</span></span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   hp  mean(dY/dX)   8  -0.0120     0.0108 -1.1065   0.2685  1.9 -0.0332  0.00923</span></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   wt  mean(dY/dX)   4  -3.1198     0.6613 -4.7175   &lt;0.001 18.7 -4.4160 -1.82364</span></span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   wt  mean(dY/dX)   6  -3.1198     0.6613 -4.7176   &lt;0.001 18.7 -4.4160 -1.82366</span></span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   wt  mean(dY/dX)   8  -3.1198     0.6613 -4.7175   &lt;0.001 18.7 -4.4160 -1.82364</span></span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, cyl, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="adjusted-predictions" class="level3">
+<h3 class="anchored" data-anchor-id="adjusted-predictions">Adjusted Predictions</h3>
+<p>The syntax to compute adjusted predictions using the <code>predictions</code> package or <code>marginaleffects</code> is very similar:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>prediction<span class="sc">::</span><span class="fu">prediction</span>(mod) <span class="sc">|&gt;</span> <span class="fu">head</span>()</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    mpg cyl disp  hp drat    wt  qsec vs am gear carb   fitted se.fitted</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4 21.90488 0.6927034</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4 21.10933 0.6266557</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 22.8   4  108  93 3.85 2.320 18.61  1  1    4    1 25.64753 0.6652076</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1 20.04859 0.6041400</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2 17.25445 0.7436172</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 18.1   6  225 105 2.76 3.460 20.22  1  0    3    1 19.53360 0.6436862</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>marginaleffects<span class="sc">::</span><span class="fu">predictions</span>(mod) <span class="sc">|&gt;</span> <span class="fu">head</span>()</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Estimate Std. Error    z Pr(&gt;|z|)     S 2.5 % 97.5 %</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      21.9      0.693 31.6   &lt;0.001 726.6  20.5   23.3</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      21.1      0.627 33.7   &lt;0.001 823.9  19.9   22.3</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      25.6      0.665 38.6   &lt;0.001   Inf  24.3   27.0</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      20.0      0.604 33.2   &lt;0.001 799.8  18.9   21.2</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      17.3      0.744 23.2   &lt;0.001 393.2  15.8   18.7</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      19.5      0.644 30.3   &lt;0.001 669.5  18.3   20.8</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: rowid, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, mpg, cyl, hp, wt </span></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="stata" class="level2">
+<h2 class="anchored" data-anchor-id="stata"><code>Stata</code></h2>
+<p><code>Stata</code> is a good but expensive software package for statistical analysis. It is published by StataCorp LLC. This section compares <code>Stata</code>’s <code>margins</code> command to <code>marginaleffects</code>.</p>
+<p>The results produced by <code>marginaleffects</code> are extensively tested against <code>Stata</code>. See the <a href="https://github.com/vincentarelbundock/marginaleffects/tree/main/inst/tinytest">test suite</a> for a list of the dozens of models where we compared estimates and standard errors.</p>
+<section id="average-marginal-effect-ames" class="level3">
+<h3 class="anchored" data-anchor-id="average-marginal-effect-ames">Average Marginal Effect (AMEs)</h3>
+<p>Marginal effects are unit-level quantities. To compute “average marginal effects”, we first calculate marginal effects for each observation in a dataset. Then, we take the mean of those unit-level marginal effects.</p>
+<section id="stata-1" class="level4">
+<h4 class="anchored" data-anchor-id="stata-1">Stata</h4>
+<p>Both Stata’s <code>margins</code> command and the <code>slopes</code> function can calculate average marginal effects (AMEs). Here is an example showing how to estimate AMEs in Stata:</p>
+<pre><code>quietly reg mpg cyl hp wt
+margins, dydx(*)
+
+Average marginal effects                        Number of obs     =         32
+Model VCE    : OLS
+ 
+Expression   : Linear prediction, predict()
+dy/dx w.r.t. : cyl hp wt
+ 
+------------------------------------------------------------------------------
+    |            Delta-method
+    |      dy/dx   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+------------------------------------------------------------------------------
+cyl |  -.9416168   .5509164    -1.71   0.098    -2.070118    .1868842
+ hp |  -.0180381   .0118762    -1.52   0.140    -.0423655    .0062893
+ wt |  -3.166973   .7405759    -4.28   0.000    -4.683974   -1.649972
+------------------------------------------------------------------------------</code></pre>
+</section>
+<section id="marginaleffects" class="level4">
+<h4 class="anchored" data-anchor-id="marginaleffects">marginaleffects</h4>
+<p>The same results can be obtained with <code>slopes()</code> and <code>summary()</code> like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"marginaleffects"</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> cyl <span class="sc">+</span> hp <span class="sc">+</span> wt, <span class="at">data =</span> mtcars)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_slopes</span>(mod)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Estimate Std. Error     z Pr(&gt;|z|)    S   2.5 %   97.5 %</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   cyl   -0.942     0.5510 -1.71   0.0875  3.5 -2.0215  0.13832</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   hp    -0.018     0.0119 -1.52   0.1288  3.0 -0.0413  0.00524</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   wt    -3.167     0.7405 -4.28   &lt;0.001 15.7 -4.6184 -1.71553</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Note that <code>Stata</code> reports t statistics while <code>marginaleffects</code> reports Z. This produces slightly different p-values because this model has low degrees of freedom: <code>mtcars</code> only has 32 rows</p>
+</section>
+</section>
+<section id="counterfactual-marginal-effects" class="level3">
+<h3 class="anchored" data-anchor-id="counterfactual-marginal-effects">Counterfactual Marginal Effects</h3>
+<p>A “counterfactual marginal effect” is a special quantity obtained by replicating a dataset while fixing some regressor to user-defined values.</p>
+<p>Concretely, Stata computes counterfactual marginal effects in 3 steps:</p>
+<ol type="1">
+<li>Duplicate the whole dataset 3 times and sets the values of <code>cyl</code> to the three specified values in each of those subsets.</li>
+<li>Calculate marginal effects for each observation in that large grid.</li>
+<li>Take the average of marginal effects for each value of the variable of interest.</li>
+</ol>
+<section id="stata-2" class="level4">
+<h4 class="anchored" data-anchor-id="stata-2">Stata</h4>
+<p>With the <code>at</code> argument, Stata’s <code>margins</code> command estimates average <em>counterfactual</em> marginal effects. Here is an example:</p>
+<pre><code>quietly reg mpg i.cyl##c.hp wt
+margins, dydx(hp) at(cyl = (4 6 8))
+
+Average marginal effects                        Number of obs     =         32
+Model VCE    : OLS
+
+Expression   : Linear prediction, predict()
+dy/dx w.r.t. : hp
+
+1._at        : cyl             =           4
+
+2._at        : cyl             =           6
+
+3._at        : cyl             =           8
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |      dy/dx   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+hp           |
+         _at |
+          1  |   -.099466   .0348665    -2.85   0.009    -.1712749   -.0276571
+          2  |  -.0213768    .038822    -0.55   0.587    -.1013323    .0585787
+          3  |   -.013441   .0125138    -1.07   0.293    -.0392137    .0123317
+------------------------------------------------------------------------------</code></pre>
+<!-- Adapted from this GitHub issue: https://github.com/strengejacke/ggeffects/issues/249 -->
+</section>
+<section id="marginaleffects-1" class="level4">
+<h4 class="anchored" data-anchor-id="marginaleffects-1">marginaleffects</h4>
+<p>You can estimate average counterfactual marginal effects with <code>slopes()</code> by using the <a href="reference/datagrid.html"><code>datagridcf()</code></a> to create a counterfactual dataset in which the full original dataset is replicated for each potential value of the <code>cyl</code> variable. Then, we tell the <code>by</code> argument to average within groups:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> <span class="fu">as.factor</span>(cyl) <span class="sc">*</span> hp <span class="sc">+</span> wt, <span class="at">data =</span> mtcars)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_slopes</span>(</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    mod,</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">variables =</span> <span class="st">"hp"</span>,</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="st">"cyl"</span>,</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> <span class="fu">datagridcf</span>(<span class="at">cyl =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">8</span>)))</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term    Contrast cyl Estimate Std. Error      z Pr(&gt;|z|)   S   2.5 %  97.5 %</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    hp mean(dY/dX)   4  -0.0995     0.0349 -2.853  0.00433 7.8 -0.1678 -0.0311</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    hp mean(dY/dX)   6  -0.0214     0.0388 -0.551  0.58190 0.8 -0.0975  0.0547</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    hp mean(dY/dX)   8  -0.0134     0.0125 -1.074  0.28278 1.8 -0.0380  0.0111</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, cyl, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high, predicted_lo, predicted_hi, predicted </span></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This is equivalent to taking the group-wise mean of observation-level marginal effects (without the <code>by</code> argument):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>mfx <span class="ot">&lt;-</span> <span class="fu">slopes</span>(</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    mod,</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">variables =</span> <span class="st">"hp"</span>,</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> <span class="fu">datagridcf</span>(<span class="at">cyl =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">8</span>)))</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="fu">aggregate</span>(estimate <span class="sc">~</span> term <span class="sc">+</span> cyl, <span class="at">data =</span> mfx, <span class="at">FUN =</span> mean)</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   term cyl    estimate</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1   hp   4 -0.09946598</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2   hp   6 -0.02137679</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3   hp   8 -0.01344103</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<!-- Taken from https://github.com/vincentarelbundock/marginaleffects/issues/226 -->
+<p>Note that following <code>Stata</code>, the standard errors for group-averaged marginal effects are computed by taking the “Jacobian at the mean:”</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>J <span class="ot">&lt;-</span> <span class="fu">attr</span>(mfx, <span class="st">"jacobian"</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>J_mean <span class="ot">&lt;-</span> <span class="fu">aggregate</span>(J, <span class="at">by =</span> <span class="fu">list</span>(mfx<span class="sc">$</span>cyl), <span class="at">FUN =</span> mean)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>J_mean <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(J_mean[, <span class="dv">2</span><span class="sc">:</span><span class="fu">ncol</span>(J_mean)])</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="fu">diag</span>(J_mean <span class="sc">%*%</span> <span class="fu">vcov</span>(mod) <span class="sc">%*%</span> <span class="fu">t</span>(J_mean)))</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.03486675 0.03882338 0.01251377</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="average-counterfactual-adjusted-predictions" class="level3">
+<h3 class="anchored" data-anchor-id="average-counterfactual-adjusted-predictions">Average Counterfactual Adjusted Predictions</h3>
+<section id="stata-3" class="level4">
+<h4 class="anchored" data-anchor-id="stata-3">Stata</h4>
+<p>Just like Stata’s <code>margins</code> command computes average counterfactual marginal effects, it can also estimate <em>average counterfactual adjusted predictions</em>.</p>
+<p>Here is an example:</p>
+<pre><code>quietly reg mpg i.cyl##c.hp wt
+margins, at(cyl = (4 6 8))
+
+Predictive margins                              Number of obs     =         32
+Model VCE    : OLS
+
+Expression   : Linear prediction, predict()
+
+1._at        : cyl             =           4
+
+2._at        : cyl             =           6
+
+3._at        : cyl             =           8
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |     Margin   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         _at |
+          1  |   17.44233   2.372914     7.35   0.000     12.55522    22.32944
+          2  |    18.9149   1.291483    14.65   0.000     16.25505    21.57476
+          3  |   18.33318   1.123874    16.31   0.000     16.01852    20.64785
+------------------------------------------------------------------------------</code></pre>
+<p>Again, this is what Stata does in the background:</p>
+<ol type="1">
+<li>It duplicates the whole dataset 3 times and sets the values of <code>cyl</code> to the three specified values in each of those subsets.</li>
+<li>It calculates predictions for that large grid.</li>
+<li>It takes the average prediction for each value of <code>cyl</code>.</li>
+</ol>
+<p>In other words, average counterfactual adjusted predictions as implemented by Stata are a hybrid between predictions at the observed values (the default in <code>marginaleffects::predictions</code>) and predictions at representative values.</p>
+</section>
+<section id="marginaleffects-2" class="level4">
+<h4 class="anchored" data-anchor-id="marginaleffects-2">marginaleffects</h4>
+<p>You can estimate average counterfactual adjusted predictions with <code>predictions()</code> by, first, setting the <code>grid_type</code> argument of <code>datagrid()</code> to <code>"counterfactual"</code> and, second, by averaging the predictions using the <code>by</code> argument of <code>summary()</code>, or a manual function like <code>dplyr::summarise()</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> <span class="fu">as.factor</span>(cyl) <span class="sc">*</span> hp <span class="sc">+</span> wt, <span class="at">data =</span> mtcars)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    mod,</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="st">"cyl"</span>,</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> <span class="fu">datagridcf</span>(<span class="at">cyl =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">8</span>)))</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  cyl Estimate Std. Error     z Pr(&gt;|z|)     S 2.5 % 97.5 %</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    4     17.4       2.37  7.35   &lt;0.001  42.2  12.8   22.1</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    6     18.9       1.29 14.65   &lt;0.001 158.9  16.4   21.4</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    8     18.3       1.12 16.31   &lt;0.001 196.3  16.1   20.5</span></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: cyl, estimate, std.error, statistic, p.value, s.value, conf.low, conf.high </span></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a><span class="fu">predictions</span>(</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>    mod,</span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> <span class="fu">datagridcf</span>(<span class="at">cyl =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">8</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(cyl) <span class="sc">|&gt;</span></span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">AAP =</span> <span class="fu">mean</span>(estimate))</span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 3 × 2</span></span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   cyl     AAP</span></span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;fct&gt; &lt;dbl&gt;</span></span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 4      17.4</span></span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 6      18.9</span></span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 8      18.3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="brmsmargins" class="level2">
+<h2 class="anchored" data-anchor-id="brmsmargins"><code>brmsmargins</code></h2>
+<p><a href="https://joshuawiley.com/brmsmargins/">The <code>brmsmargins</code> package</a> is developed by Joshua Wiley:</p>
+<blockquote class="blockquote">
+<p>This package has functions to calculate marginal effects from brms models ( http://paul-buerkner.github.io/brms/ ). A central motivator is to calculate average marginal effects (AMEs) for continuous and discrete predictors in fixed effects only and mixed effects regression models including location scale models.</p>
+</blockquote>
+<p>The main advantage of <code>brmsmargins</code> over <code>marginaleffects</code> is its ability to compute “Marginal Coefficients” following the method described in <a href="https://doi.org/10.1111/biom.12707">Hedeker et al (2012).</a></p>
+<p>The main advantages of <code>marginaleffects</code> over <code>brmsmargins</code> are:</p>
+<ol type="1">
+<li>Support for 60+ model types, rather than just the <code>brms</code> package.</li>
+<li>Simpler user interface (subjective).</li>
+<li>At the time of writing (2022-05-25) <code>brmsmargins</code> did not support certain <code>brms</code> models such as those with multivariate or multinomial outcomes. It also did not support custom outcome transformations.</li>
+</ol>
+<p>The rest of this section presents side-by-side replications of some of the analyses from the <code>brmsmargins</code> vignettes in order to show highlight parallels and differences in syntax.</p>
+<section id="marginal-effects-for-fixed-effects-models" class="level3">
+<h3 class="anchored" data-anchor-id="marginal-effects-for-fixed-effects-models">Marginal Effects for Fixed Effects Models</h3>
+<section id="ames-for-logistic-regression" class="level4">
+<h4 class="anchored" data-anchor-id="ames-for-logistic-regression">AMEs for Logistic Regression</h4>
+<p>Estimate a logistic regression model with <code>brms</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(brms)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(brmsmargins)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(marginaleffects)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(withr)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="fu">setDTthreads</span>(<span class="dv">5</span>)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>h <span class="ot">&lt;-</span> <span class="fl">1e-4</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>void <span class="ot">&lt;-</span> <span class="fu">capture.output</span>(</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>    bayes.logistic <span class="ot">&lt;-</span> <span class="fu">brm</span>(</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>      vs <span class="sc">~</span> am <span class="sc">+</span> mpg, <span class="at">data =</span> mtcars,</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">family =</span> <span class="st">"bernoulli"</span>, <span class="at">seed =</span> <span class="dv">1234</span>,</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">silent =</span> <span class="dv">2</span>, <span class="at">refresh =</span> <span class="dv">0</span>,</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">backend =</span> <span class="st">"cmdstanr"</span>,</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">chains =</span> <span class="dv">4</span>L, <span class="at">cores =</span> <span class="dv">4</span>L)</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Compute AMEs manually:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>d1 <span class="ot">&lt;-</span> d2 <span class="ot">&lt;-</span> mtcars</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>d2<span class="sc">$</span>mpg <span class="ot">&lt;-</span> d2<span class="sc">$</span>mpg <span class="sc">+</span> h</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">posterior_epred</span>(bayes.logistic, <span class="at">newdata =</span> d1)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">posterior_epred</span>(bayes.logistic, <span class="at">newdata =</span> d2)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> (p2 <span class="sc">-</span> p1) <span class="sc">/</span> h</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(<span class="fu">rowMeans</span>(m), <span class="fu">c</span>(.<span class="dv">5</span>, .<span class="dv">025</span>, .<span class="dv">975</span>))</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        50%       2.5%      97.5% </span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 0.07010427 0.05418413 0.09092451</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Compute AMEs with <code>brmsmargins</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>bm <span class="ot">&lt;-</span> <span class="fu">brmsmargins</span>(</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  bayes.logistic,</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">add =</span> <span class="fu">data.frame</span>(<span class="at">mpg =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span> <span class="sc">+</span> h)),</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">contrasts =</span> <span class="fu">cbind</span>(<span class="st">"AME MPG"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span> <span class="sc">/</span> h, <span class="dv">1</span> <span class="sc">/</span> h)),</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">CI =</span> <span class="fl">0.95</span>,</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">CIType =</span> <span class="st">"ETI"</span>)</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(bm<span class="sc">$</span>ContrastSummary)</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;            M        Mdn         LL         UL PercentROPE PercentMID   CI CIType ROPE  MID   Label</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 0.07105468 0.07010427 0.05418413 0.09092451          NA         NA 0.95    ETI &lt;NA&gt; &lt;NA&gt; AME MPG</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Compute AMEs using <code>marginaleffects</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_slopes</span>(bayes.logistic) </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Contrast Estimate   2.5 %  97.5 %</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   am     1 - 0  -0.2665 -0.4242 -0.0703</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   mpg    dY/dX   0.0701  0.0542  0.0909</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high </span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The <code>mpg</code> element of the <code>Effect</code> column from <code>marginaleffects</code> matches the the <code>M</code> column of the output from <code>brmsmargins</code>.</p>
+</section>
+</section>
+<section id="marginal-effects-for-mixed-effects-models" class="level3">
+<h3 class="anchored" data-anchor-id="marginal-effects-for-mixed-effects-models">Marginal Effects for Mixed Effects Models</h3>
+<p>Estimate a mixed effects logistic regression model with <code>brms</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> withr<span class="sc">::</span><span class="fu">with_seed</span>(</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">12345</span>, <span class="at">code =</span> {</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    nGroups <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    nObs <span class="ot">&lt;-</span> <span class="dv">20</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    theta.location <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span>(nGroups <span class="sc">*</span> <span class="dv">2</span>), <span class="at">nrow =</span> nGroups, <span class="at">ncol =</span> <span class="dv">2</span>)</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    theta.location[, <span class="dv">1</span>] <span class="ot">&lt;-</span> theta.location[, <span class="dv">1</span>] <span class="sc">-</span> <span class="fu">mean</span>(theta.location[, <span class="dv">1</span>])</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>    theta.location[, <span class="dv">2</span>] <span class="ot">&lt;-</span> theta.location[, <span class="dv">2</span>] <span class="sc">-</span> <span class="fu">mean</span>(theta.location[, <span class="dv">2</span>])</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>    theta.location[, <span class="dv">1</span>] <span class="ot">&lt;-</span> theta.location[, <span class="dv">1</span>] <span class="sc">/</span> <span class="fu">sd</span>(theta.location[, <span class="dv">1</span>])</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>    theta.location[, <span class="dv">2</span>] <span class="ot">&lt;-</span> theta.location[, <span class="dv">2</span>] <span class="sc">/</span> <span class="fu">sd</span>(theta.location[, <span class="dv">2</span>])</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>    theta.location <span class="ot">&lt;-</span> theta.location <span class="sc">%*%</span> <span class="fu">chol</span>(<span class="fu">matrix</span>(<span class="fu">c</span>(<span class="fl">1.5</span>, <span class="sc">-</span>.<span class="dv">25</span>, <span class="sc">-</span>.<span class="dv">25</span>, .<span class="dv">5</span><span class="sc">^</span><span class="dv">2</span>), <span class="dv">2</span>))</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>    theta.location[, <span class="dv">1</span>] <span class="ot">&lt;-</span> theta.location[, <span class="dv">1</span>] <span class="sc">-</span> <span class="fl">2.5</span></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>    theta.location[, <span class="dv">2</span>] <span class="ot">&lt;-</span> theta.location[, <span class="dv">2</span>] <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>    d <span class="ot">&lt;-</span> <span class="fu">data.table</span>(</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="fu">rep</span>(<span class="fu">rep</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="at">each =</span> nObs <span class="sc">/</span> <span class="dv">2</span>), <span class="at">times =</span> nGroups))</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>    d[, ID <span class="sc">:</span><span class="er">=</span> <span class="fu">rep</span>(<span class="fu">seq_len</span>(nGroups), <span class="at">each =</span> nObs)]</span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(nGroups)) {</span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>      d[ID <span class="sc">==</span> i, y <span class="sc">:</span><span class="er">=</span> <span class="fu">rbinom</span>(</span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">n =</span> nObs,</span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="dv">1</span>,</span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">prob =</span> <span class="fu">plogis</span>(theta.location[i, <span class="dv">1</span>] <span class="sc">+</span> theta.location[i, <span class="dv">2</span>] <span class="sc">*</span> x))</span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>        ]</span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">copy</span>(d)</span>
+<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a>void <span class="ot">&lt;-</span> <span class="fu">capture.output</span>(</span>
+<span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a>    mlogit <span class="ot">&lt;-</span> brms<span class="sc">::</span><span class="fu">brm</span>(</span>
+<span id="cb29-29"><a href="#cb29-29" aria-hidden="true" tabindex="-1"></a>      y <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> x <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">+</span> x <span class="sc">|</span> ID), <span class="at">family =</span> <span class="st">"bernoulli"</span>,</span>
+<span id="cb29-30"><a href="#cb29-30" aria-hidden="true" tabindex="-1"></a>      <span class="at">data =</span> d, <span class="at">seed =</span> <span class="dv">1234</span>,</span>
+<span id="cb29-31"><a href="#cb29-31" aria-hidden="true" tabindex="-1"></a>      <span class="at">backend =</span> <span class="st">"cmdstanr"</span>,</span>
+<span id="cb29-32"><a href="#cb29-32" aria-hidden="true" tabindex="-1"></a>      <span class="at">silent =</span> <span class="dv">2</span>, <span class="at">refresh =</span> <span class="dv">0</span>,</span>
+<span id="cb29-33"><a href="#cb29-33" aria-hidden="true" tabindex="-1"></a>      <span class="at">chains =</span> <span class="dv">4</span>L, <span class="at">cores =</span> <span class="dv">4</span>L)</span>
+<span id="cb29-34"><a href="#cb29-34" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="ame-including-random-effects" class="level4">
+<h4 class="anchored" data-anchor-id="ame-including-random-effects">AME: Including Random Effects</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>bm <span class="ot">&lt;-</span> <span class="fu">brmsmargins</span>(</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  mlogit,</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">add =</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="dv">0</span>, h)),</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">contrasts =</span> <span class="fu">cbind</span>(<span class="st">"AME x"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span> <span class="sc">/</span> h, <span class="dv">1</span> <span class="sc">/</span> h)),</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">effects =</span> <span class="st">"includeRE"</span>,</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">CI =</span> .<span class="dv">95</span>,</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">CIType =</span> <span class="st">"ETI"</span>)</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(bm<span class="sc">$</span>ContrastSummary)</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          M       Mdn         LL        UL PercentROPE PercentMID   CI CIType ROPE  MID Label</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 0.111492 0.1115944 0.08095807 0.1420166          NA         NA 0.95    ETI &lt;NA&gt; &lt;NA&gt; AME x</span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_slopes</span>(mlogit)</span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Contrast Estimate  2.5 % 97.5 %</span></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     x    1 - 0    0.111 0.0806   0.14</span></span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high </span></span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="ame-fixed-effects-only-grand-mean" class="level4">
+<h4 class="anchored" data-anchor-id="ame-fixed-effects-only-grand-mean">AME: Fixed Effects Only (Grand Mean)</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>bm <span class="ot">&lt;-</span> <span class="fu">brmsmargins</span>(</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  mlogit,</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">add =</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="dv">0</span>, h)),</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">contrasts =</span> <span class="fu">cbind</span>(<span class="st">"AME x"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span> <span class="sc">/</span> h, <span class="dv">1</span> <span class="sc">/</span> h)),</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">effects =</span> <span class="st">"fixedonly"</span>,</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">CI =</span> .<span class="dv">95</span>,</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">CIType =</span> <span class="st">"ETI"</span>)</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(bm<span class="sc">$</span>ContrastSummary)</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;           M       Mdn         LL        UL PercentROPE PercentMID   CI CIType ROPE  MID Label</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 0.1039555 0.1034452 0.06319565 0.1491665          NA         NA 0.95    ETI &lt;NA&gt; &lt;NA&gt; AME x</span></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_slopes</span>(mlogit, <span class="at">re_formula =</span> <span class="cn">NA</span>)</span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Contrast Estimate  2.5 % 97.5 %</span></span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     x    1 - 0    0.101 0.0623  0.143</span></span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high </span></span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="marginal-effects-for-location-scale-models" class="level3">
+<h3 class="anchored" data-anchor-id="marginal-effects-for-location-scale-models">Marginal Effects for Location Scale Models</h3>
+<section id="ames-for-fixed-effects-location-scale-models" class="level4">
+<h4 class="anchored" data-anchor-id="ames-for-fixed-effects-location-scale-models">AMEs for Fixed Effects Location Scale Models</h4>
+<p>Estimate a fixed effects location scale model with <code>brms</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> withr<span class="sc">::</span><span class="fu">with_seed</span>(</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">12345</span>, <span class="at">code =</span> {</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    nObs <span class="ot">&lt;-</span> <span class="dv">1000</span>L</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    d <span class="ot">&lt;-</span> <span class="fu">data.table</span>(</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">grp =</span> <span class="fu">rep</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="at">each =</span> nObs <span class="sc">/</span> <span class="dv">2</span>L),</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="fu">rnorm</span>(nObs, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="fl">0.25</span>))</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>    d[, y <span class="sc">:</span><span class="er">=</span> <span class="fu">rnorm</span>(nObs,</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>                   <span class="at">mean =</span> x <span class="sc">+</span> grp,</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>                   <span class="at">sd =</span> <span class="fu">exp</span>(<span class="dv">1</span> <span class="sc">+</span> x <span class="sc">+</span> grp))]</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">copy</span>(d)</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>void <span class="ot">&lt;-</span> <span class="fu">capture.output</span>(</span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>    ls.fe <span class="ot">&lt;-</span> <span class="fu">brm</span>(<span class="fu">bf</span>(</span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>      y <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> x <span class="sc">+</span> grp,</span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a>      sigma <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> x <span class="sc">+</span> grp),</span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">family =</span> <span class="st">"gaussian"</span>,</span>
+<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">data =</span> d, <span class="at">seed =</span> <span class="dv">1234</span>,</span>
+<span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a>      <span class="at">silent =</span> <span class="dv">2</span>, <span class="at">refresh =</span> <span class="dv">0</span>,</span>
+<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">backend =</span> <span class="st">"cmdstanr"</span>,</span>
+<span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">chains =</span> <span class="dv">4</span>L, <span class="at">cores =</span> <span class="dv">4</span>L)</span>
+<span id="cb32-22"><a href="#cb32-22" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="fixed-effects-only" class="level4">
+<h4 class="anchored" data-anchor-id="fixed-effects-only">Fixed effects only</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>bm <span class="ot">&lt;-</span> <span class="fu">brmsmargins</span>(</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  ls.fe,</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">add =</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="dv">0</span>, h)),</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">contrasts =</span> <span class="fu">cbind</span>(<span class="st">"AME x"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span> <span class="sc">/</span> h, <span class="dv">1</span> <span class="sc">/</span> h)),</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">CI =</span> <span class="fl">0.95</span>, <span class="at">CIType =</span> <span class="st">"ETI"</span>,</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">effects =</span> <span class="st">"fixedonly"</span>)</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(bm<span class="sc">$</span>ContrastSummary)</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          M     Mdn        LL      UL PercentROPE PercentMID   CI CIType ROPE  MID Label</span></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1.626186 1.63215 0.7349262 2.46998          NA         NA 0.95    ETI &lt;NA&gt; &lt;NA&gt; AME x</span></span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_slopes</span>(ls.fe, <span class="at">re_formula =</span> <span class="cn">NA</span>)</span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Contrast Estimate 2.5 % 97.5 %</span></span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   grp    1 - 0     1.02 0.355   1.70</span></span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   x      dY/dX     1.63 0.735   2.47</span></span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high </span></span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="discrete-change-and-distributional-parameter-dpar" class="level4">
+<h4 class="anchored" data-anchor-id="discrete-change-and-distributional-parameter-dpar">Discrete change and distributional parameter (<code>dpar</code>)</h4>
+<p>Compute the contrast between adjusted predictions on the <code>sigma</code> parameter, when <code>grp=0</code> and <code>grp=1</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>bm <span class="ot">&lt;-</span> <span class="fu">brmsmargins</span>(</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  ls.fe,</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">at =</span> <span class="fu">data.frame</span>(<span class="at">grp =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)),</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">contrasts =</span> <span class="fu">cbind</span>(<span class="st">"AME grp"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>)),</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">CI =</span> <span class="fl">0.95</span>, <span class="at">CIType =</span> <span class="st">"ETI"</span>, <span class="at">dpar =</span> <span class="st">"sigma"</span>,</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">effects =</span> <span class="st">"fixedonly"</span>)</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(bm<span class="sc">$</span>ContrastSummary)</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          M     Mdn       LL       UL PercentROPE PercentMID   CI CIType ROPE  MID   Label</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 4.899239 4.89621 4.423663 5.422412          NA         NA 0.95    ETI &lt;NA&gt; &lt;NA&gt; AME grp</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In <code>marginaleffects</code> we use the <code>comparisons()</code> function and the <code>variables</code> argument:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  ls.fe,</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">grp =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>),</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">dpar =</span> <span class="st">"sigma"</span>)</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Contrast Estimate 2.5 % 97.5 %</span></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   grp    1 - 0      4.9  4.42   5.42</span></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high </span></span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="marginal-effect-continuous-on-sigma" class="level4">
+<h4 class="anchored" data-anchor-id="marginal-effect-continuous-on-sigma">Marginal effect (continuous) on sigma</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>bm <span class="ot">&lt;-</span> <span class="fu">brmsmargins</span>(</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  ls.fe,</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">add =</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="dv">0</span>, h)),</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">contrasts =</span> <span class="fu">cbind</span>(<span class="st">"AME x"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span> <span class="sc">/</span> h, <span class="dv">1</span> <span class="sc">/</span> h)),</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">CI =</span> <span class="fl">0.95</span>, <span class="at">CIType =</span> <span class="st">"ETI"</span>, <span class="at">dpar =</span> <span class="st">"sigma"</span>,</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">effects =</span> <span class="st">"fixedonly"</span>)</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(bm<span class="sc">$</span>ContrastSummary)</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          M     Mdn       LL       UL PercentROPE PercentMID   CI CIType ROPE  MID Label</span></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 4.458758 4.46162 3.498163 5.443716          NA         NA 0.95    ETI &lt;NA&gt; &lt;NA&gt; AME x</span></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_slopes</span>(ls.fe, <span class="at">dpar =</span> <span class="st">"sigma"</span>, <span class="at">re_formula =</span> <span class="cn">NA</span>)</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Contrast Estimate 2.5 % 97.5 %</span></span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   grp    1 - 0     4.90  4.42   5.42</span></span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   x      dY/dX     4.46  3.50   5.44</span></span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, estimate, conf.low, conf.high </span></span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="fmeffects" class="level2">
+<h2 class="anchored" data-anchor-id="fmeffects"><code>fmeffects</code></h2>
+<p>The <a href="https://cran.r-project.org/package=fmeffects"><code>fmeffects</code> package</a> is described as follows:</p>
+<blockquote class="blockquote">
+<p>fmeffects: Model-Agnostic Interpretations with Forward Marginal Effects. Create local, regional, and global explanations for any machine learning model with forward marginal effects. You provide a model and data, and ‘fmeffects’ computes feature effects. The package is based on the theory in: C. A. Scholbeck, G. Casalicchio, C. Molnar, B. Bischl, and C. Heumann (2022)</p>
+</blockquote>
+<p>As the name says, this package is focused on “forward marginal effects” in the context of machine learning models estimated using the <code>mlr3</code> or <code>tidymodels</code> frameworks. Since version 0.16.0, <code>marginaleffects</code> also supports these machine learning frameworks, and it covers a superset of the <code>fmeffects</code> functionality. Consider a random forest model trained on the <code>bikes</code> data:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"mlr3verse"</span>)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"fmeffects"</span>)</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"bikes"</span>, <span class="at">package =</span> <span class="st">"fmeffects"</span>)</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>task <span class="ot">&lt;-</span> <span class="fu">as_task_regr</span>(<span class="at">x =</span> bikes, <span class="at">id =</span> <span class="st">"bikes"</span>, <span class="at">target =</span> <span class="st">"count"</span>)</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>forest <span class="ot">&lt;-</span> <span class="fu">lrn</span>(<span class="st">"regr.ranger"</span>)<span class="sc">$</span><span class="fu">train</span>(task)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now, we use the <code>avg_comparisons()</code> function to compute <em>forward</em> marginal effects:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(forest, <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">temp =</span> <span class="dv">1</span>), <span class="at">newdata =</span> bikes)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Term Contrast Estimate</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  temp       +1      2.3</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, estimate </span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This is equivalent to the key quantity reported by the <code>fmeffects</code> package:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>fmeffects<span class="sc">::</span><span class="fu">fme</span>(</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">model =</span> forest,</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> bikes,</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">target =</span> <span class="st">"count"</span>,</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">feature =</span> <span class="st">"temp"</span>,</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">step.size =</span> <span class="dv">1</span>)<span class="sc">$</span>ame</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 2.304276</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Another interesting feature of <code>fmeffects</code> is the ability treat categorical predictors in an unconventional way: pick a reference level, then compute the average difference between the predicted values for that level, and the predicted values for the observed levels (which may be the same as the reference level).</p>
+<p>In the <code>bikes</code> example, we can answer the question: how does the expected number of bike rentals increases, on average, if all days were misty? With <code>marginaleffects</code>, we can use a function in the <code>variables</code> argument to specify a custom contrast:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>FUN <span class="ot">&lt;-</span> <span class="cf">function</span>(x) <span class="fu">data.frame</span>(<span class="at">lo =</span> x, <span class="at">hi =</span> <span class="st">"misty"</span>)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_comparisons</span>(</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  forest,</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> bikes,</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="fu">list</span>(<span class="at">weather =</span> FUN)</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     Term Contrast Estimate</span></span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  weather   custom     2.07</span></span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: term, contrast, estimate </span></span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Type:  response</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Two more functionalities deserve to be highlight. First, <code>fmeffects</code> includes functions to explore heterogeneity in marginal effects using recursive partitioning trees. The <a href="vignettes/heterogeneity/">heterogeneity vignette</a> illustrates how to achieve something similar with <code>marginaleffects</code>.</p>
+<p>Second, <code>fmeffects</code> also implements a non-linearity measure. At the moment, there is no analogue to this in <code>marginaleffects</code>.</p>
+</section>
+<section id="effects" class="level2">
+<h2 class="anchored" data-anchor-id="effects"><code>effects</code></h2>
+<p>The <a href="https://cran.r-project.org/package=effects"><code>effects</code> package</a> was created by John Fox and colleagues.</p>
+<ul>
+<li><code>marginaleffects</code> supports 30+ more model types than <code>effects</code>.</li>
+<li><code>effects</code> focuses on the computation of <a href="predictions.html">“adjusted predictions.”</a> The plots it produces are roughly equivalent to the ones produced by the <code>plot_predictions</code> and <code>predictions</code> functions in <code>marginaleffects</code>.</li>
+<li><code>effects</code> does not appear support marginal effects (slopes), marginal means, or contrasts</li>
+<li><code>effects</code> uses Base graphics whereas <code>marginaleffects</code> uses <code>ggplot2</code></li>
+<li><code>effects</code> includes <em>a lot</em> of very powerful options to customize plots. In contrast, <code>marginaleffects</code> produces objects which can be customized by chaining <code>ggplot2</code> functions. Users can also call <code>plot_predictions(model, draw=FALSE)</code> to create a prediction grid, and then work the raw data directly to create the plot they need</li>
+</ul>
+<p><code>effects</code> offers several options which are not currently available in <code>marginaleffects</code>, including:</p>
+<ul>
+<li>Partial residuals plots</li>
+<li>Many types of ways to plot adjusted predictions: <a href="https://cran.r-project.org/web/packages/effects/vignettes/predictor-effects-gallery.pdf">package vignette</a></li>
+</ul>
+</section>
+<section id="modelbased" class="level2">
+<h2 class="anchored" data-anchor-id="modelbased"><code>modelbased</code></h2>
+<p>The <a href="https://easystats.github.io/modelbased/"><code>modelbased</code> package</a> is developed by the <code>easystats</code> team.</p>
+<p>This section is incomplete; contributions are welcome.</p>
+<ul>
+<li>Wrapper around <code>emmeans</code> to compute marginal means and marginal effects.</li>
+<li>Powerful functions to create beautiful plots.</li>
+</ul>
+</section>
+<section id="ggeffects" class="level2">
+<h2 class="anchored" data-anchor-id="ggeffects"><code>ggeffects</code></h2>
+<p>The <a href="https://strengejacke.github.io/ggeffects/"><code>ggeffects</code></a> package is developed by Daniel Lüdecke.</p>
+<p>This section is incomplete; contributions are welcome.</p>
+<ul>
+<li>Wrapper around <code>emmeans</code> to compute marginal means.</li>
+</ul>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    const typesetMath = (el) => {
+      if (window.MathJax) {
+        // MathJax Typeset
+        window.MathJax.typeset([el]);
+      } else if (window.katex) {
+        // KaTeX Render
+        var mathElements = el.getElementsByClassName("math");
+        var macros = [];
+        for (var i = 0; i < mathElements.length; i++) {
+          var texText = mathElements[i].firstChild;
+          if (mathElements[i].tagName == "SPAN") {
+            window.katex.render(texText.data, mathElements[i], {
+              displayMode: mathElements[i].classList.contains('display'),
+              throwOnError: false,
+              macros: macros,
+              fleqn: false
+            });
+          }
+        }
+      }
+    }
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        for (let i = 0; i < 2; i++) {
+          container.appendChild(note.children[i].cloneNode(true));
+        }
+        typesetMath(container);
+        return container.innerHTML
+      } else {
+        typesetMath(note);
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      typesetMath(note);
+      return note.innerHTML;
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
