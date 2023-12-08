@@ -51,6 +51,8 @@ website:
           - vignettes/svalues.qmd
       - section: Technical notes
         contents:
+          - vignettes/faq.qmd
+          - vignettes/meme.qmd
           - vignettes/alternative_software.qmd
           - vignettes/extensions.qmd
           - vignettes/links.qmd
@@ -59,7 +61,6 @@ website:
           - vignettes/supported_models.qmd
           - vignettes/tables.qmd
           - vignettes/uncertainty.qmd
-          - vignettes/faq.qmd
       - section: Functions
         contents:
           - man/predictions.qmd

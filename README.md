@@ -60,7 +60,7 @@ here!](https://marginaleffects.com/vignettes/get_started.html)
 
 ## How to help
 
-If you like this project, you can contribute in three main ways:
+If you like this project, you can contribute in four main ways:
 
 1.  [Cite the `marginaleffects` package](CITATION.html) in your work and
     tell your friends about it.
@@ -69,7 +69,9 @@ If you like this project, you can contribute in three main ways:
     versions of the package:
     -   <https://github.com/vincentarelbundock/marginaleffects>
     -   <https://github.com/vincentarelbundock/pymarginaleffects>
-3.  Make a donation to [The Native Women’s Shelter of
+3.  Submit a new entry [for the Meme
+    Gallery!](https://marginaleffects.com/vignettes/meme.html)
+4.  Make a donation to [The Native Women’s Shelter of
     Montreal](https://www.nwsm.info/) or to [Give
     Directly](https://www.givedirectly.org/), and send me (Vincent) a
     quick note. You’ll make my day.
