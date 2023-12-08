@@ -4,24 +4,7 @@
 \alias{marginaleffects}
 \title{\code{marginaleffects()} is an alias to \code{slopes()}}
 \usage{
-marginaleffects(
-  model,
-  newdata = NULL,
-  variables = NULL,
-  type = NULL,
-  by = FALSE,
-  vcov = TRUE,
-  conf_level = 0.95,
-  slope = "dydx",
-  wts = NULL,
-  hypothesis = NULL,
-  equivalence = NULL,
-  p_adjust = NULL,
-  df = Inf,
-  eps = NULL,
-  numderiv = "fdforward",
-  ...
-)
+marginaleffects(...)
 }
 \description{
 This alias is kept for backward compatibility and because some users may prefer that name.

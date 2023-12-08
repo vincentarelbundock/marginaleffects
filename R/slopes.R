@@ -303,13 +303,6 @@ slopes <- function(model,
 }
 
 
-#' `meffects()` is an alias to `slopes()`
-#'
-#' This alias is kept for backward compatibility and because some users may prefer that name.
-#' @inherit marginaleffects
-#' @keywords internal
-#' @export
-meffects <- slopes
 
 
 #' `marginaleffects()` is an alias to `slopes()`
@@ -319,7 +312,19 @@ meffects <- slopes
 #' @inherit marginaleffects
 #' @keywords internal
 #' @export
-marginaleffects <- slopes
+marginaleffects <- function(...) {
+    insight::format_warning("This function has been renamed to `slopes()`. The `marginaleffects()` alias will be removed in the near future.")
+    plot_predictions(...)
+}
+
+
+#' `meffects()` is an alias to `slopes()`
+#'
+#' This alias is kept for backward compatibility and because some users may prefer that name.
+#' @inherit marginaleffects
+#' @keywords internal
+#' @export
+meffects <- marginaleffects
 
 
 #' Average slopes (aka Average partial derivatives, marginal effects, or trends)

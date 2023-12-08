@@ -26,3 +26,4 @@ man-roxygen
 .*_files
 ^altdoc$
 ^_quarto$
+README.qmd

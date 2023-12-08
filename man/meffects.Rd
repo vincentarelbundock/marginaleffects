@@ -4,24 +4,7 @@
 \alias{meffects}
 \title{\code{meffects()} is an alias to \code{slopes()}}
 \usage{
-meffects(
-  model,
-  newdata = NULL,
-  variables = NULL,
-  type = NULL,
-  by = FALSE,
-  vcov = TRUE,
-  conf_level = 0.95,
-  slope = "dydx",
-  wts = NULL,
-  hypothesis = NULL,
-  equivalence = NULL,
-  p_adjust = NULL,
-  df = Inf,
-  eps = NULL,
-  numderiv = "fdforward",
-  ...
-)
+meffects(...)
 }
 \description{
 This alias is kept for backward compatibility and because some users may prefer that name.

@@ -197,6 +197,6 @@ plot_predictions <- function(model,
 #' @keywords internal
 #' @export
 plot_cap <- function(...) {
-    insight::format_warning("This function has been renamed to `plot_predictions()`. The `plot_cap()` alias will be removed in a future release.")
+    insight::format_warning("This function has been renamed to `plot_predictions()`. The `plot_cap()` alias will be removed in the near future.")
     plot_predictions(...)
 }
