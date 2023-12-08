@@ -8,7 +8,7 @@ These problems are compounded by the fact that modeling packages produce objects
 
 ## What?
 
-This online book introduces a conceptual framework and software tools to facilitate the interpretation of [over 100 classes of statistical models](https://marginaleffects.com/vignettes/supported_models.html) in `R` and `Python`, including linear, GLM, GAM, mixed-effects, bayesian, categorical outcomes, and more. With a single unified interface, users can compute and plot many quantities of interest, including:
+This online book introduces a conceptual framework and the `marginaleffects` package for `R` and `Python`. This software can facilitate the interpretation of [over 100 classes of statistical models](https://marginaleffects.com/vignettes/supported_models.html) in `R` and `Python`, including linear, GLM, GAM, mixed-effects, bayesian, categorical outcomes, and more. With a single unified interface, users can compute and plot many quantities of interest, including:
 
 * Predictions (aka fitted values or adjusted predictions)
 * Comparisons such as risk differences, risk ratios, odds, etc.
@@ -17,6 +17,7 @@ This online book introduces a conceptual framework and software tools to facilit
 * Linear and non-linear hypothesis tests
 * Equivalence tests
 * Uncertainty estimates using the delta method, bootstrapping, simulation, or conformal inference.
+* Much more!
 
 [The Marginal Effects Zoo](https://marginaleffects.com/) is a free online book with over 30 chapters of tutorials, case studies, and technical notes.  It covers a wide range of topics, including how the `marginaleffects` package can facilitate the analysis of:
 

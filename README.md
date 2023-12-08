@@ -21,7 +21,8 @@ implementation of best practices.
 
 ## What?
 
-This online book introduces a conceptual framework and software tools to
+This online book introduces a conceptual framework and the
+`marginaleffects` package for `R` and `Python`. This software can
 facilitate the interpretation of [over 100 classes of statistical
 models](https://marginaleffects.com/vignettes/supported_models.html) in
 `R` and `Python`, including linear, GLM, GAM, mixed-effects, bayesian,
@@ -36,6 +37,7 @@ can compute and plot many quantities of interest, including:
 -   Equivalence tests
 -   Uncertainty estimates using the delta method, bootstrapping,
     simulation, or conformal inference.
+-   Much more!
 
 [The Marginal Effects Zoo](https://marginaleffects.com/) is a free
 online book with over 30 chapters of tutorials, case studies, and
