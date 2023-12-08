@@ -1,5 +1,4 @@
-
-![](images/zoo_banner.png)
+# marginaleffects
 
 ## Why?
 

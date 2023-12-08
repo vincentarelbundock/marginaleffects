@@ -1,6 +1,6 @@
 # News
 
-## dev
+## 0.17.0
 
 Breaking changes:
 
