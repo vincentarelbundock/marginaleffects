@@ -79,7 +79,7 @@ ways:
 4.  Create a new entry [for the Meme
     Gallery!](https://marginaleffects.com/vignettes/meme.html)
 
-<a href="http://marginaleffects.com">
+<a href="https://marginaleffects.com">
 <img src="https://user-images.githubusercontent.com/987057/134899484-e3392510-2e94-4c39-9830-53356fa5feed.png" align="center" alt="marginaleffects logo" width="200" />
 </a> <br><br>
 <img src="https://github.com/vincentarelbundock/marginaleffects/workflows/R-CMD-check/badge.svg">

@@ -45,7 +45,7 @@ The `marginaleffects` package and the Marginal Effects Zoo book will always be f
 
 
 <div align="center">
-<a href="http://marginaleffects.com">
+<a href="https://marginaleffects.com">
     <img src="https://user-images.githubusercontent.com/987057/134899484-e3392510-2e94-4c39-9830-53356fa5feed.png" align="center" alt="marginaleffects logo" width="200" />
 </a>
 <br><br>
