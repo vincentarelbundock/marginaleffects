@@ -22,17 +22,11 @@ implementation of best practices.
 ## What?
 
 This online book introduces a conceptual framework and software tools to
-facilitate the interpretation of a vast range of statistical models in
-`R` and `Python`.
-
-The tutorials presented here leverage the `marginaleffects` package for
-`R` and `Python`. This package supports over [100
-classes](https://marginaleffects.com/vignettes/supported_models.html) of
-statistical models, including linear, GLM, GAM, mixed-effects, bayesian,
-categorical outcomes, and more.
-
-With a single unified interface, users can compute and plot many
-quantities of interest, including:
+facilitate the interpretation of [over 100 classes of statistical
+models](https://marginaleffects.com/vignettes/supported_models.html) in
+`R` and `Python`, including linear, GLM, GAM, mixed-effects, bayesian,
+categorical outcomes, and more. With a single unified interface, users
+can compute and plot many quantities of interest, including:
 
 -   Predictions (aka fitted values or adjusted predictions)
 -   Comparisons such as risk differences, risk ratios, odds, etc.
@@ -44,17 +38,17 @@ quantities of interest, including:
     simulation, or conformal inference.
 
 [The Marginal Effects Zoo](https://marginaleffects.com/) is a free
-online book with over 30 chapters full of tutorials, case studies, and
+online book with over 30 chapters of tutorials, case studies, and
 technical notes. It covers a wide range of topics, including how the
-`marginaleffects` package can facilitate the interpreation of analysis
-of:
+`marginaleffects` package can facilitate the analysis of:
 
 -   Experiments
--   Machine learning models
+-   Observational data
 -   Causal inference with G-Computation
+-   Machine learning models
 -   Bayesian modeling
 -   Multilevel regression with post-stratification (MRP)
--   Missing data imputation
+-   Missing data
 -   Matching
 -   Inverse probability weighting
 -   Conformal prediction

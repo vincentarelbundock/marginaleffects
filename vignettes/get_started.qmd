@@ -12,28 +12,27 @@ dat <- read.csv(url)
 n_support <- nrow(dat)
 ```
 
+This page explains how to interpret statistical results using the `marginaleffects` package for `R` and `Python`. The workflow that we propose rests on 5 conceptual pillars:
+
+1. _Estimand:_ What is the quantity of interest? Do we want to estimate a prediction or a function of predictions (average, difference, ratio, derivative, etc.)? 
+2. _Grid:_ What regressor values are we interested in? Do we want to produce estimates for the units in our dataset, or for hypothetical or representative individuals? 
+3. _Aggregation:_ Do we report estimates for every observation in the grid or a global summary?
+4. _Uncertainty:_ How do we quantify uncertainty about our estimates?
+5. _Test_: Which (non-)linear hypothesis or equivalence tests do we conduct? 
+
 ## Installation
+
+Before we begin, let's install the `marginaleffects` package:
 
 ::: {.panel-tabset}
 ### R
 
-Install the latest CRAN release:
+Install from CRAN:
 
 ```{r}
 #| eval: false
 install.packages("marginaleffects")
 ```
-
-Install the development version:
-
-```{r}
-#| eval: false
-install.packages(
-    c("marginaleffects", "insight"),
-    repos = c("https://vincentarelbundock.r-universe.dev", "https://easystats.r-universe.dev"))
-```
-
-*Restart `R` completely before moving on.*
 
 ### Python
 
@@ -46,7 +45,7 @@ pip install marginaleffects
 :::
 
 
-## Estimands: Predictions, Comparisons, and Slopes
+## Estimands
 
 The `marginaleffects` package allows `R` users to compute and plot three principal quantities of interest: (1) predictions, (2) comparisons, and (3) slopes. In addition, the package includes a convenience function to compute a fourth estimand, "marginal means", which is a special case of averaged predictions. `marginaleffects` can also average (or "marginalize") unit-level (or "conditional") estimates of all those quantities, and conduct hypothesis tests on them.
 
@@ -310,7 +309,7 @@ plot_slopes(mod, variables = "am", condition = list("hp", "wt" = "minmax"))
 
 See this vignette for more information: [Plots, interactions, predictions, contrasts, and slopes](plot.html)
 
-## Averaging
+## Aggregation
 
 Since predictions, comparisons, and slopes are conditional quantities, they can be a bit unwieldy. Often, it can be useful to report a one-number summary instead of one estimate per observation. Instead of presenting "conditional" estimates, some methodologists recommend reporting "marginal" estimates, that is, an average of unit-level estimates. 
 
@@ -404,7 +403,25 @@ marginal_means(mod_cat, variables = "am")
 
 [The Marginal Means vignette](marginalmeans.html) offers more detail.
 
-## Hypothesis and equivalence tests
+## Uncertainty
+
+The `marginaleffects` package reports uncertainty estimates for all the quantities it computes: predictions, comparisons, slopes, etc. By default, standard errors are computed using [the delta method](https://en.wikipedia.org/wiki/Delta_method) and classical standard errors. These standard errors are fast to compute, and have appealing properties some some, but not all cases. `marginaleffects` supports several alternatives, including: Huber-White Heteroskedasticity Robust, Cluster-Robust, Bootstrap, and Simulation-based uncertainty estimates.
+
+The [Standard Errors vignette](vignettes/uncertainty.html) offers more detail. For now, it suffices to show to examples. First, we use the `vcov` argument to report "HC3" (heteroskedasticity-consistent) standard errors. 
+
+```{r}
+avg_predictions(mod, by = "am", vcov = "HC3")
+```
+
+Second, we use the `inferences()` function to compute bootstrap intervals using 500 resamples:
+
+```{r}
+avg_predictions(mod, by = "am") |>
+  inferences(method = "boot", R = 500)
+```
+
+
+## Tests
 
 The `hypotheses()` function and the `hypothesis` argument can be used to conduct linear and non-linear hypothesis tests on model coefficients, or on any of the quantities computed by the functions introduced above.
 
@@ -519,8 +536,3 @@ print(s)
 :::
 
 See the [Hypothesis Tests and Custom Contrasts vignette](hypothesis.html) for background, details, and for instructions on how to conduct hypothesis tests in more complex situations.
-
-## More!
-
-There is *much* more you can do with `marginaleffects`. Click through he Table of Contents to read the vignettes, learn how to report marginal effects in [nice tables with the `modelsummary` package](https://vincentarelbundock.github.io/modelsummary/), how to define your own prediction "grid", and much more.
-****

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.358">
+<meta name="generator" content="quarto-1.4.451">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -82,7 +82,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
   "keyboard-shortcut": [
     "f",
     "/",
@@ -110,7 +110,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
@@ -531,6 +531,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
+
 <section id="machine-learning" class="level1">
 <h1>Machine Learning</h1>
 <p><code>marginaleffects</code> offers several “model-agnostic” functions to interpret statistical and machine learning models. This vignette highlights how the package can be used to extract meaningful insights from models trained using the <code>mlr3</code> and <code>tidymodels</code> frameworks.</p>
@@ -624,23 +625,23 @@ Type:  numeric </code></pre>
 <span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">coef_omit =</span> <span class="st">"sex"</span>,</span>
 <span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">coef_rename =</span> coef_rename)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="agjtjtfilc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#agjtjtfilc table {
+<div id="ybwstustrs" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ybwstustrs table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#agjtjtfilc thead, #agjtjtfilc tbody, #agjtjtfilc tfoot, #agjtjtfilc tr, #agjtjtfilc td, #agjtjtfilc th {
+#ybwstustrs thead, #ybwstustrs tbody, #ybwstustrs tfoot, #ybwstustrs tr, #ybwstustrs td, #ybwstustrs th {
   border-style: none;
 }
 
-#agjtjtfilc p {
+#ybwstustrs p {
   margin: 0;
   padding: 0;
 }
 
-#agjtjtfilc .gt_table {
+#ybwstustrs .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -666,12 +667,12 @@ Type:  numeric </code></pre>
   border-left-color: #D3D3D3;
 }
 
-#agjtjtfilc .gt_caption {
+#ybwstustrs .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#agjtjtfilc .gt_title {
+#ybwstustrs .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -683,7 +684,7 @@ Type:  numeric </code></pre>
   border-bottom-width: 0;
 }
 
-#agjtjtfilc .gt_subtitle {
+#ybwstustrs .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -695,7 +696,7 @@ Type:  numeric </code></pre>
   border-top-width: 0;
 }
 
-#agjtjtfilc .gt_heading {
+#ybwstustrs .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -707,13 +708,13 @@ Type:  numeric </code></pre>
   border-right-color: #D3D3D3;
 }
 
-#agjtjtfilc .gt_bottom_border {
+#ybwstustrs .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#agjtjtfilc .gt_col_headings {
+#ybwstustrs .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -728,7 +729,7 @@ Type:  numeric </code></pre>
   border-right-color: #D3D3D3;
 }
 
-#agjtjtfilc .gt_col_heading {
+#ybwstustrs .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -748,7 +749,7 @@ Type:  numeric </code></pre>
   overflow-x: hidden;
 }
 
-#agjtjtfilc .gt_column_spanner_outer {
+#ybwstustrs .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -760,15 +761,15 @@ Type:  numeric </code></pre>
   padding-right: 4px;
 }
 
-#agjtjtfilc .gt_column_spanner_outer:first-child {
+#ybwstustrs .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#agjtjtfilc .gt_column_spanner_outer:last-child {
+#ybwstustrs .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#agjtjtfilc .gt_column_spanner {
+#ybwstustrs .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -780,11 +781,11 @@ Type:  numeric </code></pre>
   width: 100%;
 }
 
-#agjtjtfilc .gt_spanner_row {
+#ybwstustrs .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#agjtjtfilc .gt_group_heading {
+#ybwstustrs .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -810,7 +811,7 @@ Type:  numeric </code></pre>
   text-align: left;
 }
 
-#agjtjtfilc .gt_empty_group_heading {
+#ybwstustrs .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -825,15 +826,15 @@ Type:  numeric </code></pre>
   vertical-align: middle;
 }
 
-#agjtjtfilc .gt_from_md > :first-child {
+#ybwstustrs .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#agjtjtfilc .gt_from_md > :last-child {
+#ybwstustrs .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#agjtjtfilc .gt_row {
+#ybwstustrs .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -852,7 +853,7 @@ Type:  numeric </code></pre>
   overflow-x: hidden;
 }
 
-#agjtjtfilc .gt_stub {
+#ybwstustrs .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -865,7 +866,7 @@ Type:  numeric </code></pre>
   padding-right: 5px;
 }
 
-#agjtjtfilc .gt_stub_row_group {
+#ybwstustrs .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -879,15 +880,15 @@ Type:  numeric </code></pre>
   vertical-align: top;
 }
 
-#agjtjtfilc .gt_row_group_first td {
+#ybwstustrs .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#agjtjtfilc .gt_row_group_first th {
+#ybwstustrs .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#agjtjtfilc .gt_summary_row {
+#ybwstustrs .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -897,16 +898,16 @@ Type:  numeric </code></pre>
   padding-right: 5px;
 }
 
-#agjtjtfilc .gt_first_summary_row {
+#ybwstustrs .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#agjtjtfilc .gt_first_summary_row.thick {
+#ybwstustrs .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#agjtjtfilc .gt_last_summary_row {
+#ybwstustrs .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -916,7 +917,7 @@ Type:  numeric </code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#agjtjtfilc .gt_grand_summary_row {
+#ybwstustrs .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -926,7 +927,7 @@ Type:  numeric </code></pre>
   padding-right: 5px;
 }
 
-#agjtjtfilc .gt_first_grand_summary_row {
+#ybwstustrs .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -936,7 +937,7 @@ Type:  numeric </code></pre>
   border-top-color: #D3D3D3;
 }
 
-#agjtjtfilc .gt_last_grand_summary_row_top {
+#ybwstustrs .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -946,11 +947,11 @@ Type:  numeric </code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#agjtjtfilc .gt_striped {
+#ybwstustrs .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#agjtjtfilc .gt_table_body {
+#ybwstustrs .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -959,7 +960,7 @@ Type:  numeric </code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#agjtjtfilc .gt_footnotes {
+#ybwstustrs .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -973,7 +974,7 @@ Type:  numeric </code></pre>
   border-right-color: #D3D3D3;
 }
 
-#agjtjtfilc .gt_footnote {
+#ybwstustrs .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -982,7 +983,7 @@ Type:  numeric </code></pre>
   padding-right: 5px;
 }
 
-#agjtjtfilc .gt_sourcenotes {
+#ybwstustrs .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -996,7 +997,7 @@ Type:  numeric </code></pre>
   border-right-color: #D3D3D3;
 }
 
-#agjtjtfilc .gt_sourcenote {
+#ybwstustrs .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1004,63 +1005,63 @@ Type:  numeric </code></pre>
   padding-right: 5px;
 }
 
-#agjtjtfilc .gt_left {
+#ybwstustrs .gt_left {
   text-align: left;
 }
 
-#agjtjtfilc .gt_center {
+#ybwstustrs .gt_center {
   text-align: center;
 }
 
-#agjtjtfilc .gt_right {
+#ybwstustrs .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#agjtjtfilc .gt_font_normal {
+#ybwstustrs .gt_font_normal {
   font-weight: normal;
 }
 
-#agjtjtfilc .gt_font_bold {
+#ybwstustrs .gt_font_bold {
   font-weight: bold;
 }
 
-#agjtjtfilc .gt_font_italic {
+#ybwstustrs .gt_font_italic {
   font-style: italic;
 }
 
-#agjtjtfilc .gt_super {
+#ybwstustrs .gt_super {
   font-size: 65%;
 }
 
-#agjtjtfilc .gt_footnote_marks {
+#ybwstustrs .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#agjtjtfilc .gt_asterisk {
+#ybwstustrs .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#agjtjtfilc .gt_indent_1 {
+#ybwstustrs .gt_indent_1 {
   text-indent: 5px;
 }
 
-#agjtjtfilc .gt_indent_2 {
+#ybwstustrs .gt_indent_2 {
   text-indent: 10px;
 }
 
-#agjtjtfilc .gt_indent_3 {
+#ybwstustrs .gt_indent_3 {
   text-indent: 15px;
 }
 
-#agjtjtfilc .gt_indent_4 {
+#ybwstustrs .gt_indent_4 {
   text-indent: 20px;
 }
 
-#agjtjtfilc .gt_indent_5 {
+#ybwstustrs .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -1082,7 +1083,7 @@ Type:  numeric </code></pre>
 <td class="gt_row gt_left" headers="">+1</td>
 <td class="gt_row gt_left" headers="">female</td>
 <td class="gt_row gt_center" headers="Logit">-0.101</td>
-<td class="gt_row gt_center" headers="Random Forest">-0.079</td>
+<td class="gt_row gt_center" headers="Random Forest">-0.075</td>
 <td class="gt_row gt_center" headers="XGBoost">-0.098</td>
 </tr>
 <tr class="even">
@@ -1098,7 +1099,7 @@ Type:  numeric </code></pre>
 <td class="gt_row gt_left" headers=""></td>
 <td class="gt_row gt_left" headers="">male</td>
 <td class="gt_row gt_center" headers="Logit">0.101</td>
-<td class="gt_row gt_center" headers="Random Forest">0.079</td>
+<td class="gt_row gt_center" headers="Random Forest">0.075</td>
 <td class="gt_row gt_center" headers="XGBoost">0.098</td>
 </tr>
 <tr class="even">
@@ -1114,7 +1115,7 @@ Type:  numeric </code></pre>
 <td class="gt_row gt_left" headers="">Dream - Biscoe</td>
 <td class="gt_row gt_left" headers="">female</td>
 <td class="gt_row gt_center" headers="Logit">-0.044</td>
-<td class="gt_row gt_center" headers="Random Forest">0.003</td>
+<td class="gt_row gt_center" headers="Random Forest">0.006</td>
 <td class="gt_row gt_center" headers="XGBoost">-0.004</td>
 </tr>
 <tr class="even">
@@ -1130,7 +1131,7 @@ Type:  numeric </code></pre>
 <td class="gt_row gt_left" headers=""></td>
 <td class="gt_row gt_left" headers="">male</td>
 <td class="gt_row gt_center" headers="Logit">0.044</td>
-<td class="gt_row gt_center" headers="Random Forest">-0.003</td>
+<td class="gt_row gt_center" headers="Random Forest">-0.006</td>
 <td class="gt_row gt_center" headers="XGBoost">0.004</td>
 </tr>
 <tr class="even">
@@ -1178,7 +1179,7 @@ Type:  numeric </code></pre>
 <td class="gt_row gt_left" headers="">Chinstrap - Adelie</td>
 <td class="gt_row gt_left" headers="">female</td>
 <td class="gt_row gt_center" headers="Logit">0.562</td>
-<td class="gt_row gt_center" headers="Random Forest">0.169</td>
+<td class="gt_row gt_center" headers="Random Forest">0.174</td>
 <td class="gt_row gt_center" headers="XGBoost">0.441</td>
 </tr>
 <tr class="even">
@@ -1194,7 +1195,7 @@ Type:  numeric </code></pre>
 <td class="gt_row gt_left" headers=""></td>
 <td class="gt_row gt_left" headers="">male</td>
 <td class="gt_row gt_center" headers="Logit">-0.562</td>
-<td class="gt_row gt_center" headers="Random Forest">-0.169</td>
+<td class="gt_row gt_center" headers="Random Forest">-0.174</td>
 <td class="gt_row gt_center" headers="XGBoost">-0.441</td>
 </tr>
 <tr class="even">
@@ -1210,7 +1211,7 @@ Type:  numeric </code></pre>
 <td class="gt_row gt_left" headers="">Gentoo - Adelie</td>
 <td class="gt_row gt_left" headers="">female</td>
 <td class="gt_row gt_center" headers="Logit">0.453</td>
-<td class="gt_row gt_center" headers="Random Forest">0.129</td>
+<td class="gt_row gt_center" headers="Random Forest">0.118</td>
 <td class="gt_row gt_center" headers="XGBoost">0.361</td>
 </tr>
 <tr class="even">
@@ -1226,7 +1227,7 @@ Type:  numeric </code></pre>
 <td class="gt_row gt_left" headers=""></td>
 <td class="gt_row gt_left" headers="">male</td>
 <td class="gt_row gt_center" headers="Logit">-0.453</td>
-<td class="gt_row gt_center" headers="Random Forest">-0.129</td>
+<td class="gt_row gt_center" headers="Random Forest">-0.118</td>
 <td class="gt_row gt_center" headers="XGBoost">-0.361</td>
 </tr>
 <tr class="even">
@@ -1293,38 +1294,38 @@ Type:  numeric </code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
        Term      Contrast  Estimate
- count      +1             0.00e+00
- holiday    False - True   1.41e+01
- humidity   +1            -2.06e+01
- month      +1             4.04e+00
- season     spring - fall -3.12e+01
- season     summer - fall -8.80e+00
- season     winter - fall  2.37e+00
- temp       +1             2.34e+00
- weather    misty - clear -7.55e+00
- weather    rain - clear  -5.84e+01
- weekday    Fri - Sun      7.41e+01
- weekday    Mon - Sun      8.20e+01
- weekday    Sat - Sun      1.88e+01
- weekday    Thu - Sun      8.95e+01
- weekday    Tue - Sun      8.78e+01
- weekday    Wed - Sun      9.00e+01
- windspeed  +1            -4.44e-03
- workingday False - True  -1.87e+02
- year       1 - 0          9.84e+01
+ count      +1               0.0000
+ holiday    False - True    11.0237
+ humidity   +1             -19.7677
+ month      +1               4.1081
+ season     spring - fall  -28.2594
+ season     summer - fall   -6.9537
+ season     winter - fall    4.2914
+ temp       +1               2.4081
+ weather    misty - clear   -8.1814
+ weather    rain - clear   -61.1488
+ weekday    Fri - Sun       70.4606
+ weekday    Mon - Sun       79.3195
+ weekday    Sat - Sun       24.0765
+ weekday    Thu - Sun       86.5259
+ weekday    Tue - Sun       85.5433
+ weekday    Wed - Sun       87.3045
+ windspeed  +1              -0.0556
+ workingday False - True  -192.8918
+ year       1 - 0           98.3537
 
 Columns: term, contrast, estimate 
 Type:  response </code></pre>
 </div>
 </div>
-<p>These results are easy to interpret: An increase of 1 degree Celsius in the temperature is associated with an increase of 2.340 bikes rented per hour.</p>
+<p>These results are easy to interpret: An increase of 1 degree Celsius in the temperature is associated with an increase of 2.408 bikes rented per hour.</p>
 <p>We could obtain the same result manually as follows:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>lo <span class="ot">&lt;-</span> <span class="fu">transform</span>(bikes, <span class="at">temp =</span> temp <span class="sc">-</span> <span class="fl">0.5</span>)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>hi <span class="ot">&lt;-</span> <span class="fu">transform</span>(bikes, <span class="at">temp =</span> temp <span class="sc">+</span> <span class="fl">0.5</span>)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">predict</span>(forest, <span class="at">newdata =</span> hi) <span class="sc">-</span> <span class="fu">predict</span>(forest, <span class="at">newdata =</span> lo))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 3.455978</code></pre>
+<pre><code>[1] 3.428483</code></pre>
 </div>
 </div>
 </section>
@@ -1340,12 +1341,12 @@ Type:  response </code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Estimate     C: season C: temp    C: weather
-   -36.44 spring - fall      +1 misty - clear
-   -78.08 spring - fall      +1 rain - clear 
-   -14.58 summer - fall      +1 misty - clear
-   -62.89 summer - fall      +1 rain - clear 
-    -3.62 winter - fall      +1 misty - clear
-   -57.03 winter - fall      +1 rain - clear 
+   -33.52 spring - fall      +1 misty - clear
+   -77.10 spring - fall      +1 rain - clear 
+   -12.71 summer - fall      +1 misty - clear
+   -63.97 summer - fall      +1 rain - clear 
+    -1.73 winter - fall      +1 misty - clear
+   -57.64 winter - fall      +1 rain - clear 
 
 Columns: term, contrast_season, contrast_temp, contrast_weather, estimate 
 Type:  response </code></pre>
@@ -1585,15 +1586,38 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
     stripColumnClz(note)
-    if (id.startsWith('sec-')) {
+    const typesetMath = (el) => {
+      if (window.MathJax) {
+        // MathJax Typeset
+        window.MathJax.typeset([el]);
+      } else if (window.katex) {
+        // KaTeX Render
+        var mathElements = el.getElementsByClassName("math");
+        var macros = [];
+        for (var i = 0; i < mathElements.length; i++) {
+          var texText = mathElements[i].firstChild;
+          if (mathElements[i].tagName == "SPAN") {
+            window.katex.render(texText.data, mathElements[i], {
+              displayMode: mathElements[i].classList.contains('display'),
+              throwOnError: false,
+              macros: macros,
+              fleqn: false
+            });
+          }
+        }
+      }
+    }
+    if (id === null || id.startsWith('sec-')) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
       if (note.children && note.children.length > 2) {
         for (let i = 0; i < 2; i++) {
           container.appendChild(note.children[i].cloneNode(true));
         }
+        typesetMath(container);
         return container.innerHTML
       } else {
+        typesetMath(note);
         return note.innerHTML;
       }
     } else {
@@ -1602,6 +1626,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (anchorLink) {
         anchorLink.remove();
       }
+      typesetMath(note);
       return note.innerHTML;
     }
   }
@@ -1644,6 +1669,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             instance.show();
           });
         }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
       }
     }, function(instance) {
     });
@@ -1719,7 +1767,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     window.addEventListener(
       "resize",
       throttle(() => {
-        console.log("RESIZE");
         elRect = undefined;
         if (selectedAnnoteEl) {
           selectCodeLines(selectedAnnoteEl);
@@ -1803,12 +1850,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../vignettes/lme4.html" class="pagination-link">
+      <a href="../vignettes/lme4.html" class="pagination-link  aria-label=" mixed="" effects"="">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Mixed Effects</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../vignettes/marginalmeans.html" class="pagination-link">
+      <a href="../vignettes/marginalmeans.html" class="pagination-link" aria-label="Marginal Means">
         <span class="nav-page-text">Marginal Means</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
