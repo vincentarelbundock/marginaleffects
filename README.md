@@ -1,4 +1,5 @@
-# marginaleffects
+
+![](images/zoo_banner.png)
 
 ## Why?
 
@@ -30,8 +31,9 @@ outcomes, and more. With a single unified interface, users can compute
 and plot many quantities of interest, including:
 
 -   Predictions (aka fitted values or adjusted predictions)
--   Comparisons such as risk differences, risk ratios, odds, etc.
--   Slopes (aka marginal effects)
+-   Comparisons such as contrasts, risk differences, risk ratios, odds,
+    etc.
+-   Slopes (aka marginal effects or partial derivatives)
 -   Marginal means
 -   Linear and non-linear hypothesis tests
 -   Equivalence tests
