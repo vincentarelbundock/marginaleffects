@@ -4,9 +4,10 @@ project:
 website:
   title: "The Marginal Effects Zoo"
   favicon: "images/favicon.png"
-  reader-mode: true
   page-navigation: true
+
   navbar:
+    background: "#eeeeee"
     search: true
     logo: images/marginaleffects_icon.png
     logo-alt: "marginaleffects logo"
@@ -14,9 +15,9 @@ website:
       - icon: github
         href: $ALTDOC_PACKAGE_URL_GITHUB
         aria-label: $ALTDOC_PACKAGE_NAME GitHub
+
   sidebar:
     collapse-level: 1
-    style: "docked"
     search: true
     contents:
       - vignettes/get_started.qmd
@@ -81,10 +82,6 @@ format:
   html:
     toc: true
     theme:
-      light: cosmo
+      light: flatly
     code-copy: true
-    code-overflow: wrap
-    grid:
-      sidebar-width: 250px
-      body-width: 900px
-      margin-width: 300px
+    code-overflow: scroll

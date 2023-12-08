@@ -24,10 +24,10 @@ implementation of best practices.
 This online book introduces a conceptual framework and the
 `marginaleffects` package for `R` and `Python`. This software can
 facilitate the interpretation of [over 100 classes of statistical
-models](https://marginaleffects.com/vignettes/supported_models.html) in
-`R` and `Python`, including linear, GLM, GAM, mixed-effects, bayesian,
-categorical outcomes, and more. With a single unified interface, users
-can compute and plot many quantities of interest, including:
+models](https://marginaleffects.com/vignettes/supported_models.html),
+including linear, GLM, GAM, mixed-effects, bayesian, categorical
+outcomes, and more. With a single unified interface, users can compute
+and plot many quantities of interest, including:
 
 -   Predictions (aka fitted values or adjusted predictions)
 -   Comparisons such as risk differences, risk ratios, odds, etc.
