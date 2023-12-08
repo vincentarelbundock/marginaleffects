@@ -11,8 +11,8 @@ These problems are compounded by the fact that modeling packages produce objects
 This online book introduces a conceptual framework to clearly define statistical quantities of interest, and the `marginaleffects` package to estimate those quantities in `R` and `Python`. This software can facilitate the interpretation of [over 100 classes of statistical models](https://marginaleffects.com/vignettes/supported_models.html), including linear, GLM, GAM, mixed-effects, bayesian, categorical outcomes, and more. With a single unified interface, users can compute and plot many quantities of interest, including:
 
 * Predictions (aka fitted values or adjusted predictions)
-* Comparisons such as risk differences, risk ratios, odds, etc.
-* Slopes (aka marginal effects) 
+* Comparisons such as contrasts, risk differences, risk ratios, odds, etc.
+* Slopes (aka marginal effects or partial derivatives) 
 * Marginal means
 * Linear and non-linear hypothesis tests
 * Equivalence tests
