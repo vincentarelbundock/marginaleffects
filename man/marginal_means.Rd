@@ -95,7 +95,7 @@ first entry in the error message is used by default.}
 \item "sequential": difference between an estimate and the estimate in the next row.
 \item "revpairwise", "revreference", "revsequential": inverse of the corresponding hypotheses, as described above.
 }
-\item See the Examples section below and the vignette: https://marginaleffects.com/articles/hypothesis.html
+\item See the Examples section below and the vignette: https://marginaleffects.com/vignettes/hypothesis.html
 }}
 
 \item{equivalence}{Numeric vector of length 2: bounds used for the two-one-sided test (TOST) of equivalence, and for the non-inferiority and non-superiority tests. See Details section below.}
@@ -138,7 +138,7 @@ Marginal means are adjusted predictions, averaged across a grid of categorical p
 holding other numeric predictors at their means. To learn more, read the marginal means vignette, visit the
 package website, or scroll down this page for a full list of vignettes:
 \itemize{
-\item \url{https://marginaleffects.com/articles/marginalmeans.html}
+\item \url{https://marginaleffects.com/vignettes/marginalmeans.html}
 \item \url{https://marginaleffects.com/}
 }
 }
@@ -176,11 +176,11 @@ Standard errors for all quantities estimated by \code{marginaleffects} can be ob
 
 See the "Standard Errors and Confidence Intervals" vignette on the \code{marginaleffects} website for more details on the computation of standard errors:
 
-https://marginaleffects.com/articles/uncertainty.html
+https://marginaleffects.com/vignettes/uncertainty.html
 
 Note that the \code{inferences()} function can be used to compute uncertainty estimates using a bootstrap or simulation-based inference. See the vignette:
 
-https://marginaleffects.com/articles/bootstrap.html
+https://marginaleffects.com/vignettes/bootstrap.html
 }
 
 \section{Model-Specific Arguments}{

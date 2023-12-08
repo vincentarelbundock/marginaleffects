@@ -60,21 +60,24 @@ here!](https://marginaleffects.com/vignettes/get_started.html)
 
 ## How to help
 
-If you like this project, you can contribute in four main ways:
+The `marginaleffects` package and the Marginal Effects Zoo book will
+always be free. If you like this project, you can contribute in four
+main ways:
 
-1.  [Cite the `marginaleffects` package](CITATION.html) in your work and
-    tell your friends about it.
-2.  Submit bug reports, documentation improvements, or code
-    contributions to the Github repositories of the `R` or `Python`
-    versions of the package:
-    -   <https://github.com/vincentarelbundock/marginaleffects>
-    -   <https://github.com/vincentarelbundock/pymarginaleffects>
-3.  Submit a new entry [for the Meme
-    Gallery!](https://marginaleffects.com/vignettes/meme.html)
-4.  Make a donation to [The Native Women’s Shelter of
+1.  Make a donation to the [Native Women’s Shelter of
     Montreal](https://www.nwsm.info/) or to [Give
     Directly](https://www.givedirectly.org/), and send me (Vincent) a
     quick note. You’ll make my day.
+2.  Submit bug reports, documentation improvements, or code
+    contributions to the Github repositories of the [`R`
+    version](https://github.com/vincentarelbundock/marginaleffects) or
+    the [`Python`
+    version](https://github.com/vincentarelbundock/pymarginaleffects) of
+    the package.
+3.  [Cite the `marginaleffects` package](CITATION.html) in your work and
+    tell your friends about it.
+4.  Create a new entry [for the Meme
+    Gallery!](https://marginaleffects.com/vignettes/meme.html)
 
 <a href="http://marginaleffects.com">
 <img src="https://user-images.githubusercontent.com/987057/134899484-e3392510-2e94-4c39-9830-53356fa5feed.png" align="center" alt="marginaleffects logo" width="200" />

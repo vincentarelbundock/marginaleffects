@@ -11,7 +11,7 @@
 
 #' See the "Plots" vignette and website for tutorials and information on how to customize plots:
 #'
-#' * https://marginaleffects.com/articles/plot.html
+#' * https://marginaleffects.com/vignettes/plot.html
 #' * https://marginaleffects.com
 #' 
 #' @param variables Name of the variable whose contrast we want to plot on the y-axis.

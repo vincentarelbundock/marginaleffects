@@ -127,6 +127,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
+<span class="menu-text">Get started</span></a>
+  </li>  
+</ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/vincentarelbundock/marginaleffects"> <i class="bi bi-github" role="img" aria-label="marginaleffects GitHub">
@@ -172,13 +178,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
  <span class="menu-text">Tutorials</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/predictions.html" class="sidebar-item-text sidebar-link">
@@ -213,13 +219,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
  <span class="menu-text">Case studies</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/brms.html" class="sidebar-item-text sidebar-link">
@@ -338,13 +344,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
  <span class="menu-text">Technical notes</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/faq.html" class="sidebar-item-text sidebar-link">
@@ -560,7 +566,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>See the predictions vignette and package website for worked examples and case studies:</p>
 <ul>
 <li>
-<p><a href="https://marginaleffects.com/articles/predictions.html">https://marginaleffects.com/articles/predictions.html</a></p>
+<p><a href="https://marginaleffects.com/vignettes/predictions.html">https://marginaleffects.com/vignettes/predictions.html</a></p>
 </li>
 <li>
 <p><a href="https://marginaleffects.com/">https://marginaleffects.com/</a></p>
@@ -907,7 +913,7 @@ A function applied to unit-level adjusted predictions and confidence intervals j
 </ul>
 </li>
 <li>
-<p>See the Examples section below and the vignette: https://marginaleffects.com/articles/hypothesis.html</p>
+<p>See the Examples section below and the vignette: https://marginaleffects.com/vignettes/hypothesis.html</p>
 </li>
 </ul>
 </td>
@@ -1026,9 +1032,9 @@ Additional arguments are passed to the <code>predict()</code> method supplied by
 </li>
 </ul>
 <p>See the "Standard Errors and Confidence Intervals" vignette on the <code>marginaleffects</code> website for more details on the computation of standard errors:</p>
-<p>https://marginaleffects.com/articles/uncertainty.html</p>
+<p>https://marginaleffects.com/vignettes/uncertainty.html</p>
 <p>Note that the <code>inferences()</code> function can be used to compute uncertainty estimates using a bootstrap or simulation-based inference. See the vignette:</p>
-<p>https://marginaleffects.com/articles/bootstrap.html</p>
+<p>https://marginaleffects.com/vignettes/bootstrap.html</p>
 </section>
 <section id="model-specific-arguments" class="level3">
 <h3 class="anchored" data-anchor-id="model-specific-arguments">Model-Specific Arguments</h3>

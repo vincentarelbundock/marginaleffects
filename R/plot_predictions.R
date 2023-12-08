@@ -11,7 +11,7 @@
 #' 
 #' See the "Plots" vignette and website for tutorials and information on how to customize plots:
 #'
-#' * https://marginaleffects.com/articles/plot.html
+#' * https://marginaleffects.com/vignettes/plot.html
 #' * https://marginaleffects.com
 #' 
 #' @param condition Conditional predictions
@@ -31,6 +31,7 @@
 #' @inheritParams plot_slopes
 #' @inheritParams predictions
 #' @template model_specific_arguments
+#' @template type
 #' @return A `ggplot2` object or data frame (if `draw=FALSE`)
 #' @export
 #' @examples

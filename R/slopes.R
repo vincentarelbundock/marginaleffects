@@ -10,7 +10,7 @@
 #'
 #' See the slopes vignette and package website for worked examples and case studies:
 #'
-#' * <https://marginaleffects.com/articles/slopes.html>
+#' * <https://marginaleffects.com/vignettes/slopes.html>
 #' * <https://marginaleffects.com/>
 #'
 #' @details
@@ -78,7 +78,7 @@
 #'   - "reference": differences between the estimates in each row and the estimate in the first row.
 #'   - "sequential": difference between an estimate and the estimate in the next row.
 #'   - "revpairwise", "revreference", "revsequential": inverse of the corresponding hypotheses, as described above.
-#' + See the Examples section below and the vignette: https://marginaleffects.com/articles/hypothesis.html
+#' + See the Examples section below and the vignette: https://marginaleffects.com/vignettes/hypothesis.html
 #' @param p_adjust Adjust p-values for multiple comparisons: "holm", "hochberg", "hommel", "bonferroni", "BH", "BY", or "fdr". See [stats::p.adjust]
 #' @param df Degrees of freedom used to compute p values and confidence intervals. A single numeric value between 1 and `Inf`. When `df` is `Inf`, the normal distribution is used. When `df` is finite, the `t` distribution is used. See [insight::get_df] for a convenient function to extract degrees of freedom. Ex: `slopes(model, df = insight::get_df(model))`
 #' @param eps NULL or numeric value which determines the step size to use when

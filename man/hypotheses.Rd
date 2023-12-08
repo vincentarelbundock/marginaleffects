@@ -43,7 +43,7 @@ hypotheses(
 \item "sequential": difference between an estimate and the estimate in the next row.
 \item "revpairwise", "revreference", "revsequential": inverse of the corresponding hypotheses, as described above.
 }
-\item See the Examples section below and the vignette: https://marginaleffects.com/articles/hypothesis.html
+\item See the Examples section below and the vignette: https://marginaleffects.com/vignettes/hypothesis.html
 }}
 
 \item{vcov}{Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:
@@ -108,7 +108,7 @@ Uncertainty estimates are calculated as first-order approximate standard errors 
 To learn more, read the hypothesis tests vignette, visit the
 package website, or scroll down this page for a full list of vignettes:
 \itemize{
-\item \url{https://marginaleffects.com/articles/hypothesis.html}
+\item \url{https://marginaleffects.com/vignettes/hypothesis.html}
 \item \url{https://marginaleffects.com/}
 }
 

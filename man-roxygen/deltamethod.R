@@ -10,9 +10,9 @@
 #'
 #' See the "Standard Errors and Confidence Intervals" vignette on the `marginaleffects` website for more details on the computation of standard errors:
 #'
-#' https://marginaleffects.com/articles/uncertainty.html
+#' https://marginaleffects.com/vignettes/uncertainty.html
 #'
 #' Note that the `inferences()` function can be used to compute uncertainty estimates using a bootstrap or simulation-based inference. See the vignette:
 #' 
-#' https://marginaleffects.com/articles/bootstrap.html
+#' https://marginaleffects.com/vignettes/bootstrap.html
 #'

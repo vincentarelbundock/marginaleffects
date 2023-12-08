@@ -6,7 +6,7 @@
 #' To learn more, read the hypothesis tests vignette, visit the
 #' package website, or scroll down this page for a full list of vignettes:
 #' 
-#' * <https://marginaleffects.com/articles/hypothesis.html>
+#' * <https://marginaleffects.com/vignettes/hypothesis.html>
 #' * <https://marginaleffects.com/>
 #' 
 #' Warning #1: Tests are conducted directly on the scale defined by the `type` argument. For some models, it can make sense to conduct hypothesis or equivalence tests on the `"link"` scale instead of the `"response"` scale which is often the default.

@@ -125,6 +125,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
+<span class="menu-text">Get started</span></a>
+  </li>  
+</ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/vincentarelbundock/marginaleffects"> <i class="bi bi-github" role="img" aria-label="marginaleffects GitHub">
@@ -170,13 +176,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
  <span class="menu-text">Tutorials</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/predictions.html" class="sidebar-item-text sidebar-link">
@@ -336,13 +342,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
  <span class="menu-text">Technical notes</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/faq.html" class="sidebar-item-text sidebar-link">
@@ -407,13 +413,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
  <span class="menu-text">Functions</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/predictions.html" class="sidebar-item-text sidebar-link">
@@ -573,23 +579,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(mod, <span class="at">exponentiate =</span> <span class="cn">TRUE</span>, <span class="at">coef_omit =</span> <span class="st">"^(?!txSK)"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fbgjnfivfg" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#fbgjnfivfg table {
+<div id="dohcrmzdiv" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#dohcrmzdiv table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#fbgjnfivfg thead, #fbgjnfivfg tbody, #fbgjnfivfg tfoot, #fbgjnfivfg tr, #fbgjnfivfg td, #fbgjnfivfg th {
+#dohcrmzdiv thead, #dohcrmzdiv tbody, #dohcrmzdiv tfoot, #dohcrmzdiv tr, #dohcrmzdiv td, #dohcrmzdiv th {
   border-style: none;
 }
 
-#fbgjnfivfg p {
+#dohcrmzdiv p {
   margin: 0;
   padding: 0;
 }
 
-#fbgjnfivfg .gt_table {
+#dohcrmzdiv .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -615,12 +621,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-left-color: #D3D3D3;
 }
 
-#fbgjnfivfg .gt_caption {
+#dohcrmzdiv .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#fbgjnfivfg .gt_title {
+#dohcrmzdiv .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -632,7 +638,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-width: 0;
 }
 
-#fbgjnfivfg .gt_subtitle {
+#dohcrmzdiv .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -644,7 +650,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-width: 0;
 }
 
-#fbgjnfivfg .gt_heading {
+#dohcrmzdiv .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -656,13 +662,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#fbgjnfivfg .gt_bottom_border {
+#dohcrmzdiv .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#fbgjnfivfg .gt_col_headings {
+#dohcrmzdiv .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -677,7 +683,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#fbgjnfivfg .gt_col_heading {
+#dohcrmzdiv .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -697,7 +703,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#fbgjnfivfg .gt_column_spanner_outer {
+#dohcrmzdiv .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -709,15 +715,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 4px;
 }
 
-#fbgjnfivfg .gt_column_spanner_outer:first-child {
+#dohcrmzdiv .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#fbgjnfivfg .gt_column_spanner_outer:last-child {
+#dohcrmzdiv .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#fbgjnfivfg .gt_column_spanner {
+#dohcrmzdiv .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -729,11 +735,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   width: 100%;
 }
 
-#fbgjnfivfg .gt_spanner_row {
+#dohcrmzdiv .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#fbgjnfivfg .gt_group_heading {
+#dohcrmzdiv .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -759,7 +765,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   text-align: left;
 }
 
-#fbgjnfivfg .gt_empty_group_heading {
+#dohcrmzdiv .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -774,15 +780,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: middle;
 }
 
-#fbgjnfivfg .gt_from_md > :first-child {
+#dohcrmzdiv .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#fbgjnfivfg .gt_from_md > :last-child {
+#dohcrmzdiv .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#fbgjnfivfg .gt_row {
+#dohcrmzdiv .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -801,7 +807,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#fbgjnfivfg .gt_stub {
+#dohcrmzdiv .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -814,7 +820,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#fbgjnfivfg .gt_stub_row_group {
+#dohcrmzdiv .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -828,15 +834,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: top;
 }
 
-#fbgjnfivfg .gt_row_group_first td {
+#dohcrmzdiv .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#fbgjnfivfg .gt_row_group_first th {
+#dohcrmzdiv .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#fbgjnfivfg .gt_summary_row {
+#dohcrmzdiv .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -846,16 +852,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#fbgjnfivfg .gt_first_summary_row {
+#dohcrmzdiv .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#fbgjnfivfg .gt_first_summary_row.thick {
+#dohcrmzdiv .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#fbgjnfivfg .gt_last_summary_row {
+#dohcrmzdiv .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -865,7 +871,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#fbgjnfivfg .gt_grand_summary_row {
+#dohcrmzdiv .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -875,7 +881,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#fbgjnfivfg .gt_first_grand_summary_row {
+#dohcrmzdiv .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -885,7 +891,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-color: #D3D3D3;
 }
 
-#fbgjnfivfg .gt_last_grand_summary_row_top {
+#dohcrmzdiv .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -895,11 +901,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#fbgjnfivfg .gt_striped {
+#dohcrmzdiv .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#fbgjnfivfg .gt_table_body {
+#dohcrmzdiv .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -908,7 +914,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#fbgjnfivfg .gt_footnotes {
+#dohcrmzdiv .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -922,7 +928,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#fbgjnfivfg .gt_footnote {
+#dohcrmzdiv .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -931,7 +937,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#fbgjnfivfg .gt_sourcenotes {
+#dohcrmzdiv .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -945,7 +951,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#fbgjnfivfg .gt_sourcenote {
+#dohcrmzdiv .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -953,63 +959,63 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#fbgjnfivfg .gt_left {
+#dohcrmzdiv .gt_left {
   text-align: left;
 }
 
-#fbgjnfivfg .gt_center {
+#dohcrmzdiv .gt_center {
   text-align: center;
 }
 
-#fbgjnfivfg .gt_right {
+#dohcrmzdiv .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#fbgjnfivfg .gt_font_normal {
+#dohcrmzdiv .gt_font_normal {
   font-weight: normal;
 }
 
-#fbgjnfivfg .gt_font_bold {
+#dohcrmzdiv .gt_font_bold {
   font-weight: bold;
 }
 
-#fbgjnfivfg .gt_font_italic {
+#dohcrmzdiv .gt_font_italic {
   font-style: italic;
 }
 
-#fbgjnfivfg .gt_super {
+#dohcrmzdiv .gt_super {
   font-size: 65%;
 }
 
-#fbgjnfivfg .gt_footnote_marks {
+#dohcrmzdiv .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#fbgjnfivfg .gt_asterisk {
+#dohcrmzdiv .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#fbgjnfivfg .gt_indent_1 {
+#dohcrmzdiv .gt_indent_1 {
   text-indent: 5px;
 }
 
-#fbgjnfivfg .gt_indent_2 {
+#dohcrmzdiv .gt_indent_2 {
   text-indent: 10px;
 }
 
-#fbgjnfivfg .gt_indent_3 {
+#dohcrmzdiv .gt_indent_3 {
   text-indent: 15px;
 }
 
-#fbgjnfivfg .gt_indent_4 {
+#dohcrmzdiv .gt_indent_4 {
   text-indent: 20px;
 }
 
-#fbgjnfivfg .gt_indent_5 {
+#dohcrmzdiv .gt_indent_5 {
   text-indent: 25px;
 }
 </style>

@@ -5,7 +5,7 @@
 #' holding other numeric predictors at their means. To learn more, read the marginal means vignette, visit the
 #' package website, or scroll down this page for a full list of vignettes:
 #'
-#' * <https://marginaleffects.com/articles/marginalmeans.html>
+#' * <https://marginaleffects.com/vignettes/marginalmeans.html>
 #' * <https://marginaleffects.com/>
 #'
 #' @param variables Focal variables
