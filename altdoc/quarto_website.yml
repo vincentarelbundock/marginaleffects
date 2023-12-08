@@ -2,7 +2,7 @@ project:
   type: website
 
 website:
-  title: "The Marginal Effects Zoo"
+  title: "Marginal Effects Zoo"
   favicon: "images/favicon.png"
   page-navigation: true
 
@@ -18,11 +18,12 @@ website:
       - icon: github
         href: $ALTDOC_PACKAGE_URL_GITHUB
         aria-label: $ALTDOC_PACKAGE_NAME GitHub
+      - icon: twitter
+        href: https://twitter.com/vincentab
 
   sidebar:
-    search: true
+    collapse-level: 1
     contents:
-      - collapse-level: 1
       - vignettes/get_started.qmd
       - section: Tutorials
         contents:

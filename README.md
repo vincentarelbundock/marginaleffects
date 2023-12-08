@@ -21,8 +21,9 @@ implementation of best practices.
 
 ## What?
 
-This online book introduces a conceptual framework and the
-`marginaleffects` package for `R` and `Python`. This software can
+This online book introduces a conceptual framework to clearly define
+statistical quantities of interest, and the `marginaleffects` package to
+estimate those quantities in `R` and `Python`. This software can
 facilitate the interpretation of [over 100 classes of statistical
 models](https://marginaleffects.com/vignettes/supported_models.html),
 including linear, GLM, GAM, mixed-effects, bayesian, categorical
@@ -62,16 +63,16 @@ here!](https://marginaleffects.com/vignettes/get_started.html)
 
 The `marginaleffects` package and the Marginal Effects Zoo book will
 always be free. If you like this project, you can contribute in four
-main ways:
+ways:
 
 1.  Make a donation to the [Native Women’s Shelter of
     Montreal](https://www.nwsm.info/) or to [Give
     Directly](https://www.givedirectly.org/), and send me (Vincent) a
     quick note. You’ll make my day.
 2.  Submit bug reports, documentation improvements, or code
-    contributions to the Github repositories of the [`R`
+    contributions to the Github repositories of the [R
     version](https://github.com/vincentarelbundock/marginaleffects) or
-    the [`Python`
+    the [Python
     version](https://github.com/vincentarelbundock/pymarginaleffects) of
     the package.
 3.  [Cite the `marginaleffects` package](CITATION.html) in your work and
