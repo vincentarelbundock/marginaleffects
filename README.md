@@ -75,9 +75,9 @@ using a simple and consistent user interface. Its benefits include:
     examples. The Marginal Effects Zoo website includes 20,000+ words of
     vignettes and case studies.
 -   *Efficient:* [Some
-    operations](https://marginaleffects/vignettes/performance.html) can
-    be up to 1000 times faster and use 30 times less memory than with
-    the `margins` package.  
+    operations](https://marginaleffects.com/vignettes/performance.html)
+    can be up to 1000 times faster and use 30 times less memory than
+    with the `margins` package.  
 -   *Valid:* When possible, [numerical results are
     checked](https://marginaleffects.com/vignettes/supported_models.html)
     against alternative software like `Stata` or other `R` packages.
