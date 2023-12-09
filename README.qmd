@@ -4,7 +4,7 @@ Parameter estimates are often hard to interpret substantively, especially when t
 
 These problems are compounded by the fact that modeling packages produce objects with very different structures and which hold different information. This means that end-users often have to write customized code to interpret the output of different models. This can lead to wasted effort, confusion, and mistakes, and it can hinder the implementation of best practices.
 
-## Book: Marginal Effects Zoo
+## Marginal Effects Zoo: The Book
 
 This free online book introduces a conceptual framework to clearly define statistical quantities of interest, and the `marginaleffects` package to estimate those quantities in `R` and `Python`. This software can facilitate the interpretation of [over 100 classes of statistical models](https://marginaleffects.com/vignettes/supported_models.html), including linear, GLM, GAM, mixed-effects, bayesian, categorical outcomes, and more. With a single unified interface, users can compute and plot many quantities of interest, including:
 
@@ -32,7 +32,7 @@ This free online book introduces a conceptual framework to clearly define statis
 
 [Get started by clicking here!](https://marginaleffects.com/vignettes/get_started.html)
 
-## Package: `marginaleffects`
+## `marginaleffects`: The Package
 
 The `marginaleffects` for `R` and `Python` offers a single point of entry to easily interpret the results of over 100 classes of models, using a simple and consistent user interface. Its benefits include:
 
