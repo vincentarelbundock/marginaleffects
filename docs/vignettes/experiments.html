@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.451">
+<meta name="generator" content="quarto-1.4.151">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -82,13 +82,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 50,
+  "limit": 20,
   "keyboard-shortcut": [
     "f",
     "/",
     "s"
   ],
-  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -112,7 +111,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
@@ -129,18 +128,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
-<span class="menu-text">Get started</span></a>
+    <a class="nav-link active" href="../vignettes/get_started.html" rel="" target="" aria-current="page">
+ <span class="menu-text">Get started</span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/vincentarelbundock/marginaleffects"> <i class="bi bi-github" role="img" aria-label="marginaleffects GitHub">
+    <a class="nav-link" href="https://github.com/vincentarelbundock/marginaleffects" rel="" target=""><i class="bi bi-github" role="img" aria-label="marginaleffects GitHub">
 </i> 
-<span class="menu-text"></span></a>
+ <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/vincentab"> <i class="bi bi-twitter" role="img">
+    <a class="nav-link" href="https://twitter.com/vincentab" rel="" target=""><i class="bi bi-twitter" role="img">
 </i> 
-<span class="menu-text"></span></a>
+ <span class="menu-text"></span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -153,9 +152,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../vignettes/experiments.html">Experiments</a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-        </a>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../vignettes/experiments.html">Experiments</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
     </div>
   </nav>
 </header>
@@ -420,73 +419,73 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/predictions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">predictions</span></a>
+ <span class="menu-text">Predictions</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/comparisons.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">comparisons</span></a>
+ <span class="menu-text">Comparisons Between Predictions Made With Different Regressor Values</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/slopes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">slopes</span></a>
+ <span class="menu-text">Slopes (aka Partial derivatives, Marginal Effects, or Trends)</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/plot_predictions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">plot_predictions</span></a>
+ <span class="menu-text">Plot Conditional or Marginal Predictions</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/plot_comparisons.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">plot_comparisons</span></a>
+ <span class="menu-text">Plot Conditional or Marginal Comparisons</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/plot_slopes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">plot_slopes</span></a>
+ <span class="menu-text">Plot Conditional or Marginal Slopes</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/hypotheses.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">hypotheses</span></a>
+ <span class="menu-text">(Non-)Linear Tests for Null Hypotheses, Joint Hypotheses, Equivalence, Non Superiority, and Non Inferiority</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/inferences.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">inferences</span></a>
+ <span class="menu-text">(EXPERIMENTAL) Bootstrap, Conformal, and Simulation-Based Inference</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/marginal_means.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">marginal_means</span></a>
+ <span class="menu-text">Marginal Means</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/posterior_draws.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">posterior_draws</span></a>
+ <span class="menu-text">Extract Posterior Draws or Bootstrap Resamples from <code>marginaleffects</code> Objects</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/datagrid.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">datagrid</span></a>
+ <span class="menu-text">Data grids</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/print.marginaleffects.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">print.marginaleffects</span></a>
+ <span class="menu-text">Print <code>marginaleffects</code> objects</span></a>
   </div>
 </li>
       </ul>
@@ -541,7 +540,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-
 <section id="experiments" class="level1">
 <h1>Experiments</h1>
 <section id="x2-experiments" class="level2">
@@ -580,23 +578,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(fit, <span class="at">gof_map =</span> <span class="fu">c</span>(<span class="st">"r.squared"</span>, <span class="st">"nobs"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="qlsjcrjyol" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#qlsjcrjyol table {
+<div id="obgqbzgtcs" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#obgqbzgtcs table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#qlsjcrjyol thead, #qlsjcrjyol tbody, #qlsjcrjyol tfoot, #qlsjcrjyol tr, #qlsjcrjyol td, #qlsjcrjyol th {
+#obgqbzgtcs thead, #obgqbzgtcs tbody, #obgqbzgtcs tfoot, #obgqbzgtcs tr, #obgqbzgtcs td, #obgqbzgtcs th {
   border-style: none;
 }
 
-#qlsjcrjyol p {
+#obgqbzgtcs p {
   margin: 0;
   padding: 0;
 }
 
-#qlsjcrjyol .gt_table {
+#obgqbzgtcs .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -622,12 +620,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-left-color: #D3D3D3;
 }
 
-#qlsjcrjyol .gt_caption {
+#obgqbzgtcs .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#qlsjcrjyol .gt_title {
+#obgqbzgtcs .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -639,7 +637,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-width: 0;
 }
 
-#qlsjcrjyol .gt_subtitle {
+#obgqbzgtcs .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -651,7 +649,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-width: 0;
 }
 
-#qlsjcrjyol .gt_heading {
+#obgqbzgtcs .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -663,13 +661,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#qlsjcrjyol .gt_bottom_border {
+#obgqbzgtcs .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#qlsjcrjyol .gt_col_headings {
+#obgqbzgtcs .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -684,7 +682,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#qlsjcrjyol .gt_col_heading {
+#obgqbzgtcs .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -704,7 +702,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#qlsjcrjyol .gt_column_spanner_outer {
+#obgqbzgtcs .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -716,15 +714,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 4px;
 }
 
-#qlsjcrjyol .gt_column_spanner_outer:first-child {
+#obgqbzgtcs .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#qlsjcrjyol .gt_column_spanner_outer:last-child {
+#obgqbzgtcs .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#qlsjcrjyol .gt_column_spanner {
+#obgqbzgtcs .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -736,11 +734,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   width: 100%;
 }
 
-#qlsjcrjyol .gt_spanner_row {
+#obgqbzgtcs .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#qlsjcrjyol .gt_group_heading {
+#obgqbzgtcs .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -766,7 +764,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   text-align: left;
 }
 
-#qlsjcrjyol .gt_empty_group_heading {
+#obgqbzgtcs .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -781,15 +779,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: middle;
 }
 
-#qlsjcrjyol .gt_from_md > :first-child {
+#obgqbzgtcs .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#qlsjcrjyol .gt_from_md > :last-child {
+#obgqbzgtcs .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#qlsjcrjyol .gt_row {
+#obgqbzgtcs .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -808,7 +806,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   overflow-x: hidden;
 }
 
-#qlsjcrjyol .gt_stub {
+#obgqbzgtcs .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -821,7 +819,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#qlsjcrjyol .gt_stub_row_group {
+#obgqbzgtcs .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -835,15 +833,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   vertical-align: top;
 }
 
-#qlsjcrjyol .gt_row_group_first td {
+#obgqbzgtcs .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#qlsjcrjyol .gt_row_group_first th {
+#obgqbzgtcs .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#qlsjcrjyol .gt_summary_row {
+#obgqbzgtcs .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -853,16 +851,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#qlsjcrjyol .gt_first_summary_row {
+#obgqbzgtcs .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#qlsjcrjyol .gt_first_summary_row.thick {
+#obgqbzgtcs .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#qlsjcrjyol .gt_last_summary_row {
+#obgqbzgtcs .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -872,7 +870,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#qlsjcrjyol .gt_grand_summary_row {
+#obgqbzgtcs .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -882,7 +880,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#qlsjcrjyol .gt_first_grand_summary_row {
+#obgqbzgtcs .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -892,7 +890,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-top-color: #D3D3D3;
 }
 
-#qlsjcrjyol .gt_last_grand_summary_row_top {
+#obgqbzgtcs .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -902,11 +900,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#qlsjcrjyol .gt_striped {
+#obgqbzgtcs .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#qlsjcrjyol .gt_table_body {
+#obgqbzgtcs .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -915,7 +913,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-bottom-color: #D3D3D3;
 }
 
-#qlsjcrjyol .gt_footnotes {
+#obgqbzgtcs .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -929,7 +927,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#qlsjcrjyol .gt_footnote {
+#obgqbzgtcs .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -938,7 +936,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#qlsjcrjyol .gt_sourcenotes {
+#obgqbzgtcs .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -952,7 +950,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   border-right-color: #D3D3D3;
 }
 
-#qlsjcrjyol .gt_sourcenote {
+#obgqbzgtcs .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -960,118 +958,99 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   padding-right: 5px;
 }
 
-#qlsjcrjyol .gt_left {
+#obgqbzgtcs .gt_left {
   text-align: left;
 }
 
-#qlsjcrjyol .gt_center {
+#obgqbzgtcs .gt_center {
   text-align: center;
 }
 
-#qlsjcrjyol .gt_right {
+#obgqbzgtcs .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#qlsjcrjyol .gt_font_normal {
+#obgqbzgtcs .gt_font_normal {
   font-weight: normal;
 }
 
-#qlsjcrjyol .gt_font_bold {
+#obgqbzgtcs .gt_font_bold {
   font-weight: bold;
 }
 
-#qlsjcrjyol .gt_font_italic {
+#obgqbzgtcs .gt_font_italic {
   font-style: italic;
 }
 
-#qlsjcrjyol .gt_super {
+#obgqbzgtcs .gt_super {
   font-size: 65%;
 }
 
-#qlsjcrjyol .gt_footnote_marks {
+#obgqbzgtcs .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#qlsjcrjyol .gt_asterisk {
+#obgqbzgtcs .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#qlsjcrjyol .gt_indent_1 {
+#obgqbzgtcs .gt_indent_1 {
   text-indent: 5px;
 }
 
-#qlsjcrjyol .gt_indent_2 {
+#obgqbzgtcs .gt_indent_2 {
   text-indent: 10px;
 }
 
-#qlsjcrjyol .gt_indent_3 {
+#obgqbzgtcs .gt_indent_3 {
   text-indent: 15px;
 }
 
-#qlsjcrjyol .gt_indent_4 {
+#obgqbzgtcs .gt_indent_4 {
   text-indent: 20px;
 }
 
-#qlsjcrjyol .gt_indent_5 {
+#obgqbzgtcs .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
-
-<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<thead>
-<tr class="header gt_col_headings">
-<th id=" " class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"></th>
-<th id="(1)" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">(1)</th>
-</tr>
-</thead>
-<tbody class="gt_table_body">
-<tr class="odd">
-<td class="gt_row gt_left" headers="">(Intercept)</td>
-<td class="gt_row gt_center" headers="(1)">15.050</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=""></td>
-<td class="gt_row gt_center" headers="(1)">(1.002)</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="">vs</td>
-<td class="gt_row gt_center" headers="(1)">5.693</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=""></td>
-<td class="gt_row gt_center" headers="(1)">(1.651)</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="">am</td>
-<td class="gt_row gt_center" headers="(1)">4.700</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=""></td>
-<td class="gt_row gt_center" headers="(1)">(1.736)</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="">vs × am</td>
-<td class="gt_row gt_center" headers="(1)">2.929</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000"></td>
-<td class="gt_row gt_center" headers="(1)" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000">(2.541)</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="">R2</td>
-<td class="gt_row gt_center" headers="(1)">0.700</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="">Num.Obs.</td>
-<td class="gt_row gt_center" headers="(1)">32</td>
-</tr>
-</tbody>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id=" "> </th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="(1)">(1)</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="" class="gt_row gt_left">(Intercept)</td>
+<td headers="(1)" class="gt_row gt_center">15.050</td></tr>
+    <tr><td headers="" class="gt_row gt_left"></td>
+<td headers="(1)" class="gt_row gt_center">(1.002)</td></tr>
+    <tr><td headers="" class="gt_row gt_left">vs</td>
+<td headers="(1)" class="gt_row gt_center">5.693</td></tr>
+    <tr><td headers="" class="gt_row gt_left"></td>
+<td headers="(1)" class="gt_row gt_center">(1.651)</td></tr>
+    <tr><td headers="" class="gt_row gt_left">am</td>
+<td headers="(1)" class="gt_row gt_center">4.700</td></tr>
+    <tr><td headers="" class="gt_row gt_left"></td>
+<td headers="(1)" class="gt_row gt_center">(1.736)</td></tr>
+    <tr><td headers="" class="gt_row gt_left">vs × am</td>
+<td headers="(1)" class="gt_row gt_center">2.929</td></tr>
+    <tr><td headers="" class="gt_row gt_left" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000;"></td>
+<td headers="(1)" class="gt_row gt_center" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000;">(2.541)</td></tr>
+    <tr><td headers="" class="gt_row gt_left">R2</td>
+<td headers="(1)" class="gt_row gt_center">0.700</td></tr>
+    <tr><td headers="" class="gt_row gt_left">Num.Obs.</td>
+<td headers="(1)" class="gt_row gt_center">32</td></tr>
+  </tbody>
+  
+  
 </table>
-
 </div>
 </div>
 </div>
@@ -1358,57 +1337,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
   const processXRef = (id, note) => {
-    // Strip column container classes
-    const stripColumnClz = (el) => {
-      el.classList.remove("page-full", "page-columns");
-      if (el.children) {
-        for (const child of el.children) {
-          stripColumnClz(child);
-        }
-      }
-    }
-    stripColumnClz(note)
-    const typesetMath = (el) => {
-      if (window.MathJax) {
-        // MathJax Typeset
-        window.MathJax.typeset([el]);
-      } else if (window.katex) {
-        // KaTeX Render
-        var mathElements = el.getElementsByClassName("math");
-        var macros = [];
-        for (var i = 0; i < mathElements.length; i++) {
-          var texText = mathElements[i].firstChild;
-          if (mathElements[i].tagName == "SPAN") {
-            window.katex.render(texText.data, mathElements[i], {
-              displayMode: mathElements[i].classList.contains('display'),
-              throwOnError: false,
-              macros: macros,
-              fleqn: false
-            });
-          }
-        }
-      }
-    }
-    if (id === null || id.startsWith('sec-')) {
+    if (id.startsWith('sec-')) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
       if (note.children && note.children.length > 2) {
         for (let i = 0; i < 2; i++) {
           container.appendChild(note.children[i].cloneNode(true));
         }
-        typesetMath(container);
         return container.innerHTML
       } else {
-        typesetMath(note);
         return note.innerHTML;
       }
     } else {
-      // Remove any anchor links if they are present
-      const anchorLink = note.querySelector('a.anchorjs-link');
-      if (anchorLink) {
-        anchorLink.remove();
-      }
-      typesetMath(note);
       return note.innerHTML;
     }
   }
@@ -1418,56 +1358,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       instance.disable();
       let url = xref.getAttribute('href');
       let hash = undefined; 
-      if (url.startsWith('#')) {
-        hash = url;
-      } else {
-        try { hash = new URL(url).hash; } catch {}
-      }
-      if (hash) {
-        const id = hash.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note !== null) {
-          try {
-            const html = processXRef(id, note.cloneNode(true));
-            instance.setContent(html);
-          } finally {
-            instance.enable();
-            instance.show();
-          }
-        } else {
-          // See if we can fetch this
-          fetch(url.split('#')[0])
-          .then(res => res.text())
-          .then(html => {
-            const parser = new DOMParser();
-            const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.getElementById(id);
-            if (note !== null) {
-              const html = processXRef(id, note);
-              instance.setContent(html);
-            } 
-          }).finally(() => {
-            instance.enable();
-            instance.show();
-          });
+      try { hash = new URL(url).hash; } catch {}
+      const id = hash.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note !== null) {
+        try {
+          const html = processXRef(id, note);
+          instance.setContent(html);
+        } finally {
+          instance.enable();
+          instance.show();
         }
       } else {
-        // See if we can fetch a full url (with no hash to target)
-        // This is a special case and we should probably do some content thinning / targeting
-        fetch(url)
+        // See if we can fetch this
+        fetch(url.split('#')[0])
         .then(res => res.text())
         .then(html => {
           const parser = new DOMParser();
           const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.querySelector('main.content');
+          const note = htmlDoc.getElementById(id);
           if (note !== null) {
-            // This should only happen for chapter cross references
-            // (since there is no id in the URL)
-            // remove the first header
-            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-              note.children[0].remove();
-            }
-            const html = processXRef(null, note);
+            const html = processXRef(id, note);
             instance.setContent(html);
           } 
         }).finally(() => {
@@ -1545,32 +1456,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
-        // Handle positioning of the toggle
-    window.addEventListener(
-      "resize",
-      throttle(() => {
-        elRect = undefined;
-        if (selectedAnnoteEl) {
-          selectCodeLines(selectedAnnoteEl);
-        }
-      }, 10)
-    );
-    function throttle(fn, ms) {
-    let throttle = false;
-    let timer;
-      return (...args) => {
-        if(!throttle) { // first call gets through
-            fn.apply(this, args);
-            throttle = true;
-        } else { // all the others get throttled
-            if(timer) clearTimeout(timer); // cancel #2
-            timer = setTimeout(() => {
-              fn.apply(this, args);
-              timer = throttle = false;
-            }, ms);
-        }
-      };
-    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1632,12 +1517,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../vignettes/equivalence.html" class="pagination-link  aria-label=" equivalence="" tests"="">
+      <a href="../vignettes/equivalence.html" class="pagination-link">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Equivalence Tests</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../vignettes/gam.html" class="pagination-link" aria-label="GAM">
+      <a href="../vignettes/gam.html" class="pagination-link">
         <span class="nav-page-text">GAM</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>

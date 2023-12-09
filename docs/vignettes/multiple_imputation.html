@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.451">
+<meta name="generator" content="quarto-1.4.151">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -82,13 +82,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 50,
+  "limit": 20,
   "keyboard-shortcut": [
     "f",
     "/",
     "s"
   ],
-  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -112,7 +111,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
@@ -129,18 +128,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
-<span class="menu-text">Get started</span></a>
+    <a class="nav-link active" href="../vignettes/get_started.html" rel="" target="" aria-current="page">
+ <span class="menu-text">Get started</span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/vincentarelbundock/marginaleffects"> <i class="bi bi-github" role="img" aria-label="marginaleffects GitHub">
+    <a class="nav-link" href="https://github.com/vincentarelbundock/marginaleffects" rel="" target=""><i class="bi bi-github" role="img" aria-label="marginaleffects GitHub">
 </i> 
-<span class="menu-text"></span></a>
+ <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/vincentab"> <i class="bi bi-twitter" role="img">
+    <a class="nav-link" href="https://twitter.com/vincentab" rel="" target=""><i class="bi bi-twitter" role="img">
 </i> 
-<span class="menu-text"></span></a>
+ <span class="menu-text"></span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -153,9 +152,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../vignettes/multiple_imputation.html">Missing Data</a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-        </a>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../vignettes/multiple_imputation.html">Missing Data</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
     </div>
   </nav>
 </header>
@@ -420,73 +419,73 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/predictions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">predictions</span></a>
+ <span class="menu-text">Predictions</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/comparisons.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">comparisons</span></a>
+ <span class="menu-text">Comparisons Between Predictions Made With Different Regressor Values</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/slopes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">slopes</span></a>
+ <span class="menu-text">Slopes (aka Partial derivatives, Marginal Effects, or Trends)</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/plot_predictions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">plot_predictions</span></a>
+ <span class="menu-text">Plot Conditional or Marginal Predictions</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/plot_comparisons.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">plot_comparisons</span></a>
+ <span class="menu-text">Plot Conditional or Marginal Comparisons</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/plot_slopes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">plot_slopes</span></a>
+ <span class="menu-text">Plot Conditional or Marginal Slopes</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/hypotheses.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">hypotheses</span></a>
+ <span class="menu-text">(Non-)Linear Tests for Null Hypotheses, Joint Hypotheses, Equivalence, Non Superiority, and Non Inferiority</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/inferences.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">inferences</span></a>
+ <span class="menu-text">(EXPERIMENTAL) Bootstrap, Conformal, and Simulation-Based Inference</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/marginal_means.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">marginal_means</span></a>
+ <span class="menu-text">Marginal Means</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/posterior_draws.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">posterior_draws</span></a>
+ <span class="menu-text">Extract Posterior Draws or Bootstrap Resamples from <code>marginaleffects</code> Objects</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/datagrid.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">datagrid</span></a>
+ <span class="menu-text">Data grids</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/print.marginaleffects.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">print.marginaleffects</span></a>
+ <span class="menu-text">Print <code>marginaleffects</code> objects</span></a>
   </div>
 </li>
       </ul>
@@ -535,7 +534,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-
 <section id="missing-data" class="level1">
 <h1>Missing Data</h1>
 <p>The <code>marginaleffects</code> package offers convenience functions to compute and display predictions, contrasts, and marginal effects from models with multiple imputation from the <code>mice</code> and <code>Amelia</code> packages. The workflow follows Rubin’s rules (Rubin, 1987, p.&nbsp;76), via the following steps:</p>
@@ -574,12 +572,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>mfx_mice</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          Term                        Contrast    Species Estimate Std. Error      t Pr(&gt;|t|)     S   2.5 % 97.5 %    Df</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     setosa       0.0684     0.0560  1.222  0.22413   2.2 -0.0424  0.179 120.0</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     versicolor   0.0540     0.0557  0.968  0.33543   1.6 -0.0567  0.165  93.5</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     virginica    0.0582     0.0512  1.137  0.25816   2.0 -0.0433  0.160 101.2</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     setosa       0.1890     0.0836  2.260  0.02435   5.4  0.0246  0.353 400.4</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     setosa       0.0684     0.0560  1.222  0.22414   2.2 -0.0424  0.179 120.0</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     versicolor   0.0540     0.0558  0.968  0.33559   1.6 -0.0568  0.165  93.6</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     virginica    0.0582     0.0512  1.137  0.25818   2.0 -0.0434  0.160 101.2</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     setosa       0.1890     0.0836  2.260  0.02434   5.4  0.0246  0.353 400.3</span></span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     versicolor   0.2092     0.0772  2.710  0.00807   7.0  0.0558  0.363  89.0</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     virginica    0.2242     0.1041  2.154  0.03511   4.8  0.0162  0.432  61.9</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     virginica    0.2242     0.1041  2.154  0.03513   4.8  0.0161  0.432  62.0</span></span>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Species      mean(versicolor) - mean(setosa) setosa       1.1399     0.0977 11.668  &lt; 0.001  68.1  0.9464  1.333 114.8</span></span>
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Species      mean(versicolor) - mean(setosa) versicolor   1.1399     0.0977 11.668  &lt; 0.001  68.1  0.9464  1.333 114.8</span></span>
 <span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Species      mean(versicolor) - mean(setosa) virginica    1.1399     0.0977 11.668  &lt; 0.001  68.1  0.9464  1.333 114.8</span></span>
@@ -613,8 +611,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     versicolor   0.3231     0.0802  4.030  &lt; 0.001 12.5  0.163 0.4838 55.9</span></span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     virginica    0.3467     0.0799  4.340  &lt; 0.001 13.6  0.186 0.5077 44.7</span></span>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     setosa      -0.2079     0.1491 -1.395  0.16877  2.6 -0.507 0.0909 55.0</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     versicolor  -0.1157     0.1168 -0.991  0.32646  1.6 -0.350 0.1187 51.8</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     virginica   -0.0452     0.1272 -0.355  0.72320  0.5 -0.298 0.2078 82.1</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     versicolor  -0.1157     0.1168 -0.991  0.32647  1.6 -0.350 0.1187 51.8</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     virginica   -0.0452     0.1272 -0.355  0.72321  0.5 -0.298 0.2078 82.1</span></span>
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Species      mean(versicolor) - mean(setosa) setosa       0.6127     0.1731  3.541  0.00111  9.8  0.262 0.9635 36.7</span></span>
 <span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Species      mean(versicolor) - mean(setosa) versicolor   0.6127     0.1731  3.541  0.00111  9.8  0.262 0.9635 36.7</span></span>
 <span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Species      mean(versicolor) - mean(setosa) virginica    0.6127     0.1731  3.541  0.00111  9.8  0.262 0.9635 36.7</span></span>
@@ -652,12 +650,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>mfx_missRanger</span>
 <span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          Term                        Contrast    Species Estimate Std. Error     t Pr(&gt;|t|)     S    2.5 % 97.5 %      Df</span></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     setosa       0.0586     0.0414  1.42  0.15671   2.7 -0.02249  0.140 2780641</span></span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     versicolor   0.0675     0.0392  1.72  0.08516   3.6 -0.00935  0.144  721514</span></span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     virginica    0.0643     0.0367  1.75  0.07986   3.6 -0.00766  0.136 1020580</span></span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     setosa       0.2314     0.0690  3.35  &lt; 0.001  10.3  0.09613  0.367 1911278</span></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     versicolor   0.2186     0.0551  3.97  &lt; 0.001  13.8  0.11066  0.327  246676</span></span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     virginica    0.2089     0.0687  3.04  0.00237   8.7  0.07419  0.344  194958</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     setosa       0.0586     0.0414  1.42  0.15671   2.7 -0.02249  0.140 2780618</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     versicolor   0.0675     0.0392  1.72  0.08515   3.6 -0.00934  0.144  721347</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Length mean(dY/dX)                     virginica    0.0643     0.0367  1.75  0.07986   3.6 -0.00765  0.136 1020504</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     setosa       0.2314     0.0690  3.35  &lt; 0.001  10.3  0.09612  0.367 1911470</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     versicolor   0.2186     0.0551  3.97  &lt; 0.001  13.8  0.11066  0.327  246659</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Sepal.Width  mean(dY/dX)                     virginica    0.2089     0.0687  3.04  0.00237   8.7  0.07422  0.344  194782</span></span>
 <span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Species      mean(versicolor) - mean(setosa) setosa       1.1589     0.0704 16.46  &lt; 0.001 199.8  1.02091  1.297 1115135</span></span>
 <span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Species      mean(versicolor) - mean(setosa) versicolor   1.1589     0.0704 16.46  &lt; 0.001 199.8  1.02091  1.297 1115135</span></span>
 <span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Species      mean(versicolor) - mean(setosa) virginica    1.1589     0.0704 16.46  &lt; 0.001 199.8  1.02091  1.297 1115135</span></span>
@@ -1127,286 +1125,221 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   text-indent: 25px;
 }
 </style>
-
-<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<thead>
-<tr class="header gt_col_headings">
-<th id=" " class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"></th>
-<th id="Species" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Species</th>
-<th id="LWD" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">LWD</th>
-<th id="mice" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">mice</th>
-<th id="Amelia" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">Amelia</th>
-<th id="missRanger" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">missRanger</th>
-</tr>
-</thead>
-<tbody class="gt_table_body">
-<tr class="odd">
-<td class="gt_row gt_left" headers="">Sepal.Length mean(dY/dX)</td>
-<td class="gt_row gt_left" headers="Species">setosa</td>
-<td class="gt_row gt_center" headers="LWD">0.033</td>
-<td class="gt_row gt_center" headers="mice">0.068</td>
-<td class="gt_row gt_center" headers="Amelia">0.388</td>
-<td class="gt_row gt_center" headers="missRanger">0.059</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=""></td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD">(0.061)</td>
-<td class="gt_row gt_center" headers="mice">(0.056)</td>
-<td class="gt_row gt_center" headers="Amelia">(0.091)</td>
-<td class="gt_row gt_center" headers="missRanger">(0.041)</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=""></td>
-<td class="gt_row gt_left" headers="Species">versicolor</td>
-<td class="gt_row gt_center" headers="LWD">0.050</td>
-<td class="gt_row gt_center" headers="mice">0.054</td>
-<td class="gt_row gt_center" headers="Amelia">0.323</td>
-<td class="gt_row gt_center" headers="missRanger">0.067</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=""></td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD">(0.061)</td>
-<td class="gt_row gt_center" headers="mice">(0.056)</td>
-<td class="gt_row gt_center" headers="Amelia">(0.080)</td>
-<td class="gt_row gt_center" headers="missRanger">(0.039)</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=""></td>
-<td class="gt_row gt_left" headers="Species">virginica</td>
-<td class="gt_row gt_center" headers="LWD">0.043</td>
-<td class="gt_row gt_center" headers="mice">0.058</td>
-<td class="gt_row gt_center" headers="Amelia">0.347</td>
-<td class="gt_row gt_center" headers="missRanger">0.064</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=""></td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD">(0.058)</td>
-<td class="gt_row gt_center" headers="mice">(0.051)</td>
-<td class="gt_row gt_center" headers="Amelia">(0.080)</td>
-<td class="gt_row gt_center" headers="missRanger">(0.037)</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="">Sepal.Width mean(dY/dX)</td>
-<td class="gt_row gt_left" headers="Species">setosa</td>
-<td class="gt_row gt_center" headers="LWD">0.274</td>
-<td class="gt_row gt_center" headers="mice">0.189</td>
-<td class="gt_row gt_center" headers="Amelia">-0.208</td>
-<td class="gt_row gt_center" headers="missRanger">0.231</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=""></td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD">(0.091)</td>
-<td class="gt_row gt_center" headers="mice">(0.084)</td>
-<td class="gt_row gt_center" headers="Amelia">(0.149)</td>
-<td class="gt_row gt_center" headers="missRanger">(0.069)</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=""></td>
-<td class="gt_row gt_left" headers="Species">versicolor</td>
-<td class="gt_row gt_center" headers="LWD">0.255</td>
-<td class="gt_row gt_center" headers="mice">0.209</td>
-<td class="gt_row gt_center" headers="Amelia">-0.116</td>
-<td class="gt_row gt_center" headers="missRanger">0.219</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=""></td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD">(0.074)</td>
-<td class="gt_row gt_center" headers="mice">(0.077)</td>
-<td class="gt_row gt_center" headers="Amelia">(0.117)</td>
-<td class="gt_row gt_center" headers="missRanger">(0.055)</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=""></td>
-<td class="gt_row gt_left" headers="Species">virginica</td>
-<td class="gt_row gt_center" headers="LWD">0.234</td>
-<td class="gt_row gt_center" headers="mice">0.224</td>
-<td class="gt_row gt_center" headers="Amelia">-0.045</td>
-<td class="gt_row gt_center" headers="missRanger">0.209</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=""></td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD">(0.083)</td>
-<td class="gt_row gt_center" headers="mice">(0.104)</td>
-<td class="gt_row gt_center" headers="Amelia">(0.127)</td>
-<td class="gt_row gt_center" headers="missRanger">(0.069)</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="">Species mean(versicolor) - mean(setosa)</td>
-<td class="gt_row gt_left" headers="Species">setosa</td>
-<td class="gt_row gt_center" headers="LWD">1.157</td>
-<td class="gt_row gt_center" headers="mice">1.140</td>
-<td class="gt_row gt_center" headers="Amelia">0.613</td>
-<td class="gt_row gt_center" headers="missRanger">1.159</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=""></td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD">(0.097)</td>
-<td class="gt_row gt_center" headers="mice">(0.098)</td>
-<td class="gt_row gt_center" headers="Amelia">(0.173)</td>
-<td class="gt_row gt_center" headers="missRanger">(0.070)</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=""></td>
-<td class="gt_row gt_left" headers="Species">versicolor</td>
-<td class="gt_row gt_center" headers="LWD">1.157</td>
-<td class="gt_row gt_center" headers="mice">1.140</td>
-<td class="gt_row gt_center" headers="Amelia">0.613</td>
-<td class="gt_row gt_center" headers="missRanger">1.159</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=""></td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD">(0.097)</td>
-<td class="gt_row gt_center" headers="mice">(0.098)</td>
-<td class="gt_row gt_center" headers="Amelia">(0.173)</td>
-<td class="gt_row gt_center" headers="missRanger">(0.070)</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=""></td>
-<td class="gt_row gt_left" headers="Species">virginica</td>
-<td class="gt_row gt_center" headers="LWD">1.157</td>
-<td class="gt_row gt_center" headers="mice">1.140</td>
-<td class="gt_row gt_center" headers="Amelia">0.613</td>
-<td class="gt_row gt_center" headers="missRanger">1.159</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=""></td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD">(0.097)</td>
-<td class="gt_row gt_center" headers="mice">(0.098)</td>
-<td class="gt_row gt_center" headers="Amelia">(0.173)</td>
-<td class="gt_row gt_center" headers="missRanger">(0.070)</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="">Species mean(virginica) - mean(setosa)</td>
-<td class="gt_row gt_left" headers="Species">setosa</td>
-<td class="gt_row gt_center" headers="LWD">1.839</td>
-<td class="gt_row gt_center" headers="mice">1.741</td>
-<td class="gt_row gt_center" headers="Amelia">1.036</td>
-<td class="gt_row gt_center" headers="missRanger">1.778</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=""></td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD">(0.123)</td>
-<td class="gt_row gt_center" headers="mice">(0.111)</td>
-<td class="gt_row gt_center" headers="Amelia">(0.200)</td>
-<td class="gt_row gt_center" headers="missRanger">(0.082)</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=""></td>
-<td class="gt_row gt_left" headers="Species">versicolor</td>
-<td class="gt_row gt_center" headers="LWD">1.839</td>
-<td class="gt_row gt_center" headers="mice">1.741</td>
-<td class="gt_row gt_center" headers="Amelia">1.036</td>
-<td class="gt_row gt_center" headers="missRanger">1.778</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers=""></td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD">(0.123)</td>
-<td class="gt_row gt_center" headers="mice">(0.111)</td>
-<td class="gt_row gt_center" headers="Amelia">(0.200)</td>
-<td class="gt_row gt_center" headers="missRanger">(0.082)</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers=""></td>
-<td class="gt_row gt_left" headers="Species">virginica</td>
-<td class="gt_row gt_center" headers="LWD">1.839</td>
-<td class="gt_row gt_center" headers="mice">1.741</td>
-<td class="gt_row gt_center" headers="Amelia">1.036</td>
-<td class="gt_row gt_center" headers="missRanger">1.778</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000"></td>
-<td class="gt_row gt_left" headers="Species" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000"></td>
-<td class="gt_row gt_center" headers="LWD" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000">(0.123)</td>
-<td class="gt_row gt_center" headers="mice" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000">(0.111)</td>
-<td class="gt_row gt_center" headers="Amelia" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000">(0.200)</td>
-<td class="gt_row gt_center" headers="missRanger" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000">(0.082)</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="">Num.Obs.</td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD">60</td>
-<td class="gt_row gt_center" headers="mice">150</td>
-<td class="gt_row gt_center" headers="Amelia">150</td>
-<td class="gt_row gt_center" headers="missRanger">150</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="">Num.Imp.</td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD"></td>
-<td class="gt_row gt_center" headers="mice">20</td>
-<td class="gt_row gt_center" headers="Amelia">20</td>
-<td class="gt_row gt_center" headers="missRanger">20</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="">R2</td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD">0.953</td>
-<td class="gt_row gt_center" headers="mice">0.930</td>
-<td class="gt_row gt_center" headers="Amelia">0.853</td>
-<td class="gt_row gt_center" headers="missRanger">0.947</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="">R2 Adj.</td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD">0.949</td>
-<td class="gt_row gt_center" headers="mice">0.928</td>
-<td class="gt_row gt_center" headers="Amelia">0.848</td>
-<td class="gt_row gt_center" headers="missRanger">0.945</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="">AIC</td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD">-34.0</td>
-<td class="gt_row gt_center" headers="mice"></td>
-<td class="gt_row gt_center" headers="Amelia"></td>
-<td class="gt_row gt_center" headers="missRanger"></td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="">BIC</td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD">-19.3</td>
-<td class="gt_row gt_center" headers="mice"></td>
-<td class="gt_row gt_center" headers="Amelia"></td>
-<td class="gt_row gt_center" headers="missRanger"></td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="">Log.Lik.</td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD">23.997</td>
-<td class="gt_row gt_center" headers="mice"></td>
-<td class="gt_row gt_center" headers="Amelia"></td>
-<td class="gt_row gt_center" headers="missRanger"></td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="">F</td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD">220.780</td>
-<td class="gt_row gt_center" headers="mice"></td>
-<td class="gt_row gt_center" headers="Amelia"></td>
-<td class="gt_row gt_center" headers="missRanger"></td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="">RMSE</td>
-<td class="gt_row gt_left" headers="Species"></td>
-<td class="gt_row gt_center" headers="LWD">0.16</td>
-<td class="gt_row gt_center" headers="mice"></td>
-<td class="gt_row gt_center" headers="Amelia"></td>
-<td class="gt_row gt_center" headers="missRanger"></td>
-</tr>
-</tbody>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id=" "> </th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="Species">Species</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="LWD">LWD</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="mice">mice</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="Amelia">Amelia</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="missRanger">missRanger</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="" class="gt_row gt_left">Sepal.Length mean(dY/dX)</td>
+<td headers="Species" class="gt_row gt_left">setosa</td>
+<td headers="LWD" class="gt_row gt_center">0.033</td>
+<td headers="mice" class="gt_row gt_center">0.068</td>
+<td headers="Amelia" class="gt_row gt_center">0.388</td>
+<td headers="missRanger" class="gt_row gt_center">0.059</td></tr>
+    <tr><td headers="" class="gt_row gt_left"></td>
+<td headers="Species" class="gt_row gt_left"></td>
+<td headers="LWD" class="gt_row gt_center">(0.061)</td>
+<td headers="mice" class="gt_row gt_center">(0.056)</td>
+<td headers="Amelia" class="gt_row gt_center">(0.091)</td>
+<td headers="missRanger" class="gt_row gt_center">(0.041)</td></tr>
+    <tr><td headers="" class="gt_row gt_left"></td>
+<td headers="Species" class="gt_row gt_left">versicolor</td>
+<td headers="LWD" class="gt_row gt_center">0.050</td>
+<td headers="mice" class="gt_row gt_center">0.054</td>
+<td headers="Amelia" class="gt_row gt_center">0.323</td>
+<td headers="missRanger" class="gt_row gt_center">0.067</td></tr>
+    <tr><td headers="" class="gt_row gt_left"></td>
+<td headers="Species" class="gt_row gt_left"></td>
+<td headers="LWD" class="gt_row gt_center">(0.061)</td>
+<td headers="mice" class="gt_row gt_center">(0.056)</td>
+<td headers="Amelia" class="gt_row gt_center">(0.080)</td>
+<td headers="missRanger" class="gt_row gt_center">(0.039)</td></tr>
+    <tr><td headers="" class="gt_row gt_left"></td>
+<td headers="Species" class="gt_row gt_left">virginica</td>
+<td headers="LWD" class="gt_row gt_center">0.043</td>
+<td headers="mice" class="gt_row gt_center">0.058</td>
+<td headers="Amelia" class="gt_row gt_center">0.347</td>
+<td headers="missRanger" class="gt_row gt_center">0.064</td></tr>
+    <tr><td headers="" class="gt_row gt_left"></td>
+<td headers="Species" class="gt_row gt_left"></td>
+<td headers="LWD" class="gt_row gt_center">(0.058)</td>
+<td headers="mice" class="gt_row gt_center">(0.051)</td>
+<td headers="Amelia" class="gt_row gt_center">(0.080)</td>
+<td headers="missRanger" class="gt_row gt_center">(0.037)</td></tr>
+    <tr><td headers="" class="gt_row gt_left">Sepal.Width mean(dY/dX)</td>
+<td headers="Species" class="gt_row gt_left">setosa</td>
+<td headers="LWD" class="gt_row gt_center">0.274</td>
+<td headers="mice" class="gt_row gt_center">0.189</td>
+<td headers="Amelia" class="gt_row gt_center">-0.208</td>
+<td headers="missRanger" class="gt_row gt_center">0.231</td></tr>
+    <tr><td headers="" class="gt_row gt_left"></td>
+<td headers="Species" class="gt_row gt_left"></td>
+<td headers="LWD" class="gt_row gt_center">(0.091)</td>
+<td headers="mice" class="gt_row gt_center">(0.084)</td>
+<td headers="Amelia" class="gt_row gt_center">(0.149)</td>
+<td headers="missRanger" class="gt_row gt_center">(0.069)</td></tr>
+    <tr><td headers="" class="gt_row gt_left"></td>
+<td headers="Species" class="gt_row gt_left">versicolor</td>
+<td headers="LWD" class="gt_row gt_center">0.255</td>
+<td headers="mice" class="gt_row gt_center">0.209</td>
+<td headers="Amelia" class="gt_row gt_center">-0.116</td>
+<td headers="missRanger" class="gt_row gt_center">0.219</td></tr>
+    <tr><td headers="" class="gt_row gt_left"></td>
+<td headers="Species" class="gt_row gt_left"></td>
+<td headers="LWD" class="gt_row gt_center">(0.074)</td>
+<td headers="mice" class="gt_row gt_center">(0.077)</td>
+<td headers="Amelia" class="gt_row gt_center">(0.117)</td>
+<td headers="missRanger" class="gt_row gt_center">(0.055)</td></tr>
+    <tr><td headers="" class="gt_row gt_left"></td>
+<td headers="Species" class="gt_row gt_left">virginica</td>
+<td headers="LWD" class="gt_row gt_center">0.234</td>
+<td headers="mice" class="gt_row gt_center">0.224</td>
+<td headers="Amelia" class="gt_row gt_center">-0.045</td>
+<td headers="missRanger" class="gt_row gt_center">0.209</td></tr>
+    <tr><td headers="" class="gt_row gt_left"></td>
+<td headers="Species" class="gt_row gt_left"></td>
+<td headers="LWD" class="gt_row gt_center">(0.083)</td>
+<td headers="mice" class="gt_row gt_center">(0.104)</td>
+<td headers="Amelia" class="gt_row gt_center">(0.127)</td>
+<td headers="missRanger" class="gt_row gt_center">(0.069)</td></tr>
+    <tr><td headers="" class="gt_row gt_left">Species mean(versicolor) - mean(setosa)</td>
+<td headers="Species" class="gt_row gt_left">setosa</td>
+<td headers="LWD" class="gt_row gt_center">1.157</td>
+<td headers="mice" class="gt_row gt_center">1.140</td>
+<td headers="Amelia" class="gt_row gt_center">0.613</td>
+<td headers="missRanger" class="gt_row gt_center">1.159</td></tr>
+    <tr><td headers="" class="gt_row gt_left"></td>
+<td headers="Species" class="gt_row gt_left"></td>
+<td headers="LWD" class="gt_row gt_center">(0.097)</td>
+<td headers="mice" class="gt_row gt_center">(0.098)</td>
+<td headers="Amelia" class="gt_row gt_center">(0.173)</td>
+<td headers="missRanger" class="gt_row gt_center">(0.070)</td></tr>
+    <tr><td headers="" class="gt_row gt_left"></td>
+<td headers="Species" class="gt_row gt_left">versicolor</td>
+<td headers="LWD" class="gt_row gt_center">1.157</td>
+<td headers="mice" class="gt_row gt_center">1.140</td>
+<td headers="Amelia" class="gt_row gt_center">0.613</td>
+<td headers="missRanger" class="gt_row gt_center">1.159</td></tr>
+    <tr><td headers="" class="gt_row gt_left"></td>
+<td headers="Species" class="gt_row gt_left"></td>
+<td headers="LWD" class="gt_row gt_center">(0.097)</td>
+<td headers="mice" class="gt_row gt_center">(0.098)</td>
+<td headers="Amelia" class="gt_row gt_center">(0.173)</td>
+<td headers="missRanger" class="gt_row gt_center">(0.070)</td></tr>
+    <tr><td headers="" class="gt_row gt_left"></td>
+<td headers="Species" class="gt_row gt_left">virginica</td>
+<td headers="LWD" class="gt_row gt_center">1.157</td>
+<td headers="mice" class="gt_row gt_center">1.140</td>
+<td headers="Amelia" class="gt_row gt_center">0.613</td>
+<td headers="missRanger" class="gt_row gt_center">1.159</td></tr>
+    <tr><td headers="" class="gt_row gt_left"></td>
+<td headers="Species" class="gt_row gt_left"></td>
+<td headers="LWD" class="gt_row gt_center">(0.097)</td>
+<td headers="mice" class="gt_row gt_center">(0.098)</td>
+<td headers="Amelia" class="gt_row gt_center">(0.173)</td>
+<td headers="missRanger" class="gt_row gt_center">(0.070)</td></tr>
+    <tr><td headers="" class="gt_row gt_left">Species mean(virginica) - mean(setosa)</td>
+<td headers="Species" class="gt_row gt_left">setosa</td>
+<td headers="LWD" class="gt_row gt_center">1.839</td>
+<td headers="mice" class="gt_row gt_center">1.741</td>
+<td headers="Amelia" class="gt_row gt_center">1.036</td>
+<td headers="missRanger" class="gt_row gt_center">1.778</td></tr>
+    <tr><td headers="" class="gt_row gt_left"></td>
+<td headers="Species" class="gt_row gt_left"></td>
+<td headers="LWD" class="gt_row gt_center">(0.123)</td>
+<td headers="mice" class="gt_row gt_center">(0.111)</td>
+<td headers="Amelia" class="gt_row gt_center">(0.200)</td>
+<td headers="missRanger" class="gt_row gt_center">(0.082)</td></tr>
+    <tr><td headers="" class="gt_row gt_left"></td>
+<td headers="Species" class="gt_row gt_left">versicolor</td>
+<td headers="LWD" class="gt_row gt_center">1.839</td>
+<td headers="mice" class="gt_row gt_center">1.741</td>
+<td headers="Amelia" class="gt_row gt_center">1.036</td>
+<td headers="missRanger" class="gt_row gt_center">1.778</td></tr>
+    <tr><td headers="" class="gt_row gt_left"></td>
+<td headers="Species" class="gt_row gt_left"></td>
+<td headers="LWD" class="gt_row gt_center">(0.123)</td>
+<td headers="mice" class="gt_row gt_center">(0.111)</td>
+<td headers="Amelia" class="gt_row gt_center">(0.200)</td>
+<td headers="missRanger" class="gt_row gt_center">(0.082)</td></tr>
+    <tr><td headers="" class="gt_row gt_left"></td>
+<td headers="Species" class="gt_row gt_left">virginica</td>
+<td headers="LWD" class="gt_row gt_center">1.839</td>
+<td headers="mice" class="gt_row gt_center">1.741</td>
+<td headers="Amelia" class="gt_row gt_center">1.036</td>
+<td headers="missRanger" class="gt_row gt_center">1.778</td></tr>
+    <tr><td headers="" class="gt_row gt_left" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000;"></td>
+<td headers="Species" class="gt_row gt_left" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000;"></td>
+<td headers="LWD" class="gt_row gt_center" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000;">(0.123)</td>
+<td headers="mice" class="gt_row gt_center" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000;">(0.111)</td>
+<td headers="Amelia" class="gt_row gt_center" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000;">(0.200)</td>
+<td headers="missRanger" class="gt_row gt_center" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #000000;">(0.082)</td></tr>
+    <tr><td headers="" class="gt_row gt_left">Num.Obs.</td>
+<td headers="Species" class="gt_row gt_left"></td>
+<td headers="LWD" class="gt_row gt_center">60</td>
+<td headers="mice" class="gt_row gt_center">150</td>
+<td headers="Amelia" class="gt_row gt_center">150</td>
+<td headers="missRanger" class="gt_row gt_center">150</td></tr>
+    <tr><td headers="" class="gt_row gt_left">Num.Imp.</td>
+<td headers="Species" class="gt_row gt_left"></td>
+<td headers="LWD" class="gt_row gt_center"></td>
+<td headers="mice" class="gt_row gt_center">20</td>
+<td headers="Amelia" class="gt_row gt_center">20</td>
+<td headers="missRanger" class="gt_row gt_center">20</td></tr>
+    <tr><td headers="" class="gt_row gt_left">R2</td>
+<td headers="Species" class="gt_row gt_left"></td>
+<td headers="LWD" class="gt_row gt_center">0.953</td>
+<td headers="mice" class="gt_row gt_center">0.930</td>
+<td headers="Amelia" class="gt_row gt_center">0.853</td>
+<td headers="missRanger" class="gt_row gt_center">0.947</td></tr>
+    <tr><td headers="" class="gt_row gt_left">R2 Adj.</td>
+<td headers="Species" class="gt_row gt_left"></td>
+<td headers="LWD" class="gt_row gt_center">0.949</td>
+<td headers="mice" class="gt_row gt_center">0.928</td>
+<td headers="Amelia" class="gt_row gt_center">0.848</td>
+<td headers="missRanger" class="gt_row gt_center">0.945</td></tr>
+    <tr><td headers="" class="gt_row gt_left">AIC</td>
+<td headers="Species" class="gt_row gt_left"></td>
+<td headers="LWD" class="gt_row gt_center">-34.0</td>
+<td headers="mice" class="gt_row gt_center"></td>
+<td headers="Amelia" class="gt_row gt_center"></td>
+<td headers="missRanger" class="gt_row gt_center"></td></tr>
+    <tr><td headers="" class="gt_row gt_left">BIC</td>
+<td headers="Species" class="gt_row gt_left"></td>
+<td headers="LWD" class="gt_row gt_center">-19.3</td>
+<td headers="mice" class="gt_row gt_center"></td>
+<td headers="Amelia" class="gt_row gt_center"></td>
+<td headers="missRanger" class="gt_row gt_center"></td></tr>
+    <tr><td headers="" class="gt_row gt_left">Log.Lik.</td>
+<td headers="Species" class="gt_row gt_left"></td>
+<td headers="LWD" class="gt_row gt_center">23.997</td>
+<td headers="mice" class="gt_row gt_center"></td>
+<td headers="Amelia" class="gt_row gt_center"></td>
+<td headers="missRanger" class="gt_row gt_center"></td></tr>
+    <tr><td headers="" class="gt_row gt_left">F</td>
+<td headers="Species" class="gt_row gt_left"></td>
+<td headers="LWD" class="gt_row gt_center">220.780</td>
+<td headers="mice" class="gt_row gt_center"></td>
+<td headers="Amelia" class="gt_row gt_center"></td>
+<td headers="missRanger" class="gt_row gt_center"></td></tr>
+    <tr><td headers="" class="gt_row gt_left">RMSE</td>
+<td headers="Species" class="gt_row gt_left"></td>
+<td headers="LWD" class="gt_row gt_center">0.16</td>
+<td headers="mice" class="gt_row gt_center"></td>
+<td headers="Amelia" class="gt_row gt_center"></td>
+<td headers="missRanger" class="gt_row gt_center"></td></tr>
+  </tbody>
+  
+  
 </table>
-
 </div>
 </div>
 </div>
@@ -1583,57 +1516,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
   const processXRef = (id, note) => {
-    // Strip column container classes
-    const stripColumnClz = (el) => {
-      el.classList.remove("page-full", "page-columns");
-      if (el.children) {
-        for (const child of el.children) {
-          stripColumnClz(child);
-        }
-      }
-    }
-    stripColumnClz(note)
-    const typesetMath = (el) => {
-      if (window.MathJax) {
-        // MathJax Typeset
-        window.MathJax.typeset([el]);
-      } else if (window.katex) {
-        // KaTeX Render
-        var mathElements = el.getElementsByClassName("math");
-        var macros = [];
-        for (var i = 0; i < mathElements.length; i++) {
-          var texText = mathElements[i].firstChild;
-          if (mathElements[i].tagName == "SPAN") {
-            window.katex.render(texText.data, mathElements[i], {
-              displayMode: mathElements[i].classList.contains('display'),
-              throwOnError: false,
-              macros: macros,
-              fleqn: false
-            });
-          }
-        }
-      }
-    }
-    if (id === null || id.startsWith('sec-')) {
+    if (id.startsWith('sec-')) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
       if (note.children && note.children.length > 2) {
         for (let i = 0; i < 2; i++) {
           container.appendChild(note.children[i].cloneNode(true));
         }
-        typesetMath(container);
         return container.innerHTML
       } else {
-        typesetMath(note);
         return note.innerHTML;
       }
     } else {
-      // Remove any anchor links if they are present
-      const anchorLink = note.querySelector('a.anchorjs-link');
-      if (anchorLink) {
-        anchorLink.remove();
-      }
-      typesetMath(note);
       return note.innerHTML;
     }
   }
@@ -1643,56 +1537,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       instance.disable();
       let url = xref.getAttribute('href');
       let hash = undefined; 
-      if (url.startsWith('#')) {
-        hash = url;
-      } else {
-        try { hash = new URL(url).hash; } catch {}
-      }
-      if (hash) {
-        const id = hash.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note !== null) {
-          try {
-            const html = processXRef(id, note.cloneNode(true));
-            instance.setContent(html);
-          } finally {
-            instance.enable();
-            instance.show();
-          }
-        } else {
-          // See if we can fetch this
-          fetch(url.split('#')[0])
-          .then(res => res.text())
-          .then(html => {
-            const parser = new DOMParser();
-            const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.getElementById(id);
-            if (note !== null) {
-              const html = processXRef(id, note);
-              instance.setContent(html);
-            } 
-          }).finally(() => {
-            instance.enable();
-            instance.show();
-          });
+      try { hash = new URL(url).hash; } catch {}
+      const id = hash.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note !== null) {
+        try {
+          const html = processXRef(id, note);
+          instance.setContent(html);
+        } finally {
+          instance.enable();
+          instance.show();
         }
       } else {
-        // See if we can fetch a full url (with no hash to target)
-        // This is a special case and we should probably do some content thinning / targeting
-        fetch(url)
+        // See if we can fetch this
+        fetch(url.split('#')[0])
         .then(res => res.text())
         .then(html => {
           const parser = new DOMParser();
           const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.querySelector('main.content');
+          const note = htmlDoc.getElementById(id);
           if (note !== null) {
-            // This should only happen for chapter cross references
-            // (since there is no id in the URL)
-            // remove the first header
-            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-              note.children[0].remove();
-            }
-            const html = processXRef(null, note);
+            const html = processXRef(id, note);
             instance.setContent(html);
           } 
         }).finally(() => {
@@ -1770,32 +1635,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
-        // Handle positioning of the toggle
-    window.addEventListener(
-      "resize",
-      throttle(() => {
-        elRect = undefined;
-        if (selectedAnnoteEl) {
-          selectCodeLines(selectedAnnoteEl);
-        }
-      }, 10)
-    );
-    function throttle(fn, ms) {
-    let throttle = false;
-    let timer;
-      return (...args) => {
-        if(!throttle) { // first call gets through
-            fn.apply(this, args);
-            throttle = true;
-        } else { // all the others get throttled
-            if(timer) clearTimeout(timer); // cancel #2
-            timer = setTimeout(() => {
-              fn.apply(this, args);
-              timer = throttle = false;
-            }, ms);
-        }
-      };
-    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1857,12 +1696,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../vignettes/mrp.html" class="pagination-link  aria-label=" mrp"="">
+      <a href="../vignettes/mrp.html" class="pagination-link">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">MrP</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../vignettes/svalues.html" class="pagination-link" aria-label="S Values">
+      <a href="../vignettes/svalues.html" class="pagination-link">
         <span class="nav-page-text">S Values</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>

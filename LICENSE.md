@@ -81,7 +81,7 @@ GPL assures that patents cannot be used to render the program non-free.
 
 The precise terms and conditions for copying, distribution and modification follow.
 
-## TERMS AND CONDITIONS
+## Terms and Conditions
 
 ### 0. Definitions
 

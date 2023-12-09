@@ -3,7 +3,7 @@
 
 Inverse Probability Weighting (IPW) is a popular technique to remove confounding in statistical modeling. It essentially involves re-weighting your sample so that it represents the population you're interested in. Typically, we begin by estimating the predicted probability that each unit is treated. Then, we use these probabilities as weights in model fitting and in the computation of marginal effects, contrasts, risk differences, ratios, etc.
 
-This chapter introduces how to use `marginaleffects` for IPW. The presentation is very short. Readers who seek a more comprehensive understanding and application of these methods should refer to [Noah Greifer's excellent and detailed work on the topic](https://ngreifer.github.io/) and to the [`WeightIt` package vignettes and website.](https://ngreifer.github.io/WeightIt/)
+This chapter introduces how to use `marginaleffects` for IPW. The presentation is very short. Readers who seek a more comprehensive understanding and application of these methods should refer to [Noah Greifer's excellent and detailed work on the topic](https://iqss.github.io/dss-ps/ex-weight.html) and to the [`WeightIt` package vignettes and website.](https://ngreifer.github.io/WeightIt/)
 
 To illustrate, we use the Lalonde data.
 
