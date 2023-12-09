@@ -1,4 +1,3 @@
-
 # Performance
 
 
@@ -51,13 +50,13 @@ results <- bench::mark(
     iterations = 1, check = FALSE)
 
 results[, c(1, 3, 5)]
-## <bch:expr>                                  <bch:tm> <bch:byt>
-## slopes(mod, vcov = FALSE, newdata = "mean") 230.09ms    1.24GB
-## slopes(mod, newdata = "mean")               329.14ms    1.25GB
-## slopes(mod, vcov = FALSE, variables = "X3")  198.7ms  496.24MB
-## slopes(mod, variables = "X3")                  1.27s    3.29GB
-## slopes(mod, vcov = FALSE)                      5.73s   11.05GB
-## slopes(mod)                                   21.68s   78.02GB
+# expression                                        median mem_alloc
+# "slopes(mod, vcov = FALSE, newdata = \"mean\")" 194.98ms  306.19MB
+# "slopes(mod, newdata = \"mean\")"               345.38ms  311.45MB
+# "slopes(mod, vcov = FALSE, variables = \"X3\")" 197.51ms   649.6MB
+# "slopes(mod, variables = \"X3\")"               742.05ms    1.27GB
+# "slopes(mod, vcov = FALSE)"                        4.09s   13.87GB
+# "slopes(mod)"                                     15.33s   26.83GB
 ```
 
 The benchmarks above were conducted using the development version of `marginaleffects` on 2023-02-03.
@@ -79,7 +78,7 @@ dat <- data.frame(
 mod <- glm(y ~ x1 + x2 + x3 + x4, data = dat, family = binomial)
 ```
 
-`marginaleffects` is about the same speed as `margins` when unit-level standard errors are *not* computed:
+`marginaleffects` can be 3 times faster and use 3 times less memory than `margins` when unit-level standard errors are *not* computed:
 
 ```{r, eval = FALSE}
 results <- bench::mark(
@@ -88,13 +87,13 @@ results <- bench::mark(
     check = FALSE, relative = TRUE)
 results[, c(1, 3, 5)]
 
-##   expression                        median mem_alloc
-##   <bch:expr>                          <dbl>     <dbl>
-## 1 slopes(mod, vcov = FALSE)   1         1
-## 2 margins(mod, unit_ses = FALSE)       6.15      4.17
+# expression                     median mem_alloc
+# <bch:expr>                      <dbl>     <dbl>
+# slopes(mod, vcov = FALSE)        1         1   
+# margins(mod, unit_ses = FALSE)   3.21      2.83
 ```
 
-`marginaleffects` can be 100x times faster than `margins` when unit-level standard errors are computed:
+`marginaleffects` can be up to 1000x times faster and use 32x less memory than `margins` when unit-level standard errors are computed:
 
 ```{r, eval = FALSE}
 results <- bench::mark(
@@ -102,12 +101,12 @@ results <- bench::mark(
     margins(mod, unit_ses = TRUE),
     check = FALSE, relative = TRUE, iterations = 1)
 results[, c(1, 3, 5)]
-
-## <bch:expr>                     <dbl>     <dbl>
-## slopes(mod, vcov = TRUE)          1        1  
-## margins(mod, unit_ses = TRUE)   128.      18.6
+# expression                    median mem_alloc
+#  <bch:expr>                     <dbl>     <dbl>
+#  slopes(mod, vcov = TRUE)          1        1  
+#  margins(mod, unit_ses = TRUE)  1161.      32.9
 ```
 
-Models estimated on larger datasets (> 1000 observations) can be difficult to process using the `margins` package, because of memory and time constraints. In contrast, `marginaleffects` can work well on much larger datasets.
+Models estimated on larger datasets (> 1000 observations) can be impossible to process using the `margins` package, because of memory and time constraints. In contrast, `marginaleffects` can work well on much larger datasets.
 
-In some cases, `marginaleffects` will be considerably slower than packages like `emmeans` or `modmarg`. This is because these packages make extensive use of hard-coded analytical derivatives, or reimplement their own fast prediction functions.
+Note that, in some specific cases, `marginaleffects` will be considerably slower than packages like `emmeans` or `modmarg`. This is because these packages make extensive use of hard-coded analytical derivatives, or reimplement their own fast prediction functions.
