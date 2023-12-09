@@ -446,7 +446,7 @@ hp           |
 
 #### marginaleffects
 
-You can estimate average counterfactual marginal effects with `slopes()` by using the [`datagridcf()`](reference/datagrid.html) to create a counterfactual dataset in which the full original dataset is replicated for each potential value of the `cyl` variable. Then, we tell the `by` argument to average within groups:
+You can estimate average counterfactual marginal effects with `slopes()` by using the [`datagridcf()`](man/datagrid.html) to create a counterfactual dataset in which the full original dataset is replicated for each potential value of the `cyl` variable. Then, we tell the `by` argument to average within groups:
 
 ```{r}
 mod <- lm(mpg ~ as.factor(cyl) * hp + wt, data = mtcars)

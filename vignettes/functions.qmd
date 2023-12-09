@@ -14,8 +14,8 @@ tab <- tribble(
   ""           , "[`avg_slopes()`](reference/slopes.html)",
   ""           , "[`plot_slopes()`](reference/plot_slopes.html)",
   "Marginal Means", "[`marginal_means()`](reference/marginal_means.html)",
-  "Grids"      , "[`datagrid()`](reference/datagrid.html)",
-  ""           , "[`datagridcf()`](reference/datagrid.html)",
+  "Grids"      , "[`datagrid()`](man/datagrid.html)",
+  ""           , "[`datagridcf()`](man/datagrid.html)",
   "Hypothesis & Equivalence", "[`hypotheses()`](reference/hypotheses.html)",
   "Bayes, Bootstrap, Simulation", "[`posterior_draws()`](reference/inferences.html)",
   "", "[`inferences()`](reference/inferences.html)"

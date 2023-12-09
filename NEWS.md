@@ -409,7 +409,7 @@ Bug fixes and minor improvements:
 * `tidy.predictions()` and `tidy.marginalmeans()` get a new `transform_avg` argument.
 * New vignettes: 
   - Unit-level contrasts in logistic regressions. Thanks to @arthur-albuquerque.
-  - Python Numpy models in `marginaleffects`. Thanks to @timpipeseek.
+  - Python Numpy models in `marginaleffects`. Thanks to timpipeseek.
   - Bootstrap example in standard errors vignette.
 
 ## 0.7.0

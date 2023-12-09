@@ -66,4 +66,4 @@ avg_comparisons(
 
 ## Learn more
 
-[The `MatchIt` vignette titled "Estimating Effects After Matching"](https://kosukeimai.github.io/MatchIt/vignettes/estimating-effects.html) describes many more options, including different measures of uncertainty (bootstrap, clustering, etc.), different estimands (ATE, etc.), and different strategies for adjustment.
+[The `MatchIt` vignette titled "Estimating Effects After Matching"](https://cran.r-project.org/web/packages/MatchIt/vignettes/estimating-effects.html) describes many more options, including different measures of uncertainty (bootstrap, clustering, etc.), different estimands (ATE, etc.), and different strategies for adjustment.
