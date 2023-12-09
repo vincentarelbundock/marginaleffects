@@ -304,7 +304,6 @@ slopes <- function(model,
 
 
 
-
 #' `marginaleffects()` is an alias to `slopes()`
 #'
 #' This alias is kept for backward compatibility and because some users may prefer that name.
@@ -314,7 +313,7 @@ slopes <- function(model,
 #' @export
 marginaleffects <- function(...) {
     insight::format_warning("This function has been renamed to `slopes()`. The `marginaleffects()` alias will be removed in the near future.")
-    plot_predictions(...)
+    slopes(...)
 }
 
 
