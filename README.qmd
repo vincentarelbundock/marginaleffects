@@ -39,7 +39,7 @@ The `marginaleffects` for `R` and `Python` offers a single point of entry to eas
 - *Powerful:* It can compute and plot predictions; comparisons (contrasts, risk ratios, etc.); slopes; and conduct hypothesis and equivalence tests for over 100 different classes of models in `R`.
 - *Simple:* All functions share a simple and unified interface.
 - *Documented*: Each function is thoroughly documented with abundant examples. The Marginal Effects Zoo website includes 20,000+ words of vignettes and case studies.
-- *Efficient:* [Some operations](https://vincentarelbundock.github.io/marginaleffects/articles/performance.html) are orders of magnitude faster than with the `margins` package, and the memory footprint is much smaller.  
+- *Efficient:* [Some operations](https://vincentarelbundock.github.io/marginaleffects/articles/performance.html) can be up to 1000 times faster and use 30 times less memory than with the `margins` package.  
 - *Valid:* When possible, [numerical results are checked](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html) against alternative software like `Stata` or other `R` packages.
 - *Thin:* The `R` package requires relatively few dependencies.
 - *Standards-compliant:* `marginaleffects` follows "tidy" principles and returns objects that work with standard functions like `summary()`, `tidy()`, and `glance()`. These objects are easy to program with and feed to other packages like [`ggplot2`](https://marginaleffects.com/vignettes/plot.html) or [`modelsummary`.](https://marginaleffects.com/vignettes/tables.html)
