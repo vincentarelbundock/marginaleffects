@@ -11,10 +11,9 @@ website:
     search: true
     logo: images/marginaleffects_icon.png
     logo-alt: "marginaleffects logo"
-    left:
+    right:
       - text: Get started
         href: vignettes/get_started.qmd
-    right:
       - icon: github
         href: $ALTDOC_PACKAGE_URL_GITHUB
         aria-label: $ALTDOC_PACKAGE_NAME GitHub

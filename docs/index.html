@@ -89,13 +89,11 @@ ul.task-list li input[type="checkbox"] {
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav navbar-nav-scroll me-auto">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
     <a class="nav-link active" href="./vignettes/get_started.html" aria-current="page"> 
 <span class="menu-text">Get started</span></a>
   </li>  
-</ul>
-            <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/vincentarelbundock/marginaleffects"> <i class="bi bi-github" role="img" aria-label="marginaleffects GitHub">
 </i> 
@@ -132,7 +130,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./vignettes/get_started.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Get Started</span></a>
+ <span class="menu-text">Get started</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -500,7 +498,7 @@ ul.task-list li input[type="checkbox"] {
 <p>These problems are compounded by the fact that modeling packages produce objects with very different structures and which hold different information. This means that end-users often have to write customized code to interpret the output of different models. This can lead to wasted effort, confusion, and mistakes, and it can hinder the implementation of best practices.</p>
 <section id="marginal-effects-zoo-the-book" class="level2">
 <h2 class="anchored" data-anchor-id="marginal-effects-zoo-the-book">Marginal Effects Zoo: The Book</h2>
-<p>This free online book introduces a conceptual framework to clearly define statistical quantities of interest, and shows how to use the <code>marginaleffects</code> package to estimate those quantities in <code>R</code> and <code>Python</code>. The techniques introduced herein can enhance the interpretability of <a href="https://marginaleffects.com/vignettes/supported_models.html">over 100 classes of statistical and machine learning models</a>, including linear, GLM, GAM, mixed-effects, bayesian, categorical outcomes, XGBoost, and more. With a single unified interface, users can compute and plot many quantities of interest, including:</p>
+<p><a href="https://marginaleffects.com/">This free online book</a> introduces a conceptual framework to clearly define statistical quantities of interest, and shows how to estimate those quantities using the <code>marginaleffects</code> package for <code>R</code> and <code>Python</code>. The techniques introduced herein can enhance the interpretability of <a href="https://marginaleffects.com/vignettes/supported_models.html">over 100 classes of statistical and machine learning models</a>, including linear, GLM, GAM, mixed-effects, bayesian, categorical outcomes, XGBoost, and more. With a single unified interface, users can compute and plot many estimands, including:</p>
 <ul>
 <li>Predictions (aka fitted values or adjusted predictions)</li>
 <li>Comparisons such as contrasts, risk differences, risk ratios, odds, etc.</li>
@@ -533,9 +531,9 @@ ul.task-list li input[type="checkbox"] {
 <li><em>Powerful:</em> It can compute and plot predictions; comparisons (contrasts, risk ratios, etc.); slopes; and conduct hypothesis and equivalence tests for over 100 different classes of models in <code>R</code>.</li>
 <li><em>Simple:</em> All functions share a simple and unified interface.</li>
 <li><em>Documented</em>: Each function is thoroughly documented with abundant examples. The Marginal Effects Zoo website includes 20,000+ words of vignettes and case studies.</li>
-<li><em>Efficient:</em> <a href="https://vincentarelbundock.github.io/marginaleffects/articles/performance.html">Some operations</a> can be up to 1000 times faster and use 30 times less memory than with the <code>margins</code> package.<br>
+<li><em>Efficient:</em> <a href="https://vincentarelbundock.github.io/marginaleffects/vignettes/performance.html">Some operations</a> can be up to 1000 times faster and use 30 times less memory than with the <code>margins</code> package.<br>
 </li>
-<li><em>Valid:</em> When possible, <a href="https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html">numerical results are checked</a> against alternative software like <code>Stata</code> or other <code>R</code> packages.</li>
+<li><em>Valid:</em> When possible, <a href="https://vincentarelbundock.github.io/marginaleffects/vignettes/supported_models.html">numerical results are checked</a> against alternative software like <code>Stata</code> or other <code>R</code> packages.</li>
 <li><em>Thin:</em> The <code>R</code> package requires relatively few dependencies.</li>
 <li><em>Standards-compliant:</em> <code>marginaleffects</code> follows “tidy” principles and returns objects that work with standard functions like <code>summary()</code>, <code>tidy()</code>, and <code>glance()</code>. These objects are easy to program with and feed to other packages like <a href="https://marginaleffects.com/vignettes/plot.html"><code>ggplot2</code></a> or <a href="https://marginaleffects.com/vignettes/tables.html"><code>modelsummary</code>.</a></li>
 <li><em>Extensible:</em> Adding support for new models is very easy, often requiring less than 10 lines of new code. Please submit <a href="https://github.com/vincentarelbundock/marginaleffects/issues">feature requests on Github.</a></li>

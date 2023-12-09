@@ -127,13 +127,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav navbar-nav-scroll me-auto">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
     <a class="nav-link active" href="../vignettes/get_started.html" aria-current="page"> 
 <span class="menu-text">Get started</span></a>
   </li>  
-</ul>
-            <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/vincentarelbundock/marginaleffects"> <i class="bi bi-github" role="img" aria-label="marginaleffects GitHub">
 </i> 
@@ -170,7 +168,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/get_started.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Get Started</span></a>
+ <span class="menu-text">Get started</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -760,7 +758,7 @@ Type:  response </code></pre>
 <span id="cb19-45"><a href="#cb19-45" aria-hidden="true" tabindex="-1"></a>bootstrap</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                           estimate std.error conf.low conf.high
-1 Treatment - No Treatment 3.517374 0.4928186 2.551468  4.483281</code></pre>
+1 Treatment - No Treatment 3.517374 0.4823196 2.572045  4.462703</code></pre>
 </div>
 </div>
 <p>The results are close to those that we obtained with <code>comparisons()</code>, but the confidence interval differs slightly because of the difference between bootstrapping and the delta method.</p>

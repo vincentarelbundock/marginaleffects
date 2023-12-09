@@ -1,5 +1,5 @@
 
-# Get Started
+# Get started
 
 
 ```{r, include = FALSE}

@@ -19,16 +19,16 @@ implementation of best practices.
 
 ## Marginal Effects Zoo: The Book
 
-This free online book introduces a conceptual framework to clearly
-define statistical quantities of interest, and shows how to use the
-`marginaleffects` package to estimate those quantities in `R` and
-`Python`. The techniques introduced herein can enhance the
-interpretability of [over 100 classes of statistical and machine
-learning
+[This free online book](https://marginaleffects.com/) introduces a
+conceptual framework to clearly define statistical quantities of
+interest, and shows how to estimate those quantities using the
+`marginaleffects` package for `R` and `Python`. The techniques
+introduced herein can enhance the interpretability of [over 100 classes
+of statistical and machine learning
 models](https://marginaleffects.com/vignettes/supported_models.html),
 including linear, GLM, GAM, mixed-effects, bayesian, categorical
 outcomes, XGBoost, and more. With a single unified interface, users can
-compute and plot many quantities of interest, including:
+compute and plot many estimands, including:
 
 -   Predictions (aka fitted values or adjusted predictions)
 -   Comparisons such as contrasts, risk differences, risk ratios, odds,
@@ -75,11 +75,11 @@ using a simple and consistent user interface. Its benefits include:
     examples. The Marginal Effects Zoo website includes 20,000+ words of
     vignettes and case studies.
 -   *Efficient:* [Some
-    operations](https://vincentarelbundock.github.io/marginaleffects/articles/performance.html)
+    operations](https://vincentarelbundock.github.io/marginaleffects/vignettes/performance.html)
     can be up to 1000 times faster and use 30 times less memory than
     with the `margins` package.  
 -   *Valid:* When possible, [numerical results are
-    checked](https://vincentarelbundock.github.io/marginaleffects/articles/supported_models.html)
+    checked](https://vincentarelbundock.github.io/marginaleffects/vignettes/supported_models.html)
     against alternative software like `Stata` or other `R` packages.
 -   *Thin:* The `R` package requires relatively few dependencies.
 -   *Standards-compliant:* `marginaleffects` follows “tidy” principles
