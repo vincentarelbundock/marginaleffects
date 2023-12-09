@@ -53,7 +53,7 @@ website:
           - vignettes/mrp.qmd
           - vignettes/multiple_imputation.qmd
           - vignettes/svalues.qmd
-      - section: Technical notes
+      - section: Miscellaneous
         contents:
           - vignettes/faq.qmd
           - vignettes/meme.qmd

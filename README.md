@@ -20,13 +20,15 @@ implementation of best practices.
 ## Marginal Effects Zoo: The Book
 
 This free online book introduces a conceptual framework to clearly
-define statistical quantities of interest, and the `marginaleffects`
-package to estimate those quantities in `R` and `Python`. This software
-can facilitate the interpretation of [over 100 classes of statistical
+define statistical quantities of interest, and shows how to use the
+`marginaleffects` package to estimate those quantities in `R` and
+`Python`. The techniques introduced herein can enhance the
+interpretability of [over 100 classes of statistical and machine
+learning
 models](https://marginaleffects.com/vignettes/supported_models.html),
 including linear, GLM, GAM, mixed-effects, bayesian, categorical
-outcomes, and more. With a single unified interface, users can compute
-and plot many quantities of interest, including:
+outcomes, XGBoost, and more. With a single unified interface, users can
+compute and plot many quantities of interest, including:
 
 -   Predictions (aka fitted values or adjusted predictions)
 -   Comparisons such as contrasts, risk differences, risk ratios, odds,
@@ -39,10 +41,10 @@ and plot many quantities of interest, including:
     simulation, or conformal inference.
 -   Much more!
 
-[The Marginal Effects Zoo](https://marginaleffects.com/) is a free
-online book with over 30 chapters of tutorials, case studies, and
-technical notes. It covers a wide range of topics, including how the
-`marginaleffects` package can facilitate the analysis of:
+[The Marginal Effects Zoo](https://marginaleffects.com/) book includes
+over 30 chapters of tutorials, case studies, and technical notes. It
+covers a wide range of topics, including how the `marginaleffects`
+package can facilitate the analysis of:
 
 -   Experiments
 -   Observational data
@@ -60,8 +62,9 @@ here!](https://marginaleffects.com/vignettes/get_started.html)
 
 ## `marginaleffects`: The Package
 
-The `marginaleffects` for `R` and `Python` offers a single point of
-entry to easily interpret the results of over 100 classes of models,
+The `marginaleffects` package for `R` and `Python` offers a single point
+of entry to easily interpret the results of [over 100 classes of
+models,](https://marginaleffects.com/vignettes/supported_models.html)
 using a simple and consistent user interface. Its benefits include:
 
 -   *Powerful:* It can compute and plot predictions; comparisons
