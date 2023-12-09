@@ -129,6 +129,7 @@ http
 https
 Hufthammer
 incrementing
+interpretability
 interpretable
 inv
 invlink
@@ -259,6 +260,7 @@ vincentarelbundock
 Wittenberg
 wmean
 xb
+XGBoost
 Xu
 zlink
 zprob
