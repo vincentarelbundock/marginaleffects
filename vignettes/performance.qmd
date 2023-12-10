@@ -59,11 +59,11 @@ results[, c(1, 3, 5)]
 # "slopes(mod)"                                     15.33s   26.83GB
 ```
 
-The benchmarks above were conducted using the development version of `marginaleffects` on 2023-02-03.
+The benchmarks above were conducted using the development version of `marginaleffects` on 2023-12-09.
 
 ## Speed comparison
 
-The `slopes` function is relatively fast. This simulation was conducted using the development version of the package on 2022-04-04:
+The `slopes` function is relatively fast. This simulation was conducted using the development version of the package on 2023-12-09:
 
 ```{r, eval = FALSE}
 library(margins)
