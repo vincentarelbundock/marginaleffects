@@ -68,3 +68,15 @@ h1 <- hypotheses(hyp, joint = TRUE)
 h2 <- hypotheses(lmfit, joint = 5:6, joint_test = "f")
 expect_equivalent(h1$df1, h2$df1)
 expect_equivalent(h1$df2, h2$df2)
+
+
+# Issue #981
+model <- lm(mpg ~ as.factor(cyl), data = mtcars)
+cmp <- avg_comparisons(model)
+h1 <- hypotheses(cmp, joint = ".*")
+h2 <- hypotheses(cmp, joint = "cyl")
+h3 <- hypotheses(cmp, joint = TRUE)
+expect_equivalent(h1$estimate, h2$estimate)
+expect_equivalent(h1$estimate, h3$estimate)
+expect_equivalent(h1$std.error, h2$std.error)
+expect_equivalent(h1$std.error, h3$std.error)

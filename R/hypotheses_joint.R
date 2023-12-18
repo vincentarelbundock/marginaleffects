@@ -2,7 +2,16 @@ joint_test <- function(object, joint_index = NULL, hypothesis = 0, joint_test = 
   checkmate::assert_choice(joint_test, c("f", "chisq"))
 
   # theta_hat: P x 1 vector of estimated parameters
-  theta_hat <- stats::coef(object) 
+  if (inherits(object, c("slopes", "comparisons"))) {
+    nam <- object$term
+    if ("contrast" %in% names(object)) {
+      nam <- paste(nam, object$contrast)
+    }
+    theta_hat <- stats::setNames(object$estimate, nam)
+  } else {
+    theta_hat <- get_coef(object) 
+  }
+
 
   # index
   checkmate::assert(

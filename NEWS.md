@@ -1,5 +1,11 @@
 # News
 
+## Development
+
+Bug fixes:
+
+* Error on `hypotheses(joint = "string")` for `comparisons()` objects (no result was returned). Thanks to @BorgeJorge for report #981. 
+
 ## 0.17.0
 
 Breaking changes:
