@@ -55,6 +55,16 @@ tidy.predictions <- tidy.comparisons
 tidy.hypotheses <- tidy.comparisons
 
 
+#' tidy helper
+#' 
+#' @noRd
+#' @export
+tidy.marginalmeans <- function(x, ...) {
+    insight::check_if_installed("tibble")
+    tibble::as_tibble(x)
+}
+
+
 #' @noRd
 #' @export
 glance.slopes <- function(x, ...) {
@@ -95,3 +105,8 @@ glance.comparisons <- glance.slopes
 #' @noRd
 #' @export
 glance.hypotheses <- glance.slopes
+
+
+#' @noRd
+#' @export
+glance.marginalmeans <- glance.slopes

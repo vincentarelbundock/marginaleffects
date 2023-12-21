@@ -26,8 +26,7 @@ expect_equivalent(mfx[mfx$term == "educ", "std.error"], mar$SE_dydx_educ, tolera
 expect_equivalent(mfx[mfx$term == "age", "std.error"], mar$SE_dydx_age, tolerance = tol_se)
 
 # marginaleffects vs. margins: AME 
-mfx <- slopes(m2, type = "E")
-mfx <- tidy(mfx)
+mfx <- avg_slopes(m2, type = "E")
 mfx <- mfx[match(c("age", "educ", "linc", "size", "smsa"), mfx$term),]
 mar <- margins(m2)
 mar <- summary(mar)

@@ -10,7 +10,7 @@ requiet("broom")
 stata <- readRDS(testing_path("stata/stata.rds"))$quantreg_rq_01
 model <- suppressWarnings(quantreg::rq(mpg ~ hp * wt + factor(cyl), data = mtcars))
 expect_slopes(model)
-mfx <- merge(tidy(slopes(model)), stata)
+mfx <- merge(avg_slopes(model), stata)
 expect_equivalent(mfx$estimate, mfx$dydxstata, tolerance = .0001)
 expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .001)
 

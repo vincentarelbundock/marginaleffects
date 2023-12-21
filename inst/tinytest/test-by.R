@@ -20,30 +20,30 @@ expect_equivalent(nrow(p1), 2)
 
 # use comparison to collapse into averages
 mod <- glm(gear ~ cyl + am, family = poisson, data = mtcars)
-x <- tidy(comparisons(mod, comparison = "dydx"))
+x <- avg_comparisons(mod, comparison = "dydx")
 y <- comparisons(mod, comparison = "dydxavg")
 expect_equivalent(x$estimate, y$estimate)
-expect_equivalent(x$std.error, y$std.error)
+expect_equivalent(x$std.error, y$std.error, tolerance = 1e-5)
 
-x <- tidy(comparisons(mod, comparison = "eyex"))
+x <- avg_comparisons(mod, comparison = "eyex")
 y <- comparisons(mod, comparison = "eyexavg")
 expect_equivalent(x$estimate, y$estimate)
-expect_equivalent(x$std.error, y$std.error)
+expect_equivalent(x$std.error, y$std.error, tolerance = 1e-5)
 
-x <- tidy(comparisons(mod, comparison = "eydx"))
+x <- avg_comparisons(mod, comparison = "eydx")
 y <- comparisons(mod, comparison = "eydxavg")
 expect_equivalent(x$estimate, y$estimate)
-expect_equivalent(x$std.error, y$std.error)
+expect_equivalent(x$std.error, y$std.error, tolerance = 1e-5)
 
-x <- tidy(comparisons(mod, comparison = "dyex"))
+x <- avg_comparisons(mod, comparison = "dyex")
 y <- comparisons(mod, comparison = "dyexavg")
 expect_equivalent(x$estimate, y$estimate)
-expect_equivalent(x$std.error, y$std.error)
+expect_equivalent(x$std.error, y$std.error, tolerance = 1e-5)
 
-x <- tidy(slopes(mod, slope = "dyex"))
+x <- avg_slopes(mod, slope = "dyex")
 y <- slopes(mod, slope = "dyexavg")
 expect_equivalent(x$estimate, y$estimate)
-expect_equivalent(x$std.error, y$std.error)
+expect_equivalent(x$std.error, y$std.error, tolerance = 1e-5)
 
 # input sanity check
 expect_error(slopes(mod, slope = "bad"), pattern = "eyexavg")
@@ -57,14 +57,6 @@ expect_error(slopes(mod, slope = "bad"), pattern = "eyexavg")
 mod <- glm(am ~ hp + mpg, data = mtcars, family = binomial)
 cmp <- comparisons(mod, by = "am", comparison = "lnor")
 expect_equal(nrow(cmp), 4)
-
-cmp <- comparisons(mod, by = "am")
-tid <- tidy(cmp)
-
-expect_equivalent(nrow(tid), nrow(cmp))
-expect_equivalent(nrow(tid), 4)
-expect_true("am" %in% colnames(tid))
-
 
 
 # counterfactual margins at()

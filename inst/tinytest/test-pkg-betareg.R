@@ -30,7 +30,7 @@ expect_equivalent(mfx$std.error, em$std.error, tolerance = .001)
 # marginaleffects: vs. Stata
 # stata does not include contrasts
 stata <- readRDS(testing_path("stata/stata.rds"))[["betareg_betareg_01"]]
-mfx <- merge(tidy(slopes(mod)), stata)
+mfx <- merge(avg_slopes(mod), stata)
 expect_equivalent(mfx$estimate, mfx$dydxstata, tolerance = .0001)
 expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .0001)
 
@@ -46,7 +46,6 @@ expect_predictions(pred, n_row = 6)
 mm <- marginal_means(mod, type = "link")
 expect_inherits(mm, "marginalmeans")
 expect_equal(nrow(mm), 10)
-mm <- tidy(mm)
 em <- broom::tidy(emmeans::emmeans(mod, "batch"))
 expect_equivalent(mm$estimate, em$estimate)
 expect_equivalent(mm$std.error, em$std.error, tolerance = 0.01)

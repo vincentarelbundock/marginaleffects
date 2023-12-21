@@ -38,13 +38,6 @@ expect_true(all(round(abs(em$estimate), 5) %in% round(abs(cmp$estimate), 5)))
 expect_true(all(round(abs(em$SE), 4) %in% round(abs(cmp$std.error), 4)))
 
 
-# cross and tidy()
-mod <- lm(mpg ~ factor(cyl) + factor(am), data = mtcars)
-cmp <- comparisons(mod, variables = c("am", "cyl"), cross = TRUE)
-avg <- tidy(cmp)
-expect_equivalent(nrow(avg), 2)
-expect_true("contrast_am" %in% colnames(avg))
-expect_true("contrast_cyl" %in% colnames(avg))
 
 
 # tidy does not error (no validity)
@@ -76,30 +69,13 @@ cmp <- comparisons(
 expect_true(nrow(cmp) > 17) 
 expect_true(nrow(tidy(cmp)) > 17)
 
-cmp <- comparisons(
-    mod,
-    variables = list("cyl" = "sequential", "am" = "sequential"),
-    cross = TRUE)
-expect_equivalent(nrow(cmp), 64)
-expect_equivalent(nrow(tidy(cmp)), 2)
 
-cmp <- comparisons(
-    mod,
-    cross = TRUE,
-    variables = c("cyl", "am", "wt"))
-expect_equivalent(nrow(cmp), 64)
-expect_equivalent(nrow(tidy(cmp)), 2)
 
 
 # deprecated argument
 expect_warning(comparisons(mod, interaction = TRUE))
 
 
-# brms + order of first character doesn't matter
-mod <- marginaleffects:::modelarchive_model("brms_factor")
-cmp <- comparisons(mod, variables = list("cyl_fac" = "all", "mpg" = 1), cross = TRUE)
-expect_equivalent(nrow(cmp), 192)
-expect_equivalent(nrow(tidy(cmp)), 6)
 
 
 rm(list = ls())

@@ -50,7 +50,7 @@ expect_equivalent(mfx$std.error, em$std.error, tolerance = 1e-5)
 stata <- readRDS(testing_path("stata/stata.rds"))[["stats_glm_01"]]
 dat <- read.csv(testing_path("stata/databases/stats_glm_01.csv"))
 mod <- glm(y ~ x1 * x2, family = binomial, data = dat)
-ame <- merge(tidy(slopes(mod, eps = 1e-4)), stata)
+ame <- merge(avg_slopes(mod, eps = 1e-4), stata)
 expect_equivalent(ame$estimate, ame$dydxstata, tolerance = 1e-4)
 expect_equivalent(ame$std.error, ame$std.errorstata, tolerance = 1e-4)
 
@@ -60,7 +60,7 @@ expect_equivalent(ame$std.error, ame$std.errorstata, tolerance = 1e-4)
 stata <- readRDS(testing_path("stata/stata.rds"))[["stats_lm_01"]]
 dat <- read.csv(testing_path("stata/databases/stats_lm_01.csv"))
 mod <- lm(y ~ x1 * x2, data = dat)
-ame <- merge(tidy(slopes(mod, eps = 1e-4)), stata)
+ame <- merge(avg_slopes(mod, eps = 1e-4), stata)
 expect_equivalent(ame$estimate, ame$dydxstata, tolerance = 1e-4)
 expect_equivalent(ame$std.error, ame$std.errorstata, tolerance = 1e-4)
 
@@ -94,11 +94,11 @@ dat <- mtcars
 dat$cyl <- as.factor(dat$cyl)
 dat$am <- as.logical(dat$am)
 mod <- lm(mpg ~ hp + cyl + am, data = dat)
-mm <- tidy(marginal_means(mod, variables = "cyl")) |> dplyr::arrange(value)
+mm <- marginal_means(mod, variables = "cyl") |> dplyr::arrange(value)
 em <- broom::tidy(emmeans::emmeans(mod, specs = "cyl"))
 expect_equivalent(mm$estimate, em$estimate)
 expect_equivalent(mm$std.error, em$std.error)
-mm <- tidy(marginal_means(mod, variables = "am")) |> dplyr::arrange(value)
+mm <- marginal_means(mod, variables = "am") |> dplyr::arrange(value)
 em <- broom::tidy(emmeans::emmeans(mod, specs = "am"))
 expect_equivalent(mm$estimate, em$estimate)
 expect_equivalent(mm$std.error, em$std.error, tolerance = 1e-5)
@@ -164,9 +164,8 @@ expect_predictions(pred, se = FALSE)
 
 # Issue #548: mlm support
 mod <- lm(cbind(mpg, cyl) ~ disp + am, data = mtcars)
-mfx <- slopes(mod)
-tid <- tidy(mfx)
-expect_inherits(mfx, "marginaleffects")
+tid <- avg_slopes(mod)
+expect_inherits(tid, "marginaleffects")
 expect_equivalent(nrow(tid), 4)
 
 

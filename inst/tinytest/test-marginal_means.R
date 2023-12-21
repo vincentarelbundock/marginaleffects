@@ -48,9 +48,8 @@ expect_false(all(mm2$estimate == mm3$estimate))
 
 # tidy and glance
 mod <- lm(mpg ~ cyl + am + hp, dat)
-me <- marginal_means(mod)
-ti <- tidy(me)
-gl <- glance(me)
+ti <- marginal_means(mod)
+gl <- glance(ti)
 expect_equivalent(nrow(gl), 1)
 expect_equivalent(nrow(ti), 5)
 expect_true(ncol(ti) >= 8)
@@ -64,13 +63,13 @@ dat$am <- factor(dat$am)
 dat$cyl <- factor(dat$cyl)
 mod <- glm(gear ~ cyl + am, data = dat, family = poisson)
 # link
-mm <- tidy(marginal_means(mod, variables = "cyl", type = "link")) |>
+mm <- marginal_means(mod, variables = "cyl", type = "link") |>
   dplyr::arrange(value)
 em <- tidy(emmeans(mod, specs = "cyl"))
 expect_equivalent(mm$estimate, em$estimate, tolerance = 1e-5)
 expect_equivalent(mm$estimate, em$estimate, tolerance = 1e-5)
 # response
-mm <- tidy(marginal_means(mod, variables = "cyl")) |>
+mm <- marginal_means(mod, variables = "cyl") |>
   dplyr::arrange(value)
 em <- tidy(emmeans(mod, specs = "cyl", type = "response"))
 expect_equivalent(mm$estimate, em$rate)

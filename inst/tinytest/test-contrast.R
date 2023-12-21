@@ -4,15 +4,6 @@ using("marginaleffects")
 requiet("emmeans")
 
 
-# simple contrasts: no validity check
-dat <- mtcars
-dat$am <- as.logical(dat$am)
-mod <- lm(mpg ~ hp + am + factor(cyl), data = dat)
-mfx <- suppressWarnings(slopes(mod))
-res <- tidy(mfx)
-expect_inherits(res, "data.frame")
-expect_equivalent(nrow(res), 4)
-
 
 # contrast as difference and CI make sense
 # problem reported with suggested fix by E.Book in Issue 58
@@ -21,8 +12,7 @@ dat$large_penguin <- ifelse(dat$body_mass_g > median(dat$body_mass_g, na.rm = TR
 dat <- dat
 mod <- glm(large_penguin ~ bill_length_mm + flipper_length_mm + species,
        data = dat, family = binomial)
-mfx <- slopes(mod)
-ti <- tidy(mfx)
+ti <- avg_slopes(mod)
 reject_ci <- ti$conf.high < 0 | ti$conf.low > 0
 reject_p <- ti$p.value < 0.05
 expect_equivalent(reject_ci, reject_p)
@@ -57,7 +47,7 @@ expect_equivalent(contr5$estimate, rep(sd2, 32))
 # factor glm
 mod <- glm(am ~ factor(cyl), data = mtcars, family = binomial)
 pred <- predictions(mod, newdata = datagrid(cyl = mtcars$cyl))
-contr <- tidy(comparisons(mod))
+contr <- avg_comparisons(mod)
 expect_equivalent(contr$estimate[1], pred$estimate[pred$cyl == 6] - pred$estimate[pred$cyl == 4])
 expect_equivalent(contr$estimate[2], pred$estimate[pred$cyl == 8] - pred$estimate[pred$cyl == 4])
 

@@ -47,7 +47,7 @@ requiet("plm")
 data(EmplUK, package = "plm")
 stata <- readRDS(testing_path("stata/stata.rds"))$fixest_feols
 model <- feols(wage ~ capital * output | firm, EmplUK)
-mfx <- merge(tidy(slopes(model)), stata)
+mfx <- merge(avg_slopes(model), stata)
 expect_slopes(model)
 expect_equivalent(mfx$estimate, mfx$estimate)
 expect_equivalent(mfx$std.error, mfx$std.errorstata, tolerance = .00001)

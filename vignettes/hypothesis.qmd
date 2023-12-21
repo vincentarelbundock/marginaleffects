@@ -559,9 +559,9 @@ hyp
 
 
 
-## Complex aggregations
+## Complex aggregations and tests
 
-The `FUN` argument of the `hypotheses()` function can be used to conduct complex aggregations of other estimates. For example, consider this ordered logit model fitted on a dataset of cars:
+The `FUN` argument of the `hypotheses()` function can be used to conduct complex aggregations and tests of various quantities of interest. For example, consider this ordered logit model fitted on a dataset of cars:
 
 
 ```{r}

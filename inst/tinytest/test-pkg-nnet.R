@@ -39,8 +39,7 @@ dat <- read.csv(testing_path("stata/databases/MASS_polr_01.csv"))
 void <- capture.output(
     mod <- nnet::multinom(factor(y) ~ x1 + x2, data = dat, quiet = true)
 )
-mfx <- slopes(mod, type = "probs")
-s <- tidy(mfx)
+s <- avg_slopes(mod, type = "probs")
 expect_false(anyNA(s$estimate))
 expect_false(anyNA(s$std.error))
 
@@ -52,8 +51,8 @@ dat$y <- as.factor(dat$y)
 void <- capture.output(
     mod <- nnet::multinom(y ~ x1 + x2, data = dat, quiet = true)
 )
-mfx <- slopes(mod, type = "probs")
-mfx <- merge(tidy(mfx), stata, all = TRUE)
+mfx <- avg_slopes(mod, type = "probs")
+mfx <- merge(mfx, stata, all = TRUE)
 mfx <- na.omit(mfx)
 expect_true(nrow(mfx) == 6) # na.omit doesn't trash everything
 # standard errors match now!!
@@ -180,8 +179,8 @@ reg <- nnet::multinom(poverty ~ religion + degree + gender,
     family = multinomial(refLevel = 1),
     trace = FALSE,
     data = carData::WVS)
-p1 <- predictions(reg, variables = list(religion = c("no"), gender = c("male")))
-p1 <- summary(p1)$estimate
+p1 <- avg_predictions(reg, variables = list(religion = c("no"), gender = c("male")))
+p1 <- p1$estimate
 p2 <- prediction::prediction(reg , at = list(religion=c("no"), gender=c("male")))
 p2 <- colMeans(p2[, grep("^Pr", colnames(p2))])
 expect_equivalent(p1, p2, ignore_attr = TRUE)
