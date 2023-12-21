@@ -2,7 +2,6 @@
 % Please edit documentation in R/datagrid.R
 \name{datagrid}
 \alias{datagrid}
-\alias{datagridcf}
 \title{Data grids}
 \usage{
 datagrid(
@@ -10,17 +9,15 @@ datagrid(
   model = NULL,
   newdata = NULL,
   by = NULL,
+  grid_type = "mean_or_mode",
   FUN_character = NULL,
   FUN_factor = NULL,
   FUN_logical = NULL,
   FUN_numeric = NULL,
   FUN_integer = NULL,
   FUN_binary = NULL,
-  FUN_other = NULL,
-  grid_type = "mean_or_mode"
+  FUN_other = NULL
 )
-
-datagridcf(..., model = NULL, newdata = NULL)
 }
 \arguments{
 \item{...}{named arguments with vectors of values or functions for user-specified variables.
@@ -36,6 +33,13 @@ datagridcf(..., model = NULL, newdata = NULL)
 
 \item{by}{character vector with grouping variables within which \verb{FUN_*} functions are applied to create "sub-grids" with unspecified variables.}
 
+\item{grid_type}{character. Determines the functions to apply to each variable. The defaults can be overriden by defining individual variables explicitly in \code{...}, or by supplying a function to one of the \verb{FUN_*} arguments.
+\itemize{
+\item "mean_or_mode": Character, factor, logical, and binary variables are set to their modes. Numeric, integer, and other variables are set to their means.
+\item "balanced": Each unique level of character, factor, logical, and binary variables are preserved. Numeric, integer, and other variables are set to their means. Warning: When there are many variables and many levels per variable, a balanced grid can be very large. In those cases, it is better to use \code{grid_type="mean_or_mode"} and to specify the unique levels of a subset of named variables explicitly.
+\item "counterfactual": the entire dataset is duplicated for each combination of the variable values specified in \code{...}. Variables not explicitly supplied to \code{datagrid()} are set to their observed values in the original dataset.
+}}
+
 \item{FUN_character}{the function to be applied to character variables.}
 
 \item{FUN_factor}{the function to be applied to factor variables.}
@@ -49,13 +53,6 @@ datagridcf(..., model = NULL, newdata = NULL)
 \item{FUN_binary}{the function to be applied to binary variables.}
 
 \item{FUN_other}{the function to be applied to other variable types.}
-
-\item{grid_type}{character. Determines the functions to apply to each variable. The defaults can be overriden by defining individual variables explicitly in \code{...}, or by supplying a function to one of the \verb{FUN_*} arguments.
-\itemize{
-\item "mean_or_mode": Character, factor, logical, and binary variables are set to their modes. Numeric, integer, and other variables are set to their means.
-\item "balanced": Each unique level of character, factor, logical, and binary variables are preserved. Numeric, integer, and other variables are set to their means. Warning: When there are many variables and many levels per variable, a balanced grid can be very large. In those cases, it is better to use \code{grid_type="mean_or_mode"} and to specify the unique levels of a subset of named variables explicitly.
-\item "counterfactual": the entire dataset is duplicated for each combination of the variable values specified in \code{...}. Variables not explicitly supplied to \code{datagrid()} are set to their observed values in the original dataset.
-}}
 }
 \value{
 A \code{data.frame} in which each row corresponds to one combination of the named
@@ -64,24 +61,22 @@ explicitly defined are held at their mean or mode.
 }
 \description{
 Generate a data grid of user-specified values for use in the \code{newdata} argument of the \code{predictions()}, \code{comparisons()}, and \code{slopes()} functions. This is useful to define where in the predictor space we want to evaluate the quantities of interest. Ex: the predicted outcome or slope for a 37 year old college graduate.
-\itemize{
-\item \code{datagrid()} generates data frames with combinations of "typical" or user-supplied predictor values.
-\item \code{datagridcf()} generates "counter-factual" data frames, by replicating the entire dataset once for every combination of predictor values supplied by the user.
-}
 }
 \details{
 If \code{datagrid} is used in a \code{predictions()}, \code{comparisons()}, or \code{slopes()} call as the
 \code{newdata} argument, the model is automatically inserted in the \code{model} argument of \code{datagrid()}
-call, and users do not need to specify either the \code{model} or \code{newdata} arguments.
+call, and users do not need to specify either the \code{model} or \code{newdata} arguments. The same behavior will occur when the value supplied to \verb{newdata=} is a function call which starts with "datagrid". This is intended to allow users to create convenience shortcuts like:
+
+\preformatted{
+library(marginaleffects)
+mod <- lm(mpg ~ am + vs + factor(cyl) + hp, mtcars)
+datagrid_bal <- function(...) datagrid(..., grid_type = "balanced")
+predictions(model, newdata = datagrid_bal(cyl = 4))
+}
 
 If users supply a model, the data used to fit that model is retrieved using
 the \code{insight::get_data} function.
 }
-\section{Functions}{
-\itemize{
-\item \code{datagridcf()}: Counterfactual data grid
-
-}}
 \examples{
 # The output only has 2 rows, and all the variables except `hp` are at their
 # mean or mode.

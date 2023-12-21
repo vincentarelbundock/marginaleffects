@@ -3,9 +3,6 @@
 #' @description
 #' Generate a data grid of user-specified values for use in the `newdata` argument of the `predictions()`, `comparisons()`, and `slopes()` functions. This is useful to define where in the predictor space we want to evaluate the quantities of interest. Ex: the predicted outcome or slope for a 37 year old college graduate.
 #'
-#' * `datagrid()` generates data frames with combinations of "typical" or user-supplied predictor values.
-#' * `datagridcf()` generates "counter-factual" data frames, by replicating the entire dataset once for every combination of predictor values supplied by the user.
-#'
 #' @param ... named arguments with vectors of values or functions for user-specified variables.
 #' + Functions are applied to the variable in the `model` dataset or `newdata`, and must return a vector of the appropriate type.
 #' + Character vectors are automatically transformed to factors if necessary.
@@ -27,7 +24,15 @@
 #' @details
 #' If `datagrid` is used in a `predictions()`, `comparisons()`, or `slopes()` call as the
 #' `newdata` argument, the model is automatically inserted in the `model` argument of `datagrid()`
-#' call, and users do not need to specify either the `model` or `newdata` arguments.
+#' call, and users do not need to specify either the `model` or `newdata` arguments. The same behavior will occur when the value supplied to `newdata=` is a function call which starts with "datagrid". This is intended to allow users to create convenience shortcuts like:
+#' 
+#' \preformatted{
+#' library(marginaleffects)
+#' mod <- lm(mpg ~ am + vs + factor(cyl) + hp, mtcars)
+#' datagrid_bal <- function(...) datagrid(..., grid_type = "balanced")
+#' predictions(model, newdata = datagrid_bal(cyl = 4))
+#' }
+#' 
 #'
 #' If users supply a model, the data used to fit that model is retrieved using
 #' the `insight::get_data` function.
@@ -69,14 +74,14 @@ datagrid <- function(
     model = NULL,
     newdata = NULL,
     by = NULL,
+    grid_type = "mean_or_mode",
     FUN_character = NULL,
     FUN_factor = NULL,
     FUN_logical = NULL,
     FUN_numeric = NULL,
     FUN_integer = NULL,
     FUN_binary = NULL,
-    FUN_other = NULL,
-    grid_type = "mean_or_mode") {
+    FUN_other = NULL) {
 
     dots <- list(...)
 
@@ -273,8 +278,23 @@ datagrid_engine <- function(
 }
 
 
-#' Counterfactual data grid
-#' @describeIn datagrid Counterfactual data grid
+#' DEPRECATED FUNCTION
+#' 
+#' This function will be removed from the package in a future version. Please use this instead:
+#' 
+#' \preformatted{
+#' library(marginaleffects)
+#' mod <- lm(mpg ~ am + vs + factor(cyl) + hp, mtcars)
+#' predictions(mod,
+#'   newdata = datagrid(cyl = c(4, 6), grid_type = "counterfactual"))
+#' }
+#' 
+#' Users can also create convenience shortcuts like this:
+#' \preformatted{
+#' datagrid_cf <- function(...) datagrid(..., grid_type = "counterfactual")
+#' predictions(mod, newdata = datagrid_cf(cyl = c(4, 6)))
+#' }
+#' @keywords internal
 #' @export
 #'
 datagridcf <- function(
