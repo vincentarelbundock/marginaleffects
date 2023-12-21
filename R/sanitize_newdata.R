@@ -1,6 +1,6 @@
 sanitize_newdata_call <- function(scall, newdata = NULL, model) {
     if (rlang::quo_is_call(scall)) {
-        if (rlang::call_name(scall) %in% c("datagrid", "datagridcf", "typical", "counterfactual")) {
+        if (grepl("^datagrid", rlang::call_name(scall))) {
             if (!"model" %in% rlang::call_args_names(scall)) {
                 scall <- rlang::call_modify(scall, model = model)
             }
