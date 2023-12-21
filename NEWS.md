@@ -2,6 +2,14 @@
 
 ## Development
 
+New:
+
+* `datagrid(grid_type = "balanced")` creates a balanced grid with all unique values of categorical predictors. This can be used with `predictions()` to compute marginal means as in the `emmeans` package.
+
+Deprecation warning:
+
+* The `marginal_means()` function will eventually be deprecated and removed from the package. We will raise a warning for at least one year before removing the function. Identical results can be obtained using the `predictions()` function and the `grid_type="balanced"` argument of `datagrid()`. Examples are in the marginal means vignette on the website.
+
 Bug fixes:
 
 * Error on `hypotheses(joint = "string")` for `comparisons()` objects (no result was returned). Thanks to @BorgeJorge for report #981. 

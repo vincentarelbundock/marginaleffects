@@ -2,7 +2,7 @@
 % Please edit documentation in R/marginal_means.R
 \name{marginal_means}
 \alias{marginal_means}
-\title{Marginal Means}
+\title{DEPRECATED FUNCTION}
 \usage{
 marginal_means(
   model,
@@ -134,6 +134,19 @@ arguments.}
 Data frame of marginal means with one row per variable-value combination.
 }
 \description{
+This function will be removed from the package eventually. Please use the \code{predictions()} function instead:
+
+\preformatted{
+library(marginaleffects)
+mod <- lm(mpg ~ hp + am + carb, data = mtcars)
+predictions(mod,
+  by = "am",
+  newdata = datagrid(grid_type = "balanced")
+)
+}
+
+See the Marginal Means vignette for details and tutorials at: \url{https://marginaleffects.com/vignettes/marginalmeans.html}
+
 Marginal means are adjusted predictions, averaged across a grid of categorical predictors,
 holding other numeric predictors at their means. To learn more, read the marginal means vignette, visit the
 package website, or scroll down this page for a full list of vignettes:
@@ -351,3 +364,4 @@ marginal_means(mod, variables = "carb", hypothesis = lc)
 \item Cole, Stephen R, Jessie K Edwards, and Sander Greenland. 2020. "Surprise!" American Journal of Epidemiology 190 (2): 191–93. https://doi.org/10.1093/aje/kwaa136
 }
 }
+\keyword{internal}

@@ -360,7 +360,7 @@ hypotheses(
 
 ## `hypotheses` Vectors and Matrices
 
-The `marginal_means()` function computes [estimated marginal means.](marginalmeans.html) The `hypothesis` argument of that function offers a powerful mechanism to estimate custom contrasts between marginal means, by way of linear combination.
+The `predictions()` function can compute [estimated marginal means.](marginalmeans.html) The `hypothesis` argument of that function offers a powerful mechanism to estimate custom contrasts between marginal means, by way of linear combination.
 
 Consider a simple example:
 
@@ -375,7 +375,9 @@ dat$cyl <- factor(dat$cyl)
 dat$am <- as.logical(dat$am)
 
 mod <- lm(mpg ~ carb + cyl, dat)
-mm <- marginal_means(mod, variables = "carb")
+mm <- predictions(mod,
+    by = "carb",
+    newdata = datagrid(grid_type = "balanced"))
 mm
 ```
 
@@ -407,11 +409,14 @@ The last two commands express the contrast of interest as [a linear combination]
 
 ### Simple contrast
 
-In the `marginal_means()` function, we can supply a `hypothesis` argument to compute linear combinations of marginal means. This argument must be a numeric vector of the same length as the number of rows in the output of `marginal_means()`. For example, in the previous there were six rows, and the two marginal means we want to compare are at in the first two positions:
+In the `predictions()` function, we can supply a `hypothesis` argument to compute linear combinations of marginal means. This argument must be a numeric vector of the same length as the number of rows in the output. For example, in the previous there were six rows, and the two marginal means we want to compare are at in the first two positions:
 
 ```{r}
 lc <- c(1, -1, 0, 0, 0, 0)
-marginal_means(mod, variables = "carb", hypothesis = lc)
+predictions(mod,
+    by = "carb",
+    newdata = datagrid(grid_type = "balanced"),
+    hypothesis = lc)
 ```
 
 ### Complex contrast
@@ -420,7 +425,10 @@ Of course, we can also estimate more complex contrasts:
 
 ```{r}
 lc <- c(0, -2, 1, 1, -1, 1)
-marginal_means(mod, variables = "carb", hypothesis = lc)
+predictions(mod,
+    by = "carb",
+    newdata = datagrid(grid_type = "balanced"),
+    hypothesis = lc)
 ```
 
 `emmeans` produces similar results:
@@ -428,7 +436,7 @@ marginal_means(mod, variables = "carb", hypothesis = lc)
 ```{r}
 library(emmeans)
 em <- emmeans(mod, "carb")
-lc <- data.frame(custom_contrast = c(-2, 1, 1, 0, -1, 1))
+lc <- data.frame(custom_contrast = c(0, -2, 1, 1, -1, 1))
 contrast(em, method = lc)
 ```
 
@@ -444,62 +452,10 @@ lc <- matrix(c(
 colnames(lc) <- c("Contrast A", "Contrast B")
 lc
 
-marginal_means(mod, variables = "carb", hypothesis = lc)
-```
-
-### Contrasts across response levels
-
-In models with multinomial outcomes, one may be interested in comparing outcomes or contrasts across response levels. For example, in this model there are 18 estimated marginal means, across 6 outcome levels (the `group` column):
-
-```{r}
-library(nnet)
-mod <- multinom(carb ~ mpg + cyl, data = dat, trace = FALSE)
-mm <- marginal_means(mod, type = "probs")
-mm
-```
-
-Let's contrast the marginal means in the first outcome level when `cyl` equals 4 and 6. These marginal means are located in rows 1 and 7 respectively:
-
-```{r}
-lc <- rep(0, nrow(mm))
-lc[1] <- -1
-lc[7] <- 1
-marginal_means(
-    mod,
-    type = "probs",
+predictions(mod,
+    by = "carb",
+    newdata = datagrid(grid_type = "balanced"),
     hypothesis = lc)
-```
-
-This is indeed equal to the results we would have obtained manually:
-
-```{r}
-2.828726e-01 - 3.678521e-01
-```
-
-Now let's say we want to calculate a "contrast in contrasts", that is, the outcome of a 3-step process:
-
-1. Contrast between `cyl=6` and `cyl=4` in the 1st outcome level
-2. Contrast between `cyl=6` and `cyl=4` in the 2nd outcome level
-3. Contrast between the contrasts defined in steps 1 and 2.
-
-We create the linear combination weights as follows:
-
-```{r}
-lc <- rep(0, nrow(mm))
-lc[c(1, 8)] <- -1
-lc[c(7, 2)] <- 1
-```
-
-To make sure that the weights are correct, we can display them side by side with the original `marginal_means()` output:
-
-```{r}
-transform(mm[, 1:3], lc = lc)
-```
-
-Compute the results:
-
-```{r}
-marginal_means(mod, type = "probs", hypothesis = lc)
 ```
 
 ## Pairwise contrasts: Difference-in-Differences

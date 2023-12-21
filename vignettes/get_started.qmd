@@ -382,12 +382,12 @@ We can compute marginal means manually using the functions already described:
 ```{r}
 avg_predictions(
   mod_cat,
-  newdata = datagrid(cyl = unique, am = unique),
+  newdata = datagrid(grid_type = "balanced"),
   by = "am")
 ```
 ### Python
 ```{python, eval = FALSE}
-avg_predictions(
+predictions(
   mod_cat,
   newdata = datagrid(mod_cat, cyl = dat["cyl"].unique(), am = dat["am"].unique()),
   by = "am")
@@ -395,11 +395,6 @@ print(p)
 ```
 :::
 
-For convenience, the `marginaleffects` package for `R` also includes a `marginal_means()` function:
-
-```{r}
-marginal_means(mod_cat, variables = "am")
-```
 
 [The Marginal Means vignette](marginalmeans.html) offers more detail.
 

@@ -17,10 +17,6 @@ Slopes, marginal effects, partial derivatives:
 * [`avg_slopes`](reference/slopes.html)
 * [`plot_slopes`](reference/plot_slopes.html)
 
-Marginal means:
-
-* [`marginal_means`](reference/marginal_means.html)
-
 Other:
 
 * [`hypotheses`](reference/hypotheses.html)

@@ -17,10 +17,12 @@
 #' @param FUN_factor the function to be applied to factor variables.
 #' @param FUN_logical the function to be applied to logical variables.
 #' @param FUN_integer the function to be applied to integer variables.
+#' @param FUN_binary the function to be applied to binary variables.
 #' @param FUN_numeric the function to be applied to numeric variables.
 #' @param FUN_other the function to be applied to other variable types.
-#' @param grid_type character
-#'   * "typical": variables whose values are not explicitly specified by the user in `...` are set to their mean or mode, or to the output of the functions supplied to `FUN_type` arguments.
+#' @param grid_type character. Determines the functions to apply to each variable. The defaults can be overriden by defining individual variables explicitly in `...`, or by supplying a function to one of the `FUN_*` arguments.
+#'   * "mean_or_mode": Character, factor, logical, and binary variables are set to their modes. Numeric, integer, and other variables are set to their means.
+#'   * "balanced": Each unique level of character, factor, logical, and binary variables are preserved. Numeric, integer, and other variables are set to their means. Warning: When there are many variables and many levels per variable, a balanced grid can be very large. In those cases, it is better to use `grid_type="mean_or_mode"` and to specify the unique levels of a subset of named variables explicitly.
 #'   * "counterfactual": the entire dataset is duplicated for each combination of the variable values specified in `...`. Variables not explicitly supplied to `datagrid()` are set to their observed values in the original dataset.
 #' @details
 #' If `datagrid` is used in a `predictions()`, `comparisons()`, or `slopes()` call as the
@@ -67,28 +69,53 @@ datagrid <- function(
     model = NULL,
     newdata = NULL,
     by = NULL,
-    FUN_character = get_mode,
-    # need to be explicit for numeric variables transfered to factor in model formula
-    FUN_factor = get_mode,
-    FUN_logical = get_mode,
-    FUN_numeric = function(x) mean(x, na.rm = TRUE),
-    FUN_integer = function(x) round(mean(x, na.rm = TRUE)),
-    FUN_other = function(x) mean(x, na.rm = TRUE),
-    grid_type = "typical") {
+    FUN_character = NULL,
+    FUN_factor = NULL,
+    FUN_logical = NULL,
+    FUN_numeric = NULL,
+    FUN_integer = NULL,
+    FUN_binary = NULL,
+    FUN_other = NULL,
+    grid_type = "mean_or_mode") {
 
     dots <- list(...)
 
+    # backward compatibility: 20231220
+    if (identical(grid_type, "typical")) {
+        grid_type <- "mean_or_mode"
+    }
+
     # sanity
-    checkmate::assert_choice(grid_type, choices = c("typical", "counterfactual"))
-    checkmate::assert_function(FUN_character)
-    checkmate::assert_function(FUN_factor)
-    checkmate::assert_function(FUN_logical)
-    checkmate::assert_function(FUN_numeric)
-    checkmate::assert_function(FUN_other)
+    checkmate::assert_choice(grid_type, choices = c("mean_or_mode", "balanced", "counterfactual"))
+    checkmate::assert_function(FUN_character, null.ok = TRUE)
+    checkmate::assert_function(FUN_factor, null.ok = TRUE)
+    checkmate::assert_function(FUN_logical, null.ok = TRUE)
+    checkmate::assert_function(FUN_binary, null.ok = TRUE)
+    checkmate::assert_function(FUN_integer, null.ok = TRUE)
+    checkmate::assert_function(FUN_numeric, null.ok = TRUE)
+    checkmate::assert_function(FUN_other, null.ok = TRUE)
     checkmate::assert_character(by, null.ok = TRUE)
     checkmate::assert_data_frame(newdata, null.ok = TRUE)
-    
-    if (grid_type == "counterfactual") {
+
+    if (grid_type == "mean_or_mode") {
+        if (is.null(FUN_character)) FUN_character <- get_mode
+        if (is.null(FUN_logical)) FUN_logical <- get_mode
+        if (is.null(FUN_factor)) FUN_factor <- get_mode
+        if (is.null(FUN_binary)) FUN_binary <- get_mode
+        if (is.null(FUN_numeric)) FUN_numeric <- function(x) mean(x, na.rm = TRUE)
+        if (is.null(FUN_other)) FUN_other <- function(x) mean(x, na.rm = TRUE)
+        if (is.null(FUN_integer)) FUN_integer <- function(x) round(mean(x, na.rm = TRUE))
+
+    } else if (grid_type == "balanced") {
+        if (is.null(FUN_character)) FUN_character <- unique
+        if (is.null(FUN_logical)) FUN_logical <- unique
+        if (is.null(FUN_factor)) FUN_factor <- unique
+        if (is.null(FUN_binary)) FUN_binary <- unique
+        if (is.null(FUN_numeric)) FUN_numeric <- function(x) mean(x, na.rm = TRUE)
+        if (is.null(FUN_other)) FUN_other <- function(x) mean(x, na.rm = TRUE)
+        if (is.null(FUN_integer)) FUN_integer <- function(x) round(mean(x, na.rm = TRUE))
+
+    } else if (grid_type == "counterfactual") {
         if (!is.null(by)) {
             insight::format_error("The `by` argument is not supported for counterfactual grids.")
         }
@@ -99,7 +126,7 @@ datagrid <- function(
         out <- do.call("datagridcf", args)
         return(out)
     }
-    
+
     if (!is.null(by)) {
         if (is.null(newdata) && is.null(model)) {
             insight::format_error("One of `newdata` and `model` must not be `NULL`.")
@@ -120,6 +147,7 @@ datagrid <- function(
                 FUN_character = FUN_character,
                 FUN_factor = FUN_factor,
                 FUN_logical = FUN_logical,
+                FUN_binary = FUN_binary,
                 FUN_numeric = FUN_numeric,
                 FUN_integer = FUN_integer,
                 FUN_other = FUN_other,
@@ -140,6 +168,7 @@ datagrid <- function(
                 FUN_character = FUN_character,
                 FUN_factor = FUN_factor,
                 FUN_logical = FUN_logical,
+                FUN_binary = FUN_binary,
                 FUN_numeric = FUN_numeric,
                 FUN_integer = FUN_integer,
                 FUN_other = FUN_other)
@@ -155,6 +184,7 @@ datagrid_engine <- function(
     # need to be explicit for numeric variables transfered to factor in model formula
     FUN_factor = get_mode,
     FUN_logical = get_mode,
+    FUN_binary = get_mode,
     FUN_numeric = function(x) mean(x, na.rm = TRUE),
     FUN_integer = function(x) round(mean(x, na.rm = TRUE)),
     FUN_other = function(x) mean(x, na.rm = TRUE),
@@ -188,12 +218,12 @@ datagrid_engine <- function(
         for (n in names(dat_automatic)) {
             if (get_variable_class(dat, n, c("factor", "strata", "cluster")) || n %in% tmp[["cluster"]]) {
                 out[[n]] <- FUN_factor(dat_automatic[[n]])
+            } else if (get_variable_class(dat, n, "binary")) {
+                out[[n]] <- FUN_binary(dat_automatic[[n]])
             } else if (get_variable_class(dat, n, "logical")) {
                 out[[n]] <- FUN_logical(dat_automatic[[n]])
             } else if (get_variable_class(dat, n, "character")) {
                 out[[n]] <- FUN_character(dat_automatic[[n]])
-            } else if (get_variable_class(dat, n, "binary")) {
-                out[[n]] <- FUN_numeric(dat_automatic[[n]])
             } else if (get_variable_class(dat, n, "numeric")) {
                 if (is.integer(dat_automatic[[n]])) {
                     out[[n]] <- FUN_integer(dat_automatic[[n]])

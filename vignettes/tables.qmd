@@ -90,22 +90,3 @@ modelsummary(
   cmp,
   shape = contrast_gear + contrast_cyl ~ model)
 ```
-
-## Marginal means
-
-```{r}
-library("marginaleffects")
-library("modelsummary")
-
-dat <- mtcars
-dat$cyl <- as.factor(dat$cyl)
-dat$am <- as.logical(dat$am)
-mod <- lm(mpg ~ hp + cyl + am, data = dat)
-mm <- marginal_means(mod)
-
-modelsummary(mm,
-             title = "Estimated Marginal Means",
-             estimate = "{estimate} ({std.error}){stars}",
-             statistic = NULL,
-             group = term + value ~ model)
-```

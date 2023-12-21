@@ -10,13 +10,14 @@ datagrid(
   model = NULL,
   newdata = NULL,
   by = NULL,
-  FUN_character = get_mode,
-  FUN_factor = get_mode,
-  FUN_logical = get_mode,
-  FUN_numeric = function(x) mean(x, na.rm = TRUE),
-  FUN_integer = function(x) round(mean(x, na.rm = TRUE)),
-  FUN_other = function(x) mean(x, na.rm = TRUE),
-  grid_type = "typical"
+  FUN_character = NULL,
+  FUN_factor = NULL,
+  FUN_logical = NULL,
+  FUN_numeric = NULL,
+  FUN_integer = NULL,
+  FUN_binary = NULL,
+  FUN_other = NULL,
+  grid_type = "mean_or_mode"
 )
 
 datagridcf(..., model = NULL, newdata = NULL)
@@ -45,11 +46,14 @@ datagridcf(..., model = NULL, newdata = NULL)
 
 \item{FUN_integer}{the function to be applied to integer variables.}
 
+\item{FUN_binary}{the function to be applied to binary variables.}
+
 \item{FUN_other}{the function to be applied to other variable types.}
 
-\item{grid_type}{character
+\item{grid_type}{character. Determines the functions to apply to each variable. The defaults can be overriden by defining individual variables explicitly in \code{...}, or by supplying a function to one of the \verb{FUN_*} arguments.
 \itemize{
-\item "typical": variables whose values are not explicitly specified by the user in \code{...} are set to their mean or mode, or to the output of the functions supplied to \code{FUN_type} arguments.
+\item "mean_or_mode": Character, factor, logical, and binary variables are set to their modes. Numeric, integer, and other variables are set to their means.
+\item "balanced": Each unique level of character, factor, logical, and binary variables are preserved. Numeric, integer, and other variables are set to their means. Warning: When there are many variables and many levels per variable, a balanced grid can be very large. In those cases, it is better to use \code{grid_type="mean_or_mode"} and to specify the unique levels of a subset of named variables explicitly.
 \item "counterfactual": the entire dataset is duplicated for each combination of the variable values specified in \code{...}. Variables not explicitly supplied to \code{datagrid()} are set to their observed values in the original dataset.
 }}
 }

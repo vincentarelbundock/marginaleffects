@@ -1,6 +1,19 @@
-#' Marginal Means
+#' DEPRECATED FUNCTION
 #'
 #' @description
+#' This function will be removed from the package eventually. Please use the `predictions()` function instead:
+#' 
+#' \preformatted{
+#' library(marginaleffects)
+#' mod <- lm(mpg ~ hp + am + carb, data = mtcars)
+#' predictions(mod,
+#'   by = "am",
+#'   newdata = datagrid(grid_type = "balanced")
+#' )
+#' }
+#' 
+#' See the Marginal Means vignette for details and tutorials at: <https://marginaleffects.com/vignettes/marginalmeans.html>
+#' 
 #' Marginal means are adjusted predictions, averaged across a grid of categorical predictors,
 #' holding other numeric predictors at their means. To learn more, read the marginal means vignette, visit the
 #' package website, or scroll down this page for a full list of vignettes:
@@ -62,6 +75,7 @@
 #'
 #' @return Data frame of marginal means with one row per variable-value combination.
 #' @export
+#' @keywords internal
 #' @examples
 #' library(marginaleffects)
 #'

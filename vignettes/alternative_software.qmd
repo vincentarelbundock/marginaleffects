@@ -31,7 +31,7 @@ The [`emmeans` package](https://cran.r-project.org/web/packages/emmeans/index.ht
 
 An `emmeans` analysis typically starts by computing ["marginal means"](marginalmeans.html) by holding all numeric covariates at their means, and by averaging across a balanced grid of categorical predictors. Then, users can use the `contrast()` function to estimate the difference between marginal means.
 
-The `marginaleffects` package supplies a `marginal_means` function which can replicate most `emmeans` analyses by computing marginal means. However, the typical analysis is more squarely centered on predicted/fitted values. This is a useful starting point because, in many cases, analysts will find it easy and intuitive to express their scientific queries in terms of changes in predicted values. For example, 
+The `marginaleffects` package supplies a `predictions` function which can replicate most `emmeans` analyses by computing marginal means. However, the typical analysis is more squarely centered on predicted/fitted values. This is a useful starting point because, in many cases, analysts will find it easy and intuitive to express their scientific queries in terms of changes in predicted values. For example, 
 
 * How does the average predicted probability of survival differ between treatment and control group? 
 * What is the difference between the predicted wage of college and high school graduates?
@@ -223,7 +223,6 @@ summary(m)
 
 ## 1. means for each level of am at mean wt.
 emmeans(m, "am")
-marginal_means(m, variables = "am")
 predictions(m, newdata = datagrid(am = 0:1))
 
 ## 2. means for each level of am at wt = 2.5, 3, 3.5.

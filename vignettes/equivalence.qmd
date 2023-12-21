@@ -128,7 +128,7 @@ The `p (Equiv)` column shows that the difference between the average contrasts w
 
 ## Marginal means and `emmeans`
 
-This example shows the equivalence between results produced by the `emmeans` package and the `marginal_means()` function:
+This example shows the equivalence between results produced by the `emmeans` package and the `predictions()` function:
 
 ```{r}
 library(emmeans)
@@ -145,11 +145,13 @@ emmeans(mod, specs = "source") |>
          adjust = "none")
 
 ## {marginaleffects}
-marginal_means(
+predictions(
     mod,
-    variables = "source",
+    newdata = datagrid(grid_type = "balanced"),
+    by = "source",
     hypothesis = "pairwise",
-    equivalence = c(-log(1.25), log(1.25)))
+    equivalence = c(-log(1.25), log(1.25))
+)
 ```
 
 

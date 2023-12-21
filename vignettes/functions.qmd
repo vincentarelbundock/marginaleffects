@@ -13,7 +13,6 @@ tab <- tribble(
   "Slopes"     , "[`slopes()`](reference/slopes.html)",
   ""           , "[`avg_slopes()`](reference/slopes.html)",
   ""           , "[`plot_slopes()`](reference/plot_slopes.html)",
-  "Marginal Means", "[`marginal_means()`](reference/marginal_means.html)",
   "Grids"      , "[`datagrid()`](man/datagrid.html)",
   ""           , "[`datagridcf()`](man/datagrid.html)",
   "Hypothesis & Equivalence", "[`hypotheses()`](reference/hypotheses.html)",
