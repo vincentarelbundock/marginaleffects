@@ -340,7 +340,7 @@ summary(mar)
 avg_slopes(
     mod,
     by = "cyl",
-    newdata = datagridcf(cyl = c(4, 6, 8)))
+    newdata = datagrid(cyl = c(4, 6, 8)), grid_type = "counterfactual")
 ```
 
 ### Adjusted Predictions
@@ -445,7 +445,7 @@ hp           |
 
 #### marginaleffects
 
-You can estimate average counterfactual marginal effects with `slopes()` by using the [`datagridcf()`](man/datagrid.html) to create a counterfactual dataset in which the full original dataset is replicated for each potential value of the `cyl` variable. Then, we tell the `by` argument to average within groups:
+You can estimate average counterfactual marginal effects with `slopes()` by using the [`datagrid()`](man/datagrid.html) to create a counterfactual dataset in which the full original dataset is replicated for each potential value of the `cyl` variable. Then, we tell the `by` argument to average within groups:
 
 ```{r}
 mod <- lm(mpg ~ as.factor(cyl) * hp + wt, data = mtcars)
@@ -454,7 +454,7 @@ avg_slopes(
     mod,
     variables = "hp",
     by = "cyl",
-    newdata = datagridcf(cyl = c(4, 6, 8)))
+    newdata = datagrid(cyl = c(4, 6, 8), grid_type = "counterfactual"))
 ```
 
 This is equivalent to taking the group-wise mean of observation-level marginal effects (without the `by` argument):
@@ -463,7 +463,7 @@ This is equivalent to taking the group-wise mean of observation-level marginal e
 mfx <- slopes(
     mod,
     variables = "hp",
-    newdata = datagridcf(cyl = c(4, 6, 8)))
+    newdata = datagrid(cyl = c(4, 6, 8), grid_type = "counterfactual"))
 aggregate(estimate ~ term + cyl, data = mfx, FUN = mean)
 ```
 
@@ -531,11 +531,11 @@ mod <- lm(mpg ~ as.factor(cyl) * hp + wt, data = mtcars)
 predictions(
     mod,
     by = "cyl",
-    newdata = datagridcf(cyl = c(4, 6, 8)))
+    newdata = datagrid(cyl = c(4, 6, 8), grid_type = "counterfactual"))
 
 predictions(
     mod,
-    newdata = datagridcf(cyl = c(4, 6, 8))) |>
+    newdata = datagrid(cyl = c(4, 6, 8), grid_type = "counterfactual")) |>
     group_by(cyl) |>
     summarize(AAP = mean(estimate))
 ```

@@ -51,8 +51,12 @@ expect_snapshot_plot(p, "plot_comparisons-rr_titanic")
 
 # Issue #725: `newdata` argument in plotting functions
 mod <- glm(vs ~ hp + am, mtcars, family = binomial)
-p1 <- plot_comparisons(mod, variables = "hp", by = "am", newdata = datagridcf(am = 0:1), draw = FALSE)
-p2 <- avg_comparisons(mod, variables = "hp", by = "am", newdata = datagridcf(am = 0:1), draw = FALSE)
+p1 <- plot_comparisons(mod,
+    variables = "hp", by = "am",
+    newdata = datagrid(am = 0:1, grid_type = "counterfactual"),
+    draw = FALSE)
+p2 <- avg_comparisons(mod, variables = "hp", by = "am", draw = FALSE,
+    newdata = datagrid(am = 0:1, grid_type = "counterfactual"))
 expect_equivalent(p1$estimate, p2$estimate)
 expect_equivalent(p1$conf.low, p2$conf.low, tolerance = 1e-6)
 p3 <- plot_comparisons(mod, variables = "hp", by = "am", draw = FALSE)

@@ -20,7 +20,9 @@ mfx <- slopes(
     type = "probs",
     variables = "sex",
     by = "age3",
-    newdata = datagridcf(age3 = c("[0,25)","[25,50)","[50,80]")))
+    newdata = datagrid(
+        age3 = c("[0,25)","[25,50)","[50,80]"),
+        grid_type = "counterfactual"))
 expect_equivalent(nrow(mfx), 9)
 
 

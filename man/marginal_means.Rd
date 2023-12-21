@@ -37,7 +37,7 @@ marginal_means(
 \item Warning: Please avoid modifying your dataset between fitting the model and calling a \code{marginaleffects} function. This can sometimes lead to unexpected results.
 \item \code{NULL} create a grid with all combinations of all categorical predictors in the model. Warning: can be expensive.
 \item Character vector: subset of categorical variables to use when building the balanced grid of predictors. Other variables are held to their mean or mode.
-\item Data frame: A data frame which includes all the predictors in the original model. The full dataset is replicated once for every combination of the focal variables in the \code{variables} argument, using the \code{datagridcf()} function.
+\item Data frame: A data frame which includes all the predictors in the original model. The full dataset is replicated once for every combination of the focal variables in the \code{variables} argument, using the \code{datagrid(grid_type="counterfactual")} function.
 }}
 
 \item{vcov}{Type of uncertainty estimates to report (e.g., for robust standard errors). Acceptable values:

@@ -159,10 +159,12 @@ pctiles <- quantile(dat$Gr_Liv_Area, probs = seq(0, 1, length.out = 101))
 # Select 1000 profiles at random, otherwise this is very memory-intensive
 profiles <- dat[sample(nrow(dat), 1000), ]
 
-# Use datagridcf() to replicate the full dataset 101 times. Each time, we
+# Use a counterfactual grid to replicate the full dataset 101 times. Each time, we
 # replace the value of `Gr_Liv_Area` by one of the percentiles, but keep the
 # other profile features as observed.
-nd <- datagridcf(Gr_Liv_Area = pctiles, newdata = profiles)
+nd <- datagrid(
+  Gr_Liv_Area = pctiles, newdata = profiles,
+  grid_type = "counterfactual")
 
 # Partial dependence plot
 plot_predictions(m,

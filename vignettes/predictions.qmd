@@ -214,12 +214,12 @@ predictions(
     mod,
     type = "response",
     by = "am",
-    newdata = datagridcf(am = 0:1))
+    newdata = datagrid(am = 0:1, grid_type = "counterfactual"))
 
 predictions(
     mod,
     type = "response",
-    newdata = datagridcf(am = 0:1)) |>
+    newdata = datagrid(am = 0:1, grid_type = "counterfactual")) |>
     group_by(am) |>
     summarize(AAP = mean(estimate))
 ```
@@ -230,12 +230,12 @@ Note that the two results are exactly identical when we specify `type="response"
 predictions(
     mod,
     by = "am",
-    newdata = datagridcf(am = 0:1))
+    newdata = datagrid(am = 0:1, grid_type = "counterfactual"))
 
 predictions(
     mod,
     type = "link",
-    newdata = datagridcf(am = 0:1)) |>
+    newdata = datagrid(am = 0:1, grid_type = "counterfactual")) |>
     group_by(am) |>
     summarize(AAP = mod$family$linkinv(mean(estimate)))
 ```

@@ -191,7 +191,9 @@ expect_equivalent(nrow(p), nrow(dat) * 3)
 
 expect_error(predictions(fit, variables = list(race = "all"), newdata = dat), pattern = "Check")
 
-p <- predictions(fit, newdata = datagridcf(race = c("black", "hispan", "white")))
+p <- predictions(fit, newdata = datagrid(
+    race = c("black", "hispan", "white"),
+    grid_type = "counterfactual"))
 expect_equivalent(nrow(p), nrow(dat) * 3)
 
 dat <- transform(mtcars, am = as.logical(am))
@@ -220,7 +222,9 @@ expect_equivalent(nrow(pre), 3)
 pre <- avg_predictions(mod, variables = list(cyl = c(4, 6)))
 expect_inherits(pre, "predictions")
 expect_equivalent(nrow(pre), 2)
-pre <- avg_predictions(mod, by = "cyl", newdata = datagridcf(cyl = c(4, 6)))
+pre <- avg_predictions(mod,
+    by = "cyl",
+    newdata = datagrid(cyl = c(4, 6), grid_type = "counterfactual"))
 expect_inherits(pre, "predictions")
 expect_equivalent(nrow(pre), 2)
 

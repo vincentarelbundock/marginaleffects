@@ -184,8 +184,10 @@ expect_true("qsec" %in% colnames(p))
 
 # Issue #725: `newdata` argument in plotting functions
 mod <- lm(mpg ~ hp + am + factor(cyl), mtcars)
-p1 <- plot_predictions(mod, by = "am", newdata = datagridcf(am = 0:1), draw = FALSE)
-p2 <- avg_predictions(mod, by = "am", newdata = datagridcf(am = 0:1), draw = FALSE)
+p1 <- plot_predictions(mod, by = "am", draw = FALSE,
+    newdata = datagrid(am = 0:1, grid_type = "counterfactual"))
+p2 <- avg_predictions(mod, by = "am", draw = FALSE,
+    newdata = datagrid(am = 0:1, grid_type = "counterfactual"))
 expect_equivalent(p1$estimate, p2$estimate)
 expect_equivalent(p1$conf.low, p2$conf.low)
 p3 <- plot_predictions(mod, by = "am", draw = FALSE)

@@ -28,7 +28,7 @@
 #' + Warning: Please avoid modifying your dataset between fitting the model and calling a `marginaleffects` function. This can sometimes lead to unexpected results.
 #' + `NULL` create a grid with all combinations of all categorical predictors in the model. Warning: can be expensive.
 #' + Character vector: subset of categorical variables to use when building the balanced grid of predictors. Other variables are held to their mean or mode.
-#' + Data frame: A data frame which includes all the predictors in the original model. The full dataset is replicated once for every combination of the focal variables in the `variables` argument, using the `datagridcf()` function.
+#' + Data frame: A data frame which includes all the predictors in the original model. The full dataset is replicated once for every combination of the focal variables in the `variables` argument, using the `datagrid(grid_type="counterfactual")` function.
 #' @param type string indicates the type (scale) of the predictions used to
 #' compute marginal effects or contrasts. This can differ based on the model
 #' type, but will typically be a string such as: "response", "link", "probs",
