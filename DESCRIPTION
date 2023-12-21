@@ -279,7 +279,6 @@ Collate:
     'settings.R'
     'slopes.R'
     'sort.R'
-    'summary.R'
     'tinytest.R'
     'type_dictionary.R'
     'unpack_matrix_cols.R'
