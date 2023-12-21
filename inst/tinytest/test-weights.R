@@ -11,25 +11,22 @@ mod <- suppressWarnings(svyglm(
     design = svydesign(ids = ~1, weights = ~weights, data = dat),
     family = binomial))
 
-p1 <- predictions(mod, newdata = dat)
-p2 <- predictions(mod, wts = "weights", newdata = dat)
-p3 <- predictions(mod, wts = "w", newdata = dat)
-p4 <- predictions(mod, wts = dat$weights)
-expect_false(tidy(p1)$estimate == tidy(p2)$estimate)
-expect_false(tidy(p1)$std.error == tidy(p2)$std.error)
-expect_equivalent(tidy(p2), tidy(p3))
-expect_equivalent(tidy(p2), tidy(p4))
+p1 <- avg_predictions(mod, newdata = dat)
+p2 <- avg_predictions(mod, wts = "weights", newdata = dat)
+p3 <- avg_predictions(mod, wts = "w", newdata = dat)
+p4 <- avg_predictions(mod, wts = dat$weights)
+expect_false(p1$estimate == p2$estimate)
+expect_false(p1$std.error == p2$std.error)
+expect_equivalent(p2, p3)
+expect_equivalent(p2, p4)
 
 
 # by supports weights
-p1 <- predictions(mod, wts = "weights", newdata = dat)
-p1 <- tidy(p1)
+p1 <- avg_predictions(mod, wts = "weights", newdata = dat)
 expect_inherits(p1, "data.frame")
-m1 <- slopes(mod, wts = "weights", newdata = dat, by = "cyl")
-m1 <- tidy(m1)
+m1 <- avg_slopes(mod, wts = "weights", newdata = dat, by = "cyl")
 expect_inherits(m1, "data.frame")
-c1 <- comparisons(mod, wts = "weights", newdata = dat, by = "cyl")
-c1 <- tidy(c1)
+c1 <- avg_comparisons(mod, wts = "weights", newdata = dat, by = "cyl")
 expect_inherits(c1, "data.frame")
 
 
@@ -41,7 +38,6 @@ fit <- lm(re78 ~ treat * (age + educ + race + married + re74),
           data = k, weights = w)
 cmp1 <- comparisons(fit, variables = "treat", wts = "w")
 cmp2 <- comparisons(fit, variables = "treat", wts = "w", comparison = "differenceavg")
-expect_equivalent(tidy(cmp1)$estimate, weighted.mean(cmp1$estimate, k$w))
 expect_equivalent(cmp2$estimate, weighted.mean(cmp1$estimate, k$w))
 
 
