@@ -2,6 +2,10 @@
 
 ## Development
 
+Breaking changes:
+
+* `tidy()` no longer takes the average of estimates in the original model object. Users who want an aggregate estimate should call the relevant `avg_*()` function, or use the `by` argument explicitly. The previous behavior led to unexpected behavior and increased code complexity a lot.
+
 New:
 
 * `datagrid(grid_type = "balanced")` creates a balanced grid with all unique values of categorical predictors. This can be used with `predictions()` to compute marginal means as in the `emmeans` package.

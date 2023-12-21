@@ -312,7 +312,7 @@ slopes <- function(model,
 #' @keywords internal
 #' @export
 marginaleffects <- function(...) {
-    insight::format_warning("This function has been renamed to `slopes()`. The `marginaleffects()` alias will be removed in the near future.")
+    .Deprecated("slopes()")
     slopes(...)
 }
 

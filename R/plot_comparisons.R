@@ -169,6 +169,6 @@ plot_comparisons <- function(model,
 #' @keywords internal
 #' @export
 plot_cco <- function(...) {
-    insight::format_warning("This function has been renamed to `plot_comparisons()`. The `plot_cco()` alias will be removed in the near future.")
+    .Deprecated("plot_comparisons")
     plot_comparisons(...)
 }

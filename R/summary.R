@@ -1,6 +1,7 @@
 #' @noRd
 #' @export
 summary.slopes <- function(object, ...) {
+    .Deprecated("`avg_slopes()` or the `by` argument")
     out <- get_averages(object, ...)
     return(out)
 }
@@ -8,12 +9,20 @@ summary.slopes <- function(object, ...) {
 
 #' @noRd
 #' @export
-summary.predictions <- summary.slopes
+summary.predictions <- function(...) {
+    .Deprecated("`avg_predictions()` or the `by` argument")
+    out <- get_averages(object, ...)
+    return(out)
+}
 
 
 #' @noRd
 #' @export
-summary.comparisons <- summary.slopes
+summary.comparisons <- function(...) {
+    .Deprecated("`avg_comparisons()` or the `by` argument")
+    out <- get_averages(object, ...)
+    return(out)
+}
 
 
 #' @noRd
@@ -25,4 +34,6 @@ summary.marginalmeans <- function(object, ...) {
 
 #' @noRd
 #' @export
-summary.hypotheses <- summary.marginalmeans
+summary.hypotheses <- function(object, ...) {
+    return(object)
+}
