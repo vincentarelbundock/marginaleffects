@@ -82,8 +82,6 @@ website:
             file: man/hypotheses.qmd
           - text: "`inferences`"
             file: man/inferences.qmd
-          - text: "`marginal_means`"
-            file: man/marginal_means.qmd
           - text: "`posterior_draws`"
             file: man/posterior_draws.qmd
           - text: "`datagrid`"
