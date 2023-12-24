@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.451">
+<meta name="generator" content="quarto-1.4.533">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Marginal Effects Zoo – machine_learning</title>
+<title>Marginal Effects Zoo</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -97,6 +97,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -148,11 +149,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </nav>
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/brms.html">Case studies</a></li><li class="breadcrumb-item"><a href="../vignettes/machine_learning.html">Machine Learning</a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
   </nav>
@@ -160,7 +161,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
@@ -465,12 +466,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/marginal_means.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><code>marginal_means</code></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../man/posterior_draws.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>posterior_draws</code></span></a>
   </div>
@@ -510,7 +505,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -626,23 +621,23 @@ Type:  numeric </code></pre>
 <span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">coef_omit =</span> <span class="st">"sex"</span>,</span>
 <span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">coef_rename =</span> coef_rename)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="nbnklbzett" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#nbnklbzett table {
+<div id="lyvhthzubj" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#lyvhthzubj table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#nbnklbzett thead, #nbnklbzett tbody, #nbnklbzett tfoot, #nbnklbzett tr, #nbnklbzett td, #nbnklbzett th {
+#lyvhthzubj thead, #lyvhthzubj tbody, #lyvhthzubj tfoot, #lyvhthzubj tr, #lyvhthzubj td, #lyvhthzubj th {
   border-style: none;
 }
 
-#nbnklbzett p {
+#lyvhthzubj p {
   margin: 0;
   padding: 0;
 }
 
-#nbnklbzett .gt_table {
+#lyvhthzubj .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -668,12 +663,12 @@ Type:  numeric </code></pre>
   border-left-color: #D3D3D3;
 }
 
-#nbnklbzett .gt_caption {
+#lyvhthzubj .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#nbnklbzett .gt_title {
+#lyvhthzubj .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -685,7 +680,7 @@ Type:  numeric </code></pre>
   border-bottom-width: 0;
 }
 
-#nbnklbzett .gt_subtitle {
+#lyvhthzubj .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -697,7 +692,7 @@ Type:  numeric </code></pre>
   border-top-width: 0;
 }
 
-#nbnklbzett .gt_heading {
+#lyvhthzubj .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -709,13 +704,13 @@ Type:  numeric </code></pre>
   border-right-color: #D3D3D3;
 }
 
-#nbnklbzett .gt_bottom_border {
+#lyvhthzubj .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#nbnklbzett .gt_col_headings {
+#lyvhthzubj .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -730,7 +725,7 @@ Type:  numeric </code></pre>
   border-right-color: #D3D3D3;
 }
 
-#nbnklbzett .gt_col_heading {
+#lyvhthzubj .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -750,7 +745,7 @@ Type:  numeric </code></pre>
   overflow-x: hidden;
 }
 
-#nbnklbzett .gt_column_spanner_outer {
+#lyvhthzubj .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -762,15 +757,15 @@ Type:  numeric </code></pre>
   padding-right: 4px;
 }
 
-#nbnklbzett .gt_column_spanner_outer:first-child {
+#lyvhthzubj .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#nbnklbzett .gt_column_spanner_outer:last-child {
+#lyvhthzubj .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#nbnklbzett .gt_column_spanner {
+#lyvhthzubj .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -782,11 +777,11 @@ Type:  numeric </code></pre>
   width: 100%;
 }
 
-#nbnklbzett .gt_spanner_row {
+#lyvhthzubj .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#nbnklbzett .gt_group_heading {
+#lyvhthzubj .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -812,7 +807,7 @@ Type:  numeric </code></pre>
   text-align: left;
 }
 
-#nbnklbzett .gt_empty_group_heading {
+#lyvhthzubj .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -827,15 +822,15 @@ Type:  numeric </code></pre>
   vertical-align: middle;
 }
 
-#nbnklbzett .gt_from_md > :first-child {
+#lyvhthzubj .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#nbnklbzett .gt_from_md > :last-child {
+#lyvhthzubj .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#nbnklbzett .gt_row {
+#lyvhthzubj .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -854,7 +849,7 @@ Type:  numeric </code></pre>
   overflow-x: hidden;
 }
 
-#nbnklbzett .gt_stub {
+#lyvhthzubj .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -867,7 +862,7 @@ Type:  numeric </code></pre>
   padding-right: 5px;
 }
 
-#nbnklbzett .gt_stub_row_group {
+#lyvhthzubj .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -881,15 +876,15 @@ Type:  numeric </code></pre>
   vertical-align: top;
 }
 
-#nbnklbzett .gt_row_group_first td {
+#lyvhthzubj .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#nbnklbzett .gt_row_group_first th {
+#lyvhthzubj .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#nbnklbzett .gt_summary_row {
+#lyvhthzubj .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -899,16 +894,16 @@ Type:  numeric </code></pre>
   padding-right: 5px;
 }
 
-#nbnklbzett .gt_first_summary_row {
+#lyvhthzubj .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#nbnklbzett .gt_first_summary_row.thick {
+#lyvhthzubj .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#nbnklbzett .gt_last_summary_row {
+#lyvhthzubj .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -918,7 +913,7 @@ Type:  numeric </code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#nbnklbzett .gt_grand_summary_row {
+#lyvhthzubj .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -928,7 +923,7 @@ Type:  numeric </code></pre>
   padding-right: 5px;
 }
 
-#nbnklbzett .gt_first_grand_summary_row {
+#lyvhthzubj .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -938,7 +933,7 @@ Type:  numeric </code></pre>
   border-top-color: #D3D3D3;
 }
 
-#nbnklbzett .gt_last_grand_summary_row_top {
+#lyvhthzubj .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -948,11 +943,11 @@ Type:  numeric </code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#nbnklbzett .gt_striped {
+#lyvhthzubj .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#nbnklbzett .gt_table_body {
+#lyvhthzubj .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -961,7 +956,7 @@ Type:  numeric </code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#nbnklbzett .gt_footnotes {
+#lyvhthzubj .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -975,7 +970,7 @@ Type:  numeric </code></pre>
   border-right-color: #D3D3D3;
 }
 
-#nbnklbzett .gt_footnote {
+#lyvhthzubj .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -984,7 +979,7 @@ Type:  numeric </code></pre>
   padding-right: 5px;
 }
 
-#nbnklbzett .gt_sourcenotes {
+#lyvhthzubj .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -998,7 +993,7 @@ Type:  numeric </code></pre>
   border-right-color: #D3D3D3;
 }
 
-#nbnklbzett .gt_sourcenote {
+#lyvhthzubj .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1006,63 +1001,63 @@ Type:  numeric </code></pre>
   padding-right: 5px;
 }
 
-#nbnklbzett .gt_left {
+#lyvhthzubj .gt_left {
   text-align: left;
 }
 
-#nbnklbzett .gt_center {
+#lyvhthzubj .gt_center {
   text-align: center;
 }
 
-#nbnklbzett .gt_right {
+#lyvhthzubj .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#nbnklbzett .gt_font_normal {
+#lyvhthzubj .gt_font_normal {
   font-weight: normal;
 }
 
-#nbnklbzett .gt_font_bold {
+#lyvhthzubj .gt_font_bold {
   font-weight: bold;
 }
 
-#nbnklbzett .gt_font_italic {
+#lyvhthzubj .gt_font_italic {
   font-style: italic;
 }
 
-#nbnklbzett .gt_super {
+#lyvhthzubj .gt_super {
   font-size: 65%;
 }
 
-#nbnklbzett .gt_footnote_marks {
+#lyvhthzubj .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#nbnklbzett .gt_asterisk {
+#lyvhthzubj .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#nbnklbzett .gt_indent_1 {
+#lyvhthzubj .gt_indent_1 {
   text-indent: 5px;
 }
 
-#nbnklbzett .gt_indent_2 {
+#lyvhthzubj .gt_indent_2 {
   text-indent: 10px;
 }
 
-#nbnklbzett .gt_indent_3 {
+#lyvhthzubj .gt_indent_3 {
   text-indent: 15px;
 }
 
-#nbnklbzett .gt_indent_4 {
+#lyvhthzubj .gt_indent_4 {
   text-indent: 20px;
 }
 
-#nbnklbzett .gt_indent_5 {
+#lyvhthzubj .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -1084,7 +1079,7 @@ Type:  numeric </code></pre>
 <td class="gt_row gt_left" headers="">+1</td>
 <td class="gt_row gt_left" headers="">female</td>
 <td class="gt_row gt_center" headers="Logit">-0.101</td>
-<td class="gt_row gt_center" headers="Random Forest">-0.079</td>
+<td class="gt_row gt_center" headers="Random Forest">-0.078</td>
 <td class="gt_row gt_center" headers="XGBoost">-0.098</td>
 </tr>
 <tr class="even">
@@ -1100,7 +1095,7 @@ Type:  numeric </code></pre>
 <td class="gt_row gt_left" headers=""></td>
 <td class="gt_row gt_left" headers="">male</td>
 <td class="gt_row gt_center" headers="Logit">0.101</td>
-<td class="gt_row gt_center" headers="Random Forest">0.079</td>
+<td class="gt_row gt_center" headers="Random Forest">0.078</td>
 <td class="gt_row gt_center" headers="XGBoost">0.098</td>
 </tr>
 <tr class="even">
@@ -1116,7 +1111,7 @@ Type:  numeric </code></pre>
 <td class="gt_row gt_left" headers="">Dream - Biscoe</td>
 <td class="gt_row gt_left" headers="">female</td>
 <td class="gt_row gt_center" headers="Logit">-0.044</td>
-<td class="gt_row gt_center" headers="Random Forest">0.006</td>
+<td class="gt_row gt_center" headers="Random Forest">0.007</td>
 <td class="gt_row gt_center" headers="XGBoost">-0.004</td>
 </tr>
 <tr class="even">
@@ -1132,7 +1127,7 @@ Type:  numeric </code></pre>
 <td class="gt_row gt_left" headers=""></td>
 <td class="gt_row gt_left" headers="">male</td>
 <td class="gt_row gt_center" headers="Logit">0.044</td>
-<td class="gt_row gt_center" headers="Random Forest">-0.006</td>
+<td class="gt_row gt_center" headers="Random Forest">-0.007</td>
 <td class="gt_row gt_center" headers="XGBoost">0.004</td>
 </tr>
 <tr class="even">
@@ -1148,7 +1143,7 @@ Type:  numeric </code></pre>
 <td class="gt_row gt_left" headers="">Torgersen - Biscoe</td>
 <td class="gt_row gt_left" headers="">female</td>
 <td class="gt_row gt_center" headers="Logit">0.015</td>
-<td class="gt_row gt_center" headers="Random Forest">-0.062</td>
+<td class="gt_row gt_center" headers="Random Forest">-0.065</td>
 <td class="gt_row gt_center" headers="XGBoost">0.008</td>
 </tr>
 <tr class="even">
@@ -1164,7 +1159,7 @@ Type:  numeric </code></pre>
 <td class="gt_row gt_left" headers=""></td>
 <td class="gt_row gt_left" headers="">male</td>
 <td class="gt_row gt_center" headers="Logit">-0.015</td>
-<td class="gt_row gt_center" headers="Random Forest">0.062</td>
+<td class="gt_row gt_center" headers="Random Forest">0.065</td>
 <td class="gt_row gt_center" headers="XGBoost">-0.008</td>
 </tr>
 <tr class="even">
@@ -1180,7 +1175,7 @@ Type:  numeric </code></pre>
 <td class="gt_row gt_left" headers="">Chinstrap - Adelie</td>
 <td class="gt_row gt_left" headers="">female</td>
 <td class="gt_row gt_center" headers="Logit">0.562</td>
-<td class="gt_row gt_center" headers="Random Forest">0.153</td>
+<td class="gt_row gt_center" headers="Random Forest">0.159</td>
 <td class="gt_row gt_center" headers="XGBoost">0.441</td>
 </tr>
 <tr class="even">
@@ -1196,7 +1191,7 @@ Type:  numeric </code></pre>
 <td class="gt_row gt_left" headers=""></td>
 <td class="gt_row gt_left" headers="">male</td>
 <td class="gt_row gt_center" headers="Logit">-0.562</td>
-<td class="gt_row gt_center" headers="Random Forest">-0.153</td>
+<td class="gt_row gt_center" headers="Random Forest">-0.159</td>
 <td class="gt_row gt_center" headers="XGBoost">-0.441</td>
 </tr>
 <tr class="even">
@@ -1212,7 +1207,7 @@ Type:  numeric </code></pre>
 <td class="gt_row gt_left" headers="">Gentoo - Adelie</td>
 <td class="gt_row gt_left" headers="">female</td>
 <td class="gt_row gt_center" headers="Logit">0.453</td>
-<td class="gt_row gt_center" headers="Random Forest">0.111</td>
+<td class="gt_row gt_center" headers="Random Forest">0.118</td>
 <td class="gt_row gt_center" headers="XGBoost">0.361</td>
 </tr>
 <tr class="even">
@@ -1228,7 +1223,7 @@ Type:  numeric </code></pre>
 <td class="gt_row gt_left" headers=""></td>
 <td class="gt_row gt_left" headers="">male</td>
 <td class="gt_row gt_center" headers="Logit">-0.453</td>
-<td class="gt_row gt_center" headers="Random Forest">-0.111</td>
+<td class="gt_row gt_center" headers="Random Forest">-0.118</td>
 <td class="gt_row gt_center" headers="XGBoost">-0.361</td>
 </tr>
 <tr class="even">
@@ -1296,37 +1291,37 @@ Type:  numeric </code></pre>
 <pre><code>
        Term      Contrast  Estimate
  count      +1               0.0000
- holiday    False - True    13.3803
- humidity   +1             -20.5750
- month      +1               4.0944
- season     spring - fall  -34.4925
- season     summer - fall  -10.2563
- season     winter - fall    1.0636
- temp       +1               2.2664
- weather    misty - clear   -7.4368
- weather    rain - clear   -59.4923
- weekday    Fri - Sun       76.9486
- weekday    Mon - Sun       84.9454
- weekday    Sat - Sun       24.5726
- weekday    Thu - Sun       92.3018
- weekday    Tue - Sun       90.7003
- weekday    Wed - Sun       93.1085
- windspeed  +1              -0.0417
- workingday False - True  -187.1224
- year       1 - 0           99.4623
+ holiday    False - True     9.9503
+ humidity   +1             -21.1633
+ month      +1               3.9567
+ season     spring - fall  -32.1508
+ season     summer - fall   -8.9743
+ season     winter - fall    2.5731
+ temp       +1               2.5013
+ weather    misty - clear   -7.8831
+ weather    rain - clear   -57.8279
+ weekday    Fri - Sun       66.8895
+ weekday    Mon - Sun       75.3388
+ weekday    Sat - Sun       19.3083
+ weekday    Thu - Sun       82.8564
+ weekday    Tue - Sun       81.6701
+ weekday    Wed - Sun       83.9300
+ windspeed  +1              -0.0381
+ workingday False - True  -192.2548
+ year       1 - 0           98.6050
 
 Columns: term, contrast, estimate 
 Type:  response </code></pre>
 </div>
 </div>
-<p>These results are easy to interpret: An increase of 1 degree Celsius in the temperature is associated with an increase of 2.266 bikes rented per hour.</p>
+<p>These results are easy to interpret: An increase of 1 degree Celsius in the temperature is associated with an increase of 2.501 bikes rented per hour.</p>
 <p>We could obtain the same result manually as follows:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>lo <span class="ot">&lt;-</span> <span class="fu">transform</span>(bikes, <span class="at">temp =</span> temp <span class="sc">-</span> <span class="fl">0.5</span>)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>hi <span class="ot">&lt;-</span> <span class="fu">transform</span>(bikes, <span class="at">temp =</span> temp <span class="sc">+</span> <span class="fl">0.5</span>)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">predict</span>(forest, <span class="at">newdata =</span> hi) <span class="sc">-</span> <span class="fu">predict</span>(forest, <span class="at">newdata =</span> lo))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 3.376185</code></pre>
+<pre><code>[1] 3.729613</code></pre>
 </div>
 </div>
 </section>
@@ -1342,12 +1337,12 @@ Type:  response </code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  Estimate     C: season C: temp    C: weather
-   -39.71 spring - fall      +1 misty - clear
-   -82.20 spring - fall      +1 rain - clear 
-   -16.09 summer - fall      +1 misty - clear
-   -65.37 summer - fall      +1 rain - clear 
-    -5.09 winter - fall      +1 misty - clear
-   -58.45 winter - fall      +1 rain - clear 
+   -37.20 spring - fall      +1 misty - clear
+   -77.82 spring - fall      +1 rain - clear 
+   -14.51 summer - fall      +1 misty - clear
+   -63.01 summer - fall      +1 rain - clear 
+    -3.12 winter - fall      +1 misty - clear
+   -55.61 winter - fall      +1 rain - clear 
 
 Columns: term, contrast_season, contrast_temp, contrast_weather, estimate 
 Type:  response </code></pre>
@@ -1377,18 +1372,24 @@ Type:  response </code></pre>
 <span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Select 1000 profiles at random, otherwise this is very memory-intensive</span></span>
 <span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>profiles <span class="ot">&lt;-</span> dat[<span class="fu">sample</span>(<span class="fu">nrow</span>(dat), <span class="dv">1000</span>), ]</span>
 <span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Use datagridcf() to replicate the full dataset 101 times. Each time, we</span></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Use a counterfactual grid to replicate the full dataset 101 times. Each time, we</span></span>
 <span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a><span class="co"># replace the value of `Gr_Liv_Area` by one of the percentiles, but keep the</span></span>
 <span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a><span class="co"># other profile features as observed.</span></span>
-<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>nd <span class="ot">&lt;-</span> <span class="fu">datagridcf</span>(<span class="at">Gr_Liv_Area =</span> pctiles, <span class="at">newdata =</span> profiles)</span>
-<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Partial dependence plot</span></span>
-<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_predictions</span>(m,</span>
-<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> nd,</span>
-<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"Gr_Liv_Area"</span>, <span class="st">"Bldg_Type"</span>)) <span class="sc">+</span></span>
-<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Living Area"</span>, <span class="at">y =</span> <span class="st">"Predicted log10(Sale Price)"</span>, <span class="at">color =</span> <span class="st">"Building Type"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>nd <span class="ot">&lt;-</span> <span class="fu">datagrid</span>(</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">Gr_Liv_Area =</span> pctiles, <span class="at">newdata =</span> profiles,</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid_type =</span> <span class="st">"counterfactual"</span>)</span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Partial dependence plot</span></span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_predictions</span>(m,</span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> nd,</span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"Gr_Liv_Area"</span>, <span class="st">"Bldg_Type"</span>)) <span class="sc">+</span></span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Living Area"</span>, <span class="at">y =</span> <span class="st">"Predicted log10(Sale Price)"</span>, <span class="at">color =</span> <span class="st">"Building Type"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="machine_learning_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="machine_learning_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>We can replicate this plot using the <code>DALEXtra</code> package:</p>
@@ -1406,7 +1407,11 @@ Type:  response </code></pre>
 <span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">groups =</span> <span class="st">"Bldg_Type"</span>)</span>
 <span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pdp_rf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="machine_learning_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="machine_learning_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Note that <code>marginaleffects</code> and <code>DALEXtra</code> plots are not exactly identical because the randomly sampled profiles are not the same. You can try the same procedure without sampling — or equivalently with <code>N=2930</code> — to see a perfect equivalence.</p>
@@ -1422,7 +1427,11 @@ Type:  response </code></pre>
 <span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_predictions</span>(forest, <span class="at">condition =</span> <span class="st">"temp"</span>, <span class="at">newdata =</span> bikes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="machine_learning_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="machine_learning_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>As documented in <code>?plot_predictions</code>, using <code>condition="temp"</code> is equivalent to creating an equally-spaced grid of <code>temp</code> values, and holding all other predictors at their means or modes. In other words, it is equivalent to:</p>
@@ -1435,7 +1444,11 @@ Type:  response </code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_predictions</span>(forest, <span class="at">by =</span> <span class="st">"temp"</span>, <span class="at">newdata =</span> bikes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="machine_learning_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="machine_learning_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Of course, we can customize the plot using all the standard <code>ggplot2</code> functions:</p>
@@ -1450,7 +1463,11 @@ Type:  response </code></pre>
 <pre><code>`geom_smooth()` using method = 'loess' and formula = 'y ~ x'</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="machine_learning_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="machine_learning_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 
@@ -1587,38 +1604,28 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
     stripColumnClz(note)
-    const typesetMath = (el) => {
-      if (window.MathJax) {
-        // MathJax Typeset
-        window.MathJax.typeset([el]);
-      } else if (window.katex) {
-        // KaTeX Render
-        var mathElements = el.getElementsByClassName("math");
-        var macros = [];
-        for (var i = 0; i < mathElements.length; i++) {
-          var texText = mathElements[i].firstChild;
-          if (mathElements[i].tagName == "SPAN") {
-            window.katex.render(texText.data, mathElements[i], {
-              displayMode: mathElements[i].classList.contains('display'),
-              throwOnError: false,
-              macros: macros,
-              fleqn: false
-            });
-          }
-        }
-      }
-    }
     if (id === null || id.startsWith('sec-')) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
       if (note.children && note.children.length > 2) {
-        for (let i = 0; i < 2; i++) {
-          container.appendChild(note.children[i].cloneNode(true));
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
         }
-        typesetMath(container);
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
         return container.innerHTML
       } else {
-        typesetMath(note);
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
         return note.innerHTML;
       }
     } else {
@@ -1627,7 +1634,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (anchorLink) {
         anchorLink.remove();
       }
-      typesetMath(note);
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
       return note.innerHTML;
     }
   }

@@ -62,6 +62,7 @@ Suggests:
     causaldata,
     collapse,
     conflicted,
+    countrycode,
     covr,
     crch,
     DALEXtra,

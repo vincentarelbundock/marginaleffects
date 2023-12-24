@@ -371,7 +371,7 @@ mod_cat <- lm(mpg ~ am + cyl + hp, data = dat)
 dat = mtcars \
   .with_columns(pl.col("am").cast(pl.Boolean),
                 pl.col("cyl").cast(pl.Utf8))
-mod_cat = smf.ols('mpg ~ am + cyl + hp', data=dat).fit()
+mod_cat = smf.ols('mpg ~ am + cyl + hp', data=dat.to_pandas()).fit()
 ```
 :::
 
