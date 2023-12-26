@@ -304,16 +304,35 @@ plot_predictions(mod, condition = list("hp", "wt" = "threenum", "am"))
 ```
 ### Python
 ```{python}
-p = plot_predictions(mod, condition = ["hp", "wt"])
+cond = {
+  "hp": None,
+  "wt": [mtcars["wt"].mean() - mtcars["wt"].std(),
+         mtcars["wt"].mean(),
+         mtcars["wt"].mean() + mtcars["wt"].std()],
+  "am": None
+}
+p = plot_predictions(mod, condition = cond)
 p.show()
 ```
 :::
 
 This plot shows how the derivative of `mpg` with respect to `am` varies as a function of `wt` and `hp`:
 
+::: {.panel-tabset group="language"}
+### R
 ```{r}
 plot_slopes(mod, variables = "am", condition = list("hp", "wt" = "minmax"))
 ```
+### Python
+```{python}
+p = plot_slopes(mod,
+  variables = "am",
+  condition = {"hp": None, "wt": [mtcars["wt"].min(), mtcars["wt"].max()]}
+)
+p.show()
+```
+:::
+
 
 See this vignette for more information: [Plots, interactions, predictions, contrasts, and slopes](plot.html)
 
@@ -376,7 +395,7 @@ mod_cat <- lm(mpg ~ am + cyl + hp, data = dat)
 ```
 ### Python
 ```{python}
-dat = mtcars \
+dat = pl.read_csv("https://vincentarelbundock.github.io/Rdatasets/csv/datasets/mtcars.csv") \
   .with_columns(pl.col("am").cast(pl.Boolean),
                 pl.col("cyl").cast(pl.Utf8))
 mod_cat = smf.ols('mpg ~ am + cyl + hp', data=dat.to_pandas()).fit()
