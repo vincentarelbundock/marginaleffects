@@ -548,7 +548,7 @@ Now, imagine that for theoretical (or substantive or clinical) reasons, we only 
 avg_slopes(mod, equivalence = c(-2, 2))
 ```
 ### Python
-```{python, eval = FALSE}
+```{python}
 s = avg_slopes(mod, equivalence = [-2., 2.])
 print(s)
 ```
