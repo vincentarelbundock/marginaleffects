@@ -262,7 +262,6 @@ predictions(
 p = predictions(
   mod,
   newdata = datagrid(
-    mod,
     am = [0, 1],
     wt = [mtcars["wt"].min(), mtcars["wt"].max()]))
 print(p)
@@ -311,8 +310,7 @@ cond = {
          mtcars["wt"].mean() + mtcars["wt"].std()],
   "am": None
 }
-p = plot_predictions(mod, condition = cond)
-p.show()
+plot_predictions(mod, condition = cond)
 ```
 :::
 
@@ -325,11 +323,10 @@ plot_slopes(mod, variables = "am", condition = list("hp", "wt" = "minmax"))
 ```
 ### Python
 ```{python}
-p = plot_slopes(mod,
+plot_slopes(mod,
   variables = "am",
   condition = {"hp": None, "wt": [mtcars["wt"].min(), mtcars["wt"].max()]}
 )
-p.show()
 ```
 :::
 
@@ -416,7 +413,7 @@ avg_predictions(
 ```{python, eval = FALSE}
 predictions(
   mod_cat,
-  newdata = datagrid(mod_cat, cyl = dat["cyl"].unique(), am = dat["am"].unique()),
+  newdata = datagrid(grid_type = "balanced"),
   by = "am")
 print(p)
 ```
@@ -497,7 +494,7 @@ slopes(
 s = slopes(
   mod,
   variables = "drat",
-  newdata = datagrid(mod, qsec = [mtcars["qsec"].min(), mtcars["qsec"].max()]))
+  newdata = datagrid(qsec = [mtcars["qsec"].min(), mtcars["qsec"].max()]))
 print(s)
 ```
 :::
@@ -519,7 +516,7 @@ s = slopes(
   mod,
   hypothesis = "b1 = b2",
   variables = "drat",
-  newdata = datagrid(mod, qsec = [mtcars["qsec"].min(), mtcars["qsec"].max()]))
+  newdata = datagrid(qsec = [mtcars["qsec"].min(), mtcars["qsec"].max()]))
 print(s)
 ```
 :::
