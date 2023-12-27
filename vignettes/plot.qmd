@@ -117,6 +117,8 @@ Note that the values at each end of the x-axis correspond to the numerical resul
 
 We can include a 3rd conditioning variable, specify what values we want to consider, supply `R` functions to compute summaries, and use one of several string shortcuts for common reference values ("threenum", "minmax", "quartile", etc.):
 
+::: {.panel-tabset group="language"}
+### R
 ```{r}
 plot_predictions(
     mod,
@@ -125,6 +127,18 @@ plot_predictions(
         "bill_length_mm" = "threenum",
         "species" = unique))
 ```
+### Python
+```{python}
+plot_predictions(
+    mod,
+    condition = {
+        "flipper_length_mm": list(range(180, 221)),
+        "bill_length_mm": "threenum",
+        "species": dat["species"].unique(),
+        }
+)
+```
+:::
 
 See `?plot_predictions` for more information.
 
