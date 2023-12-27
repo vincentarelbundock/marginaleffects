@@ -34,6 +34,8 @@ Those functions can be used to plot two kinds of quantities:
 
 To begin, let's download data and fit a model:
 
+::: {.panel-tabset group="language"}
+### R
 ```{r}
 ## libraries
 library(ggplot2)
@@ -52,6 +54,25 @@ dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpengui
 
 mod <- lm(body_mass_g ~ flipper_length_mm * species * bill_length_mm + island, data = dat)
 ```
+### Python
+
+```{python}
+import statsmodels.formula.api as smf
+from marginaleffects import *
+from plotnine import *
+import polars as pl
+
+# visual theme
+theme_set(theme_minimal())
+
+dat = pl.read_csv("https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv")
+
+mod = smf.ols(
+  "body_mass_g ~ flipper_length_mm * species * bill_length_mm + island", 
+  data = dat.to_pandas()).fit()
+```
+:::
+
 
 ## Predictions
 
@@ -59,16 +80,38 @@ mod <- lm(body_mass_g ~ flipper_length_mm * species * bill_length_mm + island, d
 
 We call a prediction "conditional" when it is made on a grid of user-specified values. For example, we predict penguins' body mass for different values of flipper length and species:
 
+::: {.panel-tabset group="language"}
+### R
 ```{r}
 pre <- predictions(mod, newdata = datagrid(flipper_length_mm = c(172, 231), species = unique))
 pre
 ```
+### Python
+
+```{python}
+pre = predictions(
+  mod,
+  newdata = datagrid(
+    flipper_length_mm = [172, 231], 
+    species = dat["species"].unique(),
+    model = mod)
+)
+pre
+```
+:::
 
 The `condition` argument of the `plot_predictions()` function can be used to build meaningful grids of predictor values somewhat more easily:
 
+::: {.panel-tabset group="language"}
+### R
 ```{r}
 plot_predictions(mod, condition = c("flipper_length_mm", "species"))
 ```
+### Python
+```{python}
+plot_predictions(mod, condition = ["flipper_length_mm", "species"])
+```
+:::
 
 Note that the values at each end of the x-axis correspond to the numerical results produced above. For example, the predicted outcome for a Gentoo with 231mm flippers is `r round(pre$estimate[pre$species == "Gentoo" & pre$flipper_length_mm == 231])`.
 
