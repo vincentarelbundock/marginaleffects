@@ -12,12 +12,12 @@ odds, lift, slopes, and so on.
 
 Unfortunately, computing these quantities—along with associated standard
 errors—can be a tedious and error-prone task. This problem is compounded
-by the fact that modeling packages in and produce objects with varied
-structures, which hold different information. This means that end-users
-often have to write customized code to interpret the estimates obtained
-by fitting Linear, GLM, GAM, Bayesian, Mixed Effects, and other model
-types. This can lead to wasted effort, confusion, and mistakes, and it
-can hinder the implementation of best practices.
+by the fact that modeling packages in `R` and `Python` produce objects
+with varied structures, which hold different information. This means
+that end-users often have to write customized code to interpret the
+estimates obtained by fitting Linear, GLM, GAM, Bayesian, Mixed Effects,
+and other model types. This can lead to wasted effort, confusion, and
+mistakes, and it can hinder the implementation of best practices.
 
 ## Marginal Effects Zoo: The Book
 
