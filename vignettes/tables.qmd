@@ -29,7 +29,7 @@ library(marginaleffects)
 options(modelsummary_factory_default = "gt")
 
 mod <- glm(am ~ wt + drat, family = binomial, data = mtcars)
-mfx <- slopes(mod)
+mfx <- avg_slopes(mod)
 
 modelsummary(mfx)
 ```

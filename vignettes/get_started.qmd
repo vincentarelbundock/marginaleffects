@@ -428,16 +428,26 @@ The `marginaleffects` package reports uncertainty estimates for all the quantiti
 
 The [Standard Errors vignette](https://marginaleffects.com/vignettes/uncertainty.html) offers more detail. For now, it suffices to show to examples. First, we use the `vcov` argument to report "HC3" (heteroskedasticity-consistent) standard errors. 
 
+::: {.panel-tabset group="language"}
+### R
 ```{r}
 avg_predictions(mod, by = "am", vcov = "HC3")
 ```
+### Python
+Not supported yet.
+:::
 
 Second, we use the `inferences()` function to compute bootstrap intervals using 500 resamples:
 
+::: {.panel-tabset group="language"}
+### R
 ```{r}
 avg_predictions(mod, by = "am") |>
   inferences(method = "boot", R = 500)
 ```
+### Python
+Not supported yet.
+:::
 
 
 ## Tests
