@@ -1385,6 +1385,10 @@ Type:  response </code></pre>
 <h2 class="anchored" data-anchor-id="uncertainty">Uncertainty</h2>
 <p>The <code>marginaleffects</code> package reports uncertainty estimates for all the quantities it computes: predictions, comparisons, slopes, etc. By default, standard errors are computed using <a href="https://en.wikipedia.org/wiki/Delta_method">the delta method</a> and classical standard errors. These standard errors are fast to compute, and have appealing properties some some, but not all cases. <code>marginaleffects</code> supports several alternatives, including: Huber-White Heteroskedasticity Robust, Cluster-Robust, Bootstrap, and Simulation-based uncertainty estimates.</p>
 <p>The <a href="https://marginaleffects.com/vignettes/uncertainty.html">Standard Errors vignette</a> offers more detail. For now, it suffices to show to examples. First, we use the <code>vcov</code> argument to report “HC3” (heteroskedasticity-consistent) standard errors.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-19-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-19-1" role="tab" aria-controls="tabset-19-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-19-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-19-2" role="tab" aria-controls="tabset-19-2" aria-selected="false">Python</a></li></ul>
+<div class="tab-content" data-group="language">
+<div id="tabset-19-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-19-1-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_predictions</span>(mod, <span class="at">by =</span> <span class="st">"am"</span>, <span class="at">vcov =</span> <span class="st">"HC3"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1397,18 +1401,34 @@ Columns: am, estimate, std.error, statistic, p.value, s.value, conf.low, conf.hi
 Type:  response </code></pre>
 </div>
 </div>
+</div>
+<div id="tabset-19-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-19-2-tab">
+<p>Not supported yet.</p>
+</div>
+</div>
+</div>
 <p>Second, we use the <code>inferences()</code> function to compute bootstrap intervals using 500 resamples:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-20-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-20-1" role="tab" aria-controls="tabset-20-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-20-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-20-2" role="tab" aria-controls="tabset-20-2" aria-selected="false">Python</a></li></ul>
+<div class="tab-content" data-group="language">
+<div id="tabset-20-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-20-1-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_predictions</span>(mod, <span class="at">by =</span> <span class="st">"am"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inferences</span>(<span class="at">method =</span> <span class="st">"boot"</span>, <span class="at">R =</span> <span class="dv">500</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
  am Estimate Std. Error 2.5 % 97.5 %
-  0     17.1      0.624  16.2   18.5
-  1     24.4      3.011  21.2   27.9
+  0     17.1      0.589  16.3   18.6
+  1     24.4      3.029  15.5   27.1
 
 Columns: am, estimate, std.error, conf.low, conf.high 
 Type:  response </code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-20-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-20-2-tab">
+<p>Not supported yet.</p>
+</div>
 </div>
 </div>
 </section>
@@ -1417,9 +1437,9 @@ Type:  response </code></pre>
 <p>The <code>hypotheses()</code> function and the <code>hypothesis</code> argument can be used to conduct linear and non-linear hypothesis tests on model coefficients, or on any of the quantities computed by the functions introduced above.</p>
 <p>Consider this model:</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-19-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-19-1" role="tab" aria-controls="tabset-19-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-19-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-19-2" role="tab" aria-controls="tabset-19-2" aria-selected="false">Python</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-21-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-21-1" role="tab" aria-controls="tabset-21-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-21-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-21-2" role="tab" aria-controls="tabset-21-2" aria-selected="false">Python</a></li></ul>
 <div class="tab-content" data-group="language">
-<div id="tabset-19-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-19-1-tab">
+<div id="tabset-21-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-21-1-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> qsec <span class="sc">*</span> drat, <span class="at">data =</span> mtcars)</span>
 <span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(mod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1429,7 +1449,7 @@ Type:  response </code></pre>
 </div>
 </div>
 </div>
-<div id="tabset-19-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-19-2-tab">
+<div id="tabset-21-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-21-2-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb90"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a>mod <span class="op">=</span> smf.ols(<span class="st">'mpg ~ qsec * drat'</span>, data<span class="op">=</span>mtcars).fit()</span>
 <span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(mod.params)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1457,9 +1477,9 @@ Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.
 </div>
 <p>We can ask the same question but refer to parameters by position, with indices <code>b1</code>, <code>b2</code>, <code>b3</code>, etc.:</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-20-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-20-1" role="tab" aria-controls="tabset-20-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-20-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-20-2" role="tab" aria-controls="tabset-20-2" aria-selected="false">Python</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-22-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-22-1" role="tab" aria-controls="tabset-22-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-22-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-22-2" role="tab" aria-controls="tabset-22-2" aria-selected="false">Python</a></li></ul>
 <div class="tab-content" data-group="language">
-<div id="tabset-20-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-20-1-tab">
+<div id="tabset-22-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-22-1-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hypotheses</span>(mod, <span class="st">"b3 = 2 * b2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1471,7 +1491,7 @@ Columns: term, estimate, std.error, statistic, p.value, s.value, conf.low, conf.
 </div>
 </div>
 </div>
-<div id="tabset-20-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-20-2-tab">
+<div id="tabset-22-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-22-2-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb96"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a>h <span class="op">=</span> hypotheses(mod, <span class="st">"b3 = 2 * b2"</span>)</span>
 <span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(h)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1493,9 +1513,9 @@ Columns: term, estimate, std_error, statistic, p_value, s_value, conf_low, conf_
 </div>
 <p>The main functions in <code>marginaleffects</code> all have a <code>hypothesis</code> argument, which means that we can do complex model testing. For example, consider two slope estimates:</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-21-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-21-1" role="tab" aria-controls="tabset-21-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-21-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-21-2" role="tab" aria-controls="tabset-21-2" aria-selected="false">Python</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-23-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-23-1" role="tab" aria-controls="tabset-23-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-23-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-23-2" role="tab" aria-controls="tabset-23-2" aria-selected="false">Python</a></li></ul>
 <div class="tab-content" data-group="language">
-<div id="tabset-21-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-21-1-tab">
+<div id="tabset-23-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-23-1-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="fu">slopes</span>(</span>
 <span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a>  mod,</span>
@@ -1512,7 +1532,7 @@ Type:  response </code></pre>
 </div>
 </div>
 </div>
-<div id="tabset-21-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-21-2-tab">
+<div id="tabset-23-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-23-2-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb100"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> slopes(</span>
 <span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a>  mod,</span>
@@ -1538,9 +1558,9 @@ Columns: qsec, rowid, term, contrast, estimate, std_error, statistic, p_value, s
 </div>
 <p>Are these two slopes significantly different from one another? To test this, we can use the <code>hypothesis</code> argument:</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-22-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-22-1" role="tab" aria-controls="tabset-22-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-22-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-22-2" role="tab" aria-controls="tabset-22-2" aria-selected="false">Python</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-24-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-24-1" role="tab" aria-controls="tabset-24-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-24-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-24-2" role="tab" aria-controls="tabset-24-2" aria-selected="false">Python</a></li></ul>
 <div class="tab-content" data-group="language">
-<div id="tabset-22-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-22-1-tab">
+<div id="tabset-24-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-24-1-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="fu">slopes</span>(</span>
 <span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a>  mod,</span>
@@ -1557,7 +1577,7 @@ Type:  response </code></pre>
 </div>
 </div>
 </div>
-<div id="tabset-22-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-22-2-tab">
+<div id="tabset-24-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-24-2-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb104"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> slopes(</span>
 <span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a>  mod,</span>
@@ -1583,9 +1603,9 @@ Columns: term, estimate, std_error, statistic, p_value, s_value, conf_low, conf_
 </div>
 <p>Alternatively, we can also refer to values with term names (when they are unique):</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-23-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-23-1" role="tab" aria-controls="tabset-23-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-23-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-23-2" role="tab" aria-controls="tabset-23-2" aria-selected="false">Python</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-25-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-25-1" role="tab" aria-controls="tabset-25-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-25-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-25-2" role="tab" aria-controls="tabset-25-2" aria-selected="false">Python</a></li></ul>
 <div class="tab-content" data-group="language">
-<div id="tabset-23-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-23-1-tab">
+<div id="tabset-25-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-25-1-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb106"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_slopes</span>(mod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1608,7 +1628,7 @@ Type:  response </code></pre>
 </div>
 </div>
 </div>
-<div id="tabset-23-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-23-2-tab">
+<div id="tabset-25-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-25-2-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb110"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> avg_slopes(mod)</span>
 <span id="cb110-2"><a href="#cb110-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(s)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1645,9 +1665,9 @@ Columns: term, estimate, std_error, statistic, p_value, s_value, conf_low, conf_
 </div>
 <p>Now, imagine that for theoretical (or substantive or clinical) reasons, we only care about slopes larger than 2. We can use the <code>equivalence</code> argument to conduct an equivalence test:</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-24-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-24-1" role="tab" aria-controls="tabset-24-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-24-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-24-2" role="tab" aria-controls="tabset-24-2" aria-selected="false">Python</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-26-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-26-1" role="tab" aria-controls="tabset-26-1" aria-selected="true">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-26-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-26-2" role="tab" aria-controls="tabset-26-2" aria-selected="false">Python</a></li></ul>
 <div class="tab-content" data-group="language">
-<div id="tabset-24-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-24-1-tab">
+<div id="tabset-26-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-26-1-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb114"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="fu">avg_slopes</span>(mod, <span class="at">equivalence =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1661,10 +1681,23 @@ Type:  response </code></pre>
 </div>
 </div>
 </div>
-<div id="tabset-24-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-24-2-tab">
+<div id="tabset-26-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-26-2-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb116"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> avg_slopes(mod, equivalence <span class="op">=</span> [<span class="op">-</span><span class="fl">2.</span>, <span class="fl">2.</span>])</span>
 <span id="cb116-2"><a href="#cb116-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(s)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>shape: (2, 9)
+┌──────┬─────────────┬──────────┬───────────┬───┬──────────┬──────┬───────┬───────┐
+│ Term ┆ Contrast    ┆ Estimate ┆ Std.Error ┆ … ┆ P(&gt;|z|)  ┆ S    ┆ 2.5%  ┆ 97.5% │
+│ ---  ┆ ---         ┆ ---      ┆ ---       ┆   ┆ ---      ┆ ---  ┆ ---   ┆ ---   │
+│ str  ┆ str         ┆ str      ┆ str       ┆   ┆ str      ┆ str  ┆ str   ┆ str   │
+╞══════╪═════════════╪══════════╪═══════════╪═══╪══════════╪══════╪═══════╪═══════╡
+│ drat ┆ mean(dY/dX) ┆ 7.22     ┆ 1.37      ┆ … ┆ 1.22e-07 ┆ 23   ┆ 4.55  ┆ 9.9   │
+│ qsec ┆ mean(dY/dX) ┆ 1.12     ┆ 0.432     ┆ … ┆ 0.00922  ┆ 6.76 ┆ 0.278 ┆ 1.97  │
+└──────┴─────────────┴──────────┴───────────┴───┴──────────┴──────┴───────┴───────┘
+
+Columns: term, contrast, estimate, std_error, statistic, p_value, s_value, conf_low, conf_high, statistic_noninf, statistic_nonsup, p_value_noninf, p_value_nonsup, p_value_equiv</code></pre>
+</div>
 </div>
 </div>
 </div>

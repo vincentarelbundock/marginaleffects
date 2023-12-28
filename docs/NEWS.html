@@ -522,6 +522,7 @@ ul.task-list li input[type="checkbox"] {
 <h1>News</h1>
 <section id="development" class="level2">
 <h2 class="anchored" data-anchor-id="development">Development</h2>
+<p>This release represents a major step towards 1.0.0. Some functions are renamed and now raise deprecation warnings. After 1.0.0, the API will become much more stable, and any change will have to be very deliberate with much lead time and deprecation delays.</p>
 <p>Breaking changes:</p>
 <ul>
 <li><code>tidy()</code> no longer takes the average of estimates in the original model object. Users who want an aggregate estimate should call the relevant <code>avg_*()</code> function, or use the <code>by</code> argument explicitly. The previous behavior led to unexpected behavior and increased code complexity a lot.</li>
@@ -533,6 +534,7 @@ ul.task-list li input[type="checkbox"] {
 </ul>
 <p>Deprecation warnings:</p>
 <ul>
+<li><code>deltamethod()</code> has been named <code>hypotheses()</code> for a while. We now issue a deprecation warning and will be removed eventually.</li>
 <li><code>datagridcf()</code> will eventually be deprecated and removed from the package. We will raise a warning for at least one year before removing the function. Identical results can be obtained with <code>datagrid(..., grid_type="counterfactual")</code></li>
 <li><code>marginal_means()</code> will eventually be deprecated and removed from the package. We will raise a warning for at least one year before removing the function. Identical results can be obtained using the <code>predictions()</code> function and the <code>grid_type="balanced"</code> argument of <code>datagrid()</code>. Examples are in the marginal means vignette on the website.</li>
 </ul>
