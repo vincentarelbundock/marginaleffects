@@ -101,14 +101,3 @@ plot_slopes <- function(model,
     return(out)
 }
 
-
-#' `plot_slopes()` is an alias to `plot_slopes()`
-#'
-#' This alias is kept for backward compatibility.
-#' @inherit plot_predictions
-#' @keywords internal
-#' @export
-plot_cme <- function(...) {
-    .Deprecated("plot_slopes()")
-    plot_slopes(...)
-}

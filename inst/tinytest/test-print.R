@@ -11,8 +11,6 @@ expect_snapshot_print(predictions(mod, by = "gear"), "print-predictions_by")
 # expect_snapshot_print(comparisons(mod), "print-comparisons")
 expect_snapshot_print(comparisons(mod, by = "gear"), "print-comparisons_by")
 
-expect_snapshot_print(marginal_means(mod, "gear"), "print-marginal_means")
-
 
 # Issue #638: keep datagrid() explicit variables in print
 dat <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/Stat2Data/Titanic.csv")

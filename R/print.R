@@ -276,6 +276,3 @@ print.comparisons <- print.marginaleffects
 #' @export
 print.slopes <- print.marginaleffects
 
-#' @noRd
-#' @export
-print.marginalmeans <- print.marginaleffects

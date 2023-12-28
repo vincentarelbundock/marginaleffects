@@ -190,13 +190,3 @@ plot_predictions <- function(model,
 
 
 
-#' `plot_predictions()` is an alias to `plot_predictions()`
-#'
-#' This alias is kept for backward compatibility.
-#' @inherit plot_predictions
-#' @keywords internal
-#' @export
-plot_cap <- function(...) {
-    .Deprecated("plot_predictions()")
-    plot_predictions(...)
-}

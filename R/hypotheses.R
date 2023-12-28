@@ -435,11 +435,3 @@ hypotheses <- function(
 
 
 
-#' `deltamethod()` is an alias to `hypotheses()`
-#' 
-#' This alias is kept for backward compatibility.
-#'
-#' @inherit marginaleffects
-#' @keywords internal
-#' @export
-deltamethod <- hypotheses

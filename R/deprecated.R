@@ -1,149 +1,58 @@
-#' DEPRECATED FUNCTION
-#'
-#' @description
-#' This function will be removed from the package eventually. Please use the `predictions()` function instead:
-#' 
-#' \preformatted{
-#' library(marginaleffects)
-#' mod <- lm(mpg ~ hp + am + carb, data = mtcars)
-#' predictions(mod,
-#'   by = "am",
-#'   newdata = datagrid(grid_type = "balanced")
-#' )
-#' }
-#' 
-#' See the Marginal Means vignette for details and tutorials at: <https://marginaleffects.com/vignettes/marginalmeans.html>
-#' 
-#' Marginal means are adjusted predictions, averaged across a grid of categorical predictors,
-#' holding other numeric predictors at their means. To learn more, read the marginal means vignette, visit the
-#' package website, or scroll down this page for a full list of vignettes:
-#'
-#' * <https://marginaleffects.com/vignettes/marginalmeans.html>
-#' * <https://marginaleffects.com/>
-#'
-#' @param variables Focal variables
-#' + Character vector of variable names: compute marginal means for each category of the listed variables.
-#' + `NULL`: calculate marginal means for all logical, character, or factor variables in the dataset used to fit `model`. Hint:  Set `cross=TRUE` to compute marginal means for combinations of focal variables.
-#' @param newdata Grid of predictor values over which we marginalize.
-#' + Warning: Please avoid modifying your dataset between fitting the model and calling a `marginaleffects` function. This can sometimes lead to unexpected results.
-#' + `NULL` create a grid with all combinations of all categorical predictors in the model. Warning: can be expensive.
-#' + Character vector: subset of categorical variables to use when building the balanced grid of predictors. Other variables are held to their mean or mode.
-#' + Data frame: A data frame which includes all the predictors in the original model. The full dataset is replicated once for every combination of the focal variables in the `variables` argument, using the `datagrid(grid_type="counterfactual")` function.
-#' @param type string indicates the type (scale) of the predictions used to
-#' compute marginal effects or contrasts. This can differ based on the model
-#' type, but will typically be a string such as: "response", "link", "probs",
-#' or "zero". When an unsupported string is entered, the model-specific list of
-#' acceptable values is returned in an error message. When `type` is `NULL`, the
-#' first entry in the error message is used by default.
-#' @param wts character value. Weights to use in the averaging.
-#' + "equal": each combination of variables in `newdata` gets equal weight.
-#' + "cells": each combination of values for the variables in the `newdata` gets a weight proportional to its frequency in the original data.
-#' + "proportional": each combination of values for the variables in `newdata` -- except for those in the `variables` argument -- gets a weight proportional to its frequency in the original data.
-#' @param cross TRUE or FALSE
-#' * `FALSE` (default): Marginal means are computed for each predictor individually.
-#' * `TRUE`: Marginal means are computed for each combination of predictors specified in the `variables` argument.
-#' @param by Collapse marginal means into categories. Data frame with a `by` column of group labels, and merging columns shared by `newdata` or the data frame produced by calling the same function without the `by` argument.
-#' @inheritParams slopes
-#' @inheritParams predictions
-#' @inheritParams comparisons
-#' @details
-#'   This function begins by calling the `predictions` function to obtain a
-#'   grid of predictors, and adjusted predictions for each cell. The grid
-#'   includes all combinations of the categorical variables listed in the
-#'   `variables` and `newdata` arguments, or all combinations of the
-#'   categorical variables used to fit the model if `newdata` is `NULL`.
-#'   In the prediction grid, numeric variables are held at their means.
-#'
-#'   After constructing the grid and filling the grid with adjusted predictions,
-#'   `marginal_means` computes marginal means for the variables listed in the
-#'   `variables` argument, by average across all categories in the grid.
-#'
-#'   `marginal_means` can only compute standard errors for linear models, or for
-#'   predictions on the link scale, that is, with the `type` argument set to
-#'   "link".
-#'
-#'   The `marginaleffects` website compares the output of this function to the
-#'   popular `emmeans` package, which provides similar but more advanced
-#'   functionality: https://marginaleffects.com/
-#'
-#' @template deltamethod
-#' @template model_specific_arguments
-#' @template bayesian
-#' @template equivalence
-#' @template type
-#' @template references
-#'
-#' @return Data frame of marginal means with one row per variable-value combination.
-#' @export
 #' @keywords internal
-#' @examples
-#' library(marginaleffects)
-#'
-#' # simple marginal means for each level of `cyl`
-#' dat <- mtcars
-#' dat$carb <- factor(dat$carb)
-#' dat$cyl <- factor(dat$cyl)
-#' dat$am <- as.logical(dat$am)
-#' mod <- lm(mpg ~ carb + cyl + am, dat)
-#'
-#' marginal_means(
-#'   mod,
-#'   variables = "cyl")
-#'
-#' # collapse levels of cyl by averaging
-#' by <- data.frame(
-#'   cyl = c(4, 6, 8),
-#'   by = c("4 & 6", "4 & 6", "8"))
-#' marginal_means(mod,
-#'   variables = "cyl",
-#'   by = by)
-#'
-#' # pairwise differences between collapsed levels
-#' marginal_means(mod,
-#'   variables = "cyl",
-#'   by = by,
-#'   hypothesis = "pairwise")
-#'
-#' # cross
-#' marginal_means(mod,
-#'   variables = c("cyl", "carb"),
-#'   cross = TRUE)
-#'
-#' # collapsed cross
-#' by <- expand.grid(
-#'   cyl = unique(mtcars$cyl),
-#'   carb = unique(mtcars$carb))
-#' by$by <- ifelse(
-#'   by$cyl == 4,
-#'   paste("Control:", by$carb),
-#'   paste("Treatment:", by$carb))
-#'
-#'
-#' # Convert numeric variables to categorical before fitting the model
-#' dat <- mtcars
-#' dat$am <- as.logical(dat$am)
-#' dat$carb <- as.factor(dat$carb)
-#' mod <- lm(mpg ~ hp + am + carb, data = dat)
-#'
-#' # Compute and summarize marginal means
-#' marginal_means(mod)
-#'
-#' # Contrast between marginal means (carb2 - carb1), or "is the 1st marginal means equal to the 2nd?"
-#' # see the vignette on "Hypothesis Tests and Custom Contrasts" on the `marginaleffects` website.
-#' lc <- c(-1, 1, 0, 0, 0, 0)
-#' marginal_means(mod, variables = "carb", hypothesis = "b2 = b1")
-#'
-#' marginal_means(mod, variables = "carb", hypothesis = lc)
-#'
-#' # Multiple custom contrasts
-#' lc <- matrix(c(
-#'     -2, 1, 1, 0, -1, 1,
-#'     -1, 1, 0, 0, 0, 0
-#'     ),
-#'   ncol = 2,
-#'   dimnames = list(NULL, c("A", "B")))
-#' marginal_means(mod, variables = "carb", hypothesis = lc)
-#'
+#' @export
+deltamethod <- function(...) {
+    .Deprecated("hypotheses()")
+}
+
+
+#' @keywords internal
+#' @export
+marginaleffects <- function(...) {
+    .Deprecated("slopes()")
+    slopes(...)
+}
+
+
+#' @keywords internal
+#' @export
+meffects <- marginaleffects
+
+
+
+#' @keywords internal
+#' @export
+plot_cco <- function(...) {
+    .Deprecated("plot_comparisons")
+    plot_comparisons(...)
+}
+
+
+#' @keywords internal
+#' @export
+plot_cme <- function(...) {
+    .Deprecated("plot_slopes()")
+    plot_slopes(...)
+}
+
+
+#' @keywords internal
+#' @export
+plot_cap <- function(...) {
+    .Deprecated("plot_predictions()")
+    plot_predictions(...)
+}
+
+
+#' @keywords internal
+#' @export
+datagridcf <- function(...) {
+    .Deprecated('datagrid(x = 1:2, grid_type = "counterfactual")')
+    datagridcf_internal(...)
+}
+
+
+#' @keywords internal
+#' @export
 marginal_means <- function(model,
                            variables = NULL,
                            newdata = NULL,
@@ -161,6 +70,11 @@ marginal_means <- function(model,
                            numderiv = "fdforward",
                            ...) {
 
+    .Deprecated('
+predictions(mod,
+  by = "x",
+  newdata = datagrid(grid_type = \"balanced\"))
+')
 
     # deprecation and backward compatibility
     dots <- list(...)
@@ -446,13 +360,6 @@ marginal_means <- function(model,
 }
 
 
-#' Workhorse function for `marginal_means`
-#'
-#' Needs to be separate because we also need it in `delta_method`
-#' @inheritParams marginalmeans
-#' @inheritParams predictions
-#' @param ... absorb useless arguments from other get_* workhorse functions
-#' @noRd
 get_marginalmeans <- function(model,
                               newdata,
                               type,
@@ -546,12 +453,6 @@ get_marginalmeans <- function(model,
 }
 
 
-
-#' `marginal_means()` is an alias to `marginal_means()`
-#'
-#' This alias is kept for backward compatibility and because some users may prefer that name.
-#'
-#' @inherit marginal_means
 #' @keywords internal
 #' @export
 marginalmeans <- marginal_means

@@ -98,7 +98,7 @@
 #' `marginaleffects` website). Available arguments can vary from model to
 #' model, depending on the range of supported arguments by each modeling
 #' package. See the "Model-Specific Arguments" section of the
-#' `?marginaleffects` documentation for a non-exhaustive list of available
+#' `?slopes` documentation for a non-exhaustive list of available
 #' arguments.
 #' @inheritParams comparisons
 #'
@@ -303,27 +303,6 @@ slopes <- function(model,
 }
 
 
-
-#' `marginaleffects()` is an alias to `slopes()`
-#'
-#' This alias is kept for backward compatibility and because some users may prefer that name.
-#'
-#' @inherit marginaleffects
-#' @keywords internal
-#' @export
-marginaleffects <- function(...) {
-    .Deprecated("slopes()")
-    slopes(...)
-}
-
-
-#' `meffects()` is an alias to `slopes()`
-#'
-#' This alias is kept for backward compatibility and because some users may prefer that name.
-#' @inherit marginaleffects
-#' @keywords internal
-#' @export
-meffects <- marginaleffects
 
 
 #' Average slopes (aka Average partial derivatives, marginal effects, or trends)

@@ -86,7 +86,7 @@ for mixed-effects or bayesian models (see the online vignettes on the
 \code{marginaleffects} website). Available arguments can vary from model to
 model, depending on the range of supported arguments by each modeling
 package. See the "Model-Specific Arguments" section of the
-\code{?marginaleffects} documentation for a non-exhaustive list of available
+\code{?slopes} documentation for a non-exhaustive list of available
 arguments.}
 }
 \value{

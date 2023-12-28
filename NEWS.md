@@ -2,6 +2,8 @@
 
 ## Development
 
+This release represents a major step towards 1.0.0. Some functions are renamed and now raise deprecation warnings. After 1.0.0, the API will become much more stable, and any change will have to be very deliberate with much lead time and deprecation delays.
+
 Breaking changes:
 
 * `tidy()` no longer takes the average of estimates in the original model object. Users who want an aggregate estimate should call the relevant `avg_*()` function, or use the `by` argument explicitly. The previous behavior led to unexpected behavior and increased code complexity a lot.
@@ -13,6 +15,7 @@ New:
 
 Deprecation warnings:
 
+* `deltamethod()` has been named `hypotheses()` for a while. We now issue a deprecation warning and will be removed eventually.
 * `datagridcf()` will eventually be deprecated and removed from the package. We will raise a warning for at least one year before removing the function. Identical results can be obtained with `datagrid(..., grid_type="counterfactual")`
 * `marginal_means()` will eventually be deprecated and removed from the package. We will raise a warning for at least one year before removing the function. Identical results can be obtained using the `predictions()` function and the `grid_type="balanced"` argument of `datagrid()`. Examples are in the marginal means vignette on the website.
 

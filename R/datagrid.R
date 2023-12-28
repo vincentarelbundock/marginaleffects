@@ -128,7 +128,7 @@ datagrid <- function(
             model = model,
             newdata = newdata)
         args <- c(dots, args)
-        out <- do.call("datagridcf", args)
+        out <- do.call("datagridcf_internal", args)
         return(out)
     }
 
@@ -278,26 +278,8 @@ datagrid_engine <- function(
 }
 
 
-#' DEPRECATED FUNCTION
-#' 
-#' This function will be removed from the package in a future version. Please use this instead:
-#' 
-#' \preformatted{
-#' library(marginaleffects)
-#' mod <- lm(mpg ~ am + vs + factor(cyl) + hp, mtcars)
-#' predictions(mod,
-#'   newdata = datagrid(cyl = c(4, 6), grid_type = "counterfactual"))
-#' }
-#' 
-#' Users can also create convenience shortcuts like this:
-#' \preformatted{
-#' datagrid_cf <- function(...) datagrid(..., grid_type = "counterfactual")
-#' predictions(mod, newdata = datagrid_cf(cyl = c(4, 6)))
-#' }
-#' @keywords internal
-#' @export
-#'
-datagridcf <- function(
+
+datagridcf_internal <- function(
     ...,
     model = NULL,
     newdata = NULL) {
@@ -305,7 +287,7 @@ datagridcf <- function(
     dots <- list(...)
 
     if (length(dots) == 0) {
-        insight::format_error("Users must specify variable values in the `datagridcf()` call.")
+        insight::format_error("Users must specify variable values when `grid_type='counterfactual'")
     }
 
     tmp <- prep_datagrid(..., model = model, newdata = newdata)

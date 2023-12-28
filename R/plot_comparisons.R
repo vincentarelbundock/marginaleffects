@@ -161,14 +161,3 @@ plot_comparisons <- function(model,
     return(p)
 }
 
-
-#' `plot_comparisons()` is an alias to `plot_comparisons()`
-#'
-#' This alias is kept for backward compatibility.
-#' @inherit plot_predictions
-#' @keywords internal
-#' @export
-plot_cco <- function(...) {
-    .Deprecated("plot_comparisons")
-    plot_comparisons(...)
-}

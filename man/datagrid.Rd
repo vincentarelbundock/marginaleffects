@@ -33,7 +33,7 @@ datagrid(
 
 \item{by}{character vector with grouping variables within which \verb{FUN_*} functions are applied to create "sub-grids" with unspecified variables.}
 
-\item{grid_type}{character. Determines the functions to apply to each variable. The defaults can be overriden by defining individual variables explicitly in \code{...}, or by supplying a function to one of the \verb{FUN_*} arguments.
+\item{grid_type}{character. Determines the functions to apply to each variable. The defaults can be overridden by defining individual variables explicitly in \code{...}, or by supplying a function to one of the \verb{FUN_*} arguments.
 \itemize{
 \item "mean_or_mode": Character, factor, logical, and binary variables are set to their modes. Numeric, integer, and other variables are set to their means.
 \item "balanced": Each unique level of character, factor, logical, and binary variables are preserved. Numeric, integer, and other variables are set to their means. Warning: When there are many variables and many levels per variable, a balanced grid can be very large. In those cases, it is better to use \code{grid_type="mean_or_mode"} and to specify the unique levels of a subset of named variables explicitly.
