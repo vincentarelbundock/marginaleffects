@@ -1,0 +1,167 @@
+,country,continent,impartial,equal,democracy
+0,Mexico,Americas,1,31.2,Democracy
+1,Suriname,Americas,1,68.10000000000001,Democracy
+2,Sweden,Europe,1,93.7,Democracy
+3,Switzerland,Europe,1,96.6,Democracy
+4,Ghana,Africa,0,53.300000000000004,Democracy
+5,South Africa,Africa,1,38.6,Democracy
+6,Japan,Asia,1,97.3,Democracy
+7,Burma/Myanmar,Asia,1,23.1,Autocracy
+8,Russia,Europe,0,73.3,Autocracy
+9,Albania,Europe,1,69.69999999999999,Democracy
+10,Egypt,Africa,0,12.7,Autocracy
+11,Yemen,Asia,0,10.9,Autocracy
+12,Colombia,Americas,1,36.7,Democracy
+13,Poland,Europe,1,92.5,Democracy
+14,Brazil,Americas,1,49.3,Democracy
+15,United States of America,Americas,1,69.8,Democracy
+16,Portugal,Europe,1,92.10000000000001,Democracy
+17,El Salvador,Americas,1,28.4,Democracy
+18,Bangladesh,Asia,0,18.5,Autocracy
+19,Bolivia,Americas,1,35.3,Democracy
+20,Haiti,Americas,0,13.0,Autocracy
+21,Honduras,Americas,1,13.3,Autocracy
+22,Mali,Africa,0,21.5,Democracy
+23,Pakistan,Asia,0,12.7,Autocracy
+24,Peru,Americas,1,39.300000000000004,Democracy
+25,Senegal,Africa,1,56.8,Democracy
+26,South Sudan,Africa,0,1.5,Autocracy
+27,Sudan,Africa,0,8.0,Autocracy
+28,Vietnam,Asia,1,77.0,Autocracy
+29,Afghanistan,Asia,0,31.8,Autocracy
+30,Argentina,Americas,1,69.69999999999999,Democracy
+31,Ethiopia,Africa,1,37.4,Autocracy
+32,India,Asia,1,35.8,Democracy
+33,Kenya,Africa,1,47.699999999999996,Democracy
+34,North Korea,Asia,0,58.599999999999994,Autocracy
+35,South Korea,Asia,1,96.5,Democracy
+36,Lebanon,Asia,0,49.5,Autocracy
+37,Nigeria,Africa,0,25.1,Democracy
+38,Philippines,Asia,1,32.1,Democracy
+39,Tanzania,Africa,1,71.7,Autocracy
+40,Taiwan,Asia,1,95.89999999999999,Democracy
+41,Thailand,Asia,0,60.3,Autocracy
+42,Uganda,Africa,1,33.4,Autocracy
+43,Venezuela,Americas,0,22.0,Autocracy
+44,Benin,Africa,1,62.4,Democracy
+45,Bhutan,Asia,1,92.2,Democracy
+46,Burkina Faso,Africa,1,28.599999999999998,Autocracy
+47,Cambodia,Asia,0,17.4,Autocracy
+48,Indonesia,Asia,1,49.1,Democracy
+49,Mozambique,Africa,1,29.9,Autocracy
+50,Nepal,Asia,1,30.599999999999998,Democracy
+51,Nicaragua,Americas,0,28.999999999999996,Autocracy
+52,Niger,Africa,1,30.9,Democracy
+53,Zambia,Africa,1,32.800000000000004,Autocracy
+54,Zimbabwe,Africa,0,45.0,Autocracy
+55,Guinea,Africa,0,24.9,Autocracy
+56,Ivory Coast,Africa,1,29.7,Autocracy
+57,Mauritania,Africa,0,14.499999999999998,Autocracy
+58,Canada,Americas,1,87.5,Democracy
+59,Botswana,Africa,1,69.8,Democracy
+60,Burundi,Africa,0,28.9,Autocracy
+61,Cape Verde,Africa,1,74.0,Democracy
+62,Central African Republic,Africa,0,27.3,Autocracy
+63,Chile,Americas,1,62.7,Democracy
+64,Costa Rica,Americas,1,91.9,Democracy
+65,Timor-Leste,Asia,1,27.3,Democracy
+66,Ecuador,Americas,1,66.8,Democracy
+67,France,Europe,1,96.2,Democracy
+68,Germany,Europe,1,94.5,Democracy
+69,Guatemala,Americas,1,18.9,Democracy
+70,Iran,Asia,1,79.3,Autocracy
+71,Iraq,Asia,0,38.0,Autocracy
+72,Ireland,Europe,1,83.7,Democracy
+73,Italy,Europe,1,94.3,Democracy
+74,Jordan,Asia,1,73.7,Autocracy
+75,Latvia,Europe,1,89.1,Democracy
+76,Lesotho,Africa,1,80.2,Democracy
+77,Liberia,Africa,1,29.799999999999997,Democracy
+78,Malawi,Africa,1,30.099999999999998,Democracy
+79,Maldives,Asia,0,45.2,Autocracy
+80,Mongolia,Asia,1,70.1,Democracy
+81,Morocco,Africa,1,39.0,Autocracy
+82,Netherlands,Europe,1,95.8,Democracy
+83,Panama,Americas,1,62.6,Democracy
+84,Qatar,Asia,1,95.3,Autocracy
+85,Sierra Leone,Africa,1,41.699999999999996,Democracy
+86,Spain,Europe,1,88.4,Democracy
+87,Syria,Asia,0,12.1,Autocracy
+88,Tunisia,Africa,1,69.5,Democracy
+89,Turkey,Asia,0,68.2,Autocracy
+90,Ukraine,Europe,0,79.3,Autocracy
+91,United Kingdom,Europe,1,91.8,Democracy
+92,Uruguay,Americas,1,91.3,Democracy
+93,Algeria,Africa,0,75.0,Autocracy
+94,Angola,Africa,0,17.7,Autocracy
+95,Armenia,Asia,1,84.5,Autocracy
+96,Azerbaijan,Asia,0,19.7,Autocracy
+97,Belarus,Europe,1,90.5,Autocracy
+98,Cameroon,Africa,0,33.4,Autocracy
+99,Chad,Africa,0,21.7,Autocracy
+100,China,Asia,0,41.8,Autocracy
+101,Democratic Republic of the Congo,Africa,0,23.400000000000002,Autocracy
+102,Republic of the Congo,Africa,0,32.6,Autocracy
+103,Djibouti,Africa,1,29.5,Autocracy
+104,Dominican Republic,Americas,1,26.0,Democracy
+105,Eritrea,Africa,0,73.3,Autocracy
+106,Gabon,Africa,1,67.30000000000001,Autocracy
+107,The Gambia,Africa,0,45.4,Autocracy
+108,Georgia,Asia,1,82.39999999999999,Democracy
+109,Guinea-Bissau,Africa,0,29.4,Democracy
+110,Jamaica,Americas,1,72.7,Democracy
+111,Kazakhstan,Asia,0,69.8,Autocracy
+112,Kyrgyzstan,Asia,1,64.5,Autocracy
+113,Laos,Asia,0,44.1,Autocracy
+114,Libya,Africa,0,41.699999999999996,Autocracy
+115,Madagascar,Africa,0,15.8,Autocracy
+116,Moldova,Europe,1,70.0,Democracy
+117,Namibia,Africa,1,48.6,Democracy
+118,Rwanda,Africa,1,81.8,Autocracy
+119,Somalia,Africa,0,4.5,Autocracy
+120,Sri Lanka,Asia,1,77.7,Democracy
+121,Tajikistan,Asia,0,38.7,Autocracy
+122,Togo,Africa,1,62.3,Democracy
+123,Trinidad and Tobago,Americas,1,81.0,Democracy
+124,Turkmenistan,Asia,0,43.3,Autocracy
+125,Uzbekistan,Asia,0,58.599999999999994,Autocracy
+126,Austria,Europe,1,93.8,Democracy
+127,Bahrain,Asia,0,74.1,Autocracy
+128,Barbados,Americas,1,94.1,Democracy
+129,Belgium,Europe,1,94.89999999999999,Democracy
+130,Bosnia and Herzegovina,Europe,1,68.30000000000001,Democracy
+131,Bulgaria,Europe,1,74.7,Democracy
+132,Comoros,Africa,0,41.099999999999994,Autocracy
+133,Croatia,Europe,1,86.1,Democracy
+134,Cuba,Americas,0,83.6,Autocracy
+135,Cyprus,Asia,1,93.8,Democracy
+136,Czechia,Europe,1,95.7,Democracy
+137,Denmark,Europe,1,98.3,Democracy
+138,Equatorial Guinea,Africa,0,29.4,Autocracy
+139,Estonia,Europe,1,96.0,Democracy
+140,Finland,Europe,1,95.6,Democracy
+141,Greece,Europe,1,90.10000000000001,Democracy
+142,Guyana,Americas,1,64.3,Democracy
+143,Iceland,Europe,1,96.8,Democracy
+144,Israel,Asia,1,86.4,Democracy
+145,Kuwait,Asia,1,93.60000000000001,Autocracy
+146,Lithuania,Europe,1,93.2,Democracy
+147,Luxembourg,Europe,1,96.7,Democracy
+148,North Macedonia,Europe,1,73.9,Autocracy
+149,Malaysia,Asia,1,78.2,Autocracy
+150,Malta,Europe,1,93.7,Democracy
+151,Mauritius,Africa,1,92.5,Democracy
+152,Montenegro,Europe,1,87.8,Autocracy
+153,Norway,Europe,1,98.6,Democracy
+154,Oman,Asia,1,81.89999999999999,Autocracy
+155,Paraguay,Americas,1,14.899999999999999,Democracy
+156,Romania,Europe,1,74.5,Democracy
+157,Sao Tome and Principe,Africa,1,55.60000000000001,Democracy
+158,Saudi Arabia,Asia,1,78.8,Autocracy
+159,Serbia,Europe,1,82.39999999999999,Autocracy
+160,Seychelles,Africa,1,89.4,Democracy
+161,Singapore,Asia,1,93.89999999999999,Autocracy
+162,Slovakia,Europe,1,82.8,Democracy
+163,Slovenia,Europe,1,94.6,Democracy
+164,United Arab Emirates,Asia,1,88.1,Autocracy
+165,Hungary,Europe,1,72.2,Democracy
