@@ -1,4 +1,4 @@
-.PHONY: help testall testone document check install deploy deploydev html pdf news clean
+.PHONY: help testall testone document check install deploy deploydev html pdf news clean website
 
 BOOK_DIR := book
 
@@ -46,57 +46,5 @@ clean: ## Clean the book directory
 	rm -rf $(BOOK_DIR)/NEWS.qmd $(BOOK_DIR)/_quarto.qmd 
 	rm -rf ut 
 
-deploydocs: ## Deploy to docs/
-	Rscript -e "source('book/utils/utils.R');get_reference()"
-	Rscript -e "source('book/utils/utils.R');link_function_docs()"
-	Rscript -e "source('book/utils/utils.R');get_quarto_yaml(dev = FALSE)"
-	make html
-	rsync -a book/_book/* docs/
-	rsync -a book/data docs/
-	rm -rf book/_book
-	git restore book
-
-deploy: ## Deploy book to Github website
-	git fetch origin
-	git checkout -B gh-pages origin/gh-pages
-	git pull
-	git checkout main
-	git pull
-	git stash
-	git checkout gh-pages
-	git checkout main -- book
-	git checkout main -- Makefile
-	Rscript -e "source('book/utils/utils.R');get_reference()"
-	Rscript -e "source('book/utils/utils.R');link_function_docs()"
-	Rscript -e "source('book/utils/utils.R');get_quarto_yaml(dev = FALSE)"
-	make html
-	rsync -a book/_book/* ./
-	rsync -a book/data ./
-	rm -rf book Makefile _quarto.yml utils.R
-	git add .
-	git commit -m "Update book"
-	git push
-	git checkout main
-
-deploydev: ## Deploy dev book to Github website
-	git stash
-	git fetch origin
-	git checkout -B gh-pages origin/gh-pages
-	git pull
-	git checkout main
-	git pull
-	git stash
-	git checkout gh-pages
-	git checkout main -- book
-	git checkout main -- Makefile
-	Rscript -e "source('book/utils/utils.R');get_reference()"
-	Rscript -e "source('book/utils/utils.R');link_function_docs()"
-	Rscript -e "source('book/utils/utils.R');get_quarto_yaml(dev = TRUE)"
-	make htmldev
-	rsync -a book/_book/* ./dev/
-	rsync -a book/data ./
-	rm -rf book Makefile _quarto.yml utils.R
-	git add .
-	git commit -m "Update book"
-	git push
-	git checkout main
+website: ## altdoc::render_docs(verbose = TRUE)
+	Rscript -e "altdoc::render_docs(verbose = TRUE)"
