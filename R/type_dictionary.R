@@ -113,6 +113,11 @@ mhurdle,E
 mhurdle,Ep
 mhurdle,p
 mlogit,response
+mvgam,response
+mvgam,link
+mvgam,expected
+mvgam,detection
+mvgam,latent_N
 negbin,invlink(link)
 negbin,response
 negbin,link
