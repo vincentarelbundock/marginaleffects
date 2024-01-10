@@ -111,6 +111,7 @@ Suggests:
     miceadds,
     mlogit,
     mlr3verse,
+    mmrm,
     modelbased,
     modelsummary,
     nlme,
@@ -237,6 +238,7 @@ Collate:
     'methods_mlm.R'
     'methods_mlogit.R'
     'methods_mlr3.R'
+    'methods_mmrm.R'
     'methods_nlme.R'
     'methods_ordinal.R'
     'methods_plm.R'
