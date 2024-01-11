@@ -7,12 +7,14 @@ lightbox: auto
 
 
 ::: {layout-ncol=2}
-![](fig/meme_log_odds_ratios.jpg){group="elsewhere" description="a"}
+![](fig/meme_log_odds_ratios.jpg){group="elsewhere" description="meme a"}
 
-![](fig/meme_plot_comparisons.png){group="elsewhere" description="c"}
+![](fig/meme_plot_comparisons.png){group="elsewhere" description="meme c"}
 
-![](fig/meme_raw_model_output.jpg){group="elsewhere" description="b"}
+![](fig/meme_raw_model_output.jpg){group="elsewhere" description="meme b"}
 
-![](fig/meme_full_bayesian_posterior.jpg){group="elsewhere" description="d"}
+![](fig/meme_full_bayesian_posterior.jpg){group="elsewhere" description="meme d"}
+
+![](fig/meme_wrestling.jpg){group="elsewhere" description="meme e"}
 :::
 
