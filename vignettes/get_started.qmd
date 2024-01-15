@@ -164,7 +164,7 @@ print(cmp)
 ```
 :::
 
-What happens to the predicted outcome when the `wt` variable increases by 1 standard deviation about its mean?
+What happens to the predicted outcome when the `hp` variable increases by 1 standard deviation about its mean?
 
 ::: {.panel-tabset group="language"}
 ### R
