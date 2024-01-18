@@ -2,7 +2,8 @@
 % Please edit documentation in R/methods_aod.R, R/methods_betareg.R,
 %   R/sanity_model.R, R/methods_brms.R, R/methods_dbarts.R, R/methods_glmmTMB.R,
 %   R/methods_inferences_simulation.R, R/methods_mclogit.R, R/methods_mlogit.R,
-%   R/methods_ordinal.R, R/methods_plm.R, R/methods_quantreg.R
+%   R/methods_ordinal.R, R/methods_plm.R, R/methods_quantreg.R,
+%   R/methods_survey.R
 \name{sanitize_model_specific.glimML}
 \alias{sanitize_model_specific.glimML}
 \alias{sanitize_model_specific.betareg}
@@ -17,6 +18,8 @@
 \alias{sanitize_model_specific.clm}
 \alias{sanitize_model_specific.plm}
 \alias{sanitize_model_specific.rqs}
+\alias{sanitize_model_specific.svyolr}
+\alias{sanitize_model_specific.svyglm}
 \title{Method to raise model-specific warnings and errors}
 \usage{
 \method{sanitize_model_specific}{glimML}(model, ...)
@@ -56,6 +59,10 @@ sanitize_model_specific(model, ...)
 \method{sanitize_model_specific}{plm}(model, ...)
 
 \method{sanitize_model_specific}{rqs}(model, ...)
+
+\method{sanitize_model_specific}{svyolr}(model, wts, ...)
+
+\method{sanitize_model_specific}{svyglm}(model, wts, ...)
 }
 \arguments{
 \item{model}{Model object}
@@ -102,6 +109,12 @@ arguments.}
 \item "tukey": Marginal Effects at Tukey's 5 numbers.
 \item "grid": Marginal Effects on a grid of representative numbers (Tukey's 5 numbers and unique values of categorical predictors).
 }
+}}
+
+\item{wts}{string or numeric: weights to use when computing average contrasts or slopes. These weights only affect the averaging in \verb{avg_*()} or with the \code{by} argument, and not the unit-level estimates themselves. Internally, estimates and weights are passed to the \code{weighted.mean()} function.
+\itemize{
+\item string: column name of the weights variable in \code{newdata}. When supplying a column name to \code{wts}, it is recommended to supply the original data (including the weights variable) explicitly to \code{newdata}.
+\item numeric: vector of length equal to the number of rows in the original data or in \code{newdata} (if supplied).
 }}
 }
 \value{
