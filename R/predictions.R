@@ -291,14 +291,6 @@ predictions <- function(model,
     transform_original <- transform
     transform <- sanitize_transform(transform)
 
-    model <- sanitize_model_specific(
-        model = model,
-        newdata = newdata,
-        vcov = vcov,
-        calling_function = "predictions",
-        ...)
-
-
     conf_level <- sanitize_conf_level(conf_level, ...)
     newdata <- sanitize_newdata(
         model = model,
