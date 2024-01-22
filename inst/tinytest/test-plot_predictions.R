@@ -223,6 +223,16 @@ p <- plot_predictions(mod, condition = list("mpg"=1:5, "am"=0:1, "gear"=1:3, "ca
 expect_inherits(p, "gg")
 
 
+# Issue 1005: variable name
+d1 <- d2 <- mtcars
+d2$`horse power` <- d2$hp
+m1 <- lm(mpg ~ hp, data = d1)
+m2 <- lm(mpg ~ `horse power`, data = d2)
+
+p1 <- plot_predictions(m1, condition = 'hp', draw = FALSE)
+p2 <- plot_predictions(m2, condition = 'horse power', draw = FALSE)
+assert_equivalent(p1$std.error, p2$std.error)
+
 
 
 suppressWarnings(rm("threenum", .GlobalEnv))
