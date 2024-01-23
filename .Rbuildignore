@@ -27,3 +27,5 @@ man-roxygen
 ^altdoc$
 ^_quarto$
 README.qmd
+vignettes/
+vignettes
