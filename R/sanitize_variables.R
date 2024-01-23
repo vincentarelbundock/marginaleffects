@@ -101,7 +101,7 @@ sanitize_variables <- function(variables,
     mc <- attr(newdata, "newdata_matrix_columns")
     if (length(mc) > 0 && any(names(predictors) %in% mc)) {
       predictors <- predictors[!names(predictors) %in% mc]
-      insight::format_warning("Matrix columns are not supported. Use the `variables` argument to specify valid predictors.")
+      insight::format_warning("Matrix columns are not supported. Use the `variables` argument to specify valid predictors, or use a function like `drop()` to convert your matrix columns into vectors.")
     }
 
     # missing variables
