@@ -759,15 +759,17 @@ expect_error(predictions(
 
 
 # Issue 1006: predictor is also a response
-library(brms)
-# library(marginaleffects)
 data("nhanes", package = "mice")
-bform <- bf(bmi | mi() ~ age * mi(chl)) +
-  bf(chl | mi() ~ age) + set_rescor(FALSE)
-fit_imp <- brm(bform, data = nhanes)
-pkgload::load_all()
-avg_comparisons(fit_imp, variables = list(chl = 1))
-# avg_comparisons(fit_imp, variables = list(chl = 1, age = 1))
+bform <- bf(bmi | mi() ~ age * mi(chl)) + bf(chl | mi() ~ age) + set_rescor(FALSE)
+fit <- brm(bform, data = nhanes)
+cmp <- avg_comparisons(fit)
+expect_inherits(cmp, "comparisons")
+cmp <- avg_comparisons(fit_imp, variables = list(chl = 1))
+expect_inherits(cmp, "comparisons")
+cmp <- avg_comparisons(fit_imp, variables = list(chl = 1))
+expect_inherits(cmp, "comparisons")
+cmp <- avg_comparisons(fit_imp, variables = list(chl = 1, age = 1))
+expect_inherits(cmp, "comparisons")
 
 
 
