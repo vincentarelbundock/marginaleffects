@@ -40,9 +40,19 @@ sanitize_variables <- function(variables,
         } else {
             predictors <- unlist(predictors, recursive = TRUE, use.names = FALSE)
         }
+
+        # Issue #1006
+        # we used to remove the response here because some models erroneously include it, 
+        # but in some multi-equation brms models, we want the response to be a predictor
+        # in another equation. So I'll comment this out for now and see. In principle,
+        # this should be harmless. The worst we can get is useless estimates.
+        
+
+        browser()
         # response is not a predictor, but sometimes we catch it
         dv <- hush(unlist(insight::find_response(model, combine = FALSE), use.names = FALSE))
         predictors <- unique(setdiff(predictors, dv))
+        
         if (length(predictors) == 0) { # unsupported by insight (e.g., numpyro)
             predictors <- setdiff(hush(colnames(newdata)), c(dv, "rowid"))
         }
