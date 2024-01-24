@@ -60,9 +60,9 @@ sanitize_model_specific(model, ...)
 
 \method{sanitize_model_specific}{rqs}(model, ...)
 
-\method{sanitize_model_specific}{svyolr}(model, wts, ...)
+\method{sanitize_model_specific}{svyolr}(model, wts = NULL, ...)
 
-\method{sanitize_model_specific}{svyglm}(model, wts, ...)
+\method{sanitize_model_specific}{svyglm}(model, wts = NULL, ...)
 }
 \arguments{
 \item{model}{Model object}

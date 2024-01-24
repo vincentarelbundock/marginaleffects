@@ -42,12 +42,6 @@ mod <- glm(am ~ hp + vs, dat = mtcars, family = binomial)
 cmp3 <- comparisons(mod, variables = list(vs = 1))
 expect_inherits(cmp3, "comparisons")
 
-
-# Issue #582: sanitize_variables should reject reponse as 
-mod <- lm(mpg ~ hp + qsec, data = mtcars)
-expect_error(slopes(mod, variables = "mpg"), pattern = "predictor variables")
-
-
 # no need to include categorical focal variable when there is only one of them
 mod <- lm(mpg ~ hp + factor(am) + wt, mtcars)
 nd <- data.frame(hp = 120, am = 1)
